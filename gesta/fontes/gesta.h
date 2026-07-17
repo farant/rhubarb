@@ -439,6 +439,94 @@ gesta_res_in_ramo_status (
     constans character* ramus,
     Piscina*            piscina);
 
+/* ==================================================
+ * Scriptura et vita ramorum (K4 frustum B)
+ * ==================================================
+ * Scriptura in ramo: eventus IUDICATI in linea temporis parallela
+ * (custodia contra statum RAMI iudicat - notae in ramo ipso
+ * cadunt); indices/motor/FTS trunci caeci per constructionem;
+ * genera non ramificantur (recusatio mechanica); scripturae in
+ * ramos fusos/abiectos recusantur (lectio libera - archaeologia).
+ * ABICERE FLAGSHIP: eventus unus, vilis - "truncus = veritas,
+ * rami = hypothetica; abicere gratis, fingere audacter".
+ * FUSIO = replay-on-merge: copiae crudae in truncum (ULID novum,
+ * seq novum, origo "merge:<titulus>", actor/datum/creatum
+ * SERVATA, sine revalidatione - ramus iam vixit
+ * record-don't-block), annales per copiam, transactio UNA cum
+ * statu fusus, plicatura semel, deinde sonda provectionis super
+ * eventus status copiatos (opus fusum processum suum provehit).
+ * Confligentia = res eadem utrimque post punctum tacta; vis
+ * cogit. Fusio nidificata recusatur nisi parens fusus (de imo
+ * sursum). */
+
+b32
+gesta_in_ramo_scribere (
+    GestaMundus*           mundus,
+    constans GestaEventum* eventum,
+    constans character*    ramus,      /* res_id rami */
+    character*             res_id_out);
+
+b32
+gesta_ramum_creare (
+    GestaMundus*        mundus,
+    constans character* titulus,
+    constans character* parens,   /* res_id rami aut NIHIL/"" */
+    constans character* actor,    /* NIHIL = machina */
+    Piscina*            piscina,
+    character*          res_id_out);
+
+nomen structura {
+    chorda res_id;
+    chorda titulus;
+    chorda parens;    /* res_id parentis; "" = truncus */
+    s64    punctum;   /* seq furcae */
+    chorda status;    /* activus | fusus | abiectus */
+} GestaRamusOrdo;
+
+Xar*
+gesta_ramos_enumerare (
+    GestaMundus* mundus,
+    Piscina*     piscina);
+
+/* FLAGSHIP: eventus status unus (activus -> abiectus); acta
+ * manent, lectiones catenae laborant, scripturae recusantur. */
+b32
+gesta_ramum_abicere (
+    GestaMundus*        mundus,
+    constans character* ramus,
+    constans character* actor);
+
+nomen structura {
+    chorda res_id;
+    chorda status_trunci;   /* datum plicatum trunci (JSON) */
+    chorda status_rami;     /* datum plicatum rami (JSON) */
+} GestaConfligentia;
+
+Xar*
+gesta_confligentia (
+    GestaMundus*        mundus,
+    constans character* ramus,
+    Piscina*            piscina);
+
+nomen structura {
+    b32                 fusa;
+    constans character* causa;      /* si non fusa */
+    i32                 confligentia_numerus;
+    i32                 copiata;    /* eventus in truncum copiati */
+} GestaFusioFructus;
+
+/* FALSUM solum apparatu fracto / ramo ignoto; recusatio (non
+ * activus, parens non fusus, confligentiae sine vi) = VERUM cum
+ * exitus->fusa FALSUM et causa posita. */
+b32
+gesta_ramum_fundere (
+    GestaMundus*        mundus,
+    constans character* ramus,
+    b32                 vis,
+    constans character* actor,
+    Piscina*            piscina,
+    GestaFusioFructus*  exitus);
+
 chorda
 gesta_genus_datum (
     GestaMundus*        mundus,

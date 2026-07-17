@@ -300,14 +300,17 @@ nomen structura {
     chorda genus;
 } GestaObumbra;
 
+/* obumbram quaerere (extractum K4 frustum B - via validationis
+ * ramorum eandem umbram postulat) */
 interior GestaResOrdo
-_res_capere_cum_obumbra (GestaMundus* m, chorda res_id,
-    Xar* obumbrae, Piscina* piscina)
+_obumbram_quaerere (GestaMundus* m, chorda res_id, Xar* obumbrae,
+    Piscina* piscina)
 {
-    GestaResOrdo ordo = _res_capere(m, res_id, piscina);
+    GestaResOrdo ordo;
     i32 i;
 
-    si (ordo.exsistit || obumbrae == NIHIL)
+    memset(&ordo, ZEPHYRUM, magnitudo(GestaResOrdo));
+    si (obumbrae == NIHIL)
     {
         redde ordo;
     }
@@ -351,6 +354,56 @@ _res_capere_cum_obumbra (GestaMundus* m, chorda res_id,
         frange;
     }
     redde ordo;
+}
+
+interior GestaResOrdo
+_res_capere_cum_obumbra (GestaMundus* m, chorda res_id,
+    Xar* obumbrae, Piscina* piscina)
+{
+    GestaResOrdo ordo = _res_capere(m, res_id, piscina);
+
+    si (ordo.exsistit)
+    {
+        redde ordo;
+    }
+    redde _obumbram_quaerere(m, res_id, obumbrae, piscina);
+}
+
+/* prototypum lectionis ramorum (definitio in sectione Lectio
+ * ramorum infra - validatio scripturae eam postulat, E2-B2) */
+interior GestaResOrdo
+_res_in_ramo_capere (GestaMundus* m, chorda res_id,
+    constans character* ramus, Piscina* piscina);
+
+/* ramus datus? (NIHIL aut "" = truncus) */
+interior b32
+_ramus_datus (constans character* ramus)
+{
+    redde ramus != NIHIL && ramus[0] != '\0';
+}
+
+/* lectio validationis (K4 frustum B, E2-B2): trunco = tabula stans
+ * + obumbrae; ramo = plicatura catenae + obumbrae. Lectiones
+ * validationis OMNES viae scripturae per hanc UNAM eunt -
+ * permutatio una completa, numquam mixta (aliter custodia
+ * phantasma "membrum inexistens" in ramis). */
+interior GestaResOrdo
+_res_validationis_capere (GestaMundus* m, chorda res_id,
+    Xar* obumbrae, constans character* ramus, Piscina* piscina)
+{
+    GestaResOrdo ordo;
+
+    si (!_ramus_datus(ramus))
+    {
+        redde _res_capere_cum_obumbra(m, res_id, obumbrae,
+            piscina);
+    }
+    ordo = _res_in_ramo_capere(m, res_id, ramus, piscina);
+    si (ordo.exsistit)
+    {
+        redde ordo;
+    }
+    redde _obumbram_quaerere(m, res_id, obumbrae, piscina);
 }
 
 /* genus datae speciei est? (K2 spec par IV: species absens =
@@ -491,7 +544,8 @@ _transitio_licita (Piscina* piscina, chorda datum_generis,
  * (K3 B3 - vinculum modo creatum, membrum modo creatum). */
 interior constans character*
 _membrum_validare (GestaMundus* m, b32 additum, chorda res_id,
-    JsonValor* datum_obiectum, Xar* obumbrae, Piscina* piscina)
+    JsonValor* datum_obiectum, Xar* obumbrae,
+    constans character* ramus, Piscina* piscina)
 {
     GestaResOrdo ordo;
     JsonValor* pars = json_objectum_capere(datum_obiectum, "pars");
@@ -513,8 +567,10 @@ _membrum_validare (GestaMundus* m, b32 additum, chorda res_id,
     c_pars = json_ad_chorda(pars);
     c_membrum = json_ad_chorda(membrum);
 
-    /* I. res vinculi genus nexus-speciei habeat */
-    ordo = _res_capere_cum_obumbra(m, res_id, obumbrae, piscina);
+    /* I. res vinculi genus nexus-speciei habeat (lectio
+     * validationis - in ramo status rami iudicat, E2-B2) */
+    ordo = _res_validationis_capere(m, res_id, obumbrae, ramus,
+        piscina);
     si (!ordo.exsistit)
     {
         redde "violatio: membrum in genere non-nexu";
@@ -527,8 +583,8 @@ _membrum_validare (GestaMundus* m, b32 additum, chorda res_id,
     {
         si (additum)
         {
-            GestaResOrdo alter = _res_capere_cum_obumbra(m,
-                c_membrum, obumbrae, piscina);
+            GestaResOrdo alter = _res_validationis_capere(m,
+                c_membrum, obumbrae, ramus, piscina);
 
             si (!alter.exsistit)
             {
@@ -600,8 +656,8 @@ _membrum_validare (GestaMundus* m, b32 additum, chorda res_id,
     }
     si (additum)
     {
-        GestaResOrdo alter = _res_capere_cum_obumbra(m, c_membrum,
-            obumbrae, piscina);
+        GestaResOrdo alter = _res_validationis_capere(m, c_membrum,
+            obumbrae, ramus, piscina);
 
         /* III. membrum exsistat */
         si (!alter.exsistit)
@@ -1559,7 +1615,7 @@ _annalem_appendere (GestaMundus* m, s64 seq,
     constans character* id_ev, chorda res_id,
     constans character* genus_eventus, JsonValor* datum_obiectum,
     constans character* actor, constans character* origo,
-    chorda creatum)
+    constans character* ramus, chorda creatum)
 {
     JsonValor* linea = json_objectum_creare(m->piscina);
     chorda textus;
@@ -1579,7 +1635,8 @@ _annalem_appendere (GestaMundus* m, s64 seq,
     json_objectum_ponere(linea, "origo",
         json_chorda_creare(m->piscina, _ch(origo)));
     json_objectum_ponere(linea, "branch_id",
-        json_chorda_creare(m->piscina, _ch("")));
+        json_chorda_creare(m->piscina,
+            _ch(ramus != NIHIL ? ramus : "")));
     json_objectum_ponere(linea, "creatum",
         json_chorda_creare(m->piscina, creatum));
     textus = json_scribere(linea, m->piscina);
@@ -1704,7 +1761,7 @@ _eventum_praeparare (GestaMundus* m, constans GestaEventum* e,
  * NIHIL = sanum. */
 interior constans character*
 _eventum_validare (GestaMundus* m, constans GestaEventumParatum* p,
-    Xar* obumbrae)
+    Xar* obumbrae, constans character* ramus)
 {
     si (p->est_creatio)
     {
@@ -1726,8 +1783,9 @@ _eventum_validare (GestaMundus* m, constans GestaEventumParatum* p,
     }
     si (strcmp(p->genus_eventus, "status") == ZEPHYRUM)
     {
-        GestaResOrdo ordo = _res_capere_cum_obumbra(m, p->res_id,
-            obumbrae, m->piscina);
+        /* in ramo: machina contra statum RAMI iudicat (decisio 13) */
+        GestaResOrdo ordo = _res_validationis_capere(m, p->res_id,
+            obumbrae, ramus, m->piscina);
         JsonValor* novus = json_objectum_capere(p->datum_obiectum,
             "novus");
 
@@ -1754,7 +1812,8 @@ _eventum_validare (GestaMundus* m, constans GestaEventumParatum* p,
         redde _membrum_validare(m,
             strcmp(p->genus_eventus, "membrum-additum")
                 == ZEPHYRUM,
-            p->res_id, p->datum_obiectum, obumbrae, m->piscina);
+            p->res_id, p->datum_obiectum, obumbrae, ramus,
+            m->piscina);
     }
     si (p->est_generis)
     {
@@ -1814,10 +1873,13 @@ _eventum_validare (GestaMundus* m, constans GestaEventumParatum* p,
 
 /* inserere: INSERT + annales + sordidae - SINE BEGIN/COMMIT,
  * intra transactionem apertam fascis currit. Creatum expresse
- * ligatur (unum per fascem). */
+ * ligatur (unum per fascem). branch_id expresse ligatur ('' pro
+ * trunco - numquam DEFAULT, E2-B6); scripturae ramorum sordidas
+ * NON tangunt (indices trunci caeci per constructionem). */
 interior b32
 _eventum_inserere (GestaMundus* m,
-    constans GestaEventumParatum* p, chorda nunc)
+    constans GestaEventumParatum* p, chorda nunc,
+    constans character* ramus)
 {
     s64 seq;
 
@@ -1825,7 +1887,7 @@ _eventum_inserere (GestaMundus* m,
         ScriniumEnuntiatum* ins = scrinium_praeparare(m->scrinium,
             "INSERT INTO tessellae"
             " (id, res_id, genus_eventus, datum, actor, origo,"
-            "  creatum) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            "  creatum, branch_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
         si (ins == NIHIL)
         {
@@ -1838,6 +1900,8 @@ _eventum_inserere (GestaMundus* m,
         scrinium_ligare_textum(ins, V, _ch(p->actor));
         scrinium_ligare_textum(ins, VI, _ch(p->origo));
         scrinium_ligare_textum(ins, VII, nunc);
+        scrinium_ligare_textum(ins, VIII,
+            _ch(ramus != NIHIL ? ramus : ""));
         si (scrinium_gradi(ins) != SCRINIUM_FACTUM)
         {
             scrinium_finire(ins);
@@ -1848,11 +1912,11 @@ _eventum_inserere (GestaMundus* m,
     seq = scrinium_ultimum_id(m->scrinium);
     si (!_annalem_appendere(m, seq, p->event_id, p->res_id,
             p->genus_eventus, p->datum_obiectum, p->actor,
-            p->origo, nunc))
+            p->origo, ramus, nunc))
     {
         redde _fractum(m, "annales non appensi");
     }
-    si (!p->est_generis)
+    si (!p->est_generis && !_ramus_datus(ramus))
     {
         ScriniumEnuntiatum* so = scrinium_praeparare(m->scrinium,
             "INSERT OR IGNORE INTO sordidae (res_id) VALUES (?)");
@@ -1876,7 +1940,8 @@ _eventum_inserere (GestaMundus* m,
 interior b32
 _fascis_scribere (GestaMundus* m,
     constans GestaFascisEventum* eventa, i32 numerus,
-    character* res_ids_out, chorda nunc)
+    character* res_ids_out, chorda nunc,
+    constans character* ramus)
 {
     Xar* parata;      /* GestaEventumParatum */
     Xar* obumbrae;    /* GestaObumbra - res in fasce creatae (B3) */
@@ -1885,6 +1950,25 @@ _fascis_scribere (GestaMundus* m,
     si (numerus < I)
     {
         redde _fractum(m, "fascis vacuus");
+    }
+    /* K4 frustum B: scriptura in ramo - ramus exsistat, generis
+     * ramus sit, ACTIVUS sit (fusus/abiectus = lineae temporis
+     * clausae; lectio libera manet - archaeologia) */
+    si (_ramus_datus(ramus))
+    {
+        GestaResOrdo r_ordo = _res_capere(m, _ch(ramus),
+            m->piscina);
+
+        si (!r_ordo.exsistit
+            || !_chorda_est(r_ordo.genus, "ramus"))
+        {
+            redde _fractum(m, "ramus ignotus");
+        }
+        si (!_chorda_est(r_ordo.status, "activus"))
+        {
+            redde _fractum(m, "ramus non activus (fusus aut"
+                " abiectus)");
+        }
     }
     parata = xar_creare(m->piscina,
         (i32)magnitudo(GestaEventumParatum));
@@ -1919,12 +2003,21 @@ _fascis_scribere (GestaMundus* m,
         {
             redde FALSUM;
         }
-        /* identitas: creatio duplicata recusatur - contra tabulam
-         * stantem ET obumbras (creatio bis in eodem fasce) */
+        /* genera trunco-sola (K4 decisio 8): eventus generis cum
+         * ramo = recusatio mechanica (oraculum tacite vorabat -
+         * strictiores consulto, D5) */
+        si (p.est_generis && _ramus_datus(ramus))
+        {
+            redde _fractum(m, "genera non ramificantur");
+        }
+        /* identitas: creatio duplicata recusatur - contra statum
+         * VISUM (trunco: tabula stans; ramo: plicatura catenae -
+         * res trunci post punctum nata ramo invisibilis = semantica
+         * furcae honesta) ET obumbras (creatio bis in eodem fasce) */
         si (p.est_creatio)
         {
-            GestaResOrdo ordo = _res_capere_cum_obumbra(m,
-                p.res_id, obumbrae, m->piscina);
+            GestaResOrdo ordo = _res_validationis_capere(m,
+                p.res_id, obumbrae, ramus, m->piscina);
 
             si (ordo.exsistit)
             {
@@ -1945,7 +2038,7 @@ _fascis_scribere (GestaMundus* m,
             p.event_id = _litterae(m->piscina, _ch(uev));
         }
 
-        violatio = _eventum_validare(m, &p, obumbrae);
+        violatio = _eventum_validare(m, &p, obumbrae, ramus);
         {
             GestaEventumParatum* locus =
                 (GestaEventumParatum*)xar_addere(parata);
@@ -2028,7 +2121,7 @@ _fascis_scribere (GestaMundus* m,
             (constans GestaEventumParatum*)xar_obtinere(parata,
                 i);
 
-        si (!_eventum_inserere(m, p, nunc))
+        si (!_eventum_inserere(m, p, nunc, ramus))
         {
             (vacuum)scrinium_revolvere(m->scrinium);
             redde FALSUM;
@@ -2076,7 +2169,7 @@ gesta_fascis_scribere (GestaMundus* mundus,
         }
     }
     si (!_fascis_scribere(mundus, eventa, numerus, res_ids_out,
-            vacua))
+            vacua, NIHIL))
     {
         redde FALSUM;
     }
@@ -2118,7 +2211,8 @@ gesta_scribere (GestaMundus* mundus, constans GestaEventum* eventum,
     }
     unus.event_id = NIHIL;
     unus.eventum = *eventum;
-    si (!_fascis_scribere(mundus, &unus, I, res_id_out, vacua))
+    si (!_fascis_scribere(mundus, &unus, I, res_id_out, vacua,
+            NIHIL))
     {
         redde FALSUM;
     }
@@ -2132,6 +2226,572 @@ gesta_scribere (GestaMundus* mundus, constans GestaEventum* eventum,
     {
         _provectionem_excitare(mundus, res_id_out);
     }
+    redde VERUM;
+}
+
+b32
+gesta_in_ramo_scribere (GestaMundus* mundus,
+    constans GestaEventum* eventum, constans character* ramus,
+    character* res_id_out)
+{
+    GestaFascisEventum unus;
+    chorda vacua;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    si (mundus == NIHIL || eventum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!_ramus_datus(ramus))
+    {
+        redde gesta_scribere(mundus, eventum, res_id_out);
+    }
+    unus.event_id = NIHIL;
+    unus.eventum = *eventum;
+    /* SINE plicatura, SINE excitatione - scripturae ramorum
+     * indices motoremque trunci numquam tangunt (decisiones 7/12);
+     * re-ingressus in terram processuum per fusionem solam */
+    redde _fascis_scribere(mundus, &unus, I, res_id_out, vacua,
+        ramus);
+}
+
+/* ==================================================
+ * Vita ramorum (K4 frustum B) - creare/enumerare/abicere/
+ * confligentia/fundere
+ * ==================================================
+ * Ramus = res generis "ramus" IN TRUNCO - vita per viam scripturae
+ * ordinariam (creatio/status), acta honesta. ABICERE FLAGSHIP
+ * (charta E3: rami oraculi demo-ware erant - abicere numquam
+ * cucurrit; nostrum vile consulto). FUSIO = replay-on-merge:
+ * copiae CRUDAE in truncum (numquam per _fascis_scribere -
+ * revalidatio notas phantasma pareret, E2-B3), transactione UNA
+ * cum statu fusus (D2), attributione servata (D3), verrere sondae
+ * post plicaturam (D4). */
+
+b32
+gesta_ramum_creare (GestaMundus* mundus,
+    constans character* titulus, constans character* parens,
+    constans character* actor, Piscina* piscina,
+    character* res_id_out)
+{
+    JsonValor* d;
+    GestaEventum e;
+    chorda dj;
+
+    si (mundus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (titulus == NIHIL || titulus[0] == '\0' || piscina == NIHIL)
+    {
+        redde _fractum(mundus, "ramo titulus et piscina"
+            " requiruntur");
+    }
+    /* parens: truncus (NIHIL/"") aut ramus ACTIVUS */
+    si (_ramus_datus(parens))
+    {
+        GestaResOrdo p_ordo = _res_capere(mundus, _ch(parens),
+            piscina);
+
+        si (!p_ordo.exsistit
+            || !_chorda_est(p_ordo.genus, "ramus"))
+        {
+            redde _fractum(mundus, "parens ramus ignotus");
+        }
+        si (!_chorda_est(p_ordo.status, "activus"))
+        {
+            redde _fractum(mundus, "parens ramus non activus");
+        }
+    }
+    /* titulus inter ACTIVOS unicus (E1-B9: quaesitum unum, non
+     * ambulatio nominum O(n) oraculi) */
+    {
+        ScriniumEnuntiatum* e_t = scrinium_praeparare(
+            mundus->scrinium,
+            "SELECT COUNT(*) FROM res WHERE genus = 'ramus'"
+            " AND status = 'activus' AND titulus = ?");
+
+        si (e_t == NIHIL)
+        {
+            redde _fractum(mundus,
+                scrinium_error(mundus->scrinium));
+        }
+        scrinium_ligare_textum(e_t, I, _ch(titulus));
+        si (scrinium_gradi(e_t) == SCRINIUM_ORDO
+            && scrinium_columna_numerus(e_t, 0) > ZEPHYRUM)
+        {
+            scrinium_finire(e_t);
+            redde _fractum(mundus, "titulus rami inter activos"
+                " duplicatus");
+        }
+        scrinium_finire(e_t);
+    }
+    /* punctum = seq ANTE creationem - creatio ipsa ordo trunci
+     * post furcam est (ramo proprio invisibilis, recte) */
+    d = json_objectum_creare(piscina);
+    json_objectum_ponere(d, "genus",
+        json_chorda_creare(piscina, _ch("ramus")));
+    json_objectum_ponere(d, "titulus",
+        json_chorda_creare(piscina, _ch(titulus)));
+    json_objectum_ponere(d, "parens",
+        json_chorda_creare(piscina,
+            _ch(parens != NIHIL ? parens : "")));
+    json_objectum_ponere(d, "punctum",
+        json_integer_creare(piscina, gesta_seq_ultima(mundus)));
+    dj = json_scribere(d, piscina);
+    e.res_id = NIHIL;
+    e.genus_eventus = "creatio";
+    e.datum = _litterae(piscina, dj);
+    e.actor = actor != NIHIL ? actor : "machina";
+    e.origo = "gesta-ramus";
+    redde gesta_scribere(mundus, &e, res_id_out);
+}
+
+Xar*
+gesta_ramos_enumerare (GestaMundus* mundus, Piscina* piscina)
+{
+    Xar* fructus;
+    ScriniumEnuntiatum* e;
+
+    si (mundus == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fructus = xar_creare(piscina, (i32)magnitudo(GestaRamusOrdo));
+    e = scrinium_praeparare(mundus->scrinium,
+        "SELECT res_id, titulus, status, datum FROM res"
+        " WHERE genus = 'ramus' ORDER BY res_id");
+    si (fructus == NIHIL || e == NIHIL)
+    {
+        redde NIHIL;
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        GestaRamusOrdo* o = (GestaRamusOrdo*)xar_addere(fructus);
+        chorda datum;
+        JsonResultus r;
+
+        si (o == NIHIL)
+        {
+            frange;
+        }
+        memset(o, ZEPHYRUM, magnitudo(GestaRamusOrdo));
+        o->res_id = scrinium_columna_textus(e, 0, piscina);
+        o->titulus = scrinium_columna_textus(e, I, piscina);
+        o->status = scrinium_columna_textus(e, II, piscina);
+        datum = scrinium_columna_textus(e, III, piscina);
+        r = json_legere(datum, piscina);
+        si (r.successus && json_est_objectum(r.radix))
+        {
+            JsonValor* v_parens = json_objectum_capere(r.radix,
+                "parens");
+            JsonValor* v_punctum = json_objectum_capere(r.radix,
+                "punctum");
+
+            si (v_parens != NIHIL && json_est_chorda(v_parens))
+            {
+                o->parens = v_parens != NIHIL
+                    ? json_ad_chorda(v_parens) : _ch("");
+            }
+            si (v_punctum != NIHIL && json_est_integer(v_punctum))
+            {
+                o->punctum = json_ad_integer(v_punctum);
+            }
+        }
+    }
+    scrinium_finire(e);
+    redde fructus;
+}
+
+b32
+gesta_ramum_abicere (GestaMundus* mundus, constans character* ramus,
+    constans character* actor)
+{
+    GestaResOrdo ordo;
+    GestaEventum e;
+
+    si (mundus == NIHIL || !_ramus_datus(ramus))
+    {
+        redde FALSUM;
+    }
+    ordo = _res_capere(mundus, _ch(ramus), mundus->piscina);
+    si (!ordo.exsistit || !_chorda_est(ordo.genus, "ramus"))
+    {
+        redde _fractum(mundus, "ramus ignotus");
+    }
+    si (!_chorda_est(ordo.status, "activus"))
+    {
+        redde _fractum(mundus, "ramus non activus");
+    }
+    /* FLAGSHIP: eventus UNUS - abicere gratis, fingere audacter */
+    e.res_id = ramus;
+    e.genus_eventus = "status";
+    e.datum = "{\"novus\":\"abiectus\"}";
+    e.actor = actor != NIHIL ? actor : "machina";
+    e.origo = "gesta-ramus";
+    redde gesta_scribere(mundus, &e, NIHIL);
+}
+
+Xar*
+gesta_confligentia (GestaMundus* mundus, constans character* ramus,
+    Piscina* piscina)
+{
+    Xar* fructus;
+    Xar* rei;      /* chorda - res_id confligentium */
+    GestaResOrdo r_ordo;
+    s64 punctum = ZEPHYRUM;
+    i32 i;
+
+    si (mundus == NIHIL || piscina == NIHIL
+        || !_ramus_datus(ramus))
+    {
+        redde NIHIL;
+    }
+    r_ordo = _res_capere(mundus, _ch(ramus), piscina);
+    si (!r_ordo.exsistit || !_chorda_est(r_ordo.genus, "ramus"))
+    {
+        (vacuum)_fractum(mundus, "ramus ignotus");
+        redde NIHIL;
+    }
+    {
+        JsonResultus r = json_legere(r_ordo.datum, piscina);
+        JsonValor* v_p = (r.successus
+            && json_est_objectum(r.radix))
+            ? json_objectum_capere(r.radix, "punctum") : NIHIL;
+
+        si (v_p != NIHIL && json_est_integer(v_p))
+        {
+            punctum = json_ad_integer(v_p);
+        }
+    }
+    rei = xar_creare(piscina, (i32)magnitudo(chorda));
+    fructus = xar_creare(piscina,
+        (i32)magnitudo(GestaConfligentia));
+    si (rei == NIHIL || fructus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    /* res eadem utrimque post punctum tacta (definitio oraculi) */
+    {
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            mundus->scrinium,
+            "SELECT DISTINCT t1.res_id FROM tessellae t1"
+            " WHERE t1.branch_id = ?1 AND EXISTS"
+            " (SELECT 1 FROM tessellae t2 WHERE t2.res_id ="
+            " t1.res_id AND t2.branch_id = '' AND t2.seq > ?2)"
+            " ORDER BY t1.res_id");
+
+        si (e == NIHIL)
+        {
+            redde NIHIL;
+        }
+        scrinium_ligare_textum(e, I, _ch(ramus));
+        scrinium_ligare_numerum(e, II, punctum);
+        dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            chorda* c = (chorda*)xar_addere(rei);
+
+            si (c != NIHIL)
+            {
+                *c = scrinium_columna_textus(e, 0, piscina);
+            }
+        }
+        scrinium_finire(e);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(rei); i++)
+    {
+        chorda* rid = (chorda*)xar_obtinere(rei, i);
+        GestaConfligentia* con;
+        GestaResOrdo trunci;
+        GestaResOrdo rami;
+
+        si (rid == NIHIL)
+        {
+            perge;
+        }
+        trunci = _res_capere(mundus, *rid, piscina);
+        rami = _res_in_ramo_capere(mundus, *rid, ramus, piscina);
+        con = (GestaConfligentia*)xar_addere(fructus);
+        si (con == NIHIL)
+        {
+            redde NIHIL;
+        }
+        con->res_id = *rid;
+        con->status_trunci = trunci.exsistit ? trunci.datum
+            : _ch("");
+        con->status_rami = rami.exsistit ? rami.datum : _ch("");
+    }
+    redde fructus;
+}
+
+/* copianda: eventus rami materializati ANTE insertionem (SELECT
+ * vivum + INSERT in tabulam eandem vitatur) */
+nomen structura {
+    chorda res_id;
+    chorda genus_eventus;
+    chorda datum;
+    chorda actor;
+    chorda creatum;
+} GestaCopianda;
+
+/* copiam unam in truncum inserere: INSERT crudum (branch_id '',
+ * origo fusionis, attributio SERVATA - D3: columna fontis unica
+ * oraculi actorem destruebat) + linea annalium + sordida (indices
+ * trunci copias videre debent) - intra transactionem apertam
+ * fusionis. E2-B3: NUMQUAM per _fascis_scribere - ramus iam vixit
+ * record-don't-block, notae custodiae eius IN flumine copiato. */
+interior b32
+_copiam_inserere (GestaMundus* m, chorda res_id,
+    chorda genus_eventus, chorda datum, chorda actor,
+    chorda origo, chorda creatum, Piscina* piscina)
+{
+    character uev[SCRINIUM_ULID_MENSURA];
+    constans character* id_ev;
+    s64 seq;
+    JsonValor* datum_obiectum;
+
+    scrinium_ulid(uev);
+    id_ev = _litterae(m->piscina, _ch(uev));
+    {
+        ScriniumEnuntiatum* ins = scrinium_praeparare(m->scrinium,
+            "INSERT INTO tessellae"
+            " (id, res_id, genus_eventus, datum, actor, origo,"
+            "  creatum, branch_id)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, '')");
+
+        si (ins == NIHIL)
+        {
+            redde _fractum(m, scrinium_error(m->scrinium));
+        }
+        scrinium_ligare_textum(ins, I, _ch(id_ev));
+        scrinium_ligare_textum(ins, II, res_id);
+        scrinium_ligare_textum(ins, III, genus_eventus);
+        scrinium_ligare_textum(ins, IV, datum);
+        scrinium_ligare_textum(ins, V, actor);
+        scrinium_ligare_textum(ins, VI, origo);
+        scrinium_ligare_textum(ins, VII, creatum);
+        si (scrinium_gradi(ins) != SCRINIUM_FACTUM)
+        {
+            scrinium_finire(ins);
+            redde _fractum(m, scrinium_error(m->scrinium));
+        }
+        scrinium_finire(ins);
+    }
+    seq = scrinium_ultimum_id(m->scrinium);
+    {
+        JsonResultus r = json_legere(datum, piscina);
+
+        datum_obiectum = (r.successus
+            && json_est_objectum(r.radix))
+            ? r.radix : json_objectum_creare(m->piscina);
+    }
+    si (!_annalem_appendere(m, seq, id_ev, res_id,
+            _litterae(m->piscina, genus_eventus), datum_obiectum,
+            _litterae(m->piscina, actor),
+            _litterae(m->piscina, origo), NIHIL, creatum))
+    {
+        redde _fractum(m, "annales non appensi");
+    }
+    {
+        ScriniumEnuntiatum* so = scrinium_praeparare(m->scrinium,
+            "INSERT OR IGNORE INTO sordidae (res_id) VALUES (?)");
+
+        si (so != NIHIL)
+        {
+            scrinium_ligare_textum(so, I, res_id);
+            (vacuum)scrinium_gradi(so);
+            scrinium_finire(so);
+        }
+    }
+    redde VERUM;
+}
+
+b32
+gesta_ramum_fundere (GestaMundus* mundus, constans character* ramus,
+    b32 vis, constans character* actor, Piscina* piscina,
+    GestaFusioFructus* exitus)
+{
+    GestaResOrdo r_ordo;
+    Xar* copianda;
+    Xar* status_rei;   /* chorda - sonda post fusionem (D4) */
+    chorda origo_fusionis;
+    chorda nunc;
+    i32 i;
+
+    si (exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(exitus, ZEPHYRUM, magnitudo(GestaFusioFructus));
+    exitus->causa = "";
+    si (mundus == NIHIL || piscina == NIHIL
+        || !_ramus_datus(ramus))
+    {
+        redde FALSUM;
+    }
+    r_ordo = _res_capere(mundus, _ch(ramus), piscina);
+    si (!r_ordo.exsistit || !_chorda_est(r_ordo.genus, "ramus"))
+    {
+        redde _fractum(mundus, "ramus ignotus");
+    }
+    si (!_chorda_est(r_ordo.status, "activus"))
+    {
+        exitus->causa = "ramus non activus";
+        redde VERUM;
+    }
+    /* decisio 17: fusio de imo sursum - parens fusus aut truncus */
+    {
+        JsonResultus r = json_legere(r_ordo.datum, piscina);
+        JsonValor* v_parens = (r.successus
+            && json_est_objectum(r.radix))
+            ? json_objectum_capere(r.radix, "parens") : NIHIL;
+        chorda c_parens = (v_parens != NIHIL
+            && json_est_chorda(v_parens))
+            ? json_ad_chorda(v_parens) : _ch("");
+
+        si (c_parens.mensura > ZEPHYRUM)
+        {
+            GestaResOrdo p_ordo = _res_capere(mundus, c_parens,
+                piscina);
+
+            si (!p_ordo.exsistit
+                || !_chorda_est(p_ordo.status, "fusus"))
+            {
+                exitus->causa = "parens non fusus (fusio de imo"
+                    " sursum)";
+                redde VERUM;
+            }
+        }
+    }
+    /* confligentiae obstant nisi vis */
+    {
+        Xar* conf = gesta_confligentia(mundus, ramus, piscina);
+
+        si (conf == NIHIL)
+        {
+            redde FALSUM;
+        }
+        exitus->confligentia_numerus = xar_numerus(conf);
+        si (xar_numerus(conf) > ZEPHYRUM && !vis)
+        {
+            exitus->causa = "confligentiae stant (vis cogit)";
+            redde VERUM;
+        }
+    }
+    {
+        ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+            64);
+
+        si (aed == NIHIL)
+        {
+            redde _fractum(mundus, "aedificator fractus");
+        }
+        chorda_aedificator_appendere_literis(aed, "merge:");
+        chorda_aedificator_appendere_chorda(aed, r_ordo.titulus);
+        origo_fusionis = chorda_aedificator_finire(aed);
+    }
+    /* materializatio eventuum rami ordine seq (SELECT clausum ante
+     * insertiones) */
+    copianda = xar_creare(piscina, (i32)magnitudo(GestaCopianda));
+    status_rei = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (copianda == NIHIL || status_rei == NIHIL)
+    {
+        redde _fractum(mundus, "piscina exhausta");
+    }
+    {
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            mundus->scrinium,
+            "SELECT res_id, genus_eventus, datum, actor, creatum"
+            " FROM tessellae WHERE branch_id = ? ORDER BY seq");
+
+        si (e == NIHIL)
+        {
+            redde _fractum(mundus,
+                scrinium_error(mundus->scrinium));
+        }
+        scrinium_ligare_textum(e, I, _ch(ramus));
+        dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            GestaCopianda* c = (GestaCopianda*)xar_addere(
+                copianda);
+
+            si (c == NIHIL)
+            {
+                scrinium_finire(e);
+                redde _fractum(mundus, "piscina exhausta");
+            }
+            c->res_id = scrinium_columna_textus(e, 0, piscina);
+            c->genus_eventus = scrinium_columna_textus(e, I,
+                piscina);
+            c->datum = scrinium_columna_textus(e, II, piscina);
+            c->actor = scrinium_columna_textus(e, III, piscina);
+            c->creatum = scrinium_columna_textus(e, IV, piscina);
+        }
+        scrinium_finire(e);
+    }
+    nunc = _nunc_capere(mundus);
+    /* transactio UNA: copiae omnes + status fusus (D2 - oraculum
+     * ansam copiarum solam involvebat; ruina inter = ramus semel
+     * fusus semelque activus, historia duplex) */
+    si (!scrinium_incipere(mundus->scrinium))
+    {
+        redde _fractum(mundus, scrinium_error(mundus->scrinium));
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(copianda); i++)
+    {
+        GestaCopianda* c = (GestaCopianda*)xar_obtinere(copianda,
+            i);
+
+        si (c == NIHIL || !_copiam_inserere(mundus, c->res_id,
+                c->genus_eventus, c->datum, c->actor,
+                origo_fusionis, c->creatum, piscina))
+        {
+            (vacuum)scrinium_revolvere(mundus->scrinium);
+            redde FALSUM;
+        }
+        si (_chorda_est(c->genus_eventus, "status"))
+        {
+            chorda* s = (chorda*)xar_addere(status_rei);
+
+            si (s != NIHIL)
+            {
+                *s = c->res_id;
+            }
+        }
+    }
+    si (!_copiam_inserere(mundus, _ch(ramus), _ch("status"),
+            _ch("{\"novus\":\"fusus\"}"),
+            _ch(actor != NIHIL ? actor : "machina"),
+            origo_fusionis, nunc, piscina))
+    {
+        (vacuum)scrinium_revolvere(mundus->scrinium);
+        redde FALSUM;
+    }
+    si (!scrinium_committere(mundus->scrinium))
+    {
+        (vacuum)scrinium_revolvere(mundus->scrinium);
+        redde _fractum(mundus, scrinium_error(mundus->scrinium));
+    }
+    si (!gesta_plicare(mundus))
+    {
+        redde FALSUM;
+    }
+    /* verrere sondae (D4 - oraculum processus in fusione numquam
+     * provehebat): eventus STATUS copiati processus trunci
+     * provehunt - "opus perfectum" fusum instantiam suam provehit */
+    per (i = ZEPHYRUM; i < xar_numerus(status_rei); i++)
+    {
+        chorda* s = (chorda*)xar_obtinere(status_rei, i);
+
+        si (s != NIHIL)
+        {
+            _provectionem_excitare(mundus,
+                _litterae(piscina, *s));
+        }
+    }
+    exitus->fusa = VERUM;
+    exitus->copiata = xar_numerus(copianda);
     redde VERUM;
 }
 
@@ -2740,9 +3400,11 @@ gesta_annales_verificare (GestaMundus* mundus)
     {
         redde _fractum(mundus, "annales illegibiles");
     }
+    /* K4 (decisio 16): branch_id in comparationem intrat -
+     * instrumentum veritatis physicae ramos quoque tegit */
     e = scrinium_praeparare(mundus->scrinium,
         "SELECT seq, id, res_id, genus_eventus, datum, actor,"
-        " origo, creatum FROM tessellae ORDER BY seq");
+        " origo, creatum, branch_id FROM tessellae ORDER BY seq");
     si (e == NIHIL)
     {
         redde _fractum(mundus, scrinium_error(mundus->scrinium));
@@ -2803,6 +3465,8 @@ gesta_annales_verificare (GestaMundus* mundus)
                 mundus->piscina);
             chorda cre_o = scrinium_columna_textus(e, VII,
                 mundus->piscina);
+            chorda brc_o = scrinium_columna_textus(e, VIII,
+                mundus->piscina);
             JsonValor* v_datum = json_objectum_capere(r.radix,
                 "datum");
             chorda dat_l = (v_datum != NIHIL)
@@ -2830,7 +3494,10 @@ gesta_annales_verificare (GestaMundus* mundus)
                        _litterae(mundus->piscina, org_o))
                 || !_chorda_est(json_ad_chorda(json_objectum_capere(
                        r.radix, "creatum")),
-                       _litterae(mundus->piscina, cre_o)))
+                       _litterae(mundus->piscina, cre_o))
+                || !_chorda_est(json_ad_chorda(json_objectum_capere(
+                       r.radix, "branch_id")),
+                       _litterae(mundus->piscina, brc_o)))
             {
                 mundus->error = "annales: linea ordini non"
                     " congruit";
@@ -3867,7 +4534,7 @@ _actionem_recusare (GestaMundus* m, constans character* titulus,
         json_scribere(d, piscina));
     unus.eventum.actor = actor;
     unus.eventum.origo = origo;
-    si (_fascis_scribere(m, &unus, I, NIHIL, vacua))
+    si (_fascis_scribere(m, &unus, I, NIHIL, vacua, NIHIL))
     {
         (vacuum)gesta_plicare(m);
     }
@@ -4161,7 +4828,8 @@ gesta_agere (GestaMundus* mundus, constans character* actio_titulus,
         fascis[n_eff].eventum.origo = origo;
     }
 
-    si (!_fascis_scribere(mundus, fascis, n_eff + I, NIHIL, nunc))
+    si (!_fascis_scribere(mundus, fascis, n_eff + I, NIHIL, nunc,
+            NIHIL))
     {
         /* apparatus in scriptura fractus - fascis totus
          * revolutus, error mundi iam positus */
@@ -4407,7 +5075,7 @@ _emissiones_scribere (GestaMundus* m, Xar* emissiones)
         plana[i] = *(GestaFascisEventum*)xar_obtinere(emissiones,
             i);
     }
-    si (!_fascis_scribere(m, plana, n, NIHIL, vacua))
+    si (!_fascis_scribere(m, plana, n, NIHIL, vacua, NIHIL))
     {
         redde FALSUM;
     }
@@ -5177,7 +5845,8 @@ gesta_processum_incipere (GestaMundus* mundus,
             json_scribere(d, piscina));
         unus.eventum.actor = actor_l;
         unus.eventum.origo = origo;
-        si (_fascis_scribere(mundus, &unus, I, NIHIL, vacua))
+        si (_fascis_scribere(mundus, &unus, I, NIHIL, vacua,
+                NIHIL))
         {
             (vacuum)gesta_plicare(mundus);
         }
@@ -5288,7 +5957,8 @@ gesta_processum_incipere (GestaMundus* mundus,
             pos++;
         }
 
-        si (!_fascis_scribere(mundus, fascis, pos, NIHIL, vacua))
+        si (!_fascis_scribere(mundus, fascis, pos, NIHIL, vacua,
+                NIHIL))
         {
             redde FALSUM;
         }

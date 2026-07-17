@@ -60,3 +60,38 @@ assert that requires data to FLOW.
 G9 bar: 498/498 green with kernel edits BEFORE any test additions
 (decomposition + WHERE + migration IV are behaviorally inert on
 trunk); then 562/562 + 114/114 with the K4 goldens (G2, G3).
+
+## 2026-07-16 — K4 chunk B: scriptura + vita ramorum
+
+**Zero bugs in flight** — first-run green (680/680, +118 asserts).
+The E2 must-fixes were sewn into the code before any test ran, and
+the chunk-A read path meant every validation swap had an already-
+tested fold underneath it.
+
+**Decisions this chunk (spec-silent, now owned):**
+- actor param ADDED to gesta_ramum_creare/abicere/fundere beyond
+  the spec signatures. K3 learned this the hard way (actor was
+  retrofitted in chunk C with a perl sweep over every call site);
+  this time the attribution surface ships with the op.
+- Merge copies PRESERVE creatum (the event happened when it
+  happened); merge time is visible through new seq + origo
+  "merge:<t>". Attribution law (D3) extended to time.
+- _copiam_inserere writes sordidae per copied row — owned addition
+  the spec didn't mention: merged res change trunk state, so trunk
+  FTS must reindex them. Verified by G12's quaerere("pacificus")
+  finding the branch-born res post-merge.
+- The copy loop MATERIALIZES branch rows into an Xar before
+  inserting (SELECT closed before INSERT on the same table —
+  sqlite live-scan semantics not worth gambling on).
+- fundere refusals follow the agere pattern: VERUM + fusa FALSUM +
+  causa ("ramus non activus" / "parens non fusus" / "confligentiae
+  stant"); FALSUM reserved for apparatus/ignotus.
+- _res_validationis_capere is the ONE seam for all validation
+  reads (dup-check, machina, all three membrum reads) — the E2-B2
+  "swap as a set" is structural now: you cannot swap half of it.
+
+**Test-law payoff from chunk A**: every isolation section carries
+at least one POSITIVE through-the-seam assert (trunk nota through
+branch fold, FTS finding trunk titles, archaeology reads after
+abicere) — the all-negative-section trap from the chunk-A NULL-bind
+bug informed the whole golden set.

@@ -898,3 +898,58 @@ viam scripturae, permutationes validationis (copia E2-B2 tres una),
 annales branch_id, recusatio generis, creare/enumerare/abicere
 (FLAGSHIP)/confligentia/fundere + verrere sondae, verificare
 intensum. Aureae G1, G4-G8, G10-G16.
+
+## RELATIO K4 FRUSTUM B - SCRIPTURA ET VITA RAMORUM (2026-07-16)
+
+AEDIFICATUM (spec-v2 par IX frustum B):
+- FILATIO RAMI per viam scripturae: _fascis_scribere/_eventum_
+  validare/_eventum_inserere/_annalem_appendere parametrum ramus
+  ferunt (NIHIL/'' = truncus, sedes vocantium trunci VII intactae);
+  branch_id EXPRESSE ligatur (E2-B6); scripturae ramorum sine
+  sordidis sine excitatione (indices/motor caeci per
+  constructionem); porta rami in fasce (exsistat, generis ramus,
+  ACTIVUS); genera non ramificantur (recusatio mechanica, D5).
+- PERMUTATIO VALIDATIONIS UNA SEDE: _res_validationis_capere
+  (trunco = tabula + obumbrae; ramo = plicatura catenae + obumbrae)
+  - lectiones dup-check/machinae/membrorum TRES (E2-B2) per eandem
+  eunt, dimidia permutatio structuraliter impossibilis.
+- VITA: gesta_in_ramo_scribere; gesta_ramum_creare (titulus inter
+  activos unicus quaesito uno E1-B9, punctum ante creationem);
+  gesta_ramos_enumerare; gesta_ramum_abicere FLAGSHIP (eventus
+  UNUS, lectio archaeologica manet); gesta_confligentia (res eadem
+  utrimque post punctum, status ambo plicati); gesta_ramum_fundere
+  (replay-on-merge: materializatio -> transactio UNA copiae crudae
+  attributione ET creato servatis + status fusus [D2/D3] ->
+  plicatura -> verrere sondae super status copiatos [D4]; numquam
+  per _fascis_scribere [E2-B3]; nidificata recusata nisi parens
+  fusus [dec 17]; recusationes more agere: VERUM + causa).
+- verificare INTENSUM: branch_id columna VIII in comparationem
+  (dec 16); restitutio iam circumferebat (K1) - intacta.
+- DECISIONES POSSESSAE: actor in signaturis vitae (lectio K3 -
+  attributio cum ope nascitur, non retrofit); creatum copiarum
+  SERVATUM (eventus quando accidit; tempus fusionis per seq +
+  origo); sordidae per copiam (FTS trunci res fusas videat).
+
+PROBATIONES: mundus m7 (via vera ubique - annales plenae),
+sectiones LI-LVIII: G1 insulatio + G7 recusationes; G4 custodia in
+statu RAMI + insulatio fratrum; G5 membra solum-ramalia sine nota
+phantasma + G6 creatio contra catenam (prae duplicat, post licet -
+furca honesta); G10 abicere; G11 confligentia; G12+G13 fusio
+(recusatio/vis/attributio/origo/FTS/verificare/nidificata de imo
+sursum E2E); G14 verrere sondae (opus fusum processum provehit);
+G8 replicatio proprietas + G15 branch_id medax captus + G16
+restitutio octetim. Asserta 562 -> 680; tabularium 114 intacta.
+INSECTA IN FUGA: ZEPHYRUM (impulsus diagnosticorum auxilia ficta
+duo ante compilationem cepit).
+
+INSTRUMENTA: adhibita - legati diagnostica (ACCIPE bis ante
+compilationem; impulsus post-editionem sedes vocantium VII
+enumeravit - filatio parametri sine grep), excubitor. Asperitates:
+nullae novae. Desideratum: nullum.
+
+PROXIMUM: frustum C (tenens + deploy) - semen v4 genus ramus,
+instrumentum MCP ramus {creare|enumerare|comparare|fundere|
+abicere}, parametrum ramus in addere/gerere/res + lex E2-B1
+(res_id in ramo requiritur), census/tabula RAMI, doctrina v5,
+deploy vivus, G17-G18, SIGILLUM PER RITUM CURRENTEM (opus frusta
+perfectum -> porta-sigilli -> sigillare sponte).
