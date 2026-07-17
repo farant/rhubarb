@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 213 - 2026-07-17T05:44:22.546Z
+seq 219 - 2026-07-17T12:13:06.770Z
 
 ## QUAESTIONES
 
@@ -9,8 +9,8 @@ seq 213 - 2026-07-17T05:44:22.546Z
 - [apertum] Nomina scrinium sigillum insigillata  `gesta meta messis-2026-07`
 - [apertum] Novum Fundamentum 1x11 Nuntium  `fundamentum messis-2026-07`
 - [apertum] Phase-log silvae 407KB  `silva meta messis-2026-07`
-- [apertum] VANA adiudicatio: 74 sedes comparationum mortuarum (messis insectorum)  `examen silva lint messis-2026-07`
 - [apertum] probatio_tcp_servus fluctuans  `tcp messis-2026-07`
+- [laborans] VANA adiudicatio: 74 sedes comparationum mortuarum (messis insectorum)  `examen silva lint messis-2026-07`
 
 ## PARCA
 
@@ -60,6 +60,7 @@ seq 213 - 2026-07-17T05:44:22.546Z
 - Sonda una-ictus diagnostics pull  `legatus lsp messis-2026-07`
 - Tokenizator FTS Latinus  `gesta fts messis-2026-07`
 - arbor.sh: via plagulae ut argumentum  `silva ergonomia`
+- percursus -attributio: ordines via:linea:codex per plagulam in percursu semantico  `silva examen ergonomia lint`
 
 ## DECRETA
 
