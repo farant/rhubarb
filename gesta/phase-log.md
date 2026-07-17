@@ -1026,3 +1026,20 @@ PROXIMUM: K5 palatium (parcum 01KXP9XNE4 parcatum; fontes
 docs/{memory-palace,palace-2,palace-v2-rendering,npc-spec}.md in
 ../bun-libraries) - ritus novus incipiet ibi; aut quod Fran
 trahat.
+
+## K4.1 ERGONOMIA: praefixum ULID (2026-07-17)
+
+Small pull from the instruments debrief: resolving a res by
+remembered ULID prefix ("01KXQ82Z9Z...") gave 'res ignota' - the
+post-compact recall pattern is exactly a prefix. _res_solvere gains
+a LAST-RESORT step (order preserved: exact id -> exact title ->
+unambiguous ULID prefix; existing semantics untouched): 6..25
+Crockford chars, LIKE unique resolves, plural = 'praefixum
+ambiguum' with candidates (the K1.1 title-ambiguity responder grew
+a prefix mode). In ramo the E2-B1 full-id law stands - prefix is a
+trunk courtesy. Alphabet has no LIKE metacharacters, so the bind
+is safe by construction. Tool descriptions + doctrine line +
+miss-text updated. One structural edit slip (anchored an Edit
+below the return-type line - the push cascade caught it in
+seconds). 680 + 153 (144+9) green; examen -posix ACCIPE.
+Residents need relink+reconnect to serve the feature.

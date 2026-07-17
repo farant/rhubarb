@@ -888,6 +888,87 @@ s32 principale (vacuum)
         }
     }
 
+    /* ================================================
+     * praefixum ULID inambiguum (ergonomia 2026-07-17):
+     * recessus ultimus post id exactum + titulum
+     * ================================================ */
+    {
+        character id_a[27];
+        character id_b[27];
+        character praefixum[27];
+        character vocatio[512];
+        constans character* p;
+        i32 k;
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":90,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
+            "\"arguments\":{\"res\":\"Parsura lenta\"}}}");
+        p = strstr(r, "res_id ");
+        CREDO_NON_NIHIL (p);
+        si (p == NIHIL)
+        {
+            redde I;
+        }
+        memcpy(id_a, p + VII, XXVI);
+        id_a[XXVI] = '\0';
+
+        /* praefixum XXV characterum (unicum) resolvit ad id plenum */
+        memcpy(praefixum, id_a, XXV);
+        praefixum[XXV] = '\0';
+        sprintf(vocatio, "{\"jsonrpc\":\"2.0\",\"id\":91,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
+            "\"arguments\":{\"res\":\"%s\"}}}", praefixum);
+        r = _mitte(t, piscina, vocatio);
+        CREDO_VERUM (strstr(r, id_a) != NIHIL);
+        CREDO_VERUM (strstr(r, "res ignota") == NIHIL);
+
+        /* gerere per praefixum: nota scribitur */
+        sprintf(vocatio, "{\"jsonrpc\":\"2.0\",\"id\":92,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"nota\",\"textus\":\"per praefixum scripta\"}}}",
+            praefixum);
+        r = _mitte(t, piscina, vocatio);
+        CREDO_VERUM (strstr(r, "nota") != NIHIL);
+        CREDO_VERUM (strstr(r, "ignota") == NIHIL);
+
+        /* res altera - praefixum COMMUNE ambiguum fit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":93,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Probatio praefixi ambigui\"}}}");
+        p = strstr(r, "res 01");
+        CREDO_NON_NIHIL (p);
+        si (p == NIHIL)
+        {
+            redde I;
+        }
+        memcpy(id_b, p + IV, XXVI);
+        id_b[XXVI] = '\0';
+        per (k = ZEPHYRUM; k < XXVI && id_a[k] == id_b[k]; k++)
+        {
+        }
+        /* ULID eiusdem cursus partem temporis communem habent */
+        CREDO_VERUM (k >= VI);
+        si (k >= VI)
+        {
+            memcpy(praefixum, id_a, (memoriae_index)k);
+            praefixum[k] = '\0';
+            sprintf(vocatio, "{\"jsonrpc\":\"2.0\",\"id\":94,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"res\",\"arguments\":{\"res\":\"%s\"}}}",
+                praefixum);
+            r = _mitte(t, piscina, vocatio);
+            CREDO_VERUM (strstr(r, "praefixum ambiguum") != NIHIL);
+        }
+
+        /* praefixum validum nulli congruens = res ignota */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":95,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
+            "\"arguments\":{\"res\":\"7ZZZZZZZZZ\"}}}");
+        CREDO_VERUM (strstr(r, "res ignota") != NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

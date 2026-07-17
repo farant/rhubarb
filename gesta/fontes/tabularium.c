@@ -24,7 +24,8 @@ interior constans character* constans TABULARII_DOCTRINA =
     "Claude notas/parca/decreta per debriefs SPONTE scribit (sine "
     "confirmatione singula - recensio per quaestiones, non portas). "
     "addere {genus, titulus, corpus?, tags? (commatibus), ancorae? "
-    "(JSON), actor?} = res nova. gerere {res (id aut titulus), "
+    "(JSON), actor?} = res nova. gerere {res (id, praefixum ULID"
+    " inambiguum, aut titulus), "
     "actus: nota|status|nexus|denexus|mutatio|remotio, textus?/"
     "novus?/verbum?/alterum?/clavis?/valor?/datum?} = eventus unus. "
     "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
@@ -677,9 +678,76 @@ _tituli_numerus (Tabularium* t, chorda titulus)
     redde n;
 }
 
+/* praefixum ULID validum? 6..25 characterum alphabeti Crockford
+ * (0-9, A-Z sine I L O U) - reconstructio praefixi ex memoria post
+ * compactionem 'res ignota' dabat (ergonomia 2026-07-17). Sub VI
+ * characteribus periculum congruentiae fortuitae; XXVI = id plenum
+ * (via directa iam tegit). */
+interior b32
+_ulid_praefixus_est (chorda clavis)
+{
+    i32 i;
+
+    si (clavis.mensura < VI || clavis.mensura >= XXVI)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < clavis.mensura; i++)
+    {
+        character c = (character)clavis.datum[i];
+        b32 cifra = c >= '0' && c <= '9';
+        b32 littera = c >= 'A' && c <= 'Z'
+            && c != 'I' && c != 'L' && c != 'O' && c != 'U';
+
+        si (!cifra && !littera)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* res per praefixum res_id: unicum resolvit, plura = ambiguum.
+ * Alphabetum ULID '%'/'_' non continet - LIKE tutum. */
+interior chorda
+_res_per_praefixum (Tabularium* t, chorda praefixum, Piscina* pn,
+    b32* ambiguum_out)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT res_id FROM res WHERE res_id LIKE ? || '%'"
+        " ORDER BY res_id LIMIT 2");
+    chorda inventum;
+
+    inventum.mensura = ZEPHYRUM;
+    inventum.datum = NIHIL;
+    si (e == NIHIL)
+    {
+        redde inventum;
+    }
+    scrinium_ligare_textum(e, I, praefixum);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        inventum = scrinium_columna_textus(e, 0, pn);
+        si (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            /* plura congruunt - ambiguum */
+            si (ambiguum_out != NIHIL)
+            {
+                *ambiguum_out = VERUM;
+            }
+            inventum.mensura = ZEPHYRUM;
+            inventum.datum = NIHIL;
+        }
+    }
+    scrinium_finire(e);
+    redde inventum;
+}
+
 /* clavem (id aut titulum) ad res_id solvere; titulus pluribus rebus
  * = AMBIGUUS (vacua + vexillum - exemplar legati multi-definitorum;
- * LIMIT-1 tacitum erat acies, quaestio 'Tituli duplicati') */
+ * LIMIT-1 tacitum erat acies, quaestio 'Tituli duplicati').
+ * Recessus ultimus: praefixum ULID inambiguum (2026-07-17). */
 interior chorda
 _res_solvere (Tabularium* t, chorda clavis, Piscina* pn,
     b32* ambiguum_out)
@@ -687,6 +755,7 @@ _res_solvere (Tabularium* t, chorda clavis, Piscina* pn,
     chorda d = gesta_res_datum(t->mundus,
         _litterae(pn, clavis), pn);
     chorda vacua;
+    chorda per_titulum;
 
     si (ambiguum_out != NIHIL)
     {
@@ -706,21 +775,42 @@ _res_solvere (Tabularium* t, chorda clavis, Piscina* pn,
         vacua.datum = NIHIL;
         redde vacua;
     }
-    redde _res_per_titulum(t, clavis, pn);
+    per_titulum = _res_per_titulum(t, clavis, pn);
+    si (per_titulum.mensura > ZEPHYRUM)
+    {
+        redde per_titulum;
+    }
+    /* recessus ultimus: praefixum ULID inambiguum (ordo servatus -
+     * id exactum, titulus exactus, TUM praefixum; semantica
+     * exsistens intacta). Trunci solum - in ramo lex E2-B1 res_id
+     * plenum tenet. */
+    si (_ulid_praefixus_est(clavis))
+    {
+        redde _res_per_praefixum(t, clavis, pn, ambiguum_out);
+    }
+    redde per_titulum;
 }
 
-/* candidatos ambiguitatis nominare (res_id discernit) */
+/* candidatos ambiguitatis nominare (res_id discernit). Modus per
+ * fontem: titulus pluribus rebus = quaestio tituli; alioquin
+ * praefixum ULID pluribus congruens = quaestio praefixi. */
 interior vacuum
 _ambiguitatem_respondere (Tabularium* t, Piscina* pn, JsonValor* id,
     chorda titulus, FILE* effusio)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(pn, CCLVI);
+    b32 per_praefixum = _tituli_numerus(t, titulus) <= (s64)I
+        && _ulid_praefixus_est(titulus);
     ScriniumEnuntiatum* e = scrinium_praeparare(
         gesta_scrinium(t->mundus),
-        "SELECT res_id, genus, status FROM res WHERE titulus = ?"
-        " ORDER BY res_id LIMIT 5");
+        per_praefixum
+        ? "SELECT res_id, genus, status FROM res WHERE res_id"
+          " LIKE ? || '%' ORDER BY res_id LIMIT 5"
+        : "SELECT res_id, genus, status FROM res WHERE titulus = ?"
+          " ORDER BY res_id LIMIT 5");
 
-    chorda_aedificator_appendere_literis(aed, "titulus ambiguus '");
+    chorda_aedificator_appendere_literis(aed, per_praefixum
+        ? "praefixum ambiguum '" : "titulus ambiguus '");
     chorda_aedificator_appendere_chorda(aed, titulus);
     chorda_aedificator_appendere_literis(aed,
         "' - res_id adhibe:");
@@ -1486,7 +1576,7 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         si (res_id.mensura == ZEPHYRUM)
         {
             _textum_respondere(t, pn, effusio, id,
-                _ch("res ignota (id aut titulus exactus)"), VERUM);
+                _ch("res ignota (id, praefixum inambiguum, aut titulus exactus)"), VERUM);
             redde;
         }
     }
@@ -3024,8 +3114,8 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
           " invisibilis usque ad fusionem)", FALSUM }
     };
     interior constans TabArgumentum ARG_GERERE[] = {
-        { "res", "res_id aut titulus exactus (in ramo: res_id"
-          " SOLUM)", VERUM },
+        { "res", "res_id (aut praefixum ULID inambiguum >= 6 char.)"
+          " aut titulus exactus (in ramo: res_id SOLUM)", VERUM },
         { "actus", "nota|status|nexus|denexus|mutatio|remotio",
           VERUM },
         { "textus", "pro nota", FALSUM },
@@ -3048,8 +3138,8 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         { "tag", "filtrum tagi (terminus FTS additus)", FALSUM }
     };
     interior constans TabArgumentum ARG_RES[] = {
-        { "res", "res_id aut titulus exactus (in ramo: res_id"
-          " SOLUM)", VERUM },
+        { "res", "res_id (aut praefixum ULID inambiguum >= 6 char.)"
+          " aut titulus exactus (in ramo: res_id SOLUM)", VERUM },
         { "ramus", "titulus rami - lectio plicaturae ramalis",
           FALSUM }
     };
