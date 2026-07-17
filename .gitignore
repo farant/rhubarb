@@ -30,3 +30,6 @@ tabularium.db-shm
 
 # effusum debug probationum roundtrip (scriptum in fractione - regenerabile)
 probationes/results/
+
+# stampa commissionis vigiliarum (uncus post-commit tangit)
+.vigilia_commissum

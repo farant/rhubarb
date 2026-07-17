@@ -227,6 +227,79 @@ s32 principale (vacuum)
         CREDO_VERUM (!vigilia_continet(v, _ch("")));
     }
 
+    /* ========================================================
+     * V. Politica tacendi: agnitio explicita + re-armationes
+     * quattuor (numerus/quies/commissio/causa) - horologium
+     * iniectum, determinismus sine somnis
+     * ======================================================== */
+    {
+        VigiliaConfiguratio cfg;
+        Vigilia* v;
+        character hex[SIGILLUM_HEX_MENSURA];
+        constans character* contentum = "binarium tacendi";
+        s64 t = (s64)1000;
+
+        remove(VIGILIA_VIA_COMMISSI);
+        CREDO_VERUM (_scribere(VIA_BIN, contentum));
+        _sigillum_hex(contentum, hex);
+        CREDO_VERUM (_scribere(VIA_MAN, VIA_FON "\n"));
+        cfg.signum = hex;
+        cfg.via_binarii = VIA_BIN;
+        cfg.via_manifesti = VIA_MAN;
+        v = vigilia_creare(piscina, &cfg);
+        CREDO_NON_NIHIL (v);
+
+        /* recens: nihil tacendum; dicenda NIHIL */
+        CREDO_VERUM (!vigilia_tacere(v, X, t));
+        CREDO_VERUM (vigilia_cautio_dicenda(v, t) == NIHIL);
+
+        /* fons superat -> cautio dicenda */
+        CREDO_VERUM (_scribere(VIA_FON, "integer x;\n"));
+        CREDO_VERUM (vigilia_inspicere(v, piscina)
+            == VIGILIA_FONTES_SUPERANT);
+        t++;
+        CREDO_NON_NIHIL (vigilia_cautio_dicenda(v, t));
+
+        /* NUMERUS: III tacita, quartum loquitur */
+        CREDO_VERUM (vigilia_tacere(v, III, t));
+        t++;
+        CREDO_VERUM (vigilia_cautio_dicenda(v, t) == NIHIL);
+        t++;
+        CREDO_VERUM (vigilia_cautio_dicenda(v, t) == NIHIL);
+        t++;
+        CREDO_VERUM (vigilia_cautio_dicenda(v, t) == NIHIL);
+        t++;
+        CREDO_NON_NIHIL (vigilia_cautio_dicenda(v, t));
+
+        /* QUIES: saltus horologii >= CCC re-armat ante numerum */
+        CREDO_VERUM (vigilia_tacere(v, X, t));
+        t++;
+        CREDO_VERUM (vigilia_cautio_dicenda(v, t) == NIHIL);
+        t += (s64)CCC;
+        CREDO_NON_NIHIL (vigilia_cautio_dicenda(v, t));
+
+        /* COMMISSIO: stampa mota re-armat */
+        CREDO_VERUM (vigilia_tacere(v, X, t));
+        t++;
+        CREDO_VERUM (vigilia_cautio_dicenda(v, t) == NIHIL);
+        CREDO_VERUM (_scribere(VIGILIA_VIA_COMMISSI, "stampa\n"));
+        t++;
+        CREDO_NON_NIHIL (vigilia_cautio_dicenda(v, t));
+
+        /* CAUSA NOVA: promotio fontes -> binarium loquitur per
+         * agnitionem veterem */
+        CREDO_VERUM (vigilia_tacere(v, X, t));
+        t++;
+        CREDO_VERUM (vigilia_cautio_dicenda(v, t) == NIHIL);
+        CREDO_VERUM (_scribere(VIA_BIN, "binarium reaedificatum"));
+        CREDO_VERUM (vigilia_inspicere(v, piscina)
+            == VIGILIA_BINARIUM_NOVIUS);
+        t++;
+        CREDO_NON_NIHIL (vigilia_cautio_dicenda(v, t));
+
+        remove(VIGILIA_VIA_COMMISSI);
+    }
+
     _purgare();
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

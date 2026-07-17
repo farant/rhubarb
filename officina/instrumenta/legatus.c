@@ -26,6 +26,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>   /* horologium politicae tacendi (sutura POSIX) */
 
 #define LEGATUS_VIA_MAXIMA 1024
 
@@ -1334,13 +1335,19 @@ _analysare_et_publicare (Legatus* l, Piscina* pn,
             via_s2.mensura = doc->via.mensura - II;
             in_clausura = vigilia_continet(l->vigilia, via_s2);
         }
-        si (in_clausura || !l->stalus_nuntiatum)
+        si ((in_clausura || !l->stalus_nuntiatum)
+            && vigilia_cautio_dicenda(l->vigilia,
+                (s64)time(NIHIL)) != NIHIL)
         {
-            character nuntius_b[LEGATUS_VIA_MAXIMA + CXXVIII];
+            character nuntius_b[LEGATUS_VIA_MAXIMA + CXCII];
 
-            sprintf(nuntius_b, "LEGATUS IPSE STALUS: %.900s recentior "
-                "binario residente - responsa fortasse vetera; "
-                "/reload-plugins renovat", vigilia_causa(l->vigilia));
+            /* costuma vera (2026-07-17): status RESIDENTIS, non
+             * plagulae huius - titulus id dicit; tacere (MCP)
+             * etiam hanc superficiem tacet (numerus communis) */
+            sprintf(nuntius_b, "VIGILIA LEGATI (status residentis,"
+                " non plagulae): %.900s recentior binario -"
+                " /reload-plugins renovat; tacere N supprimit",
+                vigilia_causa(l->vigilia));
             json_tabulatum_addere(lista, _diagnosticum_json(pn,
                 ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, II, nuntius_b,
                 "excubitor"));
@@ -4824,6 +4831,15 @@ _mcp_toolslist_tractare (Legatus* l, Piscina* pn, JsonValor* id)
         "via",
         "OPTIONALE: suffixum viae sedis (e.g. probatio_piscina.c) -"
         " titulos multi-definitos disambiguat"));
+    json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
+        "tacere",
+        "Cautionem vigiliae (residens obsoletus) per N responsa"
+        " supprimere - agnitio explicita; numerus communis MCP +"
+        " LSP. Re-armatur: numero exhausto, quiete 300 s,"
+        " commissione git, causa nova.",
+        "responsa",
+        "numerus responsorum supprimendorum (positivus; limen 500)",
+        NIHIL, NIHIL));
     json_objectum_ponere(resultatum, "tools", instrumenta);
     _respondere(l, tabellarius_responsum(pn, id, resultatum));
 }
@@ -4838,21 +4854,29 @@ _mcp_textum_respondere (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* fragmentum = json_objectum_creare(pn);
     chorda corpus = textus;
 
-    si (vigilia_cautio(l->vigilia) != NIHIL)
     {
-        ChordaAedificator* aed = chorda_aedificator_creare(pn,
-            (memoriae_index)textus.mensura + LEGATUS_VIA_MAXIMA
-                + CCLVI);
+        /* politica tacendi (2026-07-17): dicenda pro cruda -
+         * numerus communis omnibus superficiebus residentis
+         * (MCP + LSP) */
+        constans character* cautio = vigilia_cautio_dicenda(
+            l->vigilia, (s64)time(NIHIL));
 
-        si (aed != NIHIL)
+        si (cautio != NIHIL)
         {
-            (vacuum)chorda_aedificator_appendere_chorda(aed,
-                textus);
-            (vacuum)chorda_aedificator_appendere_literis(aed,
-                "\n");
-            (vacuum)chorda_aedificator_appendere_literis(aed,
-                vigilia_cautio(l->vigilia));
-            corpus = chorda_aedificator_finire(aed);
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                (memoriae_index)textus.mensura + LEGATUS_VIA_MAXIMA
+                    + CCLVI);
+
+            si (aed != NIHIL)
+            {
+                (vacuum)chorda_aedificator_appendere_chorda(aed,
+                    textus);
+                (vacuum)chorda_aedificator_appendere_literis(aed,
+                    "\n");
+                (vacuum)chorda_aedificator_appendere_literis(aed,
+                    cautio);
+                corpus = chorda_aedificator_finire(aed);
+            }
         }
     }
     json_objectum_ponere(fragmentum, "type",
@@ -6336,6 +6360,59 @@ _legati_inclusiones (Legatus* l, Piscina* pn, JsonValor* id,
         chorda_aedificator_finire(aed), FALSUM);
 }
 
+/* tacere: cautionem vigiliae N responsis supprimere (politica in
+ * lib/vigilia; numerus communis superficiebus MCP + LSP) */
+interior vacuum
+_legati_tacere (Legatus* l, Piscina* pn, JsonValor* id,
+    JsonValor* argumenta)
+{
+    JsonValor* v = (argumenta != NIHIL)
+        ? json_objectum_capere(argumenta, "responsa") : NIHIL;
+    s64 responsa = ZEPHYRUM;
+    character buf[CXCII];
+    chorda textus;
+    unio { constans character* l; i8* m; } u;
+
+    si (v != NIHIL && json_est_integer(v))
+    {
+        responsa = json_ad_integer(v);
+    }
+    alioquin si (v != NIHIL && json_est_chorda(v))
+    {
+        chorda c = json_ad_chorda(v);
+        character parvus[XXXII];
+        i32 m = c.mensura < XXXI ? c.mensura : XXXI;
+
+        memcpy(parvus, c.datum, (memoriae_index)m);
+        parvus[m] = '\0';
+        responsa = (s64)atoi(parvus);
+    }
+    si (responsa <= (s64)ZEPHYRUM)
+    {
+        u.l = "responsa (numerus positivus) requiritur";
+        textus.datum = u.m;
+        textus.mensura = (i32)strlen(u.l);
+        _mcp_textum_respondere(l, pn, id, textus, VERUM);
+        redde;
+    }
+    si (!vigilia_tacere(l->vigilia, (i32)responsa,
+            (s64)time(NIHIL)))
+    {
+        u.l = "vigilia recens - nihil tacendum";
+        textus.datum = u.m;
+        textus.mensura = (i32)strlen(u.l);
+        _mcp_textum_respondere(l, pn, id, textus, FALSUM);
+        redde;
+    }
+    sprintf(buf, "vigilia tacet per %ld responsa (re-armabitur:"
+        " numero exhausto, quiete %d s, commissione, causa nova)",
+        (longus)responsa, (int)VIGILIA_QUIES_SECUNDA);
+    u.l = buf;
+    textus.datum = u.m;
+    textus.mensura = (i32)strlen(buf);
+    _mcp_textum_respondere(l, pn, id, textus, FALSUM);
+}
+
 interior vacuum
 _mcp_toolscall_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* params)
@@ -6377,6 +6454,10 @@ _mcp_toolscall_tractare (Legatus* l, Piscina* pn, JsonValor* id,
         alioquin si (_methodus_est(titulus, "corpus"))
         {
             _legati_corpus(l, pn, id, argumenta);
+        }
+        alioquin si (_methodus_est(titulus, "tacere"))
+        {
+            _legati_tacere(l, pn, id, argumenta);
         }
         alioquin
         {

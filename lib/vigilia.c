@@ -23,6 +23,13 @@ structura Vigilia {
     s64                 ortus_magnitudo;
     constans character* cautio;          /* NIHIL dum recens */
     constans character* causa;           /* "" dum recens */
+
+    /* politica tacendi (2026-07-17): agnitio explicita */
+    i32                 tacita_reliqua;
+    constans character* causa_tacita;    /* fingerprint agnitionis */
+    VigiliaStatus       status_tacitus;
+    s64                 tempus_ultimum;  /* secunda; horologium iniectum */
+    s64                 commissi_mtempus; /* stampa ad agnitionem (ns) */
 };
 
 /* ==================================================
@@ -346,6 +353,83 @@ constans character*
 vigilia_causa (constans Vigilia* vigilia)
 {
     redde (vigilia != NIHIL) ? vigilia->causa : "";
+}
+
+/* stampa commissionis (ns; ZEPHYRUM = abest - excitator quietus) */
+interior s64
+_commissi_mtempus (vacuum)
+{
+    structura stat status_disci;
+
+    si (stat(VIGILIA_VIA_COMMISSI, &status_disci) != ZEPHYRUM)
+    {
+        redde (s64)ZEPHYRUM;
+    }
+    redde _mtempus_ns(&status_disci);
+}
+
+b32
+vigilia_tacere (Vigilia* vigilia, i32 responsa, s64 nunc)
+{
+    si (vigilia == NIHIL || vigilia->cautio == NIHIL
+        || responsa <= ZEPHYRUM)
+    {
+        redde FALSUM;   /* nihil tacendum */
+    }
+    si (responsa > D)
+    {
+        responsa = D;   /* limen sanitatis */
+    }
+    vigilia->tacita_reliqua = responsa;
+    vigilia->causa_tacita = vigilia->causa;
+    vigilia->status_tacitus = vigilia->status;
+    vigilia->tempus_ultimum = nunc;
+    vigilia->commissi_mtempus = _commissi_mtempus();
+    redde VERUM;
+}
+
+constans character*
+vigilia_cautio_dicenda (Vigilia* vigilia, s64 nunc)
+{
+    s64 quies;
+
+    si (vigilia == NIHIL)
+    {
+        redde NIHIL;
+    }
+    quies = nunc - vigilia->tempus_ultimum;
+    vigilia->tempus_ultimum = nunc;
+    si (vigilia->cautio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (vigilia->tacita_reliqua <= ZEPHYRUM)
+    {
+        redde vigilia->cautio;
+    }
+    /* re-armatio: quies longa - lector fortasse alius (compactio) */
+    si (quies >= (s64)VIGILIA_QUIES_SECUNDA)
+    {
+        vigilia->tacita_reliqua = ZEPHYRUM;
+        redde vigilia->cautio;
+    }
+    /* re-armatio: causa aut status NOVUS - agnitio vetus novum
+     * nuntium non tegit */
+    si (vigilia->status != vigilia->status_tacitus
+        || vigilia->causa_tacita == NIHIL
+        || strcmp(vigilia->causa, vigilia->causa_tacita) != ZEPHYRUM)
+    {
+        vigilia->tacita_reliqua = ZEPHYRUM;
+        redde vigilia->cautio;
+    }
+    /* re-armatio: commissio - mundus mutatus, limen semanticum */
+    si (_commissi_mtempus() != vigilia->commissi_mtempus)
+    {
+        vigilia->tacita_reliqua = ZEPHYRUM;
+        redde vigilia->cautio;
+    }
+    vigilia->tacita_reliqua--;
+    redde NIHIL;
 }
 
 b32

@@ -1684,7 +1684,7 @@ _vigilia_agere (Piscina* p, constans character* via_binarii,
     {
         CREDO_VERUM(_diagnostica_numerus(&n) == (s32)I);
         CREDO_VERUM(_diagnosticum_continet(&n,
-            "LEGATUS IPSE STALUS"));
+            "VIGILIA LEGATI"));
         /* fons "excubitor" (non "silva") - monitum vigiliae ab
          * origine sua nominatur */
         {
@@ -1713,7 +1713,7 @@ _vigilia_agere (Piscina* p, constans character* via_binarii,
         /* clausura propria SEMPER monetur */
         CREDO_VERUM(_diagnostica_numerus(&n) == (s32)I);
         CREDO_VERUM(_diagnosticum_continet(&n,
-            "LEGATUS IPSE STALUS"));
+            "VIGILIA LEGATI"));
     }
     alioquin
     {
@@ -2188,7 +2188,7 @@ probatio_mcp (Piscina* p)
 
         CREDO_VERUM(instrumenta != NIHIL
             && json_est_tabulatum(instrumenta)
-            && json_tabulatum_numerus(instrumenta) == VI);
+            && json_tabulatum_numerus(instrumenta) == VII);
         CREDO_VERUM(_chorda_est(json_ad_chorda(json_objectum_capere(
             json_tabulatum_obtinere(instrumenta, ZEPHYRUM),
             "name")), "diagnostica"));

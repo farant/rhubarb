@@ -701,8 +701,43 @@ s32 principale (vacuum)
                 "{\"name\":\"quaerere\",\"arguments\":"
                 "{\"textus\":\"parsur*\"}}}");
             CREDO_VERUM (strstr(r, "CAUTIO VIGILIAE") != NIHIL);
+
+            /* tacere: agnitio explicita - confirmatio ipsa per
+             * infundibulum fluit et unum absumit; duo sequentia
+             * tacita; tum numero exhausto loquitur iterum */
+            r = _mitte(t3, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":65,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"tacere\",\"arguments\":"
+                "{\"responsa\":3}}}");
+            CREDO_VERUM (strstr(r, "vigilia tacet per 3")
+                != NIHIL);
+            CREDO_VERUM (strstr(r, "CAUTIO VIGILIAE") == NIHIL);
+            r = _mitte(t3, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":66,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"census\",\"arguments\":{}}}");
+            CREDO_VERUM (strstr(r, "CAUTIO VIGILIAE") == NIHIL);
+            r = _mitte(t3, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":67,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"census\",\"arguments\":{}}}");
+            CREDO_VERUM (strstr(r, "CAUTIO VIGILIAE") == NIHIL);
+            r = _mitte(t3, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":68,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"census\",\"arguments\":{}}}");
+            CREDO_VERUM (strstr(r, "CAUTIO VIGILIAE") != NIHIL);
+
+            /* responsa absens -> error */
+            r = _mitte(t3, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":69,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"tacere\",\"arguments\":{}}}");
+            CREDO_VERUM (strstr(r, "requiritur") != NIHIL);
         }
     }
+
+    /* X.b tacere in residente sine vigilia armata: nihil tacendum */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":70,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"tacere\",\"arguments\":{\"responsa\":5}}}");
+    CREDO_VERUM (strstr(r, "nihil tacendum") != NIHIL);
 
     /* XI. nuntiatio tacite omissa; ping ante omnia licitum;
      * analysis fracta -> -32700 */

@@ -105,4 +105,42 @@ vigilia_continet (
     constans Vigilia* vigilia,
     chorda            via);
 
+/* ==================================================
+ * politica tacendi (2026-07-17): agnitio explicita
+ *
+ * Suppressio SOLUM eius quod demonstrabiliter receptum est -
+ * vocatio tacere ipsa est receptum. Ordinarius = glutinosus
+ * (hodiernus); oblivisci tacere = sonitus, numquam periculum.
+ * ================================================== */
+
+/* Stampa commissionis: uncus post-commit (tools/unci-git) eam
+ * tangit; relativa radici currendi (residentes ex radice
+ * exsequuntur, ut manifestum). Abesse licet - excitator quietus. */
+#define VIGILIA_VIA_COMMISSI ".vigilia_commissum"
+
+/* Quies re-armans (secunda): post tantum silentii petitionum
+ * agnitio expirat - compactio/absentia = lector fortasse alius */
+#define VIGILIA_QUIES_SECUNDA CCC
+
+/* Cautionem ACTIVAM per N responsa supprimere. FALSUM si nihil
+ * tacendum (recens). nunc = secunda horologii INIECTI (time(NIHIL)
+ * productione; probationes fictum - determinismus sine somnis).
+ * Re-armatur: numero exhausto, quiete >= VIGILIA_QUIES_SECUNDA,
+ * stampa commissionis mota, causa/statu NOVO (nuntium novum semper
+ * loquitur - agnitio ad causam agnitam scopata). */
+b32
+vigilia_tacere (
+    Vigilia* vigilia,
+    i32      responsa,
+    s64      nunc);
+
+/* Facies emissionis UNICA post politicam: cautio dicenda aut NIHIL
+ * (recens AUT tacita). Latus-effectus: horologium quietis gerit et
+ * numerum absumit - SEMEL per responsum vocanda. Consumptores
+ * vigilia_cautio crudam relinquant huic. */
+constans character*
+vigilia_cautio_dicenda (
+    Vigilia* vigilia,
+    s64      nunc);
+
 #endif /* VIGILIA_H */

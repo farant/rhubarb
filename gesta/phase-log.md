@@ -1043,3 +1043,27 @@ miss-text updated. One structural edit slip (anchored an Edit
 below the return-type line - the push cascade caught it in
 seconds). 680 + 153 (144+9) green; examen -posix ACCIPE.
 Residents need relink+reconnect to serve the feature.
+
+## K2.3 POLITICA TACENDI (2026-07-17, Fran's design)
+
+The vigilia noise problem solved by ACKNOWLEDGMENT, not policy:
+a tacere tool (both residents) suppresses the CAUTIO for N
+responses - the call itself is the receipt, so silence only ever
+covers what was demonstrably read. Four re-arms, each covering a
+distinct failure mode: numerus exhaustus (absolute bound), quies
+>= 300 s of requests (compaction/walk-away - the reader may be
+someone else now), commissio git (semantic boundary; post-commit
+hook touches .vigilia_commissum, residents stat it - hook writes,
+resident reads, same doctrine as manifests), causa/status NOVUS
+(old acknowledgment never covers new news). Policy lives in
+lib/vigilia (vigilia_tacere + vigilia_cautio_dicenda - the ONE
+emission face; injected clock = deterministic tests, no sleeps);
+both residents switched their funnels; legatus budget is COMMON
+across MCP + LSP surfaces. Option D shipped alongside: the LSP
+pseudo-diagnostic now labels itself "VIGILIA LEGATI (status
+residentis, non plagulae)" - truth in costume. Default when nobody
+calls tacere = today's sticky behavior: forgetting is noise, never
+danger. Suites: vigilia +14, gesta 680+160, officina 12/12 (three
+outdated expectations updated: old message text x2, tool count
+VI->VII). examen ACCIPE all three files. Residents need
+relink+reconnect.

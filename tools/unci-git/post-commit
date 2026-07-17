@@ -16,6 +16,11 @@ RADIX="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 TSV="$RADIX/build/nexus.tsv"
 SERA="$RADIX/build/nexus_renovare.sera"
 
+# stampa commissionis pro politica tacendi vigiliarum (lib/vigilia
+# 2026-07-17): residentes eam per petitionem stat-ant - commissio
+# agnitiones tacendi re-armat. ANTE debounce - semper tangitur.
+touch "$RADIX/.vigilia_commissum" 2>/dev/null
+
 # debounce: tabula satis recens - per stampam GENERATUM INTERNAM,
 # non mtime (mtime fallax: sondae "touch" reload servi probant sine
 # contentu novo et debounce venenabant - inventum shakedown MCP

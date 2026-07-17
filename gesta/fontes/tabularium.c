@@ -13,6 +13,8 @@
 #include "chorda_aedificator.h"
 #include "vigilia.h"
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>   /* horologium politicae tacendi (sutura POSIX) */
 
 #define TABULARII_PROTOCOLLUM_PINNATUM "2025-06-18"
 
@@ -307,16 +309,24 @@ _textum_respondere (Tabularium* t, Piscina* pn, FILE* effusio,
     JsonValor* contentus = json_tabulatum_creare(pn);
     JsonValor* fragmentum = json_objectum_creare(pn);
 
-    si (t != NIHIL && vigilia_cautio(t->vigilia) != NIHIL)
+    si (t != NIHIL)
     {
-        ChordaAedificator* aed = chorda_aedificator_creare(pn,
-            textus.mensura + CCLVI);
+        /* politica tacendi (2026-07-17): dicenda pro cruda -
+         * agnitio per instrumentum tacere suppressa, re-armationes
+         * in lib/vigilia */
+        constans character* cautio = vigilia_cautio_dicenda(
+            t->vigilia, (s64)time(NIHIL));
 
-        chorda_aedificator_appendere_chorda(aed, textus);
-        chorda_aedificator_appendere_literis(aed, "\n\n");
-        chorda_aedificator_appendere_literis(aed,
-            vigilia_cautio(t->vigilia));
-        textus = chorda_aedificator_finire(aed);
+        si (cautio != NIHIL)
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                textus.mensura + CCLVI);
+
+            chorda_aedificator_appendere_chorda(aed, textus);
+            chorda_aedificator_appendere_literis(aed, "\n\n");
+            chorda_aedificator_appendere_literis(aed, cautio);
+            textus = chorda_aedificator_finire(aed);
+        }
     }
     json_objectum_ponere(fragmentum, "type",
         json_chorda_creare_literis(pn, "text"));
@@ -2326,6 +2336,55 @@ _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
         chorda_aedificator_finire(aed), FALSUM);
 }
 
+/* tacere: cautionem vigiliae per N responsa supprimere - agnitio
+ * explicita (politica in lib/vigilia; consilium Fran 2026-07-17).
+ * Responsum confirmationis ipsum per infundibulum fluit et unum e
+ * numero absumit - consulto, simplicitas vincit. */
+interior vacuum
+_tab_tacere (Tabularium* t, Piscina* pn, JsonValor* id,
+    JsonValor* argumenta, FILE* effusio)
+{
+    JsonValor* v = (argumenta != NIHIL)
+        ? json_objectum_capere(argumenta, "responsa") : NIHIL;
+    s64 responsa = ZEPHYRUM;
+    character buf[CXCII];
+
+    si (v != NIHIL && json_est_integer(v))
+    {
+        responsa = json_ad_integer(v);
+    }
+    alioquin si (v != NIHIL && json_est_chorda(v))
+    {
+        responsa = (s64)atoi(_litterae(pn, json_ad_chorda(v)));
+    }
+    si (responsa <= (s64)ZEPHYRUM)
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _ch("responsa (numerus positivus) requiritur"), VERUM);
+        redde;
+    }
+    si (!vigilia_tacere(t->vigilia, (i32)responsa,
+            (s64)time(NIHIL)))
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _ch("vigilia recens - nihil tacendum"), FALSUM);
+        redde;
+    }
+    sprintf(buf, "vigilia tacet per %ld responsa (re-armabitur:"
+        " numero exhausto, quiete %d s sine petitionibus,"
+        " commissione, causa nova)", (longus)responsa,
+        (int)VIGILIA_QUIES_SECUNDA);
+    {
+        chorda textus;
+        unio { character* b; i8* m; } u;
+
+        u.b = buf;
+        textus.datum = u.m;
+        textus.mensura = (i32)strlen(buf);
+        _textum_respondere(t, pn, effusio, id, textus, FALSUM);
+    }
+}
+
 interior vacuum
 _tab_census (Tabularium* t, Piscina* pn, JsonValor* id,
     FILE* effusio)
@@ -3143,6 +3202,10 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         { "ramus", "titulus rami - lectio plicaturae ramalis",
           FALSUM }
     };
+    interior constans TabArgumentum ARG_TACERE[] = {
+        { "responsa", "numerus responsorum supprimendorum"
+          " (positivus; limen 500)", VERUM }
+    };
     interior constans TabArgumentum ARG_RAMUS[] = {
         { "actus", "creare|enumerare|comparare|fundere|abicere",
           VERUM },
@@ -3189,6 +3252,12 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "census",
         "Census: genera x status, tags, seq/hwm.",
         NIHIL, ZEPHYRUM));
+    json_tabulatum_addere(instrumenta, _instrumentum(pn, "tacere",
+        "Cautionem vigiliae (residens obsoletus) per N responsa"
+        " supprimere - agnitio explicita. Re-armatur: numero"
+        " exhausto, quiete 300 s sine petitionibus, commissione"
+        " git, causa staleness nova.",
+        ARG_TACERE, I));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "agere",
         "Actionem exsequi (porta obstat, effectus atomice - fascis"
         " unus) aut processum incipere (instantia definitionem"
@@ -3392,6 +3461,10 @@ _toolscall_tractare (Tabularium* t, Piscina* pn, JsonValor* id,
     alioquin si (_chorda_est(titulus, "census"))
     {
         _tab_census(t, pn, id, effusio);
+    }
+    alioquin si (_chorda_est(titulus, "tacere"))
+    {
+        _tab_tacere(t, pn, id, argumenta, effusio);
     }
     alioquin si (_chorda_est(titulus, "agere"))
     {
