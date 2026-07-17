@@ -1290,16 +1290,16 @@ sententia_iterator_prior(
 }
 
 
-i32
+s32
 sententia_iterator_index(
     SententiaIterator* iter)
 {
     si (iter == NIHIL)
     {
-        redde (i32)-1;
+        redde -1;
     }
 
-    redde iter->index_currens;
+    redde (s32)iter->index_currens;
 }
 
 

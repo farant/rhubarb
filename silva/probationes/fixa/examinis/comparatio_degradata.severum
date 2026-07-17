@@ -1,0 +1,20 @@
+/* comparatio degradata - insignati <= 0 fit == 0. GRADUS DORMIT
+ * (decretum 2026-07-17): census primus 228 = idioma vacuitatis
+ * (mensura <= 0) formam possidet; re-armatur ut consumptor
+ * analyseos fluxus (CFG gradus 2). Specimen dormiens - NULLAE
+ * pinnae; cum vigil flagrabit, pinnae hic redibunt. */
+
+static unsigned mortua(unsigned u)
+{
+    return u <= 0;
+}
+
+static unsigned altera(unsigned u)
+{
+    return 0 >= u;
+}
+
+static unsigned radix(unsigned u)
+{
+    return mortua(u) + altera(u);
+}

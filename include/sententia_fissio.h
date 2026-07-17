@@ -135,9 +135,9 @@ sententia_iterator_prior(
  *
  * iter: iterator
  *
- * Redde: index currens
+ * Redde: index currens, vel -1 si iterator NIHIL
  */
-i32
+s32
 sententia_iterator_index(
     SententiaIterator* iter);
 

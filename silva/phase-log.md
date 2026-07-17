@@ -8595,3 +8595,80 @@ fprintf position); fixture signum_formati.severum (pin 10, %d twin
 DELIBERATELY unpinned-silent as the decretum's specimen); VECTIS
 TENET; amalgamare VERIFICATUM; silva 30/30; officina 12/12; census
 60 = 0, 58 = 46 and REICE = 41 unchanged.
+
+## GRADUS SENTINELLA + DEGRADATIO: INTENTIO (2026-07-17)
+
+Two small tiers in one arc, both generalizations of specific corpses
+from the VANA harvest:
+
+CODEX 61 SENTINELLA_INSIGNATA (the producer side): a redde whose
+expression is a NEGATIVE CONSTANT (seen through casts/parens) in a
+function whose return type is unsigned integral. This is the tcp/
+tls/biblia disease AT BIRTH: `redde (i32)-1;` in an i32 function.
+The uncast form (`redde -1;`) is already codex 54 parity - clang
+fires on the implicit conversion; the CAST is precisely what
+silences both clang and parity, and precisely what the corpus wrote
+everywhere. VANA catches the dead CONSUMERS; this catches the
+PRODUCER even before any consumer checks. v1 = redde only;
+assignment/initializer producers named-deferred. TOLERA-bilis
+(deliberate all-bits idioms exist).
+
+CODEX 62 COMPARATIO_DEGRADATA (unsigned <= 0): `X <= 0` / `0 >= X`
+on unsigned X - NOT tautological (VANA structurally blind: it
+degrades to == 0, a DIFFERENT comparison, not a constant one). The
+delineare circle error-term bug wore exactly this shape. Seat:
+_comparationem_examinare already receives op/sides/commune - the
+two zero-position/op combinations VANA does NOT map (<=0 right,
+0>= left) are exactly ours. Same sound basis (commune unsigned or
+severum-nonneg range). CENSUS RISK, named up front: `mensura <= 0`
+as an emptiness check may be a widespread benign idiom - if the
+census is large, adjudication options go to Fran before anything
+ships as standing noise (the %d-direction lesson).
+
+BARS: unit probes both codices (cast-wrapped fire, uncast = 54 not
+61, positive-constant NEGATIVE, signed-return NEGATIVE, <=0 both
+operand orders, >0 NOT fired, TOLERA both); fixtures .severum
+(oracle silent - both inverse); vectis generic; amalgam twin rows;
+census + eyes; suites green.
+
+## GRADUS SENTINELLA + DEGRADATIO: RELATIO (2026-07-17)
+
+TWO TIERS, TWO OPPOSITE VERDICTS — the census-as-experiment pattern
+at full power.
+
+CODEX 61 SENTINELLA_INSIGNATA: SHIPPED AND HARVESTING. Census = 4;
+two frozen (arbor_praeparator, standing by decree), TWO REAL BUGS
+fixed same-arc:
+- sputnik_lexema._convertere_effugium: doc said "-1 si ignotus"
+  over an unsigned return (the doc-comment liar AGAIN); its three
+  consumers checked `effugium >= 0` — always true — so unknown
+  escapes emitted a truncated 0xFF byte instead of the literal
+  character. Producer AND three dead consumers fixed in one stroke
+  (VANA tail 46 -> 43).
+- sententia_iterator_index: public API returning (i32)-1 for NIHIL
+  iter — an indistinguishable sentinel with NO consumer checking
+  yet. Exactly the "catch the producer before any consumer exists"
+  case the tier was built for. Now s32.
+Predicate subtlety found by calibration probe BEFORE tests: the
+aestimator does NOT fold casts, and the bare form (redde -1) is
+parity 54's — so the tier strips casts itself and fires ONLY when
+a cast was present (the form that silences clang). No overlap, no
+double-fire.
+
+CODEX 62 COMPARATIO_DEGRADATA: BUILT, MEASURED, PUT TO SLEEP
+(decretum). Census = 228: ~88 in generated tables, 18 delineare
+validity guards, the rest mensura-<=-0 emptiness checks — the
+idiom OWNS the shape, and the needle (arithmetic sign intent, the
+circle error-term form) is statically indistinguishable from it.
+The separator is the operand's DEFINITIONS (accumulation vs
+assignment) = def-use = CFG stage 2. The firing sits behind
+_degradata_vigil (FALSUM) with the re-arm condition written at the
+seat; codex number reserved (ABI append-only); dormant specimen
+fixture kept. The census WAS the experiment — we now know this
+corpus's <= 0 is emptiness, which we did not know this morning.
+
+BARS: unit 919/919; fixtures sentinella_insignata.severum (pin 7,
+TOLERA twin quiet) + comparatio_degradata.severum (dormant, no
+pins); VECTIS TENET; amalgamare VERIFICATUM; silva 30/30; officina
+12/12; census 61 = 2 (frozen, standing), 62 = 0 (dormit), 58 = 43
+(sputnik harvest), REICE = 41.

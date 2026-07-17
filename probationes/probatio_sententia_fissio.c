@@ -748,29 +748,29 @@ integer principale(vacuum)
         /* Prima */
         sent = sententia_iterator_proxima(iter);
         CREDO_VERUM(_chorda_aequalis_literis(sent, "First."));
-        CREDO_AEQUALIS_I32(sententia_iterator_index(iter), ZEPHYRUM);
+        CREDO_AEQUALIS_S32(sententia_iterator_index(iter), ZEPHYRUM);
 
         /* Secunda */
         sent = sententia_iterator_proxima(iter);
         CREDO_VERUM(_chorda_aequalis_literis(sent, "Second."));
-        CREDO_AEQUALIS_I32(sententia_iterator_index(iter), I);
+        CREDO_AEQUALIS_S32(sententia_iterator_index(iter), I);
 
         /* Tertia */
         sent = sententia_iterator_proxima(iter);
         CREDO_VERUM(_chorda_aequalis_literis(sent, "Third."));
-        CREDO_AEQUALIS_I32(sententia_iterator_index(iter), II);
+        CREDO_AEQUALIS_S32(sententia_iterator_index(iter), II);
 
         /* Retro ad secundam */
         sent = sententia_iterator_prior(iter);
         CREDO_VERUM(_chorda_aequalis_literis(sent, "Second."));
-        CREDO_AEQUALIS_I32(sententia_iterator_index(iter), I);
+        CREDO_AEQUALIS_S32(sententia_iterator_index(iter), I);
 
         /* Numerus totalis */
         CREDO_AEQUALIS_I32(sententia_iterator_numerus(iter), III);
 
         /* Reset */
         sententia_iterator_reset(iter);
-        CREDO_AEQUALIS_I32(sententia_iterator_index(iter), (i32)-1);
+        CREDO_AEQUALIS_S32(sententia_iterator_index(iter), -1);
     }
 
 

@@ -327,6 +327,19 @@ nomen enumeratio {
      * negativa, %x/%o (idioma repraesentationis), argumenta
      * stellata (%.*s idioma domus). TOLERA-bilis. */
     EXAMEN_CODEX_SIGNUM_FORMATI,              /* DOMESTICUM */
+    /* 61: sentinella negativa (per casus visa) reddita e functione
+     * typo insignato - morbus tcp/tls/biblia IN ORTU. Forma nuda
+     * (redde -1) iam paritas 54; casus ((i32)-1) clang et paritatem
+     * silet - hic capitur. VANA consumptores mortuos capit; hic
+     * PRODUCTOREM etiam sine consumptore ullo. TOLERA-bilis. */
+    EXAMEN_CODEX_SENTINELLA_INSIGNATA,        /* DOMESTICUM */
+    /* 62: comparatio degradata - X <= 0 / 0 >= X insignati fit
+     * == 0 (comparatio ALIA, non constans - VANA structuraliter
+     * caeca). Terminus erroris circuli delineare hanc formam
+     * gessit. DORMIT (decretum: census 228 = idioma vacuitatis;
+     * re-armatur ut consumptor analyseos fluxus CFG gradus 2).
+     * TOLERA-bilis cum vigilat. */
+    EXAMEN_CODEX_COMPARATIO_DEGRADATA,        /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

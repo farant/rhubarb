@@ -1355,6 +1355,12 @@ typedef enum {
      * directio %d-cum-insignato DECRETO exempta - involutio
      * negativa visibilis diagnostica); TOLERA-suppressibilis */
     EXAMEN_CODEX_SIGNUM_FORMATI,
+    /* SENTINELLA_INSIGNATA = redde constantis negativae (per casus)
+     * e functione insignata; TOLERA-suppressibilis */
+    EXAMEN_CODEX_SENTINELLA_INSIGNATA,
+    /* COMPARATIO_DEGRADATA = X <= 0 / 0 >= X insignati (== 0 fit);
+     * DORMIT usque ad analysim fluxus (CFG gradus 2) */
+    EXAMEN_CODEX_COMPARATIO_DEGRADATA,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -35360,6 +35366,8 @@ interior vacuum _valorem_typare_scalarem (SilvaSemantica* sem,
     SilvaValor v);
 interior vacuum _ad_finem_annotare (SilvaSemantica* sem,
     constans SilvaNodus* nodus, TypusC89* valoris, TypusC89* finis);
+interior vacuum _sentinellam_examinare (SilvaSemantica* sem,
+    constans SilvaNodus* val);
 interior TypusC89* _qualibus_exutum (TypusC89* typus);
 interior vacuum _congeriem_typare (SilvaSemantica* sem,
     constans SilvaNodus* congeries, TypusC89* scopus_typus);
@@ -35438,7 +35446,11 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "comparatio signorum diversorum",           EXAMEN_DOMESTICUM },
     { "comparatio vana (semper eadem)",           EXAMEN_DOMESTICUM },
     { "chorda nuda (sine fine NUL)",              EXAMEN_DOMESTICUM },
-    { "signum formati discrepat",                 EXAMEN_DOMESTICUM }
+    { "signum formati discrepat",                 EXAMEN_DOMESTICUM },
+    { "sentinella negativa in functione insignata",
+                                                  EXAMEN_DOMESTICUM },
+    { "comparatio degradata (insignati <= 0 fit == 0)",
+                                                  EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -36029,7 +36041,11 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "CHORDA_NUDA",
       (s32)EXAMEN_CODEX_CHORDA_NUDA },
     { "SIGNUM_FORMATI",
-      (s32)EXAMEN_CODEX_SIGNUM_FORMATI }
+      (s32)EXAMEN_CODEX_SIGNUM_FORMATI },
+    { "SENTINELLA_INSIGNATA",
+      (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA },
+    { "COMPARATIO_DEGRADATA",
+      (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA }
 };
 
 /* commentarium TOLERA? valor = octeti pleni delimitatoribus
@@ -38450,6 +38466,7 @@ _elementum_ambulare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                 alioquin si (tv != NIHIL && rc != NIHIL)
                 {
                     _ad_finem_annotare(sem, val, tv, rc);
+                    _sentinellam_examinare(sem, val);
                 }
             }
             alioquin si (rc != NIHIL && !rc_vacuum)
@@ -40326,6 +40343,92 @@ _est_datum_chordae (SilvaSemantica* sem, constans SilvaNodus* nodus)
     }
 }
 
+/* Vigil codicis 62 (DORMIT usque ad CFG gradum 2 - vide sedem in
+ * _comparationem_examinare) */
+interior constans b32 _degradata_vigil = FALSUM;
+
+/* Codex 61: sentinella negativa reddita e functione insignata -
+ * morbus tcp/tls/biblia IN ORTU. Forma nuda (redde -1) iam paritas
+ * 54 est; CASUS ((i32)-1) et clang et paritatem silet - hic
+ * capitur (aestimator per casus plicat). VANA consumptores mortuos
+ * capit; hic PRODUCTOREM etiam antequam consumptor ullus probet. */
+interior vacuum
+_sentinellam_examinare (SilvaSemantica* sem,
+    constans SilvaNodus* val)
+{
+    TypusC89* rc = sem->reditus_currens;
+    TypusC89* e;
+    s32 p;
+    s64 valor = ZEPHYRUM;
+
+    si (rc == NIHIL || sem->in_systemate)
+    {
+        redde;
+    }
+    e = _qualibus_exutum(rc);
+    si (e == NIHIL || e->genus == TYPUS_C89_ENUMERATUS)
+    {
+        redde;
+    }
+    p = _primitivum_integrale(rc);
+    si (p < ZEPHYRUM || !_est_insignatum_primitivum(p))
+    {
+        redde;
+    }
+    /* per casus/parentheses despicere - aestimator casus NON
+     * plicat (probatum empirice), et forma NUDA (redde -1) iam
+     * paritas 54 est: solum forma CASU VESTITA nostra est (ea quae
+     * clang et paritatem silet) */
+    {
+        b32 casus_visus = FALSUM;
+
+        dum (VERUM)
+        {
+            val = _canonicum(val);
+            si (val->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+            {
+                SilvaValor v = silva_c89_parenthesis_internum(val);
+
+                si (v.genus != SILVA_VALOR_NODUS)
+                {
+                    redde;
+                }
+                val = v.datum.nodus;
+                perge;
+            }
+            si (val->genus == (s32)SILVA_C89_GENUS_CONVERSIO)
+            {
+                SilvaValor v = silva_c89_conversio_internum(val);
+
+                si (v.genus != SILVA_VALOR_NODUS)
+                {
+                    redde;
+                }
+                casus_visus = VERUM;
+                val = v.datum.nodus;
+                perge;
+            }
+            frange;
+        }
+        si (!casus_visus)
+        {
+            redde;   /* nuda = paritas 54, non nostra */
+        }
+    }
+    si (!_constans_probare(sem, val, &valor) || valor >= ZEPHYRUM)
+    {
+        redde;
+    }
+    si (_fons_alienus(sem, val)
+        || _tolera_absorbere(sem, val,
+               (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA))
+    {
+        redde;
+    }
+    _diagnosticum_addere_plenum(sem, val,
+        (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA, NIHIL, NIHIL);
+}
+
 /* ==================================================
  * SIGNUM FORMATI (codex 60): charta formati -> argumenta
  * ================================================== */
@@ -41134,6 +41237,88 @@ _comparationem_examinare (SilvaSemantica* sem,
                     }
                     silva_c89_diagnosticum_addere(sem, nodus,
                         (s32)EXAMEN_CODEX_COMPARATIO_VANA);
+                }
+                redde;
+            }
+        }
+    }
+
+    /* DEGRADATA (codex 62): X <= 0 / 0 >= X insignati - non
+     * tautologica (== 0 fit: comparatio ALIA, non constans - VANA
+     * structuraliter caeca), sed intentio signi probabilis:
+     * terminus erroris circuli delineare hanc formam gessit.
+     * Positiones zeri quas VANA NON mappat sunt exacte nostrae.
+     *
+     * DORMIT (decretum Fran 2026-07-17): census primus 228 - forma
+     * ab idiomate vacuitatis possessa (mensura <= 0 = "vacuum",
+     * ~88 in tabulis generatis, 18 custodiae delineare, omnes
+     * recte == 0). Acus (intentio signi arithmetici, forma termini
+     * erroris) statice NON separabilis - definitiones operandi
+     * requiruntur. RE-ARMATUR ut consumptor analyseos fluxus (CFG
+     * gradus 2): flagra solum cum definitiones operandi
+     * arithmeticae sint (accumulatio +/-), non assignationes
+     * mensurarum. Vigil infra tunc praedicatum verum fit. */
+    si (_degradata_vigil)
+    {
+        constans SilvaNodus* zerus = NIHIL;
+        constans SilvaNodus* alter = NIHIL;
+        TypusC89* typus_alterius = NIHIL;
+        s64 valor_z = ZEPHYRUM;
+
+        si (op == SILVA_LEX_MINOR_AEQUALIS)
+        {
+            /* X <= 0: zerus DEXTER (VANA sinistrum mappat) */
+            zerus = nd;
+            alter = ns;
+            typus_alterius = ts;
+        }
+        alioquin si (op == SILVA_LEX_MAIOR_AEQUALIS)
+        {
+            /* 0 >= X: zerus SINISTER (VANA dextrum mappat) */
+            zerus = ns;
+            alter = nd;
+            typus_alterius = td;
+        }
+        si (zerus != NIHIL
+            && _constans_probare(sem, zerus, &valor_z)
+            && valor_z == ZEPHYRUM)
+        {
+            ExamenIntervallum iv = _intervallum_expressionis(sem,
+                alter, ZEPHYRUM);
+
+            si (commune_insignatum || iv.non_negativum_severum)
+            {
+                si (!_tolera_absorbere(sem, nodus,
+                        (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA))
+                {
+                    character textus[CXXVIII];
+                    insignatus integer m = silva_c89_typum_scribere(
+                        typus_alterius, textus,
+                        (insignatus integer)magnitudo(textus));
+
+                    si (m > ZEPHYRUM)
+                    {
+                        memoriae_index capacitas =
+                            (memoriae_index)m
+                            + (memoriae_index)LXIV;
+                        character* nuntius =
+                            (character*)silva_piscina_allocare(
+                                sem->piscina, capacitas);
+
+                        si (nuntius != NIHIL)
+                        {
+                            sprintf(nuntius, "comparatio degradata:"
+                                " '<= 0' insignati '== 0' est"
+                                " (%s)", textus);
+                            _diagnosticum_addere_plenum(sem, nodus,
+                                (s32)
+                                EXAMEN_CODEX_COMPARATIO_DEGRADATA,
+                                NIHIL, nuntius);
+                            redde;
+                        }
+                    }
+                    silva_c89_diagnosticum_addere(sem, nodus,
+                        (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA);
                 }
                 redde;
             }

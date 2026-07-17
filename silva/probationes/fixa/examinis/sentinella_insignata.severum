@@ -1,0 +1,19 @@
+/* sentinella negativa in functione insignata - casus ((unsigned)-1)
+ * clang et paritatem 54 silet; hic capitur. Oraculum TACET. */
+/* EXSPECTA 7:SENTINELLA_INSIGNATA */
+
+static unsigned mortua(void)
+{
+    return (unsigned)-1;
+}
+
+static unsigned tolerata(void)
+{
+    /* TOLERA SENTINELLA_INSIGNATA: probatio suppressionis */
+    return (unsigned)-1;
+}
+
+static unsigned radix(void)
+{
+    return mortua() + tolerata();
+}

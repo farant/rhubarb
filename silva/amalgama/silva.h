@@ -1342,6 +1342,12 @@ typedef enum {
      * directio %d-cum-insignato DECRETO exempta - involutio
      * negativa visibilis diagnostica); TOLERA-suppressibilis */
     EXAMEN_CODEX_SIGNUM_FORMATI,
+    /* SENTINELLA_INSIGNATA = redde constantis negativae (per casus)
+     * e functione insignata; TOLERA-suppressibilis */
+    EXAMEN_CODEX_SENTINELLA_INSIGNATA,
+    /* COMPARATIO_DEGRADATA = X <= 0 / 0 >= X insignati (== 0 fit);
+     * DORMIT usque ad analysim fluxus (CFG gradus 2) */
+    EXAMEN_CODEX_COMPARATIO_DEGRADATA,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

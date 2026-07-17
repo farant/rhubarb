@@ -364,7 +364,7 @@ _legere_numerum(SputnikLexator* lex)
  * c: character post backslash (e.g., 'n' pro \n)
  * Redde: character realis vel -1 si ignotus
  */
-interior i32
+interior s32
 _convertere_effugium(character c)
 {
     commutatio (c)
@@ -378,7 +378,7 @@ _convertere_effugium(character c)
         casus '\'': redde '\'';
         casus '`':  redde '`';
         casus '$':  redde '$';
-        ordinarius: redde (i32)-I;  /* Ignotus - redde characterem ipsum */
+        ordinarius: redde -I;  /* Ignotus - vocator characterem ipsum includit */
     }
 }
 
@@ -397,7 +397,7 @@ _legere_chordam(SputnikLexator* lex)
     character quota;
     character c;
     character c2;
-    i32 effugium;
+    s32 effugium;
     character* buffer;
     i32 buffer_cap;
     i32 buffer_len;
@@ -508,7 +508,7 @@ _legere_template(SputnikLexator* lex)
     i32 columna;
     character c;
     character c2;
-    i32 effugium;
+    s32 effugium;
     character* buffer;
     i32 buffer_cap;
     i32 buffer_len;
@@ -636,7 +636,7 @@ _legere_template_continuatio(SputnikLexator* lex)
     i32 columna;
     character c;
     character c2;
-    i32 effugium;
+    s32 effugium;
     character* buffer;
     i32 buffer_cap;
     i32 buffer_len;

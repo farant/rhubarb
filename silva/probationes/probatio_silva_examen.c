@@ -1422,6 +1422,58 @@ s32 principale (vacuum)
         " { printf(\"%.*s\", (int)c.m, (char*)c.datum); }\n",
         (s32)EXAMEN_CODEX_CHORDA_NUDA, ZEPHYRUM);
 
+    /* ==================================================
+     * XVI. Sentinella insignata + comparatio degradata
+     * ================================================== */
+
+    /* casus vestitus flagrat (forma quae clang silet) */
+    _codicem_probare(piscina,
+        "static unsigned f(void) { return (unsigned)-1; }\n",
+        (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA, I);
+    /* forma nuda = paritas 54, NON 61 (nulla duplicatio) */
+    _codicem_probare(piscina,
+        "static unsigned f(void) { return -1; }\n",
+        (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA, ZEPHYRUM);
+    /* constans non negativa tacet */
+    _codicem_probare(piscina,
+        "static unsigned f(void) { return (unsigned)0; }\n",
+        (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA, ZEPHYRUM);
+    /* functio signata: sentinella legitima */
+    _codicem_probare(piscina,
+        "static int f(void) { return (int)-1; }\n",
+        (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA, ZEPHYRUM);
+    /* parentheses intra/circa casum despiciuntur */
+    _codicem_probare(piscina,
+        "static unsigned f(void) { return ((unsigned)(-1)); }\n",
+        (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA, I);
+    /* TOLERA absorbet (idioma omnium-bitorum consultum) */
+    _codicem_probare(piscina,
+        "static unsigned f(void) {\n"
+        "    /* TOLERA SENTINELLA_INSIGNATA: omnes biti consulto */\n"
+        "    return (unsigned)-1;\n"
+        "}\n",
+        (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA, ZEPHYRUM);
+    /* degradata DORMIT (decretum: idioma vacuitatis possidet
+     * formam; re-armatur cum analysi fluxus) - u <= 0 tacet */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned u) { return u <= 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA, ZEPHYRUM);
+    /* degradata dormit: 0 >= u (ordo alter) etiam tacet */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned u) { return 0 >= u; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA, ZEPHYRUM);
+    /* u < 0 = VANA, non degradata (nulla duplicatio) */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned u) { return u < 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA, ZEPHYRUM);
+    /* signatum <= 0: comparatio vera - tacet */
+    _codicem_probare(piscina,
+        "static int f(int s) { return s <= 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA, ZEPHYRUM);
+    /* u > 0 idioma sanum (!= 0 legibile) - tacet */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned u) { return u > 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA, ZEPHYRUM);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
