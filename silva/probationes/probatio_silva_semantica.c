@@ -1334,8 +1334,11 @@ s32 principale (vacuum)
         /* revisio consulta (conversio signi 2026-07-16): fons_b
          * "ul + ll" conversionem signi VERAM continet (ll s64 ->
          * u64; clang eam quoque monet) - unus ordo DOMESTICUS
-         * exspectatus, non zephyrum */
-        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), I);
+         * exspectatus, non zephyrum.
+         * revisio altera (angustatio 2026-07-17): "ch = i" quoque
+         * angustatio vera (int -> character; clang
+         * -Wimplicit-int-conversion) - ordines II. */
+        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), II);
         {
             constans SemanticaDiagnosticum* d =
                 silva_c89_diagnosticum_per_indicem(sem, ZEPHYRUM);
