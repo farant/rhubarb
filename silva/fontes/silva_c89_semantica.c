@@ -135,7 +135,9 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "vocatio implicita (extern int synthetizatum)", EXAMEN_SUSPECTUM },
     { "redeclaratio typi incompatibilis",         EXAMEN_VIOLATIO },
     { "macro domesticum in capite alieno expansum", EXAMEN_SUSPECTUM },
-    { "conversio signi implicita",                EXAMEN_DOMESTICUM }
+    { "conversio signi implicita",                EXAMEN_DOMESTICUM },
+    { "conversio signi implicita (analysi stricta)", EXAMEN_DOMESTICUM },
+    { "TOLERA irritum",                           EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -685,6 +687,325 @@ _macros_domestica_in_alienis_examinare (SilvaSemantica* sem,
             cur->linea,
             silva_fons_via(exp, corpus->fons_index),
             via_princeps);
+    }
+}
+
+/* ==================================================
+ * TOLERA - suppressiones commentariis (gradus severi, 2026-07-17)
+ *
+ * Regulae SEVERAE (analysis stricta supra paritatem oraculi) in
+ * codice ex proposito operante commentario supprimuntur:
+ *   x = a - b;  / * TOLERA CONVERSIO_SIGNI_SEVERA: causa * /
+ * Linea eadem aut praecedens; CAUSA OBLIGATORIA (sine causa non
+ * supprimit). Codices paritatis (54) numquam suppressibiles -
+ * TOLERA numquam silet quod clang reiceret. Commentaria ex triviis
+ * lexematum (spatia_ante/post - commentaria sunt contentum, pin
+ * VISIONIS) pigre colliguntur per parsuram. Post ambulationem
+ * TOLERA quod nihil absorbuit aut sine causa aut codicem ignotum
+ * nominat -> IRRITUM (lectio eslint: suppressiones putrescunt;
+ * quae nihil absorbet signum est).
+ * ================================================== */
+
+nomen structura {
+    i32 linea;          /* commentarii ipsius */
+    s32 fons_index;
+    s32 codex;          /* -I = ignotus -> IRRITUM */
+    b32 habet_causam;
+    b32 usus;
+} ExamenTolera;
+
+/* codices suppressibiles (SEVERI soli - paritas numquam) */
+nomen structura {
+    constans character* titulus;
+    s32                 codex;
+} ExamenTolerabilis;
+
+interior constans ExamenTolerabilis _tolerabiles[] = {
+    { "CONVERSIO_SIGNI_SEVERA",
+      (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA }
+};
+
+/* commentarium TOLERA? valor = octeti pleni delimitatoribus
+ * inclusis. Forma: TOLERA <TITULUS>[: causa]. VERUM etiam codice
+ * ignoto (in tabulam it -> IRRITUM nominat). */
+interior b32
+_tolera_legere (constans chorda* valor, s32* codex_out,
+    b32* habet_causam_out)
+{
+    i32 i = ZEPHYRUM;
+    i32 initium_tituli;
+    i32 mensura_tituli;
+    memoriae_index t;
+
+    *codex_out = -I;
+    *habet_causam_out = FALSUM;
+    si (valor == NIHIL || valor->datum == NIHIL
+        || valor->mensura < X)
+    {
+        redde FALSUM;
+    }
+    i = II;   /* post delimitatorem apertum (slash-stella aut //) */
+    dum (i < valor->mensura
+        && (valor->datum[i] == ' ' || valor->datum[i] == '\t'))
+    {
+        i++;
+    }
+    si (i + VI > valor->mensura
+        || memcmp(valor->datum + i, "TOLERA", VI) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    i += VI;
+    si (i >= valor->mensura
+        || (valor->datum[i] != ' ' && valor->datum[i] != '\t'))
+    {
+        redde FALSUM;
+    }
+    dum (i < valor->mensura
+        && (valor->datum[i] == ' ' || valor->datum[i] == '\t'))
+    {
+        i++;
+    }
+    initium_tituli = i;
+    dum (i < valor->mensura
+        && ((valor->datum[i] >= 'A' && valor->datum[i] <= 'Z')
+            || valor->datum[i] == '_'
+            || (valor->datum[i] >= '0' && valor->datum[i] <= '9')))
+    {
+        i++;
+    }
+    mensura_tituli = i - initium_tituli;
+    si (mensura_tituli == ZEPHYRUM)
+    {
+        /* "TOLERA" prosa sequente (minusculae) = commentarium de
+         * TOLERA, non directivum - lex corporis sui-referentis,
+         * ictus QUARTUS (fragor/invalidum/scriptum ante): documenta
+         * machinae ipsius "TOLERA irrita..." directiva videbantur */
+        redde FALSUM;
+    }
+    per (t = ZEPHYRUM;
+         t < magnitudo(_tolerabiles) / magnitudo(_tolerabiles[0]);
+         t++)
+    {
+        si ((memoriae_index)strlen(_tolerabiles[t].titulus)
+                == (memoriae_index)mensura_tituli
+            && memcmp(valor->datum + initium_tituli,
+                   _tolerabiles[t].titulus,
+                   (memoriae_index)mensura_tituli) == ZEPHYRUM)
+        {
+            *codex_out = _tolerabiles[t].codex;
+            frange;
+        }
+    }
+    /* causa: ':' deinde character solidus quivis ante finem */
+    dum (i < valor->mensura && valor->datum[i] != ':')
+    {
+        i++;
+    }
+    si (i < valor->mensura)
+    {
+        i++;
+        dum (i < valor->mensura)
+        {
+            si (valor->datum[i] != ' ' && valor->datum[i] != '\t'
+                && valor->datum[i] != '*' && valor->datum[i] != '/'
+                && valor->datum[i] != '\n')
+            {
+                *habet_causam_out = VERUM;
+                frange;
+            }
+            i++;
+        }
+    }
+    redde VERUM;
+}
+
+/* collectio pigra per parsuram (exemplar tabulae alienitatis) */
+interior vacuum
+_toleras_colligere (SilvaSemantica* sem)
+{
+    constans SilvaParsura* parsura = sem->parsura_currens;
+    i32 i;
+
+    si (sem->tolerae_parsura == parsura)
+    {
+        redde;
+    }
+    sem->tolerae_parsura = parsura;
+    sem->tolerae = NIHIL;
+    si (parsura == NIHIL || parsura->lexemata == NIHIL)
+    {
+        redde;
+    }
+    sem->tolerae = xar_creare(sem->piscina,
+        (i32)magnitudo(ExamenTolera));
+    si (sem->tolerae == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(parsura->lexemata); i++)
+    {
+        SilvaToken* tok = *(SilvaToken**)xar_obtinere(
+            parsura->lexemata, i);
+        i32 latus;
+
+        si (tok == NIHIL)
+        {
+            perge;
+        }
+        per (latus = ZEPHYRUM; latus < II; latus++)
+        {
+            Xar* trivia = (latus == ZEPHYRUM) ? tok->spatia_ante
+                                              : tok->spatia_post;
+            i32 j;
+
+            si (trivia == NIHIL)
+            {
+                perge;
+            }
+            per (j = ZEPHYRUM; j < xar_numerus(trivia); j++)
+            {
+                SilvaToken* tr = *(SilvaToken**)xar_obtinere(
+                    trivia, j);
+                s32 codex;
+                b32 causam;
+
+                si (tr == NIHIL
+                    || ((s32)tr->genus
+                            != SILVA_LEX_COMMENTUM_CLAUSUM
+                        && (s32)tr->genus
+                            != SILVA_LEX_COMMENTUM_LINEA))
+                {
+                    perge;
+                }
+                si (_tolera_legere(&tr->valor, &codex, &causam))
+                {
+                    ExamenTolera* e = (ExamenTolera*)xar_addere(
+                        sem->tolerae);
+
+                    si (e == NIHIL)
+                    {
+                        redde;
+                    }
+                    e->linea = tr->linea;
+                    e->fons_index = tr->fons_index;
+                    e->codex = codex;
+                    e->habet_causam = causam;
+                    e->usus = FALSUM;
+                }
+            }
+        }
+    }
+}
+
+/* suppressio: TOLERA cum causa, codice congruente, in fonte eodem,
+ * linea firing aut praecedente. Absorbens usum notat. */
+interior b32
+_tolera_absorbere (SilvaSemantica* sem, constans SilvaNodus* nodus,
+    s32 codex)
+{
+    SilvaToken* lexema;
+    SilvaToken* radix;
+    i32 i;
+
+    _toleras_colligere(sem);
+    si (sem->tolerae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    lexema = _lexema_primum(nodus);
+    si (lexema == NIHIL)
+    {
+        redde FALSUM;
+    }
+    radix = silva_token_radix(lexema);
+    si (radix == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(sem->tolerae); i++)
+    {
+        ExamenTolera* e = (ExamenTolera*)xar_obtinere(
+            sem->tolerae, i);
+
+        si (e != NIHIL && e->codex == codex && e->habet_causam
+            && e->fons_index == radix->fons_index
+            && (e->linea == radix->linea
+                || e->linea + I == radix->linea))
+        {
+            e->usus = VERUM;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* passus finalis: TOLERA irrita flagrant (positio = commentarium) */
+interior vacuum
+_toleras_irritas_examinare (SilvaSemantica* sem,
+    constans SilvaParsura* parsura)
+{
+    i32 i;
+
+    si (sem == NIHIL || parsura == NIHIL)
+    {
+        redde;
+    }
+    _toleras_colligere(sem);
+    si (sem->tolerae == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(sem->tolerae); i++)
+    {
+        ExamenTolera* e = (ExamenTolera*)xar_obtinere(
+            sem->tolerae, i);
+        SemanticaDiagnosticum* d;
+        constans chorda* v;
+
+        si (e == NIHIL
+            || (e->codex >= ZEPHYRUM && e->habet_causam && e->usus))
+        {
+            perge;
+        }
+        d = (SemanticaDiagnosticum*)xar_addere(sem->diagnostica);
+        si (d == NIHIL)
+        {
+            redde;
+        }
+        d->nodus = NIHIL;
+        d->socius = NIHIL;
+        d->codex = (s32)EXAMEN_CODEX_TOLERA_IRRITUM;
+        si (e->codex < ZEPHYRUM)
+        {
+            d->causa = "TOLERA irritum: codex ignotus"
+                " (suppressibiles: CONVERSIO_SIGNI_SEVERA)";
+        }
+        alioquin si (!e->habet_causam)
+        {
+            d->causa = "TOLERA irritum: sine causa"
+                " (causa obligatoria - cur intentum?)";
+        }
+        alioquin
+        {
+            d->causa = "TOLERA irritum: nihil absorbet"
+                " (suppressio putrida - codex mutatus?)";
+        }
+        d->severitas =
+            _codices[EXAMEN_CODEX_TOLERA_IRRITUM].severitas;
+        d->provisionale = FALSUM;
+        d->via = _chorda_vacua();
+        si (parsura->expansio != NIHIL)
+        {
+            v = silva_fons_via(parsura->expansio, e->fons_index);
+            si (v != NIHIL)
+            {
+                d->via = *v;
+            }
+        }
+        d->linea = e->linea;
+        d->columna = I;
+        d->longitudo = ZEPHYRUM;
     }
 }
 
@@ -2916,6 +3237,9 @@ silva_c89_semantica_analysare_cum_systemate (Piscina* piscina,
      * lexematum TU usoris - systema exclusum per constructionem
      * (parsura usoris sola datur) */
     _macros_domestica_in_alienis_examinare(sem, parsura);
+    /* TOLERA irrita (gradus severi): suppressiones quae nihil
+     * absorbuerunt aut sine causa - post ambulationem totam */
+    _toleras_irritas_examinare(sem, parsura);
     redde sem;
 }
 
@@ -4214,7 +4538,16 @@ _primitivum_integrale (TypusC89* typus)
  * falsa positiva dedit (x = cond ? I : ZEPHYRUM etc.). */
 nomen structura {
     i32 latitudo;        /* bits significantes */
-    b32 non_negativum;
+    b32 non_negativum;   /* heuristica clang (paritas oraculi) */
+    b32 non_negativum_severum;  /* analysis SANA (gradus severi,
+                                 * 2026-07-17): eadem formula per
+                                 * operatorem, PRAETER minus =
+                                 * numquam (5-10<0). Optimismus
+                                 * motus sinistri (1<<n) AMBOBUS
+                                 * communis in v1 - limes nominatus.
+                                 * Sedes ubi heuristica tacet sed
+                                 * sana probare nequit -> codex
+                                 * SEVERA (TOLERA-suppressibilis). */
 } ExamenIntervallum;
 
 interior i32
@@ -4242,11 +4575,13 @@ _intervallum_typi (SilvaSemantica* sem, constans SilvaNodus* nodus)
     {
         iv.latitudo = LXIV;
         iv.non_negativum = FALSUM;   /* ignotum - numquam supprime */
+        iv.non_negativum_severum = FALSUM;
         redde iv;
     }
     iv.latitudo = (i32)(sem->primitivi[p]->magnitudo_octetorum
         * VIII);
     iv.non_negativum = _est_insignatum_primitivum(p);
+    iv.non_negativum_severum = iv.non_negativum;  /* typus = sanum */
     redde iv;
 }
 
@@ -4259,6 +4594,7 @@ _intervallum_expressionis (SilvaSemantica* sem,
 
     iv.latitudo = LXIV;
     iv.non_negativum = FALSUM;
+    iv.non_negativum_severum = FALSUM;
     si (nodus == NIHIL || profunditas >= VIII)
     {
         redde iv;
@@ -4282,6 +4618,7 @@ _intervallum_expressionis (SilvaSemantica* sem,
             {
                 iv.latitudo = _latitudo_valoris(valor);
                 iv.non_negativum = VERUM;
+                iv.non_negativum_severum = VERUM;  /* exacta */
             }
             redde iv;
         }
@@ -4317,6 +4654,8 @@ _intervallum_expressionis (SilvaSemantica* sem,
                     ? a.latitudo : b.latitudo;
                 iv.non_negativum = a.non_negativum
                     && b.non_negativum;
+                iv.non_negativum_severum = a.non_negativum_severum
+                    && b.non_negativum_severum;
                 redde iv;
             }
             frange;
@@ -4334,6 +4673,7 @@ _intervallum_expressionis (SilvaSemantica* sem,
                     casus SILVA_LEX_EXCLAMATIO:
                         iv.latitudo = I;
                         iv.non_negativum = VERUM;
+                        iv.non_negativum_severum = VERUM;
                         redde iv;
                     casus SILVA_LEX_PLUS:
                         redde _intervallum_expressionis(sem,
@@ -4369,6 +4709,7 @@ _intervallum_expressionis (SilvaSemantica* sem,
             {
                 iv.latitudo = I;
                 iv.non_negativum = VERUM;
+                iv.non_negativum_severum = VERUM;
                 redde iv;
             }
             s = _intervallum_expressionis(sem, s_v.datum.nodus,
@@ -4378,6 +4719,7 @@ _intervallum_expressionis (SilvaSemantica* sem,
             commutatio (op)
             {
                 casus SILVA_LEX_AMPERSAND:
+                    /* nonneg si UTRUM (bit signi purgatus - sanum) */
                     si (s.non_negativum && d.non_negativum)
                     {
                         iv.latitudo = (s.latitudo < d.latitudo)
@@ -4392,6 +4734,9 @@ _intervallum_expressionis (SilvaSemantica* sem,
                     {
                         iv = d;
                     }
+                    iv.non_negativum_severum =
+                        s.non_negativum_severum
+                        || d.non_negativum_severum;
                     redde iv;
                 casus SILVA_LEX_BARRA:
                 casus SILVA_LEX_CARET:
@@ -4399,16 +4744,24 @@ _intervallum_expressionis (SilvaSemantica* sem,
                         ? s.latitudo : d.latitudo;
                     iv.non_negativum = s.non_negativum
                         && d.non_negativum;
+                    iv.non_negativum_severum =
+                        s.non_negativum_severum
+                        && d.non_negativum_severum;
                     redde iv;
                 casus SILVA_LEX_PERCENTUM:
                     /* |fructus| < |dexter| */
                     iv.latitudo = d.latitudo;
                     iv.non_negativum = s.non_negativum;
+                    iv.non_negativum_severum =
+                        s.non_negativum_severum;
                     redde iv;
                 casus SILVA_LEX_SOLIDUS:
                     iv.latitudo = s.latitudo;
                     iv.non_negativum = s.non_negativum
                         && d.non_negativum;
+                    iv.non_negativum_severum =
+                        s.non_negativum_severum
+                        && d.non_negativum_severum;
                     redde iv;
                 casus SILVA_LEX_DEXTRORSUM:
                     redde s;
@@ -4432,16 +4785,22 @@ _intervallum_expressionis (SilvaSemantica* sem,
                     {
                         iv.latitudo = LXIV;
                     }
-                    /* nonneg servatur (oraculum: I << n tacet) */
+                    /* nonneg servatur (oraculum: I << n tacet);
+                     * optimismus AMBOBUS communis in v1 (1<<31
+                     * negativum - bracchium sanum = futurum) */
                     iv.non_negativum = s.non_negativum;
+                    iv.non_negativum_severum =
+                        s.non_negativum_severum;
                     redde iv;
                 }
                 casus SILVA_LEX_PLUS:
                 casus SILVA_LEX_MINUS:
-                    /* MINUS eadem regula ac PLUS (calibratio: clang
-                     * apud (1<<n)-1, prod-128, u8-u8 TACET - regula
-                     * eius nonneg&&nonneg, non mathematice stricta;
-                     * paritas oraculi lex est) */
+                    /* heuristica: MINUS eadem regula ac PLUS
+                     * (calibratio: clang apud (1<<n)-1, prod-128,
+                     * u8-u8 TACET - paritas oraculi lex est).
+                     * SEVERUM: minus numquam nonneg (5-10<0) - HAEC
+                     * est regula stricta v1 (17 sedes corporis,
+                     * mensura 2026-07-17). */
                     iv.latitudo = ((s.latitudo > d.latitudo)
                         ? s.latitudo : d.latitudo) + I;
                     si (iv.latitudo > LXIV)
@@ -4450,6 +4809,10 @@ _intervallum_expressionis (SilvaSemantica* sem,
                     }
                     iv.non_negativum = s.non_negativum
                         && d.non_negativum;
+                    iv.non_negativum_severum =
+                        (op == SILVA_LEX_PLUS)
+                        && s.non_negativum_severum
+                        && d.non_negativum_severum;
                     redde iv;
                 casus SILVA_LEX_STAR:
                     iv.latitudo = s.latitudo + d.latitudo;
@@ -4459,9 +4822,12 @@ _intervallum_expressionis (SilvaSemantica* sem,
                     }
                     iv.non_negativum = s.non_negativum
                         && d.non_negativum;
+                    iv.non_negativum_severum =
+                        s.non_negativum_severum
+                        && d.non_negativum_severum;
                     redde iv;
                 ordinarius:
-                    frange;   /* MINUS etc. -> typus infra */
+                    frange;   /* cetera -> typus infra */
             }
             frange;
         }
@@ -4528,6 +4894,7 @@ _conversionem_signi_examinare (SilvaSemantica* sem,
     b32 i_naturalis;
     b32 i_finis;
     constans SilvaNodus* pater;
+    s32 codex_ignis = (s32)EXAMEN_CODEX_CONVERSIO_SIGNI;
 
     si (sem->in_systemate)
     {
@@ -4601,7 +4968,9 @@ _conversionem_signi_examinare (SilvaSemantica* sem,
         redde;
     }
     /* intervallum (exemplar IntRange): signatum -> insignatum
-     * tacet si valor provabiliter non negativus; insignatum ->
+     * tacet si valor provabiliter non negativus (heuristica clang);
+     * si heuristica tacet sed analysis SANA probare nequit ->
+     * gradus SEVERUS (TOLERA-suppressibilis). insignatum ->
      * signatum tacet si latitudo intra finem cadit (constantes
      * exacte per aestimatorem - i32 n = 0 tacet, i32 x = -I
      * FLAGRAT) */
@@ -4613,7 +4982,17 @@ _conversionem_signi_examinare (SilvaSemantica* sem,
         {
             si (iv.non_negativum)
             {
-                redde;
+                si (iv.non_negativum_severum)
+                {
+                    redde;   /* sane tutum */
+                }
+                si (_tolera_absorbere(sem, nodus,
+                        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA))
+                {
+                    redde;   /* intentum, causa notata */
+                }
+                codex_ignis =
+                    (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA;
             }
         }
         alioquin si (iv.latitudo
@@ -4632,6 +5011,10 @@ _conversionem_signi_examinare (SilvaSemantica* sem,
         insignatus integer m_finis = silva_c89_typum_scribere(
             finis, textus_finis,
             (insignatus integer)magnitudo(textus_finis));
+        constans character* stricta =
+            (codex_ignis
+                == (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA)
+            ? " (stricta)" : "";
 
         si (m_naturalis > ZEPHYRUM && m_finis > ZEPHYRUM)
         {
@@ -4642,16 +5025,15 @@ _conversionem_signi_examinare (SilvaSemantica* sem,
 
             si (nuntius != NIHIL)
             {
-                sprintf(nuntius, "conversio signi implicita:"
-                    " %s -> %s", textus_naturalis, textus_finis);
-                _diagnosticum_addere_plenum(sem, nodus,
-                    (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, NIHIL,
-                    nuntius);
+                sprintf(nuntius, "conversio signi implicita%s:"
+                    " %s -> %s", stricta, textus_naturalis,
+                    textus_finis);
+                _diagnosticum_addere_plenum(sem, nodus, codex_ignis,
+                    NIHIL, nuntius);
                 redde;
             }
         }
-        silva_c89_diagnosticum_addere(sem, nodus,
-            (s32)EXAMEN_CODEX_CONVERSIO_SIGNI);
+        silva_c89_diagnosticum_addere(sem, nodus, codex_ignis);
     }
 }
 

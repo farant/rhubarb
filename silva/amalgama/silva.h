@@ -1323,6 +1323,12 @@ typedef enum {
      * i32-insignatus) - DOMESTICUM (legale C89, vexilla domus
      * reiciunt); causa in piscina structa (typos ambos nominat) */
     EXAMEN_CODEX_CONVERSIO_SIGNI,
+    /* gradus severi (TOLERA): analysis stricta supra oraculum -
+     * suppressibilis commentario "TOLERA CONVERSIO_SIGNI_SEVERA:
+     * causa" (linea eadem/praecedens, causa obligatoria); IRRITUM
+     * = suppressio quae nihil absorbet aut sine causa */
+    EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA,
+    EXAMEN_CODEX_TOLERA_IRRITUM,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

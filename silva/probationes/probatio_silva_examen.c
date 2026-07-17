@@ -1071,6 +1071,78 @@ s32 principale (vacuum)
         }
     }
 
+    /* ========================================================
+     * XII. Gradus severi + TOLERA: severa flagrat ubi analysis
+     * sana probare nequit sed clang tacet (54 IBI silet - pinna
+     * XOR); TOLERA linea eadem/praecedente cum causa supprimit;
+     * sine causa non supprimit + IRRITUM; inutile IRRITUM; codex
+     * paritatis non suppressibilis.
+     * ======================================================== */
+    imprimere("\n--- Probans gradus severos + TOLERA ---\n");
+
+    /* subtractio u8-u8 in insignatum: heuristica tacet (clang
+     * quoque), sana probare nequit -> SEVERA I, paritas ZEPHYRUM */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{ return a - b; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, I);
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{ return a - b; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, ZEPHYRUM);
+    /* additio manet sana - severa ZEPHYRUM */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{ return a + b; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, ZEPHYRUM);
+    /* TOLERA linea eadem: suppressum, IRRITUM nullum */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{ return a - b;"
+        " /* TOLERA CONVERSIO_SIGNI_SEVERA: probatio */ }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, ZEPHYRUM);
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{ return a - b;"
+        " /* TOLERA CONVERSIO_SIGNI_SEVERA: probatio */ }\n",
+        (s32)EXAMEN_CODEX_TOLERA_IRRITUM, ZEPHYRUM);
+    /* TOLERA linea praecedente: suppressum */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{\n"
+        "    /* TOLERA CONVERSIO_SIGNI_SEVERA: probatio lineae */\n"
+        "    return a - b;\n"
+        "}\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, ZEPHYRUM);
+    /* sine causa: NON supprimit + IRRITUM */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{ return a - b; /* TOLERA CONVERSIO_SIGNI_SEVERA */ }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, I);
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{ return a - b; /* TOLERA CONVERSIO_SIGNI_SEVERA */ }\n",
+        (s32)EXAMEN_CODEX_TOLERA_IRRITUM, I);
+    /* inutile (nihil in linea sua/proxima flagrat): IRRITUM */
+    _codicem_probare(piscina,
+        "/* TOLERA CONVERSIO_SIGNI_SEVERA: nusquam adhibitum */\n"
+        "static int probe_i;\n",
+        (s32)EXAMEN_CODEX_TOLERA_IRRITUM, I);
+    /* codex ignotus (paritas NON suppressibilis): IRRITUM et
+     * firing paritatis MANET */
+    _codicem_probare(piscina,
+        "static unsigned f(int s)\n"
+        "{ return s; /* TOLERA CONVERSIO_SIGNI: vetitum */ }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, I);
+    _codicem_probare(piscina,
+        "static unsigned f(int s)\n"
+        "{ return s; /* TOLERA CONVERSIO_SIGNI: vetitum */ }\n",
+        (s32)EXAMEN_CODEX_TOLERA_IRRITUM, I);
+    /* commentarium ordinarium: nulla tabula, nullum IRRITUM */
+    _codicem_probare(piscina,
+        "static int probe_j; /* commentarium simplex */\n",
+        (s32)EXAMEN_CODEX_TOLERA_IRRITUM, ZEPHYRUM);
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

@@ -1,0 +1,22 @@
+/* gradus severi - subtractio quam analysis sana probare nequit.
+ * Clang -Wsign-conversion hic TACET (supra oraculum - id ipsum
+ * gradum severum definit); examen SEVERA flagrat nisi TOLERA cum
+ * causa supprimit. Vectis: verdictum ACCIPE + pinnae praesentes +
+ * oraculum SILENS ad pinnas + linea tolerata QUIETA + IRRITUM 0. */
+/* EXSPECTA 10:CONVERSIO_SIGNI_SEVERA */
+
+static unsigned differentia_cruda(unsigned char a, unsigned char b)
+{
+    return a - b;
+}
+
+static unsigned differentia_tolerata(unsigned char a, unsigned char b)
+{
+    /* TOLERA CONVERSIO_SIGNI_SEVERA: probatio suppressionis */
+    return a - b;
+}
+
+static unsigned radix(void)
+{
+    return differentia_cruda(1, 2) + differentia_tolerata(3, 4);
+}

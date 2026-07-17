@@ -8063,3 +8063,134 @@ Link find: vigilia.o needs sigillum.o (RADIX_FONTES += vigilia,
 sigillum). Fast direct-binary loops are now safe BY DETECTION.
 Ceteri binaria subsellii (censor...) get the same ~20 lines on
 next touch — pattern proven here.
+
+## TOLERA — gradus severi + suppressiones commentariis: INTENTIO (2026-07-17)
+
+Origin: parcum 01KXQ5ZKV0 (Fran's pull, same conversation as the
+measurement). Premise measured before design: the sound-subtraction
+rule = 17 corpus sites (one-sitting adjudication; color.c lerp may
+be a REAL find). Goal: strict static analysis ABOVE oracle parity,
+with in-code suppression as a first-class recorded act.
+
+ARCHITECTURE (blessed in conversation):
+- Two tiers, hard boundary: parity codex 54 stays comment-free
+  forever (corpus-zero stays free); STRICT rules get own codices,
+  only they are TOLERA-suppressible. A site fires 54 XOR severa —
+  TOLERA can never silence what clang would reject.
+- v1 strict rule: EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA (DOMESTICUM,
+  verdict-neutral) = fires where the SOUND range analysis cannot
+  prove safety but the clang-parity heuristic stays silent. Engine:
+  ExamenIntervallum gains a second bit non_negativum_severum,
+  computed in the SAME pass (sub kills it; other ops propagate);
+  fire severa when heuristic-nonneg && !severum-nonneg.
+- Grammar (EXSPECTA precedent): /* TOLERA <CODEX_TITULUS>: causa */
+  — same line as the firing or the line above; CAUSA MANDATORY
+  (house culture: record the why). Codex named explicitly, no
+  wildcards.
+- TOLERA table: lazy per-parsura scan of comment trivia (comments
+  are content — the VISIO pin pays again), cached on sem like the
+  alienity table: {linea, codex, habet_causam, usus}.
+- EXAMEN_CODEX_TOLERA_IRRITUM (DOMESTICUM): fired at end of
+  analysis for any TOLERA that absorbed nothing OR lacks a causa
+  (reasonless = does not suppress). The eslint staleness lesson +
+  the INVARIANT shape: a suppression matching nothing is a signal.
+- ONE-override-philosophy note stands: TOLERA is the site-scoped
+  member of the exclusiones/filter/aedilis family — vocabulary
+  designed to coexist, formal unification stays at the aedilis
+  on-ramp.
+
+BARS:
+1. Unit (probatio_silva_examen): severa fires on u8-u8-into-unsigned
+   with parity 54 SILENT there (the XOR pin); TOLERA same-line and
+   line-above suppress; TOLERA without causa does NOT suppress +
+   IRRITUM; unused TOLERA -> IRRITUM; TOLERA naming codex 54 has NO
+   effect (parity not suppressible) + IRRITUM (absorbed nothing).
+2. Corpus adjudication = the deliverable: all 17 severa sites
+   classified by hand (fix real bugs / TOLERA with reasons);
+   standing bar becomes census severa = 0 UNSUPPRESSED + IRRITUM
+   = 0.
+3. Fixture + vectis leg: severa fixture asserts clang SILENT at
+   pinned lines (the inverse oracle leg — strict means beyond
+   clang), our rows present unsuppressed, absent under TOLERA.
+4. Standing gates: suites, amalgam (silva.h mirror +2 codices),
+   timing recorded.
+
+RISKS: trivia access pattern for comments (read silva_token.h
+first — attachment rules exist but the lookup shape is unverified);
+adjudication may find real bugs (color.c) whose FIXES are the
+right outcome, not TOLERA.
+
+## TOLERA — gradus severi: RELATIO (2026-07-17, same day as INTENTIO)
+
+SHIPPED, and the arc PAID ON ARRIVAL: adjudicating the 17 measured
+sites found TWO REAL SHIPPED BUGS.
+
+THE FINDS:
+- lib/delineare.c DEAD CLAMP: cohibere(i32) — unsigned param made
+  the "< 0" clamp tautologically dead since birth; negative sums
+  (dark pixel + negative diffusion error / Bayer threshold in
+  [-128,112]) wrapped to ~4e9 and clamped to 255: WHITE SPECKLES IN
+  SHADOWS across every error-diffusion and Bayer path. The (i32)
+  casts at call sites were the -Werror-silencing pattern that
+  buried it. Fixed: cohibere(s32) + 9 call sites genuinely signed +
+  threshold s32. All firings DISSOLVED (fixed, not tolerated).
+- lib/color.c ROUNDING DRIFT: interpolate's unsigned t sent
+  negative diffs (darkening lerps) through unsigned division —
+  floor-vs-truncate off-by-one on non-exact steps. Fixed to
+  explicit s32 arithmetic; probatio_color 63+123 green; the exact
+  roundtrip-fixture harvest resynced.
+
+ADJUDICATION LEDGER (17/17): 8 fixed (delineare 4, color 4) + 4
+dissolved by fixture resync + 5 TOLERA with recorded reasons
+(arbor_syntaxis 3 "custoditum - *p intra [...]", flatura 2 "larva
+(1<<n)-1 non negativa" — frozen v1 code, guards/invariants the
+width engine cannot see).
+
+BARS:
+- Unit 691/691 (+36): severa XOR parity pinned (u8-u8 fires severa
+  ONLY), same-line + line-above suppression, sine-causa does not
+  suppress + IRRITUM, unused IRRITUM, unknown codex IRRITUM with
+  parity intact, plain comments inert.
+- CORPUS FINAL: census 54 ABSENT + 55 ABSENT + 56 ABSENT over 820
+  files / 1,692,664 typed nodes — zero unsuppressed strict
+  firings, zero rotten suppressions, parity intact. Verdicts = 41
+  pinned exclusions unchanged; coverage 100.00%; tempus 150.8s
+  (baseline).
+- Fixture gradus_severi.severum + vectis leg ②c (INVERSE oracle:
+  clang must be SILENT at pins — being above the oracle is the
+  pinned property; tolerata line quiet; IRRITUM 0). VECTIS TENET
+  four legs.
+- amalgamare VERIFICATUM (hospes 32/32); silva 30/30; officina
+  12/12.
+
+AS BUILT: ExamenIntervallum carries non_negativum_severum computed
+in the same pass (identical per-op formulas; MINUS = numquam;
+shift optimism SHARED v1 = named limit); severa inherits every
+parity suppression by position; TOLERA table = lazy per-parsura
+trivia scan (comments-are-content pin pays again), suppression =
+codex+causa+fons+linea(0/-1) match, absorption marks usage;
+IRRITUM fires post-walk for unused/causa-less/unknown-codex.
+Codices 55+56 appended (stable ABI), silva.h mirrored.
+
+CORPUS LAW, FOURTH STRIKE: the machinery's own doc comments
+("TOLERA irrita...") parsed as directives — grammar now requires a
+non-empty UPPERCASE codex word (prose continues lowercase). Pinned.
+
+PHASIS II unchanged by name: comparisons tier (brings tautological
+insignatus>=0 — delineare's dead clamp would ALSO have been caught
+there), narrowing, float, sound-shift arm, -domus.
+
+INSTRUMENTA DEBRIEF (more domus):
+- adhibita: the PUSH DROVE THE FIX — changing cohibere's signature
+  lit all 9 call sites positioned in the edit feedback (judgment as
+  pair programmer, the strongest push moment yet); differentia.sh
+  dogfooded on day one (NOS SOLI bucket = the adjudication
+  worklist); percursus census = the arc's meter (17 -> 0);
+  measurement-before-design (one flipped predicate + sweep) sized
+  the whole proposal before commitment.
+- fructus: trivia-as-content answered TOLERA lookup in ~40 lines;
+  the alienity-table caching shape reused verbatim.
+- asperitates: none new — the self-referential corpus law is now
+  four-for-four on new judgment machinery (budget for it in every
+  future tier: your own docs/fixtures WILL trip the new rule).
+- desiderata: none filed (phasis II items named above).

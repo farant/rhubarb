@@ -288,6 +288,18 @@ nomen enumeratio {
      * contextus comparationis (phasis II), constans capit finem.
      * Causa IN PISCINA structa (typos ambos nominat). */
     EXAMEN_CODEX_CONVERSIO_SIGNI,             /* DOMESTICUM */
+    /* gradus SEVERI (TOLERA, 2026-07-17): analysis stricta SUPRA
+     * paritatem oraculi. SEVERA = analysis sana securitatem probare
+     * non potest ubi heuristica clang tacet (v1: subtractio numquam
+     * non-negativa) - sedes flagrat 54 AUT severa, numquam ambo;
+     * TOLERA numquam silet quod clang reiceret. Suppressibilis
+     * commentario "TOLERA CONVERSIO_SIGNI_SEVERA: causa" (linea
+     * eadem aut praecedens; causa OBLIGATORIA). IRRITUM = TOLERA
+     * quod nihil absorbet aut sine causa aut codicem ignotum
+     * nominat (lectio eslint: suppressiones putrescunt - quae nihil
+     * absorbet signum est, non nihil). */
+    EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA,      /* DOMESTICUM */
+    EXAMEN_CODEX_TOLERA_IRRITUM,              /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -391,6 +403,13 @@ structura SilvaSemantica {
     constans SilvaParsura* alieni_parsura;
     b32*                   fontes_alieni;
     i32                    fontes_alieni_numerus;
+
+    /* tabula TOLERA (gradus severi, 2026-07-17): commentaria
+     * suppressionis ex triviis lexematum pigre collecta per
+     * parsuram; elementa ExamenTolera (in .c). Post ambulationem
+     * inutilia IRRITUM flagrant. */
+    constans SilvaParsura* tolerae_parsura;
+    Xar*                   tolerae;
 };
 
 SilvaSemantica* silva_c89_semantica_creare (Piscina* piscina);

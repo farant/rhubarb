@@ -605,3 +605,21 @@ the right call — the tail was real and had exact shape:
 - Stale-binary strike (bench lesson N+1): ran silva/build/examen
   directly after editing fontes — only examen.sh relinks it;
   first "alien guard doesn't work" was a stale binary.
+
+## 2026-07-17 — TOLERA (gradus severi) built; corpus law strikes again
+
+- Self-referential corpus law, FOURTH strike (fragor/invalidum/
+  scriptum before): the TOLERA machinery's own doc comments
+  ("TOLERA irrita...", "TOLERA linea eadem...") parsed as directives
+  with unknown codices. Grammar fix: the codex word must be
+  non-empty uppercase — prose about TOLERA continues in lowercase,
+  directives don't. Pinned in the unit suite.
+- The severa fire path inherits ALL parity suppressions (cast/
+  comparison/compound/alien) by construction — it sits after them
+  in the same judgment. TOLERA lookup = lazy per-parsura comment
+  scan over token trivia (spatia_ante/post), same caching shape as
+  the alienity table.
+- Adjudication of the 17 measured sites found TWO REAL BUGS
+  (delineare dead clamp, color rounding drift) and 5 legitimate
+  TOLERA sites (guarded digit arithmetic, mask construction). The
+  hit rate argument for strict tiers made itself.

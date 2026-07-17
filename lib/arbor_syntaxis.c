@@ -1140,14 +1140,17 @@ _parsere_integer(ArborSyntaxis* syn)
     {
         si (*p >= '0' && *p <= '9')
         {
+            /* TOLERA CONVERSIO_SIGNI_SEVERA: custoditum - *p intra ['0','9'] */
             val = val * base + (*p - '0');
         }
         alioquin si (base == XVI && *p >= 'a' && *p <= 'f')
         {
+            /* TOLERA CONVERSIO_SIGNI_SEVERA: custoditum - *p intra ['a','f'] */
             val = val * base + (*p - 'a' + X);
         }
         alioquin si (base == XVI && *p >= 'A' && *p <= 'F')
         {
+            /* TOLERA CONVERSIO_SIGNI_SEVERA: custoditum - *p intra ['A','F'] */
             val = val * base + (*p - 'A' + X);
         }
         alioquin si (*p == 'u' || *p == 'U')

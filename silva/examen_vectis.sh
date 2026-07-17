@@ -146,6 +146,64 @@ for f in "$FIXA"/*.domesticum; do
     fi
 done
 
+# ②c corpus severum: gradus SEVERI (supra oraculum - clang SILET ad
+#   pinnas, id ipsum proprietas est); verdictum ACCIPE; ordines
+#   severi == pinnae exacte (lineae toleratae QUIETAE); IRRITUM 0
+echo "--- corpus severum (pinnae + oraculum inversum) ---"
+for f in "$FIXA"/*.severum; do
+    [ -e "$f" ] || continue
+    basis="$(basename "$f")"
+    exspecta="$(grep -o 'EXSPECTA [0-9]*:[A-Z_]*' "$f" \
+        | sed 's/EXSPECTA //')"
+
+    effusum="$("$SILVA_DIR/build/examen" "$f" -machina 2>/dev/null)"
+    verdictum="$(printf '%s\n' "$effusum" | awk -F'\t' \
+        '$1=="VERDICTUM"{print $2}')"
+    if [ "$verdictum" != "ACCIPE" ]; then
+        echo "  DISCREPANTIA: $basis examen=$verdictum (non ACCIPE)"
+        fracta=1
+        continue
+    fi
+    monita="$("${ORACULUM_DOMUS[@]}" "$f" 2>&1)"
+    n_pinnae=0
+    for pinna in $exspecta; do
+        n_pinnae=$((n_pinnae + 1))
+        linea="${pinna%%:*}"
+        nomen="EXAMEN_CODEX_${pinna#*:}"
+        numerus="$(awk -F'\t' -v n="$nomen" '$2==n{print $1}' "$MAPPA")"
+        if [ -z "$numerus" ]; then
+            echo "  PINNA IGNOTA: $basis $nomen"
+            fracta=1
+            continue
+        fi
+        if ! printf '%s\n' "$effusum" | awk -F'\t' \
+            -v l="$linea" -v c="$numerus" \
+            '$2==l && $4=="domesticum" && $5==c {inventum=1}
+             END{exit !inventum}'; then
+            echo "  PINNA DEEST: $basis linea $linea $nomen"
+            fracta=1
+        fi
+        if printf '%s\n' "$monita" | grep -q ":$linea:.*sign-conversion"; then
+            echo "  ORACULUM FLAGRAT: $basis linea $linea" \
+                 "(gradus severus supra oraculum esse debet!)"
+            fracta=1
+        fi
+    done
+    n_severa="$(printf '%s\n' "$effusum" | awk -F'\t' \
+        '$5==55' | wc -l | tr -d ' ')"
+    if [ "$n_severa" != "$n_pinnae" ]; then
+        echo "  DISCREPANTIA NUMERI: $basis severa=$n_severa" \
+             "pinnae=$n_pinnae (tolerata flagrant?)"
+        fracta=1
+    fi
+    n_irrita="$(printf '%s\n' "$effusum" | awk -F'\t' \
+        '$5==56' | wc -l | tr -d ' ')"
+    if [ "$n_irrita" != "0" ]; then
+        echo "  IRRITUM: $basis $n_irrita TOLERA irrita"
+        fracta=1
+    fi
+done
+
 # ③ -corpus: columna verdicti percursus contra exclusiones pinnatas
 if [ "${1:-}" = "-corpus" ]; then
     echo "--- corpus verum (percursus REICE vs exclusiones) ---"

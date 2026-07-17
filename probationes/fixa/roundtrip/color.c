@@ -113,12 +113,18 @@ Color
 color_interpolate(Color a, Color b, i32 t)
 {
     Color result;
+    /* Arithmetica SIGNATA ex decreto (inventum gradus severi
+     * 2026-07-17): t insignatum differentias negativas (b < a,
+     * obscuratio) per UAC volvebat - divisio insignata versus
+     * infinitum rotundat, signata versus zephyrum: fructus uno
+     * differebat in obscurationibus non-exactis. */
+    s32 ts = (s32)t;
 
     /* Interpolate each component (t = 0-256) */
-    result.r = (i8)(a.r + ((b.r - a.r) * t) / CCLVI);
-    result.g = (i8)(a.g + ((b.g - a.g) * t) / CCLVI);
-    result.b = (i8)(a.b + ((b.b - a.b) * t) / CCLVI);
-    result.a = (i8)(a.a + ((b.a - a.a) * t) / CCLVI);
+    result.r = (i8)((s32)a.r + (((s32)b.r - (s32)a.r) * ts) / CCLVI);
+    result.g = (i8)((s32)a.g + (((s32)b.g - (s32)a.g) * ts) / CCLVI);
+    result.b = (i8)((s32)a.b + (((s32)b.b - (s32)a.b) * ts) / CCLVI);
+    result.a = (i8)((s32)a.a + (((s32)b.a - (s32)a.a) * ts) / CCLVI);
 
     redde result;
 }

@@ -183,6 +183,7 @@ _flatura_legere_bits(
     }
 
     /* Extrahere bits */
+    /* TOLERA CONVERSIO_SIGNI_SEVERA: larva (1<<n)-1 non negativa */
     valor = lector->bit_buffer & ((I << numerus_bits) - I);
     lector->bit_buffer >>= numerus_bits;
     lector->bits_in_buffer -= numerus_bits;
@@ -538,6 +539,7 @@ _flatura_huffman_legere(
 
     si (bits_non_usati > 0)
     {
+        /* TOLERA CONVERSIO_SIGNI_SEVERA: larva (1<<n)-1 non negativa */
         bits_reponere = ((i32)bits >> longitudo) & ((I << bits_non_usati) - I);
         lector->bit_buffer = (lector->bit_buffer << bits_non_usati) | bits_reponere;
         lector->bits_in_buffer += bits_non_usati;

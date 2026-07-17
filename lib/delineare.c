@@ -1148,14 +1148,19 @@ interior constans i8 bayer_matrix_8x8[VIII][VIII] = {
     { 63, 31, 55, 23, 61, 29, 53, 21 }
 };
 
-/* Cohibere valorem intra limites 0-255 */
+/* Cohibere valorem intra limites 0-255. Parametrum SIGNATUM ex
+ * decreto (inventum gradus severi 2026-07-17): forma vetus i32
+ * probam "< 0" MORTUAM habebat (insignatum numquam negativum) -
+ * summae negativae (pixel obscurum + error/threshold negativus)
+ * volvebant ad ~4e9 et ad CCLV (ALBUM) cohibebantur: maculae albae
+ * in umbris omnium viarum diffusionis erroris et Bayer. */
 interior i32
 cohibere(
-    i32 valor)
+    s32 valor)
 {
     si (valor < ZEPHYRUM) redde ZEPHYRUM;
     si (valor > CCLV) redde CCLV;
-    redde valor;
+    redde (i32)valor;
 }
 
 /* Integer square root using Newton's method */
@@ -1367,9 +1372,9 @@ delineare_gradientum_linearem_dithered(
             b_ideal = interpolate(b0, b1, t);
 
             /* Applicare error ex pixelis praecedentibus */
-            r_actual = cohibere(r_ideal + (i32)error_r[px]);
-            g_actual = cohibere(g_ideal + (i32)error_g[px]);
-            b_actual = cohibere(b_ideal + (i32)error_b[px]);
+            r_actual = cohibere((s32)r_ideal + error_r[px]);
+            g_actual = cohibere((s32)g_ideal + error_g[px]);
+            b_actual = cohibere((s32)b_ideal + error_b[px]);
 
             /* Quantizare ad 0 vel 255 */
             r_quant = quantizare_component(r_actual);
@@ -1564,9 +1569,9 @@ delineare_gradientum_radialem_dithered(
             b_ideal = interpolate(b0, b1, t);
 
             /* Applicare error */
-            r_actual = cohibere(r_ideal + (i32)error_r[x_rel]);
-            g_actual = cohibere(g_ideal + (i32)error_g[x_rel]);
-            b_actual = cohibere(b_ideal + (i32)error_b[x_rel]);
+            r_actual = cohibere((s32)r_ideal + error_r[x_rel]);
+            g_actual = cohibere((s32)g_ideal + error_g[x_rel]);
+            b_actual = cohibere((s32)b_ideal + error_b[x_rel]);
 
             /* Quantizare */
             r_quant = quantizare_component(r_actual);
@@ -1683,7 +1688,8 @@ delineare_gradientum_linearem_dithered_cum_palette(
             {
                 i32 t, gray_ideal, color_final;
                 i32 actual_x, actual_y;
-                i32 threshold, bayer_x, bayer_y;
+                s32 threshold;
+                i32 bayer_x, bayer_y;
 
                 si (horizontalis)
                     t = (px * CCLVI) / MAXIMUM(I, latitudo - I);
@@ -1710,7 +1716,7 @@ delineare_gradientum_linearem_dithered_cum_palette(
                 }
 
                 /* Apply threshold dithering, then find nearest palette color */
-                gray_ideal = cohibere(gray_ideal + threshold);
+                gray_ideal = cohibere((s32)gray_ideal + threshold);
 
                 /* Map grayscale to nearest palette color */
                 si (palette && numerus_colorum > ZEPHYRUM)
@@ -1779,7 +1785,7 @@ delineare_gradientum_linearem_dithered_cum_palette(
                     t = (py * CCLVI) / MAXIMUM(I, altitudo - I);
 
                 gray_ideal = interpolate(gray0, gray1, t);
-                gray_actual = cohibere(gray_ideal + (i32)error[px]);
+                gray_actual = cohibere((s32)gray_ideal + error[px]);
 
                 /* Find nearest palette color by grayscale */
                 si (palette && numerus_colorum > ZEPHYRUM)
@@ -1919,7 +1925,8 @@ delineare_gradientum_radialem_dithered_cum_palette(
             /* Apply Bayer threshold dithering
              * Note: Radial gradients always use Bayer (error diffusion doesn't work well) */
             {
-                i32 threshold, bayer_x, bayer_y;
+                s32 threshold;
+                i32 bayer_x, bayer_y;
 
                 si (algorithmus == DITHERING_BAYER_8X8)
                 {
@@ -1934,7 +1941,7 @@ delineare_gradientum_radialem_dithered_cum_palette(
                     threshold = (bayer_matrix_4x4[bayer_y][bayer_x] * XVI) - CXXVIII;
                 }
 
-                gray_ideal = cohibere(gray_ideal + threshold);
+                gray_ideal = cohibere((s32)gray_ideal + threshold);
             }
 
             /* Map grayscale to palette */
