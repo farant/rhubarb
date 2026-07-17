@@ -8672,3 +8672,91 @@ TOLERA twin quiet) + comparatio_degradata.severum (dormant, no
 pins); VECTIS TENET; amalgamare VERIFICATUM; silva 30/30; officina
 12/12; census 61 = 2 (frozen, standing), 62 = 0 (dormit), 58 = 43
 (sputnik harvest), REICE = 41.
+
+## GRADUS FLUXUS-0 (CFG + attingibilitas): INTENTIO (2026-07-17)
+
+The biggest remaining lint-lane pull, and the first new DATA
+STRUCTURE since the interval machine: a statement-level control-flow
+graph per function, built silva-side on the tree (dependency law;
+code-is-a-database pin — the CFG must survive into queryable form,
+not be consumed and discarded inside one tier).
+
+CALIBRATION (done first, live Apple clang 16, specimens in scratch):
+- House flags: BLIND to fall-through and unreachable code (zero
+  diagnostics); -Wreturn-type is in -Wall and fires on both
+  missing-return-path forms (if-without-else, incomplete switch).
+- -Wimplicit-fallthrough (C89 mode): fires at the RECEIVING label
+  when the previous group's end is REACHABLE (path-based: `casus 0:
+  si (x) frange;` falls through and fires) and the previous group is
+  non-empty; label stacking (casus 4: casus 5:) is silent; comments
+  do NOT suppress (GCC honors them, clang does not); the sanctioned
+  suppression __attribute__((fallthrough)) is not house-writable.
+- -Wunreachable-code: post-jump statements fire; return-after-
+  infinite-loop needs -aggressive (DEFERRED by name, path back =
+  same CFG, just an extra "no terminating edge" query).
+
+ARCHITECTURE: new module silva_c89_fluxus.{h,c} (one unit-tested
+module at a time). FluxusFunctionis per definitio-functionis:
+blocks = runs of statement nodes (statement granularity), typed
+edges (sequens/verus/falsus/casus/ruptura/persecutio/salta),
+jump resolution (frange -> nearest breakable, perge -> nearest
+loop, salta -> titulatum by name — C89 labels are function-scoped),
+attingibilitas marking from entry. Blocks REFERENCE tree nodes
+(every field a future query column). Piscina-allocated, caller-owned
+lifetime like semantica.
+
+SCOPE PINS (deferred use cases NAMED, paths back preserved):
+- Statement granularity ONLY; no short-circuit/expression-level
+  subdivision. Path back: MC/DC horizon + codex 62 stage 2 own
+  expression-level flow; block struct must reference expression
+  nodes intact so a later pass can subdivide WITHOUT re-shaping the
+  block API.
+- Conditional arms: v1 builds on the taken track (RAMUS_SUMPTUS)
+  only. Path back: builder parameterized by arm selection when
+  config-preset queries land (wildcard-conditional pin intact —
+  the TREE keeps all arms; the CFG is a view).
+- AMBIGUUS/ERROR nodes in statement position: opaque single-block
+  statements, never crash (robustness bar).
+
+ORDER OF CONSUMERS (the de-risking move): (1) SIMULATIO of the
+module against shipped code BEFORE building (house law; complexity
+schema); (2) build fluxus + unit suite; (3) FIRST consumer =
+SEMITA_SINE_REDDITU (codex 63, -Wreturn-type PARITY) because the
+whole corpus compiles under -Werror = census MUST be 0, and
+differentia over 820 files becomes a free byte-exact validation
+harness for the CFG's edge construction; (4) SECOND consumer =
+CASUS_LAPSUS (codex 64, fall-through, house-blind oracle via flag,
+TOLERA-bilis) — census + adjudication, options to Fran if large;
+(5) THIRD (stretch, cheap once attingibilitas exists) =
+SENTENTIA_INATTINGIBILIS (codex 65, plain -Wunreachable-code
+semantics only).
+
+OPEN QUESTION for adjudication time: honor the inherited
+/* fall through */ comment idiom as suppression (comments are
+content — a silva pin; GCC precedent) or TOLERA-only (uniform
+house machinery)? The census will show whether the corpus already
+speaks the idiom.
+
+BARS: simulation complexities recorded; fluxus unit suite (new
+probatio); parity tier differentia-validated over corpus; fixtures
+.severum per tier; vectis generic legs; amalgam twins (silva.h
+hand-mirror); census + eyes; suites green; codex 62 stays DORMANT
+(its re-arm is stage 2 def-use, NOT this arc).
+
+### FLUXUS-0 addendum (2026-07-17, pre-compaction)
+
+Simulatio XI run against shipped code (project-specs/
+silva-simulatio-11.md — 8 register entries; sim ledger 7-for-7)
+then an 11-question interview (silva-fluxus-0-interview.md). All
+recommendations accepted; consolidated into the ARC RE-ENTRY
+DOCUMENT: **project-specs/silva-fluxus-0-spec.md**. Headlines:
+auxilia callback seam (canonicum + aestimator are caller policy);
+grammar REJECTS Duff (accepted, nota filed, flat group scan);
+corpus has exactly ONE real fall-through (frozen, guarded);
+VERDICT-PARITY HOLE found and verified (clang ERRORS on
+frange-outside-context + salta-to-unknown-label, examen ACCIPE) —
+closed in-arc as codices 66/67 VIOLATIO; 63 = SUSPECTUM; CFGs
+retained in sem; 65 in-arc stretch; fluxus internal v1; TOLERA-only
+suppression. Chunks: ① module+unit suite ② integration + 63/66/67 +
+differentia sweep ③ 64 + census ④ stretch 65. NOTHING BUILT YET —
+compaction next by decision; chunk ① starts from the spec.
