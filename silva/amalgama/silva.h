@@ -1338,6 +1338,10 @@ typedef enum {
     /* CHORDA_NUDA = chorda.datum ad lectorem C sine limite (chorda
      * non terminatur NUL - regula domus); TOLERA-suppressibilis */
     EXAMEN_CODEX_CHORDA_NUDA,
+    /* SIGNUM_FORMATI = %u cum argumento signato (clang tacet;
+     * directio %d-cum-insignato DECRETO exempta - involutio
+     * negativa visibilis diagnostica); TOLERA-suppressibilis */
+    EXAMEN_CODEX_SIGNUM_FORMATI,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

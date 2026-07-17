@@ -1,0 +1,29 @@
+/* signum formati - %u cum argumento signato. Oraculum TACET:
+ * -Wformat magnitudinem custodit, signum eiusdem magnitudinis
+ * numquam (-Wformat-signedness GCC solum). Directio %d-cum-
+ * insignato DECRETO exempta (infra: tacet). */
+/* EXSPECTA 10:SIGNUM_FORMATI */
+extern int printf(const char*, ...);
+
+static void signatum_in_u(int s)
+{
+    printf("%u", s);
+}
+
+static void insignatum_in_d(unsigned u)
+{
+    printf("%d", u);   /* decreto tacet - involutio visibilis */
+}
+
+static void tolerata(int s)
+{
+    /* TOLERA SIGNUM_FORMATI: probatio suppressionis */
+    printf("%u", s);
+}
+
+static void radix(void)
+{
+    signatum_in_u(-1);
+    insignatum_in_d(7u);
+    tolerata(2);
+}

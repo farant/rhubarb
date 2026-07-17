@@ -1337,6 +1337,91 @@ s32 principale (vacuum)
         "static int f(char* p) { return strlen(p); }\n",
         (s32)EXAMEN_CODEX_CHORDA_NUDA, ZEPHYRUM);
 
+    /* ==================================================
+     * XV. Signum formati: charta formati -> argumenta
+     * ================================================== */
+
+    /* %u cum signato flagrat */
+    _codicem_probare(piscina,
+        "static void f(int s) { printf(\"%u\", s); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, I);
+    /* %d cum insignato TACET (DECRETUM: involutio negativa
+     * visibilis = diagnostica; directio innoxia non iudicatur) */
+    _codicem_probare(piscina,
+        "static void f(unsigned u) { printf(\"%d\", u); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, ZEPHYRUM);
+    /* congruentia tacet */
+    _codicem_probare(piscina,
+        "static void f(int s, unsigned u)"
+        " { printf(\"%d %u\", s, u); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, ZEPHYRUM);
+    /* conversiones plures, positiones rectae: solum %u+s flagrat
+     * (%d+u decreto exemptum) - positio secunda recte legitur */
+    _codicem_probare(piscina,
+        "static void f(unsigned u, int s)"
+        " { printf(\"%d et %u\", u, s); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, I);
+    /* constans non negativa tacet (utraque directione tuta) */
+    _codicem_probare(piscina,
+        "static void f(void) { printf(\"%d\", 5u); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, ZEPHYRUM);
+    /* u8 promotum ad int (signatum) - %d congruit naturaliter */
+    _codicem_probare(piscina,
+        "static void f(unsigned char b) { printf(\"%d\", b); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, ZEPHYRUM);
+    /* %x idioma repraesentationis - exemptum */
+    _codicem_probare(piscina,
+        "static void f(int s) { printf(\"%x\", s); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, ZEPHYRUM);
+    /* argumentum stellatum non iudicatur (idioma \"%.*s\") */
+    _codicem_probare(piscina,
+        "static void f(unsigned m, char* p)"
+        " { printf(\"%.*s\", m, p); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, ZEPHYRUM);
+    /* modificator longitudinis transparens: %lu cum longo signato */
+    _codicem_probare(piscina,
+        "static void f(long s) { printf(\"%lu\", s); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, I);
+    /* formatum non litterale: tacet (non analysabile) */
+    _codicem_probare(piscina,
+        "static void f(char* fmt, int s) { printf(fmt, s); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, ZEPHYRUM);
+    /* fprintf: formatum in positione 1 */
+    _codicem_probare(piscina,
+        "static void f(void* fp, int s)"
+        " { fprintf(fp, \"%u\", s); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, I);
+    /* %% litterale praetermittitur */
+    _codicem_probare(piscina,
+        "static void f(int s) { printf(\"100%% %u\", s); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, I);
+    /* fuga \\045 = '%' - decodator per fugas videt */
+    _codicem_probare(piscina,
+        "static void f(int s) { printf(\"\\045u\", s); }\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, I);
+    /* TOLERA absorbet */
+    _codicem_probare(piscina,
+        "static void f(int s) {\n"
+        "    /* TOLERA SIGNUM_FORMATI: probatio suppressionis */\n"
+        "    printf(\"%u\", s);\n"
+        "}\n",
+        (s32)EXAMEN_CODEX_SIGNUM_FORMATI, ZEPHYRUM);
+    /* %s cum chorda.datum -> codex 59 per chartam formati */
+    _codicem_probare(piscina,
+        "typedef struct chorda { unsigned m;"
+        " unsigned char* datum; } chorda;\n"
+        "static void f(chorda c)"
+        " { printf(\"%s\", (char*)c.datum); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, I);
+    /* \"%.*s\" cum datum: praecisio lectionem limitat - IDIOMA,
+     * tacet (finis differitionis gradus chordae clausus) */
+    _codicem_probare(piscina,
+        "typedef struct chorda { unsigned m;"
+        " unsigned char* datum; } chorda;\n"
+        "static void f(chorda c)"
+        " { printf(\"%.*s\", (int)c.m, (char*)c.datum); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, ZEPHYRUM);
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

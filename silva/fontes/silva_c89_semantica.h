@@ -317,6 +317,16 @@ nomen enumeratio {
      * chorda_ut_cstr, lectores mensura-limitati (strncmp/memcmp),
      * "%.*s" cum mensura. TOLERA-bilis (gradus severus). */
     EXAMEN_CODEX_CHORDA_NUDA,                 /* DOMESTICUM */
+    /* 60: signum formati discrepat - %u cum argumento signato
+     * (-1 ut 4294967295 = effusum vere fallax). Magnitudinem clang
+     * -Wformat iam custodit; signum eiusdem magnitudinis NON
+     * (-Wformat-signedness GCC solum). DECRETUM: directio
+     * %d-cum-insignato non iudicatur (census 443/443 hac directione
+     * innoxia; involutio i32 in %d NEGATIVA visibilis = per
+     * accidens diagnostica). Exemptiones: constantes/intervalla non
+     * negativa, %x/%o (idioma repraesentationis), argumenta
+     * stellata (%.*s idioma domus). TOLERA-bilis. */
+    EXAMEN_CODEX_SIGNUM_FORMATI,              /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

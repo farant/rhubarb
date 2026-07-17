@@ -8511,3 +8511,87 @@ POST-ADJUDICATION; 58 = 46 and REICE = 41 both unchanged.
 
 Deferred by name: printf-family "%s" sink rides the future
 format-signedness tier (shared format-string->vararg mapper).
+
+## GRADUS SIGNUM FORMATI: INTENTIO (2026-07-17)
+
+Menu pull: printf-family format/argument signedness (codex 60
+SIGNUM_FORMATI) + the shared format-string->vararg MAPPER, which
+also delivers the deferred chorda "%s" sink (codex 59 extension).
+One build, two walls.
+
+ORACLE REALITY (why this is ours): clang's -Wformat already polices
+SIZE mismatches (%d fed long fires under house flags - corpus has
+none by construction) but is deliberately silent on same-size
+SIGNEDNESS (%d fed unsigned int; -Wformat-signedness is GCC-only,
+clang never implemented it). So the mapper only judges signedness
+class {signatum, insignatum, aliud} - size is clang's beat. Pure
+inverse oracle; severa-class doctrine (TOLERA-suppressible,
+DOMESTICUM, verdict-neutral).
+
+DESIGN DECISIONS, named up front:
+- Functions: printf(fmt=0), fprintf(fmt=1), sprintf(fmt=1).
+  imprimere is a macro - the aestimator sees the expansion free.
+  scanf family EXCLUDED v1 (different direction, different rules;
+  named future). va_list variants excluded (varargs invisible).
+- Format must be a SINGLE string-literal node; anything else
+  (variable, adjacent-literal concatenation if parsed multi-node)
+  -> silent skip. Safe direction; named limitation.
+- Star width/precision (%*d, %.*s) CONSUME an int arg but are NOT
+  judged: printf("%.*s", c.mensura, ...) with i32 mensura is THE
+  blessed house idiom - judging star-args would fire on every
+  correct use. Named exemption.
+- %x/%o EXEMPT v1: hex/octal on signed values is representation
+  idiom, not arithmetic intent. %u fires. (Specimens to Fran if
+  the census suggests revisiting.)
+- Range suppression mirrors SIGNORUM: provably/heuristically
+  nonneg unsigned in %d cannot print wrong (promoted u8 fits int)
+  -> suppressed; constants likewise.
+- %s + chorda.datum -> codex 59 through the mapper; %.*s + datum
+  is the LEGITIMATE idiom and stays silent (precision bounds the
+  read) - the mapper closing exactly the hole the chorda INTENTIO
+  deferred.
+
+BARS: unit probes (both directions, star-arg exemption, %.*s-vs-%s
+on datum, %x exemption, length-modifier transparency, non-literal
+format skip, TOLERA); fixture .severum (oracle silent); vectis
+generic legs; amalgam twin; corpus census + adjudication with eyes;
+suites green.
+
+## GRADUS SIGNUM FORMATI: RELATIO (2026-07-17)
+
+SHIPPED — codex 60 SIGNUM_FORMATI + the format-string->vararg
+MAPPER (fragments + escape decoding via _fugam_decodere, so even a
+\045-encoded '%' parses correctly; star width/precision consume
+args unjudged; unknown conversion = whole format unjudged, safe
+direction). The mapper also closed the chorda deferral: "%s" fed
+chorda.datum now fires codex 59 through it, while "%.*s" (precision
+bounds the read) stays silent — the blessed idiom recognized
+structurally.
+
+THE CALIBRATION DECISION (DECRETUM, Fran): first census = 544
+firings, and attribution showed 443/443 source sites in ONE
+direction — %d fed unsigned — with ZERO in the other. The %d
+direction is innocuous in practice (wrong only above 2^31) and
+ACCIDENTALLY DIAGNOSTIC: a wrapped i32 printed via %d shows as a
+negative number, instantly visible; %u would faithfully mask it as
+4e9. Decision: the %d-with-unsigned direction is NOT judged; only
+%u-with-signed fires (-1 as 4294967295 = genuinely misleading
+output). Post-decretum census: 60 = 0 — a pure wall on the
+direction that matters.
+
+TWO STRIKES for the book: (1) the first predicate SELF-SUPPRESSED
+the whole %d direction — iv.non_negativum is vacuously true for
+every unsigned expression; the exemptions had to be direction-
+asymmetric (then the decretum removed that direction anyway);
+(2) our own SIGNORUM tier caught a mixed s32/i32 compare in the
+fix mid-edit — the walls police their own masonry in real time.
+Also: editing a fixture's header comment shifts its EXSPECTA lines
+(vectis caught the stale pin immediately).
+
+BARS: unit 872/872 (both directions' probes updated to the
+decretum, star exemption, %.*s-vs-%s on datum, %x exemption, %lu
+transparency, non-literal skip, %% skip, \045 flex, TOLERA,
+fprintf position); fixture signum_formati.severum (pin 10, %d twin
+DELIBERATELY unpinned-silent as the decretum's specimen); VECTIS
+TENET; amalgamare VERIFICATUM; silva 30/30; officina 12/12; census
+60 = 0, 58 = 46 and REICE = 41 unchanged.

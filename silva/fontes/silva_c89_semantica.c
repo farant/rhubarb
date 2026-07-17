@@ -140,7 +140,8 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "TOLERA irritum",                           EXAMEN_DOMESTICUM },
     { "comparatio signorum diversorum",           EXAMEN_DOMESTICUM },
     { "comparatio vana (semper eadem)",           EXAMEN_DOMESTICUM },
-    { "chorda nuda (sine fine NUL)",              EXAMEN_DOMESTICUM }
+    { "chorda nuda (sine fine NUL)",              EXAMEN_DOMESTICUM },
+    { "signum formati discrepat",                 EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -729,7 +730,9 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "COMPARATIO_VANA",
       (s32)EXAMEN_CODEX_COMPARATIO_VANA },
     { "CHORDA_NUDA",
-      (s32)EXAMEN_CODEX_CHORDA_NUDA }
+      (s32)EXAMEN_CODEX_CHORDA_NUDA },
+    { "SIGNUM_FORMATI",
+      (s32)EXAMEN_CODEX_SIGNUM_FORMATI }
 };
 
 /* commentarium TOLERA? valor = octeti pleni delimitatoribus
@@ -5026,6 +5029,338 @@ _est_datum_chordae (SilvaSemantica* sem, constans SilvaNodus* nodus)
     }
 }
 
+/* ==================================================
+ * SIGNUM FORMATI (codex 60): charta formati -> argumenta
+ * ================================================== */
+
+/* classes exspectatae argumentorum variadicorum */
+#define FORMATUM_NIHIL          0   /* non iudicandum */
+#define FORMATUM_SIGNATUM       1   /* %d %i */
+#define FORMATUM_INSIGNATUM     2   /* %u */
+#define FORMATUM_CHORDA_LIBERA  3   /* %s sine praecisione -> 59 */
+
+#define FORMATI_ARGUMENTA_MAXIMA 32
+
+/* familia printf: positio argumenti formati (scanf-familia et
+ * variantes va_list EXCLUSAE v1 - directio alia / argumenta
+ * invisibilia) */
+nomen structura {
+    constans character* titulus;
+    s32                 positio_formati;
+} ExamenFormator;
+
+interior constans ExamenFormator _formatores[] = {
+    { "printf", 0 }, { "fprintf", 1 }, { "sprintf", 1 }
+};
+
+interior s32
+_positio_formatoris (chorda titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM;
+         i < (i32)(magnitudo(_formatores)
+             / magnitudo(_formatores[0])); i++)
+    {
+        si (_chorda_par_literis(titulus, _formatores[i].titulus))
+        {
+            redde _formatores[i].positio_formati;
+        }
+    }
+    redde -I;
+}
+
+/* Litteralem formati in octetos decodatos vertere (fragmenta
+ * adiacentia + fugae - etiam \045 pro '%' recte). Redde mensuram
+ * aut -I (non analysabile: latus, fuga invalida, nimis longus). */
+interior s32
+_formati_decodere (constans SilvaNodus* nodus, character* effusum,
+    i32 capacitas)
+{
+    SilvaValor fragmenta = silva_c89_folium_chorda_tok_valor(nodus);
+    i32 i;
+    i32 m = (i32)silva_valor_lista_numerus(fragmenta);
+    i32 n = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* v = silva_valor_lista_obtinere(fragmenta, i);
+        constans SilvaToken* tok;
+        i32 cursor;
+        i32 finis;
+
+        si (v == NIHIL || v->genus != SILVA_VALOR_TOKEN)
+        {
+            perge;
+        }
+        tok = v->datum.token;
+        si (tok->valor.mensura < II
+            || tok->valor.datum[ZEPHYRUM] == 'L')
+        {
+            redde -I;
+        }
+        cursor = I;
+        finis = tok->valor.mensura - I;   /* " claudens */
+        dum (cursor < finis)
+        {
+            character octetus;
+
+            si ((character)tok->valor.datum[cursor] == '\\')
+            {
+                s64 valor_fugae = ZEPHYRUM;
+
+                cursor++;
+                si (!_fugam_decodere(&tok->valor, &cursor,
+                        &valor_fugae))
+                {
+                    redde -I;
+                }
+                octetus = (character)valor_fugae;
+            }
+            alioquin
+            {
+                octetus = (character)tok->valor.datum[cursor];
+                cursor++;
+            }
+            si (n >= capacitas)
+            {
+                redde -I;
+            }
+            effusum[n] = octetus;
+            n++;
+        }
+    }
+    redde (s32)n;
+}
+
+/* Chartam formati aedificare: conversiones -> classes exspectatas
+ * (exspectata) + characteres conversionum (conversiones, pro
+ * nuntiis). Redde numerum argumentorum consumptorum aut -I si non
+ * analysabile (conversio ignota => NIHIL iudicatur - tutum). */
+interior s32
+_formati_exspectata (constans SilvaNodus* nodus, s32* exspectata,
+    character* conversiones)
+{
+    character litterae[DXII];
+    s32 m = _formati_decodere(nodus, litterae, DXII);
+    s32 i = ZEPHYRUM;
+    s32 n = ZEPHYRUM;
+
+    si (m < ZEPHYRUM)
+    {
+        redde -I;
+    }
+    dum (i < m)
+    {
+        character c = litterae[i];
+        b32 praecisio_data;
+
+        i++;
+        si (c != '%')
+        {
+            perge;
+        }
+        si (i >= m)
+        {
+            redde -I;
+        }
+        si (litterae[i] == '%')
+        {
+            i++;
+            perge;
+        }
+        /* vexilla */
+        dum (i < m && (litterae[i] == '-' || litterae[i] == '+'
+            || litterae[i] == ' ' || litterae[i] == '#'
+            || litterae[i] == '0'))
+        {
+            i++;
+        }
+        /* latitudo (stellata argumentum consumit, NON iudicatur -
+         * "%.*s" cum mensura idioma domus est) */
+        si (i < m && litterae[i] == '*')
+        {
+            si (n >= FORMATI_ARGUMENTA_MAXIMA)
+            {
+                redde -I;
+            }
+            exspectata[n] = FORMATUM_NIHIL;
+            conversiones[n] = '*';
+            n++;
+            i++;
+        }
+        alioquin
+        {
+            dum (i < m && litterae[i] >= '0' && litterae[i] <= '9')
+            {
+                i++;
+            }
+        }
+        /* praecisio */
+        praecisio_data = FALSUM;
+        si (i < m && litterae[i] == '.')
+        {
+            i++;
+            praecisio_data = VERUM;
+            si (i < m && litterae[i] == '*')
+            {
+                si (n >= FORMATI_ARGUMENTA_MAXIMA)
+                {
+                    redde -I;
+                }
+                exspectata[n] = FORMATUM_NIHIL;
+                conversiones[n] = '*';
+                n++;
+                i++;
+            }
+            alioquin
+            {
+                dum (i < m && litterae[i] >= '0'
+                    && litterae[i] <= '9')
+                {
+                    i++;
+                }
+            }
+        }
+        /* modificatores longitudinis (signum non mutant) */
+        dum (i < m && (litterae[i] == 'h' || litterae[i] == 'l'
+            || litterae[i] == 'L'))
+        {
+            i++;
+        }
+        si (i >= m || n >= FORMATI_ARGUMENTA_MAXIMA)
+        {
+            redde -I;
+        }
+        c = litterae[i];
+        i++;
+        conversiones[n] = c;
+        commutatio (c)
+        {
+            casus 'd':
+            casus 'i':
+                exspectata[n] = FORMATUM_SIGNATUM;
+                frange;
+            casus 'u':
+                exspectata[n] = FORMATUM_INSIGNATUM;
+                frange;
+            casus 'x':
+            casus 'X':
+            casus 'o':   /* idioma repraesentationis - exempta */
+            casus 'c':
+            casus 'p':
+            casus 'n':
+            casus 'f':
+            casus 'e':
+            casus 'E':
+            casus 'g':
+            casus 'G':
+                exspectata[n] = FORMATUM_NIHIL;
+                frange;
+            casus 's':
+                /* praecisio lectionem limitat: %.Ns/%.*s tutum */
+                exspectata[n] = praecisio_data
+                    ? FORMATUM_NIHIL : FORMATUM_CHORDA_LIBERA;
+                frange;
+            ordinarius:
+                redde -I;   /* conversio ignota - nihil iudica */
+        }
+        n++;
+    }
+    redde n;
+}
+
+/* Argumentum variadicum contra classem exspectatam iudicare.
+ * Exemptiones (utraque directione): constantes non negativae,
+ * intervalla non negativa (u8 promotum, larvae), enumerati. */
+interior vacuum
+_formatum_iudicare (SilvaSemantica* sem, constans SilvaNodus* nodus,
+    TypusC89* typus, s32 exspectatum, character conversio)
+{
+    TypusC89* promotus;
+    s32 p;
+    b32 insignatum;
+    s64 valor = ZEPHYRUM;
+
+    si (exspectatum == FORMATUM_CHORDA_LIBERA)
+    {
+        si (_est_datum_chordae(sem, nodus)
+            && !_tolera_absorbere(sem, nodus,
+                   (s32)EXAMEN_CODEX_CHORDA_NUDA))
+        {
+            _diagnosticum_addere_plenum(sem, nodus,
+                (s32)EXAMEN_CODEX_CHORDA_NUDA, NIHIL,
+                "datum chordae sine fine NUL ad conversionem"
+                " '%s' (utere \"%.*s\" cum mensura)");
+        }
+        redde;
+    }
+    si (exspectatum == FORMATUM_NIHIL || typus == NIHIL)
+    {
+        redde;
+    }
+    si (_qualibus_exutum(typus)->genus == TYPUS_C89_ENUMERATUS)
+    {
+        redde;   /* enumerati non iudicantur (ut ceteri gradus) */
+    }
+    promotus = _promotum(sem, typus);
+    p = _primitivum_integrale(promotus);
+    si (p < ZEPHYRUM)
+    {
+        redde;   /* non integrale - magnitudo res clang est */
+    }
+    insignatum = _est_insignatum_primitivum(p);
+    si ((exspectatum == FORMATUM_SIGNATUM && !insignatum)
+        || (exspectatum == FORMATUM_INSIGNATUM && insignatum))
+    {
+        redde;   /* congruit */
+    }
+    /* DECRETUM (Fran 2026-07-17): directio %d-cum-insignato NON
+     * iudicatur - i32 in %d supra 2^31 solum erratum (numquam
+     * practice: census primus 443 sedes, omnes hac directione,
+     * nullae altera), et involutio i32 ut numerus NEGATIVUS
+     * visibilis fit (%u eam ut 4e9 celaret) - habitus domus per
+     * accidens diagnosticus. Sola directio %u-cum-signato flagrat:
+     * -1 ut 4294967295 = effusum vere fallax. */
+    si (exspectatum == FORMATUM_SIGNATUM)
+    {
+        redde;
+    }
+    /* argumentum signatum in conversione insignata: non negativum
+     * idem imprimit - exemptum */
+    si (_constans_probare(sem, nodus, &valor) && valor >= ZEPHYRUM)
+    {
+        redde;
+    }
+    {
+        ExamenIntervallum iv = _intervallum_expressionis(sem, nodus,
+            ZEPHYRUM);
+
+        si (iv.non_negativum)
+        {
+            redde;
+        }
+    }
+    si (_tolera_absorbere(sem, nodus,
+            (s32)EXAMEN_CODEX_SIGNUM_FORMATI))
+    {
+        redde;
+    }
+    {
+        character* nuntius = (character*)piscina_allocare(
+            sem->piscina, (memoriae_index)LXXX);
+
+        si (nuntius != NIHIL)
+        {
+            sprintf(nuntius, "signum formati discrepat:"
+                " conversio '%%%c' cum argumento %s",
+                conversio, insignatum ? "insignato" : "signato");
+            _diagnosticum_addere_plenum(sem, nodus,
+                (s32)EXAMEN_CODEX_SIGNUM_FORMATI, NIHIL, nuntius);
+        }
+    }
+}
+
 interior vacuum
 _conversionem_signi_examinare (SilvaSemantica* sem,
     constans SilvaNodus* nodus, TypusC89* naturalis, TypusC89* finis)
@@ -7269,6 +7604,10 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
             TypusC89* t;
             b32 venenata = FALSUM;
             i32 larva_nul = ZEPHYRUM;   /* codex 59 */
+            s32 positio_formati = -I;   /* codex 60 */
+            s32 formati_numerus = -I;
+            s32 formati_exspectata[FORMATI_ARGUMENTA_MAXIMA];
+            character formati_conversiones[FORMATI_ARGUMENTA_MAXIMA];
             chorda titulus_vocati;
 
             titulus_vocati.mensura = ZEPHYRUM;
@@ -7294,6 +7633,8 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
 
                         titulus_vocati = tok_v.datum.token->valor;
                         larva_nul = _larva_lectoris_nul(
+                            titulus_vocati);
+                        positio_formati = _positio_formatoris(
                             titulus_vocati);
 
                         si (symbolum == NIHIL)
@@ -7431,6 +7772,32 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                                 (s32)EXAMEN_CODEX_CHORDA_NUDA,
                                 NIHIL, nuntius);
                         }
+                    }
+                    /* codex 60: charta formati aedificata in sede
+                     * formati, argumenta variadica contra eam
+                     * iudicata */
+                    si (positio_formati >= ZEPHYRUM
+                        && (s32)a == positio_formati
+                        && na->genus
+                            == (s32)SILVA_C89_GENUS_FOLIUM_CHORDA)
+                    {
+                        formati_numerus = _formati_exspectata(na,
+                            formati_exspectata,
+                            formati_conversiones);
+                    }
+                    alioquin si (positio_formati >= ZEPHYRUM
+                        && formati_numerus > ZEPHYRUM
+                        && (s32)a > positio_formati
+                        && (s32)a - positio_formati - I
+                            < formati_numerus
+                        && !sem->in_systemate
+                        && !_fons_alienus(sem, na))
+                    {
+                        s32 idx = (s32)a - positio_formati - I;
+
+                        _formatum_iudicare(sem, na, ta,
+                            formati_exspectata[idx],
+                            formati_conversiones[idx]);
                     }
                     si (ta != NIHIL && typus_functionis != NIHIL)
                     {
