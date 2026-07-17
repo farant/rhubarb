@@ -40,7 +40,8 @@ fi
 # <TAB> titulus vexilli (exemplar in effuso oraculi "[-W...]").
 # Gradus novus oraculo-compar: ordinem adde.
 GRADUS_TABULA="54	-Wsign-conversion	-Wsign-conversion
-57	-Wsign-compare	-Wsign-compare"
+57	-Wsign-compare	-Wsign-compare
+63	-Wreturn-type	-Wreturn-type"
 
 # ---- latus nostrum (per involucrum - SEMPER recens; binarium
 # directum numquam: decipula binarii vetusti) ----

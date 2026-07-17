@@ -1348,6 +1348,16 @@ typedef enum {
     /* COMPARATIO_DEGRADATA = X <= 0 / 0 >= X insignati (== 0 fit);
      * DORMIT usque ad analysim fluxus (CFG gradus 2) */
     EXAMEN_CODEX_COMPARATIO_DEGRADATA,
+    /* FLUXUS-0: SEMITA_SINE_REDDITU = paritas -Wreturn-type (margo
+     * CADIT fonte attingibili, functio non vacua); CASUS_LAPSUS /
+     * SENTENTIA_INATTINGIBILIS tractibus posterioribus reservati;
+     * FRANGE_EXTRA_CONTEXTUM / SALTA_AD_TITULUM_IGNOTUM = VIOLATIO
+     * (paritas erroris clang) */
+    EXAMEN_CODEX_SEMITA_SINE_REDDITU,
+    EXAMEN_CODEX_CASUS_LAPSUS,
+    EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS,
+    EXAMEN_CODEX_FRANGE_EXTRA_CONTEXTUM,
+    EXAMEN_CODEX_SALTA_AD_TITULUM_IGNOTUM,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

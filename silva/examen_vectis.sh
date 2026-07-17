@@ -151,6 +151,64 @@ for f in "$FIXA"/*.domesticum; do
     fi
 done
 
+# ②b′ corpus suspectum: ut domesticum sed gradu SUSPECTUM (paritas
+#   monitorum clang extra vexilla domus - e.g. -Wreturn-type).
+#   Eadem mechanica: pinnae + oraculum easdem lineas monet + numeri
+#   aequales. Functiones uni-lineae in fixturis (clang ad uncum
+#   clausum monet).
+echo "--- corpus suspectum (pinnae EXSPECTA + oraculum) ---"
+for f in "$FIXA"/*.suspectum; do
+    [ -e "$f" ] || continue
+    basis="$(basename "$f")"
+    exspecta="$(grep -o 'EXSPECTA [0-9]*:[A-Z_]*' "$f" \
+        | sed 's/EXSPECTA //')"
+    vexillum="$(grep -o 'ORACULUM -W[a-z-]*' "$f" | head -1 \
+        | sed 's/ORACULUM //')"
+    [ -z "$vexillum" ] && vexillum="-Wsign-conversion"
+    exemplar="${vexillum#-W}"
+
+    effusum="$("$SILVA_DIR/build/examen" "$f" -machina 2>/dev/null)"
+    verdictum="$(printf '%s\n' "$effusum" | awk -F'\t' \
+        '$1=="VERDICTUM"{print $2}')"
+    if [ "$verdictum" != "ACCIPE" ]; then
+        echo "  DISCREPANTIA: $basis examen=$verdictum" \
+             "(non ACCIPE - legale C89!)"
+        fracta=1
+        continue
+    fi
+    monita="$("${ORACULUM_BASIS_D[@]}" "$vexillum" "$f" 2>&1)"
+    for pinna in $exspecta; do
+        linea="${pinna%%:*}"
+        nomen="EXAMEN_CODEX_${pinna#*:}"
+        numerus="$(awk -F'\t' -v n="$nomen" '$2==n{print $1}' "$MAPPA")"
+        if [ -z "$numerus" ]; then
+            echo "  PINNA IGNOTA: $basis $nomen"
+            fracta=1
+            continue
+        fi
+        if ! printf '%s\n' "$effusum" | awk -F'\t' \
+            -v l="$linea" -v c="$numerus" \
+            '$2==l && $4=="suspectum" && $5==c {inventum=1}
+             END{exit !inventum}'; then
+            echo "  PINNA DEEST: $basis linea $linea $nomen"
+            fracta=1
+        fi
+        if ! printf '%s\n' "$monita" | grep -q ":$linea:.*$exemplar"; then
+            echo "  ORACULUM DISSENTIT: $basis linea $linea" \
+                 "(clang non monet)"
+            fracta=1
+        fi
+    done
+    n_pinnae="$(printf '%s\n' "$exspecta" | grep -c . || true)"
+    n_monita="$(printf '%s\n' "$monita" | grep -c "$exemplar" \
+        || true)"
+    if [ "$n_pinnae" != "$n_monita" ]; then
+        echo "  DISCREPANTIA NUMERI: $basis pinnae=$n_pinnae" \
+             "monita oraculi=$n_monita"
+        fracta=1
+    fi
+done
+
 # ②c corpus severum: gradus SEVERI (supra oraculum - clang SILET ad
 #   pinnas, id ipsum proprietas est); verdictum ACCIPE; ordines
 #   codicum pinnatorum == pinnae exacte (lineae toleratae QUIETAE);

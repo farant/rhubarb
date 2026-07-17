@@ -45,7 +45,9 @@ interior constans character* constans EXCLUDENDA_PISCINAE[] = {
 };
 
 interior constans character* constans EXCLUDENDA_CHORDAE[] = {
-    "chorda_aequalis", "chorda_aequalis_case_insensitivus",
+    /* chorda_aequalis resurrecta (fluxus tabula titulorum,
+     * FLUXUS-0 tractus 2) */
+    "chorda_aequalis_case_insensitivus",
     "chorda_aequalis_literis", "chorda_camelus",
     "chorda_character_ad", "chorda_concatenare", "chorda_continet",
     "chorda_duplicare", "chorda_ex_buffer",
@@ -147,6 +149,7 @@ interior constans AmalgamaPlagula CAPITA_SILVAE[] = {
     { "silva/fontes/silva_parsare.h",         NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_scribere.h",        NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_c89_oraculum.h",    NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_c89_fluxus.h",      NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_c89_semantica.h",   NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_quaestio.h",        NIHIL, NIHIL, FALSUM, FALSUM }
 };
@@ -165,6 +168,7 @@ interior constans AmalgamaPlagula CORPORA_SILVAE[] = {
     { "silva/fontes/silva_parsare.c",         NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_scribere.c",        NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_c89_oraculum.c",    NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_c89_fluxus.c",      NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_c89_semantica.c",   NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_quaestio.c",        NIHIL, NIHIL, VERUM, FALSUM }
 };

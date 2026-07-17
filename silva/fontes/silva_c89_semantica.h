@@ -340,6 +340,21 @@ nomen enumeratio {
      * re-armatur ut consumptor analyseos fluxus CFG gradus 2).
      * TOLERA-bilis cum vigilat. */
     EXAMEN_CODEX_COMPARATIO_DEGRADATA,        /* DOMESTICUM */
+    /* FLUXUS-0 (2026-07-17, spec silva-fluxus-0-spec.md): gradus
+     * super CFG (silva_c89_fluxus, sutura auxiliorum = _canonicum +
+     * _constans_probare semanticae). 63 = paritas -Wreturn-type:
+     * margo CADIT fonte attingibili in functione non vacua -
+     * praedicatum totum (XI-6); plicatio constantium necessaria
+     * (dum(2-1) infinita clang-i). 64/65 tractibus 3/4 reservati:
+     * lapsus inter casus (TOLERA-bilis), sententia inattingibilis.
+     * 66/67 = foramen paritatis VERDICTI clausum - clang ERRAT ubi
+     * examen ACCIPE dicebat (verificatum vivum 2026-07-17); fontes =
+     * tabulata violationum fluxus (fractiones_extra/saltus_ignoti). */
+    EXAMEN_CODEX_SEMITA_SINE_REDDITU,         /* SUSPECTUM */
+    EXAMEN_CODEX_CASUS_LAPSUS,                /* DOMESTICUM (tractus 3) */
+    EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS,    /* DOMESTICUM (tractus 4) */
+    EXAMEN_CODEX_FRANGE_EXTRA_CONTEXTUM,      /* VIOLATIO */
+    EXAMEN_CODEX_SALTA_AD_TITULUM_IGNOTUM,    /* VIOLATIO */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -450,6 +465,14 @@ structura SilvaSemantica {
      * inutilia IRRITUM flagrant. */
     constans SilvaParsura* tolerae_parsura;
     Xar*                   tolerae;
+
+    /* FLUXUS-0 (2026-07-17): CFG per definitionem RETENTI (decisio
+     * Q7 colloquii - codex-est-basis-datorum; elementa
+     * FluxusFunctionis*, silva_c89_fluxus.h). Aedificati in
+     * _definitionem_ambulare per suturam auxiliorum; gradus
+     * 63/66/67 statim legunt; consumptores futuri (codex 62 gradus
+     * 2, solarium) per hoc tabulatum quaerunt. */
+    Xar* fluxus_functionum;
 };
 
 SilvaSemantica* silva_c89_semantica_creare (Piscina* piscina);

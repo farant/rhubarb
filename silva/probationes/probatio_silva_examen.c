@@ -1474,6 +1474,83 @@ s32 principale (vacuum)
     _codicem_probare(piscina,
         "static unsigned f(unsigned u) { return u > 0; }\n",
         (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA, ZEPHYRUM);
+
+    /* ==================================================
+     * XVII. Fluxus-0: semita sine redditu + violationes fluxus
+     * (codices 63/66/67; spec silva-fluxus-0-spec.md)
+     * ================================================== */
+
+    /* si sine alioquin: semita falsa cadit - flagrat */
+    _codicem_probare(piscina,
+        "static int f(int x) { if (x > 0) { return 1; } }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, I);
+    /* omnes semitae reddunt - tacet */
+    _codicem_probare(piscina,
+        "static int f(int x) { if (x > 0) { return 1; }"
+        " return 0; }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, ZEPHYRUM);
+    /* functio vacua cadit legitime - tacet */
+    _codicem_probare(piscina,
+        "static void f(int x) { x = x + 1; }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, ZEPHYRUM);
+    /* commutatio incompleta sine redde postremo - flagrat */
+    _codicem_probare(piscina,
+        "static int f(int x) { switch (x) { case 0: return 1; } }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, I);
+    /* idioma classificatoris (ordinarius reddit) - tacet */
+    _codicem_probare(piscina,
+        "static int f(int x) { switch (x) { case 0: return 1;"
+        " default: return 2; } }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, ZEPHYRUM);
+    /* ansa variabilis sine redde post - flagrat */
+    _codicem_probare(piscina,
+        "static int f(int x) { while (x) { x = x - 1; } }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, I);
+    /* dum (1): plicatio aestimatoris - margo falsus abest, tacet
+     * (PARITAS: clang -Wreturn-type hic silet) */
+    _codicem_probare(piscina,
+        "static int f(void) { while (1) { } }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, ZEPHYRUM);
+    /* dum (2 - 1): PLICATIO vera, non litterae solae - tacet */
+    _codicem_probare(piscina,
+        "static int f(void) { while (2 - 1) { } }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, ZEPHYRUM);
+    /* per (;;): conditio absens = semper vera - tacet */
+    _codicem_probare(piscina,
+        "static int f(void) { for (;;) { } }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, ZEPHYRUM);
+    /* ansa per salta: attingibilitas pura - tacet */
+    _codicem_probare(piscina,
+        "static int f(void) { iterum: goto iterum; }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, ZEPHYRUM);
+    /* exitus solus intra dum(1) (forma _aspicere_eff) - tacet */
+    _codicem_probare(piscina,
+        "static int f(int x) { while (1) { if (x) { return 1; }"
+        " x = x - 1; } }\n",
+        (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU, ZEPHYRUM);
+
+    /* codex 66: frange extra contextum (clang ERRAT - VIOLATIO) */
+    _codicem_probare(piscina,
+        "static int f(int x) { break; return x; }\n",
+        (s32)EXAMEN_CODEX_FRANGE_EXTRA_CONTEXTUM, I);
+    /* perge intra commutationem sine ansa - transit, flagrat */
+    _codicem_probare(piscina,
+        "static int f(int x) { switch (x) { case 0: continue; }"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_FRANGE_EXTRA_CONTEXTUM, I);
+    /* frange in ansa legitima - tacet */
+    _codicem_probare(piscina,
+        "static int f(int x) { while (x) { break; } return x; }\n",
+        (s32)EXAMEN_CODEX_FRANGE_EXTRA_CONTEXTUM, ZEPHYRUM);
+
+    /* codex 67: salta ad titulum ignotum (clang ERRAT - VIOLATIO) */
+    _codicem_probare(piscina,
+        "static int f(int x) { goto ignotum; return x; }\n",
+        (s32)EXAMEN_CODEX_SALTA_AD_TITULUM_IGNOTUM, I);
+    /* salta ad titulum notum - tacet */
+    _codicem_probare(piscina,
+        "static int f(int x) { goto finis; finis: return x; }\n",
+        (s32)EXAMEN_CODEX_SALTA_AD_TITULUM_IGNOTUM, ZEPHYRUM);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

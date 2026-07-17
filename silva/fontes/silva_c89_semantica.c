@@ -4,6 +4,7 @@
 #include "silva_c89_semantica.h"
 #include "silva_tabulae_c89.h"
 #include "silva_c89_oraculum.h"
+#include "silva_c89_fluxus.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -68,6 +69,8 @@ interior vacuum _sentinellam_examinare (SilvaSemantica* sem,
 interior TypusC89* _qualibus_exutum (TypusC89* typus);
 interior vacuum _congeriem_typare (SilvaSemantica* sem,
     constans SilvaNodus* congeries, TypusC89* scopus_typus);
+interior b32 _constans_probare (SilvaSemantica* sem,
+    constans SilvaNodus* nodus, s64* valor_out);
 
 /* ==================================================
  * Diagnosticum v2 (examen, M4a chunk A)
@@ -147,7 +150,14 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "sentinella negativa in functione insignata",
                                                   EXAMEN_DOMESTICUM },
     { "comparatio degradata (insignati <= 0 fit == 0)",
-                                                  EXAMEN_DOMESTICUM }
+                                                  EXAMEN_DOMESTICUM },
+    { "semita sine redditu (finis functionis cadit)",
+                                                  EXAMEN_SUSPECTUM },
+    { "lapsus inter casus (finis gregis apertus)",
+                                                  EXAMEN_DOMESTICUM },
+    { "sententia inattingibilis",                 EXAMEN_DOMESTICUM },
+    { "frange aut perge extra contextum",         EXAMEN_VIOLATIO },
+    { "salta ad titulum ignotum",                 EXAMEN_VIOLATIO }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -1456,6 +1466,9 @@ silva_c89_semantica_creare (Piscina* piscina)
     sem->typationes = tabula_dispersa_creare_chorda(piscina, CCLVI);
     /* nexus symbolorum (M1a A): clavis eadem */
     sem->nexus = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    /* FLUXUS-0: CFG retenti (decisio Q7) */
+    sem->fluxus_functionum = xar_creare(piscina,
+        (i32)magnitudo(FluxusFunctionis*));
     sem->scopus_summus = _scopum_creare(piscina, NIHIL);
     sem->scopus_currens = sem->scopus_summus;
     si (sem->derivati == NIHIL || sem->symbola == NIHIL
@@ -2989,6 +3002,91 @@ _parametra_registrare (SilvaSemantica* sem,
     }
 }
 
+/* ==================================================
+ * FLUXUS-0: CFG + gradus 63/66/67 (spec silva-fluxus-0-spec.md)
+ * ================================================== */
+
+/* Ligamina suturae auxiliorum: politica canonicalizationis et
+ * plicatio constantium SEMANTICAE sunt, fluxus eas mutuatur (XI-1) */
+interior constans SilvaNodus*
+_fluxus_canonicum_ligamen (vacuum* contextus, constans SilvaNodus* nodus)
+{
+    (vacuum)contextus;
+    redde _canonicum(nodus);
+}
+
+interior b32
+_fluxus_aestimator_ligamen (vacuum* contextus,
+    constans SilvaNodus* nodus, s64* valor)
+{
+    redde _constans_probare((SilvaSemantica*)contextus, nodus, valor);
+}
+
+/* Post ambulationem corporis (typationes plenae, reditus_currens
+ * adhuc positus): CFG aedificare, retinere, gradus legere.
+ * 66/67 = paritas ERRORIS clang (VIOLATIO, verdictum vertunt);
+ * 63 = paritas -Wreturn-type (SUSPECTUM): margo CADIT fonte
+ * attingibili in functione non vacua - attingibilitas sola formas
+ * omnes idiomatum gerit (ansae infinitae plicatae, salta-ansae,
+ * commutationes classificatorum - XI-6, nulla exceptio). */
+interior vacuum
+_fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
+{
+    FluxusAuxilia aux;
+    FluxusFunctionis* fluxus;
+    FluxusFunctionis** locus;
+    TypusC89* rc;
+    i32 i;
+    i32 m;
+
+    aux.canonicum = _fluxus_canonicum_ligamen;
+    aux.aestimator = _fluxus_aestimator_ligamen;
+    aux.contextus = sem;
+    fluxus = silva_c89_fluxus_aedificare(sem->piscina, definitio,
+        &aux);
+    si (fluxus == NIHIL)
+    {
+        redde;
+    }
+    locus = (FluxusFunctionis**)xar_addere(sem->fluxus_functionum);
+    *locus = fluxus;
+
+    /* codex 66: frange/perge sine contextu (clang errat) */
+    m = xar_numerus(fluxus->fractiones_extra);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        silva_c89_diagnosticum_addere(sem,
+            *(constans SilvaNodus**)xar_obtinere(
+                fluxus->fractiones_extra, i),
+            (s32)EXAMEN_CODEX_FRANGE_EXTRA_CONTEXTUM);
+    }
+    /* codex 67: salta ad titulum ignotum (clang errat) */
+    m = xar_numerus(fluxus->saltus_ignoti);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        silva_c89_diagnosticum_addere(sem,
+            *(constans SilvaNodus**)xar_obtinere(
+                fluxus->saltus_ignoti, i),
+            (s32)EXAMEN_CODEX_SALTA_AD_TITULUM_IGNOTUM);
+    }
+    /* codex 63: finis cadit in functione non vacua */
+    rc = sem->reditus_currens;
+    si (fluxus->cadit_attingibilis && rc != NIHIL
+        && rc != sem->typus_erroris)
+    {
+        TypusC89* nudus = _qualibus_exutum(rc);
+        b32 rc_vacuum = nudus != NIHIL
+            && nudus->genus == TYPUS_C89_PRIMITIVUS
+            && nudus->datum.primitivum == (s32)PRIMITIVUM_VACUUM;
+
+        si (!rc_vacuum)
+        {
+            silva_c89_diagnosticum_addere(sem, definitio,
+                (s32)EXAMEN_CODEX_SEMITA_SINE_REDDITU);
+        }
+    }
+}
+
 interior vacuum
 _definitionem_ambulare (SilvaSemantica* sem,
     constans SilvaNodus* definitio)
@@ -3047,6 +3145,8 @@ _definitionem_ambulare (SilvaSemantica* sem,
     si (corpus_v.genus == SILVA_VALOR_NODUS)
     {
         _corpus_ambulare(sem, corpus_v.datum.nodus);
+        /* FLUXUS-0: reditus_currens adhuc positus (codex 63 eo eget) */
+        _fluxum_examinare(sem, definitio);
     }
     _scopum_claudere(sem);
     sem->reditus_currens = reditus_prior;

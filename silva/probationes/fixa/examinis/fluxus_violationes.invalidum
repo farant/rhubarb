@@ -1,0 +1,17 @@
+/* violationes fluxus: frange extra contextum + salta ad titulum
+ * ignotum - clang ambobus ERRAT; foramen paritatis verdicti
+ * clausum (FLUXUS-0 tractus 2, codices 66/67). */
+/* EXSPECTA 9:FRANGE_EXTRA_CONTEXTUM */
+/* EXSPECTA 15:SALTA_AD_TITULUM_IGNOTUM */
+
+static int extra_ansam(int x)
+{
+    break;
+    return x;
+}
+
+static int ad_ignotum(int x)
+{
+    goto ignotum;
+    return x;
+}
