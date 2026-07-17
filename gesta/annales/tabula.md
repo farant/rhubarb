@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 195 - 2026-07-17T01:58:14.383Z
+seq 201 - 2026-07-17T03:45:02.970Z
 
 ## QUAESTIONES
 
@@ -56,6 +56,7 @@ seq 195 - 2026-07-17T01:58:14.383Z
 - Origo argumentum in addere-gerere  `gesta mcp ergonomia`
 - Sonda una-ictus diagnostics pull  `legatus lsp messis-2026-07`
 - Tokenizator FTS Latinus  `gesta fts messis-2026-07`
+- arbor.sh: via plagulae ut argumentum  `silva ergonomia`
 
 ## DECRETA
 

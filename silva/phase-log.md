@@ -7785,3 +7785,249 @@ monita machinae in memoria topica) → QD barra v1 translata (100
 asserta, tags Anglici → DECISUS). Parcum 01KXPV9FPK (quaestio in
 legati MCP + selectores nominati/parametrizati — parametrizatio EST
 attributa, dependentia nunc soluta) trahitur post QD.
+
+### Addendum prae-compactione (2026-07-17) — semina interrogationis QC
+
+QC INTENTIO nondum scripta; rotula interrogationis brevis Frani
+debetur ANTE aedificationem. Quaestiones tres in colloquio nominatae:
+(1) familia normae (:c89/:c99/:extensio) - trahitne populationem
+tags-normae NUNC (recensio #5, "pseudos = the pull that funds it")
+an differt nominatim? (2) semantica :vocat(f) - "x CONTINET
+vocationem f" (saccharum super :habet) an "x EST vocatio f"? Barra
+v1 responsum fert - QD messis nos tenebit; inspicere v1 ante
+decisionem. (3) registratio pseudo-classium usoris (insectum v1 #4
+"made functional") - in QC an QD? Monita machinae QC in memoria
+topica silvae valida manent (:lectiones = vexillum ambulationis;
+:habet/:non = compilare recursivum; semantici = praedicata super
+vocatio[tok_valor]). Re-entry: hoc addendum + RELATIO QB supra +
+monita memoriae.
+
+INSTRUMENTA DEBRIEF (arcus quaestio QB, more domus):
+- adhibita: diagnostica legati I (ACCIPE ante compilationem);
+  impulsus post-editionem (cascatae transitionales rectae; fractura
+  syntaxis hospitis statim nominata - sed positione "99:1" pro
+  fractura vera ~949, observatio non investigata); arbor.sh II
+  (formae congeriei/folii-chordae ANTE asserta - pinnae sine
+  coniectura); grep/Read pro regionibus (spec/monita lineas ferunt -
+  navigatio viva minor, exemplar K4 iteratum); vigilia bis recte.
+- fructus: arbor.sh = stella arcus (cursus primus viridis tier
+  temporis cursus EIUS meritum); impulsus fracturam hospitis ante
+  lectionem manualem nominavit.
+- asperitates: (1) MAGNA - verdictum ACCIPE conversiones signi NON
+  tegit: errores tres -Wsign-conversion post ACCIPE compilator
+  solus cepit; classis decipulae MAXIME urens domus extra iudicium
+  examinis vivit (desideratum filatum - semantica typos naturales/
+  conversos IAM fert ex M0b, sedes implementationis exstat).
+  (2) parva - arbor.sh fontem INLINE accipit, non viam plagulae;
+  cyclum perdidi viam tradens (lexavit viam ipsam!). Vexillum
+  -plagula aut detectio plagulae exsistentis = commoditas vilis.
+- desiderata: gradus conversionum in examine (supra); cetera iam
+  parcata (harnessum LSP interpositum, mtimes nanosecundorum).
+
+## EXAMEN — conversio signi (gradus DOMESTICUM): INTENTIO (2026-07-16)
+
+Origin: desideratum 01KXPXBQG7 (QB debrief — three -Wsign-conversion
+compiler errors AFTER examen said ACCIPE; the i32-unsigned wall is the
+monorepo's most prolific trap, ~15 historical firings, and lives
+entirely outside the judgment). Goal: the trap fires IN THE PUSH at
+edit time, before the compiler ever runs.
+
+Protocol held: typing-table region of silva_c89_semantica.c read
+before this document (typationes, _conversionem_annotare, UAC
+helpers, diagnosticum materialization, effusor verdict logic).
+
+### The seat — refinement of the desideratum's sketch
+
+The desideratum sketched a post-pass over the typationes table. Code
+contact found something strictly better: `_conversionem_annotare`
+(silva_c89_semantica.c:4112) is a 17-line funnel through which EVERY
+recorded conversion flows — ~35 call sites covering UAC (both
+operands), shifts, ternary arms, the whole _ad_finem family
+(assignment / init / redde / prototyped args / congeries elements),
+and explicit casts. It receives exactly the judgment's trio {nodus,
+naturalis, finis}, runs while parsura_currens is set (positio
+materializes for free), and appends diagnostics in walk order —
+deterministic, where a hash-table post-pass would not be. The "no
+typing surgery" property is preserved: one additive call in the
+funnel's types-differ branch.
+
+### The judgment (new interior fn called from the funnel)
+
+Fire EXAMEN_CODEX_CONVERSIO_SIGNI (severitas DOMESTICUM — legal C89;
+house flags make it -Werror) iff:
+1. both sides integer-tier after quals stripped (primitivum integer
+   family; enumeratus as int per _promotum precedent; pointers,
+   floats, aggregates out);
+2. signedness differs (_est_insignatum_primitivum — NB plain char is
+   correctly signed-tier on this platform, absent from that list);
+3. range NOT preserved: signed→unsigned always fires (negatives
+   lost); unsigned→signed fires only when dest size <= src size
+   (u8→s32 is value-preserving → silent; subsumes "promotions never
+   fire").
+
+### Suppressions (each a named clause, in order)
+
+- CAST EXPLICITA: nodus sits under a conversio node (pater check —
+  post-commit trees carry pater; avoids threading a new param
+  through 35 call sites). The writer said the conversion.
+- CONTEXTUS COMPARATIONIS: pater = binarium with comparison operator
+  → silent in v1. That is -Wsign-compare's domain = named phase 2.
+- CONSTANS CAPIT: silva_c89_constans_aestimare succeeds AND the
+  value is representable in finis → silent. Covers `i32 n = 0`,
+  enum constants, `i8 m = 0xFF`. `i32 x = -I` still fires — THE
+  house trap, by design.
+- PER-INTERVALLUM (x & 0xff → i8, %, >>): NOT BUILT until corpus
+  contact demands a specific arm — the named tail where the day
+  could stretch.
+
+### Codex + message
+
+ONE codex for all contexts (codices are stable ABI; position shows
+context). Message structured in piscina (MACRO_DOMESTICUM_IN_ALIENO
+precedent) naming both types via silva_c89_typum_scribere:
+"conversio signi implicita: <naturalis> -> <finis>". Needs a small
+addere variant taking a built causa while reusing the standard
+positio materialization + provisionale mark.
+
+### Bars
+
+1. Unit (probatio_silva_examen.c section): trap forms fire (redde -I
+   from i32 fn; -I as prototyped i32 arg; s32→i32 assignment;
+   i32→s32 same-size), suppression forms silent (cast / comparison /
+   constant-fit / promotions), counts pinned.
+2. CORPUS-ZERO (the free negative oracle): full percursus sweep →
+   census shows zero CONVERSIO_SIGNI. The monorepo compiles under
+   -Wsign-conversion -Werror, so ANY corpus firing = false positive
+   BY CONSTRUCTION. Verdict column byte-identical (confirmed in the
+   effusor: only non-provisional VIOLATIO flips REICE).
+3. Fixture differential: NEW fixture class fixa/examinis/*.domesticum
+   (suffix-per-class law): verdict stays ACCIPE + EXSPECTA pins
+   present as DOMESTICUM rows + clang oracle agreement
+   (-Wsign-conversion fires at the same lines). examen_vectis.sh
+   gains a section. Fixtures SYNTHETIC from the named historical
+   patterns (censoris precedent — all firings were fixed in-session,
+   no landmine blobs exist in git).
+4. Secondary (recorded, no threshold): percursus wall-time
+   before/after — the aestimator now runs on constant-fit candidates.
+5. Standing gates: suites, hospes, amalgamare.sh (if ExamenCodex is
+   mirrored in silva.h the enum row is added by hand — twin law).
+
+### Consumers (free, via shared judgment)
+
+examen.sh rows + domestica count; LEGATUS DIAGNOSTICS PUSH — the
+actual goal, the i32 wall caught at edit time; percursus census.
+NOT v1: -domus verdict flag (visibility is the value; verdict
+flipping waits for field experience).
+
+### Named phase 2 (not now, by name)
+
+Comparisons (-Wsign-compare incl. tautological insignatus >= 0);
+narrowing (-Wconversion value truncation); float<->int. Same funnel,
+same suppression machinery — each is one predicate arm + fixtures
+when pulled.
+
+### In-flight risks
+
+- Double-annotation: some sites may annotate one node twice (UAC then
+  context) — if the probatio shows doubled rows, add a once-per-node
+  guard (judged on evidence, not assumed).
+- Ambigui: provisionale comes free via the standard addere path
+  (_intra_ambiguum) — the structured-causa variant must keep it.
+
+### Open before code (Fran)
+
+Q1 verdict-neutrality of DOMESTICUM in v1; Q2 structured vs static
+causa; Q3 one codex vs per-context split. Recommendations inline
+above.
+
+DECISUS (Fran, 2026-07-16, all three recommendations): verdict-neutral
+DOMESTICUM in v1 (-domus = named future); structured causa naming both
+types; ONE codex CONVERSIO_SIGNI.
+
+## EXAMEN — conversio signi: RELATIO (2026-07-16, same day as INTENTIO)
+
+SHIPPED. The murus i32-insignatus is inside the judgment: firings
+land in the legatus push at edit time, before the compiler.
+
+Bars:
+- Unit 641/641 (probatio_silva_examen +55 asserts): every named trap
+  fires exactly once (redde -I / -I argument / assignment / UAC /
+  init / char->u8), every suppression silent (cast / comparison /
+  constant-fit / promotions / bigger-signed-dest / enum / shift
+  count), severity DOMESTICUM + structured causa + position pinned,
+  no probe noise (total-count pin).
+- CORPUS-ZERO: definitive percursus -semantica sweep — census codex
+  54 ABSENT over 820 files / 1,690,957 typed expression nodes;
+  verdict column unchanged (one pre-existing drift row pinned:
+  lib/vigilia.c = the excubitor arc's <utime.h>-outside-lexicon
+  class, REICE since its birth, exclusiones.txt 40->41).
+- Differential fixture conversio_signi.domesticum: clang agreement
+  LINE AND COLUMN (13:12/23:13/30:13/36:12) + count parity, wired as
+  vectis section ②b (verdict must stay ACCIPE + pins present as
+  domesticum + oracle warns same lines + pin count == warning
+  count). VECTIS TENET.
+- Suites: silva 30/30 (ONE deliberate revision: the M0b UAC fixture
+  contains a true conversion "ul + ll" — zero-diagnostics pin became
+  one-DOMESTICUM-row pin, clang concurs); officina 12/12 (sessio
+  golden transcripts intact); amalgamare VERIFICATUM, hospes 32/32.
+- Timing (secondary bar, recorded): ante 155,020 ms -> post
+  155,847 ms (+0.5%, noise tier) — range engine + alienity table
+  invisible at corpus scale. Coverage 100.00% held.
+
+As built (= INTENTIO except the tail, which fired exactly as named):
+funnel seat _conversionem_annotare; ONE codex CONVERSIO_SIGNI
+(DOMESTICUM, verdict-neutral); structured causa via
+_diagnosticum_addere_plenum (addere body refactored, wrapper kept);
+suppressions = cast-pater, comparison-pater (phasis II), COMPOUND-
+ASSIGN LHS (calibration find), enum EXCLUDED (calibration find),
+ALIEN SOURCES (_alienitates_computare factored out of
+MACRO_DOMESTICUM, cached per-parsura on sem, queried by radix
+fons_index — fons viae are basenames, the inclusion graph's written
+paths decide), RANGE ENGINE _intervallum_expressionis {latitudo,
+non_negativum} in clang's IntRange shape (constants exact via silent
+probe; ternary = arm union; comparisons/logic = {1,nonneg}; bit +
+arithmetic ops by widths; fallback = TYPE range from the M0b
+typationes table — the table's first downstream consumer beyond
+demissio).
+
+First corpus contact: 217 rows, ALL false positives by construction
+(145 vendored stb + ~53 IntRange classes + amalgam/fixture copies).
+Second contact: ZERO. The INTENTIO's "per-intervallum pulled by
+corpus contact only" clause was the day's best decision — the tail
+was real, bounded, and arrived with classification data attached.
+
+THE CALIBRATION LAW (three data points this arc): an oracle-paired
+tier's predicate must be pinned against the LIVE oracle with
+specimens BEFORE authoring — clang's suppressions are heuristic,
+not mathematical (sub keeps nonneg when both operands nonneg even
+though 5-10<0; compound-assign LHS silent while RHS fires;
+non-negative enums typed unsigned). Two of three a-priori guesses
+were wrong; specimens were minutes each.
+
+PHASIS II BY NAME: comparisons tier (-Wsign-compare incl.
+tautological insignatus >= 0, own codex); narrowing tier
+(-Wconversion value truncation); float<->int; -domus verdict flag;
+compound-assign-LHS as OPTIONAL stricter-than-clang house rule.
+
+INSTRUMENTA DEBRIEF (more domus):
+- adhibita: examen push (mid-refactor exp-undeclared cascade named
+  instantly; the s32/i32 wall fired on the tier's own guard AND its
+  own probatio — poetic, caught pre-push by compile); corpus-as-
+  oracle (the arc's engine); clang specimen calibration x5 (the
+  arc's second engine); percursus census column (bar instrument);
+  worklogs at find-time.
+- fructus: typationes table answered the range engine's fallback
+  tier for free; _via_aliena + inclusion graph answered alienage;
+  the diff-vs-oracle loop (examen -machina | awk vs clang) is a
+  two-liner worth remembering.
+- asperitates: (1) STALE-BINARY strike — silva/build/examen is
+  relinked only by examen.sh; ran it directly after a fontes edit
+  and chased a phantom "guard doesn't work" (bench symptom row
+  exists, forgot to reach). (2) LANE CONFUSION — plain percursus
+  is parse-only; the first "corpus-zero" was vacuous (judgment
+  lane = -semantica). One sweep pair wasted. (3) MID-SWEEP tree
+  mutation contaminated the ante baseline (sweep reads disk as it
+  walks) — never touch the tree while a sweep runs.
+- desiderata: none new (phasis II items named above; oracle-
+  specimen calibration could become a small fixture convention if
+  a third oracle-paired tier appears).

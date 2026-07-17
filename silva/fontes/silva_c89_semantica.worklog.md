@@ -533,3 +533,75 @@ held). Exclusiones re-pin 39->40 was phase-A baseline drift
 genera_biblia.c HEALED by smart-quotes fix), not this check.
 scrinium.c judge cost 0.23s user = baseline-identical (fast path
 exits at the edge scan for vendor-free TUs).
+
+## 2026-07-16 — conversio signi (gradus DOMESTICUM)
+
+The i32-unsigned wall gets a judgment tier (desideratum 01KXPXBQG7:
+three -Wsign-conversion compiler errors AFTER examen said ACCIPE in
+the QB arc alone). Finds at build time:
+
+- SEAT REFINEMENT: the desideratum sketched a post-pass over the
+  typationes table; code contact found `_conversionem_annotare` is a
+  17-line funnel ALL ~35 conversion-recording sites flow through,
+  with {nodus, naturalis, finis} in hand, parsura_currens set
+  (positio materializes), and walk-order determinism (a hash-table
+  post-pass would emit in nondeterministic order). One additive call
+  in the types-differ branch; zero typing surgery.
+- ENUM CALIBRATION FIND: clang gives non-negative enums UNSIGNED
+  compatible types — `unsigned u = e;` is SILENT under clang
+  -Wsign-conversion while our enum-as-int model would fire. C89
+  enum type is impl-defined, so v1 EXCLUDES enumeratus entirely
+  (named limit in _primitivum_integrale's comment). Calibrate
+  against the live oracle BEFORE pinning asserts — this would have
+  been a corpus false-positive class discovered the slow way.
+- SILENT PROBE: the constant-fits suppression calls
+  silva_c89_constans_aestimare on candidate nodes; its
+  magnitudo-typi path reaches formam_computare which CAN emit
+  diagnostics (incomplete types etc.). Guard = snapshot
+  xar_numerus(diagnostica) before the probe, xar_truncare after if
+  it grew. Total-count assert in the probatio pins "no leaked
+  probe noise" on the common path.
+- Differential quality: the conversio_signi.domesticum fixture
+  agrees with clang line-AND-COLUMN exactly (13:12/23:13/30:13/
+  36:12) — the radix-token positio materialization is byte-precise
+  on this class. Vectis ②b also pins count parity (pins == oracle
+  warnings) per fixture.
+- addere refactor: silva_c89_diagnosticum_addere_cum_socio body
+  became interior _diagnosticum_addere_plenum(+causa_structa);
+  structured causa (both types named via silva_c89_typum_scribere,
+  piscina sprintf) rides the STANDARD positio/provisionale path —
+  the MACRO_DOMESTICUM manual-positio pattern was not repeated.
+
+### Addendum, same day — the named tail arrived on schedule
+
+First corpus contact: 217 firings, every one a false positive by
+construction (whole repo compiles under -Wsign-conversion -Werror).
+The INTENTIO's "per-intervallum = corpus-contact-only" clause was
+the right call — the tail was real and had exact shape:
+
+- 145 = vendored stb_image.h. The naive fons-via check NEVER fired
+  because fons viae are BASENAMES (praebere) — the exact trap the
+  MACRO_DOMESTICUM comment documents. Fix: factored its per-fons
+  alienity table into _alienitates_computare (shared), cached on
+  sem per-parsura (alieni_parsura key), queried by radix
+  fons_index. DOMESTICUM tiers judge domestic code only.
+- ~53 = clang's IntRange analysis we lacked. Built
+  _intervallum_expressionis {latitudo, non_negativum}: constants
+  exact (silent probe), ternary = arm union, comparisons/logical =
+  {1,nonneg}, bit/arithmetic operators by widths, fallback = TYPE
+  range from the M0b typationes table (the table paid off — every
+  subexpression already carries its type).
+- CALIBRATION LAW (fired three times today): clang's suppressions
+  are HEURISTIC, not mathematical — subtraction keeps nonneg when
+  both operands nonneg (u8-u8, (1<<n)-1, prod-128 all silent) even
+  though 5-10<0; compound-assign LHS conversions (s += u) are
+  silent while RHS (u += s) fires; non-negative enums are typed
+  unsigned. Every predicate decision MUST be pinned against the
+  live oracle first — two of three guesses were wrong.
+- One DELIBERATE test revision: probatio_silva_semantica's M0b UAC
+  fixture contains a true sign conversion (ul + ll) — its
+  zero-diagnostics pin became a one-DOMESTICUM-row pin (clang
+  agrees the row is real).
+- Stale-binary strike (bench lesson N+1): ran silva/build/examen
+  directly after editing fontes — only examen.sh relinks it;
+  first "alien guard doesn't work" was a stale binary.

@@ -1331,8 +1331,22 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
         sem = silva_c89_semantica_analysare(piscina, parsura);
         CREDO_NON_NIHIL (sem);
-        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem),
-            ZEPHYRUM);
+        /* revisio consulta (conversio signi 2026-07-16): fons_b
+         * "ul + ll" conversionem signi VERAM continet (ll s64 ->
+         * u64; clang eam quoque monet) - unus ordo DOMESTICUS
+         * exspectatus, non zephyrum */
+        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), I);
+        {
+            constans SemanticaDiagnosticum* d =
+                silva_c89_diagnosticum_per_indicem(sem, ZEPHYRUM);
+
+            CREDO_NON_NIHIL (d);
+            si (d != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (d->codex,
+                    (s32)EXAMEN_CODEX_CONVERSIO_SIGNI);
+            }
+        }
         int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
         long_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_LONGUS);
         char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);

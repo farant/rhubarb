@@ -958,6 +958,119 @@ s32 principale (vacuum)
         }
     }
 
+    /* ========================================================
+     * XI. Conversio signi (gradus DOMESTICUM): decipulae flagrant
+     * (redde/-I argumentum/assignatio/UAC/init), suppressiones
+     * tacent (cast/comparatio/constans-capit/promotiones/finis
+     * maior/enum = limes nominatus). Calibratum contra clang
+     * -Wsign-conversion 2026-07-16.
+     * ======================================================== */
+    imprimere("\n--- Probans conversionem signi ---\n");
+
+    /* decipula domus #1: redde -I ex functione insignata */
+    _codicem_probare(piscina,
+        "static unsigned f(void) { return -1; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, I);
+    /* -I ut argumentum prototypatum insignatum */
+    _codicem_probare(piscina,
+        "static void g(unsigned u) { (void)u; }\n"
+        "static void f(void) { g(-1); }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, I);
+    /* assignatio signatum -> insignatum (non constans) */
+    _codicem_probare(piscina,
+        "static void f(int s) { unsigned u; u = s; (void)u; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, I);
+    /* insignatum -> signatum eiusdem magnitudinis */
+    _codicem_probare(piscina,
+        "static int f(unsigned u) { return u; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, I);
+    /* UAC: signatum in insignatum arithmetica */
+    _codicem_probare(piscina,
+        "static unsigned f(int s, unsigned u) { return s + u; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, I);
+    /* initiator */
+    _codicem_probare(piscina,
+        "static void f(int s) { unsigned u = s; (void)u; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, I);
+    /* constans negativa in initiatore */
+    _codicem_probare(piscina,
+        "static void f(void) { unsigned u = -1; (void)u; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, I);
+    /* character (signatus in hac machina) -> character insignatus */
+    _codicem_probare(piscina,
+        "static void f(char c) { unsigned char u; u = c;\n"
+        "  (void)u; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, I);
+
+    /* SUPPRESSIONES */
+    /* cast explicita */
+    _codicem_probare(piscina,
+        "static void f(int s) { unsigned u = (unsigned)s;\n"
+        "  (void)u; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, ZEPHYRUM);
+    /* comparatio (phasis II nominata) */
+    _codicem_probare(piscina,
+        "static int f(int s, unsigned u) { return s < u; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, ZEPHYRUM);
+    /* constans capit finem */
+    _codicem_probare(piscina,
+        "static void f(void) { unsigned u = 5; u = 0; (void)u; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, ZEPHYRUM);
+    /* promotio valores servans (u8 -> int / long) */
+    _codicem_probare(piscina,
+        "static void f(unsigned char c) { int i = c; long l = c;\n"
+        "  (void)i; (void)l; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, ZEPHYRUM);
+    /* insignatum -> signatum maius */
+    _codicem_probare(piscina,
+        "static void f(unsigned u) { long l = u; (void)l; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, ZEPHYRUM);
+    /* enumeratus = limes nominatus (clang enums non-negativos
+     * insignatos tractat - non iudicatur) */
+    _codicem_probare(piscina,
+        "enum E { A = 1, B = 2 };\n"
+        "static void f(enum E e) { unsigned u = e; (void)u; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, ZEPHYRUM);
+    /* motus: numerus motus non convertitur */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned u, int n) { return u << n; }\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, ZEPHYRUM);
+
+    /* severitas + causa structa + positio */
+    {
+        SilvaParsura* parsura = _parsare(piscina,
+            "static unsigned f(int s)\n"
+            "{\n"
+            "    return s;\n"
+            "}\n");
+        SilvaSemantica* sem;
+        constans SemanticaDiagnosticum* d;
+
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        d = _diagnosticum_codicis(sem,
+            (s32)EXAMEN_CODEX_CONVERSIO_SIGNI);
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            CREDO_VERUM (d->severitas == (s32)EXAMEN_DOMESTICUM);
+            CREDO_AEQUALIS_I32 (d->linea, III);
+            CREDO_VERUM (!d->provisionale);
+            CREDO_VERUM (strstr(d->causa,
+                "conversio signi implicita:") != NIHIL);
+            CREDO_VERUM (strstr(d->causa, "int") != NIHIL);
+            CREDO_VERUM (strstr(d->causa, "->") != NIHIL);
+        }
+        /* totalis: sola conversio signi - probe aestimatoris
+         * strepitum non reliquit */
+        si (sem != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (
+                (i32)silva_c89_diagnostica_numerus(sem), I);
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

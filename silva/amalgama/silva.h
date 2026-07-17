@@ -1319,6 +1319,10 @@ typedef enum {
     /* macro domesticum in capite alieno (vendor) expansum -
      * SUSPECTUM; causa in piscina structa (nominat omnia) */
     EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO,
+    /* conversio signi implicita valores non servans (murus
+     * i32-insignatus) - DOMESTICUM (legale C89, vexilla domus
+     * reiciunt); causa in piscina structa (typos ambos nominat) */
+    EXAMEN_CODEX_CONVERSIO_SIGNI,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

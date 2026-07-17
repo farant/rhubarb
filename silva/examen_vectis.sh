@@ -89,6 +89,63 @@ for f in "$FIXA"/*.invalidum; do
     esac
 done
 
+# ②b corpus domesticum: legale C89 (verdictum ACCIPE manet) sed
+#   ordines DOMESTICUM ad pinnas; oraculum clang -Wsign-conversion
+#   easdem lineas monet ET numerus monitorum == numerus pinnarum
+#   (aequalitas honesta - differentiale vivum vexillorum domus)
+echo "--- corpus domesticum (pinnae EXSPECTA + oraculum) ---"
+declare -a ORACULUM_DOMUS=(
+    clang -x c -std=c89 -pedantic -Wsign-conversion
+    -Wno-long-long -fno-caret-diagnostics -fsyntax-only
+)
+for f in "$FIXA"/*.domesticum; do
+    [ -e "$f" ] || continue
+    basis="$(basename "$f")"
+    exspecta="$(grep -o 'EXSPECTA [0-9]*:[A-Z_]*' "$f" \
+        | sed 's/EXSPECTA //')"
+
+    effusum="$("$SILVA_DIR/build/examen" "$f" -machina 2>/dev/null)"
+    verdictum="$(printf '%s\n' "$effusum" | awk -F'\t' \
+        '$1=="VERDICTUM"{print $2}')"
+    if [ "$verdictum" != "ACCIPE" ]; then
+        echo "  DISCREPANTIA: $basis examen=$verdictum" \
+             "(non ACCIPE - legale C89!)"
+        fracta=1
+        continue
+    fi
+    monita="$("${ORACULUM_DOMUS[@]}" "$f" 2>&1)"
+    for pinna in $exspecta; do
+        linea="${pinna%%:*}"
+        nomen="EXAMEN_CODEX_${pinna#*:}"
+        numerus="$(awk -F'\t' -v n="$nomen" '$2==n{print $1}' "$MAPPA")"
+        if [ -z "$numerus" ]; then
+            echo "  PINNA IGNOTA: $basis $nomen"
+            fracta=1
+            continue
+        fi
+        if ! printf '%s\n' "$effusum" | awk -F'\t' \
+            -v l="$linea" -v c="$numerus" \
+            '$2==l && $4=="domesticum" && $5==c {inventum=1}
+             END{exit !inventum}'; then
+            echo "  PINNA DEEST: $basis linea $linea $nomen"
+            fracta=1
+        fi
+        if ! printf '%s\n' "$monita" | grep -q ":$linea:.*sign-conversion"; then
+            echo "  ORACULUM DISSENTIT: $basis linea $linea" \
+                 "(clang non monet)"
+            fracta=1
+        fi
+    done
+    n_pinnae="$(printf '%s\n' "$exspecta" | grep -c . || true)"
+    n_monita="$(printf '%s\n' "$monita" | grep -c 'sign-conversion' \
+        || true)"
+    if [ "$n_pinnae" != "$n_monita" ]; then
+        echo "  DISCREPANTIA NUMERI: $basis pinnae=$n_pinnae" \
+             "monita oraculi=$n_monita"
+        fracta=1
+    fi
+done
+
 # ③ -corpus: columna verdicti percursus contra exclusiones pinnatas
 if [ "${1:-}" = "-corpus" ]; then
     echo "--- corpus verum (percursus REICE vs exclusiones) ---"

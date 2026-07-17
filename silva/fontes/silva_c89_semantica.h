@@ -280,6 +280,14 @@ nomen enumeratio {
      * (vendor) expansum - ordo inclusionis significationem tacite
      * mutat ('char C' -> 'char 100'); causa IN PISCINA structa */
     EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO,  /* SUSPECTUM */
+    /* gradus conversionis signi (2026-07-16): conversio implicita
+     * integralis quae signum mutat et valores non servat (murus
+     * i32-insignatus - decipula domus frequentissima). Legale C89;
+     * vexilla domus (-Wsign-conversion -Werror) reiciunt - examen
+     * ANTE compilatorem nominat. Suppressiones: cast explicita,
+     * contextus comparationis (phasis II), constans capit finem.
+     * Causa IN PISCINA structa (typos ambos nominat). */
+    EXAMEN_CODEX_CONVERSIO_SIGNI,             /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -375,6 +383,14 @@ structura SilvaSemantica {
      * ponit per ambulationem (systema, deinde usoris) - fons viae
      * diagnosticorum; NIHIL licet (positio tunc sine via) */
     constans SilvaParsura* parsura_currens;
+
+    /* tabula alienitatis fontium (conversio signi, 2026-07-16):
+     * pigre computata per parsuram (clavis = monstrator parsurae);
+     * NIHIL = TU sine vendore. Iudicia DOMESTICA codicem alienum
+     * numquam iudicant. */
+    constans SilvaParsura* alieni_parsura;
+    b32*                   fontes_alieni;
+    i32                    fontes_alieni_numerus;
 };
 
 SilvaSemantica* silva_c89_semantica_creare (Piscina* piscina);
