@@ -169,8 +169,8 @@ delineare_ponere_offset_exemplaris (
 vacuum
 delineare_ponere_praecisionem (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y,
+    s32                  x,
+    s32                  y,
     i32                  latitudo,
     i32                  altitudo);
 
@@ -355,7 +355,7 @@ delineare_circulum (
     ContextusDelineandi* ctx,
     i32                  centrum_x,
     i32                  centrum_y,
-    i32                  radius,
+    s32                  radius,
     Color                color);
 
 /* Delineare circulum plenum
@@ -371,7 +371,7 @@ delineare_circulum_plenum (
     ContextusDelineandi* ctx,
     i32                  centrum_x,
     i32                  centrum_y,
-    i32                  radius,
+    s32                  radius,
     Color                color);
 
 
@@ -442,8 +442,8 @@ delineare_ellipsin (
     ContextusDelineandi* ctx,
     i32                  centrum_x,
     i32                  centrum_y,
-    i32                  radius_x,
-    i32                  radius_y,
+    s32                  radius_x,
+    s32                  radius_y,
     Color                color);
 
 /* Delineare ellipsin plenam
@@ -460,8 +460,8 @@ delineare_ellipsin_plenam (
     ContextusDelineandi* ctx,
     i32                  centrum_x,
     i32                  centrum_y,
-    i32                  radius_x,
-    i32                  radius_y,
+    s32                  radius_x,
+    s32                  radius_y,
     Color                color);
 
 

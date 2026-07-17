@@ -29,7 +29,7 @@ main (
                      i32  i;
                      i32  x;
                      i32  y;
-                     i32  radius;
+                     s32  radius;
                    Color  color;
                     character buffer_textus[LXIV];
 
@@ -172,7 +172,7 @@ main (
 
             x = CD + i * LX + (i32)offset_x;
             y = CL + (i32)offset_y;
-            radius = X + i * III;
+            radius = (s32)(X + i * III);
 
             color = color_ex_rgb((i8)(CCLV - i * XL), (i8)(C + i * L), (i8)(CCLV - i * XXX));
             delineare_circulum_plenum(ctx, x, y, radius, color);

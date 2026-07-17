@@ -269,16 +269,16 @@ delineare_ponere_offset_exemplaris (
 vacuum
 delineare_ponere_praecisionem (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y,
+    s32                  x,
+    s32                  y,
     i32                  latitudo,
     i32                  altitudo)
 {
     si (!ctx || !ctx->tabula) redde;
 
     /* Constringere ad limites tabulae */
-    ctx->praecisio_x = MAXIMUM(ZEPHYRUM, x);
-    ctx->praecisio_y = MAXIMUM(ZEPHYRUM, y);
+    ctx->praecisio_x = (i32)MAXIMUM(ZEPHYRUM, x);
+    ctx->praecisio_y = (i32)MAXIMUM(ZEPHYRUM, y);
     ctx->praecisio_latitudo = MINIMUM(latitudo, ctx->tabula->latitudo - ctx->praecisio_x);
     ctx->praecisio_altitudo = MINIMUM(altitudo, ctx->tabula->altitudo - ctx->praecisio_y);
 }
@@ -480,7 +480,6 @@ delineare_rectangulum_rotundum_plenum (
     /* Cohibere radius ad dimensiones */
     si (radius > latitudo / II) radius = latitudo / II;
     si (radius > altitudo / II) radius = altitudo / II;
-    si (radius < ZEPHYRUM) radius = ZEPHYRUM;
 
     /* Si radius est 0, delineare rectangulum normale */
     si (radius == ZEPHYRUM)
@@ -559,7 +558,6 @@ delineare_rectangulum_rotundum (
     /* Cohibere radius */
     si (radius > latitudo / II) radius = latitudo / II;
     si (radius > altitudo / II) radius = altitudo / II;
-    si (radius < ZEPHYRUM) radius = ZEPHYRUM;
 
     /* Si radius est 0, delineare rectangulum normale */
     si (radius == ZEPHYRUM)
@@ -626,12 +624,12 @@ delineare_circulum (
     ContextusDelineandi* ctx,
     i32                  centrum_x,
     i32                  centrum_y,
-    i32                  radius,
+    s32                  radius,
     Color                color)
 {
-    i32 x;
-    i32 y;
-    i32 error;
+    s32 x;
+    s32 y;
+    s32 error;
     i32 pixel_color;
 
     si (!ctx || radius < ZEPHYRUM) redde;
@@ -644,14 +642,14 @@ delineare_circulum (
 
     dum (x >= y)
     {
-        ponere_pixelum_internum(ctx, centrum_x + x, centrum_y + y, pixel_color);
-        ponere_pixelum_internum(ctx, centrum_x + y, centrum_y + x, pixel_color);
-        ponere_pixelum_internum(ctx, centrum_x - y, centrum_y + x, pixel_color);
-        ponere_pixelum_internum(ctx, centrum_x - x, centrum_y + y, pixel_color);
-        ponere_pixelum_internum(ctx, centrum_x - x, centrum_y - y, pixel_color);
-        ponere_pixelum_internum(ctx, centrum_x - y, centrum_y - x, pixel_color);
-        ponere_pixelum_internum(ctx, centrum_x + y, centrum_y - x, pixel_color);
-        ponere_pixelum_internum(ctx, centrum_x + x, centrum_y - y, pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y + y), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + y), (i32)((s32)centrum_y + x), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - y), (i32)((s32)centrum_y + x), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y + y), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y - y), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - y), (i32)((s32)centrum_y - x), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + y), (i32)((s32)centrum_y - x), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y - y), pixel_color);
 
         si (error <= ZEPHYRUM)
         {
@@ -672,12 +670,12 @@ delineare_circulum_plenum (
     ContextusDelineandi* ctx,
     i32                  centrum_x,
     i32                  centrum_y,
-    i32                  radius,
+    s32                  radius,
     Color                color)
 {
-    i32 x;
-    i32 y;
-    i32 error;
+    s32 x;
+    s32 y;
+    s32 error;
 
     si (!ctx || radius < ZEPHYRUM) redde;
 
@@ -687,10 +685,10 @@ delineare_circulum_plenum (
 
     dum (x >= y)
     {
-        delineare_lineam_horizontalem(ctx, centrum_x - x, centrum_x + x, centrum_y + y, color);
-        delineare_lineam_horizontalem(ctx, centrum_x - y, centrum_x + y, centrum_y + x, color);
-        delineare_lineam_horizontalem(ctx, centrum_x - x, centrum_x + x, centrum_y - y, color);
-        delineare_lineam_horizontalem(ctx, centrum_x - y, centrum_x + y, centrum_y - x, color);
+        delineare_lineam_horizontalem(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_x + x), (i32)((s32)centrum_y + y), color);
+        delineare_lineam_horizontalem(ctx, (i32)((s32)centrum_x - y), (i32)((s32)centrum_x + y), (i32)((s32)centrum_y + x), color);
+        delineare_lineam_horizontalem(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_x + x), (i32)((s32)centrum_y - y), color);
+        delineare_lineam_horizontalem(ctx, (i32)((s32)centrum_x - y), (i32)((s32)centrum_x + y), (i32)((s32)centrum_y - x), color);
 
         si (error <= ZEPHYRUM)
         {
@@ -803,8 +801,8 @@ delineare_ellipsin (
     ContextusDelineandi* ctx,
     i32                  centrum_x,
     i32                  centrum_y,
-    i32                  radius_x,
-    i32                  radius_y,
+    s32                  radius_x,
+    s32                  radius_y,
     Color                color)
 {
     s32 x;
@@ -890,8 +888,8 @@ delineare_ellipsin_plenam (
     ContextusDelineandi* ctx,
     i32                  centrum_x,
     i32                  centrum_y,
-    i32                  radius_x,
-    i32                  radius_y,
+    s32                  radius_x,
+    s32                  radius_y,
     Color                color)
 {
     s32 x;
@@ -1245,11 +1243,11 @@ invenire_colorem_per_cinereum(
     i32 numerus_colorum)
 {
     i32 i;
-    i32 distantia_minima;
+    s32 distantia_minima;
     i32 color_proximus;
     i32 pr, pg, pb;
     i32 cinereus_palette;
-    i32 distantia;
+    s32 distantia;
 
     si (!palette || numerus_colorum <= ZEPHYRUM)
     {
@@ -1270,7 +1268,7 @@ invenire_colorem_per_cinereum(
         cinereus_palette = ad_cinereum(pr, pg, pb);
 
         /* Computare distantiam cineream */
-        distantia = cinereus - cinereus_palette;
+        distantia = (s32)cinereus - (s32)cinereus_palette;
         si (distantia < ZEPHYRUM) distantia = -distantia;  /* Valor absolutus */
 
         si (distantia < distantia_minima)

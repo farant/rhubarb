@@ -202,12 +202,12 @@ elementa_slider(
     delineare_lineam_horizontalem(ctx, px, px + track_latitudo, track_y, color_track);
 
     /* Delineare thumb */
-    delineare_circulum_plenum(ctx, thumb_x, track_y, thumb_radius, color_thumb);
+    delineare_circulum_plenum(ctx, thumb_x, track_y, (s32)thumb_radius, color_thumb);
 
     /* Si hover vel dragging, delineare circulum extra */
     si (fructus.hover || fructus.dragging)
     {
-        delineare_circulum(ctx, thumb_x, track_y, thumb_radius + 2, color_thumb);
+        delineare_circulum(ctx, thumb_x, track_y, (s32)(thumb_radius + 2), color_thumb);
     }
 
     redde fructus;
