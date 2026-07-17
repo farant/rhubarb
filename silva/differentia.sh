@@ -39,9 +39,12 @@ fi
 # tabula graduum oraculo-comparium: codex <TAB> vexilla clang
 # <TAB> titulus vexilli (exemplar in effuso oraculi "[-W...]").
 # Gradus novus oraculo-compar: ordinem adde.
+# titulus: uncus flag oraculi; alternativa per '|' (umbrella
+# -Wconversion tria sub-vexilla latitudinis habet)
 GRADUS_TABULA="54	-Wsign-conversion	-Wsign-conversion
 57	-Wsign-compare	-Wsign-compare
-63	-Wreturn-type	-Wreturn-type"
+63	-Wreturn-type	-Wreturn-type
+68	-Wconversion	-Wimplicit-int-conversion|-Wconstant-conversion|-Wshorten-64-to-32"
 
 # ---- latus nostrum (per involucrum - SEMPER recens; binarium
 # directum numquam: decipula binarii vetusti) ----
@@ -82,7 +85,9 @@ while IFS=$'\t' read -r codex vexillum titulus; do
     nos_lineae="$(printf '%s\n' "$effusum" | awk -F'\t' -v c="$codex" \
         '$5==c {print $2}' | sort -un)"
     orc_lineae="$(printf '%s\n' "$monita" | awk -F: -v p="$PLAGULA" \
-        -v t="[$titulus]" 'index($0, t) && $1==p {print $2}' \
+        -v alts="$titulus" 'BEGIN { n = split(alts, A, "|") }
+        $1==p { for (i = 1; i <= n; i++)
+            if (index($0, "[" A[i] "]")) { print $2; break } }' \
         | sort -un)"
 
     consensus="$(comm -12 <(printf '%s\n' "$nos_lineae" | grep . || true) \

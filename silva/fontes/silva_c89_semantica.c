@@ -159,7 +159,10 @@ interior constans ExamenCodexInformatio _codices[] = {
                                                   EXAMEN_DOMESTICUM },
     { "sententia inattingibilis",                 EXAMEN_DOMESTICUM },
     { "frange aut perge extra contextum",         EXAMEN_VIOLATIO },
-    { "salta ad titulum ignotum",                 EXAMEN_VIOLATIO }
+    { "salta ad titulum ignotum",                 EXAMEN_VIOLATIO },
+    { "angustatio implicita (latitudo perditur)", EXAMEN_DOMESTICUM },
+    { "variabilis inutilis",                      EXAMEN_DOMESTICUM },
+    { "parametrum inutile",                       EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -6341,6 +6344,203 @@ _comparationem_examinare (SilvaSemantica* sem,
 }
 
 /* Conversum annotare si typus valoris re vera mutatur */
+/* Capitne expressio finem angustum? (pro codice 68). Recursivum:
+ * constans -> probatio intervalli EXACTA per aestimatorem (tabulae
+ * -1 in s8: latitudo negativa fallax, valor exactus verus);
+ * parenthesis/ternarius -> per bracchia (selectio: ' ' : (character)x
+ * - clang bracchia credit); typus naturalis satis angustus ->
+ * structura capit (bracchium casus vestitum); alioquin intervallum
+ * (larva & capit, % non - paritas clang). */
+interior constans SilvaNodus*
+_nodus_valoris (SilvaValor v)
+{
+    redde v.genus == SILVA_VALOR_NODUS ? v.datum.nodus : NIHIL;
+}
+
+interior b32
+_angustatio_capit (SilvaSemantica* sem, constans SilvaNodus* nodus,
+    b32 i_finis, i32 bita_finis, i32 altitudo)
+{
+    s64 valor;
+
+    si (nodus == NIHIL || altitudo > XVI)
+    {
+        redde FALSUM;
+    }
+    nodus = _canonicum(nodus);
+    si (_constans_probare(sem, nodus, &valor))
+    {
+        si (i_finis)
+        {
+            s64 maximus = ((s64)I << bita_finis) - I;
+
+            redde valor >= ZEPHYRUM && valor <= maximus;
+        }
+        {
+            s64 dimidius = (s64)I << (bita_finis - I);
+
+            redde valor >= -dimidius && valor <= dimidius - I;
+        }
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+    {
+        redde _angustatio_capit(sem,
+            _nodus_valoris(silva_c89_parenthesis_internum(nodus)),
+            i_finis, bita_finis, altitudo + I);
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_TERNARIUS)
+    {
+        redde _angustatio_capit(sem,
+                _nodus_valoris(silva_c89_ternarius_verum(nodus)),
+                i_finis, bita_finis, altitudo + I)
+            && _angustatio_capit(sem,
+                _nodus_valoris(silva_c89_ternarius_falsum(nodus)),
+                i_finis, bita_finis, altitudo + I);
+    }
+    {
+        /* typus naturalis structuraliter capiens (bracchium casus
+         * vestitum, sub-expressio angusta) */
+        constans SemanticaTypatio* ty = _typationem_invenire(sem,
+            nodus);
+
+        si (ty != NIHIL && ty->naturalis != NIHIL)
+        {
+            s32 p = _primitivum_integrale(ty->naturalis);
+
+            si (p >= ZEPHYRUM
+                && _est_insignatum_primitivum(p) == i_finis
+                && (i32)(sem->primitivi[p]->magnitudo_octetorum
+                    * VIII) <= bita_finis)
+            {
+                redde VERUM;
+            }
+        }
+    }
+    {
+        ExamenIntervallum iv = _intervallum_expressionis(sem, nodus,
+            ZEPHYRUM);
+
+        redde i_finis ? (iv.latitudo <= bita_finis)
+                      : (iv.latitudo < bita_finis);
+    }
+}
+
+/* MENU-FINALE: angustatio latitudinis EIUSDEM signi (codex 68).
+ * Directio latitudinis fratris 54: trans-signum ILLE tegit (ramus
+ * insignatum->signatum intervallo latitudinis iam probat - nulla
+ * duplicatio). Calibratio 2026-07-17: tria sub-vexilla clang
+ * (constant-conversion / implicit-int-conversion / shorten-64-to-32)
+ * = codex unus noster; constantes capientes exemptae ('= 100' in
+ * s8 tacet, '= 300' flagrat); clang larvam '& 0xFF' credit sed
+ * '% 256' NON - intervalla NOSTRA decidunt (divergentia tutior
+ * licita); casus explicitus silet. */
+interior vacuum
+_angustationem_examinare (SilvaSemantica* sem,
+    constans SilvaNodus* nodus, TypusC89* naturalis, TypusC89* finis)
+{
+    s32 p_naturalis;
+    s32 p_finis;
+    b32 i_finis;
+    i32 bita_finis;
+    constans SilvaNodus* pater;
+
+    si (sem->in_systemate)
+    {
+        redde;
+    }
+    p_naturalis = _primitivum_integrale(naturalis);
+    p_finis = _primitivum_integrale(finis);
+    si (p_naturalis < ZEPHYRUM || p_finis < ZEPHYRUM)
+    {
+        redde;
+    }
+    i_finis = _est_insignatum_primitivum(p_finis);
+    si (_est_insignatum_primitivum(p_naturalis) != i_finis)
+    {
+        /* trans-signum = territorium 54 FERE: signatum->insignatum
+         * non-negativum 54 exemit sed latitudo manet (parvum = 300:
+         * clang -Wconstant-conversion, 300 -> 44). Solum hunc casum
+         * hic iudicamus - 54 tacet, nulla duplicatio; ceteri
+         * trans-signi 54 ferunt. */
+        ExamenIntervallum iv_signi;
+
+        si (!(i_finis && !_est_insignatum_primitivum(p_naturalis)))
+        {
+            redde;
+        }
+        iv_signi = _intervallum_expressionis(sem, nodus, ZEPHYRUM);
+        si (!iv_signi.non_negativum)
+        {
+            redde;   /* 54 flagrat - dedup */
+        }
+    }
+    bita_finis = (i32)(sem->primitivi[p_finis]->magnitudo_octetorum
+        * VIII);
+    si ((i32)(sem->primitivi[p_naturalis]->magnitudo_octetorum
+            * VIII) <= bita_finis)
+    {
+        redde;   /* non angustatio */
+    }
+    pater = nodus->pater;
+    si (pater != NIHIL)
+    {
+        si (pater->genus == (s32)SILVA_C89_GENUS_CONVERSIO)
+        {
+            redde;   /* cast explicita */
+        }
+        si (pater->genus == (s32)SILVA_C89_GENUS_ASSIGNATIO)
+        {
+            /* latus sinistrum assignationis operatae - paritas 54 */
+            SilvaValor op_v = silva_c89_assignatio_tok_operator(
+                pater);
+            SilvaValor s_v = silva_c89_assignatio_sinister(pater);
+
+            si (op_v.genus == SILVA_VALOR_TOKEN
+                && (s32)op_v.datum.token->genus
+                    != SILVA_LEX_ASSIGNATIO
+                && s_v.genus == SILVA_VALOR_NODUS
+                && _canonicum(s_v.datum.nodus) == nodus)
+            {
+                redde;
+            }
+        }
+    }
+    si (_fons_alienus(sem, nodus))
+    {
+        redde;
+    }
+    si (_angustatio_capit(sem, nodus, i_finis, bita_finis, ZEPHYRUM))
+    {
+        redde;
+    }
+    {
+        character textus_naturalis[CXXVIII];
+        character textus_finis[CXXVIII];
+        insignatus integer m_naturalis = silva_c89_typum_scribere(
+            naturalis, textus_naturalis,
+            (insignatus integer)magnitudo(textus_naturalis));
+        insignatus integer m_finis = silva_c89_typum_scribere(
+            finis, textus_finis,
+            (insignatus integer)magnitudo(textus_finis));
+
+        si (m_naturalis > ZEPHYRUM && m_finis > ZEPHYRUM)
+        {
+            memoriae_index capacitas = (memoriae_index)m_naturalis
+                + (memoriae_index)m_finis + (memoriae_index)LXIV;
+            character* nuntius = (character*)piscina_allocare(
+                sem->piscina, capacitas);
+
+            si (nuntius != NIHIL)
+            {
+                sprintf(nuntius, "angustatio implicita:"
+                    " %s -> %s", textus_naturalis, textus_finis);
+                _diagnosticum_addere_plenum(sem, nodus,
+                    (s32)EXAMEN_CODEX_ANGUSTATIO, NIHIL, nuntius);
+            }
+        }
+    }
+}
+
 interior vacuum
 _conversionem_annotare (SilvaSemantica* sem,
     constans SilvaNodus* nodus, TypusC89* naturalis, TypusC89* finis)
@@ -6357,6 +6557,7 @@ _conversionem_annotare (SilvaSemantica* sem,
     si (_qualibus_exutum(naturalis) != finis)
     {
         _conversionem_signi_examinare(sem, nodus, naturalis, finis);
+        _angustationem_examinare(sem, nodus, naturalis, finis);
         _conversum_ponere(sem, nodus, finis);
     }
 }

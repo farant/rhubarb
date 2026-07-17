@@ -1358,6 +1358,12 @@ typedef enum {
     EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS,
     EXAMEN_CODEX_FRANGE_EXTRA_CONTEXTUM,
     EXAMEN_CODEX_SALTA_AD_TITULUM_IGNOTUM,
+    /* ANGUSTATIO = latitudo angustior eiusdem signi (paritas
+     * -Wconversion directione latitudinis); VARIABILIS/PARAMETRUM
+     * INUTILE = paritas -Wunused-variable/-parameter */
+    EXAMEN_CODEX_ANGUSTATIO,
+    EXAMEN_CODEX_VARIABILIS_INUTILIS,
+    EXAMEN_CODEX_PARAMETRUM_INUTILE,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

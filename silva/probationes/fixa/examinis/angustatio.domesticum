@@ -1,0 +1,19 @@
+/* angustatio implicita (codex 68) - paritas -Wconversion directione
+ * latitudinis (sub-vexilla clang: implicit-int-conversion /
+ * constant-conversion / shorten-64-to-32 = codex unus noster).
+ * Constantes capientes tacent (-1 in s8 quoque); casus vestitus
+ * tacet. ORACULUM -Wconversion */
+/* EXSPECTA 11:ANGUSTATIO */
+/* EXSPECTA 12:ANGUSTATIO */
+
+static void f(unsigned int magnum, int medium)
+{
+    unsigned char parvum = magnum;
+    short breve = medium;
+    unsigned char constans_bona = 100;
+    signed char negativus = -1;
+    (void)parvum;
+    (void)breve;
+    (void)constans_bona;
+    (void)negativus;
+}

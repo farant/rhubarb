@@ -8837,3 +8837,47 @@ INSTRUMENTA DEBRIEF (adhibita/fructus/asperitates/desiderata):
 - desiderata: TOLERA multi-line parsing (filed); a census
   convenience (examen -census CODEX over a file list) would
   replace the runner-script dance.
+
+## GRADUS ANGUSTATIO + INUTILES: INTENTIO (2026-07-17)
+
+The lint menu's LAST two items - both parity tiers on warm
+machinery; after this arc the menu is EMPTY and everything left in
+the lane waits on flow-analysis stage 1+.
+
+CODEX 68 ANGUSTATIO (width-truncation, paritas -Wconversion):
+implicit conversion to a NARROWER integral destination (i32->i8,
+s64->s32...) - the width-direction sibling of 54's sign direction.
+Widths and the interval machine already exist (conversio-signi
+era); seat = the same annotation funnel. Corpus census MUST be 0
+(house -Werror -Wconversion) = another free differential
+validation. Calibration FIRST: clang exempts provably-fitting
+constants and range-narrowed expressions (IntRange logic, same
+shape 54 mimics). SEVERA direction (cast-wrapped truncation,
+(i8)magnum - the form that SILENCES clang, codex 61's cast story)
+is NOT pre-decided: the parity census runs first and the follow-up
+is measured before built. Gradus DOMESTICUM per family precedent
+(54/57), verdict-neutral. Named subtlety: differentia bucketing
+must not conflate [-Wconversion] with [-Wsign-conversion] lines
+(bracket-exact exemplar).
+
+CODEX 69 VARIABILIS_INUTILIS (paritas -Wunused-variable, in -Wall)
++ CODEX 70 PARAMETRUM_INUTILE (paritas -Wunused-parameter, in
+-Wextra) - numbers reserved together, built in that order, 70 only
+if 69's plumbing makes it cheap this arc (parameter shapes: K&R,
+prototypes - measured, not assumed). Predicate: block-scope symbol
+with ZERO resolved use sites - sem->symbola knows declarations +
+depth, nexus knows uses; smallest-change wins between a per-symbol
+usus flag set at resolution vs a reverse tally. The house
+(vacuum)x idiom counts as a use for clang AND for our resolution -
+calibrate to confirm. "Set but unused" (-Wunused-but-set-variable)
+is OUT of scope, deferred by name. Gradus DOMESTICUM.
+
+BARS: calibration specimens pinned before predicates; unit probes
+both codices; fixtures on the oracle-paired .domesticum leg (flags
+passed explicitly); differentia rows; corpus census (expected 0 /
+0 / small for 70 - the (vacuum) idiom exists BECAUSE the wall
+demanded it); suites green each chunk; amalgam twins (enum rows
+68-70 in silva.h).
+
+CHUNKS: ① calibratio + 68 + census/differentia; ② 69 (+70 si
+vilis) + census. Each ends green.

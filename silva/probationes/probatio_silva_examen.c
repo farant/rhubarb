@@ -1633,6 +1633,52 @@ s32 principale (vacuum)
         "static void g(void);\n"
         "static int f(int x) { if (0) { g(); } return x; }\n",
         (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, I);
+
+    /* ==================================================
+     * XVIII. Angustatio (codex 68) - directio latitudinis
+     * ================================================== */
+
+    /* variabilis latior eiusdem signi - flagrat */
+    _codicem_probare(piscina,
+        "static void f(unsigned int m)"
+        " { unsigned char p = m; (void)p; }\n",
+        (s32)EXAMEN_CODEX_ANGUSTATIO, I);
+    /* int -> short signatus - flagrat */
+    _codicem_probare(piscina,
+        "static void f(int m) { short b = m; (void)b; }\n",
+        (s32)EXAMEN_CODEX_ANGUSTATIO, I);
+    /* constans capiens - tacet */
+    _codicem_probare(piscina,
+        "static void f(void) { unsigned char p = 100; (void)p; }\n",
+        (s32)EXAMEN_CODEX_ANGUSTATIO, ZEPHYRUM);
+    /* constans NON capiens (trans-signum: int -> u8, 54 tacet
+     * non-negativo - LACUNA inter gradus clausa) - flagrat */
+    _codicem_probare(piscina,
+        "static void f(void) { unsigned char p = 300; (void)p; }\n",
+        (s32)EXAMEN_CODEX_ANGUSTATIO, I);
+    /* -1 in s8 capit (tabulae base64!) - tacet */
+    _codicem_probare(piscina,
+        "static void f(void) { signed char n = -1; (void)n; }\n",
+        (s32)EXAMEN_CODEX_ANGUSTATIO, ZEPHYRUM);
+    /* -200 in s8 non capit - flagrat */
+    _codicem_probare(piscina,
+        "static void f(void) { signed char n = -200; (void)n; }\n",
+        (s32)EXAMEN_CODEX_ANGUSTATIO, I);
+    /* casus explicitus silet */
+    _codicem_probare(piscina,
+        "static void f(unsigned int m)"
+        " { unsigned char p = (unsigned char)m; (void)p; }\n",
+        (s32)EXAMEN_CODEX_ANGUSTATIO, ZEPHYRUM);
+    /* larva intervallum capiens - tacet (ut clang) */
+    _codicem_probare(piscina,
+        "static void f(unsigned int m)"
+        " { unsigned char p = m & 0xFFu; (void)p; }\n",
+        (s32)EXAMEN_CODEX_ANGUSTATIO, ZEPHYRUM);
+    /* ternarius bracchiis capientibus (forma selectio) - tacet */
+    _codicem_probare(piscina,
+        "static void f(int c, char y)"
+        " { char b = c ? ' ' : (char)y; (void)b; }\n",
+        (s32)EXAMEN_CODEX_ANGUSTATIO, ZEPHYRUM);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

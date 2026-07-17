@@ -355,6 +355,19 @@ nomen enumeratio {
     EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS,    /* DOMESTICUM (tractus 4) */
     EXAMEN_CODEX_FRANGE_EXTRA_CONTEXTUM,      /* VIOLATIO */
     EXAMEN_CODEX_SALTA_AD_TITULUM_IGNOTUM,    /* VIOLATIO */
+    /* MENU-FINALE (2026-07-17): duo gradus paritatis ultimi ante
+     * analysim fluxus. 68 = angustatio latitudinis EIUSDEM SIGNI
+     * (directio latitudinis fratris 54; trans-signum 54 iam per
+     * intervalla tegit - nulla duplicatio). Calibratio: tria
+     * sub-vexilla clang sub -Wconversion (constant-conversion /
+     * implicit-int-conversion / shorten-64-to-32) = codex unus
+     * noster; constantes capientes exemptae; & larva exempta sed
+     * % NON (clang IntRange - divergentia nostra tutior licet).
+     * 69/70 = variabiles/parametra inutilia (-Wunused-variable in
+     * -Wall, -Wunused-parameter in -Wextra); (vacuum)x usus est. */
+    EXAMEN_CODEX_ANGUSTATIO,                  /* DOMESTICUM */
+    EXAMEN_CODEX_VARIABILIS_INUTILIS,         /* DOMESTICUM */
+    EXAMEN_CODEX_PARAMETRUM_INUTILE,          /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
