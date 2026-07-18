@@ -4474,10 +4474,20 @@ nomen structura {
     b32                  parametrum;   /* initiata in introitu */
 } FluxusVariabilis;
 
-/* Blocus parallelus (index = FluxusBlocus.index). Gradus B campos
- * punctorum-fixorum appendet (crescentia interna - amalgama). */
+/* Blocus parallelus (index = FluxusBlocus.index). Status
+ * punctorum-fixorum (chunk B): verba i64 (numerus_verborum in
+ * FluxusDatorum), bitum positum = variabilis initiata. may = unio
+ * super praedecessores (semita ALIQUA initiavit), must = intersectio
+ * (semitae OMNES). Introitus functionis: bita parametrorum sola.
+ * Bloci inattingibiles numquam processi: may 0, must omnia-posita
+ * (elementum summum) - contributio nulla, paritas s04d
+ * structuralis. */
 nomen structura {
     SilvaXar* eventa;                       /* FluxusEventum (valore) */
+    i64* may_introitus;
+    i64* may_exitus;
+    i64* must_introitus;
+    i64* must_exitus;
 } FluxusDatorumBlocus;
 
 structura FluxusDatorum {
@@ -4485,6 +4495,7 @@ structura FluxusDatorum {
     SilvaXar* variabiles;                   /* FluxusVariabilis (valore) */
     SilvaXar* bloci;                        /* FluxusDatorumBlocus (valore,
                                         * parallelus fluxus->bloci) */
+    i32  numerus_verborum;             /* verba i64 per statum */
 };
 
 /* ==================================================
@@ -37780,6 +37791,195 @@ _granulum_ambulare (FluxusExtractor* ex, constans SilvaNodus* n)
 }
 
 /* ==================================================
+ * Punctum fixum may/must (chunk B)
+ *
+ * Impulsus-successorum: blocus cuius exitus mutatur contributiones
+ * per margines suos EXEUNTES pellit (may |= , must &=) - index
+ * praedecessorum non necessarius (chunk C eum aedificat pro
+ * ambulatione inevitabilitatis). Bloci numquam processi (
+ * inattingibiles, rami plicati) nihil pellunt: regula
+ * praedecessorum-invisorum STRUCTURALIS.
+ * ================================================== */
+
+interior vacuum
+_verba_implere (i64* verba, i32 numerus, i64 valor)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        verba[i] = valor;
+    }
+}
+
+interior vacuum
+_bitum_ponere (i64* verba, s32 index)
+{
+    verba[index / LXIV] |= (i64)I << (i32)(index % LXIV);
+}
+
+/* Exitus = introitus + definitiones eventorum (USUS iners hic) */
+interior vacuum
+_exitum_computare (FluxusDatorum* datorum, FluxusDatorumBlocus* b)
+{
+    i32 n = datorum->numerus_verborum;
+    i32 e;
+    i32 m = silva_xar_numerus(b->eventa);
+
+    memcpy(b->may_exitus, b->may_introitus,
+        (memoriae_index)n * magnitudo(i64));
+    memcpy(b->must_exitus, b->must_introitus,
+        (memoriae_index)n * magnitudo(i64));
+    per (e = ZEPHYRUM; e < m; e++)
+    {
+        FluxusEventum* ev = (FluxusEventum*)silva_xar_obtinere(b->eventa,
+            e);
+
+        si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO
+            && ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI)
+        {
+            perge;
+        }
+        si (ev->variabilis < ZEPHYRUM)
+        {
+            /* def-omnia (folium opacum) */
+            _verba_implere(b->may_exitus, n, ~(i64)ZEPHYRUM);
+            _verba_implere(b->must_exitus, n, ~(i64)ZEPHYRUM);
+        }
+        alioquin
+        {
+            _bitum_ponere(b->may_exitus, ev->variabilis);
+            _bitum_ponere(b->must_exitus, ev->variabilis);
+        }
+    }
+}
+
+interior vacuum
+_punctum_fixum (SilvaPiscina* piscina, FluxusDatorum* datorum)
+{
+    i32 n_var = silva_xar_numerus(datorum->variabiles);
+    i32 n_verba = (n_var + (i32)LXIV - I) / (i32)LXIV;
+    i32 numerus_blocorum = silva_xar_numerus(datorum->bloci);
+    i32 b;
+    b32* in_indice;
+    SilvaXar* index_operis;
+    i32 lector = ZEPHYRUM;
+
+    si (n_verba == ZEPHYRUM)
+    {
+        n_verba = I;   /* verbum unum etiam sine variabilibus */
+    }
+    datorum->numerus_verborum = n_verba;
+
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, b);
+
+        db->may_introitus = (i64*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        db->may_exitus = (i64*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        db->must_introitus = (i64*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        db->must_exitus = (i64*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        _verba_implere(db->may_introitus, n_verba, ZEPHYRUM);
+        _verba_implere(db->may_exitus, n_verba, ZEPHYRUM);
+        _verba_implere(db->must_introitus, n_verba, ~(i64)ZEPHYRUM);
+        _verba_implere(db->must_exitus, n_verba, ~(i64)ZEPHYRUM);
+    }
+
+    /* introitus: bita parametrorum sola (may = must = parametra) */
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, datorum->fluxus->introitus->index);
+        i32 v;
+
+        _verba_implere(db->must_introitus, n_verba, ZEPHYRUM);
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            FluxusVariabilis* var = (FluxusVariabilis*)silva_xar_obtinere(
+                datorum->variabiles, v);
+
+            si (var->parametrum)
+            {
+                _bitum_ponere(db->may_introitus, (s32)v);
+                _bitum_ponere(db->must_introitus, (s32)v);
+            }
+        }
+    }
+
+    in_indice = (b32*)silva_piscina_allocare(piscina,
+        (memoriae_index)numerus_blocorum * magnitudo(b32));
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        in_indice[b] = FALSUM;
+    }
+    index_operis = silva_xar_creare(piscina, (i32)magnitudo(i32));
+    {
+        i32* locus = (i32*)silva_xar_addere(index_operis);
+
+        *locus = datorum->fluxus->introitus->index;
+        in_indice[datorum->fluxus->introitus->index] = VERUM;
+    }
+
+    dum (lector < silva_xar_numerus(index_operis))
+    {
+        i32 index_bloci = *(i32*)silva_xar_obtinere(index_operis, lector);
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, index_bloci);
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            silva_xar_obtinere(datorum->fluxus->bloci, index_bloci);
+        i32 m;
+        i32 k;
+
+        lector++;
+        in_indice[index_bloci] = FALSUM;
+        _exitum_computare(datorum, db);
+
+        m = silva_xar_numerus(fb->margines);
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            constans FluxusMargo* margo = (constans FluxusMargo*)
+                silva_xar_obtinere(fb->margines, k);
+            FluxusDatorumBlocus* dd;
+            b32 mutatum = FALSUM;
+            i32 w;
+
+            si (margo->destinatio == NIHIL)
+            {
+                perge;
+            }
+            dd = (FluxusDatorumBlocus*)silva_xar_obtinere(datorum->bloci,
+                margo->destinatio->index);
+            per (w = ZEPHYRUM; w < n_verba; w++)
+            {
+                i64 may_novum = dd->may_introitus[w]
+                    | db->may_exitus[w];
+                i64 must_novum = dd->must_introitus[w]
+                    & db->must_exitus[w];
+
+                si (may_novum != dd->may_introitus[w]
+                    || must_novum != dd->must_introitus[w])
+                {
+                    dd->may_introitus[w] = may_novum;
+                    dd->must_introitus[w] = must_novum;
+                    mutatum = VERUM;
+                }
+            }
+            si (mutatum && !in_indice[margo->destinatio->index])
+            {
+                i32* locus = (i32*)silva_xar_addere(index_operis);
+
+                *locus = margo->destinatio->index;
+                in_indice[margo->destinatio->index] = VERUM;
+            }
+        }
+    }
+}
+
+/* ==================================================
  * API
  * ================================================== */
 
@@ -37841,6 +38041,10 @@ silva_c89_fluxus_datorum_aedificare (SilvaPiscina* piscina,
             _granulum_ambulare(&ex, *locus);
         }
     }
+
+    /* chunk B: punctum fixum may/must super eventa extracta */
+    _punctum_fixum(piscina, datorum);
+
     redde datorum;
 }
 

@@ -71,10 +71,20 @@ nomen structura {
     b32                  parametrum;   /* initiata in introitu */
 } FluxusVariabilis;
 
-/* Blocus parallelus (index = FluxusBlocus.index). Gradus B campos
- * punctorum-fixorum appendet (crescentia interna - amalgama). */
+/* Blocus parallelus (index = FluxusBlocus.index). Status
+ * punctorum-fixorum (chunk B): verba i64 (numerus_verborum in
+ * FluxusDatorum), bitum positum = variabilis initiata. may = unio
+ * super praedecessores (semita ALIQUA initiavit), must = intersectio
+ * (semitae OMNES). Introitus functionis: bita parametrorum sola.
+ * Bloci inattingibiles numquam processi: may 0, must omnia-posita
+ * (elementum summum) - contributio nulla, paritas s04d
+ * structuralis. */
 nomen structura {
     Xar* eventa;                       /* FluxusEventum (valore) */
+    i64* may_introitus;
+    i64* may_exitus;
+    i64* must_introitus;
+    i64* must_exitus;
 } FluxusDatorumBlocus;
 
 structura FluxusDatorum {
@@ -82,6 +92,7 @@ structura FluxusDatorum {
     Xar* variabiles;                   /* FluxusVariabilis (valore) */
     Xar* bloci;                        /* FluxusDatorumBlocus (valore,
                                         * parallelus fluxus->bloci) */
+    i32  numerus_verborum;             /* verba i64 per statum */
 };
 
 /* ==================================================

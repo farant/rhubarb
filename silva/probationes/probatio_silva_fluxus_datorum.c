@@ -186,6 +186,53 @@ _definitio_prima (constans SilvaParsura* parsura)
     redde e->datum.nodus;
 }
 
+/* Aestimator litteralis parvus (exemplar probatio_silva_fluxus):
+ * folium-integer decimale per parentheses - plicatio si (0) */
+interior b32
+_aestimator_litteralis (vacuum* contextus,
+    constans SilvaNodus* expressio, s64* valor)
+{
+    SilvaValor tok_v;
+    chorda textus;
+    s64 v = ZEPHYRUM;
+    i32 i;
+
+    (vacuum)contextus;
+    dum (expressio != NIHIL
+        && expressio->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+    {
+        expressio = _nodalis_probationis(
+            silva_c89_parenthesis_internum(expressio));
+    }
+    si (expressio == NIHIL
+        || expressio->genus != (s32)SILVA_C89_GENUS_FOLIUM_INTEGER)
+    {
+        redde FALSUM;
+    }
+    tok_v = silva_c89_folium_integer_tok_valor(expressio);
+    si (tok_v.genus != SILVA_VALOR_TOKEN)
+    {
+        redde FALSUM;
+    }
+    textus = tok_v.datum.token->valor;
+    si (textus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < textus.mensura; i++)
+    {
+        character c = (character)textus.datum[i];
+
+        si (c < '0' || c > '9')
+        {
+            redde FALSUM;
+        }
+        v = v * X + (s64)(c - '0');
+    }
+    *valor = v;
+    redde VERUM;
+}
+
 interior FluxusDatorum*
 _extrahere (Piscina* piscina, constans character* fons)
 {
@@ -193,6 +240,7 @@ _extrahere (Piscina* piscina, constans character* fons)
         fons, (i32)strlen(fons), NIHIL);
     constans SilvaNodus* definitio;
     FluxusFunctionis* fluxus;
+    FluxusAuxilia aux_fluxus;
     FluxusDatorumAuxilia aux;
 
     si (parsura == NIHIL || parsura->numerus_errorum != ZEPHYRUM)
@@ -204,7 +252,11 @@ _extrahere (Piscina* piscina, constans character* fons)
     {
         redde NIHIL;
     }
-    fluxus = silva_c89_fluxus_aedificare(piscina, definitio, NIHIL);
+    aux_fluxus.canonicum = NIHIL;
+    aux_fluxus.aestimator = _aestimator_litteralis;
+    aux_fluxus.contextus = NIHIL;
+    fluxus = silva_c89_fluxus_aedificare(piscina, definitio,
+        &aux_fluxus);
     si (fluxus == NIHIL)
     {
         redde NIHIL;
@@ -277,6 +329,93 @@ _seriem_probare (FluxusDatorum* datorum,
 #define USUS_  (s32)FLUXUS_EVENTUM_USUS
 #define DEF_   (s32)FLUXUS_EVENTUM_DEFINITIO
 #define LOCI_  (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI
+
+/* ==================================================
+ * Auxilia chunk B: lectio statuum may/must
+ * ================================================== */
+
+interior s32
+_variabilis_titulo (FluxusDatorum* d, constans character* titulus)
+{
+    i32 i;
+    i32 m = xar_numerus(d->variabiles);
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        FluxusVariabilis* v = (FluxusVariabilis*)xar_obtinere(
+            d->variabiles, i);
+
+        si (_nomen_aequale(v->titulus, titulus))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+interior b32
+_bitum_lectum (constans i64* verba, s32 index)
+{
+    redde ((verba[index / LXIV] >> (i32)(index % LXIV)) & (i64)I)
+        != (i64)ZEPHYRUM ? VERUM : FALSUM;
+}
+
+/* Status ad exitum functionis (introitus bloci exitus) */
+interior vacuum
+_status_exitus (FluxusDatorum* d, constans character* titulus,
+    b32* may, b32* must)
+{
+    FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+        d->bloci, d->fluxus->exitus->index);
+    s32 v = _variabilis_titulo(d, titulus);
+
+    *may = FALSUM;
+    *must = FALSUM;
+    si (v < ZEPHYRUM)
+    {
+        redde;
+    }
+    *may = _bitum_lectum(db->may_introitus, v);
+    *must = _bitum_lectum(db->must_introitus, v);
+}
+
+/* Status ad introitum bloci usus primi variabilis nominatae */
+interior vacuum
+_status_ad_usum (FluxusDatorum* d, constans character* usus_titulus,
+    constans character* quaesitum, b32* may, b32* must)
+{
+    s32 vu = _variabilis_titulo(d, usus_titulus);
+    s32 vq = _variabilis_titulo(d, quaesitum);
+    i32 b;
+    i32 numerus_blocorum = xar_numerus(d->bloci);
+
+    *may = FALSUM;
+    *must = FALSUM;
+    si (vu < ZEPHYRUM || vq < ZEPHYRUM)
+    {
+        redde;
+    }
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+            d->bloci, b);
+        i32 e;
+        i32 m = xar_numerus(db->eventa);
+
+        per (e = ZEPHYRUM; e < m; e++)
+        {
+            FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
+                db->eventa, e);
+
+            si (ev->genus == USUS_ && ev->variabilis == vu)
+            {
+                *may = _bitum_lectum(db->may_introitus, vq);
+                *must = _bitum_lectum(db->must_introitus, vq);
+                redde;
+            }
+        }
+    }
+}
 
 s32 principale (vacuum)
 {
@@ -501,6 +640,82 @@ s32 principale (vacuum)
 
         CREDO_NON_NIHIL (d);
         _seriem_probare(d, s, IV);
+    }
+
+    /* ========================================================
+     * CHUNK B: punctum fixum may/must
+     * ======================================================== */
+    {
+        FluxusDatorum* d;
+        b32 may;
+        b32 must;
+
+        /* si sine alioquin: may sine must (forma s06a) */
+        d = _extrahere(piscina,
+            "int f(int a) { int x; if (a) { x = 1; } return x; }");
+        CREDO_NON_NIHIL (d);
+        _status_exitus(d, "x", &may, &must);
+        CREDO_VERUM (may);
+        CREDO_FALSUM (must);
+
+        /* ambo rami definiunt: must (forma s06b) */
+        d = _extrahere(piscina,
+            "int f(int a) { int x; if (a) { x = 1; }"
+            " else { x = 2; } return x; }");
+        CREDO_NON_NIHIL (d);
+        _status_exitus(d, "x", &may, &must);
+        CREDO_VERUM (may);
+        CREDO_VERUM (must);
+
+        /* ansa pura: may sine must (forma s15a - margo retro) */
+        d = _extrahere(piscina,
+            "int f(int a) { int x; while (a) { x = 1; }"
+            " return x; }");
+        CREDO_NON_NIHIL (d);
+        _status_exitus(d, "x", &may, &must);
+        CREDO_VERUM (may);
+        CREDO_FALSUM (must);
+
+        /* dum+frange (forma s07b): ad caput x NEC in may -
+         * praeconditio marginis culpabilis gradus C */
+        d = _extrahere(piscina,
+            "int f(int a) { int x; while (a) { x = 1; break; }"
+            " return x; }");
+        CREDO_NON_NIHIL (d);
+        _status_ad_usum(d, "a", "x", &may, &must);
+        CREDO_FALSUM (may);
+
+        /* fac_dum: corpus semper currit - must (forma s07c) */
+        d = _extrahere(piscina,
+            "int f(int a) { int x; do { x = 1; } while (a);"
+            " return x; }");
+        CREDO_NON_NIHIL (d);
+        _status_exitus(d, "x", &may, &must);
+        CREDO_VERUM (must);
+
+        /* plicatum si (0): contributio rami mortui INVISIBILIS
+         * (forma s04d - structuralis, blocus numquam processus) */
+        d = _extrahere(piscina,
+            "int f(void) { int x; if (0) { fill(&x); }"
+            " return x; }");
+        CREDO_NON_NIHIL (d);
+        _status_exitus(d, "x", &may, &must);
+        CREDO_FALSUM (may);
+
+        /* parametra initiata in introitu */
+        d = _extrahere(piscina,
+            "int f(int a) { return a; }");
+        CREDO_NON_NIHIL (d);
+        _status_exitus(d, "a", &may, &must);
+        CREDO_VERUM (must);
+
+        /* def-omnia tegit variabiles omnes (abstentio) */
+        d = _extrahere(piscina,
+            "int f(void) { int x; int y; x = sizeof(g2);"
+            " return y; }");
+        CREDO_NON_NIHIL (d);
+        _status_exitus(d, "y", &may, &must);
+        CREDO_VERUM (must);
     }
 
     credo_imprimere_compendium();
