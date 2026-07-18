@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 262 - 2026-07-18T02:34:34.596Z
+seq 269 - 2026-07-18T15:31:22.630Z
 
 ## QUAESTIONES
 
@@ -16,6 +16,7 @@ seq 262 - 2026-07-18T02:34:34.596Z
 
 - [parcatum] 'post' saccharum super portas  `gesta k3`
 - [parcatum] AEDILIS stratum constructionis  `aedilis officina messis-2026-07`
+- [parcatum] Annotationes commentariorum: C89 cum typis profundis (visio TypeScript-formae)  `silva examen visio annotationes lint`
 - [parcatum] Cancellatio cascadens (opera orba)  `gesta k3`
 - [parcatum] Columna species in tabula generum  `gesta k3 perf`
 - [parcatum] Configuratio exclusionum unificata (viae/plagulae tractatu speciali)  `officina silva ergonomia meta aedilis`
@@ -46,7 +47,6 @@ seq 262 - 2026-07-18T02:34:34.596Z
 - [parcatum] Salus per sordidas  `gesta perf messis-2026-07`
 - [parcatum] Sessio et actor ut entia  `gesta k4`
 - [parcatum] Sigillum ancorae symboli  `gesta legatus messis-2026-07`
-- [parcatum] Silva fluxus gradus 1: initialisatio dataflow (-Wuninitialized)  `silva examen fluxus lint messis-2026-07`
 - [parcatum] Silva quaestio QB-QD  `silva saltuarius messis-2026-07`
 - [parcatum] Superficies MCP definitionis receptorum  `gesta k3 mcp`
 - [parcatum] Susceptum in provectione (si susceptio umquam refert)  `gesta k3`
@@ -57,6 +57,7 @@ seq 262 - 2026-07-18T02:34:34.596Z
 
 - Ancorae ut tabulatum typatum  `gesta mcp ergonomia`
 - Batch-symbolum multiplex  `legatus mcp messis-2026-07`
+- Censor: culpam intra fracturam parsationis nominare (nomen-ut-campus PURUS transit)  `silva censor lint ergonomia`
 - MEMORY.md in tabularium migratio  `gesta meta messis-2026-07`
 - Origo argumentum in addere-gerere  `gesta mcp ergonomia`
 - Percursus: vexillum modi in compendio nominatum  `silva ergonomia examen`

@@ -9175,3 +9175,242 @@ RELATIO notes actual behavior); 63/66/67 untouched.
 PROCESS NOTE: full phase-log re-read at this phase boundary NOT
 done (484KB — the phase-log-size strategy conversation is a named
 open item); tail + park + spec carried re-entry instead.
+
+## FLUXUS GRADUS 1 — CHUNK 0 (FINDERE): RELATIO (2026-07-17)
+
+Shipped (057d8ba): the CFG splits short-circuits. One shared
+machinery — _sectionem_findere (value position: segment blocks with
+own iunctio), _conditionem_findere (condition position: cascade
+whose section edges ARE the branch edges, s20 parity; ! swaps
+targets; deep sections under comparisons handled by the terminal via
+_interna_findere), _folium_findere_aut_addere at all four statement
+seats (ordinarius default, redde, per-initium, per-passus) plus the
+commutatio discrimen. Edge origo = the BINARIUM/TERNARIUS node;
+final-operand edges carry the compound node (s21 specimen owns
+confirming clang's vocabulary before chunk C messages).
+
+DESIGN DEVIATION FROM INTENTIO (improvement found mid-build, spec
+updated): conditions are granules UNIVERSALLY — the cascade terminal
+naturally emits its sub-expression into its evaluation block, so
+simple conditions emit too, and chunk A's two-source extraction rule
+(leaves + edge-origin conditions, switch pater-climb) DIES. Single
+source: sententiae in order. Folded conditions keep their granule;
+the skip-invariant drops their operands, which is CORRECT (never
+evaluated) — documented in fluxus.h with the praetermissio
+invariant.
+
+BARS: 113/113 fluxus (48 new asserts — every analytically derived
+margin/granule/reachability count held on FIRST run: cascade si/dum,
+statement/redde/passus positions, ternary, a&&(b||c) nesting,
+!-swap, fold-boundary f5), silva 31/31, VECTIS TENET, census meters
+BYTE-STABLE over 626 files (58=8, 61=2, 64=1, 65=1, 63/68 walls,
+69/70 in-fixa, REICE=42, INFRA=0) — the surgery is invisible to
+every stage-0 judgment over a corpus full of real short-circuits.
+Amalgama VERIFICATUM, officina 12/12. The INTENTIO's expected
+fixture-pin movement never materialized: stage-0 fixtures contain
+no short-circuits, so unaffected shapes were byte-identical exactly
+as claimed.
+
+PRE-EXISTING REDS FOUND (bisected by stash — NOT chunk 0):
+probatio_officina_legatus pinned "clausura reversa (3)" for
+legatus.h; sonda.c (6998d0d) is the fourth includer — pin re-blessed
+to 4 (c35eb4f). probatio_officina_machinula is CWD-SENSITIVE (file
+loop test opens officina/build/pa.txt RELATIVE) — the suite must run
+from the repo root; ran green there.
+
+INSTRUMENTA: adhibita — examen push healed each -Wconversion ripple
+at edit time; census-as-regression-bar carried the whole corpus
+claim in one sweep; stash-bisect settled causality in two minutes.
+Asperitates — officina suite cwd-sensitivity cost one false alarm
+(worth a cd-to-root guard in the script someday, named not built).
+Desiderata — none new.
+
+NEXT: chunk A (silva_c89_fluxus_datorum sidecar — eventa + symbol
+facta seam), per spec §4. s21 specimen before chunk C vocabulary.
+
+## FLUXUS GRADUS 1 — CHUNK A (DATORUM): RELATIO (2026-07-18)
+
+Shipped (580977e): silva_c89_fluxus_datorum.{h,c} — the retained
+dataflow tables. Per-block ordered event streams (USUS / DEFINITIO /
+DEFINITIO_LOCI; variabilis -1 = def-omnia for opaque ERROR/AMBIGUUS
+leaves), dense variable table, and the facts seam (FluxusDatorumAuxilia:
+symbolum / parametrum_constans / canonicum callbacks — datorum never
+includes semantica, XI-1 pattern; the seam returns FACTS, not the
+symbol struct). Every calibration pin is a walker rule: eval-order
+(RHS before LHS-def, use-then-def for +=/++), magnitudo skipped,
+(vacuum)x-bare-identifier skipped, member/element store = FULL def
+of the whole aggregate, member reads invisible, scalar-pointer bases
+read (p[i]/p->a/*p), &x = LOCI except const-param call args (s04f),
+short-circuit subtrees skipped whole (the chunk-0 praetermissio
+invariant, single-source granule streams).
+
+SEAT: _fluxum_examinare builds datorum for every function, always-on
+(Q8). New substrate contract: DECLARATOR nodes now registered in the
+nexus (symbolum_nodi resolves them) — with a notare_usum flag on
+_nexum_ponere so declaration-registration does NOT mark usage
+(codices 69/70 stay honest; their fixa meters proved it). Wrappers
+compute facta from genus/profunditas/repositio and walk real
+TypusC89 function types for per-position pointer-to-const.
+
+BARS: 184/184 unit (test-local name-keyed resolver); e2e through
+real semantica: shadowing yields THREE distinct identities,
+peek(const int*) yields ZERO events, fill(int*) yields one — the
+s04f pin proven end-to-end through actual type lookup. Silva 32/32,
+VECTIS TENET, census meters byte-identical with the seat live over
+the whole corpus; census wall 119s = the standing ~2min meter — the
+always-on extraction is inside noise (Q8 answered: no gate needed).
+Amalgama VERIFICATUM, officina 12/12.
+
+FINDS: (1) unit-test pipeline without semantica exposed the AMBIGUUS
+reality — sizeof(x), f(s), g(p[a]) all parse ambiguous without
+typedef knowledge; the walker's def-omnia abstention handled them
+CORRECTLY (that's what the rule is for), tests de-ambiguated their
+sources and gained a dedicated def-omnia case; (2) tok_verba is a
+LISTA of tokens with SILVA_LEX_VOID — first (void)x check was
+shape-wrong twice; (3) the amalgamator's duplicate-definition gate
+caught three cross-TU static name collisions (_canonicum,
+_per_parentheses, _nodalis → _lectio_canonica, _sine_parenthesibus,
+_ut_nodus) — the single-TU discipline enforcing itself; (4) I used
+`nomen` as a struct FIELD name in the probatio — the oldest trap in
+the book, still catching; examen push cascade named it.
+
+NEXT: chunk B — praedecessor index + may/must bitsets + fixpoint
+(spec §5); then C iudicium (71/72/73). s21 specimen before chunk C
+vocabulary.
+
+## FLUXUS GRADUS 1 — CHUNK B (PUNCTUM FIXUM): INTENTIO (2026-07-18)
+
+Pull: spec §5 — may/must bitsets + forward fixpoint over the datorum
+event streams. DEVIATION FROM SPEC WORDING (named): the fixpoint
+runs SUCCESSOR-PUSH — a block whose exit changes pushes may|= /
+must&= contributions along its own outgoing margines — so NO
+predecessor index is needed in B (it defers to chunk C, whose
+blame-edge inevitability walk actually consumes it). The
+never-visited-preds meet rule becomes STRUCTURAL: unprocessed
+(unreachable) blocks never push, so folded si(0) branches
+contribute nothing (s04d parity, zero code).
+
+Shape: FluxusDatorumBlocus grows four retained bitset fields
+(may/must × introitus/exitus, i64 words, numerus_verborum on
+FluxusDatorum); aedificare runs extraction THEN fixpoint in one
+call (seat unchanged). Lattice: may init 0s (union), must init
+all-ones = top (plain &= works from first contribution); introitus
+seeds param bits both. Transfer: DEFINITIO/DEFINITIO_LOCI set the
+bit in both; def-omnia (variabilis -1) sets ALL words; USUS inert
+in B (judged by C's streaming re-walk). Monotone both directions,
+worklist with in-queue flag, termination bounded.
+
+Bars: unit probationes on block-boundary bits — if/else may-vs-must,
+both-branches-must, pure-while postis may-only (s15a shape),
+while+break caput must-uninit (s07b — THE blame precondition),
+folded si(0) contribution invisible (s04d structural), do-while
+must (s07c), param entry bits, def-omnia coverage via the ambiguous
+sizeof source. Then suite + vectis + census (wall-clock = the Q8
+meter again — fixpoint now runs corpus-wide) + amalgama + officina.
+
+## FLUXUS GRADUS 1 — CHUNK B (PUNCTUM FIXUM): RELATIO (2026-07-18)
+
+Shipped (ut supra in commissione): may/must bitsets (i64 words,
+introitus+exitus per block, retained — query columns) + the
+successor-push fixpoint exactly as the INTENTIO shaped it. The
+deviation held: no predecessor index needed — unprocessed blocks
+never push, so the folded-branch invisibility (s04d) and the
+never-visited-preds meet rule are structural facts of the
+algorithm, not checked conditions. Entry = param bits; def-omnia
+fills all words; must starts at top (all-ones) so plain &= works
+from first contribution.
+
+BARS: 203/203 unit — the eight fixpoint pins all held first run,
+notably s07b (while+break: x ABSENT from may at caput entry — the
+exact must-uninit-crossing-the-edge precondition chunk C's blame
+rule needs) and s04d (dead fill(&x) contributes nothing). Suite
+32/32, VECTIS TENET, amalgama VERIFICATUM, officina 12/12, census
+verdicts identical at 118.8s — the corpus-wide fixpoint is inside
+measurement noise (Q8 holds through B).
+
+NEXT: chunk C — s21 attribution-vocabulary specimen FIRST, then
+predecessor index + streaming judgment re-walk + blame-edge rule +
+codices 71 LECTIO_ININITIATA / 72 ININITIATA_QUANDOCUMQUE / 73
+ININITIATA_FORSITAN (dormant) + specimen graduation to fixtures +
+corpus first contact (pure wall expected).
+
+## FLUXUS GRADUS 1 — CHUNK C (IUDICIUM): INTENTIO (2026-07-18)
+
+Pull: spec §6 — codices 71 LECTIO_ININITIATA (definite, SUSPECTUM,
+anchor at use), 72 ININITIATA_QUANDOCUMQUE (sometimes, SUSPECTUM,
+anchor at blamed edge origo + socius = use), 73 ININITIATA_FORSITAN
+(dormant behind _forsitan_vigil). DESIGN NOTE found in planning: the
+_codices table carries ONE causa per codex — per-site "whenever X"
+vocabulary is impossible in the message; attribution lives in the
+ANCHOR (origo node position names the construct) + socius. s21 runs
+first for the record (final-operand blame vocabulary) but no longer
+gates wiring. Self-init keeps its event flag (query column) but
+shares codex 71's causa — message-form parity deferred, named.
+
+Shape: judgment in semantica (_initiationem_examinare after datorum
+build): reachable blocks only, streaming may-state re-walk judging
+USUS events (definite = bit absent from running may); sometimes =
+may∖must + blame edge E=(P→S): (a) x absent from may_exitus(P), P
+reachable; (b) U inevitable from S def-free (fixed point: I = {U-block}
+grown backward via NEW pred index where all out-edges land in I and
+block is def-free); E restricted to VERUS/FALSUS/ORDINARIUS-labeled
+(clang's blamable forms; CASUS/LAPSUS/SALTUS → residual). One
+diagnostic per use, first blamable edge in deterministic order.
+Residual (may∖must, no blame edge) counted for 73; vigil FALSUM =
+never fires; measurement = one documented vigil-flip census (62
+pattern), expect small (lib/ baseline 3).
+
+Bars: specimen battery as _codicem_probare e2e counts (the fast
+wall); all 20 specimens graduate to fixa/examinis .suspectum with
+ORACULUM -Wuninitialized + EXSPECTA-PROXIMA pins (silent ones
+pin-less — verify the leg accepts zero pins); corpus first contact
+census 71/72 = PURE WALL expected (any site = predicate bug or real
+bug, both harvest); census wall-time meter continuity; suites +
+vectis + amalgama + officina. TOLERA guards on 71/72 firings.
+
+## FLUXUS GRADUS 1 — CHUNK C (IUDICIUM): RELATIO (2026-07-18)
+
+Shipped (6223c07): the judgment. 71 LECTIO_ININITIATA (definite =
+absent from running may; anchor at use), 72 ININITIATA_QUANDOCUMQUE
+(may∖must + blamable edge; anchor at edge origo, socius = use), 73
+ININITIATA_FORSITAN dormant behind _forsitan_vigil. The blame rule
+shipped as specced — (a) must-uninit crossing the edge, (b) use
+inevitable from the target (all-blocks fixed point; the predecessor
+index died entirely, chunk B's deviation extended) — with ONE
+calibration-forced amendment: clang fires PER BLAMABLE EDGE (s21b:
+'if' false AND '&&' false on one line), so we emit per edge too.
+s21 also pinned final-operand vocabulary = 'if' — the chunk-0
+origo wiring was already clang's choice.
+
+CORPUS FIRST CONTACT: 5322 sites in 262 files — NOT a wall, and the
+whole cliff was TWO decay classes the specimens missed: (1) array
+identifier in value position (sprintf(tabula,...)) = T[]->T* decay
+= address-taken = LOCI, not a use; (2) member-array decay
+(memset(r.c,...)) = address INTO the aggregate = LOCI of the whole
+— answered by a NEW seam callback expressio_acies over typationes.
+5322 -> 16 -> 2, both in fixa/roundtrip (out of judging domain).
+STANDING METERS: 71 = 2-in-fixa, 72 = 0, both pure walls in
+maintained code; census wall 118s unchanged (whole judgment
+corpus-wide = free). 73 vigil-flip experiment: 87 residual sites
+(78 knotapel matrix-init loops — the sigillum shape at scale, 6
+lib/), all false-positive-flavored: dormancy vindicated.
+
+TWO NET FINDS beyond the codices: the old purum test source read an
+uninitialized whole struct (a = b) — clang flags it too (s22 pin);
+and vectis' oracle-count grepped the flag substring over ALL clang
+lines — -Wuninitialized is the first flag whose NOTES repeat its
+name ("uninitialized use occurs here"), double-counting every
+sometimes-warning; now warning:-lines only (both legs).
+
+BARS: e2e battery 30 counted cases (all pins as counts, TOLERA
+included), unit 203/203, silva 32/32, VECTIS TENET over the 12 new
+.suspectum fixtures (specimina s01-s22 graduated whole — silences
+ride pin-less, the count-equality contract holds them), amalgama
+VERIFICATUM (hand-written silva.h enum extended — the clamat
+worked), officina 12/12. TOLERA names registered (the _tolerabiles
+table was a second registry the spec missed — caught by the battery).
+
+ARC COMPLETE: chunks 0/A/B/C all shipped, 2026-07-17 evening to
+2026-07-18, five commits (057d8ba, 580977e, 8d1bed4, 6223c07 +
+c35eb4f pin fix). Codex 62 re-arm now UNBLOCKED: def-use substrate
+exists (its named condition, decretum 01KXRBS0VQ).
