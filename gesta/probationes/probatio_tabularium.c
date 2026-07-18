@@ -167,6 +167,7 @@ s32 principale (vacuum)
     cfg.signum = NIHIL;
     cfg.via_binarii = NIHIL;
     cfg.via_manifesti = NIHIL;
+    cfg.via_entitatum = NIHIL;
     t = tabularium_creare(piscina, &cfg);
     CREDO_NON_NIHIL (t);
     si (t == NIHIL)

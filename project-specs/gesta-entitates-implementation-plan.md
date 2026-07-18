@@ -16,7 +16,8 @@
 - `i32` is **unsigned**; use `s32`/`s64` for signed. Loop counters over `json_tabulatum_numerus` are `i32`.
 - The projection is a **read-only generated artifact**. Every file begins with a "GENERATUM" banner; hand-edits are overwritten.
 - Content is **deterministic**: every timestamp shown comes from event/row data, never a regeneration clock. Two reconciles of an unchanged entity produce byte-identical files (so `git diff` shows a file only when the entity actually changed).
-- Compile+run tests with: `cd /Users/francisarant/Documents/projects/rhubarb/gesta && ./compile_probationes.sh tabularium`. Exit `0` = all `credo` asserts passed.
+- Compile+run tests with: `cd /Users/francisarant/Documents/projects/rhubarb && ./gesta/compile_probationes.sh tabularium`. Exit `0` = all `credo` asserts passed. **CRITICAL: run from the repo ROOT, not from `gesta/`** — the test binary uses repo-root-relative paths (`gesta/build/...`), so running from `gesta/` makes every path resolve to `gesta/gesta/...` and the whole suite fails with misleading cascade errors from the first `initialize`.
+- The test's `TabulariumConfiguratio cfg;` (probatio_tabularium.c:148) is NOT zero-initialized — every config field must be assigned explicitly before `tabularium_creare`, or `via_entitatum` is read uninitialized (UB). When you add the field's consumer, also set `cfg.via_entitatum` in the test config.
 - **Commit discipline:** we are on `main`. Before the first commit of this work, create a branch: `git checkout -b gesta-entitates`. Do not commit to `main`.
 
 ---
@@ -96,7 +97,7 @@ All new C lives in `tabularium.c` — it is the projection owner; keeping the re
 
 - [ ] **Step 6: Build (nothing consumes the field yet — just verify it compiles).**
 
-Run: `cd /Users/francisarant/Documents/projects/rhubarb/gesta && ./compile_probationes.sh tabularium`
+Run: `cd /Users/francisarant/Documents/projects/rhubarb && ./gesta/compile_probationes.sh tabularium`
 Expected: PASS (existing tests still green; new field unused is fine — an unused struct field does not warn).
 
 - [ ] **Step 7: Commit.**
@@ -205,7 +206,7 @@ _entitatem_nomen_plagulae (chorda genus, chorda slug,
 
 - [ ] **Step 3: Build (functions unused so far — confirm they compile clean under `-Werror`).**
 
-Run: `cd /Users/francisarant/Documents/projects/rhubarb/gesta && ./compile_probationes.sh tabularium`
+Run: `cd /Users/francisarant/Documents/projects/rhubarb && ./gesta/compile_probationes.sh tabularium`
 Expected: FAIL with `-Werror=unused-function` for the two new `interior` functions (they have no caller yet).
 
 **This is expected.** To keep the build green between tasks, temporarily mark them used by adding, at the end of the entitates section, a forward reference that the next task consumes. Simplest: **do Steps 1-2 but defer the build to Task 5**, where the first caller appears. Mark this task's commit as combined with Task 5 if your executor requires green-between-commits. Otherwise commit with a `(vacuum)` self-reference guard:
@@ -388,7 +389,7 @@ Note the numeral macros are `latina.h` Roman numerals (`XL`=40, `MDXX`=1520, `MM
 
 - [ ] **Step 5: Silence unused until Task 5.** These are consumed in Task 5. If your executor needs green now, extend the `_entitates_provisorium` guard from Task 2 to reference them, else fold Tasks 3-5 into one commit. Build:
 
-Run: `cd /Users/francisarant/Documents/projects/rhubarb/gesta && ./compile_probationes.sh tabularium`
+Run: `cd /Users/francisarant/Documents/projects/rhubarb && ./gesta/compile_probationes.sh tabularium`
 Expected: PASS (with guard) — confirms POSIX calls compile under the strict C89 flags. **If it fails with implicit-declaration of `mkdir`/`opendir`/`unlink`:** add `#define _DARWIN_C_SOURCE` as the very first line of `tabularium.c` (before all includes) and rebuild.
 
 - [ ] **Step 6: Commit.**
@@ -759,7 +760,7 @@ Note: `—` (em dash) and `→` (→) are shown here for clarity — C89 has no 
 
 - [ ] **Step 5: Build (still no caller — keep the provisorium guard extended to `_entitatem_ad_markdown`).**
 
-Run: `cd /Users/francisarant/Documents/projects/rhubarb/gesta && ./compile_probationes.sh tabularium`
+Run: `cd /Users/francisarant/Documents/projects/rhubarb && ./gesta/compile_probationes.sh tabularium`
 Expected: PASS.
 
 - [ ] **Step 6: Commit.**
@@ -969,14 +970,14 @@ Then in the test body (inside the block where `t` and `piscina` exist, after the
 
 - [ ] **Step 4: Run test to verify it fails.**
 
-Run: `cd /Users/francisarant/Documents/projects/rhubarb/gesta && ./compile_probationes.sh tabularium`
+Run: `cd /Users/francisarant/Documents/projects/rhubarb && ./gesta/compile_probationes.sh tabularium`
 Expected: FAIL — the reconcile is not yet wired into `addere` (Task 7), so no files are written; `strstr` returns `NIHIL`. (This proves the test exercises the real path.)
 
 - [ ] **Step 5:** Leave the failing test; it goes green in Task 7. **Commit the reconcile function + test now** (red test committed intentionally; Task 7 turns it green):
 
 Actually — to keep committed states green, **defer the test's assertions to Task 7**. For this task, commit only `_entitatem_reconciliare` (still uncalled but no longer guarded, because Task 7 immediately follows and is committed together). If your executor requires each commit to build green, **combine Task 5 and Task 7 into one commit**. Build with reconcile present but uncalled:
 
-Run: `cd /Users/francisarant/Documents/projects/rhubarb/gesta && ./compile_probationes.sh tabularium`
+Run: `cd /Users/francisarant/Documents/projects/rhubarb && ./gesta/compile_probationes.sh tabularium`
 Expected: FAIL `-Werror=unused-function` for `_entitatem_reconciliare`. Therefore **do not commit Task 5 alone** — proceed directly to Task 6 and Task 7, which add the callers, then commit Tasks 5-7 together at Task 7 Step 4.
 
 ---
@@ -1056,7 +1057,7 @@ _entitates_reconciliare_omnes (Tabularium* t, Piscina* pn)
 
 - [ ] **Step 3: Build (both still uncalled → proceed to Task 7 before committing).**
 
-Run: `cd /Users/francisarant/Documents/projects/rhubarb/gesta && ./compile_probationes.sh tabularium`
+Run: `cd /Users/francisarant/Documents/projects/rhubarb && ./gesta/compile_probationes.sh tabularium`
 Expected: FAIL `-Werror=unused-function`. Expected — callers arrive in Task 7.
 
 ---
@@ -1127,7 +1128,7 @@ At each `_tabulam_scribere(t, pn);` call, add the reconcile call(s) on the **nex
 
 - [ ] **Step 3: Run tests to verify they pass.**
 
-Run: `cd /Users/francisarant/Documents/projects/rhubarb/gesta && ./compile_probationes.sh tabularium`
+Run: `cd /Users/francisarant/Documents/projects/rhubarb && ./gesta/compile_probationes.sh tabularium`
 Expected: PASS — all `CREDO_VERUM` asserts green, exit 0. The full lifecycle (create → note → status → retag) is exercised and files reflect each write.
 
 - [ ] **Step 4: Commit Tasks 5-7 together.**
@@ -1200,7 +1201,7 @@ Confirm the actual `remotio` semantics by running; keep whichever assertion matc
 
 - [ ] **Step 2: Run tests.**
 
-Run: `cd /Users/francisarant/Documents/projects/rhubarb/gesta && ./compile_probationes.sh tabularium`
+Run: `cd /Users/francisarant/Documents/projects/rhubarb && ./gesta/compile_probationes.sh tabularium`
 Expected: PASS.
 
 - [ ] **Step 3: Commit.**
