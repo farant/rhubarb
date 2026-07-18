@@ -4642,3 +4642,58 @@ one-shot -mcp pipe (first use as a smoke instrument — cheap and
 resident-independent, worth remembering); asperitates — none new;
 desiderata — none. Resident needs relink+reload to serve the fix
 (vigilia is already saying so, correctly).
+
+## SONDA UNA-ICTUS: INTENTIO (2026-07-17)
+
+Pull: desideratum 01KXJ2K1Z9 (four demand seeds — the most mature
+instrument gap). The hand-rolled stdio LSP probe, committed once:
+a fresh in-process engine run (legatus_currere over tmpfiles — the
+probatio pattern, NOT a subprocess), scripted sequence initialize →
+didOpen(disk content, JSON-escaped via the aedificator) →
+[-servare didSave] → shutdown/exit, then read ALL output and print
+the LAST publishDiagnostics for the file. Last-wins is dissolved
+STRUCTURALLY (run-to-EOF = every publish present, take the last) —
+the lesson that burned the first capita repro script becomes the
+instrument's shape. Surface: ./officina/sonda.sh <via> [-servare]
+[-crudum]. Output examen-style rows via:linea:columna [gravitas/
+fons] nuntius; -crudum prints every publish raw. Build: shares
+legatus.sh's build dir + objects verbatim, compiles only sonda.c
+(instrumenta/principalia/). Probatio helpers duplicated (~60 lines,
+consolidate-later precedent = praeparator birth). Bar: known-answer
+live runs — clean lib file = 0 rows; a domesticum-carrying file =
+its exact census rows; -servare on a header exercises the rebuild
+path. v1 = one file, didOpen/didSave only; scripted didChange
+transcripts stay named at LEGATUSD.
+
+## SONDA UNA-ICTUS: RELATIO (2026-07-17)
+
+Shipped in one sitting: sonda.c (~330 lines, principalia) +
+sonda.sh (build-dir shared verbatim with legatus.sh — only the
+main is new). Bars all green, known-answer:
+- lib/piscina.c → diagnostica 0, publicationes 1, exit 0.
+- lib/arbor_praeparator.c → SIX rows line-identical to the census
+  through a DIFFERENT pipeline (3× codex 58 at 2896/2927/2954 +
+  the 2 standing codex-61 sentinels + 1 implicit call) — a free
+  LSP-vs-examen differential, first run. Severity mapping visible
+  (domesticum→nota, suspectum→cautio).
+- include/vigilia.h -servare → publicationes 2 (didOpen + the
+  didSave C11 header-rebuild republish), last wins, exit 0.
+- nusquam → "plagula illegibilis", exit 2. (Negative test captured
+  through a pipe FIRST — $? was tail's; the exit-code law bit its
+  own author twice today in probes. Gate on direct capture.)
+
+Design held from INTENTIO unchanged: in-process engine over
+tmpfiles (no subprocess, no async), run-to-EOF makes last-wins
+structural, -crudum for protocol-level 0-based JSON. Duplicated
+probatio helpers as planned (consolidate at praeparator-style
+birth if a third twin appears).
+
+Follow-up (small, named): fabrica.tsv binarium row for
+build/legatus/sonda — fabrica currently carries Fran's uncommitted
+edits, so the row waits rather than riding a mixed commit.
+
+INSTRUMENTA: adhibita — the probatio file was the entire parts
+bin (framing helpers, message shapes, engine-driving pattern);
+asperitates — none; the aedificator's appendere_evasus_json did
+the one genuinely fiddly job (arbitrary file bytes into a JSON
+string) in one call. Demand ledger: 4 seeds closed.
