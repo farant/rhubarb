@@ -2146,6 +2146,18 @@ probatio_mcp (Piscina* p)
         "\"params\":{\"name\":\"corpus\",\"arguments\":"
         "{\"titulus\":\"_ch\","
         "\"via\":\"nusquam_xyz.c\"}}}");
+    /* typedef-opacum (desideratum 01KXS3EXS6): typedef nudum ->
+     * corpus STRUCTURAE redditur, non linea nominis sola */
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":18,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"corpus\",\"arguments\":"
+        "{\"titulus\":\"SilvaSemantica\"}}}");
+    /* idioma uni-declarationis (corpus intra radicem typedefi):
+     * via repuncta radicem eandem videt - intactum */
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":19,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"corpus\",\"arguments\":"
+        "{\"titulus\":\"TypusC89Membrum\"}}}");
     /* nullum "exit" - EOF fistulae = exitus ordinatus */
 
     rewind(intra);
@@ -2358,6 +2370,26 @@ probatio_mcp (Piscina* p)
         chorda textus = _mcp_textus(&n);
 
         CREDO_VERUM(_chorda_continet(textus, "sedes notae"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* corpus typedef-opacum */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus,
+            "corpus SilvaSemantica"));
+        /* membrum e CORPORE structurae - ante sanationem linea
+         * typedefi sola reddebatur (nomen structura X X;) */
+        CREDO_VERUM(_chorda_continet(textus, "scopus_currens"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* corpus uni-declarationis */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "est_campus"));
     }
 
     fclose(intra);

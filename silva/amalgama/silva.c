@@ -38527,12 +38527,18 @@ _tag_tractare (SilvaSemantica* sem, constans SilvaNodus* nodus,
             ? silva_chorda_transcribere(titulus_v.datum.token->valor,
                   sem->piscina)
             : _chorda_vacua();
-        typus->datum.tag.declarans = nodus;
         si (nominata)
         {
             _tag_registrare(sem, titulus_v.datum.token->valor, typus);
         }
     }
+    /* definitione praelata (2026-07-17): completio in situ sedem
+     * identitatis ad nodum DEFINIENTEM repungit - referentia
+     * praecedens (idioma typedef-opacum) eam aliter in aeternum
+     * teneret. Consumptores declarantis positionem diagnosticorum
+     * formae volunt (corpus habet membra); identitas nominalis =
+     * monstrator internatus, non hic ager. */
+    typus->datum.tag.declarans = nodus;
     /* registratum ANTE membra - structura sui-referens */
     redde _typus_ex_membris(sem, typus, membra_v);
 }

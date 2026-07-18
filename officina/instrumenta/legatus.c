@@ -3653,6 +3653,86 @@ _extenta_ex_semantica (Legatus* l, constans SilvaParsura* parsura,
                     e->corpus_finis = (min_c >= ZEPHYRUM)
                         ? (s32)max_c : (s32)-I;
                 }
+                /* idioma typedef-opacum (desideratum 01KXS3EXS6):
+                 * charta typedefi nudi ad radicem DEFINITIONIS tag
+                 * repungitur - corpus {titulus} corpus structurae
+                 * reddit, non lineam nominis. Directio per TYPUM
+                 * (non nomen - 'nomen structura Alia Mea;' quoque);
+                 * declarans tag post completionem in situ nodum
+                 * definientem monstrat (silva, eodem die). Radix
+                 * eadem = idioma uni-declarationis, intacta;
+                 * commentarium typedefi manet nisi definitio suum
+                 * fert. */
+                si (s->genus == (int)SYMBOLUM_TYPEDEF
+                    && s->typus != NIHIL)
+                {
+                    constans TypusC89* t = s->typus;
+                    constans SilvaNodus* definiens = NIHIL;
+
+                    dum (t != NIHIL
+                        && t->genus == (s32)TYPUS_C89_QUALIFICATUS)
+                    {
+                        t = t->datum.qualificatus.internum;
+                    }
+                    si (t != NIHIL
+                        && (t->genus == (s32)TYPUS_C89_STRUCTURA
+                            || t->genus == (s32)TYPUS_C89_UNIO)
+                        && t->datum.tag.completa)
+                    {
+                        definiens = t->datum.tag.declarans;
+                    }
+                    alioquin si (t != NIHIL
+                        && t->genus == (s32)TYPUS_C89_ENUMERATUS
+                        && t->datum.enumeratus.completa)
+                    {
+                        definiens = t->datum.enumeratus.declarans;
+                    }
+                    si (definiens != NIHIL)
+                    {
+                        constans SilvaNodus* radix_def = definiens;
+
+                        dum (radix_def->pater != NIHIL)
+                        {
+                            radix_def = radix_def->pater;
+                        }
+                        si (radix_def != radix_decl)
+                        {
+                            int min_d = -I;
+                            int max_d = ZEPHYRUM;
+
+                            silva_nodus_extensionem(radix_def,
+                                (int)fons, &min_d, &max_d);
+                            si (min_d >= ZEPHYRUM)
+                            {
+                                insignatus integer dla;
+                                insignatus integer dca;
+                                insignatus integer dlb;
+                                insignatus integer dcb;
+                                SilvaCommentariumVista cvd;
+
+                                silva_nodus_extensionem_lineis(
+                                    radix_def, fons, &dla, &dca,
+                                    &dlb, &dcb);
+                                si (dla != ZEPHYRUM)
+                                {
+                                    e->linea_a = dla;
+                                    e->linea_b = dlb;
+                                }
+                                e->corpus_initium = (s32)min_d;
+                                e->corpus_finis = (s32)max_d;
+                                si (silva_commentarium_ducens(
+                                        radix_def, (int)fons, &cvd)
+                                    == I)
+                                {
+                                    e->commentarium_initium =
+                                        (s32)cvd.initium;
+                                    e->commentarium_finis =
+                                        (s32)cvd.finis;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

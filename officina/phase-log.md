@@ -4565,3 +4565,80 @@ _praeparationem_struere - navigatio tota per legati, greps nulli fere);
 vigilia ipsa bis in venatione flagravit (editio quae residentem
 senescebat) - strata staleness DUO orthogonalia demonstrata: binarium
 (vigilia) et photographia capitum (hoc insectum).
+
+## LEGATI CORPUS TYPEDEF-OPACUM: INTENTIO (2026-07-17)
+
+Pull: desideratum 01KXS3EXS6 (remaining half). corpus
+{SilvaSemantica} returned the one-line typedef (`nomen structura X
+X;`) instead of the struct body sitting on the next 60 lines — the
+house typedef-opaque idiom resolves to the TYPEDEF symbol card, and
+struct TAG definitions never become cards at all (tags are not
+symbols).
+
+ROOT CAUSE (two layers):
+1. silva: `_tag_tractare` in-situ completion never repoints
+   `tag.declarans` — the forward-reference sighting (the typedef
+   line) owns the identity seat forever. Audit: declarans has TWO
+   consumer roles, both diagnostic POSITIONING (_declarans_typi,
+   CAMPI_PARCATI seat); nominal identity is the interned pointer,
+   never a cross-sighting declarans compare. Repointing at
+   completion is safe and strictly better (form diagnostics land on
+   the body that has the members). Definition-wins — the same
+   philosophy as the symbolum prototype-shadow fix.
+2. legatus: `_extenta_ex_semantica` builds the typedef card from
+   the SYMBOL's root node only. Fix: for SYMBOLUM_TYPEDEF cards,
+   follow s->typus (strip QUALIFICATUS) to a completed
+   STRUCTURA/UNIO/ENUMERATUS, pater-climb its (now
+   definition-pointing) declarans to root; if that root differs
+   from the typedef's root and yields a valid extent in this fons,
+   repoint the card's corpus/lineae/commentarium to the DEFINITION
+   root. Type-directed, not name-matched — `nomen structura Alia
+   Mea;` works too. Single-declaration idiom (body inside the
+   typedef root) = same root = untouched, byte-identical behavior.
+
+Enum note: enum definitions always allocate fresh (declarans
+already correct) and C89 forbids incomplete enums — struct/unio is
+the live path; the legatus walk covers ENUMERATUS anyway.
+
+Bars: silva suite + examen_vectis (positioned EXSPECTA pins reveal
+any diagnostic-seat moves; moves TO the definition = re-pin as
+improvement); amalgamare VERIFICATUM; legatus probatio + new
+split-idiom scenario (corpus extent = struct body lines); MCP
+one-shot pipe smoke on corpus {SilvaSemantica} before the resident
+reload.
+
+## LEGATI CORPUS TYPEDEF-OPACUM: RELATIO (2026-07-17)
+
+Shipped in one chunk, two layers exactly as the INTENTIO drew them:
+
+1. silva `_tag_tractare`: in-situ tag completion now repoints
+   `tag.declarans` to the DEFINING node (definitione praelata). The
+   forward-reference sighting had owned the identity seat forever;
+   consumer audit held — declarans's only roles are diagnostic
+   positioning (_declarans_typi, CAMPI_PARCATI), nominal identity is
+   the interned pointer. Form diagnostics now land on the body that
+   has the members. VECTIS TENET untouched (no pinned position
+   moved); amalgamare VERIFICATUM; silva 31/31.
+
+2. legatus `_extenta_ex_semantica`: TYPEDEF cards follow s->typus
+   (QUALIFICATUS stripped) to a completed STRUCTURA/UNIO/ENUMERATUS
+   and repoint corpus/lineae/commentarium to the definition root —
+   guarded by root-differs + valid-extent-in-fons (cross-file
+   definitions abstain honestly). Type-directed, so `nomen structura
+   Alia Mea;` resolves too; the single-declaration idiom sees the
+   same root and stays byte-identical. The typedef's leading comment
+   survives unless the definition carries its own.
+
+Live smoke (one-shot -mcp pipe, pre-reload): corpus {SilvaSemantica}
+= silva_c89_semantica.h:425-494, the struct's own doc comment + all
+members verbatim — the desideratum's exact wish. Bars: legatus
+probatio 300/300 (two new scenarios: typedef-opacum returns a body
+member, uni-declaratio intact); officina 12/12; suite drives the
+engine E2E through legatus_currere.
+
+INSTRUMENTA: adhibita — corpus/emitte for reading legatus's own
+resolution path, nexus row checks for probe world-truth, the
+one-shot -mcp pipe (first use as a smoke instrument — cheap and
+resident-independent, worth remembering); asperitates — none new;
+desiderata — none. Resident needs relink+reload to serve the fix
+(vigilia is already saying so, correctly).

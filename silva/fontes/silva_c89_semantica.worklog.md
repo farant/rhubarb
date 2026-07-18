@@ -670,3 +670,18 @@ existing sites happened to sit above identifier-led lines. Also note:
 _tolera_legere is single-line-strict (multi-line TOLERA comments do
 not parse) — discovered en route, kept as-is, format is documented as
 single-line.
+
+## 2026-07-17 — tag.declarans repoints to definition at completion
+
+`_tag_tractare` in-situ completion now sets declarans = the
+defining node (it previously survived from the FIRST sighting — a
+forward reference in the typedef-opaque idiom owned it forever).
+Audit before the change: declarans has exactly two consumer roles,
+both diagnostic POSITIONING (_declarans_typi for form diagnostics,
+CAMPI_PARCATI seat); nominal identity is the interned TypusC89
+pointer — no cross-sighting declarans comparison exists. So the
+repoint is strictly better: form diagnostics land on the body that
+declares the members. Enum path untouched (definitions allocate
+fresh, declarans already correct; C89 forbids incomplete enums).
+First consumer: legatus typedef-opaque corpus cards (same day).
+VECTIS TENET — no pinned diagnostic position moved.

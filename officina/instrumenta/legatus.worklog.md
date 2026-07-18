@@ -697,3 +697,17 @@ guard (MCP's _aetates_custodire pattern at LSP request entry) =
 follow-up candidate, lower stakes. (3) interleaved-transcript
 engine harness (batch model can't mutate disk mid-conversation) =
 park; natural at LEGATUSD (socket transport).
+
+## 2026-07-17 — typedef-opaque corpus fix (desideratum 01KXS3EXS6)
+
+Cards for SYMBOLUM_TYPEDEF now follow the TYPE to the tag's
+definition root when it differs from the typedef's own root
+(split idiom `nomen structura X X;` + `structura X {...};`).
+Depends on the same-day silva change: _tag_tractare repoints
+tag.declarans to the defining node at in-situ completion. Guards:
+completa only, valid extent in this fons (cross-file definition =
+abstain, card keeps typedef extents), comment kept unless the
+definition has its own. est_definitio untouched (functions only) —
+_extentum_tituli picks the card as `primum`, same as before; no
+other consumer reads typedef-card lineae for control flow
+(_functio_continens guards genus). Probes: MCP ids 18/19.
