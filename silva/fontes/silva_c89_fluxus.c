@@ -1441,6 +1441,7 @@ silva_c89_fluxus_aedificare (Piscina* piscina,
     fluxus->fractiones_extra = xar_creare(piscina,
         (i32)magnitudo(constans SilvaNodus*));
     fluxus->cadit_attingibilis = FALSUM;
+    fluxus->datorum = NIHIL;
 
     aed.piscina = piscina;
     si (auxilia != NIHIL)

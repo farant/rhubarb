@@ -150,6 +150,7 @@ interior constans AmalgamaPlagula CAPITA_SILVAE[] = {
     { "silva/fontes/silva_scribere.h",        NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_c89_oraculum.h",    NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_c89_fluxus.h",      NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_c89_fluxus_datorum.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_c89_semantica.h",   NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_quaestio.h",        NIHIL, NIHIL, FALSUM, FALSUM }
 };
@@ -169,6 +170,7 @@ interior constans AmalgamaPlagula CORPORA_SILVAE[] = {
     { "silva/fontes/silva_scribere.c",        NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_c89_oraculum.c",    NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_c89_fluxus.c",      NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_c89_fluxus_datorum.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_c89_semantica.c",   NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_quaestio.c",        NIHIL, NIHIL, VERUM, FALSUM }
 };

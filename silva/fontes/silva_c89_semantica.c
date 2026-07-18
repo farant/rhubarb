@@ -5,8 +5,14 @@
 #include "silva_tabulae_c89.h"
 #include "silva_c89_oraculum.h"
 #include "silva_c89_fluxus.h"
+#include "silva_c89_fluxus_datorum.h"
 #include <stdio.h>
 #include <string.h>
+
+/* praedeclaratio: nexus declaratorum (FLUXUS-1) ante definitionem */
+interior vacuum _nexum_ponere (SilvaSemantica* sem,
+    constans SilvaNodus* nodus, SemanticaSymbolum* symbolum,
+    b32 notare_usum);
 
 /* ==================================================
  * Auxiliares
@@ -2877,9 +2883,21 @@ silva_c89_declarationem_tractare (SilvaSemantica* sem,
             {
                 genus_symboli = SYMBOLUM_VARIABILE;
             }
-            (vacuum)_symbolum_registrare(sem, genus_symboli,
-                tok->valor, t, ZEPHYRUM, repositio,
-                dv->datum.nodus, tok);
+            {
+                SemanticaSymbolum* symbolum_declaratum =
+                    _symbolum_registrare(sem, genus_symboli,
+                        tok->valor, t, ZEPHYRUM, repositio,
+                        dv->datum.nodus, tok);
+
+                /* nexus declaratoris (FLUXUS-1 chunk A: datorum
+                 * facta; etiam solarium "salta ad symbolum") -
+                 * SINE notatione usus (codices 69/70 caeci manent) */
+                si (symbolum_declaratum != NIHIL)
+                {
+                    _nexum_ponere(sem, _canonicum(dv->datum.nodus),
+                        symbolum_declaratum, FALSUM);
+                }
+            }
         }
         /* initiator typatur POST registrationem (int x = x; legale,
          * dextrum x novum videt - C89). Conversio ad typum
@@ -3088,6 +3106,83 @@ _fluxus_aestimator_ligamen (vacuum* contextus,
  * attingibili in functione non vacua - attingibilitas sola formas
  * omnes idiomatum gerit (ansae infinitae plicatae, salta-ansae,
  * commutationes classificatorum - XI-6, nulla exceptio). */
+/* Ligamina factorum datorum (FLUXUS-1 chunk A): symbolum ->
+ * facta iudicii, typus functionis -> constantia parametri (s04f) */
+interior b32
+_datorum_symbolum_ligamen (vacuum* contextus,
+    constans SilvaNodus* nodus, FluxusSymbolumFacta* facta)
+{
+    SilvaSemantica* sem = (SilvaSemantica*)contextus;
+    constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(sem,
+        nodus);
+    TypusC89* t;
+
+    si (s == NIHIL)
+    {
+        redde FALSUM;
+    }
+    facta->identitas = (constans vacuum*)s;
+    facta->titulus = s->titulus;
+    facta->declarans = s->declarans;
+    facta->localis_automata = (s->genus == SYMBOLUM_VARIABILE
+        && s->profunditas > ZEPHYRUM
+        && (s->repositio & (i32)(REPOSITIO_STATICA
+               | REPOSITIO_EXTERNA)) == ZEPHYRUM) ? VERUM : FALSUM;
+    facta->parametrum = (s->genus == SYMBOLUM_PARAMETRUM)
+        ? VERUM : FALSUM;
+    t = s->typus;
+    dum (t != NIHIL && t->genus == TYPUS_C89_QUALIFICATUS)
+    {
+        t = t->datum.qualificatus.internum;
+    }
+    facta->aggregatum = (t != NIHIL
+        && (t->genus == TYPUS_C89_ACIES
+            || t->genus == TYPUS_C89_STRUCTURA
+            || t->genus == TYPUS_C89_UNIO)) ? VERUM : FALSUM;
+    redde VERUM;
+}
+
+interior b32
+_datorum_parametrum_constans_ligamen (vacuum* contextus,
+    constans SilvaNodus* functio_folium, i32 index)
+{
+    SilvaSemantica* sem = (SilvaSemantica*)contextus;
+    constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(sem,
+        functio_folium);
+    TypusC89* t;
+    TypusC89* p;
+
+    si (s == NIHIL)
+    {
+        redde FALSUM;
+    }
+    t = s->typus;
+    dum (t != NIHIL && t->genus == TYPUS_C89_QUALIFICATUS)
+    {
+        t = t->datum.qualificatus.internum;
+    }
+    si (t == NIHIL || t->genus != TYPUS_C89_FUNCTIO
+        || !t->datum.functio.est_prototypata
+        || index >= t->datum.functio.numerus_parametrorum)
+    {
+        /* ignotum / K&R / cauda variadica = non-constans (silens) */
+        redde FALSUM;
+    }
+    p = t->datum.functio.parametra[index];
+    dum (p != NIHIL && p->genus == TYPUS_C89_QUALIFICATUS)
+    {
+        p = p->datum.qualificatus.internum;
+    }
+    si (p == NIHIL || p->genus != TYPUS_C89_MONSTRATOR)
+    {
+        redde FALSUM;
+    }
+    p = p->datum.monstrator.internum;
+    redde (p != NIHIL && p->genus == TYPUS_C89_QUALIFICATUS
+        && (p->datum.qualificatus.quales & QUALIS_CONSTANS)
+            != ZEPHYRUM) ? VERUM : FALSUM;
+}
+
 interior vacuum
 _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
 {
@@ -3109,6 +3204,21 @@ _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
     }
     locus = (FluxusFunctionis**)xar_addere(sem->fluxus_functionum);
     *locus = fluxus;
+
+    /* FLUXUS-1 chunk A: tabulae datorum (eventa def/usus) super
+     * graphum recentem - semper aedificatae (Q8: metire in-arcu,
+     * porta solum si murus latentiae apparet) */
+    {
+        FluxusDatorumAuxilia aux_datorum;
+
+        aux_datorum.symbolum = _datorum_symbolum_ligamen;
+        aux_datorum.parametrum_constans =
+            _datorum_parametrum_constans_ligamen;
+        aux_datorum.canonicum = _fluxus_canonicum_ligamen;
+        aux_datorum.contextus = sem;
+        fluxus->datorum = silva_c89_fluxus_datorum_aedificare(
+            sem->piscina, fluxus, &aux_datorum);
+    }
 
     /* codex 66: frange/perge sine contextu (clang errat) */
     m = xar_numerus(fluxus->fractiones_extra);
@@ -4446,12 +4556,12 @@ _nexum_invenire (constans SilvaSemantica* sem,
 
 interior vacuum
 _nexum_ponere (SilvaSemantica* sem, constans SilvaNodus* nodus,
-    SemanticaSymbolum* symbolum)
+    SemanticaSymbolum* symbolum, b32 notare_usum)
 {
     SemanticaNexus* n = _nexum_invenire(sem, nodus);
     chorda clavis;
 
-    si (symbolum != NIHIL)
+    si (symbolum != NIHIL && notare_usum)
     {
         symbolum->usus = VERUM;   /* codices 69/70 */
     }
@@ -7484,7 +7594,8 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                 tok_v.datum.token->valor);
             si (symbolum != NIHIL)
             {
-                _nexum_ponere(sem, nodus, symbolum);   /* M1a A */
+                _nexum_ponere(sem, nodus, symbolum,
+                    VERUM);   /* M1a A */
             }
             si (symbolum == NIHIL)
             {
@@ -8402,7 +8513,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                         si (symbolum != NIHIL)
                         {
                             /* M1a A: etiam implicitus nectitur */
-                            _nexum_ponere(sem, nf, symbolum);
+                            _nexum_ponere(sem, nf, symbolum, VERUM);
                         }
                         (vacuum)_typationem_ponere(sem, nf, tf);
                     }

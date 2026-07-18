@@ -110,6 +110,8 @@ nomen structura {
     constans SilvaNodus* nodus;   /* titulatum */
 } FluxusTitulus;
 
+nomen structura FluxusDatorum FluxusDatorum;  /* fluxus_datorum.h */
+
 nomen structura {
     constans SilvaNodus* definitio;  /* definitio-functionis */
     Xar*          bloci;             /* FluxusBlocus (valore; monstratores
@@ -120,6 +122,10 @@ nomen structura {
     Xar*          saltus_ignoti;     /* constans SilvaNodus* (salta) - codex 67 */
     Xar*          fractiones_extra;  /* constans SilvaNodus* (frange/perge) - codex 66 */
     b32           cadit_attingibilis;
+    FluxusDatorum* datorum;          /* tabulae gradus 1 (FLUXUS-1);
+                                      * NIHIL donec aedificatae -
+                                      * vocator reponit post
+                                      * fluxus_datorum_aedificare */
 } FluxusFunctionis;
 
 /* ==================================================

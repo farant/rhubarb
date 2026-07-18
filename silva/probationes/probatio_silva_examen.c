@@ -12,6 +12,8 @@
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
 #include "silva_c89_semantica.h"
+#include "silva_c89_fluxus.h"
+#include "silva_c89_fluxus_datorum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -1633,6 +1635,57 @@ s32 principale (vacuum)
         "static void g(void);\n"
         "static int f(int x) { if (0) { g(); } return x; }\n",
         (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, I);
+
+    /* ==================================================
+     * XVII-b. Fluxus-1 chunk A: datorum per sedem semanticae
+     * (facta VERA - umbrae, parametra, constantia s04f)
+     * ================================================== */
+    {
+        SilvaParsura* parsura;
+        SilvaSemantica* sem;
+        FluxusFunctionis* fluxus;
+
+        /* umbrae: x interior et exterior identitates DISTINCTAE
+         * (a + x-interior + x-exterior = variabiles III) */
+        parsura = _parsare(piscina,
+            "static int f(int a) { int x; { int x; x = a; }"
+            " x = 2; return x; }\n");
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        CREDO_AEQUALIS_I32 (xar_numerus(sem->fluxus_functionum), I);
+        fluxus = *(FluxusFunctionis**)xar_obtinere(
+            sem->fluxus_functionum, ZEPHYRUM);
+        CREDO_NON_NIHIL (fluxus->datorum);
+        CREDO_AEQUALIS_I32 (
+            xar_numerus(fluxus->datorum->variabiles), III);
+
+        /* parametrum T* constans: peek(&x) NULLUM eventum (s04f
+         * per typum verum); geminus fill(&x) = eventum unum */
+        parsura = _parsare(piscina,
+            "void peek(const int *p);\n"
+            "static void f(void) { int x; peek(&x); }\n");
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        fluxus = *(FluxusFunctionis**)xar_obtinere(
+            sem->fluxus_functionum, ZEPHYRUM);
+        CREDO_NON_NIHIL (fluxus->datorum);
+        CREDO_AEQUALIS_I32 (
+            xar_numerus(fluxus->datorum->variabiles), ZEPHYRUM);
+
+        parsura = _parsare(piscina,
+            "void fill(int *p);\n"
+            "static void f(void) { int x; fill(&x); }\n");
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        fluxus = *(FluxusFunctionis**)xar_obtinere(
+            sem->fluxus_functionum, ZEPHYRUM);
+        CREDO_NON_NIHIL (fluxus->datorum);
+        CREDO_AEQUALIS_I32 (
+            xar_numerus(fluxus->datorum->variabiles), I);
+    }
 
     /* ==================================================
      * XVIII. Angustatio (codex 68) - directio latitudinis

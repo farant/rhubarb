@@ -1,0 +1,515 @@
+/* probatio_silva_fluxus_datorum.c - FLUXUS-1 chunk A: extractio
+ * eventorum def/usus. Resolutor probationis nomine-clavatus (facta
+ * manu data - semantica non tangitur); identitas = ordo tabulae.
+ * Regulae probatae = pinnae calibrationis (s01-s20). */
+#include "latina.h"
+#include "piscina.h"
+#include "chorda.h"
+#include "xar.h"
+#include "silva_token.h"
+#include "silva_nodus.h"
+#include "silva_parsare.h"
+#include "silva_commissio.h"
+#include "silva_c89_oraculum.h"
+#include "silva_tabulae_c89.h"
+#include "silva_c89_fluxus.h"
+#include "silva_c89_fluxus_datorum.h"
+#include "credo.h"
+#include <stdio.h>
+#include <string.h>
+
+/* ==================================================
+ * Resolutor probationis (nomine-clavatus)
+ * ================================================== */
+
+nomen structura {
+    constans character* titulus;
+    b32 localis;
+    b32 parametrum;
+    b32 aggregatum;
+} ProbatioSymbolum;
+
+/* Partes fixae: a/b/c/i parametra, x/y/p locales scalares,
+ * s/arr locales aggregata. Functiones (g, peek, sinkp) ABSENT =
+ * non resolutae = nulla eventa. */
+hic_manens ProbatioSymbolum _symbola[] = {
+    { "a",   FALSUM, VERUM,  FALSUM },
+    { "b",   FALSUM, VERUM,  FALSUM },
+    { "c",   FALSUM, VERUM,  FALSUM },
+    { "i",   FALSUM, VERUM,  FALSUM },
+    { "x",   VERUM,  FALSUM, FALSUM },
+    { "y",   VERUM,  FALSUM, FALSUM },
+    { "p",   VERUM,  FALSUM, FALSUM },
+    { "s",   VERUM,  FALSUM, VERUM  },
+    { "arr", VERUM,  FALSUM, VERUM  }
+};
+
+interior b32
+_nomen_aequale (chorda c, constans character* litterae)
+{
+    memoriae_index m = strlen(litterae);
+
+    redde (c.mensura == (i32)m && c.datum != NIHIL
+        && memcmp(c.datum, litterae, m) == ZEPHYRUM) ? VERUM : FALSUM;
+}
+
+interior constans SilvaNodus*
+_nodalis_probationis (SilvaValor v)
+{
+    si (v.genus != SILVA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    redde v.datum.nodus;
+}
+
+/* Descensus declaratoris ad titulum (resolutor probationis -
+ * semantica per nexum declaratorum resolvit) */
+interior constans SilvaNodus*
+_declaratoris_titulus (constans SilvaNodus* d)
+{
+    dum (d != NIHIL)
+    {
+        commutatio (d->genus)
+        {
+            casus (s32)SILVA_C89_GENUS_DECLARATOR_TITULUS:
+                redde d;
+            casus (s32)SILVA_C89_GENUS_DECLARATOR_INITIATUS:
+                d = _nodalis_probationis(
+                    silva_c89_declarator_initiatus_declarator(d));
+                frange;
+            casus (s32)SILVA_C89_GENUS_DECLARATOR_MONSTRATOR:
+                d = _nodalis_probationis(
+                    silva_c89_declarator_monstrator_internum(d));
+                frange;
+            casus (s32)SILVA_C89_GENUS_DECLARATOR_ACIEI:
+                d = _nodalis_probationis(
+                    silva_c89_declarator_aciei_internum(d));
+                frange;
+            casus (s32)SILVA_C89_GENUS_PARENTHESIS:
+                d = _nodalis_probationis(
+                    silva_c89_parenthesis_internum(d));
+                frange;
+            ordinarius:
+                redde NIHIL;
+        }
+    }
+    redde NIHIL;
+}
+
+interior b32
+_probatio_symbolum (vacuum* contextus, constans SilvaNodus* nodus,
+    FluxusSymbolumFacta* facta)
+{
+    SilvaValor tok_v;
+    chorda textus;
+    i32 k;
+    i32 m = (i32)(magnitudo(_symbola) / magnitudo(_symbola[0]));
+
+    (vacuum)contextus;
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        tok_v = silva_c89_folium_identificator_tok_valor(nodus);
+    }
+    alioquin
+    {
+        constans SilvaNodus* titulus = _declaratoris_titulus(nodus);
+
+        si (titulus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        tok_v = silva_c89_declarator_titulus_tok_titulus(titulus);
+    }
+    si (tok_v.genus != SILVA_VALOR_TOKEN)
+    {
+        redde FALSUM;
+    }
+    textus = tok_v.datum.token->valor;
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        si (_nomen_aequale(textus, _symbola[k].titulus))
+        {
+            facta->identitas = (vacuum*)&_symbola[k];
+            facta->titulus = textus;
+            facta->declarans = nodus;
+            facta->localis_automata = _symbola[k].localis;
+            facta->parametrum = _symbola[k].parametrum;
+            facta->aggregatum = _symbola[k].aggregatum;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* peek = functio cum parametris T* constantibus (pinna s04f) */
+interior b32
+_probatio_parametrum_constans (vacuum* contextus,
+    constans SilvaNodus* functio_folium, i32 index)
+{
+    SilvaValor tok_v;
+
+    (vacuum)contextus;
+    (vacuum)index;
+    si (functio_folium == NIHIL
+        || functio_folium->genus
+            != (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        redde FALSUM;
+    }
+    tok_v = silva_c89_folium_identificator_tok_valor(functio_folium);
+    si (tok_v.genus != SILVA_VALOR_TOKEN)
+    {
+        redde FALSUM;
+    }
+    redde _nomen_aequale(tok_v.datum.token->valor, "peek");
+}
+
+/* ==================================================
+ * Fistula: fons -> CFG -> datorum
+ * ================================================== */
+
+interior constans SilvaNodus*
+_definitio_prima (constans SilvaParsura* parsura)
+{
+    SilvaValor* e = silva_valor_lista_obtinere(
+        parsura->commissio->radix, ZEPHYRUM);
+
+    si (e == NIHIL || e->genus != SILVA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    redde e->datum.nodus;
+}
+
+interior FluxusDatorum*
+_extrahere (Piscina* piscina, constans character* fons)
+{
+    SilvaParsura* parsura = silva_c89_parsare(piscina, "probatio.c",
+        fons, (i32)strlen(fons), NIHIL);
+    constans SilvaNodus* definitio;
+    FluxusFunctionis* fluxus;
+    FluxusDatorumAuxilia aux;
+
+    si (parsura == NIHIL || parsura->numerus_errorum != ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    definitio = _definitio_prima(parsura);
+    si (definitio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fluxus = silva_c89_fluxus_aedificare(piscina, definitio, NIHIL);
+    si (fluxus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    aux.symbolum = _probatio_symbolum;
+    aux.parametrum_constans = _probatio_parametrum_constans;
+    aux.canonicum = NIHIL;
+    aux.contextus = NIHIL;
+    redde silva_c89_fluxus_datorum_aedificare(piscina, fluxus, &aux);
+}
+
+/* ==================================================
+ * Probatio seriei eventorum (plana, ordine blocorum)
+ * ================================================== */
+
+nomen structura {
+    constans character* titulus;   /* "*" = def-omnia (variabilis -1) */
+    s32 genus;
+    b32 proprius;                /* in_initiatore_proprio */
+} EventumExspectatum;
+
+interior vacuum
+_seriem_probare (FluxusDatorum* datorum,
+    constans EventumExspectatum* exspectata, i32 numerus)
+{
+    i32 visa = ZEPHYRUM;
+    i32 b;
+    i32 numerus_blocorum = xar_numerus(datorum->bloci);
+
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        FluxusDatorumBlocus* blocus = (FluxusDatorumBlocus*)
+            xar_obtinere(datorum->bloci, b);
+        i32 e;
+        i32 m = xar_numerus(blocus->eventa);
+
+        per (e = ZEPHYRUM; e < m; e++)
+        {
+            FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
+                blocus->eventa, e);
+
+            si (visa < numerus)
+            {
+                constans EventumExspectatum* ex = &exspectata[visa];
+
+                CREDO_AEQUALIS_S32 (ev->genus, ex->genus);
+                CREDO_VERUM (ev->in_initiatore_proprio
+                    == ex->proprius);
+                si (ev->variabilis < ZEPHYRUM)
+                {
+                    /* def-omnia (folium opacum) */
+                    CREDO_VERUM (strcmp(ex->titulus, "*") == ZEPHYRUM);
+                }
+                alioquin
+                {
+                    FluxusVariabilis* v = (FluxusVariabilis*)
+                        xar_obtinere(datorum->variabiles,
+                            (i32)ev->variabilis);
+
+                    CREDO_VERUM (_nomen_aequale(v->titulus,
+                        ex->titulus));
+                }
+            }
+            visa++;
+        }
+    }
+    CREDO_AEQUALIS_I32 (visa, numerus);
+}
+
+#define USUS_  (s32)FLUXUS_EVENTUM_USUS
+#define DEF_   (s32)FLUXUS_EVENTUM_DEFINITIO
+#define LOCI_  (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI
+
+s32 principale (vacuum)
+{
+    Piscina* piscina;
+    b32 praeteritus;
+
+    piscina = piscina_generare_dynamicum("probatio_fluxus_datorum",
+        33554432);
+    si (!piscina)
+    {
+        imprimere("FRACTA: piscina\n");
+        redde I;
+    }
+    credo_aperire(piscina);
+
+    /* ordo fundamentalis: dexter ante definitionem sinistri */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "int f(int a) { int x; x = a + 1; return x; }");
+        EventumExspectatum s[] = {
+            { "a", USUS_, FALSUM },
+            { "x", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, III);
+        CREDO_AEQUALIS_I32 (xar_numerus(d->variabiles), II);
+        {
+            FluxusVariabilis* v = (FluxusVariabilis*)xar_obtinere(
+                d->variabiles, ZEPHYRUM);
+
+            CREDO_VERUM (v->parametrum);   /* a */
+        }
+    }
+
+    /* lectio in assignatione propria: usus ANTE def (s01e) */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "int f(int a) { int x; x = x + 1; return x; }");
+        EventumExspectatum s[] = {
+            { "x", USUS_, FALSUM },
+            { "x", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, III);
+    }
+
+    /* composita: usus sinistri primum */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "int f(int a) { int x; x = 0; x += a; return x; }");
+        EventumExspectatum s[] = {
+            { "x", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM },
+            { "a", USUS_, FALSUM },
+            { "x", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, V);
+    }
+
+    /* incrementa: usus deinde def (post et prae) */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "int f(void) { int x; x = 0; x++; ++x; return x; }");
+        EventumExspectatum s[] = {
+            { "x", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM },
+            { "x", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM },
+            { "x", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, VI);
+    }
+
+    /* declaratio initiata + initiatio propria (s02: int y = y) */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "int f(int a) { int x = a; int y = y; return x + y; }");
+        EventumExspectatum s[] = {
+            { "a", USUS_, FALSUM },
+            { "x", DEF_,  FALSUM },
+            { "y", USUS_, VERUM },    /* in initiatore proprio! */
+            { "y", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM },
+            { "y", USUS_, FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, VI);
+    }
+
+    /* amper: def loci; peek(&x) constans = NULLUM eventum (s04f) */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "void f(int a) { int x; int* p = &x; g(&x);"
+            " peek(&x); }");
+        EventumExspectatum s[] = {
+            { "x", LOCI_, FALSUM },
+            { "p", DEF_,  FALSUM },
+            { "x", LOCI_, FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, III);
+    }
+
+    /* magnitudo praetermissa (s18) + conversio discardans (s01c);
+     * (void)g(x) NON discardans - usus x manet */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "void f(void) { int x; int y; y = (int)sizeof x;"
+            " (void)x; (void)g(x); }");
+        EventumExspectatum s[] = {
+            { "y", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, II);
+    }
+
+    /* aggregata: scriptio membri/elementi = def totius (s19);
+     * lectio membri/elementi invisibilis (s05); usus toti-valoris */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "void f(int i) { struct S s; int arr[4]; int y;"
+            " s.a = 1; y = s.a; arr[i] = 1; y = arr[i];"
+            " y = s; }");
+        EventumExspectatum s[] = {
+            { "s",   DEF_,  FALSUM },
+            { "y",   DEF_,  FALSUM },
+            { "i",   USUS_, FALSUM },
+            { "arr", DEF_,  FALSUM },
+            { "i",   USUS_, FALSUM },
+            { "y",   DEF_,  FALSUM },
+            { "s",   USUS_, FALSUM },   /* usus toti-valoris */
+            { "y",   DEF_,  FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, VIII);
+    }
+
+    /* monstratores scalares: *p et p[a] legunt p (s01f) */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "void f(int a) { int* p; int y; *p = 1; y = p[a]; }");
+        EventumExspectatum s[] = {
+            { "p", USUS_, FALSUM },
+            { "a", USUS_, FALSUM },
+            { "p", USUS_, FALSUM },
+            { "y", DEF_,  FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, IV);
+    }
+
+    /* folium AMBIGUUS inresolutum (canonicum NIHIL): def-omnia -
+     * abstentio conservativa. sizeof(g2) = ambiguitas classica
+     * typus-vs-expressio; sedes vera semantica canonicum tradet. */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "void f(void) { int x; x = sizeof(g2); }");
+        EventumExspectatum s[] = {
+            { "*", DEF_,  FALSUM },
+            { "x", DEF_,  FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, II);
+    }
+
+    /* fissio (chunk 0) + invariantum praetermissionis: operanda in
+     * blocis segmentorum, sententia granulum def in iunctione */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "int f(int a, int b) { int x; x = a && b; return x; }");
+        EventumExspectatum s[] = {
+            { "a", USUS_, FALSUM },
+            { "b", USUS_, FALSUM },
+            { "x", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, IV);
+    }
+
+    /* conditio granulum est (fons unicus post chunk 0) */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "int f(int a) { if (a > 0) { return a; } return 0; }");
+        EventumExspectatum s[] = {
+            { "a", USUS_, FALSUM },
+            { "a", USUS_, FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, II);
+    }
+
+    /* ternarius praetermissus integer - operanda granulata */
+    {
+        FluxusDatorum* d = _extrahere(piscina,
+            "int f(int c) { int x; x = c ? c : 0; return x; }");
+        EventumExspectatum s[] = {
+            { "c", USUS_, FALSUM },
+            { "c", USUS_, FALSUM },
+            { "x", DEF_,  FALSUM },
+            { "x", USUS_, FALSUM }
+        };
+
+        CREDO_NON_NIHIL (d);
+        _seriem_probare(d, s, IV);
+    }
+
+    credo_imprimere_compendium();
+    praeteritus = credo_omnia_praeterierunt();
+    piscina_destruere(piscina);
+
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    redde I;
+}
