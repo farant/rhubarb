@@ -1,6 +1,6 @@
 RHUBARB CODEBASE MAP
 ====================
-Last updated: 2026-01-13
+Last updated: 2026-07-18
 
 A C89 monorepo for building catholic civilization.
 All identifiers in Latin. No dependencies. Long-term thinking.
@@ -10,32 +10,55 @@ DIRECTORY STRUCTURE
 -------------------
 
 rhubarb/
-├── include/         105 header files (.h)
-├── lib/             114 implementation files (.c, .m)
-├── probationes/     87 test modules (probatio_*.c)
-├── silva/           C89 parser subproject, 4th generation (self-contained:
-│                    fontes/ + probationes/ + compile_probationes.sh;
-│                    START AT silva/phase-log.md; design record in
-│                    project-specs/silva-spec*.md; M1 CLOSED - deliverable
-│                    is silva/amalgama/{silva.c,silva.h} - supersedes
-│                    arbor/arbor2/lapifex)
+├── include/         118 header files (.h)
+├── lib/             121 implementation files (.c, .m)
+├── probationes/     111 test modules (probatio_*.c)
+├── tools/           14 utility executables (.c → bin/)
+│
+│   ── SELF-CONTAINED SUBPROJECTS (own fontes/ + probationes/ +
+│      compile_probationes.sh + phase-log.md; most amalgamate to
+│      amalgama/{name.c,name.h}; START AT each one's phase-log.md) ──
+│
+├── silva/           C89 parser + static-analysis frontend, 4th gen.
+│                    Supersedes arbor/arbor2/lapifex. Now far past the
+│                    parser: semantica (name resolution/types) + the
+│                    `examen` C89 judgment tiers (clang-parity lint) +
+│                    CFG/dataflow (fluxus). Shell bench: nexus.sh,
+│                    examen.sh, censor.sh, differentia.sh, emitte.sh.
+│                    START AT silva/CLAUDE.md + silva/phase-log.md.
+├── officina/        Compiler / VM / debugger toolchain over the silva
+│                    frontend. Pipeline: fons → silva → semantica →
+│                    demissio → conexio → machinula → indicium → vindex.
+│                    LSP server (legatus.sh -mcp; legatus-plugin/) + REPL
+│                    (colloquium.sh) + debugger TUI (vindex.sh).
+│                    START AT officina/CLAUDE.md + officina/phase-log.md.
 ├── tessera/         ANSI-terminal TUI library, anti-ncurses (xterm-only,
-│                    zero terminfo; self-contained: fontes/ + probationes/
-│                    + compile_probationes.sh; START AT tessera/phase-log.md;
-│                    design record in project-specs/tessera-*.md;
-│                    deliverable = tessera/amalgama/{tessera.c,tessera.h};
-│                    demo: ./tessera/spectaculum.sh; powers saltuarius)
-├── tools/           13 utility executables
-├── bin/             compiled binaries
-├── build/           build artifacts
-├── data/            data files (bible, fonts, etc)
-├── docs/            documentation
-├── vendor/          third-party (stb_image)
-├── scripts/         helper scripts
-└── .claude/         claude code config
+│                    zero terminfo). deliverable = amalgama/{tessera.c,
+│                    tessera.h}; demo: ./tessera/spectaculum.sh; powers
+│                    saltuarius.
+├── saltuarius/      TUI code explorer (fuzzy file/symbol bar) built on
+│                    tessera. daily-driver. saltuarius.sh.
+├── knotapel/        Knot-algebra research (Kauffman bracket, Jones,
+│                    Temperley-Lieb, DKC). 100+ numbered demo_NN_* dirs;
+│                    scrutinium.h algebraic-analysis framework; atlas/.
+├── gesta/           TABULARIUM records office: append-only JSONL ledger
+│                    (annales/tabularium.jsonl = truth) behind the
+│                    tabularii MCP server. cold path: ./gesta/frigida.sh.
+│
+│   ── SUPPORTING DIRS ──
+│
+├── project-specs/   design records (silva-spec*, tessera-*, etc.)
+├── episodes/        Novum Fundamentum TV-show scripts (1 lib = 1 episode)
+├── vim/             editor integration: Latin-C syntax + ftdetect
+├── lint/            house lint probationes
+├── instrumenta/     standalone code generators (nuntium_schema_generare)
+├── docs/  reference/  study/  stml-parser-reference/   documentation & notes
+├── data/  book_assets/  gutenberg-data/  output/       data & generated output
+├── bin/  build/  vendor/  scripts/                     binaries, artifacts, 3rd-party, scripts
+└── .claude/         claude code config (+ MEMORY.md auto-memory)
 
 
-LIBRARY DEPENDENCY TIERS
+LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
 ------------------------
 
     ┌─────────────────────────────────────────────────────────────┐
@@ -50,6 +73,7 @@ LIBRARY DEPENDENCY TIERS
     │  uuid.h ────── UUID generation                              │
     │  utf8.h ────── UTF-8 encoding                               │
     │  base64.h ──── Base64 encode/decode                         │
+    │  sigillum.h ── Content seal (SHA-256, FIPS 180-4)           │
     └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -59,17 +83,22 @@ LIBRARY DEPENDENCY TIERS
     │  ┌─ Strings ───────────┐  ┌─ Collections ─────────┐         │
     │  │ chorda_aedificator  │  │ tabula_dispersa (hash)│         │
     │  │ internamentum       │  │ filum (linked list)   │         │
-    │  └─────────────────────┘  │ friatio (hashing)     │         │
-    │                           └───────────────────────┘         │
+    │  │ similitudo (fzf)    │  │ friatio (hashing)     │         │
+    │  └─────────────────────┘  └───────────────────────┘         │
     │  ┌─ Data Formats ──────┐  ┌─ Entity System ───────┐         │
     │  │ json, xml, toml     │  │ entitas               │         │
     │  │ stml, nuntium       │  │ entitas_repositorium  │         │
-    │  └─────────────────────┘  │ persistentia          │         │
-    │                           └───────────────────────┘         │
+    │  │ nuntium_schema      │  │ persistentia          │         │
+    │  └─────────────────────┘  └───────────────────────┘         │
+    │  ┌─ Messaging ─────────┐  ┌─ Documents ───────────┐         │
+    │  │ cursus (msg bus)    │  │ scrinium (doc archive)│         │
+    │  │ tractator (handlers)│  │ tabellarius (JSON-RPC)│         │
+    │  └─────────────────────┘  └───────────────────────┘         │
     │  ┌─ Utilities ─────────────────────────────────────┐        │
     │  │ uri, url, via (paths), tempus, fasti            │        │
     │  │ argumenta, sectio, symbola, iter_directoria     │        │
     │  │ exemplar (templates), quaerere (search)         │        │
+    │  │ vigilia (resident-process watch)                │        │
     │  └─────────────────────────────────────────────────┘        │
     └─────────────────────────────────────────────────────────────┘
                               │
@@ -84,18 +113,23 @@ LIBRARY DEPENDENCY TIERS
     │  │       └──────────────────┬────────────────────┘     │    │
     │  │                          ▼                          │    │
     │  │    arbor_quaestio    arbor_formator    arbor_index  │    │
-    │  │    arbor_typus                                      │    │
-    │  │                          │                          │    │
+    │  │    arbor_typus            │                         │    │
     │  │                          ▼                          │    │
     │  │                   arbor.h (facade)                  │    │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
     │  ┌─ ARBOR2 (GLR Parser Framework) ─────────────────────┐    │
-    │  │                                                     │    │
     │  │  arbor2_lexema ──► arbor2_token ──► arbor2_glr      │    │
-    │  │                                     arbor2_glr_tabula│   │
     │  │  arbor2_expandere (grammar expansion)               │    │
+    │  │  arbor2_conditio_evaluare   arbor2_scribere (AST→src)│   │
+    │  │  arbor2_lapifex_adaptator (bridge to lapifex)       │    │
     │  └─────────────────────────────────────────────────────┘    │
+    │                                                             │
+    │  ┌─ LAPIFEX (C89 parser gen) ──── frozen / reference ──┐    │
+    │  │  lapifex_lexere ──► lapifex_parsere                 │    │
+    │  │  lapifex_c89   lapifex_glr   lapifex_generare       │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │       (all of arbor/arbor2/lapifex superseded by silva/)    │
     │                                                             │
     │  ┌─ SPUTNIK (Custom Language) ─────────────────────────┐    │
     │  │  sputnik_lexema ──► sputnik_parser ──► sputnik_interpres │
@@ -104,10 +138,12 @@ LIBRARY DEPENDENCY TIERS
     │                                                             │
     │  ┌─ Graphics/Rendering ────────────────────────────────┐    │
     │  │  color, coloratio ─── color systems                 │    │
-    │  │  fons, fons_visus ─── font rendering                │    │
+    │  │  fons, fons_visus, fons_6x8 ─── font rendering      │    │
     │  │  delineare ────────── 2D drawing primitives         │    │
     │  │  imago, imago_opus ── image processing              │    │
     │  │  dithering ────────── dithering algorithms          │    │
+    │  │  cursor ───────────── custom mouse cursor           │    │
+    │  │  tabula_characterum ─ 2D character grid (text edit) │    │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
     │  ┌─ UI Framework ──────────────────────────────────────┐    │
@@ -116,11 +152,15 @@ LIBRARY DEPENDENCY TIERS
     │  │      │                                              │    │
     │  │      ▼                                              │    │
     │  │  widget ──► layout ──► pagina ──► schirmata         │    │
+    │  │  elementa (immediate-mode GUI components)           │    │
     │  │      │                                              │    │
-    │  │      ├── dialogus (dialogs)                         │    │
+    │  │      ├── dialogus, dialogus_importatio (dialogs)    │    │
     │  │      ├── registrum_commandi (commands)              │    │
     │  │      ├── registrum_widget (widget registry)         │    │
     │  │      ├── selectio (selection)                       │    │
+    │  │      ├── pinacotheca_visus, importatio_visus        │    │
+    │  │      ├── calendario_visus (liturgical widget)       │    │
+    │  │      ├── arx_caeli (spatial map/card editor)        │    │
     │  │      └── paginarium, sententia_* (pagination)       │    │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
@@ -131,6 +171,7 @@ LIBRARY DEPENDENCY TIERS
     │  │  calendarium_liturgicum ── liturgical calendar      │    │
     │  │  sanctorale ────────────── saints calendar          │    │
     │  │  navigator_entitatum ───── entity navigation        │    │
+    │  │  tempestivum ───────────── timer entities           │    │
     │  │  vim ───────────────────── vim keybindings          │    │
     │  │  thema, thema_visus ────── theming                  │    │
     │  └─────────────────────────────────────────────────────┘    │
@@ -157,19 +198,20 @@ TOOLS
 -----
 
 tools/
-├── glr_debug.c ─────────────────── Debug GLR parser
-├── glr_quaestio.c ──────────────── Query GLR parser (clone)
-├── sputnik.c ───────────────────── Sputnik interpreter
-├── genera_biblia.c ─────────────── Generate Bible database
-├── gutenberg_index.c ───────────── Index Gutenberg books
-├── gutenberg_census.c ──────────── Analyze Gutenberg collection
-├── lector_eventuum.c ───────────── Event/log reader
-├── librarium_collector.c ───────── Collect books into library
-├── librarium_merge.c ───────────── Merge library files
-├── capsula_generare.c ──────────── Generate asset capsule
-├── capsula_caudae_adiungere.c ─── Add assets to capsule
-├── fons_merge.c ─────────────────── Merge font files
-└── bitsyfont_ad_fons.c ─────────── Convert bitmap font
+├── generare.c ─────────────────────── Run codegen directives pre-compile
+├── glr_debug.c ─────────────────────── Debug GLR parser
+├── glr_quaestio.c ─────────────────── Query GLR parser (clone)
+├── sputnik.c ───────────────────────── Sputnik interpreter
+├── genera_biblia.c ─────────────────── Generate Bible database
+├── gutenberg_index.c ──────────────── Index Gutenberg books
+├── gutenberg_census.c ─────────────── Analyze Gutenberg collection
+├── lector_eventuum.c ──────────────── Event/log reader
+├── librarium_collector.c ──────────── Collect books into library
+├── librarium_merge.c ──────────────── Merge library files
+├── capsula_generare.c ─────────────── Generate asset capsule
+├── capsula_caudae_adiungere.c ─────── Add assets to capsule
+├── fons_merge.c ───────────────────── Merge font files
+└── bitsyfont_ad_fons.c ────────────── Convert bitmap font
 
 
 KEY PATTERNS
@@ -184,11 +226,16 @@ Strings:    chorda = {i32 mensura; i8* datum}
             Use internamentum for deduplication
 
 Data:       nuntium ──► protobuf-style binary (compact, typed)
+            nuntium_schema ──► schema language for nuntium messages
             json/xml/toml/stml ──► text formats
 
 Entity:     entitas ──► properties with typed values
             entitas_repositorium ──► event sourcing storage
             persistentia ──► memory or file backend
+
+Records:    tabularium ──► append-only JSONL ledger (gesta/) behind the
+                           tabularii MCP; the project board lives here,
+                           not in prose
 
 
 BUILD
@@ -202,6 +249,7 @@ Flags:      -pedantic -Wall -Wextra -Werror -Wconversion
 Scripts:    ./compile_tests.sh <pattern>  ── run tests matching pattern
             ./compile_tools.sh            ── compile all tools
             ./compile_library.sh          ── compile library
+            (subprojects have their own ./compile_probationes.sh)
 
 
 NOTES
@@ -209,6 +257,11 @@ NOTES
 
 - All code in Latin (identifiers, comments, messages)
 - "nomen" is a macro for typedef, don't use as variable name
+  (every word #defined in latina.h is a reserved identifier)
 - Platform: macOS only (platform layer exists for future porting)
 - Tests use credo.h framework (see probationes/probatio_piscina.c)
 - Worklogs: lib/foo.worklog.md for non-obvious decisions
+- Subprojects (silva/officina/tessera/saltuarius/knotapel/gesta) are
+  self-contained: read each one's phase-log.md + CLAUDE.md first
+- The project ledger is the tabularii MCP, not this file; MAP.txt is a
+  structural orientation map, the store is the live board
