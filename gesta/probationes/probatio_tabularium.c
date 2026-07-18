@@ -1004,6 +1004,97 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "res ignota") != NIHIL);
     }
 
+    /* ================================================
+     * XXII. K4.2 ergonomia: origo + similia + breviter
+     * ================================================ */
+    {
+        /* schemata nova in tools/list */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":100,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "\"origo\"") != NIHIL);
+        CREDO_VERUM (strstr(r, "\"breviter\"") != NIHIL);
+
+        /* origo in addere: eventus provenientiam datam fert
+         * (annales JSONL = via probationis vilissima - totum iter
+         * scripturae tegit) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":101,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Messis probationis\",\"origo\":"
+            "\"messis-probatio\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        {
+            constans character* an = _plagula_litterae(piscina,
+                VIA_AN);
+
+            CREDO_VERUM (strstr(an, "messis-probatio") != NIHIL);
+        }
+
+        /* origo in gerere (nota) - eadem via */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":102,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Parsura lenta\","
+            "\"actus\":\"nota\",\"textus\":\"adnotatio"
+            " provenientiae\",\"origo\":\"sessio-42\"}}}");
+        CREDO_VERUM (strstr(r, "scriptum") != NIHIL);
+        {
+            constans character* an = _plagula_litterae(piscina,
+                VIA_AN);
+
+            CREDO_VERUM (strstr(an, "sessio-42") != NIHIL);
+        }
+
+        /* similia: titulus verba cum 'Parsura lenta' communia -
+         * vicinus in responso creationis nominatur */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":103,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Parsura tarda\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        CREDO_VERUM (strstr(r, "similia:") != NIHIL);
+        CREDO_VERUM (strstr(r, "Parsura lenta") != NIHIL);
+
+        /* titulus alienus - nihil simile, nihil appensum */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":104,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Zyx wvut\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        CREDO_VERUM (strstr(r, "similia:") == NIHIL);
+
+        /* breviter: corpus + notae ultimae (III ex III) +
+         * caput; datum crudum, ancorae, annales ABSENT */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":105,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Parsura lenta\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "res_id") != NIHIL);
+        CREDO_VERUM (strstr(r, "corpus expansio macronis tarda")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "notae (3 ex 3") != NIHIL);
+        CREDO_VERUM (strstr(r, "adnotatio provenientiae")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "datum") == NIHIL);
+        CREDO_VERUM (strstr(r, "annales") == NIHIL);
+        CREDO_VERUM (strstr(r, "ancora") == NIHIL);
+
+        /* breviter cum affordantiis (Affordata tractum manet) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":106,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Affordata\","
+            "\"breviter\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "actiones: claudere-cum-decreto")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "datum") == NIHIL);
+
+        /* res plena immutata (datum + annales adhuc redduntur) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":107,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Parsura lenta\"}}}");
+        CREDO_VERUM (strstr(r, "datum") != NIHIL);
+        CREDO_VERUM (strstr(r, "annales") != NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

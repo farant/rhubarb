@@ -26,14 +26,17 @@ interior constans character* constans TABULARII_DOCTRINA =
     "Claude notas/parca/decreta per debriefs SPONTE scribit (sine "
     "confirmatione singula - recensio per quaestiones, non portas). "
     "addere {genus, titulus, corpus?, tags? (commatibus), ancorae? "
-    "(JSON), actor?} = res nova. gerere {res (id, praefixum ULID"
+    "(JSON), actor?, origo?} = res nova (similia FTS in responso - "
+    "custos duplicationum). gerere {res (id, praefixum ULID"
     " inambiguum, aut titulus), "
     "actus: nota|status|nexus|denexus|mutatio|remotio, textus?/"
-    "novus?/verbum?/alterum?/clavis?/valor?/datum?} = eventus unus. "
+    "novus?/verbum?/alterum?/clavis?/valor?/datum?/origo?} = "
+    "eventus unus. "
     "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
     "Latinum: praefixa 'parsur*' - stemmata Anglica sola). res "
-    "{res} = status + ancorae (CAUTIO si inresolutae) + actiones "
-    "affordatae + annales. "
+    "{res, breviter?} = status + ancorae (CAUTIO si inresolutae) + "
+    "actiones affordatae + annales; breviter \"verum\" = compendium "
+    "(corpus + notae ultimae III + actiones, sine dato crudo). "
     "census {} = genera x status + tags + arretrata. "
     "agere {actio?|processus?, ligamina? (JSON: ops->res_id|"
     "titulus), argumenta? (JSON), actor?} = K3: actionem exsequi "
@@ -910,7 +913,8 @@ _verbum_vinculi (Tabularium* t, chorda vinculum, Piscina* pn)
 interior b32
 _membrum_scribere (Tabularium* t, Piscina* pn,
     constans character* vinculum, constans character* pars,
-    chorda membrum, constans character* actor_l)
+    chorda membrum, constans character* actor_l,
+    constans character* origo_l)
 {
     JsonValor* d = json_objectum_creare(pn);
     GestaEventum ev;
@@ -923,7 +927,7 @@ _membrum_scribere (Tabularium* t, Piscina* pn,
     ev.genus_eventus = "membrum-additum";
     ev.datum = _litterae(pn, json_scribere(d, pn));
     ev.actor = actor_l;
-    ev.origo = "mcp";
+    ev.origo = origo_l;
     redde gesta_scribere(t->mundus, &ev, NIHIL);
 }
 
@@ -1335,6 +1339,100 @@ _tabulam_scribere (Tabularium* t, Piscina* pn)
 interior chorda
 _ramum_solvere (Tabularium* t, chorda clavis, Piscina* pn);
 
+interior b32
+_littera_aut_cifra (i8 octetus)
+{
+    character c = (character)octetus;
+
+    redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9');
+}
+
+/* similia post creationem (K4.2): vicini FTS tituli novi - custos
+ * duplicationum ipso momento scripturae (quaere-ante saepe
+ * praetermittitur). Termini = verba tituli (>= III char., usque
+ * VIII) praefixata '*' disiuncta OR - idioma Latinum; bm25
+ * ordinat, IDF verba communia deprimit. Res nova ipsa excluditur
+ * (exhaustio pigra eam ante lectionem indicavit). Error syntaxis
+ * MATCH = fructus vacuus = nihil appenditur (honestum). */
+interior vacuum
+_similia_reddere (Tabularium* t, ChordaAedificator* aed,
+    chorda titulus, constans character* res_id_nova, Piscina* pn)
+{
+    ChordaAedificator* qa = chorda_aedificator_creare(pn, CCLVI);
+    Xar* inventa;
+    i32 i = ZEPHYRUM;
+    i32 termini = ZEPHYRUM;
+    i32 reddita = ZEPHYRUM;
+
+    si (qa == NIHIL)
+    {
+        redde;
+    }
+    dum (i < titulus.mensura && termini < VIII)
+    {
+        i32 initium;
+
+        dum (i < titulus.mensura
+            && !_littera_aut_cifra(titulus.datum[i]))
+        {
+            i++;
+        }
+        initium = i;
+        dum (i < titulus.mensura
+            && _littera_aut_cifra(titulus.datum[i]))
+        {
+            i++;
+        }
+        si (i - initium >= III)
+        {
+            chorda verbum;
+
+            verbum.datum = titulus.datum + initium;
+            verbum.mensura = i - initium;
+            si (termini > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(qa, " OR ");
+            }
+            chorda_aedificator_appendere_chorda(qa, verbum);
+            chorda_aedificator_appendere_literis(qa, "*");
+            termini++;
+        }
+    }
+    si (termini == ZEPHYRUM)
+    {
+        redde;
+    }
+    inventa = gesta_quaerere(t->mundus,
+        _litterae(pn, chorda_aedificator_finire(qa)), NIHIL, NIHIL,
+        pn);
+    si (inventa == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM;
+         i < xar_numerus(inventa) && reddita < III; i++)
+    {
+        GestaInventum* inv = (GestaInventum*)xar_obtinere(inventa,
+            i);
+
+        si (inv == NIHIL || _chorda_est(inv->res_id, res_id_nova))
+        {
+            perge;
+        }
+        chorda_aedificator_appendere_literis(aed,
+            reddita == ZEPHYRUM ? "\nsimilia:\n  " : "\n  ");
+        chorda_aedificator_appendere_chorda(aed, inv->res_id);
+        chorda_aedificator_appendere_literis(aed, "  ");
+        chorda_aedificator_appendere_chorda(aed, inv->genus);
+        chorda_aedificator_appendere_literis(aed, "/");
+        chorda_aedificator_appendere_chorda(aed, inv->status);
+        chorda_aedificator_appendere_literis(aed, "  ");
+        chorda_aedificator_appendere_chorda(aed, inv->titulus);
+        reddita++;
+    }
+}
+
 interior vacuum
 _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     JsonValor* argumenta, FILE* effusio)
@@ -1345,6 +1443,7 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     chorda tags = _arg(argumenta, "tags");
     chorda ancorae = _arg(argumenta, "ancorae");
     chorda actor = _arg(argumenta, "actor");
+    chorda origo = _arg(argumenta, "origo");
     chorda ramus_arg = _arg(argumenta, "ramus");
     chorda ramus_id;
     JsonValor* datum;
@@ -1437,7 +1536,8 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     e.datum = _litterae(pn, datum_textus);
     e.actor = actor.mensura > ZEPHYRUM
         ? _litterae(pn, actor) : "claude";
-    e.origo = "mcp";
+    e.origo = origo.mensura > ZEPHYRUM
+        ? _litterae(pn, origo) : "mcp";
     /* in ramo: scriptura iudicata in linea parallela - tabula/FTS
      * trunci intacta (invisibilis usque ad fusionem) */
     si (ramus_id.mensura > ZEPHYRUM)
@@ -1519,6 +1619,7 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
                 " adhibe", (int)eodem_titulo);
             chorda_aedificator_appendere_literis(aed, cautio);
         }
+        _similia_reddere(t, aed, titulus, res_id, pn);
         _textum_respondere(t, pn, effusio, id,
             chorda_aedificator_finire(aed), FALSUM);
     }
@@ -1531,7 +1632,10 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
     chorda clavis = _arg(argumenta, "res");
     chorda actus = _arg(argumenta, "actus");
     chorda actor = _arg(argumenta, "actor");
+    chorda origo = _arg(argumenta, "origo");
     chorda ramus_arg = _arg(argumenta, "ramus");
+    constans character* origo_l = origo.mensura > ZEPHYRUM
+        ? _litterae(pn, origo) : "mcp";
     chorda ramus_id;
     chorda res_id;
     JsonValor* datum = json_objectum_creare(pn);
@@ -1664,12 +1768,12 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         ev.genus_eventus = "creatio";
         ev.datum = _litterae(pn, json_scribere(d, pn));
         ev.actor = actor_l;
-        ev.origo = "mcp";
+        ev.origo = origo_l;
         si (!gesta_scribere(t->mundus, &ev, vinculum_id)
             || !_membrum_scribere(t, pn, vinculum_id, "a",
-                   res_id, actor_l)
+                   res_id, actor_l, origo_l)
             || !_membrum_scribere(t, pn, vinculum_id, "b",
-                   membrum_b, actor_l))
+                   membrum_b, actor_l, origo_l))
         {
             _textum_respondere(t, pn, effusio, id,
                 _ch("scriptura vinculi fracta"), VERUM);
@@ -1769,7 +1873,7 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         ev.genus_eventus = "status";
         ev.datum = "{\"novus\":\"solutum\"}";
         ev.actor = actor_l;
-        ev.origo = "mcp";
+        ev.origo = origo_l;
         si (!gesta_scribere(t->mundus, &ev, NIHIL))
         {
             _textum_respondere(t, pn, effusio, id,
@@ -1848,7 +1952,7 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
     e.datum = _litterae(pn, json_scribere(datum, pn));
     e.actor = actor.mensura > ZEPHYRUM
         ? _litterae(pn, actor) : "claude";
-    e.origo = "mcp";
+    e.origo = origo_l;
     /* in ramo: eventus iudicatus in linea parallela (custodia
      * contra statum RAMI); tabula trunci intacta */
     si (ramus_id.mensura > ZEPHYRUM)
@@ -2009,12 +2113,188 @@ _tab_quaerere (Tabularium* t, Piscina* pn, JsonValor* id,
         chorda_aedificator_finire(aed), FALSUM);
 }
 
+/* caput rei (linea prima + res_id + tempora) - commune redditione
+ * plena et breviario (K4.2: ne formae divergant) */
+interior vacuum
+_caput_rei_reddere (Tabularium* t, ChordaAedificator* aed,
+    chorda res_id, Piscina* pn)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT genus, titulus, status, creatum, mutatum"
+        " FROM res WHERE res_id = ?");
+
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    scrinium_ligare_textum(e, I, res_id);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda_aedificator_appendere_chorda(aed,
+            scrinium_columna_textus(e, I, pn));
+        chorda_aedificator_appendere_literis(aed, " (");
+        chorda_aedificator_appendere_chorda(aed,
+            scrinium_columna_textus(e, 0, pn));
+        chorda_aedificator_appendere_literis(aed, ", ");
+        chorda_aedificator_appendere_chorda(aed,
+            scrinium_columna_textus(e, II, pn));
+        chorda_aedificator_appendere_literis(aed,
+            ")\nres_id ");
+        chorda_aedificator_appendere_chorda(aed, res_id);
+        chorda_aedificator_appendere_literis(aed,
+            "\ncreatum ");
+        chorda_aedificator_appendere_chorda(aed,
+            scrinium_columna_textus(e, III, pn));
+        chorda_aedificator_appendere_literis(aed,
+            "  mutatum ");
+        chorda_aedificator_appendere_chorda(aed,
+            scrinium_columna_textus(e, IV, pn));
+    }
+    scrinium_finire(e);
+}
+
+/* affordantiae (K3 superficies passiva) - commune */
+interior vacuum
+_actiones_reddere (Tabularium* t, ChordaAedificator* aed,
+    chorda res_id, Piscina* pn)
+{
+    Xar* act = gesta_actiones_rei(t->mundus,
+        _litterae(pn, res_id), pn);
+
+    si (act != NIHIL && xar_numerus(act) > ZEPHYRUM)
+    {
+        i32 i;
+
+        chorda_aedificator_appendere_literis(aed,
+            "\nactiones:");
+        per (i = ZEPHYRUM; i < xar_numerus(act); i++)
+        {
+            chorda* c = (chorda*)xar_obtinere(act, i);
+
+            si (c == NIHIL)
+            {
+                perge;
+            }
+            chorda_aedificator_appendere_literis(aed,
+                i > ZEPHYRUM ? ", " : " ");
+            chorda_aedificator_appendere_chorda(aed, *c);
+        }
+    }
+}
+
+/* compendium rei (K4.2 'breviter'): corpus ut textus purus + notae
+ * ultimae III (plicatura eas in statum iam fert) + affordantiae.
+ * OMISSA: datum crudum, ancorae (IO plagularum + sigilla), socii,
+ * salus, annales - lectio parcorum vili pro lectore
+ * context-budgetato. */
+interior vacuum
+_breviarium_reddere (Tabularium* t, ChordaAedificator* aed,
+    chorda res_id, JsonValor* st, Piscina* pn)
+{
+    _caput_rei_reddere(t, aed, res_id, pn);
+    si (st != NIHIL)
+    {
+        JsonValor* corpus_v = json_objectum_capere(st, "corpus");
+        JsonValor* tags_v = json_objectum_capere(st, "tags");
+        JsonValor* notae_v = json_objectum_capere(st, "notae");
+
+        si (corpus_v != NIHIL && json_est_chorda(corpus_v))
+        {
+            chorda_aedificator_appendere_literis(aed,
+                "\ncorpus ");
+            chorda_aedificator_appendere_chorda(aed,
+                json_ad_chorda(corpus_v));
+        }
+        si (tags_v != NIHIL && json_est_tabulatum(tags_v)
+            && json_tabulatum_numerus(tags_v) > ZEPHYRUM)
+        {
+            i32 i;
+
+            chorda_aedificator_appendere_literis(aed, "\ntags ");
+            per (i = ZEPHYRUM;
+                 i < json_tabulatum_numerus(tags_v); i++)
+            {
+                JsonValor* tg = json_tabulatum_obtinere(tags_v,
+                    i);
+
+                si (tg == NIHIL || !json_est_chorda(tg))
+                {
+                    perge;
+                }
+                si (i > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_literis(aed,
+                        " ");
+                }
+                chorda_aedificator_appendere_chorda(aed,
+                    json_ad_chorda(tg));
+            }
+        }
+        si (notae_v != NIHIL && json_est_tabulatum(notae_v)
+            && json_tabulatum_numerus(notae_v) > ZEPHYRUM)
+        {
+            i32 n = json_tabulatum_numerus(notae_v);
+            i32 ostendendae = n > III ? III : n;
+            character numeri[LXIV];
+            i32 i;
+
+            sprintf(numeri, "\nnotae (%d ex %d, recentissima"
+                " primum):", (int)ostendendae, (int)n);
+            chorda_aedificator_appendere_literis(aed, numeri);
+            per (i = ZEPHYRUM; i < ostendendae; i++)
+            {
+                JsonValor* nv = json_tabulatum_obtinere(notae_v,
+                    n - I - i);
+                JsonValor* tx;
+                JsonValor* cr;
+                JsonValor* ac;
+
+                si (nv == NIHIL || !json_est_objectum(nv))
+                {
+                    perge;
+                }
+                tx = json_objectum_capere(nv, "textus");
+                cr = json_objectum_capere(nv, "creatum");
+                ac = json_objectum_capere(nv, "actor");
+                chorda_aedificator_appendere_literis(aed,
+                    "\n  ");
+                si (cr != NIHIL && json_est_chorda(cr))
+                {
+                    chorda_aedificator_appendere_chorda(aed,
+                        json_ad_chorda(cr));
+                }
+                si (ac != NIHIL && json_est_chorda(ac))
+                {
+                    chorda_aedificator_appendere_literis(aed,
+                        " (");
+                    chorda_aedificator_appendere_chorda(aed,
+                        json_ad_chorda(ac));
+                    chorda_aedificator_appendere_literis(aed,
+                        ")");
+                }
+                chorda_aedificator_appendere_literis(aed, "  ");
+                si (tx != NIHIL && json_est_chorda(tx))
+                {
+                    chorda_aedificator_appendere_chorda(aed,
+                        json_ad_chorda(tx));
+                }
+            }
+        }
+    }
+    _actiones_reddere(t, aed, res_id, pn);
+}
+
 interior vacuum
 _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
     JsonValor* argumenta, FILE* effusio)
 {
     chorda clavis = _arg(argumenta, "res");
     chorda ramus_arg = _arg(argumenta, "ramus");
+    chorda breviter = _arg(argumenta, "breviter");
+    b32 breviter_est = _chorda_est(breviter, "verum")
+        || _chorda_est(breviter, "true")
+        || _chorda_est(breviter, "ita");
     chorda res_id;
     chorda datum;
     JsonValor* st = NIHIL;
@@ -2160,40 +2440,14 @@ _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
         }
     }
     aed = chorda_aedificator_creare(pn, 4096);
+    si (breviter_est)
     {
-        ScriniumEnuntiatum* e = scrinium_praeparare(
-            gesta_scrinium(t->mundus),
-            "SELECT genus, titulus, status, creatum, mutatum"
-            " FROM res WHERE res_id = ?");
-
-        si (e != NIHIL)
-        {
-            scrinium_ligare_textum(e, I, res_id);
-            si (scrinium_gradi(e) == SCRINIUM_ORDO)
-            {
-                chorda_aedificator_appendere_chorda(aed,
-                    scrinium_columna_textus(e, I, pn));
-                chorda_aedificator_appendere_literis(aed, " (");
-                chorda_aedificator_appendere_chorda(aed,
-                    scrinium_columna_textus(e, 0, pn));
-                chorda_aedificator_appendere_literis(aed, ", ");
-                chorda_aedificator_appendere_chorda(aed,
-                    scrinium_columna_textus(e, II, pn));
-                chorda_aedificator_appendere_literis(aed,
-                    ")\nres_id ");
-                chorda_aedificator_appendere_chorda(aed, res_id);
-                chorda_aedificator_appendere_literis(aed,
-                    "\ncreatum ");
-                chorda_aedificator_appendere_chorda(aed,
-                    scrinium_columna_textus(e, III, pn));
-                chorda_aedificator_appendere_literis(aed,
-                    "  mutatum ");
-                chorda_aedificator_appendere_chorda(aed,
-                    scrinium_columna_textus(e, IV, pn));
-            }
-            scrinium_finire(e);
-        }
+        _breviarium_reddere(t, aed, res_id, st, pn);
+        _textum_respondere(t, pn, effusio, id,
+            chorda_aedificator_finire(aed), FALSUM);
+        redde;
     }
+    _caput_rei_reddere(t, aed, res_id, pn);
     chorda_aedificator_appendere_literis(aed, "\ndatum ");
     chorda_aedificator_appendere_chorda(aed, datum);
     si (st != NIHIL)
@@ -2280,30 +2534,7 @@ _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
     }
     /* affordantiae (K3 - superficies passiva): actiones quae rem
      * NUNC ligare possunt */
-    {
-        Xar* act = gesta_actiones_rei(t->mundus,
-            _litterae(pn, res_id), pn);
-
-        si (act != NIHIL && xar_numerus(act) > ZEPHYRUM)
-        {
-            i32 i;
-
-            chorda_aedificator_appendere_literis(aed,
-                "\nactiones:");
-            per (i = ZEPHYRUM; i < xar_numerus(act); i++)
-            {
-                chorda* c = (chorda*)xar_obtinere(act, i);
-
-                si (c == NIHIL)
-                {
-                    perge;
-                }
-                chorda_aedificator_appendere_literis(aed,
-                    i > ZEPHYRUM ? ", " : " ");
-                chorda_aedificator_appendere_chorda(aed, *c);
-            }
-        }
-    }
+    _actiones_reddere(t, aed, res_id, pn);
     /* annales entis (XV eventa recentissima) */
     {
         ScriniumEnuntiatum* e = scrinium_praeparare(
@@ -3169,6 +3400,8 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
           "\"scopus\":\"...\",\"sigillum\":\"hex?\"}]", FALSUM },
         { "actor", "fran|claude|machina (ordinarius claude)",
           FALSUM },
+        { "origo", "provenientia eventus (ordinarius mcp; e.g."
+          " messis-2026-07, sessio)", FALSUM },
         { "ramus", "titulus rami activi - creatio in ramo (trunco"
           " invisibilis usque ad fusionem)", FALSUM }
     };
@@ -3187,6 +3420,8 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         { "datum", "pro mutatione: obiectum JSON crudum", FALSUM },
         { "actor", "fran|claude|machina (ordinarius claude)",
           FALSUM },
+        { "origo", "provenientia eventus (ordinarius mcp; e.g."
+          " messis-2026-07, sessio)", FALSUM },
         { "ramus", "titulus rami activi - eventus in ramo"
           " (custodia contra statum rami)", FALSUM }
     };
@@ -3199,6 +3434,9 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
     interior constans TabArgumentum ARG_RES[] = {
         { "res", "res_id (aut praefixum ULID inambiguum >= 6 char.)"
           " aut titulus exactus (in ramo: res_id SOLUM)", VERUM },
+        { "breviter", "\"verum\" = compendium (corpus + notae"
+          " ultimae III + actiones; sine dato crudo/ancoris/"
+          "annalibus)", FALSUM },
         { "ramus", "titulus rami - lectio plicaturae ramalis",
           FALSUM }
     };
@@ -3232,13 +3470,14 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
 
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "addere",
         "Rem novam creare (quaestio/parcum/decretum/nota/"
-        "desideratum) cum tags et ancoris optionalibus.",
-        ARG_ADDERE, VII));
+        "desideratum) cum tags et ancoris optionalibus; similia"
+        " FTS in responso (custos duplicationum).",
+        ARG_ADDERE, VIII));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "gerere",
         "Eventum unum in rem exsistentem scribere: nota, status,"
         " nexus/denexus (ligamina), mutatio, remotio. Violationes"
         " machinae notantur, non obstant.",
-        ARG_GERERE, XI));
+        ARG_GERERE, XII));
     json_tabulatum_addere(instrumenta, _instrumentum(pn,
         "quaerere",
         "Quaestio FTS super statum materializatum (titulus/corpus/"
@@ -3247,8 +3486,8 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "res",
         "Rem unam reddere: status + datum + ancorae (resolutae per"
         " indicem; CAUTIO si inresolutae) + actiones affordatae +"
-        " annales recentes.",
-        ARG_RES, II));
+        " annales recentes. breviter \"verum\" = compendium.",
+        ARG_RES, III));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "census",
         "Census: genera x status, tags, seq/hwm.",
         NIHIL, ZEPHYRUM));

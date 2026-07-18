@@ -1067,3 +1067,76 @@ danger. Suites: vigilia +14, gesta 680+160, officina 12/12 (three
 outdated expectations updated: old message text x2, tool count
 VI->VII). examen ACCIPE all three files. Residents need
 relink+reconnect.
+
+## K4.2 ERGONOMIA INTENTIO: similia + breviter + origo (2026-07-18)
+
+Pull from park 01KXTY8SCR (items 1-2) + desideratum 01KXJ3F6TH
+(origo). All tenant-surface (tabularium.c): no kernel change, no
+migration, no fold change.
+
+1. SIMILIA-ON-ADDERE: after a successful trunk creatio, run FTS
+   with terms built from the new titulus (alnum word runs >= III
+   chars, max VIII, each prefixed-'*', joined OR - the Latin
+   prefix idiom; bm25 ranks, IDF downweights common words) and
+   append up to III neighbors "res_id genus/status titulus",
+   excluding the new res itself (lazy drain indexes it before the
+   read). Zero neighbors = nothing appended. FTS syntax error =
+   empty result (documented honesty) = nothing appended. Branch
+   addere unchanged (trunk FTS is blind to rami by construction).
+   Complements the existing duplicate-title CAUTIO: that guards
+   exact collision, similia guards the near-miss.
+
+2. RES BREVITER: 'breviter' param on res ("verum"/"true"/"ita",
+   the vis idiom). Compact render = header (titulus/genus/status/
+   res_id/creatum/mutatum) + corpus as clean text + tags + notae
+   ultimae III (from the state notae array the reducer already
+   folds - newest first, count shown "III ex N") + actiones
+   (affordances). OMITTED: raw datum JSON, ancorae (file IO +
+   hashing), socii, salus, annales. In-ramo reading ignores
+   breviter (already macra). Header + actiones factored into
+   shared helpers so full and brief paths cannot drift.
+
+3. ORIGO ARG: optional 'origo' on addere + gerere, default "mcp"
+   unchanged. Threads all gerere paths: main event, in-ramo,
+   nexus sugar (creation + both membra via _membrum_scribere,
+   which gains an origo param), denexus solutum. Retires the
+   messis-tag-as-provenance workaround for future backfills.
+
+Schemas VII->VIII (addere), XI->XII (gerere), II->III (res);
+doctrine lines updated. Tests: origo via annales JSONL strstr
+(cheapest full-path check) + default; similia positive (shared
+title words) + negative (alien title); breviter presence/absence
+asserts. Seal: suites green + examen -posix ACCIPE + relink note.
+
+## K4.2 ERGONOMIA RELATIO: similia + breviter + origo (2026-07-18)
+
+All three shipped as speced, one INTENTIO deviation of note: none.
+Suites 2/2 (gesta 680 intact, tabularium +~20 asserts, section
+XXII); examen -posix ACCIPE zero diagnostics; resident + cold
+path relinked.
+
+FIND OF THE DAY (not in the intentio): frigida.sh's link list was
+missing vigilia.o - a LATENT break since K2.2 gave tabularium.o
+the vigilia dependency. The cached nota_frigida binary hid it;
+today's tabularium.c edit forced the relink and the cold path
+failed on undefined _vigilia_* symbols. One-word fix (vigilia in
+the object loop). Lesson rhymes with the K1.1 launcher-relink bug:
+mtime-gated builds hide dead link lists until the trigger file
+changes - excubitor HAD been flagging nota_frigida STALUM for
+days; a standing STALUM on a binary nobody spawns is exactly
+where this class hides.
+
+Mechanics that held: notae live in the folded state (reducer
+appends {textus, actor, creatum}) so breviter needed zero new
+queries; similia rides gesta_quaerere's lazy drain (new res
+indexed before the read, self-excluded by res_id); origo was
+pure plumbing (kernel field existed since K1 - the tenant just
+never exposed it).
+
+Residents: build/tabularium relinked - Fran reconnects via /mcp
+to serve origo/similia/breviter; the running resident announces
+its own staleness meanwhile (K2.1 working as designed).
+
+Store: desideratum origo -> impletum; park 01KXTY8SCR closed via
+claudere-cum-decreto (the flagship action closing its own
+ergonomics park); items 3-5 re-parcata as residua park.
