@@ -25,13 +25,19 @@ reads invisible, member stores = may-def of the whole, whole-value
 uses fire. Corpus cleanliness under -Wall = free negative oracle for
 classes 1+2 exactly.
 
-**Missing calibration pins — THREE now (specimens before chunk 0):**
-1. `sizeof(x)` on uninit (expect silent — unevaluated);
-2. member-write-then-whole-value-use (expect residual class — the
-   sigillum datum implies it, confirm directly);
-3. **condition-position short-circuit**: `si (opaque() || (x = 1))`
-   then use x — does clang fire, and does the message name '||' or
-   'if'? This decides §3's condition-position scope.
+**Gate pins — RESOLVED (round 5, s18/s19/s20):**
+1. `sizeof(x)` on uninit: SILENT (unevaluated) — extraction skips
+   magnitudo subtrees.
+2. member-write-then-whole-value-use: SILENT under BOTH flag sets,
+   even with other members never written — **member/element store =
+   FULL def of the whole aggregate** (both bitsets, same as scalar
+   assignment). The sigillum residual fire is re-explained: its
+   element writes sit inside a possibly-zero-trip loop — the
+   residual class came from the loop, not from grain.
+3. condition-position short-circuit: FIRES, "whenever '||' condition
+   is true", in BOTH if-condition and while-condition seats — clang
+   splits condition evaluation. §3's condition-position seat is IN
+   SCOPE, unconditionally.
 
 ## §3 Chunk 0 — CFG surgery (grounded)
 
@@ -58,11 +64,12 @@ TERNARIUS, emits evaluation-segment blocks with VERUS/FALSUS edges
   of `_folium_addere`;
 - **condition position**: the five compound builders (`_si_fluere`
   :434, `_dum_fluere` :500, `_fac_dum_fluere` :544, `_per_fluere`
-  :584, `_commutationem_fluere` :659) — GATED on missing pin #3: if
-  clang fires in condition position (expected — its CFG linearizes
-  everywhere), conditions with short-circuits route through the same
-  helper; if clang is silent there, condition position stays
-  edge-origo-only and the pin documents why.
+  :584, `_commutationem_fluere` :659) — pin #3 resolved IN SCOPE:
+  conditions with short-circuits route through the same helper.
+  Constant folding runs FIRST (existing `_aestimare` on the whole
+  condition); only non-constant trees split. The hard spot is loop
+  conditions: the back edge (and per's passus edge) must target the
+  FIRST condition-segment block, since evaluation restarts whole.
 Statements/conditions without the operators are byte-identical to
 stage 0. The full statement node stays recoverable from any granule
 via pater-climb.
@@ -130,7 +137,7 @@ untracked. `REPOSITIO_REGISTRI` tracks normally.
 
 ### Event extraction
 Per-block ordered `FluxusEventum { identitas, genus (USUS |
-DEFINITIO | DEFINITIO_LOCI | DEFINITIO_FORTASSE), nodus, ordo }`.
+DEFINITIO | DEFINITIO_LOCI), nodus, ordo }`.
 Two sources keyed on edge genus (conditions live on edges): leaf
 statements/granules in order, then the terminal condition expression
 of conditional out-edges (VERUS/FALSUS share origo; switch head =
@@ -138,9 +145,11 @@ pater-climb from a CASUS edge origo). Eval-order rules per v1 §2
 (RHS-before-LHS-def, use-then-def for `+=`/`++`, magnitudo skip,
 &-operand not a read, subscript reads index, declarators
 left-to-right, `int x = x` flagged during extraction).
-DEFINITIO_FORTASSE (may-def) = member/element stores, and any def in
-a residual conditionally-evaluated subexpression the splitter did
-not lift (post-surgery this class should be near-empty).
+Member/element stores emit DEFINITIO of the whole variable (pin #2:
+full def, both bitsets — clang's grain). No may-def event genus
+exists: post-surgery every conditionally-evaluated def sits in its
+own block; if an unliftable case ever appears, it returns as a named
+addition, not a silent weakening.
 &-const: callee symbol via the seam → `typus->datum.functio`
 (`parametra / numerus_parametrorum / est_variadica / est_prototypata`,
 semantica.h:118-124, guard `genus == TYPUS_C89_FUNCTIO`) →
@@ -153,8 +162,8 @@ abstention inherited (69/70 pattern).
 
 Unchanged from v1: predecessor index (margines are outgoing-only,
 one pass); may (union) + must (intersection) bitsets per block, one
-transfer (DEF sets both, DEFINITIO_FORTASSE sets may only,
-DEFINITIO_LOCI = DEF); worklist from introitus; never-visited preds
+transfer (DEFINITIO and DEFINITIO_LOCI both set both bitsets);
+worklist from introitus; never-visited preds
 skipped in meets (folded `si (0)` invisibility = s04d parity,
 structural). No per-use state storage — post-fixpoint re-walk
 judges uses streaming.
@@ -204,7 +213,7 @@ canary.
 
 ## §7 Bars
 
-- Specimens: all 17 + the 3 missing pins graduate to
+- Specimens: all 20 (s01–s20) graduate to
   fixa/examinis as `.suspectum` fixtures with `ORACULUM
   -Wuninitialized` directives (leg ②b′, examen_vectis.sh:194-244;
   grade $4=="suspectum"): firing specimens carry EXSPECTA-PROXIMA
@@ -230,5 +239,3 @@ Unchanged from v1: unknown-callee const-ness assumed non-const;
 setjmp unhandled (named); full clang-style linearization not needed
 for parity (split-at-short-circuit is the v1 granularity contract);
 codex 62 re-arm = its own pull once datorum def-use chains exist.
-NEW: if pin #3 shows clang silent in condition position, condition
-builders stay unsplit and the pin documents the narrower surgery.

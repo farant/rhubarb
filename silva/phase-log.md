@@ -9118,3 +9118,60 @@ default shape for in-place transforms.
 
 Flow stage 1 lands on this: new fixtures are born with relative
 pins, never carrying the absolute-pin debt.
+
+## FLUXUS GRADUS 1 — CHUNK 0 (FINDERE): INTENTIO (2026-07-17)
+
+Pull: park 01KXSETFAP (flow stage 1) → spec
+project-specs/silva-fluxus-1-spec-v2.md (codebase-grounded;
+calibration battery + simulatio + 12-question interview recorded
+there, in silva-fluxus-1-interview.md, and in the park notae). Arc =
+chunk 0 (this) → A eventa (fluxus_datorum sidecar) → B punctum fixum
+(may/must) → C codices 71 LECTIO_ININITIATA / 72
+ININITIATA_QUANDOCUMQUE / 73 ININITIATA_FORSITAN (dormant).
+
+GATE SPECIMENS RAN FIRST (round 5, scratchpad calibratio-fluxus-1/,
+results folded into spec §2):
+- s18 sizeof: SILENT (unevaluated) — extraction skips magnitudo.
+- s19 member-then-whole: silent BOTH flag sets even with a member
+  never written — member/element store = FULL def of the whole
+  aggregate. The v1-spec may-def rule was WRONG; sigillum's residual
+  fire re-explained as zero-trip-loop, not grain. DEFINITIO_FORTASSE
+  event genus DELETED from the design (YAGNI, named path back).
+- s20 condition-position ||: FIRES "whenever '||' condition is
+  true" in BOTH if- and while-condition seats — clang splits
+  condition evaluation. Chunk-0 condition seat IN SCOPE.
+
+CHUNK 0 SCOPE: shared splitter (working name _expressionem_findere)
+for expression trees containing BINARIUM(ET_ET/VEL_VEL) or
+TERNARIUS: evaluation-segment blocks, VERUS/FALSUS edges with origo
+= the operator node, granules in sententiae, full statement
+recoverable by pater-climb. TWO seats: statement position
+(_sententiam_ambulare ordinarius: default, fluxus.c:891) +
+condition position (five compound builders). Fold-first: _aestimare
+on the whole condition runs before any split decision (constant
+conditions keep today's folded shape); partial-fold behavior (si (0
+&& f())) pinned by fixture in-arc. KNOWN-HARD SPOT: loop conditions
+with short-circuits — the back edge (dum corpus→caput, per
+passus→caput) must target the FIRST condition-segment block
+(evaluation restarts whole); postis/exemptus wiring must survive.
+Statements and conditions without the operators stay byte-identical
+to stage 0.
+
+BARS (all before chunk A): vectis TENET on script exit; census
+meters byte-stable (63=0 pure wall, 64=1, 65=1, 66/67 + every
+non-fluxus meter); suites green root + silva + officina; amalgams
+VERIFICATUM. NAMED DELIBERATE MOVEMENT: probatio_silva_fluxus
+margin-count pins (:196-298) and _bloci_mortui_pleni pins
+(:352/:406) will move with the new VERUS/FALSUS edges — each moved
+pin re-blessed by reading what it now pins (golden blessing law).
+New fixtures for split shapes born with EXSPECTA-PROXIMA.
+
+CONSUMER AUDIT (blast-radius pass, all in _fluxum_examinare
+semantica.c:3091-3243): codex 64 label-head test unaffected (split
+blocks carry titulus_dux NIHIL); codex 65 may name a granule as
+culpa in unreachable split blocks (accepted — position stays valid;
+RELATIO notes actual behavior); 63/66/67 untouched.
+
+PROCESS NOTE: full phase-log re-read at this phase boundary NOT
+done (484KB — the phase-log-size strategy conversation is a named
+open item); tail + park + spec carried re-entry instead.
