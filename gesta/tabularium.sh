@@ -30,7 +30,7 @@ declare -a INCLUDE_FLAGS=(
 declare -a RADIX_FONTES=(
     piscina chorda chorda_aedificator xar friatio tabula_dispersa
     internamentum utf8 json similitudo sigillum vigilia scrinium
-    tabellarius
+    tabellarius filum via iter_directoria
 )
 declare -a VENDOR_FLAGS=(
     "-O2" "-DSQLITE_ENABLE_FTS5" "-DSQLITE_THREADSAFE=0"

@@ -12,13 +12,12 @@
 #include "sigillum.h"
 #include "chorda_aedificator.h"
 #include "vigilia.h"
+#include "filum.h"
+#include "via.h"
+#include "iter_directoria.h"
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>   /* horologium politicae tacendi (sutura POSIX) */
-#include <sys/stat.h>   /* mkdir */
-#include <dirent.h>     /* opendir/readdir/closedir */
-#include <unistd.h>     /* unlink/rmdir */
-#include <errno.h>      /* EEXIST */
 
 #define TABULARII_PROTOCOLLUM_PINNATUM "2025-06-18"
 
@@ -1341,10 +1340,6 @@ _tabulam_scribere (Tabularium* t, Piscina* pn)
  * folders navigat). Spec: .superpowers/sdd/task-2-brief.md.
  * ================================================== */
 
-/* mensura communis bufferum semitae (MDXX/MMXL desunt in
- * latina.h - numerale nostrum proprium) */
-#define ENT_SEMITA_MENSURA 2048
-
 /* titulum in slug URL-aptum vertere: minusculae ASCII, quisque
  * cursus non-[a-z0-9] fit lineola una, lineolae extremae
  * praecisae, ad XL octetos truncatum (sine lineola pendente post
@@ -1411,129 +1406,89 @@ _entitatem_nomen_plagulae (chorda genus, chorda slug,
 }
 
 /* ==================================================
- * auxilia POSIX (mkdir/scandir/scribere/delere) - proiectio non
- * est via critica: errores tacite ignorantur (archivum
- * derivatum, regenerabile per initialize)
+ * auxilia entitatum (via.h/filum.h/iter_directoria.h - proiectio
+ * non est via critica: errores tacite ignorantur, archivum
+ * derivatum regenerabile per initialize)
  * ================================================== */
 
-interior vacuum
-_directorium_facere (constans character* via)
+/* duas partes viae per via_iungere componere (saccharum super API
+ * array-based via.h - vocatum crebro hic) */
+interior chorda
+_duas_iungere (chorda a, chorda b, Piscina* pn)
 {
-    si (mkdir(via, 0755) != ZEPHYRUM && errno != EEXIST)
-    {
-        /* tacite pergere - proiectio non est via critica */
-    }
-}
+    chorda partes[II];
 
-/* "a/b" in buf; FALSUM si excederet cap */
-interior b32
-_semita_iungere (character* buf, memoriae_index cap,
-    constans character* a, constans character* b)
-{
-    memoriae_index la = strlen(a);
-    memoriae_index lb = strlen(b);
-
-    si (la + I + lb + I > cap)
-    {
-        redde FALSUM;
-    }
-    memcpy(buf, a, la);
-    buf[la] = '/';
-    memcpy(buf + la + I, b, lb);
-    buf[la + I + lb] = '\0';
-    redde VERUM;
-}
-
-interior vacuum
-_plagulam_chorda_scribere (constans character* via, chorda textus)
-{
-    FILE* pl = fopen(via, "wb");
-
-    si (pl == NIHIL)
-    {
-        redde;
-    }
-    si (textus.mensura > ZEPHYRUM)
-    {
-        (vacuum)fwrite(textus.datum, I,
-            (memoriae_index)textus.mensura, pl);
-    }
-    fclose(pl);
+    partes[0] = a;
+    partes[I] = b;
+    redde via_iungere(partes, II, pn);
 }
 
 /* trans omnia subdirectoria tagorum, quaeque plagula terminans
- * "-<res_id>.md" delere; directorium vacuum relictum purgare */
+ * "-<res_id>.md" delere. Directoria tagi vacua NON purgantur (nulla
+ * machina domestica pro rmdir - relinquere acceptabile pro v1). */
 interior vacuum
 _entis_plagulas_omnes_delere (Tabularium* t, constans character* res_id,
     Piscina* pn)
 {
-    DIR* radix;
-    structura dirent* e;
+    DirectoriumIterator* radix;
+    DirectoriumIntroitus* e;
     character acus[XL + IV];   /* "-<ulid>.md" */
 
-    (vacuum)pn;
     si (t->via_entitatum == NIHIL)
     {
         redde;
     }
-    radix = opendir(t->via_entitatum);
+    radix = directorium_iterator_aperire(t->via_entitatum, pn);
     si (radix == NIHIL)
     {
         redde;
     }
     sprintf(acus, "-%s.md", res_id);
-    dum ((e = readdir(radix)) != NIHIL)
+    dum ((e = directorium_iterator_proximum(radix)) != NIHIL)
     {
-        character semita_dir[ENT_SEMITA_MENSURA];
-        DIR* sub;
-        structura dirent* f;
-        b32 vacua = VERUM;
+        DirectoriumIterator* sub;
+        DirectoriumIntroitus* f;
+        chorda semita_dir;
 
-        si (e->d_name[0] == '.')
+        si (e->genus != INTROITUS_DIRECTORIUM
+            || (e->titulus.mensura > ZEPHYRUM
+                && e->titulus.datum[0] == '.'))
         {
             perge;
         }
-        si (!_semita_iungere(semita_dir, magnitudo(semita_dir),
-                t->via_entitatum, e->d_name))
-        {
-            perge;
-        }
-        sub = opendir(semita_dir);
+        semita_dir = _duas_iungere(_ch(t->via_entitatum), e->titulus,
+            pn);
+        sub = directorium_iterator_aperire(_litterae(pn, semita_dir),
+            pn);
         si (sub == NIHIL)
         {
             perge;   /* non directorium */
         }
-        dum ((f = readdir(sub)) != NIHIL)
+        dum ((f = directorium_iterator_proximum(sub)) != NIHIL)
         {
-            character semita_plag[ENT_SEMITA_MENSURA];
-            memoriae_index ln = strlen(f->d_name);
+            memoriae_index ln;
             memoriae_index la = strlen(acus);
 
-            si (f->d_name[0] == '.')
+            si (f->genus != INTROITUS_FILUM
+                || (f->titulus.mensura > ZEPHYRUM
+                    && f->titulus.datum[0] == '.'))
             {
                 perge;
             }
+            ln = (memoriae_index)f->titulus.mensura;
             si (ln >= la
-                && strcmp(f->d_name + (ln - la), acus) == ZEPHYRUM)
+                && memcmp(f->titulus.datum + (ln - la), acus, la)
+                    == ZEPHYRUM)
             {
-                si (_semita_iungere(semita_plag, magnitudo(semita_plag),
-                        semita_dir, f->d_name))
-                {
-                    unlink(semita_plag);
-                }
-            }
-            alioquin
-            {
-                vacua = FALSUM;   /* alia plagula manet */
+                chorda semita_plag = _duas_iungere(semita_dir,
+                    f->titulus, pn);
+
+                (vacuum)filum_delere(_litterae(pn, semita_plag));
             }
         }
-        closedir(sub);
-        si (vacua)
-        {
-            rmdir(semita_dir);   /* directorium tagi vacuum purgare */
-        }
+        directorium_iterator_claudere(sub);
     }
-    closedir(radix);
+    directorium_iterator_claudere(radix);
 }
 
 /* ==================================================
@@ -1613,7 +1568,8 @@ _entitatem_ad_markdown (Tabularium* t, constans character* res_id,
     Piscina* pn)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(pn,
-        ENT_SEMITA_MENSURA);
+        2048);   /* MDXX/MMXL desunt in latina.h - numerale
+                  * decimum hic manet propter hanc lacunam */
     chorda datum = gesta_res_datum(t->mundus, res_id, pn);
     JsonValor* st = NIHIL;
     chorda genus_ch = _ch("");
@@ -1948,45 +1904,34 @@ _entitatem_reconciliare (Tabularium* t, constans character* res_id,
             n_tags = json_tabulatum_numerus(tags);
         }
     }
-    _directorium_facere(t->via_entitatum);
+    (vacuum)filum_directorium_creare_si_necesse(t->via_entitatum);
 
     si (n_tags == ZEPHYRUM)
     {
-        character dir[ENT_SEMITA_MENSURA];
-        character plag[ENT_SEMITA_MENSURA];
+        chorda dir = _duas_iungere(_ch(t->via_entitatum),
+            _ch("_sine_tag"), pn);
+        chorda plag;
 
-        si (_semita_iungere(dir, magnitudo(dir), t->via_entitatum,
-                "_sine_tag"))
-        {
-            _directorium_facere(dir);
-            si (_semita_iungere(plag, magnitudo(plag), dir,
-                    _litterae(pn, nomen_plagulae)))
-            {
-                _plagulam_chorda_scribere(plag, md);
-            }
-        }
+        (vacuum)filum_directorium_creare_si_necesse(_litterae(pn, dir));
+        plag = _duas_iungere(dir, nomen_plagulae, pn);
+        (vacuum)filum_scribere(_litterae(pn, plag), md);
         redde;
     }
     per (i = ZEPHYRUM; i < n_tags; i++)
     {
         JsonValor* tg = json_tabulatum_obtinere(tags, i);
-        character dir[ENT_SEMITA_MENSURA];
-        character plag[ENT_SEMITA_MENSURA];
+        chorda dir;
+        chorda plag;
 
         si (tg == NIHIL || !json_est_chorda(tg))
         {
             perge;
         }
-        si (_semita_iungere(dir, magnitudo(dir), t->via_entitatum,
-                _litterae(pn, json_ad_chorda(tg))))
-        {
-            _directorium_facere(dir);
-            si (_semita_iungere(plag, magnitudo(plag), dir,
-                    _litterae(pn, nomen_plagulae)))
-            {
-                _plagulam_chorda_scribere(plag, md);
-            }
-        }
+        dir = _duas_iungere(_ch(t->via_entitatum), json_ad_chorda(tg),
+            pn);
+        (vacuum)filum_directorium_creare_si_necesse(_litterae(pn, dir));
+        plag = _duas_iungere(dir, nomen_plagulae, pn);
+        (vacuum)filum_scribere(_litterae(pn, plag), md);
     }
 }
 
@@ -1994,32 +1939,52 @@ _entitatem_reconciliare (Tabularium* t, constans character* res_id,
  * reconciliatio - omnes res (transitus plenus / reformatio)
  * ================================================== */
 
+/* directorium unius gradus purgare: quaeque plagula in quoque
+ * subdirectorio delere. Directoria NON removentur (nulla machina
+ * domestica pro rmdir) - reconciliatio sequens eas rescribit. */
 interior vacuum
-_directorium_purgare (constans character* via)
+_directorium_purgare (constans character* via, Piscina* pn)
 {
-    DIR* d = opendir(via);
-    structura dirent* e;
+    DirectoriumIterator* radix = directorium_iterator_aperire(via, pn);
+    DirectoriumIntroitus* e;
 
-    si (d == NIHIL)
+    si (radix == NIHIL)
     {
         redde;
     }
-    dum ((e = readdir(d)) != NIHIL)
+    dum ((e = directorium_iterator_proximum(radix)) != NIHIL)
     {
-        character semita[ENT_SEMITA_MENSURA];
+        DirectoriumIterator* sub;
+        DirectoriumIntroitus* f;
+        chorda semita_dir;
 
-        si (e->d_name[0] == '.')
+        si (e->genus != INTROITUS_DIRECTORIUM
+            || (e->titulus.mensura > ZEPHYRUM
+                && e->titulus.datum[0] == '.'))
         {
             perge;
         }
-        si (_semita_iungere(semita, magnitudo(semita), via, e->d_name))
+        semita_dir = _duas_iungere(_ch(via), e->titulus, pn);
+        sub = directorium_iterator_aperire(_litterae(pn, semita_dir),
+            pn);
+        si (sub == NIHIL)
         {
-            _directorium_purgare(semita);   /* si directorium */
-            unlink(semita);                  /* si plagula */
-            rmdir(semita);                   /* si directorium iam vacuum */
+            perge;
         }
+        dum ((f = directorium_iterator_proximum(sub)) != NIHIL)
+        {
+            chorda semita_plag;
+
+            si (f->genus != INTROITUS_FILUM)
+            {
+                perge;
+            }
+            semita_plag = _duas_iungere(semita_dir, f->titulus, pn);
+            (vacuum)filum_delere(_litterae(pn, semita_plag));
+        }
+        directorium_iterator_claudere(sub);
     }
-    closedir(d);
+    directorium_iterator_claudere(radix);
 }
 
 /* directorium entitatum purgare + omnem rem in scrinio
@@ -2033,8 +1998,8 @@ _entitates_reconciliare_omnes (Tabularium* t, Piscina* pn)
     {
         redde;
     }
-    _directorium_purgare(t->via_entitatum);
-    _directorium_facere(t->via_entitatum);
+    _directorium_purgare(t->via_entitatum, pn);
+    (vacuum)filum_directorium_creare_si_necesse(t->via_entitatum);
     e = scrinium_praeparare(gesta_scrinium(t->mundus),
         "SELECT res_id FROM res ORDER BY res_id");
     si (e == NIHIL)

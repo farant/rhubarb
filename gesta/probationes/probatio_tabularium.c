@@ -9,10 +9,10 @@
 #include "gesta.h"
 #include "sigillum.h"
 #include "credo.h"
+#include "iter_directoria.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>   /* system - purgatio recursiva arboris entitatum */
-#include <dirent.h>   /* opendir/readdir/closedir - _prima_plagula_md */
 
 #define VIA_DB "gesta/build/probatio_tab.db"
 #define VIA_AN "gesta/build/probatio_tab.jsonl"
@@ -91,27 +91,30 @@ _plagula_litterae (Piscina* piscina, constans character* via)
 interior constans character*
 _prima_plagula_md (Piscina* piscina, constans character* dir)
 {
-    DIR* d = opendir(dir);
-    structura dirent* e;
-    character semita[PROBATIO_SEMITA_MENSURA];
+    DirectoriumIterator* it = directorium_iterator_aperire(dir, piscina);
+    DirectoriumIntroitus* e;
+    chorda exemplar = chorda_ex_literis("*.md", piscina);
 
-    si (d == NIHIL)
+    si (it == NIHIL)
     {
         redde "";
     }
-    dum ((e = readdir(d)) != NIHIL)
+    dum ((e = directorium_iterator_proximum(it)) != NIHIL)
     {
-        memoriae_index ln = strlen(e->d_name);
-
-        si (e->d_name[0] != '.' && ln > III
-            && strcmp(e->d_name + (ln - III), ".md") == ZEPHYRUM)
+        si (e->genus == INTROITUS_FILUM
+            && e->titulus.mensura > ZEPHYRUM
+            && e->titulus.datum[0] != '.'
+            && directorium_titulus_congruit(e->titulus, exemplar))
         {
-            sprintf(semita, "%s/%s", dir, e->d_name);
-            closedir(d);
+            character semita[PROBATIO_SEMITA_MENSURA];
+
+            sprintf(semita, "%s/%s", dir,
+                chorda_ut_cstr(e->titulus, piscina));
+            directorium_iterator_claudere(it);
             redde _plagula_litterae(piscina, semita);
         }
     }
-    closedir(d);
+    directorium_iterator_claudere(it);
     redde "";
 }
 

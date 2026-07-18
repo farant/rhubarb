@@ -57,6 +57,9 @@ declare -a RADIX_FONTES=(
     "scrinium"
     "tabellarius"
     "credo"
+    "filum"
+    "via"
+    "iter_directoria"
 )
 
 # SQLite vendicatum - LAXUM, obiectum proprium (exemplar
