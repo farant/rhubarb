@@ -1405,9 +1405,10 @@ indicium_aperire (Piscina* piscina, constans character* via)
     {
         constans IndiciumSectio* sectio = &directorium[g];
 
-        si (sectio->offset < ZEPHYRUM
-            || sectio->magnitudo_octetorum < ZEPHYRUM
-            || (memoriae_index)sectio->offset
+        /* clausulae "< 0" mortuae remotae (2026-07-17): agri i32
+         * formati; summa in memoriae_index (64-bit) sine volutione
+         * - cohibitio summae contra mensuram valores QUOSVIS capit */
+        si ((memoriae_index)sectio->offset
                 + (memoriae_index)sectio->magnitudo_octetorum
                 > (memoriae_index)mensura
             || (_elementi_magnitudines[g] > 0U

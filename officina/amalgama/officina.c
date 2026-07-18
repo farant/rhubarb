@@ -2769,7 +2769,9 @@ officina_chorda_aedificator_appendere_repetita(
 {
 	i32 i;
 
-	si (!aedificator || numerus < ZEPHYRUM)
+	/* numerus i32 insignatus - custodia negativi mortua remota
+	 * (2026-07-17); familia indentationis non-negativa per push/pop */
+	si (!aedificator)
 		redde FALSUM;
 
 	si (numerus == ZEPHYRUM)
@@ -10051,7 +10053,10 @@ b32
 machinula_anulum_inspicere (constans Machinula* machinula,
     i32 retro_index, s32* functio_index_out, i32* instructio_out)
 {
-    i64 index;
+    /* index s64 (2026-07-17): retro ultra initium historiae in i64
+     * volvebatur - custodia "< 0" mortua, salvatio fortuita per
+     * ordines anuli zephyratos */
+    s64 index;
     constans AnulusFigura* figura;
 
     si (machinula == NIHIL
@@ -10059,12 +10064,12 @@ machinula_anulum_inspicere (constans Machinula* machinula,
     {
         redde FALSUM;
     }
-    index = machinula->anulus_cursor - I - (i64)retro_index;
+    index = (s64)machinula->anulus_cursor - I - (s64)retro_index;
     si (index < ZEPHYRUM)
     {
         redde FALSUM;
     }
-    figura = &machinula->anulus[index & (i64)ANULUS_LARVA];
+    figura = &machinula->anulus[(i64)index & (i64)ANULUS_LARVA];
     si (figura->functio == NIHIL)
     {
         redde FALSUM;
@@ -16293,9 +16298,10 @@ indicium_aperire (OfficinaPiscina* piscina, constans character* via)
     {
         constans IndiciumSectio* sectio = &directorium[g];
 
-        si (sectio->offset < ZEPHYRUM
-            || sectio->magnitudo_octetorum < ZEPHYRUM
-            || (memoriae_index)sectio->offset
+        /* clausulae "< 0" mortuae remotae (2026-07-17): agri i32
+         * formati; summa in memoriae_index (64-bit) sine volutione
+         * - cohibitio summae contra mensuram valores QUOSVIS capit */
+        si ((memoriae_index)sectio->offset
                 + (memoriae_index)sectio->magnitudo_octetorum
                 > (memoriae_index)mensura
             || (_elementi_magnitudines[g] > 0U

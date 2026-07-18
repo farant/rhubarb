@@ -315,8 +315,10 @@ libro_pagina_currens(
         redde NIHIL;
     }
 
-    si (libro->index_currens < ZEPHYRUM ||
-        libro->index_currens >= libro->numerus_paginarum)
+    /* clausula "< 0" mortua remota (2026-07-17): index i32 non
+     * negativus per constructionem; volutio quaevis clausula
+     * superiore capitur */
+    si (libro->index_currens >= libro->numerus_paginarum)
     {
         redde NIHIL;
     }

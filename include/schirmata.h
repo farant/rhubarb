@@ -138,7 +138,7 @@ schirmata_creare(
 vacuum
 schirmata_commutare_ad(
     Schirmata* schirmata,
-    i32        index);
+    s32        index);
 
 /* Commutare ad schirmam proximam (cyclus)
  *

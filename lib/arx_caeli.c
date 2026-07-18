@@ -528,6 +528,8 @@ _pixel_ad_char_index(
     i32 text_px_y;
     i32 click_col;
     i32 click_linea;
+    s32 dx;
+    s32 dy;
     i32 textus_longitudo;
     constans i8* textus_datum;
     i32 linea_currens;
@@ -554,14 +556,20 @@ _pixel_ad_char_index(
     text_px_x = vis_x + CARTA_PADDING * char_lat;
     text_px_y = vis_y + CARTA_PADDING * char_alt;
 
-    /* Convertere click ad columna et linea relativum ad textum */
-    click_col = (click_px_x - text_px_x) / char_lat;
-    click_linea = (click_px_y - text_px_y) / char_alt;
+    /* Convertere click ad columna et linea relativum ad textum -
+     * differentia SIGNATA ante divisionem (2026-07-17: subtractio
+     * i32 volvebatur, custodia negativi mortua; etiam click paulum
+     * sinister [-char_lat, 0) ad columnam 0 truncabatur) */
+    dx = (s32)click_px_x - (s32)text_px_x;
+    dy = (s32)click_px_y - (s32)text_px_y;
 
-    si (click_col < ZEPHYRUM || click_linea < ZEPHYRUM)
+    si (dx < ZEPHYRUM || dy < ZEPHYRUM)
     {
         redde -I;
     }
+
+    click_col = (i32)(dx / (s32)char_lat);
+    click_linea = (i32)(dy / (s32)char_alt);
 
     /* Iterare per textum ad invenire character index */
     textus_datum = carta->textus.datum;
@@ -1057,8 +1065,8 @@ vacuum
 arx_caeli_carta_movere(
     ArcCaeli* arc,
     i32       index,
-    i32       px_x,
-    i32       px_y)
+    s32       px_x,
+    s32       px_y)
 {
     Carta* carta;
     i32 char_lat;
@@ -1088,10 +1096,11 @@ arx_caeli_carta_movere(
     carta_px_lat = carta->latitudo * char_lat;
     carta_px_alt = carta->altitudo * char_alt;
 
-    /* Verificare limites widget (pixela) */
+    /* Verificare limites widget (pixela) - px s32, custodia
+     * negativi VIVA (2026-07-17) */
     si (px_x < ZEPHYRUM || px_y < ZEPHYRUM ||
-        px_x + carta_px_lat > widget_px_lat ||
-        px_y + carta_px_alt > widget_px_alt)
+        px_x + (s32)carta_px_lat > (s32)widget_px_lat ||
+        px_y + (s32)carta_px_alt > (s32)widget_px_alt)
     {
         /* Extra limites - non movere */
         redde;
@@ -1099,9 +1108,9 @@ arx_caeli_carta_movere(
 
     /* Nulla collisio - cartae possunt overlap */
 
-    /* Actualizare positio (pixela) */
-    carta->x = px_x;
-    carta->y = px_y;
+    /* Actualizare positio (pixela) - custoditum >= 0 supra */
+    carta->x = (i32)px_x;
+    carta->y = (i32)px_y;
 
     /* Ponere z_index ad summum (carta nunc est super omnes) */
     carta->z_index = _obtinere_max_z_index(arc) + I;
@@ -2174,12 +2183,14 @@ arx_caeli_tractare_eventum(
             }
             alioquin si (arc->trahere_validum)
             {
-                /* Committere move ad novam positionem (pixela) */
+                /* Committere move ad novam positionem (pixela) -
+                 * visio s32: positio tracta i32 voluta = negativa
+                 * intenta, custodia in movere eam reicit */
                 arx_caeli_carta_movere(
                     arc,
                     arc->index_selecta,
-                    arc->trahere_grid_x,
-                    arc->trahere_grid_y);
+                    (s32)arc->trahere_grid_x,
+                    (s32)arc->trahere_grid_y);
             }
             /* Si extra limites, carta manet in loco originali */
 

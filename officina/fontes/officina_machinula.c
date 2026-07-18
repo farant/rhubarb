@@ -3079,7 +3079,10 @@ b32
 machinula_anulum_inspicere (constans Machinula* machinula,
     i32 retro_index, s32* functio_index_out, i32* instructio_out)
 {
-    i64 index;
+    /* index s64 (2026-07-17): retro ultra initium historiae in i64
+     * volvebatur - custodia "< 0" mortua, salvatio fortuita per
+     * ordines anuli zephyratos */
+    s64 index;
     constans AnulusFigura* figura;
 
     si (machinula == NIHIL
@@ -3087,12 +3090,12 @@ machinula_anulum_inspicere (constans Machinula* machinula,
     {
         redde FALSUM;
     }
-    index = machinula->anulus_cursor - I - (i64)retro_index;
+    index = (s64)machinula->anulus_cursor - I - (s64)retro_index;
     si (index < ZEPHYRUM)
     {
         redde FALSUM;
     }
-    figura = &machinula->anulus[index & (i64)ANULUS_LARVA];
+    figura = &machinula->anulus[(i64)index & (i64)ANULUS_LARVA];
     si (figura->functio == NIHIL)
     {
         redde FALSUM;

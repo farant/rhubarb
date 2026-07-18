@@ -1915,13 +1915,11 @@ _impl_legere_eventus_post_indicem(
     }
 
     numerus = xar_numerus(omnes);
+    /* cohibitio "i < 0" mortua remota (2026-07-17): index i32
+     * volutus condicione circuli statim excluditur (vacuum = idem
+     * effectus quem cohibitio intendebat) */
     per (i = index; i < numerus; i++)
     {
-        si (i < ZEPHYRUM)
-        {
-            perge;
-        }
-
         e = *(Eventum**)xar_obtinere(omnes, i);
         si (e)
         {
@@ -1946,9 +1944,11 @@ _impl_legere_eventus_recentes(
     Xar*              resultus;
     Eventum*          e;
     Eventum**         slot;
-    i32               i;
+    s32               i;
     i32               numerus_totalis;
-    i32               initium;
+    /* initium s32 (2026-07-17): subtractio i32 volvebatur cum
+     * petitus > totalis - fenestra vacua pro OMNIBUS reddita */
+    s32               initium;
 
     data = (RepositoriumData*)datum;
 
@@ -1970,15 +1970,15 @@ _impl_legere_eventus_recentes(
     }
 
     numerus_totalis = xar_numerus(omnes);
-    initium = numerus_totalis - numerus_petitus;
+    initium = (s32)numerus_totalis - (s32)numerus_petitus;
     si (initium < ZEPHYRUM)
     {
         initium = ZEPHYRUM;
     }
 
-    per (i = initium; i < numerus_totalis; i++)
+    per (i = initium; i < (s32)numerus_totalis; i++)
     {
-        e = *(Eventum**)xar_obtinere(omnes, i);
+        e = *(Eventum**)xar_obtinere(omnes, (i32)i);
         si (e)
         {
             slot = (Eventum**)xar_addere(resultus);

@@ -982,7 +982,9 @@ _reddere_tabulam_schirmarum(
 {
     i32 character_latitudo;
     i32 character_altitudo;
-    i32 tab_y;
+    /* tab_y s32: coordinata signata (fenestra minuscula -> negativa;
+     * cohibitiones >= 0 in i32 mortuae erant, 2026-07-17) */
+    s32 tab_y;
     i32 tab_x;
     i32 tab_width;
     i32 margin_right;
@@ -1000,7 +1002,7 @@ _reddere_tabulam_schirmarum(
     margin_right = VIII;  /* 8 pixels margin */
 
     /* Tab bar ad fundum fenestrae (extra pixel altitudo) */
-    tab_y = tabula->altitudo - character_altitudo - I;
+    tab_y = (s32)tabula->altitudo - (s32)character_altitudo - I;
     tab_x = II;
 
     color_text_normal = thema_color(COLOR_BACKGROUND);      /* Warm gray text */
@@ -1010,18 +1012,21 @@ _reddere_tabulam_schirmarum(
 
     /* Pingere fondum tab bar (tota linea, extra pixel altitudo) */
     {
-        i32 py, px;
-        i32 bar_altitudo;
+        s32 py;
+        i32 px;
+        s32 bar_altitudo;
 
-        bar_altitudo = character_altitudo + I;  /* Extra pixel */
+        bar_altitudo = (s32)character_altitudo + I;  /* Extra pixel */
 
         per (py = ZEPHYRUM; py < bar_altitudo; py++)
         {
             per (px = ZEPHYRUM; px < tabula->latitudo; px++)
             {
-                si (tab_y + py >= ZEPHYRUM && tab_y + py < tabula->altitudo)
+                si (tab_y + py >= ZEPHYRUM
+                    && tab_y + py < (s32)tabula->altitudo)
                 {
-                    tabula->pixela[(tab_y + py) * tabula->latitudo + px] =
+                    tabula->pixela[(i32)(tab_y + py)
+                        * tabula->latitudo + px] =
                         color_ad_pixelum(color_fondum_bar);
                 }
             }
@@ -1040,28 +1045,31 @@ _reddere_tabulam_schirmarum(
         /* Pingere fondum pro tab activo */
         si (est_activum)
         {
-            i32 py, px;
-            i32 padding_left;
-            i32 padding_right;
-            i32 bar_altitudo;
-            i32 bg_width;
+            s32 py, px;
+            s32 padding_left;
+            s32 padding_right;
+            s32 bar_altitudo;
+            s32 bg_width;
 
             padding_left = II;
             padding_right = IV;
-            bar_altitudo = character_altitudo + I;
-            bg_width = padding_left + tab_width + padding_right;
+            bar_altitudo = (s32)character_altitudo + I;
+            bg_width = padding_left + (s32)tab_width + padding_right;
 
             per (py = ZEPHYRUM; py < bar_altitudo; py++)
             {
                 per (px = ZEPHYRUM; px < bg_width; px++)
                 {
-                    i32 draw_x;
-                    draw_x = tab_x - padding_left + px;
+                    s32 draw_x;
+                    draw_x = (s32)tab_x - padding_left + px;
 
-                    si (tab_y + py >= ZEPHYRUM && tab_y + py < tabula->altitudo &&
-                        draw_x >= ZEPHYRUM && draw_x < tabula->latitudo)
+                    si (tab_y + py >= ZEPHYRUM
+                        && tab_y + py < (s32)tabula->altitudo
+                        && draw_x >= ZEPHYRUM
+                        && draw_x < (s32)tabula->latitudo)
                     {
-                        tabula->pixela[(tab_y + py) * tabula->latitudo + draw_x] =
+                        tabula->pixela[(i32)(tab_y + py)
+                            * tabula->latitudo + (i32)draw_x] =
                             color_ad_pixelum(color_fondum_activum);
                     }
                 }
@@ -1079,7 +1087,7 @@ _reddere_tabulam_schirmarum(
         tabula_pixelorum_pingere_chordam(
             tabula,
             tab_x,
-            tab_y + I,  /* 1 pixel padding top */
+            (i32)(tab_y + I),  /* 1 pixel padding top */
             label,
             color_ad_pixelum(color_text));
 
@@ -1119,7 +1127,7 @@ _reddere_tabulam_schirmarum(
 
                 margin_dextra = VIII;
                 display_x = tabula->latitudo - (i32)chorda_display.mensura * character_latitudo - margin_dextra;
-                display_y = tab_y + I;
+                display_y = (i32)(tab_y + I);
 
                 per (col = ZEPHYRUM; col < (i32)chorda_display.mensura; col++) {
                     tabula_pixelorum_pingere_characterem(
@@ -1212,8 +1220,10 @@ schirmata_creare(
 vacuum
 schirmata_commutare_ad(
     Schirmata* schirmata,
-    i32        index)
+    s32        index)
 {
+    /* index s32 (2026-07-17): clampa negativi in i32 mortua erat -
+     * index "negativus" volvebatur ad clampam superiorem */
     si (!schirmata)
     {
         redde;
@@ -1230,7 +1240,7 @@ schirmata_commutare_ad(
     }
 
     /* Si iam in hac schirma, nihil facere */
-    si (index == schirmata->index_currens)
+    si (index == (s32)schirmata->index_currens)
     {
         redde;
     }
@@ -1240,25 +1250,25 @@ schirmata_commutare_ad(
     _salvare_widget_status(schirmata, schirmata->index_currens);
 
     /* Commutare */
-    schirmata->index_currens = index;
+    schirmata->index_currens = (i32)index;
 
     /* Restituere status novae schirmae */
     _restituere_status(&schirmata->schirmae[index], schirmata->libro);
-    _carcare_widget_status(schirmata, index);
+    _carcare_widget_status(schirmata, (i32)index);
 }
 
 vacuum
 schirmata_proxima(
     Schirmata* schirmata)
 {
-    i32 nova_index;
+    s32 nova_index;
 
     si (!schirmata)
     {
         redde;
     }
 
-    nova_index = schirmata->index_currens + I;
+    nova_index = (s32)schirmata->index_currens + I;
     si (nova_index >= SCHIRMATA_MAXIMUS)
     {
         nova_index = ZEPHYRUM;
@@ -1271,14 +1281,17 @@ vacuum
 schirmata_prior(
     Schirmata* schirmata)
 {
-    i32 nova_index;
+    /* s32 (2026-07-17): a schirma 0 volutio i32 rectum reddebat
+     * FORTUITO (4e9 -> clampa superior = MAXIMUS-1, idem valor ac
+     * ramus intentus) - nunc honeste per ramum vivum */
+    s32 nova_index;
 
     si (!schirmata)
     {
         redde;
     }
 
-    nova_index = schirmata->index_currens - I;
+    nova_index = (s32)schirmata->index_currens - I;
     si (nova_index < ZEPHYRUM)
     {
         nova_index = SCHIRMATA_MAXIMUS - I;
@@ -1474,15 +1487,17 @@ schirmata_tractare_eventum(
 
         si (click_y >= tab_y_min)
         {
-            /* Click in tab bar area */
-            i32 tab_index;
+            /* Click in tab bar area (tab_index s32: click sinister
+             * marginis = negativus, custodia viva 2026-07-17) */
+            s32 tab_index;
             i32 tab_width;
             i32 margin_right;
 
             tab_width = III * character_latitudo;  /* "[N]" = 3 characters */
             margin_right = VIII;  /* 8 pixels margin */
 
-            tab_index = (click_x - II) / (tab_width + margin_right);
+            tab_index = ((s32)click_x - II)
+                / ((s32)tab_width + (s32)margin_right);
             si (tab_index >= ZEPHYRUM && tab_index < SCHIRMATA_MAXIMUS)
             {
                 schirmata_commutare_ad(schirmata, tab_index);
@@ -1532,7 +1547,7 @@ schirmata_tractare_eventum(
                 si (clavis >= '1' && clavis <= '9')
                 {
                     schirmata->praefixum_activum = FALSUM;
-                    schirmata_commutare_ad(schirmata, (i32)(clavis - '1'));
+                    schirmata_commutare_ad(schirmata, (s32)(clavis - '1'));
                     redde VERUM;
                 }
                 /* 0 = schirma 9 (decima) */

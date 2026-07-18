@@ -245,7 +245,8 @@ _dialogus_importatio_reddere(
     {
         i32 zoom_char_y, zoom_label_px, zoom_label_py;
         FructusSlider fructus;
-        i32 zoom_valor;
+        s32 zoom_valor;   /* signatus: zoom < 1.0 dat negativum
+                           * (clampa inferior viva 2026-07-17) */
         chorda zoom_label;
 
         zoom_char_y = base_y + LAYOUT_ZOOM_Y;
@@ -259,15 +260,15 @@ _dialogus_importatio_reddere(
             color_ad_pixelum(color_text), (i32)scala);
 
         /* Convert zoom 1.0-8.0 to slider 0-100 */
-        zoom_valor = (i32)((visus->zoom - 1.0f) * 100.0f / 7.0f);
+        zoom_valor = (s32)((visus->zoom - 1.0f) * 100.0f / 7.0f);
         si (zoom_valor < 0) zoom_valor = 0;
-        si (zoom_valor > C) zoom_valor = (i32)C;
+        si (zoom_valor > (s32)C) zoom_valor = (s32)C;
 
         fructus = elementa_slider(
             tabula, di->piscina,
             base_x + LAYOUT_MARGIN + VIII, zoom_char_y,
             XX,  /* latitudo in characteribus */
-            zoom_valor,
+            (i32)zoom_valor,
             0, C,
             di->eventus_currens,
             scala);

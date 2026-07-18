@@ -740,9 +740,11 @@ thema_visus_carcare_status(
     {
         si (chorda_ut_s32(*valor, &temp))
         {
+            /* clampa in s32 ANTE conversionem (2026-07-17: valor
+             * persistitus negativus in i32 volvebatur ad MAXIMAM) */
+            si (temp < ZEPHYRUM) temp = ZEPHYRUM;
+            si (temp > THEMA_PAGINA_MAXIMA) temp = THEMA_PAGINA_MAXIMA;
             visus->pagina = (i32)temp;
-            si (visus->pagina < ZEPHYRUM) visus->pagina = ZEPHYRUM;
-            si (visus->pagina > THEMA_PAGINA_MAXIMA) visus->pagina = THEMA_PAGINA_MAXIMA;
         }
     }
 

@@ -401,7 +401,9 @@ chorda_aedificator_appendere_repetita(
 {
 	i32 i;
 
-	si (!aedificator || numerus < ZEPHYRUM)
+	/* numerus i32 insignatus - custodia negativi mortua remota
+	 * (2026-07-17); familia indentationis non-negativa per push/pop */
+	si (!aedificator)
 		redde FALSUM;
 
 	si (numerus == ZEPHYRUM)
@@ -527,7 +529,10 @@ chorda_aedificator_appendere_indentationem(
 	i32 i;
 	i32 spatia;
 
-	si (!aedificator || gradus < ZEPHYRUM)
+	/* gradus i32 insignatus - custodia negativi mortua remota
+	 * (2026-07-17); gradus tractatus <= M per push, pop ad zephyrum
+	 * sistit */
+	si (!aedificator)
 		redde FALSUM;
 
 	spatia = gradus * CHORDA_AEDIFICATOR_INDENTATIO_SPATIA;

@@ -133,31 +133,42 @@ _finis_lineae(
     redde finis;
 }
 
-/* Clamp cursor ad limites tabulae (2D grid - libera navigatio) */
+/* Clamp cursor ad limites tabulae (2D grid - libera navigatio).
+ * Visio s32 (2026-07-17): agri cursoris i32 inter motum et clampam
+ * TRANSIENTER voluti esse possunt (decrementum sub zephyrum) -
+ * clampae "< 0" in i32 mortuae erant, cursor a summo ad FUNDUM
+ * saltabat per clampam superiorem. Visio signata negativum intentum
+ * recuperat; agri s32-ificare = sectio profundior (177 sedes),
+ * nominata in worklog. */
 hic_manens VimStatus
 _clamp_cursor(
     VimStatus status)
 {
+    s32 linea = (s32)status.cursor_linea;
+    s32 columna = (s32)status.cursor_columna;
+
     /* Clamp linea */
-    si (status.cursor_linea < ZEPHYRUM)
+    si (linea < ZEPHYRUM)
     {
-        status.cursor_linea = ZEPHYRUM;
+        linea = ZEPHYRUM;
     }
-    si (status.cursor_linea >= status.tabula->altitudo)
+    si (linea >= (s32)status.tabula->altitudo)
     {
-        status.cursor_linea = status.tabula->altitudo - I;
+        linea = (s32)status.tabula->altitudo - I;
     }
 
     /* Clamp columna - 2D grid permittit navigare libere */
-    si (status.cursor_columna < ZEPHYRUM)
+    si (columna < ZEPHYRUM)
     {
-        status.cursor_columna = ZEPHYRUM;
+        columna = ZEPHYRUM;
     }
-    si (status.cursor_columna >= status.tabula->latitudo)
+    si (columna >= (s32)status.tabula->latitudo)
     {
-        status.cursor_columna = status.tabula->latitudo - I;
+        columna = (s32)status.tabula->latitudo - I;
     }
 
+    status.cursor_linea = (i32)linea;
+    status.cursor_columna = (i32)columna;
     redde status;
 }
 

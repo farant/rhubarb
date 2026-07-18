@@ -127,10 +127,11 @@ s32 principale(vacuum)
 		imprimere("  Address: 0x%lx\n", (unsigned long)addressa);
 		CREDO_VERUM(addressa > ZEPHYRUM);
 
-		/* Verificare ordinatio */
+		/* Verificare ordinatio (i32 - ">= 0" vana erat; sanitas
+		 * vera: exponens ordinationis rationabilis) */
 		ordinatio = sectio_ordinatio(text);
 		imprimere("  Align: 2^%d\n", ordinatio);
-		CREDO_VERUM(ordinatio >= ZEPHYRUM);
+		CREDO_VERUM(ordinatio < XXXII);
 
 		/* Verificare vexilla */
 		vexilla = sectio_vexilla(text);

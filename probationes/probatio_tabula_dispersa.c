@@ -609,8 +609,9 @@ s32 principale (vacuum)
             tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)i);
         }
 
-        /* Distantia aliqua probationis habere debet */
-        CREDO_VERUM(tabula->distantia_maxima >= ZEPHYRUM);
+        /* Invarians verus (">= 0" in i32 vana erat): distantia
+         * probationis capacitatem numquam excedit */
+        CREDO_VERUM(tabula->distantia_maxima < XVI);
     }
 
 

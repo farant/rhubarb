@@ -330,18 +330,23 @@ _turnum_possidentem (constans TurnusVisus* visus, i32 numerus,
         si (linea_involuta >= visus[k].involutum_primus
             && linea_involuta <= visus[k].involutum_ultimus)
         {
-            i32 delta = linea_involuta - visus[k].involutum_initium;
+            /* delta s32 (2026-07-17): subtractio i32 volvebatur si
+             * initium > linea - clampa inferior mortua, superior ad
+             * lineam ULTIMAM (directio falsa) deflectebat */
+            s32 delta = (s32)linea_involuta
+                - (s32)visus[k].involutum_initium;
 
             si (delta < ZEPHYRUM)
             {
                 delta = ZEPHYRUM;
             }
-            si (delta >= visus[k].lineae)
+            si (delta >= (s32)visus[k].lineae)
             {
                 delta = visus[k].lineae > ZEPHYRUM
-                    ? visus[k].lineae - I : ZEPHYRUM;
+                    ? (s32)visus[k].lineae - I : ZEPHYRUM;
             }
-            *linea_ostensa_out = visus[k].ostensum_initium + delta;
+            *linea_ostensa_out = visus[k].ostensum_initium
+                + (i32)delta;
             redde (s32)k;
         }
     }

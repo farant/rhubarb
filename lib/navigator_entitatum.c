@@ -1625,7 +1625,9 @@ _reddere_columnam_entitatis(
     i32                  altitudo_maxima,
     i32                  character_latitudo,
     i32                  character_altitudo,
-    i32                  selectio_index,           /* Index item selecti, vel -1 */
+    s32                  selectio_index,           /* Index item selecti, vel -1
+                                                    * (s32 2026-07-17: sententia -1
+                                                    * in i32 voluta erat) */
     chorda*              selectio_destinatio_id,  /* ID destinationis pro highlight, vel NIHIL */
     b32                  selectio_per_backlink,   /* VERUM si selectio est backlink */
     b32                  dimmed)            /* VERUM pro colores obscuriores */
@@ -1920,7 +1922,7 @@ _reddere_columnam_entitatis(
         est_selectus = FALSUM;
 
         /* Verificare si selectus per index */
-        si (selectio_index >= ZEPHYRUM && i == selectio_index)
+        si (selectio_index >= ZEPHYRUM && (s32)i == selectio_index)
         {
             est_selectus = VERUM;
         }
@@ -2515,7 +2517,7 @@ navigator_entitatum_reddere(
             textus_altitudo,
             character_latitudo,
             character_altitudo,
-            (i32)(-I),   /* Non usare index */
+            -I,   /* Non usare index (sententia s32 vera) */
             nav->entitas_currens ? nav->entitas_currens->id : NIHIL,
             item_historiae ? item_historiae->per_backlink : FALSUM,
             VERUM);    /* Dimmed */

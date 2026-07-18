@@ -945,16 +945,19 @@ _methodus_xar_includes(SputnikInterpres* interp, Xar* xar, Xar* argumenta, Sputn
 interior SputnikValor
 _methodus_xar_slice(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
 {
-    i32 start;
-    i32 end;
-    i32 num;
-    i32 i;
+    /* indices s32: semantica indicum negativorum (slice(-2) = duo
+     * ultima) VIVA - in i32 rami "< 0" mortui erant et slice(-2)
+     * vacuum reddebat (sanatum 2026-07-17) */
+    s32 start;
+    s32 end;
+    s32 num;
+    s32 i;
     Xar* novus;
     SputnikValor* arg;
     SputnikValor* elem;
     SputnikValor* copia;
 
-    num = xar_numerus(xar);
+    num = (s32)xar_numerus(xar);
 
     si (xar_numerus(argumenta) < I)
     {
@@ -968,7 +971,7 @@ _methodus_xar_slice(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikA
         _error(interp, nodus, "slice() requirit numerum pro start");
         redde _valor_nihil();
     }
-    start = (i32)arg->ut.numerus;
+    start = (s32)arg->ut.numerus;
 
     /* Default end est longitudo */
     end = num;
@@ -980,7 +983,7 @@ _methodus_xar_slice(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikA
             _error(interp, nodus, "slice() requirit numerum pro end");
             redde _valor_nihil();
         }
-        end = (i32)arg->ut.numerus;
+        end = (s32)arg->ut.numerus;
     }
 
     /* Tractare indices negativos */
@@ -999,7 +1002,7 @@ _methodus_xar_slice(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikA
 
     per (i = start; i < end; i++)
     {
-        elem = xar_obtinere(xar, i);
+        elem = xar_obtinere(xar, (i32)i);
         copia = xar_addere(novus);
         si (copia == NIHIL)
         {
@@ -1534,8 +1537,10 @@ interior SputnikValor
 _methodus_chorda_substring(SputnikInterpres* interp, chorda str, Xar* argumenta, SputnikAstNodus* nodus)
 {
     SputnikValor* arg;
-    i32 start, end;
-    i32 len;
+    /* indices s32: cohibitiones negativi in i32 mortuae erant -
+     * substring(-1) volvebatur ad clampam superiorem (2026-07-17) */
+    s32 start, end;
+    s32 len;
     character* buffer;
 
     si (xar_numerus(argumenta) < I)
@@ -1550,29 +1555,29 @@ _methodus_chorda_substring(SputnikInterpres* interp, chorda str, Xar* argumenta,
         _error(interp, nodus, "substring() requirit numerum ut initium");
         redde _valor_nihil();
     }
-    start = (i32)arg->ut.numerus;
+    start = (s32)arg->ut.numerus;
 
     /* Default end = longitudo */
-    end = str.mensura;
+    end = (s32)str.mensura;
     si (xar_numerus(argumenta) >= II)
     {
         arg = xar_obtinere(argumenta, I);
         si (arg->genus == SPUTNIK_VALOR_NUMERUS)
         {
-            end = (i32)arg->ut.numerus;
+            end = (s32)arg->ut.numerus;
         }
     }
 
     /* Normalizare indices (JavaScript substring behavior) */
     si (start < ZEPHYRUM) start = ZEPHYRUM;
     si (end < ZEPHYRUM) end = ZEPHYRUM;
-    si (start > str.mensura) start = str.mensura;
-    si (end > str.mensura) end = str.mensura;
+    si (start > (s32)str.mensura) start = (s32)str.mensura;
+    si (end > (s32)str.mensura) end = (s32)str.mensura;
 
     /* Si start > end, commutare */
     si (start > end)
     {
-        i32 temp;
+        s32 temp;
         temp = start;
         start = end;
         end = temp;

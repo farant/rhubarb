@@ -184,7 +184,11 @@ chorda_praecidi_laterale (
 		redde fructus;
 	}
 
-	initium = ZEPHYRUM;
+	/* initium = sententia "non inventum" (s.mensura): chorda tota
+	 * spatia -> initium >= finis -> vacua redditur (ante 2026-07-17
+	 * initium ZEPHYRUM manebat ET circulus retro insignatus
+	 * volvebatur - circulus infinitus cum lectionibus feris) */
+	initium = s.mensura;
 	finis   = s.mensura;
 
 	per (i = ZEPHYRUM; i < s.mensura; i++)
@@ -196,11 +200,12 @@ chorda_praecidi_laterale (
 		}
 	}
 
-	per (i = s.mensura - I; i >= ZEPHYRUM; i--)
+	/* idioma numerus-deorsum: i insignatus numquam sub zephyrum */
+	per (i = s.mensura; i > ZEPHYRUM; i--)
 	{
-		si (!isspace((i8)s.datum[i]))
+		si (!isspace((i8)s.datum[i - I]))
 		{
-			finis = i + I;
+			finis = i;
 			frange;
 		}
 	}
@@ -1968,12 +1973,8 @@ chorda_ex_bytes_legibilis (
         redde fructus;
     }
 
-    si (bytes < 0)
-    {
-        bytes = 0;
-    }
-
-    /* Determinare suffixum et valorem */
+    /* Determinare suffixum et valorem (bytes i64 insignatus -
+     * cohibitio negativi mortua erat, remota 2026-07-17) */
     si (bytes < M * M)  /* < 1 MB */
     {
         si (bytes < M)  /* < 1 KB */

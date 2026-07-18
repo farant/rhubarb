@@ -9004,3 +9004,70 @@ loop; asperitates — VERDICTUM-sine-via was the one gap, closed
 in-arc; desiderata — none new. The TOLERA rider on 01KXRXW70T
 stands documented-as-designed (single-line official; a small
 multi-line reader only if causae grow long).
+
+## VANA CAUDA: INTENTIO (2026-07-17)
+
+Pull: finish quaestio 01KXQ9NF8J. Fran's decretum: the frozen
+parser family (arbor v1 + arbor2 + lapifex = 8 sites incl.
+arbor_quaestio) stands AS-IS in the census — no fixes, no TOLERA,
+no exclusion; named standing residue like codex 61. Remaining work
+= 31 sites / 16 files (43 − 8 frozen − 4 amalgam shadows), core-lib
+first (chorda ×2, chorda_aedificator ×2). Recipe per the quaestio:
+read the declared type and intent BEFORE surgery; s32-ify or
+restructure; the examen push heals -Wsign-conversion ripples at
+edit time. Amalgams regenerate after (silva embeds chorda; officina
+embeds indicium/machinula/aedificator shadows). Bars: touched-lib
+suites + officina/silva suites green; examen -census 58 == 8
+(frozen only) at close; quaestio closes with the decretum.
+
+## VANA CAUDA: RELATIO (2026-07-17) — QUAESTIO CLAUSA
+
+31 sites / 16 files adjudicated in one pass; census 58 = 8, all
+frozen-family (arbor v1/arbor2/lapifex per Fran's decretum
+01KXSAK5K7), zero in maintained code. Root tests exit 0, officina
+12/12, silva 31/31, both amalgams VERIFICATUM.
+
+LIVE BUGS KILLED (the tail was NOT innocuous):
+- chorda_praecidi_laterale: ALL-WHITESPACE input = infinite loop
+  with wild reads (backward scan wrapped) AND the initium default
+  would have returned the untrimmed string — two bugs on one line
+  in the hottest string function. Count-down idiom + not-found
+  sentinel.
+- sputnik slice/substring: negative-index semantics (a documented
+  JS-style feature) were DEAD — slice(-2) returned empty. s32
+  indices bring the feature to life.
+- entitas_repositorium legere_eventus_recentes: asking for more
+  events than exist returned NONE instead of all (tail-window
+  subtraction wrapped).
+- vim _clamp_cursor: cursor-up at top row jumped to BOTTOM (wrap
+  through the upper clamp). Written intent (clamp at top) restored
+  — NOTE: user-visible behavior change, flagged to Fran.
+- sessio _turnum_possidentem: defensive clamp deflected to the
+  LAST line instead of first when wrapped.
+- schirmata_prior: cycle-to-last was correct BY DOUBLE ACCIDENT
+  (wrap + upper clamp = the intended value); now honest. machinula
+  ring lookback similarly luck-saved by zeroed slots; now honest
+  s64.
+- arx_caeli click mapping: clicks slightly left of text truncated
+  to column 0 (division before sign check); signed delta computed
+  first now.
+
+PATTERNS: s32-ification where negativity is MEANT (coordinates,
+sentinels, deltas, tail-windows); dead-guard DELETION where the
+upper bound provably subsumes wrap (libro, indicium format fields,
+entitas skip); s32-VIEW containment at chokepoints where a field
+flip would cascade (vim cursor fields — 177 sites, deeper cut
+named in worklog; arx trahere_grid). Two vacuous probatio asserts
+made meaningful (sectio ordinatio < 32, tabula_dispersa probe
+distance < capacity — a true invariant).
+
+FOOTNOTE: capsula_libri.c flips REICE→INFRA under the parallel
+census (4 × 256MB piscinae + a 128K-line TU = allocation fails
+under load; solo run REICEs normally). The census NAMED it instead
+of dropping it — the no-silent-drops design proving itself.
+
+INSTRUMENTA: examen -census 58 was the worklist AND the closing
+meter (built this morning, load-bearing by evening); the examen
+push caught every -Wsign-conversion ripple at edit time (schirmata
+margin_right UAC, sputnik temp, arx call sites) — zero compile
+surprises at suite time.
