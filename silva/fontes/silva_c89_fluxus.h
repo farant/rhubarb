@@ -11,6 +11,19 @@
  * Nodi arboris tantum REFERUNTUR - nihil copiatur (codex-est-basis-
  * datorum: quisque campus columna quaestionis futurae).
  *
+ * FISSIO SECTIONUM BREVIUM (FLUXUS-1 chunk 0): sententiae et
+ * conditiones quae && / || / ?: continent per blocos segmentorum
+ * finduntur - margines VERUS/FALSUS cum origo = nodus operatoris
+ * (BINARIUM/TERNARIUS), operanda GRANULA in blocis suis, reliquum
+ * arboris granulum ultimum in bloco iunctionis. CONDITIONES
+ * sententiarum compositarum SEMPER granula sunt (etiam simplices;
+ * terminale cascadae) - fons unicus ambulationis dataflow.
+ * INVARIANTUM PRAETERMISSIONIS: ambulator granulorum subtrees
+ * BINARIUM(&&,||) et TERNARIUS integros praetermittit - operanda
+ * eorum in blocis praecedentibus granulata sunt (in conditione
+ * PLICATA praetermissio operanda omittit: rectum, numquam
+ * aestimantur).
+ *
  * SUTURA AUXILIORUM (XI-1): canonicalizatio lectionum AMBIGUARUM et
  * aestimatio constantium sunt POLITICA VOCATORIS - semantica
  * involucra sua tradit, probationes aestimatorem litteralem parvum.

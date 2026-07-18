@@ -147,6 +147,46 @@ _margines_generis (constans FluxusFunctionis* fluxus, s32 genus)
     redde summa;
 }
 
+/* Numerus blocorum attingibilium (fissio: omnes segmenta vivere
+ * debent - probatio marginis retro ansarum) */
+interior i32
+_bloci_attingibiles (constans FluxusFunctionis* fluxus)
+{
+    i32 summa = ZEPHYRUM;
+    i32 b;
+    i32 numerus_blocorum = xar_numerus(fluxus->bloci);
+
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        constans FluxusBlocus* blocus = (constans FluxusBlocus*)
+            xar_obtinere(fluxus->bloci, b);
+
+        si (blocus->attingibilis)
+        {
+            summa++;
+        }
+    }
+    redde summa;
+}
+
+/* Summa granulorum trans omnes blocos */
+interior i32
+_sententiae_totae (constans FluxusFunctionis* fluxus)
+{
+    i32 summa = ZEPHYRUM;
+    i32 b;
+    i32 numerus_blocorum = xar_numerus(fluxus->bloci);
+
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        constans FluxusBlocus* blocus = (constans FluxusBlocus*)
+            xar_obtinere(fluxus->bloci, b);
+
+        summa += xar_numerus(blocus->sententiae);
+    }
+    redde summa;
+}
+
 /* Bloci inattingibiles NON vacui (cibus codicis 65) */
 interior i32
 _bloci_mortui_pleni (constans FluxusFunctionis* fluxus)
@@ -419,6 +459,147 @@ s32 principale (vacuum)
         CREDO_FALSUM (f->cadit_attingibilis);
         CREDO_AEQUALIS_I32 (_margines_generis(f,
             (s32)FLUXUS_MARGO_REDDITUS), I);
+    }
+
+    /* ========================================================
+     * PROBARE: fissio sectionum brevium (FLUXUS-1 chunk 0)
+     * ======================================================== */
+    {
+        FluxusFunctionis* f;
+
+        /* conditio simplex GRANULUM est (fons unicus ambulationis):
+         * granula = conditio + redde = II */
+        f = _fluere(piscina,
+            "int c2(int x) { if (x > 0) { return 1; } }", FALSUM);
+        CREDO_NON_NIHIL (f);
+        CREDO_AEQUALIS_I32 (_sententiae_totae(f), II);
+
+        /* si (a && b): cascada - margines sectionis IPSI margines
+         * rami (VERUS 2 = a->dexter, b->dein; FALSUS 2 = breves) */
+        f = _fluere(piscina,
+            "int f1(int a, int b) { if (a && b) { return 1; }"
+            " return 0; }", FALSUM);
+        CREDO_NON_NIHIL (f);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_VERUS), II);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_FALSUS), II);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_REDDITUS), II);
+        CREDO_FALSUM (f->cadit_attingibilis);
+        CREDO_AEQUALIS_I32 (_bloci_attingibiles(f),
+            xar_numerus(f->bloci));
+        CREDO_AEQUALIS_I32 (_bloci_mortui_pleni(f), ZEPHYRUM);
+
+        /* positio sententiae: x = a && b - fissio cum iunctione */
+        f = _fluere(piscina,
+            "int f2(int a, int b) { int x; x = a && b;"
+            " return x; }", FALSUM);
+        CREDO_NON_NIHIL (f);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_VERUS), I);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_FALSUS), I);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_REDDITUS), I);
+        CREDO_FALSUM (f->cadit_attingibilis);
+        CREDO_AEQUALIS_I32 (_bloci_attingibiles(f),
+            xar_numerus(f->bloci));
+
+        /* ternarius in positione sententiae */
+        f = _fluere(piscina,
+            "int f3(int c) { int x; x = c ? 1 : 2; return x; }",
+            FALSUM);
+        CREDO_NON_NIHIL (f);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_VERUS), I);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_FALSUS), I);
+        CREDO_FALSUM (f->cadit_attingibilis);
+        CREDO_AEQUALIS_I32 (_bloci_attingibiles(f),
+            xar_numerus(f->bloci));
+
+        /* dum (a || b): margo retro caput petit (segmentum PRIMUM -
+         * aestimatio tota recomincat); omnes bloci vivi */
+        f = _fluere(piscina,
+            "int f4(int a, int b) { while (a || b) { a = a - 1; }"
+            " return a; }", FALSUM);
+        CREDO_NON_NIHIL (f);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_VERUS), II);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_FALSUS), II);
+        CREDO_FALSUM (f->cadit_attingibilis);
+        CREDO_AEQUALIS_I32 (_bloci_attingibiles(f),
+            xar_numerus(f->bloci));
+
+        /* plicatio partialis NON fit in aedificatore: 0 && x sine
+         * aestimatore toto = cascada cum AMBOBUS marginibus (nullum
+         * falsum inattingibile; plicatio tota = officium
+         * aestimatoris) */
+        f = _fluere(piscina,
+            "int f5(int x) { if (0 && x) { return 1; } return 0; }",
+            VERUM);
+        CREDO_NON_NIHIL (f);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_VERUS), II);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_FALSUS), II);
+        CREDO_AEQUALIS_I32 (_bloci_mortui_pleni(f), ZEPHYRUM);
+
+        /* redde a && b: REDDITUS ex bloco iunctionis */
+        f = _fluere(piscina,
+            "int f6(int a, int b) { return a && b; }", FALSUM);
+        CREDO_NON_NIHIL (f);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_VERUS), I);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_FALSUS), I);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_REDDITUS), I);
+        CREDO_FALSUM (f->cadit_attingibilis);
+        CREDO_AEQUALIS_I32 (_bloci_attingibiles(f),
+            xar_numerus(f->bloci));
+
+        /* nidificatio: a && (b || c) - tres terminales */
+        f = _fluere(piscina,
+            "int f7(int a, int b, int c) {"
+            " if (a && (b || c)) { return 1; } return 0; }", FALSUM);
+        CREDO_NON_NIHIL (f);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_VERUS), III);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_FALSUS), III);
+        CREDO_AEQUALIS_I32 (_bloci_attingibiles(f),
+            xar_numerus(f->bloci));
+
+        /* negatio: !(a && b) - permutatio destinationum, forma
+         * eadem, omnes bloci vivi */
+        f = _fluere(piscina,
+            "int f8(int a, int b) { if (!(a && b)) { return 0; }"
+            " return 1; }", FALSUM);
+        CREDO_NON_NIHIL (f);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_VERUS), II);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_FALSUS), II);
+        CREDO_AEQUALIS_I32 (_bloci_attingibiles(f),
+            xar_numerus(f->bloci));
+
+        /* passus ansae per cum sectione: fissio in passus_b, margo
+         * retro ex iunctione eius */
+        f = _fluere(piscina,
+            "int f9(int a, int b) { int i;"
+            " for (i = 0; i < a; i = i + (a && b)) { b = b + 1; }"
+            " return i; }", FALSUM);
+        CREDO_NON_NIHIL (f);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_VERUS), II);
+        CREDO_AEQUALIS_I32 (_margines_generis(f,
+            (s32)FLUXUS_MARGO_FALSUS), II);
+        CREDO_FALSUM (f->cadit_attingibilis);
+        CREDO_AEQUALIS_I32 (_bloci_attingibiles(f),
+            xar_numerus(f->bloci));
     }
 
     credo_imprimere_compendium();
