@@ -11,6 +11,8 @@
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>   /* system - purgatio recursiva arboris entitatum */
+#include <dirent.h>   /* opendir/readdir/closedir - _prima_plagula_md */
 
 #define VIA_DB "gesta/build/probatio_tab.db"
 #define VIA_AN "gesta/build/probatio_tab.jsonl"
@@ -19,6 +21,10 @@
 #define VIA_BN "gesta/build/probatio_binarium_fictum.txt"
 #define VIA_MN "gesta/build/probatio_manifestum_fictum"
 #define VIA_FN "gesta/build/probatio_fons_fictus.c"
+#define VIA_ENT "gesta/build/probatio_entities"
+
+/* mensura bufferi semitae probationis (MMXL deest in latina.h) */
+#define PROBATIO_SEMITA_MENSURA 2048
 
 interior vacuum
 _purgare (vacuum)
@@ -31,6 +37,7 @@ _purgare (vacuum)
     remove(VIA_BN);
     remove(VIA_MN);
     remove(VIA_FN);
+    (vacuum)system("rm -rf " VIA_ENT);
 }
 
 /* plagulam scribere (fixtura vigiliae) */
@@ -77,6 +84,35 @@ _plagula_litterae (Piscina* piscina, constans character* via)
     textus[mensura] = '\0';
     fclose(pl);
     redde textus;
+}
+
+/* prima plagula .md in directorio (recens tagi) - textus totus,
+ * vacuum "" si directorium abest aut nulla plagula .md continet */
+interior constans character*
+_prima_plagula_md (Piscina* piscina, constans character* dir)
+{
+    DIR* d = opendir(dir);
+    structura dirent* e;
+    character semita[PROBATIO_SEMITA_MENSURA];
+
+    si (d == NIHIL)
+    {
+        redde "";
+    }
+    dum ((e = readdir(d)) != NIHIL)
+    {
+        memoriae_index ln = strlen(e->d_name);
+
+        si (e->d_name[0] != '.' && ln > III
+            && strcmp(e->d_name + (ln - III), ".md") == ZEPHYRUM)
+        {
+            sprintf(semita, "%s/%s", dir, e->d_name);
+            closedir(d);
+            redde _plagula_litterae(piscina, semita);
+        }
+    }
+    closedir(d);
+    redde "";
 }
 
 /* lineam mittere, responsum totum (litterae) recipere */
@@ -167,7 +203,7 @@ s32 principale (vacuum)
     cfg.signum = NIHIL;
     cfg.via_binarii = NIHIL;
     cfg.via_manifesti = NIHIL;
-    cfg.via_entitatum = NIHIL;
+    cfg.via_entitatum = VIA_ENT;
     t = tabularium_creare(piscina, &cfg);
     CREDO_NON_NIHIL (t);
     si (t == NIHIL)
@@ -1094,6 +1130,68 @@ s32 principale (vacuum)
             "\"res\",\"arguments\":{\"res\":\"Parsura lenta\"}}}");
         CREDO_VERUM (strstr(r, "datum") != NIHIL);
         CREDO_VERUM (strstr(r, "annales") != NIHIL);
+    }
+
+    /* ================================================
+     * XXIII. proiectio entitatum (per rem, per tag) - vita
+     * completa: creatio cum duobus tags, nota, mutatio status,
+     * retag (folder vetus purgatur, novum apparet)
+     * ================================================ */
+    {
+        constans character* md;
+
+        /* creare rem cum duobus tags */
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":200,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"addere\","
+            "\"arguments\":{\"genus\":\"parcum\",\"titulus\":"
+            "\"Probatio Entitatum Alpha\",\"corpus\":\"corpus alpha\","
+            "\"tags\":\"silva, examen\"}}}");
+
+        /* plagula in utroque folder tagi, corpus praesens */
+        md = _prima_plagula_md(piscina, VIA_ENT "/silva");
+        CREDO_VERUM (strstr(md, "genus: parcum") != NIHIL);
+        CREDO_VERUM (strstr(md, "# Probatio Entitatum Alpha") != NIHIL);
+        CREDO_VERUM (strstr(md, "corpus alpha") != NIHIL);
+        CREDO_VERUM (strstr(md, "GENERATUM") != NIHIL);
+        md = _prima_plagula_md(piscina, VIA_ENT "/examen");
+        CREDO_VERUM (strstr(md, "Probatio Entitatum Alpha") != NIHIL);
+
+        /* addere nota -> nota apparet, eadem plagula */
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":201,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Probatio Entitatum"
+            " Alpha\",\"actus\":\"nota\",\"textus\":\"nota prima"
+            " hic\"}}}");
+        md = _prima_plagula_md(piscina, VIA_ENT "/silva");
+        CREDO_VERUM (strstr(md, "## Notae") != NIHIL);
+        CREDO_VERUM (strstr(md, "nota prima hic") != NIHIL);
+
+        /* status -> lineae status, plagula manet (archivum planum) */
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":202,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Probatio Entitatum"
+            " Alpha\",\"actus\":\"status\",\"novus\":\"tractum\"}}}");
+        md = _prima_plagula_md(piscina, VIA_ENT "/silva");
+        CREDO_VERUM (strstr(md, "status: tractum") != NIHIL);
+
+        /* retag: mutatio datum obiectum crudum -> tabulatum reale.
+         * NOTA (probatum empirice): gerere mutatio clavis+valor
+         * pono 'tags' ut chorda simplicem (json_objectum_ponere_
+         * chorda - tabularium.c 1919), non tabulatum; mersio
+         * superficialis gestae (gesta.h:12-14) verbatim substituit
+         * - reconciliatio json_est_tabulatum requirit, ergo forma
+         * clavis+valor foliret in _sine_tag (probatum: assertio
+         * infra fracta cum ea forma adhibita). Forma datum crudum
+         * sola tabulatum verum ponit. */
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":203,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Probatio Entitatum"
+            " Alpha\",\"actus\":\"mutatio\",\"datum\":"
+            "\"{\\\"tags\\\":[\\\"mcp\\\"]}\"}}}");
+        md = _prima_plagula_md(piscina, VIA_ENT "/mcp");
+        CREDO_VERUM (strstr(md, "Probatio Entitatum Alpha") != NIHIL);
+        CREDO_VERUM (_prima_plagula_md(piscina, VIA_ENT "/silva")[0]
+            == '\0');   /* folder silva purgatum (vacuum aut abest) */
     }
 
     credo_imprimere_compendium();

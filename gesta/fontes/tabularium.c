@@ -15,6 +15,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>   /* horologium politicae tacendi (sutura POSIX) */
+#include <sys/stat.h>   /* mkdir */
+#include <dirent.h>     /* opendir/readdir/closedir */
+#include <unistd.h>     /* unlink/rmdir */
+#include <errno.h>      /* EEXIST */
 
 #define TABULARII_PROTOCOLLUM_PINNATUM "2025-06-18"
 
@@ -1332,6 +1336,721 @@ _tabulam_scribere (Tabularium* t, Piscina* pn)
 }
 
 /* ==================================================
+ * entitates: proiectio una-plagula-per-rem (GENERATUM per tag -
+ * archivum planum legibile ex quovis editore/instrumento quod
+ * folders navigat). Spec: .superpowers/sdd/task-2-brief.md.
+ * ================================================== */
+
+/* mensura communis bufferum semitae (MDXX/MMXL desunt in
+ * latina.h - numerale nostrum proprium) */
+#define ENT_SEMITA_MENSURA 2048
+
+/* titulum in slug URL-aptum vertere: minusculae ASCII, quisque
+ * cursus non-[a-z0-9] fit lineola una, lineolae extremae
+ * praecisae, ad XL octetos truncatum (sine lineola pendente post
+ * truncationem). Titulus vacuus/sine-alnum -> "sine-titulo" */
+interior chorda
+_titulum_ad_slug (chorda titulus, Piscina* pn)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(pn, LXIV);
+    b32 lineola_pendens = FALSUM;   /* an ultimum emissum fuit '-' */
+    b32 aliquid = FALSUM;           /* an character alphanumericus emissus */
+    i32 emissa = ZEPHYRUM;          /* longitudo currens */
+    i32 i;
+    character unum[II];
+
+    unum[I] = '\0';
+    per (i = ZEPHYRUM; i < titulus.mensura && emissa < XL; i++)
+    {
+        i8 c = titulus.datum[i];
+
+        si (c >= (i8)'A' && c <= (i8)'Z')
+        {
+            c = (i8)(c + (i8)('a' - 'A'));
+        }
+        si ((c >= (i8)'a' && c <= (i8)'z')
+            || (c >= (i8)'0' && c <= (i8)'9'))
+        {
+            si (lineola_pendens && aliquid)
+            {
+                chorda_aedificator_appendere_literis(aed, "-");
+                emissa++;
+                lineola_pendens = FALSUM;
+            }
+            unum[0] = (character)c;
+            chorda_aedificator_appendere_literis(aed, unum);
+            emissa++;
+            aliquid = VERUM;
+        }
+        alioquin
+        {
+            lineola_pendens = VERUM;   /* mora - lineolam solum si sequitur alnum */
+        }
+    }
+    si (!aliquid)
+    {
+        redde _ch("sine-titulo");
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
+/* "<genus>-<slug>-<res_id>.md" */
+interior chorda
+_entitatem_nomen_plagulae (chorda genus, chorda slug,
+    constans character* res_id, Piscina* pn)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(pn, LXIV);
+
+    chorda_aedificator_appendere_chorda(aed, genus);
+    chorda_aedificator_appendere_literis(aed, "-");
+    chorda_aedificator_appendere_chorda(aed, slug);
+    chorda_aedificator_appendere_literis(aed, "-");
+    chorda_aedificator_appendere_literis(aed, res_id);
+    chorda_aedificator_appendere_literis(aed, ".md");
+    redde chorda_aedificator_finire(aed);
+}
+
+/* ==================================================
+ * auxilia POSIX (mkdir/scandir/scribere/delere) - proiectio non
+ * est via critica: errores tacite ignorantur (archivum
+ * derivatum, regenerabile per initialize)
+ * ================================================== */
+
+interior vacuum
+_directorium_facere (constans character* via)
+{
+    si (mkdir(via, 0755) != ZEPHYRUM && errno != EEXIST)
+    {
+        /* tacite pergere - proiectio non est via critica */
+    }
+}
+
+/* "a/b" in buf; FALSUM si excederet cap */
+interior b32
+_semita_iungere (character* buf, memoriae_index cap,
+    constans character* a, constans character* b)
+{
+    memoriae_index la = strlen(a);
+    memoriae_index lb = strlen(b);
+
+    si (la + I + lb + I > cap)
+    {
+        redde FALSUM;
+    }
+    memcpy(buf, a, la);
+    buf[la] = '/';
+    memcpy(buf + la + I, b, lb);
+    buf[la + I + lb] = '\0';
+    redde VERUM;
+}
+
+interior vacuum
+_plagulam_chorda_scribere (constans character* via, chorda textus)
+{
+    FILE* pl = fopen(via, "wb");
+
+    si (pl == NIHIL)
+    {
+        redde;
+    }
+    si (textus.mensura > ZEPHYRUM)
+    {
+        (vacuum)fwrite(textus.datum, I,
+            (memoriae_index)textus.mensura, pl);
+    }
+    fclose(pl);
+}
+
+/* trans omnia subdirectoria tagorum, quaeque plagula terminans
+ * "-<res_id>.md" delere; directorium vacuum relictum purgare */
+interior vacuum
+_entis_plagulas_omnes_delere (Tabularium* t, constans character* res_id,
+    Piscina* pn)
+{
+    DIR* radix;
+    structura dirent* e;
+    character acus[XL + IV];   /* "-<ulid>.md" */
+
+    (vacuum)pn;
+    si (t->via_entitatum == NIHIL)
+    {
+        redde;
+    }
+    radix = opendir(t->via_entitatum);
+    si (radix == NIHIL)
+    {
+        redde;
+    }
+    sprintf(acus, "-%s.md", res_id);
+    dum ((e = readdir(radix)) != NIHIL)
+    {
+        character semita_dir[ENT_SEMITA_MENSURA];
+        DIR* sub;
+        structura dirent* f;
+        b32 vacua = VERUM;
+
+        si (e->d_name[0] == '.')
+        {
+            perge;
+        }
+        si (!_semita_iungere(semita_dir, magnitudo(semita_dir),
+                t->via_entitatum, e->d_name))
+        {
+            perge;
+        }
+        sub = opendir(semita_dir);
+        si (sub == NIHIL)
+        {
+            perge;   /* non directorium */
+        }
+        dum ((f = readdir(sub)) != NIHIL)
+        {
+            character semita_plag[ENT_SEMITA_MENSURA];
+            memoriae_index ln = strlen(f->d_name);
+            memoriae_index la = strlen(acus);
+
+            si (f->d_name[0] == '.')
+            {
+                perge;
+            }
+            si (ln >= la
+                && strcmp(f->d_name + (ln - la), acus) == ZEPHYRUM)
+            {
+                si (_semita_iungere(semita_plag, magnitudo(semita_plag),
+                        semita_dir, f->d_name))
+                {
+                    unlink(semita_plag);
+                }
+            }
+            alioquin
+            {
+                vacua = FALSUM;   /* alia plagula manet */
+            }
+        }
+        closedir(sub);
+        si (vacua)
+        {
+            rmdir(semita_dir);   /* directorium tagi vacuum purgare */
+        }
+    }
+    closedir(radix);
+}
+
+/* ==================================================
+ * entitas -> chorda semitae relativae / markdown
+ * ================================================== */
+
+/* semita relativa "../<primum-tag>/<genus>-<slug>-<id>.md" ad
+ * membrum ligatum; chorda vacua si membrum_id non est res (tunc
+ * vocans textum planum reddit) */
+interior chorda
+_entitatem_semita_relativa (Tabularium* t, chorda membrum_id, Piscina* pn)
+{
+    ScriniumEnuntiatum* e;
+    chorda genus_ch = _ch("");
+    chorda titulus_ch = _ch("");
+    chorda datum;
+    chorda primum_tag;
+    chorda slug;
+    ChordaAedificator* aed;
+    b32 inventa = FALSUM;
+
+    primum_tag = _ch("_sine_tag");
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT genus, titulus FROM res WHERE res_id = ?");
+    si (e == NIHIL)
+    {
+        redde _ch("");
+    }
+    scrinium_ligare_textum(e, I, membrum_id);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        genus_ch = scrinium_columna_textus(e, ZEPHYRUM, pn);
+        titulus_ch = scrinium_columna_textus(e, I, pn);
+        inventa = VERUM;
+    }
+    scrinium_finire(e);
+    si (!inventa)
+    {
+        redde _ch("");   /* membrum non est res -> sine ligamine */
+    }
+    datum = gesta_res_datum(t->mundus, _litterae(pn, membrum_id), pn);
+    {
+        JsonResultus r = json_legere(datum, pn);
+
+        si (r.successus && json_est_objectum(r.radix))
+        {
+            JsonValor* tags = json_objectum_capere(r.radix, "tags");
+
+            si (tags != NIHIL && json_est_tabulatum(tags)
+                && json_tabulatum_numerus(tags) > ZEPHYRUM)
+            {
+                JsonValor* t0 = json_tabulatum_obtinere(tags, ZEPHYRUM);
+
+                si (t0 != NIHIL && json_est_chorda(t0))
+                {
+                    primum_tag = json_ad_chorda(t0);
+                }
+            }
+        }
+    }
+    slug = _titulum_ad_slug(titulus_ch, pn);
+    aed = chorda_aedificator_creare(pn, LXIV);
+    chorda_aedificator_appendere_literis(aed, "../");
+    chorda_aedificator_appendere_chorda(aed, primum_tag);
+    chorda_aedificator_appendere_literis(aed, "/");
+    chorda_aedificator_appendere_chorda(aed,
+        _entitatem_nomen_plagulae(genus_ch, slug,
+            _litterae(pn, membrum_id), pn));
+    redde chorda_aedificator_finire(aed);
+}
+
+/* corpus plenus plagulae unius entitatis: frontmatter + titulus +
+ * corpus + ## Status + ## Notae + ## Nexus + ## Ancorae. Assumit
+ * rem exsistere (vocans gesta_res_datum non-vacuum iam probavit) */
+interior chorda
+_entitatem_ad_markdown (Tabularium* t, constans character* res_id,
+    Piscina* pn)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(pn,
+        ENT_SEMITA_MENSURA);
+    chorda datum = gesta_res_datum(t->mundus, res_id, pn);
+    JsonValor* st = NIHIL;
+    chorda genus_ch = _ch("");
+    chorda titulus_ch = _ch("");
+    chorda status_ch = _ch("");
+    chorda creatum_ch = _ch("");
+    JsonResultus r;
+
+    /* res tabula: genus/titulus/status/creatum */
+    {
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            gesta_scrinium(t->mundus),
+            "SELECT genus, titulus, status, creatum FROM res"
+            " WHERE res_id = ?");
+
+        si (e != NIHIL)
+        {
+            scrinium_ligare_textum(e, I, _ch(res_id));
+            si (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                genus_ch = scrinium_columna_textus(e, ZEPHYRUM, pn);
+                titulus_ch = scrinium_columna_textus(e, I, pn);
+                status_ch = scrinium_columna_textus(e, II, pn);
+                creatum_ch = scrinium_columna_textus(e, III, pn);
+            }
+            scrinium_finire(e);
+        }
+    }
+    r = json_legere(datum, pn);
+    si (r.successus && json_est_objectum(r.radix))
+    {
+        st = r.radix;
+    }
+    /* frontmatter */
+    chorda_aedificator_appendere_literis(aed, "---\nid: ");
+    chorda_aedificator_appendere_literis(aed, res_id);
+    chorda_aedificator_appendere_literis(aed, "\ngenus: ");
+    chorda_aedificator_appendere_chorda(aed, genus_ch);
+    chorda_aedificator_appendere_literis(aed, "\nstatus: ");
+    chorda_aedificator_appendere_chorda(aed, status_ch);
+    chorda_aedificator_appendere_literis(aed, "\ncreatum: ");
+    chorda_aedificator_appendere_chorda(aed, creatum_ch);
+    chorda_aedificator_appendere_literis(aed, "\ntags: ");
+    si (st != NIHIL)
+    {
+        JsonValor* tags = json_objectum_capere(st, "tags");
+        i32 i;
+        i32 n = (tags != NIHIL && json_est_tabulatum(tags))
+            ? json_tabulatum_numerus(tags) : ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            JsonValor* tg = json_tabulatum_obtinere(tags, i);
+
+            si (tg == NIHIL || !json_est_chorda(tg))
+            {
+                perge;
+            }
+            si (i > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(aed, ", ");
+            }
+            chorda_aedificator_appendere_chorda(aed, json_ad_chorda(tg));
+        }
+    }
+    chorda_aedificator_appendere_literis(aed,
+        "\n---\n\n> GENERATUM (proiectio entitatum - noli manu"
+        " edere)\n\n# ");
+    chorda_aedificator_appendere_chorda(aed, titulus_ch);
+    chorda_aedificator_appendere_literis(aed, "\n\n");
+    /* corpus */
+    si (st != NIHIL)
+    {
+        JsonValor* corpus = json_objectum_capere(st, "corpus");
+
+        si (corpus != NIHIL && json_est_chorda(corpus))
+        {
+            chorda_aedificator_appendere_chorda(aed,
+                json_ad_chorda(corpus));
+            chorda_aedificator_appendere_literis(aed, "\n");
+        }
+    }
+    /* ## Status - chronologia ex eventis creatio/status */
+    {
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            gesta_scrinium(t->mundus),
+            "SELECT genus_eventus, datum, creatum FROM tessellae"
+            " WHERE res_id = ? AND genus_eventus IN ('creatio','status')"
+            " ORDER BY seq");
+
+        si (e != NIHIL)
+        {
+            scrinium_ligare_textum(e, I, _ch(res_id));
+            chorda_aedificator_appendere_literis(aed, "\n## Status\n\n");
+            dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                chorda ge = scrinium_columna_textus(e, ZEPHYRUM, pn);
+                chorda ed = scrinium_columna_textus(e, I, pn);
+                chorda ec = scrinium_columna_textus(e, II, pn);
+
+                chorda_aedificator_appendere_literis(aed, "- ");
+                si (_chorda_est(ge, "creatio"))
+                {
+                    chorda_aedificator_appendere_literis(aed, "creatum");
+                }
+                alioquin
+                {
+                    JsonResultus rd = json_legere(ed, pn);
+
+                    si (rd.successus && json_est_objectum(rd.radix))
+                    {
+                        JsonValor* nv = json_objectum_capere(rd.radix,
+                            "novus");
+
+                        si (nv != NIHIL && json_est_chorda(nv))
+                        {
+                            chorda_aedificator_appendere_chorda(aed,
+                                json_ad_chorda(nv));
+                        }
+                    }
+                }
+                chorda_aedificator_appendere_literis(aed,
+                    " \xE2\x80\x94 ");
+                chorda_aedificator_appendere_chorda(aed, ec);
+                chorda_aedificator_appendere_literis(aed, "\n");
+            }
+            scrinium_finire(e);
+        }
+    }
+    /* ## Notae - omnes, vetustissima primum */
+    {
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            gesta_scrinium(t->mundus),
+            "SELECT datum, actor, creatum FROM tessellae"
+            " WHERE res_id = ? AND genus_eventus = 'nota' ORDER BY seq");
+        b32 caput = FALSUM;
+
+        si (e != NIHIL)
+        {
+            scrinium_ligare_textum(e, I, _ch(res_id));
+            dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                chorda ed = scrinium_columna_textus(e, ZEPHYRUM, pn);
+                chorda ea = scrinium_columna_textus(e, I, pn);
+                chorda ec = scrinium_columna_textus(e, II, pn);
+                JsonResultus rd = json_legere(ed, pn);
+
+                si (!caput)
+                {
+                    chorda_aedificator_appendere_literis(aed,
+                        "\n## Notae\n\n");
+                    caput = VERUM;
+                }
+                chorda_aedificator_appendere_literis(aed, "- ");
+                chorda_aedificator_appendere_chorda(aed, ec);
+                chorda_aedificator_appendere_literis(aed, " (");
+                chorda_aedificator_appendere_chorda(aed, ea);
+                chorda_aedificator_appendere_literis(aed, "): ");
+                si (rd.successus && json_est_objectum(rd.radix))
+                {
+                    JsonValor* tx = json_objectum_capere(rd.radix,
+                        "textus");
+
+                    si (tx != NIHIL && json_est_chorda(tx))
+                    {
+                        chorda_aedificator_appendere_chorda(aed,
+                            json_ad_chorda(tx));
+                    }
+                }
+                chorda_aedificator_appendere_literis(aed, "\n");
+            }
+            scrinium_finire(e);
+        }
+    }
+    /* ## Nexus - socii ut ligamina relativa */
+    {
+        Xar* socii = gesta_socii_rei(t->mundus, res_id, pn);
+        i32 i;
+        i32 n = (socii != NIHIL) ? xar_numerus(socii) : ZEPHYRUM;
+
+        si (n > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed, "\n## Nexus\n\n");
+        }
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            GestaSocius* s = (GestaSocius*)xar_obtinere(socii, i);
+            chorda verbum;
+            chorda titulus_m;
+            chorda semita;
+
+            si (s == NIHIL)
+            {
+                perge;
+            }
+            verbum = _verbum_vinculi(t, s->nexus_res, pn);
+            titulus_m = _titulus_membri(t, s->membrum, pn);
+            semita = _entitatem_semita_relativa(t, s->membrum, pn);
+            chorda_aedificator_appendere_literis(aed, "- ");
+            chorda_aedificator_appendere_chorda(aed, verbum);
+            chorda_aedificator_appendere_literis(aed,
+                " \xE2\x86\x92 ");
+            si (semita.mensura > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(aed, "[");
+                chorda_aedificator_appendere_chorda(aed, titulus_m);
+                chorda_aedificator_appendere_literis(aed, "](");
+                chorda_aedificator_appendere_chorda(aed, semita);
+                chorda_aedificator_appendere_literis(aed, ")");
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_chorda(aed, titulus_m);
+            }
+            chorda_aedificator_appendere_literis(aed, "\n");
+        }
+    }
+    /* ## Ancorae */
+    si (st != NIHIL)
+    {
+        JsonValor* anc = json_objectum_capere(st, "ancorae");
+        i32 i;
+        i32 n = (anc != NIHIL && json_est_tabulatum(anc))
+            ? json_tabulatum_numerus(anc) : ZEPHYRUM;
+
+        si (n > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed, "\n## Ancorae\n\n");
+        }
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            JsonValor* a = json_tabulatum_obtinere(anc, i);
+            JsonValor* ag;
+            JsonValor* as;
+
+            si (a == NIHIL || !json_est_objectum(a))
+            {
+                perge;
+            }
+            ag = json_objectum_capere(a, "genus");
+            as = json_objectum_capere(a, "scopus");
+            chorda_aedificator_appendere_literis(aed, "- ");
+            si (ag != NIHIL && json_est_chorda(ag))
+            {
+                chorda_aedificator_appendere_chorda(aed,
+                    json_ad_chorda(ag));
+                chorda_aedificator_appendere_literis(aed, " ");
+            }
+            si (as != NIHIL && json_est_chorda(as))
+            {
+                chorda_aedificator_appendere_literis(aed, "`");
+                chorda_aedificator_appendere_chorda(aed,
+                    json_ad_chorda(as));
+                chorda_aedificator_appendere_literis(aed, "`");
+            }
+            chorda_aedificator_appendere_literis(aed, "\n");
+        }
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
+/* ==================================================
+ * reconciliatio - una res (incrementalis)
+ * ================================================== */
+
+/* plagulam entitatis in omne directorium tagi (vel _sine_tag)
+ * scribere, prioribus copiis prius deletis. Res remota/absens
+ * (gesta_res_datum vacuum) -> omnes copiae delentur, nihil
+ * scribitur. */
+interior vacuum
+_entitatem_reconciliare (Tabularium* t, constans character* res_id,
+    Piscina* pn)
+{
+    chorda datum;
+    chorda genus_ch = _ch("");
+    chorda titulus_ch = _ch("");
+    chorda slug;
+    chorda nomen_plagulae;
+    chorda md;
+    JsonValor* st = NIHIL;
+    JsonValor* tags = NIHIL;
+    i32 n_tags = ZEPHYRUM;
+    i32 i;
+
+    si (t->via_entitatum == NIHIL)
+    {
+        redde;
+    }
+    /* semper primo reliquas plagulas huius entis purgare (tags/slug
+     * mutati, remotio) - systema plagularum = memoria status veteris */
+    _entis_plagulas_omnes_delere(t, res_id, pn);
+
+    datum = gesta_res_datum(t->mundus, res_id, pn);
+    si (datum.mensura == ZEPHYRUM)
+    {
+        redde;   /* remotum/absens -> nullae plagulae optatae */
+    }
+    {
+        JsonResultus r = json_legere(datum, pn);
+
+        si (r.successus && json_est_objectum(r.radix))
+        {
+            st = r.radix;
+        }
+    }
+    {
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            gesta_scrinium(t->mundus),
+            "SELECT genus, titulus FROM res WHERE res_id = ?");
+
+        si (e != NIHIL)
+        {
+            scrinium_ligare_textum(e, I, _ch(res_id));
+            si (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                genus_ch = scrinium_columna_textus(e, ZEPHYRUM, pn);
+                titulus_ch = scrinium_columna_textus(e, I, pn);
+            }
+            scrinium_finire(e);
+        }
+    }
+    slug = _titulum_ad_slug(titulus_ch, pn);
+    nomen_plagulae = _entitatem_nomen_plagulae(genus_ch, slug, res_id,
+        pn);
+    md = _entitatem_ad_markdown(t, res_id, pn);
+
+    si (st != NIHIL)
+    {
+        tags = json_objectum_capere(st, "tags");
+        si (tags != NIHIL && json_est_tabulatum(tags))
+        {
+            n_tags = json_tabulatum_numerus(tags);
+        }
+    }
+    _directorium_facere(t->via_entitatum);
+
+    si (n_tags == ZEPHYRUM)
+    {
+        character dir[ENT_SEMITA_MENSURA];
+        character plag[ENT_SEMITA_MENSURA];
+
+        si (_semita_iungere(dir, magnitudo(dir), t->via_entitatum,
+                "_sine_tag"))
+        {
+            _directorium_facere(dir);
+            si (_semita_iungere(plag, magnitudo(plag), dir,
+                    _litterae(pn, nomen_plagulae)))
+            {
+                _plagulam_chorda_scribere(plag, md);
+            }
+        }
+        redde;
+    }
+    per (i = ZEPHYRUM; i < n_tags; i++)
+    {
+        JsonValor* tg = json_tabulatum_obtinere(tags, i);
+        character dir[ENT_SEMITA_MENSURA];
+        character plag[ENT_SEMITA_MENSURA];
+
+        si (tg == NIHIL || !json_est_chorda(tg))
+        {
+            perge;
+        }
+        si (_semita_iungere(dir, magnitudo(dir), t->via_entitatum,
+                _litterae(pn, json_ad_chorda(tg))))
+        {
+            _directorium_facere(dir);
+            si (_semita_iungere(plag, magnitudo(plag), dir,
+                    _litterae(pn, nomen_plagulae)))
+            {
+                _plagulam_chorda_scribere(plag, md);
+            }
+        }
+    }
+}
+
+/* ==================================================
+ * reconciliatio - omnes res (transitus plenus / reformatio)
+ * ================================================== */
+
+interior vacuum
+_directorium_purgare (constans character* via)
+{
+    DIR* d = opendir(via);
+    structura dirent* e;
+
+    si (d == NIHIL)
+    {
+        redde;
+    }
+    dum ((e = readdir(d)) != NIHIL)
+    {
+        character semita[ENT_SEMITA_MENSURA];
+
+        si (e->d_name[0] == '.')
+        {
+            perge;
+        }
+        si (_semita_iungere(semita, magnitudo(semita), via, e->d_name))
+        {
+            _directorium_purgare(semita);   /* si directorium */
+            unlink(semita);                  /* si plagula */
+            rmdir(semita);                   /* si directorium iam vacuum */
+        }
+    }
+    closedir(d);
+}
+
+/* directorium entitatum purgare + omnem rem in scrinio
+ * reconciliare (initialize + operationes multi-rei) */
+interior vacuum
+_entitates_reconciliare_omnes (Tabularium* t, Piscina* pn)
+{
+    ScriniumEnuntiatum* e;
+
+    si (t->via_entitatum == NIHIL)
+    {
+        redde;
+    }
+    _directorium_purgare(t->via_entitatum);
+    _directorium_facere(t->via_entitatum);
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT res_id FROM res ORDER BY res_id");
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda rid = scrinium_columna_textus(e, ZEPHYRUM, pn);
+
+        _entitatem_reconciliare(t, _litterae(pn, rid), pn);
+    }
+    scrinium_finire(e);
+}
+
+/* ==================================================
  * instrumenta
  * ================================================== */
 
@@ -1593,6 +2312,7 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
         redde;
     }
     _tabulam_scribere(t, pn);
+    _entitatem_reconciliare(t, res_id, pn);
     {
         ChordaAedificator* aed = chorda_aedificator_creare(pn,
             CCLVI);
@@ -1781,6 +2501,8 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
             redde;
         }
         _tabulam_scribere(t, pn);
+        _entitatem_reconciliare(t, _litterae(pn, res_id), pn);
+        _entitatem_reconciliare(t, _litterae(pn, membrum_b), pn);
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 CCLVI);
@@ -1882,6 +2604,8 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
             redde;
         }
         _tabulam_scribere(t, pn);
+        _entitatem_reconciliare(t, _litterae(pn, res_id), pn);
+        _entitatem_reconciliare(t, _litterae(pn, membrum_b), pn);
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 CCLVI);
@@ -2014,6 +2738,7 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         redde;
     }
     _tabulam_scribere(t, pn);
+    _entitatem_reconciliare(t, _litterae(pn, res_id), pn);
     {
         ChordaAedificator* aed = chorda_aedificator_creare(pn,
             CCLVI);
@@ -2818,6 +3543,7 @@ _tab_agere (Tabularium* t, Piscina* pn, JsonValor* id,
             redde;
         }
         _tabulam_scribere(t, pn);
+        _entitates_reconciliare_omnes(t, pn);
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 CCLVI);
@@ -2872,6 +3598,7 @@ _tab_agere (Tabularium* t, Piscina* pn, JsonValor* id,
             redde;
         }
         _tabulam_scribere(t, pn);
+        _entitates_reconciliare_omnes(t, pn);
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 CCLVI);
@@ -3054,6 +3781,7 @@ _tab_ramus (Tabularium* t, Piscina* pn, JsonValor* id,
             redde;
         }
         _tabulam_scribere(t, pn);
+        _entitates_reconciliare_omnes(t, pn);
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 CCLVI);
@@ -3263,6 +3991,7 @@ _tab_ramus (Tabularium* t, Piscina* pn, JsonValor* id,
             redde;
         }
         _tabulam_scribere(t, pn);
+        _entitates_reconciliare_omnes(t, pn);
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 CCLVI);
@@ -3315,6 +4044,7 @@ _tab_ramus (Tabularium* t, Piscina* pn, JsonValor* id,
             redde;
         }
         _tabulam_scribere(t, pn);
+        _entitates_reconciliare_omnes(t, pn);
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 CCLVI);
@@ -3625,6 +4355,7 @@ _initialize_tractare (Tabularium* t, Piscina* pn, JsonValor* id,
     }
     _seminare(t, pn);
     _tabulam_scribere(t, pn);
+    _entitates_reconciliare_omnes(t, pn);
     t->initiatum = VERUM;
     {
         JsonValor* resultatum = json_objectum_creare(pn);
