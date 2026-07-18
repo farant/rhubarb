@@ -568,6 +568,16 @@ _expressionem_ambulare (FluxusExtractor* ex, constans SilvaNodus* n)
                     _ut_nodus(silva_c89_accessus_basis(n)));
                 redde;
             }
+            si (ex->aux.expressio_acies != NIHIL
+                && ex->aux.expressio_acies(ex->aux.contextus, n))
+            {
+                /* membrum-acies positione valoris DECADIT: locus
+                 * in aggregatum sumptus (memset(r.c,...)) */
+                _locum_resolvere(ex,
+                    _ut_nodus(silva_c89_accessus_basis(n)),
+                    FALSUM, (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI);
+                redde;
+            }
             /* lectio membri aggregati invisibilis (s05a) */
             _locum_resolvere(ex,
                 _ut_nodus(silva_c89_accessus_basis(n)),
@@ -584,6 +594,16 @@ _expressionem_ambulare (FluxusExtractor* ex, constans SilvaNodus* n)
                     && facta.identitas == ex->declarator_identitas)
                     ? VERUM : FALSUM;
 
+                si (facta.acies)
+                {
+                    /* decasus aciei (T[] -> T*): locus sumptus,
+                     * non lectio - clang idem tacet */
+                    _eventum_emittere(ex,
+                        _variabilis_index(ex, &facta),
+                        (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI, n,
+                        FALSUM);
+                    redde;
+                }
                 _eventum_emittere(ex, _variabilis_index(ex, &facta),
                     (s32)FLUXUS_EVENTUM_USUS, n, proprius);
             }
@@ -914,6 +934,7 @@ silva_c89_fluxus_datorum_aedificare (Piscina* piscina,
     {
         ex.aux.symbolum = NIHIL;
         ex.aux.parametrum_constans = NIHIL;
+        ex.aux.expressio_acies = NIHIL;
         ex.aux.canonicum = NIHIL;
         ex.aux.contextus = NIHIL;
     }

@@ -373,6 +373,15 @@ nomen enumeratio {
     EXAMEN_CODEX_ANGUSTATIO,                  /* DOMESTICUM */
     EXAMEN_CODEX_VARIABILIS_INUTILIS,         /* DOMESTICUM */
     EXAMEN_CODEX_PARAMETRUM_INUTILE,          /* DOMESTICUM */
+    /* FLUXUS-1 chunk C (spec silva-fluxus-1-spec-v2.md §6):
+     * 71 = definite (-Wuninitialized paritas, ancora = usus);
+     * 72 = quandocumque (-Wsometimes-uninitialized paritas, ancora
+     *      = origo marginis culpabilis, socius = usus);
+     * 73 = classis residua (-Wconditional-uninitialized, DORMIT
+     *      post _forsitan_vigil - numerus census solus). */
+    EXAMEN_CODEX_LECTIO_ININITIATA,           /* SUSPECTUM */
+    EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE,     /* SUSPECTUM */
+    EXAMEN_CODEX_ININITIATA_FORSITAN,         /* SUSPECTUM, dormit */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

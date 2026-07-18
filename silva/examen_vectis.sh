@@ -177,8 +177,10 @@ for f in "$FIXA"/*.domesticum; do
         fi
     done
     n_pinnae="$(printf '%s\n' "$exspecta" | grep -c . || true)"
-    n_monita="$(printf '%s\n' "$monita" | grep -c "$exemplar" \
-        || true)"
+    # solum ordines "warning:" - notae clang exemplar repetere
+    # possunt ("uninitialized use occurs here" sub -Wuninitialized)
+    n_monita="$(printf '%s\n' "$monita" \
+        | grep -c "warning:.*$exemplar" || true)"
     if [ "$n_pinnae" != "$n_monita" ]; then
         echo "  DISCREPANTIA NUMERI: $basis pinnae=$n_pinnae" \
              "monita oraculi=$n_monita"
@@ -234,8 +236,10 @@ for f in "$FIXA"/*.suspectum; do
         fi
     done
     n_pinnae="$(printf '%s\n' "$exspecta" | grep -c . || true)"
-    n_monita="$(printf '%s\n' "$monita" | grep -c "$exemplar" \
-        || true)"
+    # solum ordines "warning:" - notae clang exemplar repetere
+    # possunt ("uninitialized use occurs here" sub -Wuninitialized)
+    n_monita="$(printf '%s\n' "$monita" \
+        | grep -c "warning:.*$exemplar" || true)"
     if [ "$n_pinnae" != "$n_monita" ]; then
         echo "  DISCREPANTIA NUMERI: $basis pinnae=$n_pinnae" \
              "monita oraculi=$n_monita"

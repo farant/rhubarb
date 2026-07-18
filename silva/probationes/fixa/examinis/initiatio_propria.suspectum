@@ -1,0 +1,18 @@
+/* initiatio propria (codex 71) - int x = x (specimen s02).
+ * ORACULUM -Wuninitialized */
+
+static int propria(void)
+{
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    int x = x;
+
+    return x;
+}
+
+static int propria_arithmetica(void)
+{
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    int y = y + 1;
+
+    return y;
+}

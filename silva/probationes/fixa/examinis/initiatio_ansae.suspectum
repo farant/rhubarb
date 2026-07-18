@@ -1,0 +1,58 @@
+/* ansae (specimina s07/s15/s17): frange affirmationem exactam
+ * facit; ansa pura cum margine retro = classis residua (tacet).
+ * ORACULUM -Wuninitialized */
+
+extern int opacum(void);
+
+static int ansa_pura(void)
+{
+    int x;
+
+    while (opacum()) { x = 1; }
+    return x;
+}
+
+static int ansa_cum_frange(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    while (opacum()) { x = 1; break; }
+    return x;
+}
+
+static int fac_dum_semper(void)
+{
+    int x;
+
+    do { x = 1; } while (opacum());
+    return x;
+}
+
+static int per_cum_frange(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    for (; opacum();) { x = 1; break; }
+    return x;
+}
+
+static int ansa_numerata(int n)
+{
+    int x;
+    int i;
+
+    for (i = 0; i < n; i++) { x = i; }
+    return x;
+}
+
+static int lectio_in_conditione(void)
+{
+    int x;
+    int i = 0;
+
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    do { i++; } while (i < x);
+    return i;
+}

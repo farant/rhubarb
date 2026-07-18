@@ -1,0 +1,62 @@
+/* quandocumque per si (codex 72; specimina s06/s21): affirmatio
+ * "quandocumque" litteralis; operandum finale = vocabularium 'si'.
+ * ORACULUM -Wuninitialized */
+
+extern int opacum(void);
+extern void sink(int v);
+
+static int sine_alioquin(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    if (opacum()) { x = 1; }
+    return x;
+}
+
+static int ambo_rami(void)
+{
+    int x;
+
+    if (opacum()) { x = 1; } else { x = 2; }
+    return x;
+}
+
+static int alioquin_solum(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    if (opacum()) { sink(0); } else { x = 2; }
+    return x;
+}
+
+static int custodia_prima(void)
+{
+    int x;
+
+    if (!opacum()) { return 0; }
+    x = 1;
+    return x;
+}
+
+static int operandum_finale_verum(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    if (opacum() && opacum()) { ; } else { x = 1; }
+    return x;
+}
+
+static int operandum_finale_falsum(void)
+{
+    int x;
+
+    /* duo margines culpabiles: 'si' falsum + '&&' falsum breve -
+     * clang duo monita eodem linea (s21b) */
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    if (opacum() && opacum()) { x = 1; }
+    return x;
+}

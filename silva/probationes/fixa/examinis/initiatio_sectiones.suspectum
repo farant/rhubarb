@@ -1,0 +1,49 @@
+/* sectiones breves (specimina s08/s16/s20): margines || / &&
+ * ipsi margines rami (fissio chunk 0), culpa in operatore.
+ * ORACULUM -Wuninitialized */
+
+extern int opacum(void);
+
+static int vel_in_sententia(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    (void)(opacum() || (x = 1));
+    return x;
+}
+
+static int et_in_conditione(void)
+{
+    int x;
+
+    if (opacum() && (x = 1)) { return x; }
+    return 0;
+}
+
+static int ternarius_lectio(void)
+{
+    int x;
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    int y = opacum() ? x : 0;
+
+    return y;
+}
+
+static int vel_in_conditione(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    if (opacum() || (x = 1)) { ; }
+    return x;
+}
+
+static int vel_in_ansa(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    while (opacum() || (x = 1)) { break; }
+    return x;
+}

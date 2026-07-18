@@ -1,0 +1,28 @@
+/* salta (specimen s10): culpa in si custodiente; salta retro
+ * cum definitione praecedente tacet.
+ * ORACULUM -Wuninitialized */
+
+extern int opacum(void);
+
+static int trans_initiationem(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    if (opacum()) goto post;
+    x = 1;
+post:
+    return x;
+}
+
+static int retro_salta(void)
+{
+    int x;
+    int n = 0;
+
+again:
+    if (n > 0) return x;
+    x = 5;
+    n = 1;
+    goto again;
+}

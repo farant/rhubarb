@@ -14,6 +14,10 @@ interior vacuum _nexum_ponere (SilvaSemantica* sem,
     constans SilvaNodus* nodus, SemanticaSymbolum* symbolum,
     b32 notare_usum);
 
+/* praedeclaratio: ligamen aciei (typationes infra definitae) */
+interior b32 _datorum_expressio_acies_ligamen (vacuum* contextus,
+    constans SilvaNodus* nodus);
+
 /* ==================================================
  * Auxiliares
  * ================================================== */
@@ -169,7 +173,12 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "salta ad titulum ignotum",                 EXAMEN_VIOLATIO },
     { "angustatio implicita (latitudo perditur)", EXAMEN_DOMESTICUM },
     { "variabilis inutilis",                      EXAMEN_DOMESTICUM },
-    { "parametrum inutile",                       EXAMEN_DOMESTICUM }
+    { "parametrum inutile",                       EXAMEN_DOMESTICUM },
+    { "variabilis ininitiata legitur",            EXAMEN_SUSPECTUM },
+    { "hoc ramo sumpto variabilis ininitiata legitur (usus = socius)",
+                                                  EXAMEN_SUSPECTUM },
+    { "variabilis fortasse ininitiata legitur (classis residua)",
+                                                  EXAMEN_SUSPECTUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -186,6 +195,7 @@ silva_c89_codicis_causa (s32 codex)
     }
     redde _codices[codex].causa;
 }
+
 
 s32
 silva_c89_codicis_severitas (s32 codex)
@@ -768,7 +778,11 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "CASUS_LAPSUS",
       (s32)EXAMEN_CODEX_CASUS_LAPSUS },
     { "SENTENTIA_INATTINGIBILIS",
-      (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS }
+      (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS },
+    { "LECTIO_ININITIATA",
+      (s32)EXAMEN_CODEX_LECTIO_ININITIATA },
+    { "ININITIATA_QUANDOCUMQUE",
+      (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE }
 };
 
 /* commentarium TOLERA? valor = octeti pleni delimitatoribus
@@ -3139,6 +3153,8 @@ _datorum_symbolum_ligamen (vacuum* contextus,
         && (t->genus == TYPUS_C89_ACIES
             || t->genus == TYPUS_C89_STRUCTURA
             || t->genus == TYPUS_C89_UNIO)) ? VERUM : FALSUM;
+    facta->acies = (t != NIHIL && t->genus == TYPUS_C89_ACIES)
+        ? VERUM : FALSUM;
     redde VERUM;
 }
 
@@ -3183,6 +3199,300 @@ _datorum_parametrum_constans_ligamen (vacuum* contextus,
             != ZEPHYRUM) ? VERUM : FALSUM;
 }
 
+/* ==================================================
+ * FLUXUS-1 chunk C: iudicium initiationis (codices 71/72/73)
+ * ================================================== */
+
+/* Vigil classis residuae (73): FALSUM = dormit. Mensura = inversio
+ * localis documentata + census (exemplar codicis 62). */
+hic_manens constans b32 _forsitan_vigil = FALSUM;
+
+interior b32
+_datorum_bitum (constans i64* verba, s32 index)
+{
+    redde ((verba[index / LXIV] >> (i32)(index % LXIV)) & (i64)I)
+        != (i64)ZEPHYRUM ? VERUM : FALSUM;
+}
+
+interior vacuum
+_datorum_bitum_ponere (i64* verba, s32 index)
+{
+    verba[index / LXIV] |= (i64)I << (i32)(index % LXIV);
+}
+
+/* Estne definitio variabilis v (aut def-omnia) in bloco? */
+interior b32
+_blocus_definit (FluxusDatorumBlocus* db, s32 v)
+{
+    i32 e;
+    i32 m = xar_numerus(db->eventa);
+
+    per (e = ZEPHYRUM; e < m; e++)
+    {
+        FluxusEventum* ev = (FluxusEventum*)xar_obtinere(db->eventa,
+            e);
+
+        si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO
+            && ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI)
+        {
+            perge;
+        }
+        si (ev->variabilis == v || ev->variabilis < ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Margo culpabilis pro usu variabilis v in bloco ub: E = (P -> S)
+ * cum (a) v absens e may_exitus(P), P attingibilis, et (b) usus
+ * inevitabilis ab S sine definitione (punctum fixum I: omnes
+ * margines exeuntes in I manent, blocus definitione liber; basis =
+ * ub ipse - introitus bloci usum ANTE definitiones eius attingit).
+ * Genera culpabilia: VERUS/FALSUS/ORDINARIUS-etiquetatus (formae
+ * clang; CASUS/SALTUS/LAPSUS -> classis residua). QUISQUE margo
+ * culpabilis diagnosticum accipit (paritas clang: si (a && b) duo
+ * monita eodem usu - calibratio s21b/vectis); numerus emissorum
+ * redditur (0 = nullus -> classis residua). */
+interior i32
+_margines_culpabiles_iudicare (SilvaSemantica* sem,
+    constans FluxusFunctionis* fluxus,
+    FluxusDatorum* datorum, i32 ub, s32 v, b32* in_I,
+    constans SilvaNodus* usus_nodus)
+{
+    i32 numerus_blocorum = xar_numerus(fluxus->bloci);
+    i32 b;
+    b32 mutatum;
+
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        in_I[b] = FALSUM;
+    }
+    in_I[ub] = VERUM;
+    fac
+    {
+        mutatum = FALSUM;
+        per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+        {
+            constans FluxusBlocus* fb;
+            FluxusDatorumBlocus* db;
+            i32 k;
+            i32 m;
+            b32 omnes;
+
+            si (in_I[b])
+            {
+                perge;
+            }
+            fb = (constans FluxusBlocus*)xar_obtinere(fluxus->bloci,
+                b);
+            si (!fb->attingibilis)
+            {
+                perge;
+            }
+            db = (FluxusDatorumBlocus*)xar_obtinere(datorum->bloci,
+                b);
+            si (_blocus_definit(db, v))
+            {
+                perge;
+            }
+            m = xar_numerus(fb->margines);
+            si (m == ZEPHYRUM)
+            {
+                perge;   /* exitus aut mortuus: semita effugit */
+            }
+            omnes = VERUM;
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                constans FluxusMargo* margo = (constans FluxusMargo*)
+                    xar_obtinere(fb->margines, k);
+
+                si (margo->destinatio == NIHIL
+                    || !in_I[margo->destinatio->index])
+                {
+                    omnes = FALSUM;
+                    frange;
+                }
+            }
+            si (omnes)
+            {
+                in_I[b] = VERUM;
+                mutatum = VERUM;
+            }
+        }
+    } dum (mutatum);
+
+    {
+        i32 emissa = ZEPHYRUM;
+
+        per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+        {
+            constans FluxusBlocus* fb = (constans FluxusBlocus*)
+                xar_obtinere(fluxus->bloci, b);
+            FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)
+                xar_obtinere(datorum->bloci, b);
+            i32 k;
+            i32 m = xar_numerus(fb->margines);
+
+            si (!fb->attingibilis)
+            {
+                perge;
+            }
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                constans FluxusMargo* margo = (constans FluxusMargo*)
+                    xar_obtinere(fb->margines, k);
+                b32 culpabile;
+
+                si (margo->destinatio == NIHIL
+                    || !in_I[margo->destinatio->index])
+                {
+                    perge;
+                }
+                culpabile = (margo->genus == (s32)FLUXUS_MARGO_VERUS
+                    || margo->genus == (s32)FLUXUS_MARGO_FALSUS
+                    || (margo->genus == (s32)FLUXUS_MARGO_ORDINARIUS
+                        && margo->origo != NIHIL
+                        && margo->origo->genus
+                            == (s32)SILVA_C89_GENUS_ORDINARIUS))
+                    ? VERUM : FALSUM;
+                si (!culpabile)
+                {
+                    perge;
+                }
+                si (_datorum_bitum(db->may_exitus, v))
+                {
+                    perge;   /* semita per P initiare potest */
+                }
+                emissa++;
+                si (!_tolera_absorbere(sem, margo->origo,
+                        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE))
+                {
+                    silva_c89_diagnosticum_addere_cum_socio(sem,
+                        margo->origo,
+                        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE,
+                        usus_nodus);
+                }
+            }
+        }
+        redde emissa;
+    }
+}
+
+/* Iudicium initiationis super datorum (71 definite / 72
+ * quandocumque / 73 residua dormiens). Bloci attingibiles soli;
+ * status may/must currens per eventa fluit. */
+interior vacuum
+_initiationem_examinare (SilvaSemantica* sem,
+    constans FluxusFunctionis* fluxus)
+{
+    FluxusDatorum* datorum = fluxus->datorum;
+    i32 numerus_blocorum;
+    i32 n_verba;
+    i64* may_currens;
+    i64* must_currens;
+    b32* in_I;
+    i32 b;
+
+    si (datorum == NIHIL)
+    {
+        redde;
+    }
+    numerus_blocorum = xar_numerus(datorum->bloci);
+    n_verba = datorum->numerus_verborum;
+    may_currens = (i64*)piscina_allocare(sem->piscina,
+        (memoriae_index)n_verba * magnitudo(i64));
+    must_currens = (i64*)piscina_allocare(sem->piscina,
+        (memoriae_index)n_verba * magnitudo(i64));
+    in_I = (b32*)piscina_allocare(sem->piscina,
+        (memoriae_index)numerus_blocorum * magnitudo(b32));
+    si (may_currens == NIHIL || must_currens == NIHIL
+        || in_I == NIHIL)
+    {
+        redde;
+    }
+
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            xar_obtinere(fluxus->bloci, b);
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+            datorum->bloci, b);
+        i32 e;
+        i32 m;
+
+        si (!fb->attingibilis)
+        {
+            perge;
+        }
+        memcpy(may_currens, db->may_introitus,
+            (memoriae_index)n_verba * magnitudo(i64));
+        memcpy(must_currens, db->must_introitus,
+            (memoriae_index)n_verba * magnitudo(i64));
+        m = xar_numerus(db->eventa);
+        per (e = ZEPHYRUM; e < m; e++)
+        {
+            FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
+                db->eventa, e);
+
+            si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO
+                || ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI)
+            {
+                si (ev->variabilis < ZEPHYRUM)
+                {
+                    i32 w;
+
+                    per (w = ZEPHYRUM; w < n_verba; w++)
+                    {
+                        may_currens[w] = ~(i64)ZEPHYRUM;
+                        must_currens[w] = ~(i64)ZEPHYRUM;
+                    }
+                }
+                alioquin
+                {
+                    _datorum_bitum_ponere(may_currens,
+                        ev->variabilis);
+                    _datorum_bitum_ponere(must_currens,
+                        ev->variabilis);
+                }
+                perge;
+            }
+            si (ev->genus != (s32)FLUXUS_EVENTUM_USUS
+                || ev->variabilis < ZEPHYRUM)
+            {
+                perge;
+            }
+            si (!_datorum_bitum(may_currens, ev->variabilis))
+            {
+                /* definite: nulla semita initiat (71) */
+                si (!_tolera_absorbere(sem, ev->nodus,
+                        (s32)EXAMEN_CODEX_LECTIO_ININITIATA))
+                {
+                    silva_c89_diagnosticum_addere(sem, ev->nodus,
+                        (s32)EXAMEN_CODEX_LECTIO_ININITIATA);
+                }
+                perge;
+            }
+            si (!_datorum_bitum(must_currens, ev->variabilis))
+            {
+                /* fortasse: may sine must - margines culpabiles?
+                 * (quisque diagnosticum accipit - paritas s21b) */
+                i32 emissa = _margines_culpabiles_iudicare(sem,
+                    fluxus, datorum, b, ev->variabilis, in_I,
+                    ev->nodus);
+
+                si (emissa == ZEPHYRUM && _forsitan_vigil)
+                {
+                    /* classis residua (73) - dormit ordinarie */
+                    silva_c89_diagnosticum_addere(sem, ev->nodus,
+                        (s32)EXAMEN_CODEX_ININITIATA_FORSITAN);
+                }
+            }
+        }
+    }
+}
+
 interior vacuum
 _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
 {
@@ -3214,11 +3524,15 @@ _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
         aux_datorum.symbolum = _datorum_symbolum_ligamen;
         aux_datorum.parametrum_constans =
             _datorum_parametrum_constans_ligamen;
+        aux_datorum.expressio_acies = _datorum_expressio_acies_ligamen;
         aux_datorum.canonicum = _fluxus_canonicum_ligamen;
         aux_datorum.contextus = sem;
         fluxus->datorum = silva_c89_fluxus_datorum_aedificare(
             sem->piscina, fluxus, &aux_datorum);
     }
+
+    /* chunk C: iudicium initiationis (71/72/73) */
+    _initiationem_examinare(sem, fluxus);
 
     /* codex 66: frange/perge sine contextu (clang errat) */
     m = xar_numerus(fluxus->fractiones_extra);
@@ -4594,6 +4908,29 @@ _qualibus_exutum (TypusC89* typus)
         typus = typus->datum.qualificatus.internum;
     }
     redde typus;
+}
+
+/* Estne typus expressionis acies? (decasus membri-aciei) */
+interior b32
+_datorum_expressio_acies_ligamen (vacuum* contextus,
+    constans SilvaNodus* nodus)
+{
+    SilvaSemantica* sem = (SilvaSemantica*)contextus;
+    constans SemanticaTypatio* ty = _typationem_invenire(sem,
+        _canonicum(nodus));
+    TypusC89* t;
+
+    si (ty == NIHIL || ty->naturalis == NIHIL)
+    {
+        redde FALSUM;
+    }
+    t = ty->naturalis;
+    dum (t != NIHIL && t->genus == TYPUS_C89_QUALIFICATUS)
+    {
+        t = t->datum.qualificatus.internum;
+    }
+    redde (t != NIHIL && t->genus == TYPUS_C89_ACIES)
+        ? VERUM : FALSUM;
 }
 
 /* Intra involucrum AMBIGUUM retentum? Lectiones canonicae furcarum

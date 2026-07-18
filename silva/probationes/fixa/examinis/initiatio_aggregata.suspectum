@@ -1,0 +1,45 @@
+/* granum aggregatorum (specimina s05/s19): lectiones membrorum
+ * invisibiles, scriptio membri = def totius, usus toti-valoris
+ * ininitiati flagrat.
+ * ORACULUM -Wuninitialized */
+
+struct PrB { int a; int b; };
+extern void vorare(struct PrB p);
+
+static int membrum_lectum(void)
+{
+    struct PrB p;
+
+    return p.a;
+}
+
+static int membrum_post_partem(void)
+{
+    struct PrB p;
+
+    p.a = 1;
+    return p.b;
+}
+
+static void tota_ininitiata(void)
+{
+    struct PrB p;
+
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    vorare(p);
+}
+
+static void tota_post_membrum(void)
+{
+    struct PrB p;
+
+    p.a = 1;
+    vorare(p);
+}
+
+static int elementum_lectum(void)
+{
+    int a[4];
+
+    return a[0];
+}

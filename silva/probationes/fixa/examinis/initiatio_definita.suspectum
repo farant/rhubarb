@@ -1,0 +1,82 @@
+/* initiatio definita (codex 71, SUSPECTUM) - paritas
+ * -Wuninitialized: lectio sine ulla definitione (specimina
+ * s01/s18/s22, calibratio 2026-07-17).
+ * ORACULUM -Wuninitialized */
+
+extern void sink(int v);
+struct PrA { int a; int b; };
+
+static int lectio_plana(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    return x;
+}
+
+static void per_valorem(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    sink(x);
+}
+
+static void conversio_discardans(void)
+{
+    int x;
+
+    (void)x;
+}
+
+static int post_scriptionem(void)
+{
+    int x;
+
+    x = 1;
+    return x;
+}
+
+static int in_assignatione_propria(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    x = x + 1;
+    return x;
+}
+
+static void deref_scribens(int v)
+{
+    int* p;
+
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    *p = v;
+}
+
+static int magnitudo_non_usus(void)
+{
+    int x;
+
+    return (int)sizeof(x);
+}
+
+static int magnitudo_deinde_lectio(void)
+{
+    int x;
+    int y = (int)sizeof(x);
+
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    return y + x;
+}
+
+static int assignatio_structurae(void)
+{
+    struct PrA a;
+    struct PrA b;
+
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    a = b;
+    a.a = 1;
+    return a.a;
+}

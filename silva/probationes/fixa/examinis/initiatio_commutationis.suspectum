@@ -1,0 +1,22 @@
+/* commutatio (specimina s09/s14): culpa postulat etiquetam
+ * ordinariam expressam; sine ea = classis residua (tacet).
+ * ORACULUM -Wuninitialized */
+
+extern int opacum(void);
+
+static int sine_ordinario(void)
+{
+    int x;
+
+    switch (opacum()) { case 0: x = 1; break; }
+    return x;
+}
+
+static int ordinarius_expressus(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    switch (opacum()) { case 0: x = 1; break; default: break; }
+    return x;
+}

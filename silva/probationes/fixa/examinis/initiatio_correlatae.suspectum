@@ -1,0 +1,28 @@
+/* custodiae correlatae (specimina s06d/s13): clang correlationem
+ * NON computat - silentium ex attributione impossibili (classis
+ * residua). Pinnae NULLAE - paritas silentii.
+ * ORACULUM -Wuninitialized */
+
+extern int opacum(void);
+
+static int per_copiam(void)
+{
+    int x;
+    int c = opacum();
+    int d = c;
+
+    if (c) { x = 1; }
+    if (d) { return x; }
+    return 0;
+}
+
+static int inter_mutatum(void)
+{
+    int x;
+    int c = opacum();
+
+    if (c) { x = 1; }
+    c = opacum();
+    if (c) { return x; }
+    return 0;
+}

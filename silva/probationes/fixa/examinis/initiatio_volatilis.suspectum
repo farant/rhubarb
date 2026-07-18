@@ -1,0 +1,10 @@
+/* volatilis NON supprimit (specimen s11).
+ * ORACULUM -Wuninitialized */
+
+static int volatilis_lecta(void)
+{
+    volatile int x;
+
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    return x;
+}

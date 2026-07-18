@@ -27,21 +27,22 @@ nomen structura {
     b32 localis;
     b32 parametrum;
     b32 aggregatum;
+    b32 acies;
 } ProbatioSymbolum;
 
 /* Partes fixae: a/b/c/i parametra, x/y/p locales scalares,
  * s/arr locales aggregata. Functiones (g, peek, sinkp) ABSENT =
  * non resolutae = nulla eventa. */
 hic_manens ProbatioSymbolum _symbola[] = {
-    { "a",   FALSUM, VERUM,  FALSUM },
-    { "b",   FALSUM, VERUM,  FALSUM },
-    { "c",   FALSUM, VERUM,  FALSUM },
-    { "i",   FALSUM, VERUM,  FALSUM },
-    { "x",   VERUM,  FALSUM, FALSUM },
-    { "y",   VERUM,  FALSUM, FALSUM },
-    { "p",   VERUM,  FALSUM, FALSUM },
-    { "s",   VERUM,  FALSUM, VERUM  },
-    { "arr", VERUM,  FALSUM, VERUM  }
+    { "a",   FALSUM, VERUM,  FALSUM, FALSUM },
+    { "b",   FALSUM, VERUM,  FALSUM, FALSUM },
+    { "c",   FALSUM, VERUM,  FALSUM, FALSUM },
+    { "i",   FALSUM, VERUM,  FALSUM, FALSUM },
+    { "x",   VERUM,  FALSUM, FALSUM, FALSUM },
+    { "y",   VERUM,  FALSUM, FALSUM, FALSUM },
+    { "p",   VERUM,  FALSUM, FALSUM, FALSUM },
+    { "s",   VERUM,  FALSUM, VERUM,  FALSUM },
+    { "arr", VERUM,  FALSUM, VERUM,  VERUM  }
 };
 
 interior b32
@@ -140,6 +141,7 @@ _probatio_symbolum (vacuum* contextus, constans SilvaNodus* nodus,
             facta->localis_automata = _symbola[k].localis;
             facta->parametrum = _symbola[k].parametrum;
             facta->aggregatum = _symbola[k].aggregatum;
+            facta->acies = _symbola[k].acies;
             redde VERUM;
         }
     }
@@ -263,6 +265,7 @@ _extrahere (Piscina* piscina, constans character* fons)
     }
     aux.symbolum = _probatio_symbolum;
     aux.parametrum_constans = _probatio_parametrum_constans;
+    aux.expressio_acies = NIHIL;   /* e2e semanticae hoc probat */
     aux.canonicum = NIHIL;
     aux.contextus = NIHIL;
     redde silva_c89_fluxus_datorum_aedificare(piscina, fluxus, &aux);

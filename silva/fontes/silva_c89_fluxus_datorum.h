@@ -110,6 +110,11 @@ nomen structura {
     b32 parametrum;         /* initiata in introitu (tractatur) */
     b32 aggregatum;         /* structura/unio/acies: lectio membri
                              * invisibilis, scriptio = def totius */
+    b32 acies;              /* acies: identificator positione valoris
+                             * DECADIT (T[] -> T*) = eventum LOCI,
+                             * non usus (contactus corporis primus:
+                             * sprintf(tabula,...) - clang tacet,
+                             * decasus = locus sumptus) */
 } FluxusSymbolumFacta;
 
 nomen structura {
@@ -124,6 +129,11 @@ nomen structura {
      * ignotum/variadicum/K&R = FALSUM (non-constans, silens) */
     b32 (*parametrum_constans)(vacuum* contextus,
         constans SilvaNodus* functio_folium, i32 index);
+    /* estne typus expressionis acies? (accessus membri aciei
+     * positione valoris DECADIT = LOCI totius - memset(r.c,...);
+     * NIHIL = numquam acies, lectio membri invisibilis manet) */
+    b32 (*expressio_acies)(vacuum* contextus,
+        constans SilvaNodus* nodus);
     /* lectio canonica nodi AMBIGUI; NIHIL = identitas */
     constans SilvaNodus* (*canonicum)(vacuum* contextus,
         constans SilvaNodus* nodus);

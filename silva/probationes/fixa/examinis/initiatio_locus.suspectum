@@ -1,0 +1,61 @@
+/* locus sumptus (&x) = eventum def positione fluxus (specimina
+ * s04a-f): const T* NON initiat, ramus mortuus invisibilis.
+ * ORACULUM -Wuninitialized */
+
+extern void implere(int *p);
+extern void inspicere(const int *p);
+extern int opacum(void);
+
+static int locus_deinde_lectio(void)
+{
+    int x;
+
+    implere(&x);
+    return x;
+}
+
+static int lectio_ante_locum(void)
+{
+    int x;
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    int y = x;
+
+    implere(&x);
+    return y + x;
+}
+
+static int alias_localis(void)
+{
+    int x;
+    int* p = &x;
+
+    (void)p;
+    return x;
+}
+
+static int locus_in_ramo_mortuo(void)
+{
+    int x;
+
+    if (0) { implere(&x); }
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    return x;
+}
+
+static int locus_in_ramo_vivo(void)
+{
+    int x;
+
+    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    if (opacum()) { implere(&x); }
+    return x;
+}
+
+static int locus_constans(void)
+{
+    int x;
+
+    inspicere(&x);
+    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    return x;
+}

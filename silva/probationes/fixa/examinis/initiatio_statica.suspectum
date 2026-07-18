@@ -1,0 +1,10 @@
+/* statica zero-initiata tacet (specimen s03; pinnae NULLAE -
+ * silentium ipsum pinna est).
+ * ORACULUM -Wuninitialized */
+
+static int statica_lecta(void)
+{
+    static int x;
+
+    return x;
+}

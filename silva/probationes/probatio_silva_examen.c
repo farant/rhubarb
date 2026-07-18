@@ -85,6 +85,18 @@ _initiator_primus (constans SilvaParsura* parsura)
     redde iv.datum.nodus;
 }
 
+/* fons nominatur in fractura (tacet viridi) */
+interior vacuum
+_fontem_si_fractum (constans character* fons, i32 inventi,
+    i32 numerus)
+{
+    si (inventi != numerus)
+    {
+        imprimere("\n[FONS FRACTUS] inventi=%ld exspectati=%ld\n%s\n",
+            (long)inventi, (long)numerus, fons);
+    }
+}
+
 /* Chunk C: fons parvus -> codex exspectatus n-ies (aut purum) */
 interior vacuum
 _codicem_probare (Piscina* piscina, constans character* fons,
@@ -118,6 +130,7 @@ _codicem_probare (Piscina* piscina, constans character* fons,
             inventi++;
         }
     }
+    _fontem_si_fractum(fons, inventi, numerus);
     CREDO_AEQUALIS_I32 (inventi, numerus);
 }
 
@@ -189,6 +202,7 @@ _codicem_numerare (constans SilvaSemantica* sem, s32 codex)
     }
     redde inventi;
 }
+
 
 interior vacuum
 _purum_probare (Piscina* piscina, constans character* fons)
@@ -823,10 +837,12 @@ s32 principale (vacuum)
 
     /* LEGALIA PURA (custodes C4: cauda aggregata, chorda in aciem,
      * vacuum*, crementa, &functio, comparatio cum nulla/vacuo) */
+    /* b initiata per membrum (s19: scriptio membri = def totius) -
+     * fons vetus b ininitiatam legebat, clang idem flagrat (s22) */
     _purum_probare(piscina,
         "struct S { int a; };\n"
-        "static void f(void) { struct S a; struct S b; a = b;\n"
-        "  a.a = 1; }\n");
+        "static void f(void) { struct S a; struct S b; b.a = 1;\n"
+        "  a = b; a.a = 1; }\n");
     _purum_probare(piscina,
         "static char s[] = \"ab\";\n"
         "static char e[4] = \"xyz\";\n");
@@ -1686,6 +1702,167 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (
             xar_numerus(fluxus->datorum->variabiles), I);
     }
+
+    /* ==================================================
+     * XVII-c. Fluxus-1 chunk C: initiatio (codices 71/72)
+     * (batteria speciminum s01-s21 ut probationes numeratae)
+     * ================================================== */
+
+    /* 71 definite: lectio sine ulla definitione */
+    _codicem_probare(piscina,
+        "static int f(void) { int x; return x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, I);
+    /* post scriptionem: tacet */
+    _codicem_probare(piscina,
+        "static int f(void) { int x; x = 1; return x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, ZEPHYRUM);
+    /* lectio in assignatione propria (s01e) */
+    _codicem_probare(piscina,
+        "static int f(void) { int x; x = x + 1; return x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, I);
+    /* initiatio propria int x = x (s02) */
+    _codicem_probare(piscina,
+        "static int f(void) { int x = x; return x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, I);
+    /* bracchium ternarii numquam-initiatae = DEFINITE (s08c) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; int y; y = c ? x : 0;"
+        " return y; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, I);
+    /* volatilis FLAGRAT (s11) */
+    _codicem_probare(piscina,
+        "static int f(void) { volatile int x; return x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, I);
+    /* staticus localis zero-initiatus tacet (s03) */
+    _codicem_probare(piscina,
+        "static int f(void) { static int x; return x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, ZEPHYRUM);
+    /* &x = eventum def: lectio post tacet (s04a) */
+    _codicem_probare(piscina,
+        "static void g2(int *p);\n"
+        "static int f(void) { int x; g2(&x); return x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, ZEPHYRUM);
+    /* lectio ANTE &x flagrat (s04b - positio fluxus) */
+    _codicem_probare(piscina,
+        "static void g2(int *p);\n"
+        "static int f(void) { int x; int y = x; g2(&x);"
+        " return y + x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, I);
+    /* &x in ramo plicato si (0) invisibile (s04d) */
+    _codicem_probare(piscina,
+        "static void g2(int *p);\n"
+        "static int f(void) { int x; if (0) { g2(&x); }"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, I);
+    /* &x ad parametrum T* constantem NON initiat (s04f) */
+    _codicem_probare(piscina,
+        "static void inspicere(const int *p);\n"
+        "static int f(void) { int x; inspicere(&x); return x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, I);
+    /* magnitudo non usus (s18) */
+    _codicem_probare(piscina,
+        "static int f(void) { int x; return (int)sizeof(x); }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, ZEPHYRUM);
+    /* (void)x non usus (s01c) */
+    _codicem_probare(piscina,
+        "static void f(void) { int x; (void)x; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, ZEPHYRUM);
+    /* lectio membri aggregati invisibilis (s05a) */
+    _codicem_probare(piscina,
+        "struct PrP { int a; int b; };\n"
+        "static int f(void) { struct PrP p; return p.a; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, ZEPHYRUM);
+    /* usus toti-valoris aggregati ininitiati flagrat (s05c) */
+    _codicem_probare(piscina,
+        "struct PrP { int a; int b; };\n"
+        "static struct PrP f(void) { struct PrP p; return p; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, I);
+    /* scriptio membri = def totius: usus totus post tacet (s19a) */
+    _codicem_probare(piscina,
+        "struct PrP { int a; int b; };\n"
+        "static struct PrP f(void) { struct PrP p; p.a = 1;"
+        " return p; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, ZEPHYRUM);
+    /* decasus aciei: tabula ut argumentum = locus sumptus, non
+     * lectio (contactus corporis: sprintf(tabula,...)) - tacet */
+    _codicem_probare(piscina,
+        "static void g4(char *p);\n"
+        "static int f(void) { char b[8]; g4(b); return b[0]; }\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, ZEPHYRUM);
+    /* TOLERA supprimit 71 */
+    _codicem_probare(piscina,
+        "static int f(void)\n{\n    int x;\n"
+        "    /* TOLERA LECTIO_ININITIATA: probatio */\n"
+        "    return x;\n}\n",
+        (s32)EXAMEN_CODEX_LECTIO_ININITIATA, ZEPHYRUM);
+
+    /* 72 quandocumque: si sine alioquin (s06a) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; if (c) { x = 1; }"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, I);
+    /* ambo rami: tacet (s06b) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; if (c) { x = 1; }"
+        " else { x = 2; } return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, ZEPHYRUM);
+    /* initiatio in alioquin solo: culpa VERUS (s06c) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; if (c) { ; }"
+        " else { x = 2; } return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, I);
+    /* custodiae correlatae: NULLUS margo culpabilis - tacet
+     * (s06d/s13 - classis residua, clang -Wall idem tacet) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; int c2 = c;"
+        " if (c2) { x = 1; } if (c2) { return x; } return 0; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, ZEPHYRUM);
+    /* ansa pura cum margine retro: tacet (s15a residua) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; while (c) { x = 1; }"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, ZEPHYRUM);
+    /* dum+frange: affirmatio exacta - flagrat (s07b) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; while (c) { x = 1; break; }"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, I);
+    /* fac_dum semper currit: tacet (s07c) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; do { x = 1; } while (c);"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, ZEPHYRUM);
+    /* commutatio SINE etiqueta ordinaria: tacet (s09a residua) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; switch (c) { case 0: x = 1;"
+        " break; } return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, ZEPHYRUM);
+    /* ordinarius expressus sine initiatione: flagrat (s14c) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; switch (c) { case 0: x = 1;"
+        " break; default: break; } return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, I);
+    /* || in positione conditionis: culpa in operatore (s20a) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; if (c || (x = 1)) { ; }"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, I);
+    /* || in positione sententiae (s16/s08b) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; (void)(c || (x = 1));"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, I);
+    /* salta trans initiationem: culpa in si (s10a) */
+    _codicem_probare(piscina,
+        "static int f(int c) { int x; if (c) goto post; x = 1;"
+        " post: return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, I);
+    /* && operandum finale: DUO margines culpabiles ('si' falsum
+     * + '&&' falsum breve) - paritas clang s21b: duo monita */
+    _codicem_probare(piscina,
+        "static int f(int c, int c2) { int x;"
+        " if (c && c2) { x = 1; } return x; }\n",
+        (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE, II);
 
     /* ==================================================
      * XVIII. Angustatio (codex 68) - directio latitudinis
