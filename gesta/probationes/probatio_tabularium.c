@@ -118,6 +118,59 @@ _prima_plagula_md (Piscina* piscina, constans character* dir)
     redde "";
 }
 
+/* plagulam .md in directorio quaerere cuius contentus substantiam
+ * continet - fructus = contentus totus illius plagulae (vacuum ""
+ * si nulla congruit). Folder (praesertim _sine_tag) crebras res
+ * insertas per probationes antecedentes fert, ordo iteratoris
+ * directorii non certus; ergo _prima_plagula_md fragile hic est ubi
+ * plura entia coexsistunt (probatum empirice: XXIIIb infra sine hac
+ * functione fracta) */
+interior constans character*
+_plagula_cum_continente (Piscina* piscina, constans character* dir,
+    constans character* substantia)
+{
+    DirectoriumIterator* it = directorium_iterator_aperire(dir, piscina);
+    DirectoriumIntroitus* e;
+    chorda exemplar = chorda_ex_literis("*.md", piscina);
+
+    si (it == NIHIL)
+    {
+        redde "";
+    }
+    dum ((e = directorium_iterator_proximum(it)) != NIHIL)
+    {
+        si (e->genus == INTROITUS_FILUM
+            && e->titulus.mensura > ZEPHYRUM
+            && e->titulus.datum[0] != '.'
+            && directorium_titulus_congruit(e->titulus, exemplar))
+        {
+            character semita[PROBATIO_SEMITA_MENSURA];
+            constans character* contentum;
+
+            sprintf(semita, "%s/%s", dir,
+                chorda_ut_cstr(e->titulus, piscina));
+            contentum = _plagula_litterae(piscina, semita);
+            si (strstr(contentum, substantia) != NIHIL)
+            {
+                directorium_iterator_claudere(it);
+                redde contentum;
+            }
+        }
+    }
+    directorium_iterator_claudere(it);
+    redde "";
+}
+
+/* an ULLA plagula .md in directorio substantiam continet (saccharum
+ * super _plagula_cum_continente pro assertionibus booleis) */
+interior b32
+_ulla_plagula_continet (Piscina* piscina, constans character* dir,
+    constans character* substantia)
+{
+    redde _plagula_cum_continente(piscina, dir, substantia)[0]
+        != '\0';
+}
+
 /* lineam mittere, responsum totum (litterae) recipere */
 interior constans character*
 _mitte (Tabularium* t, Piscina* pn, constans character* linea)
@@ -333,6 +386,30 @@ s32 principale (vacuum)
     CREDO_VERUM (strstr(r, "--impeditur-a-->") != NIHIL);
     CREDO_VERUM (strstr(r, "Cache calida") != NIHIL);
 
+    /* review fix 1: vinculum ipsum (res genus 'nexus', sine tags) -
+     * antea numquam reconciliatus incrementaliter, tantum in
+     * transitu pleno rarissimo - accipit proiectionem propriam */
+    {
+        constans character* p = strstr(r, "nexus ");
+
+        CREDO_NON_NIHIL (p);
+        si (p != NIHIL)
+        {
+            character vid[GESTA_RES_ID_MENSURA];
+            i32 k;
+
+            p += VI;
+            per (k = ZEPHYRUM; k < (i32)(GESTA_RES_ID_MENSURA - I)
+                && p[k] != '\0' && p[k] != ' '; k++)
+            {
+                vid[k] = p[k];
+            }
+            vid[k] = '\0';
+            CREDO_VERUM (_ulla_plagula_continet(piscina,
+                VIA_ENT "/_sine_tag", vid));
+        }
+    }
+
     /* XI-b. tabula.md: res apertae praesentes, clausae absentes,
      * nexus redditus (proiectio plicata; INTENTIO K1.1) */
     {
@@ -372,6 +449,31 @@ s32 principale (vacuum)
             VIA_TB);
 
         CREDO_VERUM (strstr(tabula, "impeditur-a") == NIHIL);
+    }
+    /* review fix 1 (continued): vinculum quoque renovatur - status
+     * solutum apparet in eius proiectione propria (antea manebat
+     * vetus 'vigens' usque ad transitum plenum rarissimum) */
+    {
+        constans character* p = strstr(r, "nexus ");
+
+        CREDO_NON_NIHIL (p);
+        si (p != NIHIL)
+        {
+            character vid[GESTA_RES_ID_MENSURA];
+            i32 k;
+            constans character* md;
+
+            p += VI;
+            per (k = ZEPHYRUM; k < (i32)(GESTA_RES_ID_MENSURA - I)
+                && p[k] != '\0' && p[k] != ' '; k++)
+            {
+                vid[k] = p[k];
+            }
+            vid[k] = '\0';
+            md = _plagula_cum_continente(piscina, VIA_ENT "/_sine_tag",
+                vid);
+            CREDO_VERUM (strstr(md, "status: solutum") != NIHIL);
+        }
     }
     /* denexus iterum = ignotus (iam solutum, index vacuus) */
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":22,"
@@ -1195,6 +1297,86 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(md, "Probatio Entitatum Alpha") != NIHIL);
         CREDO_VERUM (_prima_plagula_md(piscina, VIA_ENT "/silva")[0]
             == '\0');   /* folder silva purgatum (vacuum aut abest) */
+    }
+
+    /* ================================================
+     * XXIIIb. _sine_tag saccharum: ens sine argumento 'tags' - nulla
+     * clavis 'tags' in dato, ergo n_tags == 0 in
+     * _entitatem_reconciliare - plagula cadit in folder _sine_tag.
+     * NOTA: _ulla_plagula_continet adhibetur (non _prima_plagula_md)
+     * quia _sine_tag iam multas res antecedentes fert (parca/notae
+     * sine tag + vincula nexus/denexus post review fix 1) - ordo
+     * iteratoris non certus, "prima" plagula alia esse potest */
+    {
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":204,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"addere\","
+            "\"arguments\":{\"genus\":\"nota\",\"titulus\":"
+            "\"Probatio Sine Tag\",\"corpus\":\"corpus sine tag\"}}}");
+        CREDO_VERUM (_ulla_plagula_continet(piscina,
+            VIA_ENT "/_sine_tag", "Probatio Sine Tag"));
+    }
+
+    /* ================================================
+     * XXIIIc. reconciliatio omnium (transitus plenus): actus 'ramus
+     * creare' _entitates_reconciliare_omnes ciet (purgatio +
+     * rescriptio directorii totius). "Probatio Entitatum Alpha" -
+     * FACTA ANTE hunc transitum (retagata in 'mcp' supra XXIII) -
+     * plagulam suam POST transitum RETINET: hoc probat rescriptionem
+     * plenam ex scrinio, non modo scripturam incrementalem (iam
+     * probatam in XXIII per singula actus) */
+    {
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":205,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"ramus\","
+            "\"arguments\":{\"actus\":\"creare\",\"titulus\":"
+            "\"renovatio-plena\"}}}");
+        CREDO_VERUM (strstr(r, "creatus") != NIHIL);
+        CREDO_VERUM (_ulla_plagula_continet(piscina, VIA_ENT "/mcp",
+            "Probatio Entitatum Alpha"));
+    }
+
+    /* ================================================
+     * XXIIId (review fix 2): _titulum_ad_slug numquam summam XL
+     * (40) octetorum slug superat - etiam cum lineola pendens +
+     * character alphanumericus in eodem gradu incidunt (ante
+     * fixuram: XXXIX alnum + confinium + alnum unum = slug XLI
+     * octetorum, pactum documentatum violans) */
+    {
+        DirectoriumIterator* it;
+        DirectoriumIntroitus* e;
+        chorda exemplar = chorda_ex_literis("*.md", piscina);
+        i32 longitudo_nominis = ZEPHYRUM;
+
+        /* titulus: XXXIX 'a' + spatium (confinium) + 'b' - gradus
+         * ubi lineola pendens + 'b' simul incidunt post XXXIX octeti
+         * iam emissi */
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":206,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"addere\","
+            "\"arguments\":{\"genus\":\"nota\",\"titulus\":"
+            "\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa b\","
+            "\"tags\":\"capacitastest\"}}}");
+        it = directorium_iterator_aperire(
+            VIA_ENT "/capacitastest", piscina);
+        CREDO_NON_NIHIL (it);
+        si (it != NIHIL)
+        {
+            dum ((e = directorium_iterator_proximum(it)) != NIHIL)
+            {
+                si (e->genus == INTROITUS_FILUM
+                    && e->titulus.mensura > ZEPHYRUM
+                    && e->titulus.datum[0] != '.'
+                    && directorium_titulus_congruit(e->titulus,
+                        exemplar))
+                {
+                    longitudo_nominis = e->titulus.mensura;
+                }
+            }
+            directorium_iterator_claudere(it);
+        }
+        CREDO_VERUM (longitudo_nominis > ZEPHYRUM);
+        /* "nota-" (IV+I) + slug (<= XL) + "-" (I) + res_id (XXVI) +
+         * ".md" (III); ante fixuram slug XLI dabat, summa +I */
+        CREDO_VERUM (longitudo_nominis
+            <= (i32)(IV + I + XL + I + XXVI + III));
     }
 
     credo_imprimere_compendium();

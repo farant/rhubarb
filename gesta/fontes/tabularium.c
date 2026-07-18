@@ -1366,7 +1366,17 @@ _titulum_ad_slug (chorda titulus, Piscina* pn)
         si ((c >= (i8)'a' && c <= (i8)'z')
             || (c >= (i8)'0' && c <= (i8)'9'))
         {
-            si (lineola_pendens && aliquid)
+            /* lineola pendens + alnum = duo octeti hoc gradu -
+             * capacitas ANTE quamque appositionem probanda (non
+             * semel per gradum solum) ne emissa summam XL superet */
+            b32 lineola_hic = lineola_pendens && aliquid;
+            i32 necessaria = lineola_hic ? II : I;
+
+            si (emissa + necessaria > XL)
+            {
+                frange;   /* nulla capacitas - slug hic terminatur */
+            }
+            si (lineola_hic)
             {
                 chorda_aedificator_appendere_literis(aed, "-");
                 emissa++;
@@ -1495,41 +1505,62 @@ _entis_plagulas_omnes_delere (Tabularium* t, constans character* res_id,
  * entitas -> chorda semitae relativae / markdown
  * ================================================== */
 
+/* genus + nomen plagulae rei per res_id legere: SELECT genus,titulus
+ * -> _titulum_ad_slug -> _entitatem_nomen_plagulae, sequentia
+ * communis inter semitam relativam et reconciliationem incrementalem
+ * (emendatio DRY). genus_out optionalis (NIHIL si vocans genus non
+ * curat - nomen_out iam genus incorporat). Redde FALSUM si res_id in
+ * tabula res non invenitur (nomen_out adhuc scriptum - "sine-titulo"
+ * pro slug - vocans decernit an id abstinendum sit). */
+interior b32
+_entitatem_genus_nomen (Tabularium* t, constans character* res_id,
+    Piscina* pn, chorda* genus_out, chorda* nomen_out)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT genus, titulus FROM res WHERE res_id = ?");
+    chorda genus_ch = _ch("");
+    chorda titulus_ch = _ch("");
+    b32 inventa = FALSUM;
+
+    si (e != NIHIL)
+    {
+        scrinium_ligare_textum(e, I, _ch(res_id));
+        si (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            genus_ch = scrinium_columna_textus(e, ZEPHYRUM, pn);
+            titulus_ch = scrinium_columna_textus(e, I, pn);
+            inventa = VERUM;
+        }
+        scrinium_finire(e);
+    }
+    si (genus_out != NIHIL)
+    {
+        *genus_out = genus_ch;
+    }
+    *nomen_out = _entitatem_nomen_plagulae(genus_ch,
+        _titulum_ad_slug(titulus_ch, pn), res_id, pn);
+    redde inventa;
+}
+
 /* semita relativa "../<primum-tag>/<genus>-<slug>-<id>.md" ad
  * membrum ligatum; chorda vacua si membrum_id non est res (tunc
  * vocans textum planum reddit) */
 interior chorda
 _entitatem_semita_relativa (Tabularium* t, chorda membrum_id, Piscina* pn)
 {
-    ScriniumEnuntiatum* e;
-    chorda genus_ch = _ch("");
-    chorda titulus_ch = _ch("");
+    constans character* membrum_l = _litterae(pn, membrum_id);
+    chorda nomen_plagulae;
     chorda datum;
-    chorda primum_tag;
-    chorda slug;
+    chorda primum_tag = _ch("_sine_tag");
     ChordaAedificator* aed;
-    b32 inventa = FALSUM;
 
-    primum_tag = _ch("_sine_tag");
-    e = scrinium_praeparare(gesta_scrinium(t->mundus),
-        "SELECT genus, titulus FROM res WHERE res_id = ?");
-    si (e == NIHIL)
-    {
-        redde _ch("");
-    }
-    scrinium_ligare_textum(e, I, membrum_id);
-    si (scrinium_gradi(e) == SCRINIUM_ORDO)
-    {
-        genus_ch = scrinium_columna_textus(e, ZEPHYRUM, pn);
-        titulus_ch = scrinium_columna_textus(e, I, pn);
-        inventa = VERUM;
-    }
-    scrinium_finire(e);
-    si (!inventa)
+    si (!_entitatem_genus_nomen(t, membrum_l, pn, NIHIL,
+            &nomen_plagulae))
     {
         redde _ch("");   /* membrum non est res -> sine ligamine */
     }
-    datum = gesta_res_datum(t->mundus, _litterae(pn, membrum_id), pn);
+    datum = gesta_res_datum(t->mundus, membrum_l, pn);
     {
         JsonResultus r = json_legere(datum, pn);
 
@@ -1549,14 +1580,11 @@ _entitatem_semita_relativa (Tabularium* t, chorda membrum_id, Piscina* pn)
             }
         }
     }
-    slug = _titulum_ad_slug(titulus_ch, pn);
     aed = chorda_aedificator_creare(pn, LXIV);
     chorda_aedificator_appendere_literis(aed, "../");
     chorda_aedificator_appendere_chorda(aed, primum_tag);
     chorda_aedificator_appendere_literis(aed, "/");
-    chorda_aedificator_appendere_chorda(aed,
-        _entitatem_nomen_plagulae(genus_ch, slug,
-            _litterae(pn, membrum_id), pn));
+    chorda_aedificator_appendere_chorda(aed, nomen_plagulae);
     redde chorda_aedificator_finire(aed);
 }
 
@@ -1844,9 +1872,6 @@ _entitatem_reconciliare (Tabularium* t, constans character* res_id,
     Piscina* pn)
 {
     chorda datum;
-    chorda genus_ch = _ch("");
-    chorda titulus_ch = _ch("");
-    chorda slug;
     chorda nomen_plagulae;
     chorda md;
     JsonValor* st = NIHIL;
@@ -1875,25 +1900,7 @@ _entitatem_reconciliare (Tabularium* t, constans character* res_id,
             st = r.radix;
         }
     }
-    {
-        ScriniumEnuntiatum* e = scrinium_praeparare(
-            gesta_scrinium(t->mundus),
-            "SELECT genus, titulus FROM res WHERE res_id = ?");
-
-        si (e != NIHIL)
-        {
-            scrinium_ligare_textum(e, I, _ch(res_id));
-            si (scrinium_gradi(e) == SCRINIUM_ORDO)
-            {
-                genus_ch = scrinium_columna_textus(e, ZEPHYRUM, pn);
-                titulus_ch = scrinium_columna_textus(e, I, pn);
-            }
-            scrinium_finire(e);
-        }
-    }
-    slug = _titulum_ad_slug(titulus_ch, pn);
-    nomen_plagulae = _entitatem_nomen_plagulae(genus_ch, slug, res_id,
-        pn);
+    (vacuum)_entitatem_genus_nomen(t, res_id, pn, NIHIL, &nomen_plagulae);
     md = _entitatem_ad_markdown(t, res_id, pn);
 
     si (st != NIHIL)
@@ -1975,7 +1982,9 @@ _directorium_purgare (constans character* via, Piscina* pn)
         {
             chorda semita_plag;
 
-            si (f->genus != INTROITUS_FILUM)
+            si (f->genus != INTROITUS_FILUM
+                || (f->titulus.mensura > ZEPHYRUM
+                    && f->titulus.datum[0] == '.'))
             {
                 perge;
             }
@@ -2468,6 +2477,7 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         _tabulam_scribere(t, pn);
         _entitatem_reconciliare(t, _litterae(pn, res_id), pn);
         _entitatem_reconciliare(t, _litterae(pn, membrum_b), pn);
+        _entitatem_reconciliare(t, vinculum_id, pn);
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 CCLVI);
@@ -2571,6 +2581,7 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         _tabulam_scribere(t, pn);
         _entitatem_reconciliare(t, _litterae(pn, res_id), pn);
         _entitatem_reconciliare(t, _litterae(pn, membrum_b), pn);
+        _entitatem_reconciliare(t, _litterae(pn, vinculum), pn);
         {
             ChordaAedificator* aed = chorda_aedificator_creare(pn,
                 CCLVI);
