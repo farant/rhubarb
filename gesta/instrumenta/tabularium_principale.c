@@ -47,6 +47,7 @@ s32 principale (integer argc, character** argv)
     cfg.via_annalium = "gesta/annales/tabularium.jsonl";
     cfg.via_nexus = "build/nexus.tsv";
     cfg.via_tabulae = "gesta/annales/tabula.md";
+    cfg.via_entitatum = "gesta/annales/entities";
     cfg.signum = signum;
     cfg.via_binarii = via_binarii;
     cfg.via_manifesti = via_manifesti;

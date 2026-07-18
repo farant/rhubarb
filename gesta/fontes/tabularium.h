@@ -36,6 +36,8 @@ nomen structura {
                                         * legibilis, post scripturas
                                         * regenerata); NIHIL = sine
                                         * tabula */
+    constans character* via_entitatum; /* radix entities/ (proiectio una-
+                                        * plagula-per-rem); NIHIL = sine */
     /* vigilia (lib/vigilia, K2.1): launcher sigillum binarii quod
      * modo aedificavit computat + manifestum clausurae scribit -
      * residens se ipsum inspicere non debet. Campi NIHIL =

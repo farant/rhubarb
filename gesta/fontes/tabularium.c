@@ -223,6 +223,7 @@ structura Tabularium {
     constans character* via_annalium;
     constans character* via_nexus;
     constans character* via_tabulae;
+    constans character* via_entitatum;
     /* index ancorarum (pigre; INTENTIO C decisio 3) */
     b32             index_temptatus;
     TabulaDispersa* sedes_index;     /* titulus -> character* "via:linea" */
@@ -3817,6 +3818,8 @@ tabularium_creare (Piscina* piscina,
         ? _litterae(piscina, _ch(cfg->via_nexus)) : NIHIL;
     t->via_tabulae = cfg->via_tabulae != NIHIL
         ? _litterae(piscina, _ch(cfg->via_tabulae)) : NIHIL;
+    t->via_entitatum = cfg->via_entitatum != NIHIL
+        ? _litterae(piscina, _ch(cfg->via_entitatum)) : NIHIL;
     /* vigilia (lib/vigilia): configuratio manca = quieta */
     {
         VigiliaConfiguratio vc;
