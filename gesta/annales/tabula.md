@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 244 - 2026-07-17T22:45:29.346Z
+seq 262 - 2026-07-18T02:34:34.596Z
 
 ## QUAESTIONES
 
@@ -11,7 +11,6 @@ seq 244 - 2026-07-17T22:45:29.346Z
 - [apertum] Phase-log silvae 407KB  `silva meta messis-2026-07`
 - [apertum] TU book_assets/capsula_libri degradata examini (REICE, 293 typi ignoti) - clang -Iinclude resolvit, praebita non  `silva examen lint`
 - [apertum] probatio_tcp_servus fluctuans  `tcp messis-2026-07`
-- [laborans] VANA adiudicatio: 74 sedes comparationum mortuarum (messis insectorum)  `examen silva lint messis-2026-07`
 
 ## PARCA
 
@@ -19,6 +18,7 @@ seq 244 - 2026-07-17T22:45:29.346Z
 - [parcatum] AEDILIS stratum constructionis  `aedilis officina messis-2026-07`
 - [parcatum] Cancellatio cascadens (opera orba)  `gesta k3`
 - [parcatum] Columna species in tabula generum  `gesta k3 perf`
+- [parcatum] Configuratio exclusionum unificata (viae/plagulae tractatu speciali)  `officina silva ergonomia meta aedilis`
 - [parcatum] Configuratio filtrorum per proiectum  `legatus examen aedilis messis-2026-07`
 - [parcatum] Corpora macronum plena in corpus  `legatus mcp messis-2026-07`
 - [parcatum] Gesta K5: palatium  `gesta palace`
@@ -46,6 +46,7 @@ seq 244 - 2026-07-17T22:45:29.346Z
 - [parcatum] Salus per sordidas  `gesta perf messis-2026-07`
 - [parcatum] Sessio et actor ut entia  `gesta k4`
 - [parcatum] Sigillum ancorae symboli  `gesta legatus messis-2026-07`
+- [parcatum] Silva fluxus gradus 1: initialisatio dataflow (-Wuninitialized)  `silva examen fluxus lint messis-2026-07`
 - [parcatum] Silva quaestio QB-QD  `silva saltuarius messis-2026-07`
 - [parcatum] Superficies MCP definitionis receptorum  `gesta k3 mcp`
 - [parcatum] Susceptum in provectione (si susceptio umquam refert)  `gesta k3`
@@ -59,13 +60,8 @@ seq 244 - 2026-07-17T22:45:29.346Z
 - MEMORY.md in tabularium migratio  `gesta meta messis-2026-07`
 - Origo argumentum in addere-gerere  `gesta mcp ergonomia`
 - Percursus: vexillum modi in compendio nominatum  `silva ergonomia examen`
-- Pinnae EXSPECTA relativae: nota "linea proxima" pro numeris absolutis in fixis examinis  `examen vectis ergonomia silva mcp`
-- Sonda una-ictus diagnostics pull  `legatus lsp messis-2026-07`
-- TOLERA multi-linea non parsatur (uni-linearis strictus) + census-mandatum examinis  `silva examen ergonomia lint`
 - Tokenizator FTS Latinus  `gesta fts messis-2026-07`
 - arbor.sh: via plagulae ut argumentum  `silva ergonomia`
-- legati corpus: titulo typedef-opaco corpus STRUCTURAE reddere, non lineam nominis  `legatus mcp ergonomia`
-- percursus -attributio: ordines via:linea:codex per plagulam in percursu semantico  `silva examen ergonomia lint`
 
 ## DECRETA
 
@@ -74,6 +70,7 @@ seq 244 - 2026-07-17T22:45:29.346Z
 - Censor-variant macro-domesticum declinata  `examen silva messis-2026-07`
 - Clausa manent in indice FTS  `gesta fts messis-2026-07`
 - Codex congelatus (arbor2/lapifex/praeparator) manet ut est - sedes VANA caudae acceptae  `examen silva lint messis-2026-07`
+- Codex congelatus VANA: familia arbor/arbor2/lapifex UT EST manet  `silva examen lint messis-2026-07`
 - Effectus = verba clausa in eventus 1:1  `gesta messis-2026-07`
 - Emendatio-generis manet integra-substitutio  `gesta messis-2026-07`
 - Executio actionis = eventus, non tabulae  `gesta messis-2026-07`
