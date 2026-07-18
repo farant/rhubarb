@@ -1,5 +1,5 @@
-/* EXSPECTA 4:REDDE_CUM_VALORE_IN_VACUO */
 static void f(void)
 {
+    /* EXSPECTA-PROXIMA: REDDE_CUM_VALORE_IN_VACUO */
     return 5;
 }

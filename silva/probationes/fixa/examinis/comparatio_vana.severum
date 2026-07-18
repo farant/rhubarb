@@ -3,17 +3,17 @@
  * etiam suppressa sunt (ZEPHYRUM omnes zephyros domus dat) - haec
  * classis vexillis domus INVISIBILIS est; aestimator noster per
  * macra videt. ORACULUM -Wsign-compare */
-/* EXSPECTA 12:COMPARATIO_VANA */
-/* EXSPECTA 17:COMPARATIO_VANA */
 #define INFIMUM 0
 
 static int proba_mortua(unsigned u)
 {
+    /* EXSPECTA-PROXIMA: COMPARATIO_VANA */
     return u < 0;
 }
 
 static int per_macrum(unsigned u)
 {
+    /* EXSPECTA-PROXIMA: COMPARATIO_VANA */
     return u >= INFIMUM;
 }
 

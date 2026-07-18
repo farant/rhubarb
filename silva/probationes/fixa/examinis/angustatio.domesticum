@@ -3,12 +3,12 @@
  * constant-conversion / shorten-64-to-32 = codex unus noster).
  * Constantes capientes tacent (-1 in s8 quoque); casus vestitus
  * tacet. ORACULUM -Wconversion */
-/* EXSPECTA 11:ANGUSTATIO */
-/* EXSPECTA 12:ANGUSTATIO */
 
 static void f(unsigned int magnum, int medium)
 {
+    /* EXSPECTA-PROXIMA: ANGUSTATIO */
     unsigned char parvum = magnum;
+    /* EXSPECTA-PROXIMA: ANGUSTATIO */
     short breve = medium;
     unsigned char constans_bona = 100;
     signed char negativus = -1;

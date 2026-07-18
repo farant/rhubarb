@@ -2,11 +2,11 @@
  * -Wformat magnitudinem custodit, signum eiusdem magnitudinis
  * numquam (-Wformat-signedness GCC solum). Directio %d-cum-
  * insignato DECRETO exempta (infra: tacet). */
-/* EXSPECTA 10:SIGNUM_FORMATI */
 extern int printf(const char*, ...);
 
 static void signatum_in_u(int s)
 {
+    /* EXSPECTA-PROXIMA: SIGNUM_FORMATI */
     printf("%u", s);
 }
 

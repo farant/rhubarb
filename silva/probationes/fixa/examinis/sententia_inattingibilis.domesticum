@@ -3,11 +3,11 @@
  * TACET ambobus: clang sub-vexillo -aggressive solum, nos saltus
  * solos (redde/frange/perge) consulto omittimus.
  * ORACULUM -Wunreachable-code */
-/* EXSPECTA 11:SENTENTIA_INATTINGIBILIS */
 
 static int post_redditum(int x)
 {
     return x + 1;
+    /* EXSPECTA-PROXIMA: SENTENTIA_INATTINGIBILIS */
     x = 99;
     return x;
 }

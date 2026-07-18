@@ -9071,3 +9071,50 @@ meter (built this morning, load-bearing by evening); the examen
 push caught every -Wsign-conversion ripple at edit time (schirmata
 margin_right UAC, sputnik temp, arx call sites) — zero compile
 surprises at suite time.
+
+## PINNAE RELATIVAE: INTENTIO (2026-07-17)
+
+Pull: desideratum 01KXRD8JVS (pins half; vigilia half = K2.3).
+Absolute EXSPECTA pins invalidated by ANY edit above them — five
+recorded recalibrations in one day; the cost is the bar's signal
+(red must mean the judge changed). Fix: `/* EXSPECTA-PROXIMA:
+CODEX */` placed directly above its target — binds to the next
+non-pin, non-blank line; pins stack; absolute grammar stays as
+fallback (line-1 edge, migration safety). One shared resolver
+(_pinnae_solvere awk) replaces the four grep|sed extractions in
+vectis; fixtures converted wholesale by a target-keyed awk
+(insert-above + drop standalone absolute pins, indentation
+matched). Bars: total resolved-pin count identical pre/post
+conversion; VECTIS TENET exit 0 (vectis itself is the verifier of
+pin correctness — every pin found + oracle same-line + counts).
+Consumer sweep: vectis is the SOLE reader (semantica hit =
+EXSPECTATA substring; censoris fixture out of scope).
+
+## PINNAE RELATIVAE: RELATIO (2026-07-17)
+
+Shipped: `/* EXSPECTA-PROXIMA: CODEX */` is now the preferred pin
+grammar — one shared awk resolver (_pinnae_solvere) feeds all four
+vectis legs the same linea:CODEX pairs from either form; pins
+stack, skip blanks, and bind to the next non-pin line. All 30
+fixtures converted wholesale (39 pins: 38 relative + the ONE
+legitimate absolute — ordo_pravus_vendicati pins LINE 1, above
+which nothing can sit; the fallback grammar earned its place
+before the arc even shipped). Conversion by target-keyed awk,
+insert-above with matched indentation, drop-converted-standalone.
+
+BARS: resolved-pin count 39 preserved through conversion; VECTIS
+TENET exit 0; and THE USER STORY ITSELF as a test — inserted a
+header line into a converted fixture, vectis STAYED GREEN, which
+is the exact edit that produced five false reds in one day.
+Backward compat incidentally proven live (a git checkout mid-test
+restored a pre-conversion fixture; vectis accepted both grammars
+side by side).
+
+PROCESS NOTE: the multi-pin conversion first failed loudly (BWK
+awk rejects newlines in -v strings) and the `&& mv` guard left
+every failed file UNTOUCHED — cheap atomicity that turned a bug
+into a no-op instead of corrupted fixtures. Worth keeping as the
+default shape for in-place transforms.
+
+Flow stage 1 lands on this: new fixtures are born with relative
+pins, never carrying the absolute-pin debt.

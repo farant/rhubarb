@@ -1,9 +1,9 @@
 /* sentinella negativa in functione insignata - casus ((unsigned)-1)
  * clang et paritatem 54 silet; hic capitur. Oraculum TACET. */
-/* EXSPECTA 7:SENTINELLA_INSIGNATA */
 
 static unsigned mortua(void)
 {
+    /* EXSPECTA-PROXIMA: SENTINELLA_INSIGNATA */
     return (unsigned)-1;
 }
 

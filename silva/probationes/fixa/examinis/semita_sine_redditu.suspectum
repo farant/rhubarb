@@ -3,11 +3,11 @@
  * Functiones uni-lineae CONSULTO: clang ad uncum clausum monet,
  * nos ad definitionem - linea eadem solum uni-linea.
  * ORACULUM -Wreturn-type */
-/* EXSPECTA 9:SEMITA_SINE_REDDITU */
-/* EXSPECTA 11:SEMITA_SINE_REDDITU */
 
+/* EXSPECTA-PROXIMA: SEMITA_SINE_REDDITU */
 static int cadit_si(int x) { if (x > 0) { return 1; } }
 
+/* EXSPECTA-PROXIMA: SEMITA_SINE_REDDITU */
 static int cadit_commutatio(int x) { switch (x) { case 0: return 1; } }
 
 static int classificator(int x) { switch (x) { case 0: return 1; default: return 2; } }

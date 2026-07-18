@@ -3,13 +3,10 @@
  * assignationes trans signum). LEGALE C89 - verdictum examinis
  * ACCIPE manet (gradus DOMESTICUM), ordines tamen flagrant et
  * oraculum clang -Wsign-conversion easdem lineas monet. */
-/* EXSPECTA 13:CONVERSIO_SIGNI */
-/* EXSPECTA 23:CONVERSIO_SIGNI */
-/* EXSPECTA 30:CONVERSIO_SIGNI */
-/* EXSPECTA 36:CONVERSIO_SIGNI */
 
 static unsigned locum_invenire(void)
 {
+    /* EXSPECTA-PROXIMA: CONVERSIO_SIGNI */
     return -1;
 }
 
@@ -20,6 +17,7 @@ static void poscere(unsigned n)
 
 static void vocans(void)
 {
+    /* EXSPECTA-PROXIMA: CONVERSIO_SIGNI */
     poscere(-1);
 }
 
@@ -27,12 +25,14 @@ static unsigned assignans(int sedes)
 {
     unsigned index;
 
+    /* EXSPECTA-PROXIMA: CONVERSIO_SIGNI */
     index = sedes;
     return index;
 }
 
 static int redditor(unsigned magnum)
 {
+    /* EXSPECTA-PROXIMA: CONVERSIO_SIGNI */
     return magnum;
 }
 

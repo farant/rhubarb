@@ -4,11 +4,20 @@
 #
 # Modus ordinarius: ① percursus fugarum oraculi (fixturae C99/GNU
 #   contra chordam sigillatam - omnes REICI debent); ② corpus
-#   invalidum: examen REICE ad pinnas EXSPECTA (linea:CODEX) ET
-#   oraculum clang consentiens.
+#   invalidum: examen REICE ad pinnas EXSPECTA ET oraculum clang
+#   consentiens.
 # Modus -corpus: latus examinis super corpus verum - [verdictum
 #   REICE] percursus contra tabulam exclusionum pinnatam.
 # Exit: 0 = vectis tenet | 1 = discrepantia
+#
+# GRAMMATICA PINNARUM (desideratum 01KXRD8JVS, 2026-07-17):
+#   /* EXSPECTA-PROXIMA: CODEX */  - forma PRAELATA: linea proxima
+#     non-pinna non-vacua flagrat; pinnae cumulantur; editiones
+#     alibi eam numquam invalidant (quinquies uno die recalibratae
+#     pinnae absolutae - inde haec forma)
+#   /* EXSPECTA 13:CODEX */        - forma absoluta, RECESSUS
+#     (diagnosticum in linea 1, supra quam nihil poni potest -
+#     ordo_pravus_vendicati; et migrationis salus)
 #
 # Chorda oraculi SIGILLATA (officina-m4a-spec.md §V); versio clang
 # scribitur (linea acceptationis inter versiones movetur!).
@@ -31,6 +40,34 @@ declare -a ORACULUM=(
 echo "oraculum: $(clang --version | head -1)"
 fracta=0
 
+# pinnae ex utraque grammatica in paria "linea:CODEX" solutae:
+# relativae pendent donec linea non-pinna non-vacua adveniat
+_pinnae_solvere () {
+    awk '
+        /EXSPECTA-PROXIMA:/ {
+            if (match($0, /EXSPECTA-PROXIMA: *[A-Z_]+/)) {
+                s = substr($0, RSTART, RLENGTH)
+                sub(/EXSPECTA-PROXIMA: */, "", s)
+                pendentia[np++] = s
+                next
+            }
+        }
+        /EXSPECTA [0-9]+:[A-Z_]+/ {
+            if (match($0, /EXSPECTA [0-9]+:[A-Z_]+/)) {
+                s = substr($0, RSTART, RLENGTH)
+                sub(/EXSPECTA /, "", s)
+                print s
+                next
+            }
+        }
+        {
+            if (np > 0 && $0 ~ /^[ \t]*$/) next
+            for (i = 0; i < np; i++) print NR ":" pendentia[i]
+            np = 0
+        }
+    ' "$1"
+}
+
 # ① percursus fugarum: C99/GNU contra oraculum - omnes REICI
 echo "--- percursus fugarum oraculi ---"
 for f in "$FIXA"/fugae/*.fuga; do
@@ -51,8 +88,7 @@ grep -o 'EXAMEN_CODEX_[A-Z_]*' "$SILVA_DIR/fontes/silva_c89_semantica.h" \
 echo "--- corpus invalidum (pinnae EXSPECTA) ---"
 for f in "$FIXA"/*.invalidum; do
     basis="$(basename "$f")"
-    exspecta="$(grep -o 'EXSPECTA [0-9]*:[A-Z_]*' "$f" \
-        | sed 's/EXSPECTA //')"
+    exspecta="$(_pinnae_solvere "$f")"
 
     effusum="$("$SILVA_DIR/build/examen" "$f" -machina 2>/dev/null)"
     verdictum="$(printf '%s\n' "$effusum" | awk -F'\t' \
@@ -102,8 +138,7 @@ declare -a ORACULUM_BASIS_D=(
 for f in "$FIXA"/*.domesticum; do
     [ -e "$f" ] || continue
     basis="$(basename "$f")"
-    exspecta="$(grep -o 'EXSPECTA [0-9]*:[A-Z_]*' "$f" \
-        | sed 's/EXSPECTA //')"
+    exspecta="$(_pinnae_solvere "$f")"
     vexillum="$(grep -o 'ORACULUM -W[a-z-]*' "$f" | head -1 \
         | sed 's/ORACULUM //')"
     [ -z "$vexillum" ] && vexillum="-Wsign-conversion"
@@ -160,8 +195,7 @@ echo "--- corpus suspectum (pinnae EXSPECTA + oraculum) ---"
 for f in "$FIXA"/*.suspectum; do
     [ -e "$f" ] || continue
     basis="$(basename "$f")"
-    exspecta="$(grep -o 'EXSPECTA [0-9]*:[A-Z_]*' "$f" \
-        | sed 's/EXSPECTA //')"
+    exspecta="$(_pinnae_solvere "$f")"
     vexillum="$(grep -o 'ORACULUM -W[a-z-]*' "$f" | head -1 \
         | sed 's/ORACULUM //')"
     [ -z "$vexillum" ] && vexillum="-Wsign-conversion"
@@ -218,8 +252,7 @@ echo "--- corpus severum (pinnae + oraculum inversum) ---"
 for f in "$FIXA"/*.severum; do
     [ -e "$f" ] || continue
     basis="$(basename "$f")"
-    exspecta="$(grep -o 'EXSPECTA [0-9]*:[A-Z_]*' "$f" \
-        | sed 's/EXSPECTA //')"
+    exspecta="$(_pinnae_solvere "$f")"
     vexillum="$(grep -o 'ORACULUM -W[a-z-]*' "$f" | head -1 \
         | sed 's/ORACULUM //')"
     [ -z "$vexillum" ] && vexillum="-Wsign-conversion"

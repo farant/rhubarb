@@ -1,6 +1,6 @@
-/* EXSPECTA 5:MONSTRATOR_INTEGER */
 static void f(int* p)
 {
     int n;
+    /* EXSPECTA-PROXIMA: MONSTRATOR_INTEGER */
     n = p;
 }

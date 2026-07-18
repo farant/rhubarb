@@ -1,6 +1,6 @@
-/* EXSPECTA 5:LOCUS_IMMUTABILIS */
 static void f(void)
 {
     const int c = 1;
+    /* EXSPECTA-PROXIMA: LOCUS_IMMUTABILIS */
     ++c;
 }

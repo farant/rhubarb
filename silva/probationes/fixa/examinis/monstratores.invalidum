@@ -1,5 +1,5 @@
-/* EXSPECTA 4:MONSTRATORES_INCOMPATIBILES */
 static void f(int* p, char* q)
 {
+    /* EXSPECTA-PROXIMA: MONSTRATORES_INCOMPATIBILES */
     p = q;
 }

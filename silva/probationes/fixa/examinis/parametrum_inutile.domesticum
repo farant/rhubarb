@@ -1,8 +1,8 @@
 /* parametrum inutile (codex 70) - paritas -Wunused-parameter
  * (in -Wextra); (void)x usus est.
  * ORACULUM -Wunused-parameter */
-/* EXSPECTA 6:PARAMETRUM_INUTILE */
 
+/* EXSPECTA-PROXIMA: PARAMETRUM_INUTILE */
 static int f(int usatus, int otiosus)
 {
     return usatus + f(usatus, usatus);
