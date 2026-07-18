@@ -2303,10 +2303,10 @@ probatio_mcp (Piscina* p)
         CREDO_VERUM(_chorda_continet(textus, "includitur ab ("));
         CREDO_VERUM(_chorda_continet(textus,
             "officina/instrumenta/legatus.c"));
-        /* clausura = includentes tres (folia - transitivum nihil
-         * addit) */
+        /* clausura = includentes quattuor (folia - transitivum nihil
+         * addit; sonda.c quartus, 6998d0d) */
         CREDO_VERUM(_chorda_continet(textus,
-            "clausura reversa (3)"));
+            "clausura reversa (4)"));
     }
 
     n = _lege_lineam(extra, p, &bene);   /* inclusiones ignota */
