@@ -702,7 +702,15 @@ probatio_multi_connexiones(Piscina* piscina)
  * PROBATIONES - INTEGRATIO HTTP
  * ======================================================================== */
 
-/* Handler pro test route */
+/* Handler pro test route + CAPSA minima (router indices obiectorum
+ * solos tenet - index functionis in vacuum* vetitus sub -pedantic) */
+nomen vacuum (*TractatorProbationis)(
+    HttpPetitioServeri*, HttpResponsum*, RoutaParams*);
+
+nomen structura {
+    TractatorProbationis tractator;
+} CapsaTractatoris;
+
 interior vacuum
 handler_integratio(HttpPetitioServeri* petitio, HttpResponsum* responsum, RoutaParams* params)
 {
@@ -710,6 +718,8 @@ handler_integratio(HttpPetitioServeri* petitio, HttpResponsum* responsum, RoutaP
     (vacuum)params;
     responsum->status = CC;
 }
+
+hic_manens CapsaTractatoris g_capsa_integratio = { handler_integratio };
 
 interior vacuum
 probatio_integratio_http(Piscina* piscina)
@@ -753,7 +763,7 @@ probatio_integratio_http(Piscina* piscina)
     /* 2. Creare router */
     router = router_creare(piscina);
     CREDO_NON_NIHIL(router);
-    router_get(router, "/api/test", handler_integratio);
+    router_get(router, "/api/test", &g_capsa_integratio);
 
     /* 3. Connectere client */
     client_res = tcp_connectere(hospes, portus, piscina);
@@ -793,9 +803,10 @@ probatio_integratio_http(Piscina* piscina)
     CREDO_VERUM(routa_res.invenit);
     printf("  Router invenit handler\n");
 
-    /* 8. Vocare handler */
+    /* 8. Vocare handler per capsam */
     memset(&responsum, 0, magnitudo(responsum));
-    routa_res.handler(parse_res.petitio, &responsum, &routa_res.params);
+    ((CapsaTractatoris*)routa_res.datum)->tractator(
+        parse_res.petitio, &responsum, &routa_res.params);
     CREDO_VERUM(responsum.status == CC);
 
     /* 9. Serialize responsum */

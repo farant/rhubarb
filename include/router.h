@@ -1,18 +1,25 @@
 /* router.h - Bibliotheca Router (HTTP Route Matching)
  *
- * Matches HTTP requests to handlers, extracts path parameters.
+ * Congruentia pura: viae ad indices opacos (vacuum* datum), parametra
+ * extracta. NOTA ISO-C: indices functionum in vacuum* poni NON possunt
+ * sub -pedantic - consumptor CAPSAM allocat ({tractator, datum}) et
+ * &capsam registrat (exemplar CAPSAE, vide hospitium).
  *
  * USUS:
  *   Router* router = router_creare(piscina);
  *
- *   router_get(router, "/users", handler_users);
- *   router_get(router, "/users/:id", handler_user);
- *   router_post(router, "/users", handler_create_user);
+ *   router_get(router, "/users", &capsa_usorum);
+ *   router_get(router, "/users/:id", &capsa_usoris);
  *
  *   RoutaResultus res = router_matching(router, HTTP_GET, via, piscina);
  *   si (res.invenit)
  *   {
- *       res.handler(petitio, responsum, &res.params);
+ *       CapsaTractatoris* capsa = (CapsaTractatoris*)res.datum;
+ *       capsa->tractator(...);
+ *   }
+ *   alioquin si (res.via_inventa)
+ *   {
+ *       (405 - methodi permissi in res.methodi_permissae)
  *   }
  */
 
@@ -51,12 +58,6 @@ nomen structura {
     i32        numerus;
 } RoutaParams;
 
-/* Handler signature */
-nomen vacuum (*RoutaHandler)(
-    HttpPetitioServeri* petitio,
-    HttpResponsum*      responsum,
-    RoutaParams*        params);
-
 /* Route types */
 nomen enumeratio {
     ROUTA_EXACTA = 0,  /* /users - exact match */
@@ -66,11 +67,16 @@ nomen enumeratio {
 /* Opaque router handle */
 nomen structura Router Router;
 
+/* Bit methodi in larva methodi_permissae (HttpMethodus max VII < XXXII) */
+#define ROUTA_METHODUS_BIT(m)  ((i32)I << (i32)(m))
+
 /* Match result */
 nomen structura {
-    b32          invenit;
-    RoutaHandler handler;
+    b32          invenit;           /* via + methodus congruunt */
+    vacuum*      datum;             /* opacum; NIHIL nisi invenit */
     RoutaParams  params;
+    b32          via_inventa;       /* via congruit, methodo neglecta */
+    i32          methodi_permissae; /* OR bitium omnium methodorum viae */
 } RoutaResultus;
 
 
@@ -97,42 +103,42 @@ b32
 router_get(
     Router*             router,
     constans character* via,
-    RoutaHandler        handler);
+    vacuum*             datum);
 
 /* Adicere route pro POST method */
 b32
 router_post(
     Router*             router,
     constans character* via,
-    RoutaHandler        handler);
+    vacuum*             datum);
 
 /* Adicere route pro PUT method */
 b32
 router_put(
     Router*             router,
     constans character* via,
-    RoutaHandler        handler);
+    vacuum*             datum);
 
 /* Adicere route pro DELETE method */
 b32
 router_delete(
     Router*             router,
     constans character* via,
-    RoutaHandler        handler);
+    vacuum*             datum);
 
 /* Adicere route pro PATCH method */
 b32
 router_patch(
     Router*             router,
     constans character* via,
-    RoutaHandler        handler);
+    vacuum*             datum);
 
 /* Adicere route generica
  *
- * router:  Router
+ * router:   Router
  * methodus: HTTP method
  * via:      Path pattern (e.g., "/users/:id")
- * handler:  Handler function
+ * datum:    Index opacus (typice CAPSA consumptoris)
  *
  * Redde: VERUM si successus
  */
@@ -141,7 +147,7 @@ router_adicere(
     Router*             router,
     HttpMethodus        methodus,
     constans character* via,
-    RoutaHandler        handler);
+    vacuum*             datum);
 
 
 /* ========================================================================

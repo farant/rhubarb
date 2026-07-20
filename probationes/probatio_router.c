@@ -61,6 +61,31 @@ handler_posts(HttpPetitioServeri* petitio, HttpResponsum* responsum, RoutaParams
 
 
 /* ========================================================================
+ * CAPSAE - router indices obiectorum solos tenet (index functionis in
+ * vacuum* vetitus sub -pedantic); exemplar CAPSAE quod hospitium utetur
+ * ======================================================================== */
+
+nomen vacuum (*TractatorProbationis)(
+    HttpPetitioServeri*, HttpResponsum*, RoutaParams*);
+
+nomen structura {
+    TractatorProbationis tractator;
+} CapsaTractatoris;
+
+hic_manens CapsaTractatoris g_capsa_simplex    = { handler_simplex };
+hic_manens CapsaTractatoris g_capsa_users      = { handler_users };
+hic_manens CapsaTractatoris g_capsa_user_by_id = { handler_user_by_id };
+hic_manens CapsaTractatoris g_capsa_posts      = { handler_posts };
+
+/* Vocare tractatorem ex capsa resultatus */
+interior vacuum
+_vocare(RoutaResultus* res)
+{
+    ((CapsaTractatoris*)res->datum)->tractator(NIHIL, NIHIL, &res->params);
+}
+
+
+/* ========================================================================
  * FUNCTIONES AUXILIARES
  * ======================================================================== */
 
@@ -114,21 +139,21 @@ probatio_adicere_routas(Piscina* piscina)
     CREDO_NON_NIHIL(router);
 
     /* Adicere GET routes */
-    res = router_get(router, "/", handler_simplex);
+    res = router_get(router, "/", &g_capsa_simplex);
     CREDO_VERUM(res);
     CREDO_VERUM(router_numerus_routarum(router) == I);
 
-    res = router_get(router, "/users", handler_users);
+    res = router_get(router, "/users", &g_capsa_users);
     CREDO_VERUM(res);
     CREDO_VERUM(router_numerus_routarum(router) == II);
 
     /* Adicere POST route */
-    res = router_post(router, "/users", handler_simplex);
+    res = router_post(router, "/users", &g_capsa_simplex);
     CREDO_VERUM(res);
     CREDO_VERUM(router_numerus_routarum(router) == III);
 
     /* Adicere pattern route */
-    res = router_get(router, "/users/:id", handler_user_by_id);
+    res = router_get(router, "/users/:id", &g_capsa_user_by_id);
     CREDO_VERUM(res);
     CREDO_VERUM(router_numerus_routarum(router) == IV);
 
@@ -147,11 +172,11 @@ probatio_omnes_methodi(Piscina* piscina)
     router = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
-    CREDO_VERUM(router_get(router, "/get", handler_simplex));
-    CREDO_VERUM(router_post(router, "/post", handler_simplex));
-    CREDO_VERUM(router_put(router, "/put", handler_simplex));
-    CREDO_VERUM(router_delete(router, "/delete", handler_simplex));
-    CREDO_VERUM(router_patch(router, "/patch", handler_simplex));
+    CREDO_VERUM(router_get(router, "/get", &g_capsa_simplex));
+    CREDO_VERUM(router_post(router, "/post", &g_capsa_simplex));
+    CREDO_VERUM(router_put(router, "/put", &g_capsa_simplex));
+    CREDO_VERUM(router_delete(router, "/delete", &g_capsa_simplex));
+    CREDO_VERUM(router_patch(router, "/patch", &g_capsa_simplex));
 
     CREDO_VERUM(router_numerus_routarum(router) == V);
     printf("  Omnes methodi registratae\n");
@@ -175,27 +200,27 @@ probatio_matching_exacta(Piscina* piscina)
     router = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
-    router_get(router, "/", handler_simplex);
-    router_get(router, "/users", handler_users);
-    router_get(router, "/posts", handler_posts);
+    router_get(router, "/", &g_capsa_simplex);
+    router_get(router, "/users", &g_capsa_users);
+    router_get(router, "/posts", &g_capsa_posts);
 
     /* Match root */
     res = router_matching(router, HTTP_GET, chorda_test("/"), piscina);
     CREDO_VERUM(res.invenit);
-    CREDO_NON_NIHIL(res.handler);
-    res.handler(NIHIL, NIHIL, &res.params);
+    CREDO_NON_NIHIL(res.datum);
+    _vocare(&res);
     CREDO_VERUM(g_handler_vocatus == I);
 
     /* Match /users */
     res = router_matching(router, HTTP_GET, chorda_test("/users"), piscina);
     CREDO_VERUM(res.invenit);
-    res.handler(NIHIL, NIHIL, &res.params);
+    _vocare(&res);
     CREDO_VERUM(g_handler_vocatus == C);
 
     /* Match /posts */
     res = router_matching(router, HTTP_GET, chorda_test("/posts"), piscina);
     CREDO_VERUM(res.invenit);
-    res.handler(NIHIL, NIHIL, &res.params);
+    _vocare(&res);
     CREDO_VERUM(g_handler_vocatus == CCC);
 
     printf("  Matching exacta correcte\n");
@@ -214,7 +239,7 @@ probatio_non_matching(Piscina* piscina)
     router = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
-    router_get(router, "/users", handler_users);
+    router_get(router, "/users", &g_capsa_users);
 
     /* Via non existens */
     res = router_matching(router, HTTP_GET, chorda_test("/unknown"), piscina);
@@ -246,7 +271,7 @@ probatio_matching_pattern_simplex(Piscina* piscina)
     router = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
-    router_get(router, "/users/:id", handler_user_by_id);
+    router_get(router, "/users/:id", &g_capsa_user_by_id);
 
     /* Match /users/123 */
     res = router_matching(router, HTTP_GET, chorda_test("/users/123"), piscina);
@@ -276,7 +301,7 @@ probatio_matching_pattern_multiplex(Piscina* piscina)
     router = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
-    router_get(router, "/users/:user_id/posts/:post_id", handler_simplex);
+    router_get(router, "/users/:user_id/posts/:post_id", &g_capsa_simplex);
 
     /* Match /users/42/posts/7 */
     res = router_matching(router, HTTP_GET, chorda_test("/users/42/posts/7"), piscina);
@@ -310,20 +335,20 @@ probatio_matching_mixed(Piscina* piscina)
     CREDO_NON_NIHIL(router);
 
     /* Exact ante pattern */
-    router_get(router, "/users", handler_users);
-    router_get(router, "/users/:id", handler_user_by_id);
+    router_get(router, "/users", &g_capsa_users);
+    router_get(router, "/users/:id", &g_capsa_user_by_id);
 
     /* Debet match exact pro /users */
     res = router_matching(router, HTTP_GET, chorda_test("/users"), piscina);
     CREDO_VERUM(res.invenit);
-    res.handler(NIHIL, NIHIL, &res.params);
+    _vocare(&res);
     CREDO_VERUM(g_handler_vocatus == C);  /* users handler */
     CREDO_VERUM(res.params.numerus == 0);
 
     /* Debet match pattern pro /users/123 */
     res = router_matching(router, HTTP_GET, chorda_test("/users/123"), piscina);
     CREDO_VERUM(res.invenit);
-    res.handler(NIHIL, NIHIL, &res.params);
+    _vocare(&res);
     CREDO_VERUM(g_handler_vocatus == CC);  /* user_by_id handler */
     CREDO_VERUM(res.params.numerus == I);
 
@@ -348,7 +373,7 @@ probatio_param_obtinere_i32(Piscina* piscina)
     router = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
-    router_get(router, "/items/:id", handler_simplex);
+    router_get(router, "/items/:id", &g_capsa_simplex);
 
     /* Test with numeric id */
     res = router_matching(router, HTTP_GET, chorda_test("/items/456"), piscina);
@@ -379,7 +404,7 @@ probatio_param_non_numericus(Piscina* piscina)
     router = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
-    router_get(router, "/articles/:slug", handler_simplex);
+    router_get(router, "/articles/:slug", &g_capsa_simplex);
 
     res = router_matching(router, HTTP_GET, chorda_test("/articles/hello-world"), piscina);
     CREDO_VERUM(res.invenit);
@@ -419,10 +444,10 @@ probatio_nullum_argumenta(Piscina* piscina)
     CREDO_NON_NIHIL(router);
 
     /* Adicere cum NIHIL via */
-    add_res = router_get(router, NIHIL, handler_simplex);
+    add_res = router_get(router, NIHIL, &g_capsa_simplex);
     CREDO_FALSUM(add_res);
 
-    /* Adicere cum NIHIL handler */
+    /* Adicere cum NIHIL datum */
     add_res = router_get(router, "/test", NIHIL);
     CREDO_FALSUM(add_res);
 
@@ -456,7 +481,7 @@ probatio_trailing_slash(Piscina* piscina)
     router = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
-    router_get(router, "/users", handler_users);
+    router_get(router, "/users", &g_capsa_users);
 
     /* Sine trailing slash */
     res = router_matching(router, HTTP_GET, chorda_test("/users"), piscina);
@@ -493,7 +518,7 @@ probatio_routa_capacitas(Piscina* piscina)
     per (i = 0; i < CXXVIII; i++)
     {
         sprintf(via_buffer, "/route%d", i);
-        res = router_get(router, via_buffer, handler_simplex);
+        res = router_get(router, via_buffer, &g_capsa_simplex);
         si (res)
         {
             successus_count++;
@@ -505,7 +530,7 @@ probatio_routa_capacitas(Piscina* piscina)
     printf("  Routae additae: %u\n", successus_count);
 
     /* Proxima debet fallere */
-    res = router_get(router, "/overflow", handler_simplex);
+    res = router_get(router, "/overflow", &g_capsa_simplex);
     CREDO_FALSUM(res);
     CREDO_VERUM(router_numerus_routarum(router) == CXXVIII);
     printf("  Routa CXXIX recte recusata\n");
@@ -527,13 +552,13 @@ probatio_duplicata_routa(Piscina* piscina)
     CREDO_NON_NIHIL(router);
 
     /* Adicere eadem via bis */
-    CREDO_VERUM(router_get(router, "/test", handler_users));
-    CREDO_VERUM(router_get(router, "/test", handler_user_by_id));
+    CREDO_VERUM(router_get(router, "/test", &g_capsa_users));
+    CREDO_VERUM(router_get(router, "/test", &g_capsa_user_by_id));
 
     /* Secunda debet vincere (vel prima, dependent on impl) */
     res = router_matching(router, HTTP_GET, chorda_test("/test"), piscina);
     CREDO_VERUM(res.invenit);
-    res.handler(NIHIL, NIHIL, &res.params);
+    _vocare(&res);
     /* Verificare quod handler est users (C) vel user_by_id (CC) */
     CREDO_VERUM(g_handler_vocatus == C || g_handler_vocatus == CC);
 
@@ -567,7 +592,7 @@ probatio_via_longa(Piscina* piscina)
     }
     via_longa[CCL] = '\0';
 
-    CREDO_VERUM(router_get(router, via_longa, handler_simplex));
+    CREDO_VERUM(router_get(router, via_longa, &g_capsa_simplex));
 
     res = router_matching(router, HTTP_GET,
                           chorda_ex_buffer((i8*)via_longa, CCL), piscina);
@@ -590,14 +615,158 @@ probatio_via_radix(Piscina* piscina)
     router = router_creare(piscina);
     CREDO_NON_NIHIL(router);
 
-    CREDO_VERUM(router_get(router, "/", handler_simplex));
+    CREDO_VERUM(router_get(router, "/", &g_capsa_simplex));
 
     res = router_matching(router, HTTP_GET, chorda_test("/"), piscina);
     CREDO_VERUM(res.invenit);
-    res.handler(NIHIL, NIHIL, &res.params);
+    _vocare(&res);
     CREDO_VERUM(g_handler_vocatus == I);
 
     printf("  Radix matched\n");
+    printf("\n");
+}
+
+
+/* ========================================================================
+ * PROBATIONES - LARVA METHODORUM (via_inventa + methodi_permissae)
+ * ======================================================================== */
+
+interior vacuum
+probatio_larva_methodus_falsa(Piscina* piscina)
+{
+    Router* router;
+    RoutaResultus res;
+
+    printf("--- Probans larva: methodus falsa ---\n");
+
+    router = router_creare(piscina);
+    CREDO_NON_NIHIL(router);
+    router_get(router, "/users", &g_capsa_users);
+
+    res = router_matching(router, HTTP_POST, chorda_test("/users"), piscina);
+    CREDO_FALSUM(res.invenit);
+    CREDO_VERUM(res.via_inventa);
+    CREDO_VERUM(res.methodi_permissae == ROUTA_METHODUS_BIT(HTTP_GET));
+
+    printf("  405-materia: via inventa, larva GET\n");
+    printf("\n");
+}
+
+
+interior vacuum
+probatio_larva_multi_methodus(Piscina* piscina)
+{
+    Router* router;
+    RoutaResultus res;
+    i32 larva_plena;
+
+    printf("--- Probans larva: completa post victoriam ---\n");
+
+    router = router_creare(piscina);
+    CREDO_NON_NIHIL(router);
+    router_get(router, "/res", &g_capsa_users);
+    router_post(router, "/res", &g_capsa_simplex);
+    router_put(router, "/res", &g_capsa_posts);
+
+    larva_plena = ROUTA_METHODUS_BIT(HTTP_GET)
+                | ROUTA_METHODUS_BIT(HTTP_POST)
+                | ROUTA_METHODUS_BIT(HTTP_PUT);
+
+    /* victoria in routa prima - larva TAMEN completa accumulatur */
+    res = router_matching(router, HTTP_GET, chorda_test("/res"), piscina);
+    CREDO_VERUM(res.invenit);
+    CREDO_VERUM(res.methodi_permissae == larva_plena);
+
+    printf("  Larva completa etiam post victoriam\n");
+    printf("\n");
+}
+
+
+interior vacuum
+probatio_larva_exacta_et_pattern(Piscina* piscina)
+{
+    Router* router;
+    RoutaResultus res;
+    chorda x_valor;
+    chorda y_valor;
+
+    printf("--- Probans larva: exacta + pattern conferunt ---\n");
+
+    reset_globals();
+    router = router_creare(piscina);
+    CREDO_NON_NIHIL(router);
+
+    /* exacta POST; pattern POST methodi falsae ANTE victorem registrata */
+    router_post(router, "/a/7", &g_capsa_simplex);
+    router_post(router, "/a/:y", &g_capsa_posts);
+    router_get(router, "/a/:x", &g_capsa_user_by_id);
+
+    res = router_matching(router, HTTP_GET, chorda_test("/a/7"), piscina);
+
+    /* I: pattern GET vincit */
+    CREDO_VERUM(res.invenit);
+    _vocare(&res);
+    CREDO_VERUM(g_handler_vocatus == CC);
+
+    /* II: exacta et pattern ambo larvam conferunt */
+    CREDO_VERUM(res.methodi_permissae ==
+                (ROUTA_METHODUS_BIT(HTTP_POST) | ROUTA_METHODUS_BIT(HTTP_GET)));
+
+    /* III: insula parametrorum - routa pattern methodi falsae (ante
+     * victorem congruens) parametra victoris conculcare non potest */
+    CREDO_VERUM(res.params.numerus == I);
+    x_valor = router_param_obtinere(&res.params, "x");
+    CREDO_VERUM(x_valor.mensura == I);
+    CREDO_VERUM(memcmp(x_valor.datum, "7", I) == 0);
+    y_valor = router_param_obtinere(&res.params, "y");
+    CREDO_VERUM(y_valor.mensura == 0);
+
+    printf("  Exacta + pattern conferunt; parametra insulata\n");
+    printf("\n");
+}
+
+
+interior vacuum
+probatio_larva_omnino_absens(Piscina* piscina)
+{
+    Router* router;
+    RoutaResultus res;
+
+    printf("--- Probans larva: via omnino absens ---\n");
+
+    router = router_creare(piscina);
+    CREDO_NON_NIHIL(router);
+    router_get(router, "/users", &g_capsa_users);
+
+    res = router_matching(router, HTTP_GET, chorda_test("/nusquam"), piscina);
+    CREDO_FALSUM(res.invenit);
+    CREDO_FALSUM(res.via_inventa);
+    CREDO_VERUM(res.methodi_permissae == 0);
+
+    printf("  404-materia: nihil inventum, larva vacua\n");
+    printf("\n");
+}
+
+
+interior vacuum
+probatio_larva_head_literalis(Piscina* piscina)
+{
+    Router* router;
+    RoutaResultus res;
+
+    printf("--- Probans larva: HEAD literalis ---\n");
+
+    router = router_creare(piscina);
+    CREDO_NON_NIHIL(router);
+    router_get(router, "/solum", &g_capsa_users);
+
+    /* router methodo-literalis manet - HEAD->GET officium hospitii est */
+    res = router_matching(router, HTTP_HEAD, chorda_test("/solum"), piscina);
+    CREDO_FALSUM(res.invenit);
+    CREDO_VERUM(res.via_inventa);
+    CREDO_VERUM(res.methodi_permissae == ROUTA_METHODUS_BIT(HTTP_GET));
+
+    printf("  HEAD non congruit GET - literalis\n");
     printf("\n");
 }
 
@@ -637,6 +806,13 @@ principale(vacuum)
     probatio_duplicata_routa(piscina);
     probatio_via_longa(piscina);
     probatio_via_radix(piscina);
+
+    /* Larva methodorum (405 + Allow materia pro hospitio) */
+    probatio_larva_methodus_falsa(piscina);
+    probatio_larva_multi_methodus(piscina);
+    probatio_larva_exacta_et_pattern(piscina);
+    probatio_larva_omnino_absens(piscina);
+    probatio_larva_head_literalis(piscina);
 
     credo_imprimere_compendium();
 

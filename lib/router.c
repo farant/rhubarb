@@ -23,7 +23,7 @@ nomen structura {
     HttpMethodus    methodus;
     chorda          via;           /* Original path */
     RoutaTipus      tipus;
-    RoutaHandler    handler;
+    vacuum*         datum;         /* Index opacus consumptoris */
     b32             activus;
 
     /* Parsed segments */
@@ -313,12 +313,12 @@ router_adicere(
     Router*             router,
     HttpMethodus        methodus,
     constans character* via,
-    RoutaHandler        handler)
+    vacuum*             datum)
 {
     Routa* routa;
     i32 len;
 
-    si (!router || !via || !handler)
+    si (!router || !via || !datum)
     {
         redde FALSUM;
     }
@@ -333,7 +333,7 @@ router_adicere(
     len = (i32)strlen(via);
     routa->via = _chorda_ex_raw(via, len, router->piscina);
     routa->methodus = methodus;
-    routa->handler = handler;
+    routa->datum = datum;
     routa->activus = VERUM;
 
     /* Determine type and parse */
@@ -361,45 +361,45 @@ b32
 router_get(
     Router*             router,
     constans character* via,
-    RoutaHandler        handler)
+    vacuum*             datum)
 {
-    redde router_adicere(router, HTTP_GET, via, handler);
+    redde router_adicere(router, HTTP_GET, via, datum);
 }
 
 b32
 router_post(
     Router*             router,
     constans character* via,
-    RoutaHandler        handler)
+    vacuum*             datum)
 {
-    redde router_adicere(router, HTTP_POST, via, handler);
+    redde router_adicere(router, HTTP_POST, via, datum);
 }
 
 b32
 router_put(
     Router*             router,
     constans character* via,
-    RoutaHandler        handler)
+    vacuum*             datum)
 {
-    redde router_adicere(router, HTTP_PUT, via, handler);
+    redde router_adicere(router, HTTP_PUT, via, datum);
 }
 
 b32
 router_delete(
     Router*             router,
     constans character* via,
-    RoutaHandler        handler)
+    vacuum*             datum)
 {
-    redde router_adicere(router, HTTP_DELETE, via, handler);
+    redde router_adicere(router, HTTP_DELETE, via, datum);
 }
 
 b32
 router_patch(
     Router*             router,
     constans character* via,
-    RoutaHandler        handler)
+    vacuum*             datum)
 {
-    redde router_adicere(router, HTTP_PATCH, via, handler);
+    redde router_adicere(router, HTTP_PATCH, via, datum);
 }
 
 
@@ -416,41 +416,41 @@ router_matching(
 {
     RoutaResultus res;
     chorda req_segmenta[ROUTER_SEGMENTA_MAXIMA];
+    RoutaParams candidatae;
     i32 req_numerus;
     i32 i;
     Routa* routa;
 
     memset(&res, 0, magnitudo(res));
-    res.invenit = FALSUM;
 
     si (!router || !piscina)
     {
         redde res;
     }
 
-    /* First try exact matches */
+    /* Gressus exactus primus - exactum-super-pattern conservatur.
+     * NULLUS reditus praematurus: larva methodorum in OMNI congruentia
+     * viae accumulatur (405 + Allow indigent ea completa); victor sub
+     * !res.invenit assignatur - primum-registratum vincit. */
     per (i = 0; i < router->numerus; i++)
     {
         routa = &router->routae[i];
 
-        si (!routa->activus)
+        si (!routa->activus || routa->tipus != ROUTA_EXACTA)
         {
             perge;
         }
 
-        si (routa->methodus != methodus)
+        si (chorda_aequalis(routa->via, via))
         {
-            perge;
-        }
+            res.via_inventa = VERUM;
+            res.methodi_permissae |= ROUTA_METHODUS_BIT(routa->methodus);
 
-        si (routa->tipus == ROUTA_EXACTA)
-        {
-            si (chorda_aequalis(routa->via, via))
+            si (!res.invenit && routa->methodus == methodus)
             {
                 res.invenit = VERUM;
-                res.handler = routa->handler;
+                res.datum = routa->datum;
                 res.params.numerus = 0;
-                redde res;
             }
         }
     }
@@ -458,28 +458,30 @@ router_matching(
     /* Parse request path for pattern matching */
     req_numerus = _parse_request_via(via, req_segmenta, ROUTER_SEGMENTA_MAXIMA);
 
-    /* Try pattern matches */
+    /* Gressus pattern - candidatae PURGATAE, in res.params solum in
+     * victoria copiantur (routa methodi alienae victoris parametra
+     * conculcare non potest) */
     per (i = 0; i < router->numerus; i++)
     {
         routa = &router->routae[i];
 
-        si (!routa->activus)
+        si (!routa->activus || routa->tipus != ROUTA_PATTERN)
         {
             perge;
         }
 
-        si (routa->methodus != methodus)
+        memset(&candidatae, 0, magnitudo(candidatae));
+        si (_match_pattern(routa, req_segmenta, req_numerus, &candidatae,
+                           piscina))
         {
-            perge;
-        }
+            res.via_inventa = VERUM;
+            res.methodi_permissae |= ROUTA_METHODUS_BIT(routa->methodus);
 
-        si (routa->tipus == ROUTA_PATTERN)
-        {
-            si (_match_pattern(routa, req_segmenta, req_numerus, &res.params, piscina))
+            si (!res.invenit && routa->methodus == methodus)
             {
                 res.invenit = VERUM;
-                res.handler = routa->handler;
-                redde res;
+                res.datum = routa->datum;
+                res.params = candidatae;
             }
         }
     }
