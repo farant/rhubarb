@@ -259,11 +259,20 @@ b32  internuntius_praebere         (Internuntius* inx,
                                     constans character* methodus,
                                     InternuntiusTractator tractator,
                                     vacuum* datum);
-vacuum internuntius_tractare       (Internuntius* inx, chorda nuntium);
+/* AS-SHIPPED (Phase A): tractare/eventum_mittere take an EXPLICIT
+ * call piscina — a pure library owns no hidden growing arena; the
+ * caller (vitrea's drain loop) holds the mark/reset. Missor
+ * contract: textus valid only inside the missor call — copy to
+ * retain. */
+vacuum internuntius_tractare       (Internuntius* inx, chorda nuntium,
+                                    Piscina* piscina_vocationis);
 vacuum internuntius_eventum_mittere(Internuntius* inx,
                                     constans character* eventus,
-                                    JsonValor* datum);
+                                    JsonValor* datum,
+                                    Piscina* piscina_vocationis);
 Xar* internuntius_methodi          (Internuntius* inx, Piscina* piscina);
+InternuntiusFructus internuntius_fructus(constans Internuntius* inx);
+chorda internuntius_effugere_js    (chorda textus, Piscina* piscina);
 
 /* ===== vitrea.h ===== */
 nomen structura Vitrea Vitrea;
