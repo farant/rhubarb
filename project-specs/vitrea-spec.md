@@ -418,6 +418,18 @@ first real app):
 - cross-platform backends (WebView2, WebKitGTK): the platform seam is the
   .m file boundary itself; nothing in vitrea.h names WebKit
 - amalgamated deliverable (§2)
+- **vitrea-sonda** (observation channel, designed-for not bolted-on):
+  WebKit does not speak CDP (the protocols forked with Blink in 2013;
+  WebKit's own inspector protocol is private — Playwright only "drives
+  WebKit" via its own patched builds), so agent-driven testing rides
+  primitives we already own: `vitrea_aestimare` to drive + query the DOM
+  (results back over internuntius as JSON) and a window snapshot for
+  pixels (WKWebView takeSnapshot, or CoreGraphics window capture — the
+  latter needs no WebKit contact and generalizes to pixel-buffer
+  fenestra apps). Future shape: a `-sonda` stdio/MCP side channel, same
+  lineage as officina/sonda.sh. Safari Web Inspector via `inspectabilis`
+  remains the human devtools. The 2026-07 calibration spike prototypes
+  the snapshot half.
 
 ## 15. Verificanda + open interview items [SIM-1]
 
