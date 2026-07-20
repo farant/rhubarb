@@ -34,7 +34,13 @@
  * vitreae; piscina REFICITUR cum nuntius ad caudam VACUAM advenit
  * - ergo chordae exhaustae valent donec nuntius novus post
  * exhaustionem completam adveniat. TRACTA STATIM, NUMQUAM
- * RECONDE. */
+ * RECONDE.
+ *
+ * NAVIGATIO (Phasis C): navigatio ad originem configuratam SOLAM
+ * conceditur (schema+hospes+portus; 'about' exemptum - paginae
+ * internae WebKit); cetera recusantur et numerantur
+ * (navigationes_recusatae). Nexus externi in v1 mortui sunt -
+ * aperire-externum bibliotheca futura est (spec par XIV). */
 
 #ifndef VITREA_H
 #define VITREA_H
@@ -68,6 +74,7 @@ nomen structura {
     i64 aestimationes;        /* evaluationes JS C->JS */
     i64 petitiones_capsulae;  /* petitiones schematis servitae */
     i64 petitiones_fractae;   /* 404 - via in capsula absens */
+    i64 navigationes_recusatae; /* navigationes extra originem */
 } VitreaFructus;
 
 nomen enumeratio {

@@ -2,8 +2,9 @@
  * project-specs/vitrea-spec-v2.md). CONTACTUS WEBKIT TOTUS hic
  * vivit - vitrea.h C89 purum manet. MRC (retentio manualis), SINE
  * litteris blocorum - mos fenestra_macos.m; completionHandler
- * semper nil. Politica navigationis = Phasis C (methodus
- * decidePolicy blocum acciperet - dilata). */
+ * semper nil. Politica navigationis (Phasis C): blocum RECEPTUM
+ * (decisionHandler) vocamus - litterae blocorum vetitae manent
+ * (decretum 2026-07-20). */
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
@@ -35,6 +36,10 @@ structura Vitrea {
     VitreaLegatus*      legatus;
     Capsula*            capsula;
     constans character* via_initialis;
+    /* origo pro politica navigationis (semel in creare extracta) */
+    constans character* origo_schema;
+    constans character* origo_hospes;
+    s32                 origo_portus;   /* -I = nullus portus */
     /* cauda anuli (exemplar fenestrae; overflow = amissio+clamor) */
     VitreaNuntiusSitus  nuntii[VITREA_MAXIMUS_NUNTIORUM];
     i32                 nuntii_caput;
@@ -349,6 +354,40 @@ interior constans character* constans VITREA_CURSUS_JS =
 @end
 
 @implementation VitreaLegatus
+/* politica navigationis v1: origo configurata SOLA conceditur;
+ * 'about' exemptum (paginae internae vacuae WebKit); cetera
+ * recusata + numerata. Blocum RECEPTUM vocamus (decretum
+ * 2026-07-20) - litteram bloci numquam scribimus. Petitiones
+ * subresourcium (fetch, assets schematis) hac via NON transeunt -
+ * navigationes solae. */
+- (vacuum)webView:(WKWebView*)textura
+    decidePolicyForNavigationAction:(WKNavigationAction*)actio
+    decisionHandler:(vacuum (^)(WKNavigationActionPolicy))decisor
+{
+    Vitrea* vitrea = self.vitrea;
+    NSURL* url = actio.request.URL;
+    constans character* schema = [[url scheme] UTF8String];
+    constans character* hospes = [[url host] UTF8String];
+    s32 portus = [url port] != nil
+        ? (s32)[[url port] intValue] : -I;
+
+    (vacuum)textura;
+    si (schema != NIHIL && strcmp(schema, "about") == ZEPHYRUM)
+    {
+        decisor(WKNavigationActionPolicyAllow);
+        redde;
+    }
+    si (schema != NIHIL && hospes != NIHIL
+        && strcmp(schema, vitrea->origo_schema) == ZEPHYRUM
+        && strcmp(hospes, vitrea->origo_hospes) == ZEPHYRUM
+        && portus == vitrea->origo_portus)
+    {
+        decisor(WKNavigationActionPolicyAllow);
+        redde;
+    }
+    vitrea->fructus.navigationes_recusatae++;
+    decisor(WKNavigationActionPolicyCancel);
+}
 - (vacuum)webViewWebContentProcessDidTerminate:(WKWebView*)textura
 {
     (vacuum)textura;
@@ -398,6 +437,44 @@ vitrea_creare (Piscina* piscina, Fenestra* fenestra,
     vitrea->via_initialis = _litterae_copiare(piscina,
         configuratio->via_initialis != NIHIL
             ? configuratio->via_initialis : "index.html");
+    si (configuratio->origo == VITREA_ORIGO_CAPSULA)
+    {
+        vitrea->origo_schema = "capsula";
+        vitrea->origo_hospes = "radix";
+        vitrea->origo_portus = -I;
+    }
+    alioquin
+    {
+        /* origo ex URL configurata semel extracta - politica
+         * navigationis contra eam congruit. Extractio ANTE piscinas
+         * dynamicas: fractura hic nihil effundit. */
+        b32 fracta = FALSUM;
+
+        @autoreleasepool {
+            NSURL* origo_url = [NSURL URLWithString:[NSString
+                stringWithUTF8String:configuratio->url]];
+            constans character* s = origo_url != nil
+                ? [[origo_url scheme] UTF8String] : NIHIL;
+            constans character* h = origo_url != nil
+                ? [[origo_url host] UTF8String] : NIHIL;
+
+            si (s == NIHIL || h == NIHIL)
+            {
+                fracta = VERUM;
+            }
+            alioquin
+            {
+                vitrea->origo_schema = _litterae_copiare(piscina, s);
+                vitrea->origo_hospes = _litterae_copiare(piscina, h);
+                vitrea->origo_portus = [origo_url port] != nil
+                    ? (s32)[[origo_url port] intValue] : -I;
+            }
+        }
+        si (fracta)
+        {
+            redde NIHIL;
+        }
+    }
     vitrea->piscina_nuntiorum = piscina_generare_dynamicum(
         "vitrea_nuntii", 4194304);
     vitrea->piscina_petitionum = piscina_generare_dynamicum(

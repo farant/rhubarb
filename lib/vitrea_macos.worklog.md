@@ -36,3 +36,34 @@ Decisions recorded:
 - Copy-and-reset serving per spec v2 §4: dataWithBytes (WebKit
   owns its copy) then immediate reficere — zero lifetime coupling
   with the async scheme task.
+
+## 2026-07-20 — Phase C: navigation policy
+
+decidePolicyForNavigationAction shipped. The dialect decision that
+unblocked it (Fran, decretum 01KXZZDPNK): calling a RECEIVED block
+parameter — `decisor(WKNavigationActionPolicyAllow)` — is allowed;
+block LITERALS (^{}) stay forbidden. The file is block-literal-free,
+no longer block-free.
+
+Policy shape: origin captured ONCE in creare (capsula → fixed
+"capsula"/"radix"; URL mode → NSURL-parsed scheme/host/port, and an
+unparseable URL now fails creare BEFORE the dynamic piscinae are
+allocated, so failure leaks nothing). decidePolicy allows `about:`
+(WebKit's internal blank pages) and exact scheme+host+port matches;
+everything else → navigationes_recusatae++ + Cancel. Subresource
+requests (fetch, scheme-handler assets) never pass through
+decidePolicy — navigations only.
+
+Port caveat worth remembering: NSURL gives no port for
+`http://127.0.0.1` (→ -1 sentinel), so a dev config URL written
+WITHOUT an explicit port only matches portless navigation URLs.
+Dev URLs in practice always carry `:PORT`; if one ever doesn't,
+same-origin JS navigation still matches (same portless form).
+
+Smoke design — failure is self-announcing: index.html auto-attempts
+`location.href = 'https://exemplum.externum.invalidum/'` after the
+salve round trip, then reads fructus through the bridge and echoes
+`navigationes recusatae = 1` via confirmare. If the policy ever
+breaks, the page NAVIGATES AWAY, the JS context dies, and the smoke
+line simply never prints. The echo also proves the page survived
+the attempt — a successful navigation could not have produced it.

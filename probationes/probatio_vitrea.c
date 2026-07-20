@@ -97,6 +97,9 @@ _fructus_legere (JsonValor* argumenta, Piscina* piscina,
         json_integer_creare(piscina, (s64)fr.petitiones_capsulae));
     json_objectum_ponere(fructus, "petitiones_fractae",
         json_integer_creare(piscina, (s64)fr.petitiones_fractae));
+    json_objectum_ponere(fructus, "navigationes_recusatae",
+        json_integer_creare(piscina,
+            (s64)fr.navigationes_recusatae));
     redde fructus;
 }
 
@@ -252,11 +255,13 @@ s32 principale (vacuum)
         InternuntiusFructus fi = internuntius_fructus(inx);
 
         imprimere("[vitrea] finis: nuntii %d (amissi %d),"
-            " aestimationes %d, petitiones %d (fractae %d);"
+            " aestimationes %d, petitiones %d (fractae %d),"
+            " navigationes recusatae %d;"
             " vocationes %d, culpae %d, eventus %d\n",
             (int)fr.nuntii_recepti, (int)fr.nuntii_amissi,
             (int)fr.aestimationes, (int)fr.petitiones_capsulae,
             (int)fr.petitiones_fractae,
+            (int)fr.navigationes_recusatae,
             (int)fi.vocationes_tractatae, (int)fi.culpae,
             (int)fi.eventus_missi);
     }

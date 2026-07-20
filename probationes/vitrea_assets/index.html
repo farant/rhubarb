@@ -42,6 +42,20 @@ internuntius.vocare('salve', { quem: 'munde' })
        (C->JS->C) sine oculis probat */
     return internuntius.vocare('confirmare', { textus: r.salutatio });
   })
+  .then(function() {
+    /* fumus politicae navigationis: conatus externus recusandus
+       est; deinde numeratorem per pontem legimus et echamus. si
+       politica fracta, pagina ABIT et linea numquam imprimitur. */
+    location.href = 'https://exemplum.externum.invalidum/';
+    setTimeout(function() {
+      internuntius.vocare('fructus_legere', {})
+        .then(function(r) {
+          return internuntius.vocare('confirmare', {
+            textus: 'navigationes recusatae = ' +
+              r.navigationes_recusatae });
+        });
+    }, 300);
+  })
   .catch(function(e) { scribere('CULPA: ' + e.message); });
 internuntius.audire('horologium', function(d) {
   document.getElementById('hora').textContent =
