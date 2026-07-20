@@ -120,6 +120,15 @@ vitrea_missor (
     vacuum* datum,
     chorda  textus);
 
+/* aestimator seam-formis (gemellus vitrea_missor): datum = Vitrea*,
+ * JS crudum evaluat. Pro consumptoribus sine typo Vitrea (e.g.
+ * speculum). Usus:
+ *   speculum_creare(piscina, &capsula, inx, vitrea_aestimator, vitrea); */
+vacuum
+vitrea_aestimator (
+    vacuum* datum,
+    chorda  js);
+
 vacuum
 vitrea_recargare (
     Vitrea* vitrea);

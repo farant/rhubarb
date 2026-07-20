@@ -116,6 +116,7 @@ declare -a SOURCE_FILES=(
     "lib/router.c"
     "lib/mimen.c"
     "lib/hospitium.c"
+    "lib/speculum.c"
     "lib/flatura.c"
     "lib/quaerere.c"
     "lib/capsula.c"
@@ -437,7 +438,7 @@ compile_and_run_test() {
 
     # Obiecta extra per-probatione (capsulae speculi non globales)
     case "$test_name" in
-        probatio_speculum_fontium)
+        probatio_speculum_fontium|probatio_speculum)
             obj_files="$obj_files build/speculum/hospes/capsula_speculi_hospes.o"
             ;;
     esac

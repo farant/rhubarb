@@ -618,6 +618,12 @@ vitrea_missor (vacuum* datum, chorda textus)
 }
 
 vacuum
+vitrea_aestimator (vacuum* datum, chorda js)
+{
+    vitrea_aestimare((Vitrea*)datum, js);
+}
+
+vacuum
 vitrea_recargare (Vitrea* vitrea)
 {
     si (vitrea == NIHIL)
