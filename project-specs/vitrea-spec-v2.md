@@ -171,7 +171,13 @@ Adjacent-library items (small, additive — Phase B'):
   `http://127.0.0.1` freely, and a capsula-origin page can `fetch()` a
   localhost server **when the server sends CORS headers**
   (`Access-Control-Allow-Origin`) — normal CORS applies, no
-  mixed-content hard block. Servitium's dev mode must emit ACAO.
+  mixed-content hard block. **Correction (Phase C): no house HTTP
+  server exists** — http.h is a client, servitium.h is the entitas
+  service registry, tcp has the primitives; the spike used a Python
+  fixture. The ACAO rule is a filed requirement on the FUTURE house
+  dev/API server (board desideratum), not implementable today. Note
+  the pure ORIGO_URL posture (whole page FROM localhost) is
+  same-origin and needs no CORS at all.
   Dev mode does not require bundling.
 
 ## 5. Transport — three WebKit primitives, one cauda
@@ -406,10 +412,12 @@ vitrea may fight relocation into a bundle.
   generation is offline; generated capsula_*.{h,c} are committed and
   linked as ordinary sources (book_assets precedent,
   compile_tests.sh:148-149).
-- **Phase C — polish + posture.** Dev-mode URL origin (+ servitium ACAO
-  emission), inspectabilis, interitus/reload idiom, navigation policy,
-  worklogs, MAP.txt. Exit: a second toy app builds against the two
-  headers alone.
+- **Phase C — polish + posture.** Dev-mode URL origin (shipped in B as
+  it turned out; ACAO = filed requirement on the future house server),
+  inspectabilis, interitus/reload idiom, navigation policy (shipped
+  2026-07-20: origin-only + navigationes_recusatae counter + calling
+  received blocks per decretum), worklogs, MAP.txt. Exit: a second toy
+  app builds against the two headers alone.
 
 ## 14. Named deferrals
 
