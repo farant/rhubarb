@@ -111,6 +111,10 @@ nomen structura {
 /* Parser incrementalis (opaque) */
 nomen structura HttpParser HttpParser;
 
+/* Limites parseris (0 in creare_cum_limitibus = defalta) */
+#define HTTP_PETITIO_MAXIMA_DEFALTA  (M * M)      /* 1MB petitio tota */
+#define HTTP_URI_MAXIMA_DEFALTA      (VIII * M)   /* 8KB URI */
+
 /* Resultus parse */
 nomen structura {
     b32                 successus;
@@ -118,6 +122,7 @@ nomen structura {
     HttpPetitioServeri* petitio;
     HttpError           error;
     chorda              error_descriptio;
+    i32                 status_suggestus;  /* Status HTTP mittendus (0 = nullus) */
 } HttpParseResultus;
 
 
@@ -224,6 +229,20 @@ http_responsum_serialize(
     HttpResponsum* responsum,
     Piscina*       piscina);
 
+/* Serialize cum capite Connection explicito (pro servo)
+ *
+ * Content-Length SEMPER emittitur (etiam 0) nisi status corpus
+ * prohibet (1xx/204/304); capita Content-Length/Connection a vocatore
+ * data saltantur - serializator framing possidet.
+ *
+ * keep_alive: VERUM = "Connection: keep-alive", FALSUM = "close"
+ */
+chorda
+http_responsum_serialize_cum_conexione(
+    HttpResponsum* responsum,
+    b32            keep_alive,
+    Piscina*       piscina);
+
 
 /* ========================================================================
  * FUNCTIONES - UTILITAS
@@ -264,6 +283,24 @@ http_petitio_parse(
  */
 HttpParser*
 http_parser_creare(Piscina* piscina);
+
+/* Creare parser cum limitibus (0 = defalta)
+ *
+ * petitio_maxima: Limes totalis petitionis in bytes (413 si excessum)
+ * uri_maxima:     Limes URI in bytes (414 si excessum)
+ */
+HttpParser*
+http_parser_creare_cum_limitibus(
+    Piscina* piscina,
+    i32      petitio_maxima,
+    i32      uri_maxima);
+
+/* Bytes in buffer post finem petitionis completae (pipelining detectio)
+ *
+ * Redde: 0 nisi COMPLETA; aliter numerus byteorum reliquorum
+ */
+i32
+http_parser_reliquiae(HttpParser* parser);
 
 /* Adicere data ad parser
  *
