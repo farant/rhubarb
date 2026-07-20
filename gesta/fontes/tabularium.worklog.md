@@ -153,3 +153,33 @@ annales files at the expected relative paths), which then cascades
 into a wall of unrelated-looking failures for every later section.
 If you see a mass failure starting right at `initialize`, check your
 CWD before you start suspecting the actual change you made.
+
+## 2026-07-20 — branch-event leak in the entity render (review find)
+
+Reviewing the entitates commits: the `## Status` and `## Notae`
+queries read tessellae by res_id with no `branch_id = ''` filter.
+Two failure modes, one of them sitting in the suite's own generated
+artifact: (1) post-merge, fundere's raw copies coexist with the
+branch originals under the same res_id, so every status line and
+nota rendered TWICE (probatio_entities/_sine_tag/nota-cogitatio-
+ramalis-*.md showed exactly this — "creatum" x2, the in-branch nota
+x2); (2) pre-merge, a nota/status written in a live branch on a
+trunk res leaked into the trunk archive, violating "trunco
+invisibilis usque ad fusionem".
+
+Fix: `AND branch_id = ''` on both queries, plus the SAME K4-era
+latent leak in _tab_res's annales query (meta-lines only there, but
+identical mechanism). Regression = XXIIIg: asserts the merged
+branch-born entity renders its nota and its creatum line exactly
+once (the artifact-diff made this test nearly free).
+
+Lesson: any DIRECT tessellae read by res_id is a trunk-purity
+hazard — the K4 WHERE lives in _consumptorem_plicare, so fold-fed
+surfaces are safe by construction but raw queries must carry their
+own filter. Grep habit for future surfaces: `FROM tessellae` +
+res_id ⇒ expect branch_id = ''.
+
+Doc fixes same pass: spec no longer claims empty tag folders are
+pruned (rmdir deferred, desideratum 01KXVF6NSE); the section
+comment now cites project-specs/gesta-entitates-spec.md instead of
+the gitignored .superpowers task brief.

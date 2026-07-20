@@ -1444,6 +1444,40 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(md, "corpus removendum epsilon") == NIHIL);
     }
 
+    /* ================================================
+     * XXIIIg. puritas trunci in proiectione: res nata in ramo et
+     * fusa (XX: 'cogitatio ramalis' cum nota 'adnotatio ramalis'
+     * scripta IN RAMO, deinde fundere) fert eventus BIS in
+     * tessellae - originalia ramalia + copiae truncales fusionis,
+     * res_id eodem. Sine filtro branch_id='' quaeque linea Status/
+     * Notae bis redderetur (insectum repertum in recensione
+     * 2026-07-20 - artefactum generatum ipsum id monstravit).
+     * ================================================ */
+    {
+        constans character* md = _plagula_cum_continente(piscina,
+            VIA_ENT "/_sine_tag", "cogitatio ramalis");
+        constans character* p;
+
+        CREDO_VERUM (md[0] != '\0');
+        /* nota SEMEL sola (copia truncalis; originale ramale
+         * filtratum) */
+        p = strstr(md, "adnotatio ramalis");
+        CREDO_NON_NIHIL (p);
+        si (p != NIHIL)
+        {
+            CREDO_VERUM (strstr(p + I, "adnotatio ramalis")
+                == NIHIL);
+        }
+        /* linea 'creatum' SEMEL sola in ## Status */
+        p = strstr(md, "- creatum \xE2\x80\x94");
+        CREDO_NON_NIHIL (p);
+        si (p != NIHIL)
+        {
+            CREDO_VERUM (strstr(p + I, "- creatum \xE2\x80\x94")
+                == NIHIL);
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

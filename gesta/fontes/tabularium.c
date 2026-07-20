@@ -1337,7 +1337,7 @@ _tabulam_scribere (Tabularium* t, Piscina* pn)
 /* ==================================================
  * entitates: proiectio una-plagula-per-rem (GENERATUM per tag -
  * archivum planum legibile ex quovis editore/instrumento quod
- * folders navigat). Spec: .superpowers/sdd/task-2-brief.md.
+ * folders navigat). Spec: project-specs/gesta-entitates-spec.md.
  * ================================================== */
 
 /* titulum in slug URL-aptum vertere: minusculae ASCII, quisque
@@ -1680,12 +1680,17 @@ _entitatem_ad_markdown (Tabularium* t, constans character* res_id,
             chorda_aedificator_appendere_literis(aed, "\n");
         }
     }
-    /* ## Status - chronologia ex eventis creatio/status */
+    /* ## Status - chronologia ex eventis creatio/status. TRUNCALIA
+     * SOLA (branch_id vacuum): eventus ramales trunco invisibiles
+     * manent, et post fusionem originalia ramalia cum copiis
+     * truncalibus coexsistunt (res_id idem) - sine filtro quaeque
+     * linea bis redderetur. */
     {
         ScriniumEnuntiatum* e = scrinium_praeparare(
             gesta_scrinium(t->mundus),
             "SELECT genus_eventus, datum, creatum FROM tessellae"
-            " WHERE res_id = ? AND genus_eventus IN ('creatio','status')"
+            " WHERE res_id = ? AND branch_id = ''"
+            " AND genus_eventus IN ('creatio','status')"
             " ORDER BY seq");
 
         si (e != NIHIL)
@@ -1727,12 +1732,14 @@ _entitatem_ad_markdown (Tabularium* t, constans character* res_id,
             scrinium_finire(e);
         }
     }
-    /* ## Notae - omnes, vetustissima primum */
+    /* ## Notae - omnes, vetustissima primum (truncalia sola - vide
+     * commentarium Status supra) */
     {
         ScriniumEnuntiatum* e = scrinium_praeparare(
             gesta_scrinium(t->mundus),
             "SELECT datum, actor, creatum FROM tessellae"
-            " WHERE res_id = ? AND genus_eventus = 'nota' ORDER BY seq");
+            " WHERE res_id = ? AND branch_id = ''"
+            " AND genus_eventus = 'nota' ORDER BY seq");
         b32 caput = FALSUM;
 
         si (e != NIHIL)
@@ -3237,12 +3244,15 @@ _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
     /* affordantiae (K3 - superficies passiva): actiones quae rem
      * NUNC ligare possunt */
     _actiones_reddere(t, aed, res_id, pn);
-    /* annales entis (XV eventa recentissima) */
+    /* annales entis (XV eventa recentissima; truncalia sola - eadem
+     * puritas trunci ac proiectio entitatum, alias eventus ramales
+     * et duplicata post-fusionem apparerent) */
     {
         ScriniumEnuntiatum* e = scrinium_praeparare(
             gesta_scrinium(t->mundus),
             "SELECT genus_eventus, actor, creatum FROM tessellae"
-            " WHERE res_id = ? ORDER BY seq DESC LIMIT 15");
+            " WHERE res_id = ? AND branch_id = ''"
+            " ORDER BY seq DESC LIMIT 15");
 
         si (e != NIHIL)
         {

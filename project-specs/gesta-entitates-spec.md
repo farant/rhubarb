@@ -169,8 +169,14 @@ Per call, **reconcile one entity against the filesystem**:
 
 The filesystem is the record of the previous tag set, so create / note /
 status-change / retag / removal all collapse into this one idempotent
-operation — no separate bookkeeping of "old tags". Empty tag folders left after
-a delete are removed.
+operation — no separate bookkeeping of "old tags". Empty tag folders left
+after a delete are **kept** (no house rmdir wrapper yet — desideratum
+01KXVF6NSE); harmless, and the next full sweep repopulates or leaves them.
+
+Rendered `## Status` / `## Notae` read only **trunk** events
+(`branch_id = ''`): branch events stay invisible pre-merge, and post-merge
+the copied trunk events would otherwise coexist with their branch originals
+(same res_id) and render every line twice (bug found + fixed 2026-07-20).
 
 Cost per write: load one entity + 1–3 file writes + a directory scan of the
 tag folders. Proportionate to `tabula.md`'s existing per-write full DB scan.
@@ -212,7 +218,7 @@ scratch dir. Cases:
 - retag (drop one, add one) → old-tag file gone, new-tag file present,
   shared-tag file updated;
 - title change → old-slug filename gone, new-slug filename present, same id;
-- removal → all copies gone, emptied tag folders pruned;
+- removal → all copies gone (emptied tag folders remain — see above);
 - no-tag entity → lands in `_sine_tag/`;
 - determinism → reconcile twice, second run leaves bytes (and mtimes-of-content)
   identical / no spurious rewrites;
