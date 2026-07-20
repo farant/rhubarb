@@ -1379,6 +1379,71 @@ s32 principale (vacuum)
             <= (i32)(IV + I + XL + I + XXVI + III));
     }
 
+    /* ================================================
+     * XXIIIe. nexus inter duas entitates -> ## Nexus in plagula
+     * socii redditur ut LIGAMEN RELATIVUM markdown (non modo
+     * textus planus): "](../<tag>/<genus>-..." (spec: semita
+     * relativa _entitatem_semita_relativa, tabularium.c:1550)
+     * ================================================ */
+    {
+        constans character* md;
+
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":207,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"addere\","
+            "\"arguments\":{\"genus\":\"parcum\",\"titulus\":"
+            "\"Probatio Entitatum Gamma\",\"corpus\":\"corpus gamma"
+            " nexus\",\"tags\":\"silva\"}}}");
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":208,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"addere\","
+            "\"arguments\":{\"genus\":\"nota\",\"titulus\":"
+            "\"Probatio Entitatum Delta\",\"tags\":\"silva\"}}}");
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":209,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Probatio Entitatum"
+            " Gamma\",\"actus\":\"nexus\",\"verbum\":\"nectitur-cum\","
+            "\"alterum\":\"Probatio Entitatum Delta\"}}}");
+
+        /* NOTA: locandum per corpus proprium ("corpus gamma nexus"),
+         * non per titulum - Delta (socius symmetricus, cf. gesta_
+         * socii_rei) fert IDEM titulus "Probatio Entitatum Gamma"
+         * ut textus sui ligaminis Nexus reditus; titulus solus ergo
+         * ambiguus est inter binas plagulas, ordo iteratoris incertus
+         * (probatum empirice: sine hac praecautione infra flaccidum) */
+        md = _plagula_cum_continente(piscina, VIA_ENT "/silva",
+            "corpus gamma nexus");
+        CREDO_VERUM (strstr(md, "## Nexus") != NIHIL);
+        CREDO_VERUM (strstr(md, "](../silva/nota-") != NIHIL);
+    }
+
+    /* ================================================
+     * XXIIIf. remotio: clavis 'corpus' delet EX DATO REI (non rem
+     * ipsam - nullum actus totam entitatem delet in instrumentis
+     * expositis) -> plagula ipsa manet (titulus adhuc invenitur),
+     * corpus solum evanescit
+     * ================================================ */
+    {
+        constans character* md;
+
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":210,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":\"addere\","
+            "\"arguments\":{\"genus\":\"nota\",\"titulus\":"
+            "\"Probatio Entitatum Epsilon\",\"corpus\":"
+            "\"corpus removendum epsilon\",\"tags\":\"silva\"}}}");
+        md = _plagula_cum_continente(piscina, VIA_ENT "/silva",
+            "corpus removendum epsilon");
+        CREDO_VERUM (md[0] != '\0');   /* corpus praesens ante remotionem */
+
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":211,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Probatio Entitatum"
+            " Epsilon\",\"actus\":\"remotio\",\"clavis\":"
+            "\"corpus\"}}}");
+        md = _plagula_cum_continente(piscina, VIA_ENT "/silva",
+            "Probatio Entitatum Epsilon");
+        CREDO_VERUM (md[0] != '\0');   /* plagula manet - ens NON deletum */
+        CREDO_VERUM (strstr(md, "corpus removendum epsilon") == NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

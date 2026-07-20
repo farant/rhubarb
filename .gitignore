@@ -28,6 +28,10 @@ tabularium.db
 tabularium.db-wal
 tabularium.db-shm
 
+# proiectio entitatum (tertia proiectio super tabularium.jsonl -
+# una plagula markdown per rem, regenerabilis ut .db, non committitur)
+gesta/annales/entities/
+
 # effusum debug probationum roundtrip (scriptum in fractione - regenerabile)
 probationes/results/
 
