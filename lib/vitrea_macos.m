@@ -12,6 +12,7 @@
 #include "vitrea.h"
 #include "chorda_aedificator.h"
 #include "internuntius.h"   /* effugator solus - directio sana */
+#include "mimen.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -70,63 +71,6 @@ _litterae_copiare (Piscina* piscina, constans character* fons)
     memcpy(l, fons, m);
     l[m] = '\0';
     redde l;
-}
-
-/* tabula extensio -> MIME (capsula metadata nulla fert -
- * verdictum exploratoris; consumptoris officium) */
-nomen structura {
-    constans character* extensio;
-    constans character* mimen;
-} VitreaMimen;
-
-interior constans VitreaMimen MIMINA[] = {
-    { "html",  "text/html" },
-    { "css",   "text/css" },
-    { "js",    "text/javascript" },
-    { "mjs",   "text/javascript" },
-    { "json",  "application/json" },
-    { "svg",   "image/svg+xml" },
-    { "png",   "image/png" },
-    { "jpg",   "image/jpeg" },
-    { "jpeg",  "image/jpeg" },
-    { "gif",   "image/gif" },
-    { "webp",  "image/webp" },
-    { "woff2", "font/woff2" },
-    { "wasm",  "application/wasm" },
-    { "txt",   "text/plain" }
-};
-
-interior constans character*
-_mimen_pro_via (constans character* via)
-{
-    constans character* punctum = NIHIL;
-    constans character* c;
-    i32 i;
-
-    per (c = via; *c != '\0'; c++)
-    {
-        si (*c == '.')
-        {
-            punctum = c + I;
-        }
-        alioquin si (*c == '/')
-        {
-            punctum = NIHIL;
-        }
-    }
-    si (punctum != NIHIL)
-    {
-        per (i = ZEPHYRUM;
-             i < (i32)(magnitudo(MIMINA) / magnitudo(MIMINA[0]));
-             i++)
-        {
-            si (strcmp(punctum, MIMINA[i].extensio) == ZEPHYRUM)
-            {
-                redde MIMINA[i].mimen;
-            }
-        }
-    }
-    redde "application/octet-stream";
 }
 
 /* nuntium in caudam inserere + pumpam expergefacere. Copia +
@@ -300,7 +244,7 @@ interior constans character* constans VITREA_CURSUS_JS =
             statusCode:200 HTTPVersion:@"HTTP/1.1"
             headerFields:@{
                 @"Content-Type": [NSString stringWithUTF8String:
-                    _mimen_pro_via(via_l)],
+                    mimen_pro_via(via_l)],
                 @"Content-Length": [NSString stringWithUTF8String:
                     longitudo] }];
         [opus didReceiveResponse:responsum];
