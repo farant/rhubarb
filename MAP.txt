@@ -82,8 +82,8 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │                                                             │
     │  ┌─ Strings ───────────┐  ┌─ Collections ─────────┐         │
     │  │ chorda_aedificator  │  │ tabula_dispersa (hash)│         │
-    │  │ internamentum       │  │ filum (linked list)   │         │
-    │  │ similitudo (fzf)    │  │ friatio (hashing)     │         │
+    │  │ internamentum       │  │ friatio (hashing)     │         │
+    │  │ similitudo (fzf)    │  │                       │         │
     │  └─────────────────────┘  └───────────────────────┘         │
     │  ┌─ Data Formats ──────┐  ┌─ Entity System ───────┐         │
     │  │ json, xml, toml     │  │ entitas               │         │
@@ -99,6 +99,7 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │ argumenta, sectio, symbola, iter_directoria     │        │
     │  │ exemplar (templates), quaerere (search)         │        │
     │  │ vigilia (resident-process watch)                │        │
+    │  │ filum (file read/write, dir ops)                │        │
     │  └─────────────────────────────────────────────────┘        │
     └─────────────────────────────────────────────────────────────┘
                               │
