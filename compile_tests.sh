@@ -591,6 +591,16 @@ run_speculum() {
             fi
         fi
     done
+
+    # Probatio velaminis JS sine navigatro (JavaScriptCore/JXA) -
+    # porta per codicem exitus (iactus in plagula -> non-zephyrum)
+    if [ -f "lib/speculum_assets/probatio_velaminis.js" ]; then
+        if ! osascript -l JavaScript lib/speculum_assets/probatio_velaminis.js > /dev/null 2>&1; then
+            echo -e "${RED}✗ speculum velamen probatio fracta (curre: osascript -l JavaScript lib/speculum_assets/probatio_velaminis.js)${RESET}"
+            return 1
+        fi
+        echo -e "${BLUE}speculum velamen: probatio JS bona${RESET}"
+    fi
     return 0
 }
 

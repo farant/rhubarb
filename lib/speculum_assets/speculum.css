@@ -1,7 +1,331 @@
-/* speculum.css - locum tenens Phasis A
+/* speculum.css - velamen modi-debug (Phasis B)
  *
- * Phasis B: disciplina praefixi .speculum-*, reset scopatum in
- * radice tabellae, signa thematum globalia cum reservis:
- *   var(--thema-fundus, #26201a) etc. (octo signa seminalia,
- *   spec v2 pars IV.D)
+ * DISCIPLINA (spec v2, decisio interrogationis #5): omnia sub
+ * .speculum-velamen cum praefixo .speculum-*; reset scopatum in
+ * radice; SINE shadow DOM - componentia luci-DOM sunt et themata
+ * globalia penetrant.
+ *
+ * SIGNA THEMATUM (contractus primus, spec v2 IV.D): octo signa
+ * globalia cum reservis. App quaelibet (aut stratum thematum
+ * futurum) ea in :root ponere potest - tabella sequitur.
+ *   --thema-fundus         fundus tabellae
+ *   --thema-fundus-altus   superficies elevatae (caput, arbor)
+ *   --thema-littera        littera prima
+ *   --thema-littera-hebes  littera secunda (numeri linearum...)
+ *   --thema-accentus       accentus / activum
+ *   --thema-margo          margines
+ *   --thema-electio        electio / congruentia quaestionis
+ *   --thema-monospatium    familia litterarum codicis
  */
+
+.speculum-velamen {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 2147483000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--thema-fundus, #26201a);
+    color: var(--thema-littera, #efe2dc);
+    border: 1px solid var(--thema-margo, #54402c);
+    border-radius: 6px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
+    font: 13px/1.5 var(--thema-monospatium, ui-monospace, "SF Mono", Menlo, monospace);
+    text-align: left;
+}
+
+/* reset scopatum - stylus paginae hospitis non penetrat */
+.speculum-velamen * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font: inherit;
+    color: inherit;
+}
+
+
+/* ====================================================================
+ * CAPUT: titulus + tabulae + quaestio + claudere
+ * ==================================================================== */
+
+.speculum-caput {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--thema-fundus-altus, #1a1512);
+    border-bottom: 1px solid var(--thema-margo, #54402c);
+    flex: none;
+}
+
+.speculum-titulus {
+    color: var(--thema-accentus, #d4a48f);
+    font-weight: bold;
+}
+
+.speculum-tabula {
+    padding: 2px 10px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--thema-littera-hebes, #8a7a6e);
+    background: none;
+}
+
+.speculum-tabula:hover {
+    color: var(--thema-littera, #efe2dc);
+}
+
+.speculum-tabula-activa {
+    color: var(--thema-accentus, #d4a48f);
+    border-color: var(--thema-margo, #54402c);
+    background: var(--thema-fundus, #26201a);
+}
+
+.speculum-quaestio {
+    flex: 1;
+    max-width: 340px;
+    margin-left: auto;
+    padding: 3px 8px;
+    background: var(--thema-fundus, #26201a);
+    border: 1px solid var(--thema-margo, #54402c);
+    border-radius: 4px;
+    color: var(--thema-littera, #efe2dc);
+    outline: none;
+}
+
+.speculum-quaestio:focus {
+    border-color: var(--thema-accentus, #d4a48f);
+}
+
+.speculum-claudere {
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--thema-littera-hebes, #8a7a6e);
+    font-size: 16px;
+    padding: 0 4px;
+}
+
+.speculum-claudere:hover {
+    color: var(--thema-accentus, #d4a48f);
+}
+
+
+/* ====================================================================
+ * CORPUS FONS: fons-arbor | fons-visor
+ * ==================================================================== */
+
+.speculum-corpus {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+fons-arbor {
+    display: block;
+    width: 300px;
+    flex: none;
+    overflow-y: auto;
+    background: var(--thema-fundus-altus, #1a1512);
+    border-right: 1px solid var(--thema-margo, #54402c);
+    padding: 6px 0;
+}
+
+.speculum-filtrum {
+    display: block;
+    width: calc(100% - 16px);
+    margin: 2px 8px 8px;
+    padding: 3px 8px;
+    background: var(--thema-fundus, #26201a);
+    border: 1px solid var(--thema-margo, #54402c);
+    border-radius: 4px;
+    color: var(--thema-littera, #efe2dc);
+    outline: none;
+}
+
+.speculum-filtrum:focus {
+    border-color: var(--thema-accentus, #d4a48f);
+}
+
+.speculum-grex {
+    color: var(--thema-accentus, #d4a48f);
+    padding: 6px 12px 2px;
+    font-weight: bold;
+}
+
+.speculum-plagula {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 1px 12px 1px 22px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--thema-littera, #efe2dc);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.speculum-plagula:hover {
+    background: var(--thema-fundus, #26201a);
+}
+
+.speculum-plagula-electa {
+    background: var(--thema-electio, #6b4a2f);
+}
+
+.speculum-congruentia {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 2px 12px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--thema-littera, #efe2dc);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.speculum-congruentia:hover {
+    background: var(--thema-fundus, #26201a);
+}
+
+.speculum-congruentia b {
+    color: var(--thema-accentus, #d4a48f);
+    font-weight: normal;
+}
+
+.speculum-congruentia span {
+    color: var(--thema-littera-hebes, #8a7a6e);
+}
+
+fons-visor {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    overflow: auto;
+}
+
+.speculum-visor-caput {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    position: sticky;
+    top: 0;
+    background: var(--thema-fundus, #26201a);
+    border-bottom: 1px solid var(--thema-margo, #54402c);
+}
+
+.speculum-visor-via {
+    color: var(--thema-accentus, #d4a48f);
+}
+
+.speculum-visor-magnitudo {
+    color: var(--thema-littera-hebes, #8a7a6e);
+}
+
+.speculum-copiare {
+    margin-left: auto;
+    cursor: pointer;
+    padding: 1px 8px;
+    border: 1px solid var(--thema-margo, #54402c);
+    border-radius: 4px;
+    background: none;
+    color: var(--thema-littera-hebes, #8a7a6e);
+}
+
+.speculum-copiare:hover {
+    color: var(--thema-littera, #efe2dc);
+    border-color: var(--thema-accentus, #d4a48f);
+}
+
+.speculum-codex {
+    padding: 6px 0 20px;
+}
+
+.speculum-linea {
+    display: flex;
+    white-space: pre;
+}
+
+.speculum-linea-electa {
+    background: var(--thema-electio, #6b4a2f);
+}
+
+.speculum-numerus {
+    flex: none;
+    width: 58px;
+    padding-right: 14px;
+    text-align: right;
+    color: var(--thema-littera-hebes, #8a7a6e);
+    user-select: none;
+}
+
+.speculum-textus {
+    flex: 1;
+    min-width: 0;
+}
+
+.speculum-vacuum {
+    padding: 40px;
+    color: var(--thema-littera-hebes, #8a7a6e);
+    text-align: center;
+}
+
+/* illuminatio simplex (spec: non silva-gradus) */
+.speculum-il-com { color: var(--thema-littera-hebes, #8a7a6e); font-style: italic; }
+.speculum-il-cho { color: #b8a978; }
+.speculum-il-cla { color: var(--thema-accentus, #d4a48f); }
+.speculum-il-lat { color: #c98f6f; }
+.speculum-il-pra { color: #9d8fb8; }
+
+
+/* ====================================================================
+ * CORPUS DE: provenientia + exclusa
+ * ==================================================================== */
+
+.speculum-de {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 24px;
+}
+
+.speculum-de h2 {
+    color: var(--thema-accentus, #d4a48f);
+    font-size: 14px;
+    margin: 14px 0 8px;
+}
+
+.speculum-de-tabula {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 900px;
+}
+
+.speculum-de-tabula td,
+.speculum-de-tabula th {
+    padding: 3px 14px 3px 0;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--thema-margo, #54402c);
+    word-break: break-all;
+}
+
+.speculum-de-tabula th {
+    color: var(--thema-littera-hebes, #8a7a6e);
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+.speculum-de-summa {
+    color: var(--thema-littera-hebes, #8a7a6e);
+    margin-bottom: 4px;
+}

@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>speculum - probatio visus</title>
+<!-- fictio paginae hospitis: fundus clarus ut velamen contra
+     stylum alienum probetur (reset scopatum) -->
+<style>
+  body { background: #e8e2d8; color: #222; font: 15px/1.6 Georgia, serif;
+         padding: 2em; }
+  p { max-width: 34em; margin: 0 auto 1em; }
+</style>
+<link rel="stylesheet" href="speculum.css">
+</head>
+<body>
+<p><b>probatio visus speculi</b> - haec pagina hospitem fingit:
+internuntius fictus effusionem parvam reddit, deinde speculum.js
+verum (infra) currit et velamen statim aperit. Recarga ut iterum
+incipias.</p>
+<p>proba: arborem, filtrum, plagulam aperire (illuminatio), quaestionem
+plenam (e.g. "redde"), tabulam DE, Esc.</p>
+
+<script>
+/* internuntius fictus - effusio parva sed omnium generum */
+(function () {
+    var latina_h = [
+        "#ifndef LATINA_H",
+        "#define LATINA_H",
+        "",
+        "#define si          if",
+        "#define alioquin    else",
+        "#define dum         while",
+        "#define per         for",
+        "#define redde       return",
+        "#define interior    static",
+        "#define structura   struct",
+        "#define vacuum      void",
+        "#define NIHIL       NULL",
+        "#define VERUM       1",
+        "#define FALSUM      0",
+        "",
+        "#endif /* LATINA_H */"
+    ].join("\n");
+
+    var exemplum_c = [
+        "/* exemplum.c - plagula parva pro probatione visus",
+        " *",
+        " * Commentarium multi-lineare: status trans lineas",
+        " * portari debet - haec linea adhuc commentarium est. */",
+        "",
+        "#include \"latina.h\"",
+        "#include <stdio.h>",
+        "",
+        "interior i32",
+        "_summa(i32 a, i32 b)",
+        "{",
+        "    redde a + b;  /* commentarium caudae */",
+        "}",
+        "",
+        "vacuum",
+        "exemplum_currere(vacuum)",
+        "{",
+        "    i32 numerus = 0;",
+        "    dum (numerus < 10)",
+        "    {",
+        "        si (numerus == 5)",
+        "        {",
+        "            printf(\"medius: %d \\\"citatus\\\"\\n\", numerus);",
+        "        }",
+        "        numerus = _summa(numerus, 1);",
+        "    }",
+        "    per (numerus = 0; numerus < 3; numerus++)",
+        "    {",
+        "        printf(\"finis <%d>\\n\", numerus);",
+        "    }",
+        "}"
+    ].join("\n");
+
+    var worklog_md = [
+        "# exemplum.c worklog",
+        "",
+        "## 2026-07-20",
+        "",
+        "- documentum planum: sine illuminatione, littera pura.",
+        "- redde hic verbum ordinarium est (non clavis)."
+    ].join("\n");
+
+    var fontes_txt = "include/latina.h\nlib/exemplum.c\n";
+
+    var effusio = {
+        proventus: {
+            app: "probatio_visus",
+            commissum: "63edd39fabricatafabricata0000000000000000",
+            sordidum: "verum",
+            compilator: "Apple clang version 16.0.0",
+            vexilla: "-std=c89 -pedantic -Wall -Wextra -Werror",
+            tempus: "2026-07-20T22:00:00Z",
+            mandatum: "clang ... probationes/probatio_vitrea_hospes.c ..."
+        },
+        fontes: [
+            { via: "include/latina.h", magnitudo: latina_h.length,
+              corpus: latina_h },
+            { via: "lib/exemplum.c", magnitudo: exemplum_c.length,
+              corpus: exemplum_c },
+            { via: "speculum/fontes.txt", magnitudo: fontes_txt.length,
+              corpus: fontes_txt }
+        ],
+        documenta: [
+            { via: "lib/exemplum.worklog.md", magnitudo: worklog_md.length,
+              corpus: worklog_md }
+        ],
+        exclusa: [
+            { via: "vendor/sqlite3.c", magnitudo: "9514279",
+              digestum: "3694725125", causa: "vendor" },
+            { via: "lib/biblia_dr.c", magnitudo: "6130259",
+              digestum: "3435398300", causa: "magnitudo>1MB" },
+            { via: "build/speculum/hospes/capsula_speculi_hospes.c",
+              magnitudo: "0", digestum: "0",
+              causa: "generatum - continet hos ipsos fontes" }
+        ]
+    };
+
+    window.internuntius = {
+        vocare: function (methodus, argumenta) {
+            return new Promise(function (solvere, reicere) {
+                if (methodus === "speculum_obtinere") {
+                    setTimeout(function () { solvere(effusio); }, 50);
+                } else {
+                    reicere(new Error("methodus ignota: " + methodus));
+                }
+            });
+        }
+    };
+})();
+</script>
+<script src="speculum.js"></script>
+</body>
+</html>
