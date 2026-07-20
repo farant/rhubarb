@@ -35,34 +35,75 @@ declare -a RADIX_FONTES=(
     "friatio" "internamentum" "json" "tabellarius" "similitudo"
     "sigillum" "vigilia"
 )
+
+# ── clausura vera inclusionum (01KXZYFVER; exemplar tabularium.sh)
+# Unum clang -MM (~0.3s): dependentiae verae per obiectum (pro
+# aedificatore) et unio earum (pro manifesto vigiliae) ex UNO
+# fonte. Antea manifestum capita lib/ OMITTEBAT (sub-tectio: editio
+# piscina.h numquam monebat NEC recompilabat) et conditio nexus
+# semper vera erat (renexus quovis lancinatu). Cautio: basis
+# 'legatus' bis exsistit (instrumenta/ + principalia/) - lineae
+# congruae plures = unio dependentiarum, superset tutum. Si -MM
+# cadit: newest_header = glob superset (garrulum, numquam caecum).
+newest_header () {
+    find "$RADIX_DIR/include" "$RADIX_DIR/silva/amalgama" \
+         "$RADIX_DIR/silva/instrumenta" "$OFF_DIR/instrumenta" \
+         -name '*.h' -newer "$1" 2>/dev/null | head -1
+}
+FONTES_OMNES=()
+for f in "${RADIX_FONTES[@]}"; do FONTES_OMNES+=("$RADIX_DIR/lib/$f.c"); done
+FONTES_OMNES+=("$RADIX_DIR/silva/amalgama/silva.c")
+FONTES_OMNES+=("$RADIX_DIR/silva/instrumenta/nexus_ordines.c")
+FONTES_OMNES+=("$OFF_DIR/instrumenta/praeparator.c")
+FONTES_OMNES+=("$OFF_DIR/instrumenta/legatus.c")
+FONTES_OMNES+=("$OFF_DIR/instrumenta/principalia/legatus.c")
+
+DEPENDENTIAE="$(clang -MM "${INCLUDE_FLAGS[@]}" "${FONTES_OMNES[@]}" 2>/dev/null \
+    | awk '{ if (sub(/\\$/,"")) printf "%s ", $0; else print }')"
+
+deps_obiecti () {   # $1 = basis (sine .c); lineae plures = unio tuta
+    printf '%s\n' "$DEPENDENTIAE" | grep "^$1\.o:" | tr ' ' '\n' | grep '^/'
+}
+recentius_ex () {   # $1 = scopus; stdin = viae; prima recentior imprimitur
+    while IFS= read -r via; do
+        [ -n "$via" ] && [ "$via" -nt "$1" ] && { echo "$via"; return 0; }
+    done
+    return 0
+}
+fons_stalus () {    # $1 = basis, $2 = scopus; exitus 0 = recompilandum
+    if [ -n "$DEPENDENTIAE" ]; then
+        [ -n "$(deps_obiecti "$1" | recentius_ex "$2")" ]
+    else
+        [ -n "$(newest_header "$2")" ]
+    fi
+}
+
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus "$f" "$obj"; then
         echo "  [dep] $f.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
     obj_files="$obj_files $obj"
 done
 
+# silva.h mutatio formae sine recompilo = corruptio ABI (stalum
+# obiectum + amalgama recens - inventum v0.2, SilvaMacroVista) -
+# nunc per clausuram veram tecta: silva.h in dependentiis omnium
+# consumptorum est, fons_stalus eos recompilat
 src="$RADIX_DIR/silva/amalgama/silva.c"
 obj="$BUILD_DIR/amalgama_silva.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus silva "$obj"; then
     echo "  [amalgama] silva.c" >&2
     clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
 obj_files="$obj_files $obj"
 
-# silva.h mutatio formae sine recompilo = corruptio ABI (stalum
-# obiectum + amalgama recens - inventum v0.2, SilvaMacroVista)
-SILVA_H="$RADIX_DIR/silva/amalgama/silva.h"
-
 src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
 obj="$BUILD_DIR/nexus_ordines.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-    || [ "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" -nt "$obj" ] \
-    || [ "$SILVA_H" -nt "$obj" ]; then
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus nexus_ordines "$obj"; then
     echo "  [ordines] nexus_ordines.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
@@ -71,9 +112,7 @@ obj_files="$obj_files $obj"
 for unit in praeparator legatus; do
     src="$OFF_DIR/instrumenta/$unit.c"
     obj="$BUILD_DIR/$unit.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-        || [ "$OFF_DIR/instrumenta/$unit.h" -nt "$obj" ] \
-        || [ "$SILVA_H" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus "$unit" "$obj"; then
         echo "  [$unit] $unit.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -82,7 +121,15 @@ done
 
 BIN="$BUILD_DIR/legatus"
 src="$OFF_DIR/instrumenta/principalia/legatus.c"
-if [ ! -f "$BIN" ] || [ "$src" -nt "$BIN" ] || [ -n "$obj_files" ]; then
+# antea: [ -n "$obj_files" ] semper verum -> renexus QUOVIS
+# lancinatu; nunc obiectum recentius binario aut fons/capita
+# principalis (exemplar tabularium.sh)
+obj_recentius=""
+for o in $obj_files; do
+    if [ "$o" -nt "$BIN" ]; then obj_recentius="$o"; break; fi
+done
+if [ ! -f "$BIN" ] || [ "$src" -nt "$BIN" ] || [ -n "$obj_recentius" ] || fons_stalus legatus "$BIN"; then
+    echo "  [nexus] legatus" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$src" $obj_files -o "$BIN" || exit 1
 fi
 
@@ -95,17 +142,17 @@ fi
 # aedificator dissentire non possunt)
 MANIFEST="$BUILD_DIR/legatus.vigilia"
 {
-    echo "# clausura launcheri (generatum a legatus.sh)"
-    for f in "${RADIX_FONTES[@]}"; do echo "$RADIX_DIR/lib/$f.c"; done
-    echo "$RADIX_DIR/silva/amalgama/silva.c"
-    echo "$SILVA_H"
-    echo "$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
-    echo "$RADIX_DIR/silva/instrumenta/nexus_ordines.h"
-    echo "$OFF_DIR/instrumenta/praeparator.c"
-    echo "$OFF_DIR/instrumenta/praeparator.h"
-    echo "$OFF_DIR/instrumenta/legatus.c"
-    echo "$OFF_DIR/instrumenta/legatus.h"
-    echo "$OFF_DIR/instrumenta/principalia/legatus.c"
+    echo "# clausura vera launcheri (clang -MM; 01KXZYFVER)"
+    if [ -n "$DEPENDENTIAE" ]; then
+        printf '%s\n' "$DEPENDENTIAE" | tr ' ' '\n' | grep '^/' | sort -u
+    else
+        # regressus: -MM cecidit - lista vetus manu scripta
+        for f in "${FONTES_OMNES[@]}"; do echo "$f"; done
+        echo "$RADIX_DIR/silva/amalgama/silva.h"
+        echo "$RADIX_DIR/silva/instrumenta/nexus_ordines.h"
+        echo "$OFF_DIR/instrumenta/praeparator.h"
+        echo "$OFF_DIR/instrumenta/legatus.h"
+    fi
 } > "$MANIFEST" 2>/dev/null
 SIGNUM="$(shasum -a 256 "$BIN" 2>/dev/null | cut -c1-64)"
 if [ -n "$SIGNUM" ]; then

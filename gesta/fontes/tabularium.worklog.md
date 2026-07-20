@@ -183,3 +183,38 @@ Doc fixes same pass: spec no longer claims empty tag folders are
 pruned (rmdir deferred, desideratum 01KXVF6NSE); the section
 comment now cites project-specs/gesta-entitates-spec.md instead of
 the gitignored .superpowers task brief.
+
+## 2026-07-20 — vigilia manifest: true closure via clang -MM (01KXZYFVER)
+
+Both launchers (gesta/tabularium.sh, officina/legatus.sh) now
+compute the include closure with ONE `clang -MM` call (~0.3s each,
+measured) and use it for BOTH the per-object rebuild checks and the
+vigilia manifest — one source, so builder and watchdog cannot
+disagree (the K2.2 invariant, now true in letter, not just spirit).
+
+Before, the two launchers erred in OPPOSITE directions:
+- tabularium globbed all of include/ (142 manifest entries, 118
+  headers) → false staleness CAUTIO on every commit touching ANY
+  header, plus a full recompile of all ~20 objects on any header
+  change anywhere.
+- legatus omitted lib headers entirely — a piscina.h edit never
+  warned AND never recompiled (the silent-ABI-stale case) — and its
+  link condition was `[ -n "$obj_files" ]`, always true, so it
+  relinked on every single launch.
+
+After: tabularium manifest 142→44 entries (22 headers = the true
+closure); legatus 35 entries with lib headers finally covered.
+Twin-specimen on both launchers: touch vitrea.h (non-dependency) →
+0 build actions; touch piscina.h (true dependency) → full cascade +
+relink. Fallback: if -MM fails (broken header mid-edit), the old
+glob/hand-list superset — loud, never blind.
+
+Gotchas recorded:
+- basename collision in legatus (instrumenta/legatus.c AND
+  principalia/legatus.c both produce "legatus.o:" dep lines) —
+  deps_obiecti unions all matching lines; per-object superset, safe.
+- awk joins the -MM backslash continuations (portable; BSD sed
+  label syntax is finicky).
+- The amalgam correctly does NOT depend on lib headers — specimen B
+  rebuilt lib objects and consumers but not amalgama_silva.o. The
+  old hand-maintained SILVA_H ABI checks are subsumed by the truth.
