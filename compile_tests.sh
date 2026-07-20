@@ -375,6 +375,13 @@ compile_gui_app() {
 
     obj_files=$(get_object_files)
 
+    # Obiecta extra per-app (capsulae speculi non globales)
+    case "$app_name" in
+        probatio_vitrea_hospes)
+            obj_files="$obj_files build/speculum/hospes/capsula_speculi_hospes.o"
+            ;;
+    esac
+
     # Compile test file and link with object files
     # -Wno-overlength-strings: GUI apps may have long STML layout strings
     if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then

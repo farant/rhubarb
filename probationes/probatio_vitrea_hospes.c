@@ -10,7 +10,12 @@
  *   -url       A: pagina IPSA ex hospitio servita (VITREA_ORIGO_URL,
  *              eadem-origo) = postura modus-dev
  *
- * USUS:  ./bin/probatio_vitrea_hospes [-url]
+ * SPECULUM: Cmd+Shift+D velamen se-fontis aperit (binarium fontem
+ * proprium portat - build/speculum/hospes/, per fabricam generatum).
+ *
+ * USUS:  ./bin/probatio_vitrea_hospes [-url] [-speculum-fumus]
+ *        -speculum-fumus: fumus se-annuntians - velamen sponte
+ *        aperitur et linea fontis noti per pontem confirmatur
  */
 
 #include "fenestra.h"
@@ -19,12 +24,18 @@
 #include "hospitium.h"
 #include "capsula.h"
 #include "hospes_assets/capsula_hospes.h"
+#include "speculum.h"
 #include "json.h"
 #include "piscina.h"
 #include "chorda.h"
 
 #include <stdio.h>
 #include <string.h>
+
+/* capsula fontium generata (build/speculum/hospes/) - externus
+ * directus, mos consumptoris speculi (caput generatum non
+ * includitur: silva ".." non resolvit, symbolum contractus est) */
+externus constans CapsulaEmbed capsula_speculi_hospes;
 
 
 /* ========================================================================
@@ -89,7 +100,7 @@ s32 principale (s32 argc, character** argv)
     Piscina* piscina = piscina_generare_dynamicum("vitrea_hospes",
         16777216);
     Piscina* piscina_vocationis = piscina_generare_dynamicum(
-        "vitrea_hospes_vocationes", 4194304);
+        "vitrea_hospes_vocationes", 16777216);
     FenestraConfiguratio figura_fenestrae;
     VitreaConfiguratio figura_vitreae;
     HospitiumConfiguratio figura_hospitii;
@@ -98,12 +109,27 @@ s32 principale (s32 argc, character** argv)
     Vitrea* vitrea;
     Internuntius* inx;
     Hospitium* hospitium;
+    Speculum* speculum;
     character url[CXXVIII];
-    b32 postura_url = (argc > I && strcmp(argv[I], "-url") == 0);
+    b32 postura_url = FALSUM;
+    b32 fumus_speculi = FALSUM;
+    i32 gyri = 0;
+    s32 arg_i;
 
     si (piscina == NIHIL || piscina_vocationis == NIHIL)
     {
         redde I;
+    }
+    per (arg_i = I; arg_i < argc; arg_i++)
+    {
+        si (strcmp(argv[arg_i], "-url") == 0)
+        {
+            postura_url = VERUM;
+        }
+        si (strcmp(argv[arg_i], "-speculum-fumus") == 0)
+        {
+            fumus_speculi = VERUM;
+        }
     }
 
     /* hospitium PRIMUM - portus auto, ACAO (postura dev plena) */
@@ -180,6 +206,15 @@ s32 principale (s32 argc, character** argv)
     (vacuum)internuntius_praebere(inx, "portum_petere",
         _portum_petere, hospitium);
 
+    /* modus-debug se-fontis: Cmd+Shift+D in effusione eventuum */
+    speculum = speculum_creare(piscina, &capsula_speculi_hospes, inx,
+        vitrea_aestimator, vitrea);
+    si (speculum == NIHIL)
+    {
+        imprimere("FRACTA: speculum\n");
+        redde I;
+    }
+
     imprimere("[hospes] postura %s - hospitium in portu %u\n",
         postura_url ? "A (modus-dev)" : "B (capsula+ACAO)",
         hospitium_portus(hospitium));
@@ -197,12 +232,46 @@ s32 principale (s32 argc, character** argv)
         fenestra_expectare_eventus(fenestra, L);
         dum (fenestra_obtinere_eventus(fenestra, &eventus))
         {
-            ;
+            (vacuum)speculum_tangere(speculum, &eventus);
         }
 
         /* SERVUS: gyrus non-obstruens intra ansam UI - haec linea
          * est tota convergentia */
         hospitium_gressus(hospitium, 0);
+
+        /* fumus se-annuntians: chorda ficta Cmd+Shift+D (~1s), deinde
+         * proba per pontem confirmatur (~3s) - breakage tacet */
+        si (fumus_speculi)
+        {
+            gyri++;
+            si (gyri == XX)
+            {
+                Eventus fictus;
+
+                memset(&fictus, 0, magnitudo(fictus));
+                fictus.genus = EVENTUS_CLAVIS_DEPRESSUS;
+                fictus.datum.clavis.clavis = (clavis_t)'D';
+                fictus.datum.clavis.modificantes =
+                    (i32)MOD_SUPER | (i32)MOD_SHIFT;
+                (vacuum)speculum_tangere(speculum, &fictus);
+            }
+            si (gyri == LX)
+            {
+                vitrea_aestimare(vitrea, chorda_ex_literis(
+                    "(function () {"
+                    "var r = window.speculum_res;"
+                    "var bonum = r && r.structum"
+                    " && r.per_viam[\"lib/piscina.c\"]"
+                    " && r.per_viam[\"lib/piscina.c\"].corpus"
+                    ".indexOf(\"piscina_generare_dynamicum\") !== -1;"
+                    "internuntius.vocare(\"confirmare\", { textus:"
+                    " (bonum ? \"SPECULUM-FUMUS-BONUM\""
+                    " : \"SPECULUM-FUMUS-FRACTUM\")"
+                    " + \" plagulae:\" + (r ? r.plagulae.length : 0)"
+                    " });"
+                    "})();", piscina));
+            }
+        }
 
         nota = piscina_notare(piscina_vocationis);
         dum (vitrea_obtinere_nuntium(vitrea, &nuntium, &genus))

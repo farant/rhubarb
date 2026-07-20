@@ -74,4 +74,27 @@
 - **Chrome extension was down** — browser eyes deferred to Fran:
   open lib/speculum_assets/probatio_visus.html (mock-bridge harness,
   auto-opens overlay; hostile serif/light host page proves the
-  scoped reset).
+  scoped reset). Fran approved the look same day.
+
+## 2026-07-20 — Phase C (wearer: probatio_vitrea_hospes)
+
+- Integration exactly as specced: extern-direct symbol, speculum.h
+  include, speculum_creare after inx+vitrea (aestimator_datum =
+  vitrea via vitrea_aestimator), (vacuum)speculum_tangere in the
+  event drain where the bare ';' discard was, piscina_vocationis
+  4MB → 16MB. compile_gui_app gained the per-app extra-object case
+  (mirror of the per-test one).
+- **-speculum-fumus** self-announcing smoke: at ~1s a SYNTHETIC
+  Eventus (Cmd+Shift+D: 'D' + MOD_SUPER|MOD_SHIFT) goes through the
+  REAL speculum_tangere; at ~3s a probe evals in-page, checks
+  window.speculum_res.structum AND that lib/piscina.c's corpus
+  contains a known identifier, then echoes SPECULUM-FUMUS-BONUM +
+  file count through confirmare. Breakage stays silent — the line
+  prints or it didn't happen. First live run: BONUM, plagulae:300.
+- Self-reference note: the wearer's own speculum-integrated source
+  rides in its own capsula — the mirror shows the code that summons
+  the mirror, including the fumus probe JS as a C string.
+- Payload count math: generator "N plagulae" = closure+documenta+
+  scripta; capsula adds 3 speculum/ meta entries; page-side plagulae
+  = N+1 (fontes.txt embedded, proventus/exclusa consumed into
+  structure).
