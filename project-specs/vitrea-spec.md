@@ -1,4 +1,9 @@
-# vitrea + internuntius — spec v1
+# vitrea + internuntius — spec v1 — SUPERSEDED
+
+**⇒ SUPERSEDED 2026-07-20 by vitrea-spec-v2.md** (self-contained; folds
+the calibration verdicts [CAL] from vitrea-calibratio.md and the two
+codebase explorations [EXP-F]/[EXP-C]). This file stays as design
+history; build from v2.
 
 *2026-07-16. From chat discussion of a Wails/Tauri-shaped webview layer for
 rhubarb. Status: v1.1 — drafted from conversation + a first codebase read
