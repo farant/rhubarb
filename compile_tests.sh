@@ -114,6 +114,8 @@ declare -a SOURCE_FILES=(
     "lib/uri.c"
     "lib/reactor.c"
     "lib/router.c"
+    "lib/mimen.c"
+    "lib/hospitium.c"
     "lib/flatura.c"
     "lib/quaerere.c"
     "lib/capsula.c"
