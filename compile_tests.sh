@@ -184,6 +184,13 @@ declare -a VENDOR_FLAGS=(
     "-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1"
 )
 
+# Apps quae fontem proprium portant (speculum): "titulus:plagula".
+# Generatio in build/speculum/<titulus>/ - regeneratur per fabricam,
+# numquam commissa (spec: project-specs/speculum-spec-v2.md).
+declare -a SPECULUM_APPS=(
+    "hospes:probationes/probatio_vitrea_hospes.c"
+)
+
 # Build directory for object files
 BUILD_DIR="build"
 
@@ -428,6 +435,13 @@ compile_and_run_test() {
 
     obj_files=$(get_object_files)
 
+    # Obiecta extra per-probatione (capsulae speculi non globales)
+    case "$test_name" in
+        probatio_speculum_fontium)
+            obj_files="$obj_files build/speculum/hospes/capsula_speculi_hospes.o"
+            ;;
+    esac
+
     # Compile test file and link with object files
     if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
@@ -533,6 +547,52 @@ run_generare() {
     return 0
 }
 
+run_speculum() {
+    local entry
+    local titulus
+    local app_file
+    local app_name
+    local stage
+    local gen_c
+    local gen_o
+
+    compile_tool_if_needed "tools/capsula_generare.c" "bin/capsula_generare" || return 1
+
+    for entry in "${SPECULUM_APPS[@]}"; do
+        titulus="${entry%%:*}"
+        app_file="${entry#*:}"
+        app_name=$(basename "$app_file" .c)
+
+        # Genera solum si app aut probatio speculi in ludo est
+        if [ -n "$FILTER" ]; then
+            if [[ "$app_name" != *"$FILTER"* ]] && [[ "probatio_speculum_fontium" != *"$FILTER"* ]]; then
+                continue
+            fi
+        fi
+
+        if ! SPECULUM_VEXILLA="${GCC_FLAGS[*]}" SPECULUM_INCLUSA="${INCLUDE_FLAGS[*]}" \
+            tools/speculum_generare.sh "$titulus" "$app_file" "compile_tests.sh" \
+            -- "${SOURCE_FILES[@]}" -- "${OBJC_SOURCES[@]}" -- "${VENDOR_SOURCES[@]}"; then
+            echo -e "${RED}✗ speculum generatio fracta: $titulus${RESET}"
+            return 1
+        fi
+
+        # Compila capsulam generatam (obiectum in statione, non in
+        # build/ radice - nexus explicitus per-consumptore)
+        stage="build/speculum/$titulus"
+        gen_c="$stage/capsula_speculi_${titulus}.c"
+        gen_o="$stage/capsula_speculi_${titulus}.o"
+        if [ ! -f "$gen_o" ] || [ "$gen_c" -nt "$gen_o" ]; then
+            echo -e "  Compiling (speculum): $gen_c"
+            if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$gen_c" -o "$gen_o" 2>&1; then
+                echo -e "${RED}✗ FAILED: $gen_c${RESET}"
+                return 1
+            fi
+        fi
+    done
+    return 0
+}
+
 run_all_tests() {
     # Compile libraries first
     if ! compile_libraries; then
@@ -543,6 +603,12 @@ run_all_tests() {
     # Run generare directives before compiling tests
     if ! run_generare; then
         echo -e "${RED}generare step failed${RESET}"
+        return 1
+    fi
+
+    # Genera capsulas speculi (fontes embedded) ante probationes
+    if ! run_speculum; then
+        echo -e "${RED}speculum step failed${RESET}"
         return 1
     fi
 
