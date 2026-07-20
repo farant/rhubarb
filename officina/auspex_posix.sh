@@ -59,6 +59,18 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(S_IWUSR == 0200);"
     echo "IUNGO_ASSERTA(S_ISDIR(0040755) && !S_ISDIR(0100644));"
     echo "IUNGO_ASSERTA(S_ISREG(0100644) && !S_ISREG(0040755));"
+    # Unda 2 (hospitium): typi + valores macrorum fossarum/signorum
+    echo "IUNGO_ASSERTA(sizeof(pid_t) == 4);"
+    echo "IUNGO_ASSERTA(sizeof(ssize_t) == 8);"
+    echo "IUNGO_ASSERTA(sizeof(socklen_t) == 4);"
+    echo "IUNGO_ASSERTA(sizeof(useconds_t) == 4);"
+    echo "IUNGO_ASSERTA(SIGINT == 2 && SIGKILL == 9 && SIGTERM == 15);"
+    echo "IUNGO_ASSERTA(SOL_SOCKET == 0xffff);"
+    echo "IUNGO_ASSERTA(SO_REUSEADDR == 0x0004);"
+    echo "IUNGO_ASSERTA(SO_KEEPALIVE == 0x0008);"
+    echo "IUNGO_ASSERTA(SO_NOSIGPIPE == 0x1022);"
+    echo "IUNGO_ASSERTA(IPPROTO_TCP == 6);"
+    echo "IUNGO_ASSERTA(TCP_NODELAY == 0x01);"
 }
 
 PRAEAMBULUM='#define IUNGO2(a,b) a##b
@@ -71,6 +83,12 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
 {
     echo "#include <sys/stat.h>"
     echo "#include <sys/time.h>"
+    echo "#include <sys/socket.h>"
+    echo "#include <sys/wait.h>"
+    echo "#include <netinet/in.h>"
+    echo "#include <netinet/tcp.h>"
+    echo "#include <signal.h>"
+    echo "#include <unistd.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta
 } > "$GEN_DIR/verum.c"

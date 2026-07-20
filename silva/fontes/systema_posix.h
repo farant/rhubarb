@@ -94,3 +94,47 @@ int mkdir(const char* via, mode_t modus);
 
 char* getcwd(char* sedes, size_t mensura);
 int   unlink(const char* via);
+
+/* ==================================================
+ * UNDA 2 (tractus hospitii 2026-07-20): fossae + signa + processus.
+ * Valores macrorum Darwin certificati per auspex_posix (porta eadem
+ * quae formas certificat - valor falsus in syscallum verum flueret).
+ * ================================================== */
+
+/* Typi Unda 2 */
+typedef int          pid_t;
+typedef long         ssize_t;
+typedef unsigned int socklen_t;
+typedef unsigned int useconds_t;
+
+/* unistd.h - processus + I/O crudum */
+pid_t   fork(void);
+int     pipe(int* fossae);
+ssize_t read(int fossa, void* sedes, size_t mensura);
+ssize_t write(int fossa, const void* datum, size_t mensura);
+int     close(int fossa);
+void    _exit(int status);
+int     usleep(useconds_t microsecunda);
+
+/* signal.h (valores signorum communes) */
+#define SIGINT  2
+#define SIGKILL 9
+#define SIGTERM 15
+
+int kill(pid_t processus, int signum);
+
+/* sys/wait.h */
+pid_t waitpid(pid_t processus, int* status, int optiones);
+
+/* sys/socket.h + netinet/in.h + netinet/tcp.h (valores Darwin) */
+#define SOL_SOCKET   0xffff
+#define SO_REUSEADDR 0x0004
+#define SO_KEEPALIVE 0x0008
+#define SO_NOSIGPIPE 0x1022
+#define IPPROTO_TCP  6
+#define TCP_NODELAY  0x01
+
+int getsockopt(int fossa, int gradus, int titulus, void* valor,
+               socklen_t* mensura);
+int setsockopt(int fossa, int gradus, int titulus, const void* valor,
+               socklen_t mensura);

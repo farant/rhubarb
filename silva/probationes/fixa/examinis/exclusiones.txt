@@ -18,6 +18,7 @@
 ./officina/instrumenta/principalia/vindex.c
 ./officina/probationes/probatio_officina_legatus.c
 ./officina/probationes/probatio_officina_vindex.c
+./probationes/probatio_tcp_servus.c
 ./probationes/probatio_uuid.c
 ./silva/instrumenta/principalia/censor.c
 ./silva/instrumenta/principalia/census_ambigui.c

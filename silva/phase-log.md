@@ -9414,3 +9414,37 @@ ARC COMPLETE: chunks 0/A/B/C all shipped, 2026-07-17 evening to
 2026-07-18, five commits (057d8ba, 580977e, 8d1bed4, 6223c07 +
 c35eb4f pin fix). Codex 62 re-arm now UNBLOCKED: def-use substrate
 exists (its named condition, decretum 01KXRBS0VQ).
+
+## ADDENDUM 2026-07-20 — systema_posix.h Unda 2 (the hospitium pull)
+
+The hospitium arc pulled the socket/signal/process surface through
+the probationes and exposed the lexicon gap at ERROR tier for the
+first time: TCP_NODELAY/IPPROTO_TCP as bare unexpanded macros =
+"identificator ignotus" violatio (indistinguishable from a genuine
+typo — the same day a real DXCIX typo fired the identical shape),
+plus vocatio-implicita spam defeating the push's
+silence-is-clean discipline on every probatio edit.
+
+Unda 2 shipped in systema_posix.h: pid_t/ssize_t/socklen_t/
+useconds_t, fork/pipe/read/write/close/_exit/usleep, kill/waitpid
++ SIGINT/SIGKILL/SIGTERM, getsockopt/setsockopt + SOL_SOCKET/
+SO_REUSEADDR/SO_KEEPALIVE/SO_NOSIGPIPE/IPPROTO_TCP/TCP_NODELAY.
+All values auspex_posix-certified (gate extended: real socket/
+signal/unistd headers in TU verum, value+size asserts in the
+shared table — both TUs CONSENTIT first run).
+
+Hook (examen-custos): ./probationes/* now judged -posix, and for
+that path the exclusiones.txt short-circuit is BYPASSED — being
+posix-aware means those files can be judged honestly instead of
+skipped, so real diagnostics still push (negative control pinned:
+a true unknown-identifier violatio in a probationes file fires
+through the hook under -posix). Differential after Unda 2:
+probatio_tcp_servus/http/reactor = ACCIPE zero-diagnostic under
+-posix; DEFAULT mode untouched (ISO baseline immota by design) —
+probatio_tcp_servus stays REICE there (NODELAY macros), now
+pinned in exclusiones.txt (41→42) for the corpus bar.
+
+VECTIS TENET. Named residue: exclusiones graduation experiment
+(would lib/tcp_posix.c etc. come clean under -posix judgment? —
+could shrink the 42-file list to genuinely-un-judgeable ones);
+censor-on-.m remains the other half of park 01KXZYG2SE.

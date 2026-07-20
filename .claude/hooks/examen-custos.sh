@@ -28,10 +28,20 @@ case "$FILE" in
     "$RADIX"/*) REL="./${FILE#"$RADIX"/}" ;;
     *) exit 0 ;;   # extra repositorium
 esac
-EXCL="$RADIX/silva/probationes/fixa/examinis/exclusiones.txt"
-[ -f "$EXCL" ] && grep -qxF "$REL" "$EXCL" && exit 0
+# probationes radicis: -posix (fixturae fork/fossae/sockets iure
+# utuntur - Unda 2 systematis_posix.h eas videt; exclusiones NON
+# consultae ne diagnostica vera in illis plagulis sileant)
+POSIX_VEX=""
+case "$REL" in
+    ./probationes/*) POSIX_VEX="-posix" ;;
+esac
 
-OUT=$(cd "$RADIX" && ./silva/examen.sh "$REL" -machina 2>/dev/null)
+if [ -z "$POSIX_VEX" ]; then
+    EXCL="$RADIX/silva/probationes/fixa/examinis/exclusiones.txt"
+    [ -f "$EXCL" ] && grep -qxF "$REL" "$EXCL" && exit 0
+fi
+
+OUT=$(cd "$RADIX" && ./silva/examen.sh "$REL" $POSIX_VEX -machina 2>/dev/null)
 ROWS=$(printf '%s\n' "$OUT" | awk -F'\t' \
     '$1!="VERDICTUM" && $4!="infra" {
         p = ($6=="1") ? " (provisionale)" : "";
