@@ -576,6 +576,65 @@ s32 principale(vacuum)
 
 
     /* ==================================================
+     * Probare tempestivum_proxima_meta_ms (pabulum bracchii
+     * temporis pumpae obstructivae - vitrea Phasis B')
+     * ================================================== */
+
+    {
+        AdministratorTempestivi* admin;
+        RegistrumTractatoris*    tractator;
+        EntitasRepositorium*     repo;
+        CursusNuntiorum*         cursus;
+        Entitas*                 widget;
+        Entitas*                 lentum;
+        Entitas*                 celere;
+        s64                      meta;
+
+        imprimere("\n--- Probans tempestivum_proxima_meta_ms ---\n");
+
+        tractator = registrum_tractatoris_creare(piscina, intern);
+        repo      = _creare_repo(piscina);
+        cursus    = cursus_creare(piscina, tractator, repo, intern);
+        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        CREDO_NON_NIHIL(admin);
+
+        /* nullum tempestivum -> -1 (nihil paratum) */
+        CREDO_VERUM(tempestivum_proxima_meta_ms(admin) == (s64)(-I));
+        CREDO_VERUM(tempestivum_proxima_meta_ms(NIHIL) == (s64)(-I));
+
+        widget = repo->entitas_scaffoldare(repo->datum, "Widget", "meta-widget");
+        CREDO_NON_NIHIL(widget);
+
+        /* tempestivum lentum (5000 ms) -> meta in (0, 5000] */
+        lentum = tempestivum_creare(admin, widget->id, "tick", 5000, VERUM);
+        CREDO_NON_NIHIL(lentum);
+        meta = tempestivum_proxima_meta_ms(admin);
+        CREDO_VERUM(meta > (s64)ZEPHYRUM && meta <= (s64)5000);
+
+        /* alterum celerius (50 ms) -> minima vincit */
+        celere = tempestivum_creare(admin, widget->id, "update", L, VERUM);
+        CREDO_NON_NIHIL(celere);
+        meta = tempestivum_proxima_meta_ms(admin);
+        CREDO_VERUM(meta >= (s64)ZEPHYRUM && meta <= (s64)L);
+
+        /* maturum praeteritum -> 0 (numquam negativum) */
+        usleep(60000);   /* 60 ms - celere iam maturum */
+        meta = tempestivum_proxima_meta_ms(admin);
+        CREDO_VERUM(meta == (s64)ZEPHYRUM);
+
+        /* celere pausatum -> lentum solum numerat */
+        CREDO_VERUM(tempestivum_pausare(admin, celere->id));
+        meta = tempestivum_proxima_meta_ms(admin);
+        CREDO_VERUM(meta > (s64)L);
+
+        /* omnia pausata/annullata -> -1 iterum */
+        CREDO_VERUM(tempestivum_annullare(admin, lentum->id));
+        meta = tempestivum_proxima_meta_ms(admin);
+        CREDO_VERUM(meta == (s64)(-I));
+    }
+
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

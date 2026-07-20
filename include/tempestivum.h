@@ -159,6 +159,17 @@ tempestivum_processare(
  * Quaestio
  * ================================================== */
 
+/* Meta proxima aggregata: ms usque ad tempestivum activum
+ * maturissimum (0 = iam maturum), aut -1 si nullum activum.
+ * Pabulum bracchii temporis pumpae obstructivae:
+ *   ms = tempestivum_proxima_meta_ms(admin);
+ *   fenestra_expectare_eventus(fenestra, ms < 0 ? M : ms);
+ *   tempestivum_processare(admin);
+ * Percursus linearis sicut processare (N parvum). */
+s64
+tempestivum_proxima_meta_ms(
+    AdministratorTempestivi* admin);
+
 /* Numerus tempestivorum activorum */
 i32
 tempestivum_numerus_activorum(

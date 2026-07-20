@@ -294,6 +294,24 @@ vacuum
 fenestra_perscrutari_eventus (
     Fenestra* fenestra);
 
+/* Expectare eventus (pumpa obstructiva - alternativa perscrutari)
+ *
+ * Morari usque ad ms_maximae millisecundas donec eventus adveniat,
+ * tum omnes praesentes exhaurire (delegat ad perscrutari). App
+ * otiosa ~0% CPU pro apps sine ansa quadrorum (vitrea). Fontes
+ * runloop inter moras serviuntur. Eventum syntheticum
+ * ApplicationDefined (typus 15) pumpam expergefacit et a
+ * translatore voratur - contractus excitationis vitreae.
+ *
+ * fenestra:   fenestra
+ * ms_maximae: mora maxima in millisecundis (0 = statim, ut
+ *             perscrutari; pabulum: tempestivum_proxima_meta_ms)
+ */
+vacuum
+fenestra_expectare_eventus (
+    Fenestra* fenestra,
+    s64       ms_maximae);
+
 /* Obtinere eventum proximum ex cauda
  *
  * fenestra: fenestra

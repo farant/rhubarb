@@ -427,6 +427,82 @@ tempestivum_processare(
  * Quaestio
  * ================================================== */
 
+s64
+tempestivum_proxima_meta_ms(
+    AdministratorTempestivi* admin)
+{
+    Xar*    tempestiva;
+    i32     i;
+    i32     numerus;
+    s64     tempus_nunc_ms;
+    s64     minima = -I;   /* -1 = nullum activum */
+    chorda* clavis_activum;
+    chorda* clavis_proximum;
+
+    si (!admin)
+    {
+        redde -I;
+    }
+
+    clavis_activum  = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_ACTIVUM);
+    clavis_proximum = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_PROXIMUM);
+
+    tempestiva = admin->repositorium->quaerere_textum(
+        admin->repositorium->datum,
+        TEMPESTIVUM_GENUS);
+
+    si (!tempestiva)
+    {
+        redde -I;
+    }
+
+    tempus_nunc_ms = _tempus_nunc_ms();
+    numerus = xar_numerus(tempestiva);
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        Entitas** slot;
+        Entitas*  tempestivum;
+        b32       activum;
+        s64       proximum_tempus;
+        s64       mora;
+
+        slot = (Entitas**)xar_obtinere(tempestiva, i);
+        si (!slot || !*slot)
+        {
+            perge;
+        }
+        tempestivum = *slot;
+
+        si (tempestivum->genus != admin->genus_tempestivi)
+        {
+            perge;
+        }
+
+        si (!entitas_proprietas_capere_b32(tempestivum, clavis_activum, &activum) || !activum)
+        {
+            perge;
+        }
+
+        si (!entitas_proprietas_capere_s64(tempestivum, clavis_proximum, &proximum_tempus))
+        {
+            perge;
+        }
+
+        mora = proximum_tempus - tempus_nunc_ms;
+        si (mora < (s64)ZEPHYRUM)
+        {
+            mora = ZEPHYRUM;   /* iam maturum */
+        }
+        si (minima < (s64)ZEPHYRUM || mora < minima)
+        {
+            minima = mora;
+        }
+    }
+
+    redde minima;
+}
+
 i32
 tempestivum_numerus_activorum(
     AdministratorTempestivi* admin)

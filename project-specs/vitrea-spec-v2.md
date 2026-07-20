@@ -87,12 +87,13 @@ Adjacent-library items (small, additive — Phase B'):
 - **`fenestra_expectare_eventus(fenestra, ms_maximae)`** — blocking pump
   variant. **[EXP-F] design pinned:** parameter is **`s64` milliseconds**
   (fenestra has no ms precedent; tempestivum's idiom is s64 ms and its
-  deadline feeds this argument). Implementation: block once on
-  `nextEventMatchingMask untilDate:[NSDate dateWithTimeIntervalSinceNow:
-  ms/1000.0]`, then drain the remainder with distantPast; **the resize
-  detector's function-static `magnitudo_ultima`
-  (fenestra_macos.m:403) must be shared/hoisted** so both pump entry
-  points see one resize state. Idle target: ~0% CPU.
+  deadline feeds this argument). Implementation AS SHIPPED (B',
+  2026-07-20): block once on `nextEventMatchingMask` with the real
+  deadline; if an event arrives, **repost it atStart and delegate to
+  `fenestra_perscrutari_eventus`** — ONE translation path, and the
+  resize function-static needs no hoisting (the concern dissolved
+  structurally). Idle verified live: 5×200 ms = 1.004 s with a still
+  mouse; real events waking early is CORRECT (the loop re-enters).
 - **[CAL] Wake contract, verified on hardware:** bridge messages arrive
   as runloop-source work; the spike proved the blocked pump services the
   script-message handler (+1.50s) yet KEEPS BLOCKING to timeout (5.0s).

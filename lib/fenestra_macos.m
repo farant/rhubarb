@@ -243,6 +243,11 @@ convertere_clavem (
     }
 }
 
+/* prototypum (definitio post fenestra_creare - vocatur in bloco
+ * initii NSApp) */
+interior vacuum
+_menu_ordinarium_ponere (vacuum);
+
 interior vacuum
 impellere_eventum (
     Fenestra* fenestra,
@@ -298,6 +303,8 @@ fenestra_creare (
             psn.highLongOfPSN = 0;
             psn.lowLongOfPSN = kCurrentProcess;
             TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+
+            _menu_ordinarium_ponere();
         }
 
         fenestra = piscina_allocare(piscina, magnitudo(Fenestra));
@@ -372,6 +379,60 @@ fenestra_creare (
     }
 }
 
+/* Menu ordinarium minimum (App + Emendare): executabile nudum sine
+ * menu aequivalentia clavium caret - Cmd+C/V/X/A mortua in quovis
+ * campo textus (webview aut NSTextField). Selectores vulgares
+ * responsorem primum petunt, ergo tituli Latini libere licent.
+ * Constructum semel ad initium NSApp; res app-gradus, numquam
+ * vitreae (verdictum interrogationis 2026-07-16). MRC: mainMenu et
+ * addItem/setSubmenu retinent - nostra post insertionem
+ * dimittuntur. */
+interior vacuum
+_menu_ordinarium_ponere (vacuum)
+{
+    NSMenu* praecipuum = [[NSMenu alloc] init];
+    NSMenuItem* app_sedes = [[NSMenuItem alloc] init];
+    NSMenu* app_menu = [[NSMenu alloc] init];
+    NSMenuItem* emendare_sedes = [[NSMenuItem alloc] init];
+    NSMenu* emendare_menu =
+        [[NSMenu alloc] initWithTitle:@"Emendare"];
+
+    [app_menu addItemWithTitle:@"Exire"
+                        action:@selector(terminate:)
+                 keyEquivalent:@"q"];
+    [app_sedes setSubmenu:app_menu];
+    [praecipuum addItem:app_sedes];
+
+    [emendare_menu addItemWithTitle:@"Revocare"
+                             action:@selector(undo:)
+                      keyEquivalent:@"z"];
+    [emendare_menu addItemWithTitle:@"Iterare"
+                             action:@selector(redo:)
+                      keyEquivalent:@"Z"];
+    [emendare_menu addItem:[NSMenuItem separatorItem]];
+    [emendare_menu addItemWithTitle:@"Secare"
+                             action:@selector(cut:)
+                      keyEquivalent:@"x"];
+    [emendare_menu addItemWithTitle:@"Copiare"
+                             action:@selector(copy:)
+                      keyEquivalent:@"c"];
+    [emendare_menu addItemWithTitle:@"Glutinare"
+                             action:@selector(paste:)
+                      keyEquivalent:@"v"];
+    [emendare_menu addItemWithTitle:@"Omnia Eligere"
+                             action:@selector(selectAll:)
+                      keyEquivalent:@"a"];
+    [emendare_sedes setSubmenu:emendare_menu];
+    [praecipuum addItem:emendare_sedes];
+
+    [NSApp setMainMenu:praecipuum];
+    [app_menu release];
+    [app_sedes release];
+    [emendare_menu release];
+    [emendare_sedes release];
+    [praecipuum release];
+}
+
 vacuum
 fenestra_destruere (
     Fenestra* fenestra)
@@ -417,6 +478,15 @@ fenestra_perscrutari_eventus (
             {
                 ordinarius:
                     frange;
+
+                casus NSEventTypeApplicationDefined:
+                    /* eventum excitationis syntheticum (contractus
+                     * vitreae: nuntius pontis in cauda positus
+                     * pumpam obstructam expergefacere debet -
+                     * postEvent in tractatore nuntii). VORATUR:
+                     * nec Eventus nec sendEvent - nulli
+                     * respondenti destinatum est. */
+                    perge;
 
                 casus NSEventTypeKeyDown: {
                     NSString* characteres;
@@ -610,6 +680,43 @@ fenestra_perscrutari_eventus (
             magnitudo_ultima = magnitudo_currens;
         }
     }
+}
+
+vacuum
+fenestra_expectare_eventus (
+    Fenestra* fenestra,
+    s64 ms_maximae)
+{
+    @autoreleasepool {
+        NSEvent* primus;
+        NSTimeInterval secundae;
+
+        si (!fenestra) redde;
+        secundae = (NSTimeInterval)ms_maximae / 1000.0;
+        si (secundae < 0.0)
+        {
+            secundae = 0.0;
+        }
+        /* obstructio semel: morari donec eventus adveniat aut
+         * tempus exhauriatur. Fontes runloop (nuntii scripti
+         * WebKit, tempora) INTER moras serviuntur; nuntius pontis
+         * per se pumpam NON expergefacit - tractator eius eventum
+         * syntheticum ApplicationDefined ponit (foramen + remedium
+         * in ferro probata, vitrea-calibratio.md). */
+        primus = [NSApp nextEventMatchingMask:NSEventMaskAny
+            untilDate:[NSDate dateWithTimeIntervalSinceNow:secundae]
+            inMode:NSDefaultRunLoopMode
+            dequeue:YES];
+        si (primus)
+        {
+            /* in caput caudae reponere - perscrutari infra eum cum
+             * ceteris ordine translatabit. Fluxus translationis
+             * UNUS manet (nulla duplicatio status magnitudinis aut
+             * commutationis). */
+            [NSApp postEvent:primus atStart:YES];
+        }
+    }
+    fenestra_perscrutari_eventus(fenestra);
 }
 
 b32
