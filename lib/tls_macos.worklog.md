@@ -22,3 +22,18 @@ dead.
 NOTE: .m files are invisible to examen/percursus (walks .c/.h only)
 — the VANA census could never have found this file. Grep is the
 only meter here; remember that when auditing platform layers.
+
+## 2026-07-20 — read callback remapped onto the TCP_ITERUM contract
+
+tcp_recipere's 0-return used to mean both EOF and would-block, and
+the read callback mapped 0 → errSSLWouldBlock — so a peer that
+closed mid-read looked like "no data yet" and SecureTransport
+would spin/wait instead of reporting closure. With TCP_ITERUM (-2)
+the mapping is now honest: ITERUM → errSSLWouldBlock, <0 →
+errSSLClosedAbort, 0 → errSSLClosedGraceful. Order matters: the
+ITERUM check must precede n < 0 because the sentinel itself is
+negative.
+
+CAVEAT: this path is validated only by the live -reticularis TLS
+run — compile is green but a manual re-smoke is still owed before
+trusting it.

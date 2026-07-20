@@ -33,7 +33,8 @@ nomen enumeratio {
     TCP_ERROR_CONNEXIO,      /* Connexio fallita */
     TCP_ERROR_TIMEOUT,       /* Operatio timeout */
     TCP_ERROR_CLAUSUM,       /* Connexio clausa ab hospite */
-    TCP_ERROR_IO             /* I/O error */
+    TCP_ERROR_IO,            /* I/O error */
+    TCP_ERROR_ITERUM         /* Non-blocans: nihil paratum, iterum tentare */
 } TcpError;
 
 /* Resultus connexionis */
@@ -88,7 +89,10 @@ TcpOptiones tcp_optiones_default(vacuum);
 
 /* Mittere data
  *
- * Redde: Numerus bytes missi, vel -1 si error
+ * Redde: Numerus bytes missi, 0 si socket non paratus (would-block),
+ *        -1 si error
+ * NOTA: asymmetria deliberata cum tcp_recipere - in mittere 0 nullam
+ * collisionem cum EOF habet, ergo 0 = "iterum tentare" hic manet.
  */
 s32
 tcp_mittere(
@@ -106,9 +110,15 @@ tcp_mittere_omnia(
     constans i8*   data,
     i32            mensura);
 
+/* Valor redditus tcp_recipere si non-blocans et nihil paratum (EAGAIN) */
+#define TCP_ITERUM (-2)
+
 /* Recipere data
  *
- * Redde: Numerus bytes recepti, 0 si connexio clausa, -1 si error
+ * Redde: >0          numerus bytes recepti
+ *        0           connexio clausa ab hospite (EOF)
+ *        TCP_ITERUM  non-blocans et nihil paratum
+ *        -1          error
  */
 s32
 tcp_recipere(
@@ -214,7 +224,7 @@ tcp_servus_auscultare(
  * piscina: Arena pro nova connexione
  *
  * Redde: Resultus cum nova TcpConnexio vel error
- *        Si non_blocans et nullae connexiones, error = TCP_ERROR_IO
+ *        Si non_blocans et nullae connexiones, error = TCP_ERROR_ITERUM
  */
 TcpResultus
 tcp_servus_accipere(

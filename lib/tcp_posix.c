@@ -84,6 +84,17 @@ _applicare_optiones(integer fd, constans TcpOptiones* opt)
     }
 }
 
+/* Scriptio in socket a pari clausum reddit EPIPE, non SIGPIPE (qui
+ * processum totum necaret). Extra _applicare_optiones quia illa in
+ * !opt cito redit - hoc SEMPER applicandum est. */
+interior vacuum
+_ponere_nosigpipe(integer fd)
+{
+    integer flag = 1;
+    setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &flag,
+               (socklen_t)magnitudo(flag));
+}
+
 
 /* ========================================================================
  * FUNCTIONES PUBLICAE - CONNEXIO
@@ -201,6 +212,7 @@ tcp_connectere_cum_optionibus(
 
     /* Applicare optiones */
     _applicare_optiones(fd, optiones);
+    _ponere_nosigpipe(fd);
 
     /* Allocare connexio */
     conn = (TcpConnexio*)piscina_allocare(piscina, (i64)magnitudo(TcpConnexio));
@@ -318,7 +330,7 @@ tcp_recipere(
     {
         si (errno == EAGAIN || errno == EWOULDBLOCK)
         {
-            redde 0;
+            redde TCP_ITERUM;
         }
         redde -1;
     }
@@ -380,6 +392,7 @@ tcp_error_descriptio(TcpError error)
         casus TCP_ERROR_TIMEOUT:   redde "Timeout";
         casus TCP_ERROR_CLAUSUM:   redde "Connexio clausa";
         casus TCP_ERROR_IO:        redde "I/O error";
+        casus TCP_ERROR_ITERUM:    redde "Nihil paratum - iterum tentare";
         ordinarius:                redde "Error ignotus";
     }
 }
@@ -682,9 +695,20 @@ tcp_servus_accipere(
         si (errno == EAGAIN || errno == EWOULDBLOCK)
         {
             /* Non-blocking et nullae connexiones - non est error */
-            redde _creare_error(TCP_ERROR_IO, "Nullae connexiones", piscina);
+            redde _creare_error(TCP_ERROR_ITERUM, "Nullae connexiones", piscina);
         }
         redde _creare_error(TCP_ERROR_CONNEXIO, strerror(errno), piscina);
+    }
+
+    _ponere_nosigpipe(client_fd);
+
+    /* TCP_NODELAY in fd accepto - responsa parva sine mora Nagle */
+    {
+        TcpOptiones opt_accepti;
+        opt_accepti.timeout_ms = 0;
+        opt_accepti.nodelay = VERUM;
+        opt_accepti.keepalive = FALSUM;
+        _applicare_optiones(client_fd, &opt_accepti);
     }
 
     /* Inherit non-blocking mode */

@@ -343,6 +343,7 @@ reactor_adicere(
     vacuum*         data)
 {
     i32 index;
+    i32 i;
 
     si (!reactor || fd < 0 || !callback)
     {
@@ -361,20 +362,34 @@ reactor_adicere(
         redde VERUM;
     }
 
-    /* Verificare capacitatem */
-    si (reactor->fd_numerus >= REACTOR_FD_MAXIMA)
+    /* Reuti slot inactivum primum (speculum exemplaris timer) - sine
+     * hoc churn adicere/removere tabulam permanenter exhaurit */
+    index = REACTOR_NON_INVENIT;
+    per (i = 0; i < reactor->fd_numerus; i++)
     {
-        redde FALSUM;
+        si (!reactor->fd_entries[i].activus)
+        {
+            index = i;
+            frange;
+        }
     }
 
-    /* Adicere novum */
-    index = reactor->fd_numerus;
+    /* Nullum slot liberum - extendere si capacitas sinit */
+    si (index == REACTOR_NON_INVENIT)
+    {
+        si (reactor->fd_numerus >= REACTOR_FD_MAXIMA)
+        {
+            redde FALSUM;
+        }
+        index = reactor->fd_numerus;
+        reactor->fd_numerus++;
+    }
+
     reactor->fd_entries[index].fd = fd;
     reactor->fd_entries[index].eventus = eventus;
     reactor->fd_entries[index].callback = callback;
     reactor->fd_entries[index].data = data;
     reactor->fd_entries[index].activus = VERUM;
-    reactor->fd_numerus++;
 
     _rebuilere_poll_fds(reactor);
 

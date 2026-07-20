@@ -21,6 +21,7 @@ hic_manens i32 g_eventus_receptus = 0;
 hic_manens i32 g_fd_receptus = 0;
 hic_manens i32 g_timer_vocatus = 0;
 hic_manens Reactor* g_reactor_ref = NIHIL;
+hic_manens integer g_fd_subsidiarius = -1;
 
 
 /* ========================================================================
@@ -65,6 +66,21 @@ callback_fd_clausum(integer fd, i32 eventus, vacuum* data)
     (vacuum)data;
     g_callback_vocatus++;
     g_eventus_receptus = eventus;
+}
+
+/* Intra callback: removere se ipsum, adicere fd subsidiarium */
+interior vacuum
+callback_reentrans(integer fd, i32 eventus, vacuum* data)
+{
+    (vacuum)eventus;
+    (vacuum)data;
+    g_callback_vocatus++;
+    si (g_reactor_ref)
+    {
+        reactor_removere(g_reactor_ref, fd);
+        reactor_adicere(g_reactor_ref, g_fd_subsidiarius, REACTOR_LEGERE,
+                        callback_simplex, NIHIL);
+    }
 }
 
 
@@ -692,6 +708,146 @@ probatio_fd_clausum_event(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - CHURN, REENTRANTIA, POLL ERROR
+ * ======================================================================== */
+
+/* Sine reutilizatione slotorum inactivorum tabula fd permanenter
+ * exhauritur - MCC cycli adicere/removere id demonstrant */
+interior vacuum
+probatio_fd_churn_reuse(Piscina* piscina)
+{
+    Reactor* reactor;
+    integer pipe_fds[II];
+    i32 cyclus;
+    b32 res;
+
+    printf("--- Probans churn adicere/removere (MCC cycli) ---\n");
+
+    reactor = reactor_creare(piscina);
+    CREDO_NON_NIHIL(reactor);
+
+    per (cyclus = 0; cyclus < M + CC; cyclus++)
+    {
+        si (pipe(pipe_fds) != 0)
+        {
+            frange;
+        }
+
+        res = reactor_adicere(reactor, pipe_fds[0], REACTOR_LEGERE,
+                              callback_simplex, NIHIL);
+        si (!res)
+        {
+            frange;
+        }
+
+        res = reactor_adicere(reactor, pipe_fds[I], REACTOR_SCRIBERE,
+                              callback_simplex, NIHIL);
+        si (!res)
+        {
+            frange;
+        }
+
+        reactor_removere(reactor, pipe_fds[0]);
+        reactor_removere(reactor, pipe_fds[I]);
+        close(pipe_fds[0]);
+        close(pipe_fds[I]);
+    }
+
+    CREDO_VERUM(cyclus == M + CC);
+    CREDO_VERUM(reactor_numerus_fd(reactor) == 0);
+    printf("  Cycli completi: %u\n", cyclus);
+
+    reactor_destruere(reactor);
+    printf("\n");
+}
+
+
+interior vacuum
+probatio_callback_reentrans(Piscina* piscina)
+{
+    Reactor* reactor;
+    integer pipa_a[II];
+    integer pipa_b[II];
+    constans character* msg = "X";
+    i32 events;
+
+    printf("--- Probans callback reentrans ---\n");
+
+    reset_globals();
+    reactor = reactor_creare(piscina);
+    CREDO_NON_NIHIL(reactor);
+
+    CREDO_VERUM(pipe(pipa_a) == 0);
+    CREDO_VERUM(pipe(pipa_b) == 0);
+
+    g_reactor_ref = reactor;
+    g_fd_subsidiarius = pipa_b[0];
+
+    reactor_adicere(reactor, pipa_a[0], REACTOR_LEGERE,
+                    callback_reentrans, NIHIL);
+
+    /* Excitare: intra callback removere-se + adicere subsidiarium */
+    write(pipa_a[I], msg, I);
+    events = reactor_poll(reactor, C);
+    CREDO_VERUM(events >= I);
+    CREDO_VERUM(g_callback_vocatus == I);
+
+    /* Permutatio reflexa: unus fd monitoratus, subsidiarius respondet */
+    CREDO_VERUM(reactor_numerus_fd(reactor) == I);
+
+    write(pipa_b[I], msg, I);
+    events = reactor_poll(reactor, C);
+    CREDO_VERUM(events >= I);
+    CREDO_VERUM(g_callback_vocatus == II);
+    CREDO_VERUM(g_fd_receptus == (i32)pipa_b[0]);
+    printf("  Permutatio intra callback sine fragore\n");
+
+    close(pipa_a[0]);
+    close(pipa_a[I]);
+    close(pipa_b[0]);
+    close(pipa_b[I]);
+    reactor_destruere(reactor);
+    printf("\n");
+}
+
+
+interior vacuum
+probatio_poll_error(Piscina* piscina)
+{
+    Reactor* reactor;
+    integer pipe_fds[II];
+    i32 events;
+
+    printf("--- Probans poll error ---\n");
+
+    reset_globals();
+    reactor = reactor_creare(piscina);
+    CREDO_NON_NIHIL(reactor);
+
+    CREDO_VERUM(pipe(pipe_fds) == 0);
+
+    /* Extremum lectionis clausum - scriptio in pipe orbam = error */
+    close(pipe_fds[0]);
+
+    reactor_adicere(reactor, pipe_fds[I], REACTOR_SCRIBERE,
+                    callback_fd_clausum, NIHIL);
+
+    events = reactor_poll(reactor, C);
+
+    CREDO_VERUM(events >= I);
+    CREDO_VERUM(g_callback_vocatus >= I);
+    /* POLLERR -> REACTOR_ERROR; systemata etiam POLLHUP dare possunt */
+    CREDO_VERUM((g_eventus_receptus & (i32)REACTOR_ERROR) != 0 ||
+                (g_eventus_receptus & (i32)REACTOR_CLAUSUM) != 0);
+    printf("  Eventus receptus: 0x%x\n", g_eventus_receptus);
+
+    close(pipe_fds[I]);
+    reactor_destruere(reactor);
+    printf("\n");
+}
+
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -727,6 +883,9 @@ principale(vacuum)
     probatio_sistere_nihil(piscina);
     probatio_timer_capacitas(piscina);
     probatio_fd_clausum_event(piscina);
+    probatio_fd_churn_reuse(piscina);
+    probatio_callback_reentrans(piscina);
+    probatio_poll_error(piscina);
 
     credo_imprimere_compendium();
 

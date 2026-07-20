@@ -54,6 +54,13 @@ _tls_read_callback(
     petitum = *dataLength;
     n = tcp_recipere(conn->tcp, (i8*)data, (i32)petitum);
 
+    /* TCP_ITERUM ante n < 0 - sentinella ipsa negativa est */
+    si (n == TCP_ITERUM)
+    {
+        *dataLength = 0;
+        redde errSSLWouldBlock;
+    }
+
     si (n < 0)
     {
         *dataLength = 0;
@@ -63,7 +70,7 @@ _tls_read_callback(
     si (n == 0)
     {
         *dataLength = 0;
-        redde errSSLWouldBlock;
+        redde errSSLClosedGraceful;
     }
 
     *dataLength = (size_t)n;
