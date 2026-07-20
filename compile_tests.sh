@@ -24,6 +24,7 @@ declare -a INCLUDE_FLAGS=(
     "-Iprobationes"
     "-Ibook_assets"
     "-Iprobationes/vitrea_assets"
+    "-Iprobationes/tabella_assets"
 )
 
 # Source files to compile to object files
@@ -150,6 +151,7 @@ declare -a SOURCE_FILES=(
     "probationes/capsula_assets.c"
     "book_assets/capsula_libri.c"
     "probationes/vitrea_assets/capsula_templates.c"
+    "probationes/tabella_assets/capsula_tabella.c"
 )
 
 # Objective-C sources (compiled separately)
@@ -572,7 +574,7 @@ run_all_tests() {
         # Skip benchmark files - run separately via run_benchmark.sh
         if [[ "$file" == *"_benchmark.c"* ]]; then
             continue
-        elif [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_vitrea.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]] || [[ "$file" == *"probatio_capsula_caudae.c"* ]] || [[ "$file" == *"probatio_elementa.c"* ]] || [[ "$file" == *"probatio_imago.c"* ]] || [[ "$file" == *"probatio_dithering.c"* ]]; then
+        elif [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_vitrea.c"* ]] || [[ "$file" == *"probatio_vitrea_tabella.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]] || [[ "$file" == *"probatio_capsula_caudae.c"* ]] || [[ "$file" == *"probatio_elementa.c"* ]] || [[ "$file" == *"probatio_imago.c"* ]] || [[ "$file" == *"probatio_dithering.c"* ]]; then
             gui_apps="$gui_apps$file"$'\n'
         else
             test_files="$test_files$file"$'\n'

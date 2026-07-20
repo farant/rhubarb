@@ -607,43 +607,53 @@ principale(integer argc, character** argv)
 
     /* Process each section
      *
-     * For now, we iterate through known sections by checking for
-     * section_name.files patterns in the TOML.
-     *
-     * TODO: This is a simplified approach. A full implementation would
-     * need to enumerate all sections in the TOML document.
+     * Sectiones ex ipsis clavibus colliguntur: omnis clavis
+     * tabulati in '_files' desinens sectionem nominat (TODO vetus
+     * impletum - tabula nominum praefixa sublata; antea sectio
+     * ignota TACITE nihil generabat).
      */
-
-    /* For now, let's look for common section names and process them */
     {
-        constans character* sections[] = {
-            "libri", "fontes", "assets", "templates", "data",
-            "books", "fonts", "images", "sounds", "scripts",
-            NIHIL
-        };
-
-        per (i = 0; sections[i] != NIHIL; i++)
+        per (i = 0; i < xar_numerus(doc->introitus); i++)
         {
-            character key_files[128];
-            character key_compress[128];
-            Xar*      files;
-            b32       compress;
+            TomlIntroitus* intro;
+            character      section_name[96];
+            character      key_compress[128];
+            Xar*           files;
+            b32            compress;
+            i32            praefixum;
 
-            snprintf(key_files, sizeof(key_files), "%s_files", sections[i]);
-            snprintf(key_compress, sizeof(key_compress), "%s_compress", sections[i]);
-
-            files = toml_capere_tabulatum(doc, key_files);
-
-            si (files != NIHIL && xar_numerus(files) > 0)
+            intro = (TomlIntroitus*)xar_obtinere(doc->introitus, i);
+            si (intro == NIHIL
+                || intro->valor.genus != TOML_TABULATUM
+                || intro->clavis.mensura <= VI)
             {
-                compress = toml_capere_boolean(doc, key_compress);
+                perge;
+            }
+            praefixum = intro->clavis.mensura - VI;
+            si (memcmp(intro->clavis.datum + praefixum, "_files",
+                       VI) != 0
+                || praefixum >= (i32)magnitudo(section_name))
+            {
+                perge;
+            }
+            memcpy(section_name, intro->clavis.datum,
+                   (size_t)praefixum);
+            section_name[praefixum] = '\0';
 
-                si (!_process_section(sections[i], files, compress,
-                                      config_dir[0] ? config_dir : NIHIL, piscina))
-                {
-                    piscina_destruere(piscina);
-                    redde I;
-                }
+            files = intro->valor.datum.tabulatum_valor;
+            si (files == NIHIL || xar_numerus(files) == 0)
+            {
+                perge;
+            }
+            snprintf(key_compress, sizeof(key_compress),
+                     "%s_compress", section_name);
+            compress = toml_capere_boolean(doc, key_compress);
+
+            si (!_process_section(section_name, files, compress,
+                                  config_dir[0] ? config_dir : NIHIL, piscina))
+            {
+                piscina_destruere(piscina);
+                redde I;
             }
         }
     }

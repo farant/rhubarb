@@ -1,0 +1,7 @@
+# Capsula config pro fronte tabellae (app secunda vitreae -
+# vectis exitus Phasis C)
+# Regenerare: bin/capsula_generare probationes/tabella_assets/tabella.toml
+# (generata capsula_tabella.{h,c} COMMITTUNTUR - mos vitrea_assets)
+
+tabella_files = ["index.html"]
+tabella_compress = false
