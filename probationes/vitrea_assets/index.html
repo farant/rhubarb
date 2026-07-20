@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>salve vitrea</title>
+<style>
+  body { background: #1d2233; color: #dde3f0; font: 14px/1.5 monospace;
+         padding: 2em; max-width: 40em; margin: 0 auto; }
+  h1 { color: #9db4e8; font-size: 1.4em; }
+  button { background: #2c3654; color: #dde3f0; border: 1px solid #4a5a85;
+           padding: .5em 1em; font: inherit; cursor: pointer;
+           border-radius: 4px; margin-right: .5em; }
+  button:hover { background: #3a4668; }
+  #exitus { background: #141826; border: 1px solid #2c3654; padding: 1em;
+            border-radius: 4px; min-height: 6em; white-space: pre-wrap;
+            margin-top: 1em; }
+  #hora { color: #8fd49a; }
+  input { background: #141826; color: #dde3f0; border: 1px solid #4a5a85;
+          padding: .4em; font: inherit; width: 4em; border-radius: 4px; }
+</style>
+</head>
+<body>
+<h1>salve vitrea</h1>
+<p>horologium C: <span id="hora">(nondum)</span></p>
+<p>
+  <input id="a" value="2"> + <input id="b" value="3">
+  <button id="addere">addere</button>
+  <button id="fructus">fructus legere</button>
+</p>
+<div id="exitus">currens...</div>
+<script>
+var exitus = document.getElementById('exitus');
+function scribere(t) {
+  exitus.textContent = t;
+}
+/* fumus automaticus in onere: gyrus plenus pons->C->pons sine
+   oculis probatur (C imprimit lineam quam fumus quaerit) */
+internuntius.vocare('salve', { quem: 'munde' })
+  .then(function(r) {
+    scribere('C respondet: ' + r.salutatio);
+    /* responsum promissum solvit - confirmatio gyrum PLENUM
+       (C->JS->C) sine oculis probat */
+    return internuntius.vocare('confirmare', { textus: r.salutatio });
+  })
+  .catch(function(e) { scribere('CULPA: ' + e.message); });
+internuntius.audire('horologium', function(d) {
+  document.getElementById('hora').textContent =
+    d.ictus + ' ictus (' + d.hora + ')';
+});
+document.getElementById('addere').onclick = function() {
+  internuntius.vocare('addere', {
+    a: parseInt(document.getElementById('a').value, 10),
+    b: parseInt(document.getElementById('b').value, 10)
+  }).then(function(r) { scribere('summa = ' + r.summa); })
+    .catch(function(e) { scribere('CULPA: ' + e.message); });
+};
+document.getElementById('fructus').onclick = function() {
+  internuntius.vocare('fructus_legere', {})
+    .then(function(r) { scribere(JSON.stringify(r, null, 2)); })
+    .catch(function(e) { scribere('CULPA: ' + e.message); });
+};
+</script>
+</body>
+</html>

@@ -23,6 +23,7 @@ declare -a INCLUDE_FLAGS=(
     "-Iinclude"
     "-Iprobationes"
     "-Ibook_assets"
+    "-Iprobationes/vitrea_assets"
 )
 
 # Source files to compile to object files
@@ -148,6 +149,7 @@ declare -a SOURCE_FILES=(
     "lib/nuntium_schema_generare.c"
     "probationes/capsula_assets.c"
     "book_assets/capsula_libri.c"
+    "probationes/vitrea_assets/capsula_templates.c"
 )
 
 # Objective-C sources (compiled separately)
@@ -155,6 +157,7 @@ declare -a OBJC_SOURCES=(
     "lib/fenestra_macos.m"
     "lib/tls_macos.m"
     "lib/clipboard_platform_macos.m"
+    "lib/vitrea_macos.m"
 )
 
 # Vendored sources (compiled RELAXED in their own objects - treat
@@ -361,7 +364,7 @@ compile_gui_app() {
 
     # Compile test file and link with object files
     # -Wno-overlength-strings: GUI apps may have long STML layout strings
-    if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -framework Security -o "$output_binary" 2>&1; then
+    if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ BUILD FAILED: $app_name${RESET}"
         GUI_APPS_FAILED=$((GUI_APPS_FAILED + 1))
         FAILED_GUI_APPS="$FAILED_GUI_APPS $app_name"
@@ -421,7 +424,7 @@ compile_and_run_test() {
     obj_files=$(get_object_files)
 
     # Compile test file and link with object files
-    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files -framework Cocoa -framework Security -o "$output_binary" 2>&1; then
+    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
         FAILED_TESTS="$FAILED_TESTS $test_name"
@@ -477,7 +480,7 @@ compile_tool_if_needed() {
     obj_files=$(get_object_files)
 
     echo -e "  Compiling tool: $tool_source"
-    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_source" $obj_files -framework Cocoa -framework Security -o "$tool_binary" 2>&1; then
+    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_source" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$tool_binary" 2>&1; then
         echo -e "${RED}✗ FAILED: $tool_source${RESET}"
         return 1
     fi
@@ -569,7 +572,7 @@ run_all_tests() {
         # Skip benchmark files - run separately via run_benchmark.sh
         if [[ "$file" == *"_benchmark.c"* ]]; then
             continue
-        elif [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]] || [[ "$file" == *"probatio_capsula_caudae.c"* ]] || [[ "$file" == *"probatio_elementa.c"* ]] || [[ "$file" == *"probatio_imago.c"* ]] || [[ "$file" == *"probatio_dithering.c"* ]]; then
+        elif [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_vitrea.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]] || [[ "$file" == *"probatio_capsula_caudae.c"* ]] || [[ "$file" == *"probatio_elementa.c"* ]] || [[ "$file" == *"probatio_imago.c"* ]] || [[ "$file" == *"probatio_dithering.c"* ]]; then
             gui_apps="$gui_apps$file"$'\n'
         else
             test_files="$test_files$file"$'\n'

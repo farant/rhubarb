@@ -1,0 +1,7 @@
+# Capsula config pro fronte vitreae (demo salve_vitrea)
+# Regenerare: bin/capsula_generare probationes/vitrea_assets/vitrea.toml
+# (generata capsula_templates.{h,c} COMMITTUNTUR - nullus gradus
+# ordinis constructionis; incompressa = via zero-copy futura aperta)
+
+templates_files = ["index.html"]
+templates_compress = false
