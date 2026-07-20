@@ -576,6 +576,13 @@ run_all_tests() {
         # Skip benchmark files - run separately via run_benchmark.sh
         if [[ "$file" == *"_benchmark.c"* ]]; then
             continue
+        # Named live-internet exclusions (TLS is client-only - a local
+        # fixture cannot serve it). Run on demand:
+        #   ./compile_tests.sh -reticularis     (full suite + live tests)
+        #   ./compile_tests.sh tls              (explicit filter also runs)
+        elif [[ -z "$FILTER" && $RETICULARIS -eq 0 ]] && { [[ "$file" == *"probatio_tls.c"* ]] || [[ "$file" == *"probatio_tcp.c"* ]]; }; then
+            echo -e "${YELLOW}RETICULARIS EXCLUSUM: $(basename "$file" .c) (curre: ./compile_tests.sh -reticularis)${RESET}"
+            continue
         elif [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_vitrea.c"* ]] || [[ "$file" == *"probatio_vitrea_tabella.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]] || [[ "$file" == *"probatio_capsula_caudae.c"* ]] || [[ "$file" == *"probatio_elementa.c"* ]] || [[ "$file" == *"probatio_imago.c"* ]] || [[ "$file" == *"probatio_dithering.c"* ]]; then
             gui_apps="$gui_apps$file"$'\n'
         else
@@ -660,6 +667,7 @@ print_summary() {
 WATCH_MODE=0
 DEBUG_MODE=0
 CLEAN_MODE=0
+RETICULARIS=0
 for arg in "$@"; do
     if [ "$arg" == "--watch" ]; then
         WATCH_MODE=1
@@ -667,6 +675,8 @@ for arg in "$@"; do
         DEBUG_MODE=1
     elif [ "$arg" == "--clean" ]; then
         CLEAN_MODE=1
+    elif [ "$arg" == "-reticularis" ] || [ "$arg" == "--reticularis" ]; then
+        RETICULARIS=1
     else
         FILTER="$arg"
     fi

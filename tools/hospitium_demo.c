@@ -87,6 +87,7 @@ principale(integer argc, character** argv)
     memset(&cfg, 0, magnitudo(cfg));
     cfg.portus = (argc > I) ? (i32)atoi(argv[I]) : (i32)(VIII * M + LXXX);
     cfg.acta_accessus = VERUM;
+    cfg.acao = VERUM;   /* postura dev - paginae capsula:// petere possunt */
 
     h = hospitium_creare(piscina, &cfg);
     si (h == NIHIL)

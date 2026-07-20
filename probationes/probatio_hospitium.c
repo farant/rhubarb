@@ -548,6 +548,53 @@ probatio_directorium(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - ACAO (postura dev)
+ * ======================================================================== */
+
+interior vacuum
+probatio_acao(Piscina* piscina)
+{
+    HospitiumConfiguratio cfg;
+    Hospitium* h;
+    TcpConnexio* cliens;
+    character buffer[MMMMXCVI];
+    s32 n;
+
+    printf("--- Probans ACAO in omni responso ---\n");
+
+    memset(&cfg, 0, magnitudo(cfg));
+    cfg.acao = VERUM;
+    h = hospitium_creare(piscina, &cfg);
+    CREDO_NON_NIHIL(h);
+    hospitium_praebere(h, HTTP_GET, "/salve", _tractator_salve, NIHIL);
+
+    cliens = _cliens_connectere(piscina, hospitium_portus(h));
+    CREDO_NON_NIHIL(cliens);
+    _pumpare(h, V);
+
+    /* responsum tractatoris */
+    n = _commercium(h, cliens,
+        "GET /salve HTTP/1.1\r\nHost: probatio\r\n\r\n",
+        buffer, MMMMXCVI);
+    CREDO_VERUM(n > 0);
+    CREDO_VERUM(strstr(buffer, "Access-Control-Allow-Origin: *") != NIHIL);
+
+    /* etiam CDIV - uniformis in OMNI responso */
+    n = _commercium(h, cliens,
+        "GET /nusquam HTTP/1.1\r\nHost: probatio\r\n\r\n",
+        buffer, MMMMXCVI);
+    CREDO_VERUM(n > 0);
+    CREDO_VERUM(strstr(buffer, "HTTP/1.1 404 Not Found") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "Access-Control-Allow-Origin: *") != NIHIL);
+
+    tcp_claudere(cliens);
+    hospitium_destruere(h);
+    printf("  ACAO in responso tractatoris et in CDIV\n");
+    printf("\n");
+}
+
+
+/* ========================================================================
  * PROBATIONES - PLENITUDO (DIII)
  * ======================================================================== */
 
@@ -632,6 +679,7 @@ principale(vacuum)
     probatio_reliquiae_clausura(piscina);
     probatio_datum_et_caput(piscina);
     probatio_directorium(piscina);
+    probatio_acao(piscina);
     probatio_plenitudo(piscina);
 
     credo_imprimere_compendium();
