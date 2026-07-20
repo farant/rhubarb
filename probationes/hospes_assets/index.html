@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>vitrea se-hospitans</title>
+<style>
+  body { background: #1a2620; color: #dcefe2; font: 14px/1.5 monospace;
+         padding: 2em; max-width: 40em; margin: 0 auto; }
+  h1 { color: #8fd49a; font-size: 1.4em; }
+  #exitus { background: #121a16; border: 1px solid #2c5440; padding: 1em;
+            border-radius: 4px; min-height: 6em; white-space: pre-wrap;
+            margin-top: 1em; }
+</style>
+</head>
+<body>
+<h1>vitrea se-hospitans (postura B: capsula + ACAO)</h1>
+<div id="exitus">currens...</div>
+<script>
+var exitus = document.getElementById('exitus');
+function scribere(t) { exitus.textContent += '\n' + t; }
+/* fumus automaticus: (1) portum per pontem petere, (2) fetch
+   TRANS-ORIGINEM (capsula:// -> http://127.0.0.1) - succedit
+   SOLUM si hospitium ACAO emittit [CAL re-probatio], (3) fructum
+   per confirmare echare - C lineam imprimit quam fumus quaerit.
+   CULPA quoque echatur: defectus se annuntiat, non tacet. */
+internuntius.vocare('portum_petere', {})
+  .then(function(r) {
+    scribere('portus hospitii: ' + r.portus);
+    return fetch('http://127.0.0.1:' + r.portus + '/salve')
+      .then(function(resp) { return resp.text(); })
+      .then(function(textus) {
+        scribere('fetch: ' + textus);
+        return internuntius.vocare('confirmare', {
+          textus: 'ACAO trans-originem: ' + textus });
+      });
+  })
+  .catch(function(e) {
+    scribere('CULPA: ' + e.message);
+    internuntius.vocare('confirmare', {
+      textus: 'CULPA fetch: ' + e.message });
+  });
+</script>
+</body>
+</html>

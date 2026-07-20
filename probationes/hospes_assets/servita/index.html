@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>vitrea modus-dev</title>
+<style>
+  body { background: #26201a; color: #efe2dc; font: 14px/1.5 monospace;
+         padding: 2em; max-width: 40em; margin: 0 auto; }
+  h1 { color: #d4a48f; font-size: 1.4em; }
+  #exitus { background: #1a1512; border: 1px solid #54402c; padding: 1em;
+            border-radius: 4px; min-height: 6em; white-space: pre-wrap;
+            margin-top: 1em; }
+</style>
+</head>
+<body>
+<h1>vitrea modus-dev (postura A: pagina ex hospitio servita)</h1>
+<div id="exitus">currens...</div>
+<script>
+var exitus = document.getElementById('exitus');
+function scribere(t) { exitus.textContent += '\n' + t; }
+/* fumus automaticus: pagina IPSA ex hospitio venit (origo URL,
+   eadem-origo - sine CORS); fetch relativus + pons ambo probantur.
+   haec est postura dev: muta plagulam in disco, recarga. */
+fetch('/salve')
+  .then(function(resp) { return resp.text(); })
+  .then(function(textus) {
+    scribere('fetch eiusdem-originis: ' + textus);
+    return internuntius.vocare('confirmare', {
+      textus: 'postura dev vivit: ' + textus });
+  })
+  .catch(function(e) {
+    scribere('CULPA: ' + e.message);
+    internuntius.vocare('confirmare', {
+      textus: 'CULPA postura dev: ' + e.message });
+  });
+</script>
+</body>
+</html>

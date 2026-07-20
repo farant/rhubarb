@@ -1,0 +1,6 @@
+# Capsula config pro pagina hospitis (convergentia vitrea+hospitium)
+# Regenerare: bin/capsula_generare probationes/hospes_assets/hospes.toml
+# (generata capsula_hospes.{h,c} COMMITTUNTUR - mos vitrea_assets)
+
+hospes_files = ["index.html"]
+hospes_compress = false
