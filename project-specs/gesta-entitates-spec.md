@@ -58,8 +58,10 @@ All four were chosen deliberately during brainstorming (2026-07-18):
 
 ## Layout & filenames
 
-Root: `gesta/annales/entities/` (sits with the other projections; committed
-alongside the jsonl).
+Root: `gesta/annales/entities/` (sits with the other projections).
+**Gitignored** (decided 2026-07-20) — like the `.db`, it is a rebuildable
+artifact regenerated on every write, present on disk for browsing but not
+versioned; `tabula.md` carries the committed summary/diff view. See the worklog.
 
 ```
 gesta/annales/entities/
@@ -98,7 +100,6 @@ genus: parcum
 status: parcatum
 tags: rami, gesta
 creatum: 2026-07-17T05:24:21.182Z
-actor: claude
 ---
 
 # Rami: copia plicaturae ramalis
@@ -106,7 +107,8 @@ actor: claude
 <corpus — the entity body text>
 
 ## Status
-- parcatum — 2026-07-17 (creatum)
+- creatum — 2026-07-17T05:24:21.182Z
+- tractum — 2026-07-18T09:14:02.001Z
 
 ## Notae
 - 2026-07-17 (claude): <note text, oldest first>
@@ -122,13 +124,14 @@ actor: claude
 
 Details:
 
-- **Frontmatter keys are Latin** (`id`, `genus`, `status`, `tags`, `creatum`,
-  `actor`) — on-brand and greppable. Nothing consumes them yet; they exist for
-  the reader and for future file-tools.
+- **Frontmatter keys are Latin** (`id`, `genus`, `status`, `tags`, `creatum`)
+  — on-brand and greppable. Nothing consumes them yet; they exist for the
+  reader and for future file-tools. (As shipped, `actor` is not in the
+  frontmatter; note authors appear per-line in the Notae section.)
 - **Content is deterministic.** Every timestamp shown comes from event data in
   the log, never from a regeneration clock. Two regenerations of an unchanged
-  entity produce byte-identical files, so git shows a diff only when the entity
-  actually changed — same discipline as `tabula.md`.
+  entity produce byte-identical files (no spurious rewrites) — same discipline
+  as `tabula.md`.
 - **Nexus rendered as relative markdown links** to the linked entities' files,
   turning the tree into navigable hypertext (click from a park to the question
   it blocks). Because every target is duplicated across its tags, the link
