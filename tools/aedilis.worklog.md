@@ -496,3 +496,44 @@ binary emit BYTE-IDENTICAL closure parts for the wearer (62
 entries) — the bundle's 78-vs-80 plagulae delta vs the memory note
 predates Phase A (point-in-time number at 9bf8c7b), not a schema
 effect.
+
+## 2026-07-21 — AMALGAMA Phase B RELATIO (emitter flags + auditor)
+
+CLI: --partes (fructus TSV: O/C/S/V), --aristae (edge dump),
+--ordo (topo order, cycle = refusal exit 1). All return before
+manifest emission (no side effects, --enumerare precedent). The
+three amalgamator manifests gained --enumerare (CV/OV/CP/OP TSV
+from the hand arrays — machine-readable truth from the artifact
+itself; survives Phase C as a live loop-closure check). All three
+amalgams regenerate BYTE-IDENTICAL with the edit (git clean).
+
+tools/amalgama_auditor.sh = the Phase B product (eyes-tool,
+differentia-mode, exit 0 unless operational): per project runs
+amalgamare.sh (own gates), dumps hand lists, derives the union of
+--partes over the OV+OP roots, buckets CONSENSUS/DERIVATA-SOLA/
+MANUS-SOLA, validates the hand capita ORDER against derived edges.
+
+**AUDIT VERDICT (first full run)**:
+- ZERO MANUS-SOLA anywhere — aedilis sees everything all three
+  manifests carry. Hand orders = valid linearizations ×3.
+- silva: EXACT modulo one lane (latina.h = the mechanism's special
+  inline, not a file-list entry). Corpora 23/23.
+- tessera: derived-only lib/chorda.c + chorda.h = the DELIBERATE
+  type-only exclusion (TesseraChorda owned by tessera.h; body dead
+  weight dropped by hand). File-level dead-code policy the snippet
+  consumer must be able to express.
+- officina: derived-only silva/amalgama/silva.{h,c} = the
+  hospes-duplex structural dependency (handled via PROOEMIUM, not
+  file lists) + officina_indicium.h = public-header ownership lane
+  (officina.h covers the indicium API).
+
+**Phase C hinge**: findings shape the snippet format — derived
+lists need per-file HAND OVERRIDES (exclude-body: tessera chorda;
+external-dependency: officina silva.h; the latina lane stays
+mechanism-special). Migration = snippet + small exclusion policy
+in the manifest, not blind list replacement.
+
+Auditor first-run crop: stale bin/aedilis silently lacked the new
+flags ([ -x ] existence check ≠ freshness) — auditor now ALWAYS
+runs aedilis_struere.sh. The excubitor class strikes the very tool
+built to audit staleness; noted with due irony.

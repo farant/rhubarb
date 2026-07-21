@@ -11,6 +11,7 @@
 #include "piscina.h"
 #include "silva_amalgama.h"
 #include <stdio.h>
+#include <string.h>
 
 #define NUMERUS(series) ((i32)(magnitudo(series) / magnitudo((series)[0])))
 
@@ -239,11 +240,40 @@ interior constans character* constans PROOEMIUM =
     " */\n\n"
     "#include \"silva.h\"\n\n";
 
+/* Listas manifesti machinis emittere (tools/amalgama_auditor.sh) */
+interior vacuum
+_enumerare (vacuum)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < NUMERUS(CAPITA_VENDICATA); i++)
+    {
+        imprimere("CV\t%s\n", CAPITA_VENDICATA[i].via);
+    }
+    per (i = ZEPHYRUM; i < NUMERUS(CORPORA_VENDICATA); i++)
+    {
+        imprimere("OV\t%s\n", CORPORA_VENDICATA[i].via);
+    }
+    per (i = ZEPHYRUM; i < NUMERUS(CAPITA_OFFICINAE); i++)
+    {
+        imprimere("CP\t%s\n", CAPITA_OFFICINAE[i].via);
+    }
+    per (i = ZEPHYRUM; i < NUMERUS(CORPORA_OFFICINAE); i++)
+    {
+        imprimere("OP\t%s\n", CORPORA_OFFICINAE[i].via);
+    }
+}
+
 s32 principale (s32 argc, character** argv)
 {
     Piscina* piscina;
     AmalgamaManifestum manifestum;
 
+    si (argc == II && strcmp(argv[I], "--enumerare") == ZEPHYRUM)
+    {
+        _enumerare();
+        redde ZEPHYRUM;
+    }
     si (argc < III)
     {
         fprintf(stderr,

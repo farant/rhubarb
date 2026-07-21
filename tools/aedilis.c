@@ -548,6 +548,12 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
         "Sextum capitum contra clang -MM comparare (sine emissione)");
     argumenta_addere_vexillum(parser, NIHIL, "--enumerare",
         "Obiecta clausurae nuda imprimere (consumptoribus)");
+    argumenta_addere_vexillum(parser, NIHIL, "--partes",
+        "Partes fructus ut TSV imprimere (O/C/S/V via)");
+    argumenta_addere_vexillum(parser, NIHIL, "--aristae",
+        "Aristas graphi inclusionum imprimere (includens inclusum)");
+    argumenta_addere_vexillum(parser, NIHIL, "--ordo",
+        "Capita ordine topologico imprimere (cyclus = recusatio)");
     argumenta_addere_exemplum(parser, "aedilis lib/hospitium.c");
     argumenta_addere_exemplum(parser,
         "aedilis probationes/probatio_stml.c --currere");
@@ -630,6 +636,115 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
                 fructus->obiecta, i);
             imprimere("%.*s\n", (s32)obiectum->via.mensura,
                 (constans character*)obiectum->via.datum);
+        }
+        redde 0;
+    }
+
+    si (argumenta_habet_vexillum(lecta, "--partes"))
+    {
+        i32 i;
+        i32 numerus;
+
+        numerus = xar_numerus(fructus->obiecta);
+        per (i = 0; i < numerus; i++)
+        {
+            AedilisObiectum* obiectum;
+
+            obiectum = (AedilisObiectum*)xar_obtinere(
+                fructus->obiecta, i);
+            imprimere("O\t%.*s\n", (s32)obiectum->via.mensura,
+                (constans character*)obiectum->via.datum);
+        }
+        numerus = xar_numerus(fructus->capita);
+        per (i = 0; i < numerus; i++)
+        {
+            AedilisCaput* caput;
+
+            caput = (AedilisCaput*)xar_obtinere(fructus->capita,
+                i);
+            imprimere("C\t%.*s\n", (s32)caput->via.mensura,
+                (constans character*)caput->via.datum);
+        }
+        numerus = xar_numerus(fructus->systemata);
+        per (i = 0; i < numerus; i++)
+        {
+            chorda via;
+
+            via = *(chorda*)xar_obtinere(fructus->systemata, i);
+            imprimere("S\t%.*s\n", (s32)via.mensura,
+                (constans character*)via.datum);
+        }
+        numerus = xar_numerus(fructus->vendores);
+        per (i = 0; i < numerus; i++)
+        {
+            AedilisVendor* vendor;
+
+            vendor = (AedilisVendor*)xar_obtinere(
+                fructus->vendores, i);
+            imprimere("V\t%.*s\n", (s32)vendor->fons.mensura,
+                (constans character*)vendor->fons.datum);
+        }
+        redde 0;
+    }
+
+    si (argumenta_habet_vexillum(lecta, "--aristae"))
+    {
+        i32 i;
+        i32 numerus;
+
+        numerus = xar_numerus(fructus->capita);
+        per (i = 0; i < numerus; i++)
+        {
+            AedilisCaput* caput;
+            i32 k;
+            i32 numerus_aristarum;
+
+            caput = (AedilisCaput*)xar_obtinere(fructus->capita,
+                i);
+            si (caput->inclusa == NIHIL)
+            {
+                perge;
+            }
+            numerus_aristarum = xar_numerus(caput->inclusa);
+            per (k = 0; k < numerus_aristarum; k++)
+            {
+                chorda inclusum;
+
+                inclusum = *(chorda*)xar_obtinere(caput->inclusa,
+                    k);
+                imprimere("%.*s\t%.*s\n",
+                    (s32)caput->via.mensura,
+                    (constans character*)caput->via.datum,
+                    (s32)inclusum.mensura,
+                    (constans character*)inclusum.datum);
+            }
+        }
+        redde 0;
+    }
+
+    si (argumenta_habet_vexillum(lecta, "--ordo"))
+    {
+        Xar* ordinati;
+        i32  i;
+        i32  numerus;
+
+        ordinati = aedilis_capita_ordinare(fructus, piscina,
+            &causa);
+        si (ordinati == NIHIL)
+        {
+            fprintf(stderr, "AEDILIS RECUSAT: %.*s\n",
+                (s32)causa.mensura,
+                (constans character*)causa.datum);
+            redde 1;
+        }
+        numerus = xar_numerus(ordinati);
+        per (i = 0; i < numerus; i++)
+        {
+            AedilisCaput* caput;
+
+            caput = *(AedilisCaput**)xar_obtinere(ordinati, i);
+            imprimere("%.*s\n", (s32)caput->via.mensura,
+                (constans character*)caput->via.datum);
         }
         redde 0;
     }
