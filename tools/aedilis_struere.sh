@@ -25,11 +25,11 @@ declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$RADIX_DIR/silva/amalgama"
 )
-declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "filum" "via" "xar"
-    "friatio" "tabula_dispersa" "internamentum" "selectio" "stml"
-    "argumenta" "aedilis"
-)
+# SE-HOSPITANS: dependentiae propriae ab aedile ipso derivatae
+# (snippet commissum - ovum bootstrap fractum; regeneratio:
+# ./tools/fontes_generare.sh tools/aedilis_fontes_generata.sh
+#  tools/aedilis.c)
+source "$SCRIPT_DIR/aedilis_fontes_generata.sh"
 
 newest_header () {
     find "$RADIX_DIR/include" -name '*.h' -newer "$1" 2>/dev/null | head -1

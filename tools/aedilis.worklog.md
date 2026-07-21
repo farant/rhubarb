@@ -1,5 +1,27 @@
 # aedilis worklog
 
+## 2026-07-21 — self-hosting: aedilis_struere.sh derives itself
+
+First of the Tier-1 conversions (29 scripts carry the hand
+RADIX_FONTES pattern; census 2026-07-21). New GENERIC generator
+tools/fontes_generare.sh (<exitus.sh> <fons.c>... → union of
+closures → lib basenames snippet); aedilis_struere.sh now sources
+the committed tools/aedilis_fontes_generata.sh — the spec's own
+prophecy ("aedilis will one day emit its own") fulfilled. The
+bootstrap egg is broken by COMMITTING the snippet: fresh checkout
+builds from it; only regeneration needs bin/aedilis.
+
+The derived list matched my hand list exactly (13) — including
+selectio, which I originally discovered via a Phase-0 link error
+and derivation now finds through stml.c's include. Config gained
+silva/amalgama in inclusa so "silva.h" stops classifying as a
+system header in the self-manifest; the amalgam then derives as a
+real object (adjacent-dir probe) but the 1MB walk-cap keeps it
+unparsed and the lib/-only snippet filter keeps the script's
+special amalgam handling. Gate re-certified after the config
+change. gesta/fontes_generare.sh predates the generic tool and
+can migrate to it during the bench batch.
+
 ## 2026-07-20 — Phase C (consumers + seal)
 
 **The first hand list is RETIRED — and aedilis's first act was to
