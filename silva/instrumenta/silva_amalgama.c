@@ -837,7 +837,11 @@ silva_amalgama_currere (
             chorda_aedificator_appendere_chorda(totum, *c);
             chorda_aedificator_appendere_literis(totum, ">\n");
         }
-        /* caput manu scriptum VERBATIM (vanilla C89 - S43) */
+        /* caput manu scriptum VERBATIM (vanilla C89 - S43);
+         * NIHIL = sine capite manuali (ligator genericus - Phasis
+         * amalgamatis D: fasciculi domestici caput generatum
+         * separatim ferunt) */
+        si (manifestum->via_capitis != NIHIL)
         {
             character via_capitis[VIA_MAXIMA];
             i8* caput;

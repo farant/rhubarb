@@ -612,3 +612,38 @@ no-space-before-paren form fired immediately: _format_duplex).
 The M2 maintenance rule ("new consumer of an excluded fn → delete
 its entry by hand") is retired: regenerate and the entry falls out
 on its own.
+
+## 2026-07-21 — AMALGAMA Phase D RELATIO (generic bundler) — ARC CLOSED
+
+Fran's original use case ships: ./tools/amalgama_ligare.sh
+<titulus> <fons.c>... → build/amalgamata/<titulus>/<titulus>.{h,c}
+(generated, never committed — the consumer exports them). House
+tier: API original, latina inlined, self-contained pair.
+
+Mechanism delta = exactly the ~5 lines the Phase 0 spike predicted:
+via_capitis NIHIL skips the verbatim-caput section; all three
+existing amalgams byte-identical under the guard. The ligator
+(tools/amalgama_ligator.c) builds a DEGENERATE manifest and feeds
+the SHARED mechanism twice — capita-only run → .h (topo-ordered
+concatenation), full run → .c — zero new emission code, S41
+inherited free.
+
+Driver refusals (all loud, all named): vendor in closure, textual
+.c inclusion, Objective-C (proven firing on the fenestra closure),
+absent/generated files, cycles, >512 entries. Gates per bundle:
+full-severity standalone compile + consumer TU including only the
+.h + nm symbol-set equality vs the union of individually compiled
+objects (nothing lost, nothing invented).
+
+**First-contact crop, S41 edition**: the very first bundle refused
+on `_est_spatium` — a static defined in BOTH lib/selectio.c and
+lib/stml.c. The class only amalgamation exposes (exire's struct-
+field rename was the tessera-era sibling); fixed at source
+(_est_spatium_selectoris), selectio green, FULL SUITE 103/103.
+The bundler is already an instrument: every bundle run is a
+cross-file static-collision audit of its closure.
+
+Proof bundles: stml (9 capita + 9 corpora, 344KB) and json, both
+VERIFICATUM. Named v2 futures (on pull): .m closures, vendor
+passthrough, bundle-level renaming via the renamer extraction
+(rung 3), stable-order preference for committed bundles.

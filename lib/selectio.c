@@ -96,7 +96,7 @@ nomen structura {
  * ================================================== */
 
 interior b32
-_est_spatium (character c)
+_est_spatium_selectoris (character c)
 {
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
@@ -164,7 +164,7 @@ _parser_praeterire (SelectioParser* parser)
 interior vacuum
 _parser_praeterire_spatium (SelectioParser* parser)
 {
-    dum (_est_spatium(_parser_currens(parser))) {
+    dum (_est_spatium_selectoris(_parser_currens(parser))) {
         _parser_praeterire(parser);
     }
 }
@@ -563,7 +563,7 @@ _parser_legere_sequentia (SelectioParser* parser)
     /* Legere reliquos selectores compositos cum combinatoribus */
     dum (!_parser_ad_finem(parser)) {
         /* Verificare spatium (potentialis combinator descendens) */
-        habuit_spatium = _est_spatium(_parser_currens(parser));
+        habuit_spatium = _est_spatium_selectoris(_parser_currens(parser));
         _parser_praeterire_spatium(parser);
 
         si (_parser_ad_finem(parser)) {
