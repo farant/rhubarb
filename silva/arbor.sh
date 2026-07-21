@@ -23,10 +23,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$SILVA_DIR/fontes"
 )
-declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio" "internamentum"
-)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$SILVA_DIR/arbor_fontes_generata.sh"
 
 # Obiecta VETUSTA capitibus novis = valores enum generum
 # renumerati SILENTER falsi (inventum M2c Chunk B: resolutor

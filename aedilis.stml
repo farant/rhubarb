@@ -8,6 +8,8 @@
     <via (>vendor
     <via (>gesta/fontes
     <via (>silva/amalgama
+    <via (>silva/instrumenta
+    <via (>officina/fontes
   </inclusa>
   <vexilla>
     <vexillum! (>-std=c89

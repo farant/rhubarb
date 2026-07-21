@@ -27,10 +27,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$SILVA_DIR/fontes"
 )
 
-declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio"
-)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$SILVA_DIR/lustrum_fontes_generata.sh"
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"

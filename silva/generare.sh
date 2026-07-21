@@ -31,10 +31,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$SILVA_DIR/fontes"
     "-I$SILVA_DIR/instrumenta"
 )
-declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio" "internamentum" "selectio" "stml"
-)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$SILVA_DIR/generare_fontes_generata.sh"
 
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
@@ -52,6 +50,10 @@ for src in "$SILVA_DIR"/instrumenta/*.c; do
     # silva_amalgama (mechanismus amalgamatoris) fontes postulat -
     # generator eo non utitur; amalgamare.sh id compilat
     if [ "$base" = "silva_amalgama" ]; then continue; fi
+    # nexus_ordines amalgama postulat (symbola silva_c89_*) -
+    # generator eo non utitur; fractura latens ab aera LEGATUS,
+    # censu aedilis 2026-07-21 detecta
+    if [ "$base" = "nexus_ordines" ]; then continue; fi
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
         echo "  [silva] $base.c"
