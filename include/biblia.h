@@ -1,6 +1,8 @@
 #ifndef BIBLIA_H
 #define BIBLIA_H
 
+/* aedilis: corpus lib/biblia_dr.c */
+
 #include "latina.h"
 #include "chorda.h"
 

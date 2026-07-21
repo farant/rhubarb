@@ -11,6 +11,8 @@
 #ifndef LAPIFEX_C89_H
 #define LAPIFEX_C89_H
 
+/* aedilis: corpus lib/lapifex_c89_grammatica.c */
+
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"

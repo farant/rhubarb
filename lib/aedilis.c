@@ -954,6 +954,24 @@ aedilis_derivare (Piscina* piscina,
                 _obiectum_addere(&machina, reliquum, caput_vacuum,
                     AEDILIS_ORIGO_ANNOTATIO);
             }
+            alioquin si (chorda_aequalis_literis(verbum, "corpus")
+                && reliquum.mensura > 0)
+            {
+                /* caput implementatorem suum declarat (verbum in
+                 * capitibus domesticum; cum proba conventionis
+                 * COMPONITUR, eam non substituit). Ambulatur -
+                 * contra obiectum annotatum. Absens = annotatio
+                 * putrida, recusatio. */
+                si (!_existit_sub_radice(configuratio, reliquum,
+                        piscina))
+                {
+                    _causam_ponere(causa_out, piscina,
+                        "corpus absens: ", reliquum);
+                    redde NIHIL;
+                }
+                _obiectum_addere(&machina, reliquum, fons,
+                    AEDILIS_ORIGO_CORPUS);
+            }
             alioquin si (chorda_aequalis_literis(verbum,
                     "vexillum") && reliquum.mensura > 0)
             {
@@ -1018,6 +1036,7 @@ _origo_titulus (AedilisOrigo origo)
         casus AEDILIS_ORIGO_CONFIGURATIO: redde "configuratio";
         casus AEDILIS_ORIGO_ANNOTATIO:    redde "annotatio";
         casus AEDILIS_ORIGO_ORACULUM:     redde "oraculum";
+        casus AEDILIS_ORIGO_CORPUS:       redde "corpus";
         casus AEDILIS_ORIGO_DERIVATUM:
         ordinarius:                       redde "derivatum";
     }

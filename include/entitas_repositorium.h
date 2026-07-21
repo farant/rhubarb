@@ -1,6 +1,8 @@
 #ifndef ENTITAS_REPOSITORIUM_H
 #define ENTITAS_REPOSITORIUM_H
 
+/* aedilis: corpus lib/entitas_repositorium_impl.c */
+
 #include "latina.h"
 #include "entitas.h"
 #include "chorda.h"

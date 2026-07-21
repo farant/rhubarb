@@ -1,6 +1,9 @@
 #ifndef PERSISTENTIA_H
 #define PERSISTENTIA_H
 
+/* aedilis: corpus lib/persistentia_memoria.c */
+/* aedilis: corpus lib/persistentia_nuntium.c */
+
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

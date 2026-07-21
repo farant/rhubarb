@@ -1,6 +1,8 @@
 #ifndef FENESTRA_H
 #define FENESTRA_H
 
+/* aedilis: corpus lib/fenestra_textus.c */
+
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

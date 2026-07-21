@@ -1,5 +1,40 @@
 # aedilis worklog
 
+## 2026-07-21 — the `corpus` verb: headers declare their own bodies
+
+Fran's instinct, and the taxonomy's actual answer: "which files
+implement me" is a SITE-LOCAL fact about the header, so it belongs
+in the header — the irregularia went to config only because the
+gate discovered them via link failures and config was the fastest
+channel. First engine change since Phase B, and a small one:
+
+- New annotation verb for headers: `aedilis: corpus lib/x.c` —
+  new origo AEDILIS_ORIGO_CORPUS. Semantics vs `obiectum`:
+  corpus objects are WALKED (their includes join the closure;
+  1MB cap still protects — biblia_dr/glr_tabula ride it), and an
+  absent corpus is a REFUSAL (a header claiming a missing
+  implementer is a rotted annotation, not a pending generation).
+  caput field = the annotating file (self-documenting manifests).
+- Annotations COMPOSE with the convention probe instead of
+  replacing it (irregulare replaced probe wholesale) — so most
+  rules shrank to their genuinely exceptional part: fenestra
+  needs only the fenestra_textus line (probe still finds
+  fenestra_macos.m by variant), nuntium_schema only the generare
+  line, arbor2_glr only the tabula line, calendarium only
+  sanctorale. Nine annotation lines across eight headers replaced
+  ~20 config lines; irregularia section now EMPTY (mechanism kept
+  for unowned headers / future per-variant splits).
+- Migration proven semantics-preserving: --enumerare closures for
+  tempus/nuntium_rotunda/libri byte-identical before vs after.
+- The verb name deliberately echoes legati's corpus tool: the
+  header is the declaration, the corpus is where the body lives —
+  two tools, one word, one meaning.
+- Differentia symmetry holds free: corpus objects are walked in
+  the silva lane AND -MM'd in the union (the skip only exempts
+  ANNOTATIO). Known pre-existing micro-asymmetry: cap-skipped
+  objects still get -MM'd in the union — live-proven harmless
+  (their headers are already in capita via other paths).
+
 ## 2026-07-21 — the Tier-1 batch: 23 launchers source derived truth
 
 All tool launchers converted in three subtree passes (silva 12,

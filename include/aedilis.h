@@ -90,7 +90,12 @@ nomen enumeratio {
                                           * commento fontis (NB hic
                                           * ancoram ipsam scribere
                                           * = se-annotatio!) */
-    AEDILIS_ORIGO_ORACULUM               /* cursus -MM (.m) */
+    AEDILIS_ORIGO_ORACULUM,              /* cursus -MM (.m) */
+    AEDILIS_ORIGO_CORPUS                 /* annotatio corporis IN
+                                          * CAPITE: implementator
+                                          * declaratus - AMBULATUR
+                                          * (limes 1MB manet);
+                                          * absens = recusatio */
 } AedilisOrigo;
 
 nomen structura {

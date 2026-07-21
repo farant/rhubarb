@@ -17,6 +17,8 @@
 #ifndef NUNTIUM_SCHEMA_H
 #define NUNTIUM_SCHEMA_H
 
+/* aedilis: corpus lib/nuntium_schema_generare.c */
+
 #include "latina.h"
 #include "chorda.h"
 #include "piscina.h"

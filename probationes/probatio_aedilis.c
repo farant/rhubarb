@@ -88,10 +88,26 @@ _extractor_fixturarum (vacuum* datum, constans character* via,
     {
         _fix_addere(*annotationes_out, "ignotum quid", piscina);
     }
-    alioquin si (strstr(via, "include/alpha.h") != NIHIL
-        || strstr(via, "include/beta.h") != NIHIL
+    alioquin si (strstr(via, "fons/corpus_malus.c") != NIHIL)
+    {
+        _fix_addere(*annotationes_out,
+            "corpus lib/nusquam_est.c", piscina);
+    }
+    alioquin si (strstr(via, "include/alpha.h") != NIHIL)
+    {
+        /* caput implementatorem alterum declarat (verbum corpus) */
+        _fix_addere(*annotationes_out,
+            "corpus lib/alpha_socius.c", piscina);
+    }
+    alioquin si (strstr(via, "lib/alpha_socius.c") != NIHIL)
+    {
+        /* corpus AMBULATUR: directiva eius clausurae accedit */
+        _fix_addere(*directivae_out, "epsilon.h", piscina);
+    }
+    alioquin si (strstr(via, "include/beta.h") != NIHIL
         || strstr(via, "include/gamma.h") != NIHIL
-        || strstr(via, "include/delta.h") != NIHIL)
+        || strstr(via, "include/delta.h") != NIHIL
+        || strstr(via, "include/epsilon.h") != NIHIL)
     {
         /* capita fixturarum: sine directivis */
     }
@@ -426,8 +442,19 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(fructus->varians, "macos");
 
         /* obiecta: alpha (conventio), beta_macos (varians),
-         * delta_verum (irregulare), generatum (annotatio) */
-        CREDO_AEQUALIS_I32(xar_numerus(fructus->obiecta), IV);
+         * delta_verum (irregulare), generatum (annotatio),
+         * alpha_socius (corpus ex capite) */
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->obiecta), V);
+
+        /* corpus: caput implementatorem declarat; COMPONITUR cum
+         * proba (alpha.c manet) et AMBULATUR (epsilon in capitibus
+         * ambulationem probat) */
+        obiectum = _obiectum_invenire(fructus,
+            "lib/alpha_socius.c");
+        CREDO_NON_NIHIL(obiectum);
+        CREDO_AEQUALIS_I32(obiectum->origo, AEDILIS_ORIGO_CORPUS);
+        CREDO_CHORDA_AEQUALIS_LITERIS(obiectum->caput,
+            "include/alpha.h");
 
         obiectum = _obiectum_invenire(fructus, "lib/alpha.c");
         CREDO_NON_NIHIL(obiectum);
@@ -461,10 +488,10 @@ s32 principale (vacuum)
             AEDILIS_ORIGO_ANNOTATIO);
         CREDO_VERUM(obiectum->absens);
 
-        /* capita quinque (alpha beta gamma delta + librum.h
-         * vendicatum - sextus differentiae completus); systema
+        /* capita sex (alpha beta gamma delta + librum.h
+         * vendicatum + epsilon ex ambulatione corporis); systema
          * unum; vendor unus cum vexillis; vexillum annotatum unum */
-        CREDO_AEQUALIS_I32(xar_numerus(fructus->capita), V);
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->capita), VI);
         CREDO_AEQUALIS_I32(xar_numerus(fructus->systemata), I);
         CREDO_CHORDA_AEQUALIS_LITERIS(
             *(chorda*)xar_obtinere(fructus->systemata, ZEPHYRUM),
@@ -528,6 +555,18 @@ s32 principale (vacuum)
         CREDO_NIHIL(fructus);
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("ignota", piscina));
+
+        /* corpus absens = annotatio putrida, recusatio */
+        causa.datum = NIHIL;
+        causa.mensura = ZEPHYRUM;
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/corpus_malus.c", NIHIL,
+            _extractor_fixturarum, NIHIL, &causa);
+        CREDO_NIHIL(fructus);
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("corpus absens", piscina));
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("nusquam_est", piscina));
     }
 
     /* ========================================================
@@ -638,7 +677,7 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(sectio);
         obiecta = stml_invenire_omnes_liberos(sectio, "obiectum",
             piscina);
-        CREDO_AEQUALIS_I32(xar_numerus(obiecta), IV);
+        CREDO_AEQUALIS_I32(xar_numerus(obiecta), V);
 
         /* absens ut attributum boolean; vexillum crudum legibile */
         numerus = xar_numerus(obiecta);
@@ -671,6 +710,13 @@ s32 principale (vacuum)
                 CREDO_CHORDA_AEQUALIS_LITERIS(
                     stml_textus_internus(vexillum, piscina),
                     "-framework Cocoa");
+            }
+            alioquin si (chorda_aequalis_literis(*valor,
+                    "lib/alpha_socius.c"))
+            {
+                valor = stml_attributum_capere(nodus, "origo");
+                CREDO_NON_NIHIL(valor);
+                CREDO_CHORDA_AEQUALIS_LITERIS(*valor, "corpus");
             }
         }
     }
