@@ -30,10 +30,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$OFF_DIR/instrumenta"
 )
 
-declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio"
-)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$OFF_DIR/vindex_fontes_generata.sh"
 
 # capita mutata sine recompilo = corruptio ABI (excubitor:
 # vindex_onerator.o/amalgama_officina.o stala post silva.h v0.2 -

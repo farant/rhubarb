@@ -40,10 +40,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$OFF_DIR/fontes"
 )
 
-declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio"
-)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$OFF_DIR/cursor_fontes_generata.sh"
 
 newest_header () {
     find "$RADIX_DIR/include" "$OFF_DIR/fontes" \

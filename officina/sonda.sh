@@ -32,11 +32,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$OFF_DIR/instrumenta"
 )
 
-declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio" "internamentum" "json" "tabellarius" "similitudo"
-    "sigillum" "vigilia"
-)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$OFF_DIR/sonda_fontes_generata.sh"
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"

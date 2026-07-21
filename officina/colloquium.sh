@@ -29,10 +29,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$OFF_DIR/instrumenta"
 )
 
-declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio"
-)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$OFF_DIR/colloquium_fontes_generata.sh"
 
 # capita mutata sine recompilo = corruptio ABI (inventum v0.2;
 # EXCUBITOR hanc plagulam ARMATAM nominavit - sessio.o stalum +
