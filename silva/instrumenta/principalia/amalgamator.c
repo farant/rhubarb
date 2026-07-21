@@ -31,86 +31,10 @@ interior constans character* constans SERVANDA_FRIATIONIS[] = {
  * consumptas nominatim demittit. Indices ex compilatore ipso lectae
  * (-Wunused-function harvest); functio nova consumpta = introitum
  * delere (compilatio id clamat). */
-interior constans character* constans EXCLUDENDA_PISCINAE[] = {
-    "piscina_conari_allocare", "piscina_conari_allocare_ordinatum",
-    "piscina_generare_certae_magnitudinis", "piscina_notare",
-    "piscina_potesne_allocare", "piscina_reficere",
-    "piscina_reliqua_antequam_cresca_alvei",
-    "piscina_summa_inutilis_allocatus",
-    NIHIL
-    /* additiones I: summa_usus + summa_apex_usus resurrectae
-     * (telemetria publica silva.h) - in NON_STATICA quoque.
-     * additiones II: piscina_vacare + _catena_alveus_vacare
-     * resurrectae (reusus piscinarum percursus, scala tsv rung 2
-     * 2026-07-14) - vacare in NON_STATICA quoque */
-};
-
-interior constans character* constans EXCLUDENDA_CHORDAE[] = {
-    /* chorda_aequalis resurrecta (fluxus tabula titulorum,
-     * FLUXUS-0 tractus 2) */
-    "chorda_aequalis_case_insensitivus",
-    "chorda_aequalis_literis", "chorda_camelus",
-    "chorda_character_ad", "chorda_concatenare", "chorda_continet",
-    "chorda_duplicare", "chorda_ex_buffer",
-    "chorda_ex_bytes_legibilis", "chorda_ex_f64", "chorda_ex_s32",
-    "chorda_fissio", "chorda_fissio_chorda", "chorda_friare",
-    "chorda_incipit", "chorda_invenire", "chorda_invenire_index",
-    "chorda_invenire_ultimum", "chorda_invenire_ultimum_index",
-    "chorda_invertere", "chorda_iungere", "chorda_kebab",
-    "chorda_maiuscula", "chorda_minuscula", "chorda_pascalis",
-    "chorda_pascalis_serpens", "chorda_praecidere",
-    "chorda_praecidere_dextram", "chorda_praecidere_sinistram",
-    "chorda_praecidi_laterale", "chorda_serpens",
-    "chorda_substituere", "chorda_terminatur", "chorda_ut_cstr",
-    "chorda_ut_f64", "chorda_ut_i32", "chorda_ut_s32",
-    "chorda_vacua", "chorda_numerare_occurrentia", "chorda_sectio",
-    "_extrahere_verba", NIHIL
-};
-
-interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
-    "chorda_aedificator_appendere_f64",
-    "chorda_aedificator_appendere_hex_i32",
-    "chorda_aedificator_appendere_i32",
-    "chorda_aedificator_appendere_indentationem",
-    "chorda_aedificator_appendere_lineam_novam",
-    "chorda_aedificator_appendere_literis_evasus_json",
-    "chorda_aedificator_appendere_repetita",
-    "chorda_aedificator_appendere_s32",
-    "chorda_aedificator_destruere",
-    "chorda_aedificator_indentatio_gradus",
-    "chorda_aedificator_longitudo",
-    "chorda_aedificator_pop_indentationem",
-    "chorda_aedificator_push_indentationem",
-    "chorda_aedificator_reset", "chorda_aedificator_spectare",
-    "chorda_aedificator_appendere_evasus_json",
-    "_format_integer_s32", "_format_integer_i32", "_format_duplex",
-    "_evadere_json", NIHIL
-};
-
-interior constans character* constans EXCLUDENDA_TABULAE[] = {
-    "tabula_dispersa_continet_literis",
-    "tabula_dispersa_iterator_initium",
-    /* tabula_dispersa_numerus NON exclusa - typationes_numerus M0b
-     * ea utitur */
-    "tabula_dispersa_iterator_proximum",
-    "tabula_dispersa_status_imprimere", "tabula_dispersa_vacare",
-    "tabula_friare_multiplicatio",
-    "tabula_dispersa_invenire_literis", "_friare_literis",
-    "_invenire_slotum_literis", "_aequalis_literis_chorda", NIHIL
-};
-
-interior constans character* constans EXCLUDENDA_XARIS[] = {
-    "xar_addere_multos", "xar_capacitas", "xar_continet",
-    "xar_copiare_ad_tabulam",
-    "xar_destruere", "xar_invenire", "xar_invertere",
-    "xar_iterator_finis", "xar_iterator_initium",
-    "xar_iterator_proximum", "xar_obtinere_s", "xar_ponere",
-    "xar_ponere_vexilla", "xar_quaerere_binarie",
-    "xar_quaerere_binarie_index", "xar_removere_cum_ultimo",
-    "xar_removere_ultimum", "xar_status_imprimere", "xar_tollere",
-    "xar_vacuum_est", "xar_obtinere_vel_creare", "xar_invenire_index",
-    NIHIL
-};
+/* Excludenda: GENERATA (messis compilatoris - punctum fixum
+ * unused-function; introitus stali sponte cadunt in regeneratione).
+ * Regeneratio: ./tools/amalgama_excludenda_generare.sh silva */
+#include "excludenda_generata.h"
 
 /* Listae plagularum: GENERATAE ab aedile (unio clausurarum radicum
  * propriarum; ordo capitum = topologia stabilis - S42 dimidiatum:

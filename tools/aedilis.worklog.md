@@ -576,3 +576,39 @@ derivation — drift clamat.
 Steady state: add an include/new fontes file → regenerate snippet
 → amalgamare gates verify. The hand-maintained surface is now
 pure policy with named causes.
+
+## 2026-07-21 — excludenda harvest (rung 2 of the ladder)
+
+tools/amalgama_excludenda_generare.sh: excludenda arrays now
+COMPILER-HARVESTED to fixpoint, emitted as excludenda_generata.h
+(same EXCLUDENDA_* macro names — policy mapping untouched); the
+three manifests swapped ~190 hand-recorded names for one #include
+each. bases_excludendae() joined fontes_politica.sh; friatio's
+servanda stays hand (keep-only-one is policy, not a harvestable
+fact).
+
+**TWO-SIGNAL discovery** (the crop of the day): harvest-from-empty
+needs more than unused-function warnings. friatio's servanda drops
+fnv1a_literis/djb2 etc., so their CALLERS in tabula_dispersa hit
+implicit-declaration ERRORS, not warnings — and those callers are
+exactly what the hand lists had excluded. Signum A = unused
+warning → exclude the function; signum B = implicit-decl error →
+exclude the ENCLOSING CALLER (nearest preceding column-0
+definition line). Compile failure with neither signal = loud
+refusal (first version swallowed it and declared a false fixpoint
+at zero names — silently-wrong caught by the vectis gate).
+
+**VERDICT**: fixpoint in 4/7/7 rounds; harvested sets IDENTICAL to
+the hand sets (tessera 34=34, silva 101=101, officina 105=105 —
+set equality verified name-by-name) and all three amalgams
+BYTE-IDENTICAL. (First comparison scared: "55 vs 101" — hand
+arrays pack two names per line; the count was lines, not names.
+Exit-code-law cousin: count the THING, not its container.)
+
+Classifier: basis by longest original-name prefix; _-prefixed
+static helpers by definition file (column-0 `name(` — the
+no-space-before-paren form fired immediately: _format_duplex).
+
+The M2 maintenance rule ("new consumer of an excluded fn → delete
+its entry by hand") is retired: regenerate and the entry falls out
+on its own.

@@ -32,3 +32,9 @@ excludenda_pro() {
         *)                  echo "NIHIL" ;;
     esac
 }
+
+# bases quarum excludenda COMPILATORE metuntur (messis: tools/
+# amalgama_excludenda_generare.sh)
+bases_excludendae() {
+    echo "piscina chorda_aedificator utf8"
+}

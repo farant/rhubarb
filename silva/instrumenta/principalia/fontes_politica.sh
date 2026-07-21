@@ -36,3 +36,10 @@ excludenda_pro() {
         *)                  echo "NIHIL" ;;
     esac
 }
+
+# bases quarum excludenda COMPILATORE metuntur (messis: tools/
+# amalgama_excludenda_generare.sh); friatio = servanda (politica
+# manualis, numquam messa)
+bases_excludendae() {
+    echo "piscina chorda chorda_aedificator tabula_dispersa xar"
+}
