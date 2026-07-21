@@ -1,17 +1,20 @@
 #!/bin/bash
 # speculum_generare.sh - generator fontium speculi
 #
-# Colligit copiam recompilationis app (clausura vera per clang -MM),
-# worklogs, scripta, provenientiam - et capsulam emittit in
-# build/speculum/<titulus>/ per bin/capsula_generare.
+# Colligit copiam recompilationis app (clausura vera AB AEDILE -
+# manifestum artificium veritatis), worklogs, scripta,
+# provenientiam - et capsulam emittit in build/speculum/<titulus>/
+# per bin/capsula_generare.
 #
 # USUS (a compile_tests.sh invocatum):
-#   SPECULUM_VEXILLA="<vexilla>" SPECULUM_INCLUSA="<-I...>" \
-#   tools/speculum_generare.sh <titulus> <app.c> <fabrica> \
-#       -- <fontes .c...> -- <fontes .m...> -- <vendor...>
+#   [SPECULUM_VEXILLA="<vexilla>"] \
+#   tools/speculum_generare.sh <titulus> <app.c> <fabrica>
 #
 # Decisiones: project-specs/speculum-spec-v2.md (domus = build/,
 # compressio obligatoria, quine enumeratur non inseritur).
+# AB AEDILE (2026-07-21): listae fontium non iam traduntur -
+# clausura ex manifesto aedilis legitur (copia recompilationis
+# HONESTA = clausura nexus, non mundus necte-omnia).
 
 # (sine set -u: bash 3.2 in macOS tabulata vacua "${x[@]}" sub eo
 # frangit; probationes explicitae infra)
@@ -23,36 +26,26 @@ NULLUS="\033[0m"
 
 si_fracta() { echo -e "${RUBER}speculum_generare: $1${NULLUS}" >&2; exit 1; }
 
-[ $# -ge 4 ] || si_fracta "argumenta desunt (titulus app fabrica -- fontes...)"
+[ $# -eq 3 ] || si_fracta "argumenta: <titulus> <app.c> <fabrica>"
 
-TITULUS="$1"; APP="$2"; FABRICA="$3"; shift 3
+TITULUS="$1"; APP="$2"; FABRICA="$3"
 [ -n "$TITULUS" ] || si_fracta "titulus vacuus"
 [ -f "$APP" ] || si_fracta "app non exstat: $APP"
-[ "${1:-}" == "--" ] && shift
 
-C_FONTES=()
-while [ $# -gt 0 ] && [ "$1" != "--" ]; do C_FONTES+=("$1"); shift; done
-[ $# -gt 0 ] && [ "$1" == "--" ] && shift
-OBJC_FONTES=()
-while [ $# -gt 0 ] && [ "$1" != "--" ]; do OBJC_FONTES+=("$1"); shift; done
-[ $# -gt 0 ] && [ "$1" == "--" ] && shift
-VENDOR_FONTES=("$@")
-
-read -ra INCLUSA <<< "${SPECULUM_INCLUSA:-}"
 VEXILLA="${SPECULUM_VEXILLA:-}"
 
 STAGE="build/speculum/$TITULUS"
 SECTIO="speculi_$TITULUS"
 EXITUS_C="$STAGE/capsula_${SECTIO}.c"
-
-FONTES=("${C_FONTES[@]}" "${OBJC_FONTES[@]}" "$APP")
+BASIS=$(basename "$APP" .c)
+MANIFESTUM="build/aedilis/$BASIS/manifestum.stml"
 
 # ------------------------------------------------------------------
 # porta recentiae: si nihil recentius quam capsula emissa, salta
 # (provenientia inter mutationes fontium consenescit - acceptum)
 # ------------------------------------------------------------------
 if [ -f "$EXITUS_C" ]; then
-    RECENTIOR=$(find "${FONTES[@]}" "$FABRICA" "$0" include lib \
+    RECENTIOR=$(find "$APP" "$FABRICA" "$0" aedilis.stml include lib \
         -newer "$EXITUS_C" 2>/dev/null | head -1)
     if [ -z "$RECENTIOR" ]; then
         echo -e "${CAERULEUS}speculum ($TITULUS): recens${NULLUS}"
@@ -64,22 +57,33 @@ INITIUM=$(date +%s)
 echo -e "${CAERULEUS}speculum ($TITULUS): genero...${NULLUS}"
 
 # ------------------------------------------------------------------
-# clausura vera per clang -MM (forma benedicta: gesta/tabularium.sh)
-# viae absolutae = systema (abiciuntur); vendor/ -> exclusa
+# clausura vera ab aedile: derivatio recens -> manifestum ->
+# sectiones obiecta/capita/vendores (awk sectionum-conscium).
+# systemata omissa (capita systematis non sunt plagulae nostrae);
+# obiecta sub build/ = generata (annotationes) -> exclusa.
 # ------------------------------------------------------------------
-CRUDA=$(clang -MM "${INCLUSA[@]}" "${FONTES[@]}" 2>/dev/null \
-    | awk '{ if (sub(/\\$/,"")) printf "%s ", $0; else print }')
-CLAUSURA=$(printf '%s\n' "$CRUDA" | tr ' ' '\n' \
-    | grep -v ':$' | grep -v '^$' | grep -v '^/' | sort -u)
+[ -x bin/aedilis ] || ./tools/aedilis_struere.sh || si_fracta "aedilis non structus"
+./bin/aedilis "$APP" > /dev/null || si_fracta "derivatio aedilis fracta: $APP"
+[ -f "$MANIFESTUM" ] || si_fracta "manifestum deest: $MANIFESTUM"
 
-if [ -z "$CLAUSURA" ]; then
-    # garrulum, numquam caecum: superserie glob reccidimus
-    echo -e "${FLAVUS}speculum: clang -MM vacuum - superserie utor${NULLUS}" >&2
-    CLAUSURA=$( { printf '%s\n' "${FONTES[@]}"; ls include/*.h; } | sort -u )
-fi
+PARTES=$(awk -F'"' '
+    /<obiecta>/   { s = "o" }  /<capita>/   { s = "c" }
+    /<systemata>/ { s = "s" }  /<vendores>/ { s = "v" }
+    s == "o" && /<obiectum via=/ { print "O\t" $2 }
+    s == "c" && /<caput via=/    { print "C\t" $2 }
+    s == "v" && /<fons via=/     { print "V\t" $2 }
+' "$MANIFESTUM")
 
-VENDOR_CLAUSA=$(printf '%s\n' "$CLAUSURA" | grep '^vendor/' || true)
-CLAUSURA=$(printf '%s\n' "$CLAUSURA" | grep -v '^vendor/' || true)
+CLAUSURA=$( { echo "$APP"
+    printf '%s\n' "$PARTES" | awk -F'\t' \
+        '$1 != "V" && $2 !~ /^build\// && $2 !~ /^vendor\//  { print $2 }'
+    } | sort -u )
+VENDOR_CLAUSA=$(printf '%s\n' "$PARTES" | awk -F'\t' \
+    '($1 == "V") || ($2 ~ /^vendor\//) { print $2 }' | sort -u)
+GENERATA=$(printf '%s\n' "$PARTES" | awk -F'\t' \
+    '$1 == "O" && $2 ~ /^build\// { print $2 }' | sort -u)
+
+[ -n "$CLAUSURA" ] || si_fracta "clausura vacua ex manifesto"
 
 # ------------------------------------------------------------------
 # documenta: worklog pro omni fonte lib/ incluso
@@ -144,17 +148,6 @@ SORDIDUM="falsum"
 [ -n "$(git status --porcelain 2>/dev/null)" ] && SORDIDUM="verum"
 COMPILATOR=$(clang --version 2>/dev/null | head -1)
 
-OBIECTA=""
-for f in "${C_FONTES[@]}"; do
-    OBIECTA="$OBIECTA build/$(basename "$f" .c).o"
-done
-for f in "${OBJC_FONTES[@]}"; do
-    OBIECTA="$OBIECTA build/$(basename "$f" .m).o"
-done
-for f in "${VENDOR_FONTES[@]}"; do
-    OBIECTA="$OBIECTA build/$(basename "$f" .c).o"
-done
-
 {
     echo "app=$TITULUS"
     echo "plagula_app=$APP"
@@ -163,25 +156,36 @@ done
     echo "compilator=$COMPILATOR"
     echo "vexilla=$VEXILLA"
     echo "tempus=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-    echo "mandatum=clang $VEXILLA -Wno-overlength-strings ${SPECULUM_INCLUSA:-} $APP$OBIECTA -framework Cocoa -framework Security -framework WebKit -o bin/$(basename "$APP" .c)"
+    echo "mandatum=bash build/aedilis/$BASIS/struere.sh (manifestum: $MANIFESTUM; regeneratio: bin/aedilis $APP)"
 } > "$STAGE/speculum/proventus.txt"
+
+# manifestum aedilis ipsum in capsulam - speculum veritatem
+# dependentiarum suarum secum fert
+cp "$MANIFESTUM" "$STAGE/speculum/manifestum.stml"
 
 # ------------------------------------------------------------------
 # exclusa (TSV: via, magnitudo, cksum, causa)
 # quine: emissa ipsa enumeratur, corpus non inseritur (spec #17)
 # ------------------------------------------------------------------
 {
-    for f in "${VENDOR_FONTES[@]}"; do
-        [ -f "$f" ] || continue
-        printf '%s\t%s\t%s\tvendor\n' "$f" \
-            "$(wc -c < "$f" | tr -d ' ')" "$(cksum "$f" | awk '{print $1}')"
-    done
     if [ -n "$VENDOR_CLAUSA" ]; then
         while IFS= read -r f; do
             [ -f "$f" ] || continue
             printf '%s\t%s\t%s\tvendor\n' "$f" \
                 "$(wc -c < "$f" | tr -d ' ')" "$(cksum "$f" | awk '{print $1}')"
         done <<< "$VENDOR_CLAUSA"
+    fi
+    if [ -n "$GENERATA" ]; then
+        while IFS= read -r f; do
+            [ "$f" = "$EXITUS_C" ] && continue
+            if [ -f "$f" ]; then
+                printf '%s\t%s\t%s\tgeneratum (annotatio)\n' "$f" \
+                    "$(wc -c < "$f" | tr -d ' ')" \
+                    "$(cksum "$f" | awk '{print $1}')"
+            else
+                printf '%s\t0\t0\tgeneratum (annotatio, nondum)\n' "$f"
+            fi
+        done <<< "$GENERATA"
     fi
     for f in "${MAGNA[@]}"; do
         printf '%s\t%s\t%s\tmagnitudo>1MB\n' "$f" \
@@ -194,7 +198,7 @@ done
 # toml: viae explicitae (glob per-directorium etiam DIRECTORIA
 # congruebat - introitus vacui; index explicitus id occidit)
 # ------------------------------------------------------------------
-STATA=("${OMNIA[@]}" "speculum/fontes.txt" "speculum/proventus.txt" "speculum/exclusa.txt")
+STATA=("${OMNIA[@]}" "speculum/fontes.txt" "speculum/proventus.txt" "speculum/exclusa.txt" "speculum/manifestum.stml")
 GLOBAE=""
 while IFS= read -r f; do
     [ -z "$f" ] && continue

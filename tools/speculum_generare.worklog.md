@@ -1,5 +1,40 @@
 # speculum_generare.sh worklog
 
+## 2026-07-21 — the generator drinks from aedilis
+
+The closure now comes from the aedilis manifest instead of the
+generator's own clang -MM over compile_tests' passed
+link-everything lists. Contract shrank to three args (titulus,
+app, fabrica) — the `-- c -- objc -- vendor` list-passing and
+SPECULUM_INCLUSA are gone; run_speculum passes only
+SPECULUM_VEXILLA (provenance record).
+
+**The bundle became honest**: 303 → 80 plagulae, 9.2MB → 1.5MB
+generated .c, 2s generation. Speculum's charter is the honest
+rebuild set; the honest rebuild set IS the link closure, which
+-MM-over-everything never was. Consequences the truth-pins had to
+learn (probatio_speculum_fontium): count bounded both ways
+(L..CC), no vendor and no >1MB entries in exclusa (hospes'
+closure genuinely has none — those rows only existed because the
+whole SOURCE_FILES world was swept), mandatum= now points at the
+gate-proven aedilis script instead of a hand-assembled clang line.
+
+**New meta**: speculum/manifestum.stml rides IN the capsula — the
+mirror carries its own dependency manifest (DE tab can render it
+someday). Generated (annotated) objects under build/ land in
+exclusa as "generatum (annotatio)"; the quine keeps its own line.
+
+Parsing the manifest = 10-line section-aware awk (-F'"' on the
+via attribute) — bash-side consumption of the artifact of record,
+no CLI extension needed.
+
+Reminder relearned the hard way: -speculum-fumus CONFIRMS but the
+app keeps running — GUI smoke plumbing law applies (timeout/kill,
+never bare foreground). Also filtered suite runs regenerate the
+capsula but do NOT relink the wearer (name doesn't match filter)
+— a stale-binary fumus reads the OLD count; rebuild via
+./compile_tests.sh vitrea_hospes before believing the number.
+
 ## 2026-07-20 — Phase 0 (generator + build wiring + probatio)
 
 - **Staging+reuse design**: rather than teaching capsula_generare an

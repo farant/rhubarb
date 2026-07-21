@@ -579,9 +579,8 @@ run_speculum() {
             fi
         fi
 
-        if ! SPECULUM_VEXILLA="${GCC_FLAGS[*]}" SPECULUM_INCLUSA="${INCLUDE_FLAGS[*]}" \
-            tools/speculum_generare.sh "$titulus" "$app_file" "compile_tests.sh" \
-            -- "${SOURCE_FILES[@]}" -- "${OBJC_SOURCES[@]}" -- "${VENDOR_SOURCES[@]}"; then
+        if ! SPECULUM_VEXILLA="${GCC_FLAGS[*]}" \
+            tools/speculum_generare.sh "$titulus" "$app_file" "compile_tests.sh"; then
             echo -e "${RED}✗ speculum generatio fracta: $titulus${RESET}"
             return 1
         fi

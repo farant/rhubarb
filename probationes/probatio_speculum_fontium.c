@@ -59,7 +59,10 @@ probatio_aperire(Capsula* cap)
 {
     imprimere("  apertio et numerus...\n");
     CREDO_NON_NIHIL(cap);
-    CREDO_MAIOR_I32(capsula_numerus(cap), CC);
+    /* copia HONESTA ab aedile (clausura nexus, ~80), non mundus
+     * necte-omnia (~300) - pinna utrimque limitata */
+    CREDO_MAIOR_I32(capsula_numerus(cap), L);
+    CREDO_MINOR_I32(capsula_numerus(cap), CC);
 }
 
 interior vacuum
@@ -123,13 +126,26 @@ probatio_meta(Capsula* cap, Piscina* piscina)
     CREDO_VERUM(_continet(proventus.datum, "commissum="));
     CREDO_VERUM(_continet(proventus.datum, "vexilla=-std=c89"));
     CREDO_VERUM(_continet(proventus.datum, "tempus="));
-    CREDO_VERUM(_continet(proventus.datum, "mandatum=clang"));
+    /* mandatum = scriptum aedilis (via recompilationis vera,
+     * porta probata), non linea clang manu structa */
+    CREDO_VERUM(_continet(proventus.datum, "mandatum=bash"));
+    CREDO_VERUM(_continet(proventus.datum, "manifestum:"));
 
     exclusa = capsula_legere(cap, "speculum/exclusa.txt", piscina);
     CREDO_AEQUALIS_I32((i32)exclusa.status, (i32)CAPSULA_OK);
-    CREDO_VERUM(_continet(exclusa.datum, "vendor/sqlite3.c"));
-    CREDO_VERUM(_continet(exclusa.datum, "magnitudo>1MB"));
+    /* clausura honesta hospitis nec vendor nec >1MB fert - introitus
+     * quine solus semper adest */
     CREDO_VERUM(_continet(exclusa.datum, "generatum"));
+    CREDO_VERUM(_continet(exclusa.datum,
+        "capsula_speculi_hospes.c"));
+
+    /* manifestum aedilis in capsula - speculum veritatem
+     * dependentiarum suarum secum fert */
+    fontes = capsula_legere(cap, "speculum/manifestum.stml",
+        piscina);
+    CREDO_AEQUALIS_I32((i32)fontes.status, (i32)CAPSULA_OK);
+    CREDO_VERUM(_continet(fontes.datum, "aedilis-manifestum"));
+    CREDO_VERUM(_continet(fontes.datum, "lib/vitrea_macos.m"));
 
     fontes = capsula_legere(cap, "speculum/fontes.txt", piscina);
     CREDO_AEQUALIS_I32((i32)fontes.status, (i32)CAPSULA_OK);
