@@ -528,6 +528,7 @@ nomen structura {
     TabulaDispersa*               visa_obiectorum;
     TabulaDispersa*               visa_systematum;
     TabulaDispersa*               visa_vendorum;
+    TabulaDispersa*               textualia;      /* .c inclusa */
     Xar*                          pendentia;      /* chorda */
     Xar*                          variantes_effectivae;
 } _Machina;
@@ -593,8 +594,15 @@ _obiectum_addere (_Machina* machina, chorda via, chorda caput,
     /* obiecta annotata = veritas nexus DECLARATA, numquam
      * ambulata: dependentiae compilationis eorum generatoribus
      * suis pertinent (capsulae generatae 9MB parsare = 17s pro
-     * nihilo - inventum vestitoris vitreae). Cetera ambulantur. */
-    si (!absens && origo != AEDILIS_ORIGO_ANNOTATIO)
+     * nihilo - inventum vestitoris vitreae). Fontes > 1MB = data-
+     * ut-fons (biblia_dr 6.1MB: silva parsare = OOM; exemplar
+     * limitis speculi) - notantur, compilantur, nectuntur, numquam
+     * ambulantur. Cetera ambulantur. */
+    si (!absens && origo != AEDILIS_ORIGO_ANNOTATIO
+        && filum_mensura(chorda_ut_cstr(_iungere_binas(
+                machina->configuratio->radix, via,
+                machina->piscina), machina->piscina))
+            <= 1048576)
     {
         _chordam_addere(machina->pendentia, via);
     }
@@ -623,27 +631,27 @@ _vendor_tractare (_Machina* machina, chorda resoluta)
             sine_extensione);
         chorda_aedificator_appendere_literis(aedificator, ".c");
         fons = chorda_aedificator_finire(aedificator);
+        /* caput vendicatum in capita quoque (differentia contra
+         * -MM sextum capitum plenum postulat); numquam ambulatum */
+        si (!tabula_dispersa_continet(machina->visa_capitum,
+                resoluta))
+        {
+            AedilisCaput* caput;
+
+            (vacuum)tabula_dispersa_inserere(
+                machina->visa_capitum, resoluta, NIHIL);
+            caput = (AedilisCaput*)xar_addere(
+                machina->fructus->capita);
+            si (caput != NIHIL)
+            {
+                caput->via = resoluta;
+                caput->origo = AEDILIS_ORIGO_DERIVATUM;
+            }
+        }
         si (!_existit_sub_radice(machina->configuratio, fons,
                 machina->piscina))
         {
-            /* vendicatum solo capite (stb-classis): caput
-             * notatum, numquam ambulatum */
-            si (!tabula_dispersa_continet(machina->visa_capitum,
-                    resoluta))
-            {
-                AedilisCaput* caput;
-
-                (vacuum)tabula_dispersa_inserere(
-                    machina->visa_capitum, resoluta, NIHIL);
-                caput = (AedilisCaput*)xar_addere(
-                    machina->fructus->capita);
-                si (caput != NIHIL)
-                {
-                    caput->via = resoluta;
-                    caput->origo = AEDILIS_ORIGO_DERIVATUM;
-                }
-            }
-            redde;
+            redde;  /* solo capite (stb-classis) */
         }
     }
     alioquin
@@ -750,6 +758,7 @@ aedilis_derivare (Piscina* piscina,
         piscina, 64);
     machina.visa_vendorum = tabula_dispersa_creare_chorda(piscina,
         32);
+    machina.textualia = tabula_dispersa_creare_chorda(piscina, 32);
     machina.pendentia = _xar_chordarum(piscina);
 
     /* variantes effectivae: -varians dato = illa sola;
@@ -876,7 +885,16 @@ aedilis_derivare (Piscina* piscina,
             }
             _chordam_addere(machina.pendentia, resoluta);
 
-            si (chorda_terminatur(resoluta, suffixum_h))
+            si (!chorda_terminatur(resoluta, suffixum_h))
+            {
+                /* .c textualiter inclusum (persona_gen-classis):
+                 * symbola in includentem funduntur - obiectum
+                 * separatum symbola duplicaret; post punctum fixum
+                 * ex obiectis purgatur */
+                (vacuum)tabula_dispersa_inserere(machina.textualia,
+                    resoluta, NIHIL);
+            }
+            alioquin
             {
                 Xar* irregularia;
 
@@ -949,6 +967,40 @@ aedilis_derivare (Piscina* piscina,
                 redde NIHIL;
             }
         }
+    }
+
+    /* obiecta textualiter inclusa purgare (symbola iam in
+     * includentibus vivunt - duplicatio nexus aliter) */
+    {
+        Xar* purgata;
+        i32  i;
+        i32  numerus;
+
+        purgata = xar_creare(piscina,
+            (i32)magnitudo(AedilisObiectum));
+        numerus = xar_numerus(fructus->obiecta);
+        per (i = 0; i < numerus; i++)
+        {
+            AedilisObiectum* obiectum;
+
+            obiectum = (AedilisObiectum*)xar_obtinere(
+                fructus->obiecta, i);
+            si (tabula_dispersa_continet(machina.textualia,
+                    obiectum->via))
+            {
+                perge;
+            }
+            {
+                AedilisObiectum* locus;
+
+                locus = (AedilisObiectum*)xar_addere(purgata);
+                si (locus != NIHIL)
+                {
+                    *locus = *obiectum;
+                }
+            }
+        }
+        fructus->obiecta = purgata;
     }
 
     redde fructus;
@@ -1127,4 +1179,348 @@ aedilis_manifestum_scribere (constans AedilisFructus* fructus,
         intern);
 
     redde stml_scribere(radix, piscina, VERUM);
+}
+
+/* ====================================================
+ * Emissio scriptorum bash
+ * ==================================================== */
+
+/* Nomen obiecti planatum: lib/tcp_posix.c -> lib__tcp_posix.o
+ * (collisiones basium trans directoria impossibiles) */
+interior chorda
+_obiecti_nomen (chorda fons, Piscina* piscina)
+{
+    ChordaAedificator* aedificator;
+    i32 i;
+    i32 finis;
+
+    finis = fons.mensura;
+    dum (finis > 0 && fons.datum[finis - 1] != (i8)'.')
+    {
+        finis--;
+    }
+    si (finis > 0)
+    {
+        finis--;  /* punctum ipsum quoque demptum */
+    }
+    aedificator = chorda_aedificator_creare(piscina, 128);
+    per (i = 0; i < finis; i++)
+    {
+        si (fons.datum[i] == (i8)'/')
+        {
+            chorda_aedificator_appendere_literis(aedificator,
+                "__");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_character(aedificator,
+                (character)fons.datum[i]);
+        }
+    }
+    chorda_aedificator_appendere_literis(aedificator, ".o");
+    redde chorda_aedificator_finire(aedificator);
+}
+
+interior vacuum
+_scriptum_vexilla_iungere (ChordaAedificator* aedificator,
+    Xar* vexilla)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = xar_numerus(vexilla);
+    per (i = 0; i < numerus; i++)
+    {
+        si (i > 0)
+        {
+            chorda_aedificator_appendere_literis(aedificator, " ");
+        }
+        chorda_aedificator_appendere_chorda(aedificator,
+            *(chorda*)xar_obtinere(vexilla, i));
+    }
+}
+
+/* Vexillum in xar addere nisi iam adest (deduplicatio nexus) */
+interior vacuum
+_vexillum_unicum (Xar* xar, chorda vexillum)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = xar_numerus(xar);
+    per (i = 0; i < numerus; i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(xar, i),
+                vexillum))
+        {
+            redde;
+        }
+    }
+    _chordam_addere(xar, vexillum);
+}
+
+chorda
+aedilis_scriptum_scribere (constans AedilisFructus* fructus,
+    constans AedilisConfiguratio* configuratio, Piscina* piscina,
+    b32 solitarius, constans character* commissum)
+{
+    ChordaAedificator* s;
+    chorda             basis;
+    character          tempus_litterae[32];
+    i32                i;
+    i32                numerus;
+
+    basis = via_nomen_radix(via_nomen(fructus->scopus, piscina),
+        piscina);
+    s = chorda_aedificator_creare(piscina, 8192);
+
+    chorda_aedificator_appendere_literis(s, "#!/bin/bash\n");
+    chorda_aedificator_appendere_literis(s,
+        "# GENERATUM AB AEDILE - NE MANU EDITES\n# scopus: ");
+    chorda_aedificator_appendere_chorda(s, fructus->scopus);
+    chorda_aedificator_appendere_literis(s, "\n# varians: ");
+    chorda_aedificator_appendere_chorda(s, fructus->varians);
+    sprintf(tempus_litterae, "%ld", (longus)time(NIHIL));
+    chorda_aedificator_appendere_literis(s, "\n# generatum: ");
+    chorda_aedificator_appendere_literis(s, tempus_litterae);
+    si (commissum != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(s, " | commissum: ");
+        chorda_aedificator_appendere_literis(s, commissum);
+    }
+    chorda_aedificator_appendere_literis(s,
+        "\n# regeneratio: bin/aedilis ");
+    chorda_aedificator_appendere_chorda(s, fructus->scopus);
+    chorda_aedificator_appendere_literis(s,
+        solitarius ? " (-solitarius)\n" : "\n");
+    chorda_aedificator_appendere_literis(s,
+        "set -u\n"
+        "[ -f aedilis.stml ] || { echo \"AEDILIS: curre ex"
+        " radice repositorii\" >&2; exit 1; }\n\n");
+
+    chorda_aedificator_appendere_literis(s, "VEXILLA=\"");
+    _scriptum_vexilla_iungere(s, configuratio->vexilla);
+    chorda_aedificator_appendere_literis(s, "\"\nINCLUSA=\"");
+    numerus = xar_numerus(configuratio->inclusa);
+    per (i = 0; i < numerus; i++)
+    {
+        si (i > 0)
+        {
+            chorda_aedificator_appendere_literis(s, " ");
+        }
+        chorda_aedificator_appendere_literis(s, "-I");
+        chorda_aedificator_appendere_chorda(s,
+            *(chorda*)xar_obtinere(configuratio->inclusa, i));
+    }
+    chorda_aedificator_appendere_literis(s,
+        "\"\nOBIECTA_DIR=\"");
+    si (solitarius)
+    {
+        chorda_aedificator_appendere_literis(s,
+            "build/aedilis/");
+        chorda_aedificator_appendere_chorda(s, basis);
+        chorda_aedificator_appendere_literis(s, "/solitarius");
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(s,
+            "build/aedilis/obiecta");
+    }
+    chorda_aedificator_appendere_literis(s,
+        "\"\nEXITUS_DIR=\"build/aedilis/");
+    chorda_aedificator_appendere_chorda(s, basis);
+    chorda_aedificator_appendere_literis(s,
+        "\"\nmkdir -p \"$OBIECTA_DIR\" \"$EXITUS_DIR\"\n\n");
+
+    /* capita clausurae = copia vetustatis praecisa ex manifesto */
+    chorda_aedificator_appendere_literis(s, "CAPITA=\"");
+    numerus = xar_numerus(fructus->capita);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisCaput* caput;
+
+        caput = (AedilisCaput*)xar_obtinere(fructus->capita, i);
+        si (i > 0)
+        {
+            chorda_aedificator_appendere_literis(s, " ");
+        }
+        chorda_aedificator_appendere_chorda(s, caput->via);
+    }
+    chorda_aedificator_appendere_literis(s, "\"\n\n");
+
+    si (solitarius)
+    {
+        chorda_aedificator_appendere_literis(s,
+            "vetustum () {\n"
+            "    return 0\n"  /* hermeticum: semper recompila */
+            "}\n\n");
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(s,
+            "vetustum () {\n"
+            "    obj=\"$1\"; fons=\"$2\"\n"
+            "    [ ! -f \"$obj\" ] && return 0\n"
+            "    [ \"$fons\" -nt \"$obj\" ] && return 0\n"
+            "    for c in $CAPITA; do\n"
+            "        [ \"$c\" -nt \"$obj\" ] && return 0\n"
+            "    done\n"
+            "    return 1\n"
+            "}\n\n");
+    }
+
+    chorda_aedificator_appendere_literis(s,
+        "compilare () {\n"
+        "    fons=\"$1\"; obj=\"$OBIECTA_DIR/$2\"\n"
+        "    [ -f \"$fons\" ] || { echo \"AEDILIS: fons absens:"
+        " $fons (generatum nondum?)\" >&2; exit 1; }\n"
+        "    if vetustum \"$obj\" \"$fons\"; then\n"
+        "        echo \"  [obiectum] $fons\"\n"
+        "        clang $VEXILLA $INCLUSA -c \"$fons\" -o"
+        " \"$obj\" || exit 1\n"
+        "    fi\n"
+        "}\n\n");
+
+    /* obiecta clausurae */
+    numerus = xar_numerus(fructus->obiecta);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisObiectum* obiectum;
+
+        obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta,
+            i);
+        chorda_aedificator_appendere_literis(s, "compilare \"");
+        chorda_aedificator_appendere_chorda(s, obiectum->via);
+        chorda_aedificator_appendere_literis(s, "\" \"");
+        chorda_aedificator_appendere_chorda(s,
+            _obiecti_nomen(obiectum->via, piscina));
+        chorda_aedificator_appendere_literis(s, "\"\n");
+    }
+
+    /* vendicata (vexilla propria, vetustas fonte solo) */
+    numerus = xar_numerus(fructus->vendores);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisVendor* vendor;
+        chorda         obiecti;
+
+        vendor = (AedilisVendor*)xar_obtinere(fructus->vendores,
+            i);
+        obiecti = _obiecti_nomen(vendor->fons, piscina);
+        chorda_aedificator_appendere_literis(s,
+            "if [ ! -f \"$OBIECTA_DIR/");
+        chorda_aedificator_appendere_chorda(s, obiecti);
+        chorda_aedificator_appendere_literis(s, "\" ] || [ \"");
+        chorda_aedificator_appendere_chorda(s, vendor->fons);
+        chorda_aedificator_appendere_literis(s,
+            "\" -nt \"$OBIECTA_DIR/");
+        chorda_aedificator_appendere_chorda(s, obiecti);
+        chorda_aedificator_appendere_literis(s,
+            "\" ]; then\n    echo \"  [vendicatum] ");
+        chorda_aedificator_appendere_chorda(s, vendor->fons);
+        chorda_aedificator_appendere_literis(s,
+            "\"\n    clang ");
+        si (vendor->vexilla != NIHIL)
+        {
+            _scriptum_vexilla_iungere(s, vendor->vexilla);
+        }
+        chorda_aedificator_appendere_literis(s, " -c \"");
+        chorda_aedificator_appendere_chorda(s, vendor->fons);
+        chorda_aedificator_appendere_literis(s,
+            "\" -o \"$OBIECTA_DIR/");
+        chorda_aedificator_appendere_chorda(s, obiecti);
+        chorda_aedificator_appendere_literis(s,
+            "\" || exit 1\nfi\n");
+    }
+
+    /* scopus ipse */
+    chorda_aedificator_appendere_literis(s, "compilare \"");
+    chorda_aedificator_appendere_chorda(s, fructus->scopus);
+    chorda_aedificator_appendere_literis(s, "\" \"");
+    chorda_aedificator_appendere_chorda(s,
+        _obiecti_nomen(fructus->scopus, piscina));
+    chorda_aedificator_appendere_literis(s, "\"\n\n");
+
+    /* nexus */
+    chorda_aedificator_appendere_literis(s,
+        "clang $VEXILLA \\\n    \"$OBIECTA_DIR/");
+    chorda_aedificator_appendere_chorda(s,
+        _obiecti_nomen(fructus->scopus, piscina));
+    chorda_aedificator_appendere_literis(s, "\" \\\n");
+    numerus = xar_numerus(fructus->obiecta);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisObiectum* obiectum;
+
+        obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta,
+            i);
+        chorda_aedificator_appendere_literis(s,
+            "    \"$OBIECTA_DIR/");
+        chorda_aedificator_appendere_chorda(s,
+            _obiecti_nomen(obiectum->via, piscina));
+        chorda_aedificator_appendere_literis(s, "\" \\\n");
+    }
+    numerus = xar_numerus(fructus->vendores);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisVendor* vendor;
+
+        vendor = (AedilisVendor*)xar_obtinere(fructus->vendores,
+            i);
+        chorda_aedificator_appendere_literis(s,
+            "    \"$OBIECTA_DIR/");
+        chorda_aedificator_appendere_chorda(s,
+            _obiecti_nomen(vendor->fons, piscina));
+        chorda_aedificator_appendere_literis(s, "\" \\\n");
+    }
+    /* vexilla nexus deduplicata (regulae) + annotata */
+    {
+        Xar* nexus_vexilla;
+
+        nexus_vexilla = _xar_chordarum(piscina);
+        numerus = xar_numerus(fructus->obiecta);
+        per (i = 0; i < numerus; i++)
+        {
+            AedilisObiectum* obiectum;
+            i32 k;
+            i32 numerus_vexillorum;
+
+            obiectum = (AedilisObiectum*)xar_obtinere(
+                fructus->obiecta, i);
+            si (obiectum->vexilla_nexus == NIHIL)
+            {
+                perge;
+            }
+            numerus_vexillorum = xar_numerus(
+                obiectum->vexilla_nexus);
+            per (k = 0; k < numerus_vexillorum; k++)
+            {
+                _vexillum_unicum(nexus_vexilla,
+                    *(chorda*)xar_obtinere(
+                        obiectum->vexilla_nexus, k));
+            }
+        }
+        numerus = xar_numerus(fructus->vexilla_annotata);
+        per (i = 0; i < numerus; i++)
+        {
+            _vexillum_unicum(nexus_vexilla,
+                *(chorda*)xar_obtinere(fructus->vexilla_annotata,
+                    i));
+        }
+        si (xar_numerus(nexus_vexilla) > 0)
+        {
+            chorda_aedificator_appendere_literis(s, "    ");
+            _scriptum_vexilla_iungere(s, nexus_vexilla);
+            chorda_aedificator_appendere_literis(s, " \\\n");
+        }
+    }
+    chorda_aedificator_appendere_literis(s,
+        "    -o \"$EXITUS_DIR/");
+    chorda_aedificator_appendere_chorda(s, basis);
+    chorda_aedificator_appendere_literis(s,
+        "\" || exit 1\necho \"AEDILIS STRUCTUM: $EXITUS_DIR/");
+    chorda_aedificator_appendere_chorda(s, basis);
+    chorda_aedificator_appendere_literis(s, "\"\n");
+
+    redde chorda_aedificator_finire(s);
 }

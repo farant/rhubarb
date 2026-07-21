@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 
+/* aedilis: obiectum build/speculum/hospes/capsula_speculi_hospes.c */
 externus constans CapsulaEmbed capsula_speculi_hospes;
 
 

@@ -30,6 +30,7 @@
     </regula>
     <regula obiectum="tls_macos">
       <vexillum! (>-framework Security
+      <vexillum! (>-framework CoreFoundation
     </regula>
     <regula obiectum="vitrea_macos">
       <vexillum! (>-framework WebKit
@@ -51,4 +52,35 @@
       <vexillum! (>-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1
     </fons>
   </vendor>
+  <irregularia>
+    <regula caput="include/fenestra.h">
+      <obiectum (>lib/fenestra_macos.m
+      <obiectum (>lib/fenestra_textus.c
+    </regula>
+    <regula caput="include/biblia.h">
+      <obiectum (>lib/biblia_dr.c
+    </regula>
+    <regula caput="include/entitas_repositorium.h">
+      <obiectum (>lib/entitas_repositorium_impl.c
+    </regula>
+    <regula caput="include/nuntium_schema.h">
+      <obiectum (>lib/nuntium_schema.c
+      <obiectum (>lib/nuntium_schema_generare.c
+    </regula>
+    <regula caput="include/arbor2_glr.h">
+      <obiectum (>lib/arbor2_glr.c
+      <obiectum (>lib/arbor2_glr_tabula.c
+    </regula>
+    <regula caput="include/persistentia.h">
+      <obiectum (>lib/persistentia_memoria.c
+      <obiectum (>lib/persistentia_nuntium.c
+    </regula>
+    <regula caput="include/calendarium_liturgicum.h">
+      <obiectum (>lib/calendarium_liturgicum.c
+      <obiectum (>lib/sanctorale.c
+    </regula>
+    <regula caput="include/lapifex_c89.h">
+      <obiectum (>lib/lapifex_c89_grammatica.c
+    </regula>
+  </irregularia>
 </aedilis>

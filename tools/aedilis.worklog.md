@@ -1,5 +1,69 @@
 # aedilis worklog
 
+## 2026-07-20 — Phase B (emitters + oracle + THE GATE) — sealed
+
+**PORTA: 119/119 OMNES BONAE (149s).** Every root probatio:
+derivation → emitted script → build → run (where runnable) →
+differentia consensus vs clang -MM. Three gate rounds: 65 → 112 →
+119; each round's failures became config truth or engine law.
+
+**Shipped**: aedilis_scriptum_scribere (both postures — cache-
+reusing with PRECISE staleness from the manifest's capita list,
+not find-everything; solitarius hermetic, own object dir, always
+recompiles; both executed live), --differentia / --solitarius /
+--currere / --scribere flags, tools/aedilis_porta.sh (the corpus
+gate), seven irregularia + CoreFoundation regula in aedilis.stml,
+annotations in lib/tempus.c + both speculum probationes.
+
+**Differentia had to learn the link/TU distinction**: clang -MM
+sees ONE translation unit; aedilis computes the LINK closure
+(tls.h arrives via walking http.c). The honest comparison is
+capita vs the UNION of -MM over every closure source — extraction
++ resolution validated per TU, object discovery validated by the
+gate's real links. Also: -MM prints paths AS WRITTEN
+("lib/../vendor/sqlite3.h" from scrinium's ".." include) —
+normalize through via_normalizare before comparing; that one fix
+closed ~10 differentia failures from both directions.
+
+**What the gate taught (engine law)**:
+1. WALK-CAP 1MB: sources over 1MB are data-as-source (biblia_dr
+   6.1MB — silva OOM-killed at exit 137) — recorded, compiled,
+   linked, never parsed. Speculum's own LIMES precedent.
+2. TEXTUAL .c INCLUDES: #include "persona_gen.c" (nuntium
+   generated-code idiom) pours symbols into the includer — the
+   convention-probed object for the same file must be purged
+   post-fixpoint or the link sees duplicate symbols.
+3. SELF-ANNOTATION HAZARD: include/aedilis.h's own enum comment
+   /* aedilis: obiectum */ was a perfectly anchored annotation
+   with an empty argument — the engine documented itself into a
+   refusal. Never write the anchor in prose comments.
+
+**What the gate taught (config truth — the fabrica absorption
+beginning in practice)**: irregular header→object rules for
+fenestra.h (+fenestra_textus.c — declared-in-header, defined in
+companion), biblia.h→biblia_dr.c, entitas_repositorium.h→_impl.c,
+nuntium_schema.h→[schema, generare], arbor2_glr.h→[glr, tabula],
+persistentia.h→[memoria, nuntium], calendarium_liturgicum.h→
+[liturgicum, sanctorale], lapifex_c89.h→grammatica. Plus link
+truth: tls_macos needs CoreFoundation (CFRelease) beyond Security.
+And lib/tempus.c's platform-seam externs ("implementatae in
+fenestra_macos.m" — its own comment confessed) got the second
+real annotation in the tree.
+
+**Emitted script shape**: repo-root guard, VEXILLA/INCLUSA from
+config, shared flattened object cache (lib__tcp_posix.o) for the
+cache-reusing posture, per-target dir for solitarius, vendor
+compiled with its own flags and source-newer-only staleness,
+absent-source loud guard (generata nondum?), link-flag dedup,
+binary at build/aedilis/<basis>/<basis> (never clobbers suite
+artifacts), provenance header (generatum/commissum/regeneratio
+line). Annotated vexilla apply to the LINK line only (v1 —
+compile-affecting annotations would need a distinct verb).
+
+**Exit-code law violated twice more** (porta piped through tail →
+exit 0 lie); porta_relatio.txt + explicit `echo $?` is the shape.
+Porta debris (porta_*.err/.diff) lives in build/aedilis/.
+
 ## 2026-07-20 — Phase A (the engine) — sealed
 
 **Shipped**: include/aedilis.h + lib/aedilis.c (the closure engine),

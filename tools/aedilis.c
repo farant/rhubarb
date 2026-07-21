@@ -20,6 +20,7 @@
 #include "via.h"
 #include "xar.h"
 #include "argumenta.h"
+#include "tabula_dispersa.h"
 #include "aedilis.h"
 
 #include "silva.h"
@@ -221,7 +222,11 @@ _extractor_oraculi (ExtractorDatum* extractoris,
             {
                 perge;
             }
-            _chordam_in_xar(*directivae_out, signum);
+            /* -MM vias ut scriptas imprimit - "lib/../include/x.h"
+             * ex inclusionibus ".." (porta inventum): normalizare
+             * ante comparationem */
+            _chordam_in_xar(*directivae_out,
+                via_normalizare(signum, piscina));
         }
     }
     redde VERUM;
@@ -327,6 +332,150 @@ _extractor_silvae (vacuum* datum, constans character* via,
     redde VERUM;
 }
 
+/* Differentia-clausurae: sextum capitum nostrum (silva-cursus)
+ * contra clang -MM oraculum. CONSENSUS / NOS-SOLI / ORACULUM-SOLUM;
+ * exitus 0 = consensus purus (porta per codicem exitus). */
+interior s32
+_differentiam_currere (Piscina* piscina,
+    ExtractorDatum* extractoris, AedilisFructus* fructus,
+    constans character* scopus_cstr)
+{
+    TabulaDispersa* nostra;
+    TabulaDispersa* eorum;
+    Xar*            oraculi;
+    Xar*            nos_soli;
+    Xar*            oraculum_solum;
+    i32             consensus;
+    i32             i;
+    i32             numerus;
+
+    /* UNIO -MM super OMNES fontes clausurae: -MM unitatem
+     * translationis solam videt, aedilis clausuram NEXUS -
+     * capita per fontes obiectorum inventa (tls.h per http.c)
+     * in unione demum comparabilia sunt. Obiecta annotata
+     * utrimque omissa (symmetria: numquam ambulata). */
+    oraculi = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (!_extractor_oraculi(extractoris, scopus_cstr, piscina,
+            &oraculi))
+    {
+        fprintf(stderr,
+            "AEDILIS RECUSAT: oraculum -MM defecit: %s\n",
+            scopus_cstr);
+        redde 1;
+    }
+    numerus = xar_numerus(fructus->obiecta);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisObiectum* obiectum;
+
+        obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta,
+            i);
+        si (obiectum->absens
+            || obiectum->origo == AEDILIS_ORIGO_ANNOTATIO)
+        {
+            perge;
+        }
+        si (!_extractor_oraculi(extractoris,
+                chorda_ut_cstr(obiectum->via, piscina), piscina,
+                &oraculi))
+        {
+            fprintf(stderr,
+                "AEDILIS RECUSAT: oraculum -MM defecit: %.*s\n",
+                (s32)obiectum->via.mensura,
+                (constans character*)obiectum->via.datum);
+            redde 1;
+        }
+    }
+
+    nostra = tabula_dispersa_creare_chorda(piscina, 256);
+    eorum = tabula_dispersa_creare_chorda(piscina, 256);
+    numerus = xar_numerus(fructus->capita);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisCaput* caput;
+
+        caput = (AedilisCaput*)xar_obtinere(fructus->capita, i);
+        (vacuum)tabula_dispersa_inserere(nostra, caput->via,
+            NIHIL);
+    }
+    /* unionem deduplicare (caput idem ex pluribus TU) */
+    {
+        Xar* unica;
+
+        unica = xar_creare(piscina, (i32)magnitudo(chorda));
+        numerus = xar_numerus(oraculi);
+        per (i = 0; i < numerus; i++)
+        {
+            chorda via;
+
+            via = *(chorda*)xar_obtinere(oraculi, i);
+            si (!tabula_dispersa_continet(eorum, via))
+            {
+                (vacuum)tabula_dispersa_inserere(eorum, via,
+                    NIHIL);
+                _chordam_in_xar(unica, via);
+            }
+        }
+        oraculi = unica;
+    }
+
+    consensus = 0;
+    nos_soli = xar_creare(piscina, (i32)magnitudo(chorda));
+    oraculum_solum = xar_creare(piscina, (i32)magnitudo(chorda));
+    numerus = xar_numerus(fructus->capita);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisCaput* caput;
+
+        caput = (AedilisCaput*)xar_obtinere(fructus->capita, i);
+        si (tabula_dispersa_continet(eorum, caput->via))
+        {
+            consensus++;
+        }
+        alioquin
+        {
+            _chordam_in_xar(nos_soli, caput->via);
+        }
+    }
+    numerus = xar_numerus(oraculi);
+    per (i = 0; i < numerus; i++)
+    {
+        chorda via;
+
+        via = *(chorda*)xar_obtinere(oraculi, i);
+        si (!tabula_dispersa_continet(nostra, via))
+        {
+            _chordam_in_xar(oraculum_solum, via);
+        }
+    }
+
+    imprimere("DIFFERENTIA %s\n", scopus_cstr);
+    imprimere("consensus %d | nos-soli %u | oraculum-solum %u\n",
+        consensus, xar_numerus(nos_soli),
+        xar_numerus(oraculum_solum));
+    numerus = xar_numerus(nos_soli);
+    per (i = 0; i < numerus; i++)
+    {
+        chorda via;
+
+        via = *(chorda*)xar_obtinere(nos_soli, i);
+        imprimere("  NOS SOLI: %.*s\n", (s32)via.mensura,
+            (constans character*)via.datum);
+    }
+    numerus = xar_numerus(oraculum_solum);
+    per (i = 0; i < numerus; i++)
+    {
+        chorda via;
+
+        via = *(chorda*)xar_obtinere(oraculum_solum, i);
+        imprimere("  ORACULUM SOLUM: %.*s\n", (s32)via.mensura,
+            (constans character*)via.datum);
+    }
+
+    redde (xar_numerus(nos_soli) == 0
+        && xar_numerus(oraculum_solum) == 0) ? 0 : 1;
+}
+
 /* Provenientia git (optima conatio; NIHIL si abest) */
 interior constans character*
 _commissum_obtinere (Piscina* piscina)
@@ -389,9 +538,19 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
         "aedilis - clausura dependentiarum derivata + manifestum");
     argumenta_addere_optionem(parser, NIHIL, "--varians",
         "Varians platformae (ordinarie praelatio configurationis)");
+    argumenta_addere_vexillum(parser, NIHIL, "--solitarius",
+        "Etiam scriptum hermeticum emittere");
+    argumenta_addere_vexillum(parser, NIHIL, "--currere",
+        "Scriptum emissum statim exsequi");
+    argumenta_addere_optionem(parser, NIHIL, "--scribere",
+        "Scriptum etiam ad viam datam servare");
+    argumenta_addere_vexillum(parser, NIHIL, "--differentia",
+        "Sextum capitum contra clang -MM comparare (sine emissione)");
     argumenta_addere_exemplum(parser, "aedilis lib/hospitium.c");
     argumenta_addere_exemplum(parser,
-        "aedilis lib/tcp.c --varians posix");
+        "aedilis probationes/probatio_stml.c --currere");
+    argumenta_addere_exemplum(parser,
+        "aedilis lib/hospitium.c --differentia");
     lecta = argumenta_parsere(parser, (i32)numerus_argumentorum,
         (constans character* constans*)argumenta_cruda);
 
@@ -449,6 +608,12 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
         redde 1;
     }
 
+    si (argumenta_habet_vexillum(lecta, "--differentia"))
+    {
+        redde _differentiam_currere(piscina, &extractoris,
+            fructus, scopus_cstr);
+    }
+
     manifestum = aedilis_manifestum_scribere(fructus, piscina,
         _commissum_obtinere(piscina));
 
@@ -501,6 +666,90 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
         imprimere("manifestum: %.*s\n",
             (s32)via_manifesti.mensura,
             (constans character*)via_manifesti.datum);
+
+        /* scripta emissa ex manifesti veritate */
+        {
+            chorda scriptum;
+            chorda via_scripti;
+            constans character* commissum;
+
+            commissum = _commissum_obtinere(piscina);
+            scriptum = aedilis_scriptum_scribere(fructus,
+                configuratio, piscina, FALSUM, commissum);
+            aedificator = chorda_aedificator_creare(piscina, 160);
+            chorda_aedificator_appendere_chorda(aedificator,
+                directorium);
+            chorda_aedificator_appendere_literis(aedificator,
+                "/struere.sh");
+            via_scripti = chorda_aedificator_finire(aedificator);
+            si (!filum_scribere(chorda_ut_cstr(via_scripti,
+                    piscina), scriptum))
+            {
+                fprintf(stderr,
+                    "AEDILIS RECUSAT: scriptum non scriptum\n");
+                redde 1;
+            }
+            imprimere("scriptum: %.*s\n",
+                (s32)via_scripti.mensura,
+                (constans character*)via_scripti.datum);
+
+            si (argumenta_habet_vexillum(lecta, "--solitarius"))
+            {
+                chorda solitarium;
+                chorda via_solitarii;
+
+                solitarium = aedilis_scriptum_scribere(fructus,
+                    configuratio, piscina, VERUM, commissum);
+                aedificator = chorda_aedificator_creare(piscina,
+                    160);
+                chorda_aedificator_appendere_chorda(aedificator,
+                    directorium);
+                chorda_aedificator_appendere_literis(aedificator,
+                    "/struere_solitarius.sh");
+                via_solitarii = chorda_aedificator_finire(
+                    aedificator);
+                si (!filum_scribere(chorda_ut_cstr(via_solitarii,
+                        piscina), solitarium))
+                {
+                    fprintf(stderr, "AEDILIS RECUSAT:"
+                        " scriptum solitarium non scriptum\n");
+                    redde 1;
+                }
+                imprimere("scriptum solitarium: %.*s\n",
+                    (s32)via_solitarii.mensura,
+                    (constans character*)via_solitarii.datum);
+            }
+
+            {
+                chorda via_servandi;
+
+                via_servandi = argumenta_obtinere_optionem(lecta,
+                    "--scribere", piscina);
+                si (via_servandi.mensura > 0
+                    && !filum_scribere(chorda_ut_cstr(
+                            via_servandi, piscina), scriptum))
+                {
+                    fprintf(stderr, "AEDILIS RECUSAT:"
+                        " scriptum non servatum\n");
+                    redde 1;
+                }
+            }
+
+            si (argumenta_habet_vexillum(lecta, "--currere"))
+            {
+                ChordaAedificator* mandatum;
+
+                mandatum = chorda_aedificator_creare(piscina,
+                    192);
+                chorda_aedificator_appendere_literis(mandatum,
+                    "bash ");
+                chorda_aedificator_appendere_chorda(mandatum,
+                    via_scripti);
+                redde system(chorda_ut_cstr(
+                    chorda_aedificator_finire(mandatum),
+                    piscina)) == 0 ? 0 : 1;
+            }
+        }
     }
 
     redde 0;

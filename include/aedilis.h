@@ -86,7 +86,10 @@ aedilis_configurationem_legere(
 nomen enumeratio {
     AEDILIS_ORIGO_DERIVATUM = ZEPHYRUM,  /* proba conventionis */
     AEDILIS_ORIGO_CONFIGURATIO,          /* regula irregularis */
-    AEDILIS_ORIGO_ANNOTATIO,             /* aedilis: obiectum */
+    AEDILIS_ORIGO_ANNOTATIO,             /* annotatio obiecti in
+                                          * commento fontis (NB hic
+                                          * ancoram ipsam scribere
+                                          * = se-annotatio!) */
     AEDILIS_ORIGO_ORACULUM               /* cursus -MM (.m) */
 } AedilisOrigo;
 
@@ -139,5 +142,20 @@ aedilis_manifestum_scribere(
     constans AedilisFructus* fructus,
     Piscina*                 piscina,
     constans character*      commissum);
+
+/* Fructum ut scriptum bash scribere (chorda emissa).
+ * solitarius FALSUM = cache-reutens (obiecta communia in
+ * build/aedilis/obiecta/, vetustas per capita manifesti);
+ * solitarius VERUM = hermeticum (obiecta propria, semper
+ * recompilat). Scriptum ex radice repositorii currendum
+ * (custos intus); binarium in build/aedilis/<basis>/<basis>.
+ * bash-3.2-tutum, porta per codicem exitus, sine ANSI. */
+chorda
+aedilis_scriptum_scribere(
+    constans AedilisFructus*      fructus,
+    constans AedilisConfiguratio* configuratio,
+    Piscina*                      piscina,
+    b32                           solitarius,
+    constans character*           commissum);
 
 #endif /* AEDILIS_H */

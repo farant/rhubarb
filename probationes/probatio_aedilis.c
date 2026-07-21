@@ -461,9 +461,10 @@ s32 principale (vacuum)
             AEDILIS_ORIGO_ANNOTATIO);
         CREDO_VERUM(obiectum->absens);
 
-        /* capita quattuor (alpha beta gamma delta); systema unum;
-         * vendor unus cum vexillis; vexillum annotatum unum */
-        CREDO_AEQUALIS_I32(xar_numerus(fructus->capita), IV);
+        /* capita quinque (alpha beta gamma delta + librum.h
+         * vendicatum - sextus differentiae completus); systema
+         * unum; vendor unus cum vexillis; vexillum annotatum unum */
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->capita), V);
         CREDO_AEQUALIS_I32(xar_numerus(fructus->systemata), I);
         CREDO_CHORDA_AEQUALIS_LITERIS(
             *(chorda*)xar_obtinere(fructus->systemata, ZEPHYRUM),
@@ -527,6 +528,60 @@ s32 principale (vacuum)
         CREDO_NIHIL(fructus);
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("ignota", piscina));
+    }
+
+    /* ========================================================
+     * PROBARE: scripta emissa (contentum; executio in porta)
+     * ======================================================== */
+
+    {
+        AedilisConfiguratio* configuratio;
+        AedilisFructus*      fructus;
+        chorda               scriptum;
+        chorda               causa;
+
+        imprimere("\n--- Probans scripta emissa ---\n");
+
+        causa.datum = NIHIL;
+        causa.mensura = ZEPHYRUM;
+        configuratio = aedilis_configurationem_legere(piscina,
+            "probationes/fixa/aedilis/aedilis.stml", &causa);
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", NIHIL, _extractor_fixturarum, NIHIL,
+            &causa);
+        CREDO_NON_NIHIL(fructus);
+
+        /* postura cache-reutens */
+        scriptum = aedilis_scriptum_scribere(fructus,
+            configuratio, piscina, FALSUM, "abc1234");
+        CREDO_CHORDA_NON_VACUA(scriptum);
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "compilare \"lib/alpha.c\" \"lib__alpha.o\"",
+            piscina));
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "compilare \"lib/beta_macos.m\"", piscina));
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "-framework Cocoa", piscina));
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "vendor/librum.c", piscina));
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "-DLIBRUM=1", piscina));
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "gen/generatum.c", piscina));
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "-DPROBA", piscina));
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "build/aedilis/obiecta", piscina));
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "include/alpha.h", piscina));
+
+        /* postura hermetica: obiecta propria, semper recompilat */
+        scriptum = aedilis_scriptum_scribere(fructus,
+            configuratio, piscina, VERUM, NIHIL);
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "/solitarius", piscina));
+        CREDO_FALSUM(chorda_continet(scriptum, chorda_ex_literis(
+            "build/aedilis/obiecta\"", piscina)));
     }
 
     /* ========================================================

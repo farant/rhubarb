@@ -13,6 +13,7 @@ hic_manens StatisticaeQuadri g_statisticae;
 hic_manens b32 g_initiatus = FALSUM;
 
 /* Declarationes functionum platformae (implementatae in fenestra_macos.m) */
+/* aedilis: obiectum lib/fenestra_macos.m */
 externus i64 fenestra_tempus_obtinere_pulsus(vacuum);
 externus f64 fenestra_tempus_obtinere_frequentiam(vacuum);
 externus vacuum fenestra_dormire(i32 microsecundae);
