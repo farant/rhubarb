@@ -1,0 +1,54 @@
+<aedilis>
+  <inclusa>
+    <via (>include
+    <via (>probationes
+    <via (>book_assets
+    <via (>probationes/vitrea_assets
+    <via (>probationes/tabella_assets
+    <via (>vendor
+  </inclusa>
+  <vexilla>
+    <vexillum! (>-std=c89
+    <vexillum! (>-pedantic
+    <vexillum! (>-Wall
+    <vexillum! (>-Wextra
+    <vexillum! (>-Werror
+    <vexillum! (>-Wconversion
+    <vexillum! (>-Wsign-conversion
+    <vexillum! (>-Wcast-qual
+    <vexillum! (>-Wstrict-prototypes
+    <vexillum! (>-Wmissing-prototypes
+    <vexillum! (>-Wwrite-strings
+    <vexillum! (>-Wno-long-long
+    <vexillum! (>-Wno-overlength-strings
+    <vexillum! (>-fbracket-depth=512
+  </vexilla>
+  <variantes praelatio="macos posix"/>
+  <nexus>
+    <regula obiectum="fenestra_macos">
+      <vexillum! (>-framework Cocoa
+    </regula>
+    <regula obiectum="tls_macos">
+      <vexillum! (>-framework Security
+    </regula>
+    <regula obiectum="vitrea_macos">
+      <vexillum! (>-framework WebKit
+      <vexillum! (>-framework Cocoa
+    </regula>
+    <regula obiectum="clipboard_platform_macos">
+      <vexillum! (>-framework Cocoa
+    </regula>
+  </nexus>
+  <vendor>
+    <fons via="vendor/sqlite3.c">
+      <vexillum! (>-O2
+      <vexillum! (>-DSQLITE_ENABLE_FTS5
+      <vexillum! (>-DSQLITE_THREADSAFE=0
+      <vexillum! (>-DSQLITE_DQS=0
+      <vexillum! (>-DSQLITE_DEFAULT_MEMSTATUS=0
+      <vexillum! (>-DSQLITE_OMIT_LOAD_EXTENSION
+      <vexillum! (>-DSQLITE_OMIT_DEPRECATED
+      <vexillum! (>-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1
+    </fons>
+  </vendor>
+</aedilis>

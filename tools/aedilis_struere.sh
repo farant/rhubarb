@@ -26,7 +26,9 @@ declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/silva/amalgama"
 )
 declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "filum"
+    "piscina" "chorda" "chorda_aedificator" "filum" "via" "xar"
+    "friatio" "tabula_dispersa" "internamentum" "selectio" "stml"
+    "argumenta" "aedilis"
 )
 
 newest_header () {

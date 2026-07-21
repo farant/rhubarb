@@ -35,6 +35,7 @@
 /* capsula fontium generata (build/speculum/hospes/) - externus
  * directus, mos consumptoris speculi (caput generatum non
  * includitur: silva ".." non resolvit, symbolum contractus est) */
+/* aedilis: obiectum build/speculum/hospes/capsula_speculi_hospes.c */
 externus constans CapsulaEmbed capsula_speculi_hospes;
 
 

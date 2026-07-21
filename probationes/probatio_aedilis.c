@@ -14,10 +14,115 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "via.h"
+#include "xar.h"
 #include "stml.h"
 #include "internamentum.h"
+#include "aedilis.h"
 #include "credo.h"
 #include <stdio.h>
+#include <string.h>
+
+/* ========================================================
+ * Extractor fixturarum - machina sine silva agitur: tabula
+ * directivarum super fixturas disci veras
+ * (probationes/fixa/aedilis/ = radix parva). Plagula ignota =
+ * imparsabilis (FALSUM) - tabula clausuram exacte tegere debet.
+ * ======================================================== */
+
+interior vacuum
+_fix_addere (Xar* xar, constans character* literis,
+    Piscina* piscina)
+{
+    chorda* locus;
+
+    locus = (chorda*)xar_addere(xar);
+    si (locus != NIHIL)
+    {
+        *locus = chorda_ex_literis(literis, piscina);
+    }
+}
+
+interior b32
+_extractor_fixturarum (vacuum* datum, constans character* via,
+    Piscina* piscina, Xar** directivae_out, Xar** annotationes_out,
+    b32* ex_oraculo_out)
+{
+    (vacuum)datum;
+    *directivae_out = xar_creare(piscina, (i32)magnitudo(chorda));
+    *annotationes_out = xar_creare(piscina,
+        (i32)magnitudo(chorda));
+    *ex_oraculo_out = FALSUM;
+
+    si (strstr(via, "fons/scopus.c") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "alpha.h", piscina);
+        _fix_addere(*directivae_out, "beta.h", piscina);
+        _fix_addere(*directivae_out, "delta.h", piscina);
+        _fix_addere(*directivae_out, "librum.h", piscina);
+        _fix_addere(*directivae_out, "stdio.h", piscina);
+        _fix_addere(*annotationes_out,
+            "obiectum gen/generatum.c", piscina);
+        _fix_addere(*annotationes_out, "vexillum -DPROBA",
+            piscina);
+    }
+    alioquin si (strstr(via, "lib/alpha.c") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "alpha.h", piscina);
+        _fix_addere(*directivae_out, "gamma.h", piscina);
+    }
+    alioquin si (strstr(via, "lib/beta_macos.m") != NIHIL)
+    {
+        /* cursus minoritatis simulatus: viae iam resolutae */
+        *ex_oraculo_out = VERUM;
+        _fix_addere(*directivae_out, "include/beta.h", piscina);
+    }
+    alioquin si (strstr(via, "lib/beta_posix.c") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "beta.h", piscina);
+    }
+    alioquin si (strstr(via, "lib/delta_verum.c") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "delta.h", piscina);
+    }
+    alioquin si (strstr(via, "fons/annotatio_mala.c") != NIHIL)
+    {
+        _fix_addere(*annotationes_out, "ignotum quid", piscina);
+    }
+    alioquin si (strstr(via, "include/alpha.h") != NIHIL
+        || strstr(via, "include/beta.h") != NIHIL
+        || strstr(via, "include/gamma.h") != NIHIL
+        || strstr(via, "include/delta.h") != NIHIL)
+    {
+        /* capita fixturarum: sine directivis */
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior AedilisObiectum*
+_obiectum_invenire (AedilisFructus* fructus,
+    constans character* via)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = xar_numerus(fructus->obiecta);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        AedilisObiectum* obiectum;
+
+        obiectum = (AedilisObiectum*)xar_obtinere(
+            fructus->obiecta, i);
+        si (chorda_aequalis_literis(obiectum->via, via))
+        {
+            redde obiectum;
+        }
+    }
+    redde NIHIL;
+}
 
 s32 principale (vacuum)
 {
@@ -257,6 +362,263 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(*valor, "aedilis.stml");
     }
 
+
+    /* ========================================================
+     * PROBARE: configurationem legere (fixtura aedilis.stml)
+     * ======================================================== */
+
+    {
+        AedilisConfiguratio* configuratio;
+        chorda               causa;
+
+        imprimere("\n--- Probans configurationem ---\n");
+
+        causa.datum = NIHIL;
+        causa.mensura = ZEPHYRUM;
+        configuratio = aedilis_configurationem_legere(piscina,
+            "probationes/fixa/aedilis/aedilis.stml", &causa);
+        CREDO_NON_NIHIL(configuratio);
+        CREDO_CHORDA_AEQUALIS_LITERIS(configuratio->radix,
+            "probationes/fixa/aedilis");
+        CREDO_AEQUALIS_I32(xar_numerus(configuratio->inclusa), II);
+        CREDO_AEQUALIS_I32(xar_numerus(configuratio->vexilla), II);
+        CREDO_AEQUALIS_I32(xar_numerus(configuratio->variantes),
+            II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            *(chorda*)xar_obtinere(configuratio->variantes,
+                ZEPHYRUM), "macos");
+        CREDO_AEQUALIS_I32(
+            xar_numerus(configuratio->regulae_nexus), I);
+        CREDO_AEQUALIS_I32(
+            xar_numerus(configuratio->regulae_vendor), I);
+        CREDO_AEQUALIS_I32(
+            xar_numerus(configuratio->irregularia), I);
+
+        /* configuratio absens = recusatio */
+        CREDO_NIHIL(aedilis_configurationem_legere(piscina,
+            "probationes/fixa/aedilis/abest.stml", &causa));
+        CREDO_CHORDA_NON_VACUA(causa);
+    }
+
+    /* ========================================================
+     * PROBARE: derivationem (extractor fixturarum, disci verae)
+     * ======================================================== */
+
+    {
+        AedilisConfiguratio* configuratio;
+        AedilisFructus*      fructus;
+        AedilisObiectum*     obiectum;
+        AedilisVendor*       vendor;
+        chorda               causa;
+
+        imprimere("\n--- Probans derivationem ---\n");
+
+        causa.datum = NIHIL;
+        causa.mensura = ZEPHYRUM;
+        configuratio = aedilis_configurationem_legere(piscina,
+            "probationes/fixa/aedilis/aedilis.stml", &causa);
+        CREDO_NON_NIHIL(configuratio);
+
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", NIHIL, _extractor_fixturarum, NIHIL,
+            &causa);
+        CREDO_NON_NIHIL(fructus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(fructus->varians, "macos");
+
+        /* obiecta: alpha (conventio), beta_macos (varians),
+         * delta_verum (irregulare), generatum (annotatio) */
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->obiecta), IV);
+
+        obiectum = _obiectum_invenire(fructus, "lib/alpha.c");
+        CREDO_NON_NIHIL(obiectum);
+        CREDO_AEQUALIS_I32(obiectum->origo,
+            AEDILIS_ORIGO_DERIVATUM);
+        CREDO_FALSUM(obiectum->absens);
+        CREDO_CHORDA_AEQUALIS_LITERIS(obiectum->caput,
+            "include/alpha.h");
+
+        obiectum = _obiectum_invenire(fructus,
+            "lib/beta_macos.m");
+        CREDO_NON_NIHIL(obiectum);
+        CREDO_NON_NIHIL(obiectum->vexilla_nexus);
+        CREDO_AEQUALIS_I32(xar_numerus(obiectum->vexilla_nexus),
+            I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            *(chorda*)xar_obtinere(obiectum->vexilla_nexus,
+                ZEPHYRUM), "-framework Cocoa");
+        CREDO_NIHIL(_obiectum_invenire(fructus,
+            "lib/beta_posix.c"));
+
+        obiectum = _obiectum_invenire(fructus,
+            "lib/delta_verum.c");
+        CREDO_NON_NIHIL(obiectum);
+        CREDO_AEQUALIS_I32(obiectum->origo,
+            AEDILIS_ORIGO_CONFIGURATIO);
+
+        obiectum = _obiectum_invenire(fructus, "gen/generatum.c");
+        CREDO_NON_NIHIL(obiectum);
+        CREDO_AEQUALIS_I32(obiectum->origo,
+            AEDILIS_ORIGO_ANNOTATIO);
+        CREDO_VERUM(obiectum->absens);
+
+        /* capita quattuor (alpha beta gamma delta); systema unum;
+         * vendor unus cum vexillis; vexillum annotatum unum */
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->capita), IV);
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->systemata), I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            *(chorda*)xar_obtinere(fructus->systemata, ZEPHYRUM),
+            "stdio.h");
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->vendores), I);
+        vendor = (AedilisVendor*)xar_obtinere(fructus->vendores,
+            ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(vendor->fons,
+            "vendor/librum.c");
+        CREDO_NON_NIHIL(vendor->vexilla);
+        CREDO_AEQUALIS_I32(
+            xar_numerus(fructus->vexilla_annotata), I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            *(chorda*)xar_obtinere(fructus->vexilla_annotata,
+                ZEPHYRUM), "-DPROBA");
+
+        /* varians praescriptus: posix -> beta_posix, non macos */
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", "posix", _extractor_fixturarum,
+            NIHIL, &causa);
+        CREDO_NON_NIHIL(fructus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(fructus->varians, "posix");
+        CREDO_NON_NIHIL(_obiectum_invenire(fructus,
+            "lib/beta_posix.c"));
+        CREDO_NIHIL(_obiectum_invenire(fructus,
+            "lib/beta_macos.m"));
+    }
+
+    /* ========================================================
+     * PROBARE: recusationes (praecisio aut silentium)
+     * ======================================================== */
+
+    {
+        AedilisConfiguratio* configuratio;
+        AedilisFructus*      fructus;
+        chorda               causa;
+
+        imprimere("\n--- Probans recusationes ---\n");
+
+        causa.datum = NIHIL;
+        causa.mensura = ZEPHYRUM;
+        configuratio = aedilis_configurationem_legere(piscina,
+            "probationes/fixa/aedilis/aedilis.stml", &causa);
+        CREDO_NON_NIHIL(configuratio);
+
+        /* plagula imparsabilis (extractor FALSUM) */
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/malus.c", NIHIL, _extractor_fixturarum, NIHIL,
+            &causa);
+        CREDO_NIHIL(fructus);
+        CREDO_CHORDA_NON_VACUA(causa);
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("malus", piscina));
+
+        /* annotatio ignota */
+        causa.datum = NIHIL;
+        causa.mensura = ZEPHYRUM;
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/annotatio_mala.c", NIHIL,
+            _extractor_fixturarum, NIHIL, &causa);
+        CREDO_NIHIL(fructus);
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("ignota", piscina));
+    }
+
+    /* ========================================================
+     * PROBARE: manifestum scribere + relegere
+     * ======================================================== */
+
+    {
+        AedilisConfiguratio* configuratio;
+        AedilisFructus*      fructus;
+        InternamentumChorda* intern;
+        StmlResultus         relectum;
+        StmlNodus*           sectio;
+        StmlNodus*           nodus;
+        Xar*                 obiecta;
+        chorda               manifestum;
+        chorda               causa;
+        chorda*              valor;
+        i32                  i;
+        i32                  numerus;
+
+        imprimere("\n--- Probans manifestum ---\n");
+
+        causa.datum = NIHIL;
+        causa.mensura = ZEPHYRUM;
+        configuratio = aedilis_configurationem_legere(piscina,
+            "probationes/fixa/aedilis/aedilis.stml", &causa);
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", NIHIL, _extractor_fixturarum, NIHIL,
+            &causa);
+        CREDO_NON_NIHIL(fructus);
+
+        manifestum = aedilis_manifestum_scribere(fructus, piscina,
+            "abc1234");
+        CREDO_CHORDA_NON_VACUA(manifestum);
+
+        intern = internamentum_creare(piscina);
+        relectum = stml_legere(manifestum, piscina, intern);
+        CREDO_VERUM(relectum.successus);
+        CREDO_NON_NIHIL(relectum.elementum_radix);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            *relectum.elementum_radix->titulus,
+            "aedilis-manifestum");
+        valor = stml_attributum_capere(relectum.elementum_radix,
+            "scopus");
+        CREDO_NON_NIHIL(valor);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*valor, "fons/scopus.c");
+        valor = stml_attributum_capere(relectum.elementum_radix,
+            "commissum");
+        CREDO_NON_NIHIL(valor);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*valor, "abc1234");
+
+        sectio = stml_invenire_liberum(relectum.elementum_radix,
+            "obiecta");
+        CREDO_NON_NIHIL(sectio);
+        obiecta = stml_invenire_omnes_liberos(sectio, "obiectum",
+            piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(obiecta), IV);
+
+        /* absens ut attributum boolean; vexillum crudum legibile */
+        numerus = xar_numerus(obiecta);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            nodus = *(StmlNodus**)xar_obtinere(obiecta, i);
+            valor = stml_attributum_capere(nodus, "via");
+            si (valor == NIHIL)
+            {
+                perge;
+            }
+            si (chorda_aequalis_literis(*valor,
+                    "gen/generatum.c"))
+            {
+                CREDO_VERUM(stml_attributum_habet(nodus,
+                    "absens"));
+                valor = stml_attributum_capere(nodus, "origo");
+                CREDO_NON_NIHIL(valor);
+                CREDO_CHORDA_AEQUALIS_LITERIS(*valor,
+                    "annotatio");
+            }
+            alioquin si (chorda_aequalis_literis(*valor,
+                    "lib/beta_macos.m"))
+            {
+                StmlNodus* vexillum;
+
+                vexillum = stml_invenire_liberum(nodus,
+                    "vexillum");
+                CREDO_NON_NIHIL(vexillum);
+                CREDO_CHORDA_AEQUALIS_LITERIS(
+                    stml_textus_internus(vexillum, piscina),
+                    "-framework Cocoa");
+            }
+        }
+    }
 
     /* ========================================================
      * Compendium

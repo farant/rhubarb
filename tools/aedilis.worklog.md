@@ -1,5 +1,77 @@
 # aedilis worklog
 
+## 2026-07-20 — Phase A (the engine) — sealed
+
+**Shipped**: include/aedilis.h + lib/aedilis.c (the closure engine),
+tools/aedilis.c rewritten as the CLI (silva extractor + -MM lane +
+git provenance + manifest emission), aedilis.stml (repo config,
+committed, uses the day-old raw-capture syntax), fixture mini-repo
+under probationes/fixa/aedilis/, probatio_aedilis engine sections
+(config/derivation/variants/refusals/manifest — all green first
+run), compile_tests SOURCE_FILES += lib/aedilis.c (additive lib
+registration, speculum precedent — NOT the suite-adoption decision,
+which stays deferred).
+
+**The load-bearing structure**: the engine is PURE — extraction is
+injected via the AedilisExtractor seam (vitrea_missor precedent).
+silva + clang -MM live only in bin/aedilis; the probatio drives the
+engine with a table extractor over REAL disk fixtures (existence
+probes are genuine, directives are faked). Engine deps: via, filum,
+stml, tabula_dispersa, chorda — no silva.
+
+**Config = aedilis.stml, radix = its dirname** — so the fixture
+config IS a complete self-describing mini-repo and the real one
+roots at ".". Sections: inclusa (plain captures), vexilla (raw
+captures), variantes praelatio (ordered fallback words), nexus
+regulae (per-object frameworks), vendor (per-fons flags),
+irregularia (caput → obiecta).
+
+**Variant probe order** (survey-derived, not spec-assumed): for
+caput X.h, per praelatio word V: lib/X_V.m, lib/X_V.c; then base
+lib/X.c. The decisive real case: praelatio "macos posix" finds
+tcp_posix.c on macOS (no tcp_macos exists) — praelatio is a
+FALLBACK CHAIN, not a single platform word. --varians V narrows
+the chain to [V] + base.
+
+**Live results**: lib/hospitium.c → 14 objects/126ms with
+tls_macos.m carrying -framework Security; probatio_vitrea_hospes.c
+→ 28 objects/213ms with all three frameworks on the right objects,
+origo=oraculum on the .m-discovered entries, and the speculum
+capsula via a REAL annotation now in the wearer (first live
+annotation in the tree).
+
+**Decisions made in-phase (Fran may veto)**:
+1. Unresolved include = SYSTEMA, never refusal — angle/quoted are
+   indistinguishable (silva strips the form, spike finding), so a
+   typo'd house include classifies as system; it fails loud at
+   compile and differentia (Phase B) flags it. est_angulata
+   (01KY118F) would upgrade this to a refusal for quoted misses.
+2. ANNOTATED objects are link-declared, NEVER WALKED — the wearer's
+   generated 9.2MB capsula parsed for 17s before this rule; deps of
+   generated objects belong to their generators. (absens objects
+   were already unwalkable; this makes the semantics uniform.)
+3. Vendor is OPAQUE — vendor/X.h → vendor/X.c convention probe,
+   flags from rules, never walked (sqlite 8MB, stb single-header).
+   Header-only vendor (stb) lands in capita, unwalked.
+4. fabrica.tsv channel DEFERRED — its obiectum species is .o-name
+   → source (excubitor's staleness domain), not caput → obiectum;
+   aedilis channels are aedilis.stml + annotations; fabrica
+   absorption remains the later milestone (interview Q8).
+5. origo vocabulary: "configuratio" (not "aedilis.stml") for
+   irregular-rule provenance — attribute-value cleanliness.
+6. Engine walks house HEADERS too (transitive closure is the
+   point); vendor and annotated objects are the only unwalked
+   reachables.
+
+**Gotchas**: -MM emits the source itself bare while the engine
+passes "./"-joined paths — self-skip must SUFFIX-match (first
+wearer run had lib/tls_macos.m as a phantom caput). stml lacks
+textum_addere_ex_chorda — creare_ex_chorda + liberum_addere.
+argumenta_parsere wants i32 argc (examen push caught the s32).
+gesta scope (tabularium.h, -Igesta/fontes) not yet resolvable —
+Phase C extends inclusa or scopes config when the gesta consumer
+lands.
+
 ## 2026-07-20 — Phase 0 spike (sealed)
 
 Spec of record: project-specs/aedilis-spec-v2.md (implement from it,

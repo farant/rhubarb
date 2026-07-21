@@ -117,6 +117,7 @@ declare -a SOURCE_FILES=(
     "lib/mimen.c"
     "lib/hospitium.c"
     "lib/speculum.c"
+    "lib/aedilis.c"
     "lib/flatura.c"
     "lib/quaerere.c"
     "lib/capsula.c"
