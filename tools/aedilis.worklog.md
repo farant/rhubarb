@@ -537,3 +537,42 @@ Auditor first-run crop: stale bin/aedilis silently lacked the new
 flags ([ -x ] existence check ≠ freshness) — auditor now ALWAYS
 runs aedilis_struere.sh. The excubitor class strikes the very tool
 built to audit staleness; noted with due irony.
+
+## 2026-07-21 — AMALGAMA Phase C RELATIO (migration of the three)
+
+**All three amalgam manifests now consume generated lists — every
+amalgam BYTE-IDENTICAL through migration** (git diff empty on all
+three amalgama/ dirs + latina datum; the strongest possible
+migration proof, enabled by preference-seeded stable topo).
+
+Shape shipped: tools/amalgama_fontes_generare.sh emits
+fontes_generata.h (four AmalgamaPlagula arrays, uniform names
+CAPITA/CORPORA_VENDICATA/PROPRIA) next to each manifest;
+amalgamator.c replaces ~60 hand lines with one #include; policy
+lives in fontes_politica.sh per project (radices glob + exclusa
+with named causes + servanda/excludenda macro names per basis —
+the macros themselves stay in amalgamator.c, so the compiler still
+enforces the pairing). Order: capita = stable Kahn (preference =
+prior snippet, else --enumerare of the current binary = migration
+seed); corpora = preference order (order-free, Phase 0); emitted
+order re-validated against edges before write (defense).
+
+Policy classes the audit predicted, now expressed: tessera
+chorda.{h,c} = type-only exclusion; officina silva/amalgama/{h,c}
+= external architectural dependency + indicium.h = public-header
+ownership; silva sceleti/imparilis = fixture tables never
+amalgamated; latina.h = mechanism lane (generator-global).
+
+Hygiene (desideratum 01KY2P5X): newest_header ABI guard added to
+silva + officina drivers (tessera's precedent); censor gate added
+to tessera (officina's shape). All three drivers VERIFICATUM.
+
+Post-migration auditor: MANUS-SOLA empty x3, orders valid x3,
+DERIVATA-SOLA = exactly the seven documented lane entries. The
+loop is CLOSED: --enumerare now prints the generated lists, so
+every auditor run compares the consumed truth against fresh
+derivation — drift clamat.
+
+Steady state: add an include/new fontes file → regenerate snippet
+→ amalgamare gates verify. The hand-maintained surface is now
+pure policy with named causes.

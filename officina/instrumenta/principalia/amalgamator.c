@@ -143,42 +143,12 @@ interior constans character* constans EXCLUDENDA_XARIS[] = {
     NIHIL
 };
 
-interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
-    { "include/piscina.h",            NIHIL, EXCLUDENDA_PISCINAE,      FALSUM, VERUM },
-    { "include/chorda.h",             NIHIL, EXCLUDENDA_CHORDAE,       FALSUM, VERUM },
-    { "include/chorda_aedificator.h", NIHIL, EXCLUDENDA_AEDIFICATORIS, FALSUM, VERUM },
-    { "include/friatio.h",            SERVANDA_FRIATIONIS, NIHIL,      FALSUM, VERUM },
-    { "include/tabula_dispersa.h",    NIHIL, EXCLUDENDA_TABULAE,       FALSUM, VERUM },
-    { "include/xar.h",                NIHIL, EXCLUDENDA_XARIS,         FALSUM, VERUM }
-};
-
-interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
-    { "lib/piscina.c",            NIHIL, EXCLUDENDA_PISCINAE,      VERUM, VERUM },
-    { "lib/chorda.c",             NIHIL, EXCLUDENDA_CHORDAE,       VERUM, VERUM },
-    { "lib/chorda_aedificator.c", NIHIL, EXCLUDENDA_AEDIFICATORIS, VERUM, VERUM },
-    { "lib/friatio.c",            SERVANDA_FRIATIONIS, NIHIL,      VERUM, VERUM },
-    { "lib/tabula_dispersa.c",    NIHIL, EXCLUDENDA_TABULAE,       VERUM, VERUM },
-    { "lib/xar.c",                NIHIL, EXCLUDENDA_XARIS,         VERUM, VERUM }
-};
-
-interior constans AmalgamaPlagula CAPITA_OFFICINAE[] = {
-    { "officina/fontes/officina_medulla.h",        NIHIL, NIHIL, FALSUM, FALSUM },
-    { "officina/fontes/officina_medulla_textus.h", NIHIL, NIHIL, FALSUM, FALSUM },
-    { "officina/fontes/officina_regio.h",          NIHIL, NIHIL, FALSUM, FALSUM },
-    { "officina/fontes/officina_conexio.h",        NIHIL, NIHIL, FALSUM, FALSUM },
-    { "officina/fontes/officina_machinula.h",      NIHIL, NIHIL, FALSUM, FALSUM },
-    { "officina/fontes/officina_demissio.h",       NIHIL, NIHIL, FALSUM, FALSUM }
-};
-
-interior constans AmalgamaPlagula CORPORA_OFFICINAE[] = {
-    { "officina/fontes/officina_medulla.c",        NIHIL, NIHIL, VERUM, FALSUM },
-    { "officina/fontes/officina_medulla_textus.c", NIHIL, NIHIL, VERUM, FALSUM },
-    { "officina/fontes/officina_regio.c",          NIHIL, NIHIL, VERUM, FALSUM },
-    { "officina/fontes/officina_conexio.c",        NIHIL, NIHIL, VERUM, FALSUM },
-    { "officina/fontes/officina_machinula.c",      NIHIL, NIHIL, VERUM, FALSUM },
-    { "officina/fontes/officina_demissio.c",       NIHIL, NIHIL, VERUM, FALSUM },
-    { "officina/fontes/officina_indicium.c",       NIHIL, NIHIL, VERUM, FALSUM }
-};
+/* Listae plagularum: GENERATAE ab aedile (unio clausurarum radicum
+ * propriarum; ordo capitum = topologia stabilis). Politica manualis
+ * in fontes_politica.sh (silva.{h,c} = dependentia externa;
+ * indicium.h = possessio capitis publici) et infra manet.
+ * Regeneratio: ./tools/amalgama_fontes_generare.sh officina */
+#include "fontes_generata.h"
 
 /* Typi quos officina.h possidet: unitates typedef cadunt ex
  * capitibus internis (definitio una per TU) */
@@ -254,13 +224,13 @@ _enumerare (vacuum)
     {
         imprimere("OV\t%s\n", CORPORA_VENDICATA[i].via);
     }
-    per (i = ZEPHYRUM; i < NUMERUS(CAPITA_OFFICINAE); i++)
+    per (i = ZEPHYRUM; i < NUMERUS(CAPITA_PROPRIA); i++)
     {
-        imprimere("CP\t%s\n", CAPITA_OFFICINAE[i].via);
+        imprimere("CP\t%s\n", CAPITA_PROPRIA[i].via);
     }
-    per (i = ZEPHYRUM; i < NUMERUS(CORPORA_OFFICINAE); i++)
+    per (i = ZEPHYRUM; i < NUMERUS(CORPORA_PROPRIA); i++)
     {
-        imprimere("OP\t%s\n", CORPORA_OFFICINAE[i].via);
+        imprimere("OP\t%s\n", CORPORA_PROPRIA[i].via);
     }
 }
 
@@ -293,10 +263,10 @@ s32 principale (s32 argc, character** argv)
     manifestum.corpora_vendicata = CORPORA_VENDICATA;
     manifestum.numerus_corporum_vendicatorum =
         NUMERUS(CORPORA_VENDICATA);
-    manifestum.capita_propria = CAPITA_OFFICINAE;
-    manifestum.numerus_capitum_propriorum = NUMERUS(CAPITA_OFFICINAE);
-    manifestum.corpora_propria = CORPORA_OFFICINAE;
-    manifestum.numerus_corporum_propriorum = NUMERUS(CORPORA_OFFICINAE);
+    manifestum.capita_propria = CAPITA_PROPRIA;
+    manifestum.numerus_capitum_propriorum = NUMERUS(CAPITA_PROPRIA);
+    manifestum.corpora_propria = CORPORA_PROPRIA;
+    manifestum.numerus_corporum_propriorum = NUMERUS(CORPORA_PROPRIA);
     manifestum.cadenda_typedef = CADENDA_TYPEDEF;
     manifestum.cadenda_definitio = CADENDA_DEFINITIO;
     manifestum.non_statica = NON_STATICA;

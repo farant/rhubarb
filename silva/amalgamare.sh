@@ -38,11 +38,19 @@ declare -a RADIX_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
     "friatio"
 )
+# capita mutata sine recompilo = corruptio ABI (classis excubitoris;
+# custos tesserae aequatus - desideratum 01KY2P5X)
+newest_header () {
+    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" \
+        "$SILVA_DIR/instrumenta" \
+        -name '*.h' -newer "$1" 2>/dev/null | head -1
+}
+
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -51,7 +59,7 @@ done
 for f in "silva_token" "silva_lexema"; do
     src="$SILVA_DIR/fontes/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [silva] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi

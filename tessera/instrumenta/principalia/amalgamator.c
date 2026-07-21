@@ -74,34 +74,12 @@ interior constans character* constans EXCLUDENDA_UTF8[] = {
     NIHIL
 };
 
-interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
-    { "include/piscina.h",            NIHIL, EXCLUDENDA_PISCINAE,      FALSUM, VERUM },
-    { "include/chorda_aedificator.h", NIHIL, EXCLUDENDA_AEDIFICATORIS, FALSUM, VERUM },
-    { "include/utf8.h",               NIHIL, EXCLUDENDA_UTF8,          FALSUM, VERUM }
-};
-
-interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
-    { "lib/piscina.c",            NIHIL, EXCLUDENDA_PISCINAE,      VERUM, VERUM },
-    { "lib/chorda_aedificator.c", NIHIL, EXCLUDENDA_AEDIFICATORIS, VERUM, VERUM },
-    { "lib/utf8.c",               NIHIL, EXCLUDENDA_UTF8,          VERUM, VERUM }
-};
-
-interior constans AmalgamaPlagula CAPITA_TESSERAE[] = {
-    { "tessera/fontes/tessera_cellula.h",       NIHIL, NIHIL, FALSUM, FALSUM },
-    { "tessera/fontes/tessera_pons.h",          NIHIL, NIHIL, FALSUM, FALSUM },
-    { "tessera/fontes/tessera_pons_memoriae.h", NIHIL, NIHIL, FALSUM, FALSUM },
-    { "tessera/fontes/tessera_pons_posix.h",    NIHIL, NIHIL, FALSUM, FALSUM },
-    { "tessera/fontes/tessera_eventum.h",       NIHIL, NIHIL, FALSUM, FALSUM },
-    { "tessera/fontes/tessera_opus.h",          NIHIL, NIHIL, FALSUM, FALSUM }
-};
-
-interior constans AmalgamaPlagula CORPORA_TESSERAE[] = {
-    { "tessera/fontes/tessera_cellula.c",       NIHIL, NIHIL, VERUM, FALSUM },
-    { "tessera/fontes/tessera_pons_memoriae.c", NIHIL, NIHIL, VERUM, FALSUM },
-    { "tessera/fontes/tessera_pons_posix.c",    NIHIL, NIHIL, VERUM, FALSUM },
-    { "tessera/fontes/tessera_eventum.c",       NIHIL, NIHIL, VERUM, FALSUM },
-    { "tessera/fontes/tessera_opus.c",          NIHIL, NIHIL, VERUM, FALSUM }
-};
+/* Listae plagularum: GENERATAE ab aedile (unio clausurarum radicum
+ * propriarum; ordo capitum = topologia stabilis). Politica manualis
+ * in fontes_politica.sh (exclusio chordae typus-solum) et infra
+ * (excludenda/renominationes) manet.
+ * Regeneratio: ./tools/amalgama_fontes_generare.sh tessera */
+#include "fontes_generata.h"
 
 /* Typi quos tessera.h possidet: unitates typedef cadunt ex
  * capitibus internis (definitio una per TU) */
@@ -163,13 +141,13 @@ _enumerare (vacuum)
     {
         imprimere("OV\t%s\n", CORPORA_VENDICATA[i].via);
     }
-    per (i = ZEPHYRUM; i < NUMERUS(CAPITA_TESSERAE); i++)
+    per (i = ZEPHYRUM; i < NUMERUS(CAPITA_PROPRIA); i++)
     {
-        imprimere("CP\t%s\n", CAPITA_TESSERAE[i].via);
+        imprimere("CP\t%s\n", CAPITA_PROPRIA[i].via);
     }
-    per (i = ZEPHYRUM; i < NUMERUS(CORPORA_TESSERAE); i++)
+    per (i = ZEPHYRUM; i < NUMERUS(CORPORA_PROPRIA); i++)
     {
-        imprimere("OP\t%s\n", CORPORA_TESSERAE[i].via);
+        imprimere("OP\t%s\n", CORPORA_PROPRIA[i].via);
     }
 }
 
@@ -202,10 +180,10 @@ s32 principale (s32 argc, character** argv)
     manifestum.corpora_vendicata = CORPORA_VENDICATA;
     manifestum.numerus_corporum_vendicatorum =
         NUMERUS(CORPORA_VENDICATA);
-    manifestum.capita_propria = CAPITA_TESSERAE;
-    manifestum.numerus_capitum_propriorum = NUMERUS(CAPITA_TESSERAE);
-    manifestum.corpora_propria = CORPORA_TESSERAE;
-    manifestum.numerus_corporum_propriorum = NUMERUS(CORPORA_TESSERAE);
+    manifestum.capita_propria = CAPITA_PROPRIA;
+    manifestum.numerus_capitum_propriorum = NUMERUS(CAPITA_PROPRIA);
+    manifestum.corpora_propria = CORPORA_PROPRIA;
+    manifestum.numerus_corporum_propriorum = NUMERUS(CORPORA_PROPRIA);
     manifestum.cadenda_typedef = CADENDA_TYPEDEF;
     manifestum.cadenda_definitio = CADENDA_DEFINITIO;
     manifestum.non_statica = NON_STATICA;
