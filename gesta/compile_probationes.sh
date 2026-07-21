@@ -40,27 +40,10 @@ declare -a INCLUDE_FLAGS=(
     "-I$GESTA_DIR/probationes"
 )
 
-# Fontes bibliothecarum radicis quibus gesta nititur (dev-time)
-declare -a RADIX_FONTES=(
-    "piscina"
-    "chorda"
-    "chorda_aedificator"
-    "xar"
-    "friatio"
-    "tabula_dispersa"
-    "internamentum"
-    "utf8"
-    "json"
-    "similitudo"
-    "sigillum"
-    "vigilia"
-    "scrinium"
-    "tabellarius"
-    "credo"
-    "filum"
-    "via"
-    "iter_directoria"
-)
+# Fontes bibliothecarum radicis quibus gesta nititur - GENERATUM
+# AB AEDILE (gesta/fontes_generare.sh regenerat; lista manualis
+# prima retirata, aedilis Phasis C 2026-07-20)
+source "$GESTA_DIR/fontes_generata.sh"
 
 # SQLite vendicatum - LAXUM, obiectum proprium (exemplar
 # compile_tests.sh VENDOR_FLAGS)

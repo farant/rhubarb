@@ -6,6 +6,7 @@
     <via (>probationes/vitrea_assets
     <via (>probationes/tabella_assets
     <via (>vendor
+    <via (>gesta/fontes
   </inclusa>
   <vexilla>
     <vexillum! (>-std=c89

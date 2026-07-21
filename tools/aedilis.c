@@ -546,6 +546,8 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
         "Scriptum etiam ad viam datam servare");
     argumenta_addere_vexillum(parser, NIHIL, "--differentia",
         "Sextum capitum contra clang -MM comparare (sine emissione)");
+    argumenta_addere_vexillum(parser, NIHIL, "--enumerare",
+        "Obiecta clausurae nuda imprimere (consumptoribus)");
     argumenta_addere_exemplum(parser, "aedilis lib/hospitium.c");
     argumenta_addere_exemplum(parser,
         "aedilis probationes/probatio_stml.c --currere");
@@ -612,6 +614,24 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
     {
         redde _differentiam_currere(piscina, &extractoris,
             fructus, scopus_cstr);
+    }
+
+    si (argumenta_habet_vexillum(lecta, "--enumerare"))
+    {
+        i32 i;
+        i32 numerus;
+
+        numerus = xar_numerus(fructus->obiecta);
+        per (i = 0; i < numerus; i++)
+        {
+            AedilisObiectum* obiectum;
+
+            obiectum = (AedilisObiectum*)xar_obtinere(
+                fructus->obiecta, i);
+            imprimere("%.*s\n", (s32)obiectum->via.mensura,
+                (constans character*)obiectum->via.datum);
+        }
+        redde 0;
     }
 
     manifestum = aedilis_manifestum_scribere(fructus, piscina,

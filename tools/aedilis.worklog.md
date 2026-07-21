@@ -1,5 +1,46 @@
 # aedilis worklog
 
+## 2026-07-20 — Phase C (consumers + seal)
+
+**The first hand list is RETIRED — and aedilis's first act was to
+trim it.** gesta/fontes_generare.sh derives the union of both
+gesta probationes' closures via the new `--enumerare` query mode
+and emits gesta/fontes_generata.sh (committed, sourceable);
+compile_probationes.sh now sources it instead of carrying the
+literal array. The derived list has 17 entries where the hand
+list had 18: **utf8 was fat** — nothing in the gesta closure
+references it, and the suite links and passes 2/2 without it.
+Precedent set: first `source`-a-generated-snippet idiom in the
+repo. Config gained `gesta/fontes` in inclusa (the Phase A gap —
+tabularium.h now resolves).
+
+**-plagulae derivation (EXPERIMENTAL, opt-in)**:
+`./officina/interpretare.sh -derivare <functio> [args]` — sedes
+from build/nexus.tsv, include/X.h → lib/X.c by convention
+(irregular sedes → loud refusal, give -plagulae by hand), closure
+via --enumerare, filter patterns as `<basis>.c` (substring-exact
+against TU titles). Smoke: via_est_absoluta derived exactly
+`chorda.c,chorda_aedificator.c,piscina.c,via.c` — 4 modules
+instead of the whole lib/ world. Behavior verified IDENTICAL to a
+hand-passed -plagulae run (including the pre-existing marshaling
+limitation where chorda-by-value args print no result — that is
+interpretare's own affair, not the seat's). Opt-in rather than
+automatic because silently narrowing the default whole-world
+lowering is a semantics change that deserves its own blessing;
+also function-pointer escapes (callbacks registered in TUs outside
+the static closure) are the known theoretical hole of
+closure-as-execution-world.
+
+**Where the arc lands**: all four phases sealed in one day.
+bin/aedilis derives, manifests, emits, executes, and self-checks
+against clang; the corpus gate certifies 119/119; two consumers
+retire folklore (gesta list, bench filter); aedilis.stml holds
+eight irregular rules + link truths that previously lived only in
+compile_tests' link-everything. Deferred by name: suite adoption
+(Fran's call, with track record now in hand), amalgamare list
+regeneration (01KY0XRBEX rides the same --enumerare mode),
+fabrica absorption, est_angulata upgrade (01KY118F).
+
 ## 2026-07-20 — Phase B (emitters + oracle + THE GATE) — sealed
 
 **PORTA: 119/119 OMNES BONAE (149s).** Every root probatio:
