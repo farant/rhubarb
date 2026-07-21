@@ -15,12 +15,16 @@
  * - Boolean attributes: <button disabled>
  * - Raw content tags: <code!>literal <>&</code>
  * - Capture operators: <div (> <) wrap> <= sandwich =>
+ * - Raw line capture: <tag! (>reliquum lineae crudum (ad '\n')
  *
  * Proprietates:
  * - DOM-stylus arbor
  * - Omnes chordae internatae
  * - Omnes allocationes ex Piscina
- * - No entity references (use raw tags instead)
+ * - Entia (&lt; &gt; &amp; &quot; &apos;) in TEXTU solo:
+ *   scriptor effugit, lector solvit (symmetricum). Valores
+ *   attributorum CRUDI ambabus viis - quota duplex (") in valore
+ *   attributi irrepraesentabilis; tags crudi verbatim.
  * ================================================== */
 
 /* ==================================================

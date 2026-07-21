@@ -637,10 +637,32 @@ _tok_legere_tag(StmlTokenContext* ctx)
     {
         si (est_crudus)
         {
-            /* Raw tag with forward capture - capture lines */
-            /* TODO: Implement line capture for raw tags */
+            /* Captura lineae crudae <tag! (>: reliquum lineae CRUDUM
+             * in lexemate ipso fertur (captus_contentus) - sine tags,
+             * sine entiis. '\n' flumini normali relinquitur.
+             * captio_numerus > 1 notatur sed adhuc UNAM lineam capit
+             * (multi-linea + dedentatio = futura). */
+            i32 contentum_initium;
+
             token.genus = STML_TOKEN_CRUDUS;
             token.captio_numerus = captio_numerus;
+            contentum_initium = ctx->positus;
+            dum (ctx->positus < ctx->input.mensura &&
+                 _tok_aspicere(ctx, ZEPHYRUM) != '\n')
+            {
+                _tok_progredi(ctx, I);
+            }
+            token.captus_contentus.datum =
+                ctx->input.datum + contentum_initium;
+            token.captus_contentus.mensura =
+                ctx->positus - contentum_initium;
+            si (token.captus_contentus.mensura > ZEPHYRUM &&
+                token.captus_contentus.datum[
+                    token.captus_contentus.mensura - I] == (i8)'\r')
+            {
+                token.captus_contentus.mensura--;
+            }
+            token.habet_captus = VERUM;
         }
         alioquin
         {
@@ -1179,6 +1201,31 @@ _parser_legere_elementum_crudus(StmlParserContext* ctx)
     }
 
     nodus->liberi = xar_creare(ctx->piscina, magnitudo(StmlNodus*));
+
+    /* Captura lineae crudae: contentum in lexemate ipso venit
+     * (captus_contentus, CRUDUM - sine unescape); elementum captum
+     * tag clausum proprium NON habet - CLAUDERE sequens parentis
+     * est, non tangendum (vitium pristinum: </parentis> devorabat) */
+    si (nodus->captio_numerus > ZEPHYRUM)
+    {
+        si (ctx->current.habet_captus &&
+            ctx->current.captus_contentus.mensura > ZEPHYRUM)
+        {
+            textus_nodus = _parser_creare_nodus(ctx,
+                STML_NODUS_TEXTUS);
+            si (textus_nodus)
+            {
+                StmlNodus** slot;
+                textus_nodus->valor = chorda_internare(ctx->intern,
+                    ctx->current.captus_contentus);
+                textus_nodus->parens = nodus;
+                slot = xar_addere(nodus->liberi);
+                si (slot) *slot = textus_nodus;
+            }
+        }
+        _parser_progredi(ctx);
+        redde nodus;
+    }
 
     _parser_progredi(ctx);  /* Consume raw opening tag */
 
@@ -1951,8 +1998,10 @@ _processare_captiones(StmlNodus* nodus, Piscina* piscina)
 
         si (liberum->genus == STML_NODUS_ELEMENTUM)
         {
-            /* Forward capture */
-            si (liberum->captio_directio == STML_CAPTIO_ANTE)
+            /* Forward capture (crudae iam satiatae tempore
+             * parsationis - linea intus, fratres non capiendi) */
+            si (liberum->captio_directio == STML_CAPTIO_ANTE &&
+                !liberum->crudus)
             {
                 StmlNodus** slot_c;
                 captio_count = liberum->captio_numerus;
@@ -3586,6 +3635,13 @@ stml_scribere_ad_aedificator(
                             }
                         }
                     }
+                }
+                si (nodus->crudus && !pulchrum)
+                {
+                    /* linea capta '\n' terminari DEBET - aliter
+                     * frater sequens in relectione devoratur (in
+                     * modo pulchro parens lineam novam praebet) */
+                    chorda_aedificator_appendere_character(aedificator, '\n');
                 }
             }
             alioquin

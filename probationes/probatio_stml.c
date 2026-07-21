@@ -2350,6 +2350,207 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare capturam lineae crudae <tag! (>
+     * (reliquum lineae CRUDUM - sine tags, sine entiis)
+     * ================================================== */
+
+    imprimere("\n--- Probans capturam lineae crudae ---\n");
+
+    {
+        /* Asperitates crudae: anguli, ampersand, quotae -
+         * verbatim ad finem lineae */
+        StmlResultus res;
+        StmlNodus*   vexillum;
+        StmlNodus*   textus;
+
+        res = stml_legere_ex_literis(
+            "<res>\n"
+            "  <vexillum! (>-DVIA=<a&b> \"c\" -O2\n"
+            "</res>\n", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        vexillum = stml_invenire_liberum(res.elementum_radix,
+            "vexillum");
+        CREDO_NON_NIHIL(vexillum);
+        CREDO_VERUM(vexillum->crudus);
+        CREDO_AEQUALIS_I32(vexillum->captio_directio,
+            STML_CAPTIO_ANTE);
+        CREDO_AEQUALIS_I32(vexillum->captio_numerus, I);
+        CREDO_AEQUALIS_I32(xar_numerus(vexillum->liberi), I);
+
+        textus = stml_liberum_ad_indicem(vexillum, ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_AEQUALIS_I32(textus->genus, STML_NODUS_TEXTUS);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "-DVIA=<a&b> \"c\" -O2"));
+
+        imprimere("  Captura cruda asperitatum: PRAETERITUM\n");
+    }
+
+    {
+        /* Regressio vitii devorantis: crudae binae in ordine +
+         * parens recte clauditur (pristinum: prima </parentis>
+         * devorabat -> TAG_NON_CLAUSUM) */
+        StmlResultus res;
+        Xar*         vexilla;
+        StmlNodus*   secundum;
+        StmlNodus*   textus;
+
+        res = stml_legere_ex_literis(
+            "<nexus>\n"
+            "  <vexillum! (>-framework Cocoa\n"
+            "  <vexillum! (>-framework WebKit\n"
+            "</nexus>\n", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        vexilla = stml_invenire_omnes_liberos(res.elementum_radix,
+            "vexillum", piscina);
+        CREDO_NON_NIHIL(vexilla);
+        CREDO_AEQUALIS_I32(xar_numerus(vexilla), II);
+
+        secundum = *(StmlNodus**)xar_obtinere(vexilla, I);
+        textus = stml_liberum_ad_indicem(secundum, ZEPHYRUM);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "-framework WebKit"));
+
+        imprimere("  Crudae binae + parens clausus: PRAETERITUM\n");
+    }
+
+    {
+        /* Entia in linea cruda NON solvuntur (crudum = crudum) */
+        StmlResultus res;
+        StmlNodus*   vexillum;
+        StmlNodus*   textus;
+
+        res = stml_legere_ex_literis(
+            "<res><vexillum! (>a&amp;b\n</res>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        vexillum = stml_invenire_liberum(res.elementum_radix,
+            "vexillum");
+        CREDO_NON_NIHIL(vexillum);
+        textus = stml_liberum_ad_indicem(vexillum, ZEPHYRUM);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "a&amp;b"));
+
+        imprimere("  Entia cruda intacta: PRAETERITUM\n");
+    }
+
+    {
+        /* Captura vacua: elementum sine liberis */
+        StmlResultus res;
+        StmlNodus*   vexillum;
+
+        res = stml_legere_ex_literis(
+            "<res><vexillum! (>\n</res>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        vexillum = stml_invenire_liberum(res.elementum_radix,
+            "vexillum");
+        CREDO_NON_NIHIL(vexillum);
+        CREDO_VERUM(vexillum->crudus);
+        CREDO_AEQUALIS_I32(xar_numerus(vexillum->liberi), ZEPHYRUM);
+
+        imprimere("  Captura vacua: PRAETERITUM\n");
+    }
+
+    {
+        /* ((> numerum notat sed adhuc UNAM lineam capit (v1) */
+        StmlResultus res;
+        StmlNodus*   vexillum;
+
+        res = stml_legere_ex_literis(
+            "<res>\n"
+            "  <vexillum! ((>prima linea\n"
+            "  <alia/>\n"
+            "</res>\n", piscina, intern);
+        CREDO_VERUM(res.successus);
+        vexillum = stml_invenire_liberum(res.elementum_radix,
+            "vexillum");
+        CREDO_NON_NIHIL(vexillum);
+        CREDO_AEQUALIS_I32(vexillum->captio_numerus, II);
+        CREDO_AEQUALIS_I32(xar_numerus(vexillum->liberi), I);
+        CREDO_NON_NIHIL(stml_invenire_liberum(res.elementum_radix,
+            "alia"));
+
+        imprimere("  ((> notatum, una linea (v1): PRAETERITUM\n");
+    }
+
+    {
+        /* Circuitus: lectio -> scriptio -> relectio -> rescriptio,
+         * ambabus posturis stabilis */
+        StmlResultus res;
+        StmlResultus relectum;
+        chorda       scriptum;
+        chorda       rescriptum;
+
+        res = stml_legere_ex_literis(
+            "<nexus>\n"
+            "  <vexillum! (>-DSQLITE_LIKE=\"x\" -O2\n"
+            "  <alia/>\n"
+            "</nexus>\n", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        /* postura non-pulchra: '\n' post lineam captam scribi
+         * debet ne <alia/> in relectione devoretur */
+        scriptum = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        relectum = stml_legere(scriptum, piscina, intern);
+        CREDO_VERUM(relectum.successus);
+        CREDO_NON_NIHIL(stml_invenire_liberum(
+            relectum.elementum_radix, "alia"));
+        rescriptum = stml_scribere(relectum.elementum_radix,
+            piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS(scriptum, rescriptum);
+
+        /* postura pulchra */
+        scriptum = stml_scribere(res.elementum_radix, piscina,
+            VERUM);
+        relectum = stml_legere(scriptum, piscina, intern);
+        CREDO_VERUM(relectum.successus);
+        rescriptum = stml_scribere(relectum.elementum_radix,
+            piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS(scriptum, rescriptum);
+
+        imprimere("  Circuitus crudae ambabus posturis: PRAETERITUM\n");
+    }
+
+    {
+        /* Via constructoris (semita manifesti aedilis): nodus manu
+         * structus -> scriptio -> lectio -> valor idem */
+        StmlNodus*   nexus;
+        StmlNodus*   vexillum;
+        StmlNodus*   textus;
+        StmlResultus relectum;
+        chorda       scriptum;
+
+        nexus = stml_elementum_creare(piscina, intern, "nexus");
+        vexillum = stml_elementum_creare(piscina, intern,
+            "vexillum");
+        CREDO_NON_NIHIL(nexus);
+        CREDO_NON_NIHIL(vexillum);
+        vexillum->crudus = VERUM;
+        vexillum->captio_directio = STML_CAPTIO_ANTE;
+        vexillum->captio_numerus = I;
+        CREDO_VERUM(stml_textum_addere(vexillum, piscina, intern,
+            "-DFOO=\"bar\" -framework Cocoa"));
+        CREDO_VERUM(stml_liberum_addere(nexus, vexillum));
+
+        scriptum = stml_scribere(nexus, piscina, FALSUM);
+        relectum = stml_legere(scriptum, piscina, intern);
+        CREDO_VERUM(relectum.successus);
+        vexillum = stml_invenire_liberum(relectum.elementum_radix,
+            "vexillum");
+        CREDO_NON_NIHIL(vexillum);
+        textus = stml_liberum_ad_indicem(vexillum, ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "-DFOO=\"bar\" -framework Cocoa"));
+
+        imprimere("  Via constructoris cruda: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 
