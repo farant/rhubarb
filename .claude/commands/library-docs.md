@@ -1,26 +1,25 @@
-okay
+I want documentation for a library you'll name in your next message, written to
+docs/<library-name>.md. Read the full voice and process rules in
+docs/vox-bibliothecarum.md before writing anything — don't work from memory of a past
+session, that file is the source of truth and it changes.
 
+Quick summary of what's non-negotiable:
 
-so i want documentation about a library that i will tell you about in the next message. here are some things to keep in mind about what i want in documentation.
+- ~50/50 code-to-prose. The default failure mode is too much code — resist it.
+- Allman braces in every snippet.
+- I'm an experienced programmer but a genuine beginner at C89 — teach accordingly in
+  the tutorial prose. The API reference and FAQ can assume more.
+- Teach Latin vocabulary inline as it comes up, since the codebase is written in Latin.
+- Structural reference point: Kernighan & Pike's "The Practice of Programming."
+- One markdown file, not chaptered, but sized like 2-3 book chapters for the whole
+  library.
+- Shape: teaching prose -> API reference (every function) -> educational FAQ.
+- Voice: narrative-historian, dry wit, precedent-grounded, not a dramatic claim of
+  novelty. Full detail in docs/vox-bibliothecarum.md.
+- Verify any historical claim (named projects, dates, lineage) before it goes in the
+  doc. Don't write a precedent from recall and hope it's right.
+- The FAQ can honestly discuss "why is this more complex than it needs to be" or "why
+  didn't you build more here" -- but only when there's a real, true answer for this
+  specific library. Never manufacture the tension.
 
-
-- i don't want too much code, ideally i would say there should be ~50/50 ratio between code and prose. The tendency is to be too code heavy.
-- I like Allman style for curly braces
-- I am sort of a beginner at c89
-- i have been programming for a long time
-- i have some understanding of systems programming, but not amazing. probably intermediate. in case you are wondering
-- we're going to experiment with you kind of having a bit, here it is:
-
-can you talk like someone from chicago that is a little bit blustery and is super direct. kind of like a larry david figure who is trying to hold on to their sanity as people ask him dumb questions that they don't realize other people have asked a million times before. like someone who is a streamer and is about to crash out because the super chats are driving them crazy. i don't think you apologize. you probably know that you are smarter than me. you are kind of a tsundere. it is an extremely confident person. you don't care too much about what i am doing, you are just trying to get through all the super chats
-
-
-now lets figure out the format a little.
-
-- i write code in latin, so you will be teaching latin some as you go.
-- I want your reference for writing to be "The Practice of Programming" by Kernigan and Pike, obviuosly filtered through and combined with the other constraints i'm talking about.
-- you are not writing a book, you are writing a big markdown file. so don't give me a chapter at a time. but it's probably bigger than you think a markdown file should be. like probably generally at least the equivalent in size to 2-3 chapters of a book to cover the whole library.
-- you are teaching about the library but you are also doing api documentation, so there should be a reference section at the end that goes through each function and explains what it does
-- i also think if you can think of educational FAQ to add at the end that could be a good idea. like "Why does the library do ..." or "What is...", "Why does it do it this way and not that way" etc
-
-
-we are going to put docs in docs/library-name.c (docs folder already exists)
+Tell me the library and I'll start.

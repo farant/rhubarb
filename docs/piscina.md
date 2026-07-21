@@ -1,878 +1,591 @@
-# Piscina: The Memory Pool You Actually Need
+# Piscina
 
-Look, I'm gonna level with you here. You're writing C89. You know what that means? It means you're gonna be calling `malloc()` and `free()` approximately ten thousand times, you're gonna leak memory like a busted radiator, and you're gonna spend your Saturday nights running Valgrind wondering why your perfectly good code is suddenly eating 4GB of RAM.
+An arena allocator: one big block of memory you hand out pieces of, and instead of
+freeing those pieces one at a time, you free the whole block at once when you're done
+with it. This document teaches you how to use it, then serves as a reference once you
+already know it.
 
-Or - OR - you could use an arena allocator and sleep at night.
+## An old technique, not a new one
 
-This is **piscina**. Latin for "swimming pool." Because that's what it is - a big pool of memory you can splash around in without worrying about cleaning up every individual drop of water. You allocate from it, you use what you got, and when you're done with the whole thing, you drain the pool. One function call. Everything gone. No leaks. No fragmentation. No staying up until 3 AM tracking down that one `free()` you forgot.
+Every so often a technique falls out of fashion not because it stopped working, but
+because the generation that needed it retired. Arena allocation is one of those. The
+Apache HTTP Server has used it since the 1990s, under the name *pools* — every request
+gets one, and when the request finishes, the whole pool is freed in a single call,
+regardless of how many small allocations happened inside it. PostgreSQL does the same
+thing under a different name, *memory contexts*, scoped to a query or a transaction.
+id Software's Quake engine has something in the same family, the Hunk allocator — a
+block that grows from both ends toward the middle, holding a level's models, sounds,
+and textures until the level unloads, at which point the whole thing clears at once
+rather than being walked and freed piece by piece. Even GCC's own compiler internals
+use a version of this, called an *obstack* — object stack — for its own working
+memory.
 
-I've explained this concept to approximately four thousand people this week alone, so buckle up, we're doing this one more time.
-
-## What Even IS This Thing?
-
-An arena allocator. A memory pool. A bump allocator. Whatever you want to call it - the concept is dead simple and people somehow make it complicated anyway.
-
-Here's the deal: you create one big chunk of memory (we call it a *piscina*), and then you hand out pieces of it on demand. That's it. No freeing individual allocations. When you're done with EVERYTHING, you destroy the whole pool and get your life back.
-
-```c
-Piscina* p = piscina_generare_dynamicum("my_stuff", 4096);
-vacuum*  a = piscina_allocare(p, 100);  /* gimme 100 bytes */
-vacuum*  b = piscina_allocare(p, 200);  /* gimme 200 more */
-vacuum*  c = piscina_allocare(p, 50);   /* and 50 more */
-
-/* ... do your work ... */
-
-piscina_destruere(p);  /* BOOM. Everything gone. */
-```
-
-See that? Three allocations, one cleanup. Beautiful. Simple. Chef's kiss.
-
-### Wait, Why Would I Want This?
-
-Great question, glad you asked for the five hundredth time today. Here's why:
-
-**Performance**: Allocating from a pool is basically just bumping a pointer. It's O(1), it's cache-friendly, it's fast as hell. No free lists, no block coalescing, no nothing.
-
-**Simplicity**: Your cleanup code is one line. ONE LINE. You know how many memory leaks you can have with one line? Zero. That's how many.
-
-**Predictability**: You want to know how much memory your operation uses? Look at the pool size. Done. No fragmentation mysteries, no "where did my 16MB go" debugging sessions.
-
-**Locality**: Everything you allocate is close together in memory. Your CPU's cache prefetcher will actually work for once instead of thrashing all over the heap.
-
-The tradeoff? You can't free individual allocations. You're all-in until you destroy the pool. But here's the thing - if you're writing parsers, compilers, request handlers, game frames, or basically anything with a clear lifetime, this is EXACTLY what you want.
-
-## Latin Crash Course (Because Apparently We're Doing This)
-
-Alright, since you decided to write your C code in Latin like some kind of scholastic programmer from the 13th century, let's learn some vocabulary. I'll teach you as we go, but here's the essentials:
-
-- **piscina** = pool, swimming pool (the main memory pool)
-- **alveus** = trough, bucket, channel (the individual memory chunks)
-- **generare** = to generate, to create
-- **destruere** = to destroy
-- **allocare** = to allocate (yeah, this one's easy)
-- **conari** = to try, to attempt
-- **vacare** = to empty, to clear out
-- **mensura** = size, measurement
-- **capacitas** = capacity (also easy)
-- **usus** = usage, use
-- **summa** = total, sum
-
-There. Now when you see `piscina_generare_dynamicum()` you can translate it as "pool_create_dynamic" and feel smart about it. You're welcome.
-
-## How This Actually Works (The Mental Model)
-
-Picture this: you've got a swimming pool - your *piscina*. But it's not just one big pool, it's potentially multiple connected pools - these are your *alvei* (plural of *alveus*, which means bucket or trough, and yes, I know that's a weird mental image but just go with it).
-
-Each *alveus* is a chunk of memory with:
-- A buffer (the actual memory you can use)
-- A capacity (how big the buffer is)
-- An offset (how much you've used so far)
-- A link to the next bucket (if there is one)
-
-When you allocate memory, the pool just bumps the offset forward and hands you a pointer. Fast. Simple. No thinking required.
+None of these projects copied each other. Anyone who spends long enough fighting
+`malloc()`'s bookkeeping problem — track every allocation, remember to free every one,
+exactly once, in code paths you may not control — arrives at roughly the same idea
+independently: stop tracking allocations individually, and start tracking *lifetimes*
+instead. Group everything that dies at the same moment, and free it all in one motion.
+The formal name for this is region-based memory management, and the idea has an
+academic paper trail too — Ruggieri and Murtagh described compiler-inserted regions
+tied to function scope in 1988; Tofte and Talpin generalized it into a full type
+theory for Standard ML in 1994. We didn't invent any of this. We're doing what a
+fairly large and varied set of people, working on unrelated problems, kept
+re-discovering was the right shape for memory whose lifetime you can see coming.
 
 ```c
-/* Simplified view of what's happening internally */
+Piscina* p = piscina_generare_dynamicum("meum_opus", 4096);
 
-Piscina:
-  alveus #1: [used: 500 bytes] [free: 3596 bytes] -> alveus #2
-  alveus #2: [used: 1000 bytes] [free: 7192 bytes] -> NULL
-             ^
-             |
-          current allocation point
+vacuum* a = piscina_allocare(p, 100);
+vacuum* b = piscina_allocare(p, 200);
+vacuum* c = piscina_allocare(p, 50);
+
+/* ... fac opus tuum ... */
+
+piscina_destruere(p);
 ```
 
-When the current bucket fills up, one of three things happens:
+Three allocations, one cleanup call. That line at the bottom is the entire reason this
+library exists.
 
-1. **If there's a next bucket already**: Move to it and keep allocating
-2. **If you're in dynamic mode**: Create a new bucket (2x the size of the original)
-3. **If you're in fixed mode**: Return NULL and make you deal with it
+## Latin, since you'll be reading a lot of it
 
-That's literally it. That's the whole algorithm.
+You're writing C89 in Latin, so before anything else, here's the vocabulary this
+library is built from. You'll see these words constantly, so it's worth having them
+land now rather than working them out function name by function name later.
 
-## Creating Your Pool
+| Latin | Meaning | Shows up as |
+|---|---|---|
+| *piscina* | pool, swimming pool | the pool itself |
+| *alveus* | trough, channel, bucket | the individual memory chunks inside a pool |
+| *generare* | to generate, create | `piscina_generare_dynamicum` |
+| *destruere* | to destroy | `piscina_destruere` |
+| *allocare* | to allocate | `piscina_allocare` |
+| *conari* | to try, attempt | `piscina_conari_allocare` |
+| *vacare* | to empty, be empty | `piscina_vacare` |
+| *notare* | to mark, note | `piscina_notare` |
+| *reficere* | to restore, repair | `piscina_reficere` |
+| *mensura* | measurement, size | `mensura` parameters throughout |
+| *capacitas* | capacity | field inside `Alveus` |
+| *usus* | use, usage | `piscina_summa_usus` |
+| *summa* | total, sum | `piscina_summa_usus`, `piscina_summa_apex_usus` |
+| *ordinatio* | ordering, arrangement | alignment — `piscina_allocare_ordinatum` |
+| *apex* | peak, summit | `piscina_summa_apex_usus` — peak usage |
 
-You've got two choices here, and the names are annoyingly long but at least they're descriptive.
+*Piscina* is Latin for "swimming pool," and the mental picture is a deliberate one:
+a pool is one body of water you draw from, not a collection of individually-tracked
+cups.
 
-### Dynamic Pools (The Normal Choice)
+## How it actually works
+
+A `Piscina` doesn't hold memory directly. It holds a chain of `Alveus` structs —
+buckets — and each bucket owns one real block of memory:
+
+```c
+nomen structura Alveus
+{
+              vacuum* buffer;
+      memoriae_index  capacitas;
+      memoriae_index  offset;
+    structura Alveus* sequens;
+} Alveus;
+```
+
+*Buffer* is the real memory. *Capacitas* is how big it is. *Offset* is how much of it
+is currently spoken for. *Sequens* — "next" — points to the following bucket, if the
+pool has grown past one.
+
+Allocating memory is nothing more than moving `offset` forward and handing back a
+pointer to where it used to be:
+
+```
+alveus:  [ used: 500 bytes | free: 3596 bytes ] -> alveus #2 -> NIHIL
+                            ^
+                            offset (next allocation starts here)
+```
+
+That's the entire fast path. No searching for a free block big enough, no merging
+adjacent free blocks back together when something is freed — because nothing gets
+freed individually in the first place. When the current bucket runs out of room,
+`piscina` does one of three things, in order: move to a bucket that already exists
+further down the chain, create a new bucket if the pool is allowed to grow, or give up
+if it isn't. That's covered properly in the next section.
+
+## Creating a pool
+
+Two constructors, and the difference between them is whether the pool is allowed to
+grow past its starting size.
+
+### Dynamic pools
 
 ```c
 Piscina* p = piscina_generare_dynamicum("parser_pool", 4096);
 ```
 
-Let's break down that function name because I know you're squinting at it:
-- `piscina` - pool (duh)
-- `generare` - to generate/create
-- `dynamicum` - dynamic (it can grow)
+The first argument is a name — purely for debugging, safe to pass `NIHIL` if you don't
+care, but worth having when you're staring at a failed allocation and trying to figure
+out which pool ran out of room. The second is the starting bucket size in bytes.
 
-This creates a pool that starts with one 4KB bucket. If you fill it up, it automatically allocates a new bucket that's twice the size of the original (8KB in this case). Then if you fill THAT up, it makes a 16KB bucket. And so on.
+A dynamic pool begins with one bucket of that size, and that starting size doubles
+into a *growth baseline* that every later bucket is sized from. When the current
+bucket fills up, `piscina` creates a new bucket at exactly that baseline — not twice
+the size of the bucket that just filled. In the ordinary case, that means every bucket
+after the first is the same size as the one before it, not progressively larger the
+way a growable array typically gets: filling many small buckets doesn't make the next
+one bigger.
 
-The first argument is a name. It's optional (pass `NIHIL` if you don't care), but it helps with debugging. When you're staring at allocation failures at midnight, you'll thank yourself for naming your pools.
+The baseline only moves when a single allocation is bigger than it. In that case, the
+new bucket is sized to fit the oversized request plus the pool's original starting
+size, and *that* becomes the new baseline every later ordinary bucket doubles from —
+so a pool that's only ever seen small allocations stays flat, while one that's been
+handed a couple of unusually large single requests will have visibly larger buckets
+from that point on.
 
-The second argument is the initial bucket size. Pick something reasonable:
-- Too small (like 64 bytes): You'll constantly allocate new buckets. Wasteful.
-- Too large (like 1GB): You'll waste memory you're not using. Also wasteful.
-- Just right (4KB - 64KB): Goldilocks zone. You're smart.
-
-### Fixed-Size Pools (The "I Know Exactly What I'm Doing" Choice)
-
-```c
-Piscina* p = piscina_generare_certae_magnitudinis("fixed_pool", 8192);
-```
-
-More Latin for you:
-- `certae` - certain, definite
-- `magnitudinis` - of size
-
-This creates a pool with exactly one bucket of exactly the size you specified. It will NEVER grow. When you're out of space, allocations return NULL (if you use the safe variant) or crash your program (if you use the unsafe variant).
-
-Why would you want this? Because sometimes you know EXACTLY how much memory your operation needs, and you want a hard failure if you go over. Better than silently allocating gigabytes because you had a bug.
+### Fixed-size pools
 
 ```c
-/* I'm parsing a config file. I KNOW it's under 8KB. */
-Piscina* p = piscina_generare_certae_magnitudinis("config", 8192);
-
-/* ... parse config ... */
-
-si (something_went_wrong)
-{
-    /* If I somehow exceeded 8KB, something is VERY wrong */
-    imprimere("Config file too large, aborting\n");
-    piscina_destruere(p);
-    exire(I);
-}
+Piscina* p = piscina_generare_certae_magnitudinis("config_pool", 8192);
 ```
 
-### Destroying Your Pool (The Easy Part)
+*Certae magnitudinis* — "of a certain size." This creates exactly one bucket, sized
+exactly as given, and it will never grow. When it fills up, allocation fails — either
+by returning `NIHIL` or by killing the program, depending on which allocation function
+you called (the next section covers that choice).
+
+Reach for this when you know the ceiling ahead of time and want a hard failure if
+you're wrong, rather than a silent memory increase that hides a bug. Parsing a config
+file that should never exceed a few kilobytes is a reasonable case: if it somehow does,
+something upstream is already broken, and you'd rather find out immediately than
+allocate gigabytes trying to be accommodating.
+
+### Destroying a pool
 
 ```c
 piscina_destruere(p);
 ```
 
-That's it. Every allocation you made from this pool? Gone. Every bucket? Freed. Every pointer you got from `piscina_allocare()`? Invalid.
+Every bucket in the chain gets freed, the pool's own bookkeeping struct gets freed, and
+every pointer you ever got back from `piscina_allocare()` on this pool is now
+dangling. Nothing about the pointers themselves changes — they still hold the same
+addresses — but the memory behind them is gone. Using one after this call is undefined
+behavior, the same as using any pointer after `free()`.
 
-This is the beauty of arena allocation - your cleanup is a single line. You don't track individual allocations. You don't maintain free lists. You just nuke the whole thing and move on with your life.
+## Allocating memory
 
-**Important**: After you call this, that `Piscina*` pointer is dead. Don't use it. Don't even look at it. It's gone.
+Every allocation in `piscina` is a choice along two independent axes: what happens on
+failure, and whether you need specific alignment. That gives four functions, and the
+FAQ has more to say about why it's four functions instead of one with flags — for now,
+here's what each does.
 
-## Allocating Memory (Finally)
-
-Okay, you've got your pool. Now you want memory. You've got options.
-
-### The Normal Way (Dies On Failure)
+**Dies on failure, no alignment requirement:**
 
 ```c
-vacuum* ptr = piscina_allocare(piscina, 256);
+vacuum* ptr = piscina_allocare(p, 256);
 ```
 
-This allocates 256 bytes and gives you a pointer. If it can't allocate (you're out of space and can't grow), it prints an error and calls `exire(I)`. Your program dies. Harsh but simple.
+If this can't get you 256 bytes — the pool is fixed-size and full, or a dynamic pool's
+own bucket allocation failed — it prints an error naming the pool and calls `exire(I)`.
+Your program ends. This sounds harsh until you notice how often "allocation failed" and
+"something is already badly wrong" are the same event; in that case, a graceful `si
+(!ptr)` check at every call site is just ceremony around a failure nobody was going to
+recover from anyway.
 
-Use this when allocation failure means something is catastrophically wrong and you should just give up. Which, let's be honest, is most of the time.
-
-```c
-structura Config
-{
-    character  nome[64];
-    i32        valor;
-};
-
-Piscina* p = piscina_generare_dynamicum("app_pool", 4096);
-
-/* This will succeed or die trying */
-structura Config* cfg = piscina_allocare(p, magnitudo(structura Config));
-cfg->valor = 42;
-```
-
-### The Safe Way (Returns NULL On Failure)
+**Returns `NIHIL` on failure:**
 
 ```c
-vacuum* ptr = piscina_conari_allocare(piscina, 256);
+vacuum* ptr = piscina_conari_allocare(p, user_supplied_size);
 si (!ptr)
 {
-    /* Handle the failure yourself */
-    imprimere("Out of memory!\n");
+    imprimere("Allocation failed for %zu bytes\n", user_supplied_size);
     redde FALSUM;
 }
 ```
 
-`conari` means "to try" - this function TRIES to allocate but won't crash if it fails. You get NULL back and you handle it like an adult.
+*Conari* — "to try." Use this whenever the size in question came from outside your
+control — user input, a file on disk, a network message — and a too-large request is
+a normal event you intend to handle rather than a sign your program has gone wrong.
 
-Use this when you're not sure if the allocation will succeed and you want to gracefully handle failure.
-
-```c
-/* Reading user input - could be anything */
-vacuum* buffer = piscina_conari_allocare(p, user_size);
-si (!buffer)
-{
-    imprimere("Allocation failed, size too large: %zu\n", user_size);
-    redde NIHIL;
-}
-```
-
-### Aligned Allocations (For The Performance Nerds)
-
-Sometimes you need your memory aligned to specific boundaries. Maybe you're doing SIMD operations and need 16-byte alignment. Maybe you're allocating structures with strict alignment requirements. Whatever.
+**Aligned versions of both:**
 
 ```c
-vacuum* ptr = piscina_allocare_ordinatum(p, 64, XVI);
-```
-
-That allocates 64 bytes, aligned to a 16-byte boundary. The pointer you get back will be a multiple of 16.
-
-There's also `piscina_conari_allocare_ordinatum()` if you want the safe version.
-
-Why would you need this? Here's a real example:
-
-```c
-/* SSE requires 16-byte alignment */
-#define ALIGNMENT_SSE XVI
-
-structura Vector4
-{
-    f32 x, y, z, w;
-};
-
-/* This better be aligned or SSE instructions will crash */
 structura Vector4* v = piscina_allocare_ordinatum(
     p,
     magnitudo(structura Vector4),
-    ALIGNMENT_SSE
-);
+    XVI);
 ```
 
-The pool handles the alignment for you. It might waste a few bytes padding to get there, but that's fine - you're using an arena allocator, you've already accepted some waste in exchange for speed and simplicity.
+*Ordinatio* — alignment. SIMD types, and any structure your platform's ABI expects to
+land on a specific byte boundary, need this. The pool pads the offset forward as
+needed to hit the requested alignment before handing back a pointer, at the cost of a
+few wasted bytes of padding — an arena allocator has already accepted some waste in
+exchange for speed, and a little alignment padding is more of the same trade.
+`piscina_conari_allocare_ordinatum()` combines this with the NIHIL-on-failure variant.
 
-## Managing The Lifecycle
+## Managing a pool's lifecycle
 
-Alright, you've allocated a bunch of stuff. Now what?
+Once you're allocating from a pool, there are two different ways to reclaim space
+without destroying the whole thing — and they solve different problems.
 
-### Clearing The Pool (Reuse Without Destroying)
+### Clearing everything: `piscina_vacare()`
 
 ```c
-piscina_vacare(p);
-```
-
-`vacare` means "to empty" or "to be empty." This resets all the buckets back to their starting state. The memory is still allocated, but the offsets are back to zero. It's like draining and refilling the pool.
-
-```c
-/* Process 1000 files, reusing the same pool */
-per (i32 i = ZEPHYRUM; i < M; i++)
+per (i32 i = ZEPHYRUM; i < numerus_plicarum; i++)
 {
-    /* Allocate stuff for this file */
-    character* buffer = piscina_allocare(p, file_sizes[i]);
-    /* ... process file ... */
-
-    /* Clear pool for next iteration */
+    character* buffer = piscina_allocare(p, dimensiones_plicae[i]);
+    /* ... processa plicam ... */
     piscina_vacare(p);
 }
 ```
 
-This is way faster than destroying and recreating the pool every iteration. The buckets stay allocated, you just reset them.
+*Vacare* — to empty. Every bucket's `offset` resets to zero, but the buckets
+themselves stay allocated, ready to be reused on the next pass. This is meaningfully
+cheaper than destroying and recreating the pool every iteration, because the
+underlying `malloc()`-backed memory never gets freed and re-requested — you're only
+resetting an integer per bucket.
 
-**Warning**: After calling `vacare()`, all the pointers you got from `piscina_allocare()` are invalid. The memory they point to still exists, but you're about to overwrite it with new allocations. Don't use those pointers.
+Exactly like `piscina_destruere()`, every pointer handed out before the call is now
+invalid. The memory is still there — it hasn't been returned to the operating system 
+— but the next allocation is about to write over it.
 
-### Checking Usage (Because You're Curious)
+### Rewinding partway: mark and reset
 
-Want to know how much memory you're using? We've got functions for that.
-
-```c
-/* Total bytes allocated from the pool */
-memoriae_index used = piscina_summa_usus(p);
-
-/* Total bytes wasted (allocated but not used) */
-memoriae_index waste = piscina_summa_inutilis_allocatus(p);
-
-/* Bytes remaining in current bucket before growth */
-memoriae_index remaining = piscina_reliqua_antequam_cresca_alvei(p);
-
-/* Peak usage across the pool's lifetime */
-memoriae_index peak = piscina_summa_apex_usus(p);
-```
-
-More Latin vocabulary:
-- `summa` = total, sum
-- `usus` = use, usage
-- `inutilis` = useless, wasted
-- `allocatus` = allocated
-- `reliqua` = remaining, leftover
-- `antequam` = before
-- `cresca` = growth (from crescere, to grow)
-- `alvei` = of the bucket
-- `apex` = peak, summit
-
-These are mostly useful for debugging and profiling. You can check if you're wasting a ton of memory on alignment padding, or if your pool is constantly growing and you should just start with a bigger size.
+`piscina_vacare()` is all-or-nothing. Sometimes you want to allocate some temporary
+scratch space, use it, and give just that back — without touching allocations that
+came before it and need to survive. That's `piscina_notare()` and
+`piscina_reficere()`:
 
 ```c
-Piscina* p = piscina_generare_dynamicum("test", 1024);
+PiscinaNotatio nota = piscina_notare(p);
 
-vacuum* a = piscina_allocare(p, 500);
-vacuum* b = piscina_allocare(p, 300);
+vacuum* temporaria = piscina_allocare(p, 4096);
+/* ... utere temporaria pro opere transeunti ... */
 
-imprimere("Used: %zu bytes\n", piscina_summa_usus(p));         /* 800 */
-imprimere("Wasted: %zu bytes\n", piscina_summa_inutilis_allocatus(p)); /* 224 */
-imprimere("Remaining: %zu bytes\n", piscina_reliqua_antequam_cresca_alvei(p)); /* 224 */
+piscina_reficere(p, nota);
+/* Omnia allocata post 'nota' sunt nunc invalida.
+ * Omnia allocata ANTE 'nota' remanent valida. */
 ```
 
-The peak usage one is particularly useful - it tells you the high-water mark, even after you've cleared the pool. Great for figuring out how big your initial bucket should be.
+*Notare* — to note, to mark — captures exactly where you are in the pool right now:
+which bucket, and how far into it. *Reficere* — to restore — rewinds the pool back to
+that exact point, invalidating everything allocated in between while leaving anything
+allocated before the mark untouched. This is the one place `piscina` behaves like a
+true stack rather than a pure bump allocator: marks nest correctly as long as you
+reset them in the reverse order you set them, the same discipline any stack requires.
 
-## Common Patterns (That You're Gonna Use Anyway)
+A parser is the natural example: mark before attempting to parse an expression,
+allocate freely while trying, and reset back to the mark if the attempt fails and you
+need to backtrack — the permanent parse tree built before the mark survives, the
+failed attempt's scratch work doesn't.
 
-### Per-Request Pools
+## Checking on a pool
 
-You're writing a web server. Each request comes in, you parse it, process it, send a response. You could track all those little allocations... or:
+Four query functions, none of which change anything:
 
 ```c
-vacuum handle_request(Request* req)
-{
-    Piscina* p = piscina_generare_dynamicum("request", 8192);
-
-    /* Parse request body */
-    character* body = parse_body(req, p);
-
-    /* Allocate response buffer */
-    character* response = piscina_allocare(p, 4096);
-
-    /* Do your work */
-    generate_response(body, response);
-    send_response(response);
-
-    /* One line cleanup */
-    piscina_destruere(p);
-}
+memoriae_index usus     = piscina_summa_usus(p);
+memoriae_index vastum   = piscina_summa_inutilis_allocatus(p);
+memoriae_index reliqua  = piscina_reliqua_antequam_cresca_alvei(p);
+memoriae_index apex     = piscina_summa_apex_usus(p);
 ```
 
-Every request gets its own pool. When the request is done, nuke the pool. No leaks, no tracking, no problems.
+*Usus* is straightforward — total bytes currently allocated, summed across every
+bucket. *Inutilis allocatus* — "uselessly allocated" — is the gap between what's been
+handed out and what each bucket actually holds, i.e. wasted capacity, mostly useful
+for spotting a growth size that's too large for the workload. *Reliqua antequam
+cresca alvei* — "remaining before the bucket grows" — tells you how close the
+*current* bucket is to forcing a new one. *Apex usus* — peak usage — is the
+high-water mark across the pool's entire life, and unlike the other three, it survives
+a `piscina_vacare()` call, which makes it the right tool for answering "how big should
+I have started this pool" after the fact.
 
-### Parser Scratch Space
-
-You're parsing JSON or XML or whatever. You need temporary buffers for strings, arrays, objects. You could malloc each one... or:
+There's a fifth function in the same family, `piscina_potesne_allocare()` — "can you
+allocate" — which answers a yes-or-no question ahead of time instead of reporting
+history:
 
 ```c
-JsonValue* parse_json(constans character* input)
-{
-    Piscina* scratch = piscina_generare_dynamicum("json_scratch", 16384);
-
-    /* All your temporary parsing allocations come from here */
-    JsonValue* result = parse_value(input, scratch);
-
-    /* Copy the final result to permanent storage */
-    JsonValue* permanent = copy_to_permanent(result);
-
-    /* Trash all the temporary stuff */
-    piscina_destruere(scratch);
-
-    redde permanent;
-}
+b32 cabit = piscina_potesne_allocare(p, mensura_necessaria);
 ```
 
-### Frame-Based Allocation (Games)
+For a dynamic pool this is always `VERUM`, since a dynamic pool can always grow. For a
+fixed-size pool it checks whether the request fits in what's left — useful when you'd
+rather branch on the answer than let `piscina_conari_allocare()` fail and handle it
+after the fact.
 
-Every frame, you allocate temporary stuff. Particle effects, UI elements, whatever. At the end of the frame, trash it all.
+## Patterns worth knowing
+
+**Per-request pools.** A pool created at the start of handling one unit of work — a
+web request, a single frame, one file — and destroyed at the end of it. This is
+structurally identical to what Apache's `apr_pool_t` does per HTTP request; the
+pattern predates this library by decades because the underlying shape of the problem
+(bounded, predictable lifetime) hasn't changed.
+
+**Parser scratch space.** Everything a recursive-descent parser allocates while
+building an AST goes into one pool. If parsing succeeds, copy only the final result
+somewhere permanent and destroy the scratch pool. If it fails partway through,
+`piscina_reficere()` back to a mark taken before the attempt and try a different
+production, without having to manually track and free every partial node the failed
+attempt created.
+
+**Frame-based allocation.** A pool sized for one frame of a running program — particle
+effects, transient UI state, whatever doesn't need to outlive the frame it was
+computed for — cleared with `piscina_vacare()` at the top of every new frame rather
+than destroyed and rebuilt.
+
+## Things that will bite you
+
+**Using a pointer after `piscina_destruere()`, `piscina_vacare()`, or
+`piscina_reficere()` past its mark.** All three invalidate previously-returned
+pointers without changing the pointer's value — the address still looks valid, so the
+bug tends to show up later, on unrelated data, rather than at the point of the mistake.
+
+**Assuming allocated memory starts zeroed.** It doesn't. `piscina_allocare()` and its
+variants hand back whatever bytes happened to be sitting at that offset — leftover
+data from a previous `piscina_vacare()` cycle, or whatever the operating system left
+behind on a fresh bucket. If your code depends on zero-initialized memory, ask for it
+explicitly:
 
 ```c
-Piscina* frame_pool = piscina_generare_dynamicum("frame", 1024 * 1024);
-
-dum (game_running)
-{
-    /* Allocate frame stuff */
-    Particle* particles = piscina_allocare(frame_pool, particle_count * magnitudo(Particle));
-    UIElement* ui = piscina_allocare(frame_pool, ui_count * magnitudo(UIElement));
-
-    render_frame(particles, ui);
-
-    /* Clear for next frame */
-    piscina_vacare(frame_pool);
-}
-
-piscina_destruere(frame_pool);
+vacuum* ptr = piscina_allocare(p, mensura);
+memset(ptr, ZEPHYRUM, mensura);
 ```
 
-See the pattern? Create pool, use pool, trash pool. Over and over. Simple.
-
-## Things That Will Bite You (Read This Or Suffer)
-
-### Don't Use Pointers After Destroying The Pool
-
-I know I already said this, but people KEEP doing it, so I'm saying it again.
-
-```c
-/* BAD - DO NOT DO THIS */
-character* str = piscina_allocare(p, 100);
-strcpy(str, "hello");
-piscina_destruere(p);
-imprimere("%s\n", str);  /* CRASHES. str is invalid. */
-```
-
-After `piscina_destruere()`, every pointer you got from that pool is DEAD. Don't use them. They point to freed memory. You will crash, or worse, you'll get corrupted data and spend hours debugging.
-
-Same goes for `piscina_vacare()`:
-
-```c
-/* ALSO BAD */
-character* str = piscina_allocare(p, 100);
-strcpy(str, "hello");
-piscina_vacare(p);
-imprimere("%s\n", str);  /* Undefined behavior. Might work, might crash, might summon demons. */
-```
-
-### The Pool Doesn't Zero Memory (Unless You Ask)
-
-When you allocate, you get whatever garbage was in memory before. If you need zeros:
-
-```c
-vacuum* ptr = piscina_allocare(p, 100);
-memset(ptr, ZEPHYRUM, 100);  /* Zero it yourself */
-```
-
-Or just be an adult and initialize your structures properly.
-
-### You Can't Free Individual Allocations
-
-This is BY DESIGN. You don't get a `piscina_liberare()` function. Because that's not how arena allocators work.
-
-If you need to free things individually, use `malloc()` and `free()` like everyone else. But then you're back to tracking everything and hunting for leaks. Your choice.
-
-### Fixed-Size Pools Don't Grow (Obviously)
-
-If you create a fixed-size pool and run out of space, you're done. The safe functions return NULL. The unsafe ones crash your program.
-
-```c
-Piscina* p = piscina_generare_certae_magnitudinis("small", 100);
-
-vacuum* a = piscina_allocare(p, 50);   /* OK */
-vacuum* b = piscina_allocare(p, 60);   /* CRASH - doesn't fit */
-```
-
-Plan your sizes accordingly, or use dynamic pools.
-
-## Advanced Usage (For When You Get Fancy)
-
-### Nested Pools
-
-You can create pools from pools. Why? Because you can, that's why.
-
-```c
-Piscina* outer = piscina_generare_dynamicum("outer", 32768);
-
-Piscina* inner = piscina_allocare(outer, magnitudo(Piscina));
-/* ... initialize inner pool manually ... */
-```
-
-Honestly, this is pretty rare. Usually you just create separate pools and manage them independently. But if you're building some kind of hierarchical system where you want to trash a whole subtree of allocations at once, this could be useful.
-
-### Large Allocations In Dynamic Pools
-
-What happens if you allocate something bigger than the bucket size?
-
-```c
-Piscina* p = piscina_generare_dynamicum("test", 1024);
-
-/* This is bigger than 1KB */
-vacuum* huge = piscina_allocare(p, 8192);
-```
-
-The pool is smart about this. It allocates a new bucket that's big enough to hold your request PLUS the normal growth amount. So you get an 8192 + 1024 = 9216 byte bucket, and the next bucket will be 9216 * 2 = 18432 bytes.
-
-This keeps growth exponential even when you throw large allocations at it.
+**Expecting a fixed-size pool to grow.** It won't, on purpose. If you need growth,
+create the pool with `piscina_generare_dynamicum()` instead — there's no function that
+converts one kind of pool into the other after the fact.
 
 ## API Reference
 
-Alright, here's the boring part where I list every function and what it does. You've probably figured most of this out by now, but for completeness:
-
-### Creation & Destruction
-
-#### `piscina_generare_dynamicum()`
+### `piscina_generare_dynamicum()`
 
 ```c
-Piscina* piscina_generare_dynamicum(
-    constans character* piscinae_titulum,
-        memoriae_index  mensura_alvei_initia
-);
+Piscina*
+piscina_generare_dynamicum (
+        constans character* piscinae_titulum,
+            memoriae_index  mensura_alvei_initia);
 ```
 
-Creates a dynamic pool that grows automatically.
+Creates a pool with one bucket of `mensura_alvei_initia` bytes. Later buckets are
+sized at double that starting size unless a single allocation forces the baseline up.
+`piscinae_titulum` may be `NIHIL`. Returns `NIHIL` if the initial allocation fails.
 
-**Parameters:**
-- `piscinae_titulum`: Name for debugging (can be `NIHIL`)
-- `mensura_alvei_initia`: Initial bucket size in bytes
-
-**Returns:** Pointer to new pool, or `NIHIL` on allocation failure
-
-**Example:**
-```c
-Piscina* p = piscina_generare_dynamicum("my_pool", 4096);
-si (!p)
-{
-    imprimere("Failed to create pool\n");
-    exire(I);
-}
-```
-
----
-
-#### `piscina_generare_certae_magnitudinis()`
+### `piscina_generare_certae_magnitudinis()`
 
 ```c
-Piscina* piscina_generare_certae_magnitudinis(
-    constans character* piscinae_titulum,
-        memoriae_index  mensura_buffer
-);
+Piscina*
+piscina_generare_certae_magnitudinis (
+        constans character* piscinae_titulum,
+        memoriae_index  mensura_buffer);
 ```
 
-Creates a fixed-size pool that never grows.
+Creates a pool with exactly one bucket of `mensura_buffer` bytes, which never grows.
+Returns `NIHIL` if the allocation fails.
 
-**Parameters:**
-- `piscinae_titulum`: Name for debugging (can be `NIHIL`)
-- `mensura_buffer`: Total pool size in bytes
-
-**Returns:** Pointer to new pool, or `NIHIL` on allocation failure
-
-**Example:**
-```c
-Piscina* p = piscina_generare_certae_magnitudinis("fixed", 8192);
-```
-
----
-
-#### `piscina_destruere()`
+### `piscina_destruere()`
 
 ```c
-vacuum piscina_destruere(Piscina* piscina);
+vacuum
+piscina_destruere (
+        Piscina* piscina);
 ```
 
-Destroys the pool and frees all memory.
+Frees every bucket and the pool itself. Every pointer previously returned from this
+pool becomes invalid. Safe to call with `NIHIL`.
 
-**Parameters:**
-- `piscina`: The pool to destroy
-
-**Side effects:** All pointers allocated from this pool become invalid
-
-**Example:**
-```c
-piscina_destruere(p);
-/* Don't use p or anything allocated from it anymore */
-```
-
----
-
-### Allocation (Fatal On Failure)
-
-#### `piscina_allocare()`
+### `piscina_allocare()`
 
 ```c
-vacuum* piscina_allocare(
-           Piscina* piscina,
-    memoriae_index  mensura
-);
+vacuum*
+piscina_allocare (
+                         Piscina* piscina,
+        memoriae_index  mensura);
 ```
 
-Allocates memory from the pool. Calls `exire(I)` on failure.
+Allocates `mensura` bytes, unaligned. Calls `exire(I)` on failure — never returns
+`NIHIL`. Allocating zero bytes returns `NIHIL` without failing.
 
-**Parameters:**
-- `piscina`: The pool to allocate from
-- `mensura`: Number of bytes to allocate
-
-**Returns:** Pointer to allocated memory (never NULL)
-
-**Crashes if:** Out of memory and can't grow
-
-**Example:**
-```c
-i32* numbers = piscina_allocare(p, X * magnitudo(i32));
-```
-
----
-
-#### `piscina_allocare_ordinatum()`
+### `piscina_allocare_ordinatum()`
 
 ```c
-vacuum* piscina_allocare_ordinatum(
-           Piscina* piscina,
-    memoriae_index  mensura,
-    memoriae_index  ordinatio
-);
+vacuum*
+piscina_allocare_ordinatum (
+                         Piscina* piscina,
+        memoriae_index  mensura,
+        memoriae_index  ordinatio);
 ```
 
-Allocates aligned memory from the pool. Calls `exire(I)` on failure.
+Same as `piscina_allocare()`, aligned to `ordinatio` bytes (must be a power of two).
 
-**Parameters:**
-- `piscina`: The pool to allocate from
-- `mensura`: Number of bytes to allocate
-- `ordinatio`: Alignment in bytes (must be power of 2)
-
-**Returns:** Pointer to allocated memory, aligned to `ordinatio` bytes
-
-**Example:**
-```c
-/* Allocate 64 bytes aligned to 16-byte boundary */
-vacuum* aligned = piscina_allocare_ordinatum(p, LXIV, XVI);
-```
-
----
-
-### Allocation (Returns NULL On Failure)
-
-#### `piscina_conari_allocare()`
+### `piscina_conari_allocare()`
 
 ```c
-vacuum* piscina_conari_allocare(
-           Piscina* piscina,
-    memoriae_index  mensura
-);
+vacuum*
+piscina_conari_allocare (
+                         Piscina* piscina,
+        memoriae_index  mensura);
 ```
 
-Tries to allocate memory from the pool. Returns `NIHIL` on failure.
+Same as `piscina_allocare()`, but returns `NIHIL` instead of terminating the program on
+failure.
 
-**Parameters:**
-- `piscina`: The pool to allocate from
-- `mensura`: Number of bytes to allocate
-
-**Returns:** Pointer to allocated memory, or `NIHIL` if failed
-
-**Example:**
-```c
-vacuum* ptr = piscina_conari_allocare(p, huge_size);
-si (!ptr)
-{
-    imprimere("Allocation failed\n");
-    redde FALSUM;
-}
-```
-
----
-
-#### `piscina_conari_allocare_ordinatum()`
+### `piscina_conari_allocare_ordinatum()`
 
 ```c
-vacuum* piscina_conari_allocare_ordinatum(
-           Piscina* piscina,
-    memoriae_index  mensura,
-    memoriae_index  ordinatio
-);
+vacuum*
+piscina_conari_allocare_ordinatum (
+                         Piscina* piscina,
+        memoriae_index  mensura,
+        memoriae_index  ordinatio);
 ```
 
-Tries to allocate aligned memory. Returns `NIHIL` on failure.
+Combines the two variants above: aligned, and `NIHIL`-on-failure rather than fatal.
 
-**Parameters:**
-- `piscina`: The pool to allocate from
-- `mensura`: Number of bytes to allocate
-- `ordinatio`: Alignment in bytes (must be power of 2)
-
-**Returns:** Pointer to aligned memory, or `NIHIL` if failed
-
----
-
-### Lifecycle Management
-
-#### `piscina_vacare()`
+### `piscina_vacare()`
 
 ```c
-vacuum piscina_vacare(Piscina* piscina);
+vacuum
+piscina_vacare (
+        Piscina* piscina);
 ```
 
-Clears all allocations without freeing the buckets.
+Resets every bucket's offset to zero without freeing any of them. All previously
+returned pointers become invalid. The buckets themselves remain allocated for reuse.
 
-**Parameters:**
-- `piscina`: The pool to clear
-
-**Side effects:**
-- Resets all bucket offsets to zero
-- All previous pointers from this pool become invalid
-- Buckets remain allocated for reuse
-
-**Example:**
-```c
-per (i32 i = ZEPHYRUM; i < iterations; i++)
-{
-    /* Allocate stuff */
-    vacuum* temp = piscina_allocare(p, size);
-    /* Use it */
-    process(temp);
-    /* Clear for next iteration */
-    piscina_vacare(p);
-}
-```
-
----
-
-### Query Functions
-
-#### `piscina_summa_usus()`
+### `piscina_notare()`
 
 ```c
-memoriae_index piscina_summa_usus(constans Piscina* piscina);
+PiscinaNotatio
+piscina_notare (
+        Piscina* piscina);
 ```
 
-Returns total bytes currently allocated from the pool.
+Captures the pool's current position (which bucket, and the offset within it) as a
+`PiscinaNotatio` value, to be passed to `piscina_reficere()` later.
 
-**Returns:** Sum of all bucket offsets
-
-**Example:**
-```c
-imprimere("Pool usage: %zu bytes\n", piscina_summa_usus(p));
-```
-
----
-
-#### `piscina_summa_inutilis_allocatus()`
+### `piscina_reficere()`
 
 ```c
-memoriae_index piscina_summa_inutilis_allocatus(constans Piscina* piscina);
+vacuum
+piscina_reficere (
+                      Piscina* piscina,
+        PiscinaNotatio notatio);
 ```
 
-Returns total bytes allocated but unused (wasted space).
+Rewinds the pool to a previously captured `PiscinaNotatio`. Everything allocated after
+the mark becomes invalid; everything allocated before it is untouched. Marks must be
+reset in reverse order of when they were taken, the same discipline any stack requires.
 
-**Returns:** Sum of (capacity - offset) across all buckets
-
-**Example:**
-```c
-memoriae_index waste = piscina_summa_inutilis_allocatus(p);
-imprimere("Wasted: %zu bytes\n", waste);
-```
-
----
-
-#### `piscina_reliqua_antequam_cresca_alvei()`
+### `piscina_potesne_allocare()`
 
 ```c
-memoriae_index piscina_reliqua_antequam_cresca_alvei(constans Piscina* piscina);
+b32
+piscina_potesne_allocare (
+        constans Piscina* piscina,
+          memoriae_index  mensura);
 ```
 
-Returns bytes remaining in current bucket before growth needed.
+Reports whether an allocation of `mensura` bytes would currently succeed, without
+performing it. Always `VERUM` for dynamic pools. For fixed-size pools, checks whether
+`mensura` fits in the current bucket's remaining space.
 
-**Returns:** Current bucket's (capacity - offset)
-
-**Example:**
-```c
-memoriae_index left = piscina_reliqua_antequam_cresca_alvei(p);
-si (left < needed_size)
-{
-    imprimere("Next allocation will trigger growth\n");
-}
-```
-
----
-
-#### `piscina_summa_apex_usus()`
+### `piscina_summa_usus()`
 
 ```c
-memoriae_index piscina_summa_apex_usus(constans Piscina* piscina);
+memoriae_index
+piscina_summa_usus (
+        constans Piscina* piscina);
 ```
 
-Returns peak usage across the pool's lifetime.
+Total bytes currently allocated, summed across every bucket in the pool.
 
-**Returns:** Maximum value `piscina_summa_usus()` has ever returned for this pool
+### `piscina_summa_inutilis_allocatus()`
 
-**Note:** This persists even after `piscina_vacare()`
-
-**Example:**
 ```c
-/* After many allocations and clears */
-memoriae_index peak = piscina_summa_apex_usus(p);
-imprimere("Peak usage was: %zu bytes\n", peak);
+memoriae_index
+piscina_summa_inutilis_allocatus (
+        constans Piscina* piscina);
 ```
 
----
+Total allocated-but-unused capacity across every bucket — the gap between what each
+bucket holds and what's actually been handed out from it.
 
-## FAQ (Frequently Asked Questions That Make Me Want To Scream)
+### `piscina_reliqua_antequam_cresca_alvei()`
 
-### Q: Why is it called "piscina"?
+```c
+memoriae_index
+piscina_reliqua_antequam_cresca_alvei (
+        constans Piscina* piscina);
+```
 
-Because it's Latin for "swimming pool" or "fish pond," and this is a memory pool. Also because the author has a thing for Latin and medieval scholasticism. Deal with it.
+Bytes remaining in the *current* bucket before the next allocation would force the
+pool to move to a new one.
 
-### Q: Can I free individual allocations?
+### `piscina_summa_apex_usus()`
 
-No. NO. **NO.** That's not how arena allocators work. You allocate, you use, you destroy the whole pool when you're done. If you need individual freeing, use `malloc()` and `free()` like a normal person.
+```c
+memoriae_index
+piscina_summa_apex_usus (
+        constans Piscina* piscina);
+```
 
-### Q: What happens to my pointers after `piscina_vacare()`?
+The highest value `piscina_summa_usus()` has ever returned for this pool. Unlike the
+other query functions, this persists across `piscina_vacare()` calls.
 
-They're invalid. Dead. Gone. The memory still exists but you're about to overwrite it with new allocations. Don't use them.
+## FAQ
 
-Same question for `piscina_destruere()` - also invalid. Don't use them. I've told you this three times now.
+**Is "arena allocator" the right term, or is this something else?** Region-based
+memory management is the formal name in the literature; "arena," "pool," and "zone"
+are the informal names different projects picked for the same idea. This library uses
+*piscina* — pool — because that's the Latin the rest of the codebase is written in,
+not because the underlying technique is unique to it.
 
-### Q: Should I use dynamic or fixed-size pools?
+**Why does allocation come in four functions instead of one with a couple of optional
+parameters?** Because those four cover four genuinely different situations, and
+threading "die on failure or hand me NIHIL" and "any alignment or a specific one"
+through a single call site means every caller pays attention to options most of them
+never touch. A parser reading a config file under 8KB wants the fatal, unaligned
+version and nothing else — writing `si (!ptr)` at every call site when the answer is
+always "then something is badly wrong, just stop" is ceremony, not safety. Code
+allocating SIMD vectors genuinely cannot use the unaligned version. Four small
+functions that each do one obvious thing cost less at every call site than one
+flexible function threading two independent booleans through all of them would.
 
-Use dynamic unless you have a VERY good reason not to. Fixed-size pools are for when you know exactly how much memory you need and you want a hard failure if you exceed it. 99% of the time, you want dynamic.
+**Why can't you ask a pool how many buckets it currently has?** You can already ask
+for total usage and total waste, both of which are computed by walking the same
+internal bucket list a bucket-count function would walk. It's missing because nobody's
+needed it yet, not because of a considered decision to leave it out — if a debugging
+session ever needs to know the bucket count specifically rather than the aggregate
+totals, that's a legitimate reason to add a fifth query function, and it would cost
+about five lines.
 
-### Q: How big should my initial bucket be?
+**Can I free individual allocations?** No, and this isn't an oversight — it's the
+entire point. If you need to free things individually, that's a signal you want
+`malloc()`/`free()` for that particular piece of data, not an arena. Pools are for
+allocations that share a lifetime; if some of your allocations need to outlive others
+unpredictably, they don't actually share a lifetime, and forcing them into one pool
+would be solving the wrong problem.
 
-Start with 4KB - 64KB depending on your use case. Too small and you'll constantly grow. Too large and you'll waste memory. Profile and adjust.
+**Dynamic or fixed-size — which should I default to?** Dynamic, unless you have a
+specific reason to want a hard failure at a known ceiling. Fixed-size pools exist for
+the cases — config parsing, a known-bounded protocol message — where growing silently
+past an expected size would hide a bug rather than handle a legitimate need.
 
-If your peak usage is consistently 50KB, start with 64KB and you'll probably never need to grow.
+**How big should the initial bucket be?** Start in the 4KB–64KB range and use
+`piscina_summa_apex_usus()` after a representative run to see where you actually
+landed. Too small and every bucket after the first gets sized from a baseline that's
+still too conservative, so you end up with more buckets than the work really needed;
+too large and you're holding memory you never touch. Either mistake costs you
+something, but neither one is expensive to fix once you can see the real number.
 
-### Q: What's the performance compared to malloc/free?
+**What's the actual performance difference from `malloc()`/`free()`?** Allocation is
+pointer-bumping — O(1), no free-list search, no coalescing of adjacent freed blocks
+because nothing is freed individually to begin with. Cleanup is also O(1): destroying
+or clearing a pool doesn't walk and free each allocation, it discards or resets whole
+buckets. The tradeoff is real, not free: you give up the ability to reclaim part of a
+pool's memory before the whole pool's lifetime ends. For allocations that already
+share a lifetime — which is most of what a parser, a request handler, or a game frame
+actually allocates — that tradeoff costs nothing you were using anyway.
 
-Allocation is O(1) pointer bumping - way faster than malloc. Freeing is also O(1) (you destroy the whole pool). But you can't free individual allocations, so it depends on your use case.
-
-For things with clear lifetimes (requests, frames, parsing, etc.), pools destroy malloc/free in both performance and simplicity.
-
-### Q: Why does `piscina_allocare()` crash instead of returning NULL?
-
-Because in most code, allocation failure means something is catastrophically wrong and you should just give up. Handling allocation failures everywhere clutters your code with error checks that almost never happen.
-
-If you want to handle failures gracefully, use `piscina_conari_allocare()` which returns NULL.
-
-### Q: Can I create a pool from another pool?
-
-Technically yes, but why would you? Just create separate pools. It's not like you're running out of pools.
-
-### Q: What's with all the Latin variable names?
-
-That's the project style. Everything is in Latin. It's weird, it's quirky, it makes your code look like it was written by Thomas Aquinas. You'll get used to it.
-
-Quick reference:
-- `vacuum` = void
-- `si` = if
-- `alioquin` = else
-- `redde` = return
-- `per` = for
-- `dum` = while
-- `NIHIL` = NULL
-- `VERUM` = true (1)
-- `FALSUM` = false (0)
-
-### Q: Why do dynamic pools double in size?
-
-Because exponential growth is the right strategy. If you grow linearly (add 4KB each time), you'll allocate tons of buckets. If you grow exponentially (double each time), you allocate log(n) buckets.
-
-Plus it's simple and proven - every good dynamic array implementation does this.
-
-### Q: What happens if I allocate zero bytes?
-
-You get `NIHIL` back. Don't allocate zero bytes, you weirdo.
-
-### Q: Can I use this in multithreaded code?
-
-Not without your own locking. The pool isn't thread-safe. If you need thread-safe allocation, either:
-1. Give each thread its own pool (recommended)
-2. Wrap calls in mutexes (if you must)
-
-Option 1 is better - each thread gets its own pool, no contention, no locks, everything is fast.
-
-### Q: What if my allocation is bigger than the bucket size?
-
-The pool allocates a new bucket big enough to hold it, plus some extra for future growth. So if your bucket is 4KB and you allocate 10KB, you get a bucket of about 14KB.
-
-### Q: Why would I use this over malloc?
-
-- **Speed**: Bumping a pointer beats free list searching
-- **Simplicity**: One cleanup call beats tracking hundreds of frees
-- **Locality**: Everything close together in memory
-- **Predictability**: No fragmentation, no surprises
-- **Profiling**: Easy to see exactly how much memory you're using
-
-Use pools for things with clear lifetimes. Use malloc for long-lived data with complex lifetimes.
-
-### Q: Can the pool run out of address space?
-
-On 32-bit systems, theoretically yes, you could allocate 4GB of buckets. On 64-bit, you'll run out of physical RAM first.
-
-In practice, if you're allocating gigabytes from a pool, you're probably doing something wrong. Pools are for temporary allocations with reasonable sizes.
-
----
-
-Look, that's it. That's piscina. It's not complicated. Create pool, allocate from pool, destroy pool. Don't overthink it.
-
-If you screw this up somehow, I don't even know what to tell you. The entire API is like ten functions. Just read the examples and copy them.
-
-Now go write some code and stop bothering me with questions I've answered a thousand times already.
+**Is this thread-safe?** No locking is built in. Give each thread its own pool rather
+than sharing one across threads with a mutex around every call — that gets you actual
+parallelism instead of serializing every allocation through a lock, and it avoids
+needing to reason about which thread's mark/reset calls might interleave with another
+thread's allocations.
