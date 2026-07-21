@@ -27,11 +27,8 @@ declare -a GCC_FLAGS=(
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include" "-I$GESTA_DIR/fontes"
 )
-declare -a RADIX_FONTES=(
-    piscina chorda chorda_aedificator xar friatio tabula_dispersa
-    internamentum utf8 json similitudo sigillum vigilia scrinium
-    tabellarius filum via iter_directoria
-)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$GESTA_DIR/tabularium_fontes_generata.sh"
 declare -a VENDOR_FLAGS=(
     "-O2" "-DSQLITE_ENABLE_FTS5" "-DSQLITE_THREADSAFE=0"
     "-DSQLITE_DQS=0" "-DSQLITE_DEFAULT_MEMSTATUS=0"

@@ -10,6 +10,9 @@
     <via (>silva/amalgama
     <via (>silva/instrumenta
     <via (>officina/fontes
+    <via (>tessera/amalgama
+    <via (>tessera/fontes
+    <via (>saltuarius/fontes
   </inclusa>
   <vexilla>
     <vexillum! (>-std=c89

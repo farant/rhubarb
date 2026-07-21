@@ -1,5 +1,45 @@
 # aedilis worklog
 
+## 2026-07-21 — the Tier-1 batch: 23 launchers source derived truth
+
+All tool launchers converted in three subtree passes (silva 12,
+officina 7, loners: saltuarius/spectaculum/gesta-tabularium) —
+each sources a committed <basis>_fontes_generata.sh; regeneration
+line rides in each snippet header. Remaining census entries are
+deliberately out: 5 compile_probationes suite runners (Tier 3
+family) and 3 amalgamare (Tier 2's emitter).
+
+**The load-bearing lesson**: a launcher's derivation targets are
+NOT just its principal — they're everything the script compiles
+against the lib set (silva fontes modules for arbor/auspex/
+lustrum/generare, instrumenta modules for legatus/sonda/vindex,
+subtree fontes globs for the rest). First-pass snippets from
+principals alone under-derived exactly there; the link said so
+loudly, per design.
+
+**Latent break found and fixed**: silva/generare.sh had compiled
+instrumenta/nexus_ordines.c since the LEGATUS era without linking
+the amalgam it needs — dead since then, unnoticed because grammar
+regeneration hadn't run. Named skip added (silva_amalgama
+precedent); full regeneration now runs green and IDEMPOTENT
+(fontes/ diff empty — determinism re-proven free).
+
+**Two self-inflicted verification lessons**: (1) ran the HEAD
+version of a script from /tmp — BASH_SOURCE-relative paths made it
+exit early and I read "0 errors" as "HEAD works" (marker-grep
+cousin of the exit-code law: run the thing in its true habitat);
+(2) fusor "FRACTUM" was my grep matching the corpus sweep's own
+output — bare-running an unknown launcher as a smoke launched a
+multi-minute sweep (know what a script DOES before bare-running
+it; officina/CLAUDE.md had the cheap exemplars all along —
+interpretare's fasti smoke → [BENE 13 instructiones]).
+
+Derived lists trimmed hand fat repeatedly (internamentum off
+nexus, tabula_dispersa/friatio off arbor-class, etc.). Config
+inclusa grew to cover subtree header homes (silva/instrumenta,
+officina/fontes, tessera/amalgama+fontes, saltuarius/fontes);
+porta re-certified after.
+
 ## 2026-07-21 — self-hosting: aedilis_struere.sh derives itself
 
 First of the Tier-1 conversions (29 scripts carry the hand

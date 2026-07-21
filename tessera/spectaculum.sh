@@ -24,9 +24,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$TESSERA_DIR/fontes"
 )
 
-declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "utf8"
-)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$TESSERA_DIR/spectaculum_fontes_generata.sh"
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"

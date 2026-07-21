@@ -31,10 +31,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$SALT_DIR/fontes"
 )
 
-declare -a RADIX_FONTES=(
-    "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio" "filum" "via" "iter_directoria" "utf8"
-)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$SALT_DIR/saltuarius_fontes_generata.sh"
 
 # capita mutata sine recompilo = corruptio ABI (inventum v0.2;
 # excubitor hanc plagulam sine custodia capitum nominavit)
