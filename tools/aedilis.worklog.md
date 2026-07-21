@@ -27,9 +27,35 @@ fixture).
    `< > & ' =` and spaces; a double quote `"` is UNREPRESENTABLE
    (raw write → malformed document → value does not survive).
    Phase A: aedilis REFUSES LOUD on `"` in any attribute value.
-   (Text nodes are the reverse: `_scribere_evasus` writes entities
-   the reader never decodes — manifests must keep data in
-   attributes, which they already do.)
+   (CORRECTION same day, capture specimens: TEXT nodes are
+   SYMMETRIC — `_scribere_evasus` escapes and `_unescape_entities`
+   (stml.c:1377, text-parser-only call site) decodes on read, so
+   element text is value-preserving for all five entities. The
+   "No entity references" comment in stml.h is stale. Attributes
+   remain the raw-no-decode lane.)
+
+## 2026-07-20 — capture specimens (Fran's question, post-seal)
+
+Scratch specimen (JXA-of-C-style: scratchpad program against
+build/*.o) answered "can forward capture replace attributes for
+quote-bearing values":
+- `<via (>value` (plain capture): parses, captures to END OF LINE
+  as a text child, pretty round-trip BYTE-STABLE. Text semantics:
+  entity-escaped on write, decoded on read → value-preserving,
+  but `&quot;` noise appears in the emitted file.
+- `<tag!>anything <&"> here</tag>` (raw closed): fully VERBATIM
+  both directions, round-trip stable — the true CDATA lane. Only
+  unrepresentable content: the literal closing-tag text itself.
+- `<tag! (>` (raw + capture): the WRITER can emit it, the READER
+  rejects it (STML_ERROR_TAG_NON_CLAUSUM — raw scanner wants a
+  closing tag). Writer/reader asymmetry; desideratum filed.
+Design consequence for Phase A: manifests (machine-emitted) =
+attributes for identity/provenance (refuse `"` there) + raw-closed
+`<vexillum!>` children for flag units (one unit per element —
+`-framework Cocoa` stays one line, quotes legal, emitter
+interpolates without re-tokenizing). aedilis.stml (hand-written) =
+captures welcome as authoring sugar; raw captures once the reader
+learns them.
 2. **SilvaInclusioVista strips the include form**: `<stdio.h>`
    arrives as bare `stdio.h`, indistinguishable from a quoted
    include. Phase A resolution-by-probe (includer-relative → -I
