@@ -358,3 +358,32 @@ learns them.
 `echo ===` dies in zsh (equals-expansion — use plain words);
 annotation filter compares (i8) casts byte-wise since SilvaChorda
 is not house chorda.
+
+## 2026-07-21 — SOURCE_FILES middle path (dry run for suite adoption)
+
+compile_tests.sh's 139-line hand-maintained SOURCE_FILES/
+OBJC_SOURCES world replaced by a 5-line source stanza; the lists
+now come from tools/compile_tests_fontes_generare.sh → committed
+compile_tests_fontes_generata.sh (128 C + 4 ObjC). Structure
+UNCHANGED — still necte-omnia, still one object set — this was
+the dry run for adoption, not adoption.
+
+**The audit verdict**: union of aedilis closures over ALL 122
+linked principals (119 probationes + generare + capsula_generare +
+nuntium_schema_generare) == the hand list EXACTLY. Zero fat, zero
+gaps. vendor/sqlite3.c = lane difference (vendores manifest
+section; --enumerare prints obiecta only), build/ speculum object
+= per-target wiring, correctly excluded. Contrast gesta (utf8 was
+dead weight): the root list had been kept honest by discipline —
+now it's honest by derivation. Tier-3 (per-target adoption +
+fabrica absorption) can be decided with this evidence in hand.
+
+**Generator hardening beyond the generic fontes_generare.sh**:
+(1) per-derivation failure checked OUTSIDE any pipe — the generic
+one's `|| exit 1` inside a piped-$() subshell can truncate the
+union silently (empty-check catches total failure, not partial);
+(2) flat-basename collision guard — the suite compiles every
+object to build/<basis>.o, two sources sharing a basename would
+silently clobber; refuse loud with the colliding names.
+
+Proof: full suite green 103/103 + 14 GUI apps, 133.8s.
