@@ -558,6 +558,36 @@ _regulam_nexus_invenire (constans AedilisConfiguratio* configuratio,
     redde NIHIL;
 }
 
+/* Aristam graphi inclusionum in caput scribere (unice; xar pigre
+ * creatum - caput sine aristis NIHIL manet) */
+interior vacuum
+_aristam_addere (AedilisCaput* caput, chorda resoluta,
+    Piscina* piscina)
+{
+    i32 i;
+    i32 numerus;
+
+    si (caput == NIHIL)
+    {
+        redde;
+    }
+    si (caput->inclusa == NIHIL)
+    {
+        caput->inclusa = _xar_chordarum(piscina);
+    }
+    numerus = xar_numerus(caput->inclusa);
+    per (i = 0; i < numerus; i++)
+    {
+        si (chorda_aequalis(
+                *(chorda*)xar_obtinere(caput->inclusa, i),
+                resoluta))
+        {
+            redde;
+        }
+    }
+    _chordam_addere(caput->inclusa, resoluta);
+}
+
 interior vacuum
 _obiectum_addere (_Machina* machina, chorda via, chorda caput,
     AedilisOrigo origo)
@@ -638,15 +668,17 @@ _vendor_tractare (_Machina* machina, chorda resoluta)
         {
             AedilisCaput* caput;
 
-            (vacuum)tabula_dispersa_inserere(
-                machina->visa_capitum, resoluta, NIHIL);
             caput = (AedilisCaput*)xar_addere(
                 machina->fructus->capita);
             si (caput != NIHIL)
             {
                 caput->via = resoluta;
                 caput->origo = AEDILIS_ORIGO_DERIVATUM;
+                caput->inclusa = NIHIL;
             }
+            /* valor = caput ipsum (aristae per ambulationem) */
+            (vacuum)tabula_dispersa_inserere(
+                machina->visa_capitum, resoluta, caput);
         }
         si (!_existit_sub_radice(machina->configuratio, fons,
                 machina->piscina))
@@ -801,13 +833,14 @@ aedilis_derivare (Piscina* piscina,
 
     dum (cursor < xar_numerus(machina.pendentia))
     {
-        chorda fons;
-        chorda includens_dir;
-        Xar*   directivae;
-        Xar*   annotationes;
-        b32    ex_oraculo;
-        i32    i;
-        i32    numerus;
+        chorda        fons;
+        chorda        includens_dir;
+        Xar*          directivae;
+        Xar*          annotationes;
+        AedilisCaput* caput_fontis;
+        b32           ex_oraculo;
+        i32           i;
+        i32           numerus;
 
         fons = *(chorda*)xar_obtinere(machina.pendentia, cursor);
         cursor++;
@@ -817,6 +850,20 @@ aedilis_derivare (Piscina* piscina,
         }
         (vacuum)tabula_dispersa_inserere(machina.visa_fontium,
             fons, NIHIL);
+
+        /* fons ipse caput? aristae eius tunc scribendae (corpora
+         * ordine libera - probatio permutationis - ergo aristae
+         * capitum solae) */
+        caput_fontis = NIHIL;
+        {
+            vacuum* valor;
+
+            si (tabula_dispersa_invenire(machina.visa_capitum,
+                    fons, &valor))
+            {
+                caput_fontis = (AedilisCaput*)valor;
+            }
+        }
 
         directivae = NIHIL;
         annotationes = NIHIL;
@@ -858,6 +905,8 @@ aedilis_derivare (Piscina* piscina,
                 perge;
             }
 
+            _aristam_addere(caput_fontis, resoluta, piscina);
+
             si (chorda_incipit(resoluta, praefixum_vendor))
             {
                 _vendor_tractare(&machina, resoluta);
@@ -869,8 +918,6 @@ aedilis_derivare (Piscina* piscina,
             {
                 perge;
             }
-            (vacuum)tabula_dispersa_inserere(machina.visa_capitum,
-                resoluta, NIHIL);
             {
                 AedilisCaput* caput;
 
@@ -881,7 +928,10 @@ aedilis_derivare (Piscina* piscina,
                     caput->origo = ex_oraculo
                         ? AEDILIS_ORIGO_ORACULUM
                         : AEDILIS_ORIGO_DERIVATUM;
+                    caput->inclusa = NIHIL;
                 }
+                (vacuum)tabula_dispersa_inserere(
+                    machina.visa_capitum, resoluta, caput);
             }
             _chordam_addere(machina.pendentia, resoluta);
 
@@ -1025,6 +1075,142 @@ aedilis_derivare (Piscina* piscina,
 }
 
 /* ====================================================
+ * Ordo topologicus capitum
+ * ==================================================== */
+
+interior s32
+_capitis_index (constans AedilisFructus* fructus, chorda via)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = xar_numerus(fructus->capita);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisCaput* caput;
+
+        caput = (AedilisCaput*)xar_obtinere(fructus->capita, i);
+        si (chorda_aequalis(caput->via, via))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -1;
+}
+
+Xar*
+aedilis_capita_ordinare (constans AedilisFructus* fructus,
+    Piscina* piscina, chorda* causa_out)
+{
+    Xar* ordinati;   /* AedilisCaput* */
+    Xar* emissa;     /* b32, parallela capitibus */
+    i32  numerus;
+    i32  numerus_emissorum;
+    i32  i;
+
+    numerus = xar_numerus(fructus->capita);
+    ordinati = xar_creare(piscina,
+        (i32)magnitudo(AedilisCaput*));
+    emissa = xar_creare(piscina, (i32)magnitudo(b32));
+    per (i = 0; i < numerus; i++)
+    {
+        b32* locus;
+
+        locus = (b32*)xar_addere(emissa);
+        si (locus != NIHIL)
+        {
+            *locus = FALSUM;
+        }
+    }
+
+    /* Kahn gregatim: quovis gyro omnia capita parata ordine
+     * inventionis emittuntur (determinismus); gyrus sine progressu
+     * = cyclus, reliquis nominatis */
+    numerus_emissorum = 0;
+    dum (numerus_emissorum < numerus)
+    {
+        i32 emissa_hoc_gyro;
+
+        emissa_hoc_gyro = 0;
+        per (i = 0; i < numerus; i++)
+        {
+            AedilisCaput* caput;
+            b32           parata;
+            i32           k;
+            i32           numerus_aristarum;
+
+            si (*(b32*)xar_obtinere(emissa, i))
+            {
+                perge;
+            }
+            caput = (AedilisCaput*)xar_obtinere(fructus->capita,
+                i);
+            parata = VERUM;
+            numerus_aristarum = (caput->inclusa == NIHIL)
+                ? 0 : xar_numerus(caput->inclusa);
+            per (k = 0; k < numerus_aristarum; k++)
+            {
+                s32 index_dependentiae;
+
+                index_dependentiae = _capitis_index(fructus,
+                    *(chorda*)xar_obtinere(caput->inclusa, k));
+                /* dependentia extra capita = satisfacta */
+                si (index_dependentiae >= 0
+                    && !*(b32*)xar_obtinere(emissa,
+                        (i32)index_dependentiae))
+                {
+                    parata = FALSUM;
+                    frange;
+                }
+            }
+            si (parata)
+            {
+                AedilisCaput** locus;
+
+                *(b32*)xar_obtinere(emissa, i) = VERUM;
+                emissa_hoc_gyro++;
+                numerus_emissorum++;
+                locus = (AedilisCaput**)xar_addere(ordinati);
+                si (locus != NIHIL)
+                {
+                    *locus = caput;
+                }
+            }
+        }
+        si (emissa_hoc_gyro == 0)
+        {
+            si (causa_out != NIHIL)
+            {
+                ChordaAedificator* aedificator;
+
+                aedificator = chorda_aedificator_creare(piscina,
+                    256);
+                chorda_aedificator_appendere_literis(aedificator,
+                    "cyclus inclusionum:");
+                per (i = 0; i < numerus; i++)
+                {
+                    si (!*(b32*)xar_obtinere(emissa, i))
+                    {
+                        AedilisCaput* caput;
+
+                        caput = (AedilisCaput*)xar_obtinere(
+                            fructus->capita, i);
+                        chorda_aedificator_appendere_literis(
+                            aedificator, " ");
+                        chorda_aedificator_appendere_chorda(
+                            aedificator, caput->via);
+                    }
+                }
+                *causa_out = chorda_aedificator_finire(
+                    aedificator);
+            }
+            redde NIHIL;
+        }
+    }
+    redde ordinati;
+}
+
+/* ====================================================
  * Manifestum STML
  * ==================================================== */
 
@@ -1156,6 +1342,24 @@ aedilis_manifestum_scribere (constans AedilisFructus* fructus,
             intern, "via", caput->via);
         (vacuum)stml_attributum_addere(nodus, piscina, intern,
             "origo", _origo_titulus(caput->origo));
+        si (caput->inclusa != NIHIL)
+        {
+            i32 k;
+            i32 numerus_aristarum;
+
+            numerus_aristarum = xar_numerus(caput->inclusa);
+            per (k = 0; k < numerus_aristarum; k++)
+            {
+                StmlNodus* arista;
+
+                arista = stml_elementum_creare(piscina, intern,
+                    "inclusio");
+                (vacuum)stml_attributum_addere_chorda(arista,
+                    piscina, intern, "via",
+                    *(chorda*)xar_obtinere(caput->inclusa, k));
+                (vacuum)stml_liberum_addere(nodus, arista);
+            }
+        }
         (vacuum)stml_liberum_addere(sectio, nodus);
     }
 

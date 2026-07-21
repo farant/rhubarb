@@ -110,6 +110,13 @@ nomen structura {
 nomen structura {
     chorda       via;
     AedilisOrigo origo;
+    Xar*         inclusa;  /* chorda: viae resolutae quas HOC caput
+                            * includit (aristae graphi - Phasis
+                            * amalgamatis A); NIHIL = nullae
+                            * (numquam ambulatum aut sine
+                            * directivis). Corpora ordine libera
+                            * sunt (probatio permutationis) - aristae
+                            * in capitibus solis. */
 } AedilisCaput;
 
 nomen structura {
@@ -139,6 +146,16 @@ aedilis_derivare(
     AedilisExtractor              extractor,
     vacuum*                       extractor_datum,
     chorda*                       causa_out);
+
+/* Capita ordine topologico reddere (inclusa ante includentia;
+ * intra gyrum ordo inventionis servatur - determinismus). Xar de
+ * AedilisCaput* in fructum monstrantium (stabilia - xar segmentata).
+ * NIHIL + causa in cyclo, viis cycli nominatis. */
+Xar*
+aedilis_capita_ordinare(
+    constans AedilisFructus* fructus,
+    Piscina*                 piscina,
+    chorda*                  causa_out);
 
 /* Fructum ut manifestum STML scribere (chorda emissa).
  * commissum NIHIL = attributum omissum. */

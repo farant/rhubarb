@@ -104,8 +104,26 @@ _extractor_fixturarum (vacuum* datum, constans character* via,
         /* corpus AMBULATUR: directiva eius clausurae accedit */
         _fix_addere(*directivae_out, "epsilon.h", piscina);
     }
-    alioquin si (strstr(via, "include/beta.h") != NIHIL
-        || strstr(via, "include/gamma.h") != NIHIL
+    alioquin si (strstr(via, "include/beta.h") != NIHIL)
+    {
+        /* arista capitis: beta -> gamma (graphi/topologiae
+         * probationes; gamma iam per lib/alpha.c in clausura -
+         * numeri immutati) */
+        _fix_addere(*directivae_out, "gamma.h", piscina);
+    }
+    alioquin si (strstr(via, "fons/cyclicus.c") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "cyclus_a.h", piscina);
+    }
+    alioquin si (strstr(via, "include/cyclus_a.h") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "cyclus_b.h", piscina);
+    }
+    alioquin si (strstr(via, "include/cyclus_b.h") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "cyclus_a.h", piscina);
+    }
+    alioquin si (strstr(via, "include/gamma.h") != NIHIL
         || strstr(via, "include/delta.h") != NIHIL
         || strstr(via, "include/epsilon.h") != NIHIL)
     {
@@ -116,6 +134,26 @@ _extractor_fixturarum (vacuum* datum, constans character* via,
         redde FALSUM;
     }
     redde VERUM;
+}
+
+interior AedilisCaput*
+_caput_invenire (AedilisFructus* fructus, constans character* via)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = xar_numerus(fructus->capita);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        AedilisCaput* caput;
+
+        caput = (AedilisCaput*)xar_obtinere(fructus->capita, i);
+        si (chorda_aequalis_literis(caput->via, via))
+        {
+            redde caput;
+        }
+    }
+    redde NIHIL;
 }
 
 interior AedilisObiectum*
@@ -508,6 +546,56 @@ s32 principale (vacuum)
             *(chorda*)xar_obtinere(fructus->vexilla_annotata,
                 ZEPHYRUM), "-DPROBA");
 
+        /* aristae graphi inclusionum: beta -> gamma (recordata
+         * etiam cum gamma iam viso - dedup capitum aristas non
+         * devorat); alpha ambulatum sine directivis = NIHIL */
+        {
+            AedilisCaput* caput;
+
+            caput = _caput_invenire(fructus, "include/beta.h");
+            CREDO_NON_NIHIL(caput);
+            CREDO_NON_NIHIL(caput->inclusa);
+            CREDO_AEQUALIS_I32(xar_numerus(caput->inclusa), I);
+            CREDO_CHORDA_AEQUALIS_LITERIS(
+                *(chorda*)xar_obtinere(caput->inclusa, ZEPHYRUM),
+                "include/gamma.h");
+
+            caput = _caput_invenire(fructus, "include/alpha.h");
+            CREDO_NON_NIHIL(caput);
+            CREDO_NIHIL(caput->inclusa);
+        }
+
+        /* ordo topologicus: Kahn gregatim, ordo inventionis intra
+         * gyrum; beta (dependens gammae) post gyrum primum venit */
+        {
+            Xar* ordinati;
+            constans character* exspectati[VI];
+            i32 i;
+
+            exspectati[ZEPHYRUM] = "include/alpha.h";
+            exspectati[I]        = "include/delta.h";
+            exspectati[II]       = "vendor/librum.h";
+            exspectati[III]      = "include/gamma.h";
+            exspectati[IV]       = "include/epsilon.h";
+            exspectati[V]        = "include/beta.h";
+
+            causa.datum = NIHIL;
+            causa.mensura = ZEPHYRUM;
+            ordinati = aedilis_capita_ordinare(fructus, piscina,
+                &causa);
+            CREDO_NON_NIHIL(ordinati);
+            CREDO_AEQUALIS_I32(xar_numerus(ordinati), VI);
+            per (i = ZEPHYRUM; i < VI; i++)
+            {
+                AedilisCaput* caput;
+
+                caput = *(AedilisCaput**)xar_obtinere(ordinati,
+                    i);
+                CREDO_CHORDA_AEQUALIS_LITERIS(caput->via,
+                    exspectati[i]);
+            }
+        }
+
         /* varians praescriptus: posix -> beta_posix, non macos */
         fructus = aedilis_derivare(piscina, configuratio,
             "fons/scopus.c", "posix", _extractor_fixturarum,
@@ -518,6 +606,44 @@ s32 principale (vacuum)
             "lib/beta_posix.c"));
         CREDO_NIHIL(_obiectum_invenire(fructus,
             "lib/beta_macos.m"));
+    }
+
+    /* ========================================================
+     * PROBARE: cyclus inclusionum = recusatio ordinationis
+     * ======================================================== */
+
+    {
+        AedilisConfiguratio* configuratio;
+        AedilisFructus*      fructus;
+        Xar*                 ordinati;
+        chorda               causa;
+
+        imprimere("\n--- Probans cyclum inclusionum ---\n");
+
+        causa.datum = NIHIL;
+        causa.mensura = ZEPHYRUM;
+        configuratio = aedilis_configurationem_legere(piscina,
+            "probationes/fixa/aedilis/aedilis.stml", &causa);
+        CREDO_NON_NIHIL(configuratio);
+
+        /* derivatio ipsa bene - punctum fixum cyclos fert */
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/cyclicus.c", NIHIL, _extractor_fixturarum,
+            NIHIL, &causa);
+        CREDO_NON_NIHIL(fructus);
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->capita), II);
+
+        /* ordinatio recusat clamose, cyclo nominato */
+        ordinati = aedilis_capita_ordinare(fructus, piscina,
+            &causa);
+        CREDO_NIHIL(ordinati);
+        CREDO_CHORDA_NON_VACUA(causa);
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("cyclus", piscina));
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("cyclus_a.h", piscina));
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("cyclus_b.h", piscina));
     }
 
     /* ========================================================
@@ -718,6 +844,45 @@ s32 principale (vacuum)
                 CREDO_NON_NIHIL(valor);
                 CREDO_CHORDA_AEQUALIS_LITERIS(*valor, "corpus");
             }
+        }
+
+        /* aristae in manifesto: caput beta filium inclusio fert */
+        sectio = stml_invenire_liberum(relectum.elementum_radix,
+            "capita");
+        CREDO_NON_NIHIL(sectio);
+        {
+            Xar* capita_nodi;
+            b32  beta_inventum;
+
+            beta_inventum = FALSUM;
+            capita_nodi = stml_invenire_omnes_liberos(sectio,
+                "caput", piscina);
+            numerus = xar_numerus(capita_nodi);
+            per (i = ZEPHYRUM; i < numerus; i++)
+            {
+                nodus = *(StmlNodus**)xar_obtinere(capita_nodi,
+                    i);
+                valor = stml_attributum_capere(nodus, "via");
+                si (valor == NIHIL
+                    || !chorda_aequalis_literis(*valor,
+                        "include/beta.h"))
+                {
+                    perge;
+                }
+                beta_inventum = VERUM;
+                {
+                    StmlNodus* arista;
+
+                    arista = stml_invenire_liberum(nodus,
+                        "inclusio");
+                    CREDO_NON_NIHIL(arista);
+                    valor = stml_attributum_capere(arista, "via");
+                    CREDO_NON_NIHIL(valor);
+                    CREDO_CHORDA_AEQUALIS_LITERIS(*valor,
+                        "include/gamma.h");
+                }
+            }
+            CREDO_VERUM(beta_inventum);
         }
     }
 

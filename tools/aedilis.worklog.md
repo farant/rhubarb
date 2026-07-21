@@ -387,3 +387,112 @@ object to build/<basis>.o, two sources sharing a basename would
 silently clobber; refuse loud with the colliding names.
 
 Proof: full suite green 103/103 + 14 GUI apps, 133.8s.
+
+## 2026-07-21 — AMALGAMA ARC INTENTIO (phases 0/A/B/C, then D)
+
+Architecture (settled by the two-agent research, notes on
+01KY0XRBEX): aedilis owns WHAT + ORDER (closure + derived include-
+graph ordering); silva_amalgama stays the ONLY text engine (rename,
+CADENDA, static injection, include lifting, gates). Product joining
+them = derived manifest parts.
+
+Decisions (Fran, 2026-07-21):
+- D1: generic bundle = .h/.c PAIR (house shape; stb single-file
+  rejected — fights the flag regime, no precedent).
+- D2: feeding = GENERATED C SNIPPET the hand manifest includes
+  (mechanism unchanged, compiler keeps enforcing; STML-loading
+  rejected — new parser dep in a verified tool for no needed
+  capability).
+- D3: arc = 0/A/B/C (migration of the three amalgams); Phase D
+  (generic bundler, Fran's original use case) = own pull after.
+- D4: promotion riders IN-ARC: STML query CLI (jq-for-STML;
+  replaces the ×3 hand-rolled section-aware awk) + renamer
+  extraction as instrument. API-surface extractor = own named pull
+  (4 consumers). All five candidates pinned on 01KY0XRBEX.
+
+Phases:
+- 0 SPIKE: (1) WHY does body order matter (S42 compile-proven in
+  sim ④, mechanism unrecorded — permute CORPORA in a scratch
+  manifest, read the breakage); (2) does topo over the include
+  graph reproduce silva's hand CAPITA order (edges via legati
+  inclusiones for the spike); (3) does the mechanism accept a
+  degenerate manifest (empty rename/cadenda, no hand caput) — the
+  Phase-D precondition.
+- A ENGINE: fructus records include edges per caput/obiectum (raw
+  edges, not baked order); manifest schema children; topo helper +
+  loud cycle refusal; fixture pins; porta + speculum-consumer check.
+- B EMITTER+AUDITOR: bin/aedilis --amalgama <scopus...> → auditor
+  report vs hand manifest (derived-vs-hand buckets) FIRST, then
+  committed generated snippet (file arrays in order).
+- C MIGRATION: three manifests consume snippets (hand policy parts
+  untouched); driver hygiene equalized (01KY2P5X: censor→tessera,
+  newest_header→silva/officina); ALL amalgam gates re-run. Order:
+  tessera → officina → silva (smallest first, deliverable last).
+
+## 2026-07-21 — AMALGAMA Phase 0 RELATIO (spike: all three answered)
+
+**Q1 — why does body order matter? IT DOESN'T.** Permutation
+experiment (scratchpad/permutatio/): full REVERSAL of both corpora
+lists → amalgam compiles CLEAN under the entire flag set. Full
+reversal of both capita lists → 3 errors, all type-before-use
+(FluxusFunctionis used by fluxus_datorum.h before fluxus.h defines
+it). S42's "two topologies" folklore resolves to: HEADERS need a
+topo sort; BODIES need only determinism. Phase A = ONE sort.
+Caveat: body-freedom proven on silva's amalgam; per-project gates
+re-verify at migration. Note: full header reversal produced only
+3 errors because the hand-written silva.h owns most types and
+precedes everything — for generic bundles (no hand header, Phase
+D) the topo sort carries the full load.
+
+**Q2 — does derivation reproduce the hand order? YES, as a valid
+linearization.** The fontes include graph is fully populated
+(headers declare their own edges — including exactly the edge
+whose violation Q1 watched fail) and ACYCLIC (tsort clean). Hand
+CAPITA order = valid topological linearization (0 violations).
+Auditor check = "hand order valid against derived edges", NOT
+order byte-equality; migration preserves the validated hand order
+as tie-break so the byte-identical regeneration gate holds
+trivially; new amalgams get pure derived order.
+
+**Q3 — degenerate manifest accepted? NO (by inspection).**
+via_capitis is read UNCONDITIONALLY (sprintf %s with the field, no
+NIHIL guard = UB on NIHIL; silva_amalgama.c ~846). Latina inline
+also unconditional — but that is CORRECT for house-tier bundles.
+Phase D mechanism delta = one small allowance (via_capitis NIHIL →
+skip verbatim-caput section), protected by the byte-identical
+silva.c regen porta.
+
+Shell gotcha: the session shell is zsh — unquoted $VAR does NOT
+word-split (clang got 8 object paths as one arg); ${=VAR} forces
+it. Scripts themselves are bash and unaffected.
+
+## 2026-07-21 — AMALGAMA Phase A RELATIO (fructus edges + topo)
+
+AedilisCaput gained `inclusa` (lazy Xar of resolved include vias;
+NIHIL = never walked / directive-free). Recording: visa_capitum now
+stores the stable AedilisCaput* (was NIHIL) so the walk finds the
+including caput for free; edges recorded BEFORE the dedup/vendor
+skips (an edge to an already-seen header must not be devoured —
+pinned). Capita-only per the Phase 0 result (bodies order-free).
+
+aedilis_capita_ordinare = batch Kahn: each round emits every ready
+caput in discovery order (deterministic tie-break); dependency
+outside the capita set counts as satisfied; a progressless round
+refuses loudly with ALL cycle members named. Manifest: capita carry
+<inclusio via="..."/> children.
+
+Test net: fixture edge beta→gamma (chosen so every existing count
+stays untouched; also covers the recorded-despite-dedup case since
+gamma is already seen via lib/alpha.c when beta.h walks); 3-file
+cycle scope (cyclus_a ⇄ cyclus_b); pins: exact topo order
+[alpha delta librum gamma epsilon beta], alpha inclusa NIHIL,
+cycle refusal naming both members, manifest inclusio round-trip.
+First-run green.
+
+Gates: probatio green; PORTA 119/119 (156s) on the new schema;
+speculum consumer green (generator awk unaffected by child
+elements, both probationes pass). Engine-parity proof: old-vs-new
+binary emit BYTE-IDENTICAL closure parts for the wearer (62
+entries) — the bundle's 78-vs-80 plagulae delta vs the memory note
+predates Phase A (point-in-time number at 9bf8c7b), not a schema
+effect.
