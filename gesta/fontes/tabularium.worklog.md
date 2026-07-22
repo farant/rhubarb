@@ -269,3 +269,18 @@ eam fert).
 **Numerali phantasmata.** CCCLXXXIV/CCCCLXXX in latina.h desunt
 (480 = CDLXXX subtractivum) — examen ambo ante compilationem
 cepit (identificator ignotus).
+
+## 2026-07-22 — F1 fori: proxy stdio↔TCP
+
+**Fovea suspensionis nuntiationum.** Daemon nuntiationes tacite
+omittit — proxy naivus post quamque lineam responsum legens in
+"notifications/initialized" penderet in aeternum. Solutio =
+classificatio VERA per tabellarius_nuntium_legere (PETITIO/PRAVUM
+exspectant, NUNTIATIO/RESPONSUM mitte-et-obliviscere), non
+divinatio chordae ("id" in corpore textus apparere potest).
+
+**Generatio lateralis in probationibus.** Start-if-absent intra
+proxy daemon VERUM gigneret in probationibus (mundus verus, portus
+probationis!) — vexillum -sine-generatione: defectus statim, error
+curae portu VERO nominato. Generatio launcher portum configuratum
+transfert (-portus %d), non ordinarium caecum.

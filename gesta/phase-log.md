@@ -1268,3 +1268,50 @@ Navatum totum ex intentione, portae virides:
   est; nc stdin-EOF responsa vorat (worklog).
 Proximum: F1 - proxy fori (~40 lineae) + introitus .mcp.json;
 porta = pipatum primum per MCP a "Fable 5" subscriptum.
+
+## FORUM F1 - PROXY FORI: INTENTIO (2026-07-22)
+
+Introitus MCP secundus "fori" = proxy stdio<->TCP tenuis (spec-v2
+par IV). instrumenta/fori_principale.c: ansa lineae stdin ->
+classificatio per tabellarius_nuntium_legere (PETITIO/PRAVUM =
+responsum exspectatur; NUNTIATIO/RESPONSUM = mitte-et-obliviscere -
+fovea suspensionis notificationum SOLUTA analysi, non divinatione)
+-> connexio TCP per-petitionem (contractus v1) -> linea missa ->
+si exspectatur: frusta recepta VERBATIM in stdout fluunt usque ad
+novam lineam -> claudere. Start-if-absent HIC habitat: recusatio
+connexionis -> ./gesta/tabulariumd.sh genitum semel (vexillum
+staticum) + anquisitio 25x0.2s; defectus finalis + PETITIO ->
+tabellarius_errorem (nuntius curae: "tabulariumd absens").
+Argumenta: -portus (8753 ordinarius), -mcp acceptum-omissum.
+Launcher gesta/fori.sh (exemplar tabulariumd.sh sine vigilia -
+proxy machinam non fert; cd radix ante exec) + snippet aedilis.
+Probatio_fori.c: daemon effimero portu auto + proxy per system()
+canali (printf | fori -portus N > exitus) - asserta: initialize
+respondet, NUNTIATIO non suspendit (nuntiatio + petitio una serie
+-> responsum unum), pipatum trans proxy, daemon-absens error
+curae. .mcp.json introitus fori (NON commissum - plagula Franis).
+Portae: suite gestarum viridis + fumus proxy + PORTA VIVA = pipatum
+primum per MCP subscriptum "Fable 5" (post reconexionem Franis).
+
+## FORUM F1 - PROXY FORI: RELATIO (2026-07-22)
+
+Navatum ex intentione: instrumenta/fori_principale.c (~200 lineae)
++ launcher gesta/fori.sh (-struere, sine vigilia) + snippet
+aedilis + introitus .mcp.json "fori" (plagula Franis, non
+commissa). Ansa: linea stdin -> tabellarius_nuntium_legere
+(classificatio vera - fovea suspensionis nuntiationum soluta
+analysi) -> connexio TCP per-petitionem -> frusta responsi
+VERBATIM in stdout usque ad novam lineam -> claudere.
+Start-if-absent in proxy: generatio launcher semel (vexillum
+staticum) portu configurato translato, anquisitio 25x0.2s;
+-sine-generatione pro probationibus (nullus daemon lateralis);
+defectus -> error curae portu VERO nominato (emendatio post fumum:
+nuntius primo 8753 duro codice mentiebatur).
+Portae: probatio_fori 12/12 NOVA (canalis verus printf|fori contra
+daemonem verum: petitio+nuntiatio+petitio = responsa DUO exacte,
+pipatum signatum trans proxy in annales, daemon necatus = error
+curae portu nominato), suite gestarum 4/4, fumus manualis (proxy
+vivo, notificatio media, daemon absens). Instrumenta: fontes_
+generare clausuram proxy 10 fontium derivavit; examen tacuit.
+PORTA VIVA restat: reconexio Franis (/mcp fori) -> pipatum primum
+per MCP subscriptum "Fable 5".
