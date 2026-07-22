@@ -32,6 +32,7 @@
 ./silva/instrumenta/principalia/nexus_percursus.c
 ./silva/instrumenta/principalia/origo.c
 ./silva/instrumenta/principalia/percursus.c
+./silva/instrumenta/principalia/selecta.c
 ./silva/probationes/fixa/censoris/flagrationes.c
 ./silva/probationes/probatio_silva_fidelitas.c
 ./silva/probationes/probatio_silva_mensura.c

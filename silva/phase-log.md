@@ -10101,3 +10101,51 @@ SCALA QUAESTIONIS COMPLETA: QA (tags/combinatores/unio) + QB
 (messis barrae v1, trias deleta). Sequentia: parcum 01KXPV9FPK
 (quaestio in legati MCP) -> contractus selector-scopati
 (01KXTX7FA3, porta sola QC nunc aperta).
+
+## SELECTA (quaestio in subsellio): INTENTIO (2026-07-22)
+
+Parcum 01KY53MP5X tractum (postulatio 2026-07-11 harvestata: grep
+structura-formatum + ancorae Edit; receptae tres - hiatus accessus-
+membrorum M3, interrogatio Franis, QB=3 in officina). Instrumentum:
+`./silva/selecta.sh <plagula> '<selector>' [-intra <symbolum>]
+[-omnia] [-proba]` - congruentia octetim exacta cum capite
+[via:linea-linea] (impressor extentuum emitte REUSUS, variante
+const-tuta: series locis subiecti seminatur, nulla abiectio const).
+
+INVENTUM SUTURAE: -intra in schizzo originali ambulationem tabulae
+ligaminum emitte postulabat ("papers over the missing QB name-
+filter") - QC eam DISSOLVIT: filtrum post-exsecutionis per
+ascensum patrum + congruit(q_scopus) ubi q_scopus =
+"definitio-functionis:definit(sym)". Zuccharum purum, nulla
+ambulatio nova (gemellus sub-aestimationis iterum - sutura ante
+pretium).
+
+Posturae: selector reiectus = fractura clara cum causa (exitus 2);
+arbor cum erroribus = CAUTIO + PERGE (nodi error quaeribiles -
+vinculum robustitatis, dissimile emitte); exitus grep-paritate
+(0 congruentia / 1 nulla / 2 fractura). PORTA IN ORTU (doctrina):
+verbum -proba = fixtura inclusa + quinque probationes numeratae +
+selector malus reiectus, TENET/exitus 2. Launcher = exemplar
+emitte.sh (relink incondicionalis - laqueus obiecti veteris
+structuraliter vitatus) + clausura AB AEDILE (semen
+selecta_fontes_generata.sh -> tools/silva_fontes_generare.sh).
+Futura nominata (worklog): capturae impressae, plagulae plures,
+-breviter. Barrae: -proba TENET, cursus manuales contra fontes
+vivos, suite intacta.
+
+## SELECTA: RELATIO (2026-07-22) - NATUM UNO DIE
+
+Navatum: ./silva/selecta.sh <plagula> '<selector>' [-intra sym]
+[-omnia] [-proba] - grep structura-formatum vivum. Compilatio
+munda primo cursu (batteria vexillorum plena); PROBA TENET
+(fixtura inclusa, V numeri exacti + selector malus reiectus).
+Probationes vivae: :vocat(memset) in piscina.c (corpus octetim);
+accessus[tok_titulus="segmenta"] in xar.c; -intra xar_locare =
+II accessus exacti (falsae vacuae DUAE = exspectationes meae
+falsae, instrumentum rectum - xar_obtinere ->segmenta numquam
+tangit; grep textualis "segment" 120 ictus, quaestio structuralis
+II veros). Receptae postulationis 2026-07-11 solutae. Clausura
+AB AEDILE (9 fontes); exclusio examinis (dirent, ut emitte).
+Laqueus exitus-fistulae me ipsum momordit inter probationes -
+lex memoriae re-probata. Futura in worklog (capturae impressae,
+plagulae plures, -breviter). Parcum 01KY53MP5X claudendum.
