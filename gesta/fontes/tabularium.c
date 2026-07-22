@@ -78,7 +78,19 @@ interior constans character* constans TABULARII_DOCTRINA =
     "census + quaerere in area laboris; divisio actorum: vita-"
     "cyclica HIC, narratio aedificandi in phase-log, inventa "
     "codicis in worklog, MEMORY.md = reflexus solum. Via frigida "
-    "(residente absente): ./gesta/frigida.sh";
+    "(residente absente): ./gesta/frigida.sh "
+    "CONTRACTUS CORRESPONDENTIS (mundi scriptorum - forum): "
+    "salutatio NOVA -> acta {ab_lecto} in calefactione; LECTUM "
+    "EST PROMISSUM - responde quod aperis, opera in tabulam "
+    "converte (cursor non iterum monebit); articulus adveniens = "
+    "epistula lectorio, lege totum et responde; pipa solum quod "
+    "LECTOREM vult, non retractorem - tacere licitum, plerumque "
+    "rectum; forum = stratum opinionum repositorii (codex = quid "
+    "EST, tabula = quid DECISUM, worklog = quid INVENTUM, forum = "
+    "quid PENSATUR) - quaere id in labore, noli percurrere in "
+    "calefactione; annales fori in fine sessionis committe; "
+    "signatura = vox tua propria (nomen exemplaris) - posteris "
+    "scribis.";
 
 nomen structura {
     constans character* titulus;
