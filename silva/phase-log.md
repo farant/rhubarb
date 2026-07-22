@@ -10051,3 +10051,53 @@ nulla nova. Desideratum: nullum.
 
 POST: QD barra v1 translata (100 asserta) -> parcum 01KXPV9FPK
 (quaestio in legati) -> contractus selector-scopati (01KXTX7FA3).
+
+## QUAESTIO QD MESSIS BARRAE V1: INTENTIO (2026-07-22)
+
+Barra v1 (probationes/probatio_arbor_quaestio.c, ~100 asserta,
+tags Anglica) in Latinum contra genera DECISUS translata -> plagula
+nova silva/probationes/probatio_silva_quaestio_messis.c. Tabula:
+function-definition=definitio-functionis, identifier=declarator-
+titulus (nomina declarata) AUT folium-identificator (usus) - v1
+utrumque uno tag tegebat, if/for/while=si/per/dum, struct/enum=
+structura/enumeratio, compound=corpus, call=vocatio, integer-
+literal=folium-integer, :returns/:calls/:defines/:uses=:reddit/
+:vocat/:definit/:utitur. DELTA RECORDANDA: (1) tag ignotum v1
+tacite vacuum -> fractura clara (iam DECISUS, hic pinnatum);
+(2) translation-unit nodum non habet (radix LISTA nuda) - congruit
+in nodis veris probatur; (3) utilitates introspectionis (pseudo_
+nomen/combinator_nomen) non portatae - nomina in superficie ipsa
+vivunt; (4) capturae v1 tabula dispersa -> Xar gradus omnes;
+(5) asserta v1 mollia (">= I", ":calls sine assertione") EXACTA
+facta ubi arbor silvae numerabilis. Post messem virentem: trias
+v1 (lib/arbor_quaestio.c + include/.h + probatio) DELETA per
+legem culturae (suite deletur post messem ad lapidem suum).
+Barrae: messis viret, suite silvae tota, radix post deletionem.
+
+## QUAESTIO QD MESSIS: RELATIO (2026-07-22) - SCALA QA-QD COMPLETA
+
+Navatum: barra v1 tota translata -> probatio_silva_quaestio_messis
+.c, 103 asserta (v1 ~100), VIRIDIS PRIMO CURSU - aestimationes
+numerorum arboris omnes tenuerunt (declaratio VI, binarium IV,
+folium-integer V, corpus VI in fixtura amplissima). Deltae quinque
+in capite plagulae recordatae (tag ignotum fractura; translation-
+unit absens - radix LISTA; utilitates introspectionis non portatae;
+identifier -> declarator-titulus/folium-identificator distincti;
+asserta mollia exacta facta - :vocat(compute) v1 sine assertione,
+nunc EXACTUM I). Trias v1 DELETA (lib/arbor_quaestio.c 1517 +
+include/arbor_quaestio.h 198 + probatio 842 lineae; dependentes
+nulli - grep purus). Portae: messis 103/103; suite silvae 34/34;
+radix 102 praeteritae 0 fractae (103 - probatio deleta).
+
+Instrumenta (debrief): adhibita = grep clausurae dependentium ante
+deletionem (purus), tabulae generum pro tabula translationis;
+fructus = numeri exacti primo cursu iterum (bis in die - QC 74,
+QD 103); asperitates = compile_tests.sh compendium finale nullum
+imprimit (numeravi per grep TEST PASSED - desideratum minus:
+linea summae ad finem); desiderata = nulla alia.
+
+SCALA QUAESTIONIS COMPLETA: QA (tags/combinatores/unio) + QB
+(attributa/capturae/fratres) + QC (pseudo + registratio) + QD
+(messis barrae v1, trias deleta). Sequentia: parcum 01KXPV9FPK
+(quaestio in legati MCP) -> contractus selector-scopati
+(01KXTX7FA3, porta sola QC nunc aperta).
