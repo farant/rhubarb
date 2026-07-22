@@ -9448,3 +9448,100 @@ VECTIS TENET. Named residue: exclusiones graduation experiment
 (would lib/tcp_posix.c etc. come clean under -posix judgment? —
 could shrink the 42-file list to genuinely-un-judgeable ones);
 censor-on-.m remains the other half of park 01KXZYG2SE.
+
+## ANNOTATIONES STML — CHUNK A (COLLECTOR): INTENTIO (2026-07-21)
+
+Pull: park 01KY3D7EJP chunk A (spec = project-specs/
+annotationes-stml-spec.md §2/§4). The identity+intention layer's
+collector: trivia walk recognizing annotation comments (first
+non-whitespace content = STML open tag), decoration pre-pass,
+stml_legere, attachment to top-level units. First paying consumer
+of the "comments are content with structure" pin (VIGILA-HANC).
+
+SEAT DECISION (Fran, 2026-07-21): stml vendored INTO the silva
+amalgam — the pre-amalgam-arc cost argument died with the arc
+(fontes lists aedilis-derived, excludenda compiler-harvested;
+remaining hand = ~12 rename entries + silva.h reading subset +
+2 policy lines). internamentum rides along (stml interns all
+names). The collector CALLS stml_legere itself and returns
+finished records. Public-renamed-vendored-type precedent:
+SilvaPiscina/SilvaChorda/SilvaXar.
+
+Shape: fontes/silva_annotationes.{h,c}. API:
+silva_annotationes_colligere(piscina, parsura, intern /*NIHIL
+licet*/) -> Xar of SilvaAnnotatio {textus (cleaned), crudum,
+fons_index/linea/columna/byte_offset, modus
+SUPRA|INTERIOR|PLAGULA, unitas, parsata, documentum/arbor,
+status + positioned error}. Walk = TOLERA pattern (lexemata +
+radix chain — the invocation-trivia lesson pinned at birth;
+dedup by (fons, byte_offset)). Attachment BYTE-based per fons
+(silva_nodus_extensionem, radix-resolved): SUPRA = nearest unit
+minimum > offset; INTERIOR = containment (beyond-ceremony
+addition, Fran blessed: enclosing unit, keeps interior
+annotations lintable); PLAGULA = none. Malformed anchored =
+collected with parsata FALSUM + positions — never silently
+prose, structurally (everything anchored is IN the output).
+
+Bars: probatio_silva_annotationes with 8 pinned cases (anchored /
+prose / malformed / multi-line-decorated / stacked / file-scope /
+INTERIOR / macro-radix) + boolean-nid attribute; suite green;
+amalgamare VERIFICATUM (stml+internamentum vendored, harvest
+re-run, silva.h reading subset + hospes calls per HOSPES RULE);
+censor + examen clean.
+
+Wrinkles recorded (not solved): end-of-line annotation binds to
+the NEXT unit (above-target read literally); malformed source
+line = annotatio.linea + linea_erroris - 1, columns shift under
+decoration strip (chunk C refinement if needed).
+
+## ANNOTATIONES STML — CHUNK A (COLLECTOR): RELATIO (2026-07-21)
+
+Shipped, all bars green: fontes/silva_annotationes.{h,c} (collector
++ silva_annotationes_unitates public), probatio_silva_annotationes
+63/63 over 9 sections (anchored / prose / malformed-never-silent /
+multi-line-decorated+boolean-nid / stacked / file-scope / INTERIOR
+/ macro-radix dedup / empty comments), silva suite 33/33, amalgam
+VERIFICATUM (standalone + hospes 33/33 incl. new ADDITIONES block +
+nm 0 + censura). stml + internamentum vendored into silva.c (~2.15
+MB); selectio excluded wholesale at policy with via retro; silva.h
++ ~130 lines (renamed stml reading subset + annotation API), all
+type-checked by the embedded-caput gate.
+
+THE BUG: silva_nodus_extensionem is a CALLER-INITIALIZED
+accumulator; both new call sites passed uninitialized outs. The
+probatio's stack luck produced plausible extents ([0,94]); the
+module's produced a split unit POINTER (min=1/max=0x50082E80 —
+the decode that solved it). Every SUPRA pin initially passed BY
+ACCIDENT. hospes had the contract right since LEGATUS chunk 0.
+Codex-71-shaped, cross-call-boundary — the annotation type layer's
+own advertisement. Detail: fontes/silva_annotationes.worklog.md.
+
+TREE FACT: commissio radix = SILVA_VALOR_LISTA of sentence values
+(not a node); unitates() accepts both shapes.
+
+HARVEST HARDENING (tools/aedilis.worklog.md): definition-first
+classifier, PROTECTA guard (non_statica inexcludable, refusal names
+the seed), unneeded-internal-declaration as second signal-A class,
+gyrus cap X→XXX, per-gyrus station snapshots. Cascade seed = stale
+SERVANDA_FRIATIONIS (fnv1a_literis now live via stml). Fixpoint 6
+gyri / 147 nomina. Plus tools/silva_fontes_generare.sh (12 launcher
+snippets: live glob + persisted principalia — new-module-nobody-
+includes broke principal-closure derivation).
+
+INSTRUMENTA DEBRIEF: adhibita = examen push (ACCIPE first compile),
+nexus -renovare, S41 guard (caught _est_littera live), excubitor
+(STALA 2 post-regen), corpus (stml_legere read), aedilis --enumerare
+(via silva_fontes_generare). fructus = the S41 + PROTECTA refusals
+each pointed within one hop of the true cause. asperitates = (1)
+extensionem's caller-init contract is a silent footgun — two fresh
+call sites missed it in one day while hospes had it right; (2) a
+failed amalgamare leaves broken committed silva.c → aedilis
+bootstrap deadlock (loop-break: git checkout -- silva.c). desiderata
+= filed on the board.
+
+WRINKLES CARRIED (named in INTENTIO, unchanged): end-of-line
+annotation binds to NEXT unit; malformed columns shift under
+decoration strip (chunk C may refine).
+
+NEXT: Chunk B — identitates.tsv (nexus.tsv sibling) + minting
+instrument (fills boolean nids) + bench verb (##prefix → corpus).

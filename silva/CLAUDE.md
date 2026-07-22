@@ -67,8 +67,13 @@ silva/amalgama/silva.c and runs its verification gates (standalone
 full-severity compile, hospes host-pollution + equivalence,
 nm-intersection 0) — run it after ANY fontes edit; the suite does NOT
 catch a stale amalgam (silva.h is hand-written; new public API =
-extend it; new use of an excluded vendored function = delete its
-excludenda entry in the amalgamator manifest, the compile clamat).
+extend it). Manifest lists are GENERATED since 2026-07-21: fontes
+lists aedilis-derived (fontes_generata.h; policy = fontes_politica.sh
++ tools/amalgama_fontes_generare.sh), excludenda COMPILER-HARVESTED
+(excludenda_generata.h; tools/amalgama_excludenda_generare.sh). New
+use of an excluded vendored function → re-run the harvest, NEVER
+hand-edit the generated headers (the compile clamat either way).
+Hand surface = policy file + rename tables + silva.h, nothing else.
 Dev-time mains live in instrumenta/principalia/ (outside the test
 link glob).
 The read bench (instrumenta prima, 2026-07-10): ./silva/censor.sh

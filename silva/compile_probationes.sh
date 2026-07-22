@@ -42,8 +42,9 @@ declare -a INCLUDE_FLAGS=(
 )
 
 # Rhubarb lib sources silva depends on during development (vendoring happens
-# only at amalgamation). credo is the test framework. stml is used ONLY by
-# instrumenta/ (the generator, dev-time — never amalgamated).
+# only at amalgamation). credo is the test framework. stml + internamentum
+# are ENGINE deps since silva_annotationes (2026-07-21, vendored at
+# amalgamation like the rest); the generator (instrumenta) also uses stml.
 declare -a RADIX_FONTES=(
     "piscina"
     "chorda"

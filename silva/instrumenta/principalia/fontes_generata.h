@@ -13,7 +13,10 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/chorda_aedificator.h", NIHIL, EXCLUDENDA_AEDIFICATORIS, FALSUM, VERUM },
     { "include/friatio.h", SERVANDA_FRIATIONIS, NIHIL, FALSUM, VERUM },
     { "include/tabula_dispersa.h", NIHIL, EXCLUDENDA_TABULAE, FALSUM, VERUM },
-    { "include/xar.h", NIHIL, EXCLUDENDA_XARIS, FALSUM, VERUM }
+    { "include/xar.h", NIHIL, EXCLUDENDA_XARIS, FALSUM, VERUM },
+    { "include/internamentum.h", NIHIL, EXCLUDENDA_INTERNAMENTI, FALSUM, VERUM },
+    { "include/stml.h", NIHIL, EXCLUDENDA_STML, FALSUM, VERUM },
+    { "include/selectio.h", NIHIL, EXCLUDENDA_SELECTIONIS, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
@@ -22,7 +25,9 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "lib/chorda_aedificator.c", NIHIL, EXCLUDENDA_AEDIFICATORIS, VERUM, VERUM },
     { "lib/friatio.c", SERVANDA_FRIATIONIS, NIHIL, VERUM, VERUM },
     { "lib/tabula_dispersa.c", NIHIL, EXCLUDENDA_TABULAE, VERUM, VERUM },
-    { "lib/xar.c", NIHIL, EXCLUDENDA_XARIS, VERUM, VERUM }
+    { "lib/xar.c", NIHIL, EXCLUDENDA_XARIS, VERUM, VERUM },
+    { "lib/internamentum.c", NIHIL, EXCLUDENDA_INTERNAMENTI, VERUM, VERUM },
+    { "lib/stml.c", NIHIL, EXCLUDENDA_STML, VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {
@@ -43,7 +48,8 @@ interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {
     { "silva/fontes/silva_c89_fluxus.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_c89_fluxus_datorum.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_c89_semantica.h", NIHIL, NIHIL, FALSUM, FALSUM },
-    { "silva/fontes/silva_quaestio.h", NIHIL, NIHIL, FALSUM, FALSUM }
+    { "silva/fontes/silva_quaestio.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_annotationes.h", NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {
@@ -63,5 +69,6 @@ interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {
     { "silva/fontes/silva_c89_fluxus.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_c89_fluxus_datorum.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_c89_semantica.c", NIHIL, NIHIL, VERUM, FALSUM },
-    { "silva/fontes/silva_quaestio.c", NIHIL, NIHIL, VERUM, FALSUM }
+    { "silva/fontes/silva_quaestio.c", NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_annotationes.c", NIHIL, NIHIL, VERUM, FALSUM }
 };

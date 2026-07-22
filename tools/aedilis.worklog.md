@@ -647,3 +647,55 @@ Proof bundles: stml (9 capita + 9 corpora, 344KB) and json, both
 VERIFICATUM. Named v2 futures (on pull): .m closures, vendor
 passthrough, bundle-level renaming via the renamer extraction
 (rung 3), stable-order preference for committed bundles.
+
+## 2026-07-21 (evening) — harvest hardening under the first REAL new-vendor pull (silva+stml)
+
+The annotationes chunk vendored stml+internamentum+selectio into
+silva's amalgam — the first post-arc growth of a vendored set — and
+it broke the harvest in four distinct, instructive ways:
+
+1. **Classifier prefix-first was wrong.** chorda_internare* live in
+   lib/internamentum.c; stml_quaerere* live in lib/selectio.c.
+   Prefix-first filed them under the WRONG basis → exclusions landed
+   in lists the amalgamator applies to a different file → never took
+   effect → fixpoint stalled with "already known" names. Fix:
+   definition-file grep FIRST (authoritative), prefix fallback.
+2. **Signal B can cascade up LIVE chains.** Seed = stale hand
+   SERVANDA (friatio kept only fnv1a; the new libs made the tabula
+   literis path live). Signal B's premise "callers of dropped fns
+   are dead-in-context" became false and the cascade swallowed
+   stml_legere (a non_statica public!). Fix: PROTECTA guard — the
+   harvest greps NON_STATICA from the manifest and REFUSES LOUD if
+   any signal proposes excluding a protected name; the refusal
+   points at the true seed. (Guard fired at gyrus 6 and led straight
+   to the friatio line.)
+3. **Signal A had a blind class**: self/mutually-recursive statics
+   under excluded callers emit "-Wunneeded-internal-declaration"
+   ("is not needed and will not be emitted"), not "unused function".
+   Now both patterns harvest.
+4. **Unused VARIABLES under excluded callers** (selectio cache,
+   internamentum globals) — the mechanism drops functions only.
+   Convention adopted instead of mechanism growth: singleton statics
+   live INSIDE their accessor function (internamentum_globale
+   restructured); wholly-dead subsystems drop at the POLICY level
+   (exclusa_est lib/selectio.c, via retro documented). If a third
+   exemplar appears, consider mechanism support.
+
+Also: gyrus cap 10→30 with a monotonicity argument (lists only
+grow, bounded by function count — the cap is a runaway backstop,
+not a convergence bet); per-gyrus admonitiones/messis snapshots
+kept in the station (the cascade was undebuggable from last-gyrus
+state alone).
+
+Plus a sibling tool birth: tools/silva_fontes_generare.sh — the 12
+silva launcher snippets now derive from principals + the LIVE
+fontes/*.c glob (a new module nobody #includes yet is invisible to
+principal closures, and four launchers carried frozen glob
+expansions from GRADUS-1; both variants break on the same event).
+Principals persist in each snippet's "# principalia:" line.
+
+Bootstrap note for future sessions: bin/aedilis links
+silva/amalgama/silva.c. A failed amalgamare leaves a broken
+committed silva.c → aedilis_struere fails → generators fail. Break
+the loop with `git checkout -- silva/amalgama/silva.c` (HEAD is
+always VERIFICATUM), then re-run the chain.

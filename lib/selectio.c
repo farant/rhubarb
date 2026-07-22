@@ -102,7 +102,7 @@ _est_spatium_selectoris (character c)
 }
 
 interior b32
-_est_littera (character c)
+_est_littera_selectoris (character c)
 {
     redde (c >= 'a' && c <= 'z') ||
            (c >= 'A' && c <= 'Z') ||
@@ -118,13 +118,13 @@ _est_numerus (character c)
 interior b32
 _est_identificator_initium (character c)
 {
-    redde _est_littera(c);
+    redde _est_littera_selectoris(c);
 }
 
 interior b32
 _est_identificator_pars (character c)
 {
-    redde _est_littera(c) || _est_numerus(c);
+    redde _est_littera_selectoris(c) || _est_numerus(c);
 }
 
 /* ==================================================

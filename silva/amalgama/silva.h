@@ -1511,4 +1511,125 @@ int silva_c89_constans_aestimare(SilvaSemantica* sem,
 int silva_c89_chorda_decodere(SilvaPiscina* piscina,
     const SilvaNodus* nodus, SilvaChorda* octeti_out);
 
+/* ==================================================
+ * Annotationes STML (stratum identitatis et intentionis)
+ *
+ * Commentarium cuius contentum primum non-spatium tag STML apertum
+ * est ANNOTATIO est - collectum, purgatum (decoratio ' * ' exuta),
+ * per stml_legere parsatum, unitati supremae affixum. Ancoratum
+ * quod parsare nequit in fructu MANET (parsata falsum + positiones)
+ * - numquam tacite prosa. Subcopia stml LEGENDI hic exposita;
+ * scriptio/mutatio stml intra silva.c manent.
+ * ================================================== */
+
+/* internamentum praenuntiatum (opacum; creare + tradere) */
+typedef struct SilvaInternamentumChorda SilvaInternamentumChorda;
+
+SilvaInternamentumChorda* silva_internamentum_creare(
+    SilvaPiscina* piscina);
+
+typedef enum {
+    STML_NODUS_DOCUMENTUM   = 1,
+    STML_NODUS_ELEMENTUM    = 2,
+    STML_NODUS_TEXTUS       = 3,
+    STML_NODUS_COMMENTUM    = 4,
+    STML_NODUS_PROCESSIO    = 5,
+    STML_NODUS_DOCTYPE      = 6,
+    STML_NODUS_TRANSCLUSIO  = 7
+} SilvaStmlNodusGenus;
+
+typedef enum {
+    STML_CAPTIO_NIHIL       = 0,
+    STML_CAPTIO_ANTE        = 1,
+    STML_CAPTIO_RETRO       = 2,
+    STML_CAPTIO_FARCIMEN    = 3
+} SilvaStmlCaptioDirectio;
+
+typedef enum {
+    STML_SUCCESSUS                   = 0,
+    STML_ERROR_MEMORIA               = 1,
+    STML_ERROR_SYNTAXIS              = 2,
+    STML_ERROR_TAG_NON_CLAUSUM       = 3,
+    STML_ERROR_TAG_IMPROPRIE        = 4,
+    STML_ERROR_ATTRIBUTUM            = 5,
+    STML_ERROR_VACUUM_INPUT          = 6,
+    STML_ERROR_CAPTIO                = 7
+} SilvaStmlStatus;
+
+typedef struct {
+    SilvaChorda* titulus;    /* internata */
+    SilvaChorda* valor;      /* internata ("true" pro boolean) */
+} SilvaStmlAttributum;
+
+typedef struct SilvaStmlNodus {
+    SilvaStmlNodusGenus     genus;
+    SilvaChorda*            titulus;     /* elementorum */
+    SilvaChorda*            valor;       /* textus/commenti/PI */
+    SilvaXar*               attributa;   /* SilvaStmlAttributum */
+    SilvaXar*               liberi;      /* SilvaStmlNodus* */
+    struct SilvaStmlNodus*  parens;
+    int                     crudus;
+    SilvaStmlCaptioDirectio captio_directio;
+    unsigned int            captio_numerus;
+    int                     fragmentum;
+    SilvaChorda*            fragmentum_id;
+} SilvaStmlNodus;
+
+typedef struct {
+    int              successus;
+    SilvaStmlNodus*  radix;
+    SilvaStmlNodus*  elementum_radix;
+    SilvaStmlStatus  status;
+    unsigned int     linea_erroris;
+    unsigned int     columna_erroris;
+    SilvaChorda      error;
+} SilvaStmlResultus;
+
+SilvaStmlResultus silva_stml_legere(SilvaChorda input,
+    SilvaPiscina* piscina, SilvaInternamentumChorda* intern);
+SilvaStmlNodus* silva_stml_invenire_liberum(SilvaStmlNodus* nodus,
+    const char* titulus);
+SilvaChorda* silva_stml_attributum_capere(SilvaStmlNodus* nodus,
+    const char* titulus);
+int silva_stml_attributum_habet(SilvaStmlNodus* nodus,
+    const char* titulus);
+SilvaChorda silva_stml_textus_internus(SilvaStmlNodus* nodus,
+    SilvaPiscina* piscina);
+unsigned int silva_stml_numerus_liberorum(SilvaStmlNodus* nodus);
+SilvaStmlNodus* silva_stml_liberum_ad_indicem(SilvaStmlNodus* nodus,
+    unsigned int index);
+
+typedef enum {
+    SILVA_ANNOTATIO_SUPRA = 0,   /* supra unitatem sequentem */
+    SILVA_ANNOTATIO_INTERIOR,    /* intra unitatem continentem */
+    SILVA_ANNOTATIO_PLAGULA      /* scopus plagulae */
+} SilvaAnnotatioModus;
+
+typedef struct {
+    SilvaChorda textus;          /* corpus purgatum */
+    SilvaChorda crudum;          /* octeti pleni delimitatoribus */
+    int          fons_index;
+    unsigned int linea;          /* 1-basata */
+    unsigned int columna;
+    int          byte_offset;
+
+    SilvaAnnotatioModus modus;
+    const SilvaNodus*   unitas;  /* NIHIL = PLAGULA */
+
+    int              parsata;
+    SilvaStmlNodus*  documentum; /* radix documenti */
+    SilvaStmlNodus*  arbor;      /* elementum primum; NIHIL fractum */
+    SilvaStmlStatus  status;
+    unsigned int     linea_erroris;   /* intra textum purgatum */
+    unsigned int     columna_erroris;
+    SilvaChorda      error;
+} SilvaAnnotatio;
+
+/* Xar de SilvaAnnotatio (per valorem), ordo fluminis; intern NIHIL
+ * licet. Unitates: Xar de SilvaNodus*, ordo fontis. */
+SilvaXar* silva_annotationes_colligere(SilvaPiscina* piscina,
+    const SilvaParsura* parsura, SilvaInternamentumChorda* intern);
+SilvaXar* silva_annotationes_unitates(SilvaPiscina* piscina,
+    const SilvaParsura* parsura);
+
 #endif /* SILVA_H */

@@ -22,8 +22,12 @@
  * Manifestum
  * ================================================== */
 
+/* CAVE: lista stans stat dum clausura viva crescit - stml/
+ * internamentum (2026-07-21) vias literis tabulae vivas fecerunt,
+ * quarum callees friatio hic addendae erant (semen cascatae
+ * signi B - custos PROTECTA nunc clamat) */
 interior constans character* constans SERVANDA_FRIATIONIS[] = {
-    "friatio_fnv1a", NIHIL
+    "friatio_fnv1a", "friatio_fnv1a_literis", NIHIL
 };
 
 /* S44 (finis): static internalizatio x -Werror functiones inusitatas
@@ -72,6 +76,13 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "TypusC89Membrum", "SemanticaSymbolumGenus", "SemanticaSymbolum",
     "SemanticaDiagnosticum", "SilvaSemantica",
     "ExamenSeveritas", "ExamenCodex", "ExamenLicentia",
+    /* annotationes STML (2026-07-21): typi stml quos silva.h
+     * possidet + typi annotationum proprii + internamentum
+     * praenuntiatum (idioma SilvaOraculum) */
+    "StmlNodusGenus", "StmlCaptioDirectio", "StmlStatus",
+    "StmlAttributum", "StmlNodus", "StmlResultus",
+    "InternamentumChorda",
+    "SilvaAnnotatioModus", "SilvaAnnotatio",
     NIHIL
 };
 
@@ -81,7 +92,7 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
  * dereferunt). */
 interior constans character* constans CADENDA_DEFINITIO[] = {
     "SilvaToken", "SilvaValor", "SilvaNodus", "SilvaCaecatio",
-    "SilvaContextus", "TypusC89", NIHIL
+    "SilvaContextus", "TypusC89", "StmlNodus", NIHIL
 };
 
 /* Functiones vendicatae quae PUBLICAE manent (extern, in silva.h) */
@@ -89,7 +100,12 @@ interior constans character* constans NON_STATICA[] = {
     "piscina_generare_dynamicum", "piscina_destruere",
     "piscina_vacare",
     "piscina_summa_usus", "piscina_summa_apex_usus",
-    "xar_numerus", "xar_obtinere", NIHIL
+    "xar_numerus", "xar_obtinere",
+    /* subcopia stml legendi (annotationes, 2026-07-21) */
+    "stml_legere", "stml_invenire_liberum",
+    "stml_attributum_capere", "stml_attributum_habet",
+    "stml_textus_internus", "stml_numerus_liberorum",
+    "stml_liberum_ad_indicem", "internamentum_creare", NIHIL
 };
 
 /* Renominationes typorum (exactae). Typi symbola nexus non creant,
@@ -108,7 +124,14 @@ interior constans Renominatio TYPI_EXACTI[] = {
     { "SlotusStatus",          "SilvaSlotusStatus" },
     { "Xar",                   "SilvaXar" },
     { "XarIterator",           "SilvaXarIterator" },
-    { "XarComparator",         "SilvaXarComparator" }
+    { "XarComparator",         "SilvaXarComparator" },
+    { "StmlNodus",             "SilvaStmlNodus" },
+    { "StmlNodusGenus",        "SilvaStmlNodusGenus" },
+    { "StmlStatus",            "SilvaStmlStatus" },
+    { "StmlCaptioDirectio",    "SilvaStmlCaptioDirectio" },
+    { "StmlAttributum",        "SilvaStmlAttributum" },
+    { "StmlResultus",          "SilvaStmlResultus" },
+    { "InternamentumChorda",   "SilvaInternamentumChorda" }
 };
 
 /* Praefixa functionum - longissimum primum (chorda_aedificator_
@@ -116,9 +139,12 @@ interior constans Renominatio TYPI_EXACTI[] = {
 interior constans Renominatio PRAEFIXA_FUNCTIONUM[] = {
     { "chorda_aedificator_", "silva_chorda_aedificator_" },
     { "tabula_dispersa_",    "silva_tabula_dispersa_" },
+    { "internamentum_",      "silva_internamentum_" },
     { "friatio_",            "silva_friatio_" },
+    { "selectio_",           "silva_selectio_" },
     { "piscina_",            "silva_piscina_" },
     { "chorda_",             "silva_chorda_" },
+    { "stml_",               "silva_stml_" },
     { "xar_",                "silva_xar_" }
 };
 

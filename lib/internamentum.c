@@ -5,13 +5,15 @@
  * Singleton Globale
  * ================================================== */
 
-/* Piscina et internamentum globale (static) */
-hic_manens Piscina*             _piscina_globalis = NIHIL;
-hic_manens InternamentumChorda* _internamentum_globale = NIHIL;
-
 InternamentumChorda*
 internamentum_globale(vacuum)
 {
+    /* statica intra functionem (2026-07-21): functio se totam
+     * continet - amalgama eam demittere potest sine variabilibus
+     * orbatis in scopo plagulae */
+    hic_manens Piscina*             _piscina_globalis = NIHIL;
+    hic_manens InternamentumChorda* _internamentum_globale = NIHIL;
+
     /* Pigra initialisatio */
     si (_internamentum_globale == NIHIL)
     {

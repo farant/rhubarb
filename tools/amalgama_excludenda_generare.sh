@@ -38,6 +38,13 @@ command -v bases_excludendae >/dev/null 2>&1 \
 BASES="$(bases_excludendae)"
 PRAEFIXUM="${PROIECTUM}_"
 
+# functiones PROTECTAE (non_statica manifesti = superficies publica):
+# demissio earum = catena viva callee amisit - error verus, numquam
+# tacite excludendus (lectio silvae 2026-07-21: signum B per catenam
+# VIVAM ascendit et stml_legere ipsum devoravit)
+PROTECTA="$(awk '/NON_STATICA\[\]/,/};/' "$SEDES/amalgamator.c" \
+    | grep -o '"[A-Za-z_][A-Za-z0-9_]*"' | tr -d '"')"
+
 declare -a VEXILLA_SINE_WERROR=(
     "-std=c89" "-pedantic" "-Wall" "-Wextra"
     "-Wconversion" "-Wsign-conversion" "-Wcast-qual"
@@ -88,11 +95,20 @@ _amalgama_compilare_admonens() {
 }
 
 # ------------------------------------------------------------------
-# classificatio nominis originalis -> basis (praefixum longissimum,
-# residua per plagulam definitionis: titulus in columna 0 + " (")
+# classificatio nominis originalis -> basis. PLAGULA DEFINITIONIS
+# PRIMA (auctoritas - functiones alieno praefixo exsistunt:
+# chorda_internare* in lib/internamentum.c vivunt; praefixum-primum
+# eas in EXCLUDENDA falsae plagulae ponebat, amalgamator numquam
+# demittebat, punctum fixum numquam attingebatur - lectio silvae
+# 2026-07-21); praefixum longissimum = reservum.
 # ------------------------------------------------------------------
 _classificare() {
     local nomen="$1" b optimum="" optimum_mensura=0
+    for b in $BASES; do
+        if grep -q "^${nomen}[ ]*(" "lib/$b.c" 2>/dev/null; then
+            echo "$b"; return 0
+        fi
+    done
     for b in $BASES; do
         case "$nomen" in
             "${b}_"*)
@@ -102,11 +118,6 @@ _classificare() {
         esac
     done
     if [ -n "$optimum" ]; then echo "$optimum"; return 0; fi
-    for b in $BASES; do
-        if grep -q "^${nomen}[ ]*(" "lib/$b.c" 2>/dev/null; then
-            echo "$b"; return 0
-        fi
-    done
     return 1
 }
 
@@ -148,18 +159,31 @@ GYRUS=0
 dum_finis=0
 while [ $dum_finis -eq 0 ]; do
     GYRUS=$((GYRUS + 1))
-    [ $GYRUS -le 10 ] || si_fracta "punctum fixum non attactum (gyri X)"
+    # ansa monotona (listae solum crescunt, numero functionum
+    # limitatae) - tectum = obex fugae solum. X -> XXX 2026-07-21:
+    # silva tres bases novas vendicavit, cascata inusitatorum per
+    # strata DAG vocationum decorticatur (gyrus unus = stratum unum;
+    # 123 nomina gyro IX legitima erant).
+    [ $GYRUS -le 30 ] || si_fracta "punctum fixum non attactum (gyri XXX)"
 
     _amalgamatorem_struere || si_fracta "constructio amalgamatoris (gyrus $GYRUS)"
     "$STATIO/amalgamator" "$PWD" "$STATIO/amalgama_messis.c" \
         > /dev/null || si_fracta "cursus amalgamatoris (gyrus $GYRUS)"
     COMPILATIO_BONA=1
     _amalgama_compilare_admonens || COMPILATIO_BONA=0
+    cp "$STATIO/admonitiones.txt" "$STATIO/admonitiones_$GYRUS.txt"
+    cp "$STATIO/amalgama_messis.c" "$STATIO/amalgama_messis_$GYRUS.c"
 
-    # signum A: functiones inusitatae (admonitio) -> excludendae
-    grep -o "unused function '[^']*'" "$STATIO/admonitiones.txt" \
-        | sed "s/unused function '//; s/'//" | sort -u \
-        > "$STATIO/inusitatae.txt"
+    # signum A: functiones inusitatae (admonitio) -> excludendae.
+    # Classis altera (2026-07-21): statica se-recursiva sub vocatore
+    # excluso = "not needed and will not be emitted" (unneeded-
+    # internal-declaration), quam "unused function" non tegit.
+    { grep -o "unused function '[^']*'" "$STATIO/admonitiones.txt" \
+        | sed "s/unused function '//; s/'//"
+      grep -o "function '[^']*' is not needed and will not be emitted" \
+        "$STATIO/admonitiones.txt" \
+        | sed "s/function '//; s/' is not needed.*//"
+    } | sort -u > "$STATIO/inusitatae.txt"
 
     # signum B: declaratio implicita (error) = vocatio functionis a
     # servanda demptae -> VOCANS ipse mortuus-in-contextu; functio
@@ -183,6 +207,11 @@ while [ $dum_finis -eq 0 ]; do
     while IFS= read -r renominata; do
         [ -n "$renominata" ] || continue
         nomen="${renominata#"$PRAEFIXUM"}"
+        case " $(echo $PROTECTA) " in
+            *" $nomen "*)
+                si_fracta "signum functionem PROTECTAM demittere vult: $nomen (gyrus $GYRUS) - catena viva callee amisit; vide $STATIO/admonitiones.txt"
+                ;;
+        esac
         basis="$(_classificare "$nomen")" \
             || si_fracta "nomen inclassificabile: $nomen (renominata: $renominata)"
         if ! grep -Fxq "$nomen" "$STATIO/lista_$basis.txt"; then

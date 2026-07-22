@@ -11,11 +11,15 @@
  * "Conservare unicam copiam cuiusque chordae"
  * ================================================== */
 
-/* Tabula internamenti globalis */
-nomen structura {
+/* Tabula internamenti globalis. Idioma typedef-opacum (typedef et
+ * corpus unitates SEPARATAE, 2026-07-21): silva.h typedef solum
+ * praenuntiat (CADENDA), corpus internum manet - exemplar
+ * SilvaOraculum. */
+nomen structura InternamentumChorda InternamentumChorda;
+structura InternamentumChorda {
     TabulaDispersa* tabula;  /* chorda -> chorda* (canonica) */
     Piscina* piscina;        /* Omnes chordae internatae hic allocantur */
-} InternamentumChorda;
+};
 
 
 /* ==================================================

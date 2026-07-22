@@ -1275,6 +1275,97 @@ int main(void)
         }
     }
 
+    /* annotationes STML (chunk A, 2026-07-21): omnis functio nova
+     * silva.h vocatur - colligere/unitates + subcopia stml legendi
+     * + internamentum (regula stans ADDITIONES) */
+    {
+        static const char* FONS_ANN =
+            "/* <intentio nid>\n"
+            " *   <causa>quia hospes probat</causa>\n"
+            " * </intentio> */\n"
+            "int a;\n"
+            "int b;\n";
+        static unsigned char STML_TAMPON[] = "<radix v=\"x\"/>";
+        SilvaInternamentumChorda* intern =
+            silva_internamentum_creare(piscina);
+        SilvaParsura* parsura = silva_c89_parsare(piscina,
+            "hospes.c", FONS_ANN, (unsigned int)strlen(FONS_ANN),
+            NULL);
+        int bene_ann = 0;
+
+        summa++;
+        if (intern != NULL && parsura != NULL && parsura->successus)
+        {
+            SilvaXar* annotationes = silva_annotationes_colligere(
+                piscina, parsura, intern);
+            SilvaXar* unitates = silva_annotationes_unitates(
+                piscina, parsura);
+
+            if (annotationes != NULL && unitates != NULL
+                && silva_xar_numerus(annotationes) == 1u
+                && silva_xar_numerus(unitates) == 2u)
+            {
+                SilvaAnnotatio* an = (SilvaAnnotatio*)
+                    silva_xar_obtinere(annotationes, 0u);
+
+                if (an != NULL && an->parsata
+                    && an->modus == SILVA_ANNOTATIO_SUPRA
+                    && an->unitas != NULL
+                    && an->arbor != NULL
+                    && an->arbor->genus == STML_NODUS_ELEMENTUM
+                    && silva_stml_attributum_habet(an->arbor, "nid")
+                    && silva_stml_attributum_capere(an->arbor,
+                           "nid") != NULL
+                    && silva_stml_numerus_liberorum(an->arbor) > 0u
+                    && silva_stml_liberum_ad_indicem(an->arbor, 0u)
+                        != NULL)
+                {
+                    SilvaStmlNodus* causa =
+                        silva_stml_invenire_liberum(an->arbor,
+                            "causa");
+
+                    if (causa != NULL)
+                    {
+                        SilvaChorda textus =
+                            silva_stml_textus_internus(causa,
+                                piscina);
+
+                        if (textus.mensura
+                                == (unsigned int)strlen(
+                                       "quia hospes probat")
+                            && memcmp(textus.datum,
+                                   "quia hospes probat",
+                                   textus.mensura) == 0)
+                        {
+                            SilvaChorda input;
+                            SilvaStmlResultus r;
+
+                            input.mensura = (unsigned int)strlen(
+                                (const char*)STML_TAMPON);
+                            input.datum = STML_TAMPON;
+                            r = silva_stml_legere(input, piscina,
+                                intern);
+                            if (r.successus
+                                && r.elementum_radix != NULL
+                                && r.status == STML_SUCCESSUS)
+                            {
+                                bene_ann = 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (bene_ann)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: annotationes\n");
+        }
+    }
+
     /* telemetria arenae */
     {
         size_t usus = silva_piscina_summa_usus(piscina);

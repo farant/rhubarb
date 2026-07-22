@@ -21,7 +21,6 @@ interior constans character* constans EXCLUDENDA_PISCINAE[] = {
 interior constans character* constans EXCLUDENDA_CHORDAE[] = {
     "_extrahere_verba",
     "chorda_aequalis_case_insensitivus",
-    "chorda_aequalis_literis",
     "chorda_camelus",
     "chorda_character_ad",
     "chorda_concatenare",
@@ -31,7 +30,6 @@ interior constans character* constans EXCLUDENDA_CHORDAE[] = {
     "chorda_ex_bytes_legibilis",
     "chorda_ex_f64",
     "chorda_ex_s32",
-    "chorda_fissio",
     "chorda_fissio_chorda",
     "chorda_friare",
     "chorda_incipit",
@@ -47,11 +45,9 @@ interior constans character* constans EXCLUDENDA_CHORDAE[] = {
     "chorda_numerare_occurrentia",
     "chorda_pascalis",
     "chorda_pascalis_serpens",
-    "chorda_praecidere",
     "chorda_praecidere_dextram",
     "chorda_praecidere_sinistram",
     "chorda_praecidi_laterale",
-    "chorda_sectio",
     "chorda_serpens",
     "chorda_substituere",
     "chorda_terminatur",
@@ -88,11 +84,7 @@ interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
 };
 
 interior constans character* constans EXCLUDENDA_TABULAE[] = {
-    "_aequalis_literis_chorda",
-    "_friare_literis",
-    "_invenire_slotum_literis",
     "tabula_dispersa_continet_literis",
-    "tabula_dispersa_invenire_literis",
     "tabula_dispersa_iterator_initium",
     "tabula_dispersa_iterator_proximum",
     "tabula_dispersa_status_imprimere",
@@ -124,5 +116,71 @@ interior constans character* constans EXCLUDENDA_XARIS[] = {
     "xar_status_imprimere",
     "xar_tollere",
     "xar_vacuum_est",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_INTERNAMENTI[] = {
+    "chorda_est_internata",
+    "internamentum_globale",
+    "internamentum_numerus",
+    "internamentum_vacare",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_SELECTIONIS[] = {
+    "selectio_congruit",
+    "selectio_invenire_omnes",
+    "selectio_invenire_primum",
+    "selectio_legere",
+    "selectio_legere_ex_literis",
+    "stml_quaerere",
+    "stml_quaerere_omnes",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_STML[] = {
+    "_duplicare_recursivum",
+    "_liberi_inserere_ad",
+    "_liberi_removere_ad",
+    "_scribere_evasus",
+    "_scribere_indentatio",
+    "_stml_attributum_index",
+    "_stml_titulos_valor",
+    "stml_attributum_addere",
+    "stml_attributum_addere_chorda",
+    "stml_attributum_boolean_addere",
+    "stml_commentum_creare",
+    "stml_duplicare",
+    "stml_duplicare_superficialiter",
+    "stml_elementum_creare",
+    "stml_elementum_crudum_creare",
+    "stml_frater_prior",
+    "stml_frater_proximus",
+    "stml_fratres",
+    "stml_index_inter_fratres",
+    "stml_inserere_ante",
+    "stml_inserere_post",
+    "stml_invenire_omnes_liberos",
+    "stml_legere_ex_literis",
+    "stml_liberum_addere",
+    "stml_maiores",
+    "stml_praeponere",
+    "stml_primus_liberum",
+    "stml_proximus_maior",
+    "stml_removere",
+    "stml_scribere",
+    "stml_scribere_ad_aedificator",
+    "stml_substituere",
+    "stml_textum_addere",
+    "stml_textum_creare",
+    "stml_textum_creare_ex_chorda",
+    "stml_titulos_capere",
+    "stml_titulos_numerus",
+    "stml_titulum_addere",
+    "stml_titulum_commutare",
+    "stml_titulum_habet",
+    "stml_titulum_removere",
+    "stml_ultimus_liberum",
+    "stml_vacare_liberos",
     NIHIL
 };
