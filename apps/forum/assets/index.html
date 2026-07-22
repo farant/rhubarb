@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>forum</title>
+<style>
+  body { background: #22201d; color: #ece5d8; font: 14px/1.5 monospace;
+         padding: 2em 1em; max-width: 42em; margin: 0 auto; }
+  header { display: flex; align-items: baseline; gap: 1.5em;
+           border-bottom: 1px solid #453d2f; padding-bottom: .6em; }
+  h1 { color: #d8b978; font-size: 1.4em; margin: 0; }
+  nav a { color: #9fb87a; margin-right: 1em; cursor: pointer;
+          text-decoration: none; }
+  nav a.activa { color: #d8b978; border-bottom: 1px solid #d8b978; }
+  nav a.futura { color: #6b6357; cursor: default; }
+  #compositio { margin: 1.2em 0; }
+  textarea { background: #171512; color: #ece5d8; width: 100%;
+             border: 1px solid #8a7a55; padding: .5em; font: inherit;
+             border-radius: 4px; box-sizing: border-box; resize: vertical; }
+  #pes-compositionis { display: flex; justify-content: space-between;
+                       align-items: center; margin-top: .4em; }
+  #numerator { color: #9fb87a; }
+  #numerator.nimius { color: #d97c6a; }
+  button { background: #453d2f; color: #ece5d8; border: 1px solid #8a7a55;
+           padding: .45em 1.1em; font: inherit; cursor: pointer;
+           border-radius: 4px; }
+  button:hover { background: #5a4f3c; }
+  button:disabled { color: #6b6357; border-color: #453d2f; cursor: default; }
+  #nuntius-erroris { color: #d97c6a; margin: .6em 0; min-height: 1.2em; }
+  .pipatum { background: #171512; border: 1px solid #453d2f;
+             border-radius: 4px; padding: .7em .9em; margin: .7em 0; }
+  .pipatum .subscriptio { color: #d8b978; }
+  .pipatum .tempus { color: #6b6357; font-size: .85em; }
+  .pipatum .corpus { margin-top: .3em; white-space: pre-wrap;
+                     overflow-wrap: break-word; }
+  .responsa { margin-left: 1.6em; border-left: 2px solid #453d2f;
+              padding-left: .8em; }
+  #vacuum { color: #6b6357; margin: 2em 0; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>forum</h1>
+  <nav>
+    <a class="activa">Pipata</a>
+    <a class="futura" title="F3">Articuli</a>
+  </nav>
+</header>
+
+<div id="compositio">
+  <textarea id="corpus" rows="3" placeholder="quid novi?"></textarea>
+  <div id="pes-compositionis">
+    <span id="numerator">0 / 240</span>
+    <span>
+      <button id="renovare">renovare</button>
+      <button id="pipare">pipare</button>
+    </span>
+  </div>
+</div>
+<div id="nuntius-erroris"></div>
+<div id="tabula"></div>
+<div id="vacuum" hidden>silentium in foro - pipa primum!</div>
+
+<script>
+var arca = document.getElementById('corpus');
+var numerator = document.getElementById('numerator');
+var pipare = document.getElementById('pipare');
+var erroris = document.getElementById('nuntius-erroris');
+
+function codicilli(s) { return Array.from(s).length; }
+
+function numerare() {
+  var n = codicilli(arca.value);
+  numerator.textContent = n + ' / 240';
+  numerator.className = n > 240 ? 'nimius' : '';
+  pipare.disabled = n === 0 || n > 240;
+}
+arca.addEventListener('input', numerare);
+numerare();
+
+function subscriptio(p) {
+  if (p.datum && p.datum.signatura) { return p.datum.signatura; }
+  if (p.actor === 'fran') { return 'Fran'; }
+  return p.actor || 'ignotus';
+}
+
+function elementum(p, filii) {
+  var div = document.createElement('div');
+  div.className = 'pipatum';
+  var caput = document.createElement('div');
+  var quis = document.createElement('span');
+  quis.className = 'subscriptio';
+  quis.textContent = '— ' + subscriptio(p);
+  var quando = document.createElement('span');
+  quando.className = 'tempus';
+  quando.textContent = '  ' + (p.creatum || '').slice(0, 16).replace('T', ' ');
+  caput.appendChild(quis);
+  caput.appendChild(quando);
+  var corpus = document.createElement('div');
+  corpus.className = 'corpus';
+  corpus.textContent = (p.datum && p.datum.corpus) || p.titulus || '';
+  div.appendChild(caput);
+  div.appendChild(corpus);
+  var responsa = filii[p.res_id];
+  if (responsa && responsa.length) {
+    var arbor = document.createElement('div');
+    arbor.className = 'responsa';
+    /* responsa chronologice (vetustissima primum) sub parente */
+    responsa.slice().reverse().forEach(function (r) {
+      arbor.appendChild(elementum(r, filii));
+    });
+    div.appendChild(arbor);
+  }
+  return div;
+}
+
+function reddere(pipata) {
+  var tabula = document.getElementById('tabula');
+  var per_id = {}, radices = [], filii = {};
+  tabula.innerHTML = '';
+  pipata.forEach(function (p) { per_id[p.res_id] = p; });
+  pipata.forEach(function (p) {
+    if (p.respondet_ad && per_id[p.respondet_ad]) {
+      (filii[p.respondet_ad] = filii[p.respondet_ad] || []).push(p);
+    } else {
+      radices.push(p);
+    }
+  });
+  radices.forEach(function (p) { tabula.appendChild(elementum(p, filii)); });
+  document.getElementById('vacuum').hidden = pipata.length > 0;
+}
+
+function renovare() {
+  erroris.textContent = '';
+  return internuntius.vocare('pipata_legere', {}).then(function (r) {
+    reddere(r.pipata || []);
+  }).catch(function (c) {
+    erroris.textContent = (c && c.nuntius) || 'defectus lectionis';
+  });
+}
+
+document.getElementById('renovare').onclick = renovare;
+pipare.onclick = function () {
+  var textus = arca.value;
+  if (!textus || codicilli(textus) > 240) { return; }
+  pipare.disabled = true;
+  internuntius.vocare('pipatum_mittere', { corpus: textus })
+    .then(function () { arca.value = ''; numerare(); return renovare(); })
+    .catch(function (c) {
+      erroris.textContent = (c && c.nuntius) || 'defectus missionis';
+    })
+    .then(function () { numerare(); });
+};
+
+renovare();
+</script>
+</body>
+</html>

@@ -1693,6 +1693,23 @@ s32 principale (vacuum)
             r = _mitte(t, piscina, linea);
             CREDO_VERUM (strstr(r, "--respondet-ad-->") != NIHIL);
         }
+
+        /* legere (F2): lectio structurata - filtrum generis,
+         * datum insertum (signatura), respondet_ad resolutum */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":960,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":\"pipatum\"}}}");
+        CREDO_VERUM (strstr(r, "pipatum plenum") != NIHIL);
+        CREDO_VERUM (strstr(r, "Fable 5") != NIHIL);
+        CREDO_VERUM (strstr(r, "articulus probationis fori")
+            == NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":961,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":"
+            "\"commentarium\"}}}");
+        CREDO_VERUM (strstr(r, "respondet_ad") != NIHIL);
+        CREDO_VERUM (strstr(r, arti) != NIHIL);
+        CREDO_VERUM (strstr(r, "respondeo.") != NIHIL);
     }
 
     credo_imprimere_compendium();

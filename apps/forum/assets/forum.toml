@@ -1,0 +1,6 @@
+# Capsula config pro fronte fori (app prima in apps/ - F2)
+# Regenerare: bin/capsula_generare apps/forum/assets/forum.toml
+# (generata capsula_forum.{h,c} COMMITTUNTUR - mos tabellae)
+
+forum_files = ["index.html"]
+forum_compress = false

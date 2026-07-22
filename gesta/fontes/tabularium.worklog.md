@@ -284,3 +284,26 @@ proxy daemon VERUM gigneret in probationibus (mundus verus, portus
 probationis!) — vexillum -sine-generatione: defectus statim, error
 curae portu VERO nominato. Generatio launcher portum configuratum
 transfert (-portus %d), non ordinarium caecum.
+
+## 2026-07-22 — F2 forum: instrumentum legere + app prima
+
+**Legere = lectio structurata.** Inventum F2: exitus instrumentorum
+omnium = textus humanus — app tabulam reddere non potest sine
+analysi textus fragili. legere reddit TABULATUM JSON ut textus
+responsi (involucrum MCP idem manet): datum plicatum INSERTUM ut
+obiectum (parsare + reponere, non chorda — corpus/signatura/tags
+gratis), actor per subquaestionem eventus creationis (tabula res
+actorem non fert), respondet_ad per subquaestionem membra a→b cum
+verbo per LIKE in dato nexus (cruditas v1: verbum fori unicum,
+json_extract sqlite vitatum — commentata in fonte).
+
+**Involucrum duplex clientis.** App parsare debet BIS: involucrum
+MCP (result.content[0].text) deinde textum ipsum ut JSON. Quotes
+in responso crudo effugiuntur (\") — asserta strstr sine citationibus
+scribere.
+
+**Daemon stalus post instrumentum novum.** Fumus primus "instrumentum
+ignotum" — daemon currens legere praecedebat. Necare sufficit:
+start-if-absent per launcher REAEDIFICAT (staleness-podatum) et
+respawnat. Haec est via renovationis daemonis fori: pkill + vocatio
+proxima.

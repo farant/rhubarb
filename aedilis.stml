@@ -5,6 +5,8 @@
     <via (>book_assets
     <via (>probationes/vitrea_assets
     <via (>probationes/tabella_assets
+    <via (>apps/forum
+    <via (>apps/forum/assets
     <via (>vendor
     <via (>gesta/fontes
     <via (>silva/amalgama

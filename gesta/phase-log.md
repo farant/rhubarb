@@ -1315,3 +1315,69 @@ vivo, notificatio media, daemon absens). Instrumenta: fontes_
 generare clausuram proxy 10 fontium derivavit; examen tacuit.
 PORTA VIVA restat: reconexio Franis (/mcp fori) -> pipatum primum
 per MCP subscriptum "Fable 5".
+
+## FORUM F2 - SCELETUM APP: INTENTIO (2026-07-22)
+
+Prima app in apps/ (conventiones nascuntur) + instrumentum lectionis
+structuratae in machina (inventum recognitionis: exitus instrumentorum
+exsistentium = textus humanus, app datum structuratum eget).
+
+Frusta:
+1. Machina: instrumentum "legere" {genus?, status?, quantum? (L,
+   tectum CC)} -> textus = TABULATUM JSON (recentissima primum per
+   creatum DESC): {res_id, genus, titulus, status, actor (subquaestio
+   eventus creationis), creatum, mutatum, datum (obiectum plicatum
+   INSERTUM - corpus/signatura/tags gratis), respondet_ad (subquaestio
+   membra a->b, verbum per LIKE in dato nexus - cruditas v1
+   commentata)}. SQL localis tractatoris (praecedens acta/census).
+   ARG_LEGERE III, registratio, ramus dispatch. Asserta in-processu.
+   Ambo mundi instrumentum vident (ut acta).
+2. apps/forum/forum.c: exemplar tabellae (ansa app-possessa, capsula,
+   internuntius) + cliens daemonis per-petitionem (tcp + mittere
+   omnia + recipere ad novam lineam - exemplar probatio_tabulariumd;
+   initialize NON necessarium - daemon se praeinitiat) +
+   start-if-absent (ut fori) + tractatores IS "pipata_legere"
+   (daemon legere genus=pipatum -> tabulatum ad IS) et
+   "pipatum_mittere" {corpus} (titulus = praefixum corporis IS-latere;
+   actor fran, sine signatura - decisio colloquii) + vexillum -fumus
+   (pipata leguntur ANTE fenestram, numerus impressus, exitus 0 =
+   porta scriptabilis sine oculis).
+3. apps/forum/assets/index.html: tabula pipatorum recentissima primum,
+   responsa indentata (respondet_ad), arca compositionis cum numeratore
+   CCXL, button renovare (pulsus vivus = F4). aesthetica tabellae.
+4. assets/forum.toml -> capsula_forum.{h,c} COMMISSA (mos tabellae);
+   aedilis.stml inclusa += apps/forum, apps/forum/assets;
+   apps/forum/forum.sh = involucrum tenue (aedilis + struere + exec).
+Portae: suite gestarum (asserta legere) + constructio aedilis viridis
++ bin fumi (-fumus contra daemonem verum) + Fran fenestram aperit et
+tabulam videt (acceptatio vera F2).
+
+## FORUM F2 - SCELETUM APP: RELATIO (2026-07-22)
+
+Navatum ex intentione, portae virides:
+- Machina: instrumentum "legere" {genus?, status?, quantum? L/CC} ->
+  textus = tabulatum JSON recentissima primum (datum plicatum
+  insertum obiectum, actor ex subquaestione creationis, respondet_ad
+  ex membris LIKE-verbo - cruditas v1 commentata). ARG III,
+  registratio, dispatch. Asserta 6 nova (243 totum) - filtrum
+  generis, signatura in dato, respondet_ad resolutum ad articulum.
+- apps/forum/ NATUM (conventiones primae): forum.c (exemplar
+  tabellae + cliens daemonis per-petitionem + start-if-absent +
+  tractatores pipata_legere/pipatum_mittere + titulus = praefixum
+  XL codicillorum + vexillum -fumus), assets/index.html (tabula
+  filata cum responsis indentatis, arca compositionis numeratore
+  CCXL codicillorum IS-latere, renovare manuale - pulsus vivus F4),
+  forum.toml -> capsula_forum.{h,c} COMMISSA, aedilis.stml inclusa
+  += apps/forum + assets, forum.sh involucrum (aedilis + struere +
+  cp bin/forum + exec).
+- Constructio aedilis PRIMO ICTU viridis (19 obiecta, clausura tota
+  derivata incl. tcp_posix + vitrea_macos.m + capsula_forum.c +
+  compagines Cocoa/WebKit - nihil manu scriptum).
+- Fumus: daemon stalus captus ("instrumentum ignotum" - legere
+  praecedebat), pkill + start-if-absent launcher reaedificavit ->
+  "[forum] fumus: 1 pipata lecta" (pipatum primum trans catenam
+  totam). Suite gestarum 4/4.
+- RESTAT ACCEPTATIO VERA: Fran fenestram aperit (./apps/forum/
+  forum.sh), tabulam videt, pipat ex arca.
+Proximum F3: articuli + fila (visus articulorum, editor, commentaria
+respondet-ad, tumuli).

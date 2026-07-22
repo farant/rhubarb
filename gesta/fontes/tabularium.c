@@ -4009,6 +4009,119 @@ _tab_acta (Tabularium* t, Piscina* pn, JsonValor* argumenta,
         chorda_aedificator_finire(aed), FALSUM);
 }
 
+/* legere (F2 forum): lectio structurata pro apps - textus responsi
+ * = TABULATUM JSON rerum recentissimarum primum. Datum plicatum
+ * INSERTUM ut obiectum (corpus/signatura/tags gratis); actor ex
+ * eventu creationis (subquaestio); respondet_ad ex membris (a ->
+ * b) - verbum per LIKE in dato nexus (cruditas v1 commentata:
+ * verbum fori unicum, json_extract vitatum). */
+interior vacuum
+_tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
+    JsonValor* id, FILE* effusio)
+{
+    ScriniumEnuntiatum* e;
+    s64 quantum = L;
+    chorda genus_f = _arg(argumenta, "genus");
+    chorda status_f = _arg(argumenta, "status");
+    JsonValor* tabulatum = json_tabulatum_creare(pn);
+
+    si (argumenta != NIHIL)
+    {
+        JsonValor* v = json_objectum_capere(argumenta, "quantum");
+
+        si (v != NIHIL && json_est_integer(v))
+        {
+            quantum = json_ad_integer(v);
+        }
+        alioquin si (v != NIHIL && json_est_chorda(v))
+        {
+            quantum = (s64)atoi(_litterae(pn, json_ad_chorda(v)));
+        }
+    }
+    si (quantum < (s64)I) quantum = (s64)L;
+    si (quantum > (s64)CC) quantum = (s64)CC;
+    si (genus_f.datum == NIHIL) genus_f = _ch("");
+    si (status_f.datum == NIHIL) status_f = _ch("");
+
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT r.res_id, r.genus, r.titulus, r.status, r.datum,"
+        " r.creatum, r.mutatum,"
+        " (SELECT tc.actor FROM tessellae tc"
+        "  WHERE tc.res_id = r.res_id"
+        "  AND tc.genus_eventus = 'creatio' AND tc.branch_id = ''"
+        "  ORDER BY tc.seq LIMIT 1),"
+        " (SELECT mb.membrum FROM membra ma"
+        "  JOIN res n ON n.res_id = ma.res_id"
+        "   AND n.genus = 'nexus' AND n.status = 'vigens'"
+        "   AND n.datum LIKE '%\"verbum\":\"respondet-ad\"%'"
+        "  JOIN membra mb ON mb.res_id = ma.res_id"
+        "   AND mb.pars = 'b'"
+        "  WHERE ma.pars = 'a' AND ma.membrum = r.res_id"
+        "  LIMIT 1)"
+        " FROM res r"
+        " WHERE (? = '' OR r.genus = ?)"
+        " AND (? = '' OR r.status = ?)"
+        " ORDER BY r.creatum DESC, r.res_id DESC LIMIT ?");
+    si (e == NIHIL)
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _ch("legere: praeparatio scrinii fracta"), VERUM);
+        redde;
+    }
+    scrinium_ligare_textum(e, I, genus_f);
+    scrinium_ligare_textum(e, II, genus_f);
+    scrinium_ligare_textum(e, III, status_f);
+    scrinium_ligare_textum(e, IV, status_f);
+    scrinium_ligare_numerum(e, V, quantum);
+
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        JsonValor* res = json_objectum_creare(pn);
+        chorda datum = scrinium_columna_textus(e, IV, pn);
+        chorda actor = scrinium_columna_textus(e, VII, pn);
+        chorda respondet = scrinium_columna_textus(e, VIII, pn);
+
+        json_objectum_ponere(res, "res_id",
+            json_chorda_creare(pn,
+                scrinium_columna_textus(e, 0, pn)));
+        json_objectum_ponere(res, "genus",
+            json_chorda_creare(pn,
+                scrinium_columna_textus(e, I, pn)));
+        json_objectum_ponere(res, "titulus",
+            json_chorda_creare(pn,
+                scrinium_columna_textus(e, II, pn)));
+        json_objectum_ponere(res, "status",
+            json_chorda_creare(pn,
+                scrinium_columna_textus(e, III, pn)));
+        json_objectum_ponere(res, "creatum",
+            json_chorda_creare(pn,
+                scrinium_columna_textus(e, V, pn)));
+        json_objectum_ponere(res, "mutatum",
+            json_chorda_creare(pn,
+                scrinium_columna_textus(e, VI, pn)));
+        json_objectum_ponere(res, "actor",
+            json_chorda_creare(pn, actor));
+        si (respondet.mensura > ZEPHYRUM)
+        {
+            json_objectum_ponere(res, "respondet_ad",
+                json_chorda_creare(pn, respondet));
+        }
+        si (datum.mensura > ZEPHYRUM)
+        {
+            JsonResultus r = json_legere(datum, pn);
+
+            si (r.successus)
+            {
+                json_objectum_ponere(res, "datum", r.radix);
+            }
+        }
+        json_tabulatum_addere(tabulatum, res);
+    }
+    scrinium_finire(e);
+    _textum_respondere(t, pn, effusio, id,
+        json_scribere(tabulatum, pn), FALSUM);
+}
+
 /* agere (K3): actio exsequi aut processum incipere. Ligamina
  * valores = res_id AUT titulus exactus (resolutio tabularii ante
  * nucleum; ambiguitas candidatos nominat). RECEPTA SUNT CODEX:
@@ -4765,6 +4878,13 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         { "actor", "filtrum actoris (fran|claude|machina)",
           FALSUM }
     };
+    interior constans TabArgumentum ARG_LEGERE[] = {
+        { "genus", "filtrum generis rerum (e.g. pipatum|articulus|"
+          "commentarium)", FALSUM },
+        { "status", "filtrum statûs", FALSUM },
+        { "quantum", "numerus rerum (ordinarius L, tectum CC)",
+          FALSUM }
+    };
     interior constans TabArgumentum ARG_RAMUS[] = {
         { "actus", "creare|enumerare|comparare|fundere|abicere",
           VERUM },
@@ -4817,6 +4937,12 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         " (truncus, recentissima primum) - superficies recensionis"
         " (quid hodie scriptum est).",
         ARG_ACTA, III));
+    json_tabulatum_addere(instrumenta, _instrumentum(pn, "legere",
+        "Lectio structurata pro apps: textus = tabulatum JSON"
+        " rerum (recentissima primum) cum dato plicato inserto,"
+        " actore creationis, et respondet_ad (filum). Fundamentum"
+        " tabulae fori.",
+        ARG_LEGERE, III));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "tacere",
         "Cautionem vigiliae (residens obsoletus) per N responsa"
         " supprimere - agnitio explicita. Re-armatur: numero"
@@ -5031,6 +5157,10 @@ _toolscall_tractare (Tabularium* t, Piscina* pn, JsonValor* id,
     alioquin si (_chorda_est(titulus, "acta"))
     {
         _tab_acta(t, pn, argumenta, id, effusio);
+    }
+    alioquin si (_chorda_est(titulus, "legere"))
+    {
+        _tab_legere(t, pn, argumenta, id, effusio);
     }
     alioquin si (_chorda_est(titulus, "tacere"))
     {
