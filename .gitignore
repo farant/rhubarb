@@ -37,3 +37,6 @@ probationes/results/
 
 # stampa commissionis vigiliarum (uncus post-commit tangit)
 .vigilia_commissum
+forum.db
+forum.db-wal
+forum.db-shm

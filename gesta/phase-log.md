@@ -1182,3 +1182,89 @@ param ramus futurum nominatum. Portae: suite gestarum 680 + 224
 sine filtris + actor=claude; ansa initializationis in fumo
 detecta - "nondum initiatum" sine ea). Doctrina += acta (sessiones
 futurae eam hereditent). Frustum 1 ex V parci 01KY57P2WD.
+
+## FORUM F0 - TABULARIUMD: INTENTIO (2026-07-22)
+
+Fundamentum fori (spec project-specs/forum-spec-v2.md; quaestio
+01KY5AA1YH): daemon TCP super machinam exsistentem, mundus
+scriptorum novus, genera fori seminata. Decisiones Franis: limes
+pipati = CODICILLI (non bytes), portus 8753 (conditio Romae a.C.,
+praefixo 8), proiectio entities/ NON in v1.
+
+Frusta:
+1. tabularium.c: (a) initialize IDEMPOTENS - porta unica-vice fit
+   "si nondum, aperi" et responsum idem semper redditur (mutatio
+   machinae UNICA spec-v2); (b) semina v5 = articulus (conditum->
+   publicatum->retractum) + commentarium + pipatum, attributa
+   INLINE (fusio ATTRIBUTA_V2 ad SEMINA_BOARD_NUMERUS terminatur),
+   SEMINA_NUMERUS X->XIII; (c) custos pipati: _codicillos_numerare
+   (bytes non-continuationis UTF-8) > CCXL -> recusatio nominata;
+   (d) signatura arg in addere (post ancoras) et gerere (POST
+   ramos actuum - mutatio cruda datum substituit, ergo ante
+   serialisationem solam), clavis dati liberi - mutatio schematis
+   nulla; ARG_ADDERE VIII->IX, ARG_GERERE XII->XIII. Nexus/denexus
+   sine signatura (acceptum: responsum eam in creatione
+   commentarii fert).
+2. instrumenta/tabulariumd_principale.c NOVUM: argumenta -radix/
+   -portus/-scrinium/-annales + trias vigiliae; ordinarii = mundus
+   fori, proiectiones NIHIL. Se-initiatio per tractare (linea
+   synthetica -> tmpfile -> "result" verificatum). Servus TCP
+   127.0.0.1 OBSTRUENS (opt.non_blocans=FALSUM - accepti eum
+   hereditant, tcp_posix:715), SO_NOSIGPIPE iam in acceptis.
+   Ligatio fallita = alter vivit -> exitus 0 quietus. "portus N"
+   in stdout (semen fumi; portus 0 = auto). Ansa: piscina
+   connexionis effimera + accipere + fdopen(dup(fd)) r/w + ansa
+   per-lineam (pn recens per nuntium, exemplar currere) ad EOF ->
+   claudere omnia -> proxima.
+3. gesta/tabulariumd.sh: exemplar tabularium.sh (clausura -MM,
+   trias vigiliae, manifestum proprium), vexillum -struere (aedifica
+   et exi - semen fumi), snippet tabulariumd_fontes_generata.sh per
+   tools/fontes_generare.sh.
+4. Probationes: probatio_tabularium.c += asserta in-processu
+   (initialize bis = idempotens; articulus creatio status conditum
+   + machina; custos CCXL tri-casus incl. multibyte 240 chars/480
+   bytes ACCEPTUM; signatura in addere et in mutatione).
+   probatio_tabulariumd.c NOVA = fumus socketi: system() daemon in
+   mundo effimero portu 0, plagula portus lecta (anquisitio), cliens
+   tcp_connectere + fdopen + lineae, initialize + addere pipatum
+   signatum "Fable 5" + recusatio >CCXL trans filum, kill +
+   purgatio. gesta/fontes_generare.sh re-cursum (tcp in clausuram
+   suitae).
+Barrae: suite gestarum tota viridis + fumus socketi viridis.
+
+## FORUM F0 - TABULARIUMD: RELATIO (2026-07-22)
+
+Navatum totum ex intentione, portae virides:
+- Machina: initialize IDEMPOTENS (porta unica-vice -> "si nondum";
+  probatio vetus "iam initiatum" inversa); semina v5 = articulus/
+  commentarium/pipatum attributis inline, SEMINA_NUMERUS XIII;
+  custos CCXL per _codicillos_numerare (bytes non-continuationis -
+  codicilli, decisio Franis); signatura in addere et gerere (POST
+  ramos actuum - mutatio cruda datum substituit), ARG IX/XIII.
+- Daemon: instrumenta/tabulariumd_principale.c - accipere obstruens
+  sequentiale, fdopen(dup) FILE* bini, ansa per-lineam exsistens,
+  se-initiatio per tractare (tmpfile "result" verificatum), portus
+  8753 ordinarius / 0 = auto ("portus N" stdout = semen fumi),
+  ligatio fallita = exitus 0 quietus. Launcher tabulariumd.sh
+  (exemplar tabularium.sh + -struere) + snippet aedilis proprius.
+- FOVEA CAPTA: tcp_servus_creare = bind SOLUM, auscultare vocatio
+  separata - sine ea accipere in errorem cadit et ansa nete
+  occupata spinnat (vide worklog). 
+- Probationes: probatio_tabularium 237/237 (XIII nova: machina
+  articuli, custos CCXL tri-casus incl. 240 multibyte = 480 bytes
+  ACCEPTUM, signatura in creatione + mutatione via annales, filum
+  respondet-ad, idempotentia); probatio_tabulariumd NOVA 12/12
+  (fumus socketi: daemon verus mundo effimero portu auto, cliens
+  tcp domus per-petitionem, initialize bis connexionibus separatis,
+  pipatum signatum "Fable 5", recusatio CCXLI trans filum, acta).
+  Suite gestarum 3/3. Mundus fori NATUS: forum.db (ignoratum) +
+  gesta/annales/forum.jsonl (XIX eventa seminationis, COMMISSUM).
+- Instrumenta (debrief): fontes_generare (aedilis) clausuram
+  daemonis/suitae uno ictu derivavit (tcp_posix sponte); examen
+  numeralia phantasmata (CCCLXXXIV) ante compilationem cepit;
+  excubitor residentem stalum post editum nominavit (renexus
+  factus). Asperitas: bifidum creare/auscultare tcp API sine
+  custode - servus ligans qui accipere non potest obiectum validum
+  est; nc stdin-EOF responsa vorat (worklog).
+Proximum: F1 - proxy fori (~40 lineae) + introitus .mcp.json;
+porta = pipatum primum per MCP a "Fable 5" subscriptum.

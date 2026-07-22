@@ -241,3 +241,31 @@ Global event-stream tail as a read tool. Notes:
   handshake ("nondum initiatum" -32002) — the probatio's _mitte
   path initializes in setup, a bare printf-drive must send
   initialize first.
+
+## 2026-07-22 — F0 forum: tabulariumd + genera fori
+
+**Bind-sine-listen trap (tcp domus).** `tcp_servus_creare` facit
+socket+bind SOLUM; `tcp_servus_auscultare` (listen) est vocatio
+separata. Symptomata sine ea: daemon "auscultat" imprimit, clientes
+connexionem RECUSANTUR (backlog nullum), et ansa accipere in
+"Servus non auscultans" errorem cadit + `perge` = nete occupata
+100% CPU sine servitio. Hospitium eandem sequentiam vocat — lege
+consumptorem exsistentem primum (lex caller-init generalisata:
+API creare/auscultare bifidum).
+
+**nc stdin-EOF.** macOS nc post EOF stdin cito exit — responsa
+numquam visa. Fumus manualis: `{ printf ...; sleep 1; } | nc`.
+
+**fdopen(dup(fd)) bis.** FILE* lectionis et scriptionis uterque
+descriptorem PROPRIUM possidet (dup bis); originalis tcp_claudere
+clauditur. fclose ordine quovis tutum.
+
+**Signatura post ramos actuum.** In _tab_gerere mutatio cruda
+`datum = r.radix` obiectum commune SUBSTITUIT — positio unica tuta
+pro clavi signaturae = post ramos omnes, ante serialisationem.
+Nexus/denexus supra redeunt sine ea (acceptum: creatio commentarii
+eam fert).
+
+**Numerali phantasmata.** CCCLXXXIV/CCCCLXXX in latina.h desunt
+(480 = CDLXXX subtractivum) — examen ambo ante compilationem
+cepit (identificator ignotus).

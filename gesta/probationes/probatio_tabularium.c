@@ -286,10 +286,13 @@ s32 principale (vacuum)
     CREDO_VERUM (strstr(r, "tabularii") != NIHIL);
     CREDO_VERUM (strstr(r, "2025-06-18") != NIHIL);
 
-    /* iterum initialize = recusatum */
+    /* iterum initialize = IDEMPOTENS (F0 forum): responsum idem,
+     * non recusatio - clientes daemonis per-petitionem innoxie
+     * salutant */
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":3,"
         "\"method\":\"initialize\",\"params\":{}}");
-    CREDO_VERUM (strstr(r, "iam initiatum") != NIHIL);
+    CREDO_VERUM (strstr(r, "iam initiatum") == NIHIL);
+    CREDO_VERUM (strstr(r, "CONTRACTUS SCRIBAE") != NIHIL);
 
     /* III. tools/list: quinque instrumenta */
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":4,"
@@ -1571,6 +1574,125 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r,
             "CAUTIO citatio ex codice inresoluta: 01KY3ZZZZZ")
             != NIHIL);
+    }
+
+    /* XVI. F0 FORUM: genera fori seminata + custos CCXL +
+     * signatura (spec-v2 par III) */
+    {
+        character arti[GESTA_RES_ID_MENSURA];
+        character pipi[GESTA_RES_ID_MENSURA];
+        character linea[PROBATIO_SEMITA_MENSURA];
+        character longum[CCXLII];
+        character multibyte[DXII];
+        i32 i;
+
+        /* articulus: status initialis conditum, machina plena */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":950,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"articulus\","
+            "\"titulus\":\"articulus probationis fori\","
+            "\"corpus\":\"paragraphus prima.\",\"actor\":\"fran\""
+            "}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        CREDO_VERUM (strstr(r, "status conditum") != NIHIL);
+        _res_id_ex_responso(r, arti);
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":951,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"status\",\"novus\":\"publicatum\"}}}", arti);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "status publicatum") != NIHIL);
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":952,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"status\",\"novus\":\"retractum\"}}}", arti);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "status retractum") != NIHIL);
+
+        /* pipatum CCXL exacte = acceptum (limes inclusivus) */
+        per (i = ZEPHYRUM; i < CCXL; i++)
+        {
+            longum[i] = 'a';
+        }
+        longum[CCXL] = '\0';
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":953,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"pipatum\","
+            "\"titulus\":\"pipatum plenum\",\"corpus\":\"%s\","
+            "\"signatura\":\"Fable 5\"}}}", longum);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        _res_id_ex_responso(r, pipi);
+
+        /* CCXLI = recusatio nominata */
+        longum[CCXL] = 'a';
+        longum[CCXLI] = '\0';
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":954,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"pipatum\","
+            "\"titulus\":\"pipatum nimium\",\"corpus\":\"%s\"}}}",
+            longum);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r,
+            "pipatum nimis longum (limes CCXL codicilli)")
+            != NIHIL);
+
+        /* CCXL characteres multibyte (480 bytes) = acceptum -
+         * CODICILLI numerantur, non bytes (decisio Franis) */
+        per (i = ZEPHYRUM; i < CCXL; i++)
+        {
+            multibyte[i * II] = (character)0xC3;
+            multibyte[i * II + I] = (character)0xA9; /* é */
+        }
+        multibyte[CDLXXX] = '\0';
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":955,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"pipatum\","
+            "\"titulus\":\"pipatum multibyte\",\"corpus\":"
+            "\"%s\"}}}", multibyte);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+
+        /* signatura in creatione condita (datum eventus) */
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":956,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}", pipi);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "Fable 5") != NIHIL);
+
+        /* signatura in mutatione (post ramos actuum - mutatio
+         * cruda datum substituit); annales veritas */
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":957,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"mutatio\",\"clavis\":\"corpus\",\"valor\":"
+            "\"emendatum\",\"signatura\":\"Opus 4.8\"}}}", arti);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "eventum mutatio scriptum")
+            != NIHIL);
+        CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
+            "Opus 4.8") != NIHIL);
+
+        /* commentarium + filum respondet-ad (verbum liberum -
+         * mutationes nullae, spec-v2 par III.4) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":958,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"commentarium\","
+            "\"titulus\":\"commentarium probationis\",\"corpus\":"
+            "\"respondeo.\",\"signatura\":\"Fable 5\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        {
+            character comm[GESTA_RES_ID_MENSURA];
+
+            _res_id_ex_responso(r, comm);
+            sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":959,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"gerere\",\"arguments\":{\"res\":\"%s\","
+                "\"actus\":\"nexus\",\"verbum\":\"respondet-ad\","
+                "\"alterum\":\"%s\"}}}", comm, arti);
+            r = _mitte(t, piscina, linea);
+            CREDO_VERUM (strstr(r, "--respondet-ad-->") != NIHIL);
+        }
     }
 
     credo_imprimere_compendium();

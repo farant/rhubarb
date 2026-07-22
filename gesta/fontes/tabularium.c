@@ -195,13 +195,36 @@ interior constans TabulariumSemen SEMINA_GENERUM[] = {
       "\"abiectus\"]],\"attributa\":[{\"titulus\":\"titulus\","
       "\"typus\":\"textus\",\"necessarium\":true},{\"titulus\":"
       "\"parens\",\"typus\":\"textus\"},{\"titulus\":\"punctum\","
-      "\"typus\":\"numerus\"}],\"reducer\":\"ordinarius\"}" }
+      "\"typus\":\"numerus\"}],\"reducer\":\"ordinarius\"}" },
+    /* ---- semen v5 (F0 forum): genera mundi scriptorum - ambo
+     * mundi ea vident (tabula in machina cocta; acceptum spec-v2
+     * par III). Post SEMINA_BOARD_NUMERUS: attributa INLINE
+     * necessaria (fusio ATTRIBUTA_V2 hos non tangit). Fila per
+     * nexum 'respondet-ad' (verbum liberum - mutationes nullae) */
+    { "articulus",
+      "{\"titulus\":\"articulus\",\"status_initialis\":"
+      "\"conditum\",\"machina\":[[\"conditum\",\"publicatum\"],"
+      "[\"publicatum\",\"retractum\"]],\"attributa\":"
+      "[{\"titulus\":\"titulus\",\"typus\":\"textus\","
+      "\"necessarium\":true},{\"titulus\":\"corpus\",\"typus\":"
+      "\"textus\"},{\"titulus\":\"tags\",\"typus\":"
+      "\"tabulatum\"}],\"reducer\":\"ordinarius\"}" },
+    { "commentarium",
+      "{\"titulus\":\"commentarium\",\"attributa\":[{\"titulus\":"
+      "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
+      "{\"titulus\":\"corpus\",\"typus\":\"textus\"}],"
+      "\"reducer\":\"ordinarius\"}" },
+    { "pipatum",
+      "{\"titulus\":\"pipatum\",\"attributa\":[{\"titulus\":"
+      "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
+      "{\"titulus\":\"corpus\",\"typus\":\"textus\"}],"
+      "\"reducer\":\"ordinarius\"}" }
 };
 
 /* scopus fusionis v2 (genera tabulae + nexus); genera K3 infra
  * attributa propria ferunt (emendatio E2-B2) */
 #define SEMINA_BOARD_NUMERUS VI
-#define SEMINA_NUMERUS X
+#define SEMINA_NUMERUS XIII
 
 /* semen v2 (K2 decisio Q9): attributa in genera VIVA - emendatio
  * integra-substitutio ex definitione currenti + attributa (fusio
@@ -2436,6 +2459,25 @@ _similia_reddere (Tabularium* t, ChordaAedificator* aed,
     }
 }
 
+/* codicillos UTF-8 numerare (bytes non-continuationis) - limes
+ * pipati CCXL CHARACTERES significat, non bytes (decisio Franis) */
+interior i32
+_codicillos_numerare (chorda textus)
+{
+    i32 n = ZEPHYRUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < textus.mensura; i++)
+    {
+        si (((insignatus character)textus.datum[i] & 0xC0u)
+            != 0x80u)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
 interior vacuum
 _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     JsonValor* argumenta, FILE* effusio)
@@ -2447,6 +2489,7 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     chorda ancorae = _arg(argumenta, "ancorae");
     chorda actor = _arg(argumenta, "actor");
     chorda origo = _arg(argumenta, "origo");
+    chorda signatura = _arg(argumenta, "signatura");
     chorda ramus_arg = _arg(argumenta, "ramus");
     chorda ramus_id;
     JsonValor* datum;
@@ -2460,6 +2503,17 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     {
         _textum_respondere(t, pn, effusio, id,
             _ch("genus et titulus requiruntur"), VERUM);
+        redde;
+    }
+    /* custos pipati (F0 forum): limes CCXL codicillorum DURUS -
+     * limes ipse genus est; latus daemonis = MCP et app aequaliter
+     * ligati (spec-v2 par III.2) */
+    si (_chorda_est(genus, "pipatum")
+        && _codicillos_numerare(corpus) > CCXL)
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _ch("pipatum nimis longum (limes CCXL codicilli)"),
+            VERUM);
         redde;
     }
     si (ramus_arg.mensura > ZEPHYRUM)
@@ -2531,6 +2585,14 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
             redde;
         }
         json_objectum_ponere(datum, "ancorae", r.radix);
+    }
+    /* signatura (F0 forum): vox individualis scribentis (nomen
+     * exemplaris, e.g. "Fable 5") - clavis dati liberi, mutatio
+     * schematis nulla; actor = stratum identitatis manet */
+    si (signatura.mensura > ZEPHYRUM)
+    {
+        json_objectum_ponere(datum, "signatura",
+            json_chorda_creare(pn, signatura));
     }
     datum_textus = json_scribere(datum, pn);
 
@@ -2637,6 +2699,7 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
     chorda actus = _arg(argumenta, "actus");
     chorda actor = _arg(argumenta, "actor");
     chorda origo = _arg(argumenta, "origo");
+    chorda signatura = _arg(argumenta, "signatura");
     chorda ramus_arg = _arg(argumenta, "ramus");
     constans character* origo_l = origo.mensura > ZEPHYRUM
         ? _litterae(pn, origo) : "mcp";
@@ -2957,6 +3020,15 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         redde;
     }
 
+    /* signatura (F0 forum): POST ramos actuum - mutatio cruda
+     * datum substituit, ergo hic sola sedes tuta. Nexus/denexus
+     * supra redeunt sine ea (acceptum: responsa eam in creatione
+     * commentarii ferunt) */
+    si (signatura.mensura > ZEPHYRUM)
+    {
+        json_objectum_ponere(datum, "signatura",
+            json_chorda_creare(pn, signatura));
+    }
     e.res_id = _litterae(pn, res_id);
     e.genus_eventus = genus_eventus;
     e.datum = _litterae(pn, json_scribere(datum, pn));
@@ -4637,6 +4709,9 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
           FALSUM },
         { "origo", "provenientia eventus (ordinarius mcp; e.g."
           " messis-2026-07, sessio)", FALSUM },
+        { "signatura", "nomen exemplaris scribentis (e.g. Fable"
+          " 5) - linea auctoris in foro; in dato eventus conditur",
+          FALSUM },
         { "ramus", "titulus rami activi - creatio in ramo (trunco"
           " invisibilis usque ad fusionem)", FALSUM }
     };
@@ -4657,6 +4732,9 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
           FALSUM },
         { "origo", "provenientia eventus (ordinarius mcp; e.g."
           " messis-2026-07, sessio)", FALSUM },
+        { "signatura", "nomen exemplaris scribentis (e.g. Fable"
+          " 5) - in dato eventus conditur (nota/status/mutatio/"
+          "remotio)", FALSUM },
         { "ramus", "titulus rami activi - eventus in ramo"
           " (custodia contra statum rami)", FALSUM }
     };
@@ -4715,12 +4793,12 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         "Rem novam creare (quaestio/parcum/decretum/nota/"
         "desideratum) cum tags et ancoris optionalibus; similia"
         " FTS in responso (custos duplicationum).",
-        ARG_ADDERE, VIII));
+        ARG_ADDERE, IX));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "gerere",
         "Eventum unum in rem exsistentem scribere: nota, status,"
         " nexus/denexus (ligamina), mutatio, remotio. Violationes"
         " machinae notantur, non obstant.",
-        ARG_GERERE, XII));
+        ARG_GERERE, XIII));
     json_tabulatum_addere(instrumenta, _instrumentum(pn,
         "quaerere",
         "Quaestio FTS super statum materializatum (titulus/corpus/"
@@ -4849,31 +4927,31 @@ interior vacuum
 _initialize_tractare (Tabularium* t, Piscina* pn, JsonValor* id,
     JsonValor* params, FILE* effusio)
 {
-    si (t->initiatum)
+    /* IDEMPOTENS (F0 forum): salutatio iterata responsum idem
+     * reddit - daemon se praeinitiat, clientes per-petitionem
+     * innoxie salutant (mutatio machinae unica spec-v2 par II) */
+    si (!t->initiatum)
     {
-        _respondere(effusio, tabellarius_errorem(pn, id,
-            TABELLARIUS_ERROR_PETITIO_INVALIDA, "iam initiatum"));
-        redde;
+        t->mundus = gesta_aperire(t->piscina, t->via_scrinii,
+            t->via_annalium);
+        si (t->mundus == NIHIL)
+        {
+            _respondere(effusio, tabellarius_errorem(pn, id,
+                TABELLARIUS_ERROR_INTERNUS,
+                "scrinium aperiri non potuit"));
+            redde;
+        }
+        si (!gesta_plicare(t->mundus))
+        {
+            _respondere(effusio, tabellarius_errorem(pn, id,
+                TABELLARIUS_ERROR_INTERNUS, "plicatura fracta"));
+            redde;
+        }
+        _seminare(t, pn);
+        _tabulam_scribere(t, pn);
+        _entitates_reconciliare_omnes(t, pn);
+        t->initiatum = VERUM;
     }
-    t->mundus = gesta_aperire(t->piscina, t->via_scrinii,
-        t->via_annalium);
-    si (t->mundus == NIHIL)
-    {
-        _respondere(effusio, tabellarius_errorem(pn, id,
-            TABELLARIUS_ERROR_INTERNUS,
-            "scrinium aperiri non potuit"));
-        redde;
-    }
-    si (!gesta_plicare(t->mundus))
-    {
-        _respondere(effusio, tabellarius_errorem(pn, id,
-            TABELLARIUS_ERROR_INTERNUS, "plicatura fracta"));
-        redde;
-    }
-    _seminare(t, pn);
-    _tabulam_scribere(t, pn);
-    _entitates_reconciliare_omnes(t, pn);
-    t->initiatum = VERUM;
     {
         JsonValor* resultatum = json_objectum_creare(pn);
         JsonValor* caps = json_objectum_creare(pn);
