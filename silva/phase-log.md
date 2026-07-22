@@ -9939,3 +9939,72 @@ LEGERE ante aestimationem :habet recursionis et vexilli
 POST: QD barra v1 translata (100 asserta) -> parcum 01KXPV9FPK
 (quaestio in legati) -> contractus selector-scopati (01KXTX7FA3,
 porta nunc sola QC).
+
+## QUAESTIO QC: ADDENDUM SUTURAE (2026-07-22)
+
+Seam read done per the INTENTIO's lex suturae: compilare/congruit/
+exsequi read whole (silva_quaestio.c + header), plus the design doc
+DECISUS section, v1's registration wiring (lib/arbor_quaestio.c),
+and the grammar's genus vocabulary. Four decisions, Fran blessed:
+
+1. REGISTRATION BEFORE COMPILE. v1's shape (registrare onto the
+   already-compiled query) is INCOMPATIBLE with the fractura-clara
+   decretum: compile must judge ":meus" known-or-unknown at parse
+   time, so the registry must exist first. v1 accepted unknowns as
+   CUSTOM with functio NIHIL -> silent zero-result queries (typo'd
+   :cals(x) compiled fine); its bar never called registrare once
+   (bug #4 receipt) - QD owes no registration test, QC's bar adds
+   the first. Shape: opaque SilvaQuaestioPseudoRegistrum +
+   silva_quaestio_registrare(registrum, titulus, functio, datum) +
+   a compile variant taking the registrum (existing 4-arg compilare
+   = sine-registro convenience). ONE name table: builtins resolve
+   through the same table user entries extend (tabula dispatch,
+   sutura una). User functio gets the arg: (nodus, arg chorda,
+   datum) -> b32 - v1 parsed :custom(arg) then dropped the arg.
+
+2. :habet CEILING. _catenae_congruit climbs ancestors unboundedly;
+   CSS relative-selector semantics confine the nested chain to the
+   subject's subtree. One limes param threaded through the existing
+   recursion (~2 checks). Predictable counts.
+
+3. :primus/:ultimus OFF-LIST: a node in no containing lista (direct
+   NODUS locus, or root) = only child = BOTH match (CSS parity:
+   root matches :first-child). _listam_continentem NIHIL = only.
+
+4. SEMANTIC NAMES PER AMBIGUUS PRECEDENT. vocatio@functio,
+   folium-identificator@tok_valor, declarator-titulus@tok_titulus,
+   redde, ramus-sumptus, ramus-omissus - resolved by name from the
+   registrum at compile (exemplar commissionis, like genus_ambigui);
+   absent in a grammar (sceletum has no vocatio) = licet, predicate
+   never matches. Grammar-agnostic law holds - no c89 caput enters
+   the module.
+
+NAMED LIMITS: :vocat(f) matches direct-identifier callees only
+((*fp)(x) will not match - named in the header comment); pseudo
+args share QB's escape-less quoted-value rule.
+
+MECHANISM (seam-priced): one ':' branch in the compile loop
+(_tag_legere for the name, quote-aware balanced-paren arg slice;
+:habet/:non arg NUL-terminated into piscina -> recursive
+silva_quaestio_compilare, union inside :non comes free); one casus
+in _composito_congruit dispatching on pseudo genus; ONE boolean
+early-exit subtree walker (canonical-descent-aware) serves :habet
++ all four semantic pseudos (:reddit = contains-redde etc.); :non
+= congruit negated, no walker; :lectiones = b32 on SilvaQuaestio
+set at compile, flips the ambiguus branch in _nodum_visitare + the
+walker; :sumptus/:omissus = pater climb vs two cached genus
+indices; :ambiguum = compare vs cached genus_ambigui. IR: pars
+grows {pseudo_genus, pseudo_arg, pseudo_quaestio, pseudo_functio,
+pseudo_datum} (memset-covered); SilvaQuaestio grows ~7 cached
+indices + the lectiones flag. Fact worth keeping: ramus-omissus
+has NO node children (cruda lista-token) - :omissus can only match
+the arm node itself, structurally honoring the design doc's
+quaestio-v1 conditional stance.
+
+PUBLIC SURFACE: registry API + compile variant -> silva.h + hospes
+same-change.
+
+BUILD ORDER: IR + parser branch -> walker + dispatch -> registry
+-> probationes per pseudo as built (congruentia + captura +
+compositum cum attributis). Bars unchanged: QA+QB 86 asserta green
+throughout, suite, amalgamare VERIFICATUM, VECTIS TENET.
