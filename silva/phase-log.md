@@ -9902,3 +9902,40 @@ SCALA E COMPLETA: tres familiae veteres (exspecta/tolera/aedilis)
 in grammaticam unam uno die migratae, parseres tres mortui,
 chorea compressa (fundamentum -> via nova -> sedes -> identitas
 -> retiratio) ter sine iactura tenuit.
+
+## QUAESTIO QC PSEUDO-CLASSES: INTENTIO (2026-07-22)
+
+Rotula interrogationis (addendum 2026-07-17) Frani reddita, tria
+decreta: (1) familia normae :c89/:c99/:extensio DILATA NOMINE
+(parcum 01KY47F797 - populatio tags-normae = tractus proprius;
+pseudo ignotum in QC = fractura compilationis clara); (2)
+:vocat(f) = semantica CONTINET (barra v1 probat:
+"function-definition:calls(compute)" = functiones vocationem
+CONTINENTES; QD translatio mechanica manet); (3) registratio
+pseudo-classium usoris FUNCTIONALIS in QC (tabula dispatch hic
+nascitur - sutura una; barra v1 API probat, QD eam postulat).
+
+SCOPUS: parser + compilare + exsequi pro PARS_PSEUDO - sedes IR
+iam ex QB exsistit ("IR eas fert, parser nondum"). Menu (consilium
+DECISUS 2026-07-06, silva-quaestio-design.md):
+- structurales: :primus / :ultimus (filius nodalis primus/ultimus)
+- logicales: :habet(sel) / :non(sel) - compilare RECURSIVUM
+  (monitum machinae: selector internus = quaestio compilata nidificata)
+- semantici (paritas barrae v1, Latine): :vocat(f) CONTINET /
+  :definit(x) / :utitur(x) / :reddit - praedicata super
+  vocatio/declarator/folium tok_valor
+- silvani: :ambiguum, :lectiones (vexillum AMBULATIONIS - descensum
+  canonicum-solum laxat, contractus capitis id iam nominat),
+  :sumptus / :omissus (textura conditionalium ramorum)
+- registratio usoris (v1 insectum #4 functionale factum)
+
+BARRAE: asserta QA+QB 86 viridia manent; probationes novae per
+pseudo (congruentia + captura + compositum cum attributis);
+contactus corporis in arbore vera ante pinnas; suite + amalgamare
++ VECTIS. LEX SUTURAE: exsequi/congruit ambulationem et compilare
+LEGERE ante aestimationem :habet recursionis et vexilli
+:lectiones - numquam ex summario.
+
+POST: QD barra v1 translata (100 asserta) -> parcum 01KXPV9FPK
+(quaestio in legati) -> contractus selector-scopati (01KXTX7FA3,
+porta nunc sola QC).
