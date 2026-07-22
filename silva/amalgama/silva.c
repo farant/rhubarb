@@ -53339,6 +53339,42 @@ silva_annotationes_colligere (SilvaPiscina* piscina,
             _ex_lexemate(fructus, piscina, intern, radix);
         }
     }
+    /* lineae directivae consumptae: commentarium supra #include
+     * in lexemate directivae equitat quod fluxum expansum numquam
+     * intrat (annotatio capitis plagulae supra clausuram
+     * includendi - collocatio naturalissima). Duplicata innocua;
+     * ordo annotationum harum post fluxum, ante caudam. */
+    si (parsura->directivae != NIHIL)
+    {
+        per (i = ZEPHYRUM; i < silva_xar_numerus(parsura->directivae);
+             i++)
+        {
+            SilvaXar* linea_directivae = *(SilvaXar**)silva_xar_obtinere(
+                parsura->directivae, i);
+            i32 j;
+
+            per (j = ZEPHYRUM;
+                 linea_directivae != NIHIL
+                     && j < silva_xar_numerus(linea_directivae);
+                 j++)
+            {
+                SilvaToken* tok = *(SilvaToken**)silva_xar_obtinere(
+                    linea_directivae, j);
+                SilvaToken* radix;
+
+                si (tok == NIHIL)
+                {
+                    perge;
+                }
+                _ex_lexemate(fructus, piscina, intern, tok);
+                radix = silva_token_radix(tok);
+                si (radix != NIHIL && radix != tok)
+                {
+                    _ex_lexemate(fructus, piscina, intern, radix);
+                }
+            }
+        }
+    }
     /* trivia caudae: commentarium post lexema ultimum in EOF
      * equitat (casus scopi plagulae) - si EOF extra lexemata est,
      * hic attingitur; duplicata innocua */

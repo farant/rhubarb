@@ -1,6 +1,6 @@
 static int g(int a, int b) { return a + b; }
 static int f(void)
 {
-    /* EXSPECTA-PROXIMA: NUMERUS_ARGUMENTORUM */
+    /* <exspecta codex="NUMERUS_ARGUMENTORUM"/> */
     return g(1);
 }

@@ -4,13 +4,13 @@
 
 static int minor_mixta(int s, unsigned u)
 {
-    /* EXSPECTA-PROXIMA: COMPARATIO_SIGNORUM */
+    /* <exspecta codex="COMPARATIO_SIGNORUM"/> */
     return s < u;
 }
 
 static int aequalitas_mixta(unsigned long ul, int s)
 {
-    /* EXSPECTA-PROXIMA: COMPARATIO_SIGNORUM */
+    /* <exspecta codex="COMPARATIO_SIGNORUM"/> */
     return ul != s;
 }
 

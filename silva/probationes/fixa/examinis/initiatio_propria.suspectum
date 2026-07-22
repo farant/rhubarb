@@ -3,7 +3,7 @@
 
 static int propria(void)
 {
-    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    /* <exspecta codex="LECTIO_ININITIATA"/> */
     int x = x;
 
     return x;
@@ -11,7 +11,7 @@ static int propria(void)
 
 static int propria_arithmetica(void)
 {
-    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    /* <exspecta codex="LECTIO_ININITIATA"/> */
     int y = y + 1;
 
     return y;

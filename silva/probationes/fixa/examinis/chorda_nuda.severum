@@ -8,13 +8,13 @@ extern int strcmp(const char*, const char*);
 
 static unsigned long mortua(chorda c)
 {
-    /* EXSPECTA-PROXIMA: CHORDA_NUDA */
+    /* <exspecta codex="CHORDA_NUDA"/> */
     return strlen((const char*)c.datum);
 }
 
 static int comparata(chorda* p)
 {
-    /* EXSPECTA-PROXIMA: CHORDA_NUDA */
+    /* <exspecta codex="CHORDA_NUDA"/> */
     return strcmp((const char*)p->datum, "x");
 }
 

@@ -9,7 +9,7 @@ static int sine_alioquin(void)
 {
     int x;
 
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     if (opacum()) { x = 1; }
     return x;
 }
@@ -26,7 +26,7 @@ static int alioquin_solum(void)
 {
     int x;
 
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     if (opacum()) { sink(0); } else { x = 2; }
     return x;
 }
@@ -44,7 +44,7 @@ static int operandum_finale_verum(void)
 {
     int x;
 
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     if (opacum() && opacum()) { ; } else { x = 1; }
     return x;
 }
@@ -55,8 +55,8 @@ static int operandum_finale_falsum(void)
 
     /* duo margines culpabiles: 'si' falsum + '&&' falsum breve -
      * clang duo monita eodem linea (s21b) */
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     if (opacum() && opacum()) { x = 1; }
     return x;
 }

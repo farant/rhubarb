@@ -1,6 +1,6 @@
 static void f(void)
 {
     const int c = 1;
-    /* EXSPECTA-PROXIMA: LOCUS_IMMUTABILIS */
+    /* <exspecta codex="LOCUS_IMMUTABILIS"/> */
     ++c;
 }

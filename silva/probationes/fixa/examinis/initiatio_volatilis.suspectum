@@ -5,6 +5,6 @@ static int volatilis_lecta(void)
 {
     volatile int x;
 
-    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    /* <exspecta codex="LECTIO_ININITIATA"/> */
     return x;
 }

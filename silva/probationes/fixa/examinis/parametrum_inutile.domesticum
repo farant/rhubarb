@@ -2,7 +2,7 @@
  * (in -Wextra); (void)x usus est.
  * ORACULUM -Wunused-parameter */
 
-/* EXSPECTA-PROXIMA: PARAMETRUM_INUTILE */
+/* <exspecta codex="PARAMETRUM_INUTILE"/> */
 static int f(int usatus, int otiosus)
 {
     return usatus + f(usatus, usatus);

@@ -475,6 +475,41 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(annotationes), ZEPHYRUM);
     }
 
+    /* ========================================================
+     * X. annotatio supra lineam directivae (resurrectio E1):
+     * trivia in lexemate directivae consumptae equitant quod
+     * fluxum expansum numquam intrat - ante ambulationem
+     * directivarum haec annotatio TACITE vorabatur (collocatio
+     * capitis plagulae supra #include/#define naturalissima)
+     * ======================================================== */
+    {
+        constans character* fons =
+            "/* prosa capitis plagulae */\n"
+            "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDE1R\"/> */\n"
+            "#define PROBANDUM 1\n"
+            "int a;\n";
+        SilvaParsura* parsura;
+        Xar* annotationes = _colligere(piscina, fons, &parsura);
+        SilvaAnnotatio* a;
+
+        imprimere("\n--- Probans annotationem supra directivam ---\n");
+        CREDO_NON_NIHIL (annotationes);
+        CREDO_AEQUALIS_I32 (xar_numerus(annotationes), I);
+
+        a = _annotatio(annotationes, ZEPHYRUM);
+        CREDO_VERUM (a->parsata);
+        CREDO_NON_NIHIL (a->arbor);
+        CREDO_CHORDA_AEQUALIS_LITERIS (*a->arbor->titulus, "nid");
+        CREDO_AEQUALIS_I32 (a->linea, II);
+        CREDO_AEQUALIS_S32 (a->fons_index, parsura->fons_princeps);
+        /* affixio octetis: SUPRA unitatem sequentem (directiva
+         * unitas non est) */
+        CREDO_AEQUALIS_S32 ((s32)a->modus,
+            (s32)SILVA_ANNOTATIO_SUPRA);
+        CREDO_AEQUALIS_PTR (a->unitas,
+            _unitas(piscina, parsura, ZEPHYRUM));
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

@@ -1,5 +1,5 @@
 static void f(void)
 {
-    /* EXSPECTA-PROXIMA: ASSIGNATIO_NON_LOCUS */
+    /* <exspecta codex="ASSIGNATIO_NON_LOCUS"/> */
     5 = 1;
 }

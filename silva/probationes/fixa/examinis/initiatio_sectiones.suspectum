@@ -8,7 +8,7 @@ static int vel_in_sententia(void)
 {
     int x;
 
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     (void)(opacum() || (x = 1));
     return x;
 }
@@ -24,7 +24,7 @@ static int et_in_conditione(void)
 static int ternarius_lectio(void)
 {
     int x;
-    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    /* <exspecta codex="LECTIO_ININITIATA"/> */
     int y = opacum() ? x : 0;
 
     return y;
@@ -34,7 +34,7 @@ static int vel_in_conditione(void)
 {
     int x;
 
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     if (opacum() || (x = 1)) { ; }
     return x;
 }
@@ -43,7 +43,7 @@ static int vel_in_ansa(void)
 {
     int x;
 
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     while (opacum() || (x = 1)) { break; }
     return x;
 }

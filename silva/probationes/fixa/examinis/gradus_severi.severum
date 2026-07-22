@@ -6,7 +6,7 @@
 
 static unsigned differentia_cruda(unsigned char a, unsigned char b)
 {
-    /* EXSPECTA-PROXIMA: CONVERSIO_SIGNI_SEVERA */
+    /* <exspecta codex="CONVERSIO_SIGNI_SEVERA"/> */
     return a - b;
 }
 

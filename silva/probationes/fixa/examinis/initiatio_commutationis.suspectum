@@ -16,7 +16,7 @@ static int ordinarius_expressus(void)
 {
     int x;
 
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     switch (opacum()) { case 0: x = 1; break; default: break; }
     return x;
 }

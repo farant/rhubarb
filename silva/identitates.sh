@@ -8,6 +8,8 @@
 #   ./silva/identitates.sh '##PRAEFIXUM'          -> solvere (>= VI char)
 #   ./silva/identitates.sh -mintare [-scribere] [viae...]
 #   ./silva/identitates.sh -porta                 -> porta mintationis
+#   ./silva/identitates.sh -exspecta <via>        -> pinnae vectis
+#   ./silva/identitates.sh -struere               -> aedificatio sola
 #
 # NB: semper ex radice repositorii currit (cd infra).
 
@@ -58,7 +60,16 @@ done
 
 BIN_SRC="$SILVA_DIR/instrumenta/principalia/identitates.c"
 BIN="$BUILD_DIR/identitates"
-if [ ! -x "$BIN" ] || [ "$BIN_SRC" -nt "$BIN" ] || [ -n "$(newest_header "$BIN")" ]; then
+# laqueus obiecti veteris: obiectum recens sine BIN_SRC recentiore
+# nexum quoque cogit (fons .c editus -> .o novum -> BIN vetus)
+obiectum_recens=""
+for o in $obj_files; do
+    if [ ! -x "$BIN" ] || [ "$o" -nt "$BIN" ]; then
+        obiectum_recens=1
+        break
+    fi
+done
+if [ ! -x "$BIN" ] || [ "$BIN_SRC" -nt "$BIN" ] || [ -n "$obiectum_recens" ] || [ -n "$(newest_header "$BIN")" ]; then
     echo "  [silva] identitates.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$BIN_SRC" $obj_files \
         -o "$BIN" || exit 1
@@ -133,8 +144,15 @@ case "${1:-}" in
         fi
         echo "identitates -porta: VERIFICATUM"
         ;;
+    -exspecta)
+        exec "$BIN" --exspecta "$2"
+        ;;
+    -struere)
+        # aedificatio iam supra facta - vectis ante percursum vocat
+        exit 0
+        ;;
     ""|-*)
-        echo "usus: identitates.sh -renovare | '##PRAEFIXUM' | -mintare [-scribere] [viae...] | -porta" >&2
+        echo "usus: identitates.sh -renovare | '##PRAEFIXUM' | -mintare [-scribere] [viae...] | -porta | -exspecta <via> | -struere" >&2
         exit 2
         ;;
     *)

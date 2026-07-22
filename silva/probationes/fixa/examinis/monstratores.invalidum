@@ -1,5 +1,5 @@
 static void f(int* p, char* q)
 {
-    /* EXSPECTA-PROXIMA: MONSTRATORES_INCOMPATIBILES */
+    /* <exspecta codex="MONSTRATORES_INCOMPATIBILES"/> */
     p = q;
 }

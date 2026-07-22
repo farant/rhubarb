@@ -2,6 +2,6 @@ struct S { int a; };
 static void f(void)
 {
     struct S s;
-    /* EXSPECTA-PROXIMA: CONDICIO_NON_SCALARIS */
+    /* <exspecta codex="CONDICIO_NON_SCALARIS"/> */
     if (s) { s.a = 1; }
 }

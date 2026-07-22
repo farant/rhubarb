@@ -10,14 +10,16 @@
 #   REICE] percursus contra tabulam exclusionum pinnatam.
 # Exit: 0 = vectis tenet | 1 = discrepantia
 #
-# GRAMMATICA PINNARUM (desideratum 01KXRD8JVS, 2026-07-17):
-#   /* EXSPECTA-PROXIMA: CODEX */  - forma PRAELATA: linea proxima
-#     non-pinna non-vacua flagrat; pinnae cumulantur; editiones
-#     alibi eam numquam invalidant (quinquies uno die recalibratae
-#     pinnae absolutae - inde haec forma)
-#   /* EXSPECTA 13:CODEX */        - forma absoluta, RECESSUS
-#     (diagnosticum in linea 1, supra quam nihil poni potest -
-#     ordo_pravus_vendicati; et migrationis salus)
+# GRAMMATICA PINNARUM (STML annotationes, frustum E1 2026-07-22;
+# ante: desideratum 01KXRD8JVS):
+#   /* <exspecta codex="CODEX"/> */  - forma PRAELATA: linea
+#     proxima non-pinna non-vacua flagrat; pinnae cumulantur;
+#     editiones alibi eam numquam invalidant
+#   /* <exspecta linea="13" codex="CODEX"/> */ - forma absoluta,
+#     RECESSUS (diagnosticum in linea 1, supra quam nihil poni
+#     potest - ordo_pravus_vendicati)
+#   Resolutor = identitates --exspecta (ambulatio arboris; pinna
+#   malformata CLAMAT - awk vetus tacite prosam faciebat).
 #
 # Chorda oraculi SIGILLATA (officina-m4a-spec.md §V); versio clang
 # scribitur (linea acceptationis inter versiones movetur!).
@@ -40,32 +42,14 @@ declare -a ORACULUM=(
 echo "oraculum: $(clang --version | head -1)"
 fracta=0
 
-# pinnae ex utraque grammatica in paria "linea:CODEX" solutae:
-# relativae pendent donec linea non-pinna non-vacua adveniat
+# pinnae in paria "linea:CODEX" solutae (instrumentum
+# annotationum; recentia binarii semel infra praestita)
+"$SILVA_DIR/identitates.sh" -struere || exit 1
 _pinnae_solvere () {
-    awk '
-        /EXSPECTA-PROXIMA:/ {
-            if (match($0, /EXSPECTA-PROXIMA: *[A-Z_]+/)) {
-                s = substr($0, RSTART, RLENGTH)
-                sub(/EXSPECTA-PROXIMA: */, "", s)
-                pendentia[np++] = s
-                next
-            }
-        }
-        /EXSPECTA [0-9]+:[A-Z_]+/ {
-            if (match($0, /EXSPECTA [0-9]+:[A-Z_]+/)) {
-                s = substr($0, RSTART, RLENGTH)
-                sub(/EXSPECTA /, "", s)
-                print s
-                next
-            }
-        }
-        {
-            if (np > 0 && $0 ~ /^[ \t]*$/) next
-            for (i = 0; i < np; i++) print NR ":" pendentia[i]
-            np = 0
-        }
-    ' "$1"
+    "$SILVA_DIR/build/identitates" --exspecta "$1" || {
+        echo "  PINNAE RECUSATAE: $1" >&2
+        return 1
+    }
 }
 
 # ① percursus fugarum: C99/GNU contra oraculum - omnes REICI
@@ -88,7 +72,7 @@ grep -o 'EXAMEN_CODEX_[A-Z_]*' "$SILVA_DIR/fontes/silva_c89_semantica.h" \
 echo "--- corpus invalidum (pinnae EXSPECTA) ---"
 for f in "$FIXA"/*.invalidum; do
     basis="$(basename "$f")"
-    exspecta="$(_pinnae_solvere "$f")"
+    exspecta="$(_pinnae_solvere "$f")" || fracta=1
 
     effusum="$("$SILVA_DIR/build/examen" "$f" -machina 2>/dev/null)"
     verdictum="$(printf '%s\n' "$effusum" | awk -F'\t' \
@@ -138,7 +122,7 @@ declare -a ORACULUM_BASIS_D=(
 for f in "$FIXA"/*.domesticum; do
     [ -e "$f" ] || continue
     basis="$(basename "$f")"
-    exspecta="$(_pinnae_solvere "$f")"
+    exspecta="$(_pinnae_solvere "$f")" || fracta=1
     vexillum="$(grep -o 'ORACULUM -W[a-z-]*' "$f" | head -1 \
         | sed 's/ORACULUM //')"
     [ -z "$vexillum" ] && vexillum="-Wsign-conversion"
@@ -197,7 +181,7 @@ echo "--- corpus suspectum (pinnae EXSPECTA + oraculum) ---"
 for f in "$FIXA"/*.suspectum; do
     [ -e "$f" ] || continue
     basis="$(basename "$f")"
-    exspecta="$(_pinnae_solvere "$f")"
+    exspecta="$(_pinnae_solvere "$f")" || fracta=1
     vexillum="$(grep -o 'ORACULUM -W[a-z-]*' "$f" | head -1 \
         | sed 's/ORACULUM //')"
     [ -z "$vexillum" ] && vexillum="-Wsign-conversion"
@@ -256,7 +240,7 @@ echo "--- corpus severum (pinnae + oraculum inversum) ---"
 for f in "$FIXA"/*.severum; do
     [ -e "$f" ] || continue
     basis="$(basename "$f")"
-    exspecta="$(_pinnae_solvere "$f")"
+    exspecta="$(_pinnae_solvere "$f")" || fracta=1
     vexillum="$(grep -o 'ORACULUM -W[a-z-]*' "$f" | head -1 \
         | sed 's/ORACULUM //')"
     [ -z "$vexillum" ] && vexillum="-Wsign-conversion"

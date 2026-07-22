@@ -6,9 +6,9 @@
 
 static void f(unsigned int magnum, int medium)
 {
-    /* EXSPECTA-PROXIMA: ANGUSTATIO */
+    /* <exspecta codex="ANGUSTATIO"/> */
     unsigned char parvum = magnum;
-    /* EXSPECTA-PROXIMA: ANGUSTATIO */
+    /* <exspecta codex="ANGUSTATIO"/> */
     short breve = medium;
     unsigned char constans_bona = 100;
     signed char negativus = -1;

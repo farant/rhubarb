@@ -3,7 +3,7 @@
 
 static unsigned mortua(void)
 {
-    /* EXSPECTA-PROXIMA: SENTINELLA_INSIGNATA */
+    /* <exspecta codex="SENTINELLA_INSIGNATA"/> */
     return (unsigned)-1;
 }
 

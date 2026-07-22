@@ -4,6 +4,6 @@ static void f(void)
 {
     struct S s;
     struct T t;
-    /* EXSPECTA-PROXIMA: ASSIGNATIO_INCOMPATIBILIS */
+    /* <exspecta codex="ASSIGNATIO_INCOMPATIBILIS"/> */
     s = t;
 }

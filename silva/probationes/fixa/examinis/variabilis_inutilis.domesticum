@@ -5,7 +5,7 @@
 static int g(void) { return 1; }
 static void f(void)
 {
-    /* EXSPECTA-PROXIMA: VARIABILIS_INUTILIS */
+    /* <exspecta codex="VARIABILIS_INUTILIS"/> */
     int mortuus;
     int visus = g();
     (void)visus;

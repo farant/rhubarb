@@ -1,5 +1,5 @@
 static int f(void)
 {
-    /* EXSPECTA-PROXIMA: IDENTIFICATOR_IGNOTUS */
+    /* <exspecta codex="IDENTIFICATOR_IGNOTUS"/> */
     return mysterium;
 }

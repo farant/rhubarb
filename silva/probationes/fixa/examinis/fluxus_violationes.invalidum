@@ -4,14 +4,14 @@
 
 static int extra_ansam(int x)
 {
-    /* EXSPECTA-PROXIMA: FRANGE_EXTRA_CONTEXTUM */
+    /* <exspecta codex="FRANGE_EXTRA_CONTEXTUM"/> */
     break;
     return x;
 }
 
 static int ad_ignotum(int x)
 {
-    /* EXSPECTA-PROXIMA: SALTA_AD_TITULUM_IGNOTUM */
+    /* <exspecta codex="SALTA_AD_TITULUM_IGNOTUM"/> */
     goto ignotum;
     return x;
 }

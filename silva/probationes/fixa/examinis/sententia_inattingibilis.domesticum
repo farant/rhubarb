@@ -7,7 +7,7 @@
 static int post_redditum(int x)
 {
     return x + 1;
-    /* EXSPECTA-PROXIMA: SENTENTIA_INATTINGIBILIS */
+    /* <exspecta codex="SENTENTIA_INATTINGIBILIS"/> */
     x = 99;
     return x;
 }

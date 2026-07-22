@@ -4,8 +4,8 @@
  * diagnosticum SUSPECTUM ad 1:1 causam nominat (via SCRIPTA
  * "vendor/..." alienitatem dat; praebere basename specimen ex
  * fixa/examinis/vendor/ resolvit). Oraculum clang reicit
- * (includenda irresolubilia).
- * EXSPECTA 1:MACRO_DOMESTICUM_IN_ALIENO */
+ * (includenda irresolubilia). */
+/* <exspecta linea="1" codex="MACRO_DOMESTICUM_IN_ALIENO"/> */
 #include "latina.h"
 #include "vendor/collidens_vendicatum.h"
 

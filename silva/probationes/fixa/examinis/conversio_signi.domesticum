@@ -6,7 +6,7 @@
 
 static unsigned locum_invenire(void)
 {
-    /* EXSPECTA-PROXIMA: CONVERSIO_SIGNI */
+    /* <exspecta codex="CONVERSIO_SIGNI"/> */
     return -1;
 }
 
@@ -17,7 +17,7 @@ static void poscere(unsigned n)
 
 static void vocans(void)
 {
-    /* EXSPECTA-PROXIMA: CONVERSIO_SIGNI */
+    /* <exspecta codex="CONVERSIO_SIGNI"/> */
     poscere(-1);
 }
 
@@ -25,14 +25,14 @@ static unsigned assignans(int sedes)
 {
     unsigned index;
 
-    /* EXSPECTA-PROXIMA: CONVERSIO_SIGNI */
+    /* <exspecta codex="CONVERSIO_SIGNI"/> */
     index = sedes;
     return index;
 }
 
 static int redditor(unsigned magnum)
 {
-    /* EXSPECTA-PROXIMA: CONVERSIO_SIGNI */
+    /* <exspecta codex="CONVERSIO_SIGNI"/> */
     return magnum;
 }
 

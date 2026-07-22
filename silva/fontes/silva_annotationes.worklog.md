@@ -193,3 +193,40 @@ conceived the layer, anchored to the layer's first identity,
 which itself cites the park back (citationes row). The loop
 closes on its own history; old resident renders the anchor
 inert, /mcp reconnect completes the demo.
+
+## 2026-07-22 — E1: the include-splice swallow + stale-object trap
+
+Chunk E1 (EXSPECTA pin migration) flushed a real collector gap:
+an annotation comment directly above a `#include`/`#define` was
+SILENTLY dropped. Mechanism: the comment's trivia rides the
+directive-line tokens, and directive lines are consumed by the
+preprocessor — they never enter `parsura->lexemata`, so the
+trivia walk never saw them. This placement (file-head annotation
+above the include block) is the most natural spot for file-level
+annotations, so the gap would have bitten adoption hard. Fix:
+`silva_annotationes_colligere` now walks `parsura->directivae`
+(Xar de Xar de SilvaToken* — retained for byte-exact source
+reconstruction) between the lexeme stream and the EOF tail walk;
+dedup by (fons, byte_offset) makes overlap harmless. Order note:
+directive-riding annotations land after stream ones in the
+result — order is documented as approximate, consumers key on
+positions. Resurrection case = probatio section X (#define form,
+hermetic — same class as #include without needing resolvable
+headers).
+
+Debugging wrinkle worth remembering: the fix appeared to fail on
+first test because of the STALE-OBJECT TRAP in identitates.sh —
+editing a fons .c rebuilt the .o but the binary's relink
+condition only checked identitates.c and headers, so the OLD
+binary kept running. The launcher now also relinks when any
+object outruns the binary. (Bisection that cracked it: the probe
+worked only after an unrelated edit to identitates.c — the edit
+was forcing the relink, not fixing anything.)
+
+Also structural, found by the bisection gate (67/67 byte-parity
+required): one absolute pin lived INSIDE the fixture's prose
+header comment (ordo_pravus_vendicati). The awk was line-based
+and read it; the grammar anchors per-comment, so a pin embedded
+in prose is invisible BY DESIGN. Cure: the pin became its own
+annotation comment. This is the grammar teaching correct habits
+— annotations are comments, not lines.

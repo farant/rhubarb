@@ -1,3 +1,3 @@
 extern int x;
-/* EXSPECTA-PROXIMA: REDECLARATIO_INCOMPATIBILIS */
+/* <exspecta codex="REDECLARATIO_INCOMPATIBILIS"/> */
 extern char x;

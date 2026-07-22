@@ -9802,3 +9802,68 @@ amalgamare VERIFICATUM (clamat caught the forgotten silva.h enum
 — the gate earns its keep twice in one day), VECTIS TENET.
 Desideratum 01KY3JWF IMPLETUM; futures: wrapper API, scribit/
 legit modi, wrapper-propagation, 79 wake.
+
+## CHUNK E MIGRATIO: INTENTIO (2026-07-22)
+
+Familiae veteres in grammaticam unam (spec par 4 E; parcum
+01KY3D7EJP; Fran formas benedixit 2026-07-22):
+
+- E1 EXSPECTA: `<exspecta codex="X"/>` (proxima ordinaria) /
+  `<exspecta linea="13" codex="X"/>` (absoluta). Resolutor novus =
+  verbum --exspecta in identitates.c (linea_resoluta + codex per
+  plagulam emissa; ambulatio arboris, non awk). Vectis awk
+  _pinnae_solvere retiratur. Populatio: 66 proxima + 1 absoluta
+  in fixturis.
+- E2 TOLERA: `<tolera codex="X" (>causa` (captura lineae pro
+  causa). Passus tolerarum legit annotationes IAM COLLECTAS
+  (semantica collectorem iam vocat - sutura chunk C); parser
+  octetorum _tolera_legere ET ambulatio propria retirantur;
+  tabula (linea, fons, codex) forma eadem. Populatio: 24 vivae +
+  corpus fixturarum + battery.
+- E3 AEDILIS: `<aedilis corpus="via"/>` / `<aedilis
+  obiectum="via"/>` (verbum-ut-attributum). Extractor in
+  tools/aedilis.c viam alteram discit (stml iam intra limitem
+  puritatis - configuratio); machina INTACTA (chordas verbi
+  easdem accipit). Populatio: 10 sedes.
+
+CHOREA COMPRESSA (non trans sessiones): captura fundamenti
+(fructus parseris veteris) -> via nova docta -> sedes rescriptae
+-> fructus novus = fundamentum OCTETO-IDENTICUS -> parser vetus
+retiratur. Familia una = commissum unum; post quamvis familiam
+status purus. Portae: suites plenae + VECTIS TENET + (E3)
+manifesta identica + amalgamare VERIFICATUM.
+
+LUCRUM TUTELAE: mendum in EXSPECTA/TOLERA hodie = prosa TACITA;
+in grammatica nova = ancoratum malformatum -> codex 74 CLAMAT.
+
+CAVENDA: corpus invalidum = C89 vitiosum consulto - collector
+super lexemata ambulat (parsura mala non obstat) sed CONTACTUS
+CORPORIS ante omnia: verbum novum in fixtura invalida gnarissima
+probare primum. Porta codicis exitus (lex): fructus in plagulas,
+diff, $? - numquam grep in fistula.
+
+## CHUNK E1 EXSPECTA: RELATIO (2026-07-22)
+
+Navatum, portae omnes: pinnae 67/67 OCTETO-IDENTICAE (fundamentum
+awk contra instrumentum novum, corpore toto), VECTIS TENET
+resolutore novo vivo, probatio annotationum + casus resurrectionis,
+suite silvae 33/33, amalgamare VERIFICATUM, radix 103/103.
+
+- verbum --exspecta in identitates.c (+ -exspecta / -struere in
+  launcher); awk _pinnae_solvere MORTUUM; recusatio pinnae in
+  vectis fracturam ducit (awk numquam recusare poterat)
+- 67 pinnae / 39 plagulae conversae: <exspecta codex="X"/> +
+  <exspecta linea="1" codex="X"/> (absoluta una)
+- INVENTUM MAIUS gratia portae: hiatus collectoris — annotatio
+  supra #include/#define TACITE vorabatur (trivia in lexemate
+  directivae consumptae equitant, fluxus expansus eas numquam
+  videt). Sanatum: ambulatio parsura->directivae in colligere.
+  Collocatio capitis plagulae = naturalissima; hiatus adoptionem
+  momorderat. Casus resurrectionis = sectio X probationis.
+- laqueus obiecti veteris in identitates.sh sanatus (nexus etiam
+  cum obiectum binarium anteit)
+- pinna una intra commentarium prosae latebat (ordo_pravus) - awk
+  lineis legebat, grammatica commentariis ancorat; pinna nunc
+  commentarium proprium (grammatica mores rectos docet)
+
+RELIQUUM: E2 tolera, E3 aedilis.

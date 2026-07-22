@@ -25,7 +25,7 @@ static void tota_ininitiata(void)
 {
     struct PrB p;
 
-    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    /* <exspecta codex="LECTIO_ININITIATA"/> */
     vorare(p);
 }
 

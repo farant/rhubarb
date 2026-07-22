@@ -1,5 +1,5 @@
 static long f(int* p, char* q)
 {
-    /* EXSPECTA-PROXIMA: SUBTRACTIONIS_INCOMPATIBILIA */
+    /* <exspecta codex="SUBTRACTIONIS_INCOMPATIBILIA"/> */
     return p - q;
 }

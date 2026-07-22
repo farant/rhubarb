@@ -8,9 +8,9 @@ static int f(int x)
 {
     switch (x) {
     case 0: x = x + 1;
-    /* EXSPECTA-PROXIMA: CASUS_LAPSUS */
+    /* <exspecta codex="CASUS_LAPSUS"/> */
     case 1: if (x) { break; }
-    /* EXSPECTA-PROXIMA: CASUS_LAPSUS */
+    /* <exspecta codex="CASUS_LAPSUS"/> */
     case 2: x = x - 1; break;
     case 3: case 4: x = 0; break;
     default: break;

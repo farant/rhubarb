@@ -844,6 +844,232 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
 }
 
 /* ==================================================
+ * --exspecta: pinnae vectis ex annotationibus (frustum E1)
+ *
+ * <exspecta codex="X"/>            - proxima: linea sequens
+ *   non-vacua non-pinnata flagrat (pinnae cumulantur)
+ * <exspecta linea="13" codex="X"/> - absoluta (recessus)
+ *
+ * Emissio "linea:CODEX" per pinnam - forma quam examen_vectis.sh
+ * consumit. Ancoratum malformatum aut pinna sine destinatione =
+ * RECUSATIO CLAMOSA: pinna tacite lapsa est classis quam
+ * grammatica haec necat.
+ * ================================================== */
+
+nomen structura {
+    b32     absoluta;
+    i32     linea_data;   /* absoluta: ex attributo linea= */
+    i32     finis;        /* linea ultima commentarii (proxima) */
+    chorda* codex;
+} _PinnaExspecta;
+
+interior b32
+_numerus_ex_chorda (constans chorda* c, i32* numerus_out)
+{
+    i32 n = ZEPHYRUM;
+    i32 i;
+
+    si (c == NIHIL || c->mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < c->mensura; i++)
+    {
+        si (c->datum[i] < '0' || c->datum[i] > '9')
+        {
+            redde FALSUM;
+        }
+        n = n * X + (i32)(c->datum[i] - '0');
+    }
+    *numerus_out = n;
+    redde VERUM;
+}
+
+interior s32
+_exspecta (Piscina* piscina, SilvaContextus* ctx,
+    constans character* via)
+{
+    i32 mensura = ZEPHYRUM;
+    character* fons = NIHIL;
+    SilvaParsura* parsura = _parsare(piscina, ctx, via, &fons,
+        &mensura);
+    Xar* annotationes;
+    Xar* pinnae;
+    b32* vacuae;     /* [1..numerus_linearum] sola spatia/tabs */
+    b32* pinnatae;   /* [1..numerus_linearum] pinnam ferentes */
+    i32 numerus_linearum;
+    i32 i;
+    i32 l;
+    b32 vacua_currens;
+    i32 k;
+
+    si (parsura == NIHIL)
+    {
+        fprintf(stderr, "identitates --exspecta: %s non legibilis"
+            " aut non parsata\n", via);
+        redde I;
+    }
+    numerus_linearum = I;
+    per (i = ZEPHYRUM; i < mensura; i++)
+    {
+        si (fons[i] == '\n')
+        {
+            numerus_linearum++;
+        }
+    }
+    vacuae = (b32*)piscina_allocare(piscina,
+        (memoriae_index)(numerus_linearum + II) * magnitudo(b32));
+    pinnatae = (b32*)piscina_allocare(piscina,
+        (memoriae_index)(numerus_linearum + II) * magnitudo(b32));
+    pinnae = xar_creare(piscina, magnitudo(_PinnaExspecta));
+    si (vacuae == NIHIL || pinnatae == NIHIL || pinnae == NIHIL)
+    {
+        fprintf(stderr, "identitates --exspecta: memoria deest\n");
+        redde I;
+    }
+    memset(pinnatae, ZEPHYRUM,
+        (memoriae_index)(numerus_linearum + II) * magnitudo(b32));
+    l = I;
+    vacua_currens = VERUM;
+    per (i = ZEPHYRUM; i <= mensura; i++)
+    {
+        si (i == mensura || fons[i] == '\n')
+        {
+            vacuae[l] = vacua_currens;
+            l++;
+            vacua_currens = VERUM;
+        }
+        alioquin si (fons[i] != ' ' && fons[i] != '\t')
+        {
+            vacua_currens = FALSUM;
+        }
+    }
+
+    annotationes = silva_annotationes_colligere(piscina, parsura,
+        NIHIL);
+    per (k = ZEPHYRUM;
+         annotationes != NIHIL && k < xar_numerus(annotationes);
+         k++)
+    {
+        constans SilvaAnnotatio* a = (constans SilvaAnnotatio*)
+            xar_obtinere(annotationes, k);
+        i32 finis;
+        i32 j;
+
+        si (a->fons_index != parsura->fons_princeps)
+        {
+            perge;
+        }
+        si (!a->parsata)
+        {
+            fprintf(stderr, "identitates --exspecta: ANNOTATIO"
+                " MALFORMATA %s:%u - pinna fortasse tacite"
+                " lapsa\n", via, a->linea);
+            redde I;
+        }
+        finis = a->linea;
+        per (j = ZEPHYRUM; j < a->crudum.mensura; j++)
+        {
+            si (a->crudum.datum[j] == '\n')
+            {
+                finis++;
+            }
+        }
+        per (j = ZEPHYRUM;
+             a->documentum != NIHIL
+                 && a->documentum->liberi != NIHIL
+                 && j < xar_numerus(a->documentum->liberi);
+             j++)
+        {
+            StmlNodus* nodus = *(StmlNodus**)xar_obtinere(
+                a->documentum->liberi, j);
+            _PinnaExspecta* pinna;
+            chorda* codex;
+            chorda* linea_attr;
+
+            si (nodus == NIHIL
+                || (s32)nodus->genus != STML_NODUS_ELEMENTUM
+                || nodus->titulus == NIHIL
+                || nodus->titulus->mensura != VIII
+                || memcmp(nodus->titulus->datum, "exspecta", VIII)
+                    != ZEPHYRUM)
+            {
+                perge;
+            }
+            codex = stml_attributum_capere(nodus, "codex");
+            si (codex == NIHIL || codex->mensura == ZEPHYRUM)
+            {
+                fprintf(stderr, "identitates --exspecta: exspecta"
+                    " sine codice %s:%u\n", via, a->linea);
+                redde I;
+            }
+            pinna = (_PinnaExspecta*)xar_addere(pinnae);
+            si (pinna == NIHIL)
+            {
+                fprintf(stderr, "identitates --exspecta: memoria"
+                    " deest\n");
+                redde I;
+            }
+            pinna->codex = codex;
+            pinna->finis = finis;
+            linea_attr = stml_attributum_capere(nodus, "linea");
+            si (linea_attr != NIHIL)
+            {
+                si (!_numerus_ex_chorda(linea_attr,
+                        &pinna->linea_data))
+                {
+                    fprintf(stderr, "identitates --exspecta:"
+                        " linea non numerica %s:%u\n", via,
+                        a->linea);
+                    redde I;
+                }
+                pinna->absoluta = VERUM;
+            }
+            alioquin
+            {
+                pinna->absoluta = FALSUM;
+                pinna->linea_data = ZEPHYRUM;
+            }
+            per (l = a->linea;
+                 l <= finis && l <= numerus_linearum; l++)
+            {
+                pinnatae[l] = VERUM;
+            }
+        }
+    }
+
+    per (k = ZEPHYRUM; k < xar_numerus(pinnae); k++)
+    {
+        constans _PinnaExspecta* pinna = (constans _PinnaExspecta*)
+            xar_obtinere(pinnae, k);
+
+        si (pinna->absoluta)
+        {
+            imprimere("%u:%.*s\n", pinna->linea_data,
+                (int)pinna->codex->mensura,
+                (constans character*)pinna->codex->datum);
+            perge;
+        }
+        l = pinna->finis + I;
+        dum (l <= numerus_linearum && (vacuae[l] || pinnatae[l]))
+        {
+            l++;
+        }
+        si (l > numerus_linearum)
+        {
+            fprintf(stderr, "identitates --exspecta: pinna sine"
+                " linea destinata %s (finis %u)\n", via,
+                pinna->finis);
+            redde I;
+        }
+        imprimere("%u:%.*s\n", l,
+            (int)pinna->codex->mensura,
+            (constans character*)pinna->codex->datum);
+    }
+    redde ZEPHYRUM;
+}
+
+/* ==================================================
  * principale
  * ================================================== */
 
@@ -895,6 +1121,10 @@ s32 principale (integer argc, character** argv)
         }
         redde _renovare(piscina, ctx, argv[II], argv[III],
             argc - IV, argv + IV);
+    }
+    si (argc == III && strcmp(argv[I], "--exspecta") == ZEPHYRUM)
+    {
+        redde _exspecta(piscina, ctx, argv[II]);
     }
     si (strcmp(argv[I], "--mintare") == ZEPHYRUM)
     {

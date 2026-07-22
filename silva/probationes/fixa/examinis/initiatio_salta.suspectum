@@ -8,7 +8,7 @@ static int trans_initiationem(void)
 {
     int x;
 
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     if (opacum()) goto post;
     x = 1;
 post:

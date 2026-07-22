@@ -1,5 +1,5 @@
 static int f(int* p, char* q)
 {
-    /* EXSPECTA-PROXIMA: COMPARATIO_INCOMPATIBILIUM */
+    /* <exspecta codex="COMPARATIO_INCOMPATIBILIUM"/> */
     return p == q;
 }

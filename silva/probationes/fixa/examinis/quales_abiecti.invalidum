@@ -1,6 +1,6 @@
 static void f(char* q)
 {
     const char* c = q;
-    /* EXSPECTA-PROXIMA: QUALES_ABIECTI */
+    /* <exspecta codex="QUALES_ABIECTI"/> */
     q = c;
 }

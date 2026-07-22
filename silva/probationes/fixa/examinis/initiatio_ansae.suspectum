@@ -16,7 +16,7 @@ static int ansa_cum_frange(void)
 {
     int x;
 
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     while (opacum()) { x = 1; break; }
     return x;
 }
@@ -33,7 +33,7 @@ static int per_cum_frange(void)
 {
     int x;
 
-    /* EXSPECTA-PROXIMA: ININITIATA_QUANDOCUMQUE */
+    /* <exspecta codex="ININITIATA_QUANDOCUMQUE"/> */
     for (; opacum();) { x = 1; break; }
     return x;
 }
@@ -52,7 +52,7 @@ static int lectio_in_conditione(void)
     int x;
     int i = 0;
 
-    /* EXSPECTA-PROXIMA: LECTIO_ININITIATA */
+    /* <exspecta codex="LECTIO_ININITIATA"/> */
     do { i++; } while (i < x);
     return i;
 }

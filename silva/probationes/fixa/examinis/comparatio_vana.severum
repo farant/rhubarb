@@ -7,13 +7,13 @@
 
 static int proba_mortua(unsigned u)
 {
-    /* EXSPECTA-PROXIMA: COMPARATIO_VANA */
+    /* <exspecta codex="COMPARATIO_VANA"/> */
     return u < 0;
 }
 
 static int per_macrum(unsigned u)
 {
-    /* EXSPECTA-PROXIMA: COMPARATIO_VANA */
+    /* <exspecta codex="COMPARATIO_VANA"/> */
     return u >= INFIMUM;
 }
 
