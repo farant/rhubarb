@@ -10008,3 +10008,46 @@ BUILD ORDER: IR + parser branch -> walker + dispatch -> registry
 -> probationes per pseudo as built (congruentia + captura +
 compositum cum attributis). Bars unchanged: QA+QB 86 asserta green
 throughout, suite, amalgamare VERIFICATUM, VECTIS TENET.
+
+## QUAESTIO QC PSEUDO-CLASSES: RELATIO (2026-07-22)
+
+Navatum: pseudo-classes COMPLETAE in una sessione - IR + parser +
+dispatch + ambulator + registro + barra, portae omnes virides
+primo cursu. Superficies: :primus/:ultimus, :habet(sel)/:non(sel)
+(compilatio recursiva, custos XVI), :vocat/:definit/:utitur/
+:reddit, :ambiguum/:lectiones/:sumptus/:omissus, registratio
+usoris (insectum v1 #4 mortuum - probatio registrationis PRIMA
+utriusque generationis).
+
+Portae: barra quaestionis 86 -> 160/160 (74 asserta QC nova,
+NULLA rubra primo cursu - aestimationes suturae omnes tenuerunt:
+fixtura conditionalium, :lectiones lectionem alteram aperiens,
+limes CSS, numerator registrationis exactus); suite 33/33;
+amalgamare VERIFICATUM (hospes 33/33, nm-intersectio 0); VECTIS
+TENET.
+
+Inventa aedificationis:
+- radix = LISTA nuda (silva_parsare.c:244): nodi summi patre
+  carent -> :primus/:ultimus AMBO congruunt in OMNIBUS nodis
+  summis (extensio decreti filii-soli; PINNATUM in barra cum
+  commento - quaestiones utiles sub patre scopandae, e.g.
+  "corpus > declaratio:primus")
+- ambulator subarboris UNUS (_liberos_quaerere/_valorem_quaerere)
+  sex pseudos servit; :habet intra eum = _congruit_interna cum
+  limite (param limes per _catenae_congruit totam filatus)
+- :lectiones intra :habet: vexillum nidificatum QUOQUE laxat
+  (:habet(declaratio:lectiones) = "in lectione ULLA")
+- "registro" ablativus ut titulus parametri - "registrum"
+  nominativus macro latina est (register); idem laqueus iam in
+  silva_commissio.h notatus erat
+- CADENDA_TYPEDEF amalgamatoris crevit: PseudoRegistrum +
+  PseudoFunctio (praecedens functionum: SilvaResolutor)
+
+Instrumenta (debrief): adhibita = corpus/inclusiones non necessaria
+(sutura iam lecta), examen-custos per omnes editiones tacitus
+(nulla fractura), suite-filter + amalgamare + vectis = fluxus
+totus. Fructus: aestimatio suturae -> nulla retractatio. Asperitas:
+nulla nova. Desideratum: nullum.
+
+POST: QD barra v1 translata (100 asserta) -> parcum 01KXPV9FPK
+(quaestio in legati) -> contractus selector-scopati (01KXTX7FA3).

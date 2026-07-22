@@ -1070,18 +1070,29 @@ SilvaScriptura silva_c89_functionis_subscriptio(
     unsigned int index);
 
 /* ==================================================
- * Quaestio (QA): selectores CSS-similes super arbores commissas
- * (consilium: project-specs/silva-quaestio-design.md, DECISUS).
- * Tags = tituli generum registri (kebab); combinatores spatium
- * (descendens) et > (filius); unio virgula; * universalis. Tag
- * ignotum aut selector malformatus = NULL + causa (fractura
- * CLARA). Ambigua: descensus per lectionem canonicam solam;
- * involucrum ipsum congruibile (tag "ambiguus"); nodi ERROR
- * congruibiles (tag "error"). Arbores COMMISSAE exspectantur
- * (pater fixus).
+ * Quaestio (QA+QB+QC): selectores CSS-similes super arbores
+ * commissas (consilium: project-specs/silva-quaestio-design.md,
+ * DECISUS). Tags = tituli generum registri (kebab); combinatores
+ * spatium (descendens) et > (filius); unio virgula; * universalis.
+ * Tag/locus/pseudo ignotum aut selector malformatus = NULL + causa
+ * (fractura CLARA). Ambigua: descensus per lectionem canonicam
+ * solam (:lectiones aperit omnes); involucrum ipsum congruibile
+ * (tag "ambiguus" aut :ambiguum); nodi ERROR congruibiles (tag
+ * "error"). Arbores COMMISSAE exspectantur (pater fixus).
  * ================================================== */
 
 typedef struct SilvaQuaestio SilvaQuaestio;  /* compilata (opaca) */
+
+/* Tabula pseudo-classium usoris (QC, opaca) - impletur ANTE
+ * compilationem (pseudo ignotum in compilatione = fractura) */
+typedef struct SilvaQuaestioPseudoRegistrum
+    SilvaQuaestioPseudoRegistrum;
+
+/* Functio pseudo-classis usoris: nodus sub probatione + argumentum
+ * (chorda vacua si sine parenthesibus) + datum registrationis.
+ * Non-zephyrum = congruit. */
+typedef int (*SilvaQuaestioPseudoFunctio)(const SilvaNodus* nodus,
+    SilvaChorda argumentum, void* datum);
 
 /* Captura ligata (QB): gradus catenae congruentis cum $nomine -
  * gradus OMNES ligantur, non subiectum solum */
@@ -1097,14 +1108,39 @@ typedef struct SilvaQuaestioResultatum {
 } SilvaQuaestioResultatum;
 
 /* Selector -> quaestio compilata (reusabilis trans arbores).
- * Superficies QA+QB: tags, *, spatium, >, virgula, +/~ (fratres),
- * [locus op "valor"] (= ^= $= *= et exsistentia; locus PER GENUS;
- * compositum cum tag = validatio compilationis), $nomen (capturae).
- * NULL + *causa_out (litterae staticae; NULL licet) si malformatus
- * aut tag ignotum. */
+ * Superficies QA+QB+QC: tags, *, spatium, >, virgula, +/~
+ * (fratres), [locus op "valor"] (= ^= $= *= et exsistentia; locus
+ * PER GENUS; compositum cum tag = validatio compilationis), $nomen
+ * (capturae), pseudo-classes: :primus/:ultimus (sine lista
+ * continente = filius solus = AMBO), :habet(sel) (descendens
+ * congruens - catena intra subarborem confinata), :non(sel),
+ * :vocat(f)/:definit(x)/:utitur(x)/:reddit (semantici - CONTINET;
+ * genera per nomen, grammaticae absens = numquam congruit),
+ * :ambiguum, :lectiones, :sumptus/:omissus. NULL + *causa_out
+ * (litterae staticae; NULL licet) si malformatus aut nomen
+ * ignotum. */
 SilvaQuaestio* silva_quaestio_compilare(SilvaPiscina* piscina,
     const SilvaRegistrumCoctum* tabularium, const char* selector,
     const char** causa_out);
+
+/* Ut compilare, sed pseudo-classes usoris ex tabula data agnoscit
+ * (registro NULL = nativae solae; functiones in quaestionem
+ * copiantur). */
+SilvaQuaestio* silva_quaestio_compilare_cum_registro(
+    SilvaPiscina* piscina, const SilvaRegistrumCoctum* tabularium,
+    const SilvaQuaestioPseudoRegistrum* registro,
+    const char* selector, const char** causa_out);
+
+/* Tabulam pseudo-classium vacuam creare. */
+SilvaQuaestioPseudoRegistrum* silva_quaestio_registrum_creare(
+    SilvaPiscina* piscina);
+
+/* Pseudo-classem usoris registrare. Zephyrum: argumentum NULL,
+ * titulus vacuus/litteris non-tag, aut nomen nativum obumbraret.
+ * Titulus idem iterum = renovatio (non-zephyrum). */
+int silva_quaestio_registrare(
+    SilvaQuaestioPseudoRegistrum* registro, const char* titulus,
+    SilvaQuaestioPseudoFunctio functio, void* datum);
 
 /* Omnes nodi congruentes sub radice (commissio->radix directa).
  * SilvaXar de SilvaQuaestioResultatum (valore) in piscinam. */

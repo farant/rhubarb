@@ -72,6 +72,9 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "SilvaRamusVista", "SilvaMacroVista", "SilvaCommentariumVista",
     "SilvaQuaestio", "SilvaQuaestioResultatum",
     "SilvaQuaestioCaptura",
+    /* QC (2026-07-22): tabula pseudo opaca + functio usoris -
+     * silva.h eas praenuntiat (registro-idioma SilvaQuaestio) */
+    "SilvaQuaestioPseudoRegistrum", "SilvaQuaestioPseudoFunctio",
     "TypusC89Genus", "TypusC89Primitivum", "TypusC89",
     "TypusC89Membrum", "SemanticaSymbolumGenus", "SemanticaSymbolum",
     "SemanticaDiagnosticum", "SilvaSemantica",
