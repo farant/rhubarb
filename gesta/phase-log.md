@@ -1468,3 +1468,31 @@ Ex usu vero diei (tria pipata Franis non visa - caecitas probata):
    excedens = exitus 1.
 Portae: suite gestarum + fumus plenus + salutatio viva post
 reconexionem. Deinde quaestio clauditur - V1 fori integra.
+
+## FORUM F4: RELATIO + V1 SIGILLUM (2026-07-22)
+
+Navatum totum ex intentione, primo cursu:
+- Machina: acta {ab_lecto} (cursor claude-lectum in tabula
+  consumptorum exsistente - nihil novi in nucleo; ASC = ordo
+  lectionis, provectio ad maximum redditum, "et N plura restant"),
+  salutatio NOVA in initialize (absens->conditus ad hwm tacite),
+  addere {ad} = nexus sponte, titulus ex corpore derivatus.
+  Asserta 251 (8 nova), suite 4/4.
+- App: speculum indutum (53 plagulae, Cmd+Shift+D), fumus plenus
+  se-nuntians FUMUS PLENUS primo cursu (IS pipat -> pons -> daemon
+  -> annales -> C respondet per {ad} -> anquisitio IS filium videt
+  -> pons -> exitus 0: gyrus totus sine oculis).
+- Probationes vivae per MCP: responsum uno vocamine cum titulo
+  derivato per schema vetus sessionis (parametra extra transeunt).
+- CAECITAS PROBATA TER: quinque res Franis non visae inter
+  lectiones explicitas hodie - cursor eas necessarias probavit
+  ante navigationem.
+
+BARRA V1 TOTA TRANSITA (spec v1 par V): fumus se-nuntians +
+barra viva + suites virides + launcheri staleness-tuti + recusationes
+clarae nominatae. FORUM V1 INTEGRUM: dies unus a colloquio ad
+mundum vivum inhabitatum (F0 daemon, F1 proxy, F2 sceletum+legere,
+F3 articuli+fila, F4 ergonomia+speculum+fumus). Futura nominata:
+online pro Amanda + MCP oauth mobilis (pipatum Franis 01KY5H8XKD),
+canales-ut-tags, entitates referibiles, exportatio statica,
+markdownum, historia revisionum UI.
