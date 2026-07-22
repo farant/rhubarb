@@ -699,3 +699,29 @@ silva/amalgama/silva.c. A failed amalgamare leaves a broken
 committed silva.c → aedilis_struere fails → generators fail. Break
 the loop with `git checkout -- silva/amalgama/silva.c` (HEAD is
 always VERIFICATUM), then re-run the chain.
+
+## 2026-07-22 — E3: aedilis verbs into the STML grammar
+
+`/* aedilis: corpus lib/x.c */` → `/* <aedilis corpus="lib/x.c"/> */`
+(verb-as-attribute; obiectum/corpus/vexillum unchanged as verbs).
+The PURE MACHINE is untouched — the extractor in tools/aedilis.c
+rebuilds the same "verbum arg" strings from the STML tree via the
+amalgam's silva_stml_* API (stml was already inside the purity
+boundary: config reading). Fixture table extractors unaffected.
+
+TOMBSTONE pattern (first deployment): old-form "aedilis: ..." or
+a malformed/ambiguous `<aedilis` now → loud refusal naming the
+cure, machine refuses the file. Validated on live ammunition
+within minutes: the porta caught THREE stragglers
+(probationes/probatio_speculum*.c, probatio_vitrea_hospes.c) my
+lib/include sweep had missed — under the old parser those would
+have been silently accepted forever; under a silent new parser
+their body declarations would have silently VANISHED from
+closures (link failures far from the cause). The tombstone
+converted both failure modes into a named one-line cure.
+
+Gates: derivation parity 4/4 TUs byte-identical (corpus chains +
+obiectum chain), PORTA AEDILIS 119/119, root 103/103. Alien
+elements (nid/intentio/tolera) pass through the extractor
+untouched — headers can now carry mixed annotation families
+above the same unit.

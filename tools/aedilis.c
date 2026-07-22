@@ -65,13 +65,19 @@ _chordam_in_xar (Xar* xar, chorda valor)
     }
 }
 
-/* Annotatio ANCORATA (lectio spicae: substring prosam capiebat):
- * post delimitatorem et spatia commentum cum "aedilis:" INCIPERE
- * debet. Reddit contentum post ancoram, tersum, "*"/"/" caudae
- * demptis; mensura 0 = non annotatio. */
+/* Annotatio ANCORATA (grammatica STML una, frustum E3 2026-07-22):
+ * post delimitatorem et spatia elementum <aedilis verbum="arg"/>;
+ * attributum unicum -> "verbum arg" redditum (machina chordas
+ * verbi easdem accipit - INTACTA). Elementa aliena (nid,
+ * intentio, tolera...) numquam nostra. Forma vetus "aedilis: ..."
+ * aut <aedilis malformatum -> recusatio_out VERUM (tombstone
+ * clamosum - nulla prosa tacita; lectio spicae vetus: substring
+ * prosam capiebat). mensura 0 = non annotatio. */
 interior chorda
-_annotationem_extrahere (constans i8* datum, i32 mensura,
-    Piscina* piscina)
+_annotationem_extrahere (i8* datum, i32 mensura,
+    Piscina* piscina, SilvaPiscina* arboris,
+    SilvaInternamentumChorda* intern, constans character* via,
+    b32* recusatio_out)
 {
     constans character* signum = "aedilis:";
     chorda vacua;
@@ -81,25 +87,13 @@ _annotationem_extrahere (constans i8* datum, i32 mensura,
 
     vacua.datum = NIHIL;
     vacua.mensura = 0;
+    *recusatio_out = FALSUM;
 
     i = 0;
     si (mensura >= 2 && datum[0] == (i8)'/'
         && (datum[1] == (i8)'*' || datum[1] == (i8)'/'))
     {
         i = 2;
-    }
-    dum (i < mensura
-        && (datum[i] == (i8)' ' || datum[i] == (i8)'\t'))
-    {
-        i++;
-    }
-    per (j = 0; signum[j] != '\0'; j++)
-    {
-        si (i >= mensura || datum[i] != (i8)signum[j])
-        {
-            redde vacua;
-        }
-        i++;
     }
     dum (i < mensura
         && (datum[i] == (i8)' ' || datum[i] == (i8)'\t'))
@@ -124,7 +118,97 @@ _annotationem_extrahere (constans i8* datum, i32 mensura,
     {
         redde vacua;
     }
-    redde _chordam_copiare(datum + i, finis - i, piscina);
+
+    si (datum[i] == (i8)'<' && i + 1 < finis
+        && ((datum[i + 1] >= (i8)'a' && datum[i + 1] <= (i8)'z')
+            || (datum[i + 1] >= (i8)'A'
+                && datum[i + 1] <= (i8)'Z')))
+    {
+        SilvaChorda corpus_annotationis;
+        SilvaStmlResultus resultus;
+        SilvaStmlNodus* nodus;
+        SilvaStmlAttributum* attr;
+
+        corpus_annotationis.mensura =
+            (insignatus integer)(finis - i);
+        corpus_annotationis.datum = datum + i;
+        resultus = silva_stml_legere(corpus_annotationis, arboris,
+            intern);
+        si (!resultus.successus
+            || resultus.elementum_radix == NIHIL)
+        {
+            /* malformatum: si "<aedilis" textualiter, nostrum et
+             * fractum -> clamare; alioquin annotatio aliena
+             * (codex 74 examinis eam iam custodit) */
+            si (finis - i >= 8
+                && memcmp(datum + i, "<aedilis", 8) == 0)
+            {
+                fprintf(stderr, "aedilis: annotatio malformata in"
+                    " %s - <aedilis verbum=\"arg\"/>"
+                    " exspectatum\n", via);
+                *recusatio_out = VERUM;
+            }
+            redde vacua;
+        }
+        nodus = resultus.elementum_radix;
+        si (nodus->titulus == NIHIL || nodus->titulus->mensura != 7
+            || memcmp(nodus->titulus->datum, "aedilis", 7) != 0)
+        {
+            redde vacua;   /* elementum alienum */
+        }
+        si (nodus->attributa == NIHIL
+            || silva_xar_numerus(nodus->attributa) != 1)
+        {
+            fprintf(stderr, "aedilis: annotatio in %s attributum"
+                " unicum postulat (<aedilis verbum=\"arg\"/>)\n",
+                via);
+            *recusatio_out = VERUM;
+            redde vacua;
+        }
+        attr = (SilvaStmlAttributum*)silva_xar_obtinere(
+            nodus->attributa, 0);
+        si (attr == NIHIL || attr->titulus == NIHIL
+            || attr->valor == NIHIL || attr->valor->mensura == 0)
+        {
+            fprintf(stderr, "aedilis: annotatio in %s sine valore"
+                " (<aedilis verbum=\"arg\"/>)\n", via);
+            *recusatio_out = VERUM;
+            redde vacua;
+        }
+        {
+            chorda fructus;
+            i32 mensura_fructus = (i32)(attr->titulus->mensura + 1
+                + attr->valor->mensura);
+
+            fructus.mensura = mensura_fructus;
+            fructus.datum = (i8*)piscina_allocare(piscina,
+                (memoriae_index)mensura_fructus);
+            si (fructus.datum == NIHIL)
+            {
+                redde vacua;
+            }
+            memcpy(fructus.datum, attr->titulus->datum,
+                (memoriae_index)attr->titulus->mensura);
+            fructus.datum[attr->titulus->mensura] = (i8)' ';
+            memcpy(fructus.datum + attr->titulus->mensura + 1,
+                attr->valor->datum,
+                (memoriae_index)attr->valor->mensura);
+            redde fructus;
+        }
+    }
+
+    /* forma vetus "aedilis:" -> tombstone migrationis */
+    per (j = 0; signum[j] != '\0'; j++)
+    {
+        si (i + j >= finis || datum[i + j] != (i8)signum[j])
+        {
+            redde vacua;   /* prosa */
+        }
+    }
+    fprintf(stderr, "aedilis: FORMA VETUS \"aedilis: ...\" in %s -"
+        " migra ad <aedilis verbum=\"arg\"/>\n", via);
+    *recusatio_out = VERUM;
+    redde vacua;
 }
 
 /* Cursus minoritatis: clang -MM per system(), plagula temporalis.
@@ -241,6 +325,7 @@ _extractor_silvae (vacuum* datum, constans character* via,
     SilvaPiscina*   arboris;
     SilvaParsura*   parsura;
     SilvaXar*       cruda;
+    SilvaInternamentumChorda* intern;
     chorda          fons;
     memoriae_index  longitudo_viae;
     insignatus integer n;
@@ -305,11 +390,18 @@ _extractor_silvae (vacuum* datum, constans character* via,
         (constans character*)fons.datum, fons.mensura, 0);
     si (cruda != NIHIL)
     {
+        intern = silva_internamentum_creare(arboris);
+        si (intern == NIHIL)
+        {
+            silva_piscina_destruere(arboris);
+            redde FALSUM;
+        }
         n = silva_xar_numerus(cruda);
         per (k = 0; k < n; k++)
         {
             SilvaToken* lexema;
             chorda      annotatio;
+            b32         recusatio;
 
             lexema = *(SilvaToken**)silva_xar_obtinere(cruda, k);
             si (lexema == NIHIL
@@ -320,7 +412,12 @@ _extractor_silvae (vacuum* datum, constans character* via,
             }
             annotatio = _annotationem_extrahere(
                 lexema->valor.datum, lexema->valor.mensura,
-                piscina);
+                piscina, arboris, intern, via, &recusatio);
+            si (recusatio)
+            {
+                silva_piscina_destruere(arboris);
+                redde FALSUM;
+            }
             si (annotatio.mensura > 0)
             {
                 _chordam_in_xar(*annotationes_out, annotatio);

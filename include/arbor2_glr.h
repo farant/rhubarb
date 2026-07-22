@@ -1,7 +1,7 @@
 #ifndef ARBOR2_GLR_H
 #define ARBOR2_GLR_H
 
-/* aedilis: corpus lib/arbor2_glr_tabula.c */
+/* <aedilis corpus="lib/arbor2_glr_tabula.c"/> */
 
 #include "latina.h"
 #include "piscina.h"

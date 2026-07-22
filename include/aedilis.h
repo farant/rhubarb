@@ -26,8 +26,8 @@
  * legere et reddere:
  *   directivae_out:   Xar de chorda - textus directivarum
  *                     inclusionum ut rogatus ("via.h")
- *   annotationes_out: Xar de chorda - textus post "aedilis:"
- *                     ancoratum, tersus ("obiectum lib/x.c")
+ *   annotationes_out: Xar de chorda - verbum argumentumque ex
+ *                     <aedilis verbum="arg"/> ("obiectum lib/x.c")
  *   ex_oraculo_out:   VERUM = cursus minoritatis (-MM pro .m);
  *                     directivae tunc viae IAM RESOLUTAE
  *                     relativae radici sunt

@@ -9884,3 +9884,21 @@ codex 74 CLAMAT (olim prosa tacita + diagnosticum severum
 inexplicatum redibat).
 
 RELIQUUM: E3 aedilis.
+
+## CHUNK E3 AEDILIS: RELATIO (2026-07-22) - SCALA E COMPLETA
+
+Navatum: <aedilis corpus=/obiectum=/vexillum=""/> (verbum-ut-
+attributum); machina pura INTACTA (extractor chordas verbi easdem
+retexit ex arbore per silva_stml_* amalgamatis); extractores
+fixturarum intacti. TOMBSTONE primum depositum: forma vetus aut
+<aedilis malformatum -> recusatio clamosa cura nominata - et
+INTRA MINUTA tres stragulos vivos cepit (probationes speculum
+x2 + vitrea_hospes) quos percursus lib/include omiserat; sub
+parseribus tacitis corpora e clausuris tacite evanuissent.
+Portae: paritas derivationum 4/4 octeto-identica, PORTA AEDILIS
+119/119 OMNES BONAE, radix 103/103.
+
+SCALA E COMPLETA: tres familiae veteres (exspecta/tolera/aedilis)
+in grammaticam unam uno die migratae, parseres tres mortui,
+chorea compressa (fundamentum -> via nova -> sedes -> identitas
+-> retiratio) ter sine iactura tenuit.

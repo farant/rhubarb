@@ -1,7 +1,7 @@
 #ifndef CALENDARIUM_LITURGICUM_H
 #define CALENDARIUM_LITURGICUM_H
 
-/* aedilis: corpus lib/sanctorale.c */
+/* <aedilis corpus="lib/sanctorale.c"/> */
 
 #include "latina.h"
 #include "piscina.h"

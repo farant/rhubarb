@@ -20,7 +20,7 @@
 /* Symbolum ex capsula generata (build/speculum/hospes/) - externus
  * directus pro capite generato: nomen symboli est contractus
  * stabilis, et includere per "../build/" silva non resolvit */
-/* aedilis: obiectum build/speculum/hospes/capsula_speculi_hospes.c */
+/* <aedilis obiectum="build/speculum/hospes/capsula_speculi_hospes.c"/> */
 externus constans CapsulaEmbed capsula_speculi_hospes;
 
 
