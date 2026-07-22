@@ -438,11 +438,24 @@ _vocationem_ambulare (FluxusExtractor* ex, constans SilvaNodus* n)
                     ex->aux.contextus, functio_folium,
                     (i32)index_argumenti);
             }
-            _locum_resolvere(ex,
-                _ut_nodus(silva_c89_unarium_internum(nucleus)),
-                FALSUM,
-                constansne ? -I
-                    : (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI);
+            {
+                b32 accumulatne = FALSUM;
+
+                si (!constansne
+                    && ex->aux.parametrum_accumulat != NIHIL)
+                {
+                    accumulatne = ex->aux.parametrum_accumulat(
+                        ex->aux.contextus, functio_folium,
+                        (i32)index_argumenti);
+                }
+                _locum_resolvere(ex,
+                    _ut_nodus(silva_c89_unarium_internum(nucleus)),
+                    FALSUM,
+                    constansne ? -I
+                        : accumulatne
+                            ? (s32)FLUXUS_EVENTUM_LOCI_ACCUMULAT
+                            : (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI);
+            }
         }
         alioquin
         {
@@ -934,6 +947,7 @@ silva_c89_fluxus_datorum_aedificare (Piscina* piscina,
     {
         ex.aux.symbolum = NIHIL;
         ex.aux.parametrum_constans = NIHIL;
+        ex.aux.parametrum_accumulat = NIHIL;
         ex.aux.expressio_acies = NIHIL;
         ex.aux.canonicum = NIHIL;
         ex.aux.contextus = NIHIL;

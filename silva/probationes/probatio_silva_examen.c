@@ -1985,6 +1985,67 @@ s32 principale (vacuum)
     _codicem_probare(piscina,
         "/* <intentio nid>x</intentio> */\nint a;\n",
         (s32)EXAMEN_CODEX_IDENTITAS_INVALIDA, ZEPHYRUM);
+
+    imprimere("\n--- Probans contractus (77-79) ---\n");
+    /* 77: cimex huius ipsius diei ad verbum - &localis ininitiatae
+     * ad parametra accumulantia (ambo flagrant) */
+    _codicem_probare(piscina,
+        "/* <contractus param=\"minimum\" modus=\"accumulat\"/>\n"
+        " * <contractus param=\"maximum\" modus=\"accumulat\"/> */\n"
+        "static void extensio(int* minimum, int* maximum)\n"
+        "{ if (*minimum < 0) { *minimum = 0; } *maximum = *maximum; }\n"
+        "static void probans(void)\n"
+        "{ int minimum; int maximum; extensio(&minimum, &maximum); }\n",
+        (s32)EXAMEN_CODEX_CONTRACTUS_VIOLATUS, II);
+    /* 77 tacet: vocator initiat (contractus impletus) */
+    _codicem_probare(piscina,
+        "/* <contractus param=\"minimum\" modus=\"accumulat\"/> */\n"
+        "static void extensio(int* minimum)\n"
+        "{ if (*minimum < 0) { *minimum = 0; } }\n"
+        "static void probans(void)\n"
+        "{ int minimum = -1; extensio(&minimum); }\n",
+        (s32)EXAMEN_CODEX_CONTRACTUS_VIOLATUS, ZEPHYRUM);
+    /* 77 tacet: functio sine contractu (&x = LOCI ordinarium) */
+    _codicem_probare(piscina,
+        "static void impleta(int* n) { *n = 5; }\n"
+        "static void probans(void)\n"
+        "{ int n; impleta(&n); }\n",
+        (s32)EXAMEN_CODEX_CONTRACTUS_VIOLATUS, ZEPHYRUM);
+    /* 78: accumulat declaratum sed corpus scribit solum */
+    _codicem_probare(piscina,
+        "/* <contractus param=\"effusio\" modus=\"accumulat\"/> */\n"
+        "static void falsa(int* effusio) { *effusio = 1; }\n"
+        "static void usus(void) { int e = 0; falsa(&e); }\n",
+        (s32)EXAMEN_CODEX_CONTRACTUS_STALUS, I);
+    /* 78: modus extra vocabularium */
+    _codicem_probare(piscina,
+        "/* <contractus param=\"n\" modus=\"volat\"/> */\n"
+        "static void volans(int* n) { *n = *n + 1; }\n",
+        (s32)EXAMEN_CODEX_CONTRACTUS_STALUS, I);
+    /* 78: parametrum inexsistens */
+    _codicem_probare(piscina,
+        "/* <contractus param=\"nemo\" modus=\"accumulat\"/> */\n"
+        "static void sola(int* n) { if (*n) { *n = 0; } }\n",
+        (s32)EXAMEN_CODEX_CONTRACTUS_STALUS, I);
+    /* 79 DORMIT (vigilia - census CXLVII sedes invenit): forma
+     * intro-exitus sine contractu tacet donec vigil flippetur */
+    _codicem_probare(piscina,
+        "static void auget(int* n) { *n = *n + 1; }\n",
+        (s32)EXAMEN_CODEX_CONTRACTUS_ABSENS, ZEPHYRUM);
+    /* 79 tacet: contractus praesens */
+    _codicem_probare(piscina,
+        "/* <contractus param=\"n\" modus=\"accumulat\"/> */\n"
+        "static void auget(int* n) { *n = *n + 1; }\n",
+        (s32)EXAMEN_CODEX_CONTRACTUS_ABSENS, ZEPHYRUM);
+    /* 79 tacet: exitus purus (scribit solum) */
+    _codicem_probare(piscina,
+        "static void ponit(int* n) { *n = 5; }\n",
+        (s32)EXAMEN_CODEX_CONTRACTUS_ABSENS, ZEPHYRUM);
+    /* 79 tacet: p traditum alii - IGNOTUM, silentium */
+    _codicem_probare(piscina,
+        "static void alia(int* n) { *n = 1; }\n"
+        "static void tradit(int* n) { alia(n); *n = *n; }\n",
+        (s32)EXAMEN_CODEX_CONTRACTUS_ABSENS, ZEPHYRUM);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

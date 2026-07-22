@@ -169,6 +169,8 @@ silva_nodus_liberi (
  * originis (lexemata expansa synthetica - byte_offset -1 - omissa;
  * sedes invocationis numeratur). *minimum initia < 0, *maximum
  * initia 0; *minimum manet < 0 si nihil inventum. */
+/* <contractus param="minimum" modus="accumulat"/>
+ * <contractus param="maximum" modus="accumulat"/> */
 vacuum
 silva_valor_extensionem (
     SilvaValor        valor,
@@ -176,6 +178,8 @@ silva_valor_extensionem (
     s32*              minimum,
     s32*              maximum);
 
+/* <contractus param="minimum" modus="accumulat"/>
+ * <contractus param="maximum" modus="accumulat"/> */
 vacuum
 silva_nodus_extensionem (
     constans SilvaNodus* nodus,

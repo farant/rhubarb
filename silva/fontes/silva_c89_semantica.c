@@ -184,6 +184,12 @@ interior constans ExamenCodexInformatio _codices[] = {
                                                   EXAMEN_DOMESTICUM },
     { "nid duplicatum in plagula",                EXAMEN_DOMESTICUM },
     { "identitas invalida (nid = ULID XXVI; res = praefixum >= VI)",
+                                                  EXAMEN_DOMESTICUM },
+    { "contractus violatus (&localis ininitiatae ad parametrum"
+      " accumulantem - vocator initiare debet)",  EXAMEN_DOMESTICUM },
+    { "contractus stalus (corpus declarationi contradicit aut"
+      " parametrum/modus ignotus)",               EXAMEN_DOMESTICUM },
+    { "contractus absens (parametrum intro-exitus sine contractu)",
                                                   EXAMEN_DOMESTICUM }
 };
 
@@ -1289,6 +1295,648 @@ _annotationes_examinare (SilvaSemantica* sem,
             }
         }
         _res_examinare(sem, a, a->documentum);
+    }
+}
+
+/* ==================================================
+ * Contractus (desideratum 01KY3JWF): familia vocabularii
+ * SEMANTICA prima. <contractus param="NOMEN" modus="accumulat"/>
+ * supra prototypum capitis (capita praebita => TU quaeque
+ * contractus calleorum suorum in parsura sua videt - contractus
+ * vivit ubi C veritatem interfaciei ponit). Tabula pigre ex
+ * OMNIBUS fontibus; codex 77 in indice 71 per eventum
+ * LOCI_ACCUMULAT iudicatur (dataflow verum); 78/79 per
+ * definitionem (scansio pointee syntactica, conservativa -
+ * silentium ante falsa).
+ * ================================================== */
+
+nomen structura {
+    chorda titulus_functionis;
+    chorda titulus_parametri;
+    s32    index_parametri;   /* -1 = non inventum in prototypo */
+    b32    accumulat;
+    b32    modus_ignotus;
+} ExamenContractus;
+
+interior b32
+_chordae_pares_contractus (chorda a, chorda b)
+{
+    redde a.mensura == b.mensura && a.datum != NIHIL
+        && b.datum != NIHIL
+        && memcmp(a.datum, b.datum,
+               (memoriae_index)a.mensura) == ZEPHYRUM;
+}
+
+interior b32
+_folium_titulo (constans SilvaNodus* nodus, chorda titulus)
+{
+    SilvaValor tok_v;
+
+    si (nodus == NIHIL
+        || nodus->genus != (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        redde FALSUM;
+    }
+    tok_v = silva_c89_folium_identificator_tok_valor(nodus);
+    redde tok_v.genus == SILVA_VALOR_TOKEN
+        && tok_v.datum.token != NIHIL
+        && _chordae_pares_contractus(tok_v.datum.token->valor,
+               titulus);
+}
+
+/* declarator-functionis primus in subarbore valoris */
+interior constans SilvaNodus* _declaratorem_fn_invenire (
+    constans SilvaNodus* nodus);
+
+interior constans SilvaNodus*
+_declaratorem_fn_in_valore (SilvaValor v)
+{
+    si (v.genus == SILVA_VALOR_NODUS)
+    {
+        redde _declaratorem_fn_invenire(v.datum.nodus);
+    }
+    si (v.genus == SILVA_VALOR_LISTA)
+    {
+        i32 k;
+        i32 m = silva_valor_lista_numerus(v);
+
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            SilvaValor* e = silva_valor_lista_obtinere(v, k);
+
+            si (e != NIHIL)
+            {
+                constans SilvaNodus* f = _declaratorem_fn_in_valore(
+                    *e);
+
+                si (f != NIHIL)
+                {
+                    redde f;
+                }
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+interior constans SilvaNodus*
+_declaratorem_fn_invenire (constans SilvaNodus* nodus)
+{
+    i32 k;
+
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_DECLARATOR_FUNCTIONIS)
+    {
+        redde nodus;
+    }
+    per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
+    {
+        constans SilvaNodus* f = _declaratorem_fn_in_valore(
+            nodus->loci[k]);
+
+        si (f != NIHIL)
+        {
+            redde f;
+        }
+    }
+    redde NIHIL;
+}
+
+/* index parametri nomine in declaratore-functionis; -1 absens */
+interior s32
+_parametri_index (constans SilvaNodus* declarator_fn,
+    chorda titulus)
+{
+    SilvaValor parametra;
+    i32 k;
+    i32 m;
+
+    si (declarator_fn == NIHIL)
+    {
+        redde -I;
+    }
+    parametra = silva_c89_declarator_functionis_parametra(
+        declarator_fn);
+    m = silva_valor_lista_numerus(parametra);
+    {
+        /* lista virgulas UT LEXEMATA fert - index = ordinalis
+         * inter nodos parametrorum solos (aliter maximum in
+         * f(a, b) indicem II acciperet, non I) */
+        s32 ordinalis = ZEPHYRUM;
+
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            SilvaValor* pv = silva_valor_lista_obtinere(parametra,
+                k);
+
+            si (pv != NIHIL && pv->genus == SILVA_VALOR_NODUS)
+            {
+                SilvaValor dv = silva_c89_parametrum_declarator(
+                    pv->datum.nodus);
+
+                si (dv.genus == SILVA_VALOR_NODUS)
+                {
+                    SilvaToken* t = silva_c89_declaratoris_titulus(
+                        dv.datum.nodus);
+
+                    si (t != NIHIL
+                        && _chordae_pares_contractus(t->valor,
+                               titulus))
+                    {
+                        redde ordinalis;
+                    }
+                }
+                ordinalis++;
+            }
+        }
+    }
+    redde -I;
+}
+
+interior constans StmlAttributum*
+_contractus_attributum (constans StmlNodus* nodus,
+    constans character* titulus)
+{
+    i32 k;
+    memoriae_index m = strlen(titulus);
+
+    si (nodus->attributa == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(nodus->attributa); k++)
+    {
+        constans StmlAttributum* attr = (constans StmlAttributum*)
+            xar_obtinere(nodus->attributa, k);
+
+        si (attr != NIHIL && attr->titulus != NIHIL
+            && (memoriae_index)attr->titulus->mensura == m
+            && memcmp(attr->titulus->datum, titulus, m) == ZEPHYRUM)
+        {
+            redde attr;
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_contractus_ex_arbore (SilvaSemantica* sem,
+    constans SilvaAnnotatio* a, StmlNodus* nodus, b32 princeps)
+{
+    i32 k;
+
+    si (nodus == NIHIL)
+    {
+        redde;
+    }
+    si ((s32)nodus->genus == STML_NODUS_ELEMENTUM
+        && nodus->titulus != NIHIL
+        && nodus->titulus->mensura == X
+        && memcmp(nodus->titulus->datum, "contractus", X)
+            == ZEPHYRUM)
+    {
+        constans StmlAttributum* param = _contractus_attributum(
+            nodus, "param");
+        constans StmlAttributum* modus = _contractus_attributum(
+            nodus, "modus");
+        constans SilvaNodus* declarator_fn =
+            _declaratorem_fn_invenire(a->unitas);
+        SilvaToken* titulus_fn = declarator_fn != NIHIL
+            ? silva_c89_declaratoris_titulus(declarator_fn)
+            : NIHIL;
+        ExamenContractus* c;
+
+        si (param == NIHIL || param->valor == NIHIL
+            || titulus_fn == NIHIL)
+        {
+            /* contractus sine param aut extra functionem = stalus
+             * (in fonte principe solo - capita vicem suam) */
+            si (princeps)
+            {
+                _diagnosticum_annotationis(sem,
+                    (s32)EXAMEN_CODEX_CONTRACTUS_STALUS,
+                    a->fons_index, a->linea, a->columna);
+            }
+            redde;
+        }
+        c = (ExamenContractus*)xar_addere(sem->contractus);
+        si (c == NIHIL)
+        {
+            redde;
+        }
+        c->titulus_functionis = titulus_fn->valor;
+        c->titulus_parametri = *param->valor;
+        c->index_parametri = _parametri_index(declarator_fn,
+            *param->valor);
+        c->accumulat = modus != NIHIL && modus->valor != NIHIL
+            && modus->valor->mensura == IX
+            && memcmp(modus->valor->datum, "accumulat", IX)
+                == ZEPHYRUM;
+        c->modus_ignotus = !c->accumulat;
+        si (princeps
+            && (c->index_parametri < ZEPHYRUM || c->modus_ignotus))
+        {
+            _diagnosticum_annotationis(sem,
+                (s32)EXAMEN_CODEX_CONTRACTUS_STALUS,
+                a->fons_index, a->linea, a->columna);
+        }
+    }
+    si (nodus->liberi != NIHIL)
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(nodus->liberi); k++)
+        {
+            _contractus_ex_arbore(sem, a,
+                *(StmlNodus**)xar_obtinere(nodus->liberi, k),
+                princeps);
+        }
+    }
+}
+
+/* collectio pigra per parsuram (exemplar TOLERA); fontes OMNES -
+ * capita praebita contractus calleorum ferunt */
+interior vacuum
+_contractus_colligere (SilvaSemantica* sem)
+{
+    constans SilvaParsura* parsura = sem->parsura_currens;
+    InternamentumChorda* intern;
+    Xar* annotationes;
+    i32 k;
+
+    si (sem->contractus_parsura == parsura)
+    {
+        redde;
+    }
+    sem->contractus_parsura = parsura;
+    sem->contractus = NIHIL;
+    si (parsura == NIHIL)
+    {
+        redde;
+    }
+    intern = internamentum_creare(sem->piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
+    annotationes = silva_annotationes_colligere(sem->piscina,
+        parsura, intern);
+    si (annotationes == NIHIL)
+    {
+        redde;
+    }
+    sem->contractus = xar_creare(sem->piscina,
+        (i32)magnitudo(ExamenContractus));
+    si (sem->contractus == NIHIL)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(annotationes); k++)
+    {
+        constans SilvaAnnotatio* a = (constans SilvaAnnotatio*)
+            xar_obtinere(annotationes, k);
+
+        si (!a->parsata)
+        {
+            perge;
+        }
+        _contractus_ex_arbore(sem, a, a->documentum,
+            a->fons_index == parsura->fons_princeps);
+    }
+}
+
+/* ligamen seminis extractoris datorum: estne parametrum vocationis
+ * accumulans? (aux.parametrum_accumulat) */
+interior b32
+_fluxus_accumulat_ligamen (vacuum* contextus,
+    constans SilvaNodus* functio_folium, i32 index)
+{
+    SilvaSemantica* sem = (SilvaSemantica*)contextus;
+    SilvaValor tok_v;
+    chorda titulus;
+    i32 k;
+
+    si (sem == NIHIL || functio_folium == NIHIL
+        || functio_folium->genus
+            != (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        redde FALSUM;
+    }
+    tok_v = silva_c89_folium_identificator_tok_valor(functio_folium);
+    si (tok_v.genus != SILVA_VALOR_TOKEN
+        || tok_v.datum.token == NIHIL)
+    {
+        redde FALSUM;
+    }
+    titulus = tok_v.datum.token->valor;
+    _contractus_colligere(sem);
+    si (sem->contractus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(sem->contractus); k++)
+    {
+        constans ExamenContractus* c = (constans ExamenContractus*)
+            xar_obtinere(sem->contractus, k);
+
+        si (c->accumulat && c->index_parametri == (s32)index
+            && _chordae_pares_contractus(c->titulus_functionis,
+                   titulus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* ==================================================
+ * Scansio pointee (78/79): usus *p / p[i] parametri in corpore,
+ * syntactica conservativa. Exclusum = &p, p nudum ut argumentum,
+ * p->f, p reassignatum - IGNOTUM => silentium (numquam falsa).
+ * ================================================== */
+
+nomen structura {
+    chorda titulus;
+    i32    lectiones;
+    i32    scriptiones;
+    b32    exclusum;
+} _PointeeUsus;
+
+interior vacuum _pointee_scandere (constans SilvaNodus* nodus,
+    _PointeeUsus* u, b32 in_scriptura);
+
+interior vacuum
+_pointee_in_valore (SilvaValor v, _PointeeUsus* u, b32 in_scriptura)
+{
+    si (v.genus == SILVA_VALOR_NODUS)
+    {
+        _pointee_scandere(_canonicum(v.datum.nodus), u,
+            in_scriptura);
+    }
+    alioquin si (v.genus == SILVA_VALOR_LISTA)
+    {
+        i32 k;
+        i32 m = silva_valor_lista_numerus(v);
+
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            SilvaValor* e = silva_valor_lista_obtinere(v, k);
+
+            si (e != NIHIL)
+            {
+                _pointee_in_valore(*e, u, in_scriptura);
+            }
+        }
+    }
+}
+
+interior vacuum
+_pointee_scandere (constans SilvaNodus* nodus, _PointeeUsus* u,
+    b32 in_scriptura)
+{
+    i32 k;
+
+    si (nodus == NIHIL || u->exclusum)
+    {
+        redde;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_ASSIGNATIO)
+    {
+        SilvaValor sinister = silva_c89_assignatio_sinister(nodus);
+        SilvaValor op = silva_c89_assignatio_tok_operator(nodus);
+        b32 compositum = op.genus == SILVA_VALOR_TOKEN
+            && op.datum.token != NIHIL
+            && op.datum.token->valor.mensura > I;
+
+        /* p reassignatum = pointee vocatoris amissum - exclusum */
+        si (sinister.genus == SILVA_VALOR_NODUS
+            && _folium_titulo(_canonicum(sinister.datum.nodus),
+                   u->titulus))
+        {
+            u->exclusum = VERUM;
+            redde;
+        }
+        _pointee_in_valore(sinister, u, VERUM);
+        si (compositum)
+        {
+            _pointee_in_valore(sinister, u, FALSUM);
+        }
+        _pointee_in_valore(silva_c89_assignatio_dexter(nodus), u,
+            FALSUM);
+        redde;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_UNARIUM)
+    {
+        SilvaValor op = silva_c89_unarium_tok_operator(nodus);
+        SilvaValor internum = silva_c89_unarium_internum(nodus);
+        i8 c = (op.genus == SILVA_VALOR_TOKEN
+                && op.datum.token != NIHIL
+                && op.datum.token->valor.mensura == I)
+            ? op.datum.token->valor.datum[ZEPHYRUM] : (i8)'\0';
+
+        si (c == '*' && internum.genus == SILVA_VALOR_NODUS
+            && _folium_titulo(_canonicum(internum.datum.nodus),
+                   u->titulus))
+        {
+            si (in_scriptura)
+            {
+                u->scriptiones++;
+            }
+            alioquin
+            {
+                u->lectiones++;
+            }
+            redde;
+        }
+        si (c == '&' && internum.genus == SILVA_VALOR_NODUS
+            && _folium_titulo(_canonicum(internum.datum.nodus),
+                   u->titulus))
+        {
+            u->exclusum = VERUM;
+            redde;
+        }
+        _pointee_in_valore(internum, u, FALSUM);
+        redde;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_SUBSCRIPTIO)
+    {
+        SilvaValor basis = silva_c89_subscriptio_basis(nodus);
+        b32 nostra = basis.genus == SILVA_VALOR_NODUS
+            && _folium_titulo(_canonicum(basis.datum.nodus),
+                   u->titulus);
+
+        si (nostra)
+        {
+            si (in_scriptura)
+            {
+                u->scriptiones++;
+            }
+            alioquin
+            {
+                u->lectiones++;
+            }
+        }
+        per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
+        {
+            si (!nostra || k != ZEPHYRUM)
+            {
+                _pointee_in_valore(nodus->loci[k], u, FALSUM);
+            }
+        }
+        redde;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_ACCESSUS)
+    {
+        SilvaValor basis = silva_c89_accessus_basis(nodus);
+
+        si (basis.genus == SILVA_VALOR_NODUS
+            && _folium_titulo(_canonicum(basis.datum.nodus),
+                   u->titulus))
+        {
+            u->exclusum = VERUM;   /* p->f = opus structurae */
+            redde;
+        }
+        _pointee_in_valore(basis, u, FALSUM);
+        redde;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_VOCATIO)
+    {
+        SilvaValor argumenta = silva_c89_vocatio_argumenta(nodus);
+        i32 m = silva_valor_lista_numerus(argumenta);
+
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            SilvaValor* av = silva_valor_lista_obtinere(argumenta,
+                k);
+
+            si (av == NIHIL)
+            {
+                perge;
+            }
+            si (av->genus == SILVA_VALOR_NODUS
+                && _folium_titulo(_canonicum(av->datum.nodus),
+                       u->titulus))
+            {
+                u->exclusum = VERUM;   /* p traditum - IGNOTUM */
+                redde;
+            }
+            _pointee_in_valore(*av, u, FALSUM);
+        }
+        _pointee_in_valore(silva_c89_vocatio_functio(nodus), u,
+            FALSUM);
+        redde;
+    }
+    per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
+    {
+        _pointee_in_valore(nodus->loci[k], u, FALSUM);
+    }
+}
+
+/* vigilia codicis 79 (exemplar _forsitan_vigil): census primus
+ * CXLVII sedes in LXIV plagulis invenit - suasorium per editionem
+ * quamque = strepitus; dormit, census solus metitur (flippa ad
+ * impulsum adoptionis) */
+hic_manens constans b32 _contractus_absens_vigil = FALSUM;
+
+/* 78/79 per definitionem: contractus declarati contra corpus;
+ * parametra intro-exitus sine contractu suasa (79 dormit) */
+interior vacuum
+_contractus_examinare (SilvaSemantica* sem,
+    constans SilvaNodus* definitio)
+{
+    SilvaValor decl_v = silva_c89_definitio_functionis_declarator(
+        definitio);
+    constans SilvaNodus* declarator_fn;
+    SilvaToken* titulus_fn;
+    SilvaValor corpus;
+    SilvaValor parametra;
+    i32 k;
+    i32 m;
+
+    si (decl_v.genus != SILVA_VALOR_NODUS)
+    {
+        redde;
+    }
+    declarator_fn = _declaratorem_fn_invenire(decl_v.datum.nodus);
+    si (declarator_fn == NIHIL)
+    {
+        redde;
+    }
+    titulus_fn = silva_c89_declaratoris_titulus(declarator_fn);
+    si (titulus_fn == NIHIL)
+    {
+        redde;
+    }
+    _contractus_colligere(sem);
+    corpus = silva_c89_definitio_functionis_corpus(definitio);
+    parametra = silva_c89_declarator_functionis_parametra(
+        declarator_fn);
+    m = silva_valor_lista_numerus(parametra);
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        SilvaValor* pv = silva_valor_lista_obtinere(parametra, k);
+        SilvaValor dv;
+        SilvaToken* titulus_p;
+        _PointeeUsus usus;
+        b32 contractum = FALSUM;
+        b32 accumulat = FALSUM;
+        i32 c_index;
+
+        si (pv == NIHIL || pv->genus != SILVA_VALOR_NODUS)
+        {
+            perge;
+        }
+        dv = silva_c89_parametrum_declarator(pv->datum.nodus);
+        si (dv.genus != SILVA_VALOR_NODUS)
+        {
+            perge;
+        }
+        titulus_p = silva_c89_declaratoris_titulus(dv.datum.nodus);
+        si (titulus_p == NIHIL)
+        {
+            perge;
+        }
+        si (sem->contractus != NIHIL)
+        {
+            per (c_index = ZEPHYRUM;
+                 c_index < xar_numerus(sem->contractus); c_index++)
+            {
+                constans ExamenContractus* c =
+                    (constans ExamenContractus*)xar_obtinere(
+                        sem->contractus, c_index);
+
+                si (_chordae_pares_contractus(c->titulus_functionis,
+                        titulus_fn->valor)
+                    && _chordae_pares_contractus(
+                           c->titulus_parametri, titulus_p->valor))
+                {
+                    contractum = VERUM;
+                    accumulat = c->accumulat;
+                }
+            }
+        }
+        usus.titulus = titulus_p->valor;
+        usus.lectiones = ZEPHYRUM;
+        usus.scriptiones = ZEPHYRUM;
+        usus.exclusum = FALSUM;
+        _pointee_in_valore(corpus, &usus, FALSUM);
+        si (contractum && accumulat && !usus.exclusum
+            && usus.lectiones == ZEPHYRUM)
+        {
+            /* accumulat declaratum sed pointee numquam lectum */
+            silva_c89_diagnosticum_addere(sem, definitio,
+                (s32)EXAMEN_CODEX_CONTRACTUS_STALUS);
+        }
+        si (_contractus_absens_vigil && !contractum
+            && !usus.exclusum
+            && usus.lectiones > ZEPHYRUM
+            && usus.scriptiones > ZEPHYRUM)
+        {
+            /* forma intro-exitus sine contractu - suasorium */
+            silva_c89_diagnosticum_addere(sem, definitio,
+                (s32)EXAMEN_CODEX_CONTRACTUS_ABSENS);
+        }
     }
 }
 
@@ -3686,8 +4334,19 @@ _initiationem_examinare (SilvaSemantica* sem,
             FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
                 db->eventa, e);
 
+            /* codex 77 (contractus): &x ad parametrum accumulantem
+             * dum x definite ininitiata (absens ex may currenti) -
+             * iudicium ANTE bits (post vocationem definita est) */
+            si (ev->genus == (s32)FLUXUS_EVENTUM_LOCI_ACCUMULAT
+                && ev->variabilis >= ZEPHYRUM
+                && !_datorum_bitum(may_currens, ev->variabilis))
+            {
+                silva_c89_diagnosticum_addere(sem, ev->nodus,
+                    (s32)EXAMEN_CODEX_CONTRACTUS_VIOLATUS);
+            }
             si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO
-                || ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI)
+                || ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI
+                || ev->genus == (s32)FLUXUS_EVENTUM_LOCI_ACCUMULAT)
             {
                 si (ev->variabilis < ZEPHYRUM)
                 {
@@ -3774,6 +4433,7 @@ _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
         aux_datorum.symbolum = _datorum_symbolum_ligamen;
         aux_datorum.parametrum_constans =
             _datorum_parametrum_constans_ligamen;
+        aux_datorum.parametrum_accumulat = _fluxus_accumulat_ligamen;
         aux_datorum.expressio_acies = _datorum_expressio_acies_ligamen;
         aux_datorum.canonicum = _fluxus_canonicum_ligamen;
         aux_datorum.contextus = sem;
@@ -3976,6 +4636,7 @@ _definitionem_ambulare (SilvaSemantica* sem,
         _corpus_ambulare(sem, corpus_v.datum.nodus);
         /* FLUXUS-0: reditus_currens adhuc positus (codex 63 eo eget) */
         _fluxum_examinare(sem, definitio);
+        _contractus_examinare(sem, definitio);
     }
     _scopum_claudere(sem);
     sem->reditus_currens = reditus_prior;

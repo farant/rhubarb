@@ -397,6 +397,22 @@ nomen enumeratio {
     EXAMEN_CODEX_ANNOTATIO_MALFORMATA,        /* DOMESTICUM */
     EXAMEN_CODEX_NID_DUPLICATUM,              /* DOMESTICUM */
     EXAMEN_CODEX_IDENTITAS_INVALIDA,          /* DOMESTICUM */
+
+    /* Contractus (desideratum 01KY3JWF, 2026-07-22): familia
+     * vocabularii semantica prima - <contractus param="NOMEN"
+     * modus="accumulat"/> in prototypo capitis (capita praebita =>
+     * TU quaeque contractum in parsura sua videt).
+     * 77 = &localis ininitiatae ad parametrum accumulantem
+     *      (iudicium in indice 71 per eventum LOCI_ACCUMULAT -
+     *      dataflow verum, absens ex may = definite);
+     * 78 = contractus stalus (accumulat declaratum sed corpus
+     *      pointee numquam legit / parametrum inexsistens /
+     *      modus ignotus);
+     * 79 = contractus absens (parametrum intro-exitus sine
+     *      contractu - suasorium, forma stricta). */
+    EXAMEN_CODEX_CONTRACTUS_VIOLATUS,         /* DOMESTICUM */
+    EXAMEN_CODEX_CONTRACTUS_STALUS,           /* DOMESTICUM */
+    EXAMEN_CODEX_CONTRACTUS_ABSENS,           /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -507,6 +523,12 @@ structura SilvaSemantica {
      * inutilia IRRITUM flagrant. */
     constans SilvaParsura* tolerae_parsura;
     Xar*                   tolerae;
+
+    /* tabula contractuum (01KY3JWF, 2026-07-22): annotationes
+     * <contractus/> ex OMNIBUS fontibus (capita praebita!) pigre
+     * collectae per parsuram; elementa ExamenContractus (in .c). */
+    constans SilvaParsura* contractus_parsura;
+    Xar*                   contractus;
 
     /* FLUXUS-0 (2026-07-17): CFG per definitionem RETENTI (decisio
      * Q7 colloquii - codex-est-basis-datorum; elementa

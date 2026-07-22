@@ -685,3 +685,58 @@ declares the members. Enum path untouched (definitions allocate
 fresh, declarans already correct; C89 forbids incomplete enums).
 First consumer: legatus typedef-opaque corpus cards (same day).
 VECTIS TENET — no pinned diagnostic position moved.
+
+## 2026-07-22 — Contractus: the first semantic annotation family (codices 77-79)
+
+Same-day loop closure: the extensionem caller-init bug bit in the
+morning (chunk A), the annotation grammar shipped through the day
+(A-D), and by night the vocabulary that catches the bug class is
+live. <contractus param="NOMEN" modus="accumulat"/> on the
+PROTOTYPE in the header — capita praebita means every consumer TU
+sees its callees' contracts in its own parse; no index, no
+interprocedural plumbing. The contract lives where C puts
+interface truth.
+
+Codex 77 (violatus) shipped with REAL DATAFLOW, not the planned
+syntactic v1: the datorum extractor already had callee+arg-index
+in hand at the &x site (the parametrum_constans seam, s04f) — a
+twin seam parametrum_accumulat emits FLUXUS_EVENTUM_LOCI_ACCUMULAT
+instead of DEFINITIO_LOCI, and the codex-71 streaming walk judges
+it against the running may-state BEFORE the bits are set (after
+the call the variable IS defined — the callee writes). Definite-
+uninitialized only, clang-71-grade precision, ~40 lines.
+
+Codex 78 (stalus): accumulat declared but the body never READS
+the pointee / param nonexistent / modus outside vocabulary —
+provable contradictions only. Codex 79 (absens, the add-me
+advisory): in-out scalar-pointer shape without contract — census
+first contact found 147 sites in 64 files (all true in-out
+params: cursors, in-place truncations, bitmap words), too chatty
+for the per-edit push → DORMANT behind _contractus_absens_vigil
+(the codex-73 pattern); census-only until an adoption push.
+
+The pointee scanner (78/79) is deliberately conservative:
+exclusum on &p, p forwarded bare, p->f, p reassigned — IGNOTUM
+means silence, never a false fire. Notably the extensionem
+DEFINITIONS themselves are exclusum (they forward the pointers
+down the recursion) — correct conservatism, the contract is
+checked at the leaves that read.
+
+BUG DURING BUILD: the parametra lista carries comma TOKENS as
+elements — raw position 2 for the second param of f(a, b) while
+the seam asks for argument ordinal 1; _parametri_index now counts
+parametrum NODES only. (Same trap the extractor's own arg walk
+already handled — "lexemata virgularum in lista".)
+
+RESURRECTION TEST: the morning's bug verbatim against the real
+contracted header fires 77 twice at the exact columns of
+&minimum / &maximum. An hour of pointer-decoding at breakfast is
+an edit-time push by midnight. Dogfood: silva_nodus.h's two
+extensionem prototypes carry the first real contracts; corpus
+contact clean (all fixed callers pass).
+
+Battery 1345/1345; suite 33/33; amalgamare VERIFICATUM (the
+silva.h clamat gate caught the forgotten enum extension — again);
+VECTIS TENET. Futures named: wrapper API (extensionem initians +
+_accumulare internum), scribit/legit modi, wrapper-propagation
+(bottom-up over vocantes), 79 wake + adoption push.

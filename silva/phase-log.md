@@ -9740,3 +9740,65 @@ NEXT: Chunk E — MIGRATIO familiarum veterum (aedilis verbs,
 TOLERA, EXSPECTA pinnae: lectio duplex → auditor → retiratio,
 chorea aedilis-arcus), Fran's pull; post-ladder items named in
 spec §4.
+
+## CONTRACTUS (desideratum 01KY3JWF): INTENTIO (2026-07-22)
+
+Pull: the accumulator-contract family - the first SEMANTIC
+annotation vocabulary, built the same day its motivating bug bit
+(extensionem caller-init, chunk A). Direction recorded on the
+desideratum: annotation = contract carrier, inference = auditor.
+
+VOCABULARY (decretum-lite, Fran delegated): <contractus
+param="NOMEN" modus="accumulat"/> - one element per param,
+stackable; SITS ON THE PROTOTYPE IN THE HEADER (capita praebita
+=> every consumer TU sees the contract in its own parse - no
+index, no interprocedural plumbing; the contract lives where C
+puts interface truth). accumulat = caller initializes (callee
+reads pointee before writing). scribit/legit = reserved names.
+Unknown modus fires (vocabulary rot never silent).
+
+CODICES 77-79, all DOMESTICUM at birth:
+- 77 CONTRACTUS_VIOLATUS: &local passed to accumulat param, local
+  declared WITHOUT initializer, ZERO intervening uses
+  (declaration->call straight-line). V1 = SYNTACTIC BY DESIGN -
+  today's bug shape exactly, near-zero FP; full FLUXUS
+  must-uninit integration = NAMED v2 (same causa, tighter
+  detector).
+- 78 CONTRACTUS_STALUS: declared accumulat but body never READS
+  the pointee (not an accumulator any more), or modus ignotus.
+  Provable contradictions only.
+- 79 CONTRACTUS_ABSENS: in-out scalar-pointer param (pointee read
+  AND written, no -> uses, non-const) sine contractu - advisory;
+  corpus contact decides awake vs vigil-dormant (73 precedent).
+
+Contract TABLE built during the annotation pass from ALL fontes
+(the 74-76 pass filters principal; contracts must NOT - headers
+carry them). Function name from the annotated unit via the
+declarationes vista machinery.
+
+Bars: battery cases incl. a VERBATIM reproduction of this
+morning's bug firing 77; dogfood = silva_nodus.h extensionem
+prototypes annotated (first real contracts); corpus contact
+census 77-79; suites + amalgamare + VECTIS; enum/table/silva.h
+tail-append.
+
+## CONTRACTUS: RELATIO (2026-07-22)
+
+Shipped, all bars green — and BETTER than the INTENTIO: codex 77
+landed with REAL DATAFLOW (not syntactic v1): twin seam
+parametrum_accumulat beside parametrum_constans in the datorum
+extractor (callee+index already in hand), new event
+LOCI_ACCUMULAT, judged in the codex-71 streaming walk against
+running may-state BEFORE bits. 78 = provable contradictions
+(never-reads / param ignotum / modus ignotus). 79 = census first
+contact 147 sedes/64 plagulae (ALL true in-out shapes) -> DORMIT
+behind vigil (73 pattern), census-only. Comma-token trap in the
+parametra lista fixed (ordinal counts parametrum nodes only —
+the extractor's own arg walk knew; mine learned). Dogfood:
+silva_nodus.h extensionem prototypes carry the first real
+contracts; RESURRECTION TEST = the morning's bug verbatim fires
+77 x2 at the exact &-columns. Battery 1345/1345, suite 33/33,
+amalgamare VERIFICATUM (clamat caught the forgotten silva.h enum
+— the gate earns its keep twice in one day), VECTIS TENET.
+Desideratum 01KY3JWF IMPLETUM; futures: wrapper API, scribit/
+legit modi, wrapper-propagation, 79 wake.

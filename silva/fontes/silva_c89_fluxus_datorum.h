@@ -45,8 +45,14 @@ nomen enumeratio {
     FLUXUS_EVENTUM_DEFINITIO,      /* scriptio (assignatio, initiator,
                                     * scriptio membri/elementi =
                                     * totius variabilis - pinna s19) */
-    FLUXUS_EVENTUM_DEFINITIO_LOCI  /* &x contextu non-constanti
+    FLUXUS_EVENTUM_DEFINITIO_LOCI, /* &x contextu non-constanti
                                     * (idioma initialisationis C) */
+    FLUXUS_EVENTUM_LOCI_ACCUMULAT  /* &x ad parametrum accumulantem
+                                    * (contractus, 01KY3JWF): callee
+                                    * pointee LEGIT ante scriptionem
+                                    * - vocator initiare debet; index
+                                    * 71 ante bits iudicat, deinde ut
+                                    * DEFINITIO_LOCI tractatur */
 } FluxusEventumGenus;
 
 /* Eventum unum. variabilis = index densus in tabulam variabilium;
@@ -128,6 +134,14 @@ nomen structura {
      * = expressio functionis vocationis (folium nominis plerumque);
      * ignotum/variadicum/K&R = FALSUM (non-constans, silens) */
     b32 (*parametrum_constans)(vacuum* contextus,
+        constans SilvaNodus* functio_folium, i32 index);
+    /* estne parametrum positionis datae ACCUMULANS (contractus
+     * modus="accumulat" - callee pointee legit ante scriptionem)?
+     * VERUM => &x eventum LOCI_ACCUMULAT pro DEFINITIO_LOCI.
+     * NIHIL = numquam. CAVE: struct sine memset construitur -
+     * OMNIS sedes constructionis hoc campum ponere debet (laqueus
+     * vocator-initiat, lectio 2026-07-21). */
+    b32 (*parametrum_accumulat)(vacuum* contextus,
         constans SilvaNodus* functio_folium, i32 index);
     /* estne typus expressionis acies? (accessus membri aciei
      * positione valoris DECADIT = LOCI totius - memset(r.c,...);

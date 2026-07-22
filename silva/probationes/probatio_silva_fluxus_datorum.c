@@ -265,6 +265,7 @@ _extrahere (Piscina* piscina, constans character* fons)
     }
     aux.symbolum = _probatio_symbolum;
     aux.parametrum_constans = _probatio_parametrum_constans;
+    aux.parametrum_accumulat = NIHIL;
     aux.expressio_acies = NIHIL;   /* e2e semanticae hoc probat */
     aux.canonicum = NIHIL;
     aux.contextus = NIHIL;
