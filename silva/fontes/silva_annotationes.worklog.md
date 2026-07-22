@@ -84,3 +84,56 @@ launchers carried FROZEN glob expansions). tools/
 silva_fontes_generare.sh (no args) now owns all 12: live glob
 expansion + principals persisted in each snippet's "# principalia:"
 line.
+
+## 2026-07-21 (evening) — Chunk B: index + mint + bench verb
+
+Three deliverables shipped in one arc:
+
+**Extraction + locator (fontes-side, pure).**
+silva_annotationes_identitates: tree walk (document order) reads
+given identities (<nid v="U"/>, nid="U" on any element) and
+petitiones (boolean nid / boolean v on nid / bare <nid/>); a
+SEPARATE textual scanner over the RAW comment bytes locates splice
+offsets (cleaned-text offsets don't map to fons; raw ones do) —
+in-tag word scan with quote skipping, inline decoration skip, tag
+-name context for the v rule, closing tags never mintable. The two
+sides are zipped by order with a count+genus correspondence check;
+dissent (e.g. literal nid="true") leaves offset -1 and the
+instrument refuses loud. 100/100 probatio pins, all offsets
+byte-check asserted (memcmp at offset, not hand-counted).
+
+**One mint (lib/moneta.c).** scrinium's ULID implementation
+EXTRACTED to a standalone lib (scrinium vendors sqlite — 250k
+lines to link for 26 characters was absurd); scrinium_ulid now
+delegates. One identity space, one coin press: board and code
+draw from the same well. moneta.c joined exclusiones.txt (POSIX
+gettimeofday lane, beside scrinium/tcp_posix).
+
+**The instrument (identitates.c + identitates.sh).** --renovare
+walks prefiltered candidates (git ls-files + cheap grep; generata/
+amalgama/fixa excluded — the amalgam EMBEDS fontes comments, so
+indexing it would duplicate every nid) → build/identitates.tsv
+(11 columns incl. byte extents, so --solvere slices annotation +
+unit source from disk with NO reparse). Mint: dry by default,
+--scribere applies ascending-offset splices to a temp file,
+RE-COLLECTS and verifies (petitiones→0, identities grown by
+exactly the splice count, length delta exact), renames only on
+success. -porta gate: fixture copy → mint → sed-strip minted
+values → byte-identical to fixture + re-dry finds nothing.
+
+**First real identity:** 01KY3TRZ2GY3HG9Y4WQRSGR2BX — the
+collector's own intentio (res="01KY3D7EJP"), minted by the
+instrument into the file that implements it, resolved by
+./silva/identitates.sh '##01KY3TRZ'. The mint's monotonic ULIDs
+showed in the porta run: ...DQES / ...DQET consecutive.
+
+Notes for the future:
+- identitates.c carries the examen capita-praebere recipe
+  (duplicated ~90 lines, house pattern for principals) but NO
+  lexicon/semantica — collection, not judgment.
+- The extensionem calls in --renovare follow the accumulator
+  contract (init -1/0 before the call) — the lesson from this
+  morning, now with a comment citing it.
+- Launcher candidate prefilter deliberately over-matches (probatio
+  string literals) — parse-level anchoring makes false positives
+  harmless (one wasted parse), false negatives impossible.

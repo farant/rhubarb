@@ -73,6 +73,7 @@ declare -a SOURCE_FILES=(
     "lib/libro_paginarum.c"
     "lib/macho.c"
     "lib/mimen.c"
+    "lib/moneta.c"
     "lib/multipart.c"
     "lib/navigator_entitatum.c"
     "lib/nuntium.c"

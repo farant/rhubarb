@@ -103,4 +103,38 @@ silva_annotationes_unitates (
     Piscina*                piscina,
     constans SilvaParsura*  parsura);
 
+/* ==================================================
+ * Identitates (frustum B): nid lectae + petitiones mintationis
+ * ================================================== */
+
+nomen enumeratio {
+    SILVA_INSERTIO_NIHIL = 0,        /* identitas iam data */
+    SILVA_INSERTIO_POST_ATTRIBUTUM,  /* ="ULID" post titulum attributi */
+    SILVA_INSERTIO_POST_TITULUM      /* " v=\"ULID\"" post titulum elementi */
+} SilvaInsertioGenus;
+
+nomen structura {
+    StmlNodus*         elementum;       /* elementum ferens */
+    chorda             valor;           /* ULID; vacua = petitio */
+    b32                petitio;         /* mintanda */
+    SilvaInsertioGenus insertio_genus;
+    s32                insertio_offset; /* fons-absolutum; -1 = nulla
+                                         * aut INCERTA (numeri arborum
+                                         * et textus dissentiunt -
+                                         * instrumentum recusat) */
+} SilvaIdentitas;
+
+/* Identitates annotationis unius: latus arboris (ordine documenti)
+ * identitates datas et petitiones legit; latus textus (octeti crudi
+ * commentarii - offsets in fonte VERI) sedes insertionis petitionum
+ * locat (scansio intra-tag, status quotarum, decoratione intra tag
+ * saltata, regula v in elemento nid solo; tags claudentes numquam).
+ * Numeri laterum dissentientes -> offsets petitionum = -1. Currit in
+ * annotationibus PARSATIS solis (malformata = res lint, numquam
+ * mintanda); NIHIL si annotatio non parsata. Xar de SilvaIdentitas. */
+Xar*
+silva_annotationes_identitates (
+    Piscina*                 piscina,
+    constans SilvaAnnotatio* annotatio);
+
 #endif /* SILVA_ANNOTATIONES_H */

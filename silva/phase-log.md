@@ -9545,3 +9545,93 @@ decoration strip (chunk C may refine).
 
 NEXT: Chunk B — identitates.tsv (nexus.tsv sibling) + minting
 instrument (fills boolean nids) + bench verb (##prefix → corpus).
+
+## ANNOTATIONES STML — CHUNK B (INDEX + MINT): INTENTIO (2026-07-21)
+
+Pull: park 01KY3D7EJP chunk B. Three deliverables: (1)
+identitates.tsv — nexus.tsv sibling in root build/ (GENERATUM
+header, tab columns: nid / via / linea / modus / elementum /
+unitas-genus / unitas-linea), rebuilt by a walk; (2) the minting
+instrument — EXPLICIT run per ceremony Q8, dry-run by DEFAULT,
+--scribere applies, verify-after-write refuses loud; (3) the bench
+verb: ##praefixum (>=6, unambiguous) -> resolved row + unit source
+slice.
+
+ONE MINT: scrinium_ulid() (lib/scrinium.c, PUBLIC, monotonic
+within ms) — the tabularium's own generator; code and board draw
+identities from the same well. aedilis derives scrinium into the
+tool's fontes automatically.
+
+Shape: fontes-side pure additions (probatio-testable):
+silva_annotationes_identitates(piscina, annotatio) -> Xar of
+SilvaIdentitas {elementum, valor (vacua = petitio), petitio,
+insertio_offset fons-absolute, insertio_genus POST_ATTRIBUTUM |
+POST_TITULUM}. Identity READ side = tree walk (document order:
+<nid v="U"/>; nid="U" on any element); petitio side = boolean nid
+/ boolean v on nid-element / bare <nid/>. Splice OFFSETS = textual
+scan over the RAW comment bytes (in-tag word scan, quote-state
+tracked, decoration skipped inline, tag-name context for the v
+rule) — cleaned-text offsets don't map to fons, raw ones do.
+Correspondence tree-petitio-count == textual-count or the record
+carries -1 and the instrument REFUSES. Locator only runs on
+parsata annotations (anchored non-parsata = lint's business, never
+mint fodder).
+
+Instrument: instrumenta/principalia/identitates.c (--renovare /
+--solvere / --mintare [--scribere]); parse recipe = examen's
+capita-praebere walk + parsare_cum_contextu, NO lexicon/semantica
+(collection, not judgment). Launcher silva/identitates.sh: file
+enumeration + cheap textual prefilter (candidate comments only —
+on-demand adoption means few annotated files for a long time);
+snippet identitates_fontes_generata.sh joins the
+silva_fontes_generare.sh family. Mint apply = splices in
+DESCENDING offset order, write temp + rename, then RE-COLLECT and
+verify (petitio count -> 0, identity count grown, length delta ==
+sum of inserta) — mismatch = original untouched + loud refusal.
+
+Bars: probatio sections X (extraction: valued/boolean/standalone/
+bare/v-boolean + prose-"nid"-in-text + attribute-value red
+herring) + XI (splice offsets pinned exactly, incl. multi-line
+decorated tag); suite green; amalgamare VERIFICATUM (fontes grew);
+mint SELF-GATE on committed fixture (fixa/annotationes/mintanda.c
+copied into build/, minted, verified); censor clean. silva.h
+UNTOUCHED this chunk (house-instrumenta consumers only — no
+HOSPES duty).
+
+## ANNOTATIONES STML — CHUNK B (INDEX + MINT): RELATIO (2026-07-21)
+
+Shipped, all bars green: silva_annotationes_identitates (tree-read
++ raw-byte splice locator, order-zipped with count+genus
+correspondence, dissent -> -1 -> instrument refuses),
+probatio_silva_annotationes 100/100 (sections X extraction + XI
+splice offsets, all byte-check asserted); lib/moneta.c (ULID
+extracted from scrinium - scrinium vendors sqlite, 250k lines for
+26 characters was absurd; scrinium_ulid delegates; ONE mint for
+board and code); instrumenta/principalia/identitates.c +
+silva/identitates.sh (--renovare -> build/identitates.tsv with
+byte extents so --solvere slices source with NO reparse; -mintare
+dry-default, --scribere = temp + re-collect verify + rename;
+-porta gate = fixture mint -> value-strip -> byte-identical +
+re-dry empty). Suite 33/33, amalgamare VERIFICATUM, VECTIS TENET
+(exclusiones +2: moneta.c POSIX lane, identitates.c dirent lane —
+beside their siblings).
+
+FIRST REAL IDENTITY: 01KY3TRZ2GY3HG9Y4WQRSGR2BX — the collector's
+own intentio (res="01KY3D7EJP"), minted by its own instrument,
+resolved by ./silva/identitates.sh '##01KY3TRZ' to annotation +
+byte-exact unit source. Dogfood at birth; the porta run showed the
+mint's monotonicity (...DQES/...DQET consecutive).
+
+INSTRUMENTA DEBRIEF: adhibita = examen push (caught the i32/s32
+splice arithmetic at edit time), aedilis derivation (moneta flowed
+into scrinium consumers' lists via one generator run each),
+silva_fontes_generare (new launcher snippet bootstrapped with a
+"# principalia:" line and joined the family), -porta gate at birth
+per doctrine. asperitates = (1) hook diagnostics for dirent-walk
+principals fire before the exclusiones entry lands — expected
+noise on every new principal, exclusiones is the cure; (2) the
+first-mint adoption decision (annotating real source) is a
+judgment call the instrument can't make — stayed with one tasteful
+dogfood identity. NEXT: Chunk C — examen codices
+(well-formedness / uniqueness / bidirectional rot), verdict-
+neutral at birth.

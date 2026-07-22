@@ -308,6 +308,158 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * X. identitates: lectio arboris (frustum B)
+     * ======================================================== */
+    {
+        Xar* annotationes;
+        Xar* identitates;
+        SilvaIdentitas* id;
+
+        imprimere("\n--- Probans lectionem identitatum ---\n");
+
+        /* valuta solitaria */
+        annotationes = _colligere(piscina,
+            "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDE1R\"/> */\n"
+            "int a;\n", NIHIL);
+        identitates = silva_annotationes_identitates(piscina,
+            _annotatio(annotationes, ZEPHYRUM));
+        CREDO_NON_NIHIL (identitates);
+        CREDO_AEQUALIS_I32 (xar_numerus(identitates), I);
+        id = (SilvaIdentitas*)xar_obtinere(identitates, ZEPHYRUM);
+        CREDO_FALSUM (id->petitio);
+        CREDO_CHORDA_AEQUALIS_LITERIS (id->valor,
+            "01KY3A2FQ8XN4VJ7TT9M2CDE1R");
+
+        /* valuta ut attributum elementi */
+        annotationes = _colligere(piscina,
+            "/* <intentio nid=\"01KY3A2FQ8XN4VJ7TT9M2CDE6E\">x"
+            "</intentio> */\nint a;\n", NIHIL);
+        identitates = silva_annotationes_identitates(piscina,
+            _annotatio(annotationes, ZEPHYRUM));
+        CREDO_AEQUALIS_I32 (xar_numerus(identitates), I);
+        id = (SilvaIdentitas*)xar_obtinere(identitates, ZEPHYRUM);
+        CREDO_FALSUM (id->petitio);
+        CREDO_CHORDA_AEQUALIS_LITERIS (id->valor,
+            "01KY3A2FQ8XN4VJ7TT9M2CDE6E");
+
+        /* prosa "nid" in textu + "nid" in valore attributi:
+         * numquam lectae */
+        annotationes = _colligere(piscina,
+            "/* <intentio res=\"nid\">dic nid verbum</intentio> */\n"
+            "int a;\n", NIHIL);
+        identitates = silva_annotationes_identitates(piscina,
+            _annotatio(annotationes, ZEPHYRUM));
+        CREDO_NON_NIHIL (identitates);
+        CREDO_AEQUALIS_I32 (xar_numerus(identitates), ZEPHYRUM);
+
+        /* malformata: NIHIL (numquam mintanda) */
+        annotationes = _colligere(piscina,
+            "/* <intentio sine fine */\nint a;\n", NIHIL);
+        CREDO_NIHIL (silva_annotationes_identitates(piscina,
+            _annotatio(annotationes, ZEPHYRUM)));
+    }
+
+    /* ========================================================
+     * XI. sedes mintationis: offsets textuales (frustum B)
+     * ======================================================== */
+    {
+        Xar* annotationes;
+        Xar* identitates;
+        SilvaIdentitas* id;
+        constans character* fons;
+
+        imprimere("\n--- Probans sedes mintationis ---\n");
+
+        /* attributum booleanum in elemento */
+        fons = "/* <intentio nid>x</intentio> */\nint a;\n";
+        annotationes = _colligere(piscina, fons, NIHIL);
+        identitates = silva_annotationes_identitates(piscina,
+            _annotatio(annotationes, ZEPHYRUM));
+        CREDO_AEQUALIS_I32 (xar_numerus(identitates), I);
+        id = (SilvaIdentitas*)xar_obtinere(identitates, ZEPHYRUM);
+        CREDO_VERUM (id->petitio);
+        CREDO_AEQUALIS_S32 ((s32)id->insertio_genus,
+            (s32)SILVA_INSERTIO_POST_ATTRIBUTUM);
+        CREDO_VERUM (id->insertio_offset >= III);
+        CREDO_VERUM (memcmp(fons + id->insertio_offset - III,
+            "nid", III) == ZEPHYRUM);
+
+        /* elementum nid nudum: post titulum */
+        fons = "/* <nid/> */\nint a;\n";
+        annotationes = _colligere(piscina, fons, NIHIL);
+        identitates = silva_annotationes_identitates(piscina,
+            _annotatio(annotationes, ZEPHYRUM));
+        CREDO_AEQUALIS_I32 (xar_numerus(identitates), I);
+        id = (SilvaIdentitas*)xar_obtinere(identitates, ZEPHYRUM);
+        CREDO_VERUM (id->petitio);
+        CREDO_AEQUALIS_S32 ((s32)id->insertio_genus,
+            (s32)SILVA_INSERTIO_POST_TITULUM);
+        CREDO_VERUM (memcmp(fons + id->insertio_offset - III,
+            "nid", III) == ZEPHYRUM);
+        CREDO_VERUM (fons[id->insertio_offset] == '/');
+
+        /* v booleanum in elemento nid */
+        fons = "/* <nid v/> */\nint a;\n";
+        annotationes = _colligere(piscina, fons, NIHIL);
+        identitates = silva_annotationes_identitates(piscina,
+            _annotatio(annotationes, ZEPHYRUM));
+        CREDO_AEQUALIS_I32 (xar_numerus(identitates), I);
+        id = (SilvaIdentitas*)xar_obtinere(identitates, ZEPHYRUM);
+        CREDO_VERUM (id->petitio);
+        CREDO_AEQUALIS_S32 ((s32)id->insertio_genus,
+            (s32)SILVA_INSERTIO_POST_ATTRIBUTUM);
+        CREDO_VERUM (fons[id->insertio_offset - I] == 'v');
+
+        /* tag multilineare decoratum: sedes trans decorationem */
+        fons =
+            "/*\n"
+            " * <intentio\n"
+            " *   nid>corpus</intentio>\n"
+            " */\n"
+            "int a;\n";
+        annotationes = _colligere(piscina, fons, NIHIL);
+        identitates = silva_annotationes_identitates(piscina,
+            _annotatio(annotationes, ZEPHYRUM));
+        CREDO_AEQUALIS_I32 (xar_numerus(identitates), I);
+        id = (SilvaIdentitas*)xar_obtinere(identitates, ZEPHYRUM);
+        CREDO_VERUM (id->petitio);
+        CREDO_VERUM (id->insertio_offset >= III);
+        CREDO_VERUM (memcmp(fons + id->insertio_offset - III,
+            "nid", III) == ZEPHYRUM);
+        CREDO_VERUM (fons[id->insertio_offset] == '>');
+
+        /* petitiones duae uno commentario: ordo documenti */
+        fons = "/* <intentio nid><causa nid>q</causa></intentio> */\n"
+            "int a;\n";
+        annotationes = _colligere(piscina, fons, NIHIL);
+        identitates = silva_annotationes_identitates(piscina,
+            _annotatio(annotationes, ZEPHYRUM));
+        CREDO_AEQUALIS_I32 (xar_numerus(identitates), II);
+        id = (SilvaIdentitas*)xar_obtinere(identitates, ZEPHYRUM);
+        CREDO_VERUM (id->petitio);
+        CREDO_VERUM (id->insertio_offset >= ZEPHYRUM);
+        {
+            SilvaIdentitas* secunda = (SilvaIdentitas*)xar_obtinere(
+                identitates, I);
+
+            CREDO_VERUM (secunda->petitio);
+            CREDO_VERUM (secunda->insertio_offset
+                > id->insertio_offset);
+        }
+
+        /* nid="true" literalis: arbor petitionem videt, textus
+         * valutam - dissensus -> offset -1 (instrumentum recusat) */
+        fons = "/* <intentio nid=\"true\">x</intentio> */\nint a;\n";
+        annotationes = _colligere(piscina, fons, NIHIL);
+        identitates = silva_annotationes_identitates(piscina,
+            _annotatio(annotationes, ZEPHYRUM));
+        CREDO_AEQUALIS_I32 (xar_numerus(identitates), I);
+        id = (SilvaIdentitas*)xar_obtinere(identitates, ZEPHYRUM);
+        CREDO_VERUM (id->petitio);
+        CREDO_AEQUALIS_S32 (id->insertio_offset, -I);
+    }
+
+    /* ========================================================
      * IX. commentaria vacua nihil frangunt
      * ======================================================== */
     {

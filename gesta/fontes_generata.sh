@@ -10,6 +10,7 @@ declare -a RADIX_FONTES=(
     "internamentum"
     "iter_directoria"
     "json"
+    "moneta"
     "piscina"
     "scrinium"
     "sigillum"
