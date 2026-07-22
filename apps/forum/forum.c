@@ -417,8 +417,8 @@ s32 principale (integer argc, character** argv)
     figura_fenestrae.titulus = "forum";
     figura_fenestrae.x = CC;
     figura_fenestrae.y = CC;
-    figura_fenestrae.latitudo = 680;
-    figura_fenestrae.altitudo = 760;
+    figura_fenestrae.latitudo = 1000;
+    figura_fenestrae.altitudo = 900;
     figura_fenestrae.vexilla = FENESTRA_CLAUDIBILIS
         | FENESTRA_MUTABILIS | FENESTRA_CENTRATA;
     fenestra = fenestra_creare(piscina, &figura_fenestrae);
