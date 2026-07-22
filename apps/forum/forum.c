@@ -63,7 +63,12 @@ _conectere_aut_gignere (i32 portus, Piscina* pn)
     {
         redde rc.connexio;
     }
-    si (!genitus)
+    si (genitus)
+    {
+        /* iam genitum semel: defectus CITUS - anquisitio IS (2 s)
+         * tractatorem obstruentem 5 s congelaret */
+        redde NIHIL;
+    }
     {
         character imperium[CXXVIII];
 

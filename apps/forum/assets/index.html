@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <title>forum</title>
 <style>
-  body { background: #22201d; color: #ece5d8; font: 28px/1.5 monospace;
-         padding: 1em .6em; max-width: 30em; margin: 0 auto; }
+  body { background: #22201d; color: #ece5d8; font: 22px/1.5 monospace;
+         padding: 1em .6em; max-width: 34em; margin: 0 auto; }
   header { display: flex; align-items: baseline; gap: 1.5em;
            border-bottom: 1px solid #453d2f; padding-bottom: .6em; }
   h1 { color: #d8b978; font-size: 1.4em; margin: 0; }
@@ -130,14 +130,23 @@ function reddere(pipata) {
   document.getElementById('vacuum').hidden = pipata.length > 0;
 }
 
+/* anquisitio cum differentia: reddere SOLUM si tabula mutata -
+ * nullus fulgor inter anquisitiones (pulsus C-lateris = F4) */
+var ultimum = '';
 function renovare() {
-  erroris.textContent = '';
   return internuntius.vocare('pipata_legere', {}).then(function (r) {
-    reddere(r.pipata || []);
+    var pipata = r.pipata || [];
+    var series = JSON.stringify(pipata);
+    erroris.textContent = '';
+    if (series !== ultimum) {
+      ultimum = series;
+      reddere(pipata);
+    }
   }).catch(function (c) {
     erroris.textContent = (c && c.nuntius) || 'defectus lectionis';
   });
 }
+setInterval(renovare, 2000);
 
 document.getElementById('renovare').onclick = renovare;
 pipare.onclick = function () {
