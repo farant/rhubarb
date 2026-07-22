@@ -213,14 +213,64 @@ _parsare (Piscina* piscina, SilvaContextus* ctx,
 }
 
 /* ==================================================
- * --renovare: index scribere
+ * --renovare: index scribere (+ citationes res= ex arboribus -
+ * frustum D: materia cruda nexuum reversorum tabulae)
  * ================================================== */
+
+interior vacuum
+_citationes_colligere (FILE* cit, constans character* via,
+    constans SilvaAnnotatio* a, StmlNodus* nodus, i32* summa)
+{
+    i32 k;
+
+    si (nodus == NIHIL || cit == NIHIL)
+    {
+        redde;
+    }
+    si ((s32)nodus->genus == STML_NODUS_ELEMENTUM
+        && nodus->attributa != NIHIL)
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(nodus->attributa); k++)
+        {
+            constans StmlAttributum* attr =
+                (constans StmlAttributum*)xar_obtinere(
+                    nodus->attributa, k);
+
+            si (attr != NIHIL && attr->titulus != NIHIL
+                && attr->titulus->mensura == III
+                && memcmp(attr->titulus->datum, "res", III)
+                    == ZEPHYRUM
+                && attr->valor != NIHIL
+                && attr->valor->mensura > ZEPHYRUM)
+            {
+                fprintf(cit, "%.*s\t%s\t%u\n",
+                    (int)attr->valor->mensura,
+                    (constans character*)attr->valor->datum,
+                    via, a->linea);
+                (*summa)++;
+            }
+        }
+    }
+    si (nodus->liberi != NIHIL)
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(nodus->liberi); k++)
+        {
+            _citationes_colligere(cit, via, a,
+                *(StmlNodus**)xar_obtinere(nodus->liberi, k),
+                summa);
+        }
+    }
+}
 
 interior s32
 _renovare (Piscina* piscina, SilvaContextus* ctx,
-    constans character* exitus, integer numerus, character** viae)
+    constans character* exitus, constans character* exitus_cit,
+    integer numerus, character** viae)
 {
     FILE* ex = fopen(exitus, "w");
+    FILE* cit = exitus_cit != NIHIL ? fopen(exitus_cit, "w")
+                                    : NIHIL;
+    i32 citationes = ZEPHYRUM;
     InternamentumChorda* intern = internamentum_creare(piscina);
     TabulaDispersa* nides_visae = tabula_dispersa_creare_chorda(
         piscina, DXII);
@@ -238,6 +288,13 @@ _renovare (Piscina* piscina, SilvaContextus* ctx,
     fprintf(ex, "# identitates.tsv GENERATUM %ld - DISPONIBILE,"
         " noli committere; regenera: ./silva/identitates.sh"
         " -renovare\n", (longus)time(NIHIL));
+    si (cit != NIHIL)
+    {
+        fprintf(cit, "# citationes.tsv GENERATUM %ld -"
+            " DISPONIBILE, noli committere; regenera:"
+            " ./silva/identitates.sh -renovare\n",
+            (longus)time(NIHIL));
+    }
 
     per (f = ZEPHYRUM; f < numerus; f++)
     {
@@ -276,6 +333,8 @@ _renovare (Piscina* piscina, SilvaContextus* ctx,
             {
                 perge;   /* malformata - res lint */
             }
+            _citationes_colligere(cit, viae[f], a, a->documentum,
+                &citationes);
             per (j = ZEPHYRUM; j < xar_numerus(identitates); j++)
             {
                 constans SilvaIdentitas* id =
@@ -354,8 +413,16 @@ _renovare (Piscina* piscina, SilvaContextus* ctx,
         }
     }
     fclose(ex);
+    si (cit != NIHIL)
+    {
+        fclose(cit);
+    }
     fprintf(stderr, "identitates: %d identitates in %s",
         (int)summa, exitus);
+    si (citationes > ZEPHYRUM)
+    {
+        fprintf(stderr, " (citationes %d)", (int)citationes);
+    }
     si (petitiones > ZEPHYRUM)
     {
         fprintf(stderr, " (petitiones %d - minta per -mintare)",
@@ -820,8 +887,14 @@ s32 principale (integer argc, character** argv)
     }
     si (strcmp(argv[I], "--renovare") == ZEPHYRUM)
     {
-        redde _renovare(piscina, ctx, argv[II], argc - III,
-            argv + III);
+        si (argc < V)
+        {
+            fprintf(stderr, "identitates: --renovare <index.tsv>"
+                " <citationes.tsv> <fons...>\n");
+            redde II;
+        }
+        redde _renovare(piscina, ctx, argv[II], argv[III],
+            argc - IV, argv + IV);
     }
     si (strcmp(argv[I], "--mintare") == ZEPHYRUM)
     {

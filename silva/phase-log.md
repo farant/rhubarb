@@ -9690,3 +9690,53 @@ NEXT: Chunk D - TABULA: ancora genus "nid" + resolver against
 identitates.tsv; board CAUTIO-si-inresolutae upgrades to true
 resolution; res= citations resolve against the board (the other
 half of bidirectional rot).
+
+## ANNOTATIONES STML — CHUNK D (TABULA): INTENTIO (2026-07-21)
+
+Pull: park 01KY3D7EJP chunk D — the board learns the identity
+layer. Cross-project (silva instrument + gesta resident); arc
+narrative stays HERE, pointer in gesta/phase-log.
+
+(1) SILVA: --renovare emits a SECOND tsv build/citationes.tsv
+(res-praefixum \t via \t linea, one row per res= citation found
+in annotation trees) — the code->board direction's raw material.
+(2) TABULARIUM: ancora genus "nid" ({genus, scopus=praefixum})
+resolved against build/identitates.tsv via a lazy index (exact
+twin of the nexus.tsv pattern; cfg via_identitatum/via_citationum
++ principale defaults); resolution -> "via:linea (genus
+unitatis)"; absence -> CAUTIO that MEANS something (annotation
+deleted or index stale — named in the message). (3) REVERSE
+LINKS: res output gains "citata ex codice" lines (citationes rows
+whose praefixum prefixes THIS res_id). (4) CENSUS: citation
+health — resolved/unresolved counts + unresolved listed (the
+code->board rot signal). Doctrine string: genus nid documented.
+
+Bars: probatio_tabularium new section (nid anchor resolved +
+unresolved-CAUTIO via fixture identitates specimen; reverse link
++ census via runtime-written citationes tsv embedding the real
+res_id — static fixtures cannot know minted ULIDs); gesta suite
+green; silva launcher passes both tsv paths; -porta/-renovare
+green; live demo = nid anchor written onto park 01KY3D7EJP
+(old resident renders it unresolved-harmless; TRUE resolution
+after Fran's /mcp reconnect against the rebuilt binary).
+
+## ANNOTATIONES STML — CHUNK D (TABULA): RELATIO (2026-07-22)
+
+Shipped: citationes.tsv lane in --renovare (res= citations, one
+row each); tabularium ancora genus "nid" (lazy identitates.tsv
+index, nexus-twin; resolutio "via:linea (genus)"; CAUTIO quae
+significat + mandatum renovationis; praefixum ambiguum = CAUTIO
+sua); nexus reversi "citata ex codice" in lectione rei; salus
+citationum in censu (inresolutae nominatae). Lectores
+cache-in-successu (index post ortum apparens visibilis fit —
+idemque probationem fixtura runtime-scripta possibilem fecit).
+Gesta suite 220/220; launcher fontes regenerata (moneta ad
+lineam nexus residentis pervenit). DEMO VIVUM POSITUM: parcum
+01KY3D7EJP ancoram nid 01KY3TRZ... fert (residens vetus inertem
+reddit; /mcp reconnect resolutionem veram + nexum reversum
+monstrabit — anulus putredinis in historia sua ipsius clauditur).
+
+NEXT: Chunk E — MIGRATIO familiarum veterum (aedilis verbs,
+TOLERA, EXSPECTA pinnae: lectio duplex → auditor → retiratio,
+chorea aedilis-arcus), Fran's pull; post-ladder items named in
+spec §4.

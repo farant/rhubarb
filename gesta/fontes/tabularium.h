@@ -32,6 +32,12 @@ nomen structura {
     constans character* via_annalium;  /* gesta/annales/...jsonl */
     constans character* via_nexus;     /* build/nexus.tsv; NIHIL =
                                         * ancorae sine resolutione */
+    constans character* via_identitatum; /* build/identitates.tsv;
+                                        * NIHIL = ancorae nid sine
+                                        * resolutione (frustum D) */
+    constans character* via_citationum;  /* build/citationes.tsv;
+                                        * NIHIL = sine nexibus
+                                        * reversis ex codice */
     constans character* via_tabulae;   /* tabula.md (proiectio status
                                         * legibilis, post scripturas
                                         * regenerata); NIHIL = sine

@@ -217,6 +217,17 @@ interior constans character* constans VOCABULARIUM_TAGORUM =
     "vectis lsp mcp perf corpus-law examen vindex colloquium "
     "excubitor aedilis urgens\",\"tags\":[\"vocabularium\"]}";
 
+/* frustum D: ordines indicum identitatum et citationum ex codice */
+nomen structura {
+    chorda              nid;    /* ULID plenus ex indice */
+    constans character* sedes;  /* "via:linea (genus unitatis)" */
+} _NidOrdo;
+
+nomen structura {
+    chorda              praefixum; /* citatio res= ex codice */
+    constans character* sedes;     /* "via:linea" */
+} _CitatioOrdo;
+
 structura Tabularium {
     Piscina*     piscina;
     GestaMundus* mundus;
@@ -231,6 +242,13 @@ structura Tabularium {
     b32             index_temptatus;
     TabulaDispersa* sedes_index;     /* titulus -> character* "via:linea" */
     Xar*            sedes_tituli;    /* chorda (valore) */
+    /* identitates nid + citationes ex codice (frustum D, pigre) */
+    constans character* via_identitatum;
+    constans character* via_citationum;
+    b32             nides_temptatae;
+    Xar*            nides;           /* _NidOrdo (valore) */
+    b32             citationes_temptatae;
+    Xar*            citationes;      /* _CitatioOrdo (valore) */
     /* vigilia (lib/vigilia, K2.1): disci + fontium; glutinosa */
     Vigilia*        vigilia;
 };
@@ -495,6 +513,262 @@ _indicem_onerare (Tabularium* t)
     }
 }
 
+/* ==================================================
+ * identitates nid + citationes ex codice (frustum D 01KY3D7EJP):
+ * gemini indicis nexus - pigre, absentia = sine resolutione.
+ * identitates.tsv: nid via linea modus elementum genus_u linea_u...
+ * citationes.tsv: praefixum via linea
+ * ================================================== */
+
+interior vacuum
+_nides_onerare (Tabularium* t)
+{
+    character* textus;
+    i32 mensura = ZEPHYRUM;
+    i32 cursor = ZEPHYRUM;
+
+    si (t->via_identitatum == NIHIL)
+    {
+        t->nides_temptatae = VERUM;   /* numquam retempta */
+        redde;
+    }
+    textus = _plagulam_legere(t->piscina, t->via_identitatum,
+        &mensura);
+    si (textus == NIHIL)
+    {
+        redde;   /* plagula abest - retempta postea (index post
+                  * ortum residentis apparere potest) */
+    }
+    t->nides = xar_creare(t->piscina, (i32)magnitudo(_NidOrdo));
+    si (t->nides == NIHIL)
+    {
+        redde;
+    }
+    t->nides_temptatae = VERUM;
+    dum (cursor < mensura)
+    {
+        i32 initium = cursor;
+        i32 finis;
+        chorda campi[VII];
+        i32 n_campi = ZEPHYRUM;
+        i32 c;
+
+        dum (cursor < mensura && textus[cursor] != '\n')
+        {
+            cursor++;
+        }
+        finis = cursor;
+        si (cursor < mensura)
+        {
+            cursor++;
+        }
+        si (finis == initium || textus[initium] == '#')
+        {
+            perge;
+        }
+        c = initium;
+        dum (c <= finis && n_campi < VII)
+        {
+            i32 campus_initium = c;
+
+            dum (c < finis && textus[c] != '\t')
+            {
+                c++;
+            }
+            campi[n_campi].datum = (i8*)(textus + campus_initium);
+            campi[n_campi].mensura = (i32)(c - campus_initium);
+            n_campi++;
+            c++;
+        }
+        si (n_campi < VII)
+        {
+            perge;
+        }
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(
+                t->piscina, LXIV);
+            _NidOrdo* ordo;
+
+            chorda_aedificator_appendere_chorda(aed, campi[I]);
+            chorda_aedificator_appendere_literis(aed, ":");
+            si (campi[VI].mensura == I
+                && campi[VI].datum[ZEPHYRUM] == '0')
+            {
+                chorda_aedificator_appendere_chorda(aed,
+                    campi[II]);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_chorda(aed,
+                    campi[VI]);
+            }
+            chorda_aedificator_appendere_literis(aed, " (");
+            chorda_aedificator_appendere_chorda(aed, campi[V]);
+            chorda_aedificator_appendere_literis(aed, ")");
+            ordo = (_NidOrdo*)xar_addere(t->nides);
+            si (ordo != NIHIL)
+            {
+                ordo->nid = campi[ZEPHYRUM];
+                ordo->sedes = _litterae(t->piscina,
+                    chorda_aedificator_finire(aed));
+            }
+        }
+    }
+}
+
+/* nid per praefixum: sedes primae congruentis; numerus_out =
+ * quot congruunt (0 = absens, >1 = ambiguum) */
+interior constans character*
+_nid_invenire (Tabularium* t, chorda praefixum, i32* numerus_out)
+{
+    constans character* sedes = NIHIL;
+    i32 i;
+
+    *numerus_out = ZEPHYRUM;
+    si (!t->nides_temptatae)
+    {
+        _nides_onerare(t);
+    }
+    si (t->nides == NIHIL || praefixum.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(t->nides); i++)
+    {
+        constans _NidOrdo* ordo = (constans _NidOrdo*)xar_obtinere(
+            t->nides, i);
+
+        si (ordo->nid.mensura >= praefixum.mensura
+            && memcmp(ordo->nid.datum, praefixum.datum,
+                   (memoriae_index)praefixum.mensura) == ZEPHYRUM)
+        {
+            si (*numerus_out == ZEPHYRUM)
+            {
+                sedes = ordo->sedes;
+            }
+            (*numerus_out)++;
+        }
+    }
+    redde sedes;
+}
+
+interior vacuum
+_citationes_onerare (Tabularium* t)
+{
+    character* textus;
+    i32 mensura = ZEPHYRUM;
+    i32 cursor = ZEPHYRUM;
+
+    si (t->via_citationum == NIHIL)
+    {
+        t->citationes_temptatae = VERUM;   /* numquam retempta */
+        redde;
+    }
+    textus = _plagulam_legere(t->piscina, t->via_citationum,
+        &mensura);
+    si (textus == NIHIL)
+    {
+        redde;   /* plagula abest - retempta postea */
+    }
+    t->citationes = xar_creare(t->piscina,
+        (i32)magnitudo(_CitatioOrdo));
+    si (t->citationes == NIHIL)
+    {
+        redde;
+    }
+    t->citationes_temptatae = VERUM;
+    dum (cursor < mensura)
+    {
+        i32 initium = cursor;
+        i32 finis;
+        chorda campi[III];
+        i32 n_campi = ZEPHYRUM;
+        i32 c;
+
+        dum (cursor < mensura && textus[cursor] != '\n')
+        {
+            cursor++;
+        }
+        finis = cursor;
+        si (cursor < mensura)
+        {
+            cursor++;
+        }
+        si (finis == initium || textus[initium] == '#')
+        {
+            perge;
+        }
+        c = initium;
+        dum (c <= finis && n_campi < III)
+        {
+            i32 campus_initium = c;
+
+            dum (c < finis && textus[c] != '\t')
+            {
+                c++;
+            }
+            campi[n_campi].datum = (i8*)(textus + campus_initium);
+            campi[n_campi].mensura = (i32)(c - campus_initium);
+            n_campi++;
+            c++;
+        }
+        si (n_campi < III)
+        {
+            perge;
+        }
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(
+                t->piscina, LXIV);
+            _CitatioOrdo* ordo;
+
+            chorda_aedificator_appendere_chorda(aed, campi[I]);
+            chorda_aedificator_appendere_literis(aed, ":");
+            chorda_aedificator_appendere_chorda(aed, campi[II]);
+            ordo = (_CitatioOrdo*)xar_addere(t->citationes);
+            si (ordo != NIHIL)
+            {
+                ordo->praefixum = campi[ZEPHYRUM];
+                ordo->sedes = _litterae(t->piscina,
+                    chorda_aedificator_finire(aed));
+            }
+        }
+    }
+}
+
+/* nexus reversi: citationes ex codice quarum praefixum res_id
+ * huius praefigit */
+interior vacuum
+_citationes_reddere (Tabularium* t, ChordaAedificator* aed,
+    chorda res_id)
+{
+    i32 i;
+
+    si (!t->citationes_temptatae)
+    {
+        _citationes_onerare(t);
+    }
+    si (t->citationes == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(t->citationes); i++)
+    {
+        constans _CitatioOrdo* ordo = (constans _CitatioOrdo*)
+            xar_obtinere(t->citationes, i);
+
+        si (ordo->praefixum.mensura > ZEPHYRUM
+            && res_id.mensura >= ordo->praefixum.mensura
+            && memcmp(res_id.datum, ordo->praefixum.datum,
+                   (memoriae_index)ordo->praefixum.mensura)
+                == ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed,
+                "\ncitata ex codice: ");
+            chorda_aedificator_appendere_literis(aed, ordo->sedes);
+        }
+    }
+}
+
 /* ancoram symboli solvere: litterae "via:linea" aut NIHIL */
 interior constans character*
 _sedem_invenire (Tabularium* t, chorda scopus)
@@ -609,6 +883,31 @@ _ancoras_reddere (Tabularium* t, ChordaAedificator* aed,
                     " - CAUTIO: inresoluta (symbolum in indice"
                     " non est)");
                 _simillima_appendere(t, aed, scopus, pn);
+            }
+        }
+        alioquin si (_chorda_est(genus, "nid"))
+        {
+            i32 congruentes = ZEPHYRUM;
+            constans character* sedes = _nid_invenire(t, scopus,
+                &congruentes);
+
+            si (congruentes == I && sedes != NIHIL)
+            {
+                chorda_aedificator_appendere_literis(aed, " -> ");
+                chorda_aedificator_appendere_literis(aed, sedes);
+            }
+            alioquin si (congruentes > I)
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    " - CAUTIO: praefixum ambiguum in indice"
+                    " identitatum");
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    " - CAUTIO: inresoluta (nid in indice non est"
+                    " - annotatio deleta aut index vetus; curre"
+                    " ./silva/identitates.sh -renovare)");
             }
         }
         alioquin si (_chorda_est(genus, "via"))
@@ -3163,6 +3462,7 @@ _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
     {
         _ancoras_reddere(t, aed, st, pn);
     }
+    _citationes_reddere(t, aed, res_id);
     /* vincula (superficies passiva K2 - socii per membra; sagitta
      * ex parte socii: b = exiens, a = iniens) */
     {
@@ -3415,6 +3715,55 @@ _tab_census (Tabularium* t, Piscina* pn, JsonValor* id,
                 chorda_aedificator_appendere_literis(aed, numeri);
             }
             scrinium_finire(e);
+        }
+    }
+    /* frustum D: salus citationum ex codice (res= in annotationibus
+     * contra tabulam - dimidium code->board putredinis
+     * bidirectionalis; inresolutae nominatae) */
+    {
+        i32 i;
+        i32 summa_citationum = ZEPHYRUM;
+        i32 inresolutae = ZEPHYRUM;
+
+        si (!t->citationes_temptatae)
+        {
+            _citationes_onerare(t);
+        }
+        si (t->citationes != NIHIL
+            && xar_numerus(t->citationes) > ZEPHYRUM)
+        {
+            per (i = ZEPHYRUM; i < xar_numerus(t->citationes); i++)
+            {
+                constans _CitatioOrdo* ordo =
+                    (constans _CitatioOrdo*)xar_obtinere(
+                        t->citationes, i);
+                b32 ambiguum = FALSUM;
+                chorda inventa;
+
+                summa_citationum++;
+                inventa = _res_per_praefixum(t, ordo->praefixum,
+                    pn, &ambiguum);
+                si (inventa.mensura == ZEPHYRUM && !ambiguum)
+                {
+                    inresolutae++;
+                    chorda_aedificator_appendere_literis(aed,
+                        i == ZEPHYRUM || inresolutae == I
+                            ? "\n" : "");
+                    chorda_aedificator_appendere_literis(aed,
+                        "\nCAUTIO citatio ex codice inresoluta: ");
+                    chorda_aedificator_appendere_chorda(aed,
+                        ordo->praefixum);
+                    chorda_aedificator_appendere_literis(aed,
+                        " (");
+                    chorda_aedificator_appendere_literis(aed,
+                        ordo->sedes);
+                    chorda_aedificator_appendere_literis(aed, ")");
+                }
+            }
+            sprintf(numeri, "\ncitationes ex codice %d"
+                " (inresolutae %d)", (int)summa_citationum,
+                (int)inresolutae);
+            chorda_aedificator_appendere_literis(aed, numeri);
         }
     }
     _textum_respondere(t, pn, effusio, id,
@@ -4113,8 +4462,10 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         { "titulus", "titulus brevis entis", VERUM },
         { "corpus", "textus corporis (quaesibilis)", FALSUM },
         { "tags", "tags commatibus separata", FALSUM },
-        { "ancorae", "tabulatum JSON: [{\"genus\":\"symbolum|via\","
-          "\"scopus\":\"...\",\"sigillum\":\"hex?\"}]", FALSUM },
+        { "ancorae", "tabulatum JSON: [{\"genus\":\"symbolum|via"
+          "|nid\",\"scopus\":\"...\",\"sigillum\":\"hex?\"}] -"
+          " nid = identitas annotationis (praefixum >= VI;"
+          " frustum D)", FALSUM },
         { "actor", "fran|claude|machina (ordinarius claude)",
           FALSUM },
         { "origo", "provenientia eventus (ordinarius mcp; e.g."
@@ -4533,6 +4884,10 @@ tabularium_creare (Piscina* piscina,
     t->via_annalium = _litterae(piscina, _ch(cfg->via_annalium));
     t->via_nexus = cfg->via_nexus != NIHIL
         ? _litterae(piscina, _ch(cfg->via_nexus)) : NIHIL;
+    t->via_identitatum = cfg->via_identitatum != NIHIL
+        ? _litterae(piscina, _ch(cfg->via_identitatum)) : NIHIL;
+    t->via_citationum = cfg->via_citationum != NIHIL
+        ? _litterae(piscina, _ch(cfg->via_citationum)) : NIHIL;
     t->via_tabulae = cfg->via_tabulae != NIHIL
         ? _litterae(piscina, _ch(cfg->via_tabulae)) : NIHIL;
     t->via_entitatum = cfg->via_entitatum != NIHIL

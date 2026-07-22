@@ -22,6 +22,8 @@
 #define VIA_MN "gesta/build/probatio_manifestum_fictum"
 #define VIA_FN "gesta/build/probatio_fons_fictus.c"
 #define VIA_ENT "gesta/build/probatio_entities"
+#define VIA_ID "gesta/probationes/fixa/identitates_specimen.tsv"
+#define VIA_CIT "gesta/build/probatio_citationes.tsv"
 
 /* mensura bufferi semitae probationis (MMXL deest in latina.h) */
 #define PROBATIO_SEMITA_MENSURA 2048
@@ -37,6 +39,7 @@ _purgare (vacuum)
     remove(VIA_BN);
     remove(VIA_MN);
     remove(VIA_FN);
+    remove(VIA_CIT);
     (vacuum)system("rm -rf " VIA_ENT);
 }
 
@@ -255,6 +258,8 @@ s32 principale (vacuum)
     cfg.via_scrinii = VIA_DB;
     cfg.via_annalium = VIA_AN;
     cfg.via_nexus = VIA_NX;
+    cfg.via_identitatum = VIA_ID;
+    cfg.via_citationum = VIA_CIT;
     cfg.via_tabulae = VIA_TB;
     cfg.signum = NIHIL;
     cfg.via_binarii = NIHIL;
@@ -1476,6 +1481,82 @@ s32 principale (vacuum)
             CREDO_VERUM (strstr(p + I, "- creatum \xE2\x80\x94")
                 == NIHIL);
         }
+    }
+
+    /* FRUSTUM D (01KY3D7EJP): ancorae nid + citationes ex codice */
+    {
+        character rid[27];
+        constans character* p;
+        i32 k;
+
+        /* res cum ancoris nid: una resoluta (fixtura
+         * identitates_specimen), una inresoluta */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":900,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Putredo bidirectionalis probanda\","
+            "\"corpus\":\"frustum D\",\"ancorae\":"
+            "\"[{\\\"genus\\\":\\\"nid\\\",\\\"scopus\\\":"
+            "\\\"01KY3TESTAA\\\"},{\\\"genus\\\":\\\"nid\\\","
+            "\\\"scopus\\\":\\\"01KY3TESTZZ\\\"}]\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        rid[ZEPHYRUM] = '\0';
+        p = strstr(r, "res 01");
+        CREDO_NON_NIHIL (p);
+        si (p != NIHIL)
+        {
+            per (k = ZEPHYRUM; k < XXVI; k++)
+            {
+                rid[k] = p[IV + k];
+            }
+            rid[XXVI] = '\0';
+        }
+
+        /* resolutio: fixtura -> lib/exemplum.c:12 (genus); absens
+         * -> CAUTIO cum mandato renovationis */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":901,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Putredo"
+            " bidirectionalis probanda\"}}}");
+        CREDO_VERUM (strstr(r,
+            "lib/exemplum.c:12 (definitio-functionis)") != NIHIL);
+        CREDO_VERUM (strstr(r, "CAUTIO: inresoluta (nid") != NIHIL);
+
+        /* citationes ex codice: plagula runtime-scripta (praefixum
+         * verum rei + praefixum orbum) - lector cache-in-successu,
+         * ergo scriptio media probationis visibilis fit */
+        {
+            FILE* cit = fopen(VIA_CIT, "w");
+
+            CREDO_NON_NIHIL (cit);
+            si (cit != NIHIL)
+            {
+                fprintf(cit, "# citationes specimen\n");
+                fprintf(cit, "%.10s\tlib/exemplum.c\t42\n", rid);
+                fprintf(cit,
+                    "01KY3ZZZZZ\tlib/exemplum.c\t99\n");
+                fclose(cit);
+            }
+        }
+
+        /* nexus reversus in lectione rei */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":902,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Putredo"
+            " bidirectionalis probanda\"}}}");
+        CREDO_VERUM (strstr(r,
+            "citata ex codice: lib/exemplum.c:42") != NIHIL);
+
+        /* census: salus citationum - 2 summae, 1 inresoluta
+         * nominata */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":903,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"census\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r,
+            "citationes ex codice 2 (inresolutae 1)") != NIHIL);
+        CREDO_VERUM (strstr(r,
+            "CAUTIO citatio ex codice inresoluta: 01KY3ZZZZZ")
+            != NIHIL);
     }
 
     credo_imprimere_compendium();

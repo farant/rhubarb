@@ -1140,3 +1140,12 @@ its own staleness meanwhile (K2.1 working as designed).
 Store: desideratum origo -> impletum; park 01KXTY8SCR closed via
 claudere-cum-decreto (the flagship action closing its own
 ergonomics park); items 3-5 re-parcata as residua park.
+
+## ANNOTATIONES CHUNK D — genus ancorae "nid" (2026-07-21)
+
+The board learns the code's identity layer (park 01KY3D7EJP;
+arc narrative in silva/phase-log.md): ancora genus "nid" resolved
+lazily against build/identitates.tsv (nexus.tsv-twin index),
+"citata ex codice" reverse links in res output (build/
+citationes.tsv), citation health in census. INTENTIO/RELATIO in
+the silva log.

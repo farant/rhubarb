@@ -86,11 +86,15 @@ case "${1:-}" in
             {
                 echo "# identitates.tsv GENERATUM $(date +%s) - DISPONIBILE, noli committere; regenera: ./silva/identitates.sh -renovare"
             } > "$RADIX_DIR/build/identitates.tsv"
-            echo "identitates: nullae candidatae - index vacuus" >&2
+            {
+                echo "# citationes.tsv GENERATUM $(date +%s) - DISPONIBILE, noli committere; regenera: ./silva/identitates.sh -renovare"
+            } > "$RADIX_DIR/build/citationes.tsv"
+            echo "identitates: nullae candidatae - indices vacui" >&2
             exit 0
         fi
         # shellcheck disable=SC2086
-        exec "$BIN" --renovare "$RADIX_DIR/build/identitates.tsv" $vias
+        exec "$BIN" --renovare "$RADIX_DIR/build/identitates.tsv" \
+            "$RADIX_DIR/build/citationes.tsv" $vias
         ;;
     -mintare)
         shift

@@ -164,3 +164,32 @@ silences: prose, valid annotation, valid res=, petitio), 1294/1294.
 Enum/table/static-assert/silva.h all tail-appended (ABI append-only
 law). Corpus contact: the one real intentio stays ACCIPE clean —
 the codices watched it and had nothing to say.
+
+## 2026-07-22 (early) — Chunk D: the board learns the identity layer
+
+Cross-project chunk (silva instrument + gesta resident):
+- --renovare now emits build/citationes.tsv (res-praefixum, via,
+  linea — one row per res= citation in annotation trees).
+- Tabularium: ancora genus "nid" resolved against build/
+  identitates.tsv via a lazy index (exact twin of the nexus.tsv
+  loader); resolution renders "via:linea (genus unitatis)";
+  absence = a CAUTIO that names its meaning (annotation deleted
+  or index stale) and its cure (-renovare). Ambiguous prefix =
+  its own CAUTIO.
+- Reverse links: res output gains "citata ex codice: via:linea"
+  for every code citation whose praefixum prefixes the res_id.
+- Census: citation health — "citationes ex codice N (inresolutae
+  M)" with unresolved ones NAMED (the code→board rot signal).
+- Loader design note: cache-on-SUCCESS only — an index file
+  appearing after resident boot becomes visible at next use
+  (also what made the probatio's runtime-written citationes
+  fixture possible; static fixtures can't know minted ULIDs).
+- gesta launcher fontes list regenerated (moneta edge — the
+  scrinium delegation reached the resident's link line).
+
+Gesta suite 220/220. Live demo staged: the park 01KY3D7EJP now
+carries {"genus":"nid","scopus":"01KY3TRZ..."} — the park that
+conceived the layer, anchored to the layer's first identity,
+which itself cites the park back (citationes row). The loop
+closes on its own history; old resident renders the anchor
+inert, /mcp reconnect completes the demo.
