@@ -190,6 +190,18 @@ protects it. Smoothing a "quirk" means visibly deleting a feature — don't.
   APIs are expensive to refactor, implementations cheap). Walking skeleton
   before module polish — integration walls are found under load, not by
   finishing modules in isolation (lapifex M3 is the cautionary tale).
+- **Price narrowings at the seam, not from memory.** "Defer to v2" /
+  "syntactic for now" appearing in an INTENTIO before the exact
+  integration point has been READ is a trigger, not a decision: the
+  house builds callback seams (aux/config structs — canonicum,
+  aestimator, parametrum_constans/accumulat, expressio_acies,
+  resolutor, praecommissio) precisely where extensions hook, and
+  memory-priced estimates systematically overestimate. Ten minutes
+  at the seam has twice turned a planned compromise into the full
+  feature (contractus 77 dataflow; chunk C's never-built callback
+  seam). Complements the VISIO narrowing rule: before NAMING a
+  deferred use case, check whether the substrate already dissolved
+  the deferral.
 - **Simulate before building — and mid-phase, against shipped code.**
   Pretend-implementations surface interaction bugs no per-feature review
   finds. Complexities are recorded in the four-part schema
