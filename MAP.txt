@@ -1,6 +1,6 @@
 RHUBARB CODEBASE MAP
 ====================
-Last updated: 2026-07-20
+Last updated: 2026-07-22
 
 A C89 monorepo for building catholic civilization.
 All identifiers in Latin. No dependencies. Long-term thinking.
@@ -83,7 +83,7 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  ┌─ Strings ───────────┐  ┌─ Collections ─────────┐         │
     │  │ chorda_aedificator  │  │ tabula_dispersa (hash)│         │
     │  │ internamentum       │  │ friatio (hashing)     │         │
-    │  │ similitudo (fzf)    │  │                       │         │
+    │  │ similitudo (fzf)    │  │ moneta (ULID mint)    │         │
     │  └─────────────────────┘  └───────────────────────┘         │
     │  ┌─ Data Formats ──────┐  ┌─ Entity System ───────┐         │
     │  │ json, xml, toml     │  │ entitas               │         │
