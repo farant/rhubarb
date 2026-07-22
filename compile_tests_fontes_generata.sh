@@ -18,7 +18,6 @@ declare -a SOURCE_FILES=(
     "lib/arbor_index.c"
     "lib/arbor_lexema.c"
     "lib/arbor_praeparator.c"
-    "lib/arbor_quaestio.c"
     "lib/arbor_syntaxis.c"
     "lib/arbor_typus.c"
     "lib/argumenta.c"
