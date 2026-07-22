@@ -1,16 +1,25 @@
 /* apps/forum/forum.c - forum: fenestra vitreae in mundum scriptorum
- * (F2 - app prima in apps/, conventiones nascuntur).
+ * (F2 sceletum + F3 articuli/fila - app prima in apps/).
  *
  * Exemplar tabellae (ansa app-possessa, capsula, internuntius) +
  * cliens daemonis tabulariumd: connexio TCP PER-PETITIONEM
  * (contractus v1 spec-v2 par I), initialize non necessarium (daemon
- * se praeinitiat), start-if-absent ut fori. Tractatores IS:
- * pipata_legere (daemon "legere" genus=pipatum -> tabulatum
- * structuratum), pipatum_mittere {corpus} (titulus = praefixum XL
- * codicillorum; actor fran, sine signatura - decisio colloquii).
+ * se praeinitiat), start-if-absent ut fori (defectus CITUS post
+ * generationem primam - anquisitio IS tractatorem ne congelet).
  *
- * Vexillum -fumus: pipata leguntur ANTE fenestram, numerus
- * impressus, exitus - porta scriptabilis sine oculis. */
+ * Tractatores IS (F3 generales):
+ *   res_legere {genus} -> tabulatum structuratum (daemon "legere")
+ *   mittere {genus, corpus, ad?} -> addere + nexus respondet-ad
+ *   articulum_servare {res_id?, titulus, corpus} -> addere conditum
+ *     aut mutatio datum-mersione (mersio superficialis probata)
+ *   status_ponere {res_id, novus} -> gerere status
+ *   mutare {res_id, corpus} -> editio (mutatio clavis)
+ *   delere {res_id} -> tumulus (remotio corporis)
+ * Actor semper "fran" - app instrumentum Franis est; Claudius per
+ * MCP scribit (fori) cum signatura.
+ *
+ * Vexillum -fumus: pipata + articuli leguntur ANTE fenestram,
+ * numeri impressi, exitus - porta scriptabilis sine oculis. */
 
 #include "latina.h"
 #include "piscina.h"
@@ -27,7 +36,7 @@
 #include <stdlib.h>
 
 #define FORUM_PORTUS_ORDINARIUS 8753
-/* legere C rerum cum corporibus - laxe (numerus romanus deest) */
+/* legere CC rerum cum corporibus - laxe (numerus romanus deest) */
 #define RESPONSUM_CAPACITAS 262144
 
 nomen structura {
@@ -231,29 +240,121 @@ _titulus_ex_corpore (chorda corpus)
     redde t;
 }
 
-/* pipata a daemone: tabulatum JSON parsatum (NIHIL = culpa) */
-interior JsonValor*
-_pipata_capere (ForumStatus* forum, Piscina* pn, chorda* culpa)
+/* chorda -> litterae NUL-terminatae in piscina */
+interior constans character*
+_litterae_ex (Piscina* pn, chorda c)
 {
-    chorda linea = chorda_ex_literis(
-        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\","
-        "\"params\":{\"name\":\"legere\",\"arguments\":{"
-        "\"genus\":\"pipatum\",\"quantum\":100}}}", pn);
-    chorda responsum = _daemon_petere(forum->portus, pn, linea,
-        culpa);
+    character* l = (character*)piscina_allocare(pn,
+        (memoriae_index)(c.mensura + I));
+
+    si (l == NIHIL)
+    {
+        redde "";
+    }
+    si (c.mensura > ZEPHYRUM)
+    {
+        memcpy(l, c.datum, (memoriae_index)c.mensura);
+    }
+    l[c.mensura] = '\0';
+    redde l;
+}
+
+/* "res <ID> creata" -> chorda ID (vacua si absens) */
+interior chorda
+_res_id_ex_textu (chorda textus, Piscina* pn)
+{
+    constans character* t = _litterae_ex(pn, textus);
+    constans character* p = strstr(t, "res ");
+    chorda id_c;
+    i32 n = ZEPHYRUM;
+
+    id_c.mensura = ZEPHYRUM;
+    id_c.datum = NIHIL;
+    si (p == NIHIL)
+    {
+        redde id_c;
+    }
+    p += IV;
+    dum (p[n] != '\0' && p[n] != ' ')
+    {
+        n++;
+    }
+    {
+        i8* copia = (i8*)piscina_allocare(pn, (memoriae_index)n);
+        unio { constans character* l; constans i8* m; } u;
+
+        si (copia == NIHIL || n == ZEPHYRUM)
+        {
+            redde id_c;
+        }
+        u.l = p;
+        memcpy(copia, u.m, (memoriae_index)n);
+        id_c.datum = copia;
+        id_c.mensura = n;
+    }
+    redde id_c;
+}
+
+/* instrumentum daemonis vocare: petitio aedificata, textus
+ * responsi redditus (vacuus + culpa in defectu) */
+interior chorda
+_instrumentum_vocare (ForumStatus* forum, Piscina* pn,
+    constans character* nomen_instrumenti, JsonValor* arg_obj,
+    chorda* culpa)
+{
+    JsonValor* petitio = json_objectum_creare(pn);
+    JsonValor* params = json_objectum_creare(pn);
+    chorda responsum;
     chorda textus;
     b32 est_error = FALSUM;
-    JsonResultus r;
+    chorda vacua;
 
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    forum->petitio_index++;
+    json_objectum_ponere(petitio, "jsonrpc",
+        json_chorda_creare_literis(pn, "2.0"));
+    json_objectum_ponere(petitio, "id",
+        json_integer_creare(pn, forum->petitio_index));
+    json_objectum_ponere(petitio, "method",
+        json_chorda_creare_literis(pn, "tools/call"));
+    json_objectum_ponere(params, "name",
+        json_chorda_creare_literis(pn, nomen_instrumenti));
+    json_objectum_ponere(params, "arguments", arg_obj);
+    json_objectum_ponere(petitio, "params", params);
+    responsum = _daemon_petere(forum->portus, pn,
+        json_scribere(petitio, pn), culpa);
     si (responsum.mensura == ZEPHYRUM)
     {
-        redde NIHIL;   /* culpa iam posita */
+        redde vacua;   /* culpa iam posita */
     }
     textus = _textus_ex_responso(responsum, pn, &est_error);
-    si (est_error || textus.mensura == ZEPHYRUM)
+    si (est_error)
     {
         *culpa = textus.mensura > ZEPHYRUM ? textus
             : _ch_forum("responsum daemonis ininterpretabile");
+        redde vacua;
+    }
+    redde textus;
+}
+
+/* res generis a daemone: tabulatum JSON parsatum (NIHIL = culpa) */
+interior JsonValor*
+_res_capere (ForumStatus* forum, Piscina* pn, chorda genus,
+    chorda* culpa)
+{
+    JsonValor* arg_obj = json_objectum_creare(pn);
+    chorda textus;
+    JsonResultus r;
+
+    json_objectum_ponere(arg_obj, "genus",
+        json_chorda_creare(pn, genus));
+    json_objectum_ponere(arg_obj, "quantum",
+        json_integer_creare(pn, (s64)CC));
+    textus = _instrumentum_vocare(forum, pn, "legere", arg_obj,
+        culpa);
+    si (textus.mensura == ZEPHYRUM)
+    {
         redde NIHIL;
     }
     r = json_legere(textus, pn);
@@ -270,95 +371,327 @@ _pipata_capere (ForumStatus* forum, Piscina* pn, chorda* culpa)
  * ================================================== */
 
 interior JsonValor*
-_pipata_legere (JsonValor* argumenta, Piscina* piscina,
+_res_legere (JsonValor* argumenta, Piscina* piscina,
     vacuum* datum, chorda* culpa)
 {
     ForumStatus* forum = (ForumStatus*)datum;
+    chorda genus;
     JsonValor* fructus;
-    JsonValor* pipata;
+    JsonValor* res;
 
-    (vacuum)argumenta;
-    pipata = _pipata_capere(forum, piscina, culpa);
-    si (pipata == NIHIL)
+    genus.mensura = ZEPHYRUM;
+    genus.datum = NIHIL;
+    si (argumenta != NIHIL)
     {
-        redde NIHIL;   /* culpa posita */
+        genus = json_ad_chorda(json_objectum_capere(argumenta,
+            "genus"));
+    }
+    si (genus.mensura == ZEPHYRUM)
+    {
+        *culpa = _ch_forum("genus requiritur");
+        redde NIHIL;
+    }
+    res = _res_capere(forum, piscina, genus, culpa);
+    si (res == NIHIL)
+    {
+        redde NIHIL;
     }
     fructus = json_objectum_creare(piscina);
-    json_objectum_ponere(fructus, "pipata", pipata);
+    json_objectum_ponere(fructus, "res", res);
     redde fructus;
 }
 
+/* mittere {genus, corpus, ad?}: addere (actor fran) + nexus
+ * respondet-ad si ad datur. Fructus {bene, res_id}. */
 interior JsonValor*
-_pipatum_mittere (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+_mittere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
+    chorda* culpa)
 {
     ForumStatus* forum = (ForumStatus*)datum;
-    chorda corpus;
-    JsonValor* petitio;
-    JsonValor* params;
+    chorda genus, corpus, ad;
     JsonValor* arg_obj;
-    chorda responsum;
     chorda textus;
-    b32 est_error = FALSUM;
+    chorda novum_id;
     JsonValor* fructus;
 
-    corpus.mensura = ZEPHYRUM;
-    corpus.datum = NIHIL;
+    genus.mensura = ZEPHYRUM; genus.datum = NIHIL;
+    corpus.mensura = ZEPHYRUM; corpus.datum = NIHIL;
+    ad.mensura = ZEPHYRUM; ad.datum = NIHIL;
     si (argumenta != NIHIL)
     {
+        genus = json_ad_chorda(json_objectum_capere(argumenta,
+            "genus"));
         corpus = json_ad_chorda(json_objectum_capere(argumenta,
             "corpus"));
+        ad = json_ad_chorda(json_objectum_capere(argumenta, "ad"));
     }
-    si (corpus.mensura == ZEPHYRUM)
+    si (genus.mensura == ZEPHYRUM || corpus.mensura == ZEPHYRUM)
     {
-        *culpa = _ch_forum("corpus vacuum");
+        *culpa = _ch_forum("genus et corpus requiruntur");
         redde NIHIL;
     }
-    /* petitio per json aedificata - effugia gratis */
-    petitio = json_objectum_creare(piscina);
-    params = json_objectum_creare(piscina);
     arg_obj = json_objectum_creare(piscina);
-    forum->petitio_index++;
-    json_objectum_ponere(petitio, "jsonrpc",
-        json_chorda_creare_literis(piscina, "2.0"));
-    json_objectum_ponere(petitio, "id",
-        json_integer_creare(piscina, forum->petitio_index));
-    json_objectum_ponere(petitio, "method",
-        json_chorda_creare_literis(piscina, "tools/call"));
     json_objectum_ponere(arg_obj, "genus",
-        json_chorda_creare_literis(piscina, "pipatum"));
+        json_chorda_creare(piscina, genus));
     json_objectum_ponere(arg_obj, "titulus",
         json_chorda_creare(piscina, _titulus_ex_corpore(corpus)));
     json_objectum_ponere(arg_obj, "corpus",
         json_chorda_creare(piscina, corpus));
     json_objectum_ponere(arg_obj, "actor",
         json_chorda_creare_literis(piscina, "fran"));
-    json_objectum_ponere(params, "name",
-        json_chorda_creare_literis(piscina, "addere"));
-    json_objectum_ponere(params, "arguments", arg_obj);
-    json_objectum_ponere(petitio, "params", params);
+    textus = _instrumentum_vocare(forum, piscina, "addere",
+        arg_obj, culpa);
+    si (textus.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    novum_id = _res_id_ex_textu(textus, piscina);
+    si (ad.mensura > ZEPHYRUM && novum_id.mensura > ZEPHYRUM)
+    {
+        JsonValor* nexus_obj = json_objectum_creare(piscina);
+        chorda nexus_textus;
 
-    responsum = _daemon_petere(forum->portus, piscina,
-        json_scribere(petitio, piscina), culpa);
-    si (responsum.mensura == ZEPHYRUM)
-    {
-        redde NIHIL;
+        json_objectum_ponere(nexus_obj, "res",
+            json_chorda_creare(piscina, novum_id));
+        json_objectum_ponere(nexus_obj, "actus",
+            json_chorda_creare_literis(piscina, "nexus"));
+        json_objectum_ponere(nexus_obj, "verbum",
+            json_chorda_creare_literis(piscina, "respondet-ad"));
+        json_objectum_ponere(nexus_obj, "alterum",
+            json_chorda_creare(piscina, ad));
+        json_objectum_ponere(nexus_obj, "actor",
+            json_chorda_creare_literis(piscina, "fran"));
+        nexus_textus = _instrumentum_vocare(forum, piscina,
+            "gerere", nexus_obj, culpa);
+        si (nexus_textus.mensura == ZEPHYRUM)
+        {
+            /* res creata sed filum fractum - culpa nominat */
+            *culpa = _ch_forum("res creata sed nexus fili fractus");
+            redde NIHIL;
+        }
     }
-    textus = _textus_ex_responso(responsum, piscina, &est_error);
-    si (est_error)
-    {
-        *culpa = textus.mensura > ZEPHYRUM ? textus
-            : _ch_forum("missio recusata");
-        redde NIHIL;
-    }
-    imprimere("[forum] pipatum missum: %.*s\n",
+    imprimere("[forum] missum (%.*s): %.*s\n",
+        (int)genus.mensura, (constans character*)genus.datum,
         (int)(corpus.mensura > XL ? XL : corpus.mensura),
         (constans character*)corpus.datum);
     fflush(stdout);
     fructus = json_objectum_creare(piscina);
     json_objectum_ponere(fructus, "bene",
         json_boolean_creare(piscina, VERUM));
+    json_objectum_ponere(fructus, "res_id",
+        json_chorda_creare(piscina, novum_id));
     redde fructus;
+}
+
+/* articulum_servare {res_id?, titulus, corpus}: novus = addere
+ * conditum; exsistens = mutatio datum-mersione (superficialis -
+ * signatura/tags supersunt) */
+interior JsonValor*
+_articulum_servare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    ForumStatus* forum = (ForumStatus*)datum;
+    chorda res_id, titulus, corpus;
+    chorda textus;
+    chorda novum_id;
+    JsonValor* fructus;
+
+    res_id.mensura = ZEPHYRUM; res_id.datum = NIHIL;
+    titulus.mensura = ZEPHYRUM; titulus.datum = NIHIL;
+    corpus.mensura = ZEPHYRUM; corpus.datum = NIHIL;
+    si (argumenta != NIHIL)
+    {
+        res_id = json_ad_chorda(json_objectum_capere(argumenta,
+            "res_id"));
+        titulus = json_ad_chorda(json_objectum_capere(argumenta,
+            "titulus"));
+        corpus = json_ad_chorda(json_objectum_capere(argumenta,
+            "corpus"));
+    }
+    si (titulus.mensura == ZEPHYRUM)
+    {
+        *culpa = _ch_forum("titulus requiritur");
+        redde NIHIL;
+    }
+    si (res_id.mensura == ZEPHYRUM)
+    {
+        JsonValor* arg_obj = json_objectum_creare(piscina);
+
+        json_objectum_ponere(arg_obj, "genus",
+            json_chorda_creare_literis(piscina, "articulus"));
+        json_objectum_ponere(arg_obj, "titulus",
+            json_chorda_creare(piscina, titulus));
+        si (corpus.mensura > ZEPHYRUM)
+        {
+            json_objectum_ponere(arg_obj, "corpus",
+                json_chorda_creare(piscina, corpus));
+        }
+        json_objectum_ponere(arg_obj, "actor",
+            json_chorda_creare_literis(piscina, "fran"));
+        textus = _instrumentum_vocare(forum, piscina, "addere",
+            arg_obj, culpa);
+        si (textus.mensura == ZEPHYRUM)
+        {
+            redde NIHIL;
+        }
+        novum_id = _res_id_ex_textu(textus, piscina);
+    }
+    alioquin
+    {
+        JsonValor* arg_obj = json_objectum_creare(piscina);
+        JsonValor* mersio = json_objectum_creare(piscina);
+
+        json_objectum_ponere(mersio, "titulus",
+            json_chorda_creare(piscina, titulus));
+        json_objectum_ponere(mersio, "corpus",
+            json_chorda_creare(piscina, corpus));
+        json_objectum_ponere(arg_obj, "res",
+            json_chorda_creare(piscina, res_id));
+        json_objectum_ponere(arg_obj, "actus",
+            json_chorda_creare_literis(piscina, "mutatio"));
+        json_objectum_ponere(arg_obj, "datum",
+            json_chorda_creare(piscina,
+                json_scribere(mersio, piscina)));
+        json_objectum_ponere(arg_obj, "actor",
+            json_chorda_creare_literis(piscina, "fran"));
+        textus = _instrumentum_vocare(forum, piscina, "gerere",
+            arg_obj, culpa);
+        si (textus.mensura == ZEPHYRUM)
+        {
+            redde NIHIL;
+        }
+        novum_id = res_id;
+    }
+    imprimere("[forum] articulus servatus: %.*s\n",
+        (int)titulus.mensura, (constans character*)titulus.datum);
+    fflush(stdout);
+    fructus = json_objectum_creare(piscina);
+    json_objectum_ponere(fructus, "bene",
+        json_boolean_creare(piscina, VERUM));
+    json_objectum_ponere(fructus, "res_id",
+        json_chorda_creare(piscina, novum_id));
+    redde fructus;
+}
+
+/* actus unus gerere super rem: adiutor communis status_ponere/
+ * mutare/delere */
+interior JsonValor*
+_gerere_simplex (ForumStatus* forum, Piscina* piscina,
+    JsonValor* arg_obj, chorda* culpa)
+{
+    chorda textus = _instrumentum_vocare(forum, piscina, "gerere",
+        arg_obj, culpa);
+    JsonValor* fructus;
+
+    si (textus.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    fructus = json_objectum_creare(piscina);
+    json_objectum_ponere(fructus, "bene",
+        json_boolean_creare(piscina, VERUM));
+    redde fructus;
+}
+
+interior JsonValor*
+_status_ponere (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    ForumStatus* forum = (ForumStatus*)datum;
+    chorda res_id, novus;
+    JsonValor* arg_obj;
+
+    res_id.mensura = ZEPHYRUM; res_id.datum = NIHIL;
+    novus.mensura = ZEPHYRUM; novus.datum = NIHIL;
+    si (argumenta != NIHIL)
+    {
+        res_id = json_ad_chorda(json_objectum_capere(argumenta,
+            "res_id"));
+        novus = json_ad_chorda(json_objectum_capere(argumenta,
+            "novus"));
+    }
+    si (res_id.mensura == ZEPHYRUM || novus.mensura == ZEPHYRUM)
+    {
+        *culpa = _ch_forum("res_id et novus requiruntur");
+        redde NIHIL;
+    }
+    arg_obj = json_objectum_creare(piscina);
+    json_objectum_ponere(arg_obj, "res",
+        json_chorda_creare(piscina, res_id));
+    json_objectum_ponere(arg_obj, "actus",
+        json_chorda_creare_literis(piscina, "status"));
+    json_objectum_ponere(arg_obj, "novus",
+        json_chorda_creare(piscina, novus));
+    json_objectum_ponere(arg_obj, "actor",
+        json_chorda_creare_literis(piscina, "fran"));
+    redde _gerere_simplex(forum, piscina, arg_obj, culpa);
+}
+
+interior JsonValor*
+_mutare (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
+    chorda* culpa)
+{
+    ForumStatus* forum = (ForumStatus*)datum;
+    chorda res_id, corpus;
+    JsonValor* arg_obj;
+
+    res_id.mensura = ZEPHYRUM; res_id.datum = NIHIL;
+    corpus.mensura = ZEPHYRUM; corpus.datum = NIHIL;
+    si (argumenta != NIHIL)
+    {
+        res_id = json_ad_chorda(json_objectum_capere(argumenta,
+            "res_id"));
+        corpus = json_ad_chorda(json_objectum_capere(argumenta,
+            "corpus"));
+    }
+    si (res_id.mensura == ZEPHYRUM || corpus.mensura == ZEPHYRUM)
+    {
+        *culpa = _ch_forum("res_id et corpus requiruntur");
+        redde NIHIL;
+    }
+    arg_obj = json_objectum_creare(piscina);
+    json_objectum_ponere(arg_obj, "res",
+        json_chorda_creare(piscina, res_id));
+    json_objectum_ponere(arg_obj, "actus",
+        json_chorda_creare_literis(piscina, "mutatio"));
+    json_objectum_ponere(arg_obj, "clavis",
+        json_chorda_creare_literis(piscina, "corpus"));
+    json_objectum_ponere(arg_obj, "valor",
+        json_chorda_creare(piscina, corpus));
+    json_objectum_ponere(arg_obj, "actor",
+        json_chorda_creare_literis(piscina, "fran"));
+    redde _gerere_simplex(forum, piscina, arg_obj, culpa);
+}
+
+interior JsonValor*
+_delere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
+    chorda* culpa)
+{
+    ForumStatus* forum = (ForumStatus*)datum;
+    chorda res_id;
+    JsonValor* arg_obj;
+
+    res_id.mensura = ZEPHYRUM; res_id.datum = NIHIL;
+    si (argumenta != NIHIL)
+    {
+        res_id = json_ad_chorda(json_objectum_capere(argumenta,
+            "res_id"));
+    }
+    si (res_id.mensura == ZEPHYRUM)
+    {
+        *culpa = _ch_forum("res_id requiritur");
+        redde NIHIL;
+    }
+    arg_obj = json_objectum_creare(piscina);
+    json_objectum_ponere(arg_obj, "res",
+        json_chorda_creare(piscina, res_id));
+    json_objectum_ponere(arg_obj, "actus",
+        json_chorda_creare_literis(piscina, "remotio"));
+    json_objectum_ponere(arg_obj, "clavis",
+        json_chorda_creare_literis(piscina, "corpus"));
+    json_objectum_ponere(arg_obj, "actor",
+        json_chorda_creare_literis(piscina, "fran"));
+    redde _gerere_simplex(forum, piscina, arg_obj, culpa);
 }
 
 s32 principale (integer argc, character** argv)
@@ -397,23 +730,28 @@ s32 principale (integer argc, character** argv)
     }
     si (fumus)
     {
-        /* porta sine oculis: lectio contra daemonem verum ante
+        /* porta sine oculis: lectiones contra daemonem verum ante
          * fenestram ullam */
         chorda culpa;
         JsonValor* pipata;
+        JsonValor* articuli;
 
         culpa.mensura = ZEPHYRUM;
         culpa.datum = NIHIL;
-        pipata = _pipata_capere(&forum, piscina, &culpa);
-        si (pipata == NIHIL)
+        pipata = _res_capere(&forum, piscina, _ch_forum("pipatum"),
+            &culpa);
+        articuli = _res_capere(&forum, piscina,
+            _ch_forum("articulus"), &culpa);
+        si (pipata == NIHIL || articuli == NIHIL)
         {
             imprimere("[forum] fumus FRACTUS: %.*s\n",
                 (int)culpa.mensura,
                 (constans character*)culpa.datum);
             redde I;
         }
-        imprimere("[forum] fumus: %d pipata lecta\n",
-            (int)json_tabulatum_numerus(pipata));
+        imprimere("[forum] fumus: %d pipata, %d articuli\n",
+            (int)json_tabulatum_numerus(pipata),
+            (int)json_tabulatum_numerus(articuli));
         piscina_destruere(piscina_vocationis);
         piscina_destruere(piscina);
         redde ZEPHYRUM;
@@ -455,10 +793,18 @@ s32 principale (integer argc, character** argv)
         imprimere("FRACTA: internuntius\n");
         redde I;
     }
-    (vacuum)internuntius_praebere(inx, "pipata_legere",
-        _pipata_legere, &forum);
-    (vacuum)internuntius_praebere(inx, "pipatum_mittere",
-        _pipatum_mittere, &forum);
+    (vacuum)internuntius_praebere(inx, "res_legere",
+        _res_legere, &forum);
+    (vacuum)internuntius_praebere(inx, "mittere",
+        _mittere, &forum);
+    (vacuum)internuntius_praebere(inx, "articulum_servare",
+        _articulum_servare, &forum);
+    (vacuum)internuntius_praebere(inx, "status_ponere",
+        _status_ponere, &forum);
+    (vacuum)internuntius_praebere(inx, "mutare",
+        _mutare, &forum);
+    (vacuum)internuntius_praebere(inx, "delere",
+        _delere, &forum);
 
     imprimere("[forum] fenestra aperta (daemon portus %d)\n",
         (int)forum.portus);
