@@ -9635,3 +9635,58 @@ judgment call the instrument can't make — stayed with one tasteful
 dogfood identity. NEXT: Chunk C — examen codices
 (well-formedness / uniqueness / bidirectional rot), verdict-
 neutral at birth.
+
+## ANNOTATIONES STML — CHUNK C (CODICES EXAMINIS): INTENTIO (2026-07-21)
+
+Pull: park 01KY3D7EJP chunk C. Three codices, ALL DOMESTICUM
+(verdict-neutral at birth per ceremony; graduation by decretum):
+- 74 ANNOTATIO_MALFORMATA: anchored comment that does not parse -
+  the never-silently-prose rule gets its lint half; position =
+  annotation line + linea_erroris - 1 (the pre-pass preserves
+  lines), fallback comment start when stml gives no position.
+- 75 NID_DUPLICATUM: same nid twice in ONE file (fires at the
+  later occurrence). CROSS-FILE duplicates belong to the INDEX -
+  identitates --renovare gains a seen-set + CAUTIO (the examen
+  judges one file; the index owns the global truth).
+- 76 IDENTITAS_INVALIDA: nid values must be EXACTLY 26 Crockford
+  chars (no I/L/O/U); res= citations must be >= 6 valid chars
+  (format only - RESOLUTION of citations is chunk D's, where the
+  board resolver lives; the spec itself seats it there).
+
+Seat A dividend: semantica calls the collector directly (both in
+fontes) - the seam chunk C would have needed under seat C never
+gets built. Emitter: annotations are TRIVIA (no node) - a raw-
+position diagnostic variant (nodus NIHIL licet; MACRO_DOMESTICUM
+manual-position precedent), via from silva_fons_via. Petitiones
+are NOT judged (minting = the instrument's business, not a
+defect). Principal-fons annotations only (provided headers get
+their own judgment runs).
+
+Bars: battery e2e counts in probatio_silva_examen (74 fires/
+prose-never; 75 second-occurrence; 76 length/alphabet/res-prefix
++ valid-silent); enum+table+static-assert+silva.h extended (ABI:
+tail append only); amalgamare VERIFICATUM; suites + VECTIS TENET;
+corpus contact = the one real intentio stays clean.
+
+## ANNOTATIONES STML — CHUNK C (CODICES EXAMINIS): RELATIO (2026-07-21)
+
+Shipped: codices 74 ANNOTATIO_MALFORMATA / 75 NID_DUPLICATUM /
+76 IDENTITAS_INVALIDA, all DOMESTICUM (verdict-neutral;
+gradatio per decretum). _annotationes_examinare in semantica
+(hooked beside TOLERA irritum pass; collector called DIRECTLY -
+the seat-A dividend, no seam exists because none was needed);
+raw-position diagnostic variant for trivia (nodus NIHIL,
+MACRO_DOMESTICUM precedent); petitiones never judged; principal
+fons only. Cross-file duplicates = identitates --renovare CAUTIO
+(seen-set; summary line counts them). res= = format-only (>= VI
+Crockford); RESOLUTION deferred to chunk D by the spec's own
+seating. Battery 9 cases (fires + silences) 1294/1294; suite
+33/33; amalgamare VERIFICATUM (enum tail-appended in silva.h -
+the clamat gate held); VECTIS TENET; corpus contact clean (the
+real intentio judges ACCIPE zero-diagnostic). The examen-custos
+hook now pushes annotation defects on every .c/.h edit for free.
+
+NEXT: Chunk D - TABULA: ancora genus "nid" + resolver against
+identitates.tsv; board CAUTIO-si-inresolutae upgrades to true
+resolution; res= citations resolve against the board (the other
+half of bidirectional rot).

@@ -382,6 +382,21 @@ nomen enumeratio {
     EXAMEN_CODEX_LECTIO_ININITIATA,           /* SUSPECTUM */
     EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE,     /* SUSPECTUM */
     EXAMEN_CODEX_ININITIATA_FORSITAN,         /* SUSPECTUM, dormit */
+
+    /* Annotationes STML (parcum 01KY3D7EJP frustum C, 2026-07-21):
+     * verdicto-neutrales natae (DOMESTICUM; gradatio per decretum).
+     * 74 = ancoratum quod parsare nequit (regula numquam-tacite-
+     *      prosa, dimidium lint); positio = linea annotationis +
+     *      linea_erroris - 1 (praetransitus lineas servat);
+     * 75 = nid idem bis in plagula UNA (secunda sedes flagrat;
+     *      duplicata TRANS plagulas = res indicis, CAUTIO in
+     *      identitates --renovare);
+     * 76 = valor nid non-ULID (XXVI Crockford exacte) aut citatio
+     *      res= praefixo invalido (>= VI; RESOLUTIO citationum =
+     *      frustum D, ubi resolutor tabulae vivet). */
+    EXAMEN_CODEX_ANNOTATIO_MALFORMATA,        /* DOMESTICUM */
+    EXAMEN_CODEX_NID_DUPLICATUM,              /* DOMESTICUM */
+    EXAMEN_CODEX_IDENTITAS_INVALIDA,          /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

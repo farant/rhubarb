@@ -222,8 +222,11 @@ _renovare (Piscina* piscina, SilvaContextus* ctx,
 {
     FILE* ex = fopen(exitus, "w");
     InternamentumChorda* intern = internamentum_creare(piscina);
+    TabulaDispersa* nides_visae = tabula_dispersa_creare_chorda(
+        piscina, DXII);
     i32 summa = ZEPHYRUM;
     i32 petitiones = ZEPHYRUM;
+    i32 duplicata = ZEPHYRUM;
     integer f;
 
     si (ex == NIHIL || intern == NIHIL)
@@ -288,6 +291,27 @@ _renovare (Piscina* piscina, SilvaContextus* ctx,
                     petitiones++;
                     perge;
                 }
+                /* duplicata TRANS plagulas (codex 75 = plagula una;
+                 * indicis vicis = veritas globalis) */
+                si (nides_visae != NIHIL)
+                {
+                    si (tabula_dispersa_continet(nides_visae,
+                            id->valor))
+                    {
+                        fprintf(stderr, "identitates: CAUTIO nid"
+                            " duplicatum trans plagulas: %.*s"
+                            " (%s:%u)\n",
+                            (int)id->valor.mensura,
+                            (constans character*)id->valor.datum,
+                            viae[f], a->linea);
+                        duplicata++;
+                    }
+                    alioquin
+                    {
+                        (vacuum)tabula_dispersa_inserere(
+                            nides_visae, id->valor, NIHIL);
+                    }
+                }
                 si (a->unitas != NIHIL)
                 {
                     i32 columna_a;
@@ -336,6 +360,11 @@ _renovare (Piscina* piscina, SilvaContextus* ctx,
     {
         fprintf(stderr, " (petitiones %d - minta per -mintare)",
             (int)petitiones);
+    }
+    si (duplicata > ZEPHYRUM)
+    {
+        fprintf(stderr, " (CAUTIO: duplicata trans plagulas %d)",
+            (int)duplicata);
     }
     fprintf(stderr, "\n");
     redde ZEPHYRUM;

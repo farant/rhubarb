@@ -1946,6 +1946,45 @@ s32 principale (vacuum)
     _codicem_probare(piscina,
         "static void f(int contextus) { (void)contextus; }\n",
         (s32)EXAMEN_CODEX_PARAMETRUM_INUTILE, ZEPHYRUM);
+
+    imprimere("\n--- Probans annotationes STML (74-76) ---\n");
+    /* 74: ancoratum non parsabile flagrat */
+    _codicem_probare(piscina,
+        "/* <intentio sine fine */\nint a;\n",
+        (s32)EXAMEN_CODEX_ANNOTATIO_MALFORMATA, I);
+    /* prosa numquam lecta - tacet */
+    _codicem_probare(piscina,
+        "/* prosa normalis < 5 */\nint a;\n",
+        (s32)EXAMEN_CODEX_ANNOTATIO_MALFORMATA, ZEPHYRUM);
+    /* annotatio valida - tacet ubique */
+    _codicem_probare(piscina,
+        "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDE1R\"/> */\nint a;\n",
+        (s32)EXAMEN_CODEX_IDENTITAS_INVALIDA, ZEPHYRUM);
+    /* 75: nid idem bis (sedes secunda flagrat) */
+    _codicem_probare(piscina,
+        "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDE1R\"/> */\nint a;\n"
+        "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDE1R\"/> */\nint b;\n",
+        (s32)EXAMEN_CODEX_NID_DUPLICATUM, I);
+    /* 76: mensura falsa */
+    _codicem_probare(piscina,
+        "/* <nid v=\"01KY3A\"/> */\nint a;\n",
+        (s32)EXAMEN_CODEX_IDENTITAS_INVALIDA, I);
+    /* 76: littera vetita (L extra alphabetum Crockford) */
+    _codicem_probare(piscina,
+        "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDELR\"/> */\nint a;\n",
+        (s32)EXAMEN_CODEX_IDENTITAS_INVALIDA, I);
+    /* 76: citatio res= praefixo brevi */
+    _codicem_probare(piscina,
+        "/* <intentio res=\"01KY\">x</intentio> */\nint a;\n",
+        (s32)EXAMEN_CODEX_IDENTITAS_INVALIDA, I);
+    /* citatio res= valida - tacet */
+    _codicem_probare(piscina,
+        "/* <intentio res=\"01KY3D7EJP\">x</intentio> */\nint a;\n",
+        (s32)EXAMEN_CODEX_IDENTITAS_INVALIDA, ZEPHYRUM);
+    /* petitio numquam iudicatur - tacet */
+    _codicem_probare(piscina,
+        "/* <intentio nid>x</intentio> */\nint a;\n",
+        (s32)EXAMEN_CODEX_IDENTITAS_INVALIDA, ZEPHYRUM);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

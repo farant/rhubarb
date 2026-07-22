@@ -137,3 +137,30 @@ Notes for the future:
 - Launcher candidate prefilter deliberately over-matches (probatio
   string literals) — parse-level anchoring makes false positives
   harmless (one wasted parse), false negatives impossible.
+
+## 2026-07-21 (night) — Chunk C: the codices (74-76)
+
+Three examen codices, all DOMESTICUM (verdict-neutral at birth,
+graduation by decretum): 74 ANNOTATIO_MALFORMATA (anchored-but-
+unparsable — the lint half of never-silently-prose; position =
+annotation line + linea_erroris - 1, fallback comment start), 75
+NID_DUPLICATUM (same nid twice in ONE file, second occurrence
+fires; cross-file = CAUTIO in identitates --renovare via a
+seen-set — the examen judges one file, the index owns global
+truth), 76 IDENTITAS_INVALIDA (nid = exactly 26 Crockford chars;
+res= citations = valid >= 6 prefix, FORMAT only — resolution is
+chunk D's, where the board resolver lives).
+
+Seat A dividend collected: semantica calls the collector directly
+(_annotationes_examinare hooked beside _toleras_irritas_examinare)
+— the callback seam chunk C would have needed under seat C was
+never built. Annotations are trivia (no node), so a raw-position
+diagnostic emitter variant (nodus NIHIL licet; MACRO_DOMESTICUM
+manual-position precedent). Petitiones are never judged — minting
+is the instrument's business, not a defect.
+
+Battery: 9 new e2e cases in probatio_silva_examen (fires + the
+silences: prose, valid annotation, valid res=, petitio), 1294/1294.
+Enum/table/static-assert/silva.h all tail-appended (ABI append-only
+law). Corpus contact: the one real intentio stays ACCIPE clean —
+the codices watched it and had nothing to say.

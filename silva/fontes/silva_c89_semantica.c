@@ -6,6 +6,7 @@
 #include "silva_c89_oraculum.h"
 #include "silva_c89_fluxus.h"
 #include "silva_c89_fluxus_datorum.h"
+#include "silva_annotationes.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -178,7 +179,12 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "hoc ramo sumpto variabilis ininitiata legitur (usus = socius)",
                                                   EXAMEN_SUSPECTUM },
     { "variabilis fortasse ininitiata legitur (classis residua)",
-                                                  EXAMEN_SUSPECTUM }
+                                                  EXAMEN_SUSPECTUM },
+    { "annotatio malformata (ancorata sed non parsabilis)",
+                                                  EXAMEN_DOMESTICUM },
+    { "nid duplicatum in plagula",                EXAMEN_DOMESTICUM },
+    { "identitas invalida (nid = ULID XXVI; res = praefixum >= VI)",
+                                                  EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -1040,6 +1046,250 @@ _tolera_absorbere (SilvaSemantica* sem, constans SilvaNodus* nodus,
         }
     }
     redde FALSUM;
+}
+
+/* ==================================================
+ * Annotationes STML (parcum 01KY3D7EJP frustum C): codices 74-76
+ * verdicto-neutrales. Annotationes TRIVIA sunt (sine nodo) -
+ * diagnosticum positione cruda (nodus NIHIL licet; exemplar
+ * MACRO_DOMESTICUM positionis manualis). Petitiones numquam
+ * iudicantur (mintatio = res instrumenti, non defectus); fons
+ * princeps solus (capita praebita vicem suam accipiunt).
+ * ================================================== */
+
+interior vacuum
+_diagnosticum_annotationis (SilvaSemantica* sem, s32 codex,
+    s32 fons_index, i32 linea, i32 columna)
+{
+    SemanticaDiagnosticum* d;
+
+    si (sem == NIHIL)
+    {
+        redde;
+    }
+    d = (SemanticaDiagnosticum*)xar_addere(sem->diagnostica);
+    si (d == NIHIL)
+    {
+        redde;
+    }
+    d->nodus = NIHIL;
+    d->socius = NIHIL;
+    d->codex = codex;
+    d->causa = _codices[codex].causa;
+    d->severitas = _codices[codex].severitas;
+    d->provisionale = FALSUM;
+    d->via.mensura = ZEPHYRUM;
+    d->via.datum = NIHIL;
+    d->linea = linea;
+    d->columna = columna;
+    d->longitudo = ZEPHYRUM;
+    si (sem->parsura_currens != NIHIL
+        && sem->parsura_currens->expansio != NIHIL)
+    {
+        constans chorda* v = silva_fons_via(
+            sem->parsura_currens->expansio, fons_index);
+
+        si (v != NIHIL)
+        {
+            d->via = *v;
+        }
+    }
+}
+
+interior b32
+_littera_crockford (i8 c)
+{
+    redde (c >= '0' && c <= '9')
+        || ((c >= 'A' && c <= 'Z') && c != 'I' && c != 'L'
+            && c != 'O' && c != 'U');
+}
+
+/* praefixum VERUM: >= VI et <= XXVI; FALSUM: XXVI exacte */
+interior b32
+_ulid_validum (constans chorda* v, b32 praefixum)
+{
+    i32 k;
+
+    si (v == NIHIL || v->datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (praefixum)
+    {
+        si (v->mensura < VI || v->mensura > XXVI)
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (v->mensura != XXVI)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < v->mensura; k++)
+    {
+        si (!_littera_crockford(v->datum[k]))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* citationes res= per arborem (formatus solus - resolutio frustum
+ * D, ubi resolutor tabulae vivet) */
+interior vacuum
+_res_examinare (SilvaSemantica* sem, constans SilvaAnnotatio* a,
+    StmlNodus* nodus)
+{
+    i32 k;
+
+    si (nodus == NIHIL)
+    {
+        redde;
+    }
+    si ((s32)nodus->genus == STML_NODUS_ELEMENTUM
+        && nodus->attributa != NIHIL)
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(nodus->attributa); k++)
+        {
+            constans StmlAttributum* attr =
+                (constans StmlAttributum*)xar_obtinere(
+                    nodus->attributa, k);
+
+            si (attr != NIHIL && attr->titulus != NIHIL
+                && attr->titulus->mensura == III
+                && memcmp(attr->titulus->datum, "res", III)
+                    == ZEPHYRUM
+                && !_ulid_validum(attr->valor, VERUM))
+            {
+                _diagnosticum_annotationis(sem,
+                    (s32)EXAMEN_CODEX_IDENTITAS_INVALIDA,
+                    a->fons_index, a->linea, a->columna);
+            }
+        }
+    }
+    si (nodus->liberi != NIHIL)
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(nodus->liberi); k++)
+        {
+            _res_examinare(sem, a,
+                *(StmlNodus**)xar_obtinere(nodus->liberi, k));
+        }
+    }
+}
+
+nomen structura {
+    chorda valor;
+} _NidVisum;
+
+interior vacuum
+_annotationes_examinare (SilvaSemantica* sem,
+    constans SilvaParsura* parsura)
+{
+    InternamentumChorda* intern;
+    Xar* annotationes;
+    Xar* visa;
+    i32  k;
+
+    si (sem == NIHIL || parsura == NIHIL)
+    {
+        redde;
+    }
+    intern = internamentum_creare(sem->piscina);
+    si (intern == NIHIL)
+    {
+        redde;
+    }
+    annotationes = silva_annotationes_colligere(sem->piscina,
+        parsura, intern);
+    si (annotationes == NIHIL)
+    {
+        redde;
+    }
+    visa = xar_creare(sem->piscina, (i32)magnitudo(_NidVisum));
+    per (k = ZEPHYRUM; k < xar_numerus(annotationes); k++)
+    {
+        constans SilvaAnnotatio* a = (constans SilvaAnnotatio*)
+            xar_obtinere(annotationes, k);
+        Xar* identitates;
+        i32  j;
+
+        si (a->fons_index != parsura->fons_princeps)
+        {
+            perge;
+        }
+        si (!a->parsata)
+        {
+            i32 linea = a->linea;
+            i32 columna = a->columna;
+
+            si (a->linea_erroris >= I)
+            {
+                linea = a->linea + a->linea_erroris - I;
+                columna = a->columna_erroris;
+            }
+            _diagnosticum_annotationis(sem,
+                (s32)EXAMEN_CODEX_ANNOTATIO_MALFORMATA,
+                a->fons_index, linea, columna);
+            perge;
+        }
+        identitates = silva_annotationes_identitates(sem->piscina,
+            a);
+        si (identitates != NIHIL)
+        {
+            per (j = ZEPHYRUM; j < xar_numerus(identitates); j++)
+            {
+                constans SilvaIdentitas* id =
+                    (constans SilvaIdentitas*)xar_obtinere(
+                        identitates, j);
+                i32 m;
+                b32 iam = FALSUM;
+
+                si (id->petitio)
+                {
+                    perge;
+                }
+                si (!_ulid_validum(&id->valor, FALSUM))
+                {
+                    _diagnosticum_annotationis(sem,
+                        (s32)EXAMEN_CODEX_IDENTITAS_INVALIDA,
+                        a->fons_index, a->linea, a->columna);
+                    perge;
+                }
+                per (m = ZEPHYRUM; visa != NIHIL
+                    && m < xar_numerus(visa); m++)
+                {
+                    constans _NidVisum* n = (constans _NidVisum*)
+                        xar_obtinere(visa, m);
+
+                    si (n->valor.mensura == id->valor.mensura
+                        && memcmp(n->valor.datum, id->valor.datum,
+                               (memoriae_index)id->valor.mensura)
+                            == ZEPHYRUM)
+                    {
+                        iam = VERUM;
+                        frange;
+                    }
+                }
+                si (iam)
+                {
+                    _diagnosticum_annotationis(sem,
+                        (s32)EXAMEN_CODEX_NID_DUPLICATUM,
+                        a->fons_index, a->linea, a->columna);
+                }
+                alioquin si (visa != NIHIL)
+                {
+                    _NidVisum* n = (_NidVisum*)xar_addere(visa);
+
+                    si (n != NIHIL)
+                    {
+                        n->valor = id->valor;
+                    }
+                }
+            }
+        }
+        _res_examinare(sem, a, a->documentum);
+    }
 }
 
 /* passus finalis: TOLERA irrita flagrant (positio = commentarium) */
@@ -3940,6 +4190,7 @@ silva_c89_semantica_analysare_cum_systemate (Piscina* piscina,
     /* TOLERA irrita (gradus severi): suppressiones quae nihil
      * absorbuerunt aut sine causa - post ambulationem totam */
     _toleras_irritas_examinare(sem, parsura);
+    _annotationes_examinare(sem, parsura);
     /* MENU-FINALE: inutilia (69/70) - post ambulationem totam */
     _inutiles_examinare(sem);
     redde sem;
