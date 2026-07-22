@@ -1149,3 +1149,36 @@ lazily against build/identitates.tsv (nexus.tsv-twin index),
 "citata ex codice" reverse links in res output (build/
 citationes.tsv), citation health in census. INTENTIO/RELATIO in
 the silva log.
+
+## K4.5 FRUSTUM 1 - FLUMEN ACTORUM (acta): INTENTIO (2026-07-22)
+
+Parcum 01KY57P2WD tractum. Instrumentum lectionis "acta" = cauda
+fluminis eventuum globalis (superficies recensionis contractus
+scribae: "quid hodie scriptum est" una quaestione). Stratum gesta:
+gesta_acta_recentia(mundus, piscina, quantum, genus_filtrum?,
+actor_filtrum?) -> Xar de GestaActum {seq, creatum, actor, origo,
+genus_eventus, res_id, res_titulus, summarium} - SELECT tessellae
+seq DESC LIMIT, trunco solo (branch_id vacuum; param ramus =
+futurum nominatum), summarium per genus eventus ex dato JSON
+(nota=textus initium, status=novus, creatio=titulus, mutatio=
+clavis, actio-facta=actio), titulus per plicaturam res. Stratum
+tabularium: instrumentum "acta" {quantum? XXV, genus?, actor?} ->
+lineae legibiles recentissima primum. Doctrina += acta. Probatio
+in suite gestarum. Barrae: suite gestarum tota + probatio nova +
+cursus vivus contra scrinium verum.
+
+## K4.5 FRUSTUM 1 - FLUMEN ACTORUM (acta): RELATIO (2026-07-22)
+
+Navatum: instrumentum "acta" {quantum? XXV tectum CC, genus?,
+actor?} - cauda fluminis eventuum trans res omnes, recentissima
+primum, forma "seq tempus actor genus titulus - summarium".
+Sedes: stratum tabularii solum (SQL localis per gesta_scrinium -
+praecedens census/rami; extractio ad gesta si consumptor alter).
+SQL una, filtra per idioma ligaminis duplicis (? = '' OR ...).
+Summarium per ordinem clavium (corpus ANTE titulum - echo tituli
+in creationibus vitatum + saltus aequalitatis). Truncus solus;
+param ramus futurum nominatum. Portae: suite gestarum 680 + 224
+(V asserta nova acta), fumus vivus contra scrinium verum (bis:
+sine filtris + actor=claude; ansa initializationis in fumo
+detecta - "nondum initiatum" sine ea). Doctrina += acta (sessiones
+futurae eam hereditent). Frustum 1 ex V parci 01KY57P2WD.

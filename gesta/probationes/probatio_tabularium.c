@@ -375,6 +375,20 @@ s32 principale (vacuum)
     CREDO_VERUM (strstr(r, "perf") != NIHIL);
     CREDO_VERUM (strstr(r, "vocabularium") != NIHIL);
 
+    /* IX-b. acta (K4.5 frustum 1): cauda fluminis - eventus
+     * recentes trans res, filtrum generis excludit cetera */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":113,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"acta\",\"arguments\":{}}}");
+    CREDO_VERUM (strstr(r, "acta recentia") != NIHIL);
+    CREDO_VERUM (strstr(r, "creatio") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":114,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"acta\",\"arguments\":{\"genus\":\"creatio\","
+        "\"quantum\":2}}}");
+    CREDO_VERUM (strstr(r, "creatio") != NIHIL);
+    CREDO_VERUM (strstr(r, "  nota  ") == NIHIL);
+
     /* X. nexus inter res (saccharum K2: res vinculi propria -
      * creatio + membra duo; grammatica gerere eadem, G15) */
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":14,"

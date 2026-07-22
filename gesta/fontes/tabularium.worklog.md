@@ -218,3 +218,26 @@ Gotchas recorded:
 - The amalgam correctly does NOT depend on lib headers — specimen B
   rebuilt lib objects and consumers but not amalgama_silva.o. The
   old hand-maintained SILVA_H ABI checks are subsumed by the truth.
+
+## 2026-07-22 — acta (K4.5 frustum 1)
+
+Global event-stream tail as a read tool. Notes:
+- Implemented ENTIRELY in the tabularium layer (handler-local SQL
+  via gesta_scrinium) — census's rami-activi count is the
+  precedent. If a second consumer wants the query, extract to
+  gesta_acta_recentia then.
+- One SQL, two optional filters via the double-bind idiom:
+  `(? = '' OR col = ?)` binding the same value twice — no dynamic
+  SQL assembly.
+- Truncus only (branch_id = ''); a ramus param is the named
+  future.
+- Summarium = first textual key from the event datum, order:
+  textus, novus, corpus, titulus, actio, verbum, clavis, valor.
+  corpus deliberately BEFORE titulus (creatio events would echo
+  the res title otherwise) + chorda_aequalis skip when the
+  summarium equals the title anyway.
+- Cut at first newline or LXXX bytes with "..." marker.
+- Live-drive gotcha: the real server requires the initialize
+  handshake ("nondum initiatum" -32002) — the probatio's _mitte
+  path initializes in setup, a bare printf-drive must send
+  initialize first.
