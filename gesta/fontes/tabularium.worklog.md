@@ -307,3 +307,12 @@ ignotum" — daemon currens legere praecedebat. Necare sufficit:
 start-if-absent per launcher REAEDIFICAT (staleness-podatum) et
 respawnat. Haec est via renovationis daemonis fori: pkill + vocatio
 proxima.
+
+## 2026-07-22 — cp super binarium = SIGKILL (macOS, conventio apps/)
+
+`cp novum bin/forum` SUPER binarium exsistens → exec sequens
+SIGKILL (exitus 137) dat: macOS arm64 signaturam ad-hoc inodi
+mutati invalidat. Primus cp (destinatio absens) semper viget —
+fallacia latens usque ad secundam constructionem. Cura: `rm -f`
+ANTE cp (inodus recens = signatura recens). In forum.sh fixum;
+conventio apps/ omnium futurorum.
