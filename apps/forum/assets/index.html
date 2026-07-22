@@ -534,6 +534,32 @@ function anquirere_nunc() { ultima = {}; anquirere(); }
 
 setInterval(anquirere, 2000);
 anquirere();
+
+/* fumus plenus (-fumus-plenus): IS pipat in onere, C respondet
+ * via daemonis, IS filium videt -> fumus_perfectus. Gyrus totus
+ * (IS -> pons -> daemon -> annales -> legere -> IS) sine oculis. */
+var fumus = { activus: false, id: null, nuntiatus: false };
+internuntius.vocare('fumus_modus', {}).then(function (r) {
+  if (!r.plenus) { return; }
+  fumus.activus = true;
+  internuntius.vocare('mittere',
+    { genus: 'pipatum', corpus: '[fumus] salve ex fenestra' })
+    .then(function (rr) { fumus.id = rr.res_id; });
+  setInterval(function () {
+    if (!fumus.activus || !fumus.id || fumus.nuntiatus) { return; }
+    internuntius.vocare('res_legere', { genus: 'pipatum' })
+      .then(function (r2) {
+        var visum = false;
+        (r2.res || []).forEach(function (p) {
+          if (p.respondet_ad === fumus.id) { visum = true; }
+        });
+        if (visum && !fumus.nuntiatus) {
+          fumus.nuntiatus = true;
+          internuntius.vocare('fumus_perfectus', {});
+        }
+      });
+  }, 500);
+});
 </script>
 </body>
 </html>

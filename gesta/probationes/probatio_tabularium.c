@@ -1710,6 +1710,41 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "respondet_ad") != NIHIL);
         CREDO_VERUM (strstr(r, arti) != NIHIL);
         CREDO_VERUM (strstr(r, "respondeo.") != NIHIL);
+
+        /* F4: ad = responsum uno vocamine + titulus derivatus */
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":962,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"pipatum\","
+            "\"corpus\":\"responsum sine titulo, uno vocamine.\","
+            "\"ad\":\"%s\"}}}", pipi);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "--respondet-ad-->") != NIHIL);
+        CREDO_VERUM (strstr(r, "creata: responsum sine titulo,")
+            != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":963,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":\"pipatum\"}}}");
+        CREDO_VERUM (strstr(r, pipi) != NIHIL);
+        CREDO_VERUM (strstr(r, "respondet_ad") != NIHIL);
+
+        /* F4: salutatio lectoris + acta ab_lecto (cursor conditus
+         * in initialize primo ad hwm tunc - omnia posteriora non
+         * lecta) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":964,"
+            "\"method\":\"initialize\",\"params\":{}}");
+        CREDO_VERUM (strstr(r, "NOVA:") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":965,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"acta\",\"arguments\":{\"ab_lecto\":\"verum\","
+            "\"quantum\":\"200\"}}}");
+        CREDO_VERUM (strstr(r, "acta non lecta") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":966,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"acta\",\"arguments\":{\"ab_lecto\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "(nihil novi)") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":967,"
+            "\"method\":\"initialize\",\"params\":{}}");
+        CREDO_VERUM (strstr(r, "NOVA:") == NIHIL);
     }
 
     credo_imprimere_compendium();

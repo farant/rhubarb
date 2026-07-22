@@ -30,18 +30,34 @@
 #include "capsula.h"
 #include "vitrea.h"
 #include "internuntius.h"
+#include "speculum.h"
 #include "capsula_forum.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
+/* capsula fontium speculi (build/speculum/forum/) - externus
+ * directus, mos consumptoris speculi (caput generatum non
+ * includitur: silva ".." non resolvit, symbolum contractus est) */
+/* <aedilis obiectum="build/speculum/forum/capsula_speculi_forum.c"/> */
+externus constans CapsulaEmbed capsula_speculi_forum;
+
 #define FORUM_PORTUS_ORDINARIUS 8753
 /* legere CC rerum cum corporibus - laxe (numerus romanus deest) */
 #define RESPONSUM_CAPACITAS 262144
+/* tempus excedens fumi pleni: LXXV gressus x CC ms = XV s */
+#define FUMUS_GRESSUS_MAXIMI 75
 
 nomen structura {
     i32 portus;
-    s64 petitio_index;   /* id JSON-RPC crescens */
+    s64 petitio_index;      /* id JSON-RPC crescens */
+    /* fumus plenus (-fumus-plenus): fenestra vera, IS pipat, C
+     * respondet via daemonis (MCP simulata), IS filium videt */
+    b32 fumus_plenus;
+    b32 fumus_perfectus_est;
+    b32 fumus_responsum_missum;
+    character fumus_pipatum_id[LXIV];
+    i32 fumus_pipatum_mensura;
 } ForumStatus;
 
 /* litterae -> chorda (sine copia; unio contra cast-qual) */
@@ -470,6 +486,15 @@ _mittere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
             redde NIHIL;
         }
     }
+    /* fumus plenus: pipatum IS-latum notatur - C ei respondebit */
+    si (forum->fumus_plenus && ad.mensura == ZEPHYRUM
+        && novum_id.mensura > ZEPHYRUM
+        && novum_id.mensura < (i32)LXIV)
+    {
+        memcpy(forum->fumus_pipatum_id, novum_id.datum,
+            (memoriae_index)novum_id.mensura);
+        forum->fumus_pipatum_mensura = novum_id.mensura;
+    }
     imprimere("[forum] missum (%.*s): %.*s\n",
         (int)genus.mensura, (constans character*)genus.datum,
         (int)(corpus.mensura > XL ? XL : corpus.mensura),
@@ -694,6 +719,34 @@ _delere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
     redde _gerere_simplex(forum, piscina, arg_obj, culpa);
 }
 
+/* fumus_modus {} -> {plenus} - IS choreographiam fumi rogaverit */
+interior JsonValor*
+_fumus_modus (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    ForumStatus* forum = (ForumStatus*)datum;
+    JsonValor* fructus = json_objectum_creare(piscina);
+
+    (vacuum)argumenta;
+    (vacuum)culpa;
+    json_objectum_ponere(fructus, "plenus",
+        json_boolean_creare(piscina, forum->fumus_plenus));
+    redde fructus;
+}
+
+/* fumus_perfectus {} - IS filium vidit: gyrus totus clausus */
+interior JsonValor*
+_fumus_perfectus (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    ForumStatus* forum = (ForumStatus*)datum;
+
+    (vacuum)argumenta;
+    (vacuum)culpa;
+    forum->fumus_perfectus_est = VERUM;
+    redde json_objectum_creare(piscina);
+}
+
 s32 principale (integer argc, character** argv)
 {
     Piscina* piscina = piscina_generare_dynamicum("forum",
@@ -716,6 +769,10 @@ s32 principale (integer argc, character** argv)
     }
     forum.portus = FORUM_PORTUS_ORDINARIUS;
     forum.petitio_index = (s64)I;
+    forum.fumus_plenus = FALSUM;
+    forum.fumus_perfectus_est = FALSUM;
+    forum.fumus_responsum_missum = FALSUM;
+    forum.fumus_pipatum_mensura = ZEPHYRUM;
     per (k = I; k < argc; k++)
     {
         si (strcmp(argv[k], "-portus") == ZEPHYRUM && k + I < argc)
@@ -726,6 +783,10 @@ s32 principale (integer argc, character** argv)
         alioquin si (strcmp(argv[k], "-fumus") == ZEPHYRUM)
         {
             fumus = VERUM;
+        }
+        alioquin si (strcmp(argv[k], "-fumus-plenus") == ZEPHYRUM)
+        {
+            forum.fumus_plenus = VERUM;
         }
     }
     si (fumus)
@@ -805,37 +866,119 @@ s32 principale (integer argc, character** argv)
         _mutare, &forum);
     (vacuum)internuntius_praebere(inx, "delere",
         _delere, &forum);
+    (vacuum)internuntius_praebere(inx, "fumus_modus",
+        _fumus_modus, &forum);
+    (vacuum)internuntius_praebere(inx, "fumus_perfectus",
+        _fumus_perfectus, &forum);
 
-    imprimere("[forum] fenestra aperta (daemon portus %d)\n",
-        (int)forum.portus);
-    fflush(stdout);
-
-    dum (!fenestra_debet_claudere(fenestra))
+    /* modus-debug se-fontis: Cmd+Shift+D (mos domus) */
     {
-        Eventus eventus;
-        chorda nuntium;
-        VitreaNuntiusGenus genus;
-        PiscinaNotatio nota;
+        Speculum* speculum = speculum_creare(piscina,
+            &capsula_speculi_forum, inx, vitrea_aestimator,
+            vitrea);
+        i32 gressus_fumi = ZEPHYRUM;
 
-        fenestra_expectare_eventus(fenestra, CC);
-        dum (fenestra_obtinere_eventus(fenestra, &eventus))
+        si (speculum == NIHIL)
         {
-            /* eventa fenestralia sola (livratio duplex) */
+            imprimere("FRACTA: speculum\n");
+            redde I;
         }
-        nota = piscina_notare(piscina_vocationis);
-        dum (vitrea_obtinere_nuntium(vitrea, &nuntium, &genus))
+
+        imprimere("[forum] fenestra aperta (daemon portus %d)\n",
+            (int)forum.portus);
+        fflush(stdout);
+
+        dum (!fenestra_debet_claudere(fenestra))
         {
-            si (genus == VITREA_NUNTIUS_PONS)
+            Eventus eventus;
+            chorda nuntium;
+            VitreaNuntiusGenus genus;
+            PiscinaNotatio nota;
+
+            fenestra_expectare_eventus(fenestra, CC);
+            dum (fenestra_obtinere_eventus(fenestra, &eventus))
             {
-                internuntius_tractare(inx, nuntium,
-                    piscina_vocationis);
+                (vacuum)speculum_tangere(speculum, &eventus);
             }
-            alioquin
+            nota = piscina_notare(piscina_vocationis);
+            dum (vitrea_obtinere_nuntium(vitrea, &nuntium, &genus))
             {
-                vitrea_recargare(vitrea);
+                si (genus == VITREA_NUNTIUS_PONS)
+                {
+                    internuntius_tractare(inx, nuntium,
+                        piscina_vocationis);
+                }
+                alioquin
+                {
+                    vitrea_recargare(vitrea);
+                }
             }
+            /* fumus plenus: C respondet pipato IS-lato via
+             * daemonis (via MCP simulata), deinde IS filium
+             * videre debet et fumus_perfectus vocare */
+            si (forum.fumus_plenus)
+            {
+                si (forum.fumus_pipatum_mensura > ZEPHYRUM
+                    && !forum.fumus_responsum_missum)
+                {
+                    JsonValor* arg_obj =
+                        json_objectum_creare(piscina_vocationis);
+                    chorda ad_id;
+                    chorda culpa_f;
+                    chorda textus_f;
+
+                    ad_id.datum =
+                        (i8*)forum.fumus_pipatum_id;
+                    ad_id.mensura = forum.fumus_pipatum_mensura;
+                    culpa_f.mensura = ZEPHYRUM;
+                    culpa_f.datum = NIHIL;
+                    json_objectum_ponere(arg_obj, "genus",
+                        json_chorda_creare_literis(
+                            piscina_vocationis, "pipatum"));
+                    json_objectum_ponere(arg_obj, "corpus",
+                        json_chorda_creare_literis(
+                            piscina_vocationis,
+                            "[fumus] responsum trans daemonem"));
+                    json_objectum_ponere(arg_obj, "ad",
+                        json_chorda_creare(piscina_vocationis,
+                            ad_id));
+                    json_objectum_ponere(arg_obj, "actor",
+                        json_chorda_creare_literis(
+                            piscina_vocationis, "claude"));
+                    json_objectum_ponere(arg_obj, "signatura",
+                        json_chorda_creare_literis(
+                            piscina_vocationis, "Fumus"));
+                    textus_f = _instrumentum_vocare(&forum,
+                        piscina_vocationis, "addere", arg_obj,
+                        &culpa_f);
+                    forum.fumus_responsum_missum = VERUM;
+                    si (textus_f.mensura == ZEPHYRUM)
+                    {
+                        imprimere("[forum] FUMUS FRACTUS:"
+                            " responsum non missum\n");
+                        redde I;
+                    }
+                    imprimere("[forum] fumus: responsum missum\n");
+                    fflush(stdout);
+                }
+                si (forum.fumus_perfectus_est)
+                {
+                    imprimere("FUMUS PLENUS: pipatum IS ->"
+                        " responsum C via daemonis -> filium IS"
+                        " vidit\n");
+                    fflush(stdout);
+                    frange;
+                }
+                gressus_fumi++;
+                si (gressus_fumi > (i32)FUMUS_GRESSUS_MAXIMI)
+                {
+                    imprimere("[forum] FUMUS FRACTUS: tempus"
+                        " excessum\n");
+                    redde I;
+                }
+            }
+            piscina_reficere(piscina_vocationis, nota);
         }
-        piscina_reficere(piscina_vocationis, nota);
     }
 
     imprimere("[forum] finis\n");

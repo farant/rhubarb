@@ -1381,3 +1381,90 @@ Navatum ex intentione, portae virides:
   forum.sh), tabulam videt, pipat ex arca.
 Proximum F3: articuli + fila (visus articulorum, editor, commentaria
 respondet-ad, tumuli).
+
+## FORUM F3 - ARTICULI + FILA: INTENTIO (2026-07-22)
+
+Phasis app pura - mutationes machinae NULLAE (semantica probata:
+mutatio = mersio superficialis clavium gesta.c:894-910 -> servare
+uno eventu, signatura/tags supersunt; remotio = deletio clavis
+:912-925 -> tumulus = corpus absens; machina articuli seminata F0;
+legere genera omnia servit).
+
+Frusta (apps/forum sola):
+1. forum.c tractatores generales: res_legere {genus} (pipata_legere
+   generalisatum), mittere {genus, corpus, ad?} (addere titulo
+   XL-praefixo + nexus respondet-ad si ad - pipata responsa ET
+   commentaria uno tractatore; custos CCXL daemonis pipata tegit),
+   articulum_servare {res_id?, titulus, corpus} (absens = addere
+   conditum; praesens = mutatio datum-mersione), status_ponere
+   {res_id, novus}, mutare {res_id, corpus} (editio commentarii),
+   delere {res_id} (remotio corporis = tumulus). Fumus + articuli.
+2. index.html: tres visus (tabula | articuli | articulus-unus cum
+   editore). Nav vertens. Articuli: index cum sigillis statuum
+   (conditum/publicatum/retractum - omnes in app, Fran auctor est),
+   click -> visus plenus: titulus, paragraphi (linea vacua = <p>),
+   butones legales machinae (conditum->publicare, publicatum->
+   retractare), editor (titulus + textarea, servare), filum
+   commentariorum profunditate libera cum arcis responsi in linea,
+   editio/deletio commentarii, tumuli ([remotum] si filii, celatum
+   si sine filiis), arca commentarii summi. Pipata: responsa in
+   linea (genus pipatum, numerator CCXL). Anquisitio per visum
+   activum cum differentia.
+Portae: fumus (-fumus pipata + articuli numerat) + constructio
+aedilis + oculi Franis (articulus scriptus, publicatus, commentarium
+meum per MCP in fenestra vivente, responsum ex app).
+
+## FORUM F3 - ARTICULI + FILA: RELATIO (2026-07-22)
+
+Navatum ex intentione (phasis app pura - machina intacta):
+- forum.c: tractatores sex generales (res_legere/mittere/articulum_
+  servare/status_ponere/mutare/delere) super adiutorem unum
+  _instrumentum_vocare (petitio json-aedificata, involucrum MCP
+  extractum); mittere = addere + nexus respondet-ad uno tractatore
+  (pipata responsa ET commentaria); servare = addere conditum aut
+  mutatio datum-mersione; tumulus = remotio corporis. Fumus + numerat
+  articulos.
+- index.html: visus quattuor (pipata | articuli | articulus | editor),
+  nav vertens, index articulorum sigillis statuum, visus articuli
+  (paragraphi linea-vacua, butones machinae legales soli: conditum->
+  publicare, publicatum->retractare, recensere), filum commentariorum
+  profunditate libera (arcae responsi in linea, editio, deletio,
+  tumuli "[remotum]" si filii / celati si sine), responsa pipatorum
+  in linea numeratore CCXL, anquisitio per visum activum cum
+  differentia + custodia focus (arca inter tabulam aperta = redditio
+  omissa ne perdatur).
+- Portae: constructio aedilis viridis, fumus "5 pipata, 0 articuli",
+  syntaxis IS per JavaScriptCore (osascript new Function) VALIDA.
+- RESTAT ACCEPTATIO OCULIS: Fran articulum scribit/publicat,
+  commentarium meum per MCP, responsum ex app - fere BARRA VIVA F4.
+Proximum F4: speculum indutum + fumus se-nuntians + barra vivens
+(pulsus C-lateris probabiliter non necessarius - anquisitio IS
+sufficit scala personali).
+
+## FORUM F4 - ERGONOMIA MCP + SPECULUM + FUMUS: INTENTIO (2026-07-22)
+
+Ex usu vero diei (tria pipata Franis non visa - caecitas probata):
+1. Machina (tabularium.c): (a) arg "ad" in addere - nexus
+   respondet-ad sponte post creationem (responsa uno vocamine, non
+   duobus; in ramo nondum); (b) titulus optionalis si corpus datur
+   (praefixum XL codicillorum ad lineam novam derivatum - finis
+   tituli-fabricandi); (c) acta {ab_lecto:"verum"} = eventa non
+   lecta VETUSTISSIMA PRIMUM (ordo lectionis) + cursor
+   "claude-lectum" in tabula consumptorum exsistente (INSERT OR
+   REPLACE; provectus ad maximum redditum; "et N plura restant");
+   (d) SALUTATIO in initialize: cursor absens -> conditus ad hwm
+   (silentium primi conventus); praesens + retardatio > 0 ->
+   instructiones += "NOVA: N eventa..." - nuntiatio mitis, non
+   pulsus: salutatio. Ambo mundi gratis (tabula quoque). Asserta
+   nova in probatione.
+2. Speculum indutum (forum.c): annotatio aedilis obiecti +
+   externus capsula_speculi_forum + speculum_creare + tangere in
+   effusione eventuum (exemplar hospes); forum.sh: aedilis ->
+   speculum_generare -> struere.
+3. Fumus se-nuntians (-fumus-plenus): fenestra vera, IS in onere
+   pipatum mittit, C responsum per clientem daemonis addit (via
+   MCP simulata) filo nexum, anquisitio IS filium videt ->
+   fumus_perfectus per pontem -> C imprimit et exit 0; tempus
+   excedens = exitus 1.
+Portae: suite gestarum + fumus plenus + salutatio viva post
+reconexionem. Deinde quaestio clauditur - V1 fori integra.

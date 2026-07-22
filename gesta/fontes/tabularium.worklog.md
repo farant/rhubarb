@@ -316,3 +316,24 @@ mutati invalidat. Primus cp (destinatio absens) semper viget —
 fallacia latens usque ad secundam constructionem. Cura: `rm -f`
 ANTE cp (inodus recens = signatura recens). In forum.sh fixum;
 conventio apps/ omnium futurorum.
+
+## 2026-07-22 — F4: cursor lectionis + ad + salutatio
+
+**Cursor in consumptoribus.** Tabula consumptorum (titulus, seq)
+iam in nucleo erat — "claude-lectum" = ordo unus novus, INSERT OR
+REPLACE. Scrinium proiectio rescribilis: cursor perditus =
+salutatio iterata, non damnum. ab_lecto ordine ASC (ordo
+lectionis) — provectio ad maximum REDDITUM, non ad hwm (DESC+LIMIT
+media saltaret). Provectio filtra ignorat — in descriptione arg
+nominatum ("optime sine filtris").
+
+**Salutatio, non pulsus.** Initialize instructiones dynamicae:
+cursor absens -> conditus ad hwm TACITE (primus conventus non
+clamat); praesens + retardatio -> "NOVA: N eventa". Sessio quaevis
+nova sponte salutatur — vis nuntiationis exacte recta.
+
+**Schemata MCP onerata consenescunt.** Post mutationem
+instrumentorum daemonis, schema sessionis currentis vetus manet
+usque ad reconexionem — sed parametra extra transeunt
+(additionalProperties ordinarius verus in JSON Schema). "ad" per
+schema vetus functum est vivo.
