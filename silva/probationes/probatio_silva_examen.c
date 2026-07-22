@@ -1117,44 +1117,44 @@ s32 principale (vacuum)
     _codicem_probare(piscina,
         "static unsigned f(unsigned char a, unsigned char b)\n"
         "{ return a - b;"
-        " /* TOLERA CONVERSIO_SIGNI_SEVERA: probatio */ }\n",
+        " /* <tolera codex=\"CONVERSIO_SIGNI_SEVERA\" (>probatio */ }\n",
         (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, ZEPHYRUM);
     _codicem_probare(piscina,
         "static unsigned f(unsigned char a, unsigned char b)\n"
         "{ return a - b;"
-        " /* TOLERA CONVERSIO_SIGNI_SEVERA: probatio */ }\n",
+        " /* <tolera codex=\"CONVERSIO_SIGNI_SEVERA\" (>probatio */ }\n",
         (s32)EXAMEN_CODEX_TOLERA_IRRITUM, ZEPHYRUM);
     /* TOLERA linea praecedente: suppressum */
     _codicem_probare(piscina,
         "static unsigned f(unsigned char a, unsigned char b)\n"
         "{\n"
-        "    /* TOLERA CONVERSIO_SIGNI_SEVERA: probatio lineae */\n"
+        "    /* <tolera codex=\"CONVERSIO_SIGNI_SEVERA\" (>probatio lineae */\n"
         "    return a - b;\n"
         "}\n",
         (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, ZEPHYRUM);
     /* sine causa: NON supprimit + IRRITUM */
     _codicem_probare(piscina,
         "static unsigned f(unsigned char a, unsigned char b)\n"
-        "{ return a - b; /* TOLERA CONVERSIO_SIGNI_SEVERA */ }\n",
+        "{ return a - b; /* <tolera codex=\"CONVERSIO_SIGNI_SEVERA\"/> */ }\n",
         (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, I);
     _codicem_probare(piscina,
         "static unsigned f(unsigned char a, unsigned char b)\n"
-        "{ return a - b; /* TOLERA CONVERSIO_SIGNI_SEVERA */ }\n",
+        "{ return a - b; /* <tolera codex=\"CONVERSIO_SIGNI_SEVERA\"/> */ }\n",
         (s32)EXAMEN_CODEX_TOLERA_IRRITUM, I);
     /* inutile (nihil in linea sua/proxima flagrat): IRRITUM */
     _codicem_probare(piscina,
-        "/* TOLERA CONVERSIO_SIGNI_SEVERA: nusquam adhibitum */\n"
+        "/* <tolera codex=\"CONVERSIO_SIGNI_SEVERA\" (>nusquam adhibitum */\n"
         "static int probe_i;\n",
         (s32)EXAMEN_CODEX_TOLERA_IRRITUM, I);
     /* codex ignotus (paritas NON suppressibilis): IRRITUM et
      * firing paritatis MANET */
     _codicem_probare(piscina,
         "static unsigned f(int s)\n"
-        "{ return s; /* TOLERA CONVERSIO_SIGNI: vetitum */ }\n",
+        "{ return s; /* <tolera codex=\"CONVERSIO_SIGNI\" (>vetitum */ }\n",
         (s32)EXAMEN_CODEX_CONVERSIO_SIGNI, I);
     _codicem_probare(piscina,
         "static unsigned f(int s)\n"
-        "{ return s; /* TOLERA CONVERSIO_SIGNI: vetitum */ }\n",
+        "{ return s; /* <tolera codex=\"CONVERSIO_SIGNI\" (>vetitum */ }\n",
         (s32)EXAMEN_CODEX_TOLERA_IRRITUM, I);
     /* commentarium ordinarium: nulla tabula, nullum IRRITUM */
     _codicem_probare(piscina,
@@ -1244,7 +1244,7 @@ s32 principale (vacuum)
     _codicem_probare(piscina,
         "static int f(unsigned u)\n"
         "{\n"
-        "    /* TOLERA COMPARATIO_VANA: proba defensiva consulta */\n"
+        "    /* <tolera codex=\"COMPARATIO_VANA\" (>proba defensiva consulta */\n"
         "    return u >= 0;\n"
         "}\n",
         (s32)EXAMEN_CODEX_COMPARATIO_VANA, ZEPHYRUM);
@@ -1346,7 +1346,7 @@ s32 principale (vacuum)
         "typedef struct chorda { unsigned m;"
         " unsigned char* datum; } chorda;\n"
         "static int f(chorda c) {\n"
-        "    /* TOLERA CHORDA_NUDA: probatio suppressionis */\n"
+        "    /* <tolera codex=\"CHORDA_NUDA\" (>probatio suppressionis */\n"
         "    return strlen((const char*)c.datum);\n"
         "}\n",
         (s32)EXAMEN_CODEX_CHORDA_NUDA, ZEPHYRUM);
@@ -1420,7 +1420,7 @@ s32 principale (vacuum)
     /* TOLERA absorbet */
     _codicem_probare(piscina,
         "static void f(int s) {\n"
-        "    /* TOLERA SIGNUM_FORMATI: probatio suppressionis */\n"
+        "    /* <tolera codex=\"SIGNUM_FORMATI\" (>probatio suppressionis */\n"
         "    printf(\"%u\", s);\n"
         "}\n",
         (s32)EXAMEN_CODEX_SIGNUM_FORMATI, ZEPHYRUM);
@@ -1467,7 +1467,7 @@ s32 principale (vacuum)
     /* TOLERA absorbet (idioma omnium-bitorum consultum) */
     _codicem_probare(piscina,
         "static unsigned f(void) {\n"
-        "    /* TOLERA SENTINELLA_INSIGNATA: omnes biti consulto */\n"
+        "    /* <tolera codex=\"SENTINELLA_INSIGNATA\" (>omnes biti consulto */\n"
         "    return (unsigned)-1;\n"
         "}\n",
         (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA, ZEPHYRUM);
@@ -1605,7 +1605,7 @@ s32 principale (vacuum)
     _codicem_probare(piscina,
         "static int f(int x)\n{\n    switch (x) {\n"
         "    case 0: x = x + 1;\n"
-        "    /* TOLERA CASUS_LAPSUS: probatio suppressionis */\n"
+        "    /* <tolera codex=\"CASUS_LAPSUS\" (>probatio suppressionis */\n"
         "    case 1: x = x - 1; break;\n    }\n    return x;\n}\n",
         (s32)EXAMEN_CODEX_CASUS_LAPSUS, ZEPHYRUM);
 
@@ -1635,7 +1635,7 @@ s32 principale (vacuum)
     /* TOLERA supprimit */
     _codicem_probare(piscina,
         "static int f(int x)\n{\n    return x;\n"
-        "    /* TOLERA SENTENTIA_INATTINGIBILIS: probatio */\n"
+        "    /* <tolera codex=\"SENTENTIA_INATTINGIBILIS\" (>probatio */\n"
         "    x = 99;\n    return x;\n}\n",
         (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, ZEPHYRUM);
     /* si (MACRO disabilitatum): exemptum - clang idem tacet
@@ -1792,7 +1792,7 @@ s32 principale (vacuum)
     /* TOLERA supprimit 71 */
     _codicem_probare(piscina,
         "static int f(void)\n{\n    int x;\n"
-        "    /* TOLERA LECTIO_ININITIATA: probatio */\n"
+        "    /* <tolera codex=\"LECTIO_ININITIATA\" (>probatio */\n"
         "    return x;\n}\n",
         (s32)EXAMEN_CODEX_LECTIO_ININITIATA, ZEPHYRUM);
 

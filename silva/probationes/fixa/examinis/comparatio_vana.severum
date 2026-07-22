@@ -19,7 +19,7 @@ static int per_macrum(unsigned u)
 
 static int tolerata_proba(unsigned u)
 {
-    /* TOLERA COMPARATIO_VANA: probatio suppressionis */
+    /* <tolera codex="COMPARATIO_VANA" (>probatio suppressionis */
     return 0 <= u;
 }
 

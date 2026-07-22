@@ -9867,3 +9867,20 @@ suite silvae 33/33, amalgamare VERIFICATUM, radix 103/103.
   commentarium proprium (grammatica mores rectos docet)
 
 RELIQUUM: E2 tolera, E3 aedilis.
+
+## CHUNK E2 TOLERA: RELATIO (2026-07-22)
+
+Navatum: `<tolera codex="X" (>causa`; parser octetorum
+_tolera_legere ET ambulatio propria _toleras_ex_lexemate MORTUI -
+tabula ex annotationibus collectis cribratur. LUCRUM STRUCTURALE:
+ambulatio annotationum UNA communis (_annotationes_pigre, cache
+per parsuram) tres consumptores pascit (74-76, tolerae,
+contractus) - collector antea bis per parsuram currebat. Portae:
+paritas octetorum 8/8 plagularum TOLERA-ferentium (3 vivae + 5
+fixturae severae), batteria, suite 33/33, VECTIS TENET,
+amalgamare VERIFICATUM, radix 103/103. Sedes conversae: 6 vivae +
+5 fixturae + 16 chordae batteriae. Typographum TOLERA nunc
+codex 74 CLAMAT (olim prosa tacita + diagnosticum severum
+inexplicatum redibat).
+
+RELIQUUM: E3 aedilis.

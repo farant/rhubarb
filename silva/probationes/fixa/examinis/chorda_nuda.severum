@@ -20,7 +20,7 @@ static int comparata(chorda* p)
 
 static int tolerata(chorda c)
 {
-    /* TOLERA CHORDA_NUDA: probatio suppressionis */
+    /* <tolera codex="CHORDA_NUDA" (>probatio suppressionis */
     return strcmp((const char*)c.datum, "y");
 }
 

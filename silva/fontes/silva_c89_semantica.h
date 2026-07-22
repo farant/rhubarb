@@ -530,6 +530,13 @@ structura SilvaSemantica {
     constans SilvaParsura* contractus_parsura;
     Xar*                   contractus;
 
+    /* annotationes collectae (frustum E2, 2026-07-22): ambulatio
+     * UNA communis per parsuram (collector silva_annotationes) -
+     * consumptores: passus 74-76, tabula TOLERA, contractus.
+     * Elementa SilvaAnnotatio. */
+    constans SilvaParsura* annotationes_parsura;
+    Xar*                   annotationes;
+
     /* FLUXUS-0 (2026-07-17): CFG per definitionem RETENTI (decisio
      * Q7 colloquii - codex-est-basis-datorum; elementa
      * FluxusFunctionis*, silva_c89_fluxus.h). Aedificati in

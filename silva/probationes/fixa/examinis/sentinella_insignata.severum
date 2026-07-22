@@ -9,7 +9,7 @@ static unsigned mortua(void)
 
 static unsigned tolerata(void)
 {
-    /* TOLERA SENTINELLA_INSIGNATA: probatio suppressionis */
+    /* <tolera codex="SENTINELLA_INSIGNATA" (>probatio suppressionis */
     return (unsigned)-1;
 }
 

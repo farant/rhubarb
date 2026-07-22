@@ -17,7 +17,7 @@ static void insignatum_in_d(unsigned u)
 
 static void tolerata(int s)
 {
-    /* TOLERA SIGNUM_FORMATI: probatio suppressionis */
+    /* <tolera codex="SIGNUM_FORMATI" (>probatio suppressionis */
     printf("%u", s);
 }
 

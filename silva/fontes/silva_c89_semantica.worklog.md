@@ -740,3 +740,36 @@ silva.h clamat gate caught the forgotten enum extension — again);
 VECTIS TENET. Futures named: wrapper API (extensionem initians +
 _accumulare internum), scribit/legit modi, wrapper-propagation
 (bottom-up over vocantes), 79 wake + adoption push.
+
+## 2026-07-22 — E2: TOLERA into the grammar, one shared walk
+
+TOLERA migrated to `<tolera codex="X" (>causa` (line capture =
+the causa; bare `<tolera codex="X"/>` = sine causa, irritum still
+fires). The ~90-line byte parser `_tolera_legere` and the
+dedicated trivia walk `_toleras_ex_lexemate` are DEAD — the table
+is now fed by filtering collected annotations for root element
+"tolera". Side win: semantica now has ONE shared annotation walk
+(`_annotationes_pigre`, cached per parsura like the tolerae/
+contractus tables) feeding three consumers: the 74-76 pass, the
+TOLERA table, and the contract table — previously the collector
+ran twice per parsura, now once.
+
+Semantics preserved exactly (byte-parity gate on all 8
+TOLERA-bearing files: 3 live sources + 5 severum fixtures, old
+binary+old form vs new binary+new form — identical -machina
+output). Table shape unchanged: (linea, fons, codex,
+habet_causam, usus); a->linea = comment start line = what the
+old walk keyed on, so the "firing line or preceding" absorb rule
+never noticed the change. Unknown codex attr still lands in the
+table as -1 → irritum names it. NEW behavior (an upgrade, not a
+break): a typo'd tolera (e.g. `<tolera codx=...`or malformed
+STML) now fires codex 74 — under the old parser a typo made the
+comment silent prose and the severe diagnostic would just
+reappear unexplained.
+
+Line-capture content survived the hard cases: `(1<<n)-1`,
+apostrophes, brackets, inner asterisks all parse (probed via the
+codex-74 oracle before converting). The self-reference law
+(comment ABOUT tolera vs tolera directive) is now structural:
+prose mentions don't start with `<`, so the old
+uppercase-title heuristic is gone with the parser.
