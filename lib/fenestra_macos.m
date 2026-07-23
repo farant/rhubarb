@@ -51,10 +51,14 @@ structura Fenestra {
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification *)notification {
-    /* Intrare plenam visionem - occultare cursor systematis */
+    /* Intrare plenam visionem. CURSOR NON OCCULTATUR HIC (mos
+     * ludi antiquus remotus 2026-07-23): [NSCursor hide] numerum
+     * referentiarum tenet - occultatio implicita + re-occultatio
+     * per motum muris numerum sine fine augebat, unhide unicum in
+     * exitu numquam compensabat -> cursor PERPETUO occultus etiam
+     * fenestrato (symptoma fori). Apps immersivae
+     * fenestra_occultare_cursorem expresse vocent. */
     self.fenestra->plena_visio = VERUM;
-    [NSCursor hide];
-    self.fenestra->cursor_occultus = VERUM;
 }
 
 - (void)windowDidExitFullScreen:(NSNotification *)notification {
@@ -637,12 +641,9 @@ fenestra_perscrutari_eventus (
 
                     eventus.datum.mus.modificantes = (i32)[eventus_ns modifierFlags];
 
-                    /* Re-occultare cursor si in plena visione
-                     * (macOS potest ostendere cursor si mus movetur violenter) */
-                    si (fenestra->plena_visio && fenestra->cursor_occultus)
-                    {
-                        [NSCursor hide];
-                    }
+                    /* re-occultatio per motum REMOTA (2026-07-23):
+                     * hide iteratum numerum referentiarum NSCursor
+                     * inflabat - fons cursoris perpetuo occulti */
 
                     impellere_eventum(fenestra, &eventus);
                     frange;
