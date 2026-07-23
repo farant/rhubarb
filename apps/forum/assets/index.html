@@ -818,7 +818,9 @@ function creator_ordinem_addere(campo) {
       typus.appendChild(op);
     });
   var optiones = document.createElement('input');
-  optiones.placeholder = 'optiones (commatibus)';
+  optiones.placeholder = 'optio una, altera, tertia';
+  optiones.title = 'optiones commatibus separatae - ordo = ordo'
+    + ' indicis et ordinationis';
   optiones.hidden = true;
   var ad = document.createElement('select');
   ad.hidden = true;
