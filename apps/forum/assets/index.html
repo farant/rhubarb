@@ -66,8 +66,19 @@
   /* ---- genera (G2) ---- */
   select { background: #171512; color: #ece5d8; border: 1px solid #8a7a55;
            font: inherit; padding: .3em; border-radius: 4px; }
-  table.res { width: 100%; border-collapse: collapse; margin-top: .6em;
+  /* tabula lata: continens volvit (numquam pagina), tabula ad
+     contentum crescit, columnae latitudines minimas per typum */
+  #res-tabula-continens { overflow-x: auto; padding-bottom: .3em; }
+  table.res { width: max-content; min-width: 100%;
+              border-collapse: collapse; margin-top: .6em;
               font-size: .85em; }
+  table.res th, table.res td { min-width: 5em; }
+  table.res .col-textus, table.res .col-area { min-width: 10em;
+              max-width: 18em; }
+  table.res .col-relatio { min-width: 8em; max-width: 14em; }
+  table.res .col-annus, table.res .col-numerus,
+  table.res .col-veritas, table.res .col-dies,
+  table.res .col-electio, table.res .col-tags { white-space: nowrap; }
   table.res th { color: #d8b978; text-align: left; cursor: pointer;
                  border-bottom: 1px solid #8a7a55; padding: .3em .5em;
                  white-space: nowrap; }
@@ -1080,6 +1091,7 @@ function reddere_res_tabulam() {
   var tr = document.createElement('tr');
   columnae.forEach(function (c) {
     var th = document.createElement('th');
+    th.className = 'col-' + c.typus;
     th.textContent = c.monstrans || c.clavis;
     if (ordinatio && ordinatio.campus === c.clavis) {
       var sag = document.createElement('span');
@@ -1101,6 +1113,7 @@ function reddere_res_tabulam() {
     tr.appendChild(th);
   });
   var th_tags = document.createElement('th');
+  th_tags.className = 'col-tags';
   th_tags.textContent = 'tags';
   tr.appendChild(th_tags);
   thead.appendChild(tr);
@@ -1112,6 +1125,7 @@ function reddere_res_tabulam() {
     var extra = ens_extra_specem(def, e);
     columnae.forEach(function (c, ci) {
       var td = document.createElement('td');
+      td.className = 'col-' + c.typus;
       td.textContent = valorem_ordinis(e, c);
       if (ci === 0 && extra) {
         var sig = document.createElement('span');
@@ -1123,7 +1137,7 @@ function reddere_res_tabulam() {
       tr2.appendChild(td);
     });
     var td_tags = document.createElement('td');
-    td_tags.className = 'tempus';
+    td_tags.className = 'tempus col-tags';
     td_tags.textContent = ((e.datum && e.datum.tags) || []).join(', ');
     tr2.appendChild(td_tags);
     tr2.onclick = function () { res_ens_id = e.res_id; res_vertere('ens'); };
