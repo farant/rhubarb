@@ -1572,3 +1572,29 @@ tabulariumd 12).
   asserta cum virgulis escapatis (\\\") aut verba nuda (worklog).
 Proximum G1: probatio_fori datum-gyrus + porta viva MCP (post
 reconstructionem daemonis + pkill + reconexionem).
+
+## GENERA G1 - FILUM + PORTA VIVA: RELATIO (2026-07-23)
+
+1. probatio_fori: series altera trans proxy - definitio Sententia
+   + ens "Alea iacta est" (datum chorda escapata intra JSON intra
+   imperium); responsa II, valores PLANI in annales (datum
+   obiectum, non chorda) - asserta directa. 18/18.
+2. PORTA VIVA TRANSITA: daemon reconstructus (pkill + launcher),
+   genus "sententia" in mundo fori VERO per mcp__fori__addere
+   definitum (schema vetus sessionis - parametra extra transeunt,
+   ut analysis fili praedixit), entia II typata (annus -49 et 62),
+   legere embed vivum, ab_lecto entia excludit vivum.
+3. INVENTUM PORTAE VIVAE: _nova_numerare sine praedicato
+   exclusionis - "et 1 plura restant" promissum, fossa sequens
+   "(nihil novi)" negavit. Idem numerator salutationem NOVA alit:
+   dies solum-datorum salutasset epistulas inexsistentes. SANATUM
+   eodem praedicato ac lectio (LEFT JOIN res + NOT EXISTS duplex);
+   probationes pinctae (ens novum solum -> NOVA tacet, nihil
+   promittitur). Lex: NUMERATOR PROMISSI = PRAEDICATUM LECTIONIS -
+   quotiens lectio filtratur, quisque numerator qui eam promittit
+   eodem filtro utatur.
+Suite tota: fori 18 / gesta 680 / tabularium 297 / tabulariumd 12.
+Reconexio fori non necessaria functioni (parametra extra
+transeunt) - solum pro schemate datum viso in tools/list.
+Proximum G2: app (tractator transmittens generalis + tabula Res +
+creator + visus tabularis + formae + fumus).

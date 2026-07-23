@@ -2007,6 +2007,24 @@ s32 principale (vacuum)
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"acta\",\"arguments\":{\"ab_lecto\":\"verum\"}}}");
         CREDO_VERUM (strstr(r, "(nihil novi)") != NIHIL);
+
+        /* numeratio novorum eodem praedicato (G1): ens usoris
+         * novum SOLUM -> NOVA tacet, lectio nihil - salutatio
+         * numquam promittit quod lectio negabit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":987,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"auctor\","
+            "\"titulus\":\"Titus Livius\",\"datum\":"
+            "\"{\\\"floruit\\\":-10}\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":988,"
+            "\"method\":\"initialize\",\"params\":{}}");
+        CREDO_VERUM (strstr(r, "NOVA:") == NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":989,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"acta\",\"arguments\":{\"ab_lecto\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "(nihil novi)") != NIHIL);
+        CREDO_VERUM (strstr(r, "plura restant") == NIHIL);
     }
 
     credo_imprimere_compendium();

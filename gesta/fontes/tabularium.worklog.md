@@ -376,3 +376,26 @@ effectus) the shadow carries genus only, so the judgment silently
 skips. Ordinary paths (gerere nexus, addere ad) fold per call, so
 the window is theoretical until actions start creating relatio
 links.
+
+## 2026-07-23 — genera G1: the live gate found what the unit gate couldn't
+
+The wire test (probatio_fori datum round-trip) and the live MCP
+gate both passed on the first run — but the live gate immediately
+exposed a consistency bug the unit sections were structurally
+blind to: `_nova_numerare` counted WITHOUT the new ab_lecto
+exclusion predicates, so the reader was told "et 1 plura restant"
+and the very next drain said "(nihil novi)". Worse, the same
+counter feeds the NOVA greeting — a data-entry-only day would
+greet the next session with mail that doesn't exist.
+
+The law worth keeping: **a counter that PROMISES a filtered read
+must use the read's exact predicate.** Unit sections test each
+surface in isolation (ab_lecto shows X, greeting says Y); only a
+lived sequence — write data, read mail, read again — crosses the
+promise and the delivery. This is the second time the lived bar
+caught a cross-surface lie the section bar missed (F4's blindness
+proof was the first). Budget a live pass after every reader-side
+change.
+
+Fix: same LEFT JOIN + double NOT EXISTS in _nova_numerare;
+pinned with "entry-only write → NOVA silent, nothing promised."

@@ -160,6 +160,41 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
             "Fable 5") != NIHIL);
 
+        /* G1 genera: gyrus datum trans proxy - definitio + ens
+         * typatum (obiectum JSON ut chorda escapata intra JSON
+         * intra imperium; proxy fistula octetorum verbatim).
+         * Valores in annales PLANI cadunt (datum obiectum, non
+         * chorda) - asserta directa. */
+        sprintf(imperium, "printf '%%s\\n%%s\\n'"
+            " '{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":"
+            "\"tools/call\",\"params\":{\"name\":\"addere\","
+            "\"arguments\":{\"genus\":\"definitio\",\"titulus\":"
+            "\"Sententia\",\"datum\":\"{\\\"clavis\\\":"
+            "\\\"sententia\\\",\\\"campi\\\":[{\\\"clavis\\\":"
+            "\\\"fons\\\",\\\"typus\\\":\\\"textus\\\"},"
+            "{\\\"clavis\\\":\\\"annus\\\",\\\"typus\\\":"
+            "\\\"annus\\\"}]}\"}}}'"
+            " '{\"jsonrpc\":\"2.0\",\"id\":4,\"method\":"
+            "\"tools/call\",\"params\":{\"name\":\"addere\","
+            "\"arguments\":{\"genus\":\"sententia\",\"titulus\":"
+            "\"Alea iacta est\",\"datum\":\"{\\\"fons\\\":"
+            "\\\"Suetonius\\\",\\\"annus\\\":-49}\"}}}'"
+            " | gesta/build/fori -mcp -portus %d"
+            " -sine-generatione > " VIA_EX " 2>/dev/null",
+            portus_int);
+        CREDO_VERUM (system(imperium) == ZEPHYRUM);
+        exitus = _plagula_litterae(piscina, VIA_EX);
+        CREDO_VERUM (_lineas_numerare(exitus) == II);
+        CREDO_VERUM (strstr(exitus, "Alea iacta est") != NIHIL);
+        {
+            constans character* an = _plagula_litterae(piscina,
+                VIA_AN);
+
+            CREDO_VERUM (strstr(an, "\"clavis\":\"sententia\"")
+                != NIHIL);
+            CREDO_VERUM (strstr(an, "\"annus\":-49") != NIHIL);
+        }
+
         /* daemon necatus -> error curae portu VERO nominato */
         (vacuum)system("kill $(cat " VIA_PID ") 2>/dev/null");
         (vacuum)system("sleep 0.3");

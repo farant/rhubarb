@@ -4065,13 +4065,25 @@ _seq_maximum (Tabularium* t)
     redde m;
 }
 
+/* numerus eventuum non lectorum - EODEM praedicato ac lectio
+ * ab_lecto (genera G0): eventa datorum exclusa, ne salutatio NOVA
+ * aut "plura restant" epistulas promittat quas lectio negabit
+ * (inventum portae vivae G1: promissum falsum = fossa vana) */
 interior s64
 _nova_numerare (Tabularium* t, s64 post)
 {
     ScriniumEnuntiatum* e = scrinium_praeparare(
         gesta_scrinium(t->mundus),
-        "SELECT COUNT(*) FROM tessellae"
-        " WHERE branch_id = '' AND seq > ?");
+        "SELECT COUNT(*) FROM tessellae t"
+        " LEFT JOIN res r ON r.res_id = t.res_id"
+        " WHERE t.branch_id = '' AND t.seq > ?"
+        " AND NOT EXISTS (SELECT 1 FROM genera g"
+        "  WHERE g.titulus = r.genus AND g.usor = 1)"
+        " AND NOT EXISTS (SELECT 1 FROM membra ma"
+        "  JOIN res ra ON ra.res_id = ma.membrum"
+        "  JOIN genera ga ON ga.titulus = ra.genus"
+        "  WHERE ma.res_id = t.res_id AND ma.pars = 'a'"
+        "  AND ga.usor = 1)");
     s64 n = ZEPHYRUM;
 
     si (e == NIHIL)
