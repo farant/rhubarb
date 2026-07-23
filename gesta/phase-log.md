@@ -1772,3 +1772,15 @@ corpus congelatus post creationem (deriva ancorarum). Chorographia
 fumi: genera se-serentia -> codex -> scholium ancoratum -> DOM
 (lineae III, carta I, linea secunda adnotata). Sub-visus scholia
 in ultima serie inclusi. Tabula quarta fori nata.
+
+## TAGS: RELATIO (2026-07-23)
+
+FUMUS PLENUS primo cursu. Navatum ex intentione: extractio pura
+(exemplar cum custode ligaminis - "via/ad#ancoram" tagum NON
+cudit, ligamen ante # verbotenus), tagi in linea per fragmentum
+DOM (corpus_cum_tagis in pipatis/commentariis/scholiis/paragraphis
+articulorum), arbor recursiva cum numeris subarborum, electio =
+praefixum (spatium nominis posteros omnes colligit), navigatio
+per genera (commentarium radicem per catenam solvit: articulus
+aut ens aut codex). Onus tabulae tags = VI legere + genera usoris
+per fossam - acceptum scala personali. Machina INTACTA quintum.
