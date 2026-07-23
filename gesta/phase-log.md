@@ -1496,3 +1496,79 @@ F3 articuli+fila, F4 ergonomia+speculum+fumus). Futura nominata:
 online pro Amanda + MCP oauth mobilis (pipatum Franis 01KY5H8XKD),
 canales-ut-tags, entitates referibiles, exportatio statica,
 markdownum, historia revisionum UI.
+
+## GENERA G0 - MACHINA: INTENTIO (2026-07-23)
+
+Genera per app definita (FileMaker-similis; spec-v2 = consilium,
+parcum 01KY656BG1). G0 = machina sola, gesta.c + tabularium.c.
+Semina recognita CONTRA FONTEM VIVUM (non ex relatione
+exploratorum sola); inventum unum novum: mutatio entis definitionis
+claves mutatas SOLAS fert - proiectio registri ergo in plicatura
+RES (post plicaturam, datum plenum) NON in consumptore generum
+(eventum-formatum, clavis absens).
+
+1. gesta.c:
+   (a) migratio V: ALTER TABLE genera ADD COLUMN usor (0=systema,
+       1=usoris); numerus IV->V.
+   (b) proiectio: in _rei_applicare post scripturam ordinis res -
+       si genus_columna=="definitio" -> INSERT OR REPLACE genera
+       (titulus=datum.clavis, datum=datum plicatum, usor=1).
+       CUSTOS: ordinem systematis (usor=0 exsistentem) numquam
+       superscribit - collisio clavis notatur, non clobberat.
+   (c) _eventum_validare rami novi (iudicat-non-obstat, nota
+       custodiae composita per aedificatorem):
+       - creatio generis usoris: claves dati contra campi (typus
+         textus/area/dies=chorda, annus/numerus=integer,
+         relatio=in dato vetitum, clavis ignota notata; claves
+         systematis genus/titulus/corpus/tags/ancorae/signatura/
+         status/notae praetermissae);
+       - creatio definitionis: clavis+campi forma, collisio clavis;
+       - mutatio: entis usoris = idem iudicium camporum; entis
+         definitionis = emendatio destructiva (campus remotus/
+         retypatus, clavis mutata) notata;
+       - membrum-additum pars a: cardinalitas unum - nexus stans
+         alter eodem verbo ab eadem re -> nota (verbum ex re nexus
+         plicata; in fasce eodem umbra datum non fert -> iudicium
+         praetermittitur, v1 acceptum).
+2. tabularium.c:
+   (a) semen definitio (meta-genus, attributa inline, XIII->XIV);
+   (b) addere arg datum (chorda JSON escapata, exemplar gerere;
+       claves genus/titulus protectae; ARG_ADDERE X->XI);
+   (c) ab_lecto: eventa rerum generum usoris (g.usor=1) et nexuum
+       quorum membrum-a res usoris est EXCLUSA - epistulae =
+       colloquium; definitio creata = epistula manet;
+   (d) legere: tabulatum "nexus" per ordinem (verbum ex dato nexus,
+       ad, ad_titulus, ad_status) - LIKE non extenditur.
+3. Probationes (sectio XVII post F0): definitio->registrum (ens
+   generis novi accipitur), gyrus violationis typi (scriptura
+   procedit + nota custodiae in annalibus), unum bis-vinctum,
+   emendatio additiva/destructiva, ab_lecto discriminat, legere
+   datum+nexus refert, collisio clavis quaestionem non clobberat.
+   Cursor: ./gesta/compile_probationes.sh tabularium (NON radix).
+Porta G0: probationes gestarum virides omnes.
+
+## GENERA G0: RELATIO (2026-07-23)
+
+Navatum totum ex intentione, deviatio nulla; suite gestarum tota
+viridis (fori 13, gesta 680, tabularium 293 [42 nova sectio XVII],
+tabulariumd 12).
+- gesta.c: migratio V (columna usor), _definitionem_proicere in
+  plicatura RES (post scripturam - datum plenum; consumptor
+  generum eventum-formatus clavem mutationis non videret, inventum
+  reconnaissance), custos clobber (usor=0 numquam superscriptum),
+  _campos_iudicare (compositae querelae per aedificatorem),
+  _definitionem_validare (forma + collisio), _emendationem_
+  definitionis_validare (clavis immutabilis, campi additiva sola),
+  _unum_validare (LIKE exemplar legendi, nexus fascis eiusdem
+  praetermissus - fenestra theoretica). Rami validationis: creatio
+  (definitio-forma aut campi), mutatio (novus ramus), membrum-
+  additum (post custodiam membrorum).
+- tabularium.c: semen definitio (XIV), addere arg datum (chorda
+  JSON escapata, genus/titulus protecta, X->XI), ab_lecto NOT
+  EXISTS duplex (entia usoris + nexus datorum exclusa; definitio
+  creata = epistula manet), legere tabulatum nexus per ordinem
+  (verbum/ad/ad_titulus/ad_status, tituli resoluti).
+- Gotcha probationum: textus instrumenti = JSON intra JSON -
+  asserta cum virgulis escapatis (\\\") aut verba nuda (worklog).
+Proximum G1: probatio_fori datum-gyrus + porta viva MCP (post
+reconstructionem daemonis + pkill + reconexionem).

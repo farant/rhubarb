@@ -230,13 +230,28 @@ interior constans TabulariumSemen SEMINA_GENERUM[] = {
       "{\"titulus\":\"pipatum\",\"attributa\":[{\"titulus\":"
       "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
       "{\"titulus\":\"corpus\",\"typus\":\"textus\"}],"
-      "\"reducer\":\"ordinarius\"}" }
+      "\"reducer\":\"ordinarius\"}" },
+    /* ---- semen v6 (genera G0): meta-genus definitionis - genera
+     * ab usore per app definita. Ens definitionis plicatum ->
+     * ordo registri (usor=1, gesta.c _definitionem_proicere);
+     * campi = [{clavis, monstrans, typus: textus|area|dies|annus|
+     * numerus|relatio, ad?, cardinalitas?}], campus_tituli,
+     * ordo_ordinarius {campus, directio} - forma libera, iudicium
+     * ad scripturam (_campos_iudicare). clavis immutabilis,
+     * emendatio additiva sola. ---- */
+    { "definitio",
+      "{\"titulus\":\"definitio\",\"attributa\":[{\"titulus\":"
+      "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
+      "{\"titulus\":\"clavis\",\"typus\":\"textus\","
+      "\"necessarium\":true},{\"titulus\":\"campi\",\"typus\":"
+      "\"tabulatum\"},{\"titulus\":\"campus_tituli\",\"typus\":"
+      "\"textus\"}],\"reducer\":\"ordinarius\"}" }
 };
 
 /* scopus fusionis v2 (genera tabulae + nexus); genera K3 infra
  * attributa propria ferunt (emendatio E2-B2) */
 #define SEMINA_BOARD_NUMERUS VI
-#define SEMINA_NUMERUS XIII
+#define SEMINA_NUMERUS XIV
 
 /* semen v2 (K2 decisio Q9): attributa in genera VIVA - emendatio
  * integra-substitutio ex definitione currenti + attributa (fusio
@@ -2531,6 +2546,7 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     chorda signatura = _arg(argumenta, "signatura");
     chorda ad = _arg(argumenta, "ad");
     chorda ramus_arg = _arg(argumenta, "ramus");
+    chorda datum_arg = _arg(argumenta, "datum");
     chorda ramus_id;
     JsonValor* datum;
     GestaEventum e;
@@ -2650,6 +2666,39 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     {
         json_objectum_ponere(datum, "signatura",
             json_chorda_creare(pn, signatura));
+    }
+    /* datum (genera G0): campi entis generis usoris - obiectum
+     * JSON ut CHORDA escapata (exemplar gerere-mutationis). Claves
+     * summae in datum eventus mersae: reductor (mersio
+     * superficialis), legere (embed totum) et iudicium camporum ad
+     * scripturam gratis sequuntur. genus/titulus protecta -
+     * identitas per parametra sola. */
+    si (datum_arg.mensura > ZEPHYRUM)
+    {
+        JsonResultus r = json_legere(datum_arg, pn);
+
+        si (!r.successus || !json_est_objectum(r.radix))
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("datum: obiectum JSON requiritur"), VERUM);
+            redde;
+        }
+        {
+            JsonObjectumIterator iter =
+                json_objectum_iterator(r.radix);
+            chorda k;
+            JsonValor* v;
+
+            dum (json_objectum_iterator_proxima(&iter, &k, &v))
+            {
+                si (_chorda_est(k, "genus")
+                    || _chorda_est(k, "titulus"))
+                {
+                    perge;
+                }
+                json_objectum_ponere_chorda(datum, k, v);
+            }
+        }
     }
     datum_textus = json_scribere(datum, pn);
 
@@ -4123,6 +4172,11 @@ _tab_acta (Tabularium* t, Piscina* pn, JsonValor* argumenta,
             _lectum_ponere(t, solum);
         }
         maximum_visum = solum;
+        /* genera G0: eventa rerum generum usoris (usor=1) et
+         * nexuum quorum membrum-a res usoris est EXCLUSA -
+         * epistulae = colloquium, non res datorum; creatio
+         * definitionis (genus systematis) epistula manet. Acta
+         * plena (sine ab_lecto) omnia retinent. */
         e = scrinium_praeparare(gesta_scrinium(t->mundus),
             "SELECT t.seq, t.creatum, t.actor, t.genus_eventus,"
             " t.res_id, t.datum, r.titulus"
@@ -4132,6 +4186,13 @@ _tab_acta (Tabularium* t, Piscina* pn, JsonValor* argumenta,
             " AND t.seq > ?"
             " AND (? = '' OR t.genus_eventus = ?)"
             " AND (? = '' OR t.actor = ?)"
+            " AND NOT EXISTS (SELECT 1 FROM genera g"
+            "  WHERE g.titulus = r.genus AND g.usor = 1)"
+            " AND NOT EXISTS (SELECT 1 FROM membra ma"
+            "  JOIN res ra ON ra.res_id = ma.membrum"
+            "  JOIN genera ga ON ga.titulus = ra.genus"
+            "  WHERE ma.res_id = t.res_id AND ma.pars = 'a'"
+            "  AND ga.usor = 1)"
             " ORDER BY t.seq ASC LIMIT ?");
         si (e == NIHIL)
         {
@@ -4338,13 +4399,13 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
     dum (scrinium_gradi(e) == SCRINIUM_ORDO)
     {
         JsonValor* res = json_objectum_creare(pn);
+        chorda rid = scrinium_columna_textus(e, 0, pn);
         chorda datum = scrinium_columna_textus(e, IV, pn);
         chorda actor = scrinium_columna_textus(e, VII, pn);
         chorda respondet = scrinium_columna_textus(e, VIII, pn);
 
         json_objectum_ponere(res, "res_id",
-            json_chorda_creare(pn,
-                scrinium_columna_textus(e, 0, pn)));
+            json_chorda_creare(pn, rid));
         json_objectum_ponere(res, "genus",
             json_chorda_creare(pn,
                 scrinium_columna_textus(e, I, pn)));
@@ -4374,6 +4435,82 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
             si (r.successus)
             {
                 json_objectum_ponere(res, "datum", r.radix);
+            }
+        }
+        /* nexus (genera G0): tabulatum relationum embeddatum per
+         * ordinem - verbum ex dato rei nexus (LIKE respondet-ad
+         * NON extenditur: quaesitum indicatum, tituli
+         * destinationis resoluti, multa verba multae destinationes;
+         * respondet_ad supra pro filis fori manet) */
+        {
+            ScriniumEnuntiatum* en = scrinium_praeparare(
+                gesta_scrinium(t->mundus),
+                "SELECT n.datum, mb.membrum, tgt.titulus,"
+                " tgt.status"
+                " FROM membra ma"
+                " JOIN res n ON n.res_id = ma.res_id"
+                "  AND n.genus = 'nexus' AND n.status = 'vigens'"
+                " JOIN membra mb ON mb.res_id = ma.res_id"
+                "  AND mb.pars = 'b'"
+                " LEFT JOIN res tgt ON tgt.res_id = mb.membrum"
+                " WHERE ma.pars = 'a' AND ma.membrum = ?");
+
+            si (en != NIHIL)
+            {
+                JsonValor* nexus_tab = NIHIL;
+
+                scrinium_ligare_textum(en, I, rid);
+                dum (scrinium_gradi(en) == SCRINIUM_ORDO)
+                {
+                    chorda n_datum = scrinium_columna_textus(en,
+                        0, pn);
+                    chorda ad_id = scrinium_columna_textus(en, I,
+                        pn);
+                    chorda ad_titulus = scrinium_columna_textus(en,
+                        II, pn);
+                    chorda ad_status = scrinium_columna_textus(en,
+                        III, pn);
+                    JsonResultus rn = json_legere(n_datum, pn);
+                    JsonValor* v_verbum;
+                    JsonValor* unus;
+
+                    si (!rn.successus
+                        || !json_est_objectum(rn.radix))
+                    {
+                        perge;
+                    }
+                    v_verbum = json_objectum_capere(rn.radix,
+                        "verbum");
+                    si (v_verbum == NIHIL
+                        || !json_est_chorda(v_verbum))
+                    {
+                        perge;
+                    }
+                    si (nexus_tab == NIHIL)
+                    {
+                        nexus_tab = json_tabulatum_creare(pn);
+                    }
+                    unus = json_objectum_creare(pn);
+                    json_objectum_ponere(unus, "verbum", v_verbum);
+                    json_objectum_ponere(unus, "ad",
+                        json_chorda_creare(pn, ad_id));
+                    si (ad_titulus.mensura > ZEPHYRUM)
+                    {
+                        json_objectum_ponere(unus, "ad_titulus",
+                            json_chorda_creare(pn, ad_titulus));
+                    }
+                    si (ad_status.mensura > ZEPHYRUM)
+                    {
+                        json_objectum_ponere(unus, "ad_status",
+                            json_chorda_creare(pn, ad_status));
+                    }
+                    json_tabulatum_addere(nexus_tab, unus);
+                }
+                scrinium_finire(en);
+                si (nexus_tab != NIHIL)
+                {
+                    json_objectum_ponere(res, "nexus", nexus_tab);
+                }
             }
         }
         json_tabulatum_addere(tabulatum, res);
@@ -5090,7 +5227,10 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
           " creatur (filum uno vocamine); titulus absens ex"
           " corpore derivatur", FALSUM },
         { "ramus", "titulus rami activi - creatio in ramo (trunco"
-          " invisibilis usque ad fusionem)", FALSUM }
+          " invisibilis usque ad fusionem)", FALSUM },
+        { "datum", "obiectum JSON camporum ut CHORDA escapata -"
+          " entia generum per definitionem creata (claves contra"
+          " campos iudicatae, notae custodiae)", FALSUM }
     };
     interior constans TabArgumentum ARG_GERERE[] = {
         { "res", "res_id (aut praefixum ULID inambiguum >= 6 char.)"
@@ -5180,7 +5320,7 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         "Rem novam creare (quaestio/parcum/decretum/nota/"
         "desideratum) cum tags et ancoris optionalibus; similia"
         " FTS in responso (custos duplicationum).",
-        ARG_ADDERE, X));
+        ARG_ADDERE, XI));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "gerere",
         "Eventum unum in rem exsistentem scribere: nota, status,"
         " nexus/denexus (ligamina), mutatio, remotio. Violationes"

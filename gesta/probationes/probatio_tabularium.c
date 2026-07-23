@@ -1747,6 +1747,268 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "NOVA:") == NIHIL);
     }
 
+    /* ========================================================
+     * XVII. GENERA PER APP DEFINITA (G0): registrum dynamicum ex
+     * entibus definitionis, iudicium camporum (iudicat-non-
+     * obstat), cardinalitas unum, emendatio additiva sola,
+     * ab_lecto discriminat (entia = data, definitiones =
+     * epistulae)
+     * ======================================================== */
+    {
+        character def_auctor[GESTA_RES_ID_MENSURA];
+        character auctor_a[GESTA_RES_ID_MENSURA];
+        character auctor_b[GESTA_RES_ID_MENSURA];
+        character liber_a[GESTA_RES_ID_MENSURA];
+        character linea[1400];
+
+        /* definitio auctoris: campus unus textus */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":970,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"definitio\","
+            "\"titulus\":\"Auctor\",\"datum\":\"{\\\"clavis\\\":"
+            "\\\"auctor\\\",\\\"campi\\\":[{\\\"clavis\\\":"
+            "\\\"appellatio\\\",\\\"typus\\\":\\\"textus\\\"}],"
+            "\\\"campus_tituli\\\":\\\"appellatio\\\"}\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        _res_id_ex_responso(r, def_auctor);
+
+        /* definitio libri: textus + annus + numerus + relatio
+         * unum ad auctorem */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":971,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"definitio\","
+            "\"titulus\":\"Liber\",\"datum\":\"{\\\"clavis\\\":"
+            "\\\"liber\\\",\\\"campi\\\":[{\\\"clavis\\\":"
+            "\\\"titulus_operis\\\",\\\"typus\\\":\\\"textus\\\"},"
+            "{\\\"clavis\\\":\\\"annus\\\",\\\"typus\\\":"
+            "\\\"annus\\\"},{\\\"clavis\\\":\\\"paginae\\\","
+            "\\\"typus\\\":\\\"numerus\\\"},{\\\"clavis\\\":"
+            "\\\"auctor\\\",\\\"typus\\\":\\\"relatio\\\","
+            "\\\"ad\\\":\\\"auctor\\\",\\\"cardinalitas\\\":"
+            "\\\"unum\\\"}],\\\"campus_tituli\\\":"
+            "\\\"titulus_operis\\\"}\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+
+        /* registrum novit ambo (sonda gestarum, exemplar G20) */
+        {
+            GestaMundus* sonda = gesta_aperire(piscina, VIA_DB,
+                VIA_AN);
+
+            CREDO_NON_NIHIL (sonda);
+            si (sonda != NIHIL)
+            {
+                chorda c = gesta_genus_datum(sonda, "liber",
+                    piscina);
+                character* buf = (character*)piscina_allocare(
+                    piscina, (memoriae_index)c.mensura + I);
+
+                CREDO_VERUM (c.mensura > ZEPHYRUM);
+                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                {
+                    memcpy(buf, c.datum,
+                        (memoriae_index)c.mensura);
+                    buf[c.mensura] = '\0';
+                    CREDO_VERUM (strstr(buf, "\"campi\"")
+                        != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"annus\"")
+                        != NIHIL);
+                }
+                gesta_claudere(sonda);
+            }
+        }
+
+        /* entia auctorum (genus modo definitum accipitur - ipsum
+         * registrum probat: ante G0 'genus ignotum' notaretur) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":972,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"auctor\","
+            "\"titulus\":\"Gaius Iulius Caesar\",\"datum\":"
+            "\"{\\\"appellatio\\\":\\\"Gaius Iulius Caesar\\\"}\""
+            "}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        _res_id_ex_responso(r, auctor_a);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":973,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"auctor\","
+            "\"titulus\":\"Plinius Maior\",\"datum\":"
+            "\"{\\\"appellatio\\\":\\\"Plinius Maior\\\"}\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        _res_id_ex_responso(r, auctor_b);
+
+        /* ens libri mundum: annus signatus negativus (a.C.n.) -
+         * scriptura munda, nulla nota camporum adhuc */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":974,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"liber\","
+            "\"titulus\":\"Commentarii de Bello Gallico\","
+            "\"datum\":\"{\\\"titulus_operis\\\":\\\"Commentarii"
+            " de Bello Gallico\\\",\\\"annus\\\":-52,"
+            "\\\"paginae\\\":240}\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        _res_id_ex_responso(r, liber_a);
+        CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
+            "violatio camporum") == NIHIL);
+
+        /* datum malformatum = recusatio clara (non scriptum) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":975,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"liber\","
+            "\"titulus\":\"Malformatus\",\"datum\":\"non json\""
+            "}}}");
+        CREDO_VERUM (strstr(r, "datum: obiectum JSON requiritur")
+            != NIHIL);
+
+        /* violatio typi: annus ut chorda + clavis ignota -
+         * scriptura PROCEDIT, nota custodiae composita in annales
+         * (iudicat, non obstat) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":976,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"liber\","
+            "\"titulus\":\"Liber Pravus\",\"datum\":"
+            "\"{\\\"annus\\\":\\\"-52\\\",\\\"color\\\":"
+            "\\\"ruber\\\"}\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        {
+            constans character* an = _plagula_litterae(piscina,
+                VIA_AN);
+
+            CREDO_VERUM (strstr(an, "violatio camporum") != NIHIL);
+            CREDO_VERUM (strstr(an, "integer expectatus")
+                != NIHIL);
+            CREDO_VERUM (strstr(an, "clavis extra campos")
+                != NIHIL);
+        }
+
+        /* relatio unum: vinculum primum mundum, alterum notatum */
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":977,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"nexus\",\"verbum\":\"auctor\",\"alterum\":\"%s\""
+            "}}}", liber_a, auctor_a);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "--auctor-->") != NIHIL);
+        CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
+            "cardinalitas unum excessa") == NIHIL);
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":978,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"nexus\",\"verbum\":\"auctor\",\"alterum\":\"%s\""
+            "}}}", liber_a, auctor_b);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "--auctor-->") != NIHIL);
+        CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
+            "cardinalitas unum excessa") != NIHIL);
+
+        /* legere: datum insertum (annus signatus) + tabulatum
+         * nexus cum titulo destinationis resoluto */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":979,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":\"liber\"}}}");
+        /* textus instrumenti = JSON intra JSON - virgulae in
+         * responso crudo escapatae (\") */
+        CREDO_VERUM (strstr(r, "\\\"annus\\\":-52") != NIHIL);
+        CREDO_VERUM (strstr(r, "\\\"nexus\\\"") != NIHIL);
+        CREDO_VERUM (strstr(r, "\\\"verbum\\\":\\\"auctor\\\"")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "\\\"ad_titulus\\\":\\\"Gaius"
+            " Iulius Caesar\\\"") != NIHIL);
+
+        /* emendatio definitionis: additiva munda, destructiva
+         * notata, clavis immutabilis */
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":980,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"mutatio\",\"datum\":\"{\\\"campi\\\":"
+            "[{\\\"clavis\\\":\\\"appellatio\\\",\\\"typus\\\":"
+            "\\\"textus\\\"},{\\\"clavis\\\":\\\"floruit\\\","
+            "\\\"typus\\\":\\\"annus\\\"}]}\"}}}", def_auctor);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "eventum mutatio scriptum")
+            != NIHIL);
+        CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
+            "emendatio destructiva") == NIHIL);
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":981,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"mutatio\",\"datum\":\"{\\\"campi\\\":"
+            "[{\\\"clavis\\\":\\\"floruit\\\",\\\"typus\\\":"
+            "\\\"annus\\\"}]}\"}}}", def_auctor);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "eventum mutatio scriptum")
+            != NIHIL);
+        CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
+            "emendatio destructiva (campus remotus)") != NIHIL);
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":982,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"mutatio\",\"datum\":\"{\\\"clavis\\\":"
+            "\\\"scriptor\\\"}\"}}}", def_auctor);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "eventum mutatio scriptum")
+            != NIHIL);
+        CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
+            "clavis immutabilis") != NIHIL);
+
+        /* collisio clavis: definitio super genus systematis -
+         * notata, registrum systematis NON clobberatum */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":983,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"definitio\","
+            "\"titulus\":\"Quaestio Falsa\",\"datum\":"
+            "\"{\\\"clavis\\\":\\\"quaestio\\\",\\\"campi\\\":[]"
+            "}\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
+            "clavis generis iam occupata") != NIHIL);
+        {
+            GestaMundus* sonda = gesta_aperire(piscina, VIA_DB,
+                VIA_AN);
+
+            CREDO_NON_NIHIL (sonda);
+            si (sonda != NIHIL)
+            {
+                chorda c = gesta_genus_datum(sonda, "quaestio",
+                    piscina);
+                character* buf = (character*)piscina_allocare(
+                    piscina, (memoriae_index)c.mensura + I);
+
+                CREDO_VERUM (c.mensura > ZEPHYRUM);
+                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                {
+                    memcpy(buf, c.datum,
+                        (memoriae_index)c.mensura);
+                    buf[c.mensura] = '\0';
+                    CREDO_VERUM (strstr(buf, "\"machina\"")
+                        != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"campi\"")
+                        == NIHIL);
+                }
+                gesta_claudere(sonda);
+            }
+        }
+
+        /* ab_lecto discriminat: entia generum usoris = data (non
+         * epistulae), definitiones = epistulae; nota custodiae
+         * nexus datorum quoque exclusa (in annalibus manet) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":984,"
+            "\"method\":\"initialize\",\"params\":{}}");
+        CREDO_VERUM (strstr(r, "NOVA:") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":985,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"acta\",\"arguments\":{\"ab_lecto\":\"verum\","
+            "\"quantum\":\"200\"}}}");
+        CREDO_VERUM (strstr(r, "acta non lecta") != NIHIL);
+        CREDO_VERUM (strstr(r, "Quaestio Falsa") != NIHIL);
+        CREDO_VERUM (strstr(r, "Commentarii") == NIHIL);
+        CREDO_VERUM (strstr(r, "Gaius Iulius Caesar") == NIHIL);
+        CREDO_VERUM (strstr(r, "cardinalitas unum excessa")
+            == NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":986,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"acta\",\"arguments\":{\"ab_lecto\":\"verum\"}}}");
+        CREDO_VERUM (strstr(r, "(nihil novi)") != NIHIL);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

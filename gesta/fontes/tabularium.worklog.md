@@ -337,3 +337,42 @@ instrumentorum daemonis, schema sessionis currentis vetus manet
 usque ad reconexionem — sed parametra extra transeunt
 (additionalProperties ordinarius verus in JSON Schema). "ad" per
 schema vetus functum est vivo.
+
+## 2026-07-23 — genera G0: the machine layer of user-defined genera
+
+Three finds worth keeping:
+
+1. **The projection hooks the RES fold, not the genera consumer.**
+The explorer plan said "dedicated branch in the genera consumer
+keyed on datum.genus==definitio" — but a mutatio event on a
+definitio entity carries ONLY the changed keys (no genus marker,
+no clavis). The genera consumer is event-shaped; only the res fold
+has the full folded datum. So `_definitionem_proicere` runs at the
+end of `_rei_applicare` after the res-row write, where
+status_obiectum is complete. Corpus-contact law paid again: ten
+minutes at the seam flipped the design.
+
+2. **Tool-text asserts need escaped quotes.** legere's payload is
+JSON-inside-JSON (tool text embedded in the MCP envelope), so the
+raw response bytes contain `\"annus\":-52`, not `"annus":-52`.
+Asserting with plain-quote needles fails while the data is
+perfect. Either assert bare words (the F2 precedent) or write the
+needle as `\\\"annus\\\":-52` in the C literal. Cost: one
+duct-tape imprimere to see it.
+
+3. **Registry rows are never deleted (v1 crudeness, deliberate).**
+A clavis-change mutatio on a definitio entity is judged ("clavis
+immutabilis" custody note) but the write proceeds — and the
+projection then creates a NEW genera row under the new clavis; the
+old row stays. Same for deleting a definitio entity: row survives.
+Harmless (rows are additive, system rows are clobber-protected via
+the usor=0 guard), but the registry can accumulate orphans if the
+judgment is ignored. The app never offers these edits; MCP writers
+see the custody note.
+
+Also banked: unum-cardinality judgment reads the nexus's verbum
+from the FOLDED res — in a same-batch multi-event write (K3 agere
+effectus) the shadow carries genus only, so the judgment silently
+skips. Ordinary paths (gerere nexus, addere ad) fold per call, so
+the window is theoretical until actions start creating relatio
+links.

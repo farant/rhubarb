@@ -73,9 +73,16 @@ interior constans character* constans GESTA_MIGRATIONES[] = {
      * catenae (branch_id, seq) et examen puritatis trunci in
      * plicaturis avidis */
     "CREATE INDEX idx_tessellae_ramus ON tessellae(branch_id, seq);"
+    ,
+    /* migratio V (genera-usoris G0): columna usor in generibus -
+     * 0 = systema (semina definitio-generis), I = genus ab usore
+     * definitum (ens definitionis proiectum). Discriminator
+     * ab_lecto + custos proiectionis (ordo systematis numquam
+     * clobberatur). */
+    "ALTER TABLE genera ADD COLUMN usor INTEGER NOT NULL DEFAULT 0;"
 };
 
-#define GESTA_MIGRATIONES_NUMERUS IV
+#define GESTA_MIGRATIONES_NUMERUS V
 
 structura GestaMundus {
     Piscina*            piscina;
@@ -1115,6 +1122,62 @@ _statum_transformare (GestaMundus* m, JsonValor** status_in_ex,
         : GESTA_TRANSFORMATUM_INANE;
 }
 
+/* proiectio definitionis (genera-usoris G0): ens generis
+ * "definitio" plicatum -> ordo registri generum (titulus = clavis,
+ * usor = I). Fons ALTER registri - semina fons primus manent
+ * (definitio-generis, res_id NIHIL, forma attributa). In plicatura
+ * RES, non in consumptore generum: mutatio claves mutatas SOLAS
+ * fert - datum plenum solum post plicaturam exstat. Ordinem
+ * systematis (usor = 0) numquam superscribit - collisio clavis ad
+ * scripturam notatur (_definitionem_validare), hic custos ultimus
+ * tacitus. */
+interior vacuum
+_definitionem_proicere (GestaMundus* m, JsonValor* status_obiectum,
+    Piscina* piscina)
+{
+    JsonValor* v_clavis;
+    chorda clavis;
+    chorda datum_totum;
+    ScriniumEnuntiatum* e;
+
+    v_clavis = json_objectum_capere(status_obiectum, "clavis");
+    si (v_clavis == NIHIL || !json_est_chorda(v_clavis))
+    {
+        redde;   /* sine clave nihil proiciendum */
+    }
+    clavis = json_ad_chorda(v_clavis);
+    si (clavis.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    e = scrinium_praeparare(m->scrinium,
+        "SELECT usor FROM genera WHERE titulus = ?");
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    scrinium_ligare_textum(e, I, clavis);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO
+        && scrinium_columna_numerus(e, 0) == (s64)ZEPHYRUM)
+    {
+        scrinium_finire(e);
+        redde;   /* ordo systematis stans - clobber vetitum */
+    }
+    scrinium_finire(e);
+    datum_totum = json_scribere(status_obiectum, piscina);
+    e = scrinium_praeparare(m->scrinium,
+        "INSERT OR REPLACE INTO genera (titulus, datum, usor)"
+        " VALUES (?, ?, 1)");
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    scrinium_ligare_textum(e, I, clavis);
+    scrinium_ligare_textum(e, II, datum_totum);
+    (vacuum)scrinium_gradi(e);
+    scrinium_finire(e);
+}
+
 /* eventum unum in plicaturam rerum applicare (involucrum trunci
  * post decompositionem K4: lectio tabulae -> transformatio ->
  * scriptura tabulae; mores omnes priores octetim servati) */
@@ -1189,6 +1252,12 @@ _rei_applicare (GestaMundus* m, chorda res_id, chorda genus_eventus,
         scrinium_ligare_textum(e, VII, creatum);
         (vacuum)scrinium_gradi(e);
         scrinium_finire(e);
+    }
+    /* proiectio registri (genera-usoris G0): post scripturam -
+     * datum plicatum plenum */
+    si (_chorda_est(genus_columna, "definitio"))
+    {
+        _definitionem_proicere(m, status_obiectum, piscina);
     }
 }
 
@@ -1755,6 +1824,418 @@ _eventum_praeparare (GestaMundus* m, constans GestaEventum* e,
     redde VERUM;
 }
 
+/* ==================================================
+ * Iudicium generum usoris (genera-usoris G0)
+ * ================================================== */
+
+/* claves systematis - numquam contra campos iudicatae (via addere
+ * conditae aut plicatura curatae) */
+interior b32
+_clavis_systematis (chorda k)
+{
+    redde _chorda_est(k, "genus") || _chorda_est(k, "titulus")
+        || _chorda_est(k, "corpus") || _chorda_est(k, "tags")
+        || _chorda_est(k, "ancorae") || _chorda_est(k, "signatura")
+        || _chorda_est(k, "status") || _chorda_est(k, "notae");
+}
+
+/* campum in campis definitionis per clavem invenire */
+interior JsonValor*
+_campum_invenire (JsonValor* campi, chorda clavis)
+{
+    i32 i;
+    i32 n;
+
+    si (campi == NIHIL || !json_est_tabulatum(campi))
+    {
+        redde NIHIL;
+    }
+    n = json_tabulatum_numerus(campi);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        JsonValor* campus = json_tabulatum_obtinere(campi, i);
+        JsonValor* ck;
+
+        si (campus == NIHIL || !json_est_objectum(campus))
+        {
+            perge;
+        }
+        ck = json_objectum_capere(campus, "clavis");
+        si (ck != NIHIL && json_est_chorda(ck)
+            && _chordae_pares(json_ad_chorda(ck), clavis))
+        {
+            redde campus;
+        }
+    }
+    redde NIHIL;
+}
+
+/* iudicium camporum: claves dati contra campi definitionis
+ * (textus/area/dies = chorda; annus/numerus = integer; relatio in
+ * dato vetita - nexus expectatur; clavis extra campos notata).
+ * Genus sine campi = systematis, sine iudicio. NIHIL = sanum,
+ * alioquin litterae compositae in piscina. */
+interior constans character*
+_campos_iudicare (GestaMundus* m, chorda genus_titulus,
+    JsonValor* datum_obiectum, Piscina* piscina)
+{
+    chorda gd;
+    JsonResultus r;
+    JsonValor* campi;
+    ChordaAedificator* aed = NIHIL;
+    JsonObjectumIterator iter;
+    chorda k;
+    JsonValor* v;
+
+    si (genus_titulus.mensura == ZEPHYRUM
+        || datum_obiectum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    gd = _genus_datum_capere(m, genus_titulus, piscina);
+    si (gd.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    r = json_legere(gd, piscina);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde NIHIL;
+    }
+    campi = json_objectum_capere(r.radix, "campi");
+    si (campi == NIHIL || !json_est_tabulatum(campi))
+    {
+        redde NIHIL;
+    }
+    iter = json_objectum_iterator(datum_obiectum);
+    dum (json_objectum_iterator_proxima(&iter, &k, &v))
+    {
+        constans character* querela = NIHIL;
+        JsonValor* campus;
+
+        si (_clavis_systematis(k))
+        {
+            perge;
+        }
+        campus = _campum_invenire(campi, k);
+        si (campus == NIHIL)
+        {
+            querela = "clavis extra campos";
+        }
+        alioquin
+        {
+            JsonValor* t_v = json_objectum_capere(campus, "typus");
+            chorda typus = (t_v != NIHIL && json_est_chorda(t_v))
+                ? json_ad_chorda(t_v) : _ch("");
+
+            si (_chorda_est(typus, "textus")
+                || _chorda_est(typus, "area")
+                || _chorda_est(typus, "dies"))
+            {
+                si (!json_est_chorda(v))
+                {
+                    querela = "chorda expectata";
+                }
+            }
+            alioquin si (_chorda_est(typus, "annus")
+                || _chorda_est(typus, "numerus"))
+            {
+                si (!json_est_integer(v))
+                {
+                    querela = "integer expectatus";
+                }
+            }
+            alioquin si (_chorda_est(typus, "relatio"))
+            {
+                querela = "campus relationis in dato (nexus"
+                    " expectatur)";
+            }
+            /* typus ignotus = sine iudicio (comitas antrorsum) */
+        }
+        si (querela != NIHIL)
+        {
+            si (aed == NIHIL)
+            {
+                aed = chorda_aedificator_creare(piscina, 256);
+                si (aed == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                chorda_aedificator_appendere_literis(aed,
+                    "violatio camporum:");
+            }
+            chorda_aedificator_appendere_literis(aed, " ");
+            chorda_aedificator_appendere_chorda(aed, k);
+            chorda_aedificator_appendere_literis(aed, " (");
+            chorda_aedificator_appendere_literis(aed, querela);
+            chorda_aedificator_appendere_literis(aed, ");");
+        }
+    }
+    si (aed == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde _litterae(piscina, chorda_aedificator_finire(aed));
+}
+
+/* creatio entis definitionis: forma (clavis chorda non vacua,
+ * campi tabulatum) + collisio clavis contra registrum stans -
+ * proiectio ordinem systematis numquam clobberat, nota causam
+ * nominat */
+interior constans character*
+_definitionem_validare (GestaMundus* m, JsonValor* datum_obiectum,
+    Piscina* piscina)
+{
+    JsonValor* v_clavis = json_objectum_capere(datum_obiectum,
+        "clavis");
+    JsonValor* v_campi = json_objectum_capere(datum_obiectum,
+        "campi");
+
+    si (v_clavis == NIHIL || !json_est_chorda(v_clavis)
+        || json_ad_chorda(v_clavis).mensura == ZEPHYRUM)
+    {
+        redde "violatio definitionis: clavis (chorda non vacua)"
+            " requiritur";
+    }
+    si (v_campi != NIHIL && !json_est_tabulatum(v_campi))
+    {
+        redde "violatio definitionis: campi tabulatum requiritur";
+    }
+    si (_genus_datum_capere(m, json_ad_chorda(v_clavis),
+            piscina).mensura > ZEPHYRUM)
+    {
+        redde "violatio definitionis: clavis generis iam occupata";
+    }
+    redde NIHIL;
+}
+
+/* mutatio entis definitionis: additiva sola - clavis immutabilis,
+ * campi stantes (clavis, typus) manere debent */
+interior constans character*
+_emendationem_definitionis_validare (GestaMundus* m,
+    constans GestaResOrdo* ordo, JsonValor* datum_obiectum,
+    Piscina* piscina)
+{
+    JsonValor* vetus = NIHIL;
+    JsonValor* v_clavis_nova = json_objectum_capere(datum_obiectum,
+        "clavis");
+    JsonValor* v_campi_novi = json_objectum_capere(datum_obiectum,
+        "campi");
+
+    (vacuum)m;
+    si (ordo->datum.mensura > ZEPHYRUM)
+    {
+        JsonResultus r = json_legere(ordo->datum, piscina);
+
+        si (r.successus && json_est_objectum(r.radix))
+        {
+            vetus = r.radix;
+        }
+    }
+    si (vetus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (v_clavis_nova != NIHIL)
+    {
+        JsonValor* v_clavis_vetus = json_objectum_capere(vetus,
+            "clavis");
+
+        si (v_clavis_vetus != NIHIL
+            && json_est_chorda(v_clavis_vetus)
+            && (!json_est_chorda(v_clavis_nova)
+                || !_chordae_pares(json_ad_chorda(v_clavis_nova),
+                       json_ad_chorda(v_clavis_vetus))))
+        {
+            redde "violatio definitionis: clavis immutabilis";
+        }
+    }
+    si (v_campi_novi != NIHIL)
+    {
+        JsonValor* v_campi_veteres = json_objectum_capere(vetus,
+            "campi");
+
+        si (v_campi_veteres != NIHIL
+            && json_est_tabulatum(v_campi_veteres))
+        {
+            i32 i;
+            i32 n;
+
+            si (!json_est_tabulatum(v_campi_novi))
+            {
+                redde "violatio definitionis: campi tabulatum"
+                    " requiritur";
+            }
+            n = json_tabulatum_numerus(v_campi_veteres);
+            per (i = ZEPHYRUM; i < n; i++)
+            {
+                JsonValor* cv = json_tabulatum_obtinere(
+                    v_campi_veteres, i);
+                JsonValor* ck;
+                JsonValor* campus_novus;
+                JsonValor* tv;
+                JsonValor* tn;
+
+                si (cv == NIHIL || !json_est_objectum(cv))
+                {
+                    perge;
+                }
+                ck = json_objectum_capere(cv, "clavis");
+                si (ck == NIHIL || !json_est_chorda(ck))
+                {
+                    perge;
+                }
+                campus_novus = _campum_invenire(v_campi_novi,
+                    json_ad_chorda(ck));
+                si (campus_novus == NIHIL)
+                {
+                    redde "violatio definitionis: emendatio"
+                        " destructiva (campus remotus)";
+                }
+                tv = json_objectum_capere(cv, "typus");
+                tn = json_objectum_capere(campus_novus, "typus");
+                si (tv != NIHIL && json_est_chorda(tv)
+                    && (tn == NIHIL || !json_est_chorda(tn)
+                        || !_chordae_pares(json_ad_chorda(tv),
+                               json_ad_chorda(tn))))
+                {
+                    redde "violatio definitionis: emendatio"
+                        " destructiva (typus mutatus)";
+                }
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+/* cardinalitas unum (G0): membrum-additum pars a - res monstrans
+ * campum relationis 'unum' iam vinctum habet? Verbum ex re nexus
+ * plicata; in fasce eodem umbra datum non fert -> iudicium tacite
+ * praetermittitur (viae ordinariae per gesta_scribere singula
+ * plicant - fenestra angusta, v1 accepta). Exemplar LIKE idem ac
+ * legere respondet-ad (cruditas nota). */
+interior constans character*
+_unum_validare (GestaMundus* m, constans GestaEventumParatum* p,
+    Xar* obumbrae, constans character* ramus, Piscina* piscina)
+{
+    JsonValor* v_pars = json_objectum_capere(p->datum_obiectum,
+        "pars");
+    JsonValor* v_membrum = json_objectum_capere(p->datum_obiectum,
+        "membrum");
+    GestaResOrdo nexus_ordo;
+    GestaResOrdo a_ordo;
+    JsonResultus r;
+    JsonValor* v_verbum;
+    JsonValor* campi;
+    JsonValor* campus;
+    JsonValor* v_typus;
+    JsonValor* v_card;
+    chorda verbum;
+    chorda membrum;
+    chorda gd;
+
+    si (v_pars == NIHIL || !json_est_chorda(v_pars)
+        || !_chorda_est(json_ad_chorda(v_pars), "a")
+        || v_membrum == NIHIL || !json_est_chorda(v_membrum))
+    {
+        redde NIHIL;
+    }
+    membrum = json_ad_chorda(v_membrum);
+    nexus_ordo = _res_validationis_capere(m, p->res_id, obumbrae,
+        ramus, piscina);
+    si (!nexus_ordo.exsistit || nexus_ordo.datum.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    r = json_legere(nexus_ordo.datum, piscina);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde NIHIL;
+    }
+    v_verbum = json_objectum_capere(r.radix, "verbum");
+    si (v_verbum == NIHIL || !json_est_chorda(v_verbum))
+    {
+        redde NIHIL;
+    }
+    verbum = json_ad_chorda(v_verbum);
+    a_ordo = _res_validationis_capere(m, membrum, obumbrae, ramus,
+        piscina);
+    si (!a_ordo.exsistit || a_ordo.genus.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    gd = _genus_datum_capere(m, a_ordo.genus, piscina);
+    si (gd.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    r = json_legere(gd, piscina);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde NIHIL;
+    }
+    campi = json_objectum_capere(r.radix, "campi");
+    campus = _campum_invenire(campi, verbum);
+    si (campus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    v_typus = json_objectum_capere(campus, "typus");
+    si (v_typus == NIHIL || !json_est_chorda(v_typus)
+        || !_chorda_est(json_ad_chorda(v_typus), "relatio"))
+    {
+        redde NIHIL;
+    }
+    v_card = json_objectum_capere(campus, "cardinalitas");
+    si (v_card == NIHIL || !json_est_chorda(v_card)
+        || !_chorda_est(json_ad_chorda(v_card), "unum"))
+    {
+        redde NIHIL;
+    }
+    {
+        ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+            256);
+        chorda exemplar;
+        ScriniumEnuntiatum* e;
+        s64 numerus = ZEPHYRUM;
+
+        si (aed == NIHIL)
+        {
+            redde NIHIL;
+        }
+        chorda_aedificator_appendere_literis(aed,
+            "%\"verbum\":\"");
+        chorda_aedificator_appendere_chorda(aed, verbum);
+        chorda_aedificator_appendere_literis(aed, "\"%");
+        exemplar = chorda_aedificator_finire(aed);
+        e = scrinium_praeparare(m->scrinium,
+            "SELECT COUNT(*) FROM membra ma"
+            " JOIN res n ON n.res_id = ma.res_id"
+            "  AND n.genus = 'nexus' AND n.status = 'vigens'"
+            "  AND n.datum LIKE ?"
+            " WHERE ma.pars = 'a' AND ma.membrum = ?"
+            " AND ma.res_id <> ?");
+        si (e == NIHIL)
+        {
+            redde NIHIL;
+        }
+        scrinium_ligare_textum(e, I, exemplar);
+        scrinium_ligare_textum(e, II, membrum);
+        scrinium_ligare_textum(e, III, p->res_id);
+        si (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            numerus = scrinium_columna_numerus(e, 0);
+        }
+        scrinium_finire(e);
+        si (numerus > (s64)ZEPHYRUM)
+        {
+            redde "violatio: cardinalitas unum excessa (campus"
+                " relationis iam vinctus)";
+        }
+    }
+    redde NIHIL;
+}
+
 /* validatio - iudicat, non obstat (violatio -> nota custodiae
  * intra fascem). Lectiones purae contra plicaturas stantes et
  * obumbras fascis (B3). Litterae staticae aut in piscina;
@@ -1770,16 +2251,43 @@ _eventum_validare (GestaMundus* m, constans GestaEventumParatum* p,
 
         si (g != NIHIL && json_est_chorda(g))
         {
-            chorda gd = _genus_datum_capere(m, json_ad_chorda(g),
-                m->piscina);
+            chorda gt = json_ad_chorda(g);
+            chorda gd = _genus_datum_capere(m, gt, m->piscina);
 
             si (gd.mensura == ZEPHYRUM)
             {
                 redde "violatio: genus ignotum ad creationem"
                     " (definitio-generis deest)";
             }
+            /* genera-usoris G0: forma definitionis / campi entis */
+            si (_chorda_est(gt, "definitio"))
+            {
+                redde _definitionem_validare(m, p->datum_obiectum,
+                    m->piscina);
+            }
+            redde _campos_iudicare(m, gt, p->datum_obiectum,
+                m->piscina);
         }
         redde NIHIL;
+    }
+    si (strcmp(p->genus_eventus, "mutatio") == ZEPHYRUM)
+    {
+        /* genera-usoris G0: campi entis usoris iudicati; entis
+         * definitionis emendatio additiva sola */
+        GestaResOrdo ordo = _res_validationis_capere(m, p->res_id,
+            obumbrae, ramus, m->piscina);
+
+        si (!ordo.exsistit || ordo.genus.mensura == ZEPHYRUM)
+        {
+            redde NIHIL;
+        }
+        si (_chorda_est(ordo.genus, "definitio"))
+        {
+            redde _emendationem_definitionis_validare(m, &ordo,
+                p->datum_obiectum, m->piscina);
+        }
+        redde _campos_iudicare(m, ordo.genus, p->datum_obiectum,
+            m->piscina);
     }
     si (strcmp(p->genus_eventus, "status") == ZEPHYRUM)
     {
@@ -1809,11 +2317,22 @@ _eventum_validare (GestaMundus* m, constans GestaEventumParatum* p,
         || strcmp(p->genus_eventus, "membrum-remotum") == ZEPHYRUM)
     {
         /* custodia membrorum K2 spec par VI (I-VIII) */
-        redde _membrum_validare(m,
+        constans character* violatio = _membrum_validare(m,
             strcmp(p->genus_eventus, "membrum-additum")
                 == ZEPHYRUM,
             p->res_id, p->datum_obiectum, obumbrae, ramus,
             m->piscina);
+
+        si (violatio != NIHIL)
+        {
+            redde violatio;
+        }
+        /* genera-usoris G0: cardinalitas unum camporum relationis */
+        si (strcmp(p->genus_eventus, "membrum-additum") == ZEPHYRUM)
+        {
+            redde _unum_validare(m, p, obumbrae, ramus, m->piscina);
+        }
+        redde NIHIL;
     }
     si (p->est_generis)
     {
