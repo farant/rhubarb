@@ -236,6 +236,14 @@
   <div id="res-ens-domus" hidden>
     <div id="barra-superior"><a class="retro" id="ens-retro">&larr; tabula</a></div>
     <div id="res-ens"></div>
+    <div id="arca-commentarii-entis-domus">
+      <textarea id="arca-commentarii-entis" rows="2" data-inter="verum"
+        placeholder="commentarium de hac re..."></textarea>
+      <div id="pes-compositionis">
+        <span></span>
+        <button id="commentari-ens">commentari</button>
+      </div>
+    </div>
   </div>
 
   <div id="res-forma-domus" hidden>
@@ -261,6 +269,7 @@ var res_visus = 'index';       /* index | creator | tabula | ens | forma */
 var res_defs = [];             /* definitiones (cache) */
 var res_def = null;            /* definitio generis aperti */
 var res_entia = [];            /* entia generis aperti (cache) */
+var res_commentaria = [];      /* commentaria (visus entis) */
 var res_ens_id = null;         /* ens apertum */
 var res_ordinatio = {};        /* clavis generis -> {campus, typus, directio} */
 var res_fts_ids = null;        /* null = sine filtro; aliter [] res_id */
@@ -1294,7 +1303,40 @@ function reddere_res_ens() {
     });
     domus.appendChild(port);
   }
+  /* commentaria de ente: idem motor fili quo articuli (radices =
+   * respondet_ad === ens; discursus de datis - epistulae Claudii) */
+  {
+    var per_id_c = {}, filii_c = {}, radices_c = [];
+    res_commentaria.forEach(function (c) { per_id_c[c.res_id] = c; });
+    res_commentaria.forEach(function (c) {
+      if (c.respondet_ad === res_ens_id) { radices_c.push(c); }
+      else if (c.respondet_ad && per_id_c[c.respondet_ad]) {
+        (filii_c[c.respondet_ad] = filii_c[c.respondet_ad] || []).push(c);
+      }
+    });
+    if (radices_c.length) {
+      var cdiv = document.createElement('div');
+      cdiv.className = 'porticus';
+      var h3c = document.createElement('h3');
+      h3c.textContent = 'commentaria';
+      cdiv.appendChild(h3c);
+      radices_c.slice().reverse().forEach(function (c) {
+        var e = elementum_commentarii(c, filii_c);
+        if (e) { cdiv.appendChild(e); }
+      });
+      domus.appendChild(cdiv);
+    }
+  }
 }
+
+document.getElementById('commentari-ens').onclick = function () {
+  var arca = document.getElementById('arca-commentarii-entis');
+  if (!arca.value || !res_ens_id) { return; }
+  internuntius.vocare('mittere',
+    { genus: 'commentarium', corpus: arca.value, ad: res_ens_id })
+    .then(function () { arca.value = ''; anquirere_nunc(); })
+    .catch(function (c) { culpam_ostendere(c, 'defectus missionis'); });
+};
 
 /* ---- forma entis (poll-exempta; exemplar editoris) ---- */
 var forma_latitudines = {};   /* clavis campi -> elementum valoris */
@@ -1598,10 +1640,13 @@ function anquirere() {
         });
       }).catch(function (c) { culpam_ostendere(c, 'defectus lectionis'); });
     } else if (res_visus === 'tabula' || res_visus === 'ens') {
-      Promise.all([legere('definitio'), legere(clavis_de(res_def))])
+      var onera_res = [legere('definitio'), legere(clavis_de(res_def))];
+      if (res_visus === 'ens') { onera_res.push(legere('commentarium')); }
+      Promise.all(onera_res)
         .then(function (ambo) {
           res_defs = ambo[0];
           res_entia = ambo[1];
+          res_commentaria = ambo[2] || [];
           /* definitionem recentem retinere (emendationes adveniunt) */
           res_defs.forEach(function (d) {
             if (clavis_de(d) === clavis_de(res_def)) { res_def = d; }
@@ -1785,6 +1830,17 @@ function fumus_genera() {
         if (!bene) {
           throw new Error('creatio inserta sine campo tituli');
         }
+        /* commentarium de ente (motor fili articuli reusus) */
+        return internuntius.vocare('mittere',
+          { genus: 'commentarium',
+            corpus: '[fumus] commentarium de re', ad: roma_id });
+      })
+      .then(function () { return legere('commentarium'); })
+      .then(function (commentaria) {
+        var bene = commentaria.some(function (c) {
+          return c.respondet_ad === roma_id;
+        });
+        if (!bene) { throw new Error('commentarium entis fractum'); }
         return internuntius.vocare('fumus_perfectus', {});
       });
   });
