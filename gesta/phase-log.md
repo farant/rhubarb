@@ -1721,3 +1721,36 @@ uno (secunda falsificatio colloquii per barram vividam).
   migrata asserta. FUMUS PLENUS primo cursu. Probationes 303
   (insalubres 1 ante / 3 post remotionem campi - numerus exactus
   ratiocinatus et confirmatus). Suite 18/680/303/12.
+
+## SCHOLIA - EDITOR ADNOTATIONUM (docco domus): INTENTIO (2026-07-23)
+
+Ex editore vetere Franis (fons amissus): documentum quodlibet
+adglutinatur, lineae selectae, adnotationes in margine stilo docco
+(traditio scholiastarum - nomen exactum). Tabula quarta fori.
+MACHINA INTACTA: codex = res cum textu in corpore (FTS gratis,
+textus CONGELATUS post adglutinationem - deriva adnotationum);
+scholium = addere unum {corpus, ad: codex, datum: {linea_a,
+linea_b}} - titulus ex corpore derivatus. Genera per definitiones
+se-serentes (primo usu creantur - mundus quilibet). Decisa: clic +
+shift-clic pro selectione; scholia = DATA quieta (ab_lecto ea non
+videt - studium Franis, non epistulae); nomina scholia/codex/
+scholium. UI: sub-visus index (codices + numeri scholiorum) /
+novus (adglutinatio, fossae exemptus) / codex (LECTOR: corpus
+latum [body.latus ~80em], lineae numeratae dextra, margo
+scholiorum sinistra positione absoluta ad lineas ancoratas +
+cumulus anti-collisionis, selecta illuminata, arca compositionis
+in margine). Fumus: codex III linearum + scholium + asserta DOM.
+
+## SCHOLIA: RELATIO (2026-07-23)
+
+FUMUS PLENUS PRIMO CURSU. Navatum ex intentione integro: machina
+INTACTA (codex/scholium genera per definitiones se-serentes primo
+usu; scholium = addere unum cum ad + datum ancorae); lector docco
+cum margine absoluto + cumulo anti-collisionis + illuminatione
+mutua (carta <-> lineae); selectio clic/shift-clic (clic iterum =
+dissolutio); compositio et adglutinatio fossae exemptae (sel_a
+custos); scholia quieta (usor=1 - ab_lecto ea non videt, decisio);
+corpus congelatus post creationem (deriva ancorarum). Chorographia
+fumi: genera se-serentia -> codex -> scholium ancoratum -> DOM
+(lineae III, carta I, linea secunda adnotata). Sub-visus scholia
+in ultima serie inclusi. Tabula quarta fori nata.
