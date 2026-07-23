@@ -763,12 +763,16 @@ function creator_ordinem_addere() {
   var monstrans = document.createElement('input');
   monstrans.placeholder = 'campus (e.g. Annus editionis)';
   var typus = document.createElement('select');
-  ['textus', 'area', 'dies', 'annus', 'numerus', 'relatio']
+  ['textus', 'area', 'dies', 'annus', 'numerus', 'veritas',
+   'electio', 'relatio']
     .forEach(function (t) {
       var op = document.createElement('option');
       op.value = t; op.textContent = t;
       typus.appendChild(op);
     });
+  var optiones = document.createElement('input');
+  optiones.placeholder = 'optiones (commatibus)';
+  optiones.hidden = true;
   var ad = document.createElement('select');
   ad.hidden = true;
   res_defs.forEach(function (d) {
@@ -786,6 +790,7 @@ function creator_ordinem_addere() {
   typus.onchange = function () {
     ad.hidden = typus.value !== 'relatio';
     card.hidden = typus.value !== 'relatio';
+    optiones.hidden = typus.value !== 'electio';
     creator_optiones_renovare();
   };
   monstrans.addEventListener('input', creator_optiones_renovare);
@@ -802,10 +807,11 @@ function creator_ordinem_addere() {
   ordo.appendChild(typus);
   ordo.appendChild(ad);
   ordo.appendChild(card);
+  ordo.appendChild(optiones);
   ordo.appendChild(x);
   domus.appendChild(ordo);
   creator_ordines.push({ ordo: ordo, monstrans: monstrans,
-    typus: typus, ad: ad, card: card });
+    typus: typus, ad: ad, card: card, optiones: optiones });
 }
 
 document.getElementById('genus-novum').onclick = function () {
@@ -841,6 +847,13 @@ document.getElementById('creator-servare').onclick = function () {
       if (!o.ad.value) { pravum = 'relatio sine genere destinationis'; return; }
       campus.ad = o.ad.value;
       campus.cardinalitas = o.card.value;
+    }
+    if (o.typus.value === 'electio') {
+      var ops = o.optiones.value.split(',')
+        .map(function (s) { return s.trim(); })
+        .filter(function (s) { return s.length > 0; });
+      if (!ops.length) { pravum = 'electio sine optionibus'; return; }
+      campus.optiones = ops;
     }
     campi.push(campus);
   });
@@ -885,13 +898,23 @@ function valorem_ordinis(e, col) {
   var v = e.datum ? e.datum[col.clavis] : undefined;
   if (v === undefined || v === null) { return ''; }
   if (col.typus === 'annus') { return annus_monstrare(v); }
+  if (col.typus === 'veritas') { return v === true ? '✓' : '—'; }
   return String(v);
 }
 
 function claves_ordinationis(e, col) {
+  var v = e.datum ? e.datum[col.clavis] : undefined;
   if (col.typus === 'annus' || col.typus === 'numerus') {
-    var v = e.datum ? e.datum[col.clavis] : undefined;
     return (typeof v === 'number') ? v : Infinity;
+  }
+  if (col.typus === 'veritas') {
+    return v === true ? 2 : (v === false ? 1 : 0);
+  }
+  if (col.typus === 'electio') {
+    /* ordo definitionis = ordo verus (desideratus < possessus <
+     * lectus), non alphabeticus; absens ultimus */
+    var idx = (col.optiones || []).indexOf(v);
+    return idx < 0 ? Infinity : idx;
   }
   return valorem_ordinis(e, col).toLowerCase();
 }
@@ -1051,9 +1074,13 @@ function reddere_res_ens() {
       });
     } else {
       var v = ens.datum ? ens.datum[c.clavis] : undefined;
-      val.textContent = (c.typus === 'annus')
-        ? annus_monstrare(v)
-        : (v === undefined || v === null ? '' : String(v));
+      if (c.typus === 'annus') { val.textContent = annus_monstrare(v); }
+      else if (c.typus === 'veritas') {
+        val.textContent = v === true ? '✓'
+          : (v === false ? '—' : '');
+      }
+      else { val.textContent =
+        (v === undefined || v === null) ? '' : String(v); }
       if (c.typus === 'area') { val.className = 'corpus'; }
     }
     div.appendChild(val);
@@ -1237,13 +1264,28 @@ function forma_aperire(ens) {
       if (c.typus === 'area') {
         lat = document.createElement('textarea');
         lat.rows = 4;
+      } else if (c.typus === 'veritas') {
+        lat = document.createElement('input');
+        lat.type = 'checkbox';
+        lat.style.width = 'auto';
+      } else if (c.typus === 'electio') {
+        lat = document.createElement('select');
+        var vacua_op = document.createElement('option');
+        vacua_op.value = ''; vacua_op.textContent = '—';
+        lat.appendChild(vacua_op);
+        (c.optiones || []).forEach(function (o) {
+          var op = document.createElement('option');
+          op.value = o; op.textContent = o;
+          lat.appendChild(op);
+        });
       } else {
         lat = document.createElement('input');
         if (c.typus === 'dies') { lat.placeholder = 'MMDCCLXXVI-07-04 => 1776-07-04'; }
         if (c.typus === 'annus') { lat.placeholder = 'negativus = a.C.n. (-753)'; }
       }
       var v = ens && ens.datum ? ens.datum[c.clavis] : undefined;
-      if (v !== undefined && v !== null) { lat.value = String(v); }
+      if (c.typus === 'veritas') { lat.checked = v === true; }
+      else if (v !== undefined && v !== null) { lat.value = String(v); }
       if (c.typus === 'annus') {
         var aera = document.createElement('span');
         aera.className = 'aera';
@@ -1271,6 +1313,12 @@ document.getElementById('forma-servare').onclick = function () {
   campi_de(def).forEach(function (c) {
     if (c.typus === 'relatio') { return; }
     var lat = forma_latitudines[c.clavis];
+    if (c.typus === 'veritas') {
+      /* checkbox statum "absentem" exprimere nequit - semper
+       * scriptum, non-signatum = false expressum */
+      datum[c.clavis] = !!(lat && lat.checked);
+      return;
+    }
     var v = lat ? lat.value : '';
     if (v === '') {
       if (forma_res && forma_res.datum
@@ -1450,6 +1498,9 @@ function fumus_genera() {
       campi: [
         { clavis: 'titulus_rei', monstrans: 'Titulus', typus: 'textus' },
         { clavis: 'annus', monstrans: 'Annus', typus: 'annus' },
+        { clavis: 'antiquus', monstrans: 'Antiquus', typus: 'veritas' },
+        { clavis: 'sors', monstrans: 'Sors', typus: 'electio',
+          optiones: ['condita', 'florens', 'lapsa'] },
         { clavis: 'auctor_fumi', monstrans: 'Auctor', typus: 'relatio',
           ad: 'auctor_fumi', cardinalitas: 'unum' }],
       campus_tituli: 'titulus_rei',
@@ -1467,14 +1518,14 @@ function fumus_genera() {
     return instrumentum('addere', { genus: 'probatio_fumi',
       titulus: 'Roma condita',
       datum: JSON.stringify({ titulus_rei: 'Roma condita',
-        annus: -753 }) });
+        annus: -753, antiquus: true, sors: 'condita' }) });
   })
   .then(function (r) {
     roma_id = r.res_id;
     return instrumentum('addere', { genus: 'probatio_fumi',
       titulus: 'Aetas nostra',
       datum: JSON.stringify({ titulus_rei: 'Aetas nostra',
-        annus: 2026 }) });
+        annus: 2026, antiquus: false, sors: 'florens' }) });
   })
   .then(function () {
     /* creatio inserta simulata: auctor natus titulo solo + nexus */
@@ -1526,7 +1577,14 @@ function fumus_genera() {
       throw new Error('aera fracta: ' +
         ordines[0].cells[1].textContent);
     }
-    if (ordines[0].cells[2].textContent !== 'Romulus') {
+    if (ordines[0].cells[2].textContent !== '✓'
+        || ordines[1].cells[2].textContent !== '—') {
+      throw new Error('columna veritatis fracta');
+    }
+    if (ordines[0].cells[3].textContent !== 'condita') {
+      throw new Error('columna electionis fracta');
+    }
+    if (ordines[0].cells[4].textContent !== 'Romulus') {
       throw new Error('columna relationis fracta');
     }
     return internuntius.vocare('fumus_perfectus', {});

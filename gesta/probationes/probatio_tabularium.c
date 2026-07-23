@@ -1783,6 +1783,10 @@ s32 principale (vacuum)
             "{\\\"clavis\\\":\\\"annus\\\",\\\"typus\\\":"
             "\\\"annus\\\"},{\\\"clavis\\\":\\\"paginae\\\","
             "\\\"typus\\\":\\\"numerus\\\"},{\\\"clavis\\\":"
+            "\\\"lectus\\\",\\\"typus\\\":\\\"veritas\\\"},"
+            "{\\\"clavis\\\":\\\"status_lecturae\\\",\\\"typus\\\":"
+            "\\\"electio\\\",\\\"optiones\\\":[\\\"desideratus\\\","
+            "\\\"possessus\\\",\\\"lectus\\\"]},{\\\"clavis\\\":"
             "\\\"auctor\\\",\\\"typus\\\":\\\"relatio\\\","
             "\\\"ad\\\":\\\"auctor\\\",\\\"cardinalitas\\\":"
             "\\\"unum\\\"}],\\\"campus_tituli\\\":"
@@ -1843,7 +1847,8 @@ s32 principale (vacuum)
             "\"titulus\":\"Commentarii de Bello Gallico\","
             "\"datum\":\"{\\\"titulus_operis\\\":\\\"Commentarii"
             " de Bello Gallico\\\",\\\"annus\\\":-52,"
-            "\\\"paginae\\\":240}\"}}}");
+            "\\\"paginae\\\":240,\\\"lectus\\\":true,"
+            "\\\"status_lecturae\\\":\\\"possessus\\\"}\"}}}");
         CREDO_VERUM (strstr(r, "creata") != NIHIL);
         _res_id_ex_responso(r, liber_a);
         CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
@@ -1866,7 +1871,8 @@ s32 principale (vacuum)
             "\"addere\",\"arguments\":{\"genus\":\"liber\","
             "\"titulus\":\"Liber Pravus\",\"datum\":"
             "\"{\\\"annus\\\":\\\"-52\\\",\\\"color\\\":"
-            "\\\"ruber\\\"}\"}}}");
+            "\\\"ruber\\\",\\\"lectus\\\":\\\"ita\\\","
+            "\\\"status_lecturae\\\":\\\"perditus\\\"}\"}}}");
         CREDO_VERUM (strstr(r, "creata") != NIHIL);
         {
             constans character* an = _plagula_litterae(piscina,
@@ -1877,6 +1883,10 @@ s32 principale (vacuum)
                 != NIHIL);
             CREDO_VERUM (strstr(an, "clavis extra campos")
                 != NIHIL);
+            CREDO_VERUM (strstr(an, "veritas (boolean) expectata")
+                != NIHIL);
+            CREDO_VERUM (strstr(an, "valor extra optiones"
+                " electionis") != NIHIL);
         }
 
         /* relatio unum: vinculum primum mundum, alterum notatum */

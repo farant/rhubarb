@@ -1945,6 +1945,49 @@ _campos_iudicare (GestaMundus* m, chorda genus_titulus,
                     querela = "integer expectatus";
                 }
             }
+            alioquin si (_chorda_est(typus, "veritas"))
+            {
+                si (!json_est_boolean(v))
+                {
+                    querela = "veritas (boolean) expectata";
+                }
+            }
+            alioquin si (_chorda_est(typus, "electio"))
+            {
+                /* valor in optionibus campi declaratis? */
+                JsonValor* optiones = json_objectum_capere(campus,
+                    "optiones");
+                b32 inventum = FALSUM;
+
+                si (!json_est_chorda(v))
+                {
+                    querela = "chorda expectata";
+                }
+                alioquin si (optiones != NIHIL
+                    && json_est_tabulatum(optiones))
+                {
+                    i32 oi;
+                    i32 on = json_tabulatum_numerus(optiones);
+
+                    per (oi = ZEPHYRUM; oi < on; oi++)
+                    {
+                        JsonValor* op = json_tabulatum_obtinere(
+                            optiones, oi);
+
+                        si (op != NIHIL && json_est_chorda(op)
+                            && _chordae_pares(json_ad_chorda(op),
+                                   json_ad_chorda(v)))
+                        {
+                            inventum = VERUM;
+                            frange;
+                        }
+                    }
+                    si (!inventum)
+                    {
+                        querela = "valor extra optiones electionis";
+                    }
+                }
+            }
             alioquin si (_chorda_est(typus, "relatio"))
             {
                 querela = "campus relationis in dato (nexus"

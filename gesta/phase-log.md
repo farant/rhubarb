@@ -1664,3 +1664,33 @@ Capsula in assets/ regenerata (bin/capsula_generare - via vera
 apps/forum/assets/capsula_forum.*, non apps/forum/).
 Proximum G3: barra vivida - Fran libri + linea temporis per UI,
 usus trans sessiones, ens unum a Claudio via MCP.
+
+## GENERA G2.1 - VERITAS + ELECTIO: INTENTIO (2026-07-23)
+
+Ex usu vero primo (Fran genera creavit): typus veritas (boolean -
+decisionem colloquii "tags sufficiunt" barra vivida falsificavit)
++ typus electio (index valorum FileMaker; optiones in campo
+definitionis). Palette machinae data-acta: tabularium.c ZERO.
+1. gesta.c _campos_iudicare: veritas = json boolean; electio =
+   chorda in campo.optiones (extra -> nota).
+2. index.html: creator arca optionum (commatibus, visibilis cum
+   electio); forma checkbox/select; tabula "✓"/"—" et ordinatio
+   electionis PER INDICEM OPTIONUM (ordo definitionis = ordo
+   verus, non alphabeticus); fumus extensus.
+3. Probationes: campi novi in definitione libri XVII + violationes
+   (chorda pro veritate, valor extra optiones).
+
+## GENERA G2.1: RELATIO (2026-07-23)
+
+Navatum; FUMUS PLENUS iterum primo cursu. gesta.c: rami veritas
+(json boolean) + electio (valor in optionibus campi - iudicium
+optiones ex ipso campo legit, non ex genere) in _campos_iudicare;
+tabularium.c INTACTUM (palette data-acta - typus novus = editio
+gesta.c + IS solae). App: creator arca optionum, forma checkbox
+(non-signatum = false expressum - checkbox absentiam exprimere
+nequit) + select cum optione vacua, tabula "✓"/"—" et ordinatio
+electionis PER INDICEM OPTIONUM (desideratus < possessus < lectus,
+non alphabetice), fumus V columnae assertae. Probationes 299.
+Nota culturalis: decisio colloquii "booleani = tags" die uno usus
+veri falsificata - barra vivida > praedictio; electio = status-
+sine-machina (gradus lecturae sine vita formali).
