@@ -1351,11 +1351,24 @@ function selector_relationis(campus, praeselecta) {
     creare.textContent = '+ creare «' + arca.value + '»';
     creare.onclick = function () {
       var t = arca.value;
-      instrumentum('addere', { genus: campus.ad, titulus: t })
+      /* campus tituli generis destinationis QUOQUE impletur -
+       * titulus machinae (indices/vincula) et campus schematis
+       * (columna/forma) synchroni, ut forma servans facit */
+      var def_ad = null;
+      res_defs.forEach(function (d) {
+        if (clavis_de(d) === campus.ad) { def_ad = d; }
+      });
+      var ct_ad = def_ad ? campus_tituli_de(def_ad) : null;
+      var d_novum = {};
+      if (ct_ad) { d_novum[ct_ad] = t; }
+      instrumentum('addere', { genus: campus.ad, titulus: t,
+        datum: JSON.stringify(d_novum) })
         .then(function (r) {
           if (r.res_id) {
-            forma_scopi[campus.clavis].push(
-              { res_id: r.res_id, datum: { titulus: t } });
+            var e_novum = { res_id: r.res_id,
+              datum: { titulus: t } };
+            if (ct_ad) { e_novum.datum[ct_ad] = t; }
+            forma_scopi[campus.clavis].push(e_novum);
             seligere(r.res_id, t);
           }
         })
@@ -1668,9 +1681,11 @@ function fumus_genera() {
         annus: 2026, antiquus: false, sors: 'florens' }) });
   })
   .then(function () {
-    /* creatio inserta simulata: auctor natus titulo solo + nexus */
+    /* creatio inserta simulata: ut selector - titulus machinae ET
+     * campus tituli schematis ambo (paritas cum selectore) */
     return instrumentum('addere', { genus: 'auctor_fumi',
-      titulus: 'Romulus' });
+      titulus: 'Romulus',
+      datum: JSON.stringify({ appellatio: 'Romulus' }) });
   })
   .then(function (r) {
     return instrumentum('gerere', { res: roma_id, actus: 'nexus',
@@ -1745,6 +1760,16 @@ function fumus_genera() {
         if (!roma2 || roma2.datum.fatum !== 'condita'
             || roma2.datum.sors !== undefined) {
           throw new Error('migratio renominationis fracta');
+        }
+        return legere('auctor_fumi');
+      })
+      .then(function (auctores) {
+        /* creatio inserta campum tituli QUOQUE implevit? */
+        var bene = auctores.some(function (a) {
+          return a.datum && a.datum.appellatio === 'Romulus';
+        });
+        if (!bene) {
+          throw new Error('creatio inserta sine campo tituli');
         }
         return internuntius.vocare('fumus_perfectus', {});
       });

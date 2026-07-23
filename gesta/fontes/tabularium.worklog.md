@@ -399,3 +399,20 @@ change.
 
 Fix: same LEFT JOIN + double NOT EXISTS in _nova_numerare;
 pinned with "entry-only write → NOVA silent, nothing promised."
+
+## 2026-07-23 — genera: the two-layer title (picker gap)
+
+Every res has a MACHINE titulus (addere param → datum.titulus →
+res.titulus column → what lists, relation chips, and FTS show).
+A user genus ALSO has its campus_tituli FIELD (datum.<name>) —
+what the table column and the entry form show. The form save
+keeps both in sync; the inline-create picker only wrote the
+machine titulus, so picker-born entities showed their name in
+chips/headings but blank in the Name column/field. Fix: picker
+now writes the target's campus_tituli field too (fumus asserts
+parity). Fran's four persons repaired via MCP mutatio.
+
+Note the orphan machinery CORRECTLY stayed silent here — a
+missing field is legal absence, not a spec violation. The gap was
+only findable by a human looking at their own data: the lived bar
+again, third find in one day.
