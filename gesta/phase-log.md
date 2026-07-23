@@ -1598,3 +1598,69 @@ Reconexio fori non necessaria functioni (parametra extra
 transeunt) - solum pro schemate datum viso in tools/list.
 Proximum G2: app (tractator transmittens generalis + tabula Res +
 creator + visus tabularis + formae + fumus).
+
+## GENERA G2 - APP: INTENTIO (2026-07-23)
+
+Spec-v2 par VI-VII; C minimus, IS maximus.
+1. forum.c: tractator UNUS generalis "transmittere"
+   {instrumentum, argumenta} - allowlist addere|gerere|legere|
+   quaerere, actor="fran" iniectus, per _instrumentum_vocare.
+   Post hoc genera/campi novi C numquam reaperiunt.
+2. index.html:
+   (a) machinae visuum: nav-activa generalizata (binaria ->
+       per-tabulam), tabula tertia "Res"; sub-status in variabilibus
+       (res_genus/res_visus) non explosione visuum;
+   (b) index generum (definitiones + numeri entium + creator);
+   (c) creator: titulus monstrans -> clavis derivata viva (semel
+       monstrata), ordines camporum (titulus/typus/ad/cardinalitas),
+       campus tituli, ordo ordinarius;
+   (d) tabula autoderivata: columnae ex definitione, ordinatio per
+       columnam IN redditione (sine refetch - custos diff aliter
+       supprimeret), annus signatus numerice, ordo ordinarius ex
+       definitione;
+   (e) visus entis: campi omnes + porticus inversa (quis huc
+       monstrat - legere generum monstrantium, filtrum IS-latere);
+   (f) forma entis: visus proprius fossae exemptus (exemplar
+       editoris - arca_activa TEXTAREA sola est), latitudines per
+       typum, annus negativus + titulus aerae, selector relationis
+       quaere-dum-scribis + creatio inserta, denexus+nexus in
+       remutatione unum;
+   (g) arca FTS (quaerere + filtrum generis);
+   (h) lapides sepulcrales destinationum mortuarum ('[deletum]');
+   (i) chorographia fumi extensa: definire -> entia (annus -753)
+       -> tabula ordinata -> creatio inserta + nexus -> porticus
+       inversa -> fumus_perfectus (tectum LXXV gradus, ansa
+       forum.c:49 si opus).
+3. GOTCHA: capsula_generare post editiones index.html (struere
+   capsulam praegeneratam compilat); rm ante cp iam in forum.sh.
+Porta G2: fumus.sh FUMUS PLENUS + fenestra viva Franis.
+
+## GENERA G2 - APP: RELATIO (2026-07-23)
+
+FUMUS PLENUS PRIMO CURSU. Navatum ex intentione:
+- forum.c: tractator UNUS novus "transmittere" (allowlist IV,
+  actor fran iniectus, res_id extractum) - tota superficies
+  generum C-latere = ~60 lineae; _chorda_est localis addita
+  (examen vocationem implicitam cepit - tabularii auxilium erat,
+  non fori); FUMUS_GRESSUS_MAXIMI LXXV -> CL (gyri generum).
+- index.html (~570 -> ~1230 lineae): tabula tertia Res + sub-visus
+  (index generum cum numeris entium / creator / tabula / ens /
+  forma); creator cum clave derivata viva + ordinibus camporum +
+  campo tituli + ordine ordinario; tabula autoderivata (columnae ex
+  definitione, ordinatio per caput columnae SINE refetch, annus
+  signatus "N a.C.n."); visus entis cum porticu inversa (genera
+  monstrantia + saltus trans genera); forma poll-exempta (exemplar
+  editoris) cum selectore quaere-dum-scribis + creatione inserta +
+  diff denexus/nexus in editione + remotio camporum vacuatorum;
+  arca FTS per quaerere (ids -> filtrum clientis); arca_activa ad
+  INPUT extensa (dataset.inter opt-in).
+- Chorographia fumi: post filium pipati, definire II genera ->
+  entia typata (annus -753) -> creatio inserta Romuli + nexus ->
+  legere embed titulo resoluto -> TABULA IN DOM reddita et asserta
+  (ordines II, Roma prima ascendente, "753 a.C.n.", columna
+  relationis) -> fumus_perfectus. Assertum DOM = porta UI vera
+  sine oculis.
+Capsula in assets/ regenerata (bin/capsula_generare - via vera
+apps/forum/assets/capsula_forum.*, non apps/forum/).
+Proximum G3: barra vivida - Fran libri + linea temporis per UI,
+usus trans sessiones, ens unum a Claudio via MCP.

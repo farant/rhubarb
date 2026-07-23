@@ -45,8 +45,9 @@ externus constans CapsulaEmbed capsula_speculi_forum;
 #define FORUM_PORTUS_ORDINARIUS 8753
 /* legere CC rerum cum corporibus - laxe (numerus romanus deest) */
 #define RESPONSUM_CAPACITAS 262144
-/* tempus excedens fumi pleni: LXXV gressus x CC ms = XV s */
-#define FUMUS_GRESSUS_MAXIMI 75
+/* tempus excedens fumi pleni: CL gressus x CC ms = XXX s
+ * (chorographia generum G2 gyros addidit - ansa laxata) */
+#define FUMUS_GRESSUS_MAXIMI 150
 
 nomen structura {
     i32 portus;
@@ -71,6 +72,16 @@ _ch_forum (constans character* litterae)
     c.datum = u.m;
     c.mensura = (i32)strlen(litterae);
     redde c;
+}
+
+interior b32
+_chorda_est (chorda c, constans character* litterae)
+{
+    memoriae_index m = strlen(litterae);
+
+    redde (memoriae_index)c.mensura == m
+        && (m == ZEPHYRUM
+            || memcmp(c.datum, litterae, m) == ZEPHYRUM);
 }
 
 /* ==================================================
@@ -719,6 +730,66 @@ _delere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
     redde _gerere_simplex(forum, piscina, arg_obj, culpa);
 }
 
+/* transmittere {instrumentum, argumenta} (genera G2): tractator
+ * generalis UNUS - IS instrumenta daemonis directe adhibet
+ * (addere cum dato, gerere nexus/denexus/mutatio, quaerere).
+ * Allowlist quattuor; actor="fran" SEMPER iniectus (app
+ * instrumentum Franis). Post hoc genera/campi novi C numquam
+ * reaperiunt. Fructus {bene, textus, res_id?}. */
+interior JsonValor*
+_daemon_transmittere (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    ForumStatus* forum = (ForumStatus*)datum;
+    chorda instrumentum;
+    JsonValor* arg_obj = NIHIL;
+    chorda textus;
+    chorda novum_id;
+    JsonValor* fructus;
+
+    instrumentum.mensura = ZEPHYRUM;
+    instrumentum.datum = NIHIL;
+    si (argumenta != NIHIL)
+    {
+        instrumentum = json_ad_chorda(json_objectum_capere(
+            argumenta, "instrumentum"));
+        arg_obj = json_objectum_capere(argumenta, "argumenta");
+    }
+    si (!(_chorda_est(instrumentum, "addere")
+          || _chorda_est(instrumentum, "gerere")
+          || _chorda_est(instrumentum, "legere")
+          || _chorda_est(instrumentum, "quaerere")))
+    {
+        *culpa = _ch_forum("instrumentum extra allowlist"
+            " (addere|gerere|legere|quaerere)");
+        redde NIHIL;
+    }
+    si (arg_obj == NIHIL || !json_est_objectum(arg_obj))
+    {
+        arg_obj = json_objectum_creare(piscina);
+    }
+    json_objectum_ponere(arg_obj, "actor",
+        json_chorda_creare_literis(piscina, "fran"));
+    textus = _instrumentum_vocare(forum, piscina,
+        _litterae_ex(piscina, instrumentum), arg_obj, culpa);
+    si (textus.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    fructus = json_objectum_creare(piscina);
+    json_objectum_ponere(fructus, "bene",
+        json_boolean_creare(piscina, VERUM));
+    json_objectum_ponere(fructus, "textus",
+        json_chorda_creare(piscina, textus));
+    novum_id = _res_id_ex_textu(textus, piscina);
+    si (novum_id.mensura > ZEPHYRUM)
+    {
+        json_objectum_ponere(fructus, "res_id",
+            json_chorda_creare(piscina, novum_id));
+    }
+    redde fructus;
+}
+
 /* fumus_modus {} -> {plenus} - IS choreographiam fumi rogaverit */
 interior JsonValor*
 _fumus_modus (JsonValor* argumenta, Piscina* piscina,
@@ -866,6 +937,8 @@ s32 principale (integer argc, character** argv)
         _mutare, &forum);
     (vacuum)internuntius_praebere(inx, "delere",
         _delere, &forum);
+    (vacuum)internuntius_praebere(inx, "transmittere",
+        _daemon_transmittere, &forum);
     (vacuum)internuntius_praebere(inx, "fumus_modus",
         _fumus_modus, &forum);
     (vacuum)internuntius_praebere(inx, "fumus_perfectus",
