@@ -125,34 +125,39 @@
   .valor-entis .titulus-campi { color: #9fb87a; font-size: .8em; }
   #res-quaestio-domus { margin: .6em 0; }
   .extra-specem { color: #d97c6a; }
-  /* ---- scholia (lector docco) ---- */
+  /* ---- scholia (lector docco: ORDINES - scholium et linea prima
+     eius in eodem ordine; scholium altius = lacuna in textu,
+     omnia infra aligned manent; stilus underscorejs.org/docs) ---- */
   body.latus { max-width: 90em; }
-  #lector-codicis { display: flex; gap: 1.5em; align-items: flex-start; }
-  #margo-scholiorum { position: relative; flex: 0 0 24em;
-                      min-height: 4em; }
-  #textus-codicis { flex: 1 1 auto; overflow-x: auto;
-                    background: #171512; border: 1px solid #453d2f;
-                    border-radius: 4px; padding: .5em 0;
-                    font-size: .8em; }
-  .linea { display: flex; white-space: pre; line-height: 1.45;
-           cursor: pointer; }
+  #lector-codicis { position: relative; }
+  .ordo-lectoris { display: flex; gap: 1.5em; align-items: stretch; }
+  .cella-marginis { flex: 0 0 24em; min-width: 0; }
+  .cella-textus { flex: 1 1 auto; min-width: 0;
+                  background: #171512; font-size: .8em; }
+  .ordo-lectoris:first-child .cella-textus { padding-top: .5em;
+                  border-radius: 4px 4px 0 0; }
+  .ordo-lectoris:last-child .cella-textus { padding-bottom: .5em;
+                  border-radius: 0 0 4px 4px; }
+  .linea { display: flex; line-height: 1.45; cursor: pointer; }
   .linea:hover { background: #22201d; }
   .linea .numerus-lineae { flex: 0 0 3.2em; text-align: right;
-           padding-right: .8em; color: #6b6357; user-select: none; }
-  .linea .contentum-lineae { flex: 1 1 auto; }
+           padding-right: .8em; color: #6b6357; user-select: none;
+           white-space: pre; }
+  .linea .contentum-lineae { flex: 1 1 auto; min-width: 0;
+           white-space: pre-wrap; overflow-wrap: anywhere; }
   .linea.adnotata { border-left: 3px solid #8a7a55; }
   .linea.selecta { background: #453d2f; }
   .linea.illuminata { background: #2e3a26; }
-  .scholium-carta { position: absolute; left: 0; right: 0;
-           background: #171512; border: 1px solid #453d2f;
+  .scholium-carta { background: #171512; border: 1px solid #453d2f;
            border-radius: 4px; padding: .5em .7em;
-           font-size: .8em; }
+           font-size: .8em; margin-bottom: .5em; }
   .scholium-carta:hover { border-color: #8a7a55; }
   .scholium-carta .amplitudo { color: #6b6357; font-size: .85em; }
   .scholium-carta .corpus { margin-top: .2em; }
-  #arca-scholii-domus { position: absolute; left: 0; right: 0;
-           background: #22201d; border: 1px solid #d8b978;
-           border-radius: 4px; padding: .5em; }
+  #arca-scholii-domus { position: absolute; left: 0; width: 24em;
+           box-sizing: border-box; background: #22201d;
+           border: 1px solid #d8b978; border-radius: 4px;
+           padding: .5em; z-index: 4; }
   #codex-textus-novi { font-family: inherit; }
 </style>
 </head>
@@ -314,10 +319,7 @@
       <span class="tempus">clic = ancora · shift-clic = amplitudo</span>
     </div>
     <h2 id="codex-titulus"></h2>
-    <div id="lector-codicis">
-      <div id="margo-scholiorum"></div>
-      <div id="textus-codicis"></div>
-    </div>
+    <div id="lector-codicis"></div>
   </div>
 </section>
 
@@ -348,6 +350,7 @@ var scholia = [];              /* cache scholiorum */
 var codex_id = null;           /* codex apertus */
 var sel_a = 0;                 /* selectio linearum (1-basata; 0 = nulla) */
 var sel_b = 0;
+var lineae_el = [];            /* n -> elementum lineae (per redditionem) */
 
 function codicilli(s) { return Array.from(s).length; }
 
@@ -1799,10 +1802,9 @@ function reddere_scholia_indicem() {
 }
 
 function lineas_illuminare(a, b, accendere) {
-  var textus_div = document.getElementById('textus-codicis');
   var i;
   for (i = a; i <= b; i++) {
-    var el = textus_div.children[i - 1];
+    var el = lineae_el[i];
     if (!el) { break; }
     el.classList.toggle('illuminata', accendere);
   }
@@ -1822,9 +1824,8 @@ function arcam_scholii_aperire() {
   if (!sel_a) { return; }
   var a = Math.min(sel_a, sel_b);
   var b = Math.max(sel_a, sel_b);
-  var margo = document.getElementById('margo-scholiorum');
-  var textus_div = document.getElementById('textus-codicis');
-  var linea_el = textus_div.children[a - 1];
+  var lector = document.getElementById('lector-codicis');
+  var linea_el = lineae_el[a];
   var domus = document.createElement('div');
   var amp = document.createElement('div');
   var ta = document.createElement('textarea');
@@ -1871,19 +1872,71 @@ function arcam_scholii_aperire() {
   domus.appendChild(amp);
   domus.appendChild(ta);
   domus.appendChild(pes);
-  margo.appendChild(domus);
+  lector.appendChild(domus);
   ta.focus();
 }
 
+function cartam_scholii_facere(s) {
+  var a = s.datum.linea_a || 1;
+  var b = s.datum.linea_b || a;
+  var carta = document.createElement('div');
+  var amp = document.createElement('div');
+  var corp = document.createElement('div');
+  var act = document.createElement('div');
+
+  carta.className = 'scholium-carta';
+  amp.className = 'amplitudo';
+  amp.textContent = (a === b ? 'linea ' + a
+    : 'lineae ' + a + '–' + b) + ' · ' + subscriptio(s)
+    + ' · ' + tempus_breve(s);
+  corp.className = 'corpus';
+  corp.textContent = s.datum.corpus;
+  act.className = 'actiones';
+  act.appendChild(actionem_facere('recensere', function () {
+    if (carta.querySelector('textarea')) { return; }
+    var ta2 = document.createElement('textarea');
+    var b2 = document.createElement('button');
+    ta2.rows = 3;
+    ta2.dataset.inter = 'verum';
+    ta2.value = s.datum.corpus;
+    b2.className = 'parva';
+    b2.textContent = 'servare';
+    b2.onclick = function () {
+      internuntius.vocare('mutare',
+        { res_id: s.res_id, corpus: ta2.value })
+        .then(anquirere_nunc)
+        .catch(function (c) { culpam_ostendere(c, 'defectus editionis'); });
+    };
+    carta.appendChild(ta2);
+    carta.appendChild(b2);
+    ta2.focus();
+  }));
+  act.appendChild(actionem_facere('delere', function () {
+    internuntius.vocare('delere', { res_id: s.res_id })
+      .then(anquirere_nunc)
+      .catch(function (c) { culpam_ostendere(c, 'defectus deletionis'); });
+  }));
+  carta.appendChild(amp);
+  carta.appendChild(corp);
+  carta.appendChild(act);
+  carta.onmouseenter = function () { lineas_illuminare(a, b, true); };
+  carta.onmouseleave = function () { lineas_illuminare(a, b, false); };
+  return carta;
+}
+
+/* lector ORDINUM (stilus underscore docs): scholium et linea prima
+ * eius in eodem ordine flexus - scholium altius quam segmentum =
+ * lacuna naturalis in textu (align-items stretch), omnia infra
+ * aligned manent. Segmentum scholii = a lineis ancorae ad ancoram
+ * proximam. */
 function reddere_codicem() {
   var codex = null;
-  var textus_div = document.getElementById('textus-codicis');
-  var margo = document.getElementById('margo-scholiorum');
+  var lector = document.getElementById('lector-codicis');
   codices.forEach(function (c) {
     if (c.res_id === codex_id) { codex = c; }
   });
-  textus_div.innerHTML = '';
-  margo.innerHTML = '';
+  lector.innerHTML = '';
+  lineae_el = [];
   if (!codex) {
     document.getElementById('codex-titulus').textContent =
       'codex non inventus';
@@ -1896,19 +1949,25 @@ function reddere_codicem() {
     return s.respondet_ad === codex_id && s.datum && s.datum.corpus;
   });
   var adnotatae = {};
+  var per_ancoram = {};
   mea.forEach(function (s) {
     var a = s.datum.linea_a || 0;
     var b = s.datum.linea_b || a;
     var i;
     for (i = a; i <= b; i++) { adnotatae[i] = true; }
+    var ancora = Math.max(1, Math.min(a || 1, lineae.length));
+    (per_ancoram[ancora] = per_ancoram[ancora] || []).push(s);
   });
+  var ancorae = Object.keys(per_ancoram).map(Number)
+    .sort(function (x, y) { return x - y; });
   var s_min = Math.min(sel_a, sel_b);
   var s_max = Math.max(sel_a, sel_b);
-  lineae.forEach(function (l, i) {
-    var n = i + 1;
+
+  function lineam_facere(n) {
     var div = document.createElement('div');
     var num = document.createElement('span');
     var cont = document.createElement('span');
+    var l = lineae[n - 1];
 
     div.className = 'linea'
       + (adnotatae[n] ? ' adnotata' : '')
@@ -1920,67 +1979,41 @@ function reddere_codicem() {
     div.appendChild(num);
     div.appendChild(cont);
     div.onclick = function (ev) { lineam_eligere(n, ev.shiftKey); };
-    textus_div.appendChild(div);
-  });
-  /* margo: cartae ad lineas ancoratas, cumulus anti-collisionis */
-  var cartae = mea.slice().sort(function (x, y) {
-    return (x.datum.linea_a || 0) - (y.datum.linea_a || 0);
-  });
-  var cursor_y = 0;
-  cartae.forEach(function (s) {
-    var a = s.datum.linea_a || 1;
-    var b = s.datum.linea_b || a;
-    var linea_el = textus_div.children[a - 1];
-    var top = linea_el ? linea_el.offsetTop : 0;
-    var carta = document.createElement('div');
-    var amp = document.createElement('div');
-    var corp = document.createElement('div');
-    var act = document.createElement('div');
+    lineae_el[n] = div;
+    return div;
+  }
+  function ordinem_facere(scholia_ordinis, a_linea, b_linea) {
+    var ordo = document.createElement('div');
+    var margo = document.createElement('div');
+    var cella = document.createElement('div');
+    var n;
 
-    if (top < cursor_y) { top = cursor_y; }
-    carta.className = 'scholium-carta';
-    carta.style.top = top + 'px';
-    amp.className = 'amplitudo';
-    amp.textContent = (a === b ? 'linea ' + a
-      : 'lineae ' + a + '–' + b) + ' · ' + subscriptio(s)
-      + ' · ' + tempus_breve(s);
-    corp.className = 'corpus';
-    corp.textContent = s.datum.corpus;
-    act.className = 'actiones';
-    act.appendChild(actionem_facere('recensere', function () {
-      if (carta.querySelector('textarea')) { return; }
-      var ta2 = document.createElement('textarea');
-      var b2 = document.createElement('button');
-      ta2.rows = 3;
-      ta2.dataset.inter = 'verum';
-      ta2.value = s.datum.corpus;
-      b2.className = 'parva';
-      b2.textContent = 'servare';
-      b2.onclick = function () {
-        internuntius.vocare('mutare',
-          { res_id: s.res_id, corpus: ta2.value })
-          .then(anquirere_nunc)
-          .catch(function (c) { culpam_ostendere(c, 'defectus editionis'); });
-      };
-      carta.appendChild(ta2);
-      carta.appendChild(b2);
-      ta2.focus();
-    }));
-    act.appendChild(actionem_facere('delere', function () {
-      internuntius.vocare('delere', { res_id: s.res_id })
-        .then(anquirere_nunc)
-        .catch(function (c) { culpam_ostendere(c, 'defectus deletionis'); });
-    }));
-    carta.appendChild(amp);
-    carta.appendChild(corp);
-    carta.appendChild(act);
-    carta.onmouseenter = function () { lineas_illuminare(a, b, true); };
-    carta.onmouseleave = function () { lineas_illuminare(a, b, false); };
-    margo.appendChild(carta);
-    cursor_y = top + carta.offsetHeight + 8;
-  });
-  margo.style.minHeight =
-    Math.max(cursor_y, textus_div.offsetHeight) + 'px';
+    ordo.className = 'ordo-lectoris';
+    margo.className = 'cella-marginis';
+    (scholia_ordinis || []).forEach(function (s) {
+      margo.appendChild(cartam_scholii_facere(s));
+    });
+    cella.className = 'cella-textus';
+    for (n = a_linea; n <= b_linea; n++) {
+      cella.appendChild(lineam_facere(n));
+    }
+    ordo.appendChild(margo);
+    ordo.appendChild(cella);
+    lector.appendChild(ordo);
+  }
+  var initium = 1;
+  var k;
+  for (k = 0; k < ancorae.length; k++) {
+    var a = ancorae[k];
+    var finis = (k + 1 < ancorae.length)
+      ? ancorae[k + 1] - 1 : lineae.length;
+    if (initium < a) { ordinem_facere(null, initium, a - 1); }
+    ordinem_facere(per_ancoram[a], a, finis);
+    initium = finis + 1;
+  }
+  if (initium <= lineae.length) {
+    ordinem_facere(null, initium, lineae.length);
+  }
 }
 
 /* ---- anquisitio cum differentia ---- */
@@ -2267,14 +2300,21 @@ function fumus_genera() {
         scholia_vertere('codex');
         reddere_codicem();
         var lineae_dom = document.querySelectorAll(
-          '#textus-codicis .linea');
+          '#lector-codicis .linea');
         var cartae_dom = document.querySelectorAll(
-          '#margo-scholiorum .scholium-carta');
+          '#lector-codicis .scholium-carta');
+        var ordines_dom = document.querySelectorAll(
+          '#lector-codicis .ordo-lectoris');
         if (lineae_dom.length !== 3 || cartae_dom.length !== 1) {
           throw new Error('lector: lineae ' + lineae_dom.length
             + ' cartae ' + cartae_dom.length);
         }
-        if (!lineae_dom[1].className.match(/adnotata/)) {
+        /* ordines: [1] sine scholio, [2..3] cum scholio (segmentum
+         * ancorae ad finem) - stilus underscore */
+        if (ordines_dom.length !== 2) {
+          throw new Error('ordines ' + ordines_dom.length);
+        }
+        if (!lineae_el[2] || !lineae_el[2].className.match(/adnotata/)) {
           throw new Error('linea secunda non adnotata');
         }
         return internuntius.vocare('fumus_perfectus', {});
