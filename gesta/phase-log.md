@@ -1741,6 +1741,24 @@ scholiorum sinistra positione absoluta ad lineas ancoratas +
 cumulus anti-collisionis, selecta illuminata, arca compositionis
 in margine). Fumus: codex III linearum + scholium + asserta DOM.
 
+## TAGS - PROIECTIO DERIVATA #tagorum: INTENTIO (2026-07-23)
+
+Fran: #tags primae classis in corporibus (pipata/commentaria/
+articuli/scholia/campi textus entium) + tabula quinta "Tags" cum
+arbore spatiorum nominum (:: = plicae, e.g. #hardware::devices::
+eink::remarkable; - in identificatoribus licet). DECISIO: proiectio
+DERIVATA app-latere - nihil conditur, index ex contentis lectis
+computatur (editio notae = re-plicatio automatica; machina
+intacta); ager tags machinae = fons alter eiusdem indicis. Codices
+NON percensentur (fons adglutinatus #include tagos cuderet);
+scholia percensentur. Exemplar: #[littera][litterae/numeri/-]
+(::segmenta)*, minusculatum. UI: arbor plicarum cum numeris
+(electio = praefixum - spatium nominis omnes posteros monstrat),
+visus tagi = res mixtae (insigne generis + fragmentum + navigatio:
+articulus/ens/codex/pipata; commentarium per catenam respondet_ad
+ad radicem); tagi in linea accentuati clicabiles. Fumus: assertum
+extractionis purae.
+
 ## SCHOLIA: RELATIO (2026-07-23)
 
 FUMUS PLENUS PRIMO CURSU. Navatum ex intentione integro: machina
