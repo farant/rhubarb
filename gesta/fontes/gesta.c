@@ -1870,11 +1870,85 @@ _campum_invenire (JsonValor* campi, chorda clavis)
     redde NIHIL;
 }
 
-/* iudicium camporum: claves dati contra campi definitionis
- * (textus/area/dies = chorda; annus/numerus = integer; relatio in
- * dato vetita - nexus expectatur; clavis extra campos notata).
- * Genus sine campi = systematis, sine iudicio. NIHIL = sanum,
- * alioquin litterae compositae in piscina. */
+/* valor unus contra campum definitionis: NIHIL = sanum, alioquin
+ * querela statica. Communis scripturae (_campos_iudicare) et
+ * saluti (orphani post emendationem schematis - G2.2). Familiae
+ * typorum = compatibilitas gratuita: textus/area/dies chordae
+ * omnes, annus/numerus integri - retypatio intra familiam orphanos
+ * non creat. */
+interior constans character*
+_campum_iudicare (JsonValor* campus, JsonValor* v)
+{
+    JsonValor* t_v = json_objectum_capere(campus, "typus");
+    chorda typus = (t_v != NIHIL && json_est_chorda(t_v))
+        ? json_ad_chorda(t_v) : _ch("");
+
+    si (_chorda_est(typus, "textus") || _chorda_est(typus, "area")
+        || _chorda_est(typus, "dies"))
+    {
+        si (!json_est_chorda(v))
+        {
+            redde "chorda expectata";
+        }
+        redde NIHIL;
+    }
+    si (_chorda_est(typus, "annus") || _chorda_est(typus, "numerus"))
+    {
+        si (!json_est_integer(v))
+        {
+            redde "integer expectatus";
+        }
+        redde NIHIL;
+    }
+    si (_chorda_est(typus, "veritas"))
+    {
+        si (!json_est_boolean(v))
+        {
+            redde "veritas (boolean) expectata";
+        }
+        redde NIHIL;
+    }
+    si (_chorda_est(typus, "electio"))
+    {
+        JsonValor* optiones = json_objectum_capere(campus,
+            "optiones");
+
+        si (!json_est_chorda(v))
+        {
+            redde "chorda expectata";
+        }
+        si (optiones != NIHIL && json_est_tabulatum(optiones))
+        {
+            i32 oi;
+            i32 on = json_tabulatum_numerus(optiones);
+
+            per (oi = ZEPHYRUM; oi < on; oi++)
+            {
+                JsonValor* op = json_tabulatum_obtinere(optiones,
+                    oi);
+
+                si (op != NIHIL && json_est_chorda(op)
+                    && _chordae_pares(json_ad_chorda(op),
+                           json_ad_chorda(v)))
+                {
+                    redde NIHIL;
+                }
+            }
+            redde "valor extra optiones electionis";
+        }
+        redde NIHIL;
+    }
+    si (_chorda_est(typus, "relatio"))
+    {
+        redde "campus relationis in dato (nexus expectatur)";
+    }
+    redde NIHIL;   /* typus ignotus = sine iudicio (comitas) */
+}
+
+/* iudicium camporum: claves dati contra campi definitionis;
+ * clavis extra campos notata. Genus sine campi = systematis, sine
+ * iudicio. NIHIL = sanum, alioquin litterae compositae in
+ * piscina. */
 interior constans character*
 _campos_iudicare (GestaMundus* m, chorda genus_titulus,
     JsonValor* datum_obiectum, Piscina* piscina)
@@ -1924,76 +1998,7 @@ _campos_iudicare (GestaMundus* m, chorda genus_titulus,
         }
         alioquin
         {
-            JsonValor* t_v = json_objectum_capere(campus, "typus");
-            chorda typus = (t_v != NIHIL && json_est_chorda(t_v))
-                ? json_ad_chorda(t_v) : _ch("");
-
-            si (_chorda_est(typus, "textus")
-                || _chorda_est(typus, "area")
-                || _chorda_est(typus, "dies"))
-            {
-                si (!json_est_chorda(v))
-                {
-                    querela = "chorda expectata";
-                }
-            }
-            alioquin si (_chorda_est(typus, "annus")
-                || _chorda_est(typus, "numerus"))
-            {
-                si (!json_est_integer(v))
-                {
-                    querela = "integer expectatus";
-                }
-            }
-            alioquin si (_chorda_est(typus, "veritas"))
-            {
-                si (!json_est_boolean(v))
-                {
-                    querela = "veritas (boolean) expectata";
-                }
-            }
-            alioquin si (_chorda_est(typus, "electio"))
-            {
-                /* valor in optionibus campi declaratis? */
-                JsonValor* optiones = json_objectum_capere(campus,
-                    "optiones");
-                b32 inventum = FALSUM;
-
-                si (!json_est_chorda(v))
-                {
-                    querela = "chorda expectata";
-                }
-                alioquin si (optiones != NIHIL
-                    && json_est_tabulatum(optiones))
-                {
-                    i32 oi;
-                    i32 on = json_tabulatum_numerus(optiones);
-
-                    per (oi = ZEPHYRUM; oi < on; oi++)
-                    {
-                        JsonValor* op = json_tabulatum_obtinere(
-                            optiones, oi);
-
-                        si (op != NIHIL && json_est_chorda(op)
-                            && _chordae_pares(json_ad_chorda(op),
-                                   json_ad_chorda(v)))
-                        {
-                            inventum = VERUM;
-                            frange;
-                        }
-                    }
-                    si (!inventum)
-                    {
-                        querela = "valor extra optiones electionis";
-                    }
-                }
-            }
-            alioquin si (_chorda_est(typus, "relatio"))
-            {
-                querela = "campus relationis in dato (nexus"
-                    " expectatur)";
-            }
-            /* typus ignotus = sine iudicio (comitas antrorsum) */
+            querela = _campum_iudicare(campus, v);
         }
         si (querela != NIHIL)
         {
@@ -2052,8 +2057,12 @@ _definitionem_validare (GestaMundus* m, JsonValor* datum_obiectum,
     redde NIHIL;
 }
 
-/* mutatio entis definitionis: additiva sola - clavis immutabilis,
- * campi stantes (clavis, typus) manere debent */
+/* mutatio entis definitionis (G2.2: emendatio PLENA licita -
+ * decisio Franis ex usu vero): clavis generis SOLA immutabilis.
+ * Remotio/retypatio camporum = evolutio legitima schematis -
+ * orphani per salutem apparent (census insalubres + res
+ * [cautio]), non per notas scripturae; renominatio = migratio
+ * app-acta (eventus honesti per ens). */
 interior constans character*
 _emendationem_definitionis_validare (GestaMundus* m,
     constans GestaResOrdo* ordo, JsonValor* datum_obiectum,
@@ -2066,6 +2075,10 @@ _emendationem_definitionis_validare (GestaMundus* m,
         "campi");
 
     (vacuum)m;
+    si (v_campi_novi != NIHIL && !json_est_tabulatum(v_campi_novi))
+    {
+        redde "violatio definitionis: campi tabulatum requiritur";
+    }
     si (ordo->datum.mensura > ZEPHYRUM)
     {
         JsonResultus r = json_legere(ordo->datum, piscina);
@@ -2091,61 +2104,6 @@ _emendationem_definitionis_validare (GestaMundus* m,
                        json_ad_chorda(v_clavis_vetus))))
         {
             redde "violatio definitionis: clavis immutabilis";
-        }
-    }
-    si (v_campi_novi != NIHIL)
-    {
-        JsonValor* v_campi_veteres = json_objectum_capere(vetus,
-            "campi");
-
-        si (v_campi_veteres != NIHIL
-            && json_est_tabulatum(v_campi_veteres))
-        {
-            i32 i;
-            i32 n;
-
-            si (!json_est_tabulatum(v_campi_novi))
-            {
-                redde "violatio definitionis: campi tabulatum"
-                    " requiritur";
-            }
-            n = json_tabulatum_numerus(v_campi_veteres);
-            per (i = ZEPHYRUM; i < n; i++)
-            {
-                JsonValor* cv = json_tabulatum_obtinere(
-                    v_campi_veteres, i);
-                JsonValor* ck;
-                JsonValor* campus_novus;
-                JsonValor* tv;
-                JsonValor* tn;
-
-                si (cv == NIHIL || !json_est_objectum(cv))
-                {
-                    perge;
-                }
-                ck = json_objectum_capere(cv, "clavis");
-                si (ck == NIHIL || !json_est_chorda(ck))
-                {
-                    perge;
-                }
-                campus_novus = _campum_invenire(v_campi_novi,
-                    json_ad_chorda(ck));
-                si (campus_novus == NIHIL)
-                {
-                    redde "violatio definitionis: emendatio"
-                        " destructiva (campus remotus)";
-                }
-                tv = json_objectum_capere(cv, "typus");
-                tn = json_objectum_capere(campus_novus, "typus");
-                si (tv != NIHIL && json_est_chorda(tv)
-                    && (tn == NIHIL || !json_est_chorda(tn)
-                        || !_chordae_pares(json_ad_chorda(tv),
-                               json_ad_chorda(tn))))
-                {
-                    redde "violatio definitionis: emendatio"
-                        " destructiva (typus mutatus)";
-                }
-            }
         }
     }
     redde NIHIL;
@@ -4454,6 +4412,57 @@ gesta_salutem_aestimare (GestaMundus* mundus,
                         _nuntius_forma(piscina,
                             "attributum '%.*s' typum suum"
                             " violat%s", c_tit, ""),
+                        FALSUM);
+                }
+            }
+        }
+    }
+
+    /* II-bis. campi generum usoris (genera G2.2): claves status
+     * plicati contra campi definitionis CURRENTIS - orphani post
+     * emendationem schematis (campus remotus/retypatus) HIC
+     * apparent: census insalubres + res [cautio] = superficies
+     * reparationis humanae (decisio Franis: emendatio libera,
+     * discrepantia mollis signata, non scriptura prohibita). */
+    {
+        JsonValor* campi = json_objectum_capere(genus_radix,
+            "campi");
+
+        si (campi != NIHIL && json_est_tabulatum(campi)
+            && st != NIHIL)
+        {
+            JsonObjectumIterator iter = json_objectum_iterator(st);
+            chorda k;
+            JsonValor* v;
+
+            dum (json_objectum_iterator_proxima(&iter, &k, &v))
+            {
+                JsonValor* campus;
+                constans character* querela = NIHIL;
+
+                si (_clavis_systematis(k))
+                {
+                    perge;
+                }
+                campus = _campum_invenire(campi, k);
+                si (campus == NIHIL)
+                {
+                    _querelam_addere(querelae,
+                        "campus-extra-specem",
+                        _nuntius_forma(piscina,
+                            "campus '%.*s' extra campos"
+                            " definitionis%s", k, ""),
+                        FALSUM);
+                    perge;
+                }
+                querela = _campum_iudicare(campus, v);
+                si (querela != NIHIL)
+                {
+                    _querelam_addere(querelae,
+                        "typus-campi-pravus",
+                        _nuntius_forma(piscina,
+                            "campus '%.*s' typum suum violat"
+                            " (%s)", k, querela),
                         FALSUM);
                 }
             }

@@ -1923,8 +1923,10 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "\\\"ad_titulus\\\":\\\"Gaius"
             " Iulius Caesar\\\"") != NIHIL);
 
-        /* emendatio definitionis: additiva munda, destructiva
-         * notata, clavis immutabilis */
+        /* emendatio definitionis (G2.2 - emendatio PLENA licita):
+         * additiva munda; destructiva SINE nota scripturae
+         * (evolutio legitima - orphani per salutem apparent);
+         * clavis generis sola immutabilis */
         sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":980,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
@@ -1937,6 +1939,12 @@ s32 principale (vacuum)
             != NIHIL);
         CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
             "emendatio destructiva") == NIHIL);
+        /* ante emendationem destructivam: insalubris unus solus
+         * (Liber Pravus - typi violati) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":990,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"census\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "insalubres 1") != NIHIL);
         sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":981,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
@@ -1947,7 +1955,20 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "eventum mutatio scriptum")
             != NIHIL);
         CREDO_VERUM (strstr(_plagula_litterae(piscina, VIA_AN),
-            "emendatio destructiva (campus remotus)") != NIHIL);
+            "emendatio destructiva") == NIHIL);
+        /* post remotionem campi appellatio: auctores II orphani
+         * (salus campi - superficies reparationis) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":991,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"census\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "insalubres 3") != NIHIL);
+        sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":992,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}", auctor_a);
+        r = _mitte(t, piscina, linea);
+        CREDO_VERUM (strstr(r, "[cautio]") != NIHIL);
+        CREDO_VERUM (strstr(r, "extra campos definitionis")
+            != NIHIL);
         sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":982,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"

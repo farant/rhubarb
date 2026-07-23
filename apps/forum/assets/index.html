@@ -113,6 +113,7 @@
   .valor-entis { margin: .5em 0; }
   .valor-entis .titulus-campi { color: #9fb87a; font-size: .8em; }
   #res-quaestio-domus { margin: .6em 0; }
+  .extra-specem { color: #d97c6a; }
 </style>
 </head>
 <body>
@@ -209,7 +210,10 @@
   <div id="res-tabula-domus" hidden>
     <div id="barra-superior">
       <a class="retro" id="tabula-retro">&larr; genera</a>
-      <button id="ens-novum">novum</button>
+      <span>
+        <button id="genus-recensere" class="parva">genus recensere</button>
+        <button id="ens-novum">novum</button>
+      </span>
     </div>
     <h2 id="tabula-titulus"></h2>
     <div id="res-quaestio-domus">
@@ -674,6 +678,29 @@ function campum_de(d, clavis) {
 function tumulus_est(e) {
   return !(e.datum && e.datum.titulus);
 }
+var CLAVES_SYSTEMATIS = ['genus', 'titulus', 'corpus', 'tags',
+  'ancorae', 'signatura', 'status', 'notae'];
+/* speculum IS iudicii machinae: ens extra specem generis?
+ * (orphani post emendationem schematis - signum reparationis) */
+function ens_extra_specem(def, e) {
+  if (!e.datum) { return false; }
+  var malum = false;
+  Object.keys(e.datum).forEach(function (k) {
+    if (CLAVES_SYSTEMATIS.indexOf(k) >= 0) { return; }
+    var c = campum_de(def, k);
+    if (!c) { malum = true; return; }
+    var v = e.datum[k];
+    if ((c.typus === 'textus' || c.typus === 'area'
+         || c.typus === 'dies') && typeof v !== 'string') { malum = true; }
+    if ((c.typus === 'annus' || c.typus === 'numerus')
+        && typeof v !== 'number') { malum = true; }
+    if (c.typus === 'veritas' && typeof v !== 'boolean') { malum = true; }
+    if (c.typus === 'electio' && (typeof v !== 'string'
+        || (c.optiones || []).indexOf(v) < 0)) { malum = true; }
+    if (c.typus === 'relatio') { malum = true; }
+  });
+  return malum;
+}
 function nexus_de(e, clavis) {
   return (e.nexus || []).filter(function (n) {
     return n.verbum === clavis;
@@ -756,7 +783,7 @@ function creator_optiones_renovare() {
   if (oc_prior) { oc.value = oc_prior; }
 }
 
-function creator_ordinem_addere() {
+function creator_ordinem_addere(campo) {
   var domus = document.getElementById('creator-campi');
   var ordo = document.createElement('div');
   ordo.className = 'ordo-campi';
@@ -803,6 +830,16 @@ function creator_ordinem_addere() {
     });
     creator_optiones_renovare();
   };
+  if (campo) {
+    monstrans.value = campo.monstrans || campo.clavis;
+    typus.value = campo.typus || 'textus';
+    if (campo.ad) { ad.value = campo.ad; }
+    if (campo.cardinalitas) { card.value = campo.cardinalitas; }
+    if (campo.optiones) { optiones.value = campo.optiones.join(', '); }
+    ad.hidden = typus.value !== 'relatio';
+    card.hidden = typus.value !== 'relatio';
+    optiones.hidden = typus.value !== 'electio';
+  }
   ordo.appendChild(monstrans);
   ordo.appendChild(typus);
   ordo.appendChild(ad);
@@ -811,31 +848,103 @@ function creator_ordinem_addere() {
   ordo.appendChild(x);
   domus.appendChild(ordo);
   creator_ordines.push({ ordo: ordo, monstrans: monstrans,
-    typus: typus, ad: ad, card: card, optiones: optiones });
+    typus: typus, ad: ad, card: card, optiones: optiones,
+    orig: campo ? campo.clavis : null });
+}
+
+var creator_res = null;   /* null = genus novum; aliter definitio edita */
+
+function creator_aperire(def) {
+  creator_res = def;
+  document.getElementById('creator-titulus').value =
+    def ? (def_schema(def).titulus_monstrans || def.titulus) : '';
+  document.getElementById('creator-clavis').textContent = def
+    ? 'clavis: ' + clavis_de(def) + ' (immutabilis)'
+    : 'clavis: —';
+  document.querySelector('#res-creator-domus h2').textContent =
+    def ? ('genus recensere: ' + titulus_de(def)) : 'genus novum';
+  document.getElementById('creator-campi').innerHTML = '';
+  creator_ordines = [];
+  if (def) {
+    campi_de(def).forEach(function (c) { creator_ordinem_addere(c); });
+  } else {
+    creator_ordinem_addere();
+  }
+  creator_optiones_renovare();
+  if (def) {
+    var s = def_schema(def);
+    if (s.campus_tituli) {
+      document.getElementById('creator-campus-tituli').value =
+        s.campus_tituli;
+    }
+    document.getElementById('creator-ordo-campus').value =
+      s.ordo_ordinarius ? (s.ordo_ordinarius.campus || '') : '';
+    document.getElementById('creator-ordo-directio').value =
+      s.ordo_ordinarius ? (s.ordo_ordinarius.directio || 'ascendens')
+        : 'ascendens';
+  }
+  res_vertere('creator');
 }
 
 document.getElementById('genus-novum').onclick = function () {
-  document.getElementById('creator-titulus').value = '';
-  document.getElementById('creator-clavis').textContent = 'clavis: —';
-  document.getElementById('creator-campi').innerHTML = '';
-  creator_ordines = [];
-  creator_ordinem_addere();
-  creator_optiones_renovare();
-  res_vertere('creator');
+  creator_aperire(null);
+};
+document.getElementById('genus-recensere').onclick = function () {
+  creator_aperire(res_def);
 };
 document.getElementById('creator-campum-addere').onclick =
-  creator_ordinem_addere;
+  function () { creator_ordinem_addere(); };
 document.getElementById('creator-titulus').addEventListener('input',
   function () {
+    if (creator_res) { return; }   /* clavis fixa in editione */
     var c = clavicare(this.value);
     document.getElementById('creator-clavis').textContent =
       'clavis: ' + (c || '—') + ' (immutabilis post creationem)';
   });
 
+/* emendatio generis + migratio renominationum (G2.2): mutatio
+ * definitionis, claves optionales sublatae remotae (mersio
+ * superficialis non delet), deinde per ens eventus honesti
+ * (mutatio clavis novae + remotio veteris). Communis servatori et
+ * fumo. */
+function genus_emendare(def, schema, renominationes, entia) {
+  var mersio = { titulus_monstrans: schema.titulus_monstrans,
+    campi: schema.campi };
+  if (schema.campus_tituli) { mersio.campus_tituli = schema.campus_tituli; }
+  if (schema.ordo_ordinarius) { mersio.ordo_ordinarius = schema.ordo_ordinarius; }
+  var catena = instrumentum('gerere', { res: def.res_id,
+    actus: 'mutatio', datum: JSON.stringify(mersio) });
+  var s_vetus = def_schema(def);
+  ['campus_tituli', 'ordo_ordinarius'].forEach(function (k) {
+    if (s_vetus[k] && !schema[k]) {
+      catena = catena.then(function () {
+        return instrumentum('gerere', { res: def.res_id,
+          actus: 'remotio', clavis: k });
+      });
+    }
+  });
+  (renominationes || []).forEach(function (rn) {
+    (entia || []).forEach(function (e) {
+      if (!e.datum || e.datum[rn.vetus] === undefined) { return; }
+      var m = {};
+      m[rn.novus] = e.datum[rn.vetus];
+      catena = catena.then(function () {
+        return instrumentum('gerere', { res: e.res_id,
+          actus: 'mutatio', datum: JSON.stringify(m) });
+      }).then(function () {
+        return instrumentum('gerere', { res: e.res_id,
+          actus: 'remotio', clavis: rn.vetus });
+      });
+    });
+  });
+  return catena;
+}
+
 document.getElementById('creator-servare').onclick = function () {
   var titulus = document.getElementById('creator-titulus').value;
-  var clavis = clavicare(titulus);
-  if (!clavis) { culpam_ostendere(null, 'titulus generis requiritur'); return; }
+  var clavis = creator_res ? clavis_de(creator_res)
+    : clavicare(titulus);
+  if (!clavis || !titulus) { culpam_ostendere(null, 'titulus generis requiritur'); return; }
   var campi = [];
   var pravum = null;
   creator_ordines.forEach(function (o) {
@@ -867,10 +976,26 @@ document.getElementById('creator-servare').onclick = function () {
     schema.ordo_ordinarius = { campus: oc,
       directio: document.getElementById('creator-ordo-directio').value };
   }
-  instrumentum('addere', { genus: 'definitio', titulus: titulus,
-    datum: JSON.stringify(schema) })
-    .then(function () { res_vertere('index'); })
-    .catch(function (c) { culpam_ostendere(c, 'defectus creationis generis'); });
+  if (!creator_res) {
+    instrumentum('addere', { genus: 'definitio', titulus: titulus,
+      datum: JSON.stringify(schema) })
+      .then(function () { res_vertere('index'); })
+      .catch(function (c) { culpam_ostendere(c, 'defectus creationis generis'); });
+    return;
+  }
+  /* editio: renominationes ex ordinibus (orig != clavis nova) */
+  {
+    var renominationes = [];
+    creator_ordines.forEach(function (o) {
+      var ck = clavicare(o.monstrans.value);
+      if (o.orig && ck && ck !== o.orig) {
+        renominationes.push({ vetus: o.orig, novus: ck });
+      }
+    });
+    genus_emendare(creator_res, schema, renominationes, res_entia)
+      .then(function () { res_vertere('tabula'); anquirere_nunc(); })
+      .catch(function (c) { culpam_ostendere(c, 'defectus emendationis generis'); });
+  }
 };
 
 /* ---- tabula entium ---- */
@@ -984,9 +1109,17 @@ function reddere_res_tabulam() {
   entia.forEach(function (e) {
     var tr2 = document.createElement('tr');
     tr2.className = 'ordo-entis';
-    columnae.forEach(function (c) {
+    var extra = ens_extra_specem(def, e);
+    columnae.forEach(function (c, ci) {
       var td = document.createElement('td');
       td.textContent = valorem_ordinis(e, c);
+      if (ci === 0 && extra) {
+        var sig = document.createElement('span');
+        sig.className = 'extra-specem';
+        sig.textContent = '⚠ ';
+        td.insertBefore(sig, td.firstChild);
+        td.title = 'extra specem generis - reparatione eget';
+      }
       tr2.appendChild(td);
     });
     var td_tags = document.createElement('td');
@@ -1030,6 +1163,13 @@ function reddere_res_ens() {
   var h = document.createElement('h2');
   h.textContent = tumulus_est(ens) ? '[deletum]'
     : ((ens.datum && ens.datum.titulus) || ens.titulus);
+  if (ens_extra_specem(res_def, ens)) {
+    var sig_e = document.createElement('span');
+    sig_e.className = 'extra-specem';
+    sig_e.textContent = ' ⚠ extra specem';
+    sig_e.style.fontSize = '.6em';
+    h.appendChild(sig_e);
+  }
   domus.appendChild(h);
   var barra = document.createElement('div');
   barra.className = 'caput-actionum';
@@ -1587,7 +1727,27 @@ function fumus_genera() {
     if (ordines[0].cells[4].textContent !== 'Romulus') {
       throw new Error('columna relationis fracta');
     }
-    return internuntius.vocare('fumus_perfectus', {});
+    /* emendatio generis + migratio renominationis EODEM motore quo
+     * editor (sors -> fatum), entia migrata asserta (G2.2) */
+    var schema_nova = JSON.parse(JSON.stringify(
+      def_schema(def_probationis)));
+    schema_nova.campi.forEach(function (c) {
+      if (c.clavis === 'sors') { c.clavis = 'fatum'; c.monstrans = 'Fatum'; }
+    });
+    return genus_emendare(def_probationis, schema_nova,
+      [{ vetus: 'sors', novus: 'fatum' }], res_entia)
+      .then(function () { return legere('probatio_fumi'); })
+      .then(function (entia2) {
+        var roma2 = null;
+        entia2.forEach(function (e) {
+          if (e.res_id === roma_id) { roma2 = e; }
+        });
+        if (!roma2 || roma2.datum.fatum !== 'condita'
+            || roma2.datum.sors !== undefined) {
+          throw new Error('migratio renominationis fracta');
+        }
+        return internuntius.vocare('fumus_perfectus', {});
+      });
   });
 }
 

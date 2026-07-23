@@ -1694,3 +1694,30 @@ non alphabetice), fumus V columnae assertae. Probationes 299.
 Nota culturalis: decisio colloquii "booleani = tags" die uno usus
 veri falsificata - barra vivida > praedictio; electio = status-
 sine-machina (gradus lecturae sine vita formali).
+
+## GENERA G2.2 - EMENDATIO PLENA GENERUM: INTENTIO+RELATIO (2026-07-23)
+
+Decisio Franis (usus verus, exemplar mentis eius): definitio
+IUDICAT, non constringit - emendatio libera, discrepantiae molles
+signatae pro reparatione humana. "Additiva-sola v1" mortua die
+uno (secunda falsificatio colloquii per barram vividam).
+- gesta.c: _campum_iudicare extractum (valor unus, commune
+  scripturae ac saluti); _emendationem_definitionis_validare
+  RELAXATUM (clavis generis sola immutabilis - notae "emendatio
+  destructiva" mortuae: evolutio legitima non violatio); SALUS
+  sectio II-bis campi (claves status contra definitionem currentem
+  -> census insalubres + res [cautio] = superficies orphanorum).
+  Compatibilitas familiis typorum GRATUITA (textus/area/dies =
+  chorda; annus/numerus = integer) - retypatio intra familiam
+  orphanos non creat.
+- App: "genus recensere" in tabula -> creator praeimpletus
+  (creator_aperire; clavis fixa in editione); renominatio =
+  clavis derivata mutata -> genus_emendare (mutatio definitionis
+  + remotio clavium optionalium sublatarum [mersio superficialis
+  non delet!] + migratio per ens: mutatio nova + remotio vetus -
+  eventus honesti); signa "⚠ extra specem" in ordinibus tabulae
+  et capite entis (speculum IS iudicii machinae).
+- Fumus: renominatio sors->fatum EODEM motore quo editor + entia
+  migrata asserta. FUMUS PLENUS primo cursu. Probationes 303
+  (insalubres 1 ante / 3 post remotionem campi - numerus exactus
+  ratiocinatus et confirmatus). Suite 18/680/303/12.
