@@ -1,11 +1,9 @@
-./lib/fasti.c
 ./lib/filum.c
 ./lib/imago.c
 ./lib/iter_directoria.c
 ./lib/reactor.c
 ./lib/scrinium.c
 ./lib/tcp_posix.c
-./lib/moneta.c
 ./lib/uuid.c
 ./lib/via.c
 ./lib/vigilia.c

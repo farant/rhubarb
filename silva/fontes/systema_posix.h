@@ -115,6 +115,13 @@ ssize_t write(int fossa, const void* datum, size_t mensura);
 int     close(int fossa);
 void    _exit(int status);
 int     usleep(useconds_t microsecunda);
+int     dup2(int fossa_vetus, int fossa_nova);
+int     execvp(const char* plagula, char* const argumenta[]);
+
+/* unistd.h - fossae normales */
+#define STDIN_FILENO  0
+#define STDOUT_FILENO 1
+#define STDERR_FILENO 2
 
 /* signal.h (valores signorum communes) */
 #define SIGINT  2
@@ -123,8 +130,40 @@ int     usleep(useconds_t microsecunda);
 
 int kill(pid_t processus, int signum);
 
-/* sys/wait.h */
+/* sys/wait.h - macrota ut functiones declarata (forma sufficit;
+ * silva signaturam petit, non expansionem) */
 pid_t waitpid(pid_t processus, int* status, int optiones);
+int WIFEXITED(int status);
+int WEXITSTATUS(int status);
+int WIFSIGNALED(int status);
+int WTERMSIG(int status);
+
+/* fcntl.h (valores Darwin) */
+#define O_NONBLOCK 0x0004
+#define F_GETFL    3
+#define F_SETFL    4
+#define F_SETFD    2
+#define F_GETFD    1
+#define FD_CLOEXEC 1
+
+int fcntl(int fossa, int mandatum, ...);
+
+/* sys/select.h - fd_set opacum (silva membra non tangit; FD_*
+ * ut functiones declarata, ut sys/wait.h supra) */
+typedef struct { int __opacum[32]; } fd_set;
+
+void FD_ZERO(fd_set* copia);
+void FD_SET(int fossa, fd_set* copia);
+void FD_CLR(int fossa, fd_set* copia);
+int  FD_ISSET(int fossa, fd_set* copia);
+
+int select(int numerus, fd_set* legendi, fd_set* scribendi,
+           fd_set* errantes, struct timeval* mora);
+
+/* errno.h (valores Darwin communes; errno ipsum in systema_c89.h) */
+#define EINTR       4
+#define EAGAIN      35
+#define EWOULDBLOCK 35
 
 /* sys/socket.h + netinet/in.h + netinet/tcp.h (valores Darwin) */
 #define SOL_SOCKET   0xffff

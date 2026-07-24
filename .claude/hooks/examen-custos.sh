@@ -28,12 +28,24 @@ case "$FILE" in
     "$RADIX"/*) REL="./${FILE#"$RADIX"/}" ;;
     *) exit 0 ;;   # extra repositorium
 esac
-# probationes radicis: -posix (fixturae fork/fossae/sockets iure
-# utuntur - Unda 2 systematis_posix.h eas videt; exclusiones NON
-# consultae ne diagnostica vera in illis plagulis sileant)
+# -posix ubi POSIX iure adhibetur (exclusiones NON consultae tunc,
+# ne diagnostica VERA in illis plagulis sileant):
+#   - probationes radicis (fixturae fork/fossae/sockets)
+#   - lib/*_posix.c: nomen ipsum stratum platformae DECLARAT
+#   - plagulae paucae quae tempus/fossas systematis legunt et olim
+#     TOTAE excludebantur - iudicium rectum exclusioni caecae praestat
+#     (2026-07-24: quinque earum sub -posix MUNDAE sunt)
+# CAUTIO: hic solum plagulae quae sub -posix VERE mundae sunt.
+# tcp_posix.c et reactor.c desunt CONSULTO - lexicon superficiem
+# socketorum (sockaddr_in/addrinfo cum formis certificandis) et
+# poll/kqueue nondum fert, ergo -posix eis XXXV/XII violationes
+# adhuc pareret et exclusionem suam praeteriret. Exclusio eas tegat
+# donec lexicon crescat (desideratum in tabulario).
 POSIX_VEX=""
 case "$REL" in
     ./probationes/*) POSIX_VEX="-posix" ;;
+    ./lib/processus_posix.c|./lib/moneta.c|./lib/fasti.c|./lib/filum.c|./lib/via.c|./lib/uuid.c)
+        POSIX_VEX="-posix" ;;
 esac
 
 if [ -z "$POSIX_VEX" ]; then
