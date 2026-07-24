@@ -72,10 +72,10 @@ Hello World!
 ..  NIHIL handling correcte
 
 --- Probans parse sine URI ---
-  Parsed (URI: 'HTTP/1.1')
+  Recte recusatum (error)
 
 --- Probans parse sine versio ---
-  Parsed (versio: 11)
+  Recte recusatum
 
 --- Probans parse header sine colon ---
   successus=0, capita=0
@@ -90,10 +90,40 @@ Hello World!
 --- Probans URI longa ---
   URI longa accepted (len=2001)
 
+--- Probans custos CL duplex -> 400 ---
+..
+--- Probans custos CL+TE (ambo ordines) -> 400 ---
+....
+--- Probans custos chunked -> 411 ---
+..
+--- Probans custos methodus ignota -> 501 ---
+..
+--- Probans custos versio -> 400 ---
+....
+--- Probans LF-leniens (nudum + mixtum) ---
+.........
+--- Probans CRLF divisum trans adicere ---
+......
+--- Probans limes URI -> 414 ---
+..
+--- Probans limes petitionis parvus -> 413 ---
+...
+--- Probans CL nuntiatum super limitem -> 413 statim ---
+..
+--- Probans reliquiae ---
+.......
+--- Probans serialize 200 vacua -> CL: 0 ---
+..
+--- Probans serialize capita CL/Connection saltata ---
+...
+--- Probans serialize_cum_conexione ---
+...
+--- Probans reset hygiene (vexilla vidit_*) ---
+.......
 
 === CREDO COMPENDIUM ===
-Totalis:    108
-Praeteriti: 108
+Totalis:    166
+Praeteriti: 166
 Fracti:     0
 
 Conditio: OMNIA PRAETERIERUNT

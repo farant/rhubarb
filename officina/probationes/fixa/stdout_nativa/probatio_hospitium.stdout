@@ -1,0 +1,49 @@
+
+========================================
+PROBATIONES HOSPITIUM
+========================================
+
+--- Probans creare et destruere ---
+....  Portus auto-selectus, fructus vacui
+
+--- Probans gyrum simplicem ---
+............  Gyrus completus: 200 + corpus + framing
+
+--- Probans keep-alive (II petitiones, I connexio) ---
+..........  II petitiones per I connexionem
+
+--- Probans CDIV et CDV + Allow ---
+.........  CDIV + CDV cum Allow recte
+
+--- Probans custodem trans filum (versio mala) ---
+.......  Custos: 400 + close + EOF
+
+--- Probans HEAD = GET sine corpore ---
+.......  HEAD: capita cum CL vero, sine corpore
+
+--- Probans reliquias -> clausuram honestam ---
+........  Reliquiae: responsum I + close + EOF
+
+--- Probans datum registratum + caput proprium ---
+.....  Datum + caput proprium per filum
+
+--- Probans directorium staticum ---
+........................  Statica: MIME + index + pagina indicis + traversalis recusata
+
+--- Probans ACAO in omni responso ---
+.......  ACAO in responso tractatoris et in CDIV
+
+--- Probans plenitudinem -> DIII ---
+.........  Plenitudo: DIII visibile, sedes prima intacta
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    102
+Praeteriti: 102
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
+========================================
+

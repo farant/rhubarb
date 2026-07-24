@@ -266,7 +266,7 @@ void foo(i32 x);
 i32* p;
 ' [OK]
     cursor.c: (2813 bytes) [OK]
-    color.c: (3565 bytes) [OK]
+    color.c: (3956 bytes) [OK]
     color.h: (2354 bytes) [OK]
     utf8.c: (6064 bytes) [OK]
     piscina.h: (3181 bytes) [OK]

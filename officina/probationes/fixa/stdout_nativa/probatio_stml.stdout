@@ -205,10 +205,19 @@
 ...  Whitespace trimmed selector: PRAETERITUM
 ..  Mixed content transclusion: PRAETERITUM
 
+--- Probans capturam lineae crudae ---
+..........  Captura cruda asperitatum: PRAETERITUM
+.....  Crudae binae + parens clausus: PRAETERITUM
+...  Entia cruda intacta: PRAETERITUM
+....  Captura vacua: PRAETERITUM
+.....  ((> notatum, una linea (v1): PRAETERITUM
+......  Circuitus crudae ambabus posturis: PRAETERITUM
+........  Via constructoris cruda: PRAETERITUM
+
 
 === CREDO COMPENDIUM ===
-Totalis:    456
-Praeteriti: 456
+Totalis:    497
+Praeteriti: 497
 Fracti:     0
 
 Conditio: OMNIA PRAETERIERUNT

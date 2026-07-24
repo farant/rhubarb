@@ -50,10 +50,25 @@ PROBATIONES ROUTER
 --- Probans via radix (/) ---
 ....  Radix matched
 
+--- Probans larva: methodus falsa ---
+....  405-materia: via inventa, larva GET
+
+--- Probans larva: completa post victoriam ---
+...  Larva completa etiam post victoriam
+
+--- Probans larva: exacta + pattern conferunt ---
+........  Exacta + pattern conferunt; parametra insulata
+
+--- Probans larva: via omnino absens ---
+....  404-materia: nihil inventum, larva vacua
+
+--- Probans larva: HEAD literalis ---
+....  HEAD non congruit GET - literalis
+
 
 === CREDO COMPENDIUM ===
-Totalis:    83
-Praeteriti: 83
+Totalis:    106
+Praeteriti: 106
 Fracti:     0
 
 Conditio: OMNIA PRAETERIERUNT
