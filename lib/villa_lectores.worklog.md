@@ -96,6 +96,83 @@ with nothing in any log.
   which is the design (the generator's header comment says so) —
   but it reads as a build break for a second.
 
+## 2026-07-24 (later) — failure shapes, and a test that would have broken on its own subject
+
+Cleanup pass before V3.5. 153 → **202 assertions**, suite still 105/105.
+
+### We had never seen a broken unit
+
+The original fixtures covered only healthy output. For a tool whose
+entire reason to exist is showing you when something is broken, the
+parsers had been tested exclusively against success — and would have
+met the failure shape for the first time at the exact moment
+something actually failed.
+
+`systemctl list-units --state=failed` on the droplet returned zero,
+so there was nothing to capture read-only. Fran approved creating a
+throwaway unit (`Type=oneshot`, `ExecStart=/bin/false`), capturing,
+and removing it. That's `captare_fracta.sh` — kept **separate from
+`captare.sh`**, because that script's header promises "lectiones
+solae" and a promise like that is worth more than the convenience of
+one file. Cleanup runs from `trap ... EXIT` so a mid-capture failure
+still tears the unit down; verified afterward that the unit file was
+gone, `LoadState=not-found`, zero failed units, and nginx / smaragda
+/ litestream all still `active`.
+
+### Two traps the failure fixture exposed
+
+**1. An empty `ActiveEnterTimestamp` means nothing.** It is empty for
+a *failed* unit, an *inactive* unit, and an *unknown* unit alike.
+Anyone reaching for it as a "not found" signal would be wrong in two
+of three cases.
+
+**2. `Result=success` is returned for units that are dead and for
+units that do not exist.** Rendering it unconditionally puts
+"Result: success" next to a service that isn't running — a confident
+lie. The value is stored verbatim (the reader must not misreport what
+systemd said) but the derived `fracta` flag carries the judgment, and
+the header states that `causa_finis` is meaningless unless `fracta`.
+
+Both are asserted in §XVII rather than only commented. A comment
+guarding a trap decays; a test that fails is a comment that shouts.
+
+### A test that would have broken on its own subject
+
+`CREDO_VERUM (discus.praesto > ZEPHYRUM)` — that assertion is
+**false on a genuinely full disk**, which is precisely the condition
+the disk reader exists to surface. I'd written a test that would
+break on the case it was built for.
+
+Replaced positivity with bounds (`usa <= frusta`,
+`praesto <= frusta`, `usa + praesto <= frusta`). The general lesson
+is worth keeping: for a VARIANS fixture, assert *relations that hold
+in every state of the world*, not properties that happen to hold in
+the state you sampled. "Currently nonzero" is a sample; "never
+exceeds the total" is an invariant.
+
+### First-wins made visible
+
+`destinationes` now counts every `proxy_pass` in a block while
+`destinatio` still holds the first. A block with three `location`
+blocks pointing at different upstreams previously rendered as though
+it had one — silently. Now the UI can say "1 of 3". The droplet has
+one location per server, so no fixture exercises it, which is the
+argument *for* the counter rather than against it: an untested wrong
+answer that looks right is the worst kind.
+
+### Three fixtures that came free
+
+- an unknown unit **between** two healthy ones (from a typo — I
+  queried the sanitized name `gemma.service` against the real box).
+  Proves a not-found record doesn't corrupt its neighbours. Kept
+  deliberately.
+- empty `list-units` — header, blank line, `0 loaded units listed.`
+  The empty case is its own shape, not the absence of one.
+- `journalctl` emits a multi-line `Hint:` preamble before
+  `-- No entries --`. v1 displays logs verbatim, so this will render
+  unless someone strips it; pinned so whoever decides to strip it
+  knows what they're stripping.
+
 ### What is deliberately NOT here
 
 - No `journalctl` parser. Log tailing is display-only in v1 — the

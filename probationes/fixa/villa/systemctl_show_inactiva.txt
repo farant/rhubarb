@@ -1,5 +1,7 @@
 MainPID=0
+Result=success
 NRestarts=0
+ExecMainStatus=0
 Id=console-getty.service
 Description=Console Getty
 LoadState=loaded

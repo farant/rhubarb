@@ -118,6 +118,9 @@ villa_ssh_error_nomen (VillaSshError error);
 
 /* IMPERIUM: systemctl show <unitates...> --property=<claves>
  *                     --no-pager
+ * CLAVES: Id,Description,LoadState,ActiveState,SubState,
+ *         UnitFileState,ActiveEnterTimestamp,MainPID,NRestarts,
+ *         Result,ExecMainStatus
  *
  * CAUTIO CLAVIUM: systemd proprietates ORDINE SUO reddit, non
  * ordine petito (MainPID praecedit Id praecedit Description). Ergo
@@ -130,6 +133,21 @@ villa_ssh_error_nomen (VillaSshError error);
  * UTC'), non epocha. Verbatim servatur et monstratur. Si quando
  * numerus 'per N dies currens' volueris, PETE
  * ActiveEnterTimestampMonotonic - noli hanc parsare.
+ *
+ * DUAE INSIDIAE EX FIXO 'fracta' (captura vera 2026-07-24, unitate
+ * temporaria in droplet consulto fracta):
+ *
+ *  (a) 'ActiveEnterTimestamp=' VACUUM est in unitate FRACTA, in
+ *      unitate INACTIVA, ET in unitate IGNOTA pariter. Ergo campus
+ *      vacuus NIHIL de causa dicit - eo ut indicio 'non inventa'
+ *      uti falsum esset.
+ *  (b) 'Result=success' redditur in unitate MORTUA et in unitate
+ *      IGNOTA. Ergo causa_finis SOLUM cum 'fracta' VERUM est
+ *      significat quicquam; alioquin monstrata mendacium ostenderet
+ *      ('Result: success' iuxta servitium quod non currit). Valor
+ *      verbatim servatur - lector systemd non mentiatur - sed
+ *      vexillum 'fracta' iudicium portat. Probatio §XVII insidiam
+ *      ipsam adserit, ne commentarius solus eam custodiat.
  */
 
 nomen structura {
@@ -140,13 +158,20 @@ nomen structura {
 	chorda sub_status;          /* SubState */
 	chorda status_plagulae;     /* UnitFileState (potest vacuus) */
 	chorda tempus_initii;       /* ActiveEnterTimestamp (verbatim) */
+
+	/* Result: success|exit-code|signal|timeout|oom-kill|core-dump|
+	 * watchdog|start-limit-hit|resources|protocol.
+	 * SIGNIFICAT NIHIL nisi 'fracta' - vide (b) supra. */
+	chorda causa_finis;
+	i32    codex_exitus;        /* ExecMainStatus */
 	i32    pid;                 /* MainPID; ZEPHYRUM = nullus */
 	i32    restitutiones;       /* NRestarts */
 
 	/* Iudicia derivata - unum locum, ne quisque consumptor
-	 * chordas iterum comparet. */
+	 * chordas iterum comparet (et alius aliter). */
 	b32 inventa;                /* LoadState != 'not-found' */
 	b32 currit;                 /* ActiveState == 'active' */
+	b32 fracta;                 /* ActiveState == 'failed' */
 } StatusServitii;
 
 /* Redde Xar de StatusServitii (ordine effusionis). Tabulata vacua
@@ -227,7 +252,17 @@ villa_unitates_legere (
 nomen structura {
 	chorda hospes;              /* server_name primum */
 	chorda hospites;            /* server_name omnia, spatio iuncta */
-	chorda destinatio;          /* proxy_pass (vacua si nulla) */
+	chorda destinatio;          /* proxy_pass PRIMUM (vacua si nulla) */
+
+	/* QUOT 'proxy_pass' in bloco fuerint. 'destinatio' PRIMUM
+	 * solum tenet - blocum cum locationibus pluribus ad upstreams
+	 * diversos aliter TACITE unum ostenderet ut si solus esset.
+	 * Numerus terminum VISIBILEM facit: facies 'unum ex tribus'
+	 * dicere potest potius quam mentiri. Droplet nostrum unam
+	 * locationem per servum habet, ergo fixa hoc non exercent -
+	 * id est ratio propter quam numerus adest, non contra. */
+	i32    destinationes;
+
 	chorda certificatum;        /* ssl_certificate (vacuum si nullum) */
 	chorda radix;               /* root (vacua si nulla) */
 	chorda plagula;             /* '# configuration file X:' proximum */
@@ -241,7 +276,8 @@ nomen structura {
 nomen structura {
 	chorda hospes;
 	chorda hospites;
-	chorda destinatio;
+	chorda destinatio;           /* primum inventum */
+	i32    destinationes;        /* summa per bloca plicata */
 	chorda certificatum;
 	chorda radix;
 	chorda plagula;

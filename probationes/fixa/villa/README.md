@@ -80,8 +80,56 @@ these shapes, and several were surprises worth naming:
 - `DESCRIPTION` is the last column and contains spaces — split on the
   first four fields only.
 
+## The failure shapes (added 2026-07-24, after V3 shipped)
+
+The original set covered only healthy output. For a tool whose entire
+purpose is showing you when something is broken, that meant the
+parsers had never seen the case they exist for — and would have met
+it first at the worst possible moment.
+
+Captured by deliberately failing a throwaway systemd unit
+(`captare_fracta.sh`, which **mutates the server** and is separate
+from `captare.sh` for exactly that reason):
+
+| fixture | what it pins |
+|---|---|
+| `systemctl_show_fracta.txt` | `ActiveState=failed`, `Result=exit-code`, `ExecMainStatus=1`, `UnitFileState=static` |
+| `systemctl_show_medio_ignota.txt` | an unknown unit **between** two healthy ones |
+| `list_units_fractae.txt` | a failed unit in list form |
+| `list_units_vacuae.txt` | header + blank + `0 loaded units listed.` and no rows |
+| `journalctl_vacua.txt` | the multi-line `Hint:` preamble before `-- No entries --` |
+
+**Two traps this exposed**, both now asserted in §XVII of the test so
+that a comment isn't the only thing guarding them:
+
+1. **`ActiveEnterTimestamp=` is empty for a failed unit, an inactive
+   unit, *and* an unknown unit alike.** An empty timestamp therefore
+   says nothing about which case you are in — using it as a proxy for
+   "not found" would be wrong.
+2. **`Result=success` is returned for units that are dead and for
+   units that do not exist.** Displaying it unconditionally would put
+   "Result: success" next to a service that isn't running. The value
+   is stored verbatim (the reader must not lie about what systemd
+   said), but the derived `fracta` flag carries the judgment, and
+   `causa_finis` means nothing unless `fracta` is true.
+
+`Result` and `ExecMainStatus` were added to the property list at the
+same time; the healthy fixtures were re-captured so the whole set
+shares one property list.
+
 ## Re-capturing
 
-`./probationes/fixa/villa/captare.sh <ssh-alias>` — read-only, needs
-passwordless sudo for `nginx -T`. Sanitize by hand afterward; never
-re-sanitize at test time.
+`./probationes/fixa/villa/captare.sh <ssh-alias>` — **read-only**,
+needs passwordless sudo for `nginx -T`. That promise is why the
+failure capture lives elsewhere.
+
+`./probationes/fixa/villa/captare_fracta.sh <ssh-alias>` —
+**mutates the server**: creates a unit that fails, captures, removes
+it. Cleanup runs from a `trap ... EXIT` so a mid-capture failure
+still tears the unit down; verify afterward with
+
+```
+ssh <alias> 'systemctl list-units --state=failed --plain --no-legend'
+```
+
+Sanitize by hand afterward; never re-sanitize at test time.

@@ -51,9 +51,16 @@ echo "capiens ex '$ALIAS' (bis quaeque, lectiones solae)..."
 capere nginx_T 'sudo nginx -T 2>/dev/null'
 
 # II. systemctl show: forma clavis=valor, unitates plures uno vocamine
-PROPRIETATES='Id,Description,LoadState,ActiveState,SubState,UnitFileState,ActiveEnterTimestamp,MainPID,NRestarts'
+# Result + ExecMainStatus additae 2026-07-24: sine eis forma unitatis
+# FRACTAE causam suam non fert (vide captare_fracta.sh).
+PROPRIETATES='Id,Description,LoadState,ActiveState,SubState,UnitFileState,ActiveEnterTimestamp,MainPID,NRestarts,Result,ExecMainStatus'
 capere systemctl_show_activae \
     "systemctl show nginx.service smaragda.service litestream.service --property=$PROPRIETATES --no-pager"
+
+# II-bis. unitas IGNOTA in MEDIO responsi multiplicis - probat
+#         recordum non-inventum vicinos suos non corrumpere
+capere systemctl_show_medio_ignota \
+    "systemctl show nginx.service nulla-tale.service litestream.service --property=$PROPRIETATES --no-pager"
 
 # III. forma DEFECTUS: unitas ignota (LoadState=not-found)
 capere systemctl_show_ignota \
@@ -77,6 +84,18 @@ capere uptime 'cat /proc/uptime'
 
 # VIII. memoria (/proc/meminfo: idem argumentum)
 capere meminfo 'head -5 /proc/meminfo'
+
+# IX. list-units VACUUM: caput + linea vacua + 'N loaded units
+#     listed.' sine ulla unitate. Forma vacua propria est, non
+#     absentia formae - parsator ZEPHYRUM reddat, non ruat.
+capere list_units_vacuae \
+    'systemctl list-units --state=failed --no-pager --plain'
+
+# X. diaria VACUA: journalctl praefationem 'Hint:' MULTILINEAM ante
+#    '-- No entries --' emittit cum usor coetum 'adm' non habet.
+#    Facies eam monstraret nisi quis eam tolleret.
+capere journalctl_vacua \
+    'journalctl -u nginx.service -n 3 --no-pager 2>&1'
 
 echo
 echo "cruda in $CRUDA/"

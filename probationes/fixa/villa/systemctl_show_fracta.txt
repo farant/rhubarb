@@ -1,0 +1,11 @@
+MainPID=0
+Result=exit-code
+NRestarts=0
+ExecMainStatus=1
+Id=villa-probatio-temporaria.service
+Description=Villa probatio temporaria (fixtura - delenda)
+LoadState=loaded
+ActiveState=failed
+SubState=failed
+UnitFileState=static
+ActiveEnterTimestamp=

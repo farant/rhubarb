@@ -508,6 +508,8 @@ _servitium_condere (Xar* fructus, constans StatusServitii* fons,
 	s->sub_status      = _copia(fons->sub_status, piscina);
 	s->status_plagulae = _copia(fons->status_plagulae, piscina);
 	s->tempus_initii   = _copia(fons->tempus_initii, piscina);
+	s->causa_finis     = _copia(fons->causa_finis, piscina);
+	s->codex_exitus    = fons->codex_exitus;
 	s->pid             = fons->pid;
 	s->restitutiones   = fons->restitutiones;
 
@@ -516,6 +518,9 @@ _servitium_condere (Xar* fructus, constans StatusServitii* fons,
 	s->inventa = (b32)(!chorda_vacua(s->status_oneris)
 		&& !chorda_aequalis_literis(s->status_oneris, "not-found"));
 	s->currit = chorda_aequalis_literis(s->status_vitae, "active");
+	/* 'fracta' portat iudicium quod causa_finis SOLA non portat:
+	 * systemd 'Result=success' etiam mortuis et ignotis reddit */
+	s->fracta = chorda_aequalis_literis(s->status_vitae, "failed");
 }
 
 Xar*
@@ -597,6 +602,15 @@ villa_systemctl_legere (chorda effusio, Piscina* piscina)
 			"ActiveEnterTimestamp"))
 		{
 			currens.tempus_initii = valor;
+		}
+		alioquin si (chorda_aequalis_literis(clavis, "Result"))
+		{
+			currens.causa_finis = valor;
+		}
+		alioquin si (chorda_aequalis_literis(clavis,
+			"ExecMainStatus"))
+		{
+			_ut_i32(valor, &currens.codex_exitus);
 		}
 		alioquin si (chorda_aequalis_literis(clavis, "MainPID"))
 		{
@@ -769,6 +783,9 @@ _directivam_capere (ClausulaNginx* c, chorda caput, chorda directiva)
 	 * intra clausulam est, clausulae pertinet. */
 	alioquin si (chorda_aequalis_literis(caput, "proxy_pass"))
 	{
+		/* PRIMUM tenetur, sed OMNIA numerantur - terminus visibilis
+		 * potius quam mendacium tacitum */
+		c->destinationes++;
 		si (chorda_vacua(c->destinatio))
 		{
 			c->destinatio = _verbum(directiva, I);
@@ -825,10 +842,11 @@ _clausulam_condere (Xar* fructus, constans ClausulaNginx* fons,
 	{
 		redde;
 	}
-	c->hospes       = _copia(fons->hospes, piscina);
-	c->hospites     = _copia(fons->hospites, piscina);
-	c->destinatio   = _copia(fons->destinatio, piscina);
-	c->certificatum = _copia(fons->certificatum, piscina);
+	c->hospes        = _copia(fons->hospes, piscina);
+	c->hospites      = _copia(fons->hospites, piscina);
+	c->destinatio    = _copia(fons->destinatio, piscina);
+	c->destinationes = fons->destinationes;
+	c->certificatum  = _copia(fons->certificatum, piscina);
 	c->radix        = _copia(fons->radix, piscina);
 	c->plagula      = _copia(fons->plagula, piscina);
 	c->linea        = fons->linea;
@@ -1009,6 +1027,7 @@ villa_nginx_situs_plicare (constans Xar* clausulae, Piscina* piscina)
 			situs->plagula  = _copia(cl->plagula, piscina);
 		}
 		situs->clausulae++;
+		situs->destinationes += cl->destinationes;
 
 		si (socia)
 		{

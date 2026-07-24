@@ -10,17 +10,17 @@ SubState=running
 UnitFileState=enabled
 ActiveEnterTimestamp=Fri 2025-09-12 19:42:15 UTC
 
-MainPID=2559616
+MainPID=0
 Result=success
 NRestarts=0
 ExecMainStatus=0
-Id=gemma.service
-Description=Gemma MCP Server
-LoadState=loaded
-ActiveState=active
-SubState=running
-UnitFileState=enabled
-ActiveEnterTimestamp=Tue 2026-02-17 18:46:48 UTC
+Id=nulla-tale.service
+Description=nulla-tale.service
+LoadState=not-found
+ActiveState=inactive
+SubState=dead
+UnitFileState=
+ActiveEnterTimestamp=
 
 MainPID=2418350
 Result=success

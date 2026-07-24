@@ -1,6 +1,6 @@
 RHUBARB CODEBASE MAP
 ====================
-Last updated: 2026-07-22
+Last updated: 2026-07-24
 
 A C89 monorepo for building catholic civilization.
 All identifiers in Latin. No dependencies. Long-term thinking.
@@ -100,6 +100,7 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │ exemplar (templates), quaerere (search)         │        │
     │  │ vigilia (resident-process watch)                │        │
     │  │ filum (file read/write, dir ops)                │        │
+    │  │ processus (spawn+capture, argv vector, NO shell) │        │
     │  └─────────────────────────────────────────────────┘        │
     └─────────────────────────────────────────────────────────────┘
                               │
@@ -172,6 +173,7 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │  internuntius ── pure C89 JSON-RPC (registry,       │    │
     │  │                  envelope, push) over a missor      │    │
     │  │                  seam - transport-agnostic          │    │
+    │  │  speculum ────── self-source debug mode (Cmd+Shift+D)│   │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
     │  ┌─ Domain Libraries ──────────────────────────────────┐    │
@@ -193,6 +195,17 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │  router ─────────────── HTTP route matching         │    │
     │  │  servitium, reactor ─── server/event loop           │    │
     │  │  macho ──────────────── Mach-O binary format        │    │
+    │  │  cliens_tabularii ───── tabulariumd client (MCP over │   │
+    │  │                         TCP, start-if-absent)       │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                             │
+    │  ┌─ Build / Remote Administration ─────────────────────┐    │
+    │  │  aedilis ──────── derivative build layer: include    │   │
+    │  │                   closures, STML manifests, emitted  │   │
+    │  │                   scripts (include/X.h -> lib/X.c)   │   │
+    │  │  villa_lectores ─ PURE ssh command builder + parsers  │   │
+    │  │                   (systemctl, nginx -T, df, meminfo);│    │
+    │  │                   no network - fixture-driven        │    │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
     │  ┌─ Utilities ─────────────────────────────────────────┐    │

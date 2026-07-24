@@ -502,6 +502,10 @@ s32 principale (vacuum)
 			 * omnino non videret. */
 			CREDO_CHORDA_AEQUALIS_LITERIS (prima->destinatio,
 				"http://localhost:4003");
+			/* UNUM proxy_pass in hoc bloco - numerus terminum
+			 * 'primum-vincit' VISIBILEM facit, ne facies unum ex
+			 * pluribus tacite ut solum ostendat */
+			CREDO_AEQUALIS_I32 (prima->destinationes, (i32)I);
 
 			/* 'ssl_certificate', NON 'ssl_certificate_key' quod
 			 * lineam proximam occupat */
@@ -672,10 +676,17 @@ s32 principale (vacuum)
 		CREDO_CHORDA_AEQUALIS_LITERIS (discus.punctum, "/");
 
 		/* fixum VARIANS est: numeri inter capturas mutant. Ergo
-		 * SOLA relatio figitur, numquam valor. */
+		 * SOLA relatio figitur, numquam valor.
+		 *
+		 * CAUTIO (correctio 2026-07-24): adsertio prior
+		 * 'praesto > ZEPHYRUM' erat. Ea in disco VERE PLENO
+		 * FALSA fit - id est, probatio rumperetur in ipso casu
+		 * cuius causa exsistit. Adsertio quae casum suum non
+		 * superstat nulla adsertio est. Ergo TERMINI figuntur,
+		 * non positivitas. */
 		CREDO_VERUM (discus.frusta > ZEPHYRUM);
-		CREDO_VERUM (discus.usa > ZEPHYRUM);
-		CREDO_VERUM (discus.praesto > ZEPHYRUM);
+		CREDO_VERUM (discus.usa <= discus.frusta);
+		CREDO_VERUM (discus.praesto <= discus.frusta);
 		CREDO_VERUM (discus.usa + discus.praesto <= discus.frusta);
 		CREDO_VERUM (discus.capacitas <= (i32)C);
 	}
@@ -757,6 +768,179 @@ s32 principale (vacuum)
 			Xar* c = villa_nginx_clausulas_legere(pravum, piscina);
 
 			CREDO_AEQUALIS_I32 (xar_numerus(c), (i32)I);
+		}
+	}
+
+	/* ==============================================================
+	 * XVI-XIX. FORMAE DEFECTUS
+	 *
+	 * Fixa capta 2026-07-24 (post V3), unitate systemd temporaria
+	 * in droplet CONSULTO fracta - vide captare_fracta.sh. Ante
+	 * haec parsator contra SANITATEM SOLAM probatus erat, quod in
+	 * instrumento cuius tota causa est defectum ostendere absurdum
+	 * est.
+	 * ============================================================== */
+
+	/* XVI. unitas FRACTA: causa et codex adsunt */
+	{
+		chorda fx = _fixum(piscina, "systemctl_show_fracta.txt");
+		Xar*   servitia = villa_systemctl_legere(fx, piscina);
+		constans StatusServitii* s;
+
+		imprimere("\n--- XVI. systemctl show: FRACTA ---\n");
+		CREDO_AEQUALIS_I32 (xar_numerus(servitia), (i32)I);
+		s = (constans StatusServitii*)xar_obtinere(servitia,
+			ZEPHYRUM);
+		CREDO_NON_NIHIL (s);
+		si (s != NIHIL)
+		{
+			CREDO_CHORDA_AEQUALIS_LITERIS (s->status_vitae,
+				"failed");
+			CREDO_CHORDA_AEQUALIS_LITERIS (s->sub_status, "failed");
+			CREDO_VERUM (s->fracta);
+			CREDO_VERUM (s->inventa);   /* onerata SED fracta */
+			CREDO_FALSUM (s->currit);
+
+			/* haec duo sunt tota ratio propter quam fixum fractum
+			 * capiendum fuit: in nullo alio fixo apparent */
+			CREDO_CHORDA_AEQUALIS_LITERIS (s->causa_finis,
+				"exit-code");
+			CREDO_AEQUALIS_I32 (s->codex_exitus, (i32)I);
+
+			CREDO_CHORDA_AEQUALIS_LITERIS (s->status_plagulae,
+				"static");
+		}
+	}
+
+	/* XVII. DUAE INSIDIAE quas fixum fractum revelavit.
+	 * Hae adsertiones sunt forma DURABILIS monitionis: commentarius
+	 * solus senesceret, probatio clamat. */
+	{
+		Xar* fracta = villa_systemctl_legere(
+			_fixum(piscina, "systemctl_show_fracta.txt"), piscina);
+		Xar* ignota = villa_systemctl_legere(
+			_fixum(piscina, "systemctl_show_ignota.txt"), piscina);
+		Xar* inactiva = villa_systemctl_legere(
+			_fixum(piscina, "systemctl_show_inactiva.txt"), piscina);
+		constans StatusServitii* f;
+		constans StatusServitii* g;
+		constans StatusServitii* h;
+
+		imprimere("\n--- XVII. insidiae duae ---\n");
+		f = (constans StatusServitii*)xar_obtinere(fracta, ZEPHYRUM);
+		g = (constans StatusServitii*)xar_obtinere(ignota, ZEPHYRUM);
+		h = (constans StatusServitii*)xar_obtinere(inactiva,
+			ZEPHYRUM);
+		CREDO_NON_NIHIL (f);
+		CREDO_NON_NIHIL (g);
+		CREDO_NON_NIHIL (h);
+		si (f == NIHIL || g == NIHIL || h == NIHIL)
+		{
+			imprimere("  (structurae absunt - reliqua omissa)\n");
+		}
+		alioquin
+		{
+			/* INSIDIA (a): 'ActiveEnterTimestamp=' VACUUM est in
+			 * FRACTA, IGNOTA, et INACTIVA pariter. Ergo campus
+			 * vacuus de causa NIHIL dicit - eo ut indicio uti
+			 * ('vacuum ergo non inventa') falsum esset. */
+			CREDO_CHORDA_VACUA (f->tempus_initii);
+			CREDO_CHORDA_VACUA (g->tempus_initii);
+			CREDO_CHORDA_VACUA (h->tempus_initii);
+
+			/* INSIDIA (b): systemd 'Result=success' etiam IGNOTAE
+			 * et MORTUAE reddit. Ergo causa_finis SOLA monstrata
+			 * mendacium ostenderet ('Result: success' iuxta
+			 * servitium quod non currit). Vexillum 'fracta'
+			 * iudicium portat quod chorda non portat. */
+			CREDO_CHORDA_AEQUALIS_LITERIS (g->causa_finis,
+				"success");
+			CREDO_CHORDA_AEQUALIS_LITERIS (h->causa_finis,
+				"success");
+			CREDO_FALSUM (g->fracta);
+			CREDO_FALSUM (h->fracta);
+			CREDO_VERUM (f->fracta);
+
+			/* tria genera, tria iudicia DISTINCTA - quod unum
+			 * vexillum 'salva' confunderet */
+			CREDO_FALSUM (g->inventa);   /* ignota */
+			CREDO_VERUM (h->inventa);    /* inventa, mortua */
+			CREDO_VERUM (f->inventa);    /* inventa, fracta */
+		}
+	}
+
+	/* XVIII. unitas ignota IN MEDIO responsi multiplicis - recordum
+	 * non-inventum vicinos suos non corrumpat */
+	{
+		chorda fx = _fixum(piscina,
+			"systemctl_show_medio_ignota.txt");
+		Xar*   servitia = villa_systemctl_legere(fx, piscina);
+		constans StatusServitii* medium;
+
+		imprimere("\n--- XVIII. ignota in medio ---\n");
+		CREDO_AEQUALIS_I32 (xar_numerus(servitia), (i32)III);
+
+		medium = (constans StatusServitii*)xar_obtinere(servitia, I);
+		CREDO_NON_NIHIL (medium);
+		si (medium != NIHIL)
+		{
+			CREDO_FALSUM (medium->inventa);
+		}
+		/* vicini INTACTI: primus et ultimus adhuc currunt */
+		{
+			constans StatusServitii* primus = (constans
+				StatusServitii*)xar_obtinere(servitia, ZEPHYRUM);
+			constans StatusServitii* ultimus = (constans
+				StatusServitii*)xar_obtinere(servitia, II);
+
+			CREDO_NON_NIHIL (primus);
+			CREDO_NON_NIHIL (ultimus);
+			si (primus != NIHIL && ultimus != NIHIL)
+			{
+				CREDO_VERUM (primus->currit);
+				CREDO_VERUM (ultimus->currit);
+				CREDO_VERUM (primus->pid > ZEPHYRUM);
+				CREDO_VERUM (ultimus->pid > ZEPHYRUM);
+			}
+		}
+	}
+
+	/* XIX. list-units cum unitate fracta / vacuum / diaria vacua */
+	{
+		Xar* fractae = villa_unitates_legere(
+			_fixum(piscina, "list_units_fractae.txt"), piscina);
+		Xar* vacuae = villa_unitates_legere(
+			_fixum(piscina, "list_units_vacuae.txt"), piscina);
+		constans UnitasCursoria* u;
+
+		imprimere("\n--- XIX. list-units: fractae et vacuae ---\n");
+		CREDO_AEQUALIS_I32 (xar_numerus(fractae), (i32)I);
+		u = (constans UnitasCursoria*)xar_obtinere(fractae, ZEPHYRUM);
+		CREDO_NON_NIHIL (u);
+		si (u != NIHIL)
+		{
+			CREDO_CHORDA_AEQUALIS_LITERIS (u->vita, "failed");
+			CREDO_CHORDA_AEQUALIS_LITERIS (u->sub, "failed");
+		}
+
+		/* FORMA VACUA propria est, non absentia formae: caput +
+		 * linea vacua + 'N loaded units listed.'. Parsator
+		 * ZEPHYRUM reddat - id quod probat parsatorem lineam
+		 * vacuam ante prosam invenire, non prosam legere. */
+		CREDO_AEQUALIS_I32 (xar_numerus(vacuae), ZEPHYRUM);
+
+		/* diaria vacua: journalctl praefationem 'Hint:'
+		 * MULTILINEAM ante '-- No entries --' emittit. Villa v1
+		 * diaria non parsat sed MONSTRAT - ergo hic solum figimus
+		 * quod praefatio adest, ut quisquis eam tollere volet
+		 * sciat quid tollendum sit. */
+		{
+			chorda diaria = _fixum(piscina, "journalctl_vacua.txt");
+
+			CREDO_CHORDA_INCIPIT (diaria,
+				chorda_ex_literis("Hint:", piscina));
+			CREDO_CHORDA_CONTINET (diaria,
+				chorda_ex_literis("-- No entries --", piscina));
 		}
 	}
 
