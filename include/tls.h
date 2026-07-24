@@ -50,6 +50,18 @@ nomen structura {
     b32 verificare_certificatum; /* Verificare certificatum hospitis? */
 } TlsOptiones;
 
+/* Certificatum hospitis (folium primum catenae).
+ *
+ * Tempora ut EPOCHA UNIX secundorum - dies reliqui =
+ * (non_post - tempus_currens) / 86400. Visio MUNDI: hoc est quod
+ * hospes vere praebet, non quod in disco eius iacet. */
+nomen structura {
+    b32    valida;      /* certificatum obtentum et legibile? */
+    s64    non_ante;    /* notBefore, epocha unix */
+    s64    non_post;    /* notAfter, epocha unix */
+    chorda subiectum;   /* summarium subiecti (CN), vacuum si abest */
+} TlsCertificatum;
+
 
 /* ========================================================================
  * FUNCTIONES - CONNEXIO
@@ -126,6 +138,18 @@ tls_claudere(TlsConnexio* connexio);
 
 /* Verificare si connexio valida */
 b32 tls_est_valida(TlsConnexio* connexio);
+
+/* Certificatum hospitis obtinere.
+ *
+ * Vocandum dum connexio APERTA est (contextus certificatum tenet;
+ * post tls_claudere nihil restat). Allocat in piscina connexionis.
+ *
+ * Redde: VERUM si certificatum legi potuit; FALSUM aliter (exitus
+ * tunc valida=FALSUM fert). */
+b32
+tls_certificatum_obtinere(
+    TlsConnexio*     connexio,
+    TlsCertificatum* exitus);
 
 /* Obtinere error descriptio */
 constans character* tls_error_descriptio(TlsError error);

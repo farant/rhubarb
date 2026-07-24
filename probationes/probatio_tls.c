@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 
 /* ========================================================================
@@ -155,9 +156,36 @@ probatio_connexio_https(Piscina* piscina)
         printf("  Status: HTTP/1.1 200 OK\n");
     }
 
+    /* Certificatum hospitis (villa V1): VISIO MUNDI - quod hospes
+     * vere praebet, non quod in disco eius iacet. Dies reliqui
+     * huius columnae villae fons sunt. */
+    {
+        TlsCertificatum cert;
+        b32 habitum = tls_certificatum_obtinere(res.connexio, &cert);
+
+        CREDO_VERUM(habitum);
+        CREDO_VERUM(cert.valida);
+        /* fenestra validitatis sana: initium ante finem, et finis
+         * post MMXX-01-01 (1577836800) - certificatum vivum est */
+        CREDO_VERUM(cert.non_post > cert.non_ante);
+        CREDO_VERUM(cert.non_post > (s64)1577836800);
+        CREDO_VERUM(cert.subiectum.mensura > 0);
+        printf("  Certificatum: %.*s (dies reliqui ~%ld)\n",
+               cert.subiectum.mensura, cert.subiectum.datum,
+               (longus)((cert.non_post - (s64)time(NIHIL)) / 86400));
+    }
+
     /* Claudere */
     tls_claudere(res.connexio);
     CREDO_FALSUM(tls_est_valida(res.connexio));
+
+    /* post clausuram: recusatio munda, non ruina */
+    {
+        TlsCertificatum cert;
+
+        CREDO_FALSUM(tls_certificatum_obtinere(res.connexio, &cert));
+        CREDO_FALSUM(cert.valida);
+    }
 
     printf("\n");
 }

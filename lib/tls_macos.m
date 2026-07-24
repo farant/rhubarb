@@ -511,6 +511,144 @@ tls_claudere(TlsConnexio* connexio)
 
 
 /* ========================================================================
+ * FUNCTIONES PUBLICAE - CERTIFICATUM HOSPITIS
+ * ======================================================================== */
+
+/* CFAbsoluteTime (secunda ab 2001-01-01) -> epocha unix.
+ * Valores validitatis ex SecCertificateCopyValues ut CFNumber
+ * (absolutum) plerumque veniunt, ut CFDate interdum - ambo
+ * tractantur ne versio systematis nos frangat. */
+interior s64
+_tempus_ex_valore(CFTypeRef valor)
+{
+    si (valor == NULL)
+    {
+        redde 0;
+    }
+    si (CFGetTypeID(valor) == CFNumberGetTypeID())
+    {
+        double absolutum = 0.0;
+
+        si (CFNumberGetValue((CFNumberRef)valor, kCFNumberDoubleType,
+                &absolutum))
+        {
+            redde (s64)(absolutum + kCFAbsoluteTimeIntervalSince1970);
+        }
+        redde 0;
+    }
+    si (CFGetTypeID(valor) == CFDateGetTypeID())
+    {
+        redde (s64)(CFDateGetAbsoluteTime((CFDateRef)valor)
+            + kCFAbsoluteTimeIntervalSince1970);
+    }
+    redde 0;
+}
+
+/* valorem ex dictionario valorum certificati:
+ * { OID: { kSecPropertyKeyValue: <valor> } } */
+interior CFTypeRef
+_proprietatem_capere(CFDictionaryRef valores, CFTypeRef oid)
+{
+    CFDictionaryRef proprietas;
+
+    si (valores == NULL)
+    {
+        redde NULL;
+    }
+    proprietas = (CFDictionaryRef)CFDictionaryGetValue(valores, oid);
+    si (proprietas == NULL
+        || CFGetTypeID(proprietas) != CFDictionaryGetTypeID())
+    {
+        redde NULL;
+    }
+    redde CFDictionaryGetValue(proprietas, kSecPropertyKeyValue);
+}
+
+b32
+tls_certificatum_obtinere(TlsConnexio* connexio,
+    TlsCertificatum* exitus)
+{
+    SecTrustRef fiducia = NULL;
+    SecCertificateRef folium = NULL;
+    CFDictionaryRef valores = NULL;
+    CFArrayRef claves = NULL;
+    CFTypeRef oids[II];
+    CFStringRef summarium = NULL;
+    OSStatus status;
+
+    si (exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    exitus->valida = FALSUM;
+    exitus->non_ante = 0;
+    exitus->non_post = 0;
+    exitus->subiectum.datum = NIHIL;
+    exitus->subiectum.mensura = 0;
+
+    si (connexio == NIHIL || connexio->clausa
+        || connexio->ssl_context == NULL)
+    {
+        redde FALSUM;
+    }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    status = SSLCopyPeerTrust(connexio->ssl_context, &fiducia);
+#pragma clang diagnostic pop
+    si (status != noErr || fiducia == NULL)
+    {
+        redde FALSUM;
+    }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    folium = SecTrustGetCertificateAtIndex(fiducia, 0);
+#pragma clang diagnostic pop
+    si (folium == NULL)
+    {
+        CFRelease(fiducia);
+        redde FALSUM;
+    }
+
+    oids[0] = kSecOIDX509V1ValidityNotBefore;
+    oids[I] = kSecOIDX509V1ValidityNotAfter;
+    claves = CFArrayCreate(NULL, oids, II, &kCFTypeArrayCallBacks);
+    si (claves != NULL)
+    {
+        valores = SecCertificateCopyValues(folium, claves, NULL);
+        CFRelease(claves);
+    }
+    si (valores != NULL)
+    {
+        exitus->non_ante = _tempus_ex_valore(_proprietatem_capere(
+            valores, kSecOIDX509V1ValidityNotBefore));
+        exitus->non_post = _tempus_ex_valore(_proprietatem_capere(
+            valores, kSecOIDX509V1ValidityNotAfter));
+        CFRelease(valores);
+    }
+
+    summarium = SecCertificateCopySubjectSummary(folium);
+    si (summarium != NULL)
+    {
+        character buffer[CCLVI];
+
+        si (CFStringGetCString(summarium, buffer, (CFIndex)CCLVI,
+                kCFStringEncodingUTF8))
+        {
+            exitus->subiectum = chorda_ex_literis(buffer,
+                connexio->piscina);
+        }
+        CFRelease(summarium);
+    }
+
+    CFRelease(fiducia);
+    exitus->valida = (exitus->non_post > 0);
+    redde exitus->valida;
+}
+
+
+/* ========================================================================
  * FUNCTIONES PUBLICAE - UTILITAS
  * ======================================================================== */
 
