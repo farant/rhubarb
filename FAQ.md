@@ -1,4 +1,8 @@
 
+## Open curiosities
+
+*Things nobody knew. Answered once, then durable.*
+
 1. **Can officina compile rhubarb?**
 
    Partly — in two of three directions. Answered 2026-07-24.
@@ -132,6 +136,95 @@
    yet" cannot be fully ruled out. The mode is falsified for three
    integrations, not for all future ones.
 
+
+## First-exposure questions
+
+*Things you know and a newcomer doesn't. These ROT — Q5 is stale the moment
+the suites change. Re-measure, don't trust.*
+
+4. **What will I reach for that already exists?**
+
+   A tree-level instrument bench. Answered 2026-07-24.
+
+   The default instinct in a C repo — grep, find, read the whole file — is
+   the training distribution talking, not this repo. There is a tool for
+   most structural questions: who calls X, who includes this header, show
+   me that function/struct body, what did this macro expand to, is this
+   valid C89, what does this function return for these inputs.
+
+   The symptom→command table is in MEMORY.md ("THE BENCH") and in
+   silva/CLAUDE.md. **Not duplicated here on purpose** — one thing, one
+   home; a second copy would drift and then lie.
+
+   The rule underneath: *if a question is about structure, something
+   already derives it.* Reach for the bench before the grep.
+
+   Today's proof that this keeps happening: this session hand-diffed 76
+   golden files before checking that captare.sh already computed the
+   capture and golden paths.
+
+5. **What does a healthy repo look like — and what is already broken?**
+
+   All green. Measured live 2026-07-24 — **re-measure before trusting**.
+
+   | suite | command | result | time |
+   |---|---|---|---|
+   | root | `./compile_tests.sh` | **102/102**, 0 failed (+14 GUI apps built, not run) | 123s |
+   | silva | `./silva/compile_probationes.sh` | **34/34** | — |
+   | officina | `./officina/compile_probationes.sh` | **12/12** | 20s |
+   | saltuarius | `./saltuarius/compile_probationes.sh` | **13/13** | 4s |
+   | tessera | `./tessera/compile_probationes.sh` | **5/5** | 1s |
+   | gesta | `./gesta/compile_probationes.sh` | **4/4** | 4s |
+
+   Separate standing bar — the interpreted differential:
+   `./officina/cursor.sh` → **79 praeteritae / 93, 0 ruinae**, stdout
+   **72 eaedem / 0 DIFFERUNT**. It **exits 1**, correctly: its gate is
+   all-green AND no-output-differs, and 14 suites legitimately do not pass.
+
+   ALREADY "BROKEN" — do not chase these:
+   - **5 TEMPORA** in cursor, all `probatio_lapifex_c89_*`. They are the
+     five slowest suites *natively* (~6.8s each); interpreted, they blow
+     the 30s ceiling. Not a defect — a ceiling.
+   - **5 DECIPULA**: unbridged externs, all `fenestra_creare`. The GUI
+     layer is outside the corpus by DECISUM, not by accident.
+   - **2 SISTERE, 2 VITIA**: real lowering/memory gaps, known.
+   - **7 nondeterministae** refused by captare: ASLR pointer prints,
+     UUIDv7, `time(NULL)` seeds. Named with causes in cursor.c.
+   - `VERDICTUM: STALA n` in officina/gesta suite output is **excubitor**,
+     the stale-object detector, not a test result.
+   - `probatio_tcp_servus` is historically flakey (green today).
+
+   The point: without this baseline you cannot tell "I broke it" from "it
+   was already like that" — and the error runs BOTH ways. A newcomer sees
+   79/93 and thinks the repo is on fire; or ships a real regression
+   believing it was pre-existing.
+
+6. **Does this work belong in `lib/` or in a subproject?**
+
+   Answered 2026-07-24. Decided by module count, not by size or importance.
+
+   | | `lib/` | subproject |
+   |---|---|---|
+   | shape | exactly **1** `.c` + 1 `.h` | **2–20** modules that only make sense together |
+   | scale | median **709** lines | 2k–51k lines |
+   | build | root `./compile_tests.sh` | own `./compile_probationes.sh` |
+   | record | `x.worklog.md` | own `phase-log.md` + usually `CLAUDE.md` |
+   | tier | placed in the MAP.txt tier stack | outside the tiers |
+
+   THE TEST: *does it decompose into several modules that are useless
+   apart?* One concern, one module → `lib/`. A system whose parts only
+   mean something as a set → subproject.
+
+   Second axis, only for subprojects — **is it a library or an app?**
+
+   - Library shipped as a unit → gets `amalgama/` (silva → `silva.c`,
+     officina → `officina.c`, tessera → `tessera.c`). The amalgam IS the
+     API boundary; everything behind it can be rewritten freely.
+   - App or daemon → no amalgam (saltuarius, gesta).
+
+   Getting this wrong is expensive late: wrong build, wrong test runner,
+   wrong ceremony. Note `lib/biblia_dr.c` at 73k lines is not a
+   counterexample — it is generated data, not logic.
 
 ## Runner-up questions
 
