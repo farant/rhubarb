@@ -124,6 +124,7 @@ declare -a SOURCE_FILES=(
     "lib/uuid.c"
     "lib/via.c"
     "lib/vigilia.c"
+    "lib/villa_lectores.c"
     "lib/vim.c"
     "lib/widget.c"
     "lib/xar.c"
