@@ -1,0 +1,29 @@
+MainPID=936
+NRestarts=0
+Id=nginx.service
+Description=A high performance web server and a reverse proxy server
+LoadState=loaded
+ActiveState=active
+SubState=running
+UnitFileState=enabled
+ActiveEnterTimestamp=Fri 2025-09-12 19:42:15 UTC
+
+MainPID=2559616
+NRestarts=0
+Id=gemma.service
+Description=Gemma MCP Server
+LoadState=loaded
+ActiveState=active
+SubState=running
+UnitFileState=enabled
+ActiveEnterTimestamp=Tue 2026-02-17 18:46:48 UTC
+
+MainPID=2418350
+NRestarts=0
+Id=litestream.service
+Description=Litestream
+LoadState=loaded
+ActiveState=active
+SubState=running
+UnitFileState=enabled
+ActiveEnterTimestamp=Tue 2026-02-10 05:37:20 UTC

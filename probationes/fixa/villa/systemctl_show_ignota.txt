@@ -1,0 +1,9 @@
+MainPID=0
+NRestarts=0
+Id=nulla-tale-servitium.service
+Description=nulla-tale-servitium.service
+LoadState=not-found
+ActiveState=inactive
+SubState=dead
+UnitFileState=
+ActiveEnterTimestamp=

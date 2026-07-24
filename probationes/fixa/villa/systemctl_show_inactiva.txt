@@ -1,0 +1,9 @@
+MainPID=0
+NRestarts=0
+Id=console-getty.service
+Description=Console Getty
+LoadState=loaded
+ActiveState=inactive
+SubState=dead
+UnitFileState=disabled
+ActiveEnterTimestamp=
