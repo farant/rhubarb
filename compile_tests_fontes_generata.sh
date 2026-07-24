@@ -31,6 +31,7 @@ declare -a SOURCE_FILES=(
     "lib/capsula_caudae.c"
     "lib/chorda.c"
     "lib/chorda_aedificator.c"
+    "lib/cliens_tabularii.c"
     "lib/color.c"
     "lib/coloratio.c"
     "lib/concha.c"
