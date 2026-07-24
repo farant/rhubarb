@@ -84,6 +84,7 @@ declare -a SOURCE_FILES=(
     "lib/persistentia_nuntium.c"
     "lib/pinacotheca_visus.c"
     "lib/piscina.c"
+    "lib/processus_posix.c"
     "lib/quaerere.c"
     "lib/reactor.c"
     "lib/registrum_commandi.c"
