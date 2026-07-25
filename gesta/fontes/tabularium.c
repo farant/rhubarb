@@ -32,7 +32,8 @@ interior constans character* constans TABULARII_DOCTRINA =
     "(JSON), actor?, origo?} = res nova (similia FTS in responso - "
     "custos duplicationum). gerere {res (id, praefixum ULID"
     " inambiguum, aut titulus), "
-    "actus: nota|status|nexus|denexus|mutatio|remotio, textus?/"
+    "actus: nota|ictus|status|nexus|denexus|mutatio|remotio, "
+    "textus?/"
     "novus?/verbum?/alterum?/clavis?/valor?/datum?/origo?} = "
     "eventus unus. "
     "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
@@ -40,7 +41,11 @@ interior constans character* constans TABULARII_DOCTRINA =
     "{res, breviter?} = status + ancorae (CAUTIO si inresolutae) + "
     "actiones affordatae + annales; breviter \"verum\" = compendium "
     "(corpus + notae ultimae III + actiones, sine dato crudo). "
-    "census {} = genera x status + tags + arretrata. "
+    "census {} = genera x status + tags + res saepissime ICTAE "
+    "(apertae, ordine ictuum - pretium MENSURATUM, non "
+    "aestimatum). ictus: gerere {actus:ictus, textus?} = "
+    "'haec res me ITERUM momordit' - signum quod campum "
+    "prioritatis vincit quia a rebus ipsis ponitur. "
     "acta {quantum? (XXV), genus?, actor?} = cauda fluminis"
     " eventuum trans res omnes (truncus, recentissima primum) -"
     " recensio scribae (quid hodie scriptum est). "
@@ -2925,6 +2930,20 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         json_objectum_ponere(datum, "textus",
             json_chorda_creare(pn, textus));
     }
+    alioquin si (_chorda_est(actus, "ictus"))
+    {
+        /* 'haec res me ITERUM momordit'. Textus OPTIONALIS - ictus
+         * sine verbis adhuc numerat, et gradus qui verba postulat
+         * gradus est qui non fit. */
+        chorda textus = _arg(argumenta, "textus");
+
+        genus_eventus = "ictus";
+        si (textus.mensura > ZEPHYRUM)
+        {
+            json_objectum_ponere(datum, "textus",
+                json_chorda_creare(pn, textus));
+        }
+    }
     alioquin si (_chorda_est(actus, "status"))
     {
         chorda novus = _arg(argumenta, "novus");
@@ -3165,8 +3184,8 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
     alioquin
     {
         _textum_respondere(t, pn, effusio, id,
-            _ch("actus ignotus (nota|status|nexus|denexus|"
-                "mutatio|remotio)"), VERUM);
+            _ch("actus ignotus (nota|ictus|status|nexus|"
+                "denexus|mutatio|remotio)"), VERUM);
         redde;
     }
 
@@ -3899,6 +3918,33 @@ _tab_census (Tabularium* t, Piscina* pn, JsonValor* id,
             chorda_aedificator_appendere_chorda(aed, tn->tag);
             sprintf(numeri, "  %d", (int)tn->numerus);
             chorda_aedificator_appendere_literis(aed, numeri);
+        }
+    }
+    /* RES SAEPISSIME ICTAE: pretium MENSURATUM (quotiens res
+     * iterum momordit), non momentum aestimatum. Tacet omnino si
+     * nulla res icta est - sectio vacua tantum spatium consumit. */
+    {
+        Xar* ci = gesta_census_ictuum(t->mundus, (i32)X, pn);
+
+        si (ci != NIHIL && xar_numerus(ci) > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed,
+                "\nres saepissime ICTAE (apertae):");
+            per (i = ZEPHYRUM; i < xar_numerus(ci); i++)
+            {
+                GestaIctusOrdo* o = (GestaIctusOrdo*)xar_obtinere(
+                    ci, i);
+
+                si (o == NIHIL)
+                {
+                    perge;
+                }
+                sprintf(numeri, "\n  %dx  ", (int)o->ictus);
+                chorda_aedificator_appendere_literis(aed, numeri);
+                chorda_aedificator_appendere_chorda(aed, o->res_id);
+                chorda_aedificator_appendere_literis(aed, "  ");
+                chorda_aedificator_appendere_chorda(aed, o->titulus);
+            }
         }
     }
     sprintf(numeri, "\nseq ultima %d; hwm res %d",

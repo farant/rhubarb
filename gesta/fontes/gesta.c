@@ -80,9 +80,17 @@ interior constans character* constans GESTA_MIGRATIONES[] = {
      * ab_lecto + custos proiectionis (ordo systematis numquam
      * clobberatur). */
     "ALTER TABLE genera ADD COLUMN usor INTEGER NOT NULL DEFAULT 0;"
+    ,
+    /* migratio VI (ictus): quotiens res eadem iterum momordit.
+     * PRIORITAS MENSURATA, non aestimata - campus prioritatis quem
+     * homo ponit intra hebdomadem putrescit, dum numerus ictuum a
+     * REBUS IPSIS ponitur. Columna materializatur (non ex dato
+     * computatur) ut census eam sine parsura JSON per ordinem
+     * ordinare possit. */
+    "ALTER TABLE res ADD COLUMN ictus INTEGER NOT NULL DEFAULT 0;"
 };
 
-#define GESTA_MIGRATIONES_NUMERUS V
+#define GESTA_MIGRATIONES_NUMERUS VI
 
 structura GestaMundus {
     Piscina*            piscina;
@@ -946,6 +954,41 @@ _statum_transformare (GestaMundus* m, JsonValor** status_in_ex,
             mutatum_est = VERUM;
         }
     }
+    alioquin si (_chorda_est(genus_eventus, "ictus"))
+    {
+        /* ICTUS: 'haec res me ITERUM momordit'.
+         *
+         * Series appenditur ut notae, sed SEPARATA consulto: numerus
+         * est signum, et signum in acervo notarum sepultum signum
+         * non est. Numerus ictuum PRETIUM MENSURATUM est (quotiens
+         * res vere tempus abstulit), non aestimatio momenti - ideo
+         * campo prioritatis praestat, qui ab homine ponitur et
+         * intra hebdomadem putrescit.
+         *
+         * 'textus' optionalis: quid hac vice acciderit. */
+        JsonValor* textus = (datum_obiectum != NIHIL)
+            ? json_objectum_capere(datum_obiectum, "textus")
+            : NIHIL;
+        JsonValor* ictus = json_objectum_capere(status_obiectum,
+            "ictus");
+        JsonValor* unus = json_objectum_creare(piscina);
+
+        si (ictus == NIHIL || !json_est_tabulatum(ictus))
+        {
+            ictus = json_tabulatum_creare(piscina);
+            json_objectum_ponere(status_obiectum, "ictus", ictus);
+        }
+        si (textus != NIHIL && json_est_chorda(textus))
+        {
+            json_objectum_ponere(unus, "textus", textus);
+        }
+        json_objectum_ponere(unus, "actor",
+            json_chorda_creare(piscina, actor));
+        json_objectum_ponere(unus, "creatum",
+            json_chorda_creare(piscina, creatum));
+        json_tabulatum_addere(ictus, unus);
+        mutatum_est = VERUM;
+    }
     alioquin si (_chorda_est(genus_eventus, "nota"))
     {
         /* series notarum appenditur (DISCESSUS a TS - spec-v2
@@ -1234,10 +1277,16 @@ _rei_applicare (GestaMundus* m, chorda res_id, chorda genus_eventus,
             && json_est_chorda(v_status))
             ? json_ad_chorda(v_status) : _ch("");
         chorda c_datum = json_scribere(status_obiectum, piscina);
+        /* numerus ictuum MATERIALIZATUR: census eum ordinare debet,
+         * et ordo per parsuram JSON cuiusque ordinis non est ordo */
+        JsonValor* v_ictus = json_objectum_capere(status_obiectum,
+            "ictus");
+        i32 n_ictus = (v_ictus != NIHIL && json_est_tabulatum(v_ictus))
+            ? json_tabulatum_numerus(v_ictus) : ZEPHYRUM;
         ScriniumEnuntiatum* e = scrinium_praeparare(m->scrinium,
             "INSERT OR REPLACE INTO res"
             " (res_id, genus, titulus, status, datum, creatum,"
-            "  mutatum) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            "  mutatum, ictus) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
         si (e == NIHIL)
         {
@@ -1250,6 +1299,7 @@ _rei_applicare (GestaMundus* m, chorda res_id, chorda genus_eventus,
         scrinium_ligare_textum(e, V, c_datum);
         scrinium_ligare_textum(e, VI, creatum_columna);
         scrinium_ligare_textum(e, VII, creatum);
+        scrinium_ligare_numerum(e, VIII, (s64)n_ictus);
         (vacuum)scrinium_gradi(e);
         scrinium_finire(e);
     }
@@ -3897,6 +3947,59 @@ gesta_census_tagorum (GestaMundus* mundus, Piscina* piscina)
             }
         }
     }
+    redde census;
+}
+
+Xar*
+gesta_census_ictuum (GestaMundus* mundus, i32 tectum,
+    Piscina* piscina)
+{
+    Xar* census;
+    ScriniumEnuntiatum* e;
+
+    si (mundus == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (tectum == ZEPHYRUM)
+    {
+        tectum = (i32)X;
+    }
+    census = xar_creare(piscina, (i32)magnitudo(GestaIctusOrdo));
+    si (census == NIHIL)
+    {
+        redde NIHIL;
+    }
+    /* status CLAUSI enumerantur potius quam aperti: genera nova
+     * status novos ferunt, et lista apertorum senesceret tacite
+     * (genus novum ex censu caderet). Lista clausorum minor est et
+     * defectus eius est INCLUDERE nimium, quod visibile est. */
+    e = scrinium_praeparare(mundus->scrinium,
+        "SELECT res_id, genus, titulus, status, ictus FROM res"
+        " WHERE ictus > 0"
+        "   AND status NOT IN ('clausum','impletum','relictum',"
+        "                      'perfectum','omissum','abiectus')"
+        " ORDER BY ictus DESC, mutatum DESC"
+        " LIMIT ?");
+    si (e == NIHIL)
+    {
+        redde census;
+    }
+    scrinium_ligare_numerum(e, I, (s64)tectum);
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        GestaIctusOrdo* o = (GestaIctusOrdo*)xar_addere(census);
+
+        si (o != NIHIL)
+        {
+            o->res_id = scrinium_columna_textus(e, 0, piscina);
+            o->genus = scrinium_columna_textus(e, I, piscina);
+            o->titulus = scrinium_columna_textus(e, II, piscina);
+            o->status = scrinium_columna_textus(e, III, piscina);
+            o->ictus = scrinium_columna_numerus(e, IV);
+        }
+    }
+    scrinium_finire(e);
     redde census;
 }
 

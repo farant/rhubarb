@@ -344,6 +344,41 @@ s32 principale (vacuum)
         " inventa\"}}}");
     CREDO_VERUM (strstr(r, "eventum nota scriptum") != NIHIL);
 
+    /* VI-bis. ICTUS: 'haec res me ITERUM momordit'.
+     * Numerus in censu apparet SOLUM cum aliquid ictum est - sectio
+     * vacua spatium consumeret sine nuntio. */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":701,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"census\",\"arguments\":{}}}");
+    CREDO_VERUM (strstr(r, "saepissime ICTAE") == NIHIL);
+
+    /* textus OPTIONALIS - gradus qui verba postulat gradus est
+     * qui non fit */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":702,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"Parsura lenta\","
+        "\"actus\":\"ictus\"}}}");
+    CREDO_VERUM (strstr(r, "eventum ictus scriptum") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":703,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"Parsura lenta\","
+        "\"actus\":\"ictus\",\"textus\":\"iterum in messe\"}}}");
+    CREDO_VERUM (strstr(r, "eventum ictus scriptum") != NIHIL);
+
+    /* census nunc numerum fert (II ictus) */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":704,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"census\",\"arguments\":{}}}");
+    CREDO_VERUM (strstr(r, "saepissime ICTAE") != NIHIL);
+    CREDO_VERUM (strstr(r, "2x") != NIHIL);
+    CREDO_VERUM (strstr(r, "Parsura lenta") != NIHIL);
+
+    /* ictus in dato rei manent (series appensa, ut notae) */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":705,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"res\",\"arguments\":{\"res\":\"Parsura lenta\"}}}");
+    CREDO_VERUM (strstr(r, "iterum in messe") != NIHIL);
+
     /* VII. quaerere: prosa, praefixum, tag */
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":9,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"

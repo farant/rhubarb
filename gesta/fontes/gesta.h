@@ -198,6 +198,29 @@ gesta_census_tagorum (
     GestaMundus* mundus,
     Piscina*     piscina);
 
+nomen structura {
+    chorda res_id;
+    chorda genus;
+    chorda titulus;
+    chorda status;
+    s64    ictus;
+} GestaIctusOrdo;
+
+/* Res APERTAE saepissime ICTAE (ordine ictuum descendente).
+ *
+ * Ictus = quotiens res eadem iterum momordit. Signum quod campum
+ * prioritatis vincit quia a REBUS ponitur, non ab homine: campus
+ * quem quis aestimat intra hebdomadem putrescit, dum numerus
+ * ictuum pretium VERUM iam solutum mensurat.
+ *
+ * Res sine ictibus omittuntur (nihil dicunt). tectum = quot
+ * ordines ad summum; ZEPHYRUM = X. */
+Xar*
+gesta_census_ictuum (
+    GestaMundus* mundus,
+    i32          tectum,
+    Piscina*     piscina);
+
 /* ==================================================
  * Nexus generibus (K2 chunk A) - vincula ut res propriae
  * ==================================================
