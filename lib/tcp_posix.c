@@ -14,6 +14,78 @@
 #include <errno.h>
 #include <string.h>
 
+/* Superficies socketorum pro iudice (examen/silva) sola: lexicon
+ * domesticum eam nondum fert. Codex compilatus capita VERA adhibet -
+ * hic blocus commentarium est et ERASIBILIS.
+ *
+ * Cur hoc et non exclusio: exclusio plagulam TOTAM caecam facit
+ * (XXXIV violationes tacitae, inter quas violatio C89 VERA latere
+ * posset). Declaratio errans contra efficere potest solum ut examen
+ * accipiat quod clang postea reiciat - monitio amissa, numquam
+ * mendum missum.
+ *
+ * FORMAE NON CERTIFICANTUR quia tcp_posix.c ab officina NON
+ * exsequitur (probatio_tcp.c/probatio_tcp_servus.c in exclusionibus
+ * cursoris, extra undas): iudici nomina membrorum et typi sufficiunt.
+ * Ordo membrorum tamen formam Darwin veram sequitur (ex SDK lectam,
+ * non memoria) ut promotio postea sine labore fiat. Si haec plagula
+ * umquam in corpus officinae intrabit, superficies ad sectionem
+ * globalem CERTIFICATAM (portam auspicis) migret - ibi formae
+ * contra hospitem verum probandae sunt, non hic.
+ *
+ * caput= claves promotionis: cum systema_posix.h has sectiones
+ * acceperit, blocus deleatur. socklen_t/SOL_SOCKET/IPPROTO_TCP/
+ * setsockopt IAM globalia sunt - hic non repetuntur (repetitio
+ * structurae aut typi error C89 esset).
+ *
+ * <externa caput="sys/socket.h">
+ * #define AF_UNSPEC   0
+ * #define AF_INET     2
+ * #define SOCK_STREAM 1
+ * #define SO_RCVTIMEO 0x1006
+ * #define SO_SNDTIMEO 0x1005
+ * struct sockaddr { unsigned char sa_len; unsigned char sa_family;
+ *                   char sa_data[14]; };
+ * int socket(int genus, int forma, int protocollum);
+ * int bind(int fossa, const struct sockaddr* nomen, socklen_t mensura);
+ * int listen(int fossa, int agmen);
+ * int accept(int fossa, struct sockaddr* nomen, socklen_t* mensura);
+ * int connect(int fossa, const struct sockaddr* nomen, socklen_t mensura);
+ * int getsockname(int fossa, struct sockaddr* nomen, socklen_t* mensura);
+ * int getpeername(int fossa, struct sockaddr* nomen, socklen_t* mensura);
+ * ssize_t send(int fossa, const void* buffer, size_t mensura, int vexilla);
+ * ssize_t recv(int fossa, void* buffer, size_t mensura, int vexilla);
+ * </externa>
+ *
+ * <externa caput="netinet/in.h">
+ * #define INADDR_ANY 0u
+ * struct in_addr { unsigned int s_addr; };
+ * struct sockaddr_in { unsigned char sin_len; unsigned char sin_family;
+ *                      unsigned short sin_port; struct in_addr sin_addr;
+ *                      char sin_zero[8]; };
+ * unsigned short htons(unsigned short valor);
+ * unsigned int   htonl(unsigned int valor);
+ * unsigned short ntohs(unsigned short valor);
+ * </externa>
+ *
+ * <externa caput="arpa/inet.h">
+ * const char* inet_ntop(int genus, const void* fons, char* destinatio,
+ *                       socklen_t mensura);
+ * </externa>
+ *
+ * <externa caput="netdb.h">
+ * struct addrinfo { int ai_flags; int ai_family; int ai_socktype;
+ *                   int ai_protocol; socklen_t ai_addrlen;
+ *                   char* ai_canonname; struct sockaddr* ai_addr;
+ *                   struct addrinfo* ai_next; };
+ * int getaddrinfo(const char* hospes, const char* servitium,
+ *                 const struct addrinfo* consilia,
+ *                 struct addrinfo** fructus);
+ * void freeaddrinfo(struct addrinfo* fructus);
+ * const char* gai_strerror(int status);
+ * </externa>
+ */
+
 
 /* ========================================================================
  * STRUCTURA INTERNA
