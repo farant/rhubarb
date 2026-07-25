@@ -10,10 +10,25 @@
  * conditorio scaenico id NON probavit - solum quod insertio non
  * erravit.
  *
- * ORDO SECTIONUM CONSULTO EST. Sectio de collisione POST sectionem de
- * iudicio venit, quia collisio iudicium DELET (sectio V id probat).
- * Ordo inversus sectionem iudicii tacite frangeret - quod primo
- * conatu accidit.
+ * ------------------------------------------------------------------
+ * CAVE: SECTIONES HIC INDEPENDENTES NON SUNT
+ *
+ * Omnes DAEMONEM UNUM communem habent, ergo quaelibet sectio quae
+ * conditorium mutat sectiones POSTERIORES afficit. Cellae uncinatae
+ * independentes VIDENTUR et non sunt.
+ *
+ * Instantia concreta: sectio V genus CONSULTO collidit, quod registrum
+ * rapit, quod iudicium camporum EXSTINGUIT. Ergo sectio IV (quae
+ * iudicium vivere probat) ANTE sectionem V currere DEBET, et sectio VI
+ * definitionem restituit ne quid postea addatur in terram mortuam.
+ *
+ * Ordine inverso sectio IV TACITE frangitur - quod primo cursu huius
+ * portae accidit, et symptoma DUABUS sectionibus a causa distabat.
+ *
+ * SECTIONEM NOVAM ADDENS: pone quid conditorium iam passum sit eo loco
+ * quo eam inseris. Si genus, campos, aut definitiones tangit, sedem
+ * eius contra sectiones IV-VI examina - non ad finem adice sperans.
+ * ------------------------------------------------------------------
  *
  * Daemon EPHEMERUS (-portus 0, scrinium et annales in build/):
  * tabularium VERUM Franis numquam tangitur.
@@ -317,6 +332,14 @@ principale (vacuum)
             }
         }
 
+        /* CAVE ORDINIS: haec sectio ANTE sectionem V currere DEBET.
+         * Sectio V genus consulto collidit et iudicium camporum
+         * EXSTINGUIT; post eam quaelibet adsertio hic TACITE
+         * praeteriret (campus ignotus notam non pareret, et adsertio
+         * negativa laeta esset ob causam prorsus falsam).
+         *
+         * Sectionem novam quae iudicium spectat inter IV et V NE
+         * INSERAS nisi cur constet. Vide caput plagulae. */
         imprimere("\n--- IV. iudicium camporum vivit ---\n");
         {
             chorda lectio;
