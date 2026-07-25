@@ -58,6 +58,20 @@ rhubarb/
 └── .claude/         claude code config (+ MEMORY.md auto-memory)
 
 
+APPLICATIONS  (apps/ - NOT swept by any test runner; see note)
+-----------------------------------------------------------
+
+    apps/forum/   writing world: pipata, articuli, res (user-defined
+                  genera), scholia, tags. Talks to tabulariumd.
+    apps/villa/   remote server administration. UI is a V4b
+                  placeholder; ALL logic lives in lib/villa_agens.c
+                  so probationes/probatio_villa_agens.c can gate it.
+
+    CAUTIO: no runner sweeps apps/. Anything that must not rot
+    belongs in root probationes/. apps/forum/fumus.sh is referenced
+    by nothing and is the cautionary example.
+
+
 LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
 ------------------------
 
@@ -204,8 +218,13 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │                   closures, STML manifests, emitted  │   │
     │  │                   scripts (include/X.h -> lib/X.c)   │   │
     │  │  villa_lectores ─ PURE ssh command builder + parsers  │   │
-    │  │                   (systemctl, nginx -T, df, meminfo);│    │
-    │  │                   no network - fixture-driven        │    │
+    │  │                   (systemctl, nginx -T, df, meminfo, │    │
+    │  │                   ssh-outcome classifier, section    │    │
+    │  │                   splitter); no network, fixture-led │    │
+    │  │  villa_agens ──── headless server agent: config,     │    │
+    │  │                   probe scheduling over the           │   │
+    │  │                   non-blocking processus path,        │   │
+    │  │                   genera seeding, actions -> events   │   │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
     │  ┌─ Utilities ─────────────────────────────────────────┐    │
