@@ -2689,7 +2689,80 @@ function fumus_genera() {
         if (copia_t['ancoram']) {
           throw new Error('ancora URL ut tagus lecta');
         }
-        return internuntius.vocare('fumus_perfectus', {});
+        /* SENTENTIAE: tractator 'sententias_parsare' est unica
+         * superficies C nova huius pensi, ergo unica quae portam hic
+         * eget - lector ipse in probationes/probatio_sententiae.c
+         * custoditur (LXXXI asserta).
+         *
+         * Documentum minimum sed decipulas NOMINATAS ferens: uncinum
+         * per lineas extensum, segmentum nominatum, vocabularium in
+         * prooemio declaratum. */
+        var doc_pr = [
+          '# Proba',
+          '',
+          'Siglum: **PR**',
+          '',
+          '**Status: DRAFT.** Gradus: `[principle]` `[retracted: ...]`',
+          '',
+          '## Pars I',
+          '',
+          '```',
+          '1. Quaestio prima?',
+          '1.1. Responsum breve. [principle]',
+          '1.obj.1. Obiectio hic. [retracted: causa',
+          '         per lineas extensa]',
+          '```',
+          ''
+        ].join('\n');
+
+        return internuntius.vocare('sententias_parsare', { fons: doc_pr })
+          .then(function (lib) {
+            if (!lib.successus) {
+              throw new Error('sententiae: ' + lib.culpa + ' / ' + lib.causa);
+            }
+            if (lib.titulus !== 'Proba') {
+              throw new Error('titulus ' + lib.titulus);
+            }
+            if (lib.siglum !== 'PR') {
+              throw new Error('siglum ' + lib.siglum);
+            }
+            if (lib.status_libri !== 'DRAFT') {
+              throw new Error('status ' + lib.status_libri);
+            }
+            /* vocabularium ex PROOEMIO, positionaliter - non ex phrasi */
+            if (lib.gradus.length !== 2) {
+              throw new Error('gradus ' + lib.gradus.length);
+            }
+            if (lib.partes.length !== 1) {
+              throw new Error('partes ' + lib.partes.length);
+            }
+            if (lib.puncta.length !== 3) {
+              throw new Error('puncta ' + lib.puncta.length);
+            }
+            var ob = lib.puncta[2];
+            /* segmentum NOMINATUM: grammatica solis digitis hoc amitteret */
+            if (ob.locus !== '1.obj.1' || ob.profunditas !== 3) {
+              throw new Error('locus ' + ob.locus + ' prof ' + ob.profunditas);
+            }
+            if (!ob.retractum) {
+              throw new Error('1.obj.1 non retractum');
+            }
+            /* DECIPULA (a): uncinum per lineas continuationis extensum.
+             * Extractor per lineas operans hunc gradum OMNINO amitteret
+             * et successum nuntiaret. */
+            if (ob.onus.indexOf('per lineas extensa') < 0) {
+              throw new Error('onus per lineas non iunctum: ' + ob.onus);
+            }
+            /* sigillum SHA-256: id quod velamen computare NEQUIT */
+            if (!/^[0-9a-f]{64}$/.test(ob.sigillum)) {
+              throw new Error('sigillum non hex: ' + ob.sigillum);
+            }
+            if (lib.anomaliae.length !== 0) {
+              throw new Error('anomaliae ' + lib.anomaliae.length
+                + ' (prima: ' + (lib.anomaliae[0] || {}).causa + ')');
+            }
+            return internuntius.vocare('fumus_perfectus', {});
+          });
       });
   });
 }
@@ -2711,6 +2784,21 @@ internuntius.vocare('fumus_modus', {}).then(function (r) {
         if (visum && !fumus.nuntiatus) {
           fumus.nuntiatus = true;
           fumus_genera().catch(function (c) {
+            /* PORTA VISIBILITATIS: culpam_ostendere solum in VELAMINE
+             * scribit, ergo adsertio fracta intra fumus_genera a
+             * PENDENTIA indiscernibilis erat - utraque 'tempus
+             * excessum' sine causa dat, et cursor causam quaerens
+             * nihil habet. Nuntium per 'mittere' remittimus quia C
+             * corpus missum in stderr imprimit; daemon fumi ephemerus
+             * est, ergo innocuum.
+             *
+             * '.message' ante '.nuntius': internuntius.vocare cum
+             * Error reicit (textus in .message), dum culpam_ostendere
+             * .nuntius legit - ergo textus daemonis vivi ibi TACITE
+             * cadit. Hic utrumque legimus. */
+            var m = (c && (c.message || c.nuntius)) || String(c);
+            internuntius.vocare('mittere',
+              { genus: 'pipatum', corpus: '[fumus] FRACTUM: ' + m });
             culpam_ostendere(c, 'fumus generum fractus');
           });
         }

@@ -32,6 +32,8 @@
 #include "internuntius.h"
 #include "speculum.h"
 #include "cliens_tabularii.h"
+#include "sententiae.h"
+#include "xar.h"
 #include "capsula_forum.h"
 #include <stdio.h>
 #include <string.h>
@@ -129,6 +131,168 @@ _res_legere (JsonValor* argumenta, Piscina* piscina,
     }
     fructus = json_objectum_creare(piscina);
     json_objectum_ponere(fructus, "res", res);
+    redde fructus;
+}
+
+/* sententias_parsare {fons} -> structura libri.
+ *
+ * FUNCTIO PURA: textus intrat, structura exit. Nihil scribitur, nihil
+ * legitur - resolutio §II.3 (resolutio unius viae) hic in signatura
+ * ipsa apparet.
+ *
+ * TEXTUM SENTENTIARUM NON REDDIT, CONSULTO. Inscriptio VERBATIM est:
+ * consumptor ex 'fons' ipso reddit, non ex arbore. Textum addere
+ * responsum duplicaret (XLV KB iterum) pro nullo consumptore. Quod
+ * reddimus est id quod JS computare NEQUIT: loci, lineae, gradus,
+ * SIGILLA (SHA-256 super formam normatam - nulla via in velamine).
+ *
+ * CAVE: tractator in FILO INTERFACIEI currit et nulla fila in domo
+ * sunt. Documentum unum per vocationem, numquam bibliothecam. */
+interior JsonValor*
+_sententias_parsare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    chorda     fons;
+    Liber      liber;
+    JsonValor* fructus;
+    JsonValor* puncta;
+    JsonValor* partes;
+    JsonValor* gradus;
+    JsonValor* anomaliae;
+    i32        k;
+
+    (vacuum)datum;
+
+    fons.mensura = ZEPHYRUM;
+    fons.datum   = NIHIL;
+    si (argumenta != NIHIL)
+    {
+        fons = json_ad_chorda(json_objectum_capere(argumenta, "fons"));
+    }
+    si (fons.mensura == ZEPHYRUM)
+    {
+        *culpa = _ch_forum("fons requiritur");
+        redde NIHIL;
+    }
+
+    liber = sententiae_legere(fons, piscina);
+
+    fructus = json_objectum_creare(piscina);
+    json_objectum_ponere(fructus, "successus",
+        json_boolean_creare(piscina, liber.successus));
+    json_objectum_ponere(fructus, "culpa", json_chorda_creare_literis(
+        piscina, sententiae_culpae_nomen(liber.culpa)));
+    json_objectum_ponere(fructus, "linea_culpae",
+        json_integer_creare(piscina, (s64)liber.linea_culpae));
+    json_objectum_ponere(fructus, "causa",
+        json_chorda_creare(piscina, liber.causa));
+    json_objectum_ponere(fructus, "titulus",
+        json_chorda_creare(piscina, liber.titulus));
+    json_objectum_ponere(fructus, "siglum",
+        json_chorda_creare(piscina, liber.siglum));
+    json_objectum_ponere(fructus, "status_libri",
+        json_chorda_creare(piscina, liber.status));
+
+    /* culpa structurae: arbor vacua est, ergo cetera omittimus */
+    si (!liber.successus)
+    {
+        redde fructus;
+    }
+
+    gradus = json_tabulatum_creare(piscina);
+    per (k = ZEPHYRUM; k < xar_numerus(liber.vocabularium); k++)
+    {
+        Gradus*    g = (Gradus*)xar_obtinere(liber.vocabularium, (i32)k);
+        JsonValor* o;
+
+        si (g == NIHIL) { perge; }
+        o = json_objectum_creare(piscina);
+        json_objectum_ponere(o, "vocabulum",
+            json_chorda_creare(piscina, g->vocabulum));
+        json_objectum_ponere(o, "fert_onus",
+            json_boolean_creare(piscina, g->fert_onus));
+        json_tabulatum_addere(gradus, o);
+    }
+    json_objectum_ponere(fructus, "gradus", gradus);
+
+    partes = json_tabulatum_creare(piscina);
+    per (k = ZEPHYRUM; k < xar_numerus(liber.partes); k++)
+    {
+        Pars*      p = (Pars*)xar_obtinere(liber.partes, (i32)k);
+        JsonValor* o;
+
+        si (p == NIHIL) { perge; }
+        o = json_objectum_creare(piscina);
+        json_objectum_ponere(o, "titulus",
+            json_chorda_creare(piscina, p->titulus));
+        json_objectum_ponere(o, "prima",
+            json_integer_creare(piscina, (s64)p->prima));
+        json_objectum_ponere(o, "numerus",
+            json_integer_creare(piscina, (s64)p->numerus));
+        json_tabulatum_addere(partes, o);
+    }
+    json_objectum_ponere(fructus, "partes", partes);
+
+    puncta = json_tabulatum_creare(piscina);
+    per (k = ZEPHYRUM; k < xar_numerus(liber.sententiae); k++)
+    {
+        Sententia* s = (Sententia*)xar_obtinere(liber.sententiae, (i32)k);
+        JsonValor* o;
+        character  hex[SIGILLUM_HEX_MENSURA];
+
+        si (s == NIHIL) { perge; }
+        sigillum_hex(&s->sigillum, hex);
+
+        o = json_objectum_creare(piscina);
+        json_objectum_ponere(o, "locus",
+            json_chorda_creare(piscina, s->locus));
+        json_objectum_ponere(o, "profunditas",
+            json_integer_creare(piscina, (s64)s->profunditas));
+        json_objectum_ponere(o, "linea",
+            json_integer_creare(piscina, (s64)s->linea));
+        json_objectum_ponere(o, "pars",
+            json_integer_creare(piscina, (s64)s->pars));
+        json_objectum_ponere(o, "gradus",
+            json_integer_creare(piscina, (s64)s->gradus));
+        json_objectum_ponere(o, "onus",
+            json_chorda_creare(piscina, s->onus_gradus));
+        json_objectum_ponere(o, "retractum",
+            json_boolean_creare(piscina, s->retractum));
+        json_objectum_ponere(o, "inresolutum",
+            json_boolean_creare(piscina, s->inresolutum));
+        /* _literis, NON _ch_forum: json_chorda_creare chordam SINE
+         * copia octetorum servat (datum.chorda_valor = valor), et 'hex'
+         * ACERVI est - post iterationem pendulus fieret. Consecutio non
+         * erat ruina sed RESPONSUM CORRUPTUM: series JSON octetos
+         * receptos legit, velamen nihil parsare potuit, promissum
+         * numquam solvit. Ergo PENDENTIA, non reiectio - et catch
+         * numquam flagravit. */
+        json_objectum_ponere(o, "sigillum",
+            json_chorda_creare_literis(piscina, hex));
+        json_tabulatum_addere(puncta, o);
+    }
+    json_objectum_ponere(fructus, "puncta", puncta);
+
+    anomaliae = json_tabulatum_creare(piscina);
+    per (k = ZEPHYRUM; k < xar_numerus(liber.anomaliae); k++)
+    {
+        Anomalia*  a = (Anomalia*)xar_obtinere(liber.anomaliae, (i32)k);
+        JsonValor* o;
+
+        si (a == NIHIL) { perge; }
+        o = json_objectum_creare(piscina);
+        json_objectum_ponere(o, "genus", json_chorda_creare_literis(
+            piscina, sententiae_anomaliae_nomen(a->genus)));
+        json_objectum_ponere(o, "linea",
+            json_integer_creare(piscina, (s64)a->linea));
+        json_objectum_ponere(o, "textus",
+            json_chorda_creare(piscina, a->textus));
+        json_objectum_ponere(o, "causa",
+            json_chorda_creare(piscina, a->causa));
+        json_tabulatum_addere(anomaliae, o);
+    }
+    json_objectum_ponere(fructus, "anomaliae", anomaliae);
+
     redde fructus;
 }
 
@@ -584,6 +748,8 @@ s32 principale (integer argc, character** argv)
         _delere, &forum);
     (vacuum)internuntius_praebere(inx, "transmittere",
         cliens_tabularii_transmittere, &forum.cliens);
+    (vacuum)internuntius_praebere(inx, "sententias_parsare",
+        _sententias_parsare, &forum);
     (vacuum)internuntius_praebere(inx, "fumus_modus",
         _fumus_modus, &forum);
     (vacuum)internuntius_praebere(inx, "fumus_perfectus",
