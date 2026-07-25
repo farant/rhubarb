@@ -123,6 +123,16 @@ if [ "$CENSURA_EXITUS" != "1" ] || [ "$CENSURA_NUMERUS" != "13" ]; then
     echo "amalgamare: FRACTA - corpus censoris non flagrat ut benedictum (exitus $CENSURA_EXITUS, $CENSURA_NUMERUS/13)"
     exit 1
 fi
+# (a-bis) classis B: culpae PROBABILES in fragoribus (VI benedictae,
+# una per formam historicam - nomen/registrum/magnitudo/structura/
+# commutatio/externus). Sine hoc pino convictio tacite mori posset:
+# ordines [CULPA PROBABILIS] exitum non mutant (classis B consulto),
+# ergo nulla porta alia eos videret.
+CULPAE_NUMERUS=$(echo "$CENSURA_PROBA" | grep -c 'CULPA PROBABILIS')
+if [ "$CULPAE_NUMERUS" != "6" ]; then
+    echo "amalgamare: FRACTA - censor culpas probabiles non nominat ($CULPAE_NUMERUS/6)"
+    exit 1
+fi
 # (b) fontes silvae puri sunto
 if ! "$CENSOR" "$SILVA_DIR"/fontes/*.c "$SILVA_DIR"/fontes/*.h \
         "$SILVA_DIR"/instrumenta/principalia/*.c \

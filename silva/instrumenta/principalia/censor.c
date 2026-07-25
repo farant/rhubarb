@@ -14,6 +14,14 @@
  * censor causam probabilem plane nominat. Ordines B exitum NON
  * mutant (fractura ipsa iam clamat).
  *
+ * Classis B ordines DUOS gradus fert:
+ *   [CULPA PROBABILIS] - lexema unum, sede EXACTA, quod regulam
+ *      convictionis implet (vide _convictum infra). Hoc responsum
+ *      est.
+ *   [suspectum in errore] - catalogus macrorum distinctorum in
+ *      fractura. Hoc fundus est: cum nihil convincitur, homo eum
+ *      percurrit.
+ *
  * MECHANICA, NON LISTAE MANU SCRIPTAE (lectio AEDIFICATA):
  *   - inventarium locorum: SILVA_C89_REGISTRUM percurritur; omnis
  *     locus specie TOKEN titulo "tok_titulus" = positio nominis.
@@ -60,6 +68,7 @@ hic_manens i32 plagulae = ZEPHYRUM;
 hic_manens i32 plagulae_cum_latina = ZEPHYRUM;
 hic_manens i32 flagrationes = ZEPHYRUM;
 hic_manens i32 suspecta = ZEPHYRUM;
+hic_manens i32 convicta = ZEPHYRUM;
 hic_manens i32 sine_arbore = ZEPHYRUM;
 hic_manens i32 praetermissae = ZEPHYRUM;
 
@@ -188,6 +197,136 @@ _exceptum (s32 genus_nodi, constans chorda* nm)
 }
 
 /* --------------------------------------------------
+ * convictio intra fracturam: QUOD macrum culpandum sit
+ *
+ * Ordo macrorum solus culpam non nominat: fractura una sex macra
+ * ferre potest quorum quinque innocentia sunt (mensuratum
+ * 2026-07-24: 'principale, vacuum, ZEPHYRUM, ordinarius, I, redde'
+ * - culpa 'ordinarius' inter quinque latens). Homo listam
+ * percurrit et landmine inter verba communia exsilit; peius, cum
+ * tectum tangitur, culpa ipsa post '...' truncari potest.
+ *
+ * REGULA (duae condiciones SIMUL - neutra sola sufficit):
+ *   (i)  macrum in CLAVEM C89 expanditur (ordinarius -> default,
+ *        nomen -> typedef, registrum -> register). Macra quae in
+ *        numeros aut identificatores expanduntur (ZEPHYRUM -> 0,
+ *        NIHIL -> NULL, I -> 1) ubique legitima stant.
+ *   (ii) macrum in POSITIONE DECLARATORIS stat:
+ *              <signum typi> [*]* <hic> <; , ) = [>
+ *
+ * Cur ambae: condicio (i) sola 'redde X;' convinceret, quia redde
+ * ipsum clavis est et ubique legitime stat; condicio (ii) sola
+ * omnem declarationem sanam convinceret. Coniunctae id solum
+ * capiunt quod compilator quoque frangeret - clavis C in loco
+ * nominis SEMPER error est.
+ * -------------------------------------------------- */
+
+/* Verba clavium C89 CONTIGUA in enumeratione lexematum stant
+ * (AUTO..WHILE) - ergo intervallum, non lista manu scripta. C89
+ * clausum est: intervallum crescere non potest. */
+hic_manens b32
+_clavis_c89 (constans SilvaToken* t)
+{
+    si (t == NIHIL) redde FALSUM;
+    redde ((s32)t->genus >= (s32)SILVA_LEX_AUTO
+        && (s32)t->genus <= (s32)SILVA_LEX_WHILE) ? VERUM : FALSUM;
+}
+
+/* Signum quod declaratorem PRAECEDERE potest: identificator
+ * (nomen typi per typedef - i32, chorda, Piscina) aut clavis
+ * specificantis (typus aut classis conditionis). Claves reliquae
+ * (return, if, for, sizeof...) NON: post eas nomen declaratoris
+ * stare non potest, ergo vicinitas earum innocentiam signat. */
+hic_manens b32
+_signum_typi (constans SilvaToken* t)
+{
+    si (t == NIHIL) redde FALSUM;
+    commutatio (t->genus)
+    {
+        casus SILVA_LEX_IDENTIFICATOR:
+        casus SILVA_LEX_CHAR:
+        casus SILVA_LEX_CONST:
+        casus SILVA_LEX_DOUBLE:
+        casus SILVA_LEX_ENUM:
+        casus SILVA_LEX_FLOAT_KW:
+        casus SILVA_LEX_INT:
+        casus SILVA_LEX_LONG:
+        casus SILVA_LEX_SHORT:
+        casus SILVA_LEX_SIGNED:
+        casus SILVA_LEX_STRUCT:
+        casus SILVA_LEX_UNION:
+        casus SILVA_LEX_UNSIGNED:
+        casus SILVA_LEX_VOID:
+        casus SILVA_LEX_VOLATILE:
+        casus SILVA_LEX_AUTO:
+        casus SILVA_LEX_EXTERN:
+        casus SILVA_LEX_REGISTER:
+        casus SILVA_LEX_STATIC:
+        casus SILVA_LEX_TYPEDEF:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+hic_manens b32
+_convictum (constans SilvaToken* t, SilvaValor lexemata, i32 m)
+{
+    constans SilvaToken* ante = NIHIL;
+    constans SilvaToken* post = NIHIL;
+    i32 numerus = silva_valor_lista_numerus(lexemata);
+    s32 j;
+
+    /* (i) in clavem expansum? */
+    si (!_clavis_c89(t)) redde FALSUM;
+
+    /* (ii-a) sequitur signum quod declaratorem CLAUDIT */
+    per (j = (s32)m + I; j < (s32)numerus; j++)
+    {
+        SilvaValor* e = silva_valor_lista_obtinere(lexemata, (i32)j);
+
+        si (e == NIHIL || e->genus != SILVA_VALOR_TOKEN
+            || e->datum.token == NIHIL)
+        {
+            perge;
+        }
+        post = e->datum.token;
+        frange;
+    }
+    si (post == NIHIL) redde FALSUM;
+    commutatio (post->genus)
+    {
+        casus SILVA_LEX_SEMICOLON:
+        casus SILVA_LEX_COMMA:
+        casus SILVA_LEX_PAREN_CLAUSA:
+        casus SILVA_LEX_ASSIGNATIO:
+        casus SILVA_LEX_QUADRA_APERTA:
+            frange;
+        ordinarius:
+            redde FALSUM;
+    }
+
+    /* (ii-b) praecedit signum typi, STELLIS MONSTRATORUM
+     * TRANSCENSIS - casus historicus 2026-07-18 est
+     * 'constans character* nomen;', ubi vicinus proximus '*' est,
+     * non typus */
+    per (j = (s32)m - I; j >= ZEPHYRUM; j--)
+    {
+        SilvaValor* e = silva_valor_lista_obtinere(lexemata, (i32)j);
+
+        si (e == NIHIL || e->genus != SILVA_VALOR_TOKEN
+            || e->datum.token == NIHIL)
+        {
+            perge;
+        }
+        si (e->datum.token->genus == SILVA_LEX_STAR) perge;
+        ante = e->datum.token;
+        frange;
+    }
+    redde _signum_typi(ante);
+}
+
+/* --------------------------------------------------
  * ordines relati
  * -------------------------------------------------- */
 
@@ -225,6 +364,44 @@ _flagrationem_referre (constans SilvaExpansio* exp,
         (constans character*)t->valor.datum,
         (int)nm->mensura, (constans character*)nm->datum,
         titulus_generis != NIHIL ? titulus_generis : "?");
+}
+
+/* Culpa probabilis: sedes EXACTA lexematis culpandi (non initium
+ * nodi erroris), forma scripta -> expansio. Signum '[CULPA
+ * PROBABILIS]' a '[CENSURA]' distinctum est CONSULTO: porta
+ * amalgamandi ordines [CENSURA] numerat (XIII benedicti), et
+ * numerus ille mutari non debet quia classis B exitum non mutat. */
+hic_manens vacuum
+_convictum_referre (constans SilvaExpansio* exp,
+    constans character* via_tu, SilvaToken* t, constans chorda* nm)
+{
+    SilvaToken* radix = silva_token_radix(t);
+    constans chorda* via_fontis = NIHIL;
+    constans chorda* scriptum = (radix != NIHIL) ? &radix->valor : nm;
+
+    si (radix != NIHIL && exp != NIHIL)
+    {
+        via_fontis = silva_fons_via(exp, radix->fons_index);
+    }
+    convicta++;
+    si (via_fontis != NIHIL)
+    {
+        imprimere("[CULPA PROBABILIS] %.*s:%u:%u ",
+            (int)via_fontis->mensura,
+            (constans character*)via_fontis->datum,
+            radix != NIHIL ? radix->linea : 0u,
+            radix != NIHIL ? radix->columna : 0u);
+    }
+    alioquin
+    {
+        imprimere("[CULPA PROBABILIS] %s:?:? ", via_tu);
+    }
+    imprimere("'%.*s' -> '%.*s' in positione declaratoris "
+        "(clavis C ubi nomen exspectatur)\n",
+        (int)scriptum->mensura,
+        (constans character*)scriptum->datum,
+        (int)t->valor.mensura,
+        (constans character*)t->valor.datum);
 }
 
 #define SUSPECTA_MAXIMA VIII
@@ -384,6 +561,15 @@ _arborem_censere (constans SilvaParsura* parsura,
                         nm = _macrum_latinum(elem->datum.token,
                             copia);
                         si (nm == NIHIL) perge;
+                        /* culpa probabilis ANTE ordinem listae:
+                         * responsum primum legatur, catalogus
+                         * postea */
+                        si (_convictum(elem->datum.token, lexemata,
+                                m))
+                        {
+                            _convictum_referre(exp, via_tu,
+                                elem->datum.token, nm);
+                        }
                         si (primus == NIHIL)
                         {
                             primus = elem->datum.token;
@@ -808,6 +994,11 @@ s32 principale (integer argc, character** argv)
     {
         imprimere("suspecta:     %d (in fracturis parsationis)\n",
             (int)suspecta);
+    }
+    si (convicta > ZEPHYRUM)
+    {
+        imprimere("convicta:     %d (culpa probabilis nominata)\n",
+            (int)convicta);
     }
     si (sine_arbore > ZEPHYRUM)
     {
