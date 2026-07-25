@@ -184,3 +184,110 @@ S2 is the store: the `liber` genus, the collision check that must read
 the `genera` table rather than trust the `addere` response, and the
 paste/mutatio path. The parser is complete and gated; nothing downstream
 needs to re-derive its behaviour.
+
+---
+
+## 2026-07-25 (later) — S2: the store round trip
+
+**INTENTIO.** Prove that a document surviving the store is *still the same
+document* — not merely that inserting it didn't error.
+
+**RELATIO.** `probationes/probatio_sententiae_horreum.c`, 32 asserts,
+suite 107 → 108.
+
+### Deviation from the plan, stated
+
+spec-v2 staged S2 as "JS only, headless". That combination does not
+exist: the forum's JS lives inside `index.html` and there is no headless
+JS harness. So S2 became a **C gate** using `cliens_tabularii` against an
+ephemeral daemon (`-portus 0`, scratch db and annals in `build/`), on
+villa's fixture pattern. The JS in S3 mirrors the same call sequence.
+
+This is strictly better than the specced version, because root
+`probationes/` is swept by a runner and `apps/` is not.
+
+### The assertion that justifies the whole gate
+
+A seal is computed over text. If one byte changes anywhere between the
+paste box and the read-back, **every** seal changes and **every** anchor
+breaks. The scratch-store experiment during exploration proved insertion
+*succeeds*; it did not prove the text *survives*.
+
+So the gate does both halves:
+
+```
+CREDO_CHORDA_AEQUALIS (fons_reditus, fons_originalis);   /* octetus pro octeto */
+...
+CREDO_AEQUALIS_I32 (congruentia, (i32)273);              /* et omnia sigilla congruunt */
+```
+
+45,144 bytes through JSON encoding (twice — `datum` is a *string*
+containing JSON), the wire, SQLite, and back: **identical**, and all 273
+seals match. Anchors survive the store.
+
+The byte comparison says the text is equal. The seal comparison says the
+thing that actually matters — that no comment would be orphaned. Both are
+kept because they fail differently.
+
+### The gate found the clobber by suffering it
+
+First run: 29/30. The failure was section V's negative control — mutating
+an *unknown* field should produce a `violatio camporum` note, and no note
+appeared.
+
+Cause: section III had deliberately collided the genus (a second
+definitio with `clavis: "liber"` and no `campi`) to demonstrate that the
+`addere` response reports a clean success. That collision **clobbered the
+registry row**, and `_campos_iudicare` performs no judgment at all on a
+genus with no `campi`. So the collision demo silently disabled the
+judgment demo two sections later.
+
+This is exactly the blast radius the exploration described — reproduced
+accidentally, inside my own test, within minutes of writing it down.
+
+Restructured so the ordering is deliberate and the consequence is
+**asserted rather than suffered**:
+
+| §IV | judgment lives — declared field clean, unknown field flagged |
+| §V | collision — response is clean **and judgment is now dead** |
+| §VI | recovery — re-declare, judgment returns |
+
+§V is now the most valuable section in the file: it pins the real danger.
+The documented complaint was "the response doesn't tell you." The actual
+cost is "a colliding definition silently switches off field validation
+for every entity of that genus, and nothing anywhere says so."
+
+**The general lesson about tests:** these sections had a hidden ordering
+dependency through *shared store state*, and the symptom appeared two
+sections away from the cause. Braced blocks look independent and are not
+when they share a daemon. Where order matters, say so at the top of the
+file — which the header now does.
+
+### Details
+
+- **`datum` must be a JSON-encoded *string*, not an object.** Built with
+  `json_scribere` on a constructed value, then passed as a chorda. The
+  wire escapes it again; the double encoding round-trips cleanly.
+- **`status` is not a field.** The genus declares `status_libri`;
+  `status` is one of the eight reserved keys and would be both unjudged
+  and projected to the lifecycle column.
+- **`res {breviter}` is asserted to stay under 4 KB.** Plain `res` prints
+  raw datum verbatim and would dump 45 KB into a response — a gate
+  against the app (or me, post-compaction) reaching for it.
+- **`<stdlib.h>` for `system()`** — the implicit-declaration error is
+  loud, but worth noting since the villa test gets it via another header.
+
+### Instrumenta
+
+- **adhibita:** `cliens_tabularii` against an ephemeral daemon, credo,
+  censor, `compile_tests.sh`
+- **fructus:** the ephemeral-daemon fixture copied from
+  `probatio_villa_agens.c` worked unmodified — the second consumer of
+  that pattern, and it cost about ten minutes rather than an afternoon.
+- **asperitates:** `compile_tests.sh` summary **third firing** of
+  `01KYB29BC6` — `| grep 'Tests Passed'` returns nothing, and an empty
+  grep *exits 1 silently*, so "no tests ran" and "all tests passed" are
+  indistinguishable to a caller. Stripping ANSI in a live pipe still
+  failed; the reliable form is redirect-to-file then strip. A
+  `-sine-coloribus` flag would delete the whole workaround.
+- **desiderata:** none new.
