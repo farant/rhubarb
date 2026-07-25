@@ -170,6 +170,146 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
+/* <externa caput="X.h"> ... </externa> - superficies externae in
+ * COMMENTARIO declaratae: .d.ts pro C, ad limitem platformae.
+ *
+ * ORDO PORTANS - cur scrutinium TEXTUS et non ambulatio arboris:
+ * hoc ANTE parsationem legi debet, quia typos definit quibus
+ * parsatio ipsa eget. Arbor quae hinc penderet nondum exsistit cum
+ * opus est. Ergo textum crudum scrutamur, ante omnia.
+ *
+ * 'caput=' REQUIRITUR et clavis promotionis est: nominat sectionem
+ * lexici globalis pro qua hic blocus vicarius stat. Cum lexicon
+ * illam sectionem acceperit, blocus deleri potest - et duplicatio
+ * detegi. Sine eo, derivatio-ex-inclusionibus futura scire non
+ * posset an sectio globalis hunc blocum superet.
+ *
+ * Praefixum ' * ' cuiusque lineae tollitur (mos commentarii C).
+ *
+ * PERICULUM ACCEPTUM: scrutinium crudum est, ergo '<externa' intra
+ * litteram chordae captum iri posset. Pretium falsum est monitio
+ * amissa, numquam mendum missum (vide infra), ergo v1 id fert.
+ *
+ * ASYMMETRIA PERICULI (ratio huius rei): declaratio errans efficere
+ * potest SOLUM ut examen codicem ACCIPIAT quem clang postea REICIT.
+ * examen monitio praevia est; clang cum vexillis plenis porta vera
+ * manet. Ergo mendacium locale monitionem priorem constat - dissimile
+ * EXCLUSIONI, quae omnia silet et plagulam CAECAM relinquit. */
+hic_manens character*
+_externa_excerpere (constans character* fons, i32 mensura,
+    Piscina* piscina, i32* mensura_out, constans character* via,
+    b32* fractum)
+{
+    character* effusio;
+    i32 longitudo = ZEPHYRUM;
+    i32 i = ZEPHYRUM;
+
+    /* 'fractum' ab 'absente' DISCERNENDUM: NIHIL sine fracto =
+     * nullus blocus (casus communis, tacitus); NIHIL cum fracto =
+     * annotatio prava, quae iudicium SISTERE debet. Sine hac
+     * distinctione blocus pravus verdictum ACCIPE tacite pareret -
+     * id est ipsum genus vitii quod haec annotatio vitare debet. */
+    *fractum = FALSUM;
+    *mensura_out = ZEPHYRUM;
+    si (fons == NIHIL || mensura == ZEPHYRUM) redde NIHIL;
+    effusio = (character*)piscina_allocare(piscina,
+        (memoriae_index)(mensura + I));
+    si (effusio == NIHIL) redde NIHIL;
+
+    dum (i + VIII < mensura)
+    {
+        i32 apertura;
+        i32 initium;
+        i32 finis;
+        b32 caput_adest = FALSUM;
+        i32 k;
+
+        si (!(fons[i] == '<'
+              && strncmp(fons + i, "<externa", VIII) == ZEPHYRUM
+              && (fons[i + VIII] == ' ' || fons[i + VIII] == '>'
+                  || fons[i + VIII] == '\n')))
+        {
+            i++;
+            perge;
+        }
+        apertura = i + VIII;
+        dum (apertura < mensura && fons[apertura] != '>')
+        {
+            apertura++;
+        }
+        si (apertura >= mensura)
+        {
+            fprintf(stderr, "examen: <externa> non clausum (%s)\n",
+                via);
+            *fractum = VERUM;
+            redde NIHIL;
+        }
+        per (k = i; k + VI < apertura; k++)
+        {
+            si (strncmp(fons + k, "caput=", VI) == ZEPHYRUM)
+            {
+                caput_adest = VERUM;
+                frange;
+            }
+        }
+        si (!caput_adest)
+        {
+            fprintf(stderr, "examen: <externa> sine 'caput=' (%s) -"
+                " caput nominandum est (clavis promotionis)\n", via);
+            *fractum = VERUM;
+            redde NIHIL;
+        }
+        initium = apertura + I;
+        finis = initium;
+        dum (finis + X <= mensura
+            && strncmp(fons + finis, "</externa>", X) != ZEPHYRUM)
+        {
+            finis++;
+        }
+        si (finis + X > mensura)
+        {
+            fprintf(stderr, "examen: </externa> abest (%s)\n", via);
+            *fractum = VERUM;
+            redde NIHIL;
+        }
+        {
+            i32 p = initium;
+            b32 initium_lineae = VERUM;
+
+            dum (p < finis)
+            {
+                si (initium_lineae)
+                {
+                    dum (p < finis
+                        && (fons[p] == ' ' || fons[p] == '\t'))
+                    {
+                        p++;
+                    }
+                    si (p < finis && fons[p] == '*'
+                        && !(p + I < finis && fons[p + I] == '/'))
+                    {
+                        p++;
+                        si (p < finis && fons[p] == ' ') p++;
+                    }
+                    initium_lineae = FALSUM;
+                    perge;
+                }
+                si (fons[p] == '\n') initium_lineae = VERUM;
+                effusio[longitudo] = fons[p];
+                longitudo++;
+                p++;
+            }
+            effusio[longitudo] = '\n';
+            longitudo++;
+        }
+        i = finis + X;
+    }
+    si (longitudo == ZEPHYRUM) redde NIHIL;
+    effusio[longitudo] = '\0';
+    *mensura_out = longitudo;
+    redde effusio;
+}
+
 s32 principale (integer argc, character** argv)
 {
     constans character* via = NIHIL;
@@ -177,6 +317,8 @@ s32 principale (integer argc, character** argv)
     SilvaContextus* ctx;
     SilvaParsura* systema_parsura = NIHIL;
     SilvaSemantica* systema_semantica = NIHIL;
+    character* fons_plagulae = NIHIL;
+    i32 mensura_plagulae = ZEPHYRUM;
     integer k;
 
     per (k = I; k < argc; k++)
@@ -249,6 +391,15 @@ s32 principale (integer argc, character** argv)
         redde II;
     }
 
+    /* plagula PRIMUM legitur (non ubi iudicatur): blocos <externa>
+     * ante compositionem lexici excerpere oportet */
+    fons_plagulae = _plagulam_legere(piscina, via, &mensura_plagulae);
+    si (fons_plagulae == NIHIL)
+    {
+        fprintf(stderr, "examen: plagula illegibilis: %s\n", via);
+        redde II;
+    }
+
     /* systema (lexicon): ISO ordinarius; -posix concatenat
      * (exemplar vindex_onerator); -nudum = sine (LEXICON_DEEST
      * probandus) */
@@ -295,6 +446,47 @@ s32 principale (integer argc, character** argv)
                 mensura_sys = mensura_sys + I + mensura_px;
             }
         }
+        /* <externa> plagulae: lexicon LOCALE, eodem canali quo
+         * systema globale - superficies quas lexicon nondum fert
+         * (sockets, poll) hic a plagula ipsa portantur, pro
+         * exclusione quae plagulam TOTAM caecam faceret */
+        {
+            i32 mensura_ext = ZEPHYRUM;
+            b32 ext_fractum = FALSUM;
+            character* fons_ext = _externa_excerpere(fons_plagulae,
+                mensura_plagulae, piscina, &mensura_ext, via,
+                &ext_fractum);
+
+            /* annotatio prava = INFRA (apparatus), numquam ACCIPE:
+             * verdictum mundum ex annotatione fracta est mendacium */
+            si (ext_fractum)
+            {
+                redde II;
+            }
+            si (fons_ext != NIHIL && mensura_ext > ZEPHYRUM)
+            {
+                character* iunctum = (character*)piscina_allocare(
+                    piscina, (memoriae_index)(mensura_sys
+                        + mensura_ext + I));
+
+                si (iunctum == NIHIL)
+                {
+                    redde II;
+                }
+                memcpy(iunctum, fons_sys,
+                    (memoriae_index)mensura_sys);
+                iunctum[mensura_sys] = '\n';
+                memcpy(iunctum + mensura_sys + I, fons_ext,
+                    (memoriae_index)mensura_ext);
+                fons_sys = iunctum;
+                mensura_sys = mensura_sys + I + mensura_ext;
+                si (verbosa)
+                {
+                    fprintf(stderr, "examen: <externa> %d octeti ex"
+                        " %s\n", (int)mensura_ext, via);
+                }
+            }
+        }
         si (!silva_contextus_lexicon_addere(ctx, "systema_c89.h",
                 fons_sys, mensura_sys))
         {
@@ -336,8 +528,8 @@ s32 principale (integer argc, character** argv)
 
     /* plagula ipsa: parsare + bis-analysis (recipe percursus) */
     {
-        i32 mensura = ZEPHYRUM;
-        character* fons = _plagulam_legere(piscina, via, &mensura);
+        i32 mensura = mensura_plagulae;
+        character* fons = fons_plagulae;   /* supra lectum */
         SilvaOraculum* oraculum;
         SilvaParsura* parsura;
         SilvaSemantica* sem;

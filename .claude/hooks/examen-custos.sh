@@ -36,15 +36,24 @@ esac
 #     TOTAE excludebantur - iudicium rectum exclusioni caecae praestat
 #     (2026-07-24: quinque earum sub -posix MUNDAE sunt)
 # CAUTIO: hic solum plagulae quae sub -posix VERE mundae sunt.
-# tcp_posix.c et reactor.c desunt CONSULTO - lexicon superficiem
-# socketorum (sockaddr_in/addrinfo cum formis certificandis) et
-# poll/kqueue nondum fert, ergo -posix eis XXXV/XII violationes
-# adhuc pareret et exclusionem suam praeteriret. Exclusio eas tegat
-# donec lexicon crescat (desideratum in tabulario).
+# tcp_posix.c deest CONSULTO - lexicon superficiem socketorum
+# (sockaddr_in/addrinfo cum formis certificandis) nondum fert, ergo
+# -posix ei XXXV violationes adhuc pareret. Exclusio eam tegat donec
+# lexicon crescat aut donec blocum <externa> suum ferat.
+#
+# reactor.c ADDITA 2026-07-25: superficiem poll.h SUAM per blocum
+# <externa caput="poll.h"> fert (lib/reactor.c), ergo sub -posix
+# MUNDA est (XI violationes -> ZERO). Ex CAECA iudicata facta.
+#
+# NOTA DE DIVERGENTIA (01KYBAG1MJ): reactor.c in exclusiones.txt
+# MANET quia sweep corporis (percursus) -posix omnino non routat -
+# ergo uncus eam mundam, sweep REICE vocat. Hoc consulto factum est:
+# alterum erat eam CAECAM relinquere. Quarta plagula huius classis
+# (cum filum/via/uuid); sanabitur cum routing unificabitur.
 POSIX_VEX=""
 case "$REL" in
     ./probationes/*) POSIX_VEX="-posix" ;;
-    ./lib/processus_posix.c|./lib/moneta.c|./lib/fasti.c|./lib/filum.c|./lib/via.c|./lib/uuid.c)
+    ./lib/processus_posix.c|./lib/moneta.c|./lib/fasti.c|./lib/filum.c|./lib/via.c|./lib/uuid.c|./lib/reactor.c)
         POSIX_VEX="-posix" ;;
 esac
 
