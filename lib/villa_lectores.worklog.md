@@ -173,6 +173,32 @@ answer that looks right is the worst kind.
   unless someone strips it; pinned so whoever decides to strip it
   knows what they're stripping.
 
+### Known limits of the nginx reader — read this before trusting it
+
+None of these are hit by the committed fixtures, which is exactly why
+they are written down: **an untested wrong answer that looks right is
+the worst kind.** All four are cheap to fix when a config that
+provokes them appears; none is worth speculative work now.
+
+1. **No ports are captured.** `ssl` is a boolean; which ports
+   `listen` names is discarded. Fine while 443/80 are assumed, wrong
+   for a non-standard port.
+2. **Quote state does not persist across lines.** nginx permits a
+   quoted string to span lines; the comment-stripper resets quote
+   state at every line start, so such a string would mis-parse. The
+   near-miss in our own fixture is `ssl_ciphers "ECDHE-…"` — one
+   line, so it works.
+3. **Brace depth is not reset at `# configuration file` markers.** If
+   any dumped include were brace-unbalanced, depth would drift for
+   everything after it. There is a guard against *underflow*
+   (`profunditas > ZEPHYRUM`, tested in §XV) but none against upward
+   drift. Every file in the real dump is balanced.
+4. **The fold keys on the first `server_name` token only.** Two
+   distinct sites sharing a first token would merge into one.
+
+Limit (1) from the original list — first-wins `proxy_pass` — was
+fixed in the later pass: `destinationes` now counts them.
+
 ### What is deliberately NOT here
 
 - No `journalctl` parser. Log tailing is display-only in v1 — the
