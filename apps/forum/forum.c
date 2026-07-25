@@ -123,8 +123,36 @@ _res_legere (JsonValor* argumenta, Piscina* piscina,
         *culpa = _ch_forum("genus requiritur");
         redde NIHIL;
     }
-    res = cliens_tabularii_legere(&forum->cliens, piscina, genus,
-        (i32)CC, culpa);
+    /* 'sine_campis' + 'res' TRANSMITTUNTUR (01KYCMQMED): index
+     * librorum campum 'fons' tacet (XLV KB per documentum saturaret
+     * pyxidem clientis CCLVI KB ad V documenta), apertio unum ens
+     * dato pleno petit. Absentia utriusque = mos vetus exacte. */
+    {
+        JsonValor* arg = json_objectum_creare(piscina);
+        chorda sine_campis;
+        chorda res_unum;
+
+        json_objectum_ponere(arg, "genus",
+            json_chorda_creare(piscina, genus));
+        json_objectum_ponere(arg, "quantum",
+            json_integer_creare(piscina, (s64)CC));
+        sine_campis = json_ad_chorda(json_objectum_capere(argumenta,
+            "sine_campis"));
+        si (sine_campis.mensura > ZEPHYRUM)
+        {
+            json_objectum_ponere(arg, "sine_campis",
+                json_chorda_creare(piscina, sine_campis));
+        }
+        res_unum = json_ad_chorda(json_objectum_capere(argumenta,
+            "res"));
+        si (res_unum.mensura > ZEPHYRUM)
+        {
+            json_objectum_ponere(arg, "res",
+                json_chorda_creare(piscina, res_unum));
+        }
+        res = cliens_tabularii_legere_cum(&forum->cliens, piscina,
+            arg, culpa);
+    }
     si (res == NIHIL)
     {
         redde NIHIL;

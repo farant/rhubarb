@@ -301,17 +301,17 @@ cliens_tabularii_vocare (ClientTabularii* cliens, Piscina* pn,
 
 /* res generis a daemone: tabulatum JSON parsatum (NIHIL = culpa) */
 JsonValor*
-cliens_tabularii_legere (ClientTabularii* cliens, Piscina* pn,
-    chorda genus, i32 quantum, chorda* culpa)
+cliens_tabularii_legere_cum (ClientTabularii* cliens, Piscina* pn,
+    JsonValor* arg_obj, chorda* culpa)
 {
-    JsonValor* arg_obj = json_objectum_creare(pn);
     chorda textus;
     JsonResultus r;
 
-    json_objectum_ponere(arg_obj, "genus",
-        json_chorda_creare(pn, genus));
-    json_objectum_ponere(arg_obj, "quantum",
-        json_integer_creare(pn, (s64)quantum));
+    si (arg_obj == NIHIL)
+    {
+        *culpa = _ch("argumenta desunt");
+        redde NIHIL;
+    }
     textus = cliens_tabularii_vocare(cliens, pn, "legere", arg_obj,
         culpa);
     si (textus.mensura == ZEPHYRUM)
@@ -325,6 +325,20 @@ cliens_tabularii_legere (ClientTabularii* cliens, Piscina* pn,
         redde NIHIL;
     }
     redde r.radix;
+}
+
+/* Involucrum vetus: genus + quantum sola. */
+JsonValor*
+cliens_tabularii_legere (ClientTabularii* cliens, Piscina* pn,
+    chorda genus, i32 quantum, chorda* culpa)
+{
+    JsonValor* arg_obj = json_objectum_creare(pn);
+
+    json_objectum_ponere(arg_obj, "genus",
+        json_chorda_creare(pn, genus));
+    json_objectum_ponere(arg_obj, "quantum",
+        json_integer_creare(pn, (s64)quantum));
+    redde cliens_tabularii_legere_cum(cliens, pn, arg_obj, culpa);
 }
 
 /* ==================================================

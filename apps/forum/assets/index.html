@@ -2426,8 +2426,16 @@ function reddere_tags_tagum() {
 }
 
 /* ---- anquisitio cum differentia ---- */
-function legere(genus) {
-  return internuntius.vocare('res_legere', { genus: genus })
+function legere(genus, extra) {
+  var arg = { genus: genus };
+  if (extra) {
+    for (var k in extra) {
+      if (Object.prototype.hasOwnProperty.call(extra, k)) {
+        arg[k] = extra[k];
+      }
+    }
+  }
+  return internuntius.vocare('res_legere', arg)
     .then(function (r) { return r.res || []; });
 }
 
@@ -2460,8 +2468,12 @@ function sententiae_vertere(sub) {
   if (sub === 'index') { sententiae_libros_onerare(); }
 }
 
+/* Index 'fons' CONSULTO tacet: documenta XLV KB sunt et pyxis
+   clientis CCLVI KB est, ergo V-VI libri eam saturarent et tabula
+   VACUA appareret (ansa lectionis in medio rumpitur - defectio non
+   munda). Corpus in apertione sola petitur. */
 function sententiae_libros_onerare() {
-  legere('liber').then(function (libri) {
+  legere('liber', { sine_campis: 'fons' }).then(function (libri) {
     sent_libri = libri || [];
     reddere_sententiae_indicem();
   }).catch(function (c) { culpam_ostendere(c, 'defectus librorum'); });
@@ -2469,8 +2481,10 @@ function sententiae_libros_onerare() {
 
 function reddere_sententiae_indicem() {
   var d = document.getElementById('sent-index-ordines');
+  /* 'fons_omissus' (mensura) index tacentis signum est; adest SOLUM
+     si 'fons' revera exstitit, ergo idem filtrum ac antea */
   var vivi = sent_libri.filter(function (e) {
-    return e.datum && e.datum.fons;
+    return e.datum && e.datum.fons_omissus !== undefined;
   });
   d.innerHTML = '';
   if (!vivi.length) {
@@ -2496,14 +2510,23 @@ function reddere_sententiae_indicem() {
   });
 }
 
+/* Apertio DUOS gressus habet quia index corpus non fert: primum ens
+   PLENUM peti (res: unum), deinde parsari. */
 function sententiae_aperire(ens) {
-  sent_liber = ens;
-  internuntius.vocare('sententias_parsare', { fons: ens.datum.fons })
-    .then(function (arbor) {
-      sent_arbor  = arbor;
-      sent_lineae = ens.datum.fons.split('\n');
-      sententiae_vertere('lector');
-      reddere_lectorem_sententiarum();
+  legere('liber', { res: ens.res_id })
+    .then(function (entia) {
+      var plenum = (entia && entia[0]) || null;
+      var fons = plenum && plenum.datum && plenum.datum.fons;
+
+      if (!fons) { throw new Error('fons abest: ' + ens.res_id); }
+      sent_liber = plenum;
+      return internuntius.vocare('sententias_parsare', { fons: fons })
+        .then(function (arbor) {
+          sent_arbor  = arbor;
+          sent_lineae = fons.split('\n');
+          sententiae_vertere('lector');
+          reddere_lectorem_sententiarum();
+        });
     })
     .catch(function (c) { culpam_ostendere(c, 'defectus parsationis'); });
 }
@@ -3283,7 +3306,48 @@ function fumus_genera() {
                 if (!malus.causa) {
                   throw new Error('recusatio sine causa');
                 }
-                return internuntius.vocare('fumus_perfectus', {});
+                /* ---- 01KYCMQMED: lista tacere potest, apertio
+                 * complet. CATENA TOTA probatur - velamen ->
+                 * res_legere -> cliens_tabularii_legere_cum ->
+                 * daemon -> _datum_sine_campis. Index sententiarum
+                 * ab hac ipsa semita pendet, ergo tractator solus
+                 * probatus non sufficeret.
+                 * Pipatum adhibetur, non liber: mechanismus generis
+                 * nescius est, et fumus pipata iam creat. */
+                return internuntius.vocare('mittere',
+                  { genus: 'pipatum',
+                    corpus: '[fumus] corpus omittendum' })
+                  .then(function (nn) {
+                    return legere('pipatum', { sine_campis: 'corpus' })
+                      .then(function (tacita) {
+                        var meum = null;
+                        tacita.forEach(function (p) {
+                          if (p.res_id === nn.res_id) { meum = p; }
+                        });
+                        if (!meum) {
+                          throw new Error('pipatum tacitum abest');
+                        }
+                        /* campus ABEST (non marcatore substitutus):
+                         * lector qui eum petit MANIFESTE deficit */
+                        if (meum.datum.corpus !== undefined) {
+                          throw new Error('campus omissus adhuc adest');
+                        }
+                        if (meum.datum.corpus_omissus === undefined) {
+                          throw new Error('mensura omissi abest');
+                        }
+                        return legere('pipatum', { res: nn.res_id });
+                      })
+                      .then(function (unum) {
+                        if (unum.length !== 1) {
+                          throw new Error('res unica exspectata, '
+                            + unum.length + ' redditae');
+                        }
+                        if (!unum[0].datum.corpus) {
+                          throw new Error('apertio corpus non reddit');
+                        }
+                        return internuntius.vocare('fumus_perfectus', {});
+                      });
+                  });
               });
           });
       });

@@ -77,6 +77,16 @@ cliens_tabularii_legere(
     i32              quantum,
     chorda*          culpa);
 
+/* legere cum argumentis ARBITRARIIS (sine_campis, res, status...) -
+ * idem fructus parsatus. Vocator obiectum aedificat, ergo campi novi
+ * daemonis hic numquam reaperiunt. */
+JsonValor*
+cliens_tabularii_legere_cum(
+    ClientTabularii* cliens,
+    Piscina*         pn,
+    JsonValor*       argumenta,
+    chorda*          culpa);
+
 /* "res <ID> creata" -> chorda ID (vacua si absens). */
 chorda
 cliens_tabularii_res_id(chorda textus, Piscina* pn);

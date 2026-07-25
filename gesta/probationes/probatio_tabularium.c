@@ -1999,6 +1999,64 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "\\\"ad_titulus\\\":\\\"Gaius"
             " Iulius Caesar\\\"") != NIHIL);
 
+        /* ================================================
+         * 'sine_campis' + 'res' in legere (01KYCMQMED): lista
+         * tacere potest, apertio complet.
+         *
+         * Cur AMBO simul et non suppressio per MENSURAM: campi
+         * longi legitimi ubique sunt - articuli, scholia, codices
+         * omnes 'corpus' ex hac ipsa via reddunt, ergo regula
+         * mensurae caeca faciem fori truncaret. Suppressio ergo
+         * NOMINATA est et vocatoris electio; et vocator viam ad
+         * campum recipiendum habere DEBET, alioquin sartura datum
+         * simpliciter perdit - inde 'res'.
+         * ================================================ */
+        {
+            constans character* s;
+            constans character* p;
+            character rid_l[27];
+            i32 numerus = ZEPHYRUM;
+
+            /* (a) campus nominatus TOLLITUR; mensura in clave nova
+             * manet; ceteri INTACTI */
+            s = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":981,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"legere\",\"arguments\":{\"genus\":\"liber\","
+                "\"sine_campis\":\"annus\"}}}");
+            CREDO_VERUM (strstr(s, "\\\"annus\\\":-52") == NIHIL);
+            CREDO_VERUM (strstr(s, "\\\"annus_omissus\\\"") != NIHIL);
+            CREDO_VERUM (strstr(s, "\\\"nexus\\\"") != NIHIL);
+
+            /* (b) nomen SIMILE non capitur: comparatio TOTA est,
+             * non substantia ('ann' 'annus' non tollat) */
+            s = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":982,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"legere\",\"arguments\":{\"genus\":\"liber\","
+                "\"sine_campis\":\"ann\"}}}");
+            CREDO_VERUM (strstr(s, "\\\"annus\\\":-52") != NIHIL);
+
+            /* (c) 'res' UNUM ens reddit (apertio dato pleno) */
+            s = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":983,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"addere\",\"arguments\":{\"genus\":\"nota\","
+                "\"titulus\":\"Unica Lectio Probanda\",\"tags\":"
+                "\"lectioprobanda\"}}}");
+            _res_id_ex_responso(s, rid_l);
+            sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":984,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"legere\",\"arguments\":{\"res\":\"%s\"}}}",
+                rid_l);
+            s = _mitte(t, piscina, linea);
+            CREDO_VERUM (strstr(s, "Unica Lectio Probanda") != NIHIL);
+            p = s;
+            dum ((p = strstr(p, "\\\"res_id\\\"")) != NIHIL)
+            {
+                numerus++;
+                p++;
+            }
+            CREDO_VERUM (numerus == I);
+        }
+
         /* emendatio definitionis (G2.2 - emendatio PLENA licita):
          * additiva munda; destructiva SINE nota scripturae
          * (evolutio legitima - orphani per salutem apparent);

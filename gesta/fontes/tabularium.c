@@ -3595,6 +3595,96 @@ _breviarium_reddere (Tabularium* t, ChordaAedificator* aed,
  * Fallback: si datum objectum non est, aut parsari non potest, aut
  * nihil immane continet, chorda ORIGINALIS redditur - mos vetus
  * intactus et nulla copia frustra facta. */
+/* an clavis in lista commatibus separata stet (spatiis circumcisis).
+ * Comparatio TOTA, non substantia: 'fons' 'fons_alter' non capiat. */
+interior b32
+_in_lista_commatum (chorda lista, chorda clavis)
+{
+    i32 i = ZEPHYRUM;
+
+    dum (i < lista.mensura)
+    {
+        i32 initium = i;
+        i32 longitudo;
+
+        dum (i < lista.mensura && lista.datum[i] != ',') i++;
+        longitudo = i - initium;
+        dum (longitudo > ZEPHYRUM && lista.datum[initium] == ' ')
+        {
+            initium++;
+            longitudo--;
+        }
+        dum (longitudo > ZEPHYRUM
+            && lista.datum[initium + longitudo - I] == ' ')
+        {
+            longitudo--;
+        }
+        si (longitudo == clavis.mensura && longitudo > ZEPHYRUM
+            && memcmp(lista.datum + initium, clavis.datum,
+                (memoriae_index)longitudo) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+        si (i < lista.mensura) i++;   /* comma ipsum */
+    }
+    redde FALSUM;
+}
+
+/* Campos NOMINATOS ex dato tollere (lectio listae).
+ *
+ * Campus non marcatore SUBSTITUITUR sed TOLLITUR, et clavis nova
+ * '<clavis>_omissus' cum mensura additur. Ratio est momenti:
+ * marcator in clave ORIGINALI chorda VERA esset, ergo lector qui
+ * 'datum.fons' petit textum plausibilem sed falsum acciperet et eum
+ * ut documentum parsaret. Clave ablata, idem lector STATIM et
+ * MANIFESTE deficit - et mensura adhuc dicit quid absit et quantum.
+ *
+ * Electio vocatoris est, non politica conditorii: campi longi
+ * legitimi ubique sunt (articuli, scholia, codices omnes 'corpus' ex
+ * hac ipsa via reddunt), ergo regula mensurae caeca eos truncaret. */
+interior JsonValor*
+_datum_sine_campis (JsonValor* radix, chorda campi, Piscina* pn)
+{
+    JsonValor* novum;
+    JsonObjectumIterator iter;
+    chorda clavis;
+    JsonValor* valor;
+    b32 mutatum = FALSUM;
+
+    si (radix == NIHIL || !json_est_objectum(radix)
+        || campi.mensura == ZEPHYRUM)
+    {
+        redde radix;
+    }
+    novum = json_objectum_creare(pn);
+    si (novum == NIHIL) redde radix;
+
+    iter = json_objectum_iterator(radix);
+    dum (json_objectum_iterator_proxima(&iter, &clavis, &valor))
+    {
+        si (_in_lista_commatum(campi, clavis)
+            && clavis.mensura < (i32)C)
+        {
+            character nota[128];
+
+            sprintf(nota, "%.*s_omissus", (int)clavis.mensura,
+                (constans character*)clavis.datum);
+            json_objectum_ponere_chorda(novum,
+                chorda_ex_literis(nota, pn),
+                json_integer_creare(pn,
+                    json_est_chorda(valor)
+                        ? (s64)json_ad_chorda(valor).mensura
+                        : (s64)ZEPHYRUM));
+            mutatum = VERUM;
+        }
+        alioquin
+        {
+            json_objectum_ponere_chorda(novum, clavis, valor);
+        }
+    }
+    redde mutatum ? novum : radix;
+}
+
 interior chorda
 _datum_temperatum (chorda datum, Piscina* pn)
 {
@@ -4502,6 +4592,8 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
     s64 quantum = L;
     chorda genus_f = _arg(argumenta, "genus");
     chorda status_f = _arg(argumenta, "status");
+    chorda res_f = _arg(argumenta, "res");
+    chorda sine_campis = _arg(argumenta, "sine_campis");
     JsonValor* tabulatum = json_tabulatum_creare(pn);
 
     si (argumenta != NIHIL)
@@ -4521,6 +4613,8 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
     si (quantum > (s64)CC) quantum = (s64)CC;
     si (genus_f.datum == NIHIL) genus_f = _ch("");
     si (status_f.datum == NIHIL) status_f = _ch("");
+    si (res_f.datum == NIHIL) res_f = _ch("");
+    si (sine_campis.datum == NIHIL) sine_campis = _ch("");
 
     e = scrinium_praeparare(gesta_scrinium(t->mundus),
         "SELECT r.res_id, r.genus, r.titulus, r.status, r.datum,"
@@ -4540,6 +4634,7 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
         " FROM res r"
         " WHERE (? = '' OR r.genus = ?)"
         " AND (? = '' OR r.status = ?)"
+        " AND (? = '' OR r.res_id = ?)"
         " ORDER BY r.creatum DESC, r.res_id DESC LIMIT ?");
     si (e == NIHIL)
     {
@@ -4551,7 +4646,9 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
     scrinium_ligare_textum(e, II, genus_f);
     scrinium_ligare_textum(e, III, status_f);
     scrinium_ligare_textum(e, IV, status_f);
-    scrinium_ligare_numerum(e, V, quantum);
+    scrinium_ligare_textum(e, V, res_f);
+    scrinium_ligare_textum(e, VI, res_f);
+    scrinium_ligare_numerum(e, VII, quantum);
 
     dum (scrinium_gradi(e) == SCRINIUM_ORDO)
     {
@@ -4591,7 +4688,8 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
 
             si (r.successus)
             {
-                json_objectum_ponere(res, "datum", r.radix);
+                json_objectum_ponere(res, "datum",
+                    _datum_sine_campis(r.radix, sine_campis, pn));
             }
         }
         /* nexus (genera G0): tabulatum relationum embeddatum per
@@ -5447,6 +5545,13 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
           "commentarium)", FALSUM },
         { "status", "filtrum statûs", FALSUM },
         { "quantum", "numerus rerum (ordinarius L, tectum CC)",
+          FALSUM },
+        { "res", "res_id unicum - lectio UNIUS entis dato PLENO"
+          " (comes 'sine_campis': lista tacet, apertio complet)",
+          FALSUM },
+        { "sine_campis", "clavium nomina commatibus separata quae"
+          " ex dato tollantur; '<clavis>_omissus' cum mensura"
+          " manet. Pro listis ubi campus immanis est (e.g. 'fons')",
           FALSUM }
     };
     interior constans TabArgumentum ARG_RAMUS[] = {
@@ -5505,8 +5610,9 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         "Lectio structurata pro apps: textus = tabulatum JSON"
         " rerum (recentissima primum) cum dato plicato inserto,"
         " actore creationis, et respondet_ad (filum). Fundamentum"
-        " tabulae fori.",
-        ARG_LEGERE, III));
+        " tabulae fori. 'res' unum ens plene reddit; 'sine_campis'"
+        " campos immanes ex lista tollit (limes clientis CCLVI KB).",
+        ARG_LEGERE, V));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "tacere",
         "Cautionem vigiliae (residens obsoletus) per N responsa"
         " supprimere - agnitio explicita. Re-armatur: numero"
