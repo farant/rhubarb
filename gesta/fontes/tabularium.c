@@ -3537,6 +3537,77 @@ _breviarium_reddere (Tabularium* t, ChordaAedificator* aed,
     _actiones_reddere(t, aed, res_id, pn);
 }
 
+/* Tectum campi singularis in impressione dati crudi. Campi ordinarii
+ * (titulus, siglum, status) longe infra stant; documenta integra
+ * longe supra. */
+#define DATUM_CAMPUS_MAXIMUS 2048
+
+/* Datum ad IMPRESSIONEM temperare: campos chordarum immanes
+ * marcatore substituere.
+ *
+ * CUR (mensuratum 2026-07-25 in conditorio vivo): unus 'liber' cum
+ * de-imagine.md in campo 'fons' vocationem 'res' simplicem in XLV KB
+ * contextus vertit. Non est limes conditorii - nulla mensura in
+ * validatione camporum, SQLite ad GB, transportus ad LXIV MB - sed
+ * laqueus LECTORIS: agens post compactionem orientationem suam uno
+ * vocamine comedit, eo ipso momento quo contextus carissimus est.
+ *
+ * MARCATOR CLAMAT: nomen campi manet et numerus octetorum omissorum
+ * nominatur, ergo lector scit et QUID absit et QUANTUM, et campum
+ * per viam suam petere potest. Truncatio TACITA hic vitium peius
+ * esset quam effusio ipsa - lector 'fons' absentem pro 'fons'
+ * vacuo legeret.
+ *
+ * SOLA impressio 'res' temperatur. '_tab_legere' CONSULTO intacta
+ * manet: applicatio fori 'fons' ex lectione LISTAE hodie sumit
+ * (apps/forum/assets/index.html: legere('liber') -> ens.datum.fons),
+ * ergo suppressio ibi lectorem sententiarum frangeret. Illud latus
+ * mutationem BILATERAM poscit (conditorium tacet + applicatio corpus
+ * in apertione petit) - res propria, non haec.
+ *
+ * Fallback: si datum objectum non est, aut parsari non potest, aut
+ * nihil immane continet, chorda ORIGINALIS redditur - mos vetus
+ * intactus et nulla copia frustra facta. */
+interior chorda
+_datum_temperatum (chorda datum, Piscina* pn)
+{
+    JsonResultus r;
+    JsonValor* novum;
+    JsonObjectumIterator iter;
+    chorda clavis;
+    JsonValor* valor;
+    b32 mutatum = FALSUM;
+
+    si (datum.mensura <= (i32)DATUM_CAMPUS_MAXIMUS) redde datum;
+    r = json_legere(datum, pn);
+    si (!r.successus || !json_est_objectum(r.radix)) redde datum;
+    novum = json_objectum_creare(pn);
+    si (novum == NIHIL) redde datum;
+
+    iter = json_objectum_iterator(r.radix);
+    dum (json_objectum_iterator_proxima(&iter, &clavis, &valor))
+    {
+        si (json_est_chorda(valor)
+            && json_ad_chorda(valor).mensura
+                > (i32)DATUM_CAMPUS_MAXIMUS)
+        {
+            character nota[128];
+
+            sprintf(nota, "<OMISSUM: %lu octeti - campus immanis>",
+                (insignatus longus)json_ad_chorda(valor).mensura);
+            json_objectum_ponere_chorda(novum, clavis,
+                json_chorda_creare_literis(pn, nota));
+            mutatum = VERUM;
+        }
+        alioquin
+        {
+            json_objectum_ponere_chorda(novum, clavis, valor);
+        }
+    }
+    si (!mutatum) redde datum;
+    redde json_scribere(novum, pn);
+}
+
 interior vacuum
 _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
     JsonValor* argumenta, FILE* effusio)
@@ -3701,7 +3772,8 @@ _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
     }
     _caput_rei_reddere(t, aed, res_id, pn);
     chorda_aedificator_appendere_literis(aed, "\ndatum ");
-    chorda_aedificator_appendere_chorda(aed, datum);
+    chorda_aedificator_appendere_chorda(aed,
+        _datum_temperatum(datum, pn));
     si (st != NIHIL)
     {
         _ancoras_reddere(t, aed, st, pn);
