@@ -21,11 +21,14 @@
  *       ... r.effusio ...            (r.erratum = diagnostica)
  *   }
  *
- * NOTA DE FLUENTE: haec functio colligit et EXSPECTAT. Lectio
- * incrementalis (diaria sequentia) non adest consulto - ansa
- * interna iam est ansa fluentis cum revocatione omissa, ergo
- * additio postera erit ingressus novus super eadem interna, non
- * rescriptio.
+ * DUAE SEMITAE, ANSA UNA: processus_exsequi colligit et EXSPECTAT
+ * (simplex, pro instrumentis conchae et probationibus). Semita
+ * INCREMENTALIS (incipere/pulsare/metere, infra) idem opus per
+ * tictus spargit, pro faciebus quae obstare non possunt.
+ *
+ * AMBAE corpus ansae IDEM adhibent (_ansam_pulsare interna) -
+ * consulto, ne duo exemplaria ansae select() subtilis per tempus
+ * dissideant. Quod hic emendatur, utrique semitae emendatur.
  */
 
 #ifndef PROCESSUS_H
@@ -93,5 +96,86 @@ processus_exsequi(
 /* Descriptio erroris ut litterae staticae (pro nuntiis). */
 constans character*
 processus_error_nomen(ProcessusError error);
+
+
+/* ========================================================================
+ * SEMITA INCREMENTALIS - pro faciebus quae obstare non possunt
+ * ========================================================================
+ *
+ * CUR EXSISTIT: domus filis CARET (nullum pthread in lib/; reactor
+ * ansam suam possidet; actor/cursus concurrentia non sunt). Ergo
+ * facies vitreae filum UNUM habet, et processus_exsequi cum
+ * 'ConnectTimeout=5' fenestram per quinque secunda CONGELARET si in
+ * tictu vocaretur. Movere vocationem ex tractatore internuntii in
+ * tictum NIHIL sanat - tictus aeque obstruitur.
+ *
+ * USUS (in tictu applicationis):
+ *   si (processus == NIHIL && opus_est)
+ *   {
+ *       processus = processus_incipere(argumenta, 5000, piscina);
+ *   }
+ *   si (processus != NIHIL
+ *       && processus_pulsare(processus) == PROCESSUS_PARATUS)
+ *   {
+ *       ProcessusResultus r = processus_metere(processus);
+ *       ... r tractare ...
+ *       processus = NIHIL;
+ *   }
+ *
+ * Pulsus UNUS select() vocationem cum mora ZEPHYRI facit: quod
+ * paratum est haurit, quod non, relinquit. Numquam obstat.
+ */
+
+nomen structura Processus Processus;
+
+nomen enumeratio {
+    PROCESSUS_CURRIT = 0,   /* nondum perfectus - pulsa iterum */
+    PROCESSUS_PARATUS       /* perfectus (aut fractus) - mete */
+} ProcessusStatus;
+
+/* Processum generare et STATIM redire (nulla exspectatio).
+ *
+ * Redde: manubrium, aut NIHIL si piscina NIHIL est aut manubrium
+ * allocari non potuit. Errores ALII (argumenta prava, furca fracta,
+ * fistulae fractae) manubrium VALIDUM reddunt quod statim PARATUS
+ * est et cuius processus_metere resultum erroris rectum fert -
+ * ergo vocator unam semitam tractat, non duas.
+ *
+ * mora_maxima_ms: idem quod in processus_exsequi - terminus DURUS
+ * ab hoc momento. ZEPHYRUM = infinitus. Terminus in pulsare
+ * custoditur, ergo excessus processum occidit etiam si vocator
+ * tarde pulsat.
+ */
+Processus*
+processus_incipere(
+    constans character* constans* argumenta,
+    i32                          mora_maxima_ms,
+    Piscina*                     piscina);
+
+/* Pulsus unus: quod paratum est haurire, terminum custodire, statum
+ * referre. NUMQUAM OBSTAT (select cum mora zephyri).
+ *
+ * PARATUS redditur solum cum fistulae clausae sunt ET infans
+ * messus est (waitpid WNOHANG). Infans qui fistulas claudit sed
+ * currere pergit CURRIT manet - recte, quia nondum finivit.
+ */
+ProcessusStatus
+processus_pulsare(Processus* processus);
+
+/* Resultus post PARATUM. Si vocatur dum adhuc currit, OBSTAT donec
+ * perficiatur (terminus adhuc valet) - commoditas pro vocatore qui
+ * pulsare desiit, non semita ordinaria.
+ *
+ * Idempotens: iterum vocata idem resultum reddit.
+ */
+ProcessusResultus
+processus_metere(Processus* processus);
+
+/* Occidere et metere (SIGKILL). Pro pyxide 'abrumpe' faciei.
+ * Post hoc processus_metere resultum cum PROCESSUS_ERROR_TEMPUS
+ * fert. Tuta si iam perfectus (nihil agit).
+ */
+vacuum
+processus_abrumpere(Processus* processus);
 
 #endif /* PROCESSUS_H */

@@ -132,6 +132,9 @@ int kill(pid_t processus, int signum);
 
 /* sys/wait.h - macrota ut functiones declarata (forma sufficit;
  * silva signaturam petit, non expansionem) */
+#define WNOHANG   1     /* Darwin: 0x00000001 */
+#define WUNTRACED 2     /* Darwin: 0x00000002 */
+
 pid_t waitpid(pid_t processus, int* status, int optiones);
 int WIFEXITED(int status);
 int WEXITSTATUS(int status);

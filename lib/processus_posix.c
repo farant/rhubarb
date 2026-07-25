@@ -6,6 +6,12 @@
  * infans errno scribit. Ita "binarium abest" a "processus cucurrit
  * et codicem 127 reddidit" DISTINGUITUR - quod ssh momenti facit,
  * quia ssh ipse 127 reddit cum imperium REMOTUM deest.
+ *
+ * DUAE SEMITAE, ANSA UNA (2026-07-24): omnis status ansae in
+ * structura Processus habitat, et _ansam_pulsare gradum UNUM agit.
+ * processus_exsequi eam OBSTANTER in ansa vocat; processus_pulsare
+ * eam SEMEL non-obstanter. Nullum exemplar alterum ansae select()
+ * exsistit quod dissidere possit.
  */
 
 #include "processus.h"
@@ -23,6 +29,60 @@
 /* magnitudo lectionis unius; sacculus ab hoc incipit et duplicat */
 #define PROCESSUS_FRUSTUM 4096
 
+/* Frusta maxima quae pulsus UNUS haurit. Sine termino infans
+ * effundens pulsum in aeternum teneret (id est, faciem congelaret -
+ * quod tota ratio semitae incrementalis est vitare). Cum eo pulsus
+ * ad summum CCLVI KiB agit et redit. */
+#define PROCESSUS_FRUSTA_PER_PULSUM LXIV
+
+/* ========================================================================
+ * STATUS
+ * ======================================================================== */
+
+/* sacculus crescens in arena (duplicatio + copia - piscina
+ * liberationem non habet, ergo capacitas sola crescit) */
+nomen structura {
+    i8* datum;
+    i32 mensura;
+    i32 capacitas;
+} Sacculus;
+
+structura Processus {
+    Piscina* piscina;
+    pid_t    pid;
+
+    /* fines LEGENDI; -I = clausum (custos contra clausuram duplam) */
+    integer  fd_ef;
+    integer  fd_er;
+    integer  fd_exec;
+
+    Sacculus sac_ef;
+    Sacculus sac_er;
+
+    i64      initium;
+    i32      mora_maxima_ms;
+    i32      mora_ms;
+
+    b32      ef_apertus;
+    b32      er_apertus;
+    b32      memoria_fracta;
+    b32      tempus_excessum;
+    b32      abruptus;
+    b32      occisus;
+    b32      messus;
+    b32      perfectus;
+
+    integer  status;
+    integer  exec_errno;
+
+    /* error ANTE generationem (argumenta prava, furca fracta).
+     * Manubrium validum manet et statim PARATUS est, ut vocator
+     * semitam UNAM tractet - vide caput. Nuntius litterae STATICAE
+     * sunt, ergo nulla allocatio in semita erroris. */
+    ProcessusError      error_initialis;
+    constans character* nuntius_initialis;
+};
+
 /* ========================================================================
  * FUNCTIONES INTERNAE
  * ======================================================================== */
@@ -35,14 +95,6 @@ _tempus_ms (vacuum)
     gettimeofday(&tv, NIHIL);
     redde (i64)tv.tv_sec * (i64)M + (i64)tv.tv_usec / (i64)M;
 }
-
-/* sacculus crescens in arena (duplicatio + copia - piscina
- * liberationem non habet, ergo capacitas sola crescit) */
-nomen structura {
-    i8* datum;
-    i32 mensura;
-    i32 capacitas;
-} Sacculus;
 
 interior vacuum
 _sacculum_incipere (Sacculus* s)
@@ -109,6 +161,16 @@ _non_blocantem_ponere (integer fd)
     }
 }
 
+interior vacuum
+_fd_claudere (integer* fd)
+{
+    si (*fd >= 0)
+    {
+        close(*fd);
+        *fd = -I;
+    }
+}
+
 interior ProcessusResultus
 _resultus_vacuus (vacuum)
 {
@@ -142,6 +204,382 @@ _error_reddere (ProcessusError error, constans character* nuntius,
     redde r;
 }
 
+/* fistulam unam haurire donec EEXHAURIATUR aut terminus frustorum
+ * attingatur. Fistulae iam non-blocantes sunt, ergo lectio repetita
+ * tuta est - et pulsum UNUM multa frusta haurire sinit potius quam
+ * IV KiB per tictum (quod effusionem magnam per multos tictus
+ * traheret). */
+interior vacuum
+_fistulam_haurire (Processus* p, integer fd, b32* apertus,
+    Sacculus* sac)
+{
+    i32 frusta = ZEPHYRUM;
+
+    dum (*apertus && frusta < (i32)PROCESSUS_FRUSTA_PER_PULSUM)
+    {
+        i8      frustum[PROCESSUS_FRUSTUM];
+        ssize_t n = read(fd, frustum, (memoriae_index)PROCESSUS_FRUSTUM);
+
+        si (n > 0)
+        {
+            si (!_sacculum_addere(sac, frustum, (i32)n, p->piscina))
+            {
+                p->memoria_fracta = VERUM;
+                *apertus = FALSUM;
+                redde;
+            }
+            frusta++;
+            perge;
+        }
+        si (n == 0)
+        {
+            *apertus = FALSUM;   /* EOF verus */
+            redde;
+        }
+        si (errno == EAGAIN || errno == EWOULDBLOCK)
+        {
+            redde;               /* exhausta in praesenti - normale */
+        }
+        si (errno == EINTR)
+        {
+            perge;
+        }
+        *apertus = FALSUM;       /* error verus */
+        redde;
+    }
+}
+
+/* GRADUS UNUS ansae - corpus quod AMBAE semitae communicant.
+ *
+ * obstans = VERUM  : select obstat usque ad terminum totalem (aut
+ *                    in aeternum si terminus abest) - mos
+ *                    processus_exsequi, immutatus.
+ * obstans = FALSUM : select cum mora ZEPHYRI - pulsus qui numquam
+ *                    obstat.
+ *
+ * CAUTIO: 'select redidit ZEPHYRUM' significat TERMINUM EXCESSUM
+ * solum in modo obstante. In modo pulsante idem valorem significat
+ * 'nihil paratum nunc' - quod normalissimum est. Confundere ea
+ * omnem probationem post pulsum primum tempore excedi faceret.
+ */
+interior vacuum
+_ansam_pulsare (Processus* p, b32 obstans)
+{
+    fd_set             legendi;
+    structura timeval  mora;
+    structura timeval* mora_ptr = NIHIL;
+    integer            maximus = -I;
+    integer            paratus;
+
+    si (!p->ef_apertus && !p->er_apertus)
+    {
+        redde;
+    }
+
+    FD_ZERO(&legendi);
+    si (p->ef_apertus)
+    {
+        FD_SET(p->fd_ef, &legendi);
+        si (p->fd_ef > maximus)
+        {
+            maximus = p->fd_ef;
+        }
+    }
+    si (p->er_apertus)
+    {
+        FD_SET(p->fd_er, &legendi);
+        si (p->fd_er > maximus)
+        {
+            maximus = p->fd_er;
+        }
+    }
+
+    si (obstans)
+    {
+        si (p->mora_maxima_ms > ZEPHYRUM)
+        {
+            i64 reliquum = (i64)p->mora_maxima_ms
+                - (_tempus_ms() - p->initium);
+
+            si (reliquum <= (i64)ZEPHYRUM)
+            {
+                p->tempus_excessum = VERUM;
+                redde;
+            }
+            /* tv_usec est int in Darwin, longus alibi - conversio
+             * per typum campi ipsius, non per typum coniectum */
+            mora.tv_sec = (time_t)(reliquum / (i64)M);
+            mora.tv_usec = (integer)((reliquum % (i64)M) * (i64)M);
+            mora_ptr = &mora;
+        }
+        /* alioquin mora_ptr = NIHIL: in aeternum, ut ante */
+    }
+    alioquin
+    {
+        /* terminus custoditur ETIAM in modo pulsante - alioquin
+         * vocator qui tarde pulsat processum aeternum pareret */
+        si (p->mora_maxima_ms > ZEPHYRUM
+            && (_tempus_ms() - p->initium)
+                >= (i64)p->mora_maxima_ms)
+        {
+            p->tempus_excessum = VERUM;
+            redde;
+        }
+        mora.tv_sec = (time_t)ZEPHYRUM;
+        mora.tv_usec = ZEPHYRUM;
+        mora_ptr = &mora;
+    }
+
+    paratus = select(maximus + I, &legendi, NIHIL, NIHIL, mora_ptr);
+    si (paratus < 0)
+    {
+        si (errno == EINTR)
+        {
+            redde;   /* gradus proximus retentat */
+        }
+        p->ef_apertus = FALSUM;
+        p->er_apertus = FALSUM;
+        redde;
+    }
+    si (paratus == ZEPHYRUM)
+    {
+        si (obstans)
+        {
+            p->tempus_excessum = VERUM;
+        }
+        redde;
+    }
+
+    si (p->ef_apertus && FD_ISSET(p->fd_ef, &legendi))
+    {
+        _fistulam_haurire(p, p->fd_ef, &p->ef_apertus, &p->sac_ef);
+    }
+    si (p->er_apertus && FD_ISSET(p->fd_er, &legendi))
+    {
+        _fistulam_haurire(p, p->fd_er, &p->er_apertus, &p->sac_er);
+    }
+    si (p->memoria_fracta)
+    {
+        p->ef_apertus = FALSUM;
+        p->er_apertus = FALSUM;
+    }
+}
+
+/* infantem metere. obstans=FALSUM adhibet WNOHANG.
+ * Redde: VERUM si messus (aut nihil metendum). */
+interior b32
+_reficere (Processus* p, b32 obstans)
+{
+    si (p->messus)
+    {
+        redde VERUM;
+    }
+    si (p->pid <= 0)
+    {
+        p->messus = VERUM;
+        redde VERUM;
+    }
+    dum (VERUM)
+    {
+        integer status = ZEPHYRUM;
+        pid_t   r = waitpid(p->pid, &status,
+            obstans ? 0 : WNOHANG);
+
+        si (r == p->pid)
+        {
+            p->status = status;
+            p->messus = VERUM;
+            redde VERUM;
+        }
+        si (r == (pid_t)ZEPHYRUM)
+        {
+            redde FALSUM;   /* WNOHANG: adhuc currit */
+        }
+        si (errno == EINTR)
+        {
+            perge;
+        }
+        p->status = ZEPHYRUM;
+        p->messus = VERUM;
+        redde VERUM;
+    }
+}
+
+/* errorem exec legere. VOCANDA POST MESSEM SOLUM: fistula exec
+ * non-blocans NON est, sed infans messus scriptorem suum iam
+ * clausit, ergo lectio statim redit (datum aut EOF). Ante messem
+ * eadem lectio OBSTARET - quod totam semitam incrementalem
+ * everteret. */
+interior vacuum
+_exec_errno_legere (Processus* p)
+{
+    ssize_t n;
+
+    si (p->fd_exec < 0)
+    {
+        redde;
+    }
+    n = read(p->fd_exec, &p->exec_errno, magnitudo(p->exec_errno));
+    si (n != (ssize_t)magnitudo(p->exec_errno))
+    {
+        p->exec_errno = ZEPHYRUM;
+    }
+    _fd_claudere(&p->fd_exec);
+}
+
+/* processum ad finem ducere. obstans=FALSUM redit FALSUM si nondum
+ * paratus est. */
+interior b32
+_perficere (Processus* p, b32 obstans)
+{
+    si (p->perfectus)
+    {
+        redde VERUM;
+    }
+    /* CONDICIO TERMINALIS iam nota => NOLI haurire.
+     * 'abruptus' hic esse DEBET, non solum tempus/memoria: sine eo
+     * abrumpere in haustum obstantem cadit qui EOF exspectat, et
+     * EOF nonnisi cum infans sponte finit venit - id est, abrumpere
+     * moram integram infantis exspectaret, quod contrarium est eius
+     * quod pollicetur (probatio XII id cepit: 'sleep 10' abruptum
+     * decem secunda tenuit). */
+    si ((p->ef_apertus || p->er_apertus)
+        && !p->tempus_excessum && !p->memoria_fracta && !p->abruptus)
+    {
+        si (!obstans)
+        {
+            redde FALSUM;
+        }
+        dum ((p->ef_apertus || p->er_apertus)
+            && !p->tempus_excessum && !p->memoria_fracta)
+        {
+            _ansam_pulsare(p, VERUM);
+        }
+    }
+    si ((p->tempus_excessum || p->memoria_fracta || p->abruptus)
+        && !p->occisus)
+    {
+        (vacuum)kill(p->pid, SIGKILL);
+        p->occisus = VERUM;
+    }
+    /* fistulas claudere ANTE messem: infans in scriptione haerens
+     * (fistula plena, nemo legens) aliter waitpid in aeternum
+     * teneret */
+    _fd_claudere(&p->fd_ef);
+    _fd_claudere(&p->fd_er);
+    p->ef_apertus = FALSUM;
+    p->er_apertus = FALSUM;
+
+    si (!_reficere(p, obstans))
+    {
+        redde FALSUM;
+    }
+    _exec_errno_legere(p);
+    p->mora_ms = (i32)(_tempus_ms() - p->initium);
+    p->perfectus = VERUM;
+    redde VERUM;
+}
+
+interior ProcessusResultus
+_resultus_aedificare (Processus* p)
+{
+    ProcessusResultus r = _resultus_vacuus();
+
+    si (p->error_initialis != PROCESSUS_OK)
+    {
+        r.error = p->error_initialis;
+        si (p->nuntius_initialis != NIHIL)
+        {
+            r.error_descriptio = chorda_ex_literis(
+                p->nuntius_initialis, p->piscina);
+        }
+        redde r;
+    }
+
+    r.effusio = _sacculum_finire(&p->sac_ef);
+    r.erratum = _sacculum_finire(&p->sac_er);
+    r.mora_ms = p->mora_ms;
+
+    si (p->exec_errno != ZEPHYRUM)
+    {
+        r.error = PROCESSUS_ERROR_EXEC;
+        r.error_descriptio = chorda_ex_literis(
+            strerror(p->exec_errno), p->piscina);
+        redde r;
+    }
+    si (p->memoria_fracta)
+    {
+        r.error = PROCESSUS_ERROR_IO;
+        r.error_descriptio = chorda_ex_literis("piscina exhausta",
+            p->piscina);
+        redde r;
+    }
+    si (p->abruptus)
+    {
+        r.error = PROCESSUS_ERROR_TEMPUS;
+        r.error_descriptio = chorda_ex_literis(
+            "abruptus a vocatore - processus occisus", p->piscina);
+        redde r;
+    }
+    si (p->tempus_excessum)
+    {
+        r.error = PROCESSUS_ERROR_TEMPUS;
+        r.error_descriptio = chorda_ex_literis(
+            "mora maxima excessa - processus occisus", p->piscina);
+        redde r;
+    }
+
+    r.successus = VERUM;
+    si (WIFEXITED(p->status))
+    {
+        r.codex_exitus = (i32)WEXITSTATUS(p->status);
+    }
+    alioquin si (WIFSIGNALED(p->status))
+    {
+        r.signum = (i32)WTERMSIG(p->status);
+    }
+    redde r;
+}
+
+interior Processus*
+_manubrium_novum (Piscina* piscina)
+{
+    Processus* p = (Processus*)piscina_allocare(piscina,
+        magnitudo(Processus));
+
+    si (p == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memset(p, 0, magnitudo(Processus));
+    p->piscina = piscina;
+    p->pid = (pid_t)-I;
+    p->fd_ef = -I;
+    p->fd_er = -I;
+    p->fd_exec = -I;
+    _sacculum_incipere(&p->sac_ef);
+    _sacculum_incipere(&p->sac_er);
+    p->error_initialis = PROCESSUS_OK;
+    redde p;
+}
+
+interior Processus*
+_manubrium_fractum (Piscina* piscina, ProcessusError error,
+    constans character* nuntius)
+{
+    Processus* p = _manubrium_novum(piscina);
+
+    si (p == NIHIL)
+    {
+        redde NIHIL;
+    }
+    p->error_initialis = error;
+    p->nuntius_initialis = nuntius;
+    p->perfectus = VERUM;
+    p->messus = VERUM;
+    redde p;
+}
+
 /* ========================================================================
  * FUNCTIONES PUBLICAE
  * ======================================================================== */
@@ -161,45 +599,42 @@ processus_error_nomen (ProcessusError error)
     }
 }
 
-ProcessusResultus
-processus_exsequi (constans character* constans* argumenta,
+Processus*
+processus_incipere (constans character* constans* argumenta,
     i32 mora_maxima_ms, Piscina* piscina)
 {
-    integer fistula_ef[II];
-    integer fistula_er[II];
-    integer fistula_exec[II];
-    pid_t pid;
-    Sacculus sac_ef;
-    Sacculus sac_er;
-    ProcessusResultus r;
-    i64 initium;
-    integer exec_errno = ZEPHYRUM;
-    b32 memoria_fracta = FALSUM;
-    b32 tempus_excessum = FALSUM;
-    integer status = ZEPHYRUM;
+    Processus* p;
+    integer    fistula_ef[II];
+    integer    fistula_er[II];
+    integer    fistula_exec[II];
 
     si (piscina == NIHIL)
     {
-        redde _error_reddere(PROCESSUS_ERROR_ARGUMENTA,
-            "piscina requiritur", NIHIL);
+        redde NIHIL;
     }
     si (argumenta == NIHIL || argumenta[0] == NIHIL)
     {
-        redde _error_reddere(PROCESSUS_ERROR_ARGUMENTA,
-            "vector argumentorum vacuus", piscina);
+        redde _manubrium_fractum(piscina, PROCESSUS_ERROR_ARGUMENTA,
+            "vector argumentorum vacuus");
     }
+    p = _manubrium_novum(piscina);
+    si (p == NIHIL)
+    {
+        redde NIHIL;
+    }
+    p->mora_maxima_ms = mora_maxima_ms;
 
     si (pipe(fistula_ef) != 0)
     {
-        redde _error_reddere(PROCESSUS_ERROR_GENERARE,
-            "fistula effusionis fracta", piscina);
+        redde _manubrium_fractum(piscina, PROCESSUS_ERROR_GENERARE,
+            "fistula effusionis fracta");
     }
     si (pipe(fistula_er) != 0)
     {
         close(fistula_ef[0]);
         close(fistula_ef[I]);
-        redde _error_reddere(PROCESSUS_ERROR_GENERARE,
-            "fistula errati fracta", piscina);
+        redde _manubrium_fractum(piscina, PROCESSUS_ERROR_GENERARE,
+            "fistula errati fracta");
     }
     si (pipe(fistula_exec) != 0)
     {
@@ -207,24 +642,24 @@ processus_exsequi (constans character* constans* argumenta,
         close(fistula_ef[I]);
         close(fistula_er[0]);
         close(fistula_er[I]);
-        redde _error_reddere(PROCESSUS_ERROR_GENERARE,
-            "fistula exec fracta", piscina);
+        redde _manubrium_fractum(piscina, PROCESSUS_ERROR_GENERARE,
+            "fistula exec fracta");
     }
     /* CLOEXEC: exec felix fistulam tacite claudit = signum */
     (vacuum)fcntl(fistula_exec[I], F_SETFD, FD_CLOEXEC);
 
-    initium = _tempus_ms();
-    pid = fork();
-    si (pid < 0)
+    p->initium = _tempus_ms();
+    p->pid = fork();
+    si (p->pid < 0)
     {
         close(fistula_ef[0]);   close(fistula_ef[I]);
         close(fistula_er[0]);   close(fistula_er[I]);
         close(fistula_exec[0]); close(fistula_exec[I]);
-        redde _error_reddere(PROCESSUS_ERROR_GENERARE,
-            "furca fracta", piscina);
+        redde _manubrium_fractum(piscina, PROCESSUS_ERROR_GENERARE,
+            "furca fracta");
     }
 
-    si (pid == ZEPHYRUM)
+    si (p->pid == (pid_t)ZEPHYRUM)
     {
         /* INFANS - numquam ad vocantem redit */
         unio {
@@ -257,180 +692,76 @@ processus_exsequi (constans character* constans* argumenta,
     close(fistula_ef[I]);
     close(fistula_er[I]);
     close(fistula_exec[I]);
-    _non_blocantem_ponere(fistula_ef[0]);
-    _non_blocantem_ponere(fistula_er[0]);
-    _sacculum_incipere(&sac_ef);
-    _sacculum_incipere(&sac_er);
+    p->fd_ef = fistula_ef[0];
+    p->fd_er = fistula_er[0];
+    p->fd_exec = fistula_exec[0];
+    _non_blocantem_ponere(p->fd_ef);
+    _non_blocantem_ponere(p->fd_er);
+    p->ef_apertus = VERUM;
+    p->er_apertus = VERUM;
+    redde p;
+}
 
+ProcessusStatus
+processus_pulsare (Processus* processus)
+{
+    si (processus == NIHIL || processus->perfectus)
     {
-        b32 ef_apertus = VERUM;
-        b32 er_apertus = VERUM;
-
-        dum (ef_apertus || er_apertus)
-        {
-            fd_set legendi;
-            structura timeval mora;
-            structura timeval* mora_ptr = NIHIL;
-            integer maximus = -I;
-            integer paratus;
-
-            FD_ZERO(&legendi);
-            si (ef_apertus)
-            {
-                FD_SET(fistula_ef[0], &legendi);
-                si (fistula_ef[0] > maximus) maximus = fistula_ef[0];
-            }
-            si (er_apertus)
-            {
-                FD_SET(fistula_er[0], &legendi);
-                si (fistula_er[0] > maximus) maximus = fistula_er[0];
-            }
-            si (mora_maxima_ms > ZEPHYRUM)
-            {
-                i64 reliquum = (i64)mora_maxima_ms
-                    - (_tempus_ms() - initium);
-
-                si (reliquum <= (i64)ZEPHYRUM)
-                {
-                    tempus_excessum = VERUM;
-                    frange;
-                }
-                /* tv_usec est int in Darwin, longus alibi - conversio
-                 * per typum campi ipsius, non per typum coniectum */
-                mora.tv_sec = (time_t)(reliquum / (i64)M);
-                mora.tv_usec = (integer)((reliquum % (i64)M) * (i64)M);
-                mora_ptr = &mora;
-            }
-
-            paratus = select(maximus + I, &legendi, NIHIL, NIHIL,
-                mora_ptr);
-            si (paratus < 0)
-            {
-                si (errno == EINTR)
-                {
-                    perge;
-                }
-                frange;
-            }
-            si (paratus == ZEPHYRUM)
-            {
-                tempus_excessum = VERUM;
-                frange;
-            }
-            si (ef_apertus && FD_ISSET(fistula_ef[0], &legendi))
-            {
-                i8 frustum[PROCESSUS_FRUSTUM];
-                ssize_t n = read(fistula_ef[0], frustum,
-                    (memoriae_index)PROCESSUS_FRUSTUM);
-
-                si (n > 0)
-                {
-                    si (!_sacculum_addere(&sac_ef, frustum, (i32)n,
-                            piscina))
-                    {
-                        memoria_fracta = VERUM;
-                        frange;
-                    }
-                }
-                alioquin si (n == 0)
-                {
-                    ef_apertus = FALSUM;
-                }
-                alioquin si (errno != EAGAIN && errno != EINTR)
-                {
-                    ef_apertus = FALSUM;
-                }
-            }
-            si (er_apertus && FD_ISSET(fistula_er[0], &legendi))
-            {
-                i8 frustum[PROCESSUS_FRUSTUM];
-                ssize_t n = read(fistula_er[0], frustum,
-                    (memoriae_index)PROCESSUS_FRUSTUM);
-
-                si (n > 0)
-                {
-                    si (!_sacculum_addere(&sac_er, frustum, (i32)n,
-                            piscina))
-                    {
-                        memoria_fracta = VERUM;
-                        frange;
-                    }
-                }
-                alioquin si (n == 0)
-                {
-                    er_apertus = FALSUM;
-                }
-                alioquin si (errno != EAGAIN && errno != EINTR)
-                {
-                    er_apertus = FALSUM;
-                }
-            }
-        }
+        redde PROCESSUS_PARATUS;
     }
-
-    si (tempus_excessum || memoria_fracta)
+    _ansam_pulsare(processus, FALSUM);
+    si (_perficere(processus, FALSUM))
     {
-        (vacuum)kill(pid, SIGKILL);
+        redde PROCESSUS_PARATUS;
     }
-    close(fistula_ef[0]);
-    close(fistula_er[0]);
+    redde PROCESSUS_CURRIT;
+}
 
-    /* errorem exec legere (fistula iam clausa si exec successit) */
+ProcessusResultus
+processus_metere (Processus* processus)
+{
+    si (processus == NIHIL)
     {
-        ssize_t n = read(fistula_exec[0], &exec_errno,
-            magnitudo(exec_errno));
+        ProcessusResultus r = _resultus_vacuus();
 
-        si (n != (ssize_t)magnitudo(exec_errno))
-        {
-            exec_errno = ZEPHYRUM;
-        }
-    }
-    close(fistula_exec[0]);
-
-    dum (waitpid(pid, &status, 0) < 0)
-    {
-        si (errno != EINTR)
-        {
-            status = ZEPHYRUM;
-            frange;
-        }
-    }
-
-    r = _resultus_vacuus();
-    r.effusio = _sacculum_finire(&sac_ef);
-    r.erratum = _sacculum_finire(&sac_er);
-    r.mora_ms = (i32)(_tempus_ms() - initium);
-
-    si (exec_errno != ZEPHYRUM)
-    {
-        r.error = PROCESSUS_ERROR_EXEC;
-        r.error_descriptio = chorda_ex_literis(strerror(exec_errno),
-            piscina);
+        r.error = PROCESSUS_ERROR_ARGUMENTA;
         redde r;
     }
-    si (memoria_fracta)
+    si (processus->error_initialis == PROCESSUS_OK)
     {
-        r.error = PROCESSUS_ERROR_IO;
-        r.error_descriptio = chorda_ex_literis("piscina exhausta",
-            piscina);
-        redde r;
+        (vacuum)_perficere(processus, VERUM);
     }
-    si (tempus_excessum)
-    {
-        r.error = PROCESSUS_ERROR_TEMPUS;
-        r.error_descriptio = chorda_ex_literis(
-            "mora maxima excessa - processus occisus", piscina);
-        redde r;
-    }
+    redde _resultus_aedificare(processus);
+}
 
-    r.successus = VERUM;
-    si (WIFEXITED(status))
+vacuum
+processus_abrumpere (Processus* processus)
+{
+    si (processus == NIHIL || processus->perfectus)
     {
-        r.codex_exitus = (i32)WEXITSTATUS(status);
+        redde;
     }
-    alioquin si (WIFSIGNALED(status))
+    processus->abruptus = VERUM;
+    (vacuum)_perficere(processus, VERUM);
+}
+
+ProcessusResultus
+processus_exsequi (constans character* constans* argumenta,
+    i32 mora_maxima_ms, Piscina* piscina)
+{
+    Processus* p;
+
+    si (piscina == NIHIL)
     {
-        r.signum = (i32)WTERMSIG(status);
+        redde _error_reddere(PROCESSUS_ERROR_ARGUMENTA,
+            "piscina requiritur", NIHIL);
     }
-    redde r;
+    p = processus_incipere(argumenta, mora_maxima_ms, piscina);
+    si (p == NIHIL)
+    {
+        redde _error_reddere(PROCESSUS_ERROR_GENERARE,
+            "manubrium allocari non potuit", piscina);
+    }
+    /* metere OBSTANTER: ansam eandem ad finem ducit */
+    redde processus_metere(p);
 }
