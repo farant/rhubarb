@@ -117,6 +117,43 @@ that a comment isn't the only thing guarding them:
 same time; the healthy fixtures were re-captured so the whole set
 shares one property list.
 
+## `ssh/` — how ssh itself fails (added 2026-07-24, V3.6)
+
+Seven captures of ssh's *own* failure output, each as an `.err`
+(stderr verbatim) plus a `.code` (exit status). Captured by
+`captare_ssh.sh`, which **changes nothing** on either machine: every
+case either fails before connecting or dies during the handshake.
+
+| fixture | exit | what ssh says |
+|---|---|---|
+| `hospes_ignotus` | 255 | `Could not resolve hostname …` |
+| `recusata` | 255 | `connect to host … Connection refused` |
+| `tempus` | 255 | `connect to host … Operation timed out` |
+| `clavis_hospitis` | 255 | `Host key verification failed.` |
+| `clavis_negata` | 255 | `Permission denied (publickey).` |
+| `imperium_absens` | **127** | `bash: line 1: …: command not found` |
+| `successus` | 0 | *(empty — a legitimate shape, not a failure)* |
+
+**The law these establish**: ssh uses **255** for its own errors and
+passes the *remote* command's exit code through otherwise. So 255
+means "ssh failed, read stderr for which"; anything else means the
+remote command ran and answered.
+
+**`clavis_negata` is the most valuable file here.** Its stderr is
+two lines, and the **first is a red herring** (`Load key
+"/dev/null": invalid format`) while the **second decides**
+(`Permission denied (publickey).`). A classifier that reads the
+first line of stderr answers "unknown cause" — so the reader scans
+the whole of stderr for decisive markers instead. §V-bis asserts
+both the right verdict *and* that the red-herring line is not the
+one reported.
+
+**Known ambiguity, accepted for v1**: a remote command that itself
+exits 255 is indistinguishable from an ssh failure. No seam fixes
+that without a sentinel (wrapping the remote command in something
+like `echo MARK$?`). Named in the header rather than papered over;
+if it ever bites, the sentinel gets added.
+
 ## Re-capturing
 
 `./probationes/fixa/villa/captare.sh <ssh-alias>` — **read-only**,

@@ -488,6 +488,146 @@ villa_mandatum_ssh (constans ConfiguratioSsh* configuratio,
 
 
 /* ========================================================================
+ * I-bis. DISCRETIO EXITUS SSH
+ * ======================================================================== */
+
+constans character*
+villa_exitus_nomen (VillaExitus genus)
+{
+	commutatio (genus)
+	{
+	casus VILLA_EXITUS_SUCCESSUS:        redde "successus";
+	casus VILLA_EXITUS_HOSPES_IGNOTUS:   redde "hospes ignotus";
+	casus VILLA_EXITUS_CONEXIO_RECUSATA: redde "conexio recusata";
+	casus VILLA_EXITUS_TEMPUS:           redde "mora conexionis";
+	casus VILLA_EXITUS_CLAVIS_HOSPITIS:  redde "clavis hospitis";
+	casus VILLA_EXITUS_PERMISSIO:        redde "permissio negata";
+	casus VILLA_EXITUS_SSH_ALIUS:        redde "ssh: causa ignota";
+	casus VILLA_EXITUS_IMPERIUM_ABSENS:  redde "imperium absens";
+	casus VILLA_EXITUS_IMPERIUM_FRACTUM: redde "imperium fractum";
+	ordinarius:                          redde "ignotus";
+	}
+}
+
+/* lineam PRIMAM quae acum continet reddere (vista). Erratum TOTUM
+ * scrutamur, non lineam primam: vide caput (fixum clavis_negata
+ * lineam fallacem ante decisivam fert). */
+interior chorda
+_linea_cum_acu (chorda erratum, constans character* acus)
+{
+	chorda linea;
+	chorda ac      = _ch(acus);
+	i32    positus = ZEPHYRUM;
+
+	dum (_linea_proxima(erratum, &positus, &linea))
+	{
+		si (chorda_continet(linea, ac))
+		{
+			redde chorda_praecidere(linea);
+		}
+	}
+	redde _vacua();
+}
+
+/* ultima linea non vacua - recidivum cum nulla acus congruit
+ * (conchae errorem suum ULTIMUM ponunt) */
+interior chorda
+_linea_ultima (chorda erratum)
+{
+	chorda linea;
+	chorda ultima  = _vacua();
+	i32    positus = ZEPHYRUM;
+
+	dum (_linea_proxima(erratum, &positus, &linea))
+	{
+		chorda t = chorda_praecidere(linea);
+
+		si (t.mensura > ZEPHYRUM)
+		{
+			ultima = t;
+		}
+	}
+	redde ultima;
+}
+
+CausaExitus
+villa_exitum_discernere (i32 codex_exitus, chorda erratum,
+	Piscina* piscina)
+{
+	CausaExitus c;
+	chorda      linea;
+
+	c.genus    = VILLA_EXITUS_SUCCESSUS;
+	c.causa    = _vacua();
+	c.codex    = codex_exitus;
+	c.ssh_ipse = FALSUM;
+
+	si (codex_exitus == ZEPHYRUM)
+	{
+		redde c;
+	}
+
+	/* CCLV = ssh de se ipso queritur. Ordo acuum a SPECIFICO ad
+	 * generale: 'Permission denied' etiam in nuntiis aliis apparere
+	 * potest, ergo ultimum inter nominatos stat. */
+	si (codex_exitus == (i32)CCLV)
+	{
+		c.ssh_ipse = VERUM;
+
+		linea = _linea_cum_acu(erratum, "Could not resolve hostname");
+		si (!chorda_vacua(linea))
+		{
+			c.genus = VILLA_EXITUS_HOSPES_IGNOTUS;
+			c.causa = _copia(linea, piscina);
+			redde c;
+		}
+		linea = _linea_cum_acu(erratum, "Connection refused");
+		si (!chorda_vacua(linea))
+		{
+			c.genus = VILLA_EXITUS_CONEXIO_RECUSATA;
+			c.causa = _copia(linea, piscina);
+			redde c;
+		}
+		linea = _linea_cum_acu(erratum, "timed out");
+		si (!chorda_vacua(linea))
+		{
+			c.genus = VILLA_EXITUS_TEMPUS;
+			c.causa = _copia(linea, piscina);
+			redde c;
+		}
+		linea = _linea_cum_acu(erratum,
+			"Host key verification failed");
+		si (!chorda_vacua(linea))
+		{
+			c.genus = VILLA_EXITUS_CLAVIS_HOSPITIS;
+			c.causa = _copia(linea, piscina);
+			redde c;
+		}
+		linea = _linea_cum_acu(erratum, "Permission denied");
+		si (!chorda_vacua(linea))
+		{
+			c.genus = VILLA_EXITUS_PERMISSIO;
+			c.causa = _copia(linea, piscina);
+			redde c;
+		}
+		c.genus = VILLA_EXITUS_SSH_ALIUS;
+		c.causa = _copia(_linea_ultima(erratum), piscina);
+		redde c;
+	}
+
+	/* codex alius = imperium REMOTUM cucurrit et ita respondit.
+	 * CXXVII est 'command not found' conchae - quod ssh transmittit
+	 * et quod a 'ssh ipsum abest' (PROCESSUS_ERROR_EXEC, stratum
+	 * prius) DISTINCTUM manet. */
+	c.genus = (codex_exitus == (i32)CXXVII)
+		? VILLA_EXITUS_IMPERIUM_ABSENS
+		: VILLA_EXITUS_IMPERIUM_FRACTUM;
+	c.causa = _copia(_linea_ultima(erratum), piscina);
+	redde c;
+}
+
+
+/* ========================================================================
  * II. SYSTEMCTL SHOW
  * ======================================================================== */
 

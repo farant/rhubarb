@@ -113,6 +113,69 @@ villa_ssh_error_nomen (VillaSshError error);
 
 
 /* ========================================================================
+ * I-bis. DISCRETIO EXITUS SSH - cur defecit?
+ * ========================================================================
+ *
+ * 'known_hosts trust is a precondition; villa refuses with a NAMED
+ * CAUSE' - hoc est quod causam nominat. Sine eo facies unum 'ssh
+ * defecit' pro omnibus ostenderet, quod nihil dicit: clavis ignota,
+ * conexio recusata, permissio negata, et imperium REMOTUM absens
+ * remedia prorsus diversa postulant.
+ *
+ * LEX FUNDAMENTALIS (ex fixis vera): ssh codicem CCLV pro erroribus
+ * SUIS adhibet, et codicem imperii REMOTI aliter transmittit. Ergo
+ * CCLV = 'ssh ipse defecit' (erratum causam nominat); quidquid
+ * aliud = imperium remotum cucurrit et hunc codicem reddidit.
+ *
+ * AMBIGUITAS INSANABILIS: imperium remotum quod IPSUM CCLV reddit
+ * ab errore ssh distingui NON POTEST. Nulla sutura hoc solvit sine
+ * signo (e.g. imperium in 'echo MARCA$?' involvere). v1 id accipit
+ * et hic nominat; si quando morsum dederit, signum additur.
+ *
+ * PRAESUMIT PROCESSUM CUCURRISSE. Si processus_exsequi successus =
+ * FALSUM reddidit (binarium ssh absens, furca fracta, mora nostra
+ * excessa), ille error PRIOR est et hanc functionem non attingit.
+ *
+ * LINEA DECISIVA, NON PRIMA: fixum 'clavis_negata' duas lineas
+ * fert, quarum PRIMA fallax est ('Load key "/dev/null": invalid
+ * format') et SECUNDA decernit ('Permission denied (publickey)').
+ * Ergo erratum TOTUM scrutamur; parsator lineae primae falsum
+ * responsum daret.
+ */
+
+nomen enumeratio {
+	VILLA_EXITUS_SUCCESSUS = 0,      /* codex ZEPHYRUM */
+	/* --- ssh ipse defecit (codex CCLV) --- */
+	VILLA_EXITUS_HOSPES_IGNOTUS,     /* nomen resolvi non potest */
+	VILLA_EXITUS_CONEXIO_RECUSATA,   /* portus clausus */
+	VILLA_EXITUS_TEMPUS,             /* ConnectTimeout ssh */
+	VILLA_EXITUS_CLAVIS_HOSPITIS,    /* known_hosts non consentit */
+	VILLA_EXITUS_PERMISSIO,          /* clavis recusata */
+	VILLA_EXITUS_SSH_ALIUS,          /* CCLV, causa ignota */
+	/* --- imperium remotum cucurrit --- */
+	VILLA_EXITUS_IMPERIUM_ABSENS,    /* CXXVII */
+	VILLA_EXITUS_IMPERIUM_FRACTUM    /* codex alius non-zerus */
+} VillaExitus;
+
+nomen structura {
+	VillaExitus genus;
+	chorda      causa;      /* linea DECISIVA erratii, verbatim */
+	i32         codex;      /* codex exitus crudus */
+	b32         ssh_ipse;   /* VERUM = defectus ssh, non imperii */
+} CausaExitus;
+
+CausaExitus
+villa_exitum_discernere (
+	   i32  codex_exitus,
+	chorda  erratum,
+	Piscina* piscina);
+
+/* Nomen breve ut litterae staticae (pro faciebus et nuntiis). */
+constans character*
+villa_exitus_nomen (VillaExitus genus);
+
+
+/* ========================================================================
  * II. SYSTEMCTL SHOW - status servitiorum
  * ======================================================================== */
 

@@ -48,6 +48,32 @@ _fixum (Piscina* piscina, constans character* titulus)
 	redde contentum;
 }
 
+/* fixum errati ssh (probationes/fixa/villa/ssh/<nomen>.err) */
+interior chorda
+_fixum_ssh (Piscina* piscina, constans character* titulus)
+{
+	character via[CCLVI];
+	chorda    contentum;
+
+	sprintf(via, "%sssh/%s.err", FX_RADIX, titulus);
+	contentum = filum_legere_totum(via, piscina);
+	/* fixum 'successus' VACUUM est de iure (ssh felix nihil ad
+	 * erratum scribit) - ergo hic mensura non adseritur, aliter
+	 * ac in _fixum. Exsistentiam solam probamus. */
+	CREDO_VERUM (filum_existit(via));
+	redde contentum;
+}
+
+interior chorda
+_vacua_ch (vacuum)
+{
+	chorda c;
+
+	c.datum = NIHIL;
+	c.mensura = ZEPHYRUM;
+	redde c;
+}
+
 /* argumentum n-tum cum litteris comparare */
 interior b32
 _arg_est (constans MandatumSsh* m, i32 index,
@@ -296,6 +322,101 @@ s32 principale (vacuum)
 		CREDO_VERUM (m.successus);
 		CREDO_VERUM (_arg_est(&m, m.numerus - I,
 			"systemctl restart nginx; echo 'captus' && rm -rf /"));
+	}
+
+	/* ==============================================================
+	 * V-bis. DISCRETIO EXITUS SSH
+	 *
+	 * Fixa VERA, capta 2026-07-24 currendo ssh contra hospitem
+	 * insolubilem, portum clausum, clavem pravam, known_hosts
+	 * vacuum, imperium remotum absens. Nihil fictum: nuntii ssh
+	 * per versiones et systemata mutant, et forma ficta hic
+	 * praecise ea falleret quae discernere debemus.
+	 * ============================================================== */
+	{
+		CausaExitus c;
+
+		imprimere("\n--- V-bis. discretio exitus ssh ---\n");
+
+		/* successus: nihil discernendum */
+		c = villa_exitum_discernere(ZEPHYRUM,
+			_fixum_ssh(piscina, "successus"), piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_SUCCESSUS);
+		CREDO_FALSUM (c.ssh_ipse);
+
+		/* CCLV = ssh de se ipso queritur; erratum causam nominat */
+		c = villa_exitum_discernere((i32)CCLV,
+			_fixum_ssh(piscina, "hospes_ignotus"), piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_HOSPES_IGNOTUS);
+		CREDO_VERUM (c.ssh_ipse);
+		CREDO_CHORDA_CONTINET (c.causa,
+			chorda_ex_literis("Could not resolve", piscina));
+
+		c = villa_exitum_discernere((i32)CCLV,
+			_fixum_ssh(piscina, "recusata"), piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_CONEXIO_RECUSATA);
+
+		c = villa_exitum_discernere((i32)CCLV,
+			_fixum_ssh(piscina, "tempus"), piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_TEMPUS);
+
+		c = villa_exitum_discernere((i32)CCLV,
+			_fixum_ssh(piscina, "clavis_hospitis"), piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_CLAVIS_HOSPITIS);
+
+		/* INSIDIA CENTRALIS: hoc fixum lineam FALLACEM PRIMAM fert
+		 * ('Load key "/dev/null": invalid format') et decisivam
+		 * SECUNDAM. Parsator lineae primae 'causa ignota' diceret.
+		 * Ergo adserimus et genus RECTUM et causam ex linea
+		 * SECUNDA sumptam. */
+		c = villa_exitum_discernere((i32)CCLV,
+			_fixum_ssh(piscina, "clavis_negata"), piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_PERMISSIO);
+		CREDO_CHORDA_CONTINET (c.causa,
+			chorda_ex_literis("Permission denied", piscina));
+		CREDO_FALSUM (chorda_continet(c.causa,
+			chorda_ex_literis("invalid format", piscina)));
+
+		/* CXXVII = imperium REMOTUM abest. Distinctio quam villa
+		 * postulat: ssh cucurrit, capsa respondit, imperium
+		 * defuit - quod prorsus aliud est quam 'ssh ipsum abest'
+		 * (PROCESSUS_ERROR_EXEC, stratum prius). */
+		c = villa_exitum_discernere((i32)CXXVII,
+			_fixum_ssh(piscina, "imperium_absens"), piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_IMPERIUM_ABSENS);
+		CREDO_FALSUM (c.ssh_ipse);
+		CREDO_CHORDA_CONTINET (c.causa,
+			chorda_ex_literis("command not found", piscina));
+
+		/* codex alius = imperium cucurrit et fefellit */
+		c = villa_exitum_discernere((i32)III,
+			chorda_ex_literis("nginx: configuration file test"
+				" failed\n", piscina), piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_IMPERIUM_FRACTUM);
+		CREDO_FALSUM (c.ssh_ipse);
+		CREDO_AEQUALIS_I32 (c.codex, (i32)III);
+
+		/* CCLV cum errato ignoto: ssh_ipse manet VERUM (codex id
+		 * dicit) sed genus ALIUS - ne causam fingamus */
+		c = villa_exitum_discernere((i32)CCLV,
+			chorda_ex_literis("ssh: aliquid novum et ignotum\n",
+				piscina), piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_SSH_ALIUS);
+		CREDO_VERUM (c.ssh_ipse);
+		CREDO_CHORDA_CONTINET (c.causa,
+			chorda_ex_literis("aliquid novum", piscina));
+
+		/* erratum VACUUM: genus ex codice solo, nulla ruina */
+		c = villa_exitum_discernere((i32)CCLV, _vacua_ch(), piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_SSH_ALIUS);
+		CREDO_CHORDA_VACUA (c.causa);
+
+		/* nomina omnia praesto (facies ea monstrat) */
+		CREDO_VERUM (strlen(villa_exitus_nomen(
+			VILLA_EXITUS_CLAVIS_HOSPITIS)) > ZEPHYRUM);
+		CREDO_VERUM (strcmp(villa_exitus_nomen(
+			VILLA_EXITUS_IMPERIUM_ABSENS),
+			villa_exitus_nomen(VILLA_EXITUS_SSH_ALIUS)) != ZEPHYRUM);
 	}
 
 	/* ==============================================================

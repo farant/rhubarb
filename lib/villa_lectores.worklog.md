@@ -173,6 +173,74 @@ answer that looks right is the worst kind.
   unless someone strips it; pinned so whoever decides to strip it
   knows what they're stripping.
 
+## 2026-07-24 (V3.6) — telling ssh failures apart
+
+`villa_exitum_discernere` + `villa_exitus_nomen`. 202 → **233
+assertions**, suite 105/105.
+
+### The law, from real captures
+
+Seven ssh failures captured live (`captare_ssh.sh` — changes
+nothing on either machine; every case fails before or during the
+handshake). They establish one structural fact:
+
+**ssh uses exit 255 for its own errors and passes the remote
+command's exit code through otherwise.** So 255 means "ssh failed,
+read stderr to learn how"; anything else means the remote command
+ran and answered — and **127 specifically means the *remote*
+command was missing**, which `processus`'s third pipe already keeps
+distinct from "the ssh binary is missing."
+
+That distinction is why V0 built the exec-errno pipe in the first
+place. It finally has a consumer.
+
+### The capture that earned its keep
+
+`clavis_negata` — stderr is two lines:
+
+```
+Load key "/dev/null": invalid format      ← red herring
+usor@…: Permission denied (publickey).    ← the actual cause
+```
+
+A classifier reading the *first* line of stderr answers "unknown
+cause." So the reader scans **all** of stderr for decisive markers
+and reports the line that matched. §V-bis asserts both the correct
+verdict and that the red-herring line is *not* what gets reported —
+because the bug this guards against produces a plausible-looking
+wrong answer, not a crash.
+
+I would not have predicted that shape. It came from running the
+real command, which is the whole argument for capturing over
+inventing: invented fixtures encode what you *expect* ssh to say.
+
+### Ambiguity named, not papered over
+
+A remote command that itself exits 255 is indistinguishable from an
+ssh failure. Nothing fixes that without a sentinel (wrapping the
+remote command in something like `echo MARK$?`). v1 accepts it and
+says so in the header; if it ever bites, the sentinel gets added
+then rather than being built speculatively now.
+
+### Two shell traps, one of them repeated
+
+- **zsh does not word-split unquoted expansions.** `cap x ssh $O …`
+  passed `-o BatchMode=yes -o ConnectTimeout=5` as a *single*
+  argument, and all seven captures came back as identical parse
+  errors — which looked like seven real results until I read them.
+- **BSD `sed` has no `\b` — for the second time today.** It silently
+  no-oped my sanitization and left a real username in a fixture I
+  was about to commit. I had *written this down in this very file*
+  hours earlier and still repeated it.
+
+That second one is worth sitting with: a worklog entry doesn't
+prevent recurrence unless something makes you re-read it at the
+moment of the reach. What actually caught it was the verification
+step (`grep` for real hostnames before committing), not the
+documentation. **Gates catch what notes don't** — which is the same
+lesson as putting the systemd traps in §XVII as assertions rather
+than comments.
+
 ### Known limits of the nginx reader — read this before trusting it
 
 None of these are hit by the committed fixtures, which is exactly why
