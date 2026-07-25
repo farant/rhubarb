@@ -178,6 +178,42 @@
            color: #9c9285; margin-right: .6em; }
   .ordo-tagi .fragmentum { margin-top: .25em; color: #c9c1b2;
            font-size: .85em; overflow-wrap: break-word; }
+  /* ---- sententiae (documenta LOCIS INSCRIPTA) ----
+     Inscriptio VERBATIM: 'white-space: pre', NON pre-wrap - textus
+     manus-involutus ad LXX columnas est, ergo re-involutio formam
+     auctoris DELERET. Latitudo fixa + volutatio horizontalis est
+     pretium consultum (spec §VIII.1).
+     Ordines NON dilatantur (contra .ordo-lectoris scholiorum, qui
+     lacunam in textu aperit cum scholium altius est) - columna
+     numquam movetur, quod est totum consilium §VIII.3. */
+  #sent-corpus { display: flex; gap: 1.5em; align-items: flex-start; }
+  #sent-latus { flex: 0 0 17em; max-height: 78vh; overflow-y: auto;
+           font-size: .72em; }
+  #sent-latus .sent-pars { color: #d8b978; margin: .7em 0 .2em;
+           cursor: pointer; }
+  #sent-latus .sent-pars:hover { text-decoration: underline; }
+  #sent-latus .sent-quaestio { color: #9fb87a; cursor: pointer;
+           margin-left: .9em; white-space: nowrap; overflow: hidden;
+           text-overflow: ellipsis; }
+  #sent-latus .sent-quaestio:hover { color: #d8b978; }
+  #sent-textus { flex: 1 1 auto; min-width: 0; overflow-x: auto;
+           background: #171512; border-radius: 4px; padding: .5em 0;
+           font-size: .78em; max-height: 78vh; overflow-y: auto; }
+  .linea-s { display: flex; line-height: 1.45; }
+  .linea-s:hover { background: #22201d; }
+  .linea-s .locus-s { flex: 0 0 8.5em; text-align: right;
+           padding-right: 1em; color: #6b6357; user-select: none;
+           white-space: pre; }
+  .linea-s .textus-s { flex: 1 1 auto; white-space: pre; }
+  .linea-s[data-locus] { cursor: pointer; }
+  .linea-s[data-locus] .locus-s { color: #9fb87a; }
+  /* retractum: recedit sed LEGIBILE manet - 'recorded so the
+     corrections are addressable, not to display contrition' (29.) */
+  .linea-s.retracta .textus-s { color: #6b6357; }
+  .linea-s.illuminata { background: #2e3a26; }
+  #sent-saltus { max-width: 17em; }
+  #sent-meta { margin: .4em 0 .8em; line-height: 2.2; }
+  #sent-anomaliae { font-size: .75em; margin-bottom: .6em; }
 </style>
 </head>
 <body>
@@ -189,6 +225,7 @@
     <a id="nav-res">Res</a>
     <a id="nav-scholia">Scholia</a>
     <a id="nav-tags">Tags</a>
+    <a id="nav-sententiae">Sententiae</a>
   </nav>
 </header>
 <div id="nuntius-erroris"></div>
@@ -356,6 +393,39 @@
   </div>
 </section>
 
+<section id="visus-sententiae" hidden>
+  <div id="sent-index">
+    <div class="caput-actionum">
+      <button id="sent-novus" class="parva">insere documentum</button>
+    </div>
+    <div id="sent-index-ordines"></div>
+  </div>
+  <div id="sent-insere" hidden>
+    <div id="barra-superior">
+      <a class="retro" id="sent-insere-retro">&larr; sententiae</a>
+    </div>
+    <textarea id="sent-arca" rows="14"
+      data-inter="verum"
+      placeholder="insere documentum markdown (locis inscriptum)"></textarea>
+    <div id="pes-compositionis">
+      <span id="sent-iudicium" class="numerator"></span>
+      <button id="sent-servare">servare</button>
+    </div>
+  </div>
+  <div id="sent-lector" hidden>
+    <div id="barra-superior">
+      <a class="retro" id="sent-retro">&larr; sententiae</a>
+      <input id="sent-saltus" data-inter="verum"
+             placeholder="salta ad locum (e.g. 16.3.2)">
+    </div>
+    <div id="sent-caput"></div>
+    <div id="sent-corpus">
+      <div id="sent-latus"></div>
+      <div id="sent-textus"></div>
+    </div>
+  </div>
+</section>
+
 <script>
 /* ---- status ---- */
 var visus = 'pipata';          /* pipata | articuli | articulus | editor | res */
@@ -463,19 +533,23 @@ function vertere(novus) {
   document.getElementById('visus-res').hidden = novus !== 'res';
   document.getElementById('visus-scholia').hidden = novus !== 'scholia';
   document.getElementById('visus-tags').hidden = novus !== 'tags';
+  document.getElementById('visus-sententiae').hidden = novus !== 'sententiae';
   document.getElementById('nav-pipata').className =
     (novus === 'pipata') ? 'activa' : '';
   document.getElementById('nav-articuli').className =
     (novus !== 'pipata' && novus !== 'res' && novus !== 'scholia'
-     && novus !== 'tags') ? 'activa' : '';
+     && novus !== 'tags' && novus !== 'sententiae') ? 'activa' : '';
   document.getElementById('nav-res').className =
     (novus === 'res') ? 'activa' : '';
   document.getElementById('nav-scholia').className =
     (novus === 'scholia') ? 'activa' : '';
   document.getElementById('nav-tags').className =
     (novus === 'tags') ? 'activa' : '';
+  document.getElementById('nav-sententiae').className =
+    (novus === 'sententiae') ? 'activa' : '';
   document.body.className =
-    (novus === 'scholia' && scholia_visus === 'codex') ? 'latus' : '';
+    ((novus === 'scholia' && scholia_visus === 'codex')
+     || (novus === 'sententiae' && sent_visus === 'lector')) ? 'latus' : '';
   erroris.textContent = '';
   ultima = {};
   anquirere();
@@ -485,6 +559,7 @@ document.getElementById('nav-articuli').onclick = function () { vertere('articul
 document.getElementById('nav-res').onclick = function () { res_vertere('index'); vertere('res'); };
 document.getElementById('nav-scholia').onclick = function () { scholia_vertere('index'); vertere('scholia'); };
 document.getElementById('nav-tags').onclick = function () { tags_vertere('arbor'); vertere('tags'); };
+document.getElementById('nav-sententiae').onclick = function () { sententiae_vertere('index'); vertere('sententiae'); };
 document.getElementById('retro-articuli').onclick = function () { vertere('articuli'); };
 
 /* ---- arca responsi in linea (pipata + commentaria) ---- */
@@ -2350,8 +2425,300 @@ function legere(genus) {
     .then(function (r) { return r.res || []; });
 }
 
+/* ==================================================
+ * SENTENTIAE - documenta LOCIS INSCRIPTA
+ *
+ * LIBER = VERITAS, arbor = PROIECTIO. Inscriptio ex 'fons' ipso
+ * legit, numquam ex arbore: quod in velamine vides id est quod in
+ * plagula est. Arbor solum dicit UBI loci sint et quid significent
+ * (gradus, sigilla) - id quod velamen computare nequit.
+ *
+ * SINE ANQUISITIONE: documenta se non mutant nisi inseras, et
+ * anquisitio omni II secundis corpus XLV KB traheret (pyxis
+ * clientis CCLVI KB - V documenta eam saturant). Ergo hic visus
+ * ANQUISITIONE VACAT; onerantur cum tabulam intras, parsantur cum
+ * documentum aperis.
+ * ================================================== */
+var sent_visus  = 'index';   /* index | lector */
+var sent_libri  = [];
+var sent_liber  = null;      /* ens electum */
+var sent_arbor  = null;      /* fructus sententias_parsare */
+var sent_lineae = [];        /* fons per lineas - fons inscriptionis */
+
+function sententiae_vertere(sub) {
+  sent_visus = sub;
+  document.getElementById('sent-index').hidden = sub !== 'index';
+  document.getElementById('sent-insere').hidden = sub !== 'insere';
+  document.getElementById('sent-lector').hidden = sub !== 'lector';
+  document.body.className = (sub === 'lector') ? 'latus' : '';
+  if (sub === 'index') { sententiae_libros_onerare(); }
+}
+
+function sententiae_libros_onerare() {
+  legere('liber').then(function (libri) {
+    sent_libri = libri || [];
+    reddere_sententiae_indicem();
+  }).catch(function (c) { culpam_ostendere(c, 'defectus librorum'); });
+}
+
+function reddere_sententiae_indicem() {
+  var d = document.getElementById('sent-index-ordines');
+  var vivi = sent_libri.filter(function (e) {
+    return e.datum && e.datum.fons;
+  });
+  d.innerHTML = '';
+  if (!vivi.length) {
+    var v = document.createElement('div');
+    v.id = 'vacuum';
+    v.textContent = 'nullus liber';
+    d.appendChild(v);
+    return;
+  }
+  vivi.forEach(function (e) {
+    var o = document.createElement('div');
+    var t = document.createElement('span');
+    var s = document.createElement('span');
+    o.className = 'ordo-articuli';
+    t.textContent = e.titulus || (e.datum && e.datum.titulus)
+      || '(sine titulo)';
+    s.className = 'sigillum';
+    s.textContent = (e.datum && e.datum.siglum) || '?';
+    o.appendChild(t);
+    o.appendChild(s);
+    o.onclick = function () { sententiae_aperire(e); };
+    d.appendChild(o);
+  });
+}
+
+function sententiae_aperire(ens) {
+  sent_liber = ens;
+  internuntius.vocare('sententias_parsare', { fons: ens.datum.fons })
+    .then(function (arbor) {
+      sent_arbor  = arbor;
+      sent_lineae = ens.datum.fons.split('\n');
+      sententiae_vertere('lector');
+      reddere_lectorem_sententiarum();
+    })
+    .catch(function (c) { culpam_ostendere(c, 'defectus parsationis'); });
+}
+
+/* Textus primae lineae puncti, loco detracto - ex FONTE, non ex
+ * arbore (tractator textum consulto non reddit: inscriptio verbatim
+ * est, ergo responsum eum duplicaret pro nullo consumptore). */
+function sent_textus_puncti(pt) {
+  var linea = sent_lineae[pt.linea - 1] || '';
+  var post  = linea.indexOf(pt.locus + '.');
+  return (post < 0) ? linea
+    : linea.slice(post + pt.locus.length + 1).replace(/^\s+/, '');
+}
+
+function reddere_lectorem_sententiarum() {
+  if (!sent_arbor) { return; }
+  reddere_caput_libri(sent_arbor);
+  reddere_latus_sententiarum(sent_arbor);
+  reddere_textum_sententiarum(sent_arbor);
+}
+
+function reddere_caput_libri(arbor) {
+  var d = document.getElementById('sent-caput');
+  var h = document.createElement('h2');
+  var meta = document.createElement('div');
+  var insignia = [];
+  d.innerHTML = '';
+  h.textContent = arbor.titulus || '(sine titulo)';
+  d.appendChild(h);
+
+  meta.id = 'sent-meta';
+  if (arbor.siglum) { insignia.push(arbor.siglum); }
+  if (arbor.status_libri) { insignia.push(arbor.status_libri); }
+  insignia.push(arbor.puncta.length + ' sententiae');
+  insignia.push(arbor.partes.length + ' partes');
+  arbor.gradus.forEach(function (g) { insignia.push(g.vocabulum); });
+  insignia.forEach(function (txt) {
+    var s = document.createElement('span');
+    s.className = 'sigillum';
+    s.textContent = txt;
+    meta.appendChild(s);
+    meta.appendChild(document.createTextNode(' '));
+  });
+  d.appendChild(meta);
+
+  if (arbor.anomaliae && arbor.anomaliae.length) {
+    var a = document.createElement('div');
+    a.id = 'sent-anomaliae';
+    a.className = 'extra-specem';
+    a.textContent = arbor.anomaliae.length + ' anomaliae: '
+      + arbor.anomaliae.map(function (x) {
+          return x.genus + ' (linea ' + x.linea + ')';
+        }).join('; ');
+    d.appendChild(a);
+  }
+}
+
+/* Latus: partes + quaestiones primi gradus. Quaestiones IAM index
+ * verus documenti sunt - capita interrogativa per constructionem. */
+function reddere_latus_sententiarum(arbor) {
+  var d = document.getElementById('sent-latus');
+  d.innerHTML = '';
+  arbor.partes.forEach(function (p, i) {
+    var pd = document.createElement('div');
+    pd.className = 'sent-pars';
+    pd.textContent = p.titulus;
+    if (p.numerus > 0) {
+      pd.onclick = function () {
+        var prima = arbor.puncta[p.prima];
+        if (prima) { sententiae_salire(prima.locus); }
+      };
+    }
+    d.appendChild(pd);
+    arbor.puncta.forEach(function (pt) {
+      var q;
+      if (pt.pars !== i || pt.profunditas !== 1) { return; }
+      q = document.createElement('div');
+      q.className = 'sent-quaestio';
+      q.textContent = pt.locus + '. ' + sent_textus_puncti(pt);
+      q.title = q.textContent;
+      q.onclick = function () { sententiae_salire(pt.locus); };
+      d.appendChild(q);
+    });
+  });
+}
+
+/* Columna VERBATIM. Fons per lineas; arbor dicit quae linea punctum
+ * incipiat. Linea vacua 'currens' resolvit - aliter obscuratio
+ * puncti retracti in prosam sequentem MANARET. */
+function reddere_textum_sententiarum(arbor) {
+  var d = document.getElementById('sent-textus');
+  var per_lineam = {};
+  var currens = null;
+  d.innerHTML = '';
+  arbor.puncta.forEach(function (p) { per_lineam[p.linea] = p; });
+
+  sent_lineae.forEach(function (txt, idx) {
+    var p = per_lineam[idx + 1];
+    var row = document.createElement('div');
+    var g = document.createElement('span');
+    var c = document.createElement('span');
+
+    /* COLUMNA ZEPHYRA, eadem lex qua lector utitur: continuationes
+     * SEMPER indentantur, ergo quaelibet linea a columna zephyra
+     * incipiens quae punctum non est punctum PRAECEDENS claudit.
+     * (Prima forma lineas vacuas solas resolvebat - ergo saeptum
+     * '```' post punctum retractum obscurationem HEREDITABAT.) */
+    if (p) { currens = p; }
+    else if (!/^\s/.test(txt)) { currens = null; }
+
+    row.className = 'linea-s'
+      + ((currens && currens.retractum) ? ' retracta' : '');
+    if (p) {
+      row.setAttribute('data-locus', p.locus);
+      row.onclick = function () { sententiae_salire(p.locus); };
+    }
+    g.className = 'locus-s';
+    g.textContent = p ? p.locus : '';
+    c.className = 'textus-s';
+    c.textContent = txt;
+    row.appendChild(g);
+    row.appendChild(c);
+    d.appendChild(row);
+  });
+}
+
+function sententiae_salire(locus) {
+  var el = document.querySelector('[data-locus="' + locus + '"]');
+  if (!el) { return false; }
+  el.scrollIntoView(true);
+  el.className = 'linea-s illuminata';
+  setTimeout(function () {
+    el.className = el.className.replace(' illuminata', '');
+  }, 1400);
+  return true;
+}
+
+/* Custos collisionis: tabulam DEFINITIONUM legit, non responsum
+ * 'addere'. Responsum successum MUNDUM reddit etiam cum clavis iam
+ * occupata est - violatio in notis entis sepelitur, quam nemo tempore
+ * creationis legit. (Idem quod scholia_genera_curare facit.) */
+function sententiae_genus_curare() {
+  return legere('definitio').then(function (defs) {
+    if (defs.some(function (d) { return clavis_de(d) === 'liber'; })) {
+      return null;
+    }
+    return instrumentum('addere', { genus: 'definitio', titulus: 'Liber',
+      datum: JSON.stringify({ clavis: 'liber', titulus_monstrans: 'Liber',
+        campi: [
+          { clavis: 'siglum', monstrans: 'Siglum', typus: 'textus' },
+          { clavis: 'slug', monstrans: 'Slug', typus: 'textus' },
+          /* 'status_libri', NON 'status': clavis reservata est -
+           * iudicio camporum praeteritur ET columnam vitae proicit */
+          { clavis: 'status_libri', monstrans: 'Status', typus: 'textus' },
+          { clavis: 'fons', monstrans: 'Fons', typus: 'area' }
+        ] }) });
+  });
+}
+
+/* INSERTIO v1: liber NOVUS solum.
+ * Re-insertio (cum praevisione damni ancorarum) est S4 - hic nullae
+ * ancorae adhuc exstant, ergo nihil frangi potest. Documentum tamen
+ * PARSATUR ante scriptionem: culpa structurae conditorium numquam
+ * intrat. */
+function sententiae_servare() {
+  var fons = document.getElementById('sent-arca').value;
+  var iud = document.getElementById('sent-iudicium');
+  if (!fons.replace(/\s/g, '').length) { return; }
+  iud.textContent = 'parsatur...';
+  internuntius.vocare('sententias_parsare', { fons: fons })
+    .then(function (arbor) {
+      if (!arbor.successus) {
+        iud.className = 'numerator nimius';
+        iud.textContent = arbor.culpa + ' (linea ' + arbor.linea_culpae
+          + '): ' + arbor.causa;
+        return null;
+      }
+      iud.className = 'numerator';
+      iud.textContent = arbor.puncta.length + ' sententiae, '
+        + arbor.partes.length + ' partes';
+      return sententiae_genus_curare().then(function () {
+        var titulus = arbor.titulus || 'liber sine titulo';
+        return instrumentum('addere', { genus: 'liber', titulus: titulus,
+          datum: JSON.stringify({
+            siglum: arbor.siglum || '',
+            slug: titulus.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-|-$/g, ''),
+            status_libri: arbor.status_libri || '',
+            fons: fons }) });
+      }).then(function () {
+        document.getElementById('sent-arca').value = '';
+        iud.textContent = '';
+        sententiae_vertere('index');
+      });
+    })
+    .catch(function (c) { culpam_ostendere(c, 'defectus insertionis'); });
+}
+
+document.getElementById('sent-novus').onclick = function () {
+  document.getElementById('sent-iudicium').textContent = '';
+  sententiae_vertere('insere');
+};
+document.getElementById('sent-insere-retro').onclick = function () {
+  sententiae_vertere('index');
+};
+document.getElementById('sent-servare').onclick = sententiae_servare;
+document.getElementById('sent-retro').onclick = function () {
+  sententiae_vertere('index');
+};
+document.getElementById('sent-saltus').onkeydown = function (ev) {
+  var v;
+  if (ev.key !== 'Enter') { return; }
+  v = this.value.trim().replace(/\.$/, '');
+  if (!v) { return; }
+  erroris.textContent = sententiae_salire(v) ? '' : ('locus ignotus: ' + v);
+};
+
 function anquirere() {
   if (visus === 'editor') { return; }
+  /* sententiae: sine anquisitione (vide caput sectionis) */
+  if (visus === 'sententiae') { return; }
   /* creator + forma = poll-exemptae (exemplar editoris - latitudines
    * vivae numquam a redditione clobberantur) */
   if (visus === 'res'
@@ -2761,7 +3128,77 @@ function fumus_genera() {
               throw new Error('anomaliae ' + lib.anomaliae.length
                 + ' (prima: ' + (lib.anomaliae[0] || {}).causa + ')');
             }
-            return internuntius.vocare('fumus_perfectus', {});
+
+            /* ---- S3b: INSCRIPTIO. Functiones reddendi directe
+             * agitantur (semita conditorii in
+             * probatio_sententiae_horreum.c iam custoditur) - hic
+             * VELAMEN custoditur, non horreum. */
+            sent_arbor  = lib;
+            sent_liber  = { datum: { fons: doc_pr } };
+            sent_lineae = doc_pr.split('\n');
+            reddere_lectorem_sententiarum();
+
+            var lineae_s = document.querySelectorAll('#sent-textus .linea-s');
+            var ancorae  = document.querySelectorAll('#sent-textus [data-locus]');
+            var retractae = document.querySelectorAll('#sent-textus .linea-s.retracta');
+            var quaestiones = document.querySelectorAll('#sent-latus .sent-quaestio');
+            var insignia = document.querySelectorAll('#sent-meta .sigillum');
+
+            /* VERBATIM: una linea in velamine per lineam in fonte */
+            if (lineae_s.length !== sent_lineae.length) {
+              throw new Error('lineae ' + lineae_s.length + ' != fons '
+                + sent_lineae.length);
+            }
+            /* ancora per punctum, non plures */
+            if (ancorae.length !== 3) {
+              throw new Error('ancorae ' + ancorae.length);
+            }
+            if (!document.querySelector('[data-locus="1.obj.1"]')) {
+              throw new Error('ancora 1.obj.1 abest');
+            }
+            /* obscuratio punctum retractum TEGIT (duae lineae:
+             * locus + continuatio) et saeptum sequens NON tingit */
+            if (retractae.length !== 2) {
+              throw new Error('retractae ' + retractae.length
+                + ' (exspectatae II: locus + continuatio)');
+            }
+            /* latus: quaestiones primi gradus = index verus */
+            if (quaestiones.length !== 1) {
+              throw new Error('quaestiones ' + quaestiones.length);
+            }
+            if (quaestiones[0].textContent.indexOf('Quaestio prima') < 0) {
+              throw new Error('textus quaestionis: '
+                + quaestiones[0].textContent);
+            }
+            /* caput: siglum + status + II numeri + II gradus */
+            if (insignia.length !== 6) {
+              throw new Error('insignia capitis ' + insignia.length);
+            }
+            /* saltus resolvit quod exstat, recusat quod non */
+            if (!sententiae_salire('1.1')) {
+              throw new Error('saltus ad 1.1 defecit');
+            }
+            if (sententiae_salire('99.9')) {
+              throw new Error('saltus ad locum ignotum successit');
+            }
+
+            /* PORTA INSERTIONIS: culpa structurae conditorium numquam
+             * intrat. Locus duplex = duae sententiae unam ancoram
+             * vindicantes = ancora MENTIENS. */
+            return internuntius.vocare('sententias_parsare',
+              { fons: '# T\n\n```\n1. Prima.\n1. Iterum.\n```\n' })
+              .then(function (malus) {
+                if (malus.successus) {
+                  throw new Error('locus duplex acceptus');
+                }
+                if (malus.culpa.indexOf('duplex') < 0) {
+                  throw new Error('culpa: ' + malus.culpa);
+                }
+                if (!malus.causa) {
+                  throw new Error('recusatio sine causa');
+                }
+                return internuntius.vocare('fumus_perfectus', {});
+              });
           });
       });
   });
