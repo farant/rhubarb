@@ -251,19 +251,18 @@ _fistulam_haurire (Processus* p, integer fd, b32* apertus,
 
 /* GRADUS UNUS ansae - corpus quod AMBAE semitae communicant.
  *
- * obstans = VERUM  : select obstat usque ad terminum totalem (aut
- *                    in aeternum si terminus abest) - mos
- *                    processus_exsequi, immutatus.
- * obstans = FALSUM : select cum mora ZEPHYRI - pulsus qui numquam
- *                    obstat.
+ * mora_gradus_ms = ZEPHYRUM : select non obstat (pulsus faciei).
+ * mora_gradus_ms > ZEPHYRUM : select ad summum tot ms obstat.
  *
- * CAUTIO: 'select redidit ZEPHYRUM' significat TERMINUM EXCESSUM
- * solum in modo obstante. In modo pulsante idem valorem significat
- * 'nihil paratum nunc' - quod normalissimum est. Confundere ea
- * omnem probationem post pulsum primum tempore excedi faceret.
+ * GRADUS TERMINATUS, NON INFINITUS, etiam in semita obstante: sic
+ * vocator inter gradus infantem inspicere potest. Ansa quae in
+ * aeternum EOF exspectat nepotem fistulam tenentem numquam videt
+ * (vide _perficere). Terminus TOTALIS hic semper custoditur,
+ * ergo 'select redidit ZEPHYRUM' significat solum 'nihil in hoc
+ * gradu' - quae ambiguitas prior hic habitabat.
  */
 interior vacuum
-_ansam_pulsare (Processus* p, b32 obstans)
+_ansam_pulsare (Processus* p, i32 mora_gradus_ms)
 {
     fd_set             legendi;
     structura timeval  mora;
@@ -294,39 +293,37 @@ _ansam_pulsare (Processus* p, b32 obstans)
         }
     }
 
-    si (obstans)
+    /* TERMINUS TOTALIS semper primo - vocator tardus processum
+     * aeternum parere non debet */
     {
+        i64 gradus = (i64)mora_gradus_ms;
+
         si (p->mora_maxima_ms > ZEPHYRUM)
         {
-            i64 reliquum = (i64)p->mora_maxima_ms
-                - (_tempus_ms() - p->initium);
+            /* s64, NON i64: i64 in hac domo INSIGNATUS est (ut
+             * i32). 'CCC - CCCV' in insignato ad numerum ingentem
+             * circumit, ergo custos 'reliquum <= ZEPHYRUM'
+             * NUMQUAM flagrabat. Vitium invisibile mansit quia
+             * select moram TOTAM reliquam accipiebat et redditus
+             * eius ZEPHYRUM terminum ipse significabat; gradus
+             * terminati illud tegumentum sustulerunt. */
+            s64 elapsum  = (s64)(_tempus_ms() - p->initium);
+            s64 reliquum = (s64)p->mora_maxima_ms - elapsum;
 
-            si (reliquum <= (i64)ZEPHYRUM)
+            si (reliquum <= (s64)ZEPHYRUM)
             {
                 p->tempus_excessum = VERUM;
                 redde;
             }
-            /* tv_usec est int in Darwin, longus alibi - conversio
-             * per typum campi ipsius, non per typum coniectum */
-            mora.tv_sec = (time_t)(reliquum / (i64)M);
-            mora.tv_usec = (integer)((reliquum % (i64)M) * (i64)M);
-            mora_ptr = &mora;
+            si (gradus > (i64)reliquum)
+            {
+                gradus = (i64)reliquum;
+            }
         }
-        /* alioquin mora_ptr = NIHIL: in aeternum, ut ante */
-    }
-    alioquin
-    {
-        /* terminus custoditur ETIAM in modo pulsante - alioquin
-         * vocator qui tarde pulsat processum aeternum pareret */
-        si (p->mora_maxima_ms > ZEPHYRUM
-            && (_tempus_ms() - p->initium)
-                >= (i64)p->mora_maxima_ms)
-        {
-            p->tempus_excessum = VERUM;
-            redde;
-        }
-        mora.tv_sec = (time_t)ZEPHYRUM;
-        mora.tv_usec = ZEPHYRUM;
+        /* tv_usec est int in Darwin, longus alibi - conversio per
+         * typum campi ipsius, non per typum coniectum */
+        mora.tv_sec = (time_t)(gradus / (i64)M);
+        mora.tv_usec = (integer)((gradus % (i64)M) * (i64)M);
         mora_ptr = &mora;
     }
 
@@ -343,11 +340,7 @@ _ansam_pulsare (Processus* p, b32 obstans)
     }
     si (paratus == ZEPHYRUM)
     {
-        si (obstans)
-        {
-            p->tempus_excessum = VERUM;
-        }
-        redde;
+        redde;   /* nihil in hoc gradu; terminus supra custoditur */
     }
 
     si (p->ef_apertus && FD_ISSET(p->fd_ef, &legendi))
@@ -436,6 +429,41 @@ _perficere (Processus* p, b32 obstans)
     {
         redde VERUM;
     }
+    /* INFANS MESSUS = PERFECTUM, ETIAM FISTULIS APERTIS.
+     *
+     * Fistula aperta significat 'aliquis finem scribendi TENET' -
+     * quod NON idem est ac 'infans noster adhuc laborat'. Nepos
+     * fistulas hereditare et post infantem vivere potest; tunc EOF
+     * numquam venit quamvis imperium nostrum diu finitum sit.
+     *
+     * CASUS QUI HOC REVELAVIT (2026-07-24, sceletum villae): ssh
+     * cum 'ControlPersist' magistrum in tergo relinquit qui stdout
+     * et stderr NOSTRA hereditat. Probatio contra servum VERUM ergo
+     * in aeternum pendebat dum stipes (qui magistrum non habet)
+     * feliciter transibat - porta viridis, res vera pendens. NULLA
+     * probatio stipitis hoc capere poterat.
+     *
+     * Ergo messem NON-OBSTANTEM primo tentamus: si infans abiit,
+     * reliquias haurimus et perficimus. EOF non exspectatur. */
+    si (!p->messus && p->pid > (pid_t)ZEPHYRUM
+        && !p->tempus_excessum && !p->memoria_fracta && !p->abruptus)
+    {
+        si (_reficere(p, FALSUM))
+        {
+            i32 h;
+
+            /* effusio maior quam sinus fistulae infantem OBSTARE
+             * cogeret; ergo 'messus cum dato pendente' significat
+             * datum in sinu esse, quod paucis gradibus capitur */
+            per (h = ZEPHYRUM;
+                h < (i32)VIII && (p->ef_apertus || p->er_apertus);
+                h++)
+            {
+                _ansam_pulsare(p, ZEPHYRUM);
+            }
+        }
+    }
+
     /* CONDICIO TERMINALIS iam nota => NOLI haurire.
      * 'abruptus' hic esse DEBET, non solum tempus/memoria: sine eo
      * abrumpere in haustum obstantem cadit qui EOF exspectat, et
@@ -443,17 +471,34 @@ _perficere (Processus* p, b32 obstans)
      * moram integram infantis exspectaret, quod contrarium est eius
      * quod pollicetur (probatio XII id cepit: 'sleep 10' abruptum
      * decem secunda tenuit). */
-    si ((p->ef_apertus || p->er_apertus)
+    si (!p->messus && (p->ef_apertus || p->er_apertus)
         && !p->tempus_excessum && !p->memoria_fracta && !p->abruptus)
     {
         si (!obstans)
         {
             redde FALSUM;
         }
+        /* GRADUS TERMINATI, non exspectatio infinita: post quemque
+         * infantem inspicimus. Sine hoc, nepos fistulam tenens
+         * ansam usque ad terminum totalem teneret - quod villa
+         * contra ssh cum ControlPersist passa est. */
         dum ((p->ef_apertus || p->er_apertus)
             && !p->tempus_excessum && !p->memoria_fracta)
         {
-            _ansam_pulsare(p, VERUM);
+            _ansam_pulsare(p, (i32)C);
+            si (_reficere(p, FALSUM))
+            {
+                i32 h;
+
+                per (h = ZEPHYRUM;
+                    h < (i32)VIII
+                        && (p->ef_apertus || p->er_apertus);
+                    h++)
+                {
+                    _ansam_pulsare(p, ZEPHYRUM);
+                }
+                frange;
+            }
         }
     }
     si ((p->tempus_excessum || p->memoria_fracta || p->abruptus)
@@ -709,7 +754,7 @@ processus_pulsare (Processus* processus)
     {
         redde PROCESSUS_PARATUS;
     }
-    _ansam_pulsare(processus, FALSUM);
+    _ansam_pulsare(processus, ZEPHYRUM);
     si (_perficere(processus, FALSUM))
     {
         redde PROCESSUS_PARATUS;

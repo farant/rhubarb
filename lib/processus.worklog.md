@@ -169,3 +169,68 @@ violations**. `mcp__legati__diagnostica` on the same file → **REICE,
 so it judges platform files against the ISO lexicon alone and emits
 a wall of red on a clean file. Filed `01KYBAG1MJ`; the fix is one
 data file both surfaces read.
+
+## 2026-07-24 (V4a scaffolding) — two defects the stub could never show
+
+Building villa's shell app and pointing it at the **real** droplet
+exposed two bugs that every fixture-driven test had passed over.
+72 → **81 assertions**.
+
+### 1. A grandchild holding the pipe means EOF never comes
+
+`ssh -o ControlPersist` forks a background master that **inherits our
+stdout and stderr**. Our command finishes, our child exits — and the
+pipes stay open forever because the master holds the write ends.
+`processus` waited for an EOF that would never arrive.
+
+Villa hung indefinitely against the real server while the stub
+passed cleanly, because the stub has no master to fork. That is the
+precise shape of a green gate over broken reality.
+
+The fix is a reframe: **an open pipe means "someone holds the write
+end," not "our child is still working."** So `_perficere` now tries a
+non-blocking reap first; if the child is gone, it drains what's
+buffered and finishes without waiting for EOF.
+
+Output larger than the pipe buffer would *block* the child, so
+"reaped with data pending" implies the data already fits in the
+buffer — a few drain passes collect it.
+
+### 2. The deadline check had never once fired
+
+Fixing (1) required the blocking drain to wake periodically and
+re-check the child, so `_ansam_pulsare` took a **slice** parameter
+instead of a boolean. That immediately broke the timeout test — and
+the reason was sitting there the whole time:
+
+```c
+i64 reliquum = (i64)p->mora_maxima_ms - (_tempus_ms() - p->initium);
+si (reliquum <= (i64)ZEPHYRUM)      /* never true */
+```
+
+**`i64` is unsigned in this house**, exactly like `i32`. `300 - 305`
+wraps to ~1.8e19, so the guard never fired *once*, in any run, ever.
+
+It was invisible because `select` used to be handed the entire
+remaining time, so its own return-0 did the timing. The guard was
+decoration over a mechanism that happened to work. Bounded slices
+removed the cover, and the dead code became visible the moment it
+was load-bearing.
+
+Fixed with `s64` arithmetic. Worth generalising: **the i32-is-unsigned
+trap has an i64 twin**, and it's nastier, because a wrapped `i64`
+comparison isn't a crash or a warning — it's a branch that silently
+never runs. Anywhere `a - b <= 0` is written on house integer types,
+check the signedness of the type, not the plausibility of the values.
+
+### The general lesson
+
+Both bugs needed *real* ssh. The stub is honest about output shapes
+and blind to process topology — no forked master, no lingering
+grandchild, no cold-connection latency. Fixture gates prove parsing;
+only contact with the real thing proves plumbing.
+
+This is the argument for building the scaffolding before the UI:
+these surfaced in a 400-line shell app, where the diagnosis was
+cheap, instead of during interface work where they'd have looked
+like rendering problems.

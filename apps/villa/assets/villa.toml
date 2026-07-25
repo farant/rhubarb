@@ -1,0 +1,9 @@
+# Capsula config pro fronte villae (app secunda in apps/)
+# Regenerare: bin/capsula_generare apps/villa/assets/villa.toml
+# (generata capsula_villa.{h,c} COMMITTUNTUR - mos tabellae)
+#
+# COMPRIMITUR, dissimiliter ac forum: forum 'false' reliquit et
+# capsula_forum.c DCXL KiB committit AD OMNEM EDITIONEM faciei.
+
+villa_files = ["index.html"]
+villa_compress = true

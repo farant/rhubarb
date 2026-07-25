@@ -476,6 +476,71 @@ s32 principale (vacuum)
         CREDO_VERUM (r.error == PROCESSUS_ERROR_EXEC);
     }
 
+    /* XVII. NEPOS FISTULAM TENENS - infans abit, nepos vivit.
+     *
+     * CASUS VERUS QUI HOC REVELAVIT: ssh cum 'ControlPersist'
+     * magistrum in tergo relinquit qui stdout/stderr NOSTRA
+     * hereditat. Imperium nostrum finitur, infans abit, sed EOF
+     * numquam venit quia magister finem scribendi TENET. Villa
+     * contra servum verum in aeternum pendebat dum stipes (qui
+     * magistrum non habet) feliciter transibat.
+     *
+     * Hic idem forma minima: 'echo; sleep 30 &' - concha effusionem
+     * scribit, nepotem generat qui fistulam hereditat, et statim
+     * abit. Ante emendationem haec probatio XXX secunda penderet.
+     * ============================================================ */
+    {
+        constans character* argumenta[IV];
+        ProcessusResultus   r;
+
+        imprimere("\n--- XVII. nepos fistulam tenens ---\n");
+        argumenta[0] = "/bin/sh";
+        argumenta[I] = "-c";
+        argumenta[II] = "echo salve; sleep 30 &";
+        argumenta[III] = NIHIL;
+        r = processus_exsequi(argumenta, 10000, piscina);
+
+        CREDO_VERUM (r.successus);
+        CREDO_AEQUALIS_I32 (r.codex_exitus, ZEPHYRUM);
+        /* effusio ANTE exitum scripta capitur - messis reliquias
+         * haurit, non solum EOF exspectat */
+        CREDO_VERUM (strstr(_litterae_ex(piscina, r.effusio),
+            "salve") != NIHIL);
+        /* ET NON EXSPECTAVIMUS nepotem: XXX secunda vs < III */
+        CREDO_VERUM (r.mora_ms < 3000);
+        CREDO_VERUM (r.error == PROCESSUS_OK);
+    }
+
+    /* XVIII. idem per semitam INCREMENTALEM */
+    {
+        constans character* argumenta[IV];
+        Processus*          p;
+        ProcessusResultus   r;
+        i32                 pulsus = ZEPHYRUM;
+
+        imprimere("\n--- XVIII. nepos, semita incrementalis ---\n");
+        argumenta[0] = "/bin/sh";
+        argumenta[I] = "-c";
+        argumenta[II] = "echo salve; sleep 30 &";
+        argumenta[III] = NIHIL;
+
+        p = processus_incipere(argumenta, 10000, piscina);
+        CREDO_NON_NIHIL (p);
+        dum (processus_pulsare(p) == PROCESSUS_CURRIT)
+        {
+            pulsus++;
+            si (pulsus > 5000000)
+            {
+                frange;
+            }
+        }
+        r = processus_metere(p);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (strstr(_litterae_ex(piscina, r.effusio),
+            "salve") != NIHIL);
+        CREDO_VERUM (r.mora_ms < 3000);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

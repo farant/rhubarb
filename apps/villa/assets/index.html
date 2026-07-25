@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="la">
+<head>
+<meta charset="utf-8">
+<title>villa</title>
+<style>
+/* Thema: exemplar fori verbatim (V4b id extendet) */
+:root {
+  --fundus: #12100e;
+  --fundus-ii: #1b1815;
+  --linea: #2e2925;
+  --textus: #e8e2d9;
+  --textus-tenuis: #9a9086;
+  --accentus: #c9a227;
+  --sanus: #6fa86f;
+  --fractus: #c96a5a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--fundus); color: var(--textus);
+  font: 14px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+  -webkit-font-smoothing: antialiased;
+}
+header {
+  padding: 14px 20px; border-bottom: 1px solid var(--linea);
+  display: flex; align-items: baseline; gap: 14px;
+}
+h1 { margin: 0; font-size: 15px; letter-spacing: .14em;
+     text-transform: uppercase; color: var(--accentus); }
+main { padding: 20px; }
+.nota { color: var(--textus-tenuis); }
+pre {
+  background: var(--fundus-ii); border: 1px solid var(--linea);
+  padding: 14px; border-radius: 4px; overflow-x: auto;
+  white-space: pre-wrap; word-break: break-word;
+}
+#nuntius-erroris {
+  color: var(--fractus); min-height: 1.4em; margin: 0 0 12px;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>villa</h1>
+  <span class="nota" id="sub">sceletum V4a &mdash; facies in V4b</span>
+</header>
+<main>
+  <p id="nuntius-erroris"></p>
+  <p class="nota">
+    Haec pagina EXISTENTIAM catenae probat, non faciem:
+    fenestra &rarr; capsula &rarr; vitrea &rarr; internuntius
+    &rarr; agens. Si status infra apparet, stratum totum vivit.
+  </p>
+  <pre id="status">exspectans&hellip;</pre>
+</main>
+<script>
+/* Pons IS: forma fori (window.internuntius iniectus a vitrea) */
+function vocare (instrumentum, argumenta) {
+  return window.internuntius.vocare(instrumentum, argumenta || {});
+}
+
+function culpam_ostendere (e) {
+  document.getElementById('nuntius-erroris').textContent =
+    e ? ('culpa: ' + e) : '';
+}
+
+function reficere () {
+  vocare('villa_status').then(function (r) {
+    culpam_ostendere('');
+    document.getElementById('status').textContent =
+      JSON.stringify(r, null, 2);
+  }).catch(function (e) {
+    culpam_ostendere(String(e));
+  });
+}
+
+reficere();
+setInterval(reficere, 2000);
+</script>
+</body>
+</html>
