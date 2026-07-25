@@ -388,6 +388,27 @@ s32 principale (vacuum)
 		CREDO_CHORDA_CONTINET (c.causa,
 			chorda_ex_literis("command not found", piscina));
 
+		/* INDEPENDENTIA A CONCHA REMOTA. Fixum supra formam BASH
+		 * fert ('bash: line 1: X: command not found') quia concha
+		 * ingressus droplet bash est. Sed /bin/sh ibi DASH est, et
+		 * dash aliter loquitur: 'sh: 1: X: not found' - sine verbo
+		 * 'command'. Si villa umquam imperium per 'sh -c' miserit,
+		 * forma mutabitur.
+		 *
+		 * Discretor id superstat quia CODICE CXXVII ducitur, quem
+		 * POSIX figit, non prosa conchae. Haec adsertio id PROBAT
+		 * potius quam sperat - alioquin fragilitas latens maneret
+		 * quam nemo inveniret nisi die quo concha mutaretur.
+		 * (Forma dash ex droplet vero sumpta 2026-07-24.) */
+		c = villa_exitum_discernere((i32)CXXVII,
+			chorda_ex_literis(
+				"sh: 1: nulla-tale-imperium: not found\n", piscina),
+			piscina);
+		CREDO_VERUM (c.genus == VILLA_EXITUS_IMPERIUM_ABSENS);
+		CREDO_FALSUM (c.ssh_ipse);
+		CREDO_CHORDA_CONTINET (c.causa,
+			chorda_ex_literis("not found", piscina));
+
 		/* codex alius = imperium cucurrit et fefellit */
 		c = villa_exitum_discernere((i32)III,
 			chorda_ex_literis("nginx: configuration file test"
