@@ -170,6 +170,337 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
+/* ==================================================
+ * DERIVATIO EX INCLUSIONIBUS (varians (a), parcum 01KYB3NNR4)
+ *
+ * Plagula dependentias suas IAM declarat: '#include <sys/select.h>'
+ * EST dictum "superficie select utor". Ergo tabula routing nulla
+ * opus est - informatio in plagula ipsa habitat, ab auctore eo
+ * momento scripta quo necessitatem creat, et cum plagula movetur
+ * aut renominatur eam SEQUITUR.
+ *
+ * ISO SEMPER INTEGRUM MANET (decretum 01KYDMTS5N): derivatio POSIX
+ * SOLUM tangit. Derivatio ISO diagnostica VERA quoque pareret
+ * ('strlen adhibes sed <string.h> non includis') sed motum
+ * baselineae per repositorium TOTUM efficeret - cursus proprius,
+ * benedictio propria.
+ *
+ * '-posix' MANET ut escape: totum lexicon onerat, mos vetus exacte.
+ *
+ * Sectiones in systema_posix.h notantur:
+ *   <sectio caput="fcntl.h"/>              - una capiti respondet
+ *   <sectio caput="a.h,b.h"/>              - pluribus
+ *   <sectio semper="verum"/>               - basis (typi communes)
+ *   <sectio caput="x.h" poscit="y.h"/>     - dependentia inter
+ *                                            sectiones
+ *
+ * 'poscit' NECESSARIUM est quia sectiones se invicem tangunt:
+ * select() struct timeval ex sys/time.h poscit, struct stat
+ * struct timespec. Sine eo derivatio lexicon FRACTUM pareret.
+ * Clausura transitiva computatur; sectiones ORDINE FONTIS
+ * emittuntur, ergo ordo declarationum per constructionem rectus est.
+ * ================================================== */
+
+#define SECTIONES_MAXIMAE 64
+
+nomen structura {
+    i32 initium;     /* contentum: post '\*\/' commentarii notantis */
+    i32 finis;
+    i32 caput_i;
+    i32 caput_m;
+    i32 poscit_i;
+    i32 poscit_m;
+    b32 semper;
+    b32 petita;
+} SectioLexici;
+
+/* attributum="valor" intra tagum invenire */
+hic_manens b32
+_attributum_capere (constans character* fons, i32 initium, i32 finis,
+    constans character* titulus, i32* valor_i, i32* valor_m)
+{
+    i32 n = (i32)strlen(titulus);
+    i32 i;
+
+    *valor_i = ZEPHYRUM;
+    *valor_m = ZEPHYRUM;
+    per (i = initium; i + n + II < finis; i++)
+    {
+        si (strncmp(fons + i, titulus, (memoriae_index)n) != ZEPHYRUM)
+        {
+            perge;
+        }
+        si (fons[i + n] != '=' || fons[i + n + I] != '"')
+        {
+            perge;
+        }
+        {
+            i32 v = i + n + II;
+            i32 f = v;
+
+            dum (f < finis && fons[f] != '"') f++;
+            si (f >= finis) redde FALSUM;
+            *valor_i = v;
+            *valor_m = f - v;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* an nomen in lista commatibus separata stet (comparatio TOTA) */
+hic_manens b32
+_in_lista_nominum (constans character* lista, i32 lista_m,
+    constans character* titulus, i32 titulus_m)
+{
+    i32 i = ZEPHYRUM;
+
+    si (titulus_m == ZEPHYRUM) redde FALSUM;
+    dum (i < lista_m)
+    {
+        i32 initium = i;
+        i32 longitudo;
+
+        dum (i < lista_m && lista[i] != ',') i++;
+        longitudo = i - initium;
+        si (longitudo == titulus_m
+            && strncmp(lista + initium, titulus,
+                (memoriae_index)longitudo) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+        si (i < lista_m) i++;
+    }
+    redde FALSUM;
+}
+
+/* nomina ex lineis '#include <...>' colligere, commatibus iuncta.
+ * Inclusiones '"locales"' CONSULTO praetermittuntur: eae per
+ * ambulationem capitum repositorii iam resolvuntur. */
+hic_manens i32
+_inclusa_colligere (constans character* fons, i32 mensura,
+    character* effusio, i32 capacitas)
+{
+    i32 longitudo = ZEPHYRUM;
+    i32 i = ZEPHYRUM;
+
+    dum (i + IX < mensura)
+    {
+        i32 j;
+        i32 initium;
+
+        si (strncmp(fons + i, "#include", VIII) != ZEPHYRUM)
+        {
+            i++;
+            perge;
+        }
+        j = i + VIII;
+        dum (j < mensura && (fons[j] == ' ' || fons[j] == '\t')) j++;
+        si (j >= mensura || fons[j] != '<')
+        {
+            i = (j > i) ? j : i + I;
+            perge;
+        }
+        j++;
+        initium = j;
+        dum (j < mensura && fons[j] != '>' && fons[j] != '\n') j++;
+        si (j < mensura && fons[j] == '>' && j > initium)
+        {
+            i32 n = j - initium;
+
+            si (longitudo + n + I < capacitas)
+            {
+                si (longitudo > ZEPHYRUM)
+                {
+                    effusio[longitudo] = ',';
+                    longitudo++;
+                }
+                memcpy(effusio + longitudo, fons + initium,
+                    (memoriae_index)n);
+                longitudo = longitudo + n;
+            }
+        }
+        i = j;
+    }
+    redde longitudo;
+}
+
+hic_manens character*
+_posix_derivare (constans character* fons_px, i32 mensura_px,
+    constans character* fons_pl, i32 mensura_pl, Piscina* piscina,
+    i32* mensura_out)
+{
+    SectioLexici sectiones[SECTIONES_MAXIMAE];
+    i32 numerus = ZEPHYRUM;
+    i32 capacitas = mensura_pl + mensura_px + CC;
+    character* petita;
+    i32 petita_m;
+    character* effusio;
+    i32 longitudo = ZEPHYRUM;
+    i32 i;
+    b32 mutatum;
+
+    *mensura_out = ZEPHYRUM;
+    petita = (character*)piscina_allocare(piscina,
+        (memoriae_index)capacitas);
+    effusio = (character*)piscina_allocare(piscina,
+        (memoriae_index)(mensura_px + SECTIONES_MAXIMAE + I));
+    si (petita == NIHIL || effusio == NIHIL) redde NIHIL;
+    petita_m = _inclusa_colligere(fons_pl, mensura_pl, petita,
+        capacitas);
+
+    /* sectiones scrutari. Contentum post '*''/' commentarii notantis
+     * incipit (non post tagum ipsum): alioquin cauda commentarii
+     * ' ... *''/' in textum emissum flueret et parsationem
+     * frangeret. Sectio praecedens ad '/''*' huius commentarii
+     * desinit, eadem de causa. */
+    i = ZEPHYRUM;
+    dum (i + VII < mensura_px)
+    {
+        i32 tag_finis;
+        i32 com_initium;
+        i32 com_finis;
+        i32 vi;
+        i32 vm;
+
+        si (strncmp(fons_px + i, "<sectio", VII) != ZEPHYRUM)
+        {
+            i++;
+            perge;
+        }
+        tag_finis = i;
+        dum (tag_finis < mensura_px && fons_px[tag_finis] != '>')
+        {
+            tag_finis++;
+        }
+        com_initium = i;
+        dum (com_initium > ZEPHYRUM
+            && !(fons_px[com_initium] == '/'
+                 && com_initium + I < mensura_px
+                 && fons_px[com_initium + I] == '*'))
+        {
+            com_initium--;
+        }
+        com_finis = tag_finis;
+        dum (com_finis + I < mensura_px
+            && !(fons_px[com_finis] == '*'
+                 && fons_px[com_finis + I] == '/'))
+        {
+            com_finis++;
+        }
+        com_finis = com_finis + II;
+        si (com_finis > mensura_px) com_finis = mensura_px;
+
+        si (numerus > ZEPHYRUM)
+        {
+            sectiones[numerus - I].finis = com_initium;
+        }
+        si (numerus >= SECTIONES_MAXIMAE)
+        {
+            fprintf(stderr, "examen: sectiones lexici plus quam"
+                " %d\n", (int)SECTIONES_MAXIMAE);
+            redde NIHIL;
+        }
+        sectiones[numerus].initium = com_finis;
+        sectiones[numerus].finis = mensura_px;
+        sectiones[numerus].caput_i = ZEPHYRUM;
+        sectiones[numerus].caput_m = ZEPHYRUM;
+        sectiones[numerus].poscit_i = ZEPHYRUM;
+        sectiones[numerus].poscit_m = ZEPHYRUM;
+        sectiones[numerus].semper = FALSUM;
+        sectiones[numerus].petita = FALSUM;
+        si (_attributum_capere(fons_px, i, tag_finis, "caput",
+                &vi, &vm))
+        {
+            sectiones[numerus].caput_i = vi;
+            sectiones[numerus].caput_m = vm;
+        }
+        si (_attributum_capere(fons_px, i, tag_finis, "poscit",
+                &vi, &vm))
+        {
+            sectiones[numerus].poscit_i = vi;
+            sectiones[numerus].poscit_m = vm;
+        }
+        si (_attributum_capere(fons_px, i, tag_finis, "semper",
+                &vi, &vm))
+        {
+            sectiones[numerus].semper = VERUM;
+        }
+        numerus++;
+        i = tag_finis;
+    }
+
+    /* clausura transitiva sub 'poscit' */
+    mutatum = VERUM;
+    dum (mutatum)
+    {
+        mutatum = FALSUM;
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            b32 volo;
+
+            si (sectiones[i].petita) perge;
+            volo = sectiones[i].semper;
+            si (!volo && sectiones[i].caput_m > ZEPHYRUM)
+            {
+                constans character* lista = fons_px
+                    + sectiones[i].caput_i;
+                i32 lista_m = sectiones[i].caput_m;
+                i32 p = ZEPHYRUM;
+
+                dum (p < lista_m && !volo)
+                {
+                    i32 ini = p;
+                    i32 lon;
+
+                    dum (p < lista_m && lista[p] != ',') p++;
+                    lon = p - ini;
+                    si (_in_lista_nominum(petita, petita_m,
+                            lista + ini, lon))
+                    {
+                        volo = VERUM;
+                    }
+                    si (p < lista_m) p++;
+                }
+            }
+            si (!volo) perge;
+            sectiones[i].petita = VERUM;
+            mutatum = VERUM;
+            si (sectiones[i].poscit_m > ZEPHYRUM
+                && petita_m + sectiones[i].poscit_m + I < capacitas)
+            {
+                si (petita_m > ZEPHYRUM)
+                {
+                    petita[petita_m] = ',';
+                    petita_m++;
+                }
+                memcpy(petita + petita_m,
+                    fons_px + sectiones[i].poscit_i,
+                    (memoriae_index)sectiones[i].poscit_m);
+                petita_m = petita_m + sectiones[i].poscit_m;
+            }
+        }
+    }
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        i32 n;
+
+        si (!sectiones[i].petita) perge;
+        n = sectiones[i].finis - sectiones[i].initium;
+        si (n <= ZEPHYRUM) perge;
+        memcpy(effusio + longitudo, fons_px + sectiones[i].initium,
+            (memoriae_index)n);
+        longitudo = longitudo + n;
+        effusio[longitudo] = '\n';
+        longitudo++;
+    }
+    si (longitudo == ZEPHYRUM) redde NIHIL;
+    effusio[longitudo] = '\0';
+    *mensura_out = longitudo;
+    redde effusio;
+}
+
 /* <externa caput="X.h"> ... </externa> - superficies externae in
  * COMMENTARIO declaratae: .d.ts pro C, ad limitem platformae.
  *
@@ -416,11 +747,16 @@ s32 principale (integer argc, character** argv)
                 " ex radice repositorii)\n");
             redde II;
         }
-        si (cum_posix)
+        /* POSIX: '-posix' totum onerat (mos vetus, escape); alioquin
+         * sectiones EX INCLUSIONIBUS plagulae derivantur. Plagula
+         * quae nullum caput POSIX includit nihil accipit - ISO purum,
+         * ut antea. */
         {
             i32 mensura_px = ZEPHYRUM;
             character* fons_px = _plagulam_legere(piscina,
                 "silva/fontes/systema_posix.h", &mensura_px);
+            character* pars = NIHIL;
+            i32 pars_m = ZEPHYRUM;
 
             si (fons_px == NIHIL)
             {
@@ -428,10 +764,22 @@ s32 principale (integer argc, character** argv)
                     "examen: systema_posix.h deest\n");
                 redde II;
             }
+            si (cum_posix)
+            {
+                pars = fons_px;
+                pars_m = mensura_px;
+            }
+            alioquin
+            {
+                pars = _posix_derivare(fons_px, mensura_px,
+                    fons_plagulae, mensura_plagulae, piscina,
+                    &pars_m);
+            }
+            si (pars != NIHIL && pars_m > ZEPHYRUM)
             {
                 character* iunctum = (character*)piscina_allocare(
                     piscina, (memoriae_index)(mensura_sys
-                        + mensura_px + I));
+                        + pars_m + I));
 
                 si (iunctum == NIHIL)
                 {
@@ -440,10 +788,16 @@ s32 principale (integer argc, character** argv)
                 memcpy(iunctum, fons_sys,
                     (memoriae_index)mensura_sys);
                 iunctum[mensura_sys] = '\n';
-                memcpy(iunctum + mensura_sys + I, fons_px,
-                    (memoriae_index)mensura_px);
+                memcpy(iunctum + mensura_sys + I, pars,
+                    (memoriae_index)pars_m);
                 fons_sys = iunctum;
-                mensura_sys = mensura_sys + I + mensura_px;
+                mensura_sys = mensura_sys + I + pars_m;
+                si (verbosa)
+                {
+                    fprintf(stderr, "examen: POSIX %d octeti (%s)\n",
+                        (int)pars_m,
+                        cum_posix ? "-posix, totum" : "derivatum");
+                }
             }
         }
         /* <externa> plagulae: lexicon LOCALE, eodem canali quo

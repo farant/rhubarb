@@ -4,6 +4,9 @@
 #include "tcp.h"
 
 #include <sys/types.h>
+#include <sys/time.h>     /* struct timeval (SO_RCVTIMEO) - antea
+                           * per sys/socket.h Darwin tacite venibat;
+                           * derivatio ex inclusionibus id detexit */
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>

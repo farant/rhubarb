@@ -18,7 +18,8 @@
  */
 
 /* ==================================================
- * Typi fundamentales POSIX (Darwin)
+ * <sectio semper="verum"/>
+ * Typi fundamentales POSIX (Darwin) - BASIS omnium sectionum
  * ================================================== */
 
 typedef long               intptr_t;      /* stdint.h - C99, corpus */
@@ -34,7 +35,7 @@ typedef int                blksize_t;
 typedef int                suseconds_t;   /* tv_usec 32-bit! */
 
 /* ==================================================
- * sys/time.h
+ * <sectio caput="sys/time.h"/>
  * ================================================== */
 
 struct timespec {
@@ -50,7 +51,9 @@ struct timeval {
 int gettimeofday(struct timeval* tp, void* tzp);
 
 /* ==================================================
- * sys/stat.h (forma Darwin arm64, 144 octeti - certificata)
+ * <sectio caput="sys/stat.h" poscit="sys/time.h"/>
+ * sys/stat.h (forma Darwin arm64, 144 octeti - certificata).
+ * poscit: struct timespec (st_atimespec et cetera).
  * ================================================== */
 
 struct stat {
@@ -89,6 +92,7 @@ int stat(const char* via, struct stat* sedes);
 int mkdir(const char* via, mode_t modus);
 
 /* ==================================================
+ * <sectio caput="unistd.h"/>
  * unistd.h (pars parva - Unda 1; opendir/readdir = Unda 1b nomine)
  * ================================================== */
 
@@ -101,13 +105,14 @@ int   unlink(const char* via);
  * quae formas certificat - valor falsus in syscallum verum flueret).
  * ================================================== */
 
-/* Typi Unda 2 */
+/* <sectio semper="verum"/> Typi Unda 2 - BASIS: socklen_t sectionem
+ * socketorum tenet, ssize_t unistd, pid_t signal/wait */
 typedef int          pid_t;
 typedef long         ssize_t;
 typedef unsigned int socklen_t;
 typedef unsigned int useconds_t;
 
-/* unistd.h - processus + I/O crudum */
+/* <sectio caput="unistd.h"/> unistd.h - processus + I/O crudum */
 pid_t   fork(void);
 int     pipe(int* fossae);
 ssize_t read(int fossa, void* sedes, size_t mensura);
@@ -118,25 +123,27 @@ int     usleep(useconds_t microsecunda);
 int     dup2(int fossa_vetus, int fossa_nova);
 int     execvp(const char* plagula, char* const argumenta[]);
 
-/* stdlib.h POSIX (getenv in systema_c89.h ut C89; hae POSIX solae) */
+/* <sectio caput="stdlib.h"/> stdlib.h POSIX (getenv in systema_c89.h
+ * ut C89; hae POSIX solae) */
 int setenv(const char* nomen, const char* valor, int superscribere);
 int unsetenv(const char* nomen);
 int putenv(char* par);
 
-/* unistd.h - fossae normales */
+/* <sectio caput="unistd.h"/> unistd.h - fossae normales */
 #define STDIN_FILENO  0
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
-/* signal.h (valores signorum communes) */
+/* <sectio caput="signal.h"/> signal.h (valores signorum communes) */
 #define SIGINT  2
 #define SIGKILL 9
 #define SIGTERM 15
 
 int kill(pid_t processus, int signum);
 
-/* sys/wait.h - macrota ut functiones declarata (forma sufficit;
- * silva signaturam petit, non expansionem) */
+/* <sectio caput="sys/wait.h"/> sys/wait.h - macrota ut functiones
+ * declarata (forma sufficit; silva signaturam petit, non
+ * expansionem) */
 #define WNOHANG   1     /* Darwin: 0x00000001 */
 #define WUNTRACED 2     /* Darwin: 0x00000002 */
 
@@ -146,7 +153,7 @@ int WEXITSTATUS(int status);
 int WIFSIGNALED(int status);
 int WTERMSIG(int status);
 
-/* fcntl.h (valores Darwin) */
+/* <sectio caput="fcntl.h"/> fcntl.h (valores Darwin) */
 #define O_NONBLOCK 0x0004
 #define F_GETFL    3
 #define F_SETFL    4
@@ -156,8 +163,10 @@ int WTERMSIG(int status);
 
 int fcntl(int fossa, int mandatum, ...);
 
-/* sys/select.h - fd_set opacum (silva membra non tangit; FD_*
- * ut functiones declarata, ut sys/wait.h supra) */
+/* <sectio caput="sys/select.h" poscit="sys/time.h"/>
+ * sys/select.h - fd_set opacum (silva membra non tangit; FD_*
+ * ut functiones declarata, ut sys/wait.h supra).
+ * poscit: struct timeval (parametrum morae in select). */
 typedef struct { int __opacum[32]; } fd_set;
 
 void FD_ZERO(fd_set* copia);
@@ -168,12 +177,14 @@ int  FD_ISSET(int fossa, fd_set* copia);
 int select(int numerus, fd_set* legendi, fd_set* scribendi,
            fd_set* errantes, struct timeval* mora);
 
-/* errno.h (valores Darwin communes; errno ipsum in systema_c89.h) */
+/* <sectio caput="errno.h"/> errno.h (valores Darwin communes; errno
+ * ipsum in systema_c89.h) */
 #define EINTR       4
 #define EAGAIN      35
 #define EWOULDBLOCK 35
 
-/* sys/socket.h + netinet/in.h + netinet/tcp.h (valores Darwin) */
+/* <sectio caput="sys/socket.h,netinet/in.h,netinet/tcp.h"/>
+ * sys/socket.h + netinet/in.h + netinet/tcp.h (valores Darwin) */
 #define SOL_SOCKET   0xffff
 #define SO_REUSEADDR 0x0004
 #define SO_KEEPALIVE 0x0008

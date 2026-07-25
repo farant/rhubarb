@@ -28,45 +28,32 @@ case "$FILE" in
     "$RADIX"/*) REL="./${FILE#"$RADIX"/}" ;;
     *) exit 0 ;;   # extra repositorium
 esac
-# -posix ubi POSIX iure adhibetur (exclusiones NON consultae tunc,
-# ne diagnostica VERA in illis plagulis sileant):
-#   - probationes radicis (fixturae fork/fossae/sockets)
-#   - lib/*_posix.c: nomen ipsum stratum platformae DECLARAT
-#   - plagulae paucae quae tempus/fossas systematis legunt et olim
-#     TOTAE excludebantur - iudicium rectum exclusioni caecae praestat
-#     (2026-07-24: quinque earum sub -posix MUNDAE sunt)
-# CAUTIO: hic solum plagulae quae sub -posix VERE mundae sunt.
-#
-# reactor.c et tcp_posix.c ADDITAE 2026-07-25: superficies suas per
-# blocos <externa caput="..."> ipsae ferunt, ergo sub -posix MUNDAE
-# sunt (XI -> ZERO; XXXIV violationes + XXI suspecta + IV domestica
-# -> ZERO). Ex CAECIS iudicatae factae - nulla plagula huius listae
-# nunc exclusione tegitur. Parcum 01KYB3NNR4.
-#
-# NOTA DE DIVERGENTIA (01KYBAG1MJ): ambae in exclusiones.txt MANENT
-# quia sweep corporis (percursus) -posix omnino non routat - ergo
-# uncus eas mundas, sweep REICE vocat. Consulto: alterum erat eas
-# CAECAS relinquere. Quinta et sexta plagulae huius classis (cum
-# filum/via/uuid); sanabitur cum routing unificabitur.
-POSIX_VEX=""
-case "$REL" in
-    ./probationes/*) POSIX_VEX="-posix" ;;
-    ./lib/processus_posix.c|./lib/moneta.c|./lib/fasti.c|./lib/filum.c|./lib/via.c|./lib/uuid.c|./lib/reactor.c|./lib/tcp_posix.c)
-        POSIX_VEX="-posix" ;;
-esac
-
-if [ -z "$POSIX_VEX" ]; then
-    EXCL="$RADIX/silva/probationes/fixa/examinis/exclusiones.txt"
-    [ -f "$EXCL" ] && grep -qxF "$REL" "$EXCL" && exit 0
-fi
-
-OUT=$(cd "$RADIX" && ./silva/examen.sh "$REL" $POSIX_VEX -machina 2>/dev/null)
+# TABULA ROUTING -posix DELETA 2026-07-25 (01KYBAG1MJ, 01KYB3NNR4).
+# examen sectiones lexici EX INCLUSIONIBUS plagulae ipsius derivat -
+# '#include <sys/select.h>' est dictum "superficie select utor" -
+# ergo lista hic nulla opus est, et illa quae hic vivebat causa
+# divergentiae erat (LSP/percursus eam non legebant).
+# Mensuratum ante deletionem: derivatio lexicon PLENUM aequat in
+# omnibus XXXII plagulis quae capita POSIX includunt, et omnes VIII
+# probationes + omnes VI plagulae quae hic routabantur ACCIPE sunt
+# sine vexillo ullo.
+OUT=$(cd "$RADIX" && ./silva/examen.sh "$REL" -machina 2>/dev/null)
 ROWS=$(printf '%s\n' "$OUT" | awk -F'\t' \
     '$1!="VERDICTUM" && $4!="infra" {
         p = ($6=="1") ? " (provisionale)" : "";
         print $1":"$2":"$3": ["$4"] "$7 p
     }' | head -10)
 [ -z "$ROWS" ] && exit 0
+
+# Exclusiones POST iudicium consuluntur, non ANTE (mutatio
+# 2026-07-25). Antea plagula exclusa numquam iudicabatur, ergo
+# plagula quae munda FIEBAT (derivatione aut bloco <externa>) tacita
+# manebat donec quis listam manu emendaret. Nunc exclusio STREPITUM
+# silet, numquam verdictum mundum - et plagula sanata statim iudicari
+# incipit sine ulla lista tangenda. Baselinea corporis (percursus)
+# intacta manet, quae eandem plagulam adhuc legit.
+EXCL="$RADIX/silva/probationes/fixa/examinis/exclusiones.txt"
+[ -f "$EXCL" ] && grep -qxF "$REL" "$EXCL" && exit 0
 VERD=$(printf '%s\n' "$OUT" | awk -F'\t' '$1=="VERDICTUM"{print $2}')
 
 jq -n --arg r "EXAMEN C89 (uncus post-editionem, verdictum ${VERD:-?}):
