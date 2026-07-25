@@ -566,9 +566,42 @@ run_all_tests() {
 print_summary() {
     local total_end_time
     local total_duration
+    local titulus
 
     total_end_time=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
     total_duration=$(echo "$total_end_time - $TOTAL_START_TIME" | bc)
+
+    # Compendium machinae-legibile in fistulam III (-machina).
+    # Schema STABILE est: claves omnes semper emittuntur, etiam
+    # zephyrae, ne lector 'clavis abest' ab 'valor zephyrus'
+    # discernere cogatur.
+    #
+    # VERDICTUM codici exitus CONSENTIT consulto (probationes solae,
+    # non applicationes) - compendium quod portae dissentiret vitium
+    # novum esset, non sartura. Aedificatio applicationis fracta
+    # suitam NON frangit (mos praecedens, hic non mutatus); qui
+    # severior esse vult APPLICATIONES_FRACTAE legat.
+    if [ $MACHINA -eq 1 ]; then
+        printf 'TOTALIS\t%s\n'    "$TESTS_TOTAL"  >&3
+        printf 'PRAETERITI\t%s\n' "$TESTS_PASSED" >&3
+        printf 'FRACTI\t%s\n'     "$TESTS_FAILED" >&3
+        for titulus in $FAILED_TESTS; do
+            printf 'FRACTA\t%s\n' "$titulus" >&3
+        done
+        printf 'APPLICATIONES\t%s\n'         "$GUI_APPS_BUILT"  >&3
+        printf 'APPLICATIONES_FRACTAE\t%s\n' "$GUI_APPS_FAILED" >&3
+        for titulus in $FAILED_GUI_APPS; do
+            printf 'APPLICATIO_FRACTA\t%s\n' "$titulus" >&3
+        done
+        printf 'TEMPUS\t%s\n' "$total_duration" >&3
+        if [ $TESTS_TOTAL -eq 0 ]; then
+            printf 'VERDICTUM\tNULLUS\n' >&3
+        elif [ $TESTS_FAILED -eq 0 ]; then
+            printf 'VERDICTUM\tPLENUS\n' >&3
+        else
+            printf 'VERDICTUM\tFRACTUS\n' >&3
+        fi
+    fi
 
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
     echo -e "${BLUE}SUMMARY${RESET}"
@@ -619,6 +652,7 @@ WATCH_MODE=0
 DEBUG_MODE=0
 CLEAN_MODE=0
 RETICULARIS=0
+MACHINA=0
 for arg in "$@"; do
     if [ "$arg" == "--watch" ]; then
         WATCH_MODE=1
@@ -628,10 +662,30 @@ for arg in "$@"; do
         CLEAN_MODE=1
     elif [ "$arg" == "-reticularis" ] || [ "$arg" == "--reticularis" ]; then
         RETICULARIS=1
+    elif [ "$arg" == "-machina" ] || [ "$arg" == "--machina" ]; then
+        MACHINA=1
     else
         FILTER="$arg"
     fi
 done
+
+# Fistula III = canalis MACHINAE, seiunctus a canali humano.
+#
+# Cur canalis seiunctus et non sola linea plana in fine: vitium
+# verum non erat "compendium colores fert" sed "FLUMEN colores
+# fert". grep octetos ANSI videt, plagulam BINARIAM iudicat, et
+# 'binary file matches' reddit sine linea ulla - etiam si linea
+# petita ipsa munda est. sed eodem flumine 'illegal byte sequence'
+# cadit. Ergo compendium mundum in fine NIHIL sanavisset; effusio
+# humana TOTA silere debet.
+#
+# Forma: TSV, clavis MAIUSCULA in columna prima - eadem qua
+# examen -machina utitur (exemplar domi iam erat).
+if [ $MACHINA -eq 1 ]; then
+    exec 3>&1 1>/dev/null 2>/dev/null
+else
+    exec 3>/dev/null
+fi
 
 # Handle clean mode - clean build and bin directories, then continue to rebuild
 if [ $CLEAN_MODE -eq 1 ]; then
@@ -682,7 +736,19 @@ else
     run_all_tests
     print_summary
 
-    if [ $TESTS_FAILED -eq 0 ]; then
+    # NULLA probatio cursa = error operantis (filtrum male scriptum),
+    # NON successus. Antea hoc exitum 0 reddebat, ergo
+    # './compile_tests.sh probatio_sentntiae' (litera perdita) portam
+    # VIRIDEM ostendebat sine probatione ulla cursa - idem genus ac
+    # 'transformatio successum nuntiat sine ope facto'. Codex II
+    # 'nihil cursum' a codice I 'aliquid fractum' discernit.
+    #
+    # Vocator unicus qui casum-nullum consulto adhibet
+    # (compile_tools.sh:65, './compile_tests.sh --libs-only') exitum
+    # NON custodit - obiecta ipsa postea probat (linea 74). Tutum.
+    if [ $TESTS_TOTAL -eq 0 ]; then
+        exit 2
+    elif [ $TESTS_FAILED -eq 0 ]; then
         # canalis excubitoris: verdictum post-constructionem
         # (tacet nisi stala)
         ./excubitor.sh -tacitus "build/" >&2 || true
