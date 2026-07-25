@@ -477,15 +477,16 @@ _indicem_onerare (Tabularium* t)
     i32 mensura = ZEPHYRUM;
     i32 cursor = ZEPHYRUM;
 
-    t->index_temptatus = VERUM;
     si (t->via_nexus == NIHIL)
     {
+        t->index_temptatus = VERUM;   /* numquam retempta */
         redde;
     }
     textus = _plagulam_legere(t->piscina, t->via_nexus, &mensura);
     si (textus == NIHIL)
     {
-        redde;
+        redde;   /* plagula abest - retempta postea (index post
+                  * ortum residentis apparere potest) */
     }
     t->sedes_index = tabula_dispersa_creare_chorda(t->piscina,
         16384);
@@ -497,6 +498,7 @@ _indicem_onerare (Tabularium* t)
         t->sedes_tituli = NIHIL;
         redde;
     }
+    t->index_temptatus = VERUM;
     dum (cursor < mensura)
     {
         i32 initium = cursor;
@@ -2230,10 +2232,14 @@ _entitatem_ad_markdown (Tabularium* t, constans character* res_id,
 /* plagulam entitatis in omne directorium tagi (vel _sine_tag)
  * scribere, prioribus copiis prius deletis. Res remota/absens
  * (gesta_res_datum vacuum) -> omnes copiae delentur, nihil
- * scribitur. */
+ * scribitur.
+ *
+ * 'purgare_prius' FALSUM SOLUM in via scobis plenae valet, ubi
+ * _directorium_purgare arborem IAM vacuavit. Vide
+ * _entitates_reconciliare_omnes pro mensura. */
 interior vacuum
-_entitatem_reconciliare (Tabularium* t, constans character* res_id,
-    Piscina* pn)
+_entitatem_reconciliare_cum (Tabularium* t, constans character* res_id,
+    Piscina* pn, b32 purgare_prius)
 {
     chorda datum;
     chorda nomen_plagulae;
@@ -2247,9 +2253,12 @@ _entitatem_reconciliare (Tabularium* t, constans character* res_id,
     {
         redde;
     }
-    /* semper primo reliquas plagulas huius entis purgare (tags/slug
-     * mutati, remotio) - systema plagularum = memoria status veteris */
-    _entis_plagulas_omnes_delere(t, res_id, pn);
+    /* primo reliquas plagulas huius entis purgare (tags/slug mutati,
+     * remotio) - systema plagularum = memoria status veteris */
+    si (purgare_prius)
+    {
+        _entis_plagulas_omnes_delere(t, res_id, pn);
+    }
 
     datum = gesta_res_datum(t->mundus, res_id, pn);
     si (datum.mensura == ZEPHYRUM)
@@ -2304,6 +2313,15 @@ _entitatem_reconciliare (Tabularium* t, constans character* res_id,
         plag = _duas_iungere(dir, nomen_plagulae, pn);
         (vacuum)filum_scribere(_litterae(pn, plag), md);
     }
+}
+
+/* Involucrum: omnis vocator praeter scobem plenam purgationem
+ * per-entem poscit (status vetus in systemate plagularum vivit). */
+interior vacuum
+_entitatem_reconciliare (Tabularium* t, constans character* res_id,
+    Piscina* pn)
+{
+    _entitatem_reconciliare_cum(t, res_id, pn, VERUM);
 }
 
 /* ==================================================
@@ -2383,7 +2401,16 @@ _entitates_reconciliare_omnes (Tabularium* t, Piscina* pn)
     {
         chorda rid = scrinium_columna_textus(e, ZEPHYRUM, pn);
 
-        _entitatem_reconciliare(t, _litterae(pn, rid), pn);
+        /* purgatio per-entem OMITTITUR: _directorium_purgare supra
+         * arborem TOTAM iam vacuavit, ergo _entis_plagulas_omnes_-
+         * delere radicem + omne folder tagi rescrutaretur quaerens
+         * plagulas quae iam desunt. Ad CCCXLIV entitates x XXXVII
+         * tags = ~XII·DCC opendir per initialize, omnes praeter N
+         * vacui - et initialize ad quamque conexionem residentis
+         * currit. Hic solum tutum est: extra hanc ansam status
+         * vetus adhuc in systemate plagularum vivit. */
+        _entitatem_reconciliare_cum(t, _litterae(pn, rid), pn,
+            FALSUM);
     }
     scrinium_finire(e);
 }

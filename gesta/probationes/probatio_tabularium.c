@@ -1535,6 +1535,47 @@ s32 principale (vacuum)
         }
     }
 
+    /* ================================================
+     * XXIIIh. DETERMINISMUS OCTETORUM (spec gesta-entitates,
+     * sectio Testing): reconciliatio BIS facta octeta PARIA
+     * relinquit - nullae rescripturae spuriae.
+     *
+     * Haec probatio vitium praesens NON persequitur: proprietas per
+     * constructionem tenet, quia nullum horologium in via
+     * redditionis est. Custodit ne horologium parietis FUTURUM
+     * irrepat - 'mutatum <hora>' in redditione scriptum silenter
+     * transiret, et deinde omnis reconciliatio omnem plagulam
+     * rescriberet (proiectio quae numquam quiescit).
+     *
+     * initialize scobem plenam ciet (_seminare + _tabulam_scribere
+     * + _entitates_reconciliare_omnes) et IDEMPOTENS est (supra II),
+     * ergo nihil status inter duos cursus mutatur: differentia ulla
+     * octetorum non ambigua esset.
+     *
+     * Ens electum est 'cogitatio ramalis' - res in ramo nata et fusa,
+     * ergo via redditionis MAXIME implicata (eventus duplices,
+     * filtrum trunci XXIIIg supra). Si quid non-deterministicum
+     * usquam irrepit, hic primum apparebit.
+     * ================================================ */
+    {
+        constans character* ante;
+        constans character* post;
+
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":260,"
+            "\"method\":\"initialize\",\"params\":{}}");
+        ante = _plagula_cum_continente(piscina, VIA_ENT "/_sine_tag",
+            "cogitatio ramalis");
+        CREDO_VERUM (ante[0] != '\0');
+
+        (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":261,"
+            "\"method\":\"initialize\",\"params\":{}}");
+        post = _plagula_cum_continente(piscina, VIA_ENT "/_sine_tag",
+            "cogitatio ramalis");
+        CREDO_VERUM (post[0] != '\0');
+
+        CREDO_VERUM (strcmp(ante, post) == ZEPHYRUM);
+    }
+
     /* FRUSTUM D (01KY3D7EJP): ancorae nid + citationes ex codice */
     {
         character rid[27];
