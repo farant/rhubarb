@@ -915,6 +915,62 @@ filum_directorium_creare_si_necesse(
 }
 
 b32
+filum_directorium_creare_cum_modo(
+	constans character* via,
+	           integer  modus)
+{
+	structura stat st;
+
+	si (!via)
+	{
+		_filum_error_ponere("via est NIHIL");
+		redde FALSUM;
+	}
+
+	_filum_error_purgare();
+
+	si (stat(via, &st) == ZEPHYRUM)
+	{
+		si (!S_ISDIR(st.st_mode))
+		{
+			_filum_error_ponere("via existit sed non est directorium");
+			redde FALSUM;
+		}
+		/* IAM EXSISTIT: modum coercere. Directorium quod alia causa
+		 * laxius creavit aliter tacite laxum maneret - et defectus
+		 * permissionum is est qui numquam clamat. */
+#ifndef _WIN32
+		si (chmod(via, (mode_t)modus) != ZEPHYRUM)
+		{
+			_filum_error_ponere("chmod fracta");
+			redde FALSUM;
+		}
+#endif
+		redde VERUM;
+	}
+
+#ifdef _WIN32
+	(vacuum)modus;
+	si (_mkdir(via) != ZEPHYRUM)
+#else
+	si (mkdir(via, (mode_t)modus) != ZEPHYRUM)
+#endif
+	{
+		_filum_error_ponere("mkdir fracta");
+		redde FALSUM;
+	}
+#ifndef _WIN32
+	/* umask mkdir corrigit; chmod explicitus modum VERUM ponit */
+	si (chmod(via, (mode_t)modus) != ZEPHYRUM)
+	{
+		_filum_error_ponere("chmod post mkdir fracta");
+		redde FALSUM;
+	}
+#endif
+	redde VERUM;
+}
+
+b32
 filum_directorium_existit(
 	constans character* via)
 {

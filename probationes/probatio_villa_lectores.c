@@ -806,6 +806,112 @@ s32 principale (vacuum)
 	}
 
 	/* ==============================================================
+	 * XI-bis. SECTIONES PROBATIONIS - effusio composita
+	 * ============================================================== */
+	{
+		chorda compositum = chorda_ex_literis(
+			"##VILLA##unitates##\n"
+			"nginx.service loaded active running Servus\n"
+			"##VILLA##fin##0##\n"
+			"##VILLA##discus##\n"
+			"Filesystem     1024-blocks    Used Available"
+			" Capacity Mounted on\n"
+			"/dev/vda1         24221120 6958660  17246076"
+			"      29% /\n"
+			"##VILLA##fin##0##\n"
+			"##VILLA##nginx##\n"
+			"nginx: [emerg] unexpected end of file\n"
+			"##VILLA##fin##1##\n", piscina);
+		Xar* sectiones = villa_sectiones_legere(compositum, piscina);
+		constans SectioProbationis* s;
+
+		imprimere("\n--- XI-bis. sectiones probationis ---\n");
+		CREDO_AEQUALIS_I32 (xar_numerus(sectiones), (i32)III);
+
+		s = villa_sectionem_invenire(sectiones, "discus");
+		CREDO_NON_NIHIL (s);
+		si (s != NIHIL)
+		{
+			CREDO_VERUM (s->clausa);
+			CREDO_AEQUALIS_I32 (s->codex, ZEPHYRUM);
+			/* contentum sine lineis marcae, et parsator ordinarius
+			 * eum sine mutatione legit - id est TOTUM propositum */
+			{
+				StatusDisci d;
+
+				CREDO_VERUM (villa_discum_legere(s->contentum, &d,
+					piscina));
+				CREDO_CHORDA_AEQUALIS_LITERIS (d.systema,
+					"/dev/vda1");
+			}
+		}
+
+		/* CODEX PER SECTIONEM: imperium unum cadere potest dum
+		 * cetera valent. Probatio composita quae unum codicem
+		 * solum ferret hoc perderet. */
+		s = villa_sectionem_invenire(sectiones, "nginx");
+		CREDO_NON_NIHIL (s);
+		si (s != NIHIL)
+		{
+			CREDO_VERUM (s->clausa);
+			CREDO_AEQUALIS_I32 (s->codex, (i32)I);
+		}
+		CREDO_NIHIL (villa_sectionem_invenire(sectiones, "nusquam"));
+	}
+
+	/* XI-ter. sectio NON CLAUSA - effusio abscissa aut marca
+	 * collisa. Signum unum ambas prodit, et consumptor sectioni
+	 * non clausae fidere non debet. */
+	{
+		chorda abscissum = chorda_ex_literis(
+			"##VILLA##unitates##\n"
+			"nginx.service loaded active running Servus\n"
+			"##VILLA##discus##\n"          /* prior numquam clausa */
+			"/dev/vda1 1 1 1 1% /\n"
+			"##VILLA##fin##0##\n", piscina);
+		Xar* sectiones = villa_sectiones_legere(abscissum, piscina);
+		constans SectioProbationis* s;
+
+		imprimere("\n--- XI-ter. sectio non clausa ---\n");
+		CREDO_AEQUALIS_I32 (xar_numerus(sectiones), (i32)II);
+
+		s = villa_sectionem_invenire(sectiones, "unitates");
+		CREDO_NON_NIHIL (s);
+		si (s != NIHIL)
+		{
+			CREDO_FALSUM (s->clausa);
+		}
+		s = villa_sectionem_invenire(sectiones, "discus");
+		CREDO_NON_NIHIL (s);
+		si (s != NIHIL)
+		{
+			CREDO_VERUM (s->clausa);
+		}
+
+		/* conexio media abscissa: sectio ultima aperta manet */
+		{
+			Xar* trunca = villa_sectiones_legere(
+				chorda_ex_literis("##VILLA##unitates##\nalpha\n",
+					piscina), piscina);
+			constans SectioProbationis* t = (constans
+				SectioProbationis*)xar_obtinere(trunca, ZEPHYRUM);
+
+			CREDO_AEQUALIS_I32 (xar_numerus(trunca), (i32)I);
+			CREDO_NON_NIHIL (t);
+			si (t != NIHIL)
+			{
+				CREDO_FALSUM (t->clausa);
+				CREDO_CHORDA_CONTINET (t->contentum,
+					chorda_ex_literis("alpha", piscina));
+			}
+		}
+		/* effusio sine ulla marca: nulla sectio, nulla ruina */
+		CREDO_AEQUALIS_I32 (xar_numerus(villa_sectiones_legere(
+			chorda_ex_literis("prosa nuda\n", piscina), piscina)),
+			ZEPHYRUM);
+	}
+
+	/* ==============================================================
 	 * XII. LECTORES PARVI - FORMA figitur, numerus NUMQUAM
 	 * ============================================================== */
 	{

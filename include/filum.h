@@ -174,6 +174,23 @@ b32
 filum_directorium_creare_si_necesse (
 	constans character* via);
 
+/* Creare directorium CUM MODO dato si non existit; si iam existit,
+ * modum COERCET (chmod).
+ *
+ * CUR SEPARATUM a creare_si_necesse: illud 0755 figit, quod pro
+ * datis publicis rectum est sed pro secretis falsum. Directorium
+ * socketorum moderantium ssh 0700 postulat - socketus enim sessioni
+ * plenae aditum praebet, ergo nomen eius aliis usoribus ne
+ * appareat quidem. Arca (thesaurus secretorum, futurum nominatum)
+ * idem postulabit.
+ *
+ * Modum COERCET etiam in directorio praeexsistenti: directorium
+ * quod alia causa 0755 creavit aliter tacite laxum maneret. */
+b32
+filum_directorium_creare_cum_modo (
+	constans character* via,
+	           integer  modus);
+
 /* Verificare si directorium existit */
 b32
 filum_directorium_existit (

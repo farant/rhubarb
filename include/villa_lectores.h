@@ -369,6 +369,51 @@ villa_nginx_legere (
 
 
 /* ========================================================================
+ * IV-bis. SECTIONES PROBATIONIS - effusio composita findere
+ * ========================================================================
+ *
+ * Probatio UNA quinque lectiones fert (systemctl, nginx, df,
+ * uptime, meminfo). Vocatio ssh per lectionem quinque itinera et
+ * quinque processus posceret; imperium COMPOSITUM unum sufficit.
+ * (ControlMaster itinera posteriora vilia facit, non gratuita.)
+ *
+ * FORMA, quam scriptum remotum emittit:
+ *     ##VILLA##<nomen>##
+ *     <effusio imperii, cum errato mixto>
+ *     ##VILLA##fin##<codex>##
+ *
+ * Codex POST effusionem venit quia ante eam ignotus est. Ergo
+ * sectio quae finem suum non invenit CLAUSA NON EST - et id est
+ * signum quod duas res simul prodit: imperium remotum abscissum
+ * (conexio cecidit medio) AUT collisionem marcae (plagula
+ * configurationis lineam nostrae similem ferens). Utrumque
+ * 'clausa=FALSUM' nominat; consumptor sectionem non clausam
+ * FIDERE NON DEBET.
+ */
+
+#define VILLA_MARCA_SECTIONIS "##VILLA##"
+
+nomen structura {
+	chorda titulus;       /* nomen sectionis ('nomen' = macro!) */
+	chorda contentum;     /* effusio, sine lineis marcae */
+	i32    codex;         /* exitus imperii (si clausa) */
+	b32    clausa;        /* finem suum invenit? */
+} SectioProbationis;
+
+/* Effusionem compositam in sectiones findere (ordine emissionis). */
+Xar*
+villa_sectiones_legere (
+	  chorda effusio,
+	Piscina* piscina);
+
+/* Sectionem nomine invenire (NIHIL si abest). */
+constans SectioProbationis*
+villa_sectionem_invenire (
+	constans      Xar* sectiones,
+	constans character* titulus);
+
+
+/* ========================================================================
  * V. LECTORES PARVI - discus, memoria, tempus activum
  * ======================================================================== */
 

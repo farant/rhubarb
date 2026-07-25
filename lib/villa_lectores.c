@@ -1215,6 +1215,150 @@ villa_nginx_legere (chorda effusio, Piscina* piscina)
 
 
 /* ========================================================================
+ * IV-bis. SECTIONES PROBATIONIS
+ * ======================================================================== */
+
+constans SectioProbationis*
+villa_sectionem_invenire (constans Xar* sectiones,
+	constans character* titulus)
+{
+	i32 i;
+
+	si (sectiones == NIHIL || titulus == NIHIL)
+	{
+		redde NIHIL;
+	}
+	per (i = ZEPHYRUM; i < xar_numerus(sectiones); i++)
+	{
+		constans SectioProbationis* s = (constans SectioProbationis*)
+			xar_obtinere(sectiones, i);
+
+		si (s != NIHIL
+			&& chorda_aequalis_literis(s->titulus, titulus))
+		{
+			redde s;
+		}
+	}
+	redde NIHIL;
+}
+
+Xar*
+villa_sectiones_legere (chorda effusio, Piscina* piscina)
+{
+	Xar*   fructus;
+	chorda marca;
+	chorda finis_marca;
+	chorda linea;
+	chorda titulus_currens;
+	i32    positus          = ZEPHYRUM;
+	i32    initium_lineae   = ZEPHYRUM;
+	i32    initium_contenti = ZEPHYRUM;
+	b32    in_sectione      = FALSUM;
+
+	fructus = xar_creare(piscina, (i32)magnitudo(SectioProbationis));
+	si (fructus == NIHIL)
+	{
+		redde NIHIL;
+	}
+	marca           = _ch(VILLA_MARCA_SECTIONIS);
+	finis_marca     = _ch("fin##");
+	titulus_currens = _vacua();
+
+	dum (VERUM)
+	{
+		chorda nuda;
+		chorda medium;
+
+		initium_lineae = positus;
+		si (!_linea_proxima(effusio, &positus, &linea))
+		{
+			frange;
+		}
+		nuda = chorda_praecidere(linea);
+		si (!chorda_incipit(nuda, marca)
+			|| !chorda_terminatur(nuda, _ch("##"))
+			|| nuda.mensura < marca.mensura + (i32)II)
+		{
+			perge;   /* linea ordinaria - contentum */
+		}
+		medium = chorda_sectio(nuda, marca.mensura,
+			nuda.mensura - (i32)II);
+
+		si (chorda_incipit(medium, finis_marca))
+		{
+			/* FINIS: codex post 'fin##'. Sine sectione aperta =
+			 * finis orbus (effusio abscissa aut marca collisa);
+			 * tacite omittitur, quod sectio non clausa iam
+			 * nominat. */
+			si (in_sectione)
+			{
+				SectioProbationis* s = (SectioProbationis*)
+					xar_addere(fructus);
+
+				si (s != NIHIL)
+				{
+					s->titulus = _copia(titulus_currens, piscina);
+					s->contentum = _copia(
+						chorda_sectio(effusio, initium_contenti,
+							initium_lineae),
+						piscina);
+					s->codex = ZEPHYRUM;
+					_ut_i32(chorda_sectio(medium,
+						finis_marca.mensura, medium.mensura),
+						&s->codex);
+					s->clausa = VERUM;
+				}
+				in_sectione = FALSUM;
+			}
+			perge;
+		}
+
+		/* INITIUM sectionis novae. Si alia adhuc aperta est, eam
+		 * NON CLAUSAM condimus - id est signum quod effusionem
+		 * abscissam et collisionem marcae pariter prodit. */
+		si (in_sectione)
+		{
+			SectioProbationis* s = (SectioProbationis*)
+				xar_addere(fructus);
+
+			si (s != NIHIL)
+			{
+				s->titulus = _copia(titulus_currens, piscina);
+				s->contentum = _copia(
+					chorda_sectio(effusio, initium_contenti,
+						initium_lineae),
+					piscina);
+				s->codex = ZEPHYRUM;
+				s->clausa = FALSUM;
+			}
+		}
+		titulus_currens  = medium;
+		initium_contenti = positus;
+		in_sectione      = VERUM;
+	}
+
+	/* effusio finita cum sectione adhuc aperta */
+	si (in_sectione)
+	{
+		SectioProbationis* s = (SectioProbationis*)
+			xar_addere(fructus);
+
+		si (s != NIHIL)
+		{
+			s->titulus = _copia(titulus_currens, piscina);
+			s->contentum = _copia(
+				chorda_sectio(effusio, initium_contenti,
+					effusio.mensura),
+				piscina);
+			s->codex = ZEPHYRUM;
+			s->clausa = FALSUM;
+		}
+	}
+	redde fructus;
+}
+
+
+/* ========================================================================
  * V. LECTORES PARVI
  * ======================================================================== */
 
