@@ -1,6 +1,6 @@
 RHUBARB CODEBASE MAP
 ====================
-Last updated: 2026-07-24
+Last updated: 2026-07-25
 
 A C89 monorepo for building catholic civilization.
 All identifiers in Latin. No dependencies. Long-term thinking.
@@ -69,7 +69,15 @@ APPLICATIONS  (apps/ - NOT swept by any test runner; see note)
 
     CAUTIO: no runner sweeps apps/. Anything that must not rot
     belongs in root probationes/. apps/forum/fumus.sh is referenced
-    by nothing and is the cautionary example.
+    by nothing and must be run BY HAND (it is, however, the only
+    gate the forum UI has -- it drives a real window and asserts
+    DOM structure, so it is worth running after any index.html edit).
+
+    apps/forum/forum.sh regenerates the capsula before building
+    (fixed 2026-07-25). Before that, every index.html edit was
+    invisible until capsula_generare was run by hand -- and
+    fumus.sh pre-builds THROUGH forum.sh, so the smoke harness was
+    silently testing a stale UI.
 
 
 LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
@@ -225,6 +233,13 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │                   probe scheduling over the           │   │
     │  │                   non-blocking processus path,        │   │
     │  │                   genera seeding, actions -> events   │   │
+    │  │  sententiae ───── PURE reader for address-inscribed   │    │
+    │  │                   outline documents (de-imagine.md):  │    │
+    │  │                   locus grammar, grade vocabulary     │    │
+    │  │                   from the prooemium, references,     │    │
+    │  │                   SHA-256 seals over normalised text. │    │
+    │  │                   Liber = truth, tree = rebuildable   │    │
+    │  │                   projection; the parse is ONE-WAY.   │    │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
     │  ┌─ Utilities ─────────────────────────────────────────┐    │
