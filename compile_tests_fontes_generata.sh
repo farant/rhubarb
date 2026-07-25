@@ -98,6 +98,7 @@ declare -a SOURCE_FILES=(
     "lib/selectio.c"
     "lib/sententia_fissio.c"
     "lib/sententia_paginarium.c"
+    "lib/sententiae.c"
     "lib/servitium.c"
     "lib/sigillum.c"
     "lib/similitudo.c"
