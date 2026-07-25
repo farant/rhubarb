@@ -211,6 +211,12 @@
      corrections are addressable, not to display contrition' (29.) */
   .linea-s.retracta .textus-s { color: #6b6357; }
   .linea-s.illuminata { background: #2e3a26; }
+  /* gradus declarati tinguntur; uncina LIBERA (e.g. [Fran's thesis])
+     plana manent - color SIGNIFICAT 'hoc in vocabulario prooemii
+     declaratum est'. In linea retracta gradus NON obscuratur: §VIII.4
+     dimissum-cum-causa-monstrata poscit, ergo ratio legibilis manet
+     dum claim recedit. */
+  .linea-s .gradus-s { color: #8a7a55; }
   #sent-saltus { max-width: 17em; }
   #sent-meta { margin: .4em 0 .8em; line-height: 2.2; }
   #sent-anomaliae { font-size: .75em; margin-bottom: .6em; }
@@ -2587,10 +2593,61 @@ function reddere_latus_sententiarum(arbor) {
 /* Columna VERBATIM. Fons per lineas; arbor dicit quae linea punctum
  * incipiat. Linea vacua 'currens' resolvit - aliter obscuratio
  * puncti retracti in prosam sequentem MANARET. */
+/* Gradus declaratos in una linea tingere. 'stat.apertus' statum
+ * TRANS lineas fert: uncinum per lineas continuationis extensum est
+ * forma ORDINARIA hic (VI ex VII retractationibus in de-imagine.md
+ * sic scriptae) - ergo tinctor per lineas solas operans praecise eas
+ * omitteret quae maxime important. Eadem decipula quam lector fert,
+ * altero strato.
+ *
+ * textContent ubique, numquam innerHTML: contentum documenti est,
+ * non nostrum. */
+function sent_lineam_pingere(c, txt, vocab, stat) {
+  var i = 0;
+  var j;
+  var k;
+  var m;
+
+  function planum(s) {
+    if (s) { c.appendChild(document.createTextNode(s)); }
+  }
+  function tinctum(s) {
+    var g = document.createElement('span');
+    g.className = 'gradus-s';
+    g.textContent = s;
+    c.appendChild(g);
+  }
+
+  if (stat.apertus) {
+    j = txt.indexOf(']');
+    if (j < 0) { tinctum(txt); return; }
+    tinctum(txt.slice(0, j + 1));
+    stat.apertus = false;
+    i = j + 1;
+  }
+  while (i <= txt.length) {
+    k = txt.indexOf('[', i);
+    if (k < 0) { planum(txt.slice(i)); return; }
+    m = /^\[([a-z]+)/.exec(txt.slice(k));
+    if (!m || vocab.indexOf(m[1]) < 0) {
+      planum(txt.slice(i, k + 1));
+      i = k + 1;
+      continue;
+    }
+    planum(txt.slice(i, k));
+    j = txt.indexOf(']', k);
+    if (j < 0) { tinctum(txt.slice(k)); stat.apertus = true; return; }
+    tinctum(txt.slice(k, j + 1));
+    i = j + 1;
+  }
+}
+
 function reddere_textum_sententiarum(arbor) {
   var d = document.getElementById('sent-textus');
   var per_lineam = {};
   var currens = null;
+  var vocab = arbor.gradus.map(function (g) { return g.vocabulum; });
+  var stat = { apertus: false };
   d.innerHTML = '';
   arbor.puncta.forEach(function (p) { per_lineam[p.linea] = p; });
 
@@ -2606,7 +2663,7 @@ function reddere_textum_sententiarum(arbor) {
      * (Prima forma lineas vacuas solas resolvebat - ergo saeptum
      * '```' post punctum retractum obscurationem HEREDITABAT.) */
     if (p) { currens = p; }
-    else if (!/^\s/.test(txt)) { currens = null; }
+    else if (!/^\s/.test(txt)) { currens = null; stat.apertus = false; }
 
     row.className = 'linea-s'
       + ((currens && currens.retractum) ? ' retracta' : '');
@@ -2617,7 +2674,7 @@ function reddere_textum_sententiarum(arbor) {
     g.className = 'locus-s';
     g.textContent = p ? p.locus : '';
     c.className = 'textus-s';
-    c.textContent = txt;
+    sent_lineam_pingere(c, txt, vocab, stat);
     row.appendChild(g);
     row.appendChild(c);
     d.appendChild(row);
@@ -3174,6 +3231,35 @@ function fumus_genera() {
             if (insignia.length !== 6) {
               throw new Error('insignia capitis ' + insignia.length);
             }
+            /* TINCTIO GRADUUM. Quinque spans exspectantur: duo in
+             * declaratione prooemii, unus in 1.1, et DUO pro uno
+             * gradu 1.obj.1 quia per lineas extenditur. Ille par est
+             * adsertio quae refert - tinctor per lineas solas eum
+             * omitteret, et hoc genus est VI ex VII retractationum in
+             * corpore vero. */
+            var tincti = document.querySelectorAll('#sent-textus .gradus-s');
+            if (tincti.length !== 5) {
+              throw new Error('gradus tincti ' + tincti.length);
+            }
+            /* Dimidium clausurae ab initio lineae tingitur, ergo
+             * indentationem ferens - spatium tinctum invisibile est,
+             * nihil ergo emendandum. Terminum probamus, non aequalitatem. */
+            var clausura = false;
+            Array.prototype.forEach.call(tincti, function (g) {
+              if (/per lineas extensa\]$/.test(g.textContent)) {
+                clausura = true;
+              }
+            });
+            if (!clausura) {
+              throw new Error('dimidium clausurae gradus per lineas non tinctum');
+            }
+            /* textus VERBATIM manet: tinctio characteres non mutat */
+            var l12 = document.querySelectorAll('#sent-textus .linea-s')[11];
+            if (l12.querySelector('.textus-s').textContent
+                !== sent_lineae[11]) {
+              throw new Error('tinctio textum mutavit');
+            }
+
             /* saltus resolvit quod exstat, recusat quod non */
             if (!sententiae_salire('1.1')) {
               throw new Error('saltus ad 1.1 defecit');
