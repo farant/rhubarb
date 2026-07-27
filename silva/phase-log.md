@@ -10237,3 +10237,57 @@ nothing; NAMED RISK to price at that seam: the v0.2 latina PIN
 consumes the macro index / definition jumps must be read first).
 EXPECTED RED: vectis -corpus diverges massively after (2) - that IS
 the input to the re-pin session (separate, fresh, rows READ).
+
+## DESIGN B PARS I (componere + percursus): RELATIO (2026-07-27)
+
+Navatum (472160c, 9bff7ce): silva_lexicon_componere = compositio
+systematis UNO loco (ISO + POSIX totum-aut-derivatum + externa,
+allocatio NOVA semper - aequalitas contenti = clavis cache); examen
+refit ad vocationem unam (110 lineae inline -> 1). percursus:
+cache praeparationum {ctx, parsura, semantica, piscina} clave
+textus compositi; capita SEMEL lecta (piscina longaeva), in
+contextus praebita; contextus basis solum sine -semantica (basis
+pristina intacta); fractura annotationis = INFRA alta voce +
+piscina destructa, verdictum mundum numquam; vectis -corpus lineas
+FRACTA in tabulam colligit (fractura oraculo invisibilis esse non
+debet).
+
+MENSURAE: praeparationes XXI (568.7 MB, linea summae impressa -
+factum, non aestimatio; INTENTIO ~15-21 tenuit); XII plagulae POSIX
+sanatae corpore toto, REICE novae ZEPHYRUM (asymmetria periculi
+CONFIRMATA: derivatio numquam nocet); sweep 182s; examen==percursus
+in lib/ (REICE {imago, iter_directoria} ambobus, dirent-classis
+vera).
+
+DIVERTICULUM DIAGNOSTICUM (dimidium sessionis, recte impensum):
+tres plagulae REICE quas pinna non habebat -> hypothesis vitii mei
+FALSIFICATA gemino-specimine (git stash, binarium vetus, arbor
+eadem: REICE etiam vetere); contextus RECEPTUM non status (doctrina
+silva_contextus.h:7 - dependentia ordinis ambulationis EXCLUSA);
+determinismus probatus (sweep vetus bis, octetim aequalis, L REICE).
+Conclusio: corpus post pinnam motum (villa/gesta/burndown editiones
+attributae singulae in 01KYDPHSZR), relatio +II de 2026-07-25
+observatio incompleta - lex truncationis, quae me ipsum intra horam
+iterum momordit (~XXI ex diff partiali; verum XXXVIII).
+
+FLAGRATIO IV legis scanner-textualis: silva_lexicon.h:66 (doc
+functionis!) tagum in commentario portabat - latens quia uncus et
+-census .c SOLUM iudicant; percursus .h ambulat ergo detexit.
+Sanata verbo nudo; MEMORY.md renovatum.
+
+Instrumenta (debrief): adhibita = legati corpus (structura chordae;
+CAUTIO VIGILIAE ignorata recte - amalgama recentior binario, classis
+nota), stash-gemini bisectio, sweeps in umbra III, examen ut
+oraculum per-plagulam, nexus warmup; fructus = gemino-specimine
+culpa mea intra minuta exclusa; determinismus-bis mysterium in
+archaeologiam vertit; linea praeparationum impressa rem memoriae
+factum fecit statim; asperitates = zsh 'echo ===' expansione
+aequalis periit (=cmd quaerit); diff -corpus sine fistula in
+plagulam lectus -> relationes incompletae BIS (25a et mea hodie) -
+mos novus: diff in plagulam, wc ante compendium; desiderata =
+nulla nova (pinnatio-cum-causa iam in 01KYDPHSZR).
+
+IN VOLATU: pars II (praeparator/legatus, cache pigre; PERICULUM
+pin latinae v0.2 - consumptores indicis macrorum legendi ante);
+re-pinnatio = XXXVIII contra XLIII, sessione recenti, lineae
+LEGENDAE.
