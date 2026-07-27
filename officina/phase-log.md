@@ -4697,3 +4697,96 @@ bin (framing helpers, message shapes, engine-driving pattern);
 asperitates — none; the aedificator's appendere_evasus_json did
 the one genuinely fiddly job (arbitrary file bytes into a JSON
 string) in one call. Demand ledger: 4 seeds closed.
+
+## DESIGN B PARS II (praeparator/legatus derivatio): INTENTIO (2026-07-27)
+
+Sequela arcus lexici silvae (silva/phase-log 2026-07-25..27; pars I
+= examen refit + percursus, commissa 472160c/9bff7ce). Res mater
+01KYBAG1MJ: legati diagnostica eandem plagulam REICIT quam examen
+ACCIPIT (processus_posix XXI violationes falsae = probatio
+acceptionis huius partis).
+
+PRETIATUM AD SUTURAM (non ex memoria):
+- Pin latinae v0.2 SOLVITUR sine opere: saltus definitionis
+  macronis per INDICEM plagularum verarum resolvit (_sedes_macronis
+  :2294 in l->ordines quaerit, non in provenientia lexici);
+  collapsus concatenationis pro POSIX iam hodie sub -posix idem -
+  nulla regressio. Lectio sessio.worklog TENET: lexicon UNUM
+  concatenatum, numquam alterum (suppressio custodum); cfg
+  memset in IV consumptoribus omnibus (crescentia structurae tuta).
+- legatus.sh iam -I silva/instrumenta fert ET nexus_ordines.c
+  nectit - exemplar exactum pro silva_lexicon.c.
+
+DECISUS:
+- praeparator: cfg += fons_plagulae/mensura_plagulae/via_plagulae
+  (vanilla C89); textura systematis per silva_lexicon_componere
+  (ISO + totum-aut-derivatum + externa), latina POST ut ante;
+  externa fracta = praeparatio fracta (0), numquam iudicium mundum.
+  Consumptores veteres (sessio, vindex_onerator) intacti - campi
+  novi zephyrati = mos vetus exactus.
+- legatus: l->praeparatio MANET praeparatio BASIS (init, viae_
+  capitum, staleness ut hodie). IUXTA: Xar praeparationum
+  derivatarum, pigre, clavis = textus derivatus+externa (scan
+  linearis, mensura tum memcmp; paucae praeparationes in sessione
+  viva). _praeparatio_pro ad ambas superficies iudicii
+  (_analysare_et_publicare; recensio CUM effusore); constructio
+  indicis basi manet (symbola, non verdicta - profilum memoriae
+  servi finitum a plagulis APERTIS, non a corpore toto).
+  Staleness basis sufficit (basis semper vetustissima); reaedificatio
+  arbores omnium documentorum demolitur (C11), TUM praeparationes
+  derivatas destruit, TUM basim restruit. -posix vexillum = escape:
+  basis totum fert, cache circumitur.
+- Porta in ortu: probatio praeparator-gradus (plagula POSIX cum
+  cfg.fons_plagulae -> violationes 0; sine -> adsunt); acceptio =
+  mcp legati diagnostica in processus_posix.c ACCIPE == examen.
+
+## DESIGN B PARS II: RELATIO (2026-07-27)
+
+Navatum: praeparator cfg += fons_plagulae/mensura/via - systema per
+silva_lexicon_componere (ISO + totum-aut-derivatum + externa; latina
+post, ut ante); systema_posix SEMPER lectus et vigilatus, in
+Praeparatio expositus (fons_posix - clavis derivationis
+consumptorum). legatus: basis (l->praeparatio) intacta pro signatura
+vacua; LegatusPraepDerivata Xar pigre, clavis = textus
+derivatus+externa (scan linearis); superficies iudicii ambae
+(_analysare_et_publicare + _recensere cum effusore) per
+_praeparatio_pro; constructio indicis basi manet (symbola, non
+verdicta - memoria servi finita a plagulis apertis). Externa fracta
+= diagnosticum syntheticum publicatum (numquam lista vacua munda).
+Reaedificatio: derivatae post arbores documentorum, ante basim
+(C11). Nexus: silva_lexicon.c in V scriptis (legatus/sonda/vindex/
+colloquium/compile_probationes) + III listae generatae cum radice
+nova regeneratae.
+
+ACCEPTIO (sonda, via legati vera): processus_posix.c diagnostica
+XXI -> 0 (querella originalis 01KYBAG1MJ mortua); tabulariumd_
+principale.c diagnostica 4 == examen EXACTE (lineae/columnae/causae
+eaedem - superficies tres nunc consentiunt). piscina.c praeparatio
+derivata (stdlib.h sectio POSIX est - stipes 182 plagularum, non
+mirum). Probationes 311/311 primo cursu (probatio_praeparatio_
+derivata nova: sine derivatione diagnostica adsunt, cum ea 0,
+externa fracta recusatur); amalgamare officinae VERIFICATUM.
+
+OBSERVATA (non tacta, nominata):
+- reactor/tcp_posix "diagnostica 0" per sonda = EXCLUSIO legati
+  (_exclusum ANTE iudicium saltat - exemplar prae-iudicii quod
+  uncus examinis exuit 2026-07-25). Re-pinnatio listam siccabit et
+  plagulae iudicium verum accipient sponte; migratio ad exclusionem
+  post-iudicium in legato = opus proprium si umquam dolet.
+- vitium unum in aedificatione captum: FONTES_OMNES clang -MM solum
+  alit, non nexum - blocus compilationis explicitus deerat (linker
+  clamavit, sanatum).
+
+Instrumenta (debrief): adhibita = grep suturarum (macro-index
+consumptores), sonda ut probatio acceptionis (via legati VERA sine
+daemone), fontes_generare regeneratio, uncus examen-custos (vitium
+implicitae declarationis in momento editionis captum - fwd decl
+post sedem usus); fructus = pretiatio ad suturam pin latinae
+DISSOLVIT (saltus per indicem, non provenientiam - aestimatio
+memoriae iterum vicit); asperitates = nulla nova; desiderata =
+nulla (exclusio post-iudicium legati supra nominata, non petita).
+
+RELIQUUM ARCUS: re-pinnatio exclusionum (XXXVIII contra XLIII,
+sessione recenti, lineae LEGENDAE) - post eam legatus reactor/
+tcp_posix sponte iudicabit. Residens legati novus post /mcp
+reconnect.
