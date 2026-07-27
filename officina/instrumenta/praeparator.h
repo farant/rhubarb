@@ -27,13 +27,24 @@ typedef struct {
     const char* radix;     /* radix repositorii (viae systematis +
                             * ambulatio capitum); NULL = sine
                             * systemate et capitibus */
-    int cum_posix;         /* systema += silva/fontes/systema_posix.h */
+    int cum_posix;         /* systema += silva/fontes/systema_posix.h
+                            * TOTUM (escape; derivationem vincit) */
     int cum_latina;        /* systema += include/latina.h - POST
                             * systema (ORDO PORTANS: size_t ante
                             * memoriae_index; lexicon = canalis
                             * macrorum solum, typedefs per parsuram
                             * systematis fluunt) */
     int sine_capitibus;    /* ambulatio capitum omissa */
+    const char* fons_plagulae;      /* textus plagulae iudicandae:
+                            * sectiones POSIX ex eius '#include <...>'
+                            * derivantur et bloci externa eius in
+                            * systema intrant (silva_lexicon, design B
+                            * 2026-07-27). NULL = sine derivatione
+                            * (mos vetus exactus). Externa fracta =
+                            * praeparatio fracta (0) - iudicium
+                            * mundum ex annotatione prava numquam. */
+    unsigned int mensura_plagulae;
+    const char* via_plagulae;       /* pro nuntiis (externa fracta) */
 } PraeparatorConfiguratio;
 
 /* tempus capitis ad onus commemoratum (percursus staleness) */
@@ -60,6 +71,14 @@ typedef struct {
                                         * (mtime parentis = inventio
                                         * capitum novorum, 2026-07-14);
                                         * pro caput_stalum */
+    const char*     fons_posix;        /* silva/fontes/systema_posix.h
+                                        * SEMPER lectus et vigilatus
+                                        * (etiam si systema basis eum
+                                        * non texit): consumptores
+                                        * clavem derivationis inde
+                                        * legunt (legatus, design B).
+                                        * NULL si radix NULL. */
+    unsigned int    mensura_posix;
 } Praeparatio;
 
 /* Praeparat contextum. piscina_capitum = arena textuum capitum et

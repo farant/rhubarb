@@ -138,6 +138,20 @@ if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
 fi
 obj_files="$obj_files $obj"
 
+# ---- 2c-0b. silva_lexicon (compositio systematis - praeparator) ----
+src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
+obj="$BUILD_DIR/silva_lexicon.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" -nt "$obj" ] \
+    || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [lexicon] silva_lexicon.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+        -c "$src" -o "$obj"; then
+        echo "FRACTA: silva_lexicon" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
 # ---- 2c. praeparator (unitas oneratorum communis) + sessio ----
 src="$OFF_DIR/instrumenta/praeparator.c"
 obj="$BUILD_DIR/praeparator.o"

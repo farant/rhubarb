@@ -25,6 +25,7 @@ declare -a GCC_FLAGS=(
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$RADIX_DIR/silva/amalgama"
+    "-I$RADIX_DIR/silva/instrumenta"
     "-I$RADIX_DIR/tessera/amalgama"
     "-I$OFF_DIR/amalgama"
     "-I$OFF_DIR/instrumenta"
@@ -39,7 +40,8 @@ source "$OFF_DIR/vindex_fontes_generata.sh"
 # per COMMENTARIUM "silva.h" falso exoneravit)
 newest_header () {
     find "$RADIX_DIR/include" "$OFF_DIR/instrumenta" \
-        "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/tessera/amalgama" \
+        "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/silva/instrumenta" \
+        "$RADIX_DIR/tessera/amalgama" \
         "$OFF_DIR/amalgama" \
         -name '*.h' -newer "$1" 2>/dev/null | head -1
 }
@@ -73,6 +75,16 @@ for nom in "tessera" "silva" "officina"; do
     fi
     obj_files="$obj_files $obj"
 done
+
+# silva_lexicon (compositio systematis - praeparator eam vocat)
+src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
+obj="$BUILD_DIR/silva_lexicon.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [lexicon] silva_lexicon.c"
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
 
 for f in "praeparator" "vindex_onerator" "vindex_visum"; do
     src="$OFF_DIR/instrumenta/$f.c"

@@ -22,6 +22,7 @@
 #include "chorda_aedificator.h"
 #include "silva.h"
 #include "praeparator.h"
+#include "silva_lexicon.h"
 #include "nexus_ordines.h"
 
 #include <stdlib.h>
@@ -102,6 +103,19 @@ nomen structura {
     longus tempus;
 } LegatusViaTempus;
 
+/* praeparatio derivata (design B 2026-07-27): plagula quae capita
+ * POSIX includit aut blocos externa fert praeparationem PROPRIAM
+ * accipit (systema = ISO + sectiones derivatae + externa - eadem
+ * compositio quam examen per plagulam facit); basis (l->praeparatio)
+ * signaturae vacuae servit, mos vetus exactus. Clavis = textus
+ * derivatus+externa; piscina capitum propria, moritur cum introitu
+ * (reaedificatio contextus). */
+nomen structura {
+    chorda      signatura;
+    Praeparatio praeparatio;
+    Piscina*    piscina_capitum;
+} LegatusPraepDerivata;
+
 nomen structura {
     Piscina*        perennis;
     Piscina*        piscina_capitum;   /* textus capitum; moritur
@@ -128,6 +142,10 @@ nomen structura {
     FILE*           extra;
     Praeparatio     praeparatio;
     b32             praeparata;
+    Xar*            praeparationes_derivatae;  /* LegatusPraepDerivata
+                                        * - cache pigra (design B);
+                                        * finita a plagulis quibus
+                                        * diagnostica petuntur */
     b32             initiatum;
     b32             exitus_petitus;    /* shutdown receptum */
     b32             utf16;
@@ -1158,6 +1176,16 @@ _publicare (Legatus* l, Piscina* pn, chorda uri, s64 versio,
 
 interior vacuum
 _analysare_et_publicare (Legatus* l, Piscina* pn,
+    LegatusDocumentum* doc);
+interior constans Praeparatio*
+_praeparatio_pro (Legatus* l, Piscina* pn, constans character* via,
+    constans character* fons, insignatus integer mensura,
+    b32* fractum);
+interior vacuum
+_praeparationes_derivatas_destruere (Legatus* l);
+
+interior vacuum
+_analysare_et_publicare (Legatus* l, Piscina* pn,
     LegatusDocumentum* doc)
 {
     JsonValor* lista = json_tabulatum_creare(pn);
@@ -1179,10 +1207,34 @@ _analysare_et_publicare (Legatus* l, Piscina* pn,
         _publicare(l, pn, doc->uri, doc->versio, NIHIL);
         redde;
     }
-    doc->sem = praeparator_analysare(&l->praeparatio, doc->effimera,
-        (constans character*)doc->via.datum,
-        (constans character*)doc->textus.datum,
-        (insignatus integer)doc->textus.mensura, &doc->parsura);
+    {
+        b32 lex_fractum = FALSUM;
+        constans Praeparatio* praep = _praeparatio_pro(l, pn,
+            (constans character*)doc->via.datum,
+            (constans character*)doc->textus.datum,
+            (insignatus integer)doc->textus.mensura, &lex_fractum);
+
+        si (praep == NIHIL)
+        {
+            /* annotatio externa fracta aut apparatus: verdictum
+             * mundum numquam fingimus - diagnosticum syntheticum
+             * publicatur (causa exacta in stderr iam scripta) */
+            json_tabulatum_addere(lista, _diagnosticum_json(pn,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, I,
+                lex_fractum
+                    ? "annotatio externa fracta - lexicon plagulae"
+                      " non compositum (vide stderr)"
+                    : "praeparatio lexici fracta (apparatus)",
+                "silva"));
+            _publicare(l, pn, doc->uri, doc->versio, lista);
+            redde;
+        }
+        doc->sem = praeparator_analysare(praep, doc->effimera,
+            (constans character*)doc->via.datum,
+            (constans character*)doc->textus.datum,
+            (insignatus integer)doc->textus.mensura,
+            &doc->parsura);
+    }
 
     /* errores syntaxis POSITI (chunk D, C13): nodi GENUS_ERROR in
      * elementis radicis; extenta per radicem originis. Effugium
@@ -1616,6 +1668,10 @@ _contextum_reaedificare (Legatus* l, Piscina* pn)
             (*doc)->sem = NIHIL;
         }
     }
+    /* ①b praeparationes derivatae quoque moriuntur (arbores
+     * documentorum in textus earum monstrare potuerunt - iam
+     * mortuae per ①; cache vacua pigre resurgit) */
+    _praeparationes_derivatas_destruere(l);
     /* ② praeparatio nova */
     si (!_praeparationem_struere(l))
     {
@@ -3903,8 +3959,30 @@ _recensere (Legatus* l, Piscina* pn, chorda via_sine,
     {
         redde NIHIL;
     }
-    sem = praeparator_analysare(&l->praeparatio, effimera, via_cum,
-        textus, mensura, &parsura);
+    {
+        constans Praeparatio* praep = &l->praeparatio;
+
+        si (effusor != NIHIL)
+        {
+            /* diagnostica postulata: praeparatio derivata (verdicta
+             * examen aequant - design B). Constructio indicis basi
+             * manet: symbola petit, non verdicta - profilum
+             * memoriae servi a plagulis APERTIS finitum, non a
+             * corpore toto. Fracta = apparatus, non mundum. */
+            b32 lex_fractum = FALSUM;
+            constans Praeparatio* pd = _praeparatio_pro(l, pn,
+                via_cum, textus, mensura, &lex_fractum);
+
+            si (pd == NIHIL)
+            {
+                silva_piscina_destruere(effimera);
+                redde NIHIL;
+            }
+            praep = pd;
+        }
+        sem = praeparator_analysare(praep, effimera, via_cum,
+            textus, mensura, &parsura);
+    }
     si (sem != NIHIL && parsura != NIHIL)
     {
         /* ordo verificatus (superpositio documentorum): neca ->
@@ -4439,6 +4517,8 @@ _praeparationem_struere (Legatus* l)
     memset(&pc, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
     pc.radix = l->radix;
     pc.cum_posix = l->cum_posix ? I : ZEPHYRUM;
+    /* basis sine derivatione (fons_plagulae zephyratum a memset):
+     * signaturae vacuae servit; derivatae per _praeparatio_pro */
     /* PIN (v0.2): cum_latina ZEPHYRUM MANEAT - si vertitur, latina
      * in textum lexici systematis concatenatur et provenientia
      * macrorum in "systema_c89.h" collabitur (lineae falsae; index
@@ -4449,6 +4529,162 @@ _praeparationem_struere (Legatus* l)
     l->praeparata = praeparator_praeparare(&l->praeparatio,
         l->piscina_capitum, &pc) ? VERUM : FALSUM;
     redde l->praeparata;
+}
+
+/* praeparationes derivatas omnes destruere (reaedificatio: arbores
+ * documentorum in textus earum monstrare potuerunt - vocator eas
+ * ANTE demoliatur, eadem lex C11 qua basis) */
+interior vacuum
+_praeparationes_derivatas_destruere (Legatus* l)
+{
+    i32 n;
+    i32 i;
+
+    si (l->praeparationes_derivatae == NIHIL)
+    {
+        redde;
+    }
+    n = xar_numerus(l->praeparationes_derivatae);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        LegatusPraepDerivata* pd = (LegatusPraepDerivata*)
+            xar_obtinere(l->praeparationes_derivatae, i);
+
+        si (pd != NIHIL)
+        {
+            praeparator_destruere(&pd->praeparatio);
+            si (pd->piscina_capitum != NIHIL)
+            {
+                piscina_destruere(pd->piscina_capitum);
+            }
+        }
+    }
+    xar_vacare(l->praeparationes_derivatae);
+}
+
+/* Praeparationem pro plagula eligere (design B): signatura =
+ * sectiones POSIX ex inclusionibus plagulae derivatae + bloci
+ * externa eius; vacua -> basis (via calida, ~omnes plagulae).
+ * Scan linearis (praeparationes paucae in sessione viva; mensura
+ * tum memcmp). Fabrica pigra: sessio quae plagulam POSIX numquam
+ * aperit nihil solvit. 'fractum' = annotatio externa prava -
+ * vocator iudicium sistere debet, verdictum mundum numquam
+ * (NIHIL sine fracto = apparatus). Sub -posix basis totum iam
+ * fert - cache circumitur (escape vetus). */
+interior constans Praeparatio*
+_praeparatio_pro (Legatus* l, Piscina* pn, constans character* via,
+    constans character* fons, insignatus integer mensura,
+    b32* fractum)
+{
+    character* pars_d;
+    i32 m_d = ZEPHYRUM;
+    character* pars_e;
+    i32 m_e = ZEPHYRUM;
+    character* clavis;
+    i32 m_clavis;
+    i32 n;
+    i32 i;
+
+    *fractum = FALSUM;
+    si (!l->praeparata)
+    {
+        redde NIHIL;
+    }
+    si (l->cum_posix || l->praeparatio.fons_posix == NIHIL
+        || l->praeparationes_derivatae == NIHIL)
+    {
+        redde &l->praeparatio;
+    }
+    pars_d = silva_lexicon_posix_derivare(
+        l->praeparatio.fons_posix,
+        (i32)l->praeparatio.mensura_posix, fons, (i32)mensura,
+        pn, &m_d);
+    pars_e = silva_lexicon_externa_excerpere(fons, (i32)mensura,
+        pn, &m_e, via, fractum);
+    si (*fractum)
+    {
+        redde NIHIL;
+    }
+    si (m_d == ZEPHYRUM && m_e == ZEPHYRUM)
+    {
+        redde &l->praeparatio;
+    }
+    clavis = (character*)piscina_allocare(pn,
+        (memoriae_index)(m_d + m_e + I));
+    si (clavis == NIHIL)
+    {
+        redde NIHIL;
+    }
+    m_clavis = ZEPHYRUM;
+    si (pars_d != NIHIL && m_d > ZEPHYRUM)
+    {
+        memcpy(clavis, pars_d, (memoriae_index)m_d);
+        m_clavis = m_d;
+    }
+    si (pars_e != NIHIL && m_e > ZEPHYRUM)
+    {
+        memcpy(clavis + m_clavis, pars_e, (memoriae_index)m_e);
+        m_clavis = m_clavis + m_e;
+    }
+    n = xar_numerus(l->praeparationes_derivatae);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        LegatusPraepDerivata* pd = (LegatusPraepDerivata*)
+            xar_obtinere(l->praeparationes_derivatae, i);
+
+        si (pd != NIHIL && pd->signatura.mensura == m_clavis
+            && memcmp(pd->signatura.datum, clavis,
+                   (memoriae_index)m_clavis) == ZEPHYRUM)
+        {
+            redde &pd->praeparatio;
+        }
+    }
+    {
+        Piscina* pcap = piscina_generare_dynamicum(
+            "legatus_capita_derivata", 1048576);
+        Praeparatio praep;
+        PraeparatorConfiguratio pc;
+        LegatusPraepDerivata* pd;
+        character* clavis_copia;
+
+        si (pcap == NIHIL)
+        {
+            redde NIHIL;
+        }
+        memset(&pc, ZEPHYRUM,
+            magnitudo(PraeparatorConfiguratio));
+        pc.radix = l->radix;
+        pc.cum_latina = ZEPHYRUM;   /* PIN v0.2 ut basis */
+        pc.fons_plagulae = fons;
+        pc.mensura_plagulae = mensura;
+        pc.via_plagulae = via;
+        si (!praeparator_praeparare(&praep, pcap, &pc))
+        {
+            praeparator_destruere(&praep);
+            piscina_destruere(pcap);
+            redde NIHIL;
+        }
+        clavis_copia = (character*)piscina_allocare(pcap,
+            (memoriae_index)(m_clavis + I));
+        pd = (LegatusPraepDerivata*)xar_addere(
+            l->praeparationes_derivatae);
+        si (clavis_copia == NIHIL || pd == NIHIL)
+        {
+            praeparator_destruere(&praep);
+            piscina_destruere(pcap);
+            redde NIHIL;
+        }
+        memcpy(clavis_copia, clavis, (memoriae_index)m_clavis);
+        clavis_copia[m_clavis] = '\0';
+        pd->signatura.datum = (i8*)clavis_copia;
+        pd->signatura.mensura = m_clavis;
+        pd->praeparatio = praep;
+        pd->piscina_capitum = pcap;
+        fprintf(stderr, "legatus: praeparatio derivata nova pro"
+            " %s (summa %d)\n", via,
+            (int)xar_numerus(l->praeparationes_derivatae));
+        redde &pd->praeparatio;
+    }
 }
 
 /* CUSTODIA AETATUM ad introitum petitionis (lex aetatum spec-v2
@@ -6765,6 +7001,8 @@ legatus_currere (FILE* intra, FILE* extra,
         (i32)LXIV);
     l.omnia_documenta = xar_creare(l.perennis,
         (i32)magnitudo(LegatusDocumentum*));
+    l.praeparationes_derivatae = xar_creare(l.perennis,
+        (i32)magnitudo(LegatusPraepDerivata));
 
     per (;;)
     {

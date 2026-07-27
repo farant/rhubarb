@@ -9,6 +9,7 @@
 #include "latina.h"
 #include "chorda.h"
 #include "tabula_dispersa.h"
+#include "silva_lexicon.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -231,13 +232,19 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
     p->tempora_capitum = xar_creare(piscina_capitum,
         (i32)magnitudo(PraeparatorCaputTempus));
 
-    /* systema: ISO [+POSIX] [+latina] concatenata in TEXTUM UNUM -
-     * lexicon = canalis macrorum; typedefs per parsuram systematis
-     * + oraculum fluunt (lectio chunk B: lexicon separatum custodem
-     * definit -> inclusio vera tacet -> typedefs evanescunt) */
+    /* systema: ISO [+POSIX totum-aut-derivatum +externa] [+latina]
+     * concatenata in TEXTUM UNUM - lexicon = canalis macrorum;
+     * typedefs per parsuram systematis + oraculum fluunt (lectio
+     * chunk B: lexicon separatum custodem definit -> inclusio vera
+     * tacet -> typedefs evanescunt). Compositio POSIX/externa in
+     * silva_lexicon UNO loco (design B 2026-07-27, eadem quam
+     * examen/percursus): cum_posix totum onerat ut ante (escape);
+     * fons_plagulae sectiones ex inclusionibus plagulae derivat
+     * blocosque externa eius excerpit. */
     {
         character via_sys[600];
         insignatus integer m_iso = ZEPHYRUM;
+        insignatus integer m_px = ZEPHYRUM;
         character* fons_sys;
         insignatus integer mensura_sys;
 
@@ -251,34 +258,40 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
         }
         _tempus_commemorare(p, piscina_capitum, via_sys);
         mensura_sys = m_iso;
-        si (cfg->cum_posix)
+        /* POSIX SEMPER lectus et vigilatus (etiam si systema basis
+         * eum non texit): consumptores clavem derivationis ex
+         * p->fons_posix legunt, et staleness editiones eius videt
+         * antequam praeparatio derivata mendax fiat */
+        sprintf(via_sys, "%s/silva/fontes/systema_posix.h",
+            cfg->radix);
+        p->fons_posix = praeparator_plagulam_legere(piscina_capitum,
+            via_sys, &m_px);
+        si (p->fons_posix == NIHIL)
         {
-            insignatus integer m_px = ZEPHYRUM;
-            character* fons_px;
-            character* iunctum;
+            redde ZEPHYRUM;
+        }
+        p->mensura_posix = m_px;
+        _tempus_commemorare(p, piscina_capitum, via_sys);
+        si (cfg->cum_posix || cfg->fons_plagulae != NIHIL)
+        {
+            character* compositum;
+            i32 m_comp = ZEPHYRUM;
+            b32 fractum = FALSUM;
 
-            sprintf(via_sys, "%s/silva/fontes/systema_posix.h",
-                cfg->radix);
-            fons_px = praeparator_plagulam_legere(piscina_capitum,
-                via_sys, &m_px);
-            si (fons_px == NIHIL)
+            compositum = silva_lexicon_componere(fons_sys,
+                (i32)m_iso, p->fons_posix, (i32)m_px,
+                cfg->fons_plagulae, (i32)cfg->mensura_plagulae,
+                cfg->cum_posix ? VERUM : FALSUM, piscina_capitum,
+                &m_comp, cfg->via_plagulae != NIHIL
+                    ? cfg->via_plagulae : "(plagula)", &fractum);
+            si (fractum || compositum == NIHIL)
             {
+                /* externa fracta: nuntius iam in stderr; iudicium
+                 * mundum ex annotatione prava numquam */
                 redde ZEPHYRUM;
             }
-            _tempus_commemorare(p, piscina_capitum, via_sys);
-            iunctum = (character*)piscina_allocare(piscina_capitum,
-                (memoriae_index)(mensura_sys + m_px + II));
-            si (iunctum == NIHIL)
-            {
-                redde ZEPHYRUM;
-            }
-            memcpy(iunctum, fons_sys, (memoriae_index)mensura_sys);
-            iunctum[mensura_sys] = '\n';
-            memcpy(iunctum + mensura_sys + I, fons_px,
-                (memoriae_index)m_px);
-            mensura_sys = mensura_sys + I + m_px;
-            iunctum[mensura_sys] = '\0';
-            fons_sys = iunctum;
+            fons_sys = compositum;
+            mensura_sys = (insignatus integer)m_comp;
         }
         si (cfg->cum_latina)
         {

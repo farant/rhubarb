@@ -25,6 +25,7 @@ declare -a GCC_FLAGS=(
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$RADIX_DIR/silva/amalgama"
+    "-I$RADIX_DIR/silva/instrumenta"
     "-I$OFF_DIR/fontes"
     "-I$OFF_DIR/instrumenta"
 )
@@ -38,6 +39,7 @@ source "$OFF_DIR/colloquium_fontes_generata.sh"
 newest_header () {
     find "$RADIX_DIR/include" "$OFF_DIR/fontes" \
         "$OFF_DIR/instrumenta" "$RADIX_DIR/silva/amalgama" \
+        "$RADIX_DIR/silva/instrumenta" \
         -name '*.h' -newer "$1" 2>/dev/null | head -1
 }
 
@@ -69,6 +71,16 @@ for src in "$OFF_DIR"/fontes/*.c; do
     fi
     obj_files="$obj_files $obj"
 done
+
+# silva_lexicon (compositio systematis - praeparator eam vocat)
+src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
+obj="$BUILD_DIR/silva_lexicon.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [lexicon] silva_lexicon.c" >&2
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
 
 src="$OFF_DIR/instrumenta/praeparator.c"
 obj="$BUILD_DIR/praeparator.o"

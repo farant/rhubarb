@@ -51,6 +51,7 @@ FONTES_OMNES=()
 for f in "${RADIX_FONTES[@]}"; do FONTES_OMNES+=("$RADIX_DIR/lib/$f.c"); done
 FONTES_OMNES+=("$RADIX_DIR/silva/amalgama/silva.c")
 FONTES_OMNES+=("$RADIX_DIR/silva/instrumenta/nexus_ordines.c")
+FONTES_OMNES+=("$RADIX_DIR/silva/instrumenta/silva_lexicon.c")
 FONTES_OMNES+=("$OFF_DIR/instrumenta/praeparator.c")
 FONTES_OMNES+=("$OFF_DIR/instrumenta/legatus.c")
 FONTES_OMNES+=("$OFF_DIR/instrumenta/principalia/legatus.c")
@@ -106,6 +107,15 @@ if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus nexus_ordines "$obj";
 fi
 obj_files="$obj_files $obj"
 
+# silva_lexicon (compositio systematis - praeparator et legatus)
+src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
+obj="$BUILD_DIR/silva_lexicon.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus silva_lexicon "$obj"; then
+    echo "  [lexicon] silva_lexicon.c" >&2
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
+
 for unit in praeparator legatus; do
     src="$OFF_DIR/instrumenta/$unit.c"
     obj="$BUILD_DIR/$unit.o"
@@ -147,6 +157,7 @@ MANIFEST="$BUILD_DIR/legatus.vigilia"
         for f in "${FONTES_OMNES[@]}"; do echo "$f"; done
         echo "$RADIX_DIR/silva/amalgama/silva.h"
         echo "$RADIX_DIR/silva/instrumenta/nexus_ordines.h"
+        echo "$RADIX_DIR/silva/instrumenta/silva_lexicon.h"
         echo "$OFF_DIR/instrumenta/praeparator.h"
         echo "$OFF_DIR/instrumenta/legatus.h"
     fi

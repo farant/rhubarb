@@ -1773,6 +1773,117 @@ probatio_vigilia (Piscina* p)
     remove(via_binarii);
 }
 
+/* derivatio lexici (design B 2026-07-27): praeparatio cum
+ * cfg.fons_plagulae sectiones POSIX ex inclusionibus plagulae
+ * derivat - eadem plagula sine derivatione diagnostica dat, cum
+ * derivatione munda est. Externa fracta = praeparatio fracta (0).
+ * NB: sequentia aperiens tagi externa per %c construitur - littera
+ * cruda excerptorem in HANC plagulam evocaret (lex scanner-
+ * textualis, quinta sedes vitata). */
+interior vacuum
+probatio_praeparatio_derivata (Piscina* p)
+{
+    constans character* fons_posix_utens =
+        "#include <sys/time.h>\n"
+        "\n"
+        "static long secundae(void)\n"
+        "{\n"
+        "    struct timeval t;\n"
+        "\n"
+        "    t.tv_sec = 0;\n"
+        "    t.tv_usec = 0;\n"
+        "    return (long)t.tv_sec;\n"
+        "}\n";
+    Praeparatio praeparatio;
+    PraeparatorConfiguratio cfg;
+    Piscina* piscina_capitum;
+
+    (vacuum)p;
+    imprimere("--- Probans derivationem lexici (design B) ---\n");
+
+    piscina_capitum = piscina_generare_dynamicum(
+        "probatio_derivationis", 8388608);
+    CREDO_NON_NIHIL(piscina_capitum);
+
+    /* sine derivatione: struct timeval ignotum -> diagnostica */
+    memset(&cfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
+    cfg.radix = _radix();
+    cfg.sine_capitibus = I;   /* capita non attinent - velocius */
+    CREDO_VERUM(praeparator_praeparare(&praeparatio,
+        piscina_capitum, &cfg) != ZEPHYRUM);
+    CREDO_NON_NIHIL(praeparatio.fons_posix);   /* SEMPER lectus */
+    {
+        SilvaPiscina* effimera = silva_piscina_generare_dynamicum(
+            "probatio_deriv_a", 8388608);
+        SilvaParsura* parsura = NIHIL;
+        SilvaSemantica* sem;
+
+        CREDO_NON_NIHIL(effimera);
+        sem = praeparator_analysare(&praeparatio, effimera,
+            "specimen.c", fons_posix_utens,
+            (insignatus integer)strlen(fons_posix_utens), &parsura);
+        CREDO_NON_NIHIL(sem);
+        si (sem != NIHIL)
+        {
+            CREDO_VERUM(silva_c89_diagnostica_numerus(sem)
+                > ZEPHYRUM);
+        }
+        silva_piscina_destruere(effimera);
+    }
+    praeparator_destruere(&praeparatio);
+
+    /* cum derivatione: sectio sys/time.h intrat -> munda */
+    memset(&cfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
+    cfg.radix = _radix();
+    cfg.sine_capitibus = I;
+    cfg.fons_plagulae = fons_posix_utens;
+    cfg.mensura_plagulae =
+        (insignatus integer)strlen(fons_posix_utens);
+    cfg.via_plagulae = "specimen.c";
+    CREDO_VERUM(praeparator_praeparare(&praeparatio,
+        piscina_capitum, &cfg) != ZEPHYRUM);
+    {
+        SilvaPiscina* effimera = silva_piscina_generare_dynamicum(
+            "probatio_deriv_b", 8388608);
+        SilvaParsura* parsura = NIHIL;
+        SilvaSemantica* sem;
+
+        CREDO_NON_NIHIL(effimera);
+        sem = praeparator_analysare(&praeparatio, effimera,
+            "specimen.c", fons_posix_utens,
+            (insignatus integer)strlen(fons_posix_utens), &parsura);
+        CREDO_NON_NIHIL(sem);
+        si (sem != NIHIL)
+        {
+            CREDO_VERUM(silva_c89_diagnostica_numerus(sem)
+                == ZEPHYRUM);
+        }
+        silva_piscina_destruere(effimera);
+    }
+    praeparator_destruere(&praeparatio);
+
+    /* externa fracta (tagus apertus sine caput=) -> praeparatio
+     * fracta, numquam iudicium mundum */
+    {
+        character fons_fractus[CXXVIII];
+
+        sprintf(fons_fractus,
+            "/* %cexterna%c\n * int x;\n */\n"
+            "int proba_f(void) { return 0; }\n", '<', '>');
+        memset(&cfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
+        cfg.radix = _radix();
+        cfg.sine_capitibus = I;
+        cfg.fons_plagulae = fons_fractus;
+        cfg.mensura_plagulae =
+            (insignatus integer)strlen(fons_fractus);
+        cfg.via_plagulae = "specimen_fractum.c";
+        CREDO_VERUM(praeparator_praeparare(&praeparatio,
+            piscina_capitum, &cfg) == ZEPHYRUM);
+        praeparator_destruere(&praeparatio);
+    }
+    piscina_destruere(piscina_capitum);
+}
+
 /* inventio capitum NOVORUM (fallax iudicis 2026-07-14, tria
  * incendia): directoria in tempora_capitum - plagula nova mtime
  * parentis pulsat (POSIX), quod tempora capitum notorum sola
@@ -2418,6 +2529,7 @@ principale (vacuum)
     probatio_hover_symbola(piscina);
     probatio_macra(piscina);
     probatio_vigilia(piscina);
+    probatio_praeparatio_derivata(piscina);
     probatio_capita_nova(piscina);
     probatio_definitio_capitis(piscina);
     probatio_utf16(piscina);

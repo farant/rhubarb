@@ -65,6 +65,16 @@ if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
 fi
 obj_files="$obj_files $obj"
 
+# silva_lexicon (compositio systematis - praeparator eam vocat)
+src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
+obj="$BUILD_DIR/silva_lexicon.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" -nt "$obj" ]; then
+    echo "  [lexicon] silva_lexicon.c" >&2
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
+
 for unit in praeparator legatus; do
     src="$OFF_DIR/instrumenta/$unit.c"
     obj="$BUILD_DIR/$unit.o"
