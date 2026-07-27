@@ -10291,3 +10291,54 @@ IN VOLATU: pars II (praeparator/legatus, cache pigre; PERICULUM
 pin latinae v0.2 - consumptores indicis macrorum legendi ante);
 re-pinnatio = XXXVIII contra XLIII, sessione recenti, lineae
 LEGENDAE.
+
+## RE-PINNATIO EXCLUSIONUM (2026-07-27): RELATIO
+
+Sessio recens post design B, ordo operis ex 01KYDPHSZR. Tabula:
+sweep novus XXXVIII contra pinnas XLIII - XXXIII in ambabus, X
+solvendae (ACCIPE confirmatae singulae), V novae. QUAEQUE linea
+lecta: symbola culpae ex positionibus diagnosticorum extracta
+(38 plagulae -> classes MENSURATAE, non aestimatae).
+
+CLASSIFICATIO: XXXI ex XXXVIII = hiatus superficiei POSIX, quorum
+XXIV UNA superficies (dirent - eadem ansa ambulationis corporis
+ubique). Promotio in systema_posix.h (UNDA 3) pro pinnatione electa:
+sectiones dirent/mman/termios/ioctl/utime/stdio-posix/fcntl-open/
+signal-extra/errno-EEXIST + macra st_mtime (compatibilitas Darwin);
+sectio select caput alterum sys/time.h accepit (mos BSD verus -
+tessera_pons ita includit). Auspex_posix formas certificat (dirent
+1048, termios 72, sigaction 16, winsize 8, utimbuf 16 + macra
+omnia); TU verum fcntl.h carens CLAMAVIT - porta functa. I mendum
+VERUM sanatum: tools/fons_merge.c signed char contra i8 (insignatus)
+- violatio constrictionis C89 vera quam examen invenit (c42).
+
+RESIDUA VI, quaeque REICE recte: imago (venditum stb), fontes_
+generata.h x3 (fragmenta sine includente - .h ambulatio percursus
+ea detexit), flagrationes (fixtura consulto prava), amalgamator
+tesserae (ARTIFICIUM: resolutio inclusionis basinomen silvae capit,
+non vicinum - desideratum 01KYJ6740K; cpp verus plicaturam
+includentis primam quaerit).
+
+FORMA NOVA PINNAE: via<TAB>causa ('#' commentaria) - decisio
+recordata per lineam, non lista nuda. Consumptores III adaptati:
+vectis diff (cut -f1), uncus examen-custos (columna prima), legatus
+_exclusiones_onerare (clavis ad tab truncata, '#' saltatae).
+Probatio legati re-directa: uuid.c (sanata) -> imago.c (pinnata
+manens). Suite legati 311/311; uncus manu probatus ambobus modis.
+
+Pinnae XLIII -> VI. Exclusio prae-iudicium legati nunc VI plagulas
+tegit (reactor/tcp_posix sponte iudicium verum accipiunt post
+/mcp reconnect - residens vetus adhuc currit).
+
+Instrumenta (debrief): adhibita = examen ut oraculum per-plagulam
+(~L cursus), extractio symbolorum ex positionibus diagnosticorum
+(awk+sed super -machina), auspex_posix ut porta sui-corrigens,
+sweeps corporis III in umbra, tabularium (desideratum + notae);
+fructus = pretiatio ad suturam ITERUM vicit - 'pinna XXIV lineas
+dirent' fuisset lista quae mentitur, sectio una eas sanavit (lex
+subaestimationis, flagratio quarta); extractio symbolorum classes
+in minutis dedit ubi lectio XXXVIII plagularum horas costasset;
+asperitates = tectum VI-linearum-per-plagulam in extractione
+classes secundas IV plagularum celavit (sweep eas rettulit - gemina
+observationis partialis, in tabulam notata); desiderata =
+resolutio inclusionis relativa includenti (01KYJ6740K, supra).

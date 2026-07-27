@@ -310,12 +310,14 @@ if [ "${1:-}" = "-corpus" ]; then
                /\[(externa|compositio|praeparatio) fracta\] / {
                    sub(/.*fracta\] /, ""); print "FRACTA " $0 }' \
         | sort > "$SILVA_DIR/build/reice_currentes.txt"
-    if ! diff -u "$FIXA/exclusiones.txt" \
-            "$SILVA_DIR/build/reice_currentes.txt"; then
+    # forma pinnae: via<TAB>causa (lineae '#' = commentaria) -
+    # columna prima sola contra sweep diffatur; causa documentum est
+    if ! grep -v '^#' "$FIXA/exclusiones.txt" | cut -f1 \
+            | diff -u - "$SILVA_DIR/build/reice_currentes.txt"; then
         echo "  DISCREPANTIA: REICE corporis != exclusiones pinnatae"
         fracta=1
     else
-        echo "  exclusiones: $(wc -l < "$FIXA/exclusiones.txt" \
+        echo "  exclusiones: $(grep -cv '^#' "$FIXA/exclusiones.txt" \
             | tr -d ' ') pinnatae, omnes notae"
     fi
 fi

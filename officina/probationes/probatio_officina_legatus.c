@@ -268,12 +268,13 @@ probatio_ordo_plenus (Piscina* p)
         _radix());
     _scribe(intra, p, corpus);
 
-    /* 5: didOpen plagulae EXCLUSAE (lib/uuid.c pinnata) cum textu
-     * fracto - nihilominus vacua publicanda */
+    /* 5: didOpen plagulae EXCLUSAE (lib/imago.c pinnata - venditum
+     * stb_image; uuid.c olim, re-pinnatione 2026-07-27 sanata) cum
+     * textu fracto - nihilominus vacua publicanda */
     sprintf(corpus,
         "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
         "\"params\":{\"textDocument\":{\"uri\":"
-        "\"file://%s/lib/uuid.c\",\"version\":1,"
+        "\"file://%s/lib/imago.c\",\"version\":1,"
         "\"languageId\":\"c\",\"text\":\"quisquiliae (((\"}}}",
         _radix());
     _scribe(intra, p, corpus);

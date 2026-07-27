@@ -1,43 +1,11 @@
-./lib/filum.c
-./lib/imago.c
-./lib/iter_directoria.c
-./lib/reactor.c
-./lib/scrinium.c
-./lib/tcp_posix.c
-./lib/uuid.c
-./lib/via.c
-./lib/vigilia.c
-./officina/amalgama/officina.c
-./officina/fontes/officina_machinula.c
-./officina/fontes/officina_regio.c
-./officina/instrumenta/praeparator.c
-./officina/instrumenta/principalia/cursor.c
-./officina/instrumenta/principalia/fusor.c
-./officina/instrumenta/principalia/interpretare.c
-./officina/instrumenta/principalia/vindex.c
-./officina/probationes/probatio_officina_legatus.c
-./officina/probationes/probatio_officina_vindex.c
-./probationes/probatio_tcp_servus.c
-./probationes/probatio_uuid.c
-./silva/instrumenta/principalia/censor.c
-./silva/instrumenta/principalia/census_ambigui.c
-./silva/instrumenta/principalia/emitte.c
-./silva/instrumenta/principalia/examen.c
-./silva/instrumenta/principalia/haruspex.c
-./silva/instrumenta/principalia/identitates.c
-./silva/instrumenta/principalia/infidelis.c
-./silva/instrumenta/principalia/lustrum.c
-./silva/instrumenta/principalia/nexus_percursus.c
-./silva/instrumenta/principalia/origo.c
-./silva/instrumenta/principalia/percursus.c
-./silva/instrumenta/principalia/selecta.c
-./silva/probationes/fixa/censoris/flagrationes.c
-./silva/probationes/probatio_silva_fidelitas.c
-./silva/probationes/probatio_silva_mensura.c
-./silva/probationes/probatio_silva_solarium.c
-./tessera/amalgama/tessera.c
-./tessera/fontes/tessera_pons_posix.c
-./tools/capsula_caudae_adiungere.c
-./tools/capsula_generare.c
-./tools/fons_merge.c
-./tools/librarium_collector.c
+# exclusiones examinis - REICE exspectatae corporis (forma: via<TAB>causa)
+# Re-pinnatio 2026-07-27 (01KYDPHSZR): quaeque linea LECTA, causa
+# NOMINATA per lineam - decisio recordata, non lista quae tacite
+# senescit. Consumptores columnam primam solam legunt (vectis diff,
+# uncus examen-custos, legatus _exclusiones_onerare); causa oculis.
+./lib/imago.c	venditum: stb_image.h extra normam domus (acies non-constans c8, vocationes implicitae intra caput venditum)
+./officina/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis (AmalgamaPlagula/EXCLUDENDA_* apud includentem definita)
+./silva/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis
+./silva/probationes/fixa/censoris/flagrationes.c	probatio: fixtura censoris consulto fracta (syntaxis + redeclarationes)
+./tessera/instrumenta/principalia/amalgamator.c	instrumentum: resolutio inclusionis ambigua - fontes_generata.h SILVAE capitur, SERVANDA_FRIATIONIS ignota (desideratum 01KYJ6740K)
+./tessera/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis

@@ -4790,3 +4790,17 @@ RELIQUUM ARCUS: re-pinnatio exclusionum (XXXVIII contra XLIII,
 sessione recenti, lineae LEGENDAE) - post eam legatus reactor/
 tcp_posix sponte iudicabit. Residens legati novus post /mcp
 reconnect.
+
+### Addendum (2026-07-27, sessio re-pinnationis): RELIQUUM ARCUS CLAUSUM
+
+Re-pinnatio exclusionum PERACTA - relatio plena in silva/
+phase-log.md (RE-PINNATIO EXCLUSIONUM). Officinae propria: UNDA 3
+systema_posix.h + auspex_posix ampliatus (TABULA_DIRENT/TERMIOS,
+asserta Undae 3; TU verum fcntl.h carens clamavit - porta functa);
+praeparator/cursor/fusor/interpretare/vindex + probationes ambae
+nunc iudicium verum ACCIPE ferunt (dirent/mman/utime/fcntl sanata);
+legatus _exclusiones_onerare formam via<TAB>causa legit ('#'
+saltatae, clavis columna prima); probatio exclusionis ad imago.c
+re-directa (uuid.c sanata). Suite 311/311. Pinnae XLIII -> VI.
+Exclusio prae-iudicium legati nunc minima (VI); migratio ad
+post-iudicium adhuc opus proprium si umquam dolet.

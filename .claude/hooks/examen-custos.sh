@@ -53,7 +53,8 @@ ROWS=$(printf '%s\n' "$OUT" | awk -F'\t' \
 # incipit sine ulla lista tangenda. Baselinea corporis (percursus)
 # intacta manet, quae eandem plagulam adhuc legit.
 EXCL="$RADIX/silva/probationes/fixa/examinis/exclusiones.txt"
-[ -f "$EXCL" ] && grep -qxF "$REL" "$EXCL" && exit 0
+# forma pinnae: via<TAB>causa ('#' commentaria) - columna prima sola
+[ -f "$EXCL" ] && grep -v '^#' "$EXCL" | cut -f1 | grep -qxF "$REL" && exit 0
 VERD=$(printf '%s\n' "$OUT" | awk -F'\t' '$1=="VERDICTUM"{print $2}')
 
 jq -n --arg r "EXAMEN C89 (uncus post-editionem, verdictum ${VERD:-?}):

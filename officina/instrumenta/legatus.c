@@ -435,14 +435,25 @@ _exclusiones_onerare (Legatus* l)
             {
                 finis_lineae--;
             }
-            si (finis_lineae > initium)
+            si (finis_lineae > initium && textus[initium] != '#')
             {
+                memoriae_index finis_clavis = initium;
                 chorda clavis;
 
-                clavis.mensura = (i32)(finis_lineae - initium);
+                /* forma pinnae: via<TAB>causa ('#' commentaria) -
+                 * clavis = columna prima sola */
+                dum (finis_clavis < finis_lineae
+                    && textus[finis_clavis] != '\t')
+                {
+                    finis_clavis++;
+                }
+                clavis.mensura = (i32)(finis_clavis - initium);
                 clavis.datum = (i8*)(textus + initium);
-                (vacuum)tabula_dispersa_inserere(l->exclusiones,
-                    clavis, NIHIL);
+                si (clavis.mensura > ZEPHYRUM)
+                {
+                    (vacuum)tabula_dispersa_inserere(l->exclusiones,
+                        clavis, NIHIL);
+                }
             }
             initium = i + I;
         }
