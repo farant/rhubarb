@@ -10149,3 +10149,48 @@ AB AEDILE (9 fontes); exclusio examinis (dirent, ut emitte).
 Laqueus exitus-fistulae me ipsum momordit inter probationes -
 lex memoriae re-probata. Futura in worklog (capturae impressae,
 plagulae plures, -breviter). Parcum 01KY53MP5X claudendum.
+
+## EXAMEN LEXICON: DERIVATIO + EXTERNA + MODULUS (2026-07-25..27)
+
+Arcus trium commissorum (71e30ab, 401cd17, dd30242, e00ca6c) super
+parcum 01KYB3NNR4 (varians b tum a) et decretum 01KYDMTS5N.
+
+QUOD MUTATUM EST: tabula routing -posix unci DELETA. examen sectiones
+lexici POSIX ex lineis '#include <...>' plagulae iudicatae ipsius
+derivat; systema_posix.h in XIV sectiones tagis notatas divisa
+(sectio caput= / poscit= / semper=). 'poscit' inventum necessarium,
+non praevisum: select() timeval poscit, stat timespec - sine clausura
+transitiva lexicon fractum. ISO semper integrum (decretum: motus
+baselineae legibilis manere debet). '-posix' = escape totius.
+Superficies quas lexicon non fert plagula ipsa fert blocis externa
+(caput= = clavis promotionis): reactor.c (poll.h), tcp_posix.c
+(quattuor bloci socketorum) - ex CAECIS iudicatae. Uncus exclusiones
+POST iudicium consulit: exclusio strepitum silet, verdictum mundum
+numquam. Logica communis extracta in instrumenta/silva_lexicon.{h,c}
+(consumptor examen; percursus/legatus migrant - 'geminus tertius'
+ne quartum pareret). Censura amalgamandi ad instrumenta/*.c ampliata.
+
+MENSURAE PORTANTES: derivatio == -posix plenum in XXXII plagulis
+(differentia zephyrum); VI plagulae olim routatae + VIII probationes
+ACCIPE sine vexillo; inventum verum primum eodem die - tcp_posix.c
+timeval sine sys/time.h (inclusio transitiva Darwin tacita).
+
+LEX NOVA (ter uno arcu): superficies scanner-textualis - qui de tago
+SCRIBIT in plagula quam scanner leget, tagum evocat. Nuntii erroris
+excerptoris ipsi recusationem ciebant (examen.c se iudicare non
+poterat, exitus II). Verbum nudum sine uncis; CAVE in silva_lexicon.c.
+
+IN VOLATU AD SESSIONEM PROXIMAM:
+- Design B: percursus + legatus derivationem sumant. AMBO systema
+  SEMEL parsant (percursus.c:817 'systema semel parsatum', legatus
+  praeparatio communis 64MB) - ergo non transcriptio examinis sed
+  cache per signaturam sectionum AUT seminatio filtrata (provenientia
+  adest: SilvaSymbolum.lexema->byte_offset). Consilium in notis
+  01KYBAG1MJ; praeparator.c = sedes naturalis (legatus+vindex ambo
+  inde); percursus prior (re-pin exclusionum retirat).
+- RE-PIN exclusiones.txt (XLIII) = opus iudicii, sessione RECENTI
+  aperienda: ordo motus 'mendacium sanatum' ab 'mendum captum'
+  discernendus LEGENDO. vectis -corpus RUBER iam ante (01KYDPHSZR,
+  duae plagulae tesserae non pinnatae; praedictum 01KXJ2R0Z1).
+- Promotio blocorum externa in systema_posix.h = porta auspicis
+  (formae certificandae ubi officina exsequitur) - 01KYB2Z7XA.
