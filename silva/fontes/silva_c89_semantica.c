@@ -336,6 +336,26 @@ silva_c89_diagnosticum_addere (
     silva_c89_diagnosticum_addere_cum_socio(sem, nodus, codex, NIHIL);
 }
 
+/* Codices quorum nuntius symbolum culpae NOMINAT (01KYJB1S):
+ * lexema primum nodi identificator est et rem ipsam nominat
+ * (typus/identificator/basis-incompleta/vocatus). MEMBRUM_IGNOTUM
+ * extra hanc listam: lexema primum BASIS esset, non membrum -
+ * sedes eius causam ipsa struit. */
+interior b32
+_codex_symbolum_nominat (s32 codex)
+{
+    commutatio (codex)
+    {
+        casus (s32)EXAMEN_CODEX_TYPUS_NOMINATUS_IGNOTUS:
+        casus (s32)EXAMEN_CODEX_IDENTIFICATOR_IGNOTUS:
+        casus (s32)EXAMEN_CODEX_ACCESSUS_INCOMPLETAE:
+        casus (s32)EXAMEN_CODEX_VOCATIO_IMPLICITA:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
 /* Corpus commune additionis: causa_structa (NIHIL = causa tabulae)
  * causam per-sedem structam permittit (conversio signi typos ambos
  * nominat) dum positio/provisionale/severitas VIA ORDINARIA
@@ -407,6 +427,35 @@ _diagnosticum_addere_plenum (
                     {
                         d->via = *v;
                     }
+                }
+            }
+            /* nuntius symbolum culpae nominat (01KYJB1S): "causa:
+             * symbolum" in piscinam structum - classificatio ex
+             * nuntiis sine passu extractionis fontis. Lexema (non
+             * radix): quod semantica iudicavit, post expansionem. */
+            si (causa_structa == NIHIL
+                && _codex_symbolum_nominat(d->codex)
+                && lexema->genus == SILVA_LEX_IDENTIFICATOR
+                && lexema->valor.mensura > ZEPHYRUM
+                && lexema->valor.mensura < (i32)CCLVI)
+            {
+                memoriae_index cm = strlen(d->causa);
+                character* structum = (character*)piscina_allocare(
+                    sem->piscina,
+                    cm + II + (memoriae_index)lexema->valor.mensura
+                        + I);
+
+                si (structum != NIHIL)
+                {
+                    memcpy(structum, d->causa, cm);
+                    structum[cm] = ':';
+                    structum[cm + I] = ' ';
+                    memcpy(structum + cm + II, lexema->valor.datum,
+                        (memoriae_index)lexema->valor.mensura);
+                    structum[cm + II
+                        + (memoriae_index)lexema->valor.mensura]
+                        = '\0';
+                    d->causa = structum;
                 }
             }
         }
@@ -9987,8 +10036,40 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     }
                     si (inventum == NIHIL)
                     {
-                        silva_c89_diagnosticum_addere(sem, nodus,
-                            EXAMEN_CODEX_MEMBRUM_IGNOTUM);
+                        /* nuntius MEMBRUM nominat (01KYJB1S) -
+                         * lexema primum nodi basis esset, ergo
+                         * causa hic struitur ex quaesito */
+                        constans character* causa_m = NIHIL;
+
+                        si (quaesitum.mensura > ZEPHYRUM
+                            && quaesitum.mensura < (i32)CCLVI)
+                        {
+                            constans character* basis_c = _codices[
+                                EXAMEN_CODEX_MEMBRUM_IGNOTUM].causa;
+                            memoriae_index cm = strlen(basis_c);
+                            character* b = (character*)
+                                piscina_allocare(sem->piscina,
+                                    cm + II
+                                    + (memoriae_index)
+                                        quaesitum.mensura + I);
+
+                            si (b != NIHIL)
+                            {
+                                memcpy(b, basis_c, cm);
+                                b[cm] = ':';
+                                b[cm + I] = ' ';
+                                memcpy(b + cm + II, quaesitum.datum,
+                                    (memoriae_index)
+                                        quaesitum.mensura);
+                                b[cm + II
+                                    + (memoriae_index)
+                                        quaesitum.mensura] = '\0';
+                                causa_m = b;
+                            }
+                        }
+                        _diagnosticum_addere_plenum(sem, nodus,
+                            EXAMEN_CODEX_MEMBRUM_IGNOTUM, NIHIL,
+                            causa_m);
                         t = sem->typus_erroris;
                     }
                     alioquin

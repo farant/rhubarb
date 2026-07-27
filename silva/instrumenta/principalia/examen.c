@@ -432,6 +432,13 @@ s32 principale (integer argc, character** argv)
             i32 i;
             i32 m = (i32)silva_c89_diagnostica_numerus(sem);
 
+            si (machina && m > ZEPHYRUM)
+            {
+                /* linea capitis columnarum ('#' - consumptores awk
+                 * $1!~/^#/ filtrant); ordo = ordo imprimendi infra */
+                imprimere("#via\tlinea\tcolumna\tgradus\tcodex"
+                    "\tprovisionale\tcausa\n");
+            }
             per (i = ZEPHYRUM; i < m; i++)
             {
                 constans SemanticaDiagnosticum* d =

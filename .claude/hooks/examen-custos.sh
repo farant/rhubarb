@@ -39,7 +39,7 @@ esac
 # sine vexillo ullo.
 OUT=$(cd "$RADIX" && ./silva/examen.sh "$REL" -machina 2>/dev/null)
 ROWS=$(printf '%s\n' "$OUT" | awk -F'\t' \
-    '$1!="VERDICTUM" && $4!="infra" {
+    '$1!="VERDICTUM" && $1!~/^#/ && $4!="infra" {
         p = ($6=="1") ? " (provisionale)" : "";
         print $1":"$2":"$3": ["$4"] "$7 p
     }' | head -10)

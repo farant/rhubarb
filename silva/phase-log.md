@@ -10387,3 +10387,24 @@ immota, quod resolutio prior accidentaliter recta erat ubi non
 recta esse potuit. Pinnae VI -> V, VECTIS TENET. Catena transitiva
 recta per constructionem: caput sub via plena praebitum ipsum
 includens fit cum plicatura vera.
+
+### Addendum (2026-07-27, eadem sessio): NUNTII SYMBOLUM NOMINANT (01KYJB1S)
+
+Ex debrief instrumentorum statim impletum: diagnostica symbolum
+culpae nunc NOMINANT. Mechanismus centralis in _diagnosticum_addere_
+plenum: _codex_symbolum_nominat (c4 typus / c20 identificator /
+c38 basis incompleta / c51 vocatus) + lexema primum nodi si
+IDENTIFICATOR -> causa "nuntius: symbolum" in piscina sem structa.
+Sedes emissionis intactae praeter c39 (membrum ignotum: lexema
+primum BASIS esset - sedes causam ex quaesito ipsa struit).
+Lexema post expansionem, non radix: quod semantica iudicavit.
+Redditores omnes gratis hereditant (d->causa imprimunt). Linea
+capitis columnarum -machina addita ('#via...'; uncus filtrat).
+
+FRUCTUS PRIMI MINUTI: c51 XIV imaginis quos numquam intellexeramus
+= 'vocatio implicita: assert' (assert in capite vero MACRO est -
+hiatus lexici ISO nunc nominatus, non mysterium); fontes_generata
+'typus nominatus ignotus: AmalgamaPlagula' historiam suam una
+linea narrat. Suites silva 34/34 + officina 12/12; amalgama
+VERIFICATUM; verdicta immota per constructionem (causa sola
+crescit, severitas/codex immoti).
