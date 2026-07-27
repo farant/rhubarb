@@ -14,7 +14,7 @@ INPUT=$(cat)
 FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty')
 
 case "$FILE" in
-    *.c) ;;
+    *.c|*.m) ;;
     *) exit 0 ;;
 esac
 case "$FILE" in
@@ -28,6 +28,25 @@ case "$FILE" in
     "$RADIX"/*) REL="./${FILE#"$RADIX"/}" ;;
     *) exit 0 ;;   # extra repositorium
 esac
+# Plagulae .m: examen ObjC non iudicat (silva dialectum non discet) -
+# censor gradus MACRO est, ergo solus iudex domesticus earum
+# (01KXZYG2SE). Suspecta tacent (macra in fracturis ObjC = usus
+# legitimus); push solum [CENSURA] aut [CULPA PROBABILIS]. NB porta
+# in TEXTU stat: censor PURUS + exitus 0 etiam cum convictione.
+case "$FILE" in
+    *.m)
+        OUT=$(cd "$RADIX" && ./silva/censor.sh "$REL" 2>/dev/null)
+        ROWS=$(printf '%s\n' "$OUT" \
+            | grep -E '^\[(CENSURA|CULPA PROBABILIS)\]' | head -10)
+        [ -z "$ROWS" ] && exit 0
+        jq -n --arg r "CENSOR LATINAE (uncus post-editionem, .m - macra reservata):
+$ROWS
+Verbum latina.h ut identificator = fractura compilationis cryptica. Effusor: ./silva/censor.sh <plagula>." \
+            '{additionalContext:$r}'
+        exit 0
+        ;;
+esac
+
 # TABULA ROUTING -posix DELETA 2026-07-25 (01KYBAG1MJ, 01KYB3NNR4).
 # examen sectiones lexici EX INCLUSIONIBUS plagulae ipsius derivat -
 # '#include <sys/select.h>' est dictum "superficie select utor" -

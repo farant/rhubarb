@@ -1148,6 +1148,13 @@ s32 principale (integer argc, character** argv)
                     / (duplex)summa_expr_visorum);
         }
     }
+    alioquin
+    {
+        /* silentium non est successus: absentia iudicii NOMINATUR
+         * ne "corpus-zero" vacue verum legatur (01KXQ3FY0Q) */
+        imprimere("modus:     parse-only (iudicium semanticum"
+            " NON CURSUM - adde -semantica)\n");
+    }
     si (fines_tactae_plagulae > ZEPHYRUM)
     {
         imprimere("fines:     %d plagulae limen tactae\n",
