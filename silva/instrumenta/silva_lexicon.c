@@ -431,3 +431,62 @@ silva_lexicon_externa_excerpere (constans character* fons,
     *mensura_out = longitudo;
     redde effusio;
 }
+
+character*
+silva_lexicon_componere (constans character* fons_iso,
+    i32 mensura_iso, constans character* fons_px, i32 mensura_px,
+    constans character* fons_pl, i32 mensura_pl, b32 totum_posix,
+    Piscina* piscina, i32* mensura_out, constans character* via,
+    b32* fractum)
+{
+    constans character* pars = NIHIL;
+    i32 pars_m = ZEPHYRUM;
+    character* ext = NIHIL;
+    i32 ext_m = ZEPHYRUM;
+    character* effusio;
+    i32 longitudo;
+
+    *fractum = FALSUM;
+    *mensura_out = ZEPHYRUM;
+    si (fons_iso == NIHIL) redde NIHIL;
+
+    si (totum_posix)
+    {
+        pars = fons_px;
+        pars_m = mensura_px;
+    }
+    alioquin si (fons_px != NIHIL && fons_pl != NIHIL)
+    {
+        pars = silva_lexicon_posix_derivare(fons_px, mensura_px,
+            fons_pl, mensura_pl, piscina, &pars_m);
+    }
+    si (fons_pl != NIHIL)
+    {
+        ext = silva_lexicon_externa_excerpere(fons_pl, mensura_pl,
+            piscina, &ext_m, via, fractum);
+        si (*fractum) redde NIHIL;
+    }
+
+    effusio = (character*)piscina_allocare(piscina,
+        (memoriae_index)(mensura_iso + pars_m + ext_m + III));
+    si (effusio == NIHIL) redde NIHIL;
+    memcpy(effusio, fons_iso, (memoriae_index)mensura_iso);
+    longitudo = mensura_iso;
+    si (pars != NIHIL && pars_m > ZEPHYRUM)
+    {
+        effusio[longitudo] = '\n';
+        longitudo++;
+        memcpy(effusio + longitudo, pars, (memoriae_index)pars_m);
+        longitudo = longitudo + pars_m;
+    }
+    si (ext != NIHIL && ext_m > ZEPHYRUM)
+    {
+        effusio[longitudo] = '\n';
+        longitudo++;
+        memcpy(effusio + longitudo, ext, (memoriae_index)ext_m);
+        longitudo = longitudo + ext_m;
+    }
+    effusio[longitudo] = '\0';
+    *mensura_out = longitudo;
+    redde effusio;
+}

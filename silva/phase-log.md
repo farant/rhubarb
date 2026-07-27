@@ -10194,3 +10194,46 @@ IN VOLATU AD SESSIONEM PROXIMAM:
   duae plagulae tesserae non pinnatae; praedictum 01KXJ2R0Z1).
 - Promotio blocorum externa in systema_posix.h = porta auspicis
   (formae certificandae ubi officina exsequitur) - 01KYB2Z7XA.
+
+## DESIGN B (lexicon derivatio in percursu + legato): INTENTIO (2026-07-27)
+
+Seams READ before pricing (percursus.c totum; praeparator.c totum;
+examen.c fluxus; legatus.c 1182/1669/1761/3906/4415; vectis -corpus).
+Finding that settles the design: examen and percursus have IDENTICAL
+channel structure - both walk real repo headers (examen.c:409), both
+feed ONE systema text into three channels (contextus lexicon /
+oraculum seeding / analysare_cum_systemate). The only difference is
+per-file vs once-at-startup assembly. So derivation for percursus =
+per-file assembly + a preparation cache, nothing deeper.
+
+DECISUS: preparation cache keyed by COMPOSED TEXT content.
+Per file: read file FIRST (examen's reorder), derive sections +
+externa via silva_lexicon, compose systema text, cache lookup.
+Identical text => identical prep {ctx, systema_parsura,
+systema_semantica}; empty signature => shared ISO base prep.
+  - Equals examen BY CONSTRUCTION (rejected: coarse two-prep routing
+    - only empirically equal, and cannot carry externa files at all;
+    rejected: filtered seeding - filter seams in three channels incl.
+    macro lookup in the expander hot path, and externa still needs
+    per-file text anyway).
+  - MEASURED (not estimated): <=21 raw include-signatures in the
+    whole corpus (sectio caput-lists + poscit closure collapse
+    further, ~15); dominant cluster = stdlib.h alone (182 files -
+    SURPRISE: stdlib.h IS a POSIX sectio, so non-empty signatures
+    are common; cache dominance unaffected). ~20 preps total.
+  - Header texts read ONCE into shared pool, praebere'd into each
+    new ctx from memory; per-prep pool destroyable. Summary line
+    'praeparationes: N (X MB)' = the memory story stays a printed
+    fact (measure from day one).
+Deliverables in order: (1) silva_lexicon_componere - pure-text
+composition moves into the module, examen refit to a call (twin
+prevention done at the source); (2) percursus adoption; externa
+fracta = loud line + counter, NEVER a clean verdict; vectis -corpus
+gathers [externa fracta] lines into the diff set (a broken
+annotation must not be invisible to the oracle); (3) praeparator/
+legatus phase 2 - lazy prep cache, sessions never touching POSIX pay
+nothing; NAMED RISK to price at that seam: the v0.2 latina PIN
+(macro provenance collapses under lexicon concatenation - what
+consumes the macro index / definition jumps must be read first).
+EXPECTED RED: vectis -corpus diverges massively after (2) - that IS
+the input to the re-pin session (separate, fresh, rows READ).

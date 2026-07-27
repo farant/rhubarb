@@ -266,115 +266,57 @@ s32 principale (integer argc, character** argv)
         redde II;
     }
 
-    /* systema (lexicon): ISO ordinarius; -posix concatenat
-     * (exemplar vindex_onerator); -nudum = sine (LEXICON_DEEST
-     * probandus) */
+    /* systema (lexicon): compositio UNO loco (silva_lexicon) - ISO
+     * integrum + POSIX ('-posix' totum onerat, mos vetus/escape;
+     * alioquin sectiones EX INCLUSIONIBUS plagulae derivantur -
+     * plagula sine capitibus POSIX nihil accipit, ISO purum) +
+     * bloci externa plagulae ipsius (lexicon locale: superficies
+     * quas lexicon globale nondum fert a plagula portantur, pro
+     * exclusione quae plagulam TOTAM caecam faceret). Annotatio
+     * prava = INFRA (apparatus), numquam ACCIPE. -nudum = sine
+     * (LEXICON_DEEST probandus). */
     si (!nudum)
     {
+        character* fons_iso;
+        i32 mensura_iso = ZEPHYRUM;
+        character* fons_px;
+        i32 mensura_px = ZEPHYRUM;
         character* fons_sys;
         i32 mensura_sys = ZEPHYRUM;
+        b32 ext_fractum = FALSUM;
 
-        fons_sys = _plagulam_legere(piscina,
-            "silva/fontes/systema_c89.h", &mensura_sys);
-        si (fons_sys == NIHIL)
+        fons_iso = _plagulam_legere(piscina,
+            "silva/fontes/systema_c89.h", &mensura_iso);
+        si (fons_iso == NIHIL)
         {
             fprintf(stderr, "examen: systema_c89.h deest (curre"
                 " ex radice repositorii)\n");
             redde II;
         }
-        /* POSIX: '-posix' totum onerat (mos vetus, escape); alioquin
-         * sectiones EX INCLUSIONIBUS plagulae derivantur. Plagula
-         * quae nullum caput POSIX includit nihil accipit - ISO purum,
-         * ut antea. */
+        fons_px = _plagulam_legere(piscina,
+            "silva/fontes/systema_posix.h", &mensura_px);
+        si (fons_px == NIHIL)
         {
-            i32 mensura_px = ZEPHYRUM;
-            character* fons_px = _plagulam_legere(piscina,
-                "silva/fontes/systema_posix.h", &mensura_px);
-            character* pars = NIHIL;
-            i32 pars_m = ZEPHYRUM;
-
-            si (fons_px == NIHIL)
-            {
-                fprintf(stderr,
-                    "examen: systema_posix.h deest\n");
-                redde II;
-            }
-            si (cum_posix)
-            {
-                pars = fons_px;
-                pars_m = mensura_px;
-            }
-            alioquin
-            {
-                pars = silva_lexicon_posix_derivare(fons_px,
-                    mensura_px, fons_plagulae, mensura_plagulae,
-                    piscina, &pars_m);
-            }
-            si (pars != NIHIL && pars_m > ZEPHYRUM)
-            {
-                character* iunctum = (character*)piscina_allocare(
-                    piscina, (memoriae_index)(mensura_sys
-                        + pars_m + I));
-
-                si (iunctum == NIHIL)
-                {
-                    redde II;
-                }
-                memcpy(iunctum, fons_sys,
-                    (memoriae_index)mensura_sys);
-                iunctum[mensura_sys] = '\n';
-                memcpy(iunctum + mensura_sys + I, pars,
-                    (memoriae_index)pars_m);
-                fons_sys = iunctum;
-                mensura_sys = mensura_sys + I + pars_m;
-                si (verbosa)
-                {
-                    fprintf(stderr, "examen: POSIX %d octeti (%s)\n",
-                        (int)pars_m,
-                        cum_posix ? "-posix, totum" : "derivatum");
-                }
-            }
+            fprintf(stderr, "examen: systema_posix.h deest\n");
+            redde II;
         }
-        /* bloci externa plagulae: lexicon LOCALE, eodem canali quo
-         * systema globale - superficies quas lexicon nondum fert
-         * (sockets, poll) hic a plagula ipsa portantur, pro
-         * exclusione quae plagulam TOTAM caecam faceret */
+        fons_sys = silva_lexicon_componere(fons_iso, mensura_iso,
+            fons_px, mensura_px, fons_plagulae, mensura_plagulae,
+            cum_posix, piscina, &mensura_sys, via, &ext_fractum);
+        si (ext_fractum)
         {
-            i32 mensura_ext = ZEPHYRUM;
-            b32 ext_fractum = FALSUM;
-            character* fons_ext = silva_lexicon_externa_excerpere(
-                fons_plagulae, mensura_plagulae, piscina,
-                &mensura_ext, via, &ext_fractum);
-
-            /* annotatio prava = INFRA (apparatus), numquam ACCIPE:
-             * verdictum mundum ex annotatione fracta est mendacium */
-            si (ext_fractum)
-            {
-                redde II;
-            }
-            si (fons_ext != NIHIL && mensura_ext > ZEPHYRUM)
-            {
-                character* iunctum = (character*)piscina_allocare(
-                    piscina, (memoriae_index)(mensura_sys
-                        + mensura_ext + I));
-
-                si (iunctum == NIHIL)
-                {
-                    redde II;
-                }
-                memcpy(iunctum, fons_sys,
-                    (memoriae_index)mensura_sys);
-                iunctum[mensura_sys] = '\n';
-                memcpy(iunctum + mensura_sys + I, fons_ext,
-                    (memoriae_index)mensura_ext);
-                fons_sys = iunctum;
-                mensura_sys = mensura_sys + I + mensura_ext;
-                si (verbosa)
-                {
-                    fprintf(stderr, "examen: externa %d octeti ex"
-                        " %s\n", (int)mensura_ext, via);
-                }
-            }
+            redde II;   /* nuntius iam in stderr */
+        }
+        si (fons_sys == NIHIL)
+        {
+            fprintf(stderr, "examen: compositio lexici fracta\n");
+            redde II;
+        }
+        si (verbosa)
+        {
+            fprintf(stderr, "examen: systema %d octeti (ISO %d,"
+                " %s)\n", (int)mensura_sys, (int)mensura_iso,
+                cum_posix ? "-posix totum" : "derivatum");
         }
         si (!silva_contextus_lexicon_addere(ctx, "systema_c89.h",
                 fons_sys, mensura_sys))

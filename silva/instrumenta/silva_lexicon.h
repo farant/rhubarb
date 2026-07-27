@@ -77,4 +77,32 @@ silva_lexicon_externa_excerpere(
     Piscina* piscina, i32* mensura_out,
     constans character* via, b32* fractum);
 
+/* Compositio PLENA textus systematis pro plagula una - functiones
+ * I et II vocatae UNO loco (geminus tertius oneratorum hic moritur:
+ * examen, percursus, praeparator omnes hanc vocant, compositionem
+ * nemo iterum scribit):
+ *
+ *   ISO integrum
+ *   + POSIX (totum sub 'totum_posix' - escape '-posix' vetus;
+ *     alioquin sectiones ex inclusionibus plagulae derivatae)
+ *   + bloci externa plagulae ipsius
+ *
+ * Reddit allocationem NOVAM semper, etiam ISO purum sine additis -
+ * CONSULTO: aequalitas CONTENTI = clavis cache consumptorum
+ * (plagulae sine POSIX ad eundem textum componunt ergo eandem
+ * praeparationem communicant, sine casu speciali). Plagula NIHIL
+ * licet = ISO purum.
+ *
+ * 'fractum' contractus ut supra (II): VERUM = annotatio prava,
+ * vocator iudicium SISTERE debet (INFRA, numquam ACCIPE; nuntius
+ * iam in stderr). NIHIL sine fracto = apparatus (allocatio), non
+ * absentia. */
+character*
+silva_lexicon_componere(
+    constans character* fons_iso, i32 mensura_iso,
+    constans character* fons_px, i32 mensura_px,
+    constans character* fons_pl, i32 mensura_pl,
+    b32 totum_posix, Piscina* piscina, i32* mensura_out,
+    constans character* via, b32* fractum);
+
 #endif /* SILVA_LEXICON_H */
