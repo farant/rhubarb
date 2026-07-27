@@ -2099,14 +2099,31 @@ _sedes_ex_symbolo (Legatus* l, Piscina* pn, LegatusDocumentum* doc,
             insignatus integer c0;
 
             si (via_f == NIHIL
-                || l->praeparatio.viae_capitum == NIHIL
-                || via_f->mensura >= (unsigned int)CCLVI)
+                || l->praeparatio.viae_capitum == NIHIL)
             {
                 redde NIHIL;
             }
-            memcpy(basename_b, via_f->datum, via_f->mensura);
-            clavis.mensura = (i32)via_f->mensura;
-            clavis.datum = (i8*)basename_b;
+            /* fons via nunc PLENA est (01KYJ6740K: praebitio via
+             * plena clavetur) - ad basename reducenda, tabula
+             * viae_capitum basename claves servat */
+            {
+                insignatus integer bi = via_f->mensura;
+                insignatus integer bm;
+
+                dum (bi > ZEPHYRUM
+                    && via_f->datum[bi - I] != '/')
+                {
+                    bi--;
+                }
+                bm = via_f->mensura - bi;
+                si (bm == ZEPHYRUM || bm >= (insignatus integer)CCLVI)
+                {
+                    redde NIHIL;
+                }
+                memcpy(basename_b, via_f->datum + bi, bm);
+                clavis.mensura = (i32)bm;
+                clavis.datum = (i8*)basename_b;
+            }
             si (!tabula_dispersa_invenire(
                     l->praeparatio.viae_capitum, clavis,
                     &via_plena)

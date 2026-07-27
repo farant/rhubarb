@@ -7,5 +7,4 @@
 ./officina/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis (AmalgamaPlagula/EXCLUDENDA_* apud includentem definita)
 ./silva/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis
 ./silva/probationes/fixa/censoris/flagrationes.c	probatio: fixtura censoris consulto fracta (syntaxis + redeclarationes)
-./tessera/instrumenta/principalia/amalgamator.c	instrumentum: resolutio inclusionis ambigua - fontes_generata.h SILVAE capitur, SERVANDA_FRIATIONIS ignota (desideratum 01KYJ6740K)
 ./tessera/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis

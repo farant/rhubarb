@@ -10358,3 +10358,32 @@ acceperit, hic blocus deleatur'); ambae ACCIPE derivatione PURA,
 poscit sys/socket.h. VECTIS TENET, pinnae VI immotae - derivatio
 iterum nihil nocuit. Superficies socketorum nunc domus totius est:
 plagula tertia socketis utens sponte iudicium verum accipiet.
+
+### Addendum (2026-07-27, eadem sessio): RESOLUTIO INCLUDENTI-RELATIVA (01KYJ6740K)
+
+Expansor inclusiones citatas nunc includenti-relative PRIMUM
+resolvit (mos cpp verus), exacta secunda, basename tertia (recidiva
+conservativa immota). _via_iuncta_canonica = iunctio + canonica
+(segmenta '.' cadunt, 'seg/..' plicantur, '/' absolutum servatur;
+incanonica -> vacua -> gradus sequentes). Praebitio unius capitis
+claves DUAS serit: via canonica plena (resolutio nova) + basename
+(primus vincit - saltuarius et similes per recidivam vivunt).
+Praebitores tres claves plenas dant: examen/percursus (via
+ambulationis), praeparator (via RADICI-RELATIVA - inventio: spatium
+viarum legati totum radici-relativum est, ordines/extenta/documenta;
+claves absolutae chartam frangebant, valores viae_capitum absoluti
+manent pro URIs).
+
+REGRESSIONES II a suite captae (fructus retis probationum):
+viae_capitum clavis BASENAME manere debet (tabula saltus);
+_sedes_ex_symbolo fons-viam plenam ad basename reducit. Post
+sanationes: silva 34/34, officina 12/12 (legatus 311/311),
+amalgama VERIFICATUM.
+
+CORPUS: amalgamator tesserae SANATUS (fontes_generata.h vicinum
+SUUM capit, non silvae; +ACCIPE), NIHIL aliud motum - gemini
+venditi (knotapel/raqiya) vicinos proprios nunc capiunt, verdicta
+immota, quod resolutio prior accidentaliter recta erat ubi non
+recta esse potuit. Pinnae VI -> V, VECTIS TENET. Catena transitiva
+recta per constructionem: caput sub via plena praebitum ipsum
+includens fit cum plicatura vera.

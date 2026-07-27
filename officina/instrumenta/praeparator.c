@@ -111,7 +111,8 @@ _praetermittendum (constans character* titulus)
 
 interior vacuum
 _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
-    TabulaDispersa* visa, constans character* via)
+    TabulaDispersa* visa, constans character* via,
+    memoriae_index radix_m)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -148,7 +149,8 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
         sprintf(via_plena, "%s/%s", via, introitus->d_name);
         si (introitus->d_type == DT_DIR)
         {
-            _capita_praeparare(p, piscina_capitum, visa, via_plena);
+            _capita_praeparare(p, piscina_capitum, visa, via_plena,
+                radix_m);
         }
         alioquin
         {
@@ -156,11 +158,25 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
             si (m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
-                chorda clavis = chorda_ex_literis(introitus->d_name,
-                    piscina_capitum);
+                /* clavis = via RADICI-RELATIVA (01KYJ6740K):
+                 * expansor canonicam + basename seponit; resolutio
+                 * includenti-relativa viam plenam petit. Spatium
+                 * viarum legati radici-relativum est (ordines,
+                 * extenta) - clavis absoluta ei aliena esset;
+                 * valores viae_capitum absoluti manent (URIs) */
+                constans character* via_clavis = via_plena;
+                chorda clavis;
                 character* textus;
                 insignatus integer mensura;
 
+                si (radix_m > ZEPHYRUM
+                    && strlen(via_plena) > radix_m + I
+                    && via_plena[radix_m] == '/')
+                {
+                    via_clavis = via_plena + radix_m + I;
+                }
+                clavis = chorda_ex_literis(via_clavis,
+                    piscina_capitum);
                 si (tabula_dispersa_continet(visa, clavis))
                 {
                     perge;
@@ -172,26 +188,36 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
                     perge;
                 }
                 si (silva_contextus_praebere(p->ctx,
-                        introitus->d_name, textus, mensura))
+                        via_clavis, textus, mensura))
                 {
                     (vacuum)tabula_dispersa_inserere(visa, clavis,
                         NIHIL);
                     _tempus_commemorare(p, piscina_capitum,
                         via_plena);
                     /* basename -> via absoluta (saltus in capita:
-                     * legatus definitio URIs inde struit) */
+                     * legatus definitio URIs inde struit). Clavis
+                     * BASENAME manet quamvis praebitio via plena
+                     * clavetur (01KYJ6740K) - primus vincit, ut
+                     * ante */
                     si (p->viae_capitum != NIHIL)
                     {
-                        memoriae_index mv = strlen(via_plena);
-                        character* copia = (character*)
-                            piscina_allocare(piscina_capitum,
-                                mv + I);
+                        chorda basis = chorda_ex_literis(
+                            introitus->d_name, piscina_capitum);
 
-                        si (copia != NIHIL)
+                        si (!tabula_dispersa_continet(
+                                p->viae_capitum, basis))
                         {
-                            memcpy(copia, via_plena, mv + I);
-                            (vacuum)tabula_dispersa_inserere(
-                                p->viae_capitum, clavis, copia);
+                            memoriae_index mv = strlen(via_plena);
+                            character* copia = (character*)
+                                piscina_allocare(piscina_capitum,
+                                    mv + I);
+
+                            si (copia != NIHIL)
+                            {
+                                memcpy(copia, via_plena, mv + I);
+                                (vacuum)tabula_dispersa_inserere(
+                                    p->viae_capitum, basis, copia);
+                            }
                         }
                     }
                 }
@@ -350,7 +376,8 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
             piscina_capitum, DXII);
         si (visa != NIHIL)
         {
-            _capita_praeparare(p, piscina_capitum, visa, cfg->radix);
+            _capita_praeparare(p, piscina_capitum, visa, cfg->radix,
+                strlen(cfg->radix));
         }
     }
     redde I;
