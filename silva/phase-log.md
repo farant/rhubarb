@@ -10544,3 +10544,20 @@ Asperitas: excubitor officinae STALA post amalgama silvae - contentum
 idem erat, mtime solum; verificatio 'regenera et compara' momentum
 costavit sed recte (silentium non est successus). Vigilia legati bis
 flagravit inter regenerationes - /reload-plugins Franis post arcum.
+
+## 2026-07-27 - Addendum: tolera XI (commissum ad03d57)
+
+Decisio Franis post explicationem trium punctorum: annotare sedes
+benignas, non ambienter tacere. Quaeque sedes ante annotationem
+verificata (etiam grisea flatura:540 - custos lineae 521 solvit);
+invariantes veri in causis scripti. Census finalis 5/3 = solae res
+tabulae (vitium http 01KYJS4YKW, stirps generatorum 01KYJS5KPH);
+IRRITUM 0.
+
+INVENTUM: tolera cum angulo in causa TACITE evanescit (tria
+silentia: non absorbet, non IRRITUM, non malformata) - bisectum
+specimine, 01KYJTRPCX. Regula: verba pro signis in causis. Uncus
+per editionem quamque theatrum probationis erat: silentium =
+absorptio, ordo manens = collocatio prava - circulus responsi
+instantaneus quem pinnae exspectatae vectis dant fixturis, tolerae
+nunc dant codici vivo.
