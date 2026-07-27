@@ -18,7 +18,7 @@
 #include "../include/fons_6x8.h"
 
 /* Alcuin data generata a bitsyfont_ad_fons - paste here or include */
-static const signed char fons_alcuin[NUM_GLYPHAE][ALTITUDO] = {
+static const unsigned char fons_alcuin[NUM_GLYPHAE][ALTITUDO] = {
     /* 0x00  */     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
     /* 0x01  */     {0x38, 0x44, 0x6C, 0x44, 0x54, 0x44, 0x38, 0x00},
     /* 0x02  */     {0x38, 0x7C, 0x54, 0x7C, 0x44, 0x7C, 0x38, 0x00},
@@ -185,7 +185,7 @@ static const signed char fons_alcuin[NUM_GLYPHAE][ALTITUDO] = {
 
 /* Verificare si glypha vacua */
 static int
-est_vacua(const signed char* g)
+est_vacua(const unsigned char* g)
 {
     int i;
     for (i = 0; i < ALTITUDO; i++)
@@ -220,7 +220,7 @@ main(void)
 
     for (i = 0; i < NUM_GLYPHAE; i++)
     {
-        const signed char* src;
+        const unsigned char* src;
         int from_alcuin = 0;
 
         /* Decidere fontem */
