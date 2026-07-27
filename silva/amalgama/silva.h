@@ -668,6 +668,7 @@ typedef struct {
     int                fons_ex;
     int                fons_ad;           /* -1 = unresolved */
     int                est_praetermissa;
+    int                est_angulata;      /* angle form vs quoted */
 } SilvaInclusioVista;
 
 typedef struct {

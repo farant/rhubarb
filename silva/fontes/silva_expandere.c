@@ -1024,7 +1024,7 @@ _includendum_processare (
         }
         alioquin si (t->genus == SILVA_LEX_MINOR)
         {
-            /* <via> - valores concatenati usque ad '>' */
+            /* forma angulata - valores concatenati usque ad '>' */
             ChordaAedificator* aed;
             b32 clausa;
             i32 j;
@@ -1070,6 +1070,7 @@ _includendum_processare (
     inclusio->via = _chorda_figere(exp->piscina, via);
     inclusio->fons_ad = -I;
     inclusio->est_praetermissa = FALSUM;
+    inclusio->est_angulata = citata ? FALSUM : VERUM;
 
     valor = NIHIL;
     inventum = FALSUM;
@@ -2852,6 +2853,7 @@ silva_inclusio_vista (constans SilvaExpansio* exp, i32 index,
     vista_out->fons_ex = inclusio->fons_ex;
     vista_out->fons_ad = inclusio->fons_ad;
     vista_out->est_praetermissa = inclusio->est_praetermissa;
+    vista_out->est_angulata = inclusio->est_angulata;
     redde VERUM;
 }
 

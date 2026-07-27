@@ -681,6 +681,7 @@ typedef struct {
     int                fons_ex;
     int                fons_ad;           /* -1 = unresolved */
     int                est_praetermissa;
+    int                est_angulata;      /* angle form vs quoted */
 } SilvaInclusioVista;
 
 typedef struct {
@@ -3335,6 +3336,8 @@ nomen structura {
     SilvaChorda* via;                /* via petita */
     s32     fons_ad;            /* fons resolutus; -1 = ignotus */
     b32     est_praetermissa;   /* praetermissa (custos vel profunditas) */
+    b32     est_angulata;       /* forma angulata contra citatam
+                                 * "via" (01KY118F1J) */
 } SilvaInclusio;
 
 
@@ -12722,7 +12725,7 @@ _includendum_processare (
         }
         alioquin si (t->genus == SILVA_LEX_MINOR)
         {
-            /* <via> - valores concatenati usque ad '>' */
+            /* forma angulata - valores concatenati usque ad '>' */
             SilvaChordaAedificator* aed;
             b32 clausa;
             i32 j;
@@ -12768,6 +12771,7 @@ _includendum_processare (
     inclusio->via = _chorda_figere(exp->piscina, via);
     inclusio->fons_ad = -I;
     inclusio->est_praetermissa = FALSUM;
+    inclusio->est_angulata = citata ? FALSUM : VERUM;
 
     valor = NIHIL;
     inventum = FALSUM;
@@ -14550,6 +14554,7 @@ silva_inclusio_vista (constans SilvaExpansio* exp, i32 index,
     vista_out->fons_ex = inclusio->fons_ex;
     vista_out->fons_ad = inclusio->fons_ad;
     vista_out->est_praetermissa = inclusio->est_praetermissa;
+    vista_out->est_angulata = inclusio->est_angulata;
     redde VERUM;
 }
 

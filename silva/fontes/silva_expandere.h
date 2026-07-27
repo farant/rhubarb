@@ -148,6 +148,8 @@ nomen structura {
     chorda* via;                /* via petita */
     s32     fons_ad;            /* fons resolutus; -1 = ignotus */
     b32     est_praetermissa;   /* praetermissa (custos vel profunditas) */
+    b32     est_angulata;       /* forma angulata contra citatam
+                                 * "via" (01KY118F1J) */
 } SilvaInclusio;
 
 
@@ -377,6 +379,7 @@ nomen structura {
     s32              fons_ex;
     s32              fons_ad;           /* -1 = ignotus */
     b32              est_praetermissa;
+    b32              est_angulata;      /* angulata contra citatam */
 } SilvaInclusioVista;
 
 nomen structura {

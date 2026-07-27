@@ -412,6 +412,39 @@ int main(void)
                     "hospes: INFIDELIS: inclusiones\n");
             }
         }
+
+        /* est_angulata: forma inclusionis servata (01KY118F1J) -
+         * citata 0, angulata 1; irresolutae aeque memorantur */
+        summa++;
+        {
+            SilvaExpansio* exp2 = silva_expansio_creare(piscina);
+            const char* FONS_INCL =
+                "#include \"a.h\"\n#include <b.h>\nint c;\n";
+            SilvaParsura* p2 = NULL;
+            SilvaInclusioVista citata;
+            SilvaInclusioVista angulata;
+
+            if (exp2 != NULL)
+            {
+                p2 = silva_parsare_cum_expansione(piscina, exp2,
+                    "anguli.c", FONS_INCL,
+                    (unsigned int)strlen(FONS_INCL),
+                    &SILVA_C89_GRAMMATICA, NULL, NULL, NULL);
+            }
+            if (p2 != NULL && silva_inclusiones_numerus(exp2) == 2
+                && silva_inclusio_vista(exp2, 0, &citata)
+                && silva_inclusio_vista(exp2, 1, &angulata)
+                && !citata.est_angulata
+                && angulata.est_angulata)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr,
+                    "hospes: INFIDELIS: est_angulata\n");
+            }
+        }
     }
 
     /* grammatica c89 (M2a): furca typedef per amalgama - lectiones
