@@ -1,10 +1,12 @@
 /* systema_posix.h - Supplementum POSIX/Darwin superficiei systematis
  *
- * PLAGULA CONSILII OFFICINAE (M2d): supplementum ad systema_c89.h -
- * oneratores OFFICINAE SOLI (cursor, fusor) textus CONCATENANT in
- * parsuram UNAM (systema_c89.h + haec plagula). Silva-latus (percursus,
- * haruspex) plagulam ISO solam onerat - superficies normae pura manet,
- * baselines silvae immotae.
+ * Supplementum ad systema_c89.h. Duo modi consumptionis:
+ * (1) oneratores officinae (cursor, fusor) plagulam TOTAM
+ * concatenant in parsuram unam; (2) superficies iudicii tres
+ * (examen, percursus, legatus - design B 2026-07-27) sectiones
+ * DERIVANT ex inclusionibus plagulae iudicatae ipsius - marca
+ * sectio caput= infra quam plagulam evocet dicit, semper= basim
+ * omnibus dat, poscit= dependentias trahit.
  *
  * FORMAE HIC VERAE SUNT (non syntheticae!): membra structurarum
  * dereferantur ab interpretatis et monstratores hospiti VERO
@@ -88,12 +90,18 @@ struct stat {
 #define S_IWUSR 0200
 #define S_IXUSR 0100
 
+/* nomina compatibilitatis POSIX (Darwin: macra ad timespec) */
+#define st_atime st_atimespec.tv_sec
+#define st_mtime st_mtimespec.tv_sec
+#define st_ctime st_ctimespec.tv_sec
+
 int stat(const char* via, struct stat* sedes);
 int mkdir(const char* via, mode_t modus);
 
 /* ==================================================
  * <sectio caput="unistd.h"/>
- * unistd.h (pars parva - Unda 1; opendir/readdir = Unda 1b nomine)
+ * unistd.h (pars parva - Unda 1; opendir/readdir Unda 1b nomine -
+ * IMPLETA in Unda 3, sectio dirent.h infra)
  * ================================================== */
 
 char* getcwd(char* sedes, size_t mensura);
@@ -137,6 +145,7 @@ int putenv(char* par);
 /* <sectio caput="signal.h"/> signal.h (valores signorum communes) */
 #define SIGINT  2
 #define SIGKILL 9
+#define SIGALRM 14
 #define SIGTERM 15
 
 int kill(pid_t processus, int signum);
@@ -155,6 +164,9 @@ int WTERMSIG(int status);
 
 /* <sectio caput="fcntl.h"/> fcntl.h (valores Darwin) */
 #define O_NONBLOCK 0x0004
+#define O_WRONLY   0x0001
+#define O_CREAT    0x0200
+#define O_TRUNC    0x0400
 #define F_GETFL    3
 #define F_SETFL    4
 #define F_SETFD    2
@@ -162,11 +174,14 @@ int WTERMSIG(int status);
 #define FD_CLOEXEC 1
 
 int fcntl(int fossa, int mandatum, ...);
+int open(const char* via, int vexilla, ...);
 
-/* <sectio caput="sys/select.h" poscit="sys/time.h"/>
+/* <sectio caput="sys/select.h,sys/time.h" poscit="sys/time.h"/>
  * sys/select.h - fd_set opacum (silva membra non tangit; FD_*
  * ut functiones declarata, ut sys/wait.h supra).
- * poscit: struct timeval (parametrum morae in select). */
+ * poscit: struct timeval (parametrum morae in select).
+ * caput alterum sys/time.h: Darwin select/fd_set etiam per
+ * sys/time.h praebet (mos BSD) - tessera_pons ita includit. */
 typedef struct { int __opacum[32]; } fd_set;
 
 void FD_ZERO(fd_set* copia);
@@ -196,3 +211,115 @@ int getsockopt(int fossa, int gradus, int titulus, void* valor,
                socklen_t* mensura);
 int setsockopt(int fossa, int gradus, int titulus, const void* valor,
                socklen_t mensura);
+
+/* ==================================================
+ * UNDA 3 (re-pinnatio exclusionum 2026-07-27): dirent + mman +
+ * termios + ioctl + utime + supplementa stdio/unistd/signal/errno.
+ * Classes ex classificatione XXXVIII REICE mensuratae: dirent
+ * XXIV plagulas sanat (ansa ambulationis corporis ubique eadem).
+ * Formae contra capita vera per auspex_posix certificatae.
+ * ================================================== */
+
+/* <sectio caput="dirent.h"/> dirent.h (forma Darwin, inodus 64-bit;
+ * DIR opacum - monstrator solus traditur, magnitudo numquam) */
+typedef struct _telldir DIR;
+
+struct dirent {
+    ino_t              d_ino;
+    unsigned long long d_seekoff;
+    unsigned short     d_reclen;
+    unsigned short     d_namlen;
+    unsigned char      d_type;
+    char               d_name[1024];
+};
+
+#define DT_DIR 4
+
+DIR*           opendir(const char* via);
+struct dirent* readdir(DIR* dir);
+int            closedir(DIR* dir);
+
+/* <sectio caput="sys/mman.h"/> sys/mman.h (valores Darwin) */
+#define PROT_READ   0x01
+#define PROT_WRITE  0x02
+#define MAP_PRIVATE 0x0002
+#define MAP_ANON    0x1000
+#define MAP_FAILED  ((void*)-1)
+
+void* mmap(void* sedes, size_t mensura, int tutela, int vexilla,
+           int fossa, off_t offset);
+int   munmap(void* sedes, size_t mensura);
+
+/* <sectio caput="termios.h"/> termios.h (forma Darwin arm64:
+ * tcflag_t = unsigned long, NCCS 20) */
+struct termios {
+    unsigned long c_iflag;
+    unsigned long c_oflag;
+    unsigned long c_cflag;
+    unsigned long c_lflag;
+    unsigned char c_cc[20];
+    unsigned long c_ispeed;
+    unsigned long c_ospeed;
+};
+
+#define TCSAFLUSH 2
+#define ISIG      0x00000080
+#define VINTR     8
+#define VQUIT     9
+#define VMIN      16
+#define VTIME     17
+
+#define _POSIX_VDISABLE 0xff
+
+int  tcgetattr(int fossa, struct termios* modus);
+int  tcsetattr(int fossa, int quando, const struct termios* modus);
+void cfmakeraw(struct termios* modus);
+
+/* <sectio caput="sys/ioctl.h"/> sys/ioctl.h (winsize + TIOCGWINSZ) */
+struct winsize {
+    unsigned short ws_row;
+    unsigned short ws_col;
+    unsigned short ws_xpixel;
+    unsigned short ws_ypixel;
+};
+
+#define TIOCGWINSZ 0x40087468UL
+
+int ioctl(int fossa, unsigned long petitio, ...);
+
+/* <sectio caput="utime.h"/> utime.h */
+struct utimbuf {
+    time_t actime;
+    time_t modtime;
+};
+
+int utime(const char* via, const struct utimbuf* tempora);
+
+/* <sectio caput="stdio.h"/> stdio.h POSIX (FILE* ex fossa) */
+FILE* fdopen(int fossa, const char* modus);
+
+/* <sectio caput="unistd.h"/> unistd.h - supplementa Undae 3 */
+int dup(int fossa);
+int isatty(int fossa);
+
+/* <sectio caput="signal.h"/> signal.h POSIX (sigaction + signa
+ * terminalia; sig_atomic_t/signal/raise in systema_c89.h ut C89) */
+typedef unsigned int sigset_t;
+
+struct sigaction {
+    void     (*sa_handler)(int);
+    sigset_t sa_mask;
+    int      sa_flags;
+};
+
+#define SIGBUS   10
+#define SIGCONT  19
+#define SIGTSTP  18
+#define SIGWINCH 28
+
+int sigaction(int signum, const struct sigaction* actio,
+              struct sigaction* pristina);
+int sigemptyset(sigset_t* copia);
+
+/* <sectio caput="errno.h"/> errno.h - supplementa Undae 3 */
+#define EEXIST 17

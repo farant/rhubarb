@@ -39,6 +39,23 @@ st_blksize 112 4
 st_flags 116 4
 st_gen 120 4"
 
+TABULA_DIRENT="\
+d_ino 0 8
+d_seekoff 8 8
+d_reclen 16 2
+d_namlen 18 2
+d_type 20 1
+d_name 21 1024"
+
+TABULA_TERMIOS="\
+c_iflag 0 8
+c_oflag 8 8
+c_cflag 16 8
+c_lflag 24 8
+c_cc 32 20
+c_ispeed 56 8
+c_ospeed 64 8"
+
 emittere_asserta() {
     echo "IUNGO_ASSERTA(sizeof(struct stat) == 144);"
     echo "IUNGO_ASSERTA(sizeof(struct timeval) == 16);"
@@ -71,6 +88,40 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(SO_NOSIGPIPE == 0x1022);"
     echo "IUNGO_ASSERTA(IPPROTO_TCP == 6);"
     echo "IUNGO_ASSERTA(TCP_NODELAY == 0x01);"
+    # Unda 3 (re-pinnatio 2026-07-27): dirent + mman + termios +
+    # ioctl + utime + sigaction + errno
+    echo "IUNGO_ASSERTA(sizeof(struct dirent) == 1048);"
+    while read -r campus off mensura; do
+        echo "IUNGO_ASSERTA(OFF(dirent, $campus) == $off);"
+        echo "IUNGO_ASSERTA(sizeof(((struct dirent*)0)->$campus) == $mensura);"
+    done <<< "$TABULA_DIRENT"
+    echo "IUNGO_ASSERTA(DT_DIR == 4);"
+    echo "IUNGO_ASSERTA(PROT_READ == 0x01 && PROT_WRITE == 0x02);"
+    echo "IUNGO_ASSERTA(MAP_PRIVATE == 0x0002 && MAP_ANON == 0x1000);"
+    echo "IUNGO_ASSERTA(sizeof(struct termios) == 72);"
+    while read -r campus off mensura; do
+        echo "IUNGO_ASSERTA(OFF(termios, $campus) == $off);"
+        echo "IUNGO_ASSERTA(sizeof(((struct termios*)0)->$campus) == $mensura);"
+    done <<< "$TABULA_TERMIOS"
+    echo "IUNGO_ASSERTA(TCSAFLUSH == 2 && ISIG == 0x00000080);"
+    echo "IUNGO_ASSERTA(VMIN == 16 && VTIME == 17);"
+    echo "IUNGO_ASSERTA(VINTR == 8 && VQUIT == 9);"
+    echo "IUNGO_ASSERTA(_POSIX_VDISABLE == 0xff);"
+    echo "IUNGO_ASSERTA(SIGBUS == 10 && SIGALRM == 14);"
+    echo "IUNGO_ASSERTA(OFF(stat, st_mtime) == 48 && OFF(stat, st_atime) == 32);"
+    echo "IUNGO_ASSERTA(O_WRONLY == 0x0001 && O_CREAT == 0x0200 && O_TRUNC == 0x0400);"
+    echo "IUNGO_ASSERTA(sizeof(struct winsize) == 8);"
+    echo "IUNGO_ASSERTA(OFF(winsize, ws_row) == 0 && OFF(winsize, ws_col) == 2);"
+    echo "IUNGO_ASSERTA(TIOCGWINSZ == 0x40087468UL);"
+    echo "IUNGO_ASSERTA(sizeof(struct utimbuf) == 16);"
+    echo "IUNGO_ASSERTA(OFF(utimbuf, actime) == 0 && OFF(utimbuf, modtime) == 8);"
+    echo "IUNGO_ASSERTA(sizeof(struct sigaction) == 16);"
+    echo "IUNGO_ASSERTA(OFF(sigaction, sa_handler) == 0);"
+    echo "IUNGO_ASSERTA(sizeof(((struct sigaction*)0)->sa_handler) == 8);"
+    echo "IUNGO_ASSERTA(OFF(sigaction, sa_mask) == 8 && OFF(sigaction, sa_flags) == 12);"
+    echo "IUNGO_ASSERTA(sizeof(sigset_t) == 4);"
+    echo "IUNGO_ASSERTA(SIGCONT == 19 && SIGTSTP == 18 && SIGWINCH == 28);"
+    echo "IUNGO_ASSERTA(EEXIST == 17);"
 }
 
 PRAEAMBULUM='#define IUNGO2(a,b) a##b
@@ -89,6 +140,14 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <netinet/tcp.h>"
     echo "#include <signal.h>"
     echo "#include <unistd.h>"
+    echo "#include <dirent.h>"
+    echo "#include <sys/mman.h>"
+    echo "#include <termios.h>"
+    echo "#include <sys/ioctl.h>"
+    echo "#include <utime.h>"
+    echo "#include <errno.h>"
+    echo "#include <stdio.h>"
+    echo "#include <fcntl.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta
 } > "$GEN_DIR/verum.c"
@@ -97,6 +156,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
 {
     echo "typedef unsigned long size_t;"
     echo "typedef long time_t;"
+    echo "typedef struct __sFILE FILE;"
     echo "#include \"silva/fontes/systema_posix.h\""
     echo "$PRAEAMBULUM"
     emittere_asserta
@@ -115,7 +175,7 @@ for tu in verum nostrum; do
 done
 
 if [ $BENE -eq 1 ]; then
-    echo "auspex_posix: FORMAE CERTIFICATAE (stat 144 + timeval 16 + timespec 16 + macra)"
+    echo "auspex_posix: FORMAE CERTIFICATAE (stat 144 + timeval/timespec 16 + dirent 1048 + termios 72 + winsize/utimbuf/sigaction + macra)"
     exit 0
 fi
 exit 1
