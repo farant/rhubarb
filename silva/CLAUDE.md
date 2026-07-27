@@ -83,11 +83,14 @@ The read bench (instrumenta prima, 2026-07-10): ./silva/censor.sh
 ./silva/nexus.sh <symbol> (who-uses/which-file; -similis fuzzy;
 -renovare rebuilds build/nexus.tsv),
 ./silva/examen.sh <file> [-posix|-nudum] [-machina] (C89 judgment:
-verdict + positioned diagnostics; M4a; also pushed post-edit via
-examen-custos hook; lexicon exclusions in fixa/examinis/
-exclusiones.txt). Differential bar: ./silva/examen_vectis.sh
-[-corpus] (oracle leak sweep + pinned invalid corpus + corpus
-exclusion diff). Officina-side sibling:
+verdict + positioned diagnostics naming the offending SYMBOL and,
+for included-file rows, the inclusion chain "(per: root > ...)";
+M4a + 2026-07-27; also pushed post-edit via examen-custos hook.
+Pins = EXPECTED-red files with a named cause per row, format
+via<TAB>causa, in fixa/examinis/exclusiones.txt - NOT lexicon
+gaps: those get healed via systema_posix.h sectiones, auspex_posix
+gate). Differential bar: ./silva/examen_vectis.sh [-corpus]
+(oracle leak sweep + pinned invalid corpus + pin diff). Officina-side sibling:
 ./officina/interpretare.sh (run a corpus function in machinula).
 Conventions: root CLAUDE.md + the conventions recorded in phase-log
 complexities (i32 is UNSIGNED — s32/s64 for anything signed; never
