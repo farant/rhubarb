@@ -101,24 +101,26 @@ _praetermittendum (constans character* titulus)
 
 interior vacuum
 _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
-    constans character* titulus)
+    TabulaDispersa* visa, constans character* via)
 {
     chorda clavis;
     character* textus;
     i32 mensura;
 
-    clavis = chorda_ex_literis(titulus, piscina);
+    /* clavis = via PLENA (01KYJ6740K): expansor sub via canonica
+     * et basename seponit; resolutio includenti-relativa viam
+     * plenam petit, primus-vincit basename in expansore vivit */
+    clavis = chorda_ex_literis(via, piscina);
     si (tabula_dispersa_continet(visa, clavis))
     {
-        redde;   /* collisio basename - primus vicit */
+        redde;
     }
     textus = _plagulam_legere(piscina, via, &mensura);
     si (textus == NIHIL)
     {
         redde;
     }
-    si (silva_contextus_praebere(ctx, titulus, textus, mensura))
+    si (silva_contextus_praebere(ctx, via, textus, mensura))
     {
         (vacuum)tabula_dispersa_inserere(visa, clavis, NIHIL);
         capita_praebita++;
@@ -165,8 +167,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
             si (m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
-                _caput_praebere(ctx, piscina, visa, via_plena,
-                    introitus->d_name);
+                _caput_praebere(ctx, piscina, visa, via_plena);
             }
         }
     }

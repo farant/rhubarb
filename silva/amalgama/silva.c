@@ -12555,6 +12555,112 @@ _regionem_processare (
  * Chunk D - Includenda
  * ================================================== */
 
+/* Viam iungere et canonicam facere (cpp verus: inclusio CITATA
+ * relative ad plicaturam plagulae includentis PRIMUM quaeritur -
+ * 01KYJ6740K; basinomina aequalia trans plicaturas antea
+ * confundebantur). Segmenta '.' cadunt, 'seg/..' plicantur,
+ * praefixum absolutum '/' servatur. Vacua = iunctio incanonica
+ * (supra radicem ascendit) aut apparatus deficiens - quaerens tunc
+ * gradus sequentes (exacta, basename) temptat, mores pristini. */
+#define SILVA_SEGMENTA_VIAE_MAXIMA LXIV
+
+interior SilvaChorda
+_via_iuncta_canonica (SilvaPiscina* piscina, SilvaChorda plicatura, SilvaChorda via)
+{
+    SilvaChorda effusio;
+    character* crudum;
+    character* datum;
+    i32 crudum_m;
+    i32 cacumina[SILVA_SEGMENTA_VIAE_MAXIMA];
+    i32 altitudo = ZEPHYRUM;
+    i32 basis = ZEPHYRUM;
+    i32 scriptum;
+    i32 i = ZEPHYRUM;
+
+    effusio.datum = NIHIL;
+    effusio.mensura = ZEPHYRUM;
+    si (plicatura.mensura == ZEPHYRUM || via.mensura == ZEPHYRUM)
+    {
+        redde effusio;
+    }
+    crudum_m = plicatura.mensura + I + via.mensura;
+    crudum = (character*)silva_piscina_allocare(piscina,
+        (memoriae_index)crudum_m);
+    datum = (character*)silva_piscina_allocare(piscina,
+        (memoriae_index)crudum_m);
+    si (crudum == NIHIL || datum == NIHIL)
+    {
+        redde effusio;
+    }
+    memcpy(crudum, plicatura.datum,
+        (memoriae_index)plicatura.mensura);
+    crudum[plicatura.mensura] = '/';
+    memcpy(crudum + plicatura.mensura + I, via.datum,
+        (memoriae_index)via.mensura);
+
+    si (crudum[ZEPHYRUM] == '/')
+    {
+        datum[ZEPHYRUM] = '/';
+        basis = I;
+    }
+    scriptum = basis;
+    dum (i < crudum_m)
+    {
+        i32 seg_ini = i;
+        i32 seg_m;
+
+        dum (i < crudum_m && crudum[i] != '/')
+        {
+            i++;
+        }
+        seg_m = i - seg_ini;
+        si (i < crudum_m)
+        {
+            i++;
+        }
+        si (seg_m == ZEPHYRUM)
+        {
+            perge;
+        }
+        si (seg_m == I && crudum[seg_ini] == '.')
+        {
+            perge;
+        }
+        si (seg_m == II && crudum[seg_ini] == '.'
+            && crudum[seg_ini + I] == '.')
+        {
+            si (altitudo == ZEPHYRUM)
+            {
+                redde effusio;
+            }
+            altitudo--;
+            scriptum = cacumina[altitudo];
+            perge;
+        }
+        si (altitudo >= SILVA_SEGMENTA_VIAE_MAXIMA)
+        {
+            redde effusio;
+        }
+        cacumina[altitudo] = scriptum;
+        altitudo++;
+        si (scriptum > basis)
+        {
+            datum[scriptum] = '/';
+            scriptum++;
+        }
+        memcpy(datum + scriptum, crudum + seg_ini,
+            (memoriae_index)seg_m);
+        scriptum = scriptum + seg_m;
+    }
+    si (scriptum == ZEPHYRUM)
+    {
+        redde effusio;
+    }
+    effusio.datum = (i8*)datum;
+    effusio.mensura = scriptum;
+    redde effusio;
+}
+
 /* Processare #include: viam extrahere, inclusionem memorare,
  * contentum praebitum recursive processare (reliqua hic inserta) */
 interior vacuum
@@ -12572,11 +12678,14 @@ _includendum_processare (
     SilvaFons* fons;
     SilvaChorda via;
     b32 habet_viam;
+    b32 citata;
+    b32 inventum;
     vacuum* valor;
     i32 i_op;
 
     cancellum = *(SilvaToken**)silva_xar_obtinere(lexemata, i_cancellum);
     habet_viam = FALSUM;
+    citata = FALSUM;
     via.datum = NIHIL;
     via.mensura = ZEPHYRUM;
     i_op = i_cancellum + II;
@@ -12592,6 +12701,7 @@ _includendum_processare (
             via.datum = t->valor.datum + I;
             via.mensura = t->valor.mensura - II;
             habet_viam = VERUM;
+            citata = VERUM;
         }
         alioquin si (t->genus == SILVA_LEX_MINOR)
         {
@@ -12642,14 +12752,62 @@ _includendum_processare (
     inclusio->fons_ad = -I;
     inclusio->est_praetermissa = FALSUM;
 
-    si (!silva_tabula_dispersa_invenire(exp->includenda, via, &valor))
+    valor = NIHIL;
+    inventum = FALSUM;
+    si (citata
+        && (via.mensura == ZEPHYRUM || via.datum[ZEPHYRUM] != '/'))
+    {
+        /* cpp verus (01KYJ6740K): inclusio citata relative ad
+         * plicaturam plagulae INCLUDENTIS primum quaeritur.
+         * Praebenda sub via canonica plena sedent (vide
+         * silva_includendum_praebere) - iunctio incanonica aut
+         * ignota cadit ad gradus sequentes, mores pristini. */
+        SilvaFons* includens = (SilvaFons*)silva_xar_obtinere(exp->fontes,
+            (i32)cancellum->fons_index);
+
+        si (includens != NIHIL && includens->via != NIHIL)
+        {
+            SilvaChorda plicatura;
+            i32 j;
+
+            plicatura = *includens->via;
+            plicatura.mensura = ZEPHYRUM;
+            per (j = includens->via->mensura; j > ZEPHYRUM; j--)
+            {
+                si (includens->via->datum[j - I] == '/')
+                {
+                    plicatura.mensura = j - I;
+                    frange;
+                }
+            }
+            si (plicatura.mensura > ZEPHYRUM)
+            {
+                SilvaChorda iuncta = _via_iuncta_canonica(exp->piscina,
+                    plicatura, via);
+
+                si (iuncta.mensura > ZEPHYRUM
+                    && silva_tabula_dispersa_invenire(exp->includenda,
+                           iuncta, &valor))
+                {
+                    inventum = VERUM;
+                }
+            }
+        }
+    }
+    si (!inventum
+        && silva_tabula_dispersa_invenire(exp->includenda, via, &valor))
+    {
+        inventum = VERUM;
+    }
+    si (!inventum)
     {
         /* Recidiva ad BASENAME (M2d Chunk D): praebenda sub
-         * basename seditur (saltuarius, percursus - primus
-         * vincit), sed fontes veri "../include/utf8.h" scribunt -
-         * quaestio exacta fallebat et catena TOTA (latina.h
-         * transitive!) irresoluta manebat. Exacta prior, basename
-         * secunda; ambae fallunt -> transitus conservativus idem. */
+         * basename etiam sedent (primus vincit), sed fontes veri
+         * "../include/utf8.h" scribunt - quaestio exacta fallebat
+         * et catena TOTA (latina.h transitive!) irresoluta
+         * manebat. Includenti-relativa prior, exacta secunda,
+         * basename tertia; omnes fallunt -> transitus
+         * conservativus idem. */
         SilvaChorda basis = via;
         i32 j;
 
@@ -12720,7 +12878,53 @@ silva_includendum_praebere (
     incl->lexemata = silva_lexare(exp->piscina, textus, mensura, fons_index);
 
     fons = (SilvaFons*)silva_xar_obtinere(exp->fontes, (i32)fons_index);
-    silva_tabula_dispersa_inserere(exp->includenda, *fons->via, (vacuum*)incl);
+    {
+        /* Claves mappae DUAE ex praebitione una: via canonica
+         * plena (resolutio includenti-relativa eam quaerit) +
+         * basename (consumptores basename-soli, e.g. saltuarius,
+         * per recidivam vivunt). Primus vincit utrobique. */
+        SilvaChorda radix_iunctionis;
+        SilvaChorda plena;
+        SilvaChorda basis;
+        i32 j;
+
+        si (fons->via->mensura > ZEPHYRUM
+            && fons->via->datum[ZEPHYRUM] == '/')
+        {
+            radix_iunctionis = silva_chorda_ex_literis("/", exp->piscina);
+        }
+        alioquin
+        {
+            radix_iunctionis = silva_chorda_ex_literis(".", exp->piscina);
+        }
+        plena = _via_iuncta_canonica(exp->piscina, radix_iunctionis,
+            *fons->via);
+        si (plena.mensura == ZEPHYRUM)
+        {
+            plena = *fons->via;
+        }
+        si (!silva_tabula_dispersa_continet(exp->includenda, plena))
+        {
+            silva_tabula_dispersa_inserere(exp->includenda, plena,
+                (vacuum*)incl);
+        }
+        basis = plena;
+        per (j = plena.mensura; j > I; j--)
+        {
+            si (plena.datum[j - I] == '/')
+            {
+                basis.datum = plena.datum + j;
+                basis.mensura = plena.mensura - j;
+                frange;
+            }
+        }
+        si (basis.mensura != plena.mensura && basis.mensura > ZEPHYRUM
+            && !silva_tabula_dispersa_continet(exp->includenda, basis))
+        {
+            silva_tabula_dispersa_inserere(exp->includenda, basis,
+                (vacuum*)incl);
+        }
+    }
     redde fons_index;
 }
 

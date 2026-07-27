@@ -86,7 +86,7 @@ nomen structura {
 
 /* caput semel lectum (praebetur deinde in contextus plures) */
 nomen structura {
-    constans character* titulus;
+    constans character* via;   /* via plena - clavis praebitionis */
     character* textus;
     i32 mensura;
 } CaputLectum;
@@ -410,26 +410,29 @@ _plagulam_totam_legere (Piscina* piscina, constans character* via,
 }
 
 /* EXPANSIO PER INCLUSIONEM VERAM (M2d Chunk D): praepassus omne
- * caput (.h) repositorii sub BASENAME COLLIGIT - textus SEMEL
- * lectus (piscina longaeva), deinde in contextus praebetur
- * (_capita_praebere_in). DESIGN B: contextus plures (praeparatio
- * per signaturam), textus capitum communes. Quaeque plagula suam
- * catenam inclusionum VERAM sequitur (transitive, custodes
- * honorati) - plagulae latina.h includentes latinam accipiunt,
- * ceterae (hospes canariae! knotapel! raqiya) lexica SUA VERA.
- * Collisio basename: primus vincit (exemplar saltuarii). */
+ * caput (.h) repositorii sub VIA PLENA COLLIGIT (01KYJ6740K) -
+ * textus SEMEL lectus (piscina longaeva), deinde in contextus
+ * praebetur (_capita_praebere_in); expansor clavem canonicam +
+ * basename seponit (primus vincit) et inclusiones citatas
+ * includenti-relative primum resolvit. DESIGN B: contextus plures
+ * (praeparatio per signaturam), textus capitum communes. Quaeque
+ * plagula suam catenam inclusionum VERAM sequitur (transitive,
+ * custodes honorati) - plagulae latina.h includentes latinam
+ * accipiunt, ceterae (hospes canariae! knotapel! raqiya) lexica
+ * SUA VERA, et gemini basename (fontes_generata.h!) vicinos SUOS
+ * capiunt, non alienos. */
 hic_manens vacuum
 _caput_legere (Piscina* piscina, TabulaDispersa* visa,
-    constans character* via, constans character* titulus)
+    constans character* via)
 {
     chorda clavis;
     character* textus;
-    character* titulus_copia;
+    character* via_copia;
     i32 mensura = ZEPHYRUM;
     memoriae_index m;
     CaputLectum* introitus;
 
-    clavis = chorda_ex_literis(titulus, piscina);
+    clavis = chorda_ex_literis(via, piscina);
     si (tabula_dispersa_continet(visa, clavis))
     {
         capita_collisiones++;
@@ -441,14 +444,14 @@ _caput_legere (Piscina* piscina, TabulaDispersa* visa,
     }
     textus = _plagulam_totam_legere(piscina, via, &mensura);
     si (textus == NIHIL) redde;
-    /* d_name effimerum est - titulus copiandus (vita = piscina) */
-    m = strlen(titulus);
-    titulus_copia = (character*)piscina_allocare(piscina, m + I);
-    si (titulus_copia == NIHIL) redde;
-    memcpy(titulus_copia, titulus, m + I);
+    /* via_plena effimera est - copianda (vita = piscina) */
+    m = strlen(via);
+    via_copia = (character*)piscina_allocare(piscina, m + I);
+    si (via_copia == NIHIL) redde;
+    memcpy(via_copia, via, m + I);
     introitus = (CaputLectum*)xar_addere(capita_lecta);
     si (introitus == NIHIL) redde;
-    introitus->titulus = titulus_copia;
+    introitus->via = via_copia;
     introitus->textus = textus;
     introitus->mensura = mensura;
     (vacuum)tabula_dispersa_inserere(visa, clavis, NIHIL);
@@ -487,8 +490,7 @@ _capita_praeparare (Piscina* piscina, TabulaDispersa* visa,
             si (m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
-                _caput_legere(piscina, visa, via_plena,
-                    introitus->d_name);
+                _caput_legere(piscina, visa, via_plena);
             }
         }
     }
@@ -509,7 +511,7 @@ _capita_praebere_in (SilvaContextus* ctx)
 
         si (cl != NIHIL)
         {
-            (vacuum)silva_contextus_praebere(ctx, cl->titulus,
+            (vacuum)silva_contextus_praebere(ctx, cl->via,
                 cl->textus, cl->mensura);
         }
     }
