@@ -133,8 +133,10 @@ if [ "$CULPAE_NUMERUS" != "6" ]; then
     echo "amalgamare: FRACTA - censor culpas probabiles non nominat ($CULPAE_NUMERUS/6)"
     exit 1
 fi
-# (b) fontes silvae puri sunto
+# (b) fontes silvae puri sunto (instrumenta/*.c = moduli communes -
+# silva_amalgama, silva_lexicon... - eadem porta ac principalia)
 if ! "$CENSOR" "$SILVA_DIR"/fontes/*.c "$SILVA_DIR"/fontes/*.h \
+        "$SILVA_DIR"/instrumenta/*.c \
         "$SILVA_DIR"/instrumenta/principalia/*.c \
         "$SILVA_DIR"/probationes/probatio_*.c \
         > "$BUILD_DIR/censura.txt" 2>/dev/null; then

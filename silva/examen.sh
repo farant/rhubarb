@@ -60,7 +60,13 @@ done
 
 EXAMEN_SRC="$SILVA_DIR/instrumenta/principalia/examen.c"
 EXAMEN_BIN="$BUILD_DIR/examen"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$EXAMEN_SRC" $obj_files \
+# silva_lexicon.c in linea nectendi explicite (exemplar amalgamare:71
+# pro silva_amalgama.c) - modulus instrumentorum communis, extra
+# fontes/ quia instrumentum est, non substratum amalgamandum
+clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+    -I"$SILVA_DIR/instrumenta" \
+    "$EXAMEN_SRC" \
+    "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files \
     -o "$EXAMEN_BIN" || exit 1
 
 # manifestum vigiliae (invarians: aedificator indicem VERUM scribit -
@@ -69,6 +75,8 @@ clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$EXAMEN_SRC" $obj_files \
     for f in "${RADIX_FONTES[@]}"; do echo "$RADIX_DIR/lib/$f.c"; done
     ls "$SILVA_DIR"/fontes/*.c "$SILVA_DIR"/fontes/*.h
     echo "$EXAMEN_SRC"
+    echo "$SILVA_DIR/instrumenta/silva_lexicon.c"
+    echo "$SILVA_DIR/instrumenta/silva_lexicon.h"
     ls "$RADIX_DIR"/include/*.h
 } > "$BUILD_DIR/examen.manifestum"
 
