@@ -10428,3 +10428,119 @@ consulto intactus: filtrum trans-plagulare C3 diagnostica aliena
 iam excludit - LSP responsum suum habet. silva.h gemina renovata
 (structura + declaratio). Suites 34/34 + 12/12; amalgama
 VERIFICATUM; verdicta immota per constructionem.
+
+## 2026-07-27 - FASCICULUS SILVAE (burndown III): quinque res, sex commissa
+
+RELATIO. Fasciculus tertius consilii burndown (01KYCYN92Q) per
+subsystema silvae, post re-inventarium quo sex res suspectae
+mensuratae sunt (quattuor mortuae-aut-dimidiatae repertae ante
+ullam sarturam - lex 'an hoc adhuc verum est?' iterum solvit).
+
+MISSA (commissa 8e0dceb, b5e9a8f, d5b4051, 450c5fd, 9c84773):
+1. Parva tria: percursus modum 'parse-only' nominat (silentium non
+   est successus); censor .m in unco (porta TEXTUALIS - censor
+   exitum 0 etiam cum convictione reddit, [CENSURA]/[CULPA] pulsant,
+   suspecta in fracturis ObjC tacent); arbor.sh -f iam exsistebat.
+2. est_angulata in SilvaInclusio(Vista) + geminus + probatio hospes
+   (34/34): forma inclusionis quam expansor iam noverat nunc
+   memoratur.
+3. RECUSO (exitus III): fines tactae = recusatio clara, non
+   iudicium fictum. Causa capsulae 12.8 MB hypothesi-per-
+   implementationem confirmata: signum parsura->fines_tactae IAM
+   EXSTABAT, examen solum id ignorabat. Uncus RECUSO expresse
+   pulsat. Fratres nominati 01KYJN2X4G (legatus, percursus columna).
+4. Codex 80 SUBTRACTIO_COMPARATA: acus quam DEGRADATA dormiens (62,
+   census 228) statice separare nequibat - nodus subtractionis ipse.
+   Census novi: 0/681. Taxonomia graduum e vecte MENSURATA:
+   suspectum = paritas clang (porta oraculi!), domesticum = supra
+   clang - electio gradus non gustus sed structura fixturarum.
+   Limes notus: forma variabilis (exemplar villae) CFG gradus 2
+   exspectat.
+5. calibratio.sh: matrix specimen x vexilla -> tabula; demo primus
+   caecitatem clang codicis 80 uno conspectu monstravit.
+
+DEBRIEF INSTRUMENTORUM. Adhibita: legere/res tabularii (re-
+inventarium totum ex tabula, nulla plagula aperta priusquam corpus
+rei lectum); examen -machina + catena inclusionum (breadcrumbs
+heri missae hodie primae horae fructum dederunt: attributio
+latina.h intra capsulam statim visa); hospes ut porta fidelitatis
+API novae; vectis quadruplex. Asperitates: (1) lex scanner-trigger
+QUINTUM flagravit (commentarium meum in capite; et praeexsistens
+in .c) - reflexus nondum in digitis, sed diagnostica annotationum
+eam intra secundas nominaverunt; (2) MEMORY.md limitem attigit -
+sectio examinis in plagulam thematis mota (examen-lexicon-
+derivation.md), index sub 17.1 KB. Fructus inexspectatus: taxonomia
+suspectum/domesticum numquam scripta erat - vectis eam semper
+codificaverat (oraculum consentiens contra inversum); nunc in
+capite codicis 80 recordata.
+
+## 2026-07-27 - INTENTIO: FLUXUS FORMAE (codex 80 per variabilem; 62 subsumptio)
+
+Decretum 01KXRBS0VQ semper hoc destinavit: separator acus = DEFINITIONES
+operandi, def-usus super CFG. Suturae lectae (fluxus.h, datorum.h,
+chunk B punctum fixum, chunk C replay, sedes vocationis 4627):
+_corpus_ambulare (typatio) ANTE _fluxum_examinare per functionem -
+ergo consilium bifasium purum:
+
+1. DATORUM: FluxusEventum += fons_valoris (nodus valoris definitionis;
+   doctrina 'quisque campus columna quaestionis futurae'; structurae
+   internae v1 - geminus silva.h NON tangitur). Campus extractoris
+   positus ante _locum_resolvere: assignatio simplex = dexter,
+   composita = nodus assignationis, initiator = expressio initiatoris,
+   crementa = nodus ipse, cetera NIHIL.
+2. DATORUM: formae_introitus/exitus (i8 per variabilem) in
+   FluxusDatorumBlocus; reticulum IGNOTUM(0) < {SUBTRACTIO, ALIA} <
+   MIXTUM; punctum fixum alterum ad exemplar chunk B. Classificator
+   syntacticus (datorum syntaxim iam legit): BINARIUM MINUS aut
+   assignatio composita MINUS -> SUBTRACTIO; assignatio simplex
+   recursat in dextrum; crementa/ternarius -> ALIA (v1 angustum).
+   Effugium (DEFINITIO_LOCI/ACCUMULAT) -> variabilis PERPETUO MIXTUM
+   (v1 sanum); def-omnia -> omnes MIXTUM. Parametra: ALIA in introitu.
+3. SEMANTICA: sedes codicis 80 candidatos memorat (comparatio zephyro
+   ordine, commune insignatum, alter = folium identificatoris tractum)
+   in sem->candidata; _formas_examinare (post _initiationem_examinare)
+   replay formarum currit, ad eventum USUS candidatum cum forma
+   SUBTRACTIO codex 80 emittit cum vestigio definitionis.
+4. Codex 62 NON re-armatur sed SUBSUMITUR: condicio decreti (defs
+   arithmeticae) == forma SUBTRACTIO == codex 80 extensus. Nota in
+   62/decretum scribenda; vigil dormit in aeternum.
+
+Specimina ANTE praedicatum (scratchpad, promotio in fixturam ubi
+viridia): forma villae ipsa, accumulatio ansae, rami mixti (unus
+subtractio unus mensura -> TACET), effugium &x -> TACET, parametrum
+-> TACET, composita x-=y, assignatio catenata. Portae: suite +
+vectis + census 80 (novae sedes verae solae) + amalgama.
+
+## 2026-07-27 - RELATIO: FLUXUS FORMAE (commissum 9cff786)
+
+Arcus una sessione ab INTENTIONE ad radicem 108/108. Decem specimina
+scripta ANTE praedicatum, X/X primo cursu implementationis - nulla
+iteratio praedicati necessaria fuit, quod ritui speciminum tribuo:
+exspectationes exactae ante codicem scriptae erant.
+
+INVENTA ITINERIS:
+- Substratum destinatum: caput datorum ipsum '62 re-arma, decretum
+  01KXRBS0VQ' ut consumptorem nominabat. Non aedificavimus super
+  fundamentum - fundamentum nos exspectabat. Lectio suturarum ante
+  consilium (fluxus.h + datorum.h + chunk B/C + sedes 4627) totum
+  consilium bifasium dictavit.
+- 62 subsumptio pro re-armatione: condicio decreti == forma
+  SUBTRACTIO == codex 80 extensus. Codex unus = classis defectus
+  una, distantia syntactica non refert.
+- Census ut messis: XVIII sedes (contra 228), triage completa in
+  sessione - vitium retiale verisimile (01KYJS4YKW), stirps clonata
+  suspecta (01KYJS5KPH, decretis congelationis notata), XII
+  invariante custodita quae candidata tolera sunt (decisio Franis).
+- Custos duplicationum tabulae bis fructum dedit: similia decreta
+  congelationis lapifex statim ostendit.
+
+DEBRIEF INSTRUMENTORUM. Adhibita: tabularii res/addere/nexus (decretum
+01KXRBS0VQ lectum ANTE consilium - sine eo reticulum proprium
+aedificavissem ubi catenae def-usus destinatae erant); calibratio.sh
+(natus heri, hodie in ritu - caecitas clang speciminum uno cursu);
+uncus examen-custos in ipsa sessione bis me correxit (conversio
+signi, identificator ignotus provisionalis ante definitionem typi).
+Asperitas: excubitor officinae STALA post amalgama silvae - contentum
+idem erat, mtime solum; verificatio 'regenera et compara' momentum
+costavit sed recte (silentium non est successus). Vigilia legati bis
+flagravit inter regenerationes - /reload-plugins Franis post arcum.
