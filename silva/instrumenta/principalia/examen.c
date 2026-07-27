@@ -6,7 +6,7 @@
  * auctoritativum - typatio relativa canonicae).
  *
  * Usus:  examen <plagula.c> [-posix|-nudum] [-machina] [-v]
- * Exitus: 0 ACCIPE | 1 REICE | 2 INFRA
+ * Exitus: 0 ACCIPE | 1 REICE | 2 INFRA | 3 RECUSO (fines tactae)
  *
  * Verdictum: REICE = violatio non-provisionalis ULLA aut nodi
  * erroris (syntaxis fracta = reiectio C89); INFRA = apparatus
@@ -391,6 +391,28 @@ s32 principale (integer argc, character** argv)
         {
             fprintf(stderr, "examen: apparatus fractus: %s\n", via);
             redde II;
+        }
+        /* Fines tactae = expansio trunca (limen lexematum aut frons
+         * GLR): macra ultra punctum truncationis inexpansa manent
+         * et iudicium quod sequeretur FICTUM esset (mensuratum
+         * 01KXS2ETAE: TU 12.8 MB, stratum macrorum totum mortuum,
+         * 293 typi ignoti phantasmata sub verdicto REICE ficto).
+         * Recusatio clara pro iudicio falso; exitus III proprius ne
+         * cum REICE (I) aut fractura apparatus (II) confundatur. */
+        si (parsura->fines_tactae)
+        {
+            si (machina)
+            {
+                imprimere("VERDICTUM\tRECUSO\n");
+            }
+            alioquin
+            {
+                imprimere("verdictum: RECUSO  (fines tactae:"
+                    " expansio trunca - plagula limina silvae"
+                    " excedit, iudicium fidele impossibile)\n");
+            }
+            piscina_destruere(piscina);
+            redde III;
         }
         sem = silva_c89_semantica_analysare_cum_systemate(piscina,
             parsura, systema_parsura);

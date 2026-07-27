@@ -5,7 +5,7 @@
 # Usage:
 #   ./silva/examen.sh <plagula.c> [-posix|-nudum] [-machina] [-v]
 #   ./silva/examen.sh -census [codex] [radix] [-posix]
-# Exit:  0 ACCIPE | 1 REICE | 2 INFRA (apparatus)
+# Exit:  0 ACCIPE | 1 REICE | 2 INFRA (apparatus) | 3 RECUSO (fines)
 #        (-census: 0 = percursus perfectus, 1 = apparatus)
 #
 # NB: semper ex radice repositorii currit (cd infra) - viae datae

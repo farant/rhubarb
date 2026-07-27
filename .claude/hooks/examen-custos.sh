@@ -57,6 +57,14 @@ esac
 # probationes + omnes VI plagulae quae hic routabantur ACCIPE sunt
 # sine vexillo ullo.
 OUT=$(cd "$RADIX" && ./silva/examen.sh "$REL" -machina 2>/dev/null)
+VERD=$(printf '%s\n' "$OUT" | awk -F'\t' '$1=="VERDICTUM"{print $2}')
+# RECUSO = fines tactae (expansio trunca): zero ordines NON est
+# munditia - silentium hic mentiretur (01KXS2ETAE)
+if [ "$VERD" = "RECUSO" ]; then
+    jq -n --arg r "EXAMEN C89 (uncus post-editionem): VERDICTUM RECUSO - plagula limina silvae excedit (expansio trunca), iudicium fidele impossibile. Iudex efficax solus = clang -std=c89 -Werror." \
+        '{additionalContext:$r}'
+    exit 0
+fi
 ROWS=$(printf '%s\n' "$OUT" | awk -F'\t' \
     '$1!="VERDICTUM" && $1!~/^#/ && $4!="infra" {
         p = ($6=="1") ? " (provisionale)" : "";
@@ -74,7 +82,6 @@ ROWS=$(printf '%s\n' "$OUT" | awk -F'\t' \
 EXCL="$RADIX/silva/probationes/fixa/examinis/exclusiones.txt"
 # forma pinnae: via<TAB>causa ('#' commentaria) - columna prima sola
 [ -f "$EXCL" ] && grep -v '^#' "$EXCL" | cut -f1 | grep -qxF "$REL" && exit 0
-VERD=$(printf '%s\n' "$OUT" | awk -F'\t' '$1=="VERDICTUM"{print $2}')
 
 jq -n --arg r "EXAMEN C89 (uncus post-editionem, verdictum ${VERD:-?}):
 $ROWS
