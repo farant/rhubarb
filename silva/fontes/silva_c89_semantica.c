@@ -401,6 +401,7 @@ _diagnosticum_addere_plenum (
     d->linea = ZEPHYRUM;
     d->columna = ZEPHYRUM;
     d->longitudo = ZEPHYRUM;
+    d->fons_index = -I;
     si (nodus != NIHIL)
     {
         SilvaToken* lexema = _lexema_primum(nodus);
@@ -416,6 +417,7 @@ _diagnosticum_addere_plenum (
                 /* longitudo radicis IN MANU hic - extensio gratis
                  * (LEGATUS chunk 0: computatum-tum-abiectum finitur) */
                 d->longitudo = radix->longitudo;
+                d->fons_index = radix->fons_index;
                 si (sem->parsura_currens != NIHIL
                     && sem->parsura_currens->expansio != NIHIL)
                 {

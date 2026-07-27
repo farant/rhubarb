@@ -444,6 +444,10 @@ nomen structura {
     i32                  columna;      /* 1-basata; 0 si ignota */
     i32                  longitudo;    /* octeti lexematis primi
                                         * (radicis); 0 si ignota */
+    s32                  fons_index;   /* fons radicis (catena
+                                        * inclusionum:
+                                        * silva_inclusionis_catena_
+                                        * scribere); -1 ignotus */
     constans SilvaNodus* socius;       /* sedes cognata (e.g.
                                         * declaratio prior); NIHIL */
 } SemanticaDiagnosticum;

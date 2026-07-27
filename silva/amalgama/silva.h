@@ -695,6 +695,13 @@ unsigned int silva_fontes_numerus(const SilvaExpansio* exp);
 const SilvaChorda* silva_fons_via(const SilvaExpansio* exp,
     int fons_index);
 unsigned int silva_inclusiones_numerus(const SilvaExpansio* exp);
+/* Catena inclusionum AD fontem datum: viae ab radice ad
+ * includentem proximum (" > " separatae; fons ipse exclusus).
+ * 0 = radix ipse / ignotus / spatium deficiens (buffer vacuus). */
+unsigned int silva_inclusionis_catena_scribere(
+    const SilvaExpansio* exp, int fons_index, char* buffer,
+    unsigned int capacitas);
+
 int silva_inclusio_vista(const SilvaExpansio* exp,
     unsigned int index, SilvaInclusioVista* vista_out);
 unsigned int silva_rami_numerus(const SilvaExpansio* exp);
@@ -1436,6 +1443,9 @@ typedef struct {
     unsigned int      columna;      /* 1-basata; 0 si ignota */
     unsigned int      longitudo;    /* octeti lexematis primi
                                      * (radicis); 0 si ignota */
+    int               fons_index;   /* fons radicis (catena:
+                                     * silva_inclusionis_catena_
+                                     * scribere); -1 ignotus */
     const SilvaNodus* socius;       /* sedes cognata; NULL licet */
 } SemanticaDiagnosticum;
 

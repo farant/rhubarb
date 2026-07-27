@@ -414,6 +414,13 @@ silva_fons_via (constans SilvaExpansio* exp, s32 fons_index);
 i32
 silva_inclusiones_numerus (constans SilvaExpansio* exp);
 
+/* Catena inclusionum AD fontem datum: viae ab radice ad
+ * includentem proximum (" > " separatae; fons ipse exclusus).
+ * 0 = radix ipse / ignotus / spatium deficiens (buffer vacuus). */
+insignatus integer
+silva_inclusionis_catena_scribere (constans SilvaExpansio* exp,
+    s32 fons_index, character* buffer, insignatus integer capacitas);
+
 b32
 silva_inclusio_vista (constans SilvaExpansio* exp, i32 index,
     SilvaInclusioVista* vista_out);

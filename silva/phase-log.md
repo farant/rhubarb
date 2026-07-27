@@ -10408,3 +10408,23 @@ hiatus lexici ISO nunc nominatus, non mysterium); fontes_generata
 linea narrat. Suites silva 34/34 + officina 12/12; amalgama
 VERIFICATUM; verdicta immota per constructionem (causa sola
 crescit, severitas/codex immoti).
+
+### Addendum (2026-07-27, eadem sessio): CATENA INCLUSIONUM IN DIAGNOSTICIS
+
+Tertium ex debrief instrumentorum: diagnosticum in plagula INCLUSA
+nunc catenam fert - '(per: lib/imago.c)' humano modo, columna
+'catena' octava in -machina (caput columnarum renovatum; uncus
+'#' iam filtrat). Confusio attributionis plagulae-inclusae (quae
+hac sessione anomaliam falsam amalgamatoris peperit) nunc
+impossibilis: linea stb_image.h quis eam invexerit dicit.
+
+Mechanismus: SemanticaDiagnosticum campum fons_index accepit
+(extractum-tum-abiectum in emissore erat - columna quaestionis
+recuperata, 'codex est basis datorum'); silva_inclusionis_catena_
+scribere publica in expansore (ambulatio marginum inclusionum
+retro ad radicem, custos cycli XXXII, margines plures = primus
+vincit); examen catenam reddit ubi fons != princeps. Legatus
+consulto intactus: filtrum trans-plagulare C3 diagnostica aliena
+iam excludit - LSP responsum suum habet. silva.h gemina renovata
+(structura + declaratio). Suites 34/34 + 12/12; amalgama
+VERIFICATUM; verdicta immota per constructionem.

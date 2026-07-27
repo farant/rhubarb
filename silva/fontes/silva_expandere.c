@@ -2750,6 +2750,92 @@ silva_inclusiones_numerus (constans SilvaExpansio* exp)
     redde xar_numerus(exp->inclusiones);
 }
 
+/* Catena inclusionum AD fontem datum: viae ab radice ad
+ * includentem proximum, " > " separatae (fons ipse exclusus - via
+ * eius iam in diagnostico stat). 0 = radix ipse / ignotus /
+ * spatium deficiens (buffer tunc vacuus, nihil dimidium). Custos
+ * cycli: profunditas XXXII; margines plures ad eundem fontem -
+ * primus vincit (indicium lectori, non probatio). */
+insignatus integer
+silva_inclusionis_catena_scribere (constans SilvaExpansio* exp,
+    s32 fons_index, character* buffer, insignatus integer capacitas)
+{
+    s32 maiores[XXXII];
+    i32 numerus = ZEPHYRUM;
+    s32 currens;
+    i32 n_incl;
+    i32 i;
+    insignatus integer scriptum = ZEPHYRUM;
+
+    si (exp == NIHIL || buffer == NIHIL || capacitas == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    buffer[ZEPHYRUM] = '\0';
+    si (fons_index < ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    currens = fons_index;
+    n_incl = xar_numerus(exp->inclusiones);
+    dum (numerus < (i32)XXXII)
+    {
+        s32 pater = -I;
+
+        per (i = ZEPHYRUM; i < n_incl; i++)
+        {
+            constans SilvaInclusio* incl = (constans SilvaInclusio*)
+                xar_obtinere(exp->inclusiones, i);
+
+            si (incl != NIHIL && incl->fons_ad == currens
+                && incl->fons_ex != currens)
+            {
+                pater = incl->fons_ex;
+                frange;
+            }
+        }
+        si (pater < ZEPHYRUM)
+        {
+            frange;
+        }
+        maiores[numerus] = pater;
+        numerus++;
+        currens = pater;
+    }
+    si (numerus == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    /* maiores[numerus-1] = radix ... maiores[0] = includens */
+    per (i = numerus; i > ZEPHYRUM; i--)
+    {
+        constans chorda* v = silva_fons_via(exp, maiores[i - I]);
+        insignatus integer vm;
+
+        si (v == NIHIL)
+        {
+            perge;
+        }
+        vm = (insignatus integer)v->mensura;
+        si (scriptum + vm + IV >= capacitas)
+        {
+            buffer[ZEPHYRUM] = '\0';
+            redde ZEPHYRUM;
+        }
+        si (scriptum > ZEPHYRUM)
+        {
+            buffer[scriptum] = ' ';
+            buffer[scriptum + I] = '>';
+            buffer[scriptum + II] = ' ';
+            scriptum = scriptum + III;
+        }
+        memcpy(buffer + scriptum, v->datum, (memoriae_index)vm);
+        scriptum = scriptum + vm;
+    }
+    buffer[scriptum] = '\0';
+    redde scriptum;
+}
+
 b32
 silva_inclusio_vista (constans SilvaExpansio* exp, i32 index,
     SilvaInclusioVista* vista_out)

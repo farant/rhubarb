@@ -437,16 +437,30 @@ s32 principale (integer argc, character** argv)
                 /* linea capitis columnarum ('#' - consumptores awk
                  * $1!~/^#/ filtrant); ordo = ordo imprimendi infra */
                 imprimere("#via\tlinea\tcolumna\tgradus\tcodex"
-                    "\tprovisionale\tcausa\n");
+                    "\tprovisionale\tcausa\tcatena\n");
             }
             per (i = ZEPHYRUM; i < m; i++)
             {
                 constans SemanticaDiagnosticum* d =
                     silva_c89_diagnosticum_per_indicem(sem, i);
+                character catena_b[DXII];
 
+                catena_b[ZEPHYRUM] = '\0';
                 si (d == NIHIL)
                 {
                     perge;
+                }
+                /* diagnosticum in plagula INCLUSA (non radice
+                 * iudicata): catena inclusionum ei appenditur -
+                 * radix > ... > includens (confusio attributionis
+                 * plagulae-inclusae, debrief 2026-07-27) */
+                si (d->fons_index >= ZEPHYRUM
+                    && d->fons_index != parsura->fons_princeps
+                    && parsura->expansio != NIHIL)
+                {
+                    (vacuum)silva_inclusionis_catena_scribere(
+                        parsura->expansio, d->fons_index, catena_b,
+                        (insignatus integer)magnitudo(catena_b));
                 }
                 si (d->provisionale)
                 {
@@ -473,24 +487,27 @@ s32 principale (integer argc, character** argv)
                 }
                 si (machina)
                 {
-                    imprimere("%.*s\t%d\t%d\t%s\t%d\t%d\t%s\n",
+                    imprimere("%.*s\t%d\t%d\t%s\t%d\t%d\t%s\t%s\n",
                         (int)d->via.mensura,
                         (constans character*)d->via.datum,
                         (int)d->linea, (int)d->columna,
                         _severitatis_titulus(d->severitas),
                         (int)d->codex,
                         (int)(d->provisionale ? I : ZEPHYRUM),
-                        d->causa);
+                        d->causa, catena_b);
                 }
                 alioquin
                 {
-                    imprimere("%.*s:%d:%d: [%s] %s%s\n",
+                    imprimere("%.*s:%d:%d: [%s] %s%s%s%s%s\n",
                         (int)d->via.mensura,
                         (constans character*)d->via.datum,
                         (int)d->linea, (int)d->columna,
                         _severitatis_titulus(d->severitas),
                         d->causa,
-                        d->provisionale ? " (provisionale)" : "");
+                        d->provisionale ? " (provisionale)" : "",
+                        catena_b[ZEPHYRUM] != '\0' ? " (per: " : "",
+                        catena_b,
+                        catena_b[ZEPHYRUM] != '\0' ? ")" : "");
                 }
             }
         }
