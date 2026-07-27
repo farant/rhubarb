@@ -56,6 +56,16 @@ c_cc 32 20
 c_ispeed 56 8
 c_ospeed 64 8"
 
+TABULA_ADDRINFO="\
+ai_flags 0 4
+ai_family 4 4
+ai_socktype 8 4
+ai_protocol 12 4
+ai_addrlen 16 4
+ai_canonname 24 8
+ai_addr 32 8
+ai_next 40 8"
+
 emittere_asserta() {
     echo "IUNGO_ASSERTA(sizeof(struct stat) == 144);"
     echo "IUNGO_ASSERTA(sizeof(struct timeval) == 16);"
@@ -110,6 +120,25 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(SIGBUS == 10 && SIGALRM == 14);"
     echo "IUNGO_ASSERTA(OFF(stat, st_mtime) == 48 && OFF(stat, st_atime) == 32);"
     echo "IUNGO_ASSERTA(O_WRONLY == 0x0001 && O_CREAT == 0x0200 && O_TRUNC == 0x0400);"
+    # Promotio blocorum tcp_posix/reactor (01KYB2Z7XA)
+    echo "IUNGO_ASSERTA(sizeof(struct sockaddr) == 16);"
+    echo "IUNGO_ASSERTA(OFF(sockaddr, sa_family) == 1 && OFF(sockaddr, sa_data) == 2);"
+    echo "IUNGO_ASSERTA(sizeof(struct in_addr) == 4);"
+    echo "IUNGO_ASSERTA(sizeof(struct sockaddr_in) == 16);"
+    echo "IUNGO_ASSERTA(OFF(sockaddr_in, sin_port) == 2 && OFF(sockaddr_in, sin_addr) == 4 && OFF(sockaddr_in, sin_zero) == 8);"
+    echo "IUNGO_ASSERTA(sizeof(struct addrinfo) == 48);"
+    while read -r campus off mensura; do
+        echo "IUNGO_ASSERTA(OFF(addrinfo, $campus) == $off);"
+        echo "IUNGO_ASSERTA(sizeof(((struct addrinfo*)0)->$campus) == $mensura);"
+    done <<< "$TABULA_ADDRINFO"
+    echo "IUNGO_ASSERTA(AF_UNSPEC == 0 && AF_INET == 2 && SOCK_STREAM == 1);"
+    echo "IUNGO_ASSERTA(SO_RCVTIMEO == 0x1006 && SO_SNDTIMEO == 0x1005);"
+    echo "IUNGO_ASSERTA(INADDR_ANY == 0u);"
+    echo "IUNGO_ASSERTA(sizeof(struct pollfd) == 8);"
+    echo "IUNGO_ASSERTA(OFF(pollfd, events) == 4 && OFF(pollfd, revents) == 6);"
+    echo "IUNGO_ASSERTA(sizeof(nfds_t) == 4);"
+    echo "IUNGO_ASSERTA(POLLIN == 0x0001 && POLLOUT == 0x0004);"
+    echo "IUNGO_ASSERTA(POLLERR == 0x0008 && POLLHUP == 0x0010);"
     echo "IUNGO_ASSERTA(sizeof(struct winsize) == 8);"
     echo "IUNGO_ASSERTA(OFF(winsize, ws_row) == 0 && OFF(winsize, ws_col) == 2);"
     echo "IUNGO_ASSERTA(TIOCGWINSZ == 0x40087468UL);"
@@ -148,6 +177,9 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <errno.h>"
     echo "#include <stdio.h>"
     echo "#include <fcntl.h>"
+    echo "#include <poll.h>"
+    echo "#include <arpa/inet.h>"
+    echo "#include <netdb.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta
 } > "$GEN_DIR/verum.c"

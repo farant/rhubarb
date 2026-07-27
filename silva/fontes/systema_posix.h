@@ -212,6 +212,91 @@ int getsockopt(int fossa, int gradus, int titulus, void* valor,
 int setsockopt(int fossa, int gradus, int titulus, const void* valor,
                socklen_t mensura);
 
+/* promotio ex blocis tcp_posix (01KYB2Z7XA, 2026-07-27) -
+ * transcriptio verbatim, formae Darwin certificatae */
+#define AF_UNSPEC   0
+#define AF_INET     2
+#define SOCK_STREAM 1
+#define SO_RCVTIMEO 0x1006
+#define SO_SNDTIMEO 0x1005
+#define INADDR_ANY  0u
+
+struct sockaddr {
+    unsigned char sa_len;
+    unsigned char sa_family;
+    char          sa_data[14];
+};
+
+struct in_addr {
+    unsigned int s_addr;
+};
+
+struct sockaddr_in {
+    unsigned char  sin_len;
+    unsigned char  sin_family;
+    unsigned short sin_port;
+    struct in_addr sin_addr;
+    char           sin_zero[8];
+};
+
+unsigned short htons(unsigned short valor);
+unsigned int   htonl(unsigned int valor);
+unsigned short ntohs(unsigned short valor);
+
+int socket(int genus, int forma, int protocollum);
+int bind(int fossa, const struct sockaddr* titulus, socklen_t mensura);
+int listen(int fossa, int agmen);
+int accept(int fossa, struct sockaddr* titulus, socklen_t* mensura);
+int connect(int fossa, const struct sockaddr* titulus,
+            socklen_t mensura);
+int getsockname(int fossa, struct sockaddr* titulus,
+                socklen_t* mensura);
+int getpeername(int fossa, struct sockaddr* titulus,
+                socklen_t* mensura);
+ssize_t send(int fossa, const void* buffer, size_t mensura,
+             int vexilla);
+ssize_t recv(int fossa, void* buffer, size_t mensura, int vexilla);
+
+/* <sectio caput="arpa/inet.h"/> arpa/inet.h */
+const char* inet_ntop(int genus, const void* fons, char* destinatio,
+                      socklen_t mensura);
+
+/* <sectio caput="netdb.h" poscit="sys/socket.h"/> netdb.h
+ * (forma Darwin: ai_canonname ANTE ai_addr - contra Linucem!
+ * certificatur; poscit: struct sockaddr) */
+struct addrinfo {
+    int              ai_flags;
+    int              ai_family;
+    int              ai_socktype;
+    int              ai_protocol;
+    socklen_t        ai_addrlen;
+    char*            ai_canonname;
+    struct sockaddr* ai_addr;
+    struct addrinfo* ai_next;
+};
+
+int getaddrinfo(const char* hospes, const char* servitium,
+                const struct addrinfo* consilia,
+                struct addrinfo** fructus);
+void freeaddrinfo(struct addrinfo* fructus);
+const char* gai_strerror(int status);
+
+/* <sectio caput="poll.h"/> poll.h (promotio ex bloco reactoris) */
+#define POLLIN  0x0001
+#define POLLOUT 0x0004
+#define POLLERR 0x0008
+#define POLLHUP 0x0010
+
+typedef unsigned int nfds_t;
+
+struct pollfd {
+    int   fd;
+    short events;
+    short revents;
+};
+
+int poll(struct pollfd* fossae, nfds_t numerus, int mora);
+
 /* ==================================================
  * UNDA 3 (re-pinnatio exclusionum 2026-07-27): dirent + mman +
  * termios + ioctl + utime + supplementa stdio/unistd/signal/errno.

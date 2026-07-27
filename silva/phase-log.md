@@ -10342,3 +10342,19 @@ asperitates = tectum VI-linearum-per-plagulam in extractione
 classes secundas IV plagularum celavit (sweep eas rettulit - gemina
 observationis partialis, in tabulam notata); desiderata =
 resolutio inclusionis relativa includenti (01KYJ6740K, supra).
+
+### Addendum (2026-07-27, eadem sessio): PROMOTIO BLOCORUM (01KYB2Z7XA)
+
+Bloci externa reactoris (poll.h) et tcp_posix (sys/socket.h +
+netinet/in.h + arpa/inet.h + netdb.h) in systema_posix.h promoti -
+transcriptio verbatim, parametris 'nomen' ad 'titulus' mutatis
+(macro latinae). Pretium globalitatis solutum: formae per
+auspex_posix certificatae (sockaddr 16, sockaddr_in 16, addrinfo 48
+- ORDO DARWIN ai_canonname ante ai_addr, contra Linucem; pollfd 8;
+macra omnia), ambae TU primo cursu. Bloci ex plagulis DELETI (regula
+quam blocus ipse scripsit: 'cum systema_posix.h sectionem
+acceperit, hic blocus deleatur'); ambae ACCIPE derivatione PURA,
+0 ubique. Sectio socketorum fusa ampliata (non geminata); netdb
+poscit sys/socket.h. VECTIS TENET, pinnae VI immotae - derivatio
+iterum nihil nocuit. Superficies socketorum nunc domus totius est:
+plagula tertia socketis utens sponte iudicium verum accipiet.

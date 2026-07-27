@@ -9,34 +9,10 @@
 #include <sys/time.h>
 #include <string.h>
 
-/* Superficies poll.h pro iudice (examen/silva) sola: lexicon
- * domesticum eam nondum fert. Codex compilatus capita VERA adhibet -
- * hic blocus commentarium est et ERASIBILIS.
- *
- * Cur hoc et non exclusio: exclusio plagulam TOTAM caecam facit,
- * ergo violatio C89 vera hic tacita transiret. Declaratio errans
- * contra efficere potest solum ut examen accipiat quod clang postea
- * reiciat - monitio amissa, numquam mendum missum.
- *
- * FORMAE NON CERTIFICANTUR quia reactor.c ab officina NON exsequitur
- * (in exclusionibus cursoris, extra undas): iudici nomina membrorum
- * et typi sufficiunt. Si haec plagula umquam in corpus officinae
- * intrabit, superficies ad sectionem globalem certificatam (portam
- * auspicis) migret.
- *
- * caput="poll.h" = clavis promotionis: cum silva/fontes/
- * systema_posix.h sectionem poll.h acceperit, hic blocus deleatur.
- *
- * <externa caput="poll.h">
- * #define POLLIN  0x0001
- * #define POLLOUT 0x0004
- * #define POLLERR 0x0008
- * #define POLLHUP 0x0010
- * typedef unsigned int nfds_t;
- * struct pollfd { int fd; short events; short revents; };
- * int poll(struct pollfd* fossae, nfds_t numerus, int mora);
- * </externa>
- */
+/* Superficies poll.h olim hic ut blocus externa stabat (iudici
+ * soli); 2026-07-27 in silva/fontes/systema_posix.h promota et
+ * per auspex_posix certificata (01KYB2Z7XA) - derivatio ex
+ * inclusionibus eam nunc sponte praebet. */
 
 /* Sentinel pro "non invenit" */
 #define REACTOR_NON_INVENIT 0xFFFFFFFFu
