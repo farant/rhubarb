@@ -429,6 +429,7 @@ paginarium_linea_reddere(
     }
 
     longitudo = linea->finis - linea->initium;
+    /* <tolera codex="SUBTRACTIO_COMPARATA" (>linea structuraliter: finis est initium plus offset non negativum */
     si (longitudo <= 0)
     {
         redde resultus;

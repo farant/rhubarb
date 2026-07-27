@@ -736,6 +736,7 @@ _numerum_legere (chorda linea, i32* cursor, MedullaOperandum* out)
         character littera[XLVIII];
         i32 longitudo = finis - *cursor;
 
+        /* <tolera codex="SUBTRACTIO_COMPARATA" (>cursor numquam ultra finem (custos ansae vocantis) */
         si (longitudo <= ZEPHYRUM
             || longitudo >= (i32)magnitudo(littera))
         {

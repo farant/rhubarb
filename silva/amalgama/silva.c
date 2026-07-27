@@ -13747,6 +13747,7 @@ _conglutinare (
 
     /* numerare lexemata realia (sine EOF) */
     n_reales = silva_xar_numerus(relexata) - I;
+    /* <tolera codex="SUBTRACTIO_COMPARATA" (>relexata EOF semper fert: numerus saltem unus */
     si (n_reales <= ZEPHYRUM)
     {
         redde;  /* glutinum vacuum */
@@ -46290,7 +46291,10 @@ _datorum_parametrum_constans_ligamen (vacuum* contextus,
  * ================================================== */
 
 /* Vigil classis residuae (73): FALSUM = dormit. Mensura = inversio
- * localis documentata + census (exemplar codicis 62). */
+ * localis documentata + census (exemplar codicis 62).
+ * NB 2026-07-27: condicio re-armationis codicis 62 ('definitiones
+ * operandi arithmeticae') a codice 80 forma-fluxus IMPLETA est -
+ * 62 subsumptus dormit in aeternum, numerus reservatus manet. */
 hic_manens constans b32 _forsitan_vigil = FALSUM;
 
 interior b32

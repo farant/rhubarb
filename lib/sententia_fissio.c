@@ -304,6 +304,7 @@ _extrahere_verbum_ante_punctum(chorda textus, i32 punctum_index, character* buff
 
     /* Copiare verbum */
     longitudo = punctum_index - initium;
+    /* <tolera codex="SUBTRACTIO_COMPARATA" (>scansio prorsum: punctum_index numquam ante initium */
     si (longitudo <= ZEPHYRUM || longitudo >= buffer_max)
     {
         redde ZEPHYRUM;

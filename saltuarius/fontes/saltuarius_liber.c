@@ -47,6 +47,7 @@ _lineas_aedificare (Piscina* piscina, chorda textus,
             {
                 i32 mensura = k - initium;
 
+                /* <tolera codex="SUBTRACTIO_COMPARATA" (>k prorsum ab initio scandit: numquam ante initium */
                 si (mensura > ZEPHYRUM
                     && textus.datum[initium + mensura - I] == '\r')
                 {

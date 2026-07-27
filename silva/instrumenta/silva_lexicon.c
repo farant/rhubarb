@@ -306,6 +306,7 @@ silva_lexicon_posix_derivare (constans character* fons_px,
 
         si (!sectiones[i].petita) perge;
         n = sectiones[i].finis - sectiones[i].initium;
+        /* <tolera codex="SUBTRACTIO_COMPARATA" (>sectio structuraliter: finis post initium a scansore posita */
         si (n <= ZEPHYRUM) perge;
         memcpy(effusio + longitudo, fons_px + sectiones[i].initium,
             (memoriae_index)n);

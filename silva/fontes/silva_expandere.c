@@ -2009,6 +2009,7 @@ _conglutinare (
 
     /* numerare lexemata realia (sine EOF) */
     n_reales = xar_numerus(relexata) - I;
+    /* <tolera codex="SUBTRACTIO_COMPARATA" (>relexata EOF semper fert: numerus saltem unus */
     si (n_reales <= ZEPHYRUM)
     {
         redde;  /* glutinum vacuum */

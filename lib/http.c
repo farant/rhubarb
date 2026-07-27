@@ -1482,6 +1482,7 @@ _parser_parse_linea_petitionis(HttpParser* parser, i32 linea_finis)
 
     /* Copiare methodus ad string temporarium */
     methodus_len = methodus_finis - methodus_initium;
+    /* <tolera codex="SUBTRACTIO_COMPARATA" (>scansio prorsum: finis numquam ante initium; forma est aequalitas vacuitatis */
     si (methodus_len <= 0 || methodus_len >= XVI)
     {
         redde FALSUM;

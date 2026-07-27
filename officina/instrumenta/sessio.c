@@ -2861,6 +2861,7 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
                                 (i32)op_radix->byte_offset
                                 - initium_candidati;
 
+                            /* <tolera codex="SUBTRACTIO_COMPARATA" (>involutio a coniuncto altero capta: scissura legitima intra mensuram */
                             si (scissura > ZEPHYRUM
                                 && scissura < candidatus.mensura)
                             {

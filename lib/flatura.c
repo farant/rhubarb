@@ -537,6 +537,7 @@ _flatura_huffman_legere(
         bits_non_usati = bits_disponibiles - longitudo;
     }
 
+    /* <tolera codex="SUBTRACTIO_COMPARATA" (>custos supra: longitudo numquam excedit maxima_bits nec bits_disponibiles (reditus praecox) */
     si (bits_non_usati > 0)
     {
         /* <tolera codex="CONVERSIO_SIGNI_SEVERA" (>larva (1<<n)-1 non negativa */
@@ -1548,6 +1549,7 @@ _flatura_quaerere_concordantiam(
 
         distantia = positus - candidatus_positus;
 
+        /* <tolera codex="SUBTRACTIO_COMPARATA" (>involutio a disiuncto altero capta: distantia legitima intra FENESTRAM */
         si (distantia <= 0 || distantia > FLATURA_FENESTRA_MAGNITUDO)
         {
             frange;
