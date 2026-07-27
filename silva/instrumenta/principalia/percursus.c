@@ -27,6 +27,7 @@
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
 #include "silva_c89_semantica.h"
+#include "silva_lexicon.h"
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -66,9 +67,39 @@ hic_manens i32 summa_expr_typatorum = ZEPHYRUM;
 hic_manens i32 plagula_expr_visa = ZEPHYRUM;     /* per plagulam */
 hic_manens i32 plagula_expr_typata = ZEPHYRUM;
 hic_manens i32 plagulae_cum_diagnosticis = ZEPHYRUM;
-/* Chunk C: systema semel parsatum (piscina longaeva) + clausura */
-hic_manens SilvaParsura*   systema_parsura = NIHIL;
-hic_manens SilvaSemantica* systema_semantica = NIHIL;
+/* Chunk C -> DESIGN B (2026-07-27): systema non iam UNUM semel
+ * parsatum, sed praeparatio (ctx + parsura systematis + semantica)
+ * per SIGNATURAM - textus systematis compositus (ISO + sectiones
+ * POSIX ex inclusionibus plagulae derivatae + bloci externa
+ * plagulae; silva_lexicon_componere, EADEM compositio quam examen
+ * per plagulam facit) clavis cache est. Plagulae sine POSIX ad ISO
+ * purum componunt ergo praeparationem UNAM communicant; typi
+ * cuiusque praeparationis trans plagulas vivunt (piscina
+ * praeparationis longaeva - lex 'systema semel parsatum' vetus,
+ * nunc per praeparationem). */
+nomen structura {
+    SilvaContextus* ctx;
+    SilvaParsura*   parsura;
+    SilvaSemantica* semantica;
+    Piscina*        piscina;
+} PraeparatioLexici;
+
+/* caput semel lectum (praebetur deinde in contextus plures) */
+nomen structura {
+    constans character* titulus;
+    character* textus;
+    i32 mensura;
+} CaputLectum;
+
+hic_manens Xar* capita_lecta = NIHIL;
+hic_manens TabulaDispersa* praeparationes_tabula = NIHIL;
+hic_manens Xar* praeparationes_index = NIHIL;  /* pro summa */
+hic_manens SilvaContextus* ctx_basis = NIHIL;  /* sine -semantica */
+hic_manens character* fons_iso = NIHIL;
+hic_manens i32 mensura_iso = ZEPHYRUM;
+hic_manens character* fons_posix = NIHIL;
+hic_manens i32 mensura_posix = ZEPHYRUM;
+hic_manens i32 plagulae_infra = ZEPHYRUM;
 hic_manens i32 summa_versorum = ZEPHYRUM;
 hic_manens i32 summa_indecisorum = ZEPHYRUM;
 
@@ -340,24 +371,63 @@ _errores_inspicere (SilvaValor valor, constans character* via,
     }
 }
 
-/* EXPANSIO PER INCLUSIONEM VERAM (M2d Chunk D): praepassus omne
- * caput (.h) repositorii sub BASENAME praebet; quaeque plagula
- * suam catenam inclusionum VERAM sequitur (transitive, custodes
- * honorati) - plagulae latina.h includentes latinam accipiunt,
- * ceterae (hospes canariae! knotapel! raqiya) lexica SUA VERA.
- * Heuristica directorii "knotapel -> nudus" RETIRATA: expansio
- * nunc idem videt quod clang - error superstes = divergentia
- * vera. Collisio basename: primus vincit (exemplar saltuarii). */
-hic_manens vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
-    constans character* titulus)
+/* Plagulam totam legere: textus in piscina, '\0' additum (pro
+ * capitibus ET fontibus systematis) */
+hic_manens character*
+_plagulam_totam_legere (Piscina* piscina, constans character* via,
+    i32* mensura_out)
 {
     FILE* pl;
     long mensura_l;
     i32 mensura;
     character* textus;
+
+    *mensura_out = ZEPHYRUM;
+    pl = fopen(via, "rb");
+    si (pl == NIHIL) redde NIHIL;
+    fseek(pl, 0L, SEEK_END);
+    mensura_l = ftell(pl);
+    fseek(pl, 0L, SEEK_SET);
+    si (mensura_l < 0L)
+    {
+        fclose(pl);
+        redde NIHIL;
+    }
+    mensura = (i32)mensura_l;
+    textus = (character*)piscina_allocare(piscina,
+        (memoriae_index)(mensura + I));
+    si (textus == NIHIL || (mensura > ZEPHYRUM
+        && fread(textus, I, (memoriae_index)mensura, pl)
+            != (memoriae_index)mensura))
+    {
+        fclose(pl);
+        redde NIHIL;
+    }
+    fclose(pl);
+    textus[mensura] = '\0';
+    *mensura_out = mensura;
+    redde textus;
+}
+
+/* EXPANSIO PER INCLUSIONEM VERAM (M2d Chunk D): praepassus omne
+ * caput (.h) repositorii sub BASENAME COLLIGIT - textus SEMEL
+ * lectus (piscina longaeva), deinde in contextus praebetur
+ * (_capita_praebere_in). DESIGN B: contextus plures (praeparatio
+ * per signaturam), textus capitum communes. Quaeque plagula suam
+ * catenam inclusionum VERAM sequitur (transitive, custodes
+ * honorati) - plagulae latina.h includentes latinam accipiunt,
+ * ceterae (hospes canariae! knotapel! raqiya) lexica SUA VERA.
+ * Collisio basename: primus vincit (exemplar saltuarii). */
+hic_manens vacuum
+_caput_legere (Piscina* piscina, TabulaDispersa* visa,
+    constans character* via, constans character* titulus)
+{
     chorda clavis;
+    character* textus;
+    character* titulus_copia;
+    i32 mensura = ZEPHYRUM;
+    memoriae_index m;
+    CaputLectum* introitus;
 
     clavis = chorda_ex_literis(titulus, piscina);
     si (tabula_dispersa_continet(visa, clavis))
@@ -369,42 +439,25 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
         }
         redde;
     }
-
-    pl = fopen(via, "rb");
-    si (pl == NIHIL) redde;
-    fseek(pl, 0L, SEEK_END);
-    mensura_l = ftell(pl);
-    fseek(pl, 0L, SEEK_SET);
-    si (mensura_l < 0L)
-    {
-        fclose(pl);
-        redde;
-    }
-    mensura = (i32)mensura_l;
-
-    /* textus in piscina contextus vivit - lexemata praebiti in
-     * octetos fontis monstrant, vita = vita contextus */
-    textus = (character*)piscina_allocare(piscina,
-        (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (textus == NIHIL || (mensura > ZEPHYRUM
-        && fread(textus, I, (memoriae_index)mensura, pl)
-            != (memoriae_index)mensura))
-    {
-        fclose(pl);
-        redde;
-    }
-    fclose(pl);
-
-    si (silva_contextus_praebere(ctx, titulus, textus, mensura))
-    {
-        (vacuum)tabula_dispersa_inserere(visa, clavis, NIHIL);
-        capita_praebita++;
-    }
+    textus = _plagulam_totam_legere(piscina, via, &mensura);
+    si (textus == NIHIL) redde;
+    /* d_name effimerum est - titulus copiandus (vita = piscina) */
+    m = strlen(titulus);
+    titulus_copia = (character*)piscina_allocare(piscina, m + I);
+    si (titulus_copia == NIHIL) redde;
+    memcpy(titulus_copia, titulus, m + I);
+    introitus = (CaputLectum*)xar_addere(capita_lecta);
+    si (introitus == NIHIL) redde;
+    introitus->titulus = titulus_copia;
+    introitus->textus = textus;
+    introitus->mensura = mensura;
+    (vacuum)tabula_dispersa_inserere(visa, clavis, NIHIL);
+    capita_praebita++;
 }
 
 hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (Piscina* piscina, TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -426,7 +479,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
 
         si (introitus->d_type == DT_DIR)
         {
-            _capita_praeparare(ctx, piscina, visa, via_plena);
+            _capita_praeparare(piscina, visa, via_plena);
         }
         alioquin
         {
@@ -434,7 +487,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
             si (m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
-                _caput_praebere(ctx, piscina, visa, via_plena,
+                _caput_legere(piscina, visa, via_plena,
                     introitus->d_name);
             }
         }
@@ -442,9 +495,119 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
+/* Capita collecta in contextum praebere (basis aut praeparatio) */
 hic_manens vacuum
-_plagulam_percurrere (constans SilvaContextus* ctx,
-    constans character* via)
+_capita_praebere_in (SilvaContextus* ctx)
+{
+    i32 n = xar_numerus(capita_lecta);
+    i32 i;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans CaputLectum* cl = (constans CaputLectum*)
+            xar_obtinere(capita_lecta, i);
+
+        si (cl != NIHIL)
+        {
+            (vacuum)silva_contextus_praebere(ctx, cl->titulus,
+                cl->textus, cl->mensura);
+        }
+    }
+}
+
+/* Praeparationem pro textu systematis composito capere: cache
+ * clave CONTENTO - plagulae sine POSIX ad ISO purum componunt ergo
+ * praeparationem unam communicant, sine casu speciali. Fractura
+ * quaevis NIHIL reddit (vocator plagulam INFRA nominat, verdictum
+ * mundum numquam fingit); piscina praeparationis in fractura
+ * destruitur. */
+hic_manens PraeparatioLexici*
+_praeparationem_capere (character* compositum, i32 mensura_comp)
+{
+    chorda clavis;
+    vacuum* valor = NIHIL;
+    Piscina* pp;
+    PraeparatioLexici* praep;
+    character* copia;
+
+    clavis.mensura = mensura_comp;
+    clavis.datum = (i8*)compositum;
+    si (tabula_dispersa_invenire(praeparationes_tabula, clavis,
+            &valor))
+    {
+        redde (PraeparatioLexici*)valor;
+    }
+
+    pp = piscina_generare_dynamicum("percursus_praep", 8388608);
+    si (pp == NIHIL) redde NIHIL;
+    praep = (PraeparatioLexici*)piscina_allocare(pp,
+        (memoriae_index)magnitudo(PraeparatioLexici));
+    copia = (character*)piscina_allocare(pp,
+        (memoriae_index)(mensura_comp + I));
+    si (praep == NIHIL || copia == NIHIL)
+    {
+        piscina_destruere(pp);
+        redde NIHIL;
+    }
+    memcpy(copia, compositum, (memoriae_index)mensura_comp);
+    copia[mensura_comp] = '\0';
+    praep->piscina = pp;
+    praep->ctx = silva_contextus_creare(pp);
+    si (praep->ctx == NIHIL)
+    {
+        piscina_destruere(pp);
+        redde NIHIL;
+    }
+    si (mensura_maxima == ZEPHYRUM)
+    {
+        /* -omnia: fines ut in contextu basis */
+        praep->ctx->fines.lexemata = ZEPHYRUM;
+    }
+    si (!silva_contextus_lexicon_addere(praep->ctx,
+            "systema_c89.h", copia, mensura_comp))
+    {
+        piscina_destruere(pp);
+        redde NIHIL;
+    }
+    _capita_praebere_in(praep->ctx);
+    praep->parsura = silva_c89_parsare(pp, "systema_c89.h", copia,
+        mensura_comp, NIHIL);
+    si (praep->parsura == NIHIL
+        || praep->parsura->numerus_errorum > ZEPHYRUM)
+    {
+        piscina_destruere(pp);
+        redde NIHIL;
+    }
+    praep->semantica = silva_c89_semantica_analysare(pp,
+        praep->parsura);
+    si (praep->semantica == NIHIL)
+    {
+        piscina_destruere(pp);
+        redde NIHIL;
+    }
+    /* clavis in copiam piscinae praeparationis monstrat (vita
+     * = vita cache) */
+    clavis.datum = (i8*)copia;
+    si (!tabula_dispersa_inserere(praeparationes_tabula, clavis,
+            praep))
+    {
+        piscina_destruere(pp);
+        redde NIHIL;
+    }
+    {
+        PraeparatioLexici** situs = (PraeparatioLexici**)
+            xar_addere(praeparationes_index);
+
+        si (situs != NIHIL)
+        {
+            *situs = praep;
+        }
+    }
+    redde praep;
+}
+
+hic_manens vacuum
+_plagulam_percurrere (constans character* via)
 {
     Piscina* piscina;
     FILE* pl;
@@ -453,6 +616,7 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
     i32 mensura;
     SilvaParsura* parsura;
     SilvaOraculum* oraculum_clausurae = NIHIL;
+    PraeparatioLexici* praep = NIHIL;
     clock_t c0;
     clock_t c1;
 
@@ -499,20 +663,58 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
     }
     fclose(pl);
 
+    /* DESIGN B: praeparatio ANTE numerationem - fractura plagulam
+     * INFRA facit (nominata alta voce, non numerata), verdictum
+     * mundum numquam fingit (contractus examinis) */
+    si (cum_semantica)
+    {
+        character* compositum;
+        i32 mensura_comp = ZEPHYRUM;
+        b32 fractum = FALSUM;
+
+        compositum = silva_lexicon_componere(fons_iso, mensura_iso,
+            fons_posix, mensura_posix, (constans character*)fons,
+            mensura, FALSUM, piscina, &mensura_comp, via, &fractum);
+        si (fractum)
+        {
+            imprimere("[externa fracta] %s\n", via);
+            plagulae_infra++;
+            piscina_destruere(piscina);
+            redde;
+        }
+        si (compositum == NIHIL)
+        {
+            imprimere("[compositio fracta] %s\n", via);
+            plagulae_infra++;
+            piscina_destruere(piscina);
+            redde;
+        }
+        praep = _praeparationem_capere(compositum, mensura_comp);
+        si (praep == NIHIL)
+        {
+            imprimere("[praeparatio fracta] %s\n", via);
+            plagulae_infra++;
+            piscina_destruere(piscina);
+            redde;
+        }
+    }
+
     plagulae++;
     summa_octetorum += (duplex)mensura;
 
     {
         SilvaOraculum* oraculum_plagulae = NIHIL;
+        constans SilvaContextus* ctx = cum_semantica
+            ? praep->ctx : ctx_basis;
 
         si (cum_semantica)
         {
             oraculum_plagulae = silva_oraculum_creare(piscina);
             si (oraculum_plagulae != NIHIL
-                && systema_semantica != NIHIL)
+                && praep->semantica != NIHIL)
             {
                 (vacuum)silva_c89_semantica_oraculum_augere(
-                    systema_semantica, oraculum_plagulae);
+                    praep->semantica, oraculum_plagulae);
             }
         }
         c0 = clock();
@@ -566,7 +768,7 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
              * numeri referuntur, eius tabula quaeritur. */
             SilvaSemantica* sem =
                 silva_c89_semantica_analysare_cum_systemate(
-                    piscina, parsura, systema_parsura);
+                    piscina, parsura, praep->parsura);
 
             si (sem != NIHIL)
             {
@@ -596,7 +798,7 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
                     }
                     /* analysi secunda contra arborem versam */
                     sem = silva_c89_semantica_analysare_cum_systemate(
-                        piscina, parsura, systema_parsura);
+                        piscina, parsura, praep->parsura);
                 }
             }
             si (sem != NIHIL)
@@ -733,8 +935,7 @@ _praetermittendum (constans character* titulus)
 }
 
 hic_manens vacuum
-_directorium_percurrere (constans SilvaContextus* ctx,
-    constans character* via)
+_directorium_percurrere (constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -755,11 +956,11 @@ _directorium_percurrere (constans SilvaContextus* ctx,
 
         si (introitus->d_type == DT_DIR)
         {
-            _directorium_percurrere(ctx, via_plena);
+            _directorium_percurrere(via_plena);
         }
         alioquin si (_est_fons_c(introitus->d_name))
         {
-            _plagulam_percurrere(ctx, via_plena);
+            _plagulam_percurrere(via_plena);
         }
     }
     closedir(dir);
@@ -768,7 +969,6 @@ _directorium_percurrere (constans SilvaContextus* ctx,
 s32 principale (integer argc, character** argv)
 {
     Piscina* piscina_ctx;
-    SilvaContextus* ctx;
     constans character* radix = ".";
     integer k;
 
@@ -799,86 +999,55 @@ s32 principale (integer argc, character** argv)
         fprintf(stderr, "percursus: piscina deest\n");
         redde I;
     }
-    ctx = silva_contextus_creare(piscina_ctx);
-    si (ctx == NIHIL)
-    {
-        fprintf(stderr, "percursus: contextus deest\n");
-        redde I;
-    }
-    si (mensura_maxima == ZEPHYRUM)
-    {
-        /* -omnia = sine tecto, ETIAM fluxus expansus (defaltum
-         * 1M lexemata expansionem in plagulis giganteis decidit -
-         * capsula_libri 3.7M lexemata, inventum Chunk D) */
-        ctx->fines.lexemata = ZEPHYRUM;
-    }
     plagula_apicis[ZEPHYRUM] = '\0';
 
-    /* Chunk C: systema semel parsatum (piscina_ctx longaeva - typi
-     * eius trans plagulas vivunt) */
+    /* DESIGN B (2026-07-27): fontes systematis SEMEL lecti;
+     * praeparationes (ctx + parsura + semantica) per plagulam ex
+     * textu composito cache-antur (_praeparationem_capere) - eadem
+     * compositio quam examen per plagulam facit. Macra systematis
+     * (NULL, EOF, INT_MAX...) per canalem LEXICI cuiusque
+     * praeparationis fluunt, ut ante (M0b Chunk A); sub -semantica
+     * solum - basis pristina manet. */
     si (cum_semantica)
     {
-        FILE* pl_sys = fopen("silva/fontes/systema_c89.h", "rb");
-        long mensura_sys;
-        character* fons_sys;
-
-        si (pl_sys == NIHIL)
+        fons_iso = _plagulam_totam_legere(piscina_ctx,
+            "silva/fontes/systema_c89.h", &mensura_iso);
+        si (fons_iso == NIHIL)
         {
             fprintf(stderr, "percursus: systema_c89.h deest"
                 " (curre ex radice repositorii)\n");
             redde I;
         }
-        fseek(pl_sys, 0L, SEEK_END);
-        mensura_sys = ftell(pl_sys);
-        fseek(pl_sys, 0L, SEEK_SET);
-        fons_sys = (character*)piscina_allocare(piscina_ctx,
-            (memoriae_index)(mensura_sys + 1L));
-        si (fons_sys == NIHIL
-            || fread(fons_sys, I, (memoriae_index)mensura_sys,
-                   pl_sys) != (memoriae_index)mensura_sys)
+        fons_posix = _plagulam_totam_legere(piscina_ctx,
+            "silva/fontes/systema_posix.h", &mensura_posix);
+        si (fons_posix == NIHIL)
         {
-            fprintf(stderr, "percursus: systema non lectum\n");
-            fclose(pl_sys);
+            fprintf(stderr, "percursus: systema_posix.h deest\n");
             redde I;
         }
-        fclose(pl_sys);
-        /* M0b Chunk A: macra systematis (NULL, EOF, INT_MAX...) per
-         * canalem LEXICI in plagulas usoris - #definita sola
-         * supersunt ("Reliqua abiciuntur", empirice probatum M0a).
-         * Sine hoc NIHIL -> NULL = identificator ignotus in omni
-         * fere expressione custodiae (inventum sub typatione).
-         * Sub -semantica solum - basis pristina manet. */
-        si (!silva_contextus_lexicon_addere(ctx, "systema_c89.h",
-                fons_sys, (i32)mensura_sys))
+        praeparationes_tabula = tabula_dispersa_creare_chorda(
+            piscina_ctx, LXIV);
+        praeparationes_index = xar_creare(piscina_ctx,
+            (i32)magnitudo(PraeparatioLexici*));
+        si (praeparationes_tabula == NIHIL
+            || praeparationes_index == NIHIL)
         {
-            fprintf(stderr,
-                "percursus: lexicon systematis non additum\n");
-            redde I;
-        }
-        systema_parsura = silva_c89_parsare(piscina_ctx,
-            "systema_c89.h", fons_sys, (i32)mensura_sys, NIHIL);
-        si (systema_parsura == NIHIL
-            || systema_parsura->numerus_errorum > ZEPHYRUM)
-        {
-            fprintf(stderr, "percursus: systema non parsatum\n");
-            redde I;
-        }
-        systema_semantica = silva_c89_semantica_analysare(
-            piscina_ctx, systema_parsura);
-        si (systema_semantica == NIHIL)
-        {
-            fprintf(stderr, "percursus: systema non analysatum\n");
+            fprintf(stderr, "percursus: cache praeparationum"
+                " deest\n");
             redde I;
         }
     }
 
-    /* Praepassus: omne caput repositorii praebere - expansio per
-     * inclusionem VERAM (nullum lexicon incondicionale) */
+    /* Praepassus: omne caput repositorii COLLIGERE (textus semel
+     * lectus) - expansio per inclusionem VERAM (nullum lexicon
+     * incondicionale) */
     {
         TabulaDispersa* visa = tabula_dispersa_creare_chorda(
             piscina_ctx, DXII);
 
-        si (visa == NIHIL)
+        capita_lecta = xar_creare(piscina_ctx,
+            (i32)magnitudo(CaputLectum));
+        si (visa == NIHIL || capita_lecta == NIHIL)
         {
             fprintf(stderr, "percursus: tabula deest\n");
             redde I;
@@ -886,10 +1055,32 @@ s32 principale (integer argc, character** argv)
         /* SEMPER a radice repositorii (cwd), non a radice
          * percursus: plagulae sub radix capita EXTRA radicem
          * includunt (silva/fontes -> include/latina.h) */
-        _capita_praeparare(ctx, piscina_ctx, visa, ".");
+        _capita_praeparare(piscina_ctx, visa, ".");
     }
 
-    _directorium_percurrere(ctx, radix);
+    /* contextus basis (sine -semantica): capita, nullum lexicon -
+     * basis pristina. Sub -semantica contextus omnes per
+     * praeparationem veniunt (_praeparationem_capere). */
+    si (!cum_semantica)
+    {
+        ctx_basis = silva_contextus_creare(piscina_ctx);
+        si (ctx_basis == NIHIL)
+        {
+            fprintf(stderr, "percursus: contextus deest\n");
+            redde I;
+        }
+        si (mensura_maxima == ZEPHYRUM)
+        {
+            /* -omnia = sine tecto, ETIAM fluxus expansus (defaltum
+             * 1M lexemata expansionem in plagulis giganteis decidit
+             * - capsula_libri 3.7M lexemata, inventum Chunk D);
+             * idem in fabrica praeparationum */
+            ctx_basis->fines.lexemata = ZEPHYRUM;
+        }
+        _capita_praebere_in(ctx_basis);
+    }
+
+    _directorium_percurrere(radix);
 
     imprimere("\n=== PERCURSUS REPOSITORII (c89 + inclusio"
         " vera) ===\n");
@@ -965,6 +1156,34 @@ s32 principale (integer argc, character** argv)
             ? summa_ms / (summa_octetorum / 1024.0) : 0.0);
     imprimere("apex:      %.1f MB (%s)\n",
         apex_maximus / 1048576.0, plagula_apicis);
+    si (cum_semantica)
+    {
+        /* memoria praeparationum = factum impressum, non
+         * aestimatum (INTENTIO design B) */
+        duplex octeti_praep = 0.0;
+        i32 np = xar_numerus(praeparationes_index);
+        i32 pi;
+
+        per (pi = ZEPHYRUM; pi < np; pi++)
+        {
+            PraeparatioLexici** situs = (PraeparatioLexici**)
+                xar_obtinere(praeparationes_index, pi);
+
+            si (situs != NIHIL && *situs != NIHIL)
+            {
+                octeti_praep += (duplex)piscina_summa_apex_usus(
+                    (*situs)->piscina);
+            }
+        }
+        imprimere("praeparationes: %d (%.1f MB)\n", (int)np,
+            octeti_praep / 1048576.0);
+    }
+    si (plagulae_infra > ZEPHYRUM)
+    {
+        imprimere("INFRA:     %d plagulae NON iudicatae"
+            " (annotatio/compositio/praeparatio fracta)\n",
+            (int)plagulae_infra);
+    }
     imprimere("\n--- numerationes evidentiae ---\n");
     imprimere("typedef in corpore functionis: %d (decisiones 13)\n",
         (int)typedef_in_corpore);

@@ -63,8 +63,11 @@ silva_lexicon_posix_derivare(
     constans character* fons_pl, i32 mensura_pl,
     Piscina* piscina, i32* mensura_out);
 
-/* Blocos <externa caput="..."> ... </externa> plagulae excerpere,
- * praefixo ' * ' commentarii dempto, concatenatos reddere.
+/* Blocos externa (tago aperto cum caput="...", tago clauso finito
+ * - forma exacta CONSULTO non scripta, vide CAVE in .c: sequentia
+ * aperiens in plagula scrutata tagum EVOCAT, et haec plagula ipsa
+ * a percursu scrutatur) plagulae excerpere, praefixo ' * '
+ * commentarii dempto, concatenatos reddere.
  *
  * 'fractum' ab 'absente' DISCERNITUR: NIHIL sine fracto = nullus
  * blocus (casus communis, tacitus); NIHIL cum fracto = annotatio

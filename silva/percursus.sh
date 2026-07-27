@@ -56,9 +56,13 @@ done
 
 # Semper renectere: obiecta mutata (tabulae regeneratae!) aliter
 # in binario vetusto latent - fons erroris classicus
+# silva_lexicon.c in linea nectendi explicite (exemplar examen.sh)
 ARBOR_SRC="$SILVA_DIR/instrumenta/principalia/percursus.c"
 ARBOR_BIN="$BUILD_DIR/percursus"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$ARBOR_SRC" $obj_files \
+clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+    -I"$SILVA_DIR/instrumenta" \
+    "$ARBOR_SRC" \
+    "$SILVA_DIR/instrumenta/silva_lexicon.c" $obj_files \
     -o "$ARBOR_BIN" || exit 1
 
 exec "$ARBOR_BIN" "$@"

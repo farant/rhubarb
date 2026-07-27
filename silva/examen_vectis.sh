@@ -299,10 +299,16 @@ for f in "$FIXA"/*.severum; do
 done
 
 # ③ -corpus: columna verdicti percursus contra exclusiones pinnatas
+#    + plagulae INFRA (annotatio/compositio/praeparatio fracta):
+#    praefixo FRACTA in tabulam intrant - annotatio fracta oraculo
+#    INVISIBILIS esse non debet (nec REICE nec exclusio = tacita)
 if [ "${1:-}" = "-corpus" ]; then
     echo "--- corpus verum (percursus REICE vs exclusiones) ---"
     ./silva/percursus.sh -semantica 2>&1 \
-        | grep 'verdictum REICE' | sed 's/\[verdictum REICE\] //' \
+        | awk '/\[verdictum REICE\] / {
+                   sub(/.*\[verdictum REICE\] /, ""); print; next }
+               /\[(externa|compositio|praeparatio) fracta\] / {
+                   sub(/.*fracta\] /, ""); print "FRACTA " $0 }' \
         | sort > "$SILVA_DIR/build/reice_currentes.txt"
     if ! diff -u "$FIXA/exclusiones.txt" \
             "$SILVA_DIR/build/reice_currentes.txt"; then
