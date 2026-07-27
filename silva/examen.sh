@@ -128,6 +128,7 @@ done
 
 CENSUS_TSV="$BUILD_DIR/census.tsv"
 CENSUS_INFRA="$BUILD_DIR/census.infra"
+CENSUS_RECUSA="$BUILD_DIR/census.recusa"
 CENSUS_INDEX="$BUILD_DIR/census.plagulae"
 
 find "$CRADIX" \
@@ -146,14 +147,16 @@ echo "census: $n_plagulae plagulae percurrendae (xargs -P 4)..." >&2
 
 : > "$CENSUS_TSV"
 : > "$CENSUS_INFRA"
+: > "$CENSUS_RECUSA"
 export CENSUS_BIN="$EXAMEN_BIN"
-export CENSUS_TSV CENSUS_INFRA CENSUS_POSIX
+export CENSUS_TSV CENSUS_INFRA CENSUS_RECUSA CENSUS_POSIX
 
 xargs -P 4 -n 1 sh -c '
     "$CENSUS_BIN" -machina $CENSUS_POSIX "$1" >> "$CENSUS_TSV"
     case "$?" in
         0) v=ACCIPE ;;
         1) v=REICE ;;
+        3) v=RECUSO; echo "$1" >> "$CENSUS_RECUSA" ;;
         *) v=INFRA; echo "$1" >> "$CENSUS_INFRA" ;;
     esac
     printf "VERDICTUM_PLAGULAE\t%s\t%s\n" "$1" "$v" \
@@ -204,10 +207,15 @@ fi
 
 awk -F'\t' '
     $1 == "VERDICTUM_PLAGULAE" { v[$3]++ }
-    END { printf "verdicta: ACCIPE %d, REICE %d, INFRA %d\n",
-        v["ACCIPE"] + 0, v["REICE"] + 0, v["INFRA"] + 0 }
+    END { printf "verdicta: ACCIPE %d, REICE %d, RECUSO %d, INFRA %d\n",
+        v["ACCIPE"] + 0, v["REICE"] + 0, v["RECUSO"] + 0,
+        v["INFRA"] + 0 }
 ' "$CENSUS_TSV"
 
+if [ -s "$CENSUS_RECUSA" ]; then
+    echo "RECUSO (fines tactae - NON iudicatae):"
+    sed 's/^/  /' "$CENSUS_RECUSA"
+fi
 if [ -s "$CENSUS_INFRA" ]; then
     echo "INFRA (apparatus - NON iudicatae):"
     sed 's/^/  /' "$CENSUS_INFRA"

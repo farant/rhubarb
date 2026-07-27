@@ -413,6 +413,23 @@ nomen enumeratio {
     EXAMEN_CODEX_CONTRACTUS_VIOLATUS,         /* DOMESTICUM */
     EXAMEN_CODEX_CONTRACTUS_STALUS,           /* DOMESTICUM */
     EXAMEN_CODEX_CONTRACTUS_ABSENS,           /* DOMESTICUM */
+
+    /* Subtractio insignata zephyro ORDINE comparata (01KYBMCEYW,
+     * 2026-07-27): frater vigilans DEGRADATAE dormientis (codex 62,
+     * census primus 228 - idioma vacuitatis 'mensura major-aequalis
+     * zephyro' formam possidebat, acus statice inseparabilis).
+     * Acus HIC statice separata: nodus SUBTRACTIONIS ipse
+     * intentionem prodit - qui differentiam scribit valorem
+     * negativum possibilem putat; variabile nudum comparatum
+     * subtractionem non habet, ergo idioma vacuitatis TACET.
+     * 80 = subtractio insignata contra zephyrum ordine non
+     *      tautologico: involutio ramum tacite mortuum aut semper
+     *      vivum parit (vitium verum villae 2026-07-24: terminus
+     *      temporis numquam flagravit). Formae tautologicae iam
+     *      VANA capiuntur; clang AMBAS formas nostras tacet
+     *      (mensuratum: -Wtype-limits '<' capit, formas nostras
+     *      non). */
+    EXAMEN_CODEX_SUBTRACTIO_COMPARATA,        /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

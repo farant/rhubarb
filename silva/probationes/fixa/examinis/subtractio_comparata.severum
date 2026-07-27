@@ -1,0 +1,58 @@
+/* subtractio insignata zephyro ordine comparata (codex 80) -
+ * involutio: a-b insignata numquam negativa, ergo forma
+ * minor-aequalis-zephyro '== 0' est et maior-zephyro '!= 0'
+ * (ramus tacite mortuus aut falso vivus - vitium verum villae
+ * 2026-07-24, terminus temporis numquam flagravit). Clang AMBAS
+ * tacet: -Wtype-limits formam tautologicam solam capit, hae uno
+ * charactere absunt. Frater vigilans DEGRADATAE dormientis:
+ * SUBTRACTIO ipsa intentionem prodit; variabile nudum (idioma
+ * vacuitatis, census 228) subtractione caret ergo tacemus.
+ * ORACULUM -Wtype-limits */
+
+static int terminus_mortuus(unsigned a, unsigned b)
+{
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    return a - b <= 0;
+}
+
+static int zerus_primus(unsigned a, unsigned b)
+{
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    return 0 >= a - b;
+}
+
+static int falso_vivus(unsigned a, unsigned b)
+{
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    return a - b > 0;
+}
+
+static int zerus_ante(unsigned a, unsigned b)
+{
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    return 0 < (a - b);
+}
+
+/* controla negativa: subtractio abest / signata / non ordo */
+
+static int vacuitas(unsigned mensura)
+{
+    return mensura <= 0;   /* idioma vacuitatis - TACET (62 dormit) */
+}
+
+static int signata(int a, int b)
+{
+    return a - b <= 0;     /* commune signatum - TACET */
+}
+
+static int aequalitas(unsigned a, unsigned b)
+{
+    return a - b == 0;     /* aequalitas, non ordo - TACET */
+}
+
+static int radix(void)
+{
+    return terminus_mortuus(1u, 2u) + zerus_primus(3u, 4u)
+        + falso_vivus(5u, 6u) + zerus_ante(7u, 8u)
+        + vacuitas(9u) + signata(10, 11) + aequalitas(12u, 13u);
+}

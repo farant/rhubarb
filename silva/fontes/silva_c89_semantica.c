@@ -190,6 +190,8 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "contractus stalus (corpus declarationi contradicit aut"
       " parametrum/modus ignotus)",               EXAMEN_DOMESTICUM },
     { "contractus absens (parametrum intro-exitus sine contractu)",
+                                                  EXAMEN_DOMESTICUM },
+    { "subtractio insignata zephyro ordine comparata (involutio)",
                                                   EXAMEN_DOMESTICUM }
 };
 
@@ -848,7 +850,9 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "LECTIO_ININITIATA",
       (s32)EXAMEN_CODEX_LECTIO_ININITIATA },
     { "ININITIATA_QUANDOCUMQUE",
-      (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE }
+      (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE },
+    { "SUBTRACTIO_COMPARATA",
+      (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA }
 };
 
 /* ambulatio annotationum UNA communis per parsuram (frustum E2):
@@ -7433,6 +7437,47 @@ _intra_custodiam_bilateralem (constans SilvaNodus* comparatio,
     redde FALSUM;
 }
 
+/* Nodus expressionis subtractio-formis? Parentheses et ambigui
+ * perforantur; genus binarium cum operatore MINUS. Monstratores
+ * vocatorem non attingunt (via arithmetica sola huc ducit), ergo
+ * ptrdiff hic non confunditur. */
+interior b32
+_est_subtractio (constans SilvaNodus* nodus)
+{
+    i32 custos = ZEPHYRUM;
+
+    dum (nodus != NIHIL && custos < XXXII)
+    {
+        custos++;
+        nodus = _canonicum(nodus);
+        si (nodus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (nodus->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+        {
+            SilvaValor v = silva_c89_parenthesis_internum(nodus);
+
+            si (v.genus != SILVA_VALOR_NODUS)
+            {
+                redde FALSUM;
+            }
+            nodus = v.datum.nodus;
+            perge;
+        }
+        si (nodus->genus == (s32)SILVA_C89_GENUS_BINARIUM)
+        {
+            SilvaValor op_v = silva_c89_binarium_tok_operator(nodus);
+
+            redde op_v.genus == SILVA_VALOR_TOKEN
+                && (s32)op_v.datum.token->genus
+                    == (s32)SILVA_LEX_MINUS;
+        }
+        redde FALSUM;
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _comparationem_examinare (SilvaSemantica* sem,
     constans SilvaNodus* nodus, constans SilvaNodus* ns,
@@ -7543,6 +7588,81 @@ _comparationem_examinare (SilvaSemantica* sem,
                 }
                 redde;
             }
+        }
+    }
+
+    /* SUBTRACTIO_COMPARATA (codex 80, 01KYBMCEYW): frater vigilans
+     * DEGRADATAE dormientis infra. Acus quam illa statice separare
+     * nequibat hic separata: nodus SUBTRACTIONIS ipse intentionem
+     * prodit (qui differentiam scribit valorem negativum possibilem
+     * putat), dum idioma vacuitatis variabile NUDUM comparat -
+     * subtractione absente, tacemus. Positiones zeri complementa
+     * VANAE (tautologicae illius sunt):
+     *   a-b minor-aequalis 0  -> '== 0' est (ramus negativi mortuus)
+     *   a-b maior 0           -> '!= 0' est (ramus falso vivus)
+     * Clang ambas tacet (mensuratum 2026-07-25: -Wtype-limits
+     * formam strictam capit, has non - uno charactere absunt).
+     * Ante DEGRADATAM stat: specificior, redde duplicem prohibet. */
+    {
+        constans SilvaNodus* zerus = NIHIL;
+        constans SilvaNodus* alter = NIHIL;
+        b32 forma_aequalis = FALSUM;
+        s64 valor_s = ZEPHYRUM;
+
+        commutatio (op)
+        {
+            casus SILVA_LEX_MINOR_AEQUALIS:  /* X <= 0 */
+                zerus = nd; alter = ns; forma_aequalis = VERUM;
+                frange;
+            casus SILVA_LEX_MAIOR_AEQUALIS:  /* 0 >= X */
+                zerus = ns; alter = nd; forma_aequalis = VERUM;
+                frange;
+            casus SILVA_LEX_MAIOR:           /* X > 0 */
+                zerus = nd; alter = ns;
+                frange;
+            casus SILVA_LEX_MINOR:           /* 0 < X */
+                zerus = ns; alter = nd;
+                frange;
+            ordinarius:
+                frange;
+        }
+        si (zerus != NIHIL && commune_insignatum
+            && _est_subtractio(alter)
+            && _constans_probare(sem, zerus, &valor_s)
+            && valor_s == ZEPHYRUM)
+        {
+            si (!_tolera_absorbere(sem, nodus,
+                    (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA))
+            {
+                character textus[CXXVIII];
+                insignatus integer m = silva_c89_typum_scribere(
+                    _qualibus_exutum(commune), textus,
+                    (insignatus integer)magnitudo(textus));
+
+                si (m > ZEPHYRUM)
+                {
+                    memoriae_index capacitas = (memoriae_index)m
+                        + (memoriae_index)LXXX;
+                    character* nuntius = (character*)piscina_allocare(
+                        sem->piscina, capacitas);
+
+                    si (nuntius != NIHIL)
+                    {
+                        sprintf(nuntius, "subtractio insignata"
+                            " zephyro comparata: involutione"
+                            " '%s' est (%s)",
+                            forma_aequalis ? "== 0" : "!= 0",
+                            textus);
+                        _diagnosticum_addere_plenum(sem, nodus,
+                            (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA,
+                            NIHIL, nuntius);
+                        redde;
+                    }
+                }
+                silva_c89_diagnosticum_addere(sem, nodus,
+                    (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA);
+            }
+            redde;
         }
     }
 
