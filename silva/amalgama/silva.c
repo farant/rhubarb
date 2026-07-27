@@ -4923,6 +4923,19 @@ nomen enumeratio {
                                     * DEFINITIO_LOCI tractatur */
 } FluxusEventumGenus;
 
+/* Forma valoris definitionis (fluxus formae, 01KXRBS0VQ/01KYJQ7THM):
+ * reticulum IGNOTA(0) < {SUBTRACTIO, ALIA} < MIXTA. Classificatio
+ * SYNTACTICA ad tempus extractionis (binarium minus / assignatio
+ * composita minus -> SUBTRACTIO; assignatio simplex in dextrum
+ * recursat; crementa/ternarius/cetera -> ALIA, v1 angustum). */
+nomen enumeratio {
+    FLUXUS_FORMA_IGNOTA = 0,   /* nulla definitio attingit (iunctionis
+                                * identitas; usus = negotium 71/72) */
+    FLUXUS_FORMA_SUBTRACTIO,
+    FLUXUS_FORMA_ALIA,
+    FLUXUS_FORMA_MIXTA         /* iunctio dissentiens aut def-omnia */
+} FluxusForma;
+
 /* Eventum unum. variabilis = index densus in tabulam variabilium;
  * -1 = OMNES variabiles (folium ERROR/AMBIGUUS opacum: def-omnia,
  * abstentio conservativa). */
@@ -4931,6 +4944,11 @@ nomen structura {
     s32                  genus;        /* FluxusEventumGenus */
     constans SilvaNodus* nodus;        /* sedes (diagnostica) */
     b32                  in_initiatore_proprio;  /* int x = x */
+    constans SilvaNodus* fons_valoris; /* expressio valoris definitionis
+                                        * (NIHIL alias) - columna
+                                        * quaestionis futurae */
+    s32                  forma;        /* FluxusForma valoris (DEFINITIO
+                                        * sola; IGNOTA alias) */
 } FluxusEventum;
 
 /* ==================================================
@@ -4943,6 +4961,11 @@ nomen structura {
     SilvaChorda               titulus;      /* nomen (nuntia gradus C) */
     constans SilvaNodus* declarans;    /* sedes declarationis */
     b32                  parametrum;   /* initiata in introitu */
+    b32                  effugit;      /* locus sumptus usquam (eventum
+                                        * LOCI ullum): forma PERPETUO
+                                        * MIXTA - scriptio per alias
+                                        * post effugium invisibilis
+                                        * (v1 sanum) */
 } FluxusVariabilis;
 
 /* Blocus parallelus (index = FluxusBlocus.index). Status
@@ -4959,6 +4982,11 @@ nomen structura {
     i64* may_exitus;
     i64* must_introitus;
     i64* must_exitus;
+    s32* formae_introitus;             /* FluxusForma per variabilem
+                                        * (fluxus formae - punctum
+                                        * fixum alterum, iunctio
+                                        * reticuli non bitalis) */
+    s32* formae_exitus;
 } FluxusDatorumBlocus;
 
 structura FluxusDatorum {
@@ -5181,6 +5209,14 @@ structura SilvaSemantica {
      * 63/66/67 statim legunt; consumptores futuri (codex 62 gradus
      * 2, solarium) per hoc tabulatum quaerunt. */
     SilvaXar* fluxus_functionum;
+
+    /* Fluxus formae (2026-07-27, 01KXRBS0VQ impletum per codicem
+     * 80): candidati comparationum forma-variabili in typatione
+     * memorati (_comparationem_examinare), in _formas_examinare
+     * post punctum fixum formarum resoluti - typatio ANTE fluxum
+     * currit, ergo consilium bifasium. Elementa FormaCandidatus
+     * (semantica.c). */
+    SilvaXar* candidata_formarum;
 };
 
 SilvaSemantica* silva_c89_semantica_creare (SilvaPiscina* piscina);
@@ -40959,6 +40995,10 @@ nomen structura {
     FluxusDatorum*        datorum;
     FluxusDatorumBlocus*  blocus_currens;
     constans vacuum*      declarator_identitas;  /* int x = x (s02) */
+    constans SilvaNodus*  fons_valoris_currens;  /* expressio valoris
+                             * definitionis proximae (fluxus formae) -
+                             * positus ante _locum_resolvere/emissionem,
+                             * purgatus post */
 } FluxusExtractor;
 
 interior vacuum _expressionem_ambulare (FluxusExtractor* ex,
@@ -41058,7 +41098,52 @@ _variabilis_index (FluxusExtractor* ex,
     v->titulus = facta->titulus;
     v->declarans = facta->declarans;
     v->parametrum = facta->parametrum;
+    v->effugit = FALSUM;
     redde (s32)m;
+}
+
+/* Forma valoris (fluxus formae): classificatio syntactica, parentheses
+ * perforatae, assignatio simplex in dextrum recursat (x = y = a-b).
+ * NIHIL -> ALIA (crementa, scriptio membri, parametra). */
+interior s32
+_forma_valoris (FluxusExtractor* ex, constans SilvaNodus* n)
+{
+    i32 custos = ZEPHYRUM;
+
+    dum (custos < XXXII)
+    {
+        custos++;
+        n = _sine_parenthesibus(ex, n);
+        si (n == NIHIL)
+        {
+            redde (s32)FLUXUS_FORMA_ALIA;
+        }
+        si (n->genus == (s32)SILVA_C89_GENUS_BINARIUM)
+        {
+            redde (_operator_lexis(silva_c89_binarium_tok_operator(n))
+                    == SILVA_LEX_MINUS)
+                ? (s32)FLUXUS_FORMA_SUBTRACTIO
+                : (s32)FLUXUS_FORMA_ALIA;
+        }
+        si (n->genus == (s32)SILVA_C89_GENUS_ASSIGNATIO)
+        {
+            SilvaLexemaGenus lexis = _operator_lexis(
+                silva_c89_assignatio_tok_operator(n));
+
+            si (lexis == SILVA_LEX_MINUS_ASSIGNATIO)
+            {
+                redde (s32)FLUXUS_FORMA_SUBTRACTIO;
+            }
+            si (lexis == SILVA_LEX_ASSIGNATIO)
+            {
+                n = _ut_nodus(silva_c89_assignatio_dexter(n));
+                perge;   /* valor catenae = dextrum internum */
+            }
+            redde (s32)FLUXUS_FORMA_ALIA;
+        }
+        redde (s32)FLUXUS_FORMA_ALIA;
+    }
+    redde (s32)FLUXUS_FORMA_ALIA;
 }
 
 interior vacuum
@@ -41072,6 +41157,26 @@ _eventum_emittere (FluxusExtractor* ex, s32 variabilis, s32 genus,
     e->genus = genus;
     e->nodus = nodus;
     e->in_initiatore_proprio = in_initiatore_proprio;
+    e->fons_valoris = NIHIL;
+    e->forma = (s32)FLUXUS_FORMA_IGNOTA;
+    si (genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
+    {
+        e->fons_valoris = ex->fons_valoris_currens;
+        e->forma = _forma_valoris(ex, ex->fons_valoris_currens);
+    }
+    alioquin si ((genus == (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI
+            || genus == (s32)FLUXUS_EVENTUM_LOCI_ACCUMULAT)
+        && variabilis >= ZEPHYRUM)
+    {
+        /* effugium: forma variabilis perpetuo MIXTA (v1 sanum) */
+        FluxusVariabilis* v = (FluxusVariabilis*)silva_xar_obtinere(
+            ex->datorum->variabiles, (i32)variabilis);
+
+        si (v != NIHIL)
+        {
+            v->effugit = VERUM;
+        }
+    }
 }
 
 /* Facta pro folio/declaratore; FALSUM = non resolutum aut non
@@ -41438,9 +41543,14 @@ _expressionem_ambulare (FluxusExtractor* ex, constans SilvaNodus* n)
             }
             _expressionem_ambulare(ex,
                 _ut_nodus(silva_c89_assignatio_dexter(n)));
+            /* fons valoris (fluxus formae): composita = nodus ipse
+             * (operator formam fert), simplex = dextrum */
+            ex->fons_valoris_currens = composita
+                ? n : _ut_nodus(silva_c89_assignatio_dexter(n));
             _locum_resolvere(ex,
                 _ut_nodus(silva_c89_assignatio_sinister(n)),
                 FALSUM, (s32)FLUXUS_EVENTUM_DEFINITIO);
+            ex->fons_valoris_currens = NIHIL;
             redde;
         }
         casus (s32)SILVA_C89_GENUS_UNARIUM:
@@ -41602,8 +41712,11 @@ _declarationem_ambulare (FluxusExtractor* ex, constans SilvaNodus* n)
             ex->declarator_identitas = NIHIL;
             si (tracta)
             {
+                ex->fons_valoris_currens = _ut_nodus(
+                    silva_c89_declarator_initiatus_initiator(d));
                 _eventum_emittere(ex, _variabilis_index(ex, &facta),
                     (s32)FLUXUS_EVENTUM_DEFINITIO, d, FALSUM);
+                ex->fons_valoris_currens = NIHIL;
             }
         }
     }
@@ -41834,6 +41947,177 @@ _punctum_fixum (SilvaPiscina* piscina, FluxusDatorum* datorum)
 }
 
 /* ==================================================
+ * Punctum fixum formarum (fluxus formae)
+ *
+ * Ad exemplar chunk B (impulsus-successorum, index operis idem),
+ * sed iunctio reticuli non bitalis: IGNOTA identitas, aequales
+ * manent, dissentientes MIXTA. Effugium NON hic tractatur -
+ * variabilis.effugit ad tempus quaestionis consulitur (perpetuum).
+ * ================================================== */
+
+interior s32
+_formam_iungere (s32 a, s32 b)
+{
+    si (a == (s32)FLUXUS_FORMA_IGNOTA)
+    {
+        redde b;
+    }
+    si (b == (s32)FLUXUS_FORMA_IGNOTA || a == b)
+    {
+        redde a;
+    }
+    redde (s32)FLUXUS_FORMA_MIXTA;
+}
+
+/* Exitus = introitus + definitiones (replay ordine eventorum) */
+interior vacuum
+_formae_exitum_computare (FluxusDatorum* datorum,
+    FluxusDatorumBlocus* b)
+{
+    i32 n_var = silva_xar_numerus(datorum->variabiles);
+    i32 v;
+    i32 e;
+    i32 m = silva_xar_numerus(b->eventa);
+
+    per (v = ZEPHYRUM; v < n_var; v++)
+    {
+        b->formae_exitus[v] = b->formae_introitus[v];
+    }
+    per (e = ZEPHYRUM; e < m; e++)
+    {
+        FluxusEventum* ev = (FluxusEventum*)silva_xar_obtinere(b->eventa,
+            e);
+
+        si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO)
+        {
+            perge;
+        }
+        si (ev->variabilis < ZEPHYRUM)
+        {
+            /* def-omnia (folium opacum): omnes MIXTA */
+            per (v = ZEPHYRUM; v < n_var; v++)
+            {
+                b->formae_exitus[v] = (s32)FLUXUS_FORMA_MIXTA;
+            }
+        }
+        alioquin
+        {
+            b->formae_exitus[ev->variabilis] = ev->forma;
+        }
+    }
+}
+
+interior vacuum
+_punctum_fixum_formarum (SilvaPiscina* piscina, FluxusDatorum* datorum)
+{
+    i32 n_var = silva_xar_numerus(datorum->variabiles);
+    i32 n_loci = (n_var > ZEPHYRUM) ? n_var : I;
+    i32 numerus_blocorum = silva_xar_numerus(datorum->bloci);
+    i32 b;
+    i32 v;
+    b32* in_indice;
+    SilvaXar* index_operis;
+    i32 lector = ZEPHYRUM;
+
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, b);
+
+        db->formae_introitus = (s32*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_loci * magnitudo(s32));
+        db->formae_exitus = (s32*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_loci * magnitudo(s32));
+        per (v = ZEPHYRUM; v < n_loci; v++)
+        {
+            db->formae_introitus[v] = (s32)FLUXUS_FORMA_IGNOTA;
+            db->formae_exitus[v] = (s32)FLUXUS_FORMA_IGNOTA;
+        }
+    }
+
+    /* introitus: parametra formam ALIA ferunt (definita, non
+     * subtractione) */
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, datorum->fluxus->introitus->index);
+
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            FluxusVariabilis* var = (FluxusVariabilis*)silva_xar_obtinere(
+                datorum->variabiles, v);
+
+            si (var->parametrum)
+            {
+                db->formae_introitus[v] = (s32)FLUXUS_FORMA_ALIA;
+            }
+        }
+    }
+
+    in_indice = (b32*)silva_piscina_allocare(piscina,
+        (memoriae_index)numerus_blocorum * magnitudo(b32));
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        in_indice[b] = FALSUM;
+    }
+    index_operis = silva_xar_creare(piscina, (i32)magnitudo(i32));
+    {
+        i32* locus = (i32*)silva_xar_addere(index_operis);
+
+        *locus = datorum->fluxus->introitus->index;
+        in_indice[datorum->fluxus->introitus->index] = VERUM;
+    }
+
+    dum (lector < silva_xar_numerus(index_operis))
+    {
+        i32 index_bloci = *(i32*)silva_xar_obtinere(index_operis, lector);
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, index_bloci);
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            silva_xar_obtinere(datorum->fluxus->bloci, index_bloci);
+        i32 m;
+        i32 k;
+
+        lector++;
+        in_indice[index_bloci] = FALSUM;
+        _formae_exitum_computare(datorum, db);
+
+        m = silva_xar_numerus(fb->margines);
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            constans FluxusMargo* margo = (constans FluxusMargo*)
+                silva_xar_obtinere(fb->margines, k);
+            FluxusDatorumBlocus* dd;
+            b32 mutatum = FALSUM;
+
+            si (margo->destinatio == NIHIL)
+            {
+                perge;
+            }
+            dd = (FluxusDatorumBlocus*)silva_xar_obtinere(datorum->bloci,
+                margo->destinatio->index);
+            per (v = ZEPHYRUM; v < n_var; v++)
+            {
+                s32 novum = _formam_iungere(dd->formae_introitus[v],
+                    db->formae_exitus[v]);
+
+                si (novum != dd->formae_introitus[v])
+                {
+                    dd->formae_introitus[v] = novum;
+                    mutatum = VERUM;
+                }
+            }
+            si (mutatum && !in_indice[margo->destinatio->index])
+            {
+                i32* locus = (i32*)silva_xar_addere(index_operis);
+
+                *locus = margo->destinatio->index;
+                in_indice[margo->destinatio->index] = VERUM;
+            }
+        }
+    }
+}
+
+/* ==================================================
  * API
  * ================================================== */
 
@@ -41876,6 +42160,7 @@ silva_c89_fluxus_datorum_aedificare (SilvaPiscina* piscina,
     ex.datorum = datorum;
     ex.blocus_currens = NIHIL;
     ex.declarator_identitas = NIHIL;
+    ex.fons_valoris_currens = NIHIL;
 
     numerus_blocorum = silva_xar_numerus(fluxus->bloci);
     per (b = ZEPHYRUM; b < numerus_blocorum; b++)
@@ -41900,6 +42185,9 @@ silva_c89_fluxus_datorum_aedificare (SilvaPiscina* piscina,
 
     /* chunk B: punctum fixum may/must super eventa extracta */
     _punctum_fixum(piscina, datorum);
+
+    /* fluxus formae: punctum fixum alterum (formae definitionum) */
+    _punctum_fixum_formarum(piscina, datorum);
 
     redde datorum;
 }
@@ -41958,6 +42246,18 @@ _chorda_vacua (vacuum)
     c.datum = NIHIL;
     redde c;
 }
+
+/* Candidatus formae (fluxus formae): comparatio zephyro ordine cum
+ * variabili nudo - in typatione memoratus, in _formas_examinare
+ * resolutus (forma SUBTRACTIO attingens => codex 80, forma
+ * variabilis). folium = nodus identificatoris (paritas monstratoris
+ * contra eventum USUS). */
+nomen structura {
+    constans SilvaNodus* folium;
+    constans SilvaNodus* comparatio;
+    TypusC89*            commune;
+    b32                  forma_aequalis;   /* '<= 0' contra '> 0' */
+} FormaCandidatus;
 
 /* Typatio expressionum (M0b Chunk A) - implementatio infra post
  * aestimatorem; ambulatio et tractatores his utuntur */
@@ -44325,6 +44625,9 @@ silva_c89_semantica_creare (SilvaPiscina* piscina)
     /* FLUXUS-0: CFG retenti (decisio Q7) */
     sem->fluxus_functionum = silva_xar_creare(piscina,
         (i32)magnitudo(FluxusFunctionis*));
+    /* fluxus formae: candidati comparationum (bifasium) */
+    sem->candidata_formarum = silva_xar_creare(piscina,
+        (i32)magnitudo(FormaCandidatus));
     sem->scopus_summus = _scopum_creare(piscina, NIHIL);
     sem->scopus_currens = sem->scopus_summus;
     si (sem->derivati == NIHIL || sem->symbola == NIHIL
@@ -46287,6 +46590,159 @@ _initiationem_examinare (SilvaSemantica* sem,
     }
 }
 
+/* Fluxus formae: resolutio candidatorum (codex 80, forma
+ * variabilis - decretum 01KXRBS0VQ impletur: separator acus =
+ * DEFINITIONES operandi). Replay formarum per blocos attingibiles
+ * ad exemplar _initiationem_examinare; ad eventum USUS candidatum
+ * cum forma SUBTRACTIO attingente codex 80 emittitur. Variabiles
+ * effugientes (locus sumptus usquam) TACENT - scriptio per alias
+ * invisibilis. Codex 62 subsumptus manet dormiens. */
+interior vacuum
+_formas_examinare (SilvaSemantica* sem,
+    constans FluxusFunctionis* fluxus)
+{
+    FluxusDatorum* datorum = fluxus->datorum;
+    i32 n_candidata = silva_xar_numerus(sem->candidata_formarum);
+    i32 numerus_blocorum;
+    i32 n_var;
+    s32* formae_currens;
+    i32 b;
+
+    si (datorum == NIHIL || n_candidata == ZEPHYRUM)
+    {
+        redde;
+    }
+    n_var = silva_xar_numerus(datorum->variabiles);
+    si (n_var == ZEPHYRUM)
+    {
+        redde;
+    }
+    numerus_blocorum = silva_xar_numerus(datorum->bloci);
+    formae_currens = (s32*)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)n_var * magnitudo(s32));
+    si (formae_currens == NIHIL)
+    {
+        redde;
+    }
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            silva_xar_obtinere(fluxus->bloci, b);
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, b);
+        i32 e;
+        i32 m;
+        i32 v;
+
+        si (!fb->attingibilis)
+        {
+            perge;
+        }
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            formae_currens[v] = db->formae_introitus[v];
+        }
+        m = silva_xar_numerus(db->eventa);
+        per (e = ZEPHYRUM; e < m; e++)
+        {
+            FluxusEventum* ev = (FluxusEventum*)silva_xar_obtinere(
+                db->eventa, e);
+
+            si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
+            {
+                si (ev->variabilis < ZEPHYRUM)
+                {
+                    per (v = ZEPHYRUM; v < n_var; v++)
+                    {
+                        formae_currens[v] = (s32)FLUXUS_FORMA_MIXTA;
+                    }
+                }
+                alioquin
+                {
+                    formae_currens[ev->variabilis] = ev->forma;
+                }
+                perge;
+            }
+            si (ev->genus != (s32)FLUXUS_EVENTUM_USUS
+                || ev->variabilis < ZEPHYRUM)
+            {
+                perge;
+            }
+            si (formae_currens[ev->variabilis]
+                    != (s32)FLUXUS_FORMA_SUBTRACTIO)
+            {
+                perge;
+            }
+            {
+                FluxusVariabilis* var = (FluxusVariabilis*)
+                    silva_xar_obtinere(datorum->variabiles,
+                        (i32)ev->variabilis);
+
+                si (var == NIHIL || var->effugit)
+                {
+                    perge;
+                }
+            }
+            {
+                i32 k;
+
+                per (k = ZEPHYRUM; k < n_candidata; k++)
+                {
+                    FormaCandidatus* fc = (FormaCandidatus*)
+                        silva_xar_obtinere(sem->candidata_formarum, k);
+
+                    si (fc == NIHIL || fc->folium != ev->nodus)
+                    {
+                        perge;
+                    }
+                    si (!_tolera_absorbere(sem, fc->comparatio,
+                            (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA))
+                    {
+                        character textus[CXXVIII];
+                        insignatus integer tm =
+                            silva_c89_typum_scribere(
+                                _qualibus_exutum(fc->commune),
+                                textus,
+                                (insignatus integer)
+                                    magnitudo(textus));
+
+                        si (tm > ZEPHYRUM)
+                        {
+                            memoriae_index capacitas =
+                                (memoriae_index)tm
+                                + (memoriae_index)CXXVIII;
+                            character* nuntius = (character*)
+                                silva_piscina_allocare(sem->piscina,
+                                    capacitas);
+
+                            si (nuntius != NIHIL)
+                            {
+                                sprintf(nuntius,
+                                    "subtractio insignata zephyro"
+                                    " comparata: involutione '%s'"
+                                    " est (%s; per definitiones"
+                                    " fluxus)",
+                                    fc->forma_aequalis
+                                        ? "== 0" : "!= 0",
+                                    textus);
+                                _diagnosticum_addere_plenum(sem,
+                                    fc->comparatio, (s32)
+                                    EXAMEN_CODEX_SUBTRACTIO_COMPARATA,
+                                    NIHIL, nuntius);
+                                frange;
+                            }
+                        }
+                        silva_c89_diagnosticum_addere(sem,
+                            fc->comparatio, (s32)
+                            EXAMEN_CODEX_SUBTRACTIO_COMPARATA);
+                    }
+                    frange;
+                }
+            }
+        }
+    }
+}
+
 interior vacuum
 _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
 {
@@ -46328,6 +46784,9 @@ _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
 
     /* chunk C: iudicium initiationis (71/72/73) */
     _initiationem_examinare(sem, fluxus);
+
+    /* fluxus formae: candidati codicis 80 (forma variabilis) */
+    _formas_examinare(sem, fluxus);
 
     /* codex 66: frange/perge sine contextu (clang errat) */
     m = silva_xar_numerus(fluxus->fractiones_extra);
@@ -49523,9 +49982,10 @@ _comparationem_examinare (SilvaSemantica* sem,
                 frange;
         }
         si (zerus != NIHIL && commune_insignatum
-            && _est_subtractio(alter)
             && _constans_probare(sem, zerus, &valor_s)
             && valor_s == ZEPHYRUM)
+        {
+        si (_est_subtractio(alter))
         {
             si (!_tolera_absorbere(sem, nodus,
                     (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA))
@@ -49559,6 +50019,41 @@ _comparationem_examinare (SilvaSemantica* sem,
                     (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA);
             }
             redde;
+        }
+        /* forma variabilis (fluxus formae): candidatum memorare -
+         * resolutio in _formas_examinare (fluxus post typationem
+         * currit, consilium bifasium). CADIT DEORSUM: mores
+         * DEGRADATAE/SIGNORUM immoti. */
+        {
+            constans SilvaNodus* folium = alter;
+            i32 custos = ZEPHYRUM;
+
+            dum (folium != NIHIL && custos < XXXII
+                && folium->genus
+                    == (s32)SILVA_C89_GENUS_PARENTHESIS)
+            {
+                SilvaValor pv = silva_c89_parenthesis_internum(
+                    folium);
+
+                folium = (pv.genus == SILVA_VALOR_NODUS)
+                    ? _canonicum(pv.datum.nodus) : NIHIL;
+                custos++;
+            }
+            si (folium != NIHIL && folium->genus
+                    == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+            {
+                FormaCandidatus* fc = (FormaCandidatus*)silva_xar_addere(
+                    sem->candidata_formarum);
+
+                si (fc != NIHIL)
+                {
+                    fc->folium = folium;
+                    fc->comparatio = nodus;
+                    fc->commune = commune;
+                    fc->forma_aequalis = forma_aequalis;
+                }
+            }
+        }
         }
     }
 

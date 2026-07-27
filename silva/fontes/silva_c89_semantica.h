@@ -565,6 +565,14 @@ structura SilvaSemantica {
      * 63/66/67 statim legunt; consumptores futuri (codex 62 gradus
      * 2, solarium) per hoc tabulatum quaerunt. */
     Xar* fluxus_functionum;
+
+    /* Fluxus formae (2026-07-27, 01KXRBS0VQ impletum per codicem
+     * 80): candidati comparationum forma-variabili in typatione
+     * memorati (_comparationem_examinare), in _formas_examinare
+     * post punctum fixum formarum resoluti - typatio ANTE fluxum
+     * currit, ergo consilium bifasium. Elementa FormaCandidatus
+     * (semantica.c). */
+    Xar* candidata_formarum;
 };
 
 SilvaSemantica* silva_c89_semantica_creare (Piscina* piscina);

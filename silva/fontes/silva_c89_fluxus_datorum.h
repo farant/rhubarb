@@ -55,6 +55,19 @@ nomen enumeratio {
                                     * DEFINITIO_LOCI tractatur */
 } FluxusEventumGenus;
 
+/* Forma valoris definitionis (fluxus formae, 01KXRBS0VQ/01KYJQ7THM):
+ * reticulum IGNOTA(0) < {SUBTRACTIO, ALIA} < MIXTA. Classificatio
+ * SYNTACTICA ad tempus extractionis (binarium minus / assignatio
+ * composita minus -> SUBTRACTIO; assignatio simplex in dextrum
+ * recursat; crementa/ternarius/cetera -> ALIA, v1 angustum). */
+nomen enumeratio {
+    FLUXUS_FORMA_IGNOTA = 0,   /* nulla definitio attingit (iunctionis
+                                * identitas; usus = negotium 71/72) */
+    FLUXUS_FORMA_SUBTRACTIO,
+    FLUXUS_FORMA_ALIA,
+    FLUXUS_FORMA_MIXTA         /* iunctio dissentiens aut def-omnia */
+} FluxusForma;
+
 /* Eventum unum. variabilis = index densus in tabulam variabilium;
  * -1 = OMNES variabiles (folium ERROR/AMBIGUUS opacum: def-omnia,
  * abstentio conservativa). */
@@ -63,6 +76,11 @@ nomen structura {
     s32                  genus;        /* FluxusEventumGenus */
     constans SilvaNodus* nodus;        /* sedes (diagnostica) */
     b32                  in_initiatore_proprio;  /* int x = x */
+    constans SilvaNodus* fons_valoris; /* expressio valoris definitionis
+                                        * (NIHIL alias) - columna
+                                        * quaestionis futurae */
+    s32                  forma;        /* FluxusForma valoris (DEFINITIO
+                                        * sola; IGNOTA alias) */
 } FluxusEventum;
 
 /* ==================================================
@@ -75,6 +93,11 @@ nomen structura {
     chorda               titulus;      /* nomen (nuntia gradus C) */
     constans SilvaNodus* declarans;    /* sedes declarationis */
     b32                  parametrum;   /* initiata in introitu */
+    b32                  effugit;      /* locus sumptus usquam (eventum
+                                        * LOCI ullum): forma PERPETUO
+                                        * MIXTA - scriptio per alias
+                                        * post effugium invisibilis
+                                        * (v1 sanum) */
 } FluxusVariabilis;
 
 /* Blocus parallelus (index = FluxusBlocus.index). Status
@@ -91,6 +114,11 @@ nomen structura {
     i64* may_exitus;
     i64* must_introitus;
     i64* must_exitus;
+    s32* formae_introitus;             /* FluxusForma per variabilem
+                                        * (fluxus formae - punctum
+                                        * fixum alterum, iunctio
+                                        * reticuli non bitalis) */
+    s32* formae_exitus;
 } FluxusDatorumBlocus;
 
 structura FluxusDatorum {

@@ -1,0 +1,123 @@
+/* subtractio insignata per VARIABILEM (codex 80, forma fluxus -
+ * decretum 01KXRBS0VQ impletum): definitiones attingentes formam
+ * SUBTRACTIO ferunt => comparatio zephyro ordine eadem involutio
+ * est ac forma directa. Punctum fixum formarum super CFG
+ * (FLUXUS-1); iunctio dissentiens MIXTA => TACET; effugium (&x)
+ * perpetuo MIXTA => TACET; parametra ALIA => TACET (idioma
+ * vacuitatis numquam flagrat - separator quem codex 62 dormiens
+ * desiderabat). Clang caecus omnibus formis (-Wtype-limits formam
+ * tautologicam solam capit). ORACULUM -Wtype-limits */
+
+static unsigned mensura_externa(void)
+{
+    return 7u;
+}
+
+static void scribens(unsigned* p)
+{
+    *p = 3u;
+}
+
+/* forma villae ipsa: subtractio in initiatore */
+static int villa_forma(unsigned long mora, unsigned long nunc,
+    unsigned long initium)
+{
+    unsigned long reliquum = mora - (nunc - initium);
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    return reliquum <= 0;
+}
+
+/* assignatio post declarationem nudam */
+static int assignatio_sera(unsigned a, unsigned b)
+{
+    unsigned d;
+    d = a - b;
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    return d > 0;
+}
+
+/* composita x -= y */
+static int composita(unsigned a, unsigned b)
+{
+    unsigned d = a;
+    d -= b;
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    return d <= 0;
+}
+
+/* accumulatio ansae: SUBTRACTIO iungitur SUBTRACTIO trans dorsum */
+static int ansa(unsigned a, unsigned b, int n)
+{
+    unsigned d = a - b;
+    int i;
+    for (i = 0; i < n; i++)
+    {
+        d = d - 1u;
+    }
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    return d <= 0;
+}
+
+/* assignatio catenata: valor internus subtractio */
+static int catenata(unsigned a, unsigned b)
+{
+    unsigned x;
+    unsigned y;
+    x = y = a - b;
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    return x > 0;
+}
+
+/* forma directa (custodia regressionis rami syntactici) */
+static int directa(unsigned a, unsigned b)
+{
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    return a - b <= 0;
+}
+
+/* controla negativa - TACENT omnia */
+
+/* rami mixti: iunctio SUBTRACTIO/ALIA => MIXTA */
+static int rami_mixti(unsigned a, unsigned b, int quale)
+{
+    unsigned d;
+    if (quale)
+    {
+        d = a - b;
+    }
+    else
+    {
+        d = mensura_externa();
+    }
+    return d <= 0;
+}
+
+/* effugium: &d => perpetuo MIXTA */
+static int effugium(unsigned a, unsigned b)
+{
+    unsigned d = a - b;
+    scribens(&d);
+    return d <= 0;
+}
+
+/* parametrum nudum: ALIA in introitu (idioma vacuitatis) */
+static int parametrum_nudum(unsigned mensura)
+{
+    return mensura <= 0;
+}
+
+/* redefinitio sanans: definitio attingens ultima ALIA */
+static int redefinitio(unsigned a, unsigned b)
+{
+    unsigned d = a - b;
+    d = mensura_externa();
+    return d <= 0;
+}
+
+static int radix(void)
+{
+    return villa_forma(1ul, 2ul, 3ul) + assignatio_sera(1u, 2u)
+        + composita(3u, 4u) + ansa(5u, 6u, 2) + rami_mixti(7u, 8u, 1)
+        + effugium(9u, 1u) + parametrum_nudum(2u)
+        + redefinitio(3u, 4u) + catenata(5u, 6u) + directa(7u, 8u);
+}
