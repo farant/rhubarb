@@ -55,11 +55,49 @@ static int subtractio_nuda(nb_t n)
 /* <contractus intra="banana"/> */
 typedef unsigned malum_t;
 
+/* contractus reditus (01KYN7V4G7): effectus vocationis fiducia */
+/* <contractus reditus="1,255"/> */
+static unsigned mensura_ex(void)
+{
+    return 7u;
+}
+
+static unsigned mensura_nuda(void)
+{
+    return 7u;
+}
+
+/* reditus probatus: [1,255] - 1 numquam involvit - TACET */
+static int reditus_probatus(void)
+{
+    unsigned x = mensura_ex() - 1u;
+
+    if (x <= 0u)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/* sine contractu reditus: involutio possibilis - manet */
+static int reditus_nudus(void)
+{
+    unsigned x = mensura_nuda() - 1u;
+
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    if (x <= 0u)
+    {
+        return 1;
+    }
+    return 0;
+}
+
 static unsigned radix(nb_t n, unsigned m)
 {
     malum_t ignotum = 0u;
 
     return larva_probata(n) + larva_nuda(m)
         + (unsigned)subtractio_probata(m)
-        + (unsigned)subtractio_nuda(n) + ignotum;
+        + (unsigned)subtractio_nuda(n) + ignotum
+        + (unsigned)reditus_probatus() + (unsigned)reditus_nudus();
 }

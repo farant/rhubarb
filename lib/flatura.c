@@ -169,6 +169,7 @@ _flatura_lector_initium(
 }
 
 
+/* <contractus reditus="-1,65535"/> */
 interior s32
 _flatura_legere_bits(
     FlaturaLector*  lector,

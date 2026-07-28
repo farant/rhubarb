@@ -719,6 +719,41 @@ principale (vacuum)
         "n", I, 0L, U32_SUMMUM,
         "XXXVII-b. effugium parametri -> fines typi");
 
+    imprimere("--- XXXVIII-XLI: contractus reditus (gradus 1) ---\n");
+
+    /* XXXVIII. reditus inline: effectus vocationis seminatus */
+    _adfirma(piscina,
+        "/* <contractus reditus=\"0,255\"/> */\n"
+        "unsigned g(void);\n"
+        "void f(void) { unsigned x = g(); { unsigned u = x; } }",
+        "x", ZEPHYRUM, 0L, 255L,
+        "XXXVIII. reditus inline -> [0,255]");
+
+    /* XXXIX. typus reditus typedef refinato oratus */
+    _adfirma(piscina,
+        "/* <contractus intra=\"0,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "NBits g(void);\n"
+        "void f(void) { unsigned x = g(); { unsigned u = x; } }",
+        "x", ZEPHYRUM, 0L, 16L,
+        "XXXIX. reditus typo refinato -> [0,16]");
+
+    /* XL. vocatus sine contractu immutatus */
+    _adfirma(piscina,
+        "unsigned h(void);\n"
+        "void f(void) { unsigned x = h(); { unsigned u = x; } }",
+        "x", ZEPHYRUM, 0L, U32_SUMMUM,
+        "XL. sine contractu -> fines typi");
+
+    /* XLI. reditus signatus fine negativo (forma flaturae) et
+     * compositio arithmetica */
+    _adfirma(piscina,
+        "/* <contractus reditus=\"-1,65535\"/> */\n"
+        "int leg(void);\n"
+        "void f(void) { int x = leg() + 1; { int u = x; } }",
+        "x", ZEPHYRUM, 0L, 65536L,
+        "XLI. reditus [-1,65535] + 1 -> [0,65536]");
+
     credo_imprimere_compendium();
 
     {
