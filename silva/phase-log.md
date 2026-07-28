@@ -11042,3 +11042,53 @@ bisectionem probarum (macro/planum/latina) quia status hooki
 staleness confundebat; nihil in doctrina de commentario-proprio
 scriptum erat. Desiderata: STALUS diagnosis distinguere posset
 (pravum intra vs param absens - nuntius unus ambos tegit).
+
+## 2026-07-28 - INTENTIO: CONTRACTUS REDITUS (01KYN7V4G7, gradus 1)
+
+Scope: semen effectuum vocationum - frons tertia machinae unius.
+Formae duae: contractus reditus="a,b" inline (ordo ExamenContractus
+reditus_est, fines in campis intra communibus, param vacuum; elementum
+cum param ET reditus = STALUS - cura una per elementum) + typus
+reditus typedef refinato oratus (symbolum functionis -> declarans ->
+pater ad DECLARATIONEM/DEFINITIONEM -> specificatores -> registrum -
+ambulatio eadem ac parametrorum, prototypi capitum trans TU).
+Consumptio: casus VOCATIO aestimatoris (hodie ordinarius -> fines
+typi): folium functionis identificator -> inline titulo, alioquin
+orthographia; contractus cum finibus typi nodi intersectus (auxiliar
+commune cum _intervallum_seminis factum). Fiducia ad expressionem
+vocationis - non reserva conservativa (quaeque aestimatio applicatio
+independens). Recursio = fiducia (probatio corporis redde = v2,
+ianua nominata). CAVEAT notatum: prototypus et definitio orthographia
+differre possunt (C compatibilis) - symbolum resolutum vincit; mos
+domus orthographiam consentientem servet. Applicatio: reditus
+"-1,65535" in _flatura_legere_bits (error -1, valor larvatus <= 16
+bits). Specimina ante machinam; fixtura casu reditus ampliata.
+
+## 2026-07-28 - RELATIO: CONTRACTUS REDITUS (01KYN7V4G7)
+
+SHIPPED - arcus tertius diei, minimus (grammatica reditus="a,b" in
+ExamenContractus (ordo reditus_est, param vacuum; param+reditus
+simul = STALUS - cura una per elementum); casus VOCATIO aestimatoris:
+inline titulo primum, alioquin orthographia typi reditus per
+declarationem symboli (prototypi capitum trans TU - ambulatio eadem
+ac parametrorum); auxiliar _intervallum_contractus_applicare
+factum, communis semini et vocationi). Specimina IV primo contactu
+293/293 (inline; typedef refinato oratus; sine contractu immutatum;
+signatus fine negativo cum compositione arithmetica). Fixtura
+ampliata (reditus probatus tacet per codicem 80, nudus pinnatus).
+Applicatio: reditus="-1,65535" in _flatura_legere_bits.
+
+INVENTUM INSTRUMENTALE (specimen legis binarii-stali novum):
+residens calidus + uncus STALUS in annotatione reditus clamabant
+dum examen conchae purum dicebat - GRAMMATICA NOVA in binario
+concharum recenti, VETUS in residente/unco. Divergentia trium
+instrumentorum = interroga AETATES aedificiorum, non veritatem
+unius; renovatio post amalgama concordiam restituit (residens
+renovatus purum confirmat). Vectes omnes: silva 35/35, VECTIS
+TENET, amalgama VERIFICATUM, officina 13/13, radix PLENUS.
+
+Gradus 1 COMPLETUS: machina seminationis frontes TRES habet
+(typedef/param inline/reditus) - vocabularium fiduciae integrum.
+Restant gradus 2 (probatio: argumenta ad sedes vocationis, defs
+localium refinatorum, corpora redde - directio inveniendi) et
+gradus 3 (lint generum signatorum).
