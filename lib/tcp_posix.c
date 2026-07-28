@@ -204,10 +204,26 @@ tcp_connectere_cum_optionibus(
             perge;
         }
 
-        si (connect(fd, rp->ai_addr, rp->ai_addrlen) == 0)
         {
-            /* Successus! */
-            frange;
+            /* EINTR: connexio in fundo pergit - retemptatio quae
+             * EISCONN reddit successus est (hygiene POSIX; sine ea
+             * signum quodlibet - profilator, debugger - connexionem
+             * 'Interrupted system call' falso frangeret) */
+            integer r = connect(fd, rp->ai_addr, rp->ai_addrlen);
+
+            dum (r == -1 && errno == EINTR)
+            {
+                r = connect(fd, rp->ai_addr, rp->ai_addrlen);
+                si (r == -1 && errno == EISCONN)
+                {
+                    r = 0;
+                }
+            }
+            si (r == 0)
+            {
+                /* Successus! */
+                frange;
+            }
         }
 
         close(fd);
@@ -269,7 +285,10 @@ tcp_mittere(
         redde 0;
     }
 
-    n = send(connexio->fd, data, (size_t)mensura, 0);
+    fac
+    {
+        n = send(connexio->fd, data, (size_t)mensura, 0);
+    } dum (n < 0 && errno == EINTR);   /* hygiene POSIX */
 
     si (n < 0)
     {
@@ -335,7 +354,10 @@ tcp_recipere(
         redde 0;
     }
 
-    n = recv(connexio->fd, buffer, (size_t)capacitas, 0);
+    fac
+    {
+        n = recv(connexio->fd, buffer, (size_t)capacitas, 0);
+    } dum (n < 0 && errno == EINTR);   /* hygiene POSIX */
 
     si (n < 0)
     {

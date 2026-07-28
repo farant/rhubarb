@@ -150,6 +150,15 @@ http_petitio_caput_addere(
     constans character* titulus,
     constans character* valor);
 
+/* Ponere tempus receptionis/connexionis (millisecunda; 0 = defaltum
+ * XXX secundorum). Semita http plana sola (v1) - TLS tempus suum
+ * internum servat. Tempore icto http_exsequi HTTP_ERROR_TIMEOUT
+ * reddit, corpore partiali consulto abiecto. */
+vacuum
+http_petitio_tempus_ponere(
+    HttpPetitio* petitio,
+    i32          tempus_ms);
+
 /* Ponere corpus (body) petitionis */
 vacuum
 http_petitio_corpus_ponere(

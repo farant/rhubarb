@@ -10,6 +10,7 @@
 #include "credo.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "tcp.h"   /* fixtura prava: servus crudus misbehavens */
 
 #include <stdio.h>
 #include <string.h>
@@ -159,6 +160,146 @@ _url_fixturae(character* buffer, i32 portus, constans character* via)
 {
     sprintf(buffer, "http://127.0.0.1:%u%s", portus, via);
     redde buffer;
+}
+
+
+/* ========================================================================
+ * FIXTURA PRAVA - servus crudus misbehavens (semitae erroris ansae
+ * haurientis, 01KYANH7AN): connexionem UNAM accipit, partialiter
+ * respondet, deinde per modum claudit aut dormit aut mentitur.
+ * ======================================================================== */
+
+#define FIXTURA_PRAVA_MINUSCULUM    I  /* "ok" solum, claudere */
+#define FIXTURA_PRAVA_TRUNCATUM    II  /* capita + X ex C octetis, claudere */
+#define FIXTURA_PRAVA_DORMIENS    III  /* capita + X octeti, dormire II s */
+#define FIXTURA_PRAVA_CAPUT_INGENS IV  /* Content-Length involutivum */
+
+interior i32
+_fixturam_pravam_incipere(pid_t* pid_exitus, integer modus)
+{
+    integer fistula[II];
+    pid_t pid;
+    i32 portus = 0;
+
+    *pid_exitus = 0;
+    si (pipe(fistula) != 0)
+    {
+        redde 0;
+    }
+    pid = fork();
+    si (pid < 0)
+    {
+        close(fistula[0]);
+        close(fistula[I]);
+        redde 0;
+    }
+    si (pid == 0)
+    {
+        Piscina* p = piscina_generare_dynamicum("fixtura_prava", M * M);
+        TcpServusOptiones so = tcp_servus_optiones_default();
+        TcpServusResultus sr;
+        TcpResultus conn;
+        i8 buffer[M];
+        i32 portus_infantis;
+
+        /* accipere BLOCANS - defaltum non_blocans est (mundus
+         * reactoris); sine hoc infans ante clientem pollit,
+         * 'nullae connexiones' videt et exit - RST clienti */
+        so.non_blocans = FALSUM;
+        sr = tcp_servus_creare_cum_optionibus(NIHIL, 0, &so, p);
+
+        close(fistula[0]);
+        si (!sr.successus
+            || tcp_servus_auscultare(sr.servus, I) != TCP_OK)
+        {
+            _exit(I);
+        }
+        portus_infantis = tcp_servus_obtinere_portum(sr.servus);
+        si (write(fistula[I], &portus_infantis,
+                  magnitudo(portus_infantis))
+            != (ssize_t)magnitudo(portus_infantis))
+        {
+            _exit(I);
+        }
+        close(fistula[I]);
+
+        conn = tcp_servus_accipere(sr.servus, p);
+        si (!conn.successus)
+        {
+            _exit(I);
+        }
+        {
+            /* haurire petitionem TOTAM (usque '\r\n\r\n') - clausura
+             * cum octetis illectis RST pro FIN gigneret et cliens
+             * errorem IO pro EOF mundo videret */
+            s32 n;
+            b32 completa = FALSUM;
+            i32 iterationes = 0;
+
+            fac
+            {
+                n = tcp_recipere(conn.connexio, buffer,
+                                 (i32)magnitudo(buffer));
+                si (n >= IV)
+                {
+                    i32 k;
+
+                    per (k = 0; k + III < (i32)n; k++)
+                    {
+                        si (buffer[k] == '\r'
+                            && buffer[k + I] == '\n'
+                            && buffer[k + II] == '\r'
+                            && buffer[k + III] == '\n')
+                        {
+                            completa = VERUM;
+                        }
+                    }
+                }
+                iterationes++;
+            } dum (!completa && n > 0 && iterationes < X);
+        }
+
+        si (modus == FIXTURA_PRAVA_MINUSCULUM)
+        {
+            (vacuum)tcp_mittere_omnia(conn.connexio,
+                (constans i8*)"ok", II);
+        }
+        alioquin si (modus == FIXTURA_PRAVA_CAPUT_INGENS)
+        {
+            constans character* r =
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Length: 99999999999999999999\r\n\r\n"
+                "parvum";
+            (vacuum)tcp_mittere_omnia(conn.connexio,
+                (constans i8*)r, (i32)strlen(r));
+        }
+        alioquin
+        {
+            /* TRUNCATUM et DORMIENS: capita integra, X ex C octetis */
+            constans character* r =
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Length: 100\r\n\r\n"
+                "0123456789";
+            (vacuum)tcp_mittere_omnia(conn.connexio,
+                (constans i8*)r, (i32)strlen(r));
+            si (modus == FIXTURA_PRAVA_DORMIENS)
+            {
+                usleep(M * M * II);   /* II s - ultra tempus clientis */
+            }
+        }
+        tcp_claudere(conn.connexio);
+        _exit(0);
+    }
+
+    close(fistula[I]);
+    si (read(fistula[0], &portus, magnitudo(portus))
+        != (ssize_t)magnitudo(portus))
+    {
+        portus = 0;
+    }
+    close(fistula[0]);
+    *pid_exitus = pid;
+    redde portus;
 }
 
 
@@ -423,6 +564,152 @@ probatio_connexio_invalida(Piscina* piscina)
  * PRINCIPALE
  * ======================================================================== */
 
+/* ========================================================================
+ * PROBATIONES - SEMITAE ERRORIS ANSAE HAURIENTIS (fixtura prava)
+ * ======================================================================== */
+
+/* responsum minusculum (II octeti): olim scansio capitum
+ * 'total_size - III' involvebatur et extra fines currebat;
+ * nunc PARSE error mundus */
+interior vacuum
+probatio_responsum_minusculum(Piscina* piscina)
+{
+    pid_t pid = 0;
+    i32 portus;
+    character url[CXXVIII];
+    HttpPetitio* pet;
+    HttpResultus res;
+
+    printf("--- Probans responsum minusculum (scansio intra fines) ---\n");
+
+    portus = _fixturam_pravam_incipere(&pid, FIXTURA_PRAVA_MINUSCULUM);
+    CREDO_VERUM(portus > 0);
+
+    pet = http_petitio_creare(piscina, HTTP_GET,
+                              _url_fixturae(url, portus, "/"));
+    CREDO_NON_NIHIL(pet);
+    res = http_exsequi(pet, piscina);
+
+    CREDO_FALSUM(res.successus);
+    CREDO_AEQUALIS_I32((i32)res.error, (i32)HTTP_ERROR_PARSE);
+    si (!res.successus && res.error_descriptio.mensura > 0)
+    {
+        printf("  [descriptio] %.*s\n",
+               (int)res.error_descriptio.mensura,
+               (constans character*)res.error_descriptio.datum);
+    }
+
+    _fixturam_terminare(pid);
+    printf("\n");
+}
+
+/* truncatio cum EOF MUNDO: hospes claudit post X ex C octetis -
+ * successus manet (EOF = terminus legitimus), corpus X octetorum */
+interior vacuum
+probatio_truncatum_eof(Piscina* piscina)
+{
+    pid_t pid = 0;
+    i32 portus;
+    character url[CXXVIII];
+    HttpPetitio* pet;
+    HttpResultus res;
+
+    printf("--- Probans truncationem cum EOF mundo ---\n");
+
+    portus = _fixturam_pravam_incipere(&pid, FIXTURA_PRAVA_TRUNCATUM);
+    CREDO_VERUM(portus > 0);
+
+    pet = http_petitio_creare(piscina, HTTP_GET,
+                              _url_fixturae(url, portus, "/"));
+    CREDO_NON_NIHIL(pet);
+    res = http_exsequi(pet, piscina);
+
+    CREDO_VERUM(res.successus);
+    si (res.successus && res.responsum != NIHIL)
+    {
+        CREDO_AEQUALIS_I32(res.responsum->corpus.mensura, X);
+    }
+    alioquin si (res.error_descriptio.mensura > 0)
+    {
+        printf("  [descriptio] %.*s (error %d)\n",
+               (int)res.error_descriptio.mensura,
+               (constans character*)res.error_descriptio.datum,
+               (int)res.error);
+    }
+
+    _fixturam_terminare(pid);
+    printf("\n");
+}
+
+/* hospes DORMIENS post corpus partiale: SO_RCVTIMEO ictum ->
+ * HTTP_ERROR_TIMEOUT, corpus partiale abiectum (01KYANH7AN -
+ * olim 'successus' cum corpore truncato) */
+interior vacuum
+probatio_tempus_receptionis(Piscina* piscina)
+{
+    pid_t pid = 0;
+    i32 portus;
+    character url[CXXVIII];
+    HttpPetitio* pet;
+    HttpResultus res;
+
+    printf("--- Probans tempus receptionis (hospes dormiens) ---\n");
+
+    portus = _fixturam_pravam_incipere(&pid, FIXTURA_PRAVA_DORMIENS);
+    CREDO_VERUM(portus > 0);
+
+    pet = http_petitio_creare(piscina, HTTP_GET,
+                              _url_fixturae(url, portus, "/"));
+    CREDO_NON_NIHIL(pet);
+    http_petitio_tempus_ponere(pet, D);   /* D ms << II s somni */
+    res = http_exsequi(pet, piscina);
+
+    CREDO_FALSUM(res.successus);
+    CREDO_AEQUALIS_I32((i32)res.error, (i32)HTTP_ERROR_TIMEOUT);
+
+    _fixturam_terminare(pid);
+    printf("\n");
+}
+
+/* Content-Length involutivum (XX digiti): saturatio pro involutione
+ * (01KY05Q8AH) - expected_len ingens > body_len -> corpus reale */
+interior vacuum
+probatio_caput_ingens(Piscina* piscina)
+{
+    pid_t pid = 0;
+    i32 portus;
+    character url[CXXVIII];
+    HttpPetitio* pet;
+    HttpResultus res;
+
+    printf("--- Probans Content-Length involutivum (saturatio) ---\n");
+
+    portus = _fixturam_pravam_incipere(&pid, FIXTURA_PRAVA_CAPUT_INGENS);
+    CREDO_VERUM(portus > 0);
+
+    pet = http_petitio_creare(piscina, HTTP_GET,
+                              _url_fixturae(url, portus, "/"));
+    CREDO_NON_NIHIL(pet);
+    res = http_exsequi(pet, piscina);
+
+    CREDO_VERUM(res.successus);
+    si (res.successus && res.responsum != NIHIL)
+    {
+        CREDO_AEQUALIS_I32(res.responsum->corpus.mensura, VI);
+    }
+    alioquin si (res.error_descriptio.mensura > 0)
+    {
+        printf("  [descriptio] %.*s (error %d)\n",
+               (int)res.error_descriptio.mensura,
+               (constans character*)res.error_descriptio.datum,
+               (int)res.error);
+    }
+
+    _fixturam_terminare(pid);
+    printf("\n");
+}
+
+
 integer
 principale(vacuum)
 {
@@ -461,6 +748,12 @@ principale(vacuum)
     }
 
     _fixturam_terminare(fixtura_pid);
+
+    /* semitae erroris (fixturae pravae propriae, una connexio) */
+    probatio_responsum_minusculum(piscina);
+    probatio_truncatum_eof(piscina);
+    probatio_tempus_receptionis(piscina);
+    probatio_caput_ingens(piscina);
 
     credo_imprimere_compendium();
 

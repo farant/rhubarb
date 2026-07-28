@@ -197,6 +197,7 @@ int select(int numerus, fd_set* legendi, fd_set* scribendi,
 #define EINTR       4
 #define EAGAIN      35
 #define EWOULDBLOCK 35
+#define EISCONN     56
 
 /* <sectio caput="sys/socket.h,netinet/in.h,netinet/tcp.h"/>
  * sys/socket.h + netinet/in.h + netinet/tcp.h (valores Darwin) */

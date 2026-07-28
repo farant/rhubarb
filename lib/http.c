@@ -41,6 +41,9 @@ structura HttpPetitio {
     /* Capita */
     HttpCaput capita[HTTP_CAPITA_MAXIMA];
     i32       capita_numerus;
+
+    /* Tempus receptionis (ms; 0 = defaltum tcp XXX s) */
+    i32 tempus_ms;
 };
 
 
@@ -129,7 +132,16 @@ _chorda_ad_i32(chorda s)
     {
         si (s.datum[i] >= '0' && s.datum[i] <= '9')
         {
-            resultatus = resultatus * X + (i32)(s.datum[i] - '0');
+            i32 digitus = (i32)(s.datum[i] - '0');
+
+            /* custodia involutionis (01KY05Q8AH): valor ingens
+             * SATURAT ad maximum - custodes cap/413 supra flagrant;
+             * involutio ad valorem parvum eos praeteriret */
+            si (resultatus > (~(i32)ZEPHYRUM - digitus) / X)
+            {
+                redde ~(i32)ZEPHYRUM;
+            }
+            resultatus = resultatus * X + digitus;
         }
         alioquin
         {
@@ -577,6 +589,7 @@ http_petitio_creare(
     pet->capita_numerus = 0;
     pet->corpus.datum = NIHIL;
     pet->corpus.mensura = 0;
+    pet->tempus_ms = 0;
 
     si (!_parse_url(pet, url))
     {
@@ -584,6 +597,18 @@ http_petitio_creare(
     }
 
     redde pet;
+}
+
+vacuum
+http_petitio_tempus_ponere(
+    HttpPetitio* petitio,
+    i32          tempus_ms)
+{
+    si (!petitio)
+    {
+        redde;
+    }
+    petitio->tempus_ms = tempus_ms;
 }
 
 vacuum
@@ -701,9 +726,16 @@ http_exsequi(
     }
     alioquin
     {
-        TcpResultus tcp_res = tcp_connectere((constans character*)petitio->hospes.datum,
-                                              petitio->portus,
-                                              piscina);
+        TcpOptiones tcp_opt = tcp_optiones_default();
+        TcpResultus tcp_res;
+
+        si (petitio->tempus_ms > 0)
+        {
+            tcp_opt.timeout_ms = petitio->tempus_ms;
+        }
+        tcp_res = tcp_connectere_cum_optionibus(
+            (constans character*)petitio->hospes.datum,
+            petitio->portus, &tcp_opt, piscina);
         si (!tcp_res.successus)
         {
             res.successus = FALSUM;
@@ -782,17 +814,41 @@ http_exsequi(
         tcp_claudere(tcp_conn);
     }
 
+    /* Iudicare CUR ansa exiit (01KYANH7AN): solum n == 0 EOF mundus
+     * est. TCP_ITERUM = SO_RCVTIMEO ictum (hospes lentus/semiapertus
+     * - condicio quam villa deprehendere VULT); negativum aliud =
+     * error durus medio corpore. Corpus partiale consulto abicitur:
+     * corpus mendax peius quam error honestus. NB tls_recipere -1
+     * solum reddit - tempus TLS ut HTTP_ERROR_IO apparet (v1). */
+    si (n == TCP_ITERUM)
+    {
+        redde _creare_error(HTTP_ERROR_TIMEOUT,
+            "Tempus receptionis excessum (corpus partiale abiectum)",
+            piscina);
+    }
+    si (n < 0)
+    {
+        redde _creare_error(HTTP_ERROR_IO,
+            "Error retis inter receptionem (corpus partiale abiectum)",
+            piscina);
+    }
+
     si (total_size == 0)
     {
         redde _creare_error(HTTP_ERROR_IO, "Responsum vacuum", piscina);
     }
 
     /* Parse responsum */
-    /* Invenire finem capitum (\r\n\r\n) */
+    /* Invenire finem capitum (\r\n\r\n).
+     * NB forma 'i + III < total_size', NON 'i < total_size - III':
+     * total_size insignatus est - responso minusculo (1-3 octeti)
+     * subtractio involveretur et scansio extra fines curreret.
+     * Haec forma etiam praestat body_start (i + IV) numquam ultra
+     * total_size - invarians sedis body_len infra. */
     headers_end = NIHIL;
     {
         i32 i;
-        per (i = 0; i < total_size - III; i++)
+        per (i = 0; i + III < total_size; i++)
         {
             si (total_data[i] == '\r' && total_data[i + I] == '\n' &&
                 total_data[i + II] == '\r' && total_data[i + III] == '\n')
@@ -848,6 +904,7 @@ http_exsequi(
         chorda transfer_encoding;
         chorda content_length_hdr;
 
+        /* <tolera codex="SUBTRACTIO_COMPARATA" (>scansio capitum supra body_start intra total_size praestat (forma i plus III minor total_size) */
         si (body_len > 0)
         {
             /* Verificare Transfer-Encoding: chunked */
