@@ -302,6 +302,16 @@ _seriem_probare (FluxusDatorum* datorum,
             FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
                 blocus->eventa, e);
 
+            /* eventa membrorum additiva (01KYMYW75S) praetermissa -
+             * disciplina consumptorum verorum speculata (genera
+             * explicite cribrant); series membrorum probationem
+             * propriam habet infra */
+            si (ev->genus == (s32)FLUXUS_EVENTUM_MEMBRUM_USUS
+                || ev->genus
+                    == (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
+            {
+                perge;
+            }
             si (visa < numerus)
             {
                 constans EventumExspectatum* ex = &exspectata[visa];
@@ -335,6 +345,68 @@ _seriem_probare (FluxusDatorum* datorum,
 #define LOCI_  (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI
 
 /* ==================================================
+ * Probatio seriei eventorum MEMBRORUM (01KYMYW75S): solum genera
+ * membrorum, ordine blocorum - complementum _seriem_probare (quae
+ * ea praetermittit)
+ * ================================================== */
+
+nomen structura {
+    constans character* basis;      /* titulus basis */
+    constans character* membrum;    /* titulus membri */
+    s32 genus;
+} MembrumExspectatum;
+
+interior vacuum
+_seriem_membrorum_probare (FluxusDatorum* datorum,
+    constans MembrumExspectatum* exspectata, i32 numerus)
+{
+    i32 visa = ZEPHYRUM;
+    i32 b;
+    i32 numerus_blocorum = xar_numerus(datorum->bloci);
+
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        FluxusDatorumBlocus* blocus = (FluxusDatorumBlocus*)
+            xar_obtinere(datorum->bloci, b);
+        i32 e;
+        i32 m = xar_numerus(blocus->eventa);
+
+        per (e = ZEPHYRUM; e < m; e++)
+        {
+            FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
+                blocus->eventa, e);
+
+            si (ev->genus != (s32)FLUXUS_EVENTUM_MEMBRUM_USUS
+                && ev->genus
+                    != (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
+            {
+                perge;
+            }
+            si (visa < numerus)
+            {
+                constans MembrumExspectatum* ex = &exspectata[visa];
+                FluxusVariabilis* v = (FluxusVariabilis*)
+                    xar_obtinere(datorum->variabiles,
+                        (i32)ev->variabilis);
+
+                CREDO_AEQUALIS_S32 (ev->genus, ex->genus);
+                CREDO_NON_NIHIL (v);
+                si (v != NIHIL)
+                {
+                    CREDO_VERUM (v->membrum_est);
+                    CREDO_VERUM (_nomen_aequale(v->titulus,
+                        ex->basis));
+                    CREDO_VERUM (_nomen_aequale(v->titulus_membri,
+                        ex->membrum));
+                }
+            }
+            visa++;
+        }
+    }
+    CREDO_AEQUALIS_I32 (visa, numerus);
+}
+
+/* ==================================================
  * Auxilia chunk B: lectio statuum may/must
  * ================================================== */
 
@@ -349,7 +421,7 @@ _variabilis_titulo (FluxusDatorum* d, constans character* titulus)
         FluxusVariabilis* v = (FluxusVariabilis*)xar_obtinere(
             d->variabiles, i);
 
-        si (_nomen_aequale(v->titulus, titulus))
+        si (_nomen_aequale(v->titulus, titulus) && !v->membrum_est)
         {
             redde (s32)i;
         }
@@ -720,6 +792,153 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (d);
         _status_exitus(d, "y", &may, &must);
         CREDO_VERUM (must);
+    }
+
+    /* ========================================================
+     * MEMBRA UT PSEUDO-VARIABILES (01KYMYW75S): series eventorum
+     * membrorum exacta - quod probationes supra praetermittunt,
+     * hic asseritur (rete utrimque: pinnae vetustae membra non
+     * vident, series membrorum lacunas non celat)
+     * ======================================================== */
+    {
+        FluxusDatorum* d;
+
+        /* scriptio directa: def totius ANTE eventum membri (ordo
+         * dele-deinde-pone); lectio directa: usus membri */
+        d = _extrahere(piscina,
+            "int f(void) { struct S s; s.m = 1; return s.m; }");
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            constans MembrumExspectatum series[] = {
+                { "s", "m", (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO },
+                { "s", "m", (s32)FLUXUS_EVENTUM_MEMBRUM_USUS }
+            };
+
+            _seriem_membrorum_probare(d, series, II);
+        }
+        /* ordo intra granulum: DEF (totius) praecedit MEMBRUM_DEF */
+        si (d != NIHIL)
+        {
+            FluxusDatorumBlocus* blocus = (FluxusDatorumBlocus*)
+                xar_obtinere(d->bloci, ZEPHYRUM);
+            i32 e;
+            i32 m = xar_numerus(blocus->eventa);
+            s32 index_def_totius = -I;
+            s32 index_def_membri = -I;
+
+            per (e = ZEPHYRUM; e < m; e++)
+            {
+                FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
+                    blocus->eventa, e);
+
+                si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO
+                    && index_def_totius < ZEPHYRUM)
+                {
+                    index_def_totius = (s32)e;
+                }
+                si (ev->genus
+                    == (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
+                {
+                    index_def_membri = (s32)e;
+                }
+            }
+            CREDO_VERUM (index_def_totius >= ZEPHYRUM);
+            CREDO_VERUM (index_def_membri > index_def_totius);
+        }
+
+        /* ordo membri tabulae: membrum_est, basis recta, parametrum
+         * basis haeret; inquisitio basium ordinem praeterit */
+        {
+            s32 vb = _variabilis_titulo(d, "s");
+            i32 i;
+            i32 m = xar_numerus(d->variabiles);
+            FluxusVariabilis* vm = NIHIL;
+
+            CREDO_VERUM (vb >= ZEPHYRUM);
+            per (i = ZEPHYRUM; i < m; i++)
+            {
+                FluxusVariabilis* v = (FluxusVariabilis*)
+                    xar_obtinere(d->variabiles, i);
+
+                si (v->membrum_est)
+                {
+                    vm = v;
+                }
+            }
+            CREDO_NON_NIHIL (vm);
+            si (vm != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (vm->basis, vb);
+                CREDO_FALSUM (vm->parametrum);
+                CREDO_VERUM (_nomen_aequale(vm->titulus_membri,
+                    "m"));
+            }
+        }
+
+        /* sagitta: basis monstrator - NULLUM eventum membri;
+         * scriptio per elementum (s.tab[i]=) - def totius solus,
+         * NULLUM eventum membri (membrum ipsum non redefinitur);
+         * compositum (s.m += 1) - usus deinde def */
+        d = _extrahere(piscina,
+            "int f(struct S* p) { return p->m; }");
+        CREDO_NON_NIHIL (d);
+        _seriem_membrorum_probare(d, NIHIL, ZEPHYRUM);
+
+        d = _extrahere(piscina,
+            "void f(int i) { struct S s; s.tab[i] = 1; }");
+        CREDO_NON_NIHIL (d);
+        _seriem_membrorum_probare(d, NIHIL, ZEPHYRUM);
+
+        d = _extrahere(piscina,
+            "void f(void) { struct S s; s.m += 1; }");
+        CREDO_NON_NIHIL (d);
+        {
+            constans MembrumExspectatum series[] = {
+                { "s", "m", (s32)FLUXUS_EVENTUM_MEMBRUM_USUS },
+                { "s", "m", (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO }
+            };
+
+            _seriem_membrorum_probare(d, series, II);
+        }
+
+        /* profunditas 2: basis non folium - NULLUM eventum membri
+         * externi; internum (s intra t absens ex resolutore -
+         * fons t ignotus, nulla eventa omnino hic: t non in
+         * tabula symbolorum probationis). Basis tracta s.m.n:
+         * eventum membri INTERNI (s,"m") def - conservativum */
+        d = _extrahere(piscina,
+            "void f(void) { struct S s; s.m.n = 1; }");
+        CREDO_NON_NIHIL (d);
+        {
+            constans MembrumExspectatum series[] = {
+                { "s", "m", (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO }
+            };
+
+            _seriem_membrorum_probare(d, series, I);
+        }
+
+        /* effugium per membrum: &s.m - basis LOCI (mos pristinus),
+         * NULLUM eventum membri (lectores effugium basis
+         * consulunt) */
+        d = _extrahere(piscina,
+            "void f(void) { struct S s; g2(&s.m); }");
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            s32 vb;
+
+            _seriem_membrorum_probare(d, NIHIL, ZEPHYRUM);
+            vb = _variabilis_titulo(d, "s");
+            CREDO_VERUM (vb >= ZEPHYRUM);
+            si (vb >= ZEPHYRUM)
+            {
+                FluxusVariabilis* v = (FluxusVariabilis*)
+                    xar_obtinere(d->variabiles, (i32)vb);
+
+                CREDO_VERUM (v->effugit);
+            }
+        }
     }
 
     credo_imprimere_compendium();

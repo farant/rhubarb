@@ -142,6 +142,138 @@ _quaerere (Piscina* piscina, constans character* fons,
     redde silva_c89_fluxus_intervallum_ad_punctum(sem, folium, iv);
 }
 
+/* nodi ACCESSUS titulo membri - collectio recursiva ordine fontis
+ * (membra ut pseudo-variabiles, 01KYMYW75S: quaestio ad nodum
+ * ACCESSUS ipsum - eventa membrorum eum ferunt) */
+interior vacuum
+_accessus_colligere (Piscina* piscina, constans SilvaNodus* nodus,
+    constans character* titulus, Xar* effecta)
+{
+    Xar* liberi;
+    i32 i;
+    i32 m;
+
+    si (nodus == NIHIL)
+    {
+        redde;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_ACCESSUS)
+    {
+        SilvaValor tok_v = silva_c89_accessus_tok_titulus(nodus);
+
+        si (tok_v.genus == SILVA_VALOR_TOKEN)
+        {
+            chorda valor = tok_v.datum.token->valor;
+            memoriae_index mt = strlen(titulus);
+
+            si (valor.mensura == (i32)mt && valor.datum != NIHIL
+                && memcmp(valor.datum, titulus, mt) == ZEPHYRUM)
+            {
+                constans SilvaNodus** locus =
+                    (constans SilvaNodus**)xar_addere(effecta);
+
+                *locus = nodus;
+            }
+        }
+    }
+    liberi = silva_nodus_liberi(piscina, nodus);
+    m = xar_numerus(liberi);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        _accessus_colligere(piscina,
+            *(constans SilvaNodus**)xar_obtinere(liberi, i),
+            titulus, effecta);
+    }
+}
+
+/* k-tus nodus ACCESSUS (0-basatus) tituli membri in arbore */
+interior constans SilvaNodus*
+_accessus (Piscina* piscina, constans SilvaParsura* parsura,
+    constans character* titulus, i32 k)
+{
+    Xar* effecta = xar_creare(piscina,
+        (i32)magnitudo(constans SilvaNodus*));
+    i32 i;
+    i32 m = (i32)silva_valor_lista_numerus(
+        parsura->commissio->radix);
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* e = silva_valor_lista_obtinere(
+            parsura->commissio->radix, i);
+
+        si (e != NIHIL && e->genus == SILVA_VALOR_NODUS)
+        {
+            _accessus_colligere(piscina, e->datum.nodus, titulus,
+                effecta);
+        }
+    }
+    si (k < ZEPHYRUM || k >= xar_numerus(effecta))
+    {
+        redde NIHIL;
+    }
+    redde *(constans SilvaNodus**)xar_obtinere(effecta, k);
+}
+
+/* fons -> sem analysatum + accessus k membri + quaestio intervalli */
+interior b32
+_quaerere_membrum (Piscina* piscina, constans character* fons,
+    constans character* titulus, i32 k, SemanticaIntervallum* iv)
+{
+    SilvaParsura* parsura = _parsare(piscina, fons);
+    SilvaSemantica* sem;
+    constans SilvaNodus* nodus;
+
+    CREDO_NON_NIHIL(parsura);
+    si (parsura == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sem = silva_c89_semantica_analysare(piscina, parsura);
+    CREDO_NON_NIHIL(sem);
+    si (sem == NIHIL)
+    {
+        redde FALSUM;
+    }
+    nodus = _accessus(piscina, parsura, titulus, k);
+    CREDO_NON_NIHIL(nodus);
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde silva_c89_fluxus_intervallum_ad_punctum(sem, nodus, iv);
+}
+
+/* adfirmatio membri: VALIDUM [imum, summum] exspectatum ad nodum
+ * ACCESSUS k-tum tituli */
+interior vacuum
+_adfirma_membrum (Piscina* piscina, constans character* fons,
+    constans character* titulus, i32 k, s64 imum, s64 summum,
+    constans character* descriptio)
+{
+    SemanticaIntervallum iv;
+    b32 inventum;
+
+    imprimere("  %s\n", descriptio);
+    memset(&iv, ZEPHYRUM, magnitudo(SemanticaIntervallum));
+    inventum = _quaerere_membrum(piscina, fons, titulus, k, &iv);
+    CREDO_VERUM(inventum);
+    si (!inventum)
+    {
+        redde;
+    }
+    CREDO_AEQUALIS_I32((i32)iv.status,
+        (i32)SEMANTICA_INTERVALLUM_VALIDUM);
+    si (iv.imum != imum || iv.summum != summum)
+    {
+        imprimere("    EXSPECTATUM [%ld, %ld] RECEPTUM [%ld, %ld]\n",
+            (longus)imum, (longus)summum, (longus)iv.imum,
+            (longus)iv.summum);
+    }
+    CREDO_VERUM(iv.imum == imum);
+    CREDO_VERUM(iv.summum == summum);
+}
+
 /* adfirmatio compendiaria: VALIDUM [imum, summum] exspectatum */
 interior vacuum
 _adfirma (Piscina* piscina, constans character* fons,
@@ -345,6 +477,159 @@ principale (vacuum)
             CREDO_FALSUM(silva_c89_fluxus_intervallum_ad_punctum(
                 sem, folium, &iv));
         }
+    }
+
+    imprimere("--- XVIII-XXIX: membra ut pseudo-variabiles ---\n");
+
+    /* XVIII. definitio membri recta: s.m = 5 -> lectio [5,5]
+     * (accessus k=1: k=0 scriptio est) */
+    _adfirma_membrum(piscina,
+        "struct S { unsigned m; }; void f(void) { struct S s;"
+        " s.m = 5u; { unsigned u = s.m; } }",
+        "m", I, 5L, 5L,
+        "XVIII. s.m = 5 -> [5,5]");
+
+    /* XIX. assignatio totius delet membra: s = g() -> fines typi
+     * membri (regula v1: def basis = membra ad fines) */
+    _adfirma_membrum(piscina,
+        "struct S { unsigned m; }; struct S g(void);"
+        " void f(void) { struct S s; s.m = 5u; s = g();"
+        " { unsigned u = s.m; } }",
+        "m", I, 0L, U32_SUMMUM,
+        "XIX. s = g() delet -> fines u32");
+
+    /* XX. refinatio membri custodita (CASUS MATRIS: chorda.mensura):
+     * parametrum basis - membrum fines typi in introitu, custos
+     * refinat */
+    _adfirma_membrum(piscina,
+        "struct S { unsigned m; }; void f(struct S s)"
+        " { if (s.m >= 2u) { unsigned x = s.m; } }",
+        "m", I, 2L, U32_SUMMUM,
+        "XX. custos s.m >= 2 -> [2, u32max]");
+
+    /* XXI. crementum membri: pater accessus operatorem dat */
+    _adfirma_membrum(piscina,
+        "struct S { unsigned m; }; void f(void) { struct S s;"
+        " s.m = 3u; s.m++; { unsigned u = s.m; } }",
+        "m", II, 4L, 4L,
+        "XXI. s.m++ -> [4,4]");
+
+    /* XXII. effugium basis: &s -> membra fines typi perpetuo */
+    _adfirma_membrum(piscina,
+        "struct S { unsigned m; }; void g(struct S* p);"
+        " void f(void) { struct S s; s.m = 5u; g(&s);"
+        " { unsigned u = s.m; } }",
+        "m", I, 0L, U32_SUMMUM,
+        "XXII. effugium &s -> fines u32");
+
+    /* XXIII. assignatio composita membri: imprecisio v1 (fons =
+     * nodus assignationis, aestimator ordinarius -> fines typi;
+     * mores localium speculati) */
+    _adfirma_membrum(piscina,
+        "struct S { unsigned m; }; void f(void) { struct S s;"
+        " s.m = 10u; s.m -= 3u; { unsigned u = s.m; } }",
+        "m", II, 0L, U32_SUMMUM,
+        "XXIII. s.m -= 3 -> fines (imprecisio nominata)");
+
+    /* XXIV. unio: scriptio fratris delet (ordo dele-deinde-pone
+     * sanitatem aliasing praestat - deviatio ab pinna rei, INTENTIO
+     * 2026-07-28) */
+    _adfirma_membrum(piscina,
+        "union U { unsigned a; int b; }; void f(void) { union U u;"
+        " u.a = 5u; u.b = -1; { unsigned x = u.a; } }",
+        "a", I, 0L, U32_SUMMUM,
+        "XXIV. unio: u.b scriptum -> u.a fines (non [5,5])");
+
+    /* XXV. membrum parametri sine custode: fines typi membri ut
+     * VALIDUM (proprietas fundi - non OMNIA) */
+    _adfirma_membrum(piscina,
+        "struct S { unsigned m; }; void f(struct S s)"
+        " { unsigned u = s.m; }",
+        "m", ZEPHYRUM, 0L, U32_SUMMUM,
+        "XXV. parametri membrum -> fines u32 VALIDUM");
+
+    imprimere("--- XXVI-XXIX: fines tractationis membrorum ---\n");
+
+    /* XXVI. profunditas 2 invisibilis: t.in.m lectio nullum eventum
+     * membri fert -> quaestio FALSUM (honeste extra scopum) */
+    {
+        SemanticaIntervallum iv;
+        SilvaParsura* parsura = _parsare(piscina,
+            "struct S { unsigned m; }; struct T { struct S in; };"
+            " void f(void) { struct T t; t.in.m = 5u;"
+            " { unsigned u = t.in.m; } }");
+        SilvaSemantica* sem;
+        constans SilvaNodus* nodus;
+
+        imprimere("  XXVI. t.in.m -> non inventum (profunditas 2)\n");
+        CREDO_NON_NIHIL(parsura);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL(sem);
+        nodus = _accessus(piscina, parsura, "m", I);
+        CREDO_NON_NIHIL(nodus);
+        si (nodus != NIHIL && sem != NIHIL)
+        {
+            memset(&iv, ZEPHYRUM, magnitudo(SemanticaIntervallum));
+            CREDO_FALSUM(silva_c89_fluxus_intervallum_ad_punctum(
+                sem, nodus, &iv));
+        }
+    }
+
+    /* XXVII. membrum non-integrale: ordo exsistit sed OMNIA */
+    {
+        SemanticaIntervallum iv;
+        b32 inventum;
+
+        imprimere("  XXVII. membrum duplex -> OMNIA\n");
+        memset(&iv, ZEPHYRUM, magnitudo(SemanticaIntervallum));
+        inventum = _quaerere_membrum(piscina,
+            "struct D { double d; }; void f(void) { struct D s;"
+            " s.d = 1.5; { double x = s.d; } }",
+            "d", I, &iv);
+        CREDO_VERUM(inventum);
+        CREDO_AEQUALIS_I32((i32)iv.status,
+            (i32)SEMANTICA_INTERVALLUM_OMNIA);
+    }
+
+    /* XXVIII. sagitta exclusa: p->m basis monstrator - nullum
+     * eventum membri (pointee extra scopum v1) */
+    {
+        SemanticaIntervallum iv;
+        SilvaParsura* parsura = _parsare(piscina,
+            "struct S { unsigned m; }; void f(struct S* p)"
+            " { unsigned u = p->m; }");
+        SilvaSemantica* sem;
+        constans SilvaNodus* nodus;
+
+        imprimere("  XXVIII. p->m -> non inventum (sagitta)\n");
+        CREDO_NON_NIHIL(parsura);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL(sem);
+        nodus = _accessus(piscina, parsura, "m", ZEPHYRUM);
+        CREDO_NON_NIHIL(nodus);
+        si (nodus != NIHIL && sem != NIHIL)
+        {
+            memset(&iv, ZEPHYRUM, magnitudo(SemanticaIntervallum));
+            CREDO_FALSUM(silva_c89_fluxus_intervallum_ad_punctum(
+                sem, nodus, &iv));
+        }
+    }
+
+    /* XXIX. campus bitorum: truncatio def-claims insana faceret -
+     * ordo numquam praecisus (est_campus -> OMNIA semper) */
+    {
+        SemanticaIntervallum iv;
+        b32 inventum;
+
+        imprimere("  XXIX. campus bitorum -> OMNIA (non [200,200])\n");
+        memset(&iv, ZEPHYRUM, magnitudo(SemanticaIntervallum));
+        inventum = _quaerere_membrum(piscina,
+            "struct B { unsigned bits : 3; }; void f(void)"
+            " { struct B b; b.bits = 200u; { unsigned u = b.bits; } }",
+            "bits", I, &iv);
+        CREDO_VERUM(inventum);
+        CREDO_AEQUALIS_I32((i32)iv.status,
+            (i32)SEMANTICA_INTERVALLUM_OMNIA);
     }
 
     credo_imprimere_compendium();

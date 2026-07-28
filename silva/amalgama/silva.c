@@ -4915,12 +4915,26 @@ nomen enumeratio {
                                     * totius variabilis - pinna s19) */
     FLUXUS_EVENTUM_DEFINITIO_LOCI, /* &x contextu non-constanti
                                     * (idioma initialisationis C) */
-    FLUXUS_EVENTUM_LOCI_ACCUMULAT  /* &x ad parametrum accumulantem
+    FLUXUS_EVENTUM_LOCI_ACCUMULAT, /* &x ad parametrum accumulantem
                                     * (contractus, 01KY3JWF): callee
                                     * pointee LEGIT ante scriptionem
                                     * - vocator initiare debet; index
                                     * 71 ante bits iudicat, deinde ut
                                     * DEFINITIO_LOCI tractatur */
+
+    /* Membra ut pseudo-variabiles (01KYMYW75S): eventa ADDITIVA -
+     * consumptores exsistentes (bita may/must, formae, iudicium
+     * initiationis) genera explicite cribrant, haec praetereunt.
+     * Scriptio membri definitionem TOTIUS adhuc emittit (pinna s19
+     * intacta); eventum membri PRAETEREA sequitur - ordo
+     * dele-deinde-pone (def basis membra omnia ad fines typi,
+     * deinde membrum scriptum refinat). Basis folium directum
+     * solum (profunditas I); sagitta numquam (pointee extra
+     * scopum); variabilis = ordo membri (membrum_est) in tabula. */
+    FLUXUS_EVENTUM_MEMBRUM_USUS,       /* lectio c.m (nodus =
+                                        * ACCESSUS) */
+    FLUXUS_EVENTUM_MEMBRUM_DEFINITIO   /* scriptio c.m directa
+                                        * (post def totius) */
 } FluxusEventumGenus;
 
 /* Forma valoris definitionis (fluxus formae, 01KXRBS0VQ/01KYJQ7THM):
@@ -4966,6 +4980,16 @@ nomen structura {
                                         * MIXTA - scriptio per alias
                                         * post effugium invisibilis
                                         * (v1 sanum) */
+
+    /* ordo membri (01KYMYW75S): identitas = symbolum BASIS (collisio
+     * consulta - inquisitiones basium ordines membrorum praetereunt),
+     * titulus_membri discriminat. basis = index ordinis basis in hac
+     * tabula (effugium/parametrum basis ibi consulenda). Analysis
+     * initiationis ordines membrorum numquam videt (eventa membrorum
+     * genera propria ferunt). */
+    b32                  membrum_est;
+    s32                  basis;        /* -1 nisi membrum */
+    SilvaChorda               titulus_membri;
 } FluxusVariabilis;
 
 /* Blocus parallelus (index = FluxusBlocus.index). Status
@@ -41115,7 +41139,9 @@ _est_sectio (constans SilvaNodus* n)
  * Tabula variabilium + emissio
  * ================================================== */
 
-/* Index densus: invenire aut addere per identitatem */
+/* Index densus: invenire aut addere per identitatem. Ordines
+ * membrorum praetermissi (identitas basis consulto communis -
+ * titulus_membri eos discriminat, inquisitio basium hic). */
 interior s32
 _variabilis_index (FluxusExtractor* ex,
     constans FluxusSymbolumFacta* facta)
@@ -41128,7 +41154,7 @@ _variabilis_index (FluxusExtractor* ex,
     {
         v = (FluxusVariabilis*)silva_xar_obtinere(ex->datorum->variabiles,
             i);
-        si (v->identitas == facta->identitas)
+        si (v->identitas == facta->identitas && !v->membrum_est)
         {
             redde (s32)i;
         }
@@ -41139,6 +41165,57 @@ _variabilis_index (FluxusExtractor* ex,
     v->declarans = facta->declarans;
     v->parametrum = facta->parametrum;
     v->effugit = FALSUM;
+    v->membrum_est = FALSUM;
+    v->basis = -I;
+    v->titulus_membri.mensura = ZEPHYRUM;
+    v->titulus_membri.datum = NIHIL;
+    redde (s32)m;
+}
+
+interior b32
+_membri_tituli_pares (SilvaChorda a, SilvaChorda b)
+{
+    redde (a.mensura == b.mensura
+        && (a.mensura == ZEPHYRUM
+            || memcmp(a.datum, b.datum,
+                (memoriae_index)a.mensura) == ZEPHYRUM))
+        ? VERUM : FALSUM;
+}
+
+/* Ordo membri (basis, titulus_membri): invenire aut addere.
+ * Basis primum inveniatur-aut-addatur (semita lectionis ordinem
+ * basis nondum creavit - lectio totius invisibilis est). Ordo
+ * membri parametrum basis haeret (semen introitus machinae
+ * intervallorum); effugium NUMQUAM proprium - basis consulitur. */
+interior s32
+_variabilis_membri_index (FluxusExtractor* ex,
+    constans FluxusSymbolumFacta* facta_basis, SilvaChorda titulus_membri)
+{
+    s32 index_basis = _variabilis_index(ex, facta_basis);
+    i32 i;
+    i32 m = silva_xar_numerus(ex->datorum->variabiles);
+    FluxusVariabilis* v;
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        v = (FluxusVariabilis*)silva_xar_obtinere(ex->datorum->variabiles,
+            i);
+        si (v->membrum_est
+            && v->identitas == facta_basis->identitas
+            && _membri_tituli_pares(v->titulus_membri, titulus_membri))
+        {
+            redde (s32)i;
+        }
+    }
+    v = (FluxusVariabilis*)silva_xar_addere(ex->datorum->variabiles);
+    v->identitas = facta_basis->identitas;
+    v->titulus = facta_basis->titulus;
+    v->declarans = facta_basis->declarans;
+    v->parametrum = facta_basis->parametrum;
+    v->effugit = FALSUM;
+    v->membrum_est = VERUM;
+    v->basis = index_basis;
+    v->titulus_membri = titulus_membri;
     redde (s32)m;
 }
 
@@ -41199,7 +41276,8 @@ _eventum_emittere (FluxusExtractor* ex, s32 variabilis, s32 genus,
     e->in_initiatore_proprio = in_initiatore_proprio;
     e->fons_valoris = NIHIL;
     e->forma = (s32)FLUXUS_FORMA_IGNOTA;
-    si (genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
+    si (genus == (s32)FLUXUS_EVENTUM_DEFINITIO
+        || genus == (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
     {
         e->fons_valoris = ex->fons_valoris_currens;
         e->forma = _forma_valoris(ex, ex->fons_valoris_currens);
@@ -41235,6 +41313,40 @@ _facta_tracta (FluxusExtractor* ex, constans SilvaNodus* n,
     }
     redde (facta->localis_automata || facta->parametrum)
         ? VERUM : FALSUM;
+}
+
+/* Emissio eventi membri ad nodum ACCESSUS punctum: basis folium
+ * tractum aggregatum (non acies) directum - profunditas I ipsa
+ * structura. FALSUM = non emissum (basis alia: nihil, sanum). */
+interior b32
+_membrum_emittere (FluxusExtractor* ex, constans SilvaNodus* accessus,
+    s32 genus_eventi)
+{
+    constans SilvaNodus* basis_nuda = _sine_parenthesibus(ex,
+        _ut_nodus(silva_c89_accessus_basis(accessus)));
+    FluxusSymbolumFacta facta;
+    SilvaValor tit_v;
+
+    si (basis_nuda == NIHIL || basis_nuda->genus
+            != (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        redde FALSUM;
+    }
+    si (!_facta_tracta(ex, basis_nuda, &facta)
+        || !facta.aggregatum || facta.acies)
+    {
+        redde FALSUM;
+    }
+    tit_v = silva_c89_accessus_tok_titulus(accessus);
+    si (tit_v.genus != SILVA_VALOR_TOKEN)
+    {
+        redde FALSUM;
+    }
+    _eventum_emittere(ex,
+        _variabilis_membri_index(ex, &facta,
+            tit_v.datum.token->valor),
+        genus_eventi, accessus, FALSUM);
+    redde VERUM;
 }
 
 /* ==================================================
@@ -41394,6 +41506,17 @@ _locum_resolvere (FluxusExtractor* ex, constans SilvaNodus* n,
             _locum_resolvere(ex,
                 _ut_nodus(silva_c89_accessus_basis(n)),
                 per_elementum, genus_emittendi);
+            /* membrum ut pseudo-variabilis (01KYMYW75S): scriptio
+             * DIRECTA (non per elementum - c.tab[i] membrum ipsum
+             * non redefinit, def totius supra membra omnia delet)
+             * eventum membri POST definitionem totius - ordo
+             * dele-deinde-pone */
+            si (genus_emittendi == (s32)FLUXUS_EVENTUM_DEFINITIO
+                && !per_elementum)
+            {
+                (vacuum)_membrum_emittere(ex, n,
+                    (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO);
+            }
             redde;
         }
         casus (s32)SILVA_C89_GENUS_UNARIUM:
@@ -41662,6 +41785,11 @@ _expressionem_ambulare (FluxusExtractor* ex, constans SilvaNodus* n)
                     FALSUM, (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI);
                 redde;
             }
+            /* membrum ut pseudo-variabilis (01KYMYW75S): lectio
+             * membri directi eventum proprium fert (lectio TOTIUS
+             * invisibilis manet - pinna s05a intacta) */
+            (vacuum)_membrum_emittere(ex, n,
+                (s32)FLUXUS_EVENTUM_MEMBRUM_USUS);
             /* lectio membri aggregati invisibilis (s05a) */
             _locum_resolvere(ex,
                 _ut_nodus(silva_c89_accessus_basis(n)),
@@ -42310,13 +42438,28 @@ nomen structura {
     i32                        n_var;
 } IntervallaFunctionis;
 
-/* Candidatus SEVERAE dilatus (consilium bifasium alterum): sedes
- * CONVERSIO_SIGNI_SEVERA nuntium praeaedificat, resolutio post
- * fluxum probat imum non-negativum (TACET) aut emittit verbatim.
- * Ordo: probatio fluxus ANTE absorptionem tolerae - tolerae
- * redundantes IRRITUM pariunt. */
+/* Candidatus intervallorum (consilium bifasium alterum): sedes
+ * emissionis nuntium praeaedificat, resolutio post fluxum probat
+ * (TACET) aut emittit verbatim. Ordo: probatio fluxus ANTE
+ * absorptionem tolerae - tolerae redundantes IRRITUM pariunt.
+ * Codices: CONVERSIO_SIGNI_SEVERA (probatio = imum expressionis
+ * non-negativum); SUBTRACTIO_COMPARATA directa (probatio = operandi
+ * subtractionis s.imum >= d.summum - nodus INSIGNATUS, aestimatio
+ * tota involutionem celaret) et per variabilem (probatio =
+ * definitiones subtractionis OMNES variabilis probatae -
+ * 01KYMYW75S, cliens reductionis strepitus). */
 nomen structura {
-    constans SilvaNodus* nodus;      /* expressio conversionis */
+    constans SilvaNodus* nodus;      /* expressio aestimanda (55:
+                                      * conversio; 80 directum:
+                                      * subtractio; 80 variabilis:
+                                      * NIHIL) */
+    constans SilvaNodus* ancora;     /* sedes diagnostici ET
+                                      * absorptionis tolerae (55:
+                                      * = nodus; 80: comparatio) */
+    s32                  codex;
+    s32                  variabilis; /* forma variabilis codicis 80:
+                                      * index tabulae datorum
+                                      * functionis suae; -1 alias */
     constans character*  nuntius;    /* praeaedificatus (NIHIL =
                                       * addere simplex) */
     b32                  tractatum;  /* resolutum (probatum aut
@@ -42325,6 +42468,7 @@ nomen structura {
 
 /* prototypa interiora (corpora post aestimatorem intervallorum,
  * vocationes in _fluxum_examinare / analysare supra) */
+interior constans SilvaNodus* _nodus_valoris (SilvaValor v);
 interior vacuum _intervalla_computare (SilvaSemantica* sem,
     constans FluxusFunctionis* fluxus);
 interior vacuum _intervalla_severa_examinare (SilvaSemantica* sem,
@@ -46786,13 +46930,17 @@ _formas_examinare (SilvaSemantica* sem,
                 {
                     FormaCandidatus* fc = (FormaCandidatus*)
                         silva_xar_obtinere(sem->candidata_formarum, k);
+                    constans character* nuntius = NIHIL;
 
                     si (fc == NIHIL || fc->folium != ev->nodus)
                     {
                         perge;
                     }
-                    si (!_tolera_absorbere(sem, fc->comparatio,
-                            (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA))
+                    /* candidatum intervallorum (01KYMYW75S):
+                     * resolutio post fixpunctum intervallorum -
+                     * definitiones subtractionis variabilis OMNES
+                     * probatae => TACET; probatio ANTE tolerae
+                     * absorptionem */
                     {
                         character textus[CXXVIII];
                         insignatus integer tm =
@@ -46807,13 +46955,13 @@ _formas_examinare (SilvaSemantica* sem,
                             memoriae_index capacitas =
                                 (memoriae_index)tm
                                 + (memoriae_index)CXXVIII;
-                            character* nuntius = (character*)
+                            character* d = (character*)
                                 silva_piscina_allocare(sem->piscina,
                                     capacitas);
 
-                            si (nuntius != NIHIL)
+                            si (d != NIHIL)
                             {
-                                sprintf(nuntius,
+                                sprintf(d,
                                     "subtractio insignata zephyro"
                                     " comparata: involutione '%s'"
                                     " est (%s; per definitiones"
@@ -46821,16 +46969,44 @@ _formas_examinare (SilvaSemantica* sem,
                                     fc->forma_aequalis
                                         ? "== 0" : "!= 0",
                                     textus);
-                                _diagnosticum_addere_plenum(sem,
-                                    fc->comparatio, (s32)
-                                    EXAMEN_CODEX_SUBTRACTIO_COMPARATA,
-                                    NIHIL, nuntius);
-                                frange;
+                                nuntius = d;
                             }
                         }
-                        silva_c89_diagnosticum_addere(sem,
-                            fc->comparatio, (s32)
-                            EXAMEN_CODEX_SUBTRACTIO_COMPARATA);
+                    }
+                    {
+                        IntervallumCandidatus* ic =
+                            (IntervallumCandidatus*)silva_xar_addere(
+                                sem->candidata_intervallorum);
+
+                        si (ic != NIHIL)
+                        {
+                            ic->nodus = NIHIL;
+                            ic->ancora = fc->comparatio;
+                            ic->codex = (s32)
+                                EXAMEN_CODEX_SUBTRACTIO_COMPARATA;
+                            ic->variabilis = ev->variabilis;
+                            ic->nuntius = nuntius;
+                            ic->tractatum = FALSUM;
+                            frange;
+                        }
+                    }
+                    /* memoria deficit: emissio statim */
+                    si (!_tolera_absorbere(sem, fc->comparatio,
+                            (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA))
+                    {
+                        si (nuntius != NIHIL)
+                        {
+                            _diagnosticum_addere_plenum(sem,
+                                fc->comparatio, (s32)
+                                EXAMEN_CODEX_SUBTRACTIO_COMPARATA,
+                                NIHIL, nuntius);
+                        }
+                        alioquin
+                        {
+                            silva_c89_diagnosticum_addere(sem,
+                                fc->comparatio, (s32)
+                                EXAMEN_CODEX_SUBTRACTIO_COMPARATA);
+                        }
                     }
                     frange;
                 }
@@ -49168,19 +49344,77 @@ _intervallum_typi_nodi (SilvaSemantica* sem,
         imum, summum);
 }
 
+/* typus membri ex typo basis (structura AUT unio - unio tracta,
+ * sanitas per ordinem dele-deinde-pone, INTENTIO 2026-07-28) per
+ * titulum; NIHIL = membrum ignotum. est_campus effectus: campus
+ * bitorum NUMQUAM praecisus (truncatio def-claims insana faceret). */
+interior TypusC89*
+_membri_typus (constans FluxusVariabilis* var, b32* est_campus)
+{
+    constans SemanticaSymbolum* s =
+        (constans SemanticaSymbolum*)var->identitas;
+    TypusC89* t;
+    i32 i;
+
+    *est_campus = FALSUM;
+    si (s == NIHIL || s->typus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    t = _qualibus_exutum(s->typus);
+    si (t == NIHIL || (t->genus != TYPUS_C89_STRUCTURA
+            && t->genus != TYPUS_C89_UNIO))
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < t->datum.tag.numerus_membrorum; i++)
+    {
+        TypusC89Membrum* m = &t->datum.tag.membra[i];
+
+        si (_chordae_pares_contractus(m->titulus,
+                var->titulus_membri))
+        {
+            *est_campus = m->est_campus;
+            redde m->typus;
+        }
+    }
+    redde NIHIL;
+}
+
 /* summum tractabile variabilis = fines TYPI ut VALIDUM; OMNIA si
- * extra fines/non-integrale */
+ * extra fines/non-integrale. Ordo membri (01KYMYW75S): typus MEMBRI
+ * per tabulam tag basis - chorda.mensura (i32) fines [0, 2^32-1]
+ * fert dum basis structura OMNIA maneret. */
 interior SemanticaIntervallum
 _intervallum_variabilis_summum (SilvaSemantica* sem,
     constans FluxusVariabilis* var)
 {
     constans SemanticaSymbolum* s =
         (constans SemanticaSymbolum*)var->identitas;
+    TypusC89* typus;
     s64 imum;
     s64 summum;
 
-    si (s == NIHIL || s->typus == NIHIL
-        || !_fines_typi(sem, s->typus, &imum, &summum))
+    si (s == NIHIL)
+    {
+        redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_OMNIA,
+            ZEPHYRUM, ZEPHYRUM);
+    }
+    si (var->membrum_est)
+    {
+        b32 est_campus = FALSUM;
+
+        typus = _membri_typus(var, &est_campus);
+        si (est_campus)
+        {
+            typus = NIHIL;   /* campus bitorum: numquam praecisus */
+        }
+    }
+    alioquin
+    {
+        typus = s->typus;
+    }
+    si (typus == NIHIL || !_fines_typi(sem, typus, &imum, &summum))
     {
         redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_OMNIA,
             ZEPHYRUM, ZEPHYRUM);
@@ -49189,7 +49423,29 @@ _intervallum_variabilis_summum (SilvaSemantica* sem,
         imum, summum);
 }
 
-/* index variabilis in tabulis datorum per identitatem symboli */
+/* effugium effectivum: ordo membri effugium BASIS consulit (ordines
+ * post eventum effugii creati vexillum proprium non ferrent) */
+interior b32
+_intervalla_effugit (constans FluxusDatorum* datorum,
+    constans FluxusVariabilis* var)
+{
+    si (var->effugit)
+    {
+        redde VERUM;
+    }
+    si (var->membrum_est && var->basis >= ZEPHYRUM)
+    {
+        constans FluxusVariabilis* basis =
+            (constans FluxusVariabilis*)silva_xar_obtinere(
+                datorum->variabiles, (i32)var->basis);
+
+        redde (basis != NIHIL && basis->effugit) ? VERUM : FALSUM;
+    }
+    redde FALSUM;
+}
+
+/* index variabilis in tabulis datorum per identitatem symboli
+ * (ordines membrorum praetermissi - identitas basis communis) */
 interior s32
 _intervalla_variabilis_index (constans FluxusDatorum* datorum,
     constans vacuum* identitas)
@@ -49203,10 +49459,99 @@ _intervalla_variabilis_index (constans FluxusDatorum* datorum,
             (constans FluxusVariabilis*)silva_xar_obtinere(
                 datorum->variabiles, i);
 
-        si (var->identitas == identitas)
+        si (var->identitas == identitas && !var->membrum_est)
         {
             redde (s32)i;
         }
+    }
+    redde -I;
+}
+
+/* index ordinis membri per (identitatem basis, titulum membri) */
+interior s32
+_intervalla_membri_index (constans FluxusDatorum* datorum,
+    constans vacuum* identitas, SilvaChorda titulus_membri)
+{
+    i32 i;
+    i32 m = silva_xar_numerus(datorum->variabiles);
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans FluxusVariabilis* var =
+            (constans FluxusVariabilis*)silva_xar_obtinere(
+                datorum->variabiles, i);
+
+        si (var->membrum_est && var->identitas == identitas
+            && _chordae_pares_contractus(var->titulus_membri,
+                titulus_membri))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* index ordinis pro nodo lecti: folium identificatoris tractum AUT
+ * accessus punctum basis-folii tracti (membrum ut pseudo-variabilis,
+ * 01KYMYW75S) - communis aestimatori et refinationi; -1 = non
+ * tractum */
+interior s32
+_intervalla_nodi_index (SilvaSemantica* sem,
+    constans FluxusDatorum* datorum, constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL)
+    {
+        redde -I;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(sem,
+            nodus);
+
+        si (s == NIHIL)
+        {
+            redde -I;
+        }
+        redde _intervalla_variabilis_index(datorum,
+            (constans vacuum*)s);
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_ACCESSUS)
+    {
+        SilvaValor op_v = silva_c89_accessus_tok_operator(nodus);
+        SilvaValor tit_v = silva_c89_accessus_tok_titulus(nodus);
+        constans SilvaNodus* basis;
+        constans SemanticaSymbolum* s;
+        i32 custos;
+
+        si (op_v.genus != SILVA_VALOR_TOKEN
+            || op_v.datum.token->genus == SILVA_LEX_SAGITTA
+            || tit_v.genus != SILVA_VALOR_TOKEN)
+        {
+            redde -I;
+        }
+        basis = _canonicum(_nodus_valoris(
+            silva_c89_accessus_basis(nodus)));
+        per (custos = ZEPHYRUM; custos < VIII && basis != NIHIL
+            && basis->genus == (s32)SILVA_C89_GENUS_PARENTHESIS;
+            custos++)
+        {
+            SilvaValor pv = silva_c89_parenthesis_internum(basis);
+
+            basis = (pv.genus == SILVA_VALOR_NODUS)
+                ? _canonicum(pv.datum.nodus) : NIHIL;
+        }
+        si (basis == NIHIL || basis->genus
+                != (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+        {
+            redde -I;
+        }
+        s = silva_c89_symbolum_nodi(sem, basis);
+        si (s == NIHIL)
+        {
+            redde -I;
+        }
+        redde _intervalla_membri_index(datorum,
+            (constans vacuum*)s, tit_v.datum.token->valor);
     }
     redde -I;
 }
@@ -49226,7 +49571,7 @@ _intervallum_lecti (SilvaSemantica* sem,
         redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_OMNIA,
             ZEPHYRUM, ZEPHYRUM);
     }
-    si (var->effugit
+    si (_intervalla_effugit(datorum, var)
         || ambitus[v].status == (s32)SEMANTICA_INTERVALLUM_IGNOTUM)
     {
         redde _intervallum_variabilis_summum(sem, var);
@@ -49317,14 +49662,13 @@ _intervallum_fluxus_expr (SilvaSemantica* sem,
             frange;
         }
         casus (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR:
+        casus (s32)SILVA_C89_GENUS_ACCESSUS:
         {
-            constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(
-                sem, nodus);
-
-            si (s != NIHIL && datorum != NIHIL && ambitus != NIHIL)
+            /* folium tractum AUT membrum ut pseudo-variabilis
+             * (accessus punctum basis-folii, 01KYMYW75S) */
+            si (datorum != NIHIL && ambitus != NIHIL)
             {
-                s32 v = _intervalla_variabilis_index(datorum,
-                    (constans vacuum*)s);
+                s32 v = _intervalla_nodi_index(sem, datorum, nodus);
 
                 si (v >= ZEPHYRUM)
                 {
@@ -49332,7 +49676,7 @@ _intervallum_fluxus_expr (SilvaSemantica* sem,
                         v);
                 }
             }
-            frange;   /* non tractum: fines typi folii */
+            frange;   /* non tractum: fines typi nodi */
         }
         casus (s32)SILVA_C89_GENUS_TERNARIUS:
         {
@@ -49582,7 +49926,8 @@ _intervalla_transferre (SilvaSemantica* sem,
     constans FluxusVariabilis* var;
     SemanticaIntervallum summum_var;
 
-    si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO)
+    si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO
+        && ev->genus != (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
     {
         redde;
     }
@@ -49600,6 +49945,56 @@ _intervalla_transferre (SilvaSemantica* sem,
         }
         redde;
     }
+    /* definitio basis: ordines membrorum eius ad fines typi (regula
+     * v1 assignationis totius, c = d). EXCEPTIO structurae: def
+     * totius ex scriptione MEMBRI (folium basis sub ACCESSU puncti -
+     * pinna s19 initiationem notat, membra ALIA intacta manent;
+     * eventum membri sequens membrum scriptum tractat, etiam
+     * crementa quorum status prior VIVERE debet - mensuratum
+     * specimine XXI). UNIO SEMPER delet: scriptio membri cuiusvis
+     * fratres per aliasing mutat - id ipsum fundamentum sanitatis
+     * unionum tractarum (INTENTIO 2026-07-28). */
+    si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
+    {
+        b32 delenda = VERUM;
+        constans SilvaNodus* pater = (ev->nodus != NIHIL)
+            ? ev->nodus->pater : NIHIL;
+
+        si (pater != NIHIL
+            && pater->genus == (s32)SILVA_C89_GENUS_ACCESSUS)
+        {
+            constans FluxusVariabilis* basis_var =
+                (constans FluxusVariabilis*)silva_xar_obtinere(
+                    datorum->variabiles, (i32)ev->variabilis);
+            constans SemanticaSymbolum* s = (basis_var != NIHIL)
+                ? (constans SemanticaSymbolum*)basis_var->identitas
+                : NIHIL;
+            TypusC89* t = (s != NIHIL)
+                ? _qualibus_exutum(s->typus) : NIHIL;
+
+            si (t != NIHIL && t->genus == TYPUS_C89_STRUCTURA)
+            {
+                delenda = FALSUM;
+            }
+        }
+        si (delenda)
+        {
+            i32 v;
+
+            per (v = ZEPHYRUM; v < n_var; v++)
+            {
+                constans FluxusVariabilis* vv =
+                    (constans FluxusVariabilis*)silva_xar_obtinere(
+                        datorum->variabiles, v);
+
+                si (vv->membrum_est && vv->basis == ev->variabilis)
+                {
+                    ambitus[v] = _intervallum_variabilis_summum(sem,
+                        vv);
+                }
+            }
+        }
+    }
     var = (constans FluxusVariabilis*)silva_xar_obtinere(
         datorum->variabiles, (i32)ev->variabilis);
     si (var == NIHIL)
@@ -49607,7 +50002,7 @@ _intervalla_transferre (SilvaSemantica* sem,
         redde;
     }
     summum_var = _intervallum_variabilis_summum(sem, var);
-    si (var->effugit
+    si (_intervalla_effugit(datorum, var)
         || summum_var.status != (s32)SEMANTICA_INTERVALLUM_VALIDUM)
     {
         ambitus[ev->variabilis] = summum_var;
@@ -49875,7 +50270,9 @@ _intervalla_refinare (SilvaSemantica* sem,
     {
         redde;
     }
-    /* folia tracta utriusque lateris (per parentheses) */
+    /* folia tracta utriusque lateris (per parentheses): folium
+     * nudum AUT accessus membri (01KYMYW75S) - _intervalla_nodi_index
+     * ambo agnoscit */
     {
         constans SilvaNodus* folium_sin = _canonicum(
             s_v.datum.nodus);
@@ -49903,30 +50300,8 @@ _intervalla_refinare (SilvaSemantica* sem,
             folium_dex = (pv.genus == SILVA_VALOR_NODUS)
                 ? _canonicum(pv.datum.nodus) : NIHIL;
         }
-        si (folium_sin != NIHIL && folium_sin->genus
-                == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
-        {
-            constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(
-                sem, folium_sin);
-
-            si (s != NIHIL)
-            {
-                v_sin = _intervalla_variabilis_index(datorum,
-                    (constans vacuum*)s);
-            }
-        }
-        si (folium_dex != NIHIL && folium_dex->genus
-                == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
-        {
-            constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(
-                sem, folium_dex);
-
-            si (s != NIHIL)
-            {
-                v_dex = _intervalla_variabilis_index(datorum,
-                    (constans vacuum*)s);
-            }
-        }
+        v_sin = _intervalla_nodi_index(sem, datorum, folium_sin);
+        v_dex = _intervalla_nodi_index(sem, datorum, folium_dex);
     }
     /* latera aestimata ANTE refinationes (ambo ex statu communi) */
     e_sin = _intervallum_fluxus_expr(sem, datorum, ambitus,
@@ -49938,7 +50313,7 @@ _intervalla_refinare (SilvaSemantica* sem,
         constans FluxusVariabilis* var = (constans FluxusVariabilis*)
             silva_xar_obtinere(datorum->variabiles, (i32)v_sin);
 
-        si (var != NIHIL && !var->effugit)
+        si (var != NIHIL && !_intervalla_effugit(datorum, var))
         {
             SemanticaIntervallum lectum = _intervallum_lecti(sem,
                 datorum, ambitus, v_sin);
@@ -49953,7 +50328,7 @@ _intervalla_refinare (SilvaSemantica* sem,
         constans FluxusVariabilis* var = (constans FluxusVariabilis*)
             silva_xar_obtinere(datorum->variabiles, (i32)v_dex);
 
-        si (var != NIHIL && !var->effugit)
+        si (var != NIHIL && !_intervalla_effugit(datorum, var))
         {
             SemanticaIntervallum lectum = _intervallum_lecti(sem,
                 datorum, ambitus, v_dex);
@@ -50233,10 +50608,195 @@ _intervalla_intra (constans SilvaNodus* nodus,
     redde FALSUM;
 }
 
-/* resolutio candidatorum SEVERAE huius functionis: primum eventum
- * intra expressionem candidati = punctum aestimationis; fluxus
- * probat imum non-negativum -> TACET (tolera redundans IRRITUM
- * pariet); alioquin tolera deinde emissio verbatim */
+/* nodus subtractionis binarii per parentheses et catenas
+ * assignationis SIMPLICIS (x = y = a - b: valor = dextrum internum,
+ * speculum _forma_valoris); NIHIL = non subtractio */
+interior constans SilvaNodus*
+_subtractionis_nodus (constans SilvaNodus* nodus)
+{
+    i32 custos = ZEPHYRUM;
+
+    dum (nodus != NIHIL && custos < XXXII)
+    {
+        custos++;
+        nodus = _canonicum(nodus);
+        si (nodus == NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (nodus->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+        {
+            nodus = _nodus_valoris(
+                silva_c89_parenthesis_internum(nodus));
+            perge;
+        }
+        si (nodus->genus == (s32)SILVA_C89_GENUS_ASSIGNATIO)
+        {
+            SilvaValor op_v = silva_c89_assignatio_tok_operator(
+                nodus);
+
+            si (op_v.genus == SILVA_VALOR_TOKEN
+                && (s32)op_v.datum.token->genus
+                    == (s32)SILVA_LEX_ASSIGNATIO)
+            {
+                nodus = _nodus_valoris(
+                    silva_c89_assignatio_dexter(nodus));
+                perge;
+            }
+            redde NIHIL;
+        }
+        si (nodus->genus == (s32)SILVA_C89_GENUS_BINARIUM)
+        {
+            SilvaValor op_v = silva_c89_binarium_tok_operator(nodus);
+
+            redde (op_v.genus == SILVA_VALOR_TOKEN
+                && (s32)op_v.datum.token->genus
+                    == (s32)SILVA_LEX_MINUS) ? nodus : NIHIL;
+        }
+        redde NIHIL;
+    }
+    redde NIHIL;
+}
+
+/* probatio operandorum subtractionis: minuendum.imum >=
+ * subtrahendum.summum => differentia numquam negativa => involutio
+ * impossibilis. Operandi SEPARATIM aestimandi - nodus subtractionis
+ * insignatae typum insignatum fert, aestimatio tota involutionem
+ * per fines typi celaret (evidentia negativa perit). */
+interior b32
+_subtractio_probata (SilvaSemantica* sem,
+    constans FluxusDatorum* datorum,
+    constans SemanticaIntervallum* ambitus,
+    constans SilvaNodus* subtractio)
+{
+    SilvaValor s_v = silva_c89_binarium_sinister(subtractio);
+    SilvaValor d_v = silva_c89_binarium_dexter(subtractio);
+    SemanticaIntervallum s;
+    SemanticaIntervallum d;
+
+    si (s_v.genus != SILVA_VALOR_NODUS
+        || d_v.genus != SILVA_VALOR_NODUS)
+    {
+        redde FALSUM;
+    }
+    s = _intervallum_fluxus_expr(sem, datorum, ambitus,
+        s_v.datum.nodus, ZEPHYRUM);
+    d = _intervallum_fluxus_expr(sem, datorum, ambitus,
+        d_v.datum.nodus, ZEPHYRUM);
+    redde (s.status == (s32)SEMANTICA_INTERVALLUM_VALIDUM
+        && d.status == (s32)SEMANTICA_INTERVALLUM_VALIDUM
+        && s.imum >= d.summum) ? VERUM : FALSUM;
+}
+
+/* forma variabilis codicis 80: definitiones subtractionis OMNES
+ * variabilis probatae (superserie conservativa definitionum
+ * attingentium - forma SUBTRACTIO ad usum = definitiones
+ * attingentes omnes subtractione formatae). Ambulatio propria cum
+ * replay intervallorum; aestimatio ANTE transfer definitionis
+ * (status prae-definitionis = operandi eius). Composita (x -= y):
+ * minuendum = status variabilis ipsius. Nullae definitiones
+ * subtractionis inventae => FALSUM (abstentio - numquam silentium
+ * sine evidentia). */
+interior b32
+_defs_subtractionis_probatae (SilvaSemantica* sem,
+    constans IntervallaFunctionis* tf, s32 variabilis,
+    SemanticaIntervallum* ambitus)
+{
+    constans FluxusDatorum* datorum = tf->fluxus->datorum;
+    i32 defs = ZEPHYRUM;
+    b32 omnes = VERUM;
+    i32 b;
+    i32 v;
+
+    per (b = ZEPHYRUM; b < tf->n_bloci; b++)
+    {
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            silva_xar_obtinere(tf->fluxus->bloci, b);
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, b);
+        i32 e;
+        i32 m;
+
+        si (!fb->attingibilis)
+        {
+            perge;
+        }
+        per (v = ZEPHYRUM; v < tf->n_var; v++)
+        {
+            ambitus[v] = tf->introitus[b * tf->n_var + v];
+        }
+        m = silva_xar_numerus(db->eventa);
+        per (e = ZEPHYRUM; e < m; e++)
+        {
+            constans FluxusEventum* ev = (constans FluxusEventum*)
+                silva_xar_obtinere(db->eventa, e);
+
+            si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO
+                && ev->variabilis == variabilis
+                && ev->fons_valoris != NIHIL)
+            {
+                constans SilvaNodus* sub = _subtractionis_nodus(
+                    ev->fons_valoris);
+
+                si (sub != NIHIL)
+                {
+                    defs++;
+                    si (!_subtractio_probata(sem, datorum, ambitus,
+                            sub))
+                    {
+                        omnes = FALSUM;
+                    }
+                }
+                alioquin
+                {
+                    constans SilvaNodus* fons = _canonicum(
+                        ev->fons_valoris);
+
+                    si (fons != NIHIL && fons->genus
+                            == (s32)SILVA_C89_GENUS_ASSIGNATIO)
+                    {
+                        SilvaValor op_v =
+                            silva_c89_assignatio_tok_operator(fons);
+                        SilvaValor d_v =
+                            silva_c89_assignatio_dexter(fons);
+
+                        si (op_v.genus == SILVA_VALOR_TOKEN
+                            && (s32)op_v.datum.token->genus
+                                == (s32)SILVA_LEX_MINUS_ASSIGNATIO
+                            && d_v.genus == SILVA_VALOR_NODUS)
+                        {
+                            SemanticaIntervallum mi =
+                                _intervallum_lecti(sem, datorum,
+                                    ambitus, variabilis);
+                            SemanticaIntervallum di =
+                                _intervallum_fluxus_expr(sem,
+                                    datorum, ambitus,
+                                    d_v.datum.nodus, ZEPHYRUM);
+
+                            defs++;
+                            si (!(mi.status == (s32)
+                                    SEMANTICA_INTERVALLUM_VALIDUM
+                                && di.status == (s32)
+                                    SEMANTICA_INTERVALLUM_VALIDUM
+                                && mi.imum >= di.summum))
+                            {
+                                omnes = FALSUM;
+                            }
+                        }
+                    }
+                }
+            }
+            _intervalla_transferre(sem, datorum, ambitus, ev);
+        }
+    }
+    redde (defs > ZEPHYRUM && omnes) ? VERUM : FALSUM;
+}
+
+/* resolutio candidatorum intervallorum huius functionis: primum
+ * eventum intra expressionem candidati (aut comparationem, forma
+ * variabilis) = punctum aestimationis; fluxus probat -> TACET
+ * (tolera redundans IRRITUM pariet); alioquin tolera deinde
+ * emissio verbatim */
 interior vacuum
 _intervalla_severa_examinare (SilvaSemantica* sem,
     constans IntervallaFunctionis* tf)
@@ -50293,36 +50853,67 @@ _intervalla_severa_examinare (SilvaSemantica* sem,
                 constans FluxusEventum* ev =
                     (constans FluxusEventum*)silva_xar_obtinere(
                         db->eventa, e);
+                constans SilvaNodus* meta =
+                    (fc->variabilis >= ZEPHYRUM)
+                        ? fc->ancora : fc->nodus;
 
-                si (_intervalla_intra(ev->nodus, fc->nodus))
+                si (_intervalla_intra(ev->nodus, meta))
                 {
-                    SemanticaIntervallum iv =
-                        _intervallum_fluxus_expr(sem, datorum,
-                            ambitus, fc->nodus, ZEPHYRUM);
+                    b32 probatum = FALSUM;
 
                     fc->tractatum = VERUM;
                     inventum = VERUM;
-                    si (iv.status
-                            == (s32)SEMANTICA_INTERVALLUM_VALIDUM
-                        && iv.imum >= ZEPHYRUM)
+                    si (fc->codex == (s32)
+                            EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA)
+                    {
+                        SemanticaIntervallum iv =
+                            _intervallum_fluxus_expr(sem, datorum,
+                                ambitus, fc->nodus, ZEPHYRUM);
+
+                        probatum = (iv.status == (s32)
+                                SEMANTICA_INTERVALLUM_VALIDUM
+                            && iv.imum >= ZEPHYRUM)
+                            ? VERUM : FALSUM;
+                    }
+                    alioquin si (fc->variabilis >= ZEPHYRUM)
+                    {
+                        SemanticaIntervallum* ambitus_defs =
+                            (SemanticaIntervallum*)silva_piscina_allocare(
+                                sem->piscina,
+                                (memoriae_index)tf->n_var
+                                * magnitudo(SemanticaIntervallum));
+
+                        probatum = (ambitus_defs != NIHIL
+                            && _defs_subtractionis_probatae(sem, tf,
+                                fc->variabilis, ambitus_defs))
+                            ? VERUM : FALSUM;
+                    }
+                    alioquin
+                    {
+                        constans SilvaNodus* sub =
+                            _subtractionis_nodus(fc->nodus);
+
+                        probatum = (sub != NIHIL
+                            && _subtractio_probata(sem, datorum,
+                                ambitus, sub)) ? VERUM : FALSUM;
+                    }
+                    si (probatum)
                     {
                         frange;   /* probatum - TACET */
                     }
-                    si (!_tolera_absorbere(sem, fc->nodus, (s32)
-                            EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA))
+                    si (!_tolera_absorbere(sem, fc->ancora,
+                            fc->codex))
                     {
                         si (fc->nuntius != NIHIL)
                         {
                             _diagnosticum_addere_plenum(sem,
-                                fc->nodus, (s32)
-                                EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA,
-                                NIHIL, fc->nuntius);
+                                fc->ancora, fc->codex, NIHIL,
+                                fc->nuntius);
                         }
                         alioquin
                         {
                             silva_c89_diagnosticum_addere(sem,
-                                fc->nodus, (s32)
-                                EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA);
+                                fc->ancora, fc->codex);
                         }
                     }
                     frange;
@@ -50351,21 +50942,19 @@ _intervalla_candidata_relicta_emittere (SilvaSemantica* sem)
             perge;
         }
         fc->tractatum = VERUM;
-        si (_tolera_absorbere(sem, fc->nodus,
-                (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA))
+        si (_tolera_absorbere(sem, fc->ancora, fc->codex))
         {
             perge;
         }
         si (fc->nuntius != NIHIL)
         {
-            _diagnosticum_addere_plenum(sem, fc->nodus,
-                (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, NIHIL,
-                fc->nuntius);
+            _diagnosticum_addere_plenum(sem, fc->ancora, fc->codex,
+                NIHIL, fc->nuntius);
         }
         alioquin
         {
-            silva_c89_diagnosticum_addere(sem, fc->nodus,
-                (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA);
+            silva_c89_diagnosticum_addere(sem, fc->ancora,
+                fc->codex);
         }
     }
 }
@@ -51123,6 +51712,9 @@ _conversionem_signi_examinare (SilvaSemantica* sem,
             si (fc != NIHIL)
             {
                 fc->nodus = nodus;
+                fc->ancora = nodus;
+                fc->codex = (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA;
+                fc->variabilis = -I;
                 fc->nuntius = nuntius;
                 fc->tractatum = FALSUM;
                 redde;
@@ -51549,36 +52141,65 @@ _comparationem_examinare (SilvaSemantica* sem,
         {
         si (_est_subtractio(alter))
         {
+            /* candidatum intervallorum (01KYMYW75S): probatio
+             * fluxus ANTE absorptionem tolerae - operandi
+             * subtractionis s.imum >= d.summum => involutio
+             * impossibilis => TACET; tolera redundans IRRITUM
+             * pariet (via retirationis mensurata) */
+            character textus[CXXVIII];
+            insignatus integer m = silva_c89_typum_scribere(
+                _qualibus_exutum(commune), textus,
+                (insignatus integer)magnitudo(textus));
+            constans character* nuntius = NIHIL;
+
+            si (m > ZEPHYRUM)
+            {
+                memoriae_index capacitas = (memoriae_index)m
+                    + (memoriae_index)LXXX;
+                character* d = (character*)silva_piscina_allocare(
+                    sem->piscina, capacitas);
+
+                si (d != NIHIL)
+                {
+                    sprintf(d, "subtractio insignata"
+                        " zephyro comparata: involutione"
+                        " '%s' est (%s)",
+                        forma_aequalis ? "== 0" : "!= 0",
+                        textus);
+                    nuntius = d;
+                }
+            }
+            {
+                IntervallumCandidatus* ic = (IntervallumCandidatus*)
+                    silva_xar_addere(sem->candidata_intervallorum);
+
+                si (ic != NIHIL)
+                {
+                    ic->nodus = alter;
+                    ic->ancora = nodus;
+                    ic->codex =
+                        (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA;
+                    ic->variabilis = -I;
+                    ic->nuntius = nuntius;
+                    ic->tractatum = FALSUM;
+                    redde;
+                }
+            }
+            /* memoria deficit: emissio statim (numquam TACITE) */
             si (!_tolera_absorbere(sem, nodus,
                     (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA))
             {
-                character textus[CXXVIII];
-                insignatus integer m = silva_c89_typum_scribere(
-                    _qualibus_exutum(commune), textus,
-                    (insignatus integer)magnitudo(textus));
-
-                si (m > ZEPHYRUM)
+                si (nuntius != NIHIL)
                 {
-                    memoriae_index capacitas = (memoriae_index)m
-                        + (memoriae_index)LXXX;
-                    character* nuntius = (character*)silva_piscina_allocare(
-                        sem->piscina, capacitas);
-
-                    si (nuntius != NIHIL)
-                    {
-                        sprintf(nuntius, "subtractio insignata"
-                            " zephyro comparata: involutione"
-                            " '%s' est (%s)",
-                            forma_aequalis ? "== 0" : "!= 0",
-                            textus);
-                        _diagnosticum_addere_plenum(sem, nodus,
-                            (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA,
-                            NIHIL, nuntius);
-                        redde;
-                    }
+                    _diagnosticum_addere_plenum(sem, nodus,
+                        (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA,
+                        NIHIL, nuntius);
                 }
-                silva_c89_diagnosticum_addere(sem, nodus,
-                    (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA);
+                alioquin
+                {
+                    silva_c89_diagnosticum_addere(sem, nodus,
+                        (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA);
+                }
             }
             redde;
         }

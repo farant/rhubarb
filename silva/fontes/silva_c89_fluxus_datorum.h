@@ -47,12 +47,26 @@ nomen enumeratio {
                                     * totius variabilis - pinna s19) */
     FLUXUS_EVENTUM_DEFINITIO_LOCI, /* &x contextu non-constanti
                                     * (idioma initialisationis C) */
-    FLUXUS_EVENTUM_LOCI_ACCUMULAT  /* &x ad parametrum accumulantem
+    FLUXUS_EVENTUM_LOCI_ACCUMULAT, /* &x ad parametrum accumulantem
                                     * (contractus, 01KY3JWF): callee
                                     * pointee LEGIT ante scriptionem
                                     * - vocator initiare debet; index
                                     * 71 ante bits iudicat, deinde ut
                                     * DEFINITIO_LOCI tractatur */
+
+    /* Membra ut pseudo-variabiles (01KYMYW75S): eventa ADDITIVA -
+     * consumptores exsistentes (bita may/must, formae, iudicium
+     * initiationis) genera explicite cribrant, haec praetereunt.
+     * Scriptio membri definitionem TOTIUS adhuc emittit (pinna s19
+     * intacta); eventum membri PRAETEREA sequitur - ordo
+     * dele-deinde-pone (def basis membra omnia ad fines typi,
+     * deinde membrum scriptum refinat). Basis folium directum
+     * solum (profunditas I); sagitta numquam (pointee extra
+     * scopum); variabilis = ordo membri (membrum_est) in tabula. */
+    FLUXUS_EVENTUM_MEMBRUM_USUS,       /* lectio c.m (nodus =
+                                        * ACCESSUS) */
+    FLUXUS_EVENTUM_MEMBRUM_DEFINITIO   /* scriptio c.m directa
+                                        * (post def totius) */
 } FluxusEventumGenus;
 
 /* Forma valoris definitionis (fluxus formae, 01KXRBS0VQ/01KYJQ7THM):
@@ -98,6 +112,16 @@ nomen structura {
                                         * MIXTA - scriptio per alias
                                         * post effugium invisibilis
                                         * (v1 sanum) */
+
+    /* ordo membri (01KYMYW75S): identitas = symbolum BASIS (collisio
+     * consulta - inquisitiones basium ordines membrorum praetereunt),
+     * titulus_membri discriminat. basis = index ordinis basis in hac
+     * tabula (effugium/parametrum basis ibi consulenda). Analysis
+     * initiationis ordines membrorum numquam videt (eventa membrorum
+     * genera propria ferunt). */
+    b32                  membrum_est;
+    s32                  basis;        /* -1 nisi membrum */
+    chorda               titulus_membri;
 } FluxusVariabilis;
 
 /* Blocus parallelus (index = FluxusBlocus.index). Status

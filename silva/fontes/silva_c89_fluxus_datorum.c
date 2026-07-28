@@ -118,7 +118,9 @@ _est_sectio (constans SilvaNodus* n)
  * Tabula variabilium + emissio
  * ================================================== */
 
-/* Index densus: invenire aut addere per identitatem */
+/* Index densus: invenire aut addere per identitatem. Ordines
+ * membrorum praetermissi (identitas basis consulto communis -
+ * titulus_membri eos discriminat, inquisitio basium hic). */
 interior s32
 _variabilis_index (FluxusExtractor* ex,
     constans FluxusSymbolumFacta* facta)
@@ -131,7 +133,7 @@ _variabilis_index (FluxusExtractor* ex,
     {
         v = (FluxusVariabilis*)xar_obtinere(ex->datorum->variabiles,
             i);
-        si (v->identitas == facta->identitas)
+        si (v->identitas == facta->identitas && !v->membrum_est)
         {
             redde (s32)i;
         }
@@ -142,6 +144,57 @@ _variabilis_index (FluxusExtractor* ex,
     v->declarans = facta->declarans;
     v->parametrum = facta->parametrum;
     v->effugit = FALSUM;
+    v->membrum_est = FALSUM;
+    v->basis = -I;
+    v->titulus_membri.mensura = ZEPHYRUM;
+    v->titulus_membri.datum = NIHIL;
+    redde (s32)m;
+}
+
+interior b32
+_membri_tituli_pares (chorda a, chorda b)
+{
+    redde (a.mensura == b.mensura
+        && (a.mensura == ZEPHYRUM
+            || memcmp(a.datum, b.datum,
+                (memoriae_index)a.mensura) == ZEPHYRUM))
+        ? VERUM : FALSUM;
+}
+
+/* Ordo membri (basis, titulus_membri): invenire aut addere.
+ * Basis primum inveniatur-aut-addatur (semita lectionis ordinem
+ * basis nondum creavit - lectio totius invisibilis est). Ordo
+ * membri parametrum basis haeret (semen introitus machinae
+ * intervallorum); effugium NUMQUAM proprium - basis consulitur. */
+interior s32
+_variabilis_membri_index (FluxusExtractor* ex,
+    constans FluxusSymbolumFacta* facta_basis, chorda titulus_membri)
+{
+    s32 index_basis = _variabilis_index(ex, facta_basis);
+    i32 i;
+    i32 m = xar_numerus(ex->datorum->variabiles);
+    FluxusVariabilis* v;
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        v = (FluxusVariabilis*)xar_obtinere(ex->datorum->variabiles,
+            i);
+        si (v->membrum_est
+            && v->identitas == facta_basis->identitas
+            && _membri_tituli_pares(v->titulus_membri, titulus_membri))
+        {
+            redde (s32)i;
+        }
+    }
+    v = (FluxusVariabilis*)xar_addere(ex->datorum->variabiles);
+    v->identitas = facta_basis->identitas;
+    v->titulus = facta_basis->titulus;
+    v->declarans = facta_basis->declarans;
+    v->parametrum = facta_basis->parametrum;
+    v->effugit = FALSUM;
+    v->membrum_est = VERUM;
+    v->basis = index_basis;
+    v->titulus_membri = titulus_membri;
     redde (s32)m;
 }
 
@@ -202,7 +255,8 @@ _eventum_emittere (FluxusExtractor* ex, s32 variabilis, s32 genus,
     e->in_initiatore_proprio = in_initiatore_proprio;
     e->fons_valoris = NIHIL;
     e->forma = (s32)FLUXUS_FORMA_IGNOTA;
-    si (genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
+    si (genus == (s32)FLUXUS_EVENTUM_DEFINITIO
+        || genus == (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
     {
         e->fons_valoris = ex->fons_valoris_currens;
         e->forma = _forma_valoris(ex, ex->fons_valoris_currens);
@@ -238,6 +292,40 @@ _facta_tracta (FluxusExtractor* ex, constans SilvaNodus* n,
     }
     redde (facta->localis_automata || facta->parametrum)
         ? VERUM : FALSUM;
+}
+
+/* Emissio eventi membri ad nodum ACCESSUS punctum: basis folium
+ * tractum aggregatum (non acies) directum - profunditas I ipsa
+ * structura. FALSUM = non emissum (basis alia: nihil, sanum). */
+interior b32
+_membrum_emittere (FluxusExtractor* ex, constans SilvaNodus* accessus,
+    s32 genus_eventi)
+{
+    constans SilvaNodus* basis_nuda = _sine_parenthesibus(ex,
+        _ut_nodus(silva_c89_accessus_basis(accessus)));
+    FluxusSymbolumFacta facta;
+    SilvaValor tit_v;
+
+    si (basis_nuda == NIHIL || basis_nuda->genus
+            != (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        redde FALSUM;
+    }
+    si (!_facta_tracta(ex, basis_nuda, &facta)
+        || !facta.aggregatum || facta.acies)
+    {
+        redde FALSUM;
+    }
+    tit_v = silva_c89_accessus_tok_titulus(accessus);
+    si (tit_v.genus != SILVA_VALOR_TOKEN)
+    {
+        redde FALSUM;
+    }
+    _eventum_emittere(ex,
+        _variabilis_membri_index(ex, &facta,
+            tit_v.datum.token->valor),
+        genus_eventi, accessus, FALSUM);
+    redde VERUM;
 }
 
 /* ==================================================
@@ -397,6 +485,17 @@ _locum_resolvere (FluxusExtractor* ex, constans SilvaNodus* n,
             _locum_resolvere(ex,
                 _ut_nodus(silva_c89_accessus_basis(n)),
                 per_elementum, genus_emittendi);
+            /* membrum ut pseudo-variabilis (01KYMYW75S): scriptio
+             * DIRECTA (non per elementum - c.tab[i] membrum ipsum
+             * non redefinit, def totius supra membra omnia delet)
+             * eventum membri POST definitionem totius - ordo
+             * dele-deinde-pone */
+            si (genus_emittendi == (s32)FLUXUS_EVENTUM_DEFINITIO
+                && !per_elementum)
+            {
+                (vacuum)_membrum_emittere(ex, n,
+                    (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO);
+            }
             redde;
         }
         casus (s32)SILVA_C89_GENUS_UNARIUM:
@@ -665,6 +764,11 @@ _expressionem_ambulare (FluxusExtractor* ex, constans SilvaNodus* n)
                     FALSUM, (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI);
                 redde;
             }
+            /* membrum ut pseudo-variabilis (01KYMYW75S): lectio
+             * membri directi eventum proprium fert (lectio TOTIUS
+             * invisibilis manet - pinna s05a intacta) */
+            (vacuum)_membrum_emittere(ex, n,
+                (s32)FLUXUS_EVENTUM_MEMBRUM_USUS);
             /* lectio membri aggregati invisibilis (s05a) */
             _locum_resolvere(ex,
                 _ut_nodus(silva_c89_accessus_basis(n)),

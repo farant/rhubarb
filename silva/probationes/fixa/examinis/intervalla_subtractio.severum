@@ -1,0 +1,100 @@
+/* SUBTRACTIO_COMPARATA per fluxum intervallorum (01KYMYW75S):
+ * codex 80 utraque forma nunc bifasis - candidatum in typatione
+ * (directum) aut resolutione formarum (variabile), probatio post
+ * fixpunctum intervallorum ANTE absorptionem tolerae. Probatio =
+ * operandi subtractionis: minuendum.imum non minus subtrahendo.summo
+ * (differentia numquam negativa - involutio impossibilis). Membra
+ * ut pseudo-variabiles: custos in c.m refinat ordinem membri,
+ * probatio per accessum evaluatur - casus matris chorda.mensura.
+ * Clang caecus omnibus formis (frater vigilans domus).
+ * ORACULUM -Wtype-limits */
+
+struct Cn { unsigned m; };
+
+/* directum probatum fluxu: custos supra - TACET */
+static int directum_probatum(struct Cn c)
+{
+    if (c.m >= 2u)
+    {
+        if (c.m - 2u <= 0u)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/* directum nudum: sine custode - SUBTRACTIO_COMPARATA manet */
+static int directum_nudum(struct Cn c)
+{
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    if (c.m - 2u <= 0u)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/* variabile probatum: definitio sub custode - TACET */
+static int variabile_probatum(struct Cn c)
+{
+    if (c.m >= 2u)
+    {
+        unsigned x = c.m - 2u;
+
+        if (x <= 0u)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/* variabile nudum: definitio sine custode - manet */
+static int variabile_nudum(struct Cn c)
+{
+    unsigned x = c.m - 2u;
+
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    if (x <= 0u)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/* localis pura (sine membris): custos parametri - TACET (cliens
+ * localibus quoque prodest, non membris solis) */
+static int localis_probata(unsigned n)
+{
+    if (n >= 5u)
+    {
+        unsigned x = n - 5u;
+
+        if (x > 0u)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/* toleratum improbabile: absorptio ad resolutionem - QUIETA */
+static int toleratum(struct Cn c)
+{
+    unsigned x = c.m - 1u;
+
+    /* <tolera codex="SUBTRACTIO_COMPARATA" (>vocatores mensuram positivam praestant - custos externus probari nequit */
+    if (x <= 0u)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+static int radix(struct Cn c)
+{
+    return directum_probatum(c) + directum_nudum(c)
+        + variabile_probatum(c) + variabile_nudum(c)
+        + localis_probata(c.m) + toleratum(c);
+}
