@@ -1819,6 +1819,7 @@ clausura_computare(
                 num_beta = num_dextrum - (i32)res_currens->punctum - I;
                 beta_indices = NIHIL;
 
+                /* <tolera codex="SUBTRACTIO_COMPARATA" (>custos supra: punctum minor num_dextrum probatum (res completae praetermissae perge) */
                 si (num_beta > ZEPHYRUM)
                 {
                     beta_indices = (s32*)piscina_allocare(
@@ -2780,6 +2781,7 @@ silva_gen_collectio_lalr_construere(
                             num_beta = num_dextrum - (i32)res0->punctum - I;
                             beta_indices = NIHIL;
 
+                            /* <tolera codex="SUBTRACTIO_COMPARATA" (>custos supra: blocus totus intra punctum minor num_dextrum stat */
                             si (num_beta > ZEPHYRUM)
                             {
                                 beta_indices = (s32*)piscina_allocare(

@@ -114,10 +114,21 @@ static int redefinitio(unsigned a, unsigned b)
     return d <= 0;
 }
 
+/* tolera cum ANGULO in causa (01KYJTRPCX): angulus elementum
+ * capturae accidentale aperit et toleram reparentat - ambulatio
+ * recursiva eam nihilominus invenit. Absorbet: nec ordo nec
+ * IRRITUM (porta severi utrumque assereret) */
+static int tolerata_angulata(unsigned a, unsigned b)
+{
+    /* <tolera codex="SUBTRACTIO_COMPARATA" (>custoditum quia x <= y supra probatum */
+    return a - b <= 0;
+}
+
 static int radix(void)
 {
     return villa_forma(1ul, 2ul, 3ul) + assignatio_sera(1u, 2u)
         + composita(3u, 4u) + ansa(5u, 6u, 2) + rami_mixti(7u, 8u, 1)
         + effugium(9u, 1u) + parametrum_nudum(2u)
-        + redefinitio(3u, 4u) + catenata(5u, 6u) + directa(7u, 8u);
+        + redefinitio(3u, 4u) + catenata(5u, 6u) + directa(7u, 8u)
+        + tolerata_angulata(9u, 8u);
 }

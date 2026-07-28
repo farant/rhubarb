@@ -966,6 +966,39 @@ _toleram_ex_elemento (SilvaSemantica* sem,
     }
 }
 
+/* Ambulatio recursiva pro elementis tolera QUOVIS gradu
+ * (01KYJTRPCX): captura accidentalis - angulus in textu causae
+ * elementum novum aperiens (mos capturae retro) - toleram in
+ * filium alienum reparentat; ambulatio plana eam TRIBUS silentiis
+ * amittebat (nec absorptio nec IRRITUM nec malformata, parsatio
+ * enim SUCCEDIT). Exemplar recursionis = _res_examinare. */
+interior vacuum
+_toleras_ex_nodo (SilvaSemantica* sem, constans SilvaAnnotatio* a,
+    StmlNodus* nodus)
+{
+    i32 j;
+
+    si (nodus == NIHIL)
+    {
+        redde;
+    }
+    si ((s32)nodus->genus == STML_NODUS_ELEMENTUM
+        && nodus->titulus != NIHIL
+        && nodus->titulus->mensura == VI
+        && memcmp(nodus->titulus->datum, "tolera", VI) == ZEPHYRUM)
+    {
+        _toleram_ex_elemento(sem, a, nodus);
+    }
+    si (nodus->liberi != NIHIL)
+    {
+        per (j = ZEPHYRUM; j < xar_numerus(nodus->liberi); j++)
+        {
+            _toleras_ex_nodo(sem, a,
+                *(StmlNodus**)xar_obtinere(nodus->liberi, j));
+        }
+    }
+}
+
 /* collectio pigra per parsuram (exemplar tabulae alienitatis):
  * annotationes collectae elementis "tolera" cribratae. Malformata
  * ancorata res codicis 74 sunt, numquam tabulae (typographum quod
@@ -1000,30 +1033,12 @@ _toleras_colligere (SilvaSemantica* sem)
     {
         constans SilvaAnnotatio* a = (constans SilvaAnnotatio*)
             xar_obtinere(annotationes, i);
-        i32 j;
 
-        si (!a->parsata || a->documentum == NIHIL
-            || a->documentum->liberi == NIHIL)
+        si (!a->parsata || a->documentum == NIHIL)
         {
             perge;
         }
-        per (j = ZEPHYRUM; j < xar_numerus(a->documentum->liberi);
-             j++)
-        {
-            StmlNodus* nodus = *(StmlNodus**)xar_obtinere(
-                a->documentum->liberi, j);
-
-            si (nodus == NIHIL
-                || (s32)nodus->genus != STML_NODUS_ELEMENTUM
-                || nodus->titulus == NIHIL
-                || nodus->titulus->mensura != VI
-                || memcmp(nodus->titulus->datum, "tolera", VI)
-                    != ZEPHYRUM)
-            {
-                perge;
-            }
-            _toleram_ex_elemento(sem, a, nodus);
-        }
+        _toleras_ex_nodo(sem, a, a->documentum);
     }
 }
 
