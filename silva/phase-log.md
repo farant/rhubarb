@@ -10915,3 +10915,130 @@ inutile in specimine culpa); grep -machina columnas numeratas fert
 (nomen codicis non apparet - paene mensuram falsam credidi, lectio
 humana confirmavit). Desiderata: nulla nova (v1.5 copia
 intervallorum membrorum in assignatione totius - sedes nominata).
+
+## 2026-07-28 - INTENTIO: CONTRACTUS INTERVALLORUM AD TYPEDEF (01KYN533VY)
+
+Scope: intervals seeded from contracts, two front-ends, one engine
+path — (a) `contractus intra` above a TYPEDEF (the decided form:
+declarations distribute the refinement, O(types) annotations),
+(b) inline `contractus param intra` above a function (one-off
+ranges). Reuses the EXISTING contractus tag (01KY3JWF accumulat
+machinery: SilvaAnnotatio.unitas binding, lazy collection, STALUS
+discipline, header-borne cross-TU) — no new scanner-trigger word.
+
+SEAM FINDS (both would have sunk a memory-priced design):
+1. SOUNDNESS FORK: refinement is a TRUST fact about entry, never a
+   property of storage. It applies ONLY in the entry-seeding loop of
+   _intervalla_computare. It must NEVER enter
+   _intervallum_variabilis_summum — that helper serves the
+   conservative fallbacks (effugit, def-omnia, whole-assign wipe),
+   where an aliased write may have stored ANYTHING; those keep
+   honest type range.
+2. Evaluator SINISTRORSUM only accepts CONSTANT shift amounts
+   (d.imum == d.summum). The flatura mask (I << n) - I with
+   n intra [1,16] needs variable-amount shifts: s.imum >= 0 &&
+   d.imum >= 0 && d.summum < 62 -> [s.imum << d.imum,
+   s.summum << d.summum] (monotonic, multiplicare_tuta guarded).
+   Without this the motherlode tolera does not retire.
+
+DESIGN (no struct changes, all lazy):
+- Collection extends _contractus_ex_arbore: element with param
+  attr -> ExamenContractus row += {intra_est, intra_imum,
+  intra_summum} (valid iff accumulat OR intra — STALUS grammar
+  widened); element WITHOUT param whose a->unitas is a TYPEDEF
+  declaration (specificatores carry SILVA_LEX_TYPEDEF) -> new row
+  in sem->refinationes_typorum {titulus, imum, summum, unitas};
+  neither -> STALUS as today. intra value "a,b" parsed as two s64
+  (malformed -> STALUS).
+- Seeding (params, in _intervalla_computare entry loop), precedence:
+  (1) inline param contract (function title + param index match);
+  (2) declared-spelling walk: symbol->declarans -> pater ad
+  PARAMETRUM -> specificatores -> TYPUS_NOMINATUS titulus ->
+  registry name-match; (3) type range as today. Contract seed
+  INTERSECTED with type range (contracts only narrow) — EXCEPT
+  u64/i64 params: type range is unrepresentable (OMNIA) but a
+  representable contract seeds VALIDUM directly (trust extends
+  tracking where the floor could not — bonus).
+- Member rows of param bases: member's declared spelling via base
+  typus tag.declarans -> walk member declarations for
+  titulus_membri -> specificatores -> registry. Same trust point
+  (entry only).
+- v1 exclusions, named: locals (uninit garbage makes refined
+  seeding UNSOUND — and local contracts are really the CHECKING
+  direction, a future lint on defs); return contracts (call-site
+  seeding = v2 with argument checking); block-scope typedef
+  shadowing (registry is name-keyed; headers are the use case —
+  collision behavior pinned by specimen).
+
+MINI-SIMULATIO (flatura end-to-end by hand):
+- nomen i32 IndexBitorum; + contractus intra 1,16 above it;
+  _flatura_legere_bits(FlaturaLector*, IndexBitorum numerus_bits).
+  Entry: numerus_bits seeds [1,16] (spelling walk). Mask:
+  I << n -> [1,1]<<[1,16] -> [2,65536] (new shift case) -> minus I
+  -> [1,65535] -> imum >= 0 -> SEVERA TACET -> tolera :186 IRRITUM
+  -> retire. MEASURED at the seam: :543 does NOT retire
+  (bits_non_usati derives from tabula->maxima_bits — sagitta;
+  guard gives lower bound, shift needs upper). Prediction: 1 of
+  the 2 flatura SEVERA tolerae retires this arc.
+- Escape honesty: IndexBitorum local in a struct that escapes ->
+  member reads fall back to TYPE range, never [1,16].
+
+COST: registry walk per param per function fixpoint — trivial.
+Census-before-minting stays the liturgy (flatura call sites
+already measured: literals 1,2,4,5,8,16 + table-derived <= 15).
+
+## 2026-07-28 - RELATIO: CONTRACTUS INTERVALLORUM AD TYPEDEF (01KYN533VY)
+
+SHIPPED una sessione, arcus alter diei. Machina: registrum
+refinationum (RefinatioTypi, una collectione cum contractibus -
+grammatica contractus ampliata: intra attributum, forma typedef
+sine param, validitas accumulat AUT intra, STALUS in pravis);
+semen introitus _intervallum_seminis (praecedentia: contractus
+inline > refinatio typi per orthographiam declaratam > fines typi;
+INTERSECTUS cum typo - angustat solum; u64 cum contractu VALIDUM
+ex fiducia - tractio ubi fundus nequibat); orthographia parametri
+per patrem ad PARAMETRUM, membri per tabulam tag -> declarationem
+membri nomine. Aestimator SINISTRORSUM quantitates VARIABILES
+accipit (monotonicum basi non-negativa - inventum suturae, sine
+quo larva flaturae non probaretur). FURCA SANITATIS TENUIT:
+refinatio sedis introitus SOLA, reservae conservativae fines typi
+honestos tenent (specimina XXXIV-b/XXXVII/XXXVII-b eam pinnant).
+
+MINTATUM: NumerusBitorum in lib/flatura.c - typedef unum,
+signaturae duae, tolera SEVERA :186 RETIRATA (probatio ante
+toleram => deleta, iudicium purum). LITURGIA CENSUS SE PROBAVIT:
+fines bancati [1,16] MENDACES erant - tabulae extra-bitorum
+deflationis ZEPHYRUM ferunt (symbola sine bitis extra); contractus
+honestus [0,16], qui larvam adhuc probat. INVENTUM LIGAMINIS:
+annotatio contractus commentarium PROPRIUM postulat - prosa ducens
+in eodem commentario ligamen frangit (mensuratum: forma mixta
+tacite non registrabatur; exemplar exspecta/tolera sequendum).
+
+VECTES: intervalla 265/265 (specimina X contractuum ante machinam,
+V mores currentes pinnantia statim praeterita - sanitas ambabus
+partibus); fixtura contractus_intervalla.severum primo contactu
+exacta (probata tacent, nuda/prava pinnata); VECTIS TENET; silva
+35/35; amalgama VERIFICATUM; officina 13/13; radix 108/108 PLENUS
+(probationes flaturae ipsius - typedef mores temporis cursus non
+mutat). Tolerae SEVERAE reliquae IV cum causis veris (arbor *p
+deref III, flatura :549 sagitta) - praedictio suturae congruit.
+
+LIMITES NOMINATI v1: locales non seminantur (purgamentum
+ininitiatum refinatum asserere insanum); reditus/sedes-vocationis
+= v2 (probatio argumentorum contra contractus - directio
+inveniendi); umbra typedef scopi blocorum (registrum nomine
+clavatum); separatio nominalis (IndexHue in NumerusBitorum) =
+lint generum signatorum futurus.
+
+DEBRIEF INSTRUMENTORUM. Adhibita: sutura ANTE INTENTIONEM iterum
+duo invenit (furca sanitatis reservarum; restrictio SINISTRORSUM
+constantis) quae forma bancata non vidit; liturgia census fines
+mendaces [1,16] capit ANTE mendacium multiplicatum; specimina
+mores-currentes-pinnantia (V ex X statim praeterita) sanitatem
+utroque directione probant; probatio-ante-toleram retirationem
+VIVAM demonstravit (iudicium purum sine tolera). Asperitates:
+ligamen annotationis cum prosa tacite deficiebat - diagnosis per
+bisectionem probarum (macro/planum/latina) quia status hooki
+staleness confundebat; nihil in doctrina de commentario-proprio
+scriptum erat. Desiderata: STALUS diagnosis distinguere posset
+(pravum intra vs param absens - nuntius unus ambos tegit).
