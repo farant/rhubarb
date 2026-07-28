@@ -810,3 +810,31 @@ from the leaf's pater (POSTCREMENTUM / UNARIUM ++ --).
 Mixed-stream logs lied AGAIN during diagnosis (child stderr
 unbuffered vs parent stdout buffered) — stderr markers + separate
 capture files was the fix; third firing of that law this week.
+
+## 2026-07-28 — membra ut pseudo-variabiles: the discriminating wipe rule
+
+The INTENTIO's mini-sim said "whole-def wipes member rows, then the
+member event refines" — wipe-then-set. Specimen XXI (s.m++) measured
+the hole: the whole-def that PRECEDES every member write (pin s19)
+wiped the member's own pre-state, so the crement read [0,max] instead
+of [3,3]. The fix is semantic, not mechanical: a whole-def whose event
+node's PATER is an ACCESSUS is a *member write* — it touches exactly
+one member, so sibling rows must survive (more precise AND sound) and
+the written member's row must survive for crements (the following
+MEMBRUM_DEFINITIO handles it). A whole-def from a real whole
+assignment (pater = ASSIGNATIO/declarator) wipes all members — v1
+c = d rule. UNIONS always wipe regardless: any member write rewrites
+the bits of every sibling; that unconditional wipe is the entire
+soundness argument that let us keep unions tracked (excluding them
+would have cost a facta field + an every-constructor sweep — the
+documented caller-init trap).
+
+Also: bitfield members are never precise (est_campus → OMNIA at
+_membri_typus) because `b.bits = 200` stores 200 mod 2^width — a
+[200,200] def claim would be flatly false. Declared-type range is a
+sound read floor; precision is not available without width modeling.
+
+Static-name collision note: `_chordae_pares` already existed in
+silva_token.c; the amalgamator's duplicate-definition gate caught the
+new one in fluxus_datorum.c at first regen (now _membri_tituli_pares).
+Static does not mean private once TUs merge.

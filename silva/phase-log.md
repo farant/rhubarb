@@ -10723,3 +10723,195 @@ margo.origo semantica non documentata (granulum-ultimum inventum
 per lectionem fluxus.c - fortasse commentarium in fluxus.h
 meretur). Desiderata: nulla nova (annotationes intra="a,b" iam
 nominatae, arcus proximus).
+
+## 2026-07-28 - INTENTIO: MEMBRA UT PSEUDO-VARIABILES (01KYMYW75S)
+
+Scope: interval tracking for depth-1 integral members of tracked
+locals — identity (basis localis, titulus membri) — plus the
+measurable client: codex 80 gains interval proof (both forms), so
+mensura-guard tolerae retire as IRRITUM. Seams READ before this
+INTENTIO (fluxus_datorum.{h,c} whole, engine block whole, codex-80
+emission sites, TypusC89 tag.membra, the 13 corpus tolerae).
+
+EXTRACTION (additive, the named risk):
+- FluxusEventumGenus += MEMBRUM_USUS, MEMBRUM_DEFINITIO at END of
+  enum. Verified by read: every existing consumer filters on explicit
+  genera (_exitum_computare, _formae_exitum_computare, _blocus_definit,
+  _initiationem_examinare, _formas_examinare) — new genera fall
+  through every one. Calibration pins s19/s05/s04f untouched: the
+  whole-def on member write STAYS; member events are IN ADDITION.
+- FluxusVariabilis += membrum_est (b32), basis (s32, base row index),
+  titulus_membri (chorda). Base lookups skip member rows (identitas
+  collides by design); member lookup = (identitas, titulus_membri).
+  Base row always exists before member rows (recursion emits base
+  first) but lookups guard anyway.
+- Emission points: (1) _expressionem_ambulare ACCESSUS-punctum
+  non-acies value read, base (pierced) = tracked aggregate leaf ->
+  MEMBRUM_USUS, nodus = the ACCESSUS node. (2) _locum_resolvere
+  ACCESSUS-punctum with genus_emittendi DEFINITIO: AFTER the base
+  recursion (whole-def already emitted) -> MEMBRUM_DEFINITIO carrying
+  fons_valoris_currens. ORDER LAW: whole-def precedes member-def =
+  wipe-then-set. (3) crements/compound reach both paths naturally.
+  SAGITTA (p->a) never emits (pointer base, out of scope). &c.a
+  escapes the BASE (existing behavior) — members inherit escape.
+- Member rows inherit base's parametrum (entry seeding); harmless in
+  bitmaps (member rows skipped by init analysis).
+
+ENGINE:
+- _intervallum_variabilis_summum member-aware: base symbol -> typus
+  (strip quals) -> tag.membra scan by titulus_membri -> member type
+  fines. est_campus (bitfield) -> OMNIA always (truncation makes def
+  claims unsound; declared-type range is a sound READ floor but the
+  row must never go precise). chorda.mensura is i32 = unsigned 32
+  -> [0, 4294967295] fits the s64 lattice — the motherlode is live.
+- DEVIATION FROM RES PIN (flagged for Fran): UNIONS KEPT TRACKED.
+  The res said NUMQUAM uniones; the seam shows exclusion costs a
+  facta field + every-constructor sweep (the documented caller-init
+  trap) while inclusion is sound BY the wipe-then-set order: any
+  member write whole-defs the base first, wiping ALL sibling rows to
+  type range before the written member refines — aliasing through
+  the union is exactly covered. Fran can veto; exclusion is additive
+  later.
+- Effugit helper: member row consults BASE row's effugit (rows made
+  after an escape event would otherwise miss it). Used in lecti /
+  transferre / refinare.
+- _intervalla_transferre: (a) DEFINITIO of a base var wipes all rows
+  with basis == ev->variabilis to member type range (v1 c = d rule;
+  v1.5 = copy source member intervals, named landing spot: next
+  pull); (b) new MEMBRUM_DEFINITIO case: eval fons with ambitus,
+  clamp to member type; fons NIHIL -> crement via ev->nodus->pater
+  (the ACCESSUS's pater is POSTCREMENTUM/UNARIUM — same detection);
+  (c) def-omnia already covers member rows once summum is
+  member-aware.
+- Evaluator ACCESSUS case: punctum + tracked-leaf base -> member row
+  read (effugit-aware); miss -> fall through to node type range
+  (the ACCESSUS node's own typatio IS the member type — sound floor).
+- Refinement: leaf detection widened to ACCESSUS-with-tracked-base
+  on either side (si (c.mensura > 0) refines the member row).
+
+CLIENT (codex 80 interval proof — the SEVERA pattern generalized):
+- IntervallumCandidatus grows: codex, ancora (diagnostic anchor),
+  variabilis (for the variable form). SEVERA rows: codex 55, ancora
+  = nodus, behavior byte-identical.
+- Direct form (typing-time emit today) -> records a candidate
+  (codex 80, nodus = the subtraction BINARIUM, ancora = comparison,
+  prebuilt nuntius). Resolution criterion: operand-wise
+  s.imum >= d.summum (the subtraction node's type is UNSIGNED here —
+  whole-node eval would clamp away the evidence; operand check is
+  the sound form).
+- Variable form: _formas_examinare's emission body becomes candidate
+  recording (codex 80-var, variabilis + comparison + nuntius).
+  Resolution: severa-style walk; for EVERY subtraction-shaped
+  DEFINITIO of that variable (binarium minus fons OR composita -=:
+  minuend = the variable's own pre-def interval, subtrahend =
+  dexter), evaluate operands with replayed ambitus; ALL defs proven
+  -> silent; any unproven OR zero subtraction-defs found -> emit.
+  Conservative superset of reaching defs = sound.
+- Relicta sweep already guarantees no silent diagnostic loss.
+
+MINI-SIMULATIO (transfers walked by hand):
+- c = facere(): whole-def, fons=call -> base OMNIA, members wiped to
+  member type range. No member event (no ACCESSUS lvalue). Correct.
+- c = d: same wipe (v1). Correct, imprecise by design.
+- c.mensura = 5: whole-def(c, fons=5 — carries RHS, harmless: base
+  summum OMNIA absorbs) wipes members, THEN membrum-def -> [5,5].
+- c.mensura++: MEMBRUM_USUS, whole-def(fons NIHIL), membrum-def
+  (fons NIHIL, pater=POSTCREMENTUM) -> +1 with unsigned wrap to
+  range. Mirrors local crement exactly.
+- si (c.mensura >= 2) { x = c.mensura - 2; si (x == 0) }: refine
+  member [2,max]; def x operands [2,max] vs [2,2]: 2 >= 2 -> codex
+  80 SILENT. The motherlode case.
+- per (i=0; i < c.mensura; i++) { c.mensura - i }: i <= m_hi-1;
+  proof needs m_lo >= m_hi-1 — relational, NOT provable. Named
+  limit (octagons never; annotation/424N doors already banked).
+- unio u; u.a=5; use u.b: (u,b) wiped by u.a's whole-def -> type
+  range. Sound (see deviation).
+- bitfield c.bits = 200: summum OMNIA -> transfer pins OMNIA, never
+  [200,200]. Sound.
+
+HONEST PRE-CENSUS of the 13 corpus tolerae (by causa): retirable
+shapes = "custos supra" trio (flatura:540, silva_generare:1822/2784)
+if operands prove; structural/relational (paginarium, fissio,
+lexicon, http:1542, sententia_paginarium, expandere) and intentional
+wrap (flatura:1552, sessio:2864) and inter-procedural (medulla:739)
+and compound-left (http:907) STAY with named causes. The count that
+retires is the arc's measured outcome, not a promise.
+
+COST INSTRUMENT: percursus var-table growth before/after (member
+rows only exist where touched).
+
+CONVERGENTIA: MEMBRUM_USUS events = the field-references seed
+(legatus demand ledger) — recorded, not wired this arc.
+
+## 2026-07-28 - RELATIO: MEMBRA UT PSEUDO-VARIABILES (01KYMYW75S)
+
+SHIPPED una sessione ab INTENTIONE. Extractio: genera eventorum
+MEMBRUM_USUS/MEMBRUM_DEFINITIO in fine enumerationis (consumptores
+omnes genera explicite cribrant - additivum verificatum lectione et
+probatione); FluxusVariabilis += membrum_est/basis/titulus_membri;
+emissio ad ACCESSUS punctum basis-folii-tracti (lectio in
+expressione, scriptio post definitionem totius - pinna s19 INTACTA);
+sagitta/per-elementum/profunditas-2 numquam emittunt. Machina:
+_membri_typus per tabulam tag (bitfield numquam praecisus), effugium
+membri = effugium BASIS (auxiliar), transfer MEMBRUM_DEFINITIO
+(aestimatio fons + crementa per patrem accessus - codex idem ac
+folia), aestimator + refinatio per _intervalla_nodi_index (folium
+AUT accessus - una via, ambo consumptores). Cliens: codex 80
+UTRAQUE forma bifasis per IntervallumCandidatus generalizatum
+(codex/ancora/variabilis); probatio = operandi subtractionis
+s.imum >= d.summum (directum: ad comparationem; variabile:
+definitiones subtractionis OMNES - superserie conservativa);
+probatio ANTE toleram (IRRITUM = via retirationis).
+
+VECTES: intervalla 195/195 (specimina XII membrorum ante machinam
+scripta); fluxus_datorum 249/249 (pinnae vetustae VERBATIM - series
+membrorum probationem propriam habet, rete utrimque); fixtura nova
+intervalla_subtractio.severum primo contactu exacta (probata
+tacent, nuda pinnata, tolerata quieta); fixturae vetustae immutatae;
+VECTIS TENET; silva 35/35; amalgama VERIFICATUM (hospes 34/34);
+officina 13/13; radix 108/108 PLENUS.
+
+MENSURATA:
+- Corpus NEUTRALE: census 80 = sedes 2 (cauda lapifex congelata)
+  ante et post; nihil novi flagrat, nihil tacite perit.
+- Pretium: percursus lib -semantica 29.65s -> 30.55s (+3.0%),
+  apex IMMUTATUS 3670.7 MB. Ordines membrorum solum ubi tacti.
+- RETIRATIO TOLERARUM: 0 ex XIII. Causae verificatae ad suturam:
+  flatura:540 minuendum SAGITTA (tabula->maxima_bits - pointee
+  extra v1) + custodes relationales duarum variabilium;
+  generare "custos supra" = punctum < num_dextrum (relationale);
+  ceterae structurales/voluntariae/inter-procedurales. Praedictio
+  pre-census honesta erat: quot causae facta custodum
+  variabilis-contra-constantem, tot retirantur - corpus nostrum
+  NULLAS eius formae habet. Valor clientis = codex futurus (fixtura
+  formas probat, membris et localibus) + substratum.
+
+INVENTUM ITINERIS (unum, mensuratum specimine XXI): regula
+delendi-membrorum discriminanda est. Def totius ex scriptione
+MEMBRI structurae (folium sub ACCESSU) membra ALIA non delet -
+scriptio membri unum membrum tangit, et status prior CREMENTI
+vivere debet (s.m++ sine hoc [0,max] dabat). UNIO SEMPER delet:
+aliasing fratrum = ipsum fundamentum sanitatis unionum tractarum
+(deviatio ab pinna rei in INTENTIONE nominata: uniones tractae,
+sanae per ordinem dele-deinde-pone; exclusio campum facta +
+omnes-constructores costaret - laqueus documentatus).
+
+Etiam: collisio nominis statici trans TUs (_chordae_pares in token
+et datorum) ab amalgamatore capta - porta suum opus fecit.
+
+DEBRIEF INSTRUMENTORUM. Adhibita: lectio suturarum integra ANTE
+INTENTIONEM (fluxus_datorum totus, machina tota, sedes 80,
+tolerae XIII cum causis - pre-census retirationis honestus in
+INTENTIONE, mensura post congruit); specimina ante praedicatum
+(XII membrorum + fixtura - vitium unicum contra exspectationem
+exactam claruit); credo-rete datorum disciplinam consumptorum
+speculavit (praetermissio generum novorum in pinnis vetustis +
+series propria); uncus examinis vocationem implicitam et
+parametrum inutile in ipsis lineis scribendi cepit; excubitor
+nexum stalum nominavit; renovare residentem post amalgama sanavit
+(cyclus organicus alter). Asperitates: probatio datorum NIHIL
+reddito segfaltavit (custodes ante seriem additi - prototypum
+inutile in specimine culpa); grep -machina columnas numeratas fert
+(nomen codicis non apparet - paene mensuram falsam credidi, lectio
+humana confirmavit). Desiderata: nulla nova (v1.5 copia
+intervallorum membrorum in assignatione totius - sedes nominata).
