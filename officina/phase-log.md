@@ -4804,3 +4804,127 @@ saltatae, clavis columna prima); probatio exclusionis ad imago.c
 re-directa (uuid.c sanata). Suite 311/311. Pinnae XLIII -> VI.
 Exclusio prae-iudicium legati nunc minima (VI); migratio ad
 post-iudicium adhuc opus proprium si umquam dolet.
+
+## RENOVATIO LEGATI: INTENTIO (2026-07-28)
+
+Board 01KY4185QN (residens legati se ipsum renovet). The pain is
+measured: on amalgam-churn days the MCP resident goes stale within
+the hour and stays stale until Fran reconnects — the tool is least
+trustworthy exactly when most needed. Vigilia already DETECTS both
+staleness strata; this arc adds the ACT half. Scope decision (this
+session, Fran approved): MANUAL tool only — a `renovare` MCP tool
+Claude calls after verifying a CAUTIO; automatic renewal stays
+unbuilt (it would inherit the vigilia-false-positive dependency,
+01KYD189N6; the manual tool does not, because the caller verifies).
+
+DESIGN (five load-bearing decisions):
+
+1. **Exec the LAUNCHER, not the binary.** vigilia.h doctrine:
+   "signum — launcher computat, binarium se ipsum non inspicit";
+   aedificator and vigil cannot disagree because only the builder
+   computes. Renewal must preserve that invariant, so the resident
+   execs `<radix>/officina/legatus.sh -mcp -renatus` (override:
+   `-renovator <via>`, for probationes). Free consequence: renewal
+   cures FONTES_SUPERANT too (launcher rebuilds), not just
+   BINARIUM_NOVIUS.
+2. **Pre-flight before exec — exec has no undo.** legatus.sh gains
+   `-aedificare-solum` (build, print signum to stdout, exit 0, no
+   exec). The handler runs it as a child via processus_exsequi
+   (blocking is legal between requests; deadline 120s). Build fails
+   → LOUD refusal with stderr tail, resident stays alive stale.
+   Only on exit 0 does the exec arm. A fresh-but-broken build can
+   never turn "stale but working" into a dead pipe.
+3. **Respond, then become.** Handler sets l->renovandum; the main
+   loop execs AFTER the response is flushed and the message piscina
+   destroyed. The client reads the answer from the old process; its
+   next request lands on the new one, same pipe, same PID.
+4. **-renatus resume protocol.** The client never re-sends MCP
+   initialize (it does not know the server changed). The renewed
+   process starts with the initialize-equivalent setup done eagerly
+   (factor _mcp_surgere out of the initialize handler) and
+   initiatum = VERUM. Setup failure at rebirth → initiatum stays
+   FALSUM, honest NONDUM_INITIATUM errors, reconnect cures.
+5. **stdin _IONBF in MCP mode.** tabellarius reads over stdio;
+   buffered read-ahead could hold a pipelined next request in
+   USERSPACE where exec loses it (kernel pipe bytes survive exec;
+   FILE-buffer bytes do not). Unbuffered stdin closes the hole
+   totally; MCP requests are small, per-byte reads are noise. LSP
+   mode untouched (no exec there — reload/lazy-respawn already
+   covers it).
+
+Mechanics: exec itself = new lib seam processus_transformare
+(execvp-self; returns only on failure — non-fatal: log, clear flag,
+keep serving). Test shape: refusal paths (iam recens / probe fails)
+engine-tested in batch harness — they never exec; the success path
+is integration-tested by fork + pipes with the probatio re-execing
+ITSELF as the renewed legatus (-fingere-legatum argv mode), so the
+gate proves: exec happened, same pipe answers tools/list WITHOUT
+initialize, second renovare reports the new signum. No test seam in
+the engine.
+
+Bars: (a) engine scenarios green; (b) integration: renewed process
+answers on the same pipe with the new signum, no initialize; (c)
+existing legatus suite untouched green; (d) live: Fran reconnects,
+Claude calls renovare against a real stale resident on the next
+churn day.
+
+## RENOVATIO LEGATI: RELATIO (2026-07-28)
+
+SHIPPED, one session, design held with zero reversals. The MCP
+resident can now renew itself: `renovare` verified-stale → launcher
+pre-flighted as a child (`-aedificare-solum`: build, print signum,
+exit 0) → response flushed → exec `legatus.sh -mcp -renatus` → same
+PID, same pipe, fresh binary, fresh signum, initialize-equivalent
+setup done eagerly (initiatum carried — the client never re-sends
+initialize). Both staleness strata cured (FONTES_SUPERANT rebuilds,
+BINARIUM_NOVIUS re-execs). Refusal is loud and non-lethal: a broken
+build leaves the resident alive and stale with the stderr tail in
+the response; a failed exec logs and keeps serving.
+
+Pieces: processus_transformare (lib seam, execvp-self, FALSUM only
+on failure — tabulariumd is the named second consumer);
+`-aedificare-solum` in legatus.sh; `-renatus`/`-renovator` flags;
+_mcp_surgere factored from the initialize handler; stdin _IONBF in
+MCP mode (stdio read-ahead would strand pipelined bytes in the
+userspace buffer where exec loses them; kernel-pipe bytes survive);
+_mcp_instrumentum accepts NIHIL arg (first zero-argument tool);
+doctrine sentence (renovare after a VERIFIED cautio).
+
+BARS: probatio_officina_renovatio 43/43 — refusal paths in the
+batch harness (iam-recens; probe-failure with the resident proven
+alive after), success path INTEGRA: fork + pipes, the renovator
+stub execs the probatio itself as the renewed legatus
+(-fingere-legatum), asserting on ONE pipe: old signum in
+serverInfo.version → "renovatio parata" + new signum → tools/list
+answered WITHOUT initialize → "iam recens" + NEW signum → orderly
+EOF exit 0. Suites: officina 13/13, silva 34/34, root 108/108
+PLENUS, auspex certified (SIGPIPE == 13 joined the gate),
+probatio_processus XIX (transformare failure semantics).
+
+FINDS: (1) fork+stdio law — nothing may run between fork() and the
+child branch: a CREDO there ran in BOTH processes and its buffered
+progress dot flushed into the protocol pipe after dup2 as
+`.{"jsonrpc"...` (42/43 first run; mixed-stream stderr interleaving
+initially pointed the wrong way). (2) The vigilia doctrine
+("launcher computes the signum") DECIDED the design: exec the
+launcher, not the binary — self-hash-at-startup would have broken
+the builder/watchman agreement invariant. (3) Lexicon class again:
+SIGPIPE/chmod/alarm unknown to the modeled systema — healed in
+systema_posix.h + auspex, not pinned.
+
+Instrumenta (debrief): adhibita = mcp legati diagnostica (warm,
+edit-time judgment throughout — flagged the three lexicon gaps at
+write time), auspex_posix (gate ran twice), compile suites ×4,
+grep+Read for seams, processus lib as consumer; fructus = the
+diagnostics push on the probatio caught the lexicon class before
+any test ran; the -machina root suite verdict read from a FILE
+(partial-observation law held); vigilia itself nagged throughout
+the arc — correct behavior, editing its own closure, and the nag is
+the pain this arc retires; asperitates = nulla nova; desiderata =
+tabulariumd self-renewal sibling (TCP daemon shape differs — proxies
++ start-if-absent; processus_transformare is ready for it), and the
+CAUTIO-per-commit dedup cognate already named in 01KY4185QN.
+
+Live half of the seal: next /mcp reconnect spawns the
+renovare-capable resident; on the next churn day the CAUTIO →
+verify → renovare loop closes without Fran touching anything.

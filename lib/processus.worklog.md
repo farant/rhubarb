@@ -234,3 +234,17 @@ This is the argument for building the scaffolding before the UI:
 these surfaced in a 400-line shell app, where the diagnosis was
 cheap, instead of during interface work where they'd have looked
 like rendering problems.
+
+## 2026-07-28 — processus_transformare (exec-self)
+
+Added for legatus renovare (01KY4185QN): the process BECOMES the
+named program via execvp — same PID, open fds carried across. This
+is the seam for residents renewing themselves over a live stdio
+pipe (tabulariumd is the obvious future second consumer). Contract:
+never returns on success; FALSUM on failure so callers treat a
+failed exec as non-fatal (log and keep serving). Documented caveat:
+bytes already read into userspace FILE* buffers die at exec —
+callers must run unbuffered input (_IONBF); kernel-pipe bytes
+survive. Success path is untestable in-process (it would replace
+the test runner) — failure paths in probatio_processus XIX, success
+proven end-to-end in probatio_officina_renovatio III.

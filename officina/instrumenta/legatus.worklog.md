@@ -711,3 +711,64 @@ definition has its own. est_definitio untouched (functions only) —
 _extentum_tituli picks the card as `primum`, same as before; no
 other consumer reads typedef-card lineae for control flow
 (_functio_continens guards genus). Probes: MCP ids 18/19.
+
+## 2026-07-28 — renovare: the resident renews itself (01KY4185QN)
+
+The ACT half of the vigilia. New MCP tool `renovare`: verify-then-act
+manual renewal — Claude calls it after verifying a CAUTIO; automatic
+mode deliberately unbuilt (would inherit the vigilia-false-positive
+dependency 01KYD189N6; a manual caller verifies first).
+
+Design points that carried the arc:
+
+- **Exec the LAUNCHER, not the binary.** vigilia doctrine says the
+  launcher computes the signum ("binarium se ipsum non inspicit") so
+  builder and watchman can't disagree. Renewal execs
+  `officina/legatus.sh -mcp -renatus` — signum/manifest freshness
+  inherited, and FONTES_SUPERANT is cured too (launcher rebuilds),
+  not just BINARIUM_NOVIUS. Override `-renovator <via>` for tests.
+- **Pre-flight before exec** — exec has no undo. `legatus.sh
+  -aedificare-solum` builds, prints the new signum, exits 0. The
+  handler runs it via processus_exsequi (120s deadline); failure =
+  LOUD refusal with stderr tail, resident stays alive stale. A
+  broken build can never turn "stale but working" into a dead pipe.
+- **Respond, then become**: handler sets l->renovandum; the main
+  loop execs AFTER the response flush + message-piscina destroy.
+  Same PID, same pipe; next request lands on the new process.
+- **-renatus resume**: the client never re-sends MCP initialize, so
+  the renewed process runs the initialize-equivalent setup eagerly
+  (_mcp_surgere, factored out of the initialize handler) with
+  initiatum=VERUM. Setup failure → initiatum stays FALSUM, honest
+  NONDUM_INITIATUM errors, reconnect cures.
+- **stdin _IONBF in MCP mode**: tabellarius reads over stdio;
+  read-ahead could strand a pipelined request's bytes in the
+  USERSPACE buffer where exec loses them (kernel pipe bytes
+  survive). Unbuffered stdin closes the hole totally; MCP requests
+  are small. LSP untouched (no exec there).
+
+FIND (first integration run, 42/43): **nothing may run between
+fork() and the child branch.** A `CREDO_VERUM(pid >= 0)` placed
+there executed in BOTH processes; the child's progress dot sat in
+the inherited stdio buffer (suite stdout = pipe → fully buffered),
+survived dup2, and flushed into the protocol pipe as `.{"jsonrpc"...`
+— corrupting exactly one JSON line. Debugged by printing the raw
+line (stderr interleaving was misleading: child stderr unbuffered,
+parent dots buffered — do not read causality from a mixed-stream
+log). Fix: parent-side assert after the branch + belt fflush(stdout)
+at child entry before dup2.
+
+Lexicon: SIGPIPE(13)/chmod/alarm were unknown to the modeled POSIX
+systema — healed in systema_posix.h sectiones + auspex assert
+(SIGPIPE == 13 certified), NOT pinned. Same class as EISCONN
+(2026-07-28 http arc).
+
+Test shape: refusal paths (iam-recens, probe-failure) engine-tested
+in the batch harness — they never exec; the success path is
+integration-tested by fork + pipes where the renovator stub execs
+THE PROBATIO ITSELF as the renewed legatus (`-fingere-legatum` argv
+mode) — proving on one pipe: old identity (serverInfo.version) →
+"renovatio parata" + new signum → tools/list answered WITHOUT
+initialize → "iam recens" with the NEW signum → orderly EOF exit.
+Bars: probatio_officina_renovatio 43/43; suites 13/13; auspex
+certified; exec-failure semantics unit-tested in probatio_processus
+XIX (transformare returns FALSUM, never fatal).
