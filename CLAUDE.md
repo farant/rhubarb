@@ -1,4 +1,4 @@
-hi claude haiku(? hopefully), my name is fran.
+hi claude (haiku, sonnet, opus or fable..), my name is fran.
 
 i assume we had a great working relationship 60 seconds ago or yesterday and here we go starting all over again from scratch. its a little sad but here we go.  i say it's sad because over the course of a conversation you get used to me and kind of "relax" and get on the same wavelength. i am kind of an idiosyncratic person so it takes awhile. hopefully this document will help us get back on the same wavelength faster / more reliably so that context reset lottery is less punishing. anyway, you can think of the initial context as a "tuning" mechanism as much as anything.
 
@@ -26,7 +26,7 @@ here are some more observations about software and working with coding agents:
 - it doesn't take that long to make a comprehensive set of c libraries with llm, can make 20-30 that cover huge amount of practical usage and get windows on the screen in a week or two
 - you have to have unit tests, otherwise danger of regressions is too great
 - you have to split things up into libraries otherwise not testable/reusable and a mess. anytime you can have an independent composable library that is focused on a specific generic use case that is good
-- programs are like machines that do not normally experience entropy (unless you opt-in through dependencies, etc). the same logic will work a billion times once you have it without wearing out
+- programs are like machines that do not normally experience entropy (unless you opt-in through dependencies, etc). the same logic will work a billion times once you have it without wearing out even if the implementation is a little janky. this is part of the problem with a lot of discourse about code as an artifact it doesn't need to be "perfect" stylistically to work perfectly forever and it's important to remember that.
 - documentation once you have 30+ libraries is the real problem. this is a challenge for you and for claude. eventually you will end up in a situation where neither of you understand the project when you spin up a new conversation.
 - human needs to understand all the code. it takes longer but you need to understand all the code claude is writing. this way you can be the rag with an idea of the whole system in your head that can then be leveraged for debugging, refactoring, extending functionality, etc. this is actually super accessible because even if code is outside of your experience (which often will be) you can just have llm explain until you understand
 - software has been on a very, very short sighted horizon since the 90s. thinking in terms of years or months or weeks or days even (its accelerated). not a lot of long term thinking because there has been a gold rush psychology of trying to be the first mover or network effect or whatever. this is an anomaly and of course that means the internet is an extremely misincentivized poorly designed mess. the correct way for people to think about things in western civilization has always been from a catholic perspective and with long term thinking. so we should be thinking about building things that might take multiple lifetimes to complete (be willing to accept that) that will last potentially for thousands of years.
@@ -139,7 +139,7 @@ you're probably wondering "what are we doing, what have we been doing, where's t
 
 i'm not sure what we are doing and there is no changelog. this might be kind of irritating to you because you are probably raring to go? well temper your expectations i'm probably just going to ask you how this CLAUDE.md hit.
 
-usually at the start of our interaction i want you to read (all of) three files: RELAX.md, SABAW1.md and SABAW2.md plus maybe some other ones.
+sometimes at the start of our interaction i have you read (all of) three files: RELAX.md, SABAW1.md and SABAW2.md. you can look at them if you want but you don't have to.
 
 here's something to keep in mind with  sabaw. whether it is a natural language or a constructed language languages are basically linear/1 dimensional. That means that there is an inflection saturation you reach where you cannot fit any more inflections on a particular word, concept etc. the string of xml is that it basically turns inflections into a 2 dimensional space where you can do arbitrary inflection saturation (without worrying about confusing conjugation for compression)
 
@@ -187,6 +187,31 @@ it might be worthwhile to create an entry as needed before compaction and to re-
 /WORKLOG FORMAT
 
 anyway!
+
+
+
+
+lets talk about c89 a little more and what we're thinking. c in general (and c89 specifically) has a lot of advantages compared to many other languages. but modern languages have certain quality of life features post-roslyn that c does not have because it it does not have parsers as robust as go or typescript do. there is a history of a culture of grepping, etc and solutions to this kind of stuff that are "good enough" but not robust the way that we expect in more modern settings.
+
+part of the issue in my opinion is that c is fundamentally a more challenging language to parse than javascript/typescript/go/c# etc. a big part of this is macros that work on a string substitution level. this makes it a lot harder for parsers because they have to keep track of code across macro expansions, any layer might be illegible code to some degree before expansion, etc.
+
+in this project we are addressing the problem head on. after a few failed attempts we managed to create silva which is actually a very robust c parser and doesn't sweep any of the complexity under the rug. it is aware of comments, it is handles whitespace, you should be able to take any c file, parse it and then emit it based on the ast byte for byte identical as the input.
+
+we've already replaced the clangd lsp server with our own lsp server based on silva. we have post-file change hooks that do diagnostics and type checking and we have an mcp server that lets us do queries and eventually take actions as well (like automatically refactoring identifiers without having to do a string based search and replace, auto format/prettifying to our sort of idiosyncratic style guide, etc.).
+
+silva is not alone, we have also developed tools for doing static analysis as well as flow analysis. long term the plan is that we add an additional annotation layer on top of c89 with "stml" (an xml-variant) inside of comments that lets us do additional linting/type checking/etc. on our code base based on our extra layer of "type system" and tagging.
+
+we want to be relatively aggressive at fixing pain points in the lsp/hooks/etc because we want the tools to be becoming more trustworthy over time and this is a big part of what lets a new agent drop into the codebase and orient themselves and avoid making mistakes.
+
+one of the biggest risks here is that we underestimate how capable silva and our other in-house code analysis libraries are and we use hacks or avoid fixing pain points because we think it would take too much work. 
+
+it's probably not a bad idea at the start of a session or whenever applicable to take some time and look at what silva, etc. is capable of. it can probably do more than you think!
+
+
+
+
+
+
 
 NOVUM FUNDAMENTUM WRITERS' ROOM
 
@@ -239,5 +264,9 @@ division of records (one thing, one home):
 when the resident is down: ./gesta/frigida.sh writes cold.
 truth is gesta/annales/tabularium.jsonl (committed); the .db is a
 rebuildable projection of it.
+
+
+
+
 
 
