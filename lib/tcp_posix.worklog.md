@@ -29,3 +29,15 @@ Also the 01KXJ2QJ8X flake: probatio_accipere_connexio had carried
 multi_connexiones and integratio_http never got that fix, and
 ponere_non_blocans dialed httpbin.org live. All three fixed
 (blocking servus / loopback rewrite); suite ran 25/25 green.
+
+## 2026-07-28 - retemptatio EINTR (hygiene POSIX)
+
+connect/recv/send nunc EINTR retemptant (commissum 30190d6).
+connect subtilis: post EINTR connexio in fundo pergit - retemptatio
+quae EISCONN reddit SUCCESSUS est, non error. Sine hac hygiene
+signum quodlibet (debugger, profilator, SIGCHLD) syscallum
+interrumpit et 'Interrupted system call' ut errorem connexionis
+falso refert - sub lldb mensuratum antequam sanatum. EISCONN 56
+in lexicon per auspex_posix (TU ambo consentiunt). Fortasse
+fluctuationem probatio_tcp_servus veterem sanat (01KXJ2QJ8X
+observandum).

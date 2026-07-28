@@ -59,3 +59,28 @@ practice (all six either have bodies or are 204).
 reset stays UNUSED by hospitium (reficere + fresh creare per the
 memory story); it now clears status_suggestus + vidit_* flags but
 NOT the two config fields — limits survive reset by design.
+
+## 2026-07-28 - ansa hauriens iudicat + involutio scansionis
+
+Arcus http/tcp (commissum 30190d6, res 01KYANH7AN/01KY05Q8AH/
+01KYJS4YKW). Non-obvia pro lectore futuro:
+
+- La ansa hauriens exit tribus modis (0 EOF / TCP_ITERUM tempus /
+  -1 error) et POST ansam iudicatur - ante hoc omnes tres
+  'successus' erant cum corpore quocumque. Corpus partiale
+  CONSULTO abicitur: vocator (villa) condicionem lentam deprehendere
+  vult, non corpus mendax. TLS: tls_recipere -1 solum novit, tempus
+  TLS ut HTTP_ERROR_IO apparet (v1).
+- Scansio capitum: forma 'i + III < total_size' NON aequivalens
+  'i < total_size - III' - total_size insignatus, responso I-III
+  octetorum subtractio involvitur et scansio extra fines currit.
+  Forma additiva etiam invariantem constituit body_start <=
+  total_size (tolera sedis body_len ei innititur).
+- _chorda_ad_i32 saturat (non involvit) - custodes supra certo
+  accenduntur. Familia lint: comparatio contra subtractionem
+  insignatam (sine zephyro) codici 80 invisibilis est.
+- Fixtura prava (probatio_http.c): servus crudus DEBET (1) accipere
+  BLOCANS petere - defaltum non_blocans ante clientem pollit,
+  'nullae connexiones' videt, exit, et cliens RST accipit; (2)
+  petitionem TOTAM haurire ante clausuram - octeti illecti RST pro
+  FIN gignunt.
