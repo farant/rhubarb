@@ -1,0 +1,37 @@
+/* CONVERSIO_SIGNI_SEVERA per fluxum intervallorum (gradus 2,
+ * 01KYMBTDGP): sedes SEVERAE nunc bifases - candidatum in
+ * typatione, resolutio post fluxum. Fluxus imum non-negativum
+ * probat => TACET (linea prima); probare nequit => SEVERA manet
+ * (pinna); tolera ad resolutionem absorbetur (IRRITUM 0).
+ * Sedes omnes: heuristica nonneg (larvae/constantes) + minus
+ * (severum numquam) - clang IntRange eadem heuristica SILET
+ * (paritas calibrata; id ipsum proprietas gradus severi).
+ * ORACULUM -Wsign-conversion */
+
+/* probata fluxu: ((x & 255) | 16) - 15 in [1, 240] - TACET */
+static unsigned probata(int x)
+{
+    unsigned u = ((x & 255) | 16) - 15;
+    return u;
+}
+
+/* improbabilis: (x & 255) - 3 in [-3, 252] - SEVERA manet */
+static unsigned improbabilis(int x)
+{
+    /* <exspecta codex="CONVERSIO_SIGNI_SEVERA"/> */
+    unsigned u = (x & 255) - 3;
+    return u;
+}
+
+/* tolerata improbabilis: absorptio ad resolutionem - QUIETA */
+static unsigned tolerata(int x)
+{
+    /* <tolera codex="CONVERSIO_SIGNI_SEVERA" (>larva parva minus unum - vocatores numquam zephyrum dant */
+    unsigned u = (x & 15) - 1;
+    return u;
+}
+
+static unsigned radix(void)
+{
+    return probata(3) + improbabilis(4) + tolerata(5);
+}

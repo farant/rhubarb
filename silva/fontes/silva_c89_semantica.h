@@ -573,6 +573,15 @@ structura SilvaSemantica {
      * currit, ergo consilium bifasium. Elementa FormaCandidatus
      * (semantica.c). */
     Xar* candidata_formarum;
+
+    /* Fluxus intervalla (gradus 2, 01KYMBTDGP): tabulae statuum
+     * per functionem (elementa IntervallaFunctionis, semantica.c)
+     * parallelae fluxus_functionum - datorum.h INTACTUM (lex
+     * suturae: semantica datorum libere legit, non contrarium).
+     * candidata_intervallorum = sedes SEVERAE dilatae (consilium
+     * bifasium alterum; elementa IntervallumCandidatus). */
+    Xar* intervalla_functionum;
+    Xar* candidata_intervallorum;
 };
 
 SilvaSemantica* silva_c89_semantica_creare (Piscina* piscina);
@@ -613,6 +622,36 @@ s32 silva_c89_assignationem_iudicare (SilvaSemantica* sem,
  * "codex ignotus", severitas INFRA. */
 constans character* silva_c89_codicis_causa (s32 codex);
 s32 silva_c89_codicis_severitas (s32 codex);
+
+/* ==================================================
+ * Fluxus intervalla (gradus 2, 01KYMBTDGP)
+ * ================================================== */
+
+/* Reticulum: IGNOTUM (fundus - nulla semita/nulla notitia) <
+ * VALIDUM [imum, summum] < OMNIA (extra fines s64: insignatum
+ * 64-bitorum, non-integrale). Summum variabilis tractabilis =
+ * fines TYPI ut VALIDUM. */
+nomen enumeratio {
+    SEMANTICA_INTERVALLUM_IGNOTUM = 0,
+    SEMANTICA_INTERVALLUM_VALIDUM,
+    SEMANTICA_INTERVALLUM_OMNIA
+} SemanticaIntervallumStatus;
+
+nomen structura {
+    s32 status;   /* SemanticaIntervallumStatus */
+    s64 imum;
+    s64 summum;
+} SemanticaIntervallum;
+
+/* Quaestio ad-punctum: intervallum variabilis ad USUM datum (folium
+ * identificatoris cuius eventum USUS in tabulis fluxus exsistit).
+ * Replay ab introitu bloci per eventa; status PRAE-eventi (valor
+ * lectus). FALSUM = folium in eventis nullius functionis (titulus
+ * functionis, globale, extra corpus). Consumptor primus = probatio;
+ * futuri legatus (hover) / solarium - ordo silva.h ad primum
+ * consumptorem externum differtur (nominatum). */
+b32 silva_c89_fluxus_intervallum_ad_punctum (SilvaSemantica* sem,
+    constans SilvaNodus* usus, SemanticaIntervallum* effectus);
 
 /* ==================================================
  * Constructio typorum (fabricae internantes)

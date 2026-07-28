@@ -5217,6 +5217,15 @@ structura SilvaSemantica {
      * currit, ergo consilium bifasium. Elementa FormaCandidatus
      * (semantica.c). */
     SilvaXar* candidata_formarum;
+
+    /* Fluxus intervalla (gradus 2, 01KYMBTDGP): tabulae statuum
+     * per functionem (elementa IntervallaFunctionis, semantica.c)
+     * parallelae fluxus_functionum - datorum.h INTACTUM (lex
+     * suturae: semantica datorum libere legit, non contrarium).
+     * candidata_intervallorum = sedes SEVERAE dilatae (consilium
+     * bifasium alterum; elementa IntervallumCandidatus). */
+    SilvaXar* intervalla_functionum;
+    SilvaXar* candidata_intervallorum;
 };
 
 SilvaSemantica* silva_c89_semantica_creare (SilvaPiscina* piscina);
@@ -5257,6 +5266,36 @@ s32 silva_c89_assignationem_iudicare (SilvaSemantica* sem,
  * "codex ignotus", severitas INFRA. */
 constans character* silva_c89_codicis_causa (s32 codex);
 s32 silva_c89_codicis_severitas (s32 codex);
+
+/* ==================================================
+ * Fluxus intervalla (gradus 2, 01KYMBTDGP)
+ * ================================================== */
+
+/* Reticulum: IGNOTUM (fundus - nulla semita/nulla notitia) <
+ * VALIDUM [imum, summum] < OMNIA (extra fines s64: insignatum
+ * 64-bitorum, non-integrale). Summum variabilis tractabilis =
+ * fines TYPI ut VALIDUM. */
+nomen enumeratio {
+    SEMANTICA_INTERVALLUM_IGNOTUM = 0,
+    SEMANTICA_INTERVALLUM_VALIDUM,
+    SEMANTICA_INTERVALLUM_OMNIA
+} SemanticaIntervallumStatus;
+
+nomen structura {
+    s32 status;   /* SemanticaIntervallumStatus */
+    s64 imum;
+    s64 summum;
+} SemanticaIntervallum;
+
+/* Quaestio ad-punctum: intervallum variabilis ad USUM datum (folium
+ * identificatoris cuius eventum USUS in tabulis fluxus exsistit).
+ * Replay ab introitu bloci per eventa; status PRAE-eventi (valor
+ * lectus). FALSUM = folium in eventis nullius functionis (titulus
+ * functionis, globale, extra corpus). Consumptor primus = probatio;
+ * futuri legatus (hover) / solarium - ordo silva.h ad primum
+ * consumptorem externum differtur (nominatum). */
+b32 silva_c89_fluxus_intervallum_ad_punctum (SilvaSemantica* sem,
+    constans SilvaNodus* usus, SemanticaIntervallum* effectus);
 
 /* ==================================================
  * Constructio typorum (fabricae internantes)
@@ -42260,6 +42299,39 @@ nomen structura {
     b32                  forma_aequalis;   /* '<= 0' contra '> 0' */
 } FormaCandidatus;
 
+/* Fluxus intervalla (gradus 2, 01KYMBTDGP): tabulae statuum per
+ * functionem - introitus plani [bloci][variabiles], parallelae
+ * datorum. Semantica-latere consulto (lex suturae: datorum
+ * semanticam numquam videt; semantica datorum libere legit). */
+nomen structura {
+    constans FluxusFunctionis* fluxus;
+    SemanticaIntervallum*      introitus;   /* n_bloci * n_var */
+    i32                        n_bloci;
+    i32                        n_var;
+} IntervallaFunctionis;
+
+/* Candidatus SEVERAE dilatus (consilium bifasium alterum): sedes
+ * CONVERSIO_SIGNI_SEVERA nuntium praeaedificat, resolutio post
+ * fluxum probat imum non-negativum (TACET) aut emittit verbatim.
+ * Ordo: probatio fluxus ANTE absorptionem tolerae - tolerae
+ * redundantes IRRITUM pariunt. */
+nomen structura {
+    constans SilvaNodus* nodus;      /* expressio conversionis */
+    constans character*  nuntius;    /* praeaedificatus (NIHIL =
+                                      * addere simplex) */
+    b32                  tractatum;  /* resolutum (probatum aut
+                                      * emissum) */
+} IntervallumCandidatus;
+
+/* prototypa interiora (corpora post aestimatorem intervallorum,
+ * vocationes in _fluxum_examinare / analysare supra) */
+interior vacuum _intervalla_computare (SilvaSemantica* sem,
+    constans FluxusFunctionis* fluxus);
+interior vacuum _intervalla_severa_examinare (SilvaSemantica* sem,
+    constans IntervallaFunctionis* tf);
+interior vacuum _intervalla_candidata_relicta_emittere (
+    SilvaSemantica* sem);
+
 /* Typatio expressionum (M0b Chunk A) - implementatio infra post
  * aestimatorem; ambulatio et tractatores his utuntur */
 interior TypusC89* _expressionem_typare (SilvaSemantica* sem,
@@ -44644,6 +44716,11 @@ silva_c89_semantica_creare (SilvaPiscina* piscina)
     /* fluxus formae: candidati comparationum (bifasium) */
     sem->candidata_formarum = silva_xar_creare(piscina,
         (i32)magnitudo(FormaCandidatus));
+    /* fluxus intervalla (gradus 2): tabulae + candidati SEVERAE */
+    sem->intervalla_functionum = silva_xar_creare(piscina,
+        (i32)magnitudo(IntervallaFunctionis));
+    sem->candidata_intervallorum = silva_xar_creare(piscina,
+        (i32)magnitudo(IntervallumCandidatus));
     sem->scopus_summus = _scopum_creare(piscina, NIHIL);
     sem->scopus_currens = sem->scopus_summus;
     si (sem->derivati == NIHIL || sem->symbola == NIHIL
@@ -46807,6 +46884,22 @@ _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
     /* fluxus formae: candidati codicis 80 (forma variabilis) */
     _formas_examinare(sem, fluxus);
 
+    /* fluxus intervalla (gradus 2): punctum fixum + resolutio
+     * candidatorum SEVERAE huius functionis */
+    _intervalla_computare(sem, fluxus);
+    {
+        i32 nf = silva_xar_numerus(sem->intervalla_functionum);
+        constans IntervallaFunctionis* tf = (nf > ZEPHYRUM)
+            ? (constans IntervallaFunctionis*)silva_xar_obtinere(
+                  sem->intervalla_functionum, nf - I)
+            : NIHIL;
+
+        si (tf != NIHIL && tf->fluxus == fluxus)
+        {
+            _intervalla_severa_examinare(sem, tf);
+        }
+    }
+
     /* codex 66: frange/perge sine contextu (clang errat) */
     m = silva_xar_numerus(fluxus->fractiones_extra);
     per (i = ZEPHYRUM; i < m; i++)
@@ -47211,6 +47304,9 @@ silva_c89_semantica_analysare_cum_systemate (SilvaPiscina* piscina,
      * lexematum TU usoris - systema exclusum per constructionem
      * (parsura usoris sola datur) */
     _macros_domestica_in_alienis_examinare(sem, parsura);
+    /* candidati SEVERAE sine functione: emissio verbatim ANTE
+     * iudicium tolerarum irritarum (absorptio hic adhuc licet) */
+    _intervalla_candidata_relicta_emittere(sem);
     /* TOLERA irrita (gradus severi): suppressiones quae nihil
      * absorbuerunt aut sine causa - post ambulationem totam */
     _toleras_irritas_examinare(sem, parsura);
@@ -48893,6 +48989,1436 @@ _fons_alienus (SilvaSemantica* sem, constans SilvaNodus* nodus)
 }
 
 /* ==================================================
+ * FLUXUS INTERVALLA (gradus 2, 01KYMBTDGP)
+ *
+ * [imum, summum] per variabilem super CFG: transfer ad DEFINITIONES
+ * (aestimatio fons_valoris cum ambitu), refinatio marginum VERUS/
+ * FALSUS (margo.origo = nodus conditionis), latificatio V=3 ad
+ * extrema typi (simulatio INTENTIONIS: ansa numerans refinatione
+ * contra summum tegitur SINE latificatione; ansa frange-mota
+ * ascendit - numerator visitationum eam sistit). Reticulum:
+ * IGNOTUM (fundus) < VALIDUM < OMNIA (extra fines s64). Arithmetica
+ * per typum STATICUM nodi - extra fines = fines typi (involutio
+ * sana, sine dimidiis). Effugium = fines typi PERPETUO (scriptio
+ * per alias invisibilis, exemplar formarum).
+ * ================================================== */
+
+#define INTERVALLA_LATIFICATIO_VISITATIONES III
+#define INTERVALLA_PROFUNDITAS_MAXIMA VIII
+
+interior b32
+_s64_addere_tuta (s64 a, s64 b, s64* effectus)
+{
+    si ((b > ZEPHYRUM && a > 9223372036854775807L - b)
+        || (b < ZEPHYRUM && a < (-9223372036854775807L - 1L) - b))
+    {
+        redde FALSUM;
+    }
+    *effectus = a + b;
+    redde VERUM;
+}
+
+interior b32
+_s64_multiplicare_tuta (s64 a, s64 b, s64* effectus)
+{
+    si (a == ZEPHYRUM || b == ZEPHYRUM)
+    {
+        *effectus = ZEPHYRUM;
+        redde VERUM;
+    }
+    si (a == -I && b == (-9223372036854775807L - 1L))
+    {
+        redde FALSUM;
+    }
+    si (b == -I && a == (-9223372036854775807L - 1L))
+    {
+        redde FALSUM;
+    }
+    {
+        s64 p = a * b;
+
+        si (p / b != a)
+        {
+            redde FALSUM;
+        }
+        *effectus = p;
+    }
+    redde VERUM;
+}
+
+interior SemanticaIntervallum
+_intervallum_facere (s32 status, s64 imum, s64 summum)
+{
+    SemanticaIntervallum iv;
+
+    iv.status = status;
+    iv.imum = imum;
+    iv.summum = summum;
+    redde iv;
+}
+
+interior b32
+_intervalla_aequalia (constans SemanticaIntervallum* a,
+    constans SemanticaIntervallum* b)
+{
+    si (a->status != b->status)
+    {
+        redde FALSUM;
+    }
+    si (a->status != (s32)SEMANTICA_INTERVALLUM_VALIDUM)
+    {
+        redde VERUM;
+    }
+    redde (a->imum == b->imum && a->summum == b->summum)
+        ? VERUM : FALSUM;
+}
+
+/* iunctio = involucrum; IGNOTUM identitas, OMNIA absorbet */
+interior SemanticaIntervallum
+_intervalla_iungere (SemanticaIntervallum a, SemanticaIntervallum b)
+{
+    si (a.status == (s32)SEMANTICA_INTERVALLUM_IGNOTUM)
+    {
+        redde b;
+    }
+    si (b.status == (s32)SEMANTICA_INTERVALLUM_IGNOTUM)
+    {
+        redde a;
+    }
+    si (a.status == (s32)SEMANTICA_INTERVALLUM_OMNIA
+        || b.status == (s32)SEMANTICA_INTERVALLUM_OMNIA)
+    {
+        redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_OMNIA,
+            ZEPHYRUM, ZEPHYRUM);
+    }
+    redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_VALIDUM,
+        (a.imum < b.imum) ? a.imum : b.imum,
+        (a.summum > b.summum) ? a.summum : b.summum);
+}
+
+/* fines typi integralis in s64; FALSUM = extra fines (insignatum
+ * 64-bitorum) aut non-integrale - vocator OMNIA sumit. Enumeratus
+ * = int (C89). */
+interior b32
+_fines_typi (SilvaSemantica* sem, TypusC89* typus, s64* imum,
+    s64* summum)
+{
+    TypusC89* t = _qualibus_exutum(typus);
+    s32 p;
+    i32 octeti;
+
+    si (t == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (t->genus == TYPUS_C89_ENUMERATUS)
+    {
+        *imum = -2147483647L - 1L;
+        *summum = 2147483647L;
+        redde VERUM;
+    }
+    p = _primitivum_integrale(typus);
+    si (p < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    octeti = (i32)(sem->primitivi[p]->magnitudo_octetorum);
+    si (_est_insignatum_primitivum(p))
+    {
+        si (octeti >= VIII)
+        {
+            redde FALSUM;   /* u64: extra fines s64 -> OMNIA */
+        }
+        *imum = ZEPHYRUM;
+        *summum = ((s64)I << (octeti * VIII)) - I;
+        redde VERUM;
+    }
+    si (octeti >= VIII)
+    {
+        *imum = -9223372036854775807L - 1L;
+        *summum = 9223372036854775807L;
+        redde VERUM;
+    }
+    {
+        s64 dimidium = (s64)I << (octeti * VIII - I);
+
+        *imum = -dimidium;
+        *summum = dimidium - I;
+    }
+    redde VERUM;
+}
+
+/* fines typi NODI (typatio naturalis) ut intervallum - solum
+ * cadendi aestimatoris: valor quisque typo suo capitur */
+interior SemanticaIntervallum
+_intervallum_typi_nodi (SilvaSemantica* sem,
+    constans SilvaNodus* nodus)
+{
+    SemanticaTypatio* t = _typationem_invenire(sem, nodus);
+    s64 imum;
+    s64 summum;
+
+    si (t == NIHIL || t->naturalis == NIHIL
+        || !_fines_typi(sem, t->naturalis, &imum, &summum))
+    {
+        redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_OMNIA,
+            ZEPHYRUM, ZEPHYRUM);
+    }
+    redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_VALIDUM,
+        imum, summum);
+}
+
+/* summum tractabile variabilis = fines TYPI ut VALIDUM; OMNIA si
+ * extra fines/non-integrale */
+interior SemanticaIntervallum
+_intervallum_variabilis_summum (SilvaSemantica* sem,
+    constans FluxusVariabilis* var)
+{
+    constans SemanticaSymbolum* s =
+        (constans SemanticaSymbolum*)var->identitas;
+    s64 imum;
+    s64 summum;
+
+    si (s == NIHIL || s->typus == NIHIL
+        || !_fines_typi(sem, s->typus, &imum, &summum))
+    {
+        redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_OMNIA,
+            ZEPHYRUM, ZEPHYRUM);
+    }
+    redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_VALIDUM,
+        imum, summum);
+}
+
+/* index variabilis in tabulis datorum per identitatem symboli */
+interior s32
+_intervalla_variabilis_index (constans FluxusDatorum* datorum,
+    constans vacuum* identitas)
+{
+    i32 i;
+    i32 m = silva_xar_numerus(datorum->variabiles);
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans FluxusVariabilis* var =
+            (constans FluxusVariabilis*)silva_xar_obtinere(
+                datorum->variabiles, i);
+
+        si (var->identitas == identitas)
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* lectio variabilis ex ambitu: IGNOTUM (ante definitionem) et
+ * effugium -> summum tractabile (conservativum) */
+interior SemanticaIntervallum
+_intervallum_lecti (SilvaSemantica* sem,
+    constans FluxusDatorum* datorum,
+    constans SemanticaIntervallum* ambitus, s32 v)
+{
+    constans FluxusVariabilis* var = (constans FluxusVariabilis*)
+        silva_xar_obtinere(datorum->variabiles, (i32)v);
+
+    si (var == NIHIL)
+    {
+        redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_OMNIA,
+            ZEPHYRUM, ZEPHYRUM);
+    }
+    si (var->effugit
+        || ambitus[v].status == (s32)SEMANTICA_INTERVALLUM_IGNOTUM)
+    {
+        redde _intervallum_variabilis_summum(sem, var);
+    }
+    redde ambitus[v];
+}
+
+/* resultatum arithmeticae ad typum STATICUM nodi: intra fines =
+ * servatum, extra = fines typi (involutio sana), typus extra
+ * fines/ignotus = OMNIA-aut-fines per typi_nodi */
+interior SemanticaIntervallum
+_intervallum_ad_typum (SilvaSemantica* sem,
+    constans SilvaNodus* nodus, SemanticaIntervallum iv,
+    b32 computatio_tuta)
+{
+    SemanticaIntervallum typi = _intervallum_typi_nodi(sem, nodus);
+
+    si (typi.status != (s32)SEMANTICA_INTERVALLUM_VALIDUM)
+    {
+        redde typi;   /* OMNIA */
+    }
+    si (!computatio_tuta
+        || iv.status != (s32)SEMANTICA_INTERVALLUM_VALIDUM)
+    {
+        redde typi;   /* fines typi = solum quod scimus */
+    }
+    si (iv.imum >= typi.imum && iv.summum <= typi.summum)
+    {
+        redde iv;
+    }
+    /* signatum: superfluum arithmeticum = UB - saturatio sana
+     * (valor legalis extremum excedere nequit; sine ea i++ ad
+     * summum latificatum finem imum destruebat - mensuratum
+     * speciminibus VIII/X). Insignatum: involutio VERA - fines. */
+    si (typi.imum < ZEPHYRUM)
+    {
+        si (iv.imum < typi.imum)
+        {
+            iv.imum = typi.imum;
+        }
+        si (iv.summum > typi.summum)
+        {
+            iv.summum = typi.summum;
+        }
+        si (iv.imum > iv.summum)
+        {
+            redde typi;
+        }
+        redde iv;
+    }
+    redde typi;
+}
+
+/* aestimator expressionis cum ambitu (folium identificatoris ->
+ * status currens variabilis) - [imum,summum] verum; aestimator
+ * vetus {latitudo, nonneg} paritati clang pinnatus INTACTUS manet */
+interior SemanticaIntervallum
+_intervallum_fluxus_expr (SilvaSemantica* sem,
+    constans FluxusDatorum* datorum,
+    constans SemanticaIntervallum* ambitus,
+    constans SilvaNodus* nodus, i32 profunditas)
+{
+    s64 valor = ZEPHYRUM;
+
+    si (nodus == NIHIL
+        || profunditas >= INTERVALLA_PROFUNDITAS_MAXIMA)
+    {
+        redde _intervallum_facere((s32)SEMANTICA_INTERVALLUM_OMNIA,
+            ZEPHYRUM, ZEPHYRUM);
+    }
+    nodus = _canonicum(nodus);
+    si (_constans_probare(sem, nodus, &valor))
+    {
+        redde _intervallum_facere(
+            (s32)SEMANTICA_INTERVALLUM_VALIDUM, valor, valor);
+    }
+    commutatio (nodus->genus)
+    {
+        casus (s32)SILVA_C89_GENUS_PARENTHESIS:
+        {
+            SilvaValor v = silva_c89_parenthesis_internum(nodus);
+
+            si (v.genus == SILVA_VALOR_NODUS)
+            {
+                redde _intervallum_fluxus_expr(sem, datorum,
+                    ambitus, v.datum.nodus, profunditas + I);
+            }
+            frange;
+        }
+        casus (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR:
+        {
+            constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(
+                sem, nodus);
+
+            si (s != NIHIL && datorum != NIHIL && ambitus != NIHIL)
+            {
+                s32 v = _intervalla_variabilis_index(datorum,
+                    (constans vacuum*)s);
+
+                si (v >= ZEPHYRUM)
+                {
+                    redde _intervallum_lecti(sem, datorum, ambitus,
+                        v);
+                }
+            }
+            frange;   /* non tractum: fines typi folii */
+        }
+        casus (s32)SILVA_C89_GENUS_TERNARIUS:
+        {
+            SilvaValor a_v = silva_c89_ternarius_verum(nodus);
+            SilvaValor b_v = silva_c89_ternarius_falsum(nodus);
+
+            si (a_v.genus == SILVA_VALOR_NODUS
+                && b_v.genus == SILVA_VALOR_NODUS)
+            {
+                SemanticaIntervallum a = _intervallum_fluxus_expr(
+                    sem, datorum, ambitus, a_v.datum.nodus,
+                    profunditas + I);
+                SemanticaIntervallum b = _intervallum_fluxus_expr(
+                    sem, datorum, ambitus, b_v.datum.nodus,
+                    profunditas + I);
+
+                redde _intervallum_ad_typum(sem, nodus,
+                    _intervalla_iungere(a, b), VERUM);
+            }
+            frange;
+        }
+        casus (s32)SILVA_C89_GENUS_UNARIUM:
+        {
+            SilvaValor op_v = silva_c89_unarium_tok_operator(nodus);
+            SilvaValor in_v = silva_c89_unarium_internum(nodus);
+
+            si (op_v.genus != SILVA_VALOR_TOKEN
+                || in_v.genus != SILVA_VALOR_NODUS)
+            {
+                frange;
+            }
+            commutatio ((s32)op_v.datum.token->genus)
+            {
+                casus SILVA_LEX_PLUS:
+                    redde _intervallum_fluxus_expr(sem, datorum,
+                        ambitus, in_v.datum.nodus, profunditas + I);
+                casus SILVA_LEX_MINUS:
+                {
+                    SemanticaIntervallum in =
+                        _intervallum_fluxus_expr(sem, datorum,
+                            ambitus, in_v.datum.nodus,
+                            profunditas + I);
+
+                    si (in.status
+                            == (s32)SEMANTICA_INTERVALLUM_VALIDUM
+                        && in.imum != (-9223372036854775807L - 1L)
+                        && in.summum != (-9223372036854775807L - 1L))
+                    {
+                        redde _intervallum_ad_typum(sem, nodus,
+                            _intervallum_facere((s32)
+                                SEMANTICA_INTERVALLUM_VALIDUM,
+                                -in.summum, -in.imum), VERUM);
+                    }
+                    redde _intervallum_ad_typum(sem, nodus, in,
+                        FALSUM);
+                }
+                casus SILVA_LEX_EXCLAMATIO:
+                    redde _intervallum_facere(
+                        (s32)SEMANTICA_INTERVALLUM_VALIDUM,
+                        ZEPHYRUM, I);
+                ordinarius:
+                    frange;
+            }
+            frange;
+        }
+        casus (s32)SILVA_C89_GENUS_BINARIUM:
+        {
+            SilvaValor op_v = silva_c89_binarium_tok_operator(nodus);
+            SilvaValor s_v = silva_c89_binarium_sinister(nodus);
+            SilvaValor d_v = silva_c89_binarium_dexter(nodus);
+            s32 op;
+            SemanticaIntervallum s;
+            SemanticaIntervallum d;
+            b32 tuta = VERUM;
+            s64 candidati[IV];
+            SemanticaIntervallum effectus;
+
+            si (op_v.genus != SILVA_VALOR_TOKEN
+                || s_v.genus != SILVA_VALOR_NODUS
+                || d_v.genus != SILVA_VALOR_NODUS)
+            {
+                frange;
+            }
+            op = (s32)op_v.datum.token->genus;
+            si (op == SILVA_LEX_MINOR || op == SILVA_LEX_MAIOR
+                || op == SILVA_LEX_MINOR_AEQUALIS
+                || op == SILVA_LEX_MAIOR_AEQUALIS
+                || op == SILVA_LEX_AEQUALIS_AEQUALIS
+                || op == SILVA_LEX_NON_AEQUALIS
+                || op == SILVA_LEX_ET_ET || op == SILVA_LEX_VEL_VEL)
+            {
+                redde _intervallum_facere(
+                    (s32)SEMANTICA_INTERVALLUM_VALIDUM, ZEPHYRUM,
+                    I);
+            }
+            s = _intervallum_fluxus_expr(sem, datorum, ambitus,
+                s_v.datum.nodus, profunditas + I);
+            d = _intervallum_fluxus_expr(sem, datorum, ambitus,
+                d_v.datum.nodus, profunditas + I);
+            si (s.status != (s32)SEMANTICA_INTERVALLUM_VALIDUM
+                || d.status != (s32)SEMANTICA_INTERVALLUM_VALIDUM)
+            {
+                redde _intervallum_typi_nodi(sem, nodus);
+            }
+            effectus = _intervallum_facere(
+                (s32)SEMANTICA_INTERVALLUM_VALIDUM, ZEPHYRUM,
+                ZEPHYRUM);
+            commutatio (op)
+            {
+                casus SILVA_LEX_PLUS:
+                    tuta = _s64_addere_tuta(s.imum, d.imum,
+                            &effectus.imum)
+                        && _s64_addere_tuta(s.summum, d.summum,
+                            &effectus.summum);
+                    frange;
+                casus SILVA_LEX_MINUS:
+                    tuta = _s64_addere_tuta(s.imum, -d.summum,
+                            &effectus.imum)
+                        && _s64_addere_tuta(s.summum, -d.imum,
+                            &effectus.summum)
+                        && d.summum != (-9223372036854775807L - 1L)
+                        && d.imum != (-9223372036854775807L - 1L);
+                    frange;
+                casus SILVA_LEX_STAR:
+                {
+                    i32 k;
+
+                    tuta = _s64_multiplicare_tuta(s.imum, d.imum,
+                            &candidati[ZEPHYRUM])
+                        && _s64_multiplicare_tuta(s.imum, d.summum,
+                            &candidati[I])
+                        && _s64_multiplicare_tuta(s.summum, d.imum,
+                            &candidati[II])
+                        && _s64_multiplicare_tuta(s.summum,
+                            d.summum, &candidati[III]);
+                    si (tuta)
+                    {
+                        effectus.imum = candidati[ZEPHYRUM];
+                        effectus.summum = candidati[ZEPHYRUM];
+                        per (k = I; k < IV; k++)
+                        {
+                            si (candidati[k] < effectus.imum)
+                            {
+                                effectus.imum = candidati[k];
+                            }
+                            si (candidati[k] > effectus.summum)
+                            {
+                                effectus.summum = candidati[k];
+                            }
+                        }
+                    }
+                    frange;
+                }
+                casus SILVA_LEX_AMPERSAND:
+                    si (s.imum >= ZEPHYRUM && d.imum >= ZEPHYRUM)
+                    {
+                        effectus.imum = ZEPHYRUM;
+                        effectus.summum = (s.summum < d.summum)
+                            ? s.summum : d.summum;
+                    }
+                    alioquin si (s.imum >= ZEPHYRUM)
+                    {
+                        effectus.imum = ZEPHYRUM;
+                        effectus.summum = s.summum;
+                    }
+                    alioquin si (d.imum >= ZEPHYRUM)
+                    {
+                        effectus.imum = ZEPHYRUM;
+                        effectus.summum = d.summum;
+                    }
+                    alioquin
+                    {
+                        tuta = FALSUM;
+                    }
+                    frange;
+                casus SILVA_LEX_BARRA:
+                casus SILVA_LEX_CARET:
+                    si (s.imum >= ZEPHYRUM && d.imum >= ZEPHYRUM)
+                    {
+                        s64 maximus = (s.summum > d.summum)
+                            ? s.summum : d.summum;
+                        s64 larva = I;
+
+                        dum (larva <= maximus
+                            && larva < 4611686018427387904L)
+                        {
+                            larva <<= I;
+                        }
+                        effectus.imum = (op == SILVA_LEX_BARRA)
+                            ? ((s.imum > d.imum) ? s.imum : d.imum)
+                            : ZEPHYRUM;
+                        effectus.summum = larva - I;
+                    }
+                    alioquin
+                    {
+                        tuta = FALSUM;
+                    }
+                    frange;
+                casus SILVA_LEX_DEXTRORSUM:
+                    si (s.imum >= ZEPHYRUM && d.imum >= ZEPHYRUM
+                        && d.summum < LXIV)
+                    {
+                        effectus.imum = s.imum >> d.summum;
+                        effectus.summum = s.summum >> d.imum;
+                    }
+                    alioquin
+                    {
+                        tuta = FALSUM;
+                    }
+                    frange;
+                casus SILVA_LEX_SINISTRORSUM:
+                    si (s.imum >= ZEPHYRUM && d.imum == d.summum
+                        && d.imum >= ZEPHYRUM && d.imum < LXII)
+                    {
+                        tuta = _s64_multiplicare_tuta(s.imum,
+                                (s64)I << d.imum, &effectus.imum)
+                            && _s64_multiplicare_tuta(s.summum,
+                                (s64)I << d.imum,
+                                &effectus.summum);
+                    }
+                    alioquin
+                    {
+                        tuta = FALSUM;
+                    }
+                    frange;
+                ordinarius:
+                    tuta = FALSUM;   /* divisio/modulus/cetera v1 */
+                    frange;
+            }
+            redde _intervallum_ad_typum(sem, nodus, effectus, tuta);
+        }
+        ordinarius:
+            frange;
+    }
+    redde _intervallum_typi_nodi(sem, nodus);
+}
+
+/* transfer definitionis: aestima fons_valoris, clampa ad typum
+ * variabilis (assignatio convertit); fons NIHIL = crementa (pater
+ * folii) aut ignotum; def-omnia/effugium = summum */
+interior vacuum
+_intervalla_transferre (SilvaSemantica* sem,
+    constans FluxusDatorum* datorum, SemanticaIntervallum* ambitus,
+    constans FluxusEventum* ev)
+{
+    i32 n_var = silva_xar_numerus(datorum->variabiles);
+    constans FluxusVariabilis* var;
+    SemanticaIntervallum summum_var;
+
+    si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO)
+    {
+        redde;
+    }
+    si (ev->variabilis < ZEPHYRUM)
+    {
+        i32 v;
+
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            constans FluxusVariabilis* vv =
+                (constans FluxusVariabilis*)silva_xar_obtinere(
+                    datorum->variabiles, v);
+
+            ambitus[v] = _intervallum_variabilis_summum(sem, vv);
+        }
+        redde;
+    }
+    var = (constans FluxusVariabilis*)silva_xar_obtinere(
+        datorum->variabiles, (i32)ev->variabilis);
+    si (var == NIHIL)
+    {
+        redde;
+    }
+    summum_var = _intervallum_variabilis_summum(sem, var);
+    si (var->effugit
+        || summum_var.status != (s32)SEMANTICA_INTERVALLUM_VALIDUM)
+    {
+        ambitus[ev->variabilis] = summum_var;
+        redde;
+    }
+    si (ev->fons_valoris != NIHIL)
+    {
+        SemanticaIntervallum iv = _intervallum_fluxus_expr(sem,
+            datorum, ambitus, ev->fons_valoris, ZEPHYRUM);
+
+        si (iv.status == (s32)SEMANTICA_INTERVALLUM_VALIDUM
+            && iv.imum >= summum_var.imum
+            && iv.summum <= summum_var.summum)
+        {
+            ambitus[ev->variabilis] = iv;
+        }
+        alioquin
+        {
+            ambitus[ev->variabilis] = summum_var;
+        }
+        redde;
+    }
+    /* fons NIHIL: crementa (i++/++i/--) per patrem folii */
+    {
+        constans SilvaNodus* pater = (ev->nodus != NIHIL)
+            ? ev->nodus->pater : NIHIL;
+        s64 delta = ZEPHYRUM;
+
+        si (pater != NIHIL)
+        {
+            SilvaValor op_v;
+
+            op_v.genus = SILVA_VALOR_NIHIL;
+            si (pater->genus == (s32)SILVA_C89_GENUS_POSTCREMENTUM)
+            {
+                op_v = silva_c89_postcrementum_tok_operator(pater);
+            }
+            alioquin si (pater->genus
+                == (s32)SILVA_C89_GENUS_UNARIUM)
+            {
+                op_v = silva_c89_unarium_tok_operator(pater);
+            }
+            si (op_v.genus == SILVA_VALOR_TOKEN)
+            {
+                si ((s32)op_v.datum.token->genus
+                    == SILVA_LEX_INCREMENTUM)
+                {
+                    delta = I;
+                }
+                alioquin si ((s32)op_v.datum.token->genus
+                    == SILVA_LEX_DECREMENTUM)
+                {
+                    delta = -I;
+                }
+            }
+        }
+        si (delta != ZEPHYRUM)
+        {
+            SemanticaIntervallum vetus = _intervallum_lecti(sem,
+                datorum, ambitus, ev->variabilis);
+            SemanticaIntervallum novum;
+
+            si (vetus.status == (s32)SEMANTICA_INTERVALLUM_VALIDUM
+                && _s64_addere_tuta(vetus.imum, delta, &novum.imum)
+                && _s64_addere_tuta(vetus.summum, delta,
+                    &novum.summum))
+            {
+                novum.status = (s32)SEMANTICA_INTERVALLUM_VALIDUM;
+                si (novum.imum >= summum_var.imum
+                    && novum.summum <= summum_var.summum)
+                {
+                    ambitus[ev->variabilis] = novum;
+                    redde;
+                }
+                /* signatum: saturatio (superfluum = UB);
+                 * insignatum: involutio vera -> fines */
+                si (summum_var.imum < ZEPHYRUM)
+                {
+                    si (novum.imum < summum_var.imum)
+                    {
+                        novum.imum = summum_var.imum;
+                    }
+                    si (novum.summum > summum_var.summum)
+                    {
+                        novum.summum = summum_var.summum;
+                    }
+                    si (novum.imum <= novum.summum)
+                    {
+                        ambitus[ev->variabilis] = novum;
+                        redde;
+                    }
+                }
+            }
+        }
+        ambitus[ev->variabilis] = summum_var;
+    }
+}
+
+/* refinatio unius lateris: constrictum effectivum ex (op, verus,
+ * latus) - intersectio sana; vacuum (imum ultra summum) = semita
+ * infacibilis -> IGNOTUM */
+interior vacuum
+_intervallum_constringere (SemanticaIntervallum* iv, s32 op,
+    b32 verus, b32 variabilis_sinistra, SemanticaIntervallum e)
+{
+    b32 imum_pone = FALSUM;
+    b32 summum_pone = FALSUM;
+    s64 imum_novum = ZEPHYRUM;
+    s64 summum_novum = ZEPHYRUM;
+
+    si (iv->status != (s32)SEMANTICA_INTERVALLUM_VALIDUM
+        || e.status != (s32)SEMANTICA_INTERVALLUM_VALIDUM)
+    {
+        redde;
+    }
+    /* latus dextrum: specula operatorem (E op v ==> v op' E) */
+    si (!variabilis_sinistra)
+    {
+        commutatio (op)
+        {
+            casus SILVA_LEX_MINOR: op = SILVA_LEX_MAIOR; frange;
+            casus SILVA_LEX_MAIOR: op = SILVA_LEX_MINOR; frange;
+            casus SILVA_LEX_MINOR_AEQUALIS:
+                op = SILVA_LEX_MAIOR_AEQUALIS; frange;
+            casus SILVA_LEX_MAIOR_AEQUALIS:
+                op = SILVA_LEX_MINOR_AEQUALIS; frange;
+            ordinarius: frange;
+        }
+    }
+    /* FALSUS: nega operatorem */
+    si (!verus)
+    {
+        commutatio (op)
+        {
+            casus SILVA_LEX_MINOR:
+                op = SILVA_LEX_MAIOR_AEQUALIS; frange;
+            casus SILVA_LEX_MAIOR_AEQUALIS:
+                op = SILVA_LEX_MINOR; frange;
+            casus SILVA_LEX_MAIOR:
+                op = SILVA_LEX_MINOR_AEQUALIS; frange;
+            casus SILVA_LEX_MINOR_AEQUALIS:
+                op = SILVA_LEX_MAIOR; frange;
+            casus SILVA_LEX_AEQUALIS_AEQUALIS:
+                op = SILVA_LEX_NON_AEQUALIS; frange;
+            casus SILVA_LEX_NON_AEQUALIS:
+                op = SILVA_LEX_AEQUALIS_AEQUALIS; frange;
+            ordinarius: frange;
+        }
+    }
+    commutatio (op)
+    {
+        casus SILVA_LEX_MINOR:
+            si (e.summum > (-9223372036854775807L - 1L))
+            {
+                summum_pone = VERUM;
+                summum_novum = e.summum - I;
+            }
+            frange;
+        casus SILVA_LEX_MINOR_AEQUALIS:
+            summum_pone = VERUM;
+            summum_novum = e.summum;
+            frange;
+        casus SILVA_LEX_MAIOR:
+            si (e.imum < 9223372036854775807L)
+            {
+                imum_pone = VERUM;
+                imum_novum = e.imum + I;
+            }
+            frange;
+        casus SILVA_LEX_MAIOR_AEQUALIS:
+            imum_pone = VERUM;
+            imum_novum = e.imum;
+            frange;
+        casus SILVA_LEX_AEQUALIS_AEQUALIS:
+            imum_pone = VERUM;
+            imum_novum = e.imum;
+            summum_pone = VERUM;
+            summum_novum = e.summum;
+            frange;
+        ordinarius:
+            frange;   /* != : nihil */
+    }
+    si (imum_pone && imum_novum > iv->imum)
+    {
+        iv->imum = imum_novum;
+    }
+    si (summum_pone && summum_novum < iv->summum)
+    {
+        iv->summum = summum_novum;
+    }
+    si (iv->imum > iv->summum)
+    {
+        iv->status = (s32)SEMANTICA_INTERVALLUM_IGNOTUM;
+    }
+}
+
+/* refinatio marginis VERUS/FALSUS: conditio = granulum ULTIMUM
+ * bloci fontis (margo.origo sententiam fert, non conditionem -
+ * mensuratum primo cursu speciminum; granulum ultimum etiam
+ * segmentis && / || rectum est - operandum evaluatum ipsum).
+ * Formae v1 = folium tractum OP expressio (et conversum, ambo
+ * latera si ambo folia). Sinistra composita (i+3 minor n) = v2
+ * nominata (424N). */
+interior vacuum
+_intervalla_refinare (SilvaSemantica* sem,
+    constans FluxusDatorum* datorum, SemanticaIntervallum* ambitus,
+    constans FluxusMargo* margo, constans FluxusBlocus* fons)
+{
+    b32 verus;
+    constans SilvaNodus* origo;
+    SilvaValor op_v;
+    SilvaValor s_v;
+    SilvaValor d_v;
+    s32 op;
+    s32 v_sin = -I;
+    s32 v_dex = -I;
+    SemanticaIntervallum e_sin;
+    SemanticaIntervallum e_dex;
+
+    si (margo->genus == (s32)FLUXUS_MARGO_VERUS)
+    {
+        verus = VERUM;
+    }
+    alioquin si (margo->genus == (s32)FLUXUS_MARGO_FALSUS)
+    {
+        verus = FALSUM;
+    }
+    alioquin
+    {
+        redde;
+    }
+    origo = margo->origo;
+    si (fons != NIHIL && silva_xar_numerus(fons->sententiae) > ZEPHYRUM)
+    {
+        constans SilvaNodus* granulum = *(constans SilvaNodus**)
+            silva_xar_obtinere(fons->sententiae,
+                silva_xar_numerus(fons->sententiae) - I);
+
+        si (granulum != NIHIL)
+        {
+            origo = granulum;
+        }
+    }
+    origo = _canonicum(origo);
+    si (origo == NIHIL
+        || origo->genus != (s32)SILVA_C89_GENUS_BINARIUM)
+    {
+        redde;
+    }
+    op_v = silva_c89_binarium_tok_operator(origo);
+    s_v = silva_c89_binarium_sinister(origo);
+    d_v = silva_c89_binarium_dexter(origo);
+    si (op_v.genus != SILVA_VALOR_TOKEN
+        || s_v.genus != SILVA_VALOR_NODUS
+        || d_v.genus != SILVA_VALOR_NODUS)
+    {
+        redde;
+    }
+    op = (s32)op_v.datum.token->genus;
+    si (op != SILVA_LEX_MINOR && op != SILVA_LEX_MAIOR
+        && op != SILVA_LEX_MINOR_AEQUALIS
+        && op != SILVA_LEX_MAIOR_AEQUALIS
+        && op != SILVA_LEX_AEQUALIS_AEQUALIS
+        && op != SILVA_LEX_NON_AEQUALIS)
+    {
+        redde;
+    }
+    /* folia tracta utriusque lateris (per parentheses) */
+    {
+        constans SilvaNodus* folium_sin = _canonicum(
+            s_v.datum.nodus);
+        constans SilvaNodus* folium_dex = _canonicum(
+            d_v.datum.nodus);
+        i32 custos;
+
+        per (custos = ZEPHYRUM; custos < VIII && folium_sin != NIHIL
+            && folium_sin->genus
+                == (s32)SILVA_C89_GENUS_PARENTHESIS; custos++)
+        {
+            SilvaValor pv = silva_c89_parenthesis_internum(
+                folium_sin);
+
+            folium_sin = (pv.genus == SILVA_VALOR_NODUS)
+                ? _canonicum(pv.datum.nodus) : NIHIL;
+        }
+        per (custos = ZEPHYRUM; custos < VIII && folium_dex != NIHIL
+            && folium_dex->genus
+                == (s32)SILVA_C89_GENUS_PARENTHESIS; custos++)
+        {
+            SilvaValor pv = silva_c89_parenthesis_internum(
+                folium_dex);
+
+            folium_dex = (pv.genus == SILVA_VALOR_NODUS)
+                ? _canonicum(pv.datum.nodus) : NIHIL;
+        }
+        si (folium_sin != NIHIL && folium_sin->genus
+                == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+        {
+            constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(
+                sem, folium_sin);
+
+            si (s != NIHIL)
+            {
+                v_sin = _intervalla_variabilis_index(datorum,
+                    (constans vacuum*)s);
+            }
+        }
+        si (folium_dex != NIHIL && folium_dex->genus
+                == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+        {
+            constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(
+                sem, folium_dex);
+
+            si (s != NIHIL)
+            {
+                v_dex = _intervalla_variabilis_index(datorum,
+                    (constans vacuum*)s);
+            }
+        }
+    }
+    /* latera aestimata ANTE refinationes (ambo ex statu communi) */
+    e_sin = _intervallum_fluxus_expr(sem, datorum, ambitus,
+        s_v.datum.nodus, ZEPHYRUM);
+    e_dex = _intervallum_fluxus_expr(sem, datorum, ambitus,
+        d_v.datum.nodus, ZEPHYRUM);
+    si (v_sin >= ZEPHYRUM)
+    {
+        constans FluxusVariabilis* var = (constans FluxusVariabilis*)
+            silva_xar_obtinere(datorum->variabiles, (i32)v_sin);
+
+        si (var != NIHIL && !var->effugit)
+        {
+            SemanticaIntervallum lectum = _intervallum_lecti(sem,
+                datorum, ambitus, v_sin);
+
+            _intervallum_constringere(&lectum, op, verus, VERUM,
+                e_dex);
+            ambitus[v_sin] = lectum;
+        }
+    }
+    si (v_dex >= ZEPHYRUM)
+    {
+        constans FluxusVariabilis* var = (constans FluxusVariabilis*)
+            silva_xar_obtinere(datorum->variabiles, (i32)v_dex);
+
+        si (var != NIHIL && !var->effugit)
+        {
+            SemanticaIntervallum lectum = _intervallum_lecti(sem,
+                datorum, ambitus, v_dex);
+
+            _intervallum_constringere(&lectum, op, verus, FALSUM,
+                e_sin);
+            ambitus[v_dex] = lectum;
+        }
+    }
+}
+
+/* punctum fixum intervallorum (speculum _punctum_fixum_formarum
+ * datorum, sem-latere): index operis + latificatio ad iunctionem
+ * post visitationes V destinationis */
+interior vacuum
+_intervalla_computare (SilvaSemantica* sem,
+    constans FluxusFunctionis* fluxus)
+{
+    FluxusDatorum* datorum;
+    IntervallaFunctionis* tf;
+    i32 n_var;
+    i32 n_bloci;
+    i32 b;
+    i32 v;
+    SemanticaIntervallum* currens;
+    SemanticaIntervallum* refinata;
+    i32* numerus_processuum;
+    b32* in_indice;
+    SilvaXar* index_operis;
+    i32 lector = ZEPHYRUM;
+
+    si (fluxus == NIHIL || fluxus->datorum == NIHIL)
+    {
+        redde;
+    }
+    datorum = fluxus->datorum;
+    n_var = silva_xar_numerus(datorum->variabiles);
+    n_bloci = silva_xar_numerus(datorum->bloci);
+    tf = (IntervallaFunctionis*)silva_xar_addere(
+        sem->intervalla_functionum);
+    si (tf == NIHIL)
+    {
+        redde;
+    }
+    tf->fluxus = fluxus;
+    tf->n_bloci = n_bloci;
+    tf->n_var = n_var;
+    tf->introitus = (SemanticaIntervallum*)silva_piscina_allocare(
+        sem->piscina, (memoriae_index)((n_bloci * n_var > ZEPHYRUM)
+            ? n_bloci * n_var : I)
+            * magnitudo(SemanticaIntervallum));
+    si (tf->introitus == NIHIL || n_var == ZEPHYRUM)
+    {
+        tf->introitus = NIHIL;
+        redde;
+    }
+    per (b = ZEPHYRUM; b < n_bloci * n_var; b++)
+    {
+        tf->introitus[b] = _intervallum_facere(
+            (s32)SEMANTICA_INTERVALLUM_IGNOTUM, ZEPHYRUM, ZEPHYRUM);
+    }
+    /* introitus functionis: parametra fines typi ferunt */
+    {
+        SemanticaIntervallum* intro = tf->introitus
+            + fluxus->introitus->index * n_var;
+
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            constans FluxusVariabilis* var =
+                (constans FluxusVariabilis*)silva_xar_obtinere(
+                    datorum->variabiles, v);
+
+            si (var->parametrum)
+            {
+                intro[v] = _intervallum_variabilis_summum(sem, var);
+            }
+        }
+    }
+    currens = (SemanticaIntervallum*)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)n_var * magnitudo(SemanticaIntervallum));
+    refinata = (SemanticaIntervallum*)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)n_var * magnitudo(SemanticaIntervallum));
+    numerus_processuum = (i32*)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)n_bloci * magnitudo(i32));
+    in_indice = (b32*)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)n_bloci * magnitudo(b32));
+    index_operis = silva_xar_creare(sem->piscina, (i32)magnitudo(i32));
+    si (currens == NIHIL || refinata == NIHIL
+        || numerus_processuum == NIHIL || in_indice == NIHIL
+        || index_operis == NIHIL)
+    {
+        redde;
+    }
+    per (b = ZEPHYRUM; b < n_bloci; b++)
+    {
+        numerus_processuum[b] = ZEPHYRUM;
+        in_indice[b] = FALSUM;
+    }
+    {
+        i32* locus = (i32*)silva_xar_addere(index_operis);
+
+        *locus = fluxus->introitus->index;
+        in_indice[fluxus->introitus->index] = VERUM;
+    }
+    dum (lector < silva_xar_numerus(index_operis))
+    {
+        i32 index_bloci = *(i32*)silva_xar_obtinere(index_operis, lector);
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            silva_xar_obtinere(fluxus->bloci, index_bloci);
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, index_bloci);
+        i32 m;
+        i32 k;
+        i32 e;
+
+        lector++;
+        in_indice[index_bloci] = FALSUM;
+        numerus_processuum[index_bloci]++;
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            currens[v] = tf->introitus[index_bloci * n_var + v];
+        }
+        m = silva_xar_numerus(db->eventa);
+        per (e = ZEPHYRUM; e < m; e++)
+        {
+            _intervalla_transferre(sem, datorum, currens,
+                (constans FluxusEventum*)silva_xar_obtinere(db->eventa,
+                    e));
+        }
+        m = silva_xar_numerus(fb->margines);
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            constans FluxusMargo* margo = (constans FluxusMargo*)
+                silva_xar_obtinere(fb->margines, k);
+            SemanticaIntervallum* intro_dest;
+            i32 index_dest;
+            b32 mutatum = FALSUM;
+
+            si (margo->destinatio == NIHIL)
+            {
+                perge;
+            }
+            index_dest = margo->destinatio->index;
+            intro_dest = tf->introitus + index_dest * n_var;
+            per (v = ZEPHYRUM; v < n_var; v++)
+            {
+                refinata[v] = currens[v];
+            }
+            _intervalla_refinare(sem, datorum, refinata, margo, fb);
+            per (v = ZEPHYRUM; v < n_var; v++)
+            {
+                SemanticaIntervallum novum = _intervalla_iungere(
+                    intro_dest[v], refinata[v]);
+
+                si (_intervalla_aequalia(&novum, &intro_dest[v]))
+                {
+                    perge;
+                }
+                /* latificatio SOLUM ad capita ansarum (margo retro:
+                 * index destinationis non maior fonte - cyclus
+                 * quisque marginem retro continet, indices ordine
+                 * constructionis) - alibi refinationes latificatione
+                 * delerentur (mensuratum specimine IX) */
+                si (index_dest <= index_bloci
+                    && numerus_processuum[index_dest]
+                        >= INTERVALLA_LATIFICATIO_VISITATIONES
+                    && intro_dest[v].status
+                        == (s32)SEMANTICA_INTERVALLUM_VALIDUM
+                    && novum.status
+                        == (s32)SEMANTICA_INTERVALLUM_VALIDUM)
+                {
+                    constans FluxusVariabilis* var =
+                        (constans FluxusVariabilis*)silva_xar_obtinere(
+                            datorum->variabiles, v);
+                    SemanticaIntervallum fines =
+                        _intervallum_variabilis_summum(sem, var);
+
+                    si (fines.status
+                        == (s32)SEMANTICA_INTERVALLUM_VALIDUM)
+                    {
+                        si (novum.imum < intro_dest[v].imum)
+                        {
+                            novum.imum = fines.imum;
+                        }
+                        si (novum.summum > intro_dest[v].summum)
+                        {
+                            novum.summum = fines.summum;
+                        }
+                    }
+                    alioquin
+                    {
+                        novum = fines;   /* OMNIA */
+                    }
+                }
+                intro_dest[v] = novum;
+                mutatum = VERUM;
+            }
+            si (mutatum && !in_indice[index_dest])
+            {
+                i32* locus = (i32*)silva_xar_addere(index_operis);
+
+                *locus = index_dest;
+                in_indice[index_dest] = VERUM;
+            }
+        }
+    }
+}
+
+/* replay ab introitu bloci ad eventum cuius nodus datur; ambitus
+ * effectus = status PRAE-eventi. Bloci inattingibiles omissi. */
+interior b32
+_intervalla_replay (SilvaSemantica* sem,
+    constans IntervallaFunctionis* tf, constans SilvaNodus* meta,
+    SemanticaIntervallum* ambitus,
+    constans FluxusEventum** eventum_effectus)
+{
+    constans FluxusDatorum* datorum;
+    i32 b;
+    i32 v;
+
+    si (tf->introitus == NIHIL || tf->fluxus == NIHIL
+        || tf->fluxus->datorum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    datorum = tf->fluxus->datorum;
+    per (b = ZEPHYRUM; b < tf->n_bloci; b++)
+    {
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            silva_xar_obtinere(tf->fluxus->bloci, b);
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, b);
+        i32 e;
+        i32 m;
+
+        si (!fb->attingibilis)
+        {
+            perge;
+        }
+        per (v = ZEPHYRUM; v < tf->n_var; v++)
+        {
+            ambitus[v] = tf->introitus[b * tf->n_var + v];
+        }
+        m = silva_xar_numerus(db->eventa);
+        per (e = ZEPHYRUM; e < m; e++)
+        {
+            constans FluxusEventum* ev = (constans FluxusEventum*)
+                silva_xar_obtinere(db->eventa, e);
+
+            si (ev->nodus == meta)
+            {
+                *eventum_effectus = ev;
+                redde VERUM;
+            }
+            _intervalla_transferre(sem, datorum, ambitus, ev);
+        }
+    }
+    redde FALSUM;
+}
+
+/* estne intra descendentem? (per patres, tectum) */
+interior b32
+_intervalla_intra (constans SilvaNodus* nodus,
+    constans SilvaNodus* maior)
+{
+    i32 custos;
+
+    per (custos = ZEPHYRUM; custos < LXIV && nodus != NIHIL;
+        custos++)
+    {
+        si (nodus == maior)
+        {
+            redde VERUM;
+        }
+        nodus = nodus->pater;
+    }
+    redde FALSUM;
+}
+
+/* resolutio candidatorum SEVERAE huius functionis: primum eventum
+ * intra expressionem candidati = punctum aestimationis; fluxus
+ * probat imum non-negativum -> TACET (tolera redundans IRRITUM
+ * pariet); alioquin tolera deinde emissio verbatim */
+interior vacuum
+_intervalla_severa_examinare (SilvaSemantica* sem,
+    constans IntervallaFunctionis* tf)
+{
+    i32 n_candidata = silva_xar_numerus(sem->candidata_intervallorum);
+    i32 k;
+    SemanticaIntervallum* ambitus;
+
+    si (n_candidata == ZEPHYRUM || tf == NIHIL
+        || tf->introitus == NIHIL || tf->n_var == ZEPHYRUM)
+    {
+        redde;
+    }
+    ambitus = (SemanticaIntervallum*)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)tf->n_var
+        * magnitudo(SemanticaIntervallum));
+    si (ambitus == NIHIL)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < n_candidata; k++)
+    {
+        IntervallumCandidatus* fc = (IntervallumCandidatus*)
+            silva_xar_obtinere(sem->candidata_intervallorum, k);
+        constans FluxusDatorum* datorum = tf->fluxus->datorum;
+        i32 b;
+        b32 inventum = FALSUM;
+
+        si (fc == NIHIL || fc->tractatum)
+        {
+            perge;
+        }
+        per (b = ZEPHYRUM; b < tf->n_bloci && !inventum; b++)
+        {
+            constans FluxusBlocus* fb = (constans FluxusBlocus*)
+                silva_xar_obtinere(tf->fluxus->bloci, b);
+            FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)
+                silva_xar_obtinere(datorum->bloci, b);
+            i32 e;
+            i32 m;
+            i32 v;
+
+            si (!fb->attingibilis)
+            {
+                perge;
+            }
+            per (v = ZEPHYRUM; v < tf->n_var; v++)
+            {
+                ambitus[v] = tf->introitus[b * tf->n_var + v];
+            }
+            m = silva_xar_numerus(db->eventa);
+            per (e = ZEPHYRUM; e < m; e++)
+            {
+                constans FluxusEventum* ev =
+                    (constans FluxusEventum*)silva_xar_obtinere(
+                        db->eventa, e);
+
+                si (_intervalla_intra(ev->nodus, fc->nodus))
+                {
+                    SemanticaIntervallum iv =
+                        _intervallum_fluxus_expr(sem, datorum,
+                            ambitus, fc->nodus, ZEPHYRUM);
+
+                    fc->tractatum = VERUM;
+                    inventum = VERUM;
+                    si (iv.status
+                            == (s32)SEMANTICA_INTERVALLUM_VALIDUM
+                        && iv.imum >= ZEPHYRUM)
+                    {
+                        frange;   /* probatum - TACET */
+                    }
+                    si (!_tolera_absorbere(sem, fc->nodus, (s32)
+                            EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA))
+                    {
+                        si (fc->nuntius != NIHIL)
+                        {
+                            _diagnosticum_addere_plenum(sem,
+                                fc->nodus, (s32)
+                                EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA,
+                                NIHIL, fc->nuntius);
+                        }
+                        alioquin
+                        {
+                            silva_c89_diagnosticum_addere(sem,
+                                fc->nodus, (s32)
+                                EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA);
+                        }
+                    }
+                    frange;
+                }
+                _intervalla_transferre(sem, datorum, ambitus, ev);
+            }
+        }
+    }
+}
+
+/* candidati sine functione (globalia sola, corpus mortuum):
+ * emissio verbatim - diagnosticum numquam TACITE perit */
+interior vacuum
+_intervalla_candidata_relicta_emittere (SilvaSemantica* sem)
+{
+    i32 n_candidata = silva_xar_numerus(sem->candidata_intervallorum);
+    i32 k;
+
+    per (k = ZEPHYRUM; k < n_candidata; k++)
+    {
+        IntervallumCandidatus* fc = (IntervallumCandidatus*)
+            silva_xar_obtinere(sem->candidata_intervallorum, k);
+
+        si (fc == NIHIL || fc->tractatum)
+        {
+            perge;
+        }
+        fc->tractatum = VERUM;
+        si (_tolera_absorbere(sem, fc->nodus,
+                (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA))
+        {
+            perge;
+        }
+        si (fc->nuntius != NIHIL)
+        {
+            _diagnosticum_addere_plenum(sem, fc->nodus,
+                (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, NIHIL,
+                fc->nuntius);
+        }
+        alioquin
+        {
+            silva_c89_diagnosticum_addere(sem, fc->nodus,
+                (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA);
+        }
+    }
+}
+
+b32
+silva_c89_fluxus_intervallum_ad_punctum (SilvaSemantica* sem,
+    constans SilvaNodus* usus, SemanticaIntervallum* effectus)
+{
+    i32 f;
+    i32 n_functionum;
+
+    si (sem == NIHIL || usus == NIHIL || effectus == NIHIL
+        || sem->intervalla_functionum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    n_functionum = silva_xar_numerus(sem->intervalla_functionum);
+    per (f = ZEPHYRUM; f < n_functionum; f++)
+    {
+        constans IntervallaFunctionis* tf =
+            (constans IntervallaFunctionis*)silva_xar_obtinere(
+                sem->intervalla_functionum, f);
+        SemanticaIntervallum* ambitus;
+        constans FluxusEventum* ev = NIHIL;
+
+        si (tf == NIHIL || tf->introitus == NIHIL
+            || tf->n_var == ZEPHYRUM)
+        {
+            perge;
+        }
+        ambitus = (SemanticaIntervallum*)silva_piscina_allocare(
+            sem->piscina, (memoriae_index)tf->n_var
+            * magnitudo(SemanticaIntervallum));
+        si (ambitus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (_intervalla_replay(sem, tf, usus, ambitus, &ev))
+        {
+            si (ev->variabilis < ZEPHYRUM)
+            {
+                redde FALSUM;
+            }
+            *effectus = _intervallum_lecti(sem,
+                tf->fluxus->datorum, ambitus,
+                ev->variabilis);
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* ==================================================
  * CHORDA NUDA (codex 59): chorda.datum ad lectorem NUL
  * ================================================== */
 
@@ -49545,11 +51071,10 @@ _conversionem_signi_examinare (SilvaSemantica* sem,
                 {
                     redde;   /* sane tutum */
                 }
-                si (_tolera_absorbere(sem, nodus,
-                        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA))
-                {
-                    redde;   /* intentum, causa notata */
-                }
+                /* bifasium (fluxus intervalla): candidatum
+                 * memorare, resolutio post fluxum - probatio
+                 * fluxus ANTE absorptionem tolerae (tolerae
+                 * redundantes IRRITUM pariunt et retirantur) */
                 codex_ignis =
                     (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA;
             }
@@ -49570,27 +51095,45 @@ _conversionem_signi_examinare (SilvaSemantica* sem,
         insignatus integer m_finis = silva_c89_typum_scribere(
             finis, textus_finis,
             (insignatus integer)magnitudo(textus_finis));
-        constans character* stricta =
-            (codex_ignis
-                == (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA)
-            ? " (stricta)" : "";
+        b32 severa = (codex_ignis
+            == (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA)
+            ? VERUM : FALSUM;
+        constans character* nuntius = NIHIL;
 
         si (m_naturalis > ZEPHYRUM && m_finis > ZEPHYRUM)
         {
             memoriae_index capacitas = (memoriae_index)m_naturalis
                 + (memoriae_index)m_finis + (memoriae_index)LXIV;
-            character* nuntius = (character*)silva_piscina_allocare(
+            character* d = (character*)silva_piscina_allocare(
                 sem->piscina, capacitas);
 
-            si (nuntius != NIHIL)
+            si (d != NIHIL)
             {
-                sprintf(nuntius, "conversio signi implicita%s:"
-                    " %s -> %s", stricta, textus_naturalis,
-                    textus_finis);
-                _diagnosticum_addere_plenum(sem, nodus, codex_ignis,
-                    NIHIL, nuntius);
+                sprintf(d, "conversio signi implicita%s:"
+                    " %s -> %s", severa ? " (stricta)" : "",
+                    textus_naturalis, textus_finis);
+                nuntius = d;
+            }
+        }
+        si (severa)
+        {
+            IntervallumCandidatus* fc = (IntervallumCandidatus*)
+                silva_xar_addere(sem->candidata_intervallorum);
+
+            si (fc != NIHIL)
+            {
+                fc->nodus = nodus;
+                fc->nuntius = nuntius;
+                fc->tractatum = FALSUM;
                 redde;
             }
+            /* memoria deficit: emissio statim (numquam TACITE) */
+        }
+        si (nuntius != NIHIL)
+        {
+            _diagnosticum_addere_plenum(sem, nodus, codex_ignis,
+                NIHIL, nuntius);
+            redde;
         }
         silva_c89_diagnosticum_addere(sem, nodus, codex_ignis);
     }
