@@ -7,6 +7,10 @@
     "tabularii": {
       "command": "./gesta/tabularium.sh",
       "args": ["-mcp"]
+    },
+    "fori": {
+      "command": "./gesta/fori.sh",
+      "args": ["-mcp"]
     }
   }
 }
