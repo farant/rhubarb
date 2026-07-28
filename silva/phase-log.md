@@ -10561,3 +10561,165 @@ per editionem quamque theatrum probationis erat: silentium =
 absorptio, ordo manens = collocatio prava - circulus responsi
 instantaneus quem pinnae exspectatae vectis dant fixturis, tolerae
 nunc dant codici vivo.
+
+## 2026-07-28 - INTENTIO: FLUXUS INTERVALLA (gradus 2, 01KYMBTDGP)
+
+Cartutia altera compagis provenientiae. Consilium ex suturis lectis
+(datorum.h/.c punctum fixum formarum, fluxus.h margines, semen
+ExamenIntervallum 6350ff, sedes SEVERA 7355ff):
+
+ARCHITECTURA - fixpunctum SEMANTICA-LATERE. Lex suturae vetat
+datorum semanticam videre, non contrarium: semantica datorum libere
+legit (typationes + constantes + symbola nativa ibi sunt). Columna
+fons_valoris in FluxusEventum (heri addita 'columna quaestionis
+futurae') HODIE solvit: transfer definitionis = aestimatio
+expressionis eius. Auxilia suturae NON crescunt.
+
+DOMAIN: FluxusIntervallum {imum s64, summum s64, status
+IGNOTUM(fundus)/VALIDUM/OMNIA(summum)}. Fines typi per variabilem ex
+symbolo (integrale/insignatum/latitudo octetorum). LIMITES NOMINATI:
+insignatum 64-bitorum -> OMNIA semper (fines s64 non capiunt; via
+retro = fines signati); non-integrale -> non tractatum; aggregata
+opaca (chorda.mensura = extensio post locales, res).
+
+AESTIMATOR: _intervallum_cum_ambitu - [imum,summum] verum (non
+{latitudo, nonneg}: aestimator vetus paritati clang PINNATUS manet,
+intactus). Folium identificatoris -> ambitus (status currens
+variabilis); constantes exactae (probe silens exsistens); binarium/
+unarium/parenthesis/ternarius; arithmetica per typum STATICUM
+expressionis - resultatum extra fines typi = OMNIA (involutio sana,
+sine dimidiis); profunditas tecta.
+
+PUNCTUM FIXUM (speculum _punctum_fixum_formarum): tabulae statuum
+sem-latere [bloci][variabiles]; transfer = replay eventorum
+(DEFINITIO -> aestima fons_valoris; def-omnia et effugit -> OMNIA);
+parametra = fines typi in introitu; iunctio = involucrum (hull).
+
+SIMULATIO LATIFICATIONIS (crux, ante aedificationem):
+- Ansa numerans 'per (i=0; i<n; i++)': refinatio marginis VERUS
+  contra n (summum typi) iam primo transitu i ad [0, max-1] tegit;
+  transitus alter nihil mutat. TERMINAT SINE latificatione -
+  refinatio contra OMNIA ipsa tegit.
+- Ansa frange-mota 'dum(VERUM){i++; si(c) frange;}': i ascendit
+  [0,k] uno per transitum - ascensus infinitus, latificatio
+  NECESSARIA.
+POLITICA: numerator visitationum per blocum; post V=3 visitationes
+iunctio fit iunctio-latificans - finis motus ad extremum typi
+salit (uno gradu). Terminatio: ascensus quisque finitus (V motus
+liberi + saltus unus). Post latificationem refinatio marginum
+praecisionem CUSTODITAM recuperat (corpus ansae custoditae fines
+veros videt) - transitus angustationis (narrowing) v1 OMISSUS,
+nominatus.
+
+REFINATIO MARGINUM: margines VERUS/FALSUS originem portant (nodus
+comparationis in margo.origo - typati sed a dataflow inusitati
+usque nunc). Formae v1: folium tractum OP expressio (et conversum);
+latus alterum aestimatum, intersectio sana (v<E verum: summum =
+min(summum, E.summum-1), etc.). Sinistra composita (i+3 < n) = v2
+nominata (424N eam postulabit).
+
+CLIENS (res ordo #1, reductio strepitus): CONVERSIO_SIGNI_SEVERA
+bifasis (exemplar codicis 80): sedes 7355 candidatum memorat
+(nuntius praeaedificatus), _intervalla_examinare post fluxum
+resolvit replay-ad-punctum (introitus bloci + replay eventorum ad
+usum). Fluxus probat imum>=0 -> TACET. ORDO: probatio fluxus ANTE
+absorptionem tolerae - tolerae redundantes IRRITUM 56 pariunt et
+eodem arcu RETIRANTUR (mensuratum, singulae). Aestimator vetus
+heuristicus INTACTUS (paritas oraculi).
+
+SPECIMINA ANTE PRAEDICATUM (scratchpad -> fixtura ubi viridia):
+ansa numerans tecta; ansa frange-mota latificata; subtractio
+custodita (r <= (MAX-d)/X); larva (&0xFF -> [0,255]); involutio
+insignata -> OMNIA; parametrum -> fines typi; effugium -> OMNIA;
+recuperatio post latificationem; ascensus signatus negativus;
+ternarius involucrum.
+
+PORTAE: specimina X/X primo; suite silvae; vectis; census SEVERA
+ante/post per corpus (reductio mensurata); tolerae XI auditae
+(IRRITUM = retirandae); amalgama VERIFICATUM; radix plena.
+
+### Addendum INTENTIONIS (2026-07-28): census cliens falsavit, scopus re-sectus
+
+CENSUS ANTE CLIENTEM (lectio codicis 62 in clientes ipsa applicata):
+codex 55 per corpus 682 plagularum = SEDES 0 - strepitus totus iam
+in tolerae VII absorptus. Tolerae lectae: III arbor_syntaxis
+dereferentiam (*p) custodiunt - NON variabilis tracta; II flaturae
+finem PARAMETRI (numerus_bits) postulant - fines in vocatoribus
+vivunt. NULLA tolera locali-fluxu v1 probabilis. Linea STRATEGICA
+rei (annotationes = glutinum inter-procedurale) mensura ex futuro
+in LOAD-BEARING promota.
+
+DECISIO FRANIS: machina nunc, annotationes arcu proximo (cliens
+intra="a,b" in familia contractus exsistente).
+
+CONSECUTIO PROBATIONIS: sedes SEVERAE expressione una et porta
+heuristica clausae - fixpunctum (ambitus/iunctio/latificatio/
+refinatio) per eas INVISIBILE. Superficies proba honesta = QUAESTIO
+PUBLICA ad-punctum: silva_c89_intervallum_ad_punctum(sem, usus,
+effectus) - functionem continentem invenit, fluxum+datorum in loco
+reaedificat (sine statu retento - memoria servi finita), fixpunctum
+currit, replay ad usum. Ipsa = deliverabile substrati (unctio
+solarium/legatus futura: 'quid machina de x HIC putat'). Ordo
+publicus novus: silva.h + amalgama + vocatio hospitis (regula
+stans). probatio_silva_intervalla machinam per eam figit
+(specimina-primum); fixtura severum PARVA cliente bifasi manet
+(arithmetica foliorum + controlae negativae).
+
+## 2026-07-28 - RELATIO: FLUXUS INTERVALLA (gradus 2, 01KYMBTDGP)
+
+MACHINA MISSA una sessione: [imum, summum] per variabilem super CFG,
+semantica-latere (suturae auxiliorum INTACTAE - columna fons_valoris
+heri addita hodie solvit). Aestimator cum ambitu (folium -> status
+currens; constantes exactae; arithmetica per typum staticum nodi),
+punctum fixum speculo formarum, refinatio marginum VERUS/FALSUS,
+latificatio V=3 ad capita ansarum, quaestio publica
+silva_c89_fluxus_intervallum_ad_punctum (replay ad usum; ordo
+silva.h ad consumptorem externum primum differtur). Cliens
+CONVERSIO_SIGNI_SEVERA bifasis: probatio fluxus ANTE absorptionem
+tolerae; probata TACENT, cetera verbatim (candidati sine functione
+per relicta-emissionem - diagnosticum numquam tacite perit).
+
+VECTES: probatio_silva_intervalla 121/121 (specimina XVII ante
+praedicatum scripta); fixtura intervalla_severa.severum primo
+contactu exacta (probata tacet, improbabilis pinnata, tolerata
+quieta, IRRITUM 0); VECTIS TENET (oraculum ad pinnam novam SILET -
+calibratio paritatis tenuit); silva 35/35; amalgama VERIFICATUM
+(hospes 34/34); officina 13/13 (pinna clausurae 4 -> 5 honeste
+re-pinnata: probatio_officina_renovatio.c quintus includens
+legatus.h, arcus matutini); radix 108/108 PLENUS; census 55
+post-mutationem = sedes 0 (neutralitas corporis).
+
+INVENTA ITINERIS (tria vitia composita, singula mensurata):
+1. margo.origo SENTENTIAM fert, non conditionem - sedes conditionis
+   vera = granulum ULTIMUM bloci fontis (etiam segmentis && / ||
+   rectum: operandum evaluatum ipsum). Refinatio sine hoc caeca.
+2. Superfluum signatum -> fines typi finem IMUM destruebat (i++ ad
+   summum latificatum involvit ad [min,max]). Sanatio: superfluum
+   signatum = UB, SATURATIO sana; insignatum = involutio vera,
+   fines typi. In _intervallum_ad_typum et crementis.
+3. Latificatio ubique refinationes delebat ([0,9] corporis ad
+   [0,max] latificatum). Sanatio: latificatio SOLUM ad margines
+   retro (cyclus quisque marginem retro continet, indices ordine
+   constructionis - custodia terminationis servata).
+Etiam: nomina declaratorum folia identificatorum NON sunt (index
+foliorum probationis); crementa fons_valoris NIHIL ferunt - pater
+folii operatorem dat.
+
+LIMITES NOMINATI: sinistra composita (i+3 minor n) sine refinatione
+= via ad 424N (v2); angustatio (narrowing) omissa - custos post
+usum imprecisus (specimen X id ipsum figit); dereferentiae/aggregata
+opaca (chorda.mensura = extensio pretiosissima); insignatum
+64-bitorum OMNIA (fines signati = via retro).
+
+DEBRIEF INSTRUMENTORUM. Adhibita: census ante clientem (falsavit
+ordinem #1 rei - tolerae VII omnes extra fluxum localem; decisio
+Franis machina-nunc-annotationes-postea IN SESSIONE); specimina
+ante praedicatum (117 asserta exspectationum ante machinam - vitium
+quodque contra exspectationem exactam claruit); flumina separata
+stderr/stdout in probatione (lectio mixta iterum fefellit -
+signum SPECIMEN in stderr solvit); uncus examinis me ter correxit
+in ipsis lineis probationis (conversiones signi). Asperitates:
+margo.origo semantica non documentata (granulum-ultimum inventum
+per lectionem fluxus.c - fortasse commentarium in fluxus.h
+meretur). Desiderata: nulla nova (annotationes intra="a,b" iam
+nominatae, arcus proximus).

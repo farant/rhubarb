@@ -773,3 +773,40 @@ codex-74 oracle before converting). The self-reference law
 (comment ABOUT tolera vs tolera directive) is now structural:
 prose mentions don't start with `<`, so the old
 uppercase-title heuristic is gone with the parser.
+
+## 2026-07-28 — fluxus intervalla (gradus 2): three composed defects
+
+The interval fixpoint shipped with three interacting bugs, each
+invisible until the others were fixed, all measured via the
+specimen ritual (expectations written before the engine):
+
+1. **margo.origo carries the STATEMENT, not the condition.** For
+   `si (p >= 5)` the VERUS/FALSUS edges' origo = the si node. The
+   true condition seat is the LAST granule of the SOURCE block
+   (conditions are granules since fluxus chunk 0) — and that rule
+   is also correct for && / || segment blocks, where the last
+   granule is the evaluated operand itself. Refinement reads the
+   source block now, not origo.
+2. **Signed overflow must SATURATE, unsigned must wrap to type
+   range.** `i++` at a widened top produced imum = INT_MIN via the
+   full-type-range fallback, destroying the lower bound everywhere
+   downstream. Signed arithmetic overflow is UB → clamping to the
+   type extremes is sound; unsigned wrap is real → full range.
+   Conversion at a DEF site (implementation-defined wrap) keeps
+   the full-range fallback — only ARITHMETIC nodes saturate.
+3. **Widening only at back-edge targets.** The per-block visit
+   counter widened EVERY often-visited block, so the VERUS-refined
+   [0,9] at a loop body got widened to [0,max] one join later.
+   Retro edge test: dest index <= source index (blocks are created
+   in program order; every cycle contains such an edge) — heads
+   widen, bodies keep their refinements. Termination argument
+   unchanged.
+
+Also: declarator name tokens are NOT folium-identificator nodes
+(only uses are) — test finders must count uses only. Crement
+DEFINITIO events carry fons_valoris = NIHIL; the operator comes
+from the leaf's pater (POSTCREMENTUM / UNARIUM ++ --).
+
+Mixed-stream logs lied AGAIN during diagnosis (child stderr
+unbuffered vs parent stdout buffered) — stderr markers + separate
+capture files was the fix; third firing of that law this week.
