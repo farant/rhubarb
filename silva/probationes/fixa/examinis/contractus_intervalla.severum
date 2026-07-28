@@ -1,0 +1,65 @@
+/* Contractus intervallorum (01KYN533VY): intervallum ad TYPEDEF
+ * ligatum (declarationes typum ferentes semen angustum accipiunt)
+ * + contractus param intra inline. Fiducia sedis INTROITUS sola -
+ * probationes SEVERAE et codicis 80 ambitum seminatum vident.
+ * Annotatio commentarium PROPRIUM postulat (prosa ducens ligamen
+ * frangit - mensuratum flatura 2026-07-28). Clang omnibus caecus.
+ * ORACULUM -Wsign-conversion */
+
+/* <contractus intra="0,16"/> */
+typedef unsigned nb_t;
+
+/* typedef refinatum: larva (1 << n) - 1 in [0, 65535] - TACET */
+static unsigned larva_probata(nb_t n)
+{
+    unsigned v = (1 << n) - 1;
+    return v;
+}
+
+/* sine contractu: fluctus [0, 2^32-1] improbabilis - SEVERA manet */
+static unsigned larva_nuda(unsigned m)
+{
+    /* <exspecta codex="CONVERSIO_SIGNI_SEVERA"/> */
+    unsigned v = (1 << m) - 1;
+    return v;
+}
+
+/* param inline: subtractio custodita contractu - codex 80 TACET */
+/* <contractus param="n" intra="2,16"/> */
+static int subtractio_probata(unsigned n)
+{
+    unsigned x = n - 2u;
+
+    if (x <= 0u)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/* typedef refinatum sed subtrahendum extra fines - codex 80 manet */
+static int subtractio_nuda(nb_t n)
+{
+    unsigned x = n - 17u;
+
+    /* <exspecta codex="SUBTRACTIO_COMPARATA"/> */
+    if (x <= 0u)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/* intra pravum: grammatica recusata - CONTRACTUS_STALUS */
+/* <exspecta codex="CONTRACTUS_STALUS"/> */
+/* <contractus intra="banana"/> */
+typedef unsigned malum_t;
+
+static unsigned radix(nb_t n, unsigned m)
+{
+    malum_t ignotum = 0u;
+
+    return larva_probata(n) + larva_nuda(m)
+        + (unsigned)subtractio_probata(m)
+        + (unsigned)subtractio_nuda(n) + ignotum;
+}

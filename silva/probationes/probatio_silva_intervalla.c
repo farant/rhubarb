@@ -632,6 +632,93 @@ principale (vacuum)
             (i32)SEMANTICA_INTERVALLUM_OMNIA);
     }
 
+    imprimere("--- XXX-XXXVII: contractus intervallorum "
+        "(01KYN533VY) ---\n");
+
+    /* XXX. typedef refinatum: contractus supra typedef - parametrum
+     * eo typo declaratum semen angustum accipit */
+    _adfirma(piscina,
+        "/* <contractus intra=\"1,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "void f(NBits n) { unsigned u = n; }",
+        "n", ZEPHYRUM, 1L, 16L,
+        "XXX. typedef refinatum -> [1,16]");
+
+    /* XXXI. contractus param inline (frons altera, machina eadem) */
+    _adfirma(piscina,
+        "/* <contractus param=\"n\" intra=\"0,255\"/> */\n"
+        "void f(unsigned n) { unsigned u = n; }",
+        "n", ZEPHYRUM, 0L, 255L,
+        "XXXI. param intra inline -> [0,255]");
+
+    /* XXXII. contractus solum angustat: latior typo -> typus vincit */
+    _adfirma(piscina,
+        "/* <contractus param=\"n\" intra=\"0,999\"/> */\n"
+        "void f(unsigned char n) { unsigned u = n; }",
+        "n", ZEPHYRUM, 0L, 255L,
+        "XXXII. contractus latior -> fines typi vincunt");
+
+    /* XXXIII. insignatum 64-bitorum cum contractu: fiducia trahit
+     * ubi fundus nequibat (ante: OMNIA, specimen XVI) */
+    _adfirma(piscina,
+        "/* <contractus param=\"n\" intra=\"1,16\"/> */\n"
+        "void f(unsigned long n) { unsigned long u = n; }",
+        "n", ZEPHYRUM, 1L, 16L,
+        "XXXIII. u64 cum contractu -> VALIDUM [1,16]");
+
+    /* XXXIV. membrum typo refinato declaratum: semen membri
+     * angustum (compositio cum ordinibus membrorum) */
+    _adfirma_membrum(piscina,
+        "/* <contractus intra=\"1,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "struct S { NBits n; };\n"
+        "void f(struct S s) { unsigned u = s.n; }",
+        "n", ZEPHYRUM, 1L, 16L,
+        "XXXIV. membrum typo refinato -> [1,16]");
+
+    /* XXXIV-b. honestas effugii: post &s lectio membri ad fines
+     * TYPI cadit - refinatio numquam in reservis conservativis
+     * (furca sanitatis INTENTIONIS) */
+    _adfirma_membrum(piscina,
+        "/* <contractus intra=\"1,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "struct S { NBits n; };\n"
+        "void f(struct S s) { g2(&s); { unsigned u = s.n; } }",
+        "n", ZEPHYRUM, 0L, U32_SUMMUM,
+        "XXXIV-b. effugium basis -> fines typi (non [1,16])");
+
+    /* XXXV. typedef sine contractu immutatum */
+    _adfirma(piscina,
+        "typedef unsigned U;\n"
+        "void f(U n) { unsigned u = n; }",
+        "n", ZEPHYRUM, 0L, U32_SUMMUM,
+        "XXXV. typedef sine contractu -> fines typi");
+
+    /* XXXVI. fluctus variabilis (extensio aestimatoris): larva
+     * (1 << n) - 1 cum n intra [1,16] -> [1, 65535] */
+    _adfirma(piscina,
+        "/* <contractus param=\"n\" intra=\"1,16\"/> */\n"
+        "void f(unsigned n) { unsigned m = (1u << n) - 1u;"
+        " { unsigned w = m; } }",
+        "m", ZEPHYRUM, 1L, 65535L,
+        "XXXVI. (1 << [1,16]) - 1 -> [1,65535]");
+
+    /* XXXVII. localis typo refinato NON seminatur (exclusio v1:
+     * purgamentum ininitiatum in [1,16] asserere INSANUM esset) */
+    _adfirma(piscina,
+        "/* <contractus intra=\"1,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "void f(void) { NBits v; { unsigned u = v; } }",
+        "v", ZEPHYRUM, 0L, U32_SUMMUM,
+        "XXXVII. localis refinatus ininitiatus -> fines typi");
+
+    /* XXXVII-b. effugium parametri: fiducia aliasing non superest */
+    _adfirma(piscina,
+        "/* <contractus param=\"n\" intra=\"1,16\"/> */\n"
+        "void f(unsigned n) { g2(&n); { unsigned u = n; } }",
+        "n", I, 0L, U32_SUMMUM,
+        "XXXVII-b. effugium parametri -> fines typi");
+
     credo_imprimere_compendium();
 
     {

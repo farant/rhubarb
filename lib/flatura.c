@@ -21,6 +21,12 @@
 #define FLATURA_END_BLOCK           256         /* End of block symbol */
 #define FLATURA_FIRST_LEN           257         /* First length symbol */
 
+/* Numerus bitorum legendorum/scribendorum uno ictu. Fines censiti
+ * (liturgia 01KYN533VY): literales I-XVI, tabulae extra-bitorum
+ * ZEPHYRUM ferunt (symbola sine bitis extra), maxima_bits <= XV. */
+/* <contractus intra="0,16"/> */
+nomen i32 NumerusBitorum;
+
 
 /* ========================================================================
  * CRC-32 TABULA (Slice-by-4 optimizatio)
@@ -165,8 +171,8 @@ _flatura_lector_initium(
 
 interior s32
 _flatura_legere_bits(
-    FlaturaLector* lector,
-    i32            numerus_bits)
+    FlaturaLector*  lector,
+    NumerusBitorum  numerus_bits)
 {
     i32 valor;
 
@@ -182,8 +188,8 @@ _flatura_legere_bits(
         lector->bits_in_buffer += VIII;
     }
 
-    /* Extrahere bits */
-    /* <tolera codex="CONVERSIO_SIGNI_SEVERA" (>larva (1<<n)-1 non negativa */
+    /* Extrahere bits - larva probata fluxu: NumerusBitorum
+     * contractus [0,16] => (1 << n) - 1 in [0, 65535] */
     valor = lector->bit_buffer & ((I << numerus_bits) - I);
     lector->bit_buffer >>= numerus_bits;
     lector->bits_in_buffer -= numerus_bits;
@@ -267,7 +273,7 @@ interior vacuum
 _flatura_scribere_bits(
     FlaturaScriptor* scriptor,
     i32              valor,
-    i32              numerus_bits)
+    NumerusBitorum   numerus_bits)
 {
     FLATURA_SCRIBERE_BITS(scriptor, valor, numerus_bits);
 }

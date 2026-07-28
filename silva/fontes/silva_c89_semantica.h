@@ -550,6 +550,12 @@ structura SilvaSemantica {
      * collectae per parsuram; elementa ExamenContractus (in .c). */
     constans SilvaParsura* contractus_parsura;
     Xar*                   contractus;
+    Xar*                   refinationes_typorum;  /* RefinatioTypi
+                                                   * (in .c): contractus
+                                                   * intra supra typedef
+                                                   * (01KYN533VY) - una
+                                                   * collectione cum
+                                                   * contractibus */
 
     /* annotationes collectae (frustum E2, 2026-07-22): ambulatio
      * UNA communis per parsuram (collector silva_annotationes) -
