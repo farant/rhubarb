@@ -97,6 +97,7 @@ struct stat {
 
 int stat(const char* via, struct stat* sedes);
 int mkdir(const char* via, mode_t modus);
+int chmod(const char* via, mode_t modus);
 
 /* ==================================================
  * <sectio caput="unistd.h"/>
@@ -130,6 +131,7 @@ void    _exit(int status);
 int     usleep(useconds_t microsecunda);
 int     dup2(int fossa_vetus, int fossa_nova);
 int     execvp(const char* plagula, char* const argumenta[]);
+unsigned int alarm(unsigned int secunda);
 
 /* <sectio caput="stdlib.h"/> stdlib.h POSIX (getenv in systema_c89.h
  * ut C89; hae POSIX solae) */
@@ -145,6 +147,7 @@ int putenv(char* par);
 /* <sectio caput="signal.h"/> signal.h (valores signorum communes) */
 #define SIGINT  2
 #define SIGKILL 9
+#define SIGPIPE 13
 #define SIGALRM 14
 #define SIGTERM 15
 

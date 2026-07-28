@@ -92,6 +92,7 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(sizeof(socklen_t) == 4);"
     echo "IUNGO_ASSERTA(sizeof(useconds_t) == 4);"
     echo "IUNGO_ASSERTA(SIGINT == 2 && SIGKILL == 9 && SIGTERM == 15);"
+    echo "IUNGO_ASSERTA(SIGPIPE == 13);"
     echo "IUNGO_ASSERTA(SOL_SOCKET == 0xffff);"
     echo "IUNGO_ASSERTA(SO_REUSEADDR == 0x0004);"
     echo "IUNGO_ASSERTA(SO_KEEPALIVE == 0x0008);"

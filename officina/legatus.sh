@@ -3,14 +3,27 @@
 # officina/legatus.sh - LEGATUS: servus LSP silvae (chunk B)
 #
 # Usage:
-#   ./officina/legatus.sh          # stdio LSP (cliens spawnat)
+#   ./officina/legatus.sh                    # stdio LSP (cliens spawnat)
+#   ./officina/legatus.sh -mcp               # servus MCP (LEGATI)
+#   ./officina/legatus.sh -aedificare-solum  # aedifica, signum ad
+#                                            # stdout, exi (sine exec)
 #
 # Aedificatio incrementalis (exemplar colloquium.sh) - garrulitas
 # ad stderr SOLUM (stdout purus est protocollo LSP). Aedificatio
 # IUDICIS SOLIUS: amalgama silvae + praeparator + legatus - NULLA
 # fontes officinae (machinula/regio absunt consulto).
+#
+# -aedificare-solum = explorator praevius renovationis (arcus
+# 01KY4185QN): residens eum ut infantem agit ANTE exec sui - si
+# aedificatio cadit, residens vivus stalusque manet (exec revocari
+# non potest).
 
 set -u
+
+AEDIFICARE_SOLUM=""
+for a in "$@"; do
+    [ "$a" = "-aedificare-solum" ] && AEDIFICARE_SOLUM=1
+done
 
 OFF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$OFF_DIR/.." && pwd)"
@@ -163,6 +176,14 @@ MANIFEST="$BUILD_DIR/legatus.vigilia"
     fi
 } > "$MANIFEST" 2>/dev/null
 SIGNUM="$(shasum -a 256 "$BIN" 2>/dev/null | cut -c1-64)"
+if [ -n "$AEDIFICARE_SOLUM" ]; then
+    if [ -z "$SIGNUM" ]; then
+        echo "legatus.sh: signum computari non potuit" >&2
+        exit 1
+    fi
+    echo "$SIGNUM"
+    exit 0
+fi
 if [ -n "$SIGNUM" ]; then
     cd "$RADIX_DIR" && exec "$BIN" "$@" -radix "$RADIX_DIR" -signum "$SIGNUM" -manifestum "$MANIFEST"
 else

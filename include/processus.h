@@ -97,6 +97,20 @@ processus_exsequi(
 constans character*
 processus_error_nomen(ProcessusError error);
 
+/* Processus IPSE fit programma nominatum (execvp - eadem PID,
+ * descriptores aperti manent). Pro residentibus qui se super
+ * fistulam vivam renovant: responde, effunde (fflush), deinde fi.
+ *
+ * CAVETO: quod in buffris FILE* userspace iacet perit - octeti in
+ * fistula NUCLEI supersunt, octeti iam in buffrum stdio lecti non.
+ * Residens qui hoc vocat introitum sine bufferis legat (_IONBF).
+ *
+ * Redde: numquam si felix; FALSUM si exec fefellit (vocator
+ * pergat - defectus non fatalis). */
+b32
+processus_transformare(
+    constans character* constans* argumenta);
+
 
 /* ========================================================================
  * SEMITA INCREMENTALIS - pro faciebus quae obstare non possunt

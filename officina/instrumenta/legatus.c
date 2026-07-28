@@ -24,6 +24,8 @@
 #include "praeparator.h"
 #include "silva_lexicon.h"
 #include "nexus_ordines.h"
+#include "processus.h"   /* renovare: explorator praevius (exsequi)
+                          * + transformare (exec sui) */
 
 #include <stdlib.h>
 #include <string.h>
@@ -173,6 +175,15 @@ nomen structura {
     /* LEGATI (modus MCP): framing lineis, methodi tools -
      * quaestiones nomine-basatae; sine documentis */
     b32             modus_mcp;
+
+    /* renovatio sui (01KY4185QN): renovare probatum -> ansa
+     * principalis post responsum effusum launcherum exsequitur
+     * (exec - PID eadem, fistulae manent) */
+    b32             renovandum;
+    constans character* via_renovatoris_parata; /* resoluta in
+                                        * tractatore (cfg aut
+                                        * derivata); litterae stabiles
+                                        * (argv aut perennis) */
 } Legatus;
 
 /* quid ansa post nuntium faciat */
@@ -5004,10 +5015,14 @@ interior constans character* constans LEGATI_DOCTRINA =
     " (suffixum viae - titulos multi-definitos ut principale"
     " disambiguat). Responsa statum disci recentem legunt"
     " (revalidatio pigra); lineae CAUTIO staleness aut sumptus"
-    " aperiunt.";
+    " aperiunt. renovare {} = residentem stalum renovat (post"
+    " CAUTIONEM VERIFICATAM voca: aedificatio praevia probatur,"
+    " deinde residens se transformat - petitio proxima residentem"
+    " novum invenit; recens = nihil agit).";
 
 /* instrumentum argumenti chordae necessarii (+ optionalis alterius
- * si arg2_titulus non NIHIL) -> {name, description, inputSchema} */
+ * si arg2_titulus non NIHIL; arg_titulus NIHIL = instrumentum sine
+ * argumentis - renovare) -> {name, description, inputSchema} */
 interior JsonValor*
 _mcp_instrumentum (Piscina* pn, constans character* titulus,
     constans character* descriptio, constans character* arg_titulus,
@@ -5018,16 +5033,20 @@ _mcp_instrumentum (Piscina* pn, constans character* titulus,
     JsonValor* instrumentum = json_objectum_creare(pn);
     JsonValor* schema = json_objectum_creare(pn);
     JsonValor* proprietates = json_objectum_creare(pn);
-    JsonValor* arg = json_objectum_creare(pn);
     JsonValor* necessaria = json_tabulatum_creare(pn);
 
-    json_objectum_ponere(arg, "type",
-        json_chorda_creare_literis(pn, "string"));
-    json_objectum_ponere(arg, "description",
-        json_chorda_creare_literis(pn, arg_descriptio));
-    json_objectum_ponere(proprietates, arg_titulus, arg);
-    json_tabulatum_addere(necessaria,
-        json_chorda_creare_literis(pn, arg_titulus));
+    si (arg_titulus != NIHIL)
+    {
+        JsonValor* arg = json_objectum_creare(pn);
+
+        json_objectum_ponere(arg, "type",
+            json_chorda_creare_literis(pn, "string"));
+        json_objectum_ponere(arg, "description",
+            json_chorda_creare_literis(pn, arg_descriptio));
+        json_objectum_ponere(proprietates, arg_titulus, arg);
+        json_tabulatum_addere(necessaria,
+            json_chorda_creare_literis(pn, arg_titulus));
+    }
     si (arg2_titulus != NIHIL)
     {
         JsonValor* arg2 = json_objectum_creare(pn);
@@ -5051,6 +5070,32 @@ _mcp_instrumentum (Piscina* pn, constans character* titulus,
     redde instrumentum;
 }
 
+/* initium MCP commune: initialize-tractatori ET renatui (exec sui
+ * perfecto - cliens initialize non remittit, servum mutatum
+ * nescit). Litterae erroris aut NIHIL si surrectum; defectus =
+ * initiatum manet FALSUM. */
+interior constans character*
+_mcp_surgere (Legatus* l, constans LegatusConfiguratio* cfg,
+    JsonValor* params, Piscina* pn)
+{
+    /* opus LSP minus codificatione (effectus = textus, numeri
+     * 1-basati - remappa non opus, spec-v2 §III) */
+    _radicem_statuere(l, params, cfg);
+    si (l->radix_mensura == ZEPHYRUM)
+    {
+        redde "radix ignota (-radix deest)";
+    }
+    si (!_praeparationem_struere(l))
+    {
+        redde "apparatus praeparari non potuit";
+    }
+    _exclusiones_onerare(l);
+    _indicem_onerare(l);
+    _vigiliam_parare(l, cfg, pn);
+    l->initiatum = VERUM;
+    redde NIHIL;
+}
+
 interior vacuum
 _mcp_initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* params, constans LegatusConfiguratio* cfg)
@@ -5061,27 +5106,16 @@ _mcp_initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
             TABELLARIUS_ERROR_PETITIO_INVALIDA, "iam initiatum"));
         redde;
     }
-    /* opus LSP minus codificatione (effectus = textus, numeri
-     * 1-basati - remappa non opus, spec-v2 §III) */
-    _radicem_statuere(l, params, cfg);
-    si (l->radix_mensura == ZEPHYRUM)
     {
-        _respondere(l, tabellarius_errorem(pn, id,
-            TABELLARIUS_ERROR_INTERNUS,
-            "radix ignota (-radix deest)"));
-        redde;
+        constans character* error = _mcp_surgere(l, cfg, params, pn);
+
+        si (error != NIHIL)
+        {
+            _respondere(l, tabellarius_errorem(pn, id,
+                TABELLARIUS_ERROR_INTERNUS, error));
+            redde;
+        }
     }
-    si (!_praeparationem_struere(l))
-    {
-        _respondere(l, tabellarius_errorem(pn, id,
-            TABELLARIUS_ERROR_INTERNUS,
-            "apparatus praeparari non potuit"));
-        redde;
-    }
-    _exclusiones_onerare(l);
-    _indicem_onerare(l);
-    _vigiliam_parare(l, cfg, pn);
-    l->initiatum = VERUM;
 
     {
         JsonValor* resultatum = json_objectum_creare(pn);
@@ -5184,6 +5218,14 @@ _mcp_toolslist_tractare (Legatus* l, Piscina* pn, JsonValor* id)
         "responsa",
         "numerus responsorum supprimendorum (positivus; limen 500)",
         NIHIL, NIHIL));
+    json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
+        "renovare",
+        "Residentem stalum renovare: launcher ut explorator praevius"
+        " agitur (aedificatio probata ANTE exec - defectus residentem"
+        " vivum relinquit), deinde residens se ipsum per launcherum"
+        " transformat (PID eadem, fistula eadem). Petitio proxima"
+        " residentem novum invenit. Recens = nihil agit.",
+        NIHIL, NIHIL, NIHIL, NIHIL));
     json_objectum_ponere(resultatum, "tools", instrumenta);
     _respondere(l, tabellarius_responsum(pn, id, resultatum));
 }
@@ -6757,9 +6799,149 @@ _legati_tacere (Legatus* l, Piscina* pn, JsonValor* id,
     _mcp_textum_respondere(l, pn, id, textus, FALSUM);
 }
 
+/* renovare: residentem stalum per launcherum renovare (01KY4185QN
+ * - dimidium AGENDI vigiliae; detectio iam aderat). Ordo: vigilia
+ * inspecta -> explorator praevius (launcher -aedificare-solum ut
+ * infans - exec revocari non potest, ergo aedificatio ANTE
+ * probatur; defectus residentem vivum stalumque relinquit) ->
+ * responsum -> exec in ansa principali post effusionem responsi.
+ * Ambae stalitates sanantur: FONTES_SUPERANT (launcher aedificat)
+ * et BINARIUM_NOVIUS (launcher binarium recens exsequitur). */
+interior vacuum
+_legati_renovare (Legatus* l, Piscina* pn, JsonValor* id,
+    constans LegatusConfiguratio* cfg)
+{
+    VigiliaStatus status = vigilia_inspicere(l->vigilia, pn);
+    constans character* via;
+
+    si (status == VIGILIA_RECENS)
+    {
+        ChordaAedificator* aed = chorda_aedificator_creare(pn,
+            (memoriae_index)256);
+        constans character* breve = vigilia_signum_breve(l->vigilia);
+
+        chorda_aedificator_appendere_literis(aed,
+            "iam recens (signum ");
+        chorda_aedificator_appendere_literis(aed,
+            breve[ZEPHYRUM] != '\0' ? breve : "0");
+        chorda_aedificator_appendere_literis(aed,
+            ") - nihil agendum");
+        _mcp_textum_respondere(l, pn, id,
+            chorda_aedificator_finire(aed), FALSUM);
+        redde;
+    }
+
+    /* via renovatoris: cfg (probationes stipulam dant) aut
+     * launcher canonicus <radix>/officina/legatus.sh */
+    si (cfg != NIHIL && cfg->via_renovatoris != NIHIL)
+    {
+        via = cfg->via_renovatoris;
+    }
+    alioquin
+    {
+        constans character* cauda = "/officina/legatus.sh";
+        memoriae_index m_cauda = strlen(cauda);
+        character* d = (character*)piscina_allocare(l->perennis,
+            l->radix_mensura + m_cauda + I);
+
+        si (d == NIHIL)
+        {
+            _respondere(l, tabellarius_errorem(pn, id,
+                TABELLARIUS_ERROR_INTERNUS, "memoria deficit"));
+            redde;
+        }
+        memcpy(d, l->radix, l->radix_mensura);
+        memcpy(d + l->radix_mensura, cauda, m_cauda + I);
+        via = d;
+    }
+
+    {
+        constans character* argumenta[III];
+        ProcessusResultus r;
+
+        argumenta[ZEPHYRUM] = via;
+        argumenta[I] = "-aedificare-solum";
+        argumenta[II] = NIHIL;
+        r = processus_exsequi(argumenta, 120000, pn);
+        si (!r.successus || r.codex_exitus != ZEPHYRUM)
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                (memoriae_index)2048);
+
+            chorda_aedificator_appendere_literis(aed,
+                "renovatio RECUSATA - explorator praevius fractus"
+                " (");
+            si (!r.successus)
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    processus_error_nomen(r.error));
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(aed, "exitus ");
+                chorda_aedificator_appendere_i32(aed,
+                    r.codex_exitus);
+            }
+            chorda_aedificator_appendere_literis(aed,
+                "); residens vivus stalusque manet");
+            si (r.erratum.mensura > ZEPHYRUM)
+            {
+                chorda cauda_er = r.erratum;
+
+                si (cauda_er.mensura > 800)
+                {
+                    cauda_er.datum += cauda_er.mensura - 800;
+                    cauda_er.mensura = 800;
+                }
+                chorda_aedificator_appendere_literis(aed,
+                    "\n--- erratum aedificationis (cauda) ---\n");
+                chorda_aedificator_appendere_chorda(aed, cauda_er);
+            }
+            _mcp_textum_respondere(l, pn, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+
+        /* signum novum = linea prima effusionis exploratoris */
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                (memoriae_index)512);
+            chorda signum_novum = r.effusio;
+            i32 i;
+
+            per (i = ZEPHYRUM; i < signum_novum.mensura; i++)
+            {
+                si (signum_novum.datum[i] == '\n')
+                {
+                    signum_novum.mensura = i;
+                    frange;
+                }
+            }
+            si (signum_novum.mensura > LXIV)
+            {
+                signum_novum.mensura = LXIV;
+            }
+            chorda_aedificator_appendere_literis(aed,
+                "renovatio parata (causa: ");
+            chorda_aedificator_appendere_literis(aed,
+                vigilia_causa(l->vigilia));
+            chorda_aedificator_appendere_literis(aed,
+                "; signum novum ");
+            chorda_aedificator_appendere_chorda(aed, signum_novum);
+            chorda_aedificator_appendere_literis(aed,
+                ") - post hoc responsum me transformo; petitio"
+                " proxima residentem novum inveniet");
+            l->via_renovatoris_parata = via;
+            l->renovandum = VERUM;
+            _mcp_textum_respondere(l, pn, id,
+                chorda_aedificator_finire(aed), FALSUM);
+        }
+    }
+}
+
 interior vacuum
 _mcp_toolscall_tractare (Legatus* l, Piscina* pn, JsonValor* id,
-    JsonValor* params)
+    JsonValor* params, constans LegatusConfiguratio* cfg)
 {
     chorda titulus;
 
@@ -6802,6 +6984,10 @@ _mcp_toolscall_tractare (Legatus* l, Piscina* pn, JsonValor* id,
         alioquin si (_methodus_est(titulus, "tacere"))
         {
             _legati_tacere(l, pn, id, argumenta);
+        }
+        alioquin si (_methodus_est(titulus, "renovare"))
+        {
+            _legati_renovare(l, pn, id, cfg);
         }
         alioquin
         {
@@ -6860,7 +7046,7 @@ _mcp_tractare (Legatus* l, Piscina* pn, TabellariusNuntius* n,
         }
         alioquin si (_methodus_est(n->methodus, "tools/call"))
         {
-            _mcp_toolscall_tractare(l, pn, n->id, n->params);
+            _mcp_toolscall_tractare(l, pn, n->id, n->params, cfg);
         }
         alioquin
         {
@@ -7032,6 +7218,43 @@ legatus_currere (FILE* intra, FILE* extra,
     l.praeparationes_derivatae = xar_creare(l.perennis,
         (i32)magnitudo(LegatusPraepDerivata));
 
+    si (l.modus_mcp)
+    {
+        /* introitus SINE bufferis: exec sui (renovare) octetos in
+         * buffro FILE* userspace perderet - octeti in fistula
+         * NUCLEI exec supersunt, lecti in buffrum stdio non.
+         * Petitiones MCP parvae - pretium lectionis octetim
+         * nullius momenti. LSP intactus (nullus exec ibi). */
+        (vacuum)setvbuf(intra, NIHIL, _IONBF, ZEPHYRUM);
+    }
+    si (l.modus_mcp && cfg != NIHIL && cfg->renatus)
+    {
+        /* exec sui perfectus: cliens initialize NON remittit
+         * (servum mutatum nescit) - initium initialize-aequivalens
+         * sponte. Defectus = initiatum manet FALSUM: errores
+         * honesti NONDUM_INITIATUM, reconnect sanat. */
+        Piscina* pn = piscina_generare_dynamicum("legatus_renatus",
+            LXIV * 1024);
+
+        si (pn != NIHIL)
+        {
+            constans character* error = _mcp_surgere(&l, cfg, NIHIL,
+                pn);
+
+            si (error != NIHIL)
+            {
+                fprintf(stderr, "legatus: renatus fractus: %s\n",
+                    error);
+            }
+            alioquin
+            {
+                fprintf(stderr, "legatus: renatus (signum %s)\n",
+                    vigilia_signum_breve(l.vigilia));
+            }
+            piscina_destruere(pn);
+        }
+    }
+
     per (;;)
     {
         Piscina* pn = piscina_generare_dynamicum("legatus_nuntius",
@@ -7068,6 +7291,29 @@ legatus_currere (FILE* intra, FILE* extra,
         {
             exitus = l.exitus_petitus ? ZEPHYRUM : I;
             frange;
+        }
+        si (l.renovandum)
+        {
+            /* responsum effusum (lineam_scribere fflush facit),
+             * piscina nuntii destructa - punctum tutum: fimus
+             * launcher, qui aedificat (iam probatum) et binarium
+             * recens cum signo recenti exsequitur. PID eadem,
+             * fistulae manent; petitio proxima residentem novum
+             * invenit (-renatus = initium sine initialize). */
+            constans character* argumenta[IV];
+
+            argumenta[ZEPHYRUM] = l.via_renovatoris_parata;
+            argumenta[I] = "-mcp";
+            argumenta[II] = "-renatus";
+            argumenta[III] = NIHIL;
+            (vacuum)fflush(l.extra);
+            (vacuum)processus_transformare(argumenta);
+            /* huc solum defectu exec - vivere pergimus, stali */
+            fprintf(stderr,
+                "legatus: transformatio fracta (%s)\n",
+                argumenta[ZEPHYRUM] != NIHIL
+                    ? argumenta[ZEPHYRUM] : "?");
+            l.renovandum = FALSUM;
         }
     }
 

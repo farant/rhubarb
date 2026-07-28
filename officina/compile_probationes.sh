@@ -63,6 +63,7 @@ declare -a RADIX_FONTES=(
     "similitudo"
     "sigillum"
     "vigilia"
+    "processus_posix"
 )
 
 FILTER="${1:-}"

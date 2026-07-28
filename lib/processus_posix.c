@@ -810,3 +810,20 @@ processus_exsequi (constans character* constans* argumenta,
     /* metere OBSTANTER: ansam eandem ad finem ducit */
     redde processus_metere(p);
 }
+
+b32
+processus_transformare (constans character* constans* argumenta)
+{
+    unio {
+        constans character* constans* c;
+        character* constans*          m;
+    } u;
+
+    si (argumenta == NIHIL || argumenta[0] == NIHIL)
+    {
+        redde FALSUM;
+    }
+    u.c = argumenta;
+    (vacuum)execvp(argumenta[0], u.m);
+    redde FALSUM;   /* exec felix numquam huc redit */
+}

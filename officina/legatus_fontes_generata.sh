@@ -7,6 +7,7 @@ declare -a RADIX_FONTES=(
     "internamentum"
     "json"
     "piscina"
+    "processus_posix"
     "sigillum"
     "similitudo"
     "tabellarius"

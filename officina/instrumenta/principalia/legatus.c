@@ -45,6 +45,16 @@ principale (integer argc, character** argv)
             cfg.via_manifesti = argv[i + I];
             i++;
         }
+        alioquin si (strcmp(argv[i], "-renatus") == ZEPHYRUM)
+        {
+            cfg.renatus = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-renovator") == ZEPHYRUM
+            && i + I < argc)
+        {
+            cfg.via_renovatoris = argv[i + I];
+            i++;
+        }
     }
     redde (integer)legatus_currere(stdin, stdout, &cfg);
 }

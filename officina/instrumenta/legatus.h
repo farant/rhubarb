@@ -48,6 +48,16 @@ nomen structura {
                                   * computat, K2.1 exemplar
                                   * tabularii) -> serverInfo.version;
                                   * NIHIL = "0" */
+    b32 renatus;                 /* MCP: exec sui perfectus (renovare)
+                                  * - initium initialize-aequivalens
+                                  * SPONTE agitur, quia cliens
+                                  * initialize non remittit (servum
+                                  * mutatum nescit) */
+    constans character* via_renovatoris; /* scriptum quod renovare
+                                  * ut exploratorem praevium agit et
+                                  * deinde exsequitur; NIHIL =
+                                  * <radix>/officina/legatus.sh
+                                  * (probationes stipulam dant) */
 } LegatusConfiguratio;
 
 /* Ansa principalis: legere epistulas ex intra, respondere/publicare

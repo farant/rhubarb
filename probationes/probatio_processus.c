@@ -541,6 +541,22 @@ s32 principale (vacuum)
         CREDO_VERUM (r.mora_ms < 3000);
     }
 
+    /* XIX. transformare: SOLUM semitae defectus hic probantur -
+     * exsecutio felix hunc ipsum processum substitueret (semita
+     * felix in probatio_officina_renovatio integre agitur) */
+    {
+        constans character* argumenta[II];
+
+        imprimere("\n--- XIX. transformare (defectus soli) ---\n");
+        argumenta[0] = "/bin/nullum-tale-binarium-est";
+        argumenta[I] = NIHIL;
+        CREDO_FALSUM (processus_transformare(argumenta));
+
+        argumenta[0] = NIHIL;
+        CREDO_FALSUM (processus_transformare(argumenta));
+        CREDO_FALSUM (processus_transformare(NIHIL));
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 
