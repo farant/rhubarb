@@ -303,6 +303,53 @@ _adfirma (Piscina* piscina, constans character* fons,
     CREDO_VERUM(iv.summum == summum);
 }
 
+/* gradus 2 (01KYNRVKW5): fons -> codex CONTRACTUS_INTERVALLI_
+ * VIOLATUS exspectatus n-ies (0 = criterium disiunctionis
+ * probatae pinnatum: 'fortasse extra' TACET) */
+interior vacuum
+_violationem_probare (Piscina* piscina, constans character* fons,
+    i32 numerus, constans character* descriptio)
+{
+    SilvaParsura* parsura;
+    SilvaSemantica* sem;
+    i32 inventi = ZEPHYRUM;
+    i32 i;
+    i32 m;
+
+    imprimere("  %s\n", descriptio);
+    parsura = _parsare(piscina, fons);
+    CREDO_NON_NIHIL(parsura);
+    si (parsura == NIHIL)
+    {
+        redde;
+    }
+    sem = silva_c89_semantica_analysare(piscina, parsura);
+    CREDO_NON_NIHIL(sem);
+    si (sem == NIHIL)
+    {
+        redde;
+    }
+    m = (i32)silva_c89_diagnostica_numerus(sem);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans SemanticaDiagnosticum* d =
+            silva_c89_diagnosticum_per_indicem(sem, i);
+
+        si (d != NIHIL && d->codex
+            == (s32)EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS)
+        {
+            inventi++;
+        }
+    }
+    si (inventi != numerus)
+    {
+        imprimere("    [FONS FRACTUS] inventi=%ld"
+            " exspectati=%ld\n%s\n",
+            (longus)inventi, (longus)numerus, fons);
+    }
+    CREDO_AEQUALIS_I32((i32)inventi, (i32)numerus);
+}
+
 #define INT_IMUM   (-2147483647L - 1L)
 #define INT_SUMMUM 2147483647L
 #define U32_SUMMUM 4294967295L
@@ -753,6 +800,115 @@ principale (vacuum)
         "void f(void) { int x = leg() + 1; { int u = x; } }",
         "x", ZEPHYRUM, 0L, 65536L,
         "XLI. reditus [-1,65535] + 1 -> [0,65536]");
+
+    imprimere("--- XLII-LV: contractus gradus 2 - probatio "
+        "(01KYNRVKW5) ---\n");
+
+    /* XLII. argumentum constans extra contractum inline: probatio
+     * sine fluxu, emissio statim */
+    _violationem_probare(piscina,
+        "/* <contractus param=\"n\" intra=\"2,16\"/> */\n"
+        "void f(unsigned n);\n"
+        "void g(void) { f(99u); }",
+        I, "XLII. f(99) contra [2,16] -> violatio");
+
+    /* XLIII. argumentum constans intra contractum -> TACET */
+    _violationem_probare(piscina,
+        "/* <contractus param=\"n\" intra=\"2,16\"/> */\n"
+        "void f(unsigned n);\n"
+        "void g(void) { f(5u); }",
+        ZEPHYRUM, "XLIII. f(5) intra [2,16] -> TACET");
+
+    /* XLIV. violatio per fluxum probata (via candidati): localis
+     * definitione [99,99] ad parametrum contractum */
+    _violationem_probare(piscina,
+        "/* <contractus param=\"n\" intra=\"2,16\"/> */\n"
+        "void f(unsigned n);\n"
+        "void g(void) { unsigned x = 99u; f(x); }",
+        I, "XLIV. x=[99,99] per fluxum -> violatio");
+
+    /* XLV. 'fortasse extra' TACET (criterium pinnatum): [0,32]
+     * contra [2,16] se intersecant - disiunctio non probata */
+    _violationem_probare(piscina,
+        "/* <contractus param=\"n\" intra=\"2,16\"/> */\n"
+        "void f(unsigned n);\n"
+        "/* <contractus param=\"m\" intra=\"0,32\"/> */\n"
+        "void g(unsigned m) { f(m); }",
+        ZEPHYRUM, "XLV. [0,32] contra [2,16] -> fortasse TACET");
+
+    /* XLVI. parametrum typedef refinato oratum ad sedem vocationis
+     * (frons typedef, ambulatio declarationis vocati) */
+    _violationem_probare(piscina,
+        "/* <contractus intra=\"0,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "void f(NBits n);\n"
+        "void g(void) { f(99u); }",
+        I, "XLVI. f(99) contra NBits [0,16] -> violatio");
+
+    /* XLVII. initiator localis typo refinato: violatio classica */
+    _violationem_probare(piscina,
+        "/* <contractus intra=\"0,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "void f(void) { NBits v = 99u; }",
+        I, "XLVII. NBits v = 99 -> violatio");
+
+    /* XLVIII. assignatio simplex ad localem refinatum */
+    _violationem_probare(piscina,
+        "/* <contractus intra=\"0,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "void f(void) { NBits v; v = 99u; }",
+        I, "XLVIII. v = 99 contra [0,16] -> violatio");
+
+    /* XLIX. assignatio per fluxum (via candidati): dextrum
+     * variabile refinatione marginis [21,max] probatum */
+    _violationem_probare(piscina,
+        "/* <contractus intra=\"0,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "void f(unsigned y) { NBits v; if (y > 20u) { v = y; } }",
+        I, "XLIX. v = y sub y>20 -> violatio per fluxum");
+
+    /* L. assignatio membro typo refinato orato */
+    _violationem_probare(piscina,
+        "/* <contractus intra=\"0,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "struct S { NBits n; };\n"
+        "void f(struct S s) { s.n = 99u; }",
+        I, "L. s.n = 99 contra [0,16] -> violatio");
+
+    /* LI. redde contra contractum reditus inline */
+    _violationem_probare(piscina,
+        "/* <contractus reditus=\"1,255\"/> */\n"
+        "unsigned g(void) { return 0u; }",
+        I, "LI. return 0 contra [1,255] -> violatio");
+
+    /* LII. redde contra typum reditus typedef refinato oratum */
+    _violationem_probare(piscina,
+        "/* <contractus intra=\"0,16\"/> */\n"
+        "typedef unsigned NBits;\n"
+        "NBits g(void) { return 99u; }",
+        I, "LII. return 99 contra NBits [0,16] -> violatio");
+
+    /* LIII. redde intra contractum -> TACET */
+    _violationem_probare(piscina,
+        "/* <contractus reditus=\"1,255\"/> */\n"
+        "unsigned g(void) { return 7u; }",
+        ZEPHYRUM, "LIII. return 7 intra [1,255] -> TACET");
+
+    /* LIV. codex mortuus inconclusivus: candidatum inattinctum
+     * DELETUR (onus inversum - relicta numquam verbatim) */
+    _violationem_probare(piscina,
+        "/* <contractus param=\"n\" intra=\"2,16\"/> */\n"
+        "void f(unsigned n);\n"
+        "void g(unsigned y) { if (0) { f(y); } }",
+        ZEPHYRUM, "LIV. f(y) in codice mortuo -> TACET (deletur)");
+
+    /* LV. constans violans in codice mortuo: probatio sine fluxu
+     * attingibilitatem non requirit (mendacium fontis manet) */
+    _violationem_probare(piscina,
+        "/* <contractus param=\"n\" intra=\"2,16\"/> */\n"
+        "void f(unsigned n);\n"
+        "void g(void) { if (0) { f(99u); } }",
+        I, "LV. f(99) in codice mortuo -> violatio (sine fluxu)");
 
     credo_imprimere_compendium();
 

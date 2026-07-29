@@ -92,6 +92,52 @@ static int reditus_nudus(void)
     return 0;
 }
 
+/* gradus 2 (01KYNRVKW5): probatio contra contractus - onus
+ * inversum, emissio sola disiunctione probata. Clang caecus. */
+
+/* argumentum constans extra contractum typedef - violatio */
+static unsigned g2_argumentum(void)
+{
+    /* <exspecta codex="CONTRACTUS_INTERVALLI_VIOLATUS"/> */
+    return larva_probata(99u);
+}
+
+/* argumentum intra contractum - TACET */
+static unsigned g2_argumentum_bonum(void)
+{
+    return larva_probata(7u);
+}
+
+/* 'fortasse extra' TACET (criterium): fines typi contra [0,16] */
+static unsigned g2_argumentum_fortasse(unsigned m)
+{
+    return larva_probata(m);
+}
+
+/* initiator localis typo refinato - violatio */
+static unsigned g2_definitio(void)
+{
+    /* <exspecta codex="CONTRACTUS_INTERVALLI_VIOLATUS"/> */
+    nb_t v = 99u;
+
+    return v;
+}
+
+/* redde contra contractum reditus - violatio */
+/* <contractus reditus="1,255"/> */
+static unsigned g2_redde(void)
+{
+    /* <exspecta codex="CONTRACTUS_INTERVALLI_VIOLATUS"/> */
+    return 0u;
+}
+
+/* violatio consulto tolerata - QUIETA */
+static unsigned g2_tolerata(void)
+{
+    /* <tolera codex="CONTRACTUS_INTERVALLI_VIOLATUS" (>exemplar suppressionis fixturae: violatio consulta */
+    return larva_probata(99u);
+}
+
 static unsigned radix(nb_t n, unsigned m)
 {
     malum_t ignotum = 0u;
@@ -99,5 +145,8 @@ static unsigned radix(nb_t n, unsigned m)
     return larva_probata(n) + larva_nuda(m)
         + (unsigned)subtractio_probata(m)
         + (unsigned)subtractio_nuda(n) + ignotum
-        + (unsigned)reditus_probatus() + (unsigned)reditus_nudus();
+        + (unsigned)reditus_probatus() + (unsigned)reditus_nudus()
+        + g2_argumentum() + g2_argumentum_bonum()
+        + g2_argumentum_fortasse(m) + g2_definitio()
+        + g2_redde() + g2_tolerata();
 }

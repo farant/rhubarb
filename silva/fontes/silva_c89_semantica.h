@@ -430,6 +430,15 @@ nomen enumeratio {
      *      (mensuratum: -Wtype-limits '<' capit, formas nostras
      *      non). */
     EXAMEN_CODEX_SUBTRACTIO_COMPARATA,        /* DOMESTICUM */
+
+    /* Contractus gradus 2 (01KYNRVKW5, 2026-07-28): contractus a
+     * fiducia ad limitem PROBATUM - argumenta ad sedes vocationis,
+     * definitiones localium/membrorum typo refinato oratorum,
+     * corpora redde, contra contractus iudicata.
+     * 81 = intervallum expressionis contra contractum PROBATE
+     *      disiunctum (totum extra fines - 'fortasse extra' TACET;
+     *      onus probandi in emissione, relicta numquam verbatim). */
+    EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS, /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

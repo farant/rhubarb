@@ -112,6 +112,12 @@ nomen structura {
                                       * addere simplex) */
     b32                  tractatum;  /* resolutum (probatum aut
                                       * emissum) */
+    s64                  contractus_imum;   /* gradus 2 (01KYNRVKW5):
+                                      * fines contractus - lecta
+                                      * SOLUM sub codice CONTRACTUS_
+                                      * INTERVALLI_VIOLATUS (sedes
+                                      * 55/80 intactae) */
+    s64                  contractus_summum;
 } IntervallumCandidatus;
 
 /* prototypa interiora (corpora post aestimatorem intervallorum,
@@ -123,6 +129,28 @@ interior vacuum _nexum_ponere (SilvaSemantica* sem,
 interior chorda _typus_nominatus_titulus (SilvaValor specificatores);
 interior b32 _refinatio_tituli (SilvaSemantica* sem, chorda titulus,
     s64* imum, s64* summum);
+interior b32 _contractus_disiunctum (SemanticaIntervallum iv,
+    s64 imum, s64 summum);
+interior vacuum _contractus_intervalli_probare (SilvaSemantica* sem,
+    constans SilvaNodus* expressio, constans SilvaNodus* ancora,
+    s64 imum, s64 summum, constans character* nuntius);
+interior b32 _contractus_argumenti (SilvaSemantica* sem,
+    chorda titulus_functionis, s32 index, s64* imum, s64* summum,
+    chorda* titulus_parametri_out);
+interior vacuum _contractus_symboli_probare (SilvaSemantica* sem,
+    constans SemanticaSymbolum* symbolum,
+    constans SilvaNodus* expressio, constans SilvaNodus* ancora);
+interior vacuum _contractus_membri_probare (SilvaSemantica* sem,
+    TypusC89* typus_basis, chorda titulus_membri,
+    constans SilvaNodus* expressio, constans SilvaNodus* ancora);
+interior vacuum _contractus_argumentum_probare (SilvaSemantica* sem,
+    chorda titulus_vocati, s32 index, constans SilvaNodus* na);
+interior vacuum _contractus_redde_probare (SilvaSemantica* sem,
+    constans SilvaNodus* redde_nodus, constans SilvaNodus* val);
+interior chorda _orthographia_symboli (
+    constans SemanticaSymbolum* symbolum);
+interior chorda _orthographia_membri (TypusC89* typus,
+    chorda titulus_membri);
 interior vacuum _intervalla_computare (SilvaSemantica* sem,
     constans FluxusFunctionis* fluxus);
 interior vacuum _intervalla_severa_examinare (SilvaSemantica* sem,
@@ -259,6 +287,8 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "contractus absens (parametrum intro-exitus sine contractu)",
                                                   EXAMEN_DOMESTICUM },
     { "subtractio insignata zephyro ordine comparata (involutio)",
+                                                  EXAMEN_DOMESTICUM },
+    { "contractus intervalli violatus (valor extra fines probatus)",
                                                   EXAMEN_DOMESTICUM }
 };
 
@@ -919,7 +949,9 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "ININITIATA_QUANDOCUMQUE",
       (s32)EXAMEN_CODEX_ININITIATA_QUANDOCUMQUE },
     { "SUBTRACTIO_COMPARATA",
-      (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA }
+      (s32)EXAMEN_CODEX_SUBTRACTIO_COMPARATA },
+    { "CONTRACTUS_INTERVALLI_VIOLATUS",
+      (s32)EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS }
 };
 
 /* ambulatio annotationum UNA communis per parsuram (frustum E2):
@@ -4199,6 +4231,13 @@ silva_c89_declarationem_tractare (SilvaSemantica* sem,
                         si (ti != NIHIL)
                         {
                             _ad_finem_annotare(sem, init, ti, t);
+                            /* gradus 2 (01KYNRVKW5): initiator
+                             * contra contractum typi refinati
+                             * (symbolum per nexum declaratoris
+                             * modo registratum) */
+                            _contractus_symboli_probare(sem,
+                                silva_c89_symbolum_nodi(sem, d),
+                                init, d);
                         }
                     }
                 }
@@ -5319,6 +5358,12 @@ _elementum_ambulare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                 {
                     _ad_finem_annotare(sem, val, tv, rc);
                     _sentinellam_examinare(sem, val);
+                }
+                si (!rc_vacuum)
+                {
+                    /* gradus 2 (01KYNRVKW5): redde contra
+                     * contractum reditus functionis ambientis */
+                    _contractus_redde_probare(sem, nodus, val);
                 }
             }
             alioquin si (rc != NIHIL && !rc_vacuum)
@@ -8523,6 +8568,108 @@ _contractus_parametri_intra (SilvaSemantica* sem,
     redde FALSUM;
 }
 
+/* orthographia typi membri: tag basis -> declaratio membri nomine
+ * -> specificatores (communis fluxui et probationi gradus 2 -
+ * factum ex _orthographia_declarata 01KYNRVKW5) */
+interior chorda
+_orthographia_membri (TypusC89* typus, chorda titulus_membri)
+{
+    chorda vacua;
+    TypusC89* t = _qualibus_exutum(typus);
+    constans SilvaNodus* structura_nodus;
+    SilvaValor membra;
+    i32 i;
+    i32 m;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    si (t == NIHIL || (t->genus != TYPUS_C89_STRUCTURA
+            && t->genus != TYPUS_C89_UNIO))
+    {
+        redde vacua;
+    }
+    structura_nodus = t->datum.tag.declarans;
+    si (structura_nodus == NIHIL)
+    {
+        redde vacua;
+    }
+    membra = (t->genus == TYPUS_C89_STRUCTURA)
+        ? silva_c89_structura_membra(structura_nodus)
+        : silva_c89_unio_membra(structura_nodus);
+    m = (i32)silva_valor_lista_numerus(membra);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* mv = silva_valor_lista_obtinere(membra, i);
+        SilvaValor declaratores;
+        i32 k;
+        i32 dm;
+
+        si (mv == NIHIL || mv->genus != SILVA_VALOR_NODUS)
+        {
+            perge;
+        }
+        declaratores = silva_c89_membrum_declaratores(
+            mv->datum.nodus);
+        dm = (i32)silva_valor_lista_numerus(declaratores);
+        per (k = ZEPHYRUM; k < dm; k++)
+        {
+            SilvaValor* dv = silva_valor_lista_obtinere(
+                declaratores, k);
+            SilvaToken* titulus;
+
+            si (dv == NIHIL || dv->genus != SILVA_VALOR_NODUS)
+            {
+                perge;
+            }
+            titulus = silva_c89_declaratoris_titulus(
+                dv->datum.nodus);
+            si (titulus != NIHIL
+                && _chordae_pares_contractus(titulus->valor,
+                       titulus_membri))
+            {
+                redde _typus_nominatus_titulus(
+                    silva_c89_membrum_specificatores(
+                        mv->datum.nodus));
+            }
+        }
+    }
+    redde vacua;
+}
+
+/* orthographia typi declarati symboli: declarans -> PARAMETRUM aut
+ * DECLARATIO proxima -> specificatores (probatio gradus 2 -
+ * locales quoque, quos frons parametrorum non tegit) */
+interior chorda
+_orthographia_symboli (constans SemanticaSymbolum* symbolum)
+{
+    chorda vacua;
+    constans SilvaNodus* n;
+    i32 custos;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    si (symbolum == NIHIL)
+    {
+        redde vacua;
+    }
+    n = symbolum->declarans;
+    per (custos = ZEPHYRUM; custos < VIII && n != NIHIL; custos++)
+    {
+        si (n->genus == (s32)SILVA_C89_GENUS_PARAMETRUM)
+        {
+            redde _typus_nominatus_titulus(
+                silva_c89_parametrum_specificatores(n));
+        }
+        si (n->genus == (s32)SILVA_C89_GENUS_DECLARATIO)
+        {
+            redde _typus_nominatus_titulus(
+                silva_c89_declaratio_specificatores(n));
+        }
+        n = n->pater;
+    }
+    redde vacua;
+}
+
 /* orthographia typi declarati: parametrum scalare (declarans ->
  * pater ad PARAMETRUM -> specificatores) aut membrum parametri
  * (tag basis -> declaratio membri nomine) */
@@ -8555,65 +8702,13 @@ _orthographia_declarata (constans FluxusVariabilis* var)
     {
         constans SemanticaSymbolum* s =
             (constans SemanticaSymbolum*)var->identitas;
-        TypusC89* t = (s != NIHIL) ? _qualibus_exutum(s->typus)
-            : NIHIL;
-        constans SilvaNodus* structura_nodus;
-        SilvaValor membra;
-        i32 i;
-        i32 m;
 
-        si (t == NIHIL || (t->genus != TYPUS_C89_STRUCTURA
-                && t->genus != TYPUS_C89_UNIO))
+        si (s == NIHIL)
         {
             redde vacua;
         }
-        structura_nodus = t->datum.tag.declarans;
-        si (structura_nodus == NIHIL)
-        {
-            redde vacua;
-        }
-        membra = (t->genus == TYPUS_C89_STRUCTURA)
-            ? silva_c89_structura_membra(structura_nodus)
-            : silva_c89_unio_membra(structura_nodus);
-        m = (i32)silva_valor_lista_numerus(membra);
-        per (i = ZEPHYRUM; i < m; i++)
-        {
-            SilvaValor* mv = silva_valor_lista_obtinere(membra, i);
-            SilvaValor declaratores;
-            i32 k;
-            i32 dm;
-
-            si (mv == NIHIL || mv->genus != SILVA_VALOR_NODUS)
-            {
-                perge;
-            }
-            declaratores = silva_c89_membrum_declaratores(
-                mv->datum.nodus);
-            dm = (i32)silva_valor_lista_numerus(declaratores);
-            per (k = ZEPHYRUM; k < dm; k++)
-            {
-                SilvaValor* dv = silva_valor_lista_obtinere(
-                    declaratores, k);
-                SilvaToken* titulus;
-
-                si (dv == NIHIL || dv->genus != SILVA_VALOR_NODUS)
-                {
-                    perge;
-                }
-                titulus = silva_c89_declaratoris_titulus(
-                    dv->datum.nodus);
-                si (titulus != NIHIL
-                    && _chordae_pares_contractus(titulus->valor,
-                           var->titulus_membri))
-                {
-                    redde _typus_nominatus_titulus(
-                        silva_c89_membrum_specificatores(
-                            mv->datum.nodus));
-                }
-            }
-        }
+        redde _orthographia_membri(s->typus, var->titulus_membri);
     }
-    redde vacua;
 }
 
 /* semen introitus variabilis: contractus inline > refinatio typi >
@@ -8649,6 +8744,400 @@ _intervallum_seminis (SilvaSemantica* sem,
         redde basis;
     }
     redde _intervallum_contractus_applicare(basis, imum, summum);
+}
+
+/* ==================================================
+ * Contractus gradus 2 (01KYNRVKW5): probatio contra contractus.
+ * ONUS INVERSUM prae codicibus 55/80: TACET nisi disiunctio
+ * PROBATA (intervallum totum extra fines - 'fortasse extra'
+ * tacet v1); relicta DELENTUR, numquam verbatim emissa.
+ * ================================================== */
+
+/* VERUM = intervallum contra [imum,summum] probate disiunctum */
+interior b32
+_contractus_disiunctum (SemanticaIntervallum iv, s64 imum,
+    s64 summum)
+{
+    redde (iv.status == (s32)SEMANTICA_INTERVALLUM_VALIDUM
+        && (iv.imum > summum || iv.summum < imum))
+        ? VERUM : FALSUM;
+}
+
+/* expressio contra contractum probanda. Triage sine fluxu statim:
+ * disiuncta => emissio (constantes, initiatores globales, codex
+ * mortuus capiuntur); CONTENTA => TACET perpetuo (aestimator
+ * monotonus - fluxus angustare tantum potest); inconclusiva =>
+ * candidatum (resolutio cum ambitu in _intervalla_severa_examinare,
+ * relicta in _intervalla_candidata_relicta_emittere DELENTUR). */
+interior vacuum
+_contractus_intervalli_probare (SilvaSemantica* sem,
+    constans SilvaNodus* expressio, constans SilvaNodus* ancora,
+    s64 imum, s64 summum, constans character* nuntius)
+{
+    SemanticaIntervallum iv;
+
+    si (expressio == NIHIL || ancora == NIHIL || sem->in_systemate
+        || _fons_alienus(sem, expressio))
+    {
+        redde;
+    }
+    iv = _intervallum_fluxus_expr(sem, NIHIL, NIHIL, expressio,
+        ZEPHYRUM);
+    si (_contractus_disiunctum(iv, imum, summum))
+    {
+        si (!_tolera_absorbere(sem, ancora, (s32)
+                EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS))
+        {
+            si (nuntius != NIHIL)
+            {
+                _diagnosticum_addere_plenum(sem, ancora, (s32)
+                    EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS,
+                    NIHIL, nuntius);
+            }
+            alioquin
+            {
+                silva_c89_diagnosticum_addere(sem, ancora,
+                    EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS);
+            }
+        }
+        redde;
+    }
+    si (iv.status == (s32)SEMANTICA_INTERVALLUM_VALIDUM
+        && iv.imum >= imum && iv.summum <= summum)
+    {
+        redde;   /* contenta - probatio perpetua */
+    }
+    {
+        IntervallumCandidatus* ic = (IntervallumCandidatus*)
+            xar_addere(sem->candidata_intervallorum);
+
+        si (ic != NIHIL)
+        {
+            ic->nodus = expressio;
+            ic->ancora = ancora;
+            ic->codex = (s32)
+                EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS;
+            ic->variabilis = -I;
+            ic->nuntius = nuntius;
+            ic->tractatum = FALSUM;
+            ic->contractus_imum = imum;
+            ic->contractus_summum = summum;
+        }
+        /* memoria deficit: TACET (onus inversum - improbatum) */
+    }
+}
+
+/* contractus parametri ad sedem vocationis: inline per indicem,
+ * alioquin orthographia parametri declarationis vocati (typedef
+ * refinatum). titulus_parametri_out impletur si notus. */
+interior b32
+_contractus_argumenti (SilvaSemantica* sem,
+    chorda titulus_functionis, s32 index, s64* imum, s64* summum,
+    chorda* titulus_parametri_out)
+{
+    i32 k;
+
+    _contractus_colligere(sem);
+    si (sem->contractus != NIHIL)
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(sem->contractus); k++)
+        {
+            constans ExamenContractus* c =
+                (constans ExamenContractus*)xar_obtinere(
+                    sem->contractus, k);
+
+            si (c != NIHIL && c->intra_est
+                && c->index_parametri == index
+                && _chordae_pares_contractus(c->titulus_functionis,
+                       titulus_functionis))
+            {
+                *imum = c->intra_imum;
+                *summum = c->intra_summum;
+                *titulus_parametri_out = c->titulus_parametri;
+                redde VERUM;
+            }
+        }
+    }
+    {
+        SemanticaSymbolum* s = silva_c89_symbolum_invenire(sem,
+            titulus_functionis);
+        constans SilvaNodus* declarator_fn = (s != NIHIL)
+            ? _declaratorem_fn_invenire(s->declarans) : NIHIL;
+        SilvaValor parametra;
+        i32 m;
+        s32 ordinalis = ZEPHYRUM;
+
+        si (declarator_fn == NIHIL)
+        {
+            redde FALSUM;
+        }
+        parametra = silva_c89_declarator_functionis_parametra(
+            declarator_fn);
+        m = (i32)silva_valor_lista_numerus(parametra);
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            SilvaValor* pv = silva_valor_lista_obtinere(parametra,
+                k);
+
+            si (pv == NIHIL || pv->genus != SILVA_VALOR_NODUS)
+            {
+                perge;
+            }
+            si (ordinalis == index)
+            {
+                chorda orthographia = _typus_nominatus_titulus(
+                    silva_c89_parametrum_specificatores(
+                        pv->datum.nodus));
+
+                si (!_refinatio_tituli(sem, orthographia, imum,
+                        summum))
+                {
+                    redde FALSUM;
+                }
+                {
+                    SilvaValor dv = silva_c89_parametrum_declarator(
+                        pv->datum.nodus);
+
+                    si (dv.genus == SILVA_VALOR_NODUS)
+                    {
+                        SilvaToken* t =
+                            silva_c89_declaratoris_titulus(
+                                dv.datum.nodus);
+
+                        si (t != NIHIL)
+                        {
+                            *titulus_parametri_out = t->valor;
+                        }
+                    }
+                }
+                redde VERUM;
+            }
+            ordinalis++;
+        }
+    }
+    redde FALSUM;
+}
+
+/* definitio symboli typo refinato orati contra contractum (sedes:
+ * initiator declarationis, assignatio simplex ad folium) */
+interior vacuum
+_contractus_symboli_probare (SilvaSemantica* sem,
+    constans SemanticaSymbolum* symbolum,
+    constans SilvaNodus* expressio, constans SilvaNodus* ancora)
+{
+    chorda orthographia = _orthographia_symboli(symbolum);
+    s64 imum = ZEPHYRUM;
+    s64 summum = ZEPHYRUM;
+
+    si (orthographia.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    _contractus_colligere(sem);
+    si (!_refinatio_tituli(sem, orthographia, &imum, &summum))
+    {
+        redde;
+    }
+    {
+        memoriae_index capacitas =
+            (memoriae_index)symbolum->titulus.mensura
+            + (memoriae_index)CXXVIII;
+        character* nuntius = (character*)piscina_allocare(
+            sem->piscina, capacitas);
+
+        si (nuntius != NIHIL)
+        {
+            sprintf(nuntius,
+                "definitio '%.*s' extra contractum [%ld,%ld]",
+                (int)symbolum->titulus.mensura,
+                (constans character*)symbolum->titulus.datum,
+                (longus)imum, (longus)summum);
+        }
+        _contractus_intervalli_probare(sem, expressio, ancora,
+            imum, summum, nuntius);
+    }
+}
+
+/* definitio membri typo refinato orati contra contractum (sedes:
+ * assignatio simplex ad accessum - basis punctum aut sagitta) */
+interior vacuum
+_contractus_membri_probare (SilvaSemantica* sem,
+    TypusC89* typus_basis, chorda titulus_membri,
+    constans SilvaNodus* expressio, constans SilvaNodus* ancora)
+{
+    chorda orthographia = _orthographia_membri(typus_basis,
+        titulus_membri);
+    s64 imum = ZEPHYRUM;
+    s64 summum = ZEPHYRUM;
+
+    si (orthographia.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    _contractus_colligere(sem);
+    si (!_refinatio_tituli(sem, orthographia, &imum, &summum))
+    {
+        redde;
+    }
+    {
+        memoriae_index capacitas =
+            (memoriae_index)titulus_membri.mensura
+            + (memoriae_index)CXXVIII;
+        character* nuntius = (character*)piscina_allocare(
+            sem->piscina, capacitas);
+
+        si (nuntius != NIHIL)
+        {
+            sprintf(nuntius,
+                "definitio membri '%.*s' extra contractum"
+                " [%ld,%ld]",
+                (int)titulus_membri.mensura,
+                (constans character*)titulus_membri.datum,
+                (longus)imum, (longus)summum);
+        }
+        _contractus_intervalli_probare(sem, expressio, ancora,
+            imum, summum, nuntius);
+    }
+}
+
+/* argumentum contra contractum parametri vocati (sedes: ansa
+ * argumentorum casus VOCATIO typationis) */
+interior vacuum
+_contractus_argumentum_probare (SilvaSemantica* sem,
+    chorda titulus_vocati, s32 index, constans SilvaNodus* na)
+{
+    s64 c_imum = ZEPHYRUM;
+    s64 c_summum = ZEPHYRUM;
+    chorda titulus_parametri;
+
+    titulus_parametri.mensura = ZEPHYRUM;
+    titulus_parametri.datum = NIHIL;
+    si (titulus_vocati.mensura == ZEPHYRUM
+        || !_contractus_argumenti(sem, titulus_vocati, index,
+               &c_imum, &c_summum, &titulus_parametri))
+    {
+        redde;
+    }
+    {
+        memoriae_index capacitas =
+            (memoriae_index)titulus_vocati.mensura
+            + (memoriae_index)titulus_parametri.mensura
+            + (memoriae_index)CXXVIII;
+        character* nuntius = (character*)piscina_allocare(
+            sem->piscina, capacitas);
+
+        si (nuntius != NIHIL)
+        {
+            si (titulus_parametri.mensura > ZEPHYRUM)
+            {
+                sprintf(nuntius,
+                    "argumentum '%.*s' vocationis '%.*s' extra"
+                    " contractum [%ld,%ld]",
+                    (int)titulus_parametri.mensura,
+                    (constans character*)titulus_parametri.datum,
+                    (int)titulus_vocati.mensura,
+                    (constans character*)titulus_vocati.datum,
+                    (longus)c_imum, (longus)c_summum);
+            }
+            alioquin
+            {
+                sprintf(nuntius,
+                    "argumentum vocationis '%.*s' extra"
+                    " contractum [%ld,%ld]",
+                    (int)titulus_vocati.mensura,
+                    (constans character*)titulus_vocati.datum,
+                    (longus)c_imum, (longus)c_summum);
+            }
+        }
+        _contractus_intervalli_probare(sem, na, na, c_imum,
+            c_summum, nuntius);
+    }
+}
+
+/* redde contra contractum reditus functionis ambientis (inline
+ * titulo aut typus reditus typedef refinato oratus) - ascensus
+ * patrum ad definitionem, campus contextus novus nullus */
+interior vacuum
+_contractus_redde_probare (SilvaSemantica* sem,
+    constans SilvaNodus* redde_nodus, constans SilvaNodus* val)
+{
+    constans SilvaNodus* def = redde_nodus;
+    constans SilvaNodus* declarator_fn;
+    SilvaToken* titulus_fn;
+    s64 c_imum = ZEPHYRUM;
+    s64 c_summum = ZEPHYRUM;
+    b32 habet = FALSUM;
+    i32 custos;
+    i32 k;
+
+    per (custos = ZEPHYRUM; custos < LXIV && def != NIHIL
+        && def->genus != (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS;
+        custos++)
+    {
+        def = def->pater;
+    }
+    si (def == NIHIL
+        || def->genus != (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
+    {
+        redde;
+    }
+    declarator_fn = _declaratorem_fn_invenire(def);
+    titulus_fn = (declarator_fn != NIHIL)
+        ? silva_c89_declaratoris_titulus(declarator_fn) : NIHIL;
+    si (titulus_fn == NIHIL)
+    {
+        redde;
+    }
+    _contractus_colligere(sem);
+    si (sem->contractus != NIHIL)
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(sem->contractus); k++)
+        {
+            constans ExamenContractus* c =
+                (constans ExamenContractus*)xar_obtinere(
+                    sem->contractus, k);
+
+            si (c != NIHIL && c->reditus_est
+                && _chordae_pares_contractus(c->titulus_functionis,
+                       titulus_fn->valor))
+            {
+                c_imum = c->intra_imum;
+                c_summum = c->intra_summum;
+                habet = VERUM;
+                frange;
+            }
+        }
+    }
+    si (!habet)
+    {
+        habet = _refinatio_tituli(sem,
+            _typus_nominatus_titulus(
+                silva_c89_definitio_functionis_specificatores(def)),
+            &c_imum, &c_summum);
+    }
+    si (!habet)
+    {
+        redde;
+    }
+    {
+        memoriae_index capacitas =
+            (memoriae_index)titulus_fn->valor.mensura
+            + (memoriae_index)CXXVIII;
+        character* nuntius = (character*)piscina_allocare(
+            sem->piscina, capacitas);
+
+        si (nuntius != NIHIL)
+        {
+            sprintf(nuntius,
+                "redde functionis '%.*s' extra contractum"
+                " [%ld,%ld]",
+                (int)titulus_fn->valor.mensura,
+                (constans character*)titulus_fn->valor.datum,
+                (longus)c_imum, (longus)c_summum);
+        }
+        _contractus_intervalli_probare(sem, val, val, c_imum,
+            c_summum, nuntius);
+    }
 }
 
 /* punctum fixum intervallorum (speculum _punctum_fixum_formarum
@@ -9178,6 +9667,19 @@ _intervalla_severa_examinare (SilvaSemantica* sem,
                     fc->tractatum = VERUM;
                     inventum = VERUM;
                     si (fc->codex == (s32)
+                          EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS)
+                    {
+                        /* gradus 2 (01KYNRVKW5) - onus inversum:
+                         * emissio SOLUM disiunctione probata */
+                        SemanticaIntervallum iv =
+                            _intervallum_fluxus_expr(sem, datorum,
+                                ambitus, fc->nodus, ZEPHYRUM);
+
+                        probatum = _contractus_disiunctum(iv,
+                            fc->contractus_imum,
+                            fc->contractus_summum) ? FALSUM : VERUM;
+                    }
+                    alioquin si (fc->codex == (s32)
                             EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA)
                     {
                         SemanticaIntervallum iv =
@@ -9256,6 +9758,12 @@ _intervalla_candidata_relicta_emittere (SilvaSemantica* sem)
             perge;
         }
         fc->tractatum = VERUM;
+        si (fc->codex == (s32)
+                EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS)
+        {
+            perge;   /* onus inversum (01KYNRVKW5): inattinctum =
+                      * improbatum - numquam verbatim */
+        }
         si (_tolera_absorbere(sem, fc->ancora, fc->codex))
         {
             perge;
@@ -12487,6 +12995,50 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
             {
                 casus SILVA_LEX_ASSIGNATIO:
                     _ad_finem_annotare(sem, nd, td, t);
+                    /* gradus 2 (01KYNRVKW5): definitio simplex
+                     * contra contractum typi refinati sinistri
+                     * (operatores compositi TACENT v1 - statum
+                     * praevium postulant) */
+                    si (ns->genus
+                        == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+                    {
+                        _contractus_symboli_probare(sem,
+                            silva_c89_symbolum_nodi(sem, ns), nd,
+                            nodus);
+                    }
+                    alioquin si (ns->genus
+                        == (s32)SILVA_C89_GENUS_ACCESSUS)
+                    {
+                        SilvaValor b_v = silva_c89_accessus_basis(
+                            ns);
+                        SilvaValor t_v =
+                            silva_c89_accessus_tok_titulus(ns);
+
+                        si (b_v.genus == SILVA_VALOR_NODUS
+                            && t_v.genus == SILVA_VALOR_TOKEN)
+                        {
+                            SemanticaTypatio* tb =
+                                _typationem_invenire(sem,
+                                    _canonicum(b_v.datum.nodus));
+                            TypusC89* basis_t = (tb != NIHIL)
+                                ? _qualibus_exutum(tb->naturalis)
+                                : NIHIL;
+
+                            si (basis_t != NIHIL && basis_t->genus
+                                == TYPUS_C89_MONSTRATOR)
+                            {
+                                basis_t = basis_t
+                                    ->datum.monstrator.internum;
+                            }
+                            si (basis_t != NIHIL)
+                            {
+                                _contractus_membri_probare(sem,
+                                    basis_t,
+                                    t_v.datum.token->valor, nd,
+                                    nodus);
+                            }
+                        }
+                    }
                     frange;
                 casus SILVA_LEX_PLUS_ASSIGNATIO:
                 casus SILVA_LEX_MINUS_ASSIGNATIO:
@@ -12875,6 +13427,11 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                             formati_exspectata[idx],
                             formati_conversiones[idx]);
                     }
+                    /* gradus 2 (01KYNRVKW5): argumentum contra
+                     * contractum parametri (custodes systematis/
+                     * alienitatis intra probationem) */
+                    _contractus_argumentum_probare(sem,
+                        titulus_vocati, (s32)a, na);
                     si (ta != NIHIL && typus_functionis != NIHIL)
                     {
                         si (typus_functionis

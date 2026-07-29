@@ -11138,3 +11138,107 @@ in indicem = extensio messoris (quaestio auditus contractuum plena).
 Etiam: goToDefinition sedem bis reddit (dedup cosmetica). Membra
 adhuc differuntur (identitas symboli nulla - eventa MEMBRUM_USUS
 semen manent).
+
+## 2026-07-28 - INTENTIO: CONTRACTUS GRADUS 2 - PROBATIO (01KYNRVKW5)
+
+Scope: contractus a fiducia ad limitem probatum - PROBATORES TRES,
+machina una, codex unus novus (81 = CONTRACTUS_INTERVALLI_VIOLATUS,
+DOMESTICUM, tolerabilis). Criterium: DISIUNCTIO PROBATA sola
+(intervallum totum extra contractum); 'fortasse extra' TACET v1.
+
+SUTURAE LECTAE (pretium ad suturam, non ex memoria):
+- Vectis resolutionis (_intervalla_severa_examinare) = sella parata:
+  candidatum {nodus = expressio aestimanda}, eventum primum INTRA
+  nodum = punctum aestimationis - semantica adaptationis EADEM ac
+  codicis 55, mutatio metae NULLA.
+- ONUS INVERSUM (differentia structuralis una): 55/80 emittunt nisi
+  probata, novus codex TACET nisi disiunctio probata. Ergo (1)
+  probatum ordinarium VERUM in resolutione; (2) relicta DELENTUR
+  numquam verbatim emissa (inattinctum = improbatum).
+- Triage sine fluxu TEMPORE MEMORATIONIS: aestimatio ambitu NIHIL
+  statim - disiuncta => emissio statim (constantes, initiatores
+  globales, codex mortuus capiuntur); CONTENTA => TACET perpetuo
+  (aestimator monotonus: ambitus angustior -> effectus angustior,
+  involutio ad amplitudinem plenam cadit - continentia stabilis);
+  inconclusiva => candidatum.
+- IntervallumCandidatus += contractus_imum/summum (s64; lecta SOLUM
+  sub codice novo - sedes 55/80 intactae).
+- Registratio nominis SE-SERVANS: mappa vectis ex ordine enumerationis
+  capitis derivatur - appende ante NUMERUS, adde ordinem _codices[]
+  (assertum magnitudinis clamat) + _tolerabiles[].
+
+SEDES MEMORATIONIS TRES (custodes in_systemate/_fons_alienus ut 59):
+(1) ARGUMENTA: ansa argumentorum casus VOCATIO typationis (na, a,
+    titulus_vocati praesto). Contractus parametri: inline per
+    index_parametri, alioquin symbolum vocati -> declarans ->
+    _declaratorem_fn_invenire -> parametrum k -> specificatores ->
+    orthographia -> _refinatio_tituli.
+(2) DEFS: casus ASSIGNATIO (LEX_ASSIGNATIO simplex solum) +
+    initiatores declarationum. Orthographia sinistri: folium ->
+    symbolum -> declarans (DECLARATIO aut PARAMETRUM); accessus ->
+    typus basis -> _orthographia_membri (ex _orthographia_declarata
+    FACTUM - ramus membri communis fit). AMBITUS v1 NOMINATUS:
+    typedef-orata sola (contractus param inline in defs differtur);
+    operatores compositi + crementa TACENT (statum praevium
+    postulant - fluxus eos iam tractat, probatio v2).
+(3) REDDE: casus GENUS_REDDE ambulationis - ascensus patrum ad
+    DEFINITIONEM (campus novus sem NULLUS); titulus declaratoris ->
+    contractus reditus inline, alioquin specificatores ->
+    orthographia refinata.
+
+Vectis: specimina ante machinam (violatio constans; violatio per
+fluxum probata - via candidati; contenta tacet; fortasse tacet -
+criterium pinnatum; typedef ad sedem vocationis; initiator; membrum;
+redde utraque forma; codex mortuus tacet - relicta delentur).
+Fixtura contractus_intervalla.severum ampliata utroque onere.
+Census post: sedes vocationis flatura internae (corpus parvum -
+fixtura onus fert). Suites omnes + amalgama + officina + radix.
+
+## 2026-07-28 - RELATIO: CONTRACTUS GRADUS 2 - PROBATIO (01KYNRVKW5)
+
+SHIPPED una sessione ab INTENTIONE - specimina XLII-LV (XIV nova)
+PRIMO CONTACTU 335/335, vitium nullum in machina inventum. Codex 81
+CONTRACTUS_INTERVALLI_VIOLATUS (DOMESTICUM, tolerabilis); probatores
+tres super machinam unam: _contractus_intervalli_probare (triage
+sine fluxu: disiuncta emissio statim / contenta TACET perpetuo per
+monotoniam / inconclusiva candidatum), resolutio in vectis SEVERA
+(onus inversum: probatum ordinarium VERUM), relicta DELENTUR.
+Sedes IV: ansa argumentorum VOCATIO (_contractus_argumentum_probare:
+inline per indicem + orthographia parametri vocati), initiator
+declarationis (symbolum per nexum declaratoris modo registratum -
+scopus blocci registrationem celabat, nexus eam reddidit), assignatio
+simplex (folium per nexum + accessus per typationem basis ->
+_orthographia_membri FACTUM ex _orthographia_declarata), redde
+(_contractus_redde_probare: ascensus patrum ad definitionem - campus
+contextus novus NULLUS opus fuit). Nuntii se-nominantes: argumentum/
+definitio/membrum/redde + fines contractus.
+
+MENSURATA: census codicis 81 = 0 sedes in 683 plagulis (criterium
+strepitus-nulli VERUM mensuratum; REICE 2 = cauda lapifex congelata
+pristina, INFRA 1 = capsula_libri generata OOM - apparatus, non
+iudicium). Fixtura +VI functiones (III pinnatae, tolerata QUIETA,
+IRRITUM 0); VECTIS TENET (mappa nominum se-derivans ex ordine
+enumerationis - registratio nominis gratis). Flatura ACCIPE manet.
+
+UNA CAPTURA PORTAE (non vitium): enumeratio ExamenCodex API PUBLICA
+est - silva.h manuscriptum ordinem proprium fert; porta amalgamatis
+id clamavit (regula CLAUDE.md 'API nova = extende silva.h' vixit).
+Officina amalgama post silva.h renovanda (porta STALA propria
+clamavit - catena tota se custodit).
+
+Vectes omnes: silva 35/35 (intervalla 335/335), VECTIS TENET,
+amalgama silva + officina VERIFICATA, officina 13/13, radix 108/108
+PLENUS.
+
+INSTRUMENTA (debrief): adhibita = legati corpus/symbolum (sedes
+resolutionis), selecta/grep mixta, examen -census (mensura criterii
+ante navem), vectis (probavit mappam se-derivantem), hook post-edit
+(unicum vitium meum in specimine primo statim nominavit - identifier
+ignotus ante machinam, exspectatum). Fructus: censum 81 SINE codice
+speciali currere posse (examen.sh -census generica) = praemium
+tabulae codicum unicae. Asperitas: census unum processum Killed:9
+(capsula_libri.c generata immanis) - INFRA honeste relatum sed
+strepitus; desideratum possibile: exclusio generatorum in censu.
+Nominata restant (v2 ianuae): defs operatorum compositorum/crementa
+(statum praevium postulant), contractus param inline in defs,
+severitas-manubrium (fortasse-extra ut modus strictus).
