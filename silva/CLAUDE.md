@@ -41,9 +41,16 @@ Do these IN ORDER before writing code:
    Aim at your actual task; known-good fallbacks:
    `./silva/nexus.sh silva_c89_parsare` · `./silva/emitte.sh
    lib/piscina.c piscina_generare_dynamicum` · `./silva/origo.sh
-   lib/piscina.c 239:5` ('if' <- si). Symptom table (dolor →
-   mandatum) in MEMORY.md; censor runs itself (amalgamare porta 6 +
-   post-edit hook); interpretare is officina-side.
+   lib/piscina.c 239:5` ('if' <- si). **Include ONE mcp legati call**
+   (e.g. `corpus` on a symbol near your task) — the fori ab_lecto
+   principle applied here: discovery, not discipline (Fran
+   2026-07-29). Its exact AST extents + attached doc comment are the
+   experience that a computed-offset grep+Read silently lacks
+   (measured: a 110-line window truncated _intervalla_transferre at
+   line 8487 of 8558 and missed its header comment — invisibly).
+   Symptom table (dolor → mandatum) in MEMORY.md; censor runs itself
+   (amalgamare porta 6 + post-edit hook); interpretare is
+   officina-side.
 
 Before compaction: append a phase-log addendum with anything in-flight.
 When narrowing scope: log it in the phase-log with the deferred use case
