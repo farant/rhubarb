@@ -110,9 +110,49 @@ nomen structura {
     Hora hora;
 } DiesHora;
 
+/* ==================================================
+ * Typi Temporis (genera signata, 01KYNXXVX9)
+ *
+ * UNITAS CANONICA (decretum 01KYPYH3KA, 2026-07-29): MILLISECUNDA
+ * ab epocha - nomina nuda Momentum/Mora ei pertinent (scala ULID/
+ * telemetriae/entium). Scala secundorum Unix suffixum Sec fert;
+ * scala dierum Iulianorum genus proprium fert. Trans scalas =
+ * error generis (vitium x1000 classicum capitur).
+ *
+ * Puncta (affinia): Momentum/MomentumSec/DiesIulianus - punctum +
+ * punctum sensu caret; punctum - punctum = mora scalae suae.
+ * Morae (lineares): Mora/MoraSec/MoraDierum - subiecto SIGNATO
+ * necessario (differentiae temporis signum ferunt). MoraAngusta =
+ * eadem stirps ac Mora, repraesentatio angustior (s32) - genus
+ * per STIRPEM, non per typedef. Insignatum neutrum: s64 nudum in
+ * positiones signatas sine strepitu fluit (adoptio gradualis);
+ * conversio explicita erasionem benedicit.
+ * ================================================== */
+
+/* <contractus signatum="Momentum" differentia="Mora"/> */
+nomen s64 Momentum;      /* millisecunda ab epocha (canonicum) */
+
+/* <contractus signatum="Mora"/> */
+nomen s64 Mora;          /* duratio millisecundorum */
+
+/* <contractus signatum="MomentumSec" differentia="MoraSec"/> */
+nomen s64 MomentumSec;   /* secunda Unix (POSIX-orientata) */
+
+/* <contractus signatum="MoraSec"/> */
+nomen s64 MoraSec;       /* duratio secundorum */
+
+/* <contractus signatum="DiesIulianus" differentia="MoraDierum"/> */
+nomen s64 DiesIulianus;  /* numerus diei Iuliani (punctum dierum) */
+
+/* <contractus signatum="MoraDierum"/> */
+nomen s64 MoraDierum;    /* duratio dierum */
+
+/* <contractus signatum="Mora"/> */
+nomen s32 MoraAngusta;   /* duratio ms angusta (stirps Morae) */
+
 /* Intervallum - Distantia inter duas dies */
 nomen structura {
-    s64 dies_totales;
+    MoraDierum dies_totales;
 } Intervallum;
 
 
@@ -281,48 +321,19 @@ fasti_inter(
  * ================================================== */
 
 /* Convertere diem ad numerum Iulianum */
-s64
+DiesIulianus
 fasti_ad_iulianum(
     Dies dies);
 
 /* Convertere numerum Iulianum ad diem */
 Dies
 fasti_ex_iuliano(
-    s64 iulianus);
+    DiesIulianus iulianus);
 
 
 /* ==================================================
  * Conversio Unix
  * ================================================== */
-
-/* ==================================================
- * Typi Temporis (genera signata, 01KYNXXVX9)
- *
- * UNITAS CANONICA (decretum 01KYPYH3KA, 2026-07-29): MILLISECUNDA
- * ab epocha - nomina nuda Momentum/Mora ei pertinent (scala ULID/
- * telemetriae/entium). Scala secundorum Unix suffixum Sec fert
- * (unitas ut terminus technicus, more 'offset').
- *
- * Momentum = instans - genus AFFINE (punctum): momentum + momentum
- * sensu caret; momentum - momentum = Mora. Mora = duratio - genus
- * LINEARE (vector), subiecto SIGNATO necessario (differentiae
- * temporis signum ferunt). Trans scalas (Sec <-> ms) = error
- * generis - vitium x1000 classicum capitur. Insignatum neutrum:
- * s64 nudum in positiones signatas sine strepitu fluit (adoptio
- * gradualis); conversio explicita erasionem benedicit.
- * ================================================== */
-
-/* <contractus signatum="Momentum" differentia="Mora"/> */
-nomen s64 Momentum;      /* millisecunda ab epocha (canonicum) */
-
-/* <contractus signatum="Mora"/> */
-nomen s64 Mora;          /* duratio millisecundorum */
-
-/* <contractus signatum="MomentumSec" differentia="MoraSec"/> */
-nomen s64 MomentumSec;   /* secunda Unix (POSIX-orientata) */
-
-/* <contractus signatum="MoraSec"/> */
-nomen s64 MoraSec;       /* duratio secundorum */
 
 /* Convertere DiesHora ad Unix timestamp (UTC) */
 MomentumSec

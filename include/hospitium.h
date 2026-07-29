@@ -47,8 +47,8 @@ nomen structura {
     i32 connexiones_maximae;         /* 0 = CXXVIII (tectum CXXVIII) */
     i32 petitio_maxima;              /* 0 = 1MB (413 super) */
     i32 uri_maxima;                  /* 0 = 8KB (414 super) */
-    s32 otium_maximum_ms;            /* 0 = 30000 */
-    s32 capita_maxima_ms;            /* 0 = 10000 */
+    MoraAngusta otium_maximum_ms;    /* 0 = 30000 */
+    MoraAngusta capita_maxima_ms;    /* 0 = 10000 */
     b32 acao;                        /* Access-Control-Allow-Origin: * */
     b32 acta_accessus;               /* linea per petitionem ad stderr */
 } HospitiumConfiguratio;

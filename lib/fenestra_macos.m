@@ -686,7 +686,7 @@ fenestra_perscrutari_eventus (
 vacuum
 fenestra_expectare_eventus (
     Fenestra* fenestra,
-    s64 ms_maximae)
+    Mora ms_maximae)
 {
     @autoreleasepool {
         NSEvent* primus;

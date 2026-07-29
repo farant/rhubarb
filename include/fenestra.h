@@ -6,6 +6,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "fasti.h"   /* Mora: duratio millisecundorum */
 
 /* ==================================================
  * FENESTRA - Creatio et Gestio Fenestrarum
@@ -312,7 +313,7 @@ fenestra_perscrutari_eventus (
 vacuum
 fenestra_expectare_eventus (
     Fenestra* fenestra,
-    s64       ms_maximae);
+    Mora      ms_maximae);
 
 /* Obtinere eventum proximum ex cauda
  *

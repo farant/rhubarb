@@ -233,7 +233,7 @@ fasti_hora_valida(
  * computationum arithmeticarum.
  * ================================================== */
 
-s64
+DiesIulianus
 fasti_ad_iulianum(
     Dies dies)
 {
@@ -263,7 +263,7 @@ fasti_ad_iulianum(
 
 Dies
 fasti_ex_iuliano(
-    s64 iulianus)
+    DiesIulianus iulianus)
 {
     /* Algorithmus inversus: JDN ad diem Gregorianam */
     s64 a, b, c, d, e, m;
@@ -296,7 +296,7 @@ fasti_dies_hebdomadis(
      * JDN % 7 dat diem hebdomadis ubi 0 = Lunae (Monday).
      * Nos volumus 0 = Dominica, ergo adiustamus.
      */
-    s64 jdn = fasti_ad_iulianum(dies);
+    DiesIulianus jdn = fasti_ad_iulianum(dies);
     s32 dh = (s32)((jdn + I) % VII);
     redde dh;
 }
@@ -307,8 +307,8 @@ fasti_dies_anni(
 {
     /* Dies anni: 1 Ian = 1, 31 Dec = 365 (vel 366) */
     Dies prima = fasti_dies(dies.annus, I, I);
-    s64 jdn_dies = fasti_ad_iulianum(dies);
-    s64 jdn_prima = fasti_ad_iulianum(prima);
+    DiesIulianus jdn_dies = fasti_ad_iulianum(dies);
+    DiesIulianus jdn_prima = fasti_ad_iulianum(prima);
     redde (s32)(jdn_dies - jdn_prima + I);
 }
 
@@ -326,7 +326,7 @@ fasti_hebdomada_anni(
      */
     Dies ian_iv;
     s32 dh_ian_iv;
-    s64 jdn_dies, jdn_prima_feria_ii;
+    DiesIulianus jdn_dies, jdn_prima_feria_ii;
     s32 hebdomada;
 
     /* 4 Ianuarii semper est in prima hebdomada ISO */
@@ -356,7 +356,7 @@ fasti_hebdomada_anni(
         /* Verifica si revera est hebdomada 53 vel 1 anni sequentis */
         Dies ian_iv_seq = fasti_dies(dies.annus + I, I, IV);
         s32 dh_seq = fasti_dies_hebdomadis(ian_iv_seq);
-        s64 jdn_seq;
+        DiesIulianus jdn_seq;
 
         si (dh_seq == ZEPHYRUM) {
             dh_seq = VI;
@@ -544,9 +544,9 @@ fasti_ad_unix(
 {
     /* Unix epoch: 1970-01-01 00:00:00 UTC */
     Dies epoch = fasti_dies(MCMX + LXX, I, I);
-    s64 jdn_dies = fasti_ad_iulianum(dh.dies);
-    s64 jdn_epoch = fasti_ad_iulianum(epoch);
-    s64 dies_diff = jdn_dies - jdn_epoch;
+    DiesIulianus jdn_dies = fasti_ad_iulianum(dh.dies);
+    DiesIulianus jdn_epoch = fasti_ad_iulianum(epoch);
+    MoraDierum dies_diff = jdn_dies - jdn_epoch;
     s64 secunda;
 
     secunda = dies_diff * 86400LL;
@@ -562,7 +562,7 @@ fasti_ex_unix(
     MomentumSec timestamp)
 {
     Dies epoch = fasti_dies(MCMX + LXX, I, I);
-    s64 jdn_epoch = fasti_ad_iulianum(epoch);
+    DiesIulianus jdn_epoch = fasti_ad_iulianum(epoch);
     s64 dies_diff;
     s64 secunda_diei;
     DiesHora dh;

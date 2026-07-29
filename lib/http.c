@@ -43,7 +43,7 @@ structura HttpPetitio {
     i32       capita_numerus;
 
     /* Tempus receptionis (ms; 0 = defaltum tcp XXX s) */
-    i32 tempus_ms;
+    MoraAngusta tempus_ms;
 };
 
 
@@ -602,7 +602,7 @@ http_petitio_creare(
 vacuum
 http_petitio_tempus_ponere(
     HttpPetitio* petitio,
-    i32          tempus_ms)
+    MoraAngusta  tempus_ms)
 {
     si (!petitio)
     {
@@ -731,7 +731,8 @@ http_exsequi(
 
         si (petitio->tempus_ms > 0)
         {
-            tcp_opt.timeout_ms = petitio->tempus_ms;
+            /* sutura tcp adhuc i32 - valor positivus custoditus */
+            tcp_opt.timeout_ms = (i32)petitio->tempus_ms;
         }
         tcp_res = tcp_connectere_cum_optionibus(
             (constans character*)petitio->hospes.datum,

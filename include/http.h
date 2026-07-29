@@ -19,6 +19,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "fasti.h"   /* MoraAngusta: duratio ms (stirps Morae) */
 
 /* ========================================================================
  * TYPI
@@ -157,7 +158,7 @@ http_petitio_caput_addere(
 vacuum
 http_petitio_tempus_ponere(
     HttpPetitio* petitio,
-    i32          tempus_ms);
+    MoraAngusta  tempus_ms);
 
 /* Ponere corpus (body) petitionis */
 vacuum
