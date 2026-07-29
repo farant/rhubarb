@@ -298,31 +298,41 @@ fasti_ex_iuliano(
 /* ==================================================
  * Typi Temporis (genera signata, 01KYNXXVX9)
  *
- * Momentum = instans (secunda Unix, UTC) - genus AFFINE (punctum):
- * momentum + momentum sensu caret; momentum - momentum = Mora.
- * Mora = duratio (secunda) - genus LINEARE (vector), subiecto
- * SIGNATO necessario (differentiae temporis signum ferunt).
- * Insignatum neutrum est: s64 nudum in positionem Momentum sine
- * strepitu fluit - adoptio gradualis, cascata conversionis nulla.
- * NOTA: scala millisecundorum (entitas/moneta) genus proprium
- * futurum habet - hoc SECUNDA sunt.
+ * UNITAS CANONICA (decretum 01KYPYH3KA, 2026-07-29): MILLISECUNDA
+ * ab epocha - nomina nuda Momentum/Mora ei pertinent (scala ULID/
+ * telemetriae/entium). Scala secundorum Unix suffixum Sec fert
+ * (unitas ut terminus technicus, more 'offset').
+ *
+ * Momentum = instans - genus AFFINE (punctum): momentum + momentum
+ * sensu caret; momentum - momentum = Mora. Mora = duratio - genus
+ * LINEARE (vector), subiecto SIGNATO necessario (differentiae
+ * temporis signum ferunt). Trans scalas (Sec <-> ms) = error
+ * generis - vitium x1000 classicum capitur. Insignatum neutrum:
+ * s64 nudum in positiones signatas sine strepitu fluit (adoptio
+ * gradualis); conversio explicita erasionem benedicit.
  * ================================================== */
 
 /* <contractus signatum="Momentum" differentia="Mora"/> */
-nomen s64 Momentum;
+nomen s64 Momentum;      /* millisecunda ab epocha (canonicum) */
 
 /* <contractus signatum="Mora"/> */
-nomen s64 Mora;
+nomen s64 Mora;          /* duratio millisecundorum */
+
+/* <contractus signatum="MomentumSec" differentia="MoraSec"/> */
+nomen s64 MomentumSec;   /* secunda Unix (POSIX-orientata) */
+
+/* <contractus signatum="MoraSec"/> */
+nomen s64 MoraSec;       /* duratio secundorum */
 
 /* Convertere DiesHora ad Unix timestamp (UTC) */
-Momentum
+MomentumSec
 fasti_ad_unix(
     DiesHora dh);
 
 /* Convertere Unix timestamp ad DiesHora (UTC) */
 DiesHora
 fasti_ex_unix(
-    Momentum timestamp);
+    MomentumSec timestamp);
 
 
 /* ==================================================

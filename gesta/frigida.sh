@@ -27,7 +27,7 @@ declare -a GCC_FLAGS=(
 
 main_src="$GESTA_DIR/instrumenta/nota_frigida.c"
 obj_files="$BUILD_DIR/sqlite3.o"
-for o in piscina chorda chorda_aedificator xar friatio tabula_dispersa internamentum utf8 json similitudo sigillum scrinium tabellarius vigilia filum via iter_directoria gesta tabularium; do
+for o in piscina chorda chorda_aedificator xar friatio tabula_dispersa internamentum utf8 json similitudo sigillum scrinium moneta tabellarius vigilia filum via iter_directoria gesta tabularium; do
     obj_files="$obj_files $BUILD_DIR/$o.o"
 done
 

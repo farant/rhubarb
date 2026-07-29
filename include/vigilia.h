@@ -43,7 +43,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
-#include "fasti.h"   /* Momentum: horologium iniectum secunda Unix */
+#include "fasti.h"   /* MomentumSec: horologium iniectum secunda Unix */
 
 nomen enumeratio {
     VIGILIA_RECENS = 0,
@@ -131,9 +131,9 @@ vigilia_continet (
  * loquitur - agnitio ad causam agnitam scopata). */
 b32
 vigilia_tacere (
-    Vigilia* vigilia,
-    i32      responsa,
-    Momentum nunc);
+    Vigilia*    vigilia,
+    i32         responsa,
+    MomentumSec nunc);
 
 /* Facies emissionis UNICA post politicam: cautio dicenda aut NIHIL
  * (recens AUT tacita). Latus-effectus: horologium quietis gerit et
@@ -141,7 +141,7 @@ vigilia_tacere (
  * vigilia_cautio crudam relinquant huic. */
 constans character*
 vigilia_cautio_dicenda (
-    Vigilia* vigilia,
-    Momentum nunc);
+    Vigilia*    vigilia,
+    MomentumSec nunc);
 
 #endif /* VIGILIA_H */

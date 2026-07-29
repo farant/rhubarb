@@ -4,13 +4,14 @@
  * exemplar tcp_posix). */
 
 #include "moneta.h"
+#include "fasti.h"   /* Momentum: millisecunda ab epocha (canon) */
 #include <stdio.h>
 #include <sys/time.h>
 
 hic_manens constans character ULID_LITTERAE[] =
     "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
-hic_manens i64 _ulid_tempus_ultimum = 0;
+hic_manens Momentum _ulid_tempus_ultimum = 0;
 hic_manens i32 _ulid_fortuita[16];
 
 /* octeti fortuiti ex /dev/urandom (stdio purum - semita POSIX sed
@@ -31,7 +32,8 @@ _fortuita_implere (i8* effusio, memoriae_index mensura)
     }
     {
         memoriae_index k;
-        i64 semen = _ulid_tempus_ultimum ^ (i64)0x9e3779b97f4a7c15ULL;
+        i64 semen = (i64)_ulid_tempus_ultimum
+            ^ (i64)0x9e3779b97f4a7c15ULL;
 
         per (k = ZEPHYRUM; k < mensura; k++)
         {
@@ -46,12 +48,14 @@ vacuum
 moneta_ulid (character* effusio)
 {
     structura timeval nunc_tv;
-    i64 nunc;
+    Momentum nunc;
     integer k;
 
     gettimeofday(&nunc_tv, NIHIL);
-    nunc = (i64)nunc_tv.tv_sec * 1000
-         + (i64)nunc_tv.tv_usec / 1000;
+    /* instans = secunda scalata + residuum microsecundorum ut MORA
+     * (punctum + spatium; punctum + punctum machina recte vetuit) */
+    nunc = (Momentum)nunc_tv.tv_sec * 1000
+         + (Mora)nunc_tv.tv_usec / 1000;
 
     si (nunc <= _ulid_tempus_ultimum)
     {
@@ -97,7 +101,8 @@ moneta_ulid (character* effusio)
     }
 
     {
-        i64 t = _ulid_tempus_ultimum;
+        i64 t = (i64)_ulid_tempus_ultimum;   /* cifrae basi-32: bits
+                                              * crudi - erasio consulta */
 
         per (k = 9; k >= 0; k--)
         {

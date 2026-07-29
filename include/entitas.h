@@ -7,6 +7,7 @@
 #include "piscina.h"
 #include "uuid.h"
 #include "internamentum.h"
+#include "fasti.h"   /* Momentum: millisecunda ab epocha (canon) */
 
 /* ==================================================
  * Typus Literalis (Literal/Parsed Types)
@@ -22,7 +23,7 @@ nomen enumeratio {
     TYPUS_S64     = III, /* Signed 64-bit integer */
     TYPUS_F64     = IV,  /* 64-bit floating point */
     TYPUS_B32     = V,   /* Boolean */
-    TYPUS_TEMPUS  = VI,  /* Timestamp (s64 milliseconds since epoch) */
+    TYPUS_TEMPUS  = VI,  /* Timestamp (Momentum: millisecunda ab epocha) */
     TYPUS_BLOBUM  = VII  /* Binary blob, auto-compressed with flatura */
 } TypusLiteralis;
 
@@ -53,7 +54,7 @@ nomen structura {
         s64 ut_s64;
         f64 ut_f64;
         b32 ut_b32;
-        s64 ut_tempus;  /* milliseconds since epoch */
+        Momentum ut_tempus;  /* millisecunda ab epocha */
     } parsitus;
 } Proprietas;
 

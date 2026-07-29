@@ -28,7 +28,7 @@ structura Vigilia {
     i32                 tacita_reliqua;
     constans character* causa_tacita;    /* fingerprint agnitionis */
     VigiliaStatus       status_tacitus;
-    Momentum            tempus_ultimum;  /* secunda; horologium iniectum */
+    MomentumSec         tempus_ultimum;  /* secunda; horologium iniectum */
     s64                 commissi_mtempus; /* stampa ad agnitionem (ns) */
 };
 
@@ -369,7 +369,7 @@ _commissi_mtempus (vacuum)
 }
 
 b32
-vigilia_tacere (Vigilia* vigilia, i32 responsa, Momentum nunc)
+vigilia_tacere (Vigilia* vigilia, i32 responsa, MomentumSec nunc)
 {
     si (vigilia == NIHIL || vigilia->cautio == NIHIL
         || responsa <= ZEPHYRUM)
@@ -389,9 +389,9 @@ vigilia_tacere (Vigilia* vigilia, i32 responsa, Momentum nunc)
 }
 
 constans character*
-vigilia_cautio_dicenda (Vigilia* vigilia, Momentum nunc)
+vigilia_cautio_dicenda (Vigilia* vigilia, MomentumSec nunc)
 {
-    Mora quies;   /* momentum - momentum = mora (algebra signata) */
+    MoraSec quies;   /* momentum - momentum = mora (algebra signata) */
 
     si (vigilia == NIHIL)
     {
