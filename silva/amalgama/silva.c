@@ -5105,6 +5105,18 @@ nomen structura {
      * hoc campum ponere debet (laqueus vocator-initiat). */
     s32 (*stirps_valoris)(vacuum* contextus,
         constans SilvaNodus* expressio);
+    /* classificatio AMBITU-CONSCIA (v2 fluxus, ianua decisi 1):
+     * ut stirps_valoris sed cum statu currenti per variabilem
+     * (tabula exitus medio-renovata, ordine eventorum = status
+     * verus) - defs sui-referentes (t = t - m in ansa)
+     * provenientiam servant. NIHIL = columna caeca ev->stirps
+     * adhibetur. Terminatio: introitus per iunctionem monotone
+     * non-descendens in reticulo finito - recomputationes finitae
+     * etiam classificatione non-monotona. CAVE vocator-initiat. */
+    s32 (*stirps_valoris_ambitu)(vacuum* contextus,
+        constans SilvaNodus* expressio,
+        constans FluxusDatorum* datorum,
+        constans s32* stirpes);
     /* lectio canonica nodi AMBIGUI; NIHIL = identitas */
     constans SilvaNodus* (*canonicum)(vacuum* contextus,
         constans SilvaNodus* nodus);
@@ -42371,10 +42383,14 @@ _stirpem_iungere (s32 a, s32 b)
 }
 
 /* Exitus = introitus + definitiones (replay ordine eventorum);
- * eventa membrorum cribrata (lex eventorum additivorum) */
+ * eventa membrorum cribrata (lex eventorum additivorum).
+ * Classificatio ambitu-conscia (aux, v2): def contra tabulam
+ * exitus MEDIO-renovatam - ordo eventorum = status currens verus
+ * (usus-ante-def compositorum ordinem servat); involucro absente
+ * columna caeca ev->stirps. */
 interior vacuum
 _stirpes_exitum_computare (FluxusDatorum* datorum,
-    FluxusDatorumBlocus* b)
+    FluxusDatorumBlocus* b, constans FluxusDatorumAuxilia* aux)
 {
     i32 n_var = silva_xar_numerus(datorum->variabiles);
     i32 v;
@@ -42404,13 +42420,18 @@ _stirpes_exitum_computare (FluxusDatorum* datorum,
         }
         alioquin
         {
-            b->stirpes_exitus[ev->variabilis] = ev->stirps;
+            b->stirpes_exitus[ev->variabilis] =
+                (aux != NIHIL && aux->stirps_valoris_ambitu != NIHIL)
+                ? aux->stirps_valoris_ambitu(aux->contextus,
+                      ev->fons_valoris, datorum, b->stirpes_exitus)
+                : ev->stirps;
         }
     }
 }
 
 interior vacuum
-_punctum_fixum_stirpium (SilvaPiscina* piscina, FluxusDatorum* datorum)
+_punctum_fixum_stirpium (SilvaPiscina* piscina, FluxusDatorum* datorum,
+    constans FluxusDatorumAuxilia* aux)
 {
     i32 n_var = silva_xar_numerus(datorum->variabiles);
     i32 n_loci = (n_var > ZEPHYRUM) ? n_var : I;
@@ -42480,7 +42501,7 @@ _punctum_fixum_stirpium (SilvaPiscina* piscina, FluxusDatorum* datorum)
 
         lector++;
         in_indice[index_bloci] = FALSUM;
-        _stirpes_exitum_computare(datorum, db);
+        _stirpes_exitum_computare(datorum, db, aux);
 
         m = silva_xar_numerus(fb->margines);
         per (k = ZEPHYRUM; k < m; k++)
@@ -42556,6 +42577,7 @@ silva_c89_fluxus_datorum_aedificare (SilvaPiscina* piscina,
         ex.aux.parametrum_accumulat = NIHIL;
         ex.aux.expressio_acies = NIHIL;
         ex.aux.stirps_valoris = NIHIL;
+        ex.aux.stirps_valoris_ambitu = NIHIL;
         ex.aux.canonicum = NIHIL;
         ex.aux.contextus = NIHIL;
     }
@@ -42592,7 +42614,7 @@ silva_c89_fluxus_datorum_aedificare (SilvaPiscina* piscina,
     _punctum_fixum_formarum(piscina, datorum);
 
     /* vestigatio generum: punctum fixum tertium (stirpes signatae) */
-    _punctum_fixum_stirpium(piscina, datorum);
+    _punctum_fixum_stirpium(piscina, datorum, &ex.aux);
 
     redde datorum;
 }
@@ -42755,8 +42777,12 @@ interior SilvaChorda _stirps_ex_ordinali (SilvaSemantica* sem,
     s32 ordinalis);
 interior s32 _datorum_stirps_ligamen (vacuum* contextus,
     constans SilvaNodus* expressio);
+interior s32 _datorum_stirps_ambitu_ligamen (vacuum* contextus,
+    constans SilvaNodus* expressio,
+    constans FluxusDatorum* datorum, constans s32* stirpes);
 interior vacuum _signata_fluxus_examinare (SilvaSemantica* sem,
     constans FluxusFunctionis* fluxus);
+interior s32 _op_basis_compositi (s32 op);
 
 /* Typatio expressionum (M0b Chunk A) - implementatio infra post
  * aestimatorem; ambulatio et tractatores his utuntur */
@@ -47939,6 +47965,8 @@ _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
         aux_datorum.parametrum_accumulat = _fluxus_accumulat_ligamen;
         aux_datorum.expressio_acies = _datorum_expressio_acies_ligamen;
         aux_datorum.stirps_valoris = _datorum_stirps_ligamen;
+        aux_datorum.stirps_valoris_ambitu =
+            _datorum_stirps_ambitu_ligamen;
         aux_datorum.canonicum = _fluxus_canonicum_ligamen;
         aux_datorum.contextus = sem;
         fluxus->datorum = silva_c89_fluxus_datorum_aedificare(
@@ -51861,6 +51889,51 @@ _contractus_argumenti (SilvaSemantica* sem,
  * explicita benedicit.
  * ================================================== */
 
+/* operator basis assignationis compositae arithmeticae; 0 = non
+ * arithmetica (=, <<=, &=, ...) - algebra generum compositis
+ * eadem ac binariis (v2 fluxus) */
+interior s32
+_op_basis_compositi (s32 op)
+{
+    commutatio (op)
+    {
+        casus (s32)SILVA_LEX_PLUS_ASSIGNATIO:
+            redde (s32)SILVA_LEX_PLUS;
+        casus (s32)SILVA_LEX_MINUS_ASSIGNATIO:
+            redde (s32)SILVA_LEX_MINUS;
+        casus (s32)SILVA_LEX_STAR_ASSIGNATIO:
+            redde (s32)SILVA_LEX_STAR;
+        casus (s32)SILVA_LEX_SOLIDUS_ASSIGNATIO:
+            redde (s32)SILVA_LEX_SOLIDUS;
+        casus (s32)SILVA_LEX_PERCENTUM_ASSIGNATIO:
+            redde (s32)SILVA_LEX_PERCENTUM;
+        ordinarius:
+            redde ZEPHYRUM;
+    }
+}
+
+/* estne expressio typo signabili (integrali)? Monstrator/acies
+ * orthographiam specificatorum ferunt sed genus NON ferunt
+ * (Momentum* p: 'Momentum' in specificatoribus, indirectio in
+ * declaratore solo - sine custode p stirpem falso ferret et
+ * differentia monstratorum falso flagraret). Typatio absens =
+ * VERUM (mores pristini). */
+interior b32
+_typus_signabilis (SilvaSemantica* sem, constans SilvaNodus* nodus)
+{
+    SemanticaTypatio* tp = _typationem_invenire(sem,
+        _canonicum(nodus));
+    TypusC89* t = (tp != NIHIL) ? _qualibus_exutum(tp->naturalis)
+        : NIHIL;
+
+    si (t == NIHIL)
+    {
+        redde VERUM;
+    }
+    redde (t->genus == TYPUS_C89_MONSTRATOR
+        || t->genus == TYPUS_C89_ACIES) ? FALSUM : VERUM;
+}
+
 /* effectus algebrae generum; violatio_out VERUM = commixtio.
  * Lineare (sine differentia) = vector: idem+idem licet. Affine =
  * punctum: punctum+punctum vetitum etiam eodem genere,
@@ -52047,7 +52120,7 @@ _signatum_expressionis (SilvaSemantica* sem,
             constans SignatumTypi* g = _signatum_tituli(sem,
                 orthographia);
 
-            si (g != NIHIL)
+            si (g != NIHIL && _typus_signabilis(sem, nodus))
             {
                 redde g->stirps;
             }
@@ -52160,7 +52233,9 @@ _signatum_expressionis (SilvaSemantica* sem,
                     constans SignatumTypi* g = _signatum_tituli(
                         sem, orthographia);
 
-                    redde (g != NIHIL) ? g->stirps : vacua;
+                    redde (g != NIHIL
+                        && _typus_signabilis(sem, nodus))
+                        ? g->stirps : vacua;
                 }
             }
             frange;
@@ -52214,7 +52289,9 @@ _signatum_expressionis (SilvaSemantica* sem,
                         constans SignatumTypi* g = _signatum_tituli(
                             sem, orthographia);
 
-                        redde (g != NIHIL) ? g->stirps : vacua;
+                        redde (g != NIHIL
+                            && _typus_signabilis(sem, nodus))
+                            ? g->stirps : vacua;
                     }
                 }
             }
@@ -52260,6 +52337,46 @@ _signatum_expressionis (SilvaSemantica* sem,
                 redde _signatum_compositum(sem,
                     (s32)op_v.datum.token->genus, gs, gd,
                     &violatio);
+            }
+            frange;
+        }
+        casus (s32)SILVA_C89_GENUS_ASSIGNATIO:
+        {
+            /* v2 fluxus: catenae (x = y = m) et composita - valor
+             * simplicis = dextrum, compositi = algebra basis
+             * (significans cum ambitu: sinister responsum fluminis
+             * fert) */
+            SilvaValor op_v = silva_c89_assignatio_tok_operator(
+                nodus);
+            SilvaValor s_v = silva_c89_assignatio_sinister(nodus);
+            SilvaValor d_v = silva_c89_assignatio_dexter(nodus);
+
+            si (op_v.genus == SILVA_VALOR_TOKEN
+                && s_v.genus == SILVA_VALOR_NODUS
+                && d_v.genus == SILVA_VALOR_NODUS)
+            {
+                s32 op = (s32)op_v.datum.token->genus;
+
+                si (op == (s32)SILVA_LEX_ASSIGNATIO)
+                {
+                    redde _signatum_expressionis(sem,
+                        d_v.datum.nodus, profunditas + I);
+                }
+                {
+                    s32 op_basis = _op_basis_compositi(op);
+
+                    si (op_basis != ZEPHYRUM)
+                    {
+                        SilvaChorda gs = _signatum_expressionis(sem,
+                            s_v.datum.nodus, profunditas + I);
+                        SilvaChorda gd = _signatum_expressionis(sem,
+                            d_v.datum.nodus, profunditas + I);
+                        b32 violatio = FALSUM;
+
+                        redde _signatum_compositum(sem, op_basis,
+                            gs, gd, &violatio);
+                    }
+                }
             }
             frange;
         }
@@ -52753,6 +52870,42 @@ _datorum_stirps_ligamen (vacuum* contextus,
     redde _stirps_ordinalis(sem, g);
 }
 
+/* involucrum ambitu-conscium (v2): campi ambientes positi circa
+ * ambulationem - defs sui-referentes (t = t - m) provenientiam
+ * servant; fixpunctum datorum ET replay eodem classificant
+ * (dissentire non possunt) */
+interior s32
+_datorum_stirps_ambitu_ligamen (vacuum* contextus,
+    constans SilvaNodus* expressio,
+    constans FluxusDatorum* datorum, constans s32* stirpes)
+{
+    SilvaSemantica* sem = (SilvaSemantica*)contextus;
+    constans structura FluxusDatorum* datorum_servatum;
+    constans s32* stirpes_servata;
+    s32 ordinalis;
+
+    _contractus_colligere(sem);
+    si (expressio == NIHIL || sem->signata_typorum == NIHIL
+        || silva_xar_numerus(sem->signata_typorum) == ZEPHYRUM)
+    {
+        redde (s32)FLUXUS_STIRPS_NEUTRA;
+    }
+    datorum_servatum = sem->stirpes_datorum;
+    stirpes_servata = sem->stirpes_ambitus;
+    sem->stirpes_datorum = datorum;
+    sem->stirpes_ambitus = stirpes;
+    {
+        SilvaChorda g = _signatum_expressionis(sem, expressio, ZEPHYRUM);
+
+        ordinalis = (g.mensura == ZEPHYRUM)
+            ? (s32)FLUXUS_STIRPS_NEUTRA
+            : _stirps_ordinalis(sem, g);
+    }
+    sem->stirpes_datorum = datorum_servatum;
+    sem->stirpes_ambitus = stirpes_servata;
+    redde ordinalis;
+}
+
 /* iudicatum-ne iam? consulta et addit (dedup sedium intra replay -
  * folia plura eiusdem sedis, e.g. a - b ambobus flumine-signatis) */
 interior b32
@@ -52828,10 +52981,49 @@ _sedem_fluxus_iudicare (SilvaSemantica* sem,
                 SilvaValor d_v = silva_c89_assignatio_dexter(n);
 
                 si (op_v.genus != SILVA_VALOR_TOKEN
-                    || (s32)op_v.datum.token->genus
-                        != (s32)SILVA_LEX_ASSIGNATIO
                     || s_v.genus != SILVA_VALOR_NODUS
-                    || d_v.genus != SILVA_VALOR_NODUS
+                    || d_v.genus != SILVA_VALOR_NODUS)
+                {
+                    redde;
+                }
+                /* composita (v2 fluxus): algebra ut BINARIUM +
+                 * effectus contra positionem sinistram - folium
+                 * utroque latere huc ascendit */
+                {
+                    s32 op_basis = _op_basis_compositi(
+                        (s32)op_v.datum.token->genus);
+
+                    si (op_basis != ZEPHYRUM)
+                    {
+                        si (!_sedes_iudicata(iudicata, n))
+                        {
+                            constans SilvaNodus* nsc = _canonicum(
+                                s_v.datum.nodus);
+
+                            _signata_binarium_probare(sem, n,
+                                s_v.datum.nodus, d_v.datum.nodus,
+                                op_basis);
+                            si (nsc->genus == (s32)
+                                SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+                            {
+                                constans SemanticaSymbolum* symbolum
+                                    = silva_c89_symbolum_nodi(sem,
+                                        nsc);
+
+                                si (symbolum != NIHIL)
+                                {
+                                    _signatum_limitis_probare(sem,
+                                        _orthographia_symboli(
+                                            symbolum),
+                                        symbolum->titulus, n, n);
+                                }
+                            }
+                        }
+                        redde;
+                    }
+                }
+                si ((s32)op_v.datum.token->genus
+                        != (s32)SILVA_LEX_ASSIGNATIO
                     || filius != d_v.datum.nodus
                     || _sedes_iudicata(iudicata, n))
                 {
@@ -53108,7 +53300,12 @@ _signata_fluxus_examinare (SilvaSemantica* sem,
                 }
                 alioquin
                 {
-                    stirpes_currens[ev->variabilis] = ev->stirps;
+                    /* classificatio ambitu-conscia (v2) - eadem ac
+                     * fixpunctum datorum, dissentire non possunt */
+                    stirpes_currens[ev->variabilis] =
+                        _datorum_stirps_ambitu_ligamen(sem,
+                            ev->fons_valoris, datorum,
+                            stirpes_currens);
                 }
                 perge;
             }
@@ -57084,6 +57281,34 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     frange;
                 ordinarius:
                     frange;
+            }
+            /* algebra generum in compositis (v2 fluxus): operatio
+             * ut hamus BINARIUM (a += b punctum+punctum) +
+             * effectus contra positionem sinistram (m -= m2:
+             * differentia in punctum; ambulatio ASSIGNATIO valorem
+             * compositi fert). Sinister membrum = v2. */
+            {
+                s32 op_basis = _op_basis_compositi(
+                    (s32)op_v.datum.token->genus);
+
+                si (op_basis != ZEPHYRUM)
+                {
+                    _signata_binarium_probare(sem, nodus, ns, nd,
+                        op_basis);
+                    si (ns->genus
+                        == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+                    {
+                        constans SemanticaSymbolum* symbolum =
+                            silva_c89_symbolum_nodi(sem, ns);
+
+                        si (symbolum != NIHIL)
+                        {
+                            _signatum_limitis_probare(sem,
+                                _orthographia_symboli(symbolum),
+                                symbolum->titulus, nodus, nodus);
+                        }
+                    }
+                }
             }
             (vacuum)_typationem_ponere(sem, nodus, t);
             redde t;

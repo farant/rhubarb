@@ -358,8 +358,9 @@ principale (vacuum)
         "void f(Momentum m, Denarii d) { long t = m; d = t; }",
         I, "XXXVI. d = t (fluxu Momentum) -> violatio");
 
-    /* XXXVII. ansa sui-referens: classificatio ambitu caeca ->
-     * iunctio conservative delet -> TACET (decisum 1 pinnatum) */
+    /* XXXVII. ansa sui-referens genere PARI: v1 conservative
+     * delebat, v2 (classificatio ambitu-conscia) servat ET par
+     * est - silentium utroque modo, ratione recta nunc */
     _signatum_probare(piscina,
         "void g(Momentum d);\n"
         "void f(Momentum m, Mora r, int n) {\n"
@@ -368,13 +369,97 @@ principale (vacuum)
         "    for (i = 0; i < n; i++) { t = t - r; }\n"
         "    g(t);\n"
         "}",
-        ZEPHYRUM, "XXXVII. ansa t = t - r -> TACET (conservativum)");
+        ZEPHYRUM, "XXXVII. ansa t = t - r, g(Momentum) -> TACET"
+            " (servatum ET par)");
 
     /* XXXVIII. t + t fluxu: punctum+punctum UNA emissione (dedup
      * sedium - folia duo eiusdem BINARII) */
     _signatum_probare(piscina,
         "void f(Momentum m) { long t = m; long x = t + t; }",
         I, "XXXVIII. t + t (fluxu) -> violatio UNA (dedup)");
+
+    imprimere("--- XXXIX-XLVII: v2 fluxus (ansae/catenae/composita/"
+        "monstratores) ---\n");
+
+    /* XXXIX. ansa sui-referens TRANS genera: v1 conservativum
+     * (AMISSA) nunc in vim conversum - provenientia servata
+     * flagrat */
+    _signatum_probare(piscina,
+        "void g(Denarii d);\n"
+        "void f(Momentum m, Mora r, int n) {\n"
+        "    long t = m;\n"
+        "    int i;\n"
+        "    for (i = 0; i < n; i++) { t = t - r; }\n"
+        "    g(t);\n"
+        "}",
+        I, "XXXIX. ansa t = t - r, g(Denarii) -> violatio"
+            " (servatum)");
+
+    /* XL. catena assignationis: valor = dextrum internum */
+    _signatum_probare(piscina,
+        "void g(Denarii d);\n"
+        "void f(Momentum m) {\n"
+        "    long t;\n"
+        "    long u;\n"
+        "    t = u = m;\n"
+        "    g(t);\n"
+        "}",
+        I, "XL. t = u = m; g(t) ubi g(Denarii) -> violatio"
+            " (catena)");
+
+    /* XLI. compositum genus servat: t -= r punctum - spatium */
+    _signatum_probare(piscina,
+        "void g(Denarii d);\n"
+        "void f(Momentum m, Mora r) {\n"
+        "    long t = m;\n"
+        "    t -= r;\n"
+        "    g(t);\n"
+        "}",
+        I, "XLI. t -= r (Momentum - Mora); g(Denarii) ->"
+            " violatio");
+
+    /* XLII. compositum typatione: punctum += punctum */
+    _signatum_probare(piscina,
+        "void f(Momentum a, Momentum b) { a += b; }",
+        I, "XLII. a += b (puncta) -> violatio (typatio)");
+
+    /* XLIII. compositum typatione trans genera */
+    _signatum_probare(piscina,
+        "void f(Denarii d, Momentum m) { d -= m; }",
+        I, "XLIII. d -= m -> violatio (typatio)");
+
+    /* XLIV. compositum fluxu: t += b puncta ambo (alter fluxu) */
+    _signatum_probare(piscina,
+        "void f(Momentum m, Momentum b) {\n"
+        "    long t = m;\n"
+        "    t += b;\n"
+        "}",
+        I, "XLIV. t (fluxu Momentum) += b -> violatio");
+
+    /* XLV. compositum licitum genus servat: punctum += spatium */
+    _signatum_probare(piscina,
+        "void g(Momentum d);\n"
+        "void f(Momentum m, Mora r) {\n"
+        "    long t = m;\n"
+        "    t += r;\n"
+        "    g(t);\n"
+        "}",
+        ZEPHYRUM, "XLV. t += r; g(Momentum) -> TACET (servatum"
+            " et par)");
+
+    /* XLVI. effectus compositi contra positionem: m -= m2 =
+     * differentia in punctum */
+    _signatum_probare(piscina,
+        "void f(Momentum a, Momentum b) { a -= b; }",
+        I, "XLVI. a -= b (differentia in punctum) -> violatio");
+
+    /* XLVII. custos monstratorum: differentia monstratorum in
+     * genus signatum - orthographia specificatorum genus NON fert
+     * (typus signabilis) -> TACET */
+    _signatum_probare(piscina,
+        "void f(Momentum* p, Momentum* q) { Momentum r = q - p; }",
+        ZEPHYRUM, "XLVII. Momentum r = q - p (monstratores) ->"
+            " TACET (custos)");
 
     credo_imprimere_compendium();
 

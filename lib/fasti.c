@@ -549,7 +549,9 @@ fasti_ad_unix(
     MoraDierum dies_diff = jdn_dies - jdn_epoch;
     s64 secunda;
 
-    secunda = dies_diff * 86400LL;
+    /* conversio scalae (dies -> secunda): erasio consulta -
+     * vestigatio fluminis conversiones inexpressas capit */
+    secunda = (s64)dies_diff * 86400LL;
     secunda = secunda + (s64)(dh.hora.hora) * 3600LL;
     secunda = secunda + (s64)(dh.hora.minutum) * LX;
     secunda = secunda + (s64)(dh.hora.secundum);
@@ -567,8 +569,11 @@ fasti_ex_unix(
     s64 secunda_diei;
     DiesHora dh;
 
-    dies_diff = timestamp / 86400LL;
-    secunda_diei = timestamp % 86400LL;
+    /* conversio scalae (secunda -> dies ab epocha): erasio
+     * consulta - instans scalatum = mora ab ancora, algebra id
+     * exprimere nequit */
+    dies_diff = (s64)timestamp / 86400LL;
+    secunda_diei = (s64)timestamp % 86400LL;
 
     /* Tracta timestamps negativos */
     si (secunda_diei < ZEPHYRUM) {

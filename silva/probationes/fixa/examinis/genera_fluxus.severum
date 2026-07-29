@@ -69,6 +69,25 @@ static void toleratum(Momentum m)
     poscit_denarios(t);
 }
 
+/* ansa sui-referens (v2): punctum - spatium provenientiam SERVAT
+ * per iunctionem capitis - lavatio post ansam capta */
+static void lavatio_ansae(Momentum m, Mora r, int n)
+{
+    long t = m;
+    int i;
+
+    for (i = 0; i < n; i++) { t = t - r; }
+    /* <exspecta codex="SIGNATUM_COMMIXTUM"/> */
+    poscit_denarios(t);
+}
+
+/* compositum (v2): punctum += punctum sensu caret */
+static void composita_puncta(Momentum a, Momentum b)
+{
+    /* <exspecta codex="SIGNATUM_COMMIXTUM"/> */
+    a += b;
+}
+
 static long radix(Momentum m, Denarii p, int c)
 {
     lavatio_argumenti(m);
@@ -76,5 +95,7 @@ static long radix(Momentum m, Denarii p, int c)
     erasio(m);
     effugium(m);
     toleratum(m);
+    lavatio_ansae(m, 0, c);
+    composita_puncta(m, m);
     return lavatio_algebrae(m);
 }

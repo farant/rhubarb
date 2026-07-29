@@ -270,9 +270,62 @@ _probatio_stirps (vacuum* contextus, constans SilvaNodus* expressio)
     redde (s32)FLUXUS_STIRPS_NEUTRA;
 }
 
+/* Classificator AMBITU-CONSCIUS probationis: folium 'a' -> PRIMA
+ * (semen); cetera = status currens variabilis 'x' (echo -
+ * sui-referentia servat, exemplar t = t - m) */
+interior s32
+_probatio_stirps_ambitu (vacuum* contextus,
+    constans SilvaNodus* expressio,
+    constans FluxusDatorum* datorum, constans s32* stirpes)
+{
+    (vacuum)contextus;
+    {
+        constans SilvaNodus* e = expressio;
+
+        dum (e != NIHIL
+            && e->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+        {
+            e = _nodalis_probationis(
+                silva_c89_parenthesis_internum(e));
+        }
+        si (e != NIHIL && e->genus
+            == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+        {
+            SilvaValor tok_v =
+                silva_c89_folium_identificator_tok_valor(e);
+
+            si (tok_v.genus == SILVA_VALOR_TOKEN
+                && _nomen_aequale(tok_v.datum.token->valor, "a"))
+            {
+                redde (s32)FLUXUS_STIRPS_PRIMA;
+            }
+        }
+    }
+    {
+        i32 i;
+        i32 m = xar_numerus(datorum->variabiles);
+
+        per (i = ZEPHYRUM; i < m; i++)
+        {
+            constans FluxusVariabilis* v =
+                (constans FluxusVariabilis*)xar_obtinere(
+                    datorum->variabiles, i);
+
+            si (v != NIHIL && !v->membrum_est
+                && _nomen_aequale(v->titulus, "x"))
+            {
+                redde stirpes[i];
+            }
+        }
+    }
+    redde (s32)FLUXUS_STIRPS_NEUTRA;
+}
+
 interior FluxusDatorum*
 _extrahere_cum (Piscina* piscina, constans character* fons,
-    s32 (*stirps_cb)(vacuum*, constans SilvaNodus*))
+    s32 (*stirps_cb)(vacuum*, constans SilvaNodus*),
+    s32 (*ambitu_cb)(vacuum*, constans SilvaNodus*,
+        constans FluxusDatorum*, constans s32*))
 {
     SilvaParsura* parsura = silva_c89_parsare(piscina, "probatio.c",
         fons, (i32)strlen(fons), NIHIL);
@@ -304,6 +357,7 @@ _extrahere_cum (Piscina* piscina, constans character* fons,
     aux.parametrum_accumulat = NIHIL;
     aux.expressio_acies = NIHIL;   /* e2e semanticae hoc probat */
     aux.stirps_valoris = stirps_cb;
+    aux.stirps_valoris_ambitu = ambitu_cb;
     aux.canonicum = NIHIL;
     aux.contextus = NIHIL;
     redde silva_c89_fluxus_datorum_aedificare(piscina, fluxus, &aux);
@@ -312,7 +366,7 @@ _extrahere_cum (Piscina* piscina, constans character* fons,
 interior FluxusDatorum*
 _extrahere (Piscina* piscina, constans character* fons)
 {
-    redde _extrahere_cum(piscina, fons, NIHIL);
+    redde _extrahere_cum(piscina, fons, NIHIL, NIHIL);
 }
 
 /* ==================================================
@@ -1011,7 +1065,7 @@ s32 principale (vacuum)
          * numquam redefinitum stirpem NEUTRAM seminis servat */
         d = _extrahere_cum(piscina,
             "int f(int a) { int x; x = a; return x; }",
-            _probatio_stirps);
+            _probatio_stirps, NIHIL);
         CREDO_NON_NIHIL (d);
         si (d != NIHIL)
         {
@@ -1025,7 +1079,7 @@ s32 principale (vacuum)
         d = _extrahere_cum(piscina,
             "int f(int a, int b, int c) { int x;"
             " if (c) { x = a; } else { x = b; } return x; }",
-            _probatio_stirps);
+            _probatio_stirps, NIHIL);
         CREDO_NON_NIHIL (d);
         si (d != NIHIL)
         {
@@ -1037,7 +1091,7 @@ s32 principale (vacuum)
         d = _extrahere_cum(piscina,
             "int f(int a, int c) { int x;"
             " if (c) { x = a; } else { x = a; } return x; }",
-            _probatio_stirps);
+            _probatio_stirps, NIHIL);
         CREDO_NON_NIHIL (d);
         si (d != NIHIL)
         {
@@ -1048,7 +1102,7 @@ s32 principale (vacuum)
         /* redefinitio littera -> NEUTRA delet */
         d = _extrahere_cum(piscina,
             "int f(int a) { int x; x = a; x = 1; return x; }",
-            _probatio_stirps);
+            _probatio_stirps, NIHIL);
         CREDO_NON_NIHIL (d);
         si (d != NIHIL)
         {
@@ -1064,6 +1118,30 @@ s32 principale (vacuum)
         {
             CREDO_AEQUALIS_I32 ((i32)_stirps_ad_exitum(d, "x"),
                 (i32)FLUXUS_STIRPS_NEUTRA);
+        }
+
+        /* ansa sui-referens: classificator caecus delet (corpus
+         * NEUTRA -> iunctio capitis AMISSA); ambitu-conscius echo
+         * servat (v2 - fixpunctum cum statu currenti) */
+        d = _extrahere_cum(piscina,
+            "int f(int a, int c) { int x; x = a;"
+            " while (c) { x = x - 1; } return x; }",
+            _probatio_stirps, NIHIL);
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 ((i32)_stirps_ad_exitum(d, "x"),
+                (i32)FLUXUS_STIRPS_AMISSA);
+        }
+        d = _extrahere_cum(piscina,
+            "int f(int a, int c) { int x; x = a;"
+            " while (c) { x = x - 1; } return x; }",
+            _probatio_stirps, _probatio_stirps_ambitu);
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 ((i32)_stirps_ad_exitum(d, "x"),
+                (i32)FLUXUS_STIRPS_PRIMA);
         }
     }
 

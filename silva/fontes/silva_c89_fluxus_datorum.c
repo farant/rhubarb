@@ -1294,10 +1294,14 @@ _stirpem_iungere (s32 a, s32 b)
 }
 
 /* Exitus = introitus + definitiones (replay ordine eventorum);
- * eventa membrorum cribrata (lex eventorum additivorum) */
+ * eventa membrorum cribrata (lex eventorum additivorum).
+ * Classificatio ambitu-conscia (aux, v2): def contra tabulam
+ * exitus MEDIO-renovatam - ordo eventorum = status currens verus
+ * (usus-ante-def compositorum ordinem servat); involucro absente
+ * columna caeca ev->stirps. */
 interior vacuum
 _stirpes_exitum_computare (FluxusDatorum* datorum,
-    FluxusDatorumBlocus* b)
+    FluxusDatorumBlocus* b, constans FluxusDatorumAuxilia* aux)
 {
     i32 n_var = xar_numerus(datorum->variabiles);
     i32 v;
@@ -1327,13 +1331,18 @@ _stirpes_exitum_computare (FluxusDatorum* datorum,
         }
         alioquin
         {
-            b->stirpes_exitus[ev->variabilis] = ev->stirps;
+            b->stirpes_exitus[ev->variabilis] =
+                (aux != NIHIL && aux->stirps_valoris_ambitu != NIHIL)
+                ? aux->stirps_valoris_ambitu(aux->contextus,
+                      ev->fons_valoris, datorum, b->stirpes_exitus)
+                : ev->stirps;
         }
     }
 }
 
 interior vacuum
-_punctum_fixum_stirpium (Piscina* piscina, FluxusDatorum* datorum)
+_punctum_fixum_stirpium (Piscina* piscina, FluxusDatorum* datorum,
+    constans FluxusDatorumAuxilia* aux)
 {
     i32 n_var = xar_numerus(datorum->variabiles);
     i32 n_loci = (n_var > ZEPHYRUM) ? n_var : I;
@@ -1403,7 +1412,7 @@ _punctum_fixum_stirpium (Piscina* piscina, FluxusDatorum* datorum)
 
         lector++;
         in_indice[index_bloci] = FALSUM;
-        _stirpes_exitum_computare(datorum, db);
+        _stirpes_exitum_computare(datorum, db, aux);
 
         m = xar_numerus(fb->margines);
         per (k = ZEPHYRUM; k < m; k++)
@@ -1479,6 +1488,7 @@ silva_c89_fluxus_datorum_aedificare (Piscina* piscina,
         ex.aux.parametrum_accumulat = NIHIL;
         ex.aux.expressio_acies = NIHIL;
         ex.aux.stirps_valoris = NIHIL;
+        ex.aux.stirps_valoris_ambitu = NIHIL;
         ex.aux.canonicum = NIHIL;
         ex.aux.contextus = NIHIL;
     }
@@ -1515,7 +1525,7 @@ silva_c89_fluxus_datorum_aedificare (Piscina* piscina,
     _punctum_fixum_formarum(piscina, datorum);
 
     /* vestigatio generum: punctum fixum tertium (stirpes signatae) */
-    _punctum_fixum_stirpium(piscina, datorum);
+    _punctum_fixum_stirpium(piscina, datorum, &ex.aux);
 
     redde datorum;
 }

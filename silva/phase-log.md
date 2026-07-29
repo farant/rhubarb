@@ -11578,3 +11578,92 @@ amalgamare (renovatum manu - 01KYQ4H06F aperta); zsh '==='
 iterum. Fructus: hamus post-editionem TACUIT toto arcu -
 editiones primae mundae; capsula_libri OOM in censu iterum
 (01KYQ4H5ZG).
+
+## 2026-07-29 - INTENTIO: VESTIGATIO FLUXUS v2 - ansae et assignationes provenientiam servant
+
+Ianuae tres arcus matutini quae UNUS arcus sunt (eodem die,
+contextu calido):
+
+1. CLASSIFICATIO FIXPOINT-TEMPORE (ianua decisi 1): involucrum
+   alterum auxiliorum `stirps_valoris_ambitu(ctx, expressio,
+   datorum, stirpes)` - classificat CUM statu currenti. In
+   _stirpes_exitum_computare: def classificatur contra tabulam
+   exitus medio-renovatam (ordo eventorum = status currens
+   verus). `t = t - mora` in ansa: Momentum - Mora = Momentum;
+   iunctio capitis convergit ad Momentum pro AMISSA. TERMINATIO
+   PROBATA: introitus per iunctionem monotone NON-descendens
+   (par manet aut AMISSA ascendit) in reticulo finito ->
+   recomputationes finitae; exitus non-monotonus licet (mutatur
+   solum introitu mutato). Involucrum absens -> ev->stirps
+   (columna caeca RETENTA - probationes sine involucro, columna
+   quaestionis).
+2. ASSIGNATIO in ambulatione generum: casus novus - LEX_
+   ASSIGNATIO recursat in dextrum (catenae x = y = m, exemplar
+   _forma_valoris); operatores compositi = compositum(op,
+   ambula(sinister), ambula(dexter)) - significans DEMUM cum
+   ianua 1 sinistro responsum fluminis dat.
+3. IUDICIUM assignationum compositarum in replay: casus
+   ASSIGNATIO ascensus extenditur ab '=' simplici ad operatores
+   compositos - algebra ut BINARIUM (t += m2 ambobus Momentum =
+   punctum+punctum provabile; d -= m trans genera = violatio).
+   Intervalla composita manent v2 (machina alia).
+
+SEMANTICA-LATERE: replay quoque classificatione ambitu-consciente
+utatur (pro ev->stirps ad defs) - fixpunctum et replay dissentire
+non possunt. _datorum_stirps_ambitu_ligamen = campi ambientes
+positi + ambulatio + purgatio (exemplar dedup-rami).
+
+SPECIMINA: XXXVII silentium TENET (ratione recta nunc - genus
+servatum ET par); frater novus trans genera FLAGRAT (conversio
+conservatismi in vim); catena x = y = m; compositum t -= r genus
+servat; t += m2 punctum+punctum; pinnae datorum: ansa PRIMA
+servat sub involucro ambitu. NON AEDIFICATUR: membra (cribra
+ordinum propriis arcu), provenientia interprocedualis (forma
+totius-proiecti). Vectes: suites omnes + amalgamata + census 82
+murus 0 extra fixa.
+
+## 2026-07-29 - RELATIO: VESTIGATIO FLUXUS v2 - ansae/catenae/composita (arcus tertius diei)
+
+SHIPPED. Specimina IX nova (XXXIX-XLVII, signata 141/141) PRIMO
+CONTACTU; pinnae datorum II novae (contrastus: classificator
+caecus AMISSA, ambitu-conscius PRIMA per ansam - 264/264).
+
+CAPTURAE VIVAE II - lib/fasti.c (census 82: 2 sedes post
+machinam, 0 post correctionem): conversiones scalarum INEXPRESSAE
+per intermediarios insignatos quas cusio ipsa videre non potuit -
+(1) fasti_ad_unix: dies_diff * 86400 stirpem MoraDierum per
+scalationem ferebat -> collisio cum reditu MomentumSec; (2)
+fasti_ex_unix: timestamp / 86400 stirpem MomentumSec in
+jdn_epoch + dies_diff ferebat (punctum + alienum). Codex UTERQUE
+correctus erat - sed conversio inexpressa; remedium = erasio
+consulta (s64) cum commento (littera una lavationis honestae,
+exemplar monetae). Classis x1000 in conversionibus rectis - hoc
+ipsum disciplina est: conversiones exprimendae.
+
+MACHINA: (1) stirps_valoris_ambitu involucrum alterum -
+classificatio cum statu currenti (tabula exitus medio-renovata);
+fixpunctum ET replay eodem ligamine (dissentire non possunt);
+terminatio probata (introitus monotone non-descendens). (2)
+ASSIGNATIO in ambulatione: catenae recursant in dextrum,
+composita = algebra basis (_op_basis_compositi). (3) iudicium
+compositorum: typatione (hamus post commutationem operis, ut
+BINARIUM) et replay (ascensus); operatio per _signata_binarium_
+probare REUSUM + effectus contra positionem sinistram per
+_signatum_limitis_probare REUSUM (m -= m2 differentia in punctum
+capta; emissio duplex impossibilis: compositum violans vacuum
+reddit -> limitis tacet). (4) CUSTOS MONSTRATORUM
+(_typus_signabilis): orthographia specificatorum genus monstratoris
+non fert (Momentum* p falso stirpem ferebat - lacuna latens
+gradus 3 clausa ante primum ictum; specimen XLVII pinnat).
+
+Vectes omnes: silva 36/36, VECTIS TENET (fixtura + ansa +
+compositum pinnata IV), amalgamata VERIFICATA, officina 13/13,
+radix PLENUS x2, gesta 4/4 (radius fasti), census 82 = 0/684
+POST capturas expressas.
+
+IANUAE MANENTES: membra in fluxu, provenientia interprocedualis,
+algebra unitatum plena (scalatio * constans = conversio scalae -
+hodie brand-servans, capturae vivae eam viam monstrant).
+
+INSTRUMENTA: census = inventor ambarum capturarum (mensura, non
+coniectura - sextum); examen directum in plagulam pro triage.

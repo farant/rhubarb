@@ -233,6 +233,18 @@ nomen structura {
      * hoc campum ponere debet (laqueus vocator-initiat). */
     s32 (*stirps_valoris)(vacuum* contextus,
         constans SilvaNodus* expressio);
+    /* classificatio AMBITU-CONSCIA (v2 fluxus, ianua decisi 1):
+     * ut stirps_valoris sed cum statu currenti per variabilem
+     * (tabula exitus medio-renovata, ordine eventorum = status
+     * verus) - defs sui-referentes (t = t - m in ansa)
+     * provenientiam servant. NIHIL = columna caeca ev->stirps
+     * adhibetur. Terminatio: introitus per iunctionem monotone
+     * non-descendens in reticulo finito - recomputationes finitae
+     * etiam classificatione non-monotona. CAVE vocator-initiat. */
+    s32 (*stirps_valoris_ambitu)(vacuum* contextus,
+        constans SilvaNodus* expressio,
+        constans FluxusDatorum* datorum,
+        constans s32* stirpes);
     /* lectio canonica nodi AMBIGUI; NIHIL = identitas */
     constans SilvaNodus* (*canonicum)(vacuum* contextus,
         constans SilvaNodus* nodus);
