@@ -1,0 +1,80 @@
+/* Vestigatio generum fluminis (arcus fluxus 01KYPZ3XPW): stirps
+ * signata per locales insignatos vestigata - lavatio capta ad
+ * sedes iudicii (argumentum/algebra), iunctio dissentiens et
+ * effugium et erasio conversione conservative SILENT. Clang
+ * omnibus caecus. ORACULUM -Wsign-conversion */
+
+/* <contractus signatum="Momentum" differentia="Mora"/> */
+typedef long Momentum;
+
+/* <contractus signatum="Mora"/> */
+typedef long Mora;
+
+/* <contractus signatum="Denarii"/> */
+typedef long Denarii;
+
+static void poscit_denarios(Denarii d) { (void)d; }
+static void figit(long* p) { (void)p; }
+
+/* lavatio simplex: genus per localem insignatum in argumentum */
+static void lavatio_argumenti(Momentum m)
+{
+    long t = m;
+
+    /* <exspecta codex="SIGNATUM_COMMIXTUM"/> */
+    poscit_denarios(t);
+}
+
+/* lavatio in algebram: punctum + punctum per fluxum */
+static long lavatio_algebrae(Momentum m)
+{
+    long t = m;
+
+    /* <exspecta codex="SIGNATUM_COMMIXTUM"/> */
+    return t + m;
+}
+
+/* iunctio dissentiens: stirps AMISSA - TACET */
+static void iunctio_dissentiens(Momentum m, Denarii p, int c)
+{
+    long t;
+
+    if (c) { t = m; } else { t = p; }
+    poscit_denarios(t);
+}
+
+/* erasio conversione consulta: littera lavationis honestae - TACET */
+static void erasio(Momentum m)
+{
+    long t = (long)m;
+
+    poscit_denarios(t);
+}
+
+/* effugium: scriptio per alias invisibilis - TACET */
+static void effugium(Momentum m)
+{
+    long t = m;
+
+    figit(&t);
+    poscit_denarios(t);
+}
+
+/* lavatio consulto tolerata - QUIETA */
+static void toleratum(Momentum m)
+{
+    long t = m;
+
+    /* <tolera codex="SIGNATUM_COMMIXTUM" (>exemplar suppressionis fixturae: lavatio consulta */
+    poscit_denarios(t);
+}
+
+static long radix(Momentum m, Denarii p, int c)
+{
+    lavatio_argumenti(m);
+    iunctio_dissentiens(m, p, c);
+    erasio(m);
+    effugium(m);
+    toleratum(m);
+    return lavatio_algebrae(m);
+}

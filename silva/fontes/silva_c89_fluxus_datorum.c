@@ -255,11 +255,16 @@ _eventum_emittere (FluxusExtractor* ex, s32 variabilis, s32 genus,
     e->in_initiatore_proprio = in_initiatore_proprio;
     e->fons_valoris = NIHIL;
     e->forma = (s32)FLUXUS_FORMA_IGNOTA;
+    e->stirps = (s32)FLUXUS_STIRPS_IGNOTA;
     si (genus == (s32)FLUXUS_EVENTUM_DEFINITIO
         || genus == (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
     {
         e->fons_valoris = ex->fons_valoris_currens;
         e->forma = _forma_valoris(ex, ex->fons_valoris_currens);
+        e->stirps = (ex->aux.stirps_valoris != NIHIL)
+            ? ex->aux.stirps_valoris(ex->aux.contextus,
+                  ex->fons_valoris_currens)
+            : (s32)FLUXUS_STIRPS_NEUTRA;
     }
     alioquin si ((genus == (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI
             || genus == (s32)FLUXUS_EVENTUM_LOCI_ACCUMULAT)
@@ -1265,6 +1270,178 @@ _punctum_fixum_formarum (Piscina* piscina, FluxusDatorum* datorum)
 }
 
 /* ==================================================
+ * Punctum fixum stirpium (vestigatio generum, codex 82)
+ *
+ * Instantia TERTIA formae reticuli (post may/must et formas):
+ * IGNOTA identitas, aequales manent, dissentientes AMISSA.
+ * Parametra NEUTRA seruntur (sedes vocationis iam iudicata;
+ * provenientia interprocedualis = ianua nominata). Effugium ad
+ * tempus quaestionis consulitur (variabilis.effugit), non hic.
+ * ================================================== */
+
+interior s32
+_stirpem_iungere (s32 a, s32 b)
+{
+    si (a == (s32)FLUXUS_STIRPS_IGNOTA)
+    {
+        redde b;
+    }
+    si (b == (s32)FLUXUS_STIRPS_IGNOTA || a == b)
+    {
+        redde a;
+    }
+    redde (s32)FLUXUS_STIRPS_AMISSA;
+}
+
+/* Exitus = introitus + definitiones (replay ordine eventorum);
+ * eventa membrorum cribrata (lex eventorum additivorum) */
+interior vacuum
+_stirpes_exitum_computare (FluxusDatorum* datorum,
+    FluxusDatorumBlocus* b)
+{
+    i32 n_var = xar_numerus(datorum->variabiles);
+    i32 v;
+    i32 e;
+    i32 m = xar_numerus(b->eventa);
+
+    per (v = ZEPHYRUM; v < n_var; v++)
+    {
+        b->stirpes_exitus[v] = b->stirpes_introitus[v];
+    }
+    per (e = ZEPHYRUM; e < m; e++)
+    {
+        FluxusEventum* ev = (FluxusEventum*)xar_obtinere(b->eventa,
+            e);
+
+        si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO)
+        {
+            perge;
+        }
+        si (ev->variabilis < ZEPHYRUM)
+        {
+            /* def-omnia (folium opacum): provenientia perit */
+            per (v = ZEPHYRUM; v < n_var; v++)
+            {
+                b->stirpes_exitus[v] = (s32)FLUXUS_STIRPS_AMISSA;
+            }
+        }
+        alioquin
+        {
+            b->stirpes_exitus[ev->variabilis] = ev->stirps;
+        }
+    }
+}
+
+interior vacuum
+_punctum_fixum_stirpium (Piscina* piscina, FluxusDatorum* datorum)
+{
+    i32 n_var = xar_numerus(datorum->variabiles);
+    i32 n_loci = (n_var > ZEPHYRUM) ? n_var : I;
+    i32 numerus_blocorum = xar_numerus(datorum->bloci);
+    i32 b;
+    i32 v;
+    b32* in_indice;
+    Xar* index_operis;
+    i32 lector = ZEPHYRUM;
+
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+            datorum->bloci, b);
+
+        db->stirpes_introitus = (s32*)piscina_allocare(piscina,
+            (memoriae_index)n_loci * magnitudo(s32));
+        db->stirpes_exitus = (s32*)piscina_allocare(piscina,
+            (memoriae_index)n_loci * magnitudo(s32));
+        per (v = ZEPHYRUM; v < n_loci; v++)
+        {
+            db->stirpes_introitus[v] = (s32)FLUXUS_STIRPS_IGNOTA;
+            db->stirpes_exitus[v] = (s32)FLUXUS_STIRPS_IGNOTA;
+        }
+    }
+
+    /* introitus: parametra stirpem NEUTRAM ferunt */
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+            datorum->bloci, datorum->fluxus->introitus->index);
+
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            FluxusVariabilis* var = (FluxusVariabilis*)xar_obtinere(
+                datorum->variabiles, v);
+
+            si (var->parametrum)
+            {
+                db->stirpes_introitus[v] = (s32)FLUXUS_STIRPS_NEUTRA;
+            }
+        }
+    }
+
+    in_indice = (b32*)piscina_allocare(piscina,
+        (memoriae_index)numerus_blocorum * magnitudo(b32));
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        in_indice[b] = FALSUM;
+    }
+    index_operis = xar_creare(piscina, (i32)magnitudo(i32));
+    {
+        i32* locus = (i32*)xar_addere(index_operis);
+
+        *locus = datorum->fluxus->introitus->index;
+        in_indice[datorum->fluxus->introitus->index] = VERUM;
+    }
+
+    dum (lector < xar_numerus(index_operis))
+    {
+        i32 index_bloci = *(i32*)xar_obtinere(index_operis, lector);
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+            datorum->bloci, index_bloci);
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            xar_obtinere(datorum->fluxus->bloci, index_bloci);
+        i32 m;
+        i32 k;
+
+        lector++;
+        in_indice[index_bloci] = FALSUM;
+        _stirpes_exitum_computare(datorum, db);
+
+        m = xar_numerus(fb->margines);
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            constans FluxusMargo* margo = (constans FluxusMargo*)
+                xar_obtinere(fb->margines, k);
+            FluxusDatorumBlocus* dd;
+            b32 mutatum = FALSUM;
+
+            si (margo->destinatio == NIHIL)
+            {
+                perge;
+            }
+            dd = (FluxusDatorumBlocus*)xar_obtinere(datorum->bloci,
+                margo->destinatio->index);
+            per (v = ZEPHYRUM; v < n_var; v++)
+            {
+                s32 novum = _stirpem_iungere(
+                    dd->stirpes_introitus[v], db->stirpes_exitus[v]);
+
+                si (novum != dd->stirpes_introitus[v])
+                {
+                    dd->stirpes_introitus[v] = novum;
+                    mutatum = VERUM;
+                }
+            }
+            si (mutatum && !in_indice[margo->destinatio->index])
+            {
+                i32* locus = (i32*)xar_addere(index_operis);
+
+                *locus = margo->destinatio->index;
+                in_indice[margo->destinatio->index] = VERUM;
+            }
+        }
+    }
+}
+
+/* ==================================================
  * API
  * ================================================== */
 
@@ -1301,6 +1478,7 @@ silva_c89_fluxus_datorum_aedificare (Piscina* piscina,
         ex.aux.parametrum_constans = NIHIL;
         ex.aux.parametrum_accumulat = NIHIL;
         ex.aux.expressio_acies = NIHIL;
+        ex.aux.stirps_valoris = NIHIL;
         ex.aux.canonicum = NIHIL;
         ex.aux.contextus = NIHIL;
     }
@@ -1335,6 +1513,9 @@ silva_c89_fluxus_datorum_aedificare (Piscina* piscina,
 
     /* fluxus formae: punctum fixum alterum (formae definitionum) */
     _punctum_fixum_formarum(piscina, datorum);
+
+    /* vestigatio generum: punctum fixum tertium (stirpes signatae) */
+    _punctum_fixum_stirpium(piscina, datorum);
 
     redde datorum;
 }

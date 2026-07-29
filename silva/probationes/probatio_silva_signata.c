@@ -271,6 +271,111 @@ principale (vacuum)
         (s32)EXAMEN_CODEX_CONTRACTUS_STALUS, I,
         "XXIV. differentia insignata -> STALUS");
 
+    imprimere("--- XXV-XXXVIII: vestigatio fluminis (arcus fluxus"
+        " 01KYPZ3XPW) ---\n");
+
+    /* XXV. lavatio simplex ad argumentum (LACUNA banked) */
+    _signatum_probare(piscina,
+        "void g(Denarii d);\n"
+        "void f(Momentum m) { long t = m; g(t); }",
+        I, "XXV. long t = m; g(t) ubi g(Denarii) -> violatio");
+
+    /* XXVI. lavatio ad argumentum genere pari -> TACET */
+    _signatum_probare(piscina,
+        "void g(Momentum d);\n"
+        "void f(Momentum m) { long t = m; g(t); }",
+        ZEPHYRUM, "XXVI. g(t) ubi g(Momentum) -> TACET (par)");
+
+    /* XXVII. lavatio in binarium trans genera */
+    _signatum_probare(piscina,
+        "void f(Momentum m, Denarii d) {\n"
+        "    long t = m;\n"
+        "    long x = t + d;\n"
+        "}",
+        I, "XXVII. t (fluxu Momentum) + d (Denarii) -> violatio");
+
+    /* XXVIII. lavatio punctum + punctum (alter declaratus) */
+    _signatum_probare(piscina,
+        "void f(Momentum m, Momentum b) {\n"
+        "    long t = m;\n"
+        "    long x = t + b;\n"
+        "}",
+        I, "XXVIII. t (fluxu) + b -> punctum+punctum violatio");
+
+    /* XXIX. iunctio ramorum dissentiens = AMISSA -> TACET */
+    _signatum_probare(piscina,
+        "void g(Denarii d);\n"
+        "void f(Momentum m, Denarii p, int c) {\n"
+        "    long t;\n"
+        "    if (c) { t = m; } else { t = p; }\n"
+        "    g(t);\n"
+        "}",
+        ZEPHYRUM, "XXIX. iunctio dissentiens -> TACET (amissa)");
+
+    /* XXX. iunctio ramorum consentiens -> stirps servatur */
+    _signatum_probare(piscina,
+        "void g(Denarii d);\n"
+        "void f(Momentum m, int c) {\n"
+        "    long t;\n"
+        "    if (c) { t = m; } else { t = m; }\n"
+        "    g(t);\n"
+        "}",
+        I, "XXX. iunctio consentiens -> violatio (servata)");
+
+    /* XXXI. erasio conversione consulta -> TACET (littera una
+     * lavationis honestae) */
+    _signatum_probare(piscina,
+        "void g(Denarii d);\n"
+        "void f(Momentum m) { long t = (long)m; g(t); }",
+        ZEPHYRUM, "XXXI. long t = (long)m; g(t) -> TACET (erasio)");
+
+    /* XXXII. effugium = stirps amissa -> TACET */
+    _signatum_probare(piscina,
+        "void h(long* p);\n"
+        "void g(Denarii d);\n"
+        "void f(Momentum m) { long t = m; h(&t); g(t); }",
+        ZEPHYRUM, "XXXII. h(&t) -> TACET (effugium)");
+
+    /* XXXIII. redefinitio littera = NEUTRA delet -> TACET */
+    _signatum_probare(piscina,
+        "void g(Denarii d);\n"
+        "void f(Momentum m) { long t = m; t = 5; g(t); }",
+        ZEPHYRUM, "XXXIII. t = 5 post t = m -> TACET (deleta)");
+
+    /* XXXIV. redde flumine-signatum contra genus reditus */
+    _signatum_probare(piscina,
+        "Denarii f(Momentum m) { long t = m; return t; }",
+        I, "XXXIV. return t (fluxu Momentum) ex Denarii ->"
+            " violatio");
+
+    /* XXXV. initiator flumine-signatus contra genus positionis */
+    _signatum_probare(piscina,
+        "void f(Momentum m) { long t = m; { Denarii d = t; } }",
+        I, "XXXV. Denarii d = t (fluxu Momentum) -> violatio");
+
+    /* XXXVI. assignatio flumine-signata in positionem signatam */
+    _signatum_probare(piscina,
+        "void f(Momentum m, Denarii d) { long t = m; d = t; }",
+        I, "XXXVI. d = t (fluxu Momentum) -> violatio");
+
+    /* XXXVII. ansa sui-referens: classificatio ambitu caeca ->
+     * iunctio conservative delet -> TACET (decisum 1 pinnatum) */
+    _signatum_probare(piscina,
+        "void g(Momentum d);\n"
+        "void f(Momentum m, Mora r, int n) {\n"
+        "    long t = m;\n"
+        "    int i;\n"
+        "    for (i = 0; i < n; i++) { t = t - r; }\n"
+        "    g(t);\n"
+        "}",
+        ZEPHYRUM, "XXXVII. ansa t = t - r -> TACET (conservativum)");
+
+    /* XXXVIII. t + t fluxu: punctum+punctum UNA emissione (dedup
+     * sedium - folia duo eiusdem BINARII) */
+    _signatum_probare(piscina,
+        "void f(Momentum m) { long t = m; long x = t + t; }",
+        I, "XXXVIII. t + t (fluxu) -> violatio UNA (dedup)");
+
     credo_imprimere_compendium();
 
     {

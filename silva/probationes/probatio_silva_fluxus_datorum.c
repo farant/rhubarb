@@ -235,8 +235,44 @@ _aestimator_litteralis (vacuum* contextus,
     redde VERUM;
 }
 
+/* Classificator stirpium probationis (ambitu caecus): folium 'a'
+ * -> PRIMA, folium 'b' -> PRIMA+1, cetera NEUTRA */
+interior s32
+_probatio_stirps (vacuum* contextus, constans SilvaNodus* expressio)
+{
+    SilvaValor tok_v;
+
+    (vacuum)contextus;
+    dum (expressio != NIHIL
+        && expressio->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+    {
+        expressio = _nodalis_probationis(
+            silva_c89_parenthesis_internum(expressio));
+    }
+    si (expressio == NIHIL || expressio->genus
+        != (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        redde (s32)FLUXUS_STIRPS_NEUTRA;
+    }
+    tok_v = silva_c89_folium_identificator_tok_valor(expressio);
+    si (tok_v.genus != SILVA_VALOR_TOKEN)
+    {
+        redde (s32)FLUXUS_STIRPS_NEUTRA;
+    }
+    si (_nomen_aequale(tok_v.datum.token->valor, "a"))
+    {
+        redde (s32)FLUXUS_STIRPS_PRIMA;
+    }
+    si (_nomen_aequale(tok_v.datum.token->valor, "b"))
+    {
+        redde (s32)FLUXUS_STIRPS_PRIMA + I;
+    }
+    redde (s32)FLUXUS_STIRPS_NEUTRA;
+}
+
 interior FluxusDatorum*
-_extrahere (Piscina* piscina, constans character* fons)
+_extrahere_cum (Piscina* piscina, constans character* fons,
+    s32 (*stirps_cb)(vacuum*, constans SilvaNodus*))
 {
     SilvaParsura* parsura = silva_c89_parsare(piscina, "probatio.c",
         fons, (i32)strlen(fons), NIHIL);
@@ -267,9 +303,16 @@ _extrahere (Piscina* piscina, constans character* fons)
     aux.parametrum_constans = _probatio_parametrum_constans;
     aux.parametrum_accumulat = NIHIL;
     aux.expressio_acies = NIHIL;   /* e2e semanticae hoc probat */
+    aux.stirps_valoris = stirps_cb;
     aux.canonicum = NIHIL;
     aux.contextus = NIHIL;
     redde silva_c89_fluxus_datorum_aedificare(piscina, fluxus, &aux);
+}
+
+interior FluxusDatorum*
+_extrahere (Piscina* piscina, constans character* fons)
+{
+    redde _extrahere_cum(piscina, fons, NIHIL);
 }
 
 /* ==================================================
@@ -453,6 +496,22 @@ _status_exitus (FluxusDatorum* d, constans character* titulus,
     }
     *may = _bitum_lectum(db->may_introitus, v);
     *must = _bitum_lectum(db->must_introitus, v);
+}
+
+/* Stirps variabilis nominatae ad exitum functionis (introitus
+ * bloci exitus) - punctum fixum tertium */
+interior s32
+_stirps_ad_exitum (FluxusDatorum* d, constans character* titulus)
+{
+    FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+        d->bloci, d->fluxus->exitus->index);
+    s32 v = _variabilis_titulo(d, titulus);
+
+    si (v < ZEPHYRUM)
+    {
+        redde -I;
+    }
+    redde db->stirpes_introitus[v];
 }
 
 /* Status ad introitum bloci usus primi variabilis nominatae */
@@ -938,6 +997,73 @@ s32 principale (vacuum)
 
                 CREDO_VERUM (v->effugit);
             }
+        }
+    }
+
+    /* ==================================================
+     * Punctum fixum stirpium (vestigatio generum - columna tertia,
+     * arcus fluxus 01KYPZ3XPW)
+     * ================================================== */
+    {
+        FluxusDatorum* d;
+
+        /* def fert valorem classificatoris ad exitum; parametrum
+         * numquam redefinitum stirpem NEUTRAM seminis servat */
+        d = _extrahere_cum(piscina,
+            "int f(int a) { int x; x = a; return x; }",
+            _probatio_stirps);
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 ((i32)_stirps_ad_exitum(d, "x"),
+                (i32)FLUXUS_STIRPS_PRIMA);
+            CREDO_AEQUALIS_I32 ((i32)_stirps_ad_exitum(d, "a"),
+                (i32)FLUXUS_STIRPS_NEUTRA);
+        }
+
+        /* iunctio dissentiens -> AMISSA */
+        d = _extrahere_cum(piscina,
+            "int f(int a, int b, int c) { int x;"
+            " if (c) { x = a; } else { x = b; } return x; }",
+            _probatio_stirps);
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 ((i32)_stirps_ad_exitum(d, "x"),
+                (i32)FLUXUS_STIRPS_AMISSA);
+        }
+
+        /* iunctio consentiens -> stirps servata */
+        d = _extrahere_cum(piscina,
+            "int f(int a, int c) { int x;"
+            " if (c) { x = a; } else { x = a; } return x; }",
+            _probatio_stirps);
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 ((i32)_stirps_ad_exitum(d, "x"),
+                (i32)FLUXUS_STIRPS_PRIMA);
+        }
+
+        /* redefinitio littera -> NEUTRA delet */
+        d = _extrahere_cum(piscina,
+            "int f(int a) { int x; x = a; x = 1; return x; }",
+            _probatio_stirps);
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 ((i32)_stirps_ad_exitum(d, "x"),
+                (i32)FLUXUS_STIRPS_NEUTRA);
+        }
+
+        /* stirps_valoris NIHIL -> definitiones NEUTRAE */
+        d = _extrahere(piscina,
+            "int f(int a) { int x; x = a; return x; }");
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 ((i32)_stirps_ad_exitum(d, "x"),
+                (i32)FLUXUS_STIRPS_NEUTRA);
         }
     }
 

@@ -11404,3 +11404,177 @@ documentat). Census post: 0/684 - thesis linguae Latinae pro verbis
 C-futuris PERFECTE tenet. Vectes omnes; specimina IV + fixtura
 pinnata (bool/restrict flagrant, operator/inline_pars tacent,
 constexpr tolerata).
+
+## 2026-07-29 - INTENTIO: GENERA SIGNATA - vestigatio fluxus (01KYPZ3XPW)
+
+LACUNA: `s64 t = momentum; f(t)` - the brand launders through an
+unbranded local because the syntactic walk sees declared
+orthography only. Design banked 2026-07-29 (unit-decree session);
+seams READ this session before this INTENTIO (datorum header +
+forma fixpoint + _formas_examinare + signatum walk + compositum).
+
+SEAM VERDICT (the underestimation law fires again, 5th time): the
+banked "biggest fluxus arc yet" estimate priced a NEW mechanism;
+the substrate already carries the shape TWICE. The brand column is
+the THIRD instance of: classification column on the event
+(_forma_valoris) -> lattice join + fixpoint (_punctum_fixum_
+formarum, datorum.c:1097-1258) -> replay consumer in semantica
+(_formas_examinare, semantica.c:5131). And the cast-blessing law
+costs ZERO code: _signatum_expressionis CONVERSIO case already
+returns neutral for `(s64)m` (species insignata = erasio) and the
+brand for `(Momentum)x` - classification through the existing walk
+inherits the law.
+
+DECISA (Fran, interrogatis duabus):
+1. Classification EXTRACTION-TIME (forma pattern exactly): new aux
+   callback wraps the ambitus-blind syntactic walk. Self-ref defs
+   (`t = t - mora` in a loop) classify weakly (walk(t)=neutrum ->
+   Mora), loop-head join Momentum |_| Mora = AMISSUM -> silent,
+   never wrong. Fixpoint-time classification (ambitus-carrying
+   callback, monotonicity obligation) = NAMED v2 door.
+2. Resolution = SWEEP FROM USES, no candidates: during a replay
+   (exact _formas_examinare shape) any USUS event whose variable
+   carries a REAL brand pater-climbs to its judgment site and
+   re-judges with ambitus. Work ~ actual flow-branded uses (rare
+   forever). Candidate recording rejected on volume: the trigger
+   ("arithmetic on any plain local") is most of the corpus, and
+   the per-event linear candidate scan goes quadratic there.
+
+MACHINA (datorum, ~150 lineis - omnia exemplaria formae):
+- FluxusEventum += `s32 stirps` (columna retenta, codex-est-basis).
+- FluxusDatorumAuxilia += `s32 (*stirps_valoris)(ctx, expressio)`;
+  NIHIL = semper 0. CAVE vocator-initiat: struct sine memset -
+  OMNIS sedes constructionis campum ponere debet (semantica +
+  probationes datorum fixtures).
+- Ordinales: 0 IGNOTUM (identitas iunctionis), 1 NEUTRUM (valor
+  insignatus definitus), 2 AMISSUM (iunctio dissentiens / def-omnia
+  / effugium), 3+N = tabula stirpium semanticae (index+3). Iunctio
+  = _formam_iungere shape: 0 identity, equal keeps, else AMISSUM.
+- FluxusDatorumBlocus += stirpes_introitus/stirpes_exitus (s32*);
+  punctum fixum TERTIUM (_punctum_fixum_stirpium, copy of
+  formarum). Parametra seed NEUTRUM (call-site already judged;
+  provenance interprocedural = named deferral). Def-all -> AMISSUM.
+- Eventa membrorum (MEMBRUM_*) genus-sieved out (additive-events
+  law); scalars only v1, members = named deferral.
+
+MACHINA (semantica, ~250 lineis):
+- Tabula stirpium unica in _contractus_colligere (ordo stabilis) +
+  mappa ordinal<->chorda; _datorum_stirps_ligamen = colligere guard
+  + _signatum_expressionis + map (in_systemate/_fons_alienus guards
+  inside, exemplar ceterorum ligaminum).
+- _signatum_expressionis gains ambitus params (datorum +
+  s32* stirpes_currens); FOLIUM case consults ONLY when declared
+  walk yields nothing and the symbol maps to a tracked, non-escaped
+  scalar with a real (3+) state. All existing callers pass NIHIL
+  (behavior byte-identical).
+- _signata_fluxus_examinare: guard registry-empty -> redde (corpus
+  fast path); _contractus_colligere FIRST (tier-3 lazy-init
+  lesson); replay per _formas_examinare maintaining stirpes_
+  currens; qualifying USUS -> pater-climb (<=LXIV) to site:
+  BINARIUM algebra / def into branded target / VOCATIO arg (param
+  brand via _orthographia_parametri_vocati) / REDDE. Re-judge with
+  ambitus; emit codex 82 (message + " (per definitiones fluxus)")
+  ONLY si the ambitus-blind judgment was silent (typing-time
+  diagnostics never double-fire); _tolera_absorbere at the site.
+- Wire into _fluxum_examinare post _intervalla_severa_examinare.
+- NO new codex; NO silva.h change (fluxus INTERNUM v1, datorum aux
+  not exported) - amalgam hazard of arcs 81-84 absent by design.
+
+CRITERIA SERVATA: zero-noise unchanged (compositum absorbs neutral
+sides; emission still requires BOTH brands proven - flow only
+upgrades a leaf from unknown to proven); cast blesses both
+directions (inherited from the walk); escape/aliasing = brand lost
+(var->effugit replay guard); join dissent = AMISSUM.
+
+SIMULATIO (specimina banked, paper-walked at the seam):
+1. lavatio simplex `s64 t = m; f(t)` [f branded param alia]: def
+   stirps=Momentum, USUS at arg with real brand, param MomentumSec
+   -> FIRES. Matching param -> TACET (correct silence).
+2. iunctio ramorum: si/alioquin defs Momentum vs MomentumSec ->
+   join AMISSUM -> TACET. Consentiens (both Momentum) -> kept ->
+   judged downstream.
+3. erasio consulta `s64 t = (s64)m`: CONVERSIO case -> NEUTRUM ->
+   TACET (the one honest laundering letter).
+4. effugium `g(&t)`: var->effugit -> replay guard -> TACET.
+5. redefinitio `t = m; t = 5;`: literal def classifies NEUTRUM,
+   overwrites -> TACET (kill semantics correct).
+6. ansa self-ref: AMISSUM by join (decisum 1) -> TACET, documents
+   option-A conservatism.
+KNOWN COARSENESS (named): the site re-walk uses one snapshot (the
+triggering USUS event's state); an expression with an EMBEDDED
+assignment between two flow-branded leaves may see off-by-one-event
+sibling state. Pathological (zero corpus occurrences expected),
+conservative note, not a gate.
+
+VECTIS: probatio_silva_signata.c specimina nova (~XII: lavatio ad
+argumentum/binarium/redde, iunctiones II, erasio, effugium,
+redefinitio, ansa, same-brand, no-double-fire, tolera); datorum
+fixpoint pins in probatio_silva_fluxus_datorum.c (stirps column on
+small graphs, manual stirps_valoris); fixtura nova genera_fluxus.
+severum; suites omnes + amalgamata + officina + radix; census 82 =
+corpus first contact WITH live brands (moneta/vigilia/fasti) - the
+wall must hold at 0 outside fixa, any site is predicate bug or
+real bug, both harvest.
+
+## 2026-07-29 - RELATIO: VESTIGATIO FLUXUS generum signatorum (01KYPZ3XPW)
+
+SHIPPED una sessione ab INTENTIONE. Specimina XIV nova (XXV-
+XXXVIII, signata 114/114) PRIMO CONTACTU omnia - leges omnes
+simulatae tenuerunt: lavatio flagrat ad sedes V, iunctio
+dissentiens conservat silentium, conversio benedicit, effugium et
+redefinitio littera stirpem delent, ansa sui-referens
+conservativa, t+t emissione UNA per dedup. Pinnae datorum V primo
+contactu. Correctiones aedificationis II solae: typedef
+FluxusDatorum in semantica.h duplicaretur (C89) -> siglum crudum
+'constans structura FluxusDatorum*', caput fluxus consulto non
+inclusum manet; ordo _stirps_ad_exitum ante compilationem motus.
+
+MACHINA (ut INTENTIO, deviatione nulla):
+- datorum: columna stirps in eventis (classificata ad extractionem
+  per involucrum novum stirps_valoris; NIHIL = NEUTRA; sedes
+  constructionis TRES omnes positae - laqueus vocator-initiat
+  vitatus); punctum fixum TERTIUM _punctum_fixum_stirpium (copia
+  formarum; reticulum IGNOTA < {NEUTRA, PRIMA+n} < AMISSA);
+  parametra NEUTRA seruntur.
+- semantica: campi ambitus in sem (stirpes_datorum/stirpes_
+  ambitus, positi SOLUM per replay) - ambulatio generum fluxum
+  consulit MUTATIONE SIGNATURAE NULLA (casus FOLII: declaratio
+  primum, fluxus secundo; effugium/membra cribrata);
+  probare-functiones ramum caecum-dedup ferunt (emissio solum si
+  iudicium sine ambitu tacuit - typatio numquam bis) + suffixum
+  nuntii '(per definitiones fluxus)'; replay _signata_fluxus_
+  examinare (exemplar _formas_examinare) + ascensus patrum
+  _sedem_fluxus_iudicare ad sedes V (BINARIUM quodque in via;
+  ASSIGNATIO/VOCATIO/REDDE/DECLARATOR_INITIATUS terminales) cum
+  dedup sedium intra replay.
+- benedictio conversionis GRATIS: ambulatio CONVERSIO iam
+  erasionem reddit - classificatio per eam lex 'littera una
+  lavationis honestae' sine codice novo.
+
+MENSURAE: census 82 = 0/684 POST vestigationem vivam in corpore
+toto (fasti/vigilia/moneta genera viva ferunt) - murus
+strepitus-nulli TENET cum fluxu. Suites: silva 36/36, VECTIS
+TENET (fixtura genera_fluxus.severum: pinnae II vivae cum suffixo
+fluminis, silentia IV, tolera QUIETA), officina 13/13, radix
+108/108 PLENUS ~137s (ante ~135s - delta infra strepitum),
+amalgama VERIFICATA. silva.h INTACTUM - fluxus internus,
+periculum amalgamatis arcuum 81-84 absens consilio.
+
+IANUAE NOMINATAE: classificatio fixpoint-tempore (ansae
+sui-referentes provenientiam servarent - v2 decisi 1); membra
+(ordines cribrati v1); provenientia interprocedualis (parametra
+NEUTRA); assignationes compositae (fons = nodus ipse -> NEUTRA);
+ruditas photographematis (assignatio inserta inter folia duo
+flumine-signata eiusdem expressionis - nominata, non porta).
+
+INSTRUMENTA (debrief): adhibita = lectio suturarum ante
+INTENTIONEM (lex subaestimationis QUINTA vice: 'arcus fluxus
+maximus adhuc' erat instantia TERTIA exemplaris expositi -
+classificatio/iunctio/replay omnia praecedentia habebant);
+census/examen directus in fixturam (positiones vivae ante
+vectem); interrogationes II ante machinam (decisa extractio-
+tempore + sweep-ab-usibus). Asperitates: excubitor STALA post
+amalgamare (renovatum manu - 01KYQ4H06F aperta); zsh '==='
+iterum. Fructus: hamus post-editionem TACUIT toto arcu -
+editiones primae mundae; capsula_libri OOM in censu iterum
+(01KYQ4H5ZG).

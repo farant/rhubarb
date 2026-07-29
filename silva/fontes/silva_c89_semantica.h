@@ -603,6 +603,13 @@ structura SilvaSemantica {
                                                    * typedef
                                                    * (01KYNXXVX9) -
                                                    * eadem collectione */
+    /* ambitus generum fluminis (arcus fluxus 01KYPZ3XPW): positi
+     * SOLUM per replay _signata_fluxus_examinare - ambulatio
+     * generum folium insignatum declaratione per eos consulit;
+     * NIHIL alias (typatio caeca manet, mores immutati). Sigla
+     * cruda (caput fluxus hic consulto non inclusum). */
+    constans structura FluxusDatorum* stirpes_datorum;
+    constans s32*                     stirpes_ambitus;
 
     /* annotationes collectae (frustum E2, 2026-07-22): ambulatio
      * UNA communis per parsuram (collector silva_annotationes) -

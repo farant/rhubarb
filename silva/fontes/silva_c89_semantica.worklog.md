@@ -838,3 +838,22 @@ Static-name collision note: `_chordae_pares` already existed in
 silva_token.c; the amalgamator's duplicate-definition gate caught the
 new one in fluxus_datorum.c at first regen (now _membri_tituli_pares).
 Static does not mean private once TUs merge.
+
+## 2026-07-29 — flow brand tracking: ambient-field pattern (arcus fluxus)
+
+The flow consultation threads NO parameters: `sem->stirpes_datorum`
++ `sem->stirpes_ambitus` are set ONLY around `_sedem_fluxus_iudicare`
+calls inside the replay and NIHIL everywhere else, so
+`_signatum_expressionis` and both probare functions serve typing
+(blind) and replay (flow-aware) with identical signatures. The
+blind-dedup branch inside the probare functions does a save/NIHIL/
+restore of `stirpes_ambitus` to re-run the walk without flow —
+stateful but contained to two places; emission happens only when
+the blind judgment was silent, so typing-time diagnostics can never
+double-fire. Trap avoided: semantica.h must NOT re-typedef
+FluxusDatorum (C89 duplicate typedef) — the struct field uses the
+raw tag `constans structura FluxusDatorum*` and the fluxus header
+stays deliberately un-included. Known coarseness (named in
+phase-log): the site re-walk uses one snapshot per triggering USUS
+event; an embedded assignment between two flow-branded leaves of
+the same expression could see off-by-one-event sibling state.

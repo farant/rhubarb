@@ -82,6 +82,25 @@ nomen enumeratio {
     FLUXUS_FORMA_MIXTA         /* iunctio dissentiens aut def-omnia */
 } FluxusForma;
 
+/* Stirps signata valoris definitionis (vestigatio generum, codex 82
+ * arcus fluxus): reticulum IGNOTA(0) < {NEUTRA, PRIMA+n} < AMISSA.
+ * Classificatio ad tempus extractionis per involucrum auxiliorum
+ * (stirps_valoris) - ambitu caeca: defs sui-referentes (t = t - m)
+ * debiliter classificant, iunctio conservative delet (silet,
+ * numquam mentitur). Ordinales PRIMA+n = tabula stirpium vocatoris
+ * (semantica); datorum semanticam numquam videt. */
+nomen enumeratio {
+    FLUXUS_STIRPS_IGNOTA = 0,  /* nulla definitio attingit
+                                * (iunctionis identitas) */
+    FLUXUS_STIRPS_NEUTRA,      /* valor insignatus definitus
+                                * (litera, erasio conversione,
+                                * expressio inresoluta) */
+    FLUXUS_STIRPS_AMISSA,      /* iunctio dissentiens / def-omnia
+                                * (provenientia perit) */
+    FLUXUS_STIRPS_PRIMA        /* ordinales vocatoris: PRIMA + index
+                                * tabulae stirpium */
+} FluxusStirps;
+
 /* Eventum unum. variabilis = index densus in tabulam variabilium;
  * -1 = OMNES variabiles (folium ERROR/AMBIGUUS opacum: def-omnia,
  * abstentio conservativa). */
@@ -95,6 +114,9 @@ nomen structura {
                                         * quaestionis futurae */
     s32                  forma;        /* FluxusForma valoris (DEFINITIO
                                         * sola; IGNOTA alias) */
+    s32                  stirps;       /* FluxusStirps valoris per
+                                        * stirps_valoris (DEFINITIO
+                                        * genera; IGNOTA alias) */
 } FluxusEventum;
 
 /* ==================================================
@@ -143,6 +165,11 @@ nomen structura {
                                         * fixum alterum, iunctio
                                         * reticuli non bitalis) */
     s32* formae_exitus;
+    s32* stirpes_introitus;            /* FluxusStirps per variabilem
+                                        * (vestigatio generum -
+                                        * punctum fixum tertium,
+                                        * eadem forma reticuli) */
+    s32* stirpes_exitus;
 } FluxusDatorumBlocus;
 
 structura FluxusDatorum {
@@ -200,6 +227,12 @@ nomen structura {
      * NIHIL = numquam acies, lectio membri invisibilis manet) */
     b32 (*expressio_acies)(vacuum* contextus,
         constans SilvaNodus* nodus);
+    /* stirps signata valoris definitionis (FluxusStirps: NEUTRA aut
+     * PRIMA+n tabulae vocatoris); NIHIL = semper NEUTRA. CAVE:
+     * struct sine memset construitur - OMNIS sedes constructionis
+     * hoc campum ponere debet (laqueus vocator-initiat). */
+    s32 (*stirps_valoris)(vacuum* contextus,
+        constans SilvaNodus* expressio);
     /* lectio canonica nodi AMBIGUI; NIHIL = identitas */
     constans SilvaNodus* (*canonicum)(vacuum* contextus,
         constans SilvaNodus* nodus);
