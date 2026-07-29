@@ -117,6 +117,9 @@ nomen structura {
 /* prototypa interiora (corpora post aestimatorem intervallorum,
  * vocationes in _fluxum_examinare / analysare supra) */
 interior constans SilvaNodus* _nodus_valoris (SilvaValor v);
+interior vacuum _nexum_ponere (SilvaSemantica* sem,
+    constans SilvaNodus* nodus, SemanticaSymbolum* symbolum,
+    b32 notare_usum);
 interior chorda _typus_nominatus_titulus (SilvaValor specificatores);
 interior b32 _refinatio_tituli (SilvaSemantica* sem, chorda titulus,
     s64* imum, s64* summum);
@@ -2660,6 +2663,35 @@ _symbolum_registrare (SilvaSemantica* sem, s32 genus,
             *locus = symbolum;
         }
     }
+    /* nexus declarantis (01KYNNW0E6): hover in nomine declarato
+     * symbolum proprium reddit. Declarare NON est uti (FALSUM -
+     * iudicia 69/70 vigilantia manent). SEDES = declarator SOLUS:
+     * definitio functionis declarantem TOTAM fert - registratio
+     * lata vicinitatem hoveris in corpore toto eclipsaret
+     * (mensuratum pinna 'sedes proximae'); fodimus declaratorem. */
+    {
+        constans SilvaNodus* sedes = declarans;
+
+        si (sedes != NIHIL && sedes->genus
+                == (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
+        {
+            sedes = _declaratorem_fn_invenire(sedes);
+        }
+        si (sedes != NIHIL
+            && (sedes->genus == (s32)SILVA_C89_GENUS_DECLARATOR_TITULUS
+                || sedes->genus
+                    == (s32)SILVA_C89_GENUS_DECLARATOR_INITIATUS
+                || sedes->genus
+                    == (s32)SILVA_C89_GENUS_DECLARATOR_MONSTRATOR
+                || sedes->genus
+                    == (s32)SILVA_C89_GENUS_DECLARATOR_ACIEI
+                || sedes->genus
+                    == (s32)SILVA_C89_GENUS_DECLARATOR_FUNCTIONIS
+                || sedes->genus == (s32)SILVA_C89_GENUS_PARAMETRUM))
+        {
+            _nexum_ponere(sem, sedes, symbolum, FALSUM);
+        }
+    }
     redde symbolum;
 }
 
@@ -3600,8 +3632,22 @@ _typus_ex_specificatoribus_interior (SilvaSemantica* sem,
                 habet_nominatum = VERUM;
                 si (tok_v.genus == SILVA_VALOR_TOKEN)
                 {
-                    nominatus = silva_c89_typedef_invenire(sem,
-                        tok_v.datum.token->valor);
+                    /* symbolum (non typus solus) - nexus positionis
+                     * typi registratur (01KYNNW0E6: hover/definitio
+                     * in orthographia typedef; resolutio hic VERE
+                     * fit, ante hoc consumpta-et-abiecta). Typedefs
+                     * a iudiciis 69/70 praetermissi - notatio usus
+                     * neutralis. */
+                    SemanticaSymbolum* symbolum =
+                        silva_c89_symbolum_invenire(sem,
+                            tok_v.datum.token->valor);
+
+                    si (symbolum != NIHIL
+                        && symbolum->genus == SYMBOLUM_TYPEDEF)
+                    {
+                        nominatus = symbolum->typus;
+                        _nexum_ponere(sem, n, symbolum, VERUM);
+                    }
                     si (nominatus == NIHIL)
                     {
                         silva_c89_diagnosticum_addere(sem, n,
