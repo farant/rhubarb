@@ -36,11 +36,13 @@ FABRICA="fabrica.tsv"
 FILTRUM=""
 OMNIA=0
 TACITUS=0
+SANATIO=1
 
 for a in "$@"; do
     case "$a" in
         -omnia) OMNIA=1 ;;
         -tacitus) TACITUS=1 ;;
+        -sine-renovatione) SANATIO=0 ;;
         -*) echo "excubitor: flagrum ignotum $a" >&2 ; exit 2 ;;
         *)  FILTRUM="$a" ;;
     esac
@@ -50,6 +52,28 @@ if [ ! -f "$GRAPHUS" ]; then
     echo "EXCUBITOR: $GRAPHUS deest" >&2
     echo "  (genera: ./silva/nexus.sh -renovare)" >&2
     exit 2
+fi
+
+# --------------------------------------------------
+# oculi recentes (2026-07-29, 01KYQ4H06F): graphus = MENSURA
+# excubitoris, non fabrica custodita - stalus se renovat per
+# percursum incrementalem (nexus.sh -renovare, typice 1-2s) ANTE
+# verdicta; contractus "verificat et explicat solum" tenet:
+# binaria numquam aedificat, oculos suos solos tergit. Defectu
+# renovationis pergit oculis veteribus - cautio "graphus
+# vetustior" in relatione CLAMAT (numquam tacite).
+# -sine-renovatione = mores puri.
+# --------------------------------------------------
+if [ "$SANATIO" = "1" ]; then
+    RECENTIOR=$(find . \( -name '*.c' -o -name '*.h' \) \
+        -newer "$GRAPHUS" -not -path './build/*' \
+        -not -path '*/build/*' -not -path './.git/*' \
+        2>/dev/null | head -1)
+    if [ -n "$RECENTIOR" ]; then
+        echo "EXCUBITOR: graphus stalus ($RECENTIOR recentior) - oculos renovo" >&2
+        ./silva/nexus.sh -renovare >&2 \
+            || echo "EXCUBITOR: renovatio FRACTA - oculi veteres (cautio in relatione)" >&2
+    fi
 fi
 
 # --------------------------------------------------

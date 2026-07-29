@@ -11667,3 +11667,36 @@ hodie brand-servans, capturae vivae eam viam monstrant).
 
 INSTRUMENTA: census = inventor ambarum capturarum (mensura, non
 coniectura - sextum); examen directum in plagulam pro triage.
+
+## 2026-07-29 - RELATIO: NEXUS SE-SANANS + OCULI EXCUBITORIS (01KYQ4H06F, arcus quartus diei)
+
+SHIPPED + PROBATUM VIVO. Porta ad TEMPUS QUAESTIONIS mota (tabula
+stala non recusat, MENTITUR): nexus.sh quaestio quaeque percursum
+incrementalem ANTE responsum currit; renovatio functio UNA imperio
+-renovare et sanationi (dissentire non possunt); defectu responsum
+e tabula VETERE cum CAUTIONE GRAVI; -vetus = tabula vetus consulto.
+Excubitor oculos suos renovat (graphus = MENSURA, non fabrica
+custodita - contractus 'verificat et explicat solum' TENET, binaria
+nag-only manent); -sine-renovatione = mores puri; defectu cautio
+awk exsistens CLAMAT (fallback, mutatio awk NULLA).
+
+MENSURAE quae consilium bancatum MELIORAVERUNT (subaestimatio
+sexta?): (1) -renovare iam INCREMENTALIS erat (nulla-mutatio 0.4s,
+commissio typica 1-2s) - 'ianua 3' dimidia in substrato; probatio
+staleness separata supervacua, percursus IPSE mensura praecisa ->
+sanatio incondicionalis. (2) Scriptura tabularum iam ATOMICA
+(.nova + rename, consulto pro lectoribus concurrentibus) -
+corruptio numquam possibilis fuit.
+
+INVENTUM VIVO: '| head' quaestionem truncans sanationem SIGPIPE
+occidere posset (labor perditus, non corruptio) -> captura
+substitutione: percursus fistulam vocatoris numquam tangit.
+PRETIUM NOMINATUM: tactus fontis quem instrumentum ipsum nectit
+(RADIX_FONTES: chorda/similitudo/...) -> instrumentum religatum ->
+-plenus coactus (~55-68s) in quaestione prima post - lex tabulae
+mixtae absoluta, amortizatum (quaestiones sequentes 0.4s).
+
+STATUS DOMUS: res derivata OMNIS contractum habet - proiectiones
+se-reaedificantes (db/frigida/nexus), residentes se-renovantes
+(legati/tabularii/daemon), generata clamantia. Cauda suitarum
+tacita = recens verificatum, non nag mutus.
