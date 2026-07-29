@@ -11700,3 +11700,66 @@ STATUS DOMUS: res derivata OMNIS contractum habet - proiectiones
 se-reaedificantes (db/frigida/nexus), residentes se-renovantes
 (legati/tabularii/daemon), generata clamantia. Cauda suitarum
 tacita = recens verificatum, non nag mutus.
+
+## 2026-07-29 - INTENTIO: STIRPES MEMBRORUM (arcus quintus - fluxus v2b)
+
+Classis lavationis clausa: `s.t = m; f(s.t)` per campum structurae
+insignatum. Substratum IAM fert: ordines membrorum in datorum
+(01KYMYW75S), eventa MEMBRUM_DEFINITIO iam stirpe classificata
+(v1 _eventum_emittere genus utrumque tractat - cribrum solum in
+consumptoribus), exemplar ordinis in _intervalla_transferre
+(dele-deinde-pone + exceptio structurae).
+
+CONSILIUM (conservativum v1, sutura munda):
+- Transfer (fixpunctum datorum + replay semanticae, forma eadem):
+  def BASIS ordines membrorum eius -> AMISSA (dele conservativum -
+  exceptio structurae genus typi postulat quod datorum videre
+  nequit; scriptio membri def totius ANTE eventum membri emittit,
+  ergo membrum scriptum per eventum proprium REVIVIT - solum
+  FRATRES conservative pereunt, pin nominat); MEMBRUM_DEFINITIO
+  ordinem proprium classificat (cribrum tollitur).
+- Consultatio (ambulatio casus ACCESSUS): genus declaratum primum
+  (habet), fluxus secundo - basis folium -> symbolum -> ordo
+  membri per (identitas, titulus_membri); effugium BASIS
+  consulendum (lex capitis datorum); basis non-folium/sagitta =
+  numquam tracta -> vacua (conservativum).
+- Replay: eventa MEMBRUM_USUS excitant (ev->nodus = ACCESSUS);
+  ACCESSUS ad ordinem ascensus additur (ante: finis ordinarius).
+- Exceptio structurae (fratres vivunt) = REFINATIO NOMINATA
+  (facta unio_est + pater-ACCESSUS in datorum, exemplar
+  intervallorum) - non hodie.
+
+SPECIMINA (~VI): lavatio membri ad argumentum (flagrat) / par
+(tacet) / copia totius delet (tacet) / effugium basis (tacet) /
+membrum in binario (flagrat) / scriptio fratris delet
+conservative (tacet - pin ianuae). Fixtura + census.
+
+## 2026-07-29 - RELATIO: STIRPES MEMBRORUM (arcus quintus, fluxus v2b)
+
+SHIPPED. Specimina VI (XLVIII-LIII, signata 159/159) PRIMO
+CONTACTU - lavatio per campum structurae flagrat ad argumentum et
+in algebra; par/copia-totius/effugium-basis/scriptio-fratris
+conservative TACENT. Fixtura pin V (nuntius vivus membro cum
+suffixo fluminis).
+
+MACHINA (ut INTENTIO): cribrum membrorum sublatum in transfer
+utroque (fixpunctum datorum + replay - forma eadem); dele
+conservativum: def basis ordines membrorum -> AMISSA (membrum
+scriptum per eventum proprium sequens REVIVIT - donum ordinis
+dele-deinde-pone: exceptio structurae genus typi postulat quod
+datorum videre nequit, sutura munda pretio fratrum conservative
+pereuntium, pin LIII ianuam nominat); consultatio ACCESSUS in
+ambulatione (basis folium -> ordo membri per identitas+titulus,
+effugium BASIS consultum); MEMBRUM_USUS excitat replay; ACCESSUS
+in ordinem ascensus.
+
+Vectes omnes: silva 36/36, VECTIS TENET, amalgamata VERIFICATA,
+officina 13/13, radix PLENUS, census 82 = 0/684 (rete ante
+messem: campi structurarum insignati tempus hodie non lavant -
+crescet). Radix ~157s (ante ~140 - trans arcus tres fluxus;
+latentia cumulata metienda si murus apparebit).
+
+IANUAE: exceptio structurae in transfer (facta unio_est + pater-
+ACCESSUS, exemplar intervallorum - fratres viverent); basis
+sagitta/nidificata (numquam tracta v1); interprocedualis (sessio
+propria, architectura secundi passus).

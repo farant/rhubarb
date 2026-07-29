@@ -1293,12 +1293,16 @@ _stirpem_iungere (s32 a, s32 b)
     redde (s32)FLUXUS_STIRPS_AMISSA;
 }
 
-/* Exitus = introitus + definitiones (replay ordine eventorum);
- * eventa membrorum cribrata (lex eventorum additivorum).
+/* Exitus = introitus + definitiones (replay ordine eventorum).
  * Classificatio ambitu-conscia (aux, v2): def contra tabulam
  * exitus MEDIO-renovatam - ordo eventorum = status currens verus
  * (usus-ante-def compositorum ordinem servat); involucro absente
- * columna caeca ev->stirps. */
+ * columna caeca ev->stirps. Membra (v2b): MEMBRUM_DEFINITIO
+ * ordinem proprium ponit; def BASIS ordines membrorum eius delet
+ * CONSERVATIVE (exceptio structurae genus typi postulat quod
+ * datorum videre nequit - refinatio nominata; scriptio membri def
+ * totius ANTE eventum proprium emittit, ergo membrum scriptum
+ * revivit, fratres soli pereunt). */
 interior vacuum
 _stirpes_exitum_computare (FluxusDatorum* datorum,
     FluxusDatorumBlocus* b, constans FluxusDatorumAuxilia* aux)
@@ -1317,7 +1321,8 @@ _stirpes_exitum_computare (FluxusDatorum* datorum,
         FluxusEventum* ev = (FluxusEventum*)xar_obtinere(b->eventa,
             e);
 
-        si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO)
+        si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO
+            && ev->genus != (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
         {
             perge;
         }
@@ -1331,6 +1336,23 @@ _stirpes_exitum_computare (FluxusDatorum* datorum,
         }
         alioquin
         {
+            si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
+            {
+                /* dele conservativum: ordines membrorum basis */
+                per (v = ZEPHYRUM; v < n_var; v++)
+                {
+                    constans FluxusVariabilis* vv =
+                        (constans FluxusVariabilis*)xar_obtinere(
+                            datorum->variabiles, v);
+
+                    si (vv != NIHIL && vv->membrum_est
+                        && vv->basis == (s32)ev->variabilis)
+                    {
+                        b->stirpes_exitus[v] =
+                            (s32)FLUXUS_STIRPS_AMISSA;
+                    }
+                }
+            }
             b->stirpes_exitus[ev->variabilis] =
                 (aux != NIHIL && aux->stirps_valoris_ambitu != NIHIL)
                 ? aux->stirps_valoris_ambitu(aux->contextus,

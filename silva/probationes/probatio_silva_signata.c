@@ -461,6 +461,80 @@ principale (vacuum)
         ZEPHYRUM, "XLVII. Momentum r = q - p (monstratores) ->"
             " TACET (custos)");
 
+    imprimere("--- XLVIII-LIII: stirpes membrorum (v2b) ---\n");
+
+    /* XLVIII. lavatio per campum insignatum ad argumentum */
+    _signatum_probare(piscina,
+        "struct S { long t; };\n"
+        "void g(Denarii d);\n"
+        "void f(Momentum m) {\n"
+        "    struct S s;\n"
+        "    s.t = m;\n"
+        "    g(s.t);\n"
+        "}",
+        I, "XLVIII. s.t = m; g(s.t) ubi g(Denarii) -> violatio");
+
+    /* XLIX. lavatio membri genere pari -> TACET */
+    _signatum_probare(piscina,
+        "struct S { long t; };\n"
+        "void g(Momentum d);\n"
+        "void f(Momentum m) {\n"
+        "    struct S s;\n"
+        "    s.t = m;\n"
+        "    g(s.t);\n"
+        "}",
+        ZEPHYRUM, "XLIX. g(s.t) ubi g(Momentum) -> TACET (par)");
+
+    /* L. copia totius stirpem membri delet -> TACET */
+    _signatum_probare(piscina,
+        "struct S { long t; };\n"
+        "void g(Denarii d);\n"
+        "void f(Momentum m, struct S s2) {\n"
+        "    struct S s;\n"
+        "    s.t = m;\n"
+        "    s = s2;\n"
+        "    g(s.t);\n"
+        "}",
+        ZEPHYRUM, "L. s = s2 post s.t = m -> TACET (deleta)");
+
+    /* LI. effugium basis stirpes membrorum delet -> TACET */
+    _signatum_probare(piscina,
+        "struct S { long t; };\n"
+        "void h(struct S* p);\n"
+        "void g(Denarii d);\n"
+        "void f(Momentum m) {\n"
+        "    struct S s;\n"
+        "    s.t = m;\n"
+        "    h(&s);\n"
+        "    g(s.t);\n"
+        "}",
+        ZEPHYRUM, "LI. h(&s) -> TACET (effugium basis)");
+
+    /* LII. membrum flumine-signatum in algebra */
+    _signatum_probare(piscina,
+        "struct S { long t; };\n"
+        "void f(Momentum m, Momentum b) {\n"
+        "    struct S s;\n"
+        "    long x;\n"
+        "    s.t = m;\n"
+        "    x = s.t + b;\n"
+        "}",
+        I, "LII. s.t (fluxu Momentum) + b -> violatio");
+
+    /* LIII. scriptio FRATRIS stirpem delet (dele conservativum -
+     * exceptio structurae = refinatio nominata; pin ianuae) */
+    _signatum_probare(piscina,
+        "struct S { long a; long b; };\n"
+        "void g(Denarii d);\n"
+        "void f(Momentum m) {\n"
+        "    struct S s;\n"
+        "    s.a = m;\n"
+        "    s.b = 5;\n"
+        "    g(s.a);\n"
+        "}",
+        ZEPHYRUM, "LIII. s.b = 5 post s.a = m -> TACET"
+            " (conservativum)");
+
     credo_imprimere_compendium();
 
     {

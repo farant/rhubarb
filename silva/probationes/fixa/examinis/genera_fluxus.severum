@@ -88,6 +88,18 @@ static void composita_puncta(Momentum a, Momentum b)
     a += b;
 }
 
+/* membrum (v2b): lavatio per campum structurae insignatum */
+struct Arca { long t; };
+
+static void lavatio_membri(Momentum m)
+{
+    struct Arca s;
+
+    s.t = m;
+    /* <exspecta codex="SIGNATUM_COMMIXTUM"/> */
+    poscit_denarios(s.t);
+}
+
 static long radix(Momentum m, Denarii p, int c)
 {
     lavatio_argumenti(m);
@@ -97,5 +109,6 @@ static long radix(Momentum m, Denarii p, int c)
     toleratum(m);
     lavatio_ansae(m, 0, c);
     composita_puncta(m, m);
+    lavatio_membri(m);
     return lavatio_algebrae(m);
 }

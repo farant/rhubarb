@@ -9622,9 +9622,71 @@ _signatum_expressionis (SilvaSemantica* sem,
                     constans SignatumTypi* g = _signatum_tituli(
                         sem, orthographia);
 
-                    redde (g != NIHIL
-                        && _typus_signabilis(sem, nodus))
-                        ? g->stirps : vacua;
+                    si (g != NIHIL && _typus_signabilis(sem, nodus))
+                    {
+                        redde g->stirps;
+                    }
+                }
+                /* consultatio fluminis membrorum (v2b): basis
+                 * folium tractum + titulus membri -> ordo membri;
+                 * effugium BASIS consulendum. Basis non-folium/
+                 * sagitta numquam tracta -> vacua (conservativum). */
+                si (sem->stirpes_ambitus != NIHIL
+                    && sem->stirpes_datorum != NIHIL)
+                {
+                    constans SilvaNodus* bf = _canonicum(
+                        b_v.datum.nodus);
+
+                    si (bf->genus
+                        == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+                    {
+                        constans SemanticaSymbolum* bs =
+                            silva_c89_symbolum_nodi(sem, bf);
+
+                        si (bs != NIHIL)
+                        {
+                            i32 n_var = xar_numerus(
+                                sem->stirpes_datorum->variabiles);
+                            i32 i;
+
+                            per (i = ZEPHYRUM; i < n_var; i++)
+                            {
+                                constans FluxusVariabilis* var =
+                                    (constans FluxusVariabilis*)
+                                    xar_obtinere(
+                                        sem->stirpes_datorum
+                                            ->variabiles, i);
+                                constans FluxusVariabilis* basis_var;
+
+                                si (var == NIHIL
+                                    || !var->membrum_est
+                                    || var->identitas
+                                        != (constans vacuum*)bs
+                                    || !_chordae_pares_contractus(
+                                        var->titulus_membri,
+                                        t_v.datum.token->valor)
+                                    || sem->stirpes_ambitus[i]
+                                        < (s32)FLUXUS_STIRPS_PRIMA)
+                                {
+                                    perge;
+                                }
+                                basis_var = (var->basis >= ZEPHYRUM)
+                                    ? (constans FluxusVariabilis*)
+                                      xar_obtinere(
+                                          sem->stirpes_datorum
+                                              ->variabiles,
+                                          (i32)var->basis)
+                                    : NIHIL;
+                                si (basis_var == NIHIL
+                                    || basis_var->effugit)
+                                {
+                                    perge;
+                                }
+                                redde _stirps_ex_ordinali(sem,
+                                    sem->stirpes_ambitus[i]);
+                            }
+                        }
+                    }
                 }
             }
             frange;
@@ -10344,7 +10406,9 @@ _sedem_fluxus_iudicare (SilvaSemantica* sem,
             casus (s32)SILVA_C89_GENUS_UNARIUM:
             casus (s32)SILVA_C89_GENUS_CONVERSIO:
             casus (s32)SILVA_C89_GENUS_TERNARIUS:
-                frange;   /* ascende */
+            casus (s32)SILVA_C89_GENUS_ACCESSUS:
+                frange;   /* ascende (accessus = excitator membri
+                           * flumine-signati, v2b) */
             casus (s32)SILVA_C89_GENUS_BINARIUM:
             {
                 SilvaValor op_v = silva_c89_binarium_tok_operator(n);
@@ -10677,7 +10741,8 @@ _signata_fluxus_examinare (SilvaSemantica* sem,
             FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
                 db->eventa, e);
 
-            si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
+            si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO
+                || ev->genus == (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
             {
                 si (ev->variabilis < ZEPHYRUM)
                 {
@@ -10686,19 +10751,38 @@ _signata_fluxus_examinare (SilvaSemantica* sem,
                         stirpes_currens[v] =
                             (s32)FLUXUS_STIRPS_AMISSA;
                     }
+                    perge;
                 }
-                alioquin
+                si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
                 {
-                    /* classificatio ambitu-conscia (v2) - eadem ac
-                     * fixpunctum datorum, dissentire non possunt */
-                    stirpes_currens[ev->variabilis] =
-                        _datorum_stirps_ambitu_ligamen(sem,
-                            ev->fons_valoris, datorum,
-                            stirpes_currens);
+                    /* dele conservativum (v2b, forma fixpuncti):
+                     * def basis ordines membrorum delet; membrum
+                     * scriptum per eventum proprium revivit */
+                    per (v = ZEPHYRUM; v < n_var; v++)
+                    {
+                        constans FluxusVariabilis* vv =
+                            (constans FluxusVariabilis*)xar_obtinere(
+                                datorum->variabiles, v);
+
+                        si (vv != NIHIL && vv->membrum_est
+                            && vv->basis == ev->variabilis)
+                        {
+                            stirpes_currens[v] =
+                                (s32)FLUXUS_STIRPS_AMISSA;
+                        }
+                    }
                 }
+                /* classificatio ambitu-conscia (v2) - eadem ac
+                 * fixpunctum datorum, dissentire non possunt */
+                stirpes_currens[ev->variabilis] =
+                    _datorum_stirps_ambitu_ligamen(sem,
+                        ev->fons_valoris, datorum,
+                        stirpes_currens);
                 perge;
             }
-            si (ev->genus != (s32)FLUXUS_EVENTUM_USUS
+            si ((ev->genus != (s32)FLUXUS_EVENTUM_USUS
+                    && ev->genus
+                        != (s32)FLUXUS_EVENTUM_MEMBRUM_USUS)
                 || ev->variabilis < ZEPHYRUM)
             {
                 perge;
@@ -10713,8 +10797,31 @@ _signata_fluxus_examinare (SilvaSemantica* sem,
                     (constans FluxusVariabilis*)xar_obtinere(
                         datorum->variabiles, (i32)ev->variabilis);
 
-                si (var == NIHIL || var->effugit
-                    || var->membrum_est)
+                si (var == NIHIL)
+                {
+                    perge;
+                }
+                si (var->membrum_est)
+                {
+                    /* stirpes membrorum (v2b): genus eventi
+                     * congruat; effugium BASIS consulendum (lex
+                     * capitis datorum) */
+                    constans FluxusVariabilis* basis_var =
+                        (var->basis >= ZEPHYRUM)
+                        ? (constans FluxusVariabilis*)xar_obtinere(
+                              datorum->variabiles, (i32)var->basis)
+                        : NIHIL;
+
+                    si (ev->genus
+                            != (s32)FLUXUS_EVENTUM_MEMBRUM_USUS
+                        || basis_var == NIHIL
+                        || basis_var->effugit)
+                    {
+                        perge;
+                    }
+                }
+                alioquin si (var->effugit
+                    || ev->genus != (s32)FLUXUS_EVENTUM_USUS)
                 {
                     perge;
                 }
