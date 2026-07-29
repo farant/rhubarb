@@ -11386,3 +11386,21 @@ TENET, amalgamata VERIFICATA, officina 13/13, radix PLENUS, gesta
 contactu. Restant chartae dependablec: verba futura, motus
 provabilis (porta intervallorum aperta), fluitantia ==, {0}
 monstratores, verba C++ capitum publicorum.
+
+## 2026-07-29 - RELATIO: VERBUM ALIENUM - codex 84 (charta dependablec #1)
+
+SHIPPED. Tabula XII verborum C-futurorum (inline/restrict/bool/
+true/false/nullptr/constexpr/typeof/alignas/alignof/static_assert/
+thread_local) ad _symbolum_registrare; identificator integer solus.
+CORRECTIO IN CURSU (census docuit): index primus verba C++ ferebat -
+census XXVII sedes 'operator' invenit (LATINUM LEGITIMUM, arbor/
+demissio) et specimen systematis fregit (wchar_t A BIBLIOTHECA IPSA
+typedef-atum - C solum typedef, C++ solum clavis). Modellum minarum
+divisum: verba C-futura plagulam QUAMVIS tangunt (hospes norma
+recentiore compilat - promissum amalgamatis); verba C++ capita
+publica SOLA tangunt = charta #5 passus proprius scopo capitum,
+CONSULTO exclusa hic (pinna fixturae 'operator' TACET id
+documentat). Census post: 0/684 - thesis linguae Latinae pro verbis
+C-futuris PERFECTE tenet. Vectes omnes; specimina IV + fixtura
+pinnata (bool/restrict flagrant, operator/inline_pars tacent,
+constexpr tolerata).

@@ -1436,6 +1436,7 @@ typedef enum {
     EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS,
     EXAMEN_CODEX_SIGNATUM_COMMIXTUM,
     EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS,
+    EXAMEN_CODEX_IDENTIFICATOR_ALIENUS,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -42520,6 +42521,8 @@ interior SilvaChorda _orthographia_membri (TypusC89* typus,
     SilvaChorda titulus_membri);
 interior b32 _est_insignatum_primitivum (s32 p);
 interior s32 _primitivum_integrale (TypusC89* typus);
+interior b32 _chorda_par_literis (SilvaChorda s,
+    constans character* litterae);
 interior vacuum _intervalla_computare (SilvaSemantica* sem,
     constans FluxusFunctionis* fluxus);
 interior vacuum _intervalla_severa_examinare (SilvaSemantica* sem,
@@ -42662,7 +42665,9 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "genera signata commixta (typedef nominales confusi)",
                                                   EXAMEN_DOMESTICUM },
     { "identificator reservatus implementationi (__x aut _X"
-      " coinatus - C89 7.1.3)",                 EXAMEN_DOMESTICUM }
+      " coinatus - C89 7.1.3)",                 EXAMEN_DOMESTICUM },
+    { "identificator verbo alieno coinatus (C99/C23/C++ clavis"
+      " futura)",                               EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -43328,7 +43333,9 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "SIGNATUM_COMMIXTUM",
       (s32)EXAMEN_CODEX_SIGNATUM_COMMIXTUM },
     { "IDENTIFICATOR_RESERVATUS",
-      (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS }
+      (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS },
+    { "IDENTIFICATOR_ALIENUS",
+      (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS }
 };
 
 /* ambulatio annotationum UNA communis per parsuram (frustum E2):
@@ -45209,6 +45216,19 @@ silva_c89_symbolum_invenire (SilvaSemantica* sem, SilvaChorda titulus)
  * genus idem = clemens (definitiones tentativae C89 legales),
  * genus diversum = diagnosticum (constans enumeri contra
  * variabilem...); superscribitur utroque modo (lint iudicat). */
+/* verba aliena (codex 84, charta dependablec #1): identificatores
+ * C89 legales sed clavis normarum C POSTERIORUM (C99/C23) -
+ * plagula quaevis a hospite normae recentioris compilari potest
+ * (promissum amalgamatis). Verba C++ CONSULTO EXCLUSA: census
+ * mensuravit 'operator' Latinum legitimum XXVII sedibus et
+ * wchar_t a bibliotheca ipsa typedef-atum - C++ solum capita
+ * publica tangit (charta #5, passus proprius scopo capitum). */
+interior constans character* constans _verba_aliena[] = {
+    "inline", "restrict",
+    "bool", "true", "false", "nullptr", "constexpr", "typeof",
+    "alignas", "alignof", "static_assert", "thread_local"
+};
+
 interior SemanticaSymbolum*
 _symbolum_registrare (SilvaSemantica* sem, s32 genus,
     SilvaChorda titulus, TypusC89* typus, s64 valor, i32 repositio,
@@ -45253,6 +45273,50 @@ _symbolum_registrare (SilvaSemantica* sem, s32 genus,
         {
             silva_c89_diagnosticum_addere(sem, declarans,
                 EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS);
+        }
+    }
+    /* verbum alienum (codex 84): identificator integer solus -
+     * inline_amicus liber; systema exclusum */
+    si (!sem->in_systemate)
+    {
+        memoriae_index n = magnitudo(_verba_aliena)
+            / magnitudo(_verba_aliena[ZEPHYRUM]);
+        memoriae_index k;
+
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            si (_chorda_par_literis(titulus, _verba_aliena[k]))
+            {
+                si (!_tolera_absorbere(sem, declarans, (s32)
+                        EXAMEN_CODEX_IDENTIFICATOR_ALIENUS))
+                {
+                    memoriae_index capacitas =
+                        (memoriae_index)titulus.mensura
+                        + (memoriae_index)LXIV;
+                    character* nuntius = (character*)
+                        silva_piscina_allocare(sem->piscina, capacitas);
+
+                    si (nuntius != NIHIL)
+                    {
+                        sprintf(nuntius, "identificator verbo"
+                            " alieno coinatus: '%.*s'"
+                            " (clavis C99/C23)",
+                            (int)titulus.mensura,
+                            (constans character*)titulus.datum);
+                        _diagnosticum_addere_plenum(sem, declarans,
+                            (s32)
+                            EXAMEN_CODEX_IDENTIFICATOR_ALIENUS,
+                            NIHIL, nuntius);
+                    }
+                    alioquin
+                    {
+                        silva_c89_diagnosticum_addere(sem,
+                            declarans,
+                            EXAMEN_CODEX_IDENTIFICATOR_ALIENUS);
+                    }
+                }
+                frange;
+            }
         }
     }
     {

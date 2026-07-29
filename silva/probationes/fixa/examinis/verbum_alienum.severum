@@ -1,0 +1,29 @@
+/* Verba aliena (01KYQ1E653 charta dependablec #1): identificatores
+ * C89 legales sed clavis normarum C posteriorum (C99/C23) -
+ * hospes plagulam sub norma recentiore compilare potest. Verba
+ * C++ CONSULTO exclusa (operator Latinum legitimum XXVII sedibus,
+ * wchar_t a bibliotheca typedef-atum) - capita publica = charta
+ * #5. Clang -std=c89 omnibus caecus. ORACULUM -Wsign-conversion */
+
+/* <exspecta codex="IDENTIFICATOR_ALIENUS"/> */
+typedef long bool;
+
+/* <exspecta codex="IDENTIFICATOR_ALIENUS"/> */
+static long restrict = 0;
+
+/* identificator integer solus - TACET */
+static long inline_pars = 0;
+
+/* verbum C++ solum: consulto exclusum - TACET */
+static long operator = 0;
+
+/* coinatio consulto tolerata - QUIETA */
+/* <tolera codex="IDENTIFICATOR_ALIENUS" (>exemplar suppressionis fixturae: coinatio consulta */
+static long constexpr = 0;
+
+static long radix(void)
+{
+    bool b = 1;
+
+    return b + restrict + inline_pars + operator + constexpr;
+}

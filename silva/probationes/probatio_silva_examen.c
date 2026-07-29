@@ -2072,6 +2072,27 @@ s32 principale (vacuum)
         "extern int _SystemSymbolum;\n"
         "static int lege(void) { return _SystemSymbolum; }\n",
         (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS, ZEPHYRUM);
+
+    imprimere("--- 84: verbum alienum (charta dependablec #1) ---\n");
+
+    /* 84: bool ut typedef - C89 legalis, C23 clavis */
+    _codicem_probare(piscina,
+        "typedef int bool;\n"
+        "static bool b = 0;\n",
+        (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS, I);
+    /* 84: restrict ut variabile - clavis C99 */
+    _codicem_probare(piscina,
+        "static int restrict = 0;\n",
+        (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS, I);
+    /* 84 tacet: identificator integer solus */
+    _codicem_probare(piscina,
+        "static int inline_amicus = 0;\n",
+        (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS, ZEPHYRUM);
+    /* 84 tacet: verba C++ consulto exclusa (operator Latinum
+     * legitimum - capita publica = charta #5) */
+    _codicem_probare(piscina,
+        "static int operator = 0;\n",
+        (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS, ZEPHYRUM);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

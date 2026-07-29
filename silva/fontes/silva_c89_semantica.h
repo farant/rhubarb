@@ -461,6 +461,16 @@ nomen enumeratio {
      *      systematis referre licet - coinare non; sedes =
      *      registratio symboli, ergo membra/tags/macra = v2). */
     EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS,    /* DOMESTICUM */
+
+    /* Verba aliena (01KYQ1E653 charta dependablec #1, 2026-07-29):
+     * identificatores C89 legales sed clavis normarum C
+     * posteriorum (C99/C23) - hospes plagulam sub norma recentiore
+     * compilare potest (promissum amalgamatis). Verba C++ CONSULTO
+     * exclusa (mensura: 'operator' Latinum legitimum, wchar_t a
+     * bibliotheca typedef-atum) - capita publica = charta #5.
+     * 84 = identificator verbo alieno coinatus (tabula statica;
+     *      identificator INTEGER solus - inline_amicus liber). */
+    EXAMEN_CODEX_IDENTIFICATOR_ALIENUS,       /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
