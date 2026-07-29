@@ -538,7 +538,7 @@ fasti_inter(
  * Conversio Unix
  * ================================================== */
 
-s64
+Momentum
 fasti_ad_unix(
     DiesHora dh)
 {
@@ -559,7 +559,7 @@ fasti_ad_unix(
 
 DiesHora
 fasti_ex_unix(
-    s64 timestamp)
+    Momentum timestamp)
 {
     Dies epoch = fasti_dies(MCMX + LXX, I, I);
     s64 jdn_epoch = fasti_ad_iulianum(epoch);

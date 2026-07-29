@@ -11242,3 +11242,119 @@ strepitus; desideratum possibile: exclusio generatorum in censu.
 Nominata restant (v2 ianuae): defs operatorum compositorum/crementa
 (statum praevium postulant), contractus param inline in defs,
 severitas-manubrium (fortasse-extra ut modus strictus).
+
+## 2026-07-28 - INTENTIO: GENERA SIGNATA - gradus 3 (01KYNXXVX9)
+
+Scope: typedef NOMINALES - codex 82 SIGNATUM_COMMIXTUM (DOMESTICUM,
+tolerabilis). DECISA Fran (interrogatio directa): limites + algebra
+arithmetica syntactica sola (fluxus-vestigatio ianua v2); grammatica
+signatum + differentia; cusiones temporis eodem arcu.
+
+GRAMMATICA: <contractus signatum="Momentum" differentia="Mora"/>
+supra typedef. Genus LINEARE (sine differentia: Denarii, Mora) =
+vector - idem+idem licet, trans genera vetitum. Genus AFFINE (cum
+differentia: Momentum, Index) = punctum - punctum+punctum VETITUM
+etiam eodem genere, punctum-punctum = differentia, punctum +/-
+differentia = punctum. INVENTUM: casus messis omnes in has duas
+formas cadunt (tempus/indices/monstratores = punctum/spatium;
+pecunia = lineare).
+
+REGULAE: insignatum NEUTRUM (graduale - constantes genus adoptant,
+signatum in positionem insignatam = erasio licita, cascata
+conversionis NULLA). CONVERSIO explicita = benedictio (species sine
+declaratore - conversio ad derivatum numquam signat). Violatio limite
+SOLUM cum ambo signata et diversa. Arithmetica: +/- algebra plena;
+*: una parte vacua propagatio, ambabus signatis violatio (algebra
+unitatum nulla v1 - nominata); /: idem-lineare = ratio vacua; %:
+affine%differentia = differentia (phasis); comparationes trans
+genera violatio. STALUS: signatum non-typedef; signatum+intra/param/
+reditus eodem elemento; differentia sine signato; differentia non
+registrata; differentia typo INSIGNATO subiecta quando symbolum
+resolvitur (lex morarum signatarum - lenis si irresolubile, pinna
+fixturae casum resolutum fert).
+
+SUTURAE LECTAE: registrum SignatumTypi novum (colligere custodia
+parsurae, post-passus differentiae positione annotationis condita);
+ambulatio _signatum_expressionis syntactica (folium->orthographia
+symboli; VOCATIO->orthographia reditus vocati; ACCESSUS->membri;
+PARENTHESIS/unarium->internum; CONVERSIO->species_typi_
+specificatores; BINARIUM->algebra; constantes->vacuum). Limites =
+sedes gradus 2 REUSAE (orthographia iam in manibus quattuor sedium);
+emissio DIRECTA cum tolera (candidata nulla - syntactica, fluxus
+nullus). Hamus arithmeticus = casus BINARIUM typationis, vocatio una
+ante typationem-ponere (PLUS/MINUS/STAR/SOLIDUS/PERCENTUM/
+comparationes).
+
+CUSIONES: fasti.h = sedes (Momentum = instans Unix secundorum s64,
+differentia Mora s64 lineare); fasti_ad_unix -> Momentum,
+fasti_ex_unix(Momentum); vigilia.h s64 nunc -> Momentum (radius v:
+V plagulae - fasti.h inclusio nova, semantice honesta: secunda
+Unix consumit). NOTA APERTA: mundus millisecundorum (entitas/
+moneta/villa) scala DIVERSA - cusio futura propria (MomentumMs aut
+decisio unitatis canonicae), ianua in tabula. Census post cusiones
+= mensura vera (ante eas corpus genera nulla habet).
+
+Vectis: plagula probationum NOVA (probatio_silva_signata.c, glob
+sponte); specimina ante machinam (~XX: limites IV vias, benedictio,
+algebra affinis/linearis, compositio Mora r = m1-m2, STALUS III);
+fixtura severum nova; suites omnes + amalgama (silva.h manuscriptum:
+codex 82 addendum - lectio arcus prioris) + officina + radix.
+
+## 2026-07-28 - RELATIO: GENERA SIGNATA - gradus 3 (01KYNXXVX9)
+
+SHIPPED una sessione ab INTENTIONE - specimina XXIV (limites VIII +
+algebra XII + effectus vocationis + STALUS III) 71/72 primo
+contactu; vitium UNUM: sedes argumentorum iudicium generis ANTE
+_contractus_argumenti currebat ubi collectio pigra olim
+excitabatur - registrum NIHIL, iudicium tacite vacuum (linea una:
+colligere ante iudicium). Lectio: qui sedem restructurat ordinem
+excitationis pigrae ferat.
+
+MACHINA: codex 82 SIGNATUM_COMMIXTUM. Registrum SignatumTypi
+{titulus, stirps, differentia, annotatio} eadem collectione;
+post-passus differentiarum (registrata + subiecto signato quando
+symbolum resolvitur, principe solo). Ambulatio _signatum_
+expressionis PURA (folium/vocatio/accessus/conversio/parenthesis/
+unarium/ternarius/binarium - emissio NUMQUAM in ambulatione);
+algebra _signatum_compositum (affinis: punctum+punctum vetitum,
+punctum-punctum=differentia, phasis %; linearis: idem licet, ratio
+/ vacua; * ambabus signatis vetitum). Limites = sedes gradus 2
+REUSAE (orthographia iam in manibus; _orthographia_parametri_vocati
+FACTUM ex _contractus_argumenti - commune intervallis et generibus).
+Hamus BINARIUM typationis semel per nodum. Emissio directa cum
+tolera - candidata nulla (syntactica).
+
+CUSIONES VIVAE: fasti.h Momentum (instans, secunda Unix, affine) +
+Mora (duratio, lineare, s64 - lex signi tenet); fasti_ad_unix ->
+Momentum, fasti_ex_unix(Momentum); vigilia.h/c nunc -> Momentum,
+campus tempus_ultimum -> Momentum, quies -> Mora: linea
+'quies = nunc - tempus_ultimum' nunc ALGEBRAM VIVAM probat
+(momentum-momentum=mora in codice reali). Cascata vocantium NULLA
+mensurata (insignatum neutrum - suites intactae sine ulla
+mutatione vocantis). Census 82 = 0 sedes in 684 plagulis POST
+cusiones (strepitus nullus cum generibus vivis). Ambae plagulae
+cusae ACCIPE.
+
+Fixtura genera_signata.severum: nuntii se-nominantes vivi
+('Momentum' in positionem 'd' generis 'Denarii'; genera commixta
+in operatione; Mora in positionem male_positum) - pinnae III +
+tolerata QUIETA + STALUS; VECTIS TENET. Vectes omnes: silva 36/36
+(signata 72/72), officina 13/13, radix 108/108 PLENUS, amalgamata
+VERIFICATA (silva.h manuscriptum codex 82 SIMUL additum - lectio
+arcus 81 applicata, porta numquam rubra).
+
+IANUAE NOMINATAE: fluxus-vestigatio generum (lavatio per temp
+insignatum invisibilis - v2); algebra unitatum (*" plena); genus
+millisecundorum (entitas/moneta - scala diversa, decisio unitatis
+canonicae ante cusionem); brands ceterae messis (index/Cruda-
+Sancta/ChordaInternata); unarium minus in affine (lene v1).
+
+INSTRUMENTA (debrief): adhibita = legati inclusiones (radius
+vigilia.h V plagulae - pretium cusionis ante consilium), examen
+-census (mensura post cusiones), uncus post-edit (ordinem
+definitionum bis statim nominavit - implicita vocatio ante
+machinam), vectis (pinnae primo contactu), grep/sed lectiones.
+Fructus novus: excubitor STALA portam bis clausit (nexus graphus
+vetustior semantica) - renovatio explicita necessaria sed defectus
+CLARUS, numquam tacitus. Asperitas: nulla nova; renovatio residentis
+legati bis (amalgama bis mutatum) - fluxus notus.

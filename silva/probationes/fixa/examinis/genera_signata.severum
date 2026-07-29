@@ -1,0 +1,75 @@
+/* Genera signata (01KYNXXVX9): typedef nominales - algebra
+ * affinis/linearis. Momentum (punctum, differentia Mora) + Mora +
+ * Denarii (linearia). Insignatum neutrum (graduale); conversio
+ * explicita benedicit; violatio sola ambobus signatis diversis.
+ * Clang omnibus caecus - id ipsum proprietas gradus severi.
+ * ORACULUM -Wsign-conversion */
+
+/* <contractus signatum="Momentum" differentia="Mora"/> */
+typedef long Momentum;
+
+/* <contractus signatum="Mora"/> */
+typedef long Mora;
+
+/* <contractus signatum="Denarii"/> */
+typedef long Denarii;
+
+/* limes trans genera: pecunia ex horologio - violatio */
+static long limes_commixtus(Momentum m)
+{
+    /* <exspecta codex="SIGNATUM_COMMIXTUM"/> */
+    Denarii d = m;
+
+    return d;
+}
+
+/* punctum + punctum: sensu caret etiam eodem genere - violatio */
+static long puncta_addita(Momentum a, Momentum b)
+{
+    /* <exspecta codex="SIGNATUM_COMMIXTUM"/> */
+    return a + b;
+}
+
+/* punctum - punctum = differentia: in Moram recte - TACET */
+static Mora intervallum(Momentum a, Momentum b)
+{
+    return a - b;
+}
+
+/* differentia in positionem puncti: limes reditus capit */
+static Momentum male_positum(Momentum a, Momentum b)
+{
+    /* <exspecta codex="SIGNATUM_COMMIXTUM"/> */
+    return a - b;
+}
+
+/* benedictio conversionis explicitae - QUIETA */
+static Denarii benedictum(Momentum m)
+{
+    return (Denarii)m;
+}
+
+/* commixtio consulto tolerata - QUIETA */
+static Denarii toleratum(Momentum m)
+{
+    /* <tolera codex="SIGNATUM_COMMIXTUM" (>exemplar suppressionis fixturae: commixtio consulta */
+    return m;
+}
+
+/* grammatica: signatum cum intra eodem elemento - cura una */
+/* <exspecta codex="CONTRACTUS_STALUS"/> */
+/* <contractus signatum="Pravum" intra="0,5"/> */
+typedef long Pravum;
+
+static long radix(Momentum m)
+{
+    long summa = 0;
+
+    summa = summa + limes_commixtus(m);
+    summa = summa + puncta_addita(m, m);
+    summa = summa + (long)intervallum(m, m);
+    summa = summa + (long)male_positum(m, m);
+    summa = summa + (long)benedictum(m);
+    summa = summa + (long)toleratum(m);
+    return summa;
+}

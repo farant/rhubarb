@@ -295,15 +295,34 @@ fasti_ex_iuliano(
  * Conversio Unix
  * ================================================== */
 
+/* ==================================================
+ * Typi Temporis (genera signata, 01KYNXXVX9)
+ *
+ * Momentum = instans (secunda Unix, UTC) - genus AFFINE (punctum):
+ * momentum + momentum sensu caret; momentum - momentum = Mora.
+ * Mora = duratio (secunda) - genus LINEARE (vector), subiecto
+ * SIGNATO necessario (differentiae temporis signum ferunt).
+ * Insignatum neutrum est: s64 nudum in positionem Momentum sine
+ * strepitu fluit - adoptio gradualis, cascata conversionis nulla.
+ * NOTA: scala millisecundorum (entitas/moneta) genus proprium
+ * futurum habet - hoc SECUNDA sunt.
+ * ================================================== */
+
+/* <contractus signatum="Momentum" differentia="Mora"/> */
+nomen s64 Momentum;
+
+/* <contractus signatum="Mora"/> */
+nomen s64 Mora;
+
 /* Convertere DiesHora ad Unix timestamp (UTC) */
-s64
+Momentum
 fasti_ad_unix(
     DiesHora dh);
 
 /* Convertere Unix timestamp ad DiesHora (UTC) */
 DiesHora
 fasti_ex_unix(
-    s64 timestamp);
+    Momentum timestamp);
 
 
 /* ==================================================

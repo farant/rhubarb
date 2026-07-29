@@ -439,6 +439,18 @@ nomen enumeratio {
      *      disiunctum (totum extra fines - 'fortasse extra' TACET;
      *      onus probandi in emissione, relicta numquam verbatim). */
     EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS, /* DOMESTICUM */
+
+    /* Genera signata (01KYNXXVX9, 2026-07-28, gradus 3): typedef
+     * NOMINALES - <contractus signatum="Momentum"
+     * differentia="Mora"/> supra typedef. Lineare (sine
+     * differentia) = vector: idem+idem licet, trans genera vetitum.
+     * Affine (cum differentia) = punctum: punctum+punctum vetitum
+     * etiam eodem genere, punctum-punctum = differentia.
+     * 82 = genera signata commixta: trans genera ad limitem
+     *      (argumentum/definitio/redde), punctum+punctum,
+     *      lineare*lineare, comparatio trans genera. Insignatum
+     *      NEUTRUM (graduale); CONVERSIO explicita benedicit. */
+    EXAMEN_CODEX_SIGNATUM_COMMIXTUM,          /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -565,6 +577,12 @@ structura SilvaSemantica {
                                                    * (01KYN533VY) - una
                                                    * collectione cum
                                                    * contractibus */
+    Xar*                   signata_typorum;       /* SignatumTypi
+                                                   * (in .c): genera
+                                                   * nominalia supra
+                                                   * typedef
+                                                   * (01KYNXXVX9) -
+                                                   * eadem collectione */
 
     /* annotationes collectae (frustum E2, 2026-07-22): ambulatio
      * UNA communis per parsuram (collector silva_annotationes) -
