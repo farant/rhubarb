@@ -18,7 +18,7 @@ nomen structura {
 	i32 mensura_mandatorum;
 	i32 vexilla;
 	i32 reservatus;
-} _MachoHeader64;
+} MachoHeader64;
 
 /* Header Mach-O 32-bit */
 nomen structura {
@@ -29,19 +29,19 @@ nomen structura {
 	i32 numerus_mandatorum;
 	i32 mensura_mandatorum;
 	i32 vexilla;
-} _MachoHeader32;
+} MachoHeader32;
 
 /* Mandatum oneris genericum */
 nomen structura {
 	i32 genus;
 	i32 mensura;
-} _MandatumOnustumHeader;
+} MandatumOnustumHeader;
 
 /* Header crassus (fat binary) */
 nomen structura {
 	i32 magica;
 	i32 numerus_architecturae;
-} _MachoHeaderCrassus;
+} MachoHeaderCrassus;
 
 /* Architectura in fat binary */
 nomen structura {
@@ -50,7 +50,7 @@ nomen structura {
 	i32 offset;
 	i32 mensura;
 	i32 ordinatio;
-} _MachoArchitecturaCrassa;
+} MachoArchitecturaCrassa;
 
 /* LC_LOAD_DYLIB command */
 nomen structura {
@@ -58,13 +58,13 @@ nomen structura {
 	i32 timestamp;
 	i32 versio_currens;
 	i32 versio_compatibilis;
-} _DylibInfo;
+} DylibInfo;
 
 nomen structura {
 	i32 cmd;
 	i32 cmdsize;
-	_DylibInfo dylib;
-} _DylibCommand;
+	DylibInfo dylib;
+} DylibCommand;
 
 /* LC_MAIN command */
 nomen structura {
@@ -72,14 +72,14 @@ nomen structura {
 	i32 cmdsize;
 	memoriae_index entryoff;    /* File offset ad principale() */
 	memoriae_index stacksize;
-} _EntryPointCommand;
+} EntryPointCommand;
 
 /* LC_UUID command */
 nomen structura {
 	i32 cmd;
 	i32 cmdsize;
 	i8 uuid[XVI];
-} _UUIDCommand;
+} UUIDCommand;
 
 
 /* ==================================================
@@ -187,8 +187,8 @@ _macho_parsere_imaginem(
 {
 	                  MachO* macho;
 	                    i32  magica;
-	constans _MachoHeader64* header64;
-	constans _MachoHeader32* header32;
+	constans MachoHeader64* header64;
+	constans MachoHeader32* header32;
 
 	si (!datum || !piscina)
 	{
@@ -196,7 +196,7 @@ _macho_parsere_imaginem(
 		redde NIHIL;
 	}
 
-	si (mensura < magnitudo(_MachoHeader32))
+	si (mensura < magnitudo(MachoHeader32))
 	{
 		_macho_error_ponere("Filum nimis parvum pro header");
 		redde NIHIL;
@@ -232,13 +232,13 @@ _macho_parsere_imaginem(
 	/* Parsere header 64-bit vel 32-bit */
 	si (magica == MACHO_MAGICA_64)
 	{
-		si (mensura < magnitudo(_MachoHeader64))
+		si (mensura < magnitudo(MachoHeader64))
 		{
 			_macho_error_ponere("Filum nimis parvum pro header 64-bit");
 			redde NIHIL;
 		}
 
-		header64 = (constans _MachoHeader64*)datum;
+		header64 = (constans MachoHeader64*)datum;
 
 		macho->est_64bit            = VERUM;
 		macho->genus_processoris    = header64->genus_processoris;
@@ -246,11 +246,11 @@ _macho_parsere_imaginem(
 		macho->genus_filum          = header64->genus_filum;
 		macho->numerus_mandatorum   = header64->numerus_mandatorum;
 		macho->mensura_mandatorum   = header64->mensura_mandatorum;
-		macho->offset_mandatorum    = magnitudo(_MachoHeader64);
+		macho->offset_mandatorum    = magnitudo(MachoHeader64);
 	}
 	alioquin si (magica == MACHO_MAGICA_32)
 	{
-		header32 = (constans _MachoHeader32*)datum;
+		header32 = (constans MachoHeader32*)datum;
 
 		macho->est_64bit            = FALSUM;
 		macho->genus_processoris    = header32->genus_processoris;
@@ -258,7 +258,7 @@ _macho_parsere_imaginem(
 		macho->genus_filum          = header32->genus_filum;
 		macho->numerus_mandatorum   = header32->numerus_mandatorum;
 		macho->mensura_mandatorum   = header32->mensura_mandatorum;
-		macho->offset_mandatorum    = magnitudo(_MachoHeader32);
+		macho->offset_mandatorum    = magnitudo(MachoHeader32);
 	}
 	alioquin
 	{
@@ -289,8 +289,8 @@ macho_filum_ex_memoria(
 {
 	                       MachoFilum* filum;
 	                              i32  magica;
-	     constans _MachoHeaderCrassus* header_crassus;
-	constans _MachoArchitecturaCrassa* arch;
+	     constans MachoHeaderCrassus* header_crassus;
+	constans MachoArchitecturaCrassa* arch;
 	                              i32  i;
 	                      constans i8* imago_datum;
 	                   memoriae_index  imago_mensura;
@@ -333,13 +333,13 @@ macho_filum_ex_memoria(
 	si (magica == MACHO_MAGICA_FAT || magica == MACHO_MAGICA_FAT_64)
 	{
 		/* Fat binary */
-		si (mensura < magnitudo(_MachoHeaderCrassus))
+		si (mensura < magnitudo(MachoHeaderCrassus))
 		{
 			_macho_error_ponere("Filum nimis parvum pro header crassus");
 			redde NIHIL;
 		}
 
-		header_crassus = (constans _MachoHeaderCrassus*)datum;
+		header_crassus = (constans MachoHeaderCrassus*)datum;
 
 		filum->est_crassus    = VERUM;
 		filum->numerus_imago  = header_crassus->numerus_architecturae;
@@ -364,7 +364,7 @@ macho_filum_ex_memoria(
 		}
 
 		/* Parsere omnes architecturas */
-		arch = (constans _MachoArchitecturaCrassa*)(datum + magnitudo(_MachoHeaderCrassus));
+		arch = (constans MachoArchitecturaCrassa*)(datum + magnitudo(MachoHeaderCrassus));
 
 		per (i = ZEPHYRUM; i < filum->numerus_imago; i++)
 		{
@@ -646,7 +646,7 @@ macho_obtinere_dylibs(
 	i32 numerus_dylibs;
 	chorda* dylibs;
 	i32 index;
-	constans _DylibCommand* dylib_cmd;
+	constans DylibCommand* dylib_cmd;
 	constans character* via;
 
 	si (!macho || !numerus || !piscina)
@@ -696,7 +696,7 @@ macho_obtinere_dylibs(
 		    genus == MACHO_LC_LOAD_WEAK_DYLIB ||
 		    genus == MACHO_LC_REEXPORT_DYLIB)
 		{
-			dylib_cmd = (constans _DylibCommand*)mandatum_datum(mandatum);
+			dylib_cmd = (constans DylibCommand*)mandatum_datum(mandatum);
 			via = (constans character*)mandatum_datum(mandatum) + dylib_cmd->dylib.offset_nominis;
 
 			dylibs[index] = chorda_ex_literis(via, piscina);
@@ -715,7 +715,7 @@ macho_obtinere_entry_point(
 {
 	MachoIteratorMandatum iter;
 	MandatumOnustum* mandatum;
-	constans _EntryPointCommand* entry_cmd;
+	constans EntryPointCommand* entry_cmd;
 
 	si (!macho || !offset)
 	{
@@ -728,7 +728,7 @@ macho_obtinere_entry_point(
 	{
 		si (mandatum_genus(mandatum) == MACHO_LC_MAIN)
 		{
-			entry_cmd = (constans _EntryPointCommand*)mandatum_datum(mandatum);
+			entry_cmd = (constans EntryPointCommand*)mandatum_datum(mandatum);
 			*offset = entry_cmd->entryoff;
 			redde VERUM;
 		}
@@ -744,7 +744,7 @@ macho_obtinere_uuid(
 {
 	MachoIteratorMandatum iter;
 	MandatumOnustum* mandatum;
-	constans _UUIDCommand* uuid_cmd;
+	constans UUIDCommand* uuid_cmd;
 	i32 i;
 
 	si (!macho || !uuid)
@@ -758,7 +758,7 @@ macho_obtinere_uuid(
 	{
 		si (mandatum_genus(mandatum) == MACHO_LC_UUID)
 		{
-			uuid_cmd = (constans _UUIDCommand*)mandatum_datum(mandatum);
+			uuid_cmd = (constans UUIDCommand*)mandatum_datum(mandatum);
 			per (i = ZEPHYRUM; i < XVI; i++)
 			{
 				uuid[i] = uuid_cmd->uuid[i];
@@ -793,7 +793,7 @@ macho_iterator_mandatorum_proximum(
 	MachoIteratorMandatum* iter)
 {
 	                MandatumOnustum* mandatum;
-	constans _MandatumOnustumHeader* header;
+	constans MandatumOnustumHeader* header;
 	                    constans i8* mandatum_datum;
 	                 memoriae_index  offset_absolutus;
 
@@ -809,7 +809,7 @@ macho_iterator_mandatorum_proximum(
 	offset_absolutus = iter->macho->offset_mandatorum + (memoriae_index)iter->offset_currens;
 
 	/* Verificare limites */
-	si (offset_absolutus + magnitudo(_MandatumOnustumHeader) >
+	si (offset_absolutus + magnitudo(MandatumOnustumHeader) >
 	    iter->macho->mensura)
 	{
 		_macho_error_ponere("Mandatum excedit mensuram fili");
@@ -817,10 +817,10 @@ macho_iterator_mandatorum_proximum(
 	}
 
 	mandatum_datum = iter->macho->datum + offset_absolutus;
-	header = (constans _MandatumOnustumHeader*)mandatum_datum;
+	header = (constans MandatumOnustumHeader*)mandatum_datum;
 
 	/* Verificare mensuram mandati */
-	si (header->mensura < magnitudo(_MandatumOnustumHeader))
+	si (header->mensura < magnitudo(MandatumOnustumHeader))
 	{
 		_macho_error_ponere("Mensura mandati invalida");
 		redde NIHIL;

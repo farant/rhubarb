@@ -584,7 +584,7 @@ _solvere (constans character* praefixum,
 nomen structura {
     s32                offset;
     SilvaInsertioGenus genus;
-} _Splissum;
+} Splissum;
 
 interior s32
 _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
@@ -606,7 +606,7 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
             &fons, &mensura);
         Xar* annotationes;
         Xar* splissa = xar_creare(piscina,
-            (i32)magnitudo(_Splissum));
+            (i32)magnitudo(Splissum));
         i32 identitates_priores = ZEPHYRUM;
         i32 k;
 
@@ -658,7 +658,7 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
                     redde I;
                 }
                 {
-                    _Splissum* s = (_Splissum*)xar_addere(splissa);
+                    Splissum* s = (Splissum*)xar_addere(splissa);
 
                     si (s != NIHIL)
                     {
@@ -699,7 +699,7 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
             }
             per (s_index = ZEPHYRUM; s_index < n; s_index++)
             {
-                constans _Splissum* s = (constans _Splissum*)
+                constans Splissum* s = (constans Splissum*)
                     xar_obtinere(splissa, s_index);
                 character u[MONETA_ULID_MENSURA];
                 s32 pars = s->offset - prior;
@@ -861,7 +861,7 @@ nomen structura {
     i32     linea_data;   /* absoluta: ex attributo linea= */
     i32     finis;        /* linea ultima commentarii (proxima) */
     chorda* codex;
-} _PinnaExspecta;
+} PinnaExspecta;
 
 interior b32
 _numerus_ex_chorda (constans chorda* c, i32* numerus_out)
@@ -921,7 +921,7 @@ _exspecta (Piscina* piscina, SilvaContextus* ctx,
         (memoriae_index)(numerus_linearum + II) * magnitudo(b32));
     pinnatae = (b32*)piscina_allocare(piscina,
         (memoriae_index)(numerus_linearum + II) * magnitudo(b32));
-    pinnae = xar_creare(piscina, magnitudo(_PinnaExspecta));
+    pinnae = xar_creare(piscina, magnitudo(PinnaExspecta));
     si (vacuae == NIHIL || pinnatae == NIHIL || pinnae == NIHIL)
     {
         fprintf(stderr, "identitates --exspecta: memoria deest\n");
@@ -983,7 +983,7 @@ _exspecta (Piscina* piscina, SilvaContextus* ctx,
         {
             StmlNodus* nodus = *(StmlNodus**)xar_obtinere(
                 a->documentum->liberi, j);
-            _PinnaExspecta* pinna;
+            PinnaExspecta* pinna;
             chorda* codex;
             chorda* linea_attr;
 
@@ -1003,7 +1003,7 @@ _exspecta (Piscina* piscina, SilvaContextus* ctx,
                     " sine codice %s:%u\n", via, a->linea);
                 redde I;
             }
-            pinna = (_PinnaExspecta*)xar_addere(pinnae);
+            pinna = (PinnaExspecta*)xar_addere(pinnae);
             si (pinna == NIHIL)
             {
                 fprintf(stderr, "identitates --exspecta: memoria"
@@ -1040,7 +1040,7 @@ _exspecta (Piscina* piscina, SilvaContextus* ctx,
 
     per (k = ZEPHYRUM; k < xar_numerus(pinnae); k++)
     {
-        constans _PinnaExspecta* pinna = (constans _PinnaExspecta*)
+        constans PinnaExspecta* pinna = (constans PinnaExspecta*)
             xar_obtinere(pinnae, k);
 
         si (pinna->absoluta)

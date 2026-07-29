@@ -11358,3 +11358,31 @@ Fructus novus: excubitor STALA portam bis clausit (nexus graphus
 vetustior semantica) - renovatio explicita necessaria sed defectus
 CLARUS, numquam tacitus. Asperitas: nulla nova; renovatio residentis
 legati bis (amalgama bis mutatum) - fluxus notus.
+
+## 2026-07-29 - RELATIO: IDENTIFICATOR RESERVATUS - codex 83 (01KYQ1QDBQ, passus dependablec 1/5)
+
+SHIPPED (arcus parvus, decretum + parcum pro INTENTIONE - charta
+plena in 01KYQ1E653). Codex 83 in _symbolum_registrare (punctum
+angustum omnium coinationum): __x aut _Maiuscula coinatum flagrat;
+custodes = in_systemate, repositio EXTERNA (referre licet, coinare
+non), _minuscula decreto tolerata (divergentia consulta, portis
+amalgamatis custodita). Membra/tags/macra = v2 nominata.
+
+RENOMINATIO: XXV typedef privati stilo _Maiuscula (stilus
+minoritarius contra morem domus) manu renominati trans X plagulas
+(macho VIII, tabularium II, semantica II, sectio II, quaestio II,
+symbola III, quaerere/aedilis/annotationes/identitates) - perl
+limite verbi, collisione praescrutata (Machina in commentariis
+solis). MENSURA HUMILITATIS: grep meus survey silva/instrumenta
+omisit - census machinae II sedes plus invenit quam mensura quae
+codicem motivavit (identitates _Splissum/_PinnaExspecta). Fixtura
+congelata roundtrip INTACTA consulto (photographema fidelitatis,
+non stilus; census in fixa separatim refert - II exspectatae).
+
+Census 83 post: 0 sedes extra fixa. Vectes: silva 36/36, VECTIS
+TENET, amalgamata VERIFICATA, officina 13/13, radix PLENUS, gesta
+4/4 (frigida renexa post renominationem tabularii). Specimina V
+(coinatum x2 / toleratum x3 genera) + fixtura pinnata primo
+contactu. Restant chartae dependablec: verba futura, motus
+provabilis (porta intervallorum aperta), fluitantia ==, {0}
+monstratores, verba C++ capitum publicorum.

@@ -431,16 +431,16 @@ quaerere_concordare(
 nomen structura {
     s32 puncta;
     i32 index;
-} _QuaererePar;
+} QuaererePar;
 
 
 /* Insertion sort pro parvis partitionibus (descendens per puncta) */
 interior vacuum
-_quaerere_insertion_sort(_QuaererePar* paria, s32 sinister, s32 dexter)
+_quaerere_insertion_sort(QuaererePar* paria, s32 sinister, s32 dexter)
 {
     s32 i;
     s32 j;
-    _QuaererePar temp;
+    QuaererePar temp;
 
     per (i = sinister + 1; i <= dexter; i++)
     {
@@ -460,12 +460,12 @@ _quaerere_insertion_sort(_QuaererePar* paria, s32 sinister, s32 dexter)
 
 /* Quicksort cum insertion sort fallback (descendens per puncta) */
 interior vacuum
-_quaerere_quicksort(_QuaererePar* paria, s32 sinister, s32 dexter)
+_quaerere_quicksort(QuaererePar* paria, s32 sinister, s32 dexter)
 {
     s32 i;
     s32 j;
     s32 pivot;
-    _QuaererePar temp;
+    QuaererePar temp;
 
     /* Pro parvis partitionibus, insertion sort est celerior */
     si (dexter - sinister < XVI)
@@ -518,7 +518,7 @@ _quaerere_quicksort(_QuaererePar* paria, s32 sinister, s32 dexter)
 
 /* Wrapper pro sorting API */
 interior vacuum
-_quaerere_ordinare(_QuaererePar* paria, i32 numerus)
+_quaerere_ordinare(QuaererePar* paria, i32 numerus)
 {
     si (numerus <= 1)
     {
@@ -538,7 +538,7 @@ quaerere_filtrare_cum_optionibus(
     Piscina*          piscina)
 {
     QuaerereFiltrumFructus fructus;
-    _QuaererePar*          paria;
+    QuaererePar*          paria;
     i32                    numerus_congruentium;
     i32                    i;
     QuaerereFructus        match_result;
@@ -554,8 +554,8 @@ quaerere_filtrare_cum_optionibus(
     }
 
     /* Allocate temporary array for matching pairs */
-    paria = (_QuaererePar*)piscina_allocare(piscina,
-                                            (memoriae_index)numerus_candidatorum * (memoriae_index)magnitudo(_QuaererePar));
+    paria = (QuaererePar*)piscina_allocare(piscina,
+                                            (memoriae_index)numerus_candidatorum * (memoriae_index)magnitudo(QuaererePar));
 
     si (paria == NIHIL)
     {

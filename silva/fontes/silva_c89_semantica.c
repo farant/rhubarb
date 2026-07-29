@@ -293,7 +293,9 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "contractus intervalli violatus (valor extra fines probatus)",
                                                   EXAMEN_DOMESTICUM },
     { "genera signata commixta (typedef nominales confusi)",
-                                                  EXAMEN_DOMESTICUM }
+                                                  EXAMEN_DOMESTICUM },
+    { "identificator reservatus implementationi (__x aut _X"
+      " coinatus - C89 7.1.3)",                 EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -957,7 +959,9 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "CONTRACTUS_INTERVALLI_VIOLATUS",
       (s32)EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS },
     { "SIGNATUM_COMMIXTUM",
-      (s32)EXAMEN_CODEX_SIGNATUM_COMMIXTUM }
+      (s32)EXAMEN_CODEX_SIGNATUM_COMMIXTUM },
+    { "IDENTIFICATOR_RESERVATUS",
+      (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS }
 };
 
 /* ambulatio annotationum UNA communis per parsuram (frustum E2):
@@ -1309,7 +1313,7 @@ _res_examinare (SilvaSemantica* sem, constans SilvaAnnotatio* a,
 
 nomen structura {
     chorda valor;
-} _NidVisum;
+} NidVisum;
 
 interior vacuum
 _annotationes_examinare (SilvaSemantica* sem,
@@ -1328,7 +1332,7 @@ _annotationes_examinare (SilvaSemantica* sem,
     {
         redde;
     }
-    visa = xar_creare(sem->piscina, (i32)magnitudo(_NidVisum));
+    visa = xar_creare(sem->piscina, (i32)magnitudo(NidVisum));
     per (k = ZEPHYRUM; k < xar_numerus(annotationes); k++)
     {
         constans SilvaAnnotatio* a = (constans SilvaAnnotatio*)
@@ -1381,7 +1385,7 @@ _annotationes_examinare (SilvaSemantica* sem,
                 per (m = ZEPHYRUM; visa != NIHIL
                     && m < xar_numerus(visa); m++)
                 {
-                    constans _NidVisum* n = (constans _NidVisum*)
+                    constans NidVisum* n = (constans NidVisum*)
                         xar_obtinere(visa, m);
 
                     si (n->valor.mensura == id->valor.mensura
@@ -1401,7 +1405,7 @@ _annotationes_examinare (SilvaSemantica* sem,
                 }
                 alioquin si (visa != NIHIL)
                 {
-                    _NidVisum* n = (_NidVisum*)xar_addere(visa);
+                    NidVisum* n = (NidVisum*)xar_addere(visa);
 
                     si (n != NIHIL)
                     {
@@ -2218,13 +2222,13 @@ nomen structura {
     i32    lectiones;
     i32    scriptiones;
     b32    exclusum;
-} _PointeeUsus;
+} PointeeUsus;
 
 interior vacuum _pointee_scandere (constans SilvaNodus* nodus,
-    _PointeeUsus* u, b32 in_scriptura);
+    PointeeUsus* u, b32 in_scriptura);
 
 interior vacuum
-_pointee_in_valore (SilvaValor v, _PointeeUsus* u, b32 in_scriptura)
+_pointee_in_valore (SilvaValor v, PointeeUsus* u, b32 in_scriptura)
 {
     si (v.genus == SILVA_VALOR_NODUS)
     {
@@ -2249,7 +2253,7 @@ _pointee_in_valore (SilvaValor v, _PointeeUsus* u, b32 in_scriptura)
 }
 
 interior vacuum
-_pointee_scandere (constans SilvaNodus* nodus, _PointeeUsus* u,
+_pointee_scandere (constans SilvaNodus* nodus, PointeeUsus* u,
     b32 in_scriptura)
 {
     i32 k;
@@ -2435,7 +2439,7 @@ _contractus_examinare (SilvaSemantica* sem,
         SilvaValor* pv = silva_valor_lista_obtinere(parametra, k);
         SilvaValor dv;
         SilvaToken* titulus_p;
-        _PointeeUsus usus;
+        PointeeUsus usus;
         b32 contractum = FALSUM;
         b32 accumulat = FALSUM;
         i32 c_index;
@@ -2849,6 +2853,40 @@ _symbolum_registrare (SilvaSemantica* sem, s32 genus,
     si (titulus.mensura == ZEPHYRUM)
     {
         redde NIHIL;
+    }
+    /* identificator reservatus (01KYQ1QDBQ, dependablec): __x et
+     * _Maiuscula OMNI usui reservata (C89 7.1.3) - coinationes
+     * domus solae (externa systematis REFERRE licet, coinare non;
+     * _minuscula scopi plagulae decreto tolerata) */
+    si (!sem->in_systemate
+        && (repositio & REPOSITIO_EXTERNA) == ZEPHYRUM
+        && titulus.mensura >= II
+        && titulus.datum[ZEPHYRUM] == '_'
+        && (titulus.datum[I] == '_'
+            || (titulus.datum[I] >= 'A' && titulus.datum[I] <= 'Z'))
+        && !_tolera_absorbere(sem, declarans, (s32)
+               EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS))
+    {
+        memoriae_index capacitas = (memoriae_index)titulus.mensura
+            + (memoriae_index)LXIV;
+        character* nuntius = (character*)piscina_allocare(
+            sem->piscina, capacitas);
+
+        si (nuntius != NIHIL)
+        {
+            sprintf(nuntius, "identificator reservatus"
+                " implementationi: '%.*s' (C89 7.1.3)",
+                (int)titulus.mensura,
+                (constans character*)titulus.datum);
+            _diagnosticum_addere_plenum(sem, declarans, (s32)
+                EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS, NIHIL,
+                nuntius);
+        }
+        alioquin
+        {
+            silva_c89_diagnosticum_addere(sem, declarans,
+                EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS);
+        }
     }
     {
         vacuum* prior = NIHIL;

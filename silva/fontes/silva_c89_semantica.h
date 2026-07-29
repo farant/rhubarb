@@ -451,6 +451,16 @@ nomen enumeratio {
      *      lineare*lineare, comparatio trans genera. Insignatum
      *      NEUTRUM (graduale); CONVERSIO explicita benedicit. */
     EXAMEN_CODEX_SIGNATUM_COMMIXTUM,          /* DOMESTICUM */
+
+    /* Identificatores reservati (01KYQ1QDBQ, dependablec.org,
+     * 2026-07-29): C89 7.1.3 classes duae - __x et _Maiuscula
+     * OMNI usui reservata (haec codex); _minuscula scopi plagulae
+     * decreto TOLERATA (divergentia consulta domus, portis
+     * amalgamatis custodita).
+     * 83 = identificator classis periculosae COINATUS (externa
+     *      systematis referre licet - coinare non; sedes =
+     *      registratio symboli, ergo membra/tags/macra = v2). */
+    EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS,    /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

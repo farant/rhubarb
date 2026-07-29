@@ -19,7 +19,7 @@ nomen structura {
 	i32 initprot;
 	i32 nsects;
 	i32 flags;
-} _SegmentCommand64;
+} SegmentCommand64;
 
 /* Section 64-bit */
 nomen structura {
@@ -35,7 +35,7 @@ nomen structura {
 	i32 reserved1;
 	i32 reserved2;
 	i32 reserved3;
-} _Section64;
+} Section64;
 
 
 /* ==================================================
@@ -149,11 +149,11 @@ _sectio_nomen_aequalis(
 	redde name[XVI] == '\0';
 }
 
-/* Creare Sectio ex _Section64 */
+/* Creare Sectio ex Section64 */
 interior Sectio*
 _sectio_creare_ex_section64(
 	constans MachO* macho,
-	constans _Section64* section,
+	constans Section64* section,
 	       Piscina* piscina)
 {
 	Sectio* sectio;
@@ -207,9 +207,9 @@ sectio_iterator_proximum(
 	SectioIterator* iter)
 {
 	MandatumOnustum* mandatum;
-	constans _SegmentCommand64* segment;
-	constans _Section64* sections;
-	constans _Section64* section;
+	constans SegmentCommand64* segment;
+	constans Section64* sections;
+	constans Section64* section;
 
 	si (!iter || !iter->macho)
 	{
@@ -219,7 +219,7 @@ sectio_iterator_proximum(
 	/* Si in medio segmenti, reddere sectionem proximam ex segmento currenti */
 	si (iter->sectio_index < iter->sectio_numerus)
 	{
-		sections = (constans _Section64*)iter->sectiones;
+		sections = (constans Section64*)iter->sectiones;
 		section = &sections[iter->sectio_index];
 		iter->sectio_index++;
 
@@ -234,18 +234,18 @@ sectio_iterator_proximum(
 	{
 		si (mandatum_genus(mandatum) == MACHO_LC_SEGMENT_64)
 		{
-			segment = (constans _SegmentCommand64*)mandatum_datum(mandatum);
+			segment = (constans SegmentCommand64*)mandatum_datum(mandatum);
 
 			si (segment->nsects > ZEPHYRUM)
 			{
 				/* Invenit segmentum cum sectionibus */
 				iter->segment_currens = segment;
-				iter->sectiones = (constans i8*)segment + magnitudo(_SegmentCommand64);
+				iter->sectiones = (constans i8*)segment + magnitudo(SegmentCommand64);
 				iter->sectio_index = I;  /* Proxima sectio ad legere */
 				iter->sectio_numerus = segment->nsects;
 
 				/* Reddere primam sectionem */
-				sections = (constans _Section64*)iter->sectiones;
+				sections = (constans Section64*)iter->sectiones;
 				section = &sections[ZEPHYRUM];
 
 				redde _sectio_creare_ex_section64(
@@ -274,9 +274,9 @@ sectio_invenire(
 {
 	MachoIteratorMandatum mandatum_iter;
 	MandatumOnustum* mandatum;
-	constans _SegmentCommand64* segment;
-	constans _Section64* sections;
-	constans _Section64* section;
+	constans SegmentCommand64* segment;
+	constans Section64* sections;
+	constans Section64* section;
 	i32 i;
 
 	si (!macho || !nomen_segmenti || !nomen_sectionis || !piscina)
@@ -294,7 +294,7 @@ sectio_invenire(
 	{
 		si (mandatum_genus(mandatum) == MACHO_LC_SEGMENT_64)
 		{
-			segment = (constans _SegmentCommand64*)mandatum_datum(mandatum);
+			segment = (constans SegmentCommand64*)mandatum_datum(mandatum);
 
 			/* Verificare nomen segmenti */
 			si (!_sectio_nomen_aequalis(segment->segname, nomen_segmenti))
@@ -303,8 +303,8 @@ sectio_invenire(
 			}
 
 			/* Segmentum inventum, quaerere sectionem */
-			sections = (constans _Section64*)((constans i8*)segment +
-			           magnitudo(_SegmentCommand64));
+			sections = (constans Section64*)((constans i8*)segment +
+			           magnitudo(SegmentCommand64));
 
 			per (i = ZEPHYRUM; i < segment->nsects; i++)
 			{

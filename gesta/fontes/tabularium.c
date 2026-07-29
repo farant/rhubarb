@@ -279,12 +279,12 @@ interior constans character* constans VOCABULARIUM_TAGORUM =
 nomen structura {
     chorda              nid;    /* ULID plenus ex indice */
     constans character* sedes;  /* "via:linea (genus unitatis)" */
-} _NidOrdo;
+} NidOrdo;
 
 nomen structura {
     chorda              praefixum; /* citatio res= ex codice */
     constans character* sedes;     /* "via:linea" */
-} _CitatioOrdo;
+} CitatioOrdo;
 
 structura Tabularium {
     Piscina*     piscina;
@@ -304,9 +304,9 @@ structura Tabularium {
     constans character* via_identitatum;
     constans character* via_citationum;
     b32             nides_temptatae;
-    Xar*            nides;           /* _NidOrdo (valore) */
+    Xar*            nides;           /* NidOrdo (valore) */
     b32             citationes_temptatae;
-    Xar*            citationes;      /* _CitatioOrdo (valore) */
+    Xar*            citationes;      /* CitatioOrdo (valore) */
     /* vigilia (lib/vigilia, K2.1): disci + fontium; glutinosa */
     Vigilia*        vigilia;
 };
@@ -599,7 +599,7 @@ _nides_onerare (Tabularium* t)
         redde;   /* plagula abest - retempta postea (index post
                   * ortum residentis apparere potest) */
     }
-    t->nides = xar_creare(t->piscina, (i32)magnitudo(_NidOrdo));
+    t->nides = xar_creare(t->piscina, (i32)magnitudo(NidOrdo));
     si (t->nides == NIHIL)
     {
         redde;
@@ -647,7 +647,7 @@ _nides_onerare (Tabularium* t)
         {
             ChordaAedificator* aed = chorda_aedificator_creare(
                 t->piscina, LXIV);
-            _NidOrdo* ordo;
+            NidOrdo* ordo;
 
             chorda_aedificator_appendere_chorda(aed, campi[I]);
             chorda_aedificator_appendere_literis(aed, ":");
@@ -665,7 +665,7 @@ _nides_onerare (Tabularium* t)
             chorda_aedificator_appendere_literis(aed, " (");
             chorda_aedificator_appendere_chorda(aed, campi[V]);
             chorda_aedificator_appendere_literis(aed, ")");
-            ordo = (_NidOrdo*)xar_addere(t->nides);
+            ordo = (NidOrdo*)xar_addere(t->nides);
             si (ordo != NIHIL)
             {
                 ordo->nid = campi[ZEPHYRUM];
@@ -695,7 +695,7 @@ _nid_invenire (Tabularium* t, chorda praefixum, i32* numerus_out)
     }
     per (i = ZEPHYRUM; i < xar_numerus(t->nides); i++)
     {
-        constans _NidOrdo* ordo = (constans _NidOrdo*)xar_obtinere(
+        constans NidOrdo* ordo = (constans NidOrdo*)xar_obtinere(
             t->nides, i);
 
         si (ordo->nid.mensura >= praefixum.mensura
@@ -731,7 +731,7 @@ _citationes_onerare (Tabularium* t)
         redde;   /* plagula abest - retempta postea */
     }
     t->citationes = xar_creare(t->piscina,
-        (i32)magnitudo(_CitatioOrdo));
+        (i32)magnitudo(CitatioOrdo));
     si (t->citationes == NIHIL)
     {
         redde;
@@ -779,12 +779,12 @@ _citationes_onerare (Tabularium* t)
         {
             ChordaAedificator* aed = chorda_aedificator_creare(
                 t->piscina, LXIV);
-            _CitatioOrdo* ordo;
+            CitatioOrdo* ordo;
 
             chorda_aedificator_appendere_chorda(aed, campi[I]);
             chorda_aedificator_appendere_literis(aed, ":");
             chorda_aedificator_appendere_chorda(aed, campi[II]);
-            ordo = (_CitatioOrdo*)xar_addere(t->citationes);
+            ordo = (CitatioOrdo*)xar_addere(t->citationes);
             si (ordo != NIHIL)
             {
                 ordo->praefixum = campi[ZEPHYRUM];
@@ -813,7 +813,7 @@ _citationes_reddere (Tabularium* t, ChordaAedificator* aed,
     }
     per (i = ZEPHYRUM; i < xar_numerus(t->citationes); i++)
     {
-        constans _CitatioOrdo* ordo = (constans _CitatioOrdo*)
+        constans CitatioOrdo* ordo = (constans CitatioOrdo*)
             xar_obtinere(t->citationes, i);
 
         si (ordo->praefixum.mensura > ZEPHYRUM
@@ -4194,8 +4194,8 @@ _tab_census (Tabularium* t, Piscina* pn, JsonValor* id,
         {
             per (i = ZEPHYRUM; i < xar_numerus(t->citationes); i++)
             {
-                constans _CitatioOrdo* ordo =
-                    (constans _CitatioOrdo*)xar_obtinere(
+                constans CitatioOrdo* ordo =
+                    (constans CitatioOrdo*)xar_obtinere(
                         t->citationes, i);
                 b32 ambiguum = FALSUM;
                 chorda inventa;

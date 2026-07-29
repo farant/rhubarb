@@ -598,7 +598,7 @@ _identitates_ex_arbore (Xar* fructus, StmlNodus* nodus)
 nomen structura {
     s32                offset;
     SilvaInsertioGenus genus;
-} _SedesMintationis;
+} SedesMintationis;
 
 interior b32
 _verbi_initium (i8 c)
@@ -616,7 +616,7 @@ _verbi_pars (i8 c)
 interior vacuum
 _sedem_addere (Xar* sedes, s32 offset, SilvaInsertioGenus genus)
 {
-    _SedesMintationis* s = (_SedesMintationis*)xar_addere(sedes);
+    SedesMintationis* s = (SedesMintationis*)xar_addere(sedes);
 
     si (s != NIHIL)
     {
@@ -639,7 +639,7 @@ _sedes_mintationis (Piscina* piscina, constans SilvaAnnotatio* a)
     b32  titulus_lectus = FALSUM;
     s32  titulus_finis = -I;
     Xar* sedes = xar_creare(piscina,
-        (i32)magnitudo(_SedesMintationis));
+        (i32)magnitudo(SedesMintationis));
 
     si (sedes == NIHIL || v->datum == NIHIL || v->mensura < II)
     {
@@ -857,8 +857,8 @@ silva_annotationes_identitates (Piscina* piscina,
 
         si (id->petitio)
         {
-            constans _SedesMintationis* s =
-                (constans _SedesMintationis*)xar_obtinere(sedes, j);
+            constans SedesMintationis* s =
+                (constans SedesMintationis*)xar_obtinere(sedes, j);
 
             j++;
             si (s != NIHIL && s->genus == id->insertio_genus)

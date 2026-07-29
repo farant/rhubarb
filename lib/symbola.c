@@ -14,7 +14,7 @@ nomen structura {
 	i32 nsyms;      /* Numerus symbolorum */
 	i32 stroff;     /* Offset ad string table */
 	i32 strsize;    /* Mensura string table */
-} _SymtabCommand;
+} SymtabCommand;
 
 /* nlist_64 - Symbol table entry (64-bit) */
 nomen structura {
@@ -23,7 +23,7 @@ nomen structura {
 	 i8 n_sect;             /* Section number (1-based) */
 	i16 n_desc;             /* Description flags */
 	memoriae_index n_value; /* Value (address) */
-} _Nlist64;
+} Nlist64;
 
 /* nlist - Symbol table entry (32-bit) */
 nomen structura {
@@ -32,7 +32,7 @@ nomen structura {
 	 i8 n_sect;
 	i16 n_desc;
 	i32 n_value;
-} _Nlist32;
+} Nlist32;
 
 
 /* ==================================================
@@ -96,8 +96,8 @@ _symbolum_creare_ex_indice(
 	                      i32  index)
 {
 	Symbolum* symbolum;
-	constans _Nlist64* nlist64;
-	constans _Nlist32* nlist32;
+	constans Nlist64* nlist64;
+	constans Nlist32* nlist32;
 
 	si (index < ZEPHYRUM || index >= tabula->numerus_symbolarum)
 	{
@@ -117,7 +117,7 @@ _symbolum_creare_ex_indice(
 	/* Legere nlist entry ex tabula */
 	si (tabula->est_64bit)
 	{
-		nlist64 = ((constans _Nlist64*)tabula->symbola_datum) + index;
+		nlist64 = ((constans Nlist64*)tabula->symbola_datum) + index;
 		symbolum->n_strx  = nlist64->n_strx;
 		symbolum->n_type  = nlist64->n_type;
 		symbolum->n_sect  = nlist64->n_sect;
@@ -126,7 +126,7 @@ _symbolum_creare_ex_indice(
 	}
 	alioquin
 	{
-		nlist32 = ((constans _Nlist32*)tabula->symbola_datum) + index;
+		nlist32 = ((constans Nlist32*)tabula->symbola_datum) + index;
 		symbolum->n_strx  = nlist32->n_strx;
 		symbolum->n_type  = nlist32->n_type;
 		symbolum->n_sect  = nlist32->n_sect;
@@ -164,7 +164,7 @@ tabula_symbolorum_ex_macho(
 	       TabulaSymbolorum* tabula;
 	  MachoIteratorMandatum  iter;
 	        MandatumOnustum* mandatum;
-	constans _SymtabCommand* symtab_cmd;
+	constans SymtabCommand* symtab_cmd;
 	            constans i8* datum_macho;
 	         memoriae_index  mensura_macho;
 
@@ -184,7 +184,7 @@ tabula_symbolorum_ex_macho(
 	{
 		si (mandatum_genus(mandatum) == MACHO_LC_SYMTAB)
 		{
-			symtab_cmd = (constans _SymtabCommand*)mandatum_datum(mandatum);
+			symtab_cmd = (constans SymtabCommand*)mandatum_datum(mandatum);
 			frange;
 		}
 	}
@@ -209,7 +209,7 @@ tabula_symbolorum_ex_macho(
 	si (macho_est_64bit(macho))
 	{
 		si ((memoriae_index)symtab_cmd->symoff +
-		    (memoriae_index)symtab_cmd->nsyms * magnitudo(_Nlist64) > mensura_macho)
+		    (memoriae_index)symtab_cmd->nsyms * magnitudo(Nlist64) > mensura_macho)
 		{
 			_symbola_error_ponere("Symbol table excedit mensuram fili");
 			redde NIHIL;
@@ -218,7 +218,7 @@ tabula_symbolorum_ex_macho(
 	alioquin
 	{
 		si ((memoriae_index)symtab_cmd->symoff +
-		    (memoriae_index)symtab_cmd->nsyms * magnitudo(_Nlist32) > mensura_macho)
+		    (memoriae_index)symtab_cmd->nsyms * magnitudo(Nlist32) > mensura_macho)
 		{
 			_symbola_error_ponere("Symbol table excedit mensuram fili");
 			redde NIHIL;

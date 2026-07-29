@@ -1435,6 +1435,7 @@ typedef enum {
     EXAMEN_CODEX_SUBTRACTIO_COMPARATA,
     EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS,
     EXAMEN_CODEX_SIGNATUM_COMMIXTUM,
+    EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -42659,7 +42660,9 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "contractus intervalli violatus (valor extra fines probatus)",
                                                   EXAMEN_DOMESTICUM },
     { "genera signata commixta (typedef nominales confusi)",
-                                                  EXAMEN_DOMESTICUM }
+                                                  EXAMEN_DOMESTICUM },
+    { "identificator reservatus implementationi (__x aut _X"
+      " coinatus - C89 7.1.3)",                 EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -43323,7 +43326,9 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "CONTRACTUS_INTERVALLI_VIOLATUS",
       (s32)EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS },
     { "SIGNATUM_COMMIXTUM",
-      (s32)EXAMEN_CODEX_SIGNATUM_COMMIXTUM }
+      (s32)EXAMEN_CODEX_SIGNATUM_COMMIXTUM },
+    { "IDENTIFICATOR_RESERVATUS",
+      (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS }
 };
 
 /* ambulatio annotationum UNA communis per parsuram (frustum E2):
@@ -43675,7 +43680,7 @@ _res_examinare (SilvaSemantica* sem, constans SilvaAnnotatio* a,
 
 nomen structura {
     SilvaChorda valor;
-} _NidVisum;
+} NidVisum;
 
 interior vacuum
 _annotationes_examinare (SilvaSemantica* sem,
@@ -43694,7 +43699,7 @@ _annotationes_examinare (SilvaSemantica* sem,
     {
         redde;
     }
-    visa = silva_xar_creare(sem->piscina, (i32)magnitudo(_NidVisum));
+    visa = silva_xar_creare(sem->piscina, (i32)magnitudo(NidVisum));
     per (k = ZEPHYRUM; k < silva_xar_numerus(annotationes); k++)
     {
         constans SilvaAnnotatio* a = (constans SilvaAnnotatio*)
@@ -43747,7 +43752,7 @@ _annotationes_examinare (SilvaSemantica* sem,
                 per (m = ZEPHYRUM; visa != NIHIL
                     && m < silva_xar_numerus(visa); m++)
                 {
-                    constans _NidVisum* n = (constans _NidVisum*)
+                    constans NidVisum* n = (constans NidVisum*)
                         silva_xar_obtinere(visa, m);
 
                     si (n->valor.mensura == id->valor.mensura
@@ -43767,7 +43772,7 @@ _annotationes_examinare (SilvaSemantica* sem,
                 }
                 alioquin si (visa != NIHIL)
                 {
-                    _NidVisum* n = (_NidVisum*)silva_xar_addere(visa);
+                    NidVisum* n = (NidVisum*)silva_xar_addere(visa);
 
                     si (n != NIHIL)
                     {
@@ -44584,13 +44589,13 @@ nomen structura {
     i32    lectiones;
     i32    scriptiones;
     b32    exclusum;
-} _PointeeUsus;
+} PointeeUsus;
 
 interior vacuum _pointee_scandere (constans SilvaNodus* nodus,
-    _PointeeUsus* u, b32 in_scriptura);
+    PointeeUsus* u, b32 in_scriptura);
 
 interior vacuum
-_pointee_in_valore (SilvaValor v, _PointeeUsus* u, b32 in_scriptura)
+_pointee_in_valore (SilvaValor v, PointeeUsus* u, b32 in_scriptura)
 {
     si (v.genus == SILVA_VALOR_NODUS)
     {
@@ -44615,7 +44620,7 @@ _pointee_in_valore (SilvaValor v, _PointeeUsus* u, b32 in_scriptura)
 }
 
 interior vacuum
-_pointee_scandere (constans SilvaNodus* nodus, _PointeeUsus* u,
+_pointee_scandere (constans SilvaNodus* nodus, PointeeUsus* u,
     b32 in_scriptura)
 {
     i32 k;
@@ -44801,7 +44806,7 @@ _contractus_examinare (SilvaSemantica* sem,
         SilvaValor* pv = silva_valor_lista_obtinere(parametra, k);
         SilvaValor dv;
         SilvaToken* titulus_p;
-        _PointeeUsus usus;
+        PointeeUsus usus;
         b32 contractum = FALSUM;
         b32 accumulat = FALSUM;
         i32 c_index;
@@ -45215,6 +45220,40 @@ _symbolum_registrare (SilvaSemantica* sem, s32 genus,
     si (titulus.mensura == ZEPHYRUM)
     {
         redde NIHIL;
+    }
+    /* identificator reservatus (01KYQ1QDBQ, dependablec): __x et
+     * _Maiuscula OMNI usui reservata (C89 7.1.3) - coinationes
+     * domus solae (externa systematis REFERRE licet, coinare non;
+     * _minuscula scopi plagulae decreto tolerata) */
+    si (!sem->in_systemate
+        && (repositio & REPOSITIO_EXTERNA) == ZEPHYRUM
+        && titulus.mensura >= II
+        && titulus.datum[ZEPHYRUM] == '_'
+        && (titulus.datum[I] == '_'
+            || (titulus.datum[I] >= 'A' && titulus.datum[I] <= 'Z'))
+        && !_tolera_absorbere(sem, declarans, (s32)
+               EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS))
+    {
+        memoriae_index capacitas = (memoriae_index)titulus.mensura
+            + (memoriae_index)LXIV;
+        character* nuntius = (character*)silva_piscina_allocare(
+            sem->piscina, capacitas);
+
+        si (nuntius != NIHIL)
+        {
+            sprintf(nuntius, "identificator reservatus"
+                " implementationi: '%.*s' (C89 7.1.3)",
+                (int)titulus.mensura,
+                (constans character*)titulus.datum);
+            _diagnosticum_addere_plenum(sem, declarans, (s32)
+                EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS, NIHIL,
+                nuntius);
+        }
+        alioquin
+        {
+            silva_c89_diagnosticum_addere(sem, declarans,
+                EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS);
+        }
     }
     {
         vacuum* prior = NIHIL;
@@ -57219,9 +57258,9 @@ nomen structura {
     constans character* titulus;
     s32                 genus;      /* SilvaQuaestioPseudoGenus */
     b32                 argumentum_necessarium; /* alioquin vetitum */
-} _PseudoNativum;
+} PseudoNativum;
 
-hic_manens constans _PseudoNativum _pseudo_nativa[] = {
+hic_manens constans PseudoNativum _pseudo_nativa[] = {
     { "primus",    SILVA_QUAESTIO_PSEUDO_PRIMUS,    FALSUM },
     { "ultimus",   SILVA_QUAESTIO_PSEUDO_ULTIMUS,   FALSUM },
     { "habet",     SILVA_QUAESTIO_PSEUDO_HABET,     VERUM  },
@@ -57266,11 +57305,11 @@ nomen structura {
     SilvaChorda                     titulus;
     SilvaQuaestioPseudoFunctio functio;
     vacuum*                    datum;
-} _PseudoUsoris;
+} PseudoUsoris;
 
 structura SilvaQuaestioPseudoRegistrum {
     SilvaPiscina* piscina;
-    SilvaXar*     entia;    /* _PseudoUsoris (valore) */
+    SilvaXar*     entia;    /* PseudoUsoris (valore) */
 };
 
 SilvaQuaestioPseudoRegistrum*
@@ -57285,7 +57324,7 @@ silva_quaestio_registrum_creare (SilvaPiscina* piscina)
     si (registro == NIHIL) redde NIHIL;
     registro->piscina = piscina;
     registro->entia = silva_xar_creare(piscina,
-        (i32)magnitudo(_PseudoUsoris));
+        (i32)magnitudo(PseudoUsoris));
     si (registro->entia == NIHIL) redde NIHIL;
     redde registro;
 }
@@ -57299,7 +57338,7 @@ silva_quaestio_registrare (
 {
     i32 mensura;
     i32 i;
-    _PseudoUsoris* ens;
+    PseudoUsoris* ens;
 
     si (registro == NIHIL || titulus == NIHIL || functio == NIHIL)
     {
@@ -57319,7 +57358,7 @@ silva_quaestio_registrare (
     /* titulus iam registratus -> renovatio in situ */
     per (i = ZEPHYRUM; i < silva_xar_numerus(registro->entia); i++)
     {
-        ens = (_PseudoUsoris*)silva_xar_obtinere(registro->entia, i);
+        ens = (PseudoUsoris*)silva_xar_obtinere(registro->entia, i);
         si (ens != NIHIL && ens->titulus.mensura == mensura
             && memcmp(ens->titulus.datum, titulus,
                    (size_t)mensura) == ZEPHYRUM)
@@ -57329,7 +57368,7 @@ silva_quaestio_registrare (
             redde VERUM;
         }
     }
-    ens = (_PseudoUsoris*)silva_xar_addere(registro->entia);
+    ens = (PseudoUsoris*)silva_xar_addere(registro->entia);
     si (ens == NIHIL) redde FALSUM;
     ens->titulus = _chordam_copiare(registro->piscina, titulus,
         ZEPHYRUM, mensura);
@@ -57339,7 +57378,7 @@ silva_quaestio_registrare (
     redde VERUM;
 }
 
-hic_manens constans _PseudoUsoris*
+hic_manens constans PseudoUsoris*
 _pseudo_usoris_invenire (
     constans SilvaQuaestioPseudoRegistrum* registro,
     constans character*                    fons,
@@ -57350,8 +57389,8 @@ _pseudo_usoris_invenire (
     si (registro == NIHIL) redde NIHIL;
     per (i = ZEPHYRUM; i < silva_xar_numerus(registro->entia); i++)
     {
-        constans _PseudoUsoris* ens =
-            (constans _PseudoUsoris*)silva_xar_obtinere(registro->entia,
+        constans PseudoUsoris* ens =
+            (constans PseudoUsoris*)silva_xar_obtinere(registro->entia,
                 i);
 
         si (ens != NIHIL && ens->titulus.mensura == mensura
@@ -57948,7 +57987,7 @@ _compilare_cum (
                 lector.fons + initium, mensura);
             si (index_nativi >= ZEPHYRUM)
             {
-                constans _PseudoNativum* nativum =
+                constans PseudoNativum* nativum =
                     &_pseudo_nativa[index_nativi];
 
                 si (nativum->argumentum_necessarium
@@ -58012,7 +58051,7 @@ _compilare_cum (
             }
             alioquin
             {
-                constans _PseudoUsoris* usoris =
+                constans PseudoUsoris* usoris =
                     _pseudo_usoris_invenire(registro,
                         lector.fons + initium, mensura);
 
@@ -59567,7 +59606,7 @@ _identitates_ex_arbore (SilvaXar* fructus, SilvaStmlNodus* nodus)
 nomen structura {
     s32                offset;
     SilvaInsertioGenus genus;
-} _SedesMintationis;
+} SedesMintationis;
 
 interior b32
 _verbi_initium (i8 c)
@@ -59585,7 +59624,7 @@ _verbi_pars (i8 c)
 interior vacuum
 _sedem_addere (SilvaXar* sedes, s32 offset, SilvaInsertioGenus genus)
 {
-    _SedesMintationis* s = (_SedesMintationis*)silva_xar_addere(sedes);
+    SedesMintationis* s = (SedesMintationis*)silva_xar_addere(sedes);
 
     si (s != NIHIL)
     {
@@ -59608,7 +59647,7 @@ _sedes_mintationis (SilvaPiscina* piscina, constans SilvaAnnotatio* a)
     b32  titulus_lectus = FALSUM;
     s32  titulus_finis = -I;
     SilvaXar* sedes = silva_xar_creare(piscina,
-        (i32)magnitudo(_SedesMintationis));
+        (i32)magnitudo(SedesMintationis));
 
     si (sedes == NIHIL || v->datum == NIHIL || v->mensura < II)
     {
@@ -59826,8 +59865,8 @@ silva_annotationes_identitates (SilvaPiscina* piscina,
 
         si (id->petitio)
         {
-            constans _SedesMintationis* s =
-                (constans _SedesMintationis*)silva_xar_obtinere(sedes, j);
+            constans SedesMintationis* s =
+                (constans SedesMintationis*)silva_xar_obtinere(sedes, j);
 
             j++;
             si (s != NIHIL && s->genus == id->insertio_genus)

@@ -1,0 +1,31 @@
+/* Identificatores reservati (01KYQ1QDBQ, dependablec.org): C89
+ * 7.1.3 - __x et _Maiuscula OMNI usui reservata, coinatio domus
+ * flagrat; _minuscula scopi plagulae decreto tolerata (divergentia
+ * consulta); externa systematis REFERRE licet, coinare non. Clang
+ * defaltis caecus (-Wreserved-identifier extra vexilla domus).
+ * ORACULUM -Wsign-conversion */
+
+/* <exspecta codex="IDENTIFICATOR_RESERVATUS"/> */
+typedef long _Pravum;
+
+/* <exspecta codex="IDENTIFICATOR_RESERVATUS"/> */
+static long __occultum = 0;
+
+/* _minuscula scopi plagulae: decreto tolerata - TACET */
+static long _bene = 0;
+
+/* externum systematis: referentia licita - TACET */
+extern long _SystemSymbolum;
+
+/* coinatio consulto tolerata - QUIETA */
+/* <tolera codex="IDENTIFICATOR_RESERVATUS" (>exemplar suppressionis fixturae: coinatio consulta */
+static long _Toleratum = 0;
+
+static long radix(void)
+{
+    _Pravum p = 0;
+    long _localis = 1;
+
+    return __occultum + _bene + _SystemSymbolum + _Toleratum
+        + p + _localis;
+}

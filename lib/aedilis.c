@@ -531,7 +531,7 @@ nomen structura {
     TabulaDispersa*               textualia;      /* .c inclusa */
     Xar*                          pendentia;      /* chorda */
     Xar*                          variantes_effectivae;
-} _Machina;
+} Machina;
 
 interior Xar*
 _regulam_nexus_invenire (constans AedilisConfiguratio* configuratio,
@@ -589,7 +589,7 @@ _aristam_addere (AedilisCaput* caput, chorda resoluta,
 }
 
 interior vacuum
-_obiectum_addere (_Machina* machina, chorda via, chorda caput,
+_obiectum_addere (Machina* machina, chorda via, chorda caput,
     AedilisOrigo origo)
 {
     AedilisObiectum* obiectum;
@@ -639,7 +639,7 @@ _obiectum_addere (_Machina* machina, chorda via, chorda caput,
 }
 
 interior vacuum
-_vendor_tractare (_Machina* machina, chorda resoluta)
+_vendor_tractare (Machina* machina, chorda resoluta)
 {
     chorda fons;
     i32    i;
@@ -755,7 +755,7 @@ aedilis_derivare (Piscina* piscina,
     AedilisExtractor extractor, vacuum* extractor_datum,
     chorda* causa_out)
 {
-    _Machina machina;
+    Machina machina;
     AedilisFructus* fructus;
     chorda praefixum_vendor;
     chorda suffixum_h;

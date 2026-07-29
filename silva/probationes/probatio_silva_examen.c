@@ -2046,6 +2046,32 @@ s32 principale (vacuum)
         "static void alia(int* n) { *n = 1; }\n"
         "static void tradit(int* n) { alia(n); *n = *n; }\n",
         (s32)EXAMEN_CODEX_CONTRACTUS_ABSENS, ZEPHYRUM);
+
+    imprimere("--- 83: identificator reservatus (01KYQ1QDBQ) ---\n");
+
+    /* 83: typedef _Maiuscula coinatus - classis periculosa */
+    _codicem_probare(piscina,
+        "typedef int _Pravum;\n"
+        "static _Pravum p = 0;\n",
+        (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS, I);
+    /* 83: __minuscula coinatum - etiam periculosum */
+    _codicem_probare(piscina,
+        "static long __occultum = 0;\n",
+        (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS, I);
+    /* 83 tacet: _minuscula scopi plagulae - decreto tolerata */
+    _codicem_probare(piscina,
+        "static long _bene = 0;\n",
+        (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS, ZEPHYRUM);
+    /* 83 tacet: _minuscula scopi blocci - legalis omnino */
+    _codicem_probare(piscina,
+        "static void f(void) { int _localis = 0;"
+        " (void)_localis; }\n",
+        (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS, ZEPHYRUM);
+    /* 83 tacet: externum systematis REFERRE licet (macho more) */
+    _codicem_probare(piscina,
+        "extern int _SystemSymbolum;\n"
+        "static int lege(void) { return _SystemSymbolum; }\n",
+        (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS, ZEPHYRUM);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

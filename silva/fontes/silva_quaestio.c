@@ -80,9 +80,9 @@ nomen structura {
     constans character* titulus;
     s32                 genus;      /* SilvaQuaestioPseudoGenus */
     b32                 argumentum_necessarium; /* alioquin vetitum */
-} _PseudoNativum;
+} PseudoNativum;
 
-hic_manens constans _PseudoNativum _pseudo_nativa[] = {
+hic_manens constans PseudoNativum _pseudo_nativa[] = {
     { "primus",    SILVA_QUAESTIO_PSEUDO_PRIMUS,    FALSUM },
     { "ultimus",   SILVA_QUAESTIO_PSEUDO_ULTIMUS,   FALSUM },
     { "habet",     SILVA_QUAESTIO_PSEUDO_HABET,     VERUM  },
@@ -127,11 +127,11 @@ nomen structura {
     chorda                     titulus;
     SilvaQuaestioPseudoFunctio functio;
     vacuum*                    datum;
-} _PseudoUsoris;
+} PseudoUsoris;
 
 structura SilvaQuaestioPseudoRegistrum {
     Piscina* piscina;
-    Xar*     entia;    /* _PseudoUsoris (valore) */
+    Xar*     entia;    /* PseudoUsoris (valore) */
 };
 
 SilvaQuaestioPseudoRegistrum*
@@ -146,7 +146,7 @@ silva_quaestio_registrum_creare (Piscina* piscina)
     si (registro == NIHIL) redde NIHIL;
     registro->piscina = piscina;
     registro->entia = xar_creare(piscina,
-        (i32)magnitudo(_PseudoUsoris));
+        (i32)magnitudo(PseudoUsoris));
     si (registro->entia == NIHIL) redde NIHIL;
     redde registro;
 }
@@ -160,7 +160,7 @@ silva_quaestio_registrare (
 {
     i32 mensura;
     i32 i;
-    _PseudoUsoris* ens;
+    PseudoUsoris* ens;
 
     si (registro == NIHIL || titulus == NIHIL || functio == NIHIL)
     {
@@ -180,7 +180,7 @@ silva_quaestio_registrare (
     /* titulus iam registratus -> renovatio in situ */
     per (i = ZEPHYRUM; i < xar_numerus(registro->entia); i++)
     {
-        ens = (_PseudoUsoris*)xar_obtinere(registro->entia, i);
+        ens = (PseudoUsoris*)xar_obtinere(registro->entia, i);
         si (ens != NIHIL && ens->titulus.mensura == mensura
             && memcmp(ens->titulus.datum, titulus,
                    (size_t)mensura) == ZEPHYRUM)
@@ -190,7 +190,7 @@ silva_quaestio_registrare (
             redde VERUM;
         }
     }
-    ens = (_PseudoUsoris*)xar_addere(registro->entia);
+    ens = (PseudoUsoris*)xar_addere(registro->entia);
     si (ens == NIHIL) redde FALSUM;
     ens->titulus = _chordam_copiare(registro->piscina, titulus,
         ZEPHYRUM, mensura);
@@ -200,7 +200,7 @@ silva_quaestio_registrare (
     redde VERUM;
 }
 
-hic_manens constans _PseudoUsoris*
+hic_manens constans PseudoUsoris*
 _pseudo_usoris_invenire (
     constans SilvaQuaestioPseudoRegistrum* registro,
     constans character*                    fons,
@@ -211,8 +211,8 @@ _pseudo_usoris_invenire (
     si (registro == NIHIL) redde NIHIL;
     per (i = ZEPHYRUM; i < xar_numerus(registro->entia); i++)
     {
-        constans _PseudoUsoris* ens =
-            (constans _PseudoUsoris*)xar_obtinere(registro->entia,
+        constans PseudoUsoris* ens =
+            (constans PseudoUsoris*)xar_obtinere(registro->entia,
                 i);
 
         si (ens != NIHIL && ens->titulus.mensura == mensura
@@ -809,7 +809,7 @@ _compilare_cum (
                 lector.fons + initium, mensura);
             si (index_nativi >= ZEPHYRUM)
             {
-                constans _PseudoNativum* nativum =
+                constans PseudoNativum* nativum =
                     &_pseudo_nativa[index_nativi];
 
                 si (nativum->argumentum_necessarium
@@ -873,7 +873,7 @@ _compilare_cum (
             }
             alioquin
             {
-                constans _PseudoUsoris* usoris =
+                constans PseudoUsoris* usoris =
                     _pseudo_usoris_invenire(registro,
                         lector.fons + initium, mensura);
 
