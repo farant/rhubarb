@@ -11092,3 +11092,49 @@ Gradus 1 COMPLETUS: machina seminationis frontes TRES habet
 Restant gradus 2 (probatio: argumenta ad sedes vocationis, defs
 localium refinatorum, corpora redde - directio inveniendi) et
 gradus 3 (lint generum signatorum).
+
+## 2026-07-28 - INTENTIO: NEXUS POSITIONUM DECLARATIONIS (01KYNNW0E6)
+
+Scope: positiones typorum in declarationibus (hover/definitio/
+referentiae in orthographia typedef) - lacuna mensurata probatione
+viva LSP hodierna. SUTURA LECTA: iunctio positionis legati
+(_invenire_ad_byte) nexum in QUOQUE gradu descensus tentat -
+registratio sola deest ('sedes USUS - nexus ibi solum registrat').
+Sanatio tota semantica-latere, legatus INTACTUS: (1) sedes
+resolutionis TYPUS_NOMINATUS (typus_ex_specificatoribus) symbolum
+typedef in nexum ponit (notare_usum VERUM - iudicia 69/70 typedefs
+praetereunt, neutrale verificatum); (2) sedes registrationis
+symbolorum declarantem in nexum ponit (notare_usum FALSUM -
+declarare non est uti, exemplar lineae 4118). Membra DIFFERUNTUR
+ad arcum field-references (identitas symboli nulla; eventa
+MEMBRUM_USUS semen manent). Tags: si symbola sunt, eadem via;
+alioquin nominatum. FRUCTUS post contractus: referentiae typedef
+= quaestio auditus contractuum (quid NumerusBitorum tangit).
+Vectis: probatio viva LSP (hover/definitio/referentiae in
+NumerusBitorum) + asserta nexus semanticae + suite.
+
+## 2026-07-28 - RELATIO: NEXUS POSITIONUM DECLARATIONIS (01KYNNW0E6)
+
+SHIPPED (arcus quartus diei, minimus omnium - probatio viva LSP =
+vectis). Sanatio tota semantica-latere, legatus INTACTUS ut sutura
+promisit: (1) sedes TYPUS_NOMINATUS symbolum typedef in nexum ponit
+(symbolum_invenire + custos generis = semantica typedef_invenire
+aequivalens, registratio addita; usus notatus - 69/70 typedefs
+praetereunt, neutrale); (2) declarantes in nexum positi (FALSUM -
+declarare non est uti) SED sedes = DECLARATOR FOSSUS solus:
+registratio lata in definitione functionis (declarans = definitio
+TOTA) vicinitatem hoveris in corpore toto eclipsabat - pinna 'sedes
+proximae' probationis legati id MENSURAVIT (12/13 -> fossio
+declaratoris -> 13/13). PROBATIO VIVA post reload: hover in
+orthographia typi 'NumerusBitorum : insignatus integer' (ante:
+nihil hic); goToDefinition -> flatura.c:28 typedef (ante: non
+inventum). Suites omnes: silva 35/35, officina 13/13, radix PLENUS,
+amalgama VERIFICATUM.
+
+RELIQUUM NOMINATUM (sub-arcus): findReferences indicem
+trans-plagularem (LegatusOrdo, _ordines_tituli) consulit, non nexum
+- messor indicis sedes foliorum solas colligit; positiones typorum
+in indicem = extensio messoris (quaestio auditus contractuum plena).
+Etiam: goToDefinition sedem bis reddit (dedup cosmetica). Membra
+adhuc differuntur (identitas symboli nulla - eventa MEMBRUM_USUS
+semen manent).
