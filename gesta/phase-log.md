@@ -1784,3 +1784,90 @@ praefixum (spatium nominis posteros omnes colligit), navigatio
 per genera (commentarium radicem per catenam solvit: articulus
 aut ens aut codex). Onus tabulae tags = VI legere + genera usoris
 per fossam - acceptum scala personali. Machina INTACTA quintum.
+
+## RENOVATIO RESIDENTIUM: INTENTIO (2026-07-29, 01KYQ4T5EE)
+
+Pretium mensuratum: cycli reconnexionis manuales IV-V per sessionem
+cusionum. Consilium bancatum in tabula; exemplar operans =
+officina/instrumenta/legatus.c (_legati_renovare + ansa exec).
+
+MACHINA UNA, MODI DUO (inventum suturae: daemon per idem
+tabularium_tractare dispatchat - instrumentum unum ambobus servit,
+fori mutatione NULLA quia proxy verbatim fert):
+- cfg nova: via_renovatoris (NIHIL = derivata radix +
+  /gesta/tabularium.sh aut /gesta/tabulariumd.sh per modum),
+  renovatio_exitus (daemon VERUM), renatus (post-exec surgere).
+  Sedes constructionis III (principalia II + probatio) - laqueus
+  vocator-initiat.
+- _tab_renovare (exemplar legati): vigilia RECENS -> "nihil
+  agendum"; explorator praevius = launcher -struere ut infans
+  (processus_exsequi, 120s; linea prima stdout = signum novum -
+  launcheri AMBO signum echare discunt); defectu recusatio clara +
+  cauda erroris, residens vivus; successu modus stdio: renovandum
+  + exec in currere post effusionem (processus_transformare, -mcp
+  -renatus; stdin SINE bufferis - octeti ante exec non pereunt);
+  modus daemon: renovandum + exitus 0 post connexionem clausam -
+  petitio proxima per start-if-absent fori daemonem recentem
+  gignit.
+- _se_initiare daemonis in machinam movetur (tabularium_se_
+  initiare publicum) - currere renatus eo surgit, daemon eodem.
+- tabularium.sh vexillum -struere accipit (exemplar tabulariumd.sh,
+  hack '</dev/null' moritur); AMBO -struere signum echant.
+- lib/vigilia remedium: nuntii CAUTIONIS instrumentum renovare
+  nominant (buffer m+CXXVIII -> m+CXCII; pinnae probationis
+  substring 'binarium in disco novius' intactae).
+- doctrina + tabula instrumentorum: renovare {} additum.
+
+LEGES: imperium explicitum solum; aedificatio probata ANTE exec/
+exitum; defectus = recusatio clara, residens vetus vivit. NOTA
+BOOTSTRAP: residentes vivi instrumentum nondum ferunt - reconnexio
+manualis ULTIMA post commissum, deinde se ipsi renovant.
+
+VECTIS: probatio_tabularium renovare specimina (recens-recusatio;
+stub fractus -> RECUSATA + renovandum FALSUM; stub sanus stdio ->
+parata + renovandum VERUM; modus daemon -> exitus-textus);
+accessor tabularium_renovandum probationi. gesta 4/4 + fumus fori;
+fontes generatae regenerandae (processus.h inclusio nova).
+
+## RENOVATIO RESIDENTIUM: RELATIO (2026-07-29)
+
+SHIPPED + PROBATUM VIVO eadem sessione. Specimina IV sectionis XVI
+primo contactu (recens-recusatio / stipula fracta RECUSATA +
+residens vivus / stdio parata + renovandum / daemon exitus-textus);
+vectes: gesta 4/4, vigilia unitas PLENUS, officina 13/13, radix
+108/108 PLENUS, fumus fori PLENUS.
+
+CYCLUS VIVUS DAEMONIS INTEGER: tactus fontis -> renovare per TCP
+crudum -> "renovatio parata (causa: <plagula tacta ipsa>; signum
+novum ...) - post hoc responsum exeo" + CAUTIO remedio novo ->
+exitus mundus -> respawn per start-if-absent. INVENTUM VIVUM:
+custos "genitus semel per vitam" in fori proxy respawn post
+renovationem obstruxit - correctio: re-armatio in connexione
+prospera (generatio UNA per defectionem manet, tempestas adhuc
+vetita). Hoc solum mensura viva invenire potuit - stipulae
+probationum proxy extra machinam non vident.
+
+MACHINA UT INTENTIO, deviatione nulla: instrumentum unum in
+tabularium.c ambobus residentibus servit (daemon per idem
+tractare dispatchat; fori verbatim fert - mutatio proxy sola =
+custos); -struere in tabularium.sh natum (hack '</dev/null'
+MORTUUS) + launcheri AMBO signum echant (linea prima, exemplar
+legati -aedificare-solum); tabularium_se_initiare publicum
+(daemon praeinitiatio + renatus stdio communis); stdin sine
+bufferis in currere (octeti ante exec non pereunt);
+lib/vigilia remedium instrumentum renovare nominat (buffer
+m+CXXVIII -> m+CXCII; pinnae probationis substring intactae).
+
+BOOTSTRAP (ut praevisum): residentes stdio sessionis huius
+binaria vetera - reconnexio manualis ULTIMA (tabularii + fori;
+indices instrumentorum in conexione hauriuntur, ToolSearch
+instrumentum novum residentis conexi videre non potest), posthac
+se ipsi renovant.
+
+INSTRUMENTA (debrief): nc crudum = probator daemonis sine proxy
+(fructus novus - responsum verbatim, nullum stratum); stipulae
+launcheri exsecutabiles in probationibus (semantica launcheri
+veri in fumo vivo); fumus fori = porta viva respawn. Asperitas:
+index instrumentorum clientis MCP in conexione figitur -
+instrumenta nova residentium post commissum reconnexione unica
+apparent.

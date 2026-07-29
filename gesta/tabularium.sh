@@ -128,6 +128,13 @@ MANIFEST="$BUILD_DIR/tabularium.vigilia"
         find "$RADIX_DIR/include" "$GESTA_DIR/fontes" -name '*.h'
     fi
 } > "$MANIFEST" 2>/dev/null
+# -struere: aedifica et exi (praestructio + explorator renovationis;
+# linea prima stdout = signum novum pro nuntio renovare)
+if [ "${1:-}" = "-struere" ]; then
+    shasum -a 256 "$BIN" 2>/dev/null | cut -c1-64
+    exit 0
+fi
+
 SIGNUM="$(shasum -a 256 "$BIN" 2>/dev/null | cut -c1-64)"
 if [ -n "$SIGNUM" ]; then
     cd "$RADIX_DIR" && exec "$BIN" "$@" -radix "$RADIX_DIR" -signum "$SIGNUM" -binarium "$BIN" -manifestum "$MANIFEST"

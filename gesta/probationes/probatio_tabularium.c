@@ -24,6 +24,12 @@
 #define VIA_ENT "gesta/build/probatio_entities"
 #define VIA_ID "gesta/probationes/fixa/identitates_specimen.tsv"
 #define VIA_CIT "gesta/build/probatio_citationes.tsv"
+/* fixturae renovationis (sectio XVI) */
+#define VIA_BN2 "gesta/build/probatio_binarium_renovandum.txt"
+#define VIA_MN2 "gesta/build/probatio_manifestum_renovandum"
+#define VIA_FN2 "gesta/build/probatio_fons_renovandus.c"
+#define VIA_STIPULA_SANA "gesta/build/probatio_renovator_sanus.sh"
+#define VIA_STIPULA_FRACTA "gesta/build/probatio_renovator_fractus.sh"
 
 /* mensura bufferi semitae probationis (MMXL deest in latina.h) */
 #define PROBATIO_SEMITA_MENSURA 2048
@@ -40,6 +46,11 @@ _purgare (vacuum)
     remove(VIA_MN);
     remove(VIA_FN);
     remove(VIA_CIT);
+    remove(VIA_BN2);
+    remove(VIA_MN2);
+    remove(VIA_FN2);
+    remove(VIA_STIPULA_SANA);
+    remove(VIA_STIPULA_FRACTA);
     (vacuum)system("rm -rf " VIA_ENT);
 }
 
@@ -265,6 +276,9 @@ s32 principale (vacuum)
     cfg.via_binarii = NIHIL;
     cfg.via_manifesti = NIHIL;
     cfg.via_entitatum = VIA_ENT;
+    cfg.via_renovatoris = NIHIL;
+    cfg.renovatio_exitus = FALSUM;
+    cfg.renatus = FALSUM;
     t = tabularium_creare(piscina, &cfg);
     CREDO_NON_NIHIL (t);
     si (t == NIHIL)
@@ -2190,6 +2204,105 @@ s32 principale (vacuum)
             "\"acta\",\"arguments\":{\"ab_lecto\":\"verum\"}}}");
         CREDO_VERUM (strstr(r, "(nihil novi)") != NIHIL);
         CREDO_VERUM (strstr(r, "plura restant") == NIHIL);
+    }
+
+    /* XVI. renovatio sui (01KYQ4T5EE): explorator praevius =
+     * launcher -struere ut infans; defectus = residens vivus;
+     * successus = renovandum (stdio: exec in currere; daemon:
+     * exitus). Stipulae pro launchero - semantica launcheri veri
+     * in fumo vivo probatur. */
+    {
+        Tabularium* tr;
+        TabulariumConfiguratio cfgr = cfg;
+        Sigillum s;
+        character hex[SIGILLUM_HEX_MENSURA];
+        constans character* contentum = "binarium renovandum";
+
+        /* recens (vigilia quieta): nihil agendum */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":990,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"renovare\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "nihil agendum") != NIHIL);
+        CREDO_VERUM (!tabularium_renovandum(t));
+
+        /* tools/list instrumentum fert */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":991,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "\"renovare\"") != NIHIL);
+
+        /* stipulae launcheri */
+        CREDO_VERUM (_plagulam_scribere(VIA_STIPULA_FRACTA,
+            "#!/bin/sh\nexit 1\n"));
+        CREDO_VERUM (_plagulam_scribere(VIA_STIPULA_SANA,
+            "#!/bin/sh\necho cafe1234deadbeef\nexit 0\n"));
+        (vacuum)system("chmod +x " VIA_STIPULA_FRACTA " "
+            VIA_STIPULA_SANA);
+
+        /* fixtura vigiliae stalandae (exemplar XV) */
+        CREDO_VERUM (_plagulam_scribere(VIA_BN2, contentum));
+        CREDO_VERUM (_plagulam_scribere(VIA_MN2, VIA_FN2 "\n"));
+        s = sigillum_computare(contentum, strlen(contentum));
+        sigillum_hex(&s, hex);
+        cfgr.signum = hex;
+        cfgr.via_binarii = VIA_BN2;
+        cfgr.via_manifesti = VIA_MN2;
+
+        /* stipula fracta: RECUSATA, residens vivus */
+        cfgr.via_renovatoris = VIA_STIPULA_FRACTA;
+        tr = tabularium_creare(piscina, &cfgr);
+        CREDO_NON_NIHIL (tr);
+        si (tr != NIHIL)
+        {
+            r = _mitte(tr, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":992,\"method\":\"initialize\",\"params\":"
+                "{}}");
+            CREDO_VERUM (_plagulam_scribere(VIA_FN2,
+                "integer x;\n"));
+            r = _mitte(tr, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":993,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"renovare\",\"arguments\":{}}}");
+            CREDO_VERUM (strstr(r, "RECUSATA") != NIHIL);
+            CREDO_VERUM (strstr(r, "residens vivus") != NIHIL);
+            CREDO_VERUM (!tabularium_renovandum(tr));
+        }
+
+        /* stipula sana, modus stdio: parata + transformatio */
+        cfgr.via_renovatoris = VIA_STIPULA_SANA;
+        tr = tabularium_creare(piscina, &cfgr);
+        CREDO_NON_NIHIL (tr);
+        si (tr != NIHIL)
+        {
+            r = _mitte(tr, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":994,\"method\":\"initialize\",\"params\":"
+                "{}}");
+            CREDO_VERUM (_plagulam_scribere(VIA_FN2,
+                "integer y;\n"));
+            r = _mitte(tr, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":995,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"renovare\",\"arguments\":{}}}");
+            CREDO_VERUM (strstr(r, "renovatio parata") != NIHIL);
+            CREDO_VERUM (strstr(r, "cafe1234deadbeef") != NIHIL);
+            CREDO_VERUM (strstr(r, "me transformo") != NIHIL);
+            CREDO_VERUM (tabularium_renovandum(tr));
+        }
+
+        /* stipula sana, modus daemon: exitus pro exec */
+        cfgr.renovatio_exitus = VERUM;
+        tr = tabularium_creare(piscina, &cfgr);
+        CREDO_NON_NIHIL (tr);
+        si (tr != NIHIL)
+        {
+            r = _mitte(tr, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":996,\"method\":\"initialize\",\"params\":"
+                "{}}");
+            CREDO_VERUM (_plagulam_scribere(VIA_FN2,
+                "integer z;\n"));
+            r = _mitte(tr, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":997,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"renovare\",\"arguments\":{}}}");
+            CREDO_VERUM (strstr(r, "exeo") != NIHIL);
+            CREDO_VERUM (tabularium_renovandum(tr));
+        }
     }
 
     credo_imprimere_compendium();

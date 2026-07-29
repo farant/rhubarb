@@ -29,10 +29,13 @@
 interior TcpConnexio* _conectere_aut_gignere (i32 portus,
     b32 generatio_licita, Piscina* pn);
 
-/* connexio per-petitionem; recusatio -> daemon genitus semel per
- * launcher portu eodem (vexillum staticum - nulla tempestas
- * generationis). generatio_licita FALSUM (-sine-generatione,
- * probationes) = defectus statim, nullus effectus lateralis. */
+/* connexio per-petitionem; recusatio -> daemon genitus per
+ * launcher portu eodem. Custos tempestatis: generatio UNA per
+ * defectionem - connexio prospera vexillum RE-ARMAT (renovatio
+ * daemonis exitum mundum petit, respawn sequens licere debet;
+ * mensura viva 2026-07-29: 'semel per vitam' respawn post
+ * renovare obstruxit). generatio_licita FALSUM
+ * (-sine-generatione, probationes) = defectus statim. */
 interior TcpConnexio*
 _conectere_aut_gignere (i32 portus, b32 generatio_licita,
     Piscina* pn)
@@ -43,6 +46,7 @@ _conectere_aut_gignere (i32 portus, b32 generatio_licita,
 
     si (rc.successus)
     {
+        genitus = FALSUM;   /* re-armatio: defectio nova generat */
         redde rc.connexio;
     }
     si (!generatio_licita)
@@ -66,6 +70,7 @@ _conectere_aut_gignere (i32 portus, b32 generatio_licita,
         rc = tcp_connectere("127.0.0.1", portus, pn);
         si (rc.successus)
         {
+            genitus = FALSUM;   /* re-armatio */
             redde rc.connexio;
         }
     }

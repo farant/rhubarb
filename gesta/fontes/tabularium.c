@@ -12,6 +12,8 @@
 #include "sigillum.h"
 #include "chorda_aedificator.h"
 #include "vigilia.h"
+#include "processus.h"   /* renovatio sui: explorator praevius
+                          * (exsequi) + transformatio (exec) */
 #include "filum.h"
 #include "via.h"
 #include "iter_directoria.h"
@@ -83,7 +85,9 @@ interior constans character* constans TABULARII_DOCTRINA =
     "census + quaerere in area laboris; divisio actorum: vita-"
     "cyclica HIC, narratio aedificandi in phase-log, inventa "
     "codicis in worklog, MEMORY.md = reflexus solum. Via frigida "
-    "(residente absente): ./gesta/frigida.sh "
+    "(residente absente): ./gesta/frigida.sh. renovare {} = "
+    "residentem stalum renovat post CAUTIONEM (aedificatio probata "
+    "ANTE; defectus = residens vivus; recens = nihil agit). "
     "CONTRACTUS CORRESPONDENTIS (mundi scriptorum - forum): "
     "salutatio NOVA -> acta {ab_lecto} in calefactione; LECTUM "
     "EST PROMISSUM - responde quod aperis, opera in tabulam "
@@ -309,6 +313,15 @@ structura Tabularium {
     Xar*            citationes;      /* CitatioOrdo (valore) */
     /* vigilia (lib/vigilia, K2.1): disci + fontium; glutinosa */
     Vigilia*        vigilia;
+    /* renovatio sui (01KYQ4T5EE, exemplar legati): renovare
+     * probatum -> stdio: currere post responsum effusum launcherum
+     * exsequitur (exec - PID/fistulae manent); daemon
+     * (renovatio_exitus): principale post connexionem clausam
+     * exit - start-if-absent recentem gignit */
+    constans character* via_renovatoris;   /* cfg aut NIHIL */
+    b32             renovatio_exitus;
+    b32             renovandum;
+    constans character* via_renovatoris_parata;
 };
 
 /* ==================================================
@@ -4061,6 +4074,157 @@ _tab_tacere (Tabularium* t, Piscina* pn, JsonValor* id,
     }
 }
 
+/* renovare: residentem stalum per launcherum renovare (01KYQ4T5EE,
+ * exemplar legati _legati_renovare). Explorator praevius =
+ * launcher -struere ut infans (exec/exitus revocari non possunt -
+ * aedificatio ANTE probatur; defectus residentem vivum stalumque
+ * relinquit; linea prima effusionis = signum novum). Modus stdio:
+ * exec in currere post responsum effusum; modus daemon
+ * (renovatio_exitus): exitus mundus post connexionem clausam -
+ * petitio proxima per start-if-absent fori recentem gignit. */
+interior vacuum
+_tab_renovare (Tabularium* t, Piscina* pn, JsonValor* id,
+    FILE* effusio)
+{
+    VigiliaStatus status = vigilia_inspicere(t->vigilia, pn);
+    constans character* via;
+
+    si (status == VIGILIA_RECENS)
+    {
+        ChordaAedificator* aed = chorda_aedificator_creare(pn,
+            (memoriae_index)CCLVI);
+        constans character* breve = vigilia_signum_breve(
+            t->vigilia);
+
+        chorda_aedificator_appendere_literis(aed,
+            "iam recens (signum ");
+        chorda_aedificator_appendere_literis(aed,
+            breve[ZEPHYRUM] != '\0' ? breve : "0");
+        chorda_aedificator_appendere_literis(aed,
+            ") - nihil agendum");
+        _textum_respondere(t, pn, effusio, id,
+            chorda_aedificator_finire(aed), FALSUM);
+        redde;
+    }
+
+    /* via renovatoris: cfg (probationes stipulam dant) aut
+     * launcher canonicus per modum; perennis - exec post pn */
+    si (t->via_renovatoris != NIHIL)
+    {
+        via = t->via_renovatoris;
+    }
+    alioquin
+    {
+        constans character* cauda = t->renovatio_exitus
+            ? "/gesta/tabulariumd.sh" : "/gesta/tabularium.sh";
+        memoriae_index m_radix = strlen(t->radix);
+        memoriae_index m_cauda = strlen(cauda);
+        character* d = (character*)piscina_allocare(t->piscina,
+            m_radix + m_cauda + I);
+
+        si (d == NIHIL)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("memoria deficit"), VERUM);
+            redde;
+        }
+        memcpy(d, t->radix, m_radix);
+        memcpy(d + m_radix, cauda, m_cauda + I);
+        via = d;
+    }
+
+    {
+        constans character* argumenta[III];
+        ProcessusResultus r;
+
+        argumenta[ZEPHYRUM] = via;
+        argumenta[I] = "-struere";
+        argumenta[II] = NIHIL;
+        r = processus_exsequi(argumenta, 120000, pn);
+        si (!r.successus || r.codex_exitus != ZEPHYRUM)
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                (memoriae_index)2048);
+
+            chorda_aedificator_appendere_literis(aed,
+                "renovatio RECUSATA - explorator praevius fractus"
+                " (");
+            si (!r.successus)
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    processus_error_nomen(r.error));
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    "exitus ");
+                chorda_aedificator_appendere_i32(aed,
+                    r.codex_exitus);
+            }
+            chorda_aedificator_appendere_literis(aed,
+                "); residens vivus stalusque manet");
+            si (r.erratum.mensura > ZEPHYRUM)
+            {
+                chorda cauda_er = r.erratum;
+
+                si (cauda_er.mensura > 800)
+                {
+                    cauda_er.datum += cauda_er.mensura - 800;
+                    cauda_er.mensura = 800;
+                }
+                chorda_aedificator_appendere_literis(aed,
+                    "\n--- erratum aedificationis (cauda) ---\n");
+                chorda_aedificator_appendere_chorda(aed, cauda_er);
+            }
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                (memoriae_index)DXII);
+            chorda signum_novum = r.effusio;
+            i32 i;
+
+            per (i = ZEPHYRUM; i < signum_novum.mensura; i++)
+            {
+                si (signum_novum.datum[i] == '\n')
+                {
+                    signum_novum.mensura = i;
+                    frange;
+                }
+            }
+            si (signum_novum.mensura > LXIV)
+            {
+                signum_novum.mensura = LXIV;
+            }
+            chorda_aedificator_appendere_literis(aed,
+                "renovatio parata (causa: ");
+            chorda_aedificator_appendere_literis(aed,
+                vigilia_causa(t->vigilia));
+            chorda_aedificator_appendere_literis(aed,
+                "; signum novum ");
+            chorda_aedificator_appendere_chorda(aed, signum_novum);
+            si (t->renovatio_exitus)
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    ") - post hoc responsum exeo; petitio proxima"
+                    " daemonem recentem gignet (start-if-absent)");
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    ") - post hoc responsum me transformo; petitio"
+                    " proxima residentem novum inveniet");
+            }
+            t->via_renovatoris_parata = via;
+            t->renovandum = VERUM;
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+        }
+    }
+}
+
 interior vacuum
 _tab_census (Tabularium* t, Piscina* pn, JsonValor* id,
     FILE* effusio)
@@ -5619,6 +5783,15 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         " exhausto, quiete 300 s sine petitionibus, commissione"
         " git, causa staleness nova.",
         ARG_TACERE, I));
+    json_tabulatum_addere(instrumenta, _instrumentum(pn, "renovare",
+        "Residentem stalum renovare (post CAUTIONEM VERIFICATAM"
+        " voca): launcher ut explorator praevius agitur -"
+        " aedificatio probata ANTE, defectus residentem vivum"
+        " relinquit; stdio: residens se per launcherum transformat"
+        " (PID/fistula eadem, petitio proxima recentem invenit);"
+        " daemon: exitus mundus, petitio proxima recentem gignit."
+        " Recens = nihil agit.",
+        NIHIL, ZEPHYRUM));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "agere",
         "Actionem exsequi (porta obstat, effectus atomice - fascis"
         " unus) aut processum incipere (instantia definitionem"
@@ -5871,6 +6044,10 @@ _toolscall_tractare (Tabularium* t, Piscina* pn, JsonValor* id,
     {
         _tab_tacere(t, pn, id, argumenta, effusio);
     }
+    alioquin si (_chorda_est(titulus, "renovare"))
+    {
+        _tab_renovare(t, pn, id, effusio);
+    }
     alioquin si (_chorda_est(titulus, "agere"))
     {
         _tab_agere(t, pn, id, argumenta, effusio);
@@ -5998,6 +6175,10 @@ tabularium_creare (Piscina* piscina,
         vc.via_manifesti = cfg->via_manifesti;
         t->vigilia = vigilia_creare(piscina, &vc);
     }
+    /* renovatio sui (renovandum/parata memset-zephyrata) */
+    t->via_renovatoris = cfg->via_renovatoris != NIHIL
+        ? _litterae(piscina, _ch(cfg->via_renovatoris)) : NIHIL;
+    t->renovatio_exitus = cfg->renovatio_exitus;
     redde t;
 }
 
@@ -6020,6 +6201,26 @@ tabularium_currere (constans TabulariumConfiguratio* cfg,
         piscina_destruere(piscina);
         redde I;
     }
+    /* introitus SINE bufferis (exemplar legati): exec sui
+     * (renovare) octetos in buffro FILE* userspace perderet -
+     * octeti in fistula NUCLEI exec supersunt, lecti in buffrum
+     * stdio non. Petitiones MCP parvae - pretium nullius momenti. */
+    (vacuum)setvbuf(intra, NIHIL, _IONBF, ZEPHYRUM);
+    si (cfg->renatus)
+    {
+        /* exec sui perfectus: cliens initialize NON remittit -
+         * initium synthetica sponte; defectus = initiatum FALSUM,
+         * errores honesti, reconnect sanat */
+        si (tabularium_se_initiare(t))
+        {
+            fprintf(stderr, "tabularium: renatus (signum %s)\n",
+                vigilia_signum_breve(t->vigilia));
+        }
+        alioquin
+        {
+            fprintf(stderr, "tabularium: renatus fractus\n");
+        }
+    }
     per (;;)
     {
         Piscina* pn = piscina_generare_dynamicum(
@@ -6040,6 +6241,27 @@ tabularium_currere (constans TabulariumConfiguratio* cfg,
         }
         (vacuum)tabularium_tractare(t, pn, corpus, extra);
         piscina_destruere(pn);
+        si (t->renovandum)
+        {
+            /* responsum effusum, piscina nuntii destructa -
+             * punctum tutum: fimus launcher (aedificatio iam
+             * probata), binarium recens exsequitur. PID eadem,
+             * fistulae manent; -renatus = initium sine
+             * initialize. */
+            constans character* argumenta[IV];
+
+            argumenta[ZEPHYRUM] = t->via_renovatoris_parata;
+            argumenta[I] = "-mcp";
+            argumenta[II] = "-renatus";
+            argumenta[III] = NIHIL;
+            (vacuum)fflush(extra);
+            (vacuum)processus_transformare(argumenta);
+            /* huc solum defectu exec - vivere pergimus, stali */
+            fprintf(stderr, "tabularium: transformatio fracta"
+                " (%s)\n", argumenta[ZEPHYRUM] != NIHIL
+                    ? argumenta[ZEPHYRUM] : "?");
+            t->renovandum = FALSUM;
+        }
     }
     si (t->mundus != NIHIL)
     {
@@ -6047,4 +6269,51 @@ tabularium_currere (constans TabulariumConfiguratio* cfg,
     }
     piscina_destruere(piscina);
     redde exitus;
+}
+
+/* initiatio synthetica per tractare - machina intacta manet
+ * (responsum in tmpfile captum; "result" in primis bytes = bene).
+ * Communis daemoni (praeinitiatio) et renatui stdio. */
+b32
+tabularium_se_initiare (Tabularium* t)
+{
+    Piscina* pn;
+    FILE* effusio;
+    b32 bene = FALSUM;
+
+    si (t == NIHIL)
+    {
+        redde FALSUM;
+    }
+    pn = piscina_generare_dynamicum("tabularium_init",
+        LXIV * 1024);
+    si (pn == NIHIL)
+    {
+        redde FALSUM;
+    }
+    effusio = tmpfile();
+    si (effusio != NIHIL)
+    {
+        character linea[DXII];
+        chorda corpus = chorda_ex_literis(
+            "{\"jsonrpc\":\"2.0\",\"id\":0,\"method\":"
+            "\"initialize\",\"params\":{}}", pn);
+
+        (vacuum)tabularium_tractare(t, pn, corpus, effusio);
+        rewind(effusio);
+        si (fgets(linea, (integer)magnitudo(linea), effusio)
+            != NIHIL && strstr(linea, "\"result\"") != NIHIL)
+        {
+            bene = VERUM;
+        }
+        fclose(effusio);
+    }
+    piscina_destruere(pn);
+    redde bene;
+}
+
+b32
+tabularium_renovandum (constans Tabularium* t)
+{
+    redde (t != NIHIL && t->renovandum) ? VERUM : FALSUM;
 }

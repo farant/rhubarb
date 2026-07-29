@@ -117,8 +117,10 @@ MANIFEST="$BUILD_DIR/tabulariumd.vigilia"
     fi
 } > "$MANIFEST" 2>/dev/null
 
-# -struere: aedifica et exi (semen fumi + praestructio)
+# -struere: aedifica et exi (semen fumi + praestructio + explorator
+# renovationis; linea prima stdout = signum novum)
 if [ "${1:-}" = "-struere" ]; then
+    shasum -a 256 "$BIN" 2>/dev/null | cut -c1-64
     exit 0
 fi
 

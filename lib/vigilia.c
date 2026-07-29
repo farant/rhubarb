@@ -172,7 +172,7 @@ _figere (Vigilia* v, VigiliaStatus status,
     v->status = status;
     v->causa = _litterae_copiare(v->piscina, causa);
     buf = (character*)piscina_allocare(v->piscina,
-        m + (memoriae_index)CXXVIII);
+        m + (memoriae_index)CXCII);
     si (buf == NIHIL)
     {
         v->cautio = "CAUTIO VIGILIAE: residens obsoletus - /mcp"
@@ -182,13 +182,14 @@ _figere (Vigilia* v, VigiliaStatus status,
     si (status == VIGILIA_BINARIUM_NOVIUS)
     {
         sprintf(buf, "CAUTIO VIGILIAE: binarium in disco novius"
-            " me - /mcp reconnect residentem recentem capiet");
+            " me - instrumentum renovare voca (aut /mcp"
+            " reconnect)");
     }
     alioquin
     {
         sprintf(buf, "CAUTIO VIGILIAE: fontes me superant (%s"
-            " recentior binario) - reaedificatio + /mcp"
-            " reconnect", causa);
+            " recentior binario) - instrumentum renovare voca"
+            " (aut reaedificatio + /mcp reconnect)", causa);
     }
     v->cautio = buf;
 }

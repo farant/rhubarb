@@ -51,6 +51,21 @@ nomen structura {
     constans character* signum;        /* sigillum hex (64) ad ortum */
     constans character* via_binarii;   /* vigilia disci */
     constans character* via_manifesti; /* vigilia fontium */
+    /* renovatio sui (01KYQ4T5EE, exemplar legati): instrumentum
+     * renovare launcherum ut exploratorem praevium agit
+     * (-struere), deinde residens se transformat (stdio: exec per
+     * launcherum, PID/fistulae manent) aut exit (daemon: petitio
+     * proxima per start-if-absent recentem gignit). CAVE: struct
+     * sine memset construitur - omnis sedes constructionis hos
+     * campos ponere debet. */
+    constans character* via_renovatoris; /* NIHIL = derivata ex
+                                        * radice per modum */
+    b32                 renovatio_exitus; /* VERUM = daemon: post
+                                        * responsum exitus mundus
+                                        * (exec nullus) */
+    b32                 renatus;       /* post exec sui: initiatio
+                                        * synthetica sponte (cliens
+                                        * initialize non remittit) */
 } TabulariumConfiguratio;
 
 nomen structura Tabularium Tabularium;
@@ -79,5 +94,15 @@ tabularium_currere (
     constans TabulariumConfiguratio* cfg,
     FILE*                            intra,
     FILE*                            extra);
+
+/* initiatio synthetica per tractare - machina intacta (responsum
+ * in tmpfile captum); daemon et renatus stdio eadem surgunt */
+b32
+tabularium_se_initiare (Tabularium* tabularium);
+
+/* renovatio petita est? (post tractare consulendum: stdio = exec
+ * in currere; daemon = exitus post connexionem clausam) */
+b32
+tabularium_renovandum (constans Tabularium* tabularium);
 
 #endif /* TABULARIUM_H */

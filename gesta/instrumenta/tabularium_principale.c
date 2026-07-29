@@ -13,6 +13,7 @@ s32 principale (integer argc, character** argv)
     constans character* signum = NIHIL;
     constans character* via_binarii = NIHIL;
     constans character* via_manifesti = NIHIL;
+    b32 renatus = FALSUM;
     integer k;
 
     per (k = I; k < argc; k++)
@@ -21,6 +22,10 @@ s32 principale (integer argc, character** argv)
         {
             radix = argv[k + I];
             k++;
+        }
+        alioquin si (strcmp(argv[k], "-renatus") == ZEPHYRUM)
+        {
+            renatus = VERUM;
         }
         alioquin si (strcmp(argv[k], "-signum") == ZEPHYRUM
             && k + I < argc)
@@ -53,5 +58,8 @@ s32 principale (integer argc, character** argv)
     cfg.signum = signum;
     cfg.via_binarii = via_binarii;
     cfg.via_manifesti = via_manifesti;
+    cfg.via_renovatoris = NIHIL;   /* derivata: radix + launcher */
+    cfg.renovatio_exitus = FALSUM; /* stdio: exec, non exitus */
+    cfg.renatus = renatus;
     redde tabularium_currere(&cfg, stdin, stdout);
 }

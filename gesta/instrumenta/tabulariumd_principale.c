@@ -26,47 +26,13 @@
 
 #define TABULARIUMD_PORTUS_ORDINARIUS 8753
 
-interior b32 _se_initiare (Tabularium* t);
 interior vacuum _connexionem_servire (Tabularium* t, FILE* intra,
     FILE* extra);
 
-/* initiatio synthetica per tractare - machina intacta manet.
- * Responsum in tmpfile captum; "result" in primis bytes = bene */
-interior b32
-_se_initiare (Tabularium* t)
-{
-    Piscina* pn = piscina_generare_dynamicum("tabulariumd_init",
-        LXIV * 1024);
-    FILE* effusio;
-    b32 bene = FALSUM;
-
-    si (pn == NIHIL)
-    {
-        redde FALSUM;
-    }
-    effusio = tmpfile();
-    si (effusio != NIHIL)
-    {
-        character linea[DXII];
-        chorda corpus = chorda_ex_literis(
-            "{\"jsonrpc\":\"2.0\",\"id\":0,\"method\":"
-            "\"initialize\",\"params\":{}}", pn);
-
-        (vacuum)tabularium_tractare(t, pn, corpus, effusio);
-        rewind(effusio);
-        si (fgets(linea, (integer)magnitudo(linea), effusio)
-            != NIHIL && strstr(linea, "\"result\"") != NIHIL)
-        {
-            bene = VERUM;
-        }
-        fclose(effusio);
-    }
-    piscina_destruere(pn);
-    redde bene;
-}
-
 /* ansa per-lineam ad EOF - exemplar tabularium_currere (pn recens
- * per nuntium); tabellarius fluit post scriptionem quamque */
+ * per nuntium); tabellarius fluit post scriptionem quamque.
+ * Renovatio petita -> connexio finita (responsum iam effusum) -
+ * principale exit post clausuram. */
 interior vacuum
 _connexionem_servire (Tabularium* t, FILE* intra, FILE* extra)
 {
@@ -89,6 +55,11 @@ _connexionem_servire (Tabularium* t, FILE* intra, FILE* extra)
         }
         (vacuum)tabularium_tractare(t, pn, corpus, extra);
         piscina_destruere(pn);
+        si (tabularium_renovandum(t))
+        {
+            (vacuum)fflush(extra);
+            frange;
+        }
     }
 }
 
@@ -162,6 +133,10 @@ s32 principale (integer argc, character** argv)
     cfg.signum = signum;
     cfg.via_binarii = via_binarii;
     cfg.via_manifesti = via_manifesti;
+    cfg.via_renovatoris = NIHIL;  /* derivata: radix + launcher */
+    cfg.renovatio_exitus = VERUM; /* daemon: exitus post responsum
+                                   * - start-if-absent respawnat */
+    cfg.renatus = FALSUM;
 
     piscina = piscina_generare_dynamicum("tabulariumd", 268435456);
     si (piscina == NIHIL)
@@ -175,7 +150,7 @@ s32 principale (integer argc, character** argv)
         fprintf(stderr, "tabulariumd: creatio fracta\n");
         redde I;
     }
-    si (!_se_initiare(t))
+    si (!tabularium_se_initiare(t))
     {
         fprintf(stderr, "tabulariumd: initiatio fracta (scrinium"
             " %s, annales %s)\n", via_scrinii, via_annalium);
@@ -250,6 +225,16 @@ s32 principale (integer argc, character** argv)
         }
         tcp_claudere(rc.connexio);
         piscina_destruere(pc);
+        si (tabularium_renovandum(t))
+        {
+            /* renovatio: aedificatio iam probata (explorator
+             * praevius in tractatore); exitus mundus - petitio
+             * proxima per start-if-absent fori daemonem recentem
+             * gignit (launcher build-before-exec) */
+            fprintf(stderr, "tabulariumd: renovatio - exeo;"
+                " respawn per start-if-absent\n");
+            redde ZEPHYRUM;
+        }
     }
     redde I;
 }
