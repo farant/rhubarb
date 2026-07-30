@@ -44,12 +44,17 @@ similitudo_optima (
     SimilitudoFructus* fructus,
     i32                maxima);
 
-/* Ut optima, sed quaestione a dextra decurtata donec candidati
- * appareant (pavimentum III codicilli - quaestio brevior numquam
- * temptatur): nomen totum male coniectum subsequentia nullius est,
- * cauda substituta quaestionem totam necat - quod homo in fzf
- * delendo facit. Promota regula duorum 2026-07-30 (ansae manu
- * scriptae in emitte + nexus; legatus tertius consumptor). */
+/* Ut optima, sed punctum candidati = OPTIMUM trans praefixa
+ * quaestionis (pavimentum III codicilli; quaestio brevior III
+ * numquam temptatur): nomen totum male coniectum subsequentia
+ * nullius est, cauda substituta quaestionem totam necat - quod homo
+ * in fzf delendo facit. FUSIO trans gradus (2026-07-30): gradus non
+ * est ordo durus - congruentia caudae pretio negativo se ipsa
+ * demittit, ergo praefixum brevius MUNDUM praefixo longiori sordido
+ * praestat (poenae casus/hiatus sufficiunt; poena decurtationis non
+ * opus - mensuratum manu: legatus_currere@8=80 > macro@9=67).
+ * Ambulatio UNA per candidatum - pretium = optima. Promota regula
+ * duorum 2026-07-30 (emitte + nexus + legatus). */
 i32
 similitudo_optima_decurtata (
     chorda             quaestio,

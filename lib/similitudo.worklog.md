@@ -43,3 +43,33 @@ state; the by-value chorda is shrunk locally). All three consumers
 migrated; behavior byte-identical to the hand loops (same floor,
 same first-hit-wins). Note the floor also means a query SHORTER than
 III is never attempted at all — pinned in probatio_similitudo.
+
+## 2026-07-30 (later) — cross-level merge: the level is not a tier
+
+The promoted decurtata's greedy stop-at-first-productive-level had a
+measured flaw within hours: 'legatus_tractare' suggested LEGATUS_*
+macros (matching 'legatus_t', 9 chars, case-mismatched with gaps) and
+never reached legatus_currere (matching 'legatus_', 8 chars, clean).
+One extra matched char of the guess's WRONG TAIL trumped every
+quality signal — but the tail is the least trustworthy part of a
+guess; that's why we shrink it.
+
+Hand-measurement against the weights settled the design before any
+code: currere@8 = 80, macro@9 = 67, macro@8 = 73. So (1) raw merge
+suffices — case premiums + gap penalties already rank clean-short
+above sloppy-long, no discard-penalty term needed; (2) a net-negative
+tail match demotes ITSELF (67 < 73).
+
+THE COLLAPSE: cumulative score at consumption k in one greedy walk
+== punctare(prefix_k) exactly (deterministic walk; candidate chars
+after the last consumption never score). So "merge N levels" became
+"one walk per candidate, running max past the floor" — decurtata now
+costs exactly what optima costs, and is FASTER than the old
+loop-until-hit on misses.
+
+Structure: _ambulare = the ONE walk body (punctare is now a wrapper;
+the two scorers can never drift); _inserere = optima's insertion
+extracted, shared. Hand-computed 80/73 pinned in probatio (with the
+macro competitors IN the candidate pool — a natal pin without the
+competitors would have passed before the fix too). Emitte bonus: the
+merged pool gives 3 ranked suggestions where the level-stop gave 1.

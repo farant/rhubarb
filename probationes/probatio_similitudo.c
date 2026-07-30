@@ -184,10 +184,11 @@ s32 principale (vacuum)
 
     /* ========================================================
      * PROBARE: optima_decurtata - cauda substituta sanata
+     * (fusio trans gradus: macra competitoria in piscina!)
      * ======================================================== */
     {
-        chorda candidati[III];
-        SimilitudoFructus fructus[III];
+        chorda candidati[V];
+        SimilitudoFructus fructus[V];
         i32 n;
 
         imprimere("\n--- Probans optima_decurtata ---\n");
@@ -198,38 +199,54 @@ s32 principale (vacuum)
             "machinula_currere", piscina);
         candidati[2] = chorda_ex_literis(
             "piscina_vacare", piscina);
+        candidati[3] = chorda_ex_literis(
+            "LEGATUS_RELATIONES_MAXIMAE", piscina);
+        candidati[4] = chorda_ex_literis(
+            "LEGATUS_PLAGULAE_VOCANTIUM_MAXIMAE", piscina);
 
         /* casus natalis (excussio 2026-07-30): praefixum verum,
-         * verbum falsum - subsequentia tota necatur, decurtatio
-         * ad 'legatus_' candidatum verum invenit */
+         * verbum falsum - subsequentia tota necatur. Fusio trans
+         * gradus: macra ad 'legatus_t' (9) congruunt sed sordide
+         * (casus discors, hiatus), legatus_currere ad 'legatus_'
+         * (8) MUNDE - punctum optimum trans praefixa functionem
+         * veram primam ponit. Puncta manu computata ex ponderibus:
+         * currere 17+7*9=80; macro praefixum 73 (cauda 't' pretio
+         * -6 se ipsa demittit: 67@9 < 73@8). */
         n = similitudo_optima(
             chorda_ex_literis("legatus_tractare", piscina),
-            candidati, III, fructus, III);
+            candidati, V, fructus, V);
         CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
         n = similitudo_optima_decurtata(
             chorda_ex_literis("legatus_tractare", piscina),
-            candidati, III, fructus, III);
-        CREDO_VERUM (n >= I);
+            candidati, V, fructus, V);
+        CREDO_AEQUALIS_I32 (n, III);
         CREDO_AEQUALIS_I32 (fructus[0].index, ZEPHYRUM);
+        CREDO_VERUM (fructus[0].punctum == 80);
+        /* macra paria (73) - brevius primum (_melior) */
+        CREDO_AEQUALIS_I32 (fructus[1].index, III);
+        CREDO_VERUM (fructus[1].punctum == 73);
+        CREDO_AEQUALIS_I32 (fructus[2].index, IV);
+        /* machinula_currere: 'leg' numquam congruit (consumpta II
+         * sub pavimento) - exclusa, non sordide inclusa */
 
         /* congruentia plena = optima ipsa (nulla decurtatio) */
         n = similitudo_optima_decurtata(
             chorda_ex_literis("piscina_vacare", piscina),
-            candidati, III, fructus, III);
+            candidati, V, fructus, V);
         CREDO_VERUM (n >= I);
         CREDO_AEQUALIS_I32 (fructus[0].index, II);
 
         /* pavimentum III: quaestio brevior numquam temptatur */
         n = similitudo_optima_decurtata(
             chorda_ex_literis("zz", piscina),
-            candidati, III, fructus, III);
+            candidati, V, fructus, V);
         CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
 
-        /* nihil simile omnino: decurtatio usque ad pavimentum,
-         * tum zephyrum honestum */
+        /* nihil simile omnino: nullum praefixum >= III congruit,
+         * zephyrum honestum */
         n = similitudo_optima_decurtata(
             chorda_ex_literis("qqqqqq", piscina),
-            candidati, III, fructus, III);
+            candidati, V, fructus, V);
         CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
     }
 

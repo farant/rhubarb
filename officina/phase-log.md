@@ -5029,3 +5029,71 @@ the arc's edits. asperitates = corpus 200-line cap cut
 _legati_symbolum (241 lines) mid-function — Read covered; the
 greedy-level find above. desiderata = nulla nova (meter + contextus
 already queued on 01KYR4AS0N).
+
+## SIMILITUDO FUSIO TRANS GRADUS: INTENTIO (2026-07-30)
+
+Follow-on to the MINUTIAE find: decurtata's greedy stop-at-first-
+productive-level makes 'legatus_tractare' suggest LEGATUS_* macros
+(match at 'legatus_t', 9 chars) and never reach legatus_currere
+(matches only at 'legatus_', 8). The level is a hard tier — one
+extra matched char of the guess's WRONG TAIL trumps every quality
+signal the scorer knows.
+
+HAND-MEASURED against the actual weights (LIMITIS 16 / CONTINUI 8 /
+CASUS 1 / HIATUS 3+1): legatus_currere@8 = 80; the macro@9 = 67;
+the macro@8 = 73. Two conclusions: (1) RAW MERGE SUFFICES — no
+discard-penalty term; case premiums + gap penalties already rank
+the clean short match above the sloppy long one. (2) A net-negative
+tail match demotes ITSELF (67 < 73) — max-over-prefixes absorbs the
+penalty concept for free.
+
+THE COLLAPSE: cumulative score at consumption k in ONE greedy walk
+== punctare(prefix_k) EXACTLY (deterministic walk; trailing
+candidate chars never score). So the design is not "merge N levels"
+but "one walk per candidate, running max past the floor (III)".
+Decurtata drops from levels×optima to EXACTLY optima's cost. Purity
+intact, signature unchanged, three consumers upgrade for free.
+
+Shape: extract the walk into _ambulare (one body — punctare and the
+prefix-max scorer must never drift); extract optima's insertion into
+_inserere (shared); decurtata = optima-shaped loop over the
+prefix-max score, own NULL/maxima/floor guards.
+
+BARS: existing decurtata pins hold (full-match, piscina rescue,
+floor, no-match); NEW natal pin with macro COMPETITORS in the pool —
+'legatus_tractare' must rank legatus_currere FIRST; hand-computed
+scores asserted where cheap. MCP pins id 7/20 unchanged. Suites root
++ officina + silva; live re-check of legatus_tractare through the
+renewed resident (expect legatus_currere first).
+
+## SIMILITUDO FUSIO TRANS GRADUS: RELATIO (2026-07-30)
+
+Shipped exactly as INTENTIO'd — the hand-measurement made the code a
+transcription. _ambulare = the one walk body (punctare now a wrapper;
+the scorers cannot drift); _inserere = the shared insertion;
+decurtata = optima-shaped loop over max-over-prefixes. No penalty
+term (measured unnecessary); no allocation; signature unchanged;
+cost dropped from levels×optima to exactly optima.
+
+BARS: probatio_similitudo green FIRST RUN including the
+hand-computed pins (80/73 exact — with the macro competitors IN the
+pool, without which the natal pin would have passed pre-fix too);
+officina legatus OMNIA (MCP typo pins id 7/20 hold under merge
+semantics); root 108/108 PLENUS; silva suite green.
+
+LIVE, all three consumers: emitte 'dynamicvm' now gives THREE ranked
+suggestions where the level-stop gave one; nexus 'legatus_tractare'
+→ legatus_currere FIRST, macros demoted; the resident renewed itself
+and answered the morning's EXACT warmup whiff with legatus_currere
+first — the full circle in one day: warmup whiff → nit → promotion
+→ greedy-level find → merge → the same query answers right.
+
+Instrumenta (debrief): adhibita = Read (whole scorer — the arc hung
+on reading 20 lines of weights), suites -machina from files, both
+shell twins live, renovare (legati mid-arc). fructus = HAND-COMPUTING
+the natal case against the real constants BEFORE writing code
+collapsed the design (no penalty term, no level loop — one walk) and
+turned implementation into transcription; the 80/73 pins then
+verified the arithmetic. asperitates = zsh '===' equals-expansion
+bit AGAIN (known law) — res 01KYRCJ340 born so the ictus has a home.
+desiderata = nulla nova.
