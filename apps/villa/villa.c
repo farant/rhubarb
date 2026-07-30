@@ -53,6 +53,10 @@ externus constans CapsulaEmbed capsula_speculi_villa;
 
 #define VILLA_PORTUS_ORDINARIUS 8753
 #define VILLA_TICTUS_MS         CC
+/* fumus faciei: CCC ticti x ~CC ms = ~LX s. Catena villae (status
+ * -> index -> detalia -> actio) longior quam fori, ergo budgetum
+ * maius quam CL fori. */
+#define VILLA_FUMUS_GRESSUS_MAXIMI 300
 
 nomen structura {
 	ClientTabularii   cliens;
@@ -62,6 +66,13 @@ nomen structura {
 	chorda            alias;       /* praetermissio (-alias, fumus) */
 	chorda            clavis;
 	i32               cycli;
+
+	/* fumus faciei (-fumus-facies): fenestra vera, IS choreographiam
+	 * agit et fumus_perfectus vocat; C verdictum exspectat */
+	b32               fumus_facies;
+	b32               fumus_perfectus_est;
+	b32               fumus_bene;
+	character         fumus_nuntius[CCLVI];
 } VillaStatus;
 
 interior chorda
@@ -472,6 +483,50 @@ _villa_actio (JsonValor* argumenta, Piscina* piscina,
 	redde r;
 }
 
+/* fumus_modus {} -> {facies} - IS choreographiam fumi rogaverit */
+interior JsonValor*
+_fumus_modus (JsonValor* argumenta, Piscina* piscina,
+	vacuum* datum, chorda* culpa)
+{
+	VillaStatus* v = (VillaStatus*)datum;
+	JsonValor*   r = json_objectum_creare(piscina);
+
+	(vacuum)argumenta;
+	(vacuum)culpa;
+	_pone_b(r, "facies", v->fumus_facies, piscina);
+	redde r;
+}
+
+/* fumus_perfectus {bene, nuntius?} - IS choreographiam finivit;
+ * verdictum (etiam malum) statim refertur ne budgetum exspectemus */
+interior JsonValor*
+_fumus_perfectus (JsonValor* argumenta, Piscina* piscina,
+	vacuum* datum, chorda* culpa)
+{
+	VillaStatus* v = (VillaStatus*)datum;
+	JsonValor*   r = json_objectum_creare(piscina);
+	JsonValor*   b = (argumenta != NIHIL)
+		? json_objectum_capere(argumenta, "bene") : NIHIL;
+	chorda       n = _arg_ch(argumenta, "nuntius");
+	memoriae_index m;
+
+	(vacuum)culpa;
+	v->fumus_perfectus_est = VERUM;
+	v->fumus_bene = (b32)(b != NIHIL && json_ad_boolean(b));
+	m = (memoriae_index)n.mensura;
+	si (m > (memoriae_index)(CCLVI - I))
+	{
+		m = (memoriae_index)(CCLVI - I);
+	}
+	si (m > ZEPHYRUM)
+	{
+		memcpy(v->fumus_nuntius, n.datum, m);
+	}
+	v->fumus_nuntius[m] = '\0';
+	_pone_b(r, "acceptum", VERUM, piscina);
+	redde r;
+}
+
 /* villa_abrumpere {clavis?} - actionem currentem desistere */
 interior JsonValor*
 _villa_abrumpere (JsonValor* argumenta, Piscina* piscina,
@@ -540,6 +595,10 @@ s32 principale (integer argc, character** argv)
 		alioquin si (strcmp(argv[k], "-fumus") == ZEPHYRUM)
 		{
 			fumus = VERUM;
+		}
+		alioquin si (strcmp(argv[k], "-fumus-facies") == ZEPHYRUM)
+		{
+			villa.fumus_facies = VERUM;
 		}
 	}
 
@@ -682,12 +741,17 @@ s32 principale (integer argc, character** argv)
 		_villa_actio, &villa);
 	(vacuum)internuntius_praebere(inx, "villa_abrumpere",
 		_villa_abrumpere, &villa);
+	(vacuum)internuntius_praebere(inx, "fumus_modus",
+		_fumus_modus, &villa);
+	(vacuum)internuntius_praebere(inx, "fumus_perfectus",
+		_fumus_perfectus, &villa);
 	(vacuum)internuntius_praebere(inx, "transmittere",
 		cliens_tabularii_transmittere, &villa.cliens);
 
 	{
 		Speculum* speculum = speculum_creare(piscina,
 			&capsula_speculi_villa, inx, vitrea_aestimator, vitrea);
+		i32 gressus_fumi = ZEPHYRUM;
 
 		si (speculum == NIHIL)
 		{
@@ -740,6 +804,26 @@ s32 principale (integer argc, character** argv)
 			{
 				villa.cycli++;
 			}
+			si (villa.fumus_facies)
+			{
+				si (villa.fumus_perfectus_est)
+				{
+					imprimere(villa.fumus_bene
+						? "FUMUS FACIEI PLENUS: %s\n"
+						: "FUMUS FACIEI FRACTUS: %s\n",
+						villa.fumus_nuntius);
+					fflush(stdout);
+					piscina_reficere(piscina_vocationis, nota);
+					frange;
+				}
+				gressus_fumi++;
+				si (gressus_fumi > (i32)VILLA_FUMUS_GRESSUS_MAXIMI)
+				{
+					imprimere("FUMUS FACIEI FRACTUS: tempus"
+						" excessum\n");
+					redde I;
+				}
+			}
 			piscina_reficere(piscina_vocationis, nota);
 		}
 	}
@@ -747,5 +831,9 @@ s32 principale (integer argc, character** argv)
 	fenestra_destruere(fenestra);
 	piscina_destruere(piscina_vocationis);
 	piscina_destruere(piscina);
+	si (villa.fumus_facies)
+	{
+		redde villa.fumus_bene ? ZEPHYRUM : I;
+	}
 	redde ZEPHYRUM;
 }

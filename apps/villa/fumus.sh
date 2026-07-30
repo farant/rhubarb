@@ -35,3 +35,16 @@ echo "$EXITUS" | grep -q "querelae=''" || echo "$EXITUS" | grep -q "querelae=''"
     || echo "  (nota: querelae praesentes - inspice supra)"
 
 echo "FUMUS PLENUS"
+
+# ---- crus alterum: FACIES (fenestra vera, choreographia IS) ----
+# Vexillo -sine-facie omittitur (pro machinis sine fenestris).
+if [ "${1:-}" != "-sine-facie" ]; then
+    echo "=== FUMUS FACIEI (fenestra vera, ~XV s) ==="
+    if bin/villa -fumus-facies 2>&1 | tee /dev/stderr | \
+        grep -q "FUMUS FACIEI PLENUS"; then
+        echo "FUMUS FACIEI PLENUS confirmatum"
+    else
+        echo "FUMUS FACIEI FRACTUS"
+        exit 1
+    fi
+fi

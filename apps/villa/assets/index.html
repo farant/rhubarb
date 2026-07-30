@@ -157,6 +157,14 @@ textarea:focus { outline: none; border-color: var(--accentus); }
 
     <h2>servitia observata</h2>
     <div id="det-servitia"><p class="nota">nulla adhuc</p></div>
+    <!-- forma STATICA: servitium novum = ens mundi ligatum -->
+    <div class="forma" id="servitium-forma">
+      <input type="text" id="servitium-nomen" data-inter="verum"
+        placeholder="nomen (e.g. smaragda)">
+      <input type="text" id="servitium-unitas" data-inter="verum"
+        placeholder="unitas (e.g. smaragda.service)">
+      <button id="servitium-addere">servitium observare</button>
+    </div>
 
     <h2>situs nginx</h2>
     <div id="det-situs"><p class="nota">nulli adhuc</p></div>
@@ -214,6 +222,7 @@ var INTERVALLUM_MS = 30000;   /* probatio automatica per servum */
 
 /* status app - JS indicem ET horaria possidet (decisum V4b) */
 var servi = [];          /* entia 'servus' ex mundo */
+var ministeria = [];     /* entia 'servitium' ex mundo */
 var sedes = {};          /* clavis -> summarium ex villa_status */
 var horologia = {};      /* clavis -> { probata_ms, currebat } */
 var visus = 'index';     /* index | detalia */
@@ -320,7 +329,25 @@ function indicem_reddere () {
 function servos_legere () {
   return mundus_legere({ genus: 'servus', quantum: '200' })
     .then(function (entia) { servi = entia || []; })
+    .then(function () {
+      return mundus_legere({ genus: 'servitium', quantum: '200' });
+    })
+    .then(function (entia) { ministeria = entia || []; })
     .catch(function () { /* mundus abesse potest - index vacuus */ });
+}
+
+/* unitates observatae servi: entia 'servitium' cum datum.servus =
+ * clavis (campus 'servus' evolutione generis additus 2026-07-30);
+ * vacuum = praetermissio C-latus (nginx.service) */
+function unitates_pro (clavis) {
+  var u = [];
+  var i, d;
+
+  for (i = 0; i < ministeria.length; i++) {
+    d = ministeria[i].datum || {};
+    if (d.servus === clavis && d.unitas) { u.push(d.unitas); }
+  }
+  return u;
 }
 
 /* ---------------- probationes: horaria JS ---------------- */
@@ -362,8 +389,13 @@ function probationes_movere () {
         Date.now() - hor.incepta_ms < INTERVALLUM_MS) { continue; }
     hor.incepta_ms = Date.now();
     hor.currebat = true;
-    vocare('villa_probare', { clavis: s.clavis, alias: s.alias })
-      .catch(function (e) { culpam_ostendere(String(e)); });
+    /* clavis 'unitates' SOLUM cum plena: tabulatum vacuum
+     * praetermissionem C-latus (nginx) deleret */
+    (function (arg, u) {
+      if (u.length) { arg.unitates = u; }
+      vocare('villa_probare', arg)
+        .catch(function (e) { culpam_ostendere(String(e)); });
+    })({ clavis: s.clavis, alias: s.alias }, unitates_pro(s.clavis));
   }
 }
 
@@ -380,8 +412,11 @@ function servum_aperire (clavis, alias, nomen, est_ens) {
   el('det-nomen').textContent = nomen;
   el('det-alias').textContent = alias || '';
   el('actio-fructus').innerHTML = '';
-  /* commentaria ad ens ligantur - sedes praetermissionis caret */
+  /* commentaria et servitia ad ens ligantur - sedes
+   * praetermissionis caret */
   el('commentarium-forma').classList.toggle('celatum',
+    !servus_apertus.est_ens);
+  el('servitium-forma').classList.toggle('celatum',
     !servus_apertus.est_ens);
   detalia_haurire();
   commentaria_haurire();
@@ -661,9 +696,13 @@ el('det-probare').addEventListener('click', function () {
 
   hor.incepta_ms = Date.now();
   hor.currebat = true;
-  vocare('villa_probare', {
-    clavis: servus_apertus.clavis, alias: servus_apertus.alias
-  }).catch(function (e) { culpam_ostendere(String(e)); });
+  (function (arg, u) {
+    if (u.length) { arg.unitates = u; }
+    vocare('villa_probare', arg)
+      .catch(function (e) { culpam_ostendere(String(e)); });
+  })({ clavis: servus_apertus.clavis,
+       alias: servus_apertus.alias },
+     unitates_pro(servus_apertus.clavis));
 });
 el('actio-agere').addEventListener('click', function () {
   var imperium = el('actio-imperium').value.trim();
@@ -684,8 +723,111 @@ el('unitates-vertere').addEventListener('click', function () {
 });
 el('commentarium-mittere').addEventListener('click',
   commentarium_mittere);
+el('servitium-addere').addEventListener('click', function () {
+  var nomen  = el('servitium-nomen').value.trim();
+  var unitas = el('servitium-unitas').value.trim();
 
-/* initium: index ex mundo + status + ansa */
+  if (!nomen || !unitas || !servus_apertus ||
+      !servus_apertus.est_ens) {
+    culpam_ostendere('nomen et unitas ambo necessaria');
+    return;
+  }
+  vocare('transmittere', { instrumentum: 'addere', argumenta: {
+    genus: 'servitium', titulus: nomen,
+    datum: JSON.stringify({ nomen_servitii: nomen, unitas: unitas,
+      servus: servus_apertus.clavis })
+  }}).then(function () {
+    el('servitium-nomen').value = '';
+    el('servitium-unitas').value = '';
+    return servos_legere();
+  }).then(function () {
+    /* probatio statim cum unitate nova */
+    el('det-probare').click();
+  }).catch(function (e) { culpam_ostendere(String(e)); });
+});
+
+/* ---------------- fumus faciei ----------------
+ * Choreographia contra stipitem: probatio praetermissionis ->
+ * index -> detalia (numeri stipitis noti: XXV/III/IV) -> actio
+ * -> fructus. Gradus anquisitione, budgetum proprium. */
+function fumus_finire (bene, nuntius) {
+  vocare('fumus_perfectus', { bene: !!bene, nuntius: nuntius || '' });
+}
+function fumus_currere () {
+  var passus = 0;
+  var conatus = 0;
+  var ansa = setInterval(function () {
+    var n, f;
+
+    conatus++;
+    if (conatus > 200) {
+      clearInterval(ansa);
+      fumus_finire(false, 'tempus excessum in passu ' + passus);
+      return;
+    }
+    try {
+      switch (passus) {
+      case 0:  /* probatio praetermissionis perfecta */
+        n = sedes[Object.keys(sedes)[0]];
+        if (!n || n.probatio_currit || n.iudicium === 'ignotus') {
+          return;
+        }
+        passus = 1;
+        return;
+      case 1:  /* ordo praetermissionis in indice - aperi */
+        n = document.querySelector(
+          '#index-ordines .servus-ordo[data-clavis="primus"]');
+        if (!n) { return; }
+        n.click();
+        passus = 2;
+        return;
+      case 2:  /* detalia reddita cum numeris stipitis */
+        if (!detalia_data) { return; }
+        if (document.querySelectorAll('#det-servitia tr').length
+            !== 4) {
+          clearInterval(ansa);
+          fumus_finire(false, 'servitia: ' +
+            document.querySelectorAll('#det-servitia tr').length +
+            ' ordines, IV exspectati');
+          return;
+        }
+        if (document.querySelectorAll('#det-situs tr').length
+            !== 5) {
+          clearInterval(ansa);
+          fumus_finire(false, 'situs: ordines falsi');
+          return;
+        }
+        if (document.querySelectorAll('#det-unitates tr').length
+            !== 26) {
+          clearInterval(ansa);
+          fumus_finire(false, 'unitates: ordines falsi');
+          return;
+        }
+        if (el('det-uptime').textContent === '—') {
+          clearInterval(ansa);
+          fumus_finire(false, 'vitalia vacua');
+          return;
+        }
+        actionem_incipere('uptime');
+        passus = 3;
+        return;
+      case 3:  /* fructus actionis in tabula */
+        f = el('actio-fructus').textContent;
+        if (f.indexOf('servitium restitutum') < 0) { return; }
+        if (f.indexOf('bene') < 0) { return; }
+        clearInterval(ansa);
+        fumus_finire(true,
+          'index -> detalia (XXV/III/IV) -> actio -> fructus');
+        return;
+      }
+    } catch (e) {
+      clearInterval(ansa);
+      fumus_finire(false, String(e));
+    }
+  }, 250);
+}
+
+/* initium: index ex mundo + status + ansa (+ fumus si rogatus) */
 servos_legere().then(function () {
   indicem_reddere();
   return statum_haurire();
@@ -693,6 +835,9 @@ servos_legere().then(function () {
   indicem_reddere();
   probationes_movere();
 }).catch(function (e) { culpam_ostendere(String(e)); });
+vocare('fumus_modus').then(function (r) {
+  if (r && r.facies) { fumus_currere(); }
+});
 setInterval(tictus, TICTUS_MS);
 </script>
 </body>

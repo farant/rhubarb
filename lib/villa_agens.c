@@ -873,6 +873,19 @@ villa_genera_seminare (VillaAgens* agens, chorda* causa)
 			"Nomen", "textus"));
 		json_tabulatum_addere(campi, _campus(pn, "unitas",
 			"Unitas", "textus"));
+		/* ligamen ad servum (relatio) - specificatio id semper
+		 * voluit, semen V4a id omisit; mundus vivus Franis per
+		 * mutationem definitionis 2026-07-30 aequatus est */
+		{
+			JsonValor* c = _campus(pn, "servus", "Servus",
+				"relatio");
+
+			json_objectum_ponere(c, "ad",
+				json_chorda_creare(pn, _ch("servus")));
+			json_objectum_ponere(c, "cardinalitas",
+				json_chorda_creare(pn, _ch("unum")));
+			json_tabulatum_addere(campi, c);
+		}
 		bene = _genus_seminare(agens, pn, "servitium", "Servitium",
 			campi, "nomen_servitii", causa);
 	}

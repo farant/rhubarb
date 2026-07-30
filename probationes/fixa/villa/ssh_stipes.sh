@@ -60,6 +60,18 @@ abscissum)
     ;;
 esac
 
+# Sub modis probationis, scriptum NON-probationis = imperium
+# liberum (fumus faciei probationem ET actionem uno cursu agit -
+# modus ambientis semel ponitur, dispectio in scripto ipso est)
+SCRIPTUM="${!#}"
+case "$SCRIPTUM" in
+*"s unitates"*) : ;;
+*)
+    echo "servitium restitutum"
+    exit 0
+    ;;
+esac
+
 sectio unitates "$FX/list_units.txt" 0
 sectio servitia "$FX/systemctl_show_activae.txt" 0
 
