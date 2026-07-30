@@ -1191,6 +1191,7 @@ _parser_creare_nodus(StmlParserContext* ctx, StmlNodusGenus genus)
     nodus->crudus = FALSUM;
     nodus->captio_directio = STML_CAPTIO_NIHIL;
     nodus->captio_numerus = ZEPHYRUM;
+    nodus->clausura_anonyma = FALSUM;
 
     redde nodus;
 }
@@ -1236,7 +1237,16 @@ _parser_legere_elementum(StmlParserContext* ctx)
     /* Verify close tag matches */
     si (ctx->current.genus == STML_TOKEN_CLAUDERE)
     {
-        si (!chorda_aequalis(ctx->current.valor, *titulus_ptr))
+        si (ctx->current.valor.mensura == ZEPHYRUM)
+        {
+            /* clausura anonyma </>: elementum apertum proximum
+             * claudit (recursio ipsa 'proximum' dat - elementum
+             * currens primum eam videt). Forma authoris in
+             * scriptore servatur. 01KYSPRF9R */
+            nodus->clausura_anonyma = VERUM;
+        }
+        alioquin si (!chorda_aequalis(ctx->current.valor,
+                *titulus_ptr))
         {
             ctx->status = STML_ERROR_TAG_IMPROPRIE;
             ctx->linea_erroris = ctx->current.linea;
@@ -3198,6 +3208,7 @@ stml_elementum_creare(
     nodus->crudus = FALSUM;
     nodus->captio_directio = STML_CAPTIO_NIHIL;
     nodus->captio_numerus = ZEPHYRUM;
+    nodus->clausura_anonyma = FALSUM;
 
     redde nodus;
 }
@@ -3861,7 +3872,7 @@ stml_scribere_ad_aedificator(
                     }
 
                     chorda_aedificator_appendere_literis(aedificator, "</");
-                    si (nodus->titulus)
+                    si (nodus->titulus && !nodus->clausura_anonyma)
                     {
                         chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
                     }

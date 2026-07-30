@@ -2369,6 +2369,24 @@ s32 principale (vacuum)
             "\"actor\":\"fran\"}}}");
         CREDO_VERUM (strstr(r, "creata") != NIHIL);
         CREDO_VERUM (strstr(r, "capturae:") == NIHIL);
+
+        /* clausura anonyma </> blocum claudit (01KYSPRF9R) -
+         * linea capturae POST eam extra blocum est (fuga quam
+         * accidens Franis paene fecit) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":813,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"articulus\","
+            "\"titulus\":\"clausura anonyma\",\"corpus\":"
+            "\"<ideas>\\n<# (> intra blocum\\n</>\\n"
+            "<# (> post clausuram\\n\",\"actor\":\"fran\"}}}");
+        CREDO_VERUM (strstr(r, "res novae 1 stampatae") != NIHIL);
+        _res_id_ex_responso(r, articulus_id);
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":814,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}",
+            articulus_id);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "<# (> post clausuram") != NIHIL);
     }
 
     /* XVI. renovatio sui (01KYQ4T5EE): explorator praevius =

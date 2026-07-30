@@ -2718,7 +2718,8 @@ _cap_blocum_aperit (chorda corpus, i32 initium, i32 finis,
     redde i >= finis;
 }
 
-/* '</nomen>' solum in linea, nomini aperto congruens */
+/* '</nomen>' solum in linea, nomini aperto congruens; aut
+ * clausura anonyma '</>' (01KYSPRF9R - blocum apertum claudit) */
 interior b32
 _cap_blocum_claudit (chorda corpus, i32 initium, i32 finis,
     chorda genus)
@@ -2735,18 +2736,25 @@ _cap_blocum_claudit (chorda corpus, i32 initium, i32 finis,
         redde FALSUM;
     }
     i += II;
-    si (i + genus.mensura > finis
-        || memcmp(corpus.datum + i, genus.datum,
-               (memoriae_index)genus.mensura) != ZEPHYRUM)
+    si (i < finis && corpus.datum[i] == (i8)'>')
     {
-        redde FALSUM;
+        i++;   /* </> anonyma */
     }
-    i += genus.mensura;
-    si (i >= finis || corpus.datum[i] != (i8)'>')
+    alioquin
     {
-        redde FALSUM;
+        si (i + genus.mensura > finis
+            || memcmp(corpus.datum + i, genus.datum,
+                   (memoriae_index)genus.mensura) != ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        i += genus.mensura;
+        si (i >= finis || corpus.datum[i] != (i8)'>')
+        {
+            redde FALSUM;
+        }
+        i++;
     }
-    i++;
     dum (i < finis && (_cap_spatium(corpus.datum[i])
         || corpus.datum[i] == (i8)'\r'))
     {

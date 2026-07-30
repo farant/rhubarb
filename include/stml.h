@@ -19,6 +19,9 @@
  * - Fragmenta capturantia: <#id (> / <# (> - fragmentum fratres
  *   sequentes capit (directio ANTE sola); saccharum <(> =
  *   fragmentum anonymum capturans, scriptor ad <# (> normalizat
+ * - Clausura anonyma: </> elementum apertum proximum claudit
+ *   (elementa sola - crudi et fragmenta clausuram expressam
+ *   tenent); forma authoris in scriptura SERVATUR (octetim)
  *
  * Proprietates:
  * - DOM-stylus arbor
@@ -123,6 +126,8 @@ nomen structura StmlNodus {
     b32                      crudus;          /* Raw content tag (! suffix) */
     StmlCaptioDirectio       captio_directio;
     i32                      captio_numerus;  /* Number of capture parens */
+    b32                      clausura_anonyma; /* Clausum per </> - scriptor
+                                                * formam authoris servat */
 
     /* Fragment fields */
     b32                      fragmentum;      /* Is this a fragment? <#> or <#id> */

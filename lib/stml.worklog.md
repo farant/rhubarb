@@ -121,3 +121,32 @@ version too, only the line number moved. Not introduced here.
 Next: arc ② — the gesta daemon-side capture pass (mint ULID prefix,
 create genus/res, rewrite corpus stamping the id). Design on board
 01KYRGEGV4.
+
+## 2026-07-30 (later still) — anonymous closing tag </> shipped
+
+Fran wrote `</>` in his first live capture articulus expecting it
+to close the nearest tag, and it LOOKED like it worked (the daemon
+line-scanner ignored it and the corpus happened to end there). Now
+it actually works, both layers:
+
+- Parser: a CLAUDERE token with an EMPTY name (which `</>` already
+  tokenized as — the close branch read an empty name without
+  complaint) is accepted by the element currently parsing. The
+  recursive descent gives close-nearest for free: the innermost
+  open element sees the token first. Named closes keep strict
+  matching; a stray `</>` with nothing open stays TAG_IMPROPRIE.
+- Round-trip: `clausura_anonyma` flag on StmlNodus; the writer
+  emits `</>` when set — byte-identical, UNLIKE the `<(>` sugar
+  (which normalizes because the daemon rewrites that line anyway;
+  a closing line is never rewritten, so the authored form must
+  survive).
+- Scope: elements only. Raw tags end raw mode via their named
+  close (`</>` inside them is literal text); fragments keep
+  `</#>`.
+- Daemon scanner: `_cap_blocum_claudit` accepts `</>` — closing
+  the leak where capture lines after an ignored `</>` would have
+  been silently swallowed into the block (pinned: id 813 in
+  probatio_tabularium).
+
+Pins: nearest + nested-double byte round-trip, orphan errors loud.
+All first run; root PLENUS, gesta 4/4. Board 01KYSPRF9R.

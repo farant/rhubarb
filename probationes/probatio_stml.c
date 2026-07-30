@@ -2419,6 +2419,71 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Clausura anonyma </> (01KYSPRF9R): elementum apertum
+     * proximum claudit; forma authoris octetim servatur
+     * ================================================== */
+
+    imprimere("\n--- Probans clausuram anonymam ---\n");
+
+    {
+        /* proximum claudit - recursio ipsa 'proximum' dat */
+        StmlResultus res;
+        StmlNodus* b;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<r><b>x</></r>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        b = stml_invenire_liberum(res.elementum_radix, "b");
+        CREDO_NON_NIHIL(b);
+        CREDO_VERUM(b->clausura_anonyma);
+        CREDO_FALSUM(res.elementum_radix->clausura_anonyma);
+
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<r><b>x</></r>");
+
+        imprimere("  Clausura anonyma proxima: PRAETERITUM\n");
+    }
+
+    {
+        /* nidificatio bina: quaeque clausura elementum suum */
+        StmlResultus res;
+        StmlNodus* a;
+        StmlNodus* b;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<r><a><b>x</></></r>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        a = stml_invenire_liberum(res.elementum_radix, "a");
+        CREDO_NON_NIHIL(a);
+        b = stml_invenire_liberum(a, "b");
+        CREDO_NON_NIHIL(b);
+        CREDO_VERUM(a->clausura_anonyma);
+        CREDO_VERUM(b->clausura_anonyma);
+
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<r><a><b>x</></></r>");
+
+        imprimere("  Clausura anonyma nidificata: PRAETERITUM\n");
+    }
+
+    {
+        /* orba sine aperto = error (ut clausura nominata orba) */
+        StmlResultus res;
+
+        res = stml_legere_ex_literis("<r>x</r></>", piscina,
+            intern);
+        CREDO_FALSUM(res.successus);
+
+        imprimere("  Clausura anonyma orba errat: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Transclusion Tests
      * ================================================== */
 
