@@ -17,6 +17,11 @@ RADIX_DIR="$(cd "$GESTA_DIR/.." && pwd)"
 BUILD_DIR="$GESTA_DIR/build"
 mkdir -p "$BUILD_DIR"
 
+# ANCORA: fixturae probationum et scripta daemonum viis radicis
+# relativis utuntur - cursus e directorio alio OMNIA a salutatione
+# frangit (aspectus catastrophae, causa CWD; mensuratum 2026-07-30)
+cd "$RADIX_DIR" || exit 1
+
 declare -a GCC_FLAGS=(
     "-std=c89"
     "-pedantic"
