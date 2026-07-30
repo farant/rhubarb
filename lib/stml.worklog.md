@@ -48,3 +48,25 @@ Tests: probatio_stml gained 7 blocks (asperities verbatim, the
 devour regression pair, entities-intact, empty capture, `((>`
 notation, dual-posture round-trip, constructor path — the aedilis
 manifest lane). All green first run.
+
+## 2026-07-30 — anonymous capture measured; fragment-capture design landed
+
+Exploration session with Fran (STML vs XML). Measured: `<(>` parses
+TODAY by fallthrough — empty tag name read without complaint, capture
+parens counted, capture WORKS — but the element is nameless
+(unaddressable by any selector) and the writer re-emits `< (>`
+(byte round-trip broken). Nothing pinned. Board: 01KYRFMW58.
+Same silent-degenerate family as the tolera angle-char fix.
+
+Direction DECIDED same day (01KYRGEGV4, articuli capture blocks →
+board res): the real feature is FRAGMENT capture — `<# (>` authored,
+`<#01KYRF (>` after the daemon stamps the minted res id back into
+the text. Fragment tokenizer currently reads id then expects `>` or
+`/>` — the parens work lands in _tok_legere_fragmentum + the
+fragment parser branch + writer + round-trip pins. Bare `<(>`
+becomes loud refusal or normalization sugar when that ships.
+
+Transclusion status also measured: `<<selector>>` tokenizes, parses,
+round-trips, is tested — but NO resolution exists anywhere (syntax
+without semantics). Fragment-id stamping gives it its natural first
+scope when pulled: resolve `<<#id>>` against the forum corpus.
