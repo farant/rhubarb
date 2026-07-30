@@ -279,13 +279,8 @@ s32 principale (integer argc, character** argv)
                     acies[c] = *(chorda*)xar_obtinere(
                         tituli_distincti, c);
                 }
-                dum (q.mensura >= III)
-                {
-                    n = similitudo_optima(q, acies, numerus,
-                        fructus, V);
-                    si (n > ZEPHYRUM) frange;
-                    q.mensura--;
-                }
+                n = similitudo_optima_decurtata(q, acies, numerus,
+                    fructus, V);
             }
             si (n > ZEPHYRUM)
             {

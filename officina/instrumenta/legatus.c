@@ -3728,6 +3728,20 @@ _extenta_ex_semantica (Legatus* l, constans SilvaParsura* parsura,
                 {
                     radix_decl = radix_decl->pater;
                 }
+                /* lineae ex RADICE, non declaratore (excussio
+                 * 2026-07-29): octeti corporis radicem iam
+                 * sequebantur, lineae declaratorem - typedef-
+                 * structura uni-declarationis extensionem unius
+                 * lineae mentiebatur. Continentia tuta: custos
+                 * generis in _functio_continens functiones solas
+                 * admittit. */
+                silva_nodus_extensionem_lineis(radix_decl, fons,
+                    &la, &ca, &lb, &cb);
+                si (la != ZEPHYRUM)
+                {
+                    e->linea_a = la;
+                    e->linea_b = lb;
+                }
                 e->commentarium_initium = (s32)-I;
                 e->commentarium_finis = (s32)-I;
                 si (silva_commentarium_ducens(radix_decl,
@@ -5320,6 +5334,9 @@ _legati_viam_normare (Legatus* l, chorda via_arg, chorda* via_ex)
  * ================================================== */
 
 #define LEGATI_GREGES_MAXIMI 20
+/* lineae usuum ostensae per plagulam (geminus nexus.sh eas dat -
+ * excussio 2026-07-29); ultra = "..." */
+#define LEGATI_USUS_LINEAE 8
 #define LEGATI_LINEAE_GREGIS 8
 
 /* diagnostica {via}: iudicium SEMPER novum (paritas examinis =
@@ -5676,8 +5693,11 @@ _ignotum_respondere (Legatus* l, Piscina* pn, JsonValor* id,
         {
             acies[c] = *(chorda*)xar_obtinere(l->nomina_indicis, c);
         }
-        n = similitudo_optima(titulus, acies, numerus, fructus,
-            III);
+        /* decurtata: cauda substituta ('legatus_tractare')
+         * subsequentiam totam necat - quaestio a dextra
+         * decurtatur donec candidati appareant */
+        n = similitudo_optima_decurtata(titulus, acies, numerus,
+            fructus, III);
     }
     si (n > ZEPHYRUM)
     {
@@ -5909,10 +5929,15 @@ _legati_symbolum (Legatus* l, Piscina* pn, JsonValor* id,
             scriptae++;
         }
     }
-    /* usus per plagulas (nexus-forma, tecta) */
+    /* usus per plagulas (nexus-forma, tecta) - lineae primae
+     * LEGATI_USUS_LINEAE cuiusque plagulae ostensae (geminus
+     * nexus.sh: 'via (2): 898 3861'; ordo occursus, non ordinatus
+     * - paritas gemini) */
     {
         chorda viae[LEGATI_GREGES_MAXIMI];
         insignatus integer numeri[LEGATI_GREGES_MAXIMI];
+        insignatus integer lineae[LEGATI_GREGES_MAXIMI]
+            [LEGATI_USUS_LINEAE];
         insignatus integer n_viae = ZEPHYRUM;
         insignatus integer usus_toti = ZEPHYRUM;
         insignatus integer praetermissae = ZEPHYRUM;
@@ -5932,6 +5957,11 @@ _legati_symbolum (Legatus* l, Piscina* pn, JsonValor* id,
             {
                 si (_chordae_pares(viae[g], o->via))
                 {
+                    si (numeri[g] < (insignatus integer)
+                            LEGATI_USUS_LINEAE)
+                    {
+                        lineae[g][numeri[g]] = o->linea;
+                    }
                     numeri[g]++;
                     inventa = VERUM;
                     frange;
@@ -5944,6 +5974,7 @@ _legati_symbolum (Legatus* l, Piscina* pn, JsonValor* id,
                 {
                     viae[n_viae] = o->via;
                     numeri[n_viae] = I;
+                    lineae[n_viae][ZEPHYRUM] = o->linea;
                     n_viae++;
                 }
                 alioquin
@@ -5960,11 +5991,34 @@ _legati_symbolum (Legatus* l, Piscina* pn, JsonValor* id,
 
             per (g = ZEPHYRUM; g < n_viae; g++)
             {
-                sprintf(linea_b, "  %.*s (%u)\n",
+                insignatus integer k;
+                insignatus integer ostensae = numeri[g];
+
+                si (ostensae > (insignatus integer)
+                        LEGATI_USUS_LINEAE)
+                {
+                    ostensae = (insignatus integer)
+                        LEGATI_USUS_LINEAE;
+                }
+                sprintf(linea_b, "  %.*s (%u):",
                     (int)viae[g].mensura,
                     (constans character*)viae[g].datum, numeri[g]);
                 (vacuum)chorda_aedificator_appendere_literis(aed,
                     linea_b);
+                per (k = ZEPHYRUM; k < ostensae; k++)
+                {
+                    sprintf(linea_b, " %u", lineae[g][k]);
+                    (vacuum)chorda_aedificator_appendere_literis(
+                        aed, linea_b);
+                }
+                si (numeri[g] > (insignatus integer)
+                        LEGATI_USUS_LINEAE)
+                {
+                    (vacuum)chorda_aedificator_appendere_literis(
+                        aed, " ...");
+                }
+                (vacuum)chorda_aedificator_appendere_literis(aed,
+                    "\n");
             }
             si (praetermissae > ZEPHYRUM)
             {
@@ -6254,6 +6308,32 @@ _legati_vocantes (Legatus* l, Piscina* pn, JsonValor* id,
                 {
                     extra++;
                 }
+            }
+        }
+        /* ordinatio per numerum vocationum descendens (excussio
+         * 2026-07-29: ordo indicis legibilitatem laedebat -
+         * vocantes graves primum). Insertio super acies parallelas
+         * tres; '<' strictum paritates stabiles servat. */
+        {
+            insignatus integer a;
+
+            per (a = I; a < n_voc; a++)
+            {
+                chorda t_t = vocantes_tituli[a];
+                chorda t_v = vocantes_viae[a];
+                insignatus integer t_n = numeri[a];
+                insignatus integer b = a;
+
+                dum (b > ZEPHYRUM && numeri[b - I] < t_n)
+                {
+                    vocantes_tituli[b] = vocantes_tituli[b - I];
+                    vocantes_viae[b] = vocantes_viae[b - I];
+                    numeri[b] = numeri[b - I];
+                    b--;
+                }
+                vocantes_tituli[b] = t_t;
+                vocantes_viae[b] = t_v;
+                numeri[b] = t_n;
             }
         }
         sprintf(linea_b, "vocantes %.*s (%u):\n",

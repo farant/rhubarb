@@ -4928,3 +4928,104 @@ CAUTIO-per-commit dedup cognate already named in 01KY4185QN.
 Live half of the seal: next /mcp reconnect spawns the
 renovare-capable resident; on the next churn day the CAUTIO →
 verify → renovare loop closes without Fran touching anything.
+
+## MINUTIAE LEGATI (excussio 2026-07-29): INTENTIO (2026-07-30)
+
+Res 01KYR4AS0N. Four polish nits from the live five-tool shakedown
+(2026-07-29) plus one from this morning's warmup, all in
+officina/instrumenta/legatus.c except the promotion:
+
+1. **corpus span metadata lies for one-declaration typedef structs**
+   (`nomen structura {...} X;` reported 1493-1493 for a 12-line
+   body). Root cause READ, not guessed: _extenta_ex_semantica takes
+   BYTE extents from the pater-climbed declaration root but LINE
+   extents from s->declarans — for a typedef that's the DECLARATOR
+   (one line). The typedef-opacum repoint (01KXS3EXS6) already heals
+   the two-declaration case; the same-root idiom keeps the
+   declarator's line. Fix: recompute linea_a/linea_b from radix_decl
+   right after the climb — the lines follow the same root the bytes
+   already follow. One builder serves live docs + closed files, so
+   one fix heals all consumers. Containment safety:
+   _functio_continens is genus-guarded (SYMBOLUM_FUNCTIO only), so
+   wider struct/prototype spans are containment-inert; function
+   definitions already climb to themselves (declarans = whole node).
+   Prototype spans widen 1 → whole-declaration = MORE truthful
+   (prototype-shadow queries stay definition-preferred).
+
+2. **symbolum counts usages per file but omits line numbers** — its
+   shell twin nexus.sh prints them (`via (2): 898 3861`). Fix: record
+   up to VIII lineae per file group during the existing walk, print
+   in the twin's exact format, "..." marks overflow. Encounter order,
+   not sorted — parity with the twin (which is also unsorted).
+
+3. **vocantes in index order** — sort groups by vocationes
+   descending before printing (insertion sort over the three parallel
+   arrays; hand-traced BEFORE compiling per the 2026-07-14
+   worse-than-worst lesson; strict < keeps equals stable).
+
+4. **simillima misses reasonable guesses** ('legatus_tractare' →
+   nothing: similitudo requires SUBSEQUENCE, a substituted tail kills
+   the whole query). The shrink-from-right loop already exists
+   hand-copied in emitte.c:678 and nexus.c:282; legatus would be copy
+   3 → **the rule of two (named at similitudo's birth) fires:
+   promote `similitudo_optima_decurtata` into lib/similitudo**
+   (shrink query from right until candidates appear, floor III
+   codicilli, pure — no piscina, no state) and migrate all three
+   consumers. _hover_vicinitas / _workspacesymbol keep plain optima
+   (different semantics: vicinity list, not did-you-mean).
+
+BARS: probatio_similitudo rows for decurtata (exact-match short
+circuit, substituted-tail rescue, floor); probatio_officina_legatus
+pins per nit (typedef-struct span multi-line; usus lines present in
+twin format; vocantes descending; ignotum offers simillima for a
+substituted-tail guess); suites officina + silva (emitte/nexus
+migration) + root (similitudo) all green; amalgam gates untouched by
+name (legatus is fontes-side consumer via amalgam — no fontes edits
+this arc). Named cost: touching lib/similitudo.c relinks the sweep
+tool → first nexus.sh query after = forced -plenus (~60s), amortized.
+
+## MINUTIAE LEGATI: RELATIO (2026-07-30)
+
+Shipped as INTENTIO'd, one sitting. Spans truthful (LegatusOrdo
+59-69 live; the pin parses the header's A-B and asserts B > A —
+robust to line drift); symbolum usus lines in the twin's exact
+format (live: similitudo_optima 11 uses / 5 files with lines — and
+the index showed the DAY'S OWN work: emitte.c gone from users,
+decurtata's internal call at similitudo.c:188 present); vocantes
+descending (live: _tolera_absorbere 3,2,2,2,1...); decurtata
+promoted on the rule of two, three consumers migrated, emitte +
+nexus live-rescued 'piscina_generare_dynamicvm'.
+
+BARS: legatus 320/320 FIRST RUN; similitudo suite green; root
+108/108 PLENUS (144.9s — the 157s creep eased); silva suite exit 0;
+amalgama VERIFICATUM (hospes 78/78; also honestly cleared the
+pre-existing stale mech_chorda.o — lib/chorda.c mtime bump
+yesterday, content git-clean).
+
+FIND (live, named): the greedy shrink stops at the FIRST productive
+level — 'legatus_tractare' suggests LEGATUS_* macros (they match at
+'legatus_t', 9 chars) and never reaches legatus_currere (matches
+only at 'legatus_', 8). Faithful to the hand-written twins'
+behavior — the promotion changed nothing — but the improvement is
+now nameable: cross-level merge with case/length penalties =
+similitudo v2 pull, board-noted, deliberately NOT this arc.
+
+BONUS MEASUREMENT: the feared RADIX_FONTES forced -plenus never
+fired — similitudo links into the nexus CLI, not the sweep binary;
+the suite-tail heal ran incremental in 0s. The named cost was
+over-named.
+
+Instrumenta (debrief): adhibita = mcp legati corpus ×10 (THE recon
+instrument — every handler, the extent struct, the card builder read
+through it; the §6 warmup call that whiffed on a guessed name became
+nit-4's own evidence), vocata (dispatch map in one call), nexus.sh
+(the twin whose use-lines format nit 2 copied), Read for what corpus
+could not serve, suites -machina from files, renovare ×3 (fori
+morning heal + legati mid-arc self-renewal). fructus = root cause of
+the span lie found in TWO corpus calls (struct + builder); the crown
+demo: the resident renewed itself with the fix and answered the
+ORIGINAL shakedown queries correctly, its index already reflecting
+the arc's edits. asperitates = corpus 200-line cap cut
+_legati_symbolum (241 lines) mid-function — Read covered; the
+greedy-level find above. desiderata = nulla nova (meter + contextus
+already queued on 01KYR4AS0N).

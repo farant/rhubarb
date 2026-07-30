@@ -44,4 +44,18 @@ similitudo_optima (
     SimilitudoFructus* fructus,
     i32                maxima);
 
+/* Ut optima, sed quaestione a dextra decurtata donec candidati
+ * appareant (pavimentum III codicilli - quaestio brevior numquam
+ * temptatur): nomen totum male coniectum subsequentia nullius est,
+ * cauda substituta quaestionem totam necat - quod homo in fzf
+ * delendo facit. Promota regula duorum 2026-07-30 (ansae manu
+ * scriptae in emitte + nexus; legatus tertius consumptor). */
+i32
+similitudo_optima_decurtata (
+    chorda             quaestio,
+    constans chorda*   candidati,
+    i32                numerus_candidatorum,
+    SimilitudoFructus* fructus,
+    i32                maxima);
+
 #endif /* SIMILITUDO_H */

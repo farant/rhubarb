@@ -177,3 +177,22 @@ similitudo_optima (
     }
     redde scripta;
 }
+
+i32
+similitudo_optima_decurtata (chorda quaestio,
+    constans chorda* candidati, i32 numerus_candidatorum,
+    SimilitudoFructus* fructus, i32 maxima)
+{
+    dum (quaestio.mensura >= III)
+    {
+        i32 n = similitudo_optima(quaestio, candidati,
+            numerus_candidatorum, fructus, maxima);
+
+        si (n > ZEPHYRUM)
+        {
+            redde n;
+        }
+        quaestio.mensura--;
+    }
+    redde ZEPHYRUM;
+}

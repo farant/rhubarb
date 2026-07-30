@@ -130,6 +130,124 @@ _chorda_continet (chorda c, constans character* particula)
     redde FALSUM;
 }
 
+/* extensio lineae capitis "corpus X (via:A-B)" -> A,B (manu -
+ * chorda non NUL-terminata, sscanf vetitum) */
+interior b32
+_extensio_capitis (chorda c, insignatus integer* la,
+    insignatus integer* lb)
+{
+    memoriae_index prima = (memoriae_index)c.mensura;
+    memoriae_index colon = prima;
+    memoriae_index i;
+
+    per (i = ZEPHYRUM; i < (memoriae_index)c.mensura; i++)
+    {
+        si ((character)c.datum[i] == '\n')
+        {
+            prima = i;
+            frange;
+        }
+    }
+    per (i = ZEPHYRUM; i < prima; i++)
+    {
+        si ((character)c.datum[i] == ':')
+        {
+            colon = i;
+        }
+    }
+    si (colon >= prima)
+    {
+        redde FALSUM;
+    }
+    {
+        insignatus integer v = ZEPHYRUM;
+        insignatus integer a_v = ZEPHYRUM;
+        b32 visum = FALSUM;
+        b32 a_visum = FALSUM;
+
+        per (i = colon + I; i < prima; i++)
+        {
+            character ch = (character)c.datum[i];
+
+            si (ch >= '0' && ch <= '9')
+            {
+                v = v * (insignatus integer)X
+                    + (insignatus integer)(ch - '0');
+                visum = VERUM;
+            }
+            alioquin si (ch == '-' && visum && !a_visum)
+            {
+                a_v = v;
+                a_visum = VERUM;
+                v = ZEPHYRUM;
+                visum = FALSUM;
+            }
+            alioquin si (ch == ')')
+            {
+                frange;
+            }
+            alioquin
+            {
+                redde FALSUM;
+            }
+        }
+        si (!a_visum || !visum)
+        {
+            redde FALSUM;
+        }
+        *la = a_v;
+        *lb = v;
+    }
+    redde VERUM;
+}
+
+/* "vocationes N" sequentia non crescens (ordinatio descendens)?
+ * saltem una inveniatur oportet */
+interior b32
+_vocationes_descendentes (chorda c)
+{
+    constans character* clavis = "vocationes ";
+    memoriae_index cl = strlen(clavis);
+    memoriae_index i = ZEPHYRUM;
+    insignatus integer prior = ZEPHYRUM;
+    b32 prima = VERUM;
+
+    si (c.datum == NIHIL || (memoriae_index)c.mensura < cl)
+    {
+        redde FALSUM;
+    }
+    dum (i + cl <= (memoriae_index)c.mensura)
+    {
+        si (memcmp(c.datum + i, clavis, cl) == ZEPHYRUM)
+        {
+            insignatus integer v = ZEPHYRUM;
+            memoriae_index j = i + cl;
+
+            dum (j < (memoriae_index)c.mensura
+                && (character)c.datum[j] >= '0'
+                && (character)c.datum[j] <= '9')
+            {
+                v = v * (insignatus integer)X
+                    + (insignatus integer)((character)c.datum[j]
+                        - '0');
+                j++;
+            }
+            si (!prima && v > prior)
+            {
+                redde FALSUM;
+            }
+            prior = v;
+            prima = FALSUM;
+            i = j;
+        }
+        alioquin
+        {
+            i++;
+        }
+    }
+    redde prima ? FALSUM : VERUM;
+}
+
 /* numerus diagnosticorum publicationis (-1 = non publicatio) */
 interior s32
 _diagnostica_numerus (TabellariusNuntius* n)
@@ -2204,8 +2322,9 @@ probatio_mcp (Piscina* p)
         "{\"jsonrpc\":\"2.0\",\"id\":6,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"symbolum\",\"arguments\":"
         "{\"titulus\":\"piscina_generare_dynamicum\"}}}");
-    /* typo DELETIONIS (subsequentia manet - similitudo subsequentiam
-     * requirit; substitutio 'u'->'v' nihil inveniret) */
+    /* typo DELETIONIS (subsequentia manet - congruit sine
+     * decurtatione; substitutio infra, id 20, decurtationem
+     * exercet) */
     _scribe_lineam(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"symbolum\",\"arguments\":"
@@ -2270,6 +2389,13 @@ probatio_mcp (Piscina* p)
         "{\"jsonrpc\":\"2.0\",\"id\":19,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"corpus\",\"arguments\":"
         "{\"titulus\":\"TypusC89Membrum\"}}}");
+    /* typo SUBSTITUTIONIS caudae ('u'->'v'): subsequentia tota
+     * necatur - decurtata (regula duorum 2026-07-30) candidatum
+     * nihilominus invenit */
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":20,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"symbolum\",\"arguments\":"
+        "{\"titulus\":\"piscina_generare_dynamicvm\"}}}");
     /* nullum "exit" - EOF fistulae = exitus ordinatus */
 
     rewind(intra);
@@ -2363,6 +2489,9 @@ probatio_mcp (Piscina* p)
         CREDO_VERUM(_chorda_continet(textus, "signatura:"));
         CREDO_VERUM(_chorda_continet(textus, "lib/piscina.c"));
         CREDO_VERUM(_chorda_continet(textus, "usus "));
+        /* lineae usuum post numerum (geminus nexus.sh:
+         * 'via (2): 898 3861' - excussio 2026-07-29) */
+        CREDO_VERUM(_chorda_continet(textus, "): "));
         /* vexillum (banner) supra definitionem linea vacua
          * separatum NON attachatur (regula arcte-supra) */
         CREDO_VERUM(!_chorda_continet(textus, "GENERATIO"));
@@ -2393,6 +2522,9 @@ probatio_mcp (Piscina* p)
 
         CREDO_VERUM(_chorda_continet(textus,
             "officina/instrumenta/sessio.c"));
+        /* ordinatio per numerum vocationum descendens (excussio
+         * 2026-07-29) */
+        CREDO_VERUM(_vocationes_descendentes(textus));
     }
 
     n = _lege_lineam(extra, p, &bene);   /* inclusiones .c */
@@ -2495,6 +2627,15 @@ probatio_mcp (Piscina* p)
         /* membrum e CORPORE structurae - ante sanationem linea
          * typedefi sola reddebatur (nomen structura X X;) */
         CREDO_VERUM(_chorda_continet(textus, "scopus_currens"));
+        /* extensio capitis vera (casus bi-declarationis, repuncta
+         * iam sanabat) */
+        {
+            insignatus integer la = ZEPHYRUM;
+            insignatus integer lb = ZEPHYRUM;
+
+            CREDO_VERUM(_extensio_capitis(textus, &la, &lb));
+            CREDO_VERUM(lb > la);
+        }
     }
 
     n = _lege_lineam(extra, p, &bene);   /* corpus uni-declarationis */
@@ -2503,6 +2644,26 @@ probatio_mcp (Piscina* p)
         chorda textus = _mcp_textus(&n);
 
         CREDO_VERUM(_chorda_continet(textus, "est_campus"));
+        /* extensio capitis vera (excussio 2026-07-29: structura
+         * multi-linearis '1493-1493' mentiebatur - lineae nunc
+         * radicem sequuntur ut octeti) */
+        {
+            insignatus integer la = ZEPHYRUM;
+            insignatus integer lb = ZEPHYRUM;
+
+            CREDO_VERUM(_extensio_capitis(textus, &la, &lb));
+            CREDO_VERUM(lb > la);
+        }
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* symbolum: substitutio */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "simillima"));
+        CREDO_VERUM(_chorda_continet(textus,
+            "piscina_generare_dynamicum"));
     }
 
     fclose(intra);

@@ -672,16 +672,12 @@ s32 principale (integer argc, character** argv)
                             c);
                     }
                     /* nomen totum male coniectum subsequentia
-                     * nullius est - quaestionem a dextra decurtare
-                     * donec candidati appareant (quod homo in fzf
-                     * delendo facit; inventum die natali similitudinis) */
-                    dum (quaestio.mensura >= III)
-                    {
-                        n = similitudo_optima(quaestio, acies,
-                            numerus, fructus, V);
-                        si (n > ZEPHYRUM) frange;
-                        quaestio.mensura--;
-                    }
+                     * nullius est - quaestio a dextra decurtatur
+                     * donec candidati appareant (inventum die
+                     * natali similitudinis; in bibliothecam
+                     * promota regula duorum 2026-07-30) */
+                    n = similitudo_optima_decurtata(quaestio,
+                        acies, numerus, fructus, V);
                 }
                 si (n > ZEPHYRUM)
                 {

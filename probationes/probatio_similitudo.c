@@ -183,6 +183,57 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: optima_decurtata - cauda substituta sanata
+     * ======================================================== */
+    {
+        chorda candidati[III];
+        SimilitudoFructus fructus[III];
+        i32 n;
+
+        imprimere("\n--- Probans optima_decurtata ---\n");
+
+        candidati[0] = chorda_ex_literis(
+            "legatus_currere", piscina);
+        candidati[1] = chorda_ex_literis(
+            "machinula_currere", piscina);
+        candidati[2] = chorda_ex_literis(
+            "piscina_vacare", piscina);
+
+        /* casus natalis (excussio 2026-07-30): praefixum verum,
+         * verbum falsum - subsequentia tota necatur, decurtatio
+         * ad 'legatus_' candidatum verum invenit */
+        n = similitudo_optima(
+            chorda_ex_literis("legatus_tractare", piscina),
+            candidati, III, fructus, III);
+        CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
+        n = similitudo_optima_decurtata(
+            chorda_ex_literis("legatus_tractare", piscina),
+            candidati, III, fructus, III);
+        CREDO_VERUM (n >= I);
+        CREDO_AEQUALIS_I32 (fructus[0].index, ZEPHYRUM);
+
+        /* congruentia plena = optima ipsa (nulla decurtatio) */
+        n = similitudo_optima_decurtata(
+            chorda_ex_literis("piscina_vacare", piscina),
+            candidati, III, fructus, III);
+        CREDO_VERUM (n >= I);
+        CREDO_AEQUALIS_I32 (fructus[0].index, II);
+
+        /* pavimentum III: quaestio brevior numquam temptatur */
+        n = similitudo_optima_decurtata(
+            chorda_ex_literis("zz", piscina),
+            candidati, III, fructus, III);
+        CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
+
+        /* nihil simile omnino: decurtatio usque ad pavimentum,
+         * tum zephyrum honestum */
+        n = similitudo_optima_decurtata(
+            chorda_ex_literis("qqqqqq", piscina),
+            candidati, III, fructus, III);
+        CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
+    }
+
+    /* ========================================================
      * Compendium
      * ======================================================== */
 

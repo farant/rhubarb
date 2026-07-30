@@ -29,3 +29,17 @@ automatically (80→81) — the new lib runs INTERPRETED in machinula
 as part of the standing corpus bar, stdout byte-diffed against its
 pinned native capture. Cathedral perk: every new lib gets VM
 coverage for free.
+
+## 2026-07-30 — optima_decurtata promoted (rule of two fired)
+
+The shrink-from-right did-you-mean loop (query truncated from the
+right until candidates appear, floor III) was born with emitte's
+"fortasse" (2026-07-10, "consumer shrinks query from right — lib
+stays pure, rule of two before API promotion"), hand-copied into
+nexus's fortasse, and was about to be copied a third time into
+legatus's _ignotum_respondere. Promoted instead:
+similitudo_optima_decurtata — same purity contract (no piscina, no
+state; the by-value chorda is shrunk locally). All three consumers
+migrated; behavior byte-identical to the hand loops (same floor,
+same first-hit-wins). Note the floor also means a query SHORTER than
+III is never attempted at all — pinned in probatio_similitudo.

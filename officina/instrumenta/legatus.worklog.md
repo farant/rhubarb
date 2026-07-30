@@ -772,3 +772,44 @@ initialize → "iam recens" with the NEW signum → orderly EOF exit.
 Bars: probatio_officina_renovatio 43/43; suites 13/13; auspex
 certified; exec-failure semantics unit-tested in probatio_processus
 XIX (transformare returns FALSUM, never fatal).
+
+## 2026-07-30 — shakedown nits (res 01KYR4AS0N)
+
+Four polish fixes from the 2026-07-29 live shakedown:
+
+**corpus span lie (the interesting one).** For a one-declaration
+typedef struct (`nomen structura {...} X;`) the header reported a
+1-line span while serving the full multi-line text. Root cause in
+_extenta_ex_semantica: BYTE extents (corpus_initium/finis) came from
+the pater-climbed declaration root, but LINE extents (linea_a/b) came
+from s->declarans — for a typedef that's the DECLARATOR (one line).
+The typedef-opacum repoint (01KXS3EXS6) already healed lines for the
+TWO-declaration case (separate struct definition), which is why the
+lie only showed on the uni-declaration idiom. Fix: recompute lines
+from radix_decl right after the climb — lines now follow the same
+root the bytes always followed. Side effect (more truthful, not a
+regression): prototype cards widen from 1 line to their whole
+declaration. Containment stays safe — _functio_continens is
+genus-guarded to SYMBOLUM_FUNCTIO.
+
+**symbolum usus lines.** Twin parity with nexus.sh: `via (34): 12 88
+...` — first LEGATI_USUS_LINEAE (8) lines per file, encounter order
+(the twin is also unsorted), "..." marks overflow.
+
+**vocantes descending.** Insertion sort over the three parallel
+group arrays by vocationes, strict < so equals stay stable
+(hand-traced before compiling per the 2026-07-14 lesson).
+
+**simillima decurtata.** 'legatus_tractare' got NO suggestions:
+similitudo requires SUBSEQUENCE, so a substituted tail kills the
+whole query. The shrink-from-right rescue existed hand-copied in
+emitte.c and nexus.c; legatus would have been copy 3 → RULE OF TWO
+fired: promoted as similitudo_optima_decurtata (lib/similitudo, pure,
+floor III), all three consumers migrated. _hover_vicinitas and
+_workspacesymbol deliberately keep plain optima (vicinity/fuzzy list,
+not did-you-mean).
+
+Pins: probatio_officina_legatus 320/320 first run (span parse helper
+reads the header's A-B and asserts B > A — robust to line drift;
+"vocationes N" non-increasing scan; substitution-typo scenario id 20).
+probatio_similitudo covers decurtata incl. the natal case verbatim.
