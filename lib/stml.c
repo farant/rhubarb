@@ -697,6 +697,7 @@ _tok_legere_fragmentum(StmlTokenContext* ctx)
     i32 initium_linea;
     i32 initium_columna;
     chorda fragmentum_id;
+    i32 captio_numerus;
 
     initium = ctx->positus;
     initium_linea = ctx->linea;
@@ -723,8 +724,19 @@ _tok_legere_fragmentum(StmlTokenContext* ctx)
     token.attributa = _tok_legere_attributa(ctx);
     _tok_praeterire_spatium(ctx);
 
+    /* Numerare parentheses capturae <# (> / <#id (> (post
+     * attributa, sicut in tags normalibus) */
+    captio_numerus = ZEPHYRUM;
+    dum (_tok_aspicere(ctx, ZEPHYRUM) == '(')
+    {
+        captio_numerus++;
+        _tok_progredi(ctx, I);
+    }
+    _tok_praeterire_spatium(ctx);
+
     /* Check for self-closing <#/> or <#id/> */
-    si (_tok_aspicere(ctx, ZEPHYRUM) == '/' &&
+    si (captio_numerus == ZEPHYRUM &&
+        _tok_aspicere(ctx, ZEPHYRUM) == '/' &&
         _tok_aspicere(ctx, I) == '>')
     {
         _tok_progredi(ctx, II);
@@ -744,7 +756,18 @@ _tok_legere_fragmentum(StmlTokenContext* ctx)
         _tok_progredi(ctx, I);
     }
 
-    token.genus = STML_TOKEN_FRAGMENTUM_APERIRE;
+    /* Fragmentum capturans = lexema se ipso continens (idem
+     * exemplar quo CRUDUS: genus AUTO, campus captio_numerus
+     * discriminat) - fratres post parsationem capiuntur */
+    si (captio_numerus > ZEPHYRUM)
+    {
+        token.genus = STML_TOKEN_FRAGMENTUM_AUTO;
+        token.captio_numerus = captio_numerus;
+    }
+    alioquin
+    {
+        token.genus = STML_TOKEN_FRAGMENTUM_APERIRE;
+    }
     token.valor = fragmentum_id;
     token.positus_initium = initium;
     token.positus_finis = ctx->positus;
@@ -787,6 +810,56 @@ _tok_legere_fragmentum_claudere(StmlTokenContext* ctx)
     }
 
     token.genus = STML_TOKEN_FRAGMENTUM_CLAUDERE;
+    token.valor.datum = NIHIL;
+    token.valor.mensura = ZEPHYRUM;
+    token.positus_initium = initium;
+    token.positus_finis = ctx->positus;
+    token.linea = initium_linea;
+    token.columna = initium_columna;
+    redde token;
+}
+
+/* Parse bare capture sugar <(> or <((> - anonymous fragment.
+ * Saccharum authoris: scriptor ad <# (> normalizat (forma nuda
+ * ephemera est - stampatio gestarum lineam rescribit). */
+interior StmlToken
+_tok_legere_captio_nuda(StmlTokenContext* ctx)
+{
+    StmlToken token;
+    i32 initium;
+    i32 initium_linea;
+    i32 initium_columna;
+    i32 captio_numerus;
+
+    initium = ctx->positus;
+    initium_linea = ctx->linea;
+    initium_columna = ctx->columna;
+
+    token.attributa = NIHIL;
+    token.captio_numerus = ZEPHYRUM;
+    token.habet_captus = FALSUM;
+    token.captus_contentus.datum = NIHIL;
+    token.captus_contentus.mensura = ZEPHYRUM;
+
+    /* Skip < */
+    _tok_progredi(ctx, I);
+
+    captio_numerus = ZEPHYRUM;
+    dum (_tok_aspicere(ctx, ZEPHYRUM) == '(')
+    {
+        captio_numerus++;
+        _tok_progredi(ctx, I);
+    }
+    _tok_praeterire_spatium(ctx);
+
+    /* Expect > */
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '>')
+    {
+        _tok_progredi(ctx, I);
+    }
+
+    token.genus = STML_TOKEN_FRAGMENTUM_AUTO;
+    token.captio_numerus = captio_numerus;
     token.valor.datum = NIHIL;
     token.valor.mensura = ZEPHYRUM;
     token.positus_initium = initium;
@@ -1050,6 +1123,12 @@ _tok_proximus(StmlTokenContext* ctx)
         si (_tok_aspicere(ctx, I) == '#')
         {
             redde _tok_legere_fragmentum(ctx);
+        }
+
+        /* Saccharum capturae nudae <(> - fragmentum anonymum */
+        si (_tok_aspicere(ctx, I) == '(')
+        {
+            redde _tok_legere_captio_nuda(ctx);
         }
 
         /* Regular tag */
@@ -1788,6 +1867,16 @@ _parser_legere_fragmentum_auto(StmlParserContext* ctx)
 
     /* Copy attributes */
     nodus->attributa = ctx->current.attributa;
+
+    /* Campi capturae (<# (> / <#id (>): receptaculum liberis
+     * necessarium - _processare_captiones fratres huc movet */
+    nodus->captio_numerus = ctx->current.captio_numerus;
+    si (ctx->current.captio_numerus > ZEPHYRUM)
+    {
+        nodus->captio_directio = STML_CAPTIO_ANTE;
+        nodus->liberi = xar_creare(ctx->piscina,
+            magnitudo(StmlNodus*));
+    }
 
     _parser_progredi(ctx);
 
@@ -3452,6 +3541,32 @@ stml_scribere_ad_aedificator(
                             }
                         }
                     }
+                }
+
+                /* Fragmentum capturans: <# (> / <#id (> - liberi
+                 * inline, sine tag claudente (sicut elementa ANTE) */
+                si (nodus->captio_directio == STML_CAPTIO_ANTE)
+                {
+                    i32 j;
+                    chorda_aedificator_appendere_character(aedificator, ' ');
+                    per (j = ZEPHYRUM; j < nodus->captio_numerus; j++)
+                    {
+                        chorda_aedificator_appendere_character(aedificator, '(');
+                    }
+                    chorda_aedificator_appendere_character(aedificator, '>');
+                    si (nodus->liberi)
+                    {
+                        num = xar_numerus(nodus->liberi);
+                        per (i = ZEPHYRUM; i < num; i++)
+                        {
+                            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                            si (liberum)
+                            {
+                                stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                            }
+                        }
+                    }
+                    frange;
                 }
 
                 /* Check if has children (self-closing vs content) */

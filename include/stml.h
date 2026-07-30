@@ -16,6 +16,9 @@
  * - Raw content tags: <code!>literal <>&</code>
  * - Capture operators: <div (> <) wrap> <= sandwich =>
  * - Raw line capture: <tag! (>reliquum lineae crudum (ad '\n')
+ * - Fragmenta capturantia: <#id (> / <# (> - fragmentum fratres
+ *   sequentes capit (directio ANTE sola); saccharum <(> =
+ *   fragmentum anonymum capturans, scriptor ad <# (> normalizat
  *
  * Proprietates:
  * - DOM-stylus arbor
@@ -86,7 +89,9 @@ nomen enumeratio {
     STML_TOKEN_FINIS         = XII,   /* EOF */
     STML_TOKEN_FRAGMENTUM_APERIRE   = XIII,  /* <#> or <#id> */
     STML_TOKEN_FRAGMENTUM_CLAUDERE  = XIV,   /* </#> */
-    STML_TOKEN_FRAGMENTUM_AUTO      = XV,    /* <#/> or <#id/> */
+    STML_TOKEN_FRAGMENTUM_AUTO      = XV,    /* <#/> aut <#id/>; cum
+                                                captio_numerus > 0 =
+                                                <# (> / <#id (> / <(> */
     STML_TOKEN_TRANSCLUSIO          = XVI    /* <<selector>> */
 } StmlTokenGenus;
 

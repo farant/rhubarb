@@ -70,3 +70,54 @@ Transclusion status also measured: `<<selector>>` tokenizes, parses,
 round-trips, is tested — but NO resolution exists anywhere (syntax
 without semantics). Fragment-id stamping gives it its natural first
 scope when pulled: resolve `<<#id>>` against the forum corpus.
+
+## 2026-07-30 (later) — fragment capture SHIPPED (arc ① of the articuli feature)
+
+Fragments now take capture parens: `<#id (>` / `<# (>` / `<#a ((>`,
+plus bare `<(>` as authoring sugar for an anonymous capturing
+fragment. Four edits, all mirroring existing precedent:
+
+- **Tokenizer** (_tok_legere_fragmentum): paren-count loop inserted
+  after attribute parsing, exactly where _tok_legere_tag does it;
+  self-closing `/>` check gated on captio_numerus == 0 (same as the
+  element path). Token genus stays FRAGMENTUM_AUTO with
+  captio_numerus discriminating — the CRUDUS precedent (raw-line
+  capture already discriminates by field, not genus). No new enum
+  member needed.
+- **Sugar** (_tok_legere_captio_nuda, new): dispatch routes `<(` to
+  it before the regular-tag path. Emits anonymous FRAGMENTUM_AUTO
+  with the paren count. This RETIRES the 01KYRFMW58 accident — the
+  old fallthrough (nameless element, `< (>` re-emission) is
+  unreachable now.
+- **Parser** (_parser_legere_fragmentum_auto): copies captio fields
+  and — load-bearing — creates the `liberi` xar when capturing.
+  Auto-fragments normally leave liberi NIHIL; _processare_captiones
+  appends captives via xar_addere, which needs the receptacle.
+  The capture processor itself needed ZERO changes: fragments are
+  STML_NODUS_ELEMENTUM, so the existing ANTE branch just works.
+- **Writer**: fragment branch gains an ANTE case before the
+  habet_liberos split — ` ` + parens + `>` + children inline, no
+  closing tag (same shape as element ANTE). Sugar normalizes on
+  write: `<(>` → `<# (>` — deliberate; the authored form is
+  ephemeral (the gesta daemon rewrites the line when stamping).
+
+Round-trip law clarified while pinning: for capture forms the house
+law is a FIXED POINT (write → re-read → re-write stable), not
+authored-bytes — capture restructuring makes authored-bytes
+impossible in general. But the canonical inline forms ARE
+byte-exact: `<doc><#01KYRF (>eat a cake</doc>` round-trips
+identically (pinned), which is the form the daemon stamps.
+
+Pins: 4 new blocks in probatio_stml (named capture + byte round
+trip; double parens capture 2; sugar normalization + fixed point;
+the multi-line ideas block — the actual articuli target shape —
+2 fragments, anonymous + stamped, circuit stable). All green FIRST
+run; root suite 108/108 PLENUS.
+
+Note: examen shows a pre-existing domesticum in stml.h (`/* <tag */`
+comment anchors an unparsable annotation) — present in the committed
+version too, only the line number moved. Not introduced here.
+
+Next: arc ② — the gesta daemon-side capture pass (mint ULID prefix,
+create genus/res, rewrite corpus stamping the id). Design on board
+01KYRGEGV4.

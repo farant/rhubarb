@@ -2263,6 +2263,162 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Fragmenta Capturantia: <#id (> / <# (> / saccharum <(>
+     * (natalis 2026-07-30: bloci capturarum in articulis fori -
+     * linea stampata '<#01KYRF (> textus' res tabularii gignit)
+     * ================================================== */
+
+    imprimere("\n--- Probans fragmenta capturantia ---\n");
+
+    {
+        /* Fragmentum nominatum capturans: textus frater captus,
+         * circuitus octetim identicus (forma stampata) */
+        StmlResultus res;
+        StmlNodus* frag;
+        StmlNodus* textus;
+        chorda serialized;
+
+        res = stml_legere_ex_literis(
+            "<doc><#01KYRF (>eat a cake</doc>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        frag = stml_invenire_liberum(res.elementum_radix, "#");
+        CREDO_NON_NIHIL(frag);
+        CREDO_VERUM(frag->fragmentum);
+        CREDO_NON_NIHIL(frag->fragmentum_id);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*frag->fragmentum_id,
+            "01KYRF");
+        CREDO_AEQUALIS_I32(frag->captio_directio, STML_CAPTIO_ANTE);
+        CREDO_AEQUALIS_I32(frag->captio_numerus, I);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(frag), I);
+        textus = stml_liberum_ad_indicem(frag, ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_AEQUALIS_I32(textus->genus, STML_NODUS_TEXTUS);
+
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<doc><#01KYRF (>eat a cake</doc>");
+
+        imprimere("  Fragmentum nominatum capturans: PRAETERITUM\n");
+    }
+
+    {
+        /* Parentheses binae: duos fratres capit */
+        StmlResultus res;
+        StmlNodus* frag;
+        chorda serialized;
+
+        res = stml_legere_ex_literis(
+            "<doc><#a ((><x/><y/></doc>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        frag = stml_invenire_liberum(res.elementum_radix, "#");
+        CREDO_NON_NIHIL(frag);
+        CREDO_AEQUALIS_I32(frag->captio_numerus, II);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(frag), II);
+        CREDO_NON_NIHIL(stml_invenire_liberum(frag, "x"));
+        CREDO_NON_NIHIL(stml_invenire_liberum(frag, "y"));
+
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<doc><#a ((><x/><y/></doc>");
+
+        imprimere("  Parentheses binae fragmenti: PRAETERITUM\n");
+    }
+
+    {
+        /* Saccharum <(>: fragmentum anonymum capturans; scriptor
+         * ad <# (> normalizat (forma authoris ephemera) */
+        StmlResultus res;
+        StmlResultus relectum;
+        StmlNodus* frag;
+        chorda serialized;
+        chorda rescriptum;
+
+        res = stml_legere_ex_literis(
+            "<doc><(>textus</doc>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        frag = stml_invenire_liberum(res.elementum_radix, "#");
+        CREDO_NON_NIHIL(frag);
+        CREDO_VERUM(frag->fragmentum);
+        CREDO_NIHIL(frag->fragmentum_id);
+        CREDO_AEQUALIS_I32(frag->captio_directio, STML_CAPTIO_ANTE);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(frag), I);
+
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<doc><# (>textus</doc>");
+
+        /* forma normalizata = punctum fixum */
+        relectum = stml_legere(serialized, piscina, intern);
+        CREDO_VERUM(relectum.successus);
+        rescriptum = stml_scribere(relectum.elementum_radix,
+            piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS(serialized, rescriptum);
+
+        imprimere("  Saccharum <(> normalizatum: PRAETERITUM\n");
+    }
+
+    {
+        /* Blocus articuli (figura destinata): lineae mixtae -
+         * anonyma et stampata - fragmenta bina fiunt */
+        StmlResultus res;
+        StmlResultus relectum;
+        StmlNodus* radix;
+        StmlNodus* primus;
+        StmlNodus* secundus;
+        chorda serialized;
+        chorda rescriptum;
+        i32 i;
+        i32 num;
+        i32 fragmenta;
+
+        res = stml_legere_ex_literis(
+            "<ideas>\n"
+            "  <# (> eat a cake\n"
+            "  <#01KYRG (> alter cibus\n"
+            "</ideas>\n", piscina, intern);
+        CREDO_VERUM(res.successus);
+        radix = res.elementum_radix;
+        CREDO_NON_NIHIL(radix);
+
+        primus = NIHIL;
+        secundus = NIHIL;
+        fragmenta = ZEPHYRUM;
+        num = stml_numerus_liberorum(radix);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlNodus* l = stml_liberum_ad_indicem(radix, i);
+            si (l && l->fragmentum)
+            {
+                fragmenta++;
+                si (fragmenta == I) primus = l;
+                alioquin secundus = l;
+            }
+        }
+        CREDO_AEQUALIS_I32(fragmenta, II);
+        CREDO_NON_NIHIL(primus);
+        CREDO_NON_NIHIL(secundus);
+        CREDO_NIHIL(primus->fragmentum_id);
+        CREDO_NON_NIHIL(secundus->fragmentum_id);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*secundus->fragmentum_id,
+            "01KYRG");
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(primus), I);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(secundus), I);
+
+        /* circuitus: scriptio -> relectio -> rescriptio stabilis */
+        serialized = stml_scribere(radix, piscina, FALSUM);
+        relectum = stml_legere(serialized, piscina, intern);
+        CREDO_VERUM(relectum.successus);
+        rescriptum = stml_scribere(relectum.elementum_radix,
+            piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS(serialized, rescriptum);
+
+        imprimere("  Blocus articuli fragmentis binis: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Transclusion Tests
      * ================================================== */
 
