@@ -1038,21 +1038,16 @@ function editor_crescere_mox() {
   requestAnimationFrame(function () {
     var ta = document.getElementById('editor-corpus');
     var ante = ta.style.height;
-    var imus, limes;
     editor_mensura_pendet = false;
     if (editor_crescere() + 'px' === ante) { return; }
     /* linea ULTIMA solum: editio media lineam currentem in pagina
      * non movet (contentum infra descendit, cursor manet) */
     if (ta.value.indexOf('\n', ta.selectionStart) !== -1) { return; }
-    /* margo imus arcae in conspectu TENETUR. 'nearest' hic nihil
-     * agebat: arca alta partim visibilis 'in conspectu' iam erat,
-     * ergo crescens ultra plicam lineam currentem sub eam labi
-     * sinebat (Fran 2026-07-30). Delta explicitum, cum margine
-     * lineae unius. */
-    imus = ta.getBoundingClientRect().bottom;
-    limes = (window.innerHeight
-      || document.documentElement.clientHeight) - 24;
-    if (imus > limes) { window.scrollBy(0, imus - limes); }
+    /* AD IMUM PAGINAE simpliciter (Fran 2026-07-30): arca editoris
+     * elementum ultimum visus est, ergo imum paginae = cursor in
+     * conspectu. Consulto NON generale - huic paginae hoc sufficit
+     * et arithmetica delta 'adhuc paulum mira' videbatur. */
+    window.scrollTo(0, document.documentElement.scrollHeight);
   });
 }
 document.getElementById('editor-corpus').addEventListener('input',
