@@ -1031,24 +1031,47 @@ function editor_crescere() {
  * vere mutata. (Semita celeris 'scrollHeight == clientHeight'
  * consulto OMISSA - fragilis trans box-model, et rAF solus moram
  * sentitam iam tollit.) */
+/* CRESCERE SINE COLLAPSO (2026-07-30, tertia emendatio). Saltus
+ * 'auto' + lectio scrollHeight layout COACTUM cum arca ad rows=14
+ * collapsa facit: documentum momento brevius, fenestra ad terminum
+ * brevem SECATUR, altitudo restituitur sed volutio secta manet -
+ * linea currens sub plicam labitur IN OMNI ICTU, etiam sine
+ * mutatione altitudinis (Fran: 'typing scrolls the line half off').
+ * Ergo dum scribitur numquam collabimus: crescentia sine 'auto'
+ * detegitur (scrollHeight = max(contentum, arca) - contentum
+ * effluens per se apparet); contractio post deletiones per moram
+ * otii infra, cum volutione servata. */
 var editor_mensura_pendet = false;
 function editor_crescere_mox() {
   if (editor_mensura_pendet) { return; }
   editor_mensura_pendet = true;
   requestAnimationFrame(function () {
     var ta = document.getElementById('editor-corpus');
-    var ante = ta.style.height;
     editor_mensura_pendet = false;
-    if (editor_crescere() + 'px' === ante) { return; }
-    /* linea ULTIMA solum: editio media lineam currentem in pagina
-     * non movet (contentum infra descendit, cursor manet) */
-    if (ta.value.indexOf('\n', ta.selectionStart) !== -1) { return; }
-    /* AD IMUM PAGINAE simpliciter (Fran 2026-07-30): arca editoris
-     * elementum ultimum visus est, ergo imum paginae = cursor in
-     * conspectu. Consulto NON generale - huic paginae hoc sufficit
-     * et arithmetica delta 'adhuc paulum mira' videbatur. */
-    window.scrollTo(0, document.documentElement.scrollHeight);
+    if (ta.scrollHeight > ta.clientHeight) {
+      ta.style.height = Math.max(ta.scrollHeight + 2,
+        +(ta.dataset.minima || 0)) + 'px';
+      /* crevit + cursor in linea ultima -> ad imum paginae (arca
+       * elementum ultimum visus est; consulto non generale) */
+      if (ta.value.indexOf('\n', ta.selectionStart) === -1) {
+        window.scrollTo(0, document.documentElement.scrollHeight);
+      }
+    }
+    editor_contractio_mox();
   });
+}
+/* contractio otiosa: saltus 'auto' plenus (qui solus contrahere
+ * potest) DC ms post ictum ultimum, volutione ante/post servata
+ * ne clampum fenestram moveat */
+var editor_contractio_horologium = null;
+function editor_contractio_mox() {
+  clearTimeout(editor_contractio_horologium);
+  editor_contractio_horologium = setTimeout(function () {
+    var ta = document.getElementById('editor-corpus');
+    var y = window.scrollY;
+    editor_crescere();
+    window.scrollTo(0, y);
+  }, 600);
 }
 document.getElementById('editor-corpus').addEventListener('input',
   editor_crescere_mox);
