@@ -66,3 +66,28 @@ Traps found and paid for:
 Line grammar is deliberate (not stml_legere): author bytes outside
 the stamp splice stay untouched. The stamped form's STML validity
 is pinned in lib/stml (captio fragmentorum, 32a1e00).
+
+## 2026-07-30 (later) — the LIVED bar caught two things the suite missed
+
+Fran's first real saves (articulus 01KYSPA4JBKV: genus
+`project-management-genera` with 8 res, then `articuli-features`
+with 2) worked — stamps landed, genera born, titles right. But the
+live ledger showed every captured res carrying a spurious custodia
+nota: "genus ignotum ad creationem (definitio-generis deest)". The
+batch validated genus against the registry, which only receives
+user definitio-res at FOLD time — the same-batch definitio was
+invisible to it. My test store had the same notes all along; the
+suite never asserted their ABSENCE, so nobody looked. An
+unasserted side effect is an unseen side effect. Fix: GestaObumbra
+gained `clavis_definitionis`, the builder fills it for definitio
+creations, and the creatio check consults `_definitio_in_obumbris`
+before condemning (fields not judged — progressive law; the
+registry judges from the next save on). Pin added: captured res
+shows NO "nota (machina)".
+
+Second live find: Fran wrote `</>` expecting an anonymous closing
+tag and it LOOKED like it worked — actually the line scanner just
+ignored it and the corpus happened to end there (fourth member of
+the silent-degenerate family). Filed as a real stml feature +
+scanner awareness: 01KYSPRF9R ("tagus claudens
+anonymus").

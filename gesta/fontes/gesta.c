@@ -309,10 +309,14 @@ _res_capere (GestaMundus* m, chorda res_id, Piscina* piscina)
 /* obumbrae fascis (K3 B3): res in eodem fasce creatae, nondum
  * plicatae - validatio eventuum posteriorum eas videt. Exsistentia
  * et genus tantum; status = status_initialis generis; datum vacuum
- * (membra stantia ex obumbra nulla - salus posterior iudicat). */
+ * (membra stantia ex obumbra nulla - salus posterior iudicat).
+ * clavis_definitionis (captura fragmentorum 2026-07-30): definitio
+ * in fasce genus definit ANTE plicaturam registri - creatio rei
+ * eiusdem generis posterior in fasce non violat. */
 nomen structura {
     chorda res_id;
     chorda genus;
+    chorda clavis_definitionis;   /* "" nisi genus == definitio */
 } GestaObumbra;
 
 /* obumbram quaerere (extractum K4 frustum B - via validationis
@@ -382,6 +386,32 @@ _res_capere_cum_obumbra (GestaMundus* m, chorda res_id,
         redde ordo;
     }
     redde _obumbram_quaerere(m, res_id, obumbrae, piscina);
+}
+
+/* genus in eodem fasce per definitionem natum? (registrum ad
+ * plicaturam demum proicitur - sine hac quaestione creatio rei
+ * generis novi in fasce ipso 'genus ignotum' falso clamaret) */
+interior b32
+_definitio_in_obumbris (chorda genus, Xar* obumbrae)
+{
+    i32 i;
+
+    si (obumbrae == NIHIL || genus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(obumbrae); i++)
+    {
+        GestaObumbra* ob = (GestaObumbra*)xar_obtinere(obumbrae,
+            i);
+
+        si (ob != NIHIL
+            && _chordae_pares(ob->clavis_definitionis, genus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 /* prototypum lectionis ramorum (definitio in sectione Lectio
@@ -2309,6 +2339,13 @@ _eventum_validare (GestaMundus* m, constans GestaEventumParatum* p,
 
             si (gd.mensura == ZEPHYRUM)
             {
+                /* genus in fasce ipso definitum (captura
+                 * fragmentorum): notum sed nondum plicatum -
+                 * campi non iudicandi (lex progressiva) */
+                si (_definitio_in_obumbris(gt, obumbrae))
+                {
+                    redde NIHIL;
+                }
                 redde "violatio: genus ignotum ad creationem"
                     " (definitio-generis deest)";
             }
@@ -2660,6 +2697,18 @@ _fascis_scribere (GestaMundus* m,
                 ob->res_id = p.res_id;
                 ob->genus = (g != NIHIL && json_est_chorda(g))
                     ? json_ad_chorda(g) : _ch("");
+                ob->clavis_definitionis = _ch("");
+                si (_chorda_est(ob->genus, "definitio"))
+                {
+                    JsonValor* cl = json_objectum_capere(
+                        p.datum_obiectum, "clavis");
+
+                    si (cl != NIHIL && json_est_chorda(cl))
+                    {
+                        ob->clavis_definitionis =
+                            json_ad_chorda(cl);
+                    }
+                }
             }
         }
         si (res_ids_out != NIHIL)

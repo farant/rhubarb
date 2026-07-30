@@ -2284,6 +2284,9 @@ s32 principale (vacuum)
         r = _mitte(t, piscina, imperium);
         CREDO_VERUM (strstr(r, "eat a cake") != NIHIL);
         CREDO_VERUM (strstr(r, "ideas") != NIHIL);
+        /* genus in fasce ipso natum = notum validationi (obumbra
+         * definitionis) - NULLA nota custodiae 'genus ignotum' */
+        CREDO_VERUM (strstr(r, "nota (machina)") == NIHIL);
 
         /* editio lineae stampatae -> titulus rei renovatur */
         sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":804,"
