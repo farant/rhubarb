@@ -225,6 +225,28 @@ _mitte (Tabularium* t, Piscina* pn, constans character* linea)
     redde fructus;
 }
 
+/* stampam primam ex responso extrahere ('<#' sequitur usque ad
+ * spatium; captura fragmentorum) */
+interior vacuum
+_stampa_ex_responso (constans character* r, character* quaternio)
+{
+    constans character* p = strstr(r, "<#");
+    i32 i;
+
+    quaternio[0] = '\0';
+    si (p == NIHIL)
+    {
+        redde;
+    }
+    p += II;
+    per (i = ZEPHYRUM; i < XXVI && p[i] != '\0' && p[i] != ' ';
+        i++)
+    {
+        quaternio[i] = p[i];
+    }
+    quaternio[i] = '\0';
+}
+
 /* res_id ex responso "res <ID> creata" extrahere (primum "res "
  * in textu responsi = nostrum) */
 interior vacuum
@@ -2204,6 +2226,146 @@ s32 principale (vacuum)
             "\"acta\",\"arguments\":{\"ab_lecto\":\"verum\"}}}");
         CREDO_VERUM (strstr(r, "(nihil novi)") != NIHIL);
         CREDO_VERUM (strstr(r, "plura restant") == NIHIL);
+    }
+
+    /* XXII. captura fragmentorum (01KYRGEGV4): bloci <genus> in
+     * articulis - lineae '<# (>' / '<(>' res gignunt, stampantur
+     * praefixo ULID mintae fortuitae; genus natum tacite; editio
+     * titulum renovat; deletio orphanam signat. */
+    {
+        character articulus_id[GESTA_RES_ID_MENSURA];
+        character stampa[XXVII];
+        character imperium[PROBATIO_SEMITA_MENSURA];
+
+        /* creatio cum bloco: linea hash + linea sacchari */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":800,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"articulus\","
+            "\"titulus\":\"cogitationes hodiernae\",\"corpus\":"
+            "\"prooemium liberum\\n<ideas>\\n<# (> eat a cake\\n"
+            "<(> alter cibus\\n</ideas>\\npostscriptum\","
+            "\"actor\":\"fran\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        CREDO_VERUM (strstr(r, "capturae:") != NIHIL);
+        CREDO_VERUM (strstr(r, "res novae 2 stampatae") != NIHIL);
+        CREDO_VERUM (strstr(r, "genus natum: ideas") != NIHIL);
+        _res_id_ex_responso(r, articulus_id);
+        CREDO_VERUM (articulus_id[0] != '\0');
+
+        /* corpus stampatum: formae authoris abierunt, stampae
+         * adsunt; textus circumiacens intactus */
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":801,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}",
+            articulus_id);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "<#01") != NIHIL);
+        CREDO_VERUM (strstr(r, "<# (>") == NIHIL);
+        CREDO_VERUM (strstr(r, "<(>") == NIHIL);
+        CREDO_VERUM (strstr(r, "prooemium liberum") != NIHIL);
+        CREDO_VERUM (strstr(r, "postscriptum") != NIHIL);
+        _stampa_ex_responso(r, stampa);
+        CREDO_VERUM ((i32)strlen(stampa) >= XII);
+
+        /* definitio nata in registrum plicata (clavis ideas) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":802,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":"
+            "\"definitio\"}}}");
+        CREDO_VERUM (strstr(r, "\\\"clavis\\\":\\\"ideas\\\"")
+            != NIHIL || strstr(r, "\"clavis\":\"ideas\"")
+            != NIHIL);
+
+        /* res capta per stampam resolvitur; titulus = textus
+         * lineae; campus textus (definitionis natae) idem */
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":803,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}", stampa);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "eat a cake") != NIHIL);
+        CREDO_VERUM (strstr(r, "ideas") != NIHIL);
+
+        /* editio lineae stampatae -> titulus rei renovatur */
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":804,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"mutatio\",\"datum\":\"{\\\"corpus\\\":"
+            "\\\"<ideas>\\\\n<#%s (> eat a cake NOW\\\\n"
+            "</ideas>\\\"}\",\"actor\":\"fran\"}}}",
+            articulus_id, stampa);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "eventum mutatio scriptum")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "tituli renovati 1") != NIHIL);
+        /* linea sacchari abiit -> res altera orphana */
+        CREDO_VERUM (strstr(r, "orphanae 1") != NIHIL);
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":805,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}", stampa);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "eat a cake NOW") != NIHIL);
+
+        /* deletio lineae restantis -> orphana; res vivit */
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":806,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"mutatio\",\"datum\":\"{\\\"corpus\\\":"
+            "\\\"<ideas>\\\\n</ideas>\\\"}\",\"actor\":"
+            "\"fran\"}}}", articulus_id);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "orphanae 1") != NIHIL);
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":807,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}", stampa);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "eat a cake NOW") != NIHIL);
+        CREDO_VERUM (strstr(r, "orphanus") != NIHIL);
+
+        /* linea rediviva -> signum orphanae tollitur */
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":808,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"mutatio\",\"datum\":\"{\\\"corpus\\\":"
+            "\\\"<ideas>\\\\n<#%s (> eat a cake NOW\\\\n"
+            "</ideas>\\\"}\",\"actor\":\"fran\"}}}",
+            articulus_id, stampa);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "eventum mutatio scriptum")
+            != NIHIL);
+        CREDO_VERUM (strstr(r, "redivivae 1") != NIHIL);
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":809,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}", stampa);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "orphanus") == NIHIL);
+
+        /* extra blocum nihil capitur; stampa insoluta praeteritur */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":810,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"articulus\","
+            "\"titulus\":\"margines\",\"corpus\":"
+            "\"<# (> extra blocum\\n<ideas>\\n"
+            "<#01AAAAAAAAAA (> phantasma\\n</ideas>\","
+            "\"actor\":\"fran\"}}}");
+        CREDO_VERUM (strstr(r, "lineae praeteritae 1") != NIHIL);
+        _res_id_ex_responso(r, articulus_id);
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":811,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}",
+            articulus_id);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "<# (> extra blocum") != NIHIL);
+        CREDO_VERUM (strstr(r, "01AAAAAAAAAA") != NIHIL);
+
+        /* pipatum: transitus quiescit (articuli soli) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":812,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"pipatum\","
+            "\"titulus\":\"pipatum cum bloco\",\"corpus\":"
+            "\"<ideas>\\n<# (> non capienda\\n</ideas>\","
+            "\"actor\":\"fran\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        CREDO_VERUM (strstr(r, "capturae:") == NIHIL);
     }
 
     /* XVI. renovatio sui (01KYQ4T5EE): explorator praevius =

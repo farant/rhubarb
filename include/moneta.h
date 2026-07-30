@@ -23,4 +23,14 @@ vacuum
 moneta_ulid (
     character* effusio);
 
+/* Varians SINE monotonia: fortuita recentia quaque vocatione.
+ * Gemini eiusdem ms trans partem fortuitam totam differunt - ergo
+ * praefixa brevia (tempus 10 + pauca fortuita) eos discernunt,
+ * quod monotonia vetat (gemini monotonici solo signo ultimo
+ * differunt). Pro stampis capturarum (2026-07-30); ordo
+ * generationis NON lexicographicus intra ms. */
+vacuum
+moneta_ulid_fortuita (
+    character* effusio);
+
 #endif /* MONETA_H */

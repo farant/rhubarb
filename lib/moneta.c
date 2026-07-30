@@ -116,3 +116,47 @@ moneta_ulid (character* effusio)
     }
     effusio[26] = '\0';
 }
+
+vacuum
+moneta_ulid_fortuita (character* effusio)
+{
+    structura timeval nunc_tv;
+    Momentum nunc;
+    i8 octeti[10];
+    integer k;
+    integer pars;
+
+    gettimeofday(&nunc_tv, NIHIL);
+    nunc = (Momentum)nunc_tv.tv_sec * 1000
+         + (Mora)nunc_tv.tv_usec / 1000;
+
+    {
+        i64 t = (i64)nunc;
+
+        per (k = 9; k >= 0; k--)
+        {
+            effusio[k] = ULID_LITTERAE[t % 32];
+            t = t / 32;
+        }
+    }
+    /* fortuita RECENTIA quaque vocatione - status monotoniae
+     * intactus (gemini eiusdem ms trans partem fortuitam TOTAM
+     * differunt, non solum signo ultimo) */
+    _fortuita_implere(octeti, 10);
+    per (pars = 0; pars < 2; pars++)
+    {
+        i64 n = 0;
+        integer b;
+
+        per (b = 0; b < 5; b++)
+        {
+            n = n * 256 + (i64)octeti[pars * 5 + b];
+        }
+        per (b = 7; b >= 0; b--)
+        {
+            effusio[10 + pars * 8 + b] = ULID_LITTERAE[n % 32];
+            n = n / 32;
+        }
+    }
+    effusio[26] = '\0';
+}

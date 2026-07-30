@@ -1871,3 +1871,38 @@ veri in fumo vivo); fumus fori = porta viva respawn. Asperitas:
 index instrumentorum clientis MCP in conexione figitur -
 instrumenta nova residentium post commissum reconnexione unica
 apparent.
+
+## 2026-07-30 — CAPTURA FRAGMENTORUM (arc ② rei 01KYRGEGV4)
+
+INTENTIO: bloci <genus> in articulis res gignant - lineae '<# (>'
+/ '<(>' stampantur praefixo ULID, titulus rei = textus lineae;
+genus abest -> definitio nata tacite; editio titulum renovat;
+deletio orphanam signat. Decisa cum Frane: minta fortuita XII
+signorum (monotonia praefixa brevia vetat - mensuratum), genus
+natum tacite + origo provenientiae. Fascis atomicus contra
+duplicationem post ruinam.
+
+RELATIO: machina ut intentio. Transitus in tabularium.c vivit
+(grammatica linearis propria - octeti authoris intacti; stml
+validitatem formae pinnat, non parsat hic), uncis in _tab_addere
+et _tab_gerere/mutatio; moneta_ulid_fortuita nova (sine statu);
+orphanus in claves systematis gestae (iudicium camporum machinam
+suam ne iudicet). Deviationes ab intentione: genus rei ex COLUMNA
+legendum (plicatura genus in dato non servat - hora perdita,
+lectio dati numquam congruebat); custos redivivarum additus
+(remotio orphani sine numero = summarium mentiens). Probationes:
+sectio XXII probatio_tabularii (X pinnae per fluxum totum);
+suite gestae 4/4, radix 108/108.
+
+INSTRUMENTA (debrief): adhibita = legati corpus/vocantes in
+lectione suturae, annales probationis ut oraculum (grep in
+probatio_tab.jsonl eventa vera ostendit - inventio culpae
+orphani), fprintf ferrivium (CAPDBG bis - est_articulus statim
+nominavit). Fructus = annales-ut-oraculum iterum vicit: eventus
+scriptus non negatur, differentia inter 'eventum abest' et
+'eventum adest sed alibi verbum congruit' statim visibilis.
+Asperitates = (1) suite gestae e radice currenda - CWD alia
+omnia frangit a salutatione, aspectus catastrophae, causa
+trivialis; (2) zsh '===' ictus tertius (res 01KYRCJ340).
+Desiderata = nihil novum; 01KYR7XMM9 (fori legere praefixo
+tacite []) iterum sensum fecit sed non momordit.

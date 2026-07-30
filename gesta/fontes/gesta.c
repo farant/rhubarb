@@ -1879,14 +1879,16 @@ _eventum_praeparare (GestaMundus* m, constans GestaEventum* e,
  * ================================================== */
 
 /* claves systematis - numquam contra campos iudicatae (via addere
- * conditae aut plicatura curatae) */
+ * conditae aut plicatura curatae; orphanus = signum molle
+ * capturae fragmentorum, machina ponit et tollit) */
 interior b32
 _clavis_systematis (chorda k)
 {
     redde _chorda_est(k, "genus") || _chorda_est(k, "titulus")
         || _chorda_est(k, "corpus") || _chorda_est(k, "tags")
         || _chorda_est(k, "ancorae") || _chorda_est(k, "signatura")
-        || _chorda_est(k, "status") || _chorda_est(k, "notae");
+        || _chorda_est(k, "status") || _chorda_est(k, "notae")
+        || _chorda_est(k, "orphanus");
 }
 
 /* campum in campis definitionis per clavem invenire */

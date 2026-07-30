@@ -17,6 +17,8 @@
 #include "filum.h"
 #include "via.h"
 #include "iter_directoria.h"
+#include "moneta.h"   /* captura fragmentorum: minta fortuita
+                       * (stampae linearum in articulis) */
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>   /* horologium politicae tacendi (sutura POSIX) */
@@ -2577,6 +2579,959 @@ _titulum_derivare (chorda corpus)
     redde t;
 }
 
+/* ==================================================
+ * Captura fragmentorum (bloci <genus> in articulis)
+ * ==================================================
+ * Articulus blocum <ideas> continet; lineae '<# (> textus' (aut
+ * saccharum '<(>') res generis 'ideas' gignunt: praefixum ULID in
+ * lineam stampatur ('<#01KYRGEGV4NH (> textus') et titulus rei =
+ * textus lineae. Editio posterior lineae stampatae titulum
+ * renovat; linea deleta rem orphanam signat (res numquam
+ * moritur); genus abest -> definitio nata tacite (origo
+ * provenientiam fert). DIVISIO DOMINII: textus titulum possidet,
+ * tabula cetera. Fascis atomicus (genus + res + eventus articuli)
+ * - ruina nihil dimidium relinquit, ergo lineae sine stampa
+ * numquam res duplicant. Stampa = praefixum XII signorum mintae
+ * FORTUITAE (gemini eiusdem ms trans fortuita tota differunt -
+ * minta monotonica praefixa brevia structuraliter vetat),
+ * extensum si collidit. Grammatica linearis consulto (non
+ * stml_legere): octeti authoris extra stampam intacti; validitas
+ * formae stampatae in lib/stml pinnata (captio fragmentorum,
+ * 32a1e00). Trunci solum - in ramis transitus quiescit. */
+
+nomen structura {
+    chorda genus;      /* genus bloci continentis */
+    chorda id;         /* stampa exsistens (vacua = linea nova) */
+    chorda titulus;    /* textus post (> tonsus */
+    i32    insertio;   /* offset: post '#' aut post '<' (nuda) */
+    b32    nuda;       /* saccharum <(> - '#stampa ' inserendum */
+} TabCapturaLinea;
+
+nomen structura {
+    i32    offset;
+    b32    nuda;
+    chorda stampa;
+} TabCapturaInsertio;
+
+nomen structura {
+    chorda genus;
+    b32    nata;       /* definitio in hoc fasce plananda */
+    chorda campus;     /* campus tituli generis ("" = titulus solus) */
+} TabCapturaGenus;
+
+nomen structura {
+    Xar*   eventa;            /* GestaFascisEventum (valore) */
+    chorda corpus_stampatum;
+    i32    novae;
+    i32    renovatae;
+    i32    orphanae;
+    i32    redivivae;         /* signa orphanarum sublata */
+    i32    praeteritae;       /* sine textu / stampae insolutae */
+    chorda genera_nova;       /* nomina commatibus (pro responso) */
+    b32    activa;
+} TabCapturaFructus;
+
+interior b32
+_cap_spatium (i8 c)
+{
+    redde c == (i8)' ' || c == (i8)'\t';
+}
+
+interior b32
+_cap_nominis (i8 c)
+{
+    redde (c >= (i8)'a' && c <= (i8)'z')
+        || (c >= (i8)'A' && c <= (i8)'Z')
+        || (c >= (i8)'0' && c <= (i8)'9')
+        || c == (i8)'_' || c == (i8)'-';
+}
+
+interior b32
+_cap_aequae (chorda a, chorda b)
+{
+    redde a.mensura == b.mensura
+        && (a.mensura == ZEPHYRUM
+            || memcmp(a.datum, b.datum,
+                   (memoriae_index)a.mensura) == ZEPHYRUM);
+}
+
+/* forma stampae: praefixum ULID (VI..XXVI signa Crockford) - id
+ * alienum (e.g. '<#header (>') non nostrum, tacite praeteritur */
+interior b32
+_cap_stampa_est (chorda id)
+{
+    i32 i;
+
+    si (id.mensura < VI || id.mensura > XXVI)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < id.mensura; i++)
+    {
+        character c = (character)id.datum[i];
+        b32 cifra = c >= '0' && c <= '9';
+        b32 littera = c >= 'A' && c <= 'Z'
+            && c != 'I' && c != 'L' && c != 'O' && c != 'U';
+
+        si (!cifra && !littera)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* '<nomen>' solum in linea = blocus aperitur (genus_out ponitur) */
+interior b32
+_cap_blocum_aperit (chorda corpus, i32 initium, i32 finis,
+    chorda* genus_out)
+{
+    i32 i = initium;
+    i32 g;
+
+    dum (i < finis && _cap_spatium(corpus.datum[i]))
+    {
+        i++;
+    }
+    si (i >= finis || corpus.datum[i] != (i8)'<')
+    {
+        redde FALSUM;
+    }
+    i++;
+    g = i;
+    dum (i < finis && _cap_nominis(corpus.datum[i]))
+    {
+        i++;
+    }
+    si (i == g || i >= finis || corpus.datum[i] != (i8)'>')
+    {
+        redde FALSUM;
+    }
+    genus_out->datum = corpus.datum + g;
+    genus_out->mensura = i - g;
+    i++;
+    dum (i < finis && (_cap_spatium(corpus.datum[i])
+        || corpus.datum[i] == (i8)'\r'))
+    {
+        i++;
+    }
+    redde i >= finis;
+}
+
+/* '</nomen>' solum in linea, nomini aperto congruens */
+interior b32
+_cap_blocum_claudit (chorda corpus, i32 initium, i32 finis,
+    chorda genus)
+{
+    i32 i = initium;
+
+    dum (i < finis && _cap_spatium(corpus.datum[i]))
+    {
+        i++;
+    }
+    si (i + I >= finis || corpus.datum[i] != (i8)'<'
+        || corpus.datum[i + I] != (i8)'/')
+    {
+        redde FALSUM;
+    }
+    i += II;
+    si (i + genus.mensura > finis
+        || memcmp(corpus.datum + i, genus.datum,
+               (memoriae_index)genus.mensura) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    i += genus.mensura;
+    si (i >= finis || corpus.datum[i] != (i8)'>')
+    {
+        redde FALSUM;
+    }
+    i++;
+    dum (i < finis && (_cap_spatium(corpus.datum[i])
+        || corpus.datum[i] == (i8)'\r'))
+    {
+        i++;
+    }
+    redde i >= finis;
+}
+
+/* lineam capturae legere: post spatia '<' tum '#'[id] aut '('.
+ * FALSUM = linea non captura ('<#id>' sine parenthesi = fragmentum
+ * ordinarium, non tangitur). */
+interior b32
+_cap_lineam_legere (chorda corpus, i32 initium, i32 finis,
+    chorda genus, TabCapturaLinea* cl)
+{
+    i32 i = initium;
+
+    dum (i < finis && _cap_spatium(corpus.datum[i]))
+    {
+        i++;
+    }
+    si (i >= finis || corpus.datum[i] != (i8)'<')
+    {
+        redde FALSUM;
+    }
+    i++;
+    si (i < finis && corpus.datum[i] == (i8)'#')
+    {
+        i32 id_initium;
+
+        i++;
+        cl->insertio = i;
+        cl->nuda = FALSUM;
+        id_initium = i;
+        dum (i < finis && _cap_nominis(corpus.datum[i]))
+        {
+            i++;
+        }
+        cl->id.datum = corpus.datum + id_initium;
+        cl->id.mensura = i - id_initium;
+    }
+    alioquin si (i < finis && corpus.datum[i] == (i8)'(')
+    {
+        cl->insertio = i;
+        cl->nuda = VERUM;
+        cl->id.datum = NIHIL;
+        cl->id.mensura = ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    dum (i < finis && _cap_spatium(corpus.datum[i]))
+    {
+        i++;
+    }
+    si (i >= finis || corpus.datum[i] != (i8)'(')
+    {
+        redde FALSUM;
+    }
+    dum (i < finis && corpus.datum[i] == (i8)'(')
+    {
+        i++;
+    }
+    dum (i < finis && _cap_spatium(corpus.datum[i]))
+    {
+        i++;
+    }
+    si (i >= finis || corpus.datum[i] != (i8)'>')
+    {
+        redde FALSUM;
+    }
+    i++;
+    dum (i < finis && _cap_spatium(corpus.datum[i]))
+    {
+        i++;
+    }
+    {
+        i32 f = finis;
+
+        dum (f > i && (_cap_spatium(corpus.datum[f - I])
+            || corpus.datum[f - I] == (i8)'\r'))
+        {
+            f--;
+        }
+        cl->titulus.datum = corpus.datum + i;
+        cl->titulus.mensura = f - i;
+    }
+    cl->genus = genus;
+    redde VERUM;
+}
+
+/* lineas capturae in corpore invenire (contextus blocorum lineatim
+ * sequitur; extra blocos nihil capitur) */
+interior Xar*
+_capturas_invenire (chorda corpus, Piscina* pn)
+{
+    Xar* lineae = xar_creare(pn, magnitudo(TabCapturaLinea));
+    chorda genus_apertum;
+    i32 i;
+
+    si (lineae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    genus_apertum.mensura = ZEPHYRUM;
+    genus_apertum.datum = NIHIL;
+    i = ZEPHYRUM;
+    dum (i < corpus.mensura)
+    {
+        i32 finis = i;
+
+        dum (finis < corpus.mensura
+            && corpus.datum[finis] != (i8)'\n')
+        {
+            finis++;
+        }
+        si (genus_apertum.mensura == ZEPHYRUM)
+        {
+            (vacuum)_cap_blocum_aperit(corpus, i, finis,
+                &genus_apertum);
+        }
+        alioquin si (_cap_blocum_claudit(corpus, i, finis,
+                genus_apertum))
+        {
+            genus_apertum.mensura = ZEPHYRUM;
+            genus_apertum.datum = NIHIL;
+        }
+        alioquin
+        {
+            TabCapturaLinea cl;
+
+            si (_cap_lineam_legere(corpus, i, finis, genus_apertum,
+                    &cl))
+            {
+                TabCapturaLinea* slot =
+                    (TabCapturaLinea*)xar_addere(lineae);
+
+                si (slot != NIHIL)
+                {
+                    *slot = cl;
+                }
+            }
+        }
+        i = finis + I;
+    }
+    redde lineae;
+}
+
+interior s64
+_cap_praefixi_numerus (Tabularium* t, chorda praefixum)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT COUNT(*) FROM res WHERE res_id LIKE ? || '%'");
+    s64 n = ZEPHYRUM;
+
+    si (e == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    scrinium_ligare_textum(e, I, praefixum);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        n = scrinium_columna_numerus(e, 0);
+    }
+    scrinium_finire(e);
+    redde n;
+}
+
+/* stampa aliqua iam data praefixum pleni novi est? (fascis intra
+ * ms unum cudit - sine hac custodia stampa prior ambigua fieret) */
+interior b32
+_cap_stampa_praefigit (Xar* insertiones, constans character* plenum)
+{
+    i32 i;
+    i32 n = xar_numerus(insertiones);
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        TabCapturaInsertio* ins =
+            (TabCapturaInsertio*)xar_obtinere(insertiones, i);
+
+        si (ins != NIHIL && ins->stampa.mensura > ZEPHYRUM
+            && memcmp(plenum, ins->stampa.datum,
+                   (memoriae_index)ins->stampa.mensura) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* genus in memoriola quaerere aut inserere; abest in registro ->
+ * definitio nata (eventum creationis in fascem cadit) */
+interior TabCapturaGenus*
+_cap_genus_capere (Tabularium* t, Piscina* pn, Xar* genera,
+    chorda genus, constans character* actor,
+    constans character* origo_l, Xar* eventa,
+    ChordaAedificator* nomina_aed)
+{
+    i32 i;
+    i32 n = xar_numerus(genera);
+    TabCapturaGenus* g;
+    chorda gd;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        g = (TabCapturaGenus*)xar_obtinere(genera, i);
+        si (g != NIHIL && _cap_aequae(g->genus, genus))
+        {
+            redde g;
+        }
+    }
+    g = (TabCapturaGenus*)xar_addere(genera);
+    si (g == NIHIL)
+    {
+        redde NIHIL;
+    }
+    g->genus = genus;
+    g->nata = FALSUM;
+    g->campus.mensura = ZEPHYRUM;
+    g->campus.datum = NIHIL;
+    gd = gesta_genus_datum(t->mundus, _litterae(pn, genus), pn);
+    si (gd.mensura > ZEPHYRUM)
+    {
+        JsonResultus r = json_legere(gd, pn);
+
+        si (r.successus && json_est_objectum(r.radix))
+        {
+            JsonValor* v = json_objectum_capere(r.radix,
+                "campus_tituli");
+
+            si (v != NIHIL && json_est_chorda(v))
+            {
+                g->campus = json_ad_chorda(v);
+            }
+        }
+        redde g;
+    }
+    /* genus abest: definitio nata tacite (decisio 2026-07-30) -
+     * campus textus unicus, campus_tituli = textus */
+    g->nata = VERUM;
+    g->campus = _ch("textus");
+    {
+        JsonValor* def = json_objectum_creare(pn);
+        JsonValor* campi = json_tabulatum_creare(pn);
+        JsonValor* campus = json_objectum_creare(pn);
+        GestaFascisEventum* fe;
+
+        json_objectum_ponere(campus, "clavis",
+            json_chorda_creare_literis(pn, "textus"));
+        json_objectum_ponere(campus, "monstrans",
+            json_chorda_creare_literis(pn, "Textus"));
+        json_objectum_ponere(campus, "typus",
+            json_chorda_creare_literis(pn, "textus"));
+        json_tabulatum_addere(campi, campus);
+        json_objectum_ponere(def, "genus",
+            json_chorda_creare_literis(pn, "definitio"));
+        json_objectum_ponere(def, "titulus",
+            json_chorda_creare(pn, genus));
+        json_objectum_ponere(def, "clavis",
+            json_chorda_creare(pn, genus));
+        json_objectum_ponere(def, "titulus_monstrans",
+            json_chorda_creare(pn, genus));
+        json_objectum_ponere(def, "campi", campi);
+        json_objectum_ponere(def, "campus_tituli",
+            json_chorda_creare_literis(pn, "textus"));
+        fe = (GestaFascisEventum*)xar_addere(eventa);
+        si (fe != NIHIL)
+        {
+            fe->event_id = NIHIL;
+            fe->eventum.res_id = NIHIL;
+            fe->eventum.genus_eventus = "creatio";
+            fe->eventum.datum = _litterae(pn,
+                json_scribere(def, pn));
+            fe->eventum.actor = actor;
+            fe->eventum.origo = origo_l;
+        }
+        si (chorda_aedificator_longitudo(nomina_aed)
+            > (memoriae_index)ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(nomina_aed, ", ");
+        }
+        chorda_aedificator_appendere_chorda(nomina_aed, genus);
+    }
+    redde g;
+}
+
+/* corpus cum stampis insertis reficere (insertiones offsetibus
+ * ascendentibus - ordo linearum) */
+interior chorda
+_capturas_stampare (chorda corpus, Xar* insertiones, Piscina* pn)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(pn,
+        corpus.mensura + CXXVIII);
+    i32 i;
+    i32 n = xar_numerus(insertiones);
+    i32 ultimum = ZEPHYRUM;
+    chorda pars;
+
+    si (aed == NIHIL)
+    {
+        redde corpus;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        TabCapturaInsertio* ins =
+            (TabCapturaInsertio*)xar_obtinere(insertiones, i);
+
+        si (ins == NIHIL)
+        {
+            perge;
+        }
+        pars.datum = corpus.datum + ultimum;
+        pars.mensura = ins->offset - ultimum;
+        chorda_aedificator_appendere_chorda(aed, pars);
+        si (ins->nuda)
+        {
+            chorda_aedificator_appendere_character(aed, '#');
+        }
+        chorda_aedificator_appendere_chorda(aed, ins->stampa);
+        si (ins->nuda)
+        {
+            chorda_aedificator_appendere_character(aed, ' ');
+        }
+        ultimum = ins->offset;
+    }
+    pars.datum = corpus.datum + ultimum;
+    pars.mensura = corpus.mensura - ultimum;
+    chorda_aedificator_appendere_chorda(aed, pars);
+    redde chorda_aedificator_finire(aed);
+}
+
+/* stampam ad res_id plenum solvere (XXVI = id directum; brevius =
+ * praefixum inambiguum); vacua = insoluta/ambigua */
+interior chorda
+_cap_stampam_solvere (Tabularium* t, chorda id, Piscina* pn)
+{
+    chorda vacua;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    si (id.mensura == XXVI)
+    {
+        chorda d = gesta_res_datum(t->mundus, _litterae(pn, id),
+            pn);
+
+        redde d.mensura > ZEPHYRUM ? id : vacua;
+    }
+    redde _res_per_praefixum(t, id, pn, NIHIL);
+}
+
+/* genus rei ex COLUMNA tabulae res - plicatura genus in dato non
+ * servat (creatio genus in columnam movet), ergo lectio dati
+ * mentiretur (vacua) */
+interior chorda
+_cap_genus_rei (Tabularium* t, chorda res_id, Piscina* pn)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT genus FROM res WHERE res_id = ?");
+    chorda genus_ch;
+
+    genus_ch.mensura = ZEPHYRUM;
+    genus_ch.datum = NIHIL;
+    si (e == NIHIL)
+    {
+        redde genus_ch;
+    }
+    scrinium_ligare_textum(e, I, res_id);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        genus_ch = scrinium_columna_textus(e, 0, pn);
+    }
+    scrinium_finire(e);
+    redde genus_ch;
+}
+
+/* transitus capturarum: lineas legere, genera nata planare, res
+ * novas cudere + stampare, titulos differre-et-renovare, orphanas
+ * signare. Eventa in fr->eventa cadunt (fascis a vocante
+ * scribitur); corpus_stampatum = textus finalis eventus articuli. */
+interior vacuum
+_capturas_tractare (Tabularium* t, Piscina* pn,
+    constans character* articulus_id, chorda corpus_vetus,
+    chorda corpus_novum, constans character* actor,
+    TabCapturaFructus* fr)
+{
+    Xar* lineae;
+    Xar* lineae_veteres = NIHIL;
+    Xar* insertiones;
+    Xar* genera;
+    ChordaAedificator* nomina_aed;
+    ChordaAedificator* origo_aed;
+    constans character* origo_l;
+    i32 i;
+    i32 n;
+    i32 n_veteres = ZEPHYRUM;
+
+    fr->eventa = xar_creare(pn, magnitudo(GestaFascisEventum));
+    fr->corpus_stampatum = corpus_novum;
+    fr->novae = ZEPHYRUM;
+    fr->renovatae = ZEPHYRUM;
+    fr->orphanae = ZEPHYRUM;
+    fr->redivivae = ZEPHYRUM;
+    fr->praeteritae = ZEPHYRUM;
+    fr->genera_nova.mensura = ZEPHYRUM;
+    fr->genera_nova.datum = NIHIL;
+    fr->activa = FALSUM;
+
+    lineae = _capturas_invenire(corpus_novum, pn);
+    si (corpus_vetus.mensura > ZEPHYRUM)
+    {
+        lineae_veteres = _capturas_invenire(corpus_vetus, pn);
+        n_veteres = lineae_veteres != NIHIL
+            ? xar_numerus(lineae_veteres) : ZEPHYRUM;
+    }
+    si (fr->eventa == NIHIL || lineae == NIHIL)
+    {
+        redde;
+    }
+    n = xar_numerus(lineae);
+    si (n == ZEPHYRUM && n_veteres == ZEPHYRUM)
+    {
+        redde;
+    }
+    fr->activa = VERUM;
+
+    insertiones = xar_creare(pn, magnitudo(TabCapturaInsertio));
+    genera = xar_creare(pn, magnitudo(TabCapturaGenus));
+    nomina_aed = chorda_aedificator_creare(pn, LXIV);
+    origo_aed = chorda_aedificator_creare(pn, LXIV);
+    si (insertiones == NIHIL || genera == NIHIL
+        || nomina_aed == NIHIL || origo_aed == NIHIL)
+    {
+        fr->activa = FALSUM;
+        redde;
+    }
+    chorda_aedificator_appendere_literis(origo_aed, "captura:");
+    chorda_aedificator_appendere_literis(origo_aed, articulus_id);
+    origo_l = _litterae(pn, chorda_aedificator_finire(origo_aed));
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        TabCapturaLinea* cl = (TabCapturaLinea*)xar_obtinere(
+            lineae, i);
+        TabCapturaGenus* g;
+
+        si (cl == NIHIL)
+        {
+            perge;
+        }
+        si (cl->id.mensura == ZEPHYRUM)
+        {
+            /* linea nova: cudere + stampare + creatio */
+            character* plenum;
+            chorda stampa;
+            chorda plenum_ch;
+            GestaFascisEventum* fe;
+            JsonValor* d;
+
+            si (cl->titulus.mensura == ZEPHYRUM)
+            {
+                fr->praeteritae++;
+                perge;
+            }
+            g = _cap_genus_capere(t, pn, genera, cl->genus, actor,
+                origo_l, fr->eventa, nomina_aed);
+            si (g == NIHIL)
+            {
+                fr->praeteritae++;
+                perge;
+            }
+            plenum = (character*)piscina_allocare(pn,
+                MONETA_ULID_MENSURA);
+            si (plenum == NIHIL)
+            {
+                fr->praeteritae++;
+                perge;
+            }
+            fac
+            {
+                moneta_ulid_fortuita(plenum);
+            } dum (_cap_stampa_praefigit(insertiones, plenum));
+            plenum_ch = _ch(plenum);
+            stampa.datum = plenum_ch.datum;
+            stampa.mensura = XII;
+            dum (stampa.mensura < XXVI
+                && _cap_praefixi_numerus(t, stampa)
+                    > (s64)ZEPHYRUM)
+            {
+                stampa.mensura++;
+            }
+            {
+                TabCapturaInsertio* ins =
+                    (TabCapturaInsertio*)xar_addere(insertiones);
+
+                si (ins != NIHIL)
+                {
+                    ins->offset = cl->insertio;
+                    ins->nuda = cl->nuda;
+                    ins->stampa = stampa;
+                }
+            }
+            d = json_objectum_creare(pn);
+            json_objectum_ponere(d, "genus",
+                json_chorda_creare(pn, cl->genus));
+            json_objectum_ponere(d, "titulus",
+                json_chorda_creare(pn, cl->titulus));
+            si (g->campus.mensura > ZEPHYRUM)
+            {
+                json_objectum_ponere_chorda(d, g->campus,
+                    json_chorda_creare(pn, cl->titulus));
+            }
+            fe = (GestaFascisEventum*)xar_addere(fr->eventa);
+            si (fe != NIHIL)
+            {
+                fe->event_id = NIHIL;
+                fe->eventum.res_id = plenum;
+                fe->eventum.genus_eventus = "creatio";
+                fe->eventum.datum = _litterae(pn,
+                    json_scribere(d, pn));
+                fe->eventum.actor = actor;
+                fe->eventum.origo = origo_l;
+                fr->novae++;
+            }
+        }
+        alioquin si (_cap_stampa_est(cl->id))
+        {
+            /* linea stampata: titulum differre-et-renovare */
+            chorda plenum = _cap_stampam_solvere(t, cl->id, pn);
+            chorda datum_rei;
+            JsonValor* status_rei = NIHIL;
+
+            si (plenum.mensura == ZEPHYRUM)
+            {
+                fr->praeteritae++;
+                perge;
+            }
+            datum_rei = gesta_res_datum(t->mundus,
+                _litterae(pn, plenum), pn);
+            si (datum_rei.mensura > ZEPHYRUM)
+            {
+                JsonResultus r = json_legere(datum_rei, pn);
+
+                si (r.successus && json_est_objectum(r.radix))
+                {
+                    status_rei = r.radix;
+                }
+            }
+            si (status_rei == NIHIL)
+            {
+                fr->praeteritae++;
+                perge;
+            }
+            /* orphana rediviva: signum molle tollere */
+            si (json_objectum_habet(status_rei, "orphanus"))
+            {
+                GestaFascisEventum* fe =
+                    (GestaFascisEventum*)xar_addere(fr->eventa);
+
+                si (fe != NIHIL)
+                {
+                    fe->event_id = NIHIL;
+                    fe->eventum.res_id = _litterae(pn, plenum);
+                    fe->eventum.genus_eventus = "remotio";
+                    fe->eventum.datum =
+                        "{\"clavis\":\"orphanus\"}";
+                    fe->eventum.actor = actor;
+                    fe->eventum.origo = origo_l;
+                    fr->redivivae++;
+                }
+            }
+            si (cl->titulus.mensura > ZEPHYRUM)
+            {
+                JsonValor* v_titulus = json_objectum_capere(
+                    status_rei, "titulus");
+                chorda titulus_vetus;
+
+                titulus_vetus.mensura = ZEPHYRUM;
+                titulus_vetus.datum = NIHIL;
+                si (v_titulus != NIHIL
+                    && json_est_chorda(v_titulus))
+                {
+                    titulus_vetus = json_ad_chorda(v_titulus);
+                }
+                si (!_cap_aequae(titulus_vetus, cl->titulus))
+                {
+                    JsonValor* d = json_objectum_creare(pn);
+                    chorda genus_rei = _cap_genus_rei(t, plenum,
+                        pn);
+                    GestaFascisEventum* fe;
+
+                    json_objectum_ponere(d, "titulus",
+                        json_chorda_creare(pn, cl->titulus));
+                    si (genus_rei.mensura > ZEPHYRUM)
+                    {
+                        g = _cap_genus_capere(t, pn, genera,
+                            genus_rei, actor, origo_l,
+                            fr->eventa, nomina_aed);
+                        si (g != NIHIL
+                            && g->campus.mensura > ZEPHYRUM)
+                        {
+                            json_objectum_ponere_chorda(d,
+                                g->campus,
+                                json_chorda_creare(pn,
+                                    cl->titulus));
+                        }
+                    }
+                    fe = (GestaFascisEventum*)xar_addere(
+                        fr->eventa);
+                    si (fe != NIHIL)
+                    {
+                        fe->event_id = NIHIL;
+                        fe->eventum.res_id = _litterae(pn,
+                            plenum);
+                        fe->eventum.genus_eventus = "mutatio";
+                        fe->eventum.datum = _litterae(pn,
+                            json_scribere(d, pn));
+                        fe->eventum.actor = actor;
+                        fe->eventum.origo = origo_l;
+                        fr->renovatae++;
+                    }
+                }
+            }
+        }
+        /* id alienum (non-ULID): fragmentum authoris, non nostrum */
+    }
+
+    /* orphanae: stampae veteres quae in textu novo non manent */
+    per (i = ZEPHYRUM; i < n_veteres; i++)
+    {
+        TabCapturaLinea* cv = (TabCapturaLinea*)xar_obtinere(
+            lineae_veteres, i);
+        b32 manet = FALSUM;
+        i32 k;
+        chorda plenum;
+        chorda datum_rei;
+
+        si (cv == NIHIL || cv->id.mensura == ZEPHYRUM
+            || !_cap_stampa_est(cv->id))
+        {
+            perge;
+        }
+        per (k = ZEPHYRUM; k < n && !manet; k++)
+        {
+            TabCapturaLinea* cl = (TabCapturaLinea*)xar_obtinere(
+                lineae, k);
+
+            si (cl != NIHIL && _cap_aequae(cl->id, cv->id))
+            {
+                manet = VERUM;
+            }
+        }
+        si (manet)
+        {
+            perge;
+        }
+        plenum = _cap_stampam_solvere(t, cv->id, pn);
+        si (plenum.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+        datum_rei = gesta_res_datum(t->mundus,
+            _litterae(pn, plenum), pn);
+        si (datum_rei.mensura > ZEPHYRUM)
+        {
+            JsonResultus r = json_legere(datum_rei, pn);
+
+            si (r.successus && json_est_objectum(r.radix)
+                && !json_objectum_habet(r.radix, "orphanus"))
+            {
+                GestaFascisEventum* fe =
+                    (GestaFascisEventum*)xar_addere(fr->eventa);
+
+                si (fe != NIHIL)
+                {
+                    fe->event_id = NIHIL;
+                    fe->eventum.res_id = _litterae(pn, plenum);
+                    fe->eventum.genus_eventus = "mutatio";
+                    fe->eventum.datum = "{\"orphanus\":true}";
+                    fe->eventum.actor = actor;
+                    fe->eventum.origo = origo_l;
+                    fr->orphanae++;
+                }
+            }
+        }
+    }
+
+    si (xar_numerus(insertiones) > ZEPHYRUM)
+    {
+        fr->corpus_stampatum = _capturas_stampare(corpus_novum,
+            insertiones, pn);
+    }
+    fr->genera_nova = chorda_aedificator_finire(nomina_aed);
+}
+
+/* summarium capturarum responso appendere (nihil si transitus
+ * quievit) */
+interior vacuum
+_capturae_summarium (ChordaAedificator* aed,
+    constans TabCapturaFructus* fr)
+{
+    character num[LXIV];
+
+    si (!fr->activa)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(aed, "\ncapturae:");
+    si (fr->novae > ZEPHYRUM)
+    {
+        sprintf(num, " res novae %d stampatae;", (int)fr->novae);
+        chorda_aedificator_appendere_literis(aed, num);
+    }
+    si (fr->genera_nova.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed, " genus natum: ");
+        chorda_aedificator_appendere_chorda(aed, fr->genera_nova);
+        chorda_aedificator_appendere_literis(aed, ";");
+    }
+    si (fr->renovatae > ZEPHYRUM)
+    {
+        sprintf(num, " tituli renovati %d;", (int)fr->renovatae);
+        chorda_aedificator_appendere_literis(aed, num);
+    }
+    si (fr->orphanae > ZEPHYRUM)
+    {
+        sprintf(num, " orphanae %d;", (int)fr->orphanae);
+        chorda_aedificator_appendere_literis(aed, num);
+    }
+    si (fr->redivivae > ZEPHYRUM)
+    {
+        sprintf(num, " redivivae %d;", (int)fr->redivivae);
+        chorda_aedificator_appendere_literis(aed, num);
+    }
+    si (fr->praeteritae > ZEPHYRUM)
+    {
+        sprintf(num, " lineae praeteritae %d (sine textu aut"
+            " stampa insoluta);", (int)fr->praeteritae);
+        chorda_aedificator_appendere_literis(aed, num);
+    }
+    si (fr->novae == ZEPHYRUM && fr->renovatae == ZEPHYRUM
+        && fr->orphanae == ZEPHYRUM
+        && fr->redivivae == ZEPHYRUM
+        && fr->praeteritae == ZEPHYRUM
+        && fr->genera_nova.mensura == ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed,
+            " nihil mutandum");
+    }
+}
+
+/* eventa fascis in tabulatum planum copiare (xar segmentatum -
+ * gesta_fascis_scribere tabulatum contiguum poscit) + eventum
+ * finale appendere */
+interior GestaFascisEventum*
+_capturas_fascis_componere (Piscina* pn, Xar* eventa,
+    constans GestaEventum* finale, i32* numerus_out)
+{
+    i32 n = xar_numerus(eventa);
+    GestaFascisEventum* tabulatum = (GestaFascisEventum*)
+        piscina_allocare(pn,
+            (memoriae_index)(n + I)
+                * magnitudo(GestaFascisEventum));
+    i32 i;
+
+    si (tabulatum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        GestaFascisEventum* fe =
+            (GestaFascisEventum*)xar_obtinere(eventa, i);
+
+        tabulatum[i] = *fe;
+    }
+    tabulatum[n].event_id = NIHIL;
+    tabulatum[n].eventum = *finale;
+    *numerus_out = n + I;
+    redde tabulatum;
+}
+
 interior vacuum
 _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     JsonValor* argumenta, FILE* effusio)
@@ -2597,9 +3552,15 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     GestaEventum e;
     character res_id[GESTA_RES_ID_MENSURA];
     chorda datum_textus;
+    TabCapturaFructus captura;
+    character articulus_id[MONETA_ULID_MENSURA];
+    constans character* actor_l;
 
     ramus_id.mensura = ZEPHYRUM;
     ramus_id.datum = NIHIL;
+    captura.activa = FALSUM;
+    actor_l = actor.mensura > ZEPHYRUM
+        ? _litterae(pn, actor) : "claude";
     si (genus.mensura == ZEPHYRUM)
     {
         _textum_respondere(t, pn, effusio, id,
@@ -2642,6 +3603,25 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
             _textum_respondere(t, pn, effusio, id,
                 _ch("ramus ignotus"), VERUM);
             redde;
+        }
+    }
+    /* captura fragmentorum (articuli, trunci solum): corpus
+     * stampatum ANTE constructionem dati - eventus creationis
+     * textum finalem fert; res_id articuli praecusum ut origo
+     * provenientiam ferat */
+    si (_chorda_est(genus, "articulus") && corpus.mensura > ZEPHYRUM
+        && ramus_id.mensura == ZEPHYRUM)
+    {
+        chorda vacua;
+
+        vacua.mensura = ZEPHYRUM;
+        vacua.datum = NIHIL;
+        moneta_ulid(articulus_id);
+        _capturas_tractare(t, pn, articulus_id, vacua, corpus,
+            actor_l, &captura);
+        si (captura.activa)
+        {
+            corpus = captura.corpus_stampatum;
         }
     }
     datum = json_objectum_creare(pn);
@@ -2750,8 +3730,7 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     e.res_id = NIHIL;
     e.genus_eventus = "creatio";
     e.datum = _litterae(pn, datum_textus);
-    e.actor = actor.mensura > ZEPHYRUM
-        ? _litterae(pn, actor) : "claude";
+    e.actor = actor_l;
     e.origo = origo.mensura > ZEPHYRUM
         ? _litterae(pn, origo) : "mcp";
     /* in ramo: scriptura iudicata in linea parallela - tabula/FTS
@@ -2794,7 +3773,48 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
         }
         redde;
     }
-    si (!gesta_scribere(t->mundus, &e, res_id))
+    si (captura.activa)
+    {
+        /* fascis atomicus: genera nata + res captae + articulus */
+        i32 numerus_ev = ZEPHYRUM;
+        GestaFascisEventum* tabulatum;
+        character* ids_effecti;
+
+        e.res_id = articulus_id;
+        tabulatum = _capturas_fascis_componere(pn, captura.eventa,
+            &e, &numerus_ev);
+        ids_effecti = tabulatum != NIHIL
+            ? (character*)piscina_allocare(pn,
+                  (memoriae_index)numerus_ev
+                      * GESTA_RES_ID_MENSURA)
+            : NIHIL;
+        si (tabulatum == NIHIL || ids_effecti == NIHIL
+            || !gesta_fascis_scribere(t->mundus, tabulatum,
+                   numerus_ev, ids_effecti))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "scriptura fascis recusata: ");
+            chorda_aedificator_appendere_literis(aed,
+                gesta_error(t->mundus));
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        strcpy(res_id, articulus_id);
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k < numerus_ev; k++)
+            {
+                _entitatem_reconciliare(t,
+                    ids_effecti + k * GESTA_RES_ID_MENSURA, pn);
+            }
+        }
+    }
+    alioquin si (!gesta_scribere(t->mundus, &e, res_id))
     {
         ChordaAedificator* aed = chorda_aedificator_creare(pn,
             CCLVI);
@@ -2880,6 +3900,7 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
                 " adhibe", (int)eodem_titulo);
             chorda_aedificator_appendere_literis(aed, cautio);
         }
+        _capturae_summarium(aed, &captura);
         _similia_reddere(t, aed, titulus, res_id, pn);
         _textum_respondere(t, pn, effusio, id,
             chorda_aedificator_finire(aed), FALSUM);
@@ -2903,9 +3924,11 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
     JsonValor* datum = json_objectum_creare(pn);
     constans character* genus_eventus = NIHIL;
     GestaEventum e;
+    TabCapturaFructus captura;
 
     ramus_id.mensura = ZEPHYRUM;
     ramus_id.datum = NIHIL;
+    captura.activa = FALSUM;
     si (clavis.mensura == ZEPHYRUM || actus.mensura == ZEPHYRUM)
     {
         _textum_respondere(t, pn, effusio, id,
@@ -3206,6 +4229,56 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
                 _ch("mutatio: datum aut clavis+valor"), VERUM);
             redde;
         }
+        /* captura fragmentorum (articuli, trunci solum): corpus
+         * mutatum -> lineae novae stampantur, tituli renovantur,
+         * orphanae signantur; eventus mutationis textum stampatum
+         * fert */
+        si (ramus_id.mensura == ZEPHYRUM)
+        {
+            JsonValor* v_corpus = json_objectum_capere(datum,
+                "corpus");
+
+            si (v_corpus != NIHIL && json_est_chorda(v_corpus)
+                && _chorda_est(_cap_genus_rei(t, res_id, pn),
+                       "articulus"))
+            {
+                chorda status_vetus = gesta_res_datum(t->mundus,
+                    _litterae(pn, res_id), pn);
+                chorda corpus_vetus;
+                constans character* actor_c =
+                    actor.mensura > ZEPHYRUM
+                        ? _litterae(pn, actor) : "claude";
+
+                corpus_vetus.mensura = ZEPHYRUM;
+                corpus_vetus.datum = NIHIL;
+                si (status_vetus.mensura > ZEPHYRUM)
+                {
+                    JsonResultus rv = json_legere(status_vetus,
+                        pn);
+
+                    si (rv.successus
+                        && json_est_objectum(rv.radix))
+                    {
+                        JsonValor* vc = json_objectum_capere(
+                            rv.radix, "corpus");
+
+                        si (vc != NIHIL && json_est_chorda(vc))
+                        {
+                            corpus_vetus = json_ad_chorda(vc);
+                        }
+                    }
+                }
+                _capturas_tractare(t, pn, _litterae(pn, res_id),
+                    corpus_vetus, json_ad_chorda(v_corpus),
+                    actor_c, &captura);
+                si (captura.activa)
+                {
+                    json_objectum_ponere(datum, "corpus",
+                        json_chorda_creare(pn,
+                            captura.corpus_stampatum));
+                }
+            }
+        }
     }
     alioquin si (_chorda_est(actus, "remotio"))
     {
@@ -3290,7 +4363,47 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         }
         redde;
     }
-    si (!gesta_scribere(t->mundus, &e, NIHIL))
+    si (captura.activa)
+    {
+        /* fascis atomicus: genera nata + res captae + mutatio
+         * articuli (corpus stampatum) */
+        i32 numerus_ev = ZEPHYRUM;
+        GestaFascisEventum* tabulatum;
+        character* ids_effecti;
+
+        tabulatum = _capturas_fascis_componere(pn, captura.eventa,
+            &e, &numerus_ev);
+        ids_effecti = tabulatum != NIHIL
+            ? (character*)piscina_allocare(pn,
+                  (memoriae_index)numerus_ev
+                      * GESTA_RES_ID_MENSURA)
+            : NIHIL;
+        si (tabulatum == NIHIL || ids_effecti == NIHIL
+            || !gesta_fascis_scribere(t->mundus, tabulatum,
+                   numerus_ev, ids_effecti))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "scriptura fascis recusata: ");
+            chorda_aedificator_appendere_literis(aed,
+                gesta_error(t->mundus));
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k < numerus_ev; k++)
+            {
+                _entitatem_reconciliare(t,
+                    ids_effecti + k * GESTA_RES_ID_MENSURA, pn);
+            }
+        }
+    }
+    alioquin si (!gesta_scribere(t->mundus, &e, NIHIL))
     {
         ChordaAedificator* aed = chorda_aedificator_creare(pn,
             CCLVI);
@@ -3322,6 +4435,7 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
             chorda_aedificator_appendere_chorda(aed, status);
             chorda_aedificator_appendere_literis(aed, ")");
         }
+        _capturae_summarium(aed, &captura);
         _textum_respondere(t, pn, effusio, id,
             chorda_aedificator_finire(aed), FALSUM);
     }
