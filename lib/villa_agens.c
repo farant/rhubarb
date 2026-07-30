@@ -35,7 +35,20 @@ nomen structura {
 	Processus*    processus;      /* NIHIL = nulla in cursu */
 	ProbatioServi ultima;
 	b32           habet_ultimam;
+
+	/* sedes ACTIONIS incrementalis (V4b) - eadem forma gemina,
+	 * arenae PIGRE creatae quia plerique servi actiones non vident */
+	Piscina*         arena_actionis[II];
+	i32              arena_actionis_currens;
+	Processus*       actio;          /* NIHIL = nulla in cursu */
+	chorda           actio_imperium; /* in arena actionis currente */
+	chorda           actio_res;
+	ResultusActionis actio_fructus;
+	b32              habet_actionem;
 } SedesServi;
+
+interior vacuum
+_actionem_conficere (VillaAgens* agens, SedesServi* sedes);
 
 structura VillaAgens {
 	Piscina*          piscina;      /* vita applicationis */
@@ -603,14 +616,20 @@ villa_agens_pulsare (VillaAgens* agens)
 	{
 		SedesServi* s = (SedesServi*)xar_obtinere(agens->sedes, i);
 
-		si (s == NIHIL || s->processus == NIHIL)
+		si (s == NIHIL)
 		{
 			perge;
 		}
-		si (processus_pulsare(s->processus) == PROCESSUS_PARATUS)
+		si (s->processus != NIHIL
+			&& processus_pulsare(s->processus) == PROCESSUS_PARATUS)
 		{
 			_probationem_conficere(s, s->arena[s->arena_currens]);
 			perfectae++;
+		}
+		si (s->actio != NIHIL
+			&& processus_pulsare(s->actio) == PROCESSUS_PARATUS)
+		{
+			_actionem_conficere(agens, s);
 		}
 	}
 	redde perfectae;
@@ -821,51 +840,30 @@ villa_genera_seminare (VillaAgens* agens, chorda* causa)
 	redde bene;
 }
 
-ResultusActionis
-villa_actionem_agere (VillaAgens* agens, chorda alias,
-	chorda res_servi, chorda imperium, Piscina* piscina)
+/* cauda communis ambarum semitarum actionis (obstantis et
+ * incrementalis): fructum ex resulto processus aedificare et
+ * eventum scribere. Quod hic emendatur, utrique semitae emendatur. */
+interior ResultusActionis
+_actionis_fructus (VillaAgens* agens, constans ProcessusResultus* r,
+	chorda imperium, chorda res_servi, Piscina* piscina)
 {
-	ResultusActionis  fructus;
-	ConfiguratioSsh   cfg;
-	MandatumSsh       m;
-	ProcessusResultus r;
+	ResultusActionis fructus;
 
 	memset(&fructus, 0, magnitudo(ResultusActionis));
-	fructus.effusio = _vacua();
-	fructus.erratum = _vacua();
+	fructus.mora_ms = r->mora_ms;
+	fructus.effusio = r->effusio;
+	fructus.erratum = r->erratum;
 
-	si (agens == NIHIL)
-	{
-		redde fructus;
-	}
-	memset(&cfg, 0, magnitudo(ConfiguratioSsh));
-	cfg.alias         = alias;
-	cfg.via_moderandi = agens->configuratio.via_moderandi;
-	cfg.via_ssh       = agens->configuratio.via_ssh;
-
-	m = villa_mandatum_ssh(&cfg, imperium, piscina);
-	si (!m.successus)
-	{
-		fructus.causa.genus = VILLA_EXITUS_SSH_ALIUS;
-		fructus.causa.causa = m.causa;
-		redde fructus;
-	}
-	r = processus_exsequi(m.argumenta,
-		agens->configuratio.mora_actionis_ms, piscina);
-	fructus.mora_ms = r.mora_ms;
-	fructus.effusio = r.effusio;
-	fructus.erratum = r.erratum;
-
-	si (!r.successus)
+	si (!r->successus)
 	{
 		fructus.causa.genus    = VILLA_EXITUS_SSH_ALIUS;
 		fructus.causa.ssh_ipse = VERUM;
-		fructus.causa.causa    = r.error_descriptio;
+		fructus.causa.causa    = r->error_descriptio;
 	}
 	alioquin
 	{
-		fructus.causa = villa_exitum_discernere(r.codex_exitus,
-			r.erratum, piscina);
+		fructus.causa = villa_exitum_discernere(r->codex_exitus,
+			r->erratum, piscina);
 		fructus.successus = (b32)(fructus.causa.genus
 			== VILLA_EXITUS_SUCCESSUS);
 	}
@@ -907,4 +905,244 @@ villa_actionem_agere (VillaAgens* agens, chorda alias,
 		}
 	}
 	redde fructus;
+}
+
+ResultusActionis
+villa_actionem_agere (VillaAgens* agens, chorda alias,
+	chorda res_servi, chorda imperium, Piscina* piscina)
+{
+	ResultusActionis  fructus;
+	ConfiguratioSsh   cfg;
+	MandatumSsh       m;
+	ProcessusResultus r;
+
+	memset(&fructus, 0, magnitudo(ResultusActionis));
+	fructus.effusio = _vacua();
+	fructus.erratum = _vacua();
+
+	si (agens == NIHIL)
+	{
+		redde fructus;
+	}
+	memset(&cfg, 0, magnitudo(ConfiguratioSsh));
+	cfg.alias         = alias;
+	cfg.via_moderandi = agens->configuratio.via_moderandi;
+	cfg.via_ssh       = agens->configuratio.via_ssh;
+
+	m = villa_mandatum_ssh(&cfg, imperium, piscina);
+	si (!m.successus)
+	{
+		fructus.causa.genus = VILLA_EXITUS_SSH_ALIUS;
+		fructus.causa.causa = m.causa;
+		redde fructus;
+	}
+	r = processus_exsequi(m.argumenta,
+		agens->configuratio.mora_actionis_ms, piscina);
+	redde _actionis_fructus(agens, &r, imperium, res_servi, piscina);
+}
+
+/* ========================================================================
+ * VII. IUDICIUM PUNCTI
+ * ======================================================================== */
+
+VillaIudicium
+villa_iudicare (constans ProbatioServi* probatio)
+{
+	i32 i;
+
+	si (probatio == NIHIL || !probatio->perfecta)
+	{
+		redde VILLA_IUDICIUM_IGNOTUS;
+	}
+	si (!probatio->felix)
+	{
+		redde VILLA_IUDICIUM_FRACTUS;
+	}
+	/* servitium observatum quodvis non-sanum = RUBRUM: servum
+	 * observas quia currere debet. 'not-found' quoque rubrum -
+	 * unitas quam petisti et quae non est, non currit. */
+	si (probatio->servitia != NIHIL)
+	{
+		per (i = ZEPHYRUM; i < xar_numerus(probatio->servitia); i++)
+		{
+			constans StatusServitii* s = (constans StatusServitii*)
+				xar_obtinere(probatio->servitia, i);
+
+			si (s != NIHIL
+				&& (!s->inventa || !s->currit || s->fracta))
+			{
+				redde VILLA_IUDICIUM_FRACTUS;
+			}
+		}
+	}
+	si (probatio->querelae.mensura > ZEPHYRUM
+		|| probatio->discus.capacitas >= (i32)XC)
+	{
+		redde VILLA_IUDICIUM_LANGUIDUS;
+	}
+	redde VILLA_IUDICIUM_SANUS;
+}
+
+constans character*
+villa_iudicium_nomen (VillaIudicium iudicium)
+{
+	commutatio (iudicium)
+	{
+	casus VILLA_IUDICIUM_SANUS:     redde "sanus";
+	casus VILLA_IUDICIUM_LANGUIDUS: redde "languidus";
+	casus VILLA_IUDICIUM_FRACTUS:   redde "fractus";
+	casus VILLA_IUDICIUM_IGNOTUS:   redde "ignotus";
+	ordinarius:                     redde "ignotus";
+	}
+}
+
+/* ========================================================================
+ * VIII. ACTIONES INCREMENTALES
+ * ======================================================================== */
+
+b32
+villa_actionem_incipere (VillaAgens* agens, chorda clavis_servi,
+	chorda alias, chorda res_servi, chorda imperium, chorda* causa)
+{
+	SedesServi*     s;
+	ConfiguratioSsh cfg;
+	MandatumSsh     m;
+	Piscina*        arena;
+
+	si (agens == NIHIL)
+	{
+		redde FALSUM;
+	}
+	s = _sedem_parare(agens, clavis_servi, alias);
+	si (s == NIHIL)
+	{
+		si (causa != NIHIL)
+		{
+			*causa = _copia(_ch("sedes servi parari non potuit "
+				"(tectum servorum?)"), agens->piscina);
+		}
+		redde FALSUM;
+	}
+	si (s->actio != NIHIL)
+	{
+		si (causa != NIHIL)
+		{
+			*causa = _copia(_ch("actio huius servi iam currit"),
+				agens->piscina);
+		}
+		redde FALSUM;
+	}
+	/* arenae PIGRE - hic primum, non in _sedem_parare */
+	si (s->arena_actionis[0] == NIHIL)
+	{
+		s->arena_actionis[0] = piscina_generare_dynamicum(
+			"villa_actio_a", VILLA_ARENA_MENSURA);
+		s->arena_actionis[I] = piscina_generare_dynamicum(
+			"villa_actio_b", VILLA_ARENA_MENSURA);
+		si (s->arena_actionis[0] == NIHIL
+			|| s->arena_actionis[I] == NIHIL)
+		{
+			si (causa != NIHIL)
+			{
+				*causa = _copia(_ch("arena actionis parari non "
+					"potuit"), agens->piscina);
+			}
+			redde FALSUM;
+		}
+	}
+	/* ARENA ALTERNA: fructus ultimus in arena altera vivus manet */
+	arena = s->arena_actionis[(s->arena_actionis_currens + I) % II];
+	piscina_vacare(arena);
+
+	s->actio_imperium = _copia(imperium, arena);
+	s->actio_res      = _copia(res_servi, arena);
+
+	memset(&cfg, 0, magnitudo(ConfiguratioSsh));
+	cfg.alias         = alias;
+	cfg.via_moderandi = agens->configuratio.via_moderandi;
+	cfg.via_ssh       = agens->configuratio.via_ssh;
+
+	m = villa_mandatum_ssh(&cfg, s->actio_imperium, arena);
+	si (!m.successus)
+	{
+		si (causa != NIHIL)
+		{
+			*causa = _copia(m.causa, agens->piscina);
+		}
+		redde FALSUM;
+	}
+	s->actio = processus_incipere(m.argumenta,
+		agens->configuratio.mora_actionis_ms, arena);
+	si (s->actio == NIHIL)
+	{
+		si (causa != NIHIL)
+		{
+			*causa = _copia(_ch("processus incipi non potuit"),
+				agens->piscina);
+		}
+		redde FALSUM;
+	}
+	s->arena_actionis_currens = (s->arena_actionis_currens + I) % II;
+	redde VERUM;
+}
+
+interior vacuum
+_actionem_conficere (VillaAgens* agens, SedesServi* sedes)
+{
+	Piscina* arena =
+		sedes->arena_actionis[sedes->arena_actionis_currens];
+	ProcessusResultus r = processus_metere(sedes->actio);
+
+	sedes->actio_fructus = _actionis_fructus(agens, &r,
+		sedes->actio_imperium, sedes->actio_res, arena);
+	sedes->habet_actionem = VERUM;
+	sedes->actio = NIHIL;
+}
+
+b32
+villa_actio_currit (VillaAgens* agens, chorda clavis_servi)
+{
+	SedesServi* s;
+
+	si (agens == NIHIL)
+	{
+		redde FALSUM;
+	}
+	s = _sedem_invenire(agens, clavis_servi);
+	redde (b32)(s != NIHIL && s->actio != NIHIL);
+}
+
+constans ResultusActionis*
+villa_actio_ultima (VillaAgens* agens, chorda clavis_servi)
+{
+	SedesServi* s;
+
+	si (agens == NIHIL)
+	{
+		redde NIHIL;
+	}
+	s = _sedem_invenire(agens, clavis_servi);
+	si (s == NIHIL || !s->habet_actionem)
+	{
+		redde NIHIL;
+	}
+	redde &s->actio_fructus;
+}
+
+vacuum
+villa_actionem_abrumpere (VillaAgens* agens, chorda clavis_servi)
+{
+	SedesServi* s;
+
+	si (agens == NIHIL)
+	{
+		redde;
+	}
+	s = _sedem_invenire(agens, clavis_servi);
+	si (s == NIHIL || s->actio == NIHIL)
+	{
+		redde;
+	}
+	processus_abrumpere(s->actio);
+	_actionem_conficere(agens, s);
 }

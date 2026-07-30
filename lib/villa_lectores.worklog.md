@@ -366,3 +366,36 @@ complementary check that no `mutatio` event was ever written.
 - Cleanup used three explicit filenames and left sqlite's `-wal`
   and `-shm` behind. Now a glob. A gate that litters is a gate
   someone eventually disables.
+
+## 2026-07-30 (V4b-1) — iudicium + the incremental action slot
+
+First V4b stage, after Fran settled the four open decisions (board
+01KY0P5GG9, nota 2026-07-30). Two agens additions, no UI yet.
+
+**`villa_iudicare`** — the tiered dot, pure and pinned. RED = probe
+failed OR any tracked service `!inventa || !currit || fracta` (a
+tracked-but-not-found unit is red, not amber: you track it because
+it must run — and `not-found` red is also the counter to the
+`Result=success` lie §XVII guards). AMBER = querelae nonempty or
+disk ≥90% (boundary pinned both sides, 89/90). GREEN otherwise;
+NIHIL/unfinished = IGNOTUS (grey, never a green lie). Red beats
+amber when both apply — pinned.
+
+**Action slot** — `villa_actionem_incipere/currit/ultima/abrumpere`,
+mirroring the probe seat exactly: twin arenas (the §VIII
+use-after-reset argument applies verbatim to action results read by
+the UI), refuse-while-running, completion inside
+`villa_agens_pulsare`. Differences from the probe seat: arenas are
+created LAZILY (most servers never see an action; eager twins would
+double every sede's footprint for nothing), and completion writes
+the nota event via the shared `_actionis_fructus` tail — extracted
+from `villa_actionem_agere`, so both paths emit byte-identical
+events and the header's "OBSTAT consulto" is now scoped to
+shell-tools/tests only (the doctrine that postdates it wins for the
+UI). The blocking path's §IX/§X gates still pass unchanged, which
+is the proof the refactor is faithful.
+
+One deliberate test shape: §XII runs a probe and an action
+concurrently in the SAME sede — the two seats share one pulse loop
+and must not collide. The stub's mode env is captured at fork, so
+setting a different mode per spawn is race-free.

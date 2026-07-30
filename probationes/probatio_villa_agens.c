@@ -608,6 +608,211 @@ s32 principale (vacuum)
 		(vacuum)system("rm -f build/probatio_villa.*");
 	}
 
+	/* ==============================================================
+	 * XI. IUDICIUM PUNCTI - regulae tripartitae (decisae 2026-07-30)
+	 * ============================================================== */
+	{
+		ProbatioServi p;
+
+		imprimere("\n--- XI. iudicium puncti ---\n");
+
+		CREDO_VERUM (villa_iudicare(NIHIL) == VILLA_IUDICIUM_IGNOTUS);
+
+		memset(&p, 0, magnitudo(ProbatioServi));
+		CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_IGNOTUS);
+
+		p.perfecta = VERUM;
+		p.felix    = FALSUM;
+		CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_FRACTUS);
+
+		p.felix = VERUM;
+		CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_SANUS);
+
+		/* querelae -> flavum (sectio lapsa, non servus mortuus) */
+		p.querelae = chorda_ex_literis("memoria", piscina);
+		CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_LANGUIDUS);
+		p.querelae = chorda_ex_literis("", piscina);
+
+		/* discus: terminus XC ambobus lateribus */
+		p.discus.capacitas = 89;
+		CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_SANUS);
+		p.discus.capacitas = (i32)XC;
+		CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_LANGUIDUS);
+		p.discus.capacitas = ZEPHYRUM;
+
+		/* servitium observatum non-sanum = RUBRUM, etiam probatione
+		 * felici - tres viae (fracta / non currit / non inventa) */
+		{
+			StatusServitii* s;
+
+			p.servitia = xar_creare(piscina,
+				(i32)magnitudo(StatusServitii));
+			s = (StatusServitii*)xar_addere(p.servitia);
+			CREDO_NON_NIHIL (s);
+			si (s != NIHIL)
+			{
+				memset(s, 0, magnitudo(StatusServitii));
+				s->inventa = VERUM;
+				s->currit  = VERUM;
+				CREDO_VERUM (villa_iudicare(&p)
+					== VILLA_IUDICIUM_SANUS);
+
+				s->fracta = VERUM;
+				CREDO_VERUM (villa_iudicare(&p)
+					== VILLA_IUDICIUM_FRACTUS);
+				s->fracta = FALSUM;
+
+				s->currit = FALSUM;
+				CREDO_VERUM (villa_iudicare(&p)
+					== VILLA_IUDICIUM_FRACTUS);
+				s->currit = VERUM;
+
+				s->inventa = FALSUM;
+				CREDO_VERUM (villa_iudicare(&p)
+					== VILLA_IUDICIUM_FRACTUS);
+				s->inventa = VERUM;
+
+				/* rubrum vincit flavum */
+				s->fracta  = VERUM;
+				p.querelae = chorda_ex_literis("nginx", piscina);
+				CREDO_VERUM (villa_iudicare(&p)
+					== VILLA_IUDICIUM_FRACTUS);
+			}
+		}
+
+		CREDO_VERUM (strcmp(villa_iudicium_nomen(
+			VILLA_IUDICIUM_FRACTUS), "fractus") == ZEPHYRUM);
+	}
+
+	/* ==============================================================
+	 * XII. ACTIO INCREMENTALIS - sedes altera, arena gemina.
+	 * Semita faciei: incipere statim redit, pulsus perficit,
+	 * fructus ultimus vivus manet dum actio nova currit.
+	 * ============================================================== */
+	{
+		VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
+		chorda      clavis    = chorda_ex_literis("s1", piscina);
+		chorda      gemma     = chorda_ex_literis("gemma", piscina);
+		chorda      vacua_res = chorda_ex_literis("", piscina);
+		constans ResultusActionis* r;
+		constans ResultusActionis* prior;
+		i32         gradus;
+
+		imprimere("\n--- XII. actio incrementalis ---\n");
+		CREDO_NON_NIHIL (a);
+
+		CREDO_FALSUM (villa_actio_currit(a, clavis));
+		CREDO_NIHIL (villa_actio_ultima(a, clavis));
+
+		setenv("VILLA_STIPES_MODUS", "imperium", I);
+		CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
+			vacua_res, chorda_ex_literis("systemctl restart nginx",
+				piscina), &causa));
+		/* NON OBSTAT: actio statim in cursu */
+		CREDO_VERUM (villa_actio_currit(a, clavis));
+
+		/* actio dupla eiusdem servi RECUSATUR dum currit */
+		CREDO_FALSUM (villa_actionem_incipere(a, clavis, gemma,
+			vacua_res, chorda_ex_literis("uptime", piscina),
+			&causa));
+		CREDO_CHORDA_CONTINET (causa,
+			chorda_ex_literis("iam currit", piscina));
+
+		gradus = ZEPHYRUM;
+		dum (villa_actio_currit(a, clavis) && gradus < 2000000)
+		{
+			(vacuum)villa_agens_pulsare(a);
+			gradus++;
+		}
+		CREDO_FALSUM (villa_actio_currit(a, clavis));
+
+		r = villa_actio_ultima(a, clavis);
+		CREDO_NON_NIHIL (r);
+		si (r != NIHIL)
+		{
+			CREDO_VERUM (r->successus);
+			CREDO_VERUM (r->causa.genus == VILLA_EXITUS_SUCCESSUS);
+			CREDO_CHORDA_CONTINET (r->effusio,
+				chorda_ex_literis("servitium restitutum", piscina));
+			/* cliens NIHIL -> nullus eventus */
+			CREDO_FALSUM (r->eventus_scriptus);
+		}
+
+		/* ARENA GEMINA: fructus prior legibilis manet dum actio
+		 * nova currit (idem quod §VIII probationibus probat) */
+		prior = r;
+		setenv("VILLA_STIPES_MODUS", "imperium_malum", I);
+		CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
+			vacua_res, chorda_ex_literis("systemctl restart nulla",
+				piscina), &causa));
+		si (prior != NIHIL)
+		{
+			CREDO_CHORDA_CONTINET (prior->effusio,
+				chorda_ex_literis("servitium restitutum", piscina));
+		}
+		gradus = ZEPHYRUM;
+		dum (villa_actio_currit(a, clavis) && gradus < 2000000)
+		{
+			(vacuum)villa_agens_pulsare(a);
+			gradus++;
+		}
+		r = villa_actio_ultima(a, clavis);
+		CREDO_NON_NIHIL (r);
+		si (r != NIHIL)
+		{
+			CREDO_FALSUM (r->successus);
+			CREDO_VERUM (r->causa.genus
+				== VILLA_EXITUS_IMPERIUM_FRACTUM);
+		}
+
+		/* abrumpere: actio finitur, fructus adest; iterum vocata
+		 * sine actione currente nihil agit */
+		setenv("VILLA_STIPES_MODUS", "imperium", I);
+		CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
+			vacua_res, chorda_ex_literis("uptime", piscina),
+			&causa));
+		villa_actionem_abrumpere(a, clavis);
+		CREDO_FALSUM (villa_actio_currit(a, clavis));
+		CREDO_NON_NIHIL (villa_actio_ultima(a, clavis));
+		villa_actionem_abrumpere(a, clavis);
+
+		/* probatio et actio SIMUL in eadem sede - arenae separatae,
+		 * pulsus unus ambas provehit */
+		{
+			Xar* u = xar_creare(piscina, (i32)magnitudo(chorda));
+			constans ProbatioServi* pr;
+
+			_addere_chordam(u, piscina, "nginx.service");
+			setenv("VILLA_STIPES_MODUS", "bene", I);
+			CREDO_VERUM (villa_probationem_incipere(a, clavis,
+				gemma, u, &causa));
+			setenv("VILLA_STIPES_MODUS", "imperium", I);
+			CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
+				vacua_res, chorda_ex_literis("uptime", piscina),
+				&causa));
+			gradus = ZEPHYRUM;
+			dum ((villa_probationes_currentes(a) > ZEPHYRUM
+					|| villa_actio_currit(a, clavis))
+				&& gradus < 2000000)
+			{
+				(vacuum)villa_agens_pulsare(a);
+				gradus++;
+			}
+			pr = villa_probatio_ultima(a, clavis);
+			CREDO_NON_NIHIL (pr);
+			si (pr != NIHIL)
+			{
+				CREDO_VERUM (pr->felix);
+			}
+			r = villa_actio_ultima(a, clavis);
+			CREDO_NON_NIHIL (r);
+			si (r != NIHIL)
+			{
+				CREDO_VERUM (r->successus);
+			}
+		}
+	}
+
 	imprimere("\n");
 	credo_imprimere_compendium();
 

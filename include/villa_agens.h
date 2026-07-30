@@ -227,4 +227,75 @@ villa_actionem_agere (
 	    chorda  imperium,
 	   Piscina* piscina);
 
+/* ========================================================================
+ * VII. IUDICIUM PUNCTI - photographia in colorem unum
+ * ======================================================================== */
+
+nomen enumeratio {
+	VILLA_IUDICIUM_IGNOTUS = 0,   /* nulla probatio perfecta adhuc */
+	VILLA_IUDICIUM_SANUS,         /* viride: omnia munda */
+	VILLA_IUDICIUM_LANGUIDUS,     /* flavum: querelae aut discus */
+	VILLA_IUDICIUM_FRACTUS        /* rubrum */
+} VillaIudicium;
+
+/* Iudicium purum photographiae (decisum 2026-07-30):
+ *   FRACTUS   = probatio ipsa fracta, AUT servitium observatum
+ *               quodvis !inventa / !currit / fracta - servum
+ *               observas quia currere debet, ergo non-currens
+ *               rubrum est, non flavum.
+ *   LANGUIDUS = probatio felix sed querelae non vacuae (sectio
+ *               lapsa aut omissa), aut discus >= XC centesimis.
+ *   SANUS     = cetera.
+ *   IGNOTUS   = NIHIL aut nondum perfecta - punctum griseum, non
+ *               mendacium viride (lex 'Result=success' memento). */
+VillaIudicium
+villa_iudicare (constans ProbatioServi* probatio);
+
+/* nomen breve pro facie ("sanus"/"languidus"/"fractus"/"ignotus") */
+constans character*
+villa_iudicium_nomen (VillaIudicium iudicium);
+
+
+/* ========================================================================
+ * VIII. ACTIONES INCREMENTALES - sedes altera per servum
+ * ========================================================================
+ * villa_actionem_agere (supra) OBSTAT - probationibus et
+ * instrumentis conchae aptum, faciei NUMQUAM (doctrina: nihil in
+ * tractatore obstat; retractatur 'OBSTAT consulto' superius pro
+ * facie). Facies V4b hanc semitam adhibet: incipere statim redit,
+ * actio in villa_agens_pulsare provehitur, fructus per
+ * villa_actio_ultima legitur, abrumpere = pyxis 'desiste'.
+ *
+ * ARENA GEMINA ACTIONIS per servum (exemplar probationis probatum):
+ * fructus ultimus vivus manet dum actio nova arenam alteram implet.
+ * Arenae PIGRE creantur - plerique servi actiones numquam vident.
+ * Eventus (nota + origo villa) in perfectione scribitur - vocatio
+ * clientis localis brevis (~ms) in tictu accepta, quia actiones
+ * rarae et ab usore excitatae sunt. */
+
+/* Actionem incipere (NON obstat). res_servi vacuum = nullus
+ * eventus. Redde FALSUM cum causa si actio huius servi iam currit
+ * aut mandatum aedificari non potuit. */
+b32
+villa_actionem_incipere (
+	VillaAgens* agens,
+	    chorda  clavis_servi,
+	    chorda  alias,
+	    chorda  res_servi,
+	    chorda  imperium,
+	    chorda* causa);
+
+/* an actio huius servi in cursu sit */
+b32
+villa_actio_currit (VillaAgens* agens, chorda clavis_servi);
+
+/* fructus actionis ultimae perfectae (NIHIL si nulla adhuc) */
+constans ResultusActionis*
+villa_actio_ultima (VillaAgens* agens, chorda clavis_servi);
+
+/* actionem currentem occidere et fructum conficere (TEMPUS in
+ * causa processus); tuta si nulla currit */
+vacuum
+villa_actionem_abrumpere (VillaAgens* agens, chorda clavis_servi);
+
 #endif /* VILLA_AGENS_H */
