@@ -256,7 +256,8 @@ interior constans TabulariumSemen SEMINA_GENERUM[] = {
       "{\"titulus\":\"clavis\",\"typus\":\"textus\","
       "\"necessarium\":true},{\"titulus\":\"campi\",\"typus\":"
       "\"tabulatum\"},{\"titulus\":\"campus_tituli\",\"typus\":"
-      "\"textus\"}],\"reducer\":\"ordinarius\"}" }
+      "\"textus\"},{\"titulus\":\"descriptio\",\"typus\":"
+      "\"area\"}],\"reducer\":\"ordinarius\"}" }
 };
 
 /* scopus fusionis v2 (genera tabulae + nexus); genera K3 infra

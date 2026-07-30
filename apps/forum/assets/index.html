@@ -155,6 +155,8 @@
            font-size: .8em; margin-bottom: .5em; }
   .scholium-carta:hover { border-color: #8a7a55; }
   .scholium-carta .amplitudo { color: #6b6357; font-size: .85em; }
+  .genus-descriptio { color: #8a8070; font-size: .9em;
+    margin: -.4em 0 .8em; white-space: pre-wrap; }
   .scholium-carta .corpus { margin-top: .2em; }
   #arca-scholii-domus { position: absolute; left: 0; width: 24em;
            box-sizing: border-box; background: #22201d;
@@ -300,6 +302,8 @@
     <h2>genus novum</h2>
     <input id="creator-titulus" placeholder="titulus generis (e.g. Liber)">
     <div class="clavis-praevisa" id="creator-clavis">clavis: &mdash;</div>
+    <textarea id="creator-descriptio" rows="2"
+      placeholder="descriptio generis (optionalis) - quid genus significet"></textarea>
     <div id="creator-campi"></div>
     <button id="creator-campum-addere" class="parva">+ campum addere</button>
     <div class="optio-creatoris">
@@ -327,6 +331,7 @@
       </span>
     </div>
     <h2 id="tabula-titulus"></h2>
+    <div id="tabula-descriptio" class="genus-descriptio" hidden></div>
     <div id="res-quaestio-domus">
       <input id="res-quaestio" placeholder="quaerere (FTS)...">
     </div>
@@ -1001,6 +1006,9 @@ function reddere_res_indicem(defs, numeri) {
     ordo.className = 'ordo-articuli';
     var t = document.createElement('span');
     t.textContent = titulus_de(d);
+    if (def_schema(d).descriptio) {
+      t.title = def_schema(d).descriptio;
+    }
     var latus = document.createElement('span');
     latus.className = 'tempus';
     latus.textContent = numeri[i] + ' entia';
@@ -1013,10 +1021,14 @@ function reddere_res_indicem(defs, numeri) {
 }
 
 function aperire_genus(d) {
+  var desc = def_schema(d).descriptio || '';
+  var ddiv = document.getElementById('tabula-descriptio');
   res_def = d;
   res_fts_ids = null;
   document.getElementById('res-quaestio').value = '';
   document.getElementById('tabula-titulus').textContent = titulus_de(d);
+  ddiv.textContent = desc;
+  ddiv.hidden = !desc;
   res_vertere('tabula');
 }
 
@@ -1126,6 +1138,8 @@ function creator_aperire(def) {
   creator_res = def;
   document.getElementById('creator-titulus').value =
     def ? (def_schema(def).titulus_monstrans || def.titulus) : '';
+  document.getElementById('creator-descriptio').value =
+    def ? (def_schema(def).descriptio || '') : '';
   document.getElementById('creator-clavis').textContent = def
     ? 'clavis: ' + clavis_de(def) + ' (immutabilis)'
     : 'clavis: —';
@@ -1180,10 +1194,11 @@ function genus_emendare(def, schema, renominationes, entia) {
     campi: schema.campi };
   if (schema.campus_tituli) { mersio.campus_tituli = schema.campus_tituli; }
   if (schema.ordo_ordinarius) { mersio.ordo_ordinarius = schema.ordo_ordinarius; }
+  if (schema.descriptio) { mersio.descriptio = schema.descriptio; }
   var catena = instrumentum('gerere', { res: def.res_id,
     actus: 'mutatio', datum: JSON.stringify(mersio) });
   var s_vetus = def_schema(def);
-  ['campus_tituli', 'ordo_ordinarius'].forEach(function (k) {
+  ['campus_tituli', 'ordo_ordinarius', 'descriptio'].forEach(function (k) {
     if (s_vetus[k] && !schema[k]) {
       catena = catena.then(function () {
         return instrumentum('gerere', { res: def.res_id,
@@ -1239,6 +1254,8 @@ document.getElementById('creator-servare').onclick = function () {
   var schema = { clavis: clavis, titulus_monstrans: titulus, campi: campi };
   var ct = document.getElementById('creator-campus-tituli').value;
   if (ct) { schema.campus_tituli = ct; }
+  var ds = document.getElementById('creator-descriptio').value.trim();
+  if (ds) { schema.descriptio = ds; }
   var oc = document.getElementById('creator-ordo-campus').value;
   if (oc) {
     schema.ordo_ordinarius = { campus: oc,
