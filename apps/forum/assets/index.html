@@ -1188,8 +1188,18 @@ document.getElementById('forma-retro').onclick = function () {
 /* ---- index generum ---- */
 function reddere_res_indicem(defs, numeri) {
   var index = document.getElementById('res-index');
+  var ordo_indicum;
   index.innerHTML = '';
-  defs.forEach(function (d, i) {
+  /* ordinatio alphabetica insensibilis casus (Fran 2026-07-30).
+   * numeri[i] cum defs[i] PARALLELI - per indices ordinamus ne
+   * numerus entium generi alieno adhaereat */
+  ordo_indicum = defs.map(function (ignotum, i) { return i; });
+  ordo_indicum.sort(function (a, b) {
+    return titulus_de(defs[a]).toLowerCase()
+      .localeCompare(titulus_de(defs[b]).toLowerCase());
+  });
+  ordo_indicum.forEach(function (i) {
+    var d = defs[i];
     var ordo = document.createElement('div');
     ordo.className = 'ordo-articuli';
     var t = document.createElement('span');
