@@ -96,6 +96,44 @@ _tempus_ms (vacuum)
     redde (i64)tv.tv_sec * (i64)M + (i64)tv.tv_usec / (i64)M;
 }
 
+/* reliquum termini in ms. Latus effectus: tempus_excessum ponit cum
+ * excessum. Sine termino AUT POST MESSEM sentinella magna redditur -
+ * terminus infantem CURRENTEM custodit; post mortem eius nihil iam
+ * significat, et vexillum post messem positum (in haustu reliquiarum)
+ * cursum intra terminum perfectum ut TEMPUS mentiretur atque pid iam
+ * messum (fortasse recyclatum) occidi iuberet. */
+#define PROCESSUS_SINE_TERMINO 2147483647
+
+interior s64
+_terminum_reliquum (Processus* p)
+{
+    s64 reliquum;
+
+    si (p->mora_maxima_ms == ZEPHYRUM || p->messus)
+    {
+        redde (s64)PROCESSUS_SINE_TERMINO;
+    }
+    reliquum = (s64)p->mora_maxima_ms
+        - (s64)(_tempus_ms() - p->initium);
+    si (reliquum <= (s64)ZEPHYRUM)
+    {
+        p->tempus_excessum = VERUM;
+    }
+    redde reliquum;
+}
+
+/* somnus brevis sine fistulis (select vacuum) - pro anquisitione
+ * WNOHANG ubi fistulae iam clausae sunt et select nihil custodit */
+interior vacuum
+_dormire_ms (i32 ms)
+{
+    structura timeval tv;
+
+    tv.tv_sec  = (time_t)(ms / (i32)M);
+    tv.tv_usec = (integer)((ms % (i32)M) * (i32)M);
+    (vacuum)select(0, NIHIL, NIHIL, NIHIL, &tv);
+}
+
 interior vacuum
 _sacculum_incipere (Sacculus* s)
 {
@@ -294,31 +332,22 @@ _ansam_pulsare (Processus* p, i32 mora_gradus_ms)
     }
 
     /* TERMINUS TOTALIS semper primo - vocator tardus processum
-     * aeternum parere non debet */
+     * aeternum parere non debet. Computatio in _terminum_reliquum
+     * habitat (s64, NON i64: i64 in hac domo INSIGNATUS est, et
+     * 'CCC - CCCV' insignatum ad numerum ingentem circumit - custos
+     * 'reliquum <= ZEPHYRUM' NUMQUAM flagrabat donec gradus
+     * terminati tegumentum select sustulerunt; vide worklog). */
     {
-        i64 gradus = (i64)mora_gradus_ms;
+        i64 gradus   = (i64)mora_gradus_ms;
+        s64 reliquum = _terminum_reliquum(p);
 
-        si (p->mora_maxima_ms > ZEPHYRUM)
+        si (p->tempus_excessum)
         {
-            /* s64, NON i64: i64 in hac domo INSIGNATUS est (ut
-             * i32). 'CCC - CCCV' in insignato ad numerum ingentem
-             * circumit, ergo custos 'reliquum <= ZEPHYRUM'
-             * NUMQUAM flagrabat. Vitium invisibile mansit quia
-             * select moram TOTAM reliquam accipiebat et redditus
-             * eius ZEPHYRUM terminum ipse significabat; gradus
-             * terminati illud tegumentum sustulerunt. */
-            s64 elapsum  = (s64)(_tempus_ms() - p->initium);
-            s64 reliquum = (s64)p->mora_maxima_ms - elapsum;
-
-            si (reliquum <= (s64)ZEPHYRUM)
-            {
-                p->tempus_excessum = VERUM;
-                redde;
-            }
-            si (gradus > (i64)reliquum)
-            {
-                gradus = (i64)reliquum;
-            }
+            redde;
+        }
+        si (reliquum < (s64)gradus)
+        {
+            gradus = (i64)reliquum;
         }
         /* tv_usec est int in Darwin, longus alibi - conversio per
          * typum campi ipsius, non per typum coniectum */
@@ -501,8 +530,19 @@ _perficere (Processus* p, b32 obstans)
             }
         }
     }
+    /* TERMINUS SINE FISTULIS: custodia in _ansam_pulsare fistulis
+     * clausis numquam attingitur (ante eam redit), ergo infans qui
+     * fistulas claudit sed vivere pergit terminum ibi non tangit.
+     * Mensuratum 2026-07-30: 'exec >&- 2>&-; sleep 3' sub termino
+     * 500 ms moram TOTAM vixit et SUCCESSUS rediit. Hic, ubi
+     * fistulae nihil iam significant, directo custodimus. */
+    (vacuum)_terminum_reliquum(p);
+
+    /* '!p->messus' in custode occisionis: pid messus alienum fieri
+     * potest (recyclus), et vexillum terminale post messem positum
+     * infantem NOSTRUM iam non nominat */
     si ((p->tempus_excessum || p->memoria_fracta || p->abruptus)
-        && !p->occisus)
+        && !p->occisus && !p->messus)
     {
         (vacuum)kill(p->pid, SIGKILL);
         p->occisus = VERUM;
@@ -514,6 +554,29 @@ _perficere (Processus* p, b32 obstans)
     _fd_claudere(&p->fd_er);
     p->ef_apertus = FALSUM;
     p->er_apertus = FALSUM;
+
+    /* messis obstans termino subiecta: waitpid obstans terminum
+     * nullum habet, ergo anquisitio WNOHANG gradibus parvis dum
+     * terminus vigilat. Occiso aut sine termino semita simplex
+     * sufficit (SIGKILL messem mox terminat; terminus nullus =
+     * exspectatio infinita ex contractu). */
+    si (obstans && !p->messus && !p->occisus
+        && p->mora_maxima_ms > ZEPHYRUM)
+    {
+        dum (!_reficere(p, FALSUM))
+        {
+            s64 reliquum = _terminum_reliquum(p);
+
+            si (p->tempus_excessum)
+            {
+                (vacuum)kill(p->pid, SIGKILL);
+                p->occisus = VERUM;
+                frange;
+            }
+            _dormire_ms((reliquum < (s64)X)
+                ? (i32)reliquum : (i32)X);
+        }
+    }
 
     si (!_reficere(p, obstans))
     {

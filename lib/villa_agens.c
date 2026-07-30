@@ -171,6 +171,15 @@ villa_unitas_valida (chorda nomen_unitatis)
 	{
 		redde FALSUM;
 	}
+	/* TERMINUS LONGITUDINIS: systemd ipse nomina ultra CCLV
+	 * characteres recusat, ergo nihil legitimum amittitur - et sine
+	 * eo nomen unum longum capacitatem scripti probationis (CXXVIII
+	 * per unitatem) sprintf superscriberet. Custos qui characteres
+	 * solos iudicat ianuam iniectionis claudit, longitudinis non. */
+	si (nomen_unitatis.mensura > (i32)CCLV)
+	{
+		redde FALSUM;
+	}
 	per (i = ZEPHYRUM; i < nomen_unitatis.mensura; i++)
 	{
 		i8 c = nomen_unitatis.datum[i];

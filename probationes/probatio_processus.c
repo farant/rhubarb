@@ -557,6 +557,67 @@ s32 principale (vacuum)
         CREDO_FALSUM (processus_transformare(NIHIL));
     }
 
+    /* XX. TERMINUS SINE FISTULIS - infans fistulas claudit sed
+     * vivere pergit. Imago speculi XVII: illic fistulae apertae
+     * infante mortuo, hic fistulae CLAUSAE infante VIVO.
+     *
+     * MENSURATUM 2026-07-30 ante emendationem: 'exec >&- 2>&-;
+     * sleep 3' sub termino 500 ms moram TOTAM (3009 ms) vixit et
+     * SUCCESSUS rediit - custodia termini in _ansam_pulsare habitat
+     * quae fistulis clausis ante eam redit, et waitpid obstans
+     * finalis terminum nullum habebat.
+     * ============================================================ */
+    {
+        constans character* argumenta[IV];
+        ProcessusResultus   r;
+
+        imprimere("\n--- XX. terminus sine fistulis ---\n");
+        argumenta[0] = "/bin/sh";
+        argumenta[I] = "-c";
+        argumenta[II] = "exec >&- 2>&-; sleep 3";
+        argumenta[III] = NIHIL;
+        r = processus_exsequi(argumenta, 500, piscina);
+
+        CREDO_FALSUM (r.successus);
+        CREDO_VERUM (r.error == PROCESSUS_ERROR_TEMPUS);
+        /* terminus rexit: nec ante eum finitum (>= 400) nec mora
+         * infantis tota exspectata (< 2500) */
+        CREDO_VERUM (r.mora_ms >= 400);
+        CREDO_VERUM (r.mora_ms < 2500);
+    }
+
+    /* XXI. idem per semitam INCREMENTALEM - sine emendatione
+     * pulsans CURRIT in aeternum acciperet (custodia termini
+     * fistulis clausis numquam attingebatur) */
+    {
+        constans character* argumenta[IV];
+        Processus*          p;
+        ProcessusResultus   r;
+        i32                 pulsus = ZEPHYRUM;
+
+        imprimere("\n--- XXI. terminus sine fistulis,"
+            " incrementalis ---\n");
+        argumenta[0] = "/bin/sh";
+        argumenta[I] = "-c";
+        argumenta[II] = "exec >&- 2>&-; sleep 3";
+        argumenta[III] = NIHIL;
+
+        p = processus_incipere(argumenta, 500, piscina);
+        CREDO_NON_NIHIL (p);
+        dum (processus_pulsare(p) == PROCESSUS_CURRIT)
+        {
+            pulsus++;
+            si (pulsus > 50000000)
+            {
+                frange;
+            }
+        }
+        r = processus_metere(p);
+        CREDO_FALSUM (r.successus);
+        CREDO_VERUM (r.error == PROCESSUS_ERROR_TEMPUS);
+        CREDO_VERUM (r.mora_ms < 2500);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

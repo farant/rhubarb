@@ -133,6 +133,27 @@ s32 principale (vacuum)
 			chorda_ex_literis("a&b", piscina)));
 		CREDO_FALSUM (villa_unitas_valida(
 			chorda_ex_literis("", piscina)));
+
+		/* TERMINUS LONGITUDINIS ambobus lateribus (porta uno
+		 * latere sola probata in aeternum uno errare potest):
+		 * CCLV licitum, CCLVI recusatum - terminus systemd
+		 * ipsius, et sine eo nomen longum capacitatem scripti
+		 * (CXXVIII per unitatem) sprintf superscriberet */
+		{
+			chorda longum;
+
+			longum.datum = (i8*)piscina_allocare(piscina,
+				(memoriae_index)CCLVI);
+			CREDO_NON_NIHIL (longum.datum);
+			si (longum.datum != NIHIL)
+			{
+				memset(longum.datum, 'a', (memoriae_index)CCLVI);
+				longum.mensura = (i32)CCLV;
+				CREDO_VERUM (villa_unitas_valida(longum));
+				longum.mensura = (i32)CCLVI;
+				CREDO_FALSUM (villa_unitas_valida(longum));
+			}
+		}
 	}
 
 	/* ==============================================================

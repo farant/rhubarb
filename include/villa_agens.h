@@ -86,7 +86,9 @@ villa_configurationem_parare (
  *
  * Recusat quidquid conchae significat: spatium, ';', '|', '&',
  * '$', '`', '(', ')', '<', '>', citationes, lineam novam.
- * Vacuum quoque recusat.
+ * Vacuum quoque recusat, et nomina ultra CCLV characteres
+ * (terminus systemd ipsius - idem capacitatem scripti probationis
+ * contra sprintf immodicum custodit).
  */
 b32
 villa_unitas_valida (chorda nomen_unitatis);

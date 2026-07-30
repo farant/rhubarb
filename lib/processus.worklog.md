@@ -235,6 +235,44 @@ these surfaced in a 400-line shell app, where the diagnosis was
 cheap, instead of during interface work where they'd have looked
 like rendering problems.
 
+## 2026-07-30 — review pass (Fable 5): two deadline holes, one measured
+
+Post-hoc review of the villa stack. Two findings in `_perficere`,
+both in the family the V4a entry named (process topology):
+
+1. **MEASURED — the hard deadline dies with the pipes.** A child
+that closes stdout+stderr and keeps running defeats `mora_maxima`
+entirely: `sh -c 'exec >&- 2>&-; sleep 3'` under
+`processus_exsequi(…, 500)` returned after **3009 ms** with
+`successus=1, error=0`. The deadline check lives inside
+`_ansam_pulsare`, which early-returns when both pipes are closed;
+the final blocking `_reficere(VERUM)` has no deadline. The pulse
+path spins CURRIT forever in the same topology. `processus.h`
+promises the opposite ("terminus durus … etiam si vocator tarde
+pulsat"; metere "terminus adhuc valet"). Mirror image of the
+ControlPersist bug: that was pipes-open-child-dead; this is
+pipes-closed-child-alive.
+
+2. **By inspection — kill-after-reap at the deadline boundary.**
+Step-1 reap succeeds (child finished in time), then a post-reap
+drain pulse trips `tempus_excessum` → `kill(SIGKILL)` on the
+already-reaped pid (pid-reuse hazard) and the result misreports
+ERROR_TEMPUS for a run that completed within the deadline. Window
+is ms-narrow.
+
+**Both fixed same day.** The deadline computation moved into
+`_terminum_reliquum` (single source; returns a large sentinel when
+no deadline is set OR the child is already reaped — a reaped child
+can no longer time out, which kills finding 2's misreport
+structurally). `_perficere` now (a) checks the deadline directly at
+its tail, where pipes no longer matter, (b) guards the SIGKILL with
+`!p->messus`, and (c) replaces the unbounded final blocking
+`waitpid` with a WNOHANG poll in ≤10 ms slices while the deadline
+watches (`_dormire_ms` = empty select). Re-measured after the fix:
+same probe returns in **500 ms** with ERROR_TEMPUS. Pinned as
+probatio_processus §XX (blocking) and §XXI (incremental) — the
+mirror images of §XVII/§XVIII.
+
 ## 2026-07-28 — processus_transformare (exec-self)
 
 Added for legatus renovare (01KY4185QN): the process BECOMES the
