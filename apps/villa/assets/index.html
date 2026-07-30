@@ -18,16 +18,18 @@
   --ignotus: #6b6357;
 }
 * { box-sizing: border-box; }
+/* mensura basis UNA - cetera in rem (Fran 2026-07-30: XX px) */
+html { font-size: 20px; }
 body {
   margin: 0; background: var(--fundus); color: var(--textus);
-  font: 14px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+  font: 1rem/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
   -webkit-font-smoothing: antialiased;
 }
 header {
   padding: 14px 20px; border-bottom: 1px solid var(--linea);
   display: flex; align-items: baseline; gap: 14px;
 }
-h1 { margin: 0; font-size: 15px; letter-spacing: .14em;
+h1 { margin: 0; font-size: .9rem; letter-spacing: .14em;
      text-transform: uppercase; color: var(--accentus); }
 h1 a { color: var(--accentus); text-decoration: none; cursor: pointer; }
 #via-nav { color: var(--textus-tenuis); }
@@ -77,14 +79,14 @@ button.periculosa { border-color: var(--fractus); }
 
 /* detalia */
 .vitalia { display: flex; gap: 24px; flex-wrap: wrap; margin: 12px 0 18px; }
-.vitale .titulus { color: var(--textus-tenuis); font-size: 12px; }
-.vitale .valor { font-size: 15px; }
+.vitale .titulus { color: var(--textus-tenuis); font-size: .75rem; }
+.vitale .valor { font-size: 1rem; }
 table { border-collapse: collapse; width: 100%; margin: 8px 0 20px; }
 th, td { text-align: left; padding: 5px 10px; border-bottom: 1px solid var(--linea); }
-th { color: var(--textus-tenuis); font-weight: normal; font-size: 12px; }
+th { color: var(--textus-tenuis); font-weight: normal; font-size: .75rem; }
 tr.fracta td { color: var(--fractus); }
 h2 {
-  font-size: 13px; letter-spacing: .1em; text-transform: uppercase;
+  font-size: .8rem; letter-spacing: .1em; text-transform: uppercase;
   color: var(--textus-tenuis); margin: 22px 0 6px;
 }
 pre {
@@ -97,7 +99,7 @@ pre {
   border-left: 2px solid var(--linea); padding: 4px 12px;
   margin: 10px 0;
 }
-.commentarium .caput { color: var(--textus-tenuis); font-size: 12px; }
+.commentarium .caput { color: var(--textus-tenuis); font-size: .75rem; }
 textarea {
   background: var(--fundus-ii); border: 1px solid var(--linea);
   color: var(--textus); font: inherit; padding: 8px;
@@ -160,7 +162,7 @@ textarea:focus { outline: none; border-color: var(--accentus); }
     <div id="det-situs"><p class="nota">nulli adhuc</p></div>
 
     <h2>unitates currentes
-      <button id="unitates-vertere" style="font-size:12px">ostendere</button>
+      <button id="unitates-vertere" style="font-size:.75rem">ostendere</button>
     </h2>
     <div id="det-unitates" class="celatum"></div>
 
