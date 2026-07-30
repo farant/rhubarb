@@ -1011,20 +1011,42 @@ document.getElementById('editor-corpus').addEventListener('keydown',
  * nativa rows=14, capta dum visibilis (occulta = 0). */
 function editor_crescere() {
   var ta = document.getElementById('editor-corpus');
+  var altitudo;
   if (!ta.dataset.minima && ta.offsetHeight > 0) {
     ta.dataset.minima = ta.offsetHeight;
   }
   ta.style.height = 'auto';
-  ta.style.height = Math.max(ta.scrollHeight + 2,
-    +(ta.dataset.minima || 0)) + 'px';
+  altitudo = Math.max(ta.scrollHeight + 2,
+    +(ta.dataset.minima || 0));
+  ta.style.height = altitudo + 'px';
+  return altitudo;
 }
-document.getElementById('editor-corpus').addEventListener('input',
-  function () {
-    editor_crescere();
-    if (this.selectionStart === this.value.length) {
-      this.scrollIntoView({ block: 'nearest' });
+/* EMENDATIO morae tactus (2026-07-30 sero): antea mensura in OMNI
+ * ictu claviaturae SYNCHRONE currebat - saltus 'auto' + lectio
+ * scrollHeight = reflexio plena intra tractatorem ictus, quae in
+ * documentis longis ut mora tactus sentiebatur (crescit cum
+ * documento). Nunc per requestAnimationFrame coalescitur: ad
+ * summum mensura una per quadrum, POST tractatorem, ubi pictura
+ * quadri layout suum tamen faceret; conspectus solum cum altitudo
+ * vere mutata. (Semita celeris 'scrollHeight == clientHeight'
+ * consulto OMISSA - fragilis trans box-model, et rAF solus moram
+ * sentitam iam tollit.) */
+var editor_mensura_pendet = false;
+function editor_crescere_mox() {
+  if (editor_mensura_pendet) { return; }
+  editor_mensura_pendet = true;
+  requestAnimationFrame(function () {
+    var ta = document.getElementById('editor-corpus');
+    var ante = ta.style.height;
+    editor_mensura_pendet = false;
+    if (editor_crescere() + 'px' !== ante
+        && ta.selectionStart === ta.value.length) {
+      ta.scrollIntoView({ block: 'nearest' });
     }
   });
+}
+document.getElementById('editor-corpus').addEventListener('input',
+  editor_crescere_mox);
 document.getElementById('editor-servare').onclick = function () {
   var titulus = document.getElementById('editor-titulus').value;
   var corpus = document.getElementById('editor-corpus').value;
