@@ -41,13 +41,28 @@ Do these IN ORDER before writing code:
    Aim at your actual task; known-good fallbacks:
    `./silva/nexus.sh silva_c89_parsare` · `./silva/emitte.sh
    lib/piscina.c piscina_generare_dynamicum` · `./silva/origo.sh
-   lib/piscina.c 239:5` ('if' <- si). **Include ONE mcp legati call**
-   (e.g. `corpus` on a symbol near your task) — the fori ab_lecto
-   principle applied here: discovery, not discipline (Fran
-   2026-07-29). Its exact AST extents + attached doc comment are the
-   experience that a computed-offset grep+Read silently lacks
-   (measured: a 110-line window truncated _intervalla_transferre at
-   line 8487 of 8558 and missed its header comment — invisibly).
+   lib/piscina.c 239:5` ('if' <- si). **Include ONE mcp legati call**,
+   aimed at your actual task — the fori ab_lecto principle applied
+   here: discovery, not discipline (Fran 2026-07-29). Prefer `corpus`
+   on a **TYPE** (struct/typedef) over a function: function-source is
+   what you'd assume anyway; whole-struct-bodies-with-field-comments
+   is the capability the training prior doesn't predict (it cracked
+   the 2026-07-30 span bug in two calls). Known-good fallbacks when
+   no task target exists yet:
+   `corpus chorda` (the house type in four lines — mensura + datum,
+   the NOT-null-terminated reminder for free; for rich field
+   comments try `corpus SilvaMacroVista`) ·
+   `vocantes _tolera_absorbere` (a 14-caller emission-gate map in one
+   call — name-domain blast radius) ·
+   `symbolum similitudo_optima` (the full card: signature, comment,
+   per-file usage LINES).
+   A miss is not a failure, it is the second lesson: unknown titles
+   answer with simillima (decurtata — the guess shrinks from the
+   right until candidates appear; family names may beat the best
+   cousin), and `./silva/nexus.sh -similis <word>` is the wider net.
+   The exact-extents anecdote stands: a 110-line grep+Read window
+   once truncated a function at line 8487 of 8558 and silently
+   dropped its header comment.
    Symptom table (dolor → mandatum) in MEMORY.md; censor runs itself
    (amalgamare porta 6 + post-edit hook); interpretare is
    officina-side.
