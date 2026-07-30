@@ -1038,11 +1038,21 @@ function editor_crescere_mox() {
   requestAnimationFrame(function () {
     var ta = document.getElementById('editor-corpus');
     var ante = ta.style.height;
+    var imus, limes;
     editor_mensura_pendet = false;
-    if (editor_crescere() + 'px' !== ante
-        && ta.selectionStart === ta.value.length) {
-      ta.scrollIntoView({ block: 'nearest' });
-    }
+    if (editor_crescere() + 'px' === ante) { return; }
+    /* linea ULTIMA solum: editio media lineam currentem in pagina
+     * non movet (contentum infra descendit, cursor manet) */
+    if (ta.value.indexOf('\n', ta.selectionStart) !== -1) { return; }
+    /* margo imus arcae in conspectu TENETUR. 'nearest' hic nihil
+     * agebat: arca alta partim visibilis 'in conspectu' iam erat,
+     * ergo crescens ultra plicam lineam currentem sub eam labi
+     * sinebat (Fran 2026-07-30). Delta explicitum, cum margine
+     * lineae unius. */
+    imus = ta.getBoundingClientRect().bottom;
+    limes = (window.innerHeight
+      || document.documentElement.clientHeight) - 24;
+    if (imus > limes) { window.scrollBy(0, imus - limes); }
   });
 }
 document.getElementById('editor-corpus').addEventListener('input',
