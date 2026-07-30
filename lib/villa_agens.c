@@ -675,6 +675,46 @@ villa_probationes_currentes (constans VillaAgens* agens)
 	redde n;
 }
 
+i32
+villa_sedes_numerus (constans VillaAgens* agens)
+{
+	si (agens == NIHIL)
+	{
+		redde ZEPHYRUM;
+	}
+	redde xar_numerus(agens->sedes);
+}
+
+chorda
+villa_sedes_clavis (constans VillaAgens* agens, i32 index)
+{
+	constans SedesServi* s;
+
+	si (agens == NIHIL || index >= xar_numerus(agens->sedes))
+	{
+		redde _vacua();
+	}
+	s = (constans SedesServi*)xar_obtinere(agens->sedes, index);
+	si (s == NIHIL)
+	{
+		redde _vacua();
+	}
+	redde s->clavis;
+}
+
+b32
+villa_probatio_currit (VillaAgens* agens, chorda clavis_servi)
+{
+	SedesServi* s;
+
+	si (agens == NIHIL)
+	{
+		redde FALSUM;
+	}
+	s = _sedem_invenire(agens, clavis_servi);
+	redde (b32)(s != NIHIL && s->processus != NIHIL);
+}
+
 /* ========================================================================
  * VI. GENERA + ACTIONES
  * ======================================================================== */

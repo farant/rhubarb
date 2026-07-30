@@ -193,6 +193,19 @@ villa_probatio_ultima (
 i32
 villa_probationes_currentes (constans VillaAgens* agens);
 
+/* Enumeratio sediumm notarum (facies statum omnium colligit):
+ * numerus + clavis per indicem (vacua extra fines). Sedes nascitur
+ * cum probatio aut actio prima servi incipit. */
+i32
+villa_sedes_numerus (constans VillaAgens* agens);
+
+chorda
+villa_sedes_clavis (constans VillaAgens* agens, i32 index);
+
+/* an probatio huius servi in cursu sit (par villa_actio_currit) */
+b32
+villa_probatio_currit (VillaAgens* agens, chorda clavis_servi);
+
 /* ========================================================================
  * VI. ACTIONES - quae EVENTUS pariunt
  * ======================================================================== */

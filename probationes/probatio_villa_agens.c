@@ -811,6 +811,14 @@ s32 principale (vacuum)
 				CREDO_VERUM (r->successus);
 			}
 		}
+
+		/* enumeratio sediumm (fundamentum villa_status faciei) */
+		CREDO_AEQUALIS_I32 (villa_sedes_numerus(a), (i32)I);
+		CREDO_CHORDA_AEQUALIS_LITERIS (villa_sedes_clavis(a,
+			ZEPHYRUM), "s1");
+		CREDO_AEQUALIS_I32 (villa_sedes_clavis(a, (i32)V).mensura,
+			ZEPHYRUM);
+		CREDO_FALSUM (villa_probatio_currit(a, clavis));
 	}
 
 	imprimere("\n");

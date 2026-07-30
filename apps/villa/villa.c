@@ -1,22 +1,28 @@
 /* apps/villa/villa.c - villa: fenestra vitreae in servos remotos.
  *
- * SCELETUM V4a. Catena tota vivit (fenestra -> capsula -> vitrea ->
- * internuntius -> agens), sed facies ADHUC PLACEHOLDER est: V4b eam
- * aedificat. Quod hic probatur non est quid monstretur sed quod
- * strata coniuncta sint.
+ * V4b-2: stratum tractatorum plenum; facies (index.html) adhuc
+ * placeholder - V4b-3 eam aedificat. Indicem servorum FACIES
+ * possidet (entia 'servus' ex mundo per transmittere), et horaria
+ * probationum quoque: C-latus nullam auto-probationem habet praeter
+ * primam in initio (facies aliquid statim videt).
  *
  * OMNE OPUS VERUM IN lib/villa_agens.c HABITAT. Haec plagula
  * nectit, non agit - ideo probationes radicis agentem custodire
  * possunt quamvis apps/ a nullo cursore verratur.
  *
  * TICTUS NUMQUAM OBSTAT: villa_agens_pulsare gradum unum omnium
- * probationum currentium agit et statim redit. Vide processus.h de
- * causa (domus filis CARET).
+ * probationum ET actionum currentium agit et statim redit. Vide
+ * processus.h de causa (domus filis CARET).
  *
- * Tractatores IS:
- *   villa_status {}          -> configuratio + probationes + summa
- *   villa_probare {alias?}   -> probationem incipere (non obstat)
- *   transmittere {...}       -> mundus (allowlist clientis)
+ * Tractatores IS (clavis absens = servus praetermissionis, pro
+ * evolutione et fumo):
+ *   villa_status {}                    -> summarium omnium sediumm
+ *   villa_probatio {clavis?}           -> photographia plena una
+ *   villa_probare {clavis?, alias?, unitates?[]} -> probatio nova
+ *   villa_agere {clavis?, alias?, res?, imperium} -> actio nova
+ *   villa_actio {clavis?}              -> status + fructus actionis
+ *   villa_abrumpere {clavis?}          -> actionem desistere
+ *   transmittere {...}                 -> mundus (allowlist)
  *
  * Vexillum -fumus: sine oculis - configuratio, semina, probatio
  * una per stipitem, numeri impressi, exitus.
@@ -47,19 +53,14 @@ externus constans CapsulaEmbed capsula_speculi_villa;
 
 #define VILLA_PORTUS_ORDINARIUS 8753
 #define VILLA_TICTUS_MS         CC
-/* probatio automatica: XXX secunda inter cyclos. Probationes
- * eventus NON scribunt (telemetria non est historia), ergo pretium
- * solum itinera ssh sunt. */
-#define VILLA_INTERVALLUM_MS    30000
 
 nomen structura {
 	ClientTabularii   cliens;
 	VillaConfiguratio configuratio;
 	VillaAgens*       agens;
-	Xar*              unitates;    /* chorda - unitates petendae */
-	chorda            alias;       /* servus unicus (V4b plures) */
+	Xar*              unitates;    /* chorda - praetermissio */
+	chorda            alias;       /* praetermissio (-alias, fumus) */
 	chorda            clavis;
-	i64               tempus_ultimum_ms;
 	i32               cycli;
 } VillaStatus;
 
@@ -75,103 +76,418 @@ _ch (constans character* litterae)
 	redde c;
 }
 
+/* adiutores serendi - dimidium strepitus json tollunt */
+interior vacuum
+_pone_ch (JsonValor* o, constans character* clavis, chorda valor,
+	Piscina* pn)
+{
+	json_objectum_ponere(o, clavis, json_chorda_creare(pn, valor));
+}
+
+interior vacuum
+_pone_n (JsonValor* o, constans character* clavis, s64 valor,
+	Piscina* pn)
+{
+	json_objectum_ponere(o, clavis, json_integer_creare(pn, valor));
+}
+
+interior vacuum
+_pone_b (JsonValor* o, constans character* clavis, b32 valor,
+	Piscina* pn)
+{
+	json_objectum_ponere(o, clavis, json_boolean_creare(pn, valor));
+}
+
+/* chordam ex argumentis capere (vacua si clavis abest) */
+interior chorda
+_arg_ch (JsonValor* argumenta, constans character* clavis)
+{
+	si (argumenta == NIHIL)
+	{
+		chorda vacua;
+
+		vacua.datum   = NIHIL;
+		vacua.mensura = ZEPHYRUM;
+		redde vacua;
+	}
+	redde json_ad_chorda(json_objectum_capere(argumenta, clavis));
+}
+
 /* ========================================================================
  * TRACTATORES INTERNUNTII
  * ======================================================================== */
 
+/* villa_status {} -> configuratio + summarium omnium sediumm.
+ * Indicem servorum FACIES possidet (entia 'servus' ex mundo per
+ * transmittere legere); hic solum status probationum per clavem.
+ * Tempus probationis ultimae JS notat (photographia horologium non
+ * fert - JS horaria possidet, ergo et horologia). */
 interior JsonValor*
 _villa_status (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
 	chorda* culpa)
 {
 	VillaStatus* v = (VillaStatus*)datum;
 	JsonValor*   r = json_objectum_creare(piscina);
-	constans ProbatioServi* p;
+	JsonValor*   sedes = json_tabulatum_creare(piscina);
+	i32          i;
 
 	(vacuum)argumenta;
 	(vacuum)culpa;
 
-	json_objectum_ponere(r, "alias",
-		json_chorda_creare(piscina, v->alias));
+	_pone_ch(r, "alias", v->alias, piscina);
 	json_objectum_ponere(r, "via_ssh",
 		json_chorda_creare_literis(piscina,
 			(v->configuratio.via_ssh != NIHIL)
 				? v->configuratio.via_ssh : "ssh"));
-	json_objectum_ponere(r, "via_moderandi",
-		json_chorda_creare(piscina,
-			v->configuratio.via_moderandi));
-	json_objectum_ponere(r, "currentes",
-		json_integer_creare(piscina,
-			(s64)villa_probationes_currentes(v->agens)));
-	json_objectum_ponere(r, "cycli",
-		json_integer_creare(piscina,
-			(s64)v->cycli));
+	_pone_ch(r, "via_moderandi", v->configuratio.via_moderandi,
+		piscina);
+	_pone_n(r, "currentes",
+		(s64)villa_probationes_currentes(v->agens), piscina);
+	_pone_n(r, "cycli", (s64)v->cycli, piscina);
 
-	p = villa_probatio_ultima(v->agens, v->clavis);
+	per (i = ZEPHYRUM; i < villa_sedes_numerus(v->agens); i++)
+	{
+		chorda     clavis = villa_sedes_clavis(v->agens, i);
+		JsonValor* o      = json_objectum_creare(piscina);
+		constans ProbatioServi* p =
+			villa_probatio_ultima(v->agens, clavis);
+
+		_pone_ch(o, "clavis", clavis, piscina);
+		json_objectum_ponere(o, "iudicium",
+			json_chorda_creare_literis(piscina,
+				villa_iudicium_nomen(villa_iudicare(p))));
+		_pone_b(o, "probatio_currit",
+			villa_probatio_currit(v->agens, clavis), piscina);
+		_pone_b(o, "actio_currit",
+			villa_actio_currit(v->agens, clavis), piscina);
+		si (p != NIHIL)
+		{
+			_pone_b(o, "felix", p->felix, piscina);
+			_pone_n(o, "mora_ms", (s64)p->mora_ms, piscina);
+			_pone_ch(o, "querelae", p->querelae, piscina);
+			_pone_n(o, "servitia", (s64)((p->servitia != NIHIL)
+				? xar_numerus(p->servitia) : ZEPHYRUM), piscina);
+			_pone_n(o, "situs", (s64)((p->situs != NIHIL)
+				? xar_numerus(p->situs) : ZEPHYRUM), piscina);
+			_pone_n(o, "discus_capacitas",
+				(s64)p->discus.capacitas, piscina);
+		}
+		json_tabulatum_addere(sedes, o);
+	}
+	json_objectum_ponere(r, "sedes", sedes);
+	redde r;
+}
+
+/* villa_probatio {clavis?} -> photographia plena parsata unius
+ * servi - fundamentum visus detaliorum */
+interior JsonValor*
+_villa_probatio (JsonValor* argumenta, Piscina* piscina,
+	vacuum* datum, chorda* culpa)
+{
+	VillaStatus* v = (VillaStatus*)datum;
+	chorda       clavis = _arg_ch(argumenta, "clavis");
+	JsonValor*   r = json_objectum_creare(piscina);
+	constans ProbatioServi* p;
+	i32          i;
+
+	(vacuum)culpa;
+	si (clavis.mensura == ZEPHYRUM)
+	{
+		clavis = v->clavis;
+	}
+	p = villa_probatio_ultima(v->agens, clavis);
+	_pone_ch(r, "clavis", clavis, piscina);
+	json_objectum_ponere(r, "iudicium",
+		json_chorda_creare_literis(piscina,
+			villa_iudicium_nomen(villa_iudicare(p))));
+	_pone_b(r, "probatio_currit",
+		villa_probatio_currit(v->agens, clavis), piscina);
 	si (p == NIHIL)
 	{
-		json_objectum_ponere(r, "probatio",
+		redde r;
+	}
+	_pone_b(r, "felix", p->felix, piscina);
+	_pone_n(r, "mora_ms", (s64)p->mora_ms, piscina);
+	json_objectum_ponere(r, "causa",
+		json_chorda_creare_literis(piscina,
+			villa_exitus_nomen(p->causa.genus)));
+	_pone_ch(r, "causa_textus", p->causa.causa, piscina);
+	_pone_ch(r, "querelae", p->querelae, piscina);
+	_pone_n(r, "tempus_activum", (s64)p->tempus_activum, piscina);
+
+	{
+		JsonValor* t = json_tabulatum_creare(piscina);
+
+		si (p->unitates != NIHIL)
+		{
+			per (i = ZEPHYRUM; i < xar_numerus(p->unitates); i++)
+			{
+				constans UnitasCursoria* u =
+					(constans UnitasCursoria*)
+					xar_obtinere(p->unitates, i);
+				JsonValor* o = json_objectum_creare(piscina);
+
+				si (u == NIHIL)
+				{
+					perge;
+				}
+				_pone_ch(o, "unitas", u->unitas, piscina);
+				_pone_ch(o, "vita", u->vita, piscina);
+				_pone_ch(o, "sub", u->sub, piscina);
+				_pone_ch(o, "descriptio", u->descriptio, piscina);
+				json_tabulatum_addere(t, o);
+			}
+		}
+		json_objectum_ponere(r, "unitates", t);
+	}
+	{
+		JsonValor* t = json_tabulatum_creare(piscina);
+
+		si (p->servitia != NIHIL)
+		{
+			per (i = ZEPHYRUM; i < xar_numerus(p->servitia); i++)
+			{
+				constans StatusServitii* s =
+					(constans StatusServitii*)
+					xar_obtinere(p->servitia, i);
+				JsonValor* o = json_objectum_creare(piscina);
+
+				si (s == NIHIL)
+				{
+					perge;
+				}
+				_pone_ch(o, "id", s->id, piscina);
+				_pone_ch(o, "descriptio", s->descriptio, piscina);
+				_pone_ch(o, "vita", s->status_vitae, piscina);
+				_pone_ch(o, "sub", s->sub_status, piscina);
+				_pone_ch(o, "tempus_initii", s->tempus_initii,
+					piscina);
+				_pone_b(o, "inventa", s->inventa, piscina);
+				_pone_b(o, "currit", s->currit, piscina);
+				_pone_b(o, "fracta", s->fracta, piscina);
+				/* causa_finis nihil significat nisi fracta - lex
+				 * systemd: 'Result=success' etiam mortuis et
+				 * ignotis redditur. Non emissa = non ostensa. */
+				si (s->fracta)
+				{
+					_pone_ch(o, "causa_finis", s->causa_finis,
+						piscina);
+					_pone_n(o, "codex", (s64)s->codex_exitus,
+						piscina);
+				}
+				_pone_n(o, "pid", (s64)s->pid, piscina);
+				_pone_n(o, "restitutiones", (s64)s->restitutiones,
+					piscina);
+				json_tabulatum_addere(t, o);
+			}
+		}
+		json_objectum_ponere(r, "servitia", t);
+	}
+	{
+		JsonValor* t = json_tabulatum_creare(piscina);
+
+		si (p->situs != NIHIL)
+		{
+			per (i = ZEPHYRUM; i < xar_numerus(p->situs); i++)
+			{
+				constans SitusNginx* s = (constans SitusNginx*)
+					xar_obtinere(p->situs, i);
+				JsonValor* o = json_objectum_creare(piscina);
+
+				si (s == NIHIL)
+				{
+					perge;
+				}
+				_pone_ch(o, "hospes", s->hospes, piscina);
+				_pone_ch(o, "hospites", s->hospites, piscina);
+				_pone_ch(o, "destinatio", s->destinatio, piscina);
+				_pone_n(o, "destinationes", (s64)s->destinationes,
+					piscina);
+				_pone_ch(o, "certificatum", s->certificatum,
+					piscina);
+				_pone_ch(o, "radix", s->radix, piscina);
+				_pone_b(o, "ssl", s->ssl, piscina);
+				_pone_b(o, "redirectio", s->habet_redirectionem,
+					piscina);
+				json_tabulatum_addere(t, o);
+			}
+		}
+		json_objectum_ponere(r, "situs", t);
+	}
+	{
+		JsonValor* d = json_objectum_creare(piscina);
+
+		_pone_ch(d, "systema", p->discus.systema, piscina);
+		_pone_ch(d, "punctum", p->discus.punctum, piscina);
+		_pone_n(d, "frusta", (s64)p->discus.frusta, piscina);
+		_pone_n(d, "usa", (s64)p->discus.usa, piscina);
+		_pone_n(d, "praesto", (s64)p->discus.praesto, piscina);
+		_pone_n(d, "capacitas", (s64)p->discus.capacitas, piscina);
+		json_objectum_ponere(r, "discus", d);
+	}
+	{
+		JsonValor* m = json_objectum_creare(piscina);
+
+		_pone_n(m, "summa_kb", (s64)p->memoria.summa_kb, piscina);
+		_pone_n(m, "libera_kb", (s64)p->memoria.libera_kb, piscina);
+		_pone_n(m, "praesto_kb", (s64)p->memoria.praesto_kb,
+			piscina);
+		json_objectum_ponere(r, "memoria", m);
+	}
+	redde r;
+}
+
+/* villa_probare {clavis?, alias?, unitates?[]} - probationem
+ * incipere (non obstat). Sine argumentis: servus praetermissionis
+ * (-alias) - semita evolutionis et fumi immutata. */
+interior JsonValor*
+_villa_probare (JsonValor* argumenta, Piscina* piscina,
+	vacuum* datum, chorda* culpa)
+{
+	VillaStatus*  v = (VillaStatus*)datum;
+	JsonValor*    r = json_objectum_creare(piscina);
+	chorda        clavis = _arg_ch(argumenta, "clavis");
+	chorda        alias  = _arg_ch(argumenta, "alias");
+	chorda        causa  = _ch("");
+	constans Xar* unitates = v->unitates;
+	b32           bene;
+
+	(vacuum)culpa;
+	si (clavis.mensura == ZEPHYRUM)
+	{
+		clavis = v->clavis;
+	}
+	si (alias.mensura == ZEPHYRUM)
+	{
+		alias = v->alias;
+	}
+	/* unitates propriae ex JS (tabulatum chordarum) - chordae in
+	 * piscinam vocationis monstrant, quod sufficit: scriptum eas
+	 * intra hanc vocationem transcribit */
+	si (argumenta != NIHIL)
+	{
+		JsonValor* t = json_objectum_capere(argumenta, "unitates");
+
+		si (t != NIHIL && json_est_tabulatum(t))
+		{
+			Xar* propriae = xar_creare(piscina,
+				(i32)magnitudo(chorda));
+			i32  i;
+
+			per (i = ZEPHYRUM; i < json_tabulatum_numerus(t); i++)
+			{
+				JsonValor* e = json_tabulatum_obtinere(t, i);
+
+				si (e != NIHIL && json_est_chorda(e))
+				{
+					chorda* n = (chorda*)xar_addere(propriae);
+
+					si (n != NIHIL)
+					{
+						*n = json_ad_chorda(e);
+					}
+				}
+			}
+			unitates = propriae;
+		}
+	}
+	bene = villa_probationem_incipere(v->agens, clavis, alias,
+		unitates, &causa);
+	_pone_b(r, "incepta", bene, piscina);
+	_pone_ch(r, "causa", causa, piscina);
+	redde r;
+}
+
+/* villa_agere {clavis?, alias?, res?, imperium} - actio
+ * incrementalis (non obstat); fructus per villa_actio legitur */
+interior JsonValor*
+_villa_agere (JsonValor* argumenta, Piscina* piscina,
+	vacuum* datum, chorda* culpa)
+{
+	VillaStatus* v = (VillaStatus*)datum;
+	JsonValor*   r = json_objectum_creare(piscina);
+	chorda       clavis   = _arg_ch(argumenta, "clavis");
+	chorda       alias    = _arg_ch(argumenta, "alias");
+	chorda       res      = _arg_ch(argumenta, "res");
+	chorda       imperium = _arg_ch(argumenta, "imperium");
+	chorda       causa    = _ch("");
+	b32          bene;
+
+	(vacuum)culpa;
+	si (clavis.mensura == ZEPHYRUM)
+	{
+		clavis = v->clavis;
+	}
+	si (alias.mensura == ZEPHYRUM)
+	{
+		alias = v->alias;
+	}
+	bene = villa_actionem_incipere(v->agens, clavis, alias, res,
+		imperium, &causa);
+	_pone_b(r, "incepta", bene, piscina);
+	_pone_ch(r, "causa", causa, piscina);
+	redde r;
+}
+
+/* villa_actio {clavis?} - status actionis + fructus ultimus */
+interior JsonValor*
+_villa_actio (JsonValor* argumenta, Piscina* piscina,
+	vacuum* datum, chorda* culpa)
+{
+	VillaStatus* v = (VillaStatus*)datum;
+	JsonValor*   r = json_objectum_creare(piscina);
+	chorda       clavis = _arg_ch(argumenta, "clavis");
+	constans ResultusActionis* f;
+
+	(vacuum)culpa;
+	si (clavis.mensura == ZEPHYRUM)
+	{
+		clavis = v->clavis;
+	}
+	_pone_b(r, "currit", villa_actio_currit(v->agens, clavis),
+		piscina);
+	f = villa_actio_ultima(v->agens, clavis);
+	si (f == NIHIL)
+	{
+		json_objectum_ponere(r, "fructus",
 			json_nullum_creare(piscina));
 		redde r;
 	}
 	{
 		JsonValor* o = json_objectum_creare(piscina);
 
-		json_objectum_ponere(o, "felix",
-			json_boolean_creare(piscina, p->felix));
-		json_objectum_ponere(o, "mora_ms",
-			json_integer_creare(piscina,
-			(s64)p->mora_ms));
+		_pone_b(o, "successus", f->successus, piscina);
 		json_objectum_ponere(o, "causa",
 			json_chorda_creare_literis(piscina,
-				villa_exitus_nomen(p->causa.genus)));
-		json_objectum_ponere(o, "querelae",
-			json_chorda_creare(piscina, p->querelae));
-		json_objectum_ponere(o, "unitates",
-			json_integer_creare(piscina,
-			(s64)((p->unitates != NIHIL)
-					? xar_numerus(p->unitates) : ZEPHYRUM)));
-		json_objectum_ponere(o, "servitia",
-			json_integer_creare(piscina,
-			(s64)((p->servitia != NIHIL)
-					? xar_numerus(p->servitia) : ZEPHYRUM)));
-		json_objectum_ponere(o, "situs",
-			json_integer_creare(piscina,
-			(s64)((p->situs != NIHIL)
-					? xar_numerus(p->situs) : ZEPHYRUM)));
-		json_objectum_ponere(o, "discus",
-			json_chorda_creare(piscina, p->discus.systema));
-		json_objectum_ponere(o, "capacitas",
-			json_integer_creare(piscina,
-			(s64)p->discus.capacitas));
-		json_objectum_ponere(o, "memoria_kb",
-			json_integer_creare(piscina,
-			(s64)p->memoria.summa_kb));
-		json_objectum_ponere(o, "tempus_activum",
-			json_integer_creare(piscina,
-			(s64)p->tempus_activum));
-		json_objectum_ponere(r, "probatio", o);
+				villa_exitus_nomen(f->causa.genus)));
+		_pone_ch(o, "causa_textus", f->causa.causa, piscina);
+		_pone_n(o, "codex", (s64)f->causa.codex, piscina);
+		_pone_ch(o, "effusio", f->effusio, piscina);
+		_pone_ch(o, "erratum", f->erratum, piscina);
+		_pone_n(o, "mora_ms", (s64)f->mora_ms, piscina);
+		_pone_b(o, "eventus_scriptus", f->eventus_scriptus,
+			piscina);
+		json_objectum_ponere(r, "fructus", o);
 	}
 	redde r;
 }
 
+/* villa_abrumpere {clavis?} - actionem currentem desistere */
 interior JsonValor*
-_villa_probare (JsonValor* argumenta, Piscina* piscina,
+_villa_abrumpere (JsonValor* argumenta, Piscina* piscina,
 	vacuum* datum, chorda* culpa)
 {
 	VillaStatus* v = (VillaStatus*)datum;
 	JsonValor*   r = json_objectum_creare(piscina);
-	chorda       causa = _ch("");
-	b32          bene;
+	chorda       clavis = _arg_ch(argumenta, "clavis");
 
-	(vacuum)argumenta;
 	(vacuum)culpa;
-
-	bene = villa_probationem_incipere(v->agens, v->clavis, v->alias,
-		v->unitates, &causa);
-	json_objectum_ponere(r, "incepta",
-		json_boolean_creare(piscina, bene));
-	json_objectum_ponere(r, "causa",
-		json_chorda_creare(piscina, causa));
+	si (clavis.mensura == ZEPHYRUM)
+	{
+		clavis = v->clavis;
+	}
+	villa_actionem_abrumpere(v->agens, clavis);
+	_pone_b(r, "factum", VERUM, piscina);
 	redde r;
 }
 
@@ -356,21 +672,34 @@ s32 principale (integer argc, character** argv)
 	}
 	(vacuum)internuntius_praebere(inx, "villa_status",
 		_villa_status, &villa);
+	(vacuum)internuntius_praebere(inx, "villa_probatio",
+		_villa_probatio, &villa);
 	(vacuum)internuntius_praebere(inx, "villa_probare",
 		_villa_probare, &villa);
+	(vacuum)internuntius_praebere(inx, "villa_agere",
+		_villa_agere, &villa);
+	(vacuum)internuntius_praebere(inx, "villa_actio",
+		_villa_actio, &villa);
+	(vacuum)internuntius_praebere(inx, "villa_abrumpere",
+		_villa_abrumpere, &villa);
 	(vacuum)internuntius_praebere(inx, "transmittere",
 		cliens_tabularii_transmittere, &villa.cliens);
 
 	{
 		Speculum* speculum = speculum_creare(piscina,
 			&capsula_speculi_villa, inx, vitrea_aestimator, vitrea);
-		i64 tictus = ZEPHYRUM;
 
 		si (speculum == NIHIL)
 		{
 			imprimere("FRACTA: speculum\n");
 			redde I;
 		}
+		/* probatio prima statim (non obstat): facies aliquid videt
+		 * antequam JS horaria sua instituat. Horaria PERIODICA JS
+		 * possidet quia indicem servorum possidet (V4b decisum -
+		 * auto-probatio C-latus remota est). */
+		(vacuum)villa_probationem_incipere(villa.agens, villa.clavis,
+			villa.alias, villa.unitates, &causa);
 		imprimere("[villa] fenestra aperta (alias %.*s, daemon"
 			" portus %d)\n", (int)villa.alias.mensura,
 			(constans character*)villa.alias.datum,
@@ -403,26 +732,13 @@ s32 principale (integer argc, character** argv)
 				}
 			}
 
-			/* SLOT PROBATIONIS: gradus unus, numquam obstans.
-			 * Photographiae in arenis agentis vivunt, NON in
-			 * piscina_vocationis quae mox reficitur. */
+			/* SLOT PROBATIONIS: gradus unus, numquam obstans -
+			 * probationes ET actiones provehit. Photographiae in
+			 * arenis agentis vivunt, NON in piscina_vocationis
+			 * quae mox reficitur. */
 			si (villa_agens_pulsare(villa.agens) > ZEPHYRUM)
 			{
 				villa.cycli++;
-			}
-			/* horologium tictuum: fenestra_expectare_eventus
-			 * VILLA_TICTUS_MS morari SOLET sed non promittit,
-			 * ergo numerus tictuum aestimatio est, non mensura.
-			 * V4b horologium verum adhibeat si praecisio importat. */
-			tictus++;
-			si (villa_probationes_currentes(villa.agens) == ZEPHYRUM
-				&& tictus * (i64)VILLA_TICTUS_MS
-					>= (i64)VILLA_INTERVALLUM_MS)
-			{
-				tictus = ZEPHYRUM;
-				(vacuum)villa_probationem_incipere(villa.agens,
-					villa.clavis, villa.alias, villa.unitates,
-					&causa);
 			}
 			piscina_reficere(piscina_vocationis, nota);
 		}
