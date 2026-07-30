@@ -5902,6 +5902,19 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
     si (status_f.datum == NIHIL) status_f = _ch("");
     si (res_f.datum == NIHIL) res_f = _ch("");
     si (sine_campis.datum == NIHIL) sine_campis = _ch("");
+    /* praefixum ULID in 'res' ad id plenum resolvere (01KYR7XMM9:
+     * praefixum antea [] TACITE reddebat): stampae capturarum
+     * (XII+ signa) et praefixa manu data. Congruentia exacta
+     * manet; ambiguum aut absens = tabulatum vacuum ut antea. */
+    si (_ulid_praefixus_est(res_f))
+    {
+        chorda plenum = _res_per_praefixum(t, res_f, pn, NIHIL);
+
+        si (plenum.mensura > ZEPHYRUM)
+        {
+            res_f = plenum;
+        }
+    }
 
     e = scrinium_praeparare(gesta_scrinium(t->mundus),
         "SELECT r.res_id, r.genus, r.titulus, r.status, r.datum,"

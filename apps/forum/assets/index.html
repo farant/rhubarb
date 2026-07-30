@@ -62,6 +62,11 @@
   /* pre-wrap (non pre-line): spatia ducentia SERVANTUR - bloci
    * capturarum indentati (petitio 01KYSPDNP6A6) */
   #articulus-corpus p { margin: .8em 0; white-space: pre-wrap; }
+  /* illuminatio stml in visu articuli (dialectus capturarum) */
+  .stml-tag { color: #8a7a55; }
+  .stml-punct { color: #6b6357; }
+  .stml-stampa { color: #d8b978; cursor: pointer; }
+  .stml-stampa:hover { text-decoration: underline; }
   .caput-actionum { display: flex; gap: .6em; align-items: center;
                     flex-wrap: wrap; margin: .5em 0 1em; }
   #editor-titulus { margin: .8em 0 .5em; }
@@ -539,6 +544,116 @@ function corpus_cum_tagis(textus) {
   return frag;
 }
 
+/* ---- illuminatio stml (dialectus linearis capturarum) ----
+ * Gemina scanner daemonis (_capturas_invenire in tabularium.c -
+ * oraculum C est): bloci <genus>, clausurae </genus> aut </>,
+ * lineae capturae <#stampa (> / <# (> / <(> INTRA blocos solos.
+ * Contextus trans paragraphos fertur (lineae vacuae blocum non
+ * claudunt). Reconstructio octetim fidelis: partes = linea. */
+var stml_genus_apertum = null;
+
+var STML_APERIT = /^([ \t]*)<([A-Za-z0-9_-]+)>\s*$/;
+var STML_CLAUDIT = /^([ \t]*)<\/([A-Za-z0-9_-]*)>\s*$/;
+var STML_CAPTURA = /^([ \t]*)<#([A-Za-z0-9_-]*)([ \t]*\(+[ \t]*)>(.*)$/;
+var STML_CAPTURA_NUDA = /^([ \t]*)<(\(+[ \t]*)>(.*)$/;
+var STML_STAMPA = /^[0-9A-HJKMNP-TV-Z]{6,26}$/;
+
+/* stampa -> ens: daemon praefixum resolvit (legere res),
+ * definitiones onerantur si absunt */
+function stml_stampam_aperire(stampa) {
+  var praeparatio = res_defs.length ? Promise.resolve()
+    : legere('definitio').then(function (d) { res_defs = d; });
+  praeparatio.then(function () {
+    return legere('', { res: stampa });
+  }).then(function (entia) {
+    if (entia.length === 1) {
+      ens_aperire_per_genus(entia[0].genus, entia[0].res_id);
+    }
+  }).catch(function () { /* stampa insoluta = nihil */ });
+}
+
+function stml_span(classis, textus) {
+  var sp = document.createElement('span');
+  sp.className = classis;
+  sp.textContent = textus;
+  return sp;
+}
+
+/* lineam structuralem reddere (fragmentum) aut null = prosa.
+ * Contextum stml_genus_apertum legit ET mutat. */
+function stml_lineam_reddere(linea) {
+  var m;
+  var frag;
+  var prae;
+  var stampa;
+  var punct1;
+  var punct2;
+  var reliquum;
+
+  if (stml_genus_apertum === null) {
+    if ((m = linea.match(STML_APERIT))) {
+      stml_genus_apertum = m[2];
+      frag = document.createDocumentFragment();
+      frag.appendChild(document.createTextNode(m[1]));
+      frag.appendChild(stml_span('stml-tag',
+        linea.slice(m[1].length)));
+      return frag;
+    }
+    return null;
+  }
+  if ((m = linea.match(STML_CLAUDIT))
+    && (m[2] === '' || m[2] === stml_genus_apertum)) {
+    stml_genus_apertum = null;
+    frag = document.createDocumentFragment();
+    frag.appendChild(document.createTextNode(m[1]));
+    frag.appendChild(stml_span('stml-tag',
+      linea.slice(m[1].length)));
+    return frag;
+  }
+  if ((m = linea.match(STML_CAPTURA))) {
+    prae = m[1]; stampa = m[2];
+    punct1 = '<#'; punct2 = m[3] + '>'; reliquum = m[4];
+  } else if ((m = linea.match(STML_CAPTURA_NUDA))) {
+    prae = m[1]; stampa = '';
+    punct1 = '<'; punct2 = m[2] + '>'; reliquum = m[3];
+  } else {
+    return null;
+  }
+  frag = document.createDocumentFragment();
+  frag.appendChild(document.createTextNode(prae));
+  frag.appendChild(stml_span('stml-punct', punct1));
+  if (stampa) {
+    var st = stml_span(
+      STML_STAMPA.test(stampa) ? 'stml-stampa' : 'stml-tag',
+      stampa);
+    if (STML_STAMPA.test(stampa)) {
+      st.title = 'res apertam monstrare';
+      (function (s) {
+        st.onclick = function (ev) {
+          ev.stopPropagation();
+          stml_stampam_aperire(s);
+        };
+      })(stampa);
+    }
+    frag.appendChild(st);
+  }
+  frag.appendChild(stml_span('stml-punct', punct2));
+  frag.appendChild(corpus_cum_tagis(reliquum));
+  return frag;
+}
+
+/* paragraphus articuli cum illuminatione: lineae structurales
+ * per stml_lineam_reddere, prosa per corpus_cum_tagis */
+function corpus_articuli_cum_stml(par) {
+  var frag = document.createDocumentFragment();
+  par.split('\n').forEach(function (linea, i) {
+    var pars = stml_lineam_reddere(linea);
+    if (i > 0) { frag.appendChild(document.createTextNode('\n')); }
+    frag.appendChild(pars || corpus_cum_tagis(linea));
+  });
+  return frag;
+}
+
 /* ---- visus vertere ---- */
 function vertere(novus) {
   visus = novus;
@@ -832,10 +947,11 @@ function reddere_articulum(articuli, commentaria) {
   barra.appendChild(rec);
   caput.appendChild(barra);
   var textus = (arti.datum && arti.datum.corpus) || '';
+  stml_genus_apertum = null;   /* contextus blocorum per articulum */
   textus.split(/\n\s*\n/).forEach(function (par) {
     if (!par.trim()) { return; }
     var p = document.createElement('p');
-    p.appendChild(corpus_cum_tagis(par));
+    p.appendChild(corpus_articuli_cum_stml(par));
     corpus_div.appendChild(p);
   });
   /* filum: radices = commentaria quae articulo respondent */

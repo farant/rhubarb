@@ -2387,6 +2387,17 @@ s32 principale (vacuum)
             articulus_id);
         r = _mitte(t, piscina, imperium);
         CREDO_VERUM (strstr(r, "<# (> post clausuram") != NIHIL);
+
+        /* legere per praefixum (01KYR7XMM9: praefixum antea []
+         * tacite) - stampa XII signorum ens plenum reddit */
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":815,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"res\":\"%s\"}}}", stampa);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "eat a cake NOW") != NIHIL);
+        CREDO_VERUM (strstr(r, "\\\"genus\\\":\\\"ideas\\\"")
+            != NIHIL || strstr(r, "\"genus\":\"ideas\"")
+            != NIHIL);
     }
 
     /* XVI. renovatio sui (01KYQ4T5EE): explorator praevius =
