@@ -17,6 +17,9 @@
              border: 1px solid #8a7a55; padding: .5em; font: inherit;
              border-radius: 4px; box-sizing: border-box; }
   textarea { resize: vertical; }
+  /* editor crescens: altitudo contentum sequitur - scroll internus
+   * nullus umquam (pagina volvitur, cursor visualiter stabilis) */
+  #editor-corpus { overflow-y: hidden; }
   button { background: #453d2f; color: #ece5d8; border: 1px solid #8a7a55;
            padding: .45em 1.1em; font: inherit; cursor: pointer;
            border-radius: 4px; }
@@ -824,6 +827,7 @@ function reddere_articulum(articuli, commentaria) {
     document.getElementById('editor-corpus').value =
       (arti.datum && arti.datum.corpus) || '';
     vertere('editor');
+    editor_crescere();
   };
   barra.appendChild(rec);
   caput.appendChild(barra);
@@ -855,6 +859,7 @@ document.getElementById('novus-articulus').onclick = function () {
   document.getElementById('editor-titulus').value = '';
   document.getElementById('editor-corpus').value = '';
   vertere('editor');
+  editor_crescere();
 };
 document.getElementById('editor-retro').onclick = function () {
   vertere(editor_res ? 'articulus' : 'articuli');
@@ -881,6 +886,27 @@ document.getElementById('editor-corpus').addEventListener('keydown',
       ta.setRangeText(insertum, ta.selectionStart,
         ta.selectionEnd, 'end');
       ta.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  });
+/* editor crescens (2026-07-30): altitudo contentum sequitur, ergo
+ * scroll internus numquam exsistit et Enter in medio cursorem
+ * visualiter non movet; cursor ad finem = margo imus in conspectum
+ * (nearest = nihil agit si iam visibilis). Minima = altitudo
+ * nativa rows=14, capta dum visibilis (occulta = 0). */
+function editor_crescere() {
+  var ta = document.getElementById('editor-corpus');
+  if (!ta.dataset.minima && ta.offsetHeight > 0) {
+    ta.dataset.minima = ta.offsetHeight;
+  }
+  ta.style.height = 'auto';
+  ta.style.height = Math.max(ta.scrollHeight + 2,
+    +(ta.dataset.minima || 0)) + 'px';
+}
+document.getElementById('editor-corpus').addEventListener('input',
+  function () {
+    editor_crescere();
+    if (this.selectionStart === this.value.length) {
+      this.scrollIntoView({ block: 'nearest' });
     }
   });
 document.getElementById('editor-servare').onclick = function () {
