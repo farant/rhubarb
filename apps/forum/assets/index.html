@@ -859,6 +859,30 @@ document.getElementById('novus-articulus').onclick = function () {
 document.getElementById('editor-retro').onclick = function () {
   vertere(editor_res ? 'articulus' : 'articuli');
 };
+/* indentatio conservata: Enter spatium album initiale lineae
+ * currentis continuat (ab initio lineae usque ad signum primum
+ * non-album, tectum cursore) - bloci capturarum indentati sine
+ * spatiis manu repetitis. execCommand acervum undo servat;
+ * setRangeText = reservum. */
+document.getElementById('editor-corpus').addEventListener('keydown',
+  function (ev) {
+    var ta = this;
+    var initium, linea, m, insertum;
+    if (ev.key !== 'Enter' || ev.shiftKey || ev.metaKey
+      || ev.ctrlKey || ev.altKey || ev.isComposing) { return; }
+    initium = ta.value.lastIndexOf('\n', ta.selectionStart - 1) + 1;
+    linea = ta.value.slice(initium, ta.selectionStart);
+    m = linea.match(/^[ \t]+/);
+    if (!m) { return; }   /* sine indentatione = mos nativus */
+    ev.preventDefault();
+    insertum = '\n' + m[0];
+    if (!document.execCommand
+      || !document.execCommand('insertText', false, insertum)) {
+      ta.setRangeText(insertum, ta.selectionStart,
+        ta.selectionEnd, 'end');
+      ta.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  });
 document.getElementById('editor-servare').onclick = function () {
   var titulus = document.getElementById('editor-titulus').value;
   var corpus = document.getElementById('editor-corpus').value;
