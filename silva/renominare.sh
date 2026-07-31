@@ -91,6 +91,8 @@ while [ $# -gt 0 ]; do
         -via)      VEXILLA+=("$1" "${2:?-via plagula deest}"); shift ;;
         -intra)    INTRA="${2:?-intra functio deest}"
                    VEXILLA+=("$1" "$2"); shift ;;
+        -membrum)  MEMBRUM="${2:?-membrum typus deest}"
+                   VEXILLA+=("$1" "$2"); shift ;;
         -linea)    VEXILLA+=("$1" "${2:?-linea numerus deest}"); shift ;;
         -machina|-v|-lista) VEXILLA+=("$1") ;;
         *)         PLAGULAE+=("$1") ;;
@@ -102,13 +104,41 @@ done
 # nexus.sh sanationem sui ipsius facit). Modo -intra: plagulae =
 # sedes FUNCTIONIS (localis in plagula definiente vivit)
 if [ ${#PLAGULAE[@]} -eq 0 ]; then
-    CLAVIS_NEXUS="${INTRA:-$VETUS}"
+    CLAVIS_NEXUS="${MEMBRUM:-${INTRA:-$VETUS}}"
     "$SILVA_DIR/nexus.sh" "$CLAVIS_NEXUS" >/dev/null 2>&1 || true
     if [ ! -f "$RADIX_DIR/build/nexus.tsv" ]; then
         echo "renominare: nexus.tsv deest (curre ./silva/nexus.sh -renovare)" >&2
         exit 2
     fi
-    if [ -n "${INTRA:-}" ]; then
+    if [ -n "${MEMBRUM:-}" ]; then
+        # clausura inclusionum REVERSA plagulae definientis typum:
+        # usus membrorum nexui invisibiles sunt (ianua nominata) -
+        # quisquis membrum nominare potest caput typi includit
+        semina="$(awk -F'\t' -v t="$MEMBRUM" \
+            '$1==t && $2=="sedes" {print $4}' \
+            "$RADIX_DIR/build/nexus.tsv" | sort -u | tr '\n' ',')"
+        if [ -z "$semina" ]; then
+            echo "renominare: typus $MEMBRUM ignotus nexui" >&2
+            exit 1
+        fi
+        # praefiltrum textuale TUTUM constructione: plagula sine
+        # verbo membri sedes habere non potest - clausura CCXVI
+        # plagularum ad eas quae verbum vere ferunt reducitur
+        while IFS= read -r via; do
+            [ -f "$via" ] && grep -qw "$VETUS" "$via" 2>/dev/null \
+                && PLAGULAE+=("$via")
+        done < <(awk -F'\t' -v semina="$semina" '
+            BEGIN { n = split(semina, s, ",");
+                    for (i = 1; i <= n; i++) if (s[i] != "") copia[s[i]] = 1 }
+            { ex[NR] = $1; ad[NR] = $2 }
+            END {
+                mutatum = 1
+                while (mutatum) { mutatum = 0
+                    for (r = 1; r <= NR; r++)
+                        if (copia[ad[r]] && !copia[ex[r]]) { copia[ex[r]] = 1; mutatum = 1 } }
+                for (f in copia) print f
+            }' "$RADIX_DIR/build/inclusiones.tsv" | sort -u)
+    elif [ -n "${INTRA:-}" ]; then
         while IFS= read -r via; do
             PLAGULAE+=("$via")
         done < <(awk -F'\t' -v t="$INTRA" \

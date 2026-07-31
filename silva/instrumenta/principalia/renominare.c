@@ -64,6 +64,13 @@ hic_manens constans character* via_data = NIHIL;   /* -via */
 hic_manens constans character* intra_l = NIHIL;    /* -intra */
 hic_manens i32 linea_data = ZEPHYRUM;              /* -linea */
 
+/* modus membri (-membrum <typus>): vetus = titulus membri; typus
+ * per TU nomine resolvitur (typedef primum - domus tags anonyma
+ * titulis typedef baptizat - deinde tag scopi plagulae); intra TU
+ * aequalitas monstratorum tag. Spatium nominum membrorum: symbola
+ * omnia ALIENA sunt. */
+hic_manens constans character* membrum_l = NIHIL;  /* -membrum */
+
 hic_manens Piscina* piscina_magistra = NIHIL;
 
 /* capita repositorii SEMEL lecta (textus in piscina magistra) */
@@ -88,6 +95,13 @@ nomen structura {
     Piscina*            piscina;
     SilvaParsura*       parsura;
     SilvaSemantica*     sem;
+    TypusC89*           tag_electus;   /* modus membri: typus
+                                        * target huius TU; NIHIL =
+                                        * TU typum nescit */
+    i32                 errores;       /* numerus_errorum copia -
+                                        * superstes destructioni
+                                        * piscinae (fluxus modorum
+                                        * membri/localis) */
 } AnalysisPlagulae;
 hic_manens Xar* analyses = NIHIL;    /* AnalysisPlagulae */
 
@@ -508,6 +522,8 @@ _plagulam_analysare (constans character* via)
     an->piscina = pn;
     an->parsura = parsura;
     an->sem = sem;
+    an->tag_electus = NIHIL;
+    an->errores = (i32)parsura->numerus_errorum;
     redde an;
 }
 
@@ -580,6 +596,59 @@ _tok_vetus_scribit (SilvaToken* tok)
     redde _chordae_pares_lit(tok->valor, vetus_l);
 }
 
+/* basis accessus ad typum tag (recipe custodis chorda.datum in
+ * semantica.c, per superficies publicas): typus naturalis basis
+ * (canonicum-conscius), SAGITTA monstratorem unum exuit, qualia
+ * exuuntur, STRUCTURA/UNIO redditur; NIHIL = basis sine typo aut
+ * non-aggregata (consumptor refusionem parit - lex rationarii:
+ * membrum numquam divinatur) */
+interior constans TypusC89*
+_tag_accessus (constans AnalysisPlagulae* an,
+    constans SilvaNodus* accessus)
+{
+    SilvaValor b_v = silva_c89_accessus_basis(accessus);
+    SilvaValor op_v = silva_c89_accessus_tok_operator(accessus);
+    constans TypusC89* tb;
+
+    si (b_v.genus != SILVA_VALOR_NODUS || b_v.datum.nodus == NIHIL
+        || op_v.genus != SILVA_VALOR_TOKEN
+        || op_v.datum.token == NIHIL)
+    {
+        redde NIHIL;
+    }
+    tb = silva_c89_typus_expressionis(an->sem, b_v.datum.nodus);
+    si (tb == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (op_v.datum.token->genus == SILVA_LEX_SAGITTA)
+    {
+        dum (tb->genus == (s32)TYPUS_C89_QUALIFICATUS)
+        {
+            tb = tb->datum.qualificatus.internum;
+        }
+        si (tb->genus != (s32)TYPUS_C89_MONSTRATOR)
+        {
+            redde NIHIL;
+        }
+        tb = tb->datum.monstrator.internum;
+        si (tb == NIHIL)
+        {
+            redde NIHIL;
+        }
+    }
+    dum (tb->genus == (s32)TYPUS_C89_QUALIFICATUS)
+    {
+        tb = tb->datum.qualificatus.internum;
+    }
+    si (tb->genus != (s32)TYPUS_C89_STRUCTURA
+        && tb->genus != (s32)TYPUS_C89_UNIO)
+    {
+        redde NIHIL;
+    }
+    redde tb;
+}
+
 /* symbolum ligatum entitati nostrae? (discretio staticorum
  * homonymorum - nucleus correctitudinis) */
 interior b32
@@ -588,6 +657,11 @@ _symbolum_entitatis (constans AnalysisPlagulae* an,
 {
     si (s == NIHIL || s->ex_systemate)
     {
+        redde FALSUM;
+    }
+    si (membrum_l != NIHIL)
+    {
+        /* spatium nominum membrorum: symbola OMNIA aliena */
         redde FALSUM;
     }
     si (intra_l != NIHIL)
@@ -626,6 +700,8 @@ _symbolum_entitatis (constans AnalysisPlagulae* an,
 nomen structura {
     SilvaValor v;
     b32        in_membro;
+    b32        in_structura_electa;   /* subarbor declarantis tag
+                                       * target (modus membri) */
 } GradusAmbulationis;
 
 interior vacuum
@@ -650,6 +726,7 @@ _arborem_classificare (constans AnalysisPlagulae* an,
         }
         radix->v = an->parsura->commissio->radix;
         radix->in_membro = FALSUM;
+        radix->in_structura_electa = FALSUM;
     }
     dum (cursor < xar_numerus(series))
     {
@@ -677,6 +754,8 @@ _arborem_classificare (constans AnalysisPlagulae* an,
                     {
                         novus->v = *elem;
                         novus->in_membro = gradus.in_membro;
+                        novus->in_structura_electa =
+                            gradus.in_structura_electa;
                     }
                 }
             }
@@ -689,7 +768,17 @@ _arborem_classificare (constans AnalysisPlagulae* an,
         {
             constans SilvaNodus* nodus = v.datum.nodus;
             b32 in_membro = gradus.in_membro;
+            b32 in_structura_electa = gradus.in_structura_electa;
             i32 k;
+
+            /* modus membri: subarbor declarantis tag target */
+            si (membrum_l != NIHIL && an->tag_electus != NIHIL
+                && (nodus->genus == (s32)SILVA_C89_GENUS_STRUCTURA
+                    || nodus->genus == (s32)SILVA_C89_GENUS_UNIO)
+                && nodus == an->tag_electus->datum.tag.declarans)
+            {
+                in_structura_electa = VERUM;
+            }
 
             si (nodus->genus == (s32)SILVA_C89_GENUS_AMBIGUUS)
             {
@@ -715,6 +804,8 @@ _arborem_classificare (constans AnalysisPlagulae* an,
                         {
                             novus->v = *lectio;
                             novus->in_membro = in_membro;
+                            novus->in_structura_electa =
+                                in_structura_electa;
                         }
                     }
                 }
@@ -756,7 +847,31 @@ _arborem_classificare (constans AnalysisPlagulae* an,
 
                 si (_tok_vetus_scribit(tok))
                 {
-                    _classem_ponere(classes, tok, CLASSIS_ALIENA);
+                    si (membrum_l != NIHIL)
+                    {
+                        constans TypusC89* tag = _tag_accessus(an,
+                            nodus);
+
+                        si (tag == NIHIL)
+                        {
+                            /* basis sine typo - membrum numquam
+                             * divinatur (lex rationarii) */
+                            _classem_ponere(classes, tok,
+                                CLASSIS_REFUSIO);
+                        }
+                        alioquin
+                        {
+                            _classem_ponere(classes, tok,
+                                tag == an->tag_electus
+                                    ? CLASSIS_USUS
+                                    : CLASSIS_ALIENA);
+                        }
+                    }
+                    alioquin
+                    {
+                        _classem_ponere(classes, tok,
+                            CLASSIS_ALIENA);
+                    }
                 }
             }
             alioquin si (nodus->genus
@@ -798,8 +913,7 @@ _arborem_classificare (constans AnalysisPlagulae* an,
                 }
             }
             alioquin si (nodus->genus
-                    == (s32)SILVA_C89_GENUS_DECLARATOR_TITULUS
-                && in_membro)
+                == (s32)SILVA_C89_GENUS_DECLARATOR_TITULUS)
             {
                 SilvaToken* tok = _tok_valoris(
                     silva_c89_declarator_titulus_tok_titulus(
@@ -807,7 +921,16 @@ _arborem_classificare (constans AnalysisPlagulae* an,
 
                 si (_tok_vetus_scribit(tok))
                 {
-                    _classem_ponere(classes, tok, CLASSIS_ALIENA);
+                    /* modus membri: declarator intra structuram
+                     * ELECTAM = sedes. Ceteri declaratores sine
+                     * registratione (parametra prototyporum,
+                     * tituli parametrorum monstratorum functionum
+                     * - mensuratum in tessera) = ALIENA; sedes
+                     * registratae iam classificatae sunt (prima
+                     * positio vincit). */
+                    _classem_ponere(classes, tok,
+                        (membrum_l != NIHIL && in_structura_electa)
+                            ? CLASSIS_SEDES : CLASSIS_ALIENA);
                 }
             }
             alioquin si (nodus->genus
@@ -827,6 +950,8 @@ _arborem_classificare (constans AnalysisPlagulae* an,
                     novus->v = nodus->loci[
                         (insignatus integer)k];
                     novus->in_membro = in_membro;
+                    novus->in_structura_electa =
+                        in_structura_electa;
                 }
             }
         }
@@ -1556,6 +1681,18 @@ _plagulam_colligere (constans AnalysisPlagulae* an)
             }
             si (_classem_capere(classes, tok, &classis))
             {
+                si (classis == CLASSIS_REFUSIO)
+                {
+                    /* basis accessus sine typo (modus membri) */
+                    _sedem_addere(CLASSIS_REFUSIO, via_t,
+                        tok->linea, tok->columna, -I,
+                        "basis accessus sine typo");
+                    _culpam_addere(_culpa_formata(
+                        "basis accessus sine typo - membrum non"
+                        " divinatur", via_t, tok->linea,
+                        tok->columna));
+                    perge;
+                }
                 /* offset etiam alienis: dedup trans TU + calculus
                  * superstitum post scriptionem */
                 _sedem_addere(classis, via_t, tok->linea,
@@ -1591,7 +1728,7 @@ _plagulam_colligere (constans AnalysisPlagulae* an)
      * plagula affecta. Modo locali OMISSA - porta capturae (novum
      * intra functionem) instrumentum rectum est: localis 'k' in
      * functione ALIENA collisio non est */
-    n = intra_l != NIHIL ? ZEPHYRUM
+    n = (intra_l != NIHIL || membrum_l != NIHIL) ? ZEPHYRUM
         : (i32)silva_c89_symbola_numerus(an->sem);
     per (k = ZEPHYRUM; k < n; k++)
     {
@@ -2029,6 +2166,98 @@ _localem_resolvere (vacuum)
         entitas_genus = electum->genus;
     }
     piscina_destruere(effimera);
+    redde VERUM;
+}
+
+/* ==================================================
+ * resolutio membri (-membrum <typus>): typus nomine per TU
+ * ================================================== */
+
+interior b32
+_membrum_resolvere (vacuum)
+{
+    chorda titulus_typi = _ch(membrum_l);
+    i32 cum_tag = ZEPHYRUM;
+    b32 vetus_inventum = FALSUM;
+    b32 novum_inventum = FALSUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
+    {
+        AnalysisPlagulae* an = (AnalysisPlagulae*)xar_obtinere(
+            analyses, k);
+        TypusC89* t = silva_c89_typedef_invenire(an->sem,
+            titulus_typi);
+        i32 j;
+
+        si (t == NIHIL)
+        {
+            /* tag scopi plagulae (structura <titulus>) */
+            vacuum* valor;
+
+            si (an->sem->scopus_summus != NIHIL
+                && an->sem->scopus_summus->tags != NIHIL
+                && tabula_dispersa_invenire(
+                       an->sem->scopus_summus->tags,
+                       titulus_typi, &valor))
+            {
+                t = (TypusC89*)valor;
+            }
+        }
+        si (t == NIHIL)
+        {
+            perge;   /* TU typum nescit - sedes target nullae */
+        }
+        dum (t->genus == (s32)TYPUS_C89_QUALIFICATUS)
+        {
+            t = t->datum.qualificatus.internum;
+        }
+        si (t->genus != (s32)TYPUS_C89_STRUCTURA
+            && t->genus != (s32)TYPUS_C89_UNIO)
+        {
+            _culpam_addere("-membrum: typus nominatus non est"
+                " structura/unio");
+            redde FALSUM;
+        }
+        si (!t->datum.tag.completa)
+        {
+            perge;   /* declaratio incompleta - membra ignota */
+        }
+        an->tag_electus = t;
+        cum_tag++;
+        per (j = ZEPHYRUM; j < t->datum.tag.numerus_membrorum; j++)
+        {
+            constans TypusC89Membrum* m =
+                &t->datum.tag.membra[j];
+
+            si (_chordae_pares_lit(m->titulus, vetus_l))
+            {
+                vetus_inventum = VERUM;
+            }
+            si (_chordae_pares_lit(m->titulus, novum_l))
+            {
+                novum_inventum = VERUM;
+            }
+        }
+    }
+    si (cum_tag == ZEPHYRUM)
+    {
+        _culpam_addere("-membrum: typus in plagulis datis non"
+            " inventus (typedef aut tag scopi plagulae)");
+        redde FALSUM;
+    }
+    si (!vetus_inventum)
+    {
+        _culpam_addere("-membrum: membrum vetus in typo non"
+            " exstat");
+        redde FALSUM;
+    }
+    si (novum_inventum)
+    {
+        _culpam_addere("collisio: membrum novum iam in typo"
+            " exstat");
+        redde FALSUM;
+    }
     redde VERUM;
 }
 
@@ -2489,6 +2718,12 @@ principale (integer argc, character** argv)
             k++;
             intra_l = argv[k];
         }
+        alioquin si (strcmp(argv[k], "-membrum") == ZEPHYRUM
+            && k + I < argc)
+        {
+            k++;
+            membrum_l = argv[k];
+        }
         alioquin si (strcmp(argv[k], "-linea") == ZEPHYRUM
             && k + I < argc)
         {
@@ -2635,13 +2870,35 @@ principale (integer argc, character** argv)
         }
     }
 
-    si (intra_l != NIHIL ? _localem_resolvere()
-                         : _entitatem_resolvere())
+    si (intra_l != NIHIL && membrum_l != NIHIL)
+    {
+        _culpam_addere("-intra et -membrum simul dari non possunt");
+    }
+    si (xar_numerus(culpae) == ZEPHYRUM
+        && (membrum_l != NIHIL ? _membrum_resolvere()
+            : intra_l != NIHIL ? _localem_resolvere()
+                               : _entitatem_resolvere()))
     {
         per (j = ZEPHYRUM; j < xar_numerus(analyses); j++)
         {
-            _plagulam_colligere((AnalysisPlagulae*)xar_obtinere(
-                analyses, j));
+            AnalysisPlagulae* an = (AnalysisPlagulae*)xar_obtinere(
+                analyses, j);
+
+            _plagulam_colligere(an);
+            /* modi membri/localis per TU se continent: piscina
+             * post collectionem statim destruitur - clausurae
+             * reversae magnae (CCXVI plagulae mensuratae) alioqui
+             * memoriam trans finem trahunt (Killed: 9).
+             * Comparationes monstratorum posteriores (symbolum/
+             * tag) valorem solum comparant, numquam dereferunt. */
+            si (membrum_l != NIHIL || intra_l != NIHIL)
+            {
+                piscina_destruere(an->piscina);
+                an->piscina = NIHIL;
+                an->parsura = NIHIL;
+                an->sem = NIHIL;
+                an->fons = NIHIL;
+            }
         }
         /* v0.1: testimonia macronum post TUs OMNES (probatio
          * promotionis globalis est - invocationes trans plagulas) */
@@ -2752,8 +3009,7 @@ principale (integer argc, character** argv)
 
                 si (strcmp(an->via, via) == ZEPHYRUM)
                 {
-                    errores_ante =
-                        (i32)an->parsura->numerus_errorum;
+                    errores_ante = an->errores;
                 }
             }
             nova = _plagulam_analysare(via);

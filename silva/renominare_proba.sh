@@ -107,6 +107,35 @@ else
 fi
 rm -rf "$S"
 
+# XV. membrum typedef-baptizatum (Saccus.pondus; catena inclusa)
+proba "membrum-saccus" 0 aureum_saccus.tsv -- \
+    "$BIN" pondus onus -machina -membrum Saccus \
+    $F/planum_membra.c
+
+# XVI. membrum tag-nominatum (cista.pondus)
+proba "membrum-cista" 0 aureum_cista.tsv -- \
+    "$BIN" pondus onus -machina -membrum cista \
+    $F/planum_membra.c
+
+# XVII. collisio membri (Saccus iam mensuram habet)
+proba "membrum-collisio" 1 "" -- \
+    "$BIN" pondus mensura -machina -membrum Saccus \
+    $F/planum_membra.c
+
+# XVIII. scriptio membri in scaena
+rm -rf "$S"; mkdir -p "$S"
+cp $F/planum_membra.c "$S/"
+if "$BIN" pondus onus -membrum Saccus -scribere \
+       $S/planum_membra.c >/dev/null 2>&1 \
+   && diff -q "$S/planum_membra.c" \
+          "$F/post_scriptionem/planum_membra.c" >/dev/null 2>&1; then
+    echo "bene     scriptio-membri"
+else
+    echo "FRACTUM  scriptio-membri"
+    fracturae=$((fracturae+1))
+fi
+rm -rf "$S"
+
 # VIII. scriptio in scaena + verificatio + plagulae exspectatae
 rm -rf "$S"; mkdir -p "$S"
 cp $F/planum_a.c $F/planum_b.c $F/planum_caput.h "$S/"
