@@ -93,6 +93,15 @@ proba "localis-captura" 1 "" -- \
     "$BIN" cursor summa -machina -intra adhibere \
     $F/planum_locales.c
 
+# XIX. unda prototyporum: parametrum definitionis + prototypi
+proba "parametrum-prototypi" 0 aureum_datum.tsv -- \
+    "$BIN" datum copia_datorum -machina -intra adhibere \
+    $F/planum_locales.c
+
+# XX. nomen prototypi divergens -> relatum manuale, non tactum
+proba "parametrum-divergens" 0 aureum_divergens.tsv -- \
+    "$BIN" alius x -machina -intra divergens $F/planum_locales.c
+
 # XIV. scriptio localis in scaena
 rm -rf "$S"; mkdir -p "$S"
 cp $F/planum_locales.c "$S/"

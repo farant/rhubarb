@@ -132,6 +132,13 @@ hic_manens s32 entitas_genus = -I;        /* SemanticaSymbolumGenus */
 hic_manens constans SemanticaSymbolum* symbolum_localis = NIHIL;
 hic_manens constans AnalysisPlagulae* analysis_localis = NIHIL;
 
+/* unda prototyporum (target = parametrum definitionis): positio
+ * parametri in lista definitionis; parametra prototyporum eiusdem
+ * functionis EADEM positione et EODEM nomine co-renominantur
+ * (consonantia capitum); nomen divergens = relatum, non tactum */
+hic_manens s32 positio_parametri = -I;
+hic_manens SilvaToken* lexema_functionis_def = NIHIL;
+
 /* dedup sedium trans TU: clavis "via|offset" */
 hic_manens TabulaDispersa* sedes_visae = NIHIL;
 
@@ -1935,6 +1942,146 @@ _subarborem_lustrare (constans AnalysisPlagulae* an,
     }
 }
 
+/* declaratorem-functionis intra_l titulatum in subarbore invenire
+ * (BFS - primus inventus = extimus; functiones-monstratores in
+ * parametris titulos SUOS ferunt, ergo titulus discriminat) */
+interior constans SilvaNodus*
+_declaratorem_functionis_invenire (constans SilvaNodus* radix,
+    Piscina* effimera)
+{
+    Xar* series;
+    i32 cursor = ZEPHYRUM;
+    i32 r;
+
+    si (radix == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (radix->genus == (s32)SILVA_C89_GENUS_DECLARATOR_FUNCTIONIS)
+    {
+        SilvaToken* titulus = silva_c89_declaratoris_titulus(radix);
+
+        si (titulus != NIHIL
+            && _chordae_pares_lit(titulus->valor, intra_l))
+        {
+            redde radix;
+        }
+    }
+    series = xar_creare(effimera, (i32)magnitudo(SilvaValor));
+    si (series == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (r = ZEPHYRUM; r < (i32)radix->numerus_locorum; r++)
+    {
+        SilvaValor* novus = (SilvaValor*)xar_addere(series);
+
+        si (novus != NIHIL)
+        {
+            *novus = radix->loci[(insignatus integer)r];
+        }
+    }
+    dum (cursor < xar_numerus(series))
+    {
+        SilvaValor v = *(SilvaValor*)xar_obtinere(series, cursor);
+
+        cursor++;
+        si (v.genus == SILVA_VALOR_LISTA)
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM;
+                 k < silva_valor_lista_numerus(v); k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v,
+                    (insignatus integer)k);
+                SilvaValor* novus;
+
+                si (elem == NIHIL)
+                {
+                    perge;
+                }
+                novus = (SilvaValor*)xar_addere(series);
+                si (novus != NIHIL)
+                {
+                    *novus = *elem;
+                }
+            }
+            perge;
+        }
+        si (v.genus != SILVA_VALOR_NODUS || v.datum.nodus == NIHIL)
+        {
+            perge;
+        }
+        si (v.datum.nodus->genus
+            == (s32)SILVA_C89_GENUS_DECLARATOR_FUNCTIONIS)
+        {
+            SilvaToken* titulus = silva_c89_declaratoris_titulus(
+                v.datum.nodus);
+
+            si (titulus != NIHIL
+                && _chordae_pares_lit(titulus->valor, intra_l))
+            {
+                redde v.datum.nodus;
+            }
+        }
+        {
+            constans SilvaNodus* nodus = v.datum.nodus;
+            i32 k;
+
+            per (k = ZEPHYRUM; k < (i32)nodus->numerus_locorum;
+                 k++)
+            {
+                SilvaValor* novus = (SilvaValor*)xar_addere(
+                    series);
+
+                si (novus != NIHIL)
+                {
+                    *novus = nodus->loci[(insignatus integer)k];
+                }
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+/* lexema tituli parametri ad positionem in declaratore-functionis;
+ * NIHIL = abstractum aut extra fines */
+interior SilvaToken*
+_parametri_titulus (constans SilvaNodus* decl_functionis,
+    s32 positio)
+{
+    SilvaValor parametra = silva_c89_declarator_functionis_parametra(
+        decl_functionis);
+    SilvaValor* elem;
+
+    si (parametra.genus != SILVA_VALOR_LISTA || positio < ZEPHYRUM
+        || positio >= (s32)silva_valor_lista_numerus(parametra))
+    {
+        redde NIHIL;
+    }
+    elem = silva_valor_lista_obtinere(parametra,
+        (insignatus integer)positio);
+    si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS
+        || elem->datum.nodus == NIHIL
+        || elem->datum.nodus->genus
+            != (s32)SILVA_C89_GENUS_PARAMETRUM)
+    {
+        redde NIHIL;
+    }
+    {
+        SilvaValor decl = silva_c89_parametrum_declarator(
+            elem->datum.nodus);
+
+        si (decl.genus != SILVA_VALOR_NODUS
+            || decl.datum.nodus == NIHIL)
+        {
+            redde NIHIL;
+        }
+        redde silva_c89_declaratoris_titulus(decl.datum.nodus);
+    }
+}
+
 /* definitionem functionis intra_l titulatam in arbore invenire */
 interior SilvaNodus*
 _functionem_invenire (constans AnalysisPlagulae* an,
@@ -2164,9 +2311,135 @@ _localem_resolvere (vacuum)
         symbolum_localis = electum;
         analysis_localis = an_functionis;
         entitas_genus = electum->genus;
+
+        /* target parametrum definitionis? positio eius in lista -
+         * unda prototyporum eam positionem co-renominat */
+        si (electum->genus == (s32)SYMBOLUM_PARAMETRUM)
+        {
+            SilvaValor decl_v =
+                silva_c89_definitio_functionis_declarator(functio);
+            constans SilvaNodus* df =
+                decl_v.genus == SILVA_VALOR_NODUS
+                    ? _declaratorem_functionis_invenire(
+                          decl_v.datum.nodus, effimera)
+                    : NIHIL;
+
+            si (df != NIHIL)
+            {
+                SilvaValor parametra =
+                    silva_c89_declarator_functionis_parametra(df);
+                i32 p;
+
+                lexema_functionis_def =
+                    silva_c89_declaratoris_titulus(df);
+                si (parametra.genus == SILVA_VALOR_LISTA)
+                {
+                    per (p = ZEPHYRUM;
+                         p < silva_valor_lista_numerus(parametra);
+                         p++)
+                    {
+                        si (_parametri_titulus(df, (s32)p)
+                            == electum->lexema)
+                        {
+                            positio_parametri = (s32)p;
+                            frange;
+                        }
+                    }
+                }
+            }
+        }
     }
     piscina_destruere(effimera);
     redde VERUM;
+}
+
+/* unda prototyporum: registrationes FUNCTIO intra_l titulatae
+ * (praeter definitionem ipsam) - parametrum EADEM positione:
+ * idem nomen -> sedes splicenda (consonantia capitum); nomen
+ * divergens -> relatum manuale, numquam tactum (concordiam non
+ * fingimus). Currit ANTE ansam collectionis (dedup via|offset
+ * ordines ambulationis posteriores absorbet). */
+interior vacuum
+_prototypa_colligere (vacuum)
+{
+    Piscina* effimera = piscina_generare_dynamicum(
+        "renominare_prototypa", 33554432);
+    i32 k;
+
+    si (effimera == NIHIL || positio_parametri < ZEPHYRUM)
+    {
+        si (effimera != NIHIL)
+        {
+            piscina_destruere(effimera);
+        }
+        redde;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
+    {
+        AnalysisPlagulae* an = (AnalysisPlagulae*)xar_obtinere(
+            analyses, k);
+        i32 n = (i32)silva_c89_symbola_numerus(an->sem);
+        i32 j;
+
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            constans SemanticaSymbolum* s =
+                silva_c89_symbolum_per_indicem(an->sem,
+                    (insignatus integer)j);
+            constans SilvaNodus* df;
+            SilvaToken* titulus;
+
+            si (s == NIHIL || s->ex_systemate || s->est_implicitum
+                || s->genus != (s32)SYMBOLUM_FUNCTIO
+                || s->profunditas != ZEPHYRUM
+                || s->lexema == NIHIL
+                || s->lexema == lexema_functionis_def
+                || s->declarans == NIHIL)
+            {
+                perge;
+            }
+            si (!_chordae_pares_lit(s->titulus, intra_l))
+            {
+                perge;
+            }
+            df = _declaratorem_functionis_invenire(s->declarans,
+                effimera);
+            si (df == NIHIL)
+            {
+                perge;
+            }
+            titulus = _parametri_titulus(df, positio_parametri);
+            si (titulus == NIHIL || titulus->byte_offset < ZEPHYRUM
+                || !silva_token_est_fons(titulus))
+            {
+                perge;
+            }
+            {
+                constans character* via_t = _via_lexematis(an,
+                    titulus);
+
+                si (via_t == NIHIL)
+                {
+                    perge;
+                }
+                si (_chordae_pares_lit(titulus->valor, vetus_l))
+                {
+                    _sedem_addere(CLASSIS_SEDES, via_t,
+                        titulus->linea, titulus->columna,
+                        titulus->byte_offset,
+                        "parametrum prototypi");
+                }
+                alioquin
+                {
+                    _sedem_addere(CLASSIS_MANUALIS, via_t,
+                        titulus->linea, titulus->columna,
+                        titulus->byte_offset,
+                        "parametrum prototypi divergens (manu)");
+                }
+            }
+        }
+    }
+    piscina_destruere(effimera);
 }
 
 /* ==================================================
@@ -2879,6 +3152,12 @@ principale (integer argc, character** argv)
             : intra_l != NIHIL ? _localem_resolvere()
                                : _entitatem_resolvere()))
     {
+        /* unda prototyporum ANTE collectionem (piscinae vivae;
+         * dedup ordines ambulationis absorbet) */
+        si (intra_l != NIHIL && positio_parametri >= ZEPHYRUM)
+        {
+            _prototypa_colligere();
+        }
         per (j = ZEPHYRUM; j < xar_numerus(analyses); j++)
         {
             AnalysisPlagulae* an = (AnalysisPlagulae*)xar_obtinere(

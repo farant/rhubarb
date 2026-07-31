@@ -43,3 +43,19 @@ locales_summa(void)
 {
     return adhibere(2) + umbrae(3) + copia;
 }
+
+static int divergens(int primus);
+
+static int
+divergens(int alius)
+{
+    return alius + 1;
+}
+
+int divergens_usus(void);
+
+int
+divergens_usus(void)
+{
+    return divergens(4);
+}
