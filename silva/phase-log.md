@@ -12221,3 +12221,24 @@ on the house's most foundational file.
 Function-pointer/typedef doc-params deliberately NOT a target
 (no binding identity; hand edit with the plan as map). Doors
 unchanged: macros, legati tool, accessus nexus rows.
+
+## 2026-07-31 - ADDENDUM: FLUXUS SCOPI PLAGULAE (streaming for
+## file-scope mode - the Tier-0 wall falls)
+
+The blocker dissolved under an optimistic rule: a header-declared
+symbol is extern BY CONSTRUCTION, so file-scope mode now streams
+(analyse -> examine registrations -> collect -> destroy per file)
+assuming the extern entity; a static registration discovered
+mid-stream refuses naming the file - which is what would have
+happened anyway, and refusal discards the plan regardless. Each
+file self-carries the entity's genus (the header's registration
+rides in every TU), so incremental genus-consistency checks work.
+Deliberate price: a lone static without -via now asks for -via
+instead of auto-selecting (one extra flag in a rare case).
+
+MEASURED: chorda_ex_literis - the house's most-called function -
+153 candidate files, 1174 splice sites + 278 macro-expansion
+manualis rows, 66s, bounded memory. Before this change: OOM-kill
+territory. All three modes now stream; the old _entitatem_
+resolvere deleted. Porta aurea 20/20 (homonym-refusal golden
+repinned to the new file-naming message).
