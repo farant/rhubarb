@@ -38,6 +38,12 @@
                      font-size: .8em; }
   .pipatum, .commentarium { background: #171512; border: 1px solid #453d2f;
              border-radius: 4px; padding: .7em .9em; margin: .7em 0; }
+  /* charta: superficies contenti super imaginem tergalem legibilis
+     manet - eadem vestis ac pipatum */
+  .charta { background: #171512; border: 1px solid #453d2f;
+            border-radius: 4px; padding: .7em .9em; margin: .7em 0;
+            box-sizing: border-box; }
+  .charta:empty { display: none; }
   .subscriptio { color: #d8b978; }
   .tempus { color: #6b6357; font-size: .75em; }
   .corpus { margin-top: .3em; white-space: pre-wrap;
@@ -78,7 +84,7 @@
            font: inherit; padding: .3em; border-radius: 4px; }
   /* tabula lata: continens volvit (numquam pagina), tabula ad
      contentum crescit, columnae latitudines minimas per typum */
-  #res-tabula-continens { overflow-x: auto; padding-bottom: .3em; }
+  #res-tabula-continens { overflow-x: auto; }
   table.res { width: max-content; min-width: 100%;
               border-collapse: collapse; margin-top: .6em;
               font-size: .85em; }
@@ -96,7 +102,9 @@
   table.res td { border-bottom: 1px solid #453d2f; padding: .35em .5em;
                  overflow-wrap: break-word; }
   table.res tr.ordo-entis { cursor: pointer; }
-  table.res tr.ordo-entis:hover td { background: #171512; }
+  /* #22201d, non #171512: tabula nunc IN charta sedet - color idem
+     ac fundus chartae invisibilis esset (exemplum .linea:hover) */
+  table.res tr.ordo-entis:hover td { background: #22201d; }
   .clavis-praevisa { color: #6b6357; font-size: .75em;
                      margin: .3em 0 .8em; }
   .ordo-campi { display: flex; gap: .5em; margin: .4em 0;
@@ -278,8 +286,10 @@
 
 <section id="visus-articulus" hidden>
   <div id="barra-superior"><a class="retro" id="retro-articuli">&larr; articuli</a></div>
-  <div id="articulus-caput"></div>
-  <div id="articulus-corpus"></div>
+  <div class="charta">
+    <div id="articulus-caput"></div>
+    <div id="articulus-corpus"></div>
+  </div>
   <div id="filum"></div>
   <div id="arca-commentarii-domus">
     <textarea id="arca-commentarii" rows="2"
@@ -315,21 +325,23 @@
   <div id="res-creator-domus" hidden>
     <div id="barra-superior"><a class="retro" id="creator-retro">&larr; genera</a></div>
     <h2>genus novum</h2>
-    <input id="creator-titulus" placeholder="titulus generis (e.g. Liber)">
-    <div class="clavis-praevisa" id="creator-clavis">clavis: &mdash;</div>
-    <textarea id="creator-descriptio" rows="2"
-      placeholder="descriptio generis (optionalis) - quid genus significet"></textarea>
-    <div id="creator-campi"></div>
-    <button id="creator-campum-addere" class="parva">+ campum addere</button>
-    <div class="optio-creatoris">
-      <span>campus tituli:</span> <select id="creator-campus-tituli"></select>
-    </div>
-    <div class="optio-creatoris">
-      <span>ordo ordinarius:</span> <select id="creator-ordo-campus"></select>
-      <select id="creator-ordo-directio">
-        <option value="ascendens">ascendens</option>
-        <option value="descendens">descendens</option>
-      </select>
+    <div class="charta">
+      <input id="creator-titulus" placeholder="titulus generis (e.g. Liber)">
+      <div class="clavis-praevisa" id="creator-clavis">clavis: &mdash;</div>
+      <textarea id="creator-descriptio" rows="2"
+        placeholder="descriptio generis (optionalis) - quid genus significet"></textarea>
+      <div id="creator-campi"></div>
+      <button id="creator-campum-addere" class="parva">+ campum addere</button>
+      <div class="optio-creatoris">
+        <span>campus tituli:</span> <select id="creator-campus-tituli"></select>
+      </div>
+      <div class="optio-creatoris">
+        <span>ordo ordinarius:</span> <select id="creator-ordo-campus"></select>
+        <select id="creator-ordo-directio">
+          <option value="ascendens">ascendens</option>
+          <option value="descendens">descendens</option>
+        </select>
+      </div>
     </div>
     <div id="pes-compositionis">
       <span></span>
@@ -350,12 +362,12 @@
     <div id="res-quaestio-domus">
       <input id="res-quaestio" placeholder="quaerere (FTS)...">
     </div>
-    <div id="res-tabula-continens"></div>
+    <div id="res-tabula-continens" class="charta"></div>
   </div>
 
   <div id="res-ens-domus" hidden>
     <div id="barra-superior"><a class="retro" id="ens-retro">&larr; tabula</a></div>
-    <div id="res-ens"></div>
+    <div id="res-ens" class="charta"></div>
     <div id="arca-commentarii-entis-domus">
       <textarea id="arca-commentarii-entis" rows="2" data-inter="verum"
         placeholder="commentarium de hac re..."></textarea>
@@ -369,7 +381,7 @@
   <div id="res-forma-domus" hidden>
     <div id="barra-superior"><a class="retro" id="forma-retro">&larr; relinquere</a></div>
     <h2 id="forma-caput"></h2>
-    <div id="res-forma"></div>
+    <div id="res-forma" class="charta"></div>
     <div id="pes-compositionis">
       <span id="forma-culpa" class="numerator"></span>
       <button id="forma-servare">servare</button>
@@ -411,7 +423,7 @@
 <section id="visus-tags" hidden>
   <div id="tags-arbor-domus">
     <h2>tags</h2>
-    <div id="tags-arbor"></div>
+    <div id="tags-arbor" class="charta"></div>
     <div id="vacuum-tagorum" hidden>nulli tagi - scribe #tagum in nota!</div>
   </div>
   <div id="tags-tag-domus" hidden>
@@ -448,7 +460,7 @@
     </div>
     <div id="sent-caput"></div>
     <div id="sent-corpus">
-      <div id="sent-latus"></div>
+      <div id="sent-latus" class="charta"></div>
       <div id="sent-textus"></div>
     </div>
   </div>
