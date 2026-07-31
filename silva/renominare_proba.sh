@@ -70,6 +70,43 @@ proba "porta-macronis" 1 "" -- \
 proba "symbolum-ignotum" 1 "" -- \
     "$BIN" phantasma quid -machina $F/planum_a.c
 
+# IX. localis planus (-intra): declaratio + usus IV
+proba "localis-planum" 0 aureum_localis.tsv -- \
+    "$BIN" cursor k -machina -intra adhibere $F/planum_locales.c
+
+# X. umbrae sine -linea -> refusio listans lineas
+proba "localis-umbrae-refusio" 1 "" -- \
+    "$BIN" temp x -machina -intra umbrae $F/planum_locales.c
+
+# XI. -linea electio (umbra prima; soror aliena manet)
+proba "localis-linea" 0 aureum_linea.tsv -- \
+    "$BIN" temp x -machina -intra umbrae -linea 28 \
+    $F/planum_locales.c
+
+# XII. discriminatio localis contra file-scope (copia)
+proba "localis-discriminatio" 0 aureum_copia.tsv -- \
+    "$BIN" copia acervus -machina -intra umbrae \
+    $F/planum_locales.c
+
+# XIII. porta capturae (novum intra functionem)
+proba "localis-captura" 1 "" -- \
+    "$BIN" cursor summa -machina -intra adhibere \
+    $F/planum_locales.c
+
+# XIV. scriptio localis in scaena
+rm -rf "$S"; mkdir -p "$S"
+cp $F/planum_locales.c "$S/"
+if "$BIN" copia acervus -intra umbrae -scribere \
+       $S/planum_locales.c >/dev/null 2>&1 \
+   && diff -q "$S/planum_locales.c" \
+          "$F/post_scriptionem/planum_locales.c" >/dev/null 2>&1; then
+    echo "bene     scriptio-localis"
+else
+    echo "FRACTUM  scriptio-localis"
+    fracturae=$((fracturae+1))
+fi
+rm -rf "$S"
+
 # VIII. scriptio in scaena + verificatio + plagulae exspectatae
 rm -rf "$S"; mkdir -p "$S"
 cp $F/planum_a.c $F/planum_b.c $F/planum_caput.h "$S/"

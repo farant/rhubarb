@@ -89,6 +89,9 @@ while [ $# -gt 0 ]; do
     case "$1" in
         -scribere) SCRIBERE=1; VEXILLA+=("$1") ;;
         -via)      VEXILLA+=("$1" "${2:?-via plagula deest}"); shift ;;
+        -intra)    INTRA="${2:?-intra functio deest}"
+                   VEXILLA+=("$1" "$2"); shift ;;
+        -linea)    VEXILLA+=("$1" "${2:?-linea numerus deest}"); shift ;;
         -machina|-v|-lista) VEXILLA+=("$1") ;;
         *)         PLAGULAE+=("$1") ;;
     esac
@@ -96,19 +99,29 @@ while [ $# -gt 0 ]; do
 done
 
 # candidati ex nexus.tsv si plagulae non datae (sedes + usus;
-# nexus.sh sanationem sui ipsius facit)
+# nexus.sh sanationem sui ipsius facit). Modo -intra: plagulae =
+# sedes FUNCTIONIS (localis in plagula definiente vivit)
 if [ ${#PLAGULAE[@]} -eq 0 ]; then
-    "$SILVA_DIR/nexus.sh" "$VETUS" >/dev/null 2>&1 || true
+    CLAVIS_NEXUS="${INTRA:-$VETUS}"
+    "$SILVA_DIR/nexus.sh" "$CLAVIS_NEXUS" >/dev/null 2>&1 || true
     if [ ! -f "$RADIX_DIR/build/nexus.tsv" ]; then
         echo "renominare: nexus.tsv deest (curre ./silva/nexus.sh -renovare)" >&2
         exit 2
     fi
-    while IFS= read -r via; do
-        PLAGULAE+=("$via")
-    done < <(awk -F'\t' -v t="$VETUS" '$1==t {print $4}' \
-                 "$RADIX_DIR/build/nexus.tsv" | sort -u)
+    if [ -n "${INTRA:-}" ]; then
+        while IFS= read -r via; do
+            PLAGULAE+=("$via")
+        done < <(awk -F'\t' -v t="$INTRA" \
+                     '$1==t && $2=="sedes" {print $4}' \
+                     "$RADIX_DIR/build/nexus.tsv" | sort -u)
+    else
+        while IFS= read -r via; do
+            PLAGULAE+=("$via")
+        done < <(awk -F'\t' -v t="$VETUS" '$1==t {print $4}' \
+                     "$RADIX_DIR/build/nexus.tsv" | sort -u)
+    fi
     if [ ${#PLAGULAE[@]} -eq 0 ]; then
-        echo "renominare: nullae plagulae candidatae ($VETUS ignotum nexui)" >&2
+        echo "renominare: nullae plagulae candidatae ($CLAVIS_NEXUS ignotum nexui)" >&2
         exit 1
     fi
     echo "candidatae ex nexu: ${#PLAGULAE[@]} plagulae" >&2

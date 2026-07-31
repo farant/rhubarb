@@ -19,7 +19,8 @@
  * alibi ligatae AUTOMATICE excluduntur - quod grep non potest).
  *
  * Usus:   renominare <vetus> <novum> [-scribere] [-machina] [-v]
- *                    [-via <plagula>] (-lista | plagulae...)
+ *                    [-via <plagula>] [-intra <functio> [-linea n]]
+ *                    (-lista | plagulae...)
  * Exitus: 0 planum/scriptum | 1 refusio (nihil scriptum) |
  *         2 apparatus fractus | 3 RECUSO (fines tactae) |
  *         4 scriptum sed verificatio fracta (git checkout!)
@@ -56,6 +57,12 @@ hic_manens b32 recuso_flag = FALSUM;   /* fines tactae in analysi */
 hic_manens constans character* vetus_l = NIHIL;
 hic_manens constans character* novum_l = NIHIL;
 hic_manens constans character* via_data = NIHIL;   /* -via */
+
+/* modus localis (-intra): scopus = functio una; identitas =
+ * REGISTRATIO (monstrator symboli - locales TU numquam
+ * transgrediuntur, ergo aequalitas monstratorum exacta est) */
+hic_manens constans character* intra_l = NIHIL;    /* -intra */
+hic_manens i32 linea_data = ZEPHYRUM;              /* -linea */
 
 hic_manens Piscina* piscina_magistra = NIHIL;
 
@@ -106,6 +113,10 @@ hic_manens Xar* culpae = NIHIL;           /* constans character* */
 hic_manens b32 entitas_statica = FALSUM;
 hic_manens constans character* entitas_via_statica = NIHIL;
 hic_manens s32 entitas_genus = -I;        /* SemanticaSymbolumGenus */
+
+/* entitas localis (post _localem_resolvere) */
+hic_manens constans SemanticaSymbolum* symbolum_localis = NIHIL;
+hic_manens constans AnalysisPlagulae* analysis_localis = NIHIL;
 
 /* dedup sedium trans TU: clavis "via|offset" */
 hic_manens TabulaDispersa* sedes_visae = NIHIL;
@@ -575,7 +586,17 @@ interior b32
 _symbolum_entitatis (constans AnalysisPlagulae* an,
     constans SemanticaSymbolum* s)
 {
-    si (s == NIHIL || s->ex_systemate || s->profunditas != ZEPHYRUM)
+    si (s == NIHIL || s->ex_systemate)
+    {
+        redde FALSUM;
+    }
+    si (intra_l != NIHIL)
+    {
+        /* modus localis: aequalitas monstratorum - exacta */
+        redde (s == symbolum_localis && an == analysis_localis)
+            ? VERUM : FALSUM;
+    }
+    si (s->profunditas != ZEPHYRUM)
     {
         redde FALSUM;
     }
@@ -1567,8 +1588,11 @@ _plagulam_colligere (constans AnalysisPlagulae* an)
     _ramos_colligere(an);
 
     /* porta collisionis: registratio quaevis 'novum' titulata in
-     * plagula affecta */
-    n = (i32)silva_c89_symbola_numerus(an->sem);
+     * plagula affecta. Modo locali OMISSA - porta capturae (novum
+     * intra functionem) instrumentum rectum est: localis 'k' in
+     * functione ALIENA collisio non est */
+    n = intra_l != NIHIL ? ZEPHYRUM
+        : (i32)silva_c89_symbola_numerus(an->sem);
     per (k = ZEPHYRUM; k < n; k++)
     {
         constans SemanticaSymbolum* s =
@@ -1639,6 +1663,374 @@ _plagulam_colligere (constans AnalysisPlagulae* an)
 /* ==================================================
  * resolutio entitatis (trans plagulas)
  * ================================================== */
+
+/* ==================================================
+ * resolutio localis (-intra): functio -> subarbor -> registratio
+ * ================================================== */
+
+/* subarborem functionis ambulare: lexemata vetus-scribentia in
+ * copiam (clavis = monstrator), lexemata NOVUM-scribentia = porta
+ * capturae (utroque modo: umbra interior aut symbolum externum
+ * umbratum - refusio conservativa). AMBIGUUS per canonicam. */
+interior vacuum
+_subarborem_lustrare (constans AnalysisPlagulae* an,
+    SilvaNodus* functio, TabulaDispersa* copia_vetus,
+    Piscina* effimera)
+{
+    Xar* series = xar_creare(effimera, (i32)magnitudo(SilvaValor));
+    i32 cursor = ZEPHYRUM;
+
+    si (series == NIHIL)
+    {
+        redde;
+    }
+    {
+        SilvaValor* radix = (SilvaValor*)xar_addere(series);
+
+        si (radix == NIHIL)
+        {
+            redde;
+        }
+        radix->genus = SILVA_VALOR_NODUS;
+        radix->datum.nodus = functio;
+    }
+    dum (cursor < xar_numerus(series))
+    {
+        SilvaValor v = *(SilvaValor*)xar_obtinere(series, cursor);
+
+        cursor++;
+        si (v.genus == SILVA_VALOR_TOKEN && v.datum.token != NIHIL)
+        {
+            SilvaToken* tok = v.datum.token;
+
+            si (_tok_vetus_scribit(tok))
+            {
+                _classem_ponere(copia_vetus, tok, ZEPHYRUM);
+            }
+            alioquin si (tok->genus == SILVA_LEX_IDENTIFICATOR
+                && _chordae_pares_lit(tok->valor, novum_l))
+            {
+                constans character* via_t = _via_lexematis(an,
+                    tok);
+
+                _culpam_addere(_culpa_formata(
+                    "captura: nomen novum intra functionem iam"
+                    " apparet", via_t != NIHIL ? via_t : an->via,
+                    tok->linea, tok->columna));
+            }
+            perge;
+        }
+        si (v.genus == SILVA_VALOR_LISTA)
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM;
+                 k < silva_valor_lista_numerus(v); k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v,
+                    (insignatus integer)k);
+                SilvaValor* novus;
+
+                si (elem == NIHIL)
+                {
+                    perge;
+                }
+                novus = (SilvaValor*)xar_addere(series);
+                si (novus != NIHIL)
+                {
+                    *novus = *elem;
+                }
+            }
+            perge;
+        }
+        si (v.genus != SILVA_VALOR_NODUS || v.datum.nodus == NIHIL)
+        {
+            perge;
+        }
+        {
+            constans SilvaNodus* nodus = v.datum.nodus;
+            i32 k;
+
+            si (nodus->genus == (s32)SILVA_C89_GENUS_AMBIGUUS)
+            {
+                SilvaValor interp =
+                    silva_c89_ambiguus_interpretationes(nodus);
+                SilvaValor canonica =
+                    silva_c89_ambiguus_canonica(nodus);
+
+                si (canonica.genus == SILVA_VALOR_INDEX)
+                {
+                    SilvaValor* lectio =
+                        silva_valor_lista_obtinere(interp,
+                            (insignatus integer)
+                                canonica.datum.index);
+                    SilvaValor* novus;
+
+                    si (lectio != NIHIL)
+                    {
+                        novus = (SilvaValor*)xar_addere(series);
+                        si (novus != NIHIL)
+                        {
+                            *novus = *lectio;
+                        }
+                    }
+                }
+                perge;
+            }
+            si (nodus->genus == (s32)SILVA_C89_GENUS_ERROR
+                || nodus->genus
+                    == (s32)SILVA_C89_GENUS_RAMUS_OMISSUS)
+            {
+                perge;
+            }
+            per (k = ZEPHYRUM; k < (i32)nodus->numerus_locorum;
+                 k++)
+            {
+                SilvaValor* novus = (SilvaValor*)xar_addere(
+                    series);
+
+                si (novus != NIHIL)
+                {
+                    *novus = nodus->loci[(insignatus integer)k];
+                }
+            }
+        }
+    }
+}
+
+/* definitionem functionis intra_l titulatam in arbore invenire */
+interior SilvaNodus*
+_functionem_invenire (constans AnalysisPlagulae* an,
+    Piscina* effimera)
+{
+    Xar* series = xar_creare(effimera, (i32)magnitudo(SilvaValor));
+    i32 cursor = ZEPHYRUM;
+    SilvaNodus* inventa = NIHIL;
+
+    si (series == NIHIL)
+    {
+        redde NIHIL;
+    }
+    {
+        SilvaValor* radix = (SilvaValor*)xar_addere(series);
+
+        si (radix == NIHIL)
+        {
+            redde NIHIL;
+        }
+        *radix = an->parsura->commissio->radix;
+    }
+    dum (cursor < xar_numerus(series) && inventa == NIHIL)
+    {
+        SilvaValor v = *(SilvaValor*)xar_obtinere(series, cursor);
+
+        cursor++;
+        si (v.genus == SILVA_VALOR_LISTA)
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM;
+                 k < silva_valor_lista_numerus(v); k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v,
+                    (insignatus integer)k);
+                SilvaValor* novus;
+
+                si (elem == NIHIL)
+                {
+                    perge;
+                }
+                novus = (SilvaValor*)xar_addere(series);
+                si (novus != NIHIL)
+                {
+                    *novus = *elem;
+                }
+            }
+            perge;
+        }
+        si (v.genus != SILVA_VALOR_NODUS || v.datum.nodus == NIHIL)
+        {
+            perge;
+        }
+        si (v.datum.nodus->genus
+            == (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
+        {
+            SilvaValor decl =
+                silva_c89_definitio_functionis_declarator(
+                    v.datum.nodus);
+
+            si (decl.genus == SILVA_VALOR_NODUS
+                && decl.datum.nodus != NIHIL)
+            {
+                SilvaToken* titulus =
+                    silva_c89_declaratoris_titulus(
+                        decl.datum.nodus);
+
+                si (titulus != NIHIL
+                    && _chordae_pares_lit(titulus->valor,
+                           intra_l))
+                {
+                    inventa = v.datum.nodus;
+                }
+            }
+            perge;   /* corpora aliena non descendimus */
+        }
+        {
+            constans SilvaNodus* nodus = v.datum.nodus;
+            i32 k;
+
+            per (k = ZEPHYRUM; k < (i32)nodus->numerus_locorum;
+                 k++)
+            {
+                SilvaValor* novus = (SilvaValor*)xar_addere(
+                    series);
+
+                si (novus != NIHIL)
+                {
+                    *novus = nodus->loci[(insignatus integer)k];
+                }
+            }
+        }
+    }
+    redde inventa;
+}
+
+interior b32
+_localem_resolvere (vacuum)
+{
+    Piscina* effimera = piscina_generare_dynamicum(
+        "renominare_localis", 67108864);
+    constans AnalysisPlagulae* an_functionis = NIHIL;
+    SilvaNodus* functio = NIHIL;
+    TabulaDispersa* copia_vetus;
+    i32 k;
+
+    si (effimera == NIHIL)
+    {
+        redde FALSUM;
+    }
+    copia_vetus = tabula_dispersa_creare_chorda(piscina_magistra,
+        LXIV);
+    si (copia_vetus == NIHIL)
+    {
+        piscina_destruere(effimera);
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
+    {
+        AnalysisPlagulae* an = (AnalysisPlagulae*)xar_obtinere(
+            analyses, k);
+        SilvaNodus* f;
+
+        si (via_data != NIHIL && strcmp(an->via, via_data)
+                != ZEPHYRUM)
+        {
+            perge;
+        }
+        f = _functionem_invenire(an, effimera);
+        si (f == NIHIL)
+        {
+            perge;
+        }
+        si (functio != NIHIL)
+        {
+            _culpam_addere("functio -intra in plagulis pluribus"
+                " definita - da -via plagulam certam");
+            piscina_destruere(effimera);
+            redde FALSUM;
+        }
+        functio = f;
+        an_functionis = an;
+    }
+    si (functio == NIHIL)
+    {
+        _culpam_addere("functio -intra non inventa in plagulis"
+            " datis");
+        piscina_destruere(effimera);
+        redde FALSUM;
+    }
+    _subarborem_lustrare(an_functionis, functio, copia_vetus,
+        effimera);
+
+    /* registrationes candidatae: prof > 0, vetus titulatae,
+     * lexema intra subarborem */
+    {
+        i32 n = (i32)silva_c89_symbola_numerus(an_functionis->sem);
+        i32 inventae = ZEPHYRUM;
+        constans SemanticaSymbolum* electum = NIHIL;
+        character lineae_l[CCLVI];
+        i32 scripti_summa = ZEPHYRUM;
+        i32 j;
+
+        lineae_l[ZEPHYRUM] = '\0';
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            constans SemanticaSymbolum* s =
+                silva_c89_symbolum_per_indicem(an_functionis->sem,
+                    (insignatus integer)j);
+            s32 ignotum;
+
+            si (s == NIHIL || s->ex_systemate || s->est_implicitum
+                || s->profunditas == ZEPHYRUM
+                || s->lexema == NIHIL)
+            {
+                perge;
+            }
+            si (!_chordae_pares_lit(s->titulus, vetus_l))
+            {
+                perge;
+            }
+            si (!_classem_capere(copia_vetus, s->lexema, &ignotum))
+            {
+                perge;   /* extra functionem */
+            }
+            si (linea_data > ZEPHYRUM
+                && s->lexema->linea != linea_data)
+            {
+                perge;
+            }
+            inventae++;
+            electum = s;
+            si (scripti_summa < CC)
+            {
+                int scripti = sprintf(lineae_l + scripti_summa,
+                    "%s%d", scripti_summa > ZEPHYRUM ? ", " : "",
+                    (int)s->lexema->linea);
+
+                si (scripti > ZEPHYRUM)
+                {
+                    scripti_summa += (i32)scripti;
+                }
+            }
+        }
+        si (inventae == ZEPHYRUM)
+        {
+            _culpam_addere(linea_data > ZEPHYRUM
+                ? "localis vetus in linea data non inventa"
+                : "localis vetus intra functionem non inventa");
+            piscina_destruere(effimera);
+            redde FALSUM;
+        }
+        si (inventae > I)
+        {
+            character culpa_l[DXII];
+            int scripti = sprintf(culpa_l, "declarationes"
+                " plures localis intra functionem (lineae %s) -"
+                " da -linea", lineae_l);
+
+            _culpam_addere(scripti > ZEPHYRUM
+                ? _litterae(_ch(culpa_l))
+                : "declarationes plures - da -linea");
+            piscina_destruere(effimera);
+            redde FALSUM;
+        }
+        symbolum_localis = electum;
+        analysis_localis = an_functionis;
+        entitas_genus = electum->genus;
+    }
+    piscina_destruere(effimera);
+    redde VERUM;
+}
 
 /* registratio scopi plagulae vetus-titulata in analysi una?
  * fructus: numerus; genus_out = genus primae; statica_out */
@@ -2091,6 +2483,24 @@ principale (integer argc, character** argv)
             k++;
             via_data = argv[k];
         }
+        alioquin si (strcmp(argv[k], "-intra") == ZEPHYRUM
+            && k + I < argc)
+        {
+            k++;
+            intra_l = argv[k];
+        }
+        alioquin si (strcmp(argv[k], "-linea") == ZEPHYRUM
+            && k + I < argc)
+        {
+            int linea_i = ZEPHYRUM;
+
+            k++;
+            si (sscanf(argv[k], "%d", &linea_i) == I
+                && linea_i > ZEPHYRUM)
+            {
+                linea_data = (i32)linea_i;
+            }
+        }
         alioquin si (vetus_l == NIHIL)
         {
             vetus_l = argv[k];
@@ -2225,7 +2635,8 @@ principale (integer argc, character** argv)
         }
     }
 
-    si (_entitatem_resolvere())
+    si (intra_l != NIHIL ? _localem_resolvere()
+                         : _entitatem_resolvere())
     {
         per (j = ZEPHYRUM; j < xar_numerus(analyses); j++)
         {
