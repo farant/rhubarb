@@ -12128,3 +12128,72 @@ nexus-derived candidates + -via).
 
 Doors: prototype-parameter position matching (reported, not
 renamed); MEMBERS next (the typation seam read is the entry).
+
+## 2026-07-31 - INTENTIO: RENOMINARE MEMBRA (-membrum; stage 3)
+
+Seam read FIRST (the law): semantica.c already contains the whole
+recipe as an internal codex checker (chorda.datum guard) -
+accessus_basis/tok_operator/tok_titulus, type the base, SAGITTA
+unwraps one MONSTRATOR, strip QUALIFICATUS, land on the tag.
+Public path: silva_c89_typus_expressionis (canonicum-aware) +
+open TypusC89 struct. Nothing to build at the typing layer.
+
+TARGET: -membrum <typus> (typedef title first - house style
+baptizes anonymous tags - then file-scope tag), vetus = member
+name. Per-TU tag resolution by name; pointer identity within a
+TU. Files without the type simply have no target sites (their
+same-named accesses type to OTHER tags = ALIENA).
+
+CLASSIFICATION: accessus spelling vetus -> type the base ->
+target tag = SEDES/USUS site (the tok_titulus token); different
+tag = ALIENA; base UNTYPED or TYPUS_ERROR = REFUSIO (accounting
+law - never guess a member). Member declarators: STRUCTURA/UNIO
+node == tag declarans (pointer) marks the subtree; declarators
+inside = SEDES, other structs' = ALIENA. Symbol-bound tokens all
+ALIENA (different namespace - _symbolum_entitatis FALSUM in this
+mode). Gates: member vetus must EXIST in the tag; member novum
+must NOT (per-struct collision); file-wide symbol collision gate
+OFF (namespaces); macro gate stays. Chains (a.b.c) fall out of
+per-access base typing. Testimonium promotion unchanged.
+
+Candidates: reverse include closure of the type's defining file
+(inclusiones.tsv BFS in the wrapper) - member uses are invisible
+to nexus (accessus rows = a named door).
+
+## 2026-07-31 - RELATIO: RENOMINARE MEMBRA SHIPPED (680ad60,
+## stage 3, same day)
+
+The seam-read paid immediately: the ACCESSUS typing recipe
+existed verbatim as semantica's chorda.datum codex guard - copied
+through public surfaces (typus_expressionis is canonicum-aware;
+TypusC89 open in fontes world), zero new typing machinery.
+Fixture proof: Saccus.pondus vs cista.pondus vs variable pondus
+all discriminated on MIXED lines (localis.onus = s->onus + pondus
+renames the member halves only); the chain c->intus.pondus
+resolves through two types; tag-name and typedef-baptized lookup
+both work; per-struct collision gate.
+
+TWO MEASURED FINDS from the first real sweep (VigiliaConfiguratio
+.signum, 216-file reverse closure):
+(1) Killed: 9 - the v0 keep-arenas-alive tradeoff met reality.
+Fix: member/local modes are per-TU self-contained -> arenas
+destroyed after each file's collect (later pointer comparisons
+compare VALUES, never deref); plus word-prefilter on the closure
+(safe by construction - no token, no sites). 46s OOM -> 10s
+complete, 216 -> 28 candidates.
+(2) The accounting law caught an uncovered class in the wild:
+PROTOTYPE parameter names (tessera's own signum params in
+function-pointer declarators) are not registrations -> were
+INEXPLICATA -> refusal, exactly as designed (loud, not wrong).
+Fix: leftover DECLARATOR_TITULUS tokens default ALIENA -
+registration-backed declarators classify first and prima positio
+vincit protects them.
+
+Workout: VigiliaConfiguratio.signum planned tree-wide - 13
+splices in 7 files (vigilia.h decl, vigilia.c, tabularium.c,
+legatus.c, examen.c, 5 test sites), 20 alienae, ~10s. Porta
+aurea XIV -> XVIII; silva 37/37.
+
+The ladder now covers file-scope + locals + members. Remaining
+doors: macros themselves, prototype-param position matching,
+legati plan-mode tool, accessus rows in nexus.
