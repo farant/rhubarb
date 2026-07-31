@@ -5039,7 +5039,12 @@ interior constans character* constans LEGATI_DOCTRINA =
     " + via = executio nominata super plagulam; selector crudus +"
     " via = exploratio (quaestiones FORMAE - nomina ->"
     " vocantes/vocata; selector re-typatus promotionem in"
-    " bibliothecam meret).";
+    " bibliothecam meret). RENOMINATIO (actio, non quaestio -"
+    " ergo instrumentum crustae, non MCP): ./silva/renominare.sh"
+    " vetus novum [-via plagula | -intra functio [-linea n] |"
+    " -membrum typus] - ligamen semanticum (homonyma supersunt,"
+    " membra typantur, prototypa co-renominantur); planum primum,"
+    " -scribere applicat; scala gradus 0 fluit.";
 
 /* instrumentum argumenti chordae necessarii (+ optionalis alterius
  * si arg2_titulus non NIHIL; arg_titulus NIHIL = instrumentum sine
