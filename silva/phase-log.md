@@ -12021,3 +12021,37 @@ macros themselves (directive machinery); legati plan-mode MCP
 tool; -clausura candidate mode (aedilis oracle); untaken-branch
 occurrences are textual-report only (platform-seam renames for
 the Linux port will meet this - the manualis row names it).
+
+## 2026-07-31 - ADDENDUM: RENOMINARE v0.1 (868bb79, eodem die -
+## 01KYX2DSKK impletum, petitio Franis)
+
+The textual scans are gone. Fran's "seems like an oversight in
+silva" sent me back to the seam: silva retains EVERYTHING -
+SilvaMacroDef.corpus (body as real FONS tokens), SilvaRamus
+.expressio (#if condition tokens), .lexemata_cruda (untaken
+branches LEXED). The oversight was renominare's (5th firing of the
+underestimation law, recorded in the training-prior memory with a
+new corollary: a tree tool sprouting a grep-shaped subroutine IS
+the tell).
+
+v0.1: macro bodies walked as tokens; PROMOTION BY PROOF - a body
+site becomes spliceable iff every observed expansion of that
+macro's vetus tokens binds to the target entity (evidence
+aggregated globally across TUs via the first-origo-step macro
+name; SEDES counts as entity evidence - declarations through
+macros). Demotions each carry a named cause: numquam invocatum /
+ligamina divergentia / definitiones homonymae plures / parametrum
+homonymum. Invocation-site rows drop after promotion (nothing
+manual remains). Untaken branches + #if expressions = token-exact
+manualis; the fixture's string-literal decoy ("adiutor dicit
+salve" in a dead branch) proves the false-positive class is gone.
+Fixture apply: VOCA_ADIUTOREM body renamed, NUMQUAM_VOCATUM
+untouched. Porta aurea 8/8 with regenerated goldens.
+
+Measured en route: lexemata_cruda tokens are NOT in
+parsura->lexemata (no INEXPLICATA refusal on the new fixture -
+the accounting loop never saw them; the ramus walk is their only
+door). Remaining door: the QUERY surfaces (nexus/selecta/
+quaestio) still cannot see into macro bodies - "which macros
+reference X" has machinery now proven here, wants lifting into
+nexus rows.
