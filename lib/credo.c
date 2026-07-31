@@ -204,6 +204,11 @@ _credo_notare (
                   chorda_ut_cstr(notatio->valor_secundus, _credo_piscina));
         imprimere("  Receptus: %s\n",
                   chorda_ut_cstr(notatio->valor_primus, _credo_piscina));
+        /* effluere statim: probatio post fracturam saepe NIHIL
+         * dereferens cadit, et per fistulam buffer plenus cum
+         * relatione perit - segfault relationem absorbebat
+         * (mensuratum 2026-07-31, desideratum 01KYWC5ZNX) */
+        (vacuum)fflush(stdout);
     }
 }
 
