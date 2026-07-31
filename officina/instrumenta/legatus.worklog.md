@@ -813,3 +813,21 @@ Pins: probatio_officina_legatus 320/320 first run (span parse helper
 reads the header's A-B and asserts B > A — robust to line drift;
 "vocationes N" non-increasing scan; substitution-typo scenario id 20).
 probatio_similitudo covers decurtata incl. the natal case verbatim.
+
+## 2026-07-31 — quaestio tool (named selectors over MCP)
+
+Ninth tool. Notes that matter for next touch: (1) the two-string
+_mcp_instrumentum helper was deliberately NOT stretched — quaestio
+carries its own schema builder (four optional string props;
+argumenta as one 'par=valor par2=valor' string so CLI and MCP share
+one grammar). (2) Rows print the extent's first TWO lines joined
+' | ' — house style puts the return type alone on line one, so the
+name lives on line two; a one-line row read 'vacuum' and told you
+nothing (probatio caught it). (3) Bibliotheca read from disk per
+request (inclusiones.tsv precedent, self-healing). (4) Execution =
+praeparator_analysare into an ephemeral pool, ALL text copied into
+the effusor before the pool dies. (5) Live-verified via renovare
+self-transform + raw-wire drive; a session connected before the
+renewal cannot see the new tool until reconnect —
+tools/list_changed notification is the named future (also in the
+renovare worklog entry 2026-07-28).
