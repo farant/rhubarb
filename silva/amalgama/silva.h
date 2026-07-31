@@ -1160,6 +1160,80 @@ int silva_quaestio_congruit(const SilvaQuaestio* quaestio,
     const SilvaNodus* nodus);
 
 /* ==================================================
+ * Quaestiones nominatae: bibliotheca selectorum commissa
+ * (silva/quaestiones.stml; parcum 01KXPV9FPK, 2026-07-31).
+ * Entria divitia: titulus + gradus (oculi|invarians) + selector
+ * cum $parametris declaratis + causa obligatoria. Validatio in
+ * legere - plagula tota valida aut NULL + culpa nominata (selector
+ * compilatur per specimen, parametra <-> $loci utrimque, invarians
+ * = zero parametra, tituli unici). Substitutio contextu
+ * discriminata: valores attributorum citati + argumentum pseudo
+ * integrum ($capturae post tagum intactae). Invarians = selector
+ * qui ZERO congruentias reddere debet (custodia structuralis;
+ * percursus = ./silva/quaestio.sh -invariantia, oculi solum).
+ * ================================================== */
+
+typedef enum {
+    SILVA_QUAESTIONES_OCULI = 0,  /* relatio - numquam porta */
+    SILVA_QUAESTIONES_INVARIANS   /* zero congruentiae = TENET */
+} SilvaQuaestionesGradus;
+
+/* Quaestio nominata: unum entrium bibliothecae (lectum, validatum) */
+typedef struct SilvaQuaestioNominata {
+    SilvaChorda titulus;
+    int         gradus;      /* SilvaQuaestionesGradus */
+    SilvaChorda selector;    /* textus crudus cum $parametris */
+    SilvaXar*   parametra;   /* SilvaChorda (valore) - declarata */
+    SilvaChorda causa;
+} SilvaQuaestioNominata;
+
+/* Argumentum pro parare: par titulus->valor */
+typedef struct SilvaQuaestionesArgumentum {
+    SilvaChorda titulus;
+    SilvaChorda valor;
+} SilvaQuaestionesArgumentum;
+
+/* Bibliotheca lecta. tabularium/registro hic servantur - registro
+ * per compilationes posteriores (parare) legitur, ergo bibliothecam
+ * supervivere debet. */
+typedef struct SilvaQuaestiones {
+    SilvaXar*                              nominatae;
+    const SilvaRegistrumCoctum*            tabularium;
+    const SilvaQuaestioPseudoRegistrum*    registro;
+} SilvaQuaestiones;
+
+/* Bibliothecam ex chorda legere et TOTAM validare. NULL +
+ * *culpa_out (in piscinam formata, entrium nominans) in fractura
+ * QUALIBET. registro NULL = pseudo nativae solae. */
+SilvaQuaestiones* silva_quaestiones_legere(SilvaPiscina* piscina,
+    const SilvaRegistrumCoctum* tabularium,
+    const SilvaQuaestioPseudoRegistrum* registro,
+    SilvaChorda fons, SilvaChorda* culpa_out);
+
+unsigned int silva_quaestiones_numerus(
+    const SilvaQuaestiones* bibliotheca);
+
+/* Ad indicem; NULL = extra fines */
+const SilvaQuaestioNominata* silva_quaestiones_ad_indicem(
+    const SilvaQuaestiones* bibliotheca, unsigned int index);
+
+/* Per titulum; NULL = absens */
+const SilvaQuaestioNominata* silva_quaestiones_invenire(
+    const SilvaQuaestiones* bibliotheca, const char* titulus);
+
+/* Argumenta in selectorem texere et compilare. argumenta = series
+ * PLANA (monstrator + numerus; NULL/0 = nulla) - non Xar, ut
+ * hospites (quibus Xar legendus solum est) eam aedificare possint.
+ * Fracturae nominatae: argumentum absens/ignotum/iteratum, valor
+ * illicitus ('"' '(' ')' vetiti), compilatio. Fructus reusabilis
+ * trans arbores. */
+SilvaQuaestio* silva_quaestiones_parare(SilvaPiscina* piscina,
+    const SilvaQuaestiones* bibliotheca,
+    const SilvaQuaestioNominata* nominata,
+    const SilvaQuaestionesArgumentum* argumenta,
+    unsigned int numerus_argumentorum, SilvaChorda* culpa_out);
+
+/* ==================================================
  * Semantica C89 (M0a): typi + scopi + forma + index — tabulae
  * parallelae super arbores commissas (consilium:
  * project-specs/silva-semantica-design.md DECISUS). Ansa typi =
@@ -1629,6 +1703,9 @@ typedef struct SilvaStmlNodus {
     int                     crudus;
     SilvaStmlCaptioDirectio captio_directio;
     unsigned int            captio_numerus;
+    int                     clausura_anonyma; /* clausum per </> -
+                                               * scriptor formam
+                                               * authoris servat */
     int                     fragmentum;
     SilvaChorda*            fragmentum_id;
 } SilvaStmlNodus;

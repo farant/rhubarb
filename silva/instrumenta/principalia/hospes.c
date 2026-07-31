@@ -1006,6 +1006,86 @@ int main(void)
         }
     }
 
+    /* quaestiones nominatae (2026-07-31): bibliotheca selectorum -
+     * legere/numerus/ad_indicem/invenire/parare per amalgama
+     * (regula hospitis: omnis functio nova vocatur) */
+    {
+        static char fons_bib[] =
+            "<quaestiones>"
+            "<quaestio titulus=\"vocantes\" gradus=\"oculi\">"
+            "<selector>definitio-functionis:vocat($functio)"
+            "</selector>"
+            "<parametrum titulus=\"functio\"/>"
+            "<causa>hospes</causa></quaestio>"
+            "</quaestiones>";
+        static const char fons_qc[] =
+            "int quadratum(int x) { return x * x; }\n"
+            "int bis(int x) { return quadratum(x); }\n";
+        SilvaChorda fons;
+        SilvaChorda culpa;
+        SilvaQuaestiones* bibliotheca;
+        int bene_qn = 0;
+
+        summa++;
+        fons.datum = (unsigned char*)fons_bib;
+        fons.mensura = (unsigned int)(sizeof(fons_bib) - 1);
+        bibliotheca = silva_quaestiones_legere(piscina,
+            &SILVA_C89_REGISTRUM, NULL, fons, &culpa);
+        if (bibliotheca != NULL
+            && silva_quaestiones_numerus(bibliotheca) == 1
+            && silva_quaestiones_ad_indicem(bibliotheca, 0) != NULL
+            && silva_quaestiones_ad_indicem(bibliotheca, 1) == NULL)
+        {
+            const SilvaQuaestioNominata* nominata =
+                silva_quaestiones_invenire(bibliotheca, "vocantes");
+            SilvaParsura* parsura = silva_c89_parsare(piscina,
+                "hospes_qn.c", fons_qc,
+                (unsigned int)(sizeof(fons_qc) - 1), NULL);
+
+            if (nominata != NULL
+                && nominata->gradus == SILVA_QUAESTIONES_OCULI
+                && parsura != NULL)
+            {
+                /* series plana - forma quam hospes aedificare
+                 * potest (Xar amalgamatis legendus solum) */
+                static char t_functio[] = "functio";
+                static char v_quadratum[] = "quadratum";
+                SilvaQuaestionesArgumentum argumenta[1];
+                SilvaQuaestio* quaestio;
+
+                argumenta[0].titulus.datum =
+                    (unsigned char*)t_functio;
+                argumenta[0].titulus.mensura = 7;
+                argumenta[0].valor.datum =
+                    (unsigned char*)v_quadratum;
+                argumenta[0].valor.mensura = 9;
+                quaestio = silva_quaestiones_parare(piscina,
+                    bibliotheca, nominata, argumenta, 1, &culpa);
+                if (quaestio != NULL)
+                {
+                    SilvaXar* resultata = silva_quaestio_exsequi(
+                        quaestio, parsura->commissio->radix,
+                        piscina);
+
+                    if (resultata != NULL
+                        && silva_xar_numerus(resultata) == 1)
+                    {
+                        bene_qn = 1;
+                    }
+                }
+            }
+        }
+        if (bene_qn)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr,
+                "hospes: INFIDELIS: quaestiones nominatae\n");
+        }
+    }
+
     /* semantica M0a (publica Chunk D): analysis, index, typi,
      * forma, oraculum trivalens + clausura - custos declarationum
      * silva.h (regula hospitis: omnis functio nova vocatur) */

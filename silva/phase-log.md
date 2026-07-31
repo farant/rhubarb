@@ -11763,3 +11763,140 @@ IANUAE: exceptio structurae in transfer (facta unio_est + pater-
 ACCESSUS, exemplar intervallorum - fratres viverent); basis
 sagitta/nidificata (numquam tracta v1); interprocedualis (sessio
 propria, architectura secundi passus).
+
+## 2026-07-31 - INTENTIO: QUAESTIONES NOMINATAE (arcus MCP, parcum 01KXPV9FPK)
+
+Selectores nominati et parametrizati ut bibliotheca commissa +
+instrumentum legati. Idea Franis 2026-07-17; scala QA-QD completa
+2026-07-22, nihil iam obstat. Decisa duo per interrogationem
+(2026-07-31): entria DIVITIA; invariantia OCULI PRIMUM (promotio
+ad uncum PER INVARIANTEM postquam tenuit).
+
+FORMA (silva/quaestiones.stml, plagula commissa):
+  <quaestiones>
+    <quaestio titulus="..." gradus="oculi|invarians">
+      <selector>...</selector>
+      <parametrum titulus="..."/>   (nulla aut plura)
+      <causa>...</causa>
+    </quaestio>
+  </quaestiones>
+
+LEGES VALIDATIONIS (in legere, fracturae CLARAE omnes):
+- selector compilatur (specimen: parametra "x" substituta);
+- parametra declarata <-> $loci selectoris UTRIMQUE (declaratum
+  non adhibitum = fractura; $ignotum in valore attributi aut
+  argumento pseudo = fractura);
+- causa obligatoria (spiritus TOLERA);
+- gradus invarians = zero parametra (percursus valores nescit);
+- tituli unici; gradus ignotus = fractura.
+
+SUBSTITUTIO: valores attributorum citati + argumenta pseudo SOLA.
+$captura post tagum numquam tangitur - CONTEXTUS discriminat, non
+nomen (collisio structuraliter impossibilis).
+
+MACHINA: modulus fontium silva_quaestiones.{h,c} - VIA CANONICA,
+non instrumenta: probationes in suite normali, CLI mundo fontium
+(subsellium selectae), legatus per amalgama (silva.h additiones +
+hospes, regula stans). Lectio disci apud consumptores manet -
+fontes chordas accipiunt. API: silva_quaestiones_legere(piscina,
+fons, registro?, culpa_out) -> SilvaQuaestiones opaca; _numerus /
+_ad_indicem / _invenire (per titulum); _parare(nominata,
+parametra) -> selector completus -> silva_quaestio_compilare.
+
+FRUSTA:
+  I   modulus + semen quaestiones.stml + probatio (classes
+      fracturae omnes, substitutio, executio contra fixturam);
+  II  CLI ./silva/quaestio.sh: executio nominata + -invariantia
+      [radix] (TENET/VIOLATUR per invariantem, exitus 1 in
+      violatione, NULLI unco insertum); exitus selectae (0/1/2);
+      percursus cum exclusionibus generatorum (lectio
+      capsula_libri, ictus bini);
+  III instrumentum legati quaestio {nomen?, parametra?, selector?,
+      via}; sine argumentis = index bibliothecae cum causis;
+      lectio quaestiones.stml per petitionem (exemplar
+      inclusiones.tsv - se sanans); parsura mundi calidi si via
+      iudicata, aliter analysis-ad-postulationem (exemplar
+      incomingCalls); doctrina in campo instructionum crescit.
+
+SEMEN: selectores ex quaestionibus re-typatis + invarians
+vexillarius = lectio villae mensurata (processus_exsequi obstans
+in tractatoribus tick vetitum). Orthographia contra
+grammatica/genera-c89.md scribetur, non ex memoria.
+
+VECTES: silva + officina + radix PLENUS; amalgama VERIFICATUM;
+clausura viva = quaestio nominata per MCP responsa + percursus
+invariantium cum verdicto honesto.
+
+CONSUMPTOR ALTER NOMINATUS: 01KXTX7FA3 (contractus
+selector-scopati, porta QC aperta) eandem bibliothecam bibet.
+
+## 2026-07-31 - RELATIO: QUAESTIONES NOMINATAE MISSAE (arcus unus, frusta tria)
+
+MISSA die una ab INTENTIONE. Bibliotheca selectorum commissa
+(silva/quaestiones.stml) tribus superficiebus: modulus fontium +
+CLI + instrumentum legati.
+
+FRUSTUM I (modulus): silva_quaestiones.{h,c} in fontibus - entria
+divitia, validatio in legere (plagula tota aut nihil, XVI classes
+fracturae nominatae pinnataeque), substitutio contextu discriminata
+(valores citati + argumentum pseudo integrum '($nomen)'; capturae
+$post-tagum structuraliter intactae), specimen "x" compilationem
+probat. Plagula commissa in suite PINNATA (lectio ex disco).
+
+FRUSTUM II (CLI): ./silva/quaestio.sh - index cum causis, executio
+nominata (param=valor, extentus selectae-formatus), -proba, et
+PERCURSUS INVARIANTIUM: 577 plagulae, CAUTIO NULLA, saltatae XVI
+loude nominatae (nota vexilli intra C octetos + tectum mensurae),
+VERDICTUM OMNES TENENT - invarians vexillarius
+exsequi-in-pulsatione (lectio villae mensurata -> custodia
+structuralis commissa) trans arborem totam tenet.
+
+FRUSTUM III (legati): API-primum inventum - Xar amalgamatis
+hospitibus LEGENDUS solum est, ergo parare seriem PLANAM accipit
+(monstrator + numerus), non Xar; forma ante congelationem mutata
+(Eskil vindicatus). silva.h sectio quaestionum + CADENDA IV +
+hospes 34->35 fideles. Instrumentum legati 'quaestio' {nomen?,
+argumenta?, selector?, via?}: sine argumentis index; nominata +
+'par=valor'; selector crudus = exploratio; ordines
+via:linea-linea + lineae binae primae (stylus domus: typus
+reditus in linea propria). Bibliotheca per petitionem ex disco
+(exemplar inclusiones.tsv). Scenaria IV in probatio_mcp; doctrina
+crevit. VIVO probatum: residens per RENOVARE se transformavit
+(fistula eadem), deinde per filum crudum index + executio nominata
+(vocantes-continentes functio=kill -> _perficere) responsa.
+
+INVENTA TRIA mensurata: (1) lex scanner-triggeris firma SEXTA -
+amalgama_ligator.c falso 'generata' (nota in commento posteriore);
+tectum ad C octetos artatum (verae <=80, falsa prima @135).
+(2) DERIVA AMALGAMATIS DORMIENS: silva.h StmlNodus campum
+clausura_anonyma (lib/stml </> 2026-07-30) numquam accepit -
+amalgama a die illo IRREGENERABILE stabat; regula 'amalgamare post
+editionem fontium' editiones bibliothecarum VENDICATARUM non
+tegit. Sanatum + quaesitum: custodiam huic classi deesse adhuc.
+(3) S41 statica duplicata bina (_est_spatium, _chorda_vacua) -
+suffixum _q; decipula i32-insignata in codice novo ITERUM (aequale
+= -I sentinella).
+
+VECTES: silva 37/37, officina 13/13, radix 108/108 PLENUS,
+amalgama VERIFICATUM (hospes 35/35), percursus invariantium
+exitus 0.
+
+DEBRIEF INSTRUMENTORUM: adhibita - selecta (orthographia
+selectorum contra arborem veram probata ANTE semen; bis),
+legati corpus/diagnostica (superficies API sine grep; unco
+diagnostico culpas quattuor in ipso codice nominante), renovare
+(residens vivus se renovavit - dogfood perfectum), excubitor
+(moneta.o stalum nominavit). Fructus - unco push: CREDO_NIHIL_EST
+phantasma, helpera tria inexsistentia, blast-radius signaturae
+totus nominatus ante compilationem. Asperitates - fori/tabularii
+acta divisio adhuc confundit (nihil novi); amalgama_fontes_generare
+sine argumento usu exit 0 (refusio quieta - contra doctrinam,
+desideratum dignum). Desiderata - notificatio tools/list_changed
+post renovare (sessio vetus instrumentum novum non videt nisi
+reconexione).
+
+IANUAE: promotio invariantium ad uncum PER INVARIANTEM (decisum:
+postquam tenuit); tabula postulationum (selectores crudi re-typati
+-> promotio); consumptor alter 01KXTX7FA3 (contractus
+selector-scopati); custodia derivae amalgamatis pro bibliothecis
+vendicatis (inventum II).

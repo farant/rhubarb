@@ -1173,6 +1173,80 @@ int silva_quaestio_congruit(const SilvaQuaestio* quaestio,
     const SilvaNodus* nodus);
 
 /* ==================================================
+ * Quaestiones nominatae: bibliotheca selectorum commissa
+ * (silva/quaestiones.stml; parcum 01KXPV9FPK, 2026-07-31).
+ * Entria divitia: titulus + gradus (oculi|invarians) + selector
+ * cum $parametris declaratis + causa obligatoria. Validatio in
+ * legere - plagula tota valida aut NULL + culpa nominata (selector
+ * compilatur per specimen, parametra <-> $loci utrimque, invarians
+ * = zero parametra, tituli unici). Substitutio contextu
+ * discriminata: valores attributorum citati + argumentum pseudo
+ * integrum ($capturae post tagum intactae). Invarians = selector
+ * qui ZERO congruentias reddere debet (custodia structuralis;
+ * percursus = ./silva/quaestio.sh -invariantia, oculi solum).
+ * ================================================== */
+
+typedef enum {
+    SILVA_QUAESTIONES_OCULI = 0,  /* relatio - numquam porta */
+    SILVA_QUAESTIONES_INVARIANS   /* zero congruentiae = TENET */
+} SilvaQuaestionesGradus;
+
+/* Quaestio nominata: unum entrium bibliothecae (lectum, validatum) */
+typedef struct SilvaQuaestioNominata {
+    SilvaChorda titulus;
+    int         gradus;      /* SilvaQuaestionesGradus */
+    SilvaChorda selector;    /* textus crudus cum $parametris */
+    SilvaXar*   parametra;   /* SilvaChorda (valore) - declarata */
+    SilvaChorda causa;
+} SilvaQuaestioNominata;
+
+/* Argumentum pro parare: par titulus->valor */
+typedef struct SilvaQuaestionesArgumentum {
+    SilvaChorda titulus;
+    SilvaChorda valor;
+} SilvaQuaestionesArgumentum;
+
+/* Bibliotheca lecta. tabularium/registro hic servantur - registro
+ * per compilationes posteriores (parare) legitur, ergo bibliothecam
+ * supervivere debet. */
+typedef struct SilvaQuaestiones {
+    SilvaXar*                              nominatae;
+    const SilvaRegistrumCoctum*            tabularium;
+    const SilvaQuaestioPseudoRegistrum*    registro;
+} SilvaQuaestiones;
+
+/* Bibliothecam ex chorda legere et TOTAM validare. NULL +
+ * *culpa_out (in piscinam formata, entrium nominans) in fractura
+ * QUALIBET. registro NULL = pseudo nativae solae. */
+SilvaQuaestiones* silva_quaestiones_legere(SilvaPiscina* piscina,
+    const SilvaRegistrumCoctum* tabularium,
+    const SilvaQuaestioPseudoRegistrum* registro,
+    SilvaChorda fons, SilvaChorda* culpa_out);
+
+unsigned int silva_quaestiones_numerus(
+    const SilvaQuaestiones* bibliotheca);
+
+/* Ad indicem; NULL = extra fines */
+const SilvaQuaestioNominata* silva_quaestiones_ad_indicem(
+    const SilvaQuaestiones* bibliotheca, unsigned int index);
+
+/* Per titulum; NULL = absens */
+const SilvaQuaestioNominata* silva_quaestiones_invenire(
+    const SilvaQuaestiones* bibliotheca, const char* titulus);
+
+/* Argumenta in selectorem texere et compilare. argumenta = series
+ * PLANA (monstrator + numerus; NULL/0 = nulla) - non Xar, ut
+ * hospites (quibus Xar legendus solum est) eam aedificare possint.
+ * Fracturae nominatae: argumentum absens/ignotum/iteratum, valor
+ * illicitus ('"' '(' ')' vetiti), compilatio. Fructus reusabilis
+ * trans arbores. */
+SilvaQuaestio* silva_quaestiones_parare(SilvaPiscina* piscina,
+    const SilvaQuaestiones* bibliotheca,
+    const SilvaQuaestioNominata* nominata,
+    const SilvaQuaestionesArgumentum* argumenta,
+    unsigned int numerus_argumentorum, SilvaChorda* culpa_out);
+
+/* ==================================================
  * Semantica C89 (M0a): typi + scopi + forma + index — tabulae
  * parallelae super arbores commissas (consilium:
  * project-specs/silva-semantica-design.md DECISUS). Ansa typi =
@@ -1642,6 +1716,9 @@ typedef struct SilvaStmlNodus {
     int                     crudus;
     SilvaStmlCaptioDirectio captio_directio;
     unsigned int            captio_numerus;
+    int                     clausura_anonyma; /* clausum per </> -
+                                               * scriptor formam
+                                               * authoris servat */
     int                     fragmentum;
     SilvaChorda*            fragmentum_id;
 } SilvaStmlNodus;
@@ -2784,7 +2861,9 @@ nomen enumeratio {
     STML_TOKEN_FINIS         = XII,   /* EOF */
     STML_TOKEN_FRAGMENTUM_APERIRE   = XIII,  /* <#> or <#id> */
     STML_TOKEN_FRAGMENTUM_CLAUDERE  = XIV,   /* </#> */
-    STML_TOKEN_FRAGMENTUM_AUTO      = XV,    /* <#/> or <#id/> */
+    STML_TOKEN_FRAGMENTUM_AUTO      = XV,    /* <#/> aut <#id/>; cum
+                                                captio_numerus > 0 =
+                                                <# (> / <#id (> / <(> */
     STML_TOKEN_TRANSCLUSIO          = XVI    /* <<selector>> */
 } StmlTokenGenus;
 
@@ -5900,6 +5979,98 @@ silva_annotationes_identitates (
 
 #endif /* SILVA_ANNOTATIONES_H */
 
+/* ================= ex silva/fontes/silva_quaestiones.h ================= */
+/* silva_quaestiones.h - bibliotheca selectorum nominatorum
+ * (QUAESTIONES NOMINATAE - parcum 01KXPV9FPK; INTENTIO in
+ * silva/phase-log.md 2026-07-31)
+ *
+ * Plagula commissa silva/quaestiones.stml selectores NOMINATOS et
+ * PARAMETRIZATOS fert; hic modulus eam legit, validat, et
+ * selectores completos ad machinam quaestionis (silva_quaestio)
+ * tradit. Lectio disci apud consumptores manet - fontes chordas
+ * accipiunt.
+ *
+ * FORMA PLAGULAE:
+ *   <quaestiones>
+ *     <quaestio titulus="..." gradus="oculi|invarians">
+ *       <selector>...</selector>
+ *       <parametrum titulus="..."/>    (nulla aut plura)
+ *       <causa>...</causa>
+ *     </quaestio>
+ *   </quaestiones>
+ *
+ * SUBSTITUTIO ($titulus in textu selectoris):
+ *   - intra valores attributorum citatos: [locus="$param"]
+ *   - argumentum pseudo INTEGRUM:        :vocat($param)
+ * Extra hos contextus '$' = captura machinae ($nomen post tagum)
+ * et numquam tangitur - CONTEXTUS discriminat, non nomen, ergo
+ * collisio structuraliter impossibilis.
+ *
+ * VALIDATIO (in legere; plagula tota valida aut NIHIL + culpa
+ * nominata): selector compilatur (specimen "x" pro parametris);
+ * parametra declarata <-> $loci selectoris UTRIMQUE; causa et
+ * gradus obligatoria; gradus invarians = zero parametra; tituli
+ * unici.
+ *
+ * GRADUS INVARIANS: selector qui ZERO congruentias reddere debet -
+ * bibliotheca fit custodia structuralis sine codice C novo (v0
+ * OCULI PRIMUM: relatio sola, nulli unco inserta; promotio per
+ * invariantem postquam tenuit).
+ */
+
+#ifndef SILVA_QUAESTIONES_H
+#define SILVA_QUAESTIONES_H
+
+/* ==================================================
+ * API
+ * ================================================== */
+
+/* Bibliothecam ex chorda legere et TOTAM validare. NIHIL + *culpa_out
+ * (chorda in piscinam formata, entrium nominans) in fractura
+ * QUALIBET - plagula valida tota aut nihil. registro NIHIL =
+ * pseudo-classes nativae solae. */
+SilvaQuaestiones*
+silva_quaestiones_legere (
+    SilvaPiscina*                               piscina,
+    constans SilvaRegistrumCoctum*         tabularium,
+    constans SilvaQuaestioPseudoRegistrum* registro,
+    SilvaChorda                                 fons,
+    SilvaChorda*                                culpa_out);
+
+/* Numerus quaestionum nominatarum */
+i32
+silva_quaestiones_numerus (constans SilvaQuaestiones* bibliotheca);
+
+/* Quaestio nominata ad indicem; NIHIL = extra fines */
+constans SilvaQuaestioNominata*
+silva_quaestiones_ad_indicem (
+    constans SilvaQuaestiones* bibliotheca,
+    i32                        index);
+
+/* Quaestio nominata per titulum; NIHIL = absens */
+constans SilvaQuaestioNominata*
+silva_quaestiones_invenire (
+    constans SilvaQuaestiones* bibliotheca,
+    constans character*        titulus);
+
+/* Argumenta in selectorem texere et compilare. argumenta = series
+ * plana (monstrator + numerus; NIHIL/0 = nulla) - series plana, non
+ * Xar, ut hospites amalgamatis (quibus Xar legendus solum est) eam
+ * aedificare possint. Fracturae nominatae: argumentum
+ * absens/ignotum/iteratum, valor illicitus (characteres '"' '(' ')'
+ * vetiti - textura selectoris integra manet), compilatio. Fructus
+ * reusabilis trans arbores (contractus machinae). */
+SilvaQuaestio*
+silva_quaestiones_parare (
+    SilvaPiscina*                              piscina,
+    constans SilvaQuaestiones*            bibliotheca,
+    constans SilvaQuaestioNominata*       nominata,
+    constans SilvaQuaestionesArgumentum*  argumenta,
+    i32                                   numerus_argumentorum,
+    SilvaChorda*                               culpa_out);
+
+#endif /* SILVA_QUAESTIONES_H */
+
 /* ================= ex lib/piscina.c ================= */
 
 #ifndef PISCINA_DEBUG
@@ -8659,6 +8830,7 @@ _tok_legere_fragmentum(StmlTokenContext* ctx)
     i32 initium_linea;
     i32 initium_columna;
     SilvaChorda fragmentum_id;
+    i32 captio_numerus;
 
     initium = ctx->positus;
     initium_linea = ctx->linea;
@@ -8685,8 +8857,19 @@ _tok_legere_fragmentum(StmlTokenContext* ctx)
     token.attributa = _tok_legere_attributa(ctx);
     _tok_praeterire_spatium(ctx);
 
+    /* Numerare parentheses capturae <# (> / <#id (> (post
+     * attributa, sicut in tags normalibus) */
+    captio_numerus = ZEPHYRUM;
+    dum (_tok_aspicere(ctx, ZEPHYRUM) == '(')
+    {
+        captio_numerus++;
+        _tok_progredi(ctx, I);
+    }
+    _tok_praeterire_spatium(ctx);
+
     /* Check for self-closing <#/> or <#id/> */
-    si (_tok_aspicere(ctx, ZEPHYRUM) == '/' &&
+    si (captio_numerus == ZEPHYRUM &&
+        _tok_aspicere(ctx, ZEPHYRUM) == '/' &&
         _tok_aspicere(ctx, I) == '>')
     {
         _tok_progredi(ctx, II);
@@ -8706,7 +8889,18 @@ _tok_legere_fragmentum(StmlTokenContext* ctx)
         _tok_progredi(ctx, I);
     }
 
-    token.genus = STML_TOKEN_FRAGMENTUM_APERIRE;
+    /* Fragmentum capturans = lexema se ipso continens (idem
+     * exemplar quo CRUDUS: genus AUTO, campus captio_numerus
+     * discriminat) - fratres post parsationem capiuntur */
+    si (captio_numerus > ZEPHYRUM)
+    {
+        token.genus = STML_TOKEN_FRAGMENTUM_AUTO;
+        token.captio_numerus = captio_numerus;
+    }
+    alioquin
+    {
+        token.genus = STML_TOKEN_FRAGMENTUM_APERIRE;
+    }
     token.valor = fragmentum_id;
     token.positus_initium = initium;
     token.positus_finis = ctx->positus;
@@ -8749,6 +8943,56 @@ _tok_legere_fragmentum_claudere(StmlTokenContext* ctx)
     }
 
     token.genus = STML_TOKEN_FRAGMENTUM_CLAUDERE;
+    token.valor.datum = NIHIL;
+    token.valor.mensura = ZEPHYRUM;
+    token.positus_initium = initium;
+    token.positus_finis = ctx->positus;
+    token.linea = initium_linea;
+    token.columna = initium_columna;
+    redde token;
+}
+
+/* Parse bare capture sugar <(> or <((> - anonymous fragment.
+ * Saccharum authoris: scriptor ad <# (> normalizat (forma nuda
+ * ephemera est - stampatio gestarum lineam rescribit). */
+interior StmlToken
+_tok_legere_captio_nuda(StmlTokenContext* ctx)
+{
+    StmlToken token;
+    i32 initium;
+    i32 initium_linea;
+    i32 initium_columna;
+    i32 captio_numerus;
+
+    initium = ctx->positus;
+    initium_linea = ctx->linea;
+    initium_columna = ctx->columna;
+
+    token.attributa = NIHIL;
+    token.captio_numerus = ZEPHYRUM;
+    token.habet_captus = FALSUM;
+    token.captus_contentus.datum = NIHIL;
+    token.captus_contentus.mensura = ZEPHYRUM;
+
+    /* Skip < */
+    _tok_progredi(ctx, I);
+
+    captio_numerus = ZEPHYRUM;
+    dum (_tok_aspicere(ctx, ZEPHYRUM) == '(')
+    {
+        captio_numerus++;
+        _tok_progredi(ctx, I);
+    }
+    _tok_praeterire_spatium(ctx);
+
+    /* Expect > */
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '>')
+    {
+        _tok_progredi(ctx, I);
+    }
+
+    token.genus = STML_TOKEN_FRAGMENTUM_AUTO;
+    token.captio_numerus = captio_numerus;
     token.valor.datum = NIHIL;
     token.valor.mensura = ZEPHYRUM;
     token.positus_initium = initium;
@@ -9014,6 +9258,12 @@ _tok_proximus(StmlTokenContext* ctx)
             redde _tok_legere_fragmentum(ctx);
         }
 
+        /* Saccharum capturae nudae <(> - fragmentum anonymum */
+        si (_tok_aspicere(ctx, I) == '(')
+        {
+            redde _tok_legere_captio_nuda(ctx);
+        }
+
         /* Regular tag */
         token = _tok_legere_tag(ctx);
 
@@ -9074,6 +9324,7 @@ _parser_creare_nodus(StmlParserContext* ctx, SilvaStmlNodusGenus genus)
     nodus->crudus = FALSUM;
     nodus->captio_directio = STML_CAPTIO_NIHIL;
     nodus->captio_numerus = ZEPHYRUM;
+    nodus->clausura_anonyma = FALSUM;
 
     redde nodus;
 }
@@ -9119,7 +9370,16 @@ _parser_legere_elementum(StmlParserContext* ctx)
     /* Verify close tag matches */
     si (ctx->current.genus == STML_TOKEN_CLAUDERE)
     {
-        si (!silva_chorda_aequalis(ctx->current.valor, *titulus_ptr))
+        si (ctx->current.valor.mensura == ZEPHYRUM)
+        {
+            /* clausura anonyma </>: elementum apertum proximum
+             * claudit (recursio ipsa 'proximum' dat - elementum
+             * currens primum eam videt). Forma authoris in
+             * scriptore servatur. 01KYSPRF9R */
+            nodus->clausura_anonyma = VERUM;
+        }
+        alioquin si (!silva_chorda_aequalis(ctx->current.valor,
+                *titulus_ptr))
         {
             ctx->status = STML_ERROR_TAG_IMPROPRIE;
             ctx->linea_erroris = ctx->current.linea;
@@ -9750,6 +10010,16 @@ _parser_legere_fragmentum_auto(StmlParserContext* ctx)
 
     /* Copy attributes */
     nodus->attributa = ctx->current.attributa;
+
+    /* Campi capturae (<# (> / <#id (>): receptaculum liberis
+     * necessarium - _processare_captiones fratres huc movet */
+    nodus->captio_numerus = ctx->current.captio_numerus;
+    si (ctx->current.captio_numerus > ZEPHYRUM)
+    {
+        nodus->captio_directio = STML_CAPTIO_ANTE;
+        nodus->liberi = silva_xar_creare(ctx->piscina,
+            magnitudo(SilvaStmlNodus*));
+    }
 
     _parser_progredi(ctx);
 
@@ -61072,4 +61342,802 @@ silva_annotationes_identitates (SilvaPiscina* piscina,
         }
     }
     redde fructus;
+}
+
+/* ================= ex silva/fontes/silva_quaestiones.c ================= */
+
+/* ==================================================
+ * Auxilia parva
+ * ================================================== */
+
+interior b32
+_aequat (SilvaChorda c, constans character* litterae)
+{
+    i32 mensura = (i32)strlen(litterae);
+
+    si (c.mensura != mensura) redde FALSUM;
+    si (mensura == ZEPHYRUM) redde VERUM;
+    redde memcmp(c.datum, litterae, (size_t)mensura) == ZEPHYRUM
+        ? VERUM : FALSUM;
+}
+
+interior b32
+_chordae_pares_q (SilvaChorda a, SilvaChorda b)
+{
+    si (a.mensura != b.mensura) redde FALSUM;
+    si (a.mensura == ZEPHYRUM) redde VERUM;
+    redde memcmp(a.datum, b.datum, (size_t)a.mensura) == ZEPHYRUM
+        ? VERUM : FALSUM;
+}
+
+interior b32
+_est_spatium_q (i8 c)
+{
+    redde (c == (i8)' ' || c == (i8)'\t' || c == (i8)'\n'
+        || c == (i8)'\r') ? VERUM : FALSUM;
+}
+
+/* litterae tag/parametri: [a-z0-9_-] (grammatica machinae) */
+interior b32
+_est_littera_tituli (i8 c)
+{
+    redde ((c >= (i8)'a' && c <= (i8)'z')
+        || (c >= (i8)'0' && c <= (i8)'9')
+        || c == (i8)'-' || c == (i8)'_') ? VERUM : FALSUM;
+}
+
+interior SilvaChorda
+_trimmata (SilvaChorda c)
+{
+    dum (c.mensura > ZEPHYRUM && _est_spatium_q(c.datum[ZEPHYRUM]))
+    {
+        c.datum++;
+        c.mensura--;
+    }
+    dum (c.mensura > ZEPHYRUM
+        && _est_spatium_q(c.datum[c.mensura - I]))
+    {
+        c.mensura--;
+    }
+    redde c;
+}
+
+/* chorda -> litterae NUL-terminatae in piscina (compilare cstr
+ * exigit) */
+interior constans character*
+_ut_literis (SilvaPiscina* piscina, SilvaChorda c)
+{
+    character* litterae = (character*)silva_piscina_allocare(piscina,
+        (memoriae_index)(c.mensura + I));
+
+    si (litterae == NIHIL) redde NIHIL;
+    si (c.mensura > ZEPHYRUM)
+    {
+        memcpy(litterae, c.datum, (size_t)c.mensura);
+    }
+    litterae[c.mensura] = '\0';
+    redde litterae;
+}
+
+/* culpam texere: "quaestio 'T': nuntius 'R'" (T/R absentia licita) */
+interior vacuum
+_culpam_ponere (SilvaPiscina* piscina, SilvaChorda* culpa_out,
+    SilvaChorda quaestio_titulus, constans character* nuntius, SilvaChorda res)
+{
+    SilvaChordaAedificator* a;
+
+    si (culpa_out == NIHIL) redde;
+    a = silva_chorda_aedificator_creare(piscina, (memoriae_index)64);
+    si (a == NIHIL) redde;
+    si (quaestio_titulus.mensura > ZEPHYRUM)
+    {
+        (vacuum)silva_chorda_aedificator_appendere_literis(a, "quaestio '");
+        (vacuum)silva_chorda_aedificator_appendere_chorda(a,
+            quaestio_titulus);
+        (vacuum)silva_chorda_aedificator_appendere_literis(a, "': ");
+    }
+    (vacuum)silva_chorda_aedificator_appendere_literis(a, nuntius);
+    si (res.mensura > ZEPHYRUM)
+    {
+        (vacuum)silva_chorda_aedificator_appendere_literis(a, " '");
+        (vacuum)silva_chorda_aedificator_appendere_chorda(a, res);
+        (vacuum)silva_chorda_aedificator_appendere_literis(a, "'");
+    }
+    *culpa_out = silva_chorda_aedificator_finire(a);
+}
+
+interior SilvaChorda
+_chorda_vacua_q (vacuum)
+{
+    SilvaChorda c;
+
+    c.mensura = ZEPHYRUM;
+    c.datum = NIHIL;
+    redde c;
+}
+
+/* ==================================================
+ * Scanner locorum parametrorum
+ * ================================================== */
+
+nomen structura {
+    i32    initium;  /* offset '$' in selectore */
+    i32    mensura;  /* longitudo cum '$' */
+    SilvaChorda titulus;  /* sine '$' - vacuum = fractura validationis */
+} LocusParametri;
+
+/* Loca $parametrorum in textu selectoris colligere (contextus (a)
+ * et (b) supra). NIHIL = piscina exhausta. */
+interior SilvaXar*
+_loca_colligere (SilvaPiscina* piscina, SilvaChorda selector)
+{
+    SilvaXar* loca = silva_xar_creare(piscina, magnitudo(LocusParametri));
+    b32 in_citatione = FALSUM;
+    i32 i = ZEPHYRUM;
+
+    si (loca == NIHIL) redde NIHIL;
+    dum (i < selector.mensura)
+    {
+        i8 c = selector.datum[i];
+
+        si (c == (i8)'"')
+        {
+            in_citatione = in_citatione ? FALSUM : VERUM;
+            i++;
+            perge;
+        }
+        si (in_citatione && c == (i8)'$')
+        {
+            LocusParametri locus;
+            i32 finis = i + I;
+
+            dum (finis < selector.mensura
+                && _est_littera_tituli(selector.datum[finis]))
+            {
+                finis++;
+            }
+            locus.initium = i;
+            locus.mensura = finis - i;
+            locus.titulus.datum = selector.datum + i + I;
+            locus.titulus.mensura = finis - i - I;
+            {
+                LocusParametri* slot =
+                    (LocusParametri*)silva_xar_addere(loca);
+
+                si (slot == NIHIL) redde NIHIL;
+                *slot = locus;
+            }
+            i = finis;
+            perge;
+        }
+        si (!in_citatione && c == (i8)'(' && i + I < selector.mensura
+            && selector.datum[i + I] == (i8)'$')
+        {
+            i32 finis = i + II;
+
+            dum (finis < selector.mensura
+                && _est_littera_tituli(selector.datum[finis]))
+            {
+                finis++;
+            }
+            /* forma exacta '($nomen)' sola - alioquin textus
+             * ordinarius manet */
+            si (finis < selector.mensura
+                && selector.datum[finis] == (i8)')')
+            {
+                LocusParametri locus;
+                LocusParametri* slot;
+
+                locus.initium = i + I;
+                locus.mensura = finis - i - I;
+                locus.titulus.datum = selector.datum + i + II;
+                locus.titulus.mensura = finis - i - II;
+                slot = (LocusParametri*)silva_xar_addere(loca);
+                si (slot == NIHIL) redde NIHIL;
+                *slot = locus;
+                i = finis;
+                perge;
+            }
+        }
+        i++;
+    }
+    redde loca;
+}
+
+/* Selectorem completum texere: segmenta inter loca + valores.
+ * valores = Xar de chorda (valore), parallelum locis. */
+interior SilvaChorda
+_selectorem_texere (SilvaPiscina* piscina, SilvaChorda selector, SilvaXar* loca,
+    SilvaXar* valores)
+{
+    SilvaChordaAedificator* a = silva_chorda_aedificator_creare(piscina,
+        (memoriae_index)(selector.mensura + 32));
+    i32 cursor = ZEPHYRUM;
+    i32 k;
+    SilvaChorda pars;
+
+    si (a == NIHIL) redde _chorda_vacua_q();
+    per (k = ZEPHYRUM; k < silva_xar_numerus(loca); k++)
+    {
+        LocusParametri* locus =
+            (LocusParametri*)silva_xar_obtinere(loca, k);
+        SilvaChorda* valor = (SilvaChorda*)silva_xar_obtinere(valores, k);
+
+        pars.datum = selector.datum + cursor;
+        pars.mensura = locus->initium - cursor;
+        (vacuum)silva_chorda_aedificator_appendere_chorda(a, pars);
+        (vacuum)silva_chorda_aedificator_appendere_chorda(a, *valor);
+        cursor = locus->initium + locus->mensura;
+    }
+    pars.datum = selector.datum + cursor;
+    pars.mensura = selector.mensura - cursor;
+    (vacuum)silva_chorda_aedificator_appendere_chorda(a, pars);
+    redde silva_chorda_aedificator_finire(a);
+}
+
+/* ==================================================
+ * Validatio entrii
+ * ================================================== */
+
+/* Parametra declarata contra loca selectoris UTRIMQUE probare +
+ * specimen compilare. VERUM = validum; FALSUM + culpa. */
+interior b32
+_entrium_validare (SilvaPiscina* piscina,
+    constans SilvaQuaestiones* bibliotheca,
+    constans SilvaQuaestioNominata* nominata, SilvaChorda* culpa_out)
+{
+    SilvaXar* loca = _loca_colligere(piscina, nominata->selector);
+    i32 k;
+    i32 p;
+
+    si (loca == NIHIL)
+    {
+        _culpam_ponere(piscina, culpa_out, nominata->titulus,
+            "piscina exhausta", _chorda_vacua_q());
+        redde FALSUM;
+    }
+    /* omnis locus declaratum nominat */
+    per (k = ZEPHYRUM; k < silva_xar_numerus(loca); k++)
+    {
+        LocusParametri* locus =
+            (LocusParametri*)silva_xar_obtinere(loca, k);
+        b32 inventum = FALSUM;
+
+        si (locus->titulus.mensura == ZEPHYRUM)
+        {
+            _culpam_ponere(piscina, culpa_out, nominata->titulus,
+                "parametrum vacuum in selectore", _chorda_vacua_q());
+            redde FALSUM;
+        }
+        per (p = ZEPHYRUM; p < silva_xar_numerus(nominata->parametra); p++)
+        {
+            SilvaChorda* declaratum =
+                (SilvaChorda*)silva_xar_obtinere(nominata->parametra, p);
+
+            si (_chordae_pares_q(*declaratum, locus->titulus))
+            {
+                inventum = VERUM;
+                frange;
+            }
+        }
+        si (!inventum)
+        {
+            _culpam_ponere(piscina, culpa_out, nominata->titulus,
+                "parametrum ignotum in selectore", locus->titulus);
+            redde FALSUM;
+        }
+    }
+    /* omne declaratum locum habet */
+    per (p = ZEPHYRUM; p < silva_xar_numerus(nominata->parametra); p++)
+    {
+        SilvaChorda* declaratum =
+            (SilvaChorda*)silva_xar_obtinere(nominata->parametra, p);
+        b32 inventum = FALSUM;
+
+        per (k = ZEPHYRUM; k < silva_xar_numerus(loca); k++)
+        {
+            LocusParametri* locus =
+                (LocusParametri*)silva_xar_obtinere(loca, k);
+
+            si (_chordae_pares_q(*declaratum, locus->titulus))
+            {
+                inventum = VERUM;
+                frange;
+            }
+        }
+        si (!inventum)
+        {
+            _culpam_ponere(piscina, culpa_out, nominata->titulus,
+                "parametrum non adhibitum", *declaratum);
+            redde FALSUM;
+        }
+    }
+    /* specimen: parametra "x" substituta, compilatio probatur */
+    {
+        SilvaXar* valores = silva_xar_creare(piscina, magnitudo(SilvaChorda));
+        SilvaChorda specimen;
+        constans character* litterae;
+        constans character* causa = NIHIL;
+        SilvaQuaestio* q;
+
+        si (valores == NIHIL) redde FALSUM;
+        per (k = ZEPHYRUM; k < silva_xar_numerus(loca); k++)
+        {
+            SilvaChorda* slot = (SilvaChorda*)silva_xar_addere(valores);
+
+            si (slot == NIHIL) redde FALSUM;
+            *slot = silva_chorda_ex_literis("x", piscina);
+        }
+        specimen = _selectorem_texere(piscina, nominata->selector,
+            loca, valores);
+        litterae = _ut_literis(piscina, specimen);
+        si (litterae == NIHIL) redde FALSUM;
+        q = silva_quaestio_compilare_cum_registro(piscina,
+            bibliotheca->tabularium, bibliotheca->registro,
+            litterae, &causa);
+        si (q == NIHIL)
+        {
+            SilvaChorda causa_chorda = _chorda_vacua_q();
+
+            si (causa != NIHIL)
+            {
+                causa_chorda = silva_chorda_ex_literis(causa, piscina);
+            }
+            _culpam_ponere(piscina, culpa_out, nominata->titulus,
+                "selector non compilatur", causa_chorda);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* ==================================================
+ * Lectio plagulae
+ * ================================================== */
+
+/* Elementum <quaestio> unum legere (attributa + liberi) */
+interior b32
+_quaestionem_legere (SilvaPiscina* piscina, SilvaStmlNodus* elementum,
+    SilvaQuaestioNominata* nominata, SilvaChorda* culpa_out)
+{
+    SilvaChorda* titulus = silva_stml_attributum_capere(elementum, "titulus");
+    SilvaChorda* gradus = silva_stml_attributum_capere(elementum, "gradus");
+    b32 selector_visus = FALSUM;
+    b32 causa_visa = FALSUM;
+    i32 k;
+
+    nominata->titulus = _chorda_vacua_q();
+    nominata->selector = _chorda_vacua_q();
+    nominata->causa = _chorda_vacua_q();
+    nominata->gradus = (s32)SILVA_QUAESTIONES_OCULI;
+    nominata->parametra = silva_xar_creare(piscina, magnitudo(SilvaChorda));
+    si (nominata->parametra == NIHIL) redde FALSUM;
+
+    si (titulus == NIHIL || titulus->mensura == ZEPHYRUM)
+    {
+        _culpam_ponere(piscina, culpa_out, _chorda_vacua_q(),
+            "quaestio sine titulo", _chorda_vacua_q());
+        redde FALSUM;
+    }
+    nominata->titulus = *titulus;
+    si (gradus == NIHIL)
+    {
+        _culpam_ponere(piscina, culpa_out, nominata->titulus,
+            "gradus absens (oculi|invarians)", _chorda_vacua_q());
+        redde FALSUM;
+    }
+    si (_aequat(*gradus, "oculi"))
+    {
+        nominata->gradus = (s32)SILVA_QUAESTIONES_OCULI;
+    }
+    alioquin si (_aequat(*gradus, "invarians"))
+    {
+        nominata->gradus = (s32)SILVA_QUAESTIONES_INVARIANS;
+    }
+    alioquin
+    {
+        _culpam_ponere(piscina, culpa_out, nominata->titulus,
+            "gradus ignotus", *gradus);
+        redde FALSUM;
+    }
+
+    per (k = ZEPHYRUM; k < silva_stml_numerus_liberorum(elementum); k++)
+    {
+        SilvaStmlNodus* liber = *(SilvaStmlNodus**)
+            silva_xar_obtinere(elementum->liberi, k);
+
+        si (liber == NIHIL || liber->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;  /* textus/commenta inter elementa licita */
+        }
+        si (liber->titulus != NIHIL
+            && _aequat(*liber->titulus, "selector"))
+        {
+            si (selector_visus)
+            {
+                _culpam_ponere(piscina, culpa_out,
+                    nominata->titulus, "selector iteratus",
+                    _chorda_vacua_q());
+                redde FALSUM;
+            }
+            selector_visus = VERUM;
+            nominata->selector = _trimmata(
+                silva_stml_textus_internus(liber, piscina));
+        }
+        alioquin si (liber->titulus != NIHIL
+            && _aequat(*liber->titulus, "causa"))
+        {
+            si (causa_visa)
+            {
+                _culpam_ponere(piscina, culpa_out,
+                    nominata->titulus, "causa iterata",
+                    _chorda_vacua_q());
+                redde FALSUM;
+            }
+            causa_visa = VERUM;
+            nominata->causa = _trimmata(
+                silva_stml_textus_internus(liber, piscina));
+        }
+        alioquin si (liber->titulus != NIHIL
+            && _aequat(*liber->titulus, "parametrum"))
+        {
+            SilvaChorda* par_titulus =
+                silva_stml_attributum_capere(liber, "titulus");
+            i32 p;
+            SilvaChorda* slot;
+
+            si (par_titulus == NIHIL
+                || par_titulus->mensura == ZEPHYRUM)
+            {
+                _culpam_ponere(piscina, culpa_out,
+                    nominata->titulus, "parametrum sine titulo",
+                    _chorda_vacua_q());
+                redde FALSUM;
+            }
+            per (p = ZEPHYRUM;
+                p < silva_xar_numerus(nominata->parametra); p++)
+            {
+                SilvaChorda* prius =
+                    (SilvaChorda*)silva_xar_obtinere(nominata->parametra, p);
+
+                si (_chordae_pares_q(*prius, *par_titulus))
+                {
+                    _culpam_ponere(piscina, culpa_out,
+                        nominata->titulus, "parametrum iteratum",
+                        *par_titulus);
+                    redde FALSUM;
+                }
+            }
+            slot = (SilvaChorda*)silva_xar_addere(nominata->parametra);
+            si (slot == NIHIL) redde FALSUM;
+            *slot = *par_titulus;
+        }
+        alioquin
+        {
+            _culpam_ponere(piscina, culpa_out, nominata->titulus,
+                "elementum ignotum",
+                liber->titulus != NIHIL ? *liber->titulus
+                    : _chorda_vacua_q());
+            redde FALSUM;
+        }
+    }
+
+    si (!selector_visus || nominata->selector.mensura == ZEPHYRUM)
+    {
+        _culpam_ponere(piscina, culpa_out, nominata->titulus,
+            "selector absens aut vacuus", _chorda_vacua_q());
+        redde FALSUM;
+    }
+    si (!causa_visa || nominata->causa.mensura == ZEPHYRUM)
+    {
+        _culpam_ponere(piscina, culpa_out, nominata->titulus,
+            "causa absens aut vacua (obligatoria)", _chorda_vacua_q());
+        redde FALSUM;
+    }
+    si (nominata->gradus == (s32)SILVA_QUAESTIONES_INVARIANS
+        && silva_xar_numerus(nominata->parametra) > ZEPHYRUM)
+    {
+        _culpam_ponere(piscina, culpa_out, nominata->titulus,
+            "invarians cum parametris (percursus valores nescit)",
+            _chorda_vacua_q());
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+SilvaQuaestiones*
+silva_quaestiones_legere (
+    SilvaPiscina*                               piscina,
+    constans SilvaRegistrumCoctum*         tabularium,
+    constans SilvaQuaestioPseudoRegistrum* registro,
+    SilvaChorda                                 fons,
+    SilvaChorda*                                culpa_out)
+{
+    SilvaInternamentumChorda* intern = silva_internamentum_creare(piscina);
+    SilvaStmlResultus resultus;
+    SilvaQuaestiones* bibliotheca;
+    i32 k;
+
+    si (culpa_out != NIHIL)
+    {
+        *culpa_out = _chorda_vacua_q();
+    }
+    si (intern == NIHIL) redde NIHIL;
+    resultus = silva_stml_legere(fons, piscina, intern);
+    si (!resultus.successus || resultus.elementum_radix == NIHIL)
+    {
+        _culpam_ponere(piscina, culpa_out, _chorda_vacua_q(),
+            "stml non parsatur", resultus.error);
+        redde NIHIL;
+    }
+    si (resultus.elementum_radix->titulus == NIHIL
+        || !_aequat(*resultus.elementum_radix->titulus,
+               "quaestiones"))
+    {
+        _culpam_ponere(piscina, culpa_out, _chorda_vacua_q(),
+            "radix non est <quaestiones>", _chorda_vacua_q());
+        redde NIHIL;
+    }
+
+    bibliotheca = (SilvaQuaestiones*)silva_piscina_allocare(piscina,
+        magnitudo(SilvaQuaestiones));
+    si (bibliotheca == NIHIL) redde NIHIL;
+    bibliotheca->nominatae = silva_xar_creare(piscina,
+        magnitudo(SilvaQuaestioNominata));
+    si (bibliotheca->nominatae == NIHIL) redde NIHIL;
+    bibliotheca->tabularium = tabularium;
+    bibliotheca->registro = registro;
+
+    per (k = ZEPHYRUM;
+        k < silva_stml_numerus_liberorum(resultus.elementum_radix); k++)
+    {
+        SilvaStmlNodus* liber = *(SilvaStmlNodus**)
+            silva_xar_obtinere(resultus.elementum_radix->liberi, k);
+        SilvaQuaestioNominata nominata;
+        i32 prius;
+
+        si (liber == NIHIL || liber->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (liber->titulus == NIHIL
+            || !_aequat(*liber->titulus, "quaestio"))
+        {
+            _culpam_ponere(piscina, culpa_out, _chorda_vacua_q(),
+                "elementum ignotum sub radice",
+                liber->titulus != NIHIL ? *liber->titulus
+                    : _chorda_vacua_q());
+            redde NIHIL;
+        }
+        si (!_quaestionem_legere(piscina, liber, &nominata,
+                culpa_out))
+        {
+            redde NIHIL;
+        }
+        /* tituli unici */
+        per (prius = ZEPHYRUM;
+            prius < silva_xar_numerus(bibliotheca->nominatae); prius++)
+        {
+            SilvaQuaestioNominata* alia = (SilvaQuaestioNominata*)
+                silva_xar_obtinere(bibliotheca->nominatae, prius);
+
+            si (_chordae_pares_q(alia->titulus, nominata.titulus))
+            {
+                _culpam_ponere(piscina, culpa_out,
+                    nominata.titulus, "titulus iteratus",
+                    _chorda_vacua_q());
+                redde NIHIL;
+            }
+        }
+        si (!_entrium_validare(piscina, bibliotheca, &nominata,
+                culpa_out))
+        {
+            redde NIHIL;
+        }
+        {
+            SilvaQuaestioNominata* slot = (SilvaQuaestioNominata*)
+                silva_xar_addere(bibliotheca->nominatae);
+
+            si (slot == NIHIL) redde NIHIL;
+            *slot = nominata;
+        }
+    }
+    redde bibliotheca;
+}
+
+/* ==================================================
+ * Accessus
+ * ================================================== */
+
+i32
+silva_quaestiones_numerus (constans SilvaQuaestiones* bibliotheca)
+{
+    si (bibliotheca == NIHIL) redde ZEPHYRUM;
+    redde silva_xar_numerus(bibliotheca->nominatae);
+}
+
+constans SilvaQuaestioNominata*
+silva_quaestiones_ad_indicem (
+    constans SilvaQuaestiones* bibliotheca,
+    i32                        index)
+{
+    si (bibliotheca == NIHIL
+        || index >= silva_xar_numerus(bibliotheca->nominatae))
+    {
+        redde NIHIL;
+    }
+    redde (constans SilvaQuaestioNominata*)
+        silva_xar_obtinere(bibliotheca->nominatae, index);
+}
+
+constans SilvaQuaestioNominata*
+silva_quaestiones_invenire (
+    constans SilvaQuaestiones* bibliotheca,
+    constans character*        titulus)
+{
+    i32 k;
+
+    si (bibliotheca == NIHIL || titulus == NIHIL) redde NIHIL;
+    per (k = ZEPHYRUM; k < silva_xar_numerus(bibliotheca->nominatae); k++)
+    {
+        SilvaQuaestioNominata* nominata = (SilvaQuaestioNominata*)
+            silva_xar_obtinere(bibliotheca->nominatae, k);
+
+        si (_aequat(nominata->titulus, titulus))
+        {
+            redde nominata;
+        }
+    }
+    redde NIHIL;
+}
+
+/* ==================================================
+ * Parare
+ * ================================================== */
+
+SilvaQuaestio*
+silva_quaestiones_parare (
+    SilvaPiscina*                              piscina,
+    constans SilvaQuaestiones*            bibliotheca,
+    constans SilvaQuaestioNominata*       nominata,
+    constans SilvaQuaestionesArgumentum*  argumenta,
+    i32                                   numerus_argumentorum,
+    SilvaChorda*                               culpa_out)
+{
+    SilvaXar* loca;
+    SilvaXar* valores;
+    i32 k;
+    i32 p;
+
+    si (culpa_out != NIHIL)
+    {
+        *culpa_out = _chorda_vacua_q();
+    }
+    si (bibliotheca == NIHIL || nominata == NIHIL) redde NIHIL;
+    si (argumenta == NIHIL)
+    {
+        numerus_argumentorum = ZEPHYRUM;
+    }
+
+    /* argumenta contra declarata: ignota, iterata, valores */
+    per (k = ZEPHYRUM; k < numerus_argumentorum; k++)
+    {
+        constans SilvaQuaestionesArgumentum* argumentum =
+            &argumenta[k];
+        b32 inventum = FALSUM;
+        i32 c;
+
+        per (p = ZEPHYRUM; p < silva_xar_numerus(nominata->parametra); p++)
+        {
+            SilvaChorda* declaratum =
+                (SilvaChorda*)silva_xar_obtinere(nominata->parametra, p);
+
+            si (_chordae_pares_q(*declaratum, argumentum->titulus))
+            {
+                inventum = VERUM;
+                frange;
+            }
+        }
+        si (!inventum)
+        {
+            _culpam_ponere(piscina, culpa_out, nominata->titulus,
+                "argumentum ignotum", argumentum->titulus);
+            redde NIHIL;
+        }
+        per (p = ZEPHYRUM; p < k; p++)
+        {
+            constans SilvaQuaestionesArgumentum* prius =
+                &argumenta[p];
+
+            si (_chordae_pares_q(prius->titulus, argumentum->titulus))
+            {
+                _culpam_ponere(piscina, culpa_out, nominata->titulus,
+                    "argumentum iteratum", argumentum->titulus);
+                redde NIHIL;
+            }
+        }
+        per (c = ZEPHYRUM; c < argumentum->valor.mensura; c++)
+        {
+            i8 littera = argumentum->valor.datum[c];
+
+            si (littera == (i8)'"' || littera == (i8)'('
+                || littera == (i8)')')
+            {
+                _culpam_ponere(piscina, culpa_out, nominata->titulus,
+                    "valor illicitus (characteres \" ( ) vetiti)",
+                    argumentum->titulus);
+                redde NIHIL;
+            }
+        }
+    }
+    /* omne declaratum argumentum habet */
+    per (p = ZEPHYRUM; p < silva_xar_numerus(nominata->parametra); p++)
+    {
+        SilvaChorda* declaratum =
+            (SilvaChorda*)silva_xar_obtinere(nominata->parametra, p);
+        b32 inventum = FALSUM;
+
+        per (k = ZEPHYRUM; k < numerus_argumentorum; k++)
+        {
+            si (_chordae_pares_q(*declaratum,
+                    argumenta[k].titulus))
+            {
+                inventum = VERUM;
+                frange;
+            }
+        }
+        si (!inventum)
+        {
+            _culpam_ponere(piscina, culpa_out, nominata->titulus,
+                "argumentum absens", *declaratum);
+            redde NIHIL;
+        }
+    }
+
+    loca = _loca_colligere(piscina, nominata->selector);
+    si (loca == NIHIL) redde NIHIL;
+    valores = silva_xar_creare(piscina, magnitudo(SilvaChorda));
+    si (valores == NIHIL) redde NIHIL;
+    per (k = ZEPHYRUM; k < silva_xar_numerus(loca); k++)
+    {
+        LocusParametri* locus = (LocusParametri*)silva_xar_obtinere(loca, k);
+        SilvaChorda* slot = (SilvaChorda*)silva_xar_addere(valores);
+
+        si (slot == NIHIL) redde NIHIL;
+        *slot = _chorda_vacua_q();
+        per (p = ZEPHYRUM; p < numerus_argumentorum; p++)
+        {
+            si (_chordae_pares_q(argumenta[p].titulus,
+                    locus->titulus))
+            {
+                *slot = argumenta[p].valor;
+                frange;
+            }
+        }
+    }
+    {
+        SilvaChorda completus = _selectorem_texere(piscina,
+            nominata->selector, loca, valores);
+        constans character* litterae = _ut_literis(piscina, completus);
+        constans character* causa = NIHIL;
+        SilvaQuaestio* quaestio;
+
+        si (litterae == NIHIL) redde NIHIL;
+        quaestio = silva_quaestio_compilare_cum_registro(piscina,
+            bibliotheca->tabularium, bibliotheca->registro,
+            litterae, &causa);
+        si (quaestio == NIHIL)
+        {
+            SilvaChorda causa_chorda = _chorda_vacua_q();
+
+            si (causa != NIHIL)
+            {
+                causa_chorda = silva_chorda_ex_literis(causa, piscina);
+            }
+            _culpam_ponere(piscina, culpa_out, nominata->titulus,
+                "compilatio deficit", causa_chorda);
+            redde NIHIL;
+        }
+        redde quaestio;
+    }
 }

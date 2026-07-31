@@ -2396,6 +2396,27 @@ probatio_mcp (Piscina* p)
         "{\"jsonrpc\":\"2.0\",\"id\":20,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"symbolum\",\"arguments\":"
         "{\"titulus\":\"piscina_generare_dynamicvm\"}}}");
+    /* quaestio (bibliotheca selectorum, arcus 2026-07-31):
+     * index / nominata / selector crudus / nomen ignotum */
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":21,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"quaestio\",\"arguments\":{}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":22,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"quaestio\",\"arguments\":"
+        "{\"nomen\":\"definitio-nominata\","
+        "\"argumenta\":\"functio=piscina_vacare\","
+        "\"via\":\"lib/piscina.c\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":23,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"quaestio\",\"arguments\":"
+        "{\"selector\":"
+        "\"definitio-functionis:definit(piscina_vacare)\","
+        "\"via\":\"lib/piscina.c\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":24,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"quaestio\",\"arguments\":"
+        "{\"nomen\":\"nusquam\",\"via\":\"lib/piscina.c\"}}}");
     /* nullum "exit" - EOF fistulae = exitus ordinatus */
 
     rewind(intra);
@@ -2438,7 +2459,7 @@ probatio_mcp (Piscina* p)
 
         CREDO_VERUM(instrumenta != NIHIL
             && json_est_tabulatum(instrumenta)
-            && json_tabulatum_numerus(instrumenta) == VIII);
+            && json_tabulatum_numerus(instrumenta) == IX);
         CREDO_VERUM(_chorda_est(json_ad_chorda(json_objectum_capere(
             json_tabulatum_obtinere(instrumenta, ZEPHYRUM),
             "name")), "diagnostica"));
@@ -2664,6 +2685,45 @@ probatio_mcp (Piscina* p)
         CREDO_VERUM(_chorda_continet(textus, "simillima"));
         CREDO_VERUM(_chorda_continet(textus,
             "piscina_generare_dynamicum"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* quaestio: index */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus,
+            "vocantes-continentes"));
+        CREDO_VERUM(_chorda_continet(textus, "(invarians)"));
+        CREDO_VERUM(_chorda_continet(textus,
+            "exsequi-in-pulsatione"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* quaestio: nominata */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "congruentiae 1"));
+        CREDO_VERUM(_chorda_continet(textus, "lib/piscina.c:"));
+        CREDO_VERUM(_chorda_continet(textus, "piscina_vacare"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* quaestio: selector */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "congruentiae 1"));
+        CREDO_VERUM(_chorda_continet(textus, "lib/piscina.c:"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* quaestio: ignotum */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "nomen ignotum"));
     }
 
     fclose(intra);

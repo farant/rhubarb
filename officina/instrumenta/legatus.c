@@ -5032,7 +5032,14 @@ interior constans character* constans LEGATI_DOCTRINA =
     " aperiunt. renovare {} = residentem stalum renovat (post"
     " CAUTIONEM VERIFICATAM voca: aedificatio praevia probatur,"
     " deinde residens se transformat - petitio proxima residentem"
-    " novum invenit; recens = nihil agit).";
+    " novum invenit; recens = nihil agit). quaestio {nomen?,"
+    " argumenta?, selector?, via?} = bibliotheca selectorum"
+    " nominatorum (silva/quaestiones.stml): sine nomine/selectore ="
+    " index cum causis; nomen + argumenta ('par=valor par2=valor')"
+    " + via = executio nominata super plagulam; selector crudus +"
+    " via = exploratio (quaestiones FORMAE - nomina ->"
+    " vocantes/vocata; selector re-typatus promotionem in"
+    " bibliothecam meret).";
 
 /* instrumentum argumenti chordae necessarii (+ optionalis alterius
  * si arg2_titulus non NIHIL; arg_titulus NIHIL = instrumentum sine
@@ -5080,6 +5087,62 @@ _mcp_instrumentum (Piscina* pn, constans character* titulus,
         json_chorda_creare_literis(pn, titulus));
     json_objectum_ponere(instrumentum, "description",
         json_chorda_creare_literis(pn, descriptio));
+    json_objectum_ponere(instrumentum, "inputSchema", schema);
+    redde instrumentum;
+}
+
+/* instrumentum quaestionis: quattuor argumenta optionalia chordae -
+ * forma sua (auxiliare biargumentale non tenditur) */
+interior JsonValor*
+_mcp_instrumentum_quaestionis (Piscina* pn)
+{
+    JsonValor* instrumentum = json_objectum_creare(pn);
+    JsonValor* schema = json_objectum_creare(pn);
+    JsonValor* proprietates = json_objectum_creare(pn);
+    structura {
+        constans character* titulus;
+        constans character* descriptio;
+    } args[IV];
+    i32 k;
+
+    args[ZEPHYRUM].titulus = "nomen";
+    args[ZEPHYRUM].descriptio = "titulus quaestionis nominatae ex"
+        " bibliotheca (sine nomine et selectore = index"
+        " bibliothecae cum causis)";
+    args[I].titulus = "argumenta";
+    args[I].descriptio = "parametra quaestionis nominatae, forma"
+        " 'par=valor par2=valor' (spatiis separata)";
+    args[II].titulus = "selector";
+    args[II].descriptio = "selector crudus (exploratio - quaestio"
+        " sine nomine); syntaxis QA-QC machinae quaestionis";
+    args[III].titulus = "via";
+    args[III].descriptio = "plagula .c/.h contra quam quaestio"
+        " curritur (necessaria cum nomine aut selectore)";
+    per (k = ZEPHYRUM; k < (i32)IV; k++)
+    {
+        JsonValor* arg = json_objectum_creare(pn);
+
+        json_objectum_ponere(arg, "type",
+            json_chorda_creare_literis(pn, "string"));
+        json_objectum_ponere(arg, "description",
+            json_chorda_creare_literis(pn, args[k].descriptio));
+        json_objectum_ponere(proprietates, args[k].titulus, arg);
+    }
+    json_objectum_ponere(schema, "type",
+        json_chorda_creare_literis(pn, "object"));
+    json_objectum_ponere(schema, "properties", proprietates);
+    json_objectum_ponere(schema, "required",
+        json_tabulatum_creare(pn));
+    json_objectum_ponere(instrumentum, "name",
+        json_chorda_creare_literis(pn, "quaestio"));
+    json_objectum_ponere(instrumentum, "description",
+        json_chorda_creare_literis(pn,
+        "Bibliotheca selectorum nominatorum"
+        " (silva/quaestiones.stml) + selectores crudi super"
+        " plagulam: sine nomine/selectore = index bibliothecae cum"
+        " causis; nomen [+argumenta] + via = executio nominata;"
+        " selector + via = exploratio. Fructus: ordines"
+        " via:linea-linea cum linea prima congruentiae."));
     json_objectum_ponere(instrumentum, "inputSchema", schema);
     redde instrumentum;
 }
@@ -5223,6 +5286,8 @@ _mcp_toolslist_tractare (Legatus* l, Piscina* pn, JsonValor* id)
         "via",
         "OPTIONALE: suffixum viae sedis (e.g. probatio_piscina.c) -"
         " titulos multi-definitos disambiguat"));
+    json_tabulatum_addere(instrumenta,
+        _mcp_instrumentum_quaestionis(pn));
     json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
         "tacere",
         "Cautionem vigiliae (residens obsoletus) per N responsa"
@@ -6826,6 +6891,442 @@ _legati_inclusiones (Legatus* l, Piscina* pn, JsonValor* id,
         chorda_aedificator_finire(aed), FALSUM);
 }
 
+/* quaestio: bibliotheca selectorum nominatorum + selectores crudi
+ * (parcum 01KXPV9FPK; INTENTIO silva/phase-log 2026-07-31).
+ * Bibliotheca silva/quaestiones.stml per petitionem ex disco lecta
+ * (exemplar inclusiones.tsv - se sanans, sine cache). Executio =
+ * analysis ad postulatum in piscinam effimeram (arbores effimerae,
+ * modus sine documentis); fructus formatus ANTE destructionem
+ * piscinae (textus in pn copiatur). */
+
+#define LEGATI_QUAESTIO_ARGUMENTA_MAXIMA 32
+#define LEGATI_QUAESTIO_ORDINES_MAXIMI 200
+
+/* chorda -> litterae NUL-terminatae in piscina */
+interior constans character*
+_ut_litterae (Piscina* pn, chorda c)
+{
+    character* litterae = (character*)piscina_allocare(pn,
+        (memoriae_index)(c.mensura + I));
+
+    si (litterae == NIHIL) redde "";
+    si (c.mensura > ZEPHYRUM)
+    {
+        memcpy(litterae, c.datum, (size_t)c.mensura);
+    }
+    litterae[c.mensura] = '\0';
+    redde litterae;
+}
+
+/* SilvaChorda (amalgamatis) in effusorem (radicis) appendere */
+interior vacuum
+_appendere_silvam (ChordaAedificator* effusor, SilvaChorda c)
+{
+    chorda radix_c;
+
+    radix_c.datum = (i8*)c.datum;
+    radix_c.mensura = (i32)c.mensura;
+    (vacuum)chorda_aedificator_appendere_chorda(effusor, radix_c);
+}
+
+/* lineam datam (1-basatam) fontis in effusorem appendere
+ * (verbatim, sine novalinea) */
+interior vacuum
+_lineam_appendere (ChordaAedificator* effusor,
+    character* textus, insignatus integer mensura,
+    insignatus integer linea)
+{
+    insignatus integer i = ZEPHYRUM;
+    insignatus integer currens = I;
+    insignatus integer initium;
+    chorda pars;
+
+    dum (i < mensura && currens < linea)
+    {
+        si (textus[i] == '\n') currens++;
+        i++;
+    }
+    initium = i;
+    dum (i < mensura && textus[i] != '\n')
+    {
+        i++;
+    }
+    pars.datum = (i8*)(textus + initium);
+    pars.mensura = (i32)(i - initium);
+    (vacuum)chorda_aedificator_appendere_chorda(effusor, pars);
+}
+
+/* argumenta 'par=valor par2=valor' in seriem planam secare.
+ * Fructus: numerus; -1 = forma prava aut nimia. Chordae in textum
+ * ipsum monstrant (vita petitionis). */
+interior s32
+_quaestio_argumenta_secare (chorda textus,
+    SilvaQuaestionesArgumentum* series, s32 tectum)
+{
+    s32 numerus = ZEPHYRUM;
+    s32 cursor = ZEPHYRUM;
+    s32 mensura = (s32)textus.mensura;
+
+    dum (cursor < mensura)
+    {
+        s32 initium;
+        s32 aequale = -I;
+        s32 finis;
+
+        dum (cursor < mensura
+            && textus.datum[cursor] == (i8)' ')
+        {
+            cursor++;
+        }
+        si (cursor >= mensura) frange;
+        initium = cursor;
+        dum (cursor < mensura
+            && textus.datum[cursor] != (i8)' ')
+        {
+            si (textus.datum[cursor] == (i8)'='
+                && aequale < ZEPHYRUM)
+            {
+                aequale = cursor;
+            }
+            cursor++;
+        }
+        finis = cursor;
+        si (aequale <= initium || aequale >= finis - I)
+        {
+            redde -I;  /* 'par=valor' non est */
+        }
+        si (numerus >= tectum) redde -I;
+        series[numerus].titulus.datum =
+            (insignatus character*)(textus.datum + initium);
+        series[numerus].titulus.mensura =
+            (insignatus integer)(aequale - initium);
+        series[numerus].valor.datum =
+            (insignatus character*)(textus.datum + aequale + I);
+        series[numerus].valor.mensura =
+            (insignatus integer)(finis - aequale - I);
+        numerus++;
+    }
+    redde numerus;
+}
+
+interior vacuum
+_legati_quaestio (Legatus* l, Piscina* pn, JsonValor* id,
+    JsonValor* argumenta_json)
+{
+    chorda nomen_arg = json_ad_chorda(json_objectum_capere(
+        argumenta_json, "nomen"));
+    chorda selector_arg = json_ad_chorda(json_objectum_capere(
+        argumenta_json, "selector"));
+    chorda argumenta_arg = json_ad_chorda(json_objectum_capere(
+        argumenta_json, "argumenta"));
+    chorda via_arg = json_ad_chorda(json_objectum_capere(
+        argumenta_json, "via"));
+    ChordaAedificator* effusor = chorda_aedificator_creare(pn,
+        (memoriae_index)4096);
+    SilvaPiscina* effimera;
+    SilvaQuaestiones* bibliotheca = NIHIL;
+    SilvaChorda culpa;
+    b32 bene = FALSUM;
+
+    si (effusor == NIHIL)
+    {
+        _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+            "apparatus fractus", pn), VERUM);
+        redde;
+    }
+    effimera = silva_piscina_generare_dynamicum("legatus_quaestio",
+        33554432);
+    si (effimera == NIHIL)
+    {
+        _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+            "apparatus fractus (piscina)", pn), VERUM);
+        redde;
+    }
+
+    /* bibliotheca per petitionem (nisi selector crudus solus) */
+    si (nomen_arg.mensura > ZEPHYRUM
+        || selector_arg.mensura == ZEPHYRUM)
+    {
+        character via_bib[LEGATUS_VIA_MAXIMA + LXIV];
+        insignatus integer mensura_bib = ZEPHYRUM;
+        character* textus_bib;
+        SilvaChorda fons_bib;
+
+        sprintf(via_bib, "%s/silva/quaestiones.stml", l->radix);
+        textus_bib = praeparator_plagulam_legere(pn, via_bib,
+            &mensura_bib);
+        si (textus_bib == NIHIL)
+        {
+            silva_piscina_destruere(effimera);
+            _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+                "silva/quaestiones.stml non lecta", pn), VERUM);
+            redde;
+        }
+        fons_bib.datum = (insignatus character*)textus_bib;
+        fons_bib.mensura = mensura_bib;
+        bibliotheca = silva_quaestiones_legere(effimera,
+            &SILVA_C89_REGISTRUM, NIHIL, fons_bib, &culpa);
+        si (bibliotheca == NIHIL)
+        {
+            (vacuum)chorda_aedificator_appendere_literis(effusor,
+                "bibliotheca invalida: ");
+            _appendere_silvam(effusor, culpa);
+            silva_piscina_destruere(effimera);
+            _mcp_textum_respondere(l, pn, id,
+                chorda_aedificator_finire(effusor), VERUM);
+            redde;
+        }
+    }
+
+    /* sine nomine et selectore: index bibliothecae */
+    si (nomen_arg.mensura == ZEPHYRUM
+        && selector_arg.mensura == ZEPHYRUM)
+    {
+        insignatus integer k;
+        insignatus integer p;
+
+        per (k = ZEPHYRUM;
+            k < silva_quaestiones_numerus(bibliotheca); k++)
+        {
+            constans SilvaQuaestioNominata* nominata =
+                silva_quaestiones_ad_indicem(bibliotheca, k);
+
+            _appendere_silvam(effusor, nominata->titulus);
+            (vacuum)chorda_aedificator_appendere_literis(effusor,
+                nominata->gradus == SILVA_QUAESTIONES_INVARIANS
+                    ? "  (invarians)" : "  (oculi)");
+            per (p = ZEPHYRUM;
+                p < silva_xar_numerus(nominata->parametra); p++)
+            {
+                SilvaChorda* parametrum = (SilvaChorda*)
+                    silva_xar_obtinere(nominata->parametra, p);
+
+                (vacuum)chorda_aedificator_appendere_literis(
+                    effusor, " ");
+                _appendere_silvam(effusor, *parametrum);
+                (vacuum)chorda_aedificator_appendere_literis(
+                    effusor, "=...");
+            }
+            (vacuum)chorda_aedificator_appendere_literis(effusor,
+                "\n    ");
+            _appendere_silvam(effusor, nominata->causa);
+            (vacuum)chorda_aedificator_appendere_literis(effusor,
+                "\n");
+        }
+        silva_piscina_destruere(effimera);
+        _mcp_textum_respondere(l, pn, id,
+            chorda_aedificator_finire(effusor), FALSUM);
+        redde;
+    }
+
+    /* executio: via necessaria */
+    {
+        chorda via_sine;
+        character via_plena[LEGATUS_VIA_MAXIMA + LXIV];
+        character via_cum[LEGATUS_VIA_MAXIMA];
+        insignatus integer mensura = ZEPHYRUM;
+        character* textus;
+        SilvaParsura* parsura = NIHIL;
+        SilvaSemantica* sem;
+        SilvaQuaestio* quaestio = NIHIL;
+        SilvaXar* resultata;
+
+        si (via_arg.mensura == ZEPHYRUM
+            || !_legati_viam_normare(l, via_arg, &via_sine))
+        {
+            silva_piscina_destruere(effimera);
+            _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+                "argumentum 'via' necessarium cum nomine aut"
+                " selectore (aut pravum/extra radicem)", pn),
+                VERUM);
+            redde;
+        }
+        si ((memoriae_index)via_sine.mensura + l->radix_mensura + IV
+                >= magnitudo(via_plena)
+            || (memoriae_index)via_sine.mensura + IV
+                >= magnitudo(via_cum))
+        {
+            silva_piscina_destruere(effimera);
+            _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+                "via nimis longa", pn), VERUM);
+            redde;
+        }
+        sprintf(via_plena, "%s/%.*s", l->radix,
+            (int)via_sine.mensura,
+            (constans character*)via_sine.datum);
+        sprintf(via_cum, "./%.*s", (int)via_sine.mensura,
+            (constans character*)via_sine.datum);
+        textus = praeparator_plagulam_legere(pn, via_plena,
+            &mensura);
+        si (textus == NIHIL)
+        {
+            silva_piscina_destruere(effimera);
+            _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+                "plagula non lecta", pn), VERUM);
+            redde;
+        }
+        sem = praeparator_analysare(&l->praeparatio, effimera,
+            via_cum, textus, mensura, &parsura);
+        si (sem == NIHIL || parsura == NIHIL)
+        {
+            silva_piscina_destruere(effimera);
+            _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+                "plagula non analysabilis", pn), VERUM);
+            redde;
+        }
+        si (parsura->numerus_errorum > ZEPHYRUM)
+        {
+            (vacuum)chorda_aedificator_appendere_literis(effusor,
+                "CAUTIO: arbor cum erroribus - nodi error"
+                " quaeribiles\n");
+        }
+
+        si (selector_arg.mensura > ZEPHYRUM)
+        {
+            constans character* causa = NIHIL;
+            constans character* selector_lit = _ut_litterae(pn,
+                selector_arg);
+
+            si (nomen_arg.mensura > ZEPHYRUM)
+            {
+                silva_piscina_destruere(effimera);
+                _mcp_textum_respondere(l, pn, id,
+                    chorda_ex_literis("nomen AUT selector, non"
+                        " ambo", pn), VERUM);
+                redde;
+            }
+            quaestio = silva_quaestio_compilare(effimera,
+                &SILVA_C89_REGISTRUM, selector_lit, &causa);
+            si (quaestio == NIHIL)
+            {
+                (vacuum)chorda_aedificator_appendere_literis(
+                    effusor, "selector reiectus: ");
+                (vacuum)chorda_aedificator_appendere_literis(
+                    effusor, causa != NIHIL ? causa
+                        : "(sine causa)");
+                silva_piscina_destruere(effimera);
+                _mcp_textum_respondere(l, pn, id,
+                    chorda_aedificator_finire(effusor), VERUM);
+                redde;
+            }
+        }
+        alioquin
+        {
+            constans SilvaQuaestioNominata* nominata;
+            SilvaQuaestionesArgumentum
+                series[LEGATI_QUAESTIO_ARGUMENTA_MAXIMA];
+            s32 numerus_argumentorum;
+            constans character* nomen_lit = _ut_litterae(pn,
+                nomen_arg);
+
+            nominata = silva_quaestiones_invenire(bibliotheca,
+                nomen_lit);
+            si (nominata == NIHIL)
+            {
+                silva_piscina_destruere(effimera);
+                _mcp_textum_respondere(l, pn, id,
+                    chorda_ex_literis("nomen ignotum (sine"
+                        " argumentis = index)", pn), VERUM);
+                redde;
+            }
+            numerus_argumentorum = _quaestio_argumenta_secare(
+                argumenta_arg, series,
+                (s32)LEGATI_QUAESTIO_ARGUMENTA_MAXIMA);
+            si (numerus_argumentorum < ZEPHYRUM)
+            {
+                silva_piscina_destruere(effimera);
+                _mcp_textum_respondere(l, pn, id,
+                    chorda_ex_literis("argumenta prava (forma"
+                        " 'par=valor par2=valor')", pn), VERUM);
+                redde;
+            }
+            quaestio = silva_quaestiones_parare(effimera,
+                bibliotheca, nominata, series,
+                (insignatus integer)numerus_argumentorum, &culpa);
+            si (quaestio == NIHIL)
+            {
+                _appendere_silvam(effusor, culpa);
+                silva_piscina_destruere(effimera);
+                _mcp_textum_respondere(l, pn, id,
+                    chorda_aedificator_finire(effusor), VERUM);
+                redde;
+            }
+        }
+
+        resultata = silva_quaestio_exsequi(quaestio,
+            parsura->commissio->radix, effimera);
+        si (resultata == NIHIL)
+        {
+            silva_piscina_destruere(effimera);
+            _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+                "exsecutio fracta", pn), VERUM);
+            redde;
+        }
+        {
+            insignatus integer numerus =
+                silva_xar_numerus(resultata);
+            insignatus integer m;
+            character linea_b[LXIV];
+
+            sprintf(linea_b, "congruentiae %u\n", numerus);
+            (vacuum)chorda_aedificator_appendere_literis(effusor,
+                linea_b);
+            per (m = ZEPHYRUM; m < numerus
+                && m < (insignatus integer)
+                       LEGATI_QUAESTIO_ORDINES_MAXIMI; m++)
+            {
+                constans SilvaQuaestioResultatum* r =
+                    (constans SilvaQuaestioResultatum*)
+                    silva_xar_obtinere(resultata, m);
+                insignatus integer linea_a = ZEPHYRUM;
+                insignatus integer columna_a = ZEPHYRUM;
+                insignatus integer linea_z = ZEPHYRUM;
+                insignatus integer columna_z = ZEPHYRUM;
+
+                si (r == NIHIL || r->nodus == NIHIL) perge;
+                silva_nodus_extensionem_lineis(r->nodus,
+                    (int)parsura->fons_princeps, &linea_a,
+                    &columna_a, &linea_z, &columna_z);
+                si (linea_a == ZEPHYRUM) perge;
+                (vacuum)chorda_aedificator_appendere_chorda(
+                    effusor, via_sine);
+                sprintf(linea_b, ":%u-%u  ", linea_a, linea_z);
+                (vacuum)chorda_aedificator_appendere_literis(
+                    effusor, linea_b);
+                /* lineae binae primae (stylus domus: typus reditus
+                 * in linea propria - nomen in secunda) */
+                _lineam_appendere(effusor, textus, mensura,
+                    linea_a);
+                si (linea_z > linea_a)
+                {
+                    (vacuum)chorda_aedificator_appendere_literis(
+                        effusor, " | ");
+                    _lineam_appendere(effusor, textus, mensura,
+                        linea_a + I);
+                }
+                (vacuum)chorda_aedificator_appendere_literis(
+                    effusor, "\n");
+            }
+            si (numerus > (insignatus integer)
+                    LEGATI_QUAESTIO_ORDINES_MAXIMI)
+            {
+                sprintf(linea_b, "... (%u reliquae)\n",
+                    numerus - (insignatus integer)
+                        LEGATI_QUAESTIO_ORDINES_MAXIMI);
+                (vacuum)chorda_aedificator_appendere_literis(
+                    effusor, linea_b);
+            }
+            bene = VERUM;
+        }
+        silva_piscina_destruere(effimera);
+    }
+    si (bene)
+    {
+        _mcp_textum_respondere(l, pn, id,
+            chorda_aedificator_finire(effusor), FALSUM);
+    }
+}
+
 /* tacere: cautionem vigiliae N responsis supprimere (politica in
  * lib/vigilia; numerus communis superficiebus MCP + LSP) */
 interior vacuum
@@ -7060,6 +7561,10 @@ _mcp_toolscall_tractare (Legatus* l, Piscina* pn, JsonValor* id,
         alioquin si (_methodus_est(titulus, "corpus"))
         {
             _legati_corpus(l, pn, id, argumenta);
+        }
+        alioquin si (_methodus_est(titulus, "quaestio"))
+        {
+            _legati_quaestio(l, pn, id, argumenta);
         }
         alioquin si (_methodus_est(titulus, "tacere"))
         {
