@@ -36,8 +36,13 @@
   .numerator.nimius { color: #d97c6a; }
   #nuntius-erroris { color: #d97c6a; margin: .6em 0; min-height: 1.2em;
                      font-size: .8em; }
-  .pipatum, .commentarium { background: #171512; border: 1px solid #453d2f;
+  .pipatum, .commentarium, .diurnum { background: #171512;
+             border: 1px solid #453d2f;
              border-radius: 4px; padding: .7em .9em; margin: .7em 0; }
+  /* ---- acta diurna ---- */
+  #acta-caput { margin: .8em 0 .2em; }
+  #acta-compositio { margin: 1em 0; }
+  #visus-acta #barra-superior a { margin-right: 1em; }
   /* charta: superficies contenti super imaginem tergalem legibilis
      manet - eadem vestis ac pipatum */
   .charta { background: #171512; border: 1px solid #453d2f;
@@ -254,6 +259,7 @@
   <h1>forum</h1>
   <nav>
     <a id="nav-pipata" class="activa">Pipata</a>
+    <a id="nav-acta">Acta Diurna</a>
     <a id="nav-articuli">Articuli</a>
     <a id="nav-res">Res</a>
     <a id="nav-scholia">Scholia</a>
@@ -273,6 +279,27 @@
   </div>
   <div id="tabula"></div>
   <div id="vacuum" hidden>silentium in foro - pipa primum!</div>
+</section>
+
+<section id="visus-acta" hidden>
+  <div id="barra-superior">
+    <span>
+      <a class="retro" id="acta-prior">&larr; prior</a>
+      <a class="retro" id="acta-posterior">posterior &rarr;</a>
+    </span>
+    <a class="retro" id="acta-hodie">hodie</a>
+  </div>
+  <div id="acta-caput"></div>
+  <div id="acta-tabula"></div>
+  <div id="acta-vacuum" hidden>nihil adhuc hodie - scribe primum!</div>
+  <div id="acta-compositio">
+    <textarea id="arca-diurni" rows="3" data-inter="verum"
+      placeholder="quid actum est?"></textarea>
+    <div id="pes-compositionis">
+      <span></span>
+      <button id="diurnum-scribere">scribere</button>
+    </div>
+  </div>
 </section>
 
 <section id="visus-articuli" hidden>
@@ -684,6 +711,7 @@ function corpus_articuli_cum_stml(par) {
 function vertere(novus) {
   visus = novus;
   document.getElementById('visus-pipata').hidden = novus !== 'pipata';
+  document.getElementById('visus-acta').hidden = novus !== 'acta';
   document.getElementById('visus-articuli').hidden = novus !== 'articuli';
   document.getElementById('visus-articulus').hidden = novus !== 'articulus';
   document.getElementById('visus-editor').hidden = novus !== 'editor';
@@ -693,9 +721,12 @@ function vertere(novus) {
   document.getElementById('visus-sententiae').hidden = novus !== 'sententiae';
   document.getElementById('nav-pipata').className =
     (novus === 'pipata') ? 'activa' : '';
+  document.getElementById('nav-acta').className =
+    (novus === 'acta') ? 'activa' : '';
   document.getElementById('nav-articuli').className =
-    (novus !== 'pipata' && novus !== 'res' && novus !== 'scholia'
-     && novus !== 'tags' && novus !== 'sententiae') ? 'activa' : '';
+    (novus !== 'pipata' && novus !== 'acta' && novus !== 'res'
+     && novus !== 'scholia' && novus !== 'tags'
+     && novus !== 'sententiae') ? 'activa' : '';
   document.getElementById('nav-res').className =
     (novus === 'res') ? 'activa' : '';
   document.getElementById('nav-scholia').className =
@@ -712,6 +743,9 @@ function vertere(novus) {
   anquirere();
 }
 document.getElementById('nav-pipata').onclick = function () { vertere('pipata'); };
+document.getElementById('nav-acta').onclick = function () {
+  acta_dies = null; acta_saltus = true; vertere('acta');
+};
 document.getElementById('nav-articuli').onclick = function () { vertere('articuli'); };
 document.getElementById('nav-res').onclick = function () { res_vertere('index'); vertere('res'); };
 document.getElementById('nav-scholia').onclick = function () { scholia_vertere('index'); vertere('scholia'); };
@@ -1131,6 +1165,175 @@ pipare.onclick = function () {
     .then(function () { arca_pipati.value = ''; numerare_pipatum(); anquirere_nunc(); })
     .catch(function (c) { culpam_ostendere(c, 'defectus missionis'); })
     .then(numerare_pipatum);
+};
+
+/* ==================================================
+ * acta diurna (ephemeris cottidiana)
+ * ==================================================
+ * dies diurni a IV hora matutina incipit - scriptio nocturna ad
+ * diem praecedentem pertinet. pagina diei a fundo crescit
+ * (vetustissima supra, compositio in imo), navigatio inter dies
+ * SCRIPTOS solos (hodie semper adest, etiam vacuus). paginae
+ * dierum PROIECTIO sunt - nullum ens diei in repositorio. */
+var HORA_LIMITIS = 4;
+var acta_dies = null;        /* clavis diei visi; null = hodie */
+var acta_saltus = false;     /* post navigationem ad imum salire */
+var acta_dies_omnes = [];    /* claves dierum scriptorum + hodie */
+
+function bini(n) { return (n < 10 ? '0' : '') + n; }
+
+function dies_diurni(t) {
+  var s = new Date(t.getTime() - HORA_LIMITIS * 3600 * 1000);
+  return s.getFullYear() + '-' + bini(s.getMonth() + 1) + '-'
+    + bini(s.getDate());
+}
+
+/* ---- kalendarium Romanum ---- */
+var DIES_HEBDOMADIS = ['Solis', 'Lunae', 'Martis', 'Mercurii',
+  'Iovis', 'Veneris', 'Saturni'];
+var MENSES_BREVES = ['Ian.', 'Febr.', 'Mart.', 'Apr.', 'Mai.',
+  'Iun.', 'Iul.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
+var MENSES_GENITIVI = ['Ianuarii', 'Februarii', 'Martii',
+  'Aprilis', 'Maii', 'Iunii', 'Iulii', 'Augusti', 'Septembris',
+  'Octobris', 'Novembris', 'Decembris'];
+
+function numerus_romanus(n) {
+  var GRADUS = [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'],
+    [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'],
+    [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+  var s = '';
+  GRADUS.forEach(function (g) {
+    while (n >= g[0]) { s += g[1]; n -= g[0]; }
+  });
+  return s;
+}
+
+/* computus antiquus: numeratio INCLUSIVA retro a Kal./Non./Id.
+ * (dies ipse et meta ambo numerantur - ergo pridie = II).
+ * Nonae die VII in Mart/Mai/Iul/Oct, alibi die V; Idus Nonis
+ * dies VIII post. Post Idus ad Kalendas mensis PROXIMI. */
+function dies_romanus(annus, mensis, dies) {
+  var nonae = (mensis === 3 || mensis === 5 || mensis === 7
+    || mensis === 10) ? 7 : 5;
+  var idus = nonae + 8;
+  var ultimus = new Date(annus, mensis, 0).getDate();
+  function ante(n, meta, m) {
+    if (n === 1) { return meta + ' ' + MENSES_BREVES[m - 1]; }
+    if (n === 2) {
+      return 'prid. ' + meta + ' ' + MENSES_BREVES[m - 1];
+    }
+    return 'a.d. ' + numerus_romanus(n) + ' ' + meta + ' '
+      + MENSES_BREVES[m - 1];
+  }
+  if (dies === 1) { return 'Kal. ' + MENSES_BREVES[mensis - 1]; }
+  if (dies <= nonae) { return ante(nonae - dies + 1, 'Non.', mensis); }
+  if (dies <= idus) { return ante(idus - dies + 1, 'Id.', mensis); }
+  return ante(ultimus - dies + 2, 'Kal.',
+    mensis === 12 ? 1 : mensis + 1);
+}
+
+function reddere_acta(diurna) {
+  var caput = document.getElementById('acta-caput');
+  var tabula = document.getElementById('acta-tabula');
+  var hodie = dies_diurni(new Date());
+  var per_diem = {};
+  diurna.forEach(function (e) {
+    if (!e.datum || !e.datum.corpus) { return; }
+    var k = dies_diurni(new Date(e.creatum));
+    (per_diem[k] = per_diem[k] || []).push(e);
+  });
+  acta_dies_omnes = Object.keys(per_diem);
+  if (acta_dies_omnes.indexOf(hodie) < 0) {
+    acta_dies_omnes.push(hodie);
+  }
+  acta_dies_omnes.sort();
+  var k = acta_dies || hodie;
+  if (acta_dies_omnes.indexOf(k) < 0) { k = hodie; acta_dies = null; }
+  var partes = k.split('-');
+  var annus = +partes[0];
+  var mensis = +partes[1];
+  var d = +partes[2];
+  /* hora XII: dies hebdomadis firmus (margines DST vitantur) */
+  var datum_diei = new Date(annus, mensis - 1, d, 12);
+
+  caput.innerHTML = '';
+  var h = document.createElement('h2');
+  h.textContent = 'dies ' + DIES_HEBDOMADIS[datum_diei.getDay()]
+    + ' · ' + dies_romanus(annus, mensis, d) + ' '
+    + numerus_romanus(annus);
+  caput.appendChild(h);
+  var sub = document.createElement('span');
+  sub.className = 'tempus';
+  sub.textContent = d + ' ' + MENSES_GENITIVI[mensis - 1] + ' '
+    + annus + (k === hodie ? ' · hodie' : '');
+  caput.appendChild(sub);
+
+  tabula.innerHTML = '';
+  var scripta = (per_diem[k] || []).slice().sort(function (a, b) {
+    return (a.creatum || '').localeCompare(b.creatum || '');
+  });
+  scripta.forEach(function (e) {
+    var div = document.createElement('div');
+    div.className = 'diurnum';
+    var t = new Date(e.creatum);
+    var tempus = document.createElement('div');
+    tempus.className = 'tempus';
+    /* hora LOCALIS (non tempus_breve, quod UTC crudum secat) -
+     * limes IV horarum localis est, ergo et horae monstratae */
+    tempus.textContent = bini(t.getHours()) + ':'
+      + bini(t.getMinutes());
+    var corpus = document.createElement('div');
+    corpus.className = 'corpus';
+    corpus.appendChild(corpus_cum_tagis(e.datum.corpus));
+    div.appendChild(tempus);
+    div.appendChild(corpus);
+    tabula.appendChild(div);
+  });
+  document.getElementById('acta-vacuum').hidden = scripta.length > 0;
+  document.getElementById('acta-compositio').hidden = k !== hodie;
+
+  var idx = acta_dies_omnes.indexOf(k);
+  document.getElementById('acta-prior').style.visibility =
+    idx > 0 ? 'visible' : 'hidden';
+  document.getElementById('acta-posterior').style.visibility =
+    idx < acta_dies_omnes.length - 1 ? 'visible' : 'hidden';
+  document.getElementById('acta-hodie').style.visibility =
+    k !== hodie ? 'visible' : 'hidden';
+
+  if (acta_saltus) {
+    acta_saltus = false;
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+}
+
+function acta_movere(gressus) {
+  var hodie = dies_diurni(new Date());
+  var idx = acta_dies_omnes.indexOf(acta_dies || hodie) + gressus;
+  if (idx < 0 || idx >= acta_dies_omnes.length) { return; }
+  var novus = acta_dies_omnes[idx];
+  acta_dies = (novus === hodie) ? null : novus;
+  if (acta_dies === null) { acta_saltus = true; }
+  anquirere_nunc();
+}
+
+document.getElementById('acta-prior').onclick =
+  function () { acta_movere(-1); };
+document.getElementById('acta-posterior').onclick =
+  function () { acta_movere(1); };
+document.getElementById('acta-hodie').onclick = function () {
+  acta_dies = null; acta_saltus = true; anquirere_nunc();
+};
+document.getElementById('diurnum-scribere').onclick = function () {
+  var ta = document.getElementById('arca-diurni');
+  if (!ta.value) { return; }
+  internuntius.vocare('mittere',
+      { genus: 'diurnum', corpus: ta.value })
+    .then(function () {
+      ta.value = ''; acta_saltus = true; anquirere_nunc();
+    })
+    .catch(function (c) {
+      culpam_ostendere(c, 'defectus scriptionis');
+    });
 };
 
 /* ---- commentarium summum ---- */
@@ -3168,6 +3371,19 @@ function anquirere() {
       }).catch(function (c) { culpam_ostendere(c, 'defectus lectionis'); });
     return;
   }
+  if (visus === 'acta') {
+    legere('diurnum').then(function (diurna) {
+      /* acta_dies in serie: mutatio paginae sine mutatione dati
+       * redditionem quoque cogit */
+      var series = JSON.stringify(diurna) + '|' + acta_dies;
+      erroris.textContent = '';
+      if (series !== ultima.acta) {
+        ultima.acta = series;
+        reddere_acta(diurna);
+      }
+    }).catch(function (c) { culpam_ostendere(c, 'defectus lectionis'); });
+    return;
+  }
   if (visus === 'pipata') {
     legere('pipatum').then(function (pipata) {
       var series = JSON.stringify(pipata);
@@ -3617,6 +3833,7 @@ function fumus_genera() {
                           throw new Error('apertio corpus non reddit');
                         }
                         return fumus_tergale()
+                          .then(function () { return fumus_acta(); })
                           .then(function () {
                             return internuntius.vocare(
                               'fumus_perfectus', {});
@@ -3736,6 +3953,29 @@ function fumus_tergale() {
         return internuntius.vocare('tergale_ponere',
           { datum: prius });
       }
+    });
+}
+
+/* passus fumi: diurnum scriptum -> in paginam hodiernam cadit
+ * (mittere generis novi + computus diei IV-horarius probantur) */
+function fumus_acta() {
+  return internuntius.vocare('mittere',
+      { genus: 'diurnum', corpus: '[fumus] actum diurnum' })
+    .then(function (r) {
+      return legere('diurnum').then(function (diurna) {
+        var meum = null;
+        diurna.forEach(function (e) {
+          if (e.res_id === r.res_id) { meum = e; }
+        });
+        if (!meum) { throw new Error('diurnum scriptum abest'); }
+        if (!meum.datum || !meum.datum.corpus) {
+          throw new Error('diurnum sine corpore');
+        }
+        if (dies_diurni(new Date(meum.creatum))
+            !== dies_diurni(new Date())) {
+          throw new Error('diurnum extra diem hodiernum cadit');
+        }
+      });
     });
 }
 
