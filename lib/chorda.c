@@ -16,21 +16,21 @@
 
 chorda
 chorda_ex_literis (
-    constans character* cstr,
+    constans character* litterae,
                Piscina* piscina)
 {
     chorda  fructus;
        i32  mensura;
         i8* allocatus;
 
-    si (!cstr || !piscina)
+    si (!litterae || !piscina)
     {
         fructus.mensura = ZEPHYRUM;
         fructus.datum   = NIHIL;
         redde fructus;
     }
 
-      mensura = (i32)strlen(cstr);
+      mensura = (i32)strlen(litterae);
     allocatus = (i8*)piscina_allocare(piscina, mensura);
 
     si (!allocatus)
@@ -40,7 +40,7 @@ chorda_ex_literis (
         redde fructus;
     }
 
-    memcpy(allocatus, cstr, mensura);
+    memcpy(allocatus, litterae, mensura);
     fructus.mensura = mensura;
     fructus.datum   = allocatus;
     redde fructus;

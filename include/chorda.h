@@ -20,7 +20,7 @@ nomen structura chorda {
 
 chorda
 chorda_ex_literis (
-		constans character* cstr,
+		constans character* litterae,
 							 Piscina* piscina);
 
 chorda
