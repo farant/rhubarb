@@ -11900,3 +11900,27 @@ postquam tenuit); tabula postulationum (selectores crudi re-typati
 -> promotio); consumptor alter 01KXTX7FA3 (contractus
 selector-scopati); custodia derivae amalgamatis pro bibliothecis
 vendicatis (inventum II).
+
+## 2026-07-31 - ADDENDUM: QUAESTIO -OMNIBUS + -CLAUSURA (v0.1, petitio Franis)
+
+Ex colloquio post-RELATIONEM: quaestio nominata QUAELIBET nunc
+trans plagulas currit, non invariantia sola. (1) -omnibus <nomen>
+[param=valor ...] [radix] = arbor tota (exclusiones eaedem ac
+-invariantia); (2) -clausura <fons.c> <nomen> [...] = clausura
+aedilis (ordines O de --partes + fons ipse, scriptum glutinat,
+binarium -lista viae ex stdin legit - aedilis oraculum clausurae
+manet, quaestio numquam eam computat). Ordines compacti ubique
+(via:la-lz + lineae binae '|' - forma MCP aequata); ordines
+VIOLATUR eandem formam lucrantur. Exitus 0/1/2.
+
+Probata: -omnibus definitio-nominata super lib (127 plagulae,
+congruentia 1 exacta), -clausura super probatio_piscina.c (5
+plagulae), congruentiae 0 -> exitus 1 (pipestatus mensuratum -
+decipula fistulae zsh ITERUM in mensura ipsa). Firma latinae in
+codice recenti: 'nomen' ut parametrum = typedef - unco syntaxem
+fregit ANTE compilationem (lex prima CLAUDE.md, capta a pushu).
+
+MCP instrumentum per-plagulam manet (quaestiones punctuales
+calidae; percursus = navis frigida). Clausura super MCP = ianua
+nominata (inclusiones.tsv + conventio include/X.h -> lib/X.c
+sufficerent).

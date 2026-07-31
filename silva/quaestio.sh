@@ -6,6 +6,11 @@
 #   ./silva/quaestio.sh                          # index bibliothecae
 #   ./silva/quaestio.sh <plagula> <nomen> [param=valor ...]
 #   ./silva/quaestio.sh -invariantia [radix]     # percursus (oculi)
+#   ./silva/quaestio.sh -omnibus <nomen> [param=valor ...] [radix]
+#                                    # quaestio super arborem totam
+#   ./silva/quaestio.sh -clausura <fons.c> <nomen> [param=valor ...]
+#                                    # super clausuram aedilis (fons
+#                                    # + ordines O de --partes)
 #   ./silva/quaestio.sh -proba                   # porta nativa
 # Flags: -omnia (tectum mensurae sublatum)
 # Exit:  0 congruentia/TENENT | 1 nulla/VIOLATUR | 2 fractura
@@ -64,4 +69,18 @@ clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$QUAESTIO_SRC" $obj_files \
     -o "$QUAESTIO_BIN" || exit 1
 
 cd "$RADIX_DIR"
+
+# -clausura: clausuram aedilis computare, per -lista alimentare
+if [ "${1:-}" = "-clausura" ]; then
+    FONS="${2:?quaestio -clausura: fons.c deest}"
+    shift 2
+    if [ ! -x bin/aedilis ]; then
+        ./tools/aedilis_struere.sh || exit 2
+    fi
+    { echo "$FONS"; bin/aedilis "$FONS" --partes \
+        | awk -F'\t' '$1=="O"{print $2}'; } | sort -u \
+        | "$QUAESTIO_BIN" -lista "$@"
+    exit $?
+fi
+
 exec "$QUAESTIO_BIN" "$@"
