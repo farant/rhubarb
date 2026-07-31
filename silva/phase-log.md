@@ -11924,3 +11924,55 @@ MCP instrumentum per-plagulam manet (quaestiones punctuales
 calidae; percursus = navis frigida). Clausura super MCP = ianua
 nominata (inclusiones.tsv + conventio include/X.h -> lib/X.c
 sufficerent).
+
+## 2026-07-31 - INTENTIO: RENOMINARE v0 (parcum 01KYWYQMJ7 tractum)
+
+Rename-identifier tool, the first ACTION of the transformation pin.
+Recon (semantica.h read at the seam): the two hard parts EXIST -
+use-site->symbol nexus (silva_c89_symbolum_nodi, registered during
+resolution) and exact positions (SilvaToken byte_offset/longitudo/
+fons_index). What v0 adds is orchestration + gates.
+
+FORM: single principalia CLI (examen-recipe driver: lexicon
+composition, capita praebita, oraculum preseed, BIS-analysis,
+fines_tactae=RECUSO) + renominare.sh wrapper. NO fontes module, NO
+amalgam ceremony (named door: extraction to instrumenta shared unit
+when legati grows the MCP tool - nexus_ordines precedent). Tests =
+golden fixture gate in the wrapper (-proba), examen_vectis shape.
+
+SCOPE v0: file-scope symbols (functio/variabile/typedef; static +
+extern). Entity resolution: all-extern registrations = one entity
+across files; a STATIC namesake makes the name AMBIGUOUS -> refuse
+unless -via names the defining file (then single-file rename, and
+extern-bound sites elsewhere are AUTOMATICALLY excluded - the
+binding does what grep cannot). Locals/members/macros = named doors.
+
+COLLECT: nexus_ordines walk pattern (breadth-first, AMBIGUUS via
+canonica, FOLIUM_IDENTIFICATOR -> symbolum_nodi) + declaration
+lexemata from the symbol index. Site classes: FONS token ->
+spliceable {via, byte_offset}; expanded token -> MANUALIS (reported,
+never edited); header sites collected from includer parses, dedup by
+(via,offset). Candidate files from build/nexus.tsv (wrapper awk);
+post-apply textual grep over tree = residual report (belt against
+nexus staleness).
+
+GATES (refusal-loud, named culpae): novum non-identifier / C89
+keyword; novum is a macro DEFINED in any affected TU (catches
+latina.h BY DERIVATION - examen lexicon law applied to rename);
+collision = any registration titled novum in any affected file
+(conservative v0, per-scope precision later); vetus ex_systemate
+(no renaming printf); -scribere refuses on dirty git tree for
+affected files (git IS the undo - decisum); expanded-origin sites
+present -> plan lists them MANUALIS, apply proceeds only for FONS
+sites with count stated.
+
+APPLY (-scribere): splices grouped per file, applied back-to-front,
+byte guard at every site (bytes at offset MUST equal vetus, else
+refuse - stale-offset trap); post-apply each touched file re-parsed
++ re-analysed: error delta or surviving vetus sites = FRACTUM loud,
+nonzero exit. Comments NEVER auto-edited (decisum; textual mentions
+in report tail only).
+
+CHUNKS: A binary (driver+collect+gates+plan+apply+verify);
+B wrapper (candidates, dirty-tree gate, residual report, -proba
+golden fixtures); C first real workout + RELATIO.
