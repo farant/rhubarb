@@ -3510,6 +3510,15 @@ _capturae_summarium (ChordaAedificator* aed,
     }
 }
 
+/* genera quorum corpus capturas fert (bloci STML stampantur):
+ * articuli et acta diurna - pipata limite CCXL exclusa manent */
+interior b32
+_genus_capturabile (chorda genus)
+{
+    redde _chorda_est(genus, "articulus")
+        || _chorda_est(genus, "diurnum");
+}
+
 /* eventa fascis in tabulatum planum copiare (xar segmentatum -
  * gesta_fascis_scribere tabulatum contiguum poscit) + eventum
  * finale appendere */
@@ -3614,11 +3623,11 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
             redde;
         }
     }
-    /* captura fragmentorum (articuli, trunci solum): corpus
-     * stampatum ANTE constructionem dati - eventus creationis
-     * textum finalem fert; res_id articuli praecusum ut origo
+    /* captura fragmentorum (genera capturabilia, trunci solum):
+     * corpus stampatum ANTE constructionem dati - eventus creationis
+     * textum finalem fert; res_id rei praecusum ut origo
      * provenientiam ferat */
-    si (_chorda_est(genus, "articulus") && corpus.mensura > ZEPHYRUM
+    si (_genus_capturabile(genus) && corpus.mensura > ZEPHYRUM
         && ramus_id.mensura == ZEPHYRUM)
     {
         chorda vacua;
@@ -4238,18 +4247,18 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
                 _ch("mutatio: datum aut clavis+valor"), VERUM);
             redde;
         }
-        /* captura fragmentorum (articuli, trunci solum): corpus
-         * mutatum -> lineae novae stampantur, tituli renovantur,
-         * orphanae signantur; eventus mutationis textum stampatum
-         * fert */
+        /* captura fragmentorum (genera capturabilia, trunci solum):
+         * corpus mutatum -> lineae novae stampantur, tituli
+         * renovantur, orphanae signantur; eventus mutationis textum
+         * stampatum fert */
         si (ramus_id.mensura == ZEPHYRUM)
         {
             JsonValor* v_corpus = json_objectum_capere(datum,
                 "corpus");
 
             si (v_corpus != NIHIL && json_est_chorda(v_corpus)
-                && _chorda_est(_cap_genus_rei(t, res_id, pn),
-                       "articulus"))
+                && _genus_capturabile(
+                       _cap_genus_rei(t, res_id, pn)))
             {
                 chorda status_vetus = gesta_res_datum(t->mundus,
                     _litterae(pn, res_id), pn);

@@ -1284,7 +1284,10 @@ function reddere_acta(diurna) {
       + bini(t.getMinutes());
     var corpus = document.createElement('div');
     corpus.className = 'corpus';
-    corpus.appendChild(corpus_cum_tagis(e.datum.corpus));
+    /* contextus blocorum per ACTUM: scanner C corpus cuiusque
+     * scripti independenter percurrit, ergo et illuminatio */
+    stml_genus_apertum = null;
+    corpus.appendChild(corpus_articuli_cum_stml(e.datum.corpus));
     div.appendChild(tempus);
     div.appendChild(corpus);
     tabula.appendChild(div);
@@ -3957,10 +3960,12 @@ function fumus_tergale() {
 }
 
 /* passus fumi: diurnum scriptum -> in paginam hodiernam cadit
- * (mittere generis novi + computus diei IV-horarius probantur) */
+ * (mittere generis novi + computus diei IV-horarius) + blocus
+ * capturae stampatur (diurnum genus capturabile daemonis est) */
 function fumus_acta() {
+  var involucrum = '<nota>\n<(> [fumus] captura diurna\n</>';
   return internuntius.vocare('mittere',
-      { genus: 'diurnum', corpus: '[fumus] actum diurnum' })
+      { genus: 'diurnum', corpus: involucrum })
     .then(function (r) {
       return legere('diurnum').then(function (diurna) {
         var meum = null;
@@ -3974,6 +3979,9 @@ function fumus_acta() {
         if (dies_diurni(new Date(meum.creatum))
             !== dies_diurni(new Date())) {
           throw new Error('diurnum extra diem hodiernum cadit');
+        }
+        if (meum.datum.corpus.indexOf('<#') < 0) {
+          throw new Error('captura diurni non stampata');
         }
       });
     });
