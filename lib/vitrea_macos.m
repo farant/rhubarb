@@ -293,7 +293,8 @@ interior constans character* constans VITREA_CURSUS_JS =
 }
 @end
 
-@interface VitreaLegatus : NSObject <WKNavigationDelegate>
+@interface VitreaLegatus : NSObject <WKNavigationDelegate,
+    WKUIDelegate>
 @property (nonatomic, assign) Vitrea* vitrea;
 @end
 
@@ -340,6 +341,34 @@ interior constans character* constans VITREA_CURSUS_JS =
      * cum pagina moriuntur - sponte sanans. */
     _nuntium_inserere(self.vitrea, VITREA_NUNTIUS_INTERITUS,
         NIHIL, ZEPHYRUM);
+}
+/* <input type="file"> nativum: WKWebView tabellam apertionis SOLUM
+ * praebet si legatus UI hunc uncum implet - sine eo input mutum
+ * sedet (mensuratum in foro 2026-07-31). runModal ansam eventuum
+ * propriam AppKit gyrat, ergo a pumpa nostra non pendet; textura
+ * dum tabella patet congelata - electioni plagulae aequum.
+ * completionHandler SEMPER vocandus (contractus WebKit). */
+- (vacuum)webView:(WKWebView*)textura
+    runOpenPanelWithParameters:(WKOpenPanelParameters*)parametra
+    initiatedByFrame:(WKFrameInfo*)margo
+    completionHandler:(vacuum (^)(NSArray<NSURL*>*))perfector
+{
+    NSOpenPanel* tabella = [NSOpenPanel openPanel];
+
+    (vacuum)textura;
+    (vacuum)margo;
+    [tabella setCanChooseFiles:YES];
+    [tabella setCanChooseDirectories:NO];
+    [tabella setAllowsMultipleSelection:
+        [parametra allowsMultipleSelection]];
+    si ([tabella runModal] == NSModalResponseOK)
+    {
+        perfector([tabella URLs]);
+    }
+    alioquin
+    {
+        perfector(nil);
+    }
 }
 @end
 
@@ -472,6 +501,7 @@ vitrea_creare (Piscina* piscina, Fenestra* fenestra,
             configuration:figura];
         [figura release];
         [vitrea->textura setNavigationDelegate:vitrea->legatus];
+        [vitrea->textura setUIDelegate:vitrea->legatus];
         si (@available(macOS 13.3, *))
         {
             si (configuratio->inspectabilis)
@@ -525,6 +555,7 @@ vitrea_destruere (Vitrea* vitrea)
         [[[vitrea->textura configuration] userContentController]
             removeScriptMessageHandlerForName:@"internuntius"];
         [vitrea->textura setNavigationDelegate:nil];
+        [vitrea->textura setUIDelegate:nil];
         [vitrea->textura stopLoading];
         [vitrea->textura release];
         [vitrea->portitor release];
