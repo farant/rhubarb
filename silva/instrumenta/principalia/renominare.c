@@ -2573,131 +2573,6 @@ _registrationes_plagulae (constans AnalysisPlagulae* an,
     redde inventae;
 }
 
-interior b32
-_entitatem_resolvere (vacuum)
-{
-    i32 registrationes = ZEPHYRUM;
-    i32 viae_staticae = ZEPHYRUM;
-    i32 externae = ZEPHYRUM;
-    constans character* via_statica_prima = NIHIL;
-    s32 genus_externum = -I;
-    i32 k;
-
-    entitas_statica = FALSUM;
-    entitas_via_statica = NIHIL;
-    entitas_genus = -I;
-
-    /* -via: entitas = registratio plagulae nominatae, cetera
-     * automatice aliena fiunt (ligamen discriminat) */
-    si (via_data != NIHIL)
-    {
-        per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
-        {
-            AnalysisPlagulae* an = (AnalysisPlagulae*)xar_obtinere(
-                analyses, k);
-
-            si (strcmp(an->via, via_data) == ZEPHYRUM)
-            {
-                s32 genus_viae = -I;
-                b32 statica_viae = FALSUM;
-
-                si (_registrationes_plagulae(an, &genus_viae,
-                        &statica_viae) == ZEPHYRUM)
-                {
-                    _culpam_addere("-via: plagula nominata"
-                        " registrationem vetus non fert");
-                    redde FALSUM;
-                }
-                entitas_statica = VERUM;
-                entitas_via_statica = via_data;
-                entitas_genus = genus_viae;
-                redde VERUM;
-            }
-        }
-        _culpam_addere("-via plagulam non in lista datam nominat");
-        redde FALSUM;
-    }
-
-    per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
-    {
-        AnalysisPlagulae* an = (AnalysisPlagulae*)xar_obtinere(
-            analyses, k);
-        s32 genus_viae = -I;
-        b32 statica_viae = FALSUM;
-        i32 inventae = _registrationes_plagulae(an, &genus_viae,
-            &statica_viae);
-
-        si (inventae == ZEPHYRUM)
-        {
-            perge;
-        }
-        registrationes += inventae;
-        si (statica_viae)
-        {
-            viae_staticae++;
-            si (via_statica_prima == NIHIL)
-            {
-                via_statica_prima = an->via;
-            }
-        }
-        alioquin
-        {
-            externae++;
-            si (genus_externum < ZEPHYRUM)
-            {
-                genus_externum = genus_viae;
-            }
-            alioquin si (genus_externum != genus_viae)
-            {
-                _culpam_addere("genera registrationum externarum"
-                    " discordant (typedef contra functionem etc.)"
-                    " - renominatio ambigua");
-                redde FALSUM;
-            }
-        }
-    }
-    si (registrationes == ZEPHYRUM)
-    {
-        _culpam_addere("symbolum scopi plagulae non inventum"
-            " (vetus ignotum in plagulis datis)");
-        redde FALSUM;
-    }
-    si (viae_staticae > I
-        || (viae_staticae == I && externae > ZEPHYRUM))
-    {
-        _culpam_addere("statica homonyma (aut staticum externo"
-            " mixtum) - da -via plagulam certam");
-        redde FALSUM;
-    }
-    si (viae_staticae == I)
-    {
-        AnalysisPlagulae* an_s = NIHIL;
-        s32 genus_viae = -I;
-        b32 statica_viae = FALSUM;
-
-        per (k = ZEPHYRUM; k < xar_numerus(analyses); k++)
-        {
-            AnalysisPlagulae* an = (AnalysisPlagulae*)xar_obtinere(
-                analyses, k);
-
-            si (strcmp(an->via, via_statica_prima) == ZEPHYRUM)
-            {
-                an_s = an;
-            }
-        }
-        si (an_s != NIHIL)
-        {
-            (vacuum)_registrationes_plagulae(an_s, &genus_viae,
-                &statica_viae);
-        }
-        entitas_statica = VERUM;
-        entitas_via_statica = via_statica_prima;
-        entitas_genus = genus_viae;
-        redde VERUM;
-    }
-    entitas_genus = genus_externum;
-    redde VERUM;
-}
 
 /* ==================================================
  * applicatio (splices retro, custodia octetorum)
@@ -3106,82 +2981,190 @@ principale (integer argc, character** argv)
     }
     _capita_colligere(".");
 
-    /* analysis omnium plagularum (etiam sub culpis praecoces -
-     * planum plenum utile est) */
-    per (j = ZEPHYRUM; j < xar_numerus(viae); j++)
-    {
-        constans character* via = *(constans character**)
-            xar_obtinere(viae, j);
-
-        si (verbosa)
-        {
-            fprintf(stderr, "renominare: analysans %s\n", via);
-        }
-        si (_plagulam_analysare(via) == NIHIL)
-        {
-            redde recuso_flag ? III : II;
-        }
-    }
-    si (via_data != NIHIL)
-    {
-        b32 inventa = FALSUM;
-
-        per (j = ZEPHYRUM; j < xar_numerus(analyses); j++)
-        {
-            AnalysisPlagulae* an = (AnalysisPlagulae*)xar_obtinere(
-                analyses, j);
-
-            si (strcmp(an->via, via_data) == ZEPHYRUM)
-            {
-                inventa = VERUM;
-            }
-        }
-        si (!inventa)
-        {
-            _culpam_addere("-via plagulam non in lista datam"
-                " nominat");
-        }
-    }
-
     si (intra_l != NIHIL && membrum_l != NIHIL)
     {
         _culpam_addere("-intra et -membrum simul dari non possunt");
     }
-    si (xar_numerus(culpae) == ZEPHYRUM
-        && (membrum_l != NIHIL ? _membrum_resolvere()
-            : intra_l != NIHIL ? _localem_resolvere()
-                               : _entitatem_resolvere()))
-    {
-        /* unda prototyporum ANTE collectionem (piscinae vivae;
-         * dedup ordines ambulationis absorbet) */
-        si (intra_l != NIHIL && positio_parametri >= ZEPHYRUM)
-        {
-            _prototypa_colligere();
-        }
-        per (j = ZEPHYRUM; j < xar_numerus(analyses); j++)
-        {
-            AnalysisPlagulae* an = (AnalysisPlagulae*)xar_obtinere(
-                analyses, j);
 
-            _plagulam_colligere(an);
-            /* modi membri/localis per TU se continent: piscina
-             * post collectionem statim destruitur - clausurae
-             * reversae magnae (CCXVI plagulae mensuratae) alioqui
-             * memoriam trans finem trahunt (Killed: 9).
-             * Comparationes monstratorum posteriores (symbolum/
-             * tag) valorem solum comparant, numquam dereferunt. */
-            si (membrum_l != NIHIL || intra_l != NIHIL)
+    si (intra_l == NIHIL && membrum_l == NIHIL)
+    {
+        /* MODUS SCOPI PLAGULAE: FLUXUS - analyse -> registrationes
+         * -> collige -> destrue per plagulam (memoria limitata:
+         * symbolum gradus 0 in centenis plagulis alioqui arcas
+         * omnes simul teneret). Praesumptio externa OPTIMISTICA:
+         * symbolum capite declaratum externum constructione est;
+         * staticum inventum sine -via = refusio (planum abicitur -
+         * fructus idem quo ratione vetere, gradu citiore). Pretium
+         * consultum: staticum solitarium sine -via non iam sponte
+         * eligitur - -via posce. */
+        s32 genus_visum = -I;
+        i32 registrationes_summa = ZEPHYRUM;
+        b32 via_habet_registrationem = FALSUM;
+        b32 via_in_lista = FALSUM;
+
+        si (via_data != NIHIL)
+        {
+            entitas_statica = VERUM;
+            entitas_via_statica = via_data;
+        }
+        per (j = ZEPHYRUM;
+             j < xar_numerus(viae)
+                 && xar_numerus(culpae) == ZEPHYRUM; j++)
+        {
+            constans character* via = *(constans character**)
+                xar_obtinere(viae, j);
+            AnalysisPlagulae* an;
+
+            si (verbosa)
             {
+                fprintf(stderr, "renominare: analysans %s\n", via);
+            }
+            an = _plagulam_analysare(via);
+            si (an == NIHIL)
+            {
+                redde recuso_flag ? III : II;
+            }
+            si (via_data != NIHIL
+                && strcmp(an->via, via_data) == ZEPHYRUM)
+            {
+                via_in_lista = VERUM;
+            }
+            {
+                s32 genus_viae = -I;
+                b32 statica_viae = FALSUM;
+                i32 inventae = _registrationes_plagulae(an,
+                    &genus_viae, &statica_viae);
+
+                si (inventae > ZEPHYRUM)
+                {
+                    registrationes_summa += inventae;
+                    si (via_data != NIHIL
+                        && strcmp(an->via, via_data) == ZEPHYRUM)
+                    {
+                        via_habet_registrationem = VERUM;
+                    }
+                    si (genus_visum < ZEPHYRUM)
+                    {
+                        genus_visum = genus_viae;
+                        entitas_genus = genus_visum;
+                    }
+                    alioquin si (genus_visum != genus_viae)
+                    {
+                        _culpam_addere("genera registrationum"
+                            " discordant (typedef contra"
+                            " functionem etc.) - renominatio"
+                            " ambigua");
+                    }
+                    si (statica_viae && via_data == NIHIL)
+                    {
+                        _culpam_addere(_culpa_formata(
+                            "staticum inventum - da -via plagulam"
+                            " definientem", an->via, ZEPHYRUM,
+                            ZEPHYRUM));
+                    }
+                }
+            }
+            si (xar_numerus(culpae) == ZEPHYRUM)
+            {
+                _plagulam_colligere(an);
+            }
+            piscina_destruere(an->piscina);
+            an->piscina = NIHIL;
+            an->parsura = NIHIL;
+            an->sem = NIHIL;
+            an->fons = NIHIL;
+        }
+        si (xar_numerus(culpae) == ZEPHYRUM
+            && registrationes_summa == ZEPHYRUM)
+        {
+            _culpam_addere("symbolum scopi plagulae non inventum"
+                " (vetus ignotum in plagulis datis)");
+        }
+        si (xar_numerus(culpae) == ZEPHYRUM && via_data != NIHIL)
+        {
+            si (!via_in_lista)
+            {
+                _culpam_addere("-via plagulam non in lista datam"
+                    " nominat");
+            }
+            alioquin si (!via_habet_registrationem)
+            {
+                _culpam_addere("-via: plagula nominata"
+                    " registrationem vetus non fert");
+            }
+        }
+        si (xar_numerus(culpae) == ZEPHYRUM)
+        {
+            _testimonia_resolvere();
+        }
+    }
+    alioquin
+    {
+        /* modi -intra/-membrum: analyses omnes vivae ANTE
+         * resolutionem (functio/typus trans plagulas quaerendus),
+         * deinde collectio cum destructione fluente */
+        per (j = ZEPHYRUM; j < xar_numerus(viae); j++)
+        {
+            constans character* via = *(constans character**)
+                xar_obtinere(viae, j);
+
+            si (verbosa)
+            {
+                fprintf(stderr, "renominare: analysans %s\n", via);
+            }
+            si (_plagulam_analysare(via) == NIHIL)
+            {
+                redde recuso_flag ? III : II;
+            }
+        }
+        si (via_data != NIHIL)
+        {
+            b32 inventa = FALSUM;
+
+            per (j = ZEPHYRUM; j < xar_numerus(analyses); j++)
+            {
+                AnalysisPlagulae* an =
+                    (AnalysisPlagulae*)xar_obtinere(analyses, j);
+
+                si (strcmp(an->via, via_data) == ZEPHYRUM)
+                {
+                    inventa = VERUM;
+                }
+            }
+            si (!inventa)
+            {
+                _culpam_addere("-via plagulam non in lista datam"
+                    " nominat");
+            }
+        }
+        si (xar_numerus(culpae) == ZEPHYRUM
+            && (membrum_l != NIHIL ? _membrum_resolvere()
+                                   : _localem_resolvere()))
+        {
+            /* unda prototyporum ANTE collectionem (piscinae
+             * vivae; dedup ordines ambulationis absorbet) */
+            si (intra_l != NIHIL && positio_parametri >= ZEPHYRUM)
+            {
+                _prototypa_colligere();
+            }
+            per (j = ZEPHYRUM; j < xar_numerus(analyses); j++)
+            {
+                AnalysisPlagulae* an =
+                    (AnalysisPlagulae*)xar_obtinere(analyses, j);
+
+                _plagulam_colligere(an);
+                /* per TU se continent - destructio fluens
+                 * (Killed: 9 in clausura CCXVI plagularum);
+                 * comparationes monstratorum posteriores valorem
+                 * solum comparant, numquam dereferunt */
                 piscina_destruere(an->piscina);
                 an->piscina = NIHIL;
                 an->parsura = NIHIL;
                 an->sem = NIHIL;
                 an->fons = NIHIL;
             }
+            _testimonia_resolvere();
         }
-        /* v0.1: testimonia macronum post TUs OMNES (probatio
-         * promotionis globalis est - invocationes trans plagulas) */
-        _testimonia_resolvere();
     }
 
     _planum_imprimere();
