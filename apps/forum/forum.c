@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/stat.h>   /* mkdir - app macOS/POSIX sola */
 
 /* capsula fontium speculi (build/speculum/forum/) - externus
  * directus, mos consumptoris speculi (caput generatum non
@@ -654,6 +655,122 @@ _fumus_perfectus (JsonValor* argumenta, Piscina* piscina,
     redde json_objectum_creare(piscina);
 }
 
+/* ==================================================
+ * IMAGO TERGALIS - anteponimentum machinae localis in
+ * privata/forum/ (numquam commissum; res mundi NON est, ergo nec
+ * daemon nec annales - plagula una, superscripta in mutatione)
+ * ================================================== */
+
+#define FORUM_TERGALE_VIA "privata/forum/tergale.imago"
+#define FORUM_TERGALE_MENSURA_MAXIMA (8 * 1024 * 1024)
+
+/* tergale_ponere {datum} -> {bene} - datum = URL datorum integra
+ * (textus "data:..." ut est; app formam non interpretatur) */
+interior JsonValor*
+_tergale_ponere (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    JsonValor* fructus = json_objectum_creare(piscina);
+    chorda imago = json_ad_chorda(json_objectum_capere(argumenta,
+        "datum"));
+    b32 bene = FALSUM;
+
+    (vacuum)datum;
+    (vacuum)culpa;
+    si (imago.mensura > (i32)V
+        && imago.mensura <= (i32)FORUM_TERGALE_MENSURA_MAXIMA
+        && memcmp(imago.datum, "data:", (size_t)V) == ZEPHYRUM)
+    {
+        FILE* filum;
+
+        (vacuum)mkdir("privata", 0755);
+        (vacuum)mkdir("privata/forum", 0755);
+        filum = fopen(FORUM_TERGALE_VIA, "wb");
+        si (filum != NIHIL)
+        {
+            si (fwrite(imago.datum, I,
+                    (memoriae_index)imago.mensura, filum)
+                == (memoriae_index)imago.mensura)
+            {
+                bene = VERUM;
+            }
+            (vacuum)fclose(filum);
+        }
+    }
+    json_objectum_ponere(fructus, "bene",
+        json_boolean_creare(piscina, bene));
+    redde fructus;
+}
+
+/* tergale_capere {} -> {datum} - chorda vacua si absens */
+interior JsonValor*
+_tergale_capere (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    JsonValor* fructus = json_objectum_creare(piscina);
+    FILE* filum = fopen(FORUM_TERGALE_VIA, "rb");
+    chorda imago;
+
+    (vacuum)argumenta;
+    (vacuum)datum;
+    (vacuum)culpa;
+    imago.mensura = ZEPHYRUM;
+    imago.datum = NIHIL;
+    si (filum != NIHIL)
+    {
+        long mensura_l;
+
+        fseek(filum, 0L, SEEK_END);
+        mensura_l = ftell(filum);
+        fseek(filum, 0L, SEEK_SET);
+        si (mensura_l > 0L
+            && mensura_l <= (long)FORUM_TERGALE_MENSURA_MAXIMA)
+        {
+            imago.datum = (i8*)piscina_allocare(piscina,
+                (memoriae_index)mensura_l);
+            si (imago.datum != NIHIL
+                && fread(imago.datum, I,
+                       (memoriae_index)mensura_l, filum)
+                    == (memoriae_index)mensura_l)
+            {
+                imago.mensura = (i32)mensura_l;
+            }
+            alioquin
+            {
+                imago.datum = NIHIL;
+            }
+        }
+        (vacuum)fclose(filum);
+    }
+    si (imago.mensura > ZEPHYRUM)
+    {
+        json_objectum_ponere(fructus, "datum",
+            json_chorda_creare(piscina, imago));
+    }
+    alioquin
+    {
+        json_objectum_ponere(fructus, "datum",
+            json_chorda_creare_literis(piscina, ""));
+    }
+    redde fructus;
+}
+
+/* tergale_delere {} -> {bene} */
+interior JsonValor*
+_tergale_delere (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    JsonValor* fructus = json_objectum_creare(piscina);
+
+    (vacuum)argumenta;
+    (vacuum)datum;
+    (vacuum)culpa;
+    (vacuum)remove(FORUM_TERGALE_VIA);
+    json_objectum_ponere(fructus, "bene",
+        json_boolean_creare(piscina, VERUM));
+    redde fructus;
+}
+
 s32 principale (integer argc, character** argv)
 {
     Piscina* piscina = piscina_generare_dynamicum("forum",
@@ -782,6 +899,12 @@ s32 principale (integer argc, character** argv)
         _fumus_modus, &forum);
     (vacuum)internuntius_praebere(inx, "fumus_perfectus",
         _fumus_perfectus, &forum);
+    (vacuum)internuntius_praebere(inx, "tergale_ponere",
+        _tergale_ponere, &forum);
+    (vacuum)internuntius_praebere(inx, "tergale_capere",
+        _tergale_capere, &forum);
+    (vacuum)internuntius_praebere(inx, "tergale_delere",
+        _tergale_delere, &forum);
 
     /* modus-debug se-fontis: Cmd+Shift+D (mos domus) */
     {

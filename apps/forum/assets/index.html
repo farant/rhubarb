@@ -232,6 +232,13 @@
   #sent-saltus { max-width: 17em; }
   #sent-meta { margin: .4em 0 .8em; line-height: 2.2; }
   #sent-anomaliae { font-size: .75em; margin-bottom: .6em; }
+  /* imago tergalis: angulus quietus (opacitas surgit sub mure) */
+  #tergale-domus { position: fixed; right: .4em; bottom: .3em;
+    z-index: 60; opacity: .3; }
+  #tergale-domus:hover { opacity: 1; }
+  #tergale-domus button { background: transparent; border: none;
+    font-size: 1.1em; cursor: pointer; padding: .1em .15em; }
+  #tergale-arca { display: none; }
 </style>
 </head>
 <body>
@@ -446,6 +453,13 @@
     </div>
   </div>
 </section>
+
+<div id="tergale-domus">
+  <button id="tergale-eligere" title="imaginem tergalem eligere">🖼️</button>
+  <button id="tergale-tollere" title="imaginem tergalem tollere"
+    style="display:none">✕</button>
+  <input id="tergale-arca" type="file" accept="image/*">
+</div>
 
 <script>
 /* ---- status ---- */
@@ -3590,13 +3604,127 @@ function fumus_genera() {
                         if (!unum[0].datum.corpus) {
                           throw new Error('apertio corpus non reddit');
                         }
-                        return internuntius.vocare('fumus_perfectus', {});
+                        return fumus_tergale()
+                          .then(function () {
+                            return internuntius.vocare(
+                              'fumus_perfectus', {});
+                          });
                       });
                   });
               });
           });
       });
   });
+}
+
+/* ---- imago tergalis (privata/forum/ - anteponimentum machinae) ----
+ * Styli INLINE consulto: vertere() body.className integre
+ * superscribit, ergo classis corporis hic periret - styli inline
+ * mutationem classium supervivunt. */
+function tergale_applicare(datum) {
+  var s = document.body.style;
+  if (datum) {
+    s.backgroundImage = 'url("' + datum + '")';
+    s.backgroundSize = 'cover';
+    s.backgroundPosition = 'center';
+    s.backgroundAttachment = 'fixed';
+  } else {
+    s.backgroundImage = '';
+    s.backgroundSize = '';
+    s.backgroundPosition = '';
+    s.backgroundAttachment = '';
+  }
+  document.getElementById('tergale-tollere').style.display =
+    datum ? 'inline' : 'none';
+}
+/* contrahere: latus maximum 2560 + jpeg - fraenum oneris pontis
+ * (photographema crudum plurium MB tergali non necessarium) */
+function tergale_contrahere(fons, deinde) {
+  var imago = new Image();
+  imago.onload = function () {
+    var latus = Math.max(imago.width, imago.height);
+    var ratio;
+    var tela;
+    if (latus <= 2560 && fons.length < 2500000) {
+      deinde(fons);
+      return;
+    }
+    ratio = Math.min(1, 2560 / latus);
+    tela = document.createElement('canvas');
+    tela.width = Math.round(imago.width * ratio);
+    tela.height = Math.round(imago.height * ratio);
+    tela.getContext('2d').drawImage(imago, 0, 0, tela.width,
+      tela.height);
+    deinde(tela.toDataURL('image/jpeg', 0.85));
+  };
+  imago.onerror = function () { deinde(fons); };
+  imago.src = fons;
+}
+document.getElementById('tergale-eligere').onclick = function () {
+  document.getElementById('tergale-arca').click();
+};
+document.getElementById('tergale-arca').addEventListener('change',
+  function () {
+    var plagula = this.files && this.files[0];
+    var lector;
+    if (!plagula) { return; }
+    lector = new FileReader();
+    lector.onload = function () {
+      tergale_contrahere(lector.result, function (datum) {
+        tergale_applicare(datum);
+        internuntius.vocare('tergale_ponere', { datum: datum })
+          .catch(function (c) {
+            culpam_ostendere(c, 'tergale non servatum');
+          });
+      });
+    };
+    lector.readAsDataURL(plagula);
+    this.value = '';
+  });
+document.getElementById('tergale-tollere').onclick = function () {
+  tergale_applicare('');
+  internuntius.vocare('tergale_delere', {});
+};
+internuntius.vocare('tergale_capere', {}).then(function (r) {
+  if (r && r.datum) { tergale_applicare(r.datum); }
+});
+
+/* passus fumi: pons tergalis circuitu clauso (electio plagulae
+ * nativa manibus solis probatur); tergale verum ante servatur et
+ * post restituitur */
+function fumus_tergale() {
+  var specimen = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
+  var prius = '';
+  return internuntius.vocare('tergale_capere', {})
+    .then(function (r) {
+      prius = (r && r.datum) || '';
+      return internuntius.vocare('tergale_ponere',
+        { datum: specimen });
+    })
+    .then(function (r) {
+      if (!r || !r.bene) {
+        throw new Error('tergale_ponere fractum');
+      }
+      return internuntius.vocare('tergale_capere', {});
+    })
+    .then(function (r) {
+      if (!r || r.datum !== specimen) {
+        throw new Error('tergale_capere non congruit');
+      }
+      return internuntius.vocare('tergale_delere', {});
+    })
+    .then(function () {
+      return internuntius.vocare('tergale_capere', {});
+    })
+    .then(function (r) {
+      if (!r || r.datum) {
+        throw new Error('tergale post deletionem manet');
+      }
+      if (prius) {
+        return internuntius.vocare('tergale_ponere',
+          { datum: prius });
+      }
+    });
 }
 
 internuntius.vocare('fumus_modus', {}).then(function (r) {
