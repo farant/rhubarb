@@ -12197,3 +12197,27 @@ aurea XIV -> XVIII; silva 37/37.
 The ladder now covers file-scope + locals + members. Remaining
 doors: macros themselves, prototype-param position matching,
 legati plan-mode tool, accessus rows in nexus.
+
+## 2026-07-31 - ADDENDUM: UNDA PROTOTYPORUM (a116efa + 9246478)
+
+Stage 3.5, the consistency ripple: when the -intra target is a
+DEFINITION parameter, its position in the parameter list is
+computed, and every prototype of the same function entity (the
+stage-1 registration folding reused) gets the same position
+checked - same name = spliced with nota "parametrum prototypi",
+divergent name = manualis report, never touched (we do not
+invent agreement). Cross-file proven in the fixture (the header
+prototype joins the plan) and divergent-name fixture added.
+Porta aurea XVIII -> XX.
+
+FIRST PRODUCTION FRUIT (9246478): chorda_ex_literis's parameter
+was named cstr - an English stray in Tier 0. One command
+(renominare cstr litterae -intra chorda_ex_literis -scribere)
+renamed header prototype + definition + 3 uses while SEVEN other
+functions' cstr prototype params stood aliena; chorda suite
+PLENUS, residual report empty. The tool's purpose demonstrated
+on the house's most foundational file.
+
+Function-pointer/typedef doc-params deliberately NOT a target
+(no binding identity; hand edit with the plan as map). Doors
+unchanged: macros, legati tool, accessus nexus rows.
