@@ -12055,3 +12055,25 @@ door). Remaining door: the QUERY surfaces (nexus/selecta/
 quaestio) still cannot see into macro bodies - "which macros
 reference X" has machinery now proven here, wants lifting into
 nexus rows.
+
+## 2026-07-31 - ADDENDUM II: LEXEMATA RETENTA IN NEXU (842c4b5,
+## petitio Franis - ianua quaestionum 01KYX2DSKK clausa)
+
+Four public windows in expandere (macro_corpus_numerus/lexema,
+ramus_lexemata_numerus/lexema_crudum - vista-aligned indices,
+API-first), then ONE emission stage in nexus_ordines lights both
+surfaces (sweep tsv + live legati - the buried-twin architecture
+paying out). New row genera: corpus-macronis, ramus-omissus.
+Money proof: symbolum _credo_notare now leads with the eight
+CREDO macro bodies in credo.h - previously invisible to every
+instrument.
+
+Measured: 1741 corpus-macronis rows; 19186 ramus-omissus rows
+dominated by vendor/stb_image.h's never-enabled implementation
+section - TRUE dormant code (the wildcard-conditional VISIO pin
+in table form), not noise. Re-inclusion guard shadows: feared,
+built suppression for, measured ZERO - the includenda machinery
+short-circuits repeated inclusions before regions form. The
+suppression stays as commented insurance. Hospes 35->37 (body
+lexeme + omitted-lamina fideles); silva 37/37, officina 13/13;
+resident renewed and answering.
