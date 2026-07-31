@@ -12077,3 +12077,54 @@ short-circuits repeated inclusions before regions form. The
 suppression stays as commented insurance. Hospes 35->37 (body
 lexeme + omitted-lamina fideles); silva 37/37, officina 13/13;
 resident renewed and answering.
+
+## 2026-07-31 - INTENTIO: RENOMINARE LOCALES (-intra; stage 2 of
+## the door ladder, Fran picked locals as the opening stretch)
+
+Target = a specific REGISTRATION (symbol pointer), not a name:
+locals never cross TUs, so pointer identity within the defining
+file's analysis is exact - cleaner than file-scope's folding.
+CLI: -intra <functio> [+ -via <plagula> when the function name is
+multi-defined across files] [+ -linea <n> when the same local
+name is declared twice inside one function (nested shadowing)].
+Refusals list what they need.
+
+MECHANICS: walk #1 locates DEFINITIO_FUNCTIONIS whose declarator
+title spells intra (definitio_functionis_declarator +
+declaratoris_titulus), collects the vetus-token set of that
+subtree; target = the registration (prof>0, titled vetus) whose
+lexema is in the set; walk #2 = the existing classification with
+_symbolum_entitatis in pointer-equality mode. Whole-file
+accounting law unchanged (other functions' namesakes and
+file-scope homonyms fall out as ALIENA automatically).
+
+CAPTURE GATE (both directions, conservative): ANY token spelling
+NOVUM inside the target function's subtree = refusal naming the
+site - covers inner-block capture AND shadowing a file-scope
+symbol the function uses. Testimonium machinery unchanged
+(promotion criterion is target-pointer binding).
+
+Named doors: prototype-parameter position matching (renaming def
+param leaves prototype param names - legal C, reported ALIENA,
+consistency rename deferred); members next.
+
+## 2026-07-31 - RELATIO: RENOMINARE LOCALES SHIPPED (same day)
+
+The pointer-identity design held: target = one registration,
+_symbolum_entitatis in pointer-equality mode, everything else
+(accounting law, testimonium machinery, survivor arithmetic)
+unchanged. Fixture proofs: shadowed temp x2 refuses listing both
+declaration lines and -linea picks one while the sibling stays
+ALIENA; local copia renamed under a file-scope copia homonym with
+all three outside uses protected; capture gate names every
+appearance of the new name inside the function. One gate MOVED
+rather than added: the file-wide novum-collision gate is skipped
+in -intra mode (a local k elsewhere is not a collision) - the
+capture gate is the correct instrument at function scope.
+Porta aurea 8 -> 14. Dogfood workout: renamed mensura_l inside
+renominare's own _plagulam_legere - 10 splices, 65 alienae
+across the OTHER tools defining the same static helper (~11s,
+nexus-derived candidates + -via).
+
+Doors: prototype-parameter position matching (reported, not
+renamed); MEMBERS next (the typation seam read is the entry).
