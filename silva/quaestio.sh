@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# silva/quaestio.sh - quaestio (bibliotheca selectorum nominatorum)
+#
+# Usage:
+#   ./silva/quaestio.sh                          # index bibliothecae
+#   ./silva/quaestio.sh <plagula> <nomen> [param=valor ...]
+#   ./silva/quaestio.sh -invariantia [radix]     # percursus (oculi)
+#   ./silva/quaestio.sh -proba                   # porta nativa
+# Flags: -omnia (tectum mensurae sublatum)
+# Exit:  0 congruentia/TENENT | 1 nulla/VIOLATUR | 2 fractura
+#
+# Bibliotheca: silva/quaestiones.stml (semper ex radice repositorii
+# currit - cd infra).
+
+set -u
+
+SILVA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RADIX_DIR="$(cd "$SILVA_DIR/.." && pwd)"
+BUILD_DIR="$SILVA_DIR/build"
+mkdir -p "$BUILD_DIR"
+
+declare -a GCC_FLAGS=(
+    "-std=c89" "-pedantic" "-Wall" "-Wextra" "-Werror"
+    "-Wconversion" "-Wsign-conversion" "-Wcast-qual"
+    "-Wstrict-prototypes" "-Wmissing-prototypes" "-Wwrite-strings"
+    "-Wno-long-long" "-Wno-overlength-strings"
+)
+declare -a INCLUDE_FLAGS=(
+    "-I$RADIX_DIR/include"
+    "-I$SILVA_DIR/fontes"
+)
+# GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
+source "$SILVA_DIR/quaestio_fontes_generata.sh"
+
+newest_header () {
+    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" -name '*.h' -newer "$1" 2>/dev/null | head -1
+}
+
+obj_files=""
+for f in "${RADIX_FONTES[@]}"; do
+    src="$RADIX_DIR/lib/$f.c"
+    obj="$BUILD_DIR/$f.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [dep] $f.c" >&2
+        clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+    fi
+    obj_files="$obj_files $obj"
+done
+
+for src in "$SILVA_DIR"/fontes/*.c; do
+    base="$(basename "$src" .c)"
+    obj="$BUILD_DIR/fons_$base.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [silva] $base.c" >&2
+        clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+    fi
+    obj_files="$obj_files $obj"
+done
+
+QUAESTIO_SRC="$SILVA_DIR/instrumenta/principalia/quaestio.c"
+QUAESTIO_BIN="$BUILD_DIR/quaestio"
+clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$QUAESTIO_SRC" $obj_files \
+    -o "$QUAESTIO_BIN" || exit 1
+
+cd "$RADIX_DIR"
+exec "$QUAESTIO_BIN" "$@"

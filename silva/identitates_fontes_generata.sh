@@ -4,6 +4,7 @@
 declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
+    "fasti"
     "friatio"
     "internamentum"
     "moneta"
