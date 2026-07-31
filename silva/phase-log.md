@@ -11976,3 +11976,48 @@ in report tail only).
 CHUNKS: A binary (driver+collect+gates+plan+apply+verify);
 B wrapper (candidates, dirty-tree gate, residual report, -proba
 golden fixtures); C first real workout + RELATIO.
+
+## 2026-07-31 - RELATIO: RENOMINARE v0 SHIPPED (f210cb0, same day)
+
+All three chunks in one arc. The recon held: semantica's use-site
+nexus + token positions turned "hard tool" into orchestration.
+Real workout: processus_abrumpere plan over 4 nexus-derived files
+in ~3s (header prototype + definition + 2 callers, exact offsets)
+- ~0.7s/file, examen parity as predicted. Fixture proof: A's
+static renamed while B's homonym static, the member, the goto
+label, and the macro body all correctly survive; the expansion
+site and macro body reported MANUALIS. Porta aurea: 8 golden
+cases (refusals: homonyma/collisio/verbum/macro/ignotum; plans:
+-via + externum; scriptio + verification arithmetic).
+
+MEASURED FINDS: (1) directive-line tokens are NOT in
+parsura->lexemata - #define bodies invisible to token accounting;
+textual scan over macro vista ranges carries them (survivor
+arithmetic proved the split: 4 token survivors vs 4 aliena rows,
+macro body counted by neither). (2) via strings split "./x" vs
+"x" between capita-walk and principal parse - dedup key needed
+normalization (nexus_ordines had the same lesson). (3) bash
+"${A[@]:-}" under set -u injects ONE EMPTY ARG for empty arrays -
+use ${A[@]+"${A[@]}"}. (4) perl -pi replacement strings
+interpolate $VARS as perl vars - "$RADIX_DIR" became empty
+(silent-noop-transform cousin: the transform SUCCEEDED and wrote
+a wrong path). (5) zsh === bit twice more (ictus 3 and 4 filed).
+
+INSTRUMENT DEBRIEF: adhibita - legati corpus on SilvaToken (the
+struct-with-comments capability, bench law confirmed again),
+diagnostica hook caught amalgam-world names (silva_xar_*), wrong
+vista fields, and an undefined numeral BEFORE any compile;
+examen.c served as the complete driver recipe (read whole, copied
+faithfully); nexus.tsv as candidate oracle. Asperitates:
+instrumenta/ shared units need -I + explicit .c in the link line
+(examen.sh precedent, learned by fatal error); no doc says which
+Roman numerals are defined (MMXLVIII missing, DXII present).
+Fructus: the seam-reading law paid at full price - one day from
+park to shipped because both hard parts already existed.
+
+IANUAE: locals/parameters (same nexus, likely near-free); struct
+MEMBERS (needs member-use binding - read the typation seam first);
+macros themselves (directive machinery); legati plan-mode MCP
+tool; -clausura candidate mode (aedilis oracle); untaken-branch
+occurrences are textual-report only (platform-seam renames for
+the Linux port will meet this - the manualis row names it).
