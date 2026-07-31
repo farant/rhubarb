@@ -3,7 +3,13 @@
 #include "planum_caput.h"
 
 #define GEMINUM(x) ((x) + (x))
-#define VOCA_ADIUTOREM adiutor(5)
+#define VOCA_ADIUTOREM iuvans(5)
+#define NUMQUAM_VOCATUM adiutor(9)
+
+#ifdef PHANTASMA_NON_DEFINITUM
+int umbra(void) { return adiutor(7); }
+static const char* dictum = "adiutor dicit salve";
+#endif
 
 static int iuvans(int n);
 

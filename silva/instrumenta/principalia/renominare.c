@@ -110,6 +110,26 @@ hic_manens s32 entitas_genus = -I;        /* SemanticaSymbolumGenus */
 /* dedup sedium trans TU: clavis "via|offset" */
 hic_manens TabulaDispersa* sedes_visae = NIHIL;
 
+/* v0.1: testimonium macronum (01KYX2DSKK) - corpora per lexemata
+ * VERA (SilvaMacroDef.corpus), promotio probabilis: si OMNES
+ * expansiones observatae lexematum vetus-scribentium ex corpore M
+ * ad entitatem ligant, sedes corporis SPLICENDAE sunt. Clavis =
+ * titulus macronis (definitiones homonymae plures = demotio). */
+nomen structura {
+    constans character* titulus;
+    constans character* via_def;    /* definitionis primae */
+    i32                 linea_def;
+    i32                 defs;           /* definitiones distinctae */
+    b32                 param_homonymum;
+    i32                 ligata_entitati;
+    i32                 ligata_aliis;
+    i32                 non_ligata;
+    Xar*                sedes_corporis;   /* SedesInventa */
+    Xar*                invocationes;     /* SedesInventa (manualis) */
+} MacroTestimonium;
+hic_manens Xar* macro_testimonia = NIHIL;        /* MacroTestimonium */
+hic_manens TabulaDispersa* macro_index = NIHIL;  /* titulus -> idx+1 */
+
 /* ==================================================
  * auxilia parva
  * ================================================== */
@@ -826,38 +846,6 @@ _registrationes_classificare (constans AnalysisPlagulae* an,
  * intervalla textualia (corpora macronum + rami omissi)
  * ================================================== */
 
-interior b32
-_verbum_in_intervallo (constans character* fons, s32 initium,
-    s32 finis, s32* sedes_out)
-{
-    s32 i = initium;
-    memoriae_index m = strlen(vetus_l);
-
-    si (initium < ZEPHYRUM || finis <= initium)
-    {
-        redde FALSUM;
-    }
-    dum (i + (s32)m <= finis)
-    {
-        si (memcmp(fons + i, vetus_l, m) == ZEPHYRUM)
-        {
-            b32 ante_bene = (i == ZEPHYRUM
-                || !_littera_identificatoris(fons[i - I], FALSUM));
-            b32 post_bene = (i + (s32)m >= finis
-                || !_littera_identificatoris(fons[i + (s32)m],
-                       FALSUM));
-
-            si (ante_bene && post_bene)
-            {
-                *sedes_out = i;
-                redde VERUM;
-            }
-        }
-        i++;
-    }
-    redde FALSUM;
-}
-
 /* ==================================================
  * sedes addere (dedup trans TU per via|offset)
  * ================================================== */
@@ -900,15 +888,436 @@ _sedem_addere (s32 classis, constans character* via, i32 linea,
 }
 
 /* ==================================================
+ * testimonium macronum (v0.1)
+ * ================================================== */
+
+interior constans character* _via_lexematis (
+    constans AnalysisPlagulae* an, SilvaToken* tok);
+
+interior MacroTestimonium*
+_testimonium_capere (constans chorda* titulus)
+{
+    chorda clavis;
+    vacuum* valor;
+    MacroTestimonium* t;
+
+    clavis.datum = (i8*)titulus->datum;
+    clavis.mensura = (i32)titulus->mensura;
+    si (tabula_dispersa_invenire(macro_index, clavis, &valor))
+    {
+        redde (MacroTestimonium*)xar_obtinere(macro_testimonia,
+            (i32)((memoriae_index)valor - I));
+    }
+    t = (MacroTestimonium*)xar_addere(macro_testimonia);
+    si (t == NIHIL)
+    {
+        redde NIHIL;
+    }
+    t->titulus = _litterae(chorda_transcribere(clavis,
+        piscina_magistra));
+    t->via_def = NIHIL;
+    t->linea_def = ZEPHYRUM;
+    t->defs = ZEPHYRUM;
+    t->param_homonymum = FALSUM;
+    t->ligata_entitati = ZEPHYRUM;
+    t->ligata_aliis = ZEPHYRUM;
+    t->non_ligata = ZEPHYRUM;
+    t->sedes_corporis = xar_creare(piscina_magistra,
+        (i32)magnitudo(SedesInventa));
+    t->invocationes = xar_creare(piscina_magistra,
+        (i32)magnitudo(SedesInventa));
+    (vacuum)tabula_dispersa_inserere(macro_index,
+        chorda_transcribere(clavis, piscina_magistra),
+        (vacuum*)(memoriae_index)xar_numerus(macro_testimonia));
+    redde t;
+}
+
+/* nomen macronis PRIMI gradus originis: macro ex cuius CORPORE
+ * lexema hoc copiatum est (contra titulus_macronis nexus, qui ad
+ * EXTIMUM ascendit) */
+interior constans chorda*
+_macro_primum (SilvaToken* tok)
+{
+    commutatio (tok->origo.genus)
+    {
+        casus SILVA_ORIGO_EXPANSIO:
+            redde tok->origo.datum.expansio.nomen_macro;
+        casus SILVA_ORIGO_PASTA:
+            redde tok->origo.datum.pasta.nomen_macro;
+        casus SILVA_ORIGO_CHORDA:
+            redde tok->origo.datum.stringificatio.nomen_macro;
+        casus SILVA_ORIGO_API:
+            redde tok->origo.datum.api.nomen_macro;
+        ordinarius:
+            redde NIHIL;
+    }
+}
+
+/* sedes in xar privatum testimonii (dedup differtur ad emissionem
+ * per _sedem_addere) */
+interior vacuum
+_sedem_testimonii (Xar* quo, s32 classis, constans character* via,
+    i32 linea, i32 columna, s32 offset, constans character* nota)
+{
+    SedesInventa* s = (SedesInventa*)xar_addere(quo);
+
+    si (s == NIHIL)
+    {
+        redde;
+    }
+    s->classis = classis;
+    s->via = via;
+    s->linea = linea;
+    s->columna = columna;
+    s->offset = offset;
+    s->nota = nota;
+}
+
+/* corpora macronum TU huius: candidata + parametra homonyma.
+ * Definitiones ex fonte QUOVIS repositorii ('/'-via) - dedup per
+ * via|offset in emissione. */
+interior vacuum
+_macros_colligere (constans AnalysisPlagulae* an)
+{
+    i32 n = xar_numerus(an->parsura->expansio->acta);
+    i32 k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        SilvaEventum* ev = (SilvaEventum*)xar_obtinere(
+            an->parsura->expansio->acta, k);
+        SilvaMacroDef* def;
+        MacroTestimonium* t;
+        constans character* via_def;
+        i32 j;
+
+        si (ev == NIHIL || ev->genus != SILVA_EVENTUM_DEFINITIO
+            || ev->def == NIHIL || ev->def->ex_api)
+        {
+            perge;
+        }
+        def = ev->def;
+        {
+            constans chorda* via_ch = silva_fons_via(
+                an->parsura->expansio, def->fons_index);
+            b32 habet_sep = FALSUM;
+            i32 c;
+
+            si (via_ch == NIHIL)
+            {
+                perge;
+            }
+            per (c = ZEPHYRUM; c < via_ch->mensura; c++)
+            {
+                si (via_ch->datum[c] == '/')
+                {
+                    habet_sep = VERUM;
+                    frange;
+                }
+            }
+            si (!habet_sep)
+            {
+                perge;   /* copia basename praebita */
+            }
+        }
+        /* interest solum si corpus aut parametra vetus tangunt */
+        {
+            b32 tangit = FALSUM;
+
+            si (def->parametra != NIHIL)
+            {
+                per (j = ZEPHYRUM;
+                     j < xar_numerus(def->parametra); j++)
+                {
+                    chorda** p = (chorda**)xar_obtinere(
+                        def->parametra, j);
+
+                    si (p != NIHIL && *p != NIHIL
+                        && _chordae_pares_lit(**p, vetus_l))
+                    {
+                        tangit = VERUM;
+                    }
+                }
+            }
+            si (!tangit && def->corpus != NIHIL)
+            {
+                per (j = ZEPHYRUM; j < xar_numerus(def->corpus);
+                     j++)
+                {
+                    SilvaToken** c = (SilvaToken**)xar_obtinere(
+                        def->corpus, j);
+
+                    si (c != NIHIL && _tok_vetus_scribit(*c))
+                    {
+                        tangit = VERUM;
+                    }
+                }
+            }
+            si (!tangit)
+            {
+                perge;
+            }
+        }
+        si (def->titulus == NIHIL)
+        {
+            perge;
+        }
+        t = _testimonium_capere(def->titulus);
+        si (t == NIHIL)
+        {
+            perge;
+        }
+        via_def = _via_lexematis(an,
+            def->corpus != NIHIL && xar_numerus(def->corpus)
+                    > ZEPHYRUM
+                ? *(SilvaToken**)xar_obtinere(def->corpus,
+                      ZEPHYRUM)
+                : NIHIL);
+        si (via_def == NIHIL)
+        {
+            /* via ex indice fontis definitionis */
+            constans chorda* via_ch = silva_fons_via(
+                an->parsura->expansio, def->fons_index);
+            chorda c;
+
+            c.datum = (i8*)via_ch->datum;
+            c.mensura = (i32)via_ch->mensura;
+            via_def = _litterae(c);
+        }
+        /* definitio distincta? (via|linea) - homonymae demotant */
+        si (t->via_def == NIHIL)
+        {
+            t->via_def = via_def;
+            t->linea_def = def->linea_def;
+            t->defs = I;
+        }
+        alioquin si (strcmp(t->via_def, via_def) != ZEPHYRUM
+            || t->linea_def != def->linea_def)
+        {
+            t->defs++;
+        }
+        /* parametrum homonymum: corpus refert PARAMETRUM, non
+         * symbolum - sedes alienae */
+        si (def->parametra != NIHIL)
+        {
+            per (j = ZEPHYRUM; j < xar_numerus(def->parametra);
+                 j++)
+            {
+                chorda** p = (chorda**)xar_obtinere(
+                    def->parametra, j);
+
+                si (p != NIHIL && *p != NIHIL
+                    && _chordae_pares_lit(**p, vetus_l))
+                {
+                    t->param_homonymum = VERUM;
+                }
+            }
+        }
+        si (def->corpus == NIHIL)
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(def->corpus); j++)
+        {
+            SilvaToken** cella = (SilvaToken**)xar_obtinere(
+                def->corpus, j);
+            SilvaToken* tok;
+
+            si (cella == NIHIL || !_tok_vetus_scribit(*cella))
+            {
+                perge;
+            }
+            tok = *cella;
+            si (tok->byte_offset < ZEPHYRUM)
+            {
+                perge;
+            }
+            {
+                constans character* via_t = _via_lexematis(an,
+                    tok);
+
+                si (via_t != NIHIL)
+                {
+                    _sedem_testimonii(t->sedes_corporis,
+                        CLASSIS_USUS, via_t, tok->linea,
+                        tok->columna, tok->byte_offset, NIHIL);
+                }
+            }
+        }
+    }
+}
+
+/* rami omissi + expressiones conditionum: lexemata VERA (chordae
+ * et commenta non fallunt, quod scansio textualis faciebat) */
+interior vacuum
+_ramos_colligere (constans AnalysisPlagulae* an)
+{
+    i32 n = xar_numerus(an->parsura->expansio->rami);
+    i32 k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        SilvaRamus** cella = (SilvaRamus**)xar_obtinere(
+            an->parsura->expansio->rami, k);
+        SilvaRamus* ramus;
+        i32 j;
+
+        si (cella == NIHIL || *cella == NIHIL)
+        {
+            perge;
+        }
+        ramus = *cella;
+        si (ramus->lexemata_cruda != NIHIL)
+        {
+            per (j = ZEPHYRUM;
+                 j < xar_numerus(ramus->lexemata_cruda); j++)
+            {
+                SilvaToken** c = (SilvaToken**)xar_obtinere(
+                    ramus->lexemata_cruda, j);
+
+                si (c != NIHIL && _tok_vetus_scribit(*c)
+                    && (*c)->byte_offset >= ZEPHYRUM)
+                {
+                    constans character* via_t = _via_lexematis(
+                        an, *c);
+
+                    si (via_t != NIHIL)
+                    {
+                        _sedem_addere(CLASSIS_MANUALIS, via_t,
+                            (*c)->linea, (*c)->columna,
+                            (*c)->byte_offset,
+                            "in ramo praeprocessoris omisso");
+                    }
+                }
+            }
+        }
+        si (ramus->expressio != NIHIL)
+        {
+            per (j = ZEPHYRUM;
+                 j < xar_numerus(ramus->expressio); j++)
+            {
+                SilvaToken** c = (SilvaToken**)xar_obtinere(
+                    ramus->expressio, j);
+
+                si (c != NIHIL && _tok_vetus_scribit(*c)
+                    && (*c)->byte_offset >= ZEPHYRUM)
+                {
+                    constans character* via_t = _via_lexematis(
+                        an, *c);
+
+                    si (via_t != NIHIL)
+                    {
+                        _sedem_addere(CLASSIS_MANUALIS, via_t,
+                            (*c)->linea, (*c)->columna,
+                            (*c)->byte_offset,
+                            "in conditione praeprocessoris");
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* resolutio testimoniorum (post TUs omnes): promotio aut demotio */
+interior vacuum
+_testimonia_resolvere (vacuum)
+{
+    i32 k;
+    i32 j;
+
+    per (k = ZEPHYRUM; k < xar_numerus(macro_testimonia); k++)
+    {
+        MacroTestimonium* t = (MacroTestimonium*)xar_obtinere(
+            macro_testimonia, k);
+        b32 promotum = FALSUM;
+        constans character* causa = NIHIL;
+
+        si (t->param_homonymum)
+        {
+            /* corpus parametrum refert - sedes alienae */
+            per (j = ZEPHYRUM; j < xar_numerus(t->sedes_corporis);
+                 j++)
+            {
+                SedesInventa* s = (SedesInventa*)xar_obtinere(
+                    t->sedes_corporis, j);
+
+                _sedem_addere(CLASSIS_ALIENA, s->via, s->linea,
+                    s->columna, s->offset,
+                    "parametrum macronis homonymum");
+            }
+            perge;
+        }
+        si (t->defs > I)
+        {
+            causa = "corpus macronis - definitiones homonymae"
+                " plures, promotio recusata";
+        }
+        alioquin si (t->ligata_aliis > ZEPHYRUM
+            || t->non_ligata > ZEPHYRUM)
+        {
+            causa = "corpus macronis - ligamina expansionum"
+                " divergentia";
+        }
+        alioquin si (t->ligata_entitati == ZEPHYRUM)
+        {
+            causa = "corpus macronis - macro numquam invocatum"
+                " in plagulis analysatis";
+        }
+        alioquin
+        {
+            promotum = VERUM;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(t->sedes_corporis); j++)
+        {
+            SedesInventa* s = (SedesInventa*)xar_obtinere(
+                t->sedes_corporis, j);
+
+            si (promotum)
+            {
+                _sedem_addere(CLASSIS_USUS, s->via, s->linea,
+                    s->columna, s->offset,
+                    "corpus macronis - promotum per invocationes");
+            }
+            alioquin
+            {
+                _sedem_addere(CLASSIS_MANUALIS, s->via, s->linea,
+                    s->columna, s->offset, causa);
+            }
+        }
+        /* invocationes: promotione facta nihil manuale restat
+         * (corpus editur, invocationes sequuntur); aliter rows
+         * manuales manent. Testimonium sine sedibus corporis
+         * (constructio per pastam) invocationes semper servat. */
+        si (!promotum || xar_numerus(t->sedes_corporis)
+                == ZEPHYRUM)
+        {
+            per (j = ZEPHYRUM; j < xar_numerus(t->invocationes);
+                 j++)
+            {
+                SedesInventa* s = (SedesInventa*)xar_obtinere(
+                    t->invocationes, j);
+
+                _sedem_addere(CLASSIS_MANUALIS, s->via, s->linea,
+                    s->columna, s->offset, s->nota);
+            }
+        }
+    }
+}
+
+/* ==================================================
  * collectio plagulae: classes -> sedes + rationarium
  * ================================================== */
 
 interior constans character*
 _via_lexematis (constans AnalysisPlagulae* an, SilvaToken* tok)
 {
-    constans chorda* via = silva_fons_via(an->parsura->expansio,
-        tok->fons_index);
+    constans chorda* via;
 
+    si (tok == NIHIL)
+    {
+        redde NIHIL;
+    }
+    via = silva_fons_via(an->parsura->expansio, tok->fons_index);
     si (via == NIHIL)
     {
         redde NIHIL;
@@ -1067,20 +1476,47 @@ _plagulam_colligere (constans AnalysisPlagulae* an)
         }
         si (!silva_token_est_fons(tok))
         {
-            /* expansio: sedes invocationis manualis nominatur */
+            /* expansio: testimonium macroni primi gradus (macro
+             * ex cuius corpore lexema venit) - ligamen huius
+             * instantiae = probatio promotionis corporis (v0.1) */
+            constans chorda* nomen_m = _macro_primum(tok);
             SilvaToken* radix = silva_token_radix(tok);
+            MacroTestimonium* t = nomen_m != NIHIL
+                ? _testimonium_capere(nomen_m) : NIHIL;
 
-            si (radix != NIHIL && radix->byte_offset >= ZEPHYRUM)
+            si (t != NIHIL)
             {
-                constans character* via_r = _via_lexematis(an,
-                    radix);
+                s32 classis;
 
-                si (via_r != NIHIL)
+                si (_classem_capere(classes, tok, &classis))
                 {
-                    _sedem_addere(CLASSIS_MANUALIS, via_r,
-                        radix->linea, radix->columna,
-                        radix->byte_offset,
-                        "per expansionem macronis");
+                    si (classis == CLASSIS_USUS
+                        || classis == CLASSIS_SEDES)
+                    {
+                        t->ligata_entitati++;
+                    }
+                    alioquin
+                    {
+                        t->ligata_aliis++;
+                    }
+                }
+                alioquin
+                {
+                    t->non_ligata++;
+                }
+                si (radix != NIHIL
+                    && radix->byte_offset >= ZEPHYRUM)
+                {
+                    constans character* via_r = _via_lexematis(
+                        an, radix);
+
+                    si (via_r != NIHIL)
+                    {
+                        _sedem_testimonii(t->invocationes,
+                            CLASSIS_MANUALIS, via_r, radix->linea,
+                            radix->columna, radix->byte_offset,
+                            "per expansionem macronis");
+                    }
                 }
             }
             perge;
@@ -1124,75 +1560,11 @@ _plagulam_colligere (constans AnalysisPlagulae* an)
         }
     }
 
-    /* corpora macronum: scansio textualis (lexemata corporum in
-     * flumine absunt - definitio acta est, non parsata) */
-    n = silva_macros_numerus(an->parsura->expansio);
-    per (k = ZEPHYRUM; k < n; k++)
-    {
-        SilvaMacroVista vista;
-
-        si (!silva_macro_vista(an->parsura->expansio, k, &vista))
-        {
-            perge;
-        }
-        si (vista.corpus_initium < ZEPHYRUM
-            || vista.fons_index
-                != an->parsura->fons_princeps)
-        {
-            perge;   /* corpora capitum: TU capitis ea colligit */
-        }
-        {
-            s32 sedes_b;
-
-            si (_verbum_in_intervallo(an->fons,
-                    vista.corpus_initium, vista.corpus_finis,
-                    &sedes_b))
-            {
-                character nota_l[CCLVI];
-                int scripti = sprintf(nota_l,
-                    "in corpore macronis %.*s",
-                    (int)(vista.titulus->mensura < CC
-                        ? vista.titulus->mensura : CC),
-                    (constans character*)vista.titulus->datum);
-
-                _sedem_addere(CLASSIS_MANUALIS, an->via,
-                    vista.linea, I, sedes_b,
-                    scripti > ZEPHYRUM
-                        ? _litterae(_ch(nota_l))
-                        : "in corpore macronis");
-            }
-        }
-    }
-
-    /* rami omissi: scansio textualis laminarum non sumptarum */
-    n = silva_rami_numerus(an->parsura->expansio);
-    per (k = ZEPHYRUM; k < n; k++)
-    {
-        SilvaRamusVista vista;
-
-        si (!silva_ramus_vista(an->parsura->expansio, k, &vista))
-        {
-            perge;
-        }
-        si (vista.est_sumptum || vista.fons_index
-                != an->parsura->fons_princeps
-            || vista.corpus_initium < ZEPHYRUM)
-        {
-            perge;
-        }
-        {
-            s32 sedes_b;
-
-            si (_verbum_in_intervallo(an->fons,
-                    vista.corpus_initium, vista.corpus_finis,
-                    &sedes_b))
-            {
-                _sedem_addere(CLASSIS_MANUALIS, an->via,
-                    vista.linea, I, sedes_b,
-                    "in ramo praeprocessoris omisso");
-            }
-        }
-    }
+    /* v0.1 (01KYX2DSKK): corpora macronum + rami omissi per
+     * lexemata VERA - substrata quae iam exstabant (scansio
+     * textualis v0 = firma quinta legis subaestimationis) */
+    _macros_colligere(an);
+    _ramos_colligere(an);
 
     /* porta collisionis: registratio quaevis 'novum' titulata in
      * plagula affecta */
@@ -1684,6 +2056,10 @@ principale (integer argc, character** argv)
         2048);
     culpae_visae = tabula_dispersa_creare_chorda(piscina_magistra,
         LXIV);
+    macro_testimonia = xar_creare(piscina_magistra,
+        (i32)magnitudo(MacroTestimonium));
+    macro_index = tabula_dispersa_creare_chorda(piscina_magistra,
+        LXIV);
     si (viae == NIHIL || analyses == NIHIL || sedes_omnes == NIHIL
         || culpae == NIHIL || capita_lecta == NIHIL
         || sedes_visae == NIHIL)
@@ -1856,6 +2232,9 @@ principale (integer argc, character** argv)
             _plagulam_colligere((AnalysisPlagulae*)xar_obtinere(
                 analyses, j));
         }
+        /* v0.1: testimonia macronum post TUs OMNES (probatio
+         * promotionis globalis est - invocationes trans plagulas) */
+        _testimonia_resolvere();
     }
 
     _planum_imprimere();

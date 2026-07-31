@@ -1,15 +1,16 @@
 #classis	via	linea	columna	offset	nota
 aliena	silva/probationes/fixa/renominationis/planum_caput.h	5	21	110	
-sedes	silva/probationes/fixa/renominationis/planum_a.c	8	12	212	
-sedes	silva/probationes/fixa/renominationis/planum_a.c	11	1	240	
-usus	silva/probationes/fixa/renominationis/planum_a.c	19	19	337	
-aliena	silva/probationes/fixa/renominationis/planum_a.c	22	7	377	
-aliena	silva/probationes/fixa/renominationis/planum_a.c	25	14	461	
-manualis	silva/probationes/fixa/renominationis/planum_a.c	27	16	531	per expansionem macronis
-aliena	silva/probationes/fixa/renominationis/planum_a.c	28	1	583	
-aliena	silva/probationes/fixa/renominationis/planum_a.c	29	14	605	
-manualis	silva/probationes/fixa/renominationis/planum_a.c	6	1	189	in corpore macronis VOCA_ADIUTOREM
+sedes	silva/probationes/fixa/renominationis/planum_a.c	14	12	376	
+sedes	silva/probationes/fixa/renominationis/planum_a.c	17	1	404	
+usus	silva/probationes/fixa/renominationis/planum_a.c	25	19	501	
+aliena	silva/probationes/fixa/renominationis/planum_a.c	28	7	541	
+aliena	silva/probationes/fixa/renominationis/planum_a.c	31	14	625	
+aliena	silva/probationes/fixa/renominationis/planum_a.c	34	1	747	
+aliena	silva/probationes/fixa/renominationis/planum_a.c	35	14	769	
+manualis	silva/probationes/fixa/renominationis/planum_a.c	10	26	292	in ramo praeprocessoris omisso
 aliena	silva/probationes/fixa/renominationis/planum_b.c	7	12	150	
 aliena	silva/probationes/fixa/renominationis/planum_b.c	10	1	178	
 aliena	silva/probationes/fixa/renominationis/planum_b.c	18	12	263	
+usus	silva/probationes/fixa/renominationis/planum_a.c	6	24	189	corpus macronis - promotum per invocationes
+manualis	silva/probationes/fixa/renominationis/planum_a.c	7	25	224	corpus macronis - macro numquam invocatum in plagulis analysatis
 VERDICTUM	PLANUM
