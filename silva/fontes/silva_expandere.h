@@ -444,4 +444,34 @@ b32
 silva_macro_vista (constans SilvaExpansio* exp, i32 index,
     SilvaMacroVista* vista_out);
 
+/* ==================================================
+ * Lexemata retenta quaesibilia (01KYX2DSKK sequela): corpora
+ * macronum + laminae ramorum omissorum lexemata VERA tenent
+ * (positiones exactae) - hae fenestrae ea instrumentis aperiunt
+ * (nexus ordines corporum; renominare probavit). Indices iidem
+ * ac silva_macro_vista / silva_ramus_vista.
+ * ================================================== */
+
+/* Lexemata corporis macronis ad indicem actorum; 0 si ex_api,
+ * corpus vacuum, aut index malus */
+i32
+silva_macro_corpus_numerus (constans SilvaExpansio* exp,
+    i32 index);
+
+/* Lexema corporis; NIHIL extra fines */
+SilvaToken*
+silva_macro_corpus_lexema (constans SilvaExpansio* exp,
+    i32 index, i32 lexema_index);
+
+/* Lexemata laminae rami OMISSI (cruda, lexata); 0 si ramus
+ * sumptus aut index malus */
+i32
+silva_ramus_lexemata_numerus (constans SilvaExpansio* exp,
+    i32 index);
+
+/* Lexema laminae; NIHIL extra fines */
+SilvaToken*
+silva_ramus_lexema_crudum (constans SilvaExpansio* exp,
+    i32 index, i32 lexema_index);
+
 #endif /* SILVA_EXPANDERE_H */

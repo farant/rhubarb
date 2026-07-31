@@ -713,6 +713,18 @@ int silva_ramus_vista(const SilvaExpansio* exp,
 unsigned int silva_macros_numerus(const SilvaExpansio* exp);
 int silva_macro_vista(const SilvaExpansio* exp,
     unsigned int index, SilvaMacroVista* vista_out);
+/* Retained-token windows (01KYX2DSKK follow-up): macro BODIES and
+ * omitted-branch laminae hold REAL lexed tokens (exact positions) -
+ * these open them to tools. Indices match silva_macro_vista /
+ * silva_ramus_vista. 0/NULL out of bounds or api/taken. */
+unsigned int silva_macro_corpus_numerus(const SilvaExpansio* exp,
+    unsigned int index);
+SilvaToken* silva_macro_corpus_lexema(const SilvaExpansio* exp,
+    unsigned int index, unsigned int lexema_index);
+unsigned int silva_ramus_lexemata_numerus(const SilvaExpansio* exp,
+    unsigned int index);
+SilvaToken* silva_ramus_lexema_crudum(const SilvaExpansio* exp,
+    unsigned int index, unsigned int lexema_index);
 
 
 /* ==================================================

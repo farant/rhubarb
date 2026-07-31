@@ -2967,3 +2967,104 @@ silva_macro_vista (constans SilvaExpansio* exp, i32 index,
     }
     redde FALSUM;
 }
+
+/* ==================================================
+ * Lexemata retenta quaesibilia (01KYX2DSKK sequela)
+ * ================================================== */
+
+/* def ad indicem actorum (idem percursus ac silva_macro_vista);
+ * NIHIL si index malus aut definitio ex api */
+interior constans SilvaMacroDef*
+_def_ad_indicem (constans SilvaExpansio* exp, i32 index)
+{
+    i32 n;
+    i32 visae = ZEPHYRUM;
+    i32 k;
+
+    si (exp == NIHIL)
+    {
+        redde NIHIL;
+    }
+    n = xar_numerus(exp->acta);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans SilvaEventum* eventum =
+            (constans SilvaEventum*)xar_obtinere(exp->acta, k);
+
+        si (eventum->genus != SILVA_EVENTUM_DEFINITIO)
+        {
+            perge;
+        }
+        si (visae == index)
+        {
+            redde eventum->def;
+        }
+        visae++;
+    }
+    redde NIHIL;
+}
+
+i32
+silva_macro_corpus_numerus (constans SilvaExpansio* exp,
+    i32 index)
+{
+    constans SilvaMacroDef* def = _def_ad_indicem(exp, index);
+
+    si (def == NIHIL || def->ex_api || def->corpus == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    redde xar_numerus(def->corpus);
+}
+
+SilvaToken*
+silva_macro_corpus_lexema (constans SilvaExpansio* exp,
+    i32 index, i32 lexema_index)
+{
+    constans SilvaMacroDef* def = _def_ad_indicem(exp, index);
+
+    si (def == NIHIL || def->ex_api || def->corpus == NIHIL
+        || lexema_index >= xar_numerus(def->corpus))
+    {
+        redde NIHIL;
+    }
+    redde *(SilvaToken**)xar_obtinere(def->corpus, lexema_index);
+}
+
+i32
+silva_ramus_lexemata_numerus (constans SilvaExpansio* exp,
+    i32 index)
+{
+    constans SilvaRamus* ramus;
+
+    si (exp == NIHIL || index >= xar_numerus(exp->rami))
+    {
+        redde ZEPHYRUM;
+    }
+    ramus = *(SilvaRamus* constans*)xar_obtinere(exp->rami, index);
+    si (ramus->lexemata_cruda == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    redde xar_numerus(ramus->lexemata_cruda);
+}
+
+SilvaToken*
+silva_ramus_lexema_crudum (constans SilvaExpansio* exp,
+    i32 index, i32 lexema_index)
+{
+    constans SilvaRamus* ramus;
+
+    si (exp == NIHIL || index >= xar_numerus(exp->rami))
+    {
+        redde NIHIL;
+    }
+    ramus = *(SilvaRamus* constans*)xar_obtinere(exp->rami, index);
+    si (ramus->lexemata_cruda == NIHIL
+        || lexema_index >= xar_numerus(ramus->lexemata_cruda))
+    {
+        redde NIHIL;
+    }
+    redde *(SilvaToken**)xar_obtinere(ramus->lexemata_cruda,
+        lexema_index);
+}

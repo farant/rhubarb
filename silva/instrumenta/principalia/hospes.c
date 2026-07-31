@@ -395,6 +395,64 @@ int main(void)
                 "hospes: INFIDELIS: macros numerus\n");
         }
 
+        /* corpus macronis lexematim: ((x)+(x)) = IX lexemata,
+         * tertium identificator "x"; extra fines -> NULL */
+        summa++;
+        {
+            SilvaToken* tertium = silva_macro_corpus_lexema(exp,
+                0, 2);
+
+            if (silva_macro_corpus_numerus(exp, 0) == 9
+                && tertium != NULL
+                && tertium->genus == SILVA_LEX_IDENTIFICATOR
+                && tertium->valor.mensura == 1
+                && tertium->valor.datum[0] == 'x'
+                && silva_macro_corpus_lexema(exp, 0, 9999) == NULL
+                && silva_macro_corpus_numerus(exp, 9999) == 0)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr,
+                    "hospes: INFIDELIS: corpus macronis\n");
+            }
+        }
+
+        /* lamina rami omissi lexata: "int a;" identificator "a"
+         * inest; ramus sumptus lexemata cruda nulla */
+        summa++;
+        {
+            unsigned int m = silva_ramus_lexemata_numerus(exp, 0);
+            unsigned int j;
+            int a_inventum = 0;
+
+            for (j = 0; j < m; j++)
+            {
+                SilvaToken* tok = silva_ramus_lexema_crudum(exp,
+                    0, j);
+
+                if (tok != NULL
+                    && tok->genus == SILVA_LEX_IDENTIFICATOR
+                    && tok->valor.mensura == 1
+                    && tok->valor.datum[0] == 'a')
+                {
+                    a_inventum = 1;
+                }
+            }
+            if (m > 0 && a_inventum
+                && silva_ramus_lexemata_numerus(exp, 1) == 0
+                && silva_ramus_lexema_crudum(exp, 0, 9999) == NULL)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr,
+                    "hospes: INFIDELIS: lamina rami omissi\n");
+            }
+        }
+
         /* inclusio vista: fixum multi-fons supra iam parsavit; hic
          * exp NOSTRUM inclusiones nullas habet */
         summa++;

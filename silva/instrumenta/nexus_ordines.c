@@ -509,6 +509,141 @@ _macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
     }
 }
 
+/* ==================================================
+ * Lexemata retenta (stadium quartum, 01KYX2DSKK sequela):
+ * identificatores in CORPORIBUS macronum et in laminis ramorum
+ * OMISSORUM - sedes nomine-dominii quas nullum instrumentum
+ * videbat ("quae macra symbolum X referunt" nunc respondibile;
+ * renominare machinationem probavit). Lexemata vera, non textus -
+ * chordae et commenta non fallunt.
+ * ================================================== */
+
+interior vacuum
+_lexema_retentum_fundere (constans SilvaParsura* parsura,
+    SilvaToken* tok, constans character* genus,
+    NexusOrdinesReceptor receptor, vacuum* datum)
+{
+    constans SilvaChorda* via;
+    insignatus integer linea;
+    insignatus integer columna;
+
+    si (tok == NIHIL || tok->genus != SILVA_LEX_IDENTIFICATOR
+        || tok->byte_offset < ZEPHYRUM)
+    {
+        redde;
+    }
+    si (!_positionem_capere(parsura, tok, &via, &linea, &columna))
+    {
+        redde;
+    }
+    {
+        SilvaChorda titulus;
+
+        titulus.datum = tok->valor.datum;
+        titulus.mensura = tok->valor.mensura;
+        receptor(datum, &titulus, "usus", genus, via, linea,
+            columna, ZEPHYRUM);
+    }
+}
+
+interior vacuum
+_retenta_fundere (constans SilvaParsura* parsura,
+    Piscina* effimera, NexusOrdinesReceptor receptor,
+    vacuum* datum)
+{
+    TabulaDispersa* sumpta;
+    insignatus integer n;
+    insignatus integer k;
+    insignatus integer j;
+
+    si (parsura->expansio == NIHIL)
+    {
+        redde;
+    }
+    n = silva_macros_numerus(parsura->expansio);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        insignatus integer m = silva_macro_corpus_numerus(
+            parsura->expansio, k);
+
+        per (j = ZEPHYRUM; j < m; j++)
+        {
+            _lexema_retentum_fundere(parsura,
+                silva_macro_corpus_lexema(parsura->expansio, k,
+                    j), "corpus-macronis", receptor, datum);
+        }
+    }
+    /* UMBRAE INCLUSIONIS REPETITAE: inclusio secunda capitis
+     * custodita (#ifndef X_H iam definito) corpus TOTUM ut
+     * laminam omissam fert - non codex dormiens sed idem codex
+     * IAM parsatus. Ramus omissus cuius (fons|initium) rami
+     * SUMPTI congruit = umbra, supprimitur; rami platformarum
+     * (#ifdef __linux__...) initium proprium habent et manent. */
+    sumpta = tabula_dispersa_creare_chorda(effimera, CCLVI);
+    n = silva_rami_numerus(parsura->expansio);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        SilvaRamusVista vista;
+
+        si (silva_ramus_vista(parsura->expansio, k, &vista)
+            && vista.est_sumptum && vista.corpus_initium >= ZEPHYRUM
+            && sumpta != NIHIL)
+        {
+            character clavis_l[LXIV];
+            int scripti = sprintf(clavis_l, "%ld|%ld",
+                (long)vista.fons_index,
+                (long)vista.corpus_initium);
+
+            si (scripti > ZEPHYRUM)
+            {
+                chorda clavis;
+
+                clavis.mensura = (i32)scripti;
+                clavis.datum = (i8*)clavis_l;
+                (vacuum)tabula_dispersa_inserere(sumpta,
+                    chorda_transcribere(clavis, effimera), NIHIL);
+            }
+        }
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        SilvaRamusVista vista;
+        insignatus integer m;
+
+        si (!silva_ramus_vista(parsura->expansio, k, &vista))
+        {
+            perge;
+        }
+        si (!vista.est_sumptum && vista.corpus_initium >= ZEPHYRUM
+            && sumpta != NIHIL)
+        {
+            character clavis_l[LXIV];
+            int scripti = sprintf(clavis_l, "%ld|%ld",
+                (long)vista.fons_index,
+                (long)vista.corpus_initium);
+
+            si (scripti > ZEPHYRUM)
+            {
+                chorda clavis;
+
+                clavis.mensura = (i32)scripti;
+                clavis.datum = (i8*)clavis_l;
+                si (tabula_dispersa_continet(sumpta, clavis))
+                {
+                    perge;   /* umbra inclusionis repetitae */
+                }
+            }
+        }
+        m = silva_ramus_lexemata_numerus(parsura->expansio, k);
+        per (j = ZEPHYRUM; j < m; j++)
+        {
+            _lexema_retentum_fundere(parsura,
+                silva_ramus_lexema_crudum(parsura->expansio, k,
+                    j), "ramus-omissus", receptor, datum);
+        }
+    }
+}
+
 vacuum
 nexus_ordines_fundere (constans SilvaParsura* parsura,
     constans SilvaSemantica* sem, Piscina* effimera,
@@ -522,4 +657,5 @@ nexus_ordines_fundere (constans SilvaParsura* parsura,
     _symbola_fundere(parsura, sem, receptor, datum);
     _usus_fundere(parsura, sem, effimera, receptor, datum);
     _macros_fundere(parsura, effimera, receptor, datum);
+    _retenta_fundere(parsura, effimera, receptor, datum);
 }
