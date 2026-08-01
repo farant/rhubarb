@@ -2,6 +2,13 @@
 <html>
 <head>
 <meta charset="utf-8">
+<!-- Sine hoc iOS ad viewport ~980px disponit et paginam TOTAM ad
+     screnum minuit (~0.4x): littera XXII px ad ~IX px effectivos
+     redditur, ergo Safari in focum agri INTENDIT ut legi possit.
+     Causa non erat mensura litterae (iam supra limitem XVI px) sed
+     viewport absens. In fenestra vitreae (1000 px) 'device-width'
+     latitudinem fenestrae dat = mos praesens, ergo nihil mutatur. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>forum</title>
 <style>
   body { background: #22201d; color: #ece5d8; font: 22px/1.5 monospace;
@@ -17,6 +24,19 @@
              border: 1px solid #8a7a55; padding: .5em; font: inherit;
              border-radius: 4px; box-sizing: border-box; }
   textarea { resize: vertical; }
+  /* SCRENA ANGUSTA (telephonum). Limes DCC px: fenestra vitreae
+     mille lata est, ergo mensa haec numquam tangitur.
+     XVII px, non minus: infra XVI px iOS in focum agri INTENDIT.
+     Agri 'font: inherit' ferunt, ergo corpore mutato sequuntur -
+     mensura una gubernat. XXII px in screna CCCXC px ~XXIX
+     characteres per lineam dabat; XVII ~XXXVIII. */
+  @media (max-width: 700px) {
+    body { font-size: 17px; padding: .6em .5em; }
+    /* nav flexus NON est (spatium per 'margin-right' agit) - ergo
+       'gap' hic mortuum esset, quod agere videretur nec ageret */
+    nav a { margin-right: .7em; }
+    header { gap: .8em; flex-wrap: wrap; }
+  }
   /* editor crescens: altitudo contentum sequitur - scroll internus
    * nullus umquam (pagina volvitur, cursor visualiter stabilis) */
   #editor-corpus { overflow-y: hidden; }
