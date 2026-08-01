@@ -1839,6 +1839,31 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, pipi) != NIHIL);
         CREDO_VERUM (strstr(r, "respondet_ad") != NIHIL);
 
+        /* diurnum (acta diurna): genus SEMINATUM - creatio nullam
+         * notam custodiae trahit. Regressio mensurata 2026-08-01:
+         * genus in codice natum sed sine ordine seminis omnem
+         * creationem violatione 'genus ignotum' notabat (IX
+         * diurna, IX violationes) - haec porta id iterum caperet */
+        {
+            character diur[GESTA_RES_ID_MENSURA];
+
+            r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":968,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"addere\",\"arguments\":{\"genus\":"
+                "\"diurnum\",\"titulus\":\"dies probationis\","
+                "\"corpus\":\"hodie scripsi.\",\"actor\":"
+                "\"fran\"}}}");
+            CREDO_VERUM (strstr(r, "creata") != NIHIL);
+            _res_id_ex_responso(r, diur);
+            sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":969,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"res\",\"arguments\":{\"res\":\"%s\"}}}", diur);
+            r = _mitte(t, piscina, linea);
+            CREDO_VERUM (strstr(r, "hodie scripsi.") != NIHIL);
+            CREDO_VERUM (strstr(r, "genus ignotum") == NIHIL);
+            CREDO_VERUM (strstr(r, "nota (machina)") == NIHIL);
+        }
+
         /* F4: salutatio lectoris + acta ab_lecto (cursor conditus
          * in initialize primo ad hwm tunc - omnia posteriora non
          * lecta) */

@@ -242,6 +242,16 @@ interior constans TabulariumSemen SEMINA_GENERUM[] = {
       "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
       "{\"titulus\":\"corpus\",\"typus\":\"textus\"}],"
       "\"reducer\":\"ordinarius\"}" },
+    /* acta diurna (2026-08-01): ephemeris cottidiana - sine
+     * machina statuum (dies transit, ens non maturescit). Tags
+     * adsunt quia genus CAPTURABILE est (messis STML ut in
+     * articulis) - vide _genus_capturabile */
+    { "diurnum",
+      "{\"titulus\":\"diurnum\",\"attributa\":[{\"titulus\":"
+      "\"titulus\",\"typus\":\"textus\",\"necessarium\":true},"
+      "{\"titulus\":\"corpus\",\"typus\":\"textus\"},{\"titulus\":"
+      "\"tags\",\"typus\":\"tabulatum\"}],"
+      "\"reducer\":\"ordinarius\"}" },
     /* ---- semen v6 (genera G0): meta-genus definitionis - genera
      * ab usore per app definita. Ens definitionis plicatum ->
      * ordo registri (usor=1, gesta.c _definitionem_proicere);
@@ -263,7 +273,7 @@ interior constans TabulariumSemen SEMINA_GENERUM[] = {
 /* scopus fusionis v2 (genera tabulae + nexus); genera K3 infra
  * attributa propria ferunt (emendatio E2-B2) */
 #define SEMINA_BOARD_NUMERUS VI
-#define SEMINA_NUMERUS XIV
+#define SEMINA_NUMERUS XV
 
 /* semen v2 (K2 decisio Q9): attributa in genera VIVA - emendatio
  * integra-substitutio ex definitione currenti + attributa (fusio
