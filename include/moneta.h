@@ -33,4 +33,19 @@ vacuum
 moneta_ulid_fortuita (
     character* effusio);
 
+/* Octeti fortuiti ex /dev/urandom - SINE RESERVO.
+ *
+ * Redde FALSUM si fons abest aut deficit; effusio tunc INTACTA.
+ * Vocans REFUSAT, non pergit.
+ *
+ * Cur sine reservo, cum moneta_ulid reservum habeat: ULID
+ * UNICITATEM poscit, quam miscela temporis praestare potest;
+ * SECRETUM impraevisibilitatem poscit, quam praestare NON potest.
+ * Reservum tacitum hic clavem divinabilem pareret - defectus
+ * qui ut successus spectat. Ergo duae functiones, non una. */
+b32
+moneta_octeti_fortuiti (
+    i8* effusio,
+    i32 mensura);
+
 #endif /* MONETA_H */

@@ -160,3 +160,28 @@ moneta_ulid_fortuita (character* effusio)
     }
     effusio[26] = '\0';
 }
+
+/* octeti fortuiti sine reservo: pro secretis, ubi reservum
+ * praevisibile peius est quam defectus apertus (vide moneta.h) */
+b32
+moneta_octeti_fortuiti (i8* effusio, i32 mensura)
+{
+    FILE* fons;
+
+    si (effusio == NIHIL || mensura <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    fons = fopen("/dev/urandom", "rb");
+    si (fons == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (fread(effusio, I, (size_t)mensura, fons) != (size_t)mensura)
+    {
+        fclose(fons);
+        redde FALSUM;
+    }
+    fclose(fons);
+    redde VERUM;
+}

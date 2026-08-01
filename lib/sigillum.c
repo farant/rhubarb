@@ -211,6 +211,23 @@ sigillum_hex (constans Sigillum* sigillum, character* effusio)
 b32
 sigillum_aequale (constans Sigillum* a, constans Sigillum* b)
 {
-    redde memcmp(a->octeti, b->octeti, SIGILLUM_OCTETI) == 0
-        ? VERUM : FALSUM;
+    /* TEMPORE CONSTANTI: memcmp ad primam differentiam exit, ergo
+     * tempus responsi quot octeti congruant prodit. Ubi sigillum
+     * SECRETUM custodit (tessera, clavis), id oppugnatori sinit
+     * octetum post octetum divinare. Nulla sedes umquam exitum
+     * praematurum voluit - sigilla longitudinis fixae sunt et
+     * XXXII disiunctiones nihil constant - ergo functio ipsa
+     * emendatur, non altera addita. */
+    i32 i;
+    i32 differentia = ZEPHYRUM;
+
+    si (a == NIHIL || b == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < SIGILLUM_OCTETI; i++)
+    {
+        differentia |= (i32)(a->octeti[i] ^ b->octeti[i]);
+    }
+    redde (differentia == ZEPHYRUM) ? VERUM : FALSUM;
 }
