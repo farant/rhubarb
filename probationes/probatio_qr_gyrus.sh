@@ -45,15 +45,42 @@ clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion \
 fracturae=0
 probati=0
 
+# Capacitates byte-mode per versionem/gradum (ISO 18004 tabula 7),
+# HIC INDEPENDENTER scriptae. Duplex officium:
+#  (1) onus = capacitas ipsa -> versio exspectata SELECTA est, ergo
+#      omnes XL compositiones versionis/gradus tanguntur (non solum
+#      quas mensurae fortuitae attingunt);
+#  (2) onus maximum limitem impletionis/expletionis premit - locus
+#      ubi numerus codewordorum falsus primum apparet.
+# Si tabula qr.c ab his discrepat, versio recepta exspectatae non
+# aequabit et probatio nominatim clamabit.
+CAP_L="17 32 53 78 106 134 154 192 230 271"
+CAP_M="14 26 42 62 84 106 122 152 180 213"
+CAP_Q="11 20 32 46 60 74 86 108 130 151"
+CAP_H="7 14 24 34 44 58 64 84 98 119"
+
 for gradus in 0 1 2 3; do
     nomen_gradus=$(echo "L M Q H" | cut -d' ' -f$((gradus + 1)))
-    for n in 8 25 45 70 100 140 180; do
+    eval "capacitates=\$CAP_$nomen_gradus"
+    v_exspectata=0
+    for n in $capacitates; do
+        v_exspectata=$((v_exspectata + 1))
         textus=$(printf 'B%.0s' $(seq 1 "$n"))
         info=$("$BIN" "$textus" "$SCRATCH/g.bmp" "$gradus" 2>/dev/null)
         case "$info" in
-            FRACTUM*) continue ;;   # ultra capacitatem = rectum
+            FRACTUM*)
+                echo "FRACTUM  ECC-$nomen_gradus V$v_exspectata:" \
+                     "generatio recusata ad capacitatem $n"
+                fracturae=$((fracturae + 1))
+                continue ;;
         esac
         versio=$(echo "$info" | sed 's/versio=\([0-9]*\).*/\1/')
+        if [ "$versio" != "$v_exspectata" ]; then
+            echo "FRACTUM  ECC-$nomen_gradus: onus $n octetorum" \
+                 "V$versio elegit, V$v_exspectata exspectata"
+            fracturae=$((fracturae + 1))
+            continue
+        fi
         sips -s format png "$SCRATCH/g.bmp" --out "$SCRATCH/g.png" \
             >/dev/null 2>&1
         res=$(osascript -l JavaScript "$ORACULUM" "$SCRATCH/g.png" \
