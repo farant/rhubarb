@@ -257,6 +257,44 @@ proba(!liber_in_indice({ datum: { owned: false,
 proba(!liber_in_indice({}), "datum absens celatur");
 
 /* ================================================================
+ * IV bis. VESTIGIUM REDITUS - unde in ens venimus
+ *
+ * Vetustas structuraliter impossibilis esse debet: vestigium ad
+ * res_id ligatum est, ergo ens ALIUD id non heredat. Sine hac
+ * comparatione usor ens quodlibet apertum premens ad capitulum
+ * alienum mitteretur - error qui ut 'app confusa est' apparet,
+ * numquam ut error.
+ * ================================================================ */
+(function () {
+    var itum = 0;
+    res_ens_id = "01ENS_A";
+    res_reditus = { res_id: "01ENS_A", titulus: "Riots",
+        ire: function () { itum++; } };
+    proba(reditus_valet(), "vestigium ad ens SUUM valet");
+    reddere_reditum();
+    aequale(document.getElementById("ens-retro").textContent,
+        "← Riots", "titulus vestigii DESTINATIONEM nominat");
+
+    /* ens aliud eadem sessione apertum: vestigium NON valet */
+    res_ens_id = "01ENS_B";
+    proba(!reditus_valet(), "vestigium ad ens alienum NON valet");
+    reddere_reditum();
+    aequale(document.getElementById("ens-retro").textContent,
+        "← tabula", "sine vestigio valido titulus ordinarius");
+
+    /* tabulam Rerum relinquens vestigium relinquit */
+    res_ens_id = "01ENS_A";
+    proba(reditus_valet(), "vestigium redit cum ens suum redit");
+    vertere("pipata");
+    proba(res_reditus === null,
+        "vertere ex tabula Rerum vestigium purgat");
+    vertere("res");
+    proba(res_reditus === null,
+        "vestigium purgatum manet post reditum in tabulam Rerum");
+    aequale(itum, 0, "vestigium nondum adhibitum");
+}());
+
+/* ================================================================
  * V. AEQUATIO ADDITIVA - probatio quae plurimum valet
  *
  * Definitio VIVA optiones veteres fert; codex novas poscit. Sine

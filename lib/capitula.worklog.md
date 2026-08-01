@@ -270,3 +270,40 @@ Separately from the JS tests, all five species were driven through
 new species value, an `inventum` linked TWO inventores, a `scriptum`
 wrote `owned=false` with its author linked, and a question got its
 answer added afterwards. 12 test entities tombstoned after.
+
+## 2026-08-01 (late) — the back-breadcrumb problem
+
+Fran: clicking a person/place chip in the chapter feed lands you in
+the Res entity view, whose back link goes to the Res table — which
+dumps you out of your reading. *"It's a little tricky since it's not
+a full browser and there's not an easy back button."*
+
+**One trail, not a history.** The question "where did I come from"
+has exactly one answer, so `res_reditus = {res_id, titulus, ire}` —
+the same shape as `forma_reditus`, which the book-edit delegation
+introduced this morning. A stack would be more general and would buy
+nothing anyone asked for.
+
+**Staleness made structurally impossible, not managed.** The trail
+is bound to the `res_id` it was created for. Open any other entity
+by any other route and the trail simply doesn't apply — a
+comparison, not a discipline of remembering to clear. (It's also
+cleared when leaving the Res tab, but that's hygiene, not the
+guarantee.) Calibrated: dropping the id comparison turns two
+assertions red, and the reported symptom is exactly what a user
+would see — an unrelated entity offering "← Riots".
+
+**The label names the destination.** Without a browser there is no
+implied "back", so the link reads `← Riots`, not `← retro`. You know
+where it goes before you press it.
+
+**The return deliberately does NOT rebuild the note editor.** You
+look a person up in the middle of writing a note; if the return
+called `adnot_formam_reddere()` your half-written note would be
+gone. So the return restores the view and the feed only, leaving
+`adnot_lat` pointing at the same live inputs.
+
+Wired into tags too (two call sites, same mechanism) since the same
+complaint applies there — `← #nominalismus` instead of `← tabula`.
+The STML stamp path keeps the old behaviour: its origin genuinely
+varies, and guessing would be worse than the plain default.

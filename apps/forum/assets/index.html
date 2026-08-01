@@ -892,6 +892,8 @@ function vertere(novus) {
   document.getElementById('visus-sententiae').hidden = novus !== 'sententiae';
   document.getElementById('visus-libri').hidden = novus !== 'libri';
   document.getElementById('visus-telephonum').hidden = novus !== 'telephonum';
+  /* tabulam Rerum relinquens vestigium relinquit */
+  if (novus !== 'res') { res_reditus = null; }
   document.getElementById('nav-pipata').className =
     (novus === 'pipata') ? 'activa' : '';
   document.getElementById('nav-acta').className =
@@ -1718,10 +1720,21 @@ function res_vertere(sub) {
   document.getElementById('res-forma-domus').hidden = sub !== 'forma';
   erroris.textContent = '';
   ultima = {};
+  /* titulum vestigii hic renovare: haec porta UNA est per quam
+     species entis intratur, quacumque via (tabula, tagi, notae) */
+  if (sub === 'ens') { reddere_reditum(); }
   if (sub === 'index' || sub === 'tabula' || sub === 'ens') { anquirere(); }
 }
 document.getElementById('tabula-retro').onclick = function () { res_vertere('index'); };
-document.getElementById('ens-retro').onclick = function () { res_vertere('tabula'); };
+document.getElementById('ens-retro').onclick = function () {
+  if (reditus_valet()) {
+    var ire = res_reditus.ire;
+    res_reditus = null;
+    ire();
+    return;
+  }
+  res_vertere('tabula');
+};
 document.getElementById('creator-retro').onclick = function () { res_vertere('index'); };
 /* Reditus a forma generica: tabula quae formam MUTUATUR (Libri) hic
  * viam domum ponit. Sine eo mutuatio usorem in tabula Rerum
@@ -3012,7 +3025,32 @@ function tag_aperire(t) {
   tags_vertere('tag');
 }
 
-function ens_aperire_per_genus(genus_clavis, res_id) {
+/* REDITUS ENTIS - vestigium unum, non historia.
+ *
+ * App navigatrum non est: nullum 'retro' adest, et vestigium quod
+ * ad tabulam Rerum semper ducit usorem ex opere suo eicit (nota
+ * capituli scribitur, persona inspicitur, deinde... index generum).
+ *
+ * UNUM vestigium sufficit quia quaestio 'unde veni' unum responsum
+ * habet. Vetustas structuraliter impossibilis: vestigium ad RES_ID
+ * ligatur, ergo ens aliud quavis alia via apertum id NON heredat -
+ * comparatio, non disciplina purgandi.
+ *
+ * Titulus DESTINATIONEM nominat ('<- Riots'), non 'retro': sine
+ * navigatro usor scire debet quo ducat ANTE quam premat. */
+var res_reditus = null;   /* {res_id, titulus, ire} */
+
+function reditus_valet() {
+  return !!(res_reditus && res_reditus.res_id === res_ens_id);
+}
+
+function reddere_reditum() {
+  document.getElementById('ens-retro').textContent =
+    reditus_valet() ? ('← ' + res_reditus.titulus)
+                    : '← tabula';
+}
+
+function ens_aperire_per_genus(genus_clavis, res_id, reditus) {
   var def = null;
   res_defs.forEach(function (d) {
     if (clavis_de(d) === genus_clavis) { def = d; }
@@ -3022,8 +3060,14 @@ function ens_aperire_per_genus(genus_clavis, res_id) {
   res_ens_id = res_id;
   document.getElementById('tabula-titulus').textContent =
     titulus_de(def);
-  vertere('res');
+  vertere('res');       /* vestigium purgat (exitus e tabula Rerum) */
   res_vertere('ens');
+  /* POST vertere: ille purgat, ergo hic ponimus */
+  if (reditus) {
+    res_reditus = { res_id: res_id, titulus: reditus.titulus,
+      ire: reditus.ire };
+  }
+  reddere_reditum();
 }
 
 function tags_agri(copia, datum) {
@@ -3102,7 +3146,16 @@ function tags_construere(pipata, commentaria, articuli, scholia_o,
       navigare = function () { aperire_articulum(radix); };
     } else if (radix && ens_genus_per_id[radix]) {
       navigare = function () {
-        ens_aperire_per_genus(ens_genus_per_id[radix], radix);
+        var v = tags_visus;
+        var t = tag_electum;
+        ens_aperire_per_genus(ens_genus_per_id[radix], radix, {
+          titulus: t ? ('#' + t) : 'tags',
+          ire: function () {
+            tag_electum = t;
+            vertere('tags');
+            tags_vertere(v);
+          }
+        });
       };
     }
     addere_rem(copia, 'commentarium', c,
@@ -3146,7 +3199,18 @@ function tags_construere(pipata, commentaria, articuli, scholia_o,
       });
       addere_rem(copia, g, e,
         breve_ex((e.datum && e.datum.titulus) || e.titulus),
-        function () { ens_aperire_per_genus(g, e.res_id); });
+        function () {
+          var v = tags_visus;
+          var t = tag_electum;
+          ens_aperire_per_genus(g, e.res_id, {
+            titulus: t ? ('#' + t) : 'tags',
+            ire: function () {
+              tag_electum = t;
+              vertere('tags');
+              tags_vertere(v);
+            }
+          });
+        });
     });
   });
   return res;
@@ -4437,7 +4501,26 @@ function elementum_adnotationis(a) {
       s.className = 'subiectum-a';
       s.textContent = '  ' + (n.ad_titulus || '[deletum]');
       s.onclick = function () {
-        ens_aperire_per_genus(sp.ens, n.ad);
+        /* capitulum et liber in CLAUSURA capiuntur: navigatio ea
+           mutat, et vestigium quod globalia legit ad capitulum
+           FALSUM rediret */
+        var c = cap_ens;
+        var l = liber_ens;
+        var d_c = (c && c.datum) || {};
+        ens_aperire_per_genus(sp.ens, n.ad, {
+          titulus: d_c.titulus_capituli || (c && c.titulus) || 'capitulum',
+          /* NOTA: formam NON reficit. Qui personam inspicit dum
+             notam scribit notam suam SEMIPERFECTAM invenire debet -
+             adnot_formam_reddere eam deleret. Ideo reditus solum
+             visum et feed reddit. */
+          ire: function () {
+            liber_ens = l;
+            cap_ens = c;
+            vertere('libri');
+            libri_vertere('capitulum');
+            reddere_capitulum();
+          }
+        });
       };
       caput.appendChild(s);
       if (latus) {
