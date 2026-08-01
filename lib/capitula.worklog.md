@@ -182,3 +182,91 @@ Finding along the way: the app's `transmittere` allowlist is
 `addere|gerere|legere|quaerere` — `res` is NOT callable from the
 webview. Fine for the app, but it's why a test script driving the
 bridge can't inspect an entity that way.
+
+## 2026-08-01 (late) — five more species, and the forum's first JS tests
+
+Added: **terminus** (word + definition), **societas** (name + year
+founded), **scriptum** (a referenced written work), **inventum**
+(description + year + inventors), **quaestio** (question, answer
+added later).
+
+### Modelling
+
+Four are world entities; **quaestio is not**. A question belongs to
+the moment of reading, not to the world, so it lives on the
+annotation with a new `responsum` field — empty until filled. That
+also means "what didn't I understand in this book?" is answerable
+without a status field: species = quaestio, `responsum` empty. The
+empty answer IS the status, so the two can never disagree.
+
+**`scriptum` reuses the `book` genus** (Fran's call) rather than a
+parallel one: a pamphlet noted today can become a book read next
+year, with its author already linked. The cost is that the Libri
+index would fill with works never read — so notes write
+`owned: false`, and the index shows only owned-or-has-reading-status,
+with the hidden count ALWAYS displayed. A silent filter would read
+as "my book disappeared."
+
+**A term's definition lives on the term**, so it accumulates into a
+glossary across books; a second author's different usage goes in the
+note's own text.
+
+### The picker, extracted rather than rewritten
+
+Fran: *"we probably have something we can use from the res editor or
+at least build on."* Right — `selector_relationis` already had
+search, chips, cardinality, and inline-create (with the two-layer
+title fix). Extracted it to `selector_entium(cfg)` taking its state
+by PARAMETER instead of reaching for the form's globals; the Res
+form is now a five-line wrapper. Three consumers now: the Res form,
+the note's subject picker, and relation fields INSIDE entity
+creation (inventores, auctores).
+
+One flag earned its place: `creare: false`. The subject picker sits
+directly above explicit fields (praenomen/cognomen/annus), so
+offering "+ create «Darwin»" there would produce a half-empty person
+while the full fields below sat ignored.
+
+### THE trap of this batch: electio options
+
+`species` is an `electio`, and `_campum_iudicare` rejects values
+outside `optiones`. The `adnotatio` genus was ALREADY LIVE with five
+options — so shipping five new species without widening the live
+definition would have every new note rejected by the machine with a
+message the webview never surfaces. Handled by `aequare`, an
+ADDITIVE alignment: adds missing fields, unions electio options,
+never removes or rewrites anything (which is also the genus layer's
+own law).
+
+### apps/forum/assets/probatio_fori.js — the forum's first JS tests
+
+The webview now carries real logic that exists nowhere in C: title
+derivation, the additive alignment, the index filter. So: the
+speculum pattern (JXA + fake DOM), evaluating the REAL `<script>`
+extracted from index.html. 53 assertions, wired into
+compile_tests.sh beside probatio_velaminis.js.
+
+Two traps hit while writing it, both already recorded and both worth
+re-recording because they cost time anyway:
+
+1. **JXA microtasks may never flush** — a real `Promise` chain
+   silently half-runs, so assertions inside `.then()` never execute
+   and the test reports GREEN. Fixed with a synchronous thenable
+   (`Sync`) substituted for `Promise`; the app code can't tell.
+2. **My own harness read the wrong envelope.** `instrumentum(n, a)`
+   sends `transmittere {instrumentum, argumenta}`, so
+   `v.argumenta.actus` is always undefined — the test reported "no
+   mutation issued" while the code was mutating correctly. A harness
+   bug reads exactly like a product bug.
+
+Calibrated both ways: removing one species option turns 2 assertions
+red naming the option; making the alignment replace instead of merge
+turns the idempotency assertion red.
+
+### Bridge-level proof
+
+Separately from the JS tests, all five species were driven through
+`bin/forum -servire` against the live store: machine accepted every
+new species value, an `inventum` linked TWO inventores, a `scriptum`
+wrote `owned=false` with its author linked, and a question got its
+answer added afterwards. 12 test entities tombstoned after.

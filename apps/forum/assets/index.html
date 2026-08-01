@@ -320,6 +320,10 @@
   .adnot-ordo .pagina-a { color: #8a8274; font-size: .8em; }
   .adnot-ordo .subiectum-a { color: #c9b98a; cursor: pointer; }
   .adnot-ordo .textus-a { white-space: pre-wrap; }
+  /* responsum sub quaestione recedit, more responsi in filo */
+  .adnot-ordo .responsum-a { margin-top: .35em; padding-left: .8em;
+    border-left: 2px solid #453d2f; white-space: pre-wrap;
+    color: #c9c3b5; }
   .adnot-ordo .acta-a { font-size: .8em; }
   .adnot-ordo .acta-a a { margin-right: .7em; cursor: pointer;
     color: #8a8274; }
@@ -595,6 +599,7 @@
 <section id="visus-libri" hidden>
   <div id="libri-index-domus">
     <div class="caput-actionum">
+      <a class="retro" id="libri-omnia"></a>
       <button id="liber-novus" class="parva">liber novus</button>
     </div>
     <div id="libri-index"></div>
@@ -2355,31 +2360,53 @@ document.getElementById('commentari-ens').onclick = function () {
 /* ---- forma entis (poll-exempta; exemplar editoris) ---- */
 var forma_latitudines = {};   /* clavis campi -> elementum valoris */
 
-function selector_relationis(campus, praeselecta) {
+/* SELECTOR ENTIUM - unus, consumptores duo (forma Rerum, editor
+ * notarum lectionis).
+ *
+ * Status per PARAMETROS venit, non per globalia: forma Rerum sua
+ * forma_nexus/forma_scopi tenet, editor notarum sua. 'electa' IN
+ * LOCO mutatur (numquam substituitur) ut vocator idem tabulatum
+ * teneat quod hic mutamus.
+ *
+ * cfg = {
+ *   ad             clavis generis destinationis
+ *   cardinalitas   'unum' | 'multa'
+ *   electa         tabulatum {id, titulus} - MUTATUR in loco
+ *   scopus()       entia eligibilia (functio: onus asynchronum)
+ *   scopum_augere  functio(ens) post creationem inlineam
+ *   creare         b32 (ordinarius VERUM) - an creatio inlinea
+ *                  offeratur. FALSUM ubi campi expliciti infra
+ *                  stant: aliter '+ creare' ens SEMIPLENUM pareret
+ *                  (nomen solum) dum campi pleni infra ignorantur.
+ *   mutatum()      post mutationem (redditio dependens)
+ * } */
+function selector_entium(cfg) {
   var domus = document.createElement('div');
-  domus.className = 'praebita';
   var chips = document.createElement('div');
   var arca = document.createElement('input');
-  arca.placeholder = 'quaerere ' + campus.ad + '...';
   var index = document.createElement('div');
+
+  domus.className = 'praebita';
+  arca.placeholder = 'quaerere ' + cfg.ad + '...';
+  arca.dataset.inter = 'verum';
   index.className = 'praebita-index';
   index.hidden = true;
-  forma_nexus[campus.clavis] = (praeselecta || []).slice();
+
+  function nuntiare() { if (cfg.mutatum) { cfg.mutatum(); } }
 
   function chips_reddere() {
     chips.innerHTML = '';
-    forma_nexus[campus.clavis].forEach(function (sel) {
+    cfg.electa.forEach(function (sel) {
       var sp = document.createElement('span');
       sp.className = 'chip';
       sp.textContent = sel.titulus;
       var x = document.createElement('a');
       x.textContent = '×';
       x.onclick = function () {
-        forma_nexus[campus.clavis] =
-          forma_nexus[campus.clavis].filter(function (s) {
-            return s.id !== sel.id;
-          });
+        var i = cfg.electa.indexOf(sel);
+        if (i >= 0) { cfg.electa.splice(i, 1); }
         chips_reddere();
+        nuntiare();
       };
       sp.appendChild(x);
       chips.appendChild(sp);
@@ -2387,71 +2414,85 @@ function selector_relationis(campus, praeselecta) {
   }
 
   function seligere(id, titulus) {
-    if (campus.cardinalitas === 'unum') {
-      forma_nexus[campus.clavis] = [{ id: id, titulus: titulus }];
-    } else {
-      var iam = forma_nexus[campus.clavis].some(function (s) {
-        return s.id === id;
-      });
-      if (!iam) {
-        forma_nexus[campus.clavis].push({ id: id, titulus: titulus });
-      }
+    if (cfg.cardinalitas === 'unum') {
+      cfg.electa.length = 0;
+      cfg.electa.push({ id: id, titulus: titulus });
+    } else if (!cfg.electa.some(function (s) { return s.id === id; })) {
+      cfg.electa.push({ id: id, titulus: titulus });
     }
     arca.value = '';
     index.hidden = true;
     chips_reddere();
+    nuntiare();
   }
 
   arca.addEventListener('input', function () {
     var q = arca.value.toLowerCase();
     index.innerHTML = '';
     if (!q) { index.hidden = true; return; }
-    var scopi = forma_scopi[campus.clavis] || [];
-    scopi.forEach(function (e) {
-      if (tumulus_est(e)) { return; }
+    (cfg.scopus() || []).forEach(function (e) {
       var t = (e.datum && e.datum.titulus) || '';
+      if (tumulus_est(e)) { return; }
       if (t.toLowerCase().indexOf(q) < 0) { return; }
       var d = document.createElement('div');
       d.textContent = t;
       d.onclick = function () { seligere(e.res_id, t); };
       index.appendChild(d);
     });
-    var creare = document.createElement('div');
-    creare.className = 'creare-novum';
-    creare.textContent = '+ creare «' + arca.value + '»';
-    creare.onclick = function () {
-      var t = arca.value;
-      /* campus tituli generis destinationis QUOQUE impletur -
-       * titulus machinae (indices/vincula) et campus schematis
-       * (columna/forma) synchroni, ut forma servans facit */
-      var def_ad = null;
-      res_defs.forEach(function (d) {
-        if (clavis_de(d) === campus.ad) { def_ad = d; }
-      });
-      var ct_ad = def_ad ? campus_tituli_de(def_ad) : null;
-      var d_novum = {};
-      if (ct_ad) { d_novum[ct_ad] = t; }
-      instrumentum('addere', { genus: campus.ad, titulus: t,
-        datum: JSON.stringify(d_novum) })
-        .then(function (r) {
-          if (r.res_id) {
+    if (cfg.creare !== false) {
+      var creare = document.createElement('div');
+      creare.className = 'creare-novum';
+      creare.textContent = '+ creare «' + arca.value + '»';
+      creare.onclick = function () {
+        var t = arca.value;
+        /* campus tituli generis destinationis QUOQUE impletur -
+         * titulus machinae (indices/vincula) et campus schematis
+         * (columna/forma) synchroni, ut forma servans facit */
+        var def_ad = null;
+        res_defs.forEach(function (d) {
+          if (clavis_de(d) === cfg.ad) { def_ad = d; }
+        });
+        var ct_ad = def_ad ? campus_tituli_de(def_ad) : null;
+        var d_novum = {};
+        if (ct_ad) { d_novum[ct_ad] = t; }
+        instrumentum('addere', { genus: cfg.ad, titulus: t,
+          datum: JSON.stringify(d_novum) })
+          .then(function (r) {
+            if (!r.res_id) { return; }
             var e_novum = { res_id: r.res_id,
               datum: { titulus: t } };
             if (ct_ad) { e_novum.datum[ct_ad] = t; }
-            forma_scopi[campus.clavis].push(e_novum);
+            if (cfg.scopum_augere) { cfg.scopum_augere(e_novum); }
             seligere(r.res_id, t);
-          }
-        })
-        .catch(function (c) { culpam_ostendere(c, 'defectus creationis'); });
-    };
-    index.appendChild(creare);
-    index.hidden = false;
+          })
+          .catch(function (c) {
+            culpam_ostendere(c, 'defectus creationis');
+          });
+      };
+      index.appendChild(creare);
+    }
+    index.hidden = !index.childNodes.length;
   });
+
   chips_reddere();
   domus.appendChild(chips);
   domus.appendChild(arca);
   domus.appendChild(index);
   return domus;
+}
+
+/* Involucrum formae Rerum: globalia eius selectori praebet */
+function selector_relationis(campus, praeselecta) {
+  forma_nexus[campus.clavis] = (praeselecta || []).slice();
+  return selector_entium({
+    ad: campus.ad,
+    cardinalitas: campus.cardinalitas,
+    electa: forma_nexus[campus.clavis],
+    scopus: function () { return forma_scopi[campus.clavis]; },
+    scopum_augere: function (e) {
+      (forma_scopi[campus.clavis] || []).push(e);
+    }
+  });
 }
 
 function forma_aperire(ens) {
@@ -3585,6 +3626,7 @@ document.getElementById('sent-saltus').onkeydown = function (ev) {
 
 var libri_visus  = 'index';   /* index | liber | insere */
 var libri        = [];        /* cache librorum */
+var libri_omnes  = false;     /* falsum = sola lectio, non memorata */
 var liber_ens    = null;      /* liber apertus */
 var liber_cap    = [];        /* capitula libri aperti, ordine */
 var cap_praevisa = [];        /* fructus lectionis (nondum scripta) */
@@ -3643,32 +3685,76 @@ function libri_genera_curare() {
           titulus: titulus, datum: JSON.stringify(schema) });
       });
     }
-    /* PERSONA IAM EXSTAT (XXXIX entia). Praenomen/cognomen ADDUNTUR
-       (emendatio additiva - claves veteres intactae, entia vetera
-       valida cum campis novis vacuis). 'name' campus tituli MANET et
-       ex duobus DERIVATUR ad omnem scriptionem: derivatio unius viae
-       divergere non potest, dum duo campi veri ordinationem per
-       cognomen permittunt. */
-    (function () {
-      var pd = null;
+    /* AEQUATIO ADDITIVA generis IAM VIVENTIS: campi absentes
+       adduntur, optiones electionis augentur, praesentia NUMQUAM
+       mutantur nec tolluntur (lex generum: emendatio additiva
+       sola). Ergo in conditorio quovis idem facit et bis vocata
+       nihil agit.
+
+       Sine hoc species nova adnotationis a machina RECUSARETUR
+       ('valor extra optiones electionis') - definitio viva optiones
+       veteres ferret dum codex novas mitteret. */
+    function aequare(clavis, campi_desiderati) {
+      var def = null;
       defs.forEach(function (d) {
-        if (clavis_de(d) === 'person') { pd = d; }
+        if (clavis_de(d) === clavis) { def = d; }
       });
-      if (!pd) { return; }
-      if (campi_de(pd).some(function (c) {
-        return c.clavis === 'first_name';
-      })) { return; }
+      if (!def) { return; }
+      var campi = campi_de(def).map(function (c) {
+        var copia = {};
+        Object.keys(c).forEach(function (k) { copia[k] = c[k]; });
+        return copia;
+      });
+      var mutatum = false;
+      campi_desiderati.forEach(function (cd) {
+        var c = null;
+        campi.forEach(function (x) {
+          if (x.clavis === cd.clavis) { c = x; }
+        });
+        if (!c) { campi.push(cd); mutatum = true; return; }
+        (cd.optiones || []).forEach(function (v) {
+          c.optiones = c.optiones || [];
+          if (c.optiones.indexOf(v) < 0) {
+            c.optiones.push(v);
+            mutatum = true;
+          }
+        });
+      });
+      if (!mutatum) { return; }
       catena = catena.then(function () {
-        return instrumentum('gerere', { res: pd.res_id,
-          actus: 'mutatio', datum: JSON.stringify({
-            campi: campi_de(pd).concat([
-              { clavis: 'first_name', monstrans: 'First name',
-                typus: 'textus' },
-              { clavis: 'last_name', monstrans: 'Last name',
-                typus: 'textus' }
-            ]) }) });
+        return instrumentum('gerere', { res: def.res_id,
+          actus: 'mutatio',
+          datum: JSON.stringify({ campi: campi }) });
       });
-    }());
+    }
+
+    /* PERSONA IAM EXSTAT (XXXIX entia). Praenomen/cognomen ADDUNTUR:
+       'name' campus tituli MANET et ex duobus DERIVATUR ad omnem
+       scriptionem - derivatio unius viae divergere non potest, dum
+       duo campi veri ordinationem per cognomen permittunt. */
+    aequare('person', [
+      { clavis: 'first_name', monstrans: 'First name',
+        typus: 'textus' },
+      { clavis: 'last_name', monstrans: 'Last name',
+        typus: 'textus' }
+    ]);
+    /* ADNOTATIO: species novae + responsum quaestionis + campi
+       relationis ad entia mundana nova */
+    aequare('adnotatio', [
+      { clavis: 'species', monstrans: 'Species', typus: 'electio',
+        optiones: ['nota', 'citatio', 'persona', 'eventus', 'locus',
+          'terminus', 'societas', 'scriptum', 'inventum',
+          'quaestio'] },
+      { clavis: 'responsum', monstrans: 'Responsum', typus: 'area' },
+      { clavis: 'terminus', monstrans: 'Terminus', typus: 'relatio',
+        ad: 'terminus', cardinalitas: 'unum' },
+      { clavis: 'societas', monstrans: 'Societas', typus: 'relatio',
+        ad: 'societas', cardinalitas: 'unum' },
+      { clavis: 'scriptum', monstrans: 'Scriptum', typus: 'relatio',
+        ad: 'book', cardinalitas: 'unum' },
+      { clavis: 'inventum', monstrans: 'Inventum', typus: 'relatio',
+        ad: 'inventum', cardinalitas: 'unum' }
+    ]);
     condere('person', 'Person', {
       clavis: 'person', titulus_monstrans: 'Person',
       campi: [
@@ -3753,6 +3839,48 @@ function libri_genera_curare() {
       ordo_ordinarius: { campus: 'annus', directio: 'ascendens' },
       descriptio: 'Eventus historicus - inter libros communis.'
         + ' Annus signatus est (negativus = a.C.n.).' });
+    condere('terminus', 'Terminus', {
+      clavis: 'terminus', titulus_monstrans: 'Terminus',
+      campi: [
+        { clavis: 'vocabulum', monstrans: 'Vocabulum',
+          typus: 'textus' },
+        { clavis: 'definitio_termini', monstrans: 'Definitio',
+          typus: 'area' }
+      ],
+      campus_tituli: 'vocabulum',
+      ordo_ordinarius: { campus: 'vocabulum',
+        directio: 'ascendens' },
+      /* definitio in TERMINO, non in nota: ita glossarium trans
+         libros crescit. Auctor alius idem vocabulum aliter usurpans
+         in TEXTU notae notatur - dissensio ibi vivit, non hic. */
+      descriptio: 'Terminus cum definitione - glossarium trans'
+        + ' libros. Usus proprius libri in textu notae stat.' });
+    condere('societas', 'Societas', {
+      clavis: 'societas', titulus_monstrans: 'Societas',
+      campi: [
+        { clavis: 'titulus_societatis', monstrans: 'Nomen',
+          typus: 'textus' },
+        { clavis: 'annus_conditus', monstrans: 'Annus conditus',
+          typus: 'annus' }
+      ],
+      campus_tituli: 'titulus_societatis',
+      ordo_ordinarius: { campus: 'titulus_societatis',
+        directio: 'ascendens' },
+      descriptio: 'Societas, collegium, officina - inter libros'
+        + ' communis (e.g. Societas Lunaris).' });
+    condere('inventum', 'Inventum', {
+      clavis: 'inventum', titulus_monstrans: 'Inventum',
+      campi: [
+        { clavis: 'descriptio', monstrans: 'Descriptio',
+          typus: 'textus' },
+        { clavis: 'annus', monstrans: 'Annus', typus: 'annus' },
+        { clavis: 'inventores', monstrans: 'Inventores',
+          typus: 'relatio', ad: 'person', cardinalitas: 'multa' }
+      ],
+      campus_tituli: 'descriptio',
+      ordo_ordinarius: { campus: 'annus', directio: 'ascendens' },
+      descriptio: 'Inventum cum inventoribus - inventores personae'
+        + ' sunt, non textus, ergo idem homo trans libros stat.' });
     /* ADNOTATIO: unum genus, non quinque.
        Feed capituli sic lectio UNA est (filtrum nexus, 01KYZG0V0K)
        ordine creationis; quinque genera quinque lectiones et
@@ -3770,15 +3898,26 @@ function libri_genera_curare() {
           typus: 'relatio', ad: 'capitulum', cardinalitas: 'unum' },
         { clavis: 'species', monstrans: 'Species', typus: 'electio',
           optiones: ['nota', 'citatio', 'persona', 'eventus',
-            'locus'] },
+            'locus', 'terminus', 'societas', 'scriptum', 'inventum',
+            'quaestio'] },
         { clavis: 'textus', monstrans: 'Textus', typus: 'area' },
         { clavis: 'pagina', monstrans: 'Pagina', typus: 'numerus' },
+        { clavis: 'responsum', monstrans: 'Responsum',
+          typus: 'area' },
         { clavis: 'persona', monstrans: 'Persona', typus: 'relatio',
           ad: 'person', cardinalitas: 'unum' },
         { clavis: 'locus', monstrans: 'Locus', typus: 'relatio',
           ad: 'locus', cardinalitas: 'unum' },
         { clavis: 'eventus', monstrans: 'Eventus', typus: 'relatio',
-          ad: 'eventus', cardinalitas: 'unum' }
+          ad: 'eventus', cardinalitas: 'unum' },
+        { clavis: 'terminus', monstrans: 'Terminus',
+          typus: 'relatio', ad: 'terminus', cardinalitas: 'unum' },
+        { clavis: 'societas', monstrans: 'Societas',
+          typus: 'relatio', ad: 'societas', cardinalitas: 'unum' },
+        { clavis: 'scriptum', monstrans: 'Scriptum',
+          typus: 'relatio', ad: 'book', cardinalitas: 'unum' },
+        { clavis: 'inventum', monstrans: 'Inventum',
+          typus: 'relatio', ad: 'inventum', cardinalitas: 'unum' }
       ],
       campus_tituli: 'textus',
       descriptio: 'Nota lectionis in capitulo. Species dicit quid'
@@ -3808,10 +3947,45 @@ function liber_latus(ens, def) {
   return partes.join(' · ');
 }
 
+/* Index Librorum LECTIONEM monstrat, non omne opus umquam
+   memoratum. Species 'scriptum' opuscula ut 'book' condit (ut idem
+   opus cras legendum iam auctorem ligatum habeat), ergo sine cribro
+   index centenis operibus impleretur.
+   Criterium: possessum AUT status lectionis positus. Numerus
+   celatorum SEMPER monstratur - cribrum tacitum 'liber meus
+   abiit' legeretur. */
+function liber_in_indice(ens) {
+  var d = ens.datum || {};
+  return d.owned === true
+    || (typeof d.reading_status === 'string'
+        && d.reading_status !== '');
+}
+
 function reddere_libri_indicem(def) {
   var index = document.getElementById('libri-index');
+  var omissi = libri.filter(function (e) {
+    return !liber_in_indice(e);
+  }).length;
+  var nexus_omnium = document.getElementById('libri-omnia');
+  var monstranda = libri_omnes
+    ? libri : libri.filter(liber_in_indice);
+
+  if (!omissi) {
+    nexus_omnium.textContent = '';
+  } else if (libri_omnes) {
+    nexus_omnium.textContent = 'sola lectio (' + omissi
+      + ' memorata celantur)';
+  } else {
+    nexus_omnium.textContent = omissi
+      + ' scripta memorata (monstrare)';
+  }
+  nexus_omnium.onclick = function () {
+    libri_omnes = !libri_omnes;
+    reddere_libri_indicem(def);
+  };
+
   index.innerHTML = '';
-  libri.forEach(function (ens) {
+  monstranda.forEach(function (ens) {
     var ordo = document.createElement('div');
     ordo.className = 'ordo-articuli';
     var t = document.createElement('span');
@@ -3824,7 +3998,8 @@ function reddere_libri_indicem(def) {
     ordo.onclick = function () { liber_aperire(ens); };
     index.appendChild(ordo);
   });
-  document.getElementById('vacuum-librorum').hidden = libri.length > 0;
+  document.getElementById('vacuum-librorum').hidden =
+    monstranda.length > 0;
 }
 
 function liber_aperire(ens) {
@@ -4021,8 +4196,15 @@ var cap_adnot    = [];     /* adnotationes, ordine SCRIBENDI */
 var adnot_sp     = 'nota'; /* species electa in editore */
 var adnot_editum = null;   /* adnotatio quae emendatur; null = nova */
 var adnot_lat    = {};     /* clavis campi -> elementum */
-var adnot_electum = null;  /* {id, titulus} entis mundani electi */
+/* tabulatum ZERO aut UNIUS: selector_entium tabulatum mutat, ergo
+   subiectum eodem more quo campi relationis tractatur */
+var adnot_subiectum = [];
+var adnot_relata = {};     /* clavis campi ENTIS -> [{id, titulus}] */
 var adnot_scopi  = {};     /* clavis generis -> entia (pro electione) */
+
+function adnot_subiectum_unum() {
+  return adnot_subiectum.length ? adnot_subiectum[0] : null;
+}
 
 /* Tabula specierum: species nova ORDO hic est, non codex novus.
    'ens' = genus entitatis mundanae quam species gignit; 'campi' =
@@ -4058,6 +4240,60 @@ var ADNOT_SPECIES = [
         typus: 'textus' },
       { clavis: 'coordinatae', monstrans: 'coordinatae',
         typus: 'textus' }
+    ] },
+  { clavis: 'terminus', monstrans: 'terminus', textus_label: 'nota',
+    ens: 'terminus', campus_nexus: 'terminus',
+    campus_tituli: 'vocabulum',
+    campi: [
+      { clavis: 'vocabulum', monstrans: 'terminus',
+        typus: 'textus' },
+      { clavis: 'definitio_termini', monstrans: 'definitio',
+        typus: 'area' }
+    ] },
+  { clavis: 'societas', monstrans: 'societas', textus_label: 'nota',
+    ens: 'societas', campus_nexus: 'societas',
+    campus_tituli: 'titulus_societatis',
+    campi: [
+      { clavis: 'titulus_societatis', monstrans: 'nomen',
+        typus: 'textus' },
+      { clavis: 'annus_conditus', monstrans: 'annus conditus',
+        typus: 'annus' }
+    ] },
+  /* SCRIPTUM genus 'book' ADHIBET, non proprium: opusculum hodie
+     memoratum liber cras legendus fieri potest, et tunc auctor iam
+     ligatus adest. Pretium: index Librorum his impleretur - ideo
+     'owned: false' scribitur et index ea CELAT (vide
+     liber_in_indice), numero monstrato ne quid lateat. */
+  { clavis: 'scriptum', monstrans: 'scriptum', textus_label: 'nota',
+    ens: 'book', campus_nexus: 'scriptum', campus_tituli: 'title',
+    valores_fixa: { owned: false },
+    campi: [
+      { clavis: 'title', monstrans: 'titulus', typus: 'textus' },
+      { clavis: 'authors', monstrans: 'auctores', typus: 'relatio',
+        ad: 'person', cardinalitas: 'multa' },
+      { clavis: 'year_published', monstrans: 'annus editionis',
+        typus: 'annus' }
+    ] },
+  { clavis: 'inventum', monstrans: 'inventum', textus_label: 'nota',
+    ens: 'inventum', campus_nexus: 'inventum',
+    campus_tituli: 'descriptio',
+    campi: [
+      { clavis: 'descriptio', monstrans: 'descriptio',
+        typus: 'textus' },
+      { clavis: 'annus', monstrans: 'annus', typus: 'annus' },
+      { clavis: 'inventores', monstrans: 'inventores',
+        typus: 'relatio', ad: 'person', cardinalitas: 'multa' }
+    ] },
+  /* QUAESTIO ens mundanum NON habet: quaestio momento lectionis
+     adhaeret, non mundo. Responsum campus adnotationis est, vacuus
+     donec impleatur - ergo 'quid non intellexi' quaestio est quam
+     conditorium respondere potest (species quaestio, responsum
+     vacuum), sine ullo campo status. */
+  { clavis: 'quaestio', monstrans: 'quaestio', ens: null, campi: [],
+    textus_label: 'quaestio',
+    campi_adnotationis: [
+      { clavis: 'responsum', monstrans: 'responsum (addi potest'
+        + ' postea)', typus: 'area' }
     ] }
 ];
 
@@ -4093,15 +4329,30 @@ function summarium_adnotationis(sp, textus, subiectum) {
    'ad_titulus' per nexum gratis venit - sed annus eventus et
    coordinatae loci in ente vivunt, non in titulo. Ergo defectus
    copiae informationem MINUIT, numquam frangit. */
-function mundana_onerare() {
+/* Genera NOMINATA onerantur, non omnia: species decem sunt, et
+   apertio capituli decem lectiones non meret. Vocatur (a) cum
+   tabula speciei eligitur, (b) pro speciebus quae in feed REVERA
+   adsunt. */
+function mundana_onerare(claves) {
   var opera = [];
-  ADNOT_SPECIES.forEach(function (sp) {
-    if (!sp.ens || adnot_scopi[sp.ens]) { return; }
-    opera.push(legere(sp.ens).then(function (entia) {
-      adnot_scopi[sp.ens] = entia;
-    }).catch(function () { adnot_scopi[sp.ens] = []; }));
+  (claves || []).forEach(function (k) {
+    if (!k || adnot_scopi[k]) { return; }
+    adnot_scopi[k] = [];   /* custos ne bis petatur dum pendet */
+    opera.push(legere(k).then(function (entia) {
+      adnot_scopi[k] = entia;
+    }).catch(function () { adnot_scopi[k] = []; }));
   });
   return Promise.all(opera);
+}
+
+/* Genera quae species una poscit: ens ipsum + destinationes
+   camporum relationis eius (auctores/inventores -> person) */
+function genera_speciei(sp) {
+  var claves = sp.ens ? [sp.ens] : [];
+  (sp.campi || []).forEach(function (c) {
+    if (c.typus === 'relatio' && c.ad) { claves.push(c.ad); }
+  });
+  return claves;
 }
 
 function ens_mundanum(sp, id) {
@@ -4131,12 +4382,12 @@ function capitulum_aperire(c) {
   cap_ens = c;
   cap_adnot = [];
   adnot_editum = null;
-  adnot_electum = null;
+  adnot_subiectum = [];
+  adnot_relata = {};
   adnot_sp = 'nota';
   libri_vertere('capitulum');
   reddere_capitulum();
   adnot_formam_reddere();
-  mundana_onerare().then(function () { reddere_capitulum(); });
 }
 
 function reddere_capitulum() {
@@ -4153,6 +4404,18 @@ function reddere_capitulum() {
   });
   document.getElementById('vacuum-adnotationum').hidden =
     cap_adnot.length > 0;
+  /* entia mundana SPECIERUM PRAESENTIUM onerare (annus eventus,
+     coordinatae loci) - deinde semel repingere */
+  var opus = [];
+  cap_adnot.forEach(function (a) {
+    var sp = species_de((a.datum || {}).species);
+    if (sp.ens && !adnot_scopi[sp.ens]) { opus.push(sp.ens); }
+  });
+  if (opus.length) {
+    mundana_onerare(opus).then(function () {
+      if (libri_visus === 'capitulum') { reddere_capitulum(); }
+    });
+  }
 }
 
 function elementum_adnotationis(a) {
@@ -4199,6 +4462,20 @@ function elementum_adnotationis(a) {
       : d.textus;
     ordo.appendChild(t);
   }
+  /* Quaestio responsum SUUM fert, aut se apertam nuntiat. Status
+     campus non est: responsum vacuum IPSUM status est, et duo
+     numquam divergere possunt. */
+  if (d.species === 'quaestio') {
+    var r = document.createElement('div');
+    if (d.responsum) {
+      r.className = 'responsum-a';
+      r.textContent = d.responsum;
+    } else {
+      r.className = 'pagina-a';
+      r.textContent = '— sine responso';
+    }
+    ordo.appendChild(r);
+  }
   var acta = document.createElement('div');
   acta.className = 'acta-a';
   var rec = document.createElement('a');
@@ -4235,7 +4512,8 @@ function adnot_tabs_reddere() {
     } else {
       a.onclick = function () {
         adnot_sp = sp.clavis;
-        adnot_electum = null;
+        adnot_subiectum = [];
+        adnot_relata = {};
         adnot_formam_reddere();
       };
     }
@@ -4269,63 +4547,46 @@ function adnot_campum(clavis, label, typus, valor) {
 
 /* Electio entis EXSISTENTIS. Sine hoc quaelibet nota personam
    duplicem crearet, et 'idem homo trans libros' - tota ratio
-   entium - periret. */
+   entium - periret.
+   creare: FALSUM - campi expliciti infra stant (praenomen,
+   cognomen, annus); '+ creare' ens nomine solo instructum pareret
+   dum campi pleni infra ignorarentur. */
 function adnot_selector(sp) {
   var d = document.createElement('div');
   var lab = document.createElement('label');
-  var chips = document.createElement('div');
-  var arca = document.createElement('input');
-  var index = document.createElement('div');
-
   lab.textContent = sp.monstrans + ' exsistens'
     + (adnot_editum ? '' : ' (aut nova infra)');
-  arca.placeholder = 'quaerere...';
-  arca.dataset.inter = 'verum';
-  index.className = 'praebita-index';
-  index.hidden = true;
-
-  function chips_reddere() {
-    chips.innerHTML = '';
-    if (!adnot_electum) { return; }
-    var s = document.createElement('span');
-    s.className = 'chip';
-    s.textContent = adnot_electum.titulus;
-    var x = document.createElement('a');
-    x.textContent = '×';
-    x.onclick = function () {
-      adnot_electum = null;
-      chips_reddere();
-      adnot_formam_reddere();
-    };
-    s.appendChild(x);
-    chips.appendChild(s);
-  }
-
-  arca.addEventListener('input', function () {
-    var q = arca.value.toLowerCase();
-    index.innerHTML = '';
-    if (!q) { index.hidden = true; return; }
-    (adnot_scopi[sp.ens] || []).forEach(function (e) {
-      var t = (e.datum && e.datum.titulus) || e.titulus || '';
-      if (tumulus_est(e) || t.toLowerCase().indexOf(q) < 0) { return; }
-      var r = document.createElement('div');
-      r.textContent = t;
-      r.onclick = function () {
-        adnot_electum = { id: e.res_id, titulus: t };
-        arca.value = '';
-        index.hidden = true;
-        adnot_formam_reddere();
-      };
-      index.appendChild(r);
-    });
-    index.hidden = !index.childNodes.length;
-  });
-
   d.appendChild(lab);
-  d.appendChild(chips);
-  d.appendChild(arca);
-  d.appendChild(index);
-  chips_reddere();
+  d.appendChild(selector_entium({
+    ad: sp.ens,
+    cardinalitas: 'unum',
+    creare: false,
+    electa: adnot_subiectum,
+    scopus: function () { return adnot_scopi[sp.ens]; },
+    mutatum: adnot_formam_reddere
+  }));
+  return d;
+}
+
+/* Campus relationis ENTIS creandi (auctores scripti, inventores
+   inventi). Creatio inlinea HIC licet: campi expliciti personae
+   non adsunt, et 'Watt' inter inventores notatus persona vera
+   fieri debet, non chorda. */
+function adnot_campum_relationis(c) {
+  var d = document.createElement('div');
+  var lab = document.createElement('label');
+  lab.textContent = c.monstrans;
+  if (!adnot_relata[c.clavis]) { adnot_relata[c.clavis] = []; }
+  d.appendChild(lab);
+  d.appendChild(selector_entium({
+    ad: c.ad,
+    cardinalitas: c.cardinalitas || 'multa',
+    electa: adnot_relata[c.clavis],
+    scopus: function () { return adnot_scopi[c.ad]; },
+    scopum_augere: function (e) {
+      (adnot_scopi[c.ad] = adnot_scopi[c.ad] || []).push(e);
+    }
+  }));
   return d;
 }
 
@@ -4337,21 +4598,26 @@ function adnot_formam_reddere() {
   domus.innerHTML = '';
   adnot_tabs_reddere();
 
+  mundana_onerare(genera_speciei(sp));
   if (sp.ens) {
-    if (!adnot_scopi[sp.ens]) { mundana_onerare(); }
     domus.appendChild(adnot_selector(sp));
     /* campi entis NOVI: soli cum nihil electum est et nihil
        emendatur. Emendatio adnotationem tangit, non ens mundanum
        (decisio Franis: ens idem in libris aliis vivit). */
-    if (!adnot_electum && !adnot_editum) {
+    if (!adnot_subiectum_unum() && !adnot_editum) {
       sp.campi.forEach(function (c) {
-        domus.appendChild(adnot_campum(c.clavis, c.monstrans,
-          c.typus));
+        domus.appendChild(c.typus === 'relatio'
+          ? adnot_campum_relationis(c)
+          : adnot_campum(c.clavis, c.monstrans, c.typus));
       });
     }
   }
   domus.appendChild(adnot_campum('textus', sp.textus_label, 'area',
     d.textus));
+  (sp.campi_adnotationis || []).forEach(function (c) {
+    domus.appendChild(adnot_campum(c.clavis, c.monstrans, c.typus,
+      d[c.clavis]));
+  });
   domus.appendChild(adnot_campum('pagina', 'pagina', 'numerus',
     d.pagina));
   document.getElementById('adnotatio-servare').textContent =
@@ -4365,10 +4631,12 @@ function adnotationem_emendare(a) {
   adnot_editum = a;
   adnot_sp = (a.datum && a.datum.species) || 'nota';
   sp = species_de(adnot_sp);
-  adnot_electum = null;
+  adnot_subiectum = [];
+  adnot_relata = {};
   if (sp.campus_nexus) {
     nexus_de(a, sp.campus_nexus).forEach(function (n) {
-      adnot_electum = { id: n.ad, titulus: n.ad_titulus || '[deletum]' };
+      adnot_subiectum = [{ id: n.ad,
+        titulus: n.ad_titulus || "[deletum]" }];
     });
   }
   if (sp.ens && !adnot_scopi[sp.ens]) { mundana_onerare(); }
@@ -4379,7 +4647,8 @@ function adnotationem_emendare(a) {
 
 function adnot_omittere() {
   adnot_editum = null;
-  adnot_electum = null;
+  adnot_subiectum = [];
+  adnot_relata = {};
   adnot_formam_reddere();
 }
 
@@ -4425,7 +4694,7 @@ function adnotatio_servare() {
   /* RECUSATIO NOMINATA, non nota vacua: species quae ens poscit
      sine ente scripta adnotationem orbam pareret quae nihil dicit
      et in feed ut lacuna apparet. */
-  if (sp.ens && !adnot_editum && !adnot_electum) {
+  if (sp.ens && !adnot_editum && !adnot_subiectum_unum()) {
     if (vacuum_ens || !titulus_entis(sp, valores)) {
       iud.textContent = sp.monstrans + ': elige exsistentem aut'
         + ' imple campos (' + sp.campi.map(function (c) {
@@ -4443,15 +4712,18 @@ function adnotatio_servare() {
   else { adnot_creare(sp, valores, textus, pagina); }
 }
 
-function adnot_datum(textus, pagina, species) {
-  var datum = { species: species, textus: textus };
+function adnot_datum(sp, textus, pagina) {
+  var datum = { species: sp.clavis, textus: textus };
   if (pagina !== null) { datum.pagina = pagina; }
+  (sp.campi_adnotationis || []).forEach(function (c) {
+    datum[c.clavis] = adnot_valor(c.clavis);
+  });
   return datum;
 }
 
 function adnot_creare(sp, valores, textus, pagina) {
   var iud = document.getElementById('adnotatio-iudicium');
-  var subiectum = adnot_electum;
+  var subiectum = adnot_subiectum_unum();
   var catena = Promise.resolve();
 
   /* Ens mundanum PRIMUM (nota ad id monstrat), deinde adnotatio,
@@ -4464,6 +4736,11 @@ function adnot_creare(sp, valores, textus, pagina) {
       Object.keys(valores).forEach(function (k) {
         datum_entis[k] = valores[k];
       });
+      /* valores FIXI speciei (scriptum: owned = false, ne index
+         Librorum operibus memoratis impleatur) */
+      Object.keys(sp.valores_fixa || {}).forEach(function (k) {
+        datum_entis[k] = sp.valores_fixa[k];
+      });
       /* campus tituli DERIVATUS (persona: praenomen + cognomen) */
       datum_entis[sp.campus_tituli] = titulus;
       return instrumentum('addere', { genus: sp.ens,
@@ -4471,6 +4748,20 @@ function adnot_creare(sp, valores, textus, pagina) {
         .then(function (r) {
           subiectum = { id: r.res_id, titulus: titulus };
           adnot_scopi[sp.ens] = null;   /* cache stalum */
+          /* campi RELATIONIS entis (auctores, inventores): nexus
+             post creationem - relatio in dato numquam stat */
+          var sub = Promise.resolve();
+          (sp.campi || []).forEach(function (c) {
+            if (c.typus !== 'relatio') { return; }
+            (adnot_relata[c.clavis] || []).forEach(function (sel) {
+              sub = sub.then(function () {
+                return instrumentum('gerere', { res: r.res_id,
+                  actus: 'nexus', verbum: c.clavis,
+                  alterum: sel.id });
+              });
+            });
+          });
+          return sub;
         });
     });
   }
@@ -4479,7 +4770,7 @@ function adnot_creare(sp, valores, textus, pagina) {
       genus: 'adnotatio',
       titulus: summarium_adnotationis(sp, textus,
         subiectum ? subiectum.titulus : ''),
-      datum: JSON.stringify(adnot_datum(textus, pagina, sp.clavis))
+      datum: JSON.stringify(adnot_datum(sp, textus, pagina))
     });
   }).then(function (r) {
     var id = r.res_id;
@@ -4493,7 +4784,8 @@ function adnot_creare(sp, valores, textus, pagina) {
     }
     return post;
   }).then(function () {
-    adnot_electum = null;
+    adnot_subiectum = [];
+    adnot_relata = {};
     adnot_formam_reddere();
     iud.textContent = '';
     anquirere_nunc();
@@ -4504,7 +4796,7 @@ function adnot_mutare(sp, textus, pagina) {
   var iud = document.getElementById('adnotatio-iudicium');
   var a = adnot_editum;
   var prior = null;
-  var datum = adnot_datum(textus, pagina, sp.clavis);
+  var datum = adnot_datum(sp, textus, pagina);
 
   if (sp.campus_nexus) {
     nexus_de(a, sp.campus_nexus).forEach(function (n) {
@@ -4512,7 +4804,7 @@ function adnot_mutare(sp, textus, pagina) {
     });
   }
   datum.titulus = summarium_adnotationis(sp, textus,
-    adnot_electum ? adnot_electum.titulus : '');
+    adnot_subiectum_unum() ? adnot_subiectum_unum().titulus : "");
   instrumentum('gerere', { res: a.res_id, actus: 'mutatio',
     datum: JSON.stringify(datum) })
     .then(function () {
@@ -4524,7 +4816,8 @@ function adnot_mutare(sp, textus, pagina) {
       return null;
     })
     .then(function () {
-      var novum = adnot_electum ? adnot_electum.id : null;
+      var novum = adnot_subiectum_unum()
+        ? adnot_subiectum_unum().id : null;
       if (!sp.campus_nexus || novum === prior) { return null; }
       var catena = Promise.resolve();
       if (prior) {

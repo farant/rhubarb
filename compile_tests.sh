@@ -475,6 +475,18 @@ run_speculum() {
         echo -e "${BLUE}speculum velamen: probatio JS bona${RESET}"
     fi
 
+    # Velamen fori: logica quae in C non stat (derivatio tituli,
+    # aequatio ADDITIVA definitionum viventium, cribrum indicis).
+    # Aequatio tacite fallit - optiones non auctae = species nova a
+    # machina recusata, et velamen causam non monstrat.
+    if [ -f "apps/forum/assets/probatio_fori.js" ]; then
+        if ! osascript -l JavaScript apps/forum/assets/probatio_fori.js > /dev/null 2>&1; then
+            echo -e "${RED}✗ forum velamen probatio fracta (curre: osascript -l JavaScript apps/forum/assets/probatio_fori.js)${RESET}"
+            return 1
+        fi
+        echo -e "${BLUE}forum velamen: probatio JS bona${RESET}"
+    fi
+
     # Oraculum gyri QR: qr.c scribit, CoreImage (decodator alienus)
     # legit. probatio_qr.c FORMAM probat; bits solum hoc probat -
     # bibliotheca V4+ fracta LXVI casus structurales praeteribat.
