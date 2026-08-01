@@ -86,6 +86,7 @@ declare -a SOURCE_FILES=(
     "lib/pinacotheca_visus.c"
     "lib/piscina.c"
     "lib/processus_posix.c"
+    "lib/qr.c"
     "lib/quaerere.c"
     "lib/reactor.c"
     "lib/registrum_commandi.c"

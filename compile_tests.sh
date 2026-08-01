@@ -474,6 +474,17 @@ run_speculum() {
         fi
         echo -e "${BLUE}speculum velamen: probatio JS bona${RESET}"
     fi
+
+    # Oraculum gyri QR: qr.c scribit, CoreImage (decodator alienus)
+    # legit. probatio_qr.c FORMAM probat; bits solum hoc probat -
+    # bibliotheca V4+ fracta LXVI casus structurales praeteribat.
+    if [ -x "probationes/probatio_qr_gyrus.sh" ]; then
+        if ! ./probationes/probatio_qr_gyrus.sh > /dev/null 2>&1; then
+            echo -e "${RED}✗ qr gyrus fractus (curre: ./probationes/probatio_qr_gyrus.sh)${RESET}"
+            return 1
+        fi
+        echo -e "${BLUE}qr gyrus: codices legibiles (oraculum CoreImage)${RESET}"
+    fi
     return 0
 }
 
