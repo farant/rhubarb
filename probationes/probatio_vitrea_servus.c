@@ -126,8 +126,9 @@ _commercium (VitreaServus* s, TcpConnexio* cliens,
  * absentes exspectabat et probatio in silentium cadebat. Mensura
  * quam machina computat mentiri non potest.) */
 interior s32
-_pons_petere (VitreaServus* s, Piscina* piscina,
-    constans character* corpus, character* buffer, i32 capacitas)
+_pons_petere_cum (VitreaServus* s, Piscina* piscina,
+    constans character* corpus, constans character* capita_extra,
+    character* buffer, i32 capacitas)
 {
     TcpConnexio* c;
     character    petitio[4096];
@@ -139,10 +140,19 @@ _pons_petere (VitreaServus* s, Piscina* piscina,
     }
     sprintf(petitio,
         "POST /internuntius HTTP/1.1\r\nHost: x\r\n"
-        "Content-Type: application/json\r\n"
+        "Content-Type: application/json\r\n%s"
         "Content-Length: %d\r\n\r\n%s",
+        capita_extra ? capita_extra : "",
         (int)strlen(corpus), corpus);
     redde _commercium(s, c, petitio, buffer, capacitas);
+}
+
+interior s32
+_pons_petere (VitreaServus* s, Piscina* piscina,
+    constans character* corpus, character* buffer, i32 capacitas)
+{
+    redde _pons_petere_cum(s, piscina, corpus, NIHIL, buffer,
+        capacitas);
 }
 
 interior VitreaServus*
@@ -299,6 +309,139 @@ probatio_assetum_absens (Piscina* piscina)
 }
 
 /* ========================================================================
+ * CUSTODIA
+ * ======================================================================== */
+
+#define TESSERA_PROBATIONIS \
+    "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789"
+
+interior VitreaServus*
+_servum_custoditum (Piscina* piscina, constans character* hospes,
+    constans character* tessera)
+{
+    VitreaServusConfiguratio figura;
+    Capsula* capsula = capsula_aperire(&capsula_templates, piscina);
+
+    si (capsula == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memset(&figura, ZEPHYRUM, magnitudo(figura));
+    figura.capsula         = capsula;
+    figura.via_initialis   = "index.html";
+    figura.praebitor       = _praebitor;
+    figura.praebitor_datum = NIHIL;
+    figura.portus          = ZEPHYRUM;
+    figura.hospes          = hospes;
+    figura.tessera         = tessera;
+    redde vitrea_servus_creare(piscina, &figura);
+}
+
+/* PORTA NATIVITATIS: expositio sine tessera = REFUSIO.
+ * Haec probatio est cur porta in strato sedet, non in app. */
+interior vacuum
+probatio_porta_nativitatis (Piscina* piscina)
+{
+    printf("--- porta nativitatis: expositio sine tessera ---\n");
+
+    /* hospes datus, tessera nulla -> NIHIL */
+    CREDO_NIHIL(_servum_custoditum(piscina, "127.0.0.1", NIHIL));
+    /* tessera nimis brevis -> NIHIL (secretum debile = nullum) */
+    CREDO_NIHIL(_servum_custoditum(piscina, "127.0.0.1", "brevis"));
+    /* hospes datus + tessera valida -> licet */
+    {
+        VitreaServus* s = _servum_custoditum(piscina, "127.0.0.1",
+            TESSERA_PROBATIONIS);
+
+        CREDO_NON_NIHIL(s);
+        vitrea_servus_destruere(s);
+    }
+    /* sine hospite (loopback) tessera non poscitur */
+    {
+        VitreaServus* s = _servum_custoditum(piscina, NIHIL, NIHIL);
+
+        CREDO_NON_NIHIL(s);
+        vitrea_servus_destruere(s);
+    }
+}
+
+interior vacuum
+probatio_custodia (Piscina* piscina)
+{
+    VitreaServus* s = _servum_custoditum(piscina, NIHIL,
+        TESSERA_PROBATIONIS);
+    TcpConnexio*  c;
+    character     buffer[16384];
+    character     petitio[2048];
+
+    printf("--- custodia: crustulum, redirectio, CSRF ---\n");
+    CREDO_NON_NIHIL(s);
+
+    /* sine tessera: CDI */
+    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(c);
+    CREDO_VERUM(_commercium(s, c, "GET / HTTP/1.1\r\nHost: x\r\n\r\n",
+        buffer, (i32)magnitudo(buffer)) > ZEPHYRUM);
+    CREDO_VERUM(strstr(buffer, "401") != NIHIL);
+    /* pagina NON transit */
+    CREDO_VERUM(strstr(buffer, "salve vitrea") == NIHIL);
+
+    /* tessera falsa: CDI */
+    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(c);
+    CREDO_VERUM(_commercium(s, c,
+        "GET /?clavis=0000000000000000000000000000000000000000"
+        "000000000000000000000000 HTTP/1.1\r\nHost: x\r\n\r\n",
+        buffer, (i32)magnitudo(buffer)) > ZEPHYRUM);
+    CREDO_VERUM(strstr(buffer, "401") != NIHIL);
+
+    /* tessera vera in URL: CCCII + crustulum + Location */
+    sprintf(petitio, "GET /?clavis=%s HTTP/1.1\r\nHost: x\r\n\r\n",
+        TESSERA_PROBATIONIS);
+    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(c);
+    CREDO_VERUM(_commercium(s, c, petitio, buffer,
+        (i32)magnitudo(buffer)) > ZEPHYRUM);
+    CREDO_VERUM(strstr(buffer, "302") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "HttpOnly") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "SameSite=Strict") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "Location: /") != NIHIL);
+    /* pagina in responso redirectionis NON venit */
+    CREDO_VERUM(strstr(buffer, "salve vitrea") == NIHIL);
+
+    /* crustulum validum: pagina transit */
+    sprintf(petitio, "GET / HTTP/1.1\r\nHost: x\r\n"
+        "Cookie: vitrea=%s\r\n\r\n", TESSERA_PROBATIONIS);
+    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(c);
+    CREDO_VERUM(_commercium(s, c, petitio, buffer,
+        (i32)magnitudo(buffer)) > ZEPHYRUM);
+    CREDO_VERUM(strstr(buffer, "200 OK") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "salve vitrea") != NIHIL);
+
+    /* CSRF: crustulum validum SINE capite X-Vitrea -> recusatio.
+     * Forma aliena crustulum ferre POTEST, caput NON potest.
+     * (Capita per _pons_petere_cum, ne Content-Length manu iterum
+     * numeretur - eadem decipula bis in eadem sessione momordit.) */
+    sprintf(petitio, "Cookie: vitrea=%s\r\n", TESSERA_PROBATIONIS);
+    CREDO_VERUM(_pons_petere_cum(s, piscina,
+        "{\"id\":9,\"methodus\":\"salve\",\"argumenta\":{}}",
+        petitio, buffer, (i32)magnitudo(buffer)) > ZEPHYRUM);
+    CREDO_VERUM(strstr(buffer, "X-Vitrea") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "salve munde") == NIHIL);
+
+    /* crustulum + caput: transit */
+    sprintf(petitio, "Cookie: vitrea=%s\r\nX-Vitrea: 1\r\n",
+        TESSERA_PROBATIONIS);
+    CREDO_VERUM(_pons_petere_cum(s, piscina,
+        "{\"id\":9,\"methodus\":\"salve\",\"argumenta\":{}}",
+        petitio, buffer, (i32)magnitudo(buffer)) > ZEPHYRUM);
+    CREDO_VERUM(strstr(buffer, "salve munde") != NIHIL);
+
+    vitrea_servus_destruere(s);
+}
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -324,6 +467,8 @@ principale (vacuum)
     probatio_porta_harnesii(piscina);
     probatio_culpae_non_frangunt(piscina);
     probatio_assetum_absens(piscina);
+    probatio_porta_nativitatis(piscina);
+    probatio_custodia(piscina);
 
     credo_imprimere_compendium();
 

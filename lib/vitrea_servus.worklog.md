@@ -82,3 +82,63 @@ renovaretur. Emendatio nominata: SSE (`/eventus` + `EventSource`),
 Auth ANTE expositionem (`-hospes 0.0.0.0`) — in hoc strato, non in
 app, ne ulla app oblivisci possit. Deinde SSE cum app eum traxerit.
 Consumptor secundus paratus: villa app vitreae quoque est.
+
+---
+
+## 2026-08-01 (idem dies) — CUSTODIA: tessera, crustulum, portae
+
+Commissa: f50ec17 (fundamenta) + hoc. Consilium in tabulario
+01KYYWQQNV; probationes in probatio_vitrea_servus (LXIV casus).
+
+### Consilium et cur
+
+**Crustulum, non caput Authorization.** Telephonum quod nexum
+aperit caput ponere NON potest. Tessera semel in URL venit (per
+QR), statim crustulum fit, et redirectio eam ex barra addressum
+et annalibus navigatri tollit. Post id, petitiones OMNES eam
+ferunt - pagina et pons pariter - sine ulla mutatione JS.
+
+**CSRF: crustulum SOLUM non sufficit.** Pagina quaevis aliena in
+navigatro tuo POST ad /internuntius mittere potest et crustulum
+sequitur; responsum legere non potest (origo eadem vetat) sed
+SCRIPTIO caderet. Ergo duplex: SameSite=Strict + caput X-Vitrea
+quod scriptum nostrum semper mittit et forma aliena sine
+praevolatu ponere non potest. Mensuratum: crustulo valido sine
+capite, "caput X-Vitrea deest".
+
+**PORTA NATIVITATIS.** hospes datus + tessera absens/brevis =
+vitrea_servus_creare NIHIL reddit et causam ad stderr nominat.
+Non monitum. Forum expositum sine custodia IMPOSSIBILE sit, non
+improbabile. Porta in STRATO sedet, ergo nulla app oblivisci
+potest (villa gratis eam habebit).
+
+**Tessera SEMPER paratur**, etiam loopback: ergo QR idem est
+utrovis modo et transitus ad -hospes nihil mutat.
+
+### Fundamenta in bibliothecis suis (non hic)
+
+- `moneta_octeti_fortuiti`: urandom SINE reservo. moneta_ulid
+  reservum temporis habet et recte (unicitas); secretum
+  IMPRAEVISIBILITATEM poscit, quam reservum dare non potest.
+  Reservum tacitum clavem divinabilem pareret.
+- `sigillum_aequale` nunc tempore constanti (memcmp exitum
+  praematurum dabat = divinatio octetim).
+
+### Limes honestus
+
+PLANUM. hospitium TLS servire NON potest (tls.h clientem solum).
+In reticulo domestico crustulum adnotabile est - iudicium, non
+oblivio. Pro hotspot/interrete: nginx ante (01KY6449PF).
+
+### Decipula quae BIS momordit eadem sessione
+
+Content-Length manu numeratum. Emendaveram per `_pons_petere`
+(longitudinem computat) - deinde probationes auth scripsi quae
+capita extra poscebant, adiutorem PRAETERII, et numerum manu
+scripsi (XLIV pro XLII). Idem defectus, eadem hora.
+
+LEX: emendatio structuralis quae adhiberi potest sed non SEMPER
+adhibetur nondum emendatio est. Adiutor extensus est
+(`_pons_petere_cum` capita accipit) ut semita manualis non
+maneat. Si adiutor casum tuum non tegit, EXTENDE eum; noli circa
+eum ire.

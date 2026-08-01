@@ -12,6 +12,7 @@
 #include "mimen.h"
 
 #include <string.h>
+#include <stdio.h>
 
 /* ========================================================================
  * SCRIPTUM PONTIS - gemellum VITREA_CURSUS_JS pro transportu HTTP
@@ -62,6 +63,7 @@ structura VitreaServus {
     Hospitium*    hospitium;
     Internuntius* inx;
     Capsula*      capsula;
+    chorda        tessera;      /* vacua = custodia dormit (loopback) */
     /* sedes responsi petitionis currentis: tuta quia hospitium filo
      * uno currit et tractator ad finem currit ante petitionem
      * proximam (vide notam in capite) */
@@ -141,8 +143,172 @@ _scriptum_inserere (chorda pagina, Piscina* piscina)
 }
 
 /* ========================================================================
- * SUTURA MISSORIS
- * ======================================================================== */
+ * CUSTODIA (auth)
+ * ========================================================================
+ *
+ * Tessera SEMEL in URL venit (per QR scannabile), statim crustulum
+ * fit, et ex barra addressum abit per redirectionem. Cur non caput
+ * 'Authorization': telephonum quod nexum aperit nusquam caput
+ * ponere potest. Crustulum autem petitiones OMNES sequitur -
+ * paginam et vocationes pontis pariter - sine ulla mutatione JS.
+ *
+ * SameSite=Strict + caput X-Vitrea in ponte = duplex custodia
+ * contra CSRF: crustulo solo, pagina QUAEVIS aliena in navigatro
+ * tuo POST ad /internuntius mittere posset et crustulum sequeretur
+ * (responsum legere non posset, sed SCRIPTIO caderet). Forma
+ * aliena caput proprium ponere NON potest sine praevolatu, quem
+ * recusamus.
+ *
+ * PLANUM, NON CIFRATUM: hospitium TLS servire non potest (tls.h
+ * clientem solum habet). In reticulo domestico crustulum
+ * adnotabile est. Id iudicium est, non oblivio - pro hotspot aut
+ * interrete, nginx ante ponendus (01KY6449PF). */
+
+/* comparatio tempore constanti chordarum (tesserae) */
+interior b32
+_tessera_congruit (chorda a, chorda b)
+{
+    i32 i;
+    i32 differentia;
+
+    si (a.mensura != b.mensura || a.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    differentia = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < a.mensura; i++)
+    {
+        differentia |= (i32)(a.datum[i] ^ b.datum[i]);
+    }
+    redde (differentia == ZEPHYRUM) ? VERUM : FALSUM;
+}
+
+/* valorem capitis petitionis invenire (case-insensitivus);
+ * chorda vacua si abest */
+interior chorda
+_caput_valor (constans HttpPetitioServeri* p, constans character* titulus)
+{
+    chorda vacua;
+    i32    i;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = ZEPHYRUM;
+    si (p == NIHIL)
+    {
+        redde vacua;
+    }
+    per (i = ZEPHYRUM; i < p->capita_numerus; i++)
+    {
+        si (chorda_aequalis_case_insensitivus(p->capita[i].titulus,
+                _ch(titulus)))
+        {
+            redde p->capita[i].valor;
+        }
+    }
+    redde vacua;
+}
+
+/* valorem parametri ex quaestione ("clavis=xyz&a=b") */
+interior chorda
+_quaestio_valor (chorda quaestio, constans character* clavis)
+{
+    chorda vacua;
+    chorda acus;
+    i32    i;
+    i32    len;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = ZEPHYRUM;
+    acus = _ch(clavis);
+    len = acus.mensura;
+
+    per (i = ZEPHYRUM; i + len + I <= quaestio.mensura; i++)
+    {
+        /* congruentia ad initium aut post '&' */
+        si (i > ZEPHYRUM && quaestio.datum[i - I] != '&')
+        {
+            perge;
+        }
+        si (memcmp(quaestio.datum + i, acus.datum, (size_t)len) == 0
+            && quaestio.datum[i + len] == '=')
+        {
+            chorda fructus;
+            i32    initium = i + len + I;
+            i32    finis = initium;
+
+            dum (finis < quaestio.mensura
+                && quaestio.datum[finis] != '&')
+            {
+                finis++;
+            }
+            fructus.datum = quaestio.datum + initium;
+            fructus.mensura = finis - initium;
+            redde fructus;
+        }
+    }
+    redde vacua;
+}
+
+/* tesseram ex crustulo extrahere (Cookie: vitrea=xyz; alia=...) */
+interior chorda
+_crustulum_tessera (constans HttpPetitioServeri* p)
+{
+    chorda crustula = _caput_valor(p, "Cookie");
+    chorda vacua;
+    i32    i;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i + VII <= crustula.mensura; i++)
+    {
+        si (i > ZEPHYRUM && crustula.datum[i - I] != ' '
+            && crustula.datum[i - I] != ';')
+        {
+            perge;
+        }
+        si (memcmp(crustula.datum + i, "vitrea=", VII) == 0)
+        {
+            chorda fructus;
+            i32    initium = i + VII;
+            i32    finis = initium;
+
+            dum (finis < crustula.mensura
+                && crustula.datum[finis] != ';')
+            {
+                finis++;
+            }
+            fructus.datum = crustula.datum + initium;
+            fructus.mensura = finis - initium;
+            redde fructus;
+        }
+    }
+    redde vacua;
+}
+
+/* CDI cum causa nominata (nulla pagina, nullum indicium quid
+ * intus sit) */
+interior vacuum
+_recusare (HospitiumColloquium* colloquium)
+{
+    colloquium_respondere(colloquium, CDI, "text/plain",
+        _ch("tessera necessaria\n"));
+}
+
+/* Redde VERUM si petitio pergere licet.
+ * Custodia DORMIT si tessera non configurata (modus loopback). */
+interior b32
+_custodia_admittit (VitreaServus* s, HospitiumColloquium* colloquium)
+{
+    constans HttpPetitioServeri* p;
+
+    si (s->tessera.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    p = colloquium_petitio(colloquium);
+    redde _tessera_congruit(_crustulum_tessera(p), s->tessera);
+}
 
 interior vacuum
 _missor (vacuum* datum, chorda textus)
@@ -165,6 +331,22 @@ _pons_tractator (HospitiumColloquium* colloquium)
     Piscina*      pn = colloquium_piscina(colloquium);
     constans HttpPetitioServeri* petitio =
         colloquium_petitio(colloquium);
+
+    si (!_custodia_admittit(s, colloquium))
+    {
+        _recusare(colloquium);
+        redde;
+    }
+    /* CSRF: caput proprium poscimus. Forma aliena illud sine
+     * praevolatu ponere non potest, et praevolatum non tractamus -
+     * ergo scriptio trans origines cadit etiam crustulo valido. */
+    si (s->tessera.mensura > ZEPHYRUM
+        && _caput_valor(petitio, "X-Vitrea").mensura == ZEPHYRUM)
+    {
+        colloquium_respondere(colloquium, CDIII, "application/json",
+            _ch("{\"culpa\":{\"nuntius\":\"caput X-Vitrea deest\"}}"));
+        redde;
+    }
 
     s->piscina_petitionis = pn;
     s->responsum_positum  = FALSUM;
@@ -195,8 +377,54 @@ _assetum_tractator (HospitiumColloquium* colloquium)
     AssetumLigamen* lig =
         (AssetumLigamen*)colloquium_datum(colloquium);
     Piscina*        pn  = colloquium_piscina(colloquium);
+    VitreaServus*   s   = lig->servus;
     CapsulaFructus  res;
     chorda          corpus;
+
+    si (s->tessera.mensura > ZEPHYRUM)
+    {
+        constans HttpPetitioServeri* p = colloquium_petitio(colloquium);
+        chorda oblata = _quaestio_valor(p->quaestio, "clavis");
+
+        /* tessera in URL (ex QR): crustulum pone et REDIRIGE, ut
+         * secretum ex barra addressum et ex annalibus navigatri
+         * abeat. Semel ingressa, numquam iterum scribenda. */
+        si (oblata.mensura > ZEPHYRUM)
+        {
+            si (!_tessera_congruit(oblata, s->tessera))
+            {
+                _recusare(colloquium);
+                redde;
+            }
+            {
+                character crustulum[512];
+                chorda    via_nuda = colloquium_petitio(colloquium)->via;
+
+                sprintf(crustulum,
+                    "vitrea=%.*s; Path=/; HttpOnly; SameSite=Strict",
+                    (int)s->tessera.mensura,
+                    (constans character*)s->tessera.datum);
+                colloquium_caput_addere(colloquium, "Set-Cookie",
+                    crustulum);
+                {
+                    character locus[512];
+
+                    sprintf(locus, "%.*s", (int)via_nuda.mensura,
+                        (constans character*)via_nuda.datum);
+                    colloquium_caput_addere(colloquium, "Location",
+                        locus);
+                }
+                colloquium_respondere(colloquium, CCCII, NIHIL,
+                    _ch(""));
+                redde;
+            }
+        }
+        si (!_custodia_admittit(s, colloquium))
+        {
+            _recusare(colloquium);
+            redde;
+        }
+    }
 
     res = capsula_legere(lig->servus->capsula, lig->via, pn);
     si (res.status != CAPSULA_OK)
@@ -262,6 +490,21 @@ vitrea_servus_creare (Piscina* piscina,
         redde NIHIL;
     }
 
+    /* PORTA NATIVITATIS: expositio ultra loopback sine tessera =
+     * REFUSIO, non monitum. Forum in reticulo apertum sine custodia
+     * casus esse non debet sed IMPOSSIBILE. Porta hic sedet (in
+     * strato), non in app: ergo nulla app oblivisci potest. */
+    si (configuratio->hospes != NIHIL
+        && (configuratio->tessera == NIHIL
+            || strlen(configuratio->tessera) < XXXII))
+    {
+        fprintf(stderr, "vitrea_servus: REFUSIO - hospes '%s' datus"
+            " sed tessera abest aut nimis brevis (>= XXXII"
+            " characteres). Expositio sine custodia vetita.\n",
+            configuratio->hospes);
+        redde NIHIL;
+    }
+
     servus = (VitreaServus*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(VitreaServus));
     si (servus == NIHIL)
@@ -271,6 +514,13 @@ vitrea_servus_creare (Piscina* piscina,
     memset(servus, ZEPHYRUM, magnitudo(VitreaServus));
     servus->piscina = piscina;
     servus->capsula = configuratio->capsula;
+    servus->tessera.datum = NIHIL;
+    servus->tessera.mensura = ZEPHYRUM;
+    si (configuratio->tessera != NIHIL)
+    {
+        servus->tessera = chorda_transcribere(
+            _ch(configuratio->tessera), piscina);
+    }
 
     memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     cfg.hospes        = configuratio->hospes;   /* NIHIL = loopback */

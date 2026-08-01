@@ -36,10 +36,11 @@
 #include "sententiae.h"
 #include "xar.h"
 #include "capsula_forum.h"
+#include "moneta.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <sys/stat.h>   /* mkdir - app macOS/POSIX sola */
+#include <sys/stat.h>   /* mkdir + chmod - app macOS/POSIX sola */
 
 /* capsula fontium speculi (build/speculum/forum/) - externus
  * directus, mos consumptoris speculi (caput generatum non
@@ -772,6 +773,79 @@ _tergale_delere (JsonValor* argumenta, Piscina* piscina,
     redde fructus;
 }
 
+/* Tesseram legere aut gignere. Lima EXTRA arborem git, modo 0600.
+ * Secretum in repositorio numquam sedeat; haec lima est sutura per
+ * quam arca (01KYAMMMF58F) postea succedet.
+ * Redde NIHIL si gignere non potuit (fons fortuitorum defecit) -
+ * vocans REFUSAT potius quam clavem divinabilem adhibeat. */
+interior constans character*
+_tesseram_parare (Piscina* piscina)
+{
+    constans character* domus = getenv("HOME");
+    character  via[1024];
+    character* tessera;
+    FILE*      f;
+    i8         octeti[32];
+    i32        i;
+
+    si (domus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    sprintf(via, "%s/.rhubarb", domus);
+    (vacuum)mkdir(via, 0700);
+    sprintf(via, "%s/.rhubarb/forum.tessera", domus);
+
+    tessera = (character*)piscina_allocare(piscina, 65);
+    si (tessera == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    f = fopen(via, "r");
+    si (f != NIHIL)
+    {
+        si (fgets(tessera, 65, f) != NIHIL)
+        {
+            fclose(f);
+            tessera[strcspn(tessera, "\r\n")] = '\0';
+            si (strlen(tessera) >= XXXII)
+            {
+                redde tessera;
+            }
+        }
+        alioquin
+        {
+            fclose(f);
+        }
+    }
+
+    /* gignere: LXIV characteres hex = CCLVI bits */
+    si (!moneta_octeti_fortuiti(octeti, XXXII))
+    {
+        imprimere("[forum] tessera gigni NON potuit"
+            " (/dev/urandom deest) - servus recusat\n");
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < XXXII; i++)
+    {
+        sprintf(tessera + i * II, "%02x",
+            (unsigned int)(i8)octeti[i]);
+    }
+    tessera[64] = '\0';
+
+    f = fopen(via, "w");
+    si (f == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fprintf(f, "%s\n", tessera);
+    fclose(f);
+    (vacuum)chmod(via, 0600);
+    imprimere("[forum] tessera nova scripta: %s\n", via);
+    redde tessera;
+}
+
 /* PRAEBITOR: registratio methodorum fori - SEMEL scripta, ab
  * utroque transportu vocata (fenestra vitreae, servus HTTP).
  * Methodus hic addita in telephono statim adest quia locus alter
@@ -927,6 +1001,14 @@ s32 principale (integer argc, character** argv)
         figura_servi.praebitor       = _methodos_praebere;
         figura_servi.praebitor_datum = &forum;
         figura_servi.hospes          = hospes_servi;
+        /* tessera SEMPER paratur, etiam in loopback: ergo QR idem
+         * est utrovis modo, et transitus ad -hospes nihil mutat */
+        figura_servi.tessera         = _tesseram_parare(piscina);
+        si (hospes_servi != NIHIL && figura_servi.tessera == NIHIL)
+        {
+            imprimere("FRACTA: tessera necessaria ad expositionem\n");
+            redde I;
+        }
         figura_servi.portus          = portus_servi;
         figura_servi.acta_accessus   = VERUM;
 

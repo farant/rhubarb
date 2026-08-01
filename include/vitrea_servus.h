@@ -72,6 +72,17 @@ nomen structura {
      * reticulum ACTUS EXPLICITUS sit ("0.0.0.0"), numquam quod
      * per neglegentiam accidit. */
     constans character*   hospes;
+    /* Tessera secreta (chorda hexadecimalis, >= XXXII characteres).
+     *
+     * PORTA NATIVITATIS: si 'hospes' datur (id est, expositio ultra
+     * loopback) et haec abest, vitrea_servus_creare NIHIL reddit et
+     * causam nominat. Non monitum - REFUSIO. Forum sine tessera
+     * expositum casus esse non debet, sed impossibile.
+     *
+     * Bibliotheca UNDE venerit nescit: lima, arca, environmentum.
+     * Ea sutura est per quam arca (01KYAMMMF58F) postea succedet
+     * sine ulla mutatione huius codicis. */
+    constans character*   tessera;
     i32                   portus;          /* 0 = auto-selectus */
     b32                   acta_accessus;   /* linea per petitionem */
 } VitreaServusConfiguratio;
