@@ -299,8 +299,7 @@
      ergo columna quae omnes simul monstrat, non menu quod eas
      celat. Sub CDL px in ordinem verticalem cadit (columna +
      campi in fenestra angusta non capiunt). */
-  #adnotatio-editor { display: flex; gap: .9em; margin-top: 1.4em;
-    border-top: 1px solid #3a352c; padding-top: .9em; }
+  #adnotatio-editor { display: flex; gap: .9em; margin-top: 1.4em; }
   #adnotatio-tabs { display: flex; flex-direction: column;
     min-width: 7.5em; }
   #adnotatio-tabs a { padding: .3em .5em; cursor: pointer;
@@ -311,7 +310,11 @@
   #adnotatio-campi { flex: 1 1 auto; min-width: 0; }
   #adnotatio-campi label { display: block; font-size: .8em;
     color: #8a8274; margin: .5em 0 .15em; }
-  .adnot-ordo { border-bottom: 1px solid #2f2b24; padding: .6em 0; }
+  /* charta, non linea divisoria: super imagine tergali nota nuda
+     illegibilis est - eadem vestis ac pipatum et commentarium */
+  .adnot-ordo { background: #171512; border: 1px solid #453d2f;
+    border-radius: 4px; padding: .7em .9em; margin: .7em 0;
+    box-sizing: border-box; }
   .adnot-ordo .species-a { color: #9fb87a; font-size: .78em;
     text-transform: uppercase; letter-spacing: .06em; }
   .adnot-ordo .pagina-a { color: #8a8274; font-size: .8em; }
@@ -625,7 +628,7 @@
     <div id="vacuum-adnotationum" hidden>
       nullae notae adhuc - scribe primam infra
     </div>
-    <div id="adnotatio-editor">
+    <div id="adnotatio-editor" class="charta">
       <div id="adnotatio-tabs"></div>
       <div id="adnotatio-campi">
         <div id="adnotatio-forma"></div>
