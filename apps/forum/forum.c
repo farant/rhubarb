@@ -139,11 +139,20 @@ _res_legere (JsonValor* argumenta, Piscina* piscina,
     /* 'sine_campis' + 'res' TRANSMITTUNTUR (01KYCMQMED): index
      * librorum campum 'fons' tacet (XLV KB per documentum saturaret
      * pyxidem clientis CCLVI KB ad V documenta), apertio unum ens
-     * dato pleno petit. Absentia utriusque = mos vetus exacte. */
+     * dato pleno petit. Absentia utriusque = mos vetus exacte.
+     *
+     * CAVE TRANSMISSIONEM: hic argumenta NOMINATIM eliguntur, non
+     * transfunduntur. Argumentum novum quod hic non additur TACITE
+     * cadit - velamen rectum, daemon rectus, filtrum nullum. Quod
+     * peius est quam error: cum consumptor selectionem clientis
+     * latere DEPOSUERIT (capitula), lectio non-filtrata omnia
+     * reddit et ut datum verum legitur. */
     {
         JsonValor* arg = json_objectum_creare(piscina);
         chorda sine_campis;
         chorda res_unum;
+        chorda nexus_verbum;
+        chorda nexus_ad;
 
         json_objectum_ponere(arg, "genus",
             json_chorda_creare(piscina, genus));
@@ -162,6 +171,20 @@ _res_legere (JsonValor* argumenta, Piscina* piscina,
         {
             json_objectum_ponere(arg, "res",
                 json_chorda_creare(piscina, res_unum));
+        }
+        nexus_verbum = json_ad_chorda(json_objectum_capere(argumenta,
+            "nexus_verbum"));
+        si (nexus_verbum.mensura > ZEPHYRUM)
+        {
+            json_objectum_ponere(arg, "nexus_verbum",
+                json_chorda_creare(piscina, nexus_verbum));
+        }
+        nexus_ad = json_ad_chorda(json_objectum_capere(argumenta,
+            "nexus_ad"));
+        si (nexus_ad.mensura > ZEPHYRUM)
+        {
+            json_objectum_ponere(arg, "nexus_ad",
+                json_chorda_creare(piscina, nexus_ad));
         }
         res = cliens_tabularii_legere_cum(&forum->cliens, piscina,
             arg, culpa);

@@ -5900,6 +5900,8 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
     chorda status_f = _arg(argumenta, "status");
     chorda res_f = _arg(argumenta, "res");
     chorda sine_campis = _arg(argumenta, "sine_campis");
+    chorda nexus_verbum = _arg(argumenta, "nexus_verbum");
+    chorda nexus_ad = _arg(argumenta, "nexus_ad");
     JsonValor* tabulatum = json_tabulatum_creare(pn);
 
     si (argumenta != NIHIL)
@@ -5921,6 +5923,20 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
     si (status_f.datum == NIHIL) status_f = _ch("");
     si (res_f.datum == NIHIL) res_f = _ch("");
     si (sine_campis.datum == NIHIL) sine_campis = _ch("");
+    si (nexus_verbum.datum == NIHIL) nexus_verbum = _ch("");
+    si (nexus_ad.datum == NIHIL) nexus_ad = _ch("");
+    /* praefixum ULID in 'nexus_ad' quoque resolvere: destinatio
+     * eodem more nominatur quo 'res' (comitas eadem, aliter
+     * praefixum TACITE nihil congrueret) */
+    si (_ulid_praefixus_est(nexus_ad))
+    {
+        chorda plenum = _res_per_praefixum(t, nexus_ad, pn, NIHIL);
+
+        si (plenum.mensura > ZEPHYRUM)
+        {
+            nexus_ad = plenum;
+        }
+    }
     /* praefixum ULID in 'res' ad id plenum resolvere (01KYR7XMM9:
      * praefixum antea [] TACITE reddebat): stampae capturarum
      * (XII+ signa) et praefixa manu data. Congruentia exacta
@@ -5954,6 +5970,29 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
         " WHERE (? = '' OR r.genus = ?)"
         " AND (? = '' OR r.status = ?)"
         " AND (? = '' OR r.res_id = ?)"
+        /* filtrum nexus: 'quae res ad HANC per HOC verbum ligantur'.
+         * Sine eo consumptor genus TOTUM legere et clientis-latere
+         * seligere debet - quod tectum CC in bilancem GLOBALEM
+         * vertit (capitula omnium librorum uno pretio), et truncatio
+         * ut 'liber hic pauca capitula habet' legitur.
+         *
+         * Custodia utrumque-vacuum NECESSARIA est: sine ea EXISTS
+         * ad 'nexum quemlibet habet' degeneraret et res sine nexu
+         * omnes TACITE excideret - filtrum quod nemo petivit.
+         *
+         * json_extract, NON LIKE: verbum ab usore venit, et '%' in
+         * exemplari LIKE character vagus est - congruentia falsa
+         * sine ullo signo. (respondet_ad supra LIKE fixum retinet:
+         * verbum ibi litterale est.) */
+        " AND ((? = '' AND ? = '') OR EXISTS ("
+        "  SELECT 1 FROM membra ma"
+        "  JOIN res n ON n.res_id = ma.res_id"
+        "   AND n.genus = 'nexus' AND n.status = 'vigens'"
+        "  JOIN membra mb ON mb.res_id = ma.res_id"
+        "   AND mb.pars = 'b'"
+        "  WHERE ma.pars = 'a' AND ma.membrum = r.res_id"
+        "   AND (? = '' OR json_extract(n.datum, '$.verbum') = ?)"
+        "   AND (? = '' OR mb.membrum = ?)))"
         " ORDER BY r.creatum DESC, r.res_id DESC LIMIT ?");
     si (e == NIHIL)
     {
@@ -5967,7 +6006,13 @@ _tab_legere (Tabularium* t, Piscina* pn, JsonValor* argumenta,
     scrinium_ligare_textum(e, IV, status_f);
     scrinium_ligare_textum(e, V, res_f);
     scrinium_ligare_textum(e, VI, res_f);
-    scrinium_ligare_numerum(e, VII, quantum);
+    scrinium_ligare_textum(e, VII, nexus_verbum);
+    scrinium_ligare_textum(e, VIII, nexus_ad);
+    scrinium_ligare_textum(e, IX, nexus_verbum);
+    scrinium_ligare_textum(e, X, nexus_verbum);
+    scrinium_ligare_textum(e, XI, nexus_ad);
+    scrinium_ligare_textum(e, XII, nexus_ad);
+    scrinium_ligare_numerum(e, XIII, quantum);
 
     dum (scrinium_gradi(e) == SCRINIUM_ORDO)
     {
@@ -6871,7 +6916,15 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         { "sine_campis", "clavium nomina commatibus separata quae"
           " ex dato tollantur; '<clavis>_omissus' cum mensura"
           " manet. Pro listis ubi campus immanis est (e.g. 'fons')",
-          FALSUM }
+          FALSUM },
+        { "nexus_verbum", "filtrum: res nexum vigentem hoc verbo"
+          " ferentes (pars a = res reddita). Cum 'nexus_ad'"
+          " coniunctum: ambo in nexu UNO congruere debent",
+          FALSUM },
+        { "nexus_ad", "filtrum: res ad hanc destinationem ligatae"
+          " (res_id aut praefixum ULID). E.g. genus=capitulum"
+          " nexus_verbum=liber nexus_ad=<liber> = capitula UNIUS"
+          " libri", FALSUM }
     };
     interior constans TabArgumentum ARG_RAMUS[] = {
         { "actus", "creare|enumerare|comparare|fundere|abicere",
@@ -6930,8 +6983,11 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         " rerum (recentissima primum) cum dato plicato inserto,"
         " actore creationis, et respondet_ad (filum). Fundamentum"
         " tabulae fori. 'res' unum ens plene reddit; 'sine_campis'"
-        " campos immanes ex lista tollit (limes clientis CCLVI KB).",
-        ARG_LEGERE, V));
+        " campos immanes ex lista tollit (limes clientis CCLVI KB);"
+        " 'nexus_verbum'+'nexus_ad' res per nexum filtrant (e.g."
+        " capitula UNIUS libri) - aliter tectum CC per genus TOTUM"
+        " partitur.",
+        ARG_LEGERE, VII));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "tacere",
         "Cautionem vigiliae (residens obsoletus) per N responsa"
         " supprimere - agnitio explicita. Re-armatur: numero"

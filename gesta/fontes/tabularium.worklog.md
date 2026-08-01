@@ -416,3 +416,56 @@ Note the orphan machinery CORRECTLY stayed silent here — a
 missing field is legal absence, not a spec violation. The gap was
 only findable by a human looking at their own data: the lived bar
 again, third find in one day.
+
+## 2026-08-01 — legere: nexus filter (01KYZG0V0K)
+
+Born from the Libri tab. Chapters are entities linked to their book
+by a `liber` nexus, and `legere` could filter only by genus — so the
+app read EVERY `capitulum` in the store (200 ceiling) and selected
+client-side. That makes the ceiling a GLOBAL budget: 10 books × 40
+chapters = 400, the read returns 200 most-recent-first, and the books
+entered earliest quietly show short tables of contents. Worse, the
+"append after the last chapter" arithmetic is computed from that
+truncated list, so new chapters collide with existing `ordo` values.
+
+Added `nexus_verbum` + `nexus_ad`, both optional, combining inside a
+single EXISTS so "verbum X to target Y" must match ONE nexus rather
+than two different ones. Subject is `pars = 'a'`, target `pars = 'b'`
+— same convention as the nexus projection and `respondet_ad`.
+`nexus_ad` resolves ULID prefixes like `res` does; anything else
+would be a silent no-match.
+
+### Two things worth carrying forward
+
+**json_extract, not LIKE.** The neighbouring `respondet_ad` subquery
+matches `n.datum LIKE '%"verbum":"respondet-ad"%'` — fine, because
+that verbum is a literal in the source. Here the verbum comes from
+the caller, and `%` in a LIKE pattern is a wildcard: a caller passing
+`%` would match every nexus and get a confidently wrong answer with
+no error. SQLite 3.53 has JSON1 built in (we don't set
+SQLITE_OMIT_JSON), so exact comparison was available all along.
+Pinned with a test that passes `%` and expects nothing.
+
+**The both-empty guard is load-bearing for the whole store.** Without
+`((? = '' AND ? = '') OR EXISTS (...))` the EXISTS degenerates to
+"this res has SOME nexus", so every unfiltered `legere` silently
+drops link-less entities. I broke it deliberately to calibrate the
+new regression test and it took down EIGHT assertions, most of them
+pre-existing — pipata, captured ideas, single-entity reads. A
+feature-shaped change to a shared WHERE clause is a change to every
+caller of that clause; the only way to know is to watch it fail.
+
+### The bug that never fired
+
+`_res_legere` in apps/forum/forum.c builds a fresh argument object
+and forwards arguments BY NAME (genus, quantum, sine_campis, res).
+The two new arguments would have been dropped there in silence — and
+since the app had just stopped filtering client-side, every book
+would have listed every chapter, with the daemon correct, the webview
+correct, and no error anywhere. Found by reading the handler before
+trusting it. Comment left at the site.
+
+Live proof on Fran's data (42 Lunar Men chapters, via the HTTP
+bridge): filtered read = 42, all one book; unfiltered `pipatum` read
+still returns 30 link-less entities out of 40; a book with no
+chapters returns 0 rather than everything.

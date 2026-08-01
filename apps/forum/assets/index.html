@@ -3529,10 +3529,14 @@ var cap_praevisa = [];        /* fructus lectionis (nondum scripta) */
 var cap_mora     = null;      /* horologium praevisionis */
 
 /* Tectum lectionis daemonis (legere: ordinarius L, tectum CC).
- * Capitula OMNIA leguntur et clientis-latere per nexum 'liber'
- * seliguntur - conditorium filtrum nexus non praebet. Ergo tectum
- * REALE est: cum summa capitulorum trans libros omnes CC excedat,
- * indices truncati essent. NON TACITE - vide _tectum_monere. */
+ * Capitula per FILTRUM NEXUS petuntur (nexus_verbum + nexus_ad,
+ * 01KYZG0V0K), ergo tectum unum LIBRUM mensurat, non genus totum.
+ * Antea bilanx GLOBALIS erat - capitula omnium librorum uno pretio,
+ * et liber vetus indicem truncatum monstrabat.
+ *
+ * Cautio manet quia limes verus manet: liber CC capitulorum adhuc
+ * truncaretur, et truncatio tacita 'liber hic pauca capitula habet'
+ * legeretur. Nunc autem terminus rem UNAM tangit. */
 var CAP_TECTUM = 200;
 var cap_tectum_tactum = false;
 
@@ -3671,15 +3675,13 @@ function liber_aperire(ens) {
   libri_vertere('liber');
 }
 
-/* Capitula huius libri, ordine legendi. Filtrum clientis-latere:
-   vide CAP_TECTUM supra. */
-function capitula_libri(res_id, omnia) {
+/* Capitula huius libri, ordine legendi. Selectio conditorii est
+   (filtrum nexus); hic solum tumuli abiciuntur et ordo imponitur -
+   'legere' recentissima primum reddit, index ordine LEGENDI stat. */
+function capitula_libri(omnia) {
   cap_tectum_tactum = omnia.length >= CAP_TECTUM;
   return omnia.filter(function (c) {
-    if (tumulus_est(c)) { return false; }
-    return nexus_de(c, 'liber').some(function (n) {
-      return n.ad === res_id;
-    });
+    return !tumulus_est(c);
   }).sort(function (a, b) {
     return ((a.datum && a.datum.ordo) || 0)
          - ((b.datum && b.datum.ordo) || 0);
@@ -3742,9 +3744,20 @@ function reddere_liber(def) {
     liber_cap.length > 0;
   document.getElementById('capitula-numerus').textContent =
     cap_tectum_tactum
-      ? (liber_cap.length + ' capitula · CAUTIO: lectio tectum CC'
-         + ' tetigit, index INCOMPLETUS esse potest')
+      ? (liber_cap.length + ' capitula · CAUTIO: tectum CC huius'
+         + ' LIBRI tactum, index INCOMPLETUS esse potest')
       : (liber_cap.length ? liber_cap.length + ' capitula' : '');
+  /* PORTA, non monitum: cum lectio truncata sit, 'ordo maximus' ex
+     lista imperfecta computatur, ergo capitula nova numeris IAM
+     OCCUPATIS insiderent et ordo legendi tacite falsus fieret.
+     Instrumentum quod dato suo fidere nequit RECUSAT. */
+  document.getElementById('capitula-inserere').disabled =
+    cap_tectum_tactum;
+  document.getElementById('capitula-inserere').title =
+    cap_tectum_tactum
+      ? 'insertio clausa: lectio capitulorum truncata est, ergo'
+        + ' ordo novorum falsus esset'
+      : '';
 }
 
 /* ---- insertio indicis ---- */
@@ -3912,8 +3925,9 @@ function anquirere() {
        error: 'liber novus' ea condit */
     Promise.all([legere('definitio'),
       legere('book').catch(function () { return []; }),
-      libri_visus === 'liber'
-        ? legere('capitulum', { quantum: String(CAP_TECTUM) })
+      (libri_visus === 'liber' && liber_ens)
+        ? legere('capitulum', { quantum: String(CAP_TECTUM),
+            nexus_verbum: 'liber', nexus_ad: liber_ens.res_id })
             .catch(function () { return []; })
         : Promise.resolve([])])
       .then(function (r) {
@@ -3930,7 +3944,7 @@ function anquirere() {
           libri.forEach(function (e) {
             if (e.res_id === liber_ens.res_id) { liber_ens = e; }
           });
-          liber_cap = capitula_libri(liber_ens.res_id, r[2]);
+          liber_cap = capitula_libri(r[2]);
         }
         var series = JSON.stringify([r[0], r[1], liber_cap])
           + '|' + libri_visus + '|'

@@ -2425,6 +2425,134 @@ s32 principale (vacuum)
             != NIHIL);
     }
 
+    /* XV bis. legere: filtrum nexus (01KYZG0V0K). Sine eo consumptor
+     * genus TOTUM legere et clientis-latere seligere debet, ergo
+     * tectum CC per res OMNES generis partitur - capitula omnium
+     * librorum uno pretio, et truncatio ut 'liber hic pauca capitula
+     * habet' legitur. */
+    {
+        character liber_a[GESTA_RES_ID_MENSURA];
+        character liber_b[GESTA_RES_ID_MENSURA];
+        character praefixum[XI];
+        character imperium[PROBATIO_SEMITA_MENSURA];
+        character capitulum_a[GESTA_RES_ID_MENSURA];
+        character capitulum_b[GESTA_RES_ID_MENSURA];
+        i32       k;
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":820,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"decretum\","
+            "\"titulus\":\"liber alpha\"}}}");
+        _res_id_ex_responso(r, liber_a);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":821,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"decretum\","
+            "\"titulus\":\"liber beta\"}}}");
+        _res_id_ex_responso(r, liber_b);
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":822,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"capitulum alpha\"}}}");
+        _res_id_ex_responso(r, capitulum_a);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":823,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"capitulum beta\"}}}");
+        _res_id_ex_responso(r, capitulum_b);
+        /* nota SINE ullo nexu - custos regressionis infra */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":824,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"nota solitaria\"}}}");
+
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":825,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"nexus\",\"verbum\":\"liber\",\"alterum\":\"%s\"}}}",
+            capitulum_a, liber_a);
+        r = _mitte(t, piscina, imperium);
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":826,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"%s\",\"actus\":"
+            "\"nexus\",\"verbum\":\"liber\",\"alterum\":\"%s\"}}}",
+            capitulum_b, liber_b);
+        r = _mitte(t, piscina, imperium);
+
+        /* verbum + destinatio: capitula UNIUS libri */
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":827,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":\"nota\","
+            "\"nexus_verbum\":\"liber\",\"nexus_ad\":\"%s\"}}}",
+            liber_a);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "capitulum alpha") != NIHIL);
+        CREDO_VERUM (strstr(r, "capitulum beta") == NIHIL);
+        CREDO_VERUM (strstr(r, "nota solitaria") == NIHIL);
+
+        /* CUSTOS REGRESSIONIS: lectio SINE filtro res sine nexu
+         * ferre DEBET. Si custodia utrumque-vacuum caderet, EXISTS
+         * ad 'nexum quemlibet habet' degeneraret et omnis lectio
+         * fori res nexu carentes TACITE amitteret - damnum longe
+         * maius quam functio quam addimus. */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":828,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":\"nota\"}}}");
+        CREDO_VERUM (strstr(r, "nota solitaria") != NIHIL);
+        CREDO_VERUM (strstr(r, "capitulum alpha") != NIHIL);
+        CREDO_VERUM (strstr(r, "capitulum beta") != NIHIL);
+
+        /* destinatio sola (verbum quodlibet) */
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":829,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":\"nota\","
+            "\"nexus_ad\":\"%s\"}}}", liber_b);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "capitulum beta") != NIHIL);
+        CREDO_VERUM (strstr(r, "capitulum alpha") == NIHIL);
+
+        /* verbum solum: ambo capitula, nota solitaria non */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":830,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":\"nota\","
+            "\"nexus_verbum\":\"liber\"}}}");
+        CREDO_VERUM (strstr(r, "capitulum alpha") != NIHIL);
+        CREDO_VERUM (strstr(r, "capitulum beta") != NIHIL);
+        CREDO_VERUM (strstr(r, "nota solitaria") == NIHIL);
+
+        /* verbum ignotum: nihil (congruentia EXACTA, non substantia
+         * - LIKE hic characterem vagum ab usore acciperet) */
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":831,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":\"nota\","
+            "\"nexus_verbum\":\"lib\",\"nexus_ad\":\"%s\"}}}",
+            liber_a);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "capitulum alpha") == NIHIL);
+
+        /* character vagus LIKE ut verbum litterale tractatur */
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":832,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":\"nota\","
+            "\"nexus_verbum\":\"%%\",\"nexus_ad\":\"%s\"}}}",
+            liber_a);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "capitulum alpha") == NIHIL);
+
+        /* praefixum ULID in destinatione resolvitur (comitas eadem
+         * quam 'res' habet) */
+        per (k = ZEPHYRUM; k < X; k++) praefixum[k] = liber_a[k];
+        praefixum[X] = '\0';
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":833,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"legere\",\"arguments\":{\"genus\":\"nota\","
+            "\"nexus_verbum\":\"liber\",\"nexus_ad\":\"%s\"}}}",
+            praefixum);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "capitulum alpha") != NIHIL);
+        CREDO_VERUM (strstr(r, "capitulum beta") == NIHIL);
+    }
+
     /* XVI. renovatio sui (01KYQ4T5EE): explorator praevius =
      * launcher -struere ut infans; defectus = residens vivus;
      * successus = renovandum (stdio: exec in currere; daemon:

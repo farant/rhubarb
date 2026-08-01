@@ -82,7 +82,7 @@ loopback (`_custodia_admittit` only sleeps when no token is
 configured, and forum always configures one). Cookie name is
 `vitrea=`, not `vitrea_tessera=`.
 
-### Known limit, deliberately loud
+### Known limit — CLOSED same day (nexus filter shipped)
 
 `legere` has no nexus filter, so the Libri tab reads ALL `capitulum`
 entities (quantum 200, the daemon ceiling) and filters client-side by
@@ -91,3 +91,22 @@ truncated. The UI prints `CAUTIO: lectio tectum CC tetigit, index
 INCOMPLETUS esse potest` when the read comes back at the ceiling —
 silent truncation would read as "this book has 12 chapters".
 Real fix is a nexus-filtered read in the store.
+
+**Done the same afternoon** (Fran asked for it directly). `legere`
+now takes `nexus_verbum` + `nexus_ad`; the ceiling measures ONE book
+instead of the whole genus. Details in
+gesta/fontes/tabularium.worklog.md — the two findings worth carrying:
+
+1. **The both-empty guard is load-bearing far beyond this feature.**
+   Without `((? = '' AND ? = '') OR EXISTS (...))` the EXISTS
+   degenerates to "has any nexus at all", so every *unfiltered* read
+   silently drops entities that have no links. Deliberately breaking
+   it took down EIGHT assertions across probatio_tabularium, most of
+   them pre-existing (pipata, captured ideas). That is the whole
+   argument for calibrating a guard by watching it go red.
+2. **`_res_legere` in forum.c selects arguments by NAME — it does not
+   forward them.** The two new args would have been dropped in
+   silence, and because I had just deleted the client-side filter,
+   every book would have shown every chapter with no error anywhere.
+   Found by reading the handler, not by testing. Comment added at the
+   site so the next argument isn't lost the same way.
