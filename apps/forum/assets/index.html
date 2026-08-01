@@ -265,6 +265,7 @@
     <a id="nav-scholia">Scholia</a>
     <a id="nav-tags">Tags</a>
     <a id="nav-sententiae">Sententiae</a>
+    <a id="nav-telephonum">Telephonum</a>
   </nav>
 </header>
 <div id="nuntius-erroris"></div>
@@ -444,6 +445,17 @@
     </div>
     <h2 id="codex-titulus"></h2>
     <div id="lector-codicis"></div>
+  </div>
+</section>
+
+<section id="visus-telephonum" hidden>
+  <div class="charta" id="telephonum-pyxis">
+    <p id="telephonum-status">…</p>
+    <p>
+      <button id="telephonum-incipere">servire ad telephonum</button>
+      <button id="telephonum-sistere" hidden>sistere</button>
+    </p>
+    <div id="telephonum-candidati"></div>
   </div>
 </section>
 
@@ -719,6 +731,7 @@ function vertere(novus) {
   document.getElementById('visus-scholia').hidden = novus !== 'scholia';
   document.getElementById('visus-tags').hidden = novus !== 'tags';
   document.getElementById('visus-sententiae').hidden = novus !== 'sententiae';
+  document.getElementById('visus-telephonum').hidden = novus !== 'telephonum';
   document.getElementById('nav-pipata').className =
     (novus === 'pipata') ? 'activa' : '';
   document.getElementById('nav-acta').className =
@@ -735,6 +748,8 @@ function vertere(novus) {
     (novus === 'tags') ? 'activa' : '';
   document.getElementById('nav-sententiae').className =
     (novus === 'sententiae') ? 'activa' : '';
+  document.getElementById('nav-telephonum').className =
+    (novus === 'telephonum') ? 'activa' : '';
   document.body.className =
     ((novus === 'scholia' && scholia_visus === 'codex')
      || (novus === 'sententiae' && sent_visus === 'lector')) ? 'latus' : '';
@@ -751,7 +766,109 @@ document.getElementById('nav-res').onclick = function () { res_vertere('index');
 document.getElementById('nav-scholia').onclick = function () { scholia_vertere('index'); vertere('scholia'); };
 document.getElementById('nav-tags').onclick = function () { tags_vertere('arbor'); vertere('tags'); };
 document.getElementById('nav-sententiae').onclick = function () { sententiae_vertere('index'); vertere('sententiae'); };
+document.getElementById('nav-telephonum').onclick = function () {
+  vertere('telephonum'); telephonum_reficere();
+};
 document.getElementById('retro-articuli').onclick = function () { vertere('articuli'); };
+
+/* ---- telephonum: servus + QR ----
+ *
+ * QR a C computatur (bibliotheca qr), non a JS: matrix per pontem
+ * venit ut ordines chordarum '0'/'1'. Velamen SOLUM pingit.
+ *
+ * Status semper a C petitur, numquam a JS coniectatur: si servus
+ * obiit (portus occupatus, ruina), ansa app id videt et manubrium
+ * purgat, ergo hic QR de servo mortuo NON monstratur. */
+function qr_pingere(qr) {
+  var tela = document.createElement('canvas');
+  var quies = 4;
+  var scala = 6;
+  var lat = (qr.amplitudo + quies * 2) * scala;
+  var ctx, y, x;
+
+  tela.width = lat;
+  tela.height = lat;
+  tela.style.imageRendering = 'pixelated';
+  ctx = tela.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, lat, lat);
+  ctx.fillStyle = '#000000';
+  for (y = 0; y < qr.amplitudo; y++) {
+    for (x = 0; x < qr.amplitudo; x++) {
+      if (qr.ordines[y].charAt(x) === '1') {
+        ctx.fillRect((x + quies) * scala, (y + quies) * scala,
+                     scala, scala);
+      }
+    }
+  }
+  return tela;
+}
+
+function telephonum_reddere(st) {
+  var status = document.getElementById('telephonum-status');
+  var pyxis = document.getElementById('telephonum-candidati');
+  var i;
+
+  document.getElementById('telephonum-incipere').hidden = st.currens;
+  document.getElementById('telephonum-sistere').hidden = !st.currens;
+  pyxis.textContent = '';
+
+  if (!st.currens) {
+    status.textContent = 'servus non currit';
+    return;
+  }
+  status.textContent = 'servus currit in portu ' + st.portus
+    + ' — scanne codicem telephono';
+  if (!st.candidati || !st.candidati.length) {
+    pyxis.textContent = 'nulla interfacies reticuli inventa'
+      + ' (wifi aut hotspot deest?)';
+    return;
+  }
+  /* candidatus quisque suum QR fert: addressum unum non est, ergo
+     si duae interfacies supersunt, oculi eligunt */
+  for (i = 0; i < st.candidati.length; i++) {
+    var c = st.candidati[i];
+    var div = document.createElement('div');
+    var titulus = document.createElement('p');
+
+    titulus.textContent = c.interfacies + ' — ' + c.addressum;
+    div.appendChild(titulus);
+    if (c.qr) { div.appendChild(qr_pingere(c.qr)); }
+    div.appendChild(document.createElement('br'));
+    pyxis.appendChild(div);
+  }
+}
+
+function telephonum_reficere() {
+  return internuntius.vocare('servus_status', {})
+    .then(telephonum_reddere)
+    .catch(function (e) {
+      document.getElementById('telephonum-status').textContent =
+        'CULPA: ' + e.message;
+    });
+}
+
+document.getElementById('telephonum-incipere').onclick = function () {
+  document.getElementById('telephonum-status').textContent =
+    'incipiens…';
+  internuntius.vocare('servus_incipere', {})
+    .then(function () {
+      /* servo tempus da ut portum liget antequam statum petamus */
+      setTimeout(telephonum_reficere, 400);
+    })
+    .catch(function (e) {
+      document.getElementById('telephonum-status').textContent =
+        'CULPA: ' + e.message;
+    });
+};
+document.getElementById('telephonum-sistere').onclick = function () {
+  internuntius.vocare('servus_sistere', {})
+    .then(telephonum_reficere)
+    .catch(function (e) {
+      document.getElementById('telephonum-status').textContent =
+        'CULPA: ' + e.message;
+    });
+};
 
 /* ---- arca responsi in linea (pipata + commentaria) ---- */
 function arcam_responsi_facere(genus, ad, limes) {
@@ -3276,6 +3393,9 @@ function anquirere() {
   if (visus === 'editor') { return; }
   /* sententiae: sine anquisitione (vide caput sectionis) */
   if (visus === 'sententiae') { return; }
+  /* telephonum: status per actum petitur, non per horologium -
+     QR immobilis est et anquisitio eum quaque vice repingeret */
+  if (visus === 'telephonum') { return; }
   /* creator + forma = poll-exemptae (exemplar editoris - latitudines
    * vivae numquam a redditione clobberantur) */
   if (visus === 'res'

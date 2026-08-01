@@ -37,6 +37,9 @@
 #include "xar.h"
 #include "capsula_forum.h"
 #include "moneta.h"
+#include "qr.h"
+#include "rete.h"
+#include "processus.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -62,6 +65,12 @@ nomen structura {
     b32 fumus_responsum_missum;
     character fumus_pipatum_id[LXIV];
     i32 fumus_pipatum_mensura;
+    /* servus ad telephonum: PROCESSUS ALTER (ansae eventuum duae
+     * numquam intertexuntur). NIHIL = non currit. Pulsatur in ansa
+     * app - processus_exsequi fenestram congelaret. */
+    Processus* servus_proc;
+    i32        servus_portus;
+    Piscina*   piscina_diuturna;   /* processui et tesserae */
 } ForumStatus;
 
 /* litterae -> chorda (sine copia; unio contra cast-qual) */
@@ -773,6 +782,198 @@ _tergale_delere (JsonValor* argumenta, Piscina* piscina,
     redde fructus;
 }
 
+/* ==================================================
+ * servus ad telephonum (QR + processus alter)
+ * ================================================== */
+
+/* infra definita (tessera ante servum legi debet) */
+interior constans character* _tesseram_parare (Piscina* piscina);
+
+/* QR ex URL in JSON: amplitudo + ordines ut chordae '0'/'1'.
+ * Velamen matricem pingit; C eam computat. */
+interior JsonValor*
+_qr_ad_json (constans character* url, Piscina* piscina)
+{
+    QR         qr;
+    JsonValor* obiectum;
+    JsonValor* ordines;
+    chorda     datum;
+    s32        y, x;
+
+    datum = chorda_ex_literis(url, piscina);
+    /* gradus M: aequilibrium inter densitatem et tolerantiam -
+     * camera telephoni velamen oblique legit */
+    qr = qr_generare(datum, QR_ECC_M, piscina);
+    si (!qr.successus)
+    {
+        redde NIHIL;
+    }
+    obiectum = json_objectum_creare(piscina);
+    json_objectum_ponere(obiectum, "amplitudo",
+        json_integer_creare(piscina, (s64)qr.amplitudo));
+    json_objectum_ponere(obiectum, "versio",
+        json_integer_creare(piscina, (s64)qr.versio));
+
+    ordines = json_tabulatum_creare(piscina);
+    per (y = ZEPHYRUM; y < (s32)qr.amplitudo; y++)
+    {
+        character linea[128];
+
+        per (x = ZEPHYRUM; x < (s32)qr.amplitudo; x++)
+        {
+            linea[x] = (qr_modulus(&qr, x, y) == I) ? '1' : '0';
+        }
+        linea[qr.amplitudo] = '\0';
+        json_tabulatum_addere(ordines,
+            json_chorda_creare_literis(piscina, linea));
+    }
+    json_objectum_ponere(obiectum, "ordines", ordines);
+    redde obiectum;
+}
+
+/* status servi + candidati cum QR suo quisque.
+ * QR unum non damus quia addressum unum non est (vide rete.h):
+ * si duae interfacies supersunt, homo oculis eligit. */
+interior JsonValor*
+_servus_status (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    ForumStatus* f = (ForumStatus*)datum;
+    JsonValor*   fructus;
+    JsonValor*   candidati;
+    b32          currit;
+
+    (vacuum)argumenta;
+    (vacuum)culpa;
+
+    currit = (f->servus_proc != NIHIL);
+    fructus = json_objectum_creare(piscina);
+    json_objectum_ponere(fructus, "currens",
+        json_boolean_creare(piscina, currit));
+    json_objectum_ponere(fructus, "portus",
+        json_integer_creare(piscina, (s64)f->servus_portus));
+
+    candidati = json_tabulatum_creare(piscina);
+    si (currit)
+    {
+        constans character* tessera = _tesseram_parare(piscina);
+        ReteInterfacies     tabulatum[VIII];
+        i32                 numerus;
+        i32                 i;
+
+        numerus = rete_addressus_locales(tabulatum, VIII);
+        per (i = ZEPHYRUM; i < numerus && tessera != NIHIL; i++)
+        {
+            character  url[512];
+            JsonValor* ordo = json_objectum_creare(piscina);
+            JsonValor* qr;
+
+            sprintf(url, "http://%s:%d/?clavis=%s",
+                tabulatum[i].addressum, (int)f->servus_portus,
+                tessera);
+            json_objectum_ponere(ordo, "interfacies",
+                json_chorda_creare_literis(piscina,
+                    tabulatum[i].titulus));
+            json_objectum_ponere(ordo, "addressum",
+                json_chorda_creare_literis(piscina,
+                    tabulatum[i].addressum));
+            json_objectum_ponere(ordo, "url",
+                json_chorda_creare_literis(piscina, url));
+            qr = _qr_ad_json(url, piscina);
+            si (qr != NIHIL)
+            {
+                json_objectum_ponere(ordo, "qr", qr);
+            }
+            json_tabulatum_addere(candidati, ordo);
+        }
+    }
+    json_objectum_ponere(fructus, "candidati", candidati);
+    redde fructus;
+}
+
+interior JsonValor*
+_servus_incipere (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    ForumStatus*        f = (ForumStatus*)datum;
+    constans character* argv[VII];
+    character           portus_txt[XVI];
+    i32                 portus = 8790;
+
+    si (f->servus_proc != NIHIL)
+    {
+        *culpa = _ch_forum("servus iam currit");
+        redde NIHIL;
+    }
+    si (argumenta != NIHIL)
+    {
+        JsonValor* p = json_objectum_capere(argumenta, "portus");
+
+        si (p != NIHIL && json_est_integer(p))
+        {
+            portus = (i32)json_ad_integer(p);
+        }
+    }
+    si (_tesseram_parare(piscina) == NIHIL)
+    {
+        *culpa = _ch_forum("tessera parari non potuit");
+        redde NIHIL;
+    }
+    sprintf(portus_txt, "%d", (int)portus);
+
+    /* PROCESSUS ALTER, non filum: ansa vitreae et ansa hospitii
+     * numquam intertexuntur. mora ZEPHYRUM = infinitus (servus
+     * currere debet donec sistatur). */
+    argv[ZEPHYRUM] = "bin/forum";
+    argv[I]        = "-servire";
+    argv[II]       = portus_txt;
+    argv[III]      = "-hospes";
+    argv[IV]       = "0.0.0.0";
+    argv[V]        = NIHIL;
+
+    f->servus_proc = processus_incipere(argv, ZEPHYRUM,
+        f->piscina_diuturna);
+    si (f->servus_proc == NIHIL)
+    {
+        *culpa = _ch_forum("processus incipi non potuit");
+        redde NIHIL;
+    }
+    f->servus_portus = portus;
+    /* status verum per _servus_status petatur: hic solum
+     * confirmamus incepisse. Pagina statum interrogat postquam
+     * servus ligare potuit. */
+    {
+        JsonValor* fructus = json_objectum_creare(piscina);
+
+        json_objectum_ponere(fructus, "currens",
+            json_boolean_creare(piscina, VERUM));
+        json_objectum_ponere(fructus, "portus",
+            json_integer_creare(piscina, (s64)portus));
+        redde fructus;
+    }
+}
+
+interior JsonValor*
+_servus_sistere (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    ForumStatus* f = (ForumStatus*)datum;
+    JsonValor*   fructus = json_objectum_creare(piscina);
+
+    (vacuum)argumenta;
+    (vacuum)culpa;
+
+    si (f->servus_proc != NIHIL)
+    {
+        processus_abrumpere(f->servus_proc);
+        f->servus_proc = NIHIL;
+        f->servus_portus = ZEPHYRUM;
+    }
+    json_objectum_ponere(fructus, "currens",
+        json_boolean_creare(piscina, FALSUM));
+    redde fructus;
+}
+
 /* Tesseram legere aut gignere. Lima EXTRA arborem git, modo 0600.
  * Secretum in repositorio numquam sedeat; haec lima est sutura per
  * quam arca (01KYAMMMF58F) postea succedet.
@@ -888,6 +1089,15 @@ _methodos_praebere (Internuntius* inx, InternuntiusModus modus,
             _fumus_modus, f);
         (vacuum)internuntius_praebere(inx, "fumus_perfectus",
             _fumus_perfectus, f);
+        /* servus ad telephonum: FENESTRAE SOLIUS. Servus qui se
+         * ipsum gignere posset furcam infinitam pareret, et
+         * telephonum servum alium incipere nihil quaerit. */
+        (vacuum)internuntius_praebere(inx, "servus_status",
+            _servus_status, f);
+        (vacuum)internuntius_praebere(inx, "servus_incipere",
+            _servus_incipere, f);
+        (vacuum)internuntius_praebere(inx, "servus_sistere",
+            _servus_sistere, f);
     }
 }
 
@@ -920,6 +1130,9 @@ s32 principale (integer argc, character** argv)
     forum.fumus_perfectus_est = FALSUM;
     forum.fumus_responsum_missum = FALSUM;
     forum.fumus_pipatum_mensura = ZEPHYRUM;
+    forum.servus_proc = NIHIL;
+    forum.servus_portus = ZEPHYRUM;
+    forum.piscina_diuturna = piscina;
     per (k = I; k < argc; k++)
     {
         si (strcmp(argv[k], "-portus") == ZEPHYRUM && k + I < argc)
@@ -1097,6 +1310,20 @@ s32 principale (integer argc, character** argv)
             dum (fenestra_obtinere_eventus(fenestra, &eventus))
             {
                 (vacuum)speculum_tangere(speculum, &eventus);
+            }
+            /* servum pulsare: NUMQUAM OBSTAT (select mora zephyri).
+             * Servus vivus CURRIT manet; si obiit (portus occupatus,
+             * ruina), PARATUS fit et manubrium purgamus, ne facies
+             * de servo mortuo mentiatur. */
+            si (forum.servus_proc != NIHIL
+                && processus_pulsare(forum.servus_proc)
+                    == PROCESSUS_PARATUS)
+            {
+                (vacuum)processus_metere(forum.servus_proc);
+                forum.servus_proc = NIHIL;
+                forum.servus_portus = ZEPHYRUM;
+                imprimere("[forum] servus ad telephonum cessavit\n");
+                fflush(stdout);
             }
             nota = piscina_notare(piscina_vocationis);
             dum (vitrea_obtinere_nuntium(vitrea, &nuntium, &genus))
