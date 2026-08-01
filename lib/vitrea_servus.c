@@ -14,6 +14,16 @@
 #include <string.h>
 #include <stdio.h>
 
+/* Caput contra CSRF: scriptum iniectum MITTIT, porta pontis POSCIT.
+ *
+ * UNA sedes de industria. Nomen bis scriptum erat - semel in JS,
+ * semel in C - et divergerunt: scriptum caput non mittebat dum
+ * porta id poscebat, ergo OMNIS vocatio pontis super telephonum
+ * CDIII accipiebat ("defectus lectionis" in facie). Utraque pars
+ * SOLA probata erat; NEXUS non erat. Concatenatio litterarum
+ * praeprocessoris divergentiam nunc impossibilem facit. */
+#define VITREA_CAPUT_PONTIS "X-Vitrea"
+
 /* ========================================================================
  * SCRIPTUM PONTIS - gemellum VITREA_CURSUS_JS pro transportu HTTP
  * ========================================================================
@@ -35,7 +45,8 @@ interior constans character* constans VITREA_SERVUS_SCRIPTUM =
 "  vocare: function (methodus, argumenta) {\n"
 "    return fetch('/internuntius', {\n"
 "      method: 'POST',\n"
-"      headers: { 'Content-Type': 'application/json' },\n"
+"      headers: { 'Content-Type': 'application/json',\n"
+"                 '" VITREA_CAPUT_PONTIS "': '1' },\n"
 "      body: JSON.stringify({ id: 1, methodus: methodus,\n"
 "                             argumenta: argumenta || {} })\n"
 "    }).then(function (r) { return r.json(); })\n"
@@ -341,10 +352,10 @@ _pons_tractator (HospitiumColloquium* colloquium)
      * praevolatu ponere non potest, et praevolatum non tractamus -
      * ergo scriptio trans origines cadit etiam crustulo valido. */
     si (s->tessera.mensura > ZEPHYRUM
-        && _caput_valor(petitio, "X-Vitrea").mensura == ZEPHYRUM)
+        && _caput_valor(petitio, VITREA_CAPUT_PONTIS).mensura == ZEPHYRUM)
     {
         colloquium_respondere(colloquium, CDIII, "application/json",
-            _ch("{\"culpa\":{\"nuntius\":\"caput X-Vitrea deest\"}}"));
+            _ch("{\"culpa\":{\"nuntius\":\"caput " VITREA_CAPUT_PONTIS " deest\"}}"));
         redde;
     }
 

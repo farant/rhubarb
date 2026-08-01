@@ -142,3 +142,41 @@ adhibetur nondum emendatio est. Adiutor extensus est
 (`_pons_petere_cum` capita accipit) ut semita manualis non
 maneat. Si adiutor casum tuum non tegit, EXTENDE eum; noli circa
 eum ire.
+
+---
+
+## 2026-08-01 — DEFECTUS VIVUS: caput CSRF quod scriptum non mittebat
+
+Fran QR scannavit, pagina in telephono onerata est, et OMNIS
+sectio "defectus lectionis" monstravit. Causa: scriptum iniectum
+caput `X-Vitrea` NON mittebat, dum porta pontis id POSCEBAT -
+ergo omnis vocatio CDIII accipiebat.
+
+**Cur probationes id non ceperunt** (haec est lectio, non defectus
+ipse):
+
+- probationes CUSTODIAE caput manu ponebant (`_pons_petere_cum`
+  cum "X-Vitrea: 1") - portam probabant, non scriptum.
+- probationes SCRIPTI ante custodiam scriptae erant et sine
+  tessera currebant - custodia dormiebat, ergo caput non poscebatur.
+
+Utraque pars SOLA viridis. NEXUS numquam probatus. Defectus non
+in parte sed in spatio inter partes sedebat, et duae probationes
+virides id spatium celabant.
+
+**Emendatio DUPLEX** (probatio sola non satis):
+
+1. `VITREA_CAPUT_PONTIS` una sedes, per concatenationem litterarum
+   praeprocessoris in AMBAS partes (JS et C) inserta. Nomen bis
+   scriptum divergere potest; nomen semel scriptum non potest.
+2. Probatio nova: pagina SERVITA petitur et caput in scripto
+   quaeritur. Calibrata (capite ex scripto remoto, sola haec
+   assertio cadit).
+
+**LEX GENERALIS**: ubi duae partes contractum implicitum ferunt
+(hic: "quae capita mittuntur" contra "quae poscuntur"), probationes
+utriusque partis SEORSUM virides esse possunt dum contractus
+fractus est. Aut contractum in UNAM sedem coge (praeferendum), aut
+probationem scribe quae utramque partem SIMUL tangit. Probatio
+quae capita manu ponit partem alteram simulat - et simulatio
+divergentiam per definitionem celat.

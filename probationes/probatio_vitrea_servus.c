@@ -430,6 +430,22 @@ probatio_custodia (Piscina* piscina)
     CREDO_VERUM(strstr(buffer, "X-Vitrea") != NIHIL);
     CREDO_VERUM(strstr(buffer, "salve munde") == NIHIL);
 
+    /* NEXUS: scriptum SERVITUM caput mittit quod porta POSCIT.
+     *
+     * Haec probatio ex defectu vivo nata est (2026-08-01): scriptum
+     * caput non mittebat, porta id poscebat, ergo omnis pagina in
+     * telephono "defectus lectionis" monstrabat. Utraque pars sola
+     * VIRIDIS erat - probationes custodiae capita manu ponebant,
+     * probationes scripti sine custodia currebant. Nemo NEXUM
+     * probavit. Hic eum probamus. */
+    sprintf(petitio, "GET / HTTP/1.1\r\nHost: x\r\n"
+        "Cookie: vitrea=%s\r\n\r\n", TESSERA_PROBATIONIS);
+    c = _cliens_connectere(piscina, vitrea_servus_portus(s));
+    CREDO_NON_NIHIL(c);
+    CREDO_VERUM(_commercium(s, c, petitio, buffer,
+        (i32)magnitudo(buffer)) > ZEPHYRUM);
+    CREDO_VERUM(strstr(buffer, "X-Vitrea") != NIHIL);
+
     /* crustulum + caput: transit */
     sprintf(petitio, "Cookie: vitrea=%s\r\nX-Vitrea: 1\r\n",
         TESSERA_PROBATIONIS);
