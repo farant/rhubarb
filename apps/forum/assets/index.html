@@ -43,6 +43,28 @@
        tegitur, ergo 'display' quod JS in filium ponit non pugnat
        (parens tectus filium tegit). */
     #tergale-domus { display: none; }
+    /* TERGALE FIXUM IN iOS. 'background-attachment: fixed' iam
+       petebatur (tergale_applicare) sed iOS Safari id NEGLEGIT:
+       imago ad altitudinem DOCUMENTI sumitur, non ad screnum -
+       ergo cum pagina longa est, 'cover' totam paginam tegit et
+       nimis intenditur. Mos notus, non defectus noster.
+       Remedium quod iOS honorat: STRATUM FIXUM proprium.
+       Color in html ponitur ne ad canvas propagetur et stratum
+       tegat; corpus pellucidum fit; stratum post contentum sedet
+       (z-index -1). Imago per '--tergale' venit, quam
+       tergale_applicare ponit - una fons, duo consumptores. */
+    html { background: #22201d; }
+    body { background-image: none !important;
+           background-color: transparent !important; }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background-image: var(--tergale);
+      background-size: cover;
+      background-position: center;
+      z-index: -1;
+    }
   }
   /* editor crescens: altitudo contentum sequitur - scroll internus
    * nullus umquam (pagina volvitur, cursor visualiter stabilis) */
@@ -4007,11 +4029,16 @@ function tergale_applicare(datum) {
     s.backgroundSize = 'cover';
     s.backgroundPosition = 'center';
     s.backgroundAttachment = 'fixed';
+    /* idem fons strato mobili (body::before in media query):
+       iOS 'background-attachment: fixed' neglegit, ergo illic
+       stratum fixum proprium imaginem hinc sumit */
+    s.setProperty('--tergale', 'url("' + datum + '")');
   } else {
     s.backgroundImage = '';
     s.backgroundSize = '';
     s.backgroundPosition = '';
     s.backgroundAttachment = '';
+    s.removeProperty('--tergale');
   }
   document.getElementById('tergale-tollere').style.display =
     datum ? 'inline' : 'none';
