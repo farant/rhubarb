@@ -257,6 +257,92 @@ proba(!liber_in_indice({ datum: { owned: false,
 proba(!liber_in_indice({}), "datum absens celatur");
 
 /* ================================================================
+ * III bis. CORPUS ET LATUS SUBIECTI - quid ex ENTE in chartam venit
+ * ================================================================ */
+aequale(subiectum_corpus(species_de("terminus"),
+    { datum: { definitio_termini: "principium ignis putatum" } }),
+    "principium ignis putatum", "definitio termini in corpore");
+aequale(subiectum_corpus(species_de("persona"),
+    { datum: { description: "medicus" } }), "",
+    "species sine campo corporis nihil reddit");
+aequale(subiectum_corpus(species_de("terminus"), null), "",
+    "ens absens (copia nondum onerata) nihil reddit, non frangit");
+aequale(subiectum_latus(species_de("eventus"),
+    { datum: { annus: -753 } }), "753 a.C.n.",
+    "annus eventus negativus ut a.C.n.");
+aequale(subiectum_latus(species_de("locus"),
+    { datum: { coordinatae: "52.4862, -1.8904" } }),
+    "52.4862, -1.8904", "coordinatae loci in latere");
+aequale(subiectum_latus(species_de("nota"), { datum: {} }), "",
+    "species sine latere nihil reddit");
+
+/* ================================================================
+ * III ter. CHARTA IPSA - quid usor revera videt
+ * ================================================================ */
+(function () {
+    function classes(el) {
+        return el.children.map(function (c) { return c.className; });
+    }
+    function textus_classis(el, cl) {
+        var t = "";
+        el.children.forEach(function (c) {
+            if (c.className === cl) { t = c.textContent; }
+        });
+        return t;
+    }
+
+    adnot_scopi["terminus"] = [{ res_id: "01T", datum: {
+        titulus: "phlogiston", vocabulum: "phlogiston",
+        definitio_termini: "principium ignis putatum" } }];
+    var charta = elementum_adnotationis({
+        res_id: "01A", titulus: "nota",
+        datum: { species: "terminus", textus: "Priestley eo utitur",
+            pagina: 92 },
+        nexus: [{ verbum: "terminus", ad: "01T",
+            ad_titulus: "phlogiston" }] });
+    var cl = classes(charta);
+    proba(cl.indexOf("definitio-a") >= 0,
+        "charta termini definitionem fert");
+    aequale(textus_classis(charta, "definitio-a"),
+        "principium ignis putatum", "definitio ex ENTE reddita");
+    aequale(textus_classis(charta, "textus-a"), "Priestley eo utitur",
+        "nota propria seorsum manet");
+    proba(cl.indexOf("definitio-a") < cl.indexOf("textus-a"),
+        "definitio ANTE notam stat");
+
+    /* copia nondum onerata: nomen manet (per nexum), definitio abest
+       - informatio MINUITUR, charta non frangitur */
+    adnot_scopi["terminus"] = null;
+    var sine = elementum_adnotationis({
+        res_id: "01A", titulus: "nota",
+        datum: { species: "terminus", textus: "nota mea" },
+        nexus: [{ verbum: "terminus", ad: "01T",
+            ad_titulus: "phlogiston" }] });
+    proba(classes(sine).indexOf("definitio-a") < 0,
+        "sine copia definitio omittitur");
+    aequale(textus_classis(sine, "textus-a"), "nota mea",
+        "sine copia nota propria manet");
+
+    /* citatio uncinis cingitur; nota simplex non */
+    var cit = elementum_adnotationis({ res_id: "01C", titulus: "c",
+        datum: { species: "citatio", textus: "Omnia ex conchis" },
+        nexus: [] });
+    aequale(textus_classis(cit, "textus-a"), "“Omnia ex conchis”",
+        "citatio uncinis cingitur");
+
+    /* quaestio sine responso se apertam nuntiat */
+    var q = elementum_adnotationis({ res_id: "01Q", titulus: "q",
+        datum: { species: "quaestio", textus: "cur?" }, nexus: [] });
+    aequale(textus_classis(q, "pagina-a"), "— sine responso",
+        "quaestio aperta se nuntiat");
+    var qr = elementum_adnotationis({ res_id: "01Q", titulus: "q",
+        datum: { species: "quaestio", textus: "cur?",
+            responsum: "quia" }, nexus: [] });
+    aequale(textus_classis(qr, "responsum-a"), "quia",
+        "responsum redditum");
+}());
+
+/* ================================================================
  * IV bis. VESTIGIUM REDITUS - unde in ens venimus
  *
  * Vetustas structuraliter impossibilis esse debet: vestigium ad

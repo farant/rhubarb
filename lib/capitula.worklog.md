@@ -307,3 +307,40 @@ Wired into tags too (two call sites, same mechanism) since the same
 complaint applies there — `← #nominalismus` instead of `← tabula`.
 The STML stamp path keeps the old behaviour: its origin genuinely
 varies, and guessing would be worse than the plain default.
+
+## 2026-08-01 (late) — the term's definition in the card body
+
+Fran wanted a term's definition visible on the chapter card, not
+just its word.
+
+Done with `campus_corporis` on the species descriptor — the name of
+an ENTITY field that belongs in the card body rather than the
+header parenthetical. Terminus is the only species that has one
+today, and that is not an accident: `inventum` and `eventus` put
+their description in the TITLE, and coordinates/years are short
+enough for the parenthetical. So the mechanism is general but earns
+its keep once.
+
+Ordering matters and is asserted: **definition before the note.**
+The definition is the entity's words and is the same in every
+chapter; the note is mine about this book. They get different
+styling (italic, dimmer) so they can't be misread as one voice.
+
+Degradation is the same rule as the rest of the feed: the definition
+comes from the world-entity cache, so before that load the card
+still shows the word (via the nexus `ad_titulus`) and the note —
+information is reduced, never wrong. Pinned by a test that nulls the
+cache.
+
+### The card itself now has tests
+
+`elementum_adnotationis` is called directly against the fake DOM,
+asserting what the reader actually sees: definition present, drawn
+from the entity, ordered before the note, quotes wrapped in “ ”, an
+unanswered question announcing itself, an answered one showing its
+answer. 76 assertions total. Calibrated by deleting
+`campus_corporis` — one assertion red, naming the empty body.
+
+Also checked through the live bridge that the definition reaches the
+client at all (it does), because a rendering test can only prove the
+painting, never the data.
