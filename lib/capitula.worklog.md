@@ -110,3 +110,75 @@ gesta/fontes/tabularium.worklog.md — the two findings worth carrying:
    every book would have shown every chapter with no error anywhere.
    Found by reading the handler, not by testing. Comment added at the
    site so the next argument isn't lost the same way.
+
+## 2026-08-01 (evening) — chapter page + reading notes
+
+Fran's design: click a chapter → its own page, feed growing downward,
+editor at the bottom with vertical tabs for the note type. Types:
+nota, citatio, persona, eventus, locus; every one carries an optional
+page number.
+
+### The shape decision
+
+Person/event/place are **world entities**, not fields on a note. The
+same Erasmus Darwin appears in chapter 3 and chapter 11, and in a
+different book next year; Birmingham likewise. So the feed entry is
+an `adnotatio` that POINTS at a `person`/`locus`/`eventus`. Fran saw
+this himself — "this would create a person res but I think it would
+also create a 'person note' attached to the chapter."
+
+**One `adnotatio` genus with a `species` field, not five genera.**
+The feed is then ONE read (nexus filter, `nexus_verbum:'capitulum'`)
+sorted by creation; five genera would mean five reads, a client-side
+merge, and new code per note type. `ADNOT_SPECIES` is a table — a new
+species is a row, not a function.
+
+**No `ordo` field.** Chapters have STRUCTURAL order (reading
+sequence); notes have TEMPORAL order (when you wrote them), and
+`creatum` carries that for free. Different kinds of order, different
+mechanisms.
+
+### Decisions Fran made
+
+- **Person name**: `first_name`/`last_name` added ADDITIVELY to the
+  existing genus (39 rows untouched, blank until edited). `name`
+  stays the title field and is DERIVED from the two on every write —
+  one-way derivation can't drift. No migration.
+- **Coordinates are text.** The genera palette has no float type
+  (`numerus` validates `json_est_integer`), so lat/lon would silently
+  truncate. One `coordinatae` text field holds what you paste from a
+  map. A real decimal type is the named alternative if computation
+  (distance, plotting) is ever wanted — noted, not built.
+- **Annotation-only editing.** From the feed you change the note, the
+  page, and which person it points at; fixing a person's death year
+  happens in Res, where the whole record lives. Keeps a shared entity
+  from being casually rewritten while reading another book.
+
+### Consequences worth remembering
+
+- **Species is FIXED while editing.** Changing it would orphan an
+  already-created world entity and leave a nexus under the wrong
+  verbum. A note of another species is a NEW note.
+- **`titulus` must never be empty** — `addere` requires it, and a
+  person note can legitimately have no free text. `summarium_adnotationis`
+  falls back to the subject's title, then to the species name.
+- **The feed reads world entities ONCE per chapter open**, not per
+  poll. `ad_titulus` comes free through the nexus, so the feed is
+  readable without them; the cache only ADDS the year of an event and
+  the coordinates of a place. Missing cache degrades information,
+  never correctness.
+
+### Verified through the real bridge, not simulated
+
+`bin/forum -servire` + POSTs on the same path the webview uses:
+genera created, person written with derived `name`, annotation
+written with species/pagina/textus, both nexus attached, and the feed
+read back through the nexus filter showing linked and unlinked
+species together. `fori res` on the annotation shows NO custodia
+notes — the machine accepts the schema. Test entities then tombstoned
+(4), verified gone from the feed.
+
+Finding along the way: the app's `transmittere` allowlist is
+`addere|gerere|legere|quaerere` — `res` is NOT callable from the
+webview. Fine for the app, but it's why a test script driving the
+bridge can't inspect an entity that way.
