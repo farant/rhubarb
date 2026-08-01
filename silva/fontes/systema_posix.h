@@ -285,6 +285,29 @@ int getaddrinfo(const char* hospes, const char* servitium,
 void freeaddrinfo(struct addrinfo* fructus);
 const char* gai_strerror(int status);
 
+/* <sectio caput="net/if.h"/> net/if.h - vexilla interfacierum
+ * (valores Darwin; IFF_UP et IFF_LOOPBACK soli adhibentur) */
+#define IFF_UP       0x1
+#define IFF_LOOPBACK 0x8
+
+/* <sectio caput="ifaddrs.h" poscit="sys/socket.h"/> ifaddrs.h -
+ * enumeratio interfacierum (rete_posix.c). poscit: struct sockaddr.
+ * Forma Darwin: ifa_data ULTIMUM (ut in Linuce); ifa_dstaddr in
+ * Linuce 'ifa_ifu' unio est, sed campum eum non tangimus - ergo
+ * mensura et offsets priores sufficiunt. */
+struct ifaddrs {
+    struct ifaddrs*  ifa_next;
+    char*            ifa_name;
+    unsigned int     ifa_flags;
+    struct sockaddr* ifa_addr;
+    struct sockaddr* ifa_netmask;
+    struct sockaddr* ifa_dstaddr;
+    void*            ifa_data;
+};
+
+int  getifaddrs(struct ifaddrs** tabulatum);
+void freeifaddrs(struct ifaddrs* tabulatum);
+
 /* <sectio caput="poll.h"/> poll.h (promotio ex bloco reactoris) */
 #define POLLIN  0x0001
 #define POLLOUT 0x0004

@@ -91,6 +91,7 @@ declare -a SOURCE_FILES=(
     "lib/reactor.c"
     "lib/registrum_commandi.c"
     "lib/registrum_widget.c"
+    "lib/rete_posix.c"
     "lib/router.c"
     "lib/sanctorale.c"
     "lib/schirmata.c"

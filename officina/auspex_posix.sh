@@ -121,6 +121,18 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(SIGBUS == 10 && SIGALRM == 14);"
     echo "IUNGO_ASSERTA(OFF(stat, st_mtime) == 48 && OFF(stat, st_atime) == 32);"
     echo "IUNGO_ASSERTA(O_WRONLY == 0x0001 && O_CREAT == 0x0200 && O_TRUNC == 0x0400);"
+    # ifaddrs (rete_posix.c, 2026-08-01): forma catenae +
+    # vexilla. ifa_data ULTIMUM utroque in systemate; campos
+    # post ifa_netmask non tangimus, sed offsets priores
+    # certificandi sunt ne catena erret.
+    echo "IUNGO_ASSERTA(OFF(ifaddrs, ifa_next) == 0);"
+    echo "IUNGO_ASSERTA(OFF(ifaddrs, ifa_name) == 8);"
+    echo "IUNGO_ASSERTA(OFF(ifaddrs, ifa_flags) == 16);"
+    echo "IUNGO_ASSERTA(OFF(ifaddrs, ifa_addr) == 24);"
+    echo "IUNGO_ASSERTA(OFF(ifaddrs, ifa_netmask) == 32);"
+    echo "IUNGO_ASSERTA(sizeof(((struct ifaddrs*)0)->ifa_flags) == 4);"
+    echo "IUNGO_ASSERTA(sizeof(struct ifaddrs) == 56);"
+    echo "IUNGO_ASSERTA(IFF_UP == 0x1 && IFF_LOOPBACK == 0x8);"
     # Promotio blocorum tcp_posix/reactor (01KYB2Z7XA)
     echo "IUNGO_ASSERTA(sizeof(struct sockaddr) == 16);"
     echo "IUNGO_ASSERTA(OFF(sockaddr, sa_family) == 1 && OFF(sockaddr, sa_data) == 2);"
@@ -182,6 +194,8 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <poll.h>"
     echo "#include <arpa/inet.h>"
     echo "#include <netdb.h>"
+    echo "#include <ifaddrs.h>"
+    echo "#include <net/if.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta
 } > "$GEN_DIR/verum.c"
