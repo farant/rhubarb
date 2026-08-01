@@ -314,6 +314,7 @@
     <a id="nav-scholia">Scholia</a>
     <a id="nav-tags">Tags</a>
     <a id="nav-sententiae">Sententiae</a>
+    <a id="nav-libri">Libri</a>
     <a id="nav-telephonum">Telephonum</a>
   </nav>
 </header>
@@ -554,6 +555,48 @@
   </div>
 </section>
 
+<section id="visus-libri" hidden>
+  <div id="libri-index-domus">
+    <div class="caput-actionum">
+      <button id="liber-novus" class="parva">liber novus</button>
+    </div>
+    <div id="libri-index"></div>
+    <div id="vacuum-librorum" hidden>nulli libri - adde primum!</div>
+  </div>
+
+  <div id="libri-liber-domus" hidden>
+    <div id="barra-superior">
+      <a class="retro" id="libri-retro">&larr; libri</a>
+      <a class="retro" id="liber-emendare">emendare librum</a>
+    </div>
+    <h2 id="liber-titulus"></h2>
+    <div id="liber-meta" class="charta"></div>
+    <div class="caput-actionum">
+      <span id="capitula-numerus" class="tempus"></span>
+      <button id="capitula-inserere" class="parva">capitula inserere</button>
+    </div>
+    <div id="liber-capitula"></div>
+    <div id="vacuum-capitulorum" hidden>
+      index vacuus - insere capitula ut notas per capitulum scribere possis
+    </div>
+  </div>
+
+  <div id="libri-insere-domus" hidden>
+    <div id="barra-superior">
+      <a class="retro" id="capitula-retro">&larr; liber</a>
+      <span class="tempus">unum capitulum per lineam &middot;
+        indentatio = nidificatio</span>
+    </div>
+    <textarea id="capitula-arca" rows="12" data-inter="verum"
+      placeholder="Prooemium&#10;I - De methodo&#10;  1. Quid quaeratur&#10;  2. Quid non quaeratur&#10;II - De materia&#10;Appendix A"></textarea>
+    <div id="capitula-praevisio" class="charta"></div>
+    <div id="pes-compositionis">
+      <span id="capitula-iudicium" class="numerator"></span>
+      <button id="capitula-servare">capitula creare</button>
+    </div>
+  </div>
+</section>
+
 <div id="tergale-domus">
   <button id="tergale-eligere" title="imaginem tergalem eligere">🖼️</button>
   <button id="tergale-tollere" title="imaginem tergalem tollere"
@@ -780,15 +823,18 @@ function vertere(novus) {
   document.getElementById('visus-scholia').hidden = novus !== 'scholia';
   document.getElementById('visus-tags').hidden = novus !== 'tags';
   document.getElementById('visus-sententiae').hidden = novus !== 'sententiae';
+  document.getElementById('visus-libri').hidden = novus !== 'libri';
   document.getElementById('visus-telephonum').hidden = novus !== 'telephonum';
   document.getElementById('nav-pipata').className =
     (novus === 'pipata') ? 'activa' : '';
   document.getElementById('nav-acta').className =
     (novus === 'acta') ? 'activa' : '';
+  /* FORMA POSITIVA, non exclusio: catalogus negativus tabulam novam
+     quamque oblivisci potest, et oblivio DUAS tabulas accendit
+     (telephonum id iam faciebat). Articuli tres visus habent. */
   document.getElementById('nav-articuli').className =
-    (novus !== 'pipata' && novus !== 'acta' && novus !== 'res'
-     && novus !== 'scholia' && novus !== 'tags'
-     && novus !== 'sententiae') ? 'activa' : '';
+    (novus === 'articuli' || novus === 'articulus'
+     || novus === 'editor') ? 'activa' : '';
   document.getElementById('nav-res').className =
     (novus === 'res') ? 'activa' : '';
   document.getElementById('nav-scholia').className =
@@ -797,6 +843,8 @@ function vertere(novus) {
     (novus === 'tags') ? 'activa' : '';
   document.getElementById('nav-sententiae').className =
     (novus === 'sententiae') ? 'activa' : '';
+  document.getElementById('nav-libri').className =
+    (novus === 'libri') ? 'activa' : '';
   document.getElementById('nav-telephonum').className =
     (novus === 'telephonum') ? 'activa' : '';
   document.body.className =
@@ -815,6 +863,7 @@ document.getElementById('nav-res').onclick = function () { res_vertere('index');
 document.getElementById('nav-scholia').onclick = function () { scholia_vertere('index'); vertere('scholia'); };
 document.getElementById('nav-tags').onclick = function () { tags_vertere('arbor'); vertere('tags'); };
 document.getElementById('nav-sententiae').onclick = function () { sententiae_vertere('index'); vertere('sententiae'); };
+document.getElementById('nav-libri').onclick = function () { libri_vertere('index'); vertere('libri'); };
 document.getElementById('nav-telephonum').onclick = function () {
   vertere('telephonum'); telephonum_reficere();
 };
@@ -1607,7 +1656,21 @@ function res_vertere(sub) {
 document.getElementById('tabula-retro').onclick = function () { res_vertere('index'); };
 document.getElementById('ens-retro').onclick = function () { res_vertere('tabula'); };
 document.getElementById('creator-retro').onclick = function () { res_vertere('index'); };
+/* Reditus a forma generica: tabula quae formam MUTUATUR (Libri) hic
+ * viam domum ponit. Sine eo mutuatio usorem in tabula Rerum
+ * deponeret - reditus mutuationem a translatione distinguit. */
+var forma_reditus = null;
+
+function forma_redire(res_id) {
+  var f = forma_reditus;
+  if (!f) { return false; }
+  forma_reditus = null;
+  f(res_id);
+  return true;
+}
+
 document.getElementById('forma-retro').onclick = function () {
+  if (forma_redire(null)) { return; }
   res_vertere(forma_res ? 'ens' : 'tabula');
 };
 
@@ -2493,6 +2556,7 @@ document.getElementById('forma-servare').onclick = function () {
   });
   promissum.then(function () {
     res_ens_id = res_id_promissum;
+    if (forma_redire(res_id_promissum)) { return; }
     res_vertere(forma_res ? 'ens' : 'tabula');
     anquirere_nunc();
   }).catch(function (c) { culpam_ostendere(c, 'defectus servandi'); });
@@ -3438,6 +3502,393 @@ document.getElementById('sent-saltus').onkeydown = function (ev) {
   erroris.textContent = sententiae_salire(v) ? '' : ('locus ignotus: ' + v);
 };
 
+/* ==================================================
+ * LIBRI - lectio et notae
+ *
+ * Genus 'book' IAM EXSTAT (Fran per creatorem generum condidit,
+ * 2026-07-23, claves Anglicae) et entia habet. Haec tabula id
+ * ADSUMIT, non substituit: campi ex DEFINITIONE redduntur, numquam
+ * ex clavibus hic scriptis. Ita campus additus statim apparet et
+ * clavis mutata hanc tabulam non frangit.
+ *
+ * Quod NOVUM est: 'capitulum'. Capitula ENTIA sunt, non campus in
+ * libro - quia notae, tagi, nexus entibus adhaerent. Index totus
+ * semel adglutinatur, capitula ex eo NASCUNTUR (una via: textus ->
+ * entia; postea capitulum singulum emendatur, non textus).
+ *
+ * Emendatio libri ipsius ad formam GENERICAM delegatur (res-forma):
+ * selector relationis, annus cum aera, electio - omnia iam ibi
+ * vivunt, et duplicata divergerent.
+ * ================================================== */
+
+var libri_visus  = 'index';   /* index | liber | insere */
+var libri        = [];        /* cache librorum */
+var liber_ens    = null;      /* liber apertus */
+var liber_cap    = [];        /* capitula libri aperti, ordine */
+var cap_praevisa = [];        /* fructus lectionis (nondum scripta) */
+var cap_mora     = null;      /* horologium praevisionis */
+
+/* Tectum lectionis daemonis (legere: ordinarius L, tectum CC).
+ * Capitula OMNIA leguntur et clientis-latere per nexum 'liber'
+ * seliguntur - conditorium filtrum nexus non praebet. Ergo tectum
+ * REALE est: cum summa capitulorum trans libros omnes CC excedat,
+ * indices truncati essent. NON TACITE - vide _tectum_monere. */
+var CAP_TECTUM = 200;
+var cap_tectum_tactum = false;
+
+function libri_vertere(sub) {
+  libri_visus = sub;
+  document.getElementById('libri-index-domus').hidden = sub !== 'index';
+  document.getElementById('libri-liber-domus').hidden = sub !== 'liber';
+  document.getElementById('libri-insere-domus').hidden = sub !== 'insere';
+  erroris.textContent = '';
+  ultima = {};
+  if (sub === 'index' || sub === 'liber') { anquirere(); }
+}
+
+function def_per_clavem(clavis) {
+  var inventa = null;
+  res_defs.forEach(function (d) {
+    if (clavis_de(d) === clavis) { inventa = d; }
+  });
+  return inventa;
+}
+
+/* Custos collisionis: tabulam DEFINITIONUM legit, non responsum
+ * 'addere' (idem quod sententiae_genus_curare facit - responsum
+ * successum mundum reddit etiam cum clavis occupata est).
+ *
+ * 'book' et 'person' hic quoque describuntur ne haec tabula in
+ * conditorio RECENTI frangatur: definitiones Franis in hoc conditorio
+ * vivunt, in novo non essent. Custos praesentes intactas relinquit. */
+function libri_genera_curare() {
+  return legere('definitio').then(function (defs) {
+    res_defs = defs;
+    var claves = defs.map(clavis_de);
+    var catena = Promise.resolve();
+    function condere(clavis, titulus, schema) {
+      if (claves.indexOf(clavis) >= 0) { return; }
+      catena = catena.then(function () {
+        return instrumentum('addere', { genus: 'definitio',
+          titulus: titulus, datum: JSON.stringify(schema) });
+      });
+    }
+    condere('person', 'Person', {
+      clavis: 'person', titulus_monstrans: 'Person',
+      campi: [
+        { clavis: 'name', monstrans: 'Name', typus: 'textus' },
+        { clavis: 'year_of_birth', monstrans: 'Year of birth',
+          typus: 'annus' },
+        { clavis: 'place_of_birth', monstrans: 'Place of birth',
+          typus: 'textus' },
+        { clavis: 'year_of_death', monstrans: 'Year of death',
+          typus: 'annus' },
+        { clavis: 'description', monstrans: 'Description',
+          typus: 'area' }
+      ],
+      campus_tituli: 'name' });
+    condere('book', 'Book', {
+      clavis: 'book', titulus_monstrans: 'Book',
+      campi: [
+        { clavis: 'title', monstrans: 'Title', typus: 'textus' },
+        { clavis: 'year_published', monstrans: 'Year Published',
+          typus: 'annus' },
+        { clavis: 'authors', monstrans: 'Author(s)', typus: 'relatio',
+          ad: 'person', cardinalitas: 'multa' },
+        { clavis: 'owned', monstrans: 'Owned', typus: 'veritas' },
+        { clavis: 'reading_status', monstrans: 'Reading status',
+          typus: 'electio', optiones: ['unread', 'reading', 'read'] }
+      ],
+      campus_tituli: 'title',
+      ordo_ordinarius: { campus: 'title', directio: 'ascendens' } });
+    /* 'titulus_capituli', NON 'titulus': clavis reservata est
+       (CLAVES_SYSTEMATIS) - iudicio camporum praeteriretur */
+    condere('capitulum', 'Capitulum', {
+      clavis: 'capitulum', titulus_monstrans: 'Capitulum',
+      campi: [
+        { clavis: 'liber', monstrans: 'Liber', typus: 'relatio',
+          ad: 'book', cardinalitas: 'unum' },
+        { clavis: 'ordo', monstrans: 'Ordo', typus: 'numerus' },
+        { clavis: 'gradus', monstrans: 'Gradus', typus: 'numerus' },
+        { clavis: 'inscriptio', monstrans: 'Inscriptio',
+          typus: 'textus' },
+        { clavis: 'titulus_capituli', monstrans: 'Titulus',
+          typus: 'textus' }
+      ],
+      campus_tituli: 'titulus_capituli',
+      ordo_ordinarius: { campus: 'ordo', directio: 'ascendens' },
+      descriptio: 'Capitulum libri - sedes notarum lectionis.'
+        + ' Ex indice adglutinato nascitur (tabula Librorum).' });
+    return catena;
+  });
+}
+
+/* Latus indicis: auctores + annus, per TYPUM camporum electi, non
+   per nomen - genus mutari potest, haec linea non. */
+function liber_latus(ens, def) {
+  var partes = [];
+  campi_de(def).forEach(function (c) {
+    var v;
+    if (c.typus === 'relatio') {
+      var titula = nexus_de(ens, c.clavis).map(function (n) {
+        return n.ad_titulus;
+      }).filter(function (t) { return !!t; });
+      if (titula.length) { partes.push(titula.join(', ')); }
+    } else if (c.typus === 'annus') {
+      v = ens.datum ? ens.datum[c.clavis] : null;
+      if (v !== undefined && v !== null && v !== '') {
+        partes.push(annus_monstrare(v));
+      }
+    }
+  });
+  return partes.join(' · ');
+}
+
+function reddere_libri_indicem(def) {
+  var index = document.getElementById('libri-index');
+  index.innerHTML = '';
+  libri.forEach(function (ens) {
+    var ordo = document.createElement('div');
+    ordo.className = 'ordo-articuli';
+    var t = document.createElement('span');
+    t.textContent = ens.titulus || '(sine titulo)';
+    var latus = document.createElement('span');
+    latus.className = 'tempus';
+    latus.textContent = liber_latus(ens, def);
+    ordo.appendChild(t);
+    ordo.appendChild(latus);
+    ordo.onclick = function () { liber_aperire(ens); };
+    index.appendChild(ordo);
+  });
+  document.getElementById('vacuum-librorum').hidden = libri.length > 0;
+}
+
+function liber_aperire(ens) {
+  liber_ens = ens;
+  liber_cap = [];
+  document.getElementById('liber-titulus').textContent =
+    ens.titulus || '(sine titulo)';
+  libri_vertere('liber');
+}
+
+/* Capitula huius libri, ordine legendi. Filtrum clientis-latere:
+   vide CAP_TECTUM supra. */
+function capitula_libri(res_id, omnia) {
+  cap_tectum_tactum = omnia.length >= CAP_TECTUM;
+  return omnia.filter(function (c) {
+    if (tumulus_est(c)) { return false; }
+    return nexus_de(c, 'liber').some(function (n) {
+      return n.ad === res_id;
+    });
+  }).sort(function (a, b) {
+    return ((a.datum && a.datum.ordo) || 0)
+         - ((b.datum && b.datum.ordo) || 0);
+  });
+}
+
+function reddere_liber(def) {
+  var meta = document.getElementById('liber-meta');
+  var domus = document.getElementById('liber-capitula');
+  meta.innerHTML = '';
+  domus.innerHTML = '';
+
+  campi_de(def).forEach(function (c) {
+    var v, textus;
+    if (c.typus === 'relatio') {
+      textus = nexus_de(liber_ens, c.clavis).map(function (n) {
+        return n.ad_titulus;
+      }).filter(function (t) { return !!t; }).join(', ');
+    } else {
+      v = liber_ens.datum ? liber_ens.datum[c.clavis] : null;
+      if (v === undefined || v === null || v === '') { textus = ''; }
+      else if (c.typus === 'veritas') { textus = v ? 'ita' : 'non'; }
+      else if (c.typus === 'annus') { textus = annus_monstrare(v); }
+      else { textus = String(v); }
+    }
+    if (!textus) { return; }
+    var linea = document.createElement('div');
+    var lab = document.createElement('span');
+    lab.className = 'tempus';
+    lab.textContent = (c.monstrans || c.clavis) + ': ';
+    linea.appendChild(lab);
+    linea.appendChild(document.createTextNode(textus));
+    meta.appendChild(linea);
+  });
+
+  liber_cap.forEach(function (c) {
+    var d = c.datum || {};
+    var ordo = document.createElement('div');
+    ordo.className = 'ordo-articuli';
+    ordo.style.marginLeft = ((d.gradus || 0) * 1.4) + 'em';
+    var t = document.createElement('span');
+    if (d.inscriptio) {
+      var ins = document.createElement('span');
+      ins.className = 'tempus';
+      ins.textContent = d.inscriptio + '  ';
+      t.appendChild(ins);
+    }
+    t.appendChild(document.createTextNode(
+      d.titulus_capituli || c.titulus || '(sine titulo)'));
+    ordo.appendChild(t);
+    /* notae per capitulum nondum exstant - interim ens ipsum
+       aperitur, ubi commentaria iam vivunt */
+    ordo.onclick = function () {
+      ens_aperire_per_genus('capitulum', c.res_id);
+    };
+    domus.appendChild(ordo);
+  });
+
+  document.getElementById('vacuum-capitulorum').hidden =
+    liber_cap.length > 0;
+  document.getElementById('capitula-numerus').textContent =
+    cap_tectum_tactum
+      ? (liber_cap.length + ' capitula · CAUTIO: lectio tectum CC'
+         + ' tetigit, index INCOMPLETUS esse potest')
+      : (liber_cap.length ? liber_cap.length + ' capitula' : '');
+}
+
+/* ---- insertio indicis ---- */
+
+function reddere_praevisionem() {
+  var domus = document.getElementById('capitula-praevisio');
+  domus.innerHTML = '';
+  cap_praevisa.forEach(function (c) {
+    var linea = document.createElement('div');
+    linea.className = 'linea-s';
+    linea.style.marginLeft = (c.gradus * 1.4) + 'em';
+    if (c.inscriptio) {
+      var ins = document.createElement('span');
+      ins.className = 'locus-s';
+      ins.textContent = c.inscriptio + ' ';
+      linea.appendChild(ins);
+    }
+    linea.appendChild(document.createTextNode(c.titulus));
+    domus.appendChild(linea);
+  });
+}
+
+/* PRAEVISIO PORTA EST, non ornamentum: scriptio XL entium ex lectione
+   non visa XL emendationes poscit. Ideo 'creare' nihil facit donec
+   praevisio aliquid habeat. */
+function capitula_praevidere() {
+  var fons = document.getElementById('capitula-arca').value;
+  var iud = document.getElementById('capitula-iudicium');
+  if (!fons.replace(/\s/g, '').length) {
+    cap_praevisa = [];
+    reddere_praevisionem();
+    iud.textContent = '';
+    return;
+  }
+  internuntius.vocare('capitula_parsare', { fons: fons })
+    .then(function (r) {
+      cap_praevisa = r.capitula || [];
+      reddere_praevisionem();
+      iud.textContent = cap_praevisa.length + ' capitula';
+    })
+    .catch(function (c) { culpam_ostendere(c, 'defectus lectionis'); });
+}
+
+function capitula_servare() {
+  var iud = document.getElementById('capitula-iudicium');
+  var initium = 0;
+  var catena = Promise.resolve();
+  var factum = 0;
+  if (!cap_praevisa.length || !liber_ens) { return; }
+  liber_cap.forEach(function (c) {
+    var o = (c.datum && c.datum.ordo) || 0;
+    if (o > initium) { initium = o; }
+  });
+  /* catena SERIALIS, non Promise.all: conditorium unum scriptorem
+     habet, et ordo scriptionis ordo capitulorum est */
+  cap_praevisa.forEach(function (c, i) {
+    catena = catena.then(function () {
+      return instrumentum('addere', {
+        genus: 'capitulum',
+        titulus: c.titulus,
+        datum: JSON.stringify({
+          titulus_capituli: c.titulus,
+          inscriptio: c.inscriptio || '',
+          gradus: c.gradus,
+          ordo: initium + i + 1
+        })
+      }).then(function (r) {
+        return instrumentum('gerere', { res: r.res_id, actus: 'nexus',
+          verbum: 'liber', alterum: liber_ens.res_id });
+      }).then(function () {
+        factum++;
+        iud.textContent = factum + ' / ' + cap_praevisa.length;
+      });
+    });
+  });
+  catena.then(function () {
+    document.getElementById('capitula-arca').value = '';
+    cap_praevisa = [];
+    reddere_praevisionem();
+    iud.textContent = '';
+    libri_vertere('liber');
+  }).catch(function (c) { culpam_ostendere(c, 'defectus servandi'); });
+}
+
+/* ---- delegatio ad formam genericam ---- */
+
+function liber_formam_aperire(ens) {
+  var def = def_per_clavem('book');
+  if (!def) {
+    erroris.textContent = 'genus "book" abest';
+    return;
+  }
+  res_def = def;
+  forma_reditus = function (res_id) {
+    vertere('libri');
+    if (res_id && !ens) {
+      /* liber NOVUS: eum statim aperire ut index eius scribatur */
+      legere('book').then(function (entia) {
+        libri = entia.filter(function (e) { return !tumulus_est(e); });
+        var novus = null;
+        libri.forEach(function (e) {
+          if (e.res_id === res_id) { novus = e; }
+        });
+        if (novus) { liber_aperire(novus); }
+        else { libri_vertere('index'); }
+      }).catch(function () { libri_vertere('index'); });
+    } else {
+      libri_vertere(liber_ens ? 'liber' : 'index');
+    }
+  };
+  vertere('res');
+  forma_aperire(ens);
+}
+
+document.getElementById('liber-novus').onclick = function () {
+  liber_ens = null;
+  libri_genera_curare()
+    .then(function () { liber_formam_aperire(null); })
+    .catch(function (c) { culpam_ostendere(c, 'defectus generum'); });
+};
+document.getElementById('liber-emendare').onclick = function () {
+  if (liber_ens) { liber_formam_aperire(liber_ens); }
+};
+document.getElementById('libri-retro').onclick = function () {
+  liber_ens = null;
+  libri_vertere('index');
+};
+document.getElementById('capitula-inserere').onclick = function () {
+  libri_genera_curare().then(function () {
+    document.getElementById('capitula-iudicium').textContent = '';
+    libri_vertere('insere');
+    capitula_praevidere();
+  }).catch(function (c) { culpam_ostendere(c, 'defectus generum'); });
+};
+document.getElementById('capitula-retro').onclick = function () {
+  libri_vertere('liber');
+};
+document.getElementById('capitula-servare').onclick = capitula_servare;
+document.getElementById('capitula-arca').addEventListener('input',
+  function () {
+    if (cap_mora) { clearTimeout(cap_mora); }
+    cap_mora = setTimeout(capitula_praevidere, 250);
+  });
+
 function anquirere() {
   if (visus === 'editor') { return; }
   /* sententiae: sine anquisitione (vide caput sectionis) */
@@ -3453,7 +3904,50 @@ function anquirere() {
   if (visus === 'scholia'
       && (scholia_visus === 'novus'
           || (scholia_visus === 'codex' && sel_a))) { return; }
+  /* libri: insertio indicis exempta (praevisio viva clobberaretur) */
+  if (visus === 'libri' && libri_visus === 'insere') { return; }
   if (arca_activa()) { return; }
+  if (visus === 'libri') {
+    /* genera absentia (conditorium recens) = index vacuus, non
+       error: 'liber novus' ea condit */
+    Promise.all([legere('definitio'),
+      legere('book').catch(function () { return []; }),
+      libri_visus === 'liber'
+        ? legere('capitulum', { quantum: String(CAP_TECTUM) })
+            .catch(function () { return []; })
+        : Promise.resolve([])])
+      .then(function (r) {
+        res_defs = r[0];
+        var def = def_per_clavem('book');
+        if (!def) {
+          erroris.textContent = '';
+          document.getElementById('vacuum-librorum').hidden = false;
+          return;
+        }
+        libri = r[1].filter(function (e) { return !tumulus_est(e); });
+        if (libri_visus === 'liber' && liber_ens) {
+          /* librum RECENTEM retinere (emendatio advenit) */
+          libri.forEach(function (e) {
+            if (e.res_id === liber_ens.res_id) { liber_ens = e; }
+          });
+          liber_cap = capitula_libri(liber_ens.res_id, r[2]);
+        }
+        var series = JSON.stringify([r[0], r[1], liber_cap])
+          + '|' + libri_visus + '|'
+          + (liber_ens ? liber_ens.res_id : '');
+        erroris.textContent = '';
+        if (series !== ultima.libri) {
+          ultima.libri = series;
+          if (libri_visus === 'index') { reddere_libri_indicem(def); }
+          else if (libri_visus === 'liber' && liber_ens) {
+            document.getElementById('liber-titulus').textContent =
+              liber_ens.titulus || '(sine titulo)';
+            reddere_liber(def);
+          }
+        }
+      }).catch(function (c) { culpam_ostendere(c, 'defectus lectionis'); });
+    return;
+  }
   if (visus === 'res') {
     if (res_visus === 'index') {
       legere('definitio').then(function (defs) {

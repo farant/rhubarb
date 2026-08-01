@@ -34,6 +34,7 @@
 #include "speculum.h"
 #include "cliens_tabularii.h"
 #include "sententiae.h"
+#include "capitula.h"
 #include "xar.h"
 #include "capsula_forum.h"
 #include "moneta.h"
@@ -333,6 +334,70 @@ _sententias_parsare (JsonValor* argumenta, Piscina* piscina,
     }
     json_objectum_ponere(fructus, "anomaliae", anomaliae);
 
+    redde fructus;
+}
+
+/* capitula_parsare {fons} -> {capitula: [{inscriptio, titulus, gradus,
+ * ordo, linea}]}.
+ *
+ * FUNCTIO PURA, ut soror sententiarum: textus intrat, structura exit.
+ * Scriptio entium velaminis est - hic nihil in conditorium it.
+ *
+ * NULLA culpa redditur quia nulla esse potest (vide capitula.h §I).
+ * Consumptor tamen praevisionem monstrare DEBET ante scriptionem: XL
+ * capitula ex lectione tacita nata XL emendationes poscunt. */
+interior JsonValor*
+_capitula_parsare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    chorda     fons;
+    IndexLibri idx;
+    JsonValor* fructus;
+    JsonValor* tabulatum;
+    i32        k;
+
+    (vacuum)datum;
+
+    fons.mensura = ZEPHYRUM;
+    fons.datum   = NIHIL;
+    si (argumenta != NIHIL)
+    {
+        fons = json_ad_chorda(json_objectum_capere(argumenta, "fons"));
+    }
+    si (fons.mensura == ZEPHYRUM)
+    {
+        *culpa = _ch_forum("fons requiritur");
+        redde NIHIL;
+    }
+
+    idx = capitula_legere(fons, piscina);
+
+    fructus   = json_objectum_creare(piscina);
+    tabulatum = json_tabulatum_creare(piscina);
+
+    per (k = ZEPHYRUM; k < xar_numerus(idx.capitula); k++)
+    {
+        Capitulum* c = (Capitulum*)xar_obtinere(idx.capitula, (i32)k);
+        JsonValor* o;
+
+        si (c == NIHIL) { perge; }
+        o = json_objectum_creare(piscina);
+        json_objectum_ponere(o, "inscriptio",
+            json_chorda_creare(piscina, c->inscriptio));
+        json_objectum_ponere(o, "titulus",
+            json_chorda_creare(piscina, c->titulus));
+        json_objectum_ponere(o, "gradus",
+            json_integer_creare(piscina, (s64)c->gradus));
+        json_objectum_ponere(o, "ordo",
+            json_integer_creare(piscina, (s64)c->ordo));
+        json_objectum_ponere(o, "linea",
+            json_integer_creare(piscina, (s64)c->linea));
+        json_tabulatum_addere(tabulatum, o);
+    }
+
+    json_objectum_ponere(fructus, "capitula", tabulatum);
+    json_objectum_ponere(fructus, "gradus_maximus",
+        json_integer_creare(piscina, (s64)idx.gradus_maximus));
     redde fructus;
 }
 
@@ -1076,6 +1141,8 @@ _methodos_praebere (Internuntius* inx, InternuntiusModus modus,
         cliens_tabularii_transmittere, &f->cliens);
     (vacuum)internuntius_praebere(inx, "sententias_parsare",
         _sententias_parsare, f);
+    (vacuum)internuntius_praebere(inx, "capitula_parsare",
+        _capitula_parsare, f);
     (vacuum)internuntius_praebere(inx, "tergale_ponere",
         _tergale_ponere, f);
     (vacuum)internuntius_praebere(inx, "tergale_capere",
