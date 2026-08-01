@@ -128,6 +128,7 @@ declare -a SOURCE_FILES=(
     "lib/villa_agens.c"
     "lib/villa_lectores.c"
     "lib/vim.c"
+    "lib/vitrea_servus.c"
     "lib/widget.c"
     "lib/xar.c"
     "lib/xml.c"

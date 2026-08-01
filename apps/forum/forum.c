@@ -29,6 +29,7 @@
 #include "fenestra.h"
 #include "capsula.h"
 #include "vitrea.h"
+#include "vitrea_servus.h"
 #include "internuntius.h"
 #include "speculum.h"
 #include "cliens_tabularii.h"
@@ -771,6 +772,51 @@ _tergale_delere (JsonValor* argumenta, Piscina* piscina,
     redde fructus;
 }
 
+/* PRAEBITOR: registratio methodorum fori - SEMEL scripta, ab
+ * utroque transportu vocata (fenestra vitreae, servus HTTP).
+ * Methodus hic addita in telephono statim adest quia locus alter
+ * ubi obliviscaris non est.
+ *
+ * Modus PUBLICUS harnesium fumi excludit: methodi illae fenestram
+ * et probationem regunt, et super socket nihil quaerunt. */
+interior vacuum
+_methodos_praebere (Internuntius* inx, InternuntiusModus modus,
+    vacuum* datum)
+{
+    ForumStatus* f = (ForumStatus*)datum;
+
+    (vacuum)internuntius_praebere(inx, "res_legere",
+        _res_legere, f);
+    (vacuum)internuntius_praebere(inx, "mittere",
+        _mittere, f);
+    (vacuum)internuntius_praebere(inx, "articulum_servare",
+        _articulum_servare, f);
+    (vacuum)internuntius_praebere(inx, "status_ponere",
+        _status_ponere, f);
+    (vacuum)internuntius_praebere(inx, "mutare",
+        _mutare, f);
+    (vacuum)internuntius_praebere(inx, "delere",
+        _delere, f);
+    (vacuum)internuntius_praebere(inx, "transmittere",
+        cliens_tabularii_transmittere, &f->cliens);
+    (vacuum)internuntius_praebere(inx, "sententias_parsare",
+        _sententias_parsare, f);
+    (vacuum)internuntius_praebere(inx, "tergale_ponere",
+        _tergale_ponere, f);
+    (vacuum)internuntius_praebere(inx, "tergale_capere",
+        _tergale_capere, f);
+    (vacuum)internuntius_praebere(inx, "tergale_delere",
+        _tergale_delere, f);
+
+    si (modus == INTERNUNTIUS_MODUS_LOCALIS)
+    {
+        (vacuum)internuntius_praebere(inx, "fumus_modus",
+            _fumus_modus, f);
+        (vacuum)internuntius_praebere(inx, "fumus_perfectus",
+            _fumus_perfectus, f);
+    }
+}
+
 s32 principale (integer argc, character** argv)
 {
     Piscina* piscina = piscina_generare_dynamicum("forum",
@@ -779,6 +825,8 @@ s32 principale (integer argc, character** argv)
         "forum_vocationes", 8388608);
     ForumStatus forum;
     b32 fumus = FALSUM;
+    i32 portus_servi = ZEPHYRUM;        /* 0 = modus fenestrae */
+    constans character* hospes_servi = NIHIL;  /* NIHIL = loopback */
     integer k;
     FenestraConfiguratio figura_fenestrae;
     VitreaConfiguratio figura_vitreae;
@@ -813,6 +861,20 @@ s32 principale (integer argc, character** argv)
         {
             forum.fumus_plenus = VERUM;
         }
+        alioquin si (strcmp(argv[k], "-servire") == ZEPHYRUM
+            && k + I < argc)
+        {
+            portus_servi = (i32)atoi(argv[k + I]);
+            k++;
+        }
+        alioquin si (strcmp(argv[k], "-hospes") == ZEPHYRUM
+            && k + I < argc)
+        {
+            /* expositio in reticulum ACTUS EXPLICITUS: sine hoc
+             * servus loopback solum audit */
+            hospes_servi = argv[k + I];
+            k++;
+        }
     }
     si (fumus)
     {
@@ -838,6 +900,50 @@ s32 principale (integer argc, character** argv)
         imprimere("[forum] fumus: %d pipata, %d articuli\n",
             (int)json_tabulatum_numerus(pipata),
             (int)json_tabulatum_numerus(articuli));
+        piscina_destruere(piscina_vocationis);
+        piscina_destruere(piscina);
+        redde ZEPHYRUM;
+    }
+
+    /* MODUS SERVI: transportus alter, applicatio eadem. Fenestra
+     * nulla, WebKit nullum - ergo haec semita in Linux quoque
+     * vivit. Processus alter de industria (ansae eventuum duae
+     * numquam intertexuntur). */
+    si (portus_servi > ZEPHYRUM)
+    {
+        VitreaServusConfiguratio figura_servi;
+        VitreaServus* servus;
+        Capsula* capsula_servi = capsula_aperire(&capsula_forum,
+            piscina);
+
+        si (capsula_servi == NIHIL)
+        {
+            imprimere("FRACTA: capsula\n");
+            redde I;
+        }
+        memset(&figura_servi, ZEPHYRUM, magnitudo(figura_servi));
+        figura_servi.capsula         = capsula_servi;
+        figura_servi.via_initialis   = "index.html";
+        figura_servi.praebitor       = _methodos_praebere;
+        figura_servi.praebitor_datum = &forum;
+        figura_servi.hospes          = hospes_servi;
+        figura_servi.portus          = portus_servi;
+        figura_servi.acta_accessus   = VERUM;
+
+        servus = vitrea_servus_creare(piscina, &figura_servi);
+        si (servus == NIHIL)
+        {
+            imprimere("FRACTA: servus (portus %d occupatus?)\n",
+                (int)portus_servi);
+            redde I;
+        }
+        imprimere("[forum] servus http://%s:%d/ (daemon portus %d)\n",
+            hospes_servi ? hospes_servi : "127.0.0.1",
+            (int)vitrea_servus_portus(servus),
+            (int)forum.cliens.portus);
+        fflush(stdout);
+        vitrea_servus_currere(servus);
+        vitrea_servus_destruere(servus);
         piscina_destruere(piscina_vocationis);
         piscina_destruere(piscina);
         redde ZEPHYRUM;
@@ -879,32 +985,7 @@ s32 principale (integer argc, character** argv)
         imprimere("FRACTA: internuntius\n");
         redde I;
     }
-    (vacuum)internuntius_praebere(inx, "res_legere",
-        _res_legere, &forum);
-    (vacuum)internuntius_praebere(inx, "mittere",
-        _mittere, &forum);
-    (vacuum)internuntius_praebere(inx, "articulum_servare",
-        _articulum_servare, &forum);
-    (vacuum)internuntius_praebere(inx, "status_ponere",
-        _status_ponere, &forum);
-    (vacuum)internuntius_praebere(inx, "mutare",
-        _mutare, &forum);
-    (vacuum)internuntius_praebere(inx, "delere",
-        _delere, &forum);
-    (vacuum)internuntius_praebere(inx, "transmittere",
-        cliens_tabularii_transmittere, &forum.cliens);
-    (vacuum)internuntius_praebere(inx, "sententias_parsare",
-        _sententias_parsare, &forum);
-    (vacuum)internuntius_praebere(inx, "fumus_modus",
-        _fumus_modus, &forum);
-    (vacuum)internuntius_praebere(inx, "fumus_perfectus",
-        _fumus_perfectus, &forum);
-    (vacuum)internuntius_praebere(inx, "tergale_ponere",
-        _tergale_ponere, &forum);
-    (vacuum)internuntius_praebere(inx, "tergale_capere",
-        _tergale_capere, &forum);
-    (vacuum)internuntius_praebere(inx, "tergale_delere",
-        _tergale_delere, &forum);
+    _methodos_praebere(inx, INTERNUNTIUS_MODUS_LOCALIS, &forum);
 
     /* modus-debug se-fontis: Cmd+Shift+D (mos domus) */
     {

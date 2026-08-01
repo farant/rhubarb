@@ -69,6 +69,30 @@ nomen vacuum (*InternuntiusMissor)(
     vacuum* datum,
     chorda  textus);
 
+/* modus transportus - applicatio decernit quas methodos praebeat.
+ * LOCALIS = fenestra in machina propria (fides plena: harnesium
+ * probationis, modus-debug, quidquid); PUBLICUS = socket, ubi
+ * methodi harnesii EXCLUDENDAE sunt.
+ *
+ * Parametrum est, non campus configurationis, de industria: si
+ * praebitor modum in signatura videt, oblivisci NON potest. Porta
+ * quae in oculis sedet melior est quam porta quam meminisse
+ * oportet. */
+nomen enumeratio {
+    INTERNUNTIUS_MODUS_LOCALIS = 0,
+    INTERNUNTIUS_MODUS_PUBLICUS
+} InternuntiusModus;
+
+/* praebitor: registratio methodorum applicationis - SEMEL scripta,
+ * a quocumque transportu vocata (fenestra vitreae aut servus HTTP).
+ * Sedes una registrationis per FORMAM API, non per disciplinam:
+ * methodus fenestrae addita in telephono statim adest, quia locus
+ * alter ubi obliviscaris non est. */
+nomen vacuum (*InternuntiusPraebitor)(
+    Internuntius*     inx,
+    InternuntiusModus modus,
+    vacuum*           datum);
+
 Internuntius*
 internuntius_creare (
     Piscina*           piscina,
