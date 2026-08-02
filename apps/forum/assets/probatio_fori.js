@@ -546,6 +546,55 @@ proba(mappam_facere("52.4862, -1.8904", 5, "Birmingham") !== null,
     aequale(textus_classis(per, "textus-a"), "medicus et poeta",
         "nota propria manet");
 
+    /* EVENTUS cum loco et personis: personae in corpore stant
+       (informatio quam nihil aliud fert), locus NON cum mappa eum
+       iam nominat - sed MANET cum locus coordinatis caret. */
+    adnot_scopi["locus"] = [
+        { res_id: "01LB", datum: { titulus: "Birmingham",
+            titulus_loci: "Birmingham",
+            coordinatae: "52.4862, -1.8904" } },
+        { res_id: "01LX", datum: { titulus: "Alexandria",
+            titulus_loci: "Alexandria" } }];
+    adnot_scopi["person"] = [
+        { res_id: "01W", datum: { titulus: "James Watt" } },
+        { res_id: "01J", datum: { titulus: "Joseph Priestley" } }];
+    adnot_scopi["eventus"] = [
+        { res_id: "01EV", datum: { titulus: "conventus",
+            descriptio: "conventus", annus: 1765 },
+            nexus: [{ verbum: "locus", ad: "01LB",
+                ad_titulus: "Birmingham" },
+                { verbum: "personae", ad: "01W",
+                    ad_titulus: "James Watt" },
+                { verbum: "personae", ad: "01J",
+                    ad_titulus: "Joseph Priestley" }] },
+        { res_id: "01EX", datum: { titulus: "concilium",
+            descriptio: "concilium", annus: 325 },
+            nexus: [{ verbum: "locus", ad: "01LX",
+                ad_titulus: "Alexandria" }] }];
+
+    var evc = elementum_adnotationis({ res_id: "01EA", titulus: "e",
+        datum: { species: "eventus", textus: "nota mea" },
+        nexus: [{ verbum: "eventus", ad: "01EV",
+            ad_titulus: "conventus" }] });
+    var t_ev = textus_classis(evc, "campi-a");
+    proba(t_ev.indexOf("James Watt") >= 0
+        && t_ev.indexOf("Joseph Priestley") >= 0,
+        "personae eventus AMBAE in corpore");
+    proba(classes(evc).indexOf("mappa") >= 0,
+        "eventus mappam loci sui fert");
+    proba(t_ev.indexOf("Birmingham") < 0,
+        "locus NON repetitur cum mappa eum nominet");
+
+    /* locus sine coordinatis: nulla mappa, ergo linea loci MANET */
+    var evx = elementum_adnotationis({ res_id: "01EB", titulus: "e",
+        datum: { species: "eventus", textus: "" },
+        nexus: [{ verbum: "eventus", ad: "01EX",
+            ad_titulus: "concilium" }] });
+    proba(classes(evx).indexOf("mappa") < 0,
+        "locus sine coordinatis mappam non parit");
+    proba(textus_classis(evx, "campi-a").indexOf("Alexandria") >= 0,
+        "sine mappa locus in corpore MANET (informatio non perit)");
+
     /* citatio uncinis cingitur; nota simplex non */
     var cit = elementum_adnotationis({ res_id: "01C", titulus: "c",
         datum: { species: "citatio", textus: "Omnia ex conchis" },

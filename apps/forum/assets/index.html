@@ -4165,7 +4165,12 @@ function libri_genera_curare() {
        mappas monstrare non potest. */
     aequare('eventus', [
       { clavis: 'locus', monstrans: 'Locus', typus: 'relatio',
-        ad: 'locus', cardinalitas: 'unum' }
+        ad: 'locus', cardinalitas: 'unum' },
+      /* PERSONAE MULTAE: eventus plures homines tangit, et nexus
+         BILATER est - persona sua pagina 'huc monstrant' eventus
+         suos sponte ostendet, sine ullo codice novo */
+      { clavis: 'personae', monstrans: 'Personae',
+        typus: 'relatio', ad: 'person', cardinalitas: 'multa' }
     ]);
     /* ZOOM in loco: detail auctoris ex pagina eventuum (diluvium
        zoom III, urbs V) - mappa sine eo aut nimis lata aut nimis
@@ -4254,7 +4259,9 @@ function libri_genera_curare() {
           typus: 'textus' },
         { clavis: 'annus', monstrans: 'Annus', typus: 'annus' },
         { clavis: 'locus', monstrans: 'Locus', typus: 'relatio',
-          ad: 'locus', cardinalitas: 'unum' }
+          ad: 'locus', cardinalitas: 'unum' },
+        { clavis: 'personae', monstrans: 'Personae',
+          typus: 'relatio', ad: 'person', cardinalitas: 'multa' }
       ],
       campus_tituli: 'descriptio',
       ordo_ordinarius: { campus: 'annus', directio: 'ascendens' },
@@ -4657,9 +4664,13 @@ var ADNOT_SPECIES = [
     campus_anni: 'annus', campus_loci: 'locus',
     campus_lateris: 'annus',
     campi: [
-      { clavis: 'annus', monstrans: 'annus', typus: 'annus' },
       { clavis: 'descriptio', monstrans: 'descriptio',
-        typus: 'textus' }
+        typus: 'textus' },
+      { clavis: 'annus', monstrans: 'annus', typus: 'annus' },
+      { clavis: 'locus', monstrans: 'locus', typus: 'relatio',
+        ad: 'locus', cardinalitas: 'unum' },
+      { clavis: 'personae', monstrans: 'personae',
+        typus: 'relatio', ad: 'person', cardinalitas: 'multa' }
     ] },
   { clavis: 'locus', monstrans: 'locus', textus_label: 'nota',
     ens: 'locus', campus_nexus: 'locus',
@@ -4885,7 +4896,7 @@ function subiectum_corpus(sp, ens) {
    OMITTUNTUR: campus tituli (in capite iam stat), veritas FALSA
    (absentia informationis, non informatio - 'owned: non' de opere
    memorato strepitus est), vacua et nulla. */
-function subiecti_campi(sp, ens) {
+function subiecti_campi(sp, ens, mappa_est) {
   var d = (ens && ens.datum) || {};
   var ordines = [];
   if (!ens || sp.campus_corporis) { return ordines; }
@@ -4901,6 +4912,11 @@ function subiecti_campi(sp, ens) {
     if ((sp.campi_tituli || []).indexOf(c.clavis) >= 0) { return; }
     if (c.clavis === sp.campus_lateris) { return; }
     if (c.tacitus) { return; }   /* zoom: consilium picturae */
+    /* mappa pittacium loci IAM fert, ergo 'locus: Birmingham'
+       infra idem bis diceret. Sine mappa (locus sine coordinatis)
+       linea MANET - informatio numquam perit, solum non
+       geminatur. */
+    if (mappa_est && c.clavis === sp.campus_loci) { return; }
     if (c.typus === 'relatio') {
       textus = nexus_de(ens, c.clavis).map(function (n) {
         return n.ad_titulus;
@@ -4972,6 +4988,12 @@ function elementum_adnotationis(a) {
   var caput = document.createElement('div');
   var corpus_subiecti = '';
   var campi_subiecti = [];
+  /* MAPPA PRIMUM aedificatur quamquam POST caput ponitur: campi
+     corporis scire debent an mappa locum iam nominet (aliter
+     'locus: Birmingham' sub pittacio 'Birmingham' staret) */
+  var loc = locus_notae(a);
+  var mappa = loc ? mappam_facere(loc.coordinatae, loc.zoom,
+    loc.titulus) : null;
   var sig = document.createElement('span');
   sig.className = 'species-a';
   sig.textContent = sp.monstrans;
@@ -4984,7 +5006,7 @@ function elementum_adnotationis(a) {
       var latus = subiectum_latus(sp, e_mundi);
       var s = document.createElement('span');
       corpus_subiecti = subiectum_corpus(sp, e_mundi);
-      campi_subiecti = subiecti_campi(sp, e_mundi);
+      campi_subiecti = subiecti_campi(sp, e_mundi, !!mappa);
       s.className = 'subiectum-a';
       s.textContent = '  ' + (n.ad_titulus || '[deletum]');
       s.onclick = function () {
@@ -5034,12 +5056,7 @@ function elementum_adnotationis(a) {
     ordo.appendChild(dfn);
   }
   /* mappa: locus ipse, aut eventus qui ad locum monstrat */
-  {
-    var loc = locus_notae(a);
-    var mp = loc ? mappam_facere(loc.coordinatae, loc.zoom,
-      loc.titulus) : null;
-    if (mp) { ordo.appendChild(mp); }
-  }
+  if (mappa) { ordo.appendChild(mappa); }
   if (campi_subiecti.length) {
     var cmp = document.createElement('div');
     cmp.className = 'campi-a';
@@ -5556,6 +5573,25 @@ function elementum_temporis(o) {
     var mp = loc ? mappam_facere(loc.coordinatae, loc.zoom,
       loc.titulus) : null;
     if (mp) { intus.appendChild(mp); }
+    /* campi entis hic quoque: 'personae' eventus id ipsum sunt
+       quod ordo temporum monstrare debet */
+    var e_m = null;
+    nexus_de(a, sp.campus_nexus).forEach(function (n) {
+      e_m = ens_mundanum(sp, n.ad);
+    });
+    var cs = subiecti_campi(sp, e_m, !!mp);
+    if (cs.length) {
+      var cmp = document.createElement('div');
+      cmp.className = 'campi-a';
+      cs.forEach(function (o, i) {
+        var lab = document.createElement('span');
+        lab.className = 'tempus';
+        lab.textContent = (i ? ' · ' : '') + o.monstrans + ': ';
+        cmp.appendChild(lab);
+        cmp.appendChild(document.createTextNode(o.valor));
+      });
+      intus.appendChild(cmp);
+    }
   }
   if (d.textus) {
     var t = document.createElement('div');
