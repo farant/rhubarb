@@ -306,6 +306,64 @@ proba(!liber_in_indice({ datum: { owned: false,
     reading_status: "" } }), "status vacuus non sufficit");
 proba(!liber_in_indice({}), "datum absens celatur");
 
+/* ORDO INDICIS: articulus initialis omittitur (mos bibliothecarius) */
+aequale(clavis_libri({ titulus: "The Lunar Men" }), "lunar men",
+    "'The' omittitur");
+aequale(clavis_libri({ titulus: "A Song to David" }), "song to david",
+    "'A' omittitur");
+aequale(clavis_libri({ titulus: "An Universal Dictionary" }),
+    "universal dictionary", "'An' omittitur");
+/* SPATIUM custodit: aliter verbum litteras suas perderet */
+aequale(clavis_libri({ titulus: "Theory of Everything" }),
+    "theory of everything", "'Theory' articulum NON est");
+aequale(clavis_libri({ titulus: "Amazing Grace" }), "amazing grace",
+    "'Amazing' articulum NON est");
+aequale(clavis_libri({ titulus: "Antiquities" }), "antiquities",
+    "'Antiquities' articulum NON est");
+aequale(clavis_libri({ titulus: "  the Story of Art " }),
+    "story of art", "spatia lateralia et casus ignorantur");
+aequale(clavis_libri({}), "", "titulus absens non frangit");
+/* ordo verus: L ante S, et 'A Song' inter ea */
+(function () {
+    var libelli = [{ titulus: "The Story of Art" },
+        { titulus: "A Song to David" },
+        { titulus: "The Lunar Men" },
+        { titulus: "Amazing Grace" }];
+    libelli.sort(function (a, b) {
+        return clavis_libri(a).localeCompare(clavis_libri(b));
+    });
+    aequale(libelli.map(function (l) { return l.titulus; }).join(" | "),
+        "Amazing Grace | The Lunar Men | A Song to David | "
+        + "The Story of Art",
+        "ordo per clavem, non per titulum crudum");
+}());
+
+/* INDEX IPSE REDDITUS - non clavis sola. Mensuratum: clave sola
+   probata, ordinatio ex redditione TOLLI poterat et nulla
+   adsertio rubebat (calibratio muta). Probatio functionis purae
+   NON est probatio consumptoris eius. */
+(function () {
+    function liber(t) {
+        return { res_id: "01B" + t.length, titulus: t,
+            datum: { titulus: t, owned: true } };
+    }
+    var vetera_libri = libri;
+    var vetera_omnes = libri_omnes;
+    libri = [liber("The Story of Art"), liber("A Song to David"),
+        liber("The Lunar Men"), liber("Amazing Grace")];
+    libri_omnes = false;
+    reddere_libri_indicem({ datum: { clavis: "book", campi: [] } });
+    var index = document.getElementById("libri-index");
+    aequale(index.children.map(function (o) {
+        return o.children[0].textContent;
+    }).join(" | "),
+        "Amazing Grace | The Lunar Men | A Song to David | "
+        + "The Story of Art",
+        "INDEX REDDITUS ordine alphabetico stat");
+    libri = vetera_libri;
+    libri_omnes = vetera_omnes;
+}());
+
 /* ================================================================
  * III bis. CORPUS ET LATUS SUBIECTI - quid ex ENTE in chartam venit
  * ================================================================ */

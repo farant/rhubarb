@@ -4435,14 +4435,30 @@ function liber_in_indice(ens) {
         && d.reading_status !== '');
 }
 
+/* Clavis ordinandi: articulus INITIALIS omittitur (mos
+   bibliothecarius) - 'The Lunar Men' sub L, 'A Song to David' sub S.
+   SPATIUM post articulum REQUIRITUR, aliter 'Theory' et 'Amazing'
+   litteras suas perderent. */
+function clavis_libri(ens) {
+  var t = (ens.titulus || '').replace(/^\s+|\s+$/g, '');
+  var m = /^(the|an|a)\s+/i.exec(t);
+  if (m) { t = t.slice(m[0].length); }
+  return t.toLowerCase();
+}
+
 function reddere_libri_indicem(def) {
   var index = document.getElementById('libri-index');
   var omissi = libri.filter(function (e) {
     return !liber_in_indice(e);
   }).length;
   var nexus_omnium = document.getElementById('libri-omnia');
-  var monstranda = libri_omnes
-    ? libri : libri.filter(liber_in_indice);
+  var monstranda = (libri_omnes
+    ? libri.slice() : libri.filter(liber_in_indice));
+  /* localeCompare, non '<': signa diacritica aliter post 'z'
+     caderent */
+  monstranda.sort(function (a, b) {
+    return clavis_libri(a).localeCompare(clavis_libri(b));
+  });
 
   if (!omissi) {
     nexus_omnium.textContent = '';
