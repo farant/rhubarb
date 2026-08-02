@@ -4177,6 +4177,12 @@ function libri_genera_curare() {
        est - sed coniunctio manere debet, aliter ordo temporum
        mappas monstrare non potest. */
     aequare('eventus', [
+      /* RETYPATIO INTRA FAMILIAM: machina textus/area/dies eodem
+         modo iudicat (chorda expectatur), ergo valores scripti
+         valent et nullum orphanum nascitur - eadem ratio qua
+         numerus -> pagina transiit */
+      { clavis: 'descriptio', monstrans: 'Descriptio',
+        typus: 'area', retypatio: true },
       { clavis: 'locus', monstrans: 'Locus', typus: 'relatio',
         ad: 'locus', cardinalitas: 'unum' },
       /* PERSONAE MULTAE: eventus plures homines tangit, et nexus
@@ -4271,7 +4277,7 @@ function libri_genera_curare() {
       clavis: 'eventus', titulus_monstrans: 'Eventus',
       campi: [
         { clavis: 'descriptio', monstrans: 'Descriptio',
-          typus: 'textus' },
+          typus: 'area' },
         { clavis: 'annus', monstrans: 'Annus', typus: 'annus' },
         { clavis: 'locus', monstrans: 'Locus', typus: 'relatio',
           ad: 'locus', cardinalitas: 'unum' },
@@ -4702,7 +4708,7 @@ var ADNOT_SPECIES = [
     campus_lateris: 'annus',
     campi: [
       { clavis: 'descriptio', monstrans: 'descriptio',
-        typus: 'textus' },
+        typus: 'area' },
       { clavis: 'annus', monstrans: 'annus', typus: 'annus' },
       { clavis: 'locus', monstrans: 'locus', typus: 'relatio',
         ad: 'locus', cardinalitas: 'unum' },

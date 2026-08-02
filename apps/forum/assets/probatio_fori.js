@@ -265,6 +265,12 @@ proba(species_de("erratum").ens === null,
     "erratum ens mundanum non habet (mendum EDITIONIS est)");
 aequale(species_de("scriptum").ens, "book",
     "scriptum genus 'book' adhibet");
+/* descriptio eventus AREA est: eventus sententia integra
+   describitur, non voce una */
+aequale(campum_speciei(species_de("eventus"), "descriptio").typus,
+    "area", "descriptio eventus AREA est (non textus)");
+aequale(species_de("eventus").campus_tituli, "descriptio",
+    "area campus tituli esse potest (creator id permittit)");
 proba(species_de("scriptum").valores_fixa.owned === false,
     "scriptum owned=false scribit");
 proba(species_de("quaestio").ens === null,

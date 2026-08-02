@@ -427,3 +427,40 @@ worse than no map, because a reader believes a map.
   `aequare` calls made it report "not idempotent" while the code was
   correct. Rewritten to replay every recorded mutation generically,
   so the next `aequare` can't break it.
+
+## 2026-08-02 — deletion has TWO shapes, and I used the wrong one
+
+`census` reported `insalubres 1` after a night of schema edits. Chased
+it expecting my `pagina` or `descriptio` retype to have orphaned
+something — the health check's own comment points there ("orphani post
+emendationem schematis HIC apparent"). It was neither.
+
+It was my own CDN-probe pipatum, and the cause is a distinction worth
+keeping:
+
+- **User-defined genera** (via `definitio`) carry `campi` and NO
+  `attributa`. Nothing is required, so deleting by removing `titulus`
+  is correct — that's what `tumulus_est` tests, and health has nothing
+  to complain about.
+- **Seeded genera** (pipatum, articulus, commentarium, diurnum, …) get
+  ATTRIBUTA_V2 merged in, where `titulus` is `necessarium: true`.
+  Removing it leaves the entity permanently unhealthy. Their deletion
+  shape is removing **corpus** — which is exactly what the app's
+  `delere` does.
+
+I'd used the user-genus idiom on a seeded genus a dozen times in test
+cleanup and only one landed on a seeded genus, so only one showed.
+
+Fixed by restoring a titulus and removing corpus, giving it the shape
+a normally-deleted pipatum has. Back to `insalubres 0`.
+
+**Why bother for one row**: a health counter that permanently reads 1
+for a reason you know about is worse than no counter — it trains you
+to skip past the number, and the next 1 is real. Same argument as the
+false CAUTIO VIGILIAE.
+
+Also worth noting the health check's grades: `attributum-necessarium-
+absens` is FATAL (breaks `sanus`), while `campus-extra-specem` and
+`typus-campi-pravus` are SOFT — flagged, not fatal. So a user-genus
+entity essentially cannot go unhealthy, which is why every retype
+tonight left `insalubres 0` even before I fixed this.
