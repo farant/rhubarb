@@ -338,6 +338,54 @@ aequale(clavis_libri({}), "", "titulus absens non frangit");
         "ordo per clavem, non per titulum crudum");
 }());
 
+/* ---- cribrum laxum ---- */
+proba(laxe_congruit("lunar", "The Lunar Men"), "pars continua");
+/* MENSURATUM in libris Franis: subsequentia PURA per fenum totum
+   'lnr' ad X ex XVII libris extendit, 'punch' ad Cyclopaediam -
+   titulus longus quaslibet litteras ordine fere semper continet.
+   Ergo intra verbum non erramus; abbreviatio per INITIALES agit. */
+proba(!laxe_congruit("lnr", "The Lunar Men"),
+    "subsequentia INTRA verbum NON congruit (strepitus)");
+proba(!laxe_congruit("punch",
+    "Cyclopaedia, or, An Universal Dictionary of Arts and Sciences"),
+    "'punch' Cyclopaediam NON capit");
+proba(laxe_congruit("punch", "Punched-Card Systems"),
+    "'punch' substantia congruit");
+proba(laxe_congruit("dlx", "Dealers of Lightning - Xerox PARC"),
+    "'dlx' per INITIALES verborum congruit");
+aequale(initiales("dealers of lightning - xerox parc"), "dolxp",
+    "initiales ex verbis sumuntur");
+proba(laxe_congruit("dealers xerox",
+    "Dealers of Lightning - Xerox PARC"), "duo verba, ambo congruunt");
+proba(laxe_congruit("xerox dealers",
+    "Dealers of Lightning - Xerox PARC"),
+    "ORDO VERBORUM non obstat (partes seorsum congruunt)");
+proba(laxe_congruit("LUNAR", "the lunar men"), "casus ignoratur");
+proba(laxe_congruit("", "quidlibet"),
+    "vacuum = nullum cribrum, non nulla congruentia");
+proba(laxe_congruit("   ", "quidlibet"), "spatia sola = vacuum");
+proba(!laxe_congruit("zzz", "The Lunar Men"), "quod abest non congruit");
+proba(!laxe_congruit("mlt", "The Lunar Men"),
+    "ORDO initialium obstat ('tlm' non 'mlt')");
+proba(laxe_congruit("tlm", "The Lunar Men"),
+    "initiales ordine congruunt");
+proba(!laxe_congruit("lunar zzz", "The Lunar Men"),
+    "pars una deficiens totum reicit");
+
+/* fenum: titulus ET auctores */
+(function () {
+    var def = { datum: { clavis: "book", campi: [
+        { clavis: "authors", typus: "relatio", ad: "person",
+            cardinalitas: "multa" }] } };
+    var ens = { titulus: "The Story of Art", datum: {},
+        nexus: [{ verbum: "authors", ad: "01G",
+            ad_titulus: "E. H. Gombrich" }] };
+    proba(fenum_libri(ens, def).indexOf("Gombrich") >= 0,
+        "auctor in feno (nomen in titulo NON stat)");
+    proba(laxe_congruit("gombrich", fenum_libri(ens, def)),
+        "liber per auctorem invenitur");
+}());
+
 /* INDEX IPSE REDDITUS - non clavis sola. Mensuratum: clave sola
    probata, ordinatio ex redditione TOLLI poterat et nulla
    adsertio rubebat (calibratio muta). Probatio functionis purae
@@ -360,6 +408,29 @@ aequale(clavis_libri({}), "", "titulus absens non frangit");
         "Amazing Grace | The Lunar Men | A Song to David | "
         + "The Story of Art",
         "INDEX REDDITUS ordine alphabetico stat");
+
+    /* cribrum in redditione IPSA (non in functione sola) */
+    var vetus_q = libri_quaestio;
+    libri_quaestio = "lunar";
+    reddere_libri_indicem({ datum: { clavis: "book", campi: [] } });
+    aequale(index.children.map(function (o) {
+        return o.children[0].textContent;
+    }).join(" | "), "The Lunar Men",
+        "cribrum laxum indicem REDDITUM coartat");
+    proba(!document.getElementById("vacuum-librorum").hidden === false,
+        "cum congruentia, nuntius vacui latet");
+
+    libri_quaestio = "zzzz";
+    reddere_libri_indicem({ datum: { clavis: "book", campi: [] } });
+    aequale(index.children.length, 0, "nihil congruens = index vacuus");
+    proba(document.getElementById("vacuum-librorum")
+        .textContent.indexOf("nihil congruit") >= 0,
+        "nuntius vacui CAUSAM nominat (non 'adde primum')");
+    proba(document.getElementById("vacuum-librorum")
+        .textContent.indexOf("zzzz") >= 0,
+        "nuntius quaesitum ipsum refert");
+
+    libri_quaestio = vetus_q;
     libri = vetera_libri;
     libri_omnes = vetera_omnes;
 }());

@@ -672,6 +672,8 @@
 
 <section id="visus-libri" hidden>
   <div id="libri-index-domus">
+    <input id="libri-quaestio" data-inter="verum"
+      placeholder="quaerere (titulus aut auctor)...">
     <div class="caput-actionum">
       <a class="retro" id="libri-omnia"></a>
       <button id="liber-novus" class="parva">liber novus</button>
@@ -4011,6 +4013,63 @@ document.getElementById('sent-saltus').onkeydown = function (ev) {
 var libri_visus  = 'index';   /* index | liber | insere */
 var libri        = [];        /* cache librorum */
 var libri_omnes  = false;     /* falsum = sola lectio, non memorata */
+var libri_quaestio = '';      /* cribrum arcae quaestionis */
+
+/* CONGRUENTIA LAXA - duabus viis, et cur NON subsequentia pura.
+ *
+ * Subsequentia pura per fenum TOTUM (mos fzf ingenuus) in titulis
+ * longis inutilis est. Mensuratum in libris Franis (2026-08-02):
+ * 'lnr' X ex XVII libris cepit, et 'punch' Cyclopaediam - quia
+ * titulus longus quaslibet litteras ordine fere semper continet.
+ * Fixturae meae breves ('The Lunar Men') id celaverant.
+ *
+ * Ergo pars congruit si AUT
+ *   (a) substantia est ('lunar', 'gombrich', 'punch'), AUT
+ *   (b) subsequentia INITIALIUM verborum ('dlx' -> Dealers of
+ *       Lightning - Xerox).
+ * Initiales chorda brevis sunt, ergo strepitum non pariunt, sed
+ * abbreviationem servant - quod ex fzf revera utile est.
+ *
+ * Partes per spatia secantur et OMNES congruere debent, ergo ordo
+ * verborum non obstat. Vacuum = nullum cribrum. */
+function subsequentia_est(pars, fenum) {
+  var i = 0;
+  var k;
+  for (k = 0; k < fenum.length && i < pars.length; k++) {
+    if (fenum.charAt(k) === pars.charAt(i)) { i++; }
+  }
+  return i === pars.length;
+}
+
+function initiales(fenum) {
+  return (fenum.match(/[a-z0-9]+/g) || []).map(function (v) {
+    return v.charAt(0);
+  }).join('');
+}
+
+function laxe_congruit(quaesitum, fenum) {
+  var f = String(fenum || '').toLowerCase();
+  var ini = initiales(f);
+  var partes = String(quaesitum || '').toLowerCase()
+    .split(/\s+/).filter(function (p) { return !!p; });
+  if (!partes.length) { return true; }
+  return partes.every(function (pars) {
+    return f.indexOf(pars) >= 0 || subsequentia_est(pars, ini);
+  });
+}
+
+/* Fenum libri: titulus ET auctores - 'gombrich' librum invenire
+   debet quamquam nomen eius in titulo non stat */
+function fenum_libri(ens, def) {
+  var partes = [ens.titulus || ''];
+  campi_de(def).forEach(function (c) {
+    if (c.typus !== 'relatio') { return; }
+    nexus_de(ens, c.clavis).forEach(function (n) {
+      if (n.ad_titulus) { partes.push(n.ad_titulus); }
+    });
+  });
+  return partes.join(' ');
+}
 var liber_ens    = null;      /* liber apertus */
 var liber_cap    = [];        /* capitula libri aperti, ordine */
 var cap_praevisa = [];        /* fructus lectionis (nondum scripta) */
@@ -4454,6 +4513,9 @@ function reddere_libri_indicem(def) {
   var nexus_omnium = document.getElementById('libri-omnia');
   var monstranda = (libri_omnes
     ? libri.slice() : libri.filter(liber_in_indice));
+  monstranda = monstranda.filter(function (e) {
+    return laxe_congruit(libri_quaestio, fenum_libri(e, def));
+  });
   /* localeCompare, non '<': signa diacritica aliter post 'z'
      caderent */
   monstranda.sort(function (a, b) {
@@ -4488,6 +4550,12 @@ function reddere_libri_indicem(def) {
     ordo.onclick = function () { liber_aperire(ens); };
     index.appendChild(ordo);
   });
+  /* CAUSAM NOMINAT: 'nulli libri - adde primum' post quaestionem
+     falsum esset - libri adsunt, quaesitum nihil invenit */
+  document.getElementById('vacuum-librorum').textContent =
+    libri_quaestio
+      ? ('nihil congruit: «' + libri_quaestio + '»')
+      : 'nulli libri - adde primum!';
   document.getElementById('vacuum-librorum').hidden =
     monstranda.length > 0;
 }
@@ -5850,6 +5918,14 @@ function liber_formam_aperire(ens) {
   forma_aperire(ens);
 }
 
+document.getElementById('libri-quaestio').addEventListener('input',
+  function () {
+    libri_quaestio = this.value;
+    /* directe, non per anquisitionem: datum non mutatur, ergo
+       differentia seriei nihil videret */
+    var def = def_per_clavem('book');
+    if (def) { reddere_libri_indicem(def); }
+  });
 document.getElementById('liber-novus').onclick = function () {
   liber_ens = null;
   libri_genera_curare()

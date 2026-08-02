@@ -464,3 +464,53 @@ absens` is FATAL (breaks `sanus`), while `campus-extra-specem` and
 `typus-campi-pravus` are SOFT — flagged, not fatal. So a user-genus
 entity essentially cannot go unhealthy, which is why every retype
 tonight left `insalubres 0` even before I fixed this.
+
+## 2026-08-02 — the fuzzy filter, and why toy fixtures lied
+
+Fran wanted a fuzzy filter on the Libri index. Built it the obvious
+way — fzf-style subsequence over the whole haystack — and every JS
+test passed against fixtures like "The Lunar Men" and "Amazing Grace".
+
+Then I ran it against his ACTUAL 17 books:
+
+    «lnr»   -> 10 of 17 books
+    «punch» -> Punched-Card Systems, AND Cyclopaedia, or, An
+               Universal Dictionary of Arts and Sciences
+    «uglow» -> The Lunar Men, AND An Account of the Foxglove...
+
+Subsequence over a long haystack is nearly a tautology: a 40-word
+title contains almost any 3 letters in order. The feature was
+useless and every test was green, because my fixtures were SHORT.
+Three-word titles cannot exhibit the failure mode of forty-word
+titles.
+
+**Rule that replaced it**: a query token matches if it is a
+SUBSTRING of the haystack, OR a subsequence of the WORD INITIALS.
+Initials are a short string, so they carry the abbreviation power
+that makes fzf pleasant (`dlx` → Dealers of Lightning - Xerox)
+without the noise, since there is nothing long to get lost in.
+Measured after:
+
+    lunar/gombrich/punch/uglow -> exactly one book each
+    dlx, tlm, "xerox parc"     -> exactly one book each
+    lnr, zzz                   -> nothing
+
+Haystack includes linked entity titles, so `gombrich` and `uglow`
+find books whose authors they are — the author's name is nowhere in
+the title.
+
+### The lesson, which is not new but keeps arriving in new clothes
+
+This is the corpus-contact law again, in the one place I had been
+treating as safely covered: I had 200+ passing webview assertions and
+they all agreed the filter worked. They were testing the algorithm I
+wrote against data I invented. **A fixture you authored shares your
+assumptions; a corpus does not.**
+
+Cheap habit that would have caught it immediately: after building
+any filter/search/sort, run it against the real store before
+believing the tests. It cost one bridge script and thirty seconds.
+
+The tests now pin the failure explicitly — `lnr` must NOT match The
+Lunar Men, `punch` must NOT match Cyclopaedia — so the loose version
+cannot come back silently.
