@@ -514,3 +514,34 @@ believing the tests. It cost one bridge script and thirty seconds.
 The tests now pin the failure explicitly — `lnr` must NOT match The
 Lunar Men, `punch` must NOT match Cyclopaedia — so the loose version
 cannot come back silently.
+
+## Recipe: adding a note species (2026-08-02)
+
+Twelve species exist now and the shape has stabilised. Adding one:
+
+1. **Row in `ADNOT_SPECIES`** (apps/forum/assets/index.html). Keys
+   that matter: `ens` (world-entity genus, or `null`), `campus_nexus`
+   (verbum linking note→entity), `campus_tituli`, `campi` (editor
+   fields for the ENTITY), `campi_adnotationis` (fields on the NOTE
+   itself), `campus_anni`/`phrasis_temporis` (timeline),
+   `campus_lateris` (header parenthetical), `campus_loci` (map),
+   `campus_corporis` (bare body text), `campi_tituli` (fields the
+   title composes from — skipped in body), `valores_fixa`.
+2. **Widen the live `species` electio** in the `aequare('adnotatio',…)`
+   call AND the fresh-store `condere` schema. **This is the trap**:
+   the machine rejects values outside `optiones` and the webview never
+   surfaces the reason. The species tests derive from the table, so
+   forgetting this turns two assertions red by name.
+3. **New world entity?** Add a `condere(...)` for its genus plus a
+   `relatio` field on `adnotatio` pointing at it.
+4. Everything else is free: editor, feed card, timeline, dedup rules,
+   reverse lookups.
+
+Species that need NO entity (nota/citatio/erratum/quaestio) are one
+row and nothing else — `erratum` was exactly that.
+
+**Where the machine bites**: relations must NEVER appear in `datum`
+("campus relationis in dato — nexus expectatur"); write them as nexus
+after creating the entity. `titulus` must never be empty on `addere`.
+Retypes are safe only within a type family (textus/area/dies; or a
+superset like numerus→pagina) and need `retypatio: true` explicitly.
