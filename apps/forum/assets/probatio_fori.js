@@ -252,11 +252,17 @@ proba(summarium_adnotationis(species_de("nota"),
  * ================================================================ */
 aequale(species_de("ignota").clavis, "nota",
     "species ignota ad notam recidit");
-["nota", "citatio", "persona", "eventus", "locus", "terminus",
- "societas", "scriptum", "inventum", "quaestio"].forEach(
-    function (k) {
-        aequale(species_de(k).clavis, k, "species " + k + " adest");
-    });
+/* ex TABULA sumptae, non manu enumeratae: species nova aliter
+   probationem frangeret quae eam probare deberet */
+var SPECIES_CLAVES = ADNOT_SPECIES.map(function (s) {
+    return s.clavis;
+});
+SPECIES_CLAVES.forEach(function (k) {
+    aequale(species_de(k).clavis, k, "species " + k + " adest");
+});
+proba(SPECIES_CLAVES.indexOf("erratum") >= 0, "erratum adest");
+proba(species_de("erratum").ens === null,
+    "erratum ens mundanum non habet (mendum EDITIONIS est)");
 aequale(species_de("scriptum").ens, "book",
     "scriptum genus 'book' adhibet");
 proba(species_de("scriptum").valores_fixa.owned === false,
@@ -818,14 +824,15 @@ curare_cum(defs_vetera).then(function () {
         });
         proba(!!camp_sp, "campus specierum adest");
         if (camp_sp) {
-            ["nota", "citatio", "persona", "eventus", "locus",
-             "terminus", "societas", "scriptum", "inventum",
-             "quaestio"].forEach(function (o) {
+            /* OMNIS species tabulae optio VIVA esse debet -
+               aliter machina eam recusat ('valor extra optiones')
+               et velamen causam non monstrat */
+            SPECIES_CLAVES.forEach(function (o) {
                 proba(camp_sp.optiones.indexOf(o) >= 0,
                     "optio '" + o + "' in definitione viva");
             });
-            aequale(camp_sp.optiones.length, 10,
-                "optiones decem, sine duplicibus");
+            aequale(camp_sp.optiones.length, SPECIES_CLAVES.length,
+                "optiones tot quot species, sine duplicibus");
             aequale(camp_sp.optiones[0], "nota",
                 "ordo optionum veterum servatus");
         }

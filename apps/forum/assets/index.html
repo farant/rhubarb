@@ -317,6 +317,9 @@
     box-sizing: border-box; }
   .adnot-ordo .species-a { color: #9fb87a; font-size: .78em;
     text-transform: uppercase; letter-spacing: .06em; }
+  /* erratum rubet: mendum in feed CONSPICI debet, aliter inter
+     notas latet et nulla erratorum messis fieri potest */
+  .adnot-ordo .species-a.erratum-a { color: #d97c6a; }
   .adnot-ordo .pagina-a { color: #8a8274; font-size: .8em; }
   .adnot-ordo .subiectum-a { color: #c9b98a; cursor: pointer; }
   .adnot-ordo .textus-a { white-space: pre-wrap; }
@@ -4136,7 +4139,7 @@ function libri_genera_curare() {
       { clavis: 'species', monstrans: 'Species', typus: 'electio',
         optiones: ['nota', 'citatio', 'persona', 'eventus', 'locus',
           'terminus', 'societas', 'scriptum', 'inventum',
-          'quaestio'] },
+          'erratum', 'quaestio'] },
       { clavis: 'responsum', monstrans: 'Responsum', typus: 'area' },
       /* RETYPATIO numerus -> pagina. Additiva-sola est lex generum,
          sed hic superset substituit: typus 'pagina' integros QUOQUE
@@ -4330,7 +4333,7 @@ function libri_genera_curare() {
         { clavis: 'species', monstrans: 'Species', typus: 'electio',
           optiones: ['nota', 'citatio', 'persona', 'eventus',
             'locus', 'terminus', 'societas', 'scriptum', 'inventum',
-            'quaestio'] },
+            'erratum', 'quaestio'] },
         { clavis: 'textus', monstrans: 'Textus', typus: 'area' },
         { clavis: 'pagina', monstrans: 'Pagina', typus: 'pagina' },
         { clavis: 'responsum', monstrans: 'Responsum',
@@ -4755,6 +4758,12 @@ var ADNOT_SPECIES = [
       { clavis: 'inventores', monstrans: 'inventores',
         typus: 'relatio', ad: 'person', cardinalitas: 'multa' }
     ] },
+  /* ERRATUM: mendum in libro ipso (numerus falsus, nomen pravum,
+     citatio non congruens). Ens mundanum non habet - mendum huius
+     EDITIONIS est, non rei in mundo. Pagina, quam omnis nota iam
+     fert, hic maxime valet: erratum sine pagina vix utile est. */
+  { clavis: 'erratum', monstrans: 'erratum', ens: null, campi: [],
+    textus_label: 'quid erratum sit' },
   /* QUAESTIO ens mundanum NON habet: quaestio momento lectionis
      adhaeret, non mundo. Responsum campus adnotationis est, vacuus
      donec impleatur - ergo 'quid non intellexi' quaestio est quam
@@ -5021,7 +5030,8 @@ function elementum_adnotationis(a) {
   var mappa = loc ? mappam_facere(loc.coordinatae, loc.zoom,
     loc.titulus) : null;
   var sig = document.createElement('span');
-  sig.className = 'species-a';
+  sig.className = 'species-a'
+    + (sp.clavis === 'erratum' ? ' erratum-a' : '');
   sig.textContent = sp.monstrans;
   caput.appendChild(sig);
   /* subiectum: titulus per nexum GRATIS venit (ad_titulus), ergo
