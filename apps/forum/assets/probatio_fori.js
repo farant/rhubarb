@@ -379,6 +379,82 @@ aequale(paginatio_clavis(42), paginatio_clavis("42"),
 }());
 
 /* ================================================================
+ * III quinquies. COORDINATAE + ANNUS NOTAE + LOCUS NOTAE
+ * ================================================================ */
+aequale(JSON.stringify(coordinatas_legere("52.4862, -1.8904")),
+    "[52.4862,-1.8904]", "coordinatae normales");
+aequale(JSON.stringify(coordinatas_legere("  36.0606 , 102.8268 ")),
+    "[36.0606,102.8268]", "spatia tolerantur");
+aequale(JSON.stringify(coordinatas_legere("0,0")), "[0,0]",
+    "zephyrum licet (insula nulla)");
+aequale(coordinatas_legere("Birmingham"), null, "nomen respuitur");
+aequale(coordinatas_legere("52.4862"), null, "una sola respuitur");
+aequale(coordinatas_legere("52.4862, -1.8904, 7"), null,
+    "tres respuuntur");
+aequale(coordinatas_legere("91, 0"), null, "latitudo extra limites");
+aequale(coordinatas_legere("0, 181"), null,
+    "longitudo extra limites");
+aequale(JSON.stringify(coordinatas_legere("-90, 180")),
+    "[-90,180]", "limites ipsi LICENT (non extra)");
+aequale(coordinatas_legere(""), null, "vacua");
+aequale(coordinatas_legere(null), null, "nulla non frangit");
+
+/* annus EX ENTE, per campum speciei nominatum */
+(function () {
+    adnot_scopi["eventus"] = [{ res_id: "01E", datum: {
+        titulus: "condensator", descriptio: "condensator",
+        annus: 1765 } }];
+    adnot_scopi["person"] = [{ res_id: "01P", datum: {
+        titulus: "Erasmus Darwin", year_of_birth: 1731 } }];
+    var ev = { datum: { species: "eventus" },
+        nexus: [{ verbum: "eventus", ad: "01E" }] };
+    var pe = { datum: { species: "persona" },
+        nexus: [{ verbum: "persona", ad: "01P" }] };
+    var no = { datum: { species: "nota", textus: "x" }, nexus: [] };
+    aequale(annus_notae(ev), 1765, "annus eventus ex ente");
+    aequale(annus_notae(pe), 1731, "annus personae = annus natalis");
+    aequale(annus_notae(no), null,
+        "nota simplex annum non habet (cribrum ordinis)");
+    aequale(annus_notae({ datum: { species: "eventus" },
+        nexus: [] }), null, "eventus sine subiecto: nullus annus");
+
+    /* locus: per speciem loci IPSAM et per eventum MONSTRANTEM */
+    adnot_scopi["locus"] = [{ res_id: "01L", datum: {
+        titulus: "Birmingham", titulus_loci: "Birmingham",
+        coordinatae: "52.4862, -1.8904", zoom: 5 } }];
+    var lo = { datum: { species: "locus" },
+        nexus: [{ verbum: "locus", ad: "01L" }] };
+    aequale(locus_notae(lo).titulus, "Birmingham",
+        "species loci mappam suam fert");
+    aequale(locus_notae(lo).zoom, 5, "zoom auctoris servatur");
+    aequale(locus_notae(no), null, "nota simplex mappam non habet");
+
+    /* eventus -> locus (decisio Franis: pagina eventuum id probat) */
+    adnot_scopi["eventus"] = [{ res_id: "01E2", datum: {
+        titulus: "conventus", descriptio: "conventus", annus: 1765 },
+        nexus: [{ verbum: "locus", ad: "01L" }] }];
+    var ev2 = { datum: { species: "eventus" },
+        nexus: [{ verbum: "eventus", ad: "01E2" }] };
+    aequale(locus_notae(ev2).titulus, "Birmingham",
+        "eventus mappam per locum suum fert");
+    aequale(locus_notae(ev2).coordinatae, "52.4862, -1.8904",
+        "coordinatae ex loco ligato");
+
+    /* locus sine coordinatis: nulla mappa, non fractura */
+    adnot_scopi["locus"] = [{ res_id: "01L", datum: {
+        titulus: "Alexandria", titulus_loci: "Alexandria" } }];
+    aequale(locus_notae(lo), null,
+        "locus sine coordinatis mappam non petit");
+}());
+
+/* mappam_facere: coordinatae pravae mappam NULLAM dant (mappa
+   loci ALIENI peior est quam nulla - lector mappam credit) */
+aequale(mappam_facere("nugae", 4, "X"), null,
+    "coordinatae pravae mappam non pariunt");
+proba(mappam_facere("52.4862, -1.8904", 5, "Birmingham") !== null,
+    "coordinatae bonae mappam pariunt");
+
+/* ================================================================
  * III ter. CHARTA IPSA - quid usor revera videt
  * ================================================================ */
 (function () {
@@ -604,12 +680,13 @@ curare_cum(defs_vetera).then(function () {
     }
 
     /* (c) IDEMPOTENTIA: definitio iam aequata nihil mutat */
+    /* mutationes OMNES reapplicare, non genera NOMINATIM: aliter
+       aequare novum (eventus, locus, ...) fixturam frangit et
+       'non idempotens' nuntiat dum codex rectus est */
     var defs_nova = JSON.parse(JSON.stringify(defs_vetera));
     defs_nova.forEach(function (d) {
-        if (d.datum.clavis === "person") {
-            d.datum.campi = p.campi;
-        }
-        if (d.datum.clavis === "adnotatio") { d.datum.campi = a.campi; }
+        var m = per_res[d.res_id];
+        if (m && m.campi) { d.datum.campi = m.campi; }
     });
     return curare_cum(defs_nova).then(function () {
         var mut2 = mutationes("gerere").filter(function (v) {

@@ -344,3 +344,86 @@ answer. 76 assertions total. Calibrated by deleting
 Also checked through the live bridge that the definition reaches the
 client at all (it does), because a rendering test can only prove the
 painting, never the data.
+
+## 2026-08-02 — maps + timeline, modelled on franarant.com/events
+
+Fran asked for two things off his own events page: the Leaflet map
+component for places with coordinates, and a timeline showing only
+notes that carry a year. He flagged the right risk himself — can a
+WKWebView on a `capsula://` origin even fetch a CDN?
+
+### The measurement that decided it
+
+Built a throwaway probe binary, ran the real window ~12s, reported
+through the bridge:
+
+    scriptum=ONERATUM(typeof L=object) | css=ONERATUM
+    tessella=ONERATA(256x256)          | fetch=OK(200)
+
+Script, stylesheet, an OSM tile image, AND `fetch()` all succeed from
+the custom-scheme origin. No plan B needed. **Probe reverted, test
+pipatum tombstoned** — the measurement was the deliverable, not the
+code.
+
+### SRI: caught myself inventing hashes
+
+I first wrote the integrity hashes from a TRUNCATED terminal display
+of Fran's page — which would have made the script silently refuse to
+load, presenting as "maps don't work". Pulled the real values from
+his markup and independently recomputed them from the CDN bytes;
+both matched, and a test asserts the split string literals
+reassemble to the exact hashes. His page already used SRI, so
+copying it verbatim inherits the supply-chain protection — worth
+saying, since a CDN in this codebase would otherwise deserve an
+argument.
+
+### Year comes from the ENTITY, which is why the filter was free
+
+`eventus.annus`, `persona.year_of_birth`, `societas.annus_conditus`,
+`scriptum.year_published`, `inventum.annus` — so "notes with a year"
+is one `campus_anni` entry per species, and nota/citatio/terminus/
+quaestio/locus drop out because they genuinely have no year. A new
+species with a year is a table row, not a branch.
+
+### Two decisions Fran made, and why they mattered
+
+**`eventus` now points at `locus`.** His page carries year + place +
+description in ONE record, and 213 of them have coordinates — that
+data proves the two belong together. We keep them normalized
+(Birmingham is one entity) but linked, so a timeline entry can show
+the map exactly like the screenshot.
+
+**Notes now link to the book as well as the chapter.** Deliberate
+denormalization: without it a book timeline is one read per chapter
+(42 for Lunar Men, every 2s poll). A chapter never changes books, so
+drift is nil. **Backfilled the 13 existing live notes** — without
+that the book timeline would have been silently empty, which reads
+as "no notes have years" rather than "the link is missing."
+
+### Map behaviour copied deliberately
+
+Non-interactive (drag/zoom/wheel/keyboard off, `maxZoom ===
+minZoom === zoom`) so it's an illustration, not a widget that
+captures the scroll wheel inside a feed. Per-place `zoom` field
+added because that authored detail is what makes his page read well
+(flood 3, city 5). Lazy `IntersectionObserver` creation, same as his
+`onVisible` — a chapter can hold dozens of notes and eager Leaflet
+instances would choke the window.
+
+Attribution is left ON here, unlike his page's `// not for
+production`.
+
+Failure is loud: no network → the map area says so and prints the
+coordinates, rather than showing an empty box. Unparseable
+coordinates produce NO map at all — a map of the wrong place is
+worse than no map, because a reader believes a map.
+
+### Harness, third and fourth time
+
+- A malformed assertion of mine (`aequale(...) === undefined || ...`)
+  asserted the opposite of what it claimed. It failed loudly, which
+  is the only reason I noticed.
+- The idempotency fixture listed genera BY NAME, so adding two new
+  `aequare` calls made it report "not idempotent" while the code was
+  correct. Rewritten to replay every recorded mutation generically,
+  so the next `aequare` can't break it.

@@ -341,6 +341,42 @@
     #adnotatio-tabs a.activa { border-left: none;
       border-bottom-color: #9fb87a; }
   }
+  /* ---- mappa (exemplar paginae eventuum) ---- */
+  .mappa { position: relative; margin: .5em 0; border-radius: 4px;
+    overflow: hidden; }
+  .mappa-intus { height: 190px; background: #22201d; }
+  .mappa-fracta { display: flex; align-items: center;
+    justify-content: center; color: #8a8274; font-size: .8em;
+    text-align: center; padding: .5em; height: auto;
+    min-height: 3em; }
+  /* pittacium SUPER mappam, more paginae eventuum */
+  .mappa-pittacium { position: absolute; z-index: 500; left: 50%;
+    top: 50%; transform: translate(.9em, -.7em); font-weight: 700;
+    font-style: italic; font-size: 1.05em; color: #1b1b1b;
+    text-shadow: 0 0 4px #fff, 0 0 8px #fff; pointer-events: none; }
+  /* ---- ordo temporum ---- */
+  /* spina cum margine: exemplar paginae eventuum */
+  #tempora-index { border-left: 2px solid #453d2f;
+    margin-left: 4.2em; }
+  .tempus-ordo { display: flex; align-items: flex-start;
+    gap: 1em; margin: 1.6em 0; }
+  .tempus-annus { flex: 0 0 auto; width: 5.2em;
+    margin-left: -5.6em; text-align: right; padding-top: .1em; }
+  .tempus-numerus { font-size: 1.9em; font-weight: 700;
+    color: #6b6357; letter-spacing: -.02em; }
+  .tempus-aera { font-size: .8em; color: #6b6357;
+    margin-left: .25em; }
+  .tempus-intus { flex: 1 1 auto; min-width: 0; background: #171512;
+    border: 1px solid #453d2f; border-radius: 4px;
+    padding: .7em .9em; box-sizing: border-box; }
+  .tempus-via { margin-top: .45em; font-size: .78em;
+    color: #6b6357; cursor: pointer; }
+  .tempus-via:hover { color: #9fb87a; }
+  @media (max-width: 700px) {
+    #tempora-index { margin-left: 0; border-left: none; }
+    .tempus-ordo { flex-direction: column; gap: .2em; }
+    .tempus-annus { width: auto; margin-left: 0; text-align: left; }
+  }
   /* imago tergalis: angulus quietus (opacitas surgit sub mure) */
   #tergale-domus { position: fixed; right: .4em; bottom: .3em;
     z-index: 60; opacity: .3; }
@@ -621,7 +657,10 @@
     <div id="liber-meta" class="charta"></div>
     <div class="caput-actionum">
       <span id="capitula-numerus" class="tempus"></span>
-      <button id="capitula-inserere" class="parva">capitula inserere</button>
+      <span>
+        <button id="liber-tempora" class="parva">ordo temporum</button>
+        <button id="capitula-inserere" class="parva">capitula inserere</button>
+      </span>
     </div>
     <div id="liber-capitula"></div>
     <div id="vacuum-capitulorum" hidden>
@@ -632,7 +671,10 @@
   <div id="libri-capitulum-domus" hidden>
     <div id="barra-superior">
       <a class="retro" id="capitulum-retro">&larr; liber</a>
-      <span id="capitulum-liber" class="tempus"></span>
+      <span>
+        <span id="capitulum-liber" class="tempus"></span>
+        <a class="retro" id="capitulum-tempora">ordo temporum</a>
+      </span>
     </div>
     <h2 id="capitulum-titulus"></h2>
     <div id="capitulum-feed"></div>
@@ -651,6 +693,19 @@
           </span>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div id="libri-tempora-domus" hidden>
+    <div id="barra-superior">
+      <a class="retro" id="tempora-retro">&larr; retro</a>
+      <span id="tempora-numerus" class="tempus"></span>
+    </div>
+    <h2 id="tempora-titulus"></h2>
+    <div id="tempora-index"></div>
+    <div id="vacuum-temporum" hidden>
+      nulla nota annum fert - eventus, personae, societates,
+      scripta et inventa annos ferunt
     </div>
   </div>
 
@@ -1703,6 +1758,135 @@ function numerus_romanus_legere(s) {
     }
   }
   return summa;
+}
+
+/* ---- coordinatae: "52.4862, -1.8904" -> [lat, lon] ----
+ *
+ * STRICTAE more paginationis et inscriptionis: coordinata prava
+ * mappam LOCI ALIENI pingeret, quod peius est quam mappa nulla -
+ * lector mappam credit. Ergo forma sola accipitur quam tabula
+ * geographica reddit, et quidquid aliud NIHIL reddit (mappa
+ * omittitur, textus manet). */
+function coordinatas_legere(s) {
+  var partes, lat, lon;
+  if (typeof s !== 'string') { return null; }
+  partes = s.split(',');
+  if (partes.length !== 2) { return null; }
+  if (!/^\s*-?\d+(\.\d+)?\s*$/.test(partes[0])
+      || !/^\s*-?\d+(\.\d+)?\s*$/.test(partes[1])) {
+    return null;
+  }
+  lat = parseFloat(partes[0]);
+  lon = parseFloat(partes[1]);
+  if (!isFinite(lat) || !isFinite(lon)) { return null; }
+  if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+    return null;
+  }
+  return [lat, lon];
+}
+
+/* ---- mappa: exemplar paginae eventuum (franarant.com/events) ----
+ *
+ * Leaflet ex CDN cum SRI (integritas exemplar BYTORUM figit, ergo
+ * quaestio catenae subministrationis iam ibi soluta est). Mensuratum
+ * 2026-08-02 in WKWebView vero ex origine capsula://: scriptum, CSS,
+ * tessella, fetch - omnia ONERANTUR.
+ *
+ * MAPPA NON EST INSTRUMENTUM sed IMAGO: trahere, zoom, boxZoom
+ * omnia clausa, zoom per maxZoom==minZoom fixum. Ita mappa in feed
+ * rotam muris non rapit et zoom ab AUCTORE electus manet (diluvium
+ * III, urbs V - detail paginae Franis).
+ *
+ * ONUS PIGRUM per IntersectionObserver: capitulum XL notas ferre
+ * potest, et XL instantiae Leaflet simul natae fenestram
+ * strangularent. Idem quod pagina eventuum facit propter CCXIII. */
+/* SRI ex pagina Franis SUMPTA et contra CDN VERIFICATA
+   (2026-08-02: summa computata exemplari congruit byte pro byte).
+   Exemplar aliud = scriptum RECUSATUR, non tacite substituitur. */
+var LEAFLET_JS = 'https://unpkg.com/leaflet@1.8.0/dist/leaflet.js';
+var LEAFLET_JS_SRI = 'sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieI'
+  + 'WkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==';
+var LEAFLET_CSS = 'https://unpkg.com/leaflet@1.8.0/dist/leaflet.css';
+var LEAFLET_CSS_SRI = 'sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A'
+  + '4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==';
+var leaflet_onus = null;   /* promissum unicum */
+
+function leaflet_onerare() {
+  if (leaflet_onus) { return leaflet_onus; }
+  leaflet_onus = new Promise(function (solve, reice) {
+    var css, js;
+    if (typeof L !== 'undefined') { solve(); return; }
+    css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = LEAFLET_CSS;
+    css.integrity = LEAFLET_CSS_SRI;
+    css.crossOrigin = '';
+    document.head.appendChild(css);
+    js = document.createElement('script');
+    js.src = LEAFLET_JS;
+    js.integrity = LEAFLET_JS_SRI;
+    js.crossOrigin = '';
+    js.onload = function () { solve(); };
+    /* DEFECTUS NON TACET: sine rete mappa abest, et area vacua
+       'nulla coordinata' mentiretur */
+    js.onerror = function () { reice(new Error('leaflet non oneratum')); };
+    document.head.appendChild(js);
+  });
+  return leaflet_onus;
+}
+
+/* Elementum mappae reddere; onus differtur donec in conspectum
+   veniat. Redde NIHIL si coordinatae parsari nequeunt. */
+function mappam_facere(coordinatae, zoom, titulus) {
+  var cd = coordinatas_legere(coordinatae);
+  var domus, intus, pittacium;
+  if (!cd) { return null; }
+  domus = document.createElement('div');
+  domus.className = 'mappa';
+  intus = document.createElement('div');
+  intus.className = 'mappa-intus';
+  domus.appendChild(intus);
+  if (titulus) {
+    pittacium = document.createElement('div');
+    pittacium.className = 'mappa-pittacium';
+    pittacium.textContent = titulus;
+    domus.appendChild(pittacium);
+  }
+  cum_conspecta(intus, function (el) {
+    leaflet_onerare().then(function () {
+      var z = (typeof zoom === 'number' && zoom > 0) ? zoom : 4;
+      var m = L.map(el, { center: cd, zoom: z, zoomControl: false,
+        dragging: false, boxZoom: false, scrollWheelZoom: false,
+        doubleClickZoom: false, keyboard: false,
+        attributionControl: true });
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        { maxZoom: z, minZoom: z, attribution: '© OpenStreetMap' })
+        .addTo(m);
+      L.marker(cd).addTo(m);
+    }).catch(function () {
+      el.className = 'mappa-intus mappa-fracta';
+      el.textContent = 'mappa non onerata (rete abest?) · '
+        + coordinatae;
+    });
+  });
+  return domus;
+}
+
+/* IntersectionObserver: idem quod pagina eventuum 'onVisible'
+   vocat. Observator se ipsum solvit post primam visionem. */
+function cum_conspecta(elementum, agere) {
+  if (typeof IntersectionObserver !== 'function') {
+    agere(elementum);
+    return;
+  }
+  new IntersectionObserver(function (ingressus, observator) {
+    ingressus.forEach(function (i) {
+      if (i.intersectionRatio > 0) {
+        agere(elementum);
+        observator.disconnect();
+      }
+    });
+  }).observe(elementum);
 }
 
 var PAGINATIO_BANDA = 1000000;
@@ -3819,9 +4003,12 @@ function libri_vertere(sub) {
   document.getElementById('libri-insere-domus').hidden = sub !== 'insere';
   document.getElementById('libri-capitulum-domus').hidden =
     sub !== 'capitulum';
+  document.getElementById('libri-tempora-domus').hidden =
+    sub !== 'tempora';
   erroris.textContent = '';
   ultima = {};
-  if (sub === 'index' || sub === 'liber' || sub === 'capitulum') {
+  if (sub === 'index' || sub === 'liber' || sub === 'capitulum'
+      || sub === 'tempora') {
     anquirere();
   }
 }
@@ -3936,7 +4123,29 @@ function libri_genera_curare() {
       { clavis: 'scriptum', monstrans: 'Scriptum', typus: 'relatio',
         ad: 'book', cardinalitas: 'unum' },
       { clavis: 'inventum', monstrans: 'Inventum', typus: 'relatio',
-        ad: 'inventum', cardinalitas: 'unum' }
+        ad: 'inventum', cardinalitas: 'unum' },
+      /* LIBER quoque, non capitulum solum: ordo temporum LIBRI
+         omnes notas trans capitula poscit, et sine hoc lectio una
+         per capitulum fieret (XLII pro Lunar Men, bis per
+         secundum). Denormalizatio consulta - capitulum librum
+         numquam mutat, ergo divergere nequit. */
+      { clavis: 'liber', monstrans: 'Liber', typus: 'relatio',
+        ad: 'book', cardinalitas: 'unum' }
+    ]);
+    /* EVENTUS ad LOCUM monstrat: pagina eventuum Franis annum,
+       locum, descriptionem in ORDINE UNO fert, et CCXIII ordines
+       eius id probant. Nos ea normalizamus - Birmingham ens unum
+       est - sed coniunctio manere debet, aliter ordo temporum
+       mappas monstrare non potest. */
+    aequare('eventus', [
+      { clavis: 'locus', monstrans: 'Locus', typus: 'relatio',
+        ad: 'locus', cardinalitas: 'unum' }
+    ]);
+    /* ZOOM in loco: detail auctoris ex pagina eventuum (diluvium
+       zoom III, urbs V) - mappa sine eo aut nimis lata aut nimis
+       arta stat */
+    aequare('locus', [
+      { clavis: 'zoom', monstrans: 'Zoom', typus: 'numerus' }
     ]);
     condere('person', 'Person', {
       clavis: 'person', titulus_monstrans: 'Person',
@@ -4004,7 +4213,8 @@ function libri_genera_curare() {
         { clavis: 'titulus_loci', monstrans: 'Nomen',
           typus: 'textus' },
         { clavis: 'coordinatae', monstrans: 'Coordinatae',
-          typus: 'textus' }
+          typus: 'textus' },
+        { clavis: 'zoom', monstrans: 'Zoom', typus: 'numerus' }
       ],
       campus_tituli: 'titulus_loci',
       ordo_ordinarius: { campus: 'titulus_loci',
@@ -4016,7 +4226,9 @@ function libri_genera_curare() {
       campi: [
         { clavis: 'descriptio', monstrans: 'Descriptio',
           typus: 'textus' },
-        { clavis: 'annus', monstrans: 'Annus', typus: 'annus' }
+        { clavis: 'annus', monstrans: 'Annus', typus: 'annus' },
+        { clavis: 'locus', monstrans: 'Locus', typus: 'relatio',
+          ad: 'locus', cardinalitas: 'unum' }
       ],
       campus_tituli: 'descriptio',
       ordo_ordinarius: { campus: 'annus', directio: 'ascendens' },
@@ -4100,7 +4312,9 @@ function libri_genera_curare() {
         { clavis: 'scriptum', monstrans: 'Scriptum',
           typus: 'relatio', ad: 'book', cardinalitas: 'unum' },
         { clavis: 'inventum', monstrans: 'Inventum',
-          typus: 'relatio', ad: 'inventum', cardinalitas: 'unum' }
+          typus: 'relatio', ad: 'inventum', cardinalitas: 'unum' },
+        { clavis: 'liber', monstrans: 'Liber', typus: 'relatio',
+          ad: 'book', cardinalitas: 'unum' }
       ],
       campus_tituli: 'textus',
       descriptio: 'Nota lectionis in capitulo. Species dicit quid'
@@ -4399,6 +4613,7 @@ var ADNOT_SPECIES = [
     textus_label: 'verba citata' },
   { clavis: 'persona', monstrans: 'persona', textus_label: 'nota',
     ens: 'person', campus_nexus: 'persona', campus_tituli: 'name',
+    campus_anni: 'year_of_birth',
     campi: [
       { clavis: 'first_name', monstrans: 'praenomen',
         typus: 'textus' },
@@ -4410,6 +4625,7 @@ var ADNOT_SPECIES = [
   { clavis: 'eventus', monstrans: 'eventus', textus_label: 'nota',
     ens: 'eventus', campus_nexus: 'eventus',
     campus_tituli: 'descriptio',
+    campus_anni: 'annus', campus_loci: 'locus',
     campi: [
       { clavis: 'annus', monstrans: 'annus', typus: 'annus' },
       { clavis: 'descriptio', monstrans: 'descriptio',
@@ -4417,7 +4633,7 @@ var ADNOT_SPECIES = [
     ] },
   { clavis: 'locus', monstrans: 'locus', textus_label: 'nota',
     ens: 'locus', campus_nexus: 'locus',
-    campus_tituli: 'titulus_loci',
+    campus_tituli: 'titulus_loci', ipse_locus: true,
     campi: [
       { clavis: 'titulus_loci', monstrans: 'nomen',
         typus: 'textus' },
@@ -4441,6 +4657,7 @@ var ADNOT_SPECIES = [
   { clavis: 'societas', monstrans: 'societas', textus_label: 'nota',
     ens: 'societas', campus_nexus: 'societas',
     campus_tituli: 'titulus_societatis',
+    campus_anni: 'annus_conditus',
     campi: [
       { clavis: 'titulus_societatis', monstrans: 'nomen',
         typus: 'textus' },
@@ -4454,6 +4671,7 @@ var ADNOT_SPECIES = [
      liber_in_indice), numero monstrato ne quid lateat. */
   { clavis: 'scriptum', monstrans: 'scriptum', textus_label: 'nota',
     ens: 'book', campus_nexus: 'scriptum', campus_tituli: 'title',
+    campus_anni: 'year_published',
     valores_fixa: { owned: false },
     campi: [
       { clavis: 'title', monstrans: 'titulus', typus: 'textus' },
@@ -4465,6 +4683,7 @@ var ADNOT_SPECIES = [
   { clavis: 'inventum', monstrans: 'inventum', textus_label: 'nota',
     ens: 'inventum', campus_nexus: 'inventum',
     campus_tituli: 'descriptio',
+    campus_anni: 'annus',
     campi: [
       { clavis: 'descriptio', monstrans: 'descriptio',
         typus: 'textus' },
@@ -4564,6 +4783,51 @@ function subiectum_latus(sp, ens) {
   }
   if (sp.clavis === 'locus' && d.coordinatae) { return d.coordinatae; }
   return '';
+}
+
+/* ---- annus et locus notae: EX ENTE, non ex nota ----
+ *
+ * Nota annum non habet; SUBIECTUM eius habet (eventus annum,
+ * persona annum natalem, scriptum annum editionis). Ideo species
+ * campum nominat et hoc eum legit - species nova ORDO in tabula
+ * est, non ramus in codice.
+ *
+ * Redde NIHIL si annus abest: ordo temporum id ipsum cribrat. */
+function annus_notae(a) {
+  var sp = species_de((a.datum || {}).species);
+  var ens, v;
+  if (!sp.campus_anni || !sp.campus_nexus) { return null; }
+  ens = null;
+  nexus_de(a, sp.campus_nexus).forEach(function (n) {
+    ens = ens_mundanum(sp, n.ad);
+  });
+  v = ens && ens.datum ? ens.datum[sp.campus_anni] : null;
+  return (typeof v === 'number') ? v : null;
+}
+
+/* Locus notae: aut ens ipsum locus est (species locus), aut
+   subiectum ad locum monstrat (eventus -> locus). Redde
+   {coordinatae, zoom, titulus} aut NIHIL. */
+function locus_notae(a) {
+  var sp = species_de((a.datum || {}).species);
+  var ens = null;
+  var loc = null;
+  if (!sp.campus_nexus) { return null; }
+  nexus_de(a, sp.campus_nexus).forEach(function (n) {
+    ens = ens_mundanum(sp, n.ad);
+  });
+  if (!ens) { return null; }
+  if (sp.ipse_locus) {
+    loc = ens;
+  } else if (sp.campus_loci) {
+    nexus_de(ens, sp.campus_loci).forEach(function (n) {
+      loc = ens_mundanum(species_de('locus'), n.ad);
+    });
+  }
+  if (!loc || !loc.datum || !loc.datum.coordinatae) { return null; }
+  return { coordinatae: loc.datum.coordinatae,
+    zoom: loc.datum.zoom,
+    titulus: loc.datum.titulus_loci || loc.titulus || '' };
 }
 
 /* Corpus subiecti: quod in charta ipsa legi debet, non in
@@ -4720,6 +4984,13 @@ function elementum_adnotationis(a) {
     dfn.className = 'definitio-a';
     dfn.textContent = corpus_subiecti;
     ordo.appendChild(dfn);
+  }
+  /* mappa: locus ipse, aut eventus qui ad locum monstrat */
+  {
+    var loc = locus_notae(a);
+    var mp = loc ? mappam_facere(loc.coordinatae, loc.zoom,
+      loc.titulus) : null;
+    if (mp) { ordo.appendChild(mp); }
   }
   if (campi_subiecti.length) {
     var cmp = document.createElement('div');
@@ -5060,6 +5331,14 @@ function adnot_creare(sp, valores, textus, pagina) {
     var id = r.res_id;
     var post = instrumentum('gerere', { res: id, actus: 'nexus',
       verbum: 'capitulum', alterum: cap_ens.res_id });
+    /* LIBER quoque: ordo temporum libri lectionem UNAM sic petit,
+       non unam per capitulum (XLII pro Lunar Men) */
+    if (liber_ens) {
+      post = post.then(function () {
+        return instrumentum('gerere', { res: id, actus: 'nexus',
+          verbum: 'liber', alterum: liber_ens.res_id });
+      });
+    }
     if (sp.campus_nexus && subiectum) {
       post = post.then(function () {
         return instrumentum('gerere', { res: id, actus: 'nexus',
@@ -5136,6 +5415,131 @@ document.getElementById('capitulum-retro').onclick = function () {
   cap_ens = null;
   adnot_omittere();
   libri_vertere('liber');
+};
+
+/* ==================================================
+ * ORDO TEMPORUM - notae annum ferentes, chronologice
+ *
+ * Exemplar: pagina eventuum Franis (franarant.com/events) - annus
+ * in margine sinistro contra spinam, contentum ad dextram.
+ *
+ * ANNUS EX ENTE VENIT, non ex nota: eventus annum fert, persona
+ * annum natalem, scriptum annum editionis. Notae sine anno
+ * (nota, citatio, terminus, quaestio) simpliciter absunt - hoc
+ * cribrum est quod Fran petivit, et ex forma generum GRATIS venit.
+ * ================================================== */
+
+var tempora_scopus = null;   /* {genus:'liber'|'capitulum', ens} */
+var tempora_notae  = [];
+
+function tempora_aperire(genus, ens) {
+  tempora_scopus = { genus: genus, ens: ens };
+  tempora_notae = [];
+  libri_vertere('tempora');
+  reddere_tempora();
+}
+
+function reddere_tempora() {
+  var index = document.getElementById('tempora-index');
+  var e = tempora_scopus ? tempora_scopus.ens : null;
+  var d = (e && e.datum) || {};
+  document.getElementById('tempora-titulus').textContent =
+    (tempora_scopus && tempora_scopus.genus === 'capitulum')
+      ? ((d.inscriptio ? d.inscriptio + '. ' : '')
+         + (d.titulus_capituli || (e && e.titulus) || ''))
+      : ((e && e.titulus) || '');
+  index.innerHTML = '';
+  tempora_notae.forEach(function (o) {
+    index.appendChild(elementum_temporis(o));
+  });
+  document.getElementById('vacuum-temporum').hidden =
+    tempora_notae.length > 0;
+  document.getElementById('tempora-numerus').textContent =
+    tempora_notae.length
+      ? (tempora_notae.length + ' notae annum ferentes') : '';
+}
+
+/* Ordo unus: annus in margine (more paginae eventuum: numerus
+   magnus, aera minor), contentum ad dextram. */
+function elementum_temporis(o) {
+  var a = o.nota;
+  var d = a.datum || {};
+  var sp = species_de(d.species);
+  var ordo = document.createElement('div');
+  var margo = document.createElement('div');
+  var intus = document.createElement('div');
+  var numerus = document.createElement('span');
+  var aera = document.createElement('span');
+
+  ordo.className = 'tempus-ordo';
+  margo.className = 'tempus-annus';
+  numerus.className = 'tempus-numerus';
+  numerus.textContent = String(o.annus < 0 ? -o.annus : o.annus);
+  aera.className = 'tempus-aera';
+  aera.textContent = o.annus < 0 ? 'a.C.n.' : 'A.D.';
+  margo.appendChild(numerus);
+  margo.appendChild(aera);
+  intus.className = 'tempus-intus';
+
+  {
+    var caput = document.createElement('div');
+    var sig = document.createElement('span');
+    sig.className = 'species-a';
+    sig.textContent = sp.monstrans;
+    caput.appendChild(sig);
+    nexus_de(a, sp.campus_nexus).forEach(function (n) {
+      var s = document.createElement('span');
+      s.className = 'subiectum-a';
+      s.textContent = '  ' + (n.ad_titulus || '[deletum]');
+      s.onclick = function () { ens_aperire_per_genus(sp.ens, n.ad); };
+      caput.appendChild(s);
+    });
+    intus.appendChild(caput);
+  }
+  {
+    var loc = locus_notae(a);
+    var mp = loc ? mappam_facere(loc.coordinatae, loc.zoom,
+      loc.titulus) : null;
+    if (mp) { intus.appendChild(mp); }
+  }
+  if (d.textus) {
+    var t = document.createElement('div');
+    t.className = 'textus-a';
+    t.textContent = d.textus;
+    intus.appendChild(t);
+  }
+  /* unde venit: in ordine LIBRI capitulum nominare oportet,
+     aliter nota sine sede stat */
+  if (o.capitulum) {
+    var via = document.createElement('div');
+    via.className = 'tempus-via';
+    via.textContent = o.capitulum;
+    via.onclick = function () {
+      if (o.capitulum_ens) { capitulum_aperire(o.capitulum_ens); }
+    };
+    intus.appendChild(via);
+  }
+  ordo.appendChild(margo);
+  ordo.appendChild(intus);
+  return ordo;
+}
+
+document.getElementById('liber-tempora').onclick = function () {
+  if (liber_ens) { tempora_aperire('liber', liber_ens); }
+};
+document.getElementById('capitulum-tempora').onclick = function () {
+  if (cap_ens) { tempora_aperire('capitulum', cap_ens); }
+};
+document.getElementById('tempora-retro').onclick = function () {
+  var s = tempora_scopus;
+  tempora_scopus = null;
+  if (s && s.genus === 'capitulum') {
+    cap_ens = s.ens;
+    libri_vertere('capitulum');
+    reddere_capitulum();
+  } else {
+    libri_vertere('liber');
+  }
 };
 
 /* ---- delegatio ad formam genericam ---- */
@@ -5216,6 +5620,60 @@ function anquirere() {
   /* libri: insertio indicis exempta (praevisio viva clobberaretur) */
   if (visus === 'libri' && libri_visus === 'insere') { return; }
   if (arca_activa()) { return; }
+  if (visus === 'libri' && libri_visus === 'tempora') {
+    if (!tempora_scopus) { return; }
+    var sc = tempora_scopus;
+    var verbum = (sc.genus === 'capitulum') ? 'capitulum' : 'liber';
+    Promise.all([
+      legere('adnotatio', { quantum: String(CAP_TECTUM),
+        nexus_verbum: verbum, nexus_ad: sc.ens.res_id })
+        .catch(function () { return []; }),
+      sc.genus === 'liber'
+        ? legere('capitulum', { quantum: String(CAP_TECTUM),
+            nexus_verbum: 'liber', nexus_ad: sc.ens.res_id })
+            .catch(function () { return []; })
+        : Promise.resolve([])])
+      .then(function (r) {
+        var vivae = r[0].filter(function (a) { return !tumulus_est(a); });
+        var per_cap = {};
+        r[1].forEach(function (c) { per_cap[c.res_id] = c; });
+        /* entia mundana ONERANDA ante annos: annus in ente vivit,
+           ergo sine copia ordo VACUUS appareret - quod 'nullae
+           notae annum ferunt' mentiretur */
+        var opus = [];
+        vivae.forEach(function (a) {
+          var sp = species_de((a.datum || {}).species);
+          if (sp.ens && !adnot_scopi[sp.ens]) { opus.push(sp.ens); }
+        });
+        if (!adnot_scopi['locus']) { opus.push('locus'); }
+        return mundana_onerare(opus).then(function () {
+          var ordines = [];
+          vivae.forEach(function (a) {
+            var annus = annus_notae(a);
+            var cap_id = null;
+            if (annus === null) { return; }
+            nexus_de(a, 'capitulum').forEach(function (n) {
+              cap_id = n.ad;
+            });
+            ordines.push({ nota: a, annus: annus,
+              capitulum_ens: per_cap[cap_id] || null,
+              capitulum: (sc.genus === 'liber' && per_cap[cap_id])
+                ? per_cap[cap_id].titulus : null });
+          });
+          ordines.sort(function (x, y) { return x.annus - y.annus; });
+          var series = JSON.stringify(ordines.map(function (o) {
+            return [o.nota.res_id, o.annus]; })) + '|' + sc.ens.res_id;
+          erroris.textContent = '';
+          if (series !== ultima.tempora) {
+            ultima.tempora = series;
+            tempora_notae = ordines;
+            reddere_tempora();
+          }
+        });
+      })
+      .catch(function (c) { culpam_ostendere(c, 'defectus lectionis'); });
+    return;
+  }
   if (visus === 'libri' && libri_visus === 'capitulum') {
     if (!cap_ens) { return; }
     legere('adnotatio', { quantum: String(CAP_TECTUM),
