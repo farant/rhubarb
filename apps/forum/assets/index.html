@@ -4145,8 +4145,8 @@ function libri_genera_curare() {
     aequare('adnotatio', [
       { clavis: 'species', monstrans: 'Species', typus: 'electio',
         optiones: ['nota', 'citatio', 'persona', 'eventus', 'locus',
-          'terminus', 'societas', 'scriptum', 'inventum',
-          'erratum', 'quaestio'] },
+          'terminus', 'societas', 'periodicum', 'scriptum',
+          'inventum', 'erratum', 'quaestio'] },
       { clavis: 'responsum', monstrans: 'Responsum', typus: 'area' },
       /* RETYPATIO numerus -> pagina. Additiva-sola est lex generum,
          sed hic superset substituit: typus 'pagina' integros QUOQUE
@@ -4163,6 +4163,9 @@ function libri_genera_curare() {
         ad: 'book', cardinalitas: 'unum' },
       { clavis: 'inventum', monstrans: 'Inventum', typus: 'relatio',
         ad: 'inventum', cardinalitas: 'unum' },
+      { clavis: 'periodicum', monstrans: 'Periodicum',
+        typus: 'relatio', ad: 'periodicum',
+        cardinalitas: 'unum' },
       /* LIBER quoque, non capitulum solum: ordo temporum LIBRI
          omnes notas trans capitula poscit, et sine hoc lectio una
          per capitulum fieret (XLII pro Lunar Men, bis per
@@ -4317,6 +4320,23 @@ function libri_genera_curare() {
         directio: 'ascendens' },
       descriptio: 'Societas, collegium, officina - inter libros'
         + ' communis (e.g. Societas Lunaris).' });
+    condere('periodicum', 'Periodicum', {
+      clavis: 'periodicum', titulus_monstrans: 'Periodicum',
+      campi: [
+        { clavis: 'titulus_periodici', monstrans: 'Titulus',
+          typus: 'textus' },
+        { clavis: 'annus_conditus', monstrans: 'Annus conditus',
+          typus: 'annus' },
+        { clavis: 'locus', monstrans: 'Locus', typus: 'relatio',
+          ad: 'locus', cardinalitas: 'unum' }
+      ],
+      campus_tituli: 'titulus_periodici',
+      ordo_ordinarius: { campus: 'titulus_periodici',
+        directio: 'ascendens' },
+      descriptio: 'Periodicum - acta diurna, commentarii menstrui,'
+        + ' ephemerides (The Tatler, Washington Post, Byte).'
+        + ' Inter libros commune: idem periodicum multos libros'
+        + ' tangit.' });
     condere('inventum', 'Inventum', {
       clavis: 'inventum', titulus_monstrans: 'Inventum',
       campi: [
@@ -4347,8 +4367,8 @@ function libri_genera_curare() {
           typus: 'relatio', ad: 'capitulum', cardinalitas: 'unum' },
         { clavis: 'species', monstrans: 'Species', typus: 'electio',
           optiones: ['nota', 'citatio', 'persona', 'eventus',
-            'locus', 'terminus', 'societas', 'scriptum', 'inventum',
-            'erratum', 'quaestio'] },
+            'locus', 'terminus', 'societas', 'periodicum',
+            'scriptum', 'inventum', 'erratum', 'quaestio'] },
         { clavis: 'textus', monstrans: 'Textus', typus: 'area' },
         { clavis: 'pagina', monstrans: 'Pagina', typus: 'pagina' },
         { clavis: 'responsum', monstrans: 'Responsum',
@@ -4367,6 +4387,9 @@ function libri_genera_curare() {
           typus: 'relatio', ad: 'book', cardinalitas: 'unum' },
         { clavis: 'inventum', monstrans: 'Inventum',
           typus: 'relatio', ad: 'inventum', cardinalitas: 'unum' },
+        { clavis: 'periodicum', monstrans: 'Periodicum',
+          typus: 'relatio', ad: 'periodicum',
+          cardinalitas: 'unum' },
         { clavis: 'liber', monstrans: 'Liber', typus: 'relatio',
           ad: 'book', cardinalitas: 'unum' }
       ],
@@ -4749,6 +4772,24 @@ var ADNOT_SPECIES = [
         typus: 'textus' },
       { clavis: 'annus_conditus', monstrans: 'annus conditus',
         typus: 'annus' }
+    ] },
+  /* PERIODICUM more societatis: res instituta cum anno condito.
+     Inter libros communis - The Tatler in libro de saeculo XVIII
+     idem est quod in libro de Swift. */
+  { clavis: 'periodicum', monstrans: 'periodicum',
+    textus_label: 'nota', ens: 'periodicum',
+    campus_nexus: 'periodicum',
+    campus_tituli: 'titulus_periodici',
+    campus_anni: 'annus_conditus',
+    phrasis_temporis: 'conditum: {}',
+    campus_loci: 'locus',
+    campi: [
+      { clavis: 'titulus_periodici', monstrans: 'titulus',
+        typus: 'textus' },
+      { clavis: 'annus_conditus', monstrans: 'annus conditus',
+        typus: 'annus' },
+      { clavis: 'locus', monstrans: 'locus editionis',
+        typus: 'relatio', ad: 'locus', cardinalitas: 'unum' }
     ] },
   /* SCRIPTUM genus 'book' ADHIBET, non proprium: opusculum hodie
      memoratum liber cras legendus fieri potest, et tunc auctor iam

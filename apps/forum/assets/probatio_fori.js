@@ -261,6 +261,17 @@ SPECIES_CLAVES.forEach(function (k) {
     aequale(species_de(k).clavis, k, "species " + k + " adest");
 });
 proba(SPECIES_CLAVES.indexOf("erratum") >= 0, "erratum adest");
+/* PERIODICUM: res instituta, more societatis */
+proba(SPECIES_CLAVES.indexOf("periodicum") >= 0, "periodicum adest");
+aequale(species_de("periodicum").ens, "periodicum",
+    "periodicum ens mundanum proprium habet (inter libros commune)");
+aequale(species_de("periodicum").campus_anni, "annus_conditus",
+    "annus periodici CONDITIO eius est");
+aequale(species_de("periodicum").campus_loci, "locus",
+    "periodicum locum editionis ferre potest");
+aequale(titulus_entis(species_de("periodicum"),
+    { titulus_periodici: "The Tatler" }), "The Tatler",
+    "titulus periodici ex campo suo");
 proba(species_de("erratum").ens === null,
     "erratum ens mundanum non habet (mendum EDITIONIS est)");
 aequale(species_de("scriptum").ens, "book",
@@ -906,13 +917,21 @@ curare_cum(defs_vetera).then(function () {
     }
 
     /* (c) IDEMPOTENTIA: definitio iam aequata nihil mutat */
-    /* mutationes OMNES reapplicare, non genera NOMINATIM: aliter
-       aequare novum (eventus, locus, ...) fixturam frangit et
-       'non idempotens' nuntiat dum codex rectus est */
+    /* Cursum PRIMUM integre replicare - mutationes ET creationes -
+       non genera NOMINATIM. Aliter quodlibet genus novum
+       ('periodicum') aut aequatio nova fixturam frangit et 'non
+       idempotens' nuntiat dum codex rectus est: probatio quae
+       rem novam prohibet quam probare deberet. */
     var defs_nova = JSON.parse(JSON.stringify(defs_vetera));
     defs_nova.forEach(function (d) {
         var m = per_res[d.res_id];
         if (m && m.campi) { d.datum.campi = m.campi; }
+    });
+    mutationes("addere").forEach(function (m) {
+        if (m.genus !== "definitio" || !m.datum) { return; }
+        var schema = JSON.parse(m.datum);
+        defs_nova.push({ res_id: "01DEF" + schema.clavis,
+            titulus: m.titulus, datum: schema });
     });
     return curare_cum(defs_nova).then(function () {
         var mut2 = mutationes("gerere").filter(function (v) {
