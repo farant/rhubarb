@@ -8,6 +8,7 @@
 
 #include "gesta.h"
 #include "json.h"
+#include "paginatio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1979,6 +1980,33 @@ _campum_iudicare (JsonValor* campus, JsonValor* v)
         si (!json_est_integer(v))
         {
             redde "integer expectatus";
+        }
+        redde NIHIL;
+    }
+    /* PAGINA: designatio, non numerus. Liber duas series fert
+     * (prooemium i-xlii, corpus 1-380), et 'xii' et '12' paginae
+     * DIVERSAE sunt - ergo integer solus eas exprimere nequit.
+     *
+     * INTEGER QUOQUE ACCIPITUR, consulto: typus 'numerus' huc
+     * migrat, et paginae iam scriptae integri sunt. Superset esse
+     * facit ut retypatio nullum orphanum pariat - aliter emendatio
+     * generis notas veteres omnes 'extra specem' signaret. */
+    si (_chorda_est(typus, "pagina"))
+    {
+        si (json_est_integer(v))
+        {
+            redde (json_ad_integer(v) > (s64)ZEPHYRUM)
+                ? NIHIL : "pagina positiva expectata";
+        }
+        si (!json_est_chorda(v))
+        {
+            redde "designatio paginae expectata (e.g. xii aut 42)";
+        }
+        si (paginatio_legere(json_ad_chorda(v)).genus
+            == PAGINATIO_NULLA)
+        {
+            redde "designatio paginae invalida"
+                " (numerus Romanus aut integer positivus)";
         }
         redde NIHIL;
     }

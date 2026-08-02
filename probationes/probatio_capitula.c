@@ -21,21 +21,6 @@ _capitulum (IndexLibri idx, i32 positio)
     redde (Capitulum*)xar_obtinere(idx.capitula, positio);
 }
 
-interior b32
-_romanus_valet (constans character* s)
-{
-    i32 valor = ZEPHYRUM;
-    redde capitula_numerus_romanus(chorda_ex_literis(s, arena), &valor);
-}
-
-interior i32
-_romanus_valor (constans character* s)
-{
-    i32 valor = ZEPHYRUM;
-    (vacuum)capitula_numerus_romanus(chorda_ex_literis(s, arena), &valor);
-    redde valor;
-}
-
 s32 principale (vacuum)
 {
     b32 praeteritus;
@@ -47,49 +32,6 @@ s32 principale (vacuum)
         redde I;
     }
     credo_aperire(arena);
-
-    /* ========================================================
-     * PROBARE: numeri Romani - forma subtractiva stricta
-     * ======================================================== */
-    {
-        imprimere("\n--- Probans capitula_numerus_romanus ---\n");
-
-        CREDO_VERUM (_romanus_valet("I"));
-        CREDO_VERUM (_romanus_valet("IV"));
-        CREDO_VERUM (_romanus_valet("XIV"));
-        CREDO_VERUM (_romanus_valet("XXXIX"));
-        CREDO_VERUM (_romanus_valet("MCMXCIV"));
-        CREDO_VERUM (_romanus_valet("MMMCMXCIX"));
-
-        CREDO_AEQUALIS_I32 (_romanus_valor("I"), I);
-        CREDO_AEQUALIS_I32 (_romanus_valor("IV"), IV);
-        CREDO_AEQUALIS_I32 (_romanus_valor("XIV"), XIV);
-        CREDO_AEQUALIS_I32 (_romanus_valor("XXXIX"), XXXIX);
-        CREDO_AEQUALIS_I32 (_romanus_valor("MCMXCIV"), 1994);
-
-        /* formae illicitae */
-        CREDO_FALSUM (_romanus_valet(""));
-        CREDO_FALSUM (_romanus_valet("IIII"));   /* cursus nimius */
-        CREDO_FALSUM (_romanus_valet("VV"));     /* V bis */
-        CREDO_FALSUM (_romanus_valet("IL"));     /* par illicitum */
-        CREDO_FALSUM (_romanus_valet("IXX"));    /* post IX nihil */
-        CREDO_FALSUM (_romanus_valet("XIIX"));   /* grex crescens */
-        CREDO_FALSUM (_romanus_valet("iv"));     /* minuscula */
-        CREDO_FALSUM (_romanus_valet("A"));
-
-        /* VERBA ANGLICA ex litteris Romanis - causa ipsa regulae
-         * strictae. Omnia respui debent. */
-        CREDO_FALSUM (_romanus_valet("DID"));
-        CREDO_FALSUM (_romanus_valet("MILD"));
-        CREDO_FALSUM (_romanus_valet("CIVIC"));
-        CREDO_FALSUM (_romanus_valet("VIM"));
-        CREDO_FALSUM (_romanus_valet("DIM"));
-        CREDO_FALSUM (_romanus_valet("LIVID"));
-
-        /* MIX numerus VERUS est (1009) - superest consulto, et
-         * praevisio consumptoris eum monstrat */
-        CREDO_VERUM (_romanus_valet("MIX"));
-    }
 
     /* ========================================================
      * PROBARE: index planus, nullae inscriptiones

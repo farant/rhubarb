@@ -12,6 +12,8 @@ declare -a RADIX_FONTES=(
     "iter_directoria"
     "json"
     "moneta"
+    "numerus_romanus"
+    "paginatio"
     "piscina"
     "processus_posix"
     "scrinium"

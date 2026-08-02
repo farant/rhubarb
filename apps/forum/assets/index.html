@@ -324,6 +324,8 @@
      quam .textus-a, ne nota mea et definitio confundantur */
   .adnot-ordo .definitio-a { margin-top: .3em; white-space: pre-wrap;
     color: #a8a091; font-style: italic; }
+  /* campi entis (scriptum: auctores, annus): facta, non verba mea */
+  .adnot-ordo .campi-a { margin-top: .25em; color: #a8a091; }
   /* responsum sub quaestione recedit, more responsi in filo */
   .adnot-ordo .responsum-a { margin-top: .35em; padding-left: .8em;
     border-left: 2px solid #453d2f; white-space: pre-wrap;
@@ -1653,6 +1655,91 @@ function clavicare(s) {
     .replace(/[^a-z0-9_]/g, '');
 }
 
+/* ---- paginatio: GEMINUS lib/paginatio.c ----
+ *
+ * C ORACULUM est; hoc geminum eius est, quia ordinatio clientis
+ * latere fit et pons per valorem vocari non potest. Casus utrobique
+ * IIDEM sunt (probatio_paginatio.c / probatio_fori.js) - geminus
+ * sine casibus communibus divergit tacite.
+ *
+ * Liber duas series fert: prooemium (i, ii, ... xlii) et corpus
+ * (1, 2, ... 380). 'xii' et '12' paginae DIVERSAE sunt. */
+var ROMANA_EXEMPLAR = /^(?:[ivxlcdm]+|[IVXLCDM]+)$/;
+var ROMANA_VALORES = { i: 1, v: 5, x: 10, l: 50, c: 100, d: 500,
+  m: 1000 };
+
+function numerus_romanus_legere(s) {
+  var t, i, v, w, summa = 0, limes = 1001, numerus;
+  if (typeof s !== 'string' || !ROMANA_EXEMPLAR.test(s)) {
+    return null;   /* casus MIXTUS quoque hic cadit */
+  }
+  t = s.toLowerCase();
+  i = 0;
+  while (i < t.length) {
+    v = ROMANA_VALORES[t.charAt(i)];
+    w = (i + 1 < t.length) ? ROMANA_VALORES[t.charAt(i + 1)] : 0;
+    if (w > v) {
+      /* coniunctiones subtractivae licitae: iv ix xl xc cd cm */
+      if (!((v === 1 && (w === 5 || w === 10))
+            || (v === 10 && (w === 50 || w === 100))
+            || (v === 100 && (w === 500 || w === 1000)))) {
+        return null;
+      }
+      if (v >= limes) { return null; }
+      summa += w - v;
+      limes = v;
+      i += 2;
+    } else {
+      numerus = 1;
+      while (i + numerus < t.length
+             && t.charAt(i + numerus) === t.charAt(i)) { numerus++; }
+      if (v >= limes || numerus > 3) { return null; }
+      if (numerus > 1 && (v === 5 || v === 50 || v === 500)) {
+        return null;
+      }
+      summa += v * numerus;
+      limes = v;
+      i += numerus;
+    }
+  }
+  return summa;
+}
+
+var PAGINATIO_BANDA = 1000000;
+
+/* {genus: 'romana'|'arabica'|null, valor} */
+function paginatio_legere(v) {
+  var s, n;
+  if (typeof v === 'number') {
+    return (isFinite(v) && v > 0 && Math.floor(v) === v)
+      ? { genus: 'arabica', valor: v } : { genus: null, valor: 0 };
+  }
+  if (typeof v !== 'string') { return { genus: null, valor: 0 }; }
+  s = v.replace(/^[ \t]+|[ \t]+$/g, '');
+  if (!s) { return { genus: null, valor: 0 }; }
+  if (/^[0-9]+$/.test(s)) {
+    n = parseInt(s, 10);
+    return n > 0 ? { genus: 'arabica', valor: n }
+                 : { genus: null, valor: 0 };
+  }
+  n = numerus_romanus_legere(s);
+  return (n === null) ? { genus: null, valor: 0 }
+                      : { genus: 'romana', valor: n };
+}
+
+/* Romanae ANTE Arabicas; nulla ULTIMA (nota sine pagina ordinem
+   notarum paginatarum non interrumpat) */
+function paginatio_clavis(v) {
+  var p = paginatio_legere(v);
+  if (p.genus === 'romana') { return p.valor; }
+  if (p.genus === 'arabica') { return PAGINATIO_BANDA + p.valor; }
+  return PAGINATIO_BANDA * 2;
+}
+
+function paginatio_valet(v) {
+  return paginatio_legere(v).genus !== null;
+}
+
 function annus_monstrare(v) {
   if (v === null || v === undefined || v === '') { return ''; }
   return v < 0 ? (-v) + ' a.C.n.' : String(v);
@@ -1839,8 +1926,8 @@ function creator_ordinem_addere(campo) {
   var monstrans = document.createElement('input');
   monstrans.placeholder = 'campus (e.g. Annus editionis)';
   var typus = document.createElement('select');
-  ['textus', 'area', 'dies', 'annus', 'numerus', 'veritas',
-   'electio', 'relatio']
+  ['textus', 'area', 'dies', 'annus', 'numerus', 'pagina',
+   'veritas', 'electio', 'relatio']
     .forEach(function (t) {
       var op = document.createElement('option');
       op.value = t; op.textContent = t;
@@ -2088,6 +2175,7 @@ function claves_ordinationis(e, col) {
   if (col.typus === 'annus' || col.typus === 'numerus') {
     return (typeof v === 'number') ? v : Infinity;
   }
+  if (col.typus === 'pagina') { return paginatio_clavis(v); }
   if (col.typus === 'veritas') {
     return v === true ? 2 : (v === false ? 1 : 0);
   }
@@ -2563,6 +2651,9 @@ function forma_aperire(ens) {
         lat = document.createElement('input');
         if (c.typus === 'dies') { lat.placeholder = 'MMDCCLXXVI-07-04 => 1776-07-04'; }
         if (c.typus === 'annus') { lat.placeholder = 'negativus = a.C.n. (-753)'; }
+        if (c.typus === 'pagina') {
+          lat.placeholder = 'xii (prooemium) aut 42 (corpus)';
+        }
       }
       var v = ens && ens.datum ? ens.datum[c.clavis] : undefined;
       if (c.typus === 'veritas') { lat.checked = v === true; }
@@ -2615,6 +2706,15 @@ document.getElementById('forma-servare').onclick = function () {
         return;
       }
       datum[c.clavis] = n;
+    } else if (c.typus === 'pagina') {
+      /* CHORDA servatur, non numerus: 'xii' et '12' paginae diversae
+         sunt, et forma AUCTORIS servanda est - 'xii' non 'XII' */
+      if (!paginatio_valet(v)) {
+        pravum = (c.monstrans || c.clavis)
+          + ': numerus Romanus (xii) aut integer positivus (42)';
+        return;
+      }
+      datum[c.clavis] = v.trim();
     } else {
       datum[c.clavis] = v;
     }
@@ -3787,6 +3887,14 @@ function libri_genera_curare() {
             mutatum = true;
           }
         });
+        /* retypatio SOLUM cum petita: campus vocator affirmat typum
+           novum veterem CONTINERE (superset), ergo valores scripti
+           valent et nihil orphanum fit. Sine vexillo hoc silentium
+           esset in quo aequatio typos mutaret. */
+        if (cd.retypatio && c.typus !== cd.typus) {
+          c.typus = cd.typus;
+          mutatum = true;
+        }
       });
       if (!mutatum) { return; }
       catena = catena.then(function () {
@@ -3814,6 +3922,13 @@ function libri_genera_curare() {
           'terminus', 'societas', 'scriptum', 'inventum',
           'quaestio'] },
       { clavis: 'responsum', monstrans: 'Responsum', typus: 'area' },
+      /* RETYPATIO numerus -> pagina. Additiva-sola est lex generum,
+         sed hic superset substituit: typus 'pagina' integros QUOQUE
+         accipit (gesta.c), ergo paginae iam scriptae valent et
+         nullum orphanum nascitur. Retypatio explicita ne aequatio
+         typos MUTARE in genere fiat. */
+      { clavis: 'pagina', monstrans: 'Pagina', typus: 'pagina',
+        retypatio: true },
       { clavis: 'terminus', monstrans: 'Terminus', typus: 'relatio',
         ad: 'terminus', cardinalitas: 'unum' },
       { clavis: 'societas', monstrans: 'Societas', typus: 'relatio',
@@ -3969,7 +4084,7 @@ function libri_genera_curare() {
             'locus', 'terminus', 'societas', 'scriptum', 'inventum',
             'quaestio'] },
         { clavis: 'textus', monstrans: 'Textus', typus: 'area' },
-        { clavis: 'pagina', monstrans: 'Pagina', typus: 'numerus' },
+        { clavis: 'pagina', monstrans: 'Pagina', typus: 'pagina' },
         { clavis: 'responsum', monstrans: 'Responsum',
           typus: 'area' },
         { clavis: 'persona', monstrans: 'Persona', typus: 'relatio',
@@ -4451,12 +4566,50 @@ function subiectum_latus(sp, ens) {
   return '';
 }
 
-/* Corpus subiecti: quod in charta ipsa legi debet (definitio
-   termini), non in parenthesi capitis. Ex ENTE venit, non ex nota:
-   definitio termino adhaeret et in omni capitulo eadem est. */
+/* Corpus subiecti: quod in charta ipsa legi debet, non in
+   parenthesi capitis. Ex ENTE venit, non ex nota.
+
+   'campus_corporis' campum UNUM nominat qui NUDUS redditur
+   (definitio termini: titulum non meret, textus ipse est).
+   Absente eo, campi entis omnes NON-VACUI cum titulis redduntur
+   (scriptum: 'auctores: Priestley · annus editionis: 1774'). */
 function subiectum_corpus(sp, ens) {
   var d = (ens && ens.datum) || {};
   return (sp.campus_corporis && d[sp.campus_corporis]) || '';
+}
+
+/* [{monstrans, valor}] ex campis speciei, vacuis omissis.
+   OMITTUNTUR: campus tituli (in capite iam stat), veritas FALSA
+   (absentia informationis, non informatio - 'owned: non' de opere
+   memorato strepitus est), vacua et nulla. */
+function subiecti_campi(sp, ens) {
+  var d = (ens && ens.datum) || {};
+  var ordines = [];
+  if (!ens || sp.campus_corporis) { return ordines; }
+  (sp.campi || []).forEach(function (c) {
+    var v, textus;
+    if (c.clavis === sp.campus_tituli) { return; }
+    if (c.typus === 'relatio') {
+      textus = nexus_de(ens, c.clavis).map(function (n) {
+        return n.ad_titulus;
+      }).filter(function (x) { return !!x; }).join(', ');
+    } else {
+      v = d[c.clavis];
+      if (v === undefined || v === null || v === '') { return; }
+      if (typeof v === 'boolean') {
+        if (!v) { return; }
+        textus = 'ita';
+      } else if (c.typus === 'annus') {
+        textus = annus_monstrare(v);
+      } else {
+        textus = String(v);
+      }
+    }
+    if (!textus) { return; }
+    ordines.push({ monstrans: c.monstrans || c.clavis,
+      valor: textus });
+  });
+  return ordines;
 }
 
 function capitulum_aperire(c) {
@@ -4506,6 +4659,7 @@ function elementum_adnotationis(a) {
   ordo.className = 'adnot-ordo';
   var caput = document.createElement('div');
   var corpus_subiecti = '';
+  var campi_subiecti = [];
   var sig = document.createElement('span');
   sig.className = 'species-a';
   sig.textContent = sp.monstrans;
@@ -4518,6 +4672,7 @@ function elementum_adnotationis(a) {
       var latus = subiectum_latus(sp, e_mundi);
       var s = document.createElement('span');
       corpus_subiecti = subiectum_corpus(sp, e_mundi);
+      campi_subiecti = subiecti_campi(sp, e_mundi);
       s.className = 'subiectum-a';
       s.textContent = '  ' + (n.ad_titulus || '[deletum]');
       s.onclick = function () {
@@ -4565,6 +4720,18 @@ function elementum_adnotationis(a) {
     dfn.className = 'definitio-a';
     dfn.textContent = corpus_subiecti;
     ordo.appendChild(dfn);
+  }
+  if (campi_subiecti.length) {
+    var cmp = document.createElement('div');
+    cmp.className = 'campi-a';
+    campi_subiecti.forEach(function (o, i) {
+      var lab = document.createElement('span');
+      lab.className = 'tempus';
+      lab.textContent = (i ? ' · ' : '') + o.monstrans + ': ';
+      cmp.appendChild(lab);
+      cmp.appendChild(document.createTextNode(o.valor));
+    });
+    ordo.appendChild(cmp);
   }
   if (d.textus) {
     var t = document.createElement('div');
@@ -4644,6 +4811,9 @@ function adnot_campum(clavis, label, typus, valor) {
     lat = document.createElement('input');
     if (typus === 'annus') {
       lat.placeholder = 'negativus = a.C.n. (-753)';
+    }
+    if (typus === 'pagina') {
+      lat.placeholder = 'xii (prooemium) aut 42 (corpus)';
     }
   }
   lat.dataset.inter = 'verum';
@@ -4729,7 +4899,7 @@ function adnot_formam_reddere() {
     domus.appendChild(adnot_campum(c.clavis, c.monstrans, c.typus,
       d[c.clavis]));
   });
-  domus.appendChild(adnot_campum('pagina', 'pagina', 'numerus',
+  domus.appendChild(adnot_campum('pagina', 'pagina', 'pagina',
     d.pagina));
   document.getElementById('adnotatio-servare').textContent =
     adnot_editum ? 'servare' : 'addere';
@@ -4780,10 +4950,13 @@ function adnotatio_servare() {
 
   if (!cap_ens) { return; }
   if (pagina_t) {
-    pagina = parseInt(pagina_t, 10);
-    if (isNaN(pagina) || String(pagina) !== pagina_t) {
-      pravum = 'pagina: integer requiritur';
+    /* forma AUCTORIS servatur ('xii', non XII nec 12): prooemium et
+       corpus paginas homonymas ferunt, et transcriptio in integrum
+       prooemium omnino perderet */
+    if (!paginatio_valet(pagina_t)) {
+      pravum = 'pagina: numerus Romanus (xii) aut integer (42)';
     }
+    pagina = pagina_t;
   }
   sp.campi.forEach(function (c) {
     var v = adnot_valor(c.clavis);

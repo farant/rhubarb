@@ -2553,6 +2553,87 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "capitulum beta") == NIHIL);
     }
 
+    /* XV ter. TYPUS 'pagina': designatio, non numerus.
+     * Liber duas series fert (prooemium i-xlii, corpus 1-380) et
+     * 'xii' et '12' paginae DIVERSAE sunt - integer solus eas
+     * exprimere nequit. Machina hoc iudicat, ne designatio prava
+     * per MCP intret quam applicatio numquam scriberet. */
+    {
+        character imperium[PROBATIO_SEMITA_MENSURA];
+        character ens_id[GESTA_RES_ID_MENSURA];
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":840,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"definitio\","
+            "\"titulus\":\"Marginale\",\"datum\":\"{\\\"clavis\\\":"
+            "\\\"marginale\\\",\\\"campi\\\":[{\\\"clavis\\\":"
+            "\\\"nota\\\",\\\"typus\\\":\\\"textus\\\"},"
+            "{\\\"clavis\\\":\\\"pag\\\",\\\"typus\\\":"
+            "\\\"pagina\\\"}],\\\"campus_tituli\\\":\\\"nota\\\"}\""
+            "}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+
+        /* Romana minuscula: prooemium */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":841,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"marginale\","
+            "\"titulus\":\"in praefatione\",\"datum\":"
+            "\"{\\\"nota\\\":\\\"in praefatione\\\",\\\"pag\\\":"
+            "\\\"xii\\\"}\"}}}");
+        _res_id_ex_responso(r, ens_id);
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":842,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}", ens_id);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "xii") != NIHIL);
+        CREDO_VERUM (strstr(r, "invalida") == NIHIL);
+
+        /* INTEGER quoque licet: typus superset est, ergo paginae
+         * iam scriptae (numerus) valent et retypatio orphanos non
+         * parit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":843,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"marginale\","
+            "\"titulus\":\"in corpore\",\"datum\":"
+            "\"{\\\"nota\\\":\\\"in corpore\\\",\\\"pag\\\":42}\"}}}");
+        _res_id_ex_responso(r, ens_id);
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":844,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}", ens_id);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "invalida") == NIHIL);
+        CREDO_VERUM (strstr(r, "expectata") == NIHIL);
+
+        /* PRAVA nominatim recusantur - sed NOTA CUSTODIAE in ente,
+         * non in responso 'addere' (responsum successum mundum
+         * reddit; violatio in notis sepelitur). Ergo per 'res'
+         * quaerendum est, aliter probatio semper viridis esset. */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":845,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"marginale\","
+            "\"titulus\":\"prava\",\"datum\":"
+            "\"{\\\"nota\\\":\\\"prava\\\",\\\"pag\\\":"
+            "\\\"p. 12\\\"}\"}}}");
+        _res_id_ex_responso(r, ens_id);
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":8451,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}", ens_id);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "invalida") != NIHIL);
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":846,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"marginale\","
+            "\"titulus\":\"nulla\",\"datum\":"
+            "\"{\\\"nota\\\":\\\"nulla\\\",\\\"pag\\\":0}\"}}}");
+        _res_id_ex_responso(r, ens_id);
+        sprintf(imperium, "{\"jsonrpc\":\"2.0\",\"id\":8461,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"%s\"}}}", ens_id);
+        r = _mitte(t, piscina, imperium);
+        CREDO_VERUM (strstr(r, "positiva") != NIHIL);
+    }
+
     /* XVI. renovatio sui (01KYQ4T5EE): explorator praevius =
      * launcher -struere ut infans; defectus = residens vivus;
      * successus = renovandum (stdio: exec in currere; daemon:

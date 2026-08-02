@@ -1,4 +1,5 @@
 #include "capitula.h"
+#include "numerus_romanus.h"
 
 /* ====================================================================
  * CAPITULA - implementatio. Vide capitula.h de rationibus.
@@ -17,110 +18,6 @@ _cifra (i8 c)
 }
 
 /* --------------------------------------------------------------------
- * NUMERI ROMANI - forma subtractiva STRICTA
- *
- * Laxitas hic verba Anglica in inscriptiones vertit: "DID", "MILD",
- * "CIVIC" omnia ex litteris IVXLCDM constant. Regula stricta ea
- * omnia respuit quia coniunctiones subtractivae eorum illicitae sunt.
- *
- * "MIX" (= MIX) superest, et superesse debet: numerus verus est.
- * Praevisio consumptoris id monstrat; nihil tacite scribitur.
- * -------------------------------------------------------------------- */
-
-interior i32
-_valor_romanus (i8 c)
-{
-    commutatio (c)
-    {
-        casus 'I': redde I;
-        casus 'V': redde V;
-        casus 'X': redde X;
-        casus 'L': redde L;
-        casus 'C': redde C;
-        casus 'D': redde D;
-        casus 'M': redde M;
-        ordinarius: frange;
-    }
-    redde ZEPHYRUM;
-}
-
-/* coniunctiones subtractivae licitae: IV IX XL XC CD CM */
-interior b32
-_par_subtractivum (i32 minor, i32 maior)
-{
-    si (minor == I   && (maior == V || maior == X))    redde VERUM;
-    si (minor == X   && (maior == L || maior == C))    redde VERUM;
-    si (minor == C   && (maior == D || maior == M))    redde VERUM;
-    redde FALSUM;
-}
-
-b32
-capitula_numerus_romanus (chorda s, i32* valor)
-{
-    i32 i     = ZEPHYRUM;
-    i32 summa = ZEPHYRUM;
-    /* limes: character princeps gregis proximi HOC minor esse debet.
-     * Ita 'XXXIX' licet (post XXX limes X est, I princeps minor) sed
-     * 'IXX' non (post IX limes I est). */
-    i32 limes = M + I;
-
-    si (s.mensura == ZEPHYRUM || s.datum == NIHIL)
-    {
-        redde FALSUM;
-    }
-
-    dum (i < s.mensura)
-    {
-        i32 v = _valor_romanus(s.datum[i]);
-        i32 w;
-
-        si (v == ZEPHYRUM)
-        {
-            redde FALSUM;   /* character non-Romanus (aut minusculus) */
-        }
-
-        w = (i + I < s.mensura) ? _valor_romanus(s.datum[i + I])
-                                : ZEPHYRUM;
-
-        si (w > v)
-        {
-            /* grex subtractivus */
-            si (!_par_subtractivum(v, w) || v >= limes)
-            {
-                redde FALSUM;
-            }
-            summa += w - v;
-            limes  = v;
-            i     += II;
-        }
-        alioquin
-        {
-            /* grex additivus: cursus eiusdem characteris */
-            i32 numerus = I;
-
-            dum (i + numerus < s.mensura
-                && s.datum[i + numerus] == s.datum[i])
-            {
-                numerus++;
-            }
-            si (v >= limes) redde FALSUM;
-            si (numerus > III) redde FALSUM;
-            /* V L D bis stare nequeunt (VV = X scribendum) */
-            si (numerus > I && (v == V || v == L || v == D))
-            {
-                redde FALSUM;
-            }
-            summa += v * numerus;
-            limes  = v;
-            i     += numerus;
-        }
-    }
-
-    si (valor != NIHIL) *valor = summa;
-    redde VERUM;
-}
-
-/* --------------------------------------------------------------------
  * IUDICIUM INSCRIPTIONIS
  * -------------------------------------------------------------------- */
 
@@ -136,7 +33,7 @@ _inscriptio_valet (chorda s)
     {
         si (_cifra(s.datum[i])) redde VERUM;
     }
-    redde capitula_numerus_romanus(s, &ignotum);
+    redde numerus_romanus_legere(s, &ignotum);
 }
 
 /* Regula angusta (vocabulum princeps): omnia segmenta punctis divisa
@@ -163,7 +60,7 @@ _signum_valet (chorda s)
             {
                 si (!_cifra(seg.datum[k])) { cifrae = FALSUM; frange; }
             }
-            si (!cifrae && !capitula_numerus_romanus(seg, &ignotum))
+            si (!cifrae && !numerus_romanus_legere(seg, &ignotum))
             {
                 redde FALSUM;
             }

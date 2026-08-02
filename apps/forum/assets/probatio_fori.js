@@ -38,8 +38,17 @@ function nodum(tag) {
         rows: 0, checked: false
     };
     var t = "", h = "";
+    /* textContent CONCATENAT filios, ut in DOM vero. Sine hoc nodus
+     * ex spans compositus '' reddit, et adsertio 'auctores in
+     * corpore' rubet dum codex recte pingit - vitium harnesii a
+     * vitio operis indiscernibile (secunda vice hodie). Scriptio
+     * filios purgat, ergo duo numquam simul stant. */
     Object.defineProperty(e, "textContent", {
-        get: function () { return t; },
+        get: function () {
+            var s = t;
+            e.children.forEach(function (f) { s += f.textContent; });
+            return s;
+        },
         set: function (v) { t = v; e.children = []; }
     });
     Object.defineProperty(e, "innerHTML", {
@@ -277,6 +286,99 @@ aequale(subiectum_latus(species_de("nota"), { datum: {} }), "",
     "species sine latere nihil reddit");
 
 /* ================================================================
+ * III quater. PAGINATIO - GEMINUS lib/paginatio.c
+ *
+ * C oraculum est. Casus hi IIDEM sunt qui in probatio_paginatio.c
+ * stant: geminus sine casibus communibus tacite divergit, et
+ * divergentia hic = pagina in ordine falso, quod nemo videt donec
+ * index notarum absurdus fiat.
+ * ================================================================ */
+/* numeri Romani: eadem forma stricta */
+aequale(numerus_romanus_legere("xii"), 12, "romana minuscula");
+aequale(numerus_romanus_legere("XIV"), 14, "romana maiuscula");
+aequale(numerus_romanus_legere("xlii"), 42, "xlii = XLII");
+aequale(numerus_romanus_legere("MCMXCIV"), 1994, "MCMXCIV");
+aequale(numerus_romanus_legere("XXXIX"), 39, "XXXIX");
+aequale(numerus_romanus_legere("iiii"), null, "cursus nimius");
+aequale(numerus_romanus_legere("vv"), null, "v bis");
+aequale(numerus_romanus_legere("il"), null, "par illicitum");
+aequale(numerus_romanus_legere("ixx"), null, "post ix nihil");
+aequale(numerus_romanus_legere("Xii"), null, "casus MIXTUS respuitur");
+aequale(numerus_romanus_legere("did"), null, "verbum Anglicum 'did'");
+aequale(numerus_romanus_legere("mild"), null, "verbum 'mild'");
+aequale(numerus_romanus_legere("civic"), null, "verbum 'civic'");
+aequale(numerus_romanus_legere("mix"), 1009, "MIX numerus verus est");
+aequale(numerus_romanus_legere(""), null, "vacua");
+
+/* designationes */
+aequale(paginatio_legere("xii").genus, "romana", "xii romana");
+aequale(paginatio_legere("42").genus, "arabica", "42 arabica");
+aequale(paginatio_legere(" 42 ").genus, "arabica", "spatia praecisa");
+aequale(paginatio_legere(42).genus, "arabica",
+    "INTEGER acceptus (paginae iam scriptae)");
+aequale(paginatio_legere("0").genus, null, "pagina nulla non est");
+aequale(paginatio_legere("12a").genus, null, "'12a' respuitur");
+aequale(paginatio_legere("p. 12").genus, null, "'p. 12' respuitur");
+aequale(paginatio_legere("-5").genus, null, "negativa respuitur");
+aequale(paginatio_legere("").genus, null, "vacua");
+proba(paginatio_valet("xii") && paginatio_valet("42")
+    && !paginatio_valet("nugae"), "paginatio_valet congruit");
+
+/* ORDO - causa ipsa typi */
+proba(paginatio_clavis("i") < paginatio_clavis("ii"),
+    "intra Romanas numerice");
+proba(paginatio_clavis("ix") < paginatio_clavis("x"), "ix < x");
+proba(paginatio_clavis("9") < paginatio_clavis("10"),
+    "intra Arabicas NUMERICE, non lexice");
+proba(paginatio_clavis("99") < paginatio_clavis("100"), "99 < 100");
+proba(paginatio_clavis("xlii") < paginatio_clavis("1"),
+    "PROOEMIUM ANTE CORPUS (xlii < 1)");
+proba(paginatio_clavis("m") < paginatio_clavis("1"),
+    "omnis Romana ante omnem Arabicam");
+proba(paginatio_clavis("") > paginatio_clavis("380"),
+    "pagina nulla ULTIMA");
+aequale(paginatio_clavis("XII"), paginatio_clavis("xii"),
+    "casus ordinem non mutat");
+aequale(paginatio_clavis(42), paginatio_clavis("42"),
+    "integer et chorda eandem clavem dant");
+
+/* subiecti_campi: quid ex ente in corpus chartae venit.
+   Probatur per speciem SYNTHETICAM quia species verae hodie
+   campum veritatis non ferunt - adsertio contra scriptum
+   VACUA esset (mensuratum: calibratio non rubuit). */
+(function () {
+    var sp_ficta = { campus_tituli: 'nomen',
+        campi: [
+            { clavis: 'nomen', monstrans: 'Nomen', typus: 'textus' },
+            { clavis: 'annus', monstrans: 'Annus', typus: 'annus' },
+            { clavis: 'possessum', monstrans: 'Possessum',
+                typus: 'veritas' },
+            { clavis: 'nota', monstrans: 'Nota', typus: 'textus' }
+        ] };
+    function claves(ordines) {
+        return ordines.map(function (o) { return o.monstrans; });
+    }
+    var plena = subiecti_campi(sp_ficta, { datum: {
+        nomen: "X", annus: -753, possessum: true, nota: "n" } });
+    aequale(claves(plena).join(","), "Annus,Possessum,Nota",
+        "campus tituli OMITTITUR, ceteri manent");
+    aequale(plena[0].valor, "753 a.C.n.", "annus per aeram redditur");
+    aequale(plena[1].valor, "ita", "veritas VERA ut 'ita'");
+
+    var falsa = subiecti_campi(sp_ficta, { datum: {
+        nomen: "X", possessum: false, nota: "" } });
+    aequale(claves(falsa).join(","), "",
+        "veritas FALSA et chorda vacua OMITTUNTUR");
+
+    /* species cum campo corporis nudo campos titulatos NON reddit */
+    aequale(subiecti_campi(species_de("terminus"),
+        { datum: { vocabulum: "x", definitio_termini: "y" } }).length,
+        0, "campus corporis nudus campos titulatos excludit");
+    aequale(subiecti_campi(sp_ficta, null).length, 0,
+        "ens absens nihil reddit, non frangit");
+}());
+
+/* ================================================================
  * III ter. CHARTA IPSA - quid usor revera videt
  * ================================================================ */
 (function () {
@@ -322,6 +424,28 @@ aequale(subiectum_latus(species_de("nota"), { datum: {} }), "",
         "sine copia definitio omittitur");
     aequale(textus_classis(sine, "textus-a"), "nota mea",
         "sine copia nota propria manet");
+
+    /* SCRIPTUM: campi entis non-vacui in corpore, cum titulis
+       (campus tituli omittitur - in capite iam stat; veritas FALSA
+       omittitur - 'owned: non' de opere memorato strepitus est) */
+    adnot_scopi["book"] = [{ res_id: "01B", datum: {
+        titulus: "Experiments on Air", title: "Experiments on Air",
+        year_published: 1774, owned: false },
+        nexus: [{ verbum: "authors", ad: "01P",
+            ad_titulus: "Joseph Priestley" }] }];
+    var scr = elementum_adnotationis({ res_id: "01S", titulus: "s",
+        datum: { species: "scriptum", textus: "hic oxygenium",
+            pagina: "xii" },
+        nexus: [{ verbum: "scriptum", ad: "01B",
+            ad_titulus: "Experiments on Air" }] });
+    var t_campi = textus_classis(scr, "campi-a");
+    proba(t_campi.indexOf("Joseph Priestley") >= 0,
+        "auctores scripti in corpore");
+    proba(t_campi.indexOf("1774") >= 0, "annus editionis in corpore");
+    proba(t_campi.indexOf("Experiments on Air") < 0,
+        "campus TITULI omittitur (in capite stat)");
+    proba(classes(scr).indexOf("definitio-a") < 0,
+        "scriptum campum corporis nudum non habet");
 
     /* citatio uncinis cingitur; nota simplex non */
     var cit = elementum_adnotationis({ res_id: "01C", titulus: "c",

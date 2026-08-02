@@ -127,9 +127,4 @@ nomen structura
 
 IndexLibri capitula_legere (chorda fons, Piscina* piscina);
 
-/* Numerum Romanum strictum iudicare (maiusculis, forma subtractiva).
- * Publica quia probabilis est et probanda: regula quae inscriptionem
- * a titulo distinguit intra functionem privatam latere non debet. */
-b32 capitula_numerus_romanus (chorda s, i32* valor);
-
 #endif /* CAPITULA_H */
