@@ -209,6 +209,24 @@ aequale(titulus_entis(sp_persona, { last_name: "Darwin" }),
     "Darwin", "titulus personae sine praenomine");
 aequale(titulus_entis(sp_persona, { first_name: "Erasmus" }),
     "Erasmus", "titulus personae sine cognomine");
+/* NOMEN INTEGRUM: non omne nomen in duo dividitur */
+aequale(titulus_entis(sp_persona, { name: "Petrus Magnus" }),
+    "Petrus Magnus", "nomen integrum solum");
+aequale(titulus_entis(sp_persona, { name: "Aristoteles" }),
+    "Aristoteles", "nomen unicum (sine cognomine)");
+/* scriptum VINCIT derivationem - derivatio coniectura est */
+aequale(titulus_entis(sp_persona, { name: "Beda Venerabilis",
+    first_name: "Beda", last_name: "X" }), "Beda Venerabilis",
+    "nomen SCRIPTUM derivationem vincit");
+aequale(titulus_entis(sp_persona, {}), "",
+    "nihil datum, nihil derivatum");
+/* utraque via campus tituli est, ergo corpus chartae neutram
+   repetit (regula: caput iam fert) */
+proba((sp_persona.campi || []).some(function (c) {
+    return c.clavis === "name";
+}), "campus nominis in editore adest");
+aequale(sp_persona.campus_tituli, "name",
+    "campus tituli 'name' manet - corpus eum omittit");
 aequale(titulus_entis(species_de("locus"),
     { titulus_loci: "Birmingham" }), "Birmingham",
     "titulus loci ex campo tituli");

@@ -4670,6 +4670,11 @@ var ADNOT_SPECIES = [
         typus: 'textus' },
       { clavis: 'last_name', monstrans: 'cognomen',
         typus: 'textus' },
+      /* NON omne nomen in duo dividitur: 'Petrus Magnus', 'Beda
+         Venerabilis', 'Aristoteles'. Impletum VINCIT derivationem;
+         vacuum = ex praenomine et cognomine componitur. */
+      { clavis: 'name', monstrans: 'nomen integrum'
+        + ' (vacuum = ex duobus supra)', typus: 'textus' },
       { clavis: 'year_of_birth', monstrans: 'annus natalis',
         typus: 'annus' }
     ] },
@@ -4776,6 +4781,11 @@ function species_de(clavis) {
    scriptionem, ergo duo campi veri et titulus divergere NEQUEUNT. */
 function titulus_entis(sp, valores) {
   if (sp.clavis === 'persona') {
+    /* nomen SCRIPTUM vincit derivationem: quod usor in arcam
+       nominis posuit nomen EST, et derivatio coniectura est.
+       Aliter 'Petrus Magnus' in praenomen et cognomen dividendus
+       esset, quod ille non habet. */
+    if (valores.name) { return valores.name; }
     return [valores.first_name, valores.last_name]
       .filter(function (v) { return !!v; }).join(' ');
   }
