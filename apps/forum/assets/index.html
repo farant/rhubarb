@@ -4131,7 +4131,14 @@ function libri_genera_curare() {
       { clavis: 'first_name', monstrans: 'First name',
         typus: 'textus' },
       { clavis: 'last_name', monstrans: 'Last name',
-        typus: 'textus' }
+        typus: 'textus' },
+      /* 'place_of_birth' TEXTUS iam adest (genus originale Franis)
+         sed VACUUS est in omnibus L personis (mensuratum
+         2026-08-02), ergo relatio eum in editore succedit sine
+         ullo damno. Campus vetus manet - lex additiva - et in
+         tabula Rerum accessibilis est. */
+      { clavis: 'birthplace', monstrans: 'Birthplace',
+        typus: 'relatio', ad: 'locus', cardinalitas: 'unum' }
     ]);
     /* ADNOTATIO: species novae + responsum quaestionis + campi
        relationis ad entia mundana nova */
@@ -4196,6 +4203,8 @@ function libri_genera_curare() {
           typus: 'annus' },
         { clavis: 'place_of_birth', monstrans: 'Place of birth',
           typus: 'textus' },
+        { clavis: 'birthplace', monstrans: 'Birthplace',
+          typus: 'relatio', ad: 'locus', cardinalitas: 'unum' },
         { clavis: 'year_of_death', monstrans: 'Year of death',
           typus: 'annus' },
         { clavis: 'description', monstrans: 'Description',
@@ -4668,6 +4677,9 @@ var ADNOT_SPECIES = [
     phrasis_temporis: 'ortus: {}',
     campi_tituli: ['first_name', 'last_name'],
     campus_lateris: 'year_of_birth',
+    /* mappa loci natalis, more eventus: adest solum si locus
+       coordinatas fert, ergo per personam optiva est */
+    campus_loci: 'birthplace',
     campi: [
       { clavis: 'first_name', monstrans: 'praenomen',
         typus: 'textus' },
@@ -4679,7 +4691,9 @@ var ADNOT_SPECIES = [
       { clavis: 'name', monstrans: 'nomen integrum'
         + ' (vacuum = ex duobus supra)', typus: 'textus' },
       { clavis: 'year_of_birth', monstrans: 'annus natalis',
-        typus: 'annus' }
+        typus: 'annus' },
+      { clavis: 'birthplace', monstrans: 'locus natalis',
+        typus: 'relatio', ad: 'locus', cardinalitas: 'unum' }
     ] },
   { clavis: 'eventus', monstrans: 'eventus', textus_label: 'nota',
     ens: 'eventus', campus_nexus: 'eventus',

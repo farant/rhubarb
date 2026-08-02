@@ -619,6 +619,57 @@ proba(mappam_facere("52.4862, -1.8904", 5, "Birmingham") !== null,
     proba(textus_classis(evx, "campi-a").indexOf("Alexandria") >= 0,
         "sine mappa locus in corpore MANET (informatio non perit)");
 
+    /* PERSONA cum loco natali: mappa adest, et linea loci in
+       corpore NON repetitur (mappa eum iam nominat) */
+    adnot_scopi["locus"] = [
+        { res_id: "01LE", datum: { titulus: "Elston",
+            titulus_loci: "Elston",
+            coordinatae: "53.0500, -0.8500" } },
+        { res_id: "01LN", datum: { titulus: "Nusquam",
+            titulus_loci: "Nusquam" } }];
+    adnot_scopi["person"] = [
+        { res_id: "01PE", datum: { titulus: "Erasmus Darwin",
+            name: "Erasmus Darwin", first_name: "Erasmus",
+            last_name: "Darwin", year_of_birth: 1731 },
+            nexus: [{ verbum: "birthplace", ad: "01LE",
+                ad_titulus: "Elston" }] },
+        { res_id: "01PN", datum: { titulus: "Ignotus",
+            name: "Ignotus" },
+            nexus: [{ verbum: "birthplace", ad: "01LN",
+                ad_titulus: "Nusquam" }] }];
+
+    var pe2 = elementum_adnotationis({ res_id: "01PB", titulus: "p",
+        datum: { species: "persona", textus: "" },
+        nexus: [{ verbum: "persona", ad: "01PE",
+            ad_titulus: "Erasmus Darwin" }] });
+    proba(classes(pe2).indexOf("mappa") >= 0,
+        "persona mappam loci natalis fert");
+    proba(textus_classis(pe2, "campi-a").indexOf("Elston") < 0,
+        "locus natalis NON repetitur cum mappa eum nominet");
+
+    /* locus natalis sine coordinatis: nulla mappa, linea MANET */
+    var pn = elementum_adnotationis({ res_id: "01PC", titulus: "p",
+        datum: { species: "persona", textus: "" },
+        nexus: [{ verbum: "persona", ad: "01PN",
+            ad_titulus: "Ignotus" }] });
+    proba(classes(pn).indexOf("mappa") < 0,
+        "locus natalis sine coordinatis mappam non parit");
+    proba(textus_classis(pn, "campi-a").indexOf("Nusquam") >= 0,
+        "sine mappa locus natalis in corpore MANET");
+
+    /* persona SINE loco natali: nihil mutatur (casus ordinarius -
+       XLV personae iam scriptae eum non habent) */
+    adnot_scopi["person"] = [{ res_id: "01PX", datum: {
+        titulus: "Solus", name: "Solus", year_of_birth: 1700 } }];
+    var px = elementum_adnotationis({ res_id: "01PD", titulus: "p",
+        datum: { species: "persona", textus: "nota" },
+        nexus: [{ verbum: "persona", ad: "01PX",
+            ad_titulus: "Solus" }] });
+    proba(classes(px).indexOf("mappa") < 0,
+        "persona sine loco natali mappam non petit");
+    proba(classes(px).indexOf("campi-a") < 0,
+        "persona sine loco natali corpus vacuum retinet");
+
     /* citatio uncinis cingitur; nota simplex non */
     var cit = elementum_adnotationis({ res_id: "01C", titulus: "c",
         datum: { species: "citatio", textus: "Omnia ex conchis" },
