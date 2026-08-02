@@ -356,15 +356,20 @@
     text-shadow: 0 0 4px #fff, 0 0 8px #fff; pointer-events: none; }
   /* ---- ordo temporum ---- */
   /* spina cum margine: exemplar paginae eventuum */
-  #tempora-index { border-left: 2px solid #453d2f;
-    margin-left: 4.2em; }
+  /* +XV px inter annum et spinam (petitio Franis) - calc ergo
+     incrementum LITERALE est, non aestimatum in em */
+  #tempora-index { border-left: 3px solid #453d2f;
+    margin-left: calc(4.2em + 15px); }
   .tempus-ordo { display: flex; align-items: flex-start;
     gap: 1em; margin: 1.6em 0; }
   .tempus-annus { flex: 0 0 auto; width: 5.2em;
-    margin-left: -5.6em; text-align: right; padding-top: .1em; }
+    margin-left: calc(-5.6em - 15px); text-align: right;
+    padding-top: .1em; }
+  /* annus colore CHARTAE ipsius: numerus magnus recedit et in
+     tergo sedet, more imaginis (ibi cinereus in cinereo) */
   .tempus-numerus { font-size: 1.9em; font-weight: 700;
-    color: #6b6357; letter-spacing: -.02em; }
-  .tempus-aera { font-size: .8em; color: #6b6357;
+    color: #171512; letter-spacing: -.02em; }
+  .tempus-aera { font-size: .8em; color: #171512;
     margin-left: .25em; }
   .tempus-intus { flex: 1 1 auto; min-width: 0; background: #171512;
     border: 1px solid #453d2f; border-radius: 4px;
@@ -4614,6 +4619,7 @@ var ADNOT_SPECIES = [
   { clavis: 'persona', monstrans: 'persona', textus_label: 'nota',
     ens: 'person', campus_nexus: 'persona', campus_tituli: 'name',
     campus_anni: 'year_of_birth',
+    phrasis_temporis: 'ortus: {}',
     campi: [
       { clavis: 'first_name', monstrans: 'praenomen',
         typus: 'textus' },
@@ -4658,6 +4664,7 @@ var ADNOT_SPECIES = [
     ens: 'societas', campus_nexus: 'societas',
     campus_tituli: 'titulus_societatis',
     campus_anni: 'annus_conditus',
+    phrasis_temporis: 'condita: {}',
     campi: [
       { clavis: 'titulus_societatis', monstrans: 'nomen',
         typus: 'textus' },
@@ -4672,6 +4679,7 @@ var ADNOT_SPECIES = [
   { clavis: 'scriptum', monstrans: 'scriptum', textus_label: 'nota',
     ens: 'book', campus_nexus: 'scriptum', campus_tituli: 'title',
     campus_anni: 'year_published',
+    phrasis_temporis: '«{}» editum',
     valores_fixa: { owned: false },
     campi: [
       { clavis: 'title', monstrans: 'titulus', typus: 'textus' },
@@ -5481,18 +5489,25 @@ function elementum_temporis(o) {
   margo.appendChild(aera);
   intus.className = 'tempus-intus';
 
+  /* PHRASIS, non sigillum+titulus: in ordine temporum quaestio
+     est 'quid hoc anno accidit', ergo species dicere debet quid
+     annus SIGNIFICET - annus personae ortus eius est, annus
+     scripti editio. Imago Franis sigilla omnino non habet. */
   {
     var caput = document.createElement('div');
-    var sig = document.createElement('span');
-    sig.className = 'species-a';
-    sig.textContent = sp.monstrans;
-    caput.appendChild(sig);
     nexus_de(a, sp.campus_nexus).forEach(function (n) {
-      var s = document.createElement('span');
-      s.className = 'subiectum-a';
-      s.textContent = '  ' + (n.ad_titulus || '[deletum]');
-      s.onclick = function () { ens_aperire_per_genus(sp.ens, n.ad); };
-      caput.appendChild(s);
+      var tit = n.ad_titulus || '[deletum]';
+      var sp_el = document.createElement('span');
+      sp_el.className = 'subiectum-a';
+      /* substitutio per functionem: titulus '$&' ferre potest, et
+         replace eum ut exemplar legeret */
+      sp_el.textContent = sp.phrasis_temporis
+        ? sp.phrasis_temporis.replace('{}', function () { return tit; })
+        : tit;
+      sp_el.onclick = function () {
+        ens_aperire_per_genus(sp.ens, n.ad);
+      };
+      caput.appendChild(sp_el);
     });
     intus.appendChild(caput);
   }

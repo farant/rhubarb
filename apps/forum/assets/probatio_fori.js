@@ -543,6 +543,55 @@ proba(mappam_facere("52.4862, -1.8904", 5, "Birmingham") !== null,
 }());
 
 /* ================================================================
+ * III sexies. ORDO TEMPORUM - phrasis dicit quid annus SIGNIFICET
+ * ================================================================ */
+(function () {
+    function phrasis(sp_clavis, titulus) {
+        var sp = species_de(sp_clavis);
+        return sp.phrasis_temporis
+            ? sp.phrasis_temporis.replace('{}',
+                function () { return titulus; })
+            : titulus;
+    }
+    aequale(phrasis("persona", "Erasmus Darwin"),
+        "ortus: Erasmus Darwin", "annus personae ORTUS eius est");
+    aequale(phrasis("scriptum", "Zoonomia"), "«Zoonomia» editum",
+        "annus scripti EDITIO eius est");
+    aequale(phrasis("societas", "Lunar Society"),
+        "condita: Lunar Society", "annus societatis CONDITIO");
+    aequale(phrasis("eventus", "Watt patens accipit"),
+        "Watt patens accipit",
+        "eventus phrasin non poscit - descriptio eventus IPSA est");
+    aequale(phrasis("inventum", "condensator separatus"),
+        "condensator separatus", "inventum titulo suo stat");
+    /* titulus cum '$&': substitutio per functionem, non per
+       chordam - aliter replace id ut exemplar legeret */
+    aequale(phrasis("persona", "A $& B"), "ortus: A $& B",
+        "titulus cum '$&' intactus manet");
+
+    /* charta ordinis: phrasis, SINE sigillo speciei */
+    adnot_scopi["person"] = [{ res_id: "01P", datum: {
+        titulus: "Erasmus Darwin", year_of_birth: 1731 } }];
+    var el = elementum_temporis({ annus: 1731, nota: {
+        res_id: "01A", datum: { species: "persona", textus: "" },
+        nexus: [{ verbum: "persona", ad: "01P",
+            ad_titulus: "Erasmus Darwin" }] } });
+    var t = el.textContent;
+    proba(t.indexOf("ortus: Erasmus Darwin") >= 0,
+        "charta ordinis phrasin fert");
+    proba(t.indexOf("persona") < 0,
+        "sigillum speciei ABEST (more imaginis)");
+    proba(t.indexOf("1731") >= 0 && t.indexOf("A.D.") >= 0,
+        "annus et aera in margine");
+    var neg = elementum_temporis({ annus: -753, nota: {
+        res_id: "01B", datum: { species: "nota", textus: "urbs" },
+        nexus: [] } });
+    proba(neg.textContent.indexOf("753") >= 0
+        && neg.textContent.indexOf("a.C.n.") >= 0,
+        "annus negativus ut a.C.n., sine signo");
+}());
+
+/* ================================================================
  * IV bis. VESTIGIUM REDITUS - unde in ens venimus
  *
  * Vetustas structuraliter impossibilis esse debet: vestigium ad
