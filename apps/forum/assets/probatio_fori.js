@@ -602,6 +602,29 @@ proba(mappam_facere("52.4862, -1.8904", 5, "Birmingham") !== null,
     aequale(textus_classis(cit, "textus-a"), "“Omnia ex conchis”",
         "citatio uncinis cingitur");
 
+    /* CITATIO: persona OPTIONALIS in adnotatione ipsa (citatio ens
+       mundanum non habet - verba libri sunt) */
+    var cit_sine = elementum_adnotationis({ res_id: "01C1",
+        titulus: "c", datum: { species: "citatio",
+            textus: "Omnia ex conchis" }, nexus: [] });
+    proba(classes(cit_sine).indexOf("attributio-a") < 0,
+        "citatio sine persona attributionem non fert (verba libri)");
+    var cit_cum = elementum_adnotationis({ res_id: "01C2",
+        titulus: "c", datum: { species: "citatio",
+            textus: "Omnia ex conchis" },
+        nexus: [{ verbum: "persona", ad: "01P",
+            ad_titulus: "Erasmus Darwin" }] });
+    aequale(textus_classis(cit_cum, "attributio-a"),
+        "— Erasmus Darwin", "citatio attributionem fert");
+    aequale(textus_classis(cit_cum, "textus-a"),
+        "“Omnia ex conchis”", "verba uncinis manent");
+    /* relatio adnotationis NUMQUAM in dato (machina eam recusat) */
+    adnot_lat = {};
+    var dat = adnot_datum(species_de("citatio"), "verba", "12");
+    proba(dat.persona === undefined,
+        "relatio in DATO non stat (nexus expectatur)");
+    aequale(dat.species, "citatio", "species in dato manet");
+
     /* quaestio sine responso se apertam nuntiat */
     var q = elementum_adnotationis({ res_id: "01Q", titulus: "q",
         datum: { species: "quaestio", textus: "cur?" }, nexus: [] });

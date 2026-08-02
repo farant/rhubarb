@@ -326,6 +326,9 @@
     color: #a8a091; font-style: italic; }
   /* campi entis (scriptum: auctores, annus): facta, non verba mea */
   .adnot-ordo .campi-a { margin-top: .25em; color: #a8a091; }
+  /* attributio citationis: sub verbis, ad dextram, more libri */
+  .adnot-ordo .attributio-a { margin-top: .3em; text-align: right;
+    color: #c9b98a; cursor: pointer; font-size: .9em; }
   /* responsum sub quaestione recedit, more responsi in filo */
   .adnot-ordo .responsum-a { margin-top: .35em; padding-left: .8em;
     border-left: 2px solid #453d2f; white-space: pre-wrap;
@@ -4630,6 +4633,10 @@ var adnot_lat    = {};     /* clavis campi -> elementum */
    subiectum eodem more quo campi relationis tractatur */
 var adnot_subiectum = [];
 var adnot_relata = {};     /* clavis campi ENTIS -> [{id, titulus}] */
+/* relationes ADNOTATIONIS ipsius (citatio -> persona): ens
+   mundanum non tangunt, ergo vas proprium - aliter adnot_creare
+   eas in ens creandum scriberet, quod nullum est */
+var adnot_relata_notae = {};
 var adnot_scopi  = {};     /* clavis generis -> entia (pro electione) */
 
 function adnot_subiectum_unum() {
@@ -4642,8 +4649,16 @@ function adnot_subiectum_unum() {
 var ADNOT_SPECIES = [
   { clavis: 'nota', monstrans: 'nota', textus_label: 'nota',
     ens: null, campi: [] },
+  /* CITATIO ens mundanum non habet - verba libri ipsius sunt.
+     Sed citatio hominem NOMINATUM referre potest, ergo relatio
+     OPTIONALIS in adnotatione ipsa stat (non in ente: nullum est).
+     Vacua relicta = verba libri; impleta = quis dixit. */
   { clavis: 'citatio', monstrans: 'citatio', ens: null, campi: [],
-    textus_label: 'verba citata' },
+    textus_label: 'verba citata',
+    campi_adnotationis: [
+      { clavis: 'persona', monstrans: 'quis dixit (si quis)',
+        typus: 'relatio', ad: 'person', cardinalitas: 'unum' }
+    ] },
   { clavis: 'persona', monstrans: 'persona', textus_label: 'nota',
     ens: 'person', campus_nexus: 'persona', campus_tituli: 'name',
     campus_anni: 'year_of_birth',
@@ -4946,6 +4961,7 @@ function capitulum_aperire(c) {
   adnot_editum = null;
   adnot_subiectum = [];
   adnot_relata = {};
+  adnot_relata_notae = {};
   adnot_sp = 'nota';
   libri_vertere('capitulum');
   reddere_capitulum();
@@ -5076,6 +5092,21 @@ function elementum_adnotationis(a) {
       : d.textus;
     ordo.appendChild(t);
   }
+  /* ATTRIBUTIO sub citatione: '- Erasmus Darwin'. Relatio
+     adnotationis, non entis - citatio ens mundanum non habet.
+     Absens = verba libri ipsius, quod casus ordinarius est. */
+  (sp.campi_adnotationis || []).forEach(function (c) {
+    if (c.typus !== 'relatio') { return; }
+    nexus_de(a, c.clavis).forEach(function (n) {
+      var at = document.createElement('div');
+      at.className = 'attributio-a';
+      at.textContent = '— ' + (n.ad_titulus || '[deletum]');
+      at.onclick = function () {
+        ens_aperire_per_genus(c.ad, n.ad);
+      };
+      ordo.appendChild(at);
+    });
+  });
   /* Quaestio responsum SUUM fert, aut se apertam nuntiat. Status
      campus non est: responsum vacuum IPSUM status est, et duo
      numquam divergere possunt. */
@@ -5128,6 +5159,7 @@ function adnot_tabs_reddere() {
         adnot_sp = sp.clavis;
         adnot_subiectum = [];
         adnot_relata = {};
+        adnot_relata_notae = {};
         adnot_formam_reddere();
       };
     }
@@ -5189,16 +5221,17 @@ function adnot_selector(sp) {
    inventi). Creatio inlinea HIC licet: campi expliciti personae
    non adsunt, et 'Watt' inter inventores notatus persona vera
    fieri debet, non chorda. */
-function adnot_campum_relationis(c) {
+function adnot_campum_relationis(c, vas) {
   var d = document.createElement('div');
   var lab = document.createElement('label');
+  var arca = vas || adnot_relata;
   lab.textContent = c.monstrans;
-  if (!adnot_relata[c.clavis]) { adnot_relata[c.clavis] = []; }
+  if (!arca[c.clavis]) { arca[c.clavis] = []; }
   d.appendChild(lab);
   d.appendChild(selector_entium({
     ad: c.ad,
     cardinalitas: c.cardinalitas || 'multa',
-    electa: adnot_relata[c.clavis],
+    electa: arca[c.clavis],
     scopus: function () { return adnot_scopi[c.ad]; },
     scopum_augere: function (e) {
       (adnot_scopi[c.ad] = adnot_scopi[c.ad] || []).push(e);
@@ -5232,6 +5265,12 @@ function adnot_formam_reddere() {
   domus.appendChild(adnot_campum('textus', sp.textus_label, 'area',
     d.textus));
   (sp.campi_adnotationis || []).forEach(function (c) {
+    if (c.typus === 'relatio') {
+      if (!adnot_scopi[c.ad]) { mundana_onerare([c.ad]); }
+      domus.appendChild(adnot_campum_relationis(c,
+        adnot_relata_notae));
+      return;
+    }
     domus.appendChild(adnot_campum(c.clavis, c.monstrans, c.typus,
       d[c.clavis]));
   });
@@ -5250,6 +5289,14 @@ function adnotationem_emendare(a) {
   sp = species_de(adnot_sp);
   adnot_subiectum = [];
   adnot_relata = {};
+  adnot_relata_notae = {};
+  (sp.campi_adnotationis || []).forEach(function (c) {
+    if (c.typus !== 'relatio') { return; }
+    adnot_relata_notae[c.clavis] = nexus_de(a, c.clavis)
+      .map(function (n) {
+        return { id: n.ad, titulus: n.ad_titulus || '[deletum]' };
+      });
+  });
   if (sp.campus_nexus) {
     nexus_de(a, sp.campus_nexus).forEach(function (n) {
       adnot_subiectum = [{ id: n.ad,
@@ -5266,6 +5313,7 @@ function adnot_omittere() {
   adnot_editum = null;
   adnot_subiectum = [];
   adnot_relata = {};
+  adnot_relata_notae = {};
   adnot_formam_reddere();
 }
 
@@ -5336,6 +5384,9 @@ function adnot_datum(sp, textus, pagina) {
   var datum = { species: sp.clavis, textus: textus };
   if (pagina !== null) { datum.pagina = pagina; }
   (sp.campi_adnotationis || []).forEach(function (c) {
+    /* relatio in dato a machina RECUSATUR ('campus relationis in
+       dato - nexus expectatur') - nexus seorsum scribitur */
+    if (c.typus === 'relatio') { return; }
     datum[c.clavis] = adnot_valor(c.clavis);
   });
   return datum;
@@ -5410,10 +5461,21 @@ function adnot_creare(sp, valores, textus, pagina) {
           verbum: sp.campus_nexus, alterum: subiectum.id });
       });
     }
+    /* relationes ADNOTATIONIS (citatio -> quis dixit) */
+    (sp.campi_adnotationis || []).forEach(function (c) {
+      if (c.typus !== 'relatio') { return; }
+      (adnot_relata_notae[c.clavis] || []).forEach(function (sel) {
+        post = post.then(function () {
+          return instrumentum('gerere', { res: id, actus: 'nexus',
+            verbum: c.clavis, alterum: sel.id });
+        });
+      });
+    });
     return post;
   }).then(function () {
     adnot_subiectum = [];
     adnot_relata = {};
+    adnot_relata_notae = {};
     adnot_formam_reddere();
     iud.textContent = '';
     anquirere_nunc();
@@ -5462,6 +5524,34 @@ function adnot_mutare(sp, textus, pagina) {
             alterum: novum });
         });
       }
+      return catena;
+    })
+    .then(function () {
+      /* relationes ADNOTATIONIS: differentia more subiecti */
+      var catena = Promise.resolve();
+      (sp.campi_adnotationis || []).forEach(function (c) {
+        if (c.typus !== 'relatio') { return; }
+        var nunc = adnot_relata_notae[c.clavis] || [];
+        var ante = nexus_de(a, c.clavis);
+        ante.forEach(function (n) {
+          if (nunc.some(function (x) { return x.id === n.ad; })) {
+            return;
+          }
+          catena = catena.then(function () {
+            return instrumentum('gerere', { res: a.res_id,
+              actus: 'denexus', verbum: c.clavis, alterum: n.ad });
+          });
+        });
+        nunc.forEach(function (x) {
+          if (ante.some(function (n) { return n.ad === x.id; })) {
+            return;
+          }
+          catena = catena.then(function () {
+            return instrumentum('gerere', { res: a.res_id,
+              actus: 'nexus', verbum: c.clavis, alterum: x.id });
+          });
+        });
+      });
       return catena;
     })
     .then(function () {
