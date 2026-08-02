@@ -4620,6 +4620,8 @@ var ADNOT_SPECIES = [
     ens: 'person', campus_nexus: 'persona', campus_tituli: 'name',
     campus_anni: 'year_of_birth',
     phrasis_temporis: 'ortus: {}',
+    campi_tituli: ['first_name', 'last_name'],
+    campus_lateris: 'year_of_birth',
     campi: [
       { clavis: 'first_name', monstrans: 'praenomen',
         typus: 'textus' },
@@ -4632,6 +4634,7 @@ var ADNOT_SPECIES = [
     ens: 'eventus', campus_nexus: 'eventus',
     campus_tituli: 'descriptio',
     campus_anni: 'annus', campus_loci: 'locus',
+    campus_lateris: 'annus',
     campi: [
       { clavis: 'annus', monstrans: 'annus', typus: 'annus' },
       { clavis: 'descriptio', monstrans: 'descriptio',
@@ -4640,6 +4643,7 @@ var ADNOT_SPECIES = [
   { clavis: 'locus', monstrans: 'locus', textus_label: 'nota',
     ens: 'locus', campus_nexus: 'locus',
     campus_tituli: 'titulus_loci', ipse_locus: true,
+    campus_lateris: 'coordinatae',
     campi: [
       { clavis: 'titulus_loci', monstrans: 'nomen',
         typus: 'textus' },
@@ -4778,19 +4782,25 @@ function ens_mundanum(sp, id) {
   return inventum;
 }
 
-/* Latus subiecti: quod titulus NON fert (annus, coordinatae) */
+function campum_speciei(sp, clavis) {
+  var inventum = null;
+  (sp.campi || []).forEach(function (c) {
+    if (c.clavis === clavis) { inventum = c; }
+  });
+  return inventum;
+}
+
+/* Latus subiecti: quod titulus NON fert (annus, coordinatae).
+   PER TABULAM, non per ramos speciei: campus_lateris nominat, et
+   typus eius (ex campis ipsis) formam regit. */
 function subiectum_latus(sp, ens) {
   var d = (ens && ens.datum) || {};
-  if (sp.clavis === 'persona' && d.year_of_birth !== undefined
-      && d.year_of_birth !== null && d.year_of_birth !== '') {
-    return annus_monstrare(d.year_of_birth);
-  }
-  if (sp.clavis === 'eventus' && d.annus !== undefined
-      && d.annus !== null && d.annus !== '') {
-    return annus_monstrare(d.annus);
-  }
-  if (sp.clavis === 'locus' && d.coordinatae) { return d.coordinatae; }
-  return '';
+  var c, v;
+  if (!sp.campus_lateris) { return ''; }
+  v = d[sp.campus_lateris];
+  if (v === undefined || v === null || v === '') { return ''; }
+  c = campum_speciei(sp, sp.campus_lateris);
+  return (c && c.typus === 'annus') ? annus_monstrare(v) : String(v);
 }
 
 /* ---- annus et locus notae: EX ENTE, non ex nota ----
@@ -4860,7 +4870,16 @@ function subiecti_campi(sp, ens) {
   if (!ens || sp.campus_corporis) { return ordines; }
   (sp.campi || []).forEach(function (c) {
     var v, textus;
+    /* CAPUT IAM FERT: campus tituli, campi ex quibus titulus
+       COMPONITUR (persona: praenomen + cognomen -> 'Erasmus
+       Darwin'), et campus lateris (parenthesis). Aliter charta
+       personae 'Erasmus Darwin (1731)' supra et 'praenomen:
+       Erasmus - cognomen: Darwin - annus natalis: 1731' infra
+       ferret: eadem tria bis. */
     if (c.clavis === sp.campus_tituli) { return; }
+    if ((sp.campi_tituli || []).indexOf(c.clavis) >= 0) { return; }
+    if (c.clavis === sp.campus_lateris) { return; }
+    if (c.tacitus) { return; }   /* zoom: consilium picturae */
     if (c.typus === 'relatio') {
       textus = nexus_de(ens, c.clavis).map(function (n) {
         return n.ad_titulus;

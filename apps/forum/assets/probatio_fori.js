@@ -523,6 +523,29 @@ proba(mappam_facere("52.4862, -1.8904", 5, "Birmingham") !== null,
     proba(classes(scr).indexOf("definitio-a") < 0,
         "scriptum campum corporis nudum non habet");
 
+    /* PERSONA: caput iam 'Erasmus Darwin (1731)' fert, ergo corpus
+       'praenomen: ... cognomen: ... annus natalis: ...' eadem tria
+       BIS diceret. Corpus VACUUM esse debet. */
+    adnot_scopi["person"] = [{ res_id: "01P2", datum: {
+        titulus: "Erasmus Darwin", name: "Erasmus Darwin",
+        first_name: "Erasmus", last_name: "Darwin",
+        year_of_birth: 1731 } }];
+    var per = elementum_adnotationis({ res_id: "01PA", titulus: "p",
+        datum: { species: "persona", textus: "medicus et poeta" },
+        nexus: [{ verbum: "persona", ad: "01P2",
+            ad_titulus: "Erasmus Darwin" }] });
+    proba(classes(per).indexOf("campi-a") < 0,
+        "charta personae corpus camporum NON fert");
+    proba(per.textContent.indexOf("praenomen") < 0
+        && per.textContent.indexOf("cognomen") < 0,
+        "praenomen/cognomen non repetuntur (titulum componunt)");
+    proba(per.textContent.indexOf("1731") >= 0,
+        "annus natalis SEMEL adest (in latere capitis)");
+    aequale(per.textContent.split("1731").length - 1, 1,
+        "annus natalis SEMEL, non bis");
+    aequale(textus_classis(per, "textus-a"), "medicus et poeta",
+        "nota propria manet");
+
     /* citatio uncinis cingitur; nota simplex non */
     var cit = elementum_adnotationis({ res_id: "01C", titulus: "c",
         datum: { species: "citatio", textus: "Omnia ex conchis" },
