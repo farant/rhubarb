@@ -373,9 +373,12 @@
      alio loco poneret quam 'MDCCXXXI A.D.'). */
   #tempora-index { position: relative;
     --margo-anni: calc(5.2em + 20px); }
+  /* spina aurea titulorum (#d8b978, idem quo h1/h2/h3), non
+     fusca marginum: spina ordinem TENET, ergo ad titulum pertinet,
+     non ad limites chartarum */
   #tempora-index::before { content: ''; position: absolute;
     top: 0; bottom: 0; left: calc(var(--margo-anni) + 20px);
-    width: 3px; background: #453d2f; }
+    width: 3px; background: #d8b978; }
   .tempus-ordo { display: flex; align-items: flex-start;
     gap: 0; margin: 1.6em 0; }
   .tempus-annus { flex: 0 0 var(--margo-anni); min-width: 0;
