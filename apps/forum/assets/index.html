@@ -356,31 +356,40 @@
     text-shadow: 0 0 4px #fff, 0 0 8px #fff; pointer-events: none; }
   /* ---- ordo temporum ---- */
   /* spina cum margine: exemplar paginae eventuum */
-  /* +XV px inter annum et spinam (petitio Franis) - calc ergo
-     incrementum LITERALE est, non aestimatum in em */
-  #tempora-index { border-left: 3px solid #453d2f;
-    margin-left: calc(4.2em + 15px); }
+  /* SPINA ABSOLUTA, non 'border-left' contexti.
+     Ante: annus per marginem NEGATIVUM extra contextum trahebatur,
+     ergo distantia utraque summa marginum, latitudinum et
+     intervalli flexi erat - numerus quem nemo legere poterat (et
+     charta spinam per V px revera tegebat). Nunc quaeque distantia
+     NUMERUS SUUS est:
+         [annus 5.2em][XX px][spina III px][XX px][charta] */
+  #tempora-index { position: relative; }
+  #tempora-index::before { content: ''; position: absolute;
+    top: 0; bottom: 0; left: calc(5.2em + 20px); width: 3px;
+    background: #453d2f; }
   .tempus-ordo { display: flex; align-items: flex-start;
-    gap: 1em; margin: 1.6em 0; }
-  .tempus-annus { flex: 0 0 auto; width: 5.2em;
-    margin-left: calc(-5.6em - 15px); text-align: right;
+    gap: 0; margin: 1.6em 0; }
+  .tempus-annus { flex: 0 0 5.2em; text-align: right;
     padding-top: .1em; }
   /* annus colore CHARTAE ipsius: numerus magnus recedit et in
      tergo sedet, more imaginis (ibi cinereus in cinereo) */
   .tempus-numerus { font-size: 1.9em; font-weight: 700;
-    color: #171512; letter-spacing: -.02em; }
-  .tempus-aera { font-size: .8em; color: #171512;
+    color: white; letter-spacing: -.02em; }
+  .tempus-aera { font-size: .8em; color: white;
     margin-left: .25em; }
-  .tempus-intus { flex: 1 1 auto; min-width: 0; background: #171512;
+  .tempus-intus { margin-left: calc(20px + 3px + 20px);
+    flex: 1 1 auto; min-width: 0; background: #171512;
     border: 1px solid #453d2f; border-radius: 4px;
     padding: .7em .9em; box-sizing: border-box; }
   .tempus-via { margin-top: .45em; font-size: .78em;
     color: #6b6357; cursor: pointer; }
   .tempus-via:hover { color: #9fb87a; }
   @media (max-width: 700px) {
-    #tempora-index { margin-left: 0; border-left: none; }
+    /* ordine verticali spina nihil iungit - abeat */
+    #tempora-index::before { display: none; }
     .tempus-ordo { flex-direction: column; gap: .2em; }
-    .tempus-annus { width: auto; margin-left: 0; text-align: left; }
+    .tempus-annus { flex: 0 0 auto; text-align: left; }
+    .tempus-intus { margin-left: 0; }
   }
   /* imago tergalis: angulus quietus (opacitas surgit sub mure) */
   #tergale-domus { position: fixed; right: .4em; bottom: .3em;
