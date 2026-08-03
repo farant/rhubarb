@@ -12303,3 +12303,56 @@ codex seen red on the real file, each seen quiet in a fixture that
 addresses it (prologue first include / ifdef __APPLE__ arm - must
 go quiet BY CONSTRUCTION via the evaluated path / symbol replaced),
 each guard broken deliberately once.
+
+## 2026-08-03 - RELATIO: codices 85-87 SHIPPED (7ba8d84)
+
+All three fire on the live specimen and the whole ladder is green:
+probatio_silva_portabilitas 37/37 (bidirectional calibration), silva
+38/38, amalgam VERIFICATUM, root 114/114 + XIV apps.
+
+CENSUS (the frontier, first measurement):
+- 85: 54 files, one row each (bigger than the 32-file POSIX-includer
+  estimate - use-based detection sees through mixed headers).
+- 86: EXACTLY ONE - tcp_posix.c:105 SO_NOSIGPIPE. The corpus has one
+  Darwin-ism and it is now permanently watched.
+- 87: 28 sites in 8 files - usleep is the TEST SUITE's busy-wait
+  idiom (tempestivum/tcp_servus/actor_integratio x7 each). A real
+  pattern found on day one.
+
+Complexities (all resolved in-flight):
+1. strata do NOT retain the raw generation (post-mutation states
+   only) - the layer-0 scan design died on contact. Replacement is
+   BETTER: walk the final stream through silva_token_radix - one
+   walk covers plain identifiers AND macro-consumed names, positions
+   land on the source token. Provenance-as-product paid off exactly
+   as the VISIO pin promises.
+2. Gradus comment above #define vanished with the consumed directive
+   line - the E2 annotation-collector precedent recurred verbatim;
+   fix = collector walks parsura->directivae too.
+3. Calibration section V caught a WRONG TEST ASSUMPTION: gradus
+   marks are limes-independent (explicit per-symbol annotations;
+   a vernaculum symbol is vernaculum wherever declared). The
+   implementation was right; the probatio now pins the discovered
+   law.
+4. Amalgam gate caught the hand-written silva.h enum lagging (by
+   design - CADENDA self-correction).
+
+Instrumenta debrief: adhibita = origo.sh (cracked the missing-86
+mystery in one call: 'sine expansione'), examen-custos hook (caught
+my own char*/const char* comparison at edit time), auspex (certified
+lexicon edit), census -machina awk. Fructus = origo as debugger is
+real; the hook judging its own judge's source is the dogfood loop
+working. Asperitates = origo runs a lexicon-less pipeline so its
+'sine expansione' answer describes ITS parse, not examen's - nearly
+misled me; worth a flag or a note someday. Desideratum candidate:
+strata could retain the raw generation (reliqua) as stratum 0 -
+named door, not needed now (radix walk is strictly better for this
+consumer).
+
+Doors named: header-fons scanning (v1 = principal fons only; a .h's
+own uses judged when the .h is judged directly); first-include law
+is strict (a .c whose header includes postulata first still fires -
+convention is prologue-in-the-.c); function-like marked macros would
+multi-fire per expansion lamina (radix_prior dedup is consecutive
+only - none marked today). NEXT in arc: emendator sweep (Fran's
+call), then Docker gate in aedilis.

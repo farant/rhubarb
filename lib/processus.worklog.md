@@ -286,3 +286,16 @@ callers must run unbuffered input (_IONBF); kernel-pipe bytes
 survive. Success path is untestable in-process (it would replace
 the test runner) — failure paths in probatio_processus XIX, success
 proven end-to-end in probatio_officina_renovatio III.
+
+## 2026-08-03 - sonda musl (Linux arc): FD_SET interna libc, non codex noster
+
+Sonda alpine 3.20 / musl 1.2.5 / gcc 13.2: processus_posix.c quattuor
+sedes (319, 327, 375, 379 - FD_SET/FD_ISSET) sub -Wsign-conversion
+cadunt, NULLO macrone sanabiles. Codex domus innocens: macro FD_SET
+musl fd signatum in computationem 'unsigned long' trahit
+((fd)/(8*sizeof(long))); implementationes Darwin et glibc idem munus
+sine querella praestant. Genus quartum inventorum: STREPITUS
+INTERNORUM MACRONUM LIBC - fons idem, vexilla eadem, libc alia,
+verdictum aliud. Optiones posteriores: sutura macro domus cum casto,
+aut tolera, aut vexilla laxata per-platformam. CONSULTO non sanatum
+(stratum diagnosticum ante emendationes - decretum Franis).

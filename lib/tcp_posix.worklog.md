@@ -41,3 +41,25 @@ falso refert - sub lldb mensuratum antequam sanatum. EISCONN 56
 in lexicon per auspex_posix (TU ambo consentiunt). Fortasse
 fluctuationem probatio_tcp_servus veterem sanat (01KXJ2QJ8X
 observandum).
+
+## 2026-08-03 - sonda glibc prima (Linux arc): duo inventa, CONSULTO non sanata
+
+Sonda Docker (ubuntu 22.04, gcc 11.4, glibc 2.35, -std=c89 + vexilla
+domus): plagula nuda 20 errores dat, quorum 18 macrone probationis
+proprietatum sanantur (_DEFAULT_SOURCE aut _XOPEN_SOURCE=600 - radix
+una getaddrinfo/addrinfo celata, cascata ~15 errorum ex UNA radice).
+Duo residua = inventa vera:
+
+1. **SO_NOSIGPIPE (linea 105) Darwin-solum est.** Nullus macro sanat.
+   Linux aequivalens = MSG_NOSIGNAL per send, aut SIGPIPE ignorare.
+   Vernaculum in plagula 'posix' nominata - specimen primum stratae
+   diagnosticae portabilitatis.
+
+2. **usleep (linea 329) XSI obsoletum est: MENSURATUM sanari sub
+   _XOPEN_SOURCE=600 et _DEFAULT_SOURCE, NON sub 700, NON sub
+   _POSIX_C_SOURCE=200112L** (XPG7 usleep sustulit). Ergo 700 NON
+   superset 600 ad usum domus. Via moderna = nanosleep.
+
+AMBO relicta ut sunt: Fran decrevit stratum diagnosticum (codex
+examinis) ante emendationes aedificari - specimina fracta ei opus
+sunt. Sanatio post codicem probatum.
