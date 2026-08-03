@@ -12356,3 +12356,33 @@ convention is prologue-in-the-.c); function-like marked macros would
 multi-fire per expansion lamina (radix_prior dedup is consecutive
 only - none marked today). NEXT in arc: emendator sweep (Fran's
 call), then Docker gate in aedilis.
+
+## 2026-08-03 - INTENTIO: emendare (actio scriptoria prima) - codex 85
+
+Fran's call: a tool, dry-run first, for the mechanically-fixable
+class, verifying its own output with an examen pass. The class IS
+codex 85 (insert one prologue line at a known anchor; 54 files).
+86/87 explicitly NOT emendable (nanosleep = struct timespec
+signature change; MSG_NOSIGNAL = different mechanism at the send
+site) - the tool refuses them BY NAME with the reason.
+
+Shape (renominare precedent: plan by default, -scribere applies):
+- silva/instrumenta/silva_iudicium.{h,c}: the examen judgment recipe
+  extracted to a common module (examen.c names the geminus-tertius
+  park - a FOURTH inline copy is forbidden; examen migrates on its
+  own next touch). Two-phase: praeparare (repo header walk + systema
+  fontes read, ONCE) / iudicare (per file: lexicon compose, systema
+  parse, praebere from cache, parse cum contextu, bis-analysis).
+- instrumenta/principalia/emendare.c: per file - judge BEFORE;
+  anchor = first include directive line of the principal fons (from
+  parsura->directivae tokens, NOT text scan); splice the prologue
+  line; judge AFTER in memory; verify 85 -> 0, no codex count grows,
+  no REICE introduced; report SANARET (dry) / write only when
+  -scribere AND verified. No includes at all -> anchor 0, noted.
+- silva/emendare.sh: examen.sh-shaped wrapper + generated fontes
+  list + vigilia manifest.
+
+Calibration: dry-run on tcp_posix.c (verified-heal expected), on a
+clean file (iam sana), on the no-include edge if one exists.
+-scribere exercised on a build-dir COPY only - the corpus stays
+broken until Fran calls the sweep.
