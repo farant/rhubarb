@@ -12386,3 +12386,37 @@ Calibration: dry-run on tcp_posix.c (verified-heal expected), on a
 clean file (iam sana), on the no-include edge if one exists.
 -scribere exercised on a build-dir COPY only - the corpus stays
 broken until Fran calls the sweep.
+
+## 2026-08-03 - RELATIO: emendare SHIPPED + SWEPT (84df8e1, 8e8161b)
+
+The first writing action of the tool ecology is live and has already
+done its work. Dry-run over the census: 54/54 verified-healable, 0
+fractae. Fran called the sweep; 54 one-line insertions, each judged
+in memory before its write. The 55th patient was silva_iudicium.c
+ITSELF (born after the census the sweep read) - healed by the exact
+command its own diagnostic printed, since 85's message now carries
+'- sponte: ./silva/emendare.sh 85 <via> -scribere' with the real
+path (Fran's ask: the diagnostic is where the tool advertises).
+
+Census after: 85 = 0. glibc matrix after: tcp_posix 20 -> 1
+(SO_NOSIGPIPE only - the 86-watched vernaculum, deliberately kept);
+processus/iter_directoria/filum -> 0 under ALL macro variants;
+usleep now compiles (87 stays as hygiene advice). The Linux
+compile frontier for the probed set is exactly the one error the
+house chose to keep.
+
+Calibration receipts: iam-sana path (chorda.c), -scribere on a
+build-dir copy first (diff = ONE line), refusal-by-name for 86/87
+with the reason (nanosleep timespec; MSG_NOSIGNAL at send). The
+NON-SANAT verification path is code-reviewed but never fired live -
+the fix is correct by construction; noted as the one uncalibrated
+branch.
+
+Ladder green end-to-end: root 114/114 + XIV apps, silva 38/38,
+amalgama VERIFICATUM.
+
+Doors: examen.c migration onto silva_iudicium (its named park, its
+next touch); emendare -machina TSV; future emendable classes get
+table rows, not branches. NEXT (last arc step): Docker gate in
+aedilis - the standing oracle that keeps codices 85-87 honest
+forever.
