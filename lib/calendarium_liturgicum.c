@@ -5,6 +5,7 @@
  * Secundum Calendarium Romanum Generale (1969)
  * ================================================== */
 
+#include "postulata_posix.h"
 #include "calendarium_liturgicum.h"
 #include "chorda_aedificator.h"
 #include <string.h>

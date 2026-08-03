@@ -1,4 +1,5 @@
 /* probatio_arbor2_file_roundtrip.c - File-based roundtrip tests for AST serializer */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"

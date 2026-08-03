@@ -413,8 +413,12 @@ struct utimbuf {
 
 int utime(const char* via, const struct utimbuf* tempora);
 
-/* <sectio caput="stdio.h"/> stdio.h POSIX (FILE* ex fossa) */
+/* <sectio caput="stdio.h"/> stdio.h POSIX (FILE* ex fossa; snprintf
+ * C99/POSIX-2001 - Darwin sub c89 permissive exponit, glibc celat
+ * sine postulatis: VII plagulae nuclei 'vocatio implicita' ferebant
+ * quia hic aberat - percursus glibc 2026-08-03 aperuit) */
 FILE* fdopen(int fossa, const char* modus);
+int   snprintf(char* effusio, size_t mensura, const char* forma, ...);
 
 /* <sectio caput="unistd.h"/> unistd.h - supplementa Undae 3 */
 int dup(int fossa);

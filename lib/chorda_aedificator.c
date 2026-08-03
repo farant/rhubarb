@@ -1,3 +1,4 @@
+#include "postulata_posix.h"
 #include "chorda_aedificator.h"
 #include <stdio.h>
 #include <string.h>

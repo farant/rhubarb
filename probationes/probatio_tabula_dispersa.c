@@ -1,4 +1,5 @@
 /* probatio_tabula_dispersa.c - Probationes Tabulae Dispersae */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "chorda.h"
 #include "piscina.h"

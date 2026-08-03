@@ -1,4 +1,5 @@
 /* probatio_chorda_aedificator.c - Probationes ChordaAedificator */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "chorda.h"
 #include "piscina.h"

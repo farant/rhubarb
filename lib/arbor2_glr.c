@@ -1,4 +1,5 @@
 /* arbor2_glr.c - GLR Parser Core */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "arbor2_glr.h"
 #include "arbor2_conditio_evaluare.h"

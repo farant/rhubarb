@@ -5,6 +5,7 @@
  * Expandit macros cum tracking originis.
  * ================================================== */
 
+#include "postulata_posix.h"
 #include "arbor_praeparator.h"
 #include "filum.h"
 #include "via.h"

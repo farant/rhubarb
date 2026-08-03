@@ -1,4 +1,5 @@
 /* credo.c */
+#include "postulata_posix.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>

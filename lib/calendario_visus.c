@@ -6,6 +6,7 @@
  * et detalia diei selecti.
  * ================================================== */
 
+#include "postulata_posix.h"
 #include "calendario_visus.h"
 #include "color.h"
 #include "registrum_commandi.h"

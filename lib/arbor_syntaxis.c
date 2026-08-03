@@ -3,6 +3,7 @@
  * Pratt parser pro expressionibus, recursive descent pro sententiis.
  */
 
+#include "postulata_posix.h"
 #include "arbor_syntaxis.h"
 #include "tabula_dispersa.h"
 #include <stdio.h>

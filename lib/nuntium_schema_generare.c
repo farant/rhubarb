@@ -4,6 +4,7 @@
  * Struct definitionem, tag constantia, _scribere() et _legere() functiones.
  */
 
+#include "postulata_posix.h"
 #include "nuntium_schema.h"
 #include "chorda_aedificator.h"
 #include "chorda.h"
