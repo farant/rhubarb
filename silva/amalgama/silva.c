@@ -49288,13 +49288,23 @@ _portabilitatem_examinare (SilvaSemantica* sem,
     si (!prologus_adest && numerus_totus > ZEPHYRUM
         && prima_sedes != NIHIL)
     {
-        memoriae_index cap = (memoriae_index)CCLVI;
+        memoriae_index cap = (memoriae_index)CCCXX;
         character* nuntius;
+        constans SilvaChorda* via_plagulae = NIHIL;
         int longit;
 
         per (i = ZEPHYRUM; i < nomina_n; i++)
         {
             cap = cap + (memoriae_index)nomina[i].mensura;
+        }
+        si (parsura->expansio != NIHIL)
+        {
+            via_plagulae = silva_fons_via(parsura->expansio,
+                prima_sedes->fons_index);
+        }
+        si (via_plagulae != NIHIL)
+        {
+            cap = cap + (memoriae_index)via_plagulae->mensura;
         }
         nuntius = (character*)silva_piscina_allocare(sem->piscina, cap);
         si (nuntius == NIHIL)
@@ -49315,9 +49325,18 @@ _portabilitatem_examinare (SilvaSemantica* sem,
             longit = longit + sprintf(nuntius + longit,
                 " et %d alia", (int)(numerus_totus - nomina_n));
         }
-        sprintf(nuntius + longit, ") - insere '#include"
-            " \"postulata_posix.h\"' ANTE inclusiones omnes (glibc"
-            " sub -std=c89 sine macrone celat)");
+        longit = longit + sprintf(nuntius + longit, ") - insere"
+            " '#include \"postulata_posix.h\"' ANTE inclusiones"
+            " omnes (glibc sub -std=c89 sine macrone celat)");
+        /* mandatum exactum ad-glutinandum - instrumentum se ipsum
+         * in diagnostico nuntiat (petitio Franis 2026-08-03) */
+        si (via_plagulae != NIHIL)
+        {
+            sprintf(nuntius + longit, " - sponte:"
+                " ./silva/emendare.sh 85 %.*s -scribere",
+                (int)via_plagulae->mensura,
+                (constans character*)via_plagulae->datum);
+        }
         _portabilitatis_diagnosticum(sem, parsura, prima_sedes,
             (s32)EXAMEN_CODEX_POSTULATA_DESUNT, nuntius);
     }

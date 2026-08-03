@@ -15,6 +15,7 @@
  * Radix repositorii per RHUBARB_RADIX (compile_probationes.sh eam
  * praebet); defaltum ".." pro cursu manuali ex silva/.
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

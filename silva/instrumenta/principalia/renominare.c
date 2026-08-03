@@ -26,6 +26,7 @@
  *         4 scriptum sed verificatio fracta (git checkout!)
  */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"

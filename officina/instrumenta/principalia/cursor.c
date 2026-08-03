@@ -22,6 +22,7 @@
  * Usus: ./officina/cursor.sh   (ex radice repositorii)
  */
 
+#include "postulata_posix.h"
 #include "officina_demissio.h"
 #include "officina_conexio.h"
 #include "officina_machinula.h"

@@ -18,6 +18,7 @@
  * longitudinis); %.*s / latitudo * sustentae.
  */
 
+#include "postulata_posix.h"
 #include "officina_machinula.h"
 
 #include <stdio.h>

@@ -7,6 +7,7 @@
  *   ./bin/librarium_collector librarium.stml book_assets/ [--limit 100]
  */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

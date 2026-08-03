@@ -1,4 +1,5 @@
 /* probatio_uuid.c - Probationes UUID */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "uuid.h"
 #include "piscina.h"

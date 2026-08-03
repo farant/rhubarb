@@ -22,6 +22,7 @@
  * Praetermissa (numerata, alta voce in -v): incompleta, campos
  * ferentia (parca), anonyma, functiones, systemate-pendentia.
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

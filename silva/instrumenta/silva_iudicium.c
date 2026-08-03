@@ -3,6 +3,7 @@
  * potuit - divergentia recipe = divergentia verdicti (lectio
  * 01KYBAG1MJ: XXI violationes falsae ex semita divergente). */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"

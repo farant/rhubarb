@@ -7,6 +7,7 @@
  *
  * Usus: census_ambigui <via.c>
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"

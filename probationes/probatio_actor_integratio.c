@@ -12,6 +12,7 @@
  * - RegistrumServitii: Service discovery
  */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "cursus.h"
 #include "tractator.h"

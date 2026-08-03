@@ -14,6 +14,7 @@
  * exsistit quod dissidere possit.
  */
 
+#include "postulata_posix.h"
 #include "processus.h"
 
 #include <sys/types.h>

@@ -5,6 +5,7 @@
  * Probationes TLS vivae in probatio_tls manent (-reticularis).
  */
 
+#include "postulata_posix.h"
 #include "http.h"
 #include "hospitium.h"
 #include "credo.h"

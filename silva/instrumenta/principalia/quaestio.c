@@ -29,6 +29,7 @@
  * Extentus/praeparatio capitum ex selecta.c adaptata (consumptor
  * alter; extractio in unitatem communem cum tertio consumptore).
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"

@@ -18,6 +18,7 @@
  * dele ... | memoria hex | curre | exi)
  */
 
+#include "postulata_posix.h"
 #include "vindex_onerator.h"
 #include "vindex_visum.h"
 

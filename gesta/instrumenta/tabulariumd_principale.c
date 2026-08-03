@@ -16,6 +16,7 @@
  * fortasse vivit -> exitus 0 quietus (certamen start-if-absent se
  * solvit). Garrulitas cetera in stderr. */
 
+#include "postulata_posix.h"
 #include "tabularium.h"
 #include "tabellarius.h"
 #include "tcp.h"

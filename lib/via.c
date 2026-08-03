@@ -1,3 +1,4 @@
+#include "postulata_posix.h"
 #include "via.h"
 #include "chorda_aedificator.h"
 #include <string.h>

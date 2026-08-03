@@ -1,6 +1,7 @@
 /* tcp_posix.c - Implementatio TCP pro POSIX (macOS, Linux)
  */
 
+#include "postulata_posix.h"
 #include "tcp.h"
 
 #include <sys/types.h>

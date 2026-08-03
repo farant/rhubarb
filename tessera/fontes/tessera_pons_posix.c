@@ -5,6 +5,7 @@
  * spectaculum (oculi humani, terminal verum).
  */
 
+#include "postulata_posix.h"
 #include "tessera_pons_posix.h"
 
 #include <termios.h>

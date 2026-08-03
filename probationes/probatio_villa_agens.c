@@ -11,6 +11,7 @@
  * sola redditio WebView in fumus non-verso manet.
  */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

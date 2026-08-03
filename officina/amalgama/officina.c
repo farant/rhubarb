@@ -8,6 +8,7 @@
  * in lib/. Regenerare: officina/amalgamare.sh
  */
 
+#include "postulata_posix.h"
 #include "silva.h"
 
 #include <stdio.h>

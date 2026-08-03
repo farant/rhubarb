@@ -21,6 +21,7 @@
  * Vexillum -fumus: pipata + articuli leguntur ANTE fenestram,
  * numeri impressi, exitus - porta scriptabilis sine oculis. */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

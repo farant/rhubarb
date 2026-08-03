@@ -19,6 +19,7 @@
  *
  * Exitus: 0 congruentia | 1 nulla | 2 fractura (usus/arbor/selector)
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"

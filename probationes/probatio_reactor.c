@@ -3,6 +3,7 @@
  * Probationes functionum reactor: FD monitoring, timers, event loop.
  */
 
+#include "postulata_posix.h"
 #include "reactor.h"
 #include "credo.h"
 #include "piscina.h"

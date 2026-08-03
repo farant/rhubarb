@@ -1,3 +1,4 @@
+#include "postulata_posix.h"
 #include "uuid.h"
 #include "friatio.h"
 #include <stdio.h>

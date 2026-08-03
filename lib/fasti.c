@@ -1,3 +1,4 @@
+#include "postulata_posix.h"
 #include "fasti.h"
 #include <sys/time.h>
 #include <time.h>

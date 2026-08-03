@@ -43,6 +43,7 @@
  * ordine canonico stabili - praecursor fusionis incrementalis
  * (INTENTIO rung 5, silva/phase-log.md). */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

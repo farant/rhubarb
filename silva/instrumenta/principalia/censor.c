@@ -45,6 +45,7 @@
  * Vexilla: -omnia (tectum mensurae sublatum), -v (verbosa)
  * Exitus: 0 purus | 1 flagrationes (aut truncatio) | 2 sine arbore
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"

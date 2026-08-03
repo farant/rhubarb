@@ -4,6 +4,7 @@
  * (vigilia fontium, excubitor chunk 3) - forma tertia manu-voluta
  * PRAEVENTA (regula duorum ad tria hic stetit). */
 
+#include "postulata_posix.h"
 #include "vigilia.h"
 #include "sigillum.h"
 #include "xar.h"

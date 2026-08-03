@@ -16,6 +16,7 @@
  * migratio ad fontem communem = parca nominata, tactu proximo.
  */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"

@@ -15,6 +15,7 @@
  * defectus = original intactum + clamor. Cusio = moneta_ulid
  * (puteus tabularii ipsius - spatium identitatis UNUM). */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

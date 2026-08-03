@@ -1,4 +1,5 @@
 /* probatio_tempestivum.c - Probationes Administratoris Tempestivi */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "tempestivum.h"
 #include "cursus.h"

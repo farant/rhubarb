@@ -12,6 +12,7 @@
  * Usus: lustrum <via_solarii>
  * Instrumentum dev-time (principalia/) - numquam amalgamatum.
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

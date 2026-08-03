@@ -7,6 +7,7 @@
  * MENSURA_VERBOSA=1. Assertiones minimae - haec probatio historiam
  * colligit, non regressiones capit (nondum: fines post baseline).
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

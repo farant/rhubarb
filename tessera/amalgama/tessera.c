@@ -7,6 +7,7 @@
  * tessera/amalgamare.sh
  */
 
+#include "postulata_posix.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

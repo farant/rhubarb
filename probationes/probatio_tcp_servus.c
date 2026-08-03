@@ -3,6 +3,7 @@
  * Probationes functionum server: creare, auscultare, accipere.
  */
 
+#include "postulata_posix.h"
 #include "tcp.h"
 #include "http.h"
 #include "router.h"

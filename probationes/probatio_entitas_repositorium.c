@@ -4,6 +4,7 @@
  * - persistentia_memoria (in-memory)
  * - persistentia_nuntium (file-based)
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "persistentia.h"
 #include "entitas_repositorium.h"

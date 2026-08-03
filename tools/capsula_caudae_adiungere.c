@@ -10,6 +10,7 @@
  *   libri_compress = true
  */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

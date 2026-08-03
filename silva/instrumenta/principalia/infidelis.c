@@ -16,6 +16,7 @@
  *             (idem quod percursus D2 - a radice repositorii/cwd)
  *   -omnia  = fines expansionis sine tecto (fluxus 1M lexemata)
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"

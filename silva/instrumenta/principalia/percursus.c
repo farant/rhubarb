@@ -14,6 +14,7 @@
  * capit); numeri in phase-log / mensura historia referuntur.
  * Usus: ./silva/percursus.sh [radix] [-v]
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"

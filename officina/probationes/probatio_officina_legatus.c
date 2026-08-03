@@ -11,6 +11,7 @@
  * legitur. Ita nec fixa/ (exclusa!) nec inquinatio repositorii.
  */
 
+#include "postulata_posix.h"
 #include "legatus.h"
 #include "praeparator.h"   /* probatio_capita_nova: inventio
                             * capitum novorum */

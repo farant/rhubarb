@@ -3,6 +3,7 @@
  * libraries.ts: monotona intra ms; semita POSIX gettimeofday -
  * exemplar tcp_posix). */
 
+#include "postulata_posix.h"
 #include "moneta.h"
 #include "fasti.h"   /* Momentum: millisecunda ab epocha (canon) */
 #include <stdio.h>

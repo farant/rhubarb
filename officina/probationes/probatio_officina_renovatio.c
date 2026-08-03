@@ -17,6 +17,7 @@
  * hic sola integre agitur - in machina in-processu exec processum
  * probationis ipsum substitueret. */
 
+#include "postulata_posix.h"
 #include "legatus.h"
 #include "tabellarius.h"
 #include "json.h"

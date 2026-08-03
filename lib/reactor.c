@@ -3,6 +3,7 @@
  * Utitur poll() pro I/O multiplexing.
  */
 
+#include "postulata_posix.h"
 #include "reactor.h"
 
 #include <poll.h>

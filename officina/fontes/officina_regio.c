@@ -12,6 +12,7 @@
  * probatione).
  */
 
+#include "postulata_posix.h"
 #include "officina_regio.h"
 
 #include <string.h>

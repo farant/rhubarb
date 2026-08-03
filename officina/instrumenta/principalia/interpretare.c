@@ -25,6 +25,7 @@
  * Exitus: 0 = BENE | 1 = halitus/functio absens | 2 = usus/mundus
  */
 
+#include "postulata_posix.h"
 #include "officina_demissio.h"
 #include "officina_conexio.h"
 #include "officina_machinula.h"

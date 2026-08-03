@@ -14,6 +14,7 @@
  *       (ex radice repositorii)
  */
 
+#include "postulata_posix.h"
 #include "officina_demissio.h"
 #include "officina_medulla_textus.h"
 #include "tabula_dispersa.h"

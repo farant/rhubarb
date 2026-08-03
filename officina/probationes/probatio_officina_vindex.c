@@ -16,6 +16,7 @@
  * Onerator = geminus tertius (interpretare/cursor) CONSULTO -
  * refactor oneratoris communis parcatum nominatim (tractio viva). */
 
+#include "postulata_posix.h"
 #include "officina_indicium.h"
 #include "officina_demissio.h"
 #include "officina_machinula.h"

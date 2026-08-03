@@ -18,6 +18,7 @@
  *
  * Exitus: 0 inventum | 1 non inventum | 2 sine arbore / usus
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"

@@ -4,6 +4,7 @@
  * sanationem latinae-in-systemate fert). Receptum percursus fidele.
  */
 
+#include "postulata_posix.h"
 #include "praeparator.h"
 
 #include "latina.h"

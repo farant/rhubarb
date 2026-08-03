@@ -2,6 +2,7 @@
  * (macOS, Linux). Vide rete.h pro consilio.
  */
 
+#include "postulata_posix.h"
 #include "rete.h"
 
 #include <sys/types.h>
