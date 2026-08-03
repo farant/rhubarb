@@ -488,8 +488,13 @@ int main(int argc, char** argv) {
     printf("        versus_idx = cap->versus_initium + i;\n");
     printf("        si (biblia->versus[versus_idx].versus == versus_num)\n");
     printf("        {\n");
+    printf("            /* pons qualificatoris: textus constans, chorda.datum\n");
+    printf("             * mutabilis - unio castum qualificatorem vitat (gcc\n");
+    printf("             * -Wcast-qual reicit quod clang tacet) */\n");
     printf("            chorda result;\n");
-    printf("            result.datum = (i8*)(biblia->textus + biblia->versus[versus_idx].textus_initium);\n");
+    printf("            unio { constans character* c; i8* m; } pons;\n");
+    printf("            pons.c = biblia->textus + biblia->versus[versus_idx].textus_initium;\n");
+    printf("            result.datum = pons.m;\n");
     printf("            result.mensura = biblia->versus[versus_idx].textus_longitudo;\n");
     printf("            redde result;\n");
     printf("        }\n");

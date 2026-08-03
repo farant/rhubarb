@@ -6190,7 +6190,8 @@ _debug_imprimere (
 {
     si (PISCINA_DEBUG) 
     {
-        imprimere("[PISCINA %s] %s: %zu bytes\n", piscinae_titulum, operatio, mensura);
+        imprimere("[PISCINA %s] %s: %lu bytes\n", piscinae_titulum,
+                  operatio, (insignatus longus)mensura);
     }
 }
 
@@ -6329,9 +6330,9 @@ _allocare_interna (
             /* Non dynamicum et nulli alvei reliqui */
             si (fatalis)
             {
-                imprimere("ALLOCATIO PISCINAE FRACTA: %s (indigentia %zu)\n",
+                imprimere("ALLOCATIO PISCINAE FRACTA: %s (indigentia %lu)\n",
                           piscina->titulus ? piscina->titulus : "nemo",
-                          necessaria);
+                          (insignatus longus)necessaria);
                 exire(I);
             }
             redde NIHIL;

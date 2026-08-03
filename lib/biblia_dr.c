@@ -73142,8 +73142,13 @@ biblia_versus(
         versus_idx = cap->versus_initium + i;
         si (biblia->versus[versus_idx].versus == versus_num)
         {
+            /* pons qualificatoris: textus constans, chorda.datum
+             * mutabilis - unio castum qualificatorem vitat (gcc
+             * -Wcast-qual reicit quod clang tacet) */
             chorda result;
-            result.datum = (i8*)(biblia->textus + biblia->versus[versus_idx].textus_initium);
+            unio { constans character* c; i8* m; } pons;
+            pons.c = biblia->textus + biblia->versus[versus_idx].textus_initium;
+            result.datum = pons.m;
             result.mensura = biblia->versus[versus_idx].textus_longitudo;
             redde result;
         }

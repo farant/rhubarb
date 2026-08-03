@@ -4,6 +4,35 @@
 
 
 /* ==================================================
+ * Pons functionis
+ *
+ * ISO C monstratorem functionis in vacuum* convertere vetat (gcc
+ * -pedantic reicit, clang tacet - percursus glibc 2026-08-03).
+ * Cellula pontis in piscina regestri obiectum verum tabulae praebet;
+ * functio intra cellulam vivit, conversio nulla.
+ * ================================================== */
+
+nomen structura {
+    FunctioTractandi functio;
+} PonsTractatoris;
+
+interior vacuum*
+_pontem_struere(Piscina* piscina, FunctioTractandi functio)
+{
+    PonsTractatoris* pons;
+
+    pons = (PonsTractatoris*)piscina_allocare(piscina,
+        magnitudo(PonsTractatoris));
+    si (!pons)
+    {
+        redde NIHIL;
+    }
+    pons->functio = functio;
+    redde (vacuum*)pons;
+}
+
+
+/* ==================================================
  * Creatio
  * ================================================== */
 
@@ -100,9 +129,17 @@ registrum_tractatoris_registrare(
         }
     }
 
-    /* Inserere tractator in tabulam entitatis */
-    /* Nota: Functio pointer cast ad vacuum* */
-    redde tabula_dispersa_inserere(tractatori_entitatis, *genus_nun_intern, (vacuum*)functio);
+    /* Inserere tractator in tabulam entitatis (per pontem) */
+    {
+        vacuum* pons = _pontem_struere(reg->piscina, functio);
+
+        si (!pons)
+        {
+            redde FALSUM;
+        }
+        redde tabula_dispersa_inserere(tractatori_entitatis,
+            *genus_nun_intern, pons);
+    }
 }
 
 b32
@@ -127,7 +164,16 @@ registrum_tractatoris_ponere_fallback(
         redde FALSUM;
     }
 
-    redde tabula_dispersa_inserere(reg->fallbacks, *genus_intern, (vacuum*)functio);
+    {
+        vacuum* pons = _pontem_struere(reg->piscina, functio);
+
+        si (!pons)
+        {
+            redde FALSUM;
+        }
+        redde tabula_dispersa_inserere(reg->fallbacks, *genus_intern,
+            pons);
+    }
 }
 
 
@@ -161,14 +207,14 @@ registrum_tractatoris_invenire(
     /* Quaerere tractator pro genere nuntii */
     si (tabula_dispersa_invenire(tractatori_entitatis, *genus_nuntii, &valor))
     {
-        redde (FunctioTractandi)valor;
+        redde ((PonsTractatoris*)valor)->functio;
     }
 
     /* Nullus tractator specificus - quaerere fallback */
 quaerere_fallback:
     si (tabula_dispersa_invenire(reg->fallbacks, *genus_entitatis, &valor))
     {
-        redde (FunctioTractandi)valor;
+        redde ((PonsTractatoris*)valor)->functio;
     }
 
     redde NIHIL;

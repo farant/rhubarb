@@ -191,7 +191,7 @@ _flatura_legere_bits(
 
     /* Extrahere bits - larva probata fluxu: NumerusBitorum
      * contractus [0,16] => (1 << n) - 1 in [0, 65535] */
-    valor = lector->bit_buffer & ((I << numerus_bits) - I);
+    valor = lector->bit_buffer & (i32)((I << numerus_bits) - I);
     lector->bit_buffer >>= numerus_bits;
     lector->bits_in_buffer -= numerus_bits;
 
@@ -547,8 +547,8 @@ _flatura_huffman_legere(
     /* <tolera codex="SUBTRACTIO_COMPARATA" (>custos supra: longitudo numquam excedit maxima_bits nec bits_disponibiles (reditus praecox) */
     si (bits_non_usati > 0)
     {
-        /* <tolera codex="CONVERSIO_SIGNI_SEVERA" (>larva (1<<n)-1 non negativa */
-        bits_reponere = ((i32)bits >> longitudo) & ((I << bits_non_usati) - I);
+        bits_reponere = ((i32)bits >> longitudo)
+            & (i32)((I << bits_non_usati) - I);
         lector->bit_buffer = (lector->bit_buffer << bits_non_usati) | bits_reponere;
         lector->bits_in_buffer += bits_non_usati;
     }
@@ -1438,7 +1438,7 @@ _flatura_huffman_tabulae_initium(vacuum)
 
         per (idx = 0; idx < XXVIII; idx++)
         {
-            si (len <= longitudo_basis[idx + I] - I)
+            si (len <= (i32)(longitudo_basis[idx + I] - I))
             {
                 longitudo_ad_indicem[i] = (i8)idx;
                 frange;
@@ -1458,7 +1458,7 @@ _flatura_huffman_tabulae_initium(vacuum)
 
         per (sym = 0; sym < XXIX; sym++)
         {
-            si (dist <= distantia_basis[sym + I] - I)
+            si (dist <= (i32)(distantia_basis[sym + I] - I))
             {
                 distantia_ad_symbolum_tabula[i] = (i8)sym;
                 frange;
@@ -1546,7 +1546,14 @@ _flatura_quaerere_concordantiam(
         i32 longitudo;
         i32 max_longitudo;
 
-        candidatus_positus = (positus & (i32)~(i32)(FLATURA_FENESTRA_MAGNITUDO - I)) | (i32)currens;
+        /* currens >= 0 custodia ansae probatum - conversio tuta */
+        i32 basis_fenestrae;
+        i32 currens_i;
+
+        basis_fenestrae = positus
+            & (i32)~(i32)(FLATURA_FENESTRA_MAGNITUDO - I);
+        currens_i = (i32)(s32)currens;
+        candidatus_positus = basis_fenestrae | currens_i;
 
         /* Verificare si in fenestra */
         si (candidatus_positus >= positus)
@@ -1626,7 +1633,7 @@ _flatura_distantia_ad_symbolum(i32 distantia)
 
     per (i = 0; i < XXIX; i++)
     {
-        si (distantia <= distantia_basis[i + I] - I)
+        si (distantia <= (i32)(distantia_basis[i + I] - I))
         {
             redde i;
         }

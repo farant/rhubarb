@@ -144,9 +144,9 @@ credo_imprimere_compendium (
 
     imprimere("\n");
     imprimere("=== CREDO COMPENDIUM ===\n");
-    imprimere("Totalis:    %zu\n", totalis);
-    imprimere("Praeteriti: %zu\n", praeteriti);
-    imprimere("Fracti:     %zu\n", fracti);
+    imprimere("Totalis:    %lu\n", (insignatus longus)totalis);
+    imprimere("Praeteriti: %lu\n", (insignatus longus)praeteriti);
+    imprimere("Fracti:     %lu\n", (insignatus longus)fracti);
 
     si (fracti > ZEPHYRUM)
     {

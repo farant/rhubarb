@@ -216,6 +216,10 @@ base64_decodificare(
 
         si (d != '=')
         {
+            /* val >= 0 custodia probatum - conversio tuta (gcc
+             * castum nudum hic non honorat, temporarium honorat) */
+            i32 val_i;
+
             val = (d >= 0 && d < CXXVIII) ? tabula_decodificationis[(integer)d] : -1;
             si (val < 0)
             {
@@ -223,7 +227,8 @@ base64_decodificare(
                 resultatus.mensura = 0;
                 redde resultatus;
             }
-            quadruplex |= (i32)val;
+            val_i = (i32)val;
+            quadruplex = quadruplex | val_i;
         }
 
         /* Extrahere 3 bytes */

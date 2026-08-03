@@ -37,14 +37,23 @@ structura Vigilia {
  * auxilia
  * ================================================== */
 
-/* mtempus nanosecundis (st_mtimespec = nomen verum macOS; fenestra
- * eiusdem-secundi clausa - parcum 'Mtimes nanosecundorum') */
+/* mtempus nanosecundis (st_mtimespec = nomen verum macOS, st_mtim
+ * POSIX-2008/Linux; fenestra eiusdem-secundi clausa - parcum 'Mtimes
+ * nanosecundorum'). Bracchium Linux custoditur, non Apple: lexicon
+ * silvae stat Darwin-veritas est, ergo bracchium aestimatum membra
+ * nota ferre debet (via aestimata = bracchium sine custodia). */
 interior s64
 _mtempus_ns (constans structura stat* status_disci)
 {
+#ifdef __linux__
+    redde (s64)status_disci->st_mtim.tv_sec
+            * (s64)1000000000
+        + (s64)status_disci->st_mtim.tv_nsec;
+#else
     redde (s64)status_disci->st_mtimespec.tv_sec
             * (s64)1000000000
         + (s64)status_disci->st_mtimespec.tv_nsec;
+#endif
 }
 
 interior constans character*
