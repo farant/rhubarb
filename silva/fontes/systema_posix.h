@@ -128,6 +128,9 @@ ssize_t read(int fossa, void* sedes, size_t mensura);
 ssize_t write(int fossa, const void* datum, size_t mensura);
 int     close(int fossa);
 void    _exit(int status);
+/* <gradus titulus="usleep" genus="obsoletum" pro="nanosleep"/>
+ * XSI obsoletum: XPG7 sustulit - sub postulatis strictis glibc/musl
+ * evanescit (sonda 2026-08-03 mensuravit). Codex 87 usum flagat. */
 int     usleep(useconds_t microsecunda);
 int     dup2(int fossa_vetus, int fossa_nova);
 int     execvp(const char* plagula, char* const argumenta[]);
@@ -207,6 +210,9 @@ int select(int numerus, fd_set* legendi, fd_set* scribendi,
 #define SOL_SOCKET   0xffff
 #define SO_REUSEADDR 0x0004
 #define SO_KEEPALIVE 0x0008
+/* <gradus titulus="SO_NOSIGPIPE" genus="vernaculum" pro="MSG_NOSIGNAL"/>
+ * Darwin solum - Linux nomen nescit (sonda 2026-08-03); via Linux =
+ * MSG_NOSIGNAL per send aut SIGPIPE ignorare. Codex 86 usum flagat. */
 #define SO_NOSIGPIPE 0x1022
 #define IPPROTO_TCP  6
 #define TCP_NODELAY  0x01

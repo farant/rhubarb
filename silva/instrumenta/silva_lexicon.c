@@ -15,6 +15,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "silva_lexicon.h"
+#include "silva_c89_semantica.h"   /* SILVA_LIMES_POSIX_TITULUS */
 #include <stdio.h>
 #include <string.h>
 
@@ -446,6 +447,13 @@ silva_lexicon_componere (constans character* fons_iso,
     i32 ext_m = ZEPHYRUM;
     character* effusio;
     i32 longitudo;
+    /* limes portabilitatis (2026-08-03): ante partem POSIX emittitur;
+     * semantica titulum quaerit ut symbola POSIX-praebita a puris ISO
+     * discernat (codices 85-87). Externa POST limitem cadunt -
+     * consulto: superficies externa POSIX-formae sunt. */
+    constans character* limes = "\n/* " SILVA_LIMES_POSIX_TITULUS
+        " - hinc omnia derivata (compositio lexici) */\n";
+    i32 limes_m = (i32)strlen(limes);
 
     *fractum = FALSUM;
     *mensura_out = ZEPHYRUM;
@@ -469,14 +477,15 @@ silva_lexicon_componere (constans character* fons_iso,
     }
 
     effusio = (character*)piscina_allocare(piscina,
-        (memoriae_index)(mensura_iso + pars_m + ext_m + III));
+        (memoriae_index)(mensura_iso + pars_m + ext_m + limes_m
+            + III));
     si (effusio == NIHIL) redde NIHIL;
     memcpy(effusio, fons_iso, (memoriae_index)mensura_iso);
     longitudo = mensura_iso;
     si (pars != NIHIL && pars_m > ZEPHYRUM)
     {
-        effusio[longitudo] = '\n';
-        longitudo++;
+        memcpy(effusio + longitudo, limes, (memoriae_index)limes_m);
+        longitudo = longitudo + limes_m;
         memcpy(effusio + longitudo, pars, (memoriae_index)pars_m);
         longitudo = longitudo + pars_m;
     }

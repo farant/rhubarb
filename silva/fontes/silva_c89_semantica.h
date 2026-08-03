@@ -32,6 +32,15 @@
 #ifndef SILVA_C89_SEMANTICA_H
 #define SILVA_C89_SEMANTICA_H
 
+/* LIMES POSICIS (portabilitas, 2026-08-03): compositor lexici
+ * (silva_lexicon_componere, instrumenta) commentarium hoc titulo
+ * notatum ANTE partem POSIX derivatam emittit; semantica titulum in
+ * fonte systematis quaerit - symbola/typi/macra post limen definita
+ * = POSIX praebita (codices 85-87). Constans HIC vivit (fontes) ne
+ * emissor et scrutator divergant; instrumenta capita fontium iam
+ * includunt. */
+#define SILVA_LIMES_POSIX_TITULUS "SILVA-LIMES-POSIX"
+
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -471,6 +480,26 @@ nomen enumeratio {
      * 84 = identificator verbo alieno coinatus (tabula statica;
      *      identificator INTEGER solus - inline_amicus liber). */
     EXAMEN_CODEX_IDENTIFICATOR_ALIENUS,       /* DOMESTICUM */
+
+    /* Portabilitas Linux (desiderata 01KYTGNA36 + 01KZ3RDX8B,
+     * decretum 01KZ3RYZWK; sonda Docker 2026-08-03 taxonomiam
+     * mensuravit). Limes in lexico composito partem POSIX derivatam
+     * notat (SILVA_LIMES_POSIX_TITULUS supra); nomina systematis
+     * post limitem registrata = POSIX praebita. Detectio = ambulatio
+     * strati 0 fontis PRINCIPALIS contra tabulas nominum - bracchia
+     * omissa in crudis latent, ergo conventio 'sepone in bracchium
+     * ifdef' GRATIS quiescit.
+     * 85 = symbola POSIX adhibita sine postulatis (postulata_posix.h
+     *      non inclusio prima plagulae) - UNUM diagnosticum per
+     *      plagulam, radices nominat (glibc sub -std=c89 celat:
+     *      cascata XX errorum ex radice una, mensuratum);
+     * 86 = symbolum vernaculum adhibitum (gradus in systema_posix.h:
+     *      Darwin solum, e.g. SO_NOSIGPIPE) - vicarius nominatur;
+     * 87 = symbolum obsoletum adhibitum (e.g. usleep, XPG7 sustulit
+     *      - sub postulatis strictis evanescit) - vicarius nominatur. */
+    EXAMEN_CODEX_POSTULATA_DESUNT,            /* DOMESTICUM */
+    EXAMEN_CODEX_VERNACULUM_ADHIBITUM,        /* DOMESTICUM */
+    EXAMEN_CODEX_OBSOLETUM_ADHIBITUM,         /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -565,6 +594,17 @@ structura SilvaSemantica {
     TypusC89* reditus_currens;
 
     b32 in_systemate;           /* vexillum ambulationis (provenientia) */
+
+    /* Portabilitas (codices 85-87, 2026-08-03): limes POSICIS in
+     * fonte systematis compositi. limes_posix < 0 aut tabulae NIHIL
+     * = systema sine parte POSIX - codices silent. datum = alias in
+     * textum compositum (comparatio monstratorum pro registrationibus
+     * sine lexemate - typedefi). */
+    s32                 limes_posix;        /* byte_offset tituli limitis */
+    i32                 limes_posix_linea;
+    constans character* limes_posix_datum;
+    TabulaDispersa*     gradus_tabula;      /* titulus -> GradusPortabilitatis* */
+    TabulaDispersa*     posix_nomina;       /* titulus -> NIHIL */
 
     /* parsura ambulationis currentis (M4a chunk A): analysare eam
      * ponit per ambulationem (systema, deinde usoris) - fons viae

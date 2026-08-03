@@ -12242,3 +12242,64 @@ manualis rows, 66s, bounded memory. Before this change: OOM-kill
 territory. All three modes now stream; the old _entitatem_
 resolvere deleted. Porta aurea 20/20 (homonym-refusal golden
 repinned to the new file-naming message).
+
+## 2026-08-03 - INTENTIO: portabilitas Linux - codices 85-87 (postulata/vernaculum/obsoletum)
+
+Context: Docker probe (glibc 2.35 + musl 1.2.5, 6 files x 5 macro
+variants) measured the Linux failure taxonomy; evidence in ledger
+01KYTGNA36 notes + lib/tcp_posix.worklog.md + lib/processus.worklog.md.
+Decretum 01KZ3RYZWK: one prologue header postulata_posix.h
+(_DEFAULT_SOURCE - heals all macro-healable on BOTH libcs; XOPEN 700
+and strict POSIX measured WORSE, they re-hide usleep). Fran's
+sequencing: diagnostic layer FIRST, corpus stays deliberately broken;
+emendator later.
+
+Design (with Fran, 2026-08-03): three codices, all DOMESTICUM
+(verdict-neutral), firing corpus-wide from birth:
+- 85 POSTULATA_DESUNT: file uses a POSIX-provided symbol/type/macro
+  and first include is not postulata_posix.h -> ONE diagnostic per
+  file at the first-include position, naming offending symbols and
+  the exact fix line. USE-based, not include-based: stdlib.h is
+  itself a POSIX sectio (182-file cluster), so include-based would
+  false-positive at scale.
+- 86 VERNACULUM_ADHIBITUM: use-site diagnostic for Darwin-only
+  symbols (first specimen SO_NOSIGPIPE, alternative MSG_NOSIGNAL).
+- 87 OBSOLETUM_ADHIBITUM: use-site diagnostic for obsolete-XSI
+  (first specimen usleep -> nanosleep; XPG7 removal MEASURED in
+  the probe).
+
+Mechanism - in-band through the composed lexicon, so all THREE
+judgment surfaces (examen/percursus/legatus) get it by construction
+(the 01KYBAG1MJ surface-divergence lesson):
+1. silva_lexicon_componere emits a boundary annotation comment
+   before the derived-POSIX portion (string built by literal
+   concatenation to dodge the textual tag scanner).
+2. sectio CONTENT rides into the composed text verbatim (only the
+   marker comments are stripped - verified in silva_lexicon.c), so
+   per-symbol gradus annotations (own-comment directly above the
+   declaration, inside sectio content) arrive at the systema parsura.
+3. semantica cum_systemate builds a portability table: boundary
+   offset (one text scan of systema fons) + harvested symbols/types
+   with lexema offset past boundary (new ex_posix flag beside
+   ex_systemate) + macro journal definitions past boundary + gradus
+   tags from systema trivia (nomen -> gradus + alternativum).
+4. THREE use-seams feed the codices, matching the probe's error
+   taxonomy exactly: symbol resolution (getaddrinfo class), TYPE
+   resolution (mode_t class - the parse-cascade bucket), macro
+   journal events in the user fons (SO_NOSIGPIPE class - macros
+   never reach symbol resolution).
+
+Known edges (named, accepted): externa-block symbols land after the
+boundary in composition order -> counted POSIX (correct for the
+known cases; noted). -posix escape: boundary wraps whole POSIX text.
+-nudum: no systema -> codices silent. postulata_posix.h defines
+_DEFAULT_SOURCE (reserved-class name): codex 83 judges symbol
+registrations only today, macros = its named v2 - when that lands,
+postulata needs a referre-not-coinare carve-out. Watch it.
+
+Calibration: lib/tcp_posix.c is a LIVE specimen firing all three
+(no prologue / SO_NOSIGPIPE:105 / usleep:329). Discipline: each
+codex seen red on the real file, each seen quiet in a fixture that
+addresses it (prologue first include / ifdef __APPLE__ arm - must
+go quiet BY CONSTRUCTION via the evaluated path / symbol replaced),
+each guard broken deliberately once.

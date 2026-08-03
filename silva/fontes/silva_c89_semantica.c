@@ -310,7 +310,11 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "identificator reservatus implementationi (__x aut _X"
       " coinatus - C89 7.1.3)",                 EXAMEN_DOMESTICUM },
     { "identificator verbo alieno coinatus (C99/C23/C++ clavis"
-      " futura)",                               EXAMEN_DOMESTICUM }
+      " futura)",                               EXAMEN_DOMESTICUM },
+    { "postulata platformae desunt (symbola POSIX sine"
+      " postulata_posix.h)",                    EXAMEN_DOMESTICUM },
+    { "symbolum vernaculum Darwin adhibitum",   EXAMEN_DOMESTICUM },
+    { "symbolum obsoletum adhibitum",           EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -978,7 +982,11 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "IDENTIFICATOR_RESERVATUS",
       (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS },
     { "IDENTIFICATOR_ALIENUS",
-      (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS }
+      (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS },
+    { "VERNACULUM_ADHIBITUM",
+      (s32)EXAMEN_CODEX_VERNACULUM_ADHIBITUM },
+    { "OBSOLETUM_ADHIBITUM",
+      (s32)EXAMEN_CODEX_OBSOLETUM_ADHIBITUM }
 };
 
 /* ambulatio annotationum UNA communis per parsuram (frustum E2):
@@ -3014,6 +3022,31 @@ _symbolum_registrare (SilvaSemantica* sem, s32 genus,
     symbolum->declarans = declarans;
     symbolum->lexema = lexema;
     symbolum->usus = FALSUM;             /* _nexum_ponere ponit */
+    /* portabilitas (85): nomen systematis post limitem POSICIS =
+     * POSIX praebitum. Typedefi sine lexemate veniunt - titulus
+     * textum compositum ALIASAT (contractus lexematum), ergo
+     * comparatio monstratorum limitem eundem metitur. */
+    si (sem->in_systemate && sem->posix_nomina != NIHIL)
+    {
+        b32 post_limitem = FALSUM;
+
+        si (lexema != NIHIL && lexema->byte_offset >= ZEPHYRUM
+            && sem->limes_posix >= ZEPHYRUM)
+        {
+            post_limitem = lexema->byte_offset > sem->limes_posix;
+        }
+        alioquin si (sem->limes_posix_datum != NIHIL
+            && titulus.datum != NIHIL)
+        {
+            post_limitem = (constans character*)titulus.datum
+                > sem->limes_posix_datum;
+        }
+        si (post_limitem)
+        {
+            (vacuum)tabula_dispersa_inserere(sem->posix_nomina,
+                copia, NIHIL);
+        }
+    }
     (vacuum)tabula_dispersa_inserere(sem->scopus_currens->ordinaria,
         copia, (vacuum*)symbolum);
     {
@@ -3126,6 +3159,7 @@ silva_c89_semantica_creare (Piscina* piscina)
     }
     memset(sem, ZEPHYRUM, magnitudo(SilvaSemantica));
     sem->piscina = piscina;
+    sem->limes_posix = -I;   /* absens donec systema cum limite */
     sem->derivati = xar_creare(piscina, (i32)magnitudo(TypusC89*));
     sem->symbola = xar_creare(piscina,
         (i32)magnitudo(SemanticaSymbolum*));
@@ -5741,6 +5775,485 @@ _elementum_ambulare (SilvaSemantica* sem, constans SilvaNodus* nodus)
     }
 }
 
+/* ==================================================
+ * Portabilitas (codices 85-87, 2026-08-03)
+ *
+ * Limes in lexico composito (silva_lexicon_componere) partem POSIX
+ * derivatam notat; gradus in systema_posix.h symbola vernacula/
+ * obsoleta signant. Collectio TRIVIA systematis legit (textus fontis
+ * ipse semanticae non datur - trivia eum aliasant); detectio =
+ * ambulatio strati 0 fontis principalis contra tabulas nominum.
+ * Bracchia omissa in crudis latent - conventio ifdef gratis quiescit.
+ * ================================================== */
+
+nomen structura {
+    b32    vernaculum;   /* FALSUM = obsoletum */
+    chorda pro;          /* vicarius; mensura 0 = nullus */
+} GradusPortabilitatis;
+
+interior s32
+_in_chorda_quaerere (chorda fenum, constans character* acus)
+{
+    i32 n = (i32)strlen(acus);
+    i32 i;
+
+    si (n == ZEPHYRUM || fenum.datum == NIHIL || fenum.mensura < n)
+    {
+        redde -I;
+    }
+    per (i = ZEPHYRUM; i + n <= fenum.mensura; i++)
+    {
+        si (strncmp((constans character*)fenum.datum + i, acus,
+                (memoriae_index)n) == ZEPHYRUM)
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+interior b32
+_gradus_attributum (chorda valor, constans character* clavis,
+    chorda* fructus)
+{
+    character acus[XL];
+    s32 sedes;
+    i32 ini;
+    i32 fin;
+
+    fructus->mensura = ZEPHYRUM;
+    fructus->datum = NIHIL;
+    si (strlen(clavis) + (memoriae_index)III > magnitudo(acus))
+    {
+        redde FALSUM;
+    }
+    sprintf(acus, "%s=\"", clavis);
+    sedes = _in_chorda_quaerere(valor, acus);
+    si (sedes < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    ini = (i32)sedes + (i32)strlen(acus);
+    fin = ini;
+    dum (fin < valor.mensura && valor.datum[fin] != '"')
+    {
+        fin++;
+    }
+    si (fin >= valor.mensura)
+    {
+        redde FALSUM;
+    }
+    fructus->datum = valor.datum + ini;
+    fructus->mensura = fin - ini;
+    redde VERUM;
+}
+
+interior vacuum
+_portabilitas_trivium (SilvaSemantica* sem, SilvaToken* trivium)
+{
+    si (trivium == NIHIL)
+    {
+        redde;
+    }
+    si (trivium->genus != SILVA_LEX_COMMENTUM_CLAUSUM
+        && trivium->genus != SILVA_LEX_COMMENTUM_LINEA)
+    {
+        redde;
+    }
+    si (sem->limes_posix < ZEPHYRUM
+        && _in_chorda_quaerere(trivium->valor,
+               SILVA_LIMES_POSIX_TITULUS) >= ZEPHYRUM)
+    {
+        sem->limes_posix = trivium->byte_offset;
+        sem->limes_posix_linea = trivium->linea;
+        sem->limes_posix_datum =
+            (constans character*)trivium->valor.datum;
+        redde;
+    }
+    /* tagus gradus (acus divisa - lex scansoris: sequentia aperiens
+     * in littera chordae tagum evocaret) */
+    si (_in_chorda_quaerere(trivium->valor, "<gradu" "s ")
+        >= ZEPHYRUM)
+    {
+        chorda clavis;
+        chorda genus_g;
+        chorda vicarius;
+        GradusPortabilitatis* gp;
+
+        si (!_gradus_attributum(trivium->valor, "titulus", &clavis))
+        {
+            redde;
+        }
+        (vacuum)_gradus_attributum(trivium->valor, "genus",
+            &genus_g);
+        (vacuum)_gradus_attributum(trivium->valor, "pro", &vicarius);
+        gp = (GradusPortabilitatis*)piscina_allocare(sem->piscina,
+            (memoriae_index)magnitudo(GradusPortabilitatis));
+        si (gp == NIHIL)
+        {
+            redde;
+        }
+        gp->vernaculum = _chorda_par_literis(genus_g, "vernaculum");
+        gp->pro.mensura = ZEPHYRUM;
+        gp->pro.datum = NIHIL;
+        si (vicarius.mensura > ZEPHYRUM)
+        {
+            gp->pro = chorda_transcribere(vicarius, sem->piscina);
+        }
+        (vacuum)tabula_dispersa_inserere(sem->gradus_tabula,
+            chorda_transcribere(clavis, sem->piscina), (vacuum*)gp);
+    }
+}
+
+interior vacuum
+_portabilitas_trivia_omnia (SilvaSemantica* sem, SilvaToken* t)
+{
+    i32 j;
+    i32 k;
+
+    si (t == NIHIL)
+    {
+        redde;
+    }
+    si (t->spatia_ante != NIHIL)
+    {
+        k = xar_numerus(t->spatia_ante);
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            _portabilitas_trivium(sem, *(SilvaToken**)xar_obtinere(
+                t->spatia_ante, j));
+        }
+    }
+    si (t->spatia_post != NIHIL)
+    {
+        k = xar_numerus(t->spatia_post);
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            _portabilitas_trivium(sem, *(SilvaToken**)xar_obtinere(
+                t->spatia_post, j));
+        }
+    }
+}
+
+interior vacuum
+_portabilitas_colligere (SilvaSemantica* sem,
+    constans SilvaParsura* systema)
+{
+    i32 i;
+    i32 m;
+
+    si (systema == NIHIL || systema->lexemata == NIHIL)
+    {
+        redde;
+    }
+    m = xar_numerus(systema->lexemata);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        _portabilitas_trivia_omnia(sem, *(SilvaToken**)xar_obtinere(
+            systema->lexemata, i));
+    }
+    _portabilitas_trivia_omnia(sem, systema->lexema_finis);
+    /* lineae directivae CONSUMPTAE trivia sua secum ferunt -
+     * commentarium gradus supra '#define' cum linea evanesceret
+     * (praecedens mensuratum: annotatio supra #include eodem modo
+     * absorbebatur ante emendationem collectoris E2). */
+    si (systema->directivae != NIHIL)
+    {
+        i32 dm = xar_numerus(systema->directivae);
+        i32 di;
+
+        per (di = ZEPHYRUM; di < dm; di++)
+        {
+            Xar* linea = *(Xar**)xar_obtinere(systema->directivae,
+                di);
+            i32 tm;
+            i32 ti;
+
+            si (linea == NIHIL)
+            {
+                perge;
+            }
+            tm = xar_numerus(linea);
+            per (ti = ZEPHYRUM; ti < tm; ti++)
+            {
+                _portabilitas_trivia_omnia(sem, *(SilvaToken**)
+                    xar_obtinere(linea, ti));
+            }
+        }
+    }
+}
+
+interior vacuum
+_portabilitatis_diagnosticum (SilvaSemantica* sem,
+    constans SilvaParsura* parsura, constans SilvaToken* sedes,
+    s32 codex, constans character* nuntius)
+{
+    SemanticaDiagnosticum* d;
+
+    d = (SemanticaDiagnosticum*)xar_addere(sem->diagnostica);
+    si (d == NIHIL)
+    {
+        redde;
+    }
+    d->nodus = NIHIL;
+    d->socius = NIHIL;
+    d->codex = codex;
+    d->causa = nuntius;
+    d->severitas = _codices[codex].severitas;
+    d->provisionale = FALSUM;
+    d->via.mensura = ZEPHYRUM;
+    d->via.datum = NIHIL;
+    d->linea = sedes->linea;
+    d->columna = sedes->columna;
+    d->longitudo = sedes->longitudo;
+    d->fons_index = sedes->fons_index;
+    si (parsura->expansio != NIHIL)
+    {
+        constans chorda* v = silva_fons_via(parsura->expansio,
+            sedes->fons_index);
+
+        si (v != NIHIL)
+        {
+            d->via = *v;
+        }
+    }
+}
+
+interior b32
+_via_postulata_est (constans chorda* via)
+{
+    constans character* acus = "postulata_posix.h";
+    i32 n = (i32)strlen(acus);
+
+    si (via == NIHIL || via->datum == NIHIL || via->mensura < n)
+    {
+        redde FALSUM;
+    }
+    redde strncmp((constans character*)via->datum
+        + (via->mensura - n), acus, (memoriae_index)n) == ZEPHYRUM;
+}
+
+interior vacuum
+_portabilitatem_examinare (SilvaSemantica* sem,
+    constans SilvaParsura* parsura)
+{
+    Xar* fluxus;
+    b32 prologus_adest = FALSUM;
+    constans SilvaToken* prima_sedes = NIHIL;
+    chorda nomina[IV];
+    i32 nomina_n = ZEPHYRUM;
+    i32 numerus_totus = ZEPHYRUM;
+    TabulaDispersa* visa;
+    i32 i;
+    i32 m;
+
+    si (sem->posix_nomina == NIHIL || parsura == NIHIL
+        || parsura->expansio == NIHIL
+        || parsura->fons_princeps < ZEPHYRUM
+        || parsura->lexemata == NIHIL)
+    {
+        redde;
+    }
+
+    /* macra lexici post limitem -> posix_nomina (definitiones cum
+     * linea; latina.h quoque est_lexicon - via discriminat) */
+    si (sem->limes_posix_linea > ZEPHYRUM
+        && parsura->expansio->acta != NIHIL)
+    {
+        m = xar_numerus(parsura->expansio->acta);
+        per (i = ZEPHYRUM; i < m; i++)
+        {
+            constans SilvaEventum* e = (constans SilvaEventum*)
+                xar_obtinere(parsura->expansio->acta, i);
+            constans SilvaFons* f;
+
+            si (e == NIHIL || e->genus != SILVA_EVENTUM_DEFINITIO
+                || e->def == NIHIL || e->def->titulus == NIHIL
+                || e->def->fons_index < ZEPHYRUM)
+            {
+                perge;
+            }
+            f = (constans SilvaFons*)xar_obtinere(
+                parsura->expansio->fontes,
+                (i32)e->def->fons_index);
+            si (f == NIHIL || f->via == NIHIL || !f->est_lexicon)
+            {
+                perge;
+            }
+            si (!_chorda_par_literis(*f->via, "systema_c89.h"))
+            {
+                perge;
+            }
+            si (e->def->linea_def <= sem->limes_posix_linea)
+            {
+                perge;
+            }
+            (vacuum)tabula_dispersa_inserere(sem->posix_nomina,
+                chorda_transcribere(*e->def->titulus, sem->piscina),
+                NIHIL);
+        }
+    }
+
+    /* prologus: inclusio PRIMA fontis principalis postulata sit */
+    si (parsura->expansio->inclusiones != NIHIL)
+    {
+        m = xar_numerus(parsura->expansio->inclusiones);
+        per (i = ZEPHYRUM; i < m; i++)
+        {
+            constans SilvaInclusio* inc = (constans SilvaInclusio*)
+                xar_obtinere(parsura->expansio->inclusiones, i);
+
+            si (inc == NIHIL
+                || inc->fons_ex != parsura->fons_princeps)
+            {
+                perge;
+            }
+            prologus_adest = _via_postulata_est(inc->via);
+            frange;   /* prima sola iudicatur - lex postulatorum */
+        }
+    }
+
+    /* Fluxus FINALIS, sed RADIX originis iudicatur: lexema expansum
+     * ad lexema fontis (nomen macro consumptum!) reducit, lexema
+     * fontis ad se ipsum - ambulatio UNA identificatores planos ET
+     * nomina macrorum consumpta tegit. (Strata generationem CRUDAM
+     * non retinent - post-mutationes solae; provenientia origo hoc
+     * gratis dat.) Lamina expansionis una = sedes una: radix eadem
+     * consecutiva praetermittitur. */
+    fluxus = parsura->lexemata;
+    visa = tabula_dispersa_creare_chorda(sem->piscina, XXXII);
+    si (fluxus == NIHIL || visa == NIHIL)
+    {
+        redde;
+    }
+    {
+        SilvaToken* radix_prior = NIHIL;
+
+    m = xar_numerus(fluxus);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaToken* t0 = *(SilvaToken**)xar_obtinere(fluxus, i);
+        SilvaToken* t;
+        vacuum* datum_g = NIHIL;
+
+        t = (t0 != NIHIL) ? silva_token_radix(t0) : NIHIL;
+        si (t == NIHIL || t->genus != SILVA_LEX_IDENTIFICATOR
+            || t->fons_index != parsura->fons_princeps)
+        {
+            perge;
+        }
+        si (t == radix_prior)
+        {
+            perge;
+        }
+        radix_prior = t;
+        si (sem->gradus_tabula != NIHIL
+            && tabula_dispersa_invenire(sem->gradus_tabula,
+                   t->valor, &datum_g))
+        {
+            constans GradusPortabilitatis* gp =
+                (constans GradusPortabilitatis*)datum_g;
+            character* nuntius = (character*)piscina_allocare(
+                sem->piscina, (memoriae_index)t->valor.mensura
+                    + (memoriae_index)gp->pro.mensura
+                    + (memoriae_index)CXCII);
+
+            si (nuntius != NIHIL)
+            {
+                si (gp->vernaculum)
+                {
+                    sprintf(nuntius, "'%.*s' vernaculum Darwin est"
+                        " (Linux nomen nescit)%s%.*s%s - aut sepone"
+                        " in bracchium __APPLE__",
+                        (int)t->valor.mensura,
+                        (constans character*)t->valor.datum,
+                        gp->pro.mensura > ZEPHYRUM
+                            ? " - pro eo '" : "",
+                        (int)gp->pro.mensura,
+                        (constans character*)gp->pro.datum,
+                        gp->pro.mensura > ZEPHYRUM ? "'" : "");
+                    _portabilitatis_diagnosticum(sem, parsura, t,
+                        (s32)EXAMEN_CODEX_VERNACULUM_ADHIBITUM,
+                        nuntius);
+                }
+                alioquin
+                {
+                    sprintf(nuntius, "'%.*s' obsoletum est (XPG7"
+                        " sustulit - sub postulatis strictis"
+                        " evanescit)%s%.*s%s",
+                        (int)t->valor.mensura,
+                        (constans character*)t->valor.datum,
+                        gp->pro.mensura > ZEPHYRUM
+                            ? " - pro eo '" : "",
+                        (int)gp->pro.mensura,
+                        (constans character*)gp->pro.datum,
+                        gp->pro.mensura > ZEPHYRUM ? "'" : "");
+                    _portabilitatis_diagnosticum(sem, parsura, t,
+                        (s32)EXAMEN_CODEX_OBSOLETUM_ADHIBITUM,
+                        nuntius);
+                }
+            }
+        }
+        si (tabula_dispersa_invenire(sem->posix_nomina, t->valor,
+                &datum_g))
+        {
+            si (prima_sedes == NIHIL)
+            {
+                prima_sedes = t;
+            }
+            si (!tabula_dispersa_continet(visa, t->valor))
+            {
+                (vacuum)tabula_dispersa_inserere(visa, t->valor,
+                    NIHIL);
+                si (nomina_n < IV)
+                {
+                    nomina[nomina_n] = t->valor;
+                    nomina_n++;
+                }
+                numerus_totus++;
+            }
+        }
+    }
+    }
+
+    si (!prologus_adest && numerus_totus > ZEPHYRUM
+        && prima_sedes != NIHIL)
+    {
+        memoriae_index cap = (memoriae_index)CCLVI;
+        character* nuntius;
+        int longit;
+
+        per (i = ZEPHYRUM; i < nomina_n; i++)
+        {
+            cap = cap + (memoriae_index)nomina[i].mensura;
+        }
+        nuntius = (character*)piscina_allocare(sem->piscina, cap);
+        si (nuntius == NIHIL)
+        {
+            redde;
+        }
+        longit = sprintf(nuntius, "postulata platformae desunt:"
+            " symbola POSIX adhibentur (");
+        per (i = ZEPHYRUM; i < nomina_n; i++)
+        {
+            longit = longit + sprintf(nuntius + longit, "%s%.*s",
+                i > ZEPHYRUM ? ", " : "",
+                (int)nomina[i].mensura,
+                (constans character*)nomina[i].datum);
+        }
+        si (numerus_totus > nomina_n)
+        {
+            longit = longit + sprintf(nuntius + longit,
+                " et %d alia", (int)(numerus_totus - nomina_n));
+        }
+        sprintf(nuntius + longit, ") - insere '#include"
+            " \"postulata_posix.h\"' ANTE inclusiones omnes (glibc"
+            " sub -std=c89 sine macrone celat)");
+        _portabilitatis_diagnosticum(sem, parsura, prima_sedes,
+            (s32)EXAMEN_CODEX_POSTULATA_DESUNT, nuntius);
+    }
+}
+
 SilvaSemantica*
 silva_c89_semantica_analysare (Piscina* piscina,
     constans SilvaParsura* parsura)
@@ -5768,6 +6281,13 @@ silva_c89_semantica_analysare_cum_systemate (Piscina* piscina,
     }
     si (systema != NIHIL && systema->commissio != NIHIL)
     {
+        /* portabilitas: limes + gradus ANTE ambulationem systematis
+         * - uncus registrationis limitem legit (codices 85-87) */
+        sem->gradus_tabula = tabula_dispersa_creare_chorda(piscina,
+            XVI);
+        sem->posix_nomina = tabula_dispersa_creare_chorda(piscina,
+            CCLVI);
+        _portabilitas_colligere(sem, systema);
         sem->in_systemate = VERUM;
         sem->parsura_currens = systema;
         _listam_ambulare(sem, systema->commissio->radix);
@@ -5807,6 +6327,9 @@ silva_c89_semantica_analysare_cum_systemate (Piscina* piscina,
     _annotationes_examinare(sem, parsura);
     /* MENU-FINALE: inutilia (69/70) - post ambulationem totam */
     _inutiles_examinare(sem);
+    /* portabilitas (85-87): stratum 0 contra tabulas nominum -
+     * post ambulationem totam (tabulae ex systemate impletae) */
+    _portabilitatem_examinare(sem, parsura);
     redde sem;
 }
 
