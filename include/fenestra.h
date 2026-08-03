@@ -2,6 +2,8 @@
 #define FENESTRA_H
 
 /* <aedilis corpus="lib/fenestra_textus.c"/> */
+/* <sutura/> interfacies fenestrarum portabilis - implementatio
+ * per-platformam (fenestra.m Darwin; olim fenestra_linux.c) */
 
 #include "latina.h"
 #include "piscina.h"

@@ -314,7 +314,8 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "postulata platformae desunt (symbola POSIX sine"
       " postulata_posix.h)",                    EXAMEN_DOMESTICUM },
     { "symbolum vernaculum Darwin adhibitum",   EXAMEN_DOMESTICUM },
-    { "symbolum obsoletum adhibitum",           EXAMEN_DOMESTICUM }
+    { "symbolum obsoletum adhibitum",           EXAMEN_DOMESTICUM },
+    { "plagula portabilis vernaculum includit", EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -982,11 +983,12 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "IDENTIFICATOR_RESERVATUS",
       (s32)EXAMEN_CODEX_IDENTIFICATOR_RESERVATUS },
     { "IDENTIFICATOR_ALIENUS",
-      (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS },
-    { "VERNACULUM_ADHIBITUM",
-      (s32)EXAMEN_CODEX_VERNACULUM_ADHIBITUM },
-    { "OBSOLETUM_ADHIBITUM",
-      (s32)EXAMEN_CODEX_OBSOLETUM_ADHIBITUM }
+      (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS }
+    /* familia portabilitatis (85-88) CONSULTO abest: emissio eius
+     * positione manuali sine nodo fit - _tolera_absorbere nodum
+     * petit, ergo tolera numquam absorberet et IRRITUM putresceret.
+     * Porta nominata: absorptio per-lineam pro diagnosticis sine
+     * nodo, tunc familia intrat. */
 };
 
 /* ambulatio annotationum UNA communis per parsuram (frustum E2):
@@ -6273,6 +6275,252 @@ _portabilitatem_examinare (SilvaSemantica* sem,
     }
 }
 
+/* ==================================================
+ * Professiones portabilitatis (codex 88, 01KZ3RDX8B v1)
+ *
+ * Plagula in commentario quovis suo profitetur: portabile / sutura
+ * / vernaculum (tagi in litteris DIVISIS infra - lex scansoris).
+ * TU capita inclusa fert, ergo professiones fontium omnium ex una
+ * parsura leguntur; systema non requiritur. Regula LENIS v1:
+ * portabile vernaculum ne includat; sine professione transitur.
+ * ================================================== */
+
+#define PROFESSIO_NULLA      0
+#define PROFESSIO_PORTABILE  1
+#define PROFESSIO_SUTURA     2
+#define PROFESSIO_VERNACULUM 3
+
+nomen structura {
+    s32 fons_index;
+    s32 professio;
+} ProfessioFontis;
+
+interior s32
+_professio_fontis (constans SilvaSemantica* sem, s32 fons_index)
+{
+    i32 i;
+    i32 m;
+
+    si (sem->professiones == NIHIL)
+    {
+        redde PROFESSIO_NULLA;
+    }
+    m = xar_numerus(sem->professiones);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans ProfessioFontis* p = (constans ProfessioFontis*)
+            xar_obtinere(sem->professiones, i);
+
+        si (p != NIHIL && p->fons_index == fons_index)
+        {
+            redde p->professio;
+        }
+    }
+    redde PROFESSIO_NULLA;
+}
+
+interior vacuum
+_professionem_trivium (SilvaSemantica* sem, SilvaToken* trivium)
+{
+    s32 professio = PROFESSIO_NULLA;
+
+    si (trivium == NIHIL)
+    {
+        redde;
+    }
+    si (trivium->genus != SILVA_LEX_COMMENTUM_CLAUSUM
+        && trivium->genus != SILVA_LEX_COMMENTUM_LINEA)
+    {
+        redde;
+    }
+    si (_in_chorda_quaerere(trivium->valor, "<porta" "bile/>")
+        >= ZEPHYRUM)
+    {
+        professio = PROFESSIO_PORTABILE;
+    }
+    alioquin si (_in_chorda_quaerere(trivium->valor, "<sutu" "ra/>")
+        >= ZEPHYRUM)
+    {
+        professio = PROFESSIO_SUTURA;
+    }
+    alioquin si (_in_chorda_quaerere(trivium->valor,
+                     "<vernacu" "lum/>") >= ZEPHYRUM)
+    {
+        professio = PROFESSIO_VERNACULUM;
+    }
+    si (professio == PROFESSIO_NULLA)
+    {
+        redde;
+    }
+    si (_professio_fontis(sem, trivium->fons_index)
+        != PROFESSIO_NULLA)
+    {
+        redde;   /* prima professio vincit */
+    }
+    {
+        ProfessioFontis* p = (ProfessioFontis*)xar_addere(
+            sem->professiones);
+
+        si (p != NIHIL)
+        {
+            p->fons_index = trivium->fons_index;
+            p->professio = professio;
+        }
+    }
+}
+
+interior vacuum
+_professionum_trivia_omnia (SilvaSemantica* sem, SilvaToken* t)
+{
+    i32 j;
+    i32 k;
+
+    si (t == NIHIL)
+    {
+        redde;
+    }
+    si (t->spatia_ante != NIHIL)
+    {
+        k = xar_numerus(t->spatia_ante);
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            _professionem_trivium(sem, *(SilvaToken**)xar_obtinere(
+                t->spatia_ante, j));
+        }
+    }
+    si (t->spatia_post != NIHIL)
+    {
+        k = xar_numerus(t->spatia_post);
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            _professionem_trivium(sem, *(SilvaToken**)xar_obtinere(
+                t->spatia_post, j));
+        }
+    }
+}
+
+interior vacuum
+_professiones_colligere (SilvaSemantica* sem,
+    constans SilvaParsura* parsura)
+{
+    i32 i;
+    i32 m;
+
+    si (parsura == NIHIL || parsura->lexemata == NIHIL)
+    {
+        redde;
+    }
+    sem->professiones = xar_creare(sem->piscina,
+        (i32)magnitudo(ProfessioFontis));
+    si (sem->professiones == NIHIL)
+    {
+        redde;
+    }
+    m = xar_numerus(parsura->lexemata);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        _professionum_trivia_omnia(sem, *(SilvaToken**)xar_obtinere(
+            parsura->lexemata, i));
+    }
+    _professionum_trivia_omnia(sem, parsura->lexema_finis);
+    /* lineae directivae trivia sua secum ferunt (lex E2/gradus) */
+    si (parsura->directivae != NIHIL)
+    {
+        i32 dm = xar_numerus(parsura->directivae);
+        i32 di;
+
+        per (di = ZEPHYRUM; di < dm; di++)
+        {
+            Xar* linea = *(Xar**)xar_obtinere(parsura->directivae,
+                di);
+            i32 tm;
+            i32 ti;
+
+            si (linea == NIHIL)
+            {
+                perge;
+            }
+            tm = xar_numerus(linea);
+            per (ti = ZEPHYRUM; ti < tm; ti++)
+            {
+                _professionum_trivia_omnia(sem, *(SilvaToken**)
+                    xar_obtinere(linea, ti));
+            }
+        }
+    }
+}
+
+interior vacuum
+_professionem_examinare (SilvaSemantica* sem,
+    constans SilvaParsura* parsura)
+{
+    constans SilvaToken* sedes = NIHIL;
+    i32 i;
+    i32 m;
+
+    si (parsura == NIHIL || parsura->expansio == NIHIL
+        || parsura->fons_princeps < ZEPHYRUM
+        || parsura->lexemata == NIHIL)
+    {
+        redde;
+    }
+    si (_professio_fontis(sem, parsura->fons_princeps)
+        != PROFESSIO_PORTABILE)
+    {
+        redde;
+    }
+    m = xar_numerus(parsura->lexemata);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaToken* t = *(SilvaToken**)xar_obtinere(
+            parsura->lexemata, i);
+
+        si (t != NIHIL && t->fons_index == parsura->fons_princeps)
+        {
+            sedes = t;
+            frange;
+        }
+    }
+    si (sedes == NIHIL || parsura->expansio->inclusiones == NIHIL)
+    {
+        redde;
+    }
+    m = xar_numerus(parsura->expansio->inclusiones);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans SilvaInclusio* inc = (constans SilvaInclusio*)
+            xar_obtinere(parsura->expansio->inclusiones, i);
+
+        si (inc == NIHIL || inc->fons_ex != parsura->fons_princeps
+            || inc->fons_ad < ZEPHYRUM || inc->via == NIHIL)
+        {
+            perge;
+        }
+        si (_professio_fontis(sem, inc->fons_ad)
+            != PROFESSIO_VERNACULUM)
+        {
+            perge;
+        }
+        {
+            character* nuntius = (character*)piscina_allocare(
+                sem->piscina,
+                (memoriae_index)inc->via->mensura
+                    + (memoriae_index)CXXVIII);
+
+            si (nuntius != NIHIL)
+            {
+                sprintf(nuntius, "plagula portabilis '%.*s'"
+                    " (vernaculum) includit - sutura interponenda"
+                    " aut professio removenda",
+                    (int)inc->via->mensura,
+                    (constans character*)inc->via->datum);
+                _portabilitatis_diagnosticum(sem, parsura, sedes,
+                    (s32)EXAMEN_CODEX_PORTABILE_VIOLATUM, nuntius);
+            }
+        }
+    }
+}
+
 SilvaSemantica*
 silva_c89_semantica_analysare (Piscina* piscina,
     constans SilvaParsura* parsura)
@@ -6349,6 +6597,10 @@ silva_c89_semantica_analysare_cum_systemate (Piscina* piscina,
     /* portabilitas (85-87): stratum 0 contra tabulas nominum -
      * post ambulationem totam (tabulae ex systemate impletae) */
     _portabilitatem_examinare(sem, parsura);
+    /* professiones (88): sine systemate quoque - professio se
+     * ipsam fert */
+    _professiones_colligere(sem, parsura);
+    _professionem_examinare(sem, parsura);
     redde sem;
 }
 

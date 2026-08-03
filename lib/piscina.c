@@ -1,3 +1,4 @@
+/* <portabile/> probationibus sub glibc probata 2026-08-03 */
 #include "piscina.h"
 #include <stdlib.h>
 #include <string.h>

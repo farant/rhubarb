@@ -1,3 +1,4 @@
+/* <portabile/> probationibus sub glibc probata 2026-08-03 */
 /* xar.c - "Codex Tabulae Exponentialis" - Implementatio
  *
  * Tabula crescens sine reallocatio

@@ -1,3 +1,4 @@
+/* <sutura/> interfacies webview portabilis - implementatio per-platformam */
 /* vitrea.h - vitreae fenestrarum: WKWebView super Fenestram
  * (vitrea Phasis B; spec: project-specs/vitrea-spec-v2.md)
  *

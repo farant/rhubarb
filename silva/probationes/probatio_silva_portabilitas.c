@@ -13,6 +13,7 @@
 #include "xar.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
+#include "silva_contextus.h"
 #include "silva_parsare.h"
 #include "silva_commissio.h"
 #include "silva_c89_oraculum.h"
@@ -310,6 +311,121 @@ s32 principale (vacuum)
                 (s32)EXAMEN_CODEX_VERNACULUM_ADHIBITUM), ZEPHYRUM);
             CREDO_AEQUALIS_I32 (_numerus_codicis(sem,
                 (s32)EXAMEN_CODEX_OBSOLETUM_ADHIBITUM), ZEPHYRUM);
+        }
+    }
+
+    /* ========================================================
+     * VII-IX. Professiones (codex 88, regula lenis v1): plagula
+     * portabilis vernaculum includens flagrat; sutura et sine
+     * professione transeunt; principalis sine professione tacet.
+     * Tagi in litteris divisis - lex scansoris.
+     * ======================================================== */
+    imprimere("--- VII: portabile vernaculum includit ---\n");
+    {
+        SilvaContextus* ctx = silva_contextus_creare(piscina);
+        SilvaParsura* parsura;
+        SilvaSemantica* sem;
+        constans character* caput_vern =
+            "/* fenestra ficta <vernacu" "lum/> */\n"
+            "int fenestra_p(void);\n";
+        constans character* usor =
+            "/* <porta" "bile/> */\n"
+            "#include \"caput_p.h\"\n"
+            "int probare(void);\n"
+            "int probare(void) { return fenestra_p(); }\n";
+
+        CREDO_NON_NIHIL (ctx);
+        si (ctx != NIHIL)
+        {
+            CREDO_VERUM (silva_contextus_praebere(ctx, "caput_p.h",
+                caput_vern, (i32)strlen(caput_vern)));
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "usor_p.c", usor, (i32)strlen(usor), NIHIL);
+            CREDO_NON_NIHIL (parsura);
+            sem = (parsura != NIHIL)
+                ? silva_c89_semantica_analysare(piscina, parsura)
+                : NIHIL;
+            CREDO_NON_NIHIL (sem);
+            si (sem != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 (_numerus_codicis(sem,
+                    (s32)EXAMEN_CODEX_PORTABILE_VIOLATUM), I);
+                CREDO_VERUM (_causa_continet(sem,
+                    (s32)EXAMEN_CODEX_PORTABILE_VIOLATUM,
+                    "caput_p.h"));
+            }
+        }
+    }
+
+    imprimere("--- VIII: sutura et sine professione transeunt ---\n");
+    {
+        SilvaContextus* ctx = silva_contextus_creare(piscina);
+        SilvaParsura* parsura;
+        SilvaSemantica* sem;
+        constans character* caput_sut =
+            "/* <sutu" "ra/> */\n"
+            "int sutura_p(void);\n";
+        constans character* caput_liber =
+            "int liber_p(void);\n";
+        constans character* usor =
+            "/* <porta" "bile/> */\n"
+            "#include \"caput_s.h\"\n"
+            "#include \"caput_l.h\"\n"
+            "int probare(void);\n"
+            "int probare(void) { return sutura_p() + liber_p(); }\n";
+
+        CREDO_NON_NIHIL (ctx);
+        si (ctx != NIHIL)
+        {
+            CREDO_VERUM (silva_contextus_praebere(ctx, "caput_s.h",
+                caput_sut, (i32)strlen(caput_sut)));
+            CREDO_VERUM (silva_contextus_praebere(ctx, "caput_l.h",
+                caput_liber, (i32)strlen(caput_liber)));
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "usor_s.c", usor, (i32)strlen(usor), NIHIL);
+            sem = (parsura != NIHIL)
+                ? silva_c89_semantica_analysare(piscina, parsura)
+                : NIHIL;
+            CREDO_NON_NIHIL (sem);
+            si (sem != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 (_numerus_codicis(sem,
+                    (s32)EXAMEN_CODEX_PORTABILE_VIOLATUM),
+                    ZEPHYRUM);
+            }
+        }
+    }
+
+    imprimere("--- IX: principalis sine professione tacet ---\n");
+    {
+        SilvaContextus* ctx = silva_contextus_creare(piscina);
+        SilvaParsura* parsura;
+        SilvaSemantica* sem;
+        constans character* caput_vern =
+            "/* <vernacu" "lum/> */\n"
+            "int fenestra_p(void);\n";
+        constans character* usor =
+            "#include \"caput_p.h\"\n"
+            "int probare(void);\n"
+            "int probare(void) { return fenestra_p(); }\n";
+
+        CREDO_NON_NIHIL (ctx);
+        si (ctx != NIHIL)
+        {
+            CREDO_VERUM (silva_contextus_praebere(ctx, "caput_p.h",
+                caput_vern, (i32)strlen(caput_vern)));
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "usor_n.c", usor, (i32)strlen(usor), NIHIL);
+            sem = (parsura != NIHIL)
+                ? silva_c89_semantica_analysare(piscina, parsura)
+                : NIHIL;
+            CREDO_NON_NIHIL (sem);
+            si (sem != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 (_numerus_codicis(sem,
+                    (s32)EXAMEN_CODEX_PORTABILE_VIOLATUM),
+                    ZEPHYRUM);
+            }
         }
     }
 

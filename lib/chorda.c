@@ -1,3 +1,4 @@
+/* <portabile/> probationibus sub glibc probata 2026-08-03 */
 #include "postulata_posix.h"
 #include "chorda.h"
 #include "chorda_aedificator.h"

@@ -12435,3 +12435,53 @@ Fran's call after the 132/136 measurement. Three pieces:
    request answered - the VPS driver made flesh.
 3. First probatio slice under Linux (pure-C set) + the sized map of
    what the full suite port needs.
+
+## 2026-08-03 - INTENTIO: codex 88 PORTABILE_VIOLATUM (01KZ3RDX8B v1)
+
+Session closer, Fran's call. The file-level half of the portability
+annotation layer (symbol half shipped as 86):
+- Three file claims as STML tags in any comment of the file:
+  portabile / sutura / vernaculum (bare-word split literals in
+  scanner code - the law).
+- Codex 88: judged file claims portabile AND a quoted include of
+  the PRINCIPAL fons resolves to a fons claiming vernaculum ->
+  DOMESTICUM diagnostic naming the include and prescribing the
+  sutura. LENIENT v1: unclaimed includes pass (gradual adoption;
+  strict closure mode + census + mass-claim emendator = named
+  doors).
+- Mechanism: claims collected from ALL fontes' trivia of the
+  parsura (the TU carries included headers' text - fons_index keys
+  the claim map); directivae walked too (the E2/gradus lesson,
+  already paid). Check runs UNCONDITIONALLY (no systema needed -
+  claims are self-contained), so plain analysare paths get it.
+- First claims planted: fenestra.h + vitrea.h sutura (they ARE the
+  seams); portabile on the five Linux-proven files (chorda, piscina,
+  xar, tabula_dispersa, tcp_posix - the probationes that passed
+  under glibc today earn the first claims).
+- Probatio: new sections in probatio_silva_portabilitas (contextu
+  route with praebere'd fictional headers); calibration both
+  directions (fires on vernaculum include; quiet on sutura/unclaimed
+  /no-claim; claim removal quiets).
+
+## 2026-08-03 - RELATIO: codex 88 SHIPPED - professiones portabilitatis (01KZ3RDX8B v1)
+
+Session closer landed. Probatio 52/52 first run (sections VII-IX:
+fires on portabile-includes-vernaculum with the via named; quiet on
+sutura, on unclaimed includes, on unclaimed principal - the lenient
+rule pinned as law). First claims planted: fenestra.h + vitrea.h
+sutura (the seams the architecture always had, now machine-legible);
+portabile on the five glibc-proven files (chorda, piscina, xar,
+tabula_dispersa, tcp_posix - the day's Linux survivors earn the
+first professions).
+
+Honesty correction en route: 86/87 were removed from _tolerabiles -
+the manual-position emission path never calls _tolera_absorbere, so
+a tolera there would rot IRRITUM. Door named in the table comment:
+per-line absorption for node-less diagnostics, then the family
+enters.
+
+Doors: strict closure mode (all includes must be claimed), census
+of professions + inferred candidates, mass-claim emendator, the
+forum-split scout run (mark forum's core, read the violations).
+Ladder: suite 114/114 + XIV apps, silva 38/38, amalgama VERIFICATUM,
+PORTA LINUX TENET.

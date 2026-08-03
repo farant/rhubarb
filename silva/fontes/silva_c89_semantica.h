@@ -500,6 +500,18 @@ nomen enumeratio {
     EXAMEN_CODEX_POSTULATA_DESUNT,            /* DOMESTICUM */
     EXAMEN_CODEX_VERNACULUM_ADHIBITUM,        /* DOMESTICUM */
     EXAMEN_CODEX_OBSOLETUM_ADHIBITUM,         /* DOMESTICUM */
+
+    /* Professiones portabilitatis (01KZ3RDX8B v1, 2026-08-03):
+     * plagula in commentario suo profitetur - portabile (POSIX
+     * ubique compilat), sutura (interfacies portabilis,
+     * implementatio per-platformam - fenestra.h/vitrea.h), aut
+     * vernaculum (codex nativus). Regula LENIS v1: plagula
+     * portabilis plagulam VERNACULAM ne includat (sutura
+     * interponatur); inclusiones sine professione transeunt
+     * (adoptio gradualis - modus strictus + census + emendator
+     * professionum = portae nominatae).
+     * 88 = portabile vernaculum includit. */
+    EXAMEN_CODEX_PORTABILE_VIOLATUM,          /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -605,6 +617,11 @@ structura SilvaSemantica {
     constans character* limes_posix_datum;
     TabulaDispersa*     gradus_tabula;      /* titulus -> GradusPortabilitatis* */
     TabulaDispersa*     posix_nomina;       /* titulus -> NIHIL */
+
+    /* Professiones portabilitatis (codex 88): fons_index ->
+     * professio, ex triviis OMNIUM fontium parsurae collectae
+     * (systema non requiritur - professio se ipsam fert). */
+    Xar*                professiones;       /* ProfessioFontis per valorem */
 
     /* parsura ambulationis currentis (M4a chunk A): analysare eam
      * ponit per ambulationem (systema, deinde usoris) - fons viae

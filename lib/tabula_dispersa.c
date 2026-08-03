@@ -1,3 +1,4 @@
+/* <portabile/> probationibus sub glibc probata 2026-08-03 */
 #include "tabula_dispersa.h"
 #include "friatio.h"
 #include <stdio.h>

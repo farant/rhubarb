@@ -1,3 +1,4 @@
+/* <portabile/> probationibus sub glibc probata 2026-08-03 */
 /* tcp_posix.c - Implementatio TCP pro POSIX (macOS, Linux)
  */
 
