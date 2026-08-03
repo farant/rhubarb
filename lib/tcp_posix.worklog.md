@@ -63,3 +63,13 @@ Duo residua = inventa vera:
 AMBO relicta ut sunt: Fran decrevit stratum diagnosticum (codex
 examinis) ante emendationes aedificari - specimina fracta ei opus
 sunt. Sanatio post codicem probatum.
+
+## 2026-08-03 (sero) - specimen retiratum: SO_NOSIGPIPE portabiliter solutum
+
+Fumus tabulariumd sub Linux specimen coegit: clausura daemonis hanc
+plagulam fert, error electus nexum verum obstruxit. Solutio plena
+(non tantum bracchium): Darwin SO_NOSIGPIPE in bracchio __APPLE__
+(codex 86 quiescit ut calibratio praedixit), Linux MSG_NOSIGNAL in
+missione ipsa (tcp_scribere). Pinnae portae remotae; glibc 133/136.
+Codex 86 vigilat pro Darwinismis FUTURIS - specimen primum suum
+munus implevit.

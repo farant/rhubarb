@@ -996,7 +996,8 @@ _reddere_catalogo_compacto(
         num_paginae = 1;
     }
     {
-        character buffer[LXIV];
+        character buffer[CXXVIII];  /* %d bini usque XI signa - LXIV
+                                     * angustum (gcc 13, porta musl) */
         sprintf(buffer, "Pagina %d/%d   h/l: paginae   j/k: selectare   Enter: aperire",
             visus->index_paginae + 1, num_paginae);
         titulus = _chorda_ex_cstr(buffer);
@@ -1269,7 +1270,8 @@ _reddere_catalogo_plenus(
     /* Footer */
     linea = y + altitudo - II;
     {
-        character buffer[LXIV];
+        character buffer[CXXVIII];  /* ut supra - %d bini, LXIV
+                                     * angustum */
         sprintf(buffer, "Liber %d/%d   h/l: navigare   Enter: legere   Esc: retro",
             visus->index_paginae + 1, num_libri);
         titulus = _chorda_ex_cstr(buffer);

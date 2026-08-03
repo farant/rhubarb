@@ -12420,3 +12420,18 @@ next touch); emendare -machina TSV; future emendable classes get
 table rows, not branches. NEXT (last arc step): Docker gate in
 aedilis - the standing oracle that keeps codices 85-87 honest
 forever.
+
+## 2026-08-03 - INTENTIO: porta Linux (01KZ40Y1ZD) + tabulariumd sub Linux + probationes primae
+
+Fran's call after the 132/136 measurement. Three pieces:
+1. porta_linux.sh (root) + tools/linux/ (Dockerfiles promoted from
+   scratchpad, in-container sweep, expected-failure pins in the
+   via<TAB>causa house format). Flag decrees land IN the script:
+   -Wno-type-limits (bilateral-guard parity, decreed), vendor
+   relaxed (imago/stb like the real build), legacy arbors excluded
+   by name. Exit: 0 = frontier holds, 1 = NEW error (named), 2 =
+   apparatus. The gate turns today's measurement into a promise.
+2. tabulariumd built AND RUN in the glibc container, one real
+   request answered - the VPS driver made flesh.
+3. First probatio slice under Linux (pure-C set) + the sized map of
+   what the full suite port needs.

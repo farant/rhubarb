@@ -102,9 +102,17 @@ _applicare_optiones(integer fd, constans TcpOptiones* opt)
 interior vacuum
 _ponere_nosigpipe(integer fd)
 {
+#ifdef __APPLE__
     integer flag = 1;
     setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &flag,
                (socklen_t)magnitudo(flag));
+#else
+    /* Linux SO_NOSIGPIPE nescit - SIGPIPE per MSG_NOSIGNAL in
+     * missione ipsa vetatur (vide tcp_scribere). Specimen vernaculum
+     * primum codicis 86 hic vixit 2026-08-03 - bracchio seposito
+     * codex quiescit, ut calibratio praedixit. */
+    (vacuum)fd;
+#endif
 }
 
 
@@ -288,7 +296,13 @@ tcp_mittere(
 
     fac
     {
+#ifdef __linux__
+        /* par SO_NOSIGPIPE Darwinis: SIGPIPE hic per vexillum
+         * missionis vetatur */
+        n = send(connexio->fd, data, (size_t)mensura, MSG_NOSIGNAL);
+#else
         n = send(connexio->fd, data, (size_t)mensura, 0);
+#endif
     } dum (n < 0 && errno == EINTR);   /* hygiene POSIX */
 
     si (n < 0)

@@ -28,7 +28,10 @@ interior b32
 _concha_command_date(
     ContextusCommandi* ctx)
 {
-    character expectatum[XIII];  /* " MM/DD/YYYY\0" = 12 chars */
+    character expectatum[XXXII]; /* " MM/DD/YYYY\0" = 12; laxus pro
+                                  * annis post 9999 et tm insanis
+                                  * (gcc 13 format-overflow - porta
+                                  * musl 2026-08-03) */
     character contentum[XIII];
     i32 longitudo;
     time_t tempus_nunc;

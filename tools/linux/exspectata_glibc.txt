@@ -1,0 +1,6 @@
+# exspectata_glibc.txt - fracturae EXSPECTATAE portae Linux (glibc)
+# forma domus: via<TAB>causa (pinnae examinis exemplar)
+# Pinna quae non cadit = VANA nuntiatur (suppressiones putrescunt)
+lib/arbor2_glr_tabula.c	parser legatus congelatus (referentia) - extra scopum portae
+lib/arbor_syntaxis.c	parser legatus congelatus (referentia) - extra scopum portae
+lib/imago.c	stb_image venditum in capite - interna gcc flagat quae clang tacet (classis D); suite vera vendorem laxat

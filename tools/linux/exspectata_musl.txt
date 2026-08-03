@@ -1,0 +1,5 @@
+# exspectata_musl.txt - fracturae EXSPECTATAE portae Linux (musl)
+lib/processus_posix.c	FD_SET interna musl signum trahunt (classis D mensurata 2026-08-03) - fons innocens
+lib/arbor2_glr_tabula.c	parser legatus congelatus (referentia) - extra scopum portae
+lib/arbor_syntaxis.c	parser legatus congelatus (referentia) - extra scopum portae
+lib/imago.c	stb_image venditum in capite - interna classis D
