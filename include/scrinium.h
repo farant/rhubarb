@@ -97,6 +97,14 @@ scrinium_ligare_nihil (
     ScriniumEnuntiatum* enuntiatum,
     integer             index);
 
+/* massa = datum binarium (BLOB; chorda datum binarium fert).
+ * massa vacua (mensura 0) = blobum vacuum, non NULL. */
+b32
+scrinium_ligare_massam (
+    ScriniumEnuntiatum* enuntiatum,
+    integer             index,
+    chorda              massa);
+
 integer
 scrinium_gradi (
     ScriniumEnuntiatum* enuntiatum);
@@ -113,6 +121,15 @@ s64
 scrinium_columna_numerus (
     ScriniumEnuntiatum* enuntiatum,
     integer             index);
+
+/* blobum in piscinam copiatur; blobum vacuum = chorda vacua
+ * (datum NIHIL, mensura 0) - a NULL non distinguitur, vocator
+ * scrinium_columna_nihil_est ante consulat si refert */
+chorda
+scrinium_columna_massa (
+    ScriniumEnuntiatum* enuntiatum,
+    integer             index,
+    Piscina*            piscina);
 
 b32
 scrinium_columna_nihil_est (

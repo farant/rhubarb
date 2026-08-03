@@ -1,0 +1,246 @@
+/* probatio_silex.c - Probationes Silicis (clausura + novum)
+ *
+ * Currendum e radice repositorii (fabrica = "." - suite semper
+ * inde currit). Area probationis: build/probatio_silex_area/
+ * (deleta ante percursum). Scaffoldatum hic NON compilatur -
+ * id cibus caninus est (silicetum), non suite. */
+
+#include "latina.h"
+#include "piscina.h"
+#include "chorda.h"
+#include "filum.h"
+#include "xar.h"
+#include "silex.h"
+#include "volumen.h"
+#include "processus.h"
+#include "credo.h"
+
+#include <stdio.h>
+
+#define AREA "build/probatio_silex_area"
+
+interior b32
+_manifestum_continet (Xar* res_omnes, constans character* via);
+
+interior b32
+_manifestum_continet (Xar* res_omnes, constans character* via)
+{
+    i32 index;
+
+    per (index = 0; index < xar_numerus(res_omnes);
+        index = index + 1)
+    {
+        SilexRes* res = (SilexRes*)xar_obtinere(res_omnes, index);
+
+        si (chorda_aequalis_literis(res->via, via))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+s32 principale (vacuum)
+{
+    b32      praeteritus;
+    Piscina* piscina;
+
+    piscina = piscina_generare_dynamicum("probatio_silex", 65536);
+    si (!piscina)
+    {
+        imprimere("FRACTA: piscina_generatio\n");
+        redde I;
+    }
+    credo_aperire(piscina);
+
+    /* tabula rasa (percursus prior) */
+    {
+        constans character* argumenta_rm[4];
+
+        argumenta_rm[0] = "/bin/rm";
+        argumenta_rm[1] = "-rf";
+        argumenta_rm[2] = AREA;
+        argumenta_rm[3] = NIHIL;
+        processus_exsequi(argumenta_rm, 5000, piscina);
+    }
+
+    /* ========================================================
+     * PROBARE: clausura - semen sine gemino lib
+     * ======================================================== */
+
+    {
+        Xar* res_omnes;
+        interior constans character* constans SEMINA_LATINA[] = {
+            "latina.h"
+        };
+
+        imprimere("\n--- Probans clausuram (latina sola) ---\n");
+
+        res_omnes = silex_clausuram_colligere(piscina, ".",
+            SEMINA_LATINA, 1);
+        CREDO_NON_NIHIL(res_omnes);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(res_omnes), (i32)1);
+        CREDO_VERUM(_manifestum_continet(res_omnes,
+            "include/latina.h"));
+    }
+
+    /* ========================================================
+     * PROBARE: clausura - geminus lib + transitiva
+     * ======================================================== */
+
+    {
+        Xar*      res_omnes;
+        SilexRes* primus;
+        interior constans character* constans SEMINA_CHORDA[] = {
+            "chorda.h"
+        };
+
+        imprimere("\n--- Probans clausuram (chorda + trans.) ---\n");
+
+        res_omnes = silex_clausuram_colligere(piscina, ".",
+            SEMINA_CHORDA, 1);
+        CREDO_NON_NIHIL(res_omnes);
+        CREDO_VERUM(_manifestum_continet(res_omnes,
+            "include/chorda.h"));
+        CREDO_VERUM(_manifestum_continet(res_omnes, "lib/chorda.c"));
+        /* chorda piscinam trahit (transitive) */
+        CREDO_VERUM(_manifestum_continet(res_omnes,
+            "include/piscina.h"));
+        CREDO_VERUM(_manifestum_continet(res_omnes,
+            "lib/piscina.c"));
+
+        primus = (SilexRes*)xar_obtinere(res_omnes, 0);
+        CREDO_VERUM(primus->contentum.mensura > ZEPHYRUM);
+        CREDO_VERUM(primus->origo[0] == 'v');   /* "vendicata:..." */
+    }
+
+    /* ========================================================
+     * PROBARE: fabrica invalida = recusatio
+     * ======================================================== */
+
+    {
+        Xar* res_omnes;
+        interior constans character* constans SEMINA_LATINA[] = {
+            "latina.h"
+        };
+
+        imprimere("\n--- Probans recusationem fabricae ---\n");
+
+        res_omnes = silex_clausuram_colligere(piscina,
+            "/non/exsistit/fabrica", SEMINA_LATINA, 1);
+        CREDO_NIHIL(res_omnes);
+    }
+
+    /* ========================================================
+     * PROBARE: novum - proiectum integrum
+     * ======================================================== */
+
+    {
+        SilexNovumOptiones optiones;
+        SilexNovumFructus  fructus;
+
+        imprimere("\n--- Probans silex_novum ---\n");
+
+        filum_directorium_creare_si_necesse("build");
+        filum_directorium_creare_si_necesse(AREA);
+
+        optiones.fabrica = ".";
+        optiones.destinatio = AREA;
+        optiones.titulus = "specimen";
+        fructus = silex_novum(piscina, &optiones);
+        si (!fructus.successus)
+        {
+            imprimere("silex_novum erratum: %s\n",
+                fructus.erratum == NIHIL ? "?" : fructus.erratum);
+        }
+        CREDO_VERUM(fructus.successus);
+        CREDO_VERUM(fructus.vendicatae > (i32)4);
+        CREDO_AEQUALIS_I32((i32)fructus.genitae, (i32)5);
+
+        /* veritas + proiectio ambae in disco */
+        CREDO_VERUM(filum_existit(
+            AREA "/specimen/specimen.volumen"));
+        CREDO_VERUM(filum_existit(
+            AREA "/specimen/include/latina.h"));
+        CREDO_VERUM(filum_existit(AREA "/specimen/lib/chorda.c"));
+        CREDO_VERUM(filum_existit(
+            AREA "/specimen/fontes/specimen.c"));
+        CREDO_VERUM(filum_existit(
+            AREA "/specimen/probationes/probatio_specimen.c"));
+        CREDO_VERUM(filum_existit(AREA "/specimen/aedificare.sh"));
+        CREDO_VERUM(filum_existit(AREA "/specimen/probare.sh"));
+        CREDO_VERUM(filum_existit(AREA "/specimen/README.md"));
+
+        /* volumen relegibile; plagulae = vendicatae + genitae */
+        {
+            Volumen* vol = volumen_aperire(piscina,
+                AREA "/specimen/specimen.volumen");
+
+            CREDO_NON_NIHIL(vol);
+            CREDO_AEQUALIS_S64(volumen_summa_plagularum(vol),
+                (s64)(fructus.vendicatae + fructus.genitae));
+            volumen_claudere(vol);
+        }
+
+        /* proiectio == volumen: plagula e disco = plagula promota */
+        {
+            Volumen* vol = volumen_aperire(piscina,
+                AREA "/specimen/specimen.volumen");
+            chorda e_disco = filum_legere_totum(
+                AREA "/specimen/lib/chorda.c", piscina);
+            b32    inventum;
+            chorda e_volumine = volumen_plagulam_promere(vol,
+                chorda_ex_literis("lib/chorda.c", piscina), piscina,
+                &inventum);
+
+            CREDO_VERUM(inventum);
+            CREDO_CHORDA_AEQUALIS(e_disco, e_volumine);
+            volumen_claudere(vol);
+        }
+
+        /* novum iterum in eandem destinationem = recusatio */
+        fructus = silex_novum(piscina, &optiones);
+        CREDO_FALSUM(fructus.successus);
+    }
+
+    /* ========================================================
+     * PROBARE: tituli mali recusantur
+     * ======================================================== */
+
+    {
+        SilexNovumOptiones optiones;
+        SilexNovumFructus  fructus;
+
+        imprimere("\n--- Probans recusationem tituli ---\n");
+
+        optiones.fabrica = ".";
+        optiones.destinatio = AREA;
+        optiones.titulus = "malus/titulus";
+        fructus = silex_novum(piscina, &optiones);
+        CREDO_FALSUM(fructus.successus);
+
+        optiones.titulus = "";
+        fructus = silex_novum(piscina, &optiones);
+        CREDO_FALSUM(fructus.successus);
+    }
+
+    /* ========================================================
+     * Compendium
+     * ======================================================== */
+
+    imprimere("\n");
+    credo_imprimere_compendium();
+
+    praeteritus = credo_omnia_praeterierunt();
+    credo_claudere();
+    piscina_destruere(piscina);
+
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
+}

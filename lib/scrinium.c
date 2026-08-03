@@ -134,6 +134,22 @@ scrinium_ligare_nihil (ScriniumEnuntiatum* enuntiatum, integer index)
         ? VERUM : FALSUM;
 }
 
+b32
+scrinium_ligare_massam (ScriniumEnuntiatum* enuntiatum, integer index,
+    chorda massa)
+{
+    /* datum NIHIL sqlite ut NULL interpretaretur - massa vacua
+     * blobum vacuum VERUM esse debet, ergo zeroblob(0) */
+    si (massa.datum == NIHIL || massa.mensura == ZEPHYRUM)
+    {
+        redde sqlite3_bind_zeroblob(enuntiatum->ansa, index, 0)
+            == SQLITE_OK ? VERUM : FALSUM;
+    }
+    redde sqlite3_bind_blob(enuntiatum->ansa, index,
+        (constans vacuum*)massa.datum, (int)massa.mensura,
+        SQLITE_TRANSIENT) == SQLITE_OK ? VERUM : FALSUM;
+}
+
 integer
 scrinium_gradi (ScriniumEnuntiatum* enuntiatum)
 {
@@ -181,6 +197,32 @@ scrinium_columna_numerus (ScriniumEnuntiatum* enuntiatum,
     integer index)
 {
     redde (s64)sqlite3_column_int64(enuntiatum->ansa, index);
+}
+
+chorda
+scrinium_columna_massa (ScriniumEnuntiatum* enuntiatum, integer index,
+    Piscina* piscina)
+{
+    chorda fructus;
+    constans vacuum* datum =
+        sqlite3_column_blob(enuntiatum->ansa, index);
+    integer mensura = sqlite3_column_bytes(enuntiatum->ansa, index);
+
+    fructus.datum = NIHIL;
+    fructus.mensura = ZEPHYRUM;
+    si (datum == NIHIL || mensura <= 0)
+    {
+        redde fructus;
+    }
+    fructus.datum = (i8*)piscina_allocare(piscina,
+        (memoriae_index)mensura);
+    si (fructus.datum == NIHIL)
+    {
+        redde fructus;
+    }
+    memcpy(fructus.datum, datum, (memoriae_index)mensura);
+    fructus.mensura = (i32)mensura;
+    redde fructus;
 }
 
 b32
