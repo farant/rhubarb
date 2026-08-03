@@ -40,7 +40,7 @@ source "$OFF_DIR/vindex_fontes_generata.sh"
 # per COMMENTARIUM "silva.h" falso exoneravit)
 newest_header () {
     find "$RADIX_DIR/include" "$OFF_DIR/instrumenta" \
-        "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/silva/instrumenta" \
+        "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" \
         "$RADIX_DIR/tessera/amalgama" \
         "$OFF_DIR/amalgama" \
         -name '*.h' -newer "$1" 2>/dev/null | head -1
@@ -61,9 +61,12 @@ for nom in "tessera" "silva" "officina"; do
     src="$RADIX_DIR/$nom/amalgama/$nom.c"
     obj="$BUILD_DIR/amalgama_$nom.o"
     # officina amalgam: silva.h = the ONE documented external dep
-    # (tessera/silva amalgamata self-contained - src solum recte)
+    # (silva amalgama self-contained; tessera postulata_posix.h poscit)
     extra=""
     silva_h_recentior=""
+    if [ "$nom" = "tessera" ]; then
+        extra="-I$RADIX_DIR/include"   # postulata_posix.h (sutura)
+    fi
     if [ "$nom" = "officina" ]; then
         extra="-I$RADIX_DIR/silva/amalgama"
         [ "$RADIX_DIR/silva/amalgama/silva.h" -nt "$obj" ] 2>/dev/null \
@@ -82,7 +85,7 @@ obj="$BUILD_DIR/silva_lexicon.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [lexicon] silva_lexicon.c"
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" -c "$src" -o "$obj" || exit 1
 fi
 obj_files="$obj_files $obj"
 

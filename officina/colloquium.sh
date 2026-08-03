@@ -39,7 +39,7 @@ source "$OFF_DIR/colloquium_fontes_generata.sh"
 newest_header () {
     find "$RADIX_DIR/include" "$OFF_DIR/fontes" \
         "$OFF_DIR/instrumenta" "$RADIX_DIR/silva/amalgama" \
-        "$RADIX_DIR/silva/instrumenta" \
+        "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" \
         -name '*.h' -newer "$1" 2>/dev/null | head -1
 }
 
@@ -78,7 +78,7 @@ obj="$BUILD_DIR/silva_lexicon.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [lexicon] silva_lexicon.c" >&2
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" -c "$src" -o "$obj" || exit 1
 fi
 obj_files="$obj_files $obj"
 

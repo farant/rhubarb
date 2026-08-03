@@ -57,7 +57,7 @@ source "$OFF_DIR/legatus_fontes_generata.sh"
 # cadit: newest_header = glob superset (garrulum, numquam caecum).
 newest_header () {
     find "$RADIX_DIR/include" "$RADIX_DIR/silva/amalgama" \
-         "$RADIX_DIR/silva/instrumenta" "$OFF_DIR/instrumenta" \
+         "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" "$OFF_DIR/instrumenta" \
          -name '*.h' -newer "$1" 2>/dev/null | head -1
 }
 FONTES_OMNES=()
@@ -125,7 +125,7 @@ src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
 obj="$BUILD_DIR/silva_lexicon.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || fons_stalus silva_lexicon "$obj"; then
     echo "  [lexicon] silva_lexicon.c" >&2
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" -c "$src" -o "$obj" || exit 1
 fi
 obj_files="$obj_files $obj"
 

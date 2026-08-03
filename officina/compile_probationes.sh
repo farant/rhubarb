@@ -13,6 +13,9 @@
 # INCLUDE_FLAGS (a fontes include is a compile error here; that is
 # the pin working). Medulla itself is silva-free (SilvaNodus tag
 # forward-declared); demissio (M1b) is the real silva consumer.
+# (Sole exception: the silva_lexicon.o step passes a private
+# -Ifontes on its own clang line - that unit is silva-side code
+# needing SILVA_LIMES_POSIX_TITULUS, not officina code.)
 
 set -u
 
@@ -70,7 +73,7 @@ FILTER="${1:-}"
 
 newest_header () {
     find "$RADIX_DIR/include" "$OFF_DIR/fontes" \
-        "$RADIX_DIR/silva/amalgama" \
+        "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" \
         -name '*.h' -newer "$1" 2>/dev/null | head -1
 }
 
@@ -105,7 +108,7 @@ src="$RADIX_DIR/tessera/amalgama/tessera.c"
 obj="$BUILD_DIR/amalgama_tessera.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
     echo "  [amalgama] tessera.c"
-    if ! clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj"; then
+    if ! clang "${GCC_FLAGS[@]}" "-I$RADIX_DIR/include" -c "$src" -o "$obj"; then
         echo "FRACTA: amalgama tessera" ; exit 1
     fi
 fi
@@ -146,7 +149,7 @@ if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
     || [ "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" -nt "$obj" ] \
     || [ -n "$(newest_header "$obj")" ]; then
     echo "  [lexicon] silva_lexicon.c"
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" \
         -c "$src" -o "$obj"; then
         echo "FRACTA: silva_lexicon" ; exit 1
     fi

@@ -71,7 +71,7 @@ obj="$BUILD_DIR/silva_lexicon.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
     || [ "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" -nt "$obj" ]; then
     echo "  [lexicon] silva_lexicon.c" >&2
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" -c "$src" -o "$obj" || exit 1
 fi
 obj_files="$obj_files $obj"
 
