@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/norma.stml
+  Exemplar semanticum: NORMA (versio 0, PLASTICUM)
+
+  Genus a Frane petitum: norma res est, non chorda - editorem,
+  diem, statum, successionem habet. Normae se invicem SUBSTITUUNT:
+  catena temporalis (stratum historicum in relationibus ipsis).
+-->
+<natura modulus="norma" versio="0" lingua="latina">
+
+<genus nomen="norma">
+
+  <definitio>
+    Documentum publicum quod formam praescribit: quid conformitas
+    significet definit. A re normata distinguitur - norma de
+    lingua C non EST lingua C; descriptio auctoritativa est.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="index" genus="textus"
+      nota="designatio canonica, e.g. ISO/IEC 9899:1990"/>
+    <proprietas nomen="titulus" genus="textus"/>
+    <proprietas nomen="editor" genus="textus"
+      nota="MENDACIUM COMMODITATIS conscium: editor organizatio
+            est (ISO, IEEE, consortium) - genus organizatio hinc
+            SURGIT, nondum descriptum; tunc relatio fiet"/>
+    <proprietas nomen="publicata" genus="dies"/>
+  </proprietates>
+
+  <machina_statuum nomen="vigor">
+    <status nomen="proposita" nota="in deliberatione"/>
+    <status nomen="vigens"/>
+    <status nomen="substituta"
+      nota="a successore; adhuc citabilis - normae veteres non
+            evanescunt, C89 noster testis"/>
+    <status nomen="retracta"/>
+    <transitus a="proposita" ad="vigens" per="publicatio"/>
+    <transitus a="vigens" ad="substituta" per="substitutio"/>
+    <transitus a="vigens" ad="retracta" per="retractio"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="publicari"/>
+    <actio nomen="substitui" nota="a norma recentiore"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="substituit" ad="norma"
+      nota="catena successionis - historia in relationibus"/>
+    <relatio nomen="normat" ad="*"
+      nota="rem normatam cuiusvis generis - linguam, protocollum,
+            formam plagulae"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="iso_9899_1990">
+    <valor nomen="index">ISO/IEC 9899:1990</valor>
+    <valor nomen="titulus">Programming languages - C</valor>
+    <valor nomen="editor">ISO/IEC</valor>
+    <valor nomen="publicata">1990-12-15</valor>
+    <valor nomen="vigor">substituta</valor>
+    <relatum nomen="normat" ad="c89"
+      modulus="lingua_programmandi"/>
+  </individuum>
+
+  <individuum nomen="iso_9899_1999">
+    <valor nomen="index">ISO/IEC 9899:1999</valor>
+    <valor nomen="titulus">Programming languages - C</valor>
+    <valor nomen="editor">ISO/IEC</valor>
+    <valor nomen="publicata">1999-12-01</valor>
+    <valor nomen="vigor">substituta</valor>
+    <relatum nomen="substituit" ad="iso_9899_1990"/>
+    <relatum nomen="normat" ad="c99"
+      modulus="lingua_programmandi"/>
+  </individuum>
+
+  <individuum nomen="posix_1">
+    <valor nomen="index">IEEE Std 1003.1</valor>
+    <valor nomen="titulus">Portable Operating System Interface</valor>
+    <valor nomen="editor">IEEE / The Open Group</valor>
+    <valor nomen="publicata">1988</valor>
+    <valor nomen="vigor">vigens</valor>
+    <dubium>
+      Editio "1003.1" continenter renovatur (1988, 2001, 2008,
+      2024...) - norma UNA vivens an series normarum se
+      substituentium? Idem dubium quod versiones linguarum:
+      identitas rei trans editiones. Solutio versio-generis
+      fortasse hic quoque valet.
+    </dubium>
+  </individuum>
+
+</genus>
+
+</natura>

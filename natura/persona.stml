@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/persona.stml
+  Exemplar semanticum: PERSONA (versio 0, PLASTICUM)
+
+  Genus trans-dominiale primum: relationes aliorum exemplarium
+  (auctor linguae, scriptor normae) hoc genus POPOSCERUNT -
+  auctores ut textus mendacium commoditatis erat; Dennis Ritchie
+  persona est, non chorda.
+
+  Individua notabilia recordi publici hic vivunt (prosopographia,
+  more dictionarii biographici); personae TUAE (contactus, socii)
+  in voluminibus applicationum, genus hoc citantes.
+-->
+<natura modulus="persona" versio="0" lingua="latina">
+
+<genus nomen="persona">
+
+  <definitio>
+    Naturae rationabilis individua substantia (Boethius).
+    Subiectum actionum liberarum: auctor esse potest, non solum
+    causa.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="nomina" genus="textus" multiplex="verum"
+      nota="personae nomina plura habent - natale, publicum,
+            religiosum; primum = usitatissimum"/>
+    <proprietas nomen="natus" genus="dies"/>
+    <proprietas nomen="mortuus" genus="dies"
+      nota="vacuum = vivens aut ignotum"/>
+  </proprietates>
+
+  <actiones>
+    <actio nomen="creare" nota="opus novum gignere - fons
+      relationum auctoris trans exemplaria"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="auctor_de" ad="*"
+      nota="ad opus cuiusvis generis - relatio aperta consulto:
+            opera personarum genera omnia transeunt"/>
+  </relationes>
+
+  <dubium>
+    Organizatio (ISO, consortium, universitas) persona non est
+    sed agit ut auctor/editor. Genus organizatio SURGIT e norma
+    exemplari - nondum descriptum. Persona iuridica vs naturalis:
+    distinctio vetus, digna descriptione propria.
+  </dubium>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="dennis_ritchie">
+    <valor nomen="nomina">Dennis MacAlistair Ritchie</valor>
+    <valor nomen="natus">1941-09-09</valor>
+    <valor nomen="mortuus">2011-10-12</valor>
+    <historia>
+      <eventum quando="1972" actio="creare">lingua C</eventum>
+      <eventum quando="1978" actio="creare">liber "The C
+        Programming Language" (cum Kernighan)</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="guido_van_rossum">
+    <valor nomen="nomina">Guido van Rossum</valor>
+    <valor nomen="natus">1956-01-31</valor>
+    <historia>
+      <eventum quando="1991" actio="creare">lingua Python</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="graydon_hoare">
+    <valor nomen="nomina">Graydon Hoare</valor>
+    <historia>
+      <eventum quando="2006" actio="creare">lingua Rust
+        (inceptum privatum; publicum 2010)</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="brian_fox">
+    <valor nomen="nomina">Brian Jhan Fox</valor>
+    <valor nomen="natus">1959</valor>
+    <historia>
+      <eventum quando="1989" actio="creare">bash</eventum>
+    </historia>
+  </individuum>
+
+</genus>
+
+</natura>
