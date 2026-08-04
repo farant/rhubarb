@@ -110,7 +110,18 @@ MensaArbiter.prototype.duplex = function (x, y, in_plano) {
  *   <mensa-thema fundus="#101216" accentus="#e8a04c">
  * fit --mensa-fundus / --mensa-accentus in hoc elemento.
  * SINE shadow DOM consulto: thema globale, inspector verax,
- * harness probationis simplex. */
+ * harness probationis simplex.
+ *
+ * CAVE SELECTORIBUS: CSS hereditatem classium JS NON sequitur -
+ * mensa-scidula est tag ALIUD quam mensa-scida, ergo fundamentum
+ * chartarum selectoribus IUNCTIS datur (mensa-scida, mensa-scidula,
+ * mensa-theca). Decipula mensurata: sine iunctione scidulae
+ * position:absolute carebant - in fluxu sedebant, xy click
+ * ignorabant, tractus nihil movebat (v2, manibus Franis capta).
+ *
+ * LEX SELECTIONIS: nihil eligibile nisi textus editionis - chartae,
+ * thecae, orbis, tituli user-select:none; solum .editans .corpus
+ * textum eligere sinit. */
 
 var MENSA_STILI =
   'mensa-thema {' +
@@ -121,8 +132,6 @@ var MENSA_STILI =
   '  --mensa-textus: #d8d4cc;' +
   '  --mensa-textus-secundus: #8a8578;' +
   '  --mensa-accentus: #e8a04c;' +
-  '  --mensa-scidula-fundus: #3a3420;' +
-  '  --mensa-scidula-margo: #5c5232;' +
   '  --mensa-umbra: 0 4px 16px rgba(0,0,0,.45);' +
   '  background: var(--mensa-fundus);' +
   '  color: var(--mensa-textus);' +
@@ -133,51 +142,50 @@ var MENSA_STILI =
   '  width: 100%; height: 100%;' +
   '  overflow: hidden;' +   /* LEX: planum numquam volvitur */
   '}' +
-  'mensa-scida {' +
+
+  /* fundamentum chartarum COMMUNE (vide CAVE supra) */
+  'mensa-scida, mensa-scidula, mensa-theca {' +
   '  display: block; position: absolute;' +
   '  background: var(--mensa-charta);' +
   '  border: 1px solid var(--mensa-margo);' +
   '  border-radius: 6px; padding: .9em 1.1em;' +
   '  box-shadow: var(--mensa-umbra);' +
-  '  cursor: grab; user-select: none;' +
-  '  -webkit-user-select: none;' +
+  '  cursor: grab;' +
+  '  user-select: none; -webkit-user-select: none;' +
   '}' +
-  'mensa-scida.tractans { cursor: grabbing; opacity: .92; }' +
+  'mensa-scida.tractans, mensa-scidula.tractans,' +
+  'mensa-theca.tractans { cursor: grabbing; opacity: .92; }' +
+  'mensa-scida.electum, mensa-scidula.electum,' +
+  'mensa-theca.electum { outline: 2px solid var(--mensa-accentus); }' +
+  'mensa-scida.sectum, mensa-scidula.sectum,' +
+  'mensa-theca.sectum { opacity: .45; outline-style: dashed; }' +
   'mensa-scida h2 {' +
   '  color: var(--mensa-textus-secundus); font-size: .85em;' +
   '  margin: 0 0 .5em 0; text-transform: uppercase;' +
   '  letter-spacing: .1em;' +
   '}' +
-  'mensa-scidula {' +
-  '  background: var(--mensa-scidula-fundus);' +
-  '  border-color: var(--mensa-scidula-margo);' +
-  '  min-width: 10em; min-height: 5em; padding: .5em .7em;' +
-  '}' +
+
+  /* scidula: charta eadem ac ceterae (petitio Franis) - mensurae
+   * minimae solae propriae */
+  'mensa-scidula { min-width: 11em; min-height: 4.5em; }' +
   'mensa-scidula .corpus {' +
-  '  outline: none; min-height: 3.5em; cursor: text;' +
-  '  user-select: text; -webkit-user-select: text;' +
-  '  white-space: pre-wrap;' +
+  '  min-height: 3em; cursor: inherit; white-space: pre-wrap;' +
+  '  outline: none;' +
   '}' +
-  'mensa-scidula .delere {' +
-  '  position: absolute; top: .2em; right: .35em;' +
-  '  background: none; border: none; cursor: pointer;' +
-  '  color: var(--mensa-textus-secundus); font: inherit;' +
-  '}' +
-  'mensa-scidula .delere:hover { color: var(--mensa-accentus); }' +
-  'mensa-scidula .corpus { cursor: inherit; }' +
   'mensa-scidula.editans { cursor: default; }' +
   'mensa-scidula.editans .corpus {' +
   '  cursor: text; outline: 1px dashed var(--mensa-accentus);' +
   '  user-select: text; -webkit-user-select: text;' +
   '}' +
-  /* selectio + secare */
-  'mensa-scida.electum, mensa-scidula.electum, mensa-theca.electum {' +
-  '  outline: 2px solid var(--mensa-accentus);' +
+  'mensa-scidula .delere {' +
+  '  position: absolute; top: .2em; right: .35em;' +
+  '  background: none; border: none; cursor: pointer;' +
+  '  color: var(--mensa-textus-secundus); font: inherit;' +
+  '  user-select: none; -webkit-user-select: none;' +
   '}' +
-  'mensa-scida.sectum, mensa-scidula.sectum, mensa-theca.sectum {' +
-  '  opacity: .45; outline-style: dashed;' +
-  '}' +
-  /* theca: icon plicae */
+  'mensa-scidula .delere:hover { color: var(--mensa-accentus); }' +
+
+  /* theca: icon plicae (fundamentum commune superscribit) */
   'mensa-theca {' +
   '  width: 7em; padding: .7em .5em .5em .5em;' +
   '  text-align: center; box-shadow: none;' +
@@ -213,10 +221,12 @@ var MENSA_STILI =
   'mensa-theca[retro] .glyphus::before {' +
   '  background: var(--mensa-textus-secundus);' +
   '}' +
-  /* orbis: menu radiale */
+
+  /* orbis: menu radiale - numquam eligibile */
   'mensa-orbis {' +
   '  position: absolute; transform: translate(-50%, -50%);' +
   '  z-index: 99;' +
+  '  user-select: none; -webkit-user-select: none;' +
   '}' +
   'mensa-orbis .petalum {' +
   '  position: absolute; transform: translate(-50%, -50%);' +
@@ -225,6 +235,7 @@ var MENSA_STILI =
   '  border-radius: 999px; padding: .5em 1em; font: inherit;' +
   '  cursor: pointer; white-space: nowrap;' +
   '  box-shadow: var(--mensa-umbra);' +
+  '  user-select: none; -webkit-user-select: none;' +
   '}' +
   'mensa-orbis .petalum:hover {' +
   '  background: var(--mensa-accentus); color: var(--mensa-fundus);' +
@@ -241,7 +252,7 @@ class MensaThema extends HTMLElement {
       s.textContent = MENSA_STILI;
       document.head.appendChild(s);
     }
-    for (i = 0; i < this.attributes.length; i++) {
+    for (i = 0; i < this.attributes.length; i = i + 1) {
       a = this.attributes[i];
       this.style.setProperty('--mensa-' + a.name, a.value);
     }
@@ -710,8 +721,10 @@ class MensaPlanum extends HTMLElement {
       return null;   /* genus ignotum aut scida declarata absens */
     }
     node.id = id;
-    node.setAttribute('x', String(datum.x || 10));
-    node.setAttribute('y', String(datum.y || 10));
+    node.setAttribute('x',
+      String(typeof datum.x === 'number' ? datum.x : 10));
+    node.setAttribute('y',
+      String(typeof datum.y === 'number' ? datum.y : 10));
     this._nodi[id] = node;
     return node;
   }

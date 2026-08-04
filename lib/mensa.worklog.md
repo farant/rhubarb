@@ -97,3 +97,22 @@ Traps hit:
   guard does not help. Hence logica.js is the deliberately DOM-free
   testable core; component behavior stays hand-tested until a
   HTMLElement shim day.
+
+## 2026-08-04 — v2.1: the CSS-inheritance trap (Fran's hands, first catch)
+
+**CSS does not follow JS class inheritance.** MensaScidula extends
+MensaScida in JS, but `mensa-scidula` is a DIFFERENT TAG — the
+`mensa-scida { position:absolute; ... }` selector never touched it.
+Notes and folders had no positioning: they sat in document flow,
+ignored creation coordinates, and drag wrote left/top inline styles
+with zero visual effect. Exactly what Fran reported ("not sure if
+notes/folders are draggable or created at the xy"). The base card
+chrome is now a GROUPED selector (mensa-scida, mensa-scidula,
+mensa-theca) — law for any future mensa element: add your tag to the
+base group or you don't exist spatially. Also per Fran: notes now
+share the standard card container (charta/margo/umbra — the sticky
+palette is gone); selectability locked down (cards/thecae/orbis/
+tituli user-select:none; ONLY .editans .corpus selects). Companion
+fix: `datum.x || 10` falsy-zero in _nodumCreare (x=0 snapped to 10).
+First red-team catch of the loop — the walkthrough found in minutes
+what no suite could.
