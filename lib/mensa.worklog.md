@@ -203,3 +203,14 @@ the existing alien-genus tolerance tests already covered the
 probatio_mensae.js 34 → 43 assertions (summus/levatio/fold-merge).
 Seams (levare wiring, z-index application) are DOM-side and remain
 hands-verified — the harness covers the decisions only.
+
+## 2026-08-04 — MensaPaginator (the never-scroll law gets its tool)
+
+Pagination-instead-of-overflow was a founding mensa principle;
+silex's VCS cards were the first consumer that actually needed it,
+so the primitive landed in logica.js where it's DOM-free and
+testable: MensaPaginator(quantum) — paginae/fenestra/ante/post/
+statum, clamping everywhere (a shrunken ordo pulls the current page
+back into existence rather than rendering nothing). 11 assertions.
+The DOM half (arrow buttons in a card foot) stays app-side for now;
+if a third consumer repeats it, the render helper joins the battery.

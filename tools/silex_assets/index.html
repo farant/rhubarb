@@ -25,13 +25,23 @@
     <h2>verba</h2>
     <dl>
       <dt class="vivum">novum</dt>
-      <dd>proiectum novum excudere (volumen + proiectio)</dd>
-      <dt>status</dt><dd>sigilla tria comparare &mdash; mox</dd>
-      <dt>condere</dt><dd>arborem absorbere &mdash; mox</dd>
-      <dt>proicere</dt><dd>volumen proicere &mdash; mox</dd>
-      <dt>historia</dt><dd>acta ambulare &mdash; mox</dd>
+      <dd>proiectum e fabrica excudere</dd>
+      <dt class="vivum">status</dt><dd>arbor contra manifestum</dd>
+      <dt class="vivum">condere</dt><dd>arborem absorbere</dd>
+      <dt class="vivum">historia</dt><dd>acta ambulare</dd>
+      <dt class="vivum">proicere</dt>
+      <dd>volumen arborem scribit (-ad = iter temporis)</dd>
+      <dt class="vivum">renovare</dt>
+      <dd>bibliothecae sigillis tribus</dd>
     </dl>
   </mensa-scida>
+
+  <silex-conditiones id="vcs-conditiones" x="4" y="34"
+    latitudo="27"></silex-conditiones>
+  <silex-plagulae id="vcs-plagulae" x="34" y="34"
+    latitudo="27"></silex-plagulae>
+  <silex-contentum id="vcs-contentum" x="64" y="34"
+    latitudo="32"></silex-contentum>
 
 </mensa-planum>
 </mensa-thema>
@@ -68,8 +78,20 @@ internuntius.vocare('status', {})
    ~/.rhubarb/silex.volumen (latus C: mensa_praebere) */
 mensaPersistentia(document.getElementById('planum'));
 
-/* repositorium: vectis apparet si proiectum sub cwd invenitur */
-silexRepositorium();
+/* chartae VCS: praebitor iniectus (chartae pontem numquam
+   nominant - lex DI); oneratio incipit */
+silexVcs({
+  historia: function () {
+    return internuntius.vocare('vcs_historia', {});
+  },
+  plica: function (seq) {
+    return internuntius.vocare('vcs_plica', { seq: seq });
+  },
+  plagula: function (seq, via) {
+    return internuntius.vocare('vcs_plagula',
+      { seq: seq, plagula: via });
+  }
+});
 </script>
 </body>
 </html>

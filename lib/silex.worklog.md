@@ -226,3 +226,31 @@ found under cwd, Escape closes.
 - Binary content over JSON is the named v1 limitation (C sources
   fine; images would garble) — massa:// vitrea scheme is the
   ripening answer.
+
+## 2026-08-04 — ui slice II: the widgets become cards
+
+Fran's call: the overlay was chrome bolted onto a thinkboard app;
+the native form is cards. repositorium.js rewritten — overlay and
+chip deleted, three DECLARED cards in index.html:
+
+- silex-conditiones / silex-plagulae / silex-contentum, each
+  extends MensaScida — drag, %-position persistence, z-order
+  levatio, selection all inherited free. Update-in-place linking
+  (conditio electa -> plagulae -> contentum) via document events;
+  spawn-file-cards + drag-items-out = deferred by Fran, and with
+  update-in-place the genus-registration seam mensa would need for
+  dynamic cards is ALSO deferred (YAGNI paid immediately: declared
+  singletons ride the existing declared-node path).
+- Never-scroll honored: MensaPaginator (new battery primitive in
+  logica.js) + ‹ › arrows in the card foot; contentum paginates BY
+  LINES (24/page). Cards resize in WIDTH only (imago's ansa
+  pattern) — height is a function of page size.
+- v2.1 CSS law applied at birth: the three silex tags get their own
+  grouped base-style block (new tags never inherit mensa's grouped
+  selectors).
+- Rows stopPropagation on pointerdown: card drags by its chrome,
+  rows click freely (no accidental drag-select from list items).
+- Known v1 roughness for the red-team round: row selection
+  highlight doesn't survive page flips; selected seq/via not yet
+  persisted in the fold (would survive restart if stored as
+  internum — cheap follow-up).
