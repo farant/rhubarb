@@ -23,8 +23,14 @@
   migravit; (5) distinctio species/individuum EXPLICITA facta
   (C species est, c89 individuum versionis, Ritchie individuum
   personae).
+  v1->v2: (6) SUB-GENERA nata (attributum sub= + differentia in
+  genere - arbor Porphyriana profunditatem accipit): dubium bash
+  SOLUTUM subordinatione, non sororitate - lingua_iussuum sub
+  lingua_programmandi (proprietates congruunt = hereditas recta;
+  essentia differt = differentia eam fert); (7) relatio
+  emittit_pro ad architecturam (exemplar architecturae natum).
 -->
-<natura modulus="lingua_programmandi" versio="1" lingua="latina">
+<natura modulus="lingua_programmandi" versio="2" lingua="latina">
 
 <genus nomen="lingua_programmandi">
 
@@ -188,16 +194,30 @@
     </historia>
   </species>
 
+</genus>
+
+<!-- ==================================================
+     LINGUA IUSSUUM - sub-genus linguae programmandi
+     (dubium v1 de bash SOLUTUM subordinatione: proprietates
+     generis congruunt - hereditas; essentia differt -
+     differentia. Via Porphyriana ipsa.)
+     ================================================== -->
+
+<genus nomen="lingua_iussuum" sub="lingua_programmandi">
+
+  <differentia>
+    Verbum primum = PROCESSUS ALIENUS vocatus, non functio
+    propria: lingua ad imperia oritur (interactiva), scriptilis
+    fit. Fistulae, redirectio, expansio textualis ante omnia.
+  </differentia>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
   <species nomen="bash">
     <definitio>
-      Lingua imperiorum interactiva et scriptilis: programmata
-      externa ut verba prima; fistulae, redirectio, expansio
-      textualis ante omnia.
+      Concha GNU: sh Bourne aucta historia, complemento,
+      arithmeticis; concha ordinaria systematum Linux diu.
     </definitio>
-    <differentia>
-      Programma primarium = processus alienus vocatus, non
-      functio propria.
-    </differentia>
     <valor nomen="paradigmata">imperativum</valor>
     <valor nomen="typatio_tempus">dynamica</valor>
     <valor nomen="typatio_vis">debilis</valor>
@@ -209,13 +229,6 @@
     <historia>
       <eventum quando="1989-06-08" actio="ortus"/>
     </historia>
-    <dubium>
-      Estne vere species huius generis, an generis vicini
-      "lingua_iussuum" (shell)? Essentia differt: verbum primum
-      bash PROCESSUS ALIENUS est. Fortasse genus latius
-      "lingua_formalis" opus est, sub quo haec et lingua_iussuum
-      et lingua_interrogandi (SQL) sorores. APERTUM.
-    </dubium>
   </species>
 
 </genus>
@@ -318,6 +331,10 @@
             C; recursio vera et honesta"/>
     <relatio nomen="auctor" ad="persona" modulus="persona"
       multiplex="verum"/>
+    <relatio nomen="emittit_pro" ad="architectura_machinae"
+      modulus="architectura_machinae" multiplex="verum"
+      nota="compilator pro architecturis emittit (interpres pro
+            nulla - modus eius id vitat)"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->

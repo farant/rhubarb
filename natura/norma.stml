@@ -7,7 +7,7 @@
   diem, statum, successionem habet. Normae se invicem SUBSTITUUNT:
   catena temporalis (stratum historicum in relationibus ipsis).
 -->
-<natura modulus="norma" versio="0" lingua="latina">
+<natura modulus="norma" versio="1" lingua="latina">
 
 <genus nomen="norma">
 
@@ -21,12 +21,12 @@
     <proprietas nomen="index" genus="textus"
       nota="designatio canonica, e.g. ISO/IEC 9899:1990"/>
     <proprietas nomen="titulus" genus="textus"/>
-    <proprietas nomen="editor" genus="textus"
-      nota="MENDACIUM COMMODITATIS conscium: editor organizatio
-            est (ISO, IEEE, consortium) - genus organizatio hinc
-            SURGIT, nondum descriptum; tunc relatio fiet"/>
     <proprietas nomen="publicata" genus="dies"/>
   </proprietates>
+  <!-- editor olim textus erat (mendacium commoditatis conscium)
+       - nunc relatio ad corpus_normans, exemplari organizationis
+       nato (v0->v1) -->
+
 
   <machina_statuum nomen="vigor">
     <status nomen="proposita" nota="in deliberatione"/>
@@ -46,6 +46,8 @@
   </actiones>
 
   <relationes>
+    <relatio nomen="editor" ad="corpus_normans"
+      modulus="organizatio" multiplex="verum"/>
     <relatio nomen="substituit" ad="norma"
       nota="catena successionis - historia in relationibus"/>
     <relatio nomen="normat" ad="*"
@@ -58,8 +60,9 @@
   <individuum nomen="iso_9899_1990">
     <valor nomen="index">ISO/IEC 9899:1990</valor>
     <valor nomen="titulus">Programming languages - C</valor>
-    <valor nomen="editor">ISO/IEC</valor>
     <valor nomen="publicata">1990-12-15</valor>
+    <relatum nomen="editor" ad="iso" modulus="organizatio"/>
+    <relatum nomen="editor" ad="iec" modulus="organizatio"/>
     <valor nomen="vigor">substituta</valor>
     <relatum nomen="normat" ad="c89"
       modulus="lingua_programmandi"/>
@@ -68,8 +71,9 @@
   <individuum nomen="iso_9899_1999">
     <valor nomen="index">ISO/IEC 9899:1999</valor>
     <valor nomen="titulus">Programming languages - C</valor>
-    <valor nomen="editor">ISO/IEC</valor>
     <valor nomen="publicata">1999-12-01</valor>
+    <relatum nomen="editor" ad="iso" modulus="organizatio"/>
+    <relatum nomen="editor" ad="iec" modulus="organizatio"/>
     <valor nomen="vigor">substituta</valor>
     <relatum nomen="substituit" ad="iso_9899_1990"/>
     <relatum nomen="normat" ad="c99"
@@ -79,8 +83,8 @@
   <individuum nomen="posix_1">
     <valor nomen="index">IEEE Std 1003.1</valor>
     <valor nomen="titulus">Portable Operating System Interface</valor>
-    <valor nomen="editor">IEEE / The Open Group</valor>
     <valor nomen="publicata">1988</valor>
+    <relatum nomen="editor" ad="ieee" modulus="organizatio"/>
     <valor nomen="vigor">vigens</valor>
     <dubium>
       Editio "1003.1" continenter renovatur (1988, 2001, 2008,

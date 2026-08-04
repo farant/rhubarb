@@ -71,3 +71,42 @@ not-yet-described, ad="*" for open relations), then <species> and
 <individuum> with <valor>/<relatum>/<historia>/<dubium>/<nota>.
 Everything provisional; the next models (plagula_computatralis,
 systema_operativum) will bend it again.
+
+## 2026-08-04 — round two: depth (sub-genera), organizatio, architectura
+
+Fran's pulls, each landed:
+
+7. SUB-GENERA arrive (format: `sub=` attribute on genus +
+   <differentia> at genus level). The Porphyrian tree gets depth,
+   and it RESOLVED the bash dubium the scholastic way:
+   subordination, not sisterhood — lingua_iussuum sub
+   lingua_programmandi. The tell that subordination was right:
+   bash's PROPERTY VALUES all fit the parent's palette (that's
+   inheritance working), only the essence differed (that's what
+   the differentia carries). Genus + differentia doing their
+   ancient jobs unchanged.
+8. organizatio born (natura/organizatio.stml): universitas
+   personarum — the definitio hangs on PERDURATIO (persists
+   through member change; what distinguishes it from a mere
+   coetus). Sub-genera prove themselves immediately:
+   corpus_normans (iso/iec/ieee/ansi) and societas
+   (intel/amd/arm_ltd/bell_labs). norma.editor stops being a
+   conscious lie (textus → relation); persona gains membrum_de;
+   both dubia closed in place.
+9. architectura_machinae + versio_architecturae
+   (natura/architectura_machinae.stml): the language/
+   implementation distinction recurring in iron — architecture
+   is FORM (the chip genus surfaces, undescribed). THE SLIDING
+   LAW gets its third case and a name: word width belongs to the
+   VERSION, not the family (x86 crossed 16/32/64) — proprietates
+   ad subiectum verum labuntur. Three cases now: compiled→
+   implementation, annus_ortus→historia, word-width→version.
+   Dictionary honesty paying off: x86_64's auctor is AMD, not
+   Intel — version author ≠ family author, which a flat schema
+   could never say.
+
+Genera surfaced and waiting: chip (microarchitectura), att
+(from bell_labs pars_de). The versio-solution generalizing
+(lingua, architectura, probably norma/POSIX next) suggests versio
+may eventually be a FORM — a genus-shape any model can stamp —
+but three instances is not yet a law; let a fourth force it.

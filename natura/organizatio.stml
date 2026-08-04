@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/organizatio.stml
+  Exemplar semanticum: ORGANIZATIO (versio 0, PLASTICUM)
+
+  Genus a norma et persona POSTULATUM (editor normae organizatio
+  est, non persona nec chorda). Sub-genera prima formae:
+  corpus_normans, societas - arbor Porphyriana profunditatem
+  accipit (attributum sub= + differentia in genere).
+-->
+<natura modulus="organizatio" versio="0" lingua="latina">
+
+<genus nomen="organizatio">
+
+  <definitio>
+    Universitas personarum: coetus in finem communem ordinatus
+    qui UT UNUM agit et mutatis membris perdurat - haec
+    perduratio eam a mero coetu distinguit. Auctor esse potest,
+    condere, edere; persona non est sed personarum est.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="nomina" genus="textus" multiplex="verum"
+      nota="sigla inclusa: ISO, IEEE"/>
+    <proprietas nomen="condita" genus="dies"/>
+    <proprietas nomen="dissoluta" genus="dies"
+      nota="vacuum = perdurans"/>
+    <proprietas nomen="sedes" genus="textus"/>
+  </proprietates>
+
+  <actiones>
+    <actio nomen="condi"/>
+    <actio nomen="dissolvi"/>
+    <actio nomen="edere" nota="opus publicare - normam, chip,
+      programma"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="condita_a" ad="persona" modulus="persona"
+      multiplex="verum"/>
+    <relatio nomen="pars_de" ad="organizatio"
+      nota="suborganizationes - Bell Labs pars AT&amp;T erat"/>
+    <relatio nomen="membrum" a="persona" modulus="persona"
+      inversa="verum"
+      nota="persona.membrum_de hanc citat"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     CORPUS NORMANS - sub-genus: organizatio quae normas
+     edit et custodit
+     ================================================== -->
+
+<genus nomen="corpus_normans" sub="organizatio">
+
+  <differentia>
+    Finis proprius: normas edere et custodire - descriptiones
+    auctoritativas quibus alii conformantur. Auctoritas eius ex
+    consensu, non ex imperio.
+  </differentia>
+
+  <relationes>
+    <relatio nomen="edit" ad="norma" modulus="norma"
+      multiplex="verum"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="iso">
+    <valor nomen="nomina">International Organization for
+      Standardization</valor>
+    <valor nomen="nomina">ISO</valor>
+    <valor nomen="condita">1947-02-23</valor>
+    <valor nomen="sedes">Geneva</valor>
+  </individuum>
+
+  <individuum nomen="iec">
+    <valor nomen="nomina">International Electrotechnical
+      Commission</valor>
+    <valor nomen="nomina">IEC</valor>
+    <valor nomen="condita">1906</valor>
+    <valor nomen="sedes">Geneva</valor>
+  </individuum>
+
+  <individuum nomen="ieee">
+    <valor nomen="nomina">Institute of Electrical and
+      Electronics Engineers</valor>
+    <valor nomen="nomina">IEEE</valor>
+    <valor nomen="condita">1963-01-01</valor>
+  </individuum>
+
+  <individuum nomen="ansi">
+    <valor nomen="nomina">American National Standards
+      Institute</valor>
+    <valor nomen="nomina">ANSI</valor>
+    <valor nomen="condita">1918-10-19</valor>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     SOCIETAS - sub-genus: organizatio quaestui dedita
+     (ab architectura postulata: auctores architecturarum
+     societates sunt)
+     ================================================== -->
+
+<genus nomen="societas" sub="organizatio">
+
+  <differentia>
+    Finis proprius: quaestus per opera vendita; possessores
+    habet quibus respondet.
+  </differentia>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="intel">
+    <valor nomen="nomina">Intel Corporation</valor>
+    <valor nomen="condita">1968-07-18</valor>
+  </individuum>
+
+  <individuum nomen="amd">
+    <valor nomen="nomina">Advanced Micro Devices</valor>
+    <valor nomen="nomina">AMD</valor>
+    <valor nomen="condita">1969-05-01</valor>
+  </individuum>
+
+  <individuum nomen="arm_ltd">
+    <valor nomen="nomina">Arm Ltd</valor>
+    <valor nomen="condita">1990-11-27</valor>
+  </individuum>
+
+  <individuum nomen="bell_labs">
+    <valor nomen="nomina">Bell Telephone Laboratories</valor>
+    <valor nomen="condita">1925-01-01</valor>
+    <relatum nomen="pars_de" ad="att" externum="verum"/>
+    <nota>domus linguae C - Ritchie ibi laborabat</nota>
+  </individuum>
+
+</genus>
+
+</natura>

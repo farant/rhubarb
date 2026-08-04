@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/architectura_machinae.stml
+  Exemplar semanticum: ARCHITECTURA MACHINAE (versio 0, PLASTICUM)
+
+  Distinctio eadem ac lingua/implementatio, gradu ferri:
+  architectura FORMA est (copia instructionum quam programma
+  alloquitur); chip res quae eam exsequitur. Genus chip
+  (microarchitectura, exemplaria concreta) SURGIT, nondum
+  descriptum.
+
+  EXEMPLUM TERTIUM LEGIS LABENTIS: latitudo verbi non
+  architecturae familiae sed VERSIONI pertinet (x86 per 16/32/64
+  transiit) - proprietates ad subiectum verum labuntur, sicut
+  "compilata" ad implementationem lapsa est.
+-->
+<natura modulus="architectura_machinae" versio="0" lingua="latina">
+
+<genus nomen="architectura_machinae">
+
+  <definitio>
+    Forma abstracta machinae computatoriae quam programmata
+    alloquuntur: copia instructionum, registra, modellum
+    memoriae. Foedus inter compilatorem et ferrum - multa
+    exsecutoria (chips), architectura una; per versiones
+    crescit identitate manente.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="indoles_copiae" genus="electio">
+      <optio>cisc</optio>
+      <optio>risc</optio>
+      <optio>mixta</optio>
+    </proprietas>
+    <proprietas nomen="licentia_aperta" genus="veritas"
+      ordinarius="falsum"
+      nota="riscv verum - differentia eius historica"/>
+  </proprietates>
+
+  <actiones>
+    <actio nomen="ortus"/>
+    <actio nomen="edi" nota="versio nova - vide genus
+      versio_architecturae"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="auctor" ad="organizatio"
+      modulus="organizatio" multiplex="verum"
+      nota="architecturae a societatibus/consortiis nascuntur,
+            raro a personis solis"/>
+    <relatio nomen="habet_versionem" ad="versio_architecturae"/>
+    <relatio nomen="exsecuta_a" ad="chip" externum="verum"
+      nota="genus chip nondum descriptum"/>
+    <relatio nomen="emissa_pro" a="implementatio_linguae"
+      modulus="lingua_programmandi" inversa="verum"
+      nota="compilatores pro architecturis emittunt"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="x86">
+    <definitio>
+      Familia CISC ab Intel 8086 orta: instructiones longitudinis
+      variae, compatibilitas retrorsum quasi-religiosa - onus et
+      arx eius.
+    </definitio>
+    <differentia>
+      Compatibilitas retrorsum supra puritatem: stratum super
+      stratum, nihil umquam abiectum.
+    </differentia>
+    <valor nomen="indoles_copiae">cisc</valor>
+    <relatum nomen="auctor" ad="intel" modulus="organizatio"/>
+    <historia>
+      <eventum quando="1978-06-08" actio="ortus">8086</eventum>
+    </historia>
+  </species>
+
+  <species nomen="arm">
+    <definitio>
+      Familia RISC efficientiae dedita: instructiones fixae,
+      registra ampla; a machinis manualibus ad servos ascendit.
+    </definitio>
+    <differentia>
+      Efficientia energiae ut principium formans, non additum.
+    </differentia>
+    <valor nomen="indoles_copiae">risc</valor>
+    <relatum nomen="auctor" ad="arm_ltd" modulus="organizatio"/>
+    <historia>
+      <eventum quando="1985-04-26" actio="ortus">ARM1 (apud
+        Acorn)</eventum>
+    </historia>
+  </species>
+
+  <species nomen="riscv">
+    <definitio>
+      Copia instructionum RISC aperta: forma sine domino unico,
+      per consortium custodita; modularis (fundamentum +
+      extensiones nominatae).
+    </definitio>
+    <differentia>
+      Licentia aperta ut essentia, non accidens: quivis
+      exsequitur sine venia.
+    </differentia>
+    <valor nomen="indoles_copiae">risc</valor>
+    <valor nomen="licentia_aperta">verum</valor>
+    <historia>
+      <eventum quando="2010" actio="ortus">apud Berkeley</eventum>
+    </historia>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     VERSIO ARCHITECTURAE - eadem solutio ac versio_linguae:
+     editio in rem citabilem crystallizata. Latitudo verbi
+     HIC vivit, non in familia.
+     ================================================== -->
+
+<genus nomen="versio_architecturae">
+
+  <definitio>
+    Editio architecturae nominata: quam copiam instructionum
+    chip vere exsequitur et compilator vere alloquitur -
+    "aedifica pro x86_64" versionem citat, non familiam.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="titulus" genus="textus"/>
+    <proprietas nomen="latitudo_verbi" genus="numerus"
+      nota="bits; VERSIONI pertinet - x86 per 16/32/64
+            transiit"/>
+    <proprietas nomen="edita" genus="dies"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="versio_de" ad="architectura_machinae"/>
+    <relatio nomen="sequitur" ad="versio_architecturae"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="i386">
+    <valor nomen="titulus">i386 (IA-32)</valor>
+    <valor nomen="latitudo_verbi">32</valor>
+    <valor nomen="edita">1985-10</valor>
+    <relatum nomen="versio_de" ad="x86"/>
+  </individuum>
+
+  <individuum nomen="x86_64">
+    <valor nomen="titulus">x86-64 (AMD64)</valor>
+    <valor nomen="latitudo_verbi">64</valor>
+    <valor nomen="edita">2003-04-22</valor>
+    <relatum nomen="versio_de" ad="x86"/>
+    <relatum nomen="sequitur" ad="i386"/>
+    <nota>
+      Extensio 64-bit ab AMD, non ab Intel, edita - auctor
+      versionis auctori familiae non idem: historia vera
+      schemate simplici non caperetur.
+    </nota>
+  </individuum>
+
+  <individuum nomen="armv8">
+    <valor nomen="titulus">ARMv8-A (AArch64)</valor>
+    <valor nomen="latitudo_verbi">64</valor>
+    <valor nomen="edita">2011-10-27</valor>
+    <relatum nomen="versio_de" ad="arm"/>
+    <nota>machinae nostrae (Apple Silicon) hanc exsequuntur</nota>
+  </individuum>
+
+</genus>
+
+</natura>

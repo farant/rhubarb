@@ -12,7 +12,7 @@
   more dictionarii biographici); personae TUAE (contactus, socii)
   in voluminibus applicationum, genus hoc citantes.
 -->
-<natura modulus="persona" versio="0" lingua="latina">
+<natura modulus="persona" versio="1" lingua="latina">
 
 <genus nomen="persona">
 
@@ -40,14 +40,12 @@
     <relatio nomen="auctor_de" ad="*"
       nota="ad opus cuiusvis generis - relatio aperta consulto:
             opera personarum genera omnia transeunt"/>
+    <relatio nomen="membrum_de" ad="organizatio"
+      modulus="organizatio" multiplex="verum"/>
   </relationes>
+  <!-- dubium organizationis SOLUTUM (v0->v1): exemplar
+       organizatio natum - universitas personarum, non persona -->
 
-  <dubium>
-    Organizatio (ISO, consortium, universitas) persona non est
-    sed agit ut auctor/editor. Genus organizatio SURGIT e norma
-    exemplari - nondum descriptum. Persona iuridica vs naturalis:
-    distinctio vetus, digna descriptione propria.
-  </dubium>
 
   <!-- ================= DICTIONARIUM ================= -->
 
