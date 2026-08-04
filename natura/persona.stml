@@ -12,7 +12,7 @@
   more dictionarii biographici); personae TUAE (contactus, socii)
   in voluminibus applicationum, genus hoc citantes.
 -->
-<natura modulus="persona" versio="1" lingua="latina">
+<natura modulus="persona" versio="2" lingua="latina">
 
 <genus nomen="persona">
 
@@ -57,6 +57,25 @@
       <eventum quando="1972" actio="creare">lingua C</eventum>
       <eventum quando="1978" actio="creare">liber "The C
         Programming Language" (cum Kernighan)</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="ken_thompson">
+    <valor nomen="nomina">Kenneth Lane Thompson</valor>
+    <valor nomen="natus">1943-02-04</valor>
+    <historia>
+      <eventum quando="1969" actio="creare">Unix (cum
+        Ritchie)</eventum>
+      <eventum quando="1969" actio="creare">lingua B</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="linus_torvalds">
+    <valor nomen="nomina">Linus Benedict Torvalds</valor>
+    <valor nomen="natus">1969-12-28</valor>
+    <historia>
+      <eventum quando="1991" actio="creare">nucleus Linux</eventum>
+      <eventum quando="2005" actio="creare">git</eventum>
     </historia>
   </individuum>
 

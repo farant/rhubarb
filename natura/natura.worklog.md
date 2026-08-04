@@ -173,3 +173,41 @@ almost says yes), chip, att. Parish remaining: systema_operativum.
     etiam= is the honest crosslink, expected to stay rare — if
     it proliferates, that's a smell that a differentia is
     misplaced, and the worklog should catch it.
+
+## 2026-08-04 — round five: systema_operativum (parish complete)
+
+16. The state-machine BEARER question arrived and got its
+    mechanism: machina_statuum gradus="species|individuum". The
+    species macOS never sleeps; an INSTALLATION does. "vita" is
+    borne by species (DOS is derelictum); "cursus"
+    (exstinctum/initians/currens/dormiens, with CASUS as an
+    honest unwilled transition) is borne by individua — which
+    live entirely OUTSIDE the library, in app volumina (villa
+    will cite these states for its servers). The
+    describe-vs-bind doctrine made concrete: the library
+    declares a machine whose every instance is elsewhere.
+17. TRUTH-CATCH, genealogy edition: "Linux is Unix" is the
+    common schema lie. macOS ORTA EX unix (real BSD descent);
+    Linux AD_EXEMPLUM_FACTA unix (reimplementation, no line of
+    code descends). Two relations where flat schemas have one
+    boolean. Windows gets the same honesty via vms (surfaced,
+    undescribed): NT is VMS-shaped, not Unix-shaped.
+18. Dictionary grew its demanded residents: ken_thompson (Unix,
+    B), linus_torvalds (Linux kernel, git) in persona; apple,
+    microsoft in societas. Unix species notes its life
+    continues in descendants while the AT&T line itself
+    senesces — species whose vita lives in its children.
+19. versio_systematis coined per the ruling (no mechanism);
+    ventura→sonoma chained, sonoma noted as what this house
+    runs (Darwin 23.6). New dubium carried: Linux
+    DISTRIBUTIONS — kernel vs system vs distribution is the
+    granularity question knocking again (species? version? a
+    genus between?). Left open.
+
+Parish of three complete: linguae, plagulae, systemata. Surfaced
+and waiting: directorium, chip, att, vms, systema_plagularum
+(APFS/ext4). Seven models, ~1500 lines, nineteen transformations
+in one day — none of the mechanisms designed in advance, every
+one forced by content. The next natural conversations: Fran's
+editorial pass over the seven as a set, or the loader (where
+plasticity starts trading against consumers).
