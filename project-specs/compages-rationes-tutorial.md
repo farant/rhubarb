@@ -1,12 +1,21 @@
 # RATIONES — the hello-world that limit-tests the framework
 
-STATUS: aspirational draft (2026-08-04). Written in present tense AS IF the
-framework were finished — README-driven development. Every chapter carries a
-status box: EXSTAT (works today) / DIMIDIUM (partial, seam named) / DEEST
-(missing, gap named). Code is illustrative — existing-library signatures are
-approximated, invented APIs are proposals with unsealed names. The purpose of
-this document is to be red-teamed: by Fran at the prose level, by
-context-free agents at the walkthrough level.
+STATUS: aspirational draft (2026-08-04), REVISED same week after the silex
+arc. Written in present tense AS IF the framework were finished —
+README-driven development. Every chapter carries a status box: EXSTAT (works
+today) / DIMIDIUM (partial, seam named) / DEEST (missing, gap named). Code is
+illustrative — existing-library signatures are approximated, invented APIs
+are proposals with unsealed names.
+
+REVISION NOTE: between draft and revision, G1+G2 substantially SHIPPED
+(silex novum + volumen.h), G6 mostly fell (mensa image cards), and two
+things arrived the draft never imagined: **mensa** (the thinkboard frontend
+battery — sealed conventions: web components without shadow DOM,
+concatenation bundling via glomerare, theme-as-component, DI providers) and
+**the VCS** (a rationes project is version-controlled from birth). The
+red-team loop this document exists for is also no longer aspirational: it
+ran four rounds against mensa and caught real seam bugs (CSS-inheritance,
+drag hit-testing) that no suite could have.
 
 The app: **rationes** — a shopping-list + monthly-budgeting app. Documents
 are files. A document opens locally or from a server. It runs as a desktop
@@ -30,25 +39,28 @@ What you do NOT need: any dependency. Everything below is house C89.
 ## 1. Scaffold
 
 ```
-$ bin/aedilis novum rationes --vitrea
-  apps/rationes/
-    rationes.sh            launcher (generated, aedilis-maintained)
+$ silex novum rationes --vitrea
+  rationes/
+    rationes.volumen       THE DOCUMENT+REPO (truth; see ch. 2)
+    include/  lib/         vendored library closure — yours forever
     fontes/rationes.c      principale — you own main()
     assets/index.html      the vitrea page
-    assets/rationes.js
-    probationes/fumus.sh   smoke test
-$ ./apps/rationes/rationes.sh
+    aedificare.sh          build script
+$ cd rationes && ./aedificare.sh && ./bin/rationes
 ```
 
-A window opens with a hello page. The scaffold is ~60 lines of C: open a
-fenestra, mount vitrea over it, serve `assets/` via capsula, drain events.
-You own `main()` — compages never calls you; you call it.
+A window opens with a hello page. You own `main()` — compages never calls
+you; you call it. Every scaffolded and vendored file is recorded in the
+volumen BEFORE being projected to disk, so the project is version-controlled
+and fully backed up (cp one file) from its first breath.
 
-> **STATUS**
-> - vitrea + fenestra + capsula assets: **EXSTAT** (forum, villa, demos)
-> - `include/X.h → lib/X.c` zero-config resolution: **EXSTAT** (aedilis)
-> - `aedilis novum` scaffold command: **DEEST** — today you copy an existing
->   app by hand. Gap G1.
+> **STATUS** *(revised)*
+> - `silex novum` (console flavor): **EXSTAT** — vendors the closure from
+>   the fabrica, scaffolds hello + probatio + scripts, volumen-first.
+>   G1 re-homed from the imagined `aedilis novum` to silex, and shipped.
+> - `--vitrea` flavor (window + assets + internuntius wiring): **DEEST** —
+>   the remaining slice of G1; silex ui itself is the pattern to template.
+> - vitrea + fenestra + capsula + `include/X.h → lib/X.c`: **EXSTAT**
 
 ---
 
@@ -70,13 +82,22 @@ log, exactly the gesta shape but per-file instead of per-repo. Entities are
 a rebuildable projection of the acta. `volumen_reficere()` drops projections
 and replays the log; corruption of a projection is never data loss.
 
-> **STATUS**
-> - scrinium (sqlite wrapper, migrations, ULID, WAL): **EXSTAT**
-> - event log + projection discipline: **EXSTAT** as architecture (gesta),
->   but gesta is repo-global and JSONL-truth; the per-file, sqlite-truth
->   variant is **DEEST**. Gap G2 — `volumen.h`, the keystone.
-> - Note: this is also the forum's own migration path (diurnum 2026-08-03:
->   "migrate the data model to event sourced sqlite").
+And because the acta are ordered history, the volumen doubles as the
+project's **version control**: `silex status` (sigilla vs manifest →
+MUTATA/NOVA/ABSENS), `silex condere -n "..."` (atomic absorption + a named
+point in the log), `silex historia`. A commit is not an object — it is a
+point in the acta; any historical tree is a fold. The document and the
+repository turned out to be the same thing.
+
+> **STATUS** *(revised)*
+> - `volumen.h`: **EXSTAT** — acta (SQL-side timestamps) + massae
+>   (content-addressed, dedup) + plagulae (manifest), one-transaction
+>   condere, caller-owned transactions, acta-after-seq reads, bare massa
+>   API. G2 SHIPPED 2026-08-04; probationes pin binary round-trips.
+> - VCS verbs status/condere/historia: **EXSTAT** (retroactive on any
+>   volumen); proicere (plan-default) + `-ad seq` time travel: **DEEST**.
+> - genera-inside-the-volumen: still **DEEST** — that's G3, unchanged.
+> - The forum's announced migration path now has a proven target.
 
 ---
 
@@ -108,13 +129,16 @@ definition (soft-flags, never blocks — definitions judge, they don't
 constrain). Queries go through the projection: plain SQL via scrinium, FTS
 included.
 
-> **STATUS**
+> **STATUS** *(revised)*
 > - genera semantics (runtime types, custodia, field palette, FTS):
->   **EXSTAT** — but embedded in tabularium.c (7,530 lines, app not
->   library). Extraction is Gap G3 — the ActiveRecord moment. Three pulls
->   already recorded (storage direction, this tutorial, VPS split).
-> - field palette today: textus/area/dies/annus/numerus/veritas/electio/
->   relatio — no imago/blobum. Gap G6.
+>   **EXSTAT** — but embedded in tabularium.c (app not library).
+>   Extraction is Gap G3 — the ActiveRecord moment, STILL THE KEYSTONE.
+>   The design is now doubly grounded: TWO shipped per-id folds exist
+>   (mensa's board-state fold in C+JS, and the VCS manifest fold) proving
+>   the fold-over-acta pattern genera will ride.
+> - field palette: no imago field yet — but the STORAGE half of G6
+>   shipped (massae + base64 bridge, see ch. 6); the field genus waits
+>   on G3.
 
 ---
 
@@ -149,10 +173,25 @@ SELECT categoria, SUM(summa) FROM sumptus
 rendered against a per-category budget the user sets. Projection queries
 are just SQL — no query DSL to learn.
 
-> **STATUS**
-> - forum proves the pattern end-to-end (runtime genus → UI): **EXSTAT**
->   as precedent, **DEEST** as a library call (`vitrea_genera_praebere`).
->   Gap G4 — falls out of G3 + the forum's existing JS, mostly extraction.
+**Revision addendum — a second UI paradigm shipped that this draft never
+imagined**: `mensa`, the thinkboard battery (lib/mensa_assets + lib/mensa.c).
+Nested no-scroll desktops, draggable cards, folders-as-boards, sticky notes,
+image cards, cut/paste across boards — with board state event-sourced into a
+volumen through ONE mounting call (`mensa_praebere`). Its sealed conventions
+are now framework law for all compages frontend work: web components
+WITHOUT shadow DOM, concatenation bundling (tools/glomerare.sh, not ESM),
+theme-as-component (`<mensa-thema>` + CSS custom properties), and DI
+providers (components never name the bridge; persistentia injects). The
+rationes shopping list may well want to BE a mensa board — items as cards,
+months as folders — rather than a generated CRUD table; the two paradigms
+(spatial mensa, tabular genera-UI) will coexist.
+
+> **STATUS** *(revised)*
+> - mensa thinkboard battery: **EXSTAT** (v3: thecae, orbis, imagines,
+>   secare/inserere; 34-assertion logic probatio in the suite)
+> - forum proves the genus→CRUD-UI pattern end-to-end: **EXSTAT** as
+>   precedent, **DEEST** as a library call (`vitrea_genera_praebere`).
+>   Gap G4 — falls out of G3 + extraction.
 > - internuntius (JSON-RPC over missor seam): **EXSTAT**
 
 ---
@@ -174,12 +213,15 @@ land in the volumen as a blob (flatura-compressed, sigillum-addressed so
 identical images store once), the generated views thumbnail it. sqlite
 holds blobs happily at this scale; the document stays one file.
 
-> **STATUS**
-> - flatura (compression): **EXSTAT**; sigillum (content address): **EXSTAT**
-> - blob column discipline + imago field genus + upload path through
->   vitrea/internuntius: **DEEST**. Gap G6. (Amusing precedent: the OLD
->   entitas lineage already had TYPUS_BLOBUM "auto-compressed with
->   flatura" — the idea is ten months ahead of the plumbing.)
+> **STATUS** *(revised — G6 mostly FELL, out of G2's design)*
+> - blob storage: **EXSTAT** — volumen massae ARE the image store
+>   (content-addressed: the same receipt pasted twice stores once).
+> - paste → image card → persist → rehydrate: **EXSTAT** in mensa
+>   (mensa_imago_condere/promere, base64 over the bridge; aspect-ratio-
+>   preserving resize is structural — width-only control).
+> - the `imago` FIELD GENUS in genera forms: **DEEST** — waits on G3.
+> - named future: a `massa://sigillum` custom scheme in vitrea =
+>   zero-copy + browser caching (touches platform code; on-pull).
 
 ---
 
@@ -228,12 +270,14 @@ when reachable; conflicts resolve last-writer-wins at the field level with
 the losing event preserved in the acta (nothing is ever lost, the log is
 the log). No CRDTs in v1 — the single-writer server IS the ordering.
 
-> **STATUS**
+> **STATUS** *(revised)*
 > - the protocol shape (MCP-over-TCP per-request, start-if-absent):
->   **DIMIDIUM** — cliens_tabularii is the embryo, but it is
->   tabularium-specific and has no replica/outbox concept
-> - volumen replication (acta-after-seq pull, outbox, replay): **DEEST**.
->   Gap G8 — the largest genuinely new design in this document.
+>   **DIMIDIUM** — cliens_tabularii is the embryo
+> - **the pull primitive now EXISTS**: `volumen_acta_legere(vol, post_seq)`
+>   is exactly "ship me acta after seq N" — built for the VCS fold,
+>   deliberately shaped for this chapter
+> - replica/outbox/replay: **DEEST**. Gap G8 — still the largest genuinely
+>   new design here; divergence (merge) remains the honest hard part.
 
 ---
 
@@ -324,27 +368,33 @@ against the same volumen your kitchen laptop has open.
 
 ## THE GAP HARVEST
 
-| # | Gap | Size | Depends on |
-|---|-----|------|-----------|
-| G1 | `aedilis novum` scaffold | S — template + generation, aedilis owns it | — |
-| G2 | `volumen.h` — document = sqlite file, acta-in-file, projections | M — new lib, but scrinium+gesta are the parts bin | — |
-| G3 | genera extraction from tabularium.c into a library | L — the keystone; 3 pulls recorded | G2 (or lands beside it) |
-| G4 | `vitrea_genera_praebere` — generated CRUD UI as a call | M — extraction from forum JS + internuntius | G3 |
-| G5 | `deducere` deploy verb (+ G5a amd64 lane) | M — composition of porta/villa/scp/systemd/nginx | — |
-| G6 | imago/blobum field genus + upload path | S–M | G3 |
-| G7 | personae: identity, roles, login → persona mapping | M | G3 |
-| G8 | volumen replication: single-writer server, acta-after-seq pull, outbox | L — the big new design | G2 |
-| G9 | provenance-marked regenerable codegen (silva) | L, long-line | silva annotationes |
-| G10 | OAuth MCP (auctoritas) + arca | L; arca first | arca |
+| # | Gap | Status after revision |
+|---|-----|----------------------|
+| G1 | project scaffold | **SHIPPED** as `silex novum` (console); `--vitrea` flavor remains (S) |
+| G2 | `volumen.h` — document = sqlite file | **SHIPPED** 2026-08-04, plus VCS verbs the draft never asked for |
+| G3 | genera extraction into a library | **DEEST — THE KEYSTONE**, now backed by two shipped fold precedents |
+| G4 | `vitrea_genera_praebere` CRUD UI | DEEST (needs G3); mensa shipped as the spatial sibling paradigm |
+| G5 | `deducere` deploy verb (+ amd64 lane) | DEEST, unchanged |
+| G6 | images as blobs + upload path | **MOSTLY SHIPPED** (massae + mensa image cards); imago FIELD waits on G3 |
+| G7 | personae: identity, roles, login | DEEST, unchanged |
+| G8 | volumen replication | DEEST, but its pull primitive (acta_legere post_seq) now exists |
+| G9 | provenance-marked regenerable codegen | DEEST, long-line |
+| G10 | OAuth MCP (auctoritas) + arca | DEEST; arca first |
 
-Reading of the table: **G2+G3 unlock more than half the tutorial** (ch. 2,
-3, 4, 6, 7 all lean on them), match the forum's own announced migration,
-and were already named the keystone before this document existed. G1 is
-cheap and makes every later loop-iteration faster to red-team. G8 and G10
-are the genuinely new designs and deserve their own interview/spec cycles
-when their turn comes.
+New since the draft, not in the original table: **mensa** (thinkboard
+frontend battery — shipped with its own probationes and sealed frontend
+conventions), **silex VCS** (status/condere/historia shipped; proicere +
+renovare designed), **glomerare** (JS bundler), **silicetum** (the git-free
+dogfood quarry, two-class project protocol).
 
-Loop protocol reminder: improvements to this document and to the libraries
-come from walkthrough stumbles, not from speculation. Next crank: red-team
-chapters 1–5 against today's reality with a context-free agent once G1–G3
-exist even in embryo.
+Reading of the revised table: the gravity has all collapsed onto **G3** —
+it now unlocks ch. 3, 4 (CRUD half), 6 (field), and 7, and every shipped
+piece (volumen folds, mensa folds, VCS manifest) has rehearsed the pattern
+it needs. G8 and G10 remain the designs deserving their own interview
+cycles.
+
+Loop protocol: PROVEN, no longer aspirational — four red-team rounds
+against mensa caught seam bugs (CSS tag inheritance, drag hit-testing)
+invisible to every suite. Next crank: a context-free agent walks chapters
+1–2 against reality (they're now mostly EXSTAT), and its stumbles score
+the G1 `--vitrea` slice.
