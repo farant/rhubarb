@@ -133,6 +133,51 @@ MensaPaginator.prototype.statum = function (numerus) {
   return (this.pagina + 1) + '/' + this.paginae(numerus);
 };
 
+/* ---- paginatio linearum involutarum (visus plagularum) ----
+ * Monospatium + fractio per characterem (break-all) faciunt ordines
+ * involutos ARITHMETICAM puram: ceil(mensura/columnae) - nulla
+ * mensuratio DOM, recomputatio inter tractum gratis. */
+
+/* quot ordines visuales linea fontis occupat (vacua = 1) */
+function mensaOrdinesLineae(mensura, columnae) {
+  if (columnae < 1) { columnae = 1; }
+  if (mensura <= 0) { return 1; }
+  return Math.ceil(mensura / columnae);
+}
+
+/* partitio linearum in paginas: ordines = numerus ordinum visualium
+ * per lineam; ordinesPaginae = quot ordines pagina capit. Fructus =
+ * indices lineae PRIMAE cuiusque paginae. Linea una pagina maior
+ * paginam propriam accipit (praecisa redditur - malum minus quam
+ * volutio). */
+function mensaPartitioLinearum(ordines, ordinesPaginae) {
+  var initia = [0];
+  var cumulus = 0;
+  var index;
+
+  if (ordinesPaginae < 1) { ordinesPaginae = 1; }
+  for (index = 0; index < ordines.length; index = index + 1) {
+    if (cumulus > 0 && cumulus + ordines[index] > ordinesPaginae) {
+      initia.push(index);
+      cumulus = 0;
+    }
+    cumulus = cumulus + ordines[index];
+  }
+  return initia;
+}
+
+/* qua pagina linea ancorae iacet (regula Franis: post reflexionem
+ * salta ad paginam quae lineam summam tuam CONTINET - etiamsi
+ * media in pagina iam iaceat) */
+function mensaPaginaAncorae(initia, linea) {
+  var index;
+
+  for (index = initia.length - 1; index >= 0; index = index - 1) {
+    if (initia[index] <= linea) { return index; }
+  }
+  return 0;
+}
+
 /* ARBITER GESTUUM - machina statuum plani (tene-vs-trahe-vs-duplex).
  * Sine DOM: planum eventa punctoria in vocationes vertit et
  * actiones exsequitur. Fructus quisque = null aut {actio: ...}:
@@ -875,7 +920,46 @@ class MensaPlanum extends HTMLElement {
     document.addEventListener('paste', this._glutinare.bind(this));
 
     this._praebitor = null;   /* imaginum (persistentia iniectat) */
+    this._genera = {};        /* factores chartarum ab apps */
     this.reddere();
+  }
+
+  /* genera registrata (lex DI): apps chartas proprias in plicam
+   * inserunt sine mensa de eis sciente. factor(id, datum) ->
+   * elementum; planum id/positionem/registrum ipse curat. Sine
+   * registro genus ignotum tacite praeteritur (ut semper). */
+  genusRegistrare(genus, factor) {
+    this._genera[genus] = factor;
+  }
+
+  /* charta ab app creata (genus registratum) ad clientXY: ordo in
+   * summo, creatum emissum - via eadem ac _creareAd sed datum ab
+   * app venit (e.g. visus plagulae e tractu extra listam) */
+  chartamCreare(datum, clientX, clientY) {
+    var mensura = this.getBoundingClientRect();
+    var x = Math.max(0, Math.min(95,
+      Math.round((clientX - mensura.left)
+        / mensura.width * 10000) / 100));
+    var y = Math.max(0, Math.min(93,
+      Math.round((clientY - mensura.top)
+        / mensura.height * 10000) / 100));
+    var ordo = mensaOrdoSummus(this._elementa) + 1;
+    var id = datum.genus_elementi + '-' + Date.now().toString(36);
+    var emissum = {};
+    var node, clavis;
+
+    datum.x = x;
+    datum.y = y;
+    node = this._nodumCreare(id, datum);
+    if (!node) { return null; }
+    this.appendChild(node);
+    node.ponePositum(x, y);
+    node.style.zIndex = String(ordo);
+    for (clavis in datum) { emissum[clavis] = datum[clavis]; }
+    emissum.ordo = ordo;
+    emissum.tabula = this._tabula;
+    node.actumMittere('creatum', emissum);
+    return node;
   }
 
   /* praebitor imaginum: {condere(b64)->Promise(sigillum),
@@ -937,6 +1021,10 @@ class MensaPlanum extends HTMLElement {
           && node.latitudinemPonere) {
         node.latitudinemPonere(datum.latitudo);
       }
+      if (typeof datum.altitudo === 'number'
+          && node.altitudinemPonere) {
+        node.altitudinemPonere(datum.altitudo);
+      }
       if (datum.imago && node.imaginemPonere) {
         this._imaginemImplere(node, datum);
       }
@@ -995,7 +1083,9 @@ class MensaPlanum extends HTMLElement {
   _nodumCreare(id, datum) {
     var node = null;
 
-    if (datum.genus_elementi === 'scidula'
+    if (this._genera[datum.genus_elementi]) {
+      node = this._genera[datum.genus_elementi](id, datum);
+    } else if (datum.genus_elementi === 'scidula'
         || datum.genus_elementi === 'nota') {
       node = document.createElement('mensa-scidula');
       node.setAttribute('textus', datum.textus || '');
@@ -1010,6 +1100,7 @@ class MensaPlanum extends HTMLElement {
     } else {
       return null;   /* genus ignotum aut scida declarata absens */
     }
+    if (!node) { return null; }   /* factor recusavit */
     node.id = id;
     node.setAttribute('x',
       String(typeof datum.x === 'number' ? datum.x : 10));

@@ -254,3 +254,21 @@ chip deleted, three DECLARED cards in index.html:
   highlight doesn't survive page flips; selected seq/via not yet
   persisted in the fold (would survive restart if stored as
   internum — cheap follow-up).
+
+## 2026-08-04 — ui slice III: the plagulae list becomes a spawner
+
+- Click = linked in-place view (contentum follows), unchanged.
+  DRAG a row past 6pt = a ghost chip follows the pointer; drop
+  creates <silex-visus> via planum.chartamCreare — a PERMANENT
+  card of that file at that seq, persisted in the mensa fold
+  (via/seq/x/y/latitudo/altitudo/ordo), rebuilt on restart through
+  the registered factory. × deletes (deletum through the fold).
+- Line views (contentum + visus) rebuilt on SilexVisusLinearum:
+  soft wrap (break-all, monospace), BOTH-axis resize, pagination
+  recomputed live during the grip drag (rAF-gated; all arithmetic
+  via the new logica trio). Anchor rule live: the top line you
+  were reading picks the post-reflow page and glows while you
+  drag (unless page one).
+- A visus at seq 0 is a view of the PRESENT manifest — it will
+  honestly change content after a condere. Views at seq N are
+  frozen forever. Both are correct; worth feeling in the hands.

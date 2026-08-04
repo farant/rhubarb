@@ -214,3 +214,32 @@ statum, clamping everywhere (a shrunken ordo pulls the current page
 back into existence rather than rendering nothing). 11 assertions.
 The DOM half (arrow buttons in a card foot) stays app-side for now;
 if a third consumer repeats it, the render helper joins the battery.
+
+## 2026-08-04 — genus registry + line partition (the spawner pull)
+
+Fran's spawner ("drag a file off the list, it becomes a permanent
+card") is exactly the future we deferred one round earlier — and it
+arrived on a real pull, so the battery grew its two missing seams:
+
+- **planum.genusRegistrare(genus, factor)** + **chartamCreare(datum,
+  clientX, clientY)**: apps plug card types into the fold/render
+  machinery; _nodumCreare consults the registry before its builtins;
+  chartamCreare is _creareAd for app-shaped datum (position, ordo,
+  creatum emission all handled). Mensa still knows nothing about
+  silex. Null-returning factories tolerated.
+- **altitudo** joins latitudo as a reddere-applied dimension
+  (altitudinemPonere). TRAP RECORDED: a flex-column card with no
+  given height collapses to its content — the corpus measures one
+  row high and pagination shreds a file into 300 one-line pages.
+  Line-view cards therefore REQUIRE a default height at connect,
+  and spawned cards get magnitude as ATTRIBUTES at birth (creatum
+  does not re-render, so the fold's latitudo/altitudo would only
+  land on the next full reddere).
+- **Line partition trio in logica** (pure, 14 assertions):
+  mensaOrdinesLineae (monospace + break-all makes wrapped rows
+  ceil(len/cols) — arithmetic, no DOM measuring, live drag-resize
+  recompute is free), mensaPartitioLinearum (greedy page starts;
+  an over-tall line gets its own page, clipped — lesser evil than
+  scroll), mensaPaginaAncorae (Fran's anchor rule: after reflow
+  jump to the page CONTAINING the line you were reading, even if
+  it now sits mid-page).
