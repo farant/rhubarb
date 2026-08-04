@@ -1,19 +1,169 @@
 /* silex.c (instrumentum) - lapis ignarius: proiecta e fabrica
- * excudere. Verbum unicum v0: novum. Vide include/silex.h.
+ * excudere. Verba v0: novum, ui (sine argumentis = ui).
  *
  * Usus:
+ *   silex                       # fenestra vitrea (ui)
+ *   silex ui
  *   silex novum 001 -f /via/ad/rhubarb -d /via/ad/silicetum
  *   SILEX_FABRICA=/via/ad/rhubarb silex novum 001
- */
+ *
+ * Aedificatio: ./tools/silex_struere.sh (capsula frontis +
+ * obiecta suite; compile_tools.sh capsulam nesciret) */
 
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "argumenta.h"
+#include "filum.h"
+#include "json.h"
+#include "fenestra.h"
+#include "capsula.h"
+#include "vitrea.h"
+#include "internuntius.h"
 #include "silex.h"
+#include "silex_assets/capsula_silex_frons.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#define SILEX_VERSIO "v0"
+
+/* fabrica in datum tractatoris - NIHIL = ignota (ui tolerat) */
+interior JsonValor*
+_status_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa);
+
+interior JsonValor*
+_status_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    JsonValor*          fructus = json_objectum_creare(piscina);
+    constans character* fabrica = (constans character*)datum;
+    b32                 valida = FALSUM;
+
+    (vacuum)argumenta;
+    (vacuum)culpa;
+    si (fabrica != NIHIL)
+    {
+        character via[1024];
+
+        sprintf(via, "%.1000s/include", fabrica);
+        valida = filum_directorium_existit(via);
+    }
+    json_objectum_ponere(fructus, "versio",
+        json_chorda_creare_literis(piscina, SILEX_VERSIO));
+    json_objectum_ponere(fructus, "fabrica",
+        json_chorda_creare_literis(piscina,
+            fabrica == NIHIL ? "(ignota - SILEX_FABRICA pone)"
+                : fabrica));
+    json_objectum_ponere(fructus, "fabrica_valida",
+        json_boolean_creare(piscina, valida));
+    redde fructus;
+}
+
+interior s32
+_ui_currere (Piscina* piscina, constans character* fabrica);
+
+interior s32
+_ui_currere (Piscina* piscina, constans character* fabrica)
+{
+    Piscina* piscina_vocationis;
+    FenestraConfiguratio figura_fenestrae;
+    VitreaConfiguratio   figura_vitreae;
+    Fenestra*     fenestra;
+    Capsula*      capsula;
+    Vitrea*       vitrea;
+    Internuntius* inx;
+
+    piscina_vocationis = piscina_generare_dynamicum(
+        "silex_ui_vocationes", 1048576);
+    si (piscina_vocationis == NIHIL)
+    {
+        redde I;
+    }
+    figura_fenestrae.titulus = "silex";
+    figura_fenestrae.x = CC;
+    figura_fenestrae.y = CC;
+    figura_fenestrae.latitudo = 720;
+    figura_fenestrae.altitudo = 560;
+    figura_fenestrae.vexilla = FENESTRA_CLAUDIBILIS
+        | FENESTRA_MUTABILIS | FENESTRA_CENTRATA;
+    fenestra = fenestra_creare(piscina, &figura_fenestrae);
+    si (fenestra == NIHIL)
+    {
+        fprintf(stderr, "silex ui: fenestra creari non potuit\n");
+        redde I;
+    }
+    capsula = capsula_aperire(&capsula_silex_frons, piscina);
+    si (capsula == NIHIL)
+    {
+        fprintf(stderr, "silex ui: capsula frontis fracta\n");
+        redde I;
+    }
+    figura_vitreae.origo = VITREA_ORIGO_CAPSULA;
+    figura_vitreae.capsula = capsula;
+    figura_vitreae.via_initialis = "index.html";
+    figura_vitreae.url = NIHIL;
+    figura_vitreae.inspectabilis = VERUM;
+    vitrea = vitrea_creare(piscina, fenestra, &figura_vitreae);
+    si (vitrea == NIHIL)
+    {
+        fprintf(stderr, "silex ui: vitrea creari non potuit\n");
+        redde I;
+    }
+    inx = internuntius_creare(piscina, vitrea_missor, vitrea);
+    si (inx == NIHIL)
+    {
+        fprintf(stderr, "silex ui: internuntius fractus\n");
+        redde I;
+    }
+    /* exemplar mutabile fabricae - datum tractatoris vacuum* est */
+    {
+        character* fabrica_datum = NIHIL;
+
+        si (fabrica != NIHIL)
+        {
+            fabrica_datum = chorda_ut_cstr(
+                chorda_ex_literis(fabrica, piscina), piscina);
+        }
+        (vacuum)internuntius_praebere(inx, "status",
+            _status_tractare, (vacuum*)fabrica_datum);
+    }
+
+    dum (!fenestra_debet_claudere(fenestra))
+    {
+        Eventus eventus;
+        chorda nuntium;
+        VitreaNuntiusGenus genus;
+        PiscinaNotatio nota;
+
+        fenestra_expectare_eventus(fenestra, CC);
+        dum (fenestra_obtinere_eventus(fenestra, &eventus))
+        {
+            /* eventa fenestralia sola; textura clavem/murem iam
+             * accepit (livratio duplex) */
+        }
+        nota = piscina_notare(piscina_vocationis);
+        dum (vitrea_obtinere_nuntium(vitrea, &nuntium, &genus))
+        {
+            si (genus == VITREA_NUNTIUS_PONS)
+            {
+                internuntius_tractare(inx, nuntium,
+                    piscina_vocationis);
+            }
+            alioquin
+            {
+                vitrea_recargare(vitrea);
+            }
+        }
+        piscina_reficere(piscina_vocationis, nota);
+    }
+
+    vitrea_destruere(vitrea);
+    fenestra_destruere(fenestra);
+    piscina_destruere(piscina_vocationis);
+    redde ZEPHYRUM;
+}
 
 s32
 principale (integer argc, character** argv)
@@ -41,9 +191,9 @@ principale (integer argc, character** argv)
     argumenta_ponere_descriptionem(parser,
         "silex - proiecta nova e fabrica rhubarb excudere");
     argumenta_addere_positionalem(parser, "verbum",
-        "verbum (v0: novum)", VERUM);
+        "verbum (novum | ui; sine argumentis = ui)", FALSUM);
     argumenta_addere_positionalem(parser, "titulus",
-        "nomen proiecti", VERUM);
+        "nomen proiecti (pro novo)", FALSUM);
     argumenta_addere_optionem(parser, "-f", "--fabrica",
         "radix arboris rhubarb (aut SILEX_FABRICA)");
     argumenta_addere_optionem(parser, "-d", "--destinatio",
@@ -63,15 +213,7 @@ principale (integer argc, character** argv)
     verbum = argumenta_obtinere_positionalem(lecta, 0, piscina);
     titulus = argumenta_obtinere_positionalem(lecta, 1, piscina);
 
-    si (!chorda_aequalis_literis(verbum, "novum"))
-    {
-        fprintf(stderr, "silex: verbum ignotum: %.*s"
-            " (v0 solum 'novum' novit)\n",
-            (integer)verbum.mensura,
-            (constans character*)verbum.datum);
-        redde I;
-    }
-
+    /* fabrica: optio > ambiens > NIHIL (ui tolerat, novum poscit) */
     fabrica_opt = argumenta_obtinere_optionem(lecta, "--fabrica",
         piscina);
     si (fabrica_opt.mensura > ZEPHYRUM)
@@ -81,12 +223,37 @@ principale (integer argc, character** argv)
     alioquin
     {
         fabrica = getenv("SILEX_FABRICA");
-        si (fabrica == NIHIL || fabrica[0] == '\0')
+        si (fabrica != NIHIL && fabrica[0] == '\0')
         {
-            fprintf(stderr, "silex: fabrica ignota - da --fabrica"
-                " aut SILEX_FABRICA pone\n");
-            redde I;
+            fabrica = NIHIL;
         }
+    }
+
+    /* sine argumentis aut 'ui' = fenestra */
+    si (argumenta_numerus_positionalium(lecta) == 0
+        || chorda_aequalis_literis(verbum, "ui"))
+    {
+        redde _ui_currere(piscina, fabrica);
+    }
+
+    si (!chorda_aequalis_literis(verbum, "novum"))
+    {
+        fprintf(stderr, "silex: verbum ignotum: %.*s"
+            " (v0: novum, ui)\n",
+            (integer)verbum.mensura,
+            (constans character*)verbum.datum);
+        redde I;
+    }
+    si (titulus.mensura == ZEPHYRUM)
+    {
+        fprintf(stderr, "silex novum: titulus deest\n");
+        redde I;
+    }
+    si (fabrica == NIHIL)
+    {
+        fprintf(stderr, "silex: fabrica ignota - da --fabrica"
+            " aut SILEX_FABRICA pone\n");
+        redde I;
     }
 
     destinatio_opt = argumenta_obtinere_optionem(lecta,

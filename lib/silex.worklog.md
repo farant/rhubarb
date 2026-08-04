@@ -36,3 +36,17 @@ Mechanics + traps:
 Next verbs (designed, not built): status (three-way sigillum compare),
 condere (absorb working tree), proicere (re-project), historia (walk
 acta). Then the MCP posture.
+
+## 2026-08-04 — the ui verb (front door opens)
+
+`silex` bare / `silex ui` opens a vitrea window: capsula-embedded
+index.html (tools/silex_assets/, generated pair COMMITTED per the
+vitrea_assets pattern), one `status` bridge call on load (versio +
+fabrica + validity) so the C↔JS loop is proven from the first screen.
+Bare-with-no-args = ui; fabrica optional for ui, still required for
+novum. Build moved to ./tools/silex_struere.sh — compile_tools.sh
+can't know about the capsula source (regenerates it when index.html
+is newer). isatty() detection considered and deferred: no-args is
+already an explicit signal; the tty check earns its place when bare
+silex-in-a-pipe should print help instead (that file will then owe
+postulata_posix.h).

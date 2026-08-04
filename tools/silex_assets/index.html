@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>silex</title>
+<style>
+  body { background: #16181d; color: #d8d4cc; font: 14px/1.6 monospace;
+         padding: 2.5em; max-width: 44em; margin: 0 auto; }
+  h1 { color: #e8a04c; font-size: 1.6em; letter-spacing: .18em;
+       margin-bottom: .1em; }
+  h1 .scintilla { color: #f5d9a8; }
+  .subtitulus { color: #8a8578; margin-top: 0; }
+  .tabella { background: #101216; border: 1px solid #2a2d35;
+             border-radius: 4px; padding: 1em 1.4em; margin-top: 1.4em; }
+  .tabella h2 { color: #b8b2a4; font-size: 1em; margin: 0 0 .6em 0;
+                text-transform: uppercase; letter-spacing: .1em; }
+  dt { color: #8a8578; float: left; clear: left; width: 9em; }
+  dd { margin-left: 9.5em; color: #d8d4cc; word-break: break-all; }
+  .verbum { color: #e8a04c; }
+  .mox { color: #5c584e; }
+  .mox .verbum { color: #7a6a4d; }
+  #status { color: #8fd49a; }
+  .culpa { color: #d47a7a; }
+</style>
+</head>
+<body>
+<h1>SILEX<span class="scintilla"> &#10022;</span></h1>
+<p class="subtitulus">lapis ignarius &mdash; proiecta e fabrica excudere</p>
+
+<div class="tabella">
+  <h2>status</h2>
+  <dl>
+    <dt>versio</dt><dd id="versio">&hellip;</dd>
+    <dt>fabrica</dt><dd id="fabrica">&hellip;</dd>
+    <dt>pons</dt><dd id="status">exspectans&hellip;</dd>
+  </dl>
+</div>
+
+<div class="tabella">
+  <h2>verba</h2>
+  <dl>
+    <dt><span class="verbum">novum</span></dt>
+    <dd>proiectum novum excudere (volumen + proiectio)</dd>
+  </dl>
+  <dl class="mox">
+    <dt><span class="verbum">status</span></dt>
+    <dd>sigilla tria comparare &mdash; mox</dd>
+    <dt><span class="verbum">condere</span></dt>
+    <dd>arborem in volumen absorbere &mdash; mox</dd>
+    <dt><span class="verbum">proicere</span></dt>
+    <dd>volumen in arborem proicere &mdash; mox</dd>
+    <dt><span class="verbum">historia</span></dt>
+    <dd>acta voluminis ambulare &mdash; mox</dd>
+  </dl>
+</div>
+
+<script>
+internuntius.vocare('status', {})
+  .then(function(r) {
+    document.getElementById('versio').textContent = r.versio;
+    document.getElementById('fabrica').textContent = r.fabrica;
+    document.getElementById('status').textContent =
+      'vivus (fabrica ' + (r.fabrica_valida ? 'valida' : 'INVALIDA') + ')';
+  })
+  .catch(function(e) {
+    var s = document.getElementById('status');
+    s.textContent = 'CULPA: ' + e.message;
+    s.className = 'culpa';
+  });
+</script>
+</body>
+</html>

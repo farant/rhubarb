@@ -1,0 +1,7 @@
+# Capsula config pro fronte silicis (verbum ui)
+# Regenerare: bin/capsula_generare tools/silex_assets/silex.toml
+# (generata capsula_silex_frons.{h,c} COMMITTUNTUR - exemplar
+# vitrea_assets: nullus gradus ordinis constructionis)
+
+silex_frons_files = ["index.html"]
+silex_frons_compress = false
