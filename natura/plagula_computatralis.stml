@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/plagula_computatralis.stml
+  Exemplar semanticum: PLAGULA COMPUTATRALIS (versio 0, PLASTICUM)
+
+  Exemplar paroeciae maxime nostrum - quod silex olim consumet
+  (plagulae repositorii specie sua notatae, non commutatione
+  suffixuum improvisata).
+
+  ARBOR ALTISSIMA ADHUC: genus -> sub-genera (fontis, scriptum,
+  notationis, figurationis, datorum) -> sub-sub (sqlite) ->
+  species (volumen NOSTRUM). Mechanismus novus: sub-genus
+  proprietatem hereditatam FIGERE potest (<valor> in genere -
+  omnes species infra eam ferunt).
+
+  RHYTHMUS DOMESTICUS: identitas plagulae trans contentum mutatum
+  perdurat - distinctio eadem quam volumen fecit (plagula nominata
+  vs massa contentu addressata). Semantica nostra repositionem
+  nostram iam noverat.
+-->
+<natura modulus="plagula_computatralis" versio="0" lingua="latina">
+
+<genus nomen="plagula_computatralis">
+
+  <definitio>
+    Sequentia octetorum NOMINATA in systemate plagularum:
+    identitas quae perdurat dum contentum mutatur (ut universitas
+    mutatis membris). A contentu suo distinguitur - plagula res
+    nominata est, contentum status eius temporalis.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="forma_contenti" genus="electio">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </proprietas>
+    <proprietas nomen="suffixus_solitus" genus="textus"
+      multiplex="verum"
+      nota="CONVENTIO, non essentia: plagula C sine .c manet
+            plagula C - suffixus mos nominandi est"/>
+    <proprietas nomen="mimen_solitum" genus="textus"
+      nota="conventio item (registrum IANA)"/>
+  </proprietates>
+
+  <machina_statuum nomen="exsistentia">
+    <status nomen="exsistens"/>
+    <status nomen="ablata"/>
+    <transitus a="exsistens" ad="ablata" per="deletio"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="creari"/>
+    <actio nomen="scribi" nota="contentum mutatur, identitas
+      manet"/>
+    <actio nomen="legi"/>
+    <actio nomen="moveri" nota="nomen/sedes mutatur, identitas
+      manet - quaestio identitatis vetus, a volumine nostro iam
+      responsa: identitas in actis vivit, non in via"/>
+    <actio nomen="deleri"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="continetur_in" ad="directorium"
+      externum="verum"
+      nota="genus directorium SURGIT - estne ipsum plagula?
+            Unix fere dicit ita; nondum descriptum"/>
+    <relatio nomen="conformis_ad" ad="norma" modulus="norma"/>
+  </relationes>
+
+  <dubium>
+    Sub-genera infra non plane EXCLUSIVA sunt: plagula fontis
+    scriptilis (.py cum crena #!) et fons et scriptum est. Divisio
+    Porphyriana exclusivitatem vult; res ridet. Fortasse
+    exsecutabilitas ACCIDENS est, non essentia (bit +x modus est,
+    non natura; crena contentum est). Sub-genus scriptum tamen
+    manet - Fran id nominavit et usus verus est - sed tensio
+    APERTA portatur: primum exemplum divisionis transversae.
+  </dubium>
+
+</genus>
+
+<!-- ==================================================
+     PLAGULA FONTIS - textus pro translatore et persona
+     ================================================== -->
+
+<genus nomen="plagula_fontis" sub="plagula_computatralis">
+
+  <differentia>
+    Textus a personis scriptus, a personis ET translatoribus
+    lectus: forma exsecutionis futurae, non exsecutio ipsa.
+  </differentia>
+
+  <valor nomen="forma_contenti">textualis</valor>
+  <!-- mechanismus novus: genus proprietatem hereditatam FIGIT -
+       species infra omnes textuales sunt -->
+
+  <relationes>
+    <relatio nomen="scripta_in" ad="lingua_programmandi"
+      modulus="lingua_programmandi"
+      nota="relatio fons_scriptus_in exemplaris linguarum HIC
+            impletur - externum v0 tandem domum venit"/>
+    <relatio nomen="scripta_in_versione" ad="versio_linguae"
+      modulus="lingua_programmandi"
+      nota="finius quam lingua: 'hoc c89 est' - domus nostra
+            hoc cotidie dicit"/>
+  </relationes>
+
+  <species nomen="fons_c">
+    <definitio>Corpus translationis C: definitiones functionum
+      et datorum.</definitio>
+    <valor nomen="suffixus_solitus">.c</valor>
+    <valor nomen="mimen_solitum">text/x-c</valor>
+    <relatum nomen="scripta_in" ad="c"
+      modulus="lingua_programmandi"/>
+  </species>
+
+  <species nomen="caput_c">
+    <definitio>Caput C: declarationes communicandae -
+      interfacies, non corpus. Convenio aedilis nostri: caput
+      corpus suum nominat (include/X.h -> lib/X.c).</definitio>
+    <differentia>Interfacies sine corpore: quod alii videre
+      debent, nihil amplius.</differentia>
+    <valor nomen="suffixus_solitus">.h</valor>
+    <relatum nomen="scripta_in" ad="c"
+      modulus="lingua_programmandi"/>
+  </species>
+
+  <species nomen="fons_python">
+    <valor nomen="suffixus_solitus">.py</valor>
+    <relatum nomen="scripta_in" ad="python"
+      modulus="lingua_programmandi"/>
+  </species>
+
+  <species nomen="fons_rust">
+    <valor nomen="suffixus_solitus">.rs</valor>
+    <relatum nomen="scripta_in" ad="rust"
+      modulus="lingua_programmandi"/>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     SCRIPTUM EXSECUTABILE - plagula quae programma EST
+     (dubium divisionis transversae in genere parente)
+     ================================================== -->
+
+<genus nomen="scriptum_exsecutabile" sub="plagula_computatralis">
+
+  <differentia>
+    Directe exsequenda sine translatione praevia: crena (#!)
+    interpretem suum ipsa nominat - plagula quae scit quomodo
+    currere.
+  </differentia>
+
+  <valor nomen="forma_contenti">textualis</valor>
+
+  <species nomen="scriptum_conchae">
+    <definitio>Scriptum linguae iussuum: imperia quae manu dari
+      possent, conservata.</definitio>
+    <valor nomen="suffixus_solitus">.sh</valor>
+    <relatum nomen="scripta_in" ad="bash"
+      modulus="lingua_programmandi"
+      nota="aut sh, zsh - relatio ad speciem usitatissimam"/>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     PLAGULA NOTATIONIS - structura et prosa intertextae
+     ================================================== -->
+
+<genus nomen="plagula_notationis" sub="plagula_computatralis">
+
+  <differentia>
+    Contentum = prosa cum structura interposita: signa
+    structuram ferunt, textus sensum - pro lectore humano
+    per machinam formatus.
+  </differentia>
+
+  <valor nomen="forma_contenti">textualis</valor>
+
+  <species nomen="plagula_xml">
+    <valor nomen="suffixus_solitus">.xml</valor>
+    <valor nomen="mimen_solitum">application/xml</valor>
+  </species>
+
+  <species nomen="plagula_stml">
+    <definitio>Varians XML domus nostrae: notatio annotationum,
+      quaestionum silvae, et horum ipsorum exemplarium.</definitio>
+    <differentia>Hoc ipsum documentum species haec est -
+      dictionarium se ipsum continet, honeste.</differentia>
+    <valor nomen="suffixus_solitus">.stml</valor>
+  </species>
+
+  <species nomen="plagula_markdown">
+    <valor nomen="suffixus_solitus">.md</valor>
+    <valor nomen="mimen_solitum">text/markdown</valor>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     PLAGULA FIGURATIONIS - mores programmatis declarati
+     ================================================== -->
+
+<genus nomen="plagula_figurationis" sub="plagula_computatralis">
+
+  <differentia>
+    A programmate in initio lecta ut mores suos formet:
+    declarativa, non exsecutiva - dicit quid, numquam quomodo.
+  </differentia>
+
+  <valor nomen="forma_contenti">textualis</valor>
+
+  <species nomen="plagula_toml">
+    <valor nomen="suffixus_solitus">.toml</valor>
+    <nota>silex.toml nostra - capsulae figurantur hac specie</nota>
+  </species>
+
+  <species nomen="plagula_plist">
+    <valor nomen="suffixus_solitus">.plist</valor>
+    <nota>paroecia macOS</nota>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     PLAGULA DATORUM - pro programmatibus, non personis
+     ================================================== -->
+
+<genus nomen="plagula_datorum" sub="plagula_computatralis">
+
+  <differentia>
+    Contentum pro programmatibus primo: structura stricta,
+    lector humanus hospes non dominus.
+  </differentia>
+
+  <species nomen="plagula_json">
+    <valor nomen="forma_contenti">textualis</valor>
+    <valor nomen="suffixus_solitus">.json</valor>
+    <valor nomen="mimen_solitum">application/json</valor>
+  </species>
+
+  <species nomen="plagula_csv">
+    <valor nomen="forma_contenti">textualis</valor>
+    <valor nomen="suffixus_solitus">.csv</valor>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     PLAGULA SQLITE - sub-sub-genus (datorum profundius):
+     basis datorum in plagula una
+     ================================================== -->
+
+<genus nomen="plagula_sqlite" sub="plagula_datorum">
+
+  <differentia>
+    Basis datorum integra in plagula una: tabulae, indices,
+    transactiones - omnia intra sequentiam octetorum unam,
+    sine servo.
+  </differentia>
+
+  <valor nomen="forma_contenti">binaria</valor>
+  <valor nomen="suffixus_solitus">.db</valor>
+
+  <species nomen="volumen">
+    <definitio>
+      Plagula sqlite schemate domus nostrae: acta (veritas,
+      solum-appende), massae (contentum sigillo addressatum),
+      plagulae (proiectio manifesti). Documentum = repositorium.
+    </definitio>
+    <differentia>
+      Veritas eventilis intus: status quivis plicatura caudae
+      est - plagula quae historiam suam integram fert.
+    </differentia>
+    <valor nomen="suffixus_solitus">.volumen</valor>
+    <historia>
+      <eventum quando="2026-08-03" actio="creari">natum in domo
+        nostra (G2)</eventum>
+    </historia>
+    <nota>
+      Arbor quattuor graduum hic completur: computatralis ->
+      datorum -> sqlite -> volumen. Species profundissima
+      dictionarii res nostra propria est - paroecia usque ad
+      fundum.
+    </nota>
+  </species>
+
+</genus>
+
+</natura>

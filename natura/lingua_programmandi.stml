@@ -108,9 +108,10 @@
     <relatio nomen="habet_versionem" ad="versio_linguae"/>
     <relatio nomen="implementata_ab" ad="implementatio_linguae"/>
     <relatio nomen="normata_per" ad="norma" modulus="norma"/>
-    <relatio nomen="fons_scriptus_in" a="plagula_computatralis"
-      externum="verum" inversa="verum"
-      nota="exemplar plagularum hanc relationem citabit"/>
+    <relatio nomen="fons_scriptus_in" a="plagula_fontis"
+      modulus="plagula_computatralis" inversa="verum"
+      nota="impleta: plagula_fontis.scripta_in - promissum v0
+            domum venit"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->

@@ -110,3 +110,44 @@ Genera surfaced and waiting: chip (microarchitectura), att
 (lingua, architectura, probably norma/POSIX next) suggests versio
 may eventually be a FORM — a genus-shape any model can stamp —
 but three instances is not yet a law; let a fourth force it.
+
+## 2026-08-04 — round three: plagula_computatralis (the parish model)
+
+Fran's ruling recorded first: versio genera stay hand-coined per
+model — legitimate entities, no special mechanism until reality
+begs (the fourth knock never obligates, it only invites).
+
+10. plagula_computatralis: the deepest tree yet — genus → five
+    sub-genera (fontis / scriptum_exsecutabile / notationis /
+    figurationis / datorum) → sub-sub (sqlite) → species. The
+    four-level chain bottoms out at species VOLUMEN: the deepest
+    entry in the dictionary is our own thing — the parish
+    described all the way down. STML itself is in there too
+    ("hoc ipsum documentum species haec est").
+11. NEW MECHANISM forced by content: a sub-genus can FIX an
+    inherited property (<valor> at genus level — plagula_fontis
+    pins forma_contenti=textualis for everything beneath).
+    Scholastic shape: the proprium of the subordinate genus.
+12. The lingua model's v0 promise came home: fons_scriptus_in
+    (externum since the first hour) is now implemented by
+    plagula_fontis.scripta_in (+ scripta_in_versione — "this is
+    c89," which this house says daily).
+13. Honesty entries: suffixes and MIME types marked CONVENTIO
+    non essentia (a C file without .c remains a C file); file
+    identity persists through content change — the same
+    perduratio as organizatio, and the same distinction the
+    volumen already drew (named plagula vs content-addressed
+    massa). Our semantics knew our storage before we wrote it
+    down.
+14. FIRST CROSS-CUTTING TENSION, carried openly: the sub-genera
+    are not exclusive — a .py with a shebang is both fons and
+    scriptum. Porphyry wants exclusive division; reality laughs.
+    The dubium proposes executability may be ACCIDENS not
+    essentia (+x is a mode, the crena is content) — but the
+    scriptum sub-genus stays (Fran named it; the use is real)
+    with the tension recorded. This is the classic
+    multiple-inheritance fight arriving on schedule; we hold it
+    as a dubium rather than solving it prematurely.
+
+Surfaced and waiting: directorium (is it itself a plagula? Unix
+almost says yes), chip, att. Parish remaining: systema_operativum.
