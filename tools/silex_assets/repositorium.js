@@ -106,12 +106,17 @@ var SILEX_REPOSITORIUM_STILI =
   '  text-overflow: ellipsis;' +
   '}' +
 
-  /* phantasma tractus (spawner): punctorem sequitur */
+  /* phantasma tractus (spawner): chartula punctorem sequens.
+   * CAVE: intra mensa-thema appendenda - in body variabiles
+   * --mensa-* extra scopum sunt (fundus evanuit, textus niger:
+   * manibus Franis captum) */
   '.silex-vcs-phantasma {' +
   '  position: fixed; z-index: 1000010; pointer-events: none;' +
-  '  background: var(--mensa-charta); color: var(--mensa-accentus);' +
-  '  border: 1px dashed var(--mensa-accentus); border-radius: 6px;' +
-  '  padding: .3em .8em; font: 12px monospace;' +
+  '  background: var(--mensa-charta, #101216);' +
+  '  color: var(--mensa-textus, #d8d4cc);' +
+  '  border: 1px dashed var(--mensa-accentus, #e8a04c);' +
+  '  border-radius: 6px; box-shadow: var(--mensa-umbra);' +
+  '  padding: .35em .9em; font: 12px monospace; opacity: .92;' +
   '  transform: translate(-50%, -50%);' +
   '}' +
 
@@ -483,7 +488,10 @@ class SilexPlagulae extends SilexChartaListae {
           phantasma = document.createElement('div');
           phantasma.className = 'silex-vcs-phantasma';
           phantasma.textContent = res.via;
-          document.body.appendChild(phantasma);
+          /* intra thema (vide CAVE stilorum); fixum manet -
+           * positio a fenestra, variabiles a themate */
+          (ipse.closest('mensa-thema') || document.body)
+            .appendChild(phantasma);
         }
         phantasma.style.left = ev.clientX + 'px';
         phantasma.style.top = ev.clientY + 'px';
@@ -496,7 +504,9 @@ class SilexPlagulae extends SilexChartaListae {
           ipse._electio(res, d);   /* click purus */
           return;
         }
-        document.body.removeChild(phantasma);
+        if (phantasma.parentElement) {
+          phantasma.parentElement.removeChild(phantasma);
+        }
         var planum = ipse.closest('mensa-planum');
 
         if (planum && planum.chartamCreare) {
