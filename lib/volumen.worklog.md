@@ -47,3 +47,28 @@ real pull, never speculatively:
   tutorial promised create-or-open and no function delivered it.
 All pinned in probatio_volumen (including binary blobs with embedded
 zeros, dedup, and the aut_creare both-paths case).
+
+## 2026-08-04 — plicam_ad: the manifest learns to time-travel
+
+`volumen_plicam_ad(vol, seq, piscina)` — reconstruct the manifest at
+any point by replaying plagula-condita/plagula-remota acta (seq <= N;
+<= 0 = everything). Lives here rather than in silex because it is the
+time-travel READ primitive and G8 replication replays the same
+events. The datum shapes ({via, sigillum, origo}) had everything
+needed from birth — no schema change, no migration.
+
+The free integrity pin: plicam_ad(0) must equal plagulas_enumerare()
+— the replay proving the stored projection's upsert logic. Pinned in
+probatio along with: mid-seq fold shows pre-upsert content (a.txt and
+b.txt shared a sigillum back when they shared content — dedup made
+that assertion free), and a removed plagula reappears in earlier
+folds (history integra).
+
+Tool-reliability find while gating this: legati warm diagnostica
+holds a header-dependency cache that NEVER revalidates — after adding
+the plicam_ad prototype to volumen.h, the resident kept judging
+probatio_volumen.c against the OLD header (false REICE, implicit-call
+diagnostics), and neither re-query, header-first batching, nor
+renovare ("iam recens") heals it. Filed as quaestio 01KZ6GH88Z; cold
+./silva/examen.sh is the authority for files including
+recently-changed headers until the resident restarts.

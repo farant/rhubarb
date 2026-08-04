@@ -300,6 +300,98 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: plicam_ad - iter temporis replicando acta
+     * ======================================================== */
+
+    {
+        Volumen*        vol;
+        Xar*            praesens;
+        Xar*            manifestum;
+        Xar*            vetus;
+        VolumenPlagula* p;
+        VolumenPlagula* q;
+        i32             index;
+        s64             ante_remotionem;
+
+        imprimere("\n--- Probans plicam_ad (iter temporis) ---\n");
+
+        vol = volumen_aperire(piscina, VIA_PROBATIONIS);
+        CREDO_NON_NIHIL(vol);
+
+        /* PINNA: plica praesens (ad 0) manifesto aequalis -
+         * replicatio upsert-logicam manifesti probat */
+        praesens = volumen_plicam_ad(vol, (s64)0, piscina);
+        manifestum = volumen_plagulas_enumerare(vol, piscina);
+        CREDO_NON_NIHIL(praesens);
+        CREDO_NON_NIHIL(manifestum);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(praesens),
+            (i32)xar_numerus(manifestum));
+        per (index = 0; index < xar_numerus(praesens);
+            index = index + 1)
+        {
+            p = (VolumenPlagula*)xar_obtinere(praesens, index);
+            q = (VolumenPlagula*)xar_obtinere(manifestum, index);
+            CREDO_CHORDA_AEQUALIS(p->via, q->via);
+            CREDO_CHORDA_AEQUALIS(p->sigillum_hex, q->sigillum_hex);
+        }
+
+        /* ad seq 6 (ante upsert a.txt): a.txt contentum pristinum -
+         * sigillum idem ac b.txt (ambae "contentum idem" erant);
+         * vacua.txt (seq 8) nondum nata */
+        vetus = volumen_plicam_ad(vol, (s64)6, piscina);
+        CREDO_NON_NIHIL(vetus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(vetus), (i32)3);
+        {
+            VolumenPlagula* a_vetus = NIHIL;
+            VolumenPlagula* b_vetus = NIHIL;
+            VolumenPlagula* a_nunc = NIHIL;
+
+            per (index = 0; index < xar_numerus(vetus);
+                index = index + 1)
+            {
+                p = (VolumenPlagula*)xar_obtinere(vetus, index);
+                si (chorda_aequalis_literis(p->via, "a.txt"))
+                {
+                    a_vetus = p;
+                }
+                si (chorda_aequalis_literis(p->via, "b.txt"))
+                {
+                    b_vetus = p;
+                }
+            }
+            per (index = 0; index < xar_numerus(manifestum);
+                index = index + 1)
+            {
+                q = (VolumenPlagula*)xar_obtinere(manifestum, index);
+                si (chorda_aequalis_literis(q->via, "a.txt"))
+                {
+                    a_nunc = q;
+                }
+            }
+            CREDO_VERUM(a_vetus != NIHIL && b_vetus != NIHIL
+                && a_nunc != NIHIL);
+            CREDO_CHORDA_AEQUALIS(a_vetus->sigillum_hex,
+                b_vetus->sigillum_hex);
+            CREDO_FALSUM(chorda_aequalis(a_vetus->sigillum_hex,
+                a_nunc->sigillum_hex));
+        }
+
+        /* remotio replicata: plica praesens sine b.txt, plica ANTE
+         * remotionem eam adhuc fert (historia integra) */
+        ante_remotionem = volumen_summa_actorum(vol);
+        CREDO_VERUM(volumen_plagulam_removere(vol,
+            chorda_ex_literis("b.txt", piscina)));
+        praesens = volumen_plicam_ad(vol, (s64)0, piscina);
+        CREDO_NON_NIHIL(praesens);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(praesens), (i32)3);
+        vetus = volumen_plicam_ad(vol, ante_remotionem, piscina);
+        CREDO_NON_NIHIL(vetus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(vetus), (i32)4);
+
+        volumen_claudere(vol);
+    }
+
+    /* ========================================================
      * Compendium
      * ======================================================== */
 

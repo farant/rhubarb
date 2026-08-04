@@ -165,6 +165,17 @@ volumen_acta_legere (
     s64      post_seq,
     Piscina* piscina);
 
+/* plica ad seq: manifestum RECONSTRUCTUM replicando acta plagularum
+ * (plagula-condita ponit, plagula-remota tollit) cum seq <= ad_seq;
+ * ad_seq <= 0 = omnia (plica praesens - enumerationi aequalis, quod
+ * probatio pinnat). Xar de VolumenPlagula, ordine viae. Primitivum
+ * itineris temporis (proicere -ad) et replicationis (G8). */
+Xar*
+volumen_plicam_ad (
+    Volumen* volumen,
+    s64      ad_seq,
+    Piscina* piscina);
+
 s64
 volumen_summa_actorum (
     Volumen* volumen);

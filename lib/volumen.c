@@ -4,6 +4,8 @@
 #include "scrinium.h"
 #include "filum.h"
 #include "chorda_aedificator.h"
+#include "tabula_dispersa.h"
+#include "json.h"
 
 #include <stdio.h>
 
@@ -528,6 +530,115 @@ volumen_acta_legere (Volumen* volumen, s64 post_seq,
         a->datum = scrinium_columna_textus(e, 3, piscina);
     }
     scrinium_finire(e);
+    redde ordo;
+}
+
+/* comparator viae pro ordine plicae (aequalis ORDER BY via) */
+interior s32
+_plagulas_per_viam (constans vacuum* a, constans vacuum* b);
+
+interior s32
+_plagulas_per_viam (constans vacuum* a, constans vacuum* b)
+{
+    redde chorda_comparare(((constans VolumenPlagula*)a)->via,
+        ((constans VolumenPlagula*)b)->via);
+}
+
+Xar*
+volumen_plicam_ad (Volumen* volumen, s64 ad_seq, Piscina* piscina)
+{
+    ScriniumEnuntiatum* e;
+    TabulaDispersa*     plica;
+    Xar*                ordo;
+
+    plica = tabula_dispersa_creare_chorda(piscina, 128);
+    ordo = xar_creare(piscina, (i32)magnitudo(VolumenPlagula));
+    si (plica == NIHIL || ordo == NIHIL)
+    {
+        redde NIHIL;
+    }
+    e = scrinium_praeparare(volumen->scrinium,
+        "SELECT genus, datum FROM acta"
+        " WHERE genus IN ('plagula-condita','plagula-remota')"
+        " AND (? <= 0 OR seq <= ?) ORDER BY seq");
+    si (e == NIHIL)
+    {
+        redde NIHIL;
+    }
+    scrinium_ligare_numerum(e, 1, ad_seq);
+    scrinium_ligare_numerum(e, 2, ad_seq);
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda       genus = scrinium_columna_textus(e, 0, piscina);
+        chorda       datum = scrinium_columna_textus(e, 1, piscina);
+        JsonResultus lectum = json_legere(datum, piscina);
+        JsonValor*   via_v;
+        chorda       via;
+
+        si (!lectum.successus)
+        {
+            perge;   /* actum corruptum toleratur (lex plicae) */
+        }
+        via_v = json_objectum_capere(lectum.radix, "via");
+        si (via_v == NIHIL || !json_est_chorda(via_v))
+        {
+            perge;
+        }
+        via = json_ad_chorda(via_v);
+        si (chorda_aequalis_literis(genus, "plagula-remota"))
+        {
+            tabula_dispersa_delere(plica, via);
+        }
+        alioquin
+        {
+            JsonValor* sig_v = json_objectum_capere(lectum.radix,
+                "sigillum");
+            JsonValor* orig_v = json_objectum_capere(lectum.radix,
+                "origo");
+            VolumenPlagula* p;
+
+            si (sig_v == NIHIL || !json_est_chorda(sig_v))
+            {
+                perge;
+            }
+            p = (VolumenPlagula*)piscina_allocare(piscina,
+                (memoriae_index)magnitudo(VolumenPlagula));
+            si (p == NIHIL)
+            {
+                scrinium_finire(e);
+                redde NIHIL;
+            }
+            p->via = via;
+            p->sigillum_hex = json_ad_chorda(sig_v);
+            p->origo = (orig_v != NIHIL && json_est_chorda(orig_v))
+                ? json_ad_chorda(orig_v)
+                : chorda_ex_literis("", piscina);
+            tabula_dispersa_inserere(plica, via, (vacuum*)p);
+        }
+    }
+    scrinium_finire(e);
+
+    /* plicam in ordinem viae effundere */
+    {
+        TabulaIterator iter = tabula_dispersa_iterator_initium(
+            plica);
+        chorda  clavis;
+        vacuum* valor;
+
+        dum (tabula_dispersa_iterator_proximum(&iter, &clavis,
+            &valor))
+        {
+            VolumenPlagula* fons = (VolumenPlagula*)valor;
+            VolumenPlagula* p = (VolumenPlagula*)xar_addere(ordo);
+
+            si (p == NIHIL)
+            {
+                redde NIHIL;
+            }
+            *p = *fons;
+        }
+    }
+    xar_ordinare(ordo, _plagulas_per_viam);
     redde ordo;
 }
 
