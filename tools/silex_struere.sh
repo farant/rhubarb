@@ -29,9 +29,12 @@ fi
 # mensa.js glomerandum si fontes recentiores (ordo = ordo oneris:
 # thema ante scidam, scida ante scidulam quae eam extendit)
 MENSA_FONTES=(
+    lib/mensa_assets/fontes/logica.js
     lib/mensa_assets/fontes/thema.js
     lib/mensa_assets/fontes/scida.js
     lib/mensa_assets/fontes/scidula.js
+    lib/mensa_assets/fontes/theca.js
+    lib/mensa_assets/fontes/orbis.js
     lib/mensa_assets/fontes/planum.js
     lib/mensa_assets/fontes/persistentia.js
 )

@@ -487,6 +487,17 @@ run_speculum() {
         echo -e "${BLUE}forum velamen: probatio JS bona${RESET}"
     fi
 
+    # Logica mensae: arbiter gestuum (tene/trahe/duplex) + plica JS
+    # (speculum plicae C) + filtrum tabularum + derivatio retro -
+    # logica.js SINE DOM consulto, ergo probatio synchrona simplex.
+    if [ -f "lib/mensa_assets/probatio_mensae.js" ]; then
+        if ! osascript -l JavaScript lib/mensa_assets/probatio_mensae.js > /dev/null 2>&1; then
+            echo -e "${RED}✗ mensa logica probatio fracta (curre: osascript -l JavaScript lib/mensa_assets/probatio_mensae.js)${RESET}"
+            return 1
+        fi
+        echo -e "${BLUE}mensa logica: probatio JS bona${RESET}"
+    fi
+
     # Oraculum gyri QR: qr.c scribit, CoreImage (decodator alienus)
     # legit. probatio_qr.c FORMAM probat; bits solum hoc probat -
     # bibliotheca V4+ fracta LXVI casus structurales praeteribat.

@@ -49,3 +49,51 @@ Traps + notes:
 - Next iterations by pull: thecae (folders → nested boards),
   pagination component, resize grips, z-order (bring-to-front on
   pointerdown + persisted ordo).
+
+## 2026-08-04 — v2: nested desktops (thecae, orbis, secare/inserere)
+
+The board renderer arrived: planum now renders the current board FROM
+STATE (registry of nodes — declared cards captured at startup, created
+ones born from state; navigation = re-render with a different filter).
+C battery needed ZERO changes — "which board" is just a merged
+property (`tabula`), a move is one `collocatum` event. The generic
+fold earned its keep on its first real test.
+
+New pieces:
+- logica.js — pure, DOM-free by design: mensaFundere (JS mirror of
+  the C fold — if the shapes drift, fix BOTH probationes), 
+  mensaQuaeRedenda (board filter), mensaRetro (backlink derivation:
+  nav stack wins, else the board where the naming theca lives, else
+  radix), MensaArbiter (hold/drag/dblclick state machine).
+  **probatio_mensae.js: 30 assertions, wired into compile_tests.sh**
+  — the gesture-arbiter debt was NOT deferred this time.
+- theca.js — folder IS-A scida; its id names the board inside it;
+  dblclick enters; nominare() = inline rename at creation (rename
+  later = named future). Retro theca is SYNTHESIZED (retro+fixa+
+  petens attrs), never persisted — dropping a card on it moves the
+  card up one level (petens is the drop target board; free feature
+  from the drop rule).
+- orbis.js — radial menu, two petals; planum owns open/close/Escape.
+- scida.js — drag now starts after a 4pt threshold; a still click =
+  selection; drop hit-test via elementFromPoint → closest theca.
+- scidula.js — notes are CALM now: contentEditable only in edit
+  mode (dblclick opens, blur/Escape closes, emit only if changed).
+  Freed dragging from the contenteditable fight.
+- ⌘X = intent (mark, dim), ⌘V = transaction (collocatum into
+  current board); never pasting = never happened. Escape cascades:
+  orbis → edit → cut mark → selection.
+- tabula_activa persists via internum pseudo-element (genus_elementi
+  'internum' — never rendered); relaunch drops you on the board you
+  left, backlink still derivable with an empty nav stack.
+
+Traps hit:
+- A stray C-style label (`redde_nodum:`) leaked into JS — valid
+  labeled-statement syntax, so nothing errored; caught by eye.
+  Parse-check of the bundle (new Function, no execution) added to
+  the smoke ritual — cheap syntax gate for DOM-extending code the
+  JXA harness can't eval.
+- Class-extends-HTMLElement cannot be eval'd in JXA at ALL
+  (extends clause evaluates at declaration) — the customElements
+  guard does not help. Hence logica.js is the deliberately DOM-free
+  testable core; component behavior stays hand-tested until a
+  HTMLElement shim day.
