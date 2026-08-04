@@ -18,7 +18,7 @@
   vs massa contentu addressata). Semantica nostra repositionem
   nostram iam noverat.
 -->
-<natura modulus="plagula_computatralis" versio="0" lingua="latina">
+<natura modulus="plagula_computatralis" versio="1" lingua="latina">
 
 <genus nomen="plagula_computatralis">
 
@@ -67,15 +67,17 @@
     <relatio nomen="conformis_ad" ad="norma" modulus="norma"/>
   </relationes>
 
-  <dubium>
-    Sub-genera infra non plane EXCLUSIVA sunt: plagula fontis
-    scriptilis (.py cum crena #!) et fons et scriptum est. Divisio
-    Porphyriana exclusivitatem vult; res ridet. Fortasse
-    exsecutabilitas ACCIDENS est, non essentia (bit +x modus est,
-    non natura; crena contentum est). Sub-genus scriptum tamen
-    manet - Fran id nominavit et usus verus est - sed tensio
-    APERTA portatur: primum exemplum divisionis transversae.
-  </dubium>
+  <!-- dubium divisionis transversae SOLUTUM (Fran, v0->v1):
+       entia res plures esse possunt. Gradus duo:
+       (1) species essentialiter utraque (scriptum conchae ET
+           fons est, semper) -> attributum etiam= in specie;
+       (2) individuum accidentaliter utrumque (.py cum crena) ->
+           classificatio individui in voluminibus, non hic.
+       NB: exemplum Franis (persona auctor et inventor) iam
+       mechanismo exsistente solutum erat - AUCTOR RELATIO est,
+       non genus: munera relationes SUNT, et relationum quot res
+       habet tot habet. -->
+
 
 </genus>
 
@@ -154,13 +156,16 @@
 
   <valor nomen="forma_contenti">textualis</valor>
 
-  <species nomen="scriptum_conchae">
+  <species nomen="scriptum_conchae" etiam="plagula_fontis">
     <definitio>Scriptum linguae iussuum: imperia quae manu dari
       possent, conservata.</definitio>
     <valor nomen="suffixus_solitus">.sh</valor>
     <relatum nomen="scripta_in" ad="bash"
       modulus="lingua_programmandi"
       nota="aut sh, zsh - relatio ad speciem usitatissimam"/>
+    <!-- etiam: omne scriptum conchae essentialiter ET fons est
+         (textus pro translatore) - membrum generum duorum,
+         exemplum primum attributi etiam= -->
   </species>
 
 </genus>

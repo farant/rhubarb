@@ -151,3 +151,25 @@ begs (the fourth knock never obligates, it only invites).
 
 Surfaced and waiting: directorium (is it itself a plagula? Unix
 almost says yes), chip, att. Parish remaining: systema_operativum.
+
+## 2026-08-04 — round four: the multiplicity ruling
+
+15. Cross-cutting RESOLVED by Fran's ruling: entities may be
+    multiple things. The adoption revealed a pleasing structure —
+    THREE distinct multiplicities, two of which needed nothing:
+    (a) ROLES are RELATIONS, already: "author"/"inventor" were
+        never genera in these models — a person is an author by
+        standing in auctor relations. Fran's own example was
+        solved before it was asked. Munera relationes sunt.
+    (b) SPECIES-essential overlap → new attribute etiam= on
+        species: scriptum_conchae etiam="plagula_fontis" (every
+        shell script IS source; membership in both is essence,
+        not accident). First and so far only use.
+    (c) INDIVIDUAL-accidental overlap (.py with a shebang) →
+        no format change: individua are classified where they
+        live (app volumina cite multiple species). Doctrine,
+        not mechanism.
+    The Porphyrian tree stays primary (single sub= spine);
+    etiam= is the honest crosslink, expected to stay rare — if
+    it proliferates, that's a smell that a differentia is
+    misplaced, and the worklog should catch it.
