@@ -58,6 +58,42 @@ function mensaTitulus(elementa, tabula) {
   return tabula;
 }
 
+/* ordo summus trans elementa omnia - basis levationis (novus
+ * summus = summus + 1). Elementa sine ordine = 0; interna ordinem
+ * numquam ferunt, ergo sponte innocua. */
+function mensaOrdoSummus(elementa) {
+  var id, summus = 0;
+  for (id in elementa) {
+    if (typeof elementa[id].ordo === 'number'
+        && elementa[id].ordo > summus) {
+      summus = elementa[id].ordo;
+    }
+  }
+  return summus;
+}
+
+/* levatio chartae prehensae: fructus = ordo novus (summus + 1) aut
+ * null si charta iam SOLA in summo stat - acta quieta: prehensio
+ * sine effectu visibili eventum non scribit. Aequalitas in summo
+ * (duae chartae eodem ordine) levationem meret. */
+function mensaLevatio(elementa, id) {
+  var alia, solus;
+  var summus = mensaOrdoSummus(elementa);
+  var elem = elementa[id];
+
+  if (elem && elem.ordo === summus && summus > 0) {
+    solus = true;
+    for (alia in elementa) {
+      if (alia !== id && elementa[alia].ordo === summus) {
+        solus = false;
+        break;
+      }
+    }
+    if (solus) { return null; }
+  }
+  return summus + 1;
+}
+
 /* ARBITER GESTUUM - machina statuum plani (tene-vs-trahe-vs-duplex).
  * Sine DOM: planum eventa punctoria in vocationes vertit et
  * actiones exsequitur. Fructus quisque = null aut {actio: ...}:
@@ -234,9 +270,13 @@ var MENSA_STILI =
   '  border: 1px solid var(--mensa-accentus); font: inherit;' +
   '  width: 95%; text-align: center;' +
   '}' +
-  /* theca retro: margo qua venisti - obliqua et muta */
+  /* theca retro: margo qua venisti - obliqua et muta. STRATUM
+   * CHROME: z-index supra chartas levatas (ordo levationis per
+   * prehensiones crescit - 900000 numquam realiter attingitur);
+   * ante ordinem retro semper ultima appendebatur, hoc id servat */
   'mensa-theca[retro] {' +
   '  font-style: italic; opacity: .7; cursor: pointer;' +
+  '  z-index: 900000;' +
   '}' +
   'mensa-theca[retro] .glyphus,' +
   'mensa-theca[retro] .glyphus::before {' +
@@ -260,9 +300,11 @@ var MENSA_STILI =
   '}' +
   'mensa-imago:hover .ansa { opacity: .85; }' +
 
-  /* titulus tabulae: chrome plani summo medio - gestus transeunt */
+  /* titulus tabulae: chrome plani summo medio - gestus transeunt
+   * (stratum chrome, vide retro) */
   '.mensa-titulus-tabulae {' +
   '  position: absolute; top: 1em; left: 50%;' +
+  '  z-index: 900001;' +
   '  transform: translateX(-50%);' +
   '  color: var(--mensa-textus-secundus);' +
   '  font-size: .95em; letter-spacing: .22em;' +
@@ -271,10 +313,10 @@ var MENSA_STILI =
   '  user-select: none; -webkit-user-select: none;' +
   '}' +
 
-  /* orbis: menu radiale - numquam eligibile */
+  /* orbis: menu radiale - numquam eligibile; supra chrome omne */
   'mensa-orbis {' +
   '  position: absolute; transform: translate(-50%, -50%);' +
-  '  z-index: 99;' +
+  '  z-index: 999999;' +
   '  user-select: none; -webkit-user-select: none;' +
   '}' +
   'mensa-orbis .petalum {' +
@@ -346,7 +388,7 @@ class MensaScida extends HTMLElement {
 
   _prehendere(e) {
     var mensura, initX, initY, origoX, origoY, ipse;
-    var motum, movere, solvere;
+    var motum, movere, solvere, planum_levans;
 
     if (this.hasAttribute('fixa')) { return; }
     if (this.classList.contains('editans')) { return; }
@@ -357,6 +399,12 @@ class MensaScida extends HTMLElement {
     if (!this.parentElement) { return; }
     mensura = this.parentElement.getBoundingClientRect();
     if (mensura.width === 0 || mensura.height === 0) { return; }
+
+    /* prehensio levat: charta ad frontem (persistens per levatum) */
+    planum_levans = this.closest('mensa-planum');
+    if (planum_levans && planum_levans.levare) {
+      planum_levans.levare(this);
+    }
     initX = e.clientX;
     initY = e.clientY;
     origoX = this._x;
@@ -730,7 +778,12 @@ if (typeof customElements !== 'undefined') {
  *
  * Cache statūs: auscultator proprius 'mensa-actum' omnem eventum
  * in cache fundit (mensaFundere = speculum plicae C) - re-redditio
- * sine itinere ad pontem recta est. */
+ * sine itinere ad pontem recta est.
+ *
+ * Ordo (v4): prehensio chartam levat (levare -> actum 'levatum'
+ * {ordo: summus+1}); redditio ordinem ut z-index applicat; chartae
+ * novae in summo nascuntur. Chrome (retro/titulus/orbis) strato
+ * superiore in themate. */
 
 var MENSA_TEMPUS_TENENDI = 450;
 
@@ -848,6 +901,10 @@ class MensaPlanum extends HTMLElement {
       if (datum.imago && node.imaginemPonere) {
         this._imaginemImplere(node, datum);
       }
+      /* stratum e statu: ordo -> z-index (chartae sine ordine = 0,
+       * inter se ordine DOM stant) */
+      node.style.zIndex = String(
+        typeof datum.ordo === 'number' ? datum.ordo : 0);
     }
 
     /* declarati sine statu: in radice suo loco HTML manent */
@@ -948,6 +1005,19 @@ class MensaPlanum extends HTMLElement {
       id: 'internum-activa', genus_elementi: 'internum',
       activa: this._tabula
     });
+  }
+
+  /* ---------- levatio ---------- */
+
+  /* charta prehensa ad frontem: decisio in logica (mensaLevatio -
+   * null = iam sola summa, nihil scribitur), effectus hic (z-index
+   * statim + actum 'levatum' - fusio generica, C nihil mutandum) */
+  levare(node) {
+    var ordo = mensaLevatio(this._elementa, node.id);
+
+    if (ordo === null) { return; }
+    node.style.zIndex = String(ordo);
+    node.actumMittere('levatum', { ordo: ordo });
   }
 
   /* ---------- selectio + secare/inserere ---------- */
@@ -1072,6 +1142,7 @@ class MensaPlanum extends HTMLElement {
       / mensura.width * 10000) / 100;
     var y = Math.round((clientY - mensura.top)
       / mensura.height * 10000) / 100;
+    var ordo = mensaOrdoSummus(this._elementa) + 1;
     var id, node;
 
     this._ultimum = genus;
@@ -1081,9 +1152,10 @@ class MensaPlanum extends HTMLElement {
         { genus_elementi: 'theca', titulus: 'nova', x: x, y: y });
       this.appendChild(node);
       node.ponePositum(x, y);
+      node.style.zIndex = String(ordo);
       node.actumMittere('creatum', {
         genus_elementi: 'theca', titulus: 'nova',
-        x: x, y: y, tabula: this._tabula
+        x: x, y: y, ordo: ordo, tabula: this._tabula
       });
       node.nominare();
     } else {
@@ -1092,9 +1164,10 @@ class MensaPlanum extends HTMLElement {
         { genus_elementi: 'scidula', textus: '', x: x, y: y });
       this.appendChild(node);
       node.ponePositum(x, y);
+      node.style.zIndex = String(ordo);
       node.actumMittere('creatum', {
         genus_elementi: 'scidula', textus: '',
-        x: x, y: y, tabula: this._tabula
+        x: x, y: y, ordo: ordo, tabula: this._tabula
       });
       node.editionemAperire();
     }
@@ -1139,6 +1212,7 @@ class MensaPlanum extends HTMLElement {
             var id = 'imago-' + Date.now().toString(36);
             var x = Math.round((28 + Math.random() * 14) * 100) / 100;
             var y = Math.round((22 + Math.random() * 14) * 100) / 100;
+            var ordo = mensaOrdoSummus(ipse._elementa) + 1;
             var node = ipse._nodumCreare(id, {
               genus_elementi: 'imago', imago: sigillum,
               mimen: mimen, x: x, y: y, latitudo: 24
@@ -1147,12 +1221,13 @@ class MensaPlanum extends HTMLElement {
             ipse.appendChild(node);
             node.ponePositum(x, y);
             node.latitudinemPonere(24);
+            node.style.zIndex = String(ordo);
             node._impleta = true;          /* iam habemus */
             node.imaginemPonere(dataUrl);
             node.actumMittere('creatum', {
               genus_elementi: 'imago', imago: sigillum,
               mimen: mimen, x: x, y: y, latitudo: 24,
-              tabula: ipse._tabula
+              ordo: ordo, tabula: ipse._tabula
             });
           })
           .catch(function (err) {

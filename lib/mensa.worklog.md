@@ -163,3 +163,43 @@ G6's "images as blobs in sqlite" fell out of G2's design. New:
   (node._impleta guards refetch).
 - mensa-imago joined ALL grouped selectors (the v2.1 law, applied
   at birth this time).
+
+## 2026-08-04 — v4: z-order (grabbed card to front, ordo persists)
+
+The pre-compact warm-up item. Design bet paid again: the generic
+fold means ordo is just another merged key — ZERO C changes, and
+the existing alien-genus tolerance tests already covered the
+'levatum' actum's path through lib/mensa.c.
+
+- Decision in logica (testable): `mensaLevatio(elementa, id)` →
+  new ordo (summus+1) or null if the card is already the SOLE top.
+  The null = "acta quieta": grabbing the top card writes nothing —
+  without this guard every click would append an event to the
+  volumen. Ties at top DO re-raise (two cards at ordo N are
+  ambiguous; raising resolves it).
+- Effect in planum: `levare(node)` sets z-index immediately and
+  emits 'levatum' {ordo}; reddere applies `datum.ordo` as z-index
+  (cards without ordo = 0, stacking by stable DOM order among
+  themselves). No re-render needed on levatum — style is set
+  directly, the cache merges via the planum's own listener.
+- Grab site: scida._prehendere AFTER the fixa/editans guards (so
+  the retro theca never raises) and BEFORE capture. All card types
+  inherit it (scidula/theca/imago extend MensaScida). The imago
+  resize grip stopPropagation()s, so resizing doesn't churn raise
+  events.
+- Born on top: _creareAd and paste include ordo: summus+1 in the
+  creatum actum.
+- CHROME TIER (thema): retro theca z-index 900000, board title
+  900001, orbis 999999. Pre-ordo the retro was implicitly topmost
+  because reddere appended it LAST — z-index'd cards would have
+  buried it (and the radial menu sat at z 99!). Raising a card
+  must never occlude navigation chrome.
+- One latent interaction accepted: a raised card that already has
+  state-ONLY {ordo} for a DECLARED card (app HTML scida) creates a
+  state entry with no genus_elementi; reddere handles it because
+  the node lives in _nodi — if the app stops declaring it,
+  _nodumCreare returns null and it's skipped. Harmless orphan.
+
+probatio_mensae.js 34 → 43 assertions (summus/levatio/fold-merge).
+Seams (levare wiring, z-index application) are DOM-side and remain
+hands-verified — the harness covers the decisions only.
