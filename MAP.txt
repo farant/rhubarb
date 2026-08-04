@@ -70,11 +70,31 @@ rhubarb/
 │   designators - books/reading arc in the forum app);
 │   silva/instrumenta/silva_iudicium (shared examen judgment recipe).
 │   SILEX ARC (2026-08-04): volumen (document = one sqlite file:
-│   acta/massae/plagulae, G2 seed), silex (bin/silex - project
-│   scaffolder + VCS: novum/ui/status/condere/historia; build via
-│   ./tools/silex_struere.sh), mensa (+ mensa_assets/ - thinkboard
-│   frontend battery), tools/glomerare.sh (JS concat bundler).
+│   acta/massae/plagulae + plicam_ad = fold at any seq, G2 seed),
+│   silex (bin/silex - project scaffolder + VCS, FIVE verbs:
+│   novum/ui/status/condere/historia/proicere/renovare; build via
+│   ./tools/silex_struere.sh -- NOT compile_tools.sh, it carries a
+│   frons capsula), mensa (+ mensa_assets/ - thinkboard frontend
+│   battery: cards, z-order, pagination, genus registry),
+│   tools/glomerare.sh (JS concat bundler).
 │   Tutorial: project-specs/compages-rationes-tutorial.md.
+├── natura/          SEMANTIC LIBRARY (born 2026-08-04) - hand-crafted
+│                    *.stml models: taxonomy + dictionary in one
+│                    artifact (Linnaeus shape), describing kinds as
+│                    they ARE (Pieper discipline), grown by
+│                    structure-preserving transformation (Alexander).
+│                    NOT code and NOT parsed by anything yet: the
+│                    truth-artifact is the hand-written STML. Nine
+│                    models: lingua_programmandi, persona, norma,
+│                    organizatio, architectura_machinae,
+│                    plagula_computatralis, systema_operativum,
+│                    opus_scriptum, planta.
+│                    READ natura/natura.worklog.md FIRST - it is the
+│                    transformation record (every format change + the
+│                    content that forced it); the doctrine is settled
+│                    and quote-level, do not redesign it.
+│                    Future consumer: a loader that is FIRST a
+│                    validator, then silex (library-defined genera).
 └── .claude/         claude code config (+ MEMORY.md auto-memory)
 
 
