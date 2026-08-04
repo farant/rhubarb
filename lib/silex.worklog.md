@@ -50,3 +50,40 @@ is newer). isatty() detection considered and deferred: no-args is
 already an explicit signal; the tty check earns its place when bare
 silex-in-a-pipe should print help instead (that file will then owe
 postulata_posix.h).
+
+## 2026-08-04 — VCS verbs I: status / condere / historia
+
+The doctrine landed as designed: A COMMIT IS A NAMED POINT IN THE
+EVENT LOG (a `conditio` actum), not an object. Trees are folds;
+the manifest is the current fold; massae dedup means nothing is
+stored twice. Working tree = projection, volumen = residence.
+
+- status: pure reader. directorium_ambulare (includere_occultos
+  FALSUM — solves .DS_Store, but also means DOTFILES ARE INVISIBLE
+  to the VCS v1; named limitation). Praetermissa: bin/, build/,
+  *.volumen(-wal/-shm). Compare sigilla vs manifest →
+  MUTATA/NOVA/ABSENS; clean files just count.
+- condere: runs status, refuses an empty diff (exit 1), absorbs in
+  ONE transaction. Volumen grew caller-owned transactions
+  (in_transactione flag — plagulam_condere/removere skip their own
+  BEGIN when the caller holds one; sqlite forbids nesting) +
+  plagulam_removere (actum plagula-remota + DELETE; massa stays —
+  history still references it). Commit origo = "condita" (the
+  ORIGINAL vendicata provenance survives in acta; renovare will
+  derive three-way facts from history, not the manifest).
+- historia: walks acta; entries = ortus + conditiones; tactae =
+  plagula events since previous entry. novum now writes a birth
+  conditio ("proiectum excusum (novum)") so new projects' history
+  owns its birth files; PRE-EXISTING projects (001/002, scratch)
+  show birth files rolled into their first user commit — honest
+  artifact of retroactivity, not a bug.
+- Retroactivity proven: silicetum/001 (born before the verbs
+  existed) answers status (omnia munda, 15 plagulae) and historia
+  (ortus) with zero migration.
+- THE HOUSE TRAP FIRED AND WAS CAUGHT: countdown loop `i32 index;
+  index >= 0` — always true (i32 unsigned), infinite loop. Examen
+  flagged "comparatio vana" AT EDIT TIME, pre-run. s32 for
+  descending counters, always. The lint paid for itself again.
+
+Next: proicere (plan-default covenant, -scribere applies; later
+-ad seq = time travel via fold), then renovare on top.

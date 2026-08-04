@@ -11,6 +11,7 @@ structura Volumen {
     Piscina*            piscina;
     Scrinium*           scrinium;
     constans character* erratum;   /* proprium; scrinium_error alias */
+    b32                 in_transactione;   /* vocator possidet */
 };
 
 /* migrationes solum-appende (lex scrinii: numquam mutandae, solum
@@ -53,6 +54,7 @@ _volumen_struere (Piscina* piscina, constans character* via)
     }
     vol->piscina = piscina;
     vol->erratum = NIHIL;
+    vol->in_transactione = FALSUM;
     vol->scrinium = scrinium_aperire(piscina, via);
     si (vol->scrinium == NIHIL)
     {
@@ -194,7 +196,8 @@ volumen_plagulam_condere (Volumen* volumen, chorda via_relativa,
     hex_ch = chorda_ex_literis(hex, volumen->piscina);
     origo_ch = chorda_ex_literis(origo, volumen->piscina);
 
-    si (!scrinium_incipere(volumen->scrinium))
+    si (!volumen->in_transactione
+        && !scrinium_incipere(volumen->scrinium))
     {
         redde FALSUM;
     }
@@ -246,11 +249,110 @@ volumen_plagulam_condere (Volumen* volumen, chorda via_relativa,
         salta revolve;
     }
 
+    si (volumen->in_transactione)
+    {
+        redde VERUM;   /* vocator committet */
+    }
     redde scrinium_committere(volumen->scrinium);
 
 revolve:
-    scrinium_revolvere(volumen->scrinium);
+    si (!volumen->in_transactione)
+    {
+        scrinium_revolvere(volumen->scrinium);
+    }
     redde FALSUM;
+}
+
+b32
+volumen_plagulam_removere (Volumen* volumen, chorda via_relativa)
+{
+    ScriniumEnuntiatum* e;
+    chorda              datum;
+    integer             gradus;
+
+    si (!volumen->in_transactione
+        && !scrinium_incipere(volumen->scrinium))
+    {
+        redde FALSUM;
+    }
+
+    /* actum: veritas ante manifestum */
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(
+            volumen->piscina, (memoriae_index)128);
+
+        chorda_aedificator_appendere_literis(a, "{\"via\":\"");
+        chorda_aedificator_appendere_evasus_json(a, via_relativa);
+        chorda_aedificator_appendere_literis(a, "\"}");
+        datum = chorda_aedificator_finire(a);
+    }
+    si (volumen_actum_appendere(volumen, "plagula-remota", datum)
+        == 0)
+    {
+        salta remove_revolve;
+    }
+    e = scrinium_praeparare(volumen->scrinium,
+        "DELETE FROM plagulae WHERE via = ?");
+    si (e == NIHIL)
+    {
+        salta remove_revolve;
+    }
+    scrinium_ligare_textum(e, 1, via_relativa);
+    gradus = scrinium_gradi(e);
+    scrinium_finire(e);
+    si (gradus != SCRINIUM_FACTUM)
+    {
+        salta remove_revolve;
+    }
+    si (volumen->in_transactione)
+    {
+        redde VERUM;
+    }
+    redde scrinium_committere(volumen->scrinium);
+
+remove_revolve:
+    si (!volumen->in_transactione)
+    {
+        scrinium_revolvere(volumen->scrinium);
+    }
+    redde FALSUM;
+}
+
+b32
+volumen_transactionem_incipere (Volumen* volumen)
+{
+    si (volumen->in_transactione)
+    {
+        redde FALSUM;   /* nidificatio vetita - clare */
+    }
+    si (!scrinium_incipere(volumen->scrinium))
+    {
+        redde FALSUM;
+    }
+    volumen->in_transactione = VERUM;
+    redde VERUM;
+}
+
+b32
+volumen_transactionem_committere (Volumen* volumen)
+{
+    si (!volumen->in_transactione)
+    {
+        redde FALSUM;
+    }
+    volumen->in_transactione = FALSUM;
+    redde scrinium_committere(volumen->scrinium);
+}
+
+b32
+volumen_transactionem_revolvere (Volumen* volumen)
+{
+    si (!volumen->in_transactione)
+    {
+        redde FALSUM;
+    }
+    volumen->in_transactione = FALSUM;
+    redde scrinium_revolvere(volumen->scrinium);
 }
 
 chorda

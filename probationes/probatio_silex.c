@@ -204,6 +204,112 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: VCS - status/condere/historia in specimine
+     * ======================================================== */
+
+    {
+        SilexStatusFructus   status;
+        SilexConditioFructus conditio;
+        Xar*                 historia;
+        i32                  plagulae_primae;
+
+        imprimere("\n--- Probans status (arbor munda) ---\n");
+
+        status = silex_status(piscina, AREA "/specimen");
+        CREDO_VERUM(status.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(status.res), (i32)0);
+        CREDO_VERUM(status.mundae > (i32)10);
+        plagulae_primae = status.mundae;
+
+        imprimere("\n--- Probans status (mutata/nova/absens) ---\n");
+
+        /* mutare, addere, delere */
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/specimen/fontes/specimen.c",
+            "/* mutatum manu */\n"));
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/specimen/notae.md", "# notae\n"));
+        CREDO_VERUM(filum_delere(AREA "/specimen/lib/piscina.c"));
+
+        status = silex_status(piscina, AREA "/specimen");
+        CREDO_VERUM(status.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(status.res), (i32)3);
+        CREDO_AEQUALIS_I32((i32)status.mundae,
+            (i32)(plagulae_primae - 2));   /* mutata + deleta */
+        {
+            i32 index;
+            i32 mutatae = 0;
+            i32 novae = 0;
+            i32 absentes = 0;
+
+            per (index = 0; index < xar_numerus(status.res);
+                index = index + 1)
+            {
+                SilexStatusRes* r = (SilexStatusRes*)xar_obtinere(
+                    status.res, index);
+
+                si (r->status == SILEX_PLAGULA_MUTATA)
+                {
+                    mutatae = mutatae + 1;
+                }
+                alioquin si (r->status == SILEX_PLAGULA_NOVA)
+                {
+                    novae = novae + 1;
+                }
+                alioquin
+                {
+                    absentes = absentes + 1;
+                }
+            }
+            CREDO_AEQUALIS_I32((i32)mutatae, (i32)1);
+            CREDO_AEQUALIS_I32((i32)novae, (i32)1);
+            CREDO_AEQUALIS_I32((i32)absentes, (i32)1);
+        }
+
+        imprimere("\n--- Probans condere ---\n");
+
+        conditio = silex_condere(piscina, AREA "/specimen",
+            "prima conditio manualis");
+        CREDO_VERUM(conditio.successus);
+        CREDO_AEQUALIS_I32((i32)conditio.conditae, (i32)2);
+        CREDO_AEQUALIS_I32((i32)conditio.remotae, (i32)1);
+        CREDO_VERUM(conditio.seq > (s64)0);
+
+        /* post conditionem: arbor munda iterum */
+        status = silex_status(piscina, AREA "/specimen");
+        CREDO_VERUM(status.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(status.res), (i32)0);
+        CREDO_AEQUALIS_I32((i32)status.mundae,
+            (i32)plagulae_primae);   /* -1 deleta +1 nova */
+
+        /* arbor munda -> recusatio */
+        conditio = silex_condere(piscina, AREA "/specimen",
+            "vacua");
+        CREDO_FALSUM(conditio.successus);
+        CREDO_VERUM(conditio.erratum != NIHIL);
+
+        imprimere("\n--- Probans historiam ---\n");
+
+        historia = silex_historia(piscina, AREA "/specimen");
+        CREDO_NON_NIHIL(historia);
+        /* ortus + conditio novi + conditio nostra = 3 */
+        CREDO_AEQUALIS_I32((i32)xar_numerus(historia), (i32)3);
+        {
+            SilexConditio* prima = (SilexConditio*)xar_obtinere(
+                historia, 0);
+            SilexConditio* ultima = (SilexConditio*)xar_obtinere(
+                historia, (i32)(xar_numerus(historia) - 1));
+
+            CREDO_CHORDA_AEQUALIS_LITERIS(prima->nuntius,
+                "(ortus voluminis)");
+            CREDO_CHORDA_AEQUALIS_LITERIS(ultima->nuntius,
+                "prima conditio manualis");
+            CREDO_AEQUALIS_I32((i32)ultima->tactae, (i32)3);
+            CREDO_VERUM(ultima->momentum.mensura > ZEPHYRUM);
+        }
+    }
+
+    /* ========================================================
      * PROBARE: tituli mali recusantur
      * ======================================================== */
 

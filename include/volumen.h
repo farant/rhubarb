@@ -83,6 +83,30 @@ volumen_plagulam_condere (
     chorda              contentum,
     constans character* origo);
 
+/* plagulam e manifesto removere: actum 'plagula-remota' + DELETE.
+ * Massa manet (contentum sigillo addressatum - historia eam adhuc
+ * spectat); VERUM etiam si via iam aberat (idempotens). */
+b32
+volumen_plagulam_removere (
+    Volumen* volumen,
+    chorda   via_relativa);
+
+/* transactio vocatoris (conditio multi-plagularis atomica):
+ * inter incipere/committere, plagulam_condere/removere transactiones
+ * proprias NON aperiunt (sqlite nidificationem vetat) - vocator
+ * possidet. Sine his: quaeque operatio transactionem propriam habet. */
+b32
+volumen_transactionem_incipere (
+    Volumen* volumen);
+
+b32
+volumen_transactionem_committere (
+    Volumen* volumen);
+
+b32
+volumen_transactionem_revolvere (
+    Volumen* volumen);
+
 /* contentum plagulae ex manifesto + massis; *inventum FALSUM si via
  * ignota (chorda vacua legitima est - plagula vacua) */
 chorda

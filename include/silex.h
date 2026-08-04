@@ -65,4 +65,66 @@ silex_novum (
     Piscina*                  piscina,
     constans SilexNovumOptiones* optiones);
 
+/* ==================================================
+ * VCS: status / condere / historia
+ *
+ * CONDITIO NON OBIECTUM SED PUNCTUM NOMINATUM IN CAUDA ACTORUM -
+ * arbores = plicae; manifestum (plagulae) = plica currens. Volumen
+ * residentia prima, arbor laborans proiectio. Praetermissa: bin/,
+ * build/, *.volumen(-wal/-shm), occulta (.DS_Store et soror).
+ * ================================================== */
+
+nomen enumeratio {
+    SILEX_PLAGULA_MUTATA = 0,   /* in disco != manifestum */
+    SILEX_PLAGULA_NOVA,         /* in disco, manifesto ignota */
+    SILEX_PLAGULA_ABSENS        /* in manifesto, disco ablata */
+} SilexPlagulaStatus;
+
+nomen structura {
+    chorda             via;
+    SilexPlagulaStatus status;
+} SilexStatusRes;
+
+nomen structura {
+    b32                 successus;
+    i32                 mundae;   /* congruentes (tacent) */
+    Xar*                res;      /* SilexStatusRes - non-mundae */
+    constans character* erratum;
+} SilexStatusFructus;
+
+/* lector purus - numquam scribit */
+SilexStatusFructus
+silex_status (
+    Piscina*            piscina,
+    constans character* proiectum_dir);
+
+nomen structura {
+    b32                 successus;
+    s64                 seq;        /* actus conditionis */
+    i32                 conditae;   /* mutatae + novae absorptae */
+    i32                 remotae;
+    constans character* erratum;    /* "nihil condendum" si vacuum */
+} SilexConditioFructus;
+
+/* absorptio: diff statûs -> eventa + actum 'conditio' {nuntius},
+ * transactione UNA (omnia aut nihil) */
+SilexConditioFructus
+silex_condere (
+    Piscina*            piscina,
+    constans character* proiectum_dir,
+    constans character* nuntius);
+
+nomen structura {
+    s64    seq;
+    chorda momentum;
+    chorda nuntius;    /* "(ortus voluminis)" pro ortu */
+    i32    tactae;     /* plagulae ab introitu priore */
+} SilexConditio;
+
+/* conditiones (+ ortus) ordine temporis; NIHIL = erratum */
+Xar*
+silex_historia (
+    Piscina*            piscina,
+    constans character* proiectum_dir);
+
 #endif /* SILEX_H */

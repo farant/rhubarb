@@ -21,6 +21,7 @@
 #include "capsula.h"
 #include "vitrea.h"
 #include "internuntius.h"
+#include "xar.h"
 #include "silex.h"
 #include "mensa.h"
 #include "silex_assets/capsula_silex_frons.h"
@@ -222,6 +223,8 @@ principale (integer argc, character** argv)
         "radix arboris rhubarb (aut SILEX_FABRICA)");
     argumenta_addere_optionem(parser, "-d", "--destinatio",
         "directorium parens proiecti (ordinarie '.')");
+    argumenta_addere_optionem(parser, "-n", "--nuntius",
+        "nuntius conditionis (pro condere)");
     argumenta_addere_exemplum(parser,
         "silex novum 001 -f ~/Documents/projects/rhubarb");
 
@@ -260,10 +263,105 @@ principale (integer argc, character** argv)
         redde _ui_currere(piscina, fabrica);
     }
 
+    /* verba VCS: via = positionale secundum (ordinarie ".") */
+    si (chorda_aequalis_literis(verbum, "status")
+        || chorda_aequalis_literis(verbum, "condere")
+        || chorda_aequalis_literis(verbum, "historia"))
+    {
+        constans character* via_proiecti = titulus.mensura > ZEPHYRUM
+            ? chorda_ut_cstr(titulus, piscina) : ".";
+
+        si (chorda_aequalis_literis(verbum, "status"))
+        {
+            SilexStatusFructus s = silex_status(piscina,
+                via_proiecti);
+            i32 index;
+
+            si (!s.successus)
+            {
+                fprintf(stderr, "silex status: %s\n", s.erratum);
+                redde I;
+            }
+            si (xar_numerus(s.res) == 0)
+            {
+                imprimere("silex status: omnia munda"
+                    " (%d plagulae)\n", (integer)s.mundae);
+                redde ZEPHYRUM;
+            }
+            imprimere("silex status: %d mundae, %d aliae\n",
+                (integer)s.mundae, (integer)xar_numerus(s.res));
+            per (index = 0; index < xar_numerus(s.res);
+                index = index + 1)
+            {
+                SilexStatusRes* r = (SilexStatusRes*)xar_obtinere(
+                    s.res, index);
+                constans character* signum =
+                    r->status == SILEX_PLAGULA_MUTATA ? "MUTATA"
+                    : r->status == SILEX_PLAGULA_NOVA ? "NOVA  "
+                    : "ABSENS";
+
+                imprimere("  %s  %.*s\n", signum,
+                    (integer)r->via.mensura,
+                    (constans character*)r->via.datum);
+            }
+            redde ZEPHYRUM;
+        }
+        si (chorda_aequalis_literis(verbum, "condere"))
+        {
+            chorda nuntius_opt = argumenta_obtinere_optionem(lecta,
+                "--nuntius", piscina);
+            constans character* nuntius = nuntius_opt.mensura
+                    > ZEPHYRUM
+                ? chorda_ut_cstr(nuntius_opt, piscina)
+                : "(sine nuntio)";
+            SilexConditioFructus c = silex_condere(piscina,
+                via_proiecti, nuntius);
+
+            si (!c.successus)
+            {
+                fprintf(stderr, "silex condere: %s\n", c.erratum);
+                redde I;
+            }
+            imprimere("silex condere: conditio seq %ld -"
+                " %d conditae, %d remotae\n", (longus)c.seq,
+                (integer)c.conditae, (integer)c.remotae);
+            redde ZEPHYRUM;
+        }
+        {
+            Xar* ordo = silex_historia(piscina, via_proiecti);
+            s32  index;   /* SIGNATUS: numeratio descendens -
+                           * i32 >= 0 semper verum esset (examen
+                           * comparationem vanam cepit) */
+
+            si (ordo == NIHIL)
+            {
+                fprintf(stderr, "silex historia: volumen legi non"
+                    " potuit\n");
+                redde I;
+            }
+            /* recentissima primum */
+            per (index = (s32)xar_numerus(ordo) - 1; index >= 0;
+                index = index - 1)
+            {
+                SilexConditio* c = (SilexConditio*)xar_obtinere(
+                    ordo, (i32)index);
+
+                imprimere("  [%ld] %.*s  %.*s (%d plagulae)\n",
+                    (longus)c->seq,
+                    (integer)c->momentum.mensura,
+                    (constans character*)c->momentum.datum,
+                    (integer)c->nuntius.mensura,
+                    (constans character*)c->nuntius.datum,
+                    (integer)c->tactae);
+            }
+            redde ZEPHYRUM;
+        }
+    }
+
     si (!chorda_aequalis_literis(verbum, "novum"))
     {
         fprintf(stderr, "silex: verbum ignotum: %.*s"
-            " (v0: novum, ui)\n",
+            " (verba: novum, ui, status, condere, historia)\n",
             (integer)verbum.mensura,
             (constans character*)verbum.datum);
         redde I;
