@@ -24,6 +24,8 @@
 #include "vitrea.h"
 #include "internuntius.h"
 #include "xar.h"
+#include "via.h"
+#include "volumen.h"
 #include "silex.h"
 #include "mensa.h"
 #include "silex_assets/capsula_silex_frons.h"
@@ -63,6 +65,214 @@ _status_tractare (JsonValor* argumenta, Piscina* piscina,
                 : fabrica));
     json_objectum_ponere(fructus, "fabrica_valida",
         json_boolean_creare(piscina, valida));
+    redde fructus;
+}
+
+/* ---------- tractatores VCS (lectores puri, via ordinaria ".") ---
+ * repositorium in fenestra: conditiones/plagulae/contentum. Iter
+ * temporis GRATIS: plicam_ad + massam_promere - arborem laborantem
+ * numquam tangunt. */
+
+interior constans character*
+_vcs_viam_capere (JsonValor* argumenta, Piscina* piscina);
+
+interior constans character*
+_vcs_viam_capere (JsonValor* argumenta, Piscina* piscina)
+{
+    JsonValor* via_v = json_objectum_capere(argumenta, "via");
+
+    si (via_v != NIHIL && json_est_chorda(via_v)
+        && json_ad_chorda(via_v).mensura > 0)
+    {
+        redde chorda_ut_cstr(json_ad_chorda(via_v), piscina);
+    }
+    redde ".";
+}
+
+interior s64
+_vcs_seq_capere (JsonValor* argumenta);
+
+interior s64
+_vcs_seq_capere (JsonValor* argumenta)
+{
+    JsonValor* seq_v = json_objectum_capere(argumenta, "seq");
+
+    si (seq_v != NIHIL && json_est_integer(seq_v))
+    {
+        redde json_ad_integer(seq_v);
+    }
+    redde 0;
+}
+
+interior JsonValor*
+_vcs_historia_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa);
+
+interior JsonValor*
+_vcs_historia_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    constans character* via = _vcs_viam_capere(argumenta, piscina);
+    Xar*                ordo;
+    JsonValor*          fructus;
+    JsonValor*          tabulatum;
+    i32                 index;
+
+    (vacuum)datum;
+    ordo = silex_historia(piscina, via);
+    si (ordo == NIHIL)
+    {
+        *culpa = chorda_ex_literis(
+            "volumen deest - estne proiectum silicis?", piscina);
+        redde NIHIL;
+    }
+    fructus = json_objectum_creare(piscina);
+    json_objectum_ponere(fructus, "proiectum", json_chorda_creare(
+        piscina, via_absoluta(chorda_ex_literis(via, piscina),
+            piscina)));
+    tabulatum = json_tabulatum_creare(piscina);
+    per (index = 0; index < xar_numerus(ordo); index = index + 1)
+    {
+        SilexConditio* c = (SilexConditio*)xar_obtinere(ordo,
+            index);
+        JsonValor* introitus = json_objectum_creare(piscina);
+
+        json_objectum_ponere(introitus, "seq",
+            json_integer_creare(piscina, c->seq));
+        json_objectum_ponere(introitus, "momentum",
+            json_chorda_creare(piscina, c->momentum));
+        json_objectum_ponere(introitus, "nuntius",
+            json_chorda_creare(piscina, c->nuntius));
+        json_objectum_ponere(introitus, "tactae",
+            json_integer_creare(piscina, (s64)c->tactae));
+        json_tabulatum_addere(tabulatum, introitus);
+    }
+    json_objectum_ponere(fructus, "ordo", tabulatum);
+    redde fructus;
+}
+
+interior JsonValor*
+_vcs_plica_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa);
+
+interior JsonValor*
+_vcs_plica_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    constans character* via = _vcs_viam_capere(argumenta, piscina);
+    s64                 seq = _vcs_seq_capere(argumenta);
+    constans character* volumen_via;
+    Volumen*            vol;
+    Xar*                plica;
+    JsonValor*          fructus;
+    JsonValor*          tabulatum;
+    i32                 index;
+
+    (vacuum)datum;
+    volumen_via = silex_volumen_viam_invenire(piscina, via);
+    vol = volumen_via == NIHIL ? NIHIL
+        : volumen_aperire(piscina, volumen_via);
+    si (vol == NIHIL)
+    {
+        *culpa = chorda_ex_literis("volumen aperiri non potuit",
+            piscina);
+        redde NIHIL;
+    }
+    plica = volumen_plicam_ad(vol, seq, piscina);
+    volumen_claudere(vol);
+    si (plica == NIHIL)
+    {
+        *culpa = chorda_ex_literis("plica legi non potuit",
+            piscina);
+        redde NIHIL;
+    }
+    fructus = json_objectum_creare(piscina);
+    tabulatum = json_tabulatum_creare(piscina);
+    per (index = 0; index < xar_numerus(plica); index = index + 1)
+    {
+        VolumenPlagula* p = (VolumenPlagula*)xar_obtinere(plica,
+            index);
+        JsonValor* introitus = json_objectum_creare(piscina);
+
+        json_objectum_ponere(introitus, "via",
+            json_chorda_creare(piscina, p->via));
+        json_objectum_ponere(introitus, "origo",
+            json_chorda_creare(piscina, p->origo));
+        json_tabulatum_addere(tabulatum, introitus);
+    }
+    json_objectum_ponere(fructus, "ordo", tabulatum);
+    redde fructus;
+}
+
+interior JsonValor*
+_vcs_plagula_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa);
+
+interior JsonValor*
+_vcs_plagula_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    constans character* via = _vcs_viam_capere(argumenta, piscina);
+    s64                 seq = _vcs_seq_capere(argumenta);
+    JsonValor*          plagula_v = json_objectum_capere(argumenta,
+        "plagula");
+    constans character* volumen_via;
+    Volumen*            vol;
+    Xar*                plica;
+    i32                 index;
+    JsonValor*          fructus = NIHIL;
+
+    (vacuum)datum;
+    si (plagula_v == NIHIL || !json_est_chorda(plagula_v))
+    {
+        *culpa = chorda_ex_literis("argumentum 'plagula' deest",
+            piscina);
+        redde NIHIL;
+    }
+    volumen_via = silex_volumen_viam_invenire(piscina, via);
+    vol = volumen_via == NIHIL ? NIHIL
+        : volumen_aperire(piscina, volumen_via);
+    si (vol == NIHIL)
+    {
+        *culpa = chorda_ex_literis("volumen aperiri non potuit",
+            piscina);
+        redde NIHIL;
+    }
+    plica = volumen_plicam_ad(vol, seq, piscina);
+    si (plica == NIHIL)
+    {
+        volumen_claudere(vol);
+        *culpa = chorda_ex_literis("plica legi non potuit",
+            piscina);
+        redde NIHIL;
+    }
+    per (index = 0; index < xar_numerus(plica); index = index + 1)
+    {
+        VolumenPlagula* p = (VolumenPlagula*)xar_obtinere(plica,
+            index);
+
+        si (chorda_aequalis(p->via, json_ad_chorda(plagula_v)))
+        {
+            b32    inventum = FALSUM;
+            chorda contentum = volumen_massam_promere(vol,
+                p->sigillum_hex, piscina, &inventum);
+
+            si (inventum)
+            {
+                fructus = json_objectum_creare(piscina);
+                json_objectum_ponere(fructus, "contentum",
+                    json_chorda_creare(piscina, contentum));
+            }
+            frange;
+        }
+    }
+    volumen_claudere(vol);
+    si (fructus == NIHIL)
+    {
+        *culpa = chorda_ex_literis(
+            "plagula in plica illa non invenitur", piscina);
+        redde NIHIL;
+    }
     redde fructus;
 }
 
@@ -134,6 +344,13 @@ _ui_currere (Piscina* piscina, constans character* fabrica)
         (vacuum)internuntius_praebere(inx, "status",
             _status_tractare, (vacuum*)fabrica_datum);
     }
+    /* repositorium: lectores VCS puri (via ordinaria = cwd) */
+    (vacuum)internuntius_praebere(inx, "vcs_historia",
+        _vcs_historia_tractare, NIHIL);
+    (vacuum)internuntius_praebere(inx, "vcs_plica",
+        _vcs_plica_tractare, NIHIL);
+    (vacuum)internuntius_praebere(inx, "vcs_plagula",
+        _vcs_plagula_tractare, NIHIL);
 
     /* tabula persistens: ~/.rhubarb/silex.volumen (conventio
      * pilae mensae - defectus non fatalis, ui sine memoria vivit) */

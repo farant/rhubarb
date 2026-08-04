@@ -51,6 +51,8 @@ done
 # capsula frontis regeneranda si assetum quodvis recentior
 if [ tools/silex_assets/index.html -nt \
      tools/silex_assets/capsula_silex_frons.c ] || \
+   [ tools/silex_assets/repositorium.js -nt \
+     tools/silex_assets/capsula_silex_frons.c ] || \
    [ "$MENSA_EXITUS" -nt \
      tools/silex_assets/capsula_silex_frons.c ]; then
     echo "  [capsula] silex_frons (assetum recentior)"

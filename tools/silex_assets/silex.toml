@@ -6,5 +6,5 @@
 # mensa.js GLOMERATUM est (fontes lib/mensa_assets/fontes/) -
 # silex_struere.sh id regenerat; et ipsum committitur.
 
-silex_frons_files = ["index.html", "mensa.js"]
+silex_frons_files = ["index.html", "mensa.js", "repositorium.js"]
 silex_frons_compress = false

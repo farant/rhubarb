@@ -47,6 +47,7 @@
 </style>
 
 <script src="mensa.js"></script>
+<script src="repositorium.js"></script>
 <script>
 /* status silicis in scidam */
 internuntius.vocare('status', {})
@@ -66,6 +67,9 @@ internuntius.vocare('status', {})
 /* tabula persistens: positiones + scidulae in
    ~/.rhubarb/silex.volumen (latus C: mensa_praebere) */
 mensaPersistentia(document.getElementById('planum'));
+
+/* repositorium: vectis apparet si proiectum sub cwd invenitur */
+silexRepositorium();
 </script>
 </body>
 </html>

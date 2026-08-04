@@ -789,16 +789,13 @@ _praetermittenda (chorda via_rel)
         || _suffixum_habet(via_rel, ".volumen-shm");
 }
 
-/* via voluminis proiecti. DECISUM (Fran, red-team IX 2026-08-04):
- * conventio <dir>/<nomen(dir)>.volumen via laeta manet; ea absente,
- * *.volumen SOLITARIUM in directorio vincit (cp/renominatio sanata -
- * plagula EST documentum); plura = recusatio clara nominans. */
-interior constans character*
-_volumen_viam_invenire (Piscina* piscina,
-    constans character* proiectum_dir);
-
-interior constans character*
-_volumen_viam_invenire (Piscina* piscina,
+/* via voluminis proiecti (publica - vide silex.h). DECISUM (Fran,
+ * red-team IX 2026-08-04): conventio <dir>/<nomen(dir)>.volumen via
+ * laeta manet; ea absente, *.volumen SOLITARIUM in directorio vincit
+ * (cp/renominatio sanata - plagula EST documentum); plura =
+ * recusatio clara nominans. */
+constans character*
+silex_volumen_viam_invenire (Piscina* piscina,
     constans character* proiectum_dir)
 {
     chorda absoluta = via_absoluta(
@@ -970,7 +967,7 @@ silex_status (Piscina* piscina, constans character* proiectum_dir)
     fructus.res = NIHIL;
     fructus.erratum = NIHIL;
 
-    volumen_via = _volumen_viam_invenire(piscina, proiectum_dir);
+    volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
     si (volumen_via == NIHIL)
     {
         fructus.erratum = "volumen deest - estne proiectum silicis?";
@@ -1080,7 +1077,7 @@ silex_condere (Piscina* piscina, constans character* proiectum_dir,
         redde fructus;
     }
 
-    volumen_via = _volumen_viam_invenire(piscina, proiectum_dir);
+    volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
     vol = volumen_aperire(piscina, volumen_via);
     si (vol == NIHIL)
     {
@@ -1191,7 +1188,7 @@ silex_historia (Piscina* piscina, constans character* proiectum_dir)
     i32                 index;
     i32                 tactae = 0;
 
-    volumen_via = _volumen_viam_invenire(piscina, proiectum_dir);
+    volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
     si (volumen_via == NIHIL)
     {
         redde NIHIL;
@@ -1388,7 +1385,7 @@ silex_proicere (Piscina* piscina, constans character* proiectum_dir,
     fructus.scriptae = 0;
     fructus.erratum = NIHIL;
 
-    volumen_via = _volumen_viam_invenire(piscina, proiectum_dir);
+    volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
     si (volumen_via == NIHIL)
     {
         fructus.erratum = "volumen deest - estne proiectum silicis?";
@@ -1578,7 +1575,7 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
     fructus.additae = 0;
     fructus.erratum = NIHIL;
 
-    volumen_via = _volumen_viam_invenire(piscina, proiectum_dir);
+    volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
     si (volumen_via == NIHIL)
     {
         fructus.erratum = "volumen deest - estne proiectum silicis?";

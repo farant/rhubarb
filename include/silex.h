@@ -101,6 +101,14 @@ nomen structura {
     constans character* erratum;
 } SilexStatusFructus;
 
+/* via voluminis proiecti: conventio <dir>/<nomen>.volumen via
+ * laeta; ea absente *.volumen solitarium vincit; plura = recusatio
+ * clara + NIHIL. (Identitas documenti - decisum red-team IX.) */
+constans character*
+silex_volumen_viam_invenire (
+    Piscina*            piscina,
+    constans character* proiectum_dir);
+
 /* lector purus - numquam scribit */
 SilexStatusFructus
 silex_status (

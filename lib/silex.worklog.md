@@ -197,3 +197,32 @@ VCS verbs now: status / condere / historia / proicere / renovare.
 Next pulls when they bite: conflictus merge tooling, massam_habet
 (existence check without blob read), capsula embedding
 (distribution-day: fabrica ficta becomes fabrica in the binary).
+
+## 2026-08-04 — ui slice I: repositorium (commits + files in the window)
+
+First surfacing of the VCS in silex ui, deliberately crude for
+Fran's red-team rounds. Three READ-ONLY bridge handlers in
+tools/silex.c (vcs_historia / vcs_plica / vcs_plagula, via
+defaulting to the ui session's cwd) + <silex-repositorium> overlay
+(tools/silex_assets/repositorium.js — app chrome, NOT part of the
+mensa battery): conditiones | plagulae | contentum three-pane, a
+"repositorium" chip top-right that only appears when a project is
+found under cwd, Escape closes.
+
+- Time-travel browsing came free and is the architecture's party
+  trick made visible: every commit click is plicam_ad + per-file
+  massam_promere — the working tree is NEVER touched, "arbor
+  praesens" (seq 0) is just the fold with no ceiling. History
+  browses like the present because in this design it IS the same
+  read.
+- _volumen_viam_invenire promoted to public
+  silex_volumen_viam_invenire (renominare did the splices) — the
+  handlers needed the identity rule and it's genuinely public API.
+- The overlay scrolls INSIDE its columns — mensa's planum-never-
+  scrolls law untouched (this is not a planum).
+- Stale-object lesson repeated: struere links against build/*.o;
+  after a lib rename, run the suite (which recompiles) BEFORE
+  struere or the linker sees the old symbol table.
+- Binary content over JSON is the named v1 limitation (C sources
+  fine; images would garble) — massa:// vitrea scheme is the
+  ripening answer.
