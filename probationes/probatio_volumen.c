@@ -192,6 +192,59 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: massae nudae - circuitus binarius (octeti nulli!)
+     * ======================================================== */
+
+    {
+        Volumen*  vol;
+        i8        octeti[6];
+        chorda    contentum;
+        chorda    relatum;
+        character hex[SIGILLUM_HEX_MENSURA];
+        character hex_iterum[SIGILLUM_HEX_MENSURA];
+        b32       inventum;
+        s64       massae_ante;
+
+        imprimere("\n--- Probans massas nudas (binarias) ---\n");
+
+        vol = volumen_aperire(piscina, VIA_PROBATIONIS);
+        CREDO_NON_NIHIL(vol);
+
+        octeti[0] = (i8)0x89;
+        octeti[1] = 'P';
+        octeti[2] = 0;          /* octetus nullus intra! */
+        octeti[3] = 'N';
+        octeti[4] = 0;
+        octeti[5] = (i8)0xFF;
+        contentum = chorda_ex_buffer(octeti, 6);
+
+        CREDO_VERUM(volumen_massam_condere(vol, contentum, hex));
+        CREDO_VERUM(hex[0] != '\0');
+
+        relatum = volumen_massam_promere(vol,
+            chorda_ex_literis(hex, piscina), piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_AEQUALIS_I32(relatum.mensura, (i32)6);
+        CREDO_VERUM(relatum.datum[2] == 0 && relatum.datum[4] == 0);
+        CREDO_VERUM((insignatus character)relatum.datum[5] == 0xFF);
+
+        /* dedup: contentum idem -> sigillum idem, massa nova nulla */
+        massae_ante = volumen_summa_massarum(vol);
+        CREDO_VERUM(volumen_massam_condere(vol, contentum,
+            hex_iterum));
+        CREDO_AEQUALIS_S64(volumen_summa_massarum(vol), massae_ante);
+        CREDO_CHORDAE_AEQUALES(hex, hex_iterum);
+
+        /* sigillum ignotum */
+        volumen_massam_promere(vol,
+            chorda_ex_literis("deadbeef", piscina), piscina,
+            &inventum);
+        CREDO_FALSUM(inventum);
+
+        volumen_claudere(vol);
+    }
+
+    /* ========================================================
      * PROBARE: enumerare + permanentia trans aperturas
      * ======================================================== */
 

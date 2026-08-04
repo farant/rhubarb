@@ -34,6 +34,7 @@ MENSA_FONTES=(
     lib/mensa_assets/fontes/scida.js
     lib/mensa_assets/fontes/scidula.js
     lib/mensa_assets/fontes/theca.js
+    lib/mensa_assets/fontes/imago.js
     lib/mensa_assets/fontes/orbis.js
     lib/mensa_assets/fontes/planum.js
     lib/mensa_assets/fontes/persistentia.js

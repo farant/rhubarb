@@ -92,6 +92,24 @@ volumen_plagulam_promere (
     Piscina* piscina,
     b32*     inventum);
 
+/* massam nudam condere (contentum sigillo addressatum, dedup) -
+ * massa CONTENTUM est, non eventus: veritas de USU eius in actis
+ * vivit (e.g. mensa:creatum cum clave imago). sigillum_hex_exitus
+ * >= SIGILLUM_HEX_MENSURA octeti. */
+b32
+volumen_massam_condere (
+    Volumen*   volumen,
+    chorda     contentum,
+    character* sigillum_hex_exitus);
+
+/* massam promere sigillo (hex); *inventum FALSUM si ignotum */
+chorda
+volumen_massam_promere (
+    Volumen* volumen,
+    chorda   sigillum_hex,
+    Piscina* piscina,
+    b32*     inventum);
+
 /* manifestum totum, ordine viae; Xar de VolumenPlagula */
 Xar*
 volumen_plagulas_enumerare (

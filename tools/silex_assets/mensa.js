@@ -144,7 +144,7 @@ var MENSA_STILI =
   '}' +
 
   /* fundamentum chartarum COMMUNE (vide CAVE supra) */
-  'mensa-scida, mensa-scidula, mensa-theca {' +
+  'mensa-scida, mensa-scidula, mensa-theca, mensa-imago {' +
   '  display: block; position: absolute;' +
   '  background: var(--mensa-charta);' +
   '  border: 1px solid var(--mensa-margo);' +
@@ -153,11 +153,11 @@ var MENSA_STILI =
   '  cursor: grab;' +
   '  user-select: none; -webkit-user-select: none;' +
   '}' +
-  'mensa-scida.tractans, mensa-scidula.tractans,' +
+  'mensa-scida.tractans, mensa-scidula.tractans, mensa-imago.tractans,' +
   'mensa-theca.tractans { cursor: grabbing; opacity: .92; }' +
-  'mensa-scida.electum, mensa-scidula.electum,' +
+  'mensa-scida.electum, mensa-scidula.electum, mensa-imago.electum,' +
   'mensa-theca.electum { outline: 2px solid var(--mensa-accentus); }' +
-  'mensa-scida.sectum, mensa-scidula.sectum,' +
+  'mensa-scida.sectum, mensa-scidula.sectum, mensa-imago.sectum,' +
   'mensa-theca.sectum { opacity: .45; outline-style: dashed; }' +
   'mensa-scida h2 {' +
   '  color: var(--mensa-textus-secundus); font-size: .85em;' +
@@ -232,6 +232,23 @@ var MENSA_STILI =
   'mensa-theca[retro] .glyphus::before {' +
   '  background: var(--mensa-textus-secundus);' +
   '}' +
+
+  /* imago: charta imaginis - latitudo sola regitur, altitudo
+   * sequitur (ratio aspectus semper servata) */
+  'mensa-imago { padding: .35em; line-height: 0; }' +
+  'mensa-imago img {' +
+  '  width: 100%; height: auto; display: block;' +
+  '  border-radius: 4px; pointer-events: none;' +
+  '  -webkit-user-drag: none;' +
+  '}' +
+  'mensa-imago .ansa {' +
+  '  position: absolute; right: -2px; bottom: -2px;' +
+  '  width: 14px; height: 14px; cursor: nwse-resize;' +
+  '  border-right: 3px solid var(--mensa-accentus);' +
+  '  border-bottom: 3px solid var(--mensa-accentus);' +
+  '  border-radius: 0 0 5px 0; opacity: 0;' +
+  '}' +
+  'mensa-imago:hover .ansa { opacity: .85; }' +
 
   /* orbis: menu radiale - numquam eligibile */
   'mensa-orbis {' +
@@ -561,6 +578,84 @@ if (typeof customElements !== 'undefined') {
   customElements.define('mensa-theca', MensaTheca);
 }
 
+/* ================ ex lib/mensa_assets/fontes/imago.js ================ */
+/* imago.js - <mensa-imago>: charta imaginis.
+ *
+ * EST scida (tractus/selectio/depositio hereditantur). Imago intra
+ * <img latitudo 100%> vivit - altitudo sequitur, ergo mutatio
+ * magnitudinis (ansa anguli) LATITUDINEM SOLAM movet et ratio
+ * aspectus SEMPER servatur. Contentum in massis voluminis
+ * (sigillum in statu; praebitor imaginum a persistentia iniectus -
+ * componenta pontem numquam nominant, lex DI). */
+
+class MensaImago extends MensaScida {
+  connectedCallback() {
+    var ipse;
+    if (this._paratum) { return; }
+    super.connectedCallback();
+    ipse = this;
+    if (!this.getAttribute('latitudo')) {
+      this.style.width = '24%';
+    }
+
+    this._img = document.createElement('img');
+    this._img.alt = '';
+    this.appendChild(this._img);
+
+    this._ansa = document.createElement('div');
+    this._ansa.className = 'ansa';
+    this._ansa.addEventListener('pointerdown',
+      this._magnitudinemPrehendere.bind(this));
+    this.appendChild(this._ansa);
+    void ipse;
+  }
+
+  /* rehydratio/paste - sine emissione */
+  imaginemPonere(dataUrl) {
+    if (this._img) { this._img.src = dataUrl; }
+  }
+
+  latitudinemPonere(pct) {
+    this.style.width = pct + '%';
+  }
+
+  _magnitudinemPrehendere(e) {
+    var ipse = this;
+    var planum_mensura, initX, origo_lat, movere, solvere, lat;
+
+    e.stopPropagation();   /* numquam tractus chartae */
+    if (!this.parentElement) { return; }
+    planum_mensura = this.parentElement.getBoundingClientRect();
+    if (planum_mensura.width === 0) { return; }
+    initX = e.clientX;
+    origo_lat = this.getBoundingClientRect().width
+      / planum_mensura.width * 100;
+    lat = origo_lat;
+    this._ansa.setPointerCapture(e.pointerId);
+
+    movere = function (ev) {
+      lat = Math.max(5, Math.min(90,
+        origo_lat + (ev.clientX - initX)
+          / planum_mensura.width * 100));
+      ipse.latitudinemPonere(lat);
+    };
+    solvere = function () {
+      ipse._ansa.removeEventListener('pointermove', movere);
+      ipse._ansa.removeEventListener('pointerup', solvere);
+      ipse._ansa.removeEventListener('pointercancel', solvere);
+      ipse.actumMittere('magnitudo',
+        { latitudo: Math.round(lat * 100) / 100 });
+    };
+    this._ansa.addEventListener('pointermove', movere);
+    this._ansa.addEventListener('pointerup', solvere);
+    this._ansa.addEventListener('pointercancel', solvere);
+  }
+}
+
+if (typeof customElements !== 'undefined') {
+  customElements.define('mensa-imago', MensaImago);
+}
+
 /* ================ ex lib/mensa_assets/fontes/orbis.js ================ */
 /* orbis.js - <mensa-orbis>: menu radiale (preme-et-tene in plano).
  * Petala duo pro nunc (theca / nota); planum aperit et claudit
@@ -664,8 +759,17 @@ class MensaPlanum extends HTMLElement {
     });
     this.addEventListener('dblclick', this._duplex.bind(this));
     document.addEventListener('keydown', this._clavis.bind(this));
+    document.addEventListener('paste', this._glutinare.bind(this));
 
+    this._praebitor = null;   /* imaginum (persistentia iniectat) */
     this.reddere();
+  }
+
+  /* praebitor imaginum: {condere(b64)->Promise(sigillum),
+   * promere(sigillum)->Promise(b64)} - lex DI: componenta pontem
+   * numquam nominant; sine praebitore paste iners, imagines vacuae */
+  imaginesPraebere(praebitor) {
+    this._praebitor = praebitor;
   }
 
   /* ---------- status + redditio ---------- */
@@ -716,6 +820,13 @@ class MensaPlanum extends HTMLElement {
       if (typeof datum.titulus === 'string' && node.titulumPonere) {
         node.titulumPonere(datum.titulus);
       }
+      if (typeof datum.latitudo === 'number'
+          && node.latitudinemPonere) {
+        node.latitudinemPonere(datum.latitudo);
+      }
+      if (datum.imago && node.imaginemPonere) {
+        this._imaginemImplere(node, datum);
+      }
     }
 
     /* declarati sine statu: in radice suo loco HTML manent */
@@ -756,6 +867,11 @@ class MensaPlanum extends HTMLElement {
     } else if (datum.genus_elementi === 'theca') {
       node = document.createElement('mensa-theca');
       node.setAttribute('titulus', datum.titulus || 'theca');
+    } else if (datum.genus_elementi === 'imago') {
+      node = document.createElement('mensa-imago');
+      if (typeof datum.latitudo === 'number') {
+        node.setAttribute('latitudo', String(datum.latitudo));
+      }
     } else {
       return null;   /* genus ignotum aut scida declarata absens */
     }
@@ -945,6 +1061,71 @@ class MensaPlanum extends HTMLElement {
     }
   }
 
+  /* ---------- imagines ---------- */
+
+  _imaginemImplere(node, datum) {
+    if (!this._praebitor || node._impleta) { return; }
+    node._impleta = true;
+    this._praebitor.promere(datum.imago)
+      .then(function (b64) {
+        node.imaginemPonere('data:' + (datum.mimen || 'image/png')
+          + ';base64,' + b64);
+      })
+      .catch(function (err) {
+        node._impleta = false;
+        console.log('mensa: imago non prompta: ' + err.message);
+      });
+  }
+
+  /* glutinatio: imago in tabellario -> charta imaginis (contentum
+   * in massas voluminis per praebitorem, sigillum in statum) */
+  _glutinare(e) {
+    var ipse = this;
+    var res = e.clipboardData && e.clipboardData.items;
+    var index, lima, mimen, lector;
+
+    if (!res || !this._praebitor) { return; }
+    for (index = 0; index < res.length; index = index + 1) {
+      if (res[index].type.indexOf('image/') !== 0) { continue; }
+      lima = res[index].getAsFile();
+      if (!lima) { continue; }
+      mimen = res[index].type;
+      lector = new FileReader();
+      lector.onload = function () {
+        var dataUrl = lector.result;
+        var b64 = dataUrl.slice(dataUrl.indexOf(',') + 1);
+
+        ipse._praebitor.condere(b64)
+          .then(function (sigillum) {
+            var id = 'imago-' + Date.now().toString(36);
+            var x = Math.round((28 + Math.random() * 14) * 100) / 100;
+            var y = Math.round((22 + Math.random() * 14) * 100) / 100;
+            var node = ipse._nodumCreare(id, {
+              genus_elementi: 'imago', imago: sigillum,
+              mimen: mimen, x: x, y: y, latitudo: 24
+            });
+
+            ipse.appendChild(node);
+            node.ponePositum(x, y);
+            node.latitudinemPonere(24);
+            node._impleta = true;          /* iam habemus */
+            node.imaginemPonere(dataUrl);
+            node.actumMittere('creatum', {
+              genus_elementi: 'imago', imago: sigillum,
+              mimen: mimen, x: x, y: y, latitudo: 24,
+              tabula: ipse._tabula
+            });
+          })
+          .catch(function (err) {
+            console.log('mensa: imago non condita: ' + err.message);
+          });
+      };
+      lector.readAsDataURL(lima);
+      e.preventDefault();
+      return;
+    }
+  }
+
   /* emissio ex ipso plano (visum, insertum) */
   actumMittere(genus, datum) {
     this.dispatchEvent(new CustomEvent('mensa-actum', {
@@ -980,6 +1161,20 @@ function mensaPersistentia(planum) {
       .catch(function (err) {
         console.log('mensa: actum periit: ' + err.message);
       });
+  });
+
+  /* praebitor imaginum (lex DI - planum pontem numquam nominat) */
+  planum.imaginesPraebere({
+    condere: function (b64) {
+      return internuntius.vocare('mensa_imago_condere',
+        { datum_b64: b64 })
+        .then(function (r) { return r.sigillum; });
+    },
+    promere: function (sigillum) {
+      return internuntius.vocare('mensa_imago_promere',
+        { sigillum: sigillum })
+        .then(function (r) { return r.datum_b64; });
+    }
   });
 
   internuntius.vocare('mensa_status', {})

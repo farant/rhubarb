@@ -7,6 +7,8 @@
 #include "chorda_aedificator.h"
 #include "xar.h"
 #include "tabula_dispersa.h"
+#include "base64.h"
+#include "sigillum.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -241,6 +243,95 @@ _actum_tractare (JsonValor* argumenta, Piscina* piscina,
     redde fructus;
 }
 
+/* imagines: contentum in massas voluminis (sigillo addressatum -
+ * imago eadem bis glutinata semel conditur), trans pontem base64.
+ * mensa_imago_condere {datum_b64} -> {sigillum}
+ * mensa_imago_promere {sigillum}  -> {datum_b64} */
+
+interior JsonValor*
+_imago_condere_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa);
+
+interior JsonValor*
+_imago_condere_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    MensaContextus* ctx = (MensaContextus*)datum;
+    JsonValor*      b64_valor;
+    Base64Fructus   decodificatum;
+    character       hex[SIGILLUM_HEX_MENSURA];
+    chorda          contentum;
+    JsonValor*      fructus;
+
+    b64_valor = argumenta == NIHIL ? NIHIL
+        : json_objectum_capere(argumenta, "datum_b64");
+    si (b64_valor == NIHIL || !json_est_chorda(b64_valor))
+    {
+        *culpa = chorda_ex_literis(
+            "mensa_imago_condere: datum_b64 requiritur", piscina);
+        redde NIHIL;
+    }
+    decodificatum = base64_decodificare(json_ad_chorda(b64_valor),
+        piscina);
+    si (decodificatum.datum == NIHIL
+        || decodificatum.mensura <= 0)
+    {
+        *culpa = chorda_ex_literis(
+            "mensa_imago_condere: base64 invalidum", piscina);
+        redde NIHIL;
+    }
+    contentum.datum = decodificatum.datum;
+    contentum.mensura = (i32)decodificatum.mensura;
+    si (!volumen_massam_condere(ctx->volumen, contentum, hex))
+    {
+        *culpa = chorda_ex_literis(
+            "mensa_imago_condere: massa condi non potuit", piscina);
+        redde NIHIL;
+    }
+    fructus = json_objectum_creare(piscina);
+    json_objectum_ponere(fructus, "sigillum",
+        json_chorda_creare_literis(piscina, hex));
+    redde fructus;
+}
+
+interior JsonValor*
+_imago_promere_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa);
+
+interior JsonValor*
+_imago_promere_tractare (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    MensaContextus* ctx = (MensaContextus*)datum;
+    JsonValor*      sig_valor;
+    chorda          contentum;
+    b32             inventum;
+    JsonValor*      fructus;
+
+    sig_valor = argumenta == NIHIL ? NIHIL
+        : json_objectum_capere(argumenta, "sigillum");
+    si (sig_valor == NIHIL || !json_est_chorda(sig_valor))
+    {
+        *culpa = chorda_ex_literis(
+            "mensa_imago_promere: sigillum requiritur", piscina);
+        redde NIHIL;
+    }
+    contentum = volumen_massam_promere(ctx->volumen,
+        json_ad_chorda(sig_valor), piscina, &inventum);
+    si (!inventum)
+    {
+        *culpa = chorda_ex_literis(
+            "mensa_imago_promere: sigillum ignotum", piscina);
+        redde NIHIL;
+    }
+    fructus = json_objectum_creare(piscina);
+    json_objectum_ponere(fructus, "datum_b64",
+        json_chorda_creare(piscina,
+            base64_codificare(contentum.datum, contentum.mensura,
+                piscina)));
+    redde fructus;
+}
+
 /* ==================================================
  * Praebere
  * ================================================== */
@@ -285,6 +376,10 @@ mensa_praebere (Internuntius* internuntius, Piscina* piscina,
         _status_tractare, ctx);
     (vacuum)internuntius_praebere(internuntius, "mensa_actum",
         _actum_tractare, ctx);
+    (vacuum)internuntius_praebere(internuntius, "mensa_imago_condere",
+        _imago_condere_tractare, ctx);
+    (vacuum)internuntius_praebere(internuntius, "mensa_imago_promere",
+        _imago_promere_tractare, ctx);
     redde ctx;
 }
 

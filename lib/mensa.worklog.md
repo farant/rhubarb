@@ -129,3 +129,37 @@ theca under a drag lights up (.suscipiens — dashed accent outline +
 glyph glow). Also per Fran: theca sheds the card chrome (background/
 border/shadow none) — bare glyph + label, desktop-icon style; the
 .electum/.suscipiens outlines still read fine on transparent.
+
+## 2026-08-04 — v3: image cards (paste → massae, the G6 slice)
+
+Paste an image from the clipboard → <mensa-imago> card on the board.
+The storage was ALREADY THERE: volumen massae is a content-addressed
+blob store, so pasting the same screenshot twice stores it once —
+G6's "images as blobs in sqlite" fell out of G2's design. New:
+- volumen grew BARE massa API (massam_condere → sigillum hex out,
+  massam_promere by sigillum). Doctrine note in the header: a massa
+  is CONTENT, not an event — truth about its USE lives in acta (the
+  element's creatum carries the sigillum). Probatio: binary
+  round-trip with embedded zero bytes + 0xFF (catches any text-API
+  leakage), dedup same-sigillum.
+- mensa.c: mensa_imago_condere {datum_b64}→{sigillum} /
+  mensa_imago_promere {sigillum}→{datum_b64} — base64 over the
+  bridge both ways (house base64.c). A massa:// custom scheme in
+  vitrea would be the zero-copy v2 (browser caching too) — named
+  future, touches platform code.
+- LAW REFINED (DI): components never NAME internuntius — persistentia
+  INJECTS a provider (planum.imaginesPraebere({condere, promere})).
+  Bridge-less: paste inert, image frames empty. Testable with a fake
+  provider.
+- <mensa-imago> IS-A scida; aspect ratio preserved STRUCTURALLY:
+  the card controls WIDTH only (img width:100%, height:auto) — the
+  resize grip (.ansa, corner, hover-visible) adjusts latitudo alone
+  and emits one 'magnitudo' event. img pointer-events:none +
+  -webkit-user-drag:none so card drag wins over native image drag.
+- planum: paste listener (first image item; FileReader → dataURL;
+  condere then creatum with sigillum+mimen+latitudo; the just-pasted
+  card fills from the LOCAL dataURL — no round trip); reddere
+  applies latitudo generically and fills imago cards via provider
+  (node._impleta guards refetch).
+- mensa-imago joined ALL grouped selectors (the v2.1 law, applied
+  at birth this time).

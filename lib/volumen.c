@@ -321,6 +321,65 @@ volumen_plagulas_enumerare (Volumen* volumen, Piscina* piscina)
     redde ordo;
 }
 
+b32
+volumen_massam_condere (Volumen* volumen, chorda contentum,
+    character* sigillum_hex_exitus)
+{
+    Sigillum            sig;
+    chorda              hex_ch;
+    ScriniumEnuntiatum* e;
+    integer             gradus;
+
+    sig = sigillum_computare((constans vacuum*)contentum.datum,
+        (memoriae_index)contentum.mensura);
+    sigillum_hex(&sig, sigillum_hex_exitus);
+    hex_ch = chorda_ex_literis(sigillum_hex_exitus,
+        volumen->piscina);
+
+    e = scrinium_praeparare(volumen->scrinium,
+        "INSERT OR IGNORE INTO massae (sigillum, contentum)"
+        " VALUES (?, ?)");
+    si (e == NIHIL)
+    {
+        redde FALSUM;
+    }
+    scrinium_ligare_textum(e, 1, hex_ch);
+    scrinium_ligare_massam(e, 2, contentum);
+    gradus = scrinium_gradi(e);
+    scrinium_finire(e);
+    redde gradus == SCRINIUM_FACTUM ? VERUM : FALSUM;
+}
+
+chorda
+volumen_massam_promere (Volumen* volumen, chorda sigillum_hex,
+    Piscina* piscina, b32* inventum)
+{
+    ScriniumEnuntiatum* e;
+    chorda              vacua;
+    chorda              fructus;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = ZEPHYRUM;
+    *inventum = FALSUM;
+
+    e = scrinium_praeparare(volumen->scrinium,
+        "SELECT contentum FROM massae WHERE sigillum = ?");
+    si (e == NIHIL)
+    {
+        redde vacua;
+    }
+    scrinium_ligare_textum(e, 1, sigillum_hex);
+    si (scrinium_gradi(e) != SCRINIUM_ORDO)
+    {
+        scrinium_finire(e);
+        redde vacua;
+    }
+    fructus = scrinium_columna_massa(e, 0, piscina);
+    scrinium_finire(e);
+    *inventum = VERUM;
+    redde fructus;
+}
+
 Xar*
 volumen_acta_legere (Volumen* volumen, s64 post_seq,
     Piscina* piscina)
