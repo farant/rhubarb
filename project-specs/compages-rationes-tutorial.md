@@ -427,10 +427,13 @@ against the same volumen your kitchen laptop has open.
 
 New since the draft, not in the original table: **mensa** (thinkboard
 frontend battery — shipped with its own probationes and sealed frontend
-conventions), **silex VCS** (status/condere/historia/proicere shipped —
-plan-default projection, time travel, OBEX covenant; renovare designed),
-**glomerare** (JS bundler), **silicetum** (the git-free dogfood quarry,
-two-class project protocol).
+conventions), **silex VCS complete for one machine** (status / condere /
+historia / proicere / renovare — plan-default everywhere; proicere =
+time travel + OBEX covenant; renovare = three-sigillum library update
+with VULNUS/CONFLICTUS retention, ADDENDA closure drift, DERELICTA;
+updates are conditiones, revertable like everything else), **glomerare**
+(JS bundler), **silicetum** (the git-free dogfood quarry, two-class
+project protocol).
 
 Reading of the revised table: the gravity has all collapsed onto **G3** —
 it now unlocks ch. 3, 4 (CRUD half), 6 (field), and 7, and every shipped

@@ -475,6 +475,207 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: renovare - sigilla tria contra fabricam FICTAM
+     * (fabrica mutabilis in area - fabricam veram mutare non
+     * possumus)
+     * ======================================================== */
+
+    {
+        SilexRenovatioFructus r;
+        Volumen*              vol;
+        chorda                contentum;
+        b32                   bene;
+
+        imprimere("\n--- Probans renovare (fabrica ficta) ---\n");
+
+        /* fabrica ficta v1 */
+        filum_directorium_creare_si_necesse(AREA "/ficta");
+        filum_directorium_creare_si_necesse(AREA "/ficta/include");
+        filum_directorium_creare_si_necesse(AREA "/ficta/lib");
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/ficta/include/minima.h", "/* minima v1 */\n"));
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/ficta/lib/minima.c",
+            "#include \"minima.h\"\n/* corpus v1 */\n"));
+
+        /* proiectum manu vendicatum (v1 utrimque) + plagula genita */
+        filum_directorium_creare_si_necesse(AREA "/renovandum");
+        filum_directorium_creare_si_necesse(
+            AREA "/renovandum/include");
+        filum_directorium_creare_si_necesse(AREA "/renovandum/lib");
+        filum_directorium_creare_si_necesse(
+            AREA "/renovandum/fontes");
+        vol = volumen_creare(piscina,
+            AREA "/renovandum/renovandum.volumen");
+        CREDO_NON_NIHIL(vol);
+        bene = volumen_plagulam_condere(vol,
+            chorda_ex_literis("include/minima.h", piscina),
+            chorda_ex_literis("/* minima v1 */\n", piscina),
+            "vendicata:include/minima.h");
+        CREDO_VERUM(bene);
+        bene = volumen_plagulam_condere(vol,
+            chorda_ex_literis("lib/minima.c", piscina),
+            chorda_ex_literis(
+                "#include \"minima.h\"\n/* corpus v1 */\n",
+                piscina),
+            "vendicata:lib/minima.c");
+        CREDO_VERUM(bene);
+        bene = volumen_plagulam_condere(vol,
+            chorda_ex_literis("fontes/meum.c", piscina),
+            chorda_ex_literis("/* meum est */\n", piscina),
+            "genita");
+        CREDO_VERUM(bene);
+        volumen_claudere(vol);
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/renovandum/include/minima.h",
+            "/* minima v1 */\n"));
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/renovandum/lib/minima.c",
+            "#include \"minima.h\"\n/* corpus v1 */\n"));
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/renovandum/fontes/meum.c", "/* meum est */\n"));
+
+        /* I. omnia recentia */
+        r = silex_renovare(piscina, AREA "/renovandum",
+            AREA "/ficta", FALSUM);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(r.res), (i32)0);
+        CREDO_AEQUALIS_I32((i32)r.intactae, (i32)2);
+
+        /* II. fabrica movetur -> RENOVANDA; -scribere applicat */
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/ficta/include/minima.h", "/* minima v2 */\n"));
+        r = silex_renovare(piscina, AREA "/renovandum",
+            AREA "/ficta", FALSUM);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(r.res), (i32)1);
+        {
+            SilexRenovatioRes* rr = (SilexRenovatioRes*)
+                xar_obtinere(r.res, 0);
+
+            CREDO_VERUM(rr->status == SILEX_RENOVATIO_RENOVANDA);
+            CREDO_CHORDA_AEQUALIS_LITERIS(rr->via,
+                "include/minima.h");
+        }
+        r = silex_renovare(piscina, AREA "/renovandum",
+            AREA "/ficta", VERUM);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32((i32)r.renovatae, (i32)1);
+        contentum = filum_legere_totum(
+            AREA "/renovandum/include/minima.h", piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(contentum,
+            "/* minima v2 */\n");
+        /* idempotens: iterum = omnia recentia (tunc novum factum) */
+        r = silex_renovare(piscina, AREA "/renovandum",
+            AREA "/ficta", FALSUM);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(r.res), (i32)0);
+        CREDO_AEQUALIS_I32((i32)r.intactae, (i32)2);
+
+        /* III. manus editio, fabrica immota -> VULNUS retinetur */
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/renovandum/lib/minima.c", "/* meum iam */\n"));
+        r = silex_renovare(piscina, AREA "/renovandum",
+            AREA "/ficta", VERUM);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32((i32)r.renovatae, (i32)0);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(r.res), (i32)1);
+        {
+            SilexRenovatioRes* rr = (SilexRenovatioRes*)
+                xar_obtinere(r.res, 0);
+
+            CREDO_VERUM(rr->status == SILEX_RENOVATIO_VULNUS);
+        }
+        contentum = filum_legere_totum(
+            AREA "/renovandum/lib/minima.c", piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(contentum, "/* meum iam */\n");
+
+        /* IV. ambae motae -> CONFLICTUS retinetur */
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/ficta/lib/minima.c",
+            "#include \"minima.h\"\n/* corpus v2 */\n"));
+        r = silex_renovare(piscina, AREA "/renovandum",
+            AREA "/ficta", VERUM);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32((i32)r.renovatae, (i32)0);
+        {
+            SilexRenovatioRes* rr = (SilexRenovatioRes*)
+                xar_obtinere(r.res, 0);
+
+            CREDO_VERUM(rr->status == SILEX_RENOVATIO_CONFLICTUS);
+        }
+        contentum = filum_legere_totum(
+            AREA "/renovandum/lib/minima.c", piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(contentum, "/* meum iam */\n");
+
+        /* manus retracta (v1 restituta) -> RENOVANDA tuta iterum */
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/renovandum/lib/minima.c",
+            "#include \"minima.h\"\n/* corpus v1 */\n"));
+        r = silex_renovare(piscina, AREA "/renovandum",
+            AREA "/ficta", VERUM);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32((i32)r.renovatae, (i32)1);
+        contentum = filum_legere_totum(
+            AREA "/renovandum/lib/minima.c", piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(contentum,
+            "#include \"minima.h\"\n/* corpus v2 */\n");
+
+        /* V. dependentia nova in clausura -> ADDENDA */
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/ficta/include/minima.h",
+            "#include \"nova.h\"\n/* minima v3 */\n"));
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/ficta/include/nova.h", "/* nova v1 */\n"));
+        r = silex_renovare(piscina, AREA "/renovandum",
+            AREA "/ficta", VERUM);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32((i32)r.renovatae, (i32)1);
+        CREDO_AEQUALIS_I32((i32)r.additae, (i32)1);
+        CREDO_VERUM(filum_existit(
+            AREA "/renovandum/include/nova.h"));
+        {
+            b32 inventum = FALSUM;
+
+            vol = volumen_aperire(piscina,
+                AREA "/renovandum/renovandum.volumen");
+            CREDO_NON_NIHIL(vol);
+            (vacuum)volumen_plagulam_promere(vol,
+                chorda_ex_literis("include/nova.h", piscina),
+                piscina, &inventum);
+            CREDO_VERUM(inventum);
+            volumen_claudere(vol);
+        }
+
+        /* VI. fabrica plagulam demittit -> DERELICTA retinetur */
+        CREDO_VERUM(filum_delere(AREA "/ficta/include/minima.h"));
+        CREDO_VERUM(filum_delere(AREA "/ficta/lib/minima.c"));
+        r = silex_renovare(piscina, AREA "/renovandum",
+            AREA "/ficta", FALSUM);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(r.res), (i32)2);
+        {
+            i32 index;
+            i32 derelictae = 0;
+
+            per (index = 0; index < xar_numerus(r.res);
+                index = index + 1)
+            {
+                SilexRenovatioRes* rr = (SilexRenovatioRes*)
+                    xar_obtinere(r.res, index);
+
+                si (rr->status == SILEX_RENOVATIO_DERELICTA)
+                {
+                    derelictae = derelictae + 1;
+                }
+            }
+            CREDO_AEQUALIS_I32((i32)derelictae, (i32)2);
+        }
+        CREDO_VERUM(filum_existit(
+            AREA "/renovandum/include/minima.h"));
+        CREDO_VERUM(filum_existit(AREA "/renovandum/lib/minima.c"));
+    }
+
+    /* ========================================================
      * PROBARE: identitas voluminis (decisum red-team IX):
      * solitarium vincit, plura recusantur
      * ======================================================== */

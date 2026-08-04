@@ -1,6 +1,6 @@
 /* silex.c (instrumentum) - lapis ignarius: proiecta e fabrica
  * excudere. Verba: novum, ui (sine argumentis = ui), status,
- * condere, historia, proicere [-ad seq] [-scribere].
+ * condere, historia, proicere [-ad seq] [-scribere], renovare [-scribere].
  *
  * Usus:
  *   silex                       # fenestra vitrea (ui)
@@ -219,7 +219,7 @@ principale (integer argc, character** argv)
         "silex - proiecta nova e fabrica rhubarb excudere");
     argumenta_addere_positionalem(parser, "verbum",
         "verbum (novum | ui | status | condere | historia |"
-        " proicere; sine argumentis = ui)", FALSUM);
+        " proicere | renovare; sine argumentis = ui)", FALSUM);
     argumenta_addere_positionalem(parser, "titulus",
         "nomen proiecti (pro novo)", FALSUM);
     argumenta_addere_optionem(parser, "-f", "--fabrica",
@@ -282,7 +282,8 @@ principale (integer argc, character** argv)
     si (chorda_aequalis_literis(verbum, "status")
         || chorda_aequalis_literis(verbum, "condere")
         || chorda_aequalis_literis(verbum, "historia")
-        || chorda_aequalis_literis(verbum, "proicere"))
+        || chorda_aequalis_literis(verbum, "proicere")
+        || chorda_aequalis_literis(verbum, "renovare"))
     {
         constans character* via_proiecti = titulus.mensura > ZEPHYRUM
             ? chorda_ut_cstr(titulus, piscina) : ".";
@@ -320,6 +321,79 @@ principale (integer argc, character** argv)
                     (integer)r->via.mensura,
                     (constans character*)r->via.datum);
             }
+            redde ZEPHYRUM;
+        }
+        si (chorda_aequalis_literis(verbum, "renovare"))
+        {
+            b32 applicare = argumenta_habet_vexillum(lecta,
+                "--scribere");
+            SilexRenovatioFructus r;
+            i32 index;
+
+            si (fabrica == NIHIL)
+            {
+                fprintf(stderr, "silex renovare: fabrica ignota -"
+                    " da --fabrica aut SILEX_FABRICA pone\n");
+                redde I;
+            }
+            r = silex_renovare(piscina, via_proiecti, fabrica,
+                applicare);
+            si (r.res == NIHIL)
+            {
+                fprintf(stderr, "silex renovare: %s\n", r.erratum);
+                redde I;
+            }
+            si (xar_numerus(r.res) == 0)
+            {
+                imprimere("silex renovare: omnia recentia"
+                    " (%d intactae)\n", (integer)r.intactae);
+                redde ZEPHYRUM;
+            }
+            imprimere("silex renovare (e %s):\n", fabrica);
+            per (index = 0; index < xar_numerus(r.res);
+                index = index + 1)
+            {
+                SilexRenovatioRes* rr = (SilexRenovatioRes*)
+                    xar_obtinere(r.res, index);
+                constans character* signum =
+                    rr->status == SILEX_RENOVATIO_RENOVANDA
+                        ? "RENOVANDA "
+                    : rr->status == SILEX_RENOVATIO_ADDENDA
+                        ? "ADDENDA   "
+                    : rr->status == SILEX_RENOVATIO_VULNUS
+                        ? "VULNUS    "
+                    : rr->status == SILEX_RENOVATIO_CONFLICTUS
+                        ? "CONFLICTUS"
+                    : "DERELICTA ";
+                constans character* nota =
+                    rr->status == SILEX_RENOVATIO_VULNUS
+                        ? "  (manu edita, fabrica immota -"
+                          " retinetur)"
+                    : rr->status == SILEX_RENOVATIO_CONFLICTUS
+                        ? "  (ambae motae - manus tua opus est)"
+                    : rr->status == SILEX_RENOVATIO_DERELICTA
+                        ? "  (fabricae hodie ignota - retinetur)"
+                    : "";
+
+                imprimere("  %s  %.*s%s\n", signum,
+                    (integer)rr->via.mensura,
+                    (constans character*)rr->via.datum, nota);
+            }
+            imprimere("  (%d intactae)\n", (integer)r.intactae);
+            si (!applicare)
+            {
+                imprimere("consilium solum - adde -scribere ut"
+                    " applicetur\n");
+                redde ZEPHYRUM;
+            }
+            si (!r.successus)
+            {
+                fprintf(stderr, "silex renovare: %s\n", r.erratum);
+                redde I;
+            }
+            imprimere("silex renovare: %d renovatae, %d additae"
+                " (%d intactae)\n", (integer)r.renovatae,
+                (integer)r.additae, (integer)r.intactae);
             redde ZEPHYRUM;
         }
         si (chorda_aequalis_literis(verbum, "proicere"))
@@ -465,7 +539,7 @@ principale (integer argc, character** argv)
     {
         fprintf(stderr, "silex: verbum ignotum: %.*s"
             " (verba: novum, ui, status, condere, historia,"
-            " proicere)\n",
+            " proicere, renovare)\n",
             (integer)verbum.mensura,
             (constans character*)verbum.datum);
         redde I;

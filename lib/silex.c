@@ -1536,3 +1536,414 @@ silex_proicere (Piscina* piscina, constans character* proiectum_dir,
     fructus.successus = VERUM;
     redde fructus;
 }
+
+/* ==================================================
+ * Renovatio (vide silex.h pro comparatione trium sigillorum)
+ * ================================================== */
+
+interior chorda
+_sigillum_contenti (Piscina* piscina, chorda contentum);
+
+interior chorda
+_sigillum_contenti (Piscina* piscina, chorda contentum)
+{
+    Sigillum  sig;
+    character hex[SIGILLUM_HEX_MENSURA];
+
+    sig = sigillum_computare((constans vacuum*)contentum.datum,
+        (memoriae_index)contentum.mensura);
+    sigillum_hex(&sig, hex);
+    redde chorda_ex_literis(hex, piscina);
+}
+
+SilexRenovatioFructus
+silex_renovare (Piscina* piscina, constans character* proiectum_dir,
+    constans character* fabrica, b32 scribere)
+{
+    SilexRenovatioFructus fructus;
+    constans character*   volumen_via;
+    Volumen*              vol;
+    Xar*                  acta;
+    Xar*                  clausura;
+    TabulaDispersa*       tunc;    /* via -> chorda* (sigillum) */
+    TabulaDispersa*       novum;   /* via -> SilexRes* clausurae */
+    TabulaDispersa*       visae;
+    chorda                radix_absoluta;
+    i32                   index;
+
+    fructus.successus = FALSUM;
+    fructus.res = NIHIL;
+    fructus.intactae = 0;
+    fructus.renovatae = 0;
+    fructus.additae = 0;
+    fructus.erratum = NIHIL;
+
+    volumen_via = _volumen_viam_invenire(piscina, proiectum_dir);
+    si (volumen_via == NIHIL)
+    {
+        fructus.erratum = "volumen deest - estne proiectum silicis?";
+        redde fructus;
+    }
+    vol = volumen_aperire(piscina, volumen_via);
+    si (vol == NIHIL)
+    {
+        fructus.erratum = "volumen aperiri non potuit";
+        redde fructus;
+    }
+
+    /* missum-tunc: actum vendicata ultimum per viam; remota scopum
+     * demit (quod consulto amovisti non resuscitatur) */
+    tunc = tabula_dispersa_creare_chorda(piscina, 64);
+    acta = volumen_acta_legere(vol, (s64)0, piscina);
+    si (tunc == NIHIL || acta == NIHIL)
+    {
+        volumen_claudere(vol);
+        fructus.erratum = "acta legi non potuerunt";
+        redde fructus;
+    }
+    per (index = 0; index < xar_numerus(acta); index = index + 1)
+    {
+        VolumenActum* a = (VolumenActum*)xar_obtinere(acta, index);
+        JsonResultus  lectum;
+        JsonValor*    via_v;
+        chorda        via;
+
+        si (!chorda_aequalis_literis(a->genus, "plagula-condita")
+            && !chorda_aequalis_literis(a->genus, "plagula-remota"))
+        {
+            perge;
+        }
+        lectum = json_legere(a->datum, piscina);
+        si (!lectum.successus)
+        {
+            perge;
+        }
+        via_v = json_objectum_capere(lectum.radix, "via");
+        si (via_v == NIHIL || !json_est_chorda(via_v))
+        {
+            perge;
+        }
+        via = json_ad_chorda(via_v);
+        si (chorda_aequalis_literis(a->genus, "plagula-remota"))
+        {
+            tabula_dispersa_delere(tunc, via);
+        }
+        alioquin
+        {
+            JsonValor* orig_v = json_objectum_capere(lectum.radix,
+                "origo");
+            JsonValor* sig_v = json_objectum_capere(lectum.radix,
+                "sigillum");
+
+            si (orig_v == NIHIL || !json_est_chorda(orig_v)
+                || sig_v == NIHIL || !json_est_chorda(sig_v))
+            {
+                perge;
+            }
+            si (_praefixum_habet(json_ad_chorda(orig_v),
+                "vendicata:"))
+            {
+                chorda* cella = (chorda*)piscina_allocare(piscina,
+                    (memoriae_index)magnitudo(chorda));
+
+                si (cella == NIHIL)
+                {
+                    volumen_claudere(vol);
+                    fructus.erratum = "memoria defecit";
+                    redde fructus;
+                }
+                *cella = json_ad_chorda(sig_v);
+                tabula_dispersa_inserere(tunc, via,
+                    (vacuum*)cella);
+            }
+        }
+    }
+
+    /* semina = capita vendicata; clausura recomputata = missum-
+     * novum (contentum incluso) + dependentiae novae (addendae).
+     * CAVE: Xar SEGMENTATUS est - tabulatum planum e piscina
+     * aedificandum, numquam xar_obtinere(x, 0) ut tabulatum */
+    {
+        i32 numerus_capitum = 0;
+        i32 s = 0;
+        constans character** semina;
+        TabulaIterator iter;
+        chorda  clavis;
+        vacuum* valor;
+
+        iter = tabula_dispersa_iterator_initium(tunc);
+        dum (tabula_dispersa_iterator_proximum(&iter, &clavis,
+            &valor))
+        {
+            si (_praefixum_habet(clavis, "include/"))
+            {
+                numerus_capitum = numerus_capitum + 1;
+            }
+        }
+        si (numerus_capitum == 0)
+        {
+            volumen_claudere(vol);
+            fructus.res = xar_creare(piscina,
+                (i32)magnitudo(SilexRenovatioRes));
+            fructus.successus = VERUM;   /* nihil vendicatum */
+            redde fructus;
+        }
+        semina = (constans character**)piscina_allocare(piscina,
+            (memoriae_index)((memoriae_index)numerus_capitum
+                * magnitudo(constans character*)));
+        si (semina == NIHIL)
+        {
+            volumen_claudere(vol);
+            fructus.erratum = "memoria defecit";
+            redde fructus;
+        }
+        iter = tabula_dispersa_iterator_initium(tunc);
+        dum (tabula_dispersa_iterator_proximum(&iter, &clavis,
+            &valor))
+        {
+            si (_praefixum_habet(clavis, "include/"))
+            {
+                semina[s] = chorda_ut_cstr(chorda_ex_buffer(
+                    clavis.datum + 8, clavis.mensura - 8),
+                    piscina);
+                s = s + 1;
+            }
+        }
+        clausura = silex_clausuram_colligere(piscina, fabrica,
+            (constans character* constans*)semina,
+            numerus_capitum);
+    }
+    si (clausura == NIHIL)
+    {
+        volumen_claudere(vol);
+        fructus.erratum = "fabrica invalida - clausura colligi non"
+            " potuit";
+        redde fructus;
+    }
+
+    novum = tabula_dispersa_creare_chorda(piscina, 128);
+    visae = tabula_dispersa_creare_chorda(piscina, 64);
+    fructus.res = xar_creare(piscina,
+        (i32)magnitudo(SilexRenovatioRes));
+    si (novum == NIHIL || visae == NIHIL || fructus.res == NIHIL)
+    {
+        volumen_claudere(vol);
+        fructus.erratum = "memoria defecit";
+        redde fructus;
+    }
+    per (index = 0; index < xar_numerus(clausura);
+        index = index + 1)
+    {
+        SilexRes* e = (SilexRes*)xar_obtinere(clausura, index);
+
+        tabula_dispersa_inserere(novum, e->via, (vacuum*)e);
+    }
+
+    radix_absoluta = via_absoluta(
+        chorda_ex_literis(proiectum_dir, piscina), piscina);
+
+    /* classificatio: clausura (novum) contra tunc et discum */
+    per (index = 0; index < xar_numerus(clausura);
+        index = index + 1)
+    {
+        SilexRes* e = (SilexRes*)xar_obtinere(clausura, index);
+        constans character* via_plena = _texere(piscina,
+            chorda_ut_cstr(radix_absoluta, piscina), "/",
+            chorda_ut_cstr(e->via, piscina));
+        b32     in_disco = filum_existit(via_plena);
+        vacuum* tunc_v = NIHIL;
+        SilexRenovatioStatus classis;
+        b32     intacta = FALSUM;
+
+        si (tabula_dispersa_invenire(tunc, e->via, &tunc_v))
+        {
+            chorda sig_tunc = *(chorda*)tunc_v;
+            chorda sig_novum = _sigillum_contenti(piscina,
+                e->contentum);
+            b32    fabrica_mota = !chorda_aequalis(sig_tunc,
+                sig_novum);
+
+            tabula_dispersa_inserere(visae, e->via, (vacuum*)e);
+            si (!in_disco)
+            {
+                classis = fabrica_mota ? SILEX_RENOVATIO_RENOVANDA
+                    : SILEX_RENOVATIO_VULNUS;   /* ablata manu */
+            }
+            alioquin
+            {
+                chorda sig_nunc = _sigillum_contenti(piscina,
+                    filum_legere_totum(via_plena, piscina));
+
+                si (!fabrica_mota)
+                {
+                    si (chorda_aequalis(sig_nunc, sig_tunc))
+                    {
+                        intacta = VERUM;
+                    }
+                    alioquin
+                    {
+                        classis = SILEX_RENOVATIO_VULNUS;
+                    }
+                }
+                alioquin si (chorda_aequalis(sig_nunc, sig_tunc))
+                {
+                    classis = SILEX_RENOVATIO_RENOVANDA;
+                }
+                alioquin si (chorda_aequalis(sig_nunc, sig_novum))
+                {
+                    intacta = VERUM;   /* iam recens manu */
+                }
+                alioquin
+                {
+                    classis = SILEX_RENOVATIO_CONFLICTUS;
+                }
+            }
+        }
+        alioquin
+        {
+            /* clausurae nova, numquam vendicata */
+            classis = in_disco ? SILEX_RENOVATIO_CONFLICTUS
+                : SILEX_RENOVATIO_ADDENDA;   /* collisio si adest */
+        }
+
+        si (intacta)
+        {
+            fructus.intactae = fructus.intactae + 1;
+        }
+        alioquin
+        {
+            SilexRenovatioRes* r = (SilexRenovatioRes*)xar_addere(
+                fructus.res);
+
+            si (r != NIHIL)
+            {
+                r->via = e->via;
+                r->status = classis;
+            }
+        }
+    }
+
+    /* vendicatae quas clausura hodierna nescit -> derelictae */
+    {
+        TabulaIterator iter = tabula_dispersa_iterator_initium(
+            tunc);
+        chorda  clavis;
+        vacuum* valor;
+
+        dum (tabula_dispersa_iterator_proximum(&iter, &clavis,
+            &valor))
+        {
+            si (!tabula_dispersa_continet(visae, clavis))
+            {
+                SilexRenovatioRes* r = (SilexRenovatioRes*)
+                    xar_addere(fructus.res);
+
+                si (r != NIHIL)
+                {
+                    r->via = clavis;
+                    r->status = SILEX_RENOVATIO_DERELICTA;
+                }
+            }
+        }
+    }
+
+    si (!scribere)
+    {
+        volumen_claudere(vol);
+        fructus.successus = VERUM;
+        redde fructus;
+    }
+
+    /* applicatio: renovandae + addendae scribuntur et absorbentur
+     * origine vendicata, transactione una; vulnera/conflictus/
+     * derelictae retinentur nominatae - non obstant */
+    si (!volumen_transactionem_incipere(vol))
+    {
+        volumen_claudere(vol);
+        fructus.erratum = "transactio incipi non potuit";
+        redde fructus;
+    }
+    per (index = 0; index < xar_numerus(fructus.res);
+        index = index + 1)
+    {
+        SilexRenovatioRes* r = (SilexRenovatioRes*)xar_obtinere(
+            fructus.res, index);
+        vacuum*   novum_v = NIHIL;
+        SilexRes* e;
+        constans character* via_plena;
+        chorda    parens;
+
+        si (r->status != SILEX_RENOVATIO_RENOVANDA
+            && r->status != SILEX_RENOVATIO_ADDENDA)
+        {
+            perge;
+        }
+        (vacuum)tabula_dispersa_invenire(novum, r->via, &novum_v);
+        e = (SilexRes*)novum_v;
+        si (e == NIHIL)
+        {
+            volumen_transactionem_revolvere(vol);
+            volumen_claudere(vol);
+            fructus.erratum = "clausura claudicat (via sine fonte)";
+            redde fructus;
+        }
+        via_plena = _texere(piscina,
+            chorda_ut_cstr(radix_absoluta, piscina), "/",
+            chorda_ut_cstr(r->via, piscina));
+        parens = via_directorium(
+            chorda_ex_literis(via_plena, piscina), piscina);
+        filum_directorium_creare_si_necesse(
+            chorda_ut_cstr(parens, piscina));
+        si (!filum_scribere(via_plena, e->contentum)
+            || !volumen_plagulam_condere(vol, r->via, e->contentum,
+                e->origo))
+        {
+            volumen_transactionem_revolvere(vol);
+            volumen_claudere(vol);
+            fructus.erratum = _texere(piscina,
+                "renovatio fracta: ", via_plena, NIHIL);
+            fructus.renovatae = 0;
+            fructus.additae = 0;
+            redde fructus;
+        }
+        si (r->status == SILEX_RENOVATIO_RENOVANDA)
+        {
+            fructus.renovatae = fructus.renovatae + 1;
+        }
+        alioquin
+        {
+            fructus.additae = fructus.additae + 1;
+        }
+    }
+    si (fructus.renovatae + fructus.additae > 0)
+    {
+        ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+            (memoriae_index)128);
+        chorda datum;
+
+        chorda_aedificator_appendere_literis(aed,
+            "{\"nuntius\":\"renovatio e fabrica\",\"renovatae\":");
+        chorda_aedificator_appendere_s32(aed,
+            (s32)fructus.renovatae);
+        chorda_aedificator_appendere_literis(aed, ",\"additae\":");
+        chorda_aedificator_appendere_s32(aed, (s32)fructus.additae);
+        chorda_aedificator_appendere_literis(aed, "}");
+        datum = chorda_aedificator_finire(aed);
+        si (volumen_actum_appendere(vol, "conditio", datum) == 0)
+        {
+            volumen_transactionem_revolvere(vol);
+            volumen_claudere(vol);
+            fructus.erratum = "conditio scribi non potuit";
+            redde fructus;
+        }
+    }
+    si (!volumen_transactionem_committere(vol))
+    {
+        volumen_claudere(vol);
+        fructus.erratum = "transactio committi non potuit";
+        redde fructus;
+    }
+    volumen_claudere(vol);
+    fructus.successus = VERUM;
+    redde fructus;
+}

@@ -181,4 +181,57 @@ silex_proicere (
     s64                 ad_seq,
     b32                 scribere);
 
+/* ==================================================
+ * Renovatio: bibliothecae vendicatae e fabrica renovantur
+ *
+ * Comparatio sigillorum TRIUM per plagulam vendicatam:
+ *   missum-tunc   (actum vendicata ultimum in actis - remota
+ *                  scopum demit: quod consulto amovisti non
+ *                  resuscitatur)
+ *   proiectum-nunc (discus hodie)
+ *   missum-novum  (fabrica hodie, per clausuram recomputatam)
+ * NUMQUAM timestamp - solum contentum "editum a te" ab "novius"
+ * distinguit. Plagulae genitae (origo non-vendicata) numquam
+ * spectantur - tuae sunt.
+ *
+ * Consilium ordinarium; scribere = applicatio (disco + volumini
+ * origine vendicata, transactione una + actum conditionis -
+ * renovatio punctum nominatum caudae est, proicere -ad revertit).
+ * Vulnera/conflictus nominantur, numquam tanguntur, scriptionem
+ * ceterorum non obstant (retentio honesta, non recusatio).
+ * ================================================== */
+
+nomen enumeratio {
+    SILEX_RENOVATIO_RENOVANDA = 0,  /* tunc==nunc, novum aliud
+                                     * (aut disco absens) - tuta */
+    SILEX_RENOVATIO_ADDENDA,        /* clausurae novae, proiecto
+                                     * ignota - dependentia nova */
+    SILEX_RENOVATIO_VULNUS,         /* manu edita, fabrica immota */
+    SILEX_RENOVATIO_CONFLICTUS,     /* ambae motae (aut collisio
+                                     * cum plagula tua) */
+    SILEX_RENOVATIO_DERELICTA       /* vendicata, fabricae hodie
+                                     * ignota - upstream demisit */
+} SilexRenovatioStatus;
+
+nomen structura {
+    chorda               via;
+    SilexRenovatioStatus status;
+} SilexRenovatioRes;
+
+nomen structura {
+    b32                 successus;
+    Xar*                res;        /* intactae tacent (numerus) */
+    i32                 intactae;
+    i32                 renovatae;  /* si scribere: scriptae */
+    i32                 additae;
+    constans character* erratum;
+} SilexRenovatioFructus;
+
+SilexRenovatioFructus
+silex_renovare (
+    Piscina*            piscina,
+    constans character* proiectum_dir,
+    constans character* fabrica,
+    b32                 scribere);
+
 #endif /* SILEX_H */

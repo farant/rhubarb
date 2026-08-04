@@ -152,3 +152,48 @@ down:
 
 Next: renovare (three-sigillum comparison — missum-tunc /
 proiectum-nunc / missum-novum) on top of proicere's machinery.
+
+## 2026-08-04 — renovare: the three sigilla (VCS III / distribution I)
+
+The verb the silex vision was named for: vendored libraries catch up
+with the fabrica, content-compared, no network, no timestamps.
+
+- **missum-tunc from acta, not manifest** — the decision condere
+  recorded at ITS birth (origo "condita" preserves the last
+  vendicata actum as provenance) paid off exactly as planned: the
+  tunc fold is a walk over plagula-condita acta filtered to origo
+  praefix "vendicata:", with plagula-remota dropping scope (a
+  vendored file you deliberately removed is NOT resurrected).
+- **missum-novum via the existing closure** — seeds = vendored
+  include/*.h basenames, silex_clausuram_colligere recomputed
+  against today's fabrica returns content for the whole set AND
+  discovers new dependencies (ADDENDA) — if the new chorda.c grows
+  an include, it's vendored in rather than silently breaking the
+  build. Upstream-dropped files fall out as DERELICTA (the seed
+  warning is the honest stderr trail).
+- **Classes**: RENOVANDA (tunc==nunc, safe by construction — disk
+  content IS the recorded massa), ADDENDA, VULNUS (yours, upstream
+  immota), CONFLICTUS (both moved; v1 never merges), DERELICTA.
+  nunc==novum≠tunc counts INTACTA (you updated by hand; stable).
+  Vulnera/conflictus are RETAINED AND NAMED but do not block the
+  rest — apt-style holding back, unlike proicere's OBEX refusal
+  (there we'd be DESTROYING content; here we're just not helping).
+- **Apply = conditio**: write + absorb origo "vendicata:<fons>" in
+  one caller transaction + conditio actum "renovatio e fabrica" —
+  an update is a named point in the log; proicere -ad reverts it.
+  Absorbing with vendicata origo is also what makes renovare
+  idempotent (tunc becomes the new sigillum).
+- **XAR IS SEGMENTED** — caught pre-run: xar_obtinere(x, 0) cast to
+  a flat array works until the first segment fills, then reads
+  garbage. Seeds array built with piscina_allocare + fill loop.
+  (Tabula exponentialis, not contiguous — worth remembering.)
+- Probatio drives a **fabrica ficta** (mutable fake fabrica in the
+  build area — the real repo can't be mutated mid-test): all five
+  classes + idempotency exercised. Real-fabrica smoke: probe_
+  ascensus "omnia recentia (10 intactae)"; hand-edit → VULNUS
+  retained under -scribere.
+
+VCS verbs now: status / condere / historia / proicere / renovare.
+Next pulls when they bite: conflictus merge tooling, massam_habet
+(existence check without blob read), capsula embedding
+(distribution-day: fabrica ficta becomes fabrica in the binary).
