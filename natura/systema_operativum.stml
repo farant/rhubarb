@@ -17,7 +17,7 @@
   Relationes duae: orta_ex (descensus) / ad_exemplum_facta
   (imitatio formae). Genealogia vera utramque eget.
 -->
-<natura modulus="systema_operativum" versio="0" lingua="latina">
+<natura modulus="systema_operativum" versio="1" lingua="latina">
 
 <genus nomen="systema_operativum">
 
@@ -175,13 +175,10 @@
       <eventum quando="1991-08-25" actio="ortus">nuntius in
         comp.os.minix: "just a hobby, won't be big"</eventum>
     </historia>
-    <dubium>
-      "Linux" stricte NUCLEUS est; systema integrum = nucleus +
-      GNU + cetera, per DISTRIBUTIONES editum (Debian, Fedora...).
-      Estne distributio species propria? versio systematis? genus
-      novum inter systema et versionem? Granularitas iterum
-      pulsat - APERTUM.
-    </dubium>
+    <!-- dubium distributionum SOLUTUM (Fran, v0->v1): distributio
+         GENUS proprium est - "certe genus rerum quas homines
+         tractare debent". Vide genus distributio_systematis
+         infra. -->
   </species>
 
   <species nomen="windows">
@@ -204,6 +201,89 @@
         (super DOS)</eventum>
       <eventum quando="1993-07-27" actio="edi">NT 3.1 - linea
         nova quae vetera devoravit</eventum>
+    </historia>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     DISTRIBUTIO SYSTEMATIS - collectio curata systematis
+     (genus a Frane decretum: res quam homines vere tractant.
+     Generale consulto - Linux eam claram fecit, forma non
+     Linux propria est)
+     ================================================== -->
+
+<genus nomen="distributio_systematis">
+
+  <definitio>
+    Collectio curata: nucleus + instrumenta + ordinationes +
+    gestor fasciculorum, ab uno curatore electa, probata, edita.
+    Systema operativum forma est; distributio EDITIO formae
+    vivenda - quod vere instalas.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="gestor_fasciculorum" genus="textus"
+      nota="apt, rpm, pacman... genus programmatis SURGIT,
+            nondum descriptum"/>
+    <proprietas nomen="cadentia_editionum" genus="electio">
+      <optio>statuta</optio>
+      <optio>volvens</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="distributio_de" ad="systema_operativum"/>
+    <relatio nomen="orta_ex" ad="distributio_systematis"
+      nota="genealogia distributionum vera: Ubuntu ex Debian"/>
+    <relatio nomen="edita_a" ad="organizatio"
+      modulus="organizatio"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="debian">
+    <definitio>
+      Distributio communitatis vetusta: stabilitas supra
+      novitatem, contractus socialis scriptus, apt eius donum
+      mundo.
+    </definitio>
+    <valor nomen="gestor_fasciculorum">apt</valor>
+    <valor nomen="cadentia_editionum">statuta</valor>
+    <relatum nomen="distributio_de" ad="linux"/>
+    <relatum nomen="edita_a" ad="debian_project"
+      externum="verum"
+      nota="communitas, non societas - sub-genus organizationis
+            SURGIT (communitas: finis sine quaestu, opera
+            aperta)"/>
+    <historia>
+      <eventum quando="1993-08-16" actio="ortus"/>
+    </historia>
+  </species>
+
+  <species nomen="ubuntu">
+    <valor nomen="gestor_fasciculorum">apt</valor>
+    <valor nomen="cadentia_editionum">statuta</valor>
+    <relatum nomen="distributio_de" ad="linux"/>
+    <relatum nomen="orta_ex" ad="debian"/>
+    <relatum nomen="edita_a" ad="canonical"
+      modulus="organizatio"/>
+    <historia>
+      <eventum quando="2004-10-20" actio="ortus"/>
+    </historia>
+  </species>
+
+  <species nomen="arch">
+    <differentia>
+      Cadentia volvens ut essentia: numquam "editio nova" -
+      fluctus continuus; simplicitas mechanismi supra
+      commoditatem.
+    </differentia>
+    <valor nomen="gestor_fasciculorum">pacman</valor>
+    <valor nomen="cadentia_editionum">volvens</valor>
+    <relatum nomen="distributio_de" ad="linux"/>
+    <historia>
+      <eventum quando="2002-03-11" actio="ortus"/>
     </historia>
   </species>
 

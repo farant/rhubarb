@@ -8,7 +8,7 @@
   corpus_normans, societas - arbor Porphyriana profunditatem
   accipit (attributum sub= + differentia in genere).
 -->
-<natura modulus="organizatio" versio="1" lingua="latina">
+<natura modulus="organizatio" versio="2" lingua="latina">
 
 <genus nomen="organizatio">
 
@@ -128,6 +128,11 @@
   <individuum nomen="arm_ltd">
     <valor nomen="nomina">Arm Ltd</valor>
     <valor nomen="condita">1990-11-27</valor>
+  </individuum>
+
+  <individuum nomen="canonical">
+    <valor nomen="nomina">Canonical Ltd</valor>
+    <valor nomen="condita">2004-03-05</valor>
   </individuum>
 
   <individuum nomen="apple">

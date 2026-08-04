@@ -211,3 +211,21 @@ in one day — none of the mechanisms designed in advance, every
 one forced by content. The next natural conversations: Fran's
 editorial pass over the seven as a set, or the loader (where
 plasticity starts trading against consumers).
+
+## 2026-08-04 — round six: distributio_systematis
+
+20. The distribution dubium resolved by Fran's ruling:
+    distributio is a GENUS in its own right — "certainly a type
+    of thing people have to deal with" — and deliberately
+    GENERIC (distributio_systematis, not distributio_linux):
+    Linux made the pattern famous, but the form isn't
+    Linux-shaped. Definitio hangs on CURATION: the system is
+    form, the distribution is the livable edition of the form —
+    what you actually install. Dictionary: debian (with the
+    written social contract noted), ubuntu (orta_ex debian —
+    distribution genealogy is real descent), arch (whose
+    differentia IS its rolling cadence — the volvens option
+    earning its place in the enum the same day it was coined).
+    canonical joins societas; debian_project surfaces the
+    COMMUNITAS sub-genus of organizatio (purpose without
+    profit, open works) — surfaced, undescribed, waiting.
