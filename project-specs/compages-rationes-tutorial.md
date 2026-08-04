@@ -101,8 +101,10 @@ log, exactly the gesta shape but per-file instead of per-repo. Entities
 are a rebuildable projection of the acta; corruption of a projection is
 never data loss, because any projection can be re-derived by folding the
 log (the VCS manifest and mensa's board state both already work this
-way). A one-call `volumen_reficere()` verb for that replay is DEEST —
-today the guarantee is architectural, not a button.
+way — and `volumen_plicam_ad(vol, seq)` is now a callable that folds the
+manifest at ANY point in history, pinned equal to the stored projection).
+A general one-call `volumen_reficere()` for arbitrary projections is
+still DEEST; for the manifest specifically, the button exists.
 
 And because the acta are ordered history, the volumen doubles as the
 project's **version control**: `silex status` (sigilla vs manifest →
@@ -112,21 +114,32 @@ point in the log; a clean tree refuses with exit 1 — scripts take note),
 any historical tree is a fold. The document and the repository turned out
 to be the same thing.
 
+Restore is a verb now too: `silex proicere` prints a plan (SCRIBENDA /
+CREANDA / OBEX / ALIENA + intactae count) and never writes; `-scribere`
+applies it; `-ad N` projects the tree as it was at point N of the log
+(the seqs `historia` prints). There is no HEAD to detach — projecting
+backwards makes the *tree* old while the log stays whole; `status` then
+shows honest MUTATA, and the next `condere` makes the past the present
+as a NEW point. The covenant: nothing unrecorded is ever destroyed —
+disk content whose sigillum resides nowhere in the massae is an OBEX
+and `-scribere` refuses (exit 1) until you `condere` it; untracked
+files are ALIENA — named in the plan, never written, never deleted.
+
 Fine print a walker will hit: status silently skips `bin/`, `build/`,
 `*.volumen*`, and all dotfiles (hardcoded — no `.silexignore` yet, so a
-stray `.o` at project root WILL be absorbed); and while `cp` of the
-volumen is a complete backup (byte-verified — massae hold everything,
-including deleted files' content), getting files back OUT is manual
-sqlite3 until `proicere` ships. Backup is a verb; restore is still a
-craft.
+stray `.o` at project root WILL be absorbed); and `cp` of the volumen
+is a complete backup (byte-verified — massae hold everything, including
+deleted files' content).
 
 > **STATUS** *(revised)*
 > - `volumen.h`: **EXSTAT** — acta (SQL-side timestamps) + massae
 >   (content-addressed, dedup) + plagulae (manifest), one-transaction
 >   condere, caller-owned transactions, acta-after-seq reads, bare massa
 >   API. G2 SHIPPED 2026-08-04; probationes pin binary round-trips.
-> - VCS verbs status/condere/historia: **EXSTAT** (retroactive on any
->   volumen); proicere (plan-default) + `-ad seq` time travel: **DEEST**.
+> - VCS verbs status/condere/historia/proicere: **EXSTAT** (retroactive
+>   on any volumen). proicere is plan-default with `-scribere` apply,
+>   `-ad seq` time travel, OBEX covenant (nothing unrecorded destroyed)
+>   — full cycle measured in probatio AND by hand on a scratch project.
 > - genera-inside-the-volumen: still **DEEST** — that's G3, unchanged.
 > - The forum's announced migration path now has a proven target.
 
@@ -414,9 +427,10 @@ against the same volumen your kitchen laptop has open.
 
 New since the draft, not in the original table: **mensa** (thinkboard
 frontend battery — shipped with its own probationes and sealed frontend
-conventions), **silex VCS** (status/condere/historia shipped; proicere +
-renovare designed), **glomerare** (JS bundler), **silicetum** (the git-free
-dogfood quarry, two-class project protocol).
+conventions), **silex VCS** (status/condere/historia/proicere shipped —
+plan-default projection, time travel, OBEX covenant; renovare designed),
+**glomerare** (JS bundler), **silicetum** (the git-free dogfood quarry,
+two-class project protocol).
 
 Reading of the revised table: the gravity has all collapsed onto **G3** —
 it now unlocks ch. 3, 4 (CRUD half), 6 (field), and 7, and every shipped

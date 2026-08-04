@@ -339,6 +339,142 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: proicere - volumen arborem scribit
+     * ======================================================== */
+
+    {
+        SilexProiectioFructus p;
+        SilexConditioFructus  conditio;
+        SilexStatusFructus    status;
+        Xar*                  historia;
+        chorda                relatum;
+
+        imprimere("\n--- Probans proicere (consilium/scriptio) ---\n");
+
+        /* arbor munda: nihil proiciendum */
+        p = silex_proicere(piscina, AREA "/specimen", (s64)0,
+            FALSUM);
+        CREDO_VERUM(p.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(p.res), (i32)0);
+        CREDO_VERUM(p.intactae > (i32)10);
+
+        /* plagula ablata -> CREANDA; -scribere restituit */
+        CREDO_VERUM(filum_delere(AREA "/specimen/notae.md"));
+        p = silex_proicere(piscina, AREA "/specimen", (s64)0,
+            FALSUM);
+        CREDO_VERUM(p.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(p.res), (i32)1);
+        {
+            SilexProiciendaRes* r = (SilexProiciendaRes*)
+                xar_obtinere(p.res, 0);
+
+            CREDO_VERUM(r->status == SILEX_PROICIENDA_CREANDA);
+            CREDO_CHORDA_AEQUALIS_LITERIS(r->via, "notae.md");
+        }
+        p = silex_proicere(piscina, AREA "/specimen", (s64)0,
+            VERUM);
+        CREDO_VERUM(p.successus);
+        CREDO_AEQUALIS_I32((i32)p.scriptae, (i32)1);
+        relatum = filum_legere_totum(AREA "/specimen/notae.md",
+            piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "# notae\n");
+
+        imprimere("\n--- Probans obicem (inconditum) ---\n");
+
+        /* contentum inconditum -> OBEX; scriptio recusatur,
+         * plagula INTACTA manet (foedus: nihil inconditum petit) */
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/specimen/notae.md", "# vandalismus\n"));
+        p = silex_proicere(piscina, AREA "/specimen", (s64)0,
+            FALSUM);
+        CREDO_VERUM(p.successus);   /* consilium semper redditur */
+        CREDO_AEQUALIS_I32((i32)p.obices, (i32)1);
+        {
+            SilexProiciendaRes* r = (SilexProiciendaRes*)
+                xar_obtinere(p.res, 0);
+
+            CREDO_VERUM(r->status == SILEX_PROICIENDA_OBEX);
+        }
+        p = silex_proicere(piscina, AREA "/specimen", (s64)0,
+            VERUM);
+        CREDO_FALSUM(p.successus);
+        CREDO_VERUM(p.erratum != NIHIL);
+        relatum = filum_legere_totum(AREA "/specimen/notae.md",
+            piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "# vandalismus\n");
+
+        imprimere("\n--- Probans iter temporis (-ad seq) ---\n");
+
+        /* conditum -> contentum residet -> superscribibile */
+        conditio = silex_condere(piscina, AREA "/specimen",
+            "experimentum");
+        CREDO_VERUM(conditio.successus);
+
+        historia = silex_historia(piscina, AREA "/specimen");
+        CREDO_NON_NIHIL(historia);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(historia), (i32)4);
+        {
+            SilexConditio* pristina = (SilexConditio*)xar_obtinere(
+                historia, 2);
+
+            CREDO_CHORDA_AEQUALIS_LITERIS(pristina->nuntius,
+                "prima conditio manualis");
+
+            /* arbor ut erat ad punctum pristinum */
+            p = silex_proicere(piscina, AREA "/specimen",
+                pristina->seq, FALSUM);
+            CREDO_VERUM(p.successus);
+            CREDO_AEQUALIS_I32((i32)xar_numerus(p.res), (i32)1);
+            {
+                SilexProiciendaRes* r = (SilexProiciendaRes*)
+                    xar_obtinere(p.res, 0);
+
+                CREDO_VERUM(r->status
+                    == SILEX_PROICIENDA_SCRIBENDA);
+            }
+            p = silex_proicere(piscina, AREA "/specimen",
+                pristina->seq, VERUM);
+            CREDO_VERUM(p.successus);
+            CREDO_AEQUALIS_I32((i32)p.scriptae, (i32)1);
+            relatum = filum_legere_totum(
+                AREA "/specimen/notae.md", piscina);
+            CREDO_CHORDA_AEQUALIS_LITERIS(relatum, "# notae\n");
+        }
+
+        /* arbor vetus, manifestum novum: status honestus MUTATA;
+         * praeteritum praesens fit ut punctum NOVUM caudae */
+        status = silex_status(piscina, AREA "/specimen");
+        CREDO_VERUM(status.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(status.res), (i32)1);
+        conditio = silex_condere(piscina, AREA "/specimen",
+            "reversio");
+        CREDO_VERUM(conditio.successus);
+        status = silex_status(piscina, AREA "/specimen");
+        CREDO_AEQUALIS_I32((i32)xar_numerus(status.res), (i32)0);
+
+        imprimere("\n--- Probans alienam (numquam tangitur) ---\n");
+
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/specimen/vagus.txt", "vagus\n"));
+        p = silex_proicere(piscina, AREA "/specimen", (s64)0,
+            FALSUM);
+        CREDO_VERUM(p.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(p.res), (i32)1);
+        {
+            SilexProiciendaRes* r = (SilexProiciendaRes*)
+                xar_obtinere(p.res, 0);
+
+            CREDO_VERUM(r->status == SILEX_PROICIENDA_ALIENA);
+        }
+        p = silex_proicere(piscina, AREA "/specimen", (s64)0,
+            VERUM);
+        CREDO_VERUM(p.successus);   /* alienae non obstant */
+        CREDO_AEQUALIS_I32((i32)p.scriptae, (i32)0);
+        CREDO_VERUM(filum_existit(AREA "/specimen/vagus.txt"));
+        CREDO_VERUM(filum_delere(AREA "/specimen/vagus.txt"));
+    }
+
+    /* ========================================================
      * PROBARE: identitas voluminis (decisum red-team IX):
      * solitarium vincit, plura recusantur
      * ======================================================== */

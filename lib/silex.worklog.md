@@ -111,3 +111,44 @@ was demanded even when cwd WAS the fabrica.
   repo root scaffolded probe_ascensus into scratch; its
   aedificare.sh + probare.sh green. From outside the tree: loud
   refusal, correct.
+
+## 2026-08-04 — proicere: the volumen writes the tree (VCS II)
+
+Fourth VCS verb, the inverse of condere. Doctrine held all the way
+down:
+
+- **No HEAD to detach.** `proicere -ad N` folds acta up to seq N
+  (volumen_plicam_ad — lives in VOLUMEN, it's the same replay G8
+  replication wants) and writes that tree. The log never moves; the
+  tree becomes old; status shows honest MUTATA; the next condere
+  makes the past the present as a NEW point. Revert = new commit.
+  The full loop is pinned in probatio AND was run by hand on
+  probe_ascensus (historia reads: ortus → excusum → experimentum
+  vandalicum → reversio ad puritatem).
+- **Plan-default covenant**: bare proicere never writes; -scribere
+  applies. Classes: SCRIBENDA (differs, content recorded → safe),
+  CREANDA (missing from disk), INTACTA (count only, mtime never
+  touched), OBEX, ALIENA (on disk, not in fold — named in the plan,
+  never written, NEVER deleted; deletion stays manual v1).
+- **OBEX = the content-addressed store paying rent**: before
+  overwriting, sigillum the disk content and look it up in massae.
+  Not found anywhere in history → unrecorded → -scribere refuses
+  loudly ("conde prima"). One hash lookup makes "nothing unrecorded
+  is ever destroyed" an absolute invariant, no force flag in v1.
+  (Lookup is massam_promere for existence — reads the blob just to
+  check; a volumen_massam_habet would be cheaper, on-pull.)
+- **argumenta grew under this verb**: registering "-scribere" as a
+  brevis exposed that _parsere_breve TRUNCATED every single-dash
+  token to "-X" ("-scribere" matched "-s" — silent-false-match
+  family). Fixed to exact whole-token matching; multi-char
+  single-dash names (the house style) now work; unknown-option
+  errors name the real token. All four other argumenta consumers
+  use 2-char shorts / double-dash longs — truncation could only
+  ever produce false matches, so no legitimate usage broke. Pinned
+  in probatio_argumenta ("-scribere" ≠ "-s" asserted).
+- Projection loop generalized from silex_novum's birth path (mkdir
+  parents, massam_promere by the FOLD's sigillum — plagulam_promere
+  only answers for the current manifest).
+
+Next: renovare (three-sigillum comparison — missum-tunc /
+proiectum-nunc / missum-novum) on top of proicere's machinery.

@@ -1,5 +1,6 @@
 /* silex.c (instrumentum) - lapis ignarius: proiecta e fabrica
- * excudere. Verba v0: novum, ui (sine argumentis = ui).
+ * excudere. Verba: novum, ui (sine argumentis = ui), status,
+ * condere, historia, proicere [-ad seq] [-scribere].
  *
  * Usus:
  *   silex                       # fenestra vitrea (ui)
@@ -217,8 +218,8 @@ principale (integer argc, character** argv)
     argumenta_ponere_descriptionem(parser,
         "silex - proiecta nova e fabrica rhubarb excudere");
     argumenta_addere_positionalem(parser, "verbum",
-        "verbum (novum | ui | status | condere | historia;"
-        " sine argumentis = ui)", FALSUM);
+        "verbum (novum | ui | status | condere | historia |"
+        " proicere; sine argumentis = ui)", FALSUM);
     argumenta_addere_positionalem(parser, "titulus",
         "nomen proiecti (pro novo)", FALSUM);
     argumenta_addere_optionem(parser, "-f", "--fabrica",
@@ -228,8 +229,14 @@ principale (integer argc, character** argv)
         "directorium parens proiecti (ordinarie '.')");
     argumenta_addere_optionem(parser, "-n", "--nuntius",
         "nuntius conditionis (pro condere)");
+    argumenta_addere_optionem(parser, "-ad", "--ad",
+        "proicere: plica usque ad seq (iter temporis)");
+    argumenta_addere_vexillum(parser, "-scribere", "--scribere",
+        "proicere: consilium applicare (ordinarie consilium solum)");
     argumenta_addere_exemplum(parser,
         "silex novum 001 -f ~/Documents/projects/rhubarb");
+    argumenta_addere_exemplum(parser,
+        "silex proicere -ad 12 -scribere");
 
     lecta = argumenta_conari_parsere(parser, (i32)argc,
         (constans character* constans*)argv);
@@ -274,7 +281,8 @@ principale (integer argc, character** argv)
     /* verba VCS: via = positionale secundum (ordinarie ".") */
     si (chorda_aequalis_literis(verbum, "status")
         || chorda_aequalis_literis(verbum, "condere")
-        || chorda_aequalis_literis(verbum, "historia"))
+        || chorda_aequalis_literis(verbum, "historia")
+        || chorda_aequalis_literis(verbum, "proicere"))
     {
         constans character* via_proiecti = titulus.mensura > ZEPHYRUM
             ? chorda_ut_cstr(titulus, piscina) : ".";
@@ -312,6 +320,93 @@ principale (integer argc, character** argv)
                     (integer)r->via.mensura,
                     (constans character*)r->via.datum);
             }
+            redde ZEPHYRUM;
+        }
+        si (chorda_aequalis_literis(verbum, "proicere"))
+        {
+            chorda ad_opt = argumenta_obtinere_optionem(lecta,
+                "--ad", piscina);
+            b32    applicare = argumenta_habet_vexillum(lecta,
+                "--scribere");
+            s64    ad_seq = 0;
+            SilexProiectioFructus p;
+            i32    index;
+
+            si (ad_opt.mensura > ZEPHYRUM)
+            {
+                longus lectus = 0;
+
+                si (sscanf(chorda_ut_cstr(ad_opt, piscina), "%ld",
+                        &lectus) != 1 || lectus <= 0)
+                {
+                    fprintf(stderr, "silex proicere: -ad seq"
+                        " numerum positivum poscit\n");
+                    redde I;
+                }
+                ad_seq = (s64)lectus;
+            }
+            p = silex_proicere(piscina, via_proiecti, ad_seq,
+                applicare);
+            si (p.res == NIHIL)
+            {
+                fprintf(stderr, "silex proicere: %s\n", p.erratum);
+                redde I;
+            }
+            si (xar_numerus(p.res) == 0)
+            {
+                imprimere("silex proicere: nihil proiciendum -"
+                    " arbor iam plica est (%d intactae)\n",
+                    (integer)p.intactae);
+                redde ZEPHYRUM;
+            }
+            si (ad_seq > 0)
+            {
+                imprimere("silex proicere (ad seq %ld):\n",
+                    (longus)ad_seq);
+            }
+            alioquin
+            {
+                imprimere("silex proicere (plica praesens):\n");
+            }
+            per (index = 0; index < xar_numerus(p.res);
+                index = index + 1)
+            {
+                SilexProiciendaRes* r = (SilexProiciendaRes*)
+                    xar_obtinere(p.res, index);
+                constans character* signum =
+                    r->status == SILEX_PROICIENDA_SCRIBENDA
+                        ? "SCRIBENDA"
+                    : r->status == SILEX_PROICIENDA_CREANDA
+                        ? "CREANDA  "
+                    : r->status == SILEX_PROICIENDA_OBEX
+                        ? "OBEX     "
+                    : "ALIENA   ";
+                constans character* nota =
+                    r->status == SILEX_PROICIENDA_OBEX
+                        ? "  (contentum inconditum - conde prima)"
+                    : r->status == SILEX_PROICIENDA_ALIENA
+                        ? "  (numquam tangitur)"
+                    : "";
+
+                imprimere("  %s  %.*s%s\n", signum,
+                    (integer)r->via.mensura,
+                    (constans character*)r->via.datum, nota);
+            }
+            imprimere("  (%d intactae)\n", (integer)p.intactae);
+            si (!applicare)
+            {
+                imprimere("consilium solum - adde -scribere ut"
+                    " applicetur\n");
+                redde ZEPHYRUM;
+            }
+            si (!p.successus)
+            {
+                fprintf(stderr, "silex proicere: %s\n", p.erratum);
+                redde I;
+            }
+            imprimere("silex proicere: %d scriptae (%d"
+                " intactae)\n", (integer)p.scriptae,
+                (integer)p.intactae);
             redde ZEPHYRUM;
         }
         si (chorda_aequalis_literis(verbum, "condere"))
@@ -369,7 +464,8 @@ principale (integer argc, character** argv)
     si (!chorda_aequalis_literis(verbum, "novum"))
     {
         fprintf(stderr, "silex: verbum ignotum: %.*s"
-            " (verba: novum, ui, status, condere, historia)\n",
+            " (verba: novum, ui, status, condere, historia,"
+            " proicere)\n",
             (integer)verbum.mensura,
             (constans character*)verbum.datum);
         redde I;

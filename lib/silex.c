@@ -1266,3 +1266,273 @@ silex_historia (Piscina* piscina, constans character* proiectum_dir)
     }
     redde ordo;
 }
+
+/* ==================================================
+ * Proiectio: volumen arborem scribit (vide silex.h pro foedere)
+ * ================================================== */
+
+nomen structura {
+    Piscina*        piscina;
+    Volumen*        vol;
+    TabulaDispersa* plica;   /* via -> VolumenPlagula* */
+    TabulaDispersa* visae;
+    Xar*            res;     /* SilexProiciendaRes */
+    i32             intactae;
+    i32             obices;
+    i32             radix_mensura;
+} ProiectioContextus;
+
+interior s32
+_proiectio_ambulator (chorda via_plena,
+    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+
+interior s32
+_proiectio_ambulator (chorda via_plena,
+    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+{
+    ProiectioContextus* ctx = (ProiectioContextus*)contextus;
+    chorda    via_rel;
+    chorda    contentum;
+    Sigillum  sig;
+    character hex[SIGILLUM_HEX_MENSURA];
+    vacuum*   plica_v = NIHIL;
+
+    si (introitus->genus != INTROITUS_FILUM)
+    {
+        redde 0;
+    }
+    si (via_plena.mensura <= ctx->radix_mensura)
+    {
+        redde 0;
+    }
+    via_rel = chorda_ex_buffer(via_plena.datum + ctx->radix_mensura,
+        via_plena.mensura - ctx->radix_mensura);
+    si (_praetermittenda(via_rel))
+    {
+        redde 0;
+    }
+
+    si (!tabula_dispersa_invenire(ctx->plica, via_rel, &plica_v))
+    {
+        /* disco, plicae ignota: numquam tangitur, sed nominatur */
+        SilexProiciendaRes* r = (SilexProiciendaRes*)xar_addere(
+            ctx->res);
+
+        si (r != NIHIL)
+        {
+            r->via = via_rel;
+            r->status = SILEX_PROICIENDA_ALIENA;
+        }
+        redde 0;
+    }
+    tabula_dispersa_inserere(ctx->visae, via_rel, (vacuum*)ctx);
+
+    contentum = filum_legere_totum(
+        chorda_ut_cstr(via_plena, ctx->piscina), ctx->piscina);
+    sig = sigillum_computare((constans vacuum*)contentum.datum,
+        (memoriae_index)contentum.mensura);
+    sigillum_hex(&sig, hex);
+    {
+        VolumenPlagula* p = (VolumenPlagula*)plica_v;
+
+        si (p->sigillum_hex.mensura == 64
+            && memcmp(p->sigillum_hex.datum, hex, 64) == 0)
+        {
+            ctx->intactae = ctx->intactae + 1;
+        }
+        alioquin
+        {
+            /* FOEDUS: superscriptio solum si contentum disci in
+             * massis alicubi residet (recuperabile per definitionem
+             * - unus aspectus sigilli, pretium tabulae contentu
+             * addressatae) */
+            b32 conditum = FALSUM;
+            SilexProiciendaRes* r;
+
+            (vacuum)volumen_massam_promere(ctx->vol,
+                chorda_ex_literis(hex, ctx->piscina), ctx->piscina,
+                &conditum);
+            r = (SilexProiciendaRes*)xar_addere(ctx->res);
+            si (r != NIHIL)
+            {
+                r->via = via_rel;
+                r->status = conditum ? SILEX_PROICIENDA_SCRIBENDA
+                    : SILEX_PROICIENDA_OBEX;
+            }
+            si (!conditum)
+            {
+                ctx->obices = ctx->obices + 1;
+            }
+        }
+    }
+    redde 0;
+}
+
+SilexProiectioFructus
+silex_proicere (Piscina* piscina, constans character* proiectum_dir,
+    s64 ad_seq, b32 scribere)
+{
+    SilexProiectioFructus fructus;
+    constans character*   volumen_via;
+    Volumen*              vol;
+    Xar*                  plica_ordo;
+    ProiectioContextus    ctx;
+    DirectoriumFiltrum    filtrum;
+    chorda                radix_absoluta;
+    i32                   index;
+
+    fructus.successus = FALSUM;
+    fructus.res = NIHIL;
+    fructus.intactae = 0;
+    fructus.obices = 0;
+    fructus.scriptae = 0;
+    fructus.erratum = NIHIL;
+
+    volumen_via = _volumen_viam_invenire(piscina, proiectum_dir);
+    si (volumen_via == NIHIL)
+    {
+        fructus.erratum = "volumen deest - estne proiectum silicis?";
+        redde fructus;
+    }
+    vol = volumen_aperire(piscina, volumen_via);
+    si (vol == NIHIL)
+    {
+        fructus.erratum = "volumen aperiri non potuit";
+        redde fructus;
+    }
+    plica_ordo = volumen_plicam_ad(vol, ad_seq, piscina);
+    si (plica_ordo == NIHIL)
+    {
+        volumen_claudere(vol);
+        fructus.erratum = "plica legi non potuit";
+        redde fructus;
+    }
+
+    ctx.piscina = piscina;
+    ctx.vol = vol;
+    ctx.plica = tabula_dispersa_creare_chorda(piscina, 128);
+    ctx.visae = tabula_dispersa_creare_chorda(piscina, 128);
+    ctx.res = xar_creare(piscina,
+        (i32)magnitudo(SilexProiciendaRes));
+    ctx.intactae = 0;
+    ctx.obices = 0;
+    si (ctx.plica == NIHIL || ctx.visae == NIHIL
+        || ctx.res == NIHIL)
+    {
+        volumen_claudere(vol);
+        fructus.erratum = "memoria defecit";
+        redde fructus;
+    }
+    /* monstratores in xar stabiles - plica_ordo non iam crescit */
+    per (index = 0; index < xar_numerus(plica_ordo);
+        index = index + 1)
+    {
+        VolumenPlagula* p = (VolumenPlagula*)xar_obtinere(
+            plica_ordo, index);
+
+        tabula_dispersa_inserere(ctx.plica, p->via, (vacuum*)p);
+    }
+
+    radix_absoluta = via_absoluta(
+        chorda_ex_literis(proiectum_dir, piscina), piscina);
+    ctx.radix_mensura = radix_absoluta.mensura + 1;   /* + '/' */
+
+    filtrum = directorium_filtrum_omnia();
+    filtrum.includere_occultos = FALSUM;
+    directorium_ambulare(
+        chorda_ut_cstr(radix_absoluta, piscina), &filtrum,
+        _proiectio_ambulator, &ctx, piscina);
+
+    /* in plica, disco absentes -> creandae */
+    per (index = 0; index < xar_numerus(plica_ordo);
+        index = index + 1)
+    {
+        VolumenPlagula* p = (VolumenPlagula*)xar_obtinere(
+            plica_ordo, index);
+
+        si (!tabula_dispersa_continet(ctx.visae, p->via))
+        {
+            SilexProiciendaRes* r = (SilexProiciendaRes*)xar_addere(
+                ctx.res);
+
+            si (r != NIHIL)
+            {
+                r->via = p->via;
+                r->status = SILEX_PROICIENDA_CREANDA;
+            }
+        }
+    }
+
+    fructus.res = ctx.res;
+    fructus.intactae = ctx.intactae;
+    fructus.obices = ctx.obices;
+
+    si (!scribere)
+    {
+        volumen_claudere(vol);
+        fructus.successus = VERUM;
+        redde fructus;
+    }
+
+    /* applicatio: obices recusant (nihil inconditum deletur) */
+    si (ctx.obices > 0)
+    {
+        volumen_claudere(vol);
+        fructus.erratum = "contentum inconditum obstat - conde"
+            " prima";
+        redde fructus;
+    }
+    per (index = 0; index < xar_numerus(ctx.res);
+        index = index + 1)
+    {
+        SilexProiciendaRes* r = (SilexProiciendaRes*)xar_obtinere(
+            ctx.res, index);
+        vacuum*             plica_v = NIHIL;
+        VolumenPlagula*     p;
+        b32                 inventum = FALSUM;
+        chorda              contentum;
+        constans character* via_plena;
+        chorda              parens;
+
+        si (r->status != SILEX_PROICIENDA_SCRIBENDA
+            && r->status != SILEX_PROICIENDA_CREANDA)
+        {
+            perge;
+        }
+        (vacuum)tabula_dispersa_invenire(ctx.plica, r->via,
+            &plica_v);
+        p = (VolumenPlagula*)plica_v;
+        si (p == NIHIL)
+        {
+            volumen_claudere(vol);
+            fructus.erratum = "plica claudicat (via sine plagula)";
+            redde fructus;
+        }
+        contentum = volumen_massam_promere(vol, p->sigillum_hex,
+            piscina, &inventum);
+        si (!inventum)
+        {
+            volumen_claudere(vol);
+            fructus.erratum = "plagula in plica sine massa";
+            redde fructus;
+        }
+        via_plena = _texere(piscina,
+            chorda_ut_cstr(radix_absoluta, piscina), "/",
+            chorda_ut_cstr(r->via, piscina));
+        parens = via_directorium(
+            chorda_ex_literis(via_plena, piscina), piscina);
+        filum_directorium_creare_si_necesse(
+            chorda_ut_cstr(parens, piscina));
+        si (!filum_scribere(via_plena, contentum))
+        {
+            volumen_claudere(vol);
+            fructus.erratum = _texere(piscina,
+                "proiectio fracta: ", via_plena, NIHIL);
+            redde fructus;
+        }
+        fructus.scriptae = fructus.scriptae + 1;
+    }
+    volumen_claudere(vol);
+    fructus.successus = VERUM;
+    redde fructus;
+}

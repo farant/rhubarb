@@ -136,4 +136,49 @@ silex_historia (
     Piscina*            piscina,
     constans character* proiectum_dir);
 
+/* ==================================================
+ * Proiectio: volumen arborem scribit (condere inversum)
+ *
+ * Consilium ordinarium (numquam scribit); scribere = applicatio.
+ * ad_seq <= 0 = plica praesens (proicere = restitutio); ad_seq N =
+ * arbor ut erat ad punctum N caudae (iter temporis SINE capite -
+ * cauda tota manet, arbor vetus fit, conditio sequens praeteritum
+ * praesens facit ut punctum NOVUM).
+ *
+ * FOEDUS: nihil inconditum umquam deletur. Contentum disci quod in
+ * massis nusquam residet = OBEX - scriptio recusatur ("conde
+ * prima"). Alienae (disco, plicae ignotae) numquam tanguntur nec
+ * delentur - sed nominantur (consilium honestum).
+ * ================================================== */
+
+nomen enumeratio {
+    SILEX_PROICIENDA_SCRIBENDA = 0,  /* disco, contentum aliud
+                                      * (conditum alicubi - tutum) */
+    SILEX_PROICIENDA_CREANDA,        /* in plica, disco absens */
+    SILEX_PROICIENDA_OBEX,           /* contentum disci INCONDITUM */
+    SILEX_PROICIENDA_ALIENA          /* disco, plicae ignota */
+} SilexProiciendaStatus;
+
+nomen structura {
+    chorda                via;
+    SilexProiciendaStatus status;
+} SilexProiciendaRes;
+
+nomen structura {
+    b32                 successus;
+    Xar*                res;        /* SilexProiciendaRes;
+                                     * intactae tacent (numerus) */
+    i32                 intactae;
+    i32                 obices;
+    i32                 scriptae;   /* si scribere */
+    constans character* erratum;
+} SilexProiectioFructus;
+
+SilexProiectioFructus
+silex_proicere (
+    Piscina*            piscina,
+    constans character* proiectum_dir,
+    s64                 ad_seq,
+    b32                 scribere);
+
 #endif /* SILEX_H */
