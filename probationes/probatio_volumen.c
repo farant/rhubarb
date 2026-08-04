@@ -57,6 +57,34 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: aperire_aut_creare (ambulatio red-team 2026-08-04)
+     * ======================================================== */
+
+    {
+        Volumen* vol;
+
+        imprimere("\n--- Probans aperire_aut_creare ---\n");
+
+        /* exsistens: aperit (actum ortus iam ibi, non iteratum) */
+        vol = volumen_aperire_aut_creare(piscina, VIA_PROBATIONIS);
+        CREDO_NON_NIHIL(vol);
+        CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), (s64)1);
+        volumen_claudere(vol);
+
+        /* absens: creat */
+        si (filum_existit("build/probatio_volumen_aut.db"))
+        {
+            filum_delere("build/probatio_volumen_aut.db");
+        }
+        vol = volumen_aperire_aut_creare(piscina,
+            "build/probatio_volumen_aut.db");
+        CREDO_NON_NIHIL(vol);
+        CREDO_AEQUALIS_S64(volumen_summa_actorum(vol), (s64)1);
+        volumen_claudere(vol);
+        filum_delere("build/probatio_volumen_aut.db");
+    }
+
+    /* ========================================================
      * PROBARE: actum_appendere - seq crescens
      * ======================================================== */
 

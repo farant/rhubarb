@@ -106,6 +106,17 @@ volumen_aperire (Piscina* piscina, constans character* via)
     redde _volumen_struere(piscina, via);
 }
 
+Volumen*
+volumen_aperire_aut_creare (Piscina* piscina,
+    constans character* via)
+{
+    si (filum_existit(via))
+    {
+        redde _volumen_struere(piscina, via);
+    }
+    redde volumen_creare(piscina, via);
+}
+
 vacuum
 volumen_claudere (Volumen* volumen)
 {

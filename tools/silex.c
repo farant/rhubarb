@@ -216,7 +216,8 @@ principale (integer argc, character** argv)
     argumenta_ponere_descriptionem(parser,
         "silex - proiecta nova e fabrica rhubarb excudere");
     argumenta_addere_positionalem(parser, "verbum",
-        "verbum (novum | ui; sine argumentis = ui)", FALSUM);
+        "verbum (novum | ui | status | condere | historia;"
+        " sine argumentis = ui)", FALSUM);
     argumenta_addere_positionalem(parser, "titulus",
         "nomen proiecti (pro novo)", FALSUM);
     argumenta_addere_optionem(parser, "-f", "--fabrica",

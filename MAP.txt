@@ -69,6 +69,12 @@ rhubarb/
 │   capitula (ToC parser), numerus_romanus, paginatio (page
 │   designators - books/reading arc in the forum app);
 │   silva/instrumenta/silva_iudicium (shared examen judgment recipe).
+│   SILEX ARC (2026-08-04): volumen (document = one sqlite file:
+│   acta/massae/plagulae, G2 seed), silex (bin/silex - project
+│   scaffolder + VCS: novum/ui/status/condere/historia; build via
+│   ./tools/silex_struere.sh), mensa (+ mensa_assets/ - thinkboard
+│   frontend battery), tools/glomerare.sh (JS concat bundler).
+│   Tutorial: project-specs/compages-rationes-tutorial.md.
 └── .claude/         claude code config (+ MEMORY.md auto-memory)
 
 

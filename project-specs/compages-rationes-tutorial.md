@@ -29,6 +29,10 @@ SIGILLATUM).
 ## 0. What you need
 
 - the rhubarb checkout, `./compile_tests.sh` green
+- **the silex binary**: build it with `./tools/silex_struere.sh`, invoke
+  as `./bin/silex` (or put the checkout's `bin/` on your PATH / alias it)
+- **tell silex where the libraries live**: `export SILEX_FABRICA=/path/to/rhubarb`
+  once, or pass `-f /path/to/rhubarb` per command
 - for chapters 8+: a VPS you can ssh into, nginx + letsencrypt already
   configured, a domain pointed at it
 
@@ -39,20 +43,25 @@ What you do NOT need: any dependency. Everything below is house C89.
 ## 1. Scaffold
 
 ```
-$ silex novum rationes --vitrea
+$ silex novum rationes -f ~/Documents/projects/rhubarb
   rationes/
     rationes.volumen       THE DOCUMENT+REPO (truth; see ch. 2)
     include/  lib/         vendored library closure — yours forever
     fontes/rationes.c      principale — you own main()
-    assets/index.html      the vitrea page
-    aedificare.sh          build script
+    aedificare.sh          build; probare.sh runs the tests
 $ cd rationes && ./aedificare.sh && ./bin/rationes
+salve, munde - hic rationes
+$ ./probare.sh
+... OMNIA PRAETERIERUNT
 ```
 
-A window opens with a hello page. You own `main()` — compages never calls
-you; you call it. Every scaffolded and vendored file is recorded in the
-volumen BEFORE being projected to disk, so the project is version-controlled
-and fully backed up (cp one file) from its first breath.
+A console hello, compiled under the full house flag set, with a passing
+credo probatio — that is today's chapter-1 outcome (the vitrea window
+belongs to the `--vitrea` flavor, still unbuilt; see STATUS). You own
+`main()` — compages never calls you; you call it. Every scaffolded and
+vendored file is recorded in the volumen BEFORE being projected to disk,
+so the project is version-controlled and fully backed up (cp one file)
+from its first breath.
 
 > **STATUS** *(revised)*
 > - `silex novum` (console flavor): **EXSTAT** — vendors the closure from
@@ -73,21 +82,42 @@ cp. This is the scrinium discipline (WAL, single writer, append-only
 migrations) wrapped in a document lifecycle:
 
 ```c
-Volumen* vol = volumen_aperire(piscina, "~/Documenta/domus.rationes");
-/* creates the file if absent: migrations run, event log initialized */
+Volumen* vol = volumen_aperire_aut_creare(piscina,
+    "/Users/tu/Documenta/domus.volumen");
+/* creates the file if absent: migrations run, event log initialized.
+ * volumen_aperire and volumen_creare are the strict halves (open-only,
+ * create-only, each refusing the other's case loudly). No tilde
+ * expansion anywhere - absolute paths. */
 ```
 
+Naming rule that matters: **silex binds a project's identity to its
+enclosing directory** — it looks for `<dirname>/<dirname>.volumen`. Keep
+the file named after its folder or the verbs won't find it. (Under
+review; see gap notes.)
+
 Inside every volumen, truth is the **acta** table — an append-only event
-log, exactly the gesta shape but per-file instead of per-repo. Entities are
-a rebuildable projection of the acta. `volumen_reficere()` drops projections
-and replays the log; corruption of a projection is never data loss.
+log, exactly the gesta shape but per-file instead of per-repo. Entities
+are a rebuildable projection of the acta; corruption of a projection is
+never data loss, because any projection can be re-derived by folding the
+log (the VCS manifest and mensa's board state both already work this
+way). A one-call `volumen_reficere()` verb for that replay is DEEST —
+today the guarantee is architectural, not a button.
 
 And because the acta are ordered history, the volumen doubles as the
 project's **version control**: `silex status` (sigilla vs manifest →
 MUTATA/NOVA/ABSENS), `silex condere -n "..."` (atomic absorption + a named
-point in the log), `silex historia`. A commit is not an object — it is a
-point in the acta; any historical tree is a fold. The document and the
-repository turned out to be the same thing.
+point in the log; a clean tree refuses with exit 1 — scripts take note),
+`silex historia`. A commit is not an object — it is a point in the acta;
+any historical tree is a fold. The document and the repository turned out
+to be the same thing.
+
+Fine print a walker will hit: status silently skips `bin/`, `build/`,
+`*.volumen*`, and all dotfiles (hardcoded — no `.silexignore` yet, so a
+stray `.o` at project root WILL be absorbed); and while `cp` of the
+volumen is a complete backup (byte-verified — massae hold everything,
+including deleted files' content), getting files back OUT is manual
+sqlite3 until `proicere` ships. Backup is a verb; restore is still a
+craft.
 
 > **STATUS** *(revised)*
 > - `volumen.h`: **EXSTAT** — acta (SQL-side timestamps) + massae

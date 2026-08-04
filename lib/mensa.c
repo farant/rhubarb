@@ -358,14 +358,8 @@ mensa_praebere (Internuntius* internuntius, Piscina* piscina,
         filum_directorium_creare_si_necesse(
             chorda_ut_cstr(parens, piscina));
     }
-    si (filum_existit(via_voluminis))
-    {
-        ctx->volumen = volumen_aperire(piscina, via_voluminis);
-    }
-    alioquin
-    {
-        ctx->volumen = volumen_creare(piscina, via_voluminis);
-    }
+    ctx->volumen = volumen_aperire_aut_creare(piscina,
+        via_voluminis);
     si (ctx->volumen == NIHIL)
     {
         fprintf(stderr, "mensa: volumen aperiri non potuit: %s\n",

@@ -57,6 +57,15 @@ volumen_aperire (
     Piscina*            piscina,
     constans character* via);
 
+/* aperire si exsistit, alioquin creare - pro apps quae volumen
+ * status "semper habere" volunt (mensa, ambulatio prima).
+ * (Natum ex ambulatione red-team 2026-08-04: tutorial hoc
+ * pollicitum erat quod nulla functio praestabat.) */
+Volumen*
+volumen_aperire_aut_creare (
+    Piscina*            piscina,
+    constans character* via);
+
 vacuum
 volumen_claudere (
     Volumen* volumen);
