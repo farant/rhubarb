@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/opus_scriptum.stml
+  Exemplar semanticum: OPUS SCRIPTUM (versio 0, PLASTICUM)
+  PRIMUM EXEMPLAR ALIENUM - extra paroeciam computatralem consulto
+  (probatio formae: mechanismi omnes hactenus a programmate coacti;
+  forma quae solum domum suam descripsit occulte ei aptata esse
+  potest).
+
+  FRUCTUS PROBATIONIS, statim: FORMA NOSTRA VERSIONIS NIMIS SIMPLEX
+  ERAT. Scientia bibliothecaria saeculum in hac re consumpsit et ad
+  quattuor gradus pervenit (FRBR: Work / Expression / Manifestation
+  / Item) ubi nos unum habebamus (versio). Non defectus noster sed
+  DONUM domini alieni: identitas librorum vere quattuor gradus eget,
+  et distinctio inter eos sensum PORTAT (vide Moby-Dick infra:
+  editio Londinensis epilogum omisit, unde Ishmael superstes esse
+  non poterat - manifestatio sensum mutavit).
+
+  REGULA RESIDENTIAE PROBATA: sectio FRBR exacte ubi regula nostra
+  secat - opus/expressio/editio in bibliotheca (describabilia sine
+  tempore), CODEX (exemplar tuum in pluteo) in voluminibus tuis.
+  Regula aliena non flexit; congruit.
+
+  LEX LABENS casum QUARTUM nancta, et in dominio alieno: numerus
+  paginarum EDITIONI pertinet, non operi (idem opus, editiones
+  variae, paginae variae) - lex igitur non programmatis propria
+  sed rerum.
+-->
+<natura modulus="opus_scriptum" versio="0" lingua="latina">
+
+<genus nomen="opus_scriptum">
+
+  <definitio>
+    Creatio intellectualis verbis constans, ab expressionibus suis
+    distincta: "Moby-Dick" opus unum est sive Anglice sive Latine
+    legatur, sive charta sive vitro. Res quam auctor CONCEPIT.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="titulus_originalis" genus="textus"/>
+    <proprietas nomen="lingua_originalis" genus="textus"/>
+    <proprietas nomen="materia" genus="textus" multiplex="verum"
+      nota="de quo agit - subiectum, non genus litterarium"/>
+  </proprietates>
+
+  <machina_statuum nomen="compositio" gerens="individuum">
+    <status nomen="concepta"/>
+    <status nomen="in_scriptione"/>
+    <status nomen="perfecta"/>
+    <status nomen="imperfecta_relicta"
+      nota="auctor mortuus aut deseruit - status VERUS multorum
+            operum magnorum (Summa testis); schema quod eum non
+            habet mentitur"/>
+    <transitus a="concepta" ad="in_scriptione" per="inceptio"/>
+    <transitus a="in_scriptione" ad="perfecta" per="perfectio"/>
+    <transitus a="in_scriptione" ad="imperfecta_relicta"
+      per="mors_auctoris"/>
+    <transitus a="in_scriptione" ad="imperfecta_relicta"
+      per="desertio"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="componi"/>
+    <actio nomen="exprimi" nota="expressio nova - textus, versio
+      translata"/>
+    <actio nomen="edi" nota="editio nova"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="auctor" ad="persona" modulus="persona"
+      multiplex="verum"/>
+    <relatio nomen="habet_expressionem" ad="expressio"/>
+    <relatio nomen="continuatio_de" ad="opus_scriptum"
+      nota="series: opus quod aliud sequitur"/>
+    <relatio nomen="respondet_ad" ad="opus_scriptum"
+      nota="opus contra aliud scriptum - genus disputationis
+            scholasticae, relatio vera inter opera"/>
+    <relatio nomen="pars_de" ad="opus_scriptum"
+      nota="opus intra opus maius (pars Summae) - compositio
+            operum"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       NB: opera INDIVIDUA sunt, non species - "Moby-Dick"
+       genus rerum non est; unum opus est. Distinctio nostra
+       species/individuum hic omnem sarcinam portat. -->
+
+  <individuum nomen="moby_dick">
+    <valor nomen="titulus_originalis">Moby-Dick; or, The
+      Whale</valor>
+    <valor nomen="lingua_originalis">anglica</valor>
+    <valor nomen="materia">cetorum venatio</valor>
+    <valor nomen="materia">obsessio</valor>
+    <valor nomen="compositio">perfecta</valor>
+    <relatum nomen="auctor" ad="herman_melville" modulus="persona"/>
+    <historia>
+      <eventum quando="1851" actio="edi">editiones DUAE
+        divergentes eodem anno</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="summa_theologiae">
+    <valor nomen="titulus_originalis">Summa Theologiae</valor>
+    <valor nomen="lingua_originalis">latina</valor>
+    <valor nomen="materia">theologia</valor>
+    <valor nomen="compositio">imperfecta_relicta</valor>
+    <relatum nomen="auctor" ad="thomas_aquinas" modulus="persona"/>
+    <historia>
+      <eventum quando="1265" actio="componi">inceptum</eventum>
+      <eventum quando="1273-12-06" actio="desertio">
+        scribere desiit ("omnia quae scripsi videntur mihi
+        palea")</eventum>
+    </historia>
+    <nota>
+      Supplementum a discipulis ex operibus prioribus compositum -
+      pars quae auctoris non est. Relatio "completum_ab" fortasse
+      opus est; DUBIUM notatum, nondum solutum.
+    </nota>
+  </individuum>
+
+  <individuum nomen="abusus_linguae">
+    <valor nomen="titulus_originalis">Missbrauch der Sprache,
+      Missbrauch der Macht</valor>
+    <valor nomen="lingua_originalis">germanica</valor>
+    <valor nomen="materia">lingua</valor>
+    <valor nomen="materia">potestas</valor>
+    <valor nomen="materia">veritas</valor>
+    <valor nomen="compositio">perfecta</valor>
+    <relatum nomen="auctor" ad="josef_pieper" modulus="persona"/>
+    <nota>
+      Opus quod DISCIPLINAM huius ipsius bibliothecae dedit
+      (lingua ad realitatem aperiendam ordinata, non ad usum) -
+      bibliotheca librum citat qui eam docuit. Expressiones eius
+      duae infra: probatio translationis.
+    </nota>
+  </individuum>
+
+  <individuum nomen="systema_naturae">
+    <valor nomen="titulus_originalis">Systema Naturae</valor>
+    <valor nomen="lingua_originalis">latina</valor>
+    <valor nomen="materia">taxinomia</valor>
+    <valor nomen="compositio">perfecta</valor>
+    <relatum nomen="auctor" ad="carl_linnaeus" modulus="persona"/>
+    <nota>
+      Exemplar formae nostrae (taxinomia + dictionarium in uno).
+      Editiones eius NON aequales: editio decima (1758) principium
+      nomenclaturae zoologicae FORMALITER est - lex ipsa editionem
+      citat, non opus. Testis potissimus cur editio res propria
+      sit.
+    </nota>
+  </individuum>
+
+  <individuum nomen="species_plantarum">
+    <valor nomen="titulus_originalis">Species Plantarum</valor>
+    <valor nomen="lingua_originalis">latina</valor>
+    <valor nomen="materia">botanica</valor>
+    <relatum nomen="auctor" ad="carl_linnaeus" modulus="persona"/>
+    <nota>
+      Principium nomenclaturae botanicae (1753): nomina plantarum
+      hinc numerantur. Exemplar plantarum nostrum hoc opus CITAT -
+      nexus trans dominia aliena duo (bibliographia + botanica),
+      qualis in praxi vera est.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     EXPRESSIO (FRBR Expression) - realizatio operis
+     ================================================== -->
+
+<genus nomen="expressio">
+
+  <definitio>
+    Realizatio operis in signis certis: textus hic, non alius.
+    Translatio expressio NOVA est (verba alia, opus idem);
+    recensio critica item.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="lingua" genus="textus"/>
+    <proprietas nomen="genus_expressionis" genus="electio">
+      <optio>originalis</optio>
+      <optio>translata</optio>
+      <optio>recensita</optio>
+      <optio>abbreviata</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="expressio_de" ad="opus_scriptum"/>
+    <relatio nomen="translator" ad="persona" modulus="persona"
+      multiplex="verum"
+      nota="translator auctor expressionis est, non operis -
+            distinctio quam schema planum perdit"/>
+    <relatio nomen="translata_ex" ad="expressio"
+      nota="translationes ex translationibus fiunt (via
+            intermedia) - historia textuum vera"/>
+  </relationes>
+
+  <individuum nomen="abusus_linguae_germanice">
+    <valor nomen="lingua">germanica</valor>
+    <valor nomen="genus_expressionis">originalis</valor>
+    <relatum nomen="expressio_de" ad="abusus_linguae"/>
+  </individuum>
+
+  <individuum nomen="abusus_linguae_anglice">
+    <valor nomen="lingua">anglica</valor>
+    <valor nomen="genus_expressionis">translata</valor>
+    <relatum nomen="expressio_de" ad="abusus_linguae"/>
+    <relatum nomen="translata_ex" ad="abusus_linguae_germanice"/>
+    <nota>"Abuse of Language, Abuse of Power" - expressio quam
+      legimus; opus idem, verba aliena</nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     EDITIO (FRBR Manifestation) - corpus editum
+     HIC vivunt ISBN, paginae, typographia: MENDACIUM
+     VULGARE occisum - ISBN opus NON identificat sed
+     editionem (opus unum, ISBN multa)
+     ================================================== -->
+
+<genus nomen="editio">
+
+  <definitio>
+    Corpus editum expressionis: quod praelum vere protulit -
+    charta, forma, paginae, index ISBN. Quod in taberna emis.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="index_isbn" genus="textus"
+      nota="MENDACIUM VULGARE HIC OCCISUM: ISBN opus non
+            identificat sed EDITIONEM. Opus unum, ISBN multa.
+            Catalogi qui ISBN pro identitate libri habent
+            editiones pro operibus numerant"/>
+    <proprietas nomen="paginae" genus="numerus"
+      nota="LEX LABENS (casus IV, dominium alienum): paginae
+            editioni pertinent, non operi"/>
+    <proprietas nomen="forma_corporis" genus="electio">
+      <optio>codex_duro_tegmine</optio>
+      <optio>codex_molli_tegmine</optio>
+      <optio>volumen_membranaceum</optio>
+      <optio>electronica</optio>
+    </proprietas>
+    <proprietas nomen="publicata" genus="dies"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="editio_de" ad="expressio"/>
+    <relatio nomen="edita_a" ad="organizatio"
+      modulus="organizatio"
+      nota="domus editoria - sub-genus organizationis SURGIT
+            (nec pure societas: praela universitatum quaestui
+            non dedita)"/>
+    <relatio nomen="impressa_in" ad="planta" externum="verum"
+      nota="charta ex ligno fit - nexus ad exemplar plantarum
+            possibilis, nondum tractus; formae probatio non
+            nexuum omnium"/>
+  </relationes>
+
+  <individuum nomen="moby_dick_londinensis_1851">
+    <valor nomen="paginae">927</valor>
+    <valor nomen="publicata">1851-10-18</valor>
+    <valor nomen="forma_corporis">codex_duro_tegmine</valor>
+    <nota>
+      "The Whale" (titulus alius!) apud Bentley: EPILOGUM OMISIT -
+      unde Ishmael narrare non poterat cum omnes perissent, quod
+      recensores Britannici ut vitium notaverunt. TESTIS
+      POTISSIMUS cur editio res propria sit: manifestatio sensum
+      OPERIS mutavit. Schema quod editiones non distinguit hanc
+      historiam dicere NEQUIT.
+    </nota>
+  </individuum>
+
+  <individuum nomen="moby_dick_novi_eboraci_1851">
+    <valor nomen="publicata">1851-11-14</valor>
+    <valor nomen="forma_corporis">codex_duro_tegmine</valor>
+    <nota>apud Harper &amp; Brothers, cum epilogo, titulo
+      "Moby-Dick; or, The Whale"</nota>
+  </individuum>
+
+  <individuum nomen="systema_naturae_editio_decima">
+    <valor nomen="publicata">1758</valor>
+    <nota>
+      Editio quam lex nomenclaturae zoologicae ut principium
+      citat - res iuridica, non curiositas bibliographica.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     CODEX (FRBR Item) - exemplar singulare
+     Genus DECLARATUR, individua EXTRA bibliothecam vivunt
+     (pluteus tuus in volumine tuo) - sectio regulae
+     residentiae nostrae exacte hic cadit
+     ================================================== -->
+
+<genus nomen="codex">
+
+  <definitio>
+    Exemplar unum corporeum editionis: hoc quod manu tenes, cum
+    maculis, notis marginalibus, historia possessionis propria.
+    Individua eius in bibliotheca NOSTRA non vivunt - in
+    voluminibus possessorum, genus hoc citantia.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="conditio" genus="electio">
+      <optio>integer</optio>
+      <optio>usu_tritus</optio>
+      <optio>laesus</optio>
+    </proprietas>
+    <proprietas nomen="notae_marginales" genus="veritas"
+      nota="proprietas EXEMPLARIS solius - nullus alius gradus
+            eam ferre potest; testis quod gradus quartus verus
+            est"/>
+  </proprietates>
+
+  <machina_statuum nomen="possessio" gerens="individuum">
+    <status nomen="apud_dominum"/>
+    <status nomen="commodatus"/>
+    <status nomen="amissus"/>
+    <transitus a="apud_dominum" ad="commodatus" per="commodatio"/>
+    <transitus a="commodatus" ad="apud_dominum" per="reditus"/>
+    <transitus a="commodatus" ad="amissus" per="neglectus"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="exemplar_de" ad="editio"/>
+    <relatio nomen="possessor" ad="persona" modulus="persona"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     PERIODICUM - sub-genus operis: opus quod non finitur
+     ================================================== -->
+
+<genus nomen="periodicum" sub="opus_scriptum">
+
+  <differentia>
+    Opus quod PERFECTIONEM non petit: in fasciculis continuatur
+    dum curatores volunt - machina compositionis parentis ei fere
+    aliena est (numquam "perfectum", saepe "derelictum").
+    Cadentia, non finis.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="cadentia" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadalis</optio>
+      <optio>menstrua</optio>
+      <optio>trimestris</optio>
+      <optio>annua</optio>
+      <optio>irregularis</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="habet_fasciculum" ad="fasciculus"/>
+  </relationes>
+
+  <dubium>
+    Machina "compositio" generis parentis periodico male sedet:
+    status perfecta numquam attingitur. Estne differentia satis,
+    an machina propria opus est (vigens/intermissum/cessatum)?
+    Primum exemplum machinae HEREDITATAE quae subgenus non
+    decet - tensio nova, APERTA.
+  </dubium>
+
+</genus>
+
+<genus nomen="fasciculus">
+
+  <definitio>
+    Pars periodici tempore signata: numerus unus, die suo editus.
+    Versioni similis sed CADENTIA praevisa, non eventu natus -
+    fasciculus futurus exspectatur, versio futura non.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="numerus" genus="textus"
+      nota="volumen + numerus saepe (vol. 12, no. 3) - forma
+            citationis in dominio vera"/>
+    <proprietas nomen="publicatus" genus="dies"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="fasciculus_de" ad="periodicum"/>
+  </relationes>
+
+</genus>
+
+</natura>

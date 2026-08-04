@@ -12,7 +12,7 @@
   more dictionarii biographici); personae TUAE (contactus, socii)
   in voluminibus applicationum, genus hoc citantes.
 -->
-<natura modulus="persona" versio="2" lingua="latina">
+<natura modulus="persona" versio="3" lingua="latina">
 
 <genus nomen="persona">
 
@@ -57,6 +57,53 @@
       <eventum quando="1972" actio="creare">lingua C</eventum>
       <eventum quando="1978" actio="creare">liber "The C
         Programming Language" (cum Kernighan)</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="thomas_aquinas">
+    <valor nomen="nomina">Thomas de Aquino</valor>
+    <valor nomen="natus">1225</valor>
+    <valor nomen="mortuus">1274-03-07</valor>
+    <historia>
+      <eventum quando="1265" actio="creare">Summa Theologiae
+        (inceptum; imperfecta relicta)</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="carl_linnaeus">
+    <valor nomen="nomina">Carl Linnaeus</valor>
+    <valor nomen="nomina">Carolus Linnaeus</valor>
+    <valor nomen="natus">1707-05-23</valor>
+    <valor nomen="mortuus">1778-01-10</valor>
+    <historia>
+      <eventum quando="1735" actio="creare">Systema Naturae</eventum>
+      <eventum quando="1753" actio="creare">Species
+        Plantarum</eventum>
+    </historia>
+    <nota>
+      Pater formae huius bibliothecae: taxinomia + dictionarium in
+      uno artefacto, lingua latina, manu curata.
+    </nota>
+  </individuum>
+
+  <individuum nomen="josef_pieper">
+    <valor nomen="nomina">Josef Pieper</valor>
+    <valor nomen="natus">1904-05-04</valor>
+    <valor nomen="mortuus">1997-11-06</valor>
+    <historia>
+      <eventum quando="1974" actio="creare">Missbrauch der
+        Sprache, Missbrauch der Macht</eventum>
+    </historia>
+    <nota>Auctor disciplinae huius bibliothecae (lingua ad
+      realitatem, non ad usum)</nota>
+  </individuum>
+
+  <individuum nomen="herman_melville">
+    <valor nomen="nomina">Herman Melville</valor>
+    <valor nomen="natus">1819-08-01</valor>
+    <valor nomen="mortuus">1891-09-28</valor>
+    <historia>
+      <eventum quando="1851" actio="creare">Moby-Dick</eventum>
     </historia>
   </individuum>
 

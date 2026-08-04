@@ -229,3 +229,95 @@ plasticity starts trading against consumers).
     canonical joins societas; debian_project surfaces the
     COMMUNITAS sub-genus of organizatio (purpose without
     profit, open works) — surfaced, undescribed, waiting.
+
+## 2026-08-04 — round seven: THE FOREIGN STRESS TEST (books + plants)
+
+Deliberately outside the parish, on the reasoning that every
+mechanism so far was forced by describing SOFTWARE — a format that
+has only described its own domain may be secretly overfit to it.
+Two models, chosen so the second cites the first (real practice:
+species names are published in works).
+
+### opus_scriptum — and the format's first real INADEQUACY
+
+21. OUR VERSIO PATTERN WAS TOO SIMPLE. Library science spent a
+    century here and landed on four levels (FRBR: Work /
+    Expression / Manifestation / Item) where we had one. Not our
+    failure — the foreign domain's GIFT: book identity genuinely
+    needs four, and the distinctions CARRY MEANING. Witness in the
+    dictionary: the 1851 London edition of Moby-Dick omitted the
+    epilogue, so Ishmael could not have survived to narrate —
+    British reviewers said so. A manifestation changed the
+    meaning of the work. A schema that doesn't distinguish
+    editions cannot say that sentence.
+    → genera opus_scriptum / expressio / editio / codex.
+22. RESIDENCE RULE VALIDATED BY A FOREIGN DOMAIN: FRBR's cut
+    falls exactly where our rule already cut — work/expression/
+    edition are timelessly describable (library); the CODEX on
+    your shelf, with its marginalia and lending state, is yours
+    (volumen). The rule didn't bend; it agreed. And
+    notae_marginales is a property NO other level can bear —
+    proof the fourth level is real.
+23. SLIDING LAW, CASE FOUR, IN A FOREIGN DOMAIN: page count
+    belongs to the edition, not the work. The law is therefore
+    about THINGS, not about software. Same round killed the
+    domain's flagship lie: ISBN identifies a MANIFESTATION, not a
+    work — catalogs that treat ISBN as book-identity are counting
+    editions and calling them books.
+24. imperfecta_relicta became a status because the Summa demands
+    it (Aquinas stopped: "omnia quae scripsi videntur mihi
+    palea"). A composition machine without "left unfinished"
+    lies about the history of great books.
+25. Self-reference, honestly earned: the dictionary now contains
+    Pieper's Abusus Linguae (the book that gave this library its
+    discipline, with its German original and English translation
+    as two EXPRESSIONS — the translation test) and Linnaeus's
+    Systema Naturae + Species Plantarum (the form's father; and
+    the 10th edition is FORMALLY the start of zoological
+    nomenclature — law citing an edition, not a work).
+26. periodicum surfaced the first INHERITED-MACHINE MISFIT: a
+    serial never reaches "perfecta". Dubium open — is differentia
+    enough, or does a sub-genus need to override a parent's
+    machine? Carried, unresolved.
+
+### planta — the maximally foreign model
+
+27. PARTES: composition arrived (radix/caulis/folium/flos/
+    fructus/semen, each necessaria=verum|falsum — flos is
+    honestly optional: ferns and conifers have none). We had
+    relations but never part-whole composition of the described
+    kind. Software never asked; a corporeal thing asked
+    immediately. Aristotle's partes essentiales.
+28. gradus= on genus names the RANK in domain terms (familia /
+    genus / species / cultivar) — biology names its ranks because
+    its LAW names them. Our sub= spine already carried depth;
+    this labels it. Forced a discipline transformation: the
+    state-machine attribute gradus= was RENAMED gerens= (bearer)
+    — one attribute name cannot mean two things in a library
+    about precise naming, and "bearer" was the more accurate word
+    anyway. systema_operativum updated.
+29. CYCLES in state machines: quiescens → florens per ver. A
+    perennial flowers again every year; our earlier machines were
+    linear or terminal. Same machine, two paths (annual dies
+    after fruiting, perennial cycles) discriminated by the
+    'durata' property — a nice economy the domain handed us.
+30. CROSS-DOMAIN CITATION between two FOREIGN models: species
+    cite Species Plantarum (1753) as the publication of their
+    names, with auctor_nominis → persona ("Rosa canina L." — the
+    author abbreviation is PART OF THE NAME). Biological
+    nomenclature carries provenance inside the name itself; a
+    standing rebuke to our undescribed <fons> gap, and a model
+    for it.
+31. New dubium from life itself: living properties are RANGES,
+    not points (height 2-5m, flowering May-June). Our format
+    holds single values. Software never needed intervals; a rose
+    needs one immediately. Open.
+32. rosaceae carries the note that makes taxonomy worth having:
+    rose, apple, pear, plum, strawberry are kin — a truth common
+    sense would deny and only a real taxonomy makes visible.
+
+VERDICT ON THE STRESS TEST: the format bent in three places
+(four-level identity, composition, cycles) and held everywhere
+else; the residence rule was CONFIRMED by an alien domain rather
+than strained; and the sliding law replicated outside software.
+Overfit risk was real and is now measured, not assumed.

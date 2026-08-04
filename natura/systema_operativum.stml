@@ -4,7 +4,10 @@
   Exemplar semanticum: SYSTEMA OPERATIVUM (versio 0, PLASTICUM)
   Tertium paroeciae (post linguas et plagulas).
 
-  MECHANISMUS NOVUS: machina_statuum GRADUM gerentis declarat -
+  MECHANISMUS NOVUS: machina_statuum GERENTEM declarat (attributum
+  gerens=; olim gradus=, renominatum cum exemplar plantarum gradum
+  TAXINOMICUM poposcit - nomen unum duas res significare in
+  bibliotheca de nominatione accurata non licet) -
   "vita" species fert (DOS derelictum est), "cursus" INDIVIDUA
   ferunt (installatio mea dormit, species macOS numquam). Machinae
   cursus instantiae omnes EXTRA bibliothecam vivunt (in voluminibus
@@ -17,7 +20,7 @@
   Relationes duae: orta_ex (descensus) / ad_exemplum_facta
   (imitatio formae). Genealogia vera utramque eget.
 -->
-<natura modulus="systema_operativum" versio="1" lingua="latina">
+<natura modulus="systema_operativum" versio="2" lingua="latina">
 
 <genus nomen="systema_operativum">
 
@@ -43,7 +46,7 @@
       ordinarius="verum"/>
   </proprietates>
 
-  <machina_statuum nomen="vita" gradus="species">
+  <machina_statuum nomen="vita" gerens="species">
     <status nomen="nascens"/>
     <status nomen="vigens"/>
     <status nomen="senescens"/>
@@ -53,7 +56,7 @@
     <transitus a="senescens" ad="derelictum" per="derelictio"/>
   </machina_statuum>
 
-  <machina_statuum nomen="cursus" gradus="individuum"
+  <machina_statuum nomen="cursus" gerens="individuum"
     nota="INSTALLATIO hanc fert, non species - individua eius in
           voluminibus applicationum vivunt (villa nostra olim hos
           status servorum suorum citabit)">
