@@ -457,7 +457,12 @@ _parsere_longum (
 	redde VERUM;
 }
 
-/* Parsere argumentum cum "-" (breve) */
+/* Parsere argumentum cum "-" (breve)
+ *
+ * Congruentia EXACTA tokeni totius: "-v" classicum ET "-scribere"
+ * (stilus domus - nomen brevis multi-charactere registratum) ambo
+ * vivunt. Truncatio prior ("-scribere" -> "-s") congruentias
+ * falsas gignebat et errorem fallacem nominabat. */
 interior b32
 _parsere_breve (
 	   ArgumentaParser* parser,
@@ -467,11 +472,9 @@ _parsere_breve (
 	               i32* salti)
 {
 	         character  buffer[CCLVI];
-	         character  nomen_completum[III];
 	constans character* valor;
 	ArgumentaDefinitio* def;
 
-	/* Nomen est duo charactera: "-X" */
 	si (strlen(arg) < II || arg[I] == '\0')
 	{
 		snprintf(buffer, CCLVI, "Vexillum breve invalidum: %s", arg);
@@ -479,16 +482,11 @@ _parsere_breve (
 		redde FALSUM;
 	}
 
-	/* Construere nomen "-X" */
-	nomen_completum[ZEPHYRUM] = '-';
-	nomen_completum[I]        = arg[I];
-	nomen_completum[II]       = '\0';
-
-	/* Invenire definitionem */
-	def = _invenire_definitionem(parser, nomen_completum);
+	/* Invenire definitionem (token totus, sine truncatione) */
+	def = _invenire_definitionem(parser, arg);
 	si (!def)
 	{
-		snprintf(buffer, CCLVI, "Optio ignota: %s", nomen_completum);
+		snprintf(buffer, CCLVI, "Optio ignota: %s", arg);
 		parser->nuntius_erroris = _duplicare_cstr(buffer, parser->piscina);
 		redde FALSUM;
 	}
@@ -512,7 +510,7 @@ _parsere_breve (
 	/* Si optio, accipere valorem ex sequente */
 	si (!arg_sequens)
 	{
-		snprintf(buffer, CCLVI, "Optio %s requirit valorem", nomen_completum);
+		snprintf(buffer, CCLVI, "Optio %s requirit valorem", arg);
 		parser->nuntius_erroris = _duplicare_cstr(buffer, parser->piscina);
 		redde FALSUM;
 	}

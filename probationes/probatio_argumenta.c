@@ -220,6 +220,42 @@ s32 principale (vacuum)
 
 
 	/* ==================================================
+	 * Probare vexillum breve MULTI-CHARACTERE (stilus domus
+	 * "-scribere") - truncatio prior "-s" quaerebat (mensuratum
+	 * 2026-08-04, silex proicere); congruentia nunc exacta
+	 * ================================================== */
+
+	{
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
+		constans character* argv[] = {"programa", "-scribere",
+			"-ad", "XII"};
+		               i32  argc = IV;
+		            chorda  ad;
+
+		imprimere("\n--- Probans vexillum breve longius ---\n");
+
+		parser = argumenta_creare(piscina);
+		argumenta_addere_vexillum(parser, "-scribere", "--scribere",
+			"Applicare");
+		argumenta_addere_optionem(parser, "-ad", "--ad",
+			"Usque ad seq");
+		argumenta_addere_vexillum(parser, "-s", NIHIL,
+			"Vexillum unius characteris - vicinus non captus");
+
+		fructus = argumenta_parsere(parser, argc, argv);
+		CREDO_NON_NIHIL(fructus);
+		CREDO_VERUM(argumenta_habet_vexillum(fructus, "-scribere"));
+		CREDO_VERUM(argumenta_habet_vexillum(fructus, "--scribere"));
+		/* "-scribere" non est "-s" - nulla truncatio */
+		CREDO_FALSUM(argumenta_habet_vexillum(fructus, "-s"));
+		ad = argumenta_obtinere_optionem(fructus, "-ad", piscina);
+		CREDO_VERUM(chorda_aequalis(ad,
+			chorda_ex_literis("XII", piscina)));
+	}
+
+
+	/* ==================================================
 	 * Probare optio solum (sine nomen breve)
 	 * ================================================== */
 
