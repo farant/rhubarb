@@ -26,10 +26,30 @@ if [ -z "$(ls -A build/*.o 2>/dev/null)" ]; then
     exit 1
 fi
 
-# capsula frontis regeneranda si index.html recentior
+# mensa.js glomerandum si fontes recentiores (ordo = ordo oneris:
+# thema ante scidam, scida ante scidulam quae eam extendit)
+MENSA_FONTES=(
+    lib/mensa_assets/fontes/thema.js
+    lib/mensa_assets/fontes/scida.js
+    lib/mensa_assets/fontes/scidula.js
+    lib/mensa_assets/fontes/planum.js
+    lib/mensa_assets/fontes/persistentia.js
+)
+MENSA_EXITUS=tools/silex_assets/mensa.js
+for fons in "${MENSA_FONTES[@]}"; do
+    if [ ! -f "$MENSA_EXITUS" ] || [ "$fons" -nt "$MENSA_EXITUS" ]; then
+        ./tools/glomerare.sh "$MENSA_EXITUS" "${MENSA_FONTES[@]}" \
+            || exit 1
+        break
+    fi
+done
+
+# capsula frontis regeneranda si assetum quodvis recentior
 if [ tools/silex_assets/index.html -nt \
+     tools/silex_assets/capsula_silex_frons.c ] || \
+   [ "$MENSA_EXITUS" -nt \
      tools/silex_assets/capsula_silex_frons.c ]; then
-    echo "  [capsula] silex_frons (index.html recentior)"
+    echo "  [capsula] silex_frons (assetum recentior)"
     if [ ! -x bin/capsula_generare ]; then
         ./compile_tools.sh capsula_generare >/dev/null || exit 1
     fi

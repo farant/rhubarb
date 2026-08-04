@@ -14,6 +14,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "argumenta.h"
+#include "chorda_aedificator.h"
 #include "filum.h"
 #include "json.h"
 #include "fenestra.h"
@@ -21,6 +22,7 @@
 #include "vitrea.h"
 #include "internuntius.h"
 #include "silex.h"
+#include "mensa.h"
 #include "silex_assets/capsula_silex_frons.h"
 
 #include <stdio.h>
@@ -128,6 +130,28 @@ _ui_currere (Piscina* piscina, constans character* fabrica)
         }
         (vacuum)internuntius_praebere(inx, "status",
             _status_tractare, (vacuum*)fabrica_datum);
+    }
+
+    /* tabula persistens: ~/.rhubarb/silex.volumen (conventio
+     * pilae mensae - defectus non fatalis, ui sine memoria vivit) */
+    {
+        constans character* domus = getenv("HOME");
+
+        si (domus != NIHIL && domus[0] != '\0')
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(
+                piscina, (memoriae_index)128);
+
+            chorda_aedificator_appendere_literis(aed, domus);
+            chorda_aedificator_appendere_literis(aed,
+                "/.rhubarb/silex.volumen");
+            si (mensa_praebere(inx, piscina, chorda_ut_cstr(
+                chorda_aedificator_finire(aed), piscina)) == NIHIL)
+            {
+                fprintf(stderr, "silex ui: mensa sine memoria"
+                    " (volumen status non aperiri potuit)\n");
+            }
+        }
     }
 
     dum (!fenestra_debet_claudere(fenestra))

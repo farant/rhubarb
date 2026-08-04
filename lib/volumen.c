@@ -321,6 +321,44 @@ volumen_plagulas_enumerare (Volumen* volumen, Piscina* piscina)
     redde ordo;
 }
 
+Xar*
+volumen_acta_legere (Volumen* volumen, s64 post_seq,
+    Piscina* piscina)
+{
+    ScriniumEnuntiatum* e;
+    Xar*                ordo;
+
+    ordo = xar_creare(piscina, (i32)magnitudo(VolumenActum));
+    si (ordo == NIHIL)
+    {
+        redde NIHIL;
+    }
+    e = scrinium_praeparare(volumen->scrinium,
+        "SELECT seq, momentum, genus, datum FROM acta"
+        " WHERE seq > ? ORDER BY seq");
+    si (e == NIHIL)
+    {
+        redde NIHIL;
+    }
+    scrinium_ligare_numerum(e, 1, post_seq);
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        VolumenActum* a = (VolumenActum*)xar_addere(ordo);
+
+        si (a == NIHIL)
+        {
+            scrinium_finire(e);
+            redde NIHIL;
+        }
+        a->seq = scrinium_columna_numerus(e, 0);
+        a->momentum = scrinium_columna_textus(e, 1, piscina);
+        a->genus = scrinium_columna_textus(e, 2, piscina);
+        a->datum = scrinium_columna_textus(e, 3, piscina);
+    }
+    scrinium_finire(e);
+    redde ordo;
+}
+
 interior s64
 _summa (Volumen* volumen, constans character* sql);
 

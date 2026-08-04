@@ -2,6 +2,9 @@
 # Regenerare: bin/capsula_generare tools/silex_assets/silex.toml
 # (generata capsula_silex_frons.{h,c} COMMITTUNTUR - exemplar
 # vitrea_assets: nullus gradus ordinis constructionis)
+#
+# mensa.js GLOMERATUM est (fontes lib/mensa_assets/fontes/) -
+# silex_struere.sh id regenerat; et ipsum committitur.
 
-silex_frons_files = ["index.html"]
+silex_frons_files = ["index.html", "mensa.js"]
 silex_frons_compress = false

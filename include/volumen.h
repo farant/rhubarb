@@ -98,6 +98,22 @@ volumen_plagulas_enumerare (
     Volumen* volumen,
     Piscina* piscina);
 
+/* actum lectum (chordae ex piscina vocantis) */
+nomen structura {
+    s64    seq;
+    chorda momentum;
+    chorda genus;
+    chorda datum;
+} VolumenActum;
+
+/* acta POST seq datum (exclusivum; 0 = omnia), ordine seq -
+ * forma "acta post seq N" quam et plicae et replicatio volunt */
+Xar*
+volumen_acta_legere (
+    Volumen* volumen,
+    s64      post_seq,
+    Piscina* piscina);
+
 s64
 volumen_summa_actorum (
     Volumen* volumen);
