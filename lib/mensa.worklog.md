@@ -116,3 +116,16 @@ tituli user-select:none; ONLY .editans .corpus selects). Companion
 fix: `datum.x || 10` falsy-zero in _nodumCreare (x=0 snapped to 10).
 First red-team catch of the loop — the walkthrough found in minutes
 what no suite could.
+
+## 2026-08-04 — v2.2: drop actually drops (Fran's hands, second catch)
+
+**elementFromPoint during a drag returns the DRAGGED CARD** — it
+follows the cursor, so it's always topmost under the pointer. Drop
+detection never saw the theca beneath. Cure = the classic
+hide-test-restore (visibility hidden → elementFromPoint → restore,
+synchronous so it never paints), extracted as scida._subTheca(ev).
+Running the same test in movere gives drop-target feedback free:
+theca under a drag lights up (.suscipiens — dashed accent outline +
+glyph glow). Also per Fran: theca sheds the card chrome (background/
+border/shadow none) — bare glyph + label, desktop-icon style; the
+.electum/.suscipiens outlines still read fine on transparent.

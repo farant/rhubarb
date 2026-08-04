@@ -185,10 +185,21 @@ var MENSA_STILI =
   '}' +
   'mensa-scidula .delere:hover { color: var(--mensa-accentus); }' +
 
-  /* theca: icon plicae (fundamentum commune superscribit) */
+  /* theca: icon plicae NUDUM - sine charta (petitio Franis v2.2):
+   * glyphus + titulus soli; fundamentum commune superscribitur */
   'mensa-theca {' +
-  '  width: 7em; padding: .7em .5em .5em .5em;' +
-  '  text-align: center; box-shadow: none;' +
+  '  width: 7em; padding: .5em .3em .3em .3em;' +
+  '  text-align: center;' +
+  '  background: none; border: none; box-shadow: none;' +
+  '}' +
+  /* suscipiens: depositio imminens - accenditur sub tracto */
+  'mensa-theca.suscipiens {' +
+  '  outline: 2px dashed var(--mensa-accentus);' +
+  '  outline-offset: 2px; border-radius: 6px;' +
+  '}' +
+  'mensa-theca.suscipiens .glyphus,' +
+  'mensa-theca.suscipiens .glyphus::before {' +
+  '  background: var(--mensa-accentus);' +
   '}' +
   'mensa-theca .glyphus {' +
   '  width: 3.2em; height: 2.3em; margin: 0 auto;' +
@@ -319,6 +330,7 @@ class MensaScida extends HTMLElement {
     movere = function (ev) {
       var dx = ev.clientX - initX;
       var dy = ev.clientY - initY;
+      var theca;
 
       if (!motum) {
         if (dx * dx + dy * dy < 16) { return; }   /* limen 4pt */
@@ -328,15 +340,29 @@ class MensaScida extends HTMLElement {
       ipse.ponePositum(
         Math.max(0, Math.min(97, origoX + dx / mensura.width * 100)),
         Math.max(0, Math.min(95, origoY + dy / mensura.height * 100)));
+
+      /* affordantia depositionis: theca sub punctore accenditur */
+      theca = ipse._subTheca(ev);
+      if (theca !== ipse._suscipiens_nota) {
+        if (ipse._suscipiens_nota) {
+          ipse._suscipiens_nota.classList.remove('suscipiens');
+        }
+        ipse._suscipiens_nota = theca;
+        if (theca) { theca.classList.add('suscipiens'); }
+      }
     };
     solvere = function (ev) {
       var planum = ipse.closest('mensa-planum');
-      var sub, theca;
+      var theca;
 
       ipse.classList.remove('tractans');
       ipse.removeEventListener('pointermove', movere);
       ipse.removeEventListener('pointerup', solvere);
       ipse.removeEventListener('pointercancel', solvere);
+      if (ipse._suscipiens_nota) {
+        ipse._suscipiens_nota.classList.remove('suscipiens');
+        ipse._suscipiens_nota = null;
+      }
 
       if (!motum) {
         /* click purus = selectio */
@@ -345,9 +371,8 @@ class MensaScida extends HTMLElement {
       }
       /* depositio super thecam = motio in tabulam eius (theca
        * retro = motio in tabulam PETITAM - sursum uno gradu) */
-      sub = document.elementFromPoint(ev.clientX, ev.clientY);
-      theca = sub ? sub.closest('mensa-theca') : null;
-      if (theca && theca !== ipse) {
+      theca = ipse._subTheca(ev);
+      if (theca) {
         ipse.actumMittere('collocatum', {
           tabula: theca.hasAttribute('retro')
             ? theca.getAttribute('petens') : theca.id
@@ -362,6 +387,20 @@ class MensaScida extends HTMLElement {
     this.addEventListener('pointermove', movere);
     this.addEventListener('pointerup', solvere);
     this.addEventListener('pointercancel', solvere);
+  }
+
+  /* theca sub punctore - charta tracta punctorem sequitur, ergo
+   * elementFromPoint EAM redderet: abscondita-proba-restituta
+   * (synchronum - numquam pingitur). Decipula classica DnD,
+   * manibus Franis capta ("depositio non operatur"). */
+  _subTheca(ev) {
+    var sub, theca;
+
+    this.style.visibility = 'hidden';
+    sub = document.elementFromPoint(ev.clientX, ev.clientY);
+    this.style.visibility = '';
+    theca = sub ? sub.closest('mensa-theca') : null;
+    return (theca && theca !== this) ? theca : null;
   }
 
   /* datum.id semper additum; ebullit ad planum/persistentiam */
