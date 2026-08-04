@@ -57,6 +57,44 @@ _praefigere (Piscina* piscina, constans character* praefixum,
     redde chorda_aedificator_finire(aed);
 }
 
+/* ascensus ex initio: signum fabricae = include/latina.h (plagula)
+ * + lib/ (directorium). via_directorium("/") = "/" - mensura
+ * immota terminat; custodia graduum contra vias pathologicas. */
+constans character*
+silex_fabricam_invenire (Piscina* piscina,
+    constans character* initium)
+{
+    chorda via;
+    i32    gradus;
+
+    via = via_absoluta(chorda_ex_literis(initium, piscina),
+        piscina);
+    si (via.mensura == 0)
+    {
+        redde NIHIL;
+    }
+    per (gradus = 0; gradus < 64; gradus = gradus + 1)
+    {
+        constans character* radix = chorda_ut_cstr(via, piscina);
+        chorda parens;
+
+        si (filum_existit(_texere(piscina, radix,
+                "/include/latina.h", NIHIL))
+            && filum_directorium_existit(_texere(piscina, radix,
+                "/lib", NIHIL)))
+        {
+            redde radix;
+        }
+        parens = via_directorium(via, piscina);
+        si (parens.mensura == via.mensura)
+        {
+            frange;   /* radix "/" attacta */
+        }
+        via = parens;
+    }
+    redde NIHIL;
+}
+
 /* ==================================================
  * Scrutatio inclusionum (v0 textualis, lineatim)
  * ================================================== */

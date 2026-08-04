@@ -6,6 +6,7 @@
  *   silex ui
  *   silex novum 001 -f /via/ad/rhubarb -d /via/ad/silicetum
  *   SILEX_FABRICA=/via/ad/rhubarb silex novum 001
+ *   cd intra/arborem/rhubarb && silex novum 001   # ascensus sponte
  *
  * Aedificatio: ./tools/silex_struere.sh (capsula frontis +
  * obiecta suite; compile_tools.sh capsulam nesciret) */
@@ -221,7 +222,8 @@ principale (integer argc, character** argv)
     argumenta_addere_positionalem(parser, "titulus",
         "nomen proiecti (pro novo)", FALSUM);
     argumenta_addere_optionem(parser, "-f", "--fabrica",
-        "radix arboris rhubarb (aut SILEX_FABRICA)");
+        "radix arboris rhubarb (aut SILEX_FABRICA,"
+        " aut ascensus e cwd)");
     argumenta_addere_optionem(parser, "-d", "--destinatio",
         "directorium parens proiecti (ordinarie '.')");
     argumenta_addere_optionem(parser, "-n", "--nuntius",
@@ -241,7 +243,8 @@ principale (integer argc, character** argv)
     verbum = argumenta_obtinere_positionalem(lecta, 0, piscina);
     titulus = argumenta_obtinere_positionalem(lecta, 1, piscina);
 
-    /* fabrica: optio > ambiens > NIHIL (ui tolerat, novum poscit) */
+    /* fabrica: optio > ambiens > ascensus e cwd > NIHIL
+     * (ui tolerat, novum poscit) */
     fabrica_opt = argumenta_obtinere_optionem(lecta, "--fabrica",
         piscina);
     si (fabrica_opt.mensura > ZEPHYRUM)
@@ -255,6 +258,10 @@ principale (integer argc, character** argv)
         {
             fabrica = NIHIL;
         }
+    }
+    si (fabrica == NIHIL)
+    {
+        fabrica = silex_fabricam_invenire(piscina, ".");
     }
 
     /* sine argumentis aut 'ui' = fenestra */
@@ -374,8 +381,8 @@ principale (integer argc, character** argv)
     }
     si (fabrica == NIHIL)
     {
-        fprintf(stderr, "silex: fabrica ignota - da --fabrica"
-            " aut SILEX_FABRICA pone\n");
+        fprintf(stderr, "silex: fabrica ignota - da --fabrica,"
+            " SILEX_FABRICA pone, aut ex arbore rhubarb curre\n");
         redde I;
     }
 

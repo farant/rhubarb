@@ -87,3 +87,27 @@ stored twice. Working tree = projection, volumen = residence.
 
 Next: proicere (plan-default covenant, -scribere applies; later
 -ad seq = time travel via fold), then renovare on top.
+
+## 2026-08-04 — fabrica auto-detect (ascent from cwd)
+
+Half of desideratum 01KZ6CSYME (the .silexignore half stays with
+the volumen-bearing-scaffold arc). Red-team stumble III: --fabrica
+was demanded even when cwd WAS the fabrica.
+
+- `silex_fabricam_invenire(piscina, initium)` in lib/silex.c:
+  via_absoluta(initium), then ascend via via_directorium looking
+  for the marker = include/latina.h (file) + lib/ (directory).
+  Termination: via_directorium("/") == "/" — parent mensura
+  unchanged breaks the loop; 64-step guard against pathology.
+  via.h had every piece (absoluta/directorium/currens) — no POSIX
+  touched, no postulata_posix needed.
+- Rung THREE in tools/silex.c: option > SILEX_FABRICA > ascent >
+  NIHIL. ui benefits automatically (resolution happens before
+  _ui_currere). Refusal message now names all three roads.
+- Parameterized initium made it testable without chdir games:
+  probatio ascends from "lib" (finds repo root, compared against
+  via_absoluta(".")), from "." (finds), from "/tmp" (NIHIL).
+- Dogfooded for real: `env -u SILEX_FABRICA bin/silex novum` from
+  repo root scaffolded probe_ascensus into scratch; its
+  aedificare.sh + probare.sh green. From outside the tree: loud
+  refusal, correct.

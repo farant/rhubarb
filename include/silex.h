@@ -65,6 +65,15 @@ silex_novum (
     Piscina*                  piscina,
     constans SilexNovumOptiones* optiones);
 
+/* fabricam sponte invenire: ascensus ex initio (directorium),
+ * signum quaerens (include/latina.h + lib/). Reddit radicem
+ * absolutam aut NIHIL si nusquam. Superscriptiones (-f /
+ * SILEX_FABRICA) vocatori manent - hoc gradus TERTIUS est. */
+constans character*
+silex_fabricam_invenire (
+    Piscina*            piscina,
+    constans character* initium);
+
 /* ==================================================
  * VCS: status / condere / historia
  *

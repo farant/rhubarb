@@ -9,6 +9,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "filum.h"
+#include "via.h"
 #include "xar.h"
 #include "silex.h"
 #include "volumen.h"
@@ -129,6 +130,34 @@ s32 principale (vacuum)
         res_omnes = silex_clausuram_colligere(piscina,
             "/non/exsistit/fabrica", SEMINA_LATINA, 1);
         CREDO_NIHIL(res_omnes);
+    }
+
+    /* ========================================================
+     * PROBARE: fabricam invenire (ascensus e cwd)
+     * ======================================================== */
+
+    {
+        constans character* radix;
+        chorda              expectata;
+
+        imprimere("\n--- Probans fabricam invenire ---\n");
+
+        /* e subdirectorio arboris: radicem ipsam invenit
+         * (probationes e radice repositorii currunt) */
+        radix = silex_fabricam_invenire(piscina, "lib");
+        CREDO_VERUM(radix != NIHIL);
+        expectata = via_absoluta(chorda_ex_literis(".", piscina),
+            piscina);
+        CREDO_CHORDAE_AEQUALES(radix,
+            chorda_ut_cstr(expectata, piscina));
+
+        /* ex ipsa radice quoque */
+        radix = silex_fabricam_invenire(piscina, ".");
+        CREDO_VERUM(radix != NIHIL);
+
+        /* extra arborem: NIHIL (ascensus ad "/" sine signo) */
+        CREDO_VERUM(silex_fabricam_invenire(piscina, "/tmp")
+            == NIHIL);
     }
 
     /* ========================================================
