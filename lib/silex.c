@@ -751,7 +751,10 @@ _praetermittenda (chorda via_rel)
         || _suffixum_habet(via_rel, ".volumen-shm");
 }
 
-/* via voluminis proiecti: <dir>/<nomen(dir)>.volumen */
+/* via voluminis proiecti. DECISUM (Fran, red-team IX 2026-08-04):
+ * conventio <dir>/<nomen(dir)>.volumen via laeta manet; ea absente,
+ * *.volumen SOLITARIUM in directorio vincit (cp/renominatio sanata -
+ * plagula EST documentum); plura = recusatio clara nominans. */
 interior constans character*
 _volumen_viam_invenire (Piscina* piscina,
     constans character* proiectum_dir);
@@ -763,20 +766,72 @@ _volumen_viam_invenire (Piscina* piscina,
     chorda absoluta = via_absoluta(
         chorda_ex_literis(proiectum_dir, piscina), piscina);
     chorda titulus = via_nomen(absoluta, piscina);
-    ChordaAedificator* aed = chorda_aedificator_creare(piscina,
-        (memoriae_index)128);
+    constans character* absoluta_cstr = chorda_ut_cstr(absoluta,
+        piscina);
     constans character* via;
 
-    chorda_aedificator_appendere_chorda(aed, absoluta);
-    chorda_aedificator_appendere_literis(aed, "/");
-    chorda_aedificator_appendere_chorda(aed, titulus);
-    chorda_aedificator_appendere_literis(aed, ".volumen");
-    via = chorda_ut_cstr(chorda_aedificator_finire(aed), piscina);
-    si (!filum_existit(via))
+    /* I. conventio */
     {
-        redde NIHIL;
+        ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+            (memoriae_index)128);
+
+        chorda_aedificator_appendere_chorda(aed, absoluta);
+        chorda_aedificator_appendere_literis(aed, "/");
+        chorda_aedificator_appendere_chorda(aed, titulus);
+        chorda_aedificator_appendere_literis(aed, ".volumen");
+        via = chorda_ut_cstr(chorda_aedificator_finire(aed),
+            piscina);
+        si (filum_existit(via))
+        {
+            redde via;
+        }
     }
-    redde via;
+
+    /* II. *.volumen solitarium */
+    {
+        DirectoriumIterator*  iter;
+        DirectoriumIntroitus* e;
+        constans character*   inventum = NIHIL;
+        i32                   numerus = 0;
+
+        iter = directorium_iterator_aperire(absoluta_cstr, piscina);
+        si (iter == NIHIL)
+        {
+            redde NIHIL;
+        }
+        dum ((e = directorium_iterator_proximum(iter)) != NIHIL)
+        {
+            si (e->genus != INTROITUS_FILUM
+                || !_suffixum_habet(e->titulus, ".volumen"))
+            {
+                perge;
+            }
+            numerus = numerus + 1;
+            {
+                ChordaAedificator* aed = chorda_aedificator_creare(
+                    piscina, (memoriae_index)128);
+
+                chorda_aedificator_appendere_chorda(aed, absoluta);
+                chorda_aedificator_appendere_literis(aed, "/");
+                chorda_aedificator_appendere_chorda(aed,
+                    e->titulus);
+                inventum = chorda_ut_cstr(
+                    chorda_aedificator_finire(aed), piscina);
+            }
+        }
+        directorium_iterator_claudere(iter);
+        si (numerus == 1)
+        {
+            redde inventum;
+        }
+        si (numerus > 1)
+        {
+            fprintf(stderr, "silex: volumina %d in directorio -"
+                " ambiguum; unum relinque aut conventionem"
+                " <dir>/<dir>.volumen sequere\n", (integer)numerus);
+        }
+    }
+    redde NIHIL;
 }
 
 nomen structura {

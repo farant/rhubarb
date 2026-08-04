@@ -310,6 +310,41 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: identitas voluminis (decisum red-team IX):
+     * solitarium vincit, plura recusantur
+     * ======================================================== */
+
+    {
+        SilexStatusFructus status;
+
+        imprimere("\n--- Probans volumen solitarium ---\n");
+
+        filum_directorium_creare_si_necesse(AREA "/tergum");
+        CREDO_VERUM(filum_copiare(
+            AREA "/specimen/specimen.volumen",
+            AREA "/tergum/aliud.volumen"));
+
+        /* nomen directorio non congruit - solitarium tamen vincit */
+        status = silex_status(piscina, AREA "/tergum");
+        CREDO_VERUM(status.successus);
+        CREDO_AEQUALIS_I32((i32)status.mundae, (i32)0);
+        CREDO_VERUM(xar_numerus(status.res) > 10);   /* omnes ABSENS */
+        {
+            SilexStatusRes* r = (SilexStatusRes*)xar_obtinere(
+                status.res, 0);
+
+            CREDO_VERUM(r->status == SILEX_PLAGULA_ABSENS);
+        }
+
+        /* volumina duo = ambiguum, recusatio */
+        CREDO_VERUM(filum_copiare(
+            AREA "/specimen/specimen.volumen",
+            AREA "/tergum/alterum.volumen"));
+        status = silex_status(piscina, AREA "/tergum");
+        CREDO_FALSUM(status.successus);
+    }
+
+    /* ========================================================
      * PROBARE: tituli mali recusantur
      * ======================================================== */
 

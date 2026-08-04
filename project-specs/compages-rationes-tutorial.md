@@ -90,10 +90,11 @@ Volumen* vol = volumen_aperire_aut_creare(piscina,
  * expansion anywhere - absolute paths. */
 ```
 
-Naming rule that matters: **silex binds a project's identity to its
-enclosing directory** — it looks for `<dirname>/<dirname>.volumen`. Keep
-the file named after its folder or the verbs won't find it. (Under
-review; see gap notes.)
+Naming rule (DECIDED, red-team #9): the convention is
+`<dirname>/<dirname>.volumen`, but **a lone `*.volumen` in the directory
+wins regardless of name** — so `cp` your document anywhere, rename the
+folder, and the verbs still find it; the file really is the document.
+Two volumina in one directory is ambiguous and refused loudly.
 
 Inside every volumen, truth is the **acta** table — an append-only event
 log, exactly the gesta shape but per-file instead of per-repo. Entities
