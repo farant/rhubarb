@@ -48,6 +48,16 @@ function mensaRetro(elementa, tabula, acervus) {
   return 'radix';
 }
 
+/* titulus tabulae currentis = titulus thecae quae eam nominat;
+ * radix sine titulo (null); theca sine titulo -> id ipsum */
+function mensaTitulus(elementa, tabula) {
+  if (tabula === 'radix') { return null; }
+  if (elementa[tabula] && elementa[tabula].titulus) {
+    return elementa[tabula].titulus;
+  }
+  return tabula;
+}
+
 /* ARBITER GESTUUM - machina statuum plani (tene-vs-trahe-vs-duplex).
  * Sine DOM: planum eventa punctoria in vocationes vertit et
  * actiones exsequitur. Fructus quisque = null aut {actio: ...}:
@@ -249,6 +259,17 @@ var MENSA_STILI =
   '  border-radius: 0 0 5px 0; opacity: 0;' +
   '}' +
   'mensa-imago:hover .ansa { opacity: .85; }' +
+
+  /* titulus tabulae: chrome plani summo medio - gestus transeunt */
+  '.mensa-titulus-tabulae {' +
+  '  position: absolute; top: 1em; left: 50%;' +
+  '  transform: translateX(-50%);' +
+  '  color: var(--mensa-textus-secundus);' +
+  '  font-size: .95em; letter-spacing: .22em;' +
+  '  text-transform: uppercase;' +
+  '  pointer-events: none;' +
+  '  user-select: none; -webkit-user-select: none;' +
+  '}' +
 
   /* orbis: menu radiale - numquam eligibile */
   'mensa-orbis {' +
@@ -836,6 +857,24 @@ class MensaPlanum extends HTMLElement {
             && this._nodi[id].parentElement !== this) {
           this.appendChild(this._nodi[id]);
         }
+      }
+    }
+
+    /* titulus tabulae (chrome plani, non charta; pointer-events
+     * none - gestus subter transeunt) */
+    if (this._titulusTabulae
+        && this._titulusTabulae.parentElement === this) {
+      this.removeChild(this._titulusTabulae);
+      this._titulusTabulae = null;
+    }
+    {
+      var titulus = mensaTitulus(this._elementa, this._tabula);
+
+      if (titulus !== null) {
+        this._titulusTabulae = document.createElement('div');
+        this._titulusTabulae.className = 'mensa-titulus-tabulae';
+        this._titulusTabulae.textContent = titulus;
+        this.appendChild(this._titulusTabulae);
       }
     }
 
