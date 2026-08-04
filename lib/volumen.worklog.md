@@ -27,3 +27,23 @@ Decisions worth remembering:
 - Migration array had to be renamed MIGRATIONES_VOLUMINIS — leading
   `_` + capital is implementation-reserved (C89 7.1.3), house lint
   caught it at edit time.
+
+## 2026-08-04 — the day the volumen grew up (API additions, one day)
+
+Born yesterday with condere/promere/enumerare; grew today, each on a
+real pull, never speculatively:
+- `volumen_acta_legere(vol, post_seq)` — for the mensa fold; shaped
+  as "acta after seq N" because that's ALSO the G8 replication read.
+- bare massa API (`massam_condere` → sigillum hex out, `massam_promere`
+  by sigillum) — for image cards. Doctrine: a massa is CONTENT, not an
+  event; truth about its use lives in acta.
+- caller-owned transactions (`transactionem_incipere/committere/
+  revolvere` + in_transactione flag; plagulam_condere/removere skip
+  their own BEGIN under a caller's) — for atomic multi-file commits;
+  sqlite forbids nesting.
+- `plagulam_removere` — actum plagula-remota + manifest DELETE; the
+  massa stays (history references it).
+- `volumen_aperire_aut_creare` — born from the red-team walk: the
+  tutorial promised create-or-open and no function delivered it.
+All pinned in probatio_volumen (including binary blobs with embedded
+zeros, dedup, and the aut_creare both-paths case).
