@@ -1590,3 +1590,75 @@ each species fills in.
      are PRECISE (check-digit algorithms, digit counts, dates)
      and precision fails fluently. Everything historical marked
      certitudo="fides".
+
+## 2026-08-05 — round twenty-five: THE PARISH (loop, fourth run)
+
+Scenario chosen for a stated reason: the parish is the one domain
+where FRAN CAN CHECK THE SCRIBE, and the accuracy caveat says the
+scribe is most dangerous where unverifiable. It also had an open
+dubium waiting (liturgical calendar). Discussion only; harvest
+awaits blessing.
+
+PREDICTION TESTED: after run 3 I predicted run 4 would yield
+"mostly nouns, and if it yields another dimension that is itself
+information." Result: mostly nouns AND one structural REFINEMENT
+of an existing ruling — not a new dimension. Prediction held.
+
+THE FIND — OFFICIUM, and it cuts an established ruling:
+"Roles are relations" (round IV, confirmed 4x) needs a division.
+A parish has a pastor; when he leaves the office PERSISTS —
+*sede vacante* is a named state, not missing data. Duties,
+powers and eligibility attach to the POSITION, not the man.
+Canon law reifies this (officium ecclesiasticum = a function
+constituted in a stable manner, existing independently of any
+holder).
+→ TEST, crisp: DOES THE POSITION PERSIST WHEN VACANT?
+  yes → OFFICIUM, a real thing bundling duties/powers/conditions,
+        and "holding" it is the relation;
+  no  → a bare role, which remains a relation.
+"Author" is a bare role — there is no vacant authorship waiting.
+"Bishop of Rome" is an office. Generalises far past the parish:
+CEO, chair, trustee, president. Modelling offices as bare
+relations is why org systems cannot answer "who SHOULD do this"
+when the seat is empty.
+
+HARVEST (rest):
+2. PERSONA_IURIDICA — an organizatio that IS a person in law
+   (owns, sues, persists). Parishes, corporations, trusts,
+   foundations. organizatio currently cannot say it.
+3. LEX, distinct from NORMA — a norma is CONFORMED TO (ISO), a
+   lex is IMPOSED with sanction. Follows exactly the line
+   magistratus already drew (auctoritas ex imperio vs ex
+   consensu) — a split the library should arguably have made
+   in round XIV.
+4. RITUS + SACRAMENTUM — praescriptum-shaped (prescribed,
+   ordered, executed by persons) but its output is a CHANGE OF
+   STATE, not an artefact. Either praescriptum.efficit
+   generalises or ritus is a sibling — real tension, not
+   cosmetic. sacramentum adds materia / forma / minister /
+   recipiens / effectus / repeatability, and the beachhead
+   already exists (titulus.character_indelebilis).
+5. RES_SACRA — things set apart by consecration, with genuinely
+   different rules (alienation restricted, disposal regulated).
+6. RECURRENTIA_COMPUTATA — CLOSES the dubium open since round
+   XIV: Easter is computed from a lunar rule, which simple
+   periodicity cannot express.
+7. Smaller: parish membership is by TERRITORY, not by choice —
+   a bend in organizatio.membrum as modelled; status_vitae
+   (married / religious / ordained) noted, may be covered by
+   titulus + character.
+
+CONFIRMATION WORTH ITS OWN LINE — A THIRD INDEPENDENT ANCESTOR:
+parish registers (baptism, marriage, burial) became universally
+required at Trent (1563): append-only, corrections as marginal
+annotations never erasures, among the longest continuous event
+logs in Europe. That makes THREE domains — Pacioli's ledgers
+(round XIV), medical records (round XVII), parish registers —
+arriving independently at "the log is truth, status is a fold",
+each for the same reason: rewriting destroys evidentiary value.
+A doctrine reached three times by unrelated professions is not
+a design choice; it is a discovery.
+
+Other confirmations: iurisdictio (parish territory), titulus +
+character_indelebilis, calendarium_liturgicum, obligatio,
+organizatio.pars_de (diocese/province hierarchy).
