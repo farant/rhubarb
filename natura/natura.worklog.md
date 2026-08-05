@@ -321,3 +321,273 @@ VERDICT ON THE STRESS TEST: the format bent in three places
 else; the residence rule was CONFIRMED by an alien domain rather
 than strained; and the sliding law replicated outside software.
 Overfit risk was real and is now measured, not assumed.
+
+## 2026-08-04 — round eight: elementa_programmatis (the descent)
+
+New STRATUM, from a brainstorm with Fran on future applications:
+the models so far described ARTIFACTS (a language, an OS, a file);
+this one descends INTO the program, to its elements. Fran's
+framing, which became the stratum's founding doctrine: the
+interesting layer is language-ABSTRACT — "what a program actually
+is vs the specific language implementation."
+
+33. THE INTENTION DOCTRINE (Fran's ruling, the stratum's
+    foundation): the natura kind is determined by the author's
+    INTENTION; the language construct is only the realization —
+    forma/materia, mapping many-to-many. Witness in both
+    directions: one intention (constans) wears four C89 garments
+    (macro / enumerator / const object / bare discipline); one
+    garment (`const`) spells two intentions (true constancy vs a
+    read-only covenant on an access path). Consequence: this
+    stratum is NOT an annotated AST — the AST says what was
+    written, natura says what the thing IS, and the description
+    survives porting. This is also the vocabulary layer the
+    CLAUDE.md "extra type system" (annotation vision, parked
+    01KXTX7FA3) has been waiting for: an intention declaration
+    turns a fluxus-provable fact into a JUDGMENT.
+34. BEARER doctrine generalized DOWN a level: genus status with
+    geritur_a (open relation — bearers cross models). durabilitas
+    recorded as a DERIVED property: it follows the bearer's life
+    (ephemera/persistens are the two regions, process-death the
+    border). SLIDING LAW CASE FIVE: durability slides to the
+    bearer. gerens= was born for state machines (round five);
+    the same cut now organizes state itself.
+35. EFFECTS UNIFIED BY BEARER: every effectus = a mutation of
+    someone's status; species divide by WHAT is mutated
+    (mutatio_memoriae / scriptio_externa / allocatio /
+    terminatio), not how. First genus of EVENTS rather than
+    substances. Plus the apertus/occultus cut: memcpy mutates
+    openly (through a parameter, visible), strtok covertly —
+    impure-but-honest vs the betrayal.
+36. PURITY HAS TWO AXES — the stratum's flagship truth-catch:
+    "no side effects" names only hidden OUTPUTS; hidden INPUTS
+    (reading state not passed as a parameter) break purity too.
+    rand is the perfect one-function lesson: reads AND writes
+    its hidden seed. functio_pura is a sub-genus (v0 dares it;
+    dubium carried — the argument is that the differentia buys a
+    BUNDLE of licenses: memoize, reorder, parallelize, test
+    without fixtures; a differentia that begets faculties marks
+    essence).
+37. VERITAS/PROIECTIO enters the library: proiectio sub status,
+    differentia = recomputable from its veritas, hence LICENTIA
+    DELENDI — the operationally gravest property no syntax
+    carries. The house lived this doctrine in three places
+    (tabularium .db, silva caches, silex working tree) before it
+    was written here. Species: artefactum_aedificationis ("make
+    clean" is innocent BECAUSE projection), promptuarium,
+    index_derivatus.
+38. Surfaced, undescribed: TYPUS (functio.accipit/reddit),
+    CONSTRUCTUM_LINGUAE (the material side of the intention
+    doctrine), PROCESSUS (bearer of all ephemeral state —
+    programma vs processus is form vs instance, again). The
+    dictionary as BESTIARY emerges: libc individua chosen because
+    each TEACHES a truth of the stratum (printf, memcpy, strtok,
+    rand, malloc, abs, strlen).
+39. libc forced the form/implementation recursion AGAIN: libc is
+    form; glibc/musl/msvcrt implement it. Carried as dubium
+    (implementatio_bibliothecae — born only when reality begs).
+    sqlite's EMPTY dependet_ex recorded as itself notable.
+    bibliotheca's dictionary is the first designed to be
+    HARVESTED, not typed (aedilis measures dependet_ex today).
+
+Naming: functio kept with the abuse-of-language note in place
+(Pascal distinguished functio/procedura; C flattened it — the
+Pieper catch is in the genus's own name); reddit_valorem falsum =
+procedura by its old name. "modulus" avoided for the library
+genus (taken by natura's own metamodel) → bibliotheca. DSL
+deliberately deferred to lingua_programmandi (differentia
+universalis/specialis, inserta/externa).
+
+## 2026-08-04 — round nine: the twins kill effectus (v0→v1, same day)
+
+Fran, off the top of his head: "state mutation" and "state
+query/read." Two words; a genus died.
+
+40. GEMINI: lectio + mutatio born as genera — the fundamental
+    EVENTS of a status's life (written by mutation, made
+    fruitful by reading). mutatio's definitio names the deep
+    house fact: a mutation is exactly what an ACTUM records —
+    event sourcing = the doctrine that mutations deserve
+    reification, and the volumen has practiced it all along.
+    lectio's dual fact: reads leave no trace unless custodia
+    deliberately records them (audit domains reify reads too).
+41. EFFECTUS DIED AS A GENUS one round after its birth — v0's
+    own unification sentence ("omnis effectus = mutatio status
+    cuiusdam gerentis") was the confession, unread. And
+    effect-hood is BOUNDARY-RELATIVE: what memcpy does openly,
+    a caller of memcpy on a global does covertly — same
+    mutation, different verdict per declared interface. A
+    position, not an essence. The multiplicity ruling recurring
+    for events: "author" is not a kind of person, "side effect"
+    is not a kind of mutation. Munera relationes sunt, in
+    eventibus quoque. Species migrated to mutatio; "effectus
+    secundarius" survives as explained vocabulary in mutatio's
+    definitio. The declaratio (apertus/occultus) property
+    survives WITH its relativity confessed in the nota.
+42. PURITY UNIFIED: v0's "two axes" become ONE criterion (the
+    declared channel) applied to the two twins — lectiones only
+    through parameters, mutationes not at all. rand remains the
+    one-function lesson (breaks both).
+43. mutatio grew the two properties that matter for the house's
+    future: idempotens (replay safety — refolding acta) and
+    commutativa (order-independence — the G8 replica-merge
+    conversation, arriving as a property of mutation kinds).
+    transactio joined as species: the atomic compound mutation
+    (K1 law: plagulam condere = one transaction).
+44. Meyer's command-query separation named in the section
+    comment as the discipline of the twins ("asking must not
+    change the answer") with the house witnesses: tabularii
+    quaerere/gerere, SQL SELECT/UPDATE. The cut recurs
+    everywhere because it is real. scanf joined the bestiary as
+    printf's twin (lectio externa + open memory mutation in one
+    function).
+
+Method note: this is the fastest genus-death yet (hours), and it
+came from Fran REIFYING two relations I had left as mere verbs.
+Lesson for the craft: when a relation's name keeps needing notas
+(legit/mutat carried the whole purity doctrine in annotations),
+the relation may be begging to become a thing.
+
+## 2026-08-04 — round ten: promotions and divisions (v2 + lingua v3)
+
+Four pulls from Fran, all landed:
+
+45. constans DIVIDED: constans_numerica / constans_textualis.
+    Division deliberately NON-exhaustive — null (constans
+    monstratoris) stays under the parent genus as the honest
+    witness, until a third species is begged for. numerica's
+    differentia carries the domain's great abuse: the MAGIC
+    NUMBER is a constant whose intention went undeclared ("a
+    naked number does not carry its own intention"). textualis
+    carries the C89 catch that this house has always compiled
+    against: string literals are NOT const-typed (char*, not
+    const char*) — writing them is UB but the type system is
+    silent; -Wwrite-strings closes the gap between intention
+    and type. Fran's flag set was intention-doctrine praxis
+    years before the doctrine had a name.
+46. proiectio's three species PROMOTED to sub-genera (Fran:
+    "should be their own genera") — and the craft law from
+    round nine confirmed immediately: each brought its own
+    machinery the moment it had room. artefactum_aedificationis
+    got relations (ex_fontibus; per_instrumentum surfacing
+    INSTRUMENTUM_AEDIFICATIONIS — make, aedilis) and species
+    (obiectum_compilatum / exsecutabile_ligatum). promptuarium
+    got the model's first MACHINA STATUUM (fides:
+    congruens/rancidum, gerens=individuum) whose key transitus
+    carries the whole famous difficulty: mutatio_veritatis is
+    INVISIBLE to the cache itself — nobody tells it the truth
+    changed (Karlton's two hard things quoted; both live in
+    this library). index got index_inversus / index_arboris.
+    A species that accumulates properties is begging to be a
+    genus — now measured twice in one day.
+47. status grew CONGRUENTIA (statim/tandem) beside durabilitas,
+    same shape: an electio whose value is not free — single
+    bearer = statim by nature; tandem ARISES when plural
+    bearers carry replicas of one status. The seed of
+    replication (G8) recorded as a property of state, written
+    long before the mechanism exists.
+48. verbum_clavis born in lingua_programmandi (v3): the
+    language's OWN vocabulary, denied to identifiers — the
+    exact boundary latina.h lives on (every forbidden
+    identifier is a verbum_clavis wearing a Latin name).
+    additum_in → versio_linguae: keywords slide to the VERSION
+    (restrict arrived in C99, which is why this house lives
+    without it) — the sliding law reaching vocabulary.
+    Bestiary: static (one word, three meanings — the house's
+    interior/hic_manens/universalis as the published proof),
+    const (two intentions, cross-model reference to
+    elementa_programmatis), goto (Dijkstra 1968 — Dijkstra
+    surfaces, persona not yet described), restrict (the
+    version-slide witness). Keyword vs reserved-word noted as
+    itself a real distinction (contextual keywords exist).
+
+Surfaced this round: instrumentum_aedificationis, dijkstra
+(persona). Next: Fran proposes reading actor.c against the
+stratum — the first deliberate confrontation of the model with
+a real source file, looking for genera the code demands.
+
+## 2026-08-04 — round eleven: the actor.c harvest (12 models)
+
+The confrontation paid: actor.c was read whole, discussed, and
+the discussion became elementa v3 + two NEW models + persona v4.
+Two validations logged first, because they are the method
+working: (a) capsa_tollere/inspicere is EXACTLY the destructive-
+read nota lectio carried hours before the code was read;
+(b) the actor model is the canalis-declaratus criterion at
+entity scale — capsa : actor :: parametra : functio. The purity
+criterion is SCALE-INVARIANT; that promotes it from observation
+toward law.
+
+49. assertio (elementa v3): the executable claim — a
+    proposition carrying its own oracle; "documentation that
+    cannot lie for long: when false, it shouts." Species:
+    praeconditio / postconditio / invarians (Meyer's contract
+    trio as formal interface promises), assertio_statica,
+    assertio_probationis (credo is the house realization).
+    Sister-of-annotation doctrine recorded: assertion checked
+    by the program, annotation by external tools — both
+    propositions about code.
+50. commentarium (elementa v3) with the definitio found in
+    discussion: THE PART OF THE SOURCE THE LANGUAGE PROMISES
+    NOT TO READ. Species divide by addressee and tense:
+    explicativum (why, to humans), documentarium (contract),
+    monitum_futuri (TODO — named debt where it is owed),
+    titulus_iuris, codex_sepultus (commented-out code = a
+    CATEGORY LIE — code wearing commentary as a shroud; where
+    version control exists the grave is superfluous),
+    annotatio_machinae (the ignored channel repurposed to
+    address machines — the house's STML/TOLERA stratum; silva
+    preserving comments byte-for-byte is why the sensor
+    exists).
+51. Deprecated/dead landed as DECLARED vs DISCOVERED (Fran's
+    pull, the cut found in discussion): functio grew machina
+    vita (vigens→deprecata→remota, gerens=individuum —
+    deprecation is a SPEECH ACT with substituit chains like
+    norma) and the ORTHOGONAL proprietas mortua (a provable
+    FACT of the graphs — vocantes/fluxus measure it). The 2x2
+    is real: deprecata-sed-vocata and mortua-numquam-deprecata
+    both exist. Same machine noted as fitting bibliotheca —
+    deferred until pulled.
+52. identificator divided along Scotus's line (Fran associated
+    id with haecceity; the association cracked the genus):
+    identificator_baptismalis prensat haecceitatem (assigned —
+    THIS one, even among perfect twins); sigillum_contenti
+    prensat FORMAM — thisness deliberately discarded, and that
+    discarding is WHY deduplication works. The volumen split
+    its storage along this line (massae/plagulae) before the
+    vocabulary existed.
+53. communicatio.stml born (model 11): actor / nuntius /
+    eventum — genera LOGICA (Fran's word does the intention-
+    doctrine's work). nuntius = reified ADDRESSED communication
+    (a request made into a thing; machina cursus whose
+    consumptio names the destructive read); eventum = the
+    UNADDRESSED happening (ad aliquem vs coram omnibus); and
+    the metamodel's own <eventum> element recognized as this
+    genus — true cognate, unlike the status homonym.
+    disciplina_schematis records the house's two living
+    realizations: actor.c sine schemate, nuntium.h cum
+    schemate.
+54. formae_datorum.stml born (model 12): the purest Linnaean
+    material yet — mathematical forms defined by OPERATIONS,
+    before all languages. Six species with house realizations
+    named: series (xar — segmentation invisible to the form),
+    cauda (capsa), acervus (the CALL STACK: a form nobody
+    creates and everyone uses, realized by the language
+    itself), tabula_associativa (the house NAME tabula_dispersa
+    names the IMPLEMENTATION, not the form — dispersion is
+    technique, association is essence), copia (internamentum
+    as hidden set), arbor (silva named after the form).
+    Dictionary designed to be HARVESTED.
+55. persona v4: Dijkstra (called in by a single keyword),
+    Meyer ("doctor canalium declaratorum ante nos" — begged
+    twice in one day), Duns Scotus (Doctor Subtilis; second
+    scholastic in the dictionary, and like Aquinas his great
+    work carries imperfecta relicta).
+
+Ruling recorded from discussion: architecture-pattern genus
+DEFERRED (catch-all risk); GoF specifically viable later as
+PUBLICATION-membership (relatum publicatum_in → the 1994 opus,
+four auctores) — the planta nomenclature precedent, not an
+essence. Twelve models. Surfaced and waiting: momentum
+(instant), instrumentum_aedificationis, typus,
+constructum_linguae, processus, hewitt (persona), GoF quartet.

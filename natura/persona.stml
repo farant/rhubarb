@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/persona.stml
-  Exemplar semanticum: PERSONA (versio 0, PLASTICUM)
+  Exemplar semanticum: PERSONA (versio 4, PLASTICUM)
+  v3->v4: Meyer (bis postulatus: CQS et pactum), Dijkstra
+  (superfectus a verbo goto), Scotus (haecceitas ad
+  identificatorem) - dictionarium a stratis elementorum et
+  communicationis poscentibus crevit.
 
   Genus trans-dominiale primum: relationes aliorum exemplarium
   (auctor linguae, scriptor normae) hoc genus POPOSCERUNT -
@@ -12,7 +16,7 @@
   more dictionarii biographici); personae TUAE (contactus, socii)
   in voluminibus applicationum, genus hoc citantes.
 -->
-<natura modulus="persona" versio="3" lingua="latina">
+<natura modulus="persona" versio="4" lingua="latina">
 
 <genus nomen="persona">
 
@@ -148,6 +152,52 @@
     <historia>
       <eventum quando="1989" actio="creare">bash</eventum>
     </historia>
+  </individuum>
+
+  <individuum nomen="edsger_dijkstra">
+    <valor nomen="nomina">Edsger Wybe Dijkstra</valor>
+    <valor nomen="natus">1930-05-11</valor>
+    <valor nomen="mortuus">2002-08-06</valor>
+    <historia>
+      <eventum quando="1968" actio="creare">epistula "Go To
+        Statement Considered Harmful"</eventum>
+      <eventum quando="1965" actio="creare">semaphora</eventum>
+    </historia>
+    <nota>Programmatio structa; clavis una (goto) eum in hoc
+      dictionarium vocavit.</nota>
+  </individuum>
+
+  <individuum nomen="bertrand_meyer">
+    <valor nomen="nomina">Bertrand Meyer</valor>
+    <valor nomen="natus">1950-11-21</valor>
+    <historia>
+      <eventum quando="1985" actio="creare">lingua
+        Eiffel</eventum>
+      <eventum quando="1988" actio="creare">liber
+        "Object-Oriented Software Construction" (pactum ut
+        disciplina)</eventum>
+    </historia>
+    <nota>
+      Bis a stratis nostris postulatus uno die: separatio
+      quaestionis et imperii (gemini status), deinde
+      programmatio per pactum (assertio). Doctor canalium
+      declaratorum ante nos.
+    </nota>
+  </individuum>
+
+  <individuum nomen="duns_scotus">
+    <valor nomen="nomina">Ioannes Duns Scotus</valor>
+    <valor nomen="natus">1266</valor>
+    <valor nomen="mortuus">1308-11-08</valor>
+    <historia>
+      <eventum quando="1300" actio="creare">Ordinatio
+        (inceptum; imperfecta relicta)</eventum>
+    </historia>
+    <nota>
+      Doctor Subtilis. Haecceitas eius genus identificatorem
+      divisit: nomen baptismale huius-itatem prensat, sigillum
+      contenti eam consulto abicit.
+    </nota>
   </individuum>
 
 </genus>

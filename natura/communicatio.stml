@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/communicatio.stml
+  Exemplar semanticum: COMMUNICATIO (versio 0, PLASTICUM)
+  Genera: actor, nuntius, eventum.
+
+  Natum ex confrontatione cum lib/actor.c - prima collisio
+  consulta exemplaris cum plagula fontis vera. Genera LOGICA
+  sunt (vocabulum Fran): structurae Nuntius/Capsa in actor.c
+  realizationes sunt, non genera ipsa - doctrina intentionis
+  in communicatione.
+
+  INVENTUM STRATI: criterium canalis declarati per gradus
+  invariabile est. Puritas functionis = canalis unus
+  (parametra intro, reditus foras); exemplar actorum = idem
+  criterium in gradu ENTIS - actor statum proprium solus
+  mutat, et via unica qua alii eum movent capsa eius est.
+  Capsa actori quod parametra functioni.
+
+  DISTINCTIO FUNDAMENTALIS: nuntius INSCRIPTUS est
+  (destinatarius ei debetur), eventum NON (accidit coram
+  omnibus, quivis observans videt). Directum contra sparsum.
+-->
+<natura modulus="communicatio" versio="0" lingua="latina">
+
+<!-- ==================================================
+     ACTOR - ens quod solum per nuntios communicat
+     ================================================== -->
+
+<genus nomen="actor">
+
+  <definitio>
+    Ens logicum cum identitate, statu privato, moribus: cum
+    aliis SOLUM per nuntios communicat. Statum suum solus
+    mutat; statum alienum numquam tangit - petit, nuntio
+    misso. Forma ab Hewitt (1973) nominata, ab Erlang probata,
+    a domo nostra in actor.c realizata.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="mittit" ad="nuntius" multiplex="verum"/>
+    <relatio nomen="accipit" ad="nuntius" multiplex="verum"/>
+    <relatio nomen="custodit" ad="status"
+      modulus="elementa_programmatis" multiplex="verum"
+      nota="status PRIVATUS: nemo alius eum legit nec mutat -
+            hoc ipsum exemplar actorum definit"/>
+    <relatio nomen="capsa_eius" ad="cauda"
+      modulus="formae_datorum"
+      nota="canalis declaratus unicus quo alii statum eius
+            movent - capsa actori quod parametra functioni"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     NUNTIUS - communicatio reificata et inscripta
+     ================================================== -->
+
+<genus nomen="nuntius">
+
+  <definitio>
+    Communicatio reificata: data in itinere INSCRIPTA -
+    destinatarius ei debetur. Actus communicandi in rem
+    conversus: poni in caudam, recordari, iterum agi potest.
+    Mittere nuntium = petere ut alter se mutet; petitio ipsa
+    res facta.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="genus_nuntii" genus="textus"
+      nota="species nuntiorum in applicationibus tempore
+            currendi nominantur ('tick', 'click') - hic natura
+            mordere potest: genera nuntiorum a bibliotheca
+            definita"/>
+    <proprietas nomen="disciplina_schematis" genus="electio"
+      nota="sine schemate = sacculus clavium, typi in lectione
+            negotiati (actor.c); cum schemate = claves et typi
+            ante declarati (nuntium.h domus). Realizationes
+            ambae in domo vivunt - forma una, disciplinae
+            oppositae">
+      <optio>sine_schemate</optio>
+      <optio>cum_schemate</optio>
+    </proprietas>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="creatus"/>
+    <status nomen="missus"/>
+    <status nomen="traditus"
+      nota="in capsa destinatarii, nondum lectus"/>
+    <status nomen="consumptus"/>
+    <transitus a="creatus" ad="missus" per="missio"/>
+    <transitus a="missus" ad="traditus" per="traditio"/>
+    <transitus a="traditus" ad="consumptus" per="consumptio"
+      nota="lectio destructiva caudae - compositum lectionis
+            et mutationis (vide elementa_programmatis.lectio)"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="missus_a" ad="actor"/>
+    <relatio nomen="destinatus_ad" ad="actor"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     EVENTUM - res gesta non inscripta
+     ================================================== -->
+
+<genus nomen="eventum">
+
+  <definitio>
+    Res gesta NON inscripta: accidit, et quivis observans
+    videre potest - nulli debetur. A nuntio inscriptione
+    differt: nuntius AD aliquem, eventum CORAM omnibus.
+  </definitio>
+
+  <nota>
+    Elementum "eventum" in historiis exemplarium horum hoc
+    ipsum genus est: historia rei = cauda eventuum eius, status
+    praesens = plicatura. Cognatio vera, non homonymia -
+    metamodulus noster genus suum iam adhibebat.
+  </nota>
+
+  <relationes>
+    <relatio nomen="observatur_ab" ad="actor" multiplex="verum"
+      nota="observantes se subscribunt; res gesta eos non
+            novit - hoc eam a nuntio distinguit"/>
+  </relationes>
+
+</genus>
+
+</natura>

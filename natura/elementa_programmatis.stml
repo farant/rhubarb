@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/elementa_programmatis.stml
+  Exemplar semanticum: ELEMENTA PROGRAMMATIS (versio 3, PLASTICUM)
+  Genera: status (+proiectio, sub qua artefactum_aedificationis,
+  promptuarium, index), lectio, mutatio, functio (+functio_pura),
+  constans (+numerica, textualis), bibliotheca, assertio,
+  commentarium, identificator.
+
+  TRANSFORMATIONES v0->v1 (gemini a Fran pulsi):
+  (1) genera lectio et mutatio nata - eventus fundamentales
+      vitae status; (2) genus EFFECTUS MORTUUM: positio erat,
+      non genus - "effectus secundarius" = mutatio praeter
+      canalem declaratum, iudicium ad limitem relativum (quod
+      memcpy aperte facit, vocans eius super statum universalem
+      occulte facit); species ad mutationem migraverunt;
+      (3) axes duo puritatis ad criterium UNUM redacti (canalis
+      declaratus) in geminos applicatum; (4) scanf in bestiarium
+      (geminum printf).
+
+  TRANSFORMATIONES v1->v2 (Fran pulsante):
+  (5) species proiectionis ad SUB-GENERA promotae (artefactum
+      aedificationis, promptuarium, index) - quaeque machinam
+      propriam statim attulit: lex artis confirmata, species
+      quae proprietates accumulat genus fieri petit;
+  (6) constans divisa: numerica / textualis - divisio NON
+      exhaustiva (null monstratoris manet, testis honestus);
+  (7) status crevit congruentiam (statim/tandem) iuxta
+      durabilitatem - oritur ubi gerentes plures.
+
+  TRANSFORMATIONES v2->v3 (post confrontationem actor.c):
+  (8) genus assertio: propositio exsecutabilis quae oraculum
+      suum secum fert; (9) genus commentarium: pars fontis quam
+      lingua legere NON promittit - species per destinatarium
+      et intentionem; (10) functio machinam vitae accepit
+      (vigens/deprecata/remota - DECLARATA, actus loquendi) et
+      proprietatem mortua (INVENTA - factum graphi; cruciantur:
+      deprecata-sed-vocata, mortua-numquam-deprecata);
+      (11) genus identificator secundum lineam Scoti divisum:
+      identitas baptismalis (haecceitas) contra sigillum
+      contenti (forma - huius-itas consulto abiecta, ideo
+      deduplicatio operatur).
+
+  STRATUM NOVUM: exemplaria priora ARTEFACTA descripserunt
+  (linguam, systema, plagulam); hoc descendit INTRA programma,
+  ad elementa ex quibus constat.
+
+  DOCTRINA INTENTIONIS (fundamentum strati): genus elementi ab
+  INTENTIONE auctoris determinatur; constructum linguae materiam
+  solam praebet (forma/materia). Ratio multa-ad-multa:
+  - vestes multae, res una: constans in C89 quattuor modis
+    induitur (macro praeprocessoris, enumerator, obiectum
+    'const' ornatum, variabilis disciplina sola custodita);
+  - vestis una, res duae: 'const' in obiecto constantiam dicit,
+    in via accessus (parametrum monstratoris) PACTUM dicit -
+    promissum non scribendi, non constantiam rei.
+  Ideo stratum hoc NON est arbor syntactica ornata: arbor dicit
+  quid SCRIPTUM sit, exemplar hoc quid res SIT. Descriptio
+  linguam superstat: programma translatum arborem suam perdit,
+  haec vera manent.
+
+  ORDO GENERUM = ordo pendentiae definitionum: status fundamentum
+  est; gemini (lectio, mutatio) per statum definiuntur - omnis
+  vita status ex his duobus constat; functio per geminos et
+  canalem declaratum; bibliotheca elementa colligit.
+
+  CAVE NOMINUM: "constans" macro latina.h est (const) - in STML
+  innocens, in generatione C futura cavendum. Elementum <status>
+  in machina_statuum modum discretum machinae nominat; genus
+  "status" hic valorem custoditum mutabilem describit - cognati,
+  non idem.
+
+  DILATUM: lingua specialis dominii (DSL) ad exemplar
+  lingua_programmandi pertinet (differentia universalis/
+  specialis, inserta/externa) - editio futura illius plagulae.
+-->
+<natura modulus="elementa_programmatis" versio="3" lingua="latina">
+
+<!-- ==================================================
+     STATUS - valor custoditus mutabilis
+     ================================================== -->
+
+<genus nomen="status">
+
+  <definitio>
+    Valor custoditus qui in tempore mutari potest: inter eventus
+    manet, ab eventibus mutatur. Status praesens = PLICATURA
+    mutationum praeteritarum (doctrina voluminis gradu semantico:
+    acta veritas, status proiectio). Semper ab aliquo GERENTE
+    portatur, et vita eius vitam gerentis sequitur.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="durabilitas" genus="electio"
+      nota="DERIVATA, non libera: durabilitas vitam gerentis
+            sequitur (lex lapsus: proprietas ad subiectum verum
+            labitur). Mors processus terminus regionum est.">
+      <optio>ephemera</optio>
+      <optio>persistens</optio>
+    </proprietas>
+    <proprietas nomen="congruentia" genus="electio"
+      nota="uno gerente STATIM natura sua; TANDEM oritur ubi
+            gerentes plures replicae unius status sunt - lectio
+            post mutationem vetus videre potest donec replicae
+            conveniant. Semen replicationis futurae.">
+      <optio>statim</optio>
+      <optio>tandem</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="geritur_a" ad="*"
+      nota="gerens: vocatio (localis), processus (universalis,
+            hic_manens), plagula, volumen, machina. Aperta
+            consulto - gerentes exemplaria transeunt"/>
+    <relatio nomen="legitur_a" a="functio" inversa="verum"
+      nota="impletur a functio.legit"/>
+    <relatio nomen="mutatur_a" a="functio" inversa="verum"
+      nota="impletur a functio.mutat"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="errno">
+    <valor nomen="durabilitas">ephemera</valor>
+    <relatum nomen="geritur_a" ad="processus" externum="verum"/>
+    <nota>
+      Status universalis processus a libc praebitus; status
+      occultus celeberrimus - functiones multae eum tacite
+      mutant, signaturae nihil dicunt.
+    </nota>
+  </individuum>
+
+  <individuum nomen="semen_rand">
+    <valor nomen="durabilitas">ephemera</valor>
+    <relatum nomen="geritur_a" ad="processus" externum="verum"/>
+    <nota>Status celatus intra libc quem rand legit et mutat.</nota>
+  </individuum>
+
+  <individuum nomen="index_strtok">
+    <valor nomen="durabilitas">ephemera</valor>
+    <relatum nomen="geritur_a" ad="processus" externum="verum"/>
+    <nota>
+      Monstrator celatus quem strtok inter vocationes servat -
+      status occultus qui vocationes implicatas vetat.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     PROIECTIO - status ex alio statu recomputabilis
+     (veritas/proiectio: doctrina domus in tribus locis
+     iam vixit - tabularium .db, silvae cellae, silicis
+     arbor laborans - antequam hic scripta est)
+     ================================================== -->
+
+<genus nomen="proiectio" sub="status">
+
+  <differentia>
+    Ex alio statu (VERITATE sua) integre recomputari potest.
+    Inde LICENTIA DELENDI: proiectionem delere nihil perdit
+    quod non renascatur - proprietas operativa gravissima quam
+    nulla syntaxis fert; sola intentio eam dicit.
+  </differentia>
+
+  <relationes>
+    <relatio nomen="veritas_sua" ad="status"
+      nota="status ex quo recomputatur"/>
+  </relationes>
+
+  <!-- dictionarium v1 (species tres) ad sub-genera promotum
+       v2 Fran iubente: quaeque suam machinam afferebat -->
+
+</genus>
+
+<genus nomen="artefactum_aedificationis" sub="proiectio">
+
+  <differentia>
+    Proiectio fontium per aedificationem facta: fons veritas,
+    artefactum proiectio. "make clean" innocens est QUIA
+    proiectio - licentia delendi in moribus omnium fabrorum,
+    raro nominata.
+  </differentia>
+
+  <relationes>
+    <relatio nomen="ex_fontibus" ad="plagula_fontis"
+      modulus="plagula_computatralis" multiplex="verum"/>
+    <relatio nomen="per_instrumentum"
+      ad="instrumentum_aedificationis" externum="verum"
+      nota="genus superficit (make, aedilis domus) - nondum
+            descriptum"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="obiectum_compilatum">
+    <definitio>
+      Plagula obiecti ex fonte uno: gradus intermedius, ligando
+      destinatus.
+    </definitio>
+  </species>
+
+  <species nomen="exsecutabile_ligatum">
+    <definitio>
+      Artefactum ultimum: obiecta ligata quae currere possunt.
+    </definitio>
+  </species>
+
+</genus>
+
+<genus nomen="promptuarium" sub="proiectio">
+
+  <differentia>
+    Proiectio ad celeritatem servata: valor semel computatus ne
+    iterum computetur. Corruptum deleri potest, non reparari
+    debet - deletio innocens, reparatio supervacua.
+  </differentia>
+
+  <machina_statuum nomen="fides" gerens="individuum">
+    <status nomen="congruens" nota="veritati consonat"/>
+    <status nomen="rancidum"
+      nota="veritas mutata, promptuarium vetus manet"/>
+    <transitus a="congruens" ad="rancidum" per="mutatio_veritatis"
+      nota="transitus promptuario ipsi INVISIBILIS - nemo ei
+            nuntiat veritatem mutatam; tota difficultas hic"/>
+    <transitus a="rancidum" ad="congruens" per="renovatio"/>
+  </machina_statuum>
+
+  <nota>
+    "Res durae duae in computatione: invalidatio promptuarii et
+    nominatio rerum" (Karlton) - ambae in hac bibliotheca
+    habitant.
+  </nota>
+
+</genus>
+
+<genus nomen="index" sub="proiectio">
+
+  <differentia>
+    Proiectio ad quaerendum ordinata: veritas ordinem quem
+    quaerens petit non habet; index eum praebet. ORDO essentia
+    eius - data eadem, dispositio nova.
+  </differentia>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="index_inversus">
+    <definitio>
+      A verbo ad loca: quaestioni plenitextus servit - textus
+      per documenta currit, index per verba.
+    </definitio>
+  </species>
+
+  <species nomen="index_arboris">
+    <definitio>
+      Claves ordinatae in arbore: quaestioni per clavem et
+      per intervallum servit - forma basium datorum.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     GEMINI STATUS - lectio et mutatio
+     (v0->v1: genus effectus his natis MORTUUM. Positio
+     erat, non genus: "effectus secundarius" iudicium ad
+     limitem declaratum relativum est - sicut "auctor"
+     non genus personae sed relatio, ita "effectus" non
+     genus mutationis sed positio. Munera relationes
+     sunt, in eventibus quoque.)
+
+     Disciplina Meyer (separatio quaestionis et imperii):
+     "interrogatio responsum ne mutet." Domus eam vivit:
+     tabularii quaerere/gerere, SQL SELECT/UPDATE -
+     divisio ubique recurrit quia realis est.
+     ================================================== -->
+
+<genus nomen="lectio">
+
+  <definitio>
+    Eventus quo status observatur, ipso immutato: dimidium
+    alterum vitae status - mutatione scribitur, lectione
+    fructum fert. Vestigium nullum relinquit nisi custodia
+    eam consulto recordet (domini securitatis lectiones quoque
+    reificant - index accessuum).
+  </definitio>
+
+  <nota>
+    Lectio "destructiva" (fistula, cauda promens) honeste
+    COMPOSITUM est - lectio et mutatio simul, non species
+    lectionis: quod legere mutat, iam non solum legit.
+  </nota>
+
+  <relationes>
+    <relatio nomen="obiectum" ad="status"
+      nota="status qui observatur"/>
+    <relatio nomen="hauritur_a" a="functio" inversa="verum"
+      nota="impletur a functio.haurit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="lectio_memoriae">
+    <definitio>
+      Status processu gestus legitur: variabilis universalis,
+      hic_manens, aut memoria per monstratorem designata.
+    </definitio>
+  </species>
+
+  <species nomen="lectio_externa">
+    <definitio>
+      Status extra processum legitur: plagula, terminale, rete,
+      horologium. Dimidium legens eius quod vulgo I/O dicitur -
+      geminum scriptionis externae.
+    </definitio>
+  </species>
+
+</genus>
+
+<genus nomen="mutatio">
+
+  <definitio>
+    Eventus quo status mutatur: quod ACTA recordant. Ubi
+    mutationes ut res servantur (in volumine domus actum =
+    mutatio reificata), historia integra manet et status quivis
+    plicatura recomputari potest. Species per gerentem status
+    mutati dividuntur - quod mutatur, non quomodo. Mutatio
+    praeter canalem declaratum effecta vulgo "effectus
+    secundarius" dicitur - positio, non genus (vide supra).
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="declaratio" genus="electio"
+      nota="iudicium RELATIVUM ad limitem declaratum: apertus =
+            in signatura visibilis (memcpy honestum); occultus =
+            praeter signaturam (strtok proditor). Quod intus
+            apertum, extrinsecus occultum esse potest.">
+      <optio>apertus</optio>
+      <optio>occultus</optio>
+    </proprietas>
+    <proprietas nomen="idempotens" genus="veritas"
+      nota="iterata idem efficit ('x=5' idempotens, 'x+1' non) -
+            securitas repetitionis, fundamentum actorum iterum
+            plicandorum"/>
+    <proprietas nomen="commutativa" genus="veritas"
+      nota="ordo inter pares non refert (unio in multiplex) -
+            fundamentum fusionis replicarum futurae"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="obiectum" ad="status"
+      nota="status qui mutatur"/>
+    <relatio nomen="efficitur_a" a="functio" inversa="verum"
+      nota="impletur a functio.efficit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="mutatio_memoriae">
+    <definitio>
+      Status processu gestus mutatur: variabilis universalis,
+      hic_manens, aut memoria vocantis per monstratorem.
+    </definitio>
+  </species>
+
+  <species nomen="scriptio_externa">
+    <definitio>
+      Status extra processum mutatur: plagula, terminale, rete.
+      Dimidium scribens eius quod vulgo I/O dicitur - geminum
+      lectionis externae.
+    </definitio>
+  </species>
+
+  <species nomen="allocatio">
+    <definitio>
+      Status allocatoris mutatur: memoria petita aut reddita.
+      In domo nostra piscina gerens est.
+    </definitio>
+  </species>
+
+  <species nomen="terminatio">
+    <definitio>
+      Processus ipse finitur - mutatio quae gerentem omnium
+      statuum ephemerorum tollit; ultima ideo mutationum.
+    </definitio>
+  </species>
+
+  <species nomen="transactio">
+    <definitio>
+      Mutatio composita atomica: tota fit aut nulla - partes
+      eius numquam separatim visibiles. In domo nostra lex
+      prima voluminis (plagulam condere = transactio una).
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     FUNCTIO - subprogramma nominatum
+     (nomen ipsum abusui obnoxium: mathematica strictius
+     dicit; Pascal functionem a procedura distinxit; C
+     omnia "functiones" vocat, plurima procedurae sunt)
+     ================================================== -->
+
+<genus nomen="functio">
+
+  <definitio>
+    Subprogramma nominatum: parametra accipit, computat,
+    fortasse valorem reddit, fortasse mutationes efficit,
+    fortasse lectiones haurit. Vocatur et redit - unitas minima
+    laboris nominata quam programma iterare potest.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="reddit_valorem" genus="veritas"
+      nota="falsum = procedura vetere nomine (Pascal distinxit,
+            C perdidit) - agit, non computat"/>
+    <proprietas nomen="parametra_varia" genus="veritas"
+      ordinarius="falsum"
+      nota="numerus parametrorum apertus - printf testis"/>
+    <proprietas nomen="mortua" genus="veritas" ordinarius="falsum"
+      nota="INVENTA, non declarata: nemo eam vocat (graphus
+            vocationum) aut nulla via ad eam ducit (fluxus) -
+            factum probabile, non actus loquendi. Cum vita
+            cruciatur: deprecata-sed-vocata et
+            mortua-numquam-deprecata ambae exsistunt"/>
+  </proprietates>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="vigens"/>
+    <status nomen="deprecata"
+      nota="DECLARATA: actus loquendi, non factum - adhuc
+            currit, formaliter improbata; successor plerumque
+            nominatur (catena substituit, ut in normis)"/>
+    <status nomen="remota"/>
+    <transitus a="vigens" ad="deprecata" per="deprecatio"/>
+    <transitus a="deprecata" ad="remota" per="remotio"/>
+    <transitus a="deprecata" ad="vigens" per="restitutio"
+      nota="rarum sed verum"/>
+  </machina_statuum>
+  <!-- eadem machina bibliothecae aptatur - crescat cum
+       tractione, non ante -->
+
+  <actiones>
+    <actio nomen="vocari" nota="eventus fundamentalis - functio
+      vivit vocata"/>
+    <actio nomen="definiri"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="accipit" ad="typus" externum="verum"
+      multiplex="verum"
+      nota="genus typus superficit, nondum descriptum"/>
+    <relatio nomen="reddit" ad="typus" externum="verum"/>
+    <relatio nomen="vocat" ad="functio" multiplex="verum"
+      nota="graphus vocationum - in parochia legati
+            vocantes/vocata hoc metiuntur"/>
+    <relatio nomen="legit" ad="status" multiplex="verum"
+      nota="status lectus praeter parametra - lectio occulta,
+            introitus occultus puritatis"/>
+    <relatio nomen="mutat" ad="status" multiplex="verum"
+      nota="status mutatus praeter reditum - mutatio occulta,
+            exitus occultus puritatis"/>
+    <relatio nomen="efficit" ad="mutatio" multiplex="verum"
+      nota="genera mutationis quae exercet"/>
+    <relatio nomen="haurit" ad="lectio" multiplex="verum"
+      nota="genera lectionis quae exercet - geminum efficiendi
+            (haurire: ex fonte ducere)"/>
+    <relatio nomen="praebetur_a" a="bibliotheca" inversa="verum"
+      nota="impletur a bibliotheca.praebet"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       Bestiarium: individua recordi publici (libc) quae
+       genera huius strati DOCENT - quisque exemplum
+       alicuius veritatis. -->
+
+  <individuum nomen="printf">
+    <valor nomen="reddit_valorem">verum</valor>
+    <valor nomen="parametra_varia">verum</valor>
+    <relatum nomen="efficit" ad="scriptio_externa"/>
+    <relatum nomen="praebetur_a" ad="libc"/>
+    <nota>Impura celeberrima: terminale mutat, numerum
+      characterum reddit quem nemo legit.</nota>
+  </individuum>
+
+  <individuum nomen="scanf">
+    <valor nomen="reddit_valorem">verum</valor>
+    <valor nomen="parametra_varia">verum</valor>
+    <relatum nomen="haurit" ad="lectio_externa"/>
+    <relatum nomen="efficit" ad="mutatio_memoriae"/>
+    <relatum nomen="praebetur_a" ad="libc"/>
+    <nota>
+      Geminum printf: illa scribit, haec legit - et memoriam
+      vocantis per monstratores mutat (aperte). Lectio externa
+      et mutatio aperta in functione una.
+    </nota>
+  </individuum>
+
+  <individuum nomen="memcpy">
+    <valor nomen="reddit_valorem">verum</valor>
+    <relatum nomen="efficit" ad="mutatio_memoriae"/>
+    <relatum nomen="praebetur_a" ad="libc"/>
+    <nota>
+      Mutatio APERTA: per parametrum, in signatura visibilis -
+      impura sed honesta. Contrarium strtok.
+    </nota>
+  </individuum>
+
+  <individuum nomen="strtok">
+    <valor nomen="reddit_valorem">verum</valor>
+    <relatum nomen="legit" ad="index_strtok"/>
+    <relatum nomen="mutat" ad="index_strtok"/>
+    <relatum nomen="praebetur_a" ad="libc"/>
+    <nota>
+      Proditio celeberrima bibliothecae normalis: status occultus
+      in signatura invisibilis; vocationes implicatae falluntur.
+      Monumentum cur introitus occulti nominandi sint.
+    </nota>
+  </individuum>
+
+  <individuum nomen="rand">
+    <valor nomen="reddit_valorem">verum</valor>
+    <relatum nomen="legit" ad="semen_rand"/>
+    <relatum nomen="mutat" ad="semen_rand"/>
+    <relatum nomen="praebetur_a" ad="libc"/>
+    <nota>
+      Ambobus axibus impura in functione una: semen legit
+      (introitus occultus) ET mutat (exitus occultus) - lectio
+      perfecta duorum axium puritatis.
+    </nota>
+  </individuum>
+
+  <individuum nomen="malloc">
+    <valor nomen="reddit_valorem">verum</valor>
+    <relatum nomen="efficit" ad="allocatio"/>
+    <relatum nomen="praebetur_a" ad="libc"/>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     FUNCTIO PURA - sine occultis
+     ================================================== -->
+
+<genus nomen="functio_pura" sub="functio">
+
+  <differentia>
+    Criterium UNUM in geminos applicatum: lectiones solum per
+    parametra (memoria monstrata inclusa - vide strlen),
+    mutationes NULLAE, ne per parametra quidem (memcpy
+    excluditur) - fructus totus in valore reddito. Idem valor
+    pro iisdem argumentis semper; vocatio nusquam vestigium
+    relinquit. Vulgus "sine effectibus" dicit et dimidium
+    tantum nominat: functio statum universalem legens sine
+    mutationibus est nec tamen pura (rand testis ambo frangens).
+    Perspicuitas referentialis sequitur: vocatio pro valore suo
+    substitui potest.
+  </differentia>
+
+  <nota>
+    LICENTIAE quas puritas emit (cur differentia haec sub-genus
+    meretur): memorare (valorem semel computatum servare),
+    reordinare, simul exsequi, probare sine apparatu. Differentia
+    quae facultates parit essentiam signat, non accidens.
+  </nota>
+
+  <dubium>
+    An proprietas potius quam sub-genus (puritas="verum")?
+    Argumentum sub-generis: fasciculus licentiarum supra. Fran
+    nondum iudicavit - v0 sub-genus audet.
+  </dubium>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="abs">
+    <valor nomen="reddit_valorem">verum</valor>
+    <relatum nomen="praebetur_a" ad="libc"/>
+    <nota>Puritas sine subtilitate: valor in, valor ex.</nota>
+  </individuum>
+
+  <individuum nomen="strlen">
+    <valor nomen="reddit_valorem">verum</valor>
+    <relatum nomen="praebetur_a" ad="libc"/>
+    <nota>
+      Pura CUM subtilitate C: memoria monstrata pars INTROITUS
+      est - in C introitus latius quam parametra patet. Pura
+      manet quia legit solum quod argumentum designat.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     CONSTANS - valor cui intentio est numquam mutari
+     (CAVE: "constans" macro latina.h est - in STML
+     innocens, in generatione C futura cavendum)
+     ================================================== -->
+
+<genus nomen="constans">
+
+  <definitio>
+    Valor cuius INTENTIO est numquam post ortum mutari -
+    contrarium status: ille mutari exspectatur, hic mutari
+    vetatur. Genus ab intentione, non a constructo: eadem res
+    macro, enumerator, obiectum ornatum, aut disciplina nuda
+    esse potest - vestes quattuor, constans unum.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="realizatur_per" ad="constructum_linguae"
+      externum="verum" multiplex="verum"
+      nota="genus constructum_linguae superficit, nondum
+            descriptum - latus materiale doctrinae intentionis"/>
+  </relationes>
+
+  <dubium>
+    'const' in via accessus (parametrum monstratoris) rem ALIAM
+    dicit: pactum non scribendi per hoc nomen - promissum
+    functionis, non constantia rei. Genus proprium
+    (pactum_lectionis?) meretur an nota sufficit?
+  </dubium>
+
+  <!-- ================= DICTIONARIUM =================
+       divisio numerica/textualis NON exhaustiva: null nec
+       numerica nec textualis (constans monstratoris) - sub
+       genere ipso manet donec species tertia poscatur -->
+
+  <individuum nomen="null">
+    <nota>
+      Intentio: "monstrator ad nihil". Realizationes famose
+      variae (0, ((void*)0), macro NIHIL domus nostrae) -
+      materiae multae, forma una; testis principalis doctrinae
+      intentionis.
+    </nota>
+  </individuum>
+
+</genus>
+
+<genus nomen="constans_numerica" sub="constans">
+
+  <differentia>
+    Quantitas: arithmetica in ea licet. Nomine carens "numerus
+    magicus" dicitur - constans cuius intentio tacita mansit;
+    abusus celeberrimus generis, quia numerus nudus intentionem
+    suam non fert.
+  </differentia>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="pi">
+    <nota>
+      Constans ante omnem linguam - mathematica pura. Testis
+      quod genus hoc linguas superstat: intentio "numquam
+      mutari" nihil de computatris scit.
+    </nota>
+  </individuum>
+
+  <individuum nomen="eof">
+    <nota>
+      Intentio: "non character" - valor extra alphabetum qui
+      finem significat. Conventione -1, sed intentio valorem
+      praecedit.
+    </nota>
+  </individuum>
+
+</genus>
+
+<genus nomen="constans_textualis" sub="constans">
+
+  <differentia>
+    Series characterum constans, plerumque homini destinata:
+    nuntia, tituli, formae.
+  </differentia>
+
+  <nota>
+    Captura C89: litterae chordarum typo constanti NON ornantur
+    (char*, non const char*) - eas scribere indefinitum est, sed
+    systema typorum tacet. Intentio et typus dissentiunt;
+    vexillum -Wwrite-strings hiatum claudit - domus nostra eo
+    semper compilat, quia intentioni credit, non typo.
+  </nota>
+
+</genus>
+
+<!-- ==================================================
+     BIBLIOTHECA - elementa ad usum repetendum edita
+     ================================================== -->
+
+<genus nomen="bibliotheca">
+
+  <definitio>
+    Collectio elementorum (functionum, constantium, typorum) ad
+    usum repetendum edita: interfaciem praebet, corpus celat.
+    A programmate differt quia initio proprio caret - vivit
+    vocata, numquam sponte currit.
+  </definitio>
+
+  <partes>
+    <pars nomen="interfacies" necessaria="verum"
+      nota="promissum publicum - pars pretiosa (Eskil: interfaciem
+            primum recte fingere, corpus semper emendabile)"/>
+    <pars nomen="corpus" necessaria="verum"
+      nota="impletio celata - mutabilis sine fractura promissi"/>
+    <pars nomen="probationes" necessaria="falsum"
+      nota="honeste optionales, prudenter necessariae"/>
+    <pars nomen="documenta" necessaria="falsum"/>
+  </partes>
+
+  <relationes>
+    <relatio nomen="praebet" ad="*" multiplex="verum"
+      nota="elementa interfaciei: functiones, constantia, typi"/>
+    <relatio nomen="dependet_ex" ad="bibliotheca"
+      multiplex="verum"
+      nota="graphus pendentiarum; in parochia aedilis eum metitur -
+            dictionarium huius generis COLLIGI potest, non scribi"/>
+    <relatio nomen="scripta_in" ad="lingua_programmandi"
+      modulus="lingua_programmandi"/>
+  </relationes>
+  <!-- in C89 modulus linguae non est: interfacies/corpus
+       CONVENTIO est (apud nos include/X.h + lib/X.c), non
+       essentia - eadem lex quam plagula de suffixis invenit -->
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="libc">
+    <relatum nomen="scripta_in" ad="c"
+      modulus="lingua_programmandi"/>
+    <nota>
+      Bibliotheca normalis C, a norma ipsa specificata.
+    </nota>
+    <dubium>
+      libc FORMA est quam glibc, musl, msvcrt IMPLEMENTANT -
+      distinctio lingua/implementatio in bibliothecis recurrit.
+      Genus implementatio_bibliothecae nondum natum; nascatur
+      cum veritas poscat.
+    </dubium>
+  </individuum>
+
+  <individuum nomen="sqlite">
+    <relatum nomen="scripta_in" ad="c"
+      modulus="lingua_programmandi"/>
+    <nota>
+      Bibliotheca datorum ubique inclusa - latissime disposita
+      omnium. SINE pendentiis consulto: relatio dependet_ex
+      vacua ipsa notabilis est. In domo nostra volumen super
+      eam aedificatur.
+    </nota>
+  </individuum>
+
+  <individuum nomen="zlib">
+    <relatum nomen="scripta_in" ad="c"
+      modulus="lingua_programmandi"/>
+    <nota>Compressio ubique - in protocollis, in plagulis, in
+      systematibus innumeris eadem.</nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     ASSERTIO - propositio exsecutabilis
+     ================================================== -->
+
+<genus nomen="assertio">
+
+  <definitio>
+    Propositio exsecutabilis: affirmatio de statu programmatis
+    in puncto, quae oraculum suum secum fert - programma ipsum
+    eam probat dum currit. Documentatio quae diu mentiri non
+    potest: falsa clamat.
+  </definitio>
+
+  <nota>
+    Soror annotationis: assertio a programmate ipso probatur,
+    annotatio ab instrumentis externis - ambae propositiones de
+    codice. Disciplina "per pactum" (Meyer): praeconditio,
+    postconditio, invarians ut promissa interfaciei formalia.
+  </nota>
+
+  <relationes>
+    <relatio nomen="affirmat_de" ad="status"
+      nota="de quo statu propositio loquitur"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="praeconditio">
+    <definitio>
+      Quod vocans debet: verum ante introitum, aut culpa
+      vocantis est.
+    </definitio>
+  </species>
+
+  <species nomen="postconditio">
+    <definitio>
+      Quod functio promittit: verum ante reditum, aut culpa
+      functionis est.
+    </definitio>
+  </species>
+
+  <species nomen="invarians">
+    <definitio>
+      Quod semper tenet: verum inter omnes mutationes rei -
+      forma rei ipsa, ut propositio custodita.
+    </definitio>
+  </species>
+
+  <species nomen="assertio_statica">
+    <definitio>
+      In compilatione probata: propositio quam compilator
+      iudicat, exsecutione non indiget.
+    </definitio>
+  </species>
+
+  <species nomen="assertio_probationis">
+    <definitio>
+      In probationibus vivens: affirmatio de effectu exspectato
+      post actionem. In domo nostra bibliotheca credo eam
+      realizat.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     COMMENTARIUM - quod lingua legere non promittit
+     ================================================== -->
+
+<genus nomen="commentarium">
+
+  <definitio>
+    Pars fontis quam lingua legere NON promittit: textus intra
+    artefactum, lectoribus aliis quam compilatori inscriptus.
+    Species per destinatarium et intentionem dividuntur - cui
+    loquitur, et de quo tempore.
+  </definitio>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="explicativum">
+    <definitio>
+      CUR, non quid - homini legenti id quod codex ipse dicere
+      non potest: consilium, vinculum, causa electionis.
+    </definitio>
+  </species>
+
+  <species nomen="documentarium">
+    <definitio>
+      Promissum interfaciei descriptum: pars contractus, iuxta
+      declarationem habitans.
+    </definitio>
+  </species>
+
+  <species nomen="monitum_futuri">
+    <definitio>
+      Intentio de opere futuro in artefacto praesenti servata
+      (TODO, FIXME): debitum nominatum ubi debetur.
+    </definitio>
+  </species>
+
+  <species nomen="titulus_iuris">
+    <definitio>
+      Ius et licentia: homini legali inscriptum, saepe a nemine
+      lectum, a machinis collectum.
+    </definitio>
+  </species>
+
+  <species nomen="codex_sepultus">
+    <definitio>
+      Codex exclusus commento: mendacium categoriae - codex
+      vestem commentarii gerens, nec vivus nec mortuus. Ubi
+      custodia versionum adest, sepulcrum supervacuum est:
+      historia iam servat quod commentum celat.
+    </definitio>
+  </species>
+
+  <species nomen="annotatio_machinae">
+    <definitio>
+      Machinae inscripta per canalem neglectum: propositiones
+      quas instrumenta legunt, lingua ipsa numquam. In domo
+      nostra stratum STML/TOLERA - et silva commentaria ad
+      litteram servat, ideo sensus adest.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     IDENTIFICATOR - ansa ad haecceitatem
+     ================================================== -->
+
+<genus nomen="identificator">
+
+  <definitio>
+    Nomen cuius essentia REFERENTIA est, non significatio: ansa
+    ad rem. Quod prensare conatur, Scotus "haecceitatem"
+    vocavit - ipsam huius-itatem rei. Species per FONTEM
+    identitatis dividuntur: data an derivata.
+  </definitio>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="identificator_baptismalis">
+    <definitio>
+      Identitas DATA: nomen rei impositum (nomen proprium,
+      ULID, UUID). Haecceitatem individui prensat - HOC, non
+      aliud, etiam si gemella perfecta adsint.
+    </definitio>
+  </species>
+
+  <species nomen="sigillum_contenti">
+    <definitio>
+      Identitas DERIVATA: ex ipso contento computata. FORMAM
+      prensat, non haecceitatem - plagulae duae identicae
+      sigillum unum habent; huius-itas consulto abicitur, et
+      hoc ipsum abiectum est CUR deduplicatio operatur. In domo
+      nostra: massae sine haecceitate, plagulae baptizatae -
+      volumen secundum lineam Scoti divisum antequam
+      vocabularium habuimus.
+    </definitio>
+  </species>
+
+</genus>
+
+</natura>

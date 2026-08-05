@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/lingua_programmandi.stml
-  Exemplar semanticum: LINGUAE PROGRAMMANDI (versio 1, PLASTICUM)
-  Genera tria: lingua_programmandi, versio_linguae,
-  implementatio_linguae.
+  Exemplar semanticum: LINGUAE PROGRAMMANDI (versio 3, PLASTICUM)
+  Genera: lingua_programmandi (+lingua_iussuum), versio_linguae,
+  implementatio_linguae, verbum_clavis.
 
   DISCIPLINA (Pieper, De Abusu Linguae): res describimus UT SUNT,
   non ut applicationes eas velint. Proprietates veras notamus
@@ -29,8 +29,12 @@
   lingua_programmandi (proprietates congruunt = hereditas recta;
   essentia differt = differentia eam fert); (7) relatio
   emittit_pro ad architecturam (exemplar architecturae natum).
+  v2->v3: (8) genus verbum_clavis natum (Fran pulsante):
+  vocabularium linguae ipsius, non programmatis; claves ad
+  VERSIONES adduntur (restrict in C99) - lex lapsus in
+  vocabulario quoque.
 -->
-<natura modulus="lingua_programmandi" versio="2" lingua="latina">
+<natura modulus="lingua_programmandi" versio="3" lingua="latina">
 
 <genus nomen="lingua_programmandi">
 
@@ -385,6 +389,75 @@
       Interpres domus nostrae (officina/) - in c89 scriptus,
       c89 interpretatur. Ipsi in dictionario nostro sumus:
       naturalista paroeciam suam describit.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     VERBUM CLAVIS - vocabularium linguae ipsius
+     (clavis et "reservatum" stricte non idem: omnia
+     verba clavia C reservata sunt; linguae aliae claves
+     contextuales habent, alibi identificatores licitas)
+     ================================================== -->
+
+<genus nomen="verbum_clavis">
+
+  <definitio>
+    Verbum quod lingua sibi vindicat: grammaticae servit,
+    identificatori negatur. Vocabularium linguae ipsius, non
+    programmatis - programma verba sua fingit, haec ficta
+    accipit ut grammaticam.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="verbum_de" ad="lingua_programmandi"/>
+    <relatio nomen="additum_in" ad="versio_linguae"
+      nota="claves per VERSIONES adduntur - lex lapsus:
+            vocabularium versioni labitur, non linguae"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       bestiarium: claves quae aliquid DOCENT -->
+
+  <individuum nomen="static">
+    <relatum nomen="verbum_de" ad="c"/>
+    <nota>
+      Verbum unum, significata TRIA (nexus internus plagulae /
+      duratio localis manens / utrumque in universalibus) -
+      onus celeberrimum vocabularii C. Domus nostra tribus
+      nominibus id explicat: interior, hic_manens, universalis.
+    </nota>
+  </individuum>
+
+  <individuum nomen="const">
+    <relatum nomen="verbum_de" ad="c"/>
+    <relatum nomen="additum_in" ad="c89"/>
+    <nota>
+      In C89 e C++ receptum. Intentiones DUAS vestit:
+      constantiam rei et pactum viae accessus - vide
+      elementa_programmatis.constans, testis principalis
+      doctrinae intentionis.
+    </nota>
+  </individuum>
+
+  <individuum nomen="goto">
+    <relatum nomen="verbum_de" ad="c"/>
+    <nota>
+      Verbum infame: Dijkstra 1968 "Go To Statement Considered
+      Harmful" - clavis una disputationem de programmatione
+      structa accendit. (Dijkstra personam poscit -
+      superficit, nondum descriptus.)
+    </nota>
+  </individuum>
+
+  <individuum nomen="restrict">
+    <relatum nomen="verbum_de" ad="c"/>
+    <relatum nomen="additum_in" ad="c99"/>
+    <nota>
+      Testis legis lapsus in vocabulario: clavis versioni
+      advenit, non linguae - C89 eam nescit, domus nostra ideo
+      sine ea vivit.
     </nota>
   </individuum>
 
