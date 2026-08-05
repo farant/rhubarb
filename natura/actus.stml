@@ -130,7 +130,7 @@
             non habebat"/>
     <relatio nomen="afficit" ad="*"
       nota="quem aut quid mutat"/>
-    <relatio nomen="secundum_legem" ad="lex" externum="verum"
+    <relatio nomen="secundum_legem" ad="lex" modulus="norma"
       nota="genus LEX superficit (cursu quarto notatum: norma
             cui CONFORMARIS, lex quae IMPONITUR) - nondum
             descriptum"/>
@@ -170,7 +170,7 @@
   <relationes>
     <relatio nomen="minister" ad="persona" modulus="persona"/>
     <relatio nomen="recipiens" ad="persona" modulus="persona"/>
-    <relatio nomen="adhibet" ad="res_sacra" externum="verum"
+    <relatio nomen="adhibet" ad="res_sacra" modulus="corporalia"
       nota="genus res_sacra superfectum cursu quarto - res
             consecratae, quarum alienatio restricta"/>
   </relationes>
@@ -390,7 +390,7 @@
       sollemnem incipit. Fundamentum non infinitum regreditur
       sed in constitutione quiescit.
     </nota>
-    <relatum nomen="constituit" ad="lex" externum="verum"/>
+    <relatum nomen="constituit" ad="lex" modulus="norma"/>
   </species>
 
   <species nomen="inauguratio">
@@ -405,7 +405,7 @@
       iam exstabat, vacans. Testis clarissimus discriminis
       inter officium (rem stantem) et tenentem (relationem).
     </nota>
-    <relatum nomen="constituit" ad="officium" externum="verum"/>
+    <relatum nomen="constituit" ad="officium" modulus="organizatio"/>
   </species>
 
   <species nomen="collatio_tituli">

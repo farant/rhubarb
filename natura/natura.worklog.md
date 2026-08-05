@@ -2671,3 +2671,47 @@ Measured: 30 exemplaria / 137 genera / 288 residents / 371 arcs
 
 Measured: 30 exemplaria / 140 genera / 294 residents / 377 arcs
 / 0 vulnera.
+
+## 2026-08-05 — round forty: instrumenta — measured, not guessed
+
+Fran asked what tools I want. Answered from FRICTION DATA rather
+than speculation, and the measurement inverted my expectation.
+
+188. TWO SUSPICIONS, BOTH CONFIRMED AND WORSE THAN GUESSED:
+     (a) FOUR STALE UMBRAE — `actus` still flagged `lex`,
+         `res_sacra` and `officium` as undescribed, all three
+         BUILT IN ROUND XXVIII. THE COMPUTED AGENDA WAS LYING,
+         which is worse than having no agenda: we rely on it to
+         know what remains. Fourth-plus instance of this exact
+         bug, previously caught by eye three times.
+     (b) FIFTEEN OF THIRTY FILES had `versio` drift — the
+         attribute disagreeing with the file's own header
+         comment. Half the corpus. Pure bookkeeping, but the
+         headers were lying about which version they document.
+     Both fixed; both now GATED (rules 16 and 17) and
+     negative-tested.
+189. THE BIG MEASUREMENT — RULE 9, and it inverted the
+     recommendation. I expected the corpus to be dirty on
+     "does every <valor> name a property declared on its genus
+     or an ancestor" — it is the check most likely to rot,
+     needs full inheritance resolution INCLUDING cross-model
+     parents, and I had been writing values freely for forty
+     rounds.
+     RESULT: 324 valores, ZERO violations. Rule 10 (electio
+     values matching declared optiones) likewise clean.
+     CONSEQUENCE: the loader would be PREVENTIVE, not
+     corrective. Its value is future-proofing, not cleanup —
+     which lowers its priority relative to what I had assumed
+     and is worth knowing before spending the effort.
+190. THE LESSON, and it generalises past this library: THE ROT
+     WAS IN THE METADATA, NOT THE CONTENT. I was careful with
+     content because content was what I was thinking about, and
+     careless with bookkeeping because it was incidental to
+     every edit. Nineteen real defects in flags and version
+     numbers; zero in the semantic core.
+     RULE: CHECK THE THINGS YOU ARE NOT THINKING ABOUT. The
+     expensive semantic gate found nothing; two cheap
+     structural gates found nineteen.
+
+Measured: 30 exemplaria / 140 genera / 294 residents / 381 arcs
+/ 0 vulnera, eleven gates enforced.

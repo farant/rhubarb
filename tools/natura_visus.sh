@@ -254,6 +254,28 @@ sort "$TMP/nomina.txt" | uniq -d | while IFS='|' read -r m n; do
         >> "$VULNERA"
 done
 
+# ---- regula XVI: UMBRAE RANCIDAE (externum sed iam descriptum)
+# Agenda computata est: umbra rancida agendam MENTIENTEM facit,
+# quod peius est quam agendam nullam. Quater manu capta.
+while IFS='|' read -r u fm; do
+    if grep -q "|$u|" "$GENERA" || grep -q "|$u\$" "$RES"; then
+        echo "$fm --umbra--> '$u' RANCIDA (iam descriptum)" \
+            >> "$VULNERA"
+    fi
+done < <(sort -u "$UMBRAE")
+
+# ---- regula XVII: versio attributi cum capite congruat ----
+for f in natura/*.stml; do
+    m=$(xp "$f" 'string(/natura/@modulus)')
+    va=$(xp "$f" 'string(/natura/@versio)')
+    vc=$(grep -o 'versio [0-9]*, PLASTICUM' "$f" | head -1 \
+         | sed 's/versio //; s/, PLASTICUM//')
+    if [ -n "$vc" ] && [ "$va" != "$vc" ]; then
+        echo "$m --versio--> elementum v$va, caput v$vc (dissona)" \
+            >> "$VULNERA"
+    fi
+done
+
 # ---- validatio fidei: fons= solvatur, certitudo= vera sit ----
 while IFS='|' read -r m clavis nomen; do
     if ! grep -q "^$m|$clavis\$" "$FONTES"; then

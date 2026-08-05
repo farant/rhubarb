@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **30** · genera **140** · res dictionarii **294** · arcus **377**
+Exemplaria **30** · genera **140** · res dictionarii **294** · arcus **381**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -491,10 +491,7 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 - **debian_project** — a `systema_operativum` superfectum
 - **directorium** — a `plagula_computatralis` superfectum
 - **instrumentum_aedificationis** — a `elementa_programmatis` superfectum
-- **lex** — a `actus` superfectum
-- **officium** — a `actus` superfectum
 - **processus** — a `elementa_programmatis` superfectum
-- **res_sacra** — a `actus` superfectum
 - **servus** — a `cliens` superfectum
 - **systema_plagularum** — a `systema_operativum` superfectum
 - **typus** — a `elementa_programmatis` superfectum
