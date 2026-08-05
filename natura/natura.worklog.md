@@ -2031,3 +2031,84 @@ Measured: 28 exemplaria / 127 genera / 269 residents / 343 arcs
      VERIFIED rather than asserted: a genus `macos` beside the
      individuum `macos` is rejected — "bis definitum (allocutio
      ambigua)".
+
+## 2026-08-05 — round thirty-two: PM/DEVOPS (loop, fifth run)
+
+Fran's scenario: project manager / devops for a software product.
+Chosen well — ADJACENT to our parish but stressing what the
+parish never touched (work, plans, environments, operations).
+Discussion only; harvest awaits blessing.
+
+TWO HOLES FOUND BEFORE THE WALK EVEN STARTED:
+142. **PROGRAMMA DOES NOT EXIST.** And `bibliotheca` DEFINES
+     ITSELF AGAINST IT: "a programmate differt quia initio
+     proprio caret - vivit vocata, numquam sponte currit."
+     Twenty-eight models in, we have been defining a genus by
+     contrast with a genus we never described. The most ordinary
+     thing in the parish, missing. A reminder that the loop
+     finds holes introspection does not: nobody re-reads a
+     definitio asking "does the thing I contrasted with exist?"
+143. `causa` and `ambitus`: ZERO occurrences in the whole corpus.
+
+HARVEST:
+1. PROGRAMMA — that which has its own beginning and runs of
+   itself, against a bibliotheca which lives only when called.
+2. THE MACHINE-EXECUTED PROCEDURE (the round's structural find).
+   praescriptum is defined *ab homine exsequendus*, and its
+   licence to carry ambiguity ("coque donec aureum fiat") exists
+   BECAUSE a human judges. A CI pipeline is the identical shape
+   — ordered stages, declared inputs, failure at any step — with
+   the opposite executor and therefore ZERO ambiguity tolerance.
+   The ritus/praescriptum split MIRRORED: that sibling differed
+   by having MORE than skill (capacity, intention); this one by
+   having LESS (no judgment at all). Parent genus is an ordered
+   procedure; the differentia is who executes, and what that
+   permits.
+3. AMBITUS (environment) with an ontological differentia rather
+   than a technical one: dev/staging/production differ not by
+   hardware or configuration but by REALITY OF CONSEQUENCE. A
+   mistake in production is real.
+4. PENSUM (work item) — not any of fabricatio's four: a
+   postulatum is what must be true, a facultas what the product
+   can do, a vitium a divergence. A ticket is a COMMITMENT TO
+   ACT, with assignee, state and estimate. Its planned-vs-actual
+   gap is the PM's whole job and is measurable.
+5. CAUSA — a genuine vocabulary hole. The library causes things
+   constantly (parit, constituit, illatum_per, factum_a,
+   orta_ex) with no genus for cause, so a post-mortem's "root
+   cause" is expressible as a JUDGMENT but its CHAIN is not.
+   And the praedicamenta echo returns: ARISTOTLE'S FOUR CAUSES
+   ARE ALREADY DISTRIBUTED THROUGH THE LIBRARY UNNAMED —
+   material in ex_materia, formal in differentia, efficient in
+   factum_a/constituit, final in every definitio that says
+   "ad finem".
+6. INCIDENT — NOT a kind of bug. The same defect is a vitium
+   always but an incident only once it reaches users: a vitium
+   in a RELATION OF EXPOSURE, plus duration and severity. Open
+   question whether that makes it a genus or a relation.
+
+CONFIRMATIONS (several unexpected):
+- MONITORING IS OBSERVATIO: an alert is a `signum`
+  (instrument-measured, verifiable by anyone) crossing a
+  threshold — the clinic's symptoma/signum cut doing work in a
+  datacenter, two rounds after it was coined for a fever.
+- ON-CALL IS OFFICIUM WITH ad_tempus: you HOLD the on-call
+  office for a shift, and the tenere/exercere split covers
+  escalation exactly.
+- runbook = praescriptum (human-executed, judgment permitted);
+  estimation = iudicium.aestimatio, whose "three appraisers,
+  three prices — not error but the nature of judgment" needed no
+  adjustment for three engineers and three estimates; SLA =
+  obligatio + mensura + periculum; releases take the versio
+  pattern; rotations = horarium; build artifacts =
+  artefactum_aedificationis.
+- NON-SURFACING recorded: backlog priority is an ORDERING, not
+  a thing — third of its kind after merx (round XIII) and triage
+  (round XVII).
+
+VERDICT, RUN FIVE: nouns plus one structural ABSENCE (programma)
+and one vocabulary gap (causa) — no new dimension, consistent
+with the prediction after run three that dimensions get rarer
+and deeper. The novelty this run is the KIND of finding: not
+"we never modelled X" but "we defined something against an X we
+never modelled", which only a scenario walk exposes.
