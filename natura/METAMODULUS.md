@@ -10,7 +10,9 @@ of models or genera: a specification that quotes a moving number
 is stale the next afternoon.
 
 **Audience:** anyone writing a model by hand, and whoever
-implements the loader. The loader is expected to enforce the
+implements the loader. For WHY the library exists, what it is
+for, and how the work is done, see `natura/RATIO.md` — this file
+is the specification only. The loader is expected to enforce the
 NORMATIVE RULES section.
 
 **Language note (recorded decision, not drift):** this file is

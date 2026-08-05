@@ -2768,3 +2768,58 @@ Measured: 30 exemplaria / 140 genera / 294 residents / 381 arcs
 
 Measured: 30 exemplaria / 140 genera / 294 residents / 381 arcs
 / 0 vulnera.
+
+## 2026-08-05 — round forty-two: RATIO — the missing document
+
+196. Fran asked whether the philosophy and applications material
+     was captured. Honest audit: THE WRITING DOCTRINE WAS WELL
+     CAPTURED (METAMODULUS §9, now indexed); THE WHY AND
+     WHAT-FOR WERE SCATTERED — value proposition in a ledger
+     nota, cross-pollination and the sensemaking mode in worklog
+     rounds, the four use modes split across both, and several
+     process laws living ONLY IN COMMIT MESSAGES.
+     STRUCTURAL DIAGNOSIS: those had drifted into whichever
+     document was durable. METAMODULUS is a SPECIFICATION whose
+     stated audience is "anyone writing a model, and whoever
+     implements the loader" — the wrong home for a rationale.
+     And the worklog is CHRONOLOGICAL: an excellent record and a
+     terrible reference, since "how do we work on this?" required
+     reading forty-one rounds.
+197. natura/RATIO.md written — the fourth document, and the one
+     you hand someone asking "what IS this?" rather than "how do
+     I write one?" (INDEX = what exists; METAMODULUS = the
+     format; worklog = how we got here; RATIO = why, for what,
+     and how we work). Six sections:
+     - what this is, and what it is NOT (not a wire format, not
+       a compliance target, not an upper ontology);
+     - WHY MODERATE REALISM IS LOAD-BEARING — the three
+       positions and what each affords: only realism makes the
+       escape hatch possible (specimens are evidence), only it
+       grants PERMISSION TO STOP (affirm the likeness, refuse the
+       genus, move on), and it is what admits instituted kinds so
+       the library can descend to where the payload lives;
+     - WHAT IT IS FOR — the two halves (structure you would get
+       wrong / leverage you lacked), the four use modes, the
+       residence limit, and why this differs from frames and
+       expert systems (task-shaped vs Pieper-shaped, plus the
+       specimen-access diagnosis);
+     - CROSS-POLLINATION with the seven measured instances, the
+       backwards case, and the punishment heuristic;
+     - HOW WE WORK — the loop with all six runs tabulated, and
+       nine rules of the craft that had been scattered
+       (dimensions before nouns, gate at birth, measure before
+       building, check what you are not thinking about,
+       one-instance-two-instances, record the non-surfacings, a
+       concept that generates an instrument, a genus that cannot
+       falsify itself is jargon, grep is not a parser);
+     - HONEST LIMITS — the scribe's epistemic position, why the
+       DISCIPLINE rather than the expertise catches errors, and
+       the structural consolation that the taxonomy is more
+       robust than the dictionary.
+198. Wired into the orient path in FOUR places so it cannot be
+     missed: METAMODULUS header now says it is the specification
+     only and points here; INDEX.md (generated) names it first in
+     its orientation block; MAP.txt; and the project memory.
+
+Measured: 30 exemplaria / 140 genera / 294 residents / 381 arcs
+/ 0 vulnera. Four documents, each with one job.

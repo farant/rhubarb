@@ -87,6 +87,11 @@ rhubarb/
 │                                                genus with a gloss, umbrae,
 │                                                dubia, closed tag vocabulary.
 │                                                "Do we have a genus for X?"
+│                      1b. natura/RATIO.md        WHY it exists, what it is
+│                                                for, how we work on it -
+│                                                philosophy, use modes,
+│                                                cross-pollination, the loop,
+│                                                honest limits.
 │                      2. natura/METAMODULUS.md  format spec. SS8 = loader
 │                                                contract (17 rules, 11
 │                                                enforced); SS9 = the DOCTRINE

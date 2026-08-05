@@ -437,6 +437,7 @@ echo "Regenera: \`./tools/natura_visus.sh\` (idem cursus qui portam custodit)."
 echo
 echo "Exemplaria **$nModuli** · genera **$nGenera** · res dictionarii **$nRes** · arcus **$nArcus**"
 echo
+echo "Cur haec exsistat, cui serviat, quomodo laboremus: \`natura/RATIO.md\`."
 echo "Forma ipsa (elementa, attributa, regulae): \`natura/METAMODULUS.md\`."
 echo "Historia et doctrina: \`natura/natura.worklog.md\` (LEGE PRIMUM)."
 echo

@@ -5,6 +5,7 @@ Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
 Exemplaria **30** · genera **140** · res dictionarii **294** · arcus **381**
 
+Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
 
