@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **26** · genera **113** · res dictionarii **214** · arcus **307**
+Exemplaria **26** · genera **115** · res dictionarii **220** · arcus **311**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -37,14 +37,16 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **cliens_cli** ⊂ cliens — Instrumentum imperii unius: vocatur, agit, exit
 - **cliens_mobilis** ⊂ cliens — In telephono vivit: tactus pro mure, interruptiones pro sessione, pila pro fine - vincula eius differentia sunt
 
-### commercium (v1, genera 7)
+### commercium (v2, genera 9)
 
 - **moneta** — Genus pecuniae ab auctoritate emissum et receptum: unitas mensurae valoris - sed unitas cuius valor ipse MUTATUR (metr
 - **pecunia** — Quantitas in moneta: numerus CUM MONETA - "3,50" nihil est donec moneta adsit (eadem forma qua quantitas unitatem posc
 - **possessio** — Relatio inter personam (aut organizationem) et rem: quis quid habeat
 - **pretium** — Pecunia pro re petita: relatio TEMPORE VARIANS inter rem et pecuniam - non proprietas rei
 - **venditio** — Eventus quo possessio rei transit et pecunia contrarie fluit: mutatio DUPLEX simul - quod ratio duplex (Pacioli) ante 
-- **charta_negotiabilis** — Documentum cuius POSSESSIO ius transfert: charta traditur, et cum charta res ipsa
+- **tessera** — Res cuius EXHIBITIO ius constituit, non probat: differentia ab apocha vulgari tota hic est - apocha te solvisse TESTAT
+- **tessera_negotiabilis** ⊂ tessera — Accipiens bona fide et pretio dato titulum PURUM accipit, etiam si tradens ipse ius non habuit: EXCEPTIO ad regulam 'n
+- **tessera_simplex** ⊂ tessera — Possessio sufficit ad exhibendum, sed nulla titulorum purgatio: qui tesseram furatam exhibet admittitur (custos nescit
 - **ratio_rationaria** — Acta rerum pecuniariarum ordine temporis: veritas est cauda eventuum, status omnis (summa, debitum, lucrum) PLICATURA
 
 ### communicatio (v0, genera 3)
@@ -222,7 +224,6 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | bibliotheca | elementa_programmatis |
 | calendarium | tempus |
 | campus | schema |
-| charta_negotiabilis | commercium |
 | cliens | cliens |
 | cliens_api | cliens |
 | cliens_cli | cliens |
@@ -312,6 +313,9 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | societas | organizatio |
 | status | elementa_programmatis |
 | systema_operativum | systema_operativum |
+| tessera | commercium |
+| tessera_negotiabilis | commercium |
+| tessera_simplex | commercium |
 | titulus | obligatio |
 | tributum | obligatio |
 | unitas_mensurae | mensura |
@@ -332,9 +336,10 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `architectura_machinae.architectura_machinae` — arm, riscv, x86
 - `architectura_machinae.versio_architecturae` — armv8, i386, x86_64
 - `cliens.cliens_cli` — curl
-- `commercium.charta_negotiabilis` — charta_onerum, perscriptio, syngrapha
 - `commercium.moneta` — dollarium_americanum, euro
 - `commercium.ratio_rationaria` — ratio_duplex
+- `commercium.tessera_negotiabilis` — apocha_horrei, charta_onerum, nummus_chartaceus, obligatio_ad_portitorem, perscriptio, syngrapha
+- `commercium.tessera_simplex` — tessera_digitalis, tessera_repositoria, tessera_spectaculi
 - `corporalia.artefactum` — cibus
 - `corporalia.damnum` — contaminatio, corruptio, fractura
 - `elementa_programmatis.artefactum_aedificationis` — exsecutabile_ligatum, obiectum_compilatum
@@ -412,6 +417,7 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 
 ## VI. Dubia aperta
 
+- `commercium` / tessera
 - `elementa_programmatis` / functio_pura
 - `elementa_programmatis` / constans
 - `elementa_programmatis` / libc

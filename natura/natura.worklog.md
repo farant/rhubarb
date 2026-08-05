@@ -1453,6 +1453,55 @@ end for the third time.
      under Fran's own ruling the cost of getting it wrong is
      local and revision passes are indefinite.
 
+106. THE LINNAEAN DRILL-DOWN (Fran, rota XXIII) — method
+     correction with an unexpected payoff. I had left
+     charta_negotiabilis open as "a genus whose NAME may be too
+     narrow", i.e. an ABSTRACTION question. Fran: don't attack
+     it from abstraction — go Linnaean. What are the species out
+     in the wild?
+     Collected specimens: bill of lading, warehouse receipt,
+     promissory note, cheque, BANKNOTE, bearer bond, theatre
+     ticket, cloakroom token, pawn ticket, digital bearer token /
+     capability. Plus negative specimens: registered shares, a
+     door key.
+     THE TREE APPEARED BY ITSELF, deeper and sharper than v0:
+     - genus TESSERA (the Roman word is exact — tessera
+       hospitalis, frumentaria, militaris): a thing whose
+       EXHIBITION CONSTITUTES a right rather than proving it.
+       That differentia — constitutive vs evidentiary — is much
+       sharper than v0's "possession transfers a right", and it
+       is what a receipt fails.
+     - sub-genus TESSERA_NEGOTIABILIS: the good-faith purchaser
+       takes CLEAN TITLE even from a thief — an EXCEPTION to
+       nemo dat quod non habet. THAT is what negotiability
+       actually means, and v0 had it wrong by conflating it with
+       mere bearer-possession.
+     - sub-genus TESSERA_SIMPLEX: possession suffices, but no
+       title-cleansing doctrine.
+     THE PAYOFF, AND IT REVERSED MY EXPECTATION: from abstraction
+     I would have filed the digital bearer token under
+     negotiable — "possession confers right, same form". The
+     specimens show it shares the MECHANISM but not the
+     DOCTRINE: no clean-title rule exists in our systems, a
+     stolen token stays stolen. So it belongs under
+     tessera_simplex. A division that abstraction alone would
+     never have seen, and it answers round XXII's open question
+     in an unexpected direction — SPLIT, not rename.
+     Two more finds fell out: the BANKNOTE is a member ("I
+     promise to pay the bearer on demand" is still printed on
+     Bank of England notes) — so pecunia and tessera touch,
+     which v0 never saw; and the historical DECLINE of bearer
+     instruments (US bearer bonds effectively ended 1982;
+     bearer shares banned in many jurisdictions) is explained by
+     the differentia itself — title-cleansing helps the thief
+     too, so the form died not because it failed but because it
+     worked TOO well.
+     Negative boundaries recorded because they prove the genus:
+     registered instruments are NOT tesserae (the right lives in
+     the register, the certificate merely evidences it), and a
+     KEY is not one either (it confers power, not right — posse
+     vs licere).
+
 104. PHASE NAMED (Fran's recalibration): this is FILLING OUT, not
      perfecting. Revision passes are available indefinitely and
      no division decision can paint the work into a corner.

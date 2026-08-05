@@ -20,7 +20,7 @@
   esse-venale MUNUS est, ergo relatio - panis idem panis manet
   sive venalis sive donatus.
 -->
-<natura modulus="commercium" versio="1" lingua="latina">
+<natura modulus="commercium" versio="2" lingua="latina">
 
 <!-- ==================================================
      MONETA - genus pecuniae
@@ -176,46 +176,107 @@
 </genus>
 
 <!-- ==================================================
-     CHARTA NEGOTIABILIS - res corporea ius ferens
+     TESSERA - res cuius exhibitio ius CONSTITUIT
+
+     ARBOR HAEC MODO LINNAEANO INVENTA (Fran, rota XXIII):
+     non ex abstractione ("an nomen 'charta' nimis angustum
+     sit?") sed ex SPECIMINIBUS - quid re vera in silvestri
+     inveniatur. Collectis exemplaribus (charta onerum, apocha
+     horrei, syngrapha, perscriptio, NUMMUS CHARTACEUS, tessera
+     spectaculi, tessera repositoria, tessera digitalis), arbor
+     sponte apparuit, altior et acutior quam v0.
+
+     ROMANI VERBUM HABEBANT: tessera hospitalis in duas partes
+     frangebatur, et partes congruentes hospitium probabant;
+     tessera frumentaria annonam dabat; tessera militaris
+     signum ferebat. Vox exacta, duo milia annorum vetus.
+     (Nomen bibliothecae nostrae TUI idem sonat - dominia
+     diversa, nulla confusio: haec natura, illa codex.)
      ================================================== -->
 
-<genus nomen="charta_negotiabilis">
+<genus nomen="tessera">
 
   <definitio>
-    Documentum cuius POSSESSIO ius transfert: charta traditur,
-    et cum charta res ipsa. Res corporea quae rem incorpoream
-    (ius) fert - ideo furtum chartae furtum iuris est, et
-    amissio chartae amissio iuris, quamvis res ipsa intacta in
-    horreo maneat.
+    Res cuius EXHIBITIO ius constituit, non probat: differentia
+    ab apocha vulgari tota hic est - apocha te solvisse
+    TESTATUR, tessera ius ipsum FERT. Ideo tessera amissa ius
+    amissum, apocha amissa molestia sola.
   </definitio>
 
   <proprietates>
-    <proprietas nomen="ad_portitorem" genus="veritas"
-      nota="verum = quicumque tenet ius habet (nullo nomine
-            inscripto); falsum = nomini certo inscripta,
-            transferenda per assignationem. Discrimen quod
-            periculum totum determinat"/>
+    <proprietas nomen="modus_transferendi" genus="electio"
+      nota="axis principalis, e speciminibus haustus">
+      <optio>ad_portitorem</optio>
+      <optio>ad_ordinem</optio>
+      <!-- ad_ordinem = per adscriptionem transfertur ("solve
+           ordini N"), catena adscriptionum historiam ferens -->
+    </proprietas>
+    <proprietas nomen="materia_tesserae" genus="electio">
+      <optio>corporea</optio>
+      <optio>digitalis</optio>
+    </proprietas>
+    <proprietas nomen="exhibitione_consumitur" genus="veritas"
+      nota="tessera spectaculi semel valet, charta onerum
+            traditur et exstinguitur, tessera digitalis usque
+            ad terminum suum iterari potest"/>
   </proprietates>
 
   <relationes>
     <relatio nomen="fert_ius_in" ad="*"
-      nota="res cuius ius portat - merces, pecunia, pars
-            societatis"/>
+      nota="merces, pecunia, admissio, auctoritas"/>
     <relatio nomen="emissa_a" ad="*"/>
     <relatio nomen="possessio_eius" ad="possessio"
-      nota="POSSESSIO CHARTAE ET POSSESSIO REI COPULATAE:
-            unicus locus bibliothecae ubi duae possessiones
+      nota="POSSESSIO TESSERAE ET POSSESSIO REI COPULATAE:
+            locus unicus bibliothecae ubi possessiones duae
             necessario simul moventur"/>
   </relationes>
 
   <nota>
-    COGNATIO COMPUTATRALIS VERA: tessera "ad portitorem" in
-    systematibus nostris (bearer token) eadem forma est -
-    possessio auctoritatem confert, nullo nomine quaesito.
-    Idem commodum (transferri sine permissu), idem periculum
-    (qui furatur habet, qui perdit caret). Ius mercatorum
-    saeculo XIV hanc formam et pericula eius iam noverat;
-    machinae nostrae eam sine memoria repetiverunt.
+    TERMINI NEGATIVI, QUI GENUS PROBANT:
+    (a) Instrumenta NOMINATIVA (pars societatis in tabulis
+        inscripta) tesserae NON sunt: ius in TABULIS habitat,
+        charta id probat solum. Ideo charta perdita ius non
+        perdit - libellum novum petis.
+    (b) CLAVIS tessera non est: potestatem confert, ius non.
+        Qui clavem furatam tenet ianuam aperire POTEST,
+        intrare ei non LICET. Discrimen inter posse et licere,
+        quod hoc genus totum sustinet.
+  </nota>
+
+  <dubium>
+    An tessera sub instrumento (corporalia) collocanda sit? Non
+    convenit: instrumentum usu suo OPERATUR (fornax coquit),
+    tessera nihil operatur sed SIGNIFICAT et ius fert. Res
+    corporea est, instrumentum non. Apertum - fortasse res
+    corporea sola parens rectus, cum tesserae digitales
+    corpore careant.
+  </dubium>
+
+</genus>
+
+<!-- ==================================================
+     TESSERA NEGOTIABILIS - quae titulum PURGAT
+     ================================================== -->
+
+<genus nomen="tessera_negotiabilis" sub="tessera">
+
+  <differentia>
+    Accipiens bona fide et pretio dato titulum PURUM accipit,
+    etiam si tradens ipse ius non habuit: EXCEPTIO ad regulam
+    'nemo dat quod non habet'. Non possessio sola (id omnibus
+    tesseris commune est) sed PURGATIO vitiorum priorum -
+    haec sola differentia negotiabilitatem facit, et haec
+    sola commercium trans ignotos possibile reddit.
+  </differentia>
+
+  <nota>
+    Hinc et virtus et periculum: quod titulum purgat, furem
+    quoque iuvat - qui a fure bona fide emit, dominum verum
+    excludit. Ideo mundus a tesseris ad portitorem ad
+    instrumenta nominativa saeculo XX recessit (obligationes
+    ad portitorem in America anno 1982 fere abolitae; partes
+    ad portitorem multis in locis vetitae) - non quia forma
+    defecit sed quia NIMIS bene operabatur.
   </nota>
 
   <!-- ================= DICTIONARIUM ================= -->
@@ -224,10 +285,21 @@
     <definitio>
       A vectore data, merces acceptas testans et dominium
       earum ferens: dum navis navigat, merces venduntur charta
-      tradita - res in mari, dominium in foro. Instrumentum
-      quod commercium trans maria possibile fecit.
+      tradita - res in mari, dominium in foro.
     </definitio>
+    <valor nomen="exhibitione_consumitur">verum</valor>
     <relatum nomen="fert_ius_in" ad="onus" modulus="vectura"/>
+  </species>
+
+  <species nomen="apocha_horrei">
+    <definitio>
+      Idem officium, re QUIESCENTE: merces in horreo positas
+      testatur et dominium earum fert. Geminum chartae onerum
+      - illa res in motu, haec res in statione. Specimen quod
+      axem novum ostendit: motus an statio, non natura mercis.
+    </definitio>
+    <relatum nomen="fert_ius_in" ad="res_corporea"
+      modulus="corporalia"/>
   </species>
 
   <species nomen="syngrapha">
@@ -235,6 +307,7 @@
       Promissum scriptum solvendi: debitum ipsum in chartam
       versum, ideo vendibile. Obligatio quae MERX fit.
     </definitio>
+    <relatum nomen="fert_ius_in" ad="pecunia"/>
   </species>
 
   <species nomen="perscriptio">
@@ -243,6 +316,92 @@
       quae non movetur sed IUBETUR moveri - charta pro
       pecunia, quia fides argentarii pecunia est.
     </definitio>
+    <valor nomen="modus_transferendi">ad_ordinem</valor>
+    <relatum nomen="fert_ius_in" ad="pecunia"/>
+  </species>
+
+  <species nomen="nummus_chartaceus">
+    <definitio>
+      Tessera ad portitorem quam nemo tesseram vocat: "promitto
+      me portitori ad petitionem soluturum" in chartis
+      Britannicis adhuc IMPRESSUM stat. Pecunia ipsa huius
+      generis est - et purgatio titulorum, quae ceteris
+      periculosa videtur, hic tam necessaria ut invisibilis
+      fiat: nemo nummum acceptum de origine interrogat.
+    </definitio>
+    <valor nomen="modus_transferendi">ad_portitorem</valor>
+    <valor nomen="exhibitione_consumitur">falsum</valor>
+    <relatum nomen="fert_ius_in" ad="pecunia"/>
+    <nota>
+      Specimen quod tota arbor poposcit: si nummus chartaceus
+      species non est, definitio nostra falsa erat. Est - ergo
+      pecunia et tessera se tangunt, quod v0 non vidit.
+    </nota>
+  </species>
+
+  <species nomen="obligatio_ad_portitorem">
+    <definitio>
+      Debitum publicum sine nomine, cum foliis usurariis
+      resecandis: species fere exstincta, cuius mors CAUSAM
+      generis illustrat (tributa vitata, pecunia lota).
+    </definitio>
+    <valor nomen="modus_transferendi">ad_portitorem</valor>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     TESSERA SIMPLEX - possessio sufficit, titulus non purgatur
+     ================================================== -->
+
+<genus nomen="tessera_simplex" sub="tessera">
+
+  <differentia>
+    Possessio sufficit ad exhibendum, sed nulla titulorum
+    purgatio: qui tesseram furatam exhibet admittitur (custos
+    nescit), ius tamen non acquirit - dominus verus eam
+    vindicare potest. Mechanismus idem, DOCTRINA absens.
+  </differentia>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="tessera_spectaculi">
+    <definitio>
+      Ius admissionis ad locum et tempus certum: exhibetur,
+      consumitur, exstinguitur.
+    </definitio>
+    <valor nomen="exhibitione_consumitur">verum</valor>
+  </species>
+
+  <species nomen="tessera_repositoria">
+    <definitio>
+      Ius recipiendi rem certam depositam (vestiarium, pignus):
+      tessera rem INDIVIDUAM designat, non genus - unde numerus
+      in ea scriptus rem unam significat.
+    </definitio>
+  </species>
+
+  <species nomen="tessera_digitalis">
+    <definitio>
+      Tessera ad portitorem sine corpore: qui eam tenet
+      auctoritatem exercet, nullo nomine quaesito. In arte
+      munitionis "facultas" (capability) dicitur, et ratio
+      eadem est quae in tessera Romana fuit.
+    </definitio>
+    <valor nomen="materia_tesserae">digitalis</valor>
+    <valor nomen="modus_transferendi">ad_portitorem</valor>
+    <valor nomen="exhibitione_consumitur">falsum</valor>
+    <nota>
+      INVENTUM METHODI LINNAEANAE (rota XXIII): abstractione
+      progressi tesseram digitalem inter negotiabilia
+      posuissemus - "possessio ius confert, eadem forma".
+      Speciminibus collatis apparuit MECHANISMUM communem esse,
+      DOCTRINAM non: nulla purgatio titulorum in systematibus
+      nostris est, tessera furata furata manet. Ideo hic, non
+      supra. Divisio quam sola abstractio numquam vidisset -
+      et responsum quaestioni apertae rotae XXII, in partem
+      inexspectatam.
+    </nota>
   </species>
 
 </genus>
