@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **28** · genera **121** · res dictionarii **251** · arcus **327**
+Exemplaria **28** · genera **123** · res dictionarii **258** · arcus **335**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -160,9 +160,11 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **periodicum** ⊂ opus_scriptum — Opus quod PERFECTIONEM non petit: in fasciculis continuatur dum curatores volunt - machina compositionis parentis ei f
 - **fasciculus** — Pars periodici tempore signata: numerus unus, die suo editus
 
-### organizatio (v4, genera 4)
+### organizatio (v5, genera 6)
 
 - **organizatio** — Universitas personarum: coetus in finem communem ordinatus qui UT UNUM agit et mutatis membris perdurat - haec perdura
+- **persona_iuridica** ⊂ organizatio — Subiectum iurium et obligationum in iure: possidet, contrahit, agit et convenitur SUO nomine, non nomine membrorum
+- **officium** — Munus stabiliter constitutum cum oneribus, potestatibus et condicionibus SUIS, quod tenenti suo NON inhaeret: idem off
 - **corpus_normans** ⊂ organizatio — Finis proprius: normas edere et custodire - descriptiones auctoritativas quibus alii conformantur
 - **societas** ⊂ organizatio — Finis proprius: quaestus per opera vendita; possessores habet quibus respondet
 - **magistratus** ⊂ organizatio — Auctoritas ex IMPERIO super loco, non ex consensu (ut corpus normans) nec ex quaestu (ut societas): leges fert quibus 
@@ -294,6 +296,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | nuntius | communicatio |
 | obligatio | obligatio |
 | observatio | iudicium |
+| officium | organizatio |
 | onus | vectura |
 | opus_scriptum | opus_scriptum |
 | organizatio | organizatio |
@@ -301,6 +304,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | periculum | iudicium |
 | periodicum | opus_scriptum |
 | persona | persona |
+| persona_iuridica | organizatio |
 | plagula_computatralis | plagula_computatralis |
 | plagula_datorum | plagula_computatralis |
 | plagula_figurationis | plagula_computatralis |
@@ -401,6 +405,8 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `opus_scriptum.expressio` — abusus_linguae_anglice, abusus_linguae_germanice
 - `opus_scriptum.opus_scriptum` — abusus_linguae, moby_dick, species_plantarum, summa_theologiae, systema_naturae
 - `organizatio.corpus_normans` — ansi, iec, ieee, iso
+- `organizatio.officium` — curator, episcopus, notarius, parochus, praeses_collegii
+- `organizatio.persona_iuridica` — universitas_personarum, universitas_rerum
 - `organizatio.societas` — amd, apple, arm_ltd, bell_labs, canonical, intel, microsoft
 - `persona.persona` — bertrand_meyer, brian_fox, carl_linnaeus, dennis_ritchie, duns_scotus, edsger_dijkstra, graydon_hoare, guido_van_rossum, herman_melville, josef_pieper, ken_thompson, linus_torvalds, luca_pacioli, thomas_aquinas
 - `plagula_computatralis.plagula_datorum` — plagula_csv, plagula_json
@@ -424,6 +430,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 
 - **abc** — a `lingua_programmandi` superfectum
+- **agentia_isbn** — a `identificatio` superfectum
 - **att** — a `organizatio` superfectum
 - **b** — a `lingua_programmandi` superfectum
 - **chip** — a `architectura_machinae` superfectum
@@ -433,7 +440,6 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 - **instrumentum_aedificationis** — a `elementa_programmatis` superfectum
 - **lex** — a `actus` superfectum
 - **officium** — a `actus` superfectum
-- **organizatio** — a `identificatio` superfectum
 - **processus** — a `elementa_programmatis` superfectum
 - **res_sacra** — a `actus` superfectum
 - **servus** — a `cliens` superfectum

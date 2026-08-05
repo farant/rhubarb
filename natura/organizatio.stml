@@ -8,7 +8,7 @@
   corpus_normans, societas - arbor Porphyriana profunditatem
   accipit (attributum sub= + differentia in genere).
 -->
-<natura modulus="organizatio" versio="4" lingua="latina">
+<natura modulus="organizatio" versio="5" lingua="latina">
 
 <!-- FONTES (mechanismus rotae XVI) -->
 <fontes>
@@ -53,6 +53,219 @@
       inversa="verum"
       nota="persona.membrum_de hanc citat"/>
   </relationes>
+
+</genus>
+
+<!-- ==================================================
+     PERSONA IURIDICA - organizatio quae in iure PERSONA est
+     ================================================== -->
+
+<genus nomen="persona_iuridica" sub="organizatio">
+
+  <differentia>
+    Subiectum iurium et obligationum in iure: possidet,
+    contrahit, agit et convenitur SUO nomine, non nomine
+    membrorum. Ideo bona eius non sunt bona sociorum, et
+    debita eius non sunt debita eorum - separatio quae
+    negotium modernum omnino portat.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="perpetua" genus="veritas"
+      ordinarius="verum"
+      nota="membris mortuis aut mutatis manet - perduratio
+            organizationis hic vim IURIDICAM accipit"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="constituta_per" ad="actus_sollemnis"
+      modulus="actus"
+      nota="persona iuridica non oritur sponte sed ACTU
+            constituitur (charta, decretum, erectio canonica) -
+            exemplum relationis 'constituit' ex parte effectus"/>
+  </relationes>
+
+  <nota>
+    Innocentius IV eam "personam fictam" vocavit, et vox
+    manet; realismus tamen moderatus plus concedit: unio
+    ordinata ad finem communem, quae ut unum agit et membris
+    mutatis perdurat, RES VERA est - non fictio sed genus
+    institutum, quale ISBN aut officium. Ficta esset si nihil
+    in rebus responderet; respondet autem ordo ipse.
+  </nota>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="universitas_personarum">
+    <definitio>
+      Persona iuridica ex MEMBRIS constans: collegium,
+      societas, communitas. Membra mutantur, persona manet.
+    </definitio>
+  </species>
+
+  <species nomen="universitas_rerum">
+    <definitio>
+      Persona iuridica ex BONIS AD FINEM DESTINATIS constans,
+      SINE membris: fundatio, pia causa. Nemo eam "habet";
+      curatores eam regunt sed non possident.
+    </definitio>
+    <nota>
+      Distinctio antiqua (ius Romanum et canonicum) quam
+      schemata moderna perdunt: fundatio membra NON habet.
+      Qui personam iuridicam semper ut coetum modellat
+      fundationem dicere non potest - et tamen fundationes,
+      fidei commissa, piae causae ubique sunt.
+    </nota>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     OFFICIUM - munus stabiliter constitutum
+     (inventum cursus quarti: probatio acuta est AN
+     POSITIO VACANS PERSEVERET)
+     ================================================== -->
+
+<genus nomen="officium">
+
+  <definitio>
+    Munus stabiliter constitutum cum oneribus, potestatibus et
+    condicionibus SUIS, quod tenenti suo NON inhaeret: idem
+    officium manet dum alius post alium id tenet, et MANET
+    NULLO TENENTE. Vacatio status verus est, non datum absens.
+  </definitio>
+
+  <nota>
+    REGULA 'MUNERA RELATIONES SUNT' HIC DIVIDITUR, NON TOLLITUR
+    (rota IV vs rota XXV). Probatio: AN POSITIO VACANS
+    PERSEVERET?
+      NON perseverat -> munus nudum, quod RELATIO manet:
+        "auctor" nemo vacat, nulla auctoritas vacans exspectat;
+      PERSEVERAT -> OFFICIUM, res vera onera et potestates
+        ferens, et TENERE illud relatio est.
+    Ideo utrumque verum: officium res est, tenentia relatio.
+    Systemata quae officia ut relationes nudas modellant
+    respondere non possunt "quis hoc facere DEBEAT" sede
+    vacante - quaestio refert ad nihil.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="ad_tempus" genus="veritas"
+      ordinarius="falsum"
+      nota="an terminus praefinitus adsit - officium ad tempus
+            lapsu temporis vacat sine ullo actu"/>
+    <proprietas nomen="collegiale" genus="veritas"
+      ordinarius="falsum"
+      nota="an plures simul idem officium teneant (sedes in
+            consilio) - unde quorum, unde suffragia"/>
+    <proprietas nomen="requisita" genus="textus" multiplex="verum"
+      nota="condiciones eligibilitatis - AD OFFICIUM pertinent,
+            non ad tenentem: mutato tenente eaedem manent"/>
+  </proprietates>
+
+  <machina_statuum nomen="tenentia" gerens="individuum">
+    <status nomen="vacans"
+      nota="STATUS PRIMARIUS HUIUS GENERIS: officium exstat,
+            onera manent, nemo ea portat. 'Sede vacante' vox
+            propria est - et provisio interim (vicarius) non
+            tenentiam sed EXERCITIUM dat"/>
+    <status nomen="occupatum"/>
+    <transitus a="vacans" ad="occupatum" per="provisio"
+      nota="per actum sollemnem (inauguratio) - vide
+            actus.inauguratio"/>
+    <transitus a="occupatum" ad="vacans" per="cessio"/>
+    <transitus a="occupatum" ad="vacans" per="amotio"/>
+    <transitus a="occupatum" ad="vacans" per="mors"/>
+    <transitus a="occupatum" ad="vacans" per="lapsus_temporis"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="intra" ad="organizatio"
+      nota="officium sine organizatione non stat - structura
+            eius est"/>
+    <relatio nomen="tenetur_a" ad="persona" modulus="persona"
+      nota="RELATIO, recte: hic munus relatio manet. Vacuum
+            legitimum est"/>
+    <relatio nomen="exercetur_a" ad="persona" modulus="persona"
+      nota="DISTINCTUM a tenendo: vicarius, administrator,
+            procurator officium exercet quod non tenet -
+            sede vacante quis agat sine eo dici non potest"/>
+    <relatio nomen="constituitur_per" ad="actus_sollemnis"
+      modulus="actus"/>
+    <relatio nomen="postulat" ad="titulus" modulus="obligatio"
+      multiplex="verum"
+      nota="requisitum quod titulo probatur (gradus, ordo,
+            character) - unde officium et titulus se tangunt"/>
+    <relatio nomen="confert_capacitatem" ad="actus_sollemnis"
+      modulus="actus" multiplex="verum"
+      nota="quos actus sollemnes tenens ponere possit -
+            notarius instrumentum publicum, episcopus
+            ordinationem. CAPACITAS ab officio, non a peritia"/>
+    <relatio nomen="subest" ad="officium"
+      nota="ordo officiorum - hierarchia in officiis vivit,
+            non in personis: qui subest OFFICIO subest, non
+            homini"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="parochus">
+    <definitio>
+      Officium curae animarum in paroecia: pastor proprius,
+      cum oneribus praedicandi, sacramenta ministrandi,
+      tabulas custodiendi.
+    </definitio>
+    <nota>
+      Specimen quod genus peperit. Tabulae paroeciales onus
+      OFFICII sunt, non hominis - unde series earum per
+      saecula continua manet dum parochi succedunt.
+    </nota>
+  </species>
+
+  <species nomen="episcopus">
+    <definitio>
+      Officium regiminis dioecesis, ordine episcopali
+      praesuppositum.
+    </definitio>
+    <nota>
+      Vox "sede vacante" hinc venit et in linguas transiit:
+      SEDES vacat, non homo - locutio ipsa testatur officium
+      rem esse. Interim administrator EXERCET quod non TENET.
+    </nota>
+  </species>
+
+  <species nomen="notarius">
+    <definitio>
+      Officium publicum fidem instrumentis praestans.
+    </definitio>
+    <nota>
+      Testis clarissimus relationis 'confert_capacitatem':
+      eadem verba a privato scripta nihil praesumunt, a
+      notario scripta fidem publicam ferunt (vide
+      actus.instrumentum_publicum). Officium, non peritia,
+      discrimen facit.
+    </nota>
+  </species>
+
+  <species nomen="curator">
+    <definitio>
+      Officium bona aliena ad finem alienum administrandi:
+      fiducia, non dominium.
+    </definitio>
+    <nota>
+      Officium quod universitatem RERUM regit (fundationem) -
+      unde persona iuridica sine membris tamen agere potest.
+      Onera eius (fides, diligentia) officio inhaerent.
+    </nota>
+  </species>
+
+  <species nomen="praeses_collegii">
+    <definitio>
+      Officium collegio praesidendi: sedes una inter pares cum
+      potestate ordinandi, non imperandi.
+    </definitio>
+    <valor nomen="ad_tempus">verum</valor>
+  </species>
 
 </genus>
 

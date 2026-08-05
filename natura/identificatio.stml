@@ -174,10 +174,12 @@
     <valor nomen="opacus">falsum</valor>
     <valor nomen="probabilis_solus">verum</valor>
     <valor nomen="reassignabilis">falsum</valor>
-    <relatum nomen="administrata_a" ad="organizatio"
+    <relatum nomen="administrata_a" ad="agentia_isbn"
       externum="verum"
-      nota="Agentia ISBN Internationalis - organizatio nondum
-            in dictionario nostro"/>
+      nota="UMBRA VERA nominata (correctio): antea ad
+            'organizatio' monstrabat, quod GENUS est et
+            exstat - umbra FALSA inde. Quod deest individuum
+            est: Agentia ISBN Internationalis"/>
     <nota>
       MENDACIUM VULGARE (exemplar librorum rota VII iam
       occidit, hic ratio ipsa id dicit): catalogi qui ISBN pro

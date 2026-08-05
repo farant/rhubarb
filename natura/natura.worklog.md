@@ -1738,3 +1738,55 @@ Measured: 28 exemplaria / 121 genera / 251 residents / 327 arcs
 / 0 vulnera. Model deliberately CREATED THREE UMBRAE (officium,
 lex, res_sacra) rather than half-describing them inline — the
 agenda stays computed.
+
+## 2026-08-05 — round twenty-seven: officium + persona_iuridica
+
+118. OFFICIUM built (organizatio v5) — the round-XXV structural
+     find, and it DIVIDES the roles-are-relations ruling rather
+     than overturning it. Both halves stay true: the office is a
+     THING, holding it is a RELATION. The test is written into
+     the genus's own nota so a reader cannot miss it — does the
+     position persist when vacant? "Author" fails (no vacant
+     authorship waits); "bishop of Rome" passes.
+     `vacans` is the primary state, not an absence — and the
+     locution "sede vacante" is itself the argument: THE SEAT is
+     vacant, not the man, and languages that borrowed the phrase
+     borrowed the ontology with it.
+119. TENERE vs EXERCERE separated — a vicar/administrator
+     EXERCISES an office he does not HOLD. Without that
+     distinction there is no way to say who acts during a
+     vacancy, which is exactly when someone must.
+120. `confert_capacitatem` closes the loop with actus: an office
+     is where the CAPACITY for solemn acts comes from (notary →
+     public instrument, bishop → ordination). Capacity from
+     office, never from skill — the round-XXVI differentia now
+     has its source described.
+121. PERSONA_IURIDICA built, with the distinction modern schemas
+     lose: universitas PERSONARUM (a body of members) vs
+     universitas RERUM (goods devoted to a purpose, WITH NO
+     MEMBERS — a foundation). Anyone who models legal personhood
+     as always-a-group cannot say "foundation", and foundations,
+     trusts and pious causes are everywhere.
+     Recorded in its nota: Innocent IV's "persona ficta" is the
+     received phrase, but moderate realism grants more — an
+     ordered union acting as one and enduring through membership
+     change is a REAL instituted kind, like ISBN or officium. It
+     would be a fiction only if nothing in things answered to it;
+     the order itself answers.
+122. FALSE UMBRA caught by the index again (third instance of
+     this exact shape): identificatio pointed `administrata_a`
+     at `organizatio` — a GENUS THAT EXISTS — and marked it
+     externum. What is actually missing is an individuum, the
+     International ISBN Agency. Retargeted to `agentia_isbn`.
+     Lesson worth keeping: `externum` must name the thing that
+     is missing, not the kind of thing it is.
+
+Measured: 28 exemplaria / 123 genera / 258 residents / 335 arcs
+/ 0 vulnera.
+
+STILL OUTSTANDING from the parish scenario:
+- lex (distinct from norma — imposed with sanction vs conformed
+  to; the split magistratus already implied)
+- res_sacra (things set apart; alienation restricted)
+- recurrentia_computata (CLOSES the round-XIV dubium: Easter is
+  computed from a lunar rule)
