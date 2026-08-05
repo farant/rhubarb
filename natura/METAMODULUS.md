@@ -537,10 +537,31 @@ job and the reason to build it.
 | 13 | `eventum actio=` names a declared `actio` | [S] |
 | 14 | `modulus` attribute equals the filename stem | [S] |
 | 15 | No two entities share a name within a model (addressing depends on it, §4b) | [E] |
+| 16 | No `externum` flag on a target that is now described (a stale flag makes the agenda LIE) | [E] |
+| 17 | The `versio` attribute matches the version stated in the file's header comment | [E] |
+| 18 | A name bearing another name as its stem (`x_y` where `x` is a name) either descends from it or bears a declared relation to it | [M] |
 
 Rules 9–13 are the Cyc-consistency defense: they are what makes a
 hand-written library stay coherent past the point where one mind
 holds it.
+
+**Rule 18 is advisory [M]** — it reports MONITA, does not fail the
+run, and does not change the exit code. It cannot be enforced,
+because a shared stem is often legitimate: `fons_c` (a C source
+file) and `fons` (the source of a proposition) are honest
+homonyms, and `titulus_iuris` is a copyright notice while
+`titulus` is a credential. What the rule buys is that every such
+coincidence is SEEN ONCE. Its first run found that the three
+`editio` individua declare no `editio_de`, so the FRBR chain —
+this library's most-cited borrowing — was declared and unused at
+the layer it was built for. A heuristic that knows nothing about
+FRBR found that, which is the argument for keeping it noisy.
+
+*Rules 16 and 17 were enforced by the validator for a full round
+before being written here.* The closed-vocabulary gate (rule 8)
+keeps §3/§4 from rotting against the corpus; nothing was watching
+§8 against the validator. Noted rather than fixed: the same
+species of drift the mechanism was invented to stop, one level up.
 
 ---
 

@@ -53,7 +53,7 @@ for f in natura/*.stml; do
         # subordinatio TRANS EXEMPLARIA (mechanismus rotae XVII):
         # sub= cum modulo alieno = arcus, et radix in silva sua
         if [ -n "$s" ] && [ -n "$sm" ] && [ "$sm" != "$mod" ]; then
-            echo "$mod|$g|sub|$sm|$s" >> "$ARCUS"
+            echo "$mod|$g|sub|$sm|$s|$g" >> "$ARCUS"
             echo "$mod|$g|$sm.$s" >> "$TRANSRADICES"
             s=""
         fi
@@ -61,12 +61,19 @@ for f in natura/*.stml; do
         nin=$(num "$(xp "$f" "count((//genus)[$i]/individuum)")")
         ndu=$(num "$(xp "$f" "count((//genus)[$i]//dubium)")")
         nma=$(num "$(xp "$f" "count((//genus)[$i]/machina_statuum)")")
-        echo "$mod|$g|$s|$nsp|$nin|$ndu|$nma" >> "$GENERA"
+        # partes NUMERANDAE: apparatus quo absentia visibilis fit
+        # (RATIO §3) - qui applicat genus cum partibus indicem
+        # accipit, non nomen. Ideo in indice signandum.
+        npa=$(num "$(xp "$f" "count((//genus)[$i]/partes/pars)")")
+        echo "$mod|$g|$s|$nsp|$nin|$ndu|$nma|$npa" >> "$GENERA"
         # glossa: sententia prima definitionis (aut differentiae
         # in sub-generibus, quae definitione saepe carent)
         gl=$(xp "$f" "string((//genus)[$i]/definitio)")
         [ -z "$gl" ] && gl=$(xp "$f" "string((//genus)[$i]/differentia)")
-        gl=$(echo "$gl" | tr '\n' ' ' | sed 's/  */ /g; s/^ //' \
+        # tr '|' : prosa separatorem nostrum continere POTEST, et
+        # campus corruptus tacite errat (nulla querela, linea
+        # prava) - genus vitii quod domus bis mensuravit
+        gl=$(echo "$gl" | tr '\n|' ' /' | sed 's/  */ /g; s/^ //' \
              | cut -d'.' -f1 | cut -c1-118)
         echo "$mod|$g|$gl" >> "$GLOSSAE"
         i=$((i + 1))
@@ -102,9 +109,19 @@ for f in natura/*.stml; do
                 rel=$(xp "$f" "string(($sel)[$i]/@nomen)")
                 tgt=$(xp "$f" "string(($sel)[$i]/@${attr})")
                 tm=$(xp "$f" "string(($sel)[$i]/@modulus)")
-                fg=$(xp "$f" "string(($sel)[$i]/ancestor::genus/@nomen)")
+                # genus PROXIMUM, non extimum: axis ancestor reversa
+                # est, ergo [1] proximum dat. Genera nidificata
+                # (planta) aliter radicem suam nuntiant
+                fg=$(xp "$f" "string(($sel)[$i]/ancestor::genus[1]/@nomen)")
+                # FONS PRECISUS: relatum intra speciem a SPECIE
+                # asseritur, non a genere. Sine hoc campo tabula
+                # arcuum mendax est - 'quis Linnaeum citat?'
+                # 'rosa' respondet ubi 'rosa_canina' verum est.
+                # (@nomen ipsius relati nomen RELATIONIS est, unde
+                # ancestor:: et non ancestor-or-self::)
+                fr=$(xp "$f" "string(($sel)[$i]/ancestor::*[@nomen][1]/@nomen)")
                 [ -z "$tm" ] && tm="$mod"
-                echo "$mod|$fg|$rel|$tm|$tgt" >> "$ARCUS"
+                echo "$mod|$fg|$rel|$tm|$tgt|$fr" >> "$ARCUS"
                 i=$((i + 1))
             done
         done
@@ -119,7 +136,7 @@ for f in natura/*.stml; do
         pg=$(xp "$f" "string((//proprietas[@modulus])[$i]/@genus)")
         pm=$(xp "$f" "string((//proprietas[@modulus])[$i]/@modulus)")
         pf=$(xp "$f" "string((//proprietas[@modulus])[$i]/ancestor::genus[1]/@nomen)")
-        echo "$mod|$pf|proprietas:$pn|$pm|$pg" >> "$ARCUS"
+        echo "$mod|$pf|proprietas:$pn|$pm|$pg|$pf" >> "$ARCUS"
         i=$((i + 1))
     done
 
@@ -165,33 +182,74 @@ for f in natura/*.stml; do
         i=$((i + 1))
     done
 
-    # umbrae: externum="verum" - superficta declarata
+    # umbrae: externum="verum" - superficta declarata.
+    # ELEMENTUM CITANS SERVATUR, quia agendam DIVIDIT: relatio
+    # ad="X" dicit X GENUS esse (relationes in genera tendunt);
+    # relatum ad="X" rem singularem nominat (individuum sub genere
+    # iam exsistente). Agenda quae hoc non distinguit opus
+    # dictionarii facile sub opere consilii difficili CELAT.
     nu=$(num "$(xp "$f" "count(//*[@externum='verum'])")")
     i=1
     while [ "$i" -le "$nu" ]; do
-        u=$(xp "$f" "string((//*[@externum='verum'])[$i]/@ad)")
-        [ -n "$u" ] && echo "$u|$mod" >> "$UMBRAE"
+        sel="(//*[@externum='verum'])[$i]"
+        u=$(xp "$f" "string($sel/@ad)")
+        el=$(xp "$f" "string(local-name($sel))")
+        [ -n "$u" ] && echo "$u|$mod|$el" >> "$UMBRAE"
         i=$((i + 1))
     done
 
-    # dubia cum contextu
+    # dubia cum contextu ET TEXTU: index qui dubium NOMINAT sed non
+    # DICIT sessionem novam ad plagulam remittit - id est quod
+    # index praestare debet. Diagnostica se nominantia (lex domus)
+    # ad indices quoque pertinet.
     ndub=$(num "$(xp "$f" 'count(//dubium)')")
     i=1
     while [ "$i" -le "$ndub" ]; do
         ctx=$(xp "$f" "string((//dubium)[$i]/ancestor-or-self::*[@nomen][1]/@nomen)")
         [ -z "$ctx" ] && ctx="(modulus)"
-        echo "$mod|$ctx" >> "$DUBIA"
+        dtx=$(xp "$f" "string((//dubium)[$i])" | tr '\n|' ' /' \
+              | sed 's/  */ /g; s/^ //' | cut -c1-160)
+        echo "$mod|$ctx|$dtx" >> "$DUBIA"
         i=$((i + 1))
     done
 done
 
+# ---- classificatio umbrarum: DUAE agendae, non una ----
+# Umbra a relatione citata GENUS poscit: opus consilii, quaestio
+# ontologica, iudicium Franis. Umbra a relato SOLO citata
+# INDIVIDUUM poscit sub genere iam exsistente: opus dictionarii,
+# nullum consilium. Utrumque sub uno titulo ponere agendam facit
+# quae difficilior videtur quam est - et laborem facilem, quem
+# quivis quovis momento capere potest, invisibilem reddit.
+# EURISTICA, non lex: relatum genus attingere POTEST. Nomen
+# 'coniectata' hoc fatetur.
+UMBCLS="$TMP/umbrae_cls.txt"   # target|classis|nCit|moduli
+: > "$UMBCLS"
+for u in $(cut -d'|' -f1 "$UMBRAE" | sort -u); do
+    lineae=$(grep "^$u|" "$UMBRAE")
+    ncit=$(echo "$lineae" | wc -l | tr -d ' ')
+    mods=$(echo "$lineae" | cut -d'|' -f2 | sort -u | paste -sd, - \
+           | sed 's/,/, /g')
+    # relatio VINCIT: si utroque modo citatur, genus prius est,
+    # quia individuum sub genere nondum nato poni non potest
+    if echo "$lineae" | cut -d'|' -f3 | grep -q '^relatio$'; then
+        cls="genus"
+    else
+        cls="individuum"
+    fi
+    echo "$u|$cls|$ncit|$mods" >> "$UMBCLS"
+done
+nUmbGen=$(grep -c '|genus|' "$UMBCLS" || true)
+nUmbInd=$(grep -c '|individuum|' "$UMBCLS" || true)
+
 # ---- validatio: arcus contra genera+res ----
 VULNERA="$TMP/vulnera.txt"
 : > "$VULNERA"
-while IFS='|' read -r fm fg rel tm tgt; do
+while IFS='|' read -r fm fg rel tm tgt fr; do
     if ! grep -q "^$tm|$tgt|" "$GENERA" && \
        ! grep -q "^$tm|$tgt\$" "$RES"; then
-        echo "$fm.$fg --$rel--> $tm.$tgt" >> "$VULNERA"
+        # fons precisus in nuntio: diagnostica se nominantia
+        echo "$fm.${fr:-$fg} --$rel--> $tm.$tgt" >> "$VULNERA"
     fi
 done < "$ARCUS"
 
@@ -257,12 +315,12 @@ done
 # ---- regula XVI: UMBRAE RANCIDAE (externum sed iam descriptum)
 # Agenda computata est: umbra rancida agendam MENTIENTEM facit,
 # quod peius est quam agendam nullam. Quater manu capta.
-while IFS='|' read -r u fm; do
+while IFS='|' read -r u cls ncit mods; do
     if grep -q "|$u|" "$GENERA" || grep -q "|$u\$" "$RES"; then
-        echo "$fm --umbra--> '$u' RANCIDA (iam descriptum)" \
+        echo "$mods --umbra--> '$u' RANCIDA (iam descriptum)" \
             >> "$VULNERA"
     fi
-done < <(sort -u "$UMBRAE")
+done < "$UMBCLS"
 
 # ---- regula XVII: versio attributi cum capite congruat ----
 for f in natura/*.stml; do
@@ -312,6 +370,68 @@ nVulnera=$(wc -l < "$VULNERA" | tr -d ' ')
 nValiditas=$(wc -l < "$VALIDITAS" | tr -d ' ')
 nElementa=$(echo $_elementa | wc -w | tr -d " ")
 
+# ---- MONITA: nomina cognata sine cognatione (ADVISORIUM) ----
+# LEX PROPOSITA: stirps communis cognationem SIGNIFICAT. Si 'x_y'
+# et 'x' ambo nomina sunt, sed 'x_y' sub 'x' non stat, aut nomen
+# fallit aut arbor arcum amisit. NEUTRUM vulnus est - unde
+# MONITUM, quod portam non frangit et exitum non mutat.
+# Hoc porta 'monitum' quam quaerebamus (collisio nominum propinquorum)
+# in forma quae MENSURARI potest antequam severa fiat.
+MONITA="$TMP/monita.txt"
+PARENS="$TMP/parens.txt"       # nomen|parens
+NOMINA="$TMP/nomina_omnia.txt"
+NEXUS="$TMP/nexus_nom.txt"     # fons|meta (nomina nuda, utroque ordine)
+: > "$MONITA"; : > "$PARENS"
+# nexus nominales ex arcubus: fons PRECISUS (campus VI) ad metam
+cut -d'|' -f5,6 "$ARCUS" | awk -F'|' 'NF==2 && $1 && $2 {print $2"|"$1}' \
+    | sort -u > "$NEXUS"
+while IFS='|' read -r m g s _ _ _ _ _; do
+    # radix transmodularis parens quoque est (sub= cum modulo alieno)
+    [ -z "$s" ] && s=$(grep "^$m|$g|" "$TRANSRADICES" | cut -d'|' -f3 \
+                       | sed 's/^.*\.//')
+    echo "$g|$s" >> "$PARENS"
+done < "$GENERA"
+while IFS='|' read -r m g r; do
+    echo "${r#:}|$g" >> "$PARENS"
+done < "$RESGEN"
+
+maior() {  # maior <stirps> <nomen> -> 0 si stirps maiorem nominis est
+    local quaesitum="$1" cur="$2" i=0
+    while [ -n "$cur" ] && [ "$i" -lt 12 ]; do
+        cur=$(grep -m1 "^$cur|" "$PARENS" | cut -d'|' -f2)
+        [ "$cur" = "$quaesitum" ] && return 0
+        i=$((i + 1))
+    done
+    return 1
+}
+
+{ cut -d'|' -f2 "$GENERA"; cut -d'|' -f3 "$RESGEN" | sed 's/^://'; } \
+    | sort -u > "$NOMINA"
+while read -r b; do
+    case "$b" in *_*) ;; *) continue ;; esac
+    stirps="${b%_*}"
+    # stirps LONGISSIMA quae nomen est: 'res_sacra_mobilis' contra
+    # 'res_sacra', non contra 'res'
+    while [ -n "$stirps" ]; do
+        if grep -qx "$stirps" "$NOMINA"; then
+            # RELATIO DECLARATA stirpem AEQUE EXPLICAT: familia
+            # versionis/editionis/expressionis hic vivit -
+            # ':macos_14_sonoma' versio est de ':macos', et doctrina
+            # domus (FRBR) NEGAT editionem speciem operis esse.
+            # Cognatio vera est ubi sub= falsum esset. Ergo arcus
+            # monitum tacet, non sola maioritas.
+            if ! maior "$stirps" "$b" && \
+               ! grep -qxE "$b\|$stirps|$stirps\|$b" "$NEXUS"; then
+                echo "'$b' stirpem '$stirps' fert sed sub ea non stat" \
+                    >> "$MONITA"
+            fi
+            break
+        fi
+        case "$stirps" in *_*) stirps="${stirps%_*}" ;; *) stirps="" ;; esac
+    done
+done < "$NOMINA"
+nMonita=$(wc -l < "$MONITA" | tr -d ' ')
+
 # ---- numeri ----
 nModuli=$(ls natura/*.stml | wc -l | tr -d ' ')
 nGenera=$(wc -l < "$GENERA" | tr -d ' ')
@@ -360,9 +480,9 @@ echo "<p class='numeri'>exemplaria <b>$nModuli</b> &middot; genera <b>$nGenera</
 echo "<h2>SILVA PORPHYRIANA</h2>"
 
 rami() { # mod parens
-    local mod="$1" parens="$2" linea g s nsp nin ndu nma insig
+    local mod="$1" parens="$2" linea g s nsp nin ndu nma npa insig
     echo "<ul>"
-    while IFS='|' read -r _ g s nsp nin ndu nma; do
+    while IFS='|' read -r _ g s nsp nin ndu nma npa; do
         [ "$s" != "$parens" ] && continue
         insig=""
         [ "$nsp" -gt 0 ] && insig="$insig species:$nsp"
@@ -372,6 +492,7 @@ rami() { # mod parens
         [ -n "$supra" ] && printf ' <span class="umbra">&sub; %s</span>' "$supra"
         [ -n "$insig" ] && printf ' <span class="insignia">%s</span>' "$insig"
         [ "$nma" -gt 0 ] && printf ' <span class="machina">&#9881;machina</span>'
+        [ "$npa" -gt 0 ] && printf ' <span class="machina">&#9635;partes:%s</span>' "$npa"
         [ "$ndu" -gt 0 ] && printf ' <span class="dubium-i">dubia:%s</span>' "$ndu"
         rami "$mod" "$g"
         echo "</li>"
@@ -388,26 +509,49 @@ done
 
 # ---- arcus trans exemplaria ----
 echo "<h2>ARCUS TRANS EXEMPLARIA</h2><table class='arcus'>"
-while IFS='|' read -r fm fg rel tm tgt; do
+while IFS='|' read -r fm fg rel tm tgt fr; do
     [ "$fm" = "$tm" ] && continue
-    echo "<tr><td>$fm.$fg</td><td class='rel'>--$rel--&gt;</td><td>$tm.$tgt</td></tr>"
+    ostensum="$fg"
+    [ -n "$fr" ] && [ "$fr" != "$fg" ] && ostensum="$fg/$fr"
+    echo "<tr><td>$fm.$ostensum</td><td class='rel'>--$rel--&gt;</td><td>$tm.$tgt</td></tr>"
 done < <(sort -u "$ARCUS")
 echo "</table>"
 
-# ---- umbrae ----
-echo "<h2>UMBRAE (superficta, nondum descripta - agenda computata)</h2><ul>"
-sort -t'|' -k1,1 "$UMBRAE" | sort -u -t'|' -k1,1 | \
-while IFS='|' read -r u fm; do
-    echo "<li class='umbra'>$u <span class='insignia'>(a $fm superfectum)</span></li>"
+# ---- umbrae: duae agendae ----
+echo "<h2>UMBRAE - GENERA DESIDERATA ($nUmbGen)</h2>"
+echo "<p class='insignia'>a relatione citata: opus consilii</p><ul>"
+sort -t'|' -k3,3nr "$UMBCLS" | while IFS='|' read -r u cls ncit mods; do
+    [ "$cls" = "genus" ] || continue
+    echo "<li class='umbra'>$u <span class='insignia'>(citatum ${ncit}x: $mods)</span></li>"
+done
+echo "</ul>"
+echo "<h2>UMBRAE - INDIVIDUA DESIDERATA ($nUmbInd)</h2>"
+echo "<p class='insignia'>a relato solo citata: opus dictionarii, nullum consilium</p><ul>"
+sort -t'|' -k3,3nr "$UMBCLS" | while IFS='|' read -r u cls ncit mods; do
+    [ "$cls" = "individuum" ] || continue
+    echo "<li class='umbra'>$u <span class='insignia'>(citatum ${ncit}x: $mods)</span></li>"
 done
 echo "</ul>"
 
 # ---- dubia ----
 echo "<h2>DUBIA APERTA</h2><ul>"
-while IFS='|' read -r m c; do
-    echo "<li><span class='insignia'>$m /</span> $c</li>"
+while IFS='|' read -r m c t; do
+    echo "<li><span class='insignia'>$m /</span> $c &mdash; <span class='insignia'>$t</span></li>"
 done < "$DUBIA"
 echo "</ul>"
+
+# ---- monita ----
+echo "<h2>MONITA (advisoria - portam non frangunt)</h2>"
+echo "<p class='insignia'>stirps communis sine cognatione: aut nomen fallit, aut arbor arcum amisit</p>"
+if [ "$nMonita" -eq 0 ]; then
+    echo "<p class='sanum'>nulla</p>"
+else
+    echo "<ul>"
+    while IFS= read -r mo; do
+        echo "<li class='dubium-i'>$mo</li>"
+    done < "$MONITA"
+    echo "</ul>"
+fi
 
 # ---- vulnera ----
 echo "<h2>VULNERA (citationes pendentes)</h2>"
@@ -452,18 +596,28 @@ echo '```'
 echo
 echo "## II. Genera per exemplar"
 echo
+echo "Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):"
+echo "\`⚙\` machinam statuum fert · \`▣N\` partes N declaratas fert"
+echo "(partes = index quo ABSENTIA visibilis fit)."
+echo
 for mv in $MODULI; do
     mod="${mv%%:*}"; ver="${mv##*:}"
     ng=$(grep -c "^$mod|" "$GENERA")
     echo "### $mod (v$ver, genera $ng)"
     echo
     while IFS='|' read -r _ g gl; do
+        linea=$(grep "^$mod|$g|" "$GENERA")
         supra=$(grep "^$mod|$g|" "$TRANSRADICES" | cut -d'|' -f3)
-        parens=$(grep "^$mod|$g|" "$GENERA" | cut -d'|' -f3)
+        parens=$(echo "$linea" | cut -d'|' -f3)
+        nma=$(echo "$linea" | cut -d'|' -f7)
+        npa=$(echo "$linea" | cut -d'|' -f8)
         marca=""
         [ -n "$supra" ] && marca=" ⊂ $supra"
         [ -n "$parens" ] && marca=" ⊂ $parens"
-        echo "- **$g**$marca — $gl"
+        app=""
+        [ "${nma:-0}" -gt 0 ] && app="$app ⚙"
+        [ "${npa:-0}" -gt 0 ] && app="$app ▣$npa"
+        echo "- **$g**$marca$app — $gl"
     done < <(grep "^$mod|" "$GLOSSAE")
     echo
 done
@@ -486,21 +640,55 @@ for mv in $MODULI; do
     done
 done
 echo
-echo "## V. Umbrae — genera superficta, nondum descripta"
+echo "## V. Umbrae — superficta, nondum descripta"
 echo
-echo "Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit."
+echo "Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed"
+echo "nemo describit. DUAE agendae sunt, non una — ordo intra utramque"
+echo "per numerum citationum (quod plura exemplaria poscunt, prius)."
 echo
-sort -u -t'|' -k1,1 "$UMBRAE" | while IFS='|' read -r u fm; do
-    echo "- **$u** — a \`$fm\` superfectum"
+echo "### V.a Genera desiderata ($nUmbGen) — opus consilii"
+echo
+echo "A \`relatio\` citata: relationes in GENERA tendunt, ergo quaestio"
+echo "ontologica et iudicium poscitur."
+echo
+sort -t'|' -k3,3nr "$UMBCLS" | while IFS='|' read -r u cls ncit mods; do
+    [ "$cls" = "genus" ] || continue
+    echo "- **$u** — ${ncit}x, a \`$mods\`"
+done
+echo
+echo "### V.b Individua desiderata ($nUmbInd) — opus dictionarii"
+echo
+echo "A \`relato\` SOLO citata: res singularis nominata sub genere iam"
+echo "exsistente. Nullum consilium — describi potest quovis momento."
+echo "(EURISTICA, non lex: relatum genus attingere potest.)"
+echo
+sort -t'|' -k3,3nr "$UMBCLS" | while IFS='|' read -r u cls ncit mods; do
+    [ "$cls" = "individuum" ] || continue
+    echo "- **$u** — ${ncit}x, a \`$mods\`"
 done
 echo
 echo "## VI. Dubia aperta"
 echo
-while IFS='|' read -r m c; do
-    echo "- \`$m\` / $c"
+while IFS='|' read -r m c t; do
+    echo "- \`$m\` / **$c** — $t"
 done < "$DUBIA"
 echo
-echo "## VII. Vocabularium formae (omnes tituli licentes)"
+echo "## VII. Monita — stirps communis sine cognatione ($nMonita)"
+echo
+echo "Regula XVIII (ADVISORIA, portam non frangit). Nomen quod nomen"
+echo "aliud ut stirpem fert, sed nec sub eo stat nec relationem ad id"
+echo "declarat. **Pleraque LEGITIMA sunt** — homonyma honesta:"
+echo "\`fons_c\` plagula est, \`fons\` propositionis origo. Pretium"
+echo "regulae non est quod defectus inveniat sed quod nulla talis"
+echo "coincidentia INVISA transeat."
+echo
+if [ "$nMonita" -eq 0 ]; then
+    echo "- nulla"
+else
+    sed 's/^/- /' "$MONITA"
+fi
+echo
+echo "## VIII. Vocabularium formae (omnes tituli licentes)"
 echo
 echo "**Elementa (${nElementa}):** $(echo $_elementa | sed 's/ /, /g')"
 echo
@@ -513,7 +701,8 @@ echo "sine emendatione specificationis portam frangit."
 # ---- relatio terminalis ----
 echo "natura_visus: $EXITUS scriptum"
 echo "  exemplaria $nModuli / genera $nGenera / res $nRes / arcus $nArcus"
-echo "  umbrae $nUmbrae / dubia $nDubia / tempus-validitatis $nValiditas / VULNERA $nVulnera"
+echo "  umbrae $nUmbrae (genera $nUmbGen, individua $nUmbInd) / dubia $nDubia"
+echo "  tempus-validitatis $nValiditas / MONITA $nMonita / VULNERA $nVulnera"
 if [ "$nVulnera" -gt 0 ]; then
     echo "  --- vulnera: ---"
     cat "$VULNERA" | sed 's/^/  /'

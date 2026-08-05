@@ -2823,3 +2823,117 @@ Measured: 30 exemplaria / 140 genera / 294 residents / 381 arcs
 
 Measured: 30 exemplaria / 140 genera / 294 residents / 381 arcs
 / 0 vulnera. Four documents, each with one job.
+
+## 2026-08-05 — round forty-three: the tools grow eyes
+
+Post-compact session. No new genera; instead a pass over
+`natura_visus.sh` after reading the whole INDEX cold and noticing
+that several things the corpus KNEW were not things the tools
+SAID.
+
+199. THE UMBRA LIST WAS TWO AGENDAS WEARING ONE HAT. Classified
+     all 16 by which element cited them, and the split is clean:
+     an umbra cited by `<relatio ad=>` needs a GENUS (relations
+     point at kinds — ontological work, needs a ruling), while one
+     cited by `<relatum ad=>` alone needs an INDIVIDUUM under a
+     genus that already exists (dictionary work, no ruling, anyone
+     can do it any time). MEASURED: 10 genera, 6 individua.
+     So roughly a third of the standing agenda was CHEAP and had
+     been carried as if it were all design work — the easy labour
+     was invisible because it was filed under the hard.
+     Now emitted as V.a / V.b, ordered by citation count, which
+     immediately surfaced `processus` at 4x (next-largest is 2x)
+     and cited BOTH ways — related-to structurally and pointed at
+     as a particular, which is the addressability test firing
+     twice. It is the strongest candidate on the list.
+     Recorded as an EURISTICA, not a law: a relatum can reach a
+     genus. The tool says so where it prints.
+
+200. THE ARC TABLE WAS LOSSY AND NOBODY HAD LOOKED. `ARCUS`
+     recorded the ancestor GENUS as each arc's source, so a
+     `relatum` asserted inside a species was filed as coming from
+     the genus. 381 arcs, and not one of them knew which entity
+     actually made the claim: "who cites Linnaeus?" answered
+     `rosa` where the truth is `rosaceae`, `rosa`, AND
+     `rosa_canina` — three assertions at three taxonomic ranks,
+     collapsed into one. Added a precise-source field. Two
+     latent bugs fell out on the way: the ancestor lookup used
+     `ancestor::genus` (which `string()` resolves to the
+     OUTERMOST for nested genera — planta's whole subtree
+     reported `rosaceae`), and it had to be `ancestor::` rather
+     than `ancestor-or-self::` because a relatum's own `@nomen`
+     is the RELATION's name, not an entity's.
+     Verified by planting a dangling relatum inside `rosa_canina`:
+     the gate fails, and the diagnostic now names `rosa_canina`.
+     Diagnostics that name themselves — the house law — had been
+     quietly violated in the one table that describes the library
+     to itself.
+
+201. RULE XVIII, ADVISORY: a name bearing another name as its
+     stem (`x_y` where `x` is also a name) should either descend
+     from it or declare a relation to it. Shared stem ought to
+     mean shared ancestry; where it does not, either the name
+     misleads or the tree lost an arc.
+     Built as MONITA — non-fatal, no effect on exit code —
+     BECAUSE IT CANNOT BE ENFORCED. Most hits are honest
+     homonyms: `fons_c` is a source FILE and `fons` is the source
+     of a PROPOSITION; `titulus_iuris` is a copyright notice and
+     `titulus` is a credential; `codex_sepultus` is
+     commented-out code and `codex` is a physical book. What the
+     rule buys is that each such coincidence is seen ONCE.
+     First run: 29. Then suppressed the cases where a declared
+     relation already explains the stem — the
+     version/edition/expression family, where house doctrine
+     (FRBR) POSITIVELY DENIES that an edition is a kind of work,
+     so `sub=` would be wrong and a relation is right. 29 → 21,
+     and the survivors are essentially all real.
+
+202. AND IT FOUND SOMETHING ON ITS FIRST RUN. Three `editio`
+     individua survived suppression, which meant no declared
+     relation joined them to their work. True: `expressio_de` and
+     `editio_de` are both DECLARED on their genera, the
+     expressiones use them (`abusus_linguae_anglice` →
+     `abusus_linguae`, and `translata_ex` → the German), and all
+     three editiones declare NOTHING. Moby-Dick jumps opus →
+     editio with no expressio in between.
+     So the FRBR chain — this library's most-cited borrowing, the
+     thing RATIO §4 credits with bending our versio pattern into
+     something better — was declared and unused at exactly the
+     layer it was built for. A name-shape heuristic that knows
+     nothing about FRBR found it. NOT FIXED THIS ROUND: it needs
+     a `moby_dick_anglice` expressio and a ruling on whether a
+     single-language work gets a trivial one, which is a
+     modelling question, not a tooling one.
+
+203. SPEC DRIFT IN THE ANTI-DRIFT DOCUMENT. METAMODULUS §8 listed
+     15 rules; the validator enforces 17 — rules 16 (stale
+     `externum`) and 17 (version mismatch) were built last round
+     and never written down. The closed-vocabulary gate (rule 8)
+     keeps §3/§4 honest against the corpus; NOTHING was watching
+     §8 against the validator. Both rows added, plus 18. The
+     lesson is the one already on the books, one level up: CHECK
+     THE THINGS YOU ARE NOT THINKING ABOUT — and note that the
+     project memory had "17 rules" correct while the document
+     said 15, so the drift was visible and unread.
+
+204. Smaller: dubia now carry their TEXT into the index (11 open
+     questions readable without opening a file — an index that
+     NAMES a doubt but will not SAY it just sends you back to the
+     source, which is the thing an index exists not to do);
+     apparatus markers `⚙` machina and `▣N` partes in §II, so
+     "which genus gives me the most to work with" is visible;
+     and prose is now stripped of `|` before entering pipe-
+     delimited intermediates, which was a live field-corruption
+     trap that had simply not fired yet.
+
+MEASURED after: 30 exemplaria / 140 genera / 294 res / 381 arcus
+/ 0 vulnera / 21 monita / umbrae 16 = 10 genera + 6 individua.
+
+ONE OBSERVATION FOR THE NEXT ROUND, unactioned: `partes` is
+carried by SEVEN of 140 genera. RATIO §3 names it the sharpest
+affordance the library has — "a genus with declared parts makes
+absence visible, and unstructured observation cannot do that
+because absence has no perceptual signature." Five per cent of
+the corpus exercises the mechanism we claim as the differentiator.
+Either the claim is overstated or the corpus is under-built, and
+which one it is has not been established.

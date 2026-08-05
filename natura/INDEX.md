@@ -20,9 +20,13 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 ## II. Genera per exemplar
 
+Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
+`⚙` machinam statuum fert · `▣N` partes N declaratas fert
+(partes = index quo ABSENTIA visibilis fit).
+
 ### actus (v0, genera 5)
 
-- **actus_sollemnis** — Actus cuius EFFECTUS a forma praescripta et ab agentis capacitate pendet, et qui ideo VALIDUS aut IRRITUS est, non bon
+- **actus_sollemnis** ⚙ — Actus cuius EFFECTUS a forma praescripta et ab agentis capacitate pendet, et qui ideo VALIDUS aut IRRITUS est, non bon
 - **ritus** ⊂ actus_sollemnis — Actus sollemnis ad cultum divinum ordinatus: materia sensibilis et forma verborum, per ministrum, ad effectum spiritua
 - **sacramentum** ⊂ ritus — Signum efficax gratiae, a Christo institutum: effectum ponit EX OPERE OPERATO - ex actu ipso rite posito, non ex digni
 - **sacramentale** ⊂ ritus — Ab Ecclesia institutum, non a Christo: effectum ponit EX OPERE OPERANTIS - ex dispositione agentis et Ecclesiae precib
@@ -30,7 +34,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 ### animal (v0, genera 1)
 
-- **animal** ⊂ corporalia.vivens — SENSUM habet et motum localem: mundum percipit et se ad eum movet - unde appetitus, unde fuga, unde quaesitio
+- **animal** ⊂ corporalia.vivens ⚙ ▣3 — SENSUM habet et motum localem: mundum percipit et se ad eum movet - unde appetitus, unde fuga, unde quaesitio
 
 ### architectura_machinae (v0, genera 2)
 
@@ -67,34 +71,34 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 ### communicatio (v0, genera 3)
 
 - **actor** — Ens logicum cum identitate, statu privato, moribus: cum aliis SOLUM per nuntios communicat
-- **nuntius** — Communicatio reificata: data in itinere INSCRIPTA - destinatarius ei debetur
+- **nuntius** ⚙ — Communicatio reificata: data in itinere INSCRIPTA - destinatarius ei debetur
 - **eventum** — Res gesta NON inscripta: accidit, et quivis observans videre potest - nulli debetur
 
 ### corporalia (v3, genera 7)
 
-- **res_corporea** — Quod materiam habet, locum occupat, tempore corrumpitur: res quae manibus tangi potest
-- **artefactum** ⊂ res_corporea — Ab homine facta ad finem: NUMERABILIS, singularis, haecceitatem habens - hic panis, non alius, etiamsi gemellus adsit
+- **res_corporea** ⚙ — Quod materiam habet, locum occupat, tempore corrumpitur: res quae manibus tangi potest
+- **artefactum** ⊂ res_corporea ▣1 — Ab homine facta ad finem: NUMERABILIS, singularis, haecceitatem habens - hic panis, non alius, etiamsi gemellus adsit
 - **materia** ⊂ res_corporea — MENSURABILIS non numerabilis: farina, aqua, oleum - "tres farinae" nihil significat
-- **instrumentum** ⊂ artefactum — Ad faciendum factum, non ad consumendum: usu SERVATUR (immo usus eius finis est), non destruitur
-- **res_sacra** ⊂ res_corporea — Divino cultui per ACTUM dedicata, non per naturam nec per materiam: idem lignum mensa aut altare esse potest, et diffe
-- **damnum** — Laesio integritatis rei corporeae ab externa vi illata: quod unum erat divisum, quod integrum fractum, quod purum mixt
-- **vivens** ⊂ res_corporea — Se ipsum movet, nutrit, generat: principium motus INTRA se habet, ubi artefactum motum ab alio accipit et materia null
+- **instrumentum** ⊂ artefactum ⚙ — Ad faciendum factum, non ad consumendum: usu SERVATUR (immo usus eius finis est), non destruitur
+- **res_sacra** ⊂ res_corporea ⚙ — Divino cultui per ACTUM dedicata, non per naturam nec per materiam: idem lignum mensa aut altare esse potest, et diffe
+- **damnum** ⚙ — Laesio integritatis rei corporeae ab externa vi illata: quod unum erat divisum, quod integrum fractum, quod purum mixt
+- **vivens** ⊂ res_corporea ⚙ — Se ipsum movet, nutrit, generat: principium motus INTRA se habet, ubi artefactum motum ab alio accipit et materia null
 
 ### elementa_programmatis (v4, genera 17)
 
 - **status** — Valor custoditus qui in tempore mutari potest: inter eventus manet, ab eventibus mutatur
 - **proiectio** ⊂ status — Ex alio statu (VERITATE sua) integre recomputari potest
 - **artefactum_aedificationis** ⊂ proiectio — Proiectio fontium per aedificationem facta: fons veritas, artefactum proiectio
-- **promptuarium** ⊂ proiectio — Proiectio ad celeritatem servata: valor semel computatus ne iterum computetur
+- **promptuarium** ⊂ proiectio ⚙ — Proiectio ad celeritatem servata: valor semel computatus ne iterum computetur
 - **index** ⊂ proiectio — Proiectio ad quaerendum ordinata: veritas ordinem quem quaerens petit non habet; index eum praebet
 - **lectio** — Eventus quo status observatur, ipso immutato: dimidium alterum vitae status - mutatione scribitur, lectione fructum fe
 - **mutatio** — Eventus quo status mutatur: quod ACTA recordant
-- **functio** — Subprogramma nominatum: parametra accipit, computat, fortasse valorem reddit, fortasse mutationes efficit, fortasse le
+- **functio** ⚙ — Subprogramma nominatum: parametra accipit, computat, fortasse valorem reddit, fortasse mutationes efficit, fortasse le
 - **functio_pura** ⊂ functio — Criterium UNUM in geminos applicatum: lectiones solum per parametra (memoria monstrata inclusa - vide strlen), mutatio
 - **constans** — Valor cuius INTENTIO est numquam post ortum mutari - contrarium status: ille mutari exspectatur, hic mutari vetatur
 - **constans_numerica** ⊂ constans — Quantitas: arithmetica in ea licet
 - **constans_textualis** ⊂ constans — Series characterum constans, plerumque homini destinata: nuntia, tituli, formae
-- **bibliotheca** — Collectio elementorum (functionum, constantium, typorum) ad usum repetendum edita: interfaciem praebet, corpus celat
+- **bibliotheca** ▣4 — Collectio elementorum (functionum, constantium, typorum) ad usum repetendum edita: interfaciem praebet, corpus celat
 - **assertio** — Propositio exsecutabilis: affirmatio de statu programmatis in puncto, quae oraculum suum secum fert - programma ipsum 
 - **commentarium** — Pars fontis quam lingua legere NON promittit: textus intra artefactum, lectoribus aliis quam compilatori inscriptus
 - **identificator** — Nomen cuius essentia REFERENTIA est, non significatio: ansa ad rem
@@ -102,12 +106,12 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 ### fabricatio (v3, genera 6)
 
-- **postulatum** — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
+- **postulatum** ⚙ — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
 - **facultas** — Quod opus praestare potest, ab utente aestimatum: unitas VALORIS
 - **probatio** — Interrogatio exsecutabilis intentionis: scaena parata, actio exercita, effectus contra exspectationem collatus
-- **vitium** — Discrepantia inter intentionem et mores: programma facit quod scriptum est, non quod volitum - vitium in hiatu vivit
-- **debitum_technicum** — Imperfectio in opere CONSULTO suscepta ut aliquid citius praestetur, cum cognitione pretii posterioris: non defectus s
-- **complicatio** — Consideratio implementationis quae consilio praevideri NON POTEST sed opere incepto sola apparet, et consilium retract
+- **vitium** ⚙ — Discrepantia inter intentionem et mores: programma facit quod scriptum est, non quod volitum - vitium in hiatu vivit
+- **debitum_technicum** ⚙ — Imperfectio in opere CONSULTO suscepta ut aliquid citius praestetur, cum cognitione pretii posterioris: non defectus s
+- **complicatio** ⚙ — Consideratio implementationis quae consilio praevideri NON POTEST sed opere incepto sola apparet, et consilium retract
 
 ### formae_datorum (v0, genera 1)
 
@@ -115,21 +119,21 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 ### identificatio (v0, genera 1)
 
-- **schema_identificandi** — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
+- **schema_identificandi** ⚙ ▣3 — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
 
 ### iudicium (v3, genera 7)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
 - **observatio** — Notitia rei singularis accepta, quae iudicium fundare potest: quid videatur, quid sentiatur, quid metiatur
-- **iudicium** — Propositio de re quam aliquis tenet: cum auctore, momento, fundamento, gradu assensus
+- **iudicium** ⚙ — Propositio de re quam aliquis tenet: cum auctore, momento, fundamento, gradu assensus
 - **periculum** — Damnum quod accidere potest nec certum est: species iudicii de futuro, sed DUPLEX - probabilitate et gravitate simul c
-- **ignotum** — Absentia notitiae AGNITA et nominata: hiatus qui, quia nominatus est, tractari potest
-- **investigatio** — Inquisitio ordinata in causas eventus, iudicia de causis producens
+- **ignotum** ⚙ — Absentia notitiae AGNITA et nominata: hiatus qui, quia nominatus est, tractari potest
+- **investigatio** ⚙ — Inquisitio ordinata in causas eventus, iudicia de causis producens
 
 ### lingua_programmandi (v3, genera 5)
 
-- **lingua_programmandi** — Systema signorum formale ad computationes exprimendas: grammatica definita, semantica praescripta (plus minusve strict
+- **lingua_programmandi** ⚙ — Systema signorum formale ad computationes exprimendas: grammatica definita, semantica praescripta (plus minusve strict
 - **lingua_iussuum** ⊂ lingua_programmandi — Verbum primum = PROCESSUS ALIENUS vocatus, non functio propria: lingua ad imperia oritur (interactiva), scriptilis fit
 - **versio_linguae** — Editio linguae nominata et citabilis: eventus "edi" in rem conversus
 - **implementatio_linguae** — Programma quod linguam exsequitur: compilator, interpres, aut mixtum
@@ -140,7 +144,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **locus** — Pars spatii determinata ubi res corporeae esse possunt: punctum aut area in terra
 - **inscriptio** — Nomen loci ad inveniendum conventum: via, numerus, urbs, codex postalis
 - **iurisdictio** — Potestas legum ferendarum et exigendarum super loco: municipium, provincia, civitas
-- **aedificium** — Structura loco fixa quam homines occupant: res corporea quae moveri non potest - immobilitas essentia eius, unde "res 
+- **aedificium** ▣1 — Structura loco fixa quam homines occupant: res corporea quae moveri non potest - immobilitas essentia eius, unde "res 
 
 ### mensura (v0, genera 3)
 
@@ -150,33 +154,33 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 ### morbus (v1, genera 1)
 
-- **morbus** — Dispositio viventis praeter naturam, qua operatio debita impeditur: defectus ab eo quod naturae rei debetur
+- **morbus** ⚙ — Dispositio viventis praeter naturam, qua operatio debita impeditur: defectus ab eo quod naturae rei debetur
 
 ### norma (v2, genera 2)
 
-- **norma** — Documentum publicum quod formam praescribit: quid conformitas significet definit
-- **lex** — Ordinatio rationis ad bonum commune, ab eo qui curam communitatis habet promulgata (Thomas, ST I-II q
+- **norma** ⚙ — Documentum publicum quod formam praescribit: quid conformitas significet definit
+- **lex** ⚙ — Ordinatio rationis ad bonum commune, ab eo qui curam communitatis habet promulgata (Thomas, ST I-II q
 
 ### obligatio (v3, genera 5)
 
-- **obligatio** — Iuris vinculum quo quis alicui aliquid praestare adstringitur (Institutiones): non res sed VINCULUM inter personas - d
+- **obligatio** ⚙ — Iuris vinculum quo quis alicui aliquid praestare adstringitur (Institutiones): non res sed VINCULUM inter personas - d
 - **contractus** — Conventio duorum (aut plurium) quae obligationes parit: consensus est fundamentum - ideo utrumque ligat, et neuter sol
-- **licentia** — Concessio ab auctoritate data ut quid liceat quod aliter non liceret: UNILATERALIS (consensu accipientis non indiget),
+- **licentia** ⚙ — Concessio ab auctoritate data ut quid liceat quod aliter non liceret: UNILATERALIS (consensu accipientis non indiget),
 - **tributum** ⊂ obligatio — Obligatio ad MAGISTRATUM, ex lege orta, non ex consensu: debetur quia lex ita statuit, non quia quis promisit
 - **titulus** — Attestatio publica et permanens ab auctoritate data, quod aliquis aliquid consecutus est aut aliquid EST: non permissi
 
 ### operatio (v0, genera 3)
 
 - **ambitus** — Locus ordinatus ubi programmata currunt: machinae, figurationes, data, nomina
-- **pensum** — Opus certum alicui commissum: quid agendum, a quo, quo statu
-- **incidens** — Interruptio aut deminutio ministerii in ambitu vero: non genus vitii sed vitium EXPOSITUM - idem defectus vitium sempe
+- **pensum** ⚙ — Opus certum alicui commissum: quid agendum, a quo, quo statu
+- **incidens** ⚙ — Interruptio aut deminutio ministerii in ambitu vero: non genus vitii sed vitium EXPOSITUM - idem defectus vitium sempe
 
 ### opus_scriptum (v1, genera 6)
 
-- **opus_scriptum** — Creatio intellectualis verbis constans, ab expressionibus suis distincta: "Moby-Dick" opus unum est sive Anglice sive 
+- **opus_scriptum** ⚙ — Creatio intellectualis verbis constans, ab expressionibus suis distincta: "Moby-Dick" opus unum est sive Anglice sive 
 - **expressio** — Realizatio operis in signis certis: textus hic, non alius
 - **editio** — Corpus editum expressionis: quod praelum vere protulit - charta, forma, paginae, index ISBN
-- **codex** — Exemplar unum corporeum editionis: hoc quod manu tenes, cum maculis, notis marginalibus, historia possessionis propria
+- **codex** ⚙ — Exemplar unum corporeum editionis: hoc quod manu tenes, cum maculis, notis marginalibus, historia possessionis propria
 - **periodicum** ⊂ opus_scriptum — Opus quod PERFECTIONEM non petit: in fasciculis continuatur dum curatores volunt - machina compositionis parentis ei f
 - **fasciculus** — Pars periodici tempore signata: numerus unus, die suo editus
 
@@ -184,7 +188,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 - **organizatio** — Universitas personarum: coetus in finem communem ordinatus qui UT UNUM agit et mutatis membris perdurat - haec perdura
 - **persona_iuridica** ⊂ organizatio — Subiectum iurium et obligationum in iure: possidet, contrahit, agit et convenitur SUO nomine, non nomine membrorum
-- **officium** — Munus stabiliter constitutum cum oneribus, potestatibus et condicionibus SUIS, quod tenenti suo NON inhaeret: idem off
+- **officium** ⚙ — Munus stabiliter constitutum cum oneribus, potestatibus et condicionibus SUIS, quod tenenti suo NON inhaeret: idem off
 - **corpus_normans** ⊂ organizatio — Finis proprius: normas edere et custodire - descriptiones auctoritativas quibus alii conformantur
 - **societas** ⊂ organizatio — Finis proprius: quaestus per opera vendita; possessores habet quibus respondet
 - **magistratus** ⊂ organizatio — Auctoritas ex IMPERIO super loco, non ex consensu (ut corpus normans) nec ex quaestu (ut societas): leges fert quibus 
@@ -195,7 +199,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 ### plagula_computatralis (v1, genera 7)
 
-- **plagula_computatralis** — Sequentia octetorum NOMINATA in systemate plagularum: identitas quae perdurat dum contentum mutatur (ut universitas mu
+- **plagula_computatralis** ⚙ — Sequentia octetorum NOMINATA in systemate plagularum: identitas quae perdurat dum contentum mutatur (ut universitas mu
 - **plagula_fontis** ⊂ plagula_computatralis — Textus a personis scriptus, a personis ET translatoribus lectus: forma exsecutionis futurae, non exsecutio ipsa
 - **scriptum_exsecutabile** ⊂ plagula_computatralis — Directe exsequenda sine translatione praevia: crena (#!) interpretem suum ipsa nominat - plagula quae scit quomodo cur
 - **plagula_notationis** ⊂ plagula_computatralis — Contentum = prosa cum structura interposita: signa structuram ferunt, textus sensum - pro lectore humano per machinam 
@@ -205,7 +209,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 ### planta (v1, genera 4)
 
-- **planta** ⊂ corporalia.vivens — Vivens quod se ex loco non movet et lucem in cibum vertit (photosynthesis): radicibus haeret, per partes crescit, semi
+- **planta** ⊂ corporalia.vivens ⚙ ▣6 — Vivens quod se ex loco non movet et lucem in cibum vertit (photosynthesis): radicibus haeret, per partes crescit, semi
 - **rosaceae** ⊂ planta — Flores quinque-petali plerumque, stipulae ad folia, fructus varii (pomum, drupa, aggregatus) - familia late diversa qu
 - **rosa** ⊂ rosaceae — Caules aculeati, folia imparipinnata, fructus hypanthium carnosum (cynorrhodon) - non pomum
 - **malus** ⊂ rosaceae — Fructus POMUM (hypanthium carnosum quod semina includit), non drupa nec cynorrhodon
@@ -213,8 +217,8 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 ### praescriptum (v2, genera 6)
 
 - **procedura** — Ordo operationum ad finem: introitus declarati, gradus ordinati, exitus exspectatus
-- **procedura_automata** ⊂ procedura — A MACHINA exsecuta, ideo AMBIGUITATIS TOLERANTIA NULLA: ubi praescriptum "donec aureum fiat" dicere potest quia homo i
-- **praescriptum** ⊂ procedura — Ordo operationum ad finem, ab homine exsequendus: introitus declarati (materiae, instrumenta), gradus ordinati, exitus
+- **procedura_automata** ⊂ procedura ⚙ — A MACHINA exsecuta, ideo AMBIGUITATIS TOLERANTIA NULLA: ubi praescriptum "donec aureum fiat" dicere potest quia homo i
+- **praescriptum** ⊂ procedura ⚙ ▣3 — Ordo operationum ad finem, ab homine exsequendus: introitus declarati (materiae, instrumenta), gradus ordinati, exitus
 - **gradus_praescripti** — Operatio una in ordine: actio, fortasse cum quantitate, fortasse cum mora, fortasse cum conditione finiendi
 - **versio_praescripti** — Editio praescripti nominata et citabilis: quod praescriptum per emendationes transit, identitate manente ("receptum av
 - **index_verificationis** ⊂ procedura — CONFIRMAT quod factum sit; non docet quomodo fiat
@@ -227,7 +231,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 ### systema_operativum (v3, genera 4)
 
-- **systema_operativum** — Programma primarium quod machinam possidet: inter ferrum et programmata mediat - memoriam distribuit, processus custod
+- **systema_operativum** ⚙ — Programma primarium quod machinam possidet: inter ferrum et programmata mediat - memoriam distribuit, processus custod
 - **systema_unixiforme** ⊂ systema_operativum — Ad exemplar Unix formatum: arbor plagularum una a radice, "omnia plagulae sunt", processus cum fistulis componendi, co
 - **distributio_systematis** — Collectio curata: nucleus + instrumenta + ordinationes + gestor fasciculorum, ab uno curatore electa, probata, edita
 - **versio_systematis** — Editio systematis nominata: quam installatio vere currit - "Darwin 23
@@ -241,14 +245,14 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **recurrentia_per_usum** ⊂ recurrentia — Non tempore sed USU ACCUMULATO regitur: horis operis, cyclis, spatio confecto
 - **horarium** — Recurrentiae in ordinem compositae quibus opus regitur: horae apertionis, vices operariorum, ordo coctionis
 - **calendarium** — Systema quo dies nominantur et ordinantur: menses, hebdomadae, anni, dies festi
-- **reservatio** — Vindicatio capacitatis futurae: intervallum et res (sedes, cella, hora medici) alicui SERVATA ne alteri detur
+- **reservatio** ⚙ — Vindicatio capacitatis futurae: intervallum et res (sedes, cella, hora medici) alicui SERVATA ne alteri detur
 
 ### vectura (v0, genera 4)
 
-- **iter** — Motus rei aut personae a loco ad locum, proposito susceptus: initium, finis, via, tempus
+- **iter** ⚙ — Motus rei aut personae a loco ad locum, proposito susceptus: initium, finis, via, tempus
 - **via** — Semita per quam iri potest: res publica plerumque, itineribus innumeris communis
 - **vehiculum** ⊂ corporalia.instrumentum — Instrumentum cuius usus MOTUS est: se movet et alia fert
-- **onus** — Res corporeae sub itinere: non genus rerum sed CONDICIO earum - idem dolium onus est dum fertur, merx dum venditur, su
+- **onus** ⚙ — Res corporeae sub itinere: non genus rerum sed CONDICIO earum - idem dolium onus est dum fertur, merx dum venditur, su
 
 ## III. Index alphabeticus (genera)
 
@@ -479,42 +483,87 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `vectura.vehiculum` — aeroplanum, currus_onerarius, navis, tramen
 - `vectura.via` — :canalis_suesianus, :via_appia, via_aeria, via_maritima, via_terrestris
 
-## V. Umbrae — genera superficta, nondum descripta
+## V. Umbrae — superficta, nondum descripta
 
-Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
+Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed
+nemo describit. DUAE agendae sunt, non una — ordo intra utramque
+per numerum citationum (quod plura exemplaria poscunt, prius).
 
-- **abc** — a `lingua_programmandi` superfectum
-- **actio** — a `praescriptum` superfectum
-- **agentia_isbn** — a `identificatio` superfectum
-- **att** — a `organizatio` superfectum
-- **b** — a `lingua_programmandi` superfectum
-- **chip** — a `architectura_machinae` superfectum
-- **consilium** — a `fabricatio` superfectum
-- **constructum_linguae** — a `elementa_programmatis` superfectum
-- **debian_project** — a `systema_operativum` superfectum
-- **directorium** — a `plagula_computatralis` superfectum
-- **instrumentum_aedificationis** — a `elementa_programmatis` superfectum
-- **processus** — a `elementa_programmatis` superfectum
-- **servus** — a `cliens` superfectum
-- **systema_plagularum** — a `systema_operativum` superfectum
-- **typus** — a `elementa_programmatis` superfectum
-- **vms** — a `systema_operativum` superfectum
+### V.a Genera desiderata (10) — opus consilii
+
+A `relatio` citata: relationes in GENERA tendunt, ergo quaestio
+ontologica et iudicium poscitur.
+
+- **processus** — 4x, a `elementa_programmatis`
+- **typus** — 2x, a `elementa_programmatis`
+- **actio** — 1x, a `praescriptum`
+- **chip** — 1x, a `architectura_machinae`
+- **consilium** — 1x, a `fabricatio`
+- **constructum_linguae** — 1x, a `elementa_programmatis`
+- **directorium** — 1x, a `plagula_computatralis`
+- **instrumentum_aedificationis** — 1x, a `elementa_programmatis`
+- **servus** — 1x, a `cliens`
+- **systema_plagularum** — 1x, a `systema_operativum`
+
+### V.b Individua desiderata (6) — opus dictionarii
+
+A `relato` SOLO citata: res singularis nominata sub genere iam
+exsistente. Nullum consilium — describi potest quovis momento.
+(EURISTICA, non lex: relatum genus attingere potest.)
+
+- **abc** — 1x, a `lingua_programmandi`
+- **agentia_isbn** — 1x, a `identificatio`
+- **att** — 1x, a `organizatio`
+- **b** — 1x, a `lingua_programmandi`
+- **debian_project** — 1x, a `systema_operativum`
+- **vms** — 1x, a `systema_operativum`
 
 ## VI. Dubia aperta
 
-- `commercium` / tessera
-- `elementa_programmatis` / functio_pura
-- `elementa_programmatis` / constans
-- `elementa_programmatis` / libc
-- `fabricatio` / vitium
-- `fabricatio` / complicatio
-- `norma` / posix_1
-- `opus_scriptum` / periodicum
-- `planta` / planta
-- `schema` / genus_valoris
-- `tempus` / pascha
+- `commercium` / **tessera** — An tessera sub instrumento (corporalia) collocanda sit? Non convenit: instrumentum usu suo OPERATUR (fornax coquit), tessera nihil operatur sed SIGNIFICAT et iu
+- `elementa_programmatis` / **functio_pura** — An proprietas potius quam sub-genus (puritas="verum")? Argumentum sub-generis: fasciculus licentiarum supra. Fran nondum iudicavit - v0 sub-genus audet. 
+- `elementa_programmatis` / **constans** — 'const' in via accessus (parametrum monstratoris) rem ALIAM dicit: pactum non scribendi per hoc nomen - promissum functionis, non constantia rei. Genus proprium
+- `elementa_programmatis` / **libc** — libc FORMA est quam glibc, musl, msvcrt IMPLEMENTANT - distinctio lingua/implementatio in bibliothecis recurrit. Genus implementatio_bibliothecae nondum natum; 
+- `fabricatio` / **vitium** — SANATIO REBUS CORPOREIS NON CONVENIT (inventum experimenti pistrinae): sanatio = mutatio fontis, quae rem emendabilem supponit. Panis adustus non emendatur - ab
+- `fabricatio` / **complicatio** — PERICULUM PIEPERIANUM, aperte notandum: "complicatio" in excusationem verti potest sicut "debitum technicum" versum est - scutum quo lapsus tegatur ("non erravi
+- `norma` / **posix_1** — Editio "1003.1" continenter renovatur (1988, 2001, 2008, 2024...) - norma UNA vivens an series normarum se substituentium? Idem dubium quod versiones linguarum:
+- `opus_scriptum` / **periodicum** — Machina "compositio" generis parentis periodico male sedet: status perfecta numquam attingitur. Estne differentia satis, an machina propria opus est (vigens/int
+- `planta` / **planta** — Proprietates viventium AMBITUS sunt, non puncta: altitudo "2-5 m", dies florendi "Maius-Iunius". Forma nostra valorem unum fert. Res vivens hanc formam poscit; 
+- `schema` / **genus_valoris** — Paletta domus etiam "area" (textus amplus) et "annus" (dies grossior) habet: species propriae, an textus cum praesentatione et dies cum granularitate? Praesenta
+- `tempus` / **pascha** — GRADUS AMBIGUUS (rota XXIX): una est regula paschalis, ergo individuum videtur; at "pascha" etiam de quovis anno dicitur ("pascha huius anni"), quod praedicatio
 
-## VII. Vocabularium formae (omnes tituli licentes)
+## VII. Monita — stirps communis sine cognatione (21)
+
+Regula XVIII (ADVISORIA, portam non frangit). Nomen quod nomen
+aliud ut stirpem fert, sed nec sub eo stat nec relationem ad id
+declarat. **Pleraque LEGITIMA sunt** — homonyma honesta:
+`fons_c` plagula est, `fons` propositionis origo. Pretium
+regulae non est quod defectus inveniat sed quod nulla talis
+coincidentia INVISA transeat.
+
+- 'artefactum_aedificationis' stirpem 'artefactum' fert sed sub ea non stat
+- 'codex_sepultus' stirpem 'codex' fert sed sub ea non stat
+- 'dies_negotiorum' stirpem 'dies' fert sed sub ea non stat
+- 'dies_ordinalis_mensis' stirpem 'dies' fert sed sub ea non stat
+- 'fons_c' stirpem 'fons' fert sed sub ea non stat
+- 'fons_python' stirpem 'fons' fert sed sub ea non stat
+- 'fons_rust' stirpem 'fons' fert sed sub ea non stat
+- 'index_strtok' stirpem 'index' fert sed sub ea non stat
+- 'index_verificationis' stirpem 'index' fert sed sub ea non stat
+- 'instrumentum_lineae' stirpem 'instrumentum' fert sed sub ea non stat
+- 'instrumentum_publicum' stirpem 'instrumentum' fert sed sub ea non stat
+- 'isbn_10' stirpem 'isbn' fert sed sub ea non stat
+- 'isbn_13' stirpem 'isbn' fert sed sub ea non stat
+- 'moby_dick_londinensis_1851' stirpem 'moby_dick' fert sed sub ea non stat
+- 'moby_dick_novi_eboraci_1851' stirpem 'moby_dick' fert sed sub ea non stat
+- 'obligatio_ad_portitorem' stirpem 'obligatio' fert sed sub ea non stat
+- 'persona_iuridica' stirpem 'persona' fert sed sub ea non stat
+- 'schema_identificandi' stirpem 'schema' fert sed sub ea non stat
+- 'societas_contractus' stirpem 'societas' fert sed sub ea non stat
+- 'systema_naturae_editio_decima' stirpem 'systema_naturae' fert sed sub ea non stat
+- 'titulus_iuris' stirpem 'titulus' fert sed sub ea non stat
+
+## VIII. Vocabularium formae (omnes tituli licentes)
 
 **Elementa (27):** natura, fontes, fons, genus, definitio, differentia, proprietates, proprietas, optio, partes, pars, machina_statuum, status, transitus, actiones, actio, relationes, relatio, species, individuum, cultivar, valor, relatum, historia, eventum, nota, dubium
 
