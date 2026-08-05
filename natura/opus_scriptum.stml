@@ -254,10 +254,12 @@
       nota="domus editoria - sub-genus organizationis SURGIT
             (nec pure societas: praela universitatum quaestui
             non dedita)"/>
-    <relatio nomen="impressa_in" ad="planta" externum="verum"
-      nota="charta ex ligno fit - nexus ad exemplar plantarum
-            possibilis, nondum tractus; formae probatio non
-            nexuum omnium"/>
+    <relatio nomen="impressa_in" ad="planta" modulus="planta"
+      nota="charta ex ligno fit - nexus tenuis consulto, formae
+            probatio non nexuum omnium. (externum sublatum:
+            exemplar plantae post hanc lineam natum est -
+            vexillum rancidum a natura_visus captum, primo
+            cursu)"/>
   </relationes>
 
   <individuum nomen="moby_dick_londinensis_1851">
