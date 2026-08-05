@@ -2369,3 +2369,70 @@ Measured: 30 exemplaria / 135 genera / 281 residents / 367 arcs
 
 Measured: 30 exemplaria / 136 genera / 281 residents / 369 arcs
 / 0 vulnera.
+
+## 2026-08-05 — round thirty-six: cross-pollination + the
+## sensemaking mode (Fran's two observations)
+
+161. CROSS-POLLINATION — Fran's thesis: each domain elaborates
+     ONE thing exceptionally well because that thing is
+     unusually visible there; the same pattern recurs elsewhere
+     poorly solved, and people painfully reimplement e.g. "legal
+     contract" from first principles. A universal taxonomy makes
+     the best-elaborated version available to every domain.
+     ALREADY MEASURABLE, seven instances in this corpus:
+     obligatio (Roman law → software licensing, SLAs,
+     reservations); gradus_assensus (scholastic epistemology →
+     diagnoses, estimates, root causes, our own dictionary
+     dates); FRBR (library science → BENT our versio pattern
+     into something better); Pacioli (accounting → a
+     five-century ancestor for the volumen doctrine); tessera
+     (merchant law); morbus's latent/chronic/relapse (medicine →
+     the same shape as regression); officium (canon law → org
+     software).
+     AND IT HAS RUN BACKWARDS ONCE: merchant law's
+     negotiability (clean title to a good-faith purchaser)
+     revealed that a bearer TOKEN LACKS that doctrine — a
+     commercial-law distinction yielding a security insight.
+162. WHY a domain elaborates one thing — the addition that makes
+     the thesis SEARCHABLE: A DOMAIN ELABORATES WHAT IT IS
+     PUNISHED FOR GETTING WRONG. Law elaborated obligation
+     because failure means injustice; medicine elaborated
+     diagnosis because failure kills; accounting elaborated the
+     immutable ledger under adversarial pressure from cheats.
+     HEURISTIC: "who is punished for getting X wrong?" → go
+     there for the good version. This is the Linnaean escape
+     hatch AIMED rather than broadcast.
+     BIGGEST UNTAPPED SOURCE by that heuristic: AVIATION —
+     checklists, incident reporting, blameless investigation,
+     crew resource management. It elaborated failure-and-
+     recovery because crashes kill and are investigated in
+     public. Software borrowed post-mortems from aviation and
+     borrowed them badly.
+163. THE SENSEMAKING MODE — a FOURTH use mode, not previously
+     articulated. The three recorded were: read as design
+     reference / generate from / cite at runtime. Fran's is
+     THE LIBRARY AS AN INSTRUMENT OF PERCEPTION: apply terms to
+     an unstructured environment to SEE structure. His users:
+     researcher, founder, CTO, a company pivoting into new
+     software, someone reading a legacy codebase — anyone facing
+     a firehose whose job is to make sense of it. This is the
+     per-iudicium mode operationalised, and where the leverage
+     argument bites hardest.
+164. THE SHARPEST AFFORDANCE IN THAT MODE: DETECTING WHAT IS
+     MISSING. Unstructured observation cannot do this — absence
+     has no perceptual signature. A genus with declared partes,
+     relationes and status makes absence VISIBLE: walk the
+     environment asking "where is the X?"
+     AND THAT IS OUR OWN UMBRAE MECHANISM ONE LEVEL OUT. The
+     library already computes its missing pieces from
+     `externum`; the same move against a codebase yields "this
+     system has configuratio but no secretum handling" — a
+     finding, not a vibe.
+165. TOOL IMPLIED, over machinery that already exists: a
+     CHECKLIST PROJECTION (given a genus, what should be
+     present?), a REVERSE LOOKUP (I see this — what kind might
+     it be?), and a GAP REPORT (present / absent / mis-filed).
+     That is umbrae generalised to an arbitrary environment, and
+     it is the same missing pair identified in round XXXIV
+     (reverse index + apparatus-as-questions). Two independent
+     routes now point at the same next build.
