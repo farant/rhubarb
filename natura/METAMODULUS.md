@@ -364,6 +364,34 @@ Expect **hundreds** of genera at general scope. That is the
 correct order of magnitude for describing things as they are,
 and the work does not become obsolete.
 
+**Prefer the SPECIFIC genus** (Fran, 2026-08-05). Better a
+correct genus for *ISBN* or *Brazilian telephone number* than a
+pure generic one that will mislead you on the case actually in
+front of you. The generic parent is true but carries no payload:
+"identifier" does not tell you that an ISBN designates a
+MANIFESTATION rather than a work, carries a check digit, and
+migrated from ten digits to thirteen in 2007. "Telephone number"
+does not tell you that Brazilian mobile numbers gained a ninth
+digit.
+
+And the generic genus is dangerous precisely because it **looks
+like coverage**: you believe you have modelled the thing when you
+have modelled only its shape. Under-division yields an organising
+scheme with no payload — the failure that makes a taxonomy
+academic.
+
+**Institutional kinds are real kinds.** ISBN and a national
+numbering plan are conventional, yet genuinely there, with real
+membership conditions, real properties and real histories.
+Moderate realism does not require NATURAL kinds — the library
+already holds many instituted ones (norma, licentia, tributum,
+moneta, portorium).
+
+**Linnaean parallel:** the knowledge lives at the species level.
+Higher ranks organise; lower ranks carry the payload. A field
+guide that only said "plant" would be useless, and a taxonomy
+that stops at "identifier" is the same guide.
+
 ### Genera vs. analogies (Fran, 2026-08-05)
 
 Working across domains surfaces **cross-domain rhymes**: the
