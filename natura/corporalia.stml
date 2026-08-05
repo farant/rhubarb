@@ -38,7 +38,7 @@
   ad sigillum contenti accedit (forma sola), artefactum ad
   baptismum.
 -->
-<natura modulus="corporalia" versio="1" lingua="latina">
+<natura modulus="corporalia" versio="2" lingua="latina">
 
 <!-- ==================================================
      RES CORPOREA - quod materiam et locum habet
@@ -185,6 +185,98 @@
             emendatur ut fons emendatur - vide dubium in
             fabricatione"/>
   </machina_statuum>
+
+</genus>
+
+<!-- ==================================================
+     DAMNUM - laesio integritatis rei corporeae
+
+     TRIAS DEFECTUUM PERFECTA (cursu tertio circuli inventa):
+     tria genera "mali" per NORMAM ad quam mensurantur
+     distinguuntur, non per rem laesam -
+       vitium (fabricatio): discrepantia ab INTENTIONE -
+         quod voluimus non fecit;
+       morbus (morbus):     defectus a NATURA - quod rei
+         debetur non habet;
+       damnum (hic):        laesio INTEGRITATIS - quod erat
+         integrum fractum est.
+     Ideo saxum nec vitiosum nec aegrotum esse potest, damnum
+     tamen patitur: integritatem habet etsi nec intentionem nec
+     naturam propriam. Trias ordinem servat - quo plus rei
+     debetur, eo plura mala pati potest.
+     ================================================== -->
+
+<genus nomen="damnum">
+
+  <definitio>
+    Laesio integritatis rei corporeae ab externa vi illata: quod
+    unum erat divisum, quod integrum fractum, quod purum
+    mixtum. Non defectus intentionis nec naturae sed
+    INTEGRITATIS - ideo omnibus corporibus accidere potest,
+    etiam iis quae nec finem nec naturam propriam habent.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>totalis</optio>
+    </proprietas>
+    <proprietas nomen="reparabile" genus="veritas"
+      nota="an refici possit - et REFECTIO, non sanatio: res
+            corporea fracta nova fit ex parte, non emendatur
+            ut fons emendatur (dubium fabricationis huc
+            respicit)"/>
+  </proprietates>
+
+  <machina_statuum nomen="integritas" gerens="individuum">
+    <status nomen="integrum"/>
+    <status nomen="damnatum"/>
+    <status nomen="refectum"
+      nota="restitutum, non idem: refectio historiam ADDIT,
+            non tollit - res refecta rem damnatam fuisse
+            semper fuit"/>
+    <status nomen="perditum" nota="ultra refectionem"/>
+    <transitus a="integrum" ad="damnatum" per="laesio"/>
+    <transitus a="damnatum" ad="refectum" per="refectio"/>
+    <transitus a="damnatum" ad="perditum" per="perditio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="affligit" ad="res_corporea"/>
+    <relatio nomen="illatum_per" ad="*"
+      nota="causa: vis, casus, neglegentia, alius homo - et
+            si per hominem, OBLIGATIO oritur ex delicto
+            (obligatio.obligatio_ex_delicto): unde damnum et
+            ius se tangunt"/>
+    <relatio nomen="praevisum_ut" ad="periculum" modulus="iudicium"
+      nota="damnum factum est quod periculum praedixit -
+            periculum ante, damnum post; assecuratio inter
+            utrumque stat"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="fractura">
+    <definitio>Divisio quod unum esse debet.</definitio>
+  </species>
+
+  <species nomen="corruptio">
+    <definitio>
+      Mutatio substantiae ipsius: putredo, rubigo, umor. Species
+      quam MORA sola efficere potest, sine ulla vi externa -
+      confinium cum transitu 'per moram' rei corporeae.
+    </definitio>
+  </species>
+
+  <species nomen="contaminatio">
+    <definitio>
+      Admixtio alieni: quod purum esse debet mixtum est. Species
+      quae MATERIAM praecipue afflicit (numerabilia frangi,
+      mensurabilia contaminari solent) - divisio v0
+      hic fructum fert.
+    </definitio>
+  </species>
 
 </genus>
 

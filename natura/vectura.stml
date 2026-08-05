@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/vectura.stml
+  Exemplar semanticum: VECTURA (versio 0, PLASTICUM)
+  Genera: iter, via, vehiculum, onus.
+
+  Natum ex cursu tertio circuli (redemptor onerum), electo
+  propter axem quem exemplaria XXV numquam tetigerant: MOTUM.
+  Dicere poteramus UBI res esset (locus); nihil in bibliotheca
+  movebatur.
+
+  CONSIDERATUM ET DILATUM: genus motus universale (mutatio
+  quaelibet, cuius motus localis species una est - ita
+  Aristoteles). Scaena ITER poposcit, non motum in abstracto;
+  quod contentum non coegit, non scribimus. Si quando mutatio
+  ipsa describenda erit, hic locus eius.
+
+  RESIDENTIA: itinera et onera TUA in voluminibus applicationum
+  vivunt; hic genera eorum, et viae vehiculaque recordi publici
+  (via Appia, canalis Suesianus - res quae describi possunt
+  nemine vehente).
+-->
+<natura modulus="vectura" versio="0" lingua="latina">
+
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: dies et res gestae ex textibus
+    innumeris haustae. NON VERIFICATUM.
+  </fons>
+</fontes>
+
+<!-- ==================================================
+     ITER - motus a loco ad locum cum proposito
+     ================================================== -->
+
+<genus nomen="iter">
+
+  <definitio>
+    Motus rei aut personae a loco ad locum, proposito susceptus:
+    initium, finis, via, tempus. Non locus sed MUTATIO loci -
+    quod exemplar loci dicere non poterat, hoc dicit.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="distantia" genus="quantitas"
+      modulus="mensura"
+      nota="longitudo viae, non intervallum rectum inter loca:
+            duo loca prope invicem via longa iungi possunt
+            (montes, flumina) - distantia VIAE proprietas est,
+            non locorum"/>
+    <proprietas nomen="mora_aestimata" genus="quantitas"
+      modulus="mensura"
+      nota="AESTIMATA, non nota: hora adventus praedicta
+            IUDICIUM est (iudicium.praedictio) - auctorem
+            habet, revideri potest, tempore ipso probatur.
+            Tabulae quae horam adventus ostendunt IUDICIA
+            praebent et facta vocant"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="paratum" nota="susceptum, nondum inceptum"/>
+    <status nomen="in_cursu"/>
+    <status nomen="perfectum"/>
+    <status nomen="interruptum"
+      nota="in medio stetit - onus alicubi est, nec hic nec
+            ibi: status quem schemata binaria (missum/traditum)
+            perdunt et negotium quotidie patitur"/>
+    <transitus a="paratum" ad="in_cursu" per="profectio"/>
+    <transitus a="in_cursu" ad="perfectum" per="adventus"/>
+    <transitus a="in_cursu" ad="interruptum" per="interruptio"/>
+    <transitus a="interruptum" ad="in_cursu" per="resumptio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="a_loco" ad="locus" modulus="locus"/>
+    <relatio nomen="ad_locum" ad="locus" modulus="locus"/>
+    <relatio nomen="per_viam" ad="via" multiplex="verum"
+      nota="iter unum vias plures adhibere potest - unde
+            transitus onerum de vehiculo in vehiculum"/>
+    <relatio nomen="vehitur" ad="vehiculum"/>
+    <relatio nomen="fert" ad="onus" multiplex="verum"/>
+    <relatio nomen="suscipitur_a" ad="persona" modulus="persona"
+      nota="vector - qui iter agit"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     VIA - iter possibile, ante omne iter
+     ================================================== -->
+
+<genus nomen="via">
+
+  <definitio>
+    Semita per quam iri potest: res publica plerumque, itineribus
+    innumeris communis. Ante iter est et post iter manet - via
+    Appia hodie iacet quamvis nemo per eam onera ferat. Ideo non
+    iter sed CONDICIO itineris.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="longitudo" genus="quantitas"
+      modulus="mensura"/>
+    <proprietas nomen="publica" genus="veritas" ordinarius="verum"
+      nota="an omnibus pateat - via privata res possessa est,
+            unde ius transeundi (servitus) apud iurisconsultos"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="iungit" ad="locus" modulus="locus"
+      multiplex="verum"/>
+    <relatio nomen="sub_iurisdictione" ad="iurisdictio"
+      modulus="locus" multiplex="verum"
+      nota="via longa iurisdictiones plures transit - unde
+            portorium ad limites (vide obligatio.tributum)"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="via_terrestris">
+    <definitio>Per terram: strata, semita, via ferrata.</definitio>
+  </species>
+
+  <species nomen="via_maritima">
+    <definitio>
+      Per mare: nullo opere facta plerumque, sed vera - cursus
+      quos naves servant propter ventos, fluctus, praedones.
+      Species quae ostendit viam non semper AEDIFICATAM esse.
+    </definitio>
+  </species>
+
+  <species nomen="via_aeria">
+    <definitio>
+      Per aerem, corridoribus a magistratibus definitis:
+      via quae LEGE sola exsistit - nec aedificata nec
+      naturalis, sed non ideo minus vera.
+    </definitio>
+  </species>
+
+  <individuum nomen="via_appia">
+    <valor nomen="publica">verum</valor>
+    <historia>
+      <eventum quando="-312" certitudo="fides" fons="corpus">
+        ab Appio Claudio Caeco incepta - "regina viarum"
+      </eventum>
+    </historia>
+    <nota>
+      Via quae duo milia annorum superstes est: exemplum
+      horizontis quo haec bibliotheca metitur. Aedificata ut
+      duraret, et duravit.
+    </nota>
+  </individuum>
+
+  <individuum nomen="canalis_suesianus">
+    <historia>
+      <eventum quando="1869-11-17" certitudo="fides" fons="corpus">
+        apertus - via facta ubi terra erat
+      </eventum>
+    </historia>
+    <nota>
+      Via ab homine FACTA quae geographiam mutavit: iter inter
+      Europam et Asiam dimidio breviatum. Testis quod viae res
+      politicae sunt, non solum physicae.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     VEHICULUM - instrumentum quod movetur et fert
+     (subordinatio TRANS EXEMPLARIA: instrumentum in
+     corporalibus habitat - arbor una est)
+     ================================================== -->
+
+<genus nomen="vehiculum" sub="instrumentum" modulus="corporalia">
+
+  <differentia>
+    Instrumentum cuius usus MOTUS est: se movet et alia fert.
+    Capacitas et via propria eius essentiam determinant - navis
+    quod currus non potest, currus quo navis non pervenit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="capacitas_oneris" genus="quantitas"
+      modulus="mensura"
+      nota="vinculum quod totum negotium ordinat, ut fornax
+            horarium pistrinae (rota XIV): FERRUM MODUM
+            IMPERAT. Eadem lex bis inventa, in dominiis duobus"/>
+    <proprietas nomen="velocitas_media" genus="quantitas"
+      modulus="mensura"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="apta_viae" ad="via" multiplex="verum"
+      nota="vehiculum viae suae ligatum est - unde
+            transbordatio, unde portus: loca ubi viae mutantur"/>
+    <relatio nomen="regitur_a" ad="persona" modulus="persona"
+      nota="rector - cuius licentia (obligatio.licentia)
+            postulatur, et cuius horae normis reguntur"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="navis">
+    <definitio>
+      Vehiculum aquae: capacitatis maximae, velocitatis minimae -
+      unde onera gravia et vilia mari eunt, levia et cara aere.
+      Ratio quae commercium mundi ordinat.
+    </definitio>
+  </species>
+
+  <species nomen="currus_onerarius">
+    <definitio>
+      Vehiculum viae terrestris: solum quod ab ostio ad ostium
+      pervenit - unde ultimum iteris membrum fere semper eius.
+    </definitio>
+  </species>
+
+  <species nomen="tramen">
+    <definitio>
+      Vehiculum viae ferratae: viam PROPRIAM postulat, et ideo
+      quo via ferrata non it, non it - vinculum durissimum
+      omnium vehiculorum.
+    </definitio>
+  </species>
+
+  <species nomen="aeroplanum">
+    <definitio>
+      Vehiculum aeris: velocissimum, capacitatis minimae pro
+      pretio - electio cum tempus pretium superat.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     ONUS - res quae fertur
+     ================================================== -->
+
+<genus nomen="onus">
+
+  <definitio>
+    Res corporeae sub itinere: non genus rerum sed CONDICIO
+    earum - idem dolium onus est dum fertur, merx dum venditur,
+    supellex dum adhibetur. Munus, ergo relatio (regula
+    multiplicitatis rotae IV iterum).
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="massa_tota" genus="quantitas"
+      modulus="mensura"/>
+    <proprietas nomen="periturum" genus="veritas"
+      ordinarius="falsum"
+      nota="an mora ipsa id corrumpat - unde celeritas non
+            commoditas sed necessitas fit (vide
+            corporalia.res_corporea: transitus PER MORAM)"/>
+  </proprietates>
+
+  <machina_statuum nomen="custodia" gerens="individuum"
+    nota="quis onus TENEAT - series custodiae, quam ius
+          'catenam custodiae' vocat">
+    <status nomen="susceptum" nota="a vectore acceptum"/>
+    <status nomen="in_itinere"/>
+    <status nomen="traditum"
+      nota="exitus optatus: traditio obligationem vectoris
+            SOLVIT (obligatio.soluta)"/>
+    <status nomen="amissum"/>
+    <transitus a="susceptum" ad="in_itinere" per="profectio"/>
+    <transitus a="in_itinere" ad="traditum" per="traditio"/>
+    <transitus a="in_itinere" ad="amissum" per="amissio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="continet" ad="res_corporea" modulus="corporalia"
+      multiplex="verum"/>
+    <relatio nomen="fertur_per" a="iter" inversa="verum"
+      nota="impletur ab iter.fert"/>
+    <relatio nomen="possessio_eius" ad="possessio"
+      modulus="commercium"
+      nota="ONUS ET POSSESSIO SEIUNGUNTUR: vector onus TENET,
+            dominus id POSSIDET - custodia et dominium duae res.
+            Unde charta negotiabilis (commercium), quae dominium
+            transfert dum res in nave manet"/>
+    <relatio nomen="passum" ad="damnum" modulus="corporalia"
+      multiplex="verum"/>
+  </relationes>
+
+  <nota>
+    UBI SIT ONUS: quaestio quotidiana, et responsum ACCIDENS
+    RELATIVUM est (casus III regulae triplicis, vide
+    METAMODULUM §6) - "in portu Rotterodamensi" verum fuit et
+    desiit. Historia locorum cum valens_a/valens_ad servanda,
+    et status praesens PLICATURA eius. Doctrina voluminis
+    nostri in onere navali.
+  </nota>
+
+</genus>
+
+</natura>

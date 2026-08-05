@@ -22,7 +22,7 @@
   ICD (Classificatio Statistica Internationalis Morborum), ab
   OMS edita - taxinomia morborum publica, normata, numerata.
 -->
-<natura modulus="morbus" versio="0" lingua="latina">
+<natura modulus="morbus" versio="1" lingua="latina">
 
 <genus nomen="morbus">
 
@@ -32,6 +32,17 @@
     res sed PRIVATIO - quod sanitati deest, ut tenebrae luci.
     Ideo morbus sine natura definiri nequit.
   </definitio>
+
+  <nota>
+    TRIAS DEFECTUUM (rota XXI): tria genera mali per NORMAM ad
+    quam mensurantur distinguuntur - vitium ab INTENTIONE
+    (fabricatio.vitium), morbus a NATURA (hic), damnum ab
+    INTEGRITATE (corporalia.damnum). Ideo programma vitiosum,
+    animal aegrotum, saxum damnatum: quo plus rei debetur, eo
+    plura mala pati potest. Trias eadem in tribus plagulis
+    scripta est ne lector ullam solam inveniens partem pro
+    toto sumat.
+  </nota>
 
   <proprietates>
     <proprietas nomen="contagiosus" genus="veritas"

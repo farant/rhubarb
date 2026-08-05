@@ -20,7 +20,7 @@
   esse-venale MUNUS est, ergo relatio - panis idem panis manet
   sive venalis sive donatus.
 -->
-<natura modulus="commercium" versio="0" lingua="latina">
+<natura modulus="commercium" versio="1" lingua="latina">
 
 <!-- ==================================================
      MONETA - genus pecuniae
@@ -172,6 +172,78 @@
             (ratio caffeae mensualis) - unde exemplar
             obligationis"/>
   </relationes>
+
+</genus>
+
+<!-- ==================================================
+     CHARTA NEGOTIABILIS - res corporea ius ferens
+     ================================================== -->
+
+<genus nomen="charta_negotiabilis">
+
+  <definitio>
+    Documentum cuius POSSESSIO ius transfert: charta traditur,
+    et cum charta res ipsa. Res corporea quae rem incorpoream
+    (ius) fert - ideo furtum chartae furtum iuris est, et
+    amissio chartae amissio iuris, quamvis res ipsa intacta in
+    horreo maneat.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="ad_portitorem" genus="veritas"
+      nota="verum = quicumque tenet ius habet (nullo nomine
+            inscripto); falsum = nomini certo inscripta,
+            transferenda per assignationem. Discrimen quod
+            periculum totum determinat"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="fert_ius_in" ad="*"
+      nota="res cuius ius portat - merces, pecunia, pars
+            societatis"/>
+    <relatio nomen="emissa_a" ad="*"/>
+    <relatio nomen="possessio_eius" ad="possessio"
+      nota="POSSESSIO CHARTAE ET POSSESSIO REI COPULATAE:
+            unicus locus bibliothecae ubi duae possessiones
+            necessario simul moventur"/>
+  </relationes>
+
+  <nota>
+    COGNATIO COMPUTATRALIS VERA: tessera "ad portitorem" in
+    systematibus nostris (bearer token) eadem forma est -
+    possessio auctoritatem confert, nullo nomine quaesito.
+    Idem commodum (transferri sine permissu), idem periculum
+    (qui furatur habet, qui perdit caret). Ius mercatorum
+    saeculo XIV hanc formam et pericula eius iam noverat;
+    machinae nostrae eam sine memoria repetiverunt.
+  </nota>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="charta_onerum">
+    <definitio>
+      A vectore data, merces acceptas testans et dominium
+      earum ferens: dum navis navigat, merces venduntur charta
+      tradita - res in mari, dominium in foro. Instrumentum
+      quod commercium trans maria possibile fecit.
+    </definitio>
+    <relatum nomen="fert_ius_in" ad="onus" modulus="vectura"/>
+  </species>
+
+  <species nomen="syngrapha">
+    <definitio>
+      Promissum scriptum solvendi: debitum ipsum in chartam
+      versum, ideo vendibile. Obligatio quae MERX fit.
+    </definitio>
+  </species>
+
+  <species nomen="perscriptio">
+    <definitio>
+      Iussum argentario datum ut ex ratione solvat: pecunia
+      quae non movetur sed IUBETUR moveri - charta pro
+      pecunia, quia fides argentarii pecunia est.
+    </definitio>
+  </species>
 
 </genus>
 

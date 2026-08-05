@@ -15,7 +15,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="0" lingua="latina">
+<natura modulus="fabricatio" versio="1" lingua="latina">
 
 <!-- ==================================================
      POSTULATUM - intentio declarata ante opus
@@ -154,6 +154,17 @@
     Vitium quod observatione fugit "heisenbug" vulgo dicitur -
     observatio ipsa mores mutat (tempora, memoria); species
     nondum, fama iam.
+  </nota>
+
+  <nota>
+    TRIAS DEFECTUUM (rota XXI): tria genera mali per NORMAM ad
+    quam mensurantur distinguuntur - vitium ab INTENTIONE
+    (hic), morbus a NATURA (morbus.morbus), damnum ab
+    INTEGRITATE (corporalia.damnum). Ideo programma vitiosum,
+    animal aegrotum, saxum damnatum: quo plus rei debetur, eo
+    plura mala pati potest. Trias eadem in tribus plagulis
+    scripta est ne lector ullam solam inveniens partem pro
+    toto sumat.
   </nota>
 
   <dubium>

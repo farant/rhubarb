@@ -117,7 +117,12 @@ for f in natura/*.stml; do
     i=1
     while [ "$i" -le "$nfc" ]; do
         fu=$(xp "$f" "string((//*[@fons])[$i]/@fons)")
+        # diagnostica SE NOMINANTIA (lex domus): eventum nomine
+        # caret, ergo 'quando' pro nomine - nuntius vacuus
+        # lectorem ad plagulam remittit, quod porta facere debet
         fn=$(xp "$f" "string((//*[@fons])[$i]/@nomen)")
+        [ -z "$fn" ] && fn=$(xp "$f" "string((//*[@fons])[$i]/@quando)")
+        [ -z "$fn" ] && fn="(innominatum)"
         echo "$mod|$fu|$fn" >> "$CITATIONES"
         i=$((i + 1))
     done

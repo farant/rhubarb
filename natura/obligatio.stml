@@ -20,7 +20,7 @@
   datur, revocari potest, expirat. Non idem genus - quod
   schemata vulgaria confundunt.
 -->
-<natura modulus="obligatio" versio="0" lingua="latina">
+<natura modulus="obligatio" versio="2" lingua="latina">
 
 <!-- ==================================================
      OBLIGATIO - vinculum iuris
@@ -199,6 +199,85 @@
     Nexus futurus ad opus_scriptum et bibliothecam - dominium
     forense et computatrale idem genus habent.
   </nota>
+
+</genus>
+
+<!-- ==================================================
+     TRIBUTUM - obligatio ad magistratum ex lege
+     (cursu tertio circuli poscente: portorium ad limites.
+     Vocabularium Romanum integrum sumimus - dominium hoc
+     ius Romanum descripsit et verba eius nostra sunt)
+     ================================================== -->
+
+<genus nomen="tributum" sub="obligatio">
+
+  <differentia>
+    Obligatio ad MAGISTRATUM, ex lege orta, non ex consensu:
+    debetur quia lex ita statuit, non quia quis promisit. Ideo
+    nec recusari nec remitti privatim potest - creditor eam
+    remittere non potest quia creditor non homo sed res publica
+    est.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="ratio" genus="electio"
+      nota="quo facto oriatur - basis tributi">
+      <optio>ex_transitu</optio>
+      <optio>ex_reditu</optio>
+      <optio>ex_possessione</optio>
+      <optio>ex_venditione</optio>
+      <optio>ex_capite</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="exigitur_a" ad="magistratus"
+      modulus="organizatio"/>
+    <relatio nomen="secundum_normam" ad="norma" modulus="norma"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="portorium">
+    <definitio>
+      Tributum ex TRANSITU limitis: quod merces limitem
+      transeuntes debent. Species quae iurisdictionem ipsam
+      lucrativam facit - unde limites custoditi, unde
+      declarationes, unde tota vecturae difficultas.
+    </definitio>
+    <valor nomen="ratio">ex_transitu</valor>
+    <nota>
+      Nomen Romanum, res eadem: portoria ad portus et pontes
+      exigebantur. Duo milia annorum, mechanismus idem.
+    </nota>
+  </species>
+
+  <species nomen="vectigal">
+    <definitio>
+      Reditus publicus ex re publica: ex agris, salinis,
+      viis. Tributum quod non ex persona sed ex USU rei
+      publicae oritur.
+    </definitio>
+    <valor nomen="ratio">ex_possessione</valor>
+  </species>
+
+  <species nomen="decuma">
+    <definitio>
+      Pars decima fructuum: tributum ratione PARTIS, non
+      summae - forma antiquissima, quae quantitatem numeratam
+      non poscit sed proportionem.
+    </definitio>
+    <valor nomen="ratio">ex_reditu</valor>
+  </species>
+
+  <species nomen="tributum_capitis">
+    <definitio>
+      Ex capite, non ex re: debetur quia es, non quia habes.
+      Species cuius aequitas per saecula disputata est -
+      exemplum quod tributum iudicium morale semper fert.
+    </definitio>
+    <valor nomen="ratio">ex_capite</valor>
+  </species>
 
 </genus>
 

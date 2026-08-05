@@ -1301,6 +1301,80 @@ vehiculum, onus, damnum, tributum, charta negotiabilis) —
 damnum wants writing WITH vitium and morbus in view so the
 three-way symmetry (intention / nature / integrity) is stated
 in all three files.
+[BUILT round twenty-one.]
+
+## 2026-08-04 — round twenty-one: the freight nouns (26 models)
+
+94. vectura.stml — iter / via / vehiculum / onus. MOTION, the
+    last untouched fundamental axis: we could say where a thing
+    IS; nothing moved. iter is change-of-place-with-purpose;
+    its interruptum state is named as the one binary schemas
+    (sent/delivered) drop and business suffers daily. via is
+    the CONDITION of a journey rather than a journey — "the
+    Appian Way lies there though no one carries freight on
+    it" — with via_maritima recording that a way need not be
+    BUILT, and via_aeria that a way can exist by LAW alone.
+    vehiculum uses cross-model subordination (sub instrumentum
+    in corporalia).
+95. LAW FOUND TWICE, IN TWO DOMAINS: vehiculum.capacitas_oneris
+    carries the same note as the bakery oven — FERRUM MODUM
+    IMPERAT, iron commands the schedule. A physical capacity
+    ordering the whole operation, discovered independently in
+    round fourteen and again here. Two witnesses make it a
+    law rather than an observation.
+96. onus is a CONDITION, not a kind: the same barrel is cargo
+    while carried, merchandise while sold, furniture while
+    used. Roles are relations — the multiplicity ruling's
+    fourth confirmation, unprompted. Its custodia machine
+    names the chain-of-custody distinction the law already
+    draws: THE CARRIER HOLDS, THE OWNER POSSESSES — which is
+    exactly what makes charta negotiabilis possible.
+97. onus's closing nota is the round's best dogfood: "where is
+    the cargo" is a CASE III accident (METAMODULUS §6) —
+    "in Rotterdam" was true and ceased. Position history with
+    valens_a/valens_ad, current position a FOLD. The volumen
+    doctrine in a shipping container.
+98. DAMNUM — and the TRIAD OF DEFECTS completed, the round's
+    real find: three kinds of "wrong" distinguished by the
+    STANDARD each is measured against, not by the thing harmed
+    — vitium from INTENTION, morbus from NATURE, damnum from
+    INTEGRITY. Hence a stone can be neither faulty nor sick but
+    CAN be damaged: it has integrity though it has neither
+    intention nor a nature of its own. The triad has an order:
+    the more that is owed to a thing, the more kinds of evil it
+    can suffer. WRITTEN INTO ALL THREE FILES verbatim so no
+    reader landing in one takes the part for the whole.
+    damnum.contaminatio pays off the v0 count/mass cut:
+    countables break, measurables are contaminated.
+99. tributum (obligatio v2) — full Roman vocabulary
+    repatriated: portorium (the frontier duty that makes
+    jurisdiction itself lucrative — same word, same mechanism,
+    two thousand years), vectigal, decuma (a tax by PROPORTION,
+    not by sum), tributum_capitis (whose fairness has been
+    disputed for centuries — recorded as evidence that a tax
+    always carries a moral judgment).
+100. charta_negotiabilis (commercium v1) — a corporeal thing
+    carrying an incorporeal right: stealing the paper steals
+    the right, losing it loses the right, though the goods sit
+    untouched in a warehouse. charta_onerum let goods be sold
+    while the ship was still at sea — "the thing at sea, the
+    ownership in the market". AND THE HOUSE-RELEVANT CATCH:
+    a bearer token in our own systems is this exact form —
+    possession confers authority, no name asked; same benefit
+    (transfers without permission), same danger (the thief
+    has it, the loser lacks it). Merchant law knew this form
+    and its risks in the 14th century; our machines
+    reinvented it without the memory.
+101. The gate caught its author again, correctly: fons="corpus"
+    was cited in vectura before any <fontes> block declared
+    the key (rule 5). Fixed. And the diagnostic printed an
+    EMPTY name because <eventum> has no nomen — repaired per
+    house law that diagnostics must be SELF-NAMING, now
+    falling back to quando ("vectura.-312").
+
+Measured: 26 exemplaria / 113 genera / 214 residents / 305
+arcs / 0 vulnera. Run three fully built; loop closed end to
+end for the third time.
 
 VERDICT, RUN THREE: the loop keeps finding one structural gap
 per run, and they are stacking into a pattern worth naming.
