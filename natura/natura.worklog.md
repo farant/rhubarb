@@ -2253,3 +2253,45 @@ Measured: 30 exemplaria / 134 genera / 281 residents / 364 arcs
 
 Measured: 30 exemplaria / 135 genera / 281 residents / 367 arcs
 / 0 vulnera.
+
+153. FRAN ON NAMING AS LEVERAGE — completes the value
+     proposition, and isolates why per iudicium is the PURE
+     case: it is the only mode where naming changes NOTHING
+     about the world and EVERYTHING about your powers. Per
+     naturam adds description (the rock was already a rock);
+     per actum is efficacious but requires AUTHORITY; per
+     iudicium requires only COMPETENCE and still changes what
+     you can do. The naming effect is isolated there.
+     MECHANISM, in this format specifically: a genus is not a
+     label, it carries machina + proprietates + relationes +
+     actiones, so applying one imports an APPARATUS. Judging
+     "this is debt" inherits a state machine, an interest
+     question, and "what did it buy?". NAMING HANDS YOU THE
+     NEXT QUESTIONS — which is what expertise looks like from
+     outside: not more facts, but knowing what to ask next.
+     LINEAGE + DIAGNOSIS: Minsky's frames, Schank's scripts,
+     1980s expert systems. They failed to scale because THEIR
+     FRAMES WERE TASK-SHAPED; ours are PIEPER-SHAPED. A
+     "restaurant visit" frame does not compose with a "hospital
+     admission" frame, because each encodes a use case; frames
+     built for what things ARE compose because reality does.
+     Measured evidence already in hand: periculum, written for
+     a clinic, exercised unchanged by freight insurance a round
+     later.
+     FAILURE MODE recorded, since leverage has a direction:
+     misapplied vocabulary imports the WRONG apparatus — call a
+     design error "technical debt" and you inherit moves that
+     say manage and service what you should simply FIX. It
+     misleads COMPETENTLY, which is worse than confusion.
+     Hence the sharpest formulation of the session:
+     VOCABULARY AND JARGON ARE BOTH APPLIED; THE DIFFERENCE IS
+     WHETHER THE THING IS REALLY THERE. Jargon imports
+     affordances without warrant — the actual subject of
+     Pieper's book. So the realism constraint is not decoration
+     beside the practical value; it is what keeps the practical
+     value from becoming its counterfeit.
+     BOTH HALVES OF THE VALUE PROPOSITION NOW STATED: per
+     naturam material saves a consumer from getting STRUCTURE
+     wrong (ISBN, recurrence, valid time); per iudicium material
+     gives them LEVERAGE THEY LACKED. Different mechanisms,
+     both real.

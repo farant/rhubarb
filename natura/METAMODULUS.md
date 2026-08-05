@@ -656,10 +656,62 @@ must still be REAL — the expert recognises a genuine pattern
 rather than inventing one. The guard is unchanged: is the thing
 there? What changes is only how membership is established.
 
+**Why per iudicium is the PURE case of naming-as-leverage**
+(Fran, 2026-08-05). It is the only mode where naming changes
+nothing about the world and everything about your powers. Per
+naturam the name adds description, but the rock was already a
+rock. Per actum the naming is efficacious — but only because an
+institution stands behind it, so you need AUTHORITY. Per iudicium
+needs no authority, only COMPETENCE, and afterwards you can do
+what you could not do before. The naming effect is isolated
+there, with nothing else mixed in.
+
+**The mechanism, in this format specifically:** a genus is not a
+label — it carries `machina_statuum`, `proprietates`,
+`relationes`, `actiones`. Applying one imports an APPARATUS. Judge
+"this is debt" and you inherit a state machine (susceptum /
+servitum / solutum?), properties (what is the `usura`?) and
+relations (`emit` — what capability did it buy?). **Naming hands
+you the next questions**, which is what expertise looks like from
+outside: the expert does not know more facts, they know what to
+ask next, because the concept came with its interrogatives
+attached.
+
+**Lineage, and why this differs from it:** Minsky's frames,
+Schank's scripts, the expert systems of the 1980s. Those largely
+failed to scale, and the diagnosis is available — THEIR FRAMES
+WERE TASK-SHAPED, OURS ARE PIEPER-SHAPED. A frame for "restaurant
+visit" does not compose with one for "hospital admission",
+because each encodes a use case. Frames built for what things ARE
+compose, because reality does. Measured: `periculum`, written for
+a clinic, was exercised unchanged by freight insurance one round
+later.
+
+**The failure mode, stated because leverage has a direction:**
+misapplied vocabulary imports the WRONG apparatus. Call a genuine
+design error "technical debt" and you inherit moves that say
+*manage* and *service* what you should simply FIX — and it
+misleads competently, which is worse than confusion.
+
+**Hence: vocabulary and jargon are both applied; the difference
+is whether the thing is really there.** Jargon imports
+affordances without warrant, and that is the actual subject of
+Pieper's book. The realism constraint is therefore not
+philosophical decoration beside the practical value — it is what
+keeps the practical value from turning into its counterfeit.
+
 **Practical consequence for modelling:** a per-iudicium genus
 should carry `asseritur_per → iudicium`, so that membership has
 an author, a moment and a degree of assent, and two experts may
-disagree without either being in error.
+disagree without either being in error — which also makes
+RECLASSIFICATION a legitimate move rather than an admission of
+failure.
+
+**Two halves of the library's value, now both stated:** per
+naturam material saves a consumer from getting STRUCTURE wrong
+(the distilled expensive surprises — ISBN, recurrence, valid
+time); per iudicium material gives them LEVERAGE THEY LACKED.
+Different mechanisms, both real.
 
 ### Genera vs. analogies (Fran, 2026-08-05)
 
