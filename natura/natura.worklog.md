@@ -2594,3 +2594,80 @@ says: wait for a second forcing case.
 
 Measured: 30 exemplaria / 137 genera / 288 residents / 371 arcs
 / 0 vulnera.
+
+## 2026-08-05 — round thirty-nine: the aviation nouns built
+
+182. INDEX_VERIFICATIONIS (praescriptum v2) — a checklist is
+     NOT instructions. The executor already holds the art; the
+     list exists because KNOWING IS NOT DOING under load,
+     haste and fatigue. So the failure it prevents is not
+     ignorance but OMISSION.
+     Its two practical consequences are the reason it deserves
+     a genus: (a) TRAINING CANNOT SUBSTITUTE FOR IT — you get
+     more expert and still forget, indeed the expert omits MORE
+     easily because the hands run without the mind, so "be more
+     careful" is powerless against omission where a list is
+     not; (b) it is USELESS TO A NOVICE — an expert's
+     instrument, not a learner's, and whoever uses a checklist
+     as teaching loses both. Do-Confirm vs Read-Do carried as a
+     property, with the aviation reasoning (haste vs lethality).
+183. INVESTIGATIO (iudicium v3) — the round's institutional
+     find, from ICAO Annex 13: the sole objective is
+     PREVENTION, blame-apportioning is EXPRESSLY excluded, and
+     the inquiry is separated in law from liability
+     proceedings.
+     THE MECHANISM WRITTEN INTO THE GENUS: those who best know
+     what happened are the same people at risk from blame. If
+     reporting costs you, you do not report, and an inquiry
+     without the testimony of those present is blind. So
+     immunity is not softness — IT IS THE PRICE OF TRUTH.
+     Hence `finis="uterque"` is recorded as a FAILURE MODE, not
+     a compromise: an inquiry attempting both prevents neither,
+     because the precondition of the first (free confession) is
+     destroyed by the second (consequence). And
+     `inquisitio_forensis` is included as the CONTRARY SPECIES
+     that proves the point — assigning blame is legitimate and
+     necessary, which is exactly why it cannot be the same
+     process. `suspensa` is a state that itself betrays a
+     failure of separation.
+     recensio_post_mortem named honestly: the aviation form
+     borrowed WITHOUT the separation that makes it work.
+184. RECURRENTIA_PER_USUM (tempus v4) — keyed to accumulated
+     use, not the calendar. Species per_horas_operis,
+     per_cyclos (where damage comes from the TRANSITION, not
+     duration — metal fatigues by alternating stress, not by
+     standing), per_spatium.
+     HIDDEN COST recorded: time-recurrence is FREE (everyone
+     has a calendar); use-recurrence REQUIRES AN INSTRUMENT
+     that measures and retains usage. A rule presupposes a
+     measurement, and measurement is not free.
+185. LICENTIA gained `recentia_postulata` — and it completes a
+     TRICHOTOMY that neither genus could state before:
+     a TITULUS never lapses (it attests a fact); an ordinary
+     LICENTIA lapses by TIME; a licence with currency lapses by
+     DISUSE — you lose it by not exercising it, though no term
+     expired. Only the third acknowledges that SKILL DECAYS.
+186. OFFICIUM gained the AUTHORITY-GRADIENT PATHOLOGY as an
+     open nota: the authority of the seat can IMPEDE
+     information flowing upward — the junior does not
+     contradict the captain even when he sees the error.
+     Aviation learned this from crashes and DELIBERATELY
+     WEAKENED an instituted structure (CRM gives the junior a
+     duty to question and the captain a duty to hear). Our
+     genus can state authority but not its failure mode;
+     carried as a dubium (property? relation? its own genus?).
+187. MEL recorded as a METAMODEL finding rather than a genus:
+     `<pars necessaria="verum|falsum">` is BINARY, and a Minimum
+     Equipment List is necessity WITH A PREDICATE AND A CLOCK
+     (one radar may be inoperative if the other works and the
+     flight avoids convective weather, for ten days). Written
+     into METAMODULUS §3 as open. One forcing case is an
+     observation; a second domain (medical device tolerances,
+     N+1 redundancy) would make it a mechanism.
+     Also noted from the walk and NOT coined: redundancy fails
+     the addressability test (you do not address "redundancy
+     #3" — it is a design property), and incidens.gravitas in
+     aviation is fixed BY REGULATION where ours is per iudicium.
+
+Measured: 30 exemplaria / 140 genera / 294 residents / 377 arcs
+/ 0 vulnera.

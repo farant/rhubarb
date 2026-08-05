@@ -46,7 +46,7 @@
   historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
   verificatis, et hoc dicere debet.
 -->
-<natura modulus="iudicium" versio="2" lingua="latina">
+<natura modulus="iudicium" versio="3" lingua="latina">
 
 <!-- ==================================================
      GRADUS ASSENSUS - quanto animus adhaeret
@@ -575,6 +575,119 @@
       iudicia plura de eadem re supponit, quorum unum praeferri
       debet - vel omnia in dubitatione relinqui.
     </nota>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     INVESTIGATIO - inquisitio ordinata in causas
+
+     INVENTUM INSTITUTIONALE AVIATIONIS (rota XXXIX):
+     ICAO Annexum XIII finem unicum investigationis
+     PRAEVENTIONEM declarat, culpae distributionem
+     EXPRESSE excludit, et eam a iudiciis de damnis LEGE
+     separat. Separatio non benignitas est sed
+     MACHINA NOTITIAM EXTRAHENS.
+     ================================================== -->
+
+<genus nomen="investigatio">
+
+  <definitio>
+    Inquisitio ordinata in causas eventus, iudicia de causis
+    producens. Ab observatione differt quia CONCLUDIT, a
+    iudicio simplici quia METHODO procedit et testimonia
+    colligit ante conclusionem.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="finis" genus="electio"
+      nota="PROPRIETAS GRAVISSIMA, et in ea tota fides pendet">
+      <optio>praeventio</optio>
+      <optio>attributio_culpae</optio>
+      <optio>uterque</optio>
+    </proprietas>
+  </proprietates>
+
+  <nota>
+    CUR SEPARATIO NOTITIAM PARIT: qui quid acciderit optime
+    sciunt idem sunt qui culpa periclitantur. Si renuntiare
+    nocet, non renuntiatur - et investigatio sine testimonio
+    eorum qui aderant caeca est. Ergo immunitas non mollities
+    est sed PRETIUM VERITATIS.
+    Unde finis "uterque" MODUS DEFICIENDI est, non compositio:
+    investigatio quae simul praevenire et culpam distribuere
+    conatur neutrum praestat, quia prima condicio alterius
+    (libera confessio) ab altera (consequentia) tollitur.
+    Programmatarii verbum "sine culpa" mutuati sunt,
+    structuram non - unde recensiones nostrae ab humanitate
+    praesentium pendent, non ab instituto.
+  </nota>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="aperta"/>
+    <status nomen="colligens" nota="testimonia et vestigia"/>
+    <status nomen="concludens"/>
+    <status nomen="relata" nota="relatio publicata"/>
+    <status nomen="suspensa"
+      nota="dum iudicium forense pendet - status qui ipse
+            separationis defectum PRODIT"/>
+    <transitus a="aperta" ad="colligens" per="inceptio"/>
+    <transitus a="colligens" ad="concludens" per="satietas"/>
+    <transitus a="concludens" ad="relata" per="publicatio"/>
+    <transitus a="colligens" ad="suspensa" per="interpellatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="de" ad="*"
+      nota="eventus investigatus - incidens, casus, defectus"/>
+    <relatio nomen="colligit" ad="observatio" multiplex="verum"/>
+    <relatio nomen="producit" ad="iudicium" multiplex="verum"
+      nota="conclusiones de causis - iudicia, non facta:
+            revocabiles, cum auctore, cum gradu assensus"/>
+    <relatio nomen="invenit" ad="causa" modulus="causa"
+      multiplex="verum"
+      nota="MULTIPLEX consulto - vide causa: necessaria et
+            sufficiens raro conveniunt, ergo causa una
+            'radicalis' fere semper simplificatio"/>
+    <relatio nomen="parit" ad="postulatum" modulus="fabricatio"
+      multiplex="verum"
+      nota="commendationes: quod investigatio VALET non est
+            scire quid acciderit sed quid mutandum sit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="investigatio_praeventiva">
+    <definitio>
+      Ad praeventionem sola ordinata, culpa expresse exclusa:
+      forma aviatoria, et in medicina conventus mortalitatis
+      et morbositatis.
+    </definitio>
+    <valor nomen="finis">praeventio</valor>
+  </species>
+
+  <species nomen="inquisitio_forensis">
+    <definitio>
+      Ad culpam et damna determinanda: finis legitimus et
+      necessarius, sed ALIUS.
+    </definitio>
+    <valor nomen="finis">attributio_culpae</valor>
+    <nota>
+      SPECIES CONTRARIA QUAE ALTERAM PROBAT: quia haec
+      legitime culpam quaerit, illa eam quaerere NON POTEST -
+      duae institutiones, duo fines, et confusio primam
+      destruit. Non quod culpa quaerenda non sit; sed quod
+      idem processus utrumque praestare nequit.
+    </nota>
+  </species>
+
+  <species nomen="recensio_post_mortem">
+    <definitio>
+      Investigatio praeventiva in arte programmandi post
+      incidens: forma aviatoria mutuata, saepe sine separatione
+      quae eam operantem facit.
+    </definitio>
+    <valor nomen="finis">praeventio</valor>
   </species>
 
 </genus>

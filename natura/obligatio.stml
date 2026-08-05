@@ -20,7 +20,7 @@
   datur, revocari potest, expirat. Non idem genus - quod
   schemata vulgaria confundunt.
 -->
-<natura modulus="obligatio" versio="2" lingua="latina">
+<natura modulus="obligatio" versio="3" lingua="latina">
 
 <!-- ==================================================
      OBLIGATIO - vinculum iuris
@@ -166,6 +166,17 @@
     <proprietas nomen="condiciones" genus="textus"
       multiplex="verum"
       nota="quibus servatis valet - inspectio, merces annua"/>
+    <proprietas nomen="recentia_postulata" genus="veritas"
+      ordinarius="falsum"
+      nota="RECENTIA (aviatio poposcit, rota XXXIX): an vigor
+            ex USU RECENTI pendeat, non ex probatione praeterita -
+            gubernator tres descensus nonaginta diebus egit ut
+            vectores ferat. Unde TRIA genera cessandi, non duo:
+            titulus NUMQUAM cadit (factum testatur); licentia
+            ordinaria TEMPORE cadit (terminus lapsus); licentia
+            cum recentia DESUETUDINE cadit - qui non exercet
+            amittit, quamvis terminus absit. Peritia enim
+            decrescit, et hoc sola inter tria id agnoscit"/>
   </proprietates>
 
   <machina_statuum nomen="vigor" gerens="individuum">

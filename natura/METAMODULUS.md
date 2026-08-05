@@ -127,6 +127,17 @@ reference). A property may also be typed by a LIBRARY GENUS with
 Essential composition (a plant HAS a root). `necessaria="falsum"`
 is honest, not a defect: ferns have no flower.
 
+**OPEN — necessity is BINARY here, and reality wants it
+conditional** (aviation, 2026-08-05). An aircraft's Minimum
+Equipment List is a regulated statement of *which parts may be
+absent, under which conditions, for how long* — one weather radar
+may be inoperative if the other works and the flight avoids
+convective weather, for ten days. That is `necessaria` with a
+predicate and a clock, and we can only say verum/falsum.
+Recorded, not built: one forcing case is an observation. If a
+second domain asks (medical device tolerances, N+1 redundancy),
+it becomes a mechanism.
+
 ### State machines
 
 ```xml

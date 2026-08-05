@@ -8,7 +8,7 @@
   corpus_normans, societas - arbor Porphyriana profunditatem
   accipit (attributum sub= + differentia in genere).
 -->
-<natura modulus="organizatio" versio="5" lingua="latina">
+<natura modulus="organizatio" versio="6" lingua="latina">
 
 <!-- FONTES (mechanismus rotae XVI) -->
 <fontes>
@@ -206,6 +206,20 @@
             non in personis: qui subest OFFICIO subest, non
             homini"/>
   </relationes>
+
+  <nota>
+    PATHOLOGIA OFFICII (aviatio, rota XXXIX): auctoritas sedis
+    notitiam SURSUM IMPEDIRE potest - subiectus superiorem non
+    contradicit, etiam cum errare eum videt. Aviatio hoc
+    ruinis didicit et structuram institutam CONSULTO DEBILITAVIT
+    (regimen facultatum gregis: subiecto officium DATUM est
+    dubitandi, gubernatori officium AUDIENDI).
+    Genus hoc auctoritatem dicere potest, defectum eius nondum:
+    quod officium ordinat etiam OBSTRUIT, et remedium non in
+    persona sed in STRUCTURA quaerendum est. Dubium apertum -
+    an proprietas (gradus_auctoritatis), an relatio, an genus
+    proprium (impedimentum institutum).
+  </nota>
 
   <!-- ================= DICTIONARIUM ================= -->
 

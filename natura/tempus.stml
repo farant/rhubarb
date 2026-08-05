@@ -63,7 +63,7 @@
   mensuram temporis (secundum, minutum) in exemplari mensurae
   invenies; hic de temporis STRUCTURA agitur, non de mensura.
 -->
-<natura modulus="tempus" versio="3" lingua="latina">
+<natura modulus="tempus" versio="4" lingua="latina">
 
 <!-- ==================================================
      MOMENTUM - punctum in tempore
@@ -260,6 +260,55 @@
       mensem, non intervallum fixum - unde intervalla inaequalia
       (28 aut 35 dies) sine ullo errore.
     </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     RECURRENTIA PER USUM - clavis non tempus sed USUS
+     (aviatio poposcit: "post horas volatus quingentas")
+     ================================================== -->
+
+<genus nomen="recurrentia_per_usum" sub="recurrentia">
+
+  <differentia>
+    Non tempore sed USU ACCUMULATO regitur: horis operis,
+    cyclis, spatio confecto. Ideo instrumentum quiescens
+    numquam recurrit, laborans saepe - quod tempus solum dicere
+    non potest.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="mensura_usus" genus="quantitas"
+      modulus="mensura"
+      nota="quantum usus intersit"/>
+  </proprietates>
+
+  <nota>
+    PRETIUM ABSCONDITUM: recurrentia temporis GRATIS est
+    (calendarium omnes habent); recurrentia usus INSTRUMENTUM
+    poscit quod usum metiatur et servet. Ideo domus quae
+    "post horas quingentas" praescribit horometrum prius habere
+    debet - regula mensuram supponit, et mensura non gratis
+    venit.
+  </nota>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="per_horas_operis">
+    <definitio>Horis quibus res re vera operata est.</definitio>
+  </species>
+
+  <species nomen="per_cyclos">
+    <definitio>
+      Numero vicium quibus res a quiete ad opus et retro
+      transiit: ubi damnum ex TRANSITU oritur, non ex duratione
+      (metallum fatigatur pressione alternante, non stante).
+    </definitio>
+  </species>
+
+  <species nomen="per_spatium">
+    <definitio>Distantia confecta: vehiculis propria.</definitio>
   </species>
 
 </genus>

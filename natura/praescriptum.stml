@@ -19,7 +19,7 @@
   correspondentis fori, indices verificationis, ipsae normae
   huius bibliothecae in CLAUDE.md scriptae.
 -->
-<natura modulus="praescriptum" versio="1" lingua="latina">
+<natura modulus="praescriptum" versio="2" lingua="latina">
 
 <!-- ==================================================
      PROCEDURA - ordo operationum ad finem
@@ -240,6 +240,58 @@
     <relatio nomen="versio_de" ad="praescriptum"/>
     <relatio nomen="sequitur" ad="versio_praescripti"/>
     <relatio nomen="emendata_a" ad="persona" modulus="persona"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     INDEX VERIFICATIONIS - qui CONFIRMAT, non docet
+     (aviatio rota XXXIX poposcit: index aviatorius
+     praecepta NON est - gubernator volare scit)
+     ================================================== -->
+
+<genus nomen="index_verificationis" sub="procedura">
+
+  <differentia>
+    CONFIRMAT quod factum sit; non docet quomodo fiat. Exsecutor
+    artem iam tenet - index exsistit quia SCIRE NON EST FACERE
+    sub onere, festinatione, fatigatione. Ideo defectum quem
+    prohibet non ignorantia est sed OMISSIO.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="modus" genus="electio"
+      nota="distinctio aviatoria formalis: FACERE-CONFIRMARE
+            (memoriter agis, deinde index confirmat - apte ubi
+            tempus urget) contra LEGERE-FACERE (index dictat,
+            tu sequeris - apte ubi error letalis et tempus
+            adest)">
+      <optio>facere_confirmare</optio>
+      <optio>legere_facere</optio>
+    </proprietas>
+    <proprietas nomen="pro_casu" genus="veritas"
+      ordinarius="falsum"
+      nota="an ad casum extraordinarium pertineat (incendium,
+            defectio machinae) - indices normales oblivionem
+            prohibent, indices casuum PANICUM"/>
+  </proprietates>
+
+  <nota>
+    CONSEQUENTIA PRACTICA QUAE GENUS MERETUR: quia CONFIRMAT et
+    non docet, exercitatio eum SUBSTITUERE NON POTEST - peritior
+    fis, oblivisci tamen potes, immo peritior facilius omittit
+    quia manus sine mente currunt. "Diligentiores estote" nihil
+    valet contra omissionem; index valet.
+    Et contra: index ei qui artem non tenet INUTILIS est -
+    instrumentum PERITI est, non tironis. Qui indicem pro
+    doctrina adhibet utrumque perdit.
+  </nota>
+
+  <relationes>
+    <relatio nomen="confirmat" ad="actio" externum="verum"
+      nota="quae iam facta esse debent"/>
+    <relatio nomen="adhibetur_in" ad="ambitus" modulus="operatio"
+      multiplex="verum"/>
   </relationes>
 
 </genus>

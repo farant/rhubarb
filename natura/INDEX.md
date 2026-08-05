@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **30** · genera **137** · res dictionarii **288** · arcus **371**
+Exemplaria **30** · genera **140** · res dictionarii **294** · arcus **377**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -114,7 +114,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 - **schema_identificandi** — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
 
-### iudicium (v2, genera 6)
+### iudicium (v3, genera 7)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
@@ -122,6 +122,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **iudicium** — Propositio de re quam aliquis tenet: cum auctore, momento, fundamento, gradu assensus
 - **periculum** — Damnum quod accidere potest nec certum est: species iudicii de futuro, sed DUPLEX - probabilitate et gravitate simul c
 - **ignotum** — Absentia notitiae AGNITA et nominata: hiatus qui, quia nominatus est, tractari potest
+- **investigatio** — Inquisitio ordinata in causas eventus, iudicia de causis producens
 
 ### lingua_programmandi (v3, genera 5)
 
@@ -153,7 +154,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **norma** — Documentum publicum quod formam praescribit: quid conformitas significet definit
 - **lex** — Ordinatio rationis ad bonum commune, ab eo qui curam communitatis habet promulgata (Thomas, ST I-II q
 
-### obligatio (v2, genera 5)
+### obligatio (v3, genera 5)
 
 - **obligatio** — Iuris vinculum quo quis alicui aliquid praestare adstringitur (Institutiones): non res sed VINCULUM inter personas - d
 - **contractus** — Conventio duorum (aut plurium) quae obligationes parit: consensus est fundamentum - ideo utrumque ligat, et neuter sol
@@ -176,7 +177,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **periodicum** ⊂ opus_scriptum — Opus quod PERFECTIONEM non petit: in fasciculis continuatur dum curatores volunt - machina compositionis parentis ei f
 - **fasciculus** — Pars periodici tempore signata: numerus unus, die suo editus
 
-### organizatio (v5, genera 6)
+### organizatio (v6, genera 6)
 
 - **organizatio** — Universitas personarum: coetus in finem communem ordinatus qui UT UNUM agit et mutatis membris perdurat - haec perdura
 - **persona_iuridica** ⊂ organizatio — Subiectum iurium et obligationum in iure: possidet, contrahit, agit et convenitur SUO nomine, non nomine membrorum
@@ -206,13 +207,14 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **rosa** ⊂ rosaceae — Caules aculeati, folia imparipinnata, fructus hypanthium carnosum (cynorrhodon) - non pomum
 - **malus** ⊂ rosaceae — Fructus POMUM (hypanthium carnosum quod semina includit), non drupa nec cynorrhodon
 
-### praescriptum (v1, genera 5)
+### praescriptum (v2, genera 6)
 
 - **procedura** — Ordo operationum ad finem: introitus declarati, gradus ordinati, exitus exspectatus
 - **procedura_automata** ⊂ procedura — A MACHINA exsecuta, ideo AMBIGUITATIS TOLERANTIA NULLA: ubi praescriptum "donec aureum fiat" dicere potest quia homo i
 - **praescriptum** ⊂ procedura — Ordo operationum ad finem, ab homine exsequendus: introitus declarati (materiae, instrumenta), gradus ordinati, exitus
 - **gradus_praescripti** — Operatio una in ordine: actio, fortasse cum quantitate, fortasse cum mora, fortasse cum conditione finiendi
 - **versio_praescripti** — Editio praescripti nominata et citabilis: quod praescriptum per emendationes transit, identitate manente ("receptum av
+- **index_verificationis** ⊂ procedura — CONFIRMAT quod factum sit; non docet quomodo fiat
 
 ### schema (v0, genera 3)
 
@@ -227,12 +229,13 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **distributio_systematis** — Collectio curata: nucleus + instrumenta + ordinationes + gestor fasciculorum, ab uno curatore electa, probata, edita
 - **versio_systematis** — Editio systematis nominata: quam installatio vere currit - "Darwin 23
 
-### tempus (v3, genera 7)
+### tempus (v4, genera 8)
 
 - **momentum** — Punctum in tempore: quando aliquid accidit
 - **intervallum** — Spatium temporis inter duo momenta: initium, finis, ideo duratio
 - **recurrentia** — Regula quae momenta (aut intervalla) gignit: "omni die hora quarta", "omni die Lunae", "prima die cuiusque mensis"
 - **recurrentia_computata** ⊂ recurrentia — Momenta non ex periodo simplici sed ex ALGORITHMO oriuntur: regula ipsa calculum continet, saepe corpora caelestia aut
+- **recurrentia_per_usum** ⊂ recurrentia — Non tempore sed USU ACCUMULATO regitur: horis operis, cyclis, spatio confecto
 - **horarium** — Recurrentiae in ordinem compositae quibus opus regitur: horae apertionis, vices operariorum, ordo coctionis
 - **calendarium** — Systema quo dies nominantur et ordinantur: menses, hebdomadae, anni, dies festi
 - **reservatio** — Vindicatio capacitatis futurae: intervallum et res (sedes, cella, hora medici) alicui SERVATA ne alteri detur
@@ -299,9 +302,11 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | implementatio_linguae | lingua_programmandi |
 | incidens | operatio |
 | index | elementa_programmatis |
+| index_verificationis | praescriptum |
 | inscriptio | locus |
 | instrumentum | corporalia |
 | intervallum | tempus |
+| investigatio | iudicium |
 | iter | vectura |
 | iudicium | iudicium |
 | iurisdictio | locus |
@@ -354,6 +359,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | ratio_rationaria | commercium |
 | recurrentia | tempus |
 | recurrentia_computata | tempus |
+| recurrentia_per_usum | tempus |
 | res_corporea | corporalia |
 | res_sacra | corporalia |
 | reservatio | tempus |
@@ -424,6 +430,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `iudicium.fons` — corpus_institutionis, fons_mensurae, fons_scriptus, fons_testimonii
 - `iudicium.gradus_assensus` — dubitatio, fides, opinio, scientia, suspicio
 - `iudicium.ignotum` — amissum, controversum, ignotum_ignotum, ignotum_notum, impertinens, indeterminatum, retentum
+- `iudicium.investigatio` — inquisitio_forensis, investigatio_praeventiva, recensio_post_mortem
 - `iudicium.iudicium` — aestimatio, diagnosis, praedictio, sententia_iudicis
 - `iudicium.observatio` — signum, symptoma, testimonium
 - `lingua_programmandi.implementatio_linguae` — :clang, :cpython, :fil_c, :gcc, :officina
@@ -465,6 +472,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `systema_operativum.versio_systematis` — :macos_13_ventura, :macos_14_sonoma
 - `tempus.calendarium` — :calendarium_gregorianum, :calendarium_liturgicum
 - `tempus.recurrentia_computata` — dies_negotiorum, dies_ordinalis_mensis, pascha
+- `tempus.recurrentia_per_usum` — per_cyclos, per_horas_operis, per_spatium
 - `vectura.vehiculum` — aeroplanum, currus_onerarius, navis, tramen
 - `vectura.via` — :canalis_suesianus, :via_appia, via_aeria, via_maritima, via_terrestris
 
@@ -473,6 +481,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 
 - **abc** — a `lingua_programmandi` superfectum
+- **actio** — a `praescriptum` superfectum
 - **agentia_isbn** — a `identificatio` superfectum
 - **att** — a `organizatio` superfectum
 - **b** — a `lingua_programmandi` superfectum
