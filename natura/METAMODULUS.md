@@ -361,8 +361,24 @@ that correction would have broken every citation to C, Python,
 macOS, x86 and nine others. As a hint, the same event merely
 flags stale citations, which is information.
 
-Not yet exercisable: no external consumer cites addresses. It
-becomes enforceable at first citation.
+**COROLLARY — the marker creates NO namespace** (Fran,
+2026-08-05). Because resolution ignores the colon, `/x/unix` and
+`/x/:unix` are THE SAME NAME and therefore a collision, caught by
+rule 15. You cannot use the marker to disambiguate a genus from a
+particular; you must name them distinctly.
+
+That is deliberate discipline, not a limitation. A namespace
+split would let two things called "unix" coexist forever, visible
+as distinct only where a sigil happens to appear — in prose, in
+an index, in conversation they would still collide. Forcing the
+rename (`systema_unixiforme` / `unix_bell_labs`) resolves the
+ambiguity everywhere instead of hiding it in punctuation.
+VERIFIED 2026-08-05: a genus named `macos` beside the individuum
+`macos` is rejected as "bis definitum (allocutio ambigua)".
+
+Marker not yet exercisable in citations: no external consumer
+cites addresses. Enforceable at first citation; rendered in
+`INDEX.md` today.
 
 ### Promotion — prefer a sibling genus (Fran, 2026-08-05)
 

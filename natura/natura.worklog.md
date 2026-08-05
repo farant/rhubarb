@@ -2018,3 +2018,16 @@ Measured: 28 exemplaria / 127 genera / 269 residents / 343 arcs
      appear: INDEX.md dictionary lists now render individua with
      the colon (`:c`, `:python`, `:unix_bell_labs`), so the
      at-a-glance property is real now rather than promised.
+
+141. COROLLARY Fran drew, and it is the right one: because
+     resolution ignores the colon, `/x/unix` and `/x/:unix` are
+     THE SAME NAME — hence a collision, caught by rule 15. The
+     marker informs but cannot DISCRIMINATE.
+     That is discipline, not limitation: a namespace split would
+     let two things called "unix" coexist forever, distinguished
+     only where a sigil appears, while colliding in prose, in
+     indexes and in speech. Forcing the rename resolves the
+     ambiguity everywhere rather than hiding it in punctuation.
+     VERIFIED rather than asserted: a genus `macos` beside the
+     individuum `macos` is rejected — "bis definitum (allocutio
+     ambigua)".
