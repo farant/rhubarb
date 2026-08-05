@@ -120,7 +120,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="c">
+  <individuum nomen="c">
     <definitio>
       Lingua imperativa propinqua machinae: abstractio tenuis
       super memoriam linearem et monstratores; praeprocessor
@@ -145,9 +145,9 @@
       <eventum quando="1990" actio="normari">ISO/IEC
         9899:1990</eventum>
     </historia>
-  </species>
+  </individuum>
 
-  <species nomen="python">
+  <individuum nomen="python">
     <definitio>
       Lingua dynamica legibilitati dedita: structura per
       indentationem, bibliotheca normalis ampla, interpres
@@ -171,9 +171,9 @@
       <eventum quando="2008-12-03" actio="edi">Python 3 -
         fractura compatibilitatis consulta</eventum>
     </historia>
-  </species>
+  </individuum>
 
-  <species nomen="rust">
+  <individuum nomen="rust">
     <definitio>
       Lingua systematis sine collectore: tutela memoriae per
       POSSESSIONEM in compilatione probatam (typi affines);
@@ -197,7 +197,7 @@
       <eventum quando="2015-05-15" actio="edi">1.0 -
         stabilitas promissa</eventum>
     </historia>
-  </species>
+  </individuum>
 
 </genus>
 
@@ -218,7 +218,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="bash">
+  <individuum nomen="bash">
     <definitio>
       Concha GNU: sh Bourne aucta historia, complemento,
       arithmeticis; concha ordinaria systematum Linux diu.
@@ -234,7 +234,7 @@
     <historia>
       <eventum quando="1989-06-08" actio="ortus"/>
     </historia>
-  </species>
+  </individuum>
 
 </genus>
 

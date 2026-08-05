@@ -105,6 +105,17 @@
   <!-- ================= DICTIONARIUM ================= -->
 
   <species nomen="unix">
+    <dubium>
+      RECENSIO GRADUS (rota XXIX) hanc solam reliquit apertam:
+      cetera systemata in individua mutata sunt (unum macOS,
+      unum Windows), sed "unix" utrumque esse videtur - et
+      systema particulare a Bell Labs natum, et GENUS de quo
+      AIX, Solaris, BSD vere praedicantur ("AIX unix est").
+      Probatio praedicationis hic AMBAS partes probat, quod
+      alibi non accidit. Fortasse duo sunt: unix_originale
+      (individuum) et unix_genus - sicut lingua et versio
+      distinctae sunt. APERTUM, Frane iudicante.
+    </dubium>
     <definitio>
       Systema fontale: omnia-plagula-est, processus parvi fistulis
       iuncti, concha ut lingua. Forma cuius cetera aut filii aut
@@ -132,7 +143,7 @@
     </nota>
   </species>
 
-  <species nomen="macos">
+  <individuum nomen="macos">
     <definitio>
       Systema Apple pro machinis suis: nucleus XNU (hybridus),
       superficies propria, fundamentum Unix (BSD per NeXTSTEP).
@@ -154,9 +165,9 @@
         (linea NeXTSTEP, non linea Mac OS 9)</eventum>
     </historia>
     <nota>systema domus nostrae - paroecia</nota>
-  </species>
+  </individuum>
 
-  <species nomen="linux">
+  <individuum nomen="linux">
     <definitio>
       Nucleus liber ad exemplum Unix, cum instrumentis GNU
       systema integrum: fons apertus, ubique a servis ad
@@ -182,9 +193,9 @@
          GENUS proprium est - "certe genus rerum quas homines
          tractare debent". Vide genus distributio_systematis
          infra. -->
-  </species>
+  </individuum>
 
-  <species nomen="windows">
+  <individuum nomen="windows">
     <definitio>
       Systema Microsoft dominans in computatris scriptorii:
       linea NT (a VMS formata, non ab Unix), compatibilitas
@@ -205,7 +216,7 @@
       <eventum quando="1993-07-27" actio="edi">NT 3.1 - linea
         nova quae vetera devoravit</eventum>
     </historia>
-  </species>
+  </individuum>
 
 </genus>
 
@@ -245,7 +256,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="debian">
+  <individuum nomen="debian">
     <definitio>
       Distributio communitatis vetusta: stabilitas supra
       novitatem, contractus socialis scriptus, apt eius donum
@@ -262,9 +273,9 @@
     <historia>
       <eventum quando="1993-08-16" actio="ortus"/>
     </historia>
-  </species>
+  </individuum>
 
-  <species nomen="ubuntu">
+  <individuum nomen="ubuntu">
     <valor nomen="gestor_fasciculorum">apt</valor>
     <valor nomen="cadentia_editionum">statuta</valor>
     <relatum nomen="distributio_de" ad="linux"/>
@@ -274,9 +285,9 @@
     <historia>
       <eventum quando="2004-10-20" actio="ortus"/>
     </historia>
-  </species>
+  </individuum>
 
-  <species nomen="arch">
+  <individuum nomen="arch">
     <differentia>
       Cadentia volvens ut essentia: numquam "editio nova" -
       fluctus continuus; simplicitas mechanismi supra
@@ -288,7 +299,7 @@
     <historia>
       <eventum quando="2002-03-11" actio="ortus"/>
     </historia>
-  </species>
+  </individuum>
 
 </genus>
 

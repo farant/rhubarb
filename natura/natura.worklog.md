@@ -1856,3 +1856,85 @@ STILL OUTSTANDING from the parish scenario:
 
 Measured: 28 exemplaria / 126 genera / 269 residents / 343 arcs
 / 0 vulnera. Parish scenario fully built; nine gates enforced.
+
+## 2026-08-05 — round twenty-nine: rank audit + the particular-marker
+
+Fran asked whether we conflate things and kinds, guessing that
+scholastic "species" is thing-like where taxonomic species is a
+kind. The answer sharpened into two findings.
+
+129. CLARIFICATION: species is a KIND in BOTH senses (a
+     predicable, said of many). What is real behind the
+     intuition: (a) the *species specialissima* is the last
+     universal before individuals, so it sits closest to the
+     essence and feels concrete; (b) Latin *species* also means
+     appearance/form, a different sense entirely.
+     THE LOAD-BEARING POINT, and it is Porphyry's own: GENUS AND
+     SPECIES ARE RELATIVE, not absolute ranks — everything
+     mid-tree is a subaltern genus, genus toward what is below
+     and species toward what is above (our `rosa` is both).
+     So: genus/species = POSITIONAL, moves on re-parenting.
+     Universal/particular = ONTOLOGICAL, does not move.
+     Our three element names read as three peers; there are
+     really TWO categories, the first internally graded.
+130. THE ACTUAL CONFLATION WAS IN OUR DATA, not our vocabulary.
+     Test: IS IT PREDICATED OF MANY? `euro` was filed as an
+     individuum of moneta (right — one particular currency), but
+     `c`, `python`, `macos`, `x86` were filed as SPECIES though
+     there is exactly one of each and nothing is "a C".
+     Structurally identical to euro, filed differently.
+     THIRTEEN re-filed (c/python/rust/bash;
+     macos/linux/windows/debian/ubuntu/arch; x86/arm/riscv).
+     Genuinely species-shaped entries pass the test untouched:
+     many bills of lading are charta_onerum, many strings an
+     isbn, many infections morbus_infectiosus.
+     Fran had ALREADY said this two rounds earlier ("programming
+     languages are kind singletons") — quoted in the
+     identificatio header and never acted on. Recorded as a miss.
+131. THE CORRECTION PROVED THE ADDRESSING DESIGN BY ACCIDENT:
+     343 arcs before, 343 after, zero vulnera. Thirteen entities
+     changed RANK and not one citation broke, because the
+     resolver keys on modulus+nomen across genera and residents
+     alike. Had rank been load-bearing in addresses, that same
+     correction would have broken every citation to C, Python,
+     macOS and x86.
+132. FRAN'S RULING on the marker: only PARTICULAR THINGS get
+     flagged — `/persona/:dennis_ritchie`, but `/actus/stipulatio`
+     bare, since species are kinds too. Recorded in METAMODULUS
+     §4b as a CHECKED HINT rather than a resolution key, with
+     today's thirteen-fold correction as the measured
+     justification. Not yet exercisable: no external consumer
+     cites addresses.
+133. FRAN'S RULING on promotion — DO NOT PROMOTE, ADJOIN. When a
+     thing acquires sub-things, coin a SIBLING genus and relate,
+     leaving the thing a thing. The library already did this
+     once without naming it: C did not become a genus when
+     versions appeared; versio_linguae was coined. Dialects take
+     the same shape (dialectus_linguae, generic).
+     REASON: "GNU C is a dialect of C" is DERIVATION,
+     "Socrates is a man" is PREDICATION — promotion silently
+     converts one into the other.
+     TEST recorded: are the would-be members predicated of it,
+     or merely related to it? Related → sibling genus. Truly
+     predicated → it was a kind all along and you are CORRECTING
+     a misfiling, not upgrading. Three cases converge (versions,
+     implementations, dialects), and libc's open dubium resolves
+     the same way: glibc IMPLEMENTS libc, so
+     implementatio_bibliothecae, not promotion.
+     CONSEQUENCE I OWED FRAN HONESTLY: this makes rank far more
+     stable than I had argued against the colon — if upgrades
+     are avoided by doctrine, only corrections remain. The
+     checked-hint recommendation survives, but on the weaker
+     ground that corrections happen (thirteen today) and a
+     verified hint costs nothing.
+134. TWO CASES LEFT OPEN as dubia rather than forced:
+     - unix: the predication test passes BOTH ways here alone
+       ("AIX is a unix" is true, and Unix is also a particular
+       Bell Labs system). Possibly two entities, as language and
+       version are two.
+     - pascha: one paschal RULE (individuum) but "this year's
+       Easter" predicates; the rule/occurrence split may be the
+       residence rule again.
+
+Measured: 28 exemplaria / 126 genera / 269 residents / 343 arcs
+/ 11 dubia / 0 vulnera.

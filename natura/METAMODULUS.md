@@ -271,6 +271,64 @@ Three consequences worth stating, because none is obvious:
 **Uniqueness is therefore load-bearing, not hygiene** — rule 15
 is what makes addressing work, and it is now ENFORCED (§8).
 
+### The particular-marker (Fran, 2026-08-05)
+
+A citation may mark that it points at a **particular thing**
+rather than a kind:
+
+```
+/persona/:dennis_ritchie        an individuum — a THING
+/actus/stipulatio               a species — a KIND
+/actus/ritus                    a genus — also a KIND
+```
+
+**Only individua take the colon.** Genus and species are BOTH
+kinds; the line between them is positional, not ontological
+(Porphyry: everything mid-tree is a *subaltern genus* — genus
+with respect to what is below, species with respect to what is
+above; our own `rosa` is both). The line that does not move is
+universal vs particular, and that is the one worth marking.
+
+**The colon is a CHECKED HINT, not a resolution key.** The
+resolver ignores it; the gate verifies it. Measured justification
+from the day it was decided: re-filing thirteen entities from
+species to individuum (see below) changed 343 arcs to 343 arcs
+with zero breakage — had rank been load-bearing in addresses,
+that correction would have broken every citation to C, Python,
+macOS, x86 and nine others. As a hint, the same event merely
+flags stale citations, which is information.
+
+Not yet exercisable: no external consumer cites addresses. It
+becomes enforceable at first citation.
+
+### Promotion — prefer a sibling genus (Fran, 2026-08-05)
+
+When a thing acquires sub-things, do **not** promote the thing to
+a genus. Coin a SIBLING genus for the sub-things and relate them.
+
+The library already does this: C did not become a genus when
+versions appeared — `versio_linguae` was coined, with
+`c89 versio_de c`. Dialects would take the same shape
+(`dialectus_linguae`, generic like `versio_linguae`, not a
+per-language `dialectus_c`).
+
+**The reason is that the relation is wrong for membership.**
+"GNU C is a dialect of C" is DERIVATION; "Socrates is a man" is
+PREDICATION. Promotion silently converts one into the other.
+
+**Test before ever promoting: are the would-be members
+PREDICATED of it, or merely RELATED to it?**
+- related (version of, dialect of, implementation of, part of)
+  → sibling genus + relation;
+- genuinely predicated → it was a kind all along, and you are
+  CORRECTING a misfiling, not upgrading anything.
+
+Three cases converge on this shape: versions, implementations,
+dialects. It also answers `elementa_programmatis.libc`'s open
+dubium — glibc and musl IMPLEMENT libc, so the answer is
+`implementatio_bibliothecae` (parallel to
+`implementatio_linguae`), not promotion.
+
 **Open question — rename stability.** The coining rules say
 divisions are cheap and local, and this session renamed
 `charta_negotiabilis` → `tessera` on exactly that licence. That

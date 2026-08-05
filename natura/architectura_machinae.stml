@@ -58,7 +58,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="x86">
+  <individuum nomen="x86">
     <definitio>
       Familia CISC ab Intel 8086 orta: instructiones longitudinis
       variae, compatibilitas retrorsum quasi-religiosa - onus et
@@ -73,9 +73,9 @@
     <historia>
       <eventum quando="1978-06-08" actio="ortus">8086</eventum>
     </historia>
-  </species>
+  </individuum>
 
-  <species nomen="arm">
+  <individuum nomen="arm">
     <definitio>
       Familia RISC efficientiae dedita: instructiones fixae,
       registra ampla; a machinis manualibus ad servos ascendit.
@@ -89,9 +89,9 @@
       <eventum quando="1985-04-26" actio="ortus">ARM1 (apud
         Acorn)</eventum>
     </historia>
-  </species>
+  </individuum>
 
-  <species nomen="riscv">
+  <individuum nomen="riscv">
     <definitio>
       Copia instructionum RISC aperta: forma sine domino unico,
       per consortium custodita; modularis (fundamentum +
@@ -106,7 +106,7 @@
     <historia>
       <eventum quando="2010" actio="ortus">apud Berkeley</eventum>
     </historia>
-  </species>
+  </individuum>
 
 </genus>
 

@@ -467,6 +467,8 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 - `opus_scriptum` / periodicum
 - `planta` / planta
 - `schema` / genus_valoris
+- `systema_operativum` / unix
+- `tempus` / pascha
 
 ## VII. Vocabularium formae (omnes tituli licentes)
 
