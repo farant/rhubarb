@@ -172,6 +172,54 @@ while IFS='|' read -r fm fg rel tm tgt; do
     fi
 done < "$ARCUS"
 
+# ---- regula VIII: vocabularium clausum (METAMODULUS §3/§4) ----
+# Spec et corpus se invicem custodiunt: elementum aut attributum
+# novum sine emendatione METAMODULI = vulnus. Ideo documentum
+# rancidum fieri non potest.
+# normalizatio spatiorum OBLIGATORIA: catalogi lineas plures
+# habent, et `case " $x " in *" $e "*` spatia poscit, non lineas
+_elementa="natura fontes fons genus definitio differentia
+proprietates proprietas optio partes pars machina_statuum status
+transitus actiones actio relationes relatio species individuum
+cultivar valor relatum historia eventum nota dubium"
+_attributa="nomen modulus versio lingua sub gradus etiam genus
+ad a per multiplex ordinarius necessaria externum inversa gerens
+quando actio clavis verificatus certitudo fons valens_a valens_ad
+nota version encoding"
+# expansio NON QUOTATA verba findit (lineas quoque) et echo ea
+# spatiis singulis reiungit - aliter linea nova mandatum novum
+# intra $(...) esset
+ELEMENTA_NOTA=" $(echo $_elementa) "
+ATTRIBUTA_NOTA=" $(echo $_attributa) "
+
+# CAVE: vocabularium ex TITULIS solis legendum, non ex textu
+# crudo - prosa (dubium) syntaxin attributi continere potest
+# ('puritas="verum"' ut exemplum disputatum). Grep textum crudum
+# legens parser non est.
+for f in natura/*.stml; do
+    mod=$(xp "$f" 'string(/natura/@modulus)')
+    perl -0ne 's/<!--.*?-->//gs;
+               while (/<([a-z_]+)((?:"[^"]*"|[^<>])*)>/g) {
+                 my ($e,$at)=($1,$2); print "E $e\n";
+                 while ($at =~ /([a-z_]+)\s*=\s*"[^"]*"/g) {
+                   print "A $1\n" } }' "$f" | sort -u | \
+    while read -r genusnotae vox; do
+        if [ "$genusnotae" = "E" ]; then
+            case "$ELEMENTA_NOTA" in
+                *" $vox "*) ;;
+                *) echo "$mod --elementum--> <$vox> (extra METAMODULUM §3)" \
+                       >> "$VULNERA" ;;
+            esac
+        else
+            case "$ATTRIBUTA_NOTA" in
+                *" $vox "*) ;;
+                *) echo "$mod --attributum--> $vox= (extra METAMODULUM §4)" \
+                       >> "$VULNERA" ;;
+            esac
+        fi
+    done
+done
+
 # ---- validatio fidei: fons= solvatur, certitudo= vera sit ----
 while IFS='|' read -r m clavis nomen; do
     if ! grep -q "^$m|$clavis\$" "$FONTES"; then

@@ -1226,6 +1226,82 @@ exactly this specification. Flagged for Fran, not built.
 Measured: 25 exemplaria / 106 genera / 195 residents / 278
 arcs / 1 tempus-validitatis / 0 vulnera.
 
+## 2026-08-04 — round twenty: METAMODULUS (the format specified)
+
+Flagged at the end of round nineteen, built before the freight
+nouns at Fran's direction: five mechanisms were documented
+across scattered file headers with no single specification.
+
+89. natura/METAMODULUS.md written — and written from MEASURED
+    reality, not memory: the element and attribute vocabulary
+    was extracted mechanically from the corpus first (25
+    elements, 26 attributes). Sections: doctrine, document
+    shape, element reference with live usage counts, attribute
+    reference, the three cross-model mechanisms, THE THREE
+    COORDINATES OF A CLAIM (certitudo / fons / valid-time with
+    the triple rule), umbrae as computed agenda, NORMATIVE
+    RULES, conventions, deliberate non-decisions, open
+    questions. English prose with Latin identifiers, following
+    natura.worklog.md's precedent in the same directory —
+    recorded as a decision so it is not read as drift.
+90. THE LOADER'S CONTRACT written as 15 numbered rules, each
+    marked [E]nforced or [S]pecified. Eight are enforced today;
+    seven (rules 9-15: valor names a declared property, electio
+    values match a declared optio, relatum names a declared
+    relation, transitus endpoints are declared statuses, eventum
+    actio resolves, modulus equals filename, no duplicate genus
+    names) need GENUS-INHERITANCE RESOLUTION — which is exactly
+    the loader's job and now has a written work list. Rules 9-13
+    are named as the Cyc-consistency defense: what keeps a
+    hand-written library coherent past the point where one mind
+    holds it.
+91. RULE 8 MAKES THE SPEC SELF-ENFORCING: natura_visus now
+    checks a CLOSED VOCABULARY — any element or attribute not in
+    METAMODULUS §3/§4 is a vulnus. The document therefore cannot
+    silently rot away from the artifacts; adding a mechanism
+    without amending the spec fails the gate. This is the
+    strongest form of gate-at-birth we have built: the
+    documentation is now load-bearing.
+92. TWO WARTS RECORDED RATHER THAN HIDDEN (METAMODULUS §4):
+    `genus` is both an element (a kind) and an attribute (a
+    value type); `a`/`ad` mean origin/destination on transitus
+    but source/target on relatio. Analogous, not identical — a
+    parser must not assume.
+93. THE CHECKER ITSELF TAUGHT THREE LESSONS, all measured, all
+    from the same root — GREP ON RAW TEXT IS NOT A PARSER:
+    (a) first inventory was polluted by element names mentioned
+        inside COMMENTS (fontes/fons double-counted); fixed by
+        stripping comments before scanning;
+    (b) `puritas="verum"` was flagged as an unknown attribute —
+        it is PROSE inside a <dubium> discussing a hypothetical.
+        Fixed by extracting attributes only from within tags,
+        and by CONSUMING quoted values so prose like
+        "sine schemate = sacculus" cannot masquerade as an
+        attribute (three such false positives);
+    (c) the tag regex ended at the first `>`, so attributes
+        AFTER a value containing "PowerPC -> Intel" were never
+        scanned — a silent FALSE NEGATIVE, the dangerous kind.
+        Fixed with an alternation that lets quoted values
+        contain `>`, then PROVEN by planting an unknown
+        attribute after that very value and watching it get
+        caught.
+    Plus a pure shell trap worth its own line: newlines inside
+    $(...) are COMMAND SEPARATORS, so a multi-line word list
+    must be built as a quoted string and normalized by unquoted
+    expansion. The first two versions of the check reported
+    175 and 513 phantom vulnera respectively — a validator that
+    fails loudly and wrongly is still better than one that
+    passes quietly and wrongly, but only just.
+
+Measured after: 25 exemplaria / 106 genera / 195 residents /
+278 arcs / 0 vulnera, with vocabulary now closed.
+
+STILL UNBUILT from run three: the freight nouns (iter, via,
+vehiculum, onus, damnum, tributum, charta negotiabilis) —
+damnum wants writing WITH vitium and morbus in view so the
+three-way symmetry (intention / nature / integrity) is stated
+in all three files.
+
 VERDICT, RUN THREE: the loop keeps finding one structural gap
 per run, and they are stacking into a pattern worth naming.
 Run one (pistrina): missing NOUNS — whole domains.
