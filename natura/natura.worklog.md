@@ -1376,6 +1376,57 @@ Measured: 26 exemplaria / 113 genera / 214 residents / 305
 arcs / 0 vulnera. Run three fully built; loop closed end to
 end for the third time.
 
+## 2026-08-05 — round twenty-two: INDEX + Fran's division ruling
+
+102. natura/INDEX.md born — the agent-facing projection, emitted
+     on EVERY validator run (never behind a flag: what can be
+     forgotten will be, and git shows a stale index immediately).
+     Genera with glosses, alphabetical lookup, dictionary,
+     umbrae, dubia, closed vocabulary. METAMODULUS correspondingly
+     DROPPED its live counts — a specification that quotes a
+     moving number is stale by the next afternoon.
+     Writing it caught four real bugs: two in the tool (BSD
+     `paste -sd', '` CYCLES delimiters; a filter running before
+     the substitution it depended on) and two in the models —
+     mensura declared a FALSE umbra (a genus in its own file
+     marked externum) and planta carried a STALE externum flag on
+     apis, described five rounds earlier. Umbrae 15 → 13, all
+     thirteen now genuine. The §7 warning about stale flags
+     proved itself within a day of being written.
+
+103. FRAN'S DIVISION RULING — and it corrected a real error in my
+     working heuristic. I had been using "does the differentia
+     buy affordances" (purity earns memoize/reorder/parallelize,
+     therefore essence). Fran's criterion is ONTOLOGICAL: is the
+     genus about something REAL — moderate realism, universals
+     in re? If yes, coin it, application or not.
+     THE CORRECTION MATTERS: my affordance test was a USE-CASE
+     test wearing a taxonomy costume — the exact Pieper failure
+     we killed at the property layer, relocated to the genus
+     layer where it is harder to see. A library that only names
+     distinctions it can currently exploit is a use-case schema
+     with better manners.
+     Consequences recorded in METAMODULUS §9:
+     - risk is ASYMMETRIC — failing to name a real distinction is
+       nominalism creeping in; a redundant genus for something
+       real is nearly free and locally fixable. WHEN UNCERTAIN,
+       DIVIDE.
+     - expect HUNDREDS of genera at general scope; that is the
+       right order of magnitude, and the work does not obsolesce.
+     - notas growing long is not a defect: thinking clearly about
+       a nature IS the hard work, and the record of it is the
+       artifact's value (Alexander).
+
+104. PHASE NAMED (Fran's recalibration): this is FILLING OUT, not
+     perfecting. Revision passes are available indefinitely and
+     no division decision can paint the work into a corner.
+     Which dovetails exactly with the cheap/expensive asymmetry
+     the session had already discovered by instinct: divisions
+     are LOCAL (rename, re-parent, split, merge — the gate names
+     what broke), metamodel changes are GLOBAL (retrofit every
+     model). That is the real reason dimensions were taken before
+     nouns, and it is now written down rather than felt.
+
 VERDICT, RUN THREE: the loop keeps finding one structural gap
 per run, and they are stacking into a pattern worth naming.
 Run one (pistrina): missing NOUNS — whole domains.

@@ -341,6 +341,45 @@ holds it.
 
 ## 9. Conventions
 
+### When to make a new genus (Fran's ruling, 2026-08-05)
+
+**The test is ONTOLOGICAL, not pragmatic.** Does this name
+something real — a distinction that exists in the things
+themselves? Moderate realism: universals are real, *in re*. If
+the answer is yes, coin the genus, even with no application in
+view.
+
+Do **not** ask "does this buy us anything." That is a use-case
+test wearing a taxonomy costume — the Pieper failure relocated
+from the property layer to the genus layer, and harder to see
+there.
+
+**The risk is asymmetric.** Failing to name a real distinction is
+nominalism creeping in: collapsing a real difference because it
+is inconvenient. A redundant genus for something real costs
+almost nothing and is locally fixable. So when uncertain,
+DIVIDE.
+
+Expect **hundreds** of genera at general scope. That is the
+correct order of magnitude for describing things as they are,
+and the work does not become obsolete.
+
+### What is cheap and what is expensive
+
+- **Division decisions are cheap and LOCAL.** A genus can be
+  renamed, re-parented, split or merged at any time; dangling
+  references are caught by the gate, so the corpus tells you
+  what you broke.
+- **Metamodel decisions are expensive and GLOBAL.** Every
+  mechanism must be retrofitted across all models.
+
+This asymmetry is why dimensions are taken BEFORE nouns
+(iudicium and valid-time were built ahead of easier material,
+while the corpus was small enough to retrofit). It also means
+the current phase is FILLING OUT, not perfecting: revision
+passes are available indefinitely, and no division decision
+made now can paint the work into a corner.
+
 - **Values match declared names exactly.** `vita`→`vigens`,
   `certitudo`→`fides` (not `fide`). Machine-checkability beats
   grammatical flourish; this was caught by the validator on the
