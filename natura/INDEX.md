@@ -13,6 +13,8 @@ Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
 ```
 grep -i '<terminus>' natura/INDEX.md      # genus aut res
 grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
+./tools/natura_quaere.sh <terminus>        # QUAERE (definitiones+species)
+./tools/natura_quaere.sh -a mod.genus      # APPARATUS: quid rogare debeas
 ```
 
 ## II. Genera per exemplar

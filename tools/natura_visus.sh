@@ -445,6 +445,8 @@ echo
 echo '```'
 echo "grep -i '<terminus>' natura/INDEX.md      # genus aut res"
 echo "grep -n 'nomen=\"<genus>\"' natura/*.stml   # sedes definitionis"
+echo "./tools/natura_quaere.sh <terminus>        # QUAERE (definitiones+species)"
+echo "./tools/natura_quaere.sh -a mod.genus      # APPARATUS: quid rogare debeas"
 echo '```'
 echo
 echo "## II. Genera per exemplar"

@@ -2715,3 +2715,56 @@ than speculation, and the measurement inverted my expectation.
 
 Measured: 30 exemplaria / 140 genera / 294 residents / 381 arcs
 / 0 vulnera, eleven gates enforced.
+
+## 2026-08-05 — round forty-one: natura_quaere — the reverse
+## lookup, and the apparatus made explicit
+
+191. Built the tool both routes pointed at (round XXXIV's
+     leverage decomposition and round XXXVI's sensemaking mode
+     named the same two absences). Two modes:
+     - `natura_quaere.sh <terminus>` — searches NAMES,
+       DEFINITIONES, DIFFERENTIAE and SPECIES names, ranked by
+       where the hit lands (name 6, definitio/differentia 3,
+       species 4), and reports matching UMBRAE separately so
+       "we have no genus for X, but it is surfaced" is an
+       answerable result.
+     - `natura_quaere.sh -a [mod.]genus` — THE APPARATUS: turns
+       a genus into the QUESTIONS IT MAKES YOU ASK, with full
+       inheritance up the sub= chain INCLUDING cross-model
+       parents, each inherited item labelled with its source.
+192. THE APPARATUS MODE IS THE LEVERAGE CLAIM MADE MECHANICAL.
+     `-a sacramentum` walks actus_sollemnis > ritus >
+     sacramentum and yields seventeen questions the genus
+     forces — materia, minister, intention, witnesses,
+     validity state, what it constitutes — none of which the
+     word alone would have surfaced for someone who had not
+     read the model. That is "naming hands you the next
+     questions", executable.
+     And PARTES render as a CHECKLIST with [NECESSARIA] marked,
+     which is the missing-detection affordance in miniature:
+     walk an environment asking "adestne pars X?".
+193. DELIBERATELY INDEPENDENT of natura_visus: the validator is
+     now the GATE (eleven rules) and must not be destabilised by
+     an advisory read-only tool. Duplicated parsing accepted;
+     header records that IF THEY DISAGREE, THE GATE WINS.
+194. THREE PARSING BUGS, all the same family as before and worth
+     the record:
+     (a) machina_statuum is a DIRECT child of genus while
+         proprietas/pars/relatio sit inside wrappers — one
+         XPath shape does not fit all, and the state machines
+         silently vanished;
+     (b) xmllint returns an attribute node-set NEWLINE-separated,
+         so a TSV field built from it spanned multiple lines and
+         broke the table — only the first state survived. Join
+         BEFORE emitting, never after;
+     (c) tree chain printed raw tabs until rendered as
+         `a > b > c`.
+     Family resemblance to the natura_visus lessons: the parse
+     is never the hard part; the SHAPE of what the parser
+     returns is.
+195. INDEX.md now advertises both modes in its §I ("the most
+     common question"), so a new session finds the tool where it
+     is already looking.
+
+Measured: 30 exemplaria / 140 genera / 294 residents / 381 arcs
+/ 0 vulnera.
