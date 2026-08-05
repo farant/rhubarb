@@ -1417,6 +1417,42 @@ end for the third time.
        a nature IS the hard work, and the record of it is the
        artifact's value (Alexander).
 
+105. GENERA VS ANALOGIES (Fran, same conversation) — the second
+     correction, and it names something the session had been
+     doing without vocabulary. The cross-domain rhymes this work
+     keeps producing (mailbox:actor :: parametra:functio;
+     ledger:balance :: acta:manifestum; bearer bond:goods ::
+     bearer token:authority) are ANALOGIES — analogia
+     proportionalitatis — NOT genera. A genus admits univocal
+     predication; an analogy does not. Forcing one into the other
+     is precisely where the material stops supporting the
+     abstraction, and it is the classic CS failure
+     (everything-is-an-object, universal upper ontologies, deep
+     inheritance).
+     FRAN'S POINT ABOUT METHOD: nominalism is GOOD at finding
+     these patterns — it looks for regularity in usage rather
+     than essence — but cannot say "genuinely similar, not the
+     same kind", so every strong similarity becomes a candidate
+     abstraction and gears spin. Moderate realism can affirm the
+     resemblance, decline the genus, articulate the individual
+     case, and MOVE ON. That freedom is the methodological
+     advantage, not the metaphysics alone.
+     Also his: interfaces/duck typing are the engineering form of
+     analogical grouping — "responds to read()" is about
+     behaviour, not essence — on a DIFFERENT AXIS from the
+     Porphyrian spine, hence not to be forced onto it. Graph
+     relations and schema patterns are further tools, each right
+     in its own scenario.
+     Recorded in METAMODULUS §9. Audit of the session's own
+     rhymes against the new criterion: nearly all were already
+     held as notas (correct); the GoF deferral was this judgement
+     before it had a name; and ONE case changes — charta
+     negotiabilis may be a genuine GENUS whose NAME is too narrow
+     ("charta" = paper) with the digital bearer token as a real
+     member, not merely an analogue. Left open, not renamed:
+     under Fran's own ruling the cost of getting it wrong is
+     local and revision passes are indefinite.
+
 104. PHASE NAMED (Fran's recalibration): this is FILLING OUT, not
      perfecting. Revision passes are available indefinitely and
      no division decision can paint the work into a corner.

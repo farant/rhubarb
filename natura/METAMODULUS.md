@@ -364,6 +364,47 @@ Expect **hundreds** of genera at general scope. That is the
 correct order of magnitude for describing things as they are,
 and the work does not become obsolete.
 
+### Genera vs. analogies (Fran, 2026-08-05)
+
+Working across domains surfaces **cross-domain rhymes**: the
+mailbox is to an actor what parameters are to a function; a
+ledger's entries are to its balance what a volumen's acta are to
+its manifest; a bearer bond is to its goods what a bearer token
+is to its authority.
+
+These are real, and they are **not genera**. They are ANALOGIES —
+mostly *analogia proportionalitatis*, A:B :: C:D. A genus admits
+univocal predication (a dog and a horse are each *animal* in the
+same sense); an analogy does not. Forcing an analogy into a genus
+is where the material stops supporting the abstraction, and it is
+the classic failure of grand computer-science ontologies —
+everything-is-an-object, everything-is-a-stream, deep inheritance
+towers, universal upper ontologies. The pattern is real; the
+shared essence was invented.
+
+**Why this is a moderate-realist advantage.** Nominalism is good
+at *finding* these patterns (it looks for regularity in usage,
+not essence) but has no way to say "genuinely similar, not the
+same kind" — so every strong similarity becomes a candidate
+abstraction, and gears spin. Moderate realism can affirm the
+resemblance, decline the genus, **articulate the individual case,
+and move on.**
+
+**Practice:**
+- Default home for a cross-domain rhyme is a `nota` on both
+  sides. Cheap, honest, loses nothing.
+- Make it a **genus** only if it names a real kind — not merely
+  a real resemblance.
+- Use a **relation** when the tie is between two named things.
+- Interfaces and duck typing are the engineering form of
+  analogical grouping: "responds to read()" is a claim about
+  behaviour, not essence. Useful, and on a different axis from
+  the Porphyrian spine — which is why such groupings should not
+  be forced onto it.
+
+The deferral of a catch-all "design pattern" genus (§10) was this
+same judgement made before it had a name.
+
 ### What is cheap and what is expensive
 
 - **Division decisions are cheap and LOCAL.** A genus can be
