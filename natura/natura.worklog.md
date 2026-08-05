@@ -2436,3 +2436,86 @@ Measured: 30 exemplaria / 136 genera / 281 residents / 369 arcs
      it is the same missing pair identified in round XXXIV
      (reverse index + apparatus-as-questions). Two independent
      routes now point at the same next build.
+
+## 2026-08-05 — round thirty-seven: APOPHATIC NODES + AVIATION
+## (Fran's insight, and loop run six)
+
+166. FRAN'S APOPHATIC INSIGHT: unknowns should be FIRST-CLASS,
+     with their own menagerie of genera — "kind of like the
+     concept of zero". Rigour, and dodging the risk that the
+     information is not properly tracked.
+     EVIDENCE THAT THIS NAMES A REAL PATTERN: we have hit it
+     SEVEN TIMES and solved it locally each time —
+     officium.vacans (absence as a first-class STATE),
+     vitium.non_reproductum ("neither declared false nor proven
+     true"), gradus_assensus.dubitatio, plus five separate
+     `vacuum = …` notas each defining locally what empty means.
+     AND persona.mortuus ADMITS A CONFLATION IN WRITING:
+     "vacuum = vivens aut ignotum" — empty means ALIVE OR
+     UNKNOWN. Codd's NULL problem inside our own library,
+     documented and unfixed.
+167. PROPOSED: genus `ignotum` whose SPECIES EACH LICENSE A
+     DIFFERENT MOVE (which is what makes it leverage rather
+     than bookkeeping):
+     - ignotum_notum (known unknown) → ASSIGNABLE; it is a
+       pensum, go find out;
+     - ignotum_ignotum (unknown unknown) → not actionable
+       singly, only in aggregate (slack, shorter cycles);
+     - indeterminatum (no fact of the matter YET) → wait or
+       decide;
+     - amissum (was known, lost) → recover or accept;
+     - retentum (someone knows and will not say) → negotiate;
+     - non_applicabile (the question does not apply) → CODD'S
+       SECOND NULL; your schema is wrong;
+     - controversum (contested — TOO MANY answers, not none)
+       → adjudicate, and it is a iudicium dispute.
+     EXACT TIE TO FRAN'S OWN TERM: A COMPLICATION IS AN
+     UNKNOWN-UNKNOWN THAT MATERIALISED. "non praevidenda" just
+     is "was an ignotum_ignotum".
+
+AVIATION WALK (loop run six) — the domain PUNISHED for not
+knowing, hence the apophatic domain par excellence.
+
+168. CHECKLIST FORCES A REFINEMENT OF PRAESCRIPTUM: an aviation
+     checklist is NOT instructions — the crew knows how to fly.
+     It is a set of CONFIRMATIONS, existing because knowing is
+     not doing under stress (Do-Confirm vs Read-Do is
+     formalised). A recipe TEACHES, a checklist VERIFIES.
+     Conflating them is why "just be careful" fails as a remedy.
+169. MEL (Minimum Equipment List) — PURE APOPHATIC MACHINERY, and
+     the cleanest specimen of Fran's point anywhere: a formal,
+     regulated list of WHAT MAY BE ABSENT and the aircraft still
+     fly. Absence as a certified condition.
+170. THE INSTITUTIONAL FIND — BLAMELESS INVESTIGATION: ICAO
+     Annex 13 declares the sole objective of an accident
+     investigation to be PREVENTION, explicitly not the
+     apportioning of blame, and separates it legally from
+     liability proceedings. THE SEPARATION IS WHAT MAKES PEOPLE
+     REPORT. Software borrowed the word "blameless" and none of
+     the structure — Fran's painful-reimplementation pattern,
+     exactly.
+171. RECURRENTIA BENT: "every 500 flight hours" is a recurrence
+     keyed to ACCUMULATED USE, not the calendar. We have
+     periodic and computed; this is a third kind
+     (recurrentia_per_usum).
+172. LICENTIA BENT the same way — CURRENCY: three landings in
+     ninety days to carry passengers. The licence's validity
+     depends on RECENT PRACTICE, not a past examination.
+     Neither licentia nor titulus can say that.
+173. CREW RESOURCE MANAGEMENT — sharpest cross-domain item and
+     an OFFICIUM PATHOLOGY: the authority gradient means the
+     junior does not contradict the captain, so the office's
+     authority IMPEDES INFORMATION FLOW UPWARD. Aviation had to
+     DELIBERATELY WEAKEN an institutional structure for safety.
+     Our officium models the authority and not the pathology.
+174. Also surfaced: NOTAM (expiring notices of the
+     non-permanent — addressed, temporal, obligatory reading);
+     the accident / serious-incident / incident gradation with
+     REGULATORY thresholds (our `incidens` came from devops and
+     has none); airworthiness as a status conferred and
+     maintained BY ACTS; redundancy as a design property about
+     TOLERATING absence — apophatic again.
+
+Nothing built; harvest awaits blessing. Note that aviation was
+chosen by the round-XXXVI heuristic ("who is punished for
+getting X wrong?") and it paid on the first attempt.
