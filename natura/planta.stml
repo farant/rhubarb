@@ -30,9 +30,15 @@
   CITAT. Praxis vera; et probatio quod citatio trans-modularis
   extra paroeciam nostram valet.
 -->
-<natura modulus="planta" versio="0" lingua="latina">
+<natura modulus="planta" versio="1" lingua="latina">
 
-<genus nomen="planta">
+<!-- v0->v1: planta sub VIVENTE collocata (subordinatio trans
+     exemplaria, mechanismus rotae XVII): arbor una est,
+     exemplaria plagulae sunt. Planta iam non libera pendet sed
+     ramum suum in arbore Porphyriana tenet - et proprietas
+     'anima' a vivente hereditata (vegetativa) differentiam
+     eius iam dicebat sine verbo. -->
+<genus nomen="planta" sub="vivens" modulus="corporalia">
 
   <definitio>
     Vivens quod se ex loco non movet et lucem in cibum vertit
@@ -123,10 +129,12 @@
       modulus="opus_scriptum"
       nota="citatio trans dominia aliena duo: Species Plantarum
             1753 principium iuridicum"/>
-    <relatio nomen="pollinatur_a" ad="animal" externum="verum"
-      nota="genus animal SURGIT - relatio ecologica, mutua:
-            planta et pollinator se invicem egent (relationes
-            nostrae hactenus fere omnes unilaterales fuerunt)"/>
+    <relatio nomen="pollinatur_a" ad="animal" modulus="animal"
+      nota="relatio ecologica, MUTUA: planta et pollinator se
+            invicem egent (relationes nostrae hactenus fere
+            omnes unilaterales fuerunt). Umbra rotae VII rota
+            XVII IMPLETA - exemplar animalis natum, apis
+            descripta"/>
   </relationes>
 
   <dubium>

@@ -977,6 +977,111 @@ REMAINING FROM THE CLINIC HARVEST (cheap, deferred by design):
 vivens (+ the cross-model sub= question), observatio (surfaced
 as externum from iudicium.fundatur_in — the evidence side),
 morbus, reservatio, titulus, periculum.
+[BUILT round seventeen, same day.]
+
+## 2026-08-04 — round seventeen: the clinic harvest completed
+## (25 models — and the Porphyrian tree closes on itself)
+
+73. VIVENS born as res_corporea's THIRD branch (corporalia v1):
+    neither made (artefactum) nor stuff (materia) — the thing
+    with its principle of motion WITHIN. Carries the
+    Aristotelian anima ladder (vegetativa/sensitiva/rationalis)
+    as ONE form graded, not three things. Its death transition
+    is unique in the whole library: the only transitus that
+    LEAVES A DIFFERENT THING — a corpse is still res_corporea
+    but has ceased to be vivens. Substantial, not accidental
+    change; hence no return path, unlike every other machine
+    we have written.
+74. NEW MECHANISM — CROSS-MODEL SUBORDINATION: `sub=` plus
+    `modulus=` on a genus. Rationale recorded in corporalia's
+    header and it is the real point: THE TREE IS ONE; models
+    are FILES, not kingdoms. Splitting into files is our
+    convenience, not a fact about things, and the Porphyrian
+    tree knows nothing of file boundaries. This completes the
+    family: relations crossed models (round one), properties
+    crossed models (round fourteen), subordination now. First
+    two uses: planta and animal under corporalia.vivens.
+75. ANIMAL born (model 24) — closing the library's OLDEST
+    shadow: surfaced by planta's pollinatur_a in round seven,
+    it waited ten rounds. apis now described, and the
+    malus_domestica pollination edge is real in both
+    directions. Proof that computed umbrae are a genuine
+    agenda, not decoration.
+76. THE PORPHYRIAN TREE CLOSED ON ITSELF: substantia → corpus
+    → vivens → animal → animal rationale (homo). The format
+    took its NAME from that tree on day one and has now
+    RECONSTRUCTED it branch by branch without ever planning
+    to — recorded in vivens's nota as evidence that the
+    taxonomy was found, not invented. homo and persona held
+    apart cleanly by the multiplicity ruling: homo is the
+    body-species, persona is rational substance (Boethius); a
+    man is both, an angel is persona and not animal, a dog is
+    animal and not persona. Individuals stay in persona — "he
+    who speaks of Ritchie speaks of a person, not of a body."
+77. MORBUS (model 25) with the foundation that makes the
+    domain possible: DISEASE PRESUPPOSES A NATURE. To be sick
+    is to fall short of what is OWED to the thing — so only
+    what has a nature and an end can be sick; a rock cannot,
+    and a machine is broken rather than ill because its end
+    was given by its maker, not its own. Pieper's discipline
+    proved in an alien domain: true description of things
+    presupposes teleology whether we like it or not. Disease
+    as PRIVATIO (what is missing from health, as darkness to
+    light), not a thing. Residence rule confirmed again
+    (kinds here, this patient's illness in an app volumen),
+    with ICD named as the domain's normative taxonomy — where
+    our library must CITE an external authority rather than
+    invent one. Species divided by CAUSE (cause governs cure).
+    Two cross-domain rhymes recorded: recidivum ≡ regressio
+    (same thing, two domains), and vulnus deliberately shares
+    its name with silex's hand-edited-file wound — the pun
+    turns out to be true (integrity injured by external
+    force).
+78. OBSERVATIO (iudicium v1) — the evidence side, closing
+    iudicium's own shadow the same day it was cast. Divided by
+    WHO CAN VERIFY: symptoma (only the sufferer has access —
+    "the species that shows private truth is still truth"),
+    signum (any competent observer, and the instrument yields
+    a QUANTITAS), testimonium (verifiable through the witness,
+    not the thing). The epistemic gap that hides inside data.
+79. PERICULUM (iudicium v1) — risk as DOUBLE: probability AND
+    gravity, so a single number lies (rare-and-ruinous ≠
+    frequent-and-trivial, even at equal product). Its nota
+    names what the pre-round-sixteen library could not do at
+    all: no probability, no future harm — meaning it could not
+    express PRUDENCE, the virtue that deliberates about
+    uncertain futures. transfertur_per → contractus: insurance
+    is a contract whose subject matter IS a risk.
+80. RESERVATIO (tempus v1) — a claim on future capacity: "we
+    could say WHEN; we could not say CLAIMED." Its deserta
+    state is pure loss (capacity perishes unused and ungiven),
+    which is exactly why overbooking exists — recorded as the
+    place where periculum, obligatio and reservatio all
+    operate at once and none alone explains the practice.
+81. TITULUS (obligatio v1) — Fran's licence/credential contrast
+    made structural: a licence permits and is revocable, a
+    title attests and is permanent ("what has been done cannot
+    become undone"). The model is honestly noted as having
+    grown past pure obligation into the family of WHAT
+    AUTHORITY CONFERS. Species: gradus_academicus (with the
+    lovely historical note that medieval "licentia docendi"
+    was BOTH at once, and our modern word descends from it —
+    the history of the word preserves the distinction of
+    genera), character_indelebilis (the terminal case that
+    PROVES the differentia: not even the conferring authority
+    can remove it — a laicized priest remains ordained, only
+    the faculty is withdrawn), titulus_honoris (where the
+    authority publishes its own aestimatio — title touching
+    judgment).
+82. natura_visus taught cross-model sub= (else the tree
+    renderer would SILENTLY DROP planta — caught by reasoning
+    before running, then verified), rendering such genera as
+    roots marked "⊂ corporalia.vivens". Both failure modes
+    negative-tested (bad parent name, bad module).
+
+Measured: 25 exemplaria / 106 genera / 195 residents / 278
+arcs / 0 vulnera. Clinic harvest fully built; the loop's
+second run is now closed end to end.
 
 VERDICT, RUN TWO: the loop is not just additive, it is
 DIAGNOSTIC. Run one (pistrina) surfaced missing NOUNS — whole

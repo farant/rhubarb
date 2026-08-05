@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/iudicium.stml
-  Exemplar semanticum: IUDICIUM (versio 0, PLASTICUM)
-  Genera: gradus_assensus, fons, iudicium.
+  Exemplar semanticum: IUDICIUM (versio 1, PLASTICUM)
+  Genera: gradus_assensus, fons, observatio, iudicium,
+  periculum.
+
+  v0->v1: observatio nata (latus testimonii - quod iudicium
+  FUNDAT) et periculum (iudicium de damno futuro). Umbra
+  propria rotae XVI impleta eadem die.
 
   Natum ex experimento valetudinarii (cursu secundo circuli):
   DIAGNOSIS in forma nostra dici NON POTERAT. Bibliotheca omnia
@@ -171,6 +176,72 @@
 </genus>
 
 <!-- ==================================================
+     OBSERVATIO - quod testimonium praebet
+     (latus alterum iudicii: iudicium OBSERVATIONIBUS
+     nititur; species per hoc dividuntur - QUIS
+     VERIFICARE POSSIT, quod medicina millennia
+     distinxit et schemata computatralia numquam)
+     ================================================== -->
+
+<genus nomen="observatio">
+
+  <definitio>
+    Notitia rei singularis accepta, quae iudicium fundare
+    potest: quid videatur, quid sentiatur, quid metiatur.
+    Ab iudicio differt quia nihil AFFIRMAT ultra id quod
+    apparet - "febris 38.5" observatio est, "pneumoniam
+    habet" iudicium.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="facta" genus="dies"/>
+    <proprietas nomen="verificabilis_ab_alio" genus="veritas"
+      nota="AXIS DIVISIONIS: potestne alius idem videre?
+            Mensura potest, dolor alienus non - hiatus
+            epistemicus qui in datis latet et rationem eorum
+            regit"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="de" ad="*"/>
+    <relatio nomen="ex_fonte" ad="fons"/>
+    <relatio nomen="fundat" a="iudicium" inversa="verum"
+      nota="impletur ab iudicium.fundatur_in"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="symptoma">
+    <definitio>
+      A subiecto ipso relatum: dolor, nausea, vertigo. Ab alio
+      verificari NON POTEST - solus patiens accessum habet.
+      Non ideo minus verum: species quae ostendit veritatem
+      privatam veritatem esse.
+    </definitio>
+    <valor nomen="verificabilis_ab_alio">falsum</valor>
+  </species>
+
+  <species nomen="signum">
+    <definitio>
+      Ab observatore deprehensum: febris, tumor, pallor.
+      Quivis peritus idem videre potest, et instrumentum
+      QUANTITATEM dat (38.5 °C) - unde mensura, unde
+      comparatio.
+    </definitio>
+    <valor nomen="verificabilis_ab_alio">verum</valor>
+  </species>
+
+  <species nomen="testimonium">
+    <definitio>
+      Ab alio relatum de re quam ipse vidit: testis, socius,
+      acta priora. Verificabile per testem, non per rem -
+      unde iuris disciplina tota de testibus.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
      IUDICIUM - propositio ab homine tenta
      ================================================== -->
 
@@ -221,12 +292,10 @@
     <relatio nomen="assensus" ad="gradus_assensus"
       nota="RELATIO non electio: gradus res vera est cum
             definitione sua, non valor nudus in enumeratione"/>
-    <relatio nomen="fundatur_in" ad="observatio" externum="verum"
+    <relatio nomen="fundatur_in" ad="observatio"
       multiplex="verum"
-      nota="testimonia quibus nititur - genus observatio
-            SUPERFICIT (symptoma/signum: quis verificare
-            possit), cursu secundo circuli notatum, nondum
-            descriptum"/>
+      nota="testimonia quibus nititur - umbra rotae XVI hic
+            impleta"/>
     <relatio nomen="ex_fonte" ad="fons" multiplex="verum"/>
     <relatio nomen="superat" ad="iudicium"
       nota="quod hoc iudicium revisit - catena temporalis,
@@ -270,6 +339,58 @@
       obligationis esse potest).
     </definitio>
   </species>
+
+</genus>
+
+<!-- ==================================================
+     PERICULUM - damnum possibile futurum
+     ================================================== -->
+
+<genus nomen="periculum">
+
+  <definitio>
+    Damnum quod accidere potest nec certum est: species
+    iudicii de futuro, sed DUPLEX - probabilitate et gravitate
+    simul constat. Ideo numero uno dici non potest sine
+    mendacio: quod raro fit sed omnia perdit et quod saepe fit
+    sed parum nocet non sunt idem periculum, etiamsi
+    multiplicatio eadem sit.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="probabilitas" genus="numerus"
+      nota="inter 0 et 1 - et raro SCITUR: plerumque ipsa
+            aestimatur, ideo periculum iudicium de iudicio
+            saepe est"/>
+    <proprietas nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>exitialis</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="minatur" ad="*"
+      nota="cui damnum immineat"/>
+    <relatio nomen="minuitur_per" ad="*" multiplex="verum"
+      nota="cautiones - quae probabilitatem aut gravitatem
+            deprimunt (non tollunt: periculum sublatum
+            periculum non est)"/>
+    <relatio nomen="transfertur_per" ad="contractus"
+      modulus="obligatio"
+      nota="ASSECURATIO: contractus cuius materia ipsa
+            periculum est - alter periculum suscipit pro
+            pretio. Genus quod sine hoc exemplari dici non
+            poterat"/>
+  </relationes>
+
+  <nota>
+    Bibliotheca ante rotam XVI periculum dicere omnino non
+    poterat: nec probabilitatem nec damnum futurum habebat.
+    Hiatus epistemicus non solum diagnoses sed omnem
+    prudentiam excludebat - et prudentia virtus est quae de
+    futuro incerto deliberat.
+  </nota>
 
 </genus>
 

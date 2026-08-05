@@ -26,6 +26,8 @@ DUBIA="$TMP/dubia.txt"       # mod|contextus
 FONTES="$TMP/fontes.txt"     # mod|clavis
 CITATIONES="$TMP/citationes.txt"  # mod|clavis|nomen
 ASSENSUS="$TMP/assensus.txt"      # mod|gradus
+TRANSRADICES="$TMP/transradices.txt"  # mod|genus|mod.parens
+: > "$TRANSRADICES"
 : > "$GENERA"; : > "$RES"; : > "$ARCUS"; : > "$UMBRAE"; : > "$DUBIA"
 : > "$FONTES"; : > "$CITATIONES"; : > "$ASSENSUS"
 
@@ -44,6 +46,14 @@ for f in natura/*.stml; do
     while [ "$i" -le "$n" ]; do
         g=$(xp "$f" "string((//genus)[$i]/@nomen)")
         s=$(xp "$f" "string((//genus)[$i]/@sub)")
+        sm=$(xp "$f" "string((//genus)[$i]/@modulus)")
+        # subordinatio TRANS EXEMPLARIA (mechanismus rotae XVII):
+        # sub= cum modulo alieno = arcus, et radix in silva sua
+        if [ -n "$s" ] && [ -n "$sm" ] && [ "$sm" != "$mod" ]; then
+            echo "$mod|$g|sub|$sm|$s" >> "$ARCUS"
+            echo "$mod|$g|$sm.$s" >> "$TRANSRADICES"
+            s=""
+        fi
         nsp=$(num "$(xp "$f" "count((//genus)[$i]/species)")")
         nin=$(num "$(xp "$f" "count((//genus)[$i]/individuum)")")
         ndu=$(num "$(xp "$f" "count((//genus)[$i]//dubium)")")
@@ -219,6 +229,8 @@ rami() { # mod parens
         [ "$nsp" -gt 0 ] && insig="$insig species:$nsp"
         [ "$nin" -gt 0 ] && insig="$insig individua:$nin"
         printf '<li><span class="genus">%s</span>' "$g"
+        supra=$(grep "^$mod|$g|" "$TRANSRADICES" | cut -d'|' -f3)
+        [ -n "$supra" ] && printf ' <span class="umbra">&sub; %s</span>' "$supra"
         [ -n "$insig" ] && printf ' <span class="insignia">%s</span>' "$insig"
         [ "$nma" -gt 0 ] && printf ' <span class="machina">&#9881;machina</span>'
         [ "$ndu" -gt 0 ] && printf ' <span class="dubium-i">dubia:%s</span>' "$ndu"

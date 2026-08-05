@@ -202,4 +202,85 @@
 
 </genus>
 
+<!-- ==================================================
+     TITULUS - attestatio permanens auctoritatis
+     (v0->v1: exemplar ultra obligationem crevit ad
+     familiam eorum QUAE AUCTORITAS CONFERT - licentia
+     permissio revocabilis, titulus attestatio perpetua.
+     Contrarium quod exemplar valetudinarii ostendit:
+     licentia medici revocari potest, gradus doctoris
+     numquam)
+     ================================================== -->
+
+<genus nomen="titulus">
+
+  <definitio>
+    Attestatio publica et permanens ab auctoritate data, quod
+    aliquis aliquid consecutus est aut aliquid EST: non
+    permissio agendi sed testimonium facti. Ideo non expirat
+    nec revocatur - quod factum est infectum fieri nequit.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="collatus" genus="dies"/>
+    <proprietas nomen="appellatio" genus="textus"
+      nota="quo titulo nominatur - 'doctor', 'magister'"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="conferens" ad="organizatio"
+      modulus="organizatio"/>
+    <relatio nomen="latus_a" ad="persona" modulus="persona"/>
+    <relatio nomen="fundat" ad="licentia"
+      nota="titulus licentiam saepe PRAECEDIT et fundat
+            (gradus medicinae ante licentiam medendi): unum
+            testatur, alterum permittit - et alterum solum
+            aufertur"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="gradus_academicus">
+    <definitio>
+      Ab universitate collatus post studia probata:
+      baccalaureatus, licentia (nomen antiquum!), doctoratus.
+      Testatur quid quis DIDICERIT, non quid facere ei liceat.
+    </definitio>
+    <nota>
+      "Licentia docendi" medii aevi utrumque simul erat -
+      gradus ET permissio; distinctio nostra posterior est,
+      et nomen hodiernum "licentiae" ex illa radice manet.
+      Historia verborum distinctionem generum servat.
+    </nota>
+  </species>
+
+  <species nomen="character_indelebilis">
+    <definitio>
+      Signum spirituale quod sacramenta tria imprimunt
+      (baptismus, confirmatio, ordo): ontologicum, unicum,
+      irreiterabile. Casus terminalis generis - quod NE
+      AUCTORITAS QUIDEM CONFERENS auferre potest: sacerdos ad
+      statum laicalem reductus ordinatus manet, licentia sola
+      ablata.
+    </definitio>
+    <nota>
+      Species quae differentiam tituli et licentiae ad
+      extremum ducit et ideo eam probat: si permanentia gradus
+      esset, hic terminus eius. Utrumque simul in eodem homine
+      videri potest - character manens, facultas ministrandi
+      suspensa: distinctio non subtilis sed practica.
+    </nota>
+  </species>
+
+  <species nomen="titulus_honoris">
+    <definitio>
+      Ob merita collatus, non ob probationem: honores,
+      dignitates. Species in qua auctoritas non factum
+      testatur sed AESTIMATIONEM suam publicat - unde
+      iudicium (aestimatio) et titulus se tangunt.
+    </definitio>
+  </species>
+
+</genus>
+
 </natura>

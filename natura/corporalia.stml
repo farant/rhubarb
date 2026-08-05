@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/corporalia.stml
-  Exemplar semanticum: CORPORALIA (versio 0, PLASTICUM)
-  Genera: res_corporea, artefactum, materia, instrumentum.
+  Exemplar semanticum: CORPORALIA (versio 1, PLASTICUM)
+  Genera: res_corporea, artefactum, materia, instrumentum,
+  vivens.
+
+  v0->v1 (cursu secundo circuli coactum): VIVENS natum - ramus
+  TERTIUS rei corporeae. Divisio v0 (factum / materia) rem
+  VIVAM omisit, quod exemplar valetudinarii statim ostendit:
+  corpus aegrotae nec artefactum est (nemo id fecit) nec
+  materia (numerabile est, haecceitatem habet).
+
+  MECHANISMUS NOVUS HINC COACTUS - SUBORDINATIO TRANS
+  EXEMPLARIA: planta sub vivente est, sed in exemplari alio
+  habitat. Attributum modulus= in genere iuxta sub= (eadem
+  significatio qua in relationibus: modulus rei ad quam
+  monstratur). Ratio: ARBOR UNA EST; exemplaria plagulae sunt,
+  non regna. Divisio in plagulas commoditas nostra est, non
+  factum de rebus - et arbor Porphyriana lineas plagularum
+  nescit.
 
   Natum ex experimento pistrinae: panis, farina, fornax. Res
   CORPOREAE factae - bibliotheca hactenus artefacta digitalia
@@ -22,7 +38,7 @@
   ad sigillum contenti accedit (forma sola), artefactum ad
   baptismum.
 -->
-<natura modulus="corporalia" versio="0" lingua="latina">
+<natura modulus="corporalia" versio="1" lingua="latina">
 
 <!-- ==================================================
      RES CORPOREA - quod materiam et locum habet
@@ -169,6 +185,67 @@
             emendatur ut fons emendatur - vide dubium in
             fabricatione"/>
   </machina_statuum>
+
+</genus>
+
+<!-- ==================================================
+     VIVENS - ramus tertius rei corporeae
+     (nec factum nec materia: quod se movet)
+     ================================================== -->
+
+<genus nomen="vivens" sub="res_corporea">
+
+  <differentia>
+    Se ipsum movet, nutrit, generat: principium motus INTRA se
+    habet, ubi artefactum motum ab alio accipit et materia
+    nullum. Non ab homine factum (etiamsi ab homine cultum);
+    numerabile et haecceitatem habens, ideo non materia.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="anima" genus="electio"
+      nota="gradus vitae (Aristoteles, De Anima; Thomas
+            sequitur): superior inferiores CONTINET - animal
+            et vegetatur et sentit, homo et vegetatur et sentit
+            et intellegit. Non tres res sed una forma gradu
+            perfectior">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </proprietas>
+  </proprietates>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="vivum"/>
+    <status nomen="mortuum"/>
+    <transitus a="vivum" ad="mortuum" per="mors"
+      nota="TRANSITUS UNICUS IN BIBLIOTHECA QUI REM ALIAM
+            RELINQUIT: mors non statum mutat sed rem ipsam -
+            cadaver res corporea manet, vivens esse DESINIT.
+            Mutatio substantialis, non accidentalis; ideo
+            reditus nullus, et machinae nostrae ceterae huic
+            non similes"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="generat" ad="vivens" multiplex="verum"
+      nota="viventia sola sui similia gignunt - artefacta
+            fabricantur, viventia generantur"/>
+    <relatio nomen="laborat" ad="morbus" modulus="morbus"
+      multiplex="verum"
+      nota="MORBUS SOLIS VIVENTIBUS ACCIDIT: aegrotare potest
+            quod naturam habet ad quam mensuratur; saxum
+            aegrotare non potest quia nihil ei debetur"/>
+  </relationes>
+
+  <nota>
+    ARBOR PORPHYRIANA IPSA HIC APPARET: substantia -> corpus
+    (res_corporea) -> vivens -> animal -> animal rationale
+    (homo). Forma nostra ab hac arbore nomen traxit et nunc
+    eam, ramum post ramum, RECONSTRUXIT sine consilio - non
+    imitatione sed quia res ita se habent. Testimonium quod
+    taxinomia inventa est, non ficta.
+  </nota>
 
 </genus>
 
