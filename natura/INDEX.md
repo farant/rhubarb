@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **30** · genera **136** · res dictionarii **281** · arcus **369**
+Exemplaria **30** · genera **137** · res dictionarii **288** · arcus **371**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -114,13 +114,14 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 - **schema_identificandi** — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
 
-### iudicium (v0, genera 5)
+### iudicium (v2, genera 6)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
 - **observatio** — Notitia rei singularis accepta, quae iudicium fundare potest: quid videatur, quid sentiatur, quid metiatur
 - **iudicium** — Propositio de re quam aliquis tenet: cum auctore, momento, fundamento, gradu assensus
 - **periculum** — Damnum quod accidere potest nec certum est: species iudicii de futuro, sed DUPLEX - probabilitate et gravitate simul c
+- **ignotum** — Absentia notitiae AGNITA et nominata: hiatus qui, quia nominatus est, tractari potest
 
 ### lingua_programmandi (v3, genera 5)
 
@@ -294,6 +295,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | gradus_praescripti | praescriptum |
 | horarium | tempus |
 | identificator | elementa_programmatis |
+| ignotum | iudicium |
 | implementatio_linguae | lingua_programmandi |
 | incidens | operatio |
 | index | elementa_programmatis |
@@ -421,6 +423,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `identificatio.schema_identificandi` — doi, e164, gtin, iban, isbn, isbn_10, isbn_13, issn, orcid, ulid, uri, uuid
 - `iudicium.fons` — corpus_institutionis, fons_mensurae, fons_scriptus, fons_testimonii
 - `iudicium.gradus_assensus` — dubitatio, fides, opinio, scientia, suspicio
+- `iudicium.ignotum` — amissum, controversum, ignotum_ignotum, ignotum_notum, impertinens, indeterminatum, retentum
 - `iudicium.iudicium` — aestimatio, diagnosis, praedictio, sententia_iudicis
 - `iudicium.observatio` — signum, symptoma, testimonium
 - `lingua_programmandi.implementatio_linguae` — :clang, :cpython, :fil_c, :gcc, :officina

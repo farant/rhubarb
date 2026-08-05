@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/iudicium.stml
-  Exemplar semanticum: IUDICIUM (versio 1, PLASTICUM)
+  Exemplar semanticum: IUDICIUM (versio 2, PLASTICUM)
   Genera: gradus_assensus, fons, observatio, iudicium,
-  periculum.
+  periculum, ignotum.
+
+  (versio attributi cum capite non congruebat - v1 in commento,
+  v0 in elemento; sanatum rota XXXVIII.)
 
   v0->v1: observatio nata (latus testimonii - quod iudicium
   FUNDAT) et periculum (iudicium de damno futuro). Umbra
@@ -43,7 +46,7 @@
   historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
   verificatis, et hoc dicere debet.
 -->
-<natura modulus="iudicium" versio="0" lingua="latina">
+<natura modulus="iudicium" versio="2" lingua="latina">
 
 <!-- ==================================================
      GRADUS ASSENSUS - quanto animus adhaeret
@@ -391,6 +394,188 @@
     prudentiam excludebat - et prudentia virtus est quae de
     futuro incerto deliberat.
   </nota>
+
+</genus>
+
+<!-- ==================================================
+     IGNOTUM - absentia AGNITA, res primi ordinis
+
+     Insight Fran (rota XXXVII), cum analogia ZERI: numeri
+     Romani zerum non habebant, et arithmetica inde laborabat.
+     Zerum non est "nullus numerus" sed NOTA quae absentiam
+     POSITIVE repraesentat - et ea inventa positionalis
+     notatio possibilis facta est. Idem hic: ignotum non est
+     nihil sed RES, cum forma, historia, effectu.
+
+     DISCRIMEN QUOD GENUS FUNDAT: aliud est nescire, aliud
+     SCIRE SE NESCIRE. Prius nullum ignotum habet - lacuna
+     ipsa invisibilis est. Posterius ignotum PONIT: hiatum
+     nominasti, ergo de eo cogitare, eum assignare, eum
+     numerare potes. Ideo ignotum CONDERE actus epistemicus
+     est, non defectus.
+
+     FORMA IAM SEPTIES LOCALITER SOLUTA (unde genus meretur):
+     officium.vacans, fabricatio.non_reproductum,
+     gradus_assensus.dubitatio, et notae quinque "vacuum = ..."
+     quaeque suo loco definientes. Et persona.mortuus
+     CONFUSIONEM FATETUR ("vacuum = vivens aut ignotum") -
+     problema NULLI Coddianum in bibliotheca nostra ipsa.
+     ================================================== -->
+
+<genus nomen="ignotum">
+
+  <definitio>
+    Absentia notitiae AGNITA et nominata: hiatus qui, quia
+    nominatus est, tractari potest. Non ignorantia simplex
+    (quae nihil ponit) sed ignorantia in rem conversa - de qua
+    quaeri, quae assignari, quae numerari, quae solvi potest.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="quaestio" genus="textus"
+      nota="quod nescitur, verbis positum - forma hiatus.
+            Ignotum sine quaestione formata ignotum non est
+            sed inquietudo"/>
+    <proprietas nomen="impediens" genus="veritas"
+      ordinarius="falsum"
+      nota="an opus impediat - ignota plurima innocua sunt, et
+            ea sola quae impediunt pretium investigationis
+            merentur"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="agnitum" nota="hiatus nominatus"/>
+    <status nomen="quaesitum" nota="investigatio suscepta"/>
+    <status nomen="solutum" nota="notitia acquisita"/>
+    <status nomen="relictum"
+      nota="CONSULTO non quaesitum: decisio vera et honesta
+            ('hoc scire non oportet'), quae sine hoc genere
+            perit - schema quod solum 'apertum/clausum' habet
+            eam ut neglegentiam ostendit"/>
+    <status nomen="insolubile"
+      nota="quaesitum et inveniri non posse iudicatum -
+            differt a relicto ut impossibilitas a electione"/>
+    <transitus a="agnitum" ad="quaesitum" per="susceptio"/>
+    <transitus a="quaesitum" ad="solutum" per="inventio"/>
+    <transitus a="agnitum" ad="relictum" per="relictio"/>
+    <transitus a="quaesitum" ad="insolubile" per="defectio"/>
+    <transitus a="solutum" ad="agnitum" per="dubitatio_nova"
+      nota="quod solutum videbatur iterum ignotum fieri potest -
+            testimonio contrario"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="de" ad="*"
+      nota="res de qua nescitur"/>
+    <relatio nomen="agnitum_per" ad="iudicium"
+      nota="hiatum agnoscere IUDICIUM est, cum auctore et
+            momento: alius hiatum videt ubi alius nihil videt -
+            et hoc ipsum peritia est"/>
+    <relatio nomen="impedit" ad="*" multiplex="verum"
+      nota="pensa, consilia, actus quos moratur"/>
+    <relatio nomen="solvitur_per" ad="observatio" multiplex="verum"
+      nota="quid ad solvendum opus sit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       SPECIES QUAEQUE MOTUM ALIUM AFFORDAT - id ipsum est
+       cur genus vectis sit, non tabulatio -->
+
+  <species nomen="ignotum_notum">
+    <definitio>
+      Quaestionem tenes, responsum non: "quanta sit mora huius
+      ministerii ignoramus". MOTUS: assignabile - pensum est,
+      quaere.
+    </definitio>
+    <valor nomen="impediens">verum</valor>
+  </species>
+
+  <species nomen="ignotum_ignotum">
+    <definitio>
+      Quod nescis te nescire: quaestio ipsa nondum formata.
+      MOTUS: singulatim tractari NON POTEST - in summa tantum
+      (spatium in consilio, cycli breviores, redundantia).
+    </definitio>
+    <nota>
+      SPECIES QUAE INDIVIDUA HABERE NON POTEST natura sua:
+      ignotum ignotum nominatum ignotum notum FIT. Casus
+      terminalis criterii addressabilitatis (Fran, rota XXXIII)
+      et probatio eius: SPECIES addressabilis est
+      (/iudicium/ignotum_ignotum), membra non - quod refinamento
+      iam scripto respondet ("membra digna quae seligantur"
+      gradum speciei includit).
+      NEXUS: COMPLICATIO EST IGNOTUM IGNOTUM QUOD APPARUIT
+      (fabricatio.complicatio) - "non praevidenda" hoc ipsum
+      dicit. Unde et remedium idem: non plus consilii sed
+      apparatus qui ea citius aperiat.
+    </nota>
+  </species>
+
+  <species nomen="indeterminatum">
+    <definitio>
+      Nondum est quod sciatur: pretium anni venturi, exitus
+      pugnae navalis crastinae. Non ignorantia sed
+      INDETERMINATIO - nihil deest tibi, quia nihil adhuc est.
+      MOTUS: exspecta, aut decerne (interdum enim decisio tua
+      rem determinat).
+    </definitio>
+    <nota>
+      Distinctio Aristotelica (de futuris contingentibus):
+      ignorantia in SCIENTE est, indeterminatio in RE. Schemata
+      quae utrumque "unknown" vocant utentem in errorem ducunt -
+      alterum investigatione solvitur, alterum numquam.
+    </nota>
+  </species>
+
+  <species nomen="amissum">
+    <definitio>
+      Scitum olim, nunc perditum: tabulae deletae, testis
+      mortuus, acta rotata. MOTUS: recupera si potes, aut
+      absentiam agnosce - sed NOTA quod aliquando scitum est,
+      quia hoc ipsum notitia est.
+    </definitio>
+  </species>
+
+  <species nomen="retentum">
+    <definitio>
+      Aliquis scit et non dicit: ignorantia non in mundo sed in
+      te, ex voluntate alterius. MOTUS: negotiare, cogere, aut
+      sine eo agere - numquam investigare, quia investigatio
+      hic nihil valet.
+    </definitio>
+    <nota>
+      Secretum ex parte tenentis idem est quod hoc ex parte
+      quaerentis - genus unum, duo latera.
+    </nota>
+  </species>
+
+  <species nomen="impertinens">
+    <definitio>
+      Quaestio ad rem non pertinet: "quod nomen virgineum huius
+      societatis?" MOTUS: schema EMENDA - hiatus enim non in
+      notitia est sed in forma quae quaestionem imposuit.
+    </definitio>
+    <nota>
+      NULLUM SECUNDUM Codd, qui duo desideravit ("deest sed
+      applicabile" contra "deest et inapplicabile") et unum
+      accepit - unde confusio quae bases datorum per saecula
+      dimidium vexat. Species quae schema ACCUSAT, non mundum.
+    </nota>
+  </species>
+
+  <species nomen="controversum">
+    <definitio>
+      Responsa PLURA et pugnantia: non nullum sed NIMIS. MOTUS:
+      adiudica - collatis iudiciis, auctoribus, fontibus; non
+      investiga, quia investigatio responsum tertium tantum
+      addet.
+    </definitio>
+    <nota>
+      Species quae ignotum ad iudicium redit: controversia
+      iudicia plura de eadem re supponit, quorum unum praeferri
+      debet - vel omnia in dubitatione relinqui.
+    </nota>
+  </species>
 
 </genus>
 

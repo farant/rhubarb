@@ -2519,3 +2519,78 @@ knowing, hence the apophatic domain par excellence.
 Nothing built; harvest awaits blessing. Note that aviation was
 chosen by the round-XXXVI heuristic ("who is punished for
 getting X wrong?") and it paid on the first attempt.
+
+## 2026-08-05 — round thirty-eight: IGNOTUM built (absence made
+## first-class)
+
+175. Fran directed ignotum first, and it was the right order:
+     it is cross-cutting, it fixes an admitted conflation, and
+     every later model can now be written with it available.
+     Built in `iudicium` because it is epistemic.
+176. THE DEFINITION TURNS ON ONE DISTINCTION: not knowing vs
+     KNOWING THAT YOU DO NOT KNOW. The first posits nothing —
+     the gap is invisible. The second POSITS the gap, and once
+     named it can be reasoned about, assigned, counted,
+     resolved. So CREATING an ignotum is an epistemic ACT, not
+     a defect. Fran's zero analogy is exact and is written into
+     the header: zero is not "no number" but a numeral
+     representing absence POSITIVELY, and positional notation
+     became possible only once it existed.
+177. SEVEN SPECIES, EACH LICENSING A DIFFERENT MOVE — which is
+     what makes the genus leverage rather than bookkeeping:
+     - ignotum_notum → ASSIGNABLE (it is a pensum; go find out)
+     - ignotum_ignotum → not treatable singly, only in aggregate
+     - indeterminatum → wait, or DECIDE (your decision may
+       determine it)
+     - amissum → recover or accept, but RECORD that it was once
+       known, since that is itself knowledge
+     - retentum → negotiate or compel; investigation is useless
+       here, which is exactly why the species is needed
+     - impertinens → fix the SCHEMA, not the world
+     - controversum → ADJUDICATE, do not investigate (more
+       investigation only adds a third answer)
+178. TWO FINDINGS INSIDE THE SPECIES:
+     (a) ignotum_ignotum CANNOT HAVE INDIVIDUA BY ITS NATURE —
+         name one and it becomes an ignotum_notum. This is the
+         terminal case of Fran's addressability criterion AND
+         its vindication: the SPECIES is addressable
+         (/iudicium/ignotum_ignotum) even though its members are
+         not, which is precisely the refinement already recorded
+         ("members worth picking out" includes species level).
+     (b) indeterminatum is NOT ignorance: ignorance is in the
+         KNOWER, indeterminacy is in the THING (Aristotle on
+         future contingents — tomorrow's sea battle). Schemas
+         calling both "unknown" mislead, because one is solvable
+         by investigation and the other never is.
+     And impertinens is CODD'S SECOND NULL, which he wanted and
+     did not get — half a century of database confusion from one
+     missing distinction.
+179. TIE TO FRAN'S OWN TERM MADE EXPLICIT IN THE ARTIFACT:
+     A COMPLICATION IS AN IGNOTUM_IGNOTUM THAT MATERIALISED.
+     "non praevidenda" says exactly that, and the shared remedy
+     follows — not more planning but instruments that surface
+     them sooner.
+180. DOGFOOD: persona.mortuus's confessed conflation ("vacuum =
+     vivens aut ignotum") now names its resolution — empty means
+     ALIVE, and a genuinely unknown death date must be posited
+     as an ignotum, because a NAMED GAP can be handled and an
+     empty field cannot. And it records a THIRD kind of absence
+     that neither vacuum nor ignotum covers: graydon_hoare's
+     missing birth date is DELIBERATE — a judgement about what
+     ought not be said. Absence by discretion, noted as an open
+     edge.
+181. Also repaired: iudicium's `versio` attribute said 0 while
+     its own header said 1 — drift from an earlier round, found
+     while bumping. Small, but exactly the class of thing the
+     loader's rule 14 (modulus/filename agreement) would catch
+     if extended to version coherence.
+
+METAMODEL QUESTION RAISED, NOT ANSWERED: should <valor> gain a
+way to say "unknown" directly (e.g. ignotum="ignotum_notum")?
+There IS content pushing on it — graydon_hoare's deliberate
+absence is currently prose. But metamodel changes are expensive
+and global while genera are cheap and local, so the discipline
+says: wait for a second forcing case.
+
+Measured: 30 exemplaria / 137 genera / 288 residents / 371 arcs
+/ 0 vulnera.
