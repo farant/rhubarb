@@ -444,6 +444,43 @@ This composes with the coining rule above: because a genus is
 cheap and local, the specimens are free to speak. If coining
 were expensive, every survey would end in a dilemma.
 
+**Precondition: specimen access** (Fran's diagnosis). Prior
+projects did not refuse the Linnaean move out of philosophical
+error — they were structurally unable to make it. Taxonomies
+were built by programmers, not domain experts: aware of some
+details, ignorant of others, abstracting from partial
+information. With no specimens, going UP is the only move
+available. Knowledge engineering by interview was slow, lossy
+and expensive, so economising on expert contact and spending
+effort on formalism was the *rational* response to that cost
+structure — and it produced exactly the failures we now name.
+The cost structure has since inverted: specimen access is now
+cheap. That is what makes the method practical rather than
+merely correct. (Linnaeus had the same structure and knew it:
+a taxonomist at the centre, correspondents shipping specimens
+from places he would never visit.)
+
+**Known limits of that access — declare them, do not assume them
+away:**
+- It is TEXTUAL and secondhand. What practitioners know but
+  never write down is systematically missing.
+- It is strongest where the literature is thick (Roman law,
+  FRBR, biological nomenclature) and *equally fluent* where the
+  literature is thin — so confidence does not track accuracy.
+- It reproduces the CONSENSUS view, including a field's
+  conventional simplifications.
+- Therefore the discipline, not the expertise, is what catches
+  errors: "compiled" as a language property is the popular view
+  and would have been reproduced, had the format not forced the
+  question "property of WHICH subject?". An expert without the
+  discipline restates the field's received lies fluently.
+- Mitigation is not verification but honest marking
+  (`certitudo`, `fons`, `corpus_institutionis`) plus a real
+  structural property: **the taxonomy is more robust than the
+  dictionary.** A wrong date in an `individuum` is local; the
+  genus structure rests on many specimens agreeing, so
+  individual errors do not propagate upward.
+
 ### What is cheap and what is expensive
 
 - **Division decisions are cheap and LOCAL.** A genus can be
