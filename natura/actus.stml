@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/actus.stml
+  Exemplar semanticum: ACTUS SOLLEMNIS (versio 0, PLASTICUM)
+  Genera: actus_sollemnis, ritus (+sacramentum, sacramentale),
+  actus_iuridicus.
+
+  Natum ex cursu quarto circuli (paroecia) et colloquio de
+  RITU: an ritus praescriptum sit? Primo videbatur differentia
+  sola in EXITU esse (praescriptum artefactum efficit, ritus
+  statum mutat) - quod mechanismum solum poposcisset. Re
+  excussa, differentiae QUINQUE apparuerunt et se congregant:
+
+  I.   VALIDITAS contra QUALITATEM. Praescriptum male exsecutum
+       panem malum dat - panem tamen. Ritus vitiose exsecutus
+       NIHIL dat: baptismus invalidus non est baptismus malus.
+       Limen binarium, non gradus.
+  II.  CAPACITAS contra PERITIAM. Praescriptum peritiam poscit
+       (quantum iudicii exsecutor ferat). Actus sollemnis
+       CAPACITATEM poscit: episcopus imperitus valide ordinat,
+       laicus peritissimus omnino non ordinat.
+  III. INTENTIO ut PARS ACTUS. Panis quid cogitaveris non
+       curat. Actus sollemnis intentionem interiorem POSTULAT -
+       ingrediens quod nemo videre potest.
+  IV.  FORMA DETERMINANS, non gradus inter gradus. Verba mutata
+       actum tollunt, ceteris omnibus recte factis.
+  V.   Quidam ITERARI NON POSSUNT natura sua (character).
+
+  ET DEINDE EXITUS LINNAEANUS (specimina collecta): haec forma
+  RELIGIOSA NON EST. Testamentum, instrumentum notariale,
+  sententia, promulgatio, iusiurandum in officium, collatio
+  gradus, mancipatio, stipulatio - omnia valida-aut-irrita,
+  omnia agentem qualificatum poscunt, omnia forma pendent.
+
+  LOCUS STRUCTURALIS QUEM IMPLET: bibliotheca res institutas
+  multas habebat (officium, titulus, licentia, obligatio,
+  possessio, contractus) et NULLAM RATIONEM QUOMODO FIANT.
+  Actus sollemnis id est: machina qua facta instituta in
+  esse veniunt. Ideo specimina in genera nostra iam exstantia
+  cadunt - iusiurandum officium parit, collatio titulum,
+  instrumentum possessionem.
+
+  RHYTHMI (non auctoritates): Austin de verbis "performativis"
+  (dicere est facere) faciem LINGUISTICAM formae describit;
+  Searle de regulis constitutivis ("X pro Y valet in C") idem
+  quod nos de generibus institutis dicimus, aliis verbis.
+-->
+<natura modulus="actus" versio="0" lingua="latina">
+
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: ius Romanum, ius canonicum,
+    theologia sacramentalis. NON VERIFICATUM - hoc exemplar
+    Fran ipse probare potest, quod electionis causa fuit.
+  </fons>
+</fontes>
+
+<genus nomen="actus_sollemnis">
+
+  <definitio>
+    Actus cuius EFFECTUS a forma praescripta et ab agentis
+    capacitate pendet, et qui ideo VALIDUS aut IRRITUS est, non
+    bonus aut malus: quod recte factum est effectum suum
+    infallibiliter ponit, quod vitiose factum nihil ponit.
+    Facta INSTITUTA hinc oriuntur - officia, tituli,
+    obligationes, possessiones non sponte fiunt sed actu
+    sollemni constituuntur.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="forma_praescripta" genus="textus"
+      nota="verba et gesta quae actum CONSTITUUNT (non gradus
+            inter gradus): mutata forma, actus tollitur"/>
+    <proprietas nomen="intentio_necessaria" genus="veritas"
+      ordinarius="verum"
+      nota="an agens id agere INTENDERE debeat quod actus
+            significat - ingrediens invisibile, praescripto
+            prorsus alienum"/>
+    <proprietas nomen="testes_postulati" genus="numerus"
+      ordinarius="0"
+      nota="publicitas ut condicio: testes non ornamentum sed
+            PARS formae, quorum defectu actus cadit"/>
+    <proprietas nomen="iterabilis" genus="veritas"
+      ordinarius="verum"/>
+    <proprietas nomen="revocabilis" genus="veritas"
+      ordinarius="falsum"
+      nota="testamentum usque ad mortem revocari potest,
+            matrimonium non - differentia quae actus
+            unilaterales a bilateralibus fere secat"/>
+  </proprietates>
+
+  <machina_statuum nomen="vigor" gerens="individuum">
+    <status nomen="perfectus" nota="valide positus"/>
+    <status nomen="irritus"
+      nota="vitio formae, capacitatis, intentionis aut materiae -
+            NUMQUAM fuit, quamvis omnes eum fuisse putaverint"/>
+    <status nomen="rescissus"
+      nota="DECLARATUS numquam valuisse: declaratio RETRO agit
+            et actum ab initio tollit"/>
+    <status nomen="solutus"
+      nota="valuit et FINITUS est: effectus in posterum cessat,
+            praeteritum manet"/>
+    <transitus a="perfectus" ad="rescissus" per="rescissio"/>
+    <transitus a="perfectus" ad="solutus" per="solutio"/>
+  </machina_statuum>
+
+  <nota>
+    RESCISSIO ET SOLUTIO CONFUNDI SOLENT, ET DISCRIMEN GRAVE
+    EST: rescissio dicit actum NUMQUAM fuisse (declaratio
+    retroagit, effectus omnes evanescunt); solutio dicit actum
+    FUISSE et nunc finiri (praeterita valida manent). Idem
+    discrimen in nullitate matrimonii contra divortium, in
+    contractu nullo contra rescissum. Schema quod unum campum
+    "cancellatus" habet utrumque perdit - et cum quaeritur
+    "quid de rebus interim gestis?" respondere non potest.
+  </nota>
+
+  <relationes>
+    <relatio nomen="agens" ad="persona" modulus="persona"
+      nota="qui actum ponit - non quilibet"/>
+    <relatio nomen="capacitas_per" ad="*"
+      nota="unde agenti potestas: officium, titulus, character,
+            licentia. CAPACITAS non PERITIA - vide caput"/>
+    <relatio nomen="constituit" ad="*"
+      nota="RELATIO CARDINALIS HUIUS EXEMPLARIS: factum
+            institutum quod actus in esse ponit - officium,
+            titulum, obligationem, possessionem, matrimonium.
+            Bibliotheca res institutas habebat, ortum earum
+            non habebat"/>
+    <relatio nomen="afficit" ad="*"
+      nota="quem aut quid mutat"/>
+    <relatio nomen="secundum_legem" ad="lex" externum="verum"
+      nota="genus LEX superficit (cursu quarto notatum: norma
+            cui CONFORMARIS, lex quae IMPONITUR) - nondum
+            descriptum"/>
+    <relatio nomen="testes" ad="persona" modulus="persona"
+      multiplex="verum"/>
+    <relatio nomen="forma_eius" ad="praescriptum"
+      modulus="praescriptum"
+      nota="forma ut ordo operationum PRAESCRIPTUM est; actus
+            tamen praescriptum non est - praescriptum peritia
+            operatur et artefactum efficit, actus auctoritate
+            operatur et factum institutum ponit"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     RITUS - actus sollemnis rei sacrae
+     ================================================== -->
+
+<genus nomen="ritus" sub="actus_sollemnis">
+
+  <differentia>
+    Actus sollemnis ad cultum divinum ordinatus: materia
+    sensibilis et forma verborum, per ministrum, ad effectum
+    spiritualem. Quod in actu iuridico auctoritas civilis
+    praestat, hic institutio divina aut ecclesiastica praestat.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="materia_ritus" genus="textus"
+      nota="res sensibilis adhibita (aqua, panis, oleum) -
+            'materia' theologiae sacramentalis, quae materiae
+            praescripti respondet sed munere differt: hic
+            SIGNIFICAT, illic transformatur"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="minister" ad="persona" modulus="persona"/>
+    <relatio nomen="recipiens" ad="persona" modulus="persona"/>
+    <relatio nomen="adhibet" ad="res_sacra" externum="verum"
+      nota="genus res_sacra superfectum cursu quarto - res
+            consecratae, quarum alienatio restricta"/>
+  </relationes>
+
+</genus>
+
+<genus nomen="sacramentum" sub="ritus">
+
+  <differentia>
+    Signum efficax gratiae, a Christo institutum: effectum
+    ponit EX OPERE OPERATO - ex actu ipso rite posito, non ex
+    dignitate ministri aut recipientis. Ideo minister indignus
+    valide agit, quod formam ab homine PLANE separat.
+  </differentia>
+
+  <valor nomen="intentio_necessaria">verum</valor>
+
+  <nota>
+    SEPTEM sunt. TRIA characterem imprimunt (baptismus,
+    confirmatio, ordo) et ideo iterari non possunt - vide
+    obligatio.titulus.character_indelebilis, ubi casus
+    terminalis tituli iam habitat: quod nec auctoritas
+    conferens auferre potest.
+  </nota>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="baptismus">
+    <definitio>
+      Ablutio aquae cum verbis trinitariis: ianua sacramentorum.
+    </definitio>
+    <valor nomen="materia_ritus">aqua</valor>
+    <valor nomen="iterabilis">falsum</valor>
+    <nota>
+      SPECIMEN QUOD 'CAPACITATEM' MENSURAT: in necessitate
+      QUILIBET valide baptizat - etiam non credens, dummodo
+      intendat facere quod Ecclesia facit. Capacitas ergo per
+      species huius generis LATISSIME variat (hic omnes, in
+      ordine solus episcopus), quod probat capacitatem
+      proprietatem ACTUS esse, non generis.
+    </nota>
+  </species>
+
+  <species nomen="confirmatio">
+    <valor nomen="materia_ritus">chrisma</valor>
+    <valor nomen="iterabilis">falsum</valor>
+  </species>
+
+  <species nomen="eucharistia">
+    <valor nomen="materia_ritus">panis et vinum</valor>
+    <nota>
+      Solum sacramentum quod non actionem transeuntem sed REM
+      PERMANENTEM relinquit - unde res_sacra et custodia eius.
+    </nota>
+  </species>
+
+  <species nomen="paenitentia"/>
+
+  <species nomen="unctio_infirmorum"/>
+
+  <species nomen="ordo">
+    <valor nomen="iterabilis">falsum</valor>
+    <nota>
+      Actus qui CAPACITATEM ad alios actus confert: ordinatus
+      valide consecrat, absolvit. Testis relationis
+      'capacitas_per' - actus sollemnis potestatem ponendi
+      alios actus sollemnes constituit.
+    </nota>
+  </species>
+
+  <species nomen="matrimonium">
+    <valor nomen="revocabilis">falsum</valor>
+    <valor nomen="testes_postulati">2</valor>
+    <nota>
+      Sacramentum cuius MINISTRI ipsi coniuges sunt, sacerdos
+      testis qualificatus - species quae 'minister' a
+      'sacerdos' distinguit. Et locus classicus discriminis
+      rescissionis/solutionis: nullitas dicit matrimonium
+      numquam fuisse, quod aliud est omnino quam solutio.
+    </nota>
+  </species>
+
+</genus>
+
+<genus nomen="sacramentale" sub="ritus">
+
+  <differentia>
+    Ab Ecclesia institutum, non a Christo: effectum ponit EX
+    OPERE OPERANTIS - ex dispositione agentis et Ecclesiae
+    precibus, non ex opere ipso. Ideo gradum efficaciae habet
+    ubi sacramentum limen binarium habet.
+  </differentia>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="benedictio"/>
+  <species nomen="consecratio_loci">
+    <nota>
+      Actus qui rem in genus RES_SACRA transfert - mutatio
+      status per actum sollemnem, exemplum purissimum
+      relationis 'constituit'.
+    </nota>
+  </species>
+  <species nomen="exorcismus"/>
+
+</genus>
+
+<!-- ==================================================
+     ACTUS IURIDICUS - actus sollemnis auctoritate civili
+     (collectio quam specimina rotae XXV poposcerunt)
+     ================================================== -->
+
+<genus nomen="actus_iuridicus" sub="actus_sollemnis">
+
+  <differentia>
+    Actus sollemnis cuius vim auctoritas civilis praestat:
+    quod lex formam praescribit, lex effectum agnoscit. Ideo
+    forma per iurisdictiones VARIAT ubi ritus per orbem eadem
+    manet - differentia quae schemata internationalia frangit.
+  </differentia>
+
+  <relationes>
+    <relatio nomen="in_iurisdictione" ad="iurisdictio"
+      modulus="locus"
+      nota="actus valide in una iurisdictione positus in alia
+            agnosci potest aut non - unde apostillae,
+            legalizationes, tota difficultas documentorum
+            trans fines"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       specimina electa quia FORMAM PURAM ostendunt -->
+
+  <species nomen="stipulatio">
+    <definitio>
+      Contractus verbis: interrogatio et responsus congruentes,
+      utroque praesente ("Spondesne? Spondeo"). Obligatio ex
+      VERBIS ipsis nascitur, non ex re nec ex consensu tacito.
+    </definitio>
+    <valor nomen="forma_praescripta">interrogatio et responsus
+      congruens, unus actus, ambo praesentes</valor>
+    <nota>
+      Specimen purissimum totius generis: nihil traditur, nihil
+      scribitur, et tamen obligatio plena oritur - FORMA SOLA
+      EAM PONIT. Austin verba performativa post duo milia
+      annorum descripsit; ius Romanum eis iam utebatur.
+    </nota>
+    <relatum nomen="constituit" ad="obligatio" modulus="obligatio"/>
+  </species>
+
+  <species nomen="mancipatio">
+    <definitio>
+      Traditio sollemnis rerum mancipi: libripens cum libra
+      aenea, testes quinque cives, verba praescripta, aes
+      percussum.
+    </definitio>
+    <valor nomen="testes_postulati">5</valor>
+    <nota>
+      Forma quae originem suam superstitit: pondus aeris olim
+      pretium VERUM erat, deinde symbolum mansit cum pecunia
+      signata venisset - ritus qui rationem suam amisit et
+      formam servavit. Testis quod forma ab utilitate
+      separari potest et tamen operari.
+    </nota>
+    <relatum nomen="constituit" ad="possessio" modulus="commercium"/>
+  </species>
+
+  <species nomen="manumissio">
+    <definitio>
+      Actus quo servus liber fit: vindicta apud magistratum,
+      censu, aut testamento - formae tres, effectus unus.
+    </definitio>
+    <nota>
+      Actus qui STATUM PERSONAE mutat, non rem transfert:
+      specimen quod 'afficit' a 'constituit' distinguit -
+      persona eadem manet, condicio eius alia fit.
+    </nota>
+  </species>
+
+  <species nomen="testamentum">
+    <definitio>
+      Dispositio bonorum in mortem, forma sollemni facta:
+      subscriptio, testes, interdum manus propria tota.
+    </definitio>
+    <valor nomen="revocabilis">verum</valor>
+    <nota>
+      Species quae 'revocabilis' postulavit: usque ad mortem
+      mutari potest, deinde subito immutabilis fit - actus
+      cuius vigor a MORTE agentis pendet, quod inter omnes
+      unicum est. Et unde probationes formales tam strictae:
+      testis principalis interrogari non potest.
+    </nota>
+  </species>
+
+  <species nomen="instrumentum_publicum">
+    <definitio>
+      Actus a notario (aut persona publica) confectus, cui
+      fides publica inest: quod in eo scriptum est verum
+      praesumitur donec falsitas probetur.
+    </definitio>
+    <nota>
+      Specimen quod CAPACITATEM ostendit purissime: eadem verba
+      a privato scripta nihil praesumunt, a notario scripta
+      fidem publicam ferunt. Officium hominem non peritia
+      distinguit.
+    </nota>
+  </species>
+
+  <species nomen="promulgatio">
+    <definitio>
+      Actus quo lex vim accipit: publicatio forma praescripta.
+      Lex ante promulgationem lex non est - textus tantum.
+    </definitio>
+    <nota>
+      Actus qui LEGEM ipsam constituit: unde circulus honestus -
+      actus sollemnis secundum legem fit, et lex per actum
+      sollemnem incipit. Fundamentum non infinitum regreditur
+      sed in constitutione quiescit.
+    </nota>
+    <relatum nomen="constituit" ad="lex" externum="verum"/>
+  </species>
+
+  <species nomen="inauguratio">
+    <definitio>
+      Iusiurandum aut investitura qua quis officium suscipit:
+      ante actum candidatus, post actum tenens.
+    </definitio>
+    <nota>
+      SPECIMEN QUOD OFFICIUM POSTULAT (genus cursu quarto
+      superfectum, nondum descriptum): actus hic non personam
+      mutat sed eam OFFICIO IUNGIT - et officium ante actum
+      iam exstabat, vacans. Testis clarissimus discriminis
+      inter officium (rem stantem) et tenentem (relationem).
+    </nota>
+    <relatum nomen="constituit" ad="officium" externum="verum"/>
+  </species>
+
+  <species nomen="collatio_tituli">
+    <definitio>
+      Actus quo auctoritas titulum confert: gradus academicus,
+      dignitas, honor.
+    </definitio>
+    <nota>
+      Actus cuius effectus PERPETUUS est et ab ipso conferente
+      irrevocabilis - vide obligatio.titulus, ubi differentia
+      a licentia iam scripta est. Hic ORTUS eius describitur,
+      ibi natura.
+    </nota>
+    <relatum nomen="constituit" ad="titulus" modulus="obligatio"/>
+  </species>
+
+  <species nomen="sententia_lata">
+    <definitio>
+      Actus quo iudex iudicium suum PRONUNTIAT et vim ei dat:
+      ante pronuntiationem opinio, post pronuntiationem ius.
+    </definitio>
+    <nota>
+      Distinctio subtilis sed vera: iudicium.sententia_iudicis
+      PROPOSITIO est (quid iudex teneat); hic ACTUS est quo ea
+      vim accipit. Eadem sententia in animo iudicis nihil
+      obligat; pronuntiata obligationem parit. Propositio et
+      actus duo, non unum.
+    </nota>
+    <relatum nomen="constituit" ad="obligatio" modulus="obligatio"/>
+  </species>
+
+</genus>
+
+</natura>

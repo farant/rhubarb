@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **27** · genera **116** · res dictionarii **232** · arcus **317**
+Exemplaria **28** · genera **121** · res dictionarii **251** · arcus **327**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -16,6 +16,14 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 ```
 
 ## II. Genera per exemplar
+
+### actus (v0, genera 5)
+
+- **actus_sollemnis** — Actus cuius EFFECTUS a forma praescripta et ab agentis capacitate pendet, et qui ideo VALIDUS aut IRRITUS est, non bon
+- **ritus** ⊂ actus_sollemnis — Actus sollemnis ad cultum divinum ordinatus: materia sensibilis et forma verborum, per ministrum, ad effectum spiritua
+- **sacramentum** ⊂ ritus — Signum efficax gratiae, a Christo institutum: effectum ponit EX OPERE OPERATO - ex actu ipso rite posito, non ex digni
+- **sacramentale** ⊂ ritus — Ab Ecclesia institutum, non a Christo: effectum ponit EX OPERE OPERANTIS - ex dispositione agentis et Ecclesiae precib
+- **actus_iuridicus** ⊂ actus_sollemnis — Actus sollemnis cuius vim auctoritas civilis praestat: quod lex formam praescribit, lex effectum agnoscit
 
 ### animal (v0, genera 1)
 
@@ -219,6 +227,8 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | genus | exemplar |
 |---|---|
 | actor | communicatio |
+| actus_iuridicus | actus |
+| actus_sollemnis | actus |
 | aedificium | locus |
 | animal | animal |
 | architectura_machinae | architectura_machinae |
@@ -310,8 +320,11 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | recurrentia | tempus |
 | res_corporea | corporalia |
 | reservatio | tempus |
+| ritus | actus |
 | rosa | planta |
 | rosaceae | planta |
+| sacramentale | actus |
+| sacramentum | actus |
 | schema | schema |
 | schema_identificandi | identificatio |
 | scriptum_exsecutabile | plagula_computatralis |
@@ -337,6 +350,9 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 ## IV. Dictionarium (species et individua descripta)
 
+- `actus.actus_iuridicus` — collatio_tituli, inauguratio, instrumentum_publicum, mancipatio, manumissio, promulgatio, sententia_lata, stipulatio, testamentum
+- `actus.sacramentale` — benedictio, consecratio_loci, exorcismus
+- `actus.sacramentum` — baptismus, confirmatio, eucharistia, matrimonium, ordo, paenitentia, unctio_infirmorum
 - `animal.animal` — apis, canis, homo
 - `architectura_machinae.architectura_machinae` — arm, riscv, x86
 - `architectura_machinae.versio_architecturae` — armv8, i386, x86_64
@@ -415,8 +431,11 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 - **debian_project** — a `systema_operativum` superfectum
 - **directorium** — a `plagula_computatralis` superfectum
 - **instrumentum_aedificationis** — a `elementa_programmatis` superfectum
+- **lex** — a `actus` superfectum
+- **officium** — a `actus` superfectum
 - **organizatio** — a `identificatio` superfectum
 - **processus** — a `elementa_programmatis` superfectum
+- **res_sacra** — a `actus` superfectum
 - **servus** — a `cliens` superfectum
 - **systema_plagularum** — a `systema_operativum` superfectum
 - **typus** — a `elementa_programmatis` superfectum

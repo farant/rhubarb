@@ -1662,3 +1662,79 @@ a design choice; it is a discovery.
 Other confirmations: iurisdictio (parish territory), titulus +
 character_indelebilis, calendarium_liturgicum, obligatio,
 organizatio.pars_de (diocese/province hierarchy).
+
+## 2026-08-05 — round twenty-six: actus sollemnis (28 models)
+
+Fran: build both the parent and ritus, then articulate the legal
+collection that surfaced anyway.
+
+113. THE TENSION RESOLVED PROPERLY. My first framing was too
+     narrow — "a recipe makes an artefact, a rite makes a
+     state-change" — which would have needed only a more general
+     `efficit`. Worked through, FIVE differences appear and they
+     CLUSTER, which is what makes a genus rather than a variant:
+     (I) VALIDITY vs QUALITY — a badly-made loaf is still bread;
+         a defective baptism is not a bad baptism, it is nothing.
+         Binary threshold vs gradient.
+     (II) CAPACITY vs SKILL — praescriptum already has
+         peritia_postulata; an unskilled bishop ordains validly,
+         a skilled layman does not ordain at all.
+     (III) INTENTION AS CONSTITUENT — bread does not care what
+         you were thinking; the rite requires an interior act.
+         An ingredient nobody can observe.
+     (IV) FORM AS DETERMINING, not a step among steps.
+     (V) Some are unrepeatable by nature (character).
+114. THE ESCAPE HATCH, AGAIN, AND IT GENERALISED THE GENUS: the
+     specimens of "valid-or-void, qualified agent, form-
+     dependent" are NOT religious — will, notarial deed,
+     verdict, promulgation, oath of office, conferral,
+     mancipatio, stipulatio. So ritus is a SPECIES of
+     actus_sollemnis, and the parent earns its place for a
+     library reason rather than a religious one:
+     **WE HAD MANY INSTITUTED THINGS AND NO ACCOUNT OF HOW ANY
+     OF THEM COMES TO BE.** officium, titulus, licentia,
+     obligatio, possessio, contractus all begin at some moment
+     by some act. `constituit` is the cardinal relation of the
+     model, and it is why the specimens keep landing on genera
+     we already had.
+115. RESCISSIO vs SOLUTIO — the machine's real payload, and a
+     classic confusion: rescission declares the act NEVER
+     valid (retroactive, effects evaporate); dissolution says it
+     WAS valid and now ends (past stands). Annulment vs divorce;
+     void vs terminated contract. A schema with one "cancelled"
+     field loses both, and cannot answer "what about what
+     happened in between?".
+116. Specimens chosen because they show FORM PURELY:
+     - stipulatio — nothing handed over, nothing written, full
+       obligation from the WORDS ALONE. Austin described
+       performative utterance after two thousand years; Roman
+       law was already using it.
+     - mancipatio — the bronze and scales survived the reason
+       for them (real weighing → symbol once coined money
+       existed): form outliving its rationale and still working.
+     - baptism — measures CAPACITY across the genus: in
+       necessity ANYONE baptises validly, while only a bishop
+       ordains. Proof that capacity is a property of the ACT,
+       not of the genus.
+     - testamentum — forced `revocabilis`: mutable until death,
+       then abruptly immutable; the one act whose force depends
+       on the agent's death, and why its formalities are so
+       strict (the principal witness cannot be questioned).
+     - inauguratio — the clearest witness for OFFICIUM: the act
+       does not change the person, it JOINS them to an office
+       that already existed, vacant.
+     - promulgatio — an honest circle: a solemn act is performed
+       according to law, and law begins by a solemn act. The
+       regress does not run forever; it rests in a constitution.
+117. SUBTLETY RECORDED: iudicium.sententia_iudicis is the
+     PROPOSITION (what the judge holds); actus.sententia_lata is
+     the ACT that gives it force. The same sentence in the
+     judge's mind binds nobody; pronounced, it creates an
+     obligation. Proposition and act are two things — and the
+     library can now say so, which it could not before this
+     model.
+
+Measured: 28 exemplaria / 121 genera / 251 residents / 327 arcs
+/ 0 vulnera. Model deliberately CREATED THREE UMBRAE (officium,
+lex, res_sacra) rather than half-describing them inline — the
+agenda stays computed.
