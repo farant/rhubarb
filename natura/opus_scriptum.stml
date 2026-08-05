@@ -26,7 +26,7 @@
   variae, paginae variae) - lex igitur non programmatis propria
   sed rerum.
 -->
-<natura modulus="opus_scriptum" versio="0" lingua="latina">
+<natura modulus="opus_scriptum" versio="1" lingua="latina">
 
 <genus nomen="opus_scriptum">
 
@@ -230,11 +230,18 @@
   </definitio>
 
   <proprietates>
-    <proprietas nomen="index_isbn" genus="textus"
+    <proprietas nomen="index_isbn" genus="isbn"
+      modulus="identificatio"
       nota="MENDACIUM VULGARE HIC OCCISUM: ISBN opus non
             identificat sed EDITIONEM. Opus unum, ISBN multa.
             Catalogi qui ISBN pro identitate libri habent
-            editiones pro operibus numerant"/>
+            editiones pro operibus numerant.
+            SYNERGIA (rota XXIV): campus hic olim genus TEXTUS
+            habebat - chorda nuda. Nunc genus bibliothecae
+            fert, ideo peritia tota (partes, nota custos modulo
+            undecim aut decem, transitus anni 2007, lineolae ut
+            praesentatio non essentia) ADVENIT GRATIS, quamvis
+            de libris solis cogitaremus"/>
     <proprietas nomen="paginae" genus="numerus"
       nota="LEX LABENS (casus IV, dominium alienum): paginae
             editioni pertinent, non operi"/>

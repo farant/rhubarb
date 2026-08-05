@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **26** · genera **115** · res dictionarii **220** · arcus **311**
+Exemplaria **27** · genera **116** · res dictionarii **232** · arcus **317**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -94,6 +94,10 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 - **forma_datorum** — Figura ordinandi data ab OPERATIONIBUS suis definita, non ab impletione: quae rogare licet, quid promittitur, quo pret
 
+### identificatio (v0, genera 1)
+
+- **schema_identificandi** — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
+
 ### iudicium (v0, genera 5)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
@@ -139,7 +143,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **tributum** ⊂ obligatio — Obligatio ad MAGISTRATUM, ex lege orta, non ex consensu: debetur quia lex ita statuit, non quia quis promisit
 - **titulus** — Attestatio publica et permanens ab auctoritate data, quod aliquis aliquid consecutus est aut aliquid EST: non permissi
 
-### opus_scriptum (v0, genera 6)
+### opus_scriptum (v1, genera 6)
 
 - **opus_scriptum** — Creatio intellectualis verbis constans, ab expressionibus suis distincta: "Moby-Dick" opus unum est sive Anglice sive 
 - **expressio** — Realizatio operis in signis certis: textus hic, non alius
@@ -309,6 +313,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | rosa | planta |
 | rosaceae | planta |
 | schema | schema |
+| schema_identificandi | identificatio |
 | scriptum_exsecutabile | plagula_computatralis |
 | societas | organizatio |
 | status | elementa_programmatis |
@@ -358,6 +363,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `fabricatio.probatio` — probatio_fumi, probatio_integrationis, probatio_regressionis, probatio_unitatis
 - `fabricatio.vitium` — regressio
 - `formae_datorum.forma_datorum` — acervus, arbor, cauda, copia, series, tabula_associativa
+- `identificatio.schema_identificandi` — doi, e164, gtin, iban, isbn, isbn_10, isbn_13, issn, orcid, ulid, uri, uuid
 - `iudicium.fons` — corpus_institutionis, fons_mensurae, fons_scriptus, fons_testimonii
 - `iudicium.gradus_assensus` — dubitatio, fides, opinio, scientia, suspicio
 - `iudicium.iudicium` — aestimatio, diagnosis, praedictio, sententia_iudicis
@@ -409,6 +415,7 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 - **debian_project** — a `systema_operativum` superfectum
 - **directorium** — a `plagula_computatralis` superfectum
 - **instrumentum_aedificationis** — a `elementa_programmatis` superfectum
+- **organizatio** — a `identificatio` superfectum
 - **processus** — a `elementa_programmatis` superfectum
 - **servus** — a `cliens` superfectum
 - **systema_plagularum** — a `systema_operativum` superfectum

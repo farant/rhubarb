@@ -1532,3 +1532,61 @@ is exactly what a coverage instrument is for, and it would not
 have appeared by adding models in the parish. Second run also
 CLOSED an open dubium (fons) by reframing it — the loop
 resolves as well as surfaces.
+
+## 2026-08-05 — round twenty-four: identificatio (27 models)
+
+Fran's distinction that generated the model: **programming
+languages are singletons** — one C, one Python — so they are
+entities in a flat list and want no sub-genera. An identification
+SCHEME is different: ISBN is one thing but its instances are
+countless. That is exactly where shared properties do real work,
+because what is common across all schemes carries payload that
+each species fills in.
+
+107. schema_identificandi born with ten species chosen by the
+     EXPOSURE test (uuid, ulid, isbn + isbn_10/isbn_13, issn,
+     doi, orcid, iban, e164, gtin, uri). Long tail (VIN, national
+     ID cards, tax numbers) deliberately deferred per the
+     enumeration rule — the escape hatch will handle them when a
+     specimen arrives.
+108. THE GENUS'S PAYLOAD — properties that turned out to carry
+     real bug-prevention, not description:
+     - `quid_designat` — the most-neglected fact about any
+       scheme. ISBN designates an EDITION, E.164 a LINE (not a
+       person), ORCID a PERSON across changed names, GTIN a KIND
+       (not an item). Get this wrong and you are counting
+       different things than you think.
+     - `reassignabilis` — the property e164 DEMANDED: phone
+       numbers get recycled, so "same number" ≠ "same person",
+       and account recovery by SMS breaks not rarely but
+       CERTAINLY, given time.
+     - `opacus` — the smart/dumb identifier trade: a smart id
+       tells you something and BREAKS when the thing changes
+       (publisher sold); a dumb id promises nothing and breaks
+       nothing.
+     - `praesentatio` — hyphens are CONVENTION not essence, the
+       same law suffixes taught in round three; compare two ISBNs
+       with hyphens intact and equal identifiers read unequal.
+     - `probabilis_solus` — a check digit catches TYPOS, never
+       fictions: a well-formed number need not exist.
+109. Machine `vigor` found a state software rarely models:
+     schemes are CLOSED, not killed — ISBN-10 stopped being
+     assigned in 2007 while existing numbers stay valid forever.
+110. THE SYNERGY DEMONSTRATED, not just claimed (Fran's point):
+     opus_scriptum.editio.index_isbn was `genus="textus"` — a
+     bare string that knows nothing. It is now `genus="isbn"
+     modulus="identificatio"`, so a model about BOOKS inherits
+     check-digit rules, the 2007 transition, the parts breakdown
+     and the manifestation-not-work fact for free. Second major
+     use of the library-typed-property mechanism (first was
+     quantitas), and the first where the payload is domain
+     expertise rather than units.
+111. Cross-link recorded: a scheme is the MACHINE THAT MINTS
+     baptismal identifiers (elementa_programmatis.identificator,
+     the Scotus line) — assigned names, never content-derived.
+     The two models met without either being bent.
+112. Honesty note carried in the model's own fontes: this file
+     needs verification more than any other, because its facts
+     are PRECISE (check-digit algorithms, digit counts, dates)
+     and precision fails fluently. Everything historical marked
+     certitudo="fides".
