@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/persona.stml
-  Exemplar semanticum: PERSONA (versio 4, PLASTICUM)
+  Exemplar semanticum: PERSONA (versio 5, PLASTICUM)
   v3->v4: Meyer (bis postulatus: CQS et pactum), Dijkstra
   (superfectus a verbo goto), Scotus (haecceitas ad
   identificatorem) - dictionarium a stratis elementorum et
-  communicationis poscentibus crevit.
+  communicationis poscentibus crevit. Pacioli additus (v5).
+
+  EXEMPLAR PRIMUM MECHANISMI FIDEI (rota XVI): hoc exemplar
+  primum <fontes> declarat et valores suos certitudine= notat.
+  Cur hic primum? Quia mendacissimum erat: dies natales et
+  mortuales omnes ex corpore institutionis scribae veniunt,
+  NULLUS verificatus, et forma prior eos ut certos praebebat.
+  Bibliotheca quae de veritate loquitur de SUA veritate primum
+  loqui debet.
 
   Genus trans-dominiale primum: relationes aliorum exemplarium
   (auctor linguae, scriptor normae) hoc genus POPOSCERUNT -
@@ -16,7 +24,21 @@
   more dictionarii biographici); personae TUAE (contactus, socii)
   in voluminibus applicationum, genus hoc citantes.
 -->
-<natura modulus="persona" versio="4" lingua="latina">
+<natura modulus="persona" versio="5" lingua="latina">
+
+<!-- FONTES: claves quas valores per fons= citant.
+     Mechanismus rotae XVI - dubium <fons> (rota VII) solutum
+     genere iudicium.fons. -->
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae (Claude): dies et res gestae
+    ex textibus innumeris haustae, sine memoria singulorum.
+    NON VERIFICATUM - lector ad verificationem vocatur, non ad
+    fidem. Nisi aliter notatum, omnis dies huius exemplaris
+    hunc fontem habet et gradum FIDEI, non scientiae.
+  </fons>
+</fontes>
 
 <genus nomen="persona">
 
@@ -55,8 +77,11 @@
 
   <individuum nomen="dennis_ritchie">
     <valor nomen="nomina">Dennis MacAlistair Ritchie</valor>
-    <valor nomen="natus">1941-09-09</valor>
-    <valor nomen="mortuus">2011-10-12</valor>
+    <valor nomen="natus" certitudo="fides" fons="corpus">1941-09-09</valor>
+    <valor nomen="mortuus" certitudo="fides" fons="corpus"
+      nota="exemplum principale: forma prior hunc diem eodem
+            modo praebebat quo definitiones nostras - quasi
+            aeque certum. Non erat">2011-10-12</valor>
     <historia>
       <eventum quando="1972" actio="creare">lingua C</eventum>
       <eventum quando="1978" actio="creare">liber "The C
@@ -66,8 +91,12 @@
 
   <individuum nomen="thomas_aquinas">
     <valor nomen="nomina">Thomas de Aquino</valor>
-    <valor nomen="natus">1225</valor>
-    <valor nomen="mortuus">1274-03-07</valor>
+    <valor nomen="natus" certitudo="opinio" fons="corpus"
+      nota="annus IPSE disputatus (c. 1225): non solum fide
+            acceptus sed inter fontes controversus - gradus
+            infra fidem, quia auctoritates ipsae dissentiunt.
+            Praecisio 'annus' hic honesta est, non pigritia">1225</valor>
+    <valor nomen="mortuus" certitudo="fides" fons="corpus">1274-03-07</valor>
     <historia>
       <eventum quando="1265" actio="creare">Summa Theologiae
         (inceptum; imperfecta relicta)</eventum>
@@ -141,14 +170,21 @@
   <individuum nomen="graydon_hoare">
     <valor nomen="nomina">Graydon Hoare</valor>
     <historia>
-      <eventum quando="2006" actio="creare">lingua Rust
-        (inceptum privatum; publicum 2010)</eventum>
+      <eventum quando="2006" actio="creare" certitudo="fides"
+        fons="corpus">lingua Rust (inceptum privatum; publicum
+        2010)</eventum>
     </historia>
+    <nota>
+      Dies natalis ABEST consulto: viventes privati sunt, et
+      absentia honestior quam coniectura. Vacuum non est
+      defectus dati sed iudicium de eo quod dici non debet.
+    </nota>
   </individuum>
 
   <individuum nomen="brian_fox">
     <valor nomen="nomina">Brian Jhan Fox</valor>
-    <valor nomen="natus">1959</valor>
+    <valor nomen="natus" certitudo="fides" fons="corpus"
+      nota="annus solus notus - praecisio vera, non truncata">1959</valor>
     <historia>
       <eventum quando="1989" actio="creare">bash</eventum>
     </historia>

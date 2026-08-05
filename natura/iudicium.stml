@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/iudicium.stml
+  Exemplar semanticum: IUDICIUM (versio 0, PLASTICUM)
+  Genera: gradus_assensus, fons, iudicium.
+
+  Natum ex experimento valetudinarii (cursu secundo circuli):
+  DIAGNOSIS in forma nostra dici NON POTERAT. Bibliotheca omnia
+  PLANE asserebat - <valor>3</valor> nec fiduciam nec auctorem
+  nec revocabilitatem ferebat.
+
+  IDEM HIATUS AC DUBIUM <fons> (rota septima apertum): "Ritchie
+  natus 1941-09-09" affirmatio est cum fonte, certitudine,
+  revisibilitate - eadem prorsus forma qua diagnosis. Quaestio
+  citationis numquam de forma scribendi fuit; genus deerat.
+
+  DISTINCTIO ONTOLOGICA QUAE OMNIA REGIT: iudicium NON est res
+  de qua iudicatur. "Aegrota pneumoniam habet" factum est, quod
+  esse aut non esse potest; "medicus die D cum certitudine C
+  iudicavit aegrotam pneumoniam habere" EVENTUS est, qui certo
+  accidit. Iudicium verum manet etiamsi falsum sit - ideo acta
+  medica diagnoses ERRATAS servant: quod iudicatum est pars
+  historiae est, sive res ita se habuit sive non.
+
+  FRATRES TRES PROPOSITIONUM (cognatio nunc plena):
+  - assertio (elementa_programmatis): propositio quam PROGRAMMA
+    ipsum probat, currens;
+  - annotatio (stratum STML/TOLERA): propositio quam INSTRUMENTA
+    probant, extra programma;
+  - iudicium (hic): propositio quam PERSONA tenet, fallibilis,
+    revisibilis, cum gradu assensus.
+  Tres propositiones, tres probatores.
+
+  MECHANISMUS METAMODULI HINC COACTUS (vide worklog rotam XVI):
+  attributa certitudo= et fons= in <valor>, <relatum>, <eventum>;
+  elementum <fontes> in modulo, claves definiens. Non ornamentum
+  sed honestas: scriba huius bibliothecae (Claude) dies
+  historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
+  verificatis, et hoc dicere debet.
+-->
+<natura modulus="iudicium" versio="0" lingua="latina">
+
+<!-- ==================================================
+     GRADUS ASSENSUS - quanto animus adhaeret
+     (taxinomia scholastica, non "alta/media/humilis":
+     genus quod philosophia iam distinxit, et melius)
+     ================================================== -->
+
+<genus nomen="gradus_assensus">
+
+  <definitio>
+    Quanto firmitate animus propositioni adhaeret. Non de re
+    ipsa sed de ADHAESIONE: eadem propositio ab alio scitur, ab
+    alio creditur, ab alio suspicatur. Gradus ideo iudicii
+    proprietas est, non rei.
+  </definitio>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="scientia">
+    <definitio>
+      Certa adhaesio cum causa: quod per demonstrationem aut per
+      definitionem tenetur, sine formidine oppositi. In hac
+      bibliotheca: definitiones nostrae (quas STATUIMUS) et
+      quaecumque machina probare potest.
+    </definitio>
+  </species>
+
+  <species nomen="opinio">
+    <definitio>
+      Adhaesio CUM FORMIDINE OPPOSITI: tenetur, sed contrarium
+      fieri posse conceditur. Iudicia aestimativa hic vivunt -
+      "typatio C debilis est" opinio est, non scientia.
+    </definitio>
+  </species>
+
+  <species nomen="fides">
+    <definitio>
+      Adhaesio propter AUCTORITATEM alterius, non propter rem
+      visam: quod ab alio acceptum tenetur. Dies historici huius
+      dictionarii hic vivunt - scriba eos non vidit nec
+      verificavit; ex corpore institutionis suae accepit.
+      Honestissimus gradus quia dependentiam SUAM nominat.
+    </definitio>
+  </species>
+
+  <species nomen="suspicio">
+    <definitio>
+      Adhaesio levis, ad alteram partem inclinans sine
+      firmitate: quod verisimile videtur. Diagnosis differentialis
+      hic habitat ("fortasse X, excludendum Y").
+    </definitio>
+  </species>
+
+  <species nomen="dubitatio">
+    <definitio>
+      Suspensio adhaesionis: neutram partem tenere. Gradus
+      HONESTUS et in hac bibliotheca frequens - dubia nostra
+      hunc gradum induunt, et melius est dubitare nominatim
+      quam certitudinem fingere.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     FONS - unde propositio venit
+     (dubium rotae VII hic SOLUTUM: non forma citandi
+     sed genus deerat)
+     ================================================== -->
+
+<genus nomen="fons">
+
+  <definitio>
+    Id ex quo propositio accepta est: opus, mensura, testis,
+    corpus institutionis. Fons non probat propositionem veram
+    esse - dicit unde venit, quod aliud est et saepe utilius:
+    fons nominatus verificari potest, fons celatus numquam.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="clavis" genus="textus"
+      nota="nomen breve quo claims eum citant (fons= in valore)"/>
+    <proprietas nomen="verificatus" genus="veritas"
+      ordinarius="falsum"
+      nota="an aliquis fontem re vera inspexerit - defalta
+            FALSUM consulto: honestas negativa"/>
+  </proprietates>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="fons_scriptus">
+    <definitio>
+      Opus citabile: liber, norma, charta. Optimus fontium quia
+      permanens et publicus - nomenclatura biologica hoc semper
+      scivit ("Rosa canina L." auctorem in nomine fert).
+    </definitio>
+  </species>
+
+  <species nomen="fons_mensurae">
+    <definitio>
+      Instrumentum quod legit: thermometrum, horologium,
+      machina. Fons cuius fides ex CALIBRATIONE pendet, non ex
+      auctoritate.
+    </definitio>
+  </species>
+
+  <species nomen="fons_testimonii">
+    <definitio>
+      Persona quae rettulit: aegrota dolorem suum nuntians,
+      testis rem visam. Verificari non potest nisi ab ipso -
+      unde symptomatis natura propria.
+    </definitio>
+  </species>
+
+  <species nomen="corpus_institutionis">
+    <definitio>
+      Memoria machinae discentis: quod ex textibus innumeris
+      hausit sine singulorum memoria. Fons INVERIFICABILIS
+      natura sua - nec falsus necessario nec verus, sed
+      irretractabilis ad originem. Scriba huius bibliothecae
+      hoc fonte plurima dicit, et id fateri debet.
+    </definitio>
+    <nota>
+      Species quam nulla bibliotheca ante nostram aetatem
+      habuit. Honestas eius in hoc: qui hoc fonte utitur,
+      lectorem ad verificationem VOCAT, non ad fidem.
+    </nota>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     IUDICIUM - propositio ab homine tenta
+     ================================================== -->
+
+<genus nomen="iudicium">
+
+  <definitio>
+    Propositio de re quam aliquis tenet: cum auctore, momento,
+    fundamento, gradu assensus. A FACTO distinguitur - factum
+    est aut non est; iudicium ACCIDIT, et accidisse certum
+    manet etiamsi contentum falsum sit. Ideo acta iudicia
+    errata servant: quod iudicatum est pars historiae est.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quod affirmatur - propositio ipsa"/>
+    <proprietas nomen="latum" genus="dies"
+      nota="quando - momentum iudicii, non rei iudicatae:
+            distinctio quam schemata plana perdunt"/>
+  </proprietates>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="latum"/>
+    <status nomen="confirmatum"
+      nota="testimonio posteriore firmatum"/>
+    <status nomen="revisum"
+      nota="iudicio NOVO superatum - vetus non delectur sed
+            superatur (catena substituit, ut in normis):
+            historia iudiciorum ipsa testimonium est"/>
+    <status nomen="retractatum"
+      nota="ab auctore ipso reiectum - error confessus, qui
+            aliud est quam a posteriore superari"/>
+    <transitus a="latum" ad="confirmatum" per="confirmatio"/>
+    <transitus a="latum" ad="revisum" per="revisio"/>
+    <transitus a="latum" ad="retractatum" per="retractatio"/>
+    <transitus a="confirmatum" ad="revisum" per="revisio"
+      nota="confirmatum non est immutabile: testimonium novum
+            semper venire potest"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="auctor" ad="persona" modulus="persona"
+      nota="QUIS iudicavit - iudicium sine auctore orphanum
+            est, et schemata plana hoc semper perdunt"/>
+    <relatio nomen="de" ad="*"
+      nota="res de qua - apertum consulto: de quovis iudicari
+            potest"/>
+    <relatio nomen="assensus" ad="gradus_assensus"
+      nota="RELATIO non electio: gradus res vera est cum
+            definitione sua, non valor nudus in enumeratione"/>
+    <relatio nomen="fundatur_in" ad="observatio" externum="verum"
+      multiplex="verum"
+      nota="testimonia quibus nititur - genus observatio
+            SUPERFICIT (symptoma/signum: quis verificare
+            possit), cursu secundo circuli notatum, nondum
+            descriptum"/>
+    <relatio nomen="ex_fonte" ad="fons" multiplex="verum"/>
+    <relatio nomen="superat" ad="iudicium"
+      nota="quod hoc iudicium revisit - catena temporalis,
+            ut norma substituit normam"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="diagnosis">
+    <definitio>
+      Iudicium de morbo aegroti: quid habeat. Provisorium natura
+      sua - testimonio novo revisibile, et differentialis
+      (plures simul suspicione tentae) donec una confirmetur.
+      Exemplum generis clarissimum quia medicina fallibilitatem
+      suam FORMALITER tractat.
+    </definitio>
+  </species>
+
+  <species nomen="aestimatio">
+    <definitio>
+      Iudicium de valore rei: quanti sit. Ab aestimatore, in
+      tempore, ad finem (venditio, tributum, assecuratio) -
+      idem res tribus aestimatoribus tria pretia habet, quod
+      non error est sed natura iudicii.
+    </definitio>
+  </species>
+
+  <species nomen="praedictio">
+    <definitio>
+      Iudicium de futuro: quid eventurum sit. Solum genus quod
+      TEMPUS ipsum probat - praedictio expectat verificationem
+      suam.
+    </definitio>
+  </species>
+
+  <species nomen="sententia_iudicis">
+    <definitio>
+      Iudicium auctoritate publica latum quod OBLIGATIONEM
+      parit: non solum tenetur sed VINCIT. Species in qua
+      iudicium et ius se tangunt (vide obligatio: fons
+      obligationis esse potest).
+    </definitio>
+  </species>
+
+</genus>
+
+</natura>

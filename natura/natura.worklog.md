@@ -830,3 +830,160 @@ deliberate coverage instrument rather than from a pull.
 Measured after: 22 exemplaria / 96 genera / 169 dictionary
 residents / 251 arcs / 0 vulnera. The library grew ~50% in one
 round from a single imagined bakery.
+
+## 2026-08-04 — round fifteen: THE CLINIC (loop, second run)
+
+Second run of the coverage loop, scenario chosen to stress the
+axes the 22 models still had not touched: living bodies,
+evidence, and UNCERTAINTY. A small family medical practice.
+Discussion only; harvest awaits Fran.
+
+THE FIND OF THE RUN — THE EPISTEMIC GAP:
+The library asserts everything FLATLY. <valor>3</valor> carries
+no confidence, no author, no revisability. A DIAGNOSIS cannot
+be said in our format: it is a judgment, not a fact —
+provisional, revisable, probabilistic ("likely X, rule out Y"),
+authored, dated. And this is THE SAME GAP as the <fons> dubium
+open since round seven: "Ritchie born 1941-09-09" is a
+claim-with-a-source held at some confidence, exactly like a
+diagnosis. The citation question was never about formatting;
+it is a missing genus.
+→ IUDICIUM: a claim about reality bearing author, moment,
+  grounds, and DEGREE OF ASSENT. The naming has magnificent
+  prior art and it is the house's own: the scholastic degrees
+  of assent beat any high/medium/low confidence field —
+  SCIENTIA (certain), OPINIO (held with fear of the opposite),
+  FIDES (held on authority — precisely what this scribe's
+  training-sourced dates are), SUSPICIO. Aquinas's epistemology
+  as a schema, and honest about the scribe's own limits.
+
+HARVEST (rest, ranked):
+2. VIVENS as res_corporea's THIRD branch (artefactum = made,
+   materia = stuff, vivens = alive) + corpus_vivum, animal
+   (queued since planta's pollinators). STRUCTURAL FIND: planta
+   currently floats free and BELONGS under vivens — which
+   raises a format question never faced: CAN A GENUS IN ONE
+   MODEL BE sub= A GENUS IN ANOTHER? Cross-model subordination
+   is not in the metamodel. Real question, not cosmetic.
+3. OBSERVATIO divided by source — reported by the subject
+   (symptoma: unverifiable by anyone else), measured by
+   instrument (signum: a quantitas), judged by an expert. The
+   library has no vocabulary for WHO CAN VERIFY A CLAIM;
+   medicine has drawn this line for millennia.
+4. MORBUS — kinds of disease are timelessly describable with a
+   typical course (machina); the domain has its own Linnaeus
+   (ICD, published by WHO). Real library material.
+5. RESERVATIO — a claim on FUTURE capacity (appointment slots,
+   seats, rooms). tempus can say when; nothing says "claimed."
+6. TITULUS — the earned, permanent, evidentiary credential (an
+   MD degree): not revocable, does not expire, attests
+   achievement rather than granting permission. Distinct from
+   licentia, which the same scenario CONFIRMED.
+7. PERICULUM / probabilitas — risk ("1 in 10,000"); part of the
+   epistemic gap, and what insurance contracts are ABOUT.
+
+CONFIRMATIONS (the 22 holding in a third foreign domain):
+- LICENTIA confirmed by its own namesake: a medical licence is
+  granted by a board (magistratus), revocable, expiring,
+  renewable — genus and English word coincide.
+- HISTORIA confirmed at maximum strength: medical records are
+  LEGALLY REQUIRED to be append-only, amendments as new entries,
+  never erasures. The volumen doctrine enforced by law — a
+  SECOND ancestor after Pacioli (round fourteen). Two domains
+  now, independently, for our exact reason.
+- QUANTITAS + RECURRENTIA composing in one instruction ("500 mg
+  twice daily") — two models built hours apart from a BAKERY,
+  meeting correctly in a clinic. The strongest evidence yet
+  that the models compose rather than merely coexist.
+- praescriptum (treatment protocol, judgment-ambiguity licit),
+  residence rule (disease KINDS in the library, THIS patient's
+  illness in an app volumen), multiplicity ruling (patient is a
+  role → relation, third confirmation), count/mass cut (pills
+  countable, syrup measured), norma (clinical guidelines),
+  organizatio/magistratus (the board), mensura (38.5 °C).
+- CONSENT stress-tested LICENTIA rather than surfacing a genus:
+  informed consent is a unilateral revocable permission from
+  the one with authority over the thing — the authority being
+  PERSONAL, not governmental. The shape held.
+- TRIAGE deliberately NOT surfaced: an ordering criterion, not
+  a thing — like merx in round thirteen. Recording the
+  non-surfacings is part of the discipline.
+
+## 2026-08-04 — round sixteen: IUDICIUM built (23 models)
+## (the epistemic layer — Fran: "lets do iudicium first")
+
+Built ahead of the cheap surfaces deliberately: iudicium changes
+how every future dictionary entry is written, so its form should
+settle while 22 models exist to retrofit, not 40.
+
+68. iudicium.stml — three genera. GRADUS_ASSENSUS carries the
+    scholastic degrees as real things with definitions
+    (scientia / opinio / fides / suspicio / dubitatio) rather
+    than a high/medium/low enum — philosophy already drew this
+    taxonomy and drew it better. FONS closes the round-seven
+    dubium: species fons_scriptus / fons_mensurae /
+    fons_testimonii / CORPUS_INSTITUTIONIS — the last being a
+    species no library before this age could have needed: the
+    scribe's own training memory, unverifiable BY NATURE, whose
+    honesty consists in calling the reader to verification
+    rather than to belief. IUDICIUM itself rests on the
+    ontological cut that governs everything: the judgment is
+    not the fact judged — "the patient has pneumonia" may or
+    may not obtain, but "Dr X judged on day D that..." CERTAINLY
+    happened, and stays true even when its content is false.
+    That is WHY medical records keep wrong diagnoses, and why
+    revisum supersedes rather than deletes (norma's substituit
+    chain again). Species: diagnosis, aestimatio (three
+    appraisers give three prices — not error but the nature of
+    judgment), praedictio (the only judgment TIME itself
+    verifies), sententia_iudicis (where judgment touches law and
+    parit obligationem).
+69. THE THREE SIBLINGS COMPLETED: assertio (checked by the
+    program, running), annotatio (checked by external tools),
+    iudicium (held by a person, fallible, revisable). Three
+    propositions, three verifiers — a structure that was
+    implicit since round eleven and is now stated.
+70. METAMODEL MECHANISM (content-forced, the point of the
+    round): attributes certitudo= and fons= on <valor>,
+    <relatum>, <eventum>, plus a module-level <fontes>
+    declaring keys. Applied REFLEXIVELY — the library describing
+    judgment then judging its own claims.
+71. DOGFOODED ON THE LIBRARY'S OWN WEAKEST CLAIMS (persona v5,
+    chosen because it was the most mendacious file: every birth
+    and death date comes from the scribe's training and NONE is
+    verified, yet the old form presented them exactly as it
+    presented our definitions). Aquinas's 1225 marked OPINIO,
+    not fides — the sources themselves disagree, a degree below
+    faith. Ritchie's dates marked fides with the nota naming
+    the old form's exact lie. Graydon Hoare's missing birth date
+    documented as a JUDGMENT not a data gap: living persons are
+    private, and absence is honester than conjecture.
+72. GATE AT BIRTH (house law since round fourteen) — and it
+    PAID THE SAME HOUR: natura_visus taught to resolve fons=
+    against declared keys and certitudo= against the real
+    degrees, then negative-tested both. The first run FAILED
+    with 5 vulnera: I had written certitudo="fide" (ablative,
+    "held BY faith") where the species is fides. Elsewhere the
+    library's values match declared names exactly
+    (vita→vigens, paradigmata→imperativum), so machine-
+    checkability wins over grammatical flourish. A validator
+    born the same hour as its mechanism caught a consistency
+    drift a reader would have missed for months.
+
+Measured: 23 exemplaria / 99 genera / 182 residents / 255 arcs
+/ 0 vulnera.
+
+REMAINING FROM THE CLINIC HARVEST (cheap, deferred by design):
+vivens (+ the cross-model sub= question), observatio (surfaced
+as externum from iudicium.fundatur_in — the evidence side),
+morbus, reservatio, titulus, periculum.
+
+VERDICT, RUN TWO: the loop is not just additive, it is
+DIAGNOSTIC. Run one (pistrina) surfaced missing NOUNS — whole
+domains the library had never described. Run two surfaced a
+missing DIMENSION: every existing model asserts flatly, and no
+amount of new genera fixes that. A structural gap of this kind
+is exactly what a coverage instrument is for, and it would not
+have appeared by adding models in the parish. Second run also
+CLOSED an open dubium (fons) by reframing it — the loop
+resolves as well as surfaces.

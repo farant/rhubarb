@@ -23,7 +23,11 @@ RES="$TMP/res.txt"           # mod|nomen (species+individua+cultivar)
 ARCUS="$TMP/arcus.txt"       # fromMod|fromGenus|rel|toMod|target|genus
 UMBRAE="$TMP/umbrae.txt"     # target|fromMod
 DUBIA="$TMP/dubia.txt"       # mod|contextus
+FONTES="$TMP/fontes.txt"     # mod|clavis
+CITATIONES="$TMP/citationes.txt"  # mod|clavis|nomen
+ASSENSUS="$TMP/assensus.txt"      # mod|gradus
 : > "$GENERA"; : > "$RES"; : > "$ARCUS"; : > "$UMBRAE"; : > "$DUBIA"
+: > "$FONTES"; : > "$CITATIONES"; : > "$ASSENSUS"
 
 xp() { xmllint --xpath "$2" "$1" 2>/dev/null; }
 num() { printf '%.0f' "${1:-0}" 2>/dev/null || printf '0'; }
@@ -90,6 +94,30 @@ for f in natura/*.stml; do
         i=$((i + 1))
     done
 
+    # fontes declarati (claves) + citationes fons= et certitudo=
+    nfd=$(num "$(xp "$f" "count(//fontes/fons)")")
+    i=1
+    while [ "$i" -le "$nfd" ]; do
+        fc=$(xp "$f" "string((//fontes/fons)[$i]/@clavis)")
+        echo "$mod|$fc" >> "$FONTES"
+        i=$((i + 1))
+    done
+    nfc=$(num "$(xp "$f" "count(//*[@fons])")")
+    i=1
+    while [ "$i" -le "$nfc" ]; do
+        fu=$(xp "$f" "string((//*[@fons])[$i]/@fons)")
+        fn=$(xp "$f" "string((//*[@fons])[$i]/@nomen)")
+        echo "$mod|$fu|$fn" >> "$CITATIONES"
+        i=$((i + 1))
+    done
+    ncert=$(num "$(xp "$f" "count(//*[@certitudo])")")
+    i=1
+    while [ "$i" -le "$ncert" ]; do
+        cv=$(xp "$f" "string((//*[@certitudo])[$i]/@certitudo)")
+        echo "$mod|$cv" >> "$ASSENSUS"
+        i=$((i + 1))
+    done
+
     # umbrae: externum="verum" - superficta declarata
     nu=$(num "$(xp "$f" "count(//*[@externum='verum'])")")
     i=1
@@ -119,6 +147,21 @@ while IFS='|' read -r fm fg rel tm tgt; do
         echo "$fm.$fg --$rel--> $tm.$tgt" >> "$VULNERA"
     fi
 done < "$ARCUS"
+
+# ---- validatio fidei: fons= solvatur, certitudo= vera sit ----
+while IFS='|' read -r m clavis nomen; do
+    if ! grep -q "^$m|$clavis\$" "$FONTES"; then
+        echo "$m.$nomen --fons--> '$clavis' (clavis non declarata)" \
+            >> "$VULNERA"
+    fi
+done < "$CITATIONES"
+while IFS='|' read -r m gradus; do
+    if ! grep -q "^iudicium|$gradus\$" "$RES"; then
+        echo "$m --certitudo--> '$gradus' (gradus assensus ignotus)" \
+            >> "$VULNERA"
+    fi
+done < "$ASSENSUS"
+nVulnera=$(wc -l < "$VULNERA" | tr -d ' ')
 
 # ---- numeri ----
 nModuli=$(ls natura/*.stml | wc -l | tr -d ' ')
