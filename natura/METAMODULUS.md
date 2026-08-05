@@ -433,6 +433,49 @@ and move on.**
 The deferral of a catch-all "design pattern" genus (§10) was this
 same judgement made before it had a name.
 
+### How far to enumerate (Fran, 2026-08-05)
+
+Coining and enumeration are **different questions**, and the
+uncertainty rule REVERSES between them.
+
+- **Coining is ontological**: is this a real kind? When
+  uncertain, DIVIDE.
+- **Enumeration is economic**: which of the real kinds do we
+  write down first? When uncertain, DEFER.
+
+Not a contradiction. A missing *distinction* corrupts what you
+have already written — things get misfiled under a kind that is
+not theirs. A missing *instance* leaves everything written still
+correct, merely incomplete. **Incompleteness is honest;
+mis-structure is a lie.**
+
+So: **Pareto plus judgement.** Do not chase the long tail.
+Programming languages and identification schemes could each be
+subdivided into hundreds; a well-chosen few dozen will meet
+80–90% of what any application encounters. Anchor measured
+2026-08-05: Fran's own working list of programming languages
+runs to **38** — roughly 5% of the population of named languages,
+and it covers the paradigm space, the historical spine and the
+practical working set.
+
+**The inclusion test is EXPOSURE, not importance:** is it almost
+inevitable that some application will have to deal with this?
+ISO 8601, E.164, ISBN, IBAN, UUID pass. A VIN probably does not,
+yet.
+
+Conservatism is safe here *because the escape hatch exists*: when
+someone meets an obscure case, they collect that specimen and add
+the sub-genus, and the structure already has a place for it. The
+fix is always cheap and local.
+
+**Two reasons a dictionary entry earns its place — neither
+subsumes the other:**
+1. It TEACHES (rand breaks both purity axes; the kilogram was a
+   thing and became a law). Chosen for what it reveals.
+2. It COVERS (you will meet this). Chosen for frequency.
+The best entries do both — ISBN teaches the work/manifestation
+distinction *and* is unavoidable.
+
 ### The Linnaean escape hatch (Fran, 2026-08-05)
 
 **When an abstraction question stalls, stop arguing and go
