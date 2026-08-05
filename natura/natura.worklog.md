@@ -591,3 +591,61 @@ four auctores) — the planta nomenclature precedent, not an
 essence. Twelve models. Surfaced and waiting: momentum
 (instant), instrumentum_aedificationis, typus,
 constructum_linguae, processus, hewitt (persona), GoF quartet.
+
+## 2026-08-04 — round twelve: fabricatio, schema, cliens (15 models)
+
+Fran's list off the top of his head (bug, requirement, tests,
+feature, schema trio, client + seven subs) grouped into three
+models. Commit de07b0a sealed rounds 8-11 first.
+
+56. fabricatio.stml — THE INTENTION SQUARE: postulatum
+    (declared before), facultas (intention POSSESSED — the unit
+    of value), probatio (executable interrogation), vitium
+    (measured divergence). The flagship argument: "non vitium
+    sed facultas est" is a dispute about GENUS assignment —
+    same behavior, contested kind — resolvable only by
+    consulting intention, which proves all four genera live in
+    the intention layer. vitium's definitio: behavior alone
+    cannot be buggy; a bug is a RELATION to an intention.
+    Richest state: non_sanandum — the bug dies by
+    RE-DECLARATION, code unchanged (wontfix as metaphysics).
+    sanatio = mutatio fontis (cross-model to elementa);
+    regressio species carries the house's founding reason for
+    tests, guarded by probatio_regressionis (the bug's ghost
+    standing guard); probatio's honesty nota records the
+    house-measured fact that tests can lie (green-while-lying,
+    fixtures-share-assumptions). non_reproductum kept as an
+    honest state: neither declared false nor proven true.
+57. schema.stml — SUI DESCRIPTIO: natura's proprietates ARE
+    campi, the genera palette IS genus_valoris's dictionary,
+    the metamodel's genus= attribute refers to this genus. The
+    naturalist describing his own skeleton. The house-found
+    DISCIPLINA BIFIDA recorded as the schema's gravest
+    property: constringens (nonconforming data REJECTED — the
+    database way) vs iudicans (accepted and FLAGGED — the
+    forum's "definition judges, doesn't constrain"; judging
+    never loses truth, constraining turns it away at the
+    door). genus_valoris = the INTENTION of a value, not its
+    machine representation (typus is materia). "relatio" of
+    the palette renamed CITATIO at species level: a value that
+    IS another thing — the interop seed from this morning's
+    brainstorm, now a dictionary entry. Dubium carried:
+    area/annus — species, or textus-with-presentation and
+    dies-with-precision? (presentation/precision may be CAMPUS
+    properties).
+58. cliens.stml — seven sub-genera flat per Fran's list, with
+    the TWO AXES named in the header but not yet mechanized
+    (quis utitur: homo/machina/agens × ubi vivit). cliens_mcp
+    recognized as a genuinely NEW kind of our age: the client
+    whose USER is an artificial agent — the who-uses axis
+    grew a third member. servus surfaced externum (hospitium
+    and tabulariumd the future witnesses). vitrea noted
+    honestly as hybrid (web client in a native vessel). curl
+    the first resident: witness that cliens_cli and cliens_api
+    can be one body.
+
+Fifteen models, one day. The surfaced queue now: momentum,
+instrumentum_aedificationis, typus, constructum_linguae,
+processus, servus, hewitt, GoF quartet, directorium, chip,
+att, vms, systema_plagularum, communitas, domus_editoria,
+animal.

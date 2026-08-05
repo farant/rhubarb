@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/fabricatio.stml
+  Exemplar semanticum: FABRICATIO (versio 0, PLASTICUM)
+  Genera: postulatum, facultas, probatio, vitium.
+
+  QUADRATUM INTENTIONIS: postulatum intentionem DECLARAT ante
+  opus; facultas intentio POSSESSA est; probatio realizationem
+  contra intentionem INTERROGAT; vitium discrepantia MENSURATA.
+  Quattuor genera, stratum unum - nullum eorum in moribus solis
+  observari potest.
+
+  TESTIMONIUM: lis vulgata "non vitium sed facultas est" lis de
+  GENERE est - mores iidem, genus disputatur - et solvi non
+  potest nisi intentione consulta. Quod probat totum quadratum
+  in strato intentionis vivere.
+-->
+<natura modulus="fabricatio" versio="0" lingua="latina">
+
+<!-- ==================================================
+     POSTULATUM - intentio declarata ante opus
+     ================================================== -->
+
+<genus nomen="postulatum">
+
+  <definitio>
+    Intentio declarata ANTE opus: quod verum esse debet ut opus
+    perfectum dicatur. Fons iudicii ceterorum: vitium contra
+    postulatum mensuratur, probatio postulatum interrogat,
+    facultas postulatum implet.
+  </definitio>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="propositum"/>
+    <status nomen="receptum"/>
+    <status nomen="impletum"/>
+    <status nomen="reiectum"/>
+    <transitus a="propositum" ad="receptum" per="receptio"/>
+    <transitus a="propositum" ad="reiectum" per="reiectio"/>
+    <transitus a="receptum" ad="impletum" per="impletio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="impletur_a" a="facultas" inversa="verum"
+      nota="impletur a facultas.implet"/>
+    <relatio nomen="interrogatur_a" a="probatio" inversa="verum"
+      nota="impletur a probatio.interrogat"/>
+  </relationes>
+  <!-- in domo: postulata_posix.h nomen ipsum gerit - quae
+       plagula a systemate POSIX postulat, declarata primo -->
+
+</genus>
+
+<!-- ==================================================
+     FACULTAS - intentio possessa
+     ================================================== -->
+
+<genus nomen="facultas">
+
+  <definitio>
+    Quod opus praestare potest, ab utente aestimatum: unitas
+    VALORIS. Postulatum est intentio petita; facultas intentio
+    possessa - quod utens nominat cum narrat quid programma
+    faciat.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="implet" ad="postulatum" multiplex="verum"/>
+    <relatio nomen="realizata_a" ad="*" multiplex="verum"
+      nota="functiones, bibliothecae, elementa quae eam
+            efficiunt - facultas una, elementa multa"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     PROBATIO - interrogatio exsecutabilis intentionis
+     ================================================== -->
+
+<genus nomen="probatio">
+
+  <definitio>
+    Interrogatio exsecutabilis intentionis: scaena parata,
+    actio exercita, effectus contra exspectationem collatus.
+    Vas assertionum - probatio assertiones continet, quibus
+    iudicat (in domo nostra bibliotheca credo).
+  </definitio>
+
+  <nota>
+    HONESTAS: probatio mentiri potest - quod non exercet, non
+    probat; apparatus fictus assumptiones auctoris communicat
+    (in domo mensuratum: probationes virides mendaces,
+    apparatus qui assumptiones communicant). Probatio transiens
+    id solum probat quod re vera exercuit.
+  </nota>
+
+  <relationes>
+    <relatio nomen="interrogat" ad="postulatum"/>
+    <relatio nomen="continet" ad="assertio"
+      modulus="elementa_programmatis" multiplex="verum"/>
+    <relatio nomen="exercet" ad="functio"
+      modulus="elementa_programmatis" multiplex="verum"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="probatio_unitatis">
+    <definitio>
+      Elementum SOLUM probat, in insula: unum genus, unus mos,
+      apparatus minimus. In domo nostra probationes/ per
+      bibliothecam - unitas est bibliotheca.
+    </definitio>
+  </species>
+
+  <species nomen="probatio_integrationis">
+    <definitio>
+      Elementa UNA probat: suturae ipsae interrogantur - nam
+      vitia in suturis habitant, ubi assumptiones duorum
+      elementorum conveniunt nec semper congruunt.
+    </definitio>
+  </species>
+
+  <species nomen="probatio_regressionis">
+    <definitio>
+      Nata ex vitio: umbra vitii sanati custos posita, ne
+      redeat. Orta ex re quam custodit - probatio cum historia.
+    </definitio>
+  </species>
+
+  <species nomen="probatio_fumi">
+    <definitio>
+      "Vivitne omnino?" - levissima latissima: nihil profundum,
+      omnia tacta. Prima post mutationem magnam, non ultima.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     VITIUM - discrepantia inter intentionem et mores
+     ================================================== -->
+
+<genus nomen="vitium">
+
+  <definitio>
+    Discrepantia inter intentionem et mores: programma facit
+    quod scriptum est, non quod volitum - vitium in hiatu
+    vivit. Mores soli vitiosi esse non possunt: vitium
+    relationem ad intentionem postulat (postulatum, assertionem,
+    exspectationem), sine qua tantum "mores" sunt.
+  </definitio>
+
+  <nota>
+    Vitium quod observatione fugit "heisenbug" vulgo dicitur -
+    observatio ipsa mores mutat (tempora, memoria); species
+    nondum, fama iam.
+  </nota>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="relatum_est"
+      nota="querella accepta, nondum probata"/>
+    <status nomen="confirmatum"/>
+    <status nomen="sanatum"/>
+    <status nomen="clausum"/>
+    <status nomen="non_reproductum"
+      nota="querella quam probare non potuimus - nec falsa
+            declarata nec vera: honeste incognita"/>
+    <status nomen="non_sanandum"
+      nota="mores manent, INTENTIO mutatur: vitium moritur
+            sine mutatione codicis - resolutio per
+            re-declarationem; philosophice ditissimus exitus"/>
+    <transitus a="relatum_est" ad="confirmatum"
+      per="reproductio"
+      nota="reproductio = probatio ex querella facta"/>
+    <transitus a="relatum_est" ad="non_reproductum"
+      per="defectio_reproductionis"/>
+    <transitus a="confirmatum" ad="sanatum" per="sanatio"
+      nota="sanatio = mutatio fontis - vide
+            elementa_programmatis.mutatio"/>
+    <transitus a="confirmatum" ad="non_sanandum"
+      per="re_declaratio"/>
+    <transitus a="sanatum" ad="clausum" per="verificatio"/>
+    <transitus a="clausum" ad="relatum_est" per="regressio"
+      nota="vitium rediens - vide speciem; cyclus honestus"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="violat" ad="postulatum"/>
+    <relatio nomen="habitat_in" ad="*"
+      nota="functio, bibliotheca, sutura - sedes eius in
+            elementis"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="regressio">
+    <definitio>
+      Vitium REDIENS: sanatum olim, reversum - quod semel
+      fractum et refectum, iterum fractum. Causa fundationis
+      probationum domus nostrae: sine probationibus periculum
+      regressionum nimium. Custoditur a probatione
+      regressionis - umbra sua ipsius custos.
+    </definitio>
+  </species>
+
+</genus>
+
+</natura>

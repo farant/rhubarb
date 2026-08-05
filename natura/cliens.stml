@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/cliens.stml
+  Exemplar semanticum: CLIENS (versio 0, PLASTICUM)
+  Genus unum, sub-genera septem (indice Fran):
+  telae / nativus / terminalis / api / mcp / cli / mobilis.
+
+  AXES DUO sub divisione latent: QUIS utitur (homo an machina)
+  et UBI vivit (navigatrum, systema, terminale, rete,
+  telephonum). Sub-genera plana servamus donec axes ipsi
+  tractionem poscant.
+
+  Cliens ministrum supponit: genus SERVUS superficit, nondum
+  descriptum - dimidium alterum colloquii.
+-->
+<natura modulus="cliens" versio="0" lingua="latina">
+
+<genus nomen="cliens">
+
+  <definitio>
+    Programma quod ministerium alienum consumit, pro utente
+    agens: dimidium petens colloquii. Cliens sine ministro
+    nihil est - essentia eius in relatione.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="consumit" ad="servus" externum="verum"
+      multiplex="verum"
+      nota="genus servus superficit - hospitium et tabulariumd
+            domus testes futuri"/>
+    <relatio nomen="agit_pro" ad="*"
+      nota="utens: homo aut machina aut agens - axis primus
+            divisionis"/>
+  </relationes>
+
+</genus>
+
+<genus nomen="cliens_telae" sub="cliens">
+  <differentia>
+    In navigatro vivit: institutione caret - inscriptio URL
+    ipsa distributio est. Ubique statim, potestate systematis
+    circumscripta.
+  </differentia>
+  <!-- vitrea domus hybrida honesta: cliens telae in vase
+       nativo (webview) - tela intus, nativus extrinsecus -->
+</genus>
+
+<genus nomen="cliens_nativus" sub="cliens">
+  <differentia>
+    In systemate ipso vivit: institutione indiget, plenitudine
+    praemiatur - plagulae, processus, fenestrae, omnia
+    systematis ei patent.
+  </differentia>
+</genus>
+
+<genus nomen="cliens_terminalis" sub="cliens">
+  <differentia>
+    In terminali vivit, textu solo pingit: quo terminale
+    pervenit, is pervenit - trans SSH in machinas remotas sine
+    mutatione. In domo nostra tessera eum vestit, saltuarius
+    exemplum.
+  </differentia>
+</genus>
+
+<genus nomen="cliens_api" sub="cliens">
+  <differentia>
+    Machina machinae, sine facie humana: interfaciem
+    programmaticam consumit. Limes cum bibliotheca tenuis -
+    cliens api saepe bibliotheca est quae rete loquitur.
+  </differentia>
+</genus>
+
+<genus nomen="cliens_mcp" sub="cliens">
+  <differentia>
+    Cliens cuius UTENS agens artificialis est: ministeria per
+    protocollum instrumentorum consumit, agens pro homine per
+    agentem. Species vere NOVA aetatis nostrae - axis "quis
+    utitur" membrum tertium accepit. In domo: cliens_tabularii,
+    legati.
+  </differentia>
+</genus>
+
+<genus nomen="cliens_cli" sub="cliens">
+  <differentia>
+    Instrumentum imperii unius: vocatur, agit, exit.
+    Compositio essentia eius - per fistulas cum aliis
+    coniungitur, effectus eius introitus alterius (philosophia
+    Unix). In domo: silex, aedilis.
+  </differentia>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="curl">
+    <nota>
+      Cliens celeberrimus omnium: imperium unum, protocolla
+      omnia - in scriptis, in aedificationibus, in exemplis
+      documentorum ubique. Testis quod cliens_cli et
+      cliens_api uno corpore esse possunt.
+    </nota>
+  </individuum>
+</genus>
+
+<genus nomen="cliens_mobilis" sub="cliens">
+  <differentia>
+    In telephono vivit: tactus pro mure, interruptiones pro
+    sessione, pila pro fine - vincula eius differentia sunt.
+    In domo: vitrea servus applicationes ad telephonum fert.
+  </differentia>
+</genus>
+
+</natura>
