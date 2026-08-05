@@ -80,7 +80,14 @@ for f in natura/*.stml; do
             r=$(xp "$f" "string((//$gradus)[$i]/@nomen)")
             rg=$(xp "$f" "string((//$gradus)[$i]/ancestor::genus[1]/@nomen)")
             [ -n "$r" ] && echo "$mod|$r" >> "$RES"
-            [ -n "$r" ] && echo "$mod|$rg|$r" >> "$RESGEN"
+            # gradus servandus: individua signum ':' in indice
+            # ferunt (METAMODULUS §4b) - unicum locum ubi
+            # allocutiones hodie apparent
+            if [ "$gradus" = "individuum" ]; then
+                [ -n "$r" ] && echo "$mod|$rg|:$r" >> "$RESGEN"
+            else
+                [ -n "$r" ] && echo "$mod|$rg|$r" >> "$RESGEN"
+            fi
             i=$((i + 1))
         done
     done

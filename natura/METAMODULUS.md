@@ -326,8 +326,34 @@ with respect to what is below, species with respect to what is
 above; our own `rosa` is both). The line that does not move is
 universal vs particular, and that is the one worth marking.
 
-**The colon is a CHECKED HINT, not a resolution key.** The
-resolver ignores it; the gate verifies it. Measured justification
+**The colon is MANDATORY in canonical citations and IGNORED in
+resolution** (strengthened 2026-08-05). Three properties, chosen
+together:
+
+1. **Mandatory** → at-a-glance is GUARANTEED. An optional marker
+   fails exactly here: encountering a bare name, you cannot tell
+   whether it is a kind or a lazy author.
+2. **Ignored in resolution** → a correction never yields a dead
+   link. When `libc` becomes a genus, every `:libc` citation
+   still resolves and is FLAGGED STALE — information a consumer
+   wants, not breakage they must handle.
+3. **Checked both ways by the gate** → a missing colon on a
+   particular is an error, and a colon on a kind is an error.
+
+REJECTED, and the reason is the project's own value: making the
+marker LOAD-BEARING would turn every correction of a misfiling
+into a breaking change — so the schema would quietly pressure us
+to leave `c` filed as a species because fixing it is expensive.
+A mechanism that penalises truth-correction fights the discipline
+it exists to serve. (Thirteen such corrections happened on
+2026-08-05 alone.)
+
+Also rejected: using the marker to let a genus and a particular
+SHARE a name (`/systema_operativum/unix` vs `:unix`). It would
+have spared the `unix_bell_labs` rename — but it preserves an
+ambiguity instead of resolving it. The rename made the
+distinction visible in prose, in the index and in conversation;
+a sigil makes it visible only where the sigil appears. Measured justification
 from the day it was decided: re-filing thirteen entities from
 species to individuum (see below) changed 343 arcs to 343 arcs
 with zero breakage — had rank been load-bearing in addresses,

@@ -1987,3 +1987,34 @@ Measured: 28 exemplaria / 126 genera / 269 residents / 343 arcs
 
 Measured: 28 exemplaria / 127 genera / 269 residents / 343 arcs
 / 10 dubia / 0 vulnera.
+
+## 2026-08-05 — round thirty-one: the marker strengthened
+
+137. Fran pressed: individuum-ness is stable, so should the
+     marker be visible at a glance by construction? Position
+     moved one notch — from OPTIONAL hint to MANDATORY hint,
+     still ignored in resolution. Three properties chosen
+     together: mandatory (at-a-glance GUARANTEED — an optional
+     marker fails precisely here, since a bare name might mean
+     "kind" or might mean "lazy author"); ignored in resolution
+     (a correction flags stale rather than killing the link);
+     checked both directions by the gate.
+138. LOAD-BEARING REJECTED, on the project's own value rather
+     than on convenience: if rank were part of the key, every
+     correction of a misfiling becomes a BREAKING CHANGE, so the
+     schema would quietly pressure us to leave `c` filed as a
+     species because fixing it is expensive. A mechanism that
+     penalises truth-correction fights the discipline it exists
+     to serve. Thirteen such corrections happened today alone.
+139. AND THE TEMPTING BENEFIT REFUSED: a load-bearing marker
+     would let a genus and a particular share a name
+     (/systema_operativum/unix vs :unix), sparing the
+     unix_bell_labs rename. Refused because it PRESERVES an
+     ambiguity rather than resolving it — the rename made the
+     distinction visible in prose, in the index, in
+     conversation; a sigil makes it visible only where the sigil
+     appears.
+140. Made exercisable today in the one place addresses actually
+     appear: INDEX.md dictionary lists now render individua with
+     the colon (`:c`, `:python`, `:unix_bell_labs`), so the
+     at-a-glance property is real now rather than promised.

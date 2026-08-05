@@ -366,10 +366,10 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `actus.sacramentale` — benedictio, consecratio_loci, exorcismus
 - `actus.sacramentum` — baptismus, confirmatio, eucharistia, matrimonium, ordo, paenitentia, unctio_infirmorum
 - `animal.animal` — apis, canis, homo
-- `architectura_machinae.architectura_machinae` — arm, riscv, x86
-- `architectura_machinae.versio_architecturae` — armv8, i386, x86_64
-- `cliens.cliens_cli` — curl
-- `commercium.moneta` — dollarium_americanum, euro
+- `architectura_machinae.architectura_machinae` — :arm, :riscv, :x86
+- `architectura_machinae.versio_architecturae` — :armv8, :i386, :x86_64
+- `cliens.cliens_cli` — :curl
+- `commercium.moneta` — :dollarium_americanum, :euro
 - `commercium.ratio_rationaria` — ratio_duplex
 - `commercium.tessera_negotiabilis` — apocha_horrei, charta_onerum, nummus_chartaceus, obligatio_ad_portitorem, perscriptio, syngrapha
 - `commercium.tessera_simplex` — tessera_digitalis, tessera_repositoria, tessera_spectaculi
@@ -378,17 +378,17 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `corporalia.res_sacra` — reliquiae, res_sacra_immobilis, res_sacra_mobilis
 - `elementa_programmatis.artefactum_aedificationis` — exsecutabile_ligatum, obiectum_compilatum
 - `elementa_programmatis.assertio` — assertio_probationis, assertio_statica, invarians, postconditio, praeconditio
-- `elementa_programmatis.bibliotheca` — libc, sqlite, zlib
+- `elementa_programmatis.bibliotheca` — :libc, :sqlite, :zlib
 - `elementa_programmatis.commentarium` — annotatio_machinae, codex_sepultus, documentarium, explicativum, monitum_futuri, titulus_iuris
-- `elementa_programmatis.constans` — null
-- `elementa_programmatis.constans_numerica` — eof, pi
-- `elementa_programmatis.functio` — malloc, memcpy, printf, rand, scanf, strtok
-- `elementa_programmatis.functio_pura` — abs, strlen
+- `elementa_programmatis.constans` — :null
+- `elementa_programmatis.constans_numerica` — :eof, :pi
+- `elementa_programmatis.functio` — :malloc, :memcpy, :printf, :rand, :scanf, :strtok
+- `elementa_programmatis.functio_pura` — :abs, :strlen
 - `elementa_programmatis.identificator` — identificator_baptismalis, sigillum_contenti
 - `elementa_programmatis.index` — index_arboris, index_inversus
 - `elementa_programmatis.lectio` — lectio_externa, lectio_memoriae
 - `elementa_programmatis.mutatio` — allocatio, mutatio_memoriae, scriptio_externa, terminatio, transactio
-- `elementa_programmatis.status` — errno, index_strtok, semen_rand
+- `elementa_programmatis.status` — :errno, :index_strtok, :semen_rand
 - `fabricatio.probatio` — probatio_fumi, probatio_integrationis, probatio_regressionis, probatio_unitatis
 - `fabricatio.vitium` — regressio
 - `formae_datorum.forma_datorum` — acervus, arbor, cauda, copia, series, tabula_associativa
@@ -397,28 +397,28 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `iudicium.gradus_assensus` — dubitatio, fides, opinio, scientia, suspicio
 - `iudicium.iudicium` — aestimatio, diagnosis, praedictio, sententia_iudicis
 - `iudicium.observatio` — signum, symptoma, testimonium
-- `lingua_programmandi.implementatio_linguae` — clang, cpython, fil_c, gcc, officina
-- `lingua_programmandi.lingua_iussuum` — bash
-- `lingua_programmandi.lingua_programmandi` — c, python, rust
-- `lingua_programmandi.verbum_clavis` — const, goto, restrict, static
-- `lingua_programmandi.versio_linguae` — c11, c89, c99
+- `lingua_programmandi.implementatio_linguae` — :clang, :cpython, :fil_c, :gcc, :officina
+- `lingua_programmandi.lingua_iussuum` — :bash
+- `lingua_programmandi.lingua_programmandi` — :c, :python, :rust
+- `lingua_programmandi.verbum_clavis` — :const, :goto, :restrict, :static
+- `lingua_programmandi.versio_linguae` — :c11, :c89, :c99
 - `mensura.magnitudo_mensurabilis` — capacitas, longitudo, massa, numerositas, temperatura, tempus_intervallum
-- `mensura.unitas_mensurae` — gradus_celsius, gramma, kilogramma, metrum, minutum, secundum
+- `mensura.unitas_mensurae` — :gradus_celsius, :gramma, :kilogramma, :metrum, :minutum, :secundum
 - `morbus.morbus` — morbus_degenerativus, morbus_geneticus, morbus_infectiosus, vulnus
 - `norma.lex` — consuetudo, lex_aeterna, lex_divina_positiva, lex_humana, lex_naturalis
-- `norma.norma` — iso_9899_1990, iso_9899_1999, posix_1
+- `norma.norma` — :iso_9899_1990, :iso_9899_1999, :posix_1
 - `obligatio.contractus` — emptio_venditio, locatio_conductio, mandatum, societas_contractus
 - `obligatio.obligatio` — obligatio_ex_contractu, obligatio_ex_delicto, obligatio_ex_lege
 - `obligatio.titulus` — character_indelebilis, gradus_academicus, titulus_honoris
 - `obligatio.tributum` — decuma, portorium, tributum_capitis, vectigal
-- `opus_scriptum.editio` — moby_dick_londinensis_1851, moby_dick_novi_eboraci_1851, systema_naturae_editio_decima
-- `opus_scriptum.expressio` — abusus_linguae_anglice, abusus_linguae_germanice
-- `opus_scriptum.opus_scriptum` — abusus_linguae, moby_dick, species_plantarum, summa_theologiae, systema_naturae
-- `organizatio.corpus_normans` — ansi, iec, ieee, iso
+- `opus_scriptum.editio` — :moby_dick_londinensis_1851, :moby_dick_novi_eboraci_1851, :systema_naturae_editio_decima
+- `opus_scriptum.expressio` — :abusus_linguae_anglice, :abusus_linguae_germanice
+- `opus_scriptum.opus_scriptum` — :abusus_linguae, :moby_dick, :species_plantarum, :summa_theologiae, :systema_naturae
+- `organizatio.corpus_normans` — :ansi, :iec, :ieee, :iso
 - `organizatio.officium` — curator, episcopus, notarius, parochus, praeses_collegii
 - `organizatio.persona_iuridica` — universitas_personarum, universitas_rerum
-- `organizatio.societas` — amd, apple, arm_ltd, bell_labs, canonical, intel, microsoft
-- `persona.persona` — bertrand_meyer, brian_fox, carl_linnaeus, dennis_ritchie, duns_scotus, edsger_dijkstra, graydon_hoare, guido_van_rossum, herman_melville, josef_pieper, ken_thompson, linus_torvalds, luca_pacioli, thomas_aquinas
+- `organizatio.societas` — :amd, :apple, :arm_ltd, :bell_labs, :canonical, :intel, :microsoft
+- `persona.persona` — :bertrand_meyer, :brian_fox, :carl_linnaeus, :dennis_ritchie, :duns_scotus, :edsger_dijkstra, :graydon_hoare, :guido_van_rossum, :herman_melville, :josef_pieper, :ken_thompson, :linus_torvalds, :luca_pacioli, :thomas_aquinas
 - `plagula_computatralis.plagula_datorum` — plagula_csv, plagula_json
 - `plagula_computatralis.plagula_figurationis` — plagula_plist, plagula_toml
 - `plagula_computatralis.plagula_fontis` — caput_c, fons_c, fons_python, fons_rust
@@ -428,14 +428,14 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `planta.malus` — granny_smith, malus_domestica
 - `planta.rosa` — rosa_canina
 - `schema.genus_valoris` — citatio, dies, electio, numerus, textus, veritas
-- `systema_operativum.distributio_systematis` — arch, debian, ubuntu
-- `systema_operativum.systema_operativum` — windows
-- `systema_operativum.systema_unixiforme` — linux, macos, unix_bell_labs
-- `systema_operativum.versio_systematis` — macos_13_ventura, macos_14_sonoma
-- `tempus.calendarium` — calendarium_gregorianum, calendarium_liturgicum
+- `systema_operativum.distributio_systematis` — :arch, :debian, :ubuntu
+- `systema_operativum.systema_operativum` — :windows
+- `systema_operativum.systema_unixiforme` — :linux, :macos, :unix_bell_labs
+- `systema_operativum.versio_systematis` — :macos_13_ventura, :macos_14_sonoma
+- `tempus.calendarium` — :calendarium_gregorianum, :calendarium_liturgicum
 - `tempus.recurrentia_computata` — dies_negotiorum, dies_ordinalis_mensis, pascha
 - `vectura.vehiculum` — aeroplanum, currus_onerarius, navis, tramen
-- `vectura.via` — canalis_suesianus, via_aeria, via_appia, via_maritima, via_terrestris
+- `vectura.via` — :canalis_suesianus, :via_appia, via_aeria, via_maritima, via_terrestris
 
 ## V. Umbrae — genera superficta, nondum descripta
 
