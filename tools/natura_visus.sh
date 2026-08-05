@@ -236,6 +236,17 @@ for f in natura/*.stml; do
     done
 done
 
+# ---- regula XV: nomina intra modulum UNICA (METAMODULUS §4b)
+# Allocutio /modulus/nomen ab hac unicitate PENDET - ergo non
+# munditia sed fundamentum. Genera et res unum spatium nominum
+# communicant, quia allocutio gradum non fert.
+sort "$GENERA" | cut -d'|' -f1,2 > "$TMP/nomina.txt"
+cut -d'|' -f1,2 "$RES" >> "$TMP/nomina.txt"
+sort "$TMP/nomina.txt" | uniq -d | while IFS='|' read -r m n; do
+    echo "$m.$n --nomen--> bis definitum (allocutio ambigua)" \
+        >> "$VULNERA"
+done
+
 # ---- validatio fidei: fons= solvatur, certitudo= vera sit ----
 while IFS='|' read -r m clavis nomen; do
     if ! grep -q "^$m|$clavis\$" "$FONTES"; then

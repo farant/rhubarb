@@ -38,7 +38,7 @@
   ad sigillum contenti accedit (forma sola), artefactum ad
   baptismum.
 -->
-<natura modulus="corporalia" versio="2" lingua="latina">
+<natura modulus="corporalia" versio="3" lingua="latina">
 
 <!-- ==================================================
      RES CORPOREA - quod materiam et locum habet
@@ -185,6 +185,95 @@
             emendatur ut fons emendatur - vide dubium in
             fabricatione"/>
   </machina_statuum>
+
+</genus>
+
+<!-- ==================================================
+     RES SACRA - res actu segregata a profano usu
+     ================================================== -->
+
+<genus nomen="res_sacra" sub="res_corporea">
+
+  <differentia>
+    Divino cultui per ACTUM dedicata, non per naturam nec per
+    materiam: idem lignum mensa aut altare esse potest, et
+    differentia tota in consecratione stat. Genus ideo
+    probatio pura est doctrinae actus sollemnis - status rei
+    ab actu, non a materia.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="alienabilis" genus="veritas"
+      ordinarius="falsum"
+      nota="res sacrae vendi non possunt more communi:
+            alienatio licentiam auctoritatis poscit, et
+            quaedam omnino prohibentur. Proprietas quae
+            possessionem ipsam RESTRINGIT - possidetur, non
+            libere disponitur"/>
+  </proprietates>
+
+  <machina_statuum nomen="dedicatio" gerens="individuum">
+    <status nomen="profana" nota="ante consecrationem"/>
+    <status nomen="sacra"/>
+    <status nomen="violata"
+      nota="actu gravi profanata, usum suspendens donec
+            reparetur - status quem res corporea communis
+            habere non potest: LAESIO SINE DAMNO PHYSICO.
+            Ecclesia violata integra stat et tamen uti non
+            licet"/>
+    <status nomen="reducta"
+      nota="ad usus profanos actu formali reducta - egressus
+            ordinatus, non neglectus"/>
+    <transitus a="profana" ad="sacra" per="consecratio"/>
+    <transitus a="sacra" ad="violata" per="violatio"/>
+    <transitus a="violata" ad="sacra" per="reparatio"/>
+    <transitus a="sacra" ad="reducta" per="reductio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="consecrata_per" ad="actus_sollemnis"
+      modulus="actus"/>
+    <relatio nomen="custoditur_ab" ad="officium"
+      modulus="organizatio"
+      nota="custodia OFFICII est, non hominis - unde series
+            custodum per saecula continua"/>
+  </relationes>
+
+  <nota>
+    VIOLATIO ET DAMNUM DISTINGUENDA: damnum integritatem
+    PHYSICAM laedit (vide infra), violatio STATUM laedit re
+    intacta. Idem altare fractum damnum patitur, pollutum
+    violationem - et remedia diversa sunt: illud refectionem,
+    hoc reparationem ritualem. Trias defectuum (vitium/morbus/
+    damnum) ideo quartum membrum non accipit sed CONFINIUM
+    ostendit: res quaedam normas plures simul habent.
+  </nota>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="res_sacra_immobilis">
+    <definitio>
+      Ecclesia, altare, coemeterium: loco fixa et ideo
+      iurisdictioni loci obnoxia simul ac dedicationi.
+    </definitio>
+  </species>
+
+  <species nomen="res_sacra_mobilis">
+    <definitio>
+      Vasa sacra, vestes, libri liturgici: quae moveri possunt
+      et ideo alienari, unde regulae strictiores.
+    </definitio>
+  </species>
+
+  <species nomen="reliquiae">
+    <definitio>
+      Corporis sancti partes aut res ei contactae: species
+      cuius venditio omnino prohibita est (simonia), non
+      restricta - unicum in bibliotheca exemplum rei quae
+      possideri potest et VENDI NUMQUAM.
+    </definitio>
+    <valor nomen="alienabilis">falsum</valor>
+  </species>
 
 </genus>
 

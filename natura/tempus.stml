@@ -63,7 +63,7 @@
   mensuram temporis (secundum, minutum) in exemplari mensurae
   invenies; hic de temporis STRUCTURA agitur, non de mensura.
 -->
-<natura modulus="tempus" versio="2" lingua="latina">
+<natura modulus="tempus" versio="3" lingua="latina">
 
 <!-- ==================================================
      MOMENTUM - punctum in tempore
@@ -175,6 +175,84 @@
     NOMINAT et momenta eius gignit. Duo modi eiusdem veritatis:
     res quaedam iterum atque iterum fiunt.
   </nota>
+
+</genus>
+
+<!-- ==================================================
+     RECURRENTIA COMPUTATA - regula quae CALCULUM poscit
+     (DUBIUM rotae XIV HIC CLAUSUM: festa mobilia
+     periodum simplicem excedunt)
+     ================================================== -->
+
+<genus nomen="recurrentia_computata" sub="recurrentia">
+
+  <differentia>
+    Momenta non ex periodo simplici sed ex ALGORITHMO oriuntur:
+    regula ipsa calculum continet, saepe corpora caelestia aut
+    alias recurrentias consulens. Ideo "quando proxime?" sine
+    computatione responderi non potest - quod periodica semper
+    potest.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="algorithmus" genus="textus"
+      nota="regula computandi ipsa - hic descripta, non
+            exsecuta: bibliotheca id quod EST dicit, non id
+            quod fit"/>
+    <proprietas nomen="pendet_ex_alia" genus="veritas"
+      ordinarius="falsum"
+      nota="an alias recurrentias consulat - dies negotiorum
+            calendarium feriarum poscunt, unde recurrentiae
+            se invicem componunt"/>
+  </proprietates>
+
+  <nota>
+    GENUS NON RELIGIOSUM, quamvis a paroecia surrexerit:
+    specimina in negotio, in fisco, in agricultura eadem sunt.
+    Probatio Linnaeana iterum - specimina collecta genus
+    latius quam scaena ostenderunt.
+  </nota>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="pascha">
+    <definitio>
+      Dominica post plenilunium quod aequinoctium vernum
+      sequitur: computus lunisolaris, unde festa mobilia tota
+      pendent (Quadragesima, Ascensio, Pentecoste).
+    </definitio>
+    <valor nomen="algorithmus">computus lunisolaris</valor>
+    <nota>
+      Specimen quod dubium peperit et clausit: nulla periodus
+      simplex hoc exprimit, et tamen regula est - determinata,
+      publica, saeculis ante computatra computata. Calendarium
+      liturgicum (vide supra) hoc nunc dicere potest.
+    </nota>
+  </species>
+
+  <species nomen="dies_negotiorum">
+    <definitio>
+      "Post dies negotiorum triginta": dies festis et diebus
+      Solis exclusis - regula quae ALIAM recurrentiam
+      (calendarium feriarum) consulere debet.
+    </definitio>
+    <valor nomen="pendet_ex_alia">verum</valor>
+    <nota>
+      Specimen NON RELIGIOSUM quod genus generalizat: idem
+      calculus in contractibus, in solutionibus, in terminis
+      iudicialibus. Et ferias per iurisdictiones VARIANT -
+      unde eadem clausula in duabus civitatibus duos dies
+      significat.
+    </nota>
+  </species>
+
+  <species nomen="dies_ordinalis_mensis">
+    <definitio>
+      "Tertia feria secunda cuiusque mensis": ordo intra
+      mensem, non intervallum fixum - unde intervalla inaequalia
+      (28 aut 35 dies) sine ullo errore.
+    </definitio>
+  </species>
 
 </genus>
 

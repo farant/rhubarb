@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **28** · genera **123** · res dictionarii **258** · arcus **335**
+Exemplaria **28** · genera **126** · res dictionarii **269** · arcus **343**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -63,12 +63,13 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **nuntius** — Communicatio reificata: data in itinere INSCRIPTA - destinatarius ei debetur
 - **eventum** — Res gesta NON inscripta: accidit, et quivis observans videre potest - nulli debetur
 
-### corporalia (v2, genera 6)
+### corporalia (v3, genera 7)
 
 - **res_corporea** — Quod materiam habet, locum occupat, tempore corrumpitur: res quae manibus tangi potest
 - **artefactum** ⊂ res_corporea — Ab homine facta ad finem: NUMERABILIS, singularis, haecceitatem habens - hic panis, non alius, etiamsi gemellus adsit
 - **materia** ⊂ res_corporea — MENSURABILIS non numerabilis: farina, aqua, oleum - "tres farinae" nihil significat
 - **instrumentum** ⊂ artefactum — Ad faciendum factum, non ad consumendum: usu SERVATUR (immo usus eius finis est), non destruitur
+- **res_sacra** ⊂ res_corporea — Divino cultui per ACTUM dedicata, non per naturam nec per materiam: idem lignum mensa aut altare esse potest, et diffe
 - **damnum** — Laesio integritatis rei corporeae ab externa vi illata: quod unum erat divisum, quod integrum fractum, quod purum mixt
 - **vivens** ⊂ res_corporea — Se ipsum movet, nutrit, generat: principium motus INTRA se habet, ubi artefactum motum ab alio accipit et materia null
 
@@ -139,9 +140,10 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 - **morbus** — Dispositio viventis praeter naturam, qua operatio debita impeditur: defectus ab eo quod naturae rei debetur
 
-### norma (v1, genera 1)
+### norma (v2, genera 2)
 
 - **norma** — Documentum publicum quod formam praescribit: quid conformitas significet definit
+- **lex** — Ordinatio rationis ad bonum commune, ab eo qui curam communitatis habet promulgata (Thomas, ST I-II q
 
 ### obligatio (v2, genera 5)
 
@@ -208,11 +210,12 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **distributio_systematis** — Collectio curata: nucleus + instrumenta + ordinationes + gestor fasciculorum, ab uno curatore electa, probata, edita
 - **versio_systematis** — Editio systematis nominata: quam installatio vere currit - "Darwin 23
 
-### tempus (v2, genera 6)
+### tempus (v3, genera 7)
 
 - **momentum** — Punctum in tempore: quando aliquid accidit
 - **intervallum** — Spatium temporis inter duo momenta: initium, finis, ideo duratio
 - **recurrentia** — Regula quae momenta (aut intervalla) gignit: "omni die hora quarta", "omni die Lunae", "prima die cuiusque mensis"
+- **recurrentia_computata** ⊂ recurrentia — Momenta non ex periodo simplici sed ex ALGORITHMO oriuntur: regula ipsa calculum continet, saepe corpora caelestia aut
 - **horarium** — Recurrentiae in ordinem compositae quibus opus regitur: horae apertionis, vices operariorum, ordo coctionis
 - **calendarium** — Systema quo dies nominantur et ordinantur: menses, hebdomadae, anni, dies festi
 - **reservatio** — Vindicatio capacitatis futurae: intervallum et res (sedes, cella, hora medici) alicui SERVATA ne alteri detur
@@ -280,6 +283,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | iudicium | iudicium |
 | iurisdictio | locus |
 | lectio | elementa_programmatis |
+| lex | norma |
 | licentia | obligatio |
 | lingua_iussuum | lingua_programmandi |
 | lingua_programmandi | lingua_programmandi |
@@ -322,7 +326,9 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | quantitas | mensura |
 | ratio_rationaria | commercium |
 | recurrentia | tempus |
+| recurrentia_computata | tempus |
 | res_corporea | corporalia |
+| res_sacra | corporalia |
 | reservatio | tempus |
 | ritus | actus |
 | rosa | planta |
@@ -367,6 +373,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `commercium.tessera_simplex` — tessera_digitalis, tessera_repositoria, tessera_spectaculi
 - `corporalia.artefactum` — cibus
 - `corporalia.damnum` — contaminatio, corruptio, fractura
+- `corporalia.res_sacra` — reliquiae, res_sacra_immobilis, res_sacra_mobilis
 - `elementa_programmatis.artefactum_aedificationis` — exsecutabile_ligatum, obiectum_compilatum
 - `elementa_programmatis.assertio` — assertio_probationis, assertio_statica, invarians, postconditio, praeconditio
 - `elementa_programmatis.bibliotheca` — libc, sqlite, zlib
@@ -396,6 +403,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `mensura.magnitudo_mensurabilis` — capacitas, longitudo, massa, numerositas, temperatura, tempus_intervallum
 - `mensura.unitas_mensurae` — gradus_celsius, gramma, kilogramma, metrum, minutum, secundum
 - `morbus.morbus` — morbus_degenerativus, morbus_geneticus, morbus_infectiosus, vulnus
+- `norma.lex` — consuetudo, lex_aeterna, lex_divina_positiva, lex_humana, lex_naturalis
 - `norma.norma` — iso_9899_1990, iso_9899_1999, posix_1
 - `obligatio.contractus` — emptio_venditio, locatio_conductio, mandatum, societas_contractus
 - `obligatio.obligatio` — obligatio_ex_contractu, obligatio_ex_delicto, obligatio_ex_lege
@@ -422,6 +430,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `systema_operativum.systema_operativum` — linux, macos, unix, windows
 - `systema_operativum.versio_systematis` — macos_13_ventura, macos_14_sonoma
 - `tempus.calendarium` — calendarium_gregorianum, calendarium_liturgicum
+- `tempus.recurrentia_computata` — dies_negotiorum, dies_ordinalis_mensis, pascha
 - `vectura.vehiculum` — aeroplanum, currus_onerarius, navis, tramen
 - `vectura.via` — canalis_suesianus, via_aeria, via_appia, via_maritima, via_terrestris
 

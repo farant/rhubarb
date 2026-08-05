@@ -231,6 +231,61 @@ Module-level bibliography; `fons="KEY"` on a claim cites it (§6).
 
 ---
 
+## 4b. Addressing — how an entity is named from outside
+
+**An entity's address is `modulus` + `nomen`, flat.** That is
+already true of every internal reference (`ad="X" modulus="Y"`),
+and it is unambiguous: measured 2026-08-05, **381 names across
+all modules, zero collisions**.
+
+A path rendering follows directly and is the intended external
+form:
+
+```
+/persona/dennis_ritchie
+/lingua_programmandi/c
+/identificatio/isbn
+/commercium/tessera_negotiabilis
+```
+
+Three consequences worth stating, because none is obvious:
+
+1. **Rank does not appear in the address.** Genera, species and
+   individua share one namespace per module, so `/actus/ritus`
+   (a genus) and `/actus/stipulatio` (a species) address alike.
+   This is correct for a citation: a consumer refers to a THING,
+   and whether it is a kind or an instance is a fact you learn
+   on arrival, not something you must know to ask.
+2. **Nesting is display, not address.** `rosa_canina` sits four
+   levels deep under `planta`, but its address is
+   `/planta/rosa_canina`, not the full lineage. The Porphyrian
+   depth is taxonomy; the address is identity. (This also means
+   re-parenting a genus — which the coining rules encourage —
+   does NOT break addresses.)
+3. **Presentation is not essence** (the same law suffixes and
+   ISBN hyphens taught). `dennis_ritchie` vs
+   `dennis-ritchie` is a rendering choice; the `nomen` is the
+   identifier. A UI may hyphenate; a citation must not depend
+   on it.
+
+**Uniqueness is therefore load-bearing, not hygiene** — rule 15
+is what makes addressing work, and it is now ENFORCED (§8).
+
+**Open question — rename stability.** The coining rules say
+divisions are cheap and local, and this session renamed
+`charta_negotiabilis` → `tessera` on exactly that licence. That
+is only cheap INSIDE the library. Once app volumina cite
+addresses, a rename breaks consumers — the ordinary API-stability
+problem, and the reason Eskil's "get the interface right first"
+applies here as much as to a C header. The library is currently
+pre-publication, so renames remain free. When it is first cited
+externally, one of two disciplines must start: names frozen once
+published, or a forwarding mechanism (a tombstone entry naming
+the successor, which `norma.substituit` and
+`identificatio.successit` already suggest the shape of). NOT
+built — no consumer exists yet, and inventing the mechanism
+ahead of the content would break the Alexander rule.
+
 ## 5. Cross-model mechanisms
 
 The taxonomy is one tree; three kinds of reference cross files,
@@ -331,7 +386,7 @@ job and the reason to build it.
 | 12 | `transitus a=`/`ad=` name declared statuses of the same machine | [S] |
 | 13 | `eventum actio=` names a declared `actio` | [S] |
 | 14 | `modulus` attribute equals the filename stem | [S] |
-| 15 | No two genera share a name within a model | [S] |
+| 15 | No two entities share a name within a model (addressing depends on it, §4b) | [E] |
 
 Rules 9–13 are the Cyc-consistency defense: they are what makes a
 hand-written library stay coherent past the point where one mind

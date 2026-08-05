@@ -1790,3 +1790,69 @@ STILL OUTSTANDING from the parish scenario:
 - res_sacra (things set apart; alienation restricted)
 - recurrentia_computata (CLOSES the round-XIV dubium: Easter is
   computed from a lunar rule)
+
+## 2026-08-05 — round twenty-eight: the parish queue closed + addressing
+
+123. LEX built (norma v2) — the split magistratus implied two
+     rounds earlier and this model failed to follow. Definitio
+     from Thomas (ST I-II q.90 a.4). The differentia that
+     matters operationally: a NORMA HAS NO BORDERS (ISO is the
+     same everywhere), a LEX DOES — outside its jurisdiction it
+     does not bind. Machine gained two states software schemas
+     usually lack: VACATIO (promulgated but not yet binding, so
+     it can be known before it obliges) and DESUETA (killed by
+     contrary custom, with no act at all — a law that use, not
+     a legislator, ends). Species by Thomas's own fourfold
+     source-division; lex_humana carries the conclusion-vs-
+     determination distinction that explains why some laws agree
+     worldwide and others diverge by jurisdiction — not
+     inconsistency but two modes of derivation.
+     consuetudo BENDS our machine honestly: it is never
+     promulgated, it GROWS. Dubium carried, not papered over.
+124. RES_SACRA built (corporalia v3) — status by ACT, not by
+     matter: the same wood is a table or an altar, and the whole
+     difference is the consecration. Purest test yet of the
+     actus doctrine. Its VIOLATA state is one the library could
+     not previously express: INJURY WITHOUT PHYSICAL DAMAGE — a
+     desecrated church stands intact and may not be used. Noted
+     as the boundary of the triad of defects rather than a
+     fourth member: some things are measured by more than one
+     norm at once. reliquiae are the library's only thing that
+     may be possessed and NEVER sold.
+125. RECURRENTIA_COMPUTATA built (tempus v3) — CLOSES the dubium
+     open since round XIV. And the escape hatch generalised it
+     again: the specimens are not religious. dies_negotiorum
+     ("net 30 business days") needs a computed rule that
+     CONSULTS ANOTHER RECURRENCE (the holiday calendar), and
+     holidays vary by jurisdiction — so the same contract clause
+     means different dates in two countries.
+126. ADDRESSING ANSWERED AND MEASURED (Fran's tangent): an
+     entity's address is `modulus` + `nomen`, flat — which is
+     what internal references already use. Measured: 381 names,
+     ZERO collisions. So `/persona/dennis_ritchie` works today.
+     Three non-obvious consequences written into METAMODULUS
+     §4b: rank does not appear in the address (a citation refers
+     to a THING; kind-or-instance is learned on arrival);
+     NESTING IS DISPLAY, NOT ADDRESS (rosa_canina is
+     /planta/rosa_canina, four levels notwithstanding — which
+     also means re-parenting, which the coining rules encourage,
+     does NOT break addresses); and hyphen-vs-underscore is
+     presentation, not essence.
+127. RULE 15 PROMOTED [S] → [E]: uniqueness is what makes
+     addressing work, so it is now gated, not hygiene.
+     Negative-tested.
+128. OPEN QUESTION RECORDED, not solved — RENAME STABILITY.
+     "Divisions are cheap and local" is true INSIDE the library;
+     this session renamed charta_negotiabilis → tessera on that
+     licence. Once app volumina cite addresses, a rename breaks
+     consumers — ordinary API stability, and Eskil's
+     interface-first rule applies to a semantic library exactly
+     as to a C header. Pre-publication, renames stay free. At
+     first external citation one of two disciplines must begin:
+     freeze published names, or forward via a tombstone naming
+     the successor (norma.substituit and identificatio.successit
+     already suggest the shape). NOT built — no consumer exists,
+     and inventing mechanism ahead of content breaks Alexander.
+
+Measured: 28 exemplaria / 126 genera / 269 residents / 343 arcs
+/ 0 vulnera. Parish scenario fully built; nine gates enforced.

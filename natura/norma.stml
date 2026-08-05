@@ -7,7 +7,7 @@
   diem, statum, successionem habet. Normae se invicem SUBSTITUUNT:
   catena temporalis (stratum historicum in relationibus ipsis).
 -->
-<natura modulus="norma" versio="1" lingua="latina">
+<natura modulus="norma" versio="2" lingua="latina">
 
 <genus nomen="norma">
 
@@ -94,6 +94,138 @@
       fortasse hic quoque valet.
     </dubium>
   </individuum>
+
+</genus>
+
+<!-- ==================================================
+     LEX - praeceptum quod OBLIGAT, non quod dirigit
+
+     Divisio quam magistratus (organizatio, rota XIV) iam
+     implicabat et hoc exemplar non secutum est: auctoritas
+     corporis normantis EX CONSENSU, magistratus EX IMPERIO.
+     Ergo et documenta eorum differunt - normae CONFORMARIS,
+     lex TE OBLIGAT sive consentias sive non.
+     ================================================== -->
+
+<genus nomen="lex">
+
+  <definitio>
+    Ordinatio rationis ad bonum commune, ab eo qui curam
+    communitatis habet promulgata (Thomas, ST I-II q.90 a.4):
+    non consilium sed praeceptum, cum vi obligandi et
+    plerumque cum sanctione. A norma differt FONTE
+    AUCTORITATIS - norma conformitatem OFFERT, lex
+    oboedientiam POSCIT.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="sanctio" genus="textus"
+      nota="poena violationi adnexa - non omni legi (leges
+            imperfectae sine poena exsistunt), sed plerisque"/>
+    <proprietas nomen="vacatio" genus="quantitas"
+      modulus="mensura"
+      nota="VACATIO LEGIS: intervallum inter promulgationem et
+            vim obligandi, ut lex sciri possit antequam
+            obliget. Status quem schemata binaria (lata/vigens)
+            perdunt, et quo praeparatio negotiorum tota
+            nititur"/>
+  </proprietates>
+
+  <machina_statuum nomen="vigor" gerens="individuum">
+    <status nomen="lata" nota="ab auctoritate sancita, nondum
+      promulgata - textus, nondum lex"/>
+    <status nomen="promulgata" nota="publicata, in vacatione"/>
+    <status nomen="vigens"/>
+    <status nomen="abrogata" nota="ab auctoritate sublata"/>
+    <status nomen="desueta"
+      nota="vi consuetudinis contrariae amissa, NULLO ACTU -
+            lex quam mora et usus occidunt, non legislator"/>
+    <transitus a="lata" ad="promulgata" per="promulgatio"
+      nota="ACTUS SOLLEMNIS - vide actus.promulgatio: ante eum
+            lex non est, textus tantum"/>
+    <transitus a="promulgata" ad="vigens" per="lapsus_vacationis"/>
+    <transitus a="vigens" ad="abrogata" per="abrogatio"/>
+    <transitus a="vigens" ad="desueta" per="desuetudo"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="lata_a" ad="magistratus" modulus="organizatio"
+      nota="auctoritas ex imperio - unde differentia a norma"/>
+    <relatio nomen="in_iurisdictione" ad="iurisdictio"
+      modulus="locus"
+      nota="lex FINES habet: extra iurisdictionem non obligat.
+            Norma fines non habet (ISO ubique eadem est) -
+            differentia practica gravissima inter genera"/>
+    <relatio nomen="promulgata_per" ad="actus_sollemnis"
+      modulus="actus"/>
+    <relatio nomen="abrogat" ad="lex" multiplex="verum"/>
+    <relatio nomen="parit" ad="obligatio" modulus="obligatio"
+      multiplex="verum"
+      nota="obligatio ex lege - hic fons eius describitur"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       divisio Thomistica (ST I-II qq. 91-95): genera legis
+       per FONTEM, non per materiam -->
+
+  <species nomen="lex_aeterna">
+    <definitio>
+      Ratio divinae sapientiae universum gubernans: fons
+      omnium legum, ipsa a nullo lata.
+    </definitio>
+  </species>
+
+  <species nomen="lex_naturalis">
+    <definitio>
+      Participatio legis aeternae in creatura rationali: quod
+      homo ratione sua cognoscit esse faciendum aut vitandum,
+      nullo legislatore humano dicente.
+    </definitio>
+    <nota>
+      Species quae discrimen legis a norma ad extremum ducit:
+      nemo eam tulit, nulla iurisdictio eam terminat, nulla
+      abrogatio eam tollit - et tamen obligat. Lex sine
+      legislatore humano, quod norma esse omnino non potest.
+    </nota>
+  </species>
+
+  <species nomen="lex_humana">
+    <definitio>
+      Ex lege naturali per rationem derivata et ab auctoritate
+      humana lata: civilis aut canonica. Sola species quam
+      applicationes fere semper tractabunt.
+    </definitio>
+    <nota>
+      Derivatio DUPLEX (Thomas): per CONCLUSIONEM ("noli
+      nocere" ergo "noli occidere" - quod ubique idem est) et
+      per DETERMINATIONEM ("puniendum est" ergo "poena haec" -
+      quod arbitrio legislatoris variat). Unde leges quaedam
+      per orbem conveniunt, aliae per iurisdictiones dissonant:
+      non inconstantia sed duo modi derivandi.
+    </nota>
+  </species>
+
+  <species nomen="lex_divina_positiva">
+    <definitio>
+      A Deo revelata, ratione sola non cognoscibilis: quod
+      humana ratio ad finem supernaturalem non attingit.
+    </definitio>
+  </species>
+
+  <species nomen="consuetudo">
+    <definitio>
+      Usus diuturnus communitatis cum animo se obligandi, a
+      legislatore tolerata: lex NON SCRIPTA quae tamen obligat.
+    </definitio>
+    <nota>
+      Species quae machinam supra FLECTIT: consuetudo nullum
+      actum promulgationis habet - non promulgatur sed CRESCIT,
+      et vim ex tempore et consensu accipit. Machina nostra
+      promulgationem poscit; haec species eam praeterit.
+      Dubium: an transitus "introductio per usum" addendus sit,
+      an consuetudo machinam propriam petat. APERTUM.
+    </nota>
+  </species>
 
 </genus>
 
