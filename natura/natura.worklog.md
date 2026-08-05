@@ -2295,3 +2295,77 @@ Measured: 30 exemplaria / 135 genera / 281 residents / 367 arcs
      wrong (ISBN, recurrence, valid time); per iudicium material
      gives them LEVERAGE THEY LACKED. Different mechanisms,
      both real.
+
+## 2026-08-05 — round thirty-five: COMPLICATIO — the first genus
+## generated from experience rather than inventoried
+
+154. Fran's own term, defined precisely: "an implementation
+     consideration you cannot figure out in the planning process
+     but which only surfaces once implementation begins, and
+     that can require returning to or revising the plan."
+     MILESTONE: every prior genus was INVENTORIED — Rome had
+     obligatio, FRBR had the four levels, Porphyry had the tree,
+     medicine had symptoma/signum. This one was PERCEIVED
+     THROUGH WORK and named by the practitioner. It is the test
+     case for whether the library can host generated concepts,
+     which Fran named as the novel opportunity.
+155. THE DIFFERENTIA IS EPISTEMIC, and it is where all the
+     leverage lives: NON PRAEVISA vs NON PRAEVIDENDA —
+     unforeseen vs UNFORESEEABLE. An oversight could have been
+     caught and was not (a failure of planning, curable by
+     better planning); a complication could NOT have been
+     caught, and more planning would have bought nothing.
+     LATIN EARNS ITS KEEP HERE: the gerundive carries in one
+     morpheme what English needs a periphrasis for ("was not
+     foreseen" vs "could not have been foreseen"). First time
+     the language choice has done semantic work rather than
+     cultural work.
+156. THE LEVERAGE, written into the genus because it IS the
+     reason to coin it: the two conditions have OPPOSITE
+     remedies. Oversight → plan BETTER. Complication → revise
+     CHEAPER (shorter cycles, later commitment, lighter plans).
+     Confusing them inverts the response: a team that treats
+     complications as oversights demands MORE up-front
+     planning, which makes complications surface LATER and
+     revision COSTLIER. The error feeds itself, and the word
+     alone breaks it — "that was a complication, not a miss" is
+     a sentence that changes a retrospective's conclusion.
+157. EVIDENCE OF REALNESS, and the strongest kind: THE CONCEPT
+     GENERATED AN INSTRUMENT. Fran's simulate-work practice
+     (pretend to implement, report every "five minutes") exists
+     precisely to surface complications CHEAPLY before real
+     commitment. A concept that produces a method is doing work,
+     not decorating.
+     Recorded in the machine: latens → aperta happens BY ACTION
+     ALONE — neither time nor thought effects it, which is why
+     instruments that simulate action pay.
+158. PIEPER RISK NOTED IN THE ARTIFACT, since generated terms
+     have no external check: "complicatio" can decay into an
+     excuse exactly as "technical debt" did — a shield over a
+     miss. The guard is the `praevidenda` property, which is a
+     JUDGMENT and revisable: an honest review sometimes returns
+     "no, that was foreseeable." Stated as doctrine in the
+     dubium: A GENUS THAT CAN NEVER FALSIFY ITSELF IS JARGON,
+     NOT VOCABULARY.
+159. Standard for generated genera made explicit (it was already
+     our informal practice): ONE INSTANCE IS AN OBSERVATION, TWO
+     IN UNRELATED DOMAINS IS A LAW. ferrum modum imperat waited
+     for a bakery oven AND a freight vehicle; the triad of
+     defects waited for damnum to force a comparison with two
+     existing genera. Generated concepts need MORE evidence than
+     inventoried ones, not less.
+160. SURFACED: `consilium` (plan) — complicatio is defined
+     against it and we do not have it. postulatum and pensum are
+     its parts; the whole is missing.
+     ALSO NOTED: the library has been generating knowledge all
+     along and FILING IT WHERE IT CANNOT BE USED — the sliding
+     law, the triad, ferrum modum imperat, the declared-channel
+     scale invariance, the three modes of membership all live in
+     PROSE (worklog, file comments), not in the taxonomy. They
+     pass Fran's own addressability test (we cite "the sliding
+     law" by name across a dozen rounds). Whether found laws
+     should become library content is now an open question worth
+     its own round.
+
+Measured: 30 exemplaria / 136 genera / 281 residents / 369 arcs
+/ 0 vulnera.

@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **30** · genera **135** · res dictionarii **281** · arcus **367**
+Exemplaria **30** · genera **136** · res dictionarii **281** · arcus **369**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -97,13 +97,14 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **identificator** — Nomen cuius essentia REFERENTIA est, non significatio: ansa ad rem
 - **programma** — Collectio elementorum cum INITIO PROPRIO: vocatum currit et ex se ipso pergit, ubi bibliotheca vocata solum vivit
 
-### fabricatio (v2, genera 5)
+### fabricatio (v3, genera 6)
 
 - **postulatum** — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
 - **facultas** — Quod opus praestare potest, ab utente aestimatum: unitas VALORIS
 - **probatio** — Interrogatio exsecutabilis intentionis: scaena parata, actio exercita, effectus contra exspectationem collatus
 - **vitium** — Discrepantia inter intentionem et mores: programma facit quod scriptum est, non quod volitum - vitium in hiatu vivit
 - **debitum_technicum** — Imperfectio in opere CONSULTO suscepta ut aliquid citius praestetur, cum cognitione pretii posterioris: non defectus s
+- **complicatio** — Consideratio implementationis quae consilio praevideri NON POTEST sed opere incepto sola apparet, et consilium retract
 
 ### formae_datorum (v0, genera 1)
 
@@ -270,6 +271,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | cliens_terminalis | cliens |
 | codex | opus_scriptum |
 | commentarium | elementa_programmatis |
+| complicatio | fabricatio |
 | constans | elementa_programmatis |
 | constans_numerica | elementa_programmatis |
 | constans_textualis | elementa_programmatis |
@@ -472,6 +474,7 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 - **att** — a `organizatio` superfectum
 - **b** — a `lingua_programmandi` superfectum
 - **chip** — a `architectura_machinae` superfectum
+- **consilium** — a `fabricatio` superfectum
 - **constructum_linguae** — a `elementa_programmatis` superfectum
 - **debian_project** — a `systema_operativum` superfectum
 - **directorium** — a `plagula_computatralis` superfectum
@@ -492,6 +495,7 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 - `elementa_programmatis` / constans
 - `elementa_programmatis` / libc
 - `fabricatio` / vitium
+- `fabricatio` / complicatio
 - `norma` / posix_1
 - `opus_scriptum` / periodicum
 - `planta` / planta

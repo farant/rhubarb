@@ -15,7 +15,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="2" lingua="latina">
+<natura modulus="fabricatio" versio="3" lingua="latina">
 
 <!-- ==================================================
      POSTULATUM - intentio declarata ante opus
@@ -314,6 +314,118 @@
     <relatio nomen="solvitur_per" ad="pensum" modulus="operatio"
       multiplex="verum"/>
   </relationes>
+
+</genus>
+
+<!-- ==================================================
+     COMPLICATIO - quod opere solo apparet
+
+     GENUS EX EXPERIENTIA NATUM, non ex dominio hausto
+     (rota XXXV): primum in bibliotheca quod Fran per annos
+     operando PERCEPIT et nominavit, non quod Roma aut
+     Linnaeus aut FRBR iam nominaverat. Ideo probatio
+     Pieperiana hic gravior est: terminus ab experientia
+     ortus custodem externum non habet.
+
+     LATINITAS ONUS FERT: differentia tota inter NON PRAEVISA
+     et NON PRAEVIDENDA stat, quod gerundivum uno morphemate
+     dicit ubi Anglicum periphrasi eget ("was not foreseen"
+     contra "could not have been foreseen").
+     ================================================== -->
+
+<genus nomen="complicatio">
+
+  <definitio>
+    Consideratio implementationis quae consilio praevideri NON
+    POTEST sed opere incepto sola apparet, et consilium
+    retractare potest. Non defectus consilii sed TERMINUS eius:
+    quaedam nisi faciendo non discuntur.
+  </definitio>
+
+  <differentia>
+    NON PRAEVISA contra NON PRAEVIDENDA - discrimen quod totam
+    utilitatem generis portat. Neglegentia praevideri POTUIT et
+    non est: culpa consilii, quam consilium melius sanat.
+    Complicatio praevideri NON POTUIT: nullum consilium eam
+    cepisset, et plus consilii NIHIL profuisset.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="praevidenda" genus="veritas"
+      ordinarius="falsum"
+      nota="AN PRAEVIDERI POTUERIT - iudicium, non factum, et
+            duo periti dissentire possunt. Verum redditum genus
+            TOLLIT: quod praevideri potuit neglegentia est, non
+            complicatio"/>
+    <proprietas nomen="effectus_in_consilium" genus="electio">
+      <optio>nullus</optio>
+      <optio>localis</optio>
+      <optio>consilium_retractandum</optio>
+      <optio>consilium_irritum</optio>
+    </proprietas>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="latens"
+      nota="adest et nemo scit - status verus quamvis nulli
+            observabilis, sicut morbus latens"/>
+    <status nomen="aperta" nota="opere incepto manifesta"/>
+    <status nomen="absorpta" nota="intra consilium tractata"/>
+    <status nomen="consilio_mutato" nota="consilium retractatum"/>
+    <transitus a="latens" ad="aperta" per="inceptio_operis"
+      nota="TRANSITUS SOLA ACTIONE FACTUS: nec mora nec
+            cogitatio eum efficit - unde exemplaria quae
+            complicationes citius aperiant (Fran: simulare
+            implementationem) pretium suum habent"/>
+    <transitus a="aperta" ad="absorpta" per="absorptio"/>
+    <transitus a="aperta" ad="consilio_mutato" per="retractatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="aperitur_in" ad="pensum" modulus="operatio"
+      nota="dum opus agitur, non dum cogitatur"/>
+    <relatio nomen="retractat" ad="consilium" externum="verum"
+      nota="genus CONSILIUM superficit - complicatio contra
+            consilium definitur, et consilium nondum descriptum
+            est (postulatum et pensum partes eius sunt, totum
+            non)"/>
+    <relatio nomen="asseritur_per" ad="iudicium" modulus="iudicium"
+      nota="MEMBRUM PER IUDICIUM: an praevideri potuerit
+            asseritur, non legitur - cum auctore, momento,
+            gradu assensus"/>
+  </relationes>
+
+  <nota>
+    VECTIS QUEM VOCABULUM PRAEBET (et cur genus mereatur):
+    remedia DIVERSA sunt et confusio ea invertit.
+    - Neglegentiae remedium: consilium MELIUS.
+    - Complicationis remedium: retractatio VILIOR - cycli
+      breviores, commissio sera, consilium leve.
+    Qui complicationes ut neglegentias tractat plus consilii
+    ante opus poscit - quo complicationes SERIUS apparent et
+    retractatio CARIOR fit. Error se ipsum alit. Vocabulum
+    solum eum frangit: "hoc complicatio fuit, non lapsus"
+    sententia est quae conclusionem recensionis mutat.
+  </nota>
+
+  <nota>
+    CONCEPTUS INSTRUMENTUM PEPERIT, quod signum realitatis
+    validissimum est: Fran artem simulandi implementationem
+    excogitavit (fingere se codicem scribere, singulis
+    "quinque minutis" renuntiare) ut complicationes VILITER
+    ante commissionem veram appareant. Conceptus qui methodum
+    gignit conceptus operans est, non nomen otiosum.
+  </nota>
+
+  <dubium>
+    PERICULUM PIEPERIANUM, aperte notandum: "complicatio" in
+    excusationem verti potest sicut "debitum technicum" versum
+    est - scutum quo lapsus tegatur ("non erravimus, complicatio
+    fuit"). Custodia in proprietate praevidenda stat, quae
+    IUDICIUM est et revocabile: recensio honesta interdum dicit
+    "immo, hoc praevideri potuit". Genus quod se ipsum numquam
+    falsificat iargon est, non vocabularium.
+  </dubium>
 
 </genus>
 
