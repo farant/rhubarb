@@ -1938,3 +1938,52 @@ kind. The answer sharpened into two findings.
 
 Measured: 28 exemplaria / 126 genera / 269 residents / 343 arcs
 / 11 dubia / 0 vulnera.
+
+## 2026-08-05 — round thirty: unix split + the terminology decision
+
+135. UNIX DUBIUM RESOLVED Fran's way, and the resolution is the
+     promotion rule applied: the predication test passed BOTH
+     ways there alone BECAUSE THERE WERE TWO THINGS.
+     → genus `systema_unixiforme` sub systema_operativum (the
+       family: AIX, Solaris, BSD, macOS are all truly said to
+       BE Unixes) with the differentia stated as FORM not
+       genealogy — one tree from a root, everything-is-a-file,
+       composable processes, the shell as an ordinary program.
+       Which is why both true descendants (macOS) and
+       reimplementations (Linux) belong, with orta_ex vs
+       ad_exemplum_facta doing the distinguishing.
+     → individuum `unix_bell_labs` — the particular 1969 system.
+       QUALIFIED NAME, because usage says "a Unix" of the family
+       far more often than of the original, so the genus earns
+       the plain name.
+     macos and linux moved under the new genus (correct
+     taxonomy). Genealogical relations retargeted at the
+     PARTICULAR, which is historically right: macOS descends
+     from real Bell Labs code, Linux was built after its example.
+     Arcs 343 → 343 again: a genus was created, three entities
+     re-parented, and zero citations broke. Third demonstration.
+136. TERMINOLOGY DECIDED — two registers, because no single word
+     serves both:
+     - artifacts keep `individuum` (Porphyry's own; literally
+       "undivided"; what lies below the species specialissima);
+     - English prose says "particular" (the standard
+       universals-and-particulars term, no person-connotation).
+     Rejections recorded with reasons, since they are the useful
+     part: `particulare` is a bad LATIN choice because in
+     scholastic logic "particular" means QUANTIFICATION (some vs
+     all), not individuality; "entity" is bad because in ER
+     modelling it means type-or-instance depending on the
+     speaker — importing the exact confusion we are removing;
+     "instance" is bad because it imports OOP vocabulary, and
+     this library's whole framing is the taxonomy layer NOT the
+     implementation layer. `singulare` was the one real
+     alternative (universale/singulare; harmonises with Scotus's
+     haecceitas, already cited in identificator) — rejected only
+     as a rename with no functional gain.
+     Noted: the connotation gap is real. Our individua split
+     into person-like (Ritchie, ISO, Moby-Dick) and
+     artefact-like (c89, x86, euro, macOS); both are
+     particulars, only the first sound like "individuals".
+
+Measured: 28 exemplaria / 127 genera / 269 residents / 343 arcs
+/ 10 dubia / 0 vulnera.

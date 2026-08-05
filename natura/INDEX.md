@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **28** · genera **126** · res dictionarii **269** · arcus **343**
+Exemplaria **28** · genera **127** · res dictionarii **269** · arcus **343**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -204,9 +204,10 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **campus** — Locus nominatus in schemate: nomen, genus valoris, necessitas
 - **genus_valoris** — Genus valoris quod campus tenere potest: INTENTIO valoris, non repraesentatio machinae - s32 et char* realizationes su
 
-### systema_operativum (v2, genera 3)
+### systema_operativum (v3, genera 4)
 
 - **systema_operativum** — Programma primarium quod machinam possidet: inter ferrum et programmata mediat - memoriam distribuit, processus custod
+- **systema_unixiforme** ⊂ systema_operativum — Ad exemplar Unix formatum: arbor plagularum una a radice, "omnia plagulae sunt", processus cum fistulis componendi, co
 - **distributio_systematis** — Collectio curata: nucleus + instrumenta + ordinationes + gestor fasciculorum, ab uno curatore electa, probata, edita
 - **versio_systematis** — Editio systematis nominata: quam installatio vere currit - "Darwin 23
 
@@ -341,6 +342,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | societas | organizatio |
 | status | elementa_programmatis |
 | systema_operativum | systema_operativum |
+| systema_unixiforme | systema_operativum |
 | tessera | commercium |
 | tessera_negotiabilis | commercium |
 | tessera_simplex | commercium |
@@ -427,7 +429,8 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `planta.rosa` — rosa_canina
 - `schema.genus_valoris` — citatio, dies, electio, numerus, textus, veritas
 - `systema_operativum.distributio_systematis` — arch, debian, ubuntu
-- `systema_operativum.systema_operativum` — linux, macos, unix, windows
+- `systema_operativum.systema_operativum` — windows
+- `systema_operativum.systema_unixiforme` — linux, macos, unix_bell_labs
 - `systema_operativum.versio_systematis` — macos_13_ventura, macos_14_sonoma
 - `tempus.calendarium` — calendarium_gregorianum, calendarium_liturgicum
 - `tempus.recurrentia_computata` — dies_negotiorum, dies_ordinalis_mensis, pascha
@@ -467,7 +470,6 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
 - `opus_scriptum` / periodicum
 - `planta` / planta
 - `schema` / genus_valoris
-- `systema_operativum` / unix
 - `tempus` / pascha
 
 ## VII. Vocabularium formae (omnes tituli licentes)

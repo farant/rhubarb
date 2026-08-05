@@ -271,6 +271,43 @@ Three consequences worth stating, because none is obvious:
 **Uniqueness is therefore load-bearing, not hygiene** — rule 15
 is what makes addressing work, and it is now ENFORCED (§8).
 
+### What to call a particular (decided 2026-08-05)
+
+**In the artifacts: `individuum`. In English prose: "particular".**
+Two registers, deliberately, because no single word serves both.
+
+- **`individuum`** — Porphyry's own term, literally *undivided*:
+  what cannot be divided into further instances of itself. It is
+  what sits below the *species specialissima*. Precise,
+  traditional, and Latin, so it stays as the element name. Its
+  one flaw is in ENGLISH: the cognate "individual" connotes a
+  person, which grates when you say "x86 is an individual".
+- **"particular"** — the standard English metaphysical term
+  (universals and particulars), with no person-connotation. Best
+  word for prose and discussion. But it is a poor LATIN choice:
+  in scholastic logic *particularis* means QUANTIFICATION (some
+  vs all — a "particular proposition"), not individuality, so
+  `particulare` would be ambiguous in Latin in a way "particular"
+  is not in modern English.
+- **`singulare`** — the other classic pair-member
+  (universale/singulare; Aristotle's καθ' ἕκαστον). Defensible,
+  and it would harmonise with Scotus's *haecceitas*, already
+  cited in `elementa_programmatis.identificator`. Rejected only
+  because it is a rename with no functional gain.
+- **"entity"** — REJECTED. In ER modelling "entity" means entity-
+  TYPE or entity-INSTANCE depending on the speaker: it imports
+  precisely the confusion this section exists to remove.
+- **"instance"** — REJECTED. Accurate in one sense (an individuum
+  is an instance of its genus) but it imports OOP baggage, and
+  this library's framing is expressly *the taxonomy layer, not
+  the implementation layer*. Borrowing the implementation
+  vocabulary would undercut the thesis.
+
+The connotation gap is real and worth knowing: our individua fall
+into person-like (Ritchie, ISO, Moby-Dick) and artefact-like
+(c89, x86, euro, macOS). Both are particulars; only the first
+sound like "individuals".
+
 ### The particular-marker (Fran, 2026-08-05)
 
 A citation may mark that it points at a **particular thing**

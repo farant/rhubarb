@@ -20,7 +20,7 @@
   Relationes duae: orta_ex (descensus) / ad_exemplum_facta
   (imitatio formae). Genealogia vera utramque eget.
 -->
-<natura modulus="systema_operativum" versio="2" lingua="latina">
+<natura modulus="systema_operativum" versio="3" lingua="latina">
 
 <genus nomen="systema_operativum">
 
@@ -104,18 +104,50 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="unix">
-    <dubium>
-      RECENSIO GRADUS (rota XXIX) hanc solam reliquit apertam:
-      cetera systemata in individua mutata sunt (unum macOS,
-      unum Windows), sed "unix" utrumque esse videtur - et
-      systema particulare a Bell Labs natum, et GENUS de quo
-      AIX, Solaris, BSD vere praedicantur ("AIX unix est").
-      Probatio praedicationis hic AMBAS partes probat, quod
-      alibi non accidit. Fortasse duo sunt: unix_originale
-      (individuum) et unix_genus - sicut lingua et versio
-      distinctae sunt. APERTUM, Frane iudicante.
-    </dubium>
+  <individuum nomen="windows">
+    <definitio>
+      Systema Microsoft dominans in computatris scriptorii:
+      linea NT (a VMS formata, non ab Unix), compatibilitas
+      retrorsum religiosa ut x86 eius.
+    </definitio>
+    <valor nomen="genus_nuclei">hybridus</valor>
+    <valor nomen="fons_apertus">falsum</valor>
+    <valor nomen="vita">vigens</valor>
+    <relatum nomen="ad_exemplum_facta" ad="vms" externum="verum"
+      nota="Cutler a DEC venit; NT filia VMS spiritu - systema
+            vms nondum descriptum"/>
+    <relatum nomen="edita_a" ad="microsoft" modulus="organizatio"/>
+    <relatum nomen="exsequitur_in" ad="x86_64"
+      modulus="architectura_machinae"/>
+    <historia>
+      <eventum quando="1985-11-20" actio="ortus">Windows 1.0
+        (super DOS)</eventum>
+      <eventum quando="1993-07-27" actio="edi">NT 3.1 - linea
+        nova quae vetera devoravit</eventum>
+    </historia>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     SYSTEMA UNIXIFORME - familia, non systema unum
+     (rota XXX: "unix" duas res significabat - genus quo
+     AIX, Solaris, BSD continentur, et systema particulare
+     Bell Labs. Divisa sunt.)
+     ================================================== -->
+
+<genus nomen="systema_unixiforme" sub="systema_operativum">
+
+  <differentia>
+    Ad exemplar Unix formatum: arbor plagularum una a radice,
+    "omnia plagulae sunt", processus cum fistulis componendi,
+    concha ut programma inter cetera. Non genealogia sed FORMA -
+    ideo et progenies vera (macOS) et imitationes (Linux) hic
+    continentur, quod relationes orta_ex et ad_exemplum_facta
+    deinde distinguunt.
+  </differentia>
+
+  <individuum nomen="unix_bell_labs">
     <definitio>
       Systema fontale: omnia-plagula-est, processus parvi fistulis
       iuncti, concha ut lingua. Forma cuius cetera aut filii aut
@@ -141,7 +173,18 @@
       et imitatores (Linux) vigent - species cuius vita in
       descendentibus continuatur.
     </nota>
-  </species>
+    <nota>
+      DUBIUM GRADUS (rota XXIX) SOLUTUM more Fran (rota XXX):
+      probatio praedicationis hic sola AMBAS partes probabat
+      quia DUAE RES ERANT. Divisae sunt: systema_unixiforme
+      genus (de quo AIX, Solaris, BSD vere praedicantur), hoc
+      individuum systema PARTICULARE a Bell Labs natum. Nomen
+      qualificatum accipit quia genus nomen simplex meretur -
+      usus enim "unix" familiam saepius significat quam
+      originale. Eadem forma qua lingua et versio distinctae:
+      NOLI PROMOVERE, ADIUNGE.
+    </nota>
+  </individuum>
 
   <individuum nomen="macos">
     <definitio>
@@ -151,7 +194,7 @@
     <valor nomen="genus_nuclei">hybridus</valor>
     <valor nomen="fons_apertus">falsum</valor>
     <valor nomen="vita">vigens</valor>
-    <relatum nomen="orta_ex" ad="unix"
+    <relatum nomen="orta_ex" ad="unix_bell_labs"
       nota="per NeXTSTEP; codex BSD verus intus"/>
     <relatum nomen="edita_a" ad="apple" modulus="organizatio"/>
     <relatum nomen="exsequitur_in" ad="armv8"
@@ -176,7 +219,7 @@
     <valor nomen="genus_nuclei">monolithicus</valor>
     <valor nomen="fons_apertus">verum</valor>
     <valor nomen="vita">vigens</valor>
-    <relatum nomen="ad_exemplum_facta" ad="unix"
+    <relatum nomen="ad_exemplum_facta" ad="unix_bell_labs"
       nota="NON orta_ex: reimplementatio, nulla linea codicis
             descendit - captura veritatis huius exemplaris"/>
     <relatum nomen="auctor" ad="linus_torvalds"
@@ -193,29 +236,6 @@
          GENUS proprium est - "certe genus rerum quas homines
          tractare debent". Vide genus distributio_systematis
          infra. -->
-  </individuum>
-
-  <individuum nomen="windows">
-    <definitio>
-      Systema Microsoft dominans in computatris scriptorii:
-      linea NT (a VMS formata, non ab Unix), compatibilitas
-      retrorsum religiosa ut x86 eius.
-    </definitio>
-    <valor nomen="genus_nuclei">hybridus</valor>
-    <valor nomen="fons_apertus">falsum</valor>
-    <valor nomen="vita">vigens</valor>
-    <relatum nomen="ad_exemplum_facta" ad="vms" externum="verum"
-      nota="Cutler a DEC venit; NT filia VMS spiritu - systema
-            vms nondum descriptum"/>
-    <relatum nomen="edita_a" ad="microsoft" modulus="organizatio"/>
-    <relatum nomen="exsequitur_in" ad="x86_64"
-      modulus="architectura_machinae"/>
-    <historia>
-      <eventum quando="1985-11-20" actio="ortus">Windows 1.0
-        (super DOS)</eventum>
-      <eventum quando="1993-07-27" actio="edi">NT 3.1 - linea
-        nova quae vetera devoravit</eventum>
-    </historia>
   </individuum>
 
 </genus>
