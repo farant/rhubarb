@@ -405,6 +405,45 @@ and move on.**
 The deferral of a catch-all "design pattern" genus (§10) was this
 same judgement made before it had a name.
 
+### The Linnaean escape hatch (Fran, 2026-08-05)
+
+**When an abstraction question stalls, stop arguing and go
+collect specimens.** What is actually out there in the wild?
+
+This is the signature affordance of the moderate-realist
+position, and it is not available to the alternatives:
+
+- If universals are real *in the things*, then the things are
+  the evidence. Surveying specimens is going to where the
+  universal actually lives, so it can settle the question.
+- Under nominalism, more specimens are just more particulars —
+  the grouping is a convention, so collection yields data to
+  impose a scheme on, never a verdict. You are left arguing
+  about which scheme is more useful, which has no ground.
+- Under Platonic realism the form is elsewhere, so specimens are
+  shadows and one reasons toward it a priori — which produces
+  taxonomies that match nothing.
+
+**Prior projects in this space, when stuck, went UP** — another
+axiom, another abstraction layer, another negotiated upper
+ontology. The escape hatch goes DOWN. Collecting specimens is
+also *bounded and terminating* work, where arguing about levels
+is neither.
+
+**The specimens can reframe the question, not merely answer it.**
+Worked example (round XXIII): "is `charta_negotiabilis` a genus
+whose name is too narrow?" — an abstraction question. Collecting
+bills of lading, warehouse receipts, banknotes, tickets,
+cloakroom tokens and digital bearer tokens produced a different
+answer than either option on the table: there were TWO kinds,
+split by a doctrine (clean title to a good-faith purchaser) that
+the abstraction framing had not noticed at all. Specimens can
+push back only if there is something real in them.
+
+This composes with the coining rule above: because a genus is
+cheap and local, the specimens are free to speak. If coining
+were expensive, every survey would end in a dilemma.
+
 ### What is cheap and what is expensive
 
 - **Division decisions are cheap and LOCAL.** A genus can be
