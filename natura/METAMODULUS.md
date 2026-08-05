@@ -579,6 +579,46 @@ Moderate realism does not require NATURAL kinds — the library
 already holds many instituted ones (norma, licentia, tributum,
 moneta, portorium).
 
+**THE ADDRESSABILITY TEST** (Fran, 2026-08-05) — the most
+practical of the three, because it is empirical rather than a
+judgement call:
+
+> Anything that can have **individua you would want to address by
+> ID unambiguously** is worth making a genus.
+
+The load-bearing half is *can have individua* (ontological: does
+this kind have particulars under it?). ID-assignment is the
+**evidence**, not the justification — if a domain's practitioners
+routinely give these things identifiers, that is strong evidence
+the things are real enough to be picked out singly. Practice
+tracks reality.
+
+**It reproduces every refusal the library made on other grounds,
+which is why it is trustworthy:**
+
+| candidate | address an instance by ID? | verdict |
+|---|---|---|
+| incident | yes — INC-1234, "the March 3rd outage" | genus |
+| merx (merchandise) | no — you address the LOAF; being-for-sale gets no ID | not a genus (round XIII) |
+| triage | no | not a genus (round XVII) |
+| backlog priority | no | not a genus (round XXXII) |
+
+And it explains WHY those three failed: all are relations or
+orderings, and **relations do not get IDs — their relata do.**
+
+**But a relation CAN earn one.** A marriage has a certificate
+number; an employment has a contract number. When a relation
+starts being addressed, it has been reified into an entity — the
+same move `commercium.pretium` made against valid-time
+attributes. So the deep form of the test is: *has this been
+reified in practice?*
+
+**Refinement:** read "individua" as *members worth picking out*.
+Some genera have addressable SPECIES and no individua at all —
+`iudicium.gradus_assensus` (you address `/iudicium/scientia`, but
+never "an individual instance of fides"), `formae_datorum`. They
+pass the test at species level, and that is enough.
+
 **Linnaean parallel:** the knowledge lives at the species level.
 Higher ranks organise; lower ranks carry the payload. A field
 guide that only said "plant" would be useless, and a taxonomy

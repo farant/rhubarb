@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/operatio.stml
+  Exemplar semanticum: OPERATIO (versio 0, PLASTICUM)
+  Genera: ambitus, pensum, incidens.
+
+  Natum ex cursu quinto circuli (praefectus operis / devops).
+  Quod paroecia programmatica numquam tetigerat: non elementa
+  programmatis nec artefacta, sed OPUS et ADMINISTRATIO - quid
+  agendum sit, ubi currat, quid ruperit.
+
+  CRITERIUM ADDRESSABILITATIS (Fran, rota XXXIII) hic primum
+  adhibitum: genus meretur quidquid individua habere potest
+  quae ID proprio designare velis. Incidens transit (INC-1234,
+  "ruina tertii Martii"); ordo prioritatis non transit -
+  ordinatio est, non res.
+-->
+<natura modulus="operatio" versio="0" lingua="latina">
+
+<!-- ==================================================
+     AMBITUS - ubi programma currit
+     ================================================== -->
+
+<genus nomen="ambitus">
+
+  <definitio>
+    Locus ordinatus ubi programmata currunt: machinae,
+    figurationes, data, nomina. Non plaga ferri sed CONTEXTUS
+    integer quem programma circa se invenit.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="realitas_consequentiae" genus="electio"
+      nota="DIFFERENTIA VERA HUIUS GENERIS, et ontologica non
+            technica: ambitus non ferro nec figuratione
+            distinguuntur sed eo quod error in producente VERUS
+            est. Ideo 'in probatione operabatur' sententia vera
+            est nec tamen excusatio">
+      <optio>ficta</optio>
+      <optio>vera</optio>
+    </proprietas>
+    <proprietas nomen="data_vera" genus="veritas"
+      ordinarius="falsum"
+      nota="an data hominum verorum contineat - unde obligationes
+            custodiae quae ambitum fictum non tangunt"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="fert" ad="programma" modulus="elementa_programmatis"
+      multiplex="verum"/>
+    <relatio nomen="situs_in" ad="locus" modulus="locus"
+      nota="ambitus alicubi est - unde iurisdictio, unde leges
+            de datis trans fines"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="ambitus_fabricae">
+    <definitio>
+      Ubi faber ipse operatur: fractura nihil nocet, ideo
+      libertas maxima.
+    </definitio>
+    <valor nomen="realitas_consequentiae">ficta</valor>
+  </species>
+
+  <species nomen="ambitus_probationis">
+    <definitio>
+      Producentem imitatur ut errores ante producentem
+      appareant: pretium eius in FIDELITATE stat - quo minus
+      similis, eo minus probat.
+    </definitio>
+    <valor nomen="realitas_consequentiae">ficta</valor>
+  </species>
+
+  <species nomen="ambitus_producens">
+    <definitio>
+      Ubi homines veri re vera utuntur: error hic damnum verum
+      est, non nuntius. Unicus ambitus cuius vitia in mundum
+      exeunt.
+    </definitio>
+    <valor nomen="realitas_consequentiae">vera</valor>
+    <valor nomen="data_vera">verum</valor>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     PENSUM - commissio agendi
+     ================================================== -->
+
+<genus nomen="pensum">
+
+  <definitio>
+    Opus certum alicui commissum: quid agendum, a quo, quo
+    statu. Non postulatum (quod verum esse debet) nec facultas
+    (quod opus praestat) nec vitium (discrepantia) sed
+    COMMISSIO AGENDI - quartum quod quadrato fabricationis
+    deerat.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="aestimatio_laboris" genus="quantitas"
+      modulus="mensura"
+      nota="IUDICIUM est, non mensura (vide
+            iudicium.aestimatio: tres aestimatores tria pretia,
+            quod non error sed natura iudicii). Ideo
+            aestimationem cum facto conferre officium
+            praefecti EST, non eius defectus"/>
+    <proprietas nomen="terminus" genus="dies"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="propositum"/>
+    <status nomen="susceptum"/>
+    <status nomen="in_opere"/>
+    <status nomen="perfectum"/>
+    <status nomen="omissum"
+      nota="consulto relictum - exitus HONESTUS quem tabulae
+            saepe celant, quasi omne pensum perficiendum esset"/>
+    <transitus a="propositum" ad="susceptum" per="susceptio"/>
+    <transitus a="susceptum" ad="in_opere" per="inceptio"/>
+    <transitus a="in_opere" ad="perfectum" per="perfectio"/>
+    <transitus a="propositum" ad="omissum" per="omissio"/>
+    <transitus a="in_opere" ad="propositum" per="remissio"
+      nota="quod susceptum est reddi potest - status ad
+            propositum redit, non ad nihilum"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="commissum" ad="persona" modulus="persona"
+      nota="cui - et 'nemini' status verus est, non hiatus"/>
+    <relatio nomen="implet" ad="postulatum" modulus="fabricatio"
+      multiplex="verum"/>
+    <relatio nomen="sanat" ad="vitium" modulus="fabricatio"
+      multiplex="verum"/>
+    <relatio nomen="impeditur_a" ad="pensum" multiplex="verum"
+      nota="ordo dependentiae: GRAPHUS, non linea - unde
+            'via critica'"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     INCIDENS - vitium in ambitu vero manifestum
+     ================================================== -->
+
+<genus nomen="incidens">
+
+  <definitio>
+    Interruptio aut deminutio ministerii in ambitu vero: non
+    genus vitii sed vitium EXPOSITUM - idem defectus vitium
+    semper est, incidens fit cum homines veros attingit.
+    Habet initium, finem, gravitatem, responsum.
+  </definitio>
+
+  <nota>
+    QUAESTIO GENERIS (rota XXXIII) Fran solvente: incidens genus
+    est, non relatio, quia CRITERIO ADDRESSABILITATIS transit -
+    incidentia individua habent quae ID proprio designamus
+    ("INC-1234", "ruina tertii Martii"), de quibus loquimur,
+    quorum historiam servamus. Quod merx, triage et ordo
+    prioritatis non habent. Vitium exponi RELATIO est; incidens
+    ipsum RES.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>totalis</optio>
+    </proprietas>
+    <proprietas nomen="duratio" genus="quantitas"
+      modulus="mensura"
+      nota="quod SLA metitur - unde obligatio et mensura hic
+            conveniunt"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="deprehensum"/>
+    <status nomen="agnitum" nota="ab homine susceptum"/>
+    <status nomen="mitigatum"
+      nota="ministerium redditum, causa manente - status quem
+            schemata binaria (apertum/clausum) perdunt, et in
+            quo administratio vera plerumque vivit"/>
+    <status nomen="solutum"/>
+    <status nomen="recensitum" nota="post-mortem factum"/>
+    <transitus a="deprehensum" ad="agnitum" per="agnitio"/>
+    <transitus a="agnitum" ad="mitigatum" per="mitigatio"/>
+    <transitus a="mitigatum" ad="solutum" per="solutio"/>
+    <transitus a="solutum" ad="recensitum" per="recensio"/>
+    <transitus a="mitigatum" ad="deprehensum" per="recidivum"
+      nota="CYCLUS: mitigatum non sanatum redire potest -
+            eadem forma qua morbus recidit et vitium regreditur.
+            Tertium dominium eiusdem legis"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="in_ambitu" ad="ambitus"/>
+    <relatio nomen="ex_vitio" ad="vitium" modulus="fabricatio"
+      nota="non semper: incidens ex mutatione figurationis,
+            ex onere, ex defectu ferri oriri potest sine ullo
+            vitio codicis"/>
+    <relatio nomen="causa_eius" ad="causa" modulus="causa"
+      multiplex="verum"
+      nota="MULTIPLEX consulto: 'causa radicalis' singularis
+            fere semper simplificatio est (vide causa: necessaria
+            et sufficiens raro conveniunt)"/>
+    <relatio nomen="deprehensum_per" ad="observatio"
+      modulus="iudicium"
+      nota="monitum SIGNUM est (instrumento mensum, ab omnibus
+            verificabile) limen transiens - divisio
+            valetudinarii in cella machinarum operans"/>
+    <relatio nomen="violat" ad="obligatio" modulus="obligatio"
+      nota="SLA obligatio est; incidens eam violare potest"/>
+  </relationes>
+
+</genus>
+
+</natura>

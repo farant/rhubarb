@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/causa.stml
+  Exemplar semanticum: CAUSA (versio 0, PLASTICUM)
+
+  Hiatus vocabularii cursu quinto circuli inventus: bibliotheca
+  CAUSAT ubique - parit, constituit, illatum_per, factum_a,
+  orta_ex, efficit - et genus causae NULLUM habebat. Ideo
+  "causa radicalis" post-mortem ut IUDICIUM dici poterat, CATENA
+  eius non poterat.
+
+  ITERUM PRAEDICAMENTA EMPIRICE RECONSTRUCTA: quattuor causae
+  Aristotelis iam per bibliothecam DISPERSAE SINE NOMINE erant -
+  materialis in artefactum.ex_materia, formalis in differentia
+  et definitione, efficiens in factum_a et actus.constituit,
+  finalis in omni definitione quae "ad finem" dicit. Idem quod
+  arbori Porphyrianae accidit (rota XVII): forma res invenit
+  quas non quaesivit, quia res ita se habent.
+
+  CAVE: hoc exemplar de causa REALI agit, non de causa
+  PROXIMA quam instrumenta nostra metiuntur. Quod fluxus aut
+  vestigium ostendit ANTECEDENS est; quod causa sit IUDICIUM
+  addit (vide iudicium: propositio cum auctore et gradu
+  assensus). Antecedentia machina invenit, causam homo dicit.
+-->
+<natura modulus="causa" versio="0" lingua="latina">
+
+<genus nomen="causa">
+
+  <definitio>
+    Id cuius vi aliquid est aut fit: non quod praecedit tantum
+    (id antecedens est) sed quod EFFICIT. Distinctio antiquissima
+    et hodie neglecta - post fallaciam "post hoc ergo propter
+    hoc" tota res iacet.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="necessaria" genus="veritas"
+      nota="an sine ea effectus omnino non fiat"/>
+    <proprietas nomen="sufficiens" genus="veritas"
+      nota="an ea posita effectus semper sequatur. NECESSARIA ET
+            SUFFICIENS RARO CONVENIUNT: scintilla incendii causa
+            sufficiens non est sine oxygenio, nec necessaria est
+            cum fulmen idem faciat - unde 'causa radicalis'
+            singularis fere semper simplificatio"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="causat" ad="*"
+      nota="effectus - apertum consulto: quidlibet causari
+            potest"/>
+    <relatio nomen="pendet_ex" ad="causa" multiplex="verum"
+      nota="CATENA causarum: quod causa est etiam effectus
+            esse potest. Ideo 'causa radicalis' terminus
+            ELECTUS est, non inventus - catena non sponte
+            desinit, indagator eam sistit"/>
+    <relatio nomen="asseritur_per" ad="iudicium" modulus="iudicium"
+      nota="causam dicere IUDICIUM est, cum auctore, momento,
+            gradu assensus - non observatio. Machina antecedentia
+            praebet, homo causam asserit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       divisio Aristotelica (Phys. II, Metaph. V): non per
+       materiam sed per MODUM CAUSANDI -->
+
+  <species nomen="causa_materialis">
+    <definitio>
+      Id ex quo aliquid fit et in quo manet: aes statuae, farina
+      panis. In bibliotheca nostra iam vivebat -
+      corporalia.artefactum.ex_materia hoc ipsum est.
+    </definitio>
+  </species>
+
+  <species nomen="causa_formalis">
+    <definitio>
+      Forma quae rem hoc ipsum facit quod est: figura statuae,
+      ratio circuli. Iam vivebat in differentia et definitione -
+      quas omni genere scribimus.
+    </definitio>
+  </species>
+
+  <species nomen="causa_efficiens">
+    <definitio>
+      Unde principium motus: artifex statuae, actus qui officium
+      constituit. Sola quam usus hodiernus "causam" vocat, unde
+      angustia sermonis technici.
+    </definitio>
+    <nota>
+      Iam vivebat in factum_a, constituit, parit, efficit -
+      relationibus per bibliotheca sparsis. Hoc exemplar eas non
+      substituit sed NOMINAT.
+    </nota>
+  </species>
+
+  <species nomen="causa_finalis">
+    <definitio>
+      Id cuius gratia aliquid fit: sanitas ambulationis, bonum
+      commune legis. Causa quam mechanismus modernus negat et
+      omnis descriptio vera supponit.
+    </definitio>
+    <nota>
+      MORBUS EAM POSTULAVIT (rota XVII): aegrotare est deficere
+      ab eo quod rei DEBETUR, ergo id solum aegrotat quod finem
+      habet. Saxum aegrotare non potest. Quod ibi tacite
+      adhibuimus, hic nominatur.
+    </nota>
+  </species>
+
+</genus>
+
+</natura>

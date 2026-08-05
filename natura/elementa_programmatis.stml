@@ -74,7 +74,7 @@
   lingua_programmandi pertinet (differentia universalis/
   specialis, inserta/externa) - editio futura illius plagulae.
 -->
-<natura modulus="elementa_programmatis" versio="3" lingua="latina">
+<natura modulus="elementa_programmatis" versio="4" lingua="latina">
 
 <!-- ==================================================
      STATUS - valor custoditus mutabilis
@@ -919,6 +919,77 @@
       volumen secundum lineam Scoti divisum antequam
       vocabularium habuimus.
     </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     PROGRAMMA - quod initium proprium habet
+     (FORAMEN rota XXXII inventum: bibliotheca SE CONTRA
+     HOC definiebat, et hoc numquam descriptum erat.
+     Genus contra genus indescriptum definire per
+     exemplaria XXVIII latuit - circulus id invenit,
+     introspectio non invenerat.)
+     ================================================== -->
+
+<genus nomen="programma">
+
+  <definitio>
+    Collectio elementorum cum INITIO PROPRIO: vocatum currit et
+    ex se ipso pergit, ubi bibliotheca vocata solum vivit.
+    Initium (principale) non est ornamentum sed differentia -
+    quod incipere potest, fatum suum habet.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="modus_finiendi" genus="electio"
+      nota="quomodo desinat - differentia practica maxima inter
+            programmata: alterum finem suum quaerit, alterum
+            non nisi occisum desinit">
+      <optio>terminans</optio>
+      <optio>perpetuum</optio>
+    </proprietas>
+    <proprietas nomen="interactivum" genus="veritas"
+      ordinarius="falsum"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="initium" ad="functio"
+      nota="functio unica quae non vocatur sed VOCATUR A
+            SYSTEMATE - unde 'principale' nomen in domo nostra"/>
+    <relatio nomen="adhibet" ad="bibliotheca" multiplex="verum"/>
+    <relatio nomen="currit_ut" ad="processus" externum="verum"
+      nota="programma FORMA est, processus INSTANTIA currens -
+            eadem distinctio qua lingua et implementatio;
+            genus processus adhuc umbra"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="instrumentum_lineae">
+    <definitio>
+      Vocatur, agit, exit: compositioni per fistulas aptum
+      (vide cliens.cliens_cli, quod idem ex parte ministerii
+      describit).
+    </definitio>
+    <valor nomen="modus_finiendi">terminans</valor>
+  </species>
+
+  <species nomen="daemon">
+    <definitio>
+      Perpetuum, sine terminali, petitionibus serviens: non
+      finem quaerit sed statum servat.
+    </definitio>
+    <valor nomen="modus_finiendi">perpetuum</valor>
+    <valor nomen="interactivum">falsum</valor>
+  </species>
+
+  <species nomen="applicatio">
+    <definitio>
+      Homini praesens, fenestris aut terminali: dum homo
+      adest currit.
+    </definitio>
+    <valor nomen="interactivum">verum</valor>
   </species>
 
 </genus>

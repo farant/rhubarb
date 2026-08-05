@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **28** · genera **127** · res dictionarii **269** · arcus **343**
+Exemplaria **30** · genera **134** · res dictionarii **281** · arcus **364**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -33,6 +33,10 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 
 - **architectura_machinae** — Forma abstracta machinae computatoriae quam programmata alloquuntur: copia instructionum, registra, modellum memoriae
 - **versio_architecturae** — Editio architecturae nominata: quam copiam instructionum chip vere exsequitur et compilator vere alloquitur - "aedific
+
+### causa (v0, genera 1)
+
+- **causa** — Id cuius vi aliquid est aut fit: non quod praecedit tantum (id antecedens est) sed quod EFFICIT
 
 ### cliens (v0, genera 8)
 
@@ -73,7 +77,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **damnum** — Laesio integritatis rei corporeae ab externa vi illata: quod unum erat divisum, quod integrum fractum, quod purum mixt
 - **vivens** ⊂ res_corporea — Se ipsum movet, nutrit, generat: principium motus INTRA se habet, ubi artefactum motum ab alio accipit et materia null
 
-### elementa_programmatis (v3, genera 16)
+### elementa_programmatis (v4, genera 17)
 
 - **status** — Valor custoditus qui in tempore mutari potest: inter eventus manet, ab eventibus mutatur
 - **proiectio** ⊂ status — Ex alio statu (VERITATE sua) integre recomputari potest
@@ -91,6 +95,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **assertio** — Propositio exsecutabilis: affirmatio de statu programmatis in puncto, quae oraculum suum secum fert - programma ipsum 
 - **commentarium** — Pars fontis quam lingua legere NON promittit: textus intra artefactum, lectoribus aliis quam compilatori inscriptus
 - **identificator** — Nomen cuius essentia REFERENTIA est, non significatio: ansa ad rem
+- **programma** — Collectio elementorum cum INITIO PROPRIO: vocatum currit et ex se ipso pergit, ubi bibliotheca vocata solum vivit
 
 ### fabricatio (v1, genera 4)
 
@@ -153,6 +158,12 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **tributum** ⊂ obligatio — Obligatio ad MAGISTRATUM, ex lege orta, non ex consensu: debetur quia lex ita statuit, non quia quis promisit
 - **titulus** — Attestatio publica et permanens ab auctoritate data, quod aliquis aliquid consecutus est aut aliquid EST: non permissi
 
+### operatio (v0, genera 3)
+
+- **ambitus** — Locus ordinatus ubi programmata currunt: machinae, figurationes, data, nomina
+- **pensum** — Opus certum alicui commissum: quid agendum, a quo, quo statu
+- **incidens** — Interruptio aut deminutio ministerii in ambitu vero: non genus vitii sed vitium EXPOSITUM - idem defectus vitium sempe
+
 ### opus_scriptum (v1, genera 6)
 
 - **opus_scriptum** — Creatio intellectualis verbis constans, ab expressionibus suis distincta: "Moby-Dick" opus unum est sive Anglice sive 
@@ -192,9 +203,11 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **rosa** ⊂ rosaceae — Caules aculeati, folia imparipinnata, fructus hypanthium carnosum (cynorrhodon) - non pomum
 - **malus** ⊂ rosaceae — Fructus POMUM (hypanthium carnosum quod semina includit), non drupa nec cynorrhodon
 
-### praescriptum (v0, genera 3)
+### praescriptum (v1, genera 5)
 
-- **praescriptum** — Ordo operationum ad finem, ab homine exsequendus: introitus declarati (materiae, instrumenta), gradus ordinati, exitus
+- **procedura** — Ordo operationum ad finem: introitus declarati, gradus ordinati, exitus exspectatus
+- **procedura_automata** ⊂ procedura — A MACHINA exsecuta, ideo AMBIGUITATIS TOLERANTIA NULLA: ubi praescriptum "donec aureum fiat" dicere potest quia homo i
+- **praescriptum** ⊂ procedura — Ordo operationum ad finem, ab homine exsequendus: introitus declarati (materiae, instrumenta), gradus ordinati, exitus
 - **gradus_praescripti** — Operatio una in ordine: actio, fortasse cum quantitate, fortasse cum mora, fortasse cum conditione finiendi
 - **versio_praescripti** — Editio praescripti nominata et citabilis: quod praescriptum per emendationes transit, identitate manente ("receptum av
 
@@ -236,6 +249,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | actus_iuridicus | actus |
 | actus_sollemnis | actus |
 | aedificium | locus |
+| ambitus | operatio |
 | animal | animal |
 | architectura_machinae | architectura_machinae |
 | artefactum | corporalia |
@@ -244,6 +258,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | bibliotheca | elementa_programmatis |
 | calendarium | tempus |
 | campus | schema |
+| causa | causa |
 | cliens | cliens |
 | cliens_api | cliens |
 | cliens_cli | cliens |
@@ -276,6 +291,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | horarium | tempus |
 | identificator | elementa_programmatis |
 | implementatio_linguae | lingua_programmandi |
+| incidens | operatio |
 | index | elementa_programmatis |
 | inscriptio | locus |
 | instrumentum | corporalia |
@@ -306,6 +322,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | opus_scriptum | opus_scriptum |
 | organizatio | organizatio |
 | pecunia | commercium |
+| pensum | operatio |
 | periculum | iudicium |
 | periodicum | opus_scriptum |
 | persona | persona |
@@ -322,6 +339,9 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | praescriptum | praescriptum |
 | pretium | commercium |
 | probatio | fabricatio |
+| procedura | praescriptum |
+| procedura_automata | praescriptum |
+| programma | elementa_programmatis |
 | proiectio | elementa_programmatis |
 | promptuarium | elementa_programmatis |
 | quantitas | mensura |
@@ -368,6 +388,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `animal.animal` — apis, canis, homo
 - `architectura_machinae.architectura_machinae` — :arm, :riscv, :x86
 - `architectura_machinae.versio_architecturae` — :armv8, :i386, :x86_64
+- `causa.causa` — causa_efficiens, causa_finalis, causa_formalis, causa_materialis
 - `cliens.cliens_cli` — :curl
 - `commercium.moneta` — :dollarium_americanum, :euro
 - `commercium.ratio_rationaria` — ratio_duplex
@@ -388,6 +409,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `elementa_programmatis.index` — index_arboris, index_inversus
 - `elementa_programmatis.lectio` — lectio_externa, lectio_memoriae
 - `elementa_programmatis.mutatio` — allocatio, mutatio_memoriae, scriptio_externa, terminatio, transactio
+- `elementa_programmatis.programma` — applicatio, daemon, instrumentum_lineae
 - `elementa_programmatis.status` — :errno, :index_strtok, :semen_rand
 - `fabricatio.probatio` — probatio_fumi, probatio_integrationis, probatio_regressionis, probatio_unitatis
 - `fabricatio.vitium` — regressio
@@ -411,6 +433,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `obligatio.obligatio` — obligatio_ex_contractu, obligatio_ex_delicto, obligatio_ex_lege
 - `obligatio.titulus` — character_indelebilis, gradus_academicus, titulus_honoris
 - `obligatio.tributum` — decuma, portorium, tributum_capitis, vectigal
+- `operatio.ambitus` — ambitus_fabricae, ambitus_probationis, ambitus_producens
 - `opus_scriptum.editio` — :moby_dick_londinensis_1851, :moby_dick_novi_eboraci_1851, :systema_naturae_editio_decima
 - `opus_scriptum.expressio` — :abusus_linguae_anglice, :abusus_linguae_germanice
 - `opus_scriptum.opus_scriptum` — :abusus_linguae, :moby_dick, :species_plantarum, :summa_theologiae, :systema_naturae
@@ -427,6 +450,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - `plagula_computatralis.scriptum_exsecutabile` — scriptum_conchae
 - `planta.malus` — granny_smith, malus_domestica
 - `planta.rosa` — rosa_canina
+- `praescriptum.procedura_automata` — depositio, fistula_integrationis
 - `schema.genus_valoris` — citatio, dies, electio, numerus, textus, veritas
 - `systema_operativum.distributio_systematis` — :arch, :debian, :ubuntu
 - `systema_operativum.systema_operativum` — :windows

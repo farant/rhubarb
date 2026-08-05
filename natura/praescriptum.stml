@@ -19,9 +19,108 @@
   correspondentis fori, indices verificationis, ipsae normae
   huius bibliothecae in CLAUDE.md scriptae.
 -->
-<natura modulus="praescriptum" versio="0" lingua="latina">
+<natura modulus="praescriptum" versio="1" lingua="latina">
 
-<genus nomen="praescriptum">
+<!-- ==================================================
+     PROCEDURA - ordo operationum ad finem
+     (parens rota XXXII inventus: fistula CI eandem formam
+     habet quam praescriptum, exsecutore contrario. Divisio
+     ritus/praescripti SPECULATA - ille plus quam peritiam
+     poscit, haec minus.)
+     ================================================== -->
+
+<genus nomen="procedura">
+
+  <definitio>
+    Ordo operationum ad finem: introitus declarati, gradus
+    ordinati, exitus exspectatus. Quis eos exsequatur haec non
+    dicit - et in eo tota divisio subsequens stat.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="gradus_eius" ad="gradus_praescripti"
+      multiplex="verum"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     PROCEDURA AUTOMATA - a machina exsecuta
+     ================================================== -->
+
+<genus nomen="procedura_automata" sub="procedura">
+
+  <differentia>
+    A MACHINA exsecuta, ideo AMBIGUITATIS TOLERANTIA NULLA:
+    ubi praescriptum "donec aureum fiat" dicere potest quia homo
+    iudicat, haec omnia numeris et condicionibus determinare
+    debet. Quod praescripto fiducia est, huic defectus esset.
+    Contra: iterari potest infinities eodem prorsus effectu,
+    quod homo non praestat.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="idempotens" genus="veritas"
+      ordinarius="falsum"
+      nota="an bis exsecuta idem efficiat - proprietas quae
+            administrationem totam regit (vide
+            elementa_programmatis.mutatio: eadem lex)"/>
+    <proprietas nomen="reversibilis" genus="veritas"
+      ordinarius="falsum"
+      nota="an effectus revocari possit - unde 'revolutio'
+            (rollback), quae plerumque procedura ALIA est, non
+            haec inversa"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="exspectans"/>
+    <status nomen="currens"/>
+    <status nomen="perfecta"/>
+    <status nomen="lapsa" nota="gradu aliquo deficiente"/>
+    <status nomen="intercepta" nota="ab homine sistita"/>
+    <transitus a="exspectans" ad="currens" per="inceptio"/>
+    <transitus a="currens" ad="perfecta" per="perfectio"/>
+    <transitus a="currens" ad="lapsa" per="defectio"/>
+    <transitus a="currens" ad="intercepta" per="interceptio"/>
+    <transitus a="lapsa" ad="exspectans" per="retentatio"
+      nota="CYCLUS: retentare licet, et saepe SUFFICIT - unde
+            defectus 'intermittentes', qui procedurae non
+            proprietas sed vitium celatum sunt"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="porta_humana" ad="persona" modulus="persona"
+      nota="gradus qui approbationem hominis exspectat: locus
+            ubi procedura automata in actum sollemnem transit -
+            approbatio enim capacitatem poscit, non peritiam"/>
+    <relatio nomen="efficit" ad="artefactum_aedificationis"
+      modulus="elementa_programmatis" multiplex="verum"/>
+    <relatio nomen="agit_in" ad="ambitus" modulus="operatio"
+      nota="ubi currat - et differentia ambitus (realitas
+            consequentiae) huic proprietatem gravissimam dat"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="fistula_integrationis">
+    <definitio>
+      Procedura quae fontes mutatos aedificat et probat: porta
+      quae opus ante coniunctionem iudicat.
+    </definitio>
+  </species>
+
+  <species nomen="depositio">
+    <definitio>
+      Procedura quae artefactum in ambitum ponit: actus qui
+      mutat quid re vera currat - unde in ambitu producente
+      gravissima omnium.
+    </definitio>
+    <valor nomen="reversibilis">verum</valor>
+  </species>
+
+</genus>
+
+<genus nomen="praescriptum" sub="procedura">
 
   <definitio>
     Ordo operationum ad finem, ab homine exsequendus: introitus

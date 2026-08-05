@@ -2112,3 +2112,84 @@ with the prediction after run three that dimensions get rarer
 and deeper. The novelty this run is the KIND of finding: not
 "we never modelled X" but "we defined something against an X we
 never modelled", which only a scenario walk exposes.
+
+## 2026-08-05 — round thirty-three: PM/devops harvest built (30 models)
+
+144. FRAN'S ADDRESSABILITY TEST — the round's doctrine, and the
+     most practical criterion yet because it is EMPIRICAL:
+     "anything that can have individua you would want to address
+     by ID unambiguously is worth making a genus."
+     The load-bearing half is *can have individua* (ontological);
+     ID-assignment is the EVIDENCE, not the justification — if
+     practitioners routinely give these things identifiers, that
+     is evidence they are real enough to pick out singly.
+     IT REPRODUCES EVERY REFUSAL THE LIBRARY MADE ON OTHER
+     GROUNDS, which is why it is trustworthy: incident passes
+     (INC-1234), merx fails (you address the LOAF), triage fails,
+     backlog priority fails. And it EXPLAINS them: all three are
+     relations or orderings, and RELATIONS DO NOT GET IDS —
+     THEIR RELATA DO.
+     Deep form recorded: a relation CAN earn one (a marriage has
+     a certificate number), and when it does it has been REIFIED
+     into an entity — the same move pretium made against
+     valid-time attributes. Refinement recorded: read "individua"
+     as *members worth picking out*, since gradus_assensus and
+     formae_datorum pass at SPECIES level with no individua at
+     all.
+145. PROGRAMMA built — the hole that had hidden for twenty-eight
+     models while `bibliotheca` defined itself against it. Its
+     differentia is the one bibliotheca already implied: it has
+     its OWN BEGINNING and runs of itself. Species
+     instrumentum_lineae / daemon / applicatio, split by
+     modus_finiendi (terminans vs perpetuum), which is the
+     practical difference that matters.
+146. PROCEDURA parent built + PROCEDURA_AUTOMATA sibling, with
+     praescriptum re-parented under it. The differentia is the
+     ritus split MIRRORED: praescriptum may carry ambiguity
+     BECAUSE a human judges; the automated procedure may carry
+     NONE, because nothing judges. What is trust in one is a
+     defect in the other. In exchange it gains what a human
+     cannot give: infinite repetition with identical effect.
+     porta_humana names the seam where an automated procedure
+     becomes an ACTUS SOLLEMNIS — an approval needs capacity,
+     not skill. retentatio carries the honest note that a retry
+     often SUFFICES, and that "intermittent failures" are a
+     hidden vitium wearing a property's clothes.
+147. CAUSA built as its own model, and the praedicamenta echo
+     returned a third time: ARISTOTLE'S FOUR CAUSES WERE ALREADY
+     DISTRIBUTED THROUGH THE LIBRARY UNNAMED — material in
+     ex_materia, formal in differentia/definitio, efficient in
+     factum_a/constituit/parit, final in every "ad finem". The
+     model NAMES them rather than replacing the relations.
+     Two load-bearing notes: (a) necessary and sufficient RARELY
+     COINCIDE (a spark is not sufficient without oxygen, nor
+     necessary when lightning would do), so a single "root
+     cause" is nearly always a simplification, and the chain
+     does not end by itself — THE INVESTIGATOR STOPS IT;
+     (b) machines find ANTECEDENTS, humans assert CAUSES —
+     causa.asseritur_per → iudicium, so a root cause carries an
+     author and a degree of assent.
+     morbus's final cause is cited: only what has an END can be
+     sick, which we used tacitly in round XVII.
+148. OPERATIO built (ambitus / pensum / incidens).
+     - ambitus's differentia is ONTOLOGICAL not technical:
+       environments differ by REALITY OF CONSEQUENCE, which is
+       why "it worked in staging" is a true sentence and not an
+       excuse.
+     - pensum is the fourth thing fabricatio's square lacked: a
+       COMMITMENT TO ACT, distinct from what must be true
+       (postulatum), what the product does (facultas), and a
+       divergence (vitium). Its `omissum` state is an honest
+       outcome that trackers usually hide, as if every ticket
+       must be finished.
+     - incidens got Fran's ruling with the criterion attached:
+       a genus, because incidents have individua we address by
+       ID. Its `mitigatum` state is where operations actually
+       live and binary open/closed schemas lose it. Its
+       recidivum cycle is the THIRD domain of one law, after
+       morbus (relapse) and fabricatio (regression).
+       causa_eius is MULTIPLEX deliberately, for the reason
+       causa gives.
+
+Measured: 30 exemplaria / 134 genera / 281 residents / 364 arcs
+/ 0 vulnera.
