@@ -1,9 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/tempus.stml
-  Exemplar semanticum: TEMPUS (versio 0, PLASTICUM)
+  Exemplar semanticum: TEMPUS (versio 2, PLASTICUM)
   Genera: momentum, intervallum, recurrentia, horarium,
-  calendarium.
+  calendarium, reservatio.
+
+  ============================================================
+  MECHANISMUS METAMODULI: TEMPUS VALIDITATIS (rota XVIII)
+  ============================================================
+  Attributa valens_a= et valens_ad= in <valor> et <relatum>:
+  QUANDO affirmatio vera fuit. Rota XVI dedit quanta certitudine
+  (certitudo=) et unde (fons=); haec tertiam coordinatam dat.
+
+  DEFECTUS INVENTUS IN NOBIS (cursu tertio circuli): organizatio
+  affirmabat `bell_labs pars_de att` PLANE - verum ab anno 1925
+  usque ad divisionem Lucentem anni 1996. Rem quae ante triginta
+  annos desiit ut perpetuam praebebamus. Non exemplum fictum sed
+  MENDACIUM NOSTRUM, a circulo inventum.
+
+  REGULA TRIPLEX (quando notandum sit - pars caram doctrinae):
+  I.   ESSENTIALIA (definitiones, differentiae, proprietates
+       speciei: "C imperativa est") - PERPETUA, numquam notanda.
+       Quod rei est qua talis est, tempus non habet.
+  II.  STATUS (valores machinarum: vita=vigens) - PRAESENTIA
+       natura sua: status PLICATURA historiae est, ergo "nunc"
+       significat ex definitione. Non notanda; historia veritatem
+       fert.
+  III. ACCIDENTIA RELATIVA (parens organizationis, pretium,
+       locus rei, conductio personae) - HAEC SOLA NOTANDA.
+       Vera fuerunt, desierunt, et forma plana mentitur.
+  Ideo exemplaria XXV fere sine mendacio vixerunt: casus I et II
+  scribebant. Mendacium in casu III solo apparuit.
+
+  CONVENTIO TERMINORUM: valens_ad absens = ADHUC VALET (idem quo
+  organizatio.dissoluta: "vacuum = perdurans"). Si vere ignotum,
+  certitudo= id dicat aut nota.
+
+  VIA ALTERA - REIFICATIO: factum tempore ligatum ENTITAS fieri
+  potest cum proprietatibus suis (sic pretium in commercio:
+  valens_a/valens_ad proprietates habet, non attributa). Gravior
+  sed ditior - eligenda cum factum ipsum auctorem, causam,
+  pretium suum habet. Attributa cum factum nudum est.
+  (Pretium mechanismum hunc rota XIV SPONTE invenit, localiter:
+  signum quod metamodulus eo egeret - eadem lex qua relatio
+  notis gravata res fieri petit.)
+  ============================================================
 
   Natum ex experimento pistrinae: coctio hora quarta,
   hebdomadis rhythmus, horae apertionis, vices operariorum.
@@ -22,7 +63,7 @@
   mensuram temporis (secundum, minutum) in exemplari mensurae
   invenies; hic de temporis STRUCTURA agitur, non de mensura.
 -->
-<natura modulus="tempus" versio="0" lingua="latina">
+<natura modulus="tempus" versio="2" lingua="latina">
 
 <!-- ==================================================
      MOMENTUM - punctum in tempore

@@ -1083,6 +1083,160 @@ Measured: 25 exemplaria / 106 genera / 195 residents / 278
 arcs / 0 vulnera. Clinic harvest fully built; the loop's
 second run is now closed end to end.
 
+## 2026-08-04 — round eighteen: THE FORWARDER (loop, third run)
+
+Scenario chosen for the one fundamental axis 25 models had
+never touched: MOTION. We could say where a thing IS; nothing
+in the library moved. A small freight forwarder. Discussion
+only; harvest awaits Fran.
+
+THE FIND OF THE RUN — THE TEMPORAL GAP (valid-time):
+The library cannot say WHEN a claim was true. Round sixteen
+gave every claim HOW SURE (certitudo) and FROM WHOM (fons);
+this run names the third missing coordinate: VALID WHEN. A
+shipment's position, an employer, a price, a border — all
+time-varying, all asserted flatly.
+Two pieces of evidence it is real, not over-engineering:
+(1) THE LIBRARY ALREADY IMPROVISED IT ONCE — commercium.pretium
+    carries valens_a / valens_ad, a local hack invented in
+    round fourteen because price forced it. When one model
+    quietly invents a mechanism, the metamodel usually needs
+    it generally (same tell as round nine: when a relation's
+    notas get heavy, the relation wants to be a thing).
+(2) A LIVE FALSEHOOD IN THE LIBRARY RIGHT NOW — organizatio
+    asserts `bell_labs pars_de att` flatly. True 1925 until
+    the 1996 Lucent spinoff; we present as timeless a relation
+    that stopped holding thirty years ago, with no way to say
+    so. The pistrina-grade catch of this run, and it is OUR
+    error, not a hypothetical.
+Prior art to consult when building: bitemporal modelling
+(valid time vs transaction time) — our iudicium.latum is
+already assertion-time for judgments, so the library has one
+axis and needs the other. Design question for Fran: attributes
+on <valor>/<relatum> (valens_a=/valens_ad=, matching pretium's
+own words), or a wrapper element? Cheap either way; the
+DOCTRINE is the expensive part.
+
+HARVEST (rest):
+2. ITER (journey: origin, destination, purpose) + VIA (route
+   as a path through loci) + VEHICULUM (an instrumentum that
+   moves and carries — sub-genus; capacity and
+   use-not-consumption already fit) + ONUS (cargo under an
+   iter — which is what "a shipment" actually IS).
+3. DAMNUM — and the symmetry it completes: vitium (divergence
+   from INTENTION — software), morbus (falling short of a
+   NATURE — living), damnum (injury to the INTEGRITY of a
+   corporeal thing). Three kinds of wrongness for three kinds
+   of thing, divided by what each is measured against. The
+   morbus model half-saw this already when vulnus deliberately
+   shared its name with silex's hand-edited-file wound.
+4. TRIBUTUM — obligation to a magistratus arising from an act,
+   not from consent; slots under the Roman ex_lege species
+   already written.
+5. CHARTA NEGOTIABILIS — the run's most interesting object: a
+   document whose POSSESSION CONVEYS THE GOODS (bill of
+   lading; cheques and bearer bonds are the same kind). A
+   corporeal thing carrying an incorporeal right, where
+   possessio of the paper and possessio of the cargo are
+   welded. Bridges corporalia / commercium / obligatio.
+
+CONFIRMATIONS (unusually strong this run):
+- AN ETA IS A PRAEDICTIO: a judgment about the future,
+  authored, revisable, verified by time itself. Tracking pages
+  display IUDICIA and call them facts — the epistemic layer
+  earning its keep in a mundane domain one round after birth.
+- INSURANCE EXERCISED A RELATION WRITTEN HOURS EARLIER:
+  periculum.transfertur_per → contractus was speculative when
+  written in the clinic round; freight insurance is exactly
+  that, and nothing needed changing. Models composing without
+  retrofit is the strongest evidence they describe things
+  rather than use cases.
+- delivery discharges obligatio → soluta; contract of carriage
+  is already locatio_conductio (Roman law species, round
+  fourteen); driver's licence = licentia; hours-of-service =
+  norma + horarium; warehouse = aedificium + capacitas;
+  "where is it now" = historia + fold (position needs NO new
+  mechanism — only valid-time).
+
+## 2026-08-04 — round nineteen: VALID-TIME built (the third coordinate)
+
+Fran took the dimension before the nouns again, same as
+iudicium — settle structure while 25 models are cheap to
+retrofit.
+
+83. MECHANISM: attributes valens_a= / valens_ad= on <valor> and
+    <relatum>. Round sixteen gave HOW SURE (certitudo) and FROM
+    WHOM (fons); this is WHEN TRUE. Cheap in mechanism, and the
+    expensive part — the doctrine — came out sharper than
+    expected.
+84. THE TRIPLE RULE (when to mark; documented in tempus.stml's
+    header, which is now the metamodel's temporal chapter):
+    I.   ESSENTIALIA — definitions, differentiae, species
+         properties ("C is imperative"): TIMELESS, never marked.
+         What belongs to a thing AS SUCH has no date.
+    II.  STATUS — machine values (vita=vigens): PRESENT by
+         nature, because a status IS a fold of historia and
+         therefore means "now" by definition. Not marked; the
+         historia carries the truth.
+    III. RELATIONAL ACCIDENTS — an organization's parent, a
+         price, a thing's location, an employment: THESE ALONE
+         get marked. They were true, they ceased, and flat form
+         necessarily lies.
+    This explains why 25 models survived nearly lie-free: they
+    were writing cases I and II almost exclusively.
+85. DOCTRINE EMPIRICALLY CONFIRMED, not asserted: surveyed all
+    117 dictionary relata in the library. Exactly ONE was a
+    case-III falsehood — bell_labs pars_de att, true 1925 until
+    the 1996 Lucent spinoff. Fixed with valens_a/valens_ad plus
+    certitudo/fons, and its nota names it as our own first
+    time-healed lie. Everything else (authorship, genealogy,
+    versio_de, scripta_in, standard editors) is genuinely
+    timeless. A survey that could have embarrassed the doctrine
+    instead measured it.
+86. TERMINAL CONVENTION DECIDED: absent valens_ad = STILL HOLDS,
+    following organizatio.dissoluta's existing precedent
+    ("vacuum = perdurans"). If genuinely unknown, certitudo=
+    says so — the two mechanisms compose rather than overlap.
+87. REIFICATION recorded as the deliberate ALTERNATIVE: a
+    time-bound fact may become an entity with its own
+    properties (commercium.pretium already carries valens_a/
+    valens_ad as PROPERTIES). Heavier but richer — choose it
+    when the fact itself has an author, a cause, a price of its
+    own; choose attributes when the fact is bare. And the tell
+    is recorded: pretium INVENTED this mechanism locally in
+    round fourteen, which is the same law as round nine (a
+    relation whose notas grow heavy wants to be a thing).
+88. GATE AT BIRTH, third consecutive round: natura_visus
+    validates date FORM (yyyy / yyyy-mm / yyyy-mm-dd) and
+    INTERVAL ORDER, and reports a tempus-validitatis count.
+    Both negative-tested (inverted interval caught; "MCMXXV"
+    caught). The inverted-interval check is the one that will
+    earn its keep — a transposed pair is invisible to a reader
+    and fatal to a fold.
+
+SURFACED BY THIS ROUND (not built): the metamodel now has five
+mechanisms (cross-model relations, library-typed properties,
+cross-model subordination, certitudo/fons, valid-time)
+documented across scattered file headers. THERE IS NO SINGLE
+METAMODEL DOCUMENT. That is a real gap for any reader who is
+not the scribe, and it is the natural companion to the
+LOADER=VALIDATOR when that is built — the loader will need
+exactly this specification. Flagged for Fran, not built.
+
+Measured: 25 exemplaria / 106 genera / 195 residents / 278
+arcs / 1 tempus-validitatis / 0 vulnera.
+
+VERDICT, RUN THREE: the loop keeps finding one structural gap
+per run, and they are stacking into a pattern worth naming.
+Run one (pistrina): missing NOUNS — whole domains.
+Run two (valetudinarium): missing EPISTEMIC dimension — how
+sure, from whom.
+Run three (forwarder): missing TEMPORAL dimension — true when.
+The gaps are getting deeper and rarer, which is the expected
+shape: nouns are surface, dimensions are structure. A fourth
+run should be expected to yield mostly nouns again — and if it
+yields another dimension, that itself is information.
+
 VERDICT, RUN TWO: the loop is not just additive, it is
 DIAGNOSTIC. Run one (pistrina) surfaced missing NOUNS — whole
 domains the library had never described. Run two surfaced a

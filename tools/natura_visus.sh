@@ -27,7 +27,8 @@ FONTES="$TMP/fontes.txt"     # mod|clavis
 CITATIONES="$TMP/citationes.txt"  # mod|clavis|nomen
 ASSENSUS="$TMP/assensus.txt"      # mod|gradus
 TRANSRADICES="$TMP/transradices.txt"  # mod|genus|mod.parens
-: > "$TRANSRADICES"
+VALIDITAS="$TMP/validitas.txt"        # mod|nomen|a|ad
+: > "$TRANSRADICES"; : > "$VALIDITAS"
 : > "$GENERA"; : > "$RES"; : > "$ARCUS"; : > "$UMBRAE"; : > "$DUBIA"
 : > "$FONTES"; : > "$CITATIONES"; : > "$ASSENSUS"
 
@@ -128,6 +129,19 @@ for f in natura/*.stml; do
         i=$((i + 1))
     done
 
+    # tempus validitatis (mechanismus rotae XVIII):
+    # forma dierum + ordo (a <= ad) - intervallum inversum error
+    nvt=$(num "$(xp "$f" "count(//*[@valens_a or @valens_ad])")")
+    i=1
+    while [ "$i" -le "$nvt" ]; do
+        sel="(//*[@valens_a or @valens_ad])[$i]"
+        va=$(xp "$f" "string($sel/@valens_a)")
+        vd=$(xp "$f" "string($sel/@valens_ad)")
+        vn=$(xp "$f" "string($sel/@nomen)")
+        echo "$mod|$vn|$va|$vd" >> "$VALIDITAS"
+        i=$((i + 1))
+    done
+
     # umbrae: externum="verum" - superficta declarata
     nu=$(num "$(xp "$f" "count(//*[@externum='verum'])")")
     i=1
@@ -171,7 +185,27 @@ while IFS='|' read -r m gradus; do
             >> "$VULNERA"
     fi
 done < "$ASSENSUS"
+while IFS='|' read -r m nomen va vd; do
+    for d in "$va" "$vd"; do
+        [ -z "$d" ] && continue
+        case "$d" in
+            [0-9][0-9][0-9][0-9]|\
+            [0-9][0-9][0-9][0-9]-[0-9][0-9]|\
+            [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]) ;;
+            *) echo "$m.$nomen --validitas--> '$d' (forma diei prava)" \
+                   >> "$VULNERA" ;;
+        esac
+    done
+    # intervallum inversum: finis ante initium
+    if [ -n "$va" ] && [ -n "$vd" ]; then
+        if [ "$(printf '%s\n%s\n' "$va" "$vd" | sort | head -1)" != "$va" ]; then
+            echo "$m.$nomen --validitas--> $va..$vd (intervallum INVERSUM)" \
+                >> "$VULNERA"
+        fi
+    fi
+done < "$VALIDITAS"
 nVulnera=$(wc -l < "$VULNERA" | tr -d ' ')
+nValiditas=$(wc -l < "$VALIDITAS" | tr -d ' ')
 
 # ---- numeri ----
 nModuli=$(ls natura/*.stml | wc -l | tr -d ' ')
@@ -289,7 +323,7 @@ echo "</body></html>"
 # ---- relatio terminalis ----
 echo "natura_visus: $EXITUS scriptum"
 echo "  exemplaria $nModuli / genera $nGenera / res $nRes / arcus $nArcus"
-echo "  umbrae $nUmbrae / dubia $nDubia / VULNERA $nVulnera"
+echo "  umbrae $nUmbrae / dubia $nDubia / tempus-validitatis $nValiditas / VULNERA $nVulnera"
 if [ "$nVulnera" -gt 0 ]; then
     echo "  --- vulnera: ---"
     cat "$VULNERA" | sed 's/^/  /'

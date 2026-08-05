@@ -8,7 +8,16 @@
   corpus_normans, societas - arbor Porphyriana profunditatem
   accipit (attributum sub= + differentia in genere).
 -->
-<natura modulus="organizatio" versio="2" lingua="latina">
+<natura modulus="organizatio" versio="4" lingua="latina">
+
+<!-- FONTES (mechanismus rotae XVI) -->
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: dies et res gestae ex textibus
+    innumeris haustae. NON VERIFICATUM.
+  </fons>
+</fontes>
 
 <genus nomen="organizatio">
 
@@ -148,8 +157,17 @@
   <individuum nomen="bell_labs">
     <valor nomen="nomina">Bell Telephone Laboratories</valor>
     <valor nomen="condita">1925-01-01</valor>
-    <relatum nomen="pars_de" ad="att" externum="verum"/>
-    <nota>domus linguae C - Ritchie ibi laborabat</nota>
+    <relatum nomen="pars_de" ad="att" externum="verum"
+      valens_a="1925" valens_ad="1996"
+      certitudo="fides" fons="corpus"
+      nota="MENDACIUM NOSTRUM PRIMUM TEMPORE SANATUM (rota
+            XVIII): relatio haec plane affirmabatur, quasi
+            perpetua. Vera fuit 1925-1996, deinde Lucent
+            (postea Nokia) laboratoria accepit. Casus III
+            regulae triplicis - accidens relativum, quod
+            forma plana necessario mentitur"/>
+    <nota>domus linguae C - Ritchie ibi laborabat (1972,
+      intra tempus validitatis supra)</nota>
   </individuum>
 
 </genus>
