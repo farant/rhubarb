@@ -624,6 +624,43 @@ Higher ranks organise; lower ranks carry the payload. A field
 guide that only said "plant" would be useless, and a taxonomy
 that stops at "identifier" is the same guide.
 
+### Three modes of membership (Fran, 2026-08-05)
+
+How a thing comes to belong to a genus is not one story but
+three, and the library runs all three without having named them
+until now.
+
+| mode | membership is… | examples |
+|---|---|---|
+| **per naturam** | READ OFF the thing | a rock is a rock; `planta`, `animal`, `corporalia` |
+| **per iudicium** | ASSERTED by someone competent, revisably | `morbus` is diagnosed; `vitium` is judged; `incidens` is declared; `debitum_technicum` is labelled |
+| **per actum** | CONFERRED by a solemn act | `titulus`, `officium`, `licentia`, `matrimonium`, `persona_iuridica` — the whole `actus` model |
+
+**Per-iudicium genera are not weaker.** They are about a third of
+the library, and `fabricatio` already recorded the consequence
+before the mode was named: *"not a bug but a feature"* is a
+dispute about GENUS ASSIGNMENT — identical behaviour, contested
+kind, resolvable only by consulting intention.
+
+**And they are where an expert vocabulary earns its keep**
+(Fran's point, and it is the strongest argument for the library's
+practical value). Much expertise IS a repertoire of applicable
+concepts: a novice sees code that is annoying to change, someone
+with the vocabulary sees *debt* — and the word immediately
+licenses moves (estimate the principal, weigh the interest,
+decide to service or repay). The library supplies the vocabulary
+that makes the judgement possible.
+
+This does not weaken the Pieper discipline. An applied concept
+must still be REAL — the expert recognises a genuine pattern
+rather than inventing one. The guard is unchanged: is the thing
+there? What changes is only how membership is established.
+
+**Practical consequence for modelling:** a per-iudicium genus
+should carry `asseritur_per → iudicium`, so that membership has
+an author, a moment and a degree of assent, and two experts may
+disagree without either being in error.
+
 ### Genera vs. analogies (Fran, 2026-08-05)
 
 Working across domains surfaces **cross-domain rhymes**: the

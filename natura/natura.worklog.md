@@ -2193,3 +2193,63 @@ never modelled", which only a scenario walk exposes.
 
 Measured: 30 exemplaria / 134 genera / 281 residents / 364 arcs
 / 0 vulnera.
+
+## 2026-08-05 — round thirty-four: three modes of membership
+
+149. FRAN'S DISTINCTION, and it names something the library has
+     been doing in three ways without noticing: HOW A THING
+     COMES TO BELONG to a genus is not one story.
+     - PER NATURAM: read off the thing (a rock is a rock).
+       "Tautological" in Fran's word. planta, animal, corporalia.
+     - PER IUDICIUM: ASSERTED by someone competent, revisably.
+       morbus is diagnosed, vitium judged, incidens declared.
+     - PER ACTUM: CONFERRED by a solemn act. titulus, officium,
+       licentia, matrimonium, persona_iuridica — the whole actus
+       model is this mode.
+     Third instance of the same pattern (after the praedicamenta
+     and the four causes): the library already operated a
+     distinction it had never stated.
+150. AND fabricatio HAD ALREADY RECORDED THE CONSEQUENCE without
+     the vocabulary: "non vitium sed facultas est" is a dispute
+     about GENUS ASSIGNMENT — identical behaviour, contested
+     kind, resolvable only by consulting intention. That is a
+     per-iudicium membership dispute, written in round XIV.
+151. FRAN'S ARGUMENT FOR WHY THIS MATTERS, recorded as the
+     strongest case yet for the library's practical value: much
+     EXPERTISE IS A REPERTOIRE OF APPLICABLE CONCEPTS. A novice
+     sees code that is annoying to change; someone with the
+     vocabulary sees DEBT, and the word immediately licenses
+     moves (estimate principal, weigh interest, service or
+     repay). Per-iudicium genera are exactly where that pays.
+     Checked against Pieper and it holds: an applied concept
+     must still be REAL — the expert RECOGNISES a genuine
+     pattern rather than inventing one. Only the mode of
+     establishing membership changes, not the requirement of
+     truth.
+     Modelling consequence recorded: a per-iudicium genus should
+     carry `asseritur_per → iudicium`, so membership has an
+     author, a moment and a degree of assent, and two experts
+     may disagree without either being wrong.
+152. DEBITUM_TECHNICUM built (fabricatio v2) on exactly that
+     footing, and it carries a Pieper catch in its own name:
+     - it is NOT a defect but a TRADE — value taken now against
+       a price paid later, which is why the financial metaphor
+       works at all (there is good debt and bad debt);
+     - THE POPULAR SENSE IS A CORRUPTION. Ward Cunningham, who
+       coined it in 1992, meant shipping what reflects your
+       CURRENT understanding and refactoring as understanding
+       grows; he said explicitly he never favoured writing code
+       poorly. So deliberate imperfection with a known price is
+       debt; ignorant or careless mess is a vitium or bad craft.
+       The term drifted precisely because it EXCUSES ("we have
+       debt" sounds better than "we wrote it badly") — abuse of
+       language in our own domain.
+     Its `usura` property carries the operative truth: INTEREST,
+     not principal, drives the decision — debt with no interest
+     need never be repaid. Its `emit → facultas` relation makes
+     the judgement honest: debt that bought no capability is not
+     debt but pure damage. And `servitum` is named as the state
+     most debts live in PERPETUALLY, which trackers rarely admit.
+
+Measured: 30 exemplaria / 135 genera / 281 residents / 367 arcs
+/ 0 vulnera.

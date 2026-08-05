@@ -15,7 +15,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="1" lingua="latina">
+<natura modulus="fabricatio" versio="2" lingua="latina">
 
 <!-- ==================================================
      POSTULATUM - intentio declarata ante opus
@@ -226,6 +226,94 @@
       regressionis - umbra sua ipsius custos.
     </definitio>
   </species>
+
+</genus>
+
+<!-- ==================================================
+     DEBITUM TECHNICUM - imperfectio CONSULTO suscepta
+
+     GENUS PER IUDICIUM (rota XXXIV, Fran): membrum huius
+     generis non ex inspectione legitur sed ASSERITUR ab eo
+     qui vocabularium habet. Non ideo infirmius - tertia
+     pars bibliothecae ita se habet (morbus dignoscitur,
+     vitium iudicatur, incidens declaratur), et hic ipse
+     locus est ubi PERITIA vocabularii pretium suum ostendit:
+     tiro codicem molestum videt, peritus DEBITUM videt, et
+     vocabulum statim actiones affordat (principal aestimare,
+     usuram pensare, solvere an servire).
+     ================================================== -->
+
+<genus nomen="debitum_technicum">
+
+  <definitio>
+    Imperfectio in opere CONSULTO suscepta ut aliquid citius
+    praestetur, cum cognitione pretii posterioris: non defectus
+    sed COMMUTATIO - valor nunc sumptus, pretium postea
+    solvendum. Ideo metaphora nummaria portat: debitum non
+    culpa est sed instrumentum, et sicut in re nummaria debitum
+    bonum et malum datur.
+  </definitio>
+
+  <nota>
+    MENDACIUM VULGARE, ET PIEPERIANUM: usus hodiernus "debitum
+    technicum" pro quolibet codice pravo dicit. Ward Cunningham,
+    qui metaphoram anno 1992 finxit, aliud significabat -
+    emittere quod intellectum PRAESENTEM refert, deinde
+    reficere dum intellectus crescit; ipse dixit se codicem
+    prave scribi numquam probare. Ergo:
+    - imperfectio CONSULTA cum pretio cognito = debitum;
+    - imperfectio INSCIA aut neglegens = non debitum sed
+      vitium aut ars mala.
+    Vocabulum ad usum lapsum est ut culpam excusaret ("debitum
+    habemus" mollius sonat quam "male scripsimus") - abusus
+    linguae exemplum purum, in dominio nostro.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="usura" genus="textus"
+      nota="quod SINGULIS VICIBUS solvitur dum debitum manet:
+            mora cuiusque mutationis, probationes fragiles,
+            tirones tardius discentes. Usura, non principal,
+            decisionem regit - debitum sine usura solvi non
+            oportet"/>
+    <proprietas nomen="consulta" genus="veritas"
+      ordinarius="verum"
+      nota="an suscepta sit sciente auctore - falsum reddit
+            genus dubium (vide notam supra)"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="susceptum"/>
+    <status nomen="servitum"
+      nota="usura solvitur, principal manet - status in quo
+            debita plurima PERPETUO vivunt, quod tabulae raro
+            fatentur"/>
+    <status nomen="solutum"/>
+    <status nomen="remissum"
+      nota="pars codicis deleta aut substituta: debitum sine
+            solutione perit - exitus verus et frequens, quem
+            'refactoring' solum non capit"/>
+    <transitus a="susceptum" ad="servitum" per="mora"/>
+    <transitus a="servitum" ad="solutum" per="solutio"/>
+    <transitus a="servitum" ad="remissum" per="remotio"/>
+    <transitus a="susceptum" ad="solutum" per="solutio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="asseritur_per" ad="iudicium" modulus="iudicium"
+      nota="MEMBRUM PER IUDICIUM: quod hic codex debitum sit
+            affirmatio est cum auctore, momento, gradu assensus -
+            non proprietas ex inspectione lecta. Duo periti
+            dissentire possunt, nec alter ideo errat"/>
+    <relatio nomen="inhaeret" ad="*"
+      nota="cui parti operis - bibliothecae, functioni, schemati"/>
+    <relatio nomen="emit" ad="facultas" multiplex="verum"
+      nota="QUID PRETIO EMPTUM SIT: debitum sine facultate
+            empta debitum non est sed damnum purum. Relatio
+            quae iudicium honestum facit"/>
+    <relatio nomen="solvitur_per" ad="pensum" modulus="operatio"
+      multiplex="verum"/>
+  </relationes>
 
 </genus>
 

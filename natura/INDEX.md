@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **30** · genera **134** · res dictionarii **281** · arcus **364**
+Exemplaria **30** · genera **135** · res dictionarii **281** · arcus **367**
 
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
 Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
@@ -97,12 +97,13 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 - **identificator** — Nomen cuius essentia REFERENTIA est, non significatio: ansa ad rem
 - **programma** — Collectio elementorum cum INITIO PROPRIO: vocatum currit et ex se ipso pergit, ubi bibliotheca vocata solum vivit
 
-### fabricatio (v1, genera 4)
+### fabricatio (v2, genera 5)
 
 - **postulatum** — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
 - **facultas** — Quod opus praestare potest, ab utente aestimatum: unitas VALORIS
 - **probatio** — Interrogatio exsecutabilis intentionis: scaena parata, actio exercita, effectus contra exspectationem collatus
 - **vitium** — Discrepantia inter intentionem et mores: programma facit quod scriptum est, non quod volitum - vitium in hiatu vivit
+- **debitum_technicum** — Imperfectio in opere CONSULTO suscepta ut aliquid citius praestetur, cum cognitione pretii posterioris: non defectus s
 
 ### formae_datorum (v0, genera 1)
 
@@ -275,6 +276,7 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 | contractus | obligatio |
 | corpus_normans | organizatio |
 | damnum | corporalia |
+| debitum_technicum | fabricatio |
 | distributio_systematis | systema_operativum |
 | editio | opus_scriptum |
 | eventum | communicatio |
