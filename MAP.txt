@@ -78,23 +78,37 @@ rhubarb/
 │   battery: cards, z-order, pagination, genus registry),
 │   tools/glomerare.sh (JS concat bundler).
 │   Tutorial: project-specs/compages-rationes-tutorial.md.
-├── natura/          SEMANTIC LIBRARY (born 2026-08-04) - hand-crafted
-│                    *.stml models: taxonomy + dictionary in one
-│                    artifact (Linnaeus shape), describing kinds as
-│                    they ARE (Pieper discipline), grown by
-│                    structure-preserving transformation (Alexander).
-│                    NOT code and NOT parsed by anything yet: the
-│                    truth-artifact is the hand-written STML. Nine
-│                    models: lingua_programmandi, persona, norma,
-│                    organizatio, architectura_machinae,
-│                    plagula_computatralis, systema_operativum,
-│                    opus_scriptum, planta.
-│                    READ natura/natura.worklog.md FIRST - it is the
-│                    transformation record (every format change + the
-│                    content that forced it); the doctrine is settled
-│                    and quote-level, do not redesign it.
-│                    Future consumer: a loader that is FIRST a
-│                    validator, then silex (library-defined genera).
+├── natura/          SEMANTIC LIBRARY - hand-crafted taxonomy + dictionary
+│                    in STML. "OOP done right": the taxonomy layer.
+│                    30 models / 140 genera / 294 dictionary residents.
+│
+│                    ORIENT IN THIS ORDER:
+│                      1. natura/INDEX.md        GENERATED inventory - every
+│                                                genus with a gloss, umbrae,
+│                                                dubia, closed tag vocabulary.
+│                                                "Do we have a genus for X?"
+│                      2. natura/METAMODULUS.md  format spec. SS8 = loader
+│                                                contract (17 rules, 11
+│                                                enforced); SS9 = the DOCTRINE
+│                                                for writing the library.
+│                      3. natura/natura.worklog.md  transformation record,
+│                                                LOAD-BEARING: 41 rounds, every
+│                                                mechanism with what forced it.
+│
+│                    TOOLS:
+│                      ./tools/natura_visus.sh      VALIDATOR + both projections
+│                                                   (exit 1 on vulnera). Emits
+│                                                   INDEX.md and the HTML view.
+│                                                   11 gates incl. CLOSED
+│                                                   VOCABULARY - spec cannot rot.
+│                      ./tools/natura_quaere.sh X   search genera/species/umbrae
+│                      ./tools/natura_quaere.sh -a G APPARATUS: the questions a
+│                                                   genus makes you ask, with
+│                                                   inheritance.
+│
+│                    Doctrine is SETTLED at quote level - read before
+│                    redesigning. Latin throughout.
+
 └── .claude/         claude code config (+ MEMORY.md auto-memory)
 
 

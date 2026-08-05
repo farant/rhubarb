@@ -544,6 +544,22 @@ holds it.
 
 ## 9. Conventions
 
+**Doctrine at a glance** — this section carries the rules for
+WRITING the library, and it has grown. In one line each:
+
+| rule | one-line form |
+|---|---|
+| When to make a genus | Ontological, not pragmatic: is it REAL? When uncertain, DIVIDE. |
+| The addressability test | Anything with individua you'd address by ID deserves a genus. Relations don't get IDs — their relata do. |
+| Prefer the specific | The generic parent carries no payload and is dangerous because it LOOKS like coverage. |
+| Three modes of membership | per naturam (read off) / per iudicium (asserted) / per actum (conferred). |
+| Naming as leverage | A genus imports an APPARATUS, so naming hands you the next questions. Vocabulary and jargon differ only in whether the thing is there. |
+| Genera vs analogies | Cross-domain rhymes are ANALOGIES, not genera. Default home is a nota on both sides. |
+| How far to enumerate | Coining is ontological (divide); enumeration is economic (DEFER). Incompleteness is honest; mis-structure is a lie. |
+| The Linnaean escape hatch | When abstraction stalls, collect specimens. Precondition: specimen access. Aim it: who is punished for getting X wrong? |
+| Promotion | Do not promote a thing to a kind — coin a SIBLING genus and relate. Test: predicated of, or merely related to? |
+| Cheap vs expensive | Divisions are LOCAL; metamodel changes are GLOBAL. Hence dimensions before nouns. |
+
 ### When to make a new genus (Fran's ruling, 2026-08-05)
 
 **The test is ONTOLOGICAL, not pragmatic.** Does this name
