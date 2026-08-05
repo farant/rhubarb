@@ -1,8 +1,13 @@
 # METAMODULUS — the natura format specification
 
-**Status:** descriptive, v1, 2026-08-04. Describes the format as
-the 25 models actually use it (vocabulary below was extracted
-mechanically from the corpus, not from memory).
+**Status:** descriptive, v1. Describes the format as the models
+actually use it — the vocabulary below was extracted mechanically
+from the corpus, not from memory (27 elements, 26 attributes).
+
+**Live counts live in `natura/INDEX.md`**, which is regenerated on
+every validator run. This document deliberately carries NO tallies
+of models or genera: a specification that quotes a moving number
+is stale the next afternoon.
 
 **Audience:** anyone writing a model by hand, and whoever
 implements the loader. The loader is expected to enforce the
@@ -68,17 +73,15 @@ and relations may all cross model boundaries (§5).
 
 ## 3. Element reference
 
-Counts are live usage in the 25-model corpus at time of writing.
-
 ### Structural
 
 | Element | Where | Attributes | Content |
 |---|---|---|---|
-| `natura` (25) | root | `modulus` `versio` `lingua` | genera, optional `fontes` |
-| `genus` (106) | in `natura`, or nested in a `genus`/`species` for taxonomic depth | `nomen`, opt `sub` `modulus` `gradus` | everything below |
-| `species` (111) | in `genus` | `nomen`, opt `gradus` `etiam` | definitio, differentia, valor, relatum, historia, nota, dubium, nested `genus` |
-| `individuum` (83) | in `genus` | `nomen` | same as species |
-| `cultivar` (1) | in `species` | `nomen` | same — a rank below species (`planta` only) |
+| `natura` | root | `modulus` `versio` `lingua` | genera, optional `fontes` |
+| `genus` | in `natura`, or nested in a `genus`/`species` for taxonomic depth | `nomen`, opt `sub` `modulus` `gradus` | everything below |
+| `species` | in `genus` | `nomen`, opt `gradus` `etiam` | definitio, differentia, valor, relatum, historia, nota, dubium, nested `genus` |
+| `individuum` | in `genus` | `nomen` | same as species |
+| `cultivar` | in `species` | `nomen` | same — a rank below species (`planta` only) |
 
 `species` vs `individuum` is the format's central distinction: a
 species is a KIND (C, pneumonia, the rose), an individuum is a
@@ -86,12 +89,12 @@ THING (Ritchie, c89, the kilogram).
 
 ### Descriptive
 
-| Element | Count | Purpose |
-|---|---|---|
-| `definitio` | 169 | dictionary prose: what this is |
-| `differentia` | 48 | what distinguishes it from its genus |
-| `nota` | 85 | commentary that is not definitional |
-| `dubium` | 8 | an unresolved tension, carried deliberately |
+| Element | Purpose |
+|---|---|
+| `definitio` | dictionary prose: what this is |
+| `differentia` | what distinguishes it from its genus |
+| `nota` | commentary that is not definitional |
+| `dubium` | an unresolved tension, carried deliberately |
 
 `dubium` is load-bearing: honest descriptions carry their open
 questions. Resolved dubia become comments recording the
@@ -279,7 +282,8 @@ If genuinely unknown, say so with `certitudo` or a `nota`.
 | III. Relational accidents — parents, prices, locations, employments | `bell_labs pars_de att` | **Yes, always.** These were true, ceased, and flat form lies. |
 
 Measured: of 117 dictionary relations in the corpus, exactly ONE
-was case III. That is why 25 models survived nearly lie-free.
+was case III. That is why the corpus survived nearly lie-free for
+its first twenty-five models: it was writing cases I and II.
 
 **Reification is the alternative.** A time-bound fact may instead
 become an entity with its own properties (`commercium.pretium`

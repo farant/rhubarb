@@ -236,7 +236,7 @@
         electione millenaria facta - "domestica" nomen honestum.
       </differentia>
       <valor nomen="altitudo_matura">5</valor>
-      <relatum nomen="pollinatur_a" ad="apis" externum="verum"/>
+      <relatum nomen="pollinatur_a" ad="apis" modulus="animal"/>
       <nota>
         Propagatio per insitionem, non semine: cultivar quisque
         CLONUS est, unius arboris progenies vegetativa. Identitas

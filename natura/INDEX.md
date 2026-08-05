@@ -1,0 +1,431 @@
+# NATURA — INDEX GENERUM
+
+**GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
+Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
+
+Exemplaria **26** · genera **113** · res dictionarii **214** · arcus **307**
+
+Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
+Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
+
+## I. Quaestio usitatissima: an genus iam exsistat?
+
+```
+grep -i '<terminus>' natura/INDEX.md      # genus aut res
+grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
+```
+
+## II. Genera per exemplar
+
+### animal (v0, genera 1)
+
+- **animal** ⊂ corporalia.vivens — SENSUM habet et motum localem: mundum percipit et se ad eum movet - unde appetitus, unde fuga, unde quaesitio
+
+### architectura_machinae (v0, genera 2)
+
+- **architectura_machinae** — Forma abstracta machinae computatoriae quam programmata alloquuntur: copia instructionum, registra, modellum memoriae
+- **versio_architecturae** — Editio architecturae nominata: quam copiam instructionum chip vere exsequitur et compilator vere alloquitur - "aedific
+
+### cliens (v0, genera 8)
+
+- **cliens** — Programma quod ministerium alienum consumit, pro utente agens: dimidium petens colloquii
+- **cliens_telae** ⊂ cliens — In navigatro vivit: institutione caret - inscriptio URL ipsa distributio est
+- **cliens_nativus** ⊂ cliens — In systemate ipso vivit: institutione indiget, plenitudine praemiatur - plagulae, processus, fenestrae, omnia systemat
+- **cliens_terminalis** ⊂ cliens — In terminali vivit, textu solo pingit: quo terminale pervenit, is pervenit - trans SSH in machinas remotas sine mutati
+- **cliens_api** ⊂ cliens — Machina machinae, sine facie humana: interfaciem programmaticam consumit
+- **cliens_mcp** ⊂ cliens — Cliens cuius UTENS agens artificialis est: ministeria per protocollum instrumentorum consumit, agens pro homine per ag
+- **cliens_cli** ⊂ cliens — Instrumentum imperii unius: vocatur, agit, exit
+- **cliens_mobilis** ⊂ cliens — In telephono vivit: tactus pro mure, interruptiones pro sessione, pila pro fine - vincula eius differentia sunt
+
+### commercium (v1, genera 7)
+
+- **moneta** — Genus pecuniae ab auctoritate emissum et receptum: unitas mensurae valoris - sed unitas cuius valor ipse MUTATUR (metr
+- **pecunia** — Quantitas in moneta: numerus CUM MONETA - "3,50" nihil est donec moneta adsit (eadem forma qua quantitas unitatem posc
+- **possessio** — Relatio inter personam (aut organizationem) et rem: quis quid habeat
+- **pretium** — Pecunia pro re petita: relatio TEMPORE VARIANS inter rem et pecuniam - non proprietas rei
+- **venditio** — Eventus quo possessio rei transit et pecunia contrarie fluit: mutatio DUPLEX simul - quod ratio duplex (Pacioli) ante 
+- **charta_negotiabilis** — Documentum cuius POSSESSIO ius transfert: charta traditur, et cum charta res ipsa
+- **ratio_rationaria** — Acta rerum pecuniariarum ordine temporis: veritas est cauda eventuum, status omnis (summa, debitum, lucrum) PLICATURA
+
+### communicatio (v0, genera 3)
+
+- **actor** — Ens logicum cum identitate, statu privato, moribus: cum aliis SOLUM per nuntios communicat
+- **nuntius** — Communicatio reificata: data in itinere INSCRIPTA - destinatarius ei debetur
+- **eventum** — Res gesta NON inscripta: accidit, et quivis observans videre potest - nulli debetur
+
+### corporalia (v2, genera 6)
+
+- **res_corporea** — Quod materiam habet, locum occupat, tempore corrumpitur: res quae manibus tangi potest
+- **artefactum** ⊂ res_corporea — Ab homine facta ad finem: NUMERABILIS, singularis, haecceitatem habens - hic panis, non alius, etiamsi gemellus adsit
+- **materia** ⊂ res_corporea — MENSURABILIS non numerabilis: farina, aqua, oleum - "tres farinae" nihil significat
+- **instrumentum** ⊂ artefactum — Ad faciendum factum, non ad consumendum: usu SERVATUR (immo usus eius finis est), non destruitur
+- **damnum** — Laesio integritatis rei corporeae ab externa vi illata: quod unum erat divisum, quod integrum fractum, quod purum mixt
+- **vivens** ⊂ res_corporea — Se ipsum movet, nutrit, generat: principium motus INTRA se habet, ubi artefactum motum ab alio accipit et materia null
+
+### elementa_programmatis (v3, genera 16)
+
+- **status** — Valor custoditus qui in tempore mutari potest: inter eventus manet, ab eventibus mutatur
+- **proiectio** ⊂ status — Ex alio statu (VERITATE sua) integre recomputari potest
+- **artefactum_aedificationis** ⊂ proiectio — Proiectio fontium per aedificationem facta: fons veritas, artefactum proiectio
+- **promptuarium** ⊂ proiectio — Proiectio ad celeritatem servata: valor semel computatus ne iterum computetur
+- **index** ⊂ proiectio — Proiectio ad quaerendum ordinata: veritas ordinem quem quaerens petit non habet; index eum praebet
+- **lectio** — Eventus quo status observatur, ipso immutato: dimidium alterum vitae status - mutatione scribitur, lectione fructum fe
+- **mutatio** — Eventus quo status mutatur: quod ACTA recordant
+- **functio** — Subprogramma nominatum: parametra accipit, computat, fortasse valorem reddit, fortasse mutationes efficit, fortasse le
+- **functio_pura** ⊂ functio — Criterium UNUM in geminos applicatum: lectiones solum per parametra (memoria monstrata inclusa - vide strlen), mutatio
+- **constans** — Valor cuius INTENTIO est numquam post ortum mutari - contrarium status: ille mutari exspectatur, hic mutari vetatur
+- **constans_numerica** ⊂ constans — Quantitas: arithmetica in ea licet
+- **constans_textualis** ⊂ constans — Series characterum constans, plerumque homini destinata: nuntia, tituli, formae
+- **bibliotheca** — Collectio elementorum (functionum, constantium, typorum) ad usum repetendum edita: interfaciem praebet, corpus celat
+- **assertio** — Propositio exsecutabilis: affirmatio de statu programmatis in puncto, quae oraculum suum secum fert - programma ipsum 
+- **commentarium** — Pars fontis quam lingua legere NON promittit: textus intra artefactum, lectoribus aliis quam compilatori inscriptus
+- **identificator** — Nomen cuius essentia REFERENTIA est, non significatio: ansa ad rem
+
+### fabricatio (v1, genera 4)
+
+- **postulatum** — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
+- **facultas** — Quod opus praestare potest, ab utente aestimatum: unitas VALORIS
+- **probatio** — Interrogatio exsecutabilis intentionis: scaena parata, actio exercita, effectus contra exspectationem collatus
+- **vitium** — Discrepantia inter intentionem et mores: programma facit quod scriptum est, non quod volitum - vitium in hiatu vivit
+
+### formae_datorum (v0, genera 1)
+
+- **forma_datorum** — Figura ordinandi data ab OPERATIONIBUS suis definita, non ab impletione: quae rogare licet, quid promittitur, quo pret
+
+### iudicium (v0, genera 5)
+
+- **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
+- **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
+- **observatio** — Notitia rei singularis accepta, quae iudicium fundare potest: quid videatur, quid sentiatur, quid metiatur
+- **iudicium** — Propositio de re quam aliquis tenet: cum auctore, momento, fundamento, gradu assensus
+- **periculum** — Damnum quod accidere potest nec certum est: species iudicii de futuro, sed DUPLEX - probabilitate et gravitate simul c
+
+### lingua_programmandi (v3, genera 5)
+
+- **lingua_programmandi** — Systema signorum formale ad computationes exprimendas: grammatica definita, semantica praescripta (plus minusve strict
+- **lingua_iussuum** ⊂ lingua_programmandi — Verbum primum = PROCESSUS ALIENUS vocatus, non functio propria: lingua ad imperia oritur (interactiva), scriptilis fit
+- **versio_linguae** — Editio linguae nominata et citabilis: eventus "edi" in rem conversus
+- **implementatio_linguae** — Programma quod linguam exsequitur: compilator, interpres, aut mixtum
+- **verbum_clavis** — Verbum quod lingua sibi vindicat: grammaticae servit, identificatori negatur
+
+### locus (v0, genera 4)
+
+- **locus** — Pars spatii determinata ubi res corporeae esse possunt: punctum aut area in terra
+- **inscriptio** — Nomen loci ad inveniendum conventum: via, numerus, urbs, codex postalis
+- **iurisdictio** — Potestas legum ferendarum et exigendarum super loco: municipium, provincia, civitas
+- **aedificium** — Structura loco fixa quam homines occupant: res corporea quae moveri non potest - immobilitas essentia eius, unde "res 
+
+### mensura (v0, genera 3)
+
+- **magnitudo_mensurabilis** — Id quod mensurari potest: longitudo, massa, tempus, temperatura
+- **unitas_mensurae** — Partitio conventa magnitudinis mensurabilis, qua quantitates numerari possunt
+- **quantitas** — Numerus CUM UNITATE: mensura rei determinata
+
+### morbus (v1, genera 1)
+
+- **morbus** — Dispositio viventis praeter naturam, qua operatio debita impeditur: defectus ab eo quod naturae rei debetur
+
+### norma (v1, genera 1)
+
+- **norma** — Documentum publicum quod formam praescribit: quid conformitas significet definit
+
+### obligatio (v2, genera 5)
+
+- **obligatio** — Iuris vinculum quo quis alicui aliquid praestare adstringitur (Institutiones): non res sed VINCULUM inter personas - d
+- **contractus** — Conventio duorum (aut plurium) quae obligationes parit: consensus est fundamentum - ideo utrumque ligat, et neuter sol
+- **licentia** — Concessio ab auctoritate data ut quid liceat quod aliter non liceret: UNILATERALIS (consensu accipientis non indiget),
+- **tributum** ⊂ obligatio — Obligatio ad MAGISTRATUM, ex lege orta, non ex consensu: debetur quia lex ita statuit, non quia quis promisit
+- **titulus** — Attestatio publica et permanens ab auctoritate data, quod aliquis aliquid consecutus est aut aliquid EST: non permissi
+
+### opus_scriptum (v0, genera 6)
+
+- **opus_scriptum** — Creatio intellectualis verbis constans, ab expressionibus suis distincta: "Moby-Dick" opus unum est sive Anglice sive 
+- **expressio** — Realizatio operis in signis certis: textus hic, non alius
+- **editio** — Corpus editum expressionis: quod praelum vere protulit - charta, forma, paginae, index ISBN
+- **codex** — Exemplar unum corporeum editionis: hoc quod manu tenes, cum maculis, notis marginalibus, historia possessionis propria
+- **periodicum** ⊂ opus_scriptum — Opus quod PERFECTIONEM non petit: in fasciculis continuatur dum curatores volunt - machina compositionis parentis ei f
+- **fasciculus** — Pars periodici tempore signata: numerus unus, die suo editus
+
+### organizatio (v4, genera 4)
+
+- **organizatio** — Universitas personarum: coetus in finem communem ordinatus qui UT UNUM agit et mutatis membris perdurat - haec perdura
+- **corpus_normans** ⊂ organizatio — Finis proprius: normas edere et custodire - descriptiones auctoritativas quibus alii conformantur
+- **societas** ⊂ organizatio — Finis proprius: quaestus per opera vendita; possessores habet quibus respondet
+- **magistratus** ⊂ organizatio — Auctoritas ex IMPERIO super loco, non ex consensu (ut corpus normans) nec ex quaestu (ut societas): leges fert quibus 
+
+### persona (v5, genera 1)
+
+- **persona** — Naturae rationabilis individua substantia (Boethius)
+
+### plagula_computatralis (v1, genera 7)
+
+- **plagula_computatralis** — Sequentia octetorum NOMINATA in systemate plagularum: identitas quae perdurat dum contentum mutatur (ut universitas mu
+- **plagula_fontis** ⊂ plagula_computatralis — Textus a personis scriptus, a personis ET translatoribus lectus: forma exsecutionis futurae, non exsecutio ipsa
+- **scriptum_exsecutabile** ⊂ plagula_computatralis — Directe exsequenda sine translatione praevia: crena (#!) interpretem suum ipsa nominat - plagula quae scit quomodo cur
+- **plagula_notationis** ⊂ plagula_computatralis — Contentum = prosa cum structura interposita: signa structuram ferunt, textus sensum - pro lectore humano per machinam 
+- **plagula_figurationis** ⊂ plagula_computatralis — A programmate in initio lecta ut mores suos formet: declarativa, non exsecutiva - dicit quid, numquam quomodo
+- **plagula_datorum** ⊂ plagula_computatralis — Contentum pro programmatibus primo: structura stricta, lector humanus hospes non dominus
+- **plagula_sqlite** ⊂ plagula_datorum — Basis datorum integra in plagula una: tabulae, indices, transactiones - omnia intra sequentiam octetorum unam, sine se
+
+### planta (v1, genera 4)
+
+- **planta** ⊂ corporalia.vivens — Vivens quod se ex loco non movet et lucem in cibum vertit (photosynthesis): radicibus haeret, per partes crescit, semi
+- **rosaceae** ⊂ planta — Flores quinque-petali plerumque, stipulae ad folia, fructus varii (pomum, drupa, aggregatus) - familia late diversa qu
+- **rosa** ⊂ rosaceae — Caules aculeati, folia imparipinnata, fructus hypanthium carnosum (cynorrhodon) - non pomum
+- **malus** ⊂ rosaceae — Fructus POMUM (hypanthium carnosum quod semina includit), non drupa nec cynorrhodon
+
+### praescriptum (v0, genera 3)
+
+- **praescriptum** — Ordo operationum ad finem, ab homine exsequendus: introitus declarati (materiae, instrumenta), gradus ordinati, exitus
+- **gradus_praescripti** — Operatio una in ordine: actio, fortasse cum quantitate, fortasse cum mora, fortasse cum conditione finiendi
+- **versio_praescripti** — Editio praescripti nominata et citabilis: quod praescriptum per emendationes transit, identitate manente ("receptum av
+
+### schema (v0, genera 3)
+
+- **schema** — Forma datorum declarata: figura quam res eiusdem generis implere debent - campi nominati, genera valorum, necessitates
+- **campus** — Locus nominatus in schemate: nomen, genus valoris, necessitas
+- **genus_valoris** — Genus valoris quod campus tenere potest: INTENTIO valoris, non repraesentatio machinae - s32 et char* realizationes su
+
+### systema_operativum (v2, genera 3)
+
+- **systema_operativum** — Programma primarium quod machinam possidet: inter ferrum et programmata mediat - memoriam distribuit, processus custod
+- **distributio_systematis** — Collectio curata: nucleus + instrumenta + ordinationes + gestor fasciculorum, ab uno curatore electa, probata, edita
+- **versio_systematis** — Editio systematis nominata: quam installatio vere currit - "Darwin 23
+
+### tempus (v2, genera 6)
+
+- **momentum** — Punctum in tempore: quando aliquid accidit
+- **intervallum** — Spatium temporis inter duo momenta: initium, finis, ideo duratio
+- **recurrentia** — Regula quae momenta (aut intervalla) gignit: "omni die hora quarta", "omni die Lunae", "prima die cuiusque mensis"
+- **horarium** — Recurrentiae in ordinem compositae quibus opus regitur: horae apertionis, vices operariorum, ordo coctionis
+- **calendarium** — Systema quo dies nominantur et ordinantur: menses, hebdomadae, anni, dies festi
+- **reservatio** — Vindicatio capacitatis futurae: intervallum et res (sedes, cella, hora medici) alicui SERVATA ne alteri detur
+
+### vectura (v0, genera 4)
+
+- **iter** — Motus rei aut personae a loco ad locum, proposito susceptus: initium, finis, via, tempus
+- **via** — Semita per quam iri potest: res publica plerumque, itineribus innumeris communis
+- **vehiculum** ⊂ corporalia.instrumentum — Instrumentum cuius usus MOTUS est: se movet et alia fert
+- **onus** — Res corporeae sub itinere: non genus rerum sed CONDICIO earum - idem dolium onus est dum fertur, merx dum venditur, su
+
+## III. Index alphabeticus (genera)
+
+| genus | exemplar |
+|---|---|
+| actor | communicatio |
+| aedificium | locus |
+| animal | animal |
+| architectura_machinae | architectura_machinae |
+| artefactum | corporalia |
+| artefactum_aedificationis | elementa_programmatis |
+| assertio | elementa_programmatis |
+| bibliotheca | elementa_programmatis |
+| calendarium | tempus |
+| campus | schema |
+| charta_negotiabilis | commercium |
+| cliens | cliens |
+| cliens_api | cliens |
+| cliens_cli | cliens |
+| cliens_mcp | cliens |
+| cliens_mobilis | cliens |
+| cliens_nativus | cliens |
+| cliens_telae | cliens |
+| cliens_terminalis | cliens |
+| codex | opus_scriptum |
+| commentarium | elementa_programmatis |
+| constans | elementa_programmatis |
+| constans_numerica | elementa_programmatis |
+| constans_textualis | elementa_programmatis |
+| contractus | obligatio |
+| corpus_normans | organizatio |
+| damnum | corporalia |
+| distributio_systematis | systema_operativum |
+| editio | opus_scriptum |
+| eventum | communicatio |
+| expressio | opus_scriptum |
+| facultas | fabricatio |
+| fasciculus | opus_scriptum |
+| fons | iudicium |
+| forma_datorum | formae_datorum |
+| functio | elementa_programmatis |
+| functio_pura | elementa_programmatis |
+| genus_valoris | schema |
+| gradus_assensus | iudicium |
+| gradus_praescripti | praescriptum |
+| horarium | tempus |
+| identificator | elementa_programmatis |
+| implementatio_linguae | lingua_programmandi |
+| index | elementa_programmatis |
+| inscriptio | locus |
+| instrumentum | corporalia |
+| intervallum | tempus |
+| iter | vectura |
+| iudicium | iudicium |
+| iurisdictio | locus |
+| lectio | elementa_programmatis |
+| licentia | obligatio |
+| lingua_iussuum | lingua_programmandi |
+| lingua_programmandi | lingua_programmandi |
+| locus | locus |
+| magistratus | organizatio |
+| magnitudo_mensurabilis | mensura |
+| malus | planta |
+| materia | corporalia |
+| momentum | tempus |
+| moneta | commercium |
+| morbus | morbus |
+| mutatio | elementa_programmatis |
+| norma | norma |
+| nuntius | communicatio |
+| obligatio | obligatio |
+| observatio | iudicium |
+| onus | vectura |
+| opus_scriptum | opus_scriptum |
+| organizatio | organizatio |
+| pecunia | commercium |
+| periculum | iudicium |
+| periodicum | opus_scriptum |
+| persona | persona |
+| plagula_computatralis | plagula_computatralis |
+| plagula_datorum | plagula_computatralis |
+| plagula_figurationis | plagula_computatralis |
+| plagula_fontis | plagula_computatralis |
+| plagula_notationis | plagula_computatralis |
+| plagula_sqlite | plagula_computatralis |
+| planta | planta |
+| possessio | commercium |
+| postulatum | fabricatio |
+| praescriptum | praescriptum |
+| pretium | commercium |
+| probatio | fabricatio |
+| proiectio | elementa_programmatis |
+| promptuarium | elementa_programmatis |
+| quantitas | mensura |
+| ratio_rationaria | commercium |
+| recurrentia | tempus |
+| res_corporea | corporalia |
+| reservatio | tempus |
+| rosa | planta |
+| rosaceae | planta |
+| schema | schema |
+| scriptum_exsecutabile | plagula_computatralis |
+| societas | organizatio |
+| status | elementa_programmatis |
+| systema_operativum | systema_operativum |
+| titulus | obligatio |
+| tributum | obligatio |
+| unitas_mensurae | mensura |
+| vehiculum | vectura |
+| venditio | commercium |
+| verbum_clavis | lingua_programmandi |
+| versio_architecturae | architectura_machinae |
+| versio_linguae | lingua_programmandi |
+| versio_praescripti | praescriptum |
+| versio_systematis | systema_operativum |
+| via | vectura |
+| vitium | fabricatio |
+| vivens | corporalia |
+
+## IV. Dictionarium (species et individua descripta)
+
+- `animal.animal` — apis, canis, homo
+- `architectura_machinae.architectura_machinae` — arm, riscv, x86
+- `architectura_machinae.versio_architecturae` — armv8, i386, x86_64
+- `cliens.cliens_cli` — curl
+- `commercium.charta_negotiabilis` — charta_onerum, perscriptio, syngrapha
+- `commercium.moneta` — dollarium_americanum, euro
+- `commercium.ratio_rationaria` — ratio_duplex
+- `corporalia.artefactum` — cibus
+- `corporalia.damnum` — contaminatio, corruptio, fractura
+- `elementa_programmatis.artefactum_aedificationis` — exsecutabile_ligatum, obiectum_compilatum
+- `elementa_programmatis.assertio` — assertio_probationis, assertio_statica, invarians, postconditio, praeconditio
+- `elementa_programmatis.bibliotheca` — libc, sqlite, zlib
+- `elementa_programmatis.commentarium` — annotatio_machinae, codex_sepultus, documentarium, explicativum, monitum_futuri, titulus_iuris
+- `elementa_programmatis.constans` — null
+- `elementa_programmatis.constans_numerica` — eof, pi
+- `elementa_programmatis.functio` — malloc, memcpy, printf, rand, scanf, strtok
+- `elementa_programmatis.functio_pura` — abs, strlen
+- `elementa_programmatis.identificator` — identificator_baptismalis, sigillum_contenti
+- `elementa_programmatis.index` — index_arboris, index_inversus
+- `elementa_programmatis.lectio` — lectio_externa, lectio_memoriae
+- `elementa_programmatis.mutatio` — allocatio, mutatio_memoriae, scriptio_externa, terminatio, transactio
+- `elementa_programmatis.status` — errno, index_strtok, semen_rand
+- `fabricatio.probatio` — probatio_fumi, probatio_integrationis, probatio_regressionis, probatio_unitatis
+- `fabricatio.vitium` — regressio
+- `formae_datorum.forma_datorum` — acervus, arbor, cauda, copia, series, tabula_associativa
+- `iudicium.fons` — corpus_institutionis, fons_mensurae, fons_scriptus, fons_testimonii
+- `iudicium.gradus_assensus` — dubitatio, fides, opinio, scientia, suspicio
+- `iudicium.iudicium` — aestimatio, diagnosis, praedictio, sententia_iudicis
+- `iudicium.observatio` — signum, symptoma, testimonium
+- `lingua_programmandi.implementatio_linguae` — clang, cpython, fil_c, gcc, officina
+- `lingua_programmandi.lingua_iussuum` — bash
+- `lingua_programmandi.lingua_programmandi` — c, python, rust
+- `lingua_programmandi.verbum_clavis` — const, goto, restrict, static
+- `lingua_programmandi.versio_linguae` — c11, c89, c99
+- `mensura.magnitudo_mensurabilis` — capacitas, longitudo, massa, numerositas, temperatura, tempus_intervallum
+- `mensura.unitas_mensurae` — gradus_celsius, gramma, kilogramma, metrum, minutum, secundum
+- `morbus.morbus` — morbus_degenerativus, morbus_geneticus, morbus_infectiosus, vulnus
+- `norma.norma` — iso_9899_1990, iso_9899_1999, posix_1
+- `obligatio.contractus` — emptio_venditio, locatio_conductio, mandatum, societas_contractus
+- `obligatio.obligatio` — obligatio_ex_contractu, obligatio_ex_delicto, obligatio_ex_lege
+- `obligatio.titulus` — character_indelebilis, gradus_academicus, titulus_honoris
+- `obligatio.tributum` — decuma, portorium, tributum_capitis, vectigal
+- `opus_scriptum.editio` — moby_dick_londinensis_1851, moby_dick_novi_eboraci_1851, systema_naturae_editio_decima
+- `opus_scriptum.expressio` — abusus_linguae_anglice, abusus_linguae_germanice
+- `opus_scriptum.opus_scriptum` — abusus_linguae, moby_dick, species_plantarum, summa_theologiae, systema_naturae
+- `organizatio.corpus_normans` — ansi, iec, ieee, iso
+- `organizatio.societas` — amd, apple, arm_ltd, bell_labs, canonical, intel, microsoft
+- `persona.persona` — bertrand_meyer, brian_fox, carl_linnaeus, dennis_ritchie, duns_scotus, edsger_dijkstra, graydon_hoare, guido_van_rossum, herman_melville, josef_pieper, ken_thompson, linus_torvalds, luca_pacioli, thomas_aquinas
+- `plagula_computatralis.plagula_datorum` — plagula_csv, plagula_json
+- `plagula_computatralis.plagula_figurationis` — plagula_plist, plagula_toml
+- `plagula_computatralis.plagula_fontis` — caput_c, fons_c, fons_python, fons_rust
+- `plagula_computatralis.plagula_notationis` — plagula_markdown, plagula_stml, plagula_xml
+- `plagula_computatralis.plagula_sqlite` — volumen
+- `plagula_computatralis.scriptum_exsecutabile` — scriptum_conchae
+- `planta.malus` — granny_smith, malus_domestica
+- `planta.rosa` — rosa_canina
+- `schema.genus_valoris` — citatio, dies, electio, numerus, textus, veritas
+- `systema_operativum.distributio_systematis` — arch, debian, ubuntu
+- `systema_operativum.systema_operativum` — linux, macos, unix, windows
+- `systema_operativum.versio_systematis` — macos_13_ventura, macos_14_sonoma
+- `tempus.calendarium` — calendarium_gregorianum, calendarium_liturgicum
+- `vectura.vehiculum` — aeroplanum, currus_onerarius, navis, tramen
+- `vectura.via` — canalis_suesianus, via_aeria, via_appia, via_maritima, via_terrestris
+
+## V. Umbrae — genera superficta, nondum descripta
+
+Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit.
+
+- **abc** — a `lingua_programmandi` superfectum
+- **att** — a `organizatio` superfectum
+- **b** — a `lingua_programmandi` superfectum
+- **chip** — a `architectura_machinae` superfectum
+- **constructum_linguae** — a `elementa_programmatis` superfectum
+- **debian_project** — a `systema_operativum` superfectum
+- **directorium** — a `plagula_computatralis` superfectum
+- **instrumentum_aedificationis** — a `elementa_programmatis` superfectum
+- **processus** — a `elementa_programmatis` superfectum
+- **servus** — a `cliens` superfectum
+- **systema_plagularum** — a `systema_operativum` superfectum
+- **typus** — a `elementa_programmatis` superfectum
+- **vms** — a `systema_operativum` superfectum
+
+## VI. Dubia aperta
+
+- `elementa_programmatis` / functio_pura
+- `elementa_programmatis` / constans
+- `elementa_programmatis` / libc
+- `fabricatio` / vitium
+- `norma` / posix_1
+- `opus_scriptum` / periodicum
+- `planta` / planta
+- `schema` / genus_valoris
+
+## VII. Vocabularium formae (omnes tituli licentes)
+
+**Elementa (27):** natura, fontes, fons, genus, definitio, differentia, proprietates, proprietas, optio, partes, pars, machina_statuum, status, transitus, actiones, actio, relationes, relatio, species, individuum, cultivar, valor, relatum, historia, eventum, nota, dubium
+
+**Attributa:** nomen, modulus, versio, lingua, sub, gradus, etiam, genus, ad, a, per, multiplex, ordinarius, necessaria, externum, inversa, gerens, quando, actio, clavis, verificatus, certitudo, fons, valens_a, valens_ad, nota
+
+Vocabularium CLAUSUM est (METAMODULUS regula VIII): titulus novus
+sine emendatione specificationis portam frangit.

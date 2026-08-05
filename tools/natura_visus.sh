@@ -28,7 +28,9 @@ CITATIONES="$TMP/citationes.txt"  # mod|clavis|nomen
 ASSENSUS="$TMP/assensus.txt"      # mod|gradus
 TRANSRADICES="$TMP/transradices.txt"  # mod|genus|mod.parens
 VALIDITAS="$TMP/validitas.txt"        # mod|nomen|a|ad
-: > "$TRANSRADICES"; : > "$VALIDITAS"
+GLOSSAE="$TMP/glossae.txt"            # mod|genus|glossa
+RESGEN="$TMP/resgen.txt"              # mod|genus|res
+: > "$TRANSRADICES"; : > "$VALIDITAS"; : > "$GLOSSAE"; : > "$RESGEN"
 : > "$GENERA"; : > "$RES"; : > "$ARCUS"; : > "$UMBRAE"; : > "$DUBIA"
 : > "$FONTES"; : > "$CITATIONES"; : > "$ASSENSUS"
 
@@ -60,6 +62,13 @@ for f in natura/*.stml; do
         ndu=$(num "$(xp "$f" "count((//genus)[$i]//dubium)")")
         nma=$(num "$(xp "$f" "count((//genus)[$i]/machina_statuum)")")
         echo "$mod|$g|$s|$nsp|$nin|$ndu|$nma" >> "$GENERA"
+        # glossa: sententia prima definitionis (aut differentiae
+        # in sub-generibus, quae definitione saepe carent)
+        gl=$(xp "$f" "string((//genus)[$i]/definitio)")
+        [ -z "$gl" ] && gl=$(xp "$f" "string((//genus)[$i]/differentia)")
+        gl=$(echo "$gl" | tr '\n' ' ' | sed 's/  */ /g; s/^ //' \
+             | cut -d'.' -f1 | cut -c1-118)
+        echo "$mod|$g|$gl" >> "$GLOSSAE"
         i=$((i + 1))
     done
 
@@ -69,7 +78,9 @@ for f in natura/*.stml; do
         i=1
         while [ "$i" -le "$nr" ]; do
             r=$(xp "$f" "string((//$gradus)[$i]/@nomen)")
+            rg=$(xp "$f" "string((//$gradus)[$i]/ancestor::genus[1]/@nomen)")
             [ -n "$r" ] && echo "$mod|$r" >> "$RES"
+            [ -n "$r" ] && echo "$mod|$rg|$r" >> "$RESGEN"
             i=$((i + 1))
         done
     done
@@ -259,6 +270,7 @@ while IFS='|' read -r m nomen va vd; do
 done < "$VALIDITAS"
 nVulnera=$(wc -l < "$VULNERA" | tr -d ' ')
 nValiditas=$(wc -l < "$VALIDITAS" | tr -d ' ')
+nElementa=$(echo $_elementa | wc -w | tr -d " ")
 
 # ---- numeri ----
 nModuli=$(ls natura/*.stml | wc -l | tr -d ' ')
@@ -372,6 +384,88 @@ fi
 echo "<p class='insignia'>proiectio generata a tools/natura_visus.sh - deleri licet, regenerari potest</p>"
 echo "</body></html>"
 } > "$EXITUS"
+
+# ---- INDEX.md: proiectio ad oculos AGENTIS (non hominis) ----
+# HTML homini servit; sessio nova textum brevem greppabilem
+# poscit. Semper scribitur, numquam per vexillum: quod oblivioni
+# dari potest, dabitur - et git indicem rancidum statim ostendit.
+{
+echo "# NATURA — INDEX GENERUM"
+echo
+echo "**GENERATUM** a \`tools/natura_visus.sh\` — noli manu emendare."
+echo "Regenera: \`./tools/natura_visus.sh\` (idem cursus qui portam custodit)."
+echo
+echo "Exemplaria **$nModuli** · genera **$nGenera** · res dictionarii **$nRes** · arcus **$nArcus**"
+echo
+echo "Forma ipsa (elementa, attributa, regulae): \`natura/METAMODULUS.md\`."
+echo "Historia et doctrina: \`natura/natura.worklog.md\` (LEGE PRIMUM)."
+echo
+echo "## I. Quaestio usitatissima: an genus iam exsistat?"
+echo
+echo '```'
+echo "grep -i '<terminus>' natura/INDEX.md      # genus aut res"
+echo "grep -n 'nomen=\"<genus>\"' natura/*.stml   # sedes definitionis"
+echo '```'
+echo
+echo "## II. Genera per exemplar"
+echo
+for mv in $MODULI; do
+    mod="${mv%%:*}"; ver="${mv##*:}"
+    ng=$(grep -c "^$mod|" "$GENERA")
+    echo "### $mod (v$ver, genera $ng)"
+    echo
+    while IFS='|' read -r _ g gl; do
+        supra=$(grep "^$mod|$g|" "$TRANSRADICES" | cut -d'|' -f3)
+        parens=$(grep "^$mod|$g|" "$GENERA" | cut -d'|' -f3)
+        marca=""
+        [ -n "$supra" ] && marca=" ⊂ $supra"
+        [ -n "$parens" ] && marca=" ⊂ $parens"
+        echo "- **$g**$marca — $gl"
+    done < <(grep "^$mod|" "$GLOSSAE")
+    echo
+done
+echo "## III. Index alphabeticus (genera)"
+echo
+echo "| genus | exemplar |"
+echo "|---|---|"
+sort -t'|' -k2,2 "$GLOSSAE" | while IFS='|' read -r m g _; do
+    echo "| $g | $m |"
+done
+echo
+echo "## IV. Dictionarium (species et individua descripta)"
+echo
+for mv in $MODULI; do
+    mod="${mv%%:*}"
+    for g in $(grep "^$mod|" "$RESGEN" | cut -d'|' -f2 | sort -u); do
+        lista=$(grep "^$mod|$g|" "$RESGEN" | cut -d'|' -f3 \
+                | sort | paste -sd, - | sed 's/,/, /g')
+        [ -n "$lista" ] && echo "- \`$mod.$g\` — $lista"
+    done
+done
+echo
+echo "## V. Umbrae — genera superficta, nondum descripta"
+echo
+echo "Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed nemo describit."
+echo
+sort -u -t'|' -k1,1 "$UMBRAE" | while IFS='|' read -r u fm; do
+    echo "- **$u** — a \`$fm\` superfectum"
+done
+echo
+echo "## VI. Dubia aperta"
+echo
+while IFS='|' read -r m c; do
+    echo "- \`$m\` / $c"
+done < "$DUBIA"
+echo
+echo "## VII. Vocabularium formae (omnes tituli licentes)"
+echo
+echo "**Elementa (${nElementa}):** $(echo $_elementa | sed 's/ /, /g')"
+echo
+echo "**Attributa:** $(echo $_attributa | sed 's/ version encoding//' | sed 's/ /, /g')"
+echo
+echo "Vocabularium CLAUSUM est (METAMODULUS regula VIII): titulus novus"
+echo "sine emendatione specificationis portam frangit."
+} > natura/INDEX.md
 
 # ---- relatio terminalis ----
 echo "natura_visus: $EXITUS scriptum"

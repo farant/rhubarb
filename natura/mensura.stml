@@ -36,8 +36,8 @@
   </definitio>
 
   <relationes>
-    <relatio nomen="mensuratur_per" ad="unitatis"
-      externum="verum" multiplex="verum"
+    <relatio nomen="mensuratur_per" ad="unitas_mensurae"
+      multiplex="verum"
       nota="unitates eiusdem magnitudinis inter se converti
             possunt (metrum/pes); trans magnitudines numquam -
             hic radix erroris dimensionum"/>
