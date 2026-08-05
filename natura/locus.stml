@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/locus.stml
+  Exemplar semanticum: LOCUS (versio 0, PLASTICUM)
+  Genera: locus, inscriptio, iurisdictio, aedificium.
+
+  Natum ex experimento pistrinae: taberna alicubi EST, et hoc
+  omnia mutat - quas leges sequitur, quis eam inspicit, quo
+  clientes veniunt.
+
+  DISTINCTIO PRIMA: locus in NATURA est (punctum terrae);
+  inscriptio NOMEN loci est (conventio postalis, mutabilis
+  manente loco); iurisdictio POTESTAS super locum est. Tria
+  quae schemata vulgaria in "address" unum confundunt - et
+  confusio dolet, quia inscriptio mutari potest sine motu, et
+  iurisdictio mutari potest sine motu quoque (fines mutantur,
+  civitates oriuntur).
+-->
+<natura modulus="locus" versio="0" lingua="latina">
+
+<genus nomen="locus">
+
+  <definitio>
+    Pars spatii determinata ubi res corporeae esse possunt:
+    punctum aut area in terra. Ante omnem nominationem est -
+    locus manet etiamsi nomen eius pereat.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="latitudo" genus="numerus"
+      nota="gradus; coordinatae identitatem stabilem dant quam
+            inscriptiones non dant"/>
+    <proprietas nomen="longitudo_geo" genus="numerus"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="intra" ad="locus"
+      nota="loci se continent: taberna in vico, vicus in urbe -
+            hierarchia partitiva"/>
+    <relatio nomen="sub_iurisdictione" ad="iurisdictio"
+      multiplex="verum"
+      nota="MULTIPLEX vere: idem locus sub municipio, provincia,
+            civitate simul est - potestates se superponunt"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     INSCRIPTIO - nomen loci conventum
+     ================================================== -->
+
+<genus nomen="inscriptio">
+
+  <definitio>
+    Nomen loci ad inveniendum conventum: via, numerus, urbs,
+    codex postalis. CONVENTIO est, non locus - vici renominantur,
+    numeri mutantur, codices postales finguntur, loco immoto.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="linea" genus="textus" multiplex="verum"
+      nota="lineae plures, ordine servato - forma inscriptionis
+            per civitates VARIAT (codex ante urbem, post urbem;
+            numerus ante viam, post viam): schema unum omnibus
+            aptum non est, mendacium vulgare"/>
+    <proprietas nomen="codex_postalis" genus="textus"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="designat" ad="locus"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     IURISDICTIO - potestas super locum
+     ================================================== -->
+
+<genus nomen="iurisdictio">
+
+  <definitio>
+    Potestas legum ferendarum et exigendarum super loco:
+    municipium, provincia, civitas. Non locus sed POTESTAS -
+    ideo se superponere possunt (idem locus sub tribus simul),
+    quod loci ipsi non possunt.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="exercetur_a" ad="organizatio"
+      modulus="organizatio"
+      nota="magistratus - sub-genus organizationis ab hoc
+            exemplari postulatum"/>
+    <relatio nomen="fert" ad="norma" modulus="norma"
+      multiplex="verum"
+      nota="leges et regulae sanitatis - unde inspectio
+            pistrinae"/>
+    <relatio nomen="intra" ad="iurisdictio"
+      nota="hierarchia potestatum, distincta ab hierarchia
+            locorum"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     AEDIFICIUM - res corporea loco fixa
+     ================================================== -->
+
+<genus nomen="aedificium">
+
+  <definitio>
+    Structura loco fixa quam homines occupant: res corporea
+    quae moveri non potest - immobilitas essentia eius, unde
+    "res immobiles" in iure.
+  </definitio>
+
+  <partes>
+    <pars nomen="spatia" necessaria="verum"
+      nota="cellae interiores: pistrinum, taberna, cella
+            frigida - spatium quodque usum proprium habet"/>
+  </partes>
+
+  <relationes>
+    <relatio nomen="situm_in" ad="locus"/>
+    <relatio nomen="inscriptio_eius" ad="inscriptio"/>
+    <relatio nomen="occupatum_a" ad="*" multiplex="verum"
+      nota="persona aut organizatio - per contractum locationis
+            plerumque (vide obligatio.locatio_conductio)"/>
+  </relationes>
+
+</genus>
+
+</natura>

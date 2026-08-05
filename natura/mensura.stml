@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/mensura.stml
+  Exemplar semanticum: MENSURA (versio 0, PLASTICUM)
+  Genera: quantitas, unitas_mensurae, magnitudo_mensurabilis.
+
+  Natum ex experimento pistrinae: "500 grammata", "180 gradus",
+  "25 minuta" - nihil in bibliotheca numerum CUM UNITATE ferebat.
+  Proprietas genere "numerus" quantitatem nudam fert, quod
+  mendacium est: numerus sine unitate quantitas non est.
+
+  MATERIA LINNAEANA PURISSIMA post formas datorum: unitates
+  individua recordi publici sunt, per normas definitae, cum
+  historiis veris (kilogramma anno 2019 REDEFINITUM est -
+  unitas quae historiam habet).
+
+  DUBIUM PLANTAE HIC PARTIM SOLUTUM: proprietates viventium
+  ambitus sunt (altitudo 2-5 m). Genus quantitas ambitum ferre
+  potest (minimum/maximum) - sed an proprietas genere
+  "quantitas" esse debeat, an ambitus proprietas CAMPI sit
+  (vide schema), apertum manet.
+-->
+<natura modulus="mensura" versio="0" lingua="latina">
+
+<!-- ==================================================
+     MAGNITUDO MENSURABILIS - quod mensurari potest
+     ================================================== -->
+
+<genus nomen="magnitudo_mensurabilis">
+
+  <definitio>
+    Id quod mensurari potest: longitudo, massa, tempus,
+    temperatura. Praedicamentum quantitatis Aristotelicum -
+    ante omnes unitates, quae eam solum PARTIUNTUR. Longitudo
+    est etiamsi nemo metrum invenerit.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="mensuratur_per" ad="unitatis"
+      externum="verum" multiplex="verum"
+      nota="unitates eiusdem magnitudinis inter se converti
+            possunt (metrum/pes); trans magnitudines numquam -
+            hic radix erroris dimensionum"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="longitudo"/>
+  <species nomen="massa"
+    nota="a PONDERE distinguenda: pondus vis est, massa
+          quantitas materiae - confusio vulgaris"/>
+  <species nomen="tempus_intervallum"/>
+  <species nomen="temperatura"/>
+  <species nomen="capacitas"
+    nota="volumen liquidorum - pistrina utrumque adhibet"/>
+  <species nomen="numerositas"
+    nota="res NUMERATAE, non mensuratae: duodecim ova. Discrimen
+          reale inter numerabilia et mensurabilia (vide
+          materia)"/>
+
+</genus>
+
+<!-- ==================================================
+     UNITAS MENSURAE - partitio conventa magnitudinis
+     ================================================== -->
+
+<genus nomen="unitas_mensurae">
+
+  <definitio>
+    Partitio conventa magnitudinis mensurabilis, qua quantitates
+    numerari possunt. CONVENTIO est, non natura - sed conventio
+    normata, publice custodita, et ideo res de qua veritas dici
+    potest.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="symbolum" genus="textus"
+      nota="'g', 'kg', '°C' - abbreviatio normata"/>
+    <proprietas nomen="fundamentalis" genus="veritas"
+      ordinarius="falsum"
+      nota="fundamentalis = per naturam definita (SI septem
+            habet); ceterae ex his derivantur"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="mensurat" ad="magnitudo_mensurabilis"/>
+    <relatio nomen="normata_per" ad="norma" modulus="norma"/>
+    <relatio nomen="custodita_a" ad="organizatio"
+      modulus="organizatio"
+      nota="unitates CUSTODEM habent - BIPM metrum, non opinio
+            publica"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="gramma">
+    <valor nomen="symbolum">g</valor>
+    <relatum nomen="mensurat" ad="massa"/>
+    <nota>
+      Millesima kilogrammatis - unitas fundamentalis SI
+      kilogramma est, non gramma: praefixum in NOMINE unitatis
+      fundamentalis, singularitas historica.
+    </nota>
+  </individuum>
+
+  <individuum nomen="kilogramma">
+    <valor nomen="symbolum">kg</valor>
+    <valor nomen="fundamentalis">verum</valor>
+    <relatum nomen="mensurat" ad="massa"/>
+    <historia>
+      <eventum quando="1889">prototypum ex platino-iridio in
+        BIPM depositum - unitas quae RES erat</eventum>
+      <eventum quando="2019-05-20">per constantem Planck
+        redefinitum - unitas quae LEX facta est; artefactum
+        physicum deposuit</eventum>
+    </historia>
+    <nota>
+      Unitas cum historia vera: res fuit, deinde definitio -
+      exemplum quod unitates entia historica sunt, non aeterna.
+    </nota>
+  </individuum>
+
+  <individuum nomen="metrum">
+    <valor nomen="symbolum">m</valor>
+    <valor nomen="fundamentalis">verum</valor>
+    <relatum nomen="mensurat" ad="longitudo"/>
+    <historia>
+      <eventum quando="1799">decima milionesima pars quadrantis
+        meridiani - mensura ex terra ipsa sumpta</eventum>
+      <eventum quando="1983">per celeritatem lucis definitum
+        (1/299792458 secundi)</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="secundum">
+    <valor nomen="symbolum">s</valor>
+    <valor nomen="fundamentalis">verum</valor>
+    <relatum nomen="mensurat" ad="tempus_intervallum"/>
+    <nota>
+      Per transitionem caesii definitum (1967) - fundamentum
+      omnium horologiorum, computatralium quoque.
+    </nota>
+  </individuum>
+
+  <individuum nomen="minutum">
+    <valor nomen="symbolum">min</valor>
+    <relatum nomen="mensurat" ad="tempus_intervallum"/>
+    <nota>
+      Sexagesimale, non decimale: hereditas Babylonica quae
+      metricationem supervixit - conventio antiquissima adhuc
+      vivens.
+    </nota>
+  </individuum>
+
+  <individuum nomen="gradus_celsius">
+    <valor nomen="symbolum">°C</valor>
+    <relatum nomen="mensurat" ad="temperatura"/>
+    <nota>
+      Scala cum ZERO CONVENTO (glacies liquescens), non
+      absoluto: ideo differentiae additionem ferunt, valores
+      ipsi multiplicationem NON ("bis calidior" nihil
+      significat). Kelvin zerum absolutum habet - discrimen
+      quod formam mensurae mordet.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     QUANTITAS - numerus cum unitate
+     ================================================== -->
+
+<genus nomen="quantitas">
+
+  <definitio>
+    Numerus CUM UNITATE: mensura rei determinata. Numerus solus
+    quantitas non est - "500" nihil est donec "grammata" adsit.
+    Additio solum inter eiusdem magnitudinis quantitates licet;
+    quod trans magnitudines temptare error dimensionum est
+    (Mars Climate Orbiter perditus 1999 - pondus in libris pro
+    newtonis: quantitas sine unitate custodita).
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="valor" genus="numerus"/>
+    <proprietas nomen="minimum" genus="numerus"
+      nota="AMBITUS (cum maximo): altitudo rosae 2-5 m,
+            fornax 170-190 °C. Dubium plantae hic partim
+            solutum - res verae saepe ambitum habent, non
+            punctum"/>
+    <proprietas nomen="maximum" genus="numerus"/>
+    <proprietas nomen="praecisio" genus="numerus"
+      nota="figurae significantes: '500 g' et '500.0 g' idem
+            valorem, aliam praecisionem dicunt - mensura
+            praecisionem suam FERT"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="in_unitate" ad="unitas_mensurae"/>
+  </relationes>
+
+</genus>
+
+</natura>

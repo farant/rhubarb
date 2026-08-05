@@ -77,6 +77,19 @@ for f in natura/*.stml; do
         done
     done
 
+    # proprietates generibus bibliothecae typatae (mechanismus
+    # novus: genus= + modulus= pro paletta nuda) - arcus quoque
+    np=$(num "$(xp "$f" "count(//proprietas[@modulus])")")
+    i=1
+    while [ "$i" -le "$np" ]; do
+        pn=$(xp "$f" "string((//proprietas[@modulus])[$i]/@nomen)")
+        pg=$(xp "$f" "string((//proprietas[@modulus])[$i]/@genus)")
+        pm=$(xp "$f" "string((//proprietas[@modulus])[$i]/@modulus)")
+        pf=$(xp "$f" "string((//proprietas[@modulus])[$i]/ancestor::genus[1]/@nomen)")
+        echo "$mod|$pf|proprietas:$pn|$pm|$pg" >> "$ARCUS"
+        i=$((i + 1))
+    done
+
     # umbrae: externum="verum" - superficta declarata
     nu=$(num "$(xp "$f" "count(//*[@externum='verum'])")")
     i=1

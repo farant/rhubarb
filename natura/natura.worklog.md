@@ -649,3 +649,184 @@ instrumentum_aedificationis, typus, constructum_linguae,
 processus, servus, hewitt, GoF quartet, directorium, chip,
 att, vms, systema_plagularum, communitas, domus_editoria,
 animal.
+
+## 2026-08-04 — round thirteen: THE PISTRINA EXPERIMENT
+## (coverage-simulatio: model a foreign scenario, harvest genera)
+
+Fran's experiment design: pick a random situation, attempt to
+model it with existing genera, and surface NEW GENUS SUGGESTIONS
+instead of complications (simulatio adapted to coverage-
+building). First run: a neighborhood BAKERY (pistrina) — three
+never-touched axes: physical production, commerce, recurring
+time. Discussion only; no models written — harvest awaits
+Fran's blessing per the Alexander process.
+
+COVERAGE CONFIRMED (the 15 hold in foreign territory):
+- organizatio (the shop is a societas with perduratio),
+  persona + roles-are-relations, norma THREE times (health
+  code, ISO 4217 currencies, SI units — the norma model keeps
+  paying), eventum, machina with time-driven transitions
+  (perishability: recens→vetus per moram — planta's "per ver"
+  legitimized it), opus_scriptum (cookbooks; Pacioli).
+- MULTIPLICITY RULING confirmed: "merchandise" is NOT a genus —
+  being-for-sale is a role, roles are relations. Applied
+  cleanly, unprompted, in a domain it was not built for.
+- THE INTENTION SQUARE GENERALIZES TO MATTER: a custom cake
+  order IS a postulatum; the burnt batch a vitium; the taste
+  test a probatio (probatio_fumi literal in a bakery). ONE
+  BEND: physical vitium is not SANABILE — sanatio = mutatio
+  fontis assumes the wounded thing is editable; matter is
+  irreversible (discard and rebake). Sanatio is software's
+  privilege; fabricatio may someday need reficere beside
+  sanare.
+
+HARVEST (candidate genera, ranked by pull strength):
+1. mensura + unitas_mensurae — number-with-unit; units are
+   individua of PUBLIC RECORD normata per SI, with historiae
+   (kilogram redefined 2019). Purest Linnaean material since
+   formae_datorum; also the true home of planta's open
+   ranges-dubium (oven 170-190°C).
+2. praescriptum — ordered instructions executed by a PERSONA:
+   functio's human cousin. Scales, versions (versio pattern's
+   fifth knock), published in opera. The house already runs on
+   unnamed praescripta: SOPs, checklists, the forum's
+   contractus correspondentis.
+3. artefactum + materia — made corporeal things (partes ready)
+   + STUFF measured-not-counted; the mass/count cut is real
+   ontology.
+4. commerce cluster: venditio (event mutating possessio),
+   possessio, pecunia/moneta (EUR/USD individua, ISO 4217),
+   pretium (time-varying relation to a mensura of money).
+   DEEP CATCH: the register tape = acta venditionum, the
+   day-end count = plicatura — DOUBLE-ENTRY BOOKKEEPING IS THE
+   ORIGINAL EVENT-SOURCING (Pacioli 1494, Summa de
+   arithmetica: opus + persona waiting). The volumen doctrine
+   has a 500-year ancestor.
+5. obligatio + contractus + licentia — debt/agreement/grant.
+   PRIOR ART OF THE HIGHEST ORDER: Roman law already built
+   this taxonomy (ius obligationum; ex contractu / ex delicto
+   — Gaius and Justinian as the Linnaeus of obligation). The
+   Latin is not translation here; it is REPATRIATION.
+6. locus — premises, address, jurisdiction.
+7. horarium — recurrence over momenta (4am bake, shifts,
+   opening hours); momentum itself still queued beneath it.
+8. organizatio wants sub-genus magistratus/res_publica (the
+   health code's editor is a government).
+
+VERDICT ON THE LOOP: it works. One scenario, ~90 minutes of
+walking: 8 genus clusters surfaced EACH WITH FORCING CONTENT
+ATTACHED (what the Alexander process wants as input), 3
+doctrine confirmations, 1 doctrine bend, 0 dubious genera —
+every candidate has public-record dictionary material. Rough
+coverage: half the bakery was expressible with 15 models built
+from a software parish. The loop is repeatable: scenario →
+stations → cite-or-surface → harvest.
+
+## 2026-08-04 — round fourteen: the pistrina harvest built (22 models)
+
+Fran blessed the harvest; seven models written from it. The
+LOOP CLOSED: scenario → surfaced genera → built models. This
+is the first material in the library that came from a
+deliberate coverage instrument rather than from a pull.
+
+59. mensura.stml — magnitudo_mensurabilis / unitas_mensurae /
+    quantitas. The catch that motivated it: a property typed
+    "numerus" carries a BARE NUMBER, which is a lie — 500 is
+    nothing until "grams" is present. Units are individua of
+    public record with real histories: the KILOGRAM was a
+    THING (1889 platinum-iridium prototype) and became a LAW
+    (2019, Planck constant) — a unit with a genuine historia.
+    Celsius carries the interval/ratio-scale catch (conventional
+    zero: differences add, values don't multiply). Mars Climate
+    Orbiter cited in the definitio as the cost of unitless
+    quantities.
+60. NEW MECHANISM (unforeseen, content-forced): properties
+    typed by a LIBRARY GENUS rather than a palette primitive —
+    `genus="quantitas" modulus="mensura"`. The palette
+    (textus/numerus/dies/...) was closed and primitive; the
+    library can now type its own properties. Seven uses at
+    birth. natura_visus taught to validate this reference
+    class the same hour, gate-tested negatively.
+61. praescriptum.stml — functio's HUMAN cousin, and the
+    difference that changes everything: the executor is a
+    persona (varying skill, own judgment), so a praescriptum
+    MAY carry ambiguity where a functio may not ("coque donec
+    aureum fiat") — and that ambiguity is trust in the
+    executor, not a defect. Also: dependency between steps is
+    a GRAPH written as a series for convenience; yield does
+    not scale linearly (leavening and bake time refuse). Fifth
+    knock of the versio pattern (versio_praescripti). The
+    house is full of unnamed praescripta.
+62. corporalia.stml — res_corporea / artefactum / materia /
+    instrumentum. THE COUNT/MASS CUT as real ontology:
+    "three flours" is meaningless; divided material stays what
+    it was (half a mass of flour is flour), a divided artifact
+    perishes (half a loaf is not a loaf). Identity consequence
+    linking to the Scotus cut: materia has NO haecceity —
+    form alone constitutes it, exactly as content-addressed
+    massae have none. cibus's differentia: use DESTROYS it
+    (instrument survives use, food does not). res_corporea's
+    machine transitions PER MORAM — the first machine whose
+    transitions have no actor: nobody makes bread stale, time
+    does.
+63. commercium.stml — moneta/pecunia/possessio/pretium/
+    venditio/ratio_rationaria. THE ROUND'S DEEPEST CATCH:
+    double-entry bookkeeping IS event sourcing — the register
+    tape is acta, the day-end count a plicatura, correction is
+    a NEW contrary entry (stornatio) never an erasure, and
+    ratio_duplex's balance identity is an INVARIANS built into
+    the log itself. Pacioli 1494 (describing, not inventing —
+    Venetian merchants already did it). The volumen doctrine
+    has a 500-year-old ancestor, and its reason is ours: a
+    ledger that can be rewritten is not a ledger. pretium
+    carries the sliding law again (price belongs to a
+    time-varying RELATION, not to the thing). pecunia carries
+    the float-money prohibition. merx confirmed NOT a genus.
+64. obligatio.stml — REPATRIATION, not translation: Roman law
+    built this taxonomy and the language is already ours
+    (Institutiones' "iuris vinculum quo necessitate
+    adstringimur"; ex contractu / ex delicto / ex lege). The
+    states no software schema would invent: REMISSA (creditor
+    forgives — dies without performance) and PRAESCRIPTA (dies
+    by mere lapse of time). Fran's contractus/licentia cut
+    made structural: contract = bilateral consent, binds both;
+    licence = unilateral grant, revocable, expiring. Note
+    recorded that software licences (GPL/MIT) are of the
+    licentia genus — forensic and computational domains share
+    a genus.
+65. locus.stml — locus / inscriptio / iurisdictio / aedificium.
+    The three-way cut schemas collapse into "address": the
+    place is in nature, the address is a CONVENTION (streets
+    are renamed, the place does not move), the jurisdiction is
+    a POWER (and powers overlap — one place under municipality,
+    province, nation simultaneously — where places nest
+    strictly). Address-line format varies by country: the
+    one-schema-fits-all lie named.
+66. tempus.stml — momentum (queued since round eleven, finally
+    called) / intervallum / recurrentia / horarium /
+    calendarium. RECURRENTIA IS A RULE, NOT A SET — its
+    extension is infinite, so storing it expanded truncates
+    the future; exceptions (feast days) are PART of the rule.
+    momentum carries its own PRECISION (1225 is known to the
+    year; faking precision lies) and the house's signed-delta
+    war story. Gregorian calendar's TEN DELETED DAYS (Oct 4 →
+    Oct 15, 1582) as the witness that calendars are convention
+    with teeth. Liturgical calendar carried as an open dubium:
+    movable feasts need COMPUTED recurrence, which our simple
+    periodicity cannot express. horarium.vinctum_per records
+    the bakery's hard truth: the oven's capacity determines
+    the schedule — iron commands hours.
+67. Surgical edits: organizatio grew MAGISTRATUS (authority by
+    IMPERIUM, not consensus or profit — with the note that
+    ISO's own standards have no force until a magistrate
+    adopts them); planta's ranges-dubium PARTLY RESOLVED
+    (quantitas carries min/max; the TIME range Maius-Iunius
+    remains open, pointing at tempus); fabricatio grew the
+    sanatio-vs-refectio dubium (matter is irreversible;
+    corporalia.instrumentum already says refectio — the
+    language had divided before the doctrine did); persona
+    gained Pacioli.
+
+Measured after: 22 exemplaria / 96 genera / 169 dictionary
+residents / 251 arcs / 0 vulnera. The library grew ~50% in one
+round from a single imagined bakery.

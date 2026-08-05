@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/obligatio.stml
+  Exemplar semanticum: OBLIGATIO (versio 0, PLASTICUM)
+  Genera: obligatio, contractus, licentia.
+
+  Natum ex experimento pistrinae (ratio caffeae, conductio
+  operariorum, licentia sanitatis).
+
+  REPATRIATIO, NON TRANSLATIO: hoc dominium ius Romanum iam
+  descripsit, et lingua eius NOSTRA est. Institutiones Gaii et
+  Iustiniani obligationes ex CONTRACTU et ex DELICTO dividunt;
+  definitio classica obligationem "iuris vinculum quo necessitate
+  adstringimur alicuius solvendae rei" vocat - vinculum, non res.
+  Linnaeus huius dominii Gaius est; nos verba eius sumimus quia
+  meliora sunt, non quia antiqua.
+
+  DISCRIMEN QUOD FRAN NOTAVIT: contractus consensu DUORUM oritur
+  et utrumque ligat; licentia ab auctoritate UNILATERALITER
+  datur, revocari potest, expirat. Non idem genus - quod
+  schemata vulgaria confundunt.
+-->
+<natura modulus="obligatio" versio="0" lingua="latina">
+
+<!-- ==================================================
+     OBLIGATIO - vinculum iuris
+     ================================================== -->
+
+<genus nomen="obligatio">
+
+  <definitio>
+    Iuris vinculum quo quis alicui aliquid praestare adstringitur
+    (Institutiones): non res sed VINCULUM inter personas -
+    debitor et creditor duo termini eius. Sine relatione
+    obligatio non est.
+  </definitio>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="orta"/>
+    <status nomen="soluta" nota="praestatione finita - exitus
+      ordinarius"/>
+    <status nomen="remissa" nota="creditor eam DIMISIT: moritur
+      sine praestatione, voluntate creditoris - exitus quem
+      schema mere computatrale numquam praevideret"/>
+    <status nomen="praescripta" nota="tempore exstincta: ius non
+      exercitum diu perit (praescriptio) - obligatio quam MORA
+      sola occidit"/>
+    <status nomen="violata" nota="terminus praeteriit,
+      praestatio deest"/>
+    <transitus a="orta" ad="soluta" per="solutio"/>
+    <transitus a="orta" ad="remissa" per="remissio"/>
+    <transitus a="orta" ad="violata" per="mora_debitoris"/>
+    <transitus a="orta" ad="praescripta" per="praescriptio"/>
+    <transitus a="violata" ad="soluta" per="solutio_sera"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="debitor" ad="*"/>
+    <relatio nomen="creditor" ad="*"/>
+    <relatio nomen="praestandum" ad="*"
+      nota="pecunia, res, opus, aut ABSTINENTIA (non facere est
+            praestatio quoque - obligatio negativa)"/>
+    <relatio nomen="orta_ex" ad="*"
+      nota="fons: contractus, delictum, venditio, lex ipsa"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       divisio Gaiana: ex contractu / ex delicto -->
+
+  <species nomen="obligatio_ex_contractu">
+    <definitio>
+      Ex consensu orta: quod promisisti praestandum est.
+    </definitio>
+  </species>
+
+  <species nomen="obligatio_ex_delicto">
+    <definitio>
+      Ex damno illato orta: qui nocuit reparare tenetur -
+      obligatio quam nemo VOLUIT, tamen vera. Testis quod
+      obligatio consensum non postulat.
+    </definitio>
+  </species>
+
+  <species nomen="obligatio_ex_lege">
+    <definitio>
+      Ex lege ipsa orta: tributa, alimenta - nec pactum nec
+      damnum, sed praeceptum publicum.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     CONTRACTUS - conventio obligationes pariens
+     ================================================== -->
+
+<genus nomen="contractus">
+
+  <definitio>
+    Conventio duorum (aut plurium) quae obligationes parit:
+    consensus est fundamentum - ideo utrumque ligat, et neuter
+    solus eum tollere potest. Res una, obligationes plures:
+    conductio operis mercedem ab uno, laborem ab altero poscit.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="initium" genus="dies"/>
+    <proprietas nomen="finis" genus="dies"
+      nota="vacuum = sine termino"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="partes" ad="*" multiplex="verum"
+      nota="qui consenserunt - DUO saltem, semper"/>
+    <relatio nomen="parit" ad="obligatio" multiplex="verum"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="emptio_venditio">
+    <definitio>Res pro pretio: contractus omnium
+      frequentissimus.</definitio>
+  </species>
+
+  <species nomen="locatio_conductio">
+    <definitio>
+      Usus rei aut opera pro mercede: sub hac specie ius
+      Romanum et habitationem et LABOREM ponit - conductio
+      operarum, unde nostra "conductio" hodierna.
+    </definitio>
+  </species>
+
+  <species nomen="societas_contractus">
+    <definitio>
+      Plures in commune negotium: unde organizatio ipsa nascitur
+      - contractus qui personam novam (societatem) parit.
+    </definitio>
+  </species>
+
+  <species nomen="mandatum">
+    <definitio>
+      Alius pro me agit: fundamentum repraesentationis -
+      procurator, agens. (Agens artificialis mandato vivit
+      quoque: forma antiqua, materia nova.)
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     LICENTIA - concessio unilateralis auctoritatis
+     ================================================== -->
+
+<genus nomen="licentia">
+
+  <definitio>
+    Concessio ab auctoritate data ut quid liceat quod aliter non
+    liceret: UNILATERALIS (consensu accipientis non indiget),
+    REVOCABILIS (dans eam auferre potest), saepe TEMPORALIS.
+    Ideo contractus non est - quod schemata vulgaria confundunt.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="data" genus="dies"/>
+    <proprietas nomen="expirat" genus="dies"/>
+    <proprietas nomen="condiciones" genus="textus"
+      multiplex="verum"
+      nota="quibus servatis valet - inspectio, merces annua"/>
+  </proprietates>
+
+  <machina_statuum nomen="vigor" gerens="individuum">
+    <status nomen="petita"/>
+    <status nomen="concessa"/>
+    <status nomen="suspensa"/>
+    <status nomen="revocata"/>
+    <status nomen="expirata"/>
+    <transitus a="petita" ad="concessa" per="concessio"/>
+    <transitus a="concessa" ad="suspensa" per="suspensio"/>
+    <transitus a="suspensa" ad="concessa" per="restitutio"/>
+    <transitus a="concessa" ad="revocata" per="revocatio"/>
+    <transitus a="concessa" ad="expirata" per="lapsus_temporis"/>
+    <transitus a="expirata" ad="concessa" per="renovatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="concedens" ad="organizatio"
+      modulus="organizatio"
+      nota="magistratus fere semper - auctoritas publica"/>
+    <relatio nomen="accipiens" ad="*"/>
+    <relatio nomen="secundum_normam" ad="norma" modulus="norma"
+      nota="licentia normam SUPPONIT: quod inspector metitur,
+            norma dicit - nexus qui exemplar normae iterum
+            praestare facit"/>
+  </relationes>
+
+  <nota>
+    Licentia programmatis (GPL, MIT) huius generis est: auctor
+    unilateraliter concedit quod ius auctoris aliter vetaret.
+    Nexus futurus ad opus_scriptum et bibliothecam - dominium
+    forense et computatrale idem genus habent.
+  </nota>
+
+</genus>
+
+</natura>

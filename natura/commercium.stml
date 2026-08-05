@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/commercium.stml
+  Exemplar semanticum: COMMERCIUM (versio 0, PLASTICUM)
+  Genera: moneta, pecunia, possessio, venditio, pretium,
+  ratio_rationaria.
+
+  Natum ex experimento pistrinae. INVENTUM GRAVISSIMUM ROTAE:
+  tabula mercatoria ACTA venditionum est, et calculus vespertinus
+  PLICATURA - ratio duplex (Pacioli 1494) fons eventuum
+  ORIGINALIS est. Doctrina voluminis nostri maiorem natu quinque
+  saeculis habet: acta immutabilia, status per plicaturam,
+  emendatio per actum NOVUM (stornatio) numquam per rasuram.
+
+  Quod nos "event sourcing" nuper vocavimus, mercatores
+  Venetiarum saeculo XV iam sciebant - et propter EANDEM causam:
+  ratio quae rescribi potest ratio non est.
+
+  MERX NON EST GENUS (confirmatio regulae multiplicitatis Fran):
+  esse-venale MUNUS est, ergo relatio - panis idem panis manet
+  sive venalis sive donatus.
+-->
+<natura modulus="commercium" versio="0" lingua="latina">
+
+<!-- ==================================================
+     MONETA - genus pecuniae
+     ================================================== -->
+
+<genus nomen="moneta">
+
+  <definitio>
+    Genus pecuniae ab auctoritate emissum et receptum: unitas
+    mensurae valoris - sed unitas cuius valor ipse MUTATUR
+    (metrum longitudinem servat, moneta valorem non).
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="codex" genus="textus"
+      nota="ISO 4217: EUR, USD - norma iterum praestat"/>
+    <proprietas nomen="symbolum" genus="textus"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="emissa_a" ad="organizatio"
+      modulus="organizatio"
+      nota="argentaria centralis - magistratus fere semper"/>
+    <relatio nomen="normata_per" ad="norma" modulus="norma"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="euro">
+    <valor nomen="codex">EUR</valor>
+    <valor nomen="symbolum">€</valor>
+    <historia>
+      <eventum quando="1999-01-01">rationibus introducta</eventum>
+      <eventum quando="2002-01-01">nummis et chartis</eventum>
+    </historia>
+    <nota>
+      Moneta multarum civitatum - una moneta, magistratus multi:
+      relatio emissa_a hic complexior quam alibi.
+    </nota>
+  </individuum>
+
+  <individuum nomen="dollarium_americanum">
+    <valor nomen="codex">USD</valor>
+    <valor nomen="symbolum">$</valor>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     PECUNIA - quantitas monetae
+     ================================================== -->
+
+<genus nomen="pecunia">
+
+  <definitio>
+    Quantitas in moneta: numerus CUM MONETA - "3,50" nihil est
+    donec moneta adsit (eadem forma qua quantitas unitatem
+    poscit). Additio solum intra monetam unam; trans monetas
+    CONVERSIO opus est, cuius ratio in tempore mutatur -
+    additio quae hodie valet cras non valet.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="valor" genus="numerus"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="in_moneta" ad="moneta"/>
+  </relationes>
+
+  <nota>
+    Captura computatralis celeberrima: pecunia numero fluitanti
+    NUMQUAM servanda est (0.1 + 0.2 ≠ 0.3 in binario) - minima
+    unitas integra (centesimae) servetur. Genus quod
+    repraesentationem suam praescribit, raro sed vere.
+  </nota>
+
+</genus>
+
+<!-- ==================================================
+     POSSESSIO - relatio iuris ad rem
+     ================================================== -->
+
+<genus nomen="possessio">
+
+  <definitio>
+    Relatio inter personam (aut organizationem) et rem: quis
+    quid habeat. Non proprietas rei sed RELATIO - panis idem
+    manet cum dominum mutat, relatio sola mutatur. Ideo
+    venditio rem non tangit: relationem transfert.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="possessor" ad="*"
+      nota="persona aut organizatio"/>
+    <relatio nomen="possessum" ad="*"
+      nota="res corporea, artefactum, etiam res incorporalis
+            (ius, nomen) - apertum consulto"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     PRETIUM - valor petitus in tempore
+     ================================================== -->
+
+<genus nomen="pretium">
+
+  <definitio>
+    Pecunia pro re petita: relatio TEMPORE VARIANS inter rem et
+    pecuniam - non proprietas rei. Idem panis heri aliud pretium
+    habuit; pretium rei inhaerere putare error vulgaris (lex
+    lapsus iterum: pretium ad relationem labitur, non ad rem).
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="valens_a" genus="dies"/>
+    <proprietas nomen="valens_ad" genus="dies"
+      nota="vacuum = adhuc valens"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="pretium_rei" ad="*"/>
+    <relatio nomen="quantum" ad="pecunia"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     VENDITIO - eventus quo possessio transit
+     ================================================== -->
+
+<genus nomen="venditio">
+
+  <definitio>
+    Eventus quo possessio rei transit et pecunia contrarie
+    fluit: mutatio DUPLEX simul - quod ratio duplex (Pacioli)
+    ante omnes computatra scripsit. Venditio res non est sed
+    ACCIDIT; quod manet, acta eius sunt.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="venditor" ad="*"/>
+    <relatio nomen="emptor" ad="*"/>
+    <relatio nomen="res_vendita" ad="*" multiplex="verum"/>
+    <relatio nomen="solutum" ad="pecunia"/>
+    <relatio nomen="parit" ad="obligatio" modulus="obligatio"
+      nota="venditio sine solutione statim OBLIGATIONEM parit
+            (ratio caffeae mensualis) - unde exemplar
+            obligationis"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     RATIO RATIONARIA - acta rerum pecuniariarum
+     (fons eventuum ORIGINALIS - vide caput)
+     ================================================== -->
+
+<genus nomen="ratio_rationaria">
+
+  <definitio>
+    Acta rerum pecuniariarum ordine temporis: veritas est cauda
+    eventuum, status omnis (summa, debitum, lucrum) PLICATURA.
+    Emendatio numquam per rasuram sed per actum novum
+    contrarium (stornatio) - quia ratio quae rescribi potest
+    ratio non est.
+  </definitio>
+
+  <nota>
+    DOCTRINA VOLUMINIS NOSTRI, QUINQUE SAECULIS ANTIQUIOR:
+    acta immutabilia, status derivatus, correctio per eventum
+    novum. Luca Pacioli hanc formam anno 1494 descripsit (non
+    invenit: mercatores Venetiarum iam utebantur). Quod nos
+    "fontem eventuum" vocamus, ars rationaria semper fuit.
+  </nota>
+
+  <relationes>
+    <relatio nomen="continet" ad="venditio" multiplex="verum"/>
+    <relatio nomen="rationarius" ad="persona" modulus="persona"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="ratio_duplex">
+    <definitio>
+      Omnis eventus BIS scribitur (debitum et creditum): summa
+      omnium debitorum summae creditorum semper aequalis -
+      INVARIANS in actis ipsis inaedificata (vide
+      elementa_programmatis.assertio: invarians ante
+      computatra). Error se ipsum prodit cum summae non
+      conveniunt.
+    </definitio>
+  </species>
+
+</genus>
+
+</natura>

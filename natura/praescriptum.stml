@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/praescriptum.stml
+  Exemplar semanticum: PRAESCRIPTUM (versio 0, PLASTICUM)
+  Genera: praescriptum, gradus_praescripti, versio_praescripti.
+
+  Natum ex experimento pistrinae: recepta panis. Cognatum
+  FUNCTIONIS humanum - ordo operationum cum introitibus
+  declaratis et exitu exspectato, sed ab HOMINE exsecutum.
+
+  DISCRIMEN QUOD OMNIA MUTAT: exsecutor functionis machina est
+  (eadem semper); exsecutor praescripti persona est (peritia
+  varia, iudicium proprium, errare potens). Ideo praescriptum
+  ambiguitatem ferre POTEST ubi functio non potest ("coque
+  donec aureum fiat") - et haec ambiguitas non defectus sed
+  fiducia in iudicio exsecutoris est.
+
+  DOMUS NOSTRA PRAESCRIPTIS PLENA EST, innominatis: contractus
+  correspondentis fori, indices verificationis, ipsae normae
+  huius bibliothecae in CLAUDE.md scriptae.
+-->
+<natura modulus="praescriptum" versio="0" lingua="latina">
+
+<genus nomen="praescriptum">
+
+  <definitio>
+    Ordo operationum ad finem, ab homine exsequendus: introitus
+    declarati (materiae, instrumenta), gradus ordinati, exitus
+    exspectatus. Functionis cognatum humanum - eadem forma,
+    exsecutor alius.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="peritia_postulata" genus="electio"
+      nota="quantum iudicii exsecutor ferre debet - praescriptum
+            peritis scriptum multa TACET consulto">
+      <optio>nulla</optio>
+      <optio>mediocris</optio>
+      <optio>magna</optio>
+    </proprietas>
+    <proprietas nomen="proventus" genus="quantitas"
+      modulus="mensura"
+      nota="quantum efficit - 'panes duodecim'; SCALARI potest,
+            sed non semper linealiter (fermentum et tempus
+            coctionis obstant): scalatio nota praescripti
+            propria"/>
+    <proprietas nomen="mora" genus="quantitas" modulus="mensura"
+      nota="tempus totum - saepe maius quam summa graduum
+            (exspectatio non est labor: massa sola fermentat)"/>
+  </proprietates>
+
+  <machina_statuum nomen="observantia" gerens="individuum"
+    nota="cursus EXSECUTIONIS unius, non praescripti ipsius">
+    <status nomen="inceptum"/>
+    <status nomen="in_cursu"/>
+    <status nomen="perfectum"/>
+    <status nomen="desertum"/>
+    <transitus a="inceptum" ad="in_cursu" per="inceptio"/>
+    <transitus a="in_cursu" ad="perfectum" per="perfectio"/>
+    <transitus a="in_cursu" ad="desertum" per="desertio"/>
+  </machina_statuum>
+
+  <partes>
+    <pars nomen="materiae" necessaria="falsum"
+      nota="introitus - honeste optionales: praescriptum pure
+            operativum (index verificationis) materiis caret"/>
+    <pars nomen="gradus" necessaria="verum"/>
+    <pars nomen="exitus" necessaria="verum"/>
+  </partes>
+
+  <relationes>
+    <relatio nomen="exsequitur" a="persona" modulus="persona"
+      inversa="verum"/>
+    <relatio nomen="postulat" ad="materia" modulus="corporalia"
+      multiplex="verum"/>
+    <relatio nomen="efficit" ad="artefactum" modulus="corporalia"/>
+    <relatio nomen="publicatum_in" ad="opus_scriptum"
+      modulus="opus_scriptum"
+      nota="liber coquinarius praescripta CONTINET - opus quod
+            genus aliud continet, nexus trans exemplaria
+            gratuitus"/>
+    <relatio nomen="auctor" ad="persona" modulus="persona"/>
+    <relatio nomen="ortum_ex" ad="praescriptum"
+      nota="genealogia receptorum: praescriptum ex alio aptatum -
+            eadem forma qua linguae ex linguis oriuntur"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     GRADUS PRAESCRIPTI - operatio una ordinata
+     ================================================== -->
+
+<genus nomen="gradus_praescripti">
+
+  <definitio>
+    Operatio una in ordine: actio, fortasse cum quantitate,
+    fortasse cum mora, fortasse cum conditione finiendi.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="ordo" genus="numerus"/>
+    <proprietas nomen="mora" genus="quantitas" modulus="mensura"/>
+    <proprietas nomen="conditio_finis" genus="textus"
+      nota="'donec aureum fiat' - finis per IUDICIUM, non per
+            horologium: ambiguitas consulta quae exsecutori
+            humano fidit. Machina hoc ferre non potest;
+            praescriptum potest"/>
+    <proprietas nomen="simultaneus" genus="veritas"
+      ordinarius="falsum"
+      nota="dum aliud fit - gradus non semper series pura est
+            (fornax calescit dum massa formatur)"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="gradus_de" a="praescriptum" inversa="verum"/>
+    <relatio nomen="pendet_ex" ad="gradus_praescripti"
+      multiplex="verum"
+      nota="ordo verus GRAPHUS est, non linea: quod praescriptum
+            ut seriem scribitur, conveniendi causa est"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     VERSIO PRAESCRIPTI - editio nominata
+     (quintus pulsus formae versionis: lingua, architectura,
+     systema, opus, nunc praescriptum. Regula Fran manet:
+     manu cusa, sine mechanismo)
+     ================================================== -->
+
+<genus nomen="versio_praescripti">
+
+  <definitio>
+    Editio praescripti nominata et citabilis: quod praescriptum
+    per emendationes transit, identitate manente ("receptum
+    aviae, ut anno 1998 emendatum").
+  </definitio>
+
+  <relationes>
+    <relatio nomen="versio_de" ad="praescriptum"/>
+    <relatio nomen="sequitur" ad="versio_praescripti"/>
+    <relatio nomen="emendata_a" ad="persona" modulus="persona"/>
+  </relationes>
+
+</genus>
+
+</natura>

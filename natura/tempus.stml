@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/tempus.stml
+  Exemplar semanticum: TEMPUS (versio 0, PLASTICUM)
+  Genera: momentum, intervallum, recurrentia, horarium,
+  calendarium.
+
+  Natum ex experimento pistrinae: coctio hora quarta,
+  hebdomadis rhythmus, horae apertionis, vices operariorum.
+  Genus momentum iam diu superfuerat (tempus_creatus in actor.c,
+  proprietas 'dies' ubique) - pistrina id tandem evocavit cum
+  RECURRENTIA.
+
+  DISCRIMEN QUOD OMNIA REGIT: momentum PUNCTUM est, intervallum
+  SPATIUM inter puncta, recurrentia REGULA quae momenta gignit.
+  Recurrentia non est copia momentorum: regula est, et copia
+  eius INFINITA - "omni die Lunae" finem non habet. Ideo
+  recurrentia servanda est ut REGULA, numquam ut acta expansa;
+  qui expandit, futurum truncat.
+
+  Hoc exemplar solum inter nostra HOROLOGIUM supponit -
+  mensuram temporis (secundum, minutum) in exemplari mensurae
+  invenies; hic de temporis STRUCTURA agitur, non de mensura.
+-->
+<natura modulus="tempus" versio="0" lingua="latina">
+
+<!-- ==================================================
+     MOMENTUM - punctum in tempore
+     ================================================== -->
+
+<genus nomen="momentum">
+
+  <definitio>
+    Punctum in tempore: quando aliquid accidit. Sine duratione -
+    quod durat, intervallum est. Omne eventum momentum habet;
+    hinc historiae omnium exemplarium pendent.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="praecisio" genus="electio"
+      nota="momentum praecisionem SUAM fert: '1225' anno solo
+            notum (Thomas natus), '2019-05-20' die, log
+            millesima secundi. Praecisionem fingere mendacium
+            est - annus in diem versus falsum dicit">
+      <optio>annus</optio>
+      <optio>mensis</optio>
+      <optio>dies</optio>
+      <optio>hora</optio>
+      <optio>secundum</optio>
+      <optio>minutia</optio>
+    </proprietas>
+    <proprietas nomen="zona_horaria" genus="textus"
+      nota="idem momentum absolutum, nomina localia varia -
+            'hora quarta' pistrinae zonam SUPPONIT; momenta
+            trans zonas comparanda in absoluto servanda sunt"/>
+  </proprietates>
+
+  <nota>
+    CAPTURA COMPUTATRALIS: differentia duorum momentorum SIGNATA
+    est necessario (praeteritum minus futurum negativum est) -
+    numerus insignatus hic vulnus notum est in domo nostra (s64
+    pro omni tempore ex horologio).
+  </nota>
+
+</genus>
+
+<!-- ==================================================
+     INTERVALLUM - spatium inter momenta
+     ================================================== -->
+
+<genus nomen="intervallum">
+
+  <definitio>
+    Spatium temporis inter duo momenta: initium, finis, ideo
+    duratio. Quod duratione caret momentum est; quod fine caret
+    (adhuc currens) intervallum APERTUM est - status verus,
+    non defectus datorum.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="duratio" genus="quantitas"
+      modulus="mensura"
+      nota="DERIVATA ex initio et fine - sed quantitas vera:
+            '25 minuta' unitatem poscit"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="initium" ad="momentum"/>
+    <relatio nomen="finis" ad="momentum"
+      nota="vacuum = adhuc currens (intervallum apertum)"/>
+  </relationes>
+
+  <nota>
+    Intervalla se SUPERPONERE possunt, contineri, tangere -
+    algebra intervallorum (Allen tredecim relationes numeravit)
+    quam schemata vulgaria ignorant et postea dolent: "vices
+    duae eodem tempore" quaestio de superpositione est.
+  </nota>
+
+</genus>
+
+<!-- ==================================================
+     RECURRENTIA - regula momenta gignens
+     ================================================== -->
+
+<genus nomen="recurrentia">
+
+  <definitio>
+    Regula quae momenta (aut intervalla) gignit: "omni die hora
+    quarta", "omni die Lunae", "prima die cuiusque mensis".
+    REGULA est, non copia - copia eius saepe infinita. Servetur
+    ut regula; qui in acta expandit, futurum ad terminum
+    arbitrarium truncat.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </proprietas>
+    <proprietas nomen="frequentia" genus="numerus"
+      ordinarius="1"
+      nota="'omni tertia hebdomade' - periodus cum numero"/>
+    <proprietas nomen="exceptiones" genus="dies" multiplex="verum"
+      nota="dies festi, feriae: EXCEPTIO pars regulae est, non
+            error eius - pistrina die Dominico clausa"/>
+  </proprietates>
+
+  <nota>
+    Recurrentia cyclum machinae statuum COMPLET: planta 'per ver'
+    transit (cyclus intra machinam), recurrentia cyclum ipsum
+    NOMINAT et momenta eius gignit. Duo modi eiusdem veritatis:
+    res quaedam iterum atque iterum fiunt.
+  </nota>
+
+</genus>
+
+<!-- ==================================================
+     HORARIUM - recurrentiae ordinatae ad opus
+     ================================================== -->
+
+<genus nomen="horarium">
+
+  <definitio>
+    Recurrentiae in ordinem compositae quibus opus regitur:
+    horae apertionis, vices operariorum, ordo coctionis. Non
+    una regula sed SYSTEMA regularum quae inter se conveniunt
+    (aut non conveniunt - unde conflictus vicium).
+  </definitio>
+
+  <relationes>
+    <relatio nomen="continet" ad="recurrentia" multiplex="verum"/>
+    <relatio nomen="regit" ad="*"
+      nota="organizatio, aedificium, persona - quod horario
+            ordinatur"/>
+    <relatio nomen="vinctum_per" ad="instrumentum"
+      modulus="corporalia" multiplex="verum"
+      nota="capacitas instrumenti horarium DETERMINAT: fornax
+            duodecim panes simul - vinculum corporeum quod
+            tempus ordinat. Non abstractio: ferrum horas
+            imperat"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     CALENDARIUM - systema dierum nominandorum
+     ================================================== -->
+
+<genus nomen="calendarium">
+
+  <definitio>
+    Systema quo dies nominantur et ordinantur: menses,
+    hebdomadae, anni, dies festi. CONVENTIO cum historia -
+    calendaria mutantur, et mutatio dies REVERA delet.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="conditum_a" ad="*"
+      nota="persona aut auctoritas - Gregorius XIII, magistratus"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="calendarium_gregorianum">
+    <historia>
+      <eventum quando="1582-10-15">a Gregorio XIII introductum:
+        dies decem OMISSI (4 Oct sequebatur 15 Oct) - momenta
+        quae numquam fuerunt, in historia vera</eventum>
+    </historia>
+    <nota>
+      Testis quod calendarium conventio est, non natura: dies
+      decem lege deleti sunt. Quod nulla forma temporis
+      "naturalis" ferre potest, historia vera poscit.
+    </nota>
+  </individuum>
+
+  <individuum nomen="calendarium_liturgicum">
+    <nota>
+      Annus per festa et tempora ordinatus (Adventus,
+      Quadragesima, Pascha): festa MOBILIA (Pascha per lunam
+      computatum) recurrentiam calculatam poscunt, non
+      periodicam simplicem - species recurrentiae quam periodus
+      nostra nondum capit. Dubium honestum, apertum.
+    </nota>
+  </individuum>
+
+</genus>
+
+</natura>

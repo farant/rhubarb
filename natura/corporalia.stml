@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/corporalia.stml
+  Exemplar semanticum: CORPORALIA (versio 0, PLASTICUM)
+  Genera: res_corporea, artefactum, materia, instrumentum.
+
+  Natum ex experimento pistrinae: panis, farina, fornax. Res
+  CORPOREAE factae - bibliotheca hactenus artefacta digitalia
+  (plagulae) et viventia (plantas) habebat, facta corporea
+  nulla.
+
+  DIVISIO FUNDAMENTALIS (ontologia vera, non commoditas):
+  NUMERABILIA contra MENSURABILIA. Panes numerantur, farina
+  mensuratur; "tres farinae" nihil significat. Grammatica hoc
+  iam novit (nomina numerabilia et continua), et divisio ipsa
+  praedicamento quantitatis subest: discretum contra continuum.
+
+  IDENTITAS: artefactum individuum haecceitatem habet (HIC
+  panis); materia eam NON habet - massa farinae divisa duae
+  massae fiunt, coniunctae una: identitas per divisionem non
+  servatur. Vide elementa_programmatis.identificator: materia
+  ad sigillum contenti accedit (forma sola), artefactum ad
+  baptismum.
+-->
+<natura modulus="corporalia" versio="0" lingua="latina">
+
+<!-- ==================================================
+     RES CORPOREA - quod materiam et locum habet
+     ================================================== -->
+
+<genus nomen="res_corporea">
+
+  <definitio>
+    Quod materiam habet, locum occupat, tempore corrumpitur:
+    res quae manibus tangi potest. A rebus digitalibus eo
+    differt quod exemplari NON potest - copia panis panem
+    alterum poscit, copia plagulae nihil.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="massa" genus="quantitas"
+      modulus="mensura"/>
+    <proprietas nomen="perituram" genus="veritas"
+      ordinarius="falsum"
+      nota="an tempore corrumpatur - panis perit, ferrum
+            tardius, aurum vix"/>
+  </proprietates>
+
+  <machina_statuum nomen="conditio" gerens="individuum">
+    <status nomen="recens"/>
+    <status nomen="vetus" nota="adhuc utilis, non optima"/>
+    <status nomen="corrupta"/>
+    <transitus a="recens" ad="vetus" per="mora"
+      nota="transitus a TEMPORE actus, non ab actore: nemo
+            panem vetus facit, mora facit. Machinae
+            elementorum omnes actionem poscebant; res corporea
+            per solam moram transit"/>
+    <transitus a="vetus" ad="corrupta" per="mora"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="sita_in" ad="locus" modulus="locus"
+      nota="res corporea SEMPER alicubi est - proprietas quam
+            res digitalis non habet"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     ARTEFACTUM - res corporea ab homine facta
+     ================================================== -->
+
+<genus nomen="artefactum" sub="res_corporea">
+
+  <differentia>
+    Ab homine facta ad finem: NUMERABILIS, singularis,
+    haecceitatem habens - hic panis, non alius, etiamsi
+    gemellus adsit. Forma ei ab artifice imposita, non a natura
+    orta.
+  </differentia>
+
+  <partes>
+    <pars nomen="materiae_constituentes" necessaria="verum"
+      nota="ex quibus fit - in artefacto materiae formam
+            accipiunt et res novae fiunt: farina in pane
+            farina esse desinit"/>
+  </partes>
+
+  <relationes>
+    <relatio nomen="factum_per" ad="praescriptum"
+      modulus="praescriptum"/>
+    <relatio nomen="factum_a" ad="persona" modulus="persona"/>
+    <relatio nomen="ex_materia" ad="materia" multiplex="verum"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="cibus">
+    <definitio>
+      Artefactum consumendo destinatum: usus eum DESTRUIT -
+      nota quae cibum ab omnibus fere artefactis distinguit
+      (instrumentum usu servatur, cibus usu perit).
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     MATERIA - quod mensuratur, non numeratur
+     ================================================== -->
+
+<genus nomen="materia" sub="res_corporea">
+
+  <differentia>
+    MENSURABILIS non numerabilis: farina, aqua, oleum - "tres
+    farinae" nihil significat. Divisa manet quod erat (media
+    massa farinae farina est); artefactum divisum perit
+    (dimidius panis panis non est, sed pars panis). Identitas
+    individua ei DEEST - forma sola eam constituit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="quantitas_praesens" genus="quantitas"
+      modulus="mensura"
+      nota="quantum adest - materia numquam 'unum' est, semper
+            'tantum'"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="ingreditur" ad="artefactum" multiplex="verum"
+      nota="materia in artefactum ingressa saepe DESINIT esse
+            quod erat - transformatio, non compositio sola"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     INSTRUMENTUM - artefactum ad faciendum
+     ================================================== -->
+
+<genus nomen="instrumentum" sub="artefactum">
+
+  <differentia>
+    Ad faciendum factum, non ad consumendum: usu SERVATUR (immo
+    usus eius finis est), non destruitur. Fornax panem facit et
+    fornax manet - hoc instrumentum a cibo et materia
+    distinguit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="capacitas" genus="quantitas"
+      modulus="mensura"
+      nota="quantum simul ferre potest - vinculum quod opus
+            totum ordinat (fornax duodecim panes: numerus qui
+            horarium pistrinae determinat)"/>
+  </proprietates>
+
+  <machina_statuum nomen="usus" gerens="individuum">
+    <status nomen="otiosum"/>
+    <status nomen="in_usu"/>
+    <status nomen="in_reparatione"/>
+    <status nomen="fractum"/>
+    <transitus a="otiosum" ad="in_usu" per="susceptio"/>
+    <transitus a="in_usu" ad="otiosum" per="dimissio"/>
+    <transitus a="in_usu" ad="fractum" per="fractio"/>
+    <transitus a="fractum" ad="in_reparatione" per="susceptio"/>
+    <transitus a="in_reparatione" ad="otiosum" per="refectio"
+      nota="REFECTIO, non sanatio: res corporea fracta non
+            emendatur ut fons emendatur - vide dubium in
+            fabricatione"/>
+  </machina_statuum>
+
+</genus>
+
+</natura>

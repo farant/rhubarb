@@ -185,6 +185,25 @@
     </nota>
   </individuum>
 
+  <individuum nomen="luca_pacioli">
+    <valor nomen="nomina">Luca Bartolomeo de Pacioli</valor>
+    <valor nomen="natus">1447</valor>
+    <valor nomen="mortuus">1517-06-19</valor>
+    <historia>
+      <eventum quando="1494" actio="creare">Summa de arithmetica,
+        geometria, proportioni et proportionalita - ratio duplex
+        descripta</eventum>
+    </historia>
+    <nota>
+      Frater Franciscanus. Rationem duplicem NON invenit sed
+      descripsit (mercatores Venetiarum iam utebantur) - forma
+      quam nos "fontem eventuum" vocamus, quinque saeculis ante
+      computatra: acta immutabilia, status per plicaturam,
+      correctio per actum novum. Pater doctrinae voluminis
+      nostri quem numquam novimus.
+    </nota>
+  </individuum>
+
   <individuum nomen="duns_scotus">
     <valor nomen="nomina">Ioannes Duns Scotus</valor>
     <valor nomen="natus">1266</valor>

@@ -154,4 +154,39 @@
 
 </genus>
 
+<!-- ==================================================
+     MAGISTRATUS - sub-genus: organizatio cum imperio
+     (ab experimento pistrinae postulatum: editor legis
+     sanitatis magistratus est, nec corpus normans nec
+     societas - auctoritas eius ex IMPERIO, non ex
+     consensu nec ex quaestu)
+     ================================================== -->
+
+<genus nomen="magistratus" sub="organizatio">
+
+  <differentia>
+    Auctoritas ex IMPERIO super loco, non ex consensu (ut
+    corpus normans) nec ex quaestu (ut societas): leges fert
+    quibus omnes intra iurisdictionem tenentur, sive
+    consentiant sive non. Vis coactiva differentia eius.
+  </differentia>
+
+  <relationes>
+    <relatio nomen="exercet" ad="iurisdictio" modulus="locus"
+      multiplex="verum"/>
+    <relatio nomen="concedit" ad="licentia" modulus="obligatio"
+      multiplex="verum"
+      nota="licentiae fons ordinarius - unilateralis quia
+            imperium unilaterale est"/>
+  </relationes>
+
+  <nota>
+    Corpus normans normas edit quas alii SPONTE sequuntur;
+    magistratus leges fert quas sequi COGUNTUR. Distinctio
+    quam ISO ipsa vivit: normae eius vim non habent donec
+    magistratus eas in legem sumat.
+  </nota>
+
+</genus>
+
 </natura>
