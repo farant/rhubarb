@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/lingua_programmandi.stml
-  Exemplar semanticum: LINGUAE PROGRAMMANDI (versio 3, PLASTICUM)
+  Exemplar semanticum: LINGUAE PROGRAMMANDI (versio 4, PLASTICUM)
   Genera: lingua_programmandi (+lingua_iussuum), versio_linguae,
   implementatio_linguae, verbum_clavis.
 
@@ -34,7 +34,7 @@
   VERSIONES adduntur (restrict in C99) - lex lapsus in
   vocabulario quoque.
 -->
-<natura modulus="lingua_programmandi" versio="3" lingua="latina">
+<natura modulus="lingua_programmandi" versio="4" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -304,7 +304,7 @@
      volumine punctum nominatum caudae est)
      ================================================== -->
 
-<genus nomen="versio_linguae">
+<genus nomen="versio_linguae" sub="versio" modulus="versio">
 
   <definitio>
     Editio linguae nominata et citabilis: eventus "edi" in rem

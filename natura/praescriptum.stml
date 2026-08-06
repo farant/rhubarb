@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/praescriptum.stml
-  Exemplar semanticum: PRAESCRIPTUM (versio 2, PLASTICUM)
+  Exemplar semanticum: PRAESCRIPTUM (versio 3, PLASTICUM)
   Genera: praescriptum, gradus_praescripti, versio_praescripti.
 
   Natum ex experimento pistrinae: recepta panis. Cognatum
@@ -19,7 +19,7 @@
   correspondentis fori, indices verificationis, ipsae normae
   huius bibliothecae in CLAUDE.md scriptae.
 -->
-<natura modulus="praescriptum" versio="2" lingua="latina">
+<natura modulus="praescriptum" versio="3" lingua="latina">
 
 <!-- ==================================================
      PROCEDURA - ordo operationum ad finem
@@ -228,7 +228,7 @@
      manu cusa, sine mechanismo)
      ================================================== -->
 
-<genus nomen="versio_praescripti">
+<genus nomen="versio_praescripti" sub="versio" modulus="versio">
 
   <definitio>
     Editio praescripti nominata et citabilis: quod praescriptum

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/architectura_machinae.stml
-  Exemplar semanticum: ARCHITECTURA MACHINAE (versio 1, PLASTICUM)
+  Exemplar semanticum: ARCHITECTURA MACHINAE (versio 2, PLASTICUM)
 
   Distinctio eadem ac lingua/implementatio, gradu ferri:
   architectura FORMA est (copia instructionum quam programma
@@ -14,7 +14,7 @@
   transiit) - proprietates ad subiectum verum labuntur, sicut
   "compilata" ad implementationem lapsa est.
 -->
-<natura modulus="architectura_machinae" versio="1" lingua="latina">
+<natura modulus="architectura_machinae" versio="2" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -126,7 +126,7 @@
      HIC vivit, non in familia.
      ================================================== -->
 
-<genus nomen="versio_architecturae">
+<genus nomen="versio_architecturae" sub="versio" modulus="versio">
 
   <definitio>
     Editio architecturae nominata: quam copiam instructionum

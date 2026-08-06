@@ -632,6 +632,8 @@ WRITING the library, and it has grown. In one line each:
 | Promotion | Do not promote a thing to a kind — coin a SIBLING genus and relate. Test: predicated of, or merely related to? |
 | Cheap vs expensive | Divisions are LOCAL; metamodel changes are GLOBAL. Hence dimensions before nouns. |
 | Domains (rule 19) | Cross-model homonyms are ALREADY legal; global uniqueness is a convention. Open the door for genuine homonymy, never convenience — a domain qualifier lets you skip "is this a kind we already have?", which is the question the library exists to force. |
+| Narrowing an inherited relation | A sub-genus MAY redeclare a parent's relation with a narrower target. Both stand: the parent says what the relation IS, the child what is permitted HERE. Keep both — deleting the child's loses a checkable constraint. |
+| Several specialised, no general | The structural-absence signal, paid three times (`programma`, `acta`, `versio`). When several `X_of_Y` genera each reinvent one apparatus, the general kind was never named — and laying them side by side also exposes which of them is missing a piece. |
 
 ### When to make a new genus (Fran's ruling, 2026-08-05)
 

@@ -3804,3 +3804,79 @@ at five citations.
 
 MEASURED after: 32 exemplaria / 159 genera / 351 res / 470 arcus
 / 0 vulnera / 24 monita / dubia 13 / umbrae 2.
+
+## 2026-08-05 — round fifty-two: versio — the third structural absence
+
+256. THE SIGNAL, and this time it was the strongest of the three:
+     FOUR genera named `versio_X` (linguae, systematis,
+     architecturae, praescripti), each with its own `versio_de`
+     and `sequitur`, and NO general `versio`. `programma` had one
+     genus defining itself against an absence; `acta` had five
+     scattered implementations; this had four siblings all
+     reinventing the same apparatus in parallel.
+
+257. THE COMPARISON FOUND A DEFECT NOBODY COULD SEE ALONE.
+     Three of the four carry `titulus` + `edita`;
+     `versio_praescripti` carries NEITHER — while its own
+     definitio calls it "editio nominata et CITABILIS." A thing
+     professing citability with no field to be cited by. Nothing
+     was wrong within that file; the fault existed only
+     RELATIVE to its siblings, and duplication is not merely
+     wasteful but UNEVEN — the unevenness invisible until the
+     copies are laid side by side.
+
+258. AND WHAT ALL FOUR OMITTED is the thing versioning is FOR:
+     COMPATIBILITY. Not one asked whether a new version can
+     stand where the old did — which is the only reason anyone
+     numbers versions at all. Four independent modellings of a
+     concept, and all four captured the bookkeeping (name, date,
+     predecessor) and missed the payload.
+     Recorded in the parent with the sharp part: A VERSION
+     NUMBER UNDER SEMVER IS A CLAIM, NOT A LABEL — an assertion
+     about compatibility, per iudicium, with an author, which
+     can be and routinely is broken. Hence the paradox worth
+     keeping: date- and name-based schemes are never violated
+     BECAUSE they promise nothing; semver is violated constantly
+     BECAUSE it says something.
+
+259. Identity clause in the differentia, since versioning is the
+     Ship of Theseus with a release process: what makes v2 the
+     same THING as v1 is not content (that changed — hence a new
+     version) but CONTINUITY OF NAMING AUTHORITY AND PURPOSE.
+     Where either lapses it is not a new version but a new
+     thing, which is what a fork is. Dubium recorded for the
+     middle cases (a fork keeping the name; an authority
+     changing while the thing persists) — one forcing case so
+     far.
+
+260. `sustentata` is the state binary schemes lose, and where
+     most software actually lives: between "use this" and "stop
+     using this" lies a long stretch of "maintained, not
+     recommended", on which every migration plan depends.
+     And `deprecata` is a SPEECH ACT, not a fact — the same
+     declared/discovered split `functio` already carries
+     (deprecata declared vs mortua measured).
+
+261. RE-PARENTING PAID IMMEDIATELY AND MEASURABLY:
+     `versio_praescripti` went from 3 apparatus questions to 14,
+     and acquired the `titulus` its own definitio had promised.
+     No content was written for it — inheritance supplied what
+     four rounds of independent authorship had missed.
+
+262. NEW FORMAT PATTERN, first occurrence: NARROWING AN INHERITED
+     RELATION. The parent declares `versio_de → *` (anything can
+     have versions); each child keeps its own `versio_de →
+     lingua_programmandi` etc. Both stand, and the apparatus
+     prints both — parent says what the relation IS, child what
+     is permitted HERE. Deleting the child's would lose a
+     gate-checkable constraint; deleting the parent's would lose
+     the general truth. Recorded in §9 because it will recur the
+     moment any other general genus adopts specialised children.
+
+263. Doctrine row added for the signal itself: SEVERAL
+     SPECIALISED, NO GENERAL. Three payouts now, each larger than
+     the last, and the tell is cheap to check — grep for a shared
+     name prefix among genera and ask whether the stem exists.
+
+MEASURED after: 33 exemplaria / 160 genera / 351 res / 478 arcus
+/ 0 vulnera / 24 monita / dubia 14 / umbrae 2.

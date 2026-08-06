@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **32** · genera **159** · res dictionarii **351** · arcus **470**
+Exemplaria **33** · genera **160** · res dictionarii **351** · arcus **478**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -43,10 +43,10 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **animal** ⊂ corporalia.vivens ⚙ ▣3 — SENSUM habet et motum localem: mundum percipit et se ad eum movet - unde appetitus, unde fuga, unde quaesitio
 
-### architectura_machinae (v1, genera 3)
+### architectura_machinae (v2, genera 3)
 
 - **architectura_machinae** — Forma abstracta machinae computatoriae quam programmata alloquuntur: copia instructionum, registra, modellum memoriae
-- **versio_architecturae** — Editio architecturae nominata: quam copiam instructionum chip vere exsequitur et compilator vere alloquitur - "aedific
+- **versio_architecturae** ⊂ versio.versio — Editio architecturae nominata: quam copiam instructionum chip vere exsequitur et compilator vere alloquitur - "aedific
 - **processorium** — Exemplar productum circuli computantis: forma nominata quam officina in assulas innumeras imprimit, quae architecturam
 
 ### causa (v0, genera 1)
@@ -143,11 +143,11 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **investigatio** ⚙ — Inquisitio ordinata in causas eventus, iudicia de causis producens
 - **secretum** ⚙ — Res cuius utilitas in eo consistit quod pauci eam sciunt: divulgata non corrumpitur nec perit sed OFFICIO SUO EXUITUR,
 
-### lingua_programmandi (v3, genera 5)
+### lingua_programmandi (v4, genera 5)
 
 - **lingua_programmandi** ⚙ — Systema signorum formale ad computationes exprimendas: grammatica definita, semantica praescripta (plus minusve strict
 - **lingua_iussuum** ⊂ lingua_programmandi — Verbum primum = PROCESSUS ALIENUS vocatus, non functio propria: lingua ad imperia oritur (interactiva), scriptilis fit
-- **versio_linguae** — Editio linguae nominata et citabilis: eventus "edi" in rem conversus
+- **versio_linguae** ⊂ versio.versio — Editio linguae nominata et citabilis: eventus "edi" in rem conversus
 - **implementatio_linguae** — Programma quod linguam exsequitur: compilator, interpres, aut mixtum
 - **verbum_clavis** — Verbum quod lingua sibi vindicat: grammaticae servit, identificatori negatur
 
@@ -239,13 +239,13 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **rosa** ⊂ rosaceae — Caules aculeati, folia imparipinnata, fructus hypanthium carnosum (cynorrhodon) - non pomum
 - **malus** ⊂ rosaceae — Fructus POMUM (hypanthium carnosum quod semina includit), non drupa nec cynorrhodon
 
-### praescriptum (v2, genera 6)
+### praescriptum (v3, genera 6)
 
 - **procedura** — Ordo operationum ad finem: introitus declarati, gradus ordinati, exitus exspectatus
 - **procedura_automata** ⊂ procedura ⚙ — A MACHINA exsecuta, ideo AMBIGUITATIS TOLERANTIA NULLA: ubi praescriptum "donec aureum fiat" dicere potest quia homo i
 - **praescriptum** ⊂ procedura ⚙ ▣3 — Ordo operationum ad finem, ab homine exsequendus: introitus declarati (materiae, instrumenta), gradus ordinati, exitus
 - **gradus_praescripti** — Operatio una in ordine: actio, fortasse cum quantitate, fortasse cum mora, fortasse cum conditione finiendi
-- **versio_praescripti** — Editio praescripti nominata et citabilis: quod praescriptum per emendationes transit, identitate manente ("receptum av
+- **versio_praescripti** ⊂ versio.versio — Editio praescripti nominata et citabilis: quod praescriptum per emendationes transit, identitate manente ("receptum av
 - **index_verificationis** ⊂ procedura — CONFIRMAT quod factum sit; non docet quomodo fiat
 
 ### schema (v0, genera 3)
@@ -254,12 +254,12 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **campus** — Locus nominatus in schemate: nomen, genus valoris, necessitas
 - **genus_valoris** — Genus valoris quod campus tenere potest: INTENTIO valoris, non repraesentatio machinae - s32 et char* realizationes su
 
-### systema_operativum (v3, genera 4)
+### systema_operativum (v4, genera 4)
 
 - **systema_operativum** ⚙ — Programma primarium quod machinam possidet: inter ferrum et programmata mediat - memoriam distribuit, processus custod
 - **systema_unixiforme** ⊂ systema_operativum — Ad exemplar Unix formatum: arbor plagularum una a radice, "omnia plagulae sunt", processus cum fistulis componendi, co
 - **distributio_systematis** — Collectio curata: nucleus + instrumenta + ordinationes + gestor fasciculorum, ab uno curatore electa, probata, edita
-- **versio_systematis** — Editio systematis nominata: quam installatio vere currit - "Darwin 23
+- **versio_systematis** ⊂ versio.versio — Editio systematis nominata: quam installatio vere currit - "Darwin 23
 
 ### tempus (v4, genera 8)
 
@@ -278,6 +278,10 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **via** — Semita per quam iri potest: res publica plerumque, itineribus innumeris communis
 - **vehiculum** ⊂ corporalia.instrumentum — Instrumentum cuius usus MOTUS est: se movet et alia fert
 - **onus** ⚙ — Res corporeae sub itinere: non genus rerum sed CONDICIO earum - idem dolium onus est dum fertur, merx dum venditur, su
+
+### versio (v0, genera 1)
+
+- **versio** ⚙ — Editio rei nominata et citabilis, quae rem ipsam per mutationem manentem SIGNAT: res una est, versiones multae, et ver
 
 ## III. Index alphabeticus (genera)
 
@@ -435,6 +439,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | vehiculum | vectura |
 | venditio | commercium |
 | verbum_clavis | lingua_programmandi |
+| versio | versio |
 | versio_architecturae | architectura_machinae |
 | versio_linguae | lingua_programmandi |
 | versio_praescripti | praescriptum |
@@ -579,6 +584,7 @@ exsistente. Nullum consilium — describi potest quovis momento.
 - `planta` / **planta** — Proprietates viventium AMBITUS sunt, non puncta: altitudo "2-5 m", dies florendi "Maius-Iunius". Forma nostra valorem unum fert. Res vivens hanc formam poscit; 
 - `schema` / **genus_valoris** — Paletta domus etiam "area" (textus amplus) et "annus" (dies grossior) habet: species propriae, an textus cum praesentatione et dies cum granularitate? Praesenta
 - `tempus` / **pascha** — GRADUS AMBIGUUS (rota XXIX): una est regula paschalis, ergo individuum videtur; at "pascha" etiam de quovis anno dicitur ("pascha huius anni"), quod praedicatio
+- `versio` / **versio** — FURCA (fork) versio non est - continuatio auctoritatis deficit, unde res nova. Sed casus medii sunt: quid de furca quae nomen retinet et auctoritatem novam habe
 
 ## VII. Monita — stirps communis sine cognatione (24)
 

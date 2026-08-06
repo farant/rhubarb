@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/systema_operativum.stml
-  Exemplar semanticum: SYSTEMA OPERATIVUM (versio 3, PLASTICUM)
+  Exemplar semanticum: SYSTEMA OPERATIVUM (versio 4, PLASTICUM)
   Tertium paroeciae (post linguas et plagulas).
 
   MECHANISMUS NOVUS: machina_statuum GERENTEM declarat (attributum
@@ -20,7 +20,7 @@
   Relationes duae: orta_ex (descensus) / ad_exemplum_facta
   (imitatio formae). Genealogia vera utramque eget.
 -->
-<natura modulus="systema_operativum" versio="3" lingua="latina">
+<natura modulus="systema_operativum" versio="4" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -364,7 +364,7 @@
      versiones entia legitima, nullum mechanismum petunt)
      ================================================== -->
 
-<genus nomen="versio_systematis">
+<genus nomen="versio_systematis" sub="versio" modulus="versio">
 
   <definitio>
     Editio systematis nominata: quam installatio vere currit -
