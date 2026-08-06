@@ -4938,3 +4938,58 @@ ZERO lineae; probatio_natura 62/62.
 
 MEASURED: 33 exemplaria / 177 genera / 384 res / 0 vulnera; portae
 IV probatae (sana, malformata, STML-non-XML, porta absens).
+
+## 2026-08-06 — round 63: gradus II — xmllint ex viso abiit
+
+330. XLVIII VOCATIONES XMLLINT DELETAE. Quod illic stabat non erat
+     'quaedam interrogationes' sed PARSATIO ALTERA TOTIUS CORPORIS
+     cum interpretatione altera: onerator plagulas per stml
+     legebat, visus easdem per xmllint. Duo parseres, unum corpus,
+     dissensus semper possibilis - et TACITUS, quia xp() errores
+     in /dev/null mittebat (unde vitium gradus 0).
+     Consilium ergo NON fuit 'xmllint per selectio substituere'.
+     Onerator haec omnia IAM IN MEMORIA TENET; ergo tabulas
+     EMITTIT (natura_examen -tabulae) et visus solam
+     praesentationem agit. Una parsatio, una veritas.
+     natura_visus.sh: DCCCX lineae -> DCLVII.
+
+331. PORTA = DIFFERENTIA, ut in oneratore ipso. Ante mutationem
+     tabulae XII, INDEX.md, HTML omnia servata sunt ut oraculum.
+     Post: XI ex XII tabulis PRIMO CURSU octetim congruerunt
+     (genera 177, res 384, arcus 519, glossae 177, resgen 384,
+     citationes 26, assensus 26, fontes 13, transradices 9,
+     umbrae 3, validitas 1). Duodecima (dubia) linea UNA discrepuit.
+
+332. ET DISCREPANTIA ERAT VERA DIFFERENTIA SEMANTICA, non erratum:
+     `stml_textus_internus` spatium album PRAECIDIT; xmllint
+     `string()` non. Mensuratum in vitro: '<d>\n    alpha.\n  </d>'
+     -> stml 'alpha.' (VI), xmllint ' alpha. ' quod sed ad
+     'alpha. ' coartat. Unde campus unus (dubium functio_pura)
+     spatio finali caret.
+     ACCEPTUM ut MELIUS: spatium finale strepitus xmllint erat,
+     quem visus in INDEX.md et HTML ferebat. INDEX.md et HTML
+     ergo UNA LINEA differunt, eaque praedicta ANTE cursum.
+     Differentia quae explicatur ante quam apparet non est
+     defectus sed mensura.
+
+333. REGULA XIV COACTA DIVIDENDA SOLVIT. Duae sedes xp() manebant
+     quae SOLUM modulum radicis poscebant. Cum regula XIV
+     (modulus= stirpi plagulae aequatur) ab oneratore nunc
+     COGATUR, nomen plagulae fide dignum est: `basename` sufficit,
+     et parsatio altera non opus. Porta cogens usum aliorum
+     instrumentorum SIMPLICIOREM facit - lucrum quod portae raro
+     numeratur.
+
+334. GUARD TRANSITORIUS DELETUS eodem commisso quo natus est.
+     Rota LXII eum aedificavit quia contractus (STML) et
+     instrumentum (xmllint) dissentire poterant; xmllint abeunte,
+     nihil custodiebat. Guard cum causa sua scriptus fuit et cum
+     causa sua periit - quod est cur causas scribimus.
+
+RESTAT: natura_quaere.sh XXII sedes xp() adhuc fert (corpus suum
+G/P/M/A/R/S aedificans). Dependentia xmllint domus ergo nondum
+tota abiit - visus liber est, quaere non.
+
+MENSURATUM: 33 exemplaria / 177 genera / 384 res / 519 arcus /
+0 vulnera / 24 monita; INDEX.md et HTML una linea praedicta
+differunt; probationes natura 65/65, stml 577/577.

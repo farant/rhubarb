@@ -616,7 +616,7 @@ exsistente. Nullum consilium — describi potest quovis momento.
 ## VI. Dubia aperta
 
 - `acta` / **punctum_actorum** — RAMI: haec relatio 'praecedens' seriem simplicem supponit. Acta ramosa (git) puncta plura post idem punctum ferunt, et tunc 'plicatura ad punctum' viam eligere 
-- `elementa_programmatis` / **functio_pura** — An proprietas potius quam sub-genus (puritas="verum")? Argumentum sub-generis: fasciculus licentiarum supra. Fran nondum iudicavit - v0 sub-genus audet. 
+- `elementa_programmatis` / **functio_pura** — An proprietas potius quam sub-genus (puritas="verum")? Argumentum sub-generis: fasciculus licentiarum supra. Fran nondum iudicavit - v0 sub-genus audet.
 - `elementa_programmatis` / **constans** — 'const' in via accessus (parametrum monstratoris) rem ALIAM dicit: pactum non scribendi per hoc nomen - promissum functionis, non constantia rei. Genus proprium
 - `elementa_programmatis` / **libc** — libc FORMA est quam glibc, musl, msvcrt IMPLEMENTANT - distinctio lingua/implementatio in bibliothecis recurrit. Genus implementatio_bibliothecae nondum natum; 
 - `fabricatio` / **vitium** — SANATIO REBUS CORPOREIS NON CONVENIT (inventum experimenti pistrinae): sanatio = mutatio fontis, quae rem emendabilem supponit. Panis adustus non emendatur - ab

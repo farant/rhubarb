@@ -34,7 +34,6 @@ RESGEN="$TMP/resgen.txt"              # mod|genus|res
 : > "$GENERA"; : > "$RES"; : > "$ARCUS"; : > "$UMBRAE"; : > "$DUBIA"
 : > "$FONTES"; : > "$CITATIONES"; : > "$ASSENSUS"
 
-xp() { xmllint --xpath "$2" "$1" 2>/dev/null; }
 num() { printf '%.0f' "${1:-0}" 2>/dev/null || printf '0'; }
 
 # ================= PORTA PARSATIONIS (gradus 0) =================
@@ -74,198 +73,34 @@ if [ -n "$_fracta" ]; then
     exit 1
 fi
 
-# GUARD TRANSITORIUS - delendus cum gradu II (xmllint remoto).
-# Contractus regulae I iam STML BENE FORMATUM est (Fran,
-# 2026-08-06), non XML. Sed HOC instrumentum adhuc per xmllint
-# interrogat, ergo plagula STML-valida-sed-XML-invalida (attributum
-# booleanum, clausura </>, tag crudus) visum frangeret eodem modo
-# TACITO quem porta supra claudit. Dum xmllint manet, dissensus
-# LOQUI debet.
-for _f in natura/*.genera; do
-    if ! xmllint --noout "$_f" 2>/dev/null; then
-        echo "natura_visus: '$_f' STML valet sed XML NON - et hoc" >&2
-        echo "  instrumentum adhuc xmllint adhibet (gradus II id tollet)." >&2
-        xmllint --noout "$_f" 2>&1 | sed 's/^/  /' >&2
-        exit 1
-    fi
-done
+# GUARD TRANSITORIUS DELETUS (gradus II, 2026-08-06): xmllint
+# hinc abiit, ergo plagula STML-valida-sed-XML-invalida hoc
+# instrumentum frangere non potest amplius. Contractus (STML) et
+# instrumentum tandem CONSENTIUNT, unde guard nihil custodiebat.
 
-MODULI=""
+# ================= EXTRACTIO (gradus II) =================
+# XLVIII vocationes xmllint hic stabant. Erant PARSATIO ALTERA
+# eiusdem corporis cum interpretatione altera: onerator plagulas
+# per stml legebat, visus easdem per xmllint - duo parseres, unum
+# corpus, dissensus semper possibilis (et TACITUS, quia xp()
+# errores in /dev/null mittebat).
+#
+# Nunc onerator, qui haec omnia iam in memoria tenet, tabulas
+# EMITTIT; visus solam praesentationem agit. Una parsatio, una
+# veritas. Schemata tabularum immutata manent, ergo quod sequitur
+# intactum est.
+#
+# DIFFERENTIA MENSURATA in migratione: stml_textus_internus
+# spatium album PRAECIDIT, xmllint string() non - unde campus
+# unus (dubium functio_pura) spatio finali caret quod xmllint
+# ferebat. Melius, non peius: spatium finale strepitus erat.
 
-for f in natura/*.genera; do
-    mod=$(xp "$f" 'string(/natura/@modulus)')
-    ver=$(xp "$f" 'string(/natura/@versio)')
-    MODULI="$MODULI $mod:$ver"
+if ! "$PORTA" -tabulae "$TMP" >/dev/null 2>&1; then
+    echo "natura_visus: tabulae scribi nequeunt (porta $PORTA)" >&2
+    exit 1
+fi
 
-    n=$(num "$(xp "$f" 'count(//genus)')")
-    i=1
-    while [ "$i" -le "$n" ]; do
-        g=$(xp "$f" "string((//genus)[$i]/@nomen)")
-        s=$(xp "$f" "string((//genus)[$i]/@sub)")
-        sm=$(xp "$f" "string((//genus)[$i]/@modulus)")
-        # subordinatio TRANS EXEMPLARIA (mechanismus rotae XVII):
-        # sub= cum modulo alieno = arcus, et radix in silva sua
-        if [ -n "$s" ] && [ -n "$sm" ] && [ "$sm" != "$mod" ]; then
-            echo "$mod|$g|sub|$sm|$s|$g" >> "$ARCUS"
-            echo "$mod|$g|$sm.$s" >> "$TRANSRADICES"
-            s=""
-        fi
-        nsp=$(num "$(xp "$f" "count((//genus)[$i]/species)")")
-        nin=$(num "$(xp "$f" "count((//genus)[$i]/individuum)")")
-        ndu=$(num "$(xp "$f" "count((//genus)[$i]//dubium)")")
-        nma=$(num "$(xp "$f" "count((//genus)[$i]/machina_statuum)")")
-        # partes NUMERANDAE: apparatus quo absentia visibilis fit
-        # (RATIO §3) - qui applicat genus cum partibus indicem
-        # accipit, non nomen. Ideo in indice signandum.
-        npa=$(num "$(xp "$f" "count((//genus)[$i]/partes/pars)")")
-        echo "$mod|$g|$s|$nsp|$nin|$ndu|$nma|$npa" >> "$GENERA"
-        # glossa: sententia prima definitionis (aut differentiae
-        # in sub-generibus, quae definitione saepe carent)
-        gl=$(xp "$f" "string((//genus)[$i]/definitio)")
-        [ -z "$gl" ] && gl=$(xp "$f" "string((//genus)[$i]/differentia)")
-        # tr '|' : prosa separatorem nostrum continere POTEST, et
-        # campus corruptus tacite errat (nulla querela, linea
-        # prava) - genus vitii quod domus bis mensuravit
-        gl=$(echo "$gl" | tr '\n|' ' /' | sed 's/  */ /g; s/^ //' \
-             | cut -d'.' -f1 | cut -c1-118)
-        echo "$mod|$g|$gl" >> "$GLOSSAE"
-        i=$((i + 1))
-    done
-
-    # res dictionarii (species/individua/cultivares nominati)
-    for gradus in species individuum cultivar; do
-        nr=$(num "$(xp "$f" "count(//$gradus)")")
-        i=1
-        while [ "$i" -le "$nr" ]; do
-            r=$(xp "$f" "string((//$gradus)[$i]/@nomen)")
-            rg=$(xp "$f" "string((//$gradus)[$i]/ancestor::genus[1]/@nomen)")
-            [ -n "$r" ] && echo "$mod|$r" >> "$RES"
-            # gradus servandus: individua signum ':' in indice
-            # ferunt (METAMODULUS §4b) - unicum locum ubi
-            # allocutiones hodie apparent
-            if [ "$gradus" = "individuum" ]; then
-                [ -n "$r" ] && echo "$mod|$rg|:$r" >> "$RESGEN"
-            else
-                [ -n "$r" ] && echo "$mod|$rg|$r" >> "$RESGEN"
-            fi
-            i=$((i + 1))
-        done
-    done
-
-    # arcus: relatio/relatum cum ad= aut a= (praeter aperta/externa)
-    for elem in relatio relatum; do
-        for attr in ad a; do
-            sel="//${elem}[@${attr}][not(@externum)][@${attr}!='*']"
-            ne=$(num "$(xp "$f" "count($sel)")")
-            i=1
-            while [ "$i" -le "$ne" ]; do
-                rel=$(xp "$f" "string(($sel)[$i]/@nomen)")
-                tgt=$(xp "$f" "string(($sel)[$i]/@${attr})")
-                tm=$(xp "$f" "string(($sel)[$i]/@modulus)")
-                # genus PROXIMUM, non extimum: axis ancestor reversa
-                # est, ergo [1] proximum dat. Genera nidificata
-                # (planta) aliter radicem suam nuntiant
-                fg=$(xp "$f" "string(($sel)[$i]/ancestor::genus[1]/@nomen)")
-                # FONS PRECISUS: relatum intra speciem a SPECIE
-                # asseritur, non a genere. Sine hoc campo tabula
-                # arcuum mendax est - 'quis Linnaeum citat?'
-                # 'rosa' respondet ubi 'rosa_canina' verum est.
-                # (@nomen ipsius relati nomen RELATIONIS est, unde
-                # ancestor:: et non ancestor-or-self::)
-                fr=$(xp "$f" "string(($sel)[$i]/ancestor::*[@nomen][1]/@nomen)")
-                [ -z "$tm" ] && tm="$mod"
-                echo "$mod|$fg|$rel|$tm|$tgt|$fr" >> "$ARCUS"
-                i=$((i + 1))
-            done
-        done
-    done
-
-    # proprietates generibus bibliothecae typatae (mechanismus
-    # novus: genus= + modulus= pro paletta nuda) - arcus quoque
-    np=$(num "$(xp "$f" "count(//proprietas[@modulus])")")
-    i=1
-    while [ "$i" -le "$np" ]; do
-        pn=$(xp "$f" "string((//proprietas[@modulus])[$i]/@nomen)")
-        pg=$(xp "$f" "string((//proprietas[@modulus])[$i]/@genus)")
-        pm=$(xp "$f" "string((//proprietas[@modulus])[$i]/@modulus)")
-        pf=$(xp "$f" "string((//proprietas[@modulus])[$i]/ancestor::genus[1]/@nomen)")
-        echo "$mod|$pf|proprietas:$pn|$pm|$pg|$pf" >> "$ARCUS"
-        i=$((i + 1))
-    done
-
-    # fontes declarati (claves) + citationes fons= et certitudo=
-    nfd=$(num "$(xp "$f" "count(//fontes/fons)")")
-    i=1
-    while [ "$i" -le "$nfd" ]; do
-        fc=$(xp "$f" "string((//fontes/fons)[$i]/@clavis)")
-        echo "$mod|$fc" >> "$FONTES"
-        i=$((i + 1))
-    done
-    nfc=$(num "$(xp "$f" "count(//*[@fons])")")
-    i=1
-    while [ "$i" -le "$nfc" ]; do
-        fu=$(xp "$f" "string((//*[@fons])[$i]/@fons)")
-        # diagnostica SE NOMINANTIA (lex domus): eventum nomine
-        # caret, ergo 'quando' pro nomine - nuntius vacuus
-        # lectorem ad plagulam remittit, quod porta facere debet
-        fn=$(xp "$f" "string((//*[@fons])[$i]/@nomen)")
-        [ -z "$fn" ] && fn=$(xp "$f" "string((//*[@fons])[$i]/@quando)")
-        [ -z "$fn" ] && fn="(innominatum)"
-        echo "$mod|$fu|$fn" >> "$CITATIONES"
-        i=$((i + 1))
-    done
-    ncert=$(num "$(xp "$f" "count(//*[@certitudo])")")
-    i=1
-    while [ "$i" -le "$ncert" ]; do
-        cv=$(xp "$f" "string((//*[@certitudo])[$i]/@certitudo)")
-        echo "$mod|$cv" >> "$ASSENSUS"
-        i=$((i + 1))
-    done
-
-    # tempus validitatis (mechanismus rotae XVIII):
-    # forma dierum + ordo (a <= ad) - intervallum inversum error
-    nvt=$(num "$(xp "$f" "count(//*[@valens_a or @valens_ad])")")
-    i=1
-    while [ "$i" -le "$nvt" ]; do
-        sel="(//*[@valens_a or @valens_ad])[$i]"
-        va=$(xp "$f" "string($sel/@valens_a)")
-        vd=$(xp "$f" "string($sel/@valens_ad)")
-        vn=$(xp "$f" "string($sel/@nomen)")
-        echo "$mod|$vn|$va|$vd" >> "$VALIDITAS"
-        i=$((i + 1))
-    done
-
-    # umbrae: externum="verum" - superficta declarata.
-    # ELEMENTUM CITANS SERVATUR, quia agendam DIVIDIT: relatio
-    # ad="X" dicit X GENUS esse (relationes in genera tendunt);
-    # relatum ad="X" rem singularem nominat (individuum sub genere
-    # iam exsistente). Agenda quae hoc non distinguit opus
-    # dictionarii facile sub opere consilii difficili CELAT.
-    nu=$(num "$(xp "$f" "count(//*[@externum='verum'])")")
-    i=1
-    while [ "$i" -le "$nu" ]; do
-        sel="(//*[@externum='verum'])[$i]"
-        u=$(xp "$f" "string($sel/@ad)")
-        el=$(xp "$f" "string(local-name($sel))")
-        [ -n "$u" ] && echo "$u|$mod|$el" >> "$UMBRAE"
-        i=$((i + 1))
-    done
-
-    # dubia cum contextu ET TEXTU: index qui dubium NOMINAT sed non
-    # DICIT sessionem novam ad plagulam remittit - id est quod
-    # index praestare debet. Diagnostica se nominantia (lex domus)
-    # ad indices quoque pertinet.
-    ndub=$(num "$(xp "$f" 'count(//dubium)')")
-    i=1
-    while [ "$i" -le "$ndub" ]; do
-        ctx=$(xp "$f" "string((//dubium)[$i]/ancestor-or-self::*[@nomen][1]/@nomen)")
-        [ -z "$ctx" ] && ctx="(modulus)"
-        dtx=$(xp "$f" "string((//dubium)[$i])" | tr '\n|' ' /' \
-              | sed 's/  */ /g; s/^ //' | cut -c1-160)
-        echo "$mod|$ctx|$dtx" >> "$DUBIA"
-        i=$((i + 1))
-    done
-done
+MODULI=$(tr '\n' ' ' < "$TMP/moduli.txt")
 
 # ---- classificatio umbrarum: DUAE agendae, non una ----
 # Umbra a relatione citata GENUS poscit: opus consilii, quaestio
@@ -331,7 +166,10 @@ ATTRIBUTA_NOTA=" $(echo $_attributa) "
 # ('puritas="verum"' ut exemplum disputatum). Grep textum crudum
 # legens parser non est.
 for f in natura/*.genera; do
-    mod=$(xp "$f" 'string(/natura/@modulus)')
+    # modulus EX NOMINE PLAGULAE: regula XIV (modulus= stirpi
+    # aequatur) ab oneratore nunc COGITUR, ergo nomen plagulae
+    # fide dignum est et parsatio altera non opus
+    mod=$(basename "$f" .genera)
     perl -0ne 's/<!--.*?-->//gs;
                while (/<([a-z_]+)((?:"[^"]*"|[^<>])*)>/g) {
                  my ($e,$at)=($1,$2); print "E $e\n";
@@ -377,8 +215,8 @@ done < "$UMBCLS"
 
 # ---- regula XVII: versio attributi cum capite congruat ----
 for f in natura/*.genera; do
-    m=$(xp "$f" 'string(/natura/@modulus)')
-    va=$(xp "$f" 'string(/natura/@versio)')
+    m=$(basename "$f" .genera)
+    va=$(grep "^$m:" "$TMP/moduli.txt" | cut -d: -f2)
     vc=$(grep -o 'versio [0-9]*, PLASTICUM' "$f" | head -1 \
          | sed 's/versio //; s/, PLASTICUM//')
     if [ -n "$vc" ] && [ "$va" != "$vc" ]; then
