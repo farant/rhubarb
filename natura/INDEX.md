@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **33** · genera **166** · res dictionarii **360** · arcus **496**
+Exemplaria **33** · genera **169** · res dictionarii **365** · arcus **500**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -78,11 +78,12 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **tessera_simplex** ⊂ tessera — Possessio sufficit ad exhibendum, sed nulla titulorum purgatio: qui tesseram furatam exhibet admittitur (custos nescit
 - **ratio_rationaria** ⊂ acta.acta — Acta rerum pecuniariarum ordine temporis: veritas est cauda eventuum, status omnis (summa, debitum, lucrum) PLICATURA
 
-### communicatio (v1, genera 3)
+### communicatio (v2, genera 4)
 
 - **actor** — Ens logicum cum identitate, statu privato, moribus: cum aliis SOLUM per nuntios communicat
 - **nuntius** ⚙ — Communicatio reificata: data in itinere INSCRIPTA - destinatarius ei debetur
 - **eventum** — Res gesta NON inscripta: accidit, et quivis observans videre potest - nulli debetur
+- **stigmergia** — Coordinatio per vestigium quod agens in medio communi relinquit: signum nulli inscriptum, quod manet, a quolibet trans
 
 ### corporalia (v3, genera 7)
 
@@ -115,7 +116,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **programma** — Collectio elementorum cum INITIO PROPRIO: vocatum currit et ex se ipso pergit, ubi bibliotheca vocata solum vivit
 - **instrumentum_aedificationis** ⊂ programma — Programma cuius finis artefacta aedificationis ex fontibus derivare: graphum dependentiarum novit (quid ex quo), et in
 
-### fabricatio (v5, genera 8)
+### fabricatio (v6, genera 8)
 
 - **postulatum** ⚙ — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
 - **facultas** — Quod opus praestare potest, ab utente aestimatum: unitas VALORIS
@@ -206,9 +207,11 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **periodicum** ⊂ opus_scriptum — Opus quod PERFECTIONEM non petit: in fasciculis continuatur dum curatores volunt - machina compositionis parentis ei f
 - **fasciculus** — Pars periodici tempore signata: numerus unus, die suo editus
 
-### organizatio (v6, genera 6)
+### organizatio (v7, genera 8)
 
-- **organizatio** — Universitas personarum: coetus in finem communem ordinatus qui UT UNUM agit et mutatis membris perdurat - haec perdura
+- **universitas** — Coetus in finem communem ordinatus qui UT UNUM agit et mutatis membris PERDURAT: haec perduratio eum a mero acervo dis
+- **organizatio** ⊂ universitas — Universitas PERSONARUM: quod membra rationalia sunt omnia sequentia parit - fines eligi possunt et mutari, officia con
+- **colonia** ⊂ universitas — Universitas VIVENTIUM quorum membra non eligunt: ordo ad finem non consilio sed natura constat, unde nec officia const
 - **persona_iuridica** ⊂ organizatio — Subiectum iurium et obligationum in iure: possidet, contrahit, agit et convenitur SUO nomine, non nomine membrorum
 - **officium** ⚙ — Munus stabiliter constitutum cum oneribus, potestatibus et condicionibus SUIS, quod tenenti suo NON inhaeret: idem off
 - **corpus_normans** ⊂ organizatio — Finis proprius: normas edere et custodire - descriptiones auctoritativas quibus alii conformantur
@@ -320,6 +323,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | cliens_terminalis | cliens |
 | coctura | pharmacon |
 | codex | opus_scriptum |
+| colonia | organizatio |
 | commentarium | elementa_programmatis |
 | complicatio | fabricatio |
 | consilium | fabricatio |
@@ -437,6 +441,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | servus | cliens |
 | societas | organizatio |
 | status | elementa_programmatis |
+| stigmergia | communicatio |
 | substantia_chemica | pharmacon |
 | systema_operativum | systema_operativum |
 | systema_plagularum | plagula_computatralis |
@@ -448,6 +453,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | tractatus | obligatio |
 | tributum | obligatio |
 | unitas_mensurae | mensura |
+| universitas | organizatio |
 | vehiculum | vectura |
 | venditio | commercium |
 | verbum_clavis | lingua_programmandi |
@@ -481,6 +487,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `commercium.ratio_rationaria` — ratio_duplex
 - `commercium.tessera_negotiabilis` — apocha_horrei, charta_onerum, nummus_chartaceus, obligatio_ad_portitorem, perscriptio, syngrapha
 - `commercium.tessera_simplex` — tessera_digitalis, tessera_repositoria, tessera_spectaculi
+- `communicatio.stigmergia` — semita_trita, tabula_communis, vestigia_operis, vestigium_chemicum
 - `corporalia.artefactum` — cibus
 - `corporalia.damnum` — contaminatio, corruptio, fractura
 - `corporalia.res_sacra` — reliquiae, res_sacra_immobilis, res_sacra_mobilis
@@ -535,6 +542,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `opus_scriptum.editio` — :moby_dick_londinensis_1851, :moby_dick_novi_eboraci_1851, :systema_naturae_editio_decima
 - `opus_scriptum.expressio` — :abusus_linguae_anglice, :abusus_linguae_germanice
 - `opus_scriptum.opus_scriptum` — :abusus_linguae, :moby_dick, :species_plantarum, :summa_theologiae, :systema_naturae
+- `organizatio.colonia` — colonia_apium
 - `organizatio.corpus_normans` — :ansi, :iec, :ieee, :iso
 - `organizatio.officium` — curator, episcopus, notarius, parochus, praeses_collegii
 - `organizatio.organizatio` — :agentia_isbn, :debian_project

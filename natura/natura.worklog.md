@@ -4119,3 +4119,129 @@ describe the problem or merely the technology.
 
 MEASURED after: 33 exemplaria / 166 genera / 360 res / 496 arcus
 / 0 vulnera / 24 monita / dubia 14 / umbrae 2.
+
+## 2026-08-05 — round fifty-five: apiculture (coverage loop, run 12)
+
+Chosen after refusing three related domains, and the refusals are
+worth as much as the run. Fran asked whether insect colonies,
+ecosystems or fungal networks would repay a walk.
+
+279. THE METHODOLOGICAL TRAP, NAMED BEFORE WALKING. Diplomacy
+     worked because it is an INDEPENDENT domain that solved the
+     problem on its own terms centuries earlier. "Ant colony as
+     distributed system" is the inverse: much of that vocabulary
+     was IMPORTED INTO biology by physicists and computer
+     scientists from the 1980s on. Walk it naively and the
+     cross-pollination is MY OWN VOICE ECHOING BACK — the CS
+     framing applied to the ants, then read out again as
+     discovery. A failure mode the library had not met, and one
+     that would be nearly undetectable from inside.
+     SECOND OBJECTION: the punishment heuristic needs
+     PRACTITIONERS who are punished and then WRITE DOWN the
+     distinctions that settle disputes. In biology punishment
+     falls on the organism via selection, which produces
+     mechanisms, not doctrine.
+     THIRD, AND MOST HONEST: mycorrhizal networks are exactly
+     where my corpus is thick with popularisations that overstate
+     ("trees share altruistically"), and RATIO §6 says I would be
+     equally fluent whether or not I was right, with no way for
+     Fran to check. Declined to model ecosystems or fungal
+     networks at all.
+     APICULTURE FIXES ALL THREE: practitioners, severe
+     punishment, and a vocabulary thousands of years older than
+     computing, so it cannot be an echo.
+
+280. STIGMERGIA — the round's real find, and a genuine third
+     mode. The library had `nuntius` (ADDRESSED, a recipient is
+     owed it) and `eventum` (unaddressed but MOMENTARY, seen by
+     whoever is present). This is neither: a trace left in a
+     shared medium, unaddressed AND PERSISTENT, read by whoever
+     passes, decaying by itself.
+     No bee tells another anything. The queen emits pheromone; it
+     diffuses; a worker reads the LOCAL CONCENTRATION; below
+     threshold, queen-rearing begins. Nobody announced a death.
+     DECAY IS THE MECHANISM, NOT A DEFECT — the property most
+     often missed. A trail that did not fade would route ants to
+     an exhausted flower forever. What computing calls cache
+     invalidation and finds hard, nature delegates to time and
+     gets free. Recorded as `tabescentia`, and the species where
+     it is ABSENT (`tabula_communis` — a wiki, a shared board)
+     shows the cost: what was written stays until someone deletes
+     it, so shared boards go stale and nobody knows what still
+     holds.
+     `cumulativa` is the second half: where traces REINFORCE,
+     voting happens with no voters — the path more walked is
+     stronger and draws more, so the best route is chosen with no
+     one choosing. Desire paths are the purest specimen, and wise
+     architects WAIT for them before laying pavement.
+     And the house is already doing it: silex projects a tree,
+     clang reads it, neither knows the other. "The projection is
+     the CONTRACT" names stigmergy without the word.
+
+281. UNIVERSITAS — Fran's ruling, and the walk made the case
+     rather than an argument. `organizatio`'s own definitio says
+     "a body ordered to a common end which acts AS ONE and
+     endures though its members change." That is a bee colony
+     verbatim: it thermoregulates, defends, allocates foragers,
+     and persists while EVERY member is replaced in about six
+     weeks. Only the first two words excluded it — "universitas
+     PERSONARUM."
+     ROMAN LAW ALREADY HAD THE BREADTH: universitas rerum (a
+     herd, an inheritance) requires no persons, and we carry that
+     species already. The narrowing was ours, not the tradition's.
+     What went UP: endurance, acting as one, membership,
+     `dividi`, `fundi`. What stayed: persons, legal capacity,
+     offices, publication.
+
+282. AND THE RE-PARENTING PAID A DIVIDEND NOBODY LOOKED FOR:
+     SWARMING IS `dividi` — the action written in round 45 for
+     the AT&T 1984 divestiture. "Split into several, none
+     identical to the prior; new endurances begin; assets and
+     burdens are divided between them." A bee colony: the old
+     queen leaves with half the workers, the remaining half rears
+     a new queen, and both must survive alone. An antitrust
+     decree and a swarm, the same verb, and neither was written
+     with the other in view.
+     Which retroactively justifies station 5's non-surfacing —
+     swarming needed no genus because the ACTION already existed
+     one level up, unnoticed until the parent was built.
+
+283. DEPRAVATIO REFINED, from a domain with zero computing
+     contact. A colony queenless too long grows laying workers:
+     unfertilised eggs, drones only. There IS brood, there IS
+     activity, THE HIVE LOOKS ALIVE, and it is finished — which
+     is depravatio exactly, and the hardest thing for a novice to
+     diagnose. But the bees added what the genus lacked: SUCH A
+     COLONY KILLS AN INTRODUCED QUEEN. The corrupt state does not
+     merely resist repair, it DEFEATS it.
+     `insanabilis` says "cannot be fixed"; `repugnans` says
+     "fights the fix", and the practical consequence is an
+     INVERTED ORDER OF OPERATIONS — remove the resistance first
+     (frames of open brood, or move the hive far off), then
+     repair. Whoever repairs first loses the medicine and learns
+     nothing. Computing twins: a cache that re-poisons itself on
+     refresh; a config that survives redeploy.
+
+284. COMPOSITION WINS, all from craft with no theory attached:
+     `iudicium`/`observatio.signum` — a beekeeper almost never
+     sees the queen and checks for EGGS, under the rule "eggs
+     mean a queen within three days": inference from a sign WITH
+     A FRESHNESS BOUND, which is the heartbeat-with-timeout,
+     invented by people who had never heard of either.
+     `officium` — a queenless colony is a VACANT POST, and the
+     craft distinguishes two successions our language did not:
+     SUPERSEDURE (the failing queen still lays while her
+     successor is reared — time to choose) versus EMERGENCY
+     (she dies suddenly, and the colony must use whatever larvae
+     are young enough). The difference is not execution but
+     MATERIAL AVAILABLE AT THE MOMENT OF FAILURE. Prepared
+     succession wins because it CHOOSES ITS MATERIAL.
+
+285. Rule 18 fired again and again correctly: `status_operis`
+     read as a kind of `status` (a guarded mutable value) when it
+     meant the working tree AS A MEDIUM. Renamed `vestigia_operis`
+     before the commit — second consecutive round where the
+     advisory produced a correction at the moment of writing.
+
+MEASURED after: 33 exemplaria / 169 genera / 365 res / 500 arcus
+/ 0 vulnera / 24 monita / dubia 14 / umbrae 2.

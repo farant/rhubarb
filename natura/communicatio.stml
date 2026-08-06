@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/communicatio.stml
-  Exemplar semanticum: COMMUNICATIO (versio 1, PLASTICUM)
+  Exemplar semanticum: COMMUNICATIO (versio 2, PLASTICUM)
   Genera: actor, nuntius, eventum.
 
   Natum ex confrontatione cum lib/actor.c - prima collisio
@@ -21,7 +21,7 @@
   (destinatarius ei debetur), eventum NON (accidit coram
   omnibus, quivis observans videt). Directum contra sparsum.
 -->
-<natura modulus="communicatio" versio="1" lingua="latina">
+<natura modulus="communicatio" versio="2" lingua="latina">
 
 <!-- ==================================================
      ACTOR - ens quod solum per nuntios communicat
@@ -147,6 +147,143 @@
       nota="observantes se subscribunt; res gesta eos non
             novit - hoc eam a nuntio distinguit"/>
   </relationes>
+
+</genus>
+
+
+<!-- ==================================================
+     STIGMERGIA - coordinatio per vestigium in medio relictum
+
+     MODUS TERTIUS, cursu duodecimo (apicultura) inventus.
+     Exemplar hoc duos habebat et tertium non videbat:
+       nuntius   INSCRIPTUS - destinatarius ei debetur
+       eventum   non inscriptus, sed MOMENTANEUM - accidit coram
+                 praesentibus et abit
+       stigmergia non inscripta ET MANENS - vestigium in medio
+                 relinquitur, a quolibet transeunte legitur,
+                 et TABESCIT
+     Nulla apis alteri quicquam dicit. Regina feromonum emittit;
+     illud per cuneum diffunditur; operaria concentrationem
+     LOCALEM legit. Infra limen: reginam mortuam esse constat, et
+     educatio incipit. Nemo nuntiavit.
+
+     ET TABESCENTIA MECHANISMUS EST, NON DEFECTUS: semita quae
+     non evanesceret formicas ad florem exhaustum in aeternum
+     duceret. Oblivio hic gratuita est et necessaria - quod ars
+     computatralis "invalidationem promptuarii" vocat et
+     difficillimam habet, natura tempori committit.
+     ================================================== -->
+
+<genus nomen="stigmergia">
+
+  <definitio>
+    Coordinatio per vestigium quod agens in medio communi
+    relinquit: signum nulli inscriptum, quod manet, a quolibet
+    transeunte legi potest, et per se tabescit. Non mittitur nec
+    accidit sed IACET.
+  </definitio>
+
+  <differentia>
+    Sine mittente et sine destinatario SIMUL. Nuntius
+    destinatarium habet, eventum spectatores praesentes; hic
+    neutrum - qui vestigium relinquit nescit an quisquam
+    veniat, et qui legit nescit quis reliquerit. Ideo agentes
+    NEC SE INVICEM NOSSE NEC SIMUL ADESSE debent, quod
+    coordinationem inter multa et ignota et per tempus dispersa
+    solum possibilem facit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="tabescentia" genus="quantitas"
+      modulus="mensura"
+      nota="quam cito vestigium evanescat. PROPRIETAS
+            CARDINALIS, et fere semper neglecta: sine
+            tabescentia coordinatio in praeteritum ligatur -
+            semita ad florem exhaustum manet, promptuarium
+            rancidum servit, directorium aedificationis
+            artefacta mortua tenet. Tabescentia oblivio
+            GRATUITA est, quam nemo agere debet"/>
+    <proprietas nomen="cumulativa" genus="veritas"
+      ordinarius="verum"
+      nota="an vestigia plura idem signum FIRMENT. Ubi verum,
+            suffragium sponte fit sine ullo suffragio:
+            semita quam plures calcaverunt fortior est, et
+            fortior plures trahit - unde electio optimi sine
+            electore. Ubi falsum, vestigium ultimum solum valet
+            (status operis in arbore)"/>
+    <proprietas nomen="medium" genus="textus"
+      nota="quid vestigium ferat - aer, terra, cera, plagula,
+            tabula. MEDIUM PARS RATIONIS EST: quod medium
+            servare non potest, stigmergia dicere non potest"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="relinquitur_a" ad="*" multiplex="verum"/>
+    <relatio nomen="legitur_a" ad="*" multiplex="verum"/>
+    <relatio nomen="movet" ad="*"
+      nota="quid agatur cum vestigium legitur"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="vestigium_chemicum">
+    <definitio>
+      Substantia ab agente relicta quae per diffusionem legitur:
+      semita formicarum, feromonum reginae, signum territorii.
+    </definitio>
+    <nota>
+      Species in qua ABSENTIA signum est: apes reginam vivere ex
+      feromonis PRAESENTIA sciunt, mortuam ex DEFECTU. Nemo
+      mortem nuntiat; silentium eam dicit. Idem quod pulsus
+      (heartbeat) in machinis, quattuor decies milies annis
+      prius.
+    </nota>
+  </species>
+
+  <species nomen="semita_trita">
+    <definitio>
+      Via quam transeuntes calcando faciunt et calcando servant:
+      quod aedificatores "semitas desiderii" vocant.
+    </definitio>
+    <valor nomen="cumulativa">verum</valor>
+    <nota>
+      Specimen purissimum electionis sine electore: nemo semitam
+      designavit, nemo de ea consensit, et tamen optima exit -
+      quia cumulatio suffragium est et tabescentia errorem
+      corrigit. Architecti sapientes eas EXSPECTANT antequam
+      pavimentum ponant.
+    </nota>
+  </species>
+
+  <species nomen="tabula_communis">
+    <definitio>
+      Superficies quam multi mutant et legunt sine ordine
+      praestituto: tabula parietis, commentarius communis,
+      vicipaedia.
+    </definitio>
+    <valor nomen="cumulativa">falsum</valor>
+    <nota>
+      Species ubi tabescentia DEEST et defectus inde sequitur:
+      quod scriptum est manet donec quis deleat, unde tabulae
+      communes rancescunt et nemo scit quid adhuc valeat. Quod
+      natura tempori committit, hic homini committitur - et homo
+      neglegit.
+    </nota>
+  </species>
+
+  <species nomen="vestigia_operis">
+    <definitio>
+      Arbor plagularum quam instrumenta legunt ut quid agendum
+      sit statuant: directorium aedificationis, arbor laborans.
+    </definitio>
+    <nota>
+      Stigmergia inter instrumenta quae se invicem non norunt:
+      compilator artefacta relinquit, ligator ea invenit, nemo
+      alteri nuntiat. Silex ipse hoc agit - proiectio arborem
+      scribit, clang eam legit, et 'proiectio CONTRACTUS est'
+      (visio silicis) stigmergiam ipsam nominat sine nomine.
+    </nota>
+  </species>
 
 </genus>
 

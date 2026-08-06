@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/fabricatio.stml
-  Exemplar semanticum: FABRICATIO (versio 5, PLASTICUM)
+  Exemplar semanticum: FABRICATIO (versio 6, PLASTICUM)
   Genera: postulatum, facultas, probatio, vitium.
 
   QUADRATUM INTENTIONIS: postulatum intentionem DECLARAT ante
@@ -15,7 +15,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="5" lingua="latina">
+<natura modulus="fabricatio" versio="6" lingua="latina">
 
 <!-- ==================================================
      POSTULATUM - intentio declarata ante opus
@@ -604,6 +604,24 @@
             summae computatae, decisiones factae). Depravatio
             propagata sanationem multiplicat - et systemata quae
             aliis nuntiant depravationem SUAM exportant"/>
+    <proprietas nomen="repugnans" genus="veritas"
+      ordinarius="falsum"
+      nota="an status pravus SANATIONEM IPSAM DEFENDAT.
+            Distinctum ab insanabili: insanabile sanari non
+            potest, repugnans sanationem ACTIVE REICIT.
+            Specimen quod hoc coegit ex apicultura venit, nullo
+            contactu computatrali: colonia diu orbata operarias
+            parientes gignit, et talis colonia reginam
+            introductam OCCIDIT - eo ipso quod aegra est,
+            medicinam repellit. Gemina computatralia: promptuarium
+            corruptum quod se renovatione re-inficit, figuratio
+            prava quae depositionem superstat, index qui se ex
+            datis pravis reficit.
+            CONSEQUENTIA PRACTICA: talis status ordine INVERSO
+            tractandus est - prius id quod repugnat tollendum
+            (colonia favo cum ovis reginalibus firmanda, aut
+            longe portanda), deinde sanatio. Qui statim sanare
+            conatur medicinam perdit et nihil discit"/>
   </proprietates>
 
   <machina_statuum nomen="cognitio" gerens="individuum">
