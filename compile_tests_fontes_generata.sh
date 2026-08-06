@@ -94,6 +94,7 @@ declare -a SOURCE_FILES=(
     "lib/processus_posix.c"
     "lib/qr.c"
     "lib/quaerere.c"
+    "lib/quaestiones_lectio.c"
     "lib/reactor.c"
     "lib/registrum_commandi.c"
     "lib/registrum_widget.c"

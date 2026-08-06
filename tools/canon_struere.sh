@@ -46,3 +46,8 @@ clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$SCRIPT_DIR/canon_examen.c" \
     $obj_files -o "$RADIX_DIR/bin/canon_examen" || exit 1
 echo "bin/canon_examen paratum" >&2
+
+clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+    "$SCRIPT_DIR/canon_coquere.c" \
+    $obj_files -o "$RADIX_DIR/bin/canon_coquere" || exit 1
+echo "bin/canon_coquere paratum" >&2
