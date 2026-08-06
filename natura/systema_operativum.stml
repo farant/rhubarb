@@ -84,6 +84,11 @@
   </machina_statuum>
 
   <actiones>
+    <actio nomen="ortus" nota="editio publica prima - momentum quo
+      systema in mundum venit. DEFECTUS AB ONERATORE INVENTUS
+      (rota LX): octo individua hanc actionem citabant nusquam
+      declaratam, quia regula XIII resolutionem hereditatis
+      poscit quam sola tabula shell praestare non poterat"/>
     <actio nomen="edi" nota="versio nova - vide versio_systematis"/>
     <actio nomen="instalari" nota="individuum novum in machina
       nascitur"/>
@@ -299,6 +304,13 @@
       <optio>volvens</optio>
     </proprietas>
   </proprietates>
+
+  <actiones>
+    <actio nomen="ortus" nota="distributio primum edita. Genus hoc
+      sub systemate operativo NON est (distributio systema non
+      est sed EDITIO eius vivenda), ergo actiones illius non
+      hereditat - unde declaratio propria"/>
+  </actiones>
 
   <relationes>
     <relatio nomen="distributio_de" ad="systema_operativum"/>

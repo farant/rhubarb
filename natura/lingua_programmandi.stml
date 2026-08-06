@@ -387,6 +387,12 @@
             promittit - Fil-C testis principalis"/>
   </proprietates>
 
+  <actiones>
+    <actio nomen="ortus" nota="emissio publica prima. Genus hoc sub
+      lingua NON est (implementatio lingua non est sed eius
+      effectrix), ergo actiones illius non hereditat"/>
+  </actiones>
+
   <relationes>
     <relatio nomen="implementat" ad="lingua_programmandi"/>
     <relatio nomen="implementat_versionem" ad="versio_linguae"/>

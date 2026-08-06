@@ -4686,3 +4686,118 @@ from applying an existing instrument rather than inventing one.
 
 MEASURED after: 33 exemplaria / 177 genera / 384 res / 519 arcus
 / 0 vulnera / 24 monita / dubia 14 / umbrae 2.
+
+---
+
+## 2026-08-06 — round 60: THE LOADER (lib/natura.c)
+
+311. FIRST RUNNING CONSUMER. Until today every consumer of natura
+     was us, at design time: the validator is shell over xmllint,
+     the apparatus is shell over grep, and no program had ever
+     loaded a genus. Meanwhile METAMODULUS §8 is titled "the
+     loader's contract" and grades rules [E]/[S], where [S] means
+     "needs genus-inheritance resolution, which is precisely the
+     loader's job and the reason to build it." The doctrine was
+     written ahead of the software for eighteen rounds. This
+     closes it.
+
+312. THREE DECISIONS, taken before a line was written:
+     (a) FILES STAY TRUTH, graph is a projection. No emitter, no
+         mutation API, ever in v1 — same liber/tree doctrine as
+         sententiae. A loader that can write becomes a printer,
+         and a printer has to round-trip.
+     (b) HYBRID DEPTH. Typed C structs for the SKELETON only
+         (bibliotheca/exemplar/genus/res), each holding its
+         StmlNodus; everything else read from the DOM on demand.
+         27 elements as structs would mean every format evolution
+         churns C. The format can now grow without touching C.
+     (c) TWO PHASES: legere (parse+index one model) then nectere
+         (link all, resolve, enforce). Cross-model references
+         cannot resolve until every model is in — compile, then
+         link, the shape C programmers already trust.
+
+313. RULES 9-13 ARE NOW ENFORCED, and they found things on the
+     first corpus contact that four rounds of shell validation
+     could not, because the shell has no inheritance walk:
+
+       systema_operativum  ortus cited 8x, NEVER DECLARED
+       distributio_systematis (3 of those 8 — separate genus,
+                               no sub=, so it inherits nothing)
+       implementatio_linguae  ortus cited 2x, NO actiones block
+       opus_scriptum          desertio cited 1x
+
+     Eleven real violations, all of one shape: an eventum citing
+     an action nobody declared. The shell could see that `ortus`
+     existed SOMEWHERE and that the citation resolved to a
+     string; only a loader that walks sub= can ask whether it
+     resolves FROM HERE.
+
+314. THE PRETTIEST OF THE ELEVEN — opus_scriptum's `desertio`
+     IS declared. As a `per=` on a TRANSITUS, not as an actio.
+     The event recording Aquinas abandoning the Summa cited the
+     name of a state change in the slot that wants the name of an
+     act. Two adjacent vocabularies that look alike and read
+     alike, confusable by anyone including the person who wrote
+     both lines three feet apart.
+     Fixed by declaring `deseri` (passive infinitive, matching
+     componi/exprimi/edi) and retargeting the citation. BOTH
+     names stay, because both are true: `desertio` is what
+     happens to the STATE, `deseri` is what happens to the WORK.
+     The slot for an act wants an act.
+
+315. ONE LOADER BUG, found the same way and worth as much as the
+     eleven: `etiam=` — essential dual membership — was in §3 and
+     §4 and not in my inheritance walk. `scriptum_conchae` is a
+     species of scriptum_exsecutabile AND `etiam="plagula_fontis"`,
+     and its `scripta_in` relatum is declared only on the second
+     parent. Reported as a rule-11 violation; the corpus was
+     right and the loader was wrong.
+     Fixed on NaturaRes (etiam is a species-level attribute per
+     §4, not a genus-level one) with in_membris_invenire walking
+     the primary chain then the secondary. Rules 9/10/11/13 all
+     go through it now, and the test fixture grew a `corona`
+     species whose properties, relation and event ALL resolve
+     through the etiam chain alone.
+
+316. ONE DOCTRINE QUESTION LEFT STANDING, for Fran:
+     `editio.index_isbn` is typed `genus="isbn" modulus="identificatio"`
+     — but `isbn` is a SPECIES of schema_identificandi, not a
+     genus, and §5.2 says a library-typed property takes a GENUS.
+     Not made a vulnus, because rule 2 (relations) already
+     accepts "a genus OR a dictionary entry", and §4b insists an
+     address is RANK-BLIND on purpose. Made a MONITUM instead,
+     carrying the real observation:
+       TYPING A PROPERTY BY A SCHEME MEANS THE PROPERTY'S
+       APPARATUS DESCRIBES THE SCHEME, NOT THE VALUE.
+     `opacus=falsum` is true of ISBN-as-a-scheme and says nothing
+     about this book's ISBN. Same category the format already
+     knows elsewhere (`gerens`: the species macOS never sleeps,
+     an installation does). We have no way to say "a value drawn
+     from scheme X" as distinct from "a thing which is an X".
+     One occurrence — recorded, not built.
+
+317. THE GATE IS A DIFFERENTIAL, not a new opinion. The loader's
+     apparatus was run against `natura_quaere.sh -a` across ALL
+     177 genera: 1286 members, sorted, diffed — ZERO lines of
+     difference. The C reproduces the incumbent exactly, and adds
+     179 actiones the shell projection never emitted (deliberate:
+     knowing the available actions is exactly what rule 13 makes
+     you need). Script kept as tools/natura_apparatus_umbra.sh so
+     the differential can be re-run whenever either side moves.
+
+318. AND THE DIFFERENTIAL LIED FIRST. Its initial run showed 363
+     differing lines, all of the shape "C finds inheritance the
+     shell misses" — a tidy, plausible story about the shell
+     under-reporting nested genera. It was false: I had written
+     my own `maiores` and read corpus fields $4/$5 as (sub,
+     modulus) when natura_quaere.sh's own maiores() reads them as
+     (modulus, sub). Reimplementing the incumbent instead of
+     calling it invented a difference and then explained it.
+     THE TELL WAS THE STORY BEING GOOD. A differential whose
+     disagreements all point one flattering way is reporting on
+     its own harness. Second run after using the tool's own field
+     order: 1286 vs 1286, zero.
+
+MEASURED after: 33 exemplaria / 177 genera / 384 res / 519 arcus
+/ 0 vulnera (utroque instrumento) / 1 monitum novum (regula III).
+probatio_natura: 62 assertiones, omnes praetereunt.

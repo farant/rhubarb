@@ -64,6 +64,12 @@
     <actio nomen="exprimi" nota="expressio nova - textus, versio
       translata"/>
     <actio nomen="edi" nota="editio nova"/>
+    <actio nomen="deseri" nota="auctor scribere desinit opere
+      imperfecto. DUO VOCABULARIA VICINA HIC CONFUSA SUNT (rota
+      LX, ab oneratore inventa): 'desertio' transitus est (nomen
+      mutationis status), 'deseri' actio (quod operi accidit), et
+      eventum illud pro hac citabat. Utrumque manet quia utrumque
+      verum est - sed slotus actionis actionem poscit"/>
   </actiones>
 
   <relationes>
@@ -107,7 +113,7 @@
     <relatum nomen="auctor" ad="thomas_aquinas" modulus="persona"/>
     <historia>
       <eventum quando="1265" actio="componi">inceptum</eventum>
-      <eventum quando="1273-12-06" actio="desertio">
+      <eventum quando="1273-12-06" actio="deseri">
         scribere desiit ("omnia quae scripsi videntur mihi
         palea")</eventum>
     </historia>

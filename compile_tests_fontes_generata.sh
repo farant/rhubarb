@@ -77,6 +77,7 @@ declare -a SOURCE_FILES=(
     "lib/mimen.c"
     "lib/moneta.c"
     "lib/multipart.c"
+    "lib/natura.c"
     "lib/navigator_entitatum.c"
     "lib/numerus_romanus.c"
     "lib/nuntium.c"
