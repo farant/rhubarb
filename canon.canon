@@ -47,9 +47,12 @@
 
   <!-- ================= ELEMENTUM ================= -->
 
+  <!-- nomina elementorum GENERIS COMPOSITI sunt (nomen + lineola):
+       grammatica 'genera-extra' et regulas kebab fert - dialectus
+       tertius genus novum coegit, ut secundus 'intra=' coegit -->
   <elementum nomen="elementum">
-    <attributum nomen="nomen"  genus="nomen" necessarium="verum"/>
-    <attributum nomen="intra"  genus="nomen"
+    <attributum nomen="nomen"  genus="compositum" necessarium="verum"/>
+    <attributum nomen="intra"  genus="compositum"
       nota="definitio ad parentem adstricta (mos RELAX NG)"/>
     <attributum nomen="radix"  genus="veritas"/>
     <attributum nomen="textus" genus="veritas"/>
@@ -59,7 +62,7 @@
   </elementum>
 
   <elementum nomen="attributum">
-    <attributum nomen="nomen" genus="nomen" necessarium="verum"/>
+    <attributum nomen="nomen" genus="compositum" necessarium="verum"/>
     <attributum nomen="genus" genus="electio"
       nota="absens = textus (ordinarius lectoris); electio hic
             vitium II supra claudit">
@@ -69,6 +72,7 @@
       <optio>veritas</optio>
       <optio>dies</optio>
       <optio>electio</optio>
+      <optio>compositum</optio>
     </attributum>
     <attributum nomen="necessarium" genus="veritas"/>
     <attributum nomen="nota"        genus="textus"/>
@@ -78,7 +82,7 @@
   <elementum nomen="optio" textus="verum"/>
 
   <elementum nomen="liberum">
-    <attributum nomen="nomen"   genus="nomen" necessarium="verum"/>
+    <attributum nomen="nomen"   genus="compositum" necessarium="verum"/>
     <attributum nomen="minimum" genus="numerus"/>
     <attributum nomen="maximum" genus="numerus"/>
     <attributum nomen="nota"    genus="textus"/>
@@ -87,10 +91,12 @@
   <!-- ================= UNICITAS ================= -->
 
   <elementum nomen="unicitas">
-    <attributum nomen="nomen"      genus="nomen" necessarium="verum"/>
-    <attributum nomen="attributum" genus="nomen" necessarium="verum"/>
+    <attributum nomen="nomen"      genus="compositum"
+      necessarium="verum"/>
+    <attributum nomen="attributum" genus="compositum"
+      necessarium="verum"/>
     <attributum nomen="super"      genus="textus" necessarium="verum"
-      nota="index spatiis separatus - ergo textus, non nomen"/>
+      nota="index spatiis separatus - ergo textus, non compositum"/>
     <attributum nomen="nota"       genus="textus"/>
   </elementum>
 

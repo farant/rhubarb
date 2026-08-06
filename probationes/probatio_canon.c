@@ -37,6 +37,7 @@ interior constans character* CANON_HORTUS =
     "      <optio>ruber</optio>\n"
     "      <optio>albus</optio>\n"
     "    </attributum>\n"
+    "    <attributum nomen=\"cultivar\" genus=\"compositum\"/>\n"
     "    <liberum nomen=\"adnotatio\"/>\n"
     "  </elementum>\n"
     "  <elementum nomen=\"adnotatio\" textus=\"verum\"/>\n"
@@ -44,11 +45,13 @@ interior constans character* CANON_HORTUS =
     "    super=\"planta\"/>\n"
     "</canon>\n";
 
-/* aetas negativa (numerus signatus), sata forma yyyy sola */
+/* aetas negativa (numerus signatus), sata forma yyyy sola,
+ * cultivar kebab (compositum lineolam admittit ubi nomen vetat) */
 interior constans character* HORTUS_SANUS =
     "<hortus titulus=\"meus\">\n"
     "  <planta nomen=\"rosa\" aetas=\"3\" viva=\"verum\"\n"
-    "    sata=\"2020-05-01\" color=\"ruber\">\n"
+    "    sata=\"2020-05-01\" color=\"ruber\"\n"
+    "    cultivar=\"alba-plena\">\n"
     "    <adnotatio>pulchra</adnotatio>\n"
     "  </planta>\n"
     "  <planta nomen=\"lilium\" aetas=\"-1\" viva=\"falsum\"\n"
@@ -323,17 +326,19 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_ATTRIBUTUM_DEEST), I);
 
-        /* valores mali - genera quinque uno documento:
-         * nomen cum '-', numerus verbalis, veritas tertia,
-         * mensis XIII, electio extra optiones */
+        /* valores mali - genera sex uno documento: nomen cum '-'
+         * (quod compositum admitteret - discrimen generum!),
+         * numerus verbalis, veritas tertia, mensis XIII, electio
+         * extra optiones, compositum cum spatio */
         vitia = iudicare_literis(hortus,
             "<hortus titulus=\"d\">"
             "<planta nomen=\"mala-forma\" aetas=\"tres\""
             " viva=\"fortasse\" sata=\"2020-13-01\""
-            " color=\"viridis\"/></hortus>", piscina, intern);
-        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), V);
+            " color=\"viridis\" cultivar=\"mala forma\"/>"
+            "</hortus>", piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), VI);
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
-            CANON_VALOR_MALUS), V);
+            CANON_VALOR_MALUS), VI);
 
         /* liberi pauciores quam minimum */
         vitia = iudicare_literis(hortus,

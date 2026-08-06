@@ -99,6 +99,8 @@ genus_legere(
     si (chorda_aequalis_literis(*s, "veritas")) redde CANON_GENUS_VERITAS;
     si (chorda_aequalis_literis(*s, "dies"))    redde CANON_GENUS_DIES;
     si (chorda_aequalis_literis(*s, "electio")) redde CANON_GENUS_ELECTIO;
+    si (chorda_aequalis_literis(*s, "compositum"))
+        redde CANON_GENUS_COMPOSITUM;
 
     redde CANON_GENUS_TEXTUS;
 }
@@ -169,6 +171,7 @@ valor_congruit(
             redde VERUM;
 
         casus CANON_GENUS_NOMEN:
+        casus CANON_GENUS_COMPOSITUM:
             si (v->mensura == ZEPHYRUM)
             {
                 redde FALSUM;
@@ -181,7 +184,9 @@ valor_congruit(
                 si (!((c >= 'a' && c <= 'z') ||
                       (c >= 'A' && c <= 'Z') ||
                       (c >= '0' && c <= '9') ||
-                      c == '_' || c == '*'))
+                      c == '_' || c == '*' ||
+                      (c == '-' &&
+                       a->genus == CANON_GENUS_COMPOSITUM)))
                 {
                     redde FALSUM;
                 }

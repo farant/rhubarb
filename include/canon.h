@@ -60,12 +60,18 @@
  * ================================================== */
 
 nomen enumeratio {
-    CANON_GENUS_TEXTUS   = I,   /* quidlibet */
-    CANON_GENUS_NOMEN    = II,  /* identificator: [a-z0-9_] */
-    CANON_GENUS_NUMERUS  = III, /* cifrae, signum optionale */
-    CANON_GENUS_VERITAS  = IV,  /* verum | falsum */
-    CANON_GENUS_DIES     = V,   /* yyyy | yyyy-mm | yyyy-mm-dd */
-    CANON_GENUS_ELECTIO  = VI   /* ex <optio> enumeratis */
+    CANON_GENUS_TEXTUS     = I,   /* quidlibet */
+    CANON_GENUS_NOMEN      = II,  /* identificator: [a-zA-Z0-9_*] */
+    CANON_GENUS_NUMERUS    = III, /* cifrae, signum optionale */
+    CANON_GENUS_VERITAS    = IV,  /* verum | falsum */
+    CANON_GENUS_DIES       = V,   /* yyyy | yyyy-mm | yyyy-mm-dd */
+    CANON_GENUS_ELECTIO    = VI,  /* ex <optio> enumeratis */
+    /* nomen + lineola: nomina kebab ('definitio-functionis').
+     * COACTUM dialecto tertio (grammatica) - eius nomina lineolis
+     * iunguntur, quae 'nomen' vetat; sine hoc genere grammatica
+     * describi non potuit. Superset nominis consulto: unum genus
+     * 'verbum sine spatiis' latius, non genus per dialectum. */
+    CANON_GENUS_COMPOSITUM = VII
 } CanonGenusValoris;
 
 /* ==================================================
