@@ -157,6 +157,16 @@
     </proprietas>
     <proprietas nomen="sine_praescriptione" genus="veritas"
       ordinarius="falsum"/>
+    <proprietas nomen="conservatio" genus="quantitas"
+      modulus="mensura"
+      nota="temperatura qua servandum - AMBITUS, non punctum
+            ('2-8 gradus'): quantitas minimum et maximum IUXTA
+            valorem fert, unde forma hoc IAM ferebat. Dubium
+            plantae de ambitibus (altitudo '2-5 m') solutum erat
+            antequam pharmacopolium idem posceret - mechanismus
+            semel recte positus dominium novum sine mutatione
+            cepit, quod est quod 'dimensiones ante nomina'
+            promittit"/>
   </proprietates>
 
   <relationes>

@@ -3309,11 +3309,22 @@ was visible rather than landing in a pile.
      (praescriptum + index_verificationis + licentia) held a
      pharmacy's hardest procedure with no strain.
 
-227. METAMODEL DUBIUM ADVANCED: "store at 2–8 °C" is an
-     INTERVAL-VALUED requirement — the second forcing case for
-     planta's range dubium ("2–5 m", "Maius–Iunius"), and from an
-     unrelated domain. Not a genus; a metamodel question now
-     eligible for action.
+227. METAMODEL DUBIUM — **CLAIM WITHDRAWN, corrected in round
+     48.** Written here as: "store at 2–8 °C is an
+     interval-valued requirement, the second forcing case for
+     planta's range dubium, now eligible for action." CHECKED
+     ONE ROUND LATER AND FALSE: `mensura.quantitas` already
+     carries `minimum` and `maximum` beside `valor`, so quantity
+     ranges were solved before pharmacy arrived and no metamodel
+     work was ever owed. The genuinely open remainder is
+     narrower than stated — RECURRING TIME intervals
+     ("Maius–Iunius", which is neither a quantitas nor a plain
+     intervallum) — and it still stands at ONE forcing case.
+     Kept rather than deleted because the failure mode is worth
+     seeing: I read planta's dubium, saw the word AMBITUS, and
+     matched on it without reading the sentence in the same
+     dubium that says the quantity half was already solved. The
+     corpus-contact law applies to our own notes.
 
 228. And the gate caught my own prose: I wrote `morbus.interactio`
      in a norma nota when interactio lives in pharmacon. Rule
@@ -3404,3 +3415,51 @@ dangling citations, which is what building AFTER a cleanup buys).
 MEASURED after: 32 exemplaria / 155 genera / 338 res / 454 arcus
 / 0 vulnera / 24 monita / homonyma 0. Nothing changed in the
 corpus; the door is unlocked, shut, and watched.
+
+## 2026-08-05 — round forty-eight: a claim checked and withdrawn
+
+234. Asked whether the pharmacy loop had models left. It did not
+     — all six genera plus the identifier row landed in round 46.
+     But verifying one claim before recommending what came next
+     falsified it, so the round is a correction rather than a
+     build.
+
+235. `mensura.quantitas` ALREADY CARRIES minimum/maximum beside
+     valor. Round 46 recorded "store at 2–8 °C" as the second
+     forcing case for planta's range dubium, "now eligible for
+     action". False: the quantity half was solved when mensura
+     was born, and planta's own dubium SAYS SO ("partim solutum
+     ... genus quantitas minimum/maximum fert IUXTA valorem")
+     three lines below the sentence I matched on. I read the
+     word AMBITUS, recognised the shape, and did not read to the
+     end of the note I was citing.
+     THE COST OF NOT CHECKING would have been a metamodel
+     change — the global, expensive kind — proposed for a
+     problem that did not exist. Cheapest possible place to
+     catch it, and only because a recommendation was about to
+     rest on it. Corpus-contact law extends to our OWN notes:
+     the dubium was as available as any source, and being
+     already-written made it feel already-known.
+     Remaining open part, honestly restated: RECURRING TIME
+     intervals ("Maius–Iunius" — not a quantitas, not a plain
+     intervallum, a recurrentia whose occurrences have extent).
+     ONE forcing case, not two.
+
+236. AND IT EXPOSED AN UNDER-BUILD. Storage conditions surfaced
+     at station eight of the walk and never reached
+     `medicamentum` — I wrote the observation into the harvest
+     and lost it on the way to the file. Added `conservatio` as
+     a `quantitas`, which DEMONSTRATES the mechanism instead of
+     asserting it: min 2, max 8, unit celsius, valor empty.
+     A mechanism placed correctly once took a new domain with no
+     change, which is what "dimensions before nouns" buys and
+     the first time we have watched it pay across two unrelated
+     domains without touching the metamodel.
+     Lesson for the loop: the harvest table is a PLAN, and plans
+     are not gates. Nothing checked that everything surfaced was
+     either built or explicitly refused — the walk's own
+     non-surfacings were recorded carefully while a genuine
+     surfacing fell through.
+
+MEASURED: 32 exemplaria / 155 genera / 338 res / 455 arcus /
+0 vulnera / 24 monita / homonyma 0.
