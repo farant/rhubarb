@@ -1,0 +1,12 @@
+# canones.registrum - extensio -> canon (gradus II)
+#
+# Extensio CONTRACTUM nominat sine plagula aperienda - eadem ratio
+# qua '.genera' ab '.stml' distinctum est (METAMODULUS par.2).
+# Campi: extensio<TAB>via canonis
+#
+# Dialecti domus (2026-08-06): natura (33 plagulae), librarium (3),
+# grammatica (4), aedilis (2), quaestiones (1). Una sola custodem
+# habebat; hoc ceteris fundamentum dat.
+# Linea absens = dialectus nondum descriptus, NON dialectus sanus.
+
+.genera	natura/natura.canon
