@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/pharmacon.stml
-  Exemplar semanticum: PHARMACON (versio 0, PLASTICUM)
+  Exemplar semanticum: PHARMACON (versio 1, PLASTICUM)
 
   Cursus septimus circuli (pharmacopolium), euristica punitionis
   electus: qui dosem, interactionem, dispensationem contra
@@ -34,7 +34,7 @@
   dant. Specimen secundum ex dominio alieno: tabulae
   segregationis mercium periculosarum eandem formam ferunt.
 -->
-<natura modulus="pharmacon" versio="0" lingua="latina">
+<natura modulus="pharmacon" versio="1" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -326,14 +326,14 @@
       nota="CUR fiat - quod consilium possibile facit: qui
             mechanismum scit tempus interponere aut dosem
             mutare potest, qui solum 'cave' legit non potest"/>
-    <proprietas nomen="testimonium" genus="electio"
-      nota="quantum sciatur - distinctum a gravitate: coniectura
+    <proprietas nomen="testimonium" genus="fundamentum"
+      modulus="iudicium"
+      nota="genus commune rota LIX datum. Quantum sciatur - distinctum a gravitate: coniectura
             theoretica de effectu gravi et probatio firma de
-            levi res prorsus aliae">
-      <optio>theoreticum</optio>
-      <optio>relationes_casuum</optio>
-      <optio>studia</optio>
-    </proprietas>
+            levi res prorsus aliae. OPTIONES LOCALES ROTA LIX
+            SUBLATAE: 'theoreticum' illatio est, 'relationes
+            casuum' auctoritas_testis, 'studia' mensuratio -
+            species fundamenti, non enumeratio huius loci"/>
     <proprietas nomen="consilium" genus="textus"
       nota="quid agendum - vitare, tempus interponere, dosem
             minuere, mensurare"/>

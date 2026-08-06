@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/iudicium.stml
-  Exemplar semanticum: IUDICIUM (versio 6, PLASTICUM)
+  Exemplar semanticum: IUDICIUM (versio 7, PLASTICUM)
   Genera: gradus_assensus, fons, observatio, iudicium,
   periculum, ignotum.
 
@@ -46,7 +46,7 @@
   historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
   verificatis, et hoc dicere debet.
 -->
-<natura modulus="iudicium" versio="6" lingua="latina">
+<natura modulus="iudicium" versio="7" lingua="latina">
 
 <!-- ==================================================
      GRADUS ASSENSUS - quanto animus adhaeret
@@ -1056,16 +1056,16 @@
       <optio>post_eum</optio>
       <optio>in_modo_eius</optio>
     </proprietas>
-    <proprietas nomen="fundamentum_attributionis" genus="electio"
-      multiplex="verum"
+    <proprietas nomen="fundamentum_attributionis" genus="fundamentum"
+      modulus="iudicium" multiplex="verum"
       nota="quibus rebus nitatur - et haec plerumque discrepant,
-            unde controversiae">
-      <optio>subscriptio</optio>
-      <optio>documentum</optio>
-      <optio>provenientia</optio>
-      <optio>stilus</optio>
-      <optio>materia_examinata</optio>
-    </proprietas>
+            unde controversiae. OPTIONES LOCALES ROTA LIX
+            SUBLATAE: valores nunc species fundamenti sunt
+            (documentum_scriptum, comparatio_stili, mensuratio
+            pro analysi materiae, autopsia pro subscriptione
+            inspecta). Provenientia sola speciem propriam non
+            habet quia CATENA est, non fundamentum unum - vide
+            acta.origo_dominii"/>
   </proprietates>
 
   <relationes>
@@ -1090,6 +1090,184 @@
     eius se substituunt more normarum, et editio vetus citabilis
     manet - quod exemplar normae iam describit.
   </nota>
+
+</genus>
+
+
+<!-- ==================================================
+     FUNDAMENTUM - id quo nixa propositio stat
+
+     ABSENTIA STRUCTURALIS QUARTA, et prima in gradu
+     PROPRIETATUM. Quattuor proprietates in quattuor rotis natae
+     idem rogabant, nulla parentem habente:
+       attestatio.fundamentum          (PKI, rota LI)
+       interactio.testimonium          (pharmacopolium, XLVI)
+       attributio.fundamentum_attributionis (museum, LVII)
+       incertitudo.genus_aestimationis (metrologia, LVIII)
+     Signum semel iam agnitum et REIECTUM cum bis tantum
+     appareret (idempotens, rota LIII) - recte tunc, quia duae
+     proprietates communes pondus non faciunt. Quattuor faciunt.
+
+     NON EST FONS, et definitio fontis id ipsa dicit: "fons non
+     probat propositionem veram esse - dicit UNDE VENIT". Duae
+     interrogationes: unde acceperim (fons) et quo nitatur
+     (fundamentum). Ex libro accepi; liber stilo nitebatur.
+     ================================================== -->
+
+<genus nomen="fundamentum">
+
+  <definitio>
+    Id quo propositio nititur: non unde accepta sit (id fons
+    est) nec quanto assensu teneatur (id gradus assensus) sed
+    QUALE SIT ID QUOD EAM SUSTINET.
+  </definitio>
+
+  <differentia>
+    Quartus axis claris qualificandae, et quartus DISTINCTUS -
+    bibliotheca iam habebat gradum assensus (quanto animus
+    adhaereat), fontem (unde venerit), incertitudinem (quantus
+    error numeri sit). Hic quaeritur QUALITAS SUSTINENTIS, quae
+    ab omnibus tribus libera est: propositio autopsia nixa
+    dubitanter teneri potest, et coniectura firmissime.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="verificabile_ab_alio" genus="veritas"
+      nota="an alius idem fundamentum inspicere possit.
+            DISCRIMEN PRACTICUM MAXIMUM: documentum et mensura
+            inspici possunt, coniectura periti non - unde
+            controversia de illis solvi potest, de hac non nisi
+            perito altero adhibito. Fundamentum inverificabile
+            non est vitium sed CONDICIO cognoscenda"/>
+    <proprietas nomen="repetibile" genus="veritas"
+      nota="an idem fundamentum iterum haberi possit. Mensura
+            repeti potest; autopsia rei transeuntis non - qui
+            vidit solus vidit, et testimonium eius fundamentum
+            ALIUD fit apud audientem (auctoritas_testis), quo
+            gradu descendimus quotiens narratur"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="sustinet" ad="*"
+      nota="propositionem, iudicium, attestationem, mensuram"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       divisio per MODUM SUSTINENDI, ordine fere descendente
+       quantum ad verificabilitatem -->
+
+  <species nomen="autopsia">
+    <definitio>
+      Ipse vidi: cognitio ex sensu proprio, nullo medio.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">falsum</valor>
+    <nota>
+      Verbum Graecum proprium (auto-opsis, ipse-visio), quod ars
+      medica et historica ambae adhibent. FUNDAMENTUM FIRMISSIMUM
+      ET MINIME COMMUNICABILE: nemo aliena autopsia uti potest -
+      narrata in testimonium vertitur, gradu amisso.
+    </nota>
+  </species>
+
+  <species nomen="mensuratio">
+    <definitio>
+      Instrumento mensuratum: fundamentum quod NUMERUM et
+      incertitudinem simul fert.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">verum</valor>
+    <valor nomen="repetibile">verum</valor>
+    <nota>
+      Solum fundamentum quod errorem suum QUANTITATIVE dicit
+      (vide mensura.incertitudo) - cetera 'quanto certus sis'
+      solum praebent. Unde metrologia inter dominia peculiaris.
+    </nota>
+  </species>
+
+  <species nomen="documentum_scriptum">
+    <definitio>
+      Scriptura rem attestans: acta, instrumentum, tabula,
+      epistula.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">verum</valor>
+    <nota>
+      Fundamentum quod ipsum fundamentum habet, et quaestio
+      regreditur: quo nitebatur qui scripsit? Provenientiae
+      investigatio hoc ipsum agit, et in origine_dominii
+      (acta.radix_fiduciae) desinit.
+    </nota>
+  </species>
+
+  <species nomen="auctoritas_testis">
+    <definitio>
+      Alius mihi dixit: fundamentum quod in fidem alterius
+      resolvitur.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">falsum</valor>
+    <nota>
+      GRADUM AMITTIT QUOTIENS NARRATUR: quod ille autopsia
+      tenuit, ego testimonio teneo, et qui a me audit gradu
+      tertio. Bibliotheca huius fundamento maxima ex parte
+      nititur (corpus_institutionis), quod ideo fatetur.
+    </nota>
+  </species>
+
+  <species nomen="illatio">
+    <definitio>
+      Ex aliis notis conclusum: nemo id vidit nec mensuravit, sed
+      ex his sequitur.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">verum</valor>
+    <nota>
+      Verificabile quia RATIO inspici potest - sed praemissa sua
+      fundamenta habent, unde illatio numquam firmior est quam
+      infimum praemissarum. Fundamentum compositum, ut
+      incertitudo composita.
+    </nota>
+  </species>
+
+  <species nomen="comparatio_stili">
+    <definitio>
+      Ex similitudine formae iudicatum: haec manus illam refert.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">falsum</valor>
+    <nota>
+      Fundamentum quod attributio prae ceteris adhibet, et cuius
+      debilitas nota est: periti dissentiunt, nec ratio in verba
+      plene resolvi potest. Consilium Rembrandtianum hoc solo
+      fere nixum opera centena abiudicavit - unde controversia
+      quae aliter solvi non poterat.
+    </nota>
+  </species>
+
+  <species nomen="coniectura_periti">
+    <definitio>
+      Peritus ita censet, ratione non plene explicata:
+      aestimatio ex usu longo nata.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">falsum</valor>
+    <nota>
+      Fundamentum quod incertitudo TYPI B nominat, et quod in
+      rationibus incertitudinis plerumque PARS MAXIMA est -
+      computatio exacta super aestimationem inexactam aedificata.
+      Non vitium sed condicio, quam GUM ipsa fatetur et rationes
+      pleraeque celant.
+    </nota>
+  </species>
+
+  <species nomen="praesumptio">
+    <definitio>
+      Assumptum donec contrarium probetur: fundamentum quod se
+      fundamentum non esse fatetur.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">verum</valor>
+    <nota>
+      Honestissimum omnium quia se ipsum prodit, et ideo
+      periculosissimum cum tacetur: distributio assumpta in
+      ratione incertitudinis, valor ordinarius in schemate, mos
+      praesumptus in protocollo. Distinctum a fictione iuris
+      (norma): illa contrarium SCIT, haec contrarium NESCIT.
+    </nota>
+  </species>
 
 </genus>
 

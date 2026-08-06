@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **33** · genera **176** · res dictionarii **376** · arcus **516**
+Exemplaria **33** · genera **177** · res dictionarii **384** · arcus **519**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -136,7 +136,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **schema_identificandi** ⚙ ▣3 — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
 
-### iudicium (v6, genera 10)
+### iudicium (v7, genera 11)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
@@ -148,6 +148,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **secretum** ⚙ — Res cuius utilitas in eo consistit quod pauci eam sciunt: divulgata non corrumpitur nec perit sed OFFICIO SUO EXUITUR,
 - **peritia_communis** ⚙ — Scientia aut ars quae in universitate residet nec in ullo membro tota est: participando traditur, non doctrina sola, e
 - **attributio** ⊂ iudicium — Iudicium de eo QUIS FECERIT, quod duabus mensuris simul utitur: quanto assensu teneatur (certitudo, ut omne iudicium) 
+- **fundamentum** — Id quo propositio nititur: non unde accepta sit (id fons est) nec quanto assensu teneatur (id gradus assensus) sed QUA
 
 ### lingua_programmandi (v4, genera 5)
 
@@ -229,7 +230,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **persona** ⚙ — Naturae rationabilis individua substantia (Boethius)
 
-### pharmacon (v0, genera 4)
+### pharmacon (v1, genera 4)
 
 - **substantia_chemica** — Genus materiae compositione determinatum: quod omnia exemplaria eiusdem substantiae communicant, ubicumque et quandocu
 - **medicamentum** — Substantia (aut plures) cum VI et FORMA determinatis ad morbum tractandum praeparata: quod praescriptio nominat et quo
@@ -357,6 +358,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | forma_datorum | formae_datorum |
 | functio | elementa_programmatis |
 | functio_pura | elementa_programmatis |
+| fundamentum | iudicium |
 | genus_valoris | schema |
 | gradus_assensus | iudicium |
 | gradus_praescripti | praescriptum |
@@ -527,6 +529,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `formae_datorum.forma_datorum` — acervus, arbor, cauda, copia, series, tabula_associativa
 - `identificatio.schema_identificandi` — cas, doi, e164, gtin, iban, isbn, isbn_10, isbn_13, issn, ndc, numerus_dea, orcid, rxnorm, ulid, uri, uuid
 - `iudicium.fons` — corpus_institutionis, fons_mensurae, fons_scriptus, fons_testimonii
+- `iudicium.fundamentum` — auctoritas_testis, autopsia, comparatio_stili, coniectura_periti, documentum_scriptum, illatio, mensuratio, praesumptio
 - `iudicium.gradus_assensus` — dubitatio, fides, opinio, scientia, suspicio
 - `iudicium.ignotum` — amissum, controversum, ignotum_ignotum, ignotum_notum, impertinens, indeterminatum, retentum
 - `iudicium.investigatio` — inquisitio_forensis, investigatio_praeventiva, recensio_post_mortem

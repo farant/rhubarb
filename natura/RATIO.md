@@ -224,6 +224,41 @@ Eight runs, and the pattern they made:
 | 6 | aviation | richest yet; chosen by the punishment heuristic |
 | 7 | pharmacy | `iussum` — the persisting DIRECTIVE, which `actus` and `obligatio` had been standing around without |
 | 8 | civil registry | `attestatio` — *a projection you hand out stops being a projection* |
+| 9 | PKI | run as a TEST of a one-round-old genus: found 2 real defects **and** 2 predictions |
+| 10 | distributed systems | `petitio`, `quorum`, `depravatio` — and a deferred candidate redeemed by its own stated trigger |
+| 11 | diplomacy | ratification IS two-phase commit; apparent authority IS the stale credential |
+| 12 | apiculture | `stigmergia` — the third mode of coordination; and three domains REFUSED for the echo trap |
+| 13 | sheep | `peritia_communis` — knowledge borne by a collective, killed by discontinuity not forgetting |
+| 14 | museum | `fiducia`, `interventio` — and *distinguishable* as an anti-forgery ethic inside repair |
+| 15 | metrology | `incertitudo`; and Le Grand K forced `radix_fiduciae.refundata` |
+
+**Three modes have emerged, and they ask different questions.**
+Runs 1–8 were pure gap-finding. Run 9 introduced a second:
+**aim a fresh domain at a one-round-old genus deliberately** —
+the cheapest moment a genus is ever testable, and it found two
+defects and two predictions at once. Runs 11–12 introduced a
+third: **aim a domain at a whole cluster** to see whether the
+genera describe the *problem* or merely the *technology*.
+
+Two disciplines were learned by being burned, and both now pay
+every run:
+
+- **Collision-check names BEFORE walking.** Run 11 caught
+  `reservatio` already being a genus (a booking, in `tempus`)
+  before a word was written.
+- **Write the trigger when you refuse.** Run 7 refused `petitio`
+  naming the condition that would flip it; run 10 supplied it.
+  A refusal with its condition recorded is a standing order, not
+  a dead end.
+
+And one trap named before it was walked into (run 12): **do not
+walk a domain whose vocabulary was imported FROM computing.**
+"Ant colony as distributed system" would have returned our own
+voice as discovery, undetectable from inside. The test is whether
+*practitioners* developed the vocabulary or whether CS applied
+its own to them. Apiculture passed; ecosystems and mycorrhizal
+networks were refused outright, since that is exactly where the
+scribe is most fluent and least checkable.
 
 Run 5 is the one that shows why the loop cannot be replaced by
 introspection: **nobody re-reads their own definitio asking

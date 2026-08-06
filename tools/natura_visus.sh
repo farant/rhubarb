@@ -452,6 +452,29 @@ cut -d'|' -f2 "$HOMO" | sort | uniq -d | while read -r hn; do
         >> "$MONITA"
 done
 
+# ---- MONITUM: RATIO.md contra worklogum (defluxus prosae) ----
+# RATIO.md rota XLII scripta est NE materia orientationis
+# deflueret, et rota L septem cursibus retro iacebat - documentum
+# quod contra defluxum exsistit et ipsum defluit, quia prosam
+# nulla porta custodit. Rota LIX iterum septem retro.
+# Hoc minimum quod custodiri POTEST custodit: numerum cursuum
+# circuli. Worklogus eos nominat ('coverage loop, run N'), RATIO
+# eos tabula enumerat. Discrepantia = monitum.
+_wl="natura/natura.worklog.md"
+_rt="natura/RATIO.md"
+if [ -r "$_wl" ] && [ -r "$_rt" ]; then
+    cursusWl=$(grep -o 'coverage loop, run [0-9]*' "$_wl" \
+               | grep -o '[0-9]*' | sort -n | tail -1)
+    cursusRt=$(sed -n '/| run | scenario/,/^$/p' "$_rt" \
+               | grep -o '^| [0-9]* ' | grep -o '[0-9]*' \
+               | sort -n | tail -1)
+    if [ -n "$cursusWl" ] && [ -n "$cursusRt" ] \
+       && [ "$cursusWl" != "$cursusRt" ]; then
+        echo "RATIO.md cursus $cursusRt enumerat, worklogus $cursusWl - prosa orientationis RANCIDA" \
+            >> "$MONITA"
+    fi
+fi
+
 nMonita=$(wc -l < "$MONITA" | tr -d ' ')
 
 # ---- numeri ----

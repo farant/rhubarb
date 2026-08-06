@@ -427,8 +427,12 @@
             Utraque manent quia utraque vera sunt, et confundere
             eas est renovationem eo tempore agere quo nemo
             poposcit (aut non agere cum omnes poscent)"/>
-    <proprietas nomen="fundamentum" genus="textus"
-      nota="QUID EMITTENS RE VERA PROBAVERIT antequam testaretur.
+    <proprietas nomen="fundamentum" genus="fundamentum"
+      modulus="iudicium"
+      nota="PARENS ROTA LIX DATUS (iudicium.fundamentum): haec
+            proprietas cum tribus aliis idem rogabat sine ullo
+            genere communi. Nunc genus est, et valores eius
+            species. QUID EMITTENS RE VERA PROBAVERIT antequam testaretur.
             Cursu nono postulatum: certificatum 'domanio
             validatum' et 'validatione extensa' res EIUSDEM
             FORMAE sunt et warrantum prorsus diversum ferunt -

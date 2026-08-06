@@ -4599,3 +4599,90 @@ vocabulary predates computing, and the literature is thick.
 
 MEASURED after: 33 exemplaria / 176 genera / 376 res / 516 arcus
 / 0 vulnera / 24 monita / dubia 14 / umbrae 2.
+
+## 2026-08-06 — round fifty-nine: review pass (the fourth absence, and a gate on prose)
+
+Between-loops review at Fran's suggestion, and both findings came
+from applying an existing instrument rather than inventing one.
+
+305. THE FOURTH STRUCTURAL ABSENCE, and the first at the PROPERTY
+     layer. Four properties, four separate rounds, all asking ON
+     WHAT DOES THIS CLAIM REST, none with a parent:
+       attestatio.fundamentum              (PKI, LI)
+       interactio.testimonium              (pharmacy, XLVI)
+       attributio.fundamentum_attributionis (museum, LVII)
+       incertitudo.genus_aestimationis     (metrology, LVIII)
+     THE SIGNAL WAS SEEN ONCE BEFORE AND CORRECTLY REFUSED:
+     round 53 noted `idempotens` declared twice independently and
+     declined to act, since "two shared properties is not the same
+     weight as four duplicated apparatus, and properties
+     legitimately recur." That was right. Four is different, and
+     the earlier refusal is what makes this one credible.
+
+306. AND `fons` IS NOT IT — its own definitio says so outright:
+     "a source does not prove a proposition true; it says WHENCE
+     IT CAME." Two different questions that ordinary speech
+     merges: whence I received it, and on what it rests. I got
+     it from a book; the book rested on stylistic comparison.
+     So the library now carries FOUR DISTINCT AXES for
+     qualifying a claim, each with a home:
+       gradus_assensus  how firmly held
+       fons             whence received
+       fundamentum      on what it rests
+       incertitudo      how much numerical error
+     Built across forty rounds by four different domains, and
+     only visible as a set when laid side by side — which is the
+     round-50 lesson repeating: coining one at a time is safe for
+     CORRECTNESS and unsafe for CONNECTEDNESS.
+
+307. `verificabile_ab_alio` is the property that earns the genus:
+     a document or a measurement can be inspected by anyone, an
+     expert's estimate cannot — so disputes about the first can
+     be settled and disputes about the second only met with
+     another expert. Not a defect but a CONDITION worth knowing
+     before the argument starts.
+     `autopsia` recovered as the technical word (auto-opsis,
+     self-seeing) that medicine and history both use, and it
+     carries the sharpest nota: THE FIRMEST FOUNDATION IS THE
+     LEAST TRANSMISSIBLE. Nobody can use another's autopsia —
+     told, it becomes testimony, and a grade is lost at every
+     retelling. Which is precisely what `corpus_institutionis`
+     confesses about this library's own sourcing.
+     `praesumptio` distinguished from `fictio_iuris` in one line:
+     the fiction KNOWS the contrary, the presumption does not.
+
+308. THE FOUR PROPERTIES WERE RE-TYPED, not merely annotated:
+     each now carries `genus="fundamentum" modulus="iudicium"`
+     through the cross-model property-typing mechanism that
+     already existed, and their local `<optio>` lists were
+     DELETED — a library-typed property takes species of the
+     genus, not a private enumeration. Leaving the optios would
+     have been the incoherent half-migration that looks finished.
+
+309. A GATE ON PROSE — the layer nothing watched. RATIO.md was
+     written round 42 expressly to stop orientation material
+     drifting; round 50 found it seven runs stale; round 59 found
+     it seven runs stale AGAIN. The same document, the same
+     interval, twice — which makes it a mechanism failure, not an
+     oversight.
+     So instead of only refreshing it: the validator now compares
+     the highest "coverage loop, run N" in the worklog against
+     the highest row of RATIO's loop table, and emits a monitum
+     on mismatch. PROVEN BY THE DRIFT IT WAS BUILT FOR — it fired
+     "RATIO.md lists 8, worklog has 15" before the refresh and
+     went silent after.
+     It watches the one thing about prose that CAN be checked (a
+     number appearing in two places), which is the whole trick:
+     do not try to gate meaning, gate a countable shadow of it.
+
+310. RATIO refreshed with runs 9–15, and with the three MODES the
+     loop has grown that were never written down: pure
+     gap-finding (1–8), aiming a domain at a ONE-ROUND-OLD GENUS
+     on purpose (9), and aiming a domain at a whole CLUSTER to
+     test whether the genera describe the problem or the
+     technology (11–12). Plus the two disciplines learned by
+     being burned (collision-check before walking; write the
+     trigger when you refuse) and the echo trap.
+
+MEASURED after: 33 exemplaria / 177 genera / 384 res / 519 arcus
+/ 0 vulnera / 24 monita / dubia 14 / umbrae 2.
