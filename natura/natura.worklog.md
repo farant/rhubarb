@@ -4473,3 +4473,129 @@ it, so no echo risk.
 
 MEASURED after: 33 exemplaria / 174 genera / 376 res / 509 arcus
 / 0 vulnera / 24 monita / dubia 14 / umbrae 2.
+
+## 2026-08-06 — round fifty-eight: metrology (coverage loop, run 15)
+
+Domain chosen on evidence rather than appetite: `mensura` was one
+of the thinnest models (3 genera) while `quantitas` is cited from
+dozens of places — thin exactly where it bears weight. Metrology
+passes every gate: punished universally (short measure is fraud,
+a bad dose kills, a tolerance miss scraps a batch), its
+vocabulary predates computing, and the literature is thick.
+
+299. A CLAIM CORRECTED BEFORE IT WAS BUILT ON. In the walk I said
+     `quantitas.praecisio` "smudges bias and dispersion". READING
+     IT SHOWED OTHERWISE: it means SIGNIFICANT FIGURES ("500 g"
+     vs "500.0 g"), which is a clean third concept and correctly
+     stated. The real gap was not a confusion in what existed but
+     an absence beside it. Recorded because the walk-then-read
+     order is what caught it, and the reverse order would not
+     have.
+
+300. INCERTITUDO built, and the distinction that matters is
+     against something the library ALREADY had. `quantitas`
+     carries minimum/maximum — a RANGE — added for planta
+     ("a rose grows 2–5 m"). Uncertainty is not that.
+     A RANGE IS IN THE THING; UNCERTAINTY IS IN US. Roses really
+     do differ in height, and both endpoints are true. A 3 kg
+     mass has ONE true mass and we do not know it exactly.
+     The operational test, recorded in the differentia: a range
+     is NOT reduced by better measurement; an uncertainty is —
+     and if better measurement narrows what you called a range,
+     it was never a range but a mis-named uncertainty.
+     Doctrine taken from the domain (GUM): A MEASUREMENT
+     REPORTED WITHOUT ITS UNCERTAINTY IS NOT IMPRECISE, IT IS
+     INCOMPLETE.
+     `factor_tegumenti` recorded because omitting it makes the
+     number meaningless: "±0.5" at k=1 and at k=2 differ by a
+     factor of two, and reports that suppress k cannot be
+     compared at all.
+     `genus_aestimationis` keeps the domain's honesty: Type A is
+     computed from repetitions; Type B is ESTIMATED from other
+     sources — an instrument's certificate, an assumed
+     distribution, expert judgment. Type B is a JUDGMENT, not a
+     computation, and is usually the LARGER part of the budget,
+     which few admit.
+     `componitur_ex` is the budget, and it combines in quadrature
+     — so the largest component DROWNS the rest, and shaving the
+     small ones buys nothing. That is why the budget is written
+     down and audited: to show which term is actually paying.
+     AND THE HONEST SELF-INDICTMENT, put in the nota: NOT ONE
+     measurement in this library carries an uncertainty — no
+     birth date, no plant height, no historical year. The
+     certitudo/fons mechanism grades assent to a PROPOSITION;
+     this grades error in a NUMBER. Two strata, neither
+     substituting for the other: "born 1225, held as opinion"
+     and "1225 ± 2 years" say different things and history uses
+     both.
+
+301. INSTRUMENTUM_MENSURAE (sub corporalia.instrumentum), and its
+     differentia is sharp: an instrument that DOES NOT CHANGE its
+     object but characterises it — an oven bakes the bread, a
+     balance leaves it as it was. And alone among instruments IT
+     IS ITSELF MEASURED, which is what a calibration is: the
+     measurement of the measurer, and the origin of a chain no
+     other tool has.
+     `error_systematicus` carries the lesson: REPETITION NEVER
+     REVEALS BIAS. An instrument returning the same wrong number
+     two hundred times looks superbly consistent. Only comparison
+     against something better exposes it — which is why
+     calibration is NECESSARY and diligence is NOT SUFFICIENT.
+     Bias, dispersion and resolution kept separate because
+     ordinary speech folds all three into "accuracy", and each
+     fails differently: a high-resolution instrument can be
+     grossly biased — MANY DIGITS DO NOT CONFER TRUTH.
+
+302. AND THE PREDICTED HIT LANDED. An out-of-tolerance result
+     acts BACKWARDS: everything the instrument measured since its
+     last good calibration becomes suspect, the lab must notify,
+     and product already shipped must be assessed. That is
+     `depravatio` with `fenestra` (between calibrations),
+     `ambitus` (which measurements), `propagata` (did results
+     feed downstream decisions) and `sanabilis` (can they be
+     remeasured, or are the parts gone). Written three rounds ago
+     for corrupted balances in a payment system; it takes a
+     machine-shop recall WITHOUT A WORD CHANGED.
+     What that confirms: the genus is about WRONGNESS THAT HAS
+     ALREADY SPREAD WHILE LOOKING FINE, and it does not care
+     whether the medium is a database or a workshop.
+
+303. RADIX_FIDUCIAE GAINED THE STATE IT WAS MISSING, and the
+     forcing case is the best story in the walk. Until 2019 the
+     kilogram chain terminated in a PHYSICAL OBJECT, and the
+     prototype and its official copies drifted apart by tens of
+     micrograms over a century — with NO WAY TO SAY WHICH HAD
+     CHANGED, because the prototype WAS the kilogram and could
+     not be wrong, only different from everything else. A root
+     that cannot be checked against anything is a root that can
+     rot silently.
+     So the SI was redefined to derive the kilogram from Planck's
+     constant — AND THE NUMERICAL VALUE WAS CHOSEN SO THAT
+     NOTHING CHANGED AT THE MOMENT OF TRANSITION.
+     The genus had `suscepta → limitata → reiecta` and nothing
+     for this: the root was neither rejected nor limited but
+     RE-FOUNDED UNDERNEATH, continuity preserved, and everything
+     standing on it felt nothing. Added `refundata`, repeatable.
+     Computing twins are exact and hard: migrating a trust
+     anchor, changing digest algorithm while preserving identity,
+     re-deriving a key without invalidating what it signed. The
+     only way a root changes WITHOUT the collateral damage
+     `reiecta` inflicts.
+
+304. FOUR COMPOSITION WINS, which is the most in any run:
+     `licentia.recentia_postulata` (written for pilot currency)
+     takes calibration intervals unchanged — validity from recent
+     exercise rather than past proof, subject swapped from person
+     to instrument; `attestatio` fits the calibration certificate
+     using BOTH properties PKI forced us to add (`expirat` set by
+     the issuer, `fundamentum` = what was actually verified);
+     `depravatio` as above; and the traceability chain is
+     `radix_fiduciae`'s third domain.
+     NON-SURFACING: calibration itself. It is a measurement of the
+     measurer producing an `attestatio` — and notably NOT an
+     `interventio`, since it characterises without changing,
+     which is the very differentia written for
+     instrumentum_mensurae one hour earlier.
+
+MEASURED after: 33 exemplaria / 176 genera / 376 res / 516 arcus
+/ 0 vulnera / 24 monita / dubia 14 / umbrae 2.

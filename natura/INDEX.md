@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **33** · genera **174** · res dictionarii **376** · arcus **509**
+Exemplaria **33** · genera **176** · res dictionarii **376** · arcus **516**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -24,7 +24,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 `⚙` machinam statuum fert · `▣N` partes N declaratas fert
 (partes = index quo ABSENTIA visibilis fit).
 
-### acta (v2, genera 4)
+### acta (v3, genera 4)
 
 - **acta** ⚙ ▣5 — Series eventuum ordinata cui SOLUM APPENDITUR, et quae rerum descriptarum VERITAS est: status quilibet (summa, manifes
 - **punctum_actorum** — Locus in actis nominatus et allocutione dignus, ita ut interrogatio "qualia erant HIC?" responsum habeat quod homo pet
@@ -164,11 +164,13 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **iurisdictio** — Potestas legum ferendarum et exigendarum super loco: municipium, provincia, civitas
 - **aedificium** ▣1 — Structura loco fixa quam homines occupant: res corporea quae moveri non potest - immobilitas essentia eius, unde "res 
 
-### mensura (v0, genera 3)
+### mensura (v1, genera 5)
 
 - **magnitudo_mensurabilis** — Id quod mensurari potest: longitudo, massa, tempus, temperatura
 - **unitas_mensurae** — Partitio conventa magnitudinis mensurabilis, qua quantitates numerari possunt
 - **quantitas** — Numerus CUM UNITATE: mensura rei determinata
+- **incertitudo** — Mensura eius quantum de valore vero ignoremus: intervallum circa valorem mensuratum intra quod valor verus, probabilit
+- **instrumentum_mensurae** ⊂ corporalia.instrumentum ⚙ — Instrumentum quod rem suam NON MUTAT sed characterizat: fornax panem coquit, statera panem relinquit qualis erat
 
 ### morbus (v1, genera 1)
 
@@ -362,12 +364,14 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | identificator | elementa_programmatis |
 | ignotum | iudicium |
 | implementatio_linguae | lingua_programmandi |
+| incertitudo | mensura |
 | incidens | operatio |
 | index | elementa_programmatis |
 | index_verificationis | praescriptum |
 | inscriptio | locus |
 | instrumentum | corporalia |
 | instrumentum_aedificationis | elementa_programmatis |
+| instrumentum_mensurae | mensura |
 | interactio | pharmacon |
 | intervallum | tempus |
 | interventio | fabricatio |

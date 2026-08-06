@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/acta.stml
-  Exemplar semanticum: ACTA (versio 2, PLASTICUM)
+  Exemplar semanticum: ACTA (versio 3, PLASTICUM)
 
   ABSENTIA STRUCTURALIS, exercitio modellationis inventa (rota
   XLIV): non circulus coverturae qui hiatus quaerit, sed subiectum
@@ -29,7 +29,7 @@
   silicis in TEMPORE non est sed in SERIE ('numquam timestamp',
   lex eius), et /tempus/momentum id ferre non potuit.
 -->
-<natura modulus="acta" versio="2" lingua="latina">
+<natura modulus="acta" versio="3" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -640,9 +640,35 @@
             innumerae, quarum nulla per se vitiosa, uno decreto
             cadunt. Damnum collaterale in natura catenae
             inaedificatum"/>
+    <status nomen="refundata"
+      nota="EADEM RADIX, FUNDAMENTUM ALIUD - status cursu XV
+            (metrologia) postulatus, quem forma non habebat quia
+            reiectionem solam praevidebat.
+            SPECIMEN: chilogramma usque ad annum 2019 in RE
+            CORPOREA desinebat (prototypum internationale), et
+            prototypum cum exemplaribus suis per saeculum
+            decinis microgrammatum DISCESSIT - nec dici poterat
+            quid mutatum esset, quia prototypum chilogramma ERAT
+            et falsum esse non poterat, sed aliud tantum ab
+            omnibus. Ideo SI redefinitum est ut chilogramma ex
+            constante Planck flueret - ET VALOR NUMERICUS ITA
+            ELECTUS UT MOMENTO TRANSITUS NIHIL MUTARETUR.
+            Radix ergo nec reiecta nec limitata sed SUBTER
+            SUBSTITUTA, continuitate servata: quod supra eam
+            stat nihil sensit.
+            GEMINA COMPUTATRALIA EXACTA: radix fiduciae migrata,
+            algorithmus digestionis mutatus identitate servata,
+            clavis rederivata sine invalidatione eorum quae
+            signaverat. Difficillimum omnium, et sola via qua
+            radix mutari potest sine damno collaterali quod
+            'reiecta' fert"/>
     <transitus a="suscepta" ad="limitata" per="limitatio"/>
     <transitus a="suscepta" ad="reiecta" per="reiectio"/>
     <transitus a="limitata" ad="reiecta" per="reiectio"/>
+    <transitus a="suscepta" ad="refundata" per="refundatio"/>
+    <transitus a="refundata" ad="refundata" per="refundatio"
+      nota="iterari potest: fundamentum mutari potest quotiens
+            melius invenitur, valore semper servato"/>
   </machina_statuum>
 
   <relationes>
