@@ -246,6 +246,24 @@ index_scribere(
             imprimere("\t");
             _campum(stml_attributum_capere(e, "super"), "-");
             imprimere("\t");
+            _campum(stml_attributum_capere(e, "intra"), "-");
+            imprimere("\t");
+            _campum(stml_attributum_capere(e, "nota"), "-");
+            imprimere("\n");
+            perge;
+        }
+        si (chorda_aequalis_literis(*e->titulus, "citatio"))
+        {
+            imprimere("C\t");
+            _campum(e_nomen, "-");                imprimere("\t");
+            _campum(stml_attributum_capere(e, "attributum"), "-");
+            imprimere("\t");
+            _campum(stml_attributum_capere(e, "ad"), "-");
+            imprimere("\t");
+            _campum(stml_attributum_capere(e, "super"), "-");
+            imprimere("\t");
+            _campum(stml_attributum_capere(e, "intra"), "-");
+            imprimere("\t");
             _campum(stml_attributum_capere(e, "nota"), "-");
             imprimere("\n");
             perge;

@@ -92,7 +92,13 @@ nomen enumeratio {
     /* textus TYPATUS (2026-08-06): textus="numerus" etc. - textus
      * licet ET generi congruere debet. Vacuus praeteritur:
      * necessitas textus res lectoris est, non canonis. */
-    CANON_TEXTUS_MALUS        = XI
+    CANON_TEXTUS_MALUS        = XI,
+    /* CITATIO (2026-08-06): clavis-relatio INTRA documentum (mos
+     * xs:key/keyref - quod unum XSD recte fecit). Valor attributi
+     * valorem clavis alicubi declaratum aequare debet. Cum intra=
+     * scopus per INSTANTIAM est (transitus statum machinae SUAE
+     * citat). Trans plagulas = gradus III, oneratoris manet. */
+    CANON_CITATIO_IRRITA      = XII
 } CanonVitiumGenus;
 
 nomen structura {
@@ -115,6 +121,7 @@ nomen structura {
                  chorda*  versio;
          TabulaDispersa*  elementa;    /* nomen -> CanonElementum* */
                     Xar*  unicitates;  /* Xar de CanonUnicitas* */
+                    Xar*  citationes;  /* Xar de CanonCitatio* */
                  chorda*  radix;       /* nomen elementi radicis */
 } Canon;
 

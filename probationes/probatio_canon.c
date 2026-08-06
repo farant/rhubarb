@@ -1,8 +1,9 @@
 /* probatio_canon.c - Probationes strati schematis STML (gradus II)
  *
- * Septem sectiones: lectio canonis, iudicium sanum, classes vitiorum
- * omnes decem, intra= (formae contextu dependentes - casus aedilis),
+ * Octo sectiones: lectio canonis, iudicium sanum, classes vitiorum,
+ * intra= (formae contextu dependentes - casus aedilis),
  * CANON INFIXUS (liberum primum radicis = contractus, non contentum),
+ * CITATIO + SCOPI PER INSTANTIAM (clavis-relatio, mos xs:keyref),
  * registrum (clavis extensionis et clavis radicis), et CORPUS VERUM:
  * canon.canon SE IPSUM iudicat, deinde natura.canon et aedilis.canon,
  * deinde culpa plantata (attributum falso scriptum quod lector tacite
@@ -161,6 +162,68 @@ interior constans character* CAPSA_INFIXO =
     "  </canon>\n"
     "  <res nomen=\"unica\"/>\n"
     "</capsa>\n";
+
+/* citatio (clavis-relatio) + scopi per instantiam: fons-similis
+ * (documentum totum) et machina-similis (intra=) uno canone */
+interior constans character* CANON_BIBLIOTHECAE =
+    "<canon dialectus=\"bibliotheca\" versio=\"1\">\n"
+    "  <elementum nomen=\"bibliotheca\" radix=\"verum\">\n"
+    "    <liberum nomen=\"fons\"/>\n"
+    "    <liberum nomen=\"liber\"/>\n"
+    "    <liberum nomen=\"machina\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"fons\">\n"
+    "    <attributum nomen=\"clavis\" genus=\"nomen\"\n"
+    "      necessarium=\"verum\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"liber\">\n"
+    "    <attributum nomen=\"fons\" genus=\"nomen\"/>\n"
+    "    <attributum nomen=\"nomen\" genus=\"nomen\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"machina\">\n"
+    "    <liberum nomen=\"status\"/>\n"
+    "    <liberum nomen=\"transitus\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"status\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"nomen\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"transitus\">\n"
+    "    <attributum nomen=\"ad\" genus=\"nomen\"/>\n"
+    "  </elementum>\n"
+    "  <citatio nomen=\"fontium\" attributum=\"fons\"\n"
+    "    ad=\"fons/clavis\"/>\n"
+    "  <citatio nomen=\"transituum\" attributum=\"ad\"\n"
+    "    ad=\"status/nomen\" super=\"transitus\" intra=\"machina\"/>\n"
+    "  <unicitas nomen=\"statuum\" attributum=\"nomen\"\n"
+    "    super=\"status\" intra=\"machina\"/>\n"
+    "</canon>\n";
+
+interior constans character* BIBLIOTHECA_SANA =
+    "<bibliotheca>\n"
+    "  <fons clavis=\"plinius\"/>\n"
+    "  <liber fons=\"plinius\" nomen=\"historia\"/>\n"
+    "  <machina>\n"
+    "    <status nomen=\"vigens\"/>\n"
+    "    <transitus ad=\"vigens\"/>\n"
+    "  </machina>\n"
+    "  <machina>\n"
+    "    <status nomen=\"vigens\"/>\n"
+    "    <transitus ad=\"vigens\"/>\n"
+    "  </machina>\n"
+    "</bibliotheca>\n";
+
+interior constans character* BIBLIOTHECA_MALA =
+    "<bibliotheca>\n"
+    "  <liber fons=\"ignotus\" nomen=\"x\"/>\n"
+    "  <machina>\n"
+    "    <status nomen=\"unus\"/>\n"
+    "    <status nomen=\"unus\"/>\n"
+    "    <transitus ad=\"alienus\"/>\n"
+    "  </machina>\n"
+    "  <machina>\n"
+    "    <status nomen=\"alienus\"/>\n"
+    "  </machina>\n"
+    "</bibliotheca>\n";
 
 interior constans character* CATALOGUS_FIXTURA =
     "# commentarium praetermittendum\n"
@@ -512,6 +575,52 @@ s32 principale (vacuum)
                                  piscina, intern);
         CREDO_NON_NIHIL (vitia);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: citatio et scopi per instantiam
+     * ======================================================== */
+
+    {
+        Canon* bib_canon;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans citationem et scopos ---\n");
+
+        bib_canon = canon_ex_literis(CANON_BIBLIOTHECAE,
+                                     piscina, intern);
+        CREDO_NON_NIHIL (bib_canon);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(bib_canon->citationes),
+                            II);
+
+        /* sanum - ET nomen status trans machinas iteratum LICITUM
+         * (scopus per instantiam: postulatio secunda soluta) */
+        vitia = iudicare_literis(bib_canon, BIBLIOTHECA_SANA,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* mala: fons ignotus (citatio documenti), transitus
+         * statum machinae ALTERIUS citans (citatio intra), status
+         * geminus INTRA machinam (unicitas intra) */
+        vitia = iudicare_literis(bib_canon, BIBLIOTHECA_MALA,
+                                 piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), III);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_CITATIO_IRRITA), II);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_NOMEN_BIS), I);
+
+        /* citatio 'ad' sine solido: canon totus clamans frangitur
+         * (citatio muta quae nihil custodit custodire visa peior
+         * est quam canon fractus) */
+        CREDO_NIHIL (canon_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\"/>"
+            "<citatio nomen=\"c\" attributum=\"a\""
+            " ad=\"sine_solido\"/>"
+            "</canon>", piscina, intern));
     }
 
 

@@ -259,4 +259,22 @@
           (METAMODULUS §4b): genera et res unum spatium nominum
           communicant, quia allocutio gradum non fert"/>
 
+  <!-- ========= CITATIONES (regulae V et XII migratae) =========
+       2026-08-06: post regulam VIII etiam hae duae ex oneratore
+       huc migrant - ambae INTRA documentum resolvuntur, ergo
+       gradus II sunt, non III. Onerator eas non iam tenet. -->
+
+  <citatio nomen="fontium" attributum="fons" ad="fons/clavis"
+    nota="regula V: fons= in elemento quolibet clavem in
+          bibliographia moduli declaratam citat"/>
+
+  <citatio nomen="transitus-a" attributum="a" ad="status/nomen"
+    super="transitus" intra="machina_statuum"
+    nota="regula XII: transitus statum machinae SUAE citat -
+          super='transitus' obligatorium ne relatio a= (res
+          gradus III trans plagulas) falso capiatur"/>
+
+  <citatio nomen="transitus-ad" attributum="ad" ad="status/nomen"
+    super="transitus" intra="machina_statuum"/>
+
 </canon>

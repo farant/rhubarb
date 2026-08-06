@@ -45,7 +45,8 @@ $1=="E" { ne++; eord[ne]=$2; eintra[$2]=$3; eradix[$2]=$4; etex[$2]=$5 }
 $1=="A" { na[$2]++; an[$2,na[$2]]=$3; ag[$2,na[$2]]=$4; anec[$2,na[$2]]=$5 }
 $1=="O" { k=$2 SUBSEP $3; ao[k] = (k in ao) ? ao[k] "\\|" $4 : $4 }
 $1=="L" { nl[$2]++; ln[$2,nl[$2]]=$3; lmin[$2,nl[$2]]=$4; lmax[$2,nl[$2]]=$5 }
-$1=="U" { nu++; un[nu]=$2; ua[nu]=$3; us[nu]=$4 }
+$1=="U" { nu++; un[nu]=$2; ua[nu]=$3; us[nu]=$4; ui[nu]=$5 }
+$1=="C" { nc++; cn[nc]=$2; ca[nc]=$3; cad[nc]=$4; cs[nc]=$5; cin[nc]=$6 }
 END {
   print "*Catalogus GENERATUS - noli manu emendare. Fons:"
   print "`natura/natura.canon`; regenera:"
@@ -83,8 +84,21 @@ END {
   if (nu>0) {
     print ""
     print "**Unicitates:**"
-    for (i=1;i<=nu;i++)
-      print "- `" un[i] "`: attributum `" ua[i] "` super " us[i]
+    for (i=1;i<=nu;i++) {
+      s = "- `" un[i] "`: attributum `" ua[i] "` super " us[i]
+      if (ui[i]!="-") s = s " (intra `" ui[i] "`)"
+      print s
+    }
+  }
+  if (nc>0) {
+    print ""
+    print "**Citationes** (clavis-relationes intra documentum):"
+    for (i=1;i<=nc;i++) {
+      s = "- `" cn[i] "`: attributum `" ca[i] "` → `" cad[i] "`"
+      if (cs[i]!="-")  s = s " super " cs[i]
+      if (cin[i]!="-") s = s " (intra `" cin[i] "`)"
+      print s
+    }
   }
 }
 ' "$TMPD/index.tsv" > "$TMPD/catalogus.md"

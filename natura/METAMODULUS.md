@@ -134,6 +134,11 @@ cardinalitas liberorum min..max.*
 
 **Unicitates:**
 - `entia`: attributum `nomen` super genus species individuum cultivar
+
+**Citationes** (clavis-relationes intra documentum):
+- `fontium`: attributum `fons` → `fons/clavis`
+- `transitus-a`: attributum `a` → `status/nomen` super transitus (intra `machina_statuum`)
+- `transitus-ad`: attributum `ad` → `status/nomen` super transitus (intra `machina_statuum`)
 <!-- GENERATUM FINIS -->
 
 ### Structural
@@ -630,14 +635,14 @@ exits 1. Exit 2 means NOTHING RAN — never read it as health.
 | 2 | `relatio`/`relatum` `ad=` resolves to a genus or dictionary entry in the named model, unless `externum` or `ad="*"` | [E] |
 | 3 | `proprietas` with `modulus=` resolves in that model — to a genus [E]; to a *dictionary entry* it resolves but MONITA (see below) |
 | 4 | `genus` with `sub=` + `modulus=` resolves cross-model | [E] |
-| 5 | `fons=` resolves to a declared `clavis` | [E] |
+| 5 | `fons=` resolves to a declared `clavis` | **[C]** — canon `citatio fontium` (migrated 2026-08-06; within-document resolution is layer 2) |
 | 6 | `certitudo=` is a species of `gradus_assensus` | [E] |
 | 7 | `valens_a`/`valens_ad` are well-formed dates and correctly ordered | [E] |
 | 8 | Only known elements and attributes appear | **[C]** — `natura/natura.canon` via `lib/canon.c`, run inside `natura_examen` (migrated 2026-08-06; the loader no longer holds a vocabulary list) |
 | 9 | `valor nomen=` names a property declared on the entry's genus or an ancestor (or a `machina_statuum`) | [E] |
 | 10 | A `valor` for an `electio` property matches a declared `optio` | [E] |
 | 11 | `relatum nomen=` names a relation declared on the genus or an ancestor | [E] |
-| 12 | `transitus a=`/`ad=` name declared statuses of the same machine | [E] |
+| 12 | `transitus a=`/`ad=` name declared statuses of the same machine | **[C]** — canon `citatio transitus-a`/`-ad` with `intra="machina_statuum"` (migrated 2026-08-06; instance-scoped resolution) |
 | 13 | `eventum actio=` names a declared `actio` | [E] |
 | 14 | `modulus` attribute equals the filename stem | [E] |
 | 15 | No two entities share a name within a model (addressing depends on it, §4b) | [E] |

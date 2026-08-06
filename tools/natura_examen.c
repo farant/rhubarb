@@ -1272,6 +1272,7 @@ principale(
                     CanonVitium* v;
                     character    campus[CCLVI];
                     character    nuntius[DXII];
+                    i32          regula;
 
                     v = (CanonVitium*)xar_obtinere(vitia, iv);
                     si (v->genus == CANON_NOMEN_BIS)
@@ -1279,6 +1280,18 @@ principale(
                         perge;   /* regula XV oneratoris */
                     }
                     vulnera++;
+
+                    /* numerus regulae praesentationis: citationes
+                     * regulas V/XII migratas gerunt (transitus =
+                     * XII, ceterae = V), cetera vitia = VIII */
+                    regula = VIII;
+                    si (v->genus == CANON_CITATIO_IRRITA)
+                    {
+                        regula = (v->elementum &&
+                            chorda_aequalis_literis(*v->elementum,
+                                                    "transitus"))
+                            ? XII : V;
+                    }
 
                     si (plagula && ex->stirps &&
                         !viam_congruere(ex->stirps, plagula))
@@ -1320,7 +1333,8 @@ principale(
 
                     si (machina)
                     {
-                        imprimere("VULNUS\t8\t%.*s\t%.*s\t%s\n",
+                        imprimere("VULNUS\t%u\t%.*s\t%.*s\t%s\n",
+                            regula,
                             ex->stirps
                                 ? (integer)ex->stirps->mensura : 1,
                             ex->stirps
@@ -1335,8 +1349,9 @@ principale(
                     }
                     alioquin
                     {
-                        imprimere("VULNUS  regula  8  [%.*s] %.*s:"
+                        imprimere("VULNUS  regula %2u  [%.*s] %.*s:"
                                   " %s\n",
+                            regula,
                             ex->stirps
                                 ? (integer)ex->stirps->mensura : 1,
                             ex->stirps

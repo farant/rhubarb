@@ -90,7 +90,6 @@ nomen structura {
               chorda*  stirps;         /* modulus (= nomen plagulae) */
               chorda*  versio;         /* attributum versio= */
            StmlNodus*  radix;          /* elementum <natura> */
-      TabulaDispersa*  claves_fontium; /* clavis -> StmlNodus* (fons) */
 } NaturaExemplar;
 
 nomen structura {

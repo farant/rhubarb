@@ -51,7 +51,26 @@ nomen structura {
     chorda*  titulus;
     chorda*  attributum;
     Xar*     super;      /* Xar de chorda* - genera elementorum */
+    /* intra= : scopus per INSTANTIAM parentis nominati - unicitas
+     * intra quamque instantiam separatim iudicatur (postulatio
+     * quaestionum: parametra intra quaestionem unica, trans
+     * quaestiones libere iterata). NIHIL = documentum totum. */
+    chorda*  intra;
 } CanonUnicitas;
+
+/* citatio: clavis-relatio intra documentum (mos xs:key/keyref).
+ * Elementum sub 'super' (aut quodlibet si vacuum) attributum
+ * ferens valorem clavis 'ad_elementum/ad_attributum' aequare
+ * debet. Cum intra=: claves et citantes intra EANDEM instantiam
+ * quaeruntur - transitus statum machinae SUAE citat, non alienae. */
+nomen structura {
+    chorda*  titulus;
+    chorda*  attributum;
+    Xar*     super;          /* vacuum = elementum quodlibet */
+    chorda*  intra;
+    chorda*  ad_elementum;
+    chorda*  ad_attributum;
+} CanonCitatio;
 
 /* ==================================================
  * Prototypa
@@ -69,6 +88,11 @@ interior chorda clavis_scopi(Piscina* p, constans chorda* intra,
 interior vacuum nodum_iudicare(Canon* c, StmlNodus* n, Xar* vitia,
     Piscina* piscina);
 interior b32 album_solum(constans chorda* s);
+interior vacuum _scopos_colligere(StmlNodus* radix,
+    constans chorda* intra, StmlNodus* infixus, Xar* scopi,
+    Piscina* piscina);
+interior vacuum _subarborem_colligere(StmlNodus* scopus,
+    constans chorda* limes, StmlNodus* infixus, Xar* nodi);
 
 /* ==================================================
  * Auxilia
@@ -322,6 +346,121 @@ elementum_quaerere(
     redde (CanonElementum*)valor;
 }
 
+/* instantias scopi colligere: intra NIHIL = radix sola (scopus
+ * documenti); aliter POSTERI OMNES titulo intra (etiam nidificati
+ * - instantia interior scopus suus est), subarbore infixi
+ * praetermissa */
+interior vacuum
+_scopos_colligere(
+    StmlNodus*        radix,
+    constans chorda*  intra,
+    StmlNodus*        infixus,
+    Xar*              scopi,
+    Piscina*          piscina)
+{
+    Xar* acervus;
+    i32  j;
+
+    si (!intra)
+    {
+        StmlNodus** locus;
+
+        locus = (StmlNodus**)xar_addere(scopi);
+        *locus = radix;
+        redde;
+    }
+
+    acervus = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    {
+        StmlNodus** locus;
+
+        locus = (StmlNodus**)xar_addere(acervus);
+        *locus = radix;
+    }
+
+    per (j = ZEPHYRUM; j < xar_numerus(acervus); j++)
+    {
+        StmlNodus* n;
+        i32        numerus;
+        i32        k;
+
+        n = *(StmlNodus**)xar_obtinere(acervus, j);
+        si (n->titulus && chorda_aequalis(*n->titulus, *intra))
+        {
+            StmlNodus** locus;
+
+            locus = (StmlNodus**)xar_addere(scopi);
+            *locus = n;
+        }
+
+        numerus = stml_numerus_liberorum(n);
+        per (k = ZEPHYRUM; k < numerus; k++)
+        {
+            StmlNodus*  l;
+            StmlNodus** locus;
+
+            l = stml_liberum_ad_indicem(n, k);
+            si (!l || l == infixus ||
+                l->genus != STML_NODUS_ELEMENTUM)
+            {
+                perge;
+            }
+            locus = (StmlNodus**)xar_addere(acervus);
+            *locus = l;
+        }
+    }
+}
+
+/* elementa subarboris scopi colligere (scopo ipso incluso).
+ * LIMES: in instantias ALIAS tituli 'limes' non descendit -
+ * scopus interior claves suas ipse tenet, exterior eas non
+ * videt. Subarbor infixi semper praetermissa. */
+interior vacuum
+_subarborem_colligere(
+    StmlNodus*        scopus,
+    constans chorda*  limes,
+    StmlNodus*        infixus,
+    Xar*              nodi)
+{
+    i32 j;
+
+    {
+        StmlNodus** locus;
+
+        locus = (StmlNodus**)xar_addere(nodi);
+        *locus = scopus;
+    }
+
+    per (j = ZEPHYRUM; j < xar_numerus(nodi); j++)
+    {
+        StmlNodus* n;
+        i32        numerus;
+        i32        k;
+
+        n = *(StmlNodus**)xar_obtinere(nodi, j);
+        numerus = stml_numerus_liberorum(n);
+        per (k = ZEPHYRUM; k < numerus; k++)
+        {
+            StmlNodus*  l;
+            StmlNodus** locus;
+
+            l = stml_liberum_ad_indicem(n, k);
+            si (!l || l == infixus ||
+                l->genus != STML_NODUS_ELEMENTUM)
+            {
+                perge;
+            }
+            si (limes && l->titulus &&
+                chorda_aequalis(*l->titulus, *limes))
+            {
+                perge;   /* instantia interior: scopus suus */
+            }
+            locus = (StmlNodus**)xar_addere(nodi);
+            *locus = l;
+        }
+    }
+}
+
 StmlNodus*
 canon_infixum_invenire(
     StmlNodus* elementum_radix)
@@ -420,6 +559,7 @@ canon_ex_nodo(
     c->versio     = stml_attributum_capere(elementum, "versio");
     c->elementa   = tabula_dispersa_creare_chorda(piscina, LXIV);
     c->unicitates = xar_creare(piscina, (i32)magnitudo(CanonUnicitas*));
+    c->citationes = xar_creare(piscina, (i32)magnitudo(CanonCitatio*));
     c->radix      = NIHIL;
 
     numerus = stml_numerus_liberorum(elementum);
@@ -596,6 +736,87 @@ canon_ex_nodo(
             }
         }
         alioquin si (chorda_aequalis_literis(*n->titulus,
+                                             "citatio"))
+        {
+            CanonCitatio*  ci;
+            CanonCitatio** locus;
+            chorda*        ad;
+            chorda*        super;
+
+            ci = (CanonCitatio*)piscina_allocare(piscina,
+                magnitudo(CanonCitatio));
+            ci->titulus       = titulus;
+            ci->attributum    = stml_attributum_capere(n,
+                                                       "attributum");
+            ci->intra         = stml_attributum_capere(n, "intra");
+            ci->super         = xar_creare(piscina,
+                                    (i32)magnitudo(chorda*));
+            ci->ad_elementum  = NIHIL;
+            ci->ad_attributum = NIHIL;
+
+            /* ad="elementum/attributum" - solidus OBLIGATORIUS.
+             * Forma mala canonem totum frangit (clamans), ne
+             * citatio muta nihil custodiat custodire visa. */
+            ad = stml_attributum_capere(n, "ad");
+            si (ad)
+            {
+                s32 solidus;   /* -1 = absens; i32 signum voraret */
+                i32 k;
+
+                solidus = -I;
+                per (k = ZEPHYRUM; k < ad->mensura; k++)
+                {
+                    si ((character)ad->datum[k] == '/')
+                    {
+                        solidus = (s32)k;
+                        frange;
+                    }
+                }
+                si (solidus <= ZEPHYRUM ||
+                    (i32)solidus >= ad->mensura - I)
+                {
+                    si (causa)
+                    {
+                        *causa = chorda_ex_literis(
+                            "citatio 'ad' sine solido "
+                            "(forma: elementum/attributum)",
+                            piscina);
+                    }
+                    redde NIHIL;
+                }
+                ci->ad_elementum = chorda_internare(intern,
+                    chorda_sectio(*ad, ZEPHYRUM, (i32)solidus));
+                ci->ad_attributum = chorda_internare(intern,
+                    chorda_sectio(*ad, (i32)(solidus + I),
+                                  ad->mensura));
+            }
+
+            super = stml_attributum_capere(n, "super");
+            si (super)
+            {
+                chorda_fissio_fructus f;
+                i32                   k;
+
+                f = chorda_fissio(*super, ' ', piscina);
+                per (k = ZEPHYRUM; k < f.numerus; k++)
+                {
+                    chorda   t;
+                    chorda** locus_s;
+
+                    t = chorda_praecidere(f.elementa[k]);
+                    si (t.mensura == ZEPHYRUM)
+                    {
+                        perge;
+                    }
+                    locus_s = (chorda**)xar_addere(ci->super);
+                    *locus_s = chorda_internare(intern, t);
+                }
+            }
+
+            locus = (CanonCitatio**)xar_addere(c->citationes);
+            *locus = ci;
+        }
+        alioquin si (chorda_aequalis_literis(*n->titulus,
                                              "unicitas"))
         {
             CanonUnicitas*  u;
@@ -606,6 +827,7 @@ canon_ex_nodo(
                 magnitudo(CanonUnicitas));
             u->titulus    = titulus;
             u->attributum = stml_attributum_capere(n, "attributum");
+            u->intra      = stml_attributum_capere(n, "intra");
             u->super      = xar_creare(piscina,
                                 (i32)magnitudo(chorda*));
 
@@ -899,90 +1121,194 @@ canon_iudicare(
 
     nodum_iudicare(canon, elementum_radix, vitia, piscina);
 
-    /* ---- unicitates (subarbore infixi praetermissa) ---- */
-    per (i = ZEPHYRUM; i < xar_numerus(canon->unicitates); i++)
+    /* ---- unicitates et citationes: per SCOPOS iudicantur.
+     * Sine intra= scopus = documentum (mos vetus); cum intra=
+     * quaeque instantia scopus suus est (parametra intra
+     * quaestionem, status intra machinam). Subarbor infixi
+     * ubique praetermissa. ---- */
     {
-        CanonUnicitas*  u;
-        TabulaDispersa* visa;
-        Xar*            acervus;
-        StmlNodus*      infixus;
-        i32             j;
+        StmlNodus* infixus;
 
         infixus = canon_infixum_invenire(elementum_radix);
 
-        u = *(CanonUnicitas**)xar_obtinere(canon->unicitates, i);
-        si (!u->attributum)
+        per (i = ZEPHYRUM; i < xar_numerus(canon->unicitates); i++)
         {
-            perge;
-        }
+            CanonUnicitas*      u;
+            Xar*                scopi;
+            constans character* attr_cstr;
+            i32                 is;
 
-        visa = tabula_dispersa_creare_chorda(piscina, CXXVIII);
-        acervus = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
-        {
-            StmlNodus** locus;
-
-            locus = (StmlNodus**)xar_addere(acervus);
-            *locus = elementum_radix;
-        }
-
-        per (j = ZEPHYRUM; j < xar_numerus(acervus); j++)
-        {
-            StmlNodus* n;
-            i32        numerus;
-            i32        k;
-
-            n = *(StmlNodus**)xar_obtinere(acervus, j);
-            numerus = stml_numerus_liberorum(n);
-            per (k = ZEPHYRUM; k < numerus; k++)
+            u = *(CanonUnicitas**)xar_obtinere(canon->unicitates,
+                                               i);
+            si (!u->attributum)
             {
-                StmlNodus** locus;
-                StmlNodus*  l;
-
-                l = stml_liberum_ad_indicem(n, k);
-                si (!l || l == infixus ||
-                    l->genus != STML_NODUS_ELEMENTUM)
-                {
-                    perge;
-                }
-                locus = (StmlNodus**)xar_addere(acervus);
-                *locus = l;
+                perge;
             }
+            attr_cstr = chorda_ut_cstr(*u->attributum, piscina);
 
-            /* an hoc elementum sub unicitate cadat */
+            scopi = xar_creare(piscina,
+                               (i32)magnitudo(StmlNodus*));
+            _scopos_colligere(elementum_radix, u->intra, infixus,
+                              scopi, piscina);
+
+            per (is = ZEPHYRUM; is < xar_numerus(scopi); is++)
             {
-                b32 sub;
-                i32 m;
+                StmlNodus*      s;
+                TabulaDispersa* visa;
+                Xar*            nodi;
+                i32             j;
 
-                sub = FALSUM;
-                per (m = ZEPHYRUM; m < xar_numerus(u->super); m++)
+                s = *(StmlNodus**)xar_obtinere(scopi, is);
+                visa = tabula_dispersa_creare_chorda(piscina,
+                                                     XXXII);
+                nodi = xar_creare(piscina,
+                                  (i32)magnitudo(StmlNodus*));
+                _subarborem_colligere(s, u->intra, infixus, nodi);
+
+                per (j = ZEPHYRUM; j < xar_numerus(nodi); j++)
                 {
-                    chorda** t;
+                    StmlNodus* n;
+                    b32        sub;
+                    i32        m;
+                    chorda*    v;
 
-                    t = (chorda**)xar_obtinere(u->super, m);
-                    si (chorda_aequalis(*n->titulus, **t))
+                    n = *(StmlNodus**)xar_obtinere(nodi, j);
+                    sub = FALSUM;
+                    per (m = ZEPHYRUM; m < xar_numerus(u->super);
+                         m++)
                     {
-                        sub = VERUM;
-                        frange;
+                        chorda** t;
+
+                        t = (chorda**)xar_obtinere(u->super, m);
+                        si (chorda_aequalis(*n->titulus, **t))
+                        {
+                            sub = VERUM;
+                            frange;
+                        }
+                    }
+                    si (!sub)
+                    {
+                        perge;
+                    }
+
+                    v = stml_attributum_capere(n, attr_cstr);
+                    si (!v)
+                    {
+                        perge;
+                    }
+                    si (tabula_dispersa_continet(visa, *v))
+                    {
+                        vitium_addere(vitia, CANON_NOMEN_BIS,
+                            n, n->titulus, v, ZEPHYRUM, ZEPHYRUM);
+                    }
+                    alioquin
+                    {
+                        tabula_dispersa_inserere(visa, *v, n);
                     }
                 }
-                si (sub)
-                {
-                    chorda* v;
+            }
+        }
 
-                    v = stml_attributum_capere(n,
-                        chorda_ut_cstr(*u->attributum, piscina));
+        per (i = ZEPHYRUM; i < xar_numerus(canon->citationes); i++)
+        {
+            CanonCitatio*       ci;
+            Xar*                scopi;
+            constans character* attr_cstr;
+            constans character* ad_attr_cstr;
+            i32                 is;
+
+            ci = *(CanonCitatio**)xar_obtinere(canon->citationes,
+                                               i);
+            /* citatio manca (attributa absentia) INERS relinquitur
+             * hic - canon.canon eam in ipso canone clamat */
+            si (!ci->attributum || !ci->ad_elementum ||
+                !ci->ad_attributum)
+            {
+                perge;
+            }
+            attr_cstr    = chorda_ut_cstr(*ci->attributum, piscina);
+            ad_attr_cstr = chorda_ut_cstr(*ci->ad_attributum,
+                                          piscina);
+
+            scopi = xar_creare(piscina,
+                               (i32)magnitudo(StmlNodus*));
+            _scopos_colligere(elementum_radix, ci->intra, infixus,
+                              scopi, piscina);
+
+            per (is = ZEPHYRUM; is < xar_numerus(scopi); is++)
+            {
+                StmlNodus*      s;
+                TabulaDispersa* claves;
+                Xar*            nodi;
+                i32             j;
+
+                s = *(StmlNodus**)xar_obtinere(scopi, is);
+                claves = tabula_dispersa_creare_chorda(piscina,
+                                                       XXXII);
+                nodi = xar_creare(piscina,
+                                  (i32)magnitudo(StmlNodus*));
+                _subarborem_colligere(s, ci->intra, infixus, nodi);
+
+                /* passus I: claves scopi colligere */
+                per (j = ZEPHYRUM; j < xar_numerus(nodi); j++)
+                {
+                    StmlNodus* n;
+                    chorda*    v;
+
+                    n = *(StmlNodus**)xar_obtinere(nodi, j);
+                    si (!chorda_aequalis(*n->titulus,
+                                         *ci->ad_elementum))
+                    {
+                        perge;
+                    }
+                    v = stml_attributum_capere(n, ad_attr_cstr);
                     si (v)
                     {
-                        si (tabula_dispersa_continet(visa, *v))
+                        tabula_dispersa_inserere(claves, *v, n);
+                    }
+                }
+
+                /* passus II: citantes contra claves */
+                per (j = ZEPHYRUM; j < xar_numerus(nodi); j++)
+                {
+                    StmlNodus* n;
+                    chorda*    v;
+
+                    n = *(StmlNodus**)xar_obtinere(nodi, j);
+                    si (xar_numerus(ci->super) > ZEPHYRUM)
+                    {
+                        b32 sub;
+                        i32 m;
+
+                        sub = FALSUM;
+                        per (m = ZEPHYRUM;
+                             m < xar_numerus(ci->super); m++)
                         {
-                            vitium_addere(vitia, CANON_NOMEN_BIS,
-                                n, n->titulus, v, ZEPHYRUM,
-                                ZEPHYRUM);
+                            chorda** t;
+
+                            t = (chorda**)xar_obtinere(ci->super,
+                                                       m);
+                            si (chorda_aequalis(*n->titulus, **t))
+                            {
+                                sub = VERUM;
+                                frange;
+                            }
                         }
-                        alioquin
+                        si (!sub)
                         {
-                            tabula_dispersa_inserere(visa, *v, n);
+                            perge;
                         }
+                    }
+
+                    v = stml_attributum_capere(n, attr_cstr);
+                    si (!v)
+                    {
+                        perge;
+                    }
+                    si (!tabula_dispersa_continet(claves, *v))
+                    {
+                        vitium_addere(vitia, CANON_CITATIO_IRRITA,
+                            n, n->titulus, v, ZEPHYRUM, ZEPHYRUM);
                     }
                 }
             }
@@ -1016,6 +1342,8 @@ canon_nuntius(
             redde "textus ubi non licet";
         casus CANON_TEXTUS_MALUS:
             redde "textus generi elementi non congruit";
+        casus CANON_CITATIO_IRRITA:
+            redde "citatio non resoluta (clavis absens in scopo)";
         casus CANON_NOMEN_BIS:
             redde "nomen bis in spatio unico";
         casus CANON_RADIX_MALA:

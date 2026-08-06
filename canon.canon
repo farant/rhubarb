@@ -43,6 +43,7 @@
     <liberum nomen="elementum" minimum="1"
       nota="canon sine elementis nihil describit"/>
     <liberum nomen="unicitas"/>
+    <liberum nomen="citatio"/>
   </elementum>
 
   <!-- ================= ELEMENTUM ================= -->
@@ -109,7 +110,36 @@
       necessarium="verum"/>
     <attributum nomen="super"      genus="textus" necessarium="verum"
       nota="index spatiis separatus - ergo textus, non compositum"/>
+    <attributum nomen="intra"      genus="compositum"
+      nota="scopus per INSTANTIAM elementi nominati (postulatio
+            secunda: parametra intra quaestionem); absens =
+            documentum totum"/>
     <attributum nomen="nota"       genus="textus"/>
+  </elementum>
+
+  <!-- ================= CITATIO ================= -->
+
+  <elementum nomen="citatio"
+    nota="clavis-relatio INTRA documentum (mos xs:key/keyref -
+          quod unum XSD recte fecit). Trans plagulas = gradus III,
+          oneratoris manet">
+    <attributum nomen="nomen"       genus="compositum"
+      necessarium="verum"/>
+    <attributum nomen="attributum"  genus="compositum"
+      necessarium="verum"
+      nota="attributum citans - valor eius clavem aequare debet"/>
+    <attributum nomen="ad"          genus="textus"
+      necessarium="verum"
+      nota="forma 'elementum/attributum' - solidus extra
+            compositum, ergo textus; machina formam malam
+            clamans frangit"/>
+    <attributum nomen="super"       genus="textus"
+      nota="index elementorum citantium spatiis separatus;
+            absens = elementum quodlibet attributum ferens"/>
+    <attributum nomen="intra"       genus="compositum"
+      nota="claves et citantes intra EANDEM instantiam (transitus
+            statum machinae SUAE citat); absens = documentum"/>
+    <attributum nomen="nota"        genus="textus"/>
   </elementum>
 
 </canon>

@@ -389,22 +389,24 @@ s32 principale (vacuum)
             "iudicium"));
 
         vulnera = natura_nectere(bib);
-        CREDO_AEQUALIS_I32 (vulnera, XIV);
+        CREDO_AEQUALIS_I32 (vulnera, XII);
 
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, II),   I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, III),  I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, IV),   I);
-        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, V),    I);
+        /* regulae V, VIII, XII MIGRAVERUNT ad canonem (2026-08-06):
+         * onerator fons= ignotum, <mysterium/>, transitus alienum
+         * tacite fert; natura.canon ea clamat (citationes 'fontium'
+         * et 'transitus-*'; probatur in probatio_canon et per
+         * differentiam plantatam in migratione) */
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, V),    ZEPHYRUM);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, VI),   I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, VII),  I);
-        /* regula VIII MIGRAVIT ad canonem (2026-08-06): onerator
-         * <mysterium/> tacite percurrit; natura.canon eum clamat
-         * (probatur in probatio_canon corpore vero) */
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, VIII), ZEPHYRUM);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, IX),   I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, X),    I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XI),   I);
-        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XII),  I);
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XII),  ZEPHYRUM);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XIII), I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XIV),  I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XV),   I);

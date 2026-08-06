@@ -51,9 +51,6 @@ interior b32 dies_bene_formata(constans chorda* d);
 interior vacuum qualificationes_probare(
     NaturaBibliotheca* bib, NaturaExemplar* ex,
     Xar* gradus_noti, StmlNodus* nodus, chorda* ens);
-interior vacuum machinam_probare(
-    NaturaBibliotheca* bib, NaturaExemplar* ex,
-    StmlNodus* machina, chorda* ens);
 interior vacuum arborem_nectere(
     NaturaBibliotheca* bib, NaturaExemplar* ex, Xar* gradus_noti,
     StmlNodus* nodus, NaturaGenus* genus_c, NaturaRes* res_c);
@@ -322,18 +319,6 @@ arborem_legere(
              * catena apparatus) */
             arborem_legere(bib, ex, liberum, ambiens);
         }
-        alioquin si (chorda_aequalis_literis(*titulus_e, "fons"))
-        {
-            chorda* clavis_f;
-
-            clavis_f = stml_attributum_capere(liberum, "clavis");
-            si (clavis_f)
-            {
-                tabula_dispersa_inserere(ex->claves_fontium,
-                                         *clavis_f, liberum);
-            }
-            arborem_legere(bib, ex, liberum, ambiens);
-        }
         alioquin
         {
             arborem_legere(bib, ex, liberum, ambiens);
@@ -401,8 +386,6 @@ natura_legere(
     ex->versio = stml_attributum_capere(resultus.elementum_radix,
                                         "versio");
     ex->radix  = resultus.elementum_radix;
-    ex->claves_fontium = tabula_dispersa_creare_chorda(
-        bib->piscina, XVI);
 
     locus = (NaturaExemplar**)xar_addere(bib->exemplaria);
     *locus = ex;
@@ -570,7 +553,10 @@ dies_bene_formata(
     redde VERUM;
 }
 
-/* regulae V (fons), VI (certitudo), VII (valens_a/valens_ad) */
+/* regulae VI (certitudo), VII (valens_a/valens_ad).
+ * Regula V (fons -> clavis) MIGRAVIT ad canonem (2026-08-06):
+ * citatio 'fontium' in natura.canon - resolutio intra documentum
+ * gradus II est, non III. */
 interior vacuum
 qualificationes_probare(
     NaturaBibliotheca* bib,
@@ -579,19 +565,9 @@ qualificationes_probare(
     StmlNodus*         nodus,
     chorda*            ens)
 {
-    chorda* fons_attr;
     chorda* certitudo_attr;
     chorda* valens_a;
     chorda* valens_ad;
-
-    fons_attr = stml_attributum_capere(nodus, "fons");
-    si (fons_attr &&
-        !tabula_dispersa_continet(ex->claves_fontium, *fons_attr))
-    {
-        diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, V,
-            ex->stirps, ens,
-            "fons clavem non declaratam citat (regula V)");
-    }
 
     certitudo_attr = stml_attributum_capere(nodus, "certitudo");
     si (certitudo_attr && gradus_noti)
@@ -643,77 +619,10 @@ qualificationes_probare(
     }
 }
 
-/* regula XII: transitus status declaratos eiusdem machinae nominant */
-interior vacuum
-machinam_probare(
-    NaturaBibliotheca* bib,
-    NaturaExemplar*    ex,
-    StmlNodus*         machina,
-    chorda*            ens)
-{
-    i32 numerus;
-    i32 i;
-
-    numerus = stml_numerus_liberorum(machina);
-
-    per (i = ZEPHYRUM; i < numerus; i++)
-    {
-        StmlNodus* liberum;
-        chorda*    a_attr;
-        chorda*    ad_attr;
-        i32        j;
-        b32        a_notum;
-        b32        ad_notum;
-
-        liberum = stml_liberum_ad_indicem(machina, i);
-        si (!liberum || liberum->genus != STML_NODUS_ELEMENTUM ||
-            !chorda_aequalis_literis(*liberum->titulus, "transitus"))
-        {
-            perge;
-        }
-
-        a_attr  = stml_attributum_capere(liberum, "a");
-        ad_attr = stml_attributum_capere(liberum, "ad");
-        a_notum  = (b32)(a_attr == NIHIL);
-        ad_notum = (b32)(ad_attr == NIHIL);
-
-        per (j = ZEPHYRUM; j < numerus; j++)
-        {
-            StmlNodus* status_n;
-            chorda*    titulus_s;
-
-            status_n = stml_liberum_ad_indicem(machina, j);
-            si (!status_n ||
-                status_n->genus != STML_NODUS_ELEMENTUM ||
-                !chorda_aequalis_literis(*status_n->titulus,
-                                         "status"))
-            {
-                perge;
-            }
-
-            titulus_s = stml_attributum_capere(status_n, "nomen");
-            si (!titulus_s)
-            {
-                perge;
-            }
-            si (a_attr && chorda_aequalis(*a_attr, *titulus_s))
-            {
-                a_notum = VERUM;
-            }
-            si (ad_attr && chorda_aequalis(*ad_attr, *titulus_s))
-            {
-                ad_notum = VERUM;
-            }
-        }
-
-        si (!a_notum || !ad_notum)
-        {
-            diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, XII,
-                ex->stirps, ens,
-                "transitus statum non declaratum nominat (regula XII)");
-        }
-    }
-}
+/* Regula XII (transitus -> status machinae suae) MIGRAVIT ad
+ * canonem (2026-08-06): citationes 'transitus-a'/'transitus-ad'
+ * cum intra="machina_statuum" in natura.canon - scopus per
+ * instantiam citationis opus est, quod canon nunc praestat. */
 
 interior vacuum
 arborem_nectere(
@@ -788,8 +697,8 @@ arborem_nectere(
         alioquin si (chorda_aequalis_literis(*titulus_e,
                                              "machina_statuum"))
         {
-            machinam_probare(bib, ex, liberum,
-                pertinens ? pertinens->titulus : NIHIL);
+            /* regula XII apud canonem; ramus vacuus descensum
+             * veterem servat (in machinam non descendimus) */
         }
         alioquin si (chorda_aequalis_literis(*titulus_e, "proprietas"))
         {

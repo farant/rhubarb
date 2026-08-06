@@ -17,12 +17,12 @@
       genericum (gradus III/IV - _entrium_validare)
     - necessitas textus non vacui (selector/causa) - canon vacuum
       praeterit consulto
-    - parametra INTRA quaestionem unica (472) - unicitas canonis
-      per documentum currit; haec est POSTULATIO SECUNDA pro
-      unicitate adstricta (prima: canon.canon pro elementis
-      intra=; cum tertia veniet, aedificetur). Unicitas globalis
-      super parametrum FALSO flagraret: quaestiones binae
-      parametrum 'functio' legitime ferunt.
+    - [SOLUTUM 2026-08-06] parametra intra quaestionem unica:
+      postulatio secunda unicitatis adstrictae AEDIFICATA (intra=
+      in unicitate, scopus per instantiam) - vide unicitatem
+      'parametra-quaestionis' infra. Unicitas globalis falso
+      flagravisset: quaestiones binae parametrum 'functio'
+      legitime ferunt - scopus per instantiam id sinit.
 
   QUID CANON SOLUS DAT: iudicium ante suite (uncus in scriptione),
   et vocabularium etiam cum suite non currit.
@@ -65,5 +65,12 @@
   <unicitas nomen="quaestionum-tituli" attributum="titulus"
     super="quaestio"
     nota="lector eandem legem tenet (593: titulus iteratus)"/>
+
+  <unicitas nomen="parametra-quaestionis" attributum="titulus"
+    super="parametrum" intra="quaestio"
+    nota="parametra intra quaestionem unica, trans quaestiones
+          libere iterata - lector idem tenet (472: parametrum
+          iteratum); postulatio secunda unicitatis adstrictae,
+          soluta 2026-08-06"/>
 
 </canon>
