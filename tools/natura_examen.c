@@ -1210,8 +1210,9 @@ principale(
      * Vocabularium clausum natura/natura.canon solum dicit; via
      * per canones.registrum solvitur ne ligamen bis stet. Canon
      * absens = VULNUS clamans, non silentium (gradus II mortuus
-     * sanus non videtur). NOMEN_BIS praeteritur: regula XV
-     * oneratoris eandem legem tenet - duplicatio residua NOTA. */
+     * sanus non videtur). Regulae migratae: V/VIII/XII/XV et
+     * dimidium formae VII - canon eas dicit, hic praesentantur
+     * numeris historicis. */
     {
         chorda  catalogus;
         chorda  via_canonis;
@@ -1275,15 +1276,12 @@ principale(
                     i32          regula;
 
                     v = (CanonVitium*)xar_obtinere(vitia, iv);
-                    si (v->genus == CANON_NOMEN_BIS)
-                    {
-                        perge;   /* regula XV oneratoris */
-                    }
                     vulnera++;
 
-                    /* numerus regulae praesentationis: citationes
-                     * regulas V/XII migratas gerunt (transitus =
-                     * XII, ceterae = V), cetera vitia = VIII */
+                    /* numerus regulae praesentationis: vitia
+                     * canonis regulas migratas gerunt - citationes
+                     * V/XII (transitus = XII), NOMEN_BIS = XV
+                     * (unicitas 'entia'), cetera = VIII */
                     regula = VIII;
                     si (v->genus == CANON_CITATIO_IRRITA)
                     {
@@ -1291,6 +1289,10 @@ principale(
                             chorda_aequalis_literis(*v->elementum,
                                                     "transitus"))
                             ? XII : V;
+                    }
+                    alioquin si (v->genus == CANON_NOMEN_BIS)
+                    {
+                        regula = XV;
                     }
 
                     si (plagula && ex->stirps &&

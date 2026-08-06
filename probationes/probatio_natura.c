@@ -128,7 +128,8 @@ interior constans character* FIXTURA_VITIOSA =
     "  <species nomen=\"exemplum\">\n"
     "    <valor nomen=\"inexistens\">x</valor>\n"
     "    <valor nomen=\"modus\" fons=\"ignotus\">duo</valor>\n"
-    "    <valor nomen=\"cursus\" valens_a=\"1999-13\">initium</valor>\n"
+    "    <valor nomen=\"cursus\" valens_a=\"2020\"\n"
+    "      valens_ad=\"1999\">initium</valor>\n"
     "    <valor nomen=\"modus\" certitudo=\"fortasse\">unus</valor>\n"
     "    <relatum nomen=\"nescitur\" ad=\"basis\"/>\n"
     "    <historia>\n"
@@ -389,7 +390,7 @@ s32 principale (vacuum)
             "iudicium"));
 
         vulnera = natura_nectere(bib);
-        CREDO_AEQUALIS_I32 (vulnera, XII);
+        CREDO_AEQUALIS_I32 (vulnera, XI);
 
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, II),   I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, III),  I);
@@ -409,7 +410,10 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XII),  ZEPHYRUM);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XIII), I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XIV),  I);
-        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XV),   I);
+        /* regula XV migravit (unicitas 'entia' canonis); VII
+         * dimidium formae quoque - ORDO solus oneratori manet
+         * (fixtura intervallo inverso eum probat) */
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XV),   ZEPHYRUM);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XVI),  I);
 
         /* proprietas re dictionarii typata SOLVIT - monitum, non

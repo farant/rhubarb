@@ -88,6 +88,11 @@
       <optio>compositum</optio>
     </attributum>
     <attributum nomen="necessarium" genus="veritas"/>
+    <attributum nomen="ordinarius"  genus="textus"
+      nota="valor praestitutus cum attributum abest - canon eum
+            DICIT non applicat (documentatio, catalogus, generatio
+            codicis); machina conformitatem generi in lectione
+            cogit (praestitutum mendax canonem frangit)"/>
     <attributum nomen="nota"        genus="textus"/>
     <liberum nomen="optio"/>
   </elementum>

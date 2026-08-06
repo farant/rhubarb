@@ -25,6 +25,14 @@ nomen structura {
     CanonGenusValoris  genus;
     b32                necessarium;
     Xar*               optiones;   /* Xar de chorda* (electio) */
+    /* valor praestitutus cum attributum abest (NIHIL = nullus) -
+     * attributum STML 'ordinarius=' fert, sed id verbum macro
+     * latina est (default), ergo campus 'praestitutum'. Canon eum
+     * non APPLICAT (iudex est, non lector) - eum DICIT:
+     * documentatio, catalogus generatus, generatio codicis
+     * (initiatio structurarum). Conformitas generi in lectione
+     * cogitur: praestitutum mendax canonem clamans frangit. */
+    chorda*            praestitutum;
 } CanonAttributum;
 
 nomen structura {
@@ -690,6 +698,25 @@ canon_ex_nodo(
                         locus = (chorda**)xar_addere(a->optiones);
                         *locus = chorda_internare(intern, t);
                     }
+
+                    /* ordinarius= post optiones legendas: valor
+                     * praestitutus electionis contra eas iudicatur.
+                     * Praestitutum generi non congruens = canon
+                     * mendax de se ipso - fractura clamans, non
+                     * documentatio falsa tacita. */
+                    a->praestitutum =
+                        stml_attributum_capere(l, "ordinarius");
+                    si (a->praestitutum &&
+                        !valor_congruit(a->praestitutum, a))
+                    {
+                        si (causa)
+                        {
+                            *causa = chorda_ex_literis(
+                                "ordinarius generi attributi "
+                                "non congruit", piscina);
+                        }
+                        redde NIHIL;
+                    }
                 }
                 alioquin si (chorda_aequalis_literis(*l->titulus,
                                                      "liberum"))
@@ -962,10 +989,11 @@ nodum_iudicare(
         {
             CanonAttributum tmp;
 
-            tmp.titulus     = NIHIL;
-            tmp.genus       = e->textus_genus;
-            tmp.necessarium = FALSUM;
-            tmp.optiones    = NIHIL;
+            tmp.titulus      = NIHIL;
+            tmp.genus        = e->textus_genus;
+            tmp.necessarium  = FALSUM;
+            tmp.optiones     = NIHIL;
+            tmp.praestitutum = NIHIL;
             si (!valor_congruit(&textus_totus, &tmp))
             {
                 chorda* d;

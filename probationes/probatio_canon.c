@@ -34,7 +34,8 @@ interior constans character* CANON_HORTUS =
     "    <attributum nomen=\"aetas\" genus=\"numerus\"/>\n"
     "    <attributum nomen=\"viva\"  genus=\"veritas\"/>\n"
     "    <attributum nomen=\"sata\"  genus=\"dies\"/>\n"
-    "    <attributum nomen=\"color\" genus=\"electio\">\n"
+    "    <attributum nomen=\"color\" genus=\"electio\"\n"
+    "      ordinarius=\"ruber\">\n"
     "      <optio>ruber</optio>\n"
     "      <optio>albus</optio>\n"
     "    </attributum>\n"
@@ -338,6 +339,22 @@ s32 principale (vacuum)
         /* radix aliena */
         c = canon_legere(chorda_ex_literis("<res/>", piscina),
                          piscina, intern, &causa);
+        CREDO_NIHIL (c);
+        CREDO_CHORDA_NON_VACUA (causa);
+
+        /* ordinarius mendax (praestitutum electionis extra
+         * optiones) canonem CLAMANS frangit - documentatio falsa
+         * tacita peior est quam canon fractus. Validum in
+         * CANON_HORTUS supra iam probatur (color=ruber). */
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<attributum nomen=\"g\" genus=\"electio\""
+            " ordinarius=\"viridis\">"
+            "<optio>ruber</optio>"
+            "</attributum>"
+            "</elementum>"
+            "</canon>", piscina), piscina, intern, &causa);
         CREDO_NIHIL (c);
         CREDO_CHORDA_NON_VACUA (causa);
     }

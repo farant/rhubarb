@@ -42,7 +42,7 @@ fi
 
 awk -F'\t' '
 $1=="E" { ne++; eord[ne]=$2; eintra[$2]=$3; eradix[$2]=$4; etex[$2]=$5 }
-$1=="A" { na[$2]++; an[$2,na[$2]]=$3; ag[$2,na[$2]]=$4; anec[$2,na[$2]]=$5 }
+$1=="A" { na[$2]++; an[$2,na[$2]]=$3; ag[$2,na[$2]]=$4; anec[$2,na[$2]]=$5; aord[$2,na[$2]]=$6 }
 $1=="O" { k=$2 SUBSEP $3; ao[k] = (k in ao) ? ao[k] "\\|" $4 : $4 }
 $1=="L" { nl[$2]++; ln[$2,nl[$2]]=$3; lmin[$2,nl[$2]]=$4; lmax[$2,nl[$2]]=$5 }
 $1=="U" { nu++; un[nu]=$2; ua[nu]=$3; us[nu]=$4; ui[nu]=$5 }
@@ -52,7 +52,8 @@ END {
   print "`natura/natura.canon`; regenera:"
   print "`./tools/natura_metamodulus_generare.sh`. Attributa"
   print "necessaria **pinguia**; genus additum ubi non textus;"
-  print "cardinalitas liberorum min..max.*"
+  print "=valor praestitutus (ordinarius=); cardinalitas"
+  print "liberorum min..max.*"
   print ""
   print "| Elementum | Attributa | Liberi | Textus |"
   print "|---|---|---|---|"
@@ -67,6 +68,7 @@ END {
       if (ag[e,j]!="textus") s = s ":" ag[e,j]
       k = e SUBSEP an[e,j]
       if (k in ao) s = s "{" ao[k] "}"
+      if (aord[e,j]!="-") s = s "=" aord[e,j]
       as = as ? as ", " s : s
     }
     if (as=="") as = "&mdash;"

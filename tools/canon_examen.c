@@ -325,6 +325,9 @@ index_scribere(
                     _campum(stml_attributum_capere(l,
                             "necessarium"), "-");
                     imprimere("\t");
+                    _campum(stml_attributum_capere(l,
+                            "ordinarius"), "-");
+                    imprimere("\t");
                     _campum(stml_attributum_capere(l, "nota"), "-");
                     imprimere("\n");
 

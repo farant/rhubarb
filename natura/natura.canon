@@ -49,8 +49,9 @@
     <attributum nomen="genus"       genus="nomen" necessarium="verum"/>
     <attributum nomen="modulus"     genus="nomen"/>
     <attributum nomen="verificatus" genus="veritas"
-      nota="ordinarius falsum (METAMODULUS §3) - ergo optionale,
-            quamquam corpus praesens eum semper scribit"/>
+      ordinarius="falsum"
+      nota="optionale quamquam corpus praesens eum semper scribit -
+            praestitutum nunc DICTUM, non in nota latens"/>
   </elementum>
 
   <!-- ================= GENUS ================= -->

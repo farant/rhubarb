@@ -195,13 +195,13 @@ ens_registrare(
     ens->discrimen = discrimen;
     ens->corpus    = corpus;
 
-    /* regula XV: spatium nominum unum per exemplar */
+    /* Regula XV MIGRAVIT ad canonem (2026-08-06): unicitas
+     * 'entia' in natura.canon eam dicit, examen eam ut regulam
+     * XV praesentat. Primum-vincit hic manet: ens geminum
+     * registrari nequit (integritas graphi, non diagnostica). */
     clavis = clavis_entis(bib->piscina, ex->stirps, titulus);
     si (tabula_dispersa_continet(bib->entia, clavis))
     {
-        diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, XV,
-            ex->stirps, titulus,
-            "nomen bis in exemplari uno (regula XV)");
         redde;
     }
     tabula_dispersa_inserere(bib->entia, clavis, ens);
@@ -595,20 +595,14 @@ qualificationes_probare(
         }
     }
 
+    /* Forma dierum (dimidium regulae VII) MIGRAVIT ad canonem:
+     * valens_a/valens_ad genus="dies" in natura.canon ferunt.
+     * ORDO solus hic manet - comparatio trans attributa est
+     * (co-occurrentia), quam canon consulto non dicit.
+     * dies_bene_formata custos manet: dies malas comparare
+     * nihil significat (canon eas iam clamat). */
     valens_a  = stml_attributum_capere(nodus, "valens_a");
     valens_ad = stml_attributum_capere(nodus, "valens_ad");
-    si (valens_a && !dies_bene_formata(valens_a))
-    {
-        diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, VII,
-            ex->stirps, ens,
-            "valens_a male formata (regula VII)");
-    }
-    si (valens_ad && !dies_bene_formata(valens_ad))
-    {
-        diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, VII,
-            ex->stirps, ens,
-            "valens_ad male formata (regula VII)");
-    }
     si (valens_a && valens_ad &&
         dies_bene_formata(valens_a) && dies_bene_formata(valens_ad) &&
         chorda_comparare(*valens_a, *valens_ad) > ZEPHYRUM)

@@ -100,13 +100,14 @@ drifted.
 `natura/natura.canon`; regenera:
 `./tools/natura_metamodulus_generare.sh`. Attributa
 necessaria **pinguia**; genus additum ubi non textus;
-cardinalitas liberorum min..max.*
+=valor praestitutus (ordinarius=); cardinalitas
+liberorum min..max.*
 
 | Elementum | Attributa | Liberi | Textus |
 |---|---|---|---|
 | `natura` (radix) | **modulus**:nomen, **versio**:numerus, lingua | `fontes` 0..1, `genus` 1..* | &mdash; |
 | `fontes` | &mdash; | `fons` 1..* | &mdash; |
-| `fons` | **clavis**:nomen, **genus**:nomen, modulus:nomen, verificatus:veritas | &mdash; | licet |
+| `fons` | **clavis**:nomen, **genus**:nomen, modulus:nomen, verificatus:veritas=falsum | &mdash; | licet |
 | `genus` | **nomen**:nomen, sub:nomen, modulus:nomen, gradus | `definitio` 0..1, `differentia` 0..1, `proprietates` 0..1, `partes` 0..1, `actiones` 0..1, `relationes` 0..1, `machina_statuum` 0..*, `species` 0..*, `individuum` 0..*, `genus` 0..*, `valor` 0..*, `relatum` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
 | `definitio` | &mdash; | &mdash; | licet |
 | `differentia` | &mdash; | &mdash; | licet |
@@ -617,12 +618,15 @@ day).** The closed vocabulary used to stand FOUR times — arrays in
 `lib/natura.c`, shell lists + a perl scan in `natura_visus.sh`,
 this document's prose, `natura.canon` — with nothing enforcing
 their agreement. Now: the canon states it, `natura_examen` enforces
-it (canon vitia surface as `VULNUS regula 8`; `NOMEN_BIS` is
-skipped there because loader rule 15 owns that law — a NOTED
-residual duplication), visus consumes the examen rows, and §3's
-catalog is generated. The loader itself tolerates unknown elements
-silently and *skips* a nameless entity — it presumes canon-sane
-input; the canon does the shouting.
+it (canon vitia surface as VULNUS rows under their historical rule
+numbers — 5, 8, 12, 15, and rule 7's format half), visus consumes
+the examen rows, and §3's catalog is generated. The loader itself
+tolerates unknown elements silently, *skips* a nameless entity, and
+keeps first-wins registration for duplicates — it presumes
+canon-sane input; the canon does the shouting. The loader's
+remaining rules are exactly the ones no schema can hold: cross-file
+resolution and inheritance (2–4, 6, 7-ordering, 9–11, 13, 14, 16,
+17).
 
 `natura_examen` always loads **every** model even when judging one
 file, because rules 2/3/4 cross model boundaries; `-plagula` filters
@@ -637,7 +641,7 @@ exits 1. Exit 2 means NOTHING RAN — never read it as health.
 | 4 | `genus` with `sub=` + `modulus=` resolves cross-model | [E] |
 | 5 | `fons=` resolves to a declared `clavis` | **[C]** — canon `citatio fontium` (migrated 2026-08-06; within-document resolution is layer 2) |
 | 6 | `certitudo=` is a species of `gradus_assensus` | [E] |
-| 7 | `valens_a`/`valens_ad` are well-formed dates and correctly ordered | [E] |
+| 7 | `valens_a`/`valens_ad` are well-formed dates and correctly ordered | split 2026-08-06: format **[C]** (`genus="dies"` in the canon); ordering **[E]** (cross-attribute comparison, deliberately above the canon) |
 | 8 | Only known elements and attributes appear | **[C]** — `natura/natura.canon` via `lib/canon.c`, run inside `natura_examen` (migrated 2026-08-06; the loader no longer holds a vocabulary list) |
 | 9 | `valor nomen=` names a property declared on the entry's genus or an ancestor (or a `machina_statuum`) | [E] |
 | 10 | A `valor` for an `electio` property matches a declared `optio` | [E] |
@@ -645,7 +649,7 @@ exits 1. Exit 2 means NOTHING RAN — never read it as health.
 | 12 | `transitus a=`/`ad=` name declared statuses of the same machine | **[C]** — canon `citatio transitus-a`/`-ad` with `intra="machina_statuum"` (migrated 2026-08-06; instance-scoped resolution) |
 | 13 | `eventum actio=` names a declared `actio` | [E] |
 | 14 | `modulus` attribute equals the filename stem | [E] |
-| 15 | No two entities share a name within a model (addressing depends on it, §4b) | [E] |
+| 15 | No two entities share a name within a model (addressing depends on it, §4b) | **[C]** — canon `unicitas entia` (migrated 2026-08-06); the loader keeps silent first-wins registration for graph integrity |
 | 16 | No `externum` flag on a target that is now described (a stale flag makes the agenda LIE) | [E] |
 | 17 | The `versio` attribute matches the version stated in the file's header comment | [E] |
 | 18 | A name bearing another name as its stem (`x_y` where `x` is a name) either descends from it or bears a declared relation to it | [M] |
