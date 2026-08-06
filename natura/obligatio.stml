@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/obligatio.stml
-  Exemplar semanticum: OBLIGATIO (versio 3, PLASTICUM)
+  Exemplar semanticum: OBLIGATIO (versio 4, PLASTICUM)
   Genera: obligatio, contractus, licentia.
 
   Natum ex experimento pistrinae (ratio caffeae, conductio
@@ -20,7 +20,7 @@
   datur, revocari potest, expirat. Non idem genus - quod
   schemata vulgaria confundunt.
 -->
-<natura modulus="obligatio" versio="3" lingua="latina">
+<natura modulus="obligatio" versio="4" lingua="latina">
 
 <!-- ==================================================
      OBLIGATIO - vinculum iuris
@@ -369,6 +369,203 @@
       testatur sed AESTIMATIONEM suam publicat - unde
       iudicium (aestimatio) et titulus se tangunt.
     </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     IUSSUM - directivum auctoritate latum quod PERDURAT
+
+     INVENTUM CURSU SEPTIMO (pharmacopolium), et hiatum
+     structuralem implet quem duo genera circumstabant sine eo:
+     actus_iuridicus ACTUM describit (momentaneum), obligatio
+     VINCULUM (quid debeatur) - directivum ipsum, quod post
+     actum manet et ante executionem exspectat, neutrum erat.
+
+     COLLISIO ETYMOLOGICA MONENDA: praescriptio medica
+     'praescriptum' videtur et NON EST. Praescriptum nostrum
+     PROCEDURA est (gradus ordinati, ab exsequente sequendi);
+     praescriptio medica IUSSUM est (directivum auctoritate
+     latum, a TERTIO exsecutum, forma validum aut irritum).
+     Verbum anglicum 'recipe' ex Rx pharmaceutico venit - unde
+     confusio vera in linguis, falsa in rebus. Officina
+     compositoria utrumque simul habet: formula praescriptum
+     est, charta quae eam iubet iussum.
+
+     NOMEN ROMANUM: iussum auctorizatio patrisfamilias erat qua
+     alius (filius, servus) negotium valide gerebat - eadem
+     structura: potestas alterius actum validum facit.
+     ================================================== -->
+
+<genus nomen="iussum">
+
+  <definitio>
+    Directivum ab eo qui potestatem habet latum, quod agendum
+    quid, a quo, et intra quod tempus determinat, et quod ACTU
+    LATO PERDURAT: res facta, non eventus praeteritus. Effectus
+    eius a forma et ab auctoritate iubentis pendet - unde
+    VALIDUM aut IRRITUM, non bonum aut malum.
+  </definitio>
+
+  <differentia>
+    Ab obligatione: obligatio VINCULUM est inter personas (quid
+    debeatur); iussum RES est quam quis tenet, ostendit,
+    transfert, consumit. Ab actu iuridico: actus MOMENTUM est
+    (iubere), iussum quod post momentum manet. A praescripto:
+    praescriptum QUOMODO docet et iteratur; iussum QUID imperat
+    hac vice, et exhaustum moritur.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="usus_reliqui" genus="numerus"
+      nota="quotiens adhuc exsequi liceat. IUSSA CONSUMUNTUR -
+            proprietas quam nec obligatio nec actus habet:
+            praescriptio duas repetitiones fert, mandatum
+            comparandi semel solvitur. Nullus = exhaustum"/>
+    <proprietas nomen="valens_ad" genus="dies"
+      nota="post quod nemo exsequi debet nec potest"/>
+    <proprietas nomen="transferibile" genus="veritas"
+      ordinarius="falsum"
+      nota="an alius exsecutor substitui possit (praescriptio
+            ad pharmacopolium aliud transferri potest, sub
+            limitibus; mandatum iudicis non)"/>
+    <proprietas nomen="poena_neglegentis" genus="electio"
+      nota="quid accidat exsecutori qui neglegit - AXIS QUI
+            iussum a petitione dividit: petitionem negare
+            licet, iussum non">
+      <optio>nulla</optio>
+      <optio>disciplinaris</optio>
+      <optio>iuridica</optio>
+    </proprietas>
+  </proprietates>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="latum"/>
+    <status nomen="acceptum" nota="ab exsecutore receptum"/>
+    <status nomen="exsecutum" nota="semel aut pluries"/>
+    <status nomen="exhaustum" nota="usus reliqui nulli"/>
+    <status nomen="revocatum" nota="a iubente retractum"/>
+    <status nomen="elapsum" nota="tempore, non usu"/>
+    <status nomen="recusatum"
+      nota="ab exsecutore reiectum - status qui iussum a
+            necessitate dividit: pharmacopola praescriptionem
+            irritam recusare DEBET, et recusatio actus
+            professionis est, non inoboedientia"/>
+    <transitus a="latum" ad="acceptum" per="receptio"/>
+    <transitus a="latum" ad="revocatum" per="revocatio"/>
+    <transitus a="acceptum" ad="exsecutum" per="executio"/>
+    <transitus a="acceptum" ad="recusatum" per="recusatio"/>
+    <transitus a="exsecutum" ad="exsecutum" per="executio"
+      nota="CYCLUS dum usus supersunt - repetitiones"/>
+    <transitus a="exsecutum" ad="exhaustum" per="consumptio"/>
+    <transitus a="acceptum" ad="elapsum" per="lapsus_temporis"/>
+    <transitus a="exsecutum" ad="elapsum" per="lapsus_temporis"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="ferri" nota="a iubente"/>
+    <actio nomen="exsequi"/>
+    <actio nomen="recusari"/>
+    <actio nomen="revocari"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="iubens" ad="*"
+      nota="persona aut organizatio - sed non quaelibet: vide
+            relationem potestatis infra"/>
+    <relatio nomen="potestate" ad="titulus"
+      nota="QUA AUCTORITATE iubeat. Iussum sine potestate
+            IRRITUM est, non malum - unde titulus (licentia
+            medici, officium iudicis) pars validitatis, non
+            ornamentum"/>
+    <relatio nomen="exsecutor" ad="*"
+      nota="cui exsequendum - saepe non idem ac beneficiarius:
+            medicus iubet, pharmacopola exsequitur, aeger
+            accipit. TRES personae, quod iussum a contractu
+            (duae) distinguit"/>
+    <relatio nomen="beneficiarius" ad="*"/>
+    <relatio nomen="latum_per" ad="actus_iuridicus" modulus="actus"
+      nota="actus quo natum est"/>
+    <relatio nomen="parit" ad="obligatio"
+      nota="iussum acceptum obligationem exsequendi parit -
+            unde duo genera cognata sed diversa"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="praescriptio_medica">
+    <definitio>
+      Iussum medici quo pharmacopola medicamentum aegro certo
+      dispensare iubetur: substantia, vis, quantitas, modus
+      sumendi, repetitiones.
+    </definitio>
+    <differentia>
+      Exsecutor PERITUS est cum officio proprio recusandi:
+      pharmacopola non minister sed custos secundus - iussum
+      quod interactionem periculosam ferat recusare DEBET,
+      etiam medico dissentiente. Iussum cuius executio iudicium
+      independens poscit.
+    </differentia>
+    <valor nomen="transferibile">verum</valor>
+    <valor nomen="poena_neglegentis">iuridica</valor>
+  </species>
+
+  <species nomen="mandatum_iudicis">
+    <definitio>
+      Iussum a iudice latum quo quis aliquid facere aut omittere
+      iubetur: vis publica post illud stat.
+    </definitio>
+    <valor nomen="transferibile">falsum</valor>
+    <valor nomen="poena_neglegentis">iuridica</valor>
+    <nota>
+      Species in qua neglegentia CONTUMACIA fit - poena non ex
+      damno sed ex contemptu auctoritatis ipsius.
+    </nota>
+  </species>
+
+  <species nomen="iussum_emptionis">
+    <definitio>
+      Iussum quo organizatio a venditore merces poscit, pretio
+      et condicionibus praestitutis: quod "purchase order"
+      vocatur.
+    </definitio>
+    <valor nomen="poena_neglegentis">nulla</valor>
+    <nota>
+      Species QUAE LIMITEM PROBAT: exsecutor externus est et
+      recusare libere potest, unde poena nulla - et tamen
+      iussum manet quia numero suo allocutione dignum est, usus
+      consumit, tempore elapsum. Confinium cum petitione, quod
+      axis poenae mensurat.
+    </nota>
+  </species>
+
+  <species nomen="iussum_operis">
+    <definitio>
+      Iussum internum quo opus certum alicui committitur, saepe
+      cum loco, tempore, materiis: quod "work order" vocatur.
+    </definitio>
+    <valor nomen="poena_neglegentis">disciplinaris</valor>
+    <nota>
+      Iussum et PENSUM (operatio) hic se tangunt sed non
+      coincidunt: iussum charta est quae opus imperat, pensum
+      opus ipsum quod suscipitur et perficitur. Unum iussum
+      pensa plura parere potest.
+    </nota>
+  </species>
+
+  <species nomen="iussum_ne_resuscitetur">
+    <definitio>
+      Iussum quo medicus, aegro consentiente aut prius
+      declarante, resuscitationem cardiopulmonalem OMITTI
+      iubet.
+    </definitio>
+    <differentia>
+      Iussum cuius contentum OMISSIO est, non actio - et cuius
+      beneficiarius idem est ac is qui consensit. Probat
+      'agendum quid' in definitione late sumendum: quod non
+      agendum sit aeque imperari potest.
+    </differentia>
+    <valor nomen="poena_neglegentis">iuridica</valor>
   </species>
 
 </genus>

@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **31** · genera **149** · res dictionarii **318** · arcus **433**
+Exemplaria **32** · genera **155** · res dictionarii **338** · arcus **454**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -126,7 +126,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **forma_datorum** — Figura ordinandi data ab OPERATIONIBUS suis definita, non ab impletione: quae rogare licet, quid promittitur, quo pret
 
-### identificatio (v0, genera 1)
+### identificatio (v1, genera 1)
 
 - **schema_identificandi** ⚙ ▣3 — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
 
@@ -165,18 +165,20 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **morbus** ⚙ — Dispositio viventis praeter naturam, qua operatio debita impeditur: defectus ab eo quod naturae rei debetur
 
-### norma (v2, genera 2)
+### norma (v3, genera 3)
 
 - **norma** ⚙ — Documentum publicum quod formam praescribit: quid conformitas significet definit
 - **lex** ⚙ — Ordinatio rationis ad bonum commune, ab eo qui curam communitatis habet promulgata (Thomas, ST I-II q
+- **classis_normativa** ⚙ — Categoria a norma constituta in quam res assignantur, cui consequentiae (obligationes, prohibitiones, procedurae) ADHA
 
-### obligatio (v3, genera 5)
+### obligatio (v4, genera 6)
 
 - **obligatio** ⚙ — Iuris vinculum quo quis alicui aliquid praestare adstringitur (Institutiones): non res sed VINCULUM inter personas - d
 - **contractus** — Conventio duorum (aut plurium) quae obligationes parit: consensus est fundamentum - ideo utrumque ligat, et neuter sol
 - **licentia** ⚙ — Concessio ab auctoritate data ut quid liceat quod aliter non liceret: UNILATERALIS (consensu accipientis non indiget),
 - **tributum** ⊂ obligatio — Obligatio ad MAGISTRATUM, ex lege orta, non ex consensu: debetur quia lex ita statuit, non quia quis promisit
 - **titulus** — Attestatio publica et permanens ab auctoritate data, quod aliquis aliquid consecutus est aut aliquid EST: non permissi
+- **iussum** ⚙ — Directivum ab eo qui potestatem habet latum, quod agendum quid, a quo, et intra quod tempus determinat, et quod ACTU L
 
 ### operatio (v1, genera 4)
 
@@ -206,6 +208,13 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 ### persona (v5, genera 1)
 
 - **persona** — Naturae rationabilis individua substantia (Boethius)
+
+### pharmacon (v0, genera 4)
+
+- **substantia_chemica** — Genus materiae compositione determinatum: quod omnia exemplaria eiusdem substantiae communicant, ubicumque et quandocu
+- **medicamentum** — Substantia (aut plures) cum VI et FORMA determinatis ad morbum tractandum praeparata: quod praescriptio nominat et quo
+- **coctura** ⚙ — Omnia quae uno cursu fabricationis facta sunt, provenientiam communem et ideo FATUM COMMUNE habentia: quod contaminatu
+- **interactio** — Relatio inter res duas (aut plures) quarum praesentia simultanea effectum mutat quem singulae haberent: non proprietas
 
 ### plagula_computatralis (v2, genera 9)
 
@@ -285,6 +294,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | calendarium | tempus |
 | campus | schema |
 | causa | causa |
+| classis_normativa | norma |
 | cliens | cliens |
 | cliens_api | cliens |
 | cliens_cli | cliens |
@@ -293,6 +303,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | cliens_nativus | cliens |
 | cliens_telae | cliens |
 | cliens_terminalis | cliens |
+| coctura | pharmacon |
 | codex | opus_scriptum |
 | commentarium | elementa_programmatis |
 | complicatio | fabricatio |
@@ -328,11 +339,13 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | inscriptio | locus |
 | instrumentum | corporalia |
 | instrumentum_aedificationis | elementa_programmatis |
+| interactio | pharmacon |
 | intervallum | tempus |
 | investigatio | iudicium |
 | iter | vectura |
 | iudicium | iudicium |
 | iurisdictio | locus |
+| iussum | obligatio |
 | lectio | elementa_programmatis |
 | lex | norma |
 | licentia | obligatio |
@@ -343,6 +356,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | magnitudo_mensurabilis | mensura |
 | malus | planta |
 | materia | corporalia |
+| medicamentum | pharmacon |
 | momentum | tempus |
 | moneta | commercium |
 | morbus | morbus |
@@ -400,6 +414,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | servus | cliens |
 | societas | organizatio |
 | status | elementa_programmatis |
+| substantia_chemica | pharmacon |
 | systema_operativum | systema_operativum |
 | systema_plagularum | plagula_computatralis |
 | systema_unixiforme | systema_operativum |
@@ -460,7 +475,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `fabricatio.probatio` — probatio_fumi, probatio_integrationis, probatio_regressionis, probatio_unitatis
 - `fabricatio.vitium` — regressio
 - `formae_datorum.forma_datorum` — acervus, arbor, cauda, copia, series, tabula_associativa
-- `identificatio.schema_identificandi` — doi, e164, gtin, iban, isbn, isbn_10, isbn_13, issn, orcid, ulid, uri, uuid
+- `identificatio.schema_identificandi` — cas, doi, e164, gtin, iban, isbn, isbn_10, isbn_13, issn, ndc, numerus_dea, orcid, rxnorm, ulid, uri, uuid
 - `iudicium.fons` — corpus_institutionis, fons_mensurae, fons_scriptus, fons_testimonii
 - `iudicium.gradus_assensus` — dubitatio, fides, opinio, scientia, suspicio
 - `iudicium.ignotum` — amissum, controversum, ignotum_ignotum, ignotum_notum, impertinens, indeterminatum, retentum
@@ -475,9 +490,11 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `mensura.magnitudo_mensurabilis` — capacitas, longitudo, massa, numerositas, temperatura, tempus_intervallum
 - `mensura.unitas_mensurae` — :gradus_celsius, :gramma, :kilogramma, :metrum, :minutum, :secundum
 - `morbus.morbus` — morbus_degenerativus, morbus_geneticus, morbus_infectiosus, vulnus
+- `norma.classis_normativa` — classis_periculi_mercium, gradus_eventus_aviatorii, schedula_substantiarum
 - `norma.lex` — consuetudo, lex_aeterna, lex_divina_positiva, lex_humana, lex_naturalis
 - `norma.norma` — :iso_9899_1990, :iso_9899_1999, :posix_1
 - `obligatio.contractus` — emptio_venditio, locatio_conductio, mandatum, societas_contractus
+- `obligatio.iussum` — iussum_emptionis, iussum_ne_resuscitetur, iussum_operis, mandatum_iudicis, praescriptio_medica
 - `obligatio.obligatio` — obligatio_ex_contractu, obligatio_ex_delicto, obligatio_ex_lege
 - `obligatio.titulus` — character_indelebilis, gradus_academicus, titulus_honoris
 - `obligatio.tributum` — decuma, portorium, tributum_capitis, vectigal
@@ -491,6 +508,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `organizatio.persona_iuridica` — universitas_personarum, universitas_rerum
 - `organizatio.societas` — :amd, :apple, :arm_ltd, :att, :bell_labs, :canonical, :intel, :microsoft
 - `persona.persona` — :bertrand_meyer, :brian_fox, :carl_linnaeus, :dennis_ritchie, :duns_scotus, :edsger_dijkstra, :graydon_hoare, :guido_van_rossum, :herman_melville, :josef_pieper, :ken_thompson, :linus_torvalds, :luca_pacioli, :thomas_aquinas
+- `pharmacon.interactio` — incompatibilitas_mercium, interactio_cum_cibo, interactio_medicamentorum
+- `pharmacon.medicamentum` — medicamentum_compositum, medicamentum_genericum, medicamentum_nominatum
+- `pharmacon.substantia_chemica` — :amoxicillinum, :warfarinum
 - `plagula_computatralis.plagula_datorum` — plagula_csv, plagula_json
 - `plagula_computatralis.plagula_figurationis` — plagula_plist, plagula_toml
 - `plagula_computatralis.plagula_fontis` — caput_c, fons_c, fons_python, fons_rust
@@ -545,11 +565,12 @@ exsistente. Nullum consilium — describi potest quovis momento.
 - `norma` / **posix_1** — Editio "1003.1" continenter renovatur (1988, 2001, 2008, 2024...) - norma UNA vivens an series normarum se substituentium? Idem dubium quod versiones linguarum:
 - `operatio` / **processus** — DAEMON BIS SEDET. Bibliotheca daemonem speciem PROGRAMMATIS facit (elementa_programmatis, divisa per modum finiendi: terminans/perpetuum). At quod daemonem daem
 - `opus_scriptum` / **periodicum** — Machina "compositio" generis parentis periodico male sedet: status perfecta numquam attingitur. Estne differentia satis, an machina propria opus est (vigens/int
+- `pharmacon` / **interactio** — AN INTERACTIO SEMPER MALA SIT. Species omnes hic nocumentum ferunt, sed synergismus therapeuticus (medicamenta duo consulto coniuncta ut alterum alterius effect
 - `planta` / **planta** — Proprietates viventium AMBITUS sunt, non puncta: altitudo "2-5 m", dies florendi "Maius-Iunius". Forma nostra valorem unum fert. Res vivens hanc formam poscit; 
 - `schema` / **genus_valoris** — Paletta domus etiam "area" (textus amplus) et "annus" (dies grossior) habet: species propriae, an textus cum praesentatione et dies cum granularitate? Praesenta
 - `tempus` / **pascha** — GRADUS AMBIGUUS (rota XXIX): una est regula paschalis, ergo individuum videtur; at "pascha" etiam de quovis anno dicitur ("pascha huius anni"), quod praedicatio
 
-## VII. Monita — stirps communis sine cognatione (22)
+## VII. Monita — stirps communis sine cognatione (24)
 
 Regula XVIII (ADVISORIA, portam non frangit). Nomen quod nomen
 aliud ut stirpem fert, sed nec sub eo stat nec relationem ad id
@@ -572,8 +593,10 @@ coincidentia INVISA transeat.
 - 'instrumentum_publicum' stirpem 'instrumentum' fert sed sub ea non stat
 - 'isbn_10' stirpem 'isbn' fert sed sub ea non stat
 - 'isbn_13' stirpem 'isbn' fert sed sub ea non stat
+- 'mandatum_iudicis' stirpem 'mandatum' fert sed sub ea non stat
 - 'moby_dick_londinensis_1851' stirpem 'moby_dick' fert sed sub ea non stat
 - 'moby_dick_novi_eboraci_1851' stirpem 'moby_dick' fert sed sub ea non stat
+- 'numerus_dea' stirpem 'numerus' fert sed sub ea non stat
 - 'obligatio_ad_portitorem' stirpem 'obligatio' fert sed sub ea non stat
 - 'persona_iuridica' stirpem 'persona' fert sed sub ea non stat
 - 'schema_identificandi' stirpem 'schema' fert sed sub ea non stat

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/norma.stml
-  Exemplar semanticum: NORMA (versio 2, PLASTICUM)
+  Exemplar semanticum: NORMA (versio 3, PLASTICUM)
 
   Genus a Frane petitum: norma res est, non chorda - editorem,
   diem, statum, successionem habet. Normae se invicem SUBSTITUUNT:
   catena temporalis (stratum historicum in relationibus ipsis).
 -->
-<natura modulus="norma" versio="2" lingua="latina">
+<natura modulus="norma" versio="3" lingua="latina">
 
 <genus nomen="norma">
 
@@ -224,6 +224,155 @@
       promulgationem poscit; haec species eam praeterit.
       Dubium: an transitus "introductio per usum" addendus sit,
       an consuetudo machinam propriam petat. APERTUM.
+    </nota>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     CLASSIS NORMATIVA - genus quod NORMA constituit et cui
+     consequentiae iuridicae adhaerent
+
+     DUOBUS DOMINIIS POSTULATA, ideo aedificata: pharmacopolium
+     (schedulae substantiarum I-V) et aviatio (gradus eventuum:
+     accidens / incidens grave / incidens - reliquum cursus
+     sexti quod solum manebat). Lex domus 'una instantia
+     observatio, duae in dominiis alienis LEX' impleta - et
+     secunda ex dominio prorsus alieno venit, quod probatio
+     fortissima est.
+
+     CUR NON SPECIES: species genus DIVIDIT secundum id quod
+     res EST; classis normativa res IAM DEFINITAS colligit
+     secundum id quod lex de eis STATUIT. Substantia
+     rescheduletur et natura eius immota manet - quod speciei
+     accidere non potest. Membratio per ACTUM, non per naturam.
+     ================================================== -->
+
+<genus nomen="classis_normativa">
+
+  <definitio>
+    Categoria a norma constituta in quam res assignantur, cui
+    consequentiae (obligationes, prohibitiones, procedurae)
+    ADHAERENT: quod classi debetur omnibus membris debetur, et
+    membrum mutata classe consequentias mutat sine ulla sui
+    mutatione.
+  </definitio>
+
+  <differentia>
+    Consequentiae CLASSI adhaerent, non rei - unde vis eius:
+    norma semel de classe statuit, et res innumerae per
+    assignationem sequuntur. Membratio PER ACTUM confertur
+    (norma edita, assignatio decreta) et per actum tollitur;
+    ideo classis normativa historiam habet quam natura rei non
+    habet.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="ordinata" genus="veritas"
+      nota="an classes seriem GRADUUM faciant (schedulae I-V,
+            accidens>incidens grave>incidens) an categorias
+            pares (classes periculi hazmat). Ordinatae
+            confinia habent, et confinia LITIGANTUR - unde
+            plerumque iudicium, non observatio, membrum
+            assignat"/>
+    <proprietas nomen="criterium" genus="textus"
+      nota="quo res assignetur. SAEPE COMPOSITUM et raro
+            plene mensurabile: schedula II 'usum medicum
+            acceptum CUM limitationibus severis et abusum
+            gravem' coniungit - unde disputationes de cannabi
+            saecularis"/>
+    <proprietas nomen="assignatio_quomodo" genus="electio">
+      <optio>norma_nominatim</optio>
+      <optio>decreto_administrativo</optio>
+      <optio>iudicio_periti</optio>
+    </proprietas>
+  </proprietates>
+
+  <machina_statuum nomen="vigor" gerens="individuum">
+    <status nomen="proposita"/>
+    <status nomen="vigens"/>
+    <status nomen="abrogata"
+      nota="classis ipsa tolli potest, membris ad alias
+            migrantibus - eventus qui res innumeras simul
+            movet"/>
+    <transitus a="proposita" ad="vigens" per="promulgatio"/>
+    <transitus a="vigens" ad="abrogata" per="abrogatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="constituta_per" ad="norma"
+      nota="norma quae classem creat et criterium dicit"/>
+    <relatio nomen="continet" ad="*" multiplex="verum"
+      nota="membra - apertum consulto: substantiae, eventus,
+            aedificia, merces. Quod classem normativam potentem
+            facit est quod QUIDLIBET classificari potest"/>
+    <relatio nomen="imponit" ad="obligatio" modulus="obligatio"
+      multiplex="verum"
+      nota="quid membris debeatur - inventarium perpetuum,
+            custodia clausa, relatio intra horas. RELATIO
+            PROPTER QUAM GENUS EXSISTIT: sine ea classis nomen
+            nudum esset"/>
+    <relatio nomen="assignatur_per" ad="iudicium" modulus="iudicium"
+      nota="MEMBRUM PER ACTUM aut PER IUDICIUM, numquam per
+            naturam: assignatio auctorem, momentum, gradum
+            assensus habet, et mutari potest"/>
+    <relatio nomen="gradus_supra" ad="classis_normativa"
+      nota="si ordinata - classis proxime gravior"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="schedula_substantiarum">
+    <definitio>
+      Classes I-V quibus substantiae regulatae assignantur
+      secundum abusus periculum et usum medicum acceptum:
+      quaeque obligationes custodiae, inventarii, praescribendi
+      proprias imponit.
+    </definitio>
+    <valor nomen="ordinata">verum</valor>
+    <valor nomen="assignatio_quomodo">decreto_administrativo</valor>
+    <nota>
+      Specimen quod GENUS POSTULAVIT: schedula II inventarium
+      perpetuum et praescriptionem sine repetitionibus exigit,
+      schedula V vix plus quam venditionem notatam. Eadem
+      substantia rescheduleta obligationes omnes mutat sine
+      mutatione chemica ulla - probatio purissima quod
+      consequentiae CLASSI adhaerent.
+    </nota>
+  </species>
+
+  <species nomen="gradus_eventus_aviatorii">
+    <definitio>
+      Gradus quibus eventus aviatorii distinguuntur - accidens,
+      incidens grave, incidens - quorum quisque obligationem
+      nuntiandi et investigandi diversam parit.
+    </definitio>
+    <valor nomen="ordinata">verum</valor>
+    <valor nomen="criterium">damnum personarum et aeronavis, ex
+      Annexo XIII</valor>
+    <nota>
+      SPECIMEN SECUNDUM, ex dominio alieno, quod genus aedificari
+      permisit (reliquum cursus sexti). Confinium accidens/
+      incidens grave investigationem publicam a relatione interna
+      dividit - unde litigatur, quod proprietas 'ordinata'
+      praedicit.
+    </nota>
+  </species>
+
+  <species nomen="classis_periculi_mercium">
+    <definitio>
+      Classes quibus merces periculosae in vectura assignantur
+      (explosiva, gasa, inflammabilia, corrosiva...): signa,
+      documenta, segregationem imponunt.
+    </definitio>
+    <valor nomen="ordinata">falsum</valor>
+    <nota>
+      Specimen tertium, et NON ordinatum - classis 3 classe 8
+      neque gravior neque levior est. Probat ordinationem
+      proprietatem esse, non essentiam. Tabulae segregationis
+      huius classis interactiones ponunt (vide pharmacon.interactio):
+      duo genera hic conveniunt.
     </nota>
   </species>
 

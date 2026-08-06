@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/identificatio.stml
-  Exemplar semanticum: IDENTIFICATIO (versio 0, PLASTICUM)
+  Exemplar semanticum: IDENTIFICATIO (versio 1, PLASTICUM)
   Genus schema_identificandi + species e teste EXPOSITIONIS
   electae.
 
@@ -29,7 +29,7 @@
   codices nationales, tesserae fiscales caudam longam
   incolunt et exspectent donec specimen adveniat.
 -->
-<natura modulus="identificatio" versio="0" lingua="latina">
+<natura modulus="identificatio" versio="1" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -356,6 +356,94 @@
       perenni habet locum cum re confundit - unde DOI natum
       est. Ratio quae rationes ALIAS continere potest
       (urn:isbn:...), unde vis eius et ambiguitas.
+    </nota>
+  </species>
+
+  <!-- ORDO PHARMACEUTICUS (cursus septimus): quattuor schemata
+       quae SCALAM pharmaci alloquuntur, singula gradu suo -
+       probatio quod gradus illi reales sunt, quia dominium
+       cuique identificatorem proprium dedit. Numerus DEA
+       additur ut specimen schematis quod AUCTORITATEM
+       identificat, non rem. -->
+
+  <species nomen="cas">
+    <definitio>
+      Numerus quo Chemical Abstracts Service substantias
+      chemicas registrat: nihil de structura dicens, sed unicus
+      et perpetuus - registrum, non descriptio.
+    </definitio>
+    <valor nomen="quid_designat">SUBSTANTIAM chemicam, non
+      acervum nec productum</valor>
+    <valor nomen="opacus">verum</valor>
+    <valor nomen="probabilis_solus">verum</valor>
+    <valor nomen="reassignabilis">falsum</valor>
+    <valor nomen="longitudo_fixa">falsum</valor>
+    <nota>
+      Schema quod gradum infimum scalae pharmaceuticae
+      alloquitur (vide pharmacon.substantia_chemica) -
+      probatio quod ille gradus res vera est, non abstractio
+      nostra.
+    </nota>
+  </species>
+
+  <species nomen="ndc">
+    <definitio>
+      Codex nationalis medicamentorum (Civitatum Foederatarum):
+      tres partes - fabricator, productum (substantia, vis,
+      forma), fasciculus (magnitudo).
+    </definitio>
+    <valor nomen="quid_designat">PRODUCTUM in fasciculo certo -
+      gradum supra medicamentum, infra cocturam</valor>
+    <valor nomen="opacus">falsum</valor>
+    <valor nomen="probabilis_solus">falsum</valor>
+    <valor nomen="reassignabilis">falsum</valor>
+    <nota>
+      CAVE QUOD SCHEMA NON DICIT: NDC cocturam non alloquitur.
+      Revocatio ergo NDC et numerum cocturae SIMUL nominare
+      debet - quod probat cocturam gradum proprium esse, non
+      NDC subdivisionem.
+    </nota>
+  </species>
+
+  <species nomen="rxnorm">
+    <definitio>
+      Vocabularium normatum quo medicamenta clinica nominantur
+      et gradus inter se nectuntur: ingrediens, medicamentum
+      clinicum, nomen mercatorium, fasciculus.
+    </definitio>
+    <valor nomen="quid_designat">MEDICAMENTUM clinicum
+      (substantia + vis + forma)</valor>
+    <valor nomen="opacus">verum</valor>
+    <valor nomen="reassignabilis">falsum</valor>
+    <nota>
+      SCHEMA QUOD SCALAM IPSAM FERT, non gradum unum: gradus
+      nominat ET nexus inter eos. Rarum et instructivum -
+      pleraque schemata gradum unum alloquuntur et nexus aliis
+      relinquunt. Quod bibliotheca nostra generibus facit,
+      RxNorm intra schema unum fecit.
+    </nota>
+  </species>
+
+  <species nomen="numerus_dea">
+    <definitio>
+      Numerus quo auctoritas Americana eos registrat quibus
+      substantias regulatas praescribere aut tractare licet:
+      litterae duae, deinde novem numeri quorum ultimus custos
+      est.
+    </definitio>
+    <valor nomen="quid_designat">AUCTORITATEM praescribendi -
+      personam qua praescriptor, non personam simpliciter</valor>
+    <valor nomen="opacus">falsum</valor>
+    <valor nomen="probabilis_solus">verum</valor>
+    <valor nomen="longitudo_fixa">verum</valor>
+    <nota>
+      SPECIMEN QUOD GENUS ALIUD ALLOQUITUR: non rem sed
+      TITULUM (obligatio.titulus) - facultatem quam persona
+      gerit et amittere potest. Ideo numerus cum officio
+      moritur, persona vivente. Nota custos praescriptiones
+      fictas prohibet, quod probat schemata identificandi
+      munus SECURITATIS quoque gerere - pharmacopola numerum
+      computare potest antequam credat.
     </nota>
   </species>
 

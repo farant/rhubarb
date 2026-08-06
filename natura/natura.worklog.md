@@ -3170,3 +3170,158 @@ MEASURED after: 31 exemplaria / 149 genera / 318 res / 433 arcus
 / 0 vulnera / 22 monita / UMBRAE 16 → 2 (typus,
 constructum_linguae — both deliberate). The queue is clear; the
 next loop writes onto a clean agenda.
+
+## 2026-08-05 — round forty-six: pharmacy (coverage loop, run 7)
+
+Chosen by the punishment heuristic — a domain punished for dosage,
+interaction, and dispensing-against-order kills people, so it has
+elaborated all three past anywhere else. First loop run onto a
+CLEAN agenda (umbrae were 2, both deliberate), so every surfacing
+was visible rather than landing in a pile.
+
+219. PRE-COINING COLLISION CHECK, before the walk, and it burned
+     three names in advance: `massa` (twice taken — mensura's
+     species and volumen's blobs), `perscriptio` (already a
+     negotiable-instrument species), `praescriptio` (free but one
+     letter from `praescriptum` — deliberate rule-XVIII
+     violation). Worth keeping as practice: checking AFTER
+     drafting means arguing with a name you have already grown
+     attached to.
+
+220. THE RICHEST FAILURE WAS AT STATION ONE, and it is an
+     etymological trap. A prescription LOOKS like `praescriptum`
+     and is not one. Our praescriptum is a PROCEDURE (ordered
+     steps, followed by the doer); a prescription is an ORDER
+     (a directive issued by an authorised party, executed by a
+     THIRD party, valid or void by form). English "recipe"
+     descends from the pharmacy Rx, so the confusion is real in
+     language and false in things. The compounding station holds
+     both at once and keeps them apart: the formula is a
+     praescriptum because it repeats, the paper ordering it is an
+     order because it names this patient once.
+
+221. IUSSUM built (→ obligatio) — the round's structural find,
+     filling a hole two genera had been standing around: an
+     `actus_iuridicus` is the momentary ACT, an `obligatio` is
+     the BOND, and the persisting DIRECTIVE was neither. Roman
+     law had the word: iussum was the paterfamilias's
+     authorisation that made another's act valid — same
+     structure, another's authority making an act effective.
+     Its distinguishing property is one neither neighbour has:
+     `usus_reliqui`. ORDERS ARE CONSUMED. A prescription carries
+     two refills; an obligation is not spent by being met once.
+     And status `recusatum` is what separates an order from a
+     necessity: the pharmacist MUST refuse a void one, and the
+     refusal is an act of the profession, not disobedience.
+     THREE PARTIES, which is what really divides it from
+     contractus (two): prescriber orders, pharmacist executes,
+     patient benefits.
+     Species: praescriptio_medica, mandatum_iudicis,
+     iussum_emptionis, iussum_operis, iussum_ne_resuscitetur —
+     the last chosen because its content is an OMISSION, proving
+     "what is to be done" must be read widely; the PO chosen as
+     the LIMIT CASE (the executor may freely refuse, penalty
+     none) which is what made `poena_neglegentis` the axis that
+     divides order from request.
+
+222. CLASSIS_NORMATIVA built (→ norma) — and this is the house
+     law paying out exactly as designed. Schedule I–V surfaced
+     it; the SECOND forcing case was the aviation gradation
+     (accident / serious incident / incident), which had been
+     sitting in the open arcs since run 6 with no second domain.
+     It arrived from an unrelated walk, unprompted. One instance
+     is an observation, two in unrelated domains is a law.
+     Why not species: a species divides a genus by what a thing
+     IS; a normative class collects already-defined things by
+     what the law SAYS of them. Reschedule a substance and its
+     nature is untouched — which cannot happen to a species.
+     Membership per actum, consequences attach to the CLASS.
+     `ordinata` turned out to be a real property, not a
+     universal: hazmat class 3 is neither graver nor lighter
+     than class 8, while schedules and accident grades are
+     ranked — and ranked ones have BOUNDARIES, which get
+     litigated, which is why judgment rather than observation
+     assigns membership.
+
+223. PHARMACON built (model 32) — three genera that the DOMAIN
+     had already laid out as a ladder and given identifiers to at
+     every rung (RxNorm: ingredient → clinical drug → brand →
+     pack; CAS, NDC, lot). Not our abstraction imposed but their
+     structure read off, which is the strongest form the
+     Linnaean hatch takes.
+     - `substantia_chemica` — the chemical KIND, distinct from
+       `materia` as a kind from its heaps: CAS numbers the
+       substance, never the heap.
+     - `medicamentum` — substance + strength + form, the rung the
+       prescription names. Its `aequivalens` relation is PER
+       IUDICIUM: the Orange Book ASSERTS therapeutic equivalence
+       with ratings; two drugs can share an ingredient and not be
+       equivalent.
+     - `coctura` (batch) — A NEW RANK for the library, between
+       the product model (`processorium`, `medicamentum`) and the
+       haecceity-bearing single thing: everything made in one
+       run, sharing provenance and therefore SHARING FATE. The
+       recall is the event that demands it — it addresses a
+       batch and can never address a unit. `expirat` belongs
+       HERE, not to the drug, which is the proof the rank is
+       real. Cross-domain immediately: vaccine lots, steel heats,
+       food lots, seed batches.
+     - `interactio` — a REIFIED relation, carrying both house
+       tests at once (notas grown heavy: severity, mechanism,
+       evidence, management; plus interaction databases assign
+       IDs). Second domain: hazmat segregation tables. Kept the
+       `inter` relation OPEN, and the hazmat specimen justified
+       it — those tables relate CLASSES, not goods, so
+       classis_normativa and interactio meet inside the species.
+       `testimonium` deliberately separate from `gravitas`: a
+       theoretical guess about a severe effect and firm proof of
+       a mild one are different things, and collapsing them is
+       how interaction warnings became noise.
+
+224. FOUR SCHEMES to the dictionary (identificatio v1): `cas`,
+     `ndc`, `rxnorm`, `numerus_dea`. Two earn their keep beyond
+     inventory. NDC does NOT address the batch — so a recall must
+     name NDC *and* lot number, which independently proves
+     `coctura` is a rank rather than a subdivision. And
+     `numerus_dea` identifies a TITULUS, not a person: the
+     authority to prescribe, which dies with the office while the
+     person lives — plus a check digit, so the pharmacist can
+     compute before believing. Identifier schemes doing SECURITY
+     work, which none of the previous twelve showed.
+
+225. NON-SURFACINGS RECORDED, with the trigger named for the one
+     closest to the line: patient (persona suffices), dose
+     (quantitas), refill (a count on the iussum, now literally
+     `usus_reliqui`), regimen (compositional — the sig "1 cap TID
+     × 7 days" is quantitas + recurrentia + intervallum with no
+     residue, the bakery-clinic pair carrying a third domain
+     unchanged), PBM (organizatio), and `petitio` (insurance
+     claim = demand for performance under an obligation) — NOT
+     coined on one domain; a warranty or legal claim would be the
+     second case that flips it.
+
+226. COMPOSITION WINS, worth recording because they are the first
+     time a loop found YESTERDAY'S genera already load-bearing:
+     `acta_auditus` (built round 44) took the controlled-substance
+     perpetual inventory cleanly — appender and audited are the
+     same person, so its own nota "disciplina is always the WRONG
+     answer here" was already written; the compounding cluster
+     (praescriptum + index_verificationis + licentia) held a
+     pharmacy's hardest procedure with no strain.
+
+227. METAMODEL DUBIUM ADVANCED: "store at 2–8 °C" is an
+     INTERVAL-VALUED requirement — the second forcing case for
+     planta's range dubium ("2–5 m", "Maius–Iunius"), and from an
+     unrelated domain. Not a genus; a metamodel question now
+     eligible for action.
+
+228. And the gate caught my own prose: I wrote `morbus.interactio`
+     in a norma nota when interactio lives in pharmacon. Rule
+     XVIII surfaced two new monita too, both legitimate homonyms
+     worth seeing once — `mandatum_iudicis` vs `mandatum` (the
+     Roman consensual contract) and `numerus_dea` vs `numerus`
+     (the datatype).
+
+MEASURED after: 32 exemplaria / 155 genera / 338 res / 454 arcus
+/ 0 vulnera / 24 monita / umbrae 2 (unchanged — the run added no
+dangling citations, which is what building AFTER a cleanup buys).
