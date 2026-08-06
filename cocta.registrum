@@ -1,0 +1,8 @@
+# cocta.registrum - canon -> lector generatus (canon_coquere)
+#
+# Manifestum lectorum coctorum: quae plagulae generatae ex quo
+# canone veniant. tools/canon_coquere.sh id legit: sine argumento
+# omnes regenerat, -probare rancorem clamat (canon mutatus sine
+# regeneratione = lector mendax de fonte suo).
+# Campi (tab): canon	praefixum	caput	corpus
+silva/quaestiones.canon	Qs	include/quaestiones_lectio.h	lib/quaestiones_lectio.c

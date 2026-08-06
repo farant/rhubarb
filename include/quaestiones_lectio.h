@@ -1,4 +1,5 @@
-/* GENERATUM a canon_coquere e silva/quaestiones.canon - NOLI MANU EDERE.
+/* GENERATUM a canon_coquere e silva/quaestiones.canon - NOLI MANU MUTARE.
+ * (signum generata-custodis: editio manualis vetatur)
  * Lex folii: involve, numquam emenda - regeneratio
  * emendationes vincit. Lectio sola; plagulam canone
  * sanam praesumit (ignota tacite praeterit).

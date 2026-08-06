@@ -44,6 +44,19 @@ done
 OUT=$(cd "$RADIX" && "$PORTA" "$FILE" 2>&1)
 STATUS=$?
 
+# lectores cocti: canon mutatus sine regeneratione = lector
+# generatus mendax de fonte suo. Exitus I (rancidi) ET II
+# (instrumentum fractum) ambo loquuntur - porta muta vetita.
+COCTA_NUNTIUS=""
+case "$FILE" in
+    *.canon)
+        if [ -f "$RADIX/cocta.registrum" ]; then
+            if ! COCTA_OUT=$(cd "$RADIX" && ./tools/canon_coquere.sh -probare 2>&1); then
+                COCTA_NUNTIUS="$COCTA_OUT"
+            fi
+        fi ;;
+esac
+
 # exitus II = NIHIL iudicatum: aut dialectus sine canone (notitia)
 # aut defectus portae (loquere totum)
 if [ "$STATUS" -eq 2 ]; then
@@ -57,6 +70,15 @@ fi
 
 if [ "$STATUS" -eq 1 ]; then
     ROWS=$(printf '%s\n' "$OUT" | head -12)
+    if [ -n "$COCTA_NUNTIUS" ]; then
+        ROWS="$ROWS
+$COCTA_NUNTIUS"
+    fi
     jq -n --arg r "$ROWS" '{hookSpecificOutput:{hookEventName:"PostToolUse",additionalContext:("CANON (uncus post-editionem): contractus violatus in plagula modo scripta:\n" + $r + "\nCanones: canones.registrum; totum: bin/canon_examen <via>")}}'
+    exit 0
+fi
+
+if [ -n "$COCTA_NUNTIUS" ]; then
+    jq -n --arg r "$COCTA_NUNTIUS" '{hookSpecificOutput:{hookEventName:"PostToolUse",additionalContext:("CANON: canon sanus, sed lectores cocti eius RANCIDI:\n" + $r)}}'
 fi
 exit 0

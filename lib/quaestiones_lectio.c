@@ -1,4 +1,4 @@
-/* GENERATUM a canon_coquere e silva/quaestiones.canon - NOLI MANU EDERE.
+/* GENERATUM a canon_coquere e silva/quaestiones.canon - NOLI MANU MUTARE.
  * Vide caput pro legibus folii. */
 #include "quaestiones_lectio.h"
 

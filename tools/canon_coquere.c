@@ -523,7 +523,8 @@ _caput_emittere(
     i32 j;
 
     fprintf(f,
-        "/* GENERATUM a canon_coquere e %s - NOLI MANU EDERE.\n"
+        "/* GENERATUM a canon_coquere e %s - NOLI MANU MUTARE.\n"
+        " * (signum generata-custodis: editio manualis vetatur)\n"
         " * Lex folii: involve, numquam emenda - regeneratio\n"
         " * emendationes vincit. Lectio sola; plagulam canone\n"
         " * sanam praesumit (ignota tacite praeterit).\n"
@@ -1073,7 +1074,7 @@ _corpus_emittere(
     i32 i;
 
     fprintf(f,
-        "/* GENERATUM a canon_coquere e %s - NOLI MANU EDERE.\n"
+        "/* GENERATUM a canon_coquere e %s - NOLI MANU MUTARE.\n"
         " * Vide caput pro legibus folii. */\n"
         "#include \"%s\"\n\n",
         via_canonis, caput_basis);
