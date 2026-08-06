@@ -80,3 +80,70 @@ compilavisse.
 
 MENSURATUM: natura 33 plagulae / 3 vitia (vera, supra); aedilis
 2 plagulae / 0 vitia.
+
+## 2026-08-06 (pars altera) — from judge to platform, in one day
+
+The library grew from "layer-2 judge" to a platform in one
+continuous pull. Entries here are the non-obvious parts only;
+the narrative lives in memory/canon-project.md and the ledger.
+
+**Self-hosting (canon.canon)**: `canon_legere` tolerates unknowns
+by design (a reader), which means every typo in a canon silently
+weakens it. The fix is not a stricter reader but a canon FOR
+canons — the registry maps `<canon>` to canon.canon, so every
+canon (including itself) is judged. Four silent-swallow classes
+became vitia. Law: *lector tolerat, contractus poscit.*
+
+**Canon infixus + ambo iudicant**: a document may carry its canon
+as the FIRST element child of its root (DTD internal subset, minus
+entities). Registry canon = floor that cannot be shed; the infixus
+can only add, and is itself judged against canon.canon — so a
+document cannot quietly weaken its own contract (the XSD
+schemaLocation failure, closed structurally).
+
+**Each dialect grows the language** (now law, thrice confirmed):
+aedilis forced `intra=` on elementum; grammatica forced the
+`compositum` datatype (kebab names — canon.canon itself could not
+say `nomen="genera-extra"` without it); quaestiones + rule XII
+forced instance scoping. Write the next dialect to find the next
+feature.
+
+**Instance scoping mechanics**: `_scopos_colligere` collects ALL
+instances (nested ones too — each is its own scope);
+`_subarborem_colligere` stops at nested instance boundaries, so an
+outer machine never sees an inner machine's statuses. The infixus
+subtree is pruned from every walk.
+
+**citatio 'ad' malformed = whole canon load fails.** A citatio
+missing its slash would otherwise be a checker-shaped object that
+checks nothing. Same rule for a lying `ordinarius=` (default not
+conforming to its own genus). Loud beats plausible.
+
+**praestitutum, not ordinarius, as the C field** — `ordinarius`
+is a latina macro (`default`); the examen hook caught the broken
+typedef within seconds. The STML attribute keeps the natural name.
+
+**Migration pattern (rules V, VII-forma, VIII, XII, XV)**: plant a
+differential BEFORE deleting the loader site — both judges must see
+the same planted faults and the same clean corpus. The differential
+immediately caught a stale natura_examen binary whose old canon
+reader silently ignored `<citatio>` elements. Presentation keeps
+historical rule numbers (examen maps vitium genus → 5/8/12/15).
+
+**canon_coquere**: the tiny type system is what makes codegen
+clean (JAXB drowned in XSD's rich types). Generated readers APPLY
+ordinarius= (canon states, reader applies); structs always keep
+StmlNodus* (hybrid depth; linea rides free). Generated files must
+bear the EXACT house signum "NOLI MANU MUTARE" — my synonym
+("EDERE") fell outside generata-custos's regex and the readers
+were silently unprotected. The staleness gate (cocta.registrum +
+canon_coquere.sh -probare) is SEMANTIC: it diffs regenerated
+output, so comment-only canon edits stay fresh; the probe copy
+needs three path substitutions (regen command, include guard,
+#include basename) or the paths themselves fake a diff.
+
+**stml linea**: the tokenizer had counted lines since birth;
+nobody had copied the number onto nodes. Ten lines at
+_parser_creare_nodus. En route: clausura_anonyma was never
+initialized in the copy function or three builder constructors —
+uninitialized memory in every copied node until today.
