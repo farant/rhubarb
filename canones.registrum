@@ -2,7 +2,9 @@
 #
 # Extensio CONTRACTUM nominat sine plagula aperienda - eadem ratio
 # qua '.genera' ab '.stml' distinctum est (METAMODULUS par.2).
-# Campi: extensio<TAB>via canonis
+# Claves DUAE: extensio (.genera) AUT elementum radicis (<aedilis>).
+# RADIX VINCIT - '.stml' quattuor dialectos fert, ergo extensio
+# illis nihil dicit; documentum se ipsum per radicem profitetur.
 #
 # Dialecti domus (2026-08-06): natura (33 plagulae), librarium (3),
 # grammatica (4), aedilis (2), quaestiones (1). Una sola custodem
@@ -10,3 +12,4 @@
 # Linea absens = dialectus nondum descriptus, NON dialectus sanus.
 
 .genera	natura/natura.canon
+<aedilis>	aedilis.canon

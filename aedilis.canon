@@ -1,0 +1,114 @@
+<!--
+  aedilis.canon
+  Canon dialecti AEDILIS (aedilis.stml) - gradus II
+
+  DIALECTUS QUAM NULLUM INSTRUMENTUM XML LEGERE POTEST: capturae
+  lineae ('<via (>include') et tags crudi ('<vexillum! (>-Wall')
+  superset STML sunt, et xmllint iam in linea tertia deficit
+  ('error parsing attribute name'). Ergo haec plagula ante canonem
+  nullam viam ad validationem omnino habebat - quod argumentum
+  strati est, non ornamentum.
+
+  DUO INVENTA DUM SCRIBEREM, utrumque a corpore coactum:
+
+  I. FORMAE CONTEXTU DEPENDENTES. <regula> duas formas fert:
+       intra <nexus>        obiectum= poscit, <vexillum> continet
+       intra <irregularia>  caput= poscit, <obiectum> continet
+     Declaratio GLOBALIS (mos DTD) hoc dicere non potest - unionem
+     solam dicere potest, unde '<regula obiectum="x"><obiectum/>'
+     transiret. Attributum 'intra=' ideo canoni additum est
+     (mos RELAX NG). Natura eo caruit; dialectus secundus id
+     statim postulavit, quod est cur dialectus secundus scribitur.
+
+  II. ABSENTIA IN EXEMPLO UNO NON EST ABSENTIA E DIALECTO.
+     aedilis.stml <irregularia> VACUUM fert; <regula caput=> et
+     <obiectum> in FIXTURA PROBATIONUM sola apparent. Canon ex
+     plagula viva sola derivatus duo elementa omnino omisisset.
+     Corpus derivationis ergo utramque plagulam continere debet.
+
+  DUBIUM: quae sectiones summae NECESSARIAE sint ignoratur. Ambae
+  plagulae omnes sex ferunt, sed id 'observatum' est, non
+  'postulatum' - et canon nimis strictus corpus fossilizat. Omnes
+  ergo optionales (maximum I) donec aedilis.c interrogetur.
+-->
+<canon dialectus="aedilis" versio="1">
+
+  <elementum nomen="aedilis" radix="verum">
+    <liberum nomen="inclusa"      maximum="1"/>
+    <liberum nomen="vexilla"      maximum="1"/>
+    <liberum nomen="variantes"    maximum="1"/>
+    <liberum nomen="nexus"        maximum="1"/>
+    <liberum nomen="vendor"       maximum="1"/>
+    <liberum nomen="irregularia"  maximum="1"/>
+  </elementum>
+
+  <!-- ================= VIAE INCLUSAE ================= -->
+
+  <elementum nomen="inclusa">
+    <liberum nomen="via" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="via" textus="verum"
+    nota="captura lineae: '<via (>include' - contentus textus
+          crudus est, ergo textus licet et nulla attributa"/>
+
+  <!-- ================= VEXILLA ================= -->
+
+  <elementum nomen="vexilla">
+    <liberum nomen="vexillum" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="vexillum" textus="verum"
+    nota="tag CRUDUS cum captura lineae - '-Wsign-conversion' sine
+          fuga aut quotis scribitur, quod ratio formae est"/>
+
+  <!-- ================= VARIANTES ================= -->
+
+  <elementum nomen="variantes">
+    <attributum nomen="praelatio" genus="textus" necessarium="verum"
+      nota="ordo praelationis, spatiis separatus ('macos posix') -
+            ergo textus, non nomen"/>
+  </elementum>
+
+  <!-- ================= NEXUS ================= -->
+
+  <elementum nomen="nexus">
+    <liberum nomen="regula" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="regula" intra="nexus">
+    <attributum nomen="obiectum" genus="nomen" necessarium="verum"
+      nota="obiectum cuius nexus haec vexilla poscit"/>
+    <liberum nomen="vexillum" minimum="1"/>
+  </elementum>
+
+  <!-- ================= VENDOR ================= -->
+
+  <elementum nomen="vendor">
+    <liberum nomen="fons" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="fons">
+    <attributum nomen="via" genus="textus" necessarium="verum"/>
+    <liberum nomen="vexillum" minimum="1"/>
+  </elementum>
+
+  <!-- ================= IRREGULARIA ================= -->
+
+  <elementum nomen="irregularia"
+    nota="vacuum licet - exceptiones caput->corpus nunc in
+          capitibus ipsis vivunt (vide commentarium aedilis.stml)">
+    <liberum nomen="regula"/>
+  </elementum>
+
+  <elementum nomen="regula" intra="irregularia">
+    <attributum nomen="caput" genus="textus" necessarium="verum"/>
+    <liberum nomen="obiectum" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="obiectum" textus="verum"
+    nota="captura lineae: via corporis pro capite irregulari.
+          NOMEN IDEM AC ATTRIBUTUM regulae in nexu - spatia
+          diversa, nulla collisio"/>
+
+</canon>

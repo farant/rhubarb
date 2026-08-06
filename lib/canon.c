@@ -29,6 +29,14 @@ nomen structura {
 
 nomen structura {
     chorda*  titulus;
+    /* intra= : definitio ad PARENTEM adstricta. NIHIL = globalis.
+     * Necessarium quia idem nomen formas duas ferre potest:
+     * aedilis <regula> intra <nexus> obiectum= poscit et
+     * <vexillum> continet; intra <irregularia> caput= poscit et
+     * <obiectum> continet. Declarationes GLOBALES (mos DTD) hoc
+     * dicere non possunt; contextus (mos RELAX NG) potest.
+     * INVENTUM dialecto SECUNDO describendo - natura eo caruit. */
+    chorda*  intra;
     b32      radix;
     b32      textus_licet;
     Xar*     attributa;  /* Xar de CanonAttributum */
@@ -51,6 +59,8 @@ interior vacuum vitium_addere(Xar* vitia, CanonVitiumGenus genus,
     StmlNodus* nodus, chorda* elementum, chorda* detail,
     i32 numerus, i32 limes);
 interior CanonElementum* elementum_quaerere(Canon* c,
+    StmlNodus* n);
+interior chorda clavis_scopi(Piscina* p, constans chorda* intra,
     constans chorda* titulus);
 interior vacuum nodum_iudicare(Canon* c, StmlNodus* n, Xar* vitia,
     Piscina* piscina);
@@ -250,14 +260,52 @@ vitium_addere(
     v->limes     = limes;
 }
 
+/* clavis tabulae: "parens/nomen" pro definitione adstricta */
+interior chorda
+clavis_scopi(
+    Piscina*          p,
+    constans chorda*  intra,
+    constans chorda*  titulus)
+{
+    chorda k;
+
+    k.mensura = intra->mensura + I + titulus->mensura;
+    k.datum   = (i8*)piscina_allocare(p, (memoriae_index)k.mensura);
+    memcpy(k.datum, intra->datum, (memoriae_index)intra->mensura);
+    k.datum[intra->mensura] = (i8)'/';
+    memcpy(k.datum + intra->mensura + I, titulus->datum,
+           (memoriae_index)titulus->mensura);
+
+    redde k;
+}
+
+/* Definitionem ADSTRICTAM prius quaerere, deinde globalem:
+ * specialius vincit. */
 interior CanonElementum*
 elementum_quaerere(
-    Canon*            c,
-    constans chorda*  titulus)
+    Canon*      c,
+    StmlNodus*  n)
 {
     vacuum* valor;
 
-    si (!tabula_dispersa_invenire(c->elementa, *titulus, &valor))
+    si (n->parens && n->parens->genus == STML_NODUS_ELEMENTUM &&
+        n->parens->titulus)
+    {
+        PiscinaNotatio nota;
+        chorda         k;
+        b32            inventum;
+
+        nota = piscina_notare(c->piscina);
+        k = clavis_scopi(c->piscina, n->parens->titulus, n->titulus);
+        inventum = tabula_dispersa_invenire(c->elementa, k, &valor);
+        piscina_reficere(c->piscina, nota);
+        si (inventum)
+        {
+            redde (CanonElementum*)valor;
+        }
+    }
+
+    si (!tabula_dispersa_invenire(c->elementa, *n->titulus, &valor))
     {
         redde NIHIL;
     }
@@ -351,6 +399,7 @@ canon_legere(
                                 (i32)magnitudo(CanonAttributum));
             e->liberi       = xar_creare(piscina,
                                 (i32)magnitudo(CanonLiberum));
+            e->intra = stml_attributum_capere(n, "intra");
             attr = stml_attributum_capere(n, "radix");
             e->radix = (b32)(attr &&
                 chorda_aequalis_literis(*attr, "verum"));
@@ -454,7 +503,15 @@ canon_legere(
                 }
             }
 
-            tabula_dispersa_inserere(c->elementa, *titulus, e);
+            si (e->intra)
+            {
+                tabula_dispersa_inserere(c->elementa,
+                    clavis_scopi(piscina, e->intra, titulus), e);
+            }
+            alioquin
+            {
+                tabula_dispersa_inserere(c->elementa, *titulus, e);
+            }
         }
         alioquin si (chorda_aequalis_literis(*n->titulus,
                                              "unicitas"))
@@ -520,7 +577,7 @@ nodum_iudicare(
         redde;
     }
 
-    e = elementum_quaerere(c, n->titulus);
+    e = elementum_quaerere(c, n);
     si (!e)
     {
         vitium_addere(vitia, CANON_ELEMENTUM_IGNOTUM, n,
@@ -843,6 +900,65 @@ canon_nuntius(
 /* ==================================================
  * Registrum
  * ================================================== */
+
+chorda
+canon_registrum_quaerere_radice(
+    chorda            catalogus,
+    constans chorda*  radix,
+    Piscina*          piscina)
+{
+    chorda                vacua;
+    chorda_fissio_fructus lineae;
+    i32                   i;
+
+    vacua.datum   = NIHIL;
+    vacua.mensura = ZEPHYRUM;
+
+    si (!radix || radix->mensura == ZEPHYRUM)
+    {
+        redde vacua;
+    }
+
+    lineae = chorda_fissio(catalogus, '\n', piscina);
+    per (i = ZEPHYRUM; i < lineae.numerus; i++)
+    {
+        chorda                linea;
+        chorda_fissio_fructus campi;
+
+        linea = chorda_praecidere(lineae.elementa[i]);
+        si (linea.mensura == ZEPHYRUM ||
+            (character)linea.datum[ZEPHYRUM] == '#')
+        {
+            perge;
+        }
+
+        campi = chorda_fissio(linea, '\t', piscina);
+        si (campi.numerus < II)
+        {
+            perge;
+        }
+        {
+            chorda clavis;
+
+            clavis = chorda_praecidere(campi.elementa[ZEPHYRUM]);
+            si (clavis.mensura >= III &&
+                (character)clavis.datum[ZEPHYRUM] == '<' &&
+                (character)clavis.datum[clavis.mensura - I] == '>')
+            {
+                chorda intus;
+
+                intus = chorda_sectio(clavis, I,
+                                      clavis.mensura - I);
+                si (chorda_aequalis(intus, *radix))
+                {
+                    redde chorda_praecidere(campi.elementa[I]);
+                }
+            }
+        }
+    }
+
+    redde vacua;
+}
 
 chorda
 canon_registrum_quaerere(

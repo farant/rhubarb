@@ -107,7 +107,24 @@ principale(
 
         via = argumenta[i];
 
-        /* canonem invenire */
+        fons = filum_legere_totum(via, piscina);
+        si (fons.mensura == ZEPHYRUM)
+        {
+            fprintf(stderr, "canon_examen: '%s' legi nequit\n", via);
+            perge;
+        }
+        r = stml_legere(fons, piscina, intern);
+        si (!r.successus)
+        {
+            fprintf(stderr, "canon_examen: '%s' parsari nequit "
+                            "(gradus I, ante canonem)\n", via);
+            vitia_summa++;
+            perge;
+        }
+
+        /* canonem invenire: RADIX VINCIT, extensio cadit.
+         * '.stml' quattuor dialectos fert, ergo extensio illis
+         * nihil dicit; elementum radicis dialectum semper nominat */
         si (canon_expressus)
         {
             via_canonis = chorda_ex_literis(canon_expressus,
@@ -115,8 +132,18 @@ principale(
         }
         alioquin
         {
-            via_canonis = canon_registrum_quaerere(catalogus, via,
-                                                   piscina);
+            via_canonis.datum   = NIHIL;
+            via_canonis.mensura = ZEPHYRUM;
+            si (r.elementum_radix && r.elementum_radix->titulus)
+            {
+                via_canonis = canon_registrum_quaerere_radice(
+                    catalogus, r.elementum_radix->titulus, piscina);
+            }
+            si (via_canonis.mensura == ZEPHYRUM)
+            {
+                via_canonis = canon_registrum_quaerere(catalogus,
+                                                       via, piscina);
+            }
         }
         si (via_canonis.mensura == ZEPHYRUM)
         {
@@ -144,22 +171,6 @@ principale(
                     (constans character*)via_canonis.datum,
                     (integer)causa.mensura,
                     (constans character*)causa.datum);
-            perge;
-        }
-
-        fons = filum_legere_totum(via, piscina);
-        si (fons.mensura == ZEPHYRUM)
-        {
-            fprintf(stderr, "canon_examen: '%s' legi nequit\n", via);
-            perge;
-        }
-
-        r = stml_legere(fons, piscina, intern);
-        si (!r.successus)
-        {
-            fprintf(stderr, "canon_examen: '%s' parsari nequit "
-                            "(gradus I, ante canonem)\n", via);
-            vitia_summa++;
             perge;
         }
 

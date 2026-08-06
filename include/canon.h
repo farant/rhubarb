@@ -126,20 +126,35 @@ canon_nuntius(
 /* ==================================================
  * Registrum - extensio ad canonem
  *
- * Forma plagulae (canones.registrum in radice):
- *   # commentarius
- *   .genera<TAB>natura/natura.canon
+ * Forma plagulae (canones.registrum in radice), DUAE claves:
+ *   .genera<TAB>natura/natura.canon      per EXTENSIONEM
+ *   <aedilis><TAB>aedilis.canon          per ELEMENTUM RADICIS
  *
- * Extensio hoc modo CONTRACTUM nominat sine plagula aperienda -
- * eadem ratio qua '.genera' ab '.stml' distinctum est.
+ * CUR DUAE: extensio contractum nominat sine plagula aperienda -
+ * ratio qua '.genera' ab '.stml' distinctum est. SED '.stml'
+ * QUATTUOR dialectos fert (librarium, grammatica, aedilis,
+ * quaestiones), ergo illis extensio nihil dicit. Elementum
+ * radicis dialectum SEMPER nominat, quia documentum se ipsum
+ * profitetur.
+ * Radix VINCIT cum utraque adest: specialius vincit.
+ * (Inventum dialecto secundo describendo: '.stml -> aedilis'
+ * tres alios dialectos falso iudicasset.)
  * ================================================== */
 
-/* Canonem pro via plagulae invenire.
+/* Canonem per EXTENSIONEM viae invenire.
  * Redde: via canonis (ex piscina) aut chorda vacua si nullus. */
 chorda
 canon_registrum_quaerere(
     chorda               catalogus,
     constans character*  via_plagulae,
     Piscina*             piscina);
+
+/* Canonem per ELEMENTUM RADICIS invenire (clavis '<nomen>').
+ * Redde: via canonis aut chorda vacua si nullus. */
+chorda
+canon_registrum_quaerere_radice(
+    chorda            catalogus,
+    constans chorda*  radix,
+    Piscina*          piscina);
 
 #endif /* CANON_H */

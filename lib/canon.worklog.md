@@ -42,3 +42,41 @@ Id est quod stratum schematis praestare debet: non minus codicis in
 natura (regulae IX-XIII manent, et illae sunt gemmae), sed
 FUNDAMENTUM ubi nullum erat, et vocabularium quod in tribus locis
 manu servatum non amplius est.
+
+## 2026-08-06 — dialectus SECUNDUS (aedilis): duo defectus linguae
+
+Aedilis scriptus est ut PROBATIO GENERALITATIS, non ut lucrum. Duo
+defectus statim invenit quos natura sola numquam ostendisset - quod
+est tota ratio dialecti secundi ante fidem.
+
+I. FORMAE CONTEXTU DEPENDENTES. <regula> duas formas fert:
+     intra <nexus>        obiectum= poscit, <vexillum> continet
+     intra <irregularia>  caput= poscit, <obiectum> continet
+   Declarationes GLOBALES (mos DTD) unionem solam dicere possunt,
+   unde '<regula obiectum="x"><obiectum/></regula>' transiret.
+   Attributum 'intra=' additum (mos RELAX NG); clavis tabulae fit
+   "parens/nomen", et specialius vincit. Natura eo caruit quia
+   nullum nomen bis diverse adhibet.
+
+II. REGISTRUM PER EXTENSIONEM SOLAM FALSUM EST. Primo scripsi
+    '.stml -> aedilis.canon'. Sed '.stml' QUATTUOR dialectos fert
+    (librarium, grammatica, aedilis, quaestiones): illa linea tres
+    alios dialectos canone alieno iudicasset. Extensio contractum
+    nominat SOLUM ubi extensio dialecto propria est - quod '.genera'
+    est et '.stml' non.
+    Additum: clavis per ELEMENTUM RADICIS ('<aedilis>'), quae
+    dialectum semper nominat quia documentum se ipsum profitetur.
+    RADIX VINCIT, extensio cadit.
+
+ET UNCUS BINARII STALI RURSUS. Mutationem 'intra' per
+`clang -c ... -o /dev/null` probavi - quod SYNTAXIN probat et
+BINARIUM NON SCRIBIT - deinde bin/canon_examen VETUS cursus est.
+Scopus tacite fallebat et causam in tabula dispersa quaerebam.
+Aedificatio depurationis (flagra pauciora) rem statim solvit, quia
+illa RE VERA compilata est.
+Eadem lectio quam natura_visus porta stala custodit; canon_examen
+eam nondum habet. '-o /dev/null' probat te compilare posse, non te
+compilavisse.
+
+MENSURATUM: natura 33 plagulae / 3 vitia (vera, supra); aedilis
+2 plagulae / 0 vitia.
