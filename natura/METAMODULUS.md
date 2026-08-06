@@ -64,8 +64,18 @@ Five commitments, each with consequences in the grammar:
 </natura>
 ```
 
-One model = one file = `natura/<modulus>.stml`. The `modulus`
-attribute MUST equal the filename stem.
+One model = one file = `natura/<modulus>.genera`. The `modulus`
+attribute MUST equal the filename stem (rule 14).
+
+**Why its own extension** (2026-08-06). The syntax is STML, but
+STML is a *syntax*, not a genre — this repo also writes silva
+queries, grammar fixtures and vitrea layouts in it. A taxonomy
+file additionally obeys a closed vocabulary (§3/§4) and the
+loader's contract (§8), so it is to `.stml` what `.svg` is to
+`.xml`: same grammar, its own schema, its own validator. The
+extension is what lets a tool know which contract applies without
+opening the file — and it is what the `.genera` edit hook keys on.
+Editors should map `.genera` to STML/XML highlighting.
 
 **Models are files, not kingdoms.** The taxonomy is ONE tree;
 splitting it across files is our convenience. Genera, properties
@@ -514,28 +524,45 @@ also resolves, so treat it as a discipline.
 
 ## 8. Normative rules (the loader's contract)
 
-Rules marked **[E]** are enforced today by
-`tools/natura_visus.sh` (exit 1 on violation). Rules marked
-**[S]** are specified but not yet enforced — they need
-genus-inheritance resolution, which is precisely the loader's
-job and the reason to build it.
+**THE LOADER EXISTS** (2026-08-06, `lib/natura.c`). Rules 9–13
+were marked [S] for eighteen rounds with the note that they need
+genus-inheritance resolution "which is precisely the loader's job
+and the reason to build it." They are now **[E]**, and their first
+corpus contact found eleven real violations no shell pass could
+see — the shell can tell that a name exists *somewhere*; only an
+inheritance walk can ask whether it resolves *from here*.
+
+Two enforcers, both authoritative, different jobs:
+
+| | `tools/natura_visus.sh` | `bin/natura_examen` |
+|---|---|---|
+| written in | shell + xmllint | C (the loader) |
+| cost | ~14 s | ~0.03 s |
+| also emits | INDEX.md, HTML, umbrae, monita (rules 18/19, prose-drift) | diagnostics only |
+| enforces | structural [E] | structural [E] **+ 9–13** |
+| used by | hand, before commit | the `.genera` edit hook |
+
+`natura_examen` always loads **every** model even when judging one
+file, because rules 2/3/4 cross model boundaries; `-plagula` filters
+what is *shown*, never what is *checked*, and a break anywhere still
+exits 1. Exit 2 means NOTHING RAN — never read it as health.
 
 | # | Rule | Status |
 |---|---|---|
 | 1 | Every file is well-formed XML | [E] (`xmllint`) |
 | 2 | `relatio`/`relatum` `ad=` resolves to a genus or dictionary entry in the named model, unless `externum` or `ad="*"` | [E] |
-| 3 | `proprietas` with `modulus=` resolves to a genus in that model | [E] |
+| 3 | `proprietas` with `modulus=` resolves in that model — to a genus [E]; to a *dictionary entry* it resolves but MONITA (see below) |
 | 4 | `genus` with `sub=` + `modulus=` resolves cross-model | [E] |
 | 5 | `fons=` resolves to a declared `clavis` | [E] |
 | 6 | `certitudo=` is a species of `gradus_assensus` | [E] |
 | 7 | `valens_a`/`valens_ad` are well-formed dates and correctly ordered | [E] |
 | 8 | Only known elements and attributes appear (this document's §3/§4) | [E] |
-| 9 | `valor nomen=` names a property declared on the entry's genus or an ancestor (or a `machina_statuum`) | [S] |
-| 10 | A `valor` for an `electio` property matches a declared `optio` | [S] |
-| 11 | `relatum nomen=` names a relation declared on the genus or an ancestor | [S] |
-| 12 | `transitus a=`/`ad=` name declared statuses of the same machine | [S] |
-| 13 | `eventum actio=` names a declared `actio` | [S] |
-| 14 | `modulus` attribute equals the filename stem | [S] |
+| 9 | `valor nomen=` names a property declared on the entry's genus or an ancestor (or a `machina_statuum`) | [E] |
+| 10 | A `valor` for an `electio` property matches a declared `optio` | [E] |
+| 11 | `relatum nomen=` names a relation declared on the genus or an ancestor | [E] |
+| 12 | `transitus a=`/`ad=` name declared statuses of the same machine | [E] |
+| 13 | `eventum actio=` names a declared `actio` | [E] |
+| 14 | `modulus` attribute equals the filename stem | [E] |
 | 15 | No two entities share a name within a model (addressing depends on it, §4b) | [E] |
 | 16 | No `externum` flag on a target that is now described (a stale flag makes the agenda LIE) | [E] |
 | 17 | The `versio` attribute matches the version stated in the file's header comment | [E] |
@@ -545,6 +572,24 @@ job and the reason to build it.
 Rules 9–13 are the Cyc-consistency defense: they are what makes a
 hand-written library stay coherent past the point where one mind
 holds it.
+
+**Rule 3's second case — a property typed by a dictionary entry.**
+`editio.index_isbn` is typed `genus="isbn"`, and `isbn` is a
+*species* of `schema_identificandi`, not a genus. This RESOLVES and
+is a MONITUM, not a vulnus: rule 2 already accepts "a genus or a
+dictionary entry", and §4b makes an address rank-blind on purpose
+("whether it is a kind or an instance is a fact you learn on
+arrival"). Refusing it here would contradict both.
+
+What the monitum carries is the real observation: **typing a
+property by a SCHEME means the property's apparatus describes the
+scheme, not the value.** `opacus="falsum"` is true of ISBN-as-a-
+scheme and says nothing whatever about this book's ISBN. It is the
+`gerens` distinction again — the species macOS never sleeps, an
+installation does — and the format has no way to say "a value drawn
+from scheme X" as distinct from "a thing which IS an X". One
+occurrence (ledger `01KZBWKZ0Q`). Recorded, not built; a second
+case (postal code, currency, phone number) makes it a mechanism.
 
 **Rule 18 is advisory [M]** — it reports MONITA, does not fail the
 run, and does not change the exit code. It cannot be enforced,

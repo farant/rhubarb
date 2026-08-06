@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/planta.genera
+  Exemplar semanticum: PLANTA (versio 1, PLASTICUM)
+  EXEMPLAR ALIENUM SECUNDUM, et maxime alienum: res VIVENTES,
+  quibus nihil computatrale subest.
+
+  PROBATIO GRAVISSIMA FORMAE - dominium ipsum Linnaei, cuius
+  exemplum formam nostram genuit: si ranks eius non capimus, forma
+  patrem suum non capit.
+
+  MECHANISMI NOVI TRES, omnes contentu coacti:
+  (1) PARTES - compositio essentialis: planta radicem, caulem,
+      folia HABET. Relationes habebamus, compositionem NON
+      (programma partes tales non poposcit; res corporea statim
+      poscit). Aristotelicae partes essentiales.
+  (2) gradus= in genere - nomen RANKUS in verbis dominii
+      (familia/genus/species): biologia ranks NOMINAT, et
+      nomenclatura eorum iuridica est. (Attributum machinae
+      statuum de gradu= ad gerens= renominatum: nomen unum duas
+      res significare in bibliotheca de nominatione accurata
+      non licet - transformatio disciplinae.)
+  (3) CYCLUS in machina statuum: perennis quotannis floret,
+      fructificat, quiescit, ITERUM floret. Machinae priores
+      lineares aut terminales erant; vita cyclum vult.
+
+  NEXUS TRANS DOMINIA ALIENA: nomina specierum in OPERIBUS
+  publicantur (Species Plantarum 1753 principium iuridicum
+  nomenclaturae botanicae) - exemplar plantarum exemplar librorum
+  CITAT. Praxis vera; et probatio quod citatio trans-modularis
+  extra paroeciam nostram valet.
+-->
+<natura modulus="planta" versio="1" lingua="latina">
+
+<!-- v0->v1: planta sub VIVENTE collocata (subordinatio trans
+     exemplaria, mechanismus rotae XVII): arbor una est,
+     exemplaria plagulae sunt. Planta iam non libera pendet sed
+     ramum suum in arbore Porphyriana tenet - et proprietas
+     'anima' a vivente hereditata (vegetativa) differentiam
+     eius iam dicebat sine verbo. -->
+<genus nomen="planta" sub="vivens" modulus="corporalia">
+
+  <definitio>
+    Vivens quod se ex loco non movet et lucem in cibum vertit
+    (photosynthesis): radicibus haeret, per partes crescit,
+    semine aut talea se multiplicat. Anima vegetativa sola -
+    nutritio, augmentum, generatio, sine sensu.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="habitus" genus="electio">
+      <optio>herba</optio>
+      <optio>frutex</optio>
+      <optio>arbor</optio>
+      <optio>scandens</optio>
+    </proprietas>
+    <proprietas nomen="durata" genus="electio">
+      <optio>annua</optio>
+      <optio>biennis</optio>
+      <optio>perennis</optio>
+    </proprietas>
+    <proprietas nomen="folia_permanentia" genus="electio">
+      <optio>decidua</optio>
+      <optio>sempervirens</optio>
+    </proprietas>
+    <proprietas nomen="altitudo_matura" genus="numerus"
+      nota="metra; INTERVALLUM vere (2-5 m) non punctum -
+            proprietates rerum viventium AMBITUS habent, non
+            valores. Forma nostra intervalla nondum fert:
+            DUBIUM infra"/>
+  </proprietates>
+
+  <!-- MECHANISMUS NOVUS: compositio essentialis -->
+  <partes>
+    <pars nomen="radix" necessaria="verum"
+      nota="haustus aquae, ancora"/>
+    <pars nomen="caulis" necessaria="verum"/>
+    <pars nomen="folium" necessaria="verum"
+      nota="officina photosynthesis"/>
+    <pars nomen="flos" necessaria="falsum"
+      nota="angiospermae solae - filices, coniferae carent;
+            necessaria=falsum honestum est, non defectus"/>
+    <pars nomen="fructus" necessaria="falsum"
+      nota="ex flore fecundato"/>
+    <pars nomen="semen" necessaria="falsum"/>
+  </partes>
+
+  <!-- machina INDIVIDUI cum CYCLO (mechanismus novus) -->
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="semen"/>
+    <status nomen="germinans"/>
+    <status nomen="iuvenis"/>
+    <status nomen="florens"/>
+    <status nomen="fructifera"/>
+    <status nomen="quiescens" nota="hiems perennium"/>
+    <status nomen="mortua"/>
+    <transitus a="semen" ad="germinans" per="germinatio"/>
+    <transitus a="germinans" ad="iuvenis" per="augmentum"/>
+    <transitus a="iuvenis" ad="florens" per="maturitas"/>
+    <transitus a="florens" ad="fructifera" per="fecundatio"/>
+    <transitus a="fructifera" ad="quiescens" per="hiematio"/>
+    <transitus a="quiescens" ad="florens" per="ver"
+      nota="CYCLUS: hic machina in se redit - perennis quotannis
+            iterum floret. Machinae nostrae priores lineares;
+            vita rotam vult"/>
+    <transitus a="fructifera" ad="mortua" per="mors"
+      nota="annuae hic finiunt - una fructificatio, deinde mors:
+            eadem machina, viae duae, quas proprietas 'durata'
+            discernit"/>
+    <transitus a="florens" ad="mortua" per="mors"/>
+    <transitus a="iuvenis" ad="mortua" per="mors"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="germinare"/>
+    <actio nomen="florere"/>
+    <actio nomen="fructificare"/>
+    <actio nomen="propagari" nota="semine, talea, divisione"/>
+    <actio nomen="nominari" nota="nomen scientificum in opere
+      publicatur - actio quae nomen ipsum gignit"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="auctor_nominis" ad="persona" modulus="persona"
+      nota="qui nomen scientificum publicavit ('L.' = Linnaeus) -
+            nomen SPECIEI auctorem habet, quod in nominibus
+            computatralibus nemo praestat"/>
+    <relatio nomen="nomen_publicatum_in" ad="opus_scriptum"
+      modulus="opus_scriptum"
+      nota="citatio trans dominia aliena duo: Species Plantarum
+            1753 principium iuridicum"/>
+    <relatio nomen="pollinatur_a" ad="animal" modulus="animal"
+      nota="relatio ecologica, MUTUA: planta et pollinator se
+            invicem egent (relationes nostrae hactenus fere
+            omnes unilaterales fuerunt). Umbra rotae VII rota
+            XVII IMPLETA - exemplar animalis natum, apis
+            descripta"/>
+  </relationes>
+
+  <dubium>
+    Proprietates viventium AMBITUS sunt, non puncta: altitudo
+    "2-5 m", dies florendi "Maius-Iunius". Forma nostra valorem
+    unum fert. Res vivens hanc formam poscit; programma numquam
+    poposcit - fructus probationis alienae.
+    PARTIM SOLUTUM (exemplar mensurae natum, experimento
+    pistrinae pulsum): genus quantitas minimum/maximum fert
+    IUXTA valorem, ideo altitudo_matura quantitas esse potest,
+    non numerus nudus (unitas quoque lucratur: 'metra' in nota
+    latebat). RELIQUUM APERTUM: ambitus TEMPORIS (Maius-Iunius)
+    quantitas non est sed intervallum recurrens - exemplar
+    temporis id ferre potest, nexus nondum tractus. Migratio
+    proprietatum ad quantitates per exemplaria omnia opus
+    editoriale est, Fran iudicante.
+  </dubium>
+
+</genus>
+
+<!-- ==================================================
+     RANKS TAXINOMICI - genera cum gradu nominato
+     (mechanismus novus: gradus= nomen rankus in verbis
+     dominii. Spina sub= nostra profunditatem iam ferebat;
+     biologia ranks NOMINARI vult quia lex eos nominat)
+     ================================================== -->
+
+<genus nomen="rosaceae" sub="planta" gradus="familia">
+
+  <differentia>
+    Flores quinque-petali plerumque, stipulae ad folia, fructus
+    varii (pomum, drupa, aggregatus) - familia late diversa quam
+    florum structura unit, non fructuum forma.
+  </differentia>
+
+  <relatum nomen="auctor_nominis" ad="carl_linnaeus"
+    modulus="persona"/>
+
+  <nota>
+    Familia quae rosam et malum et pirum et prunum et fragum
+    CONTINET: veritas quam taxinomia visibilem facit et sensus
+    communis negaret. Rosa et malum cognatae sunt - hoc est cur
+    taxinomiae verae valeant.
+  </nota>
+
+  <!-- ============ ROSA (genus taxinomicum) ============ -->
+
+  <genus nomen="rosa" sub="rosaceae" gradus="genus">
+    <differentia>
+      Caules aculeati, folia imparipinnata, fructus hypanthium
+      carnosum (cynorrhodon) - non pomum.
+    </differentia>
+    <valor nomen="habitus">frutex</valor>
+    <valor nomen="durata">perennis</valor>
+    <relatum nomen="auctor_nominis" ad="carl_linnaeus"
+      modulus="persona"/>
+    <relatum nomen="nomen_publicatum_in" ad="species_plantarum"
+      modulus="opus_scriptum"/>
+
+    <species nomen="rosa_canina" gradus="species">
+      <definitio>
+        Rosa silvestris Europae: flores simplices roseo-albi,
+        cynorrhoda rubra vitamine C dives, aculei recurvi.
+      </definitio>
+      <valor nomen="folia_permanentia">decidua</valor>
+      <valor nomen="altitudo_matura">3</valor>
+      <relatum nomen="auctor_nominis" ad="carl_linnaeus"
+        modulus="persona"/>
+      <relatum nomen="nomen_publicatum_in" ad="species_plantarum"
+        modulus="opus_scriptum"/>
+      <nota>
+        Nomen plenum cum auctore: "Rosa canina L." - abbreviatio
+        auctoris PARS NOMINIS est. Nomenclatura biologica
+        provenientiam in nomine ipso fert; exemplum quod
+        elementum &lt;fons&gt; nostrum olim imitetur.
+      </nota>
+    </species>
+  </genus>
+
+  <!-- ============ MALUS (genus taxinomicum) ============ -->
+
+  <genus nomen="malus" sub="rosaceae" gradus="genus">
+    <differentia>
+      Fructus POMUM (hypanthium carnosum quod semina includit),
+      non drupa nec cynorrhodon.
+    </differentia>
+    <valor nomen="habitus">arbor</valor>
+    <valor nomen="durata">perennis</valor>
+    <valor nomen="folia_permanentia">decidua</valor>
+
+    <species nomen="malus_domestica" gradus="species">
+      <definitio>
+        Malus culta, ex hybridatione longa orta (M. sieversii
+        praecipue): fructus edulis, per insitionem propagata quia
+        semina parentem non referunt.
+      </definitio>
+      <differentia>
+        Species CULTA: forma eius non natura sola sed hominum
+        electione millenaria facta - "domestica" nomen honestum.
+      </differentia>
+      <valor nomen="altitudo_matura">5</valor>
+      <relatum nomen="pollinatur_a" ad="apis" modulus="animal"/>
+      <nota>
+        Propagatio per insitionem, non semine: cultivar quisque
+        CLONUS est, unius arboris progenies vegetativa. Identitas
+        biologica hic modo insolito currit - individua genetice
+        eadem trans saecula.
+      </nota>
+
+      <cultivar nomen="granny_smith">
+        <definitio>
+          Cultivar Australianus: fructus viridis, acidus, durus,
+          conservationi aptus.
+        </definitio>
+        <differentia>
+          Cultivar (varietas CULTA): non natura orta sed ab
+          homine electa et vegetative servata - gradus quem
+          natura sola non habet, sed res verus est.
+        </differentia>
+        <historia>
+          <eventum quando="1868" actio="nominari">apud Mariam Ann
+            Smith in Australia inventa</eventum>
+        </historia>
+      </cultivar>
+    </species>
+  </genus>
+
+</genus>
+
+</natura>

@@ -1,0 +1,818 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/fabricatio.genera
+  Exemplar semanticum: FABRICATIO (versio 7, PLASTICUM)
+  Genera: postulatum, facultas, probatio, vitium.
+
+  QUADRATUM INTENTIONIS: postulatum intentionem DECLARAT ante
+  opus; facultas intentio POSSESSA est; probatio realizationem
+  contra intentionem INTERROGAT; vitium discrepantia MENSURATA.
+  Quattuor genera, stratum unum - nullum eorum in moribus solis
+  observari potest.
+
+  TESTIMONIUM: lis vulgata "non vitium sed facultas est" lis de
+  GENERE est - mores iidem, genus disputatur - et solvi non
+  potest nisi intentione consulta. Quod probat totum quadratum
+  in strato intentionis vivere.
+-->
+<natura modulus="fabricatio" versio="7" lingua="latina">
+
+<!-- ==================================================
+     POSTULATUM - intentio declarata ante opus
+     ================================================== -->
+
+<genus nomen="postulatum">
+
+  <definitio>
+    Intentio declarata ANTE opus: quod verum esse debet ut opus
+    perfectum dicatur. Fons iudicii ceterorum: vitium contra
+    postulatum mensuratur, probatio postulatum interrogat,
+    facultas postulatum implet.
+  </definitio>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="propositum"/>
+    <status nomen="receptum"/>
+    <status nomen="impletum"/>
+    <status nomen="reiectum"/>
+    <transitus a="propositum" ad="receptum" per="receptio"/>
+    <transitus a="propositum" ad="reiectum" per="reiectio"/>
+    <transitus a="receptum" ad="impletum" per="impletio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="impletur_a" a="facultas" inversa="verum"
+      nota="impletur a facultas.implet"/>
+    <relatio nomen="interrogatur_a" a="probatio" inversa="verum"
+      nota="impletur a probatio.interrogat"/>
+  </relationes>
+  <!-- in domo: postulata_posix.h nomen ipsum gerit - quae
+       plagula a systemate POSIX postulat, declarata primo -->
+
+</genus>
+
+<!-- ==================================================
+     FACULTAS - intentio possessa
+     ================================================== -->
+
+<genus nomen="facultas">
+
+  <definitio>
+    Quod opus praestare potest, ab utente aestimatum: unitas
+    VALORIS. Postulatum est intentio petita; facultas intentio
+    possessa - quod utens nominat cum narrat quid programma
+    faciat.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="implet" ad="postulatum" multiplex="verum"/>
+    <relatio nomen="realizata_a" ad="*" multiplex="verum"
+      nota="functiones, bibliothecae, elementa quae eam
+            efficiunt - facultas una, elementa multa"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     PROBATIO - interrogatio exsecutabilis intentionis
+     ================================================== -->
+
+<genus nomen="probatio">
+
+  <definitio>
+    Interrogatio exsecutabilis intentionis: scaena parata,
+    actio exercita, effectus contra exspectationem collatus.
+    Vas assertionum - probatio assertiones continet, quibus
+    iudicat (in domo nostra bibliotheca credo).
+  </definitio>
+
+  <nota>
+    HONESTAS: probatio mentiri potest - quod non exercet, non
+    probat; apparatus fictus assumptiones auctoris communicat
+    (in domo mensuratum: probationes virides mendaces,
+    apparatus qui assumptiones communicant). Probatio transiens
+    id solum probat quod re vera exercuit.
+  </nota>
+
+  <relationes>
+    <relatio nomen="interrogat" ad="postulatum"/>
+    <relatio nomen="continet" ad="assertio"
+      modulus="elementa_programmatis" multiplex="verum"/>
+    <relatio nomen="exercet" ad="functio"
+      modulus="elementa_programmatis" multiplex="verum"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="probatio_unitatis">
+    <definitio>
+      Elementum SOLUM probat, in insula: unum genus, unus mos,
+      apparatus minimus. In domo nostra probationes/ per
+      bibliothecam - unitas est bibliotheca.
+    </definitio>
+  </species>
+
+  <species nomen="probatio_integrationis">
+    <definitio>
+      Elementa UNA probat: suturae ipsae interrogantur - nam
+      vitia in suturis habitant, ubi assumptiones duorum
+      elementorum conveniunt nec semper congruunt.
+    </definitio>
+  </species>
+
+  <species nomen="probatio_regressionis">
+    <definitio>
+      Nata ex vitio: umbra vitii sanati custos posita, ne
+      redeat. Orta ex re quam custodit - probatio cum historia.
+    </definitio>
+  </species>
+
+  <species nomen="probatio_fumi">
+    <definitio>
+      "Vivitne omnino?" - levissima latissima: nihil profundum,
+      omnia tacta. Prima post mutationem magnam, non ultima.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     VITIUM - discrepantia inter intentionem et mores
+     ================================================== -->
+
+<genus nomen="vitium">
+
+  <definitio>
+    Discrepantia inter intentionem et mores: programma facit
+    quod scriptum est, non quod volitum - vitium in hiatu
+    vivit. Mores soli vitiosi esse non possunt: vitium
+    relationem ad intentionem postulat (postulatum, assertionem,
+    exspectationem), sine qua tantum "mores" sunt.
+  </definitio>
+
+  <nota>
+    Vitium quod observatione fugit "heisenbug" vulgo dicitur -
+    observatio ipsa mores mutat (tempora, memoria); species
+    nondum, fama iam.
+  </nota>
+
+  <nota>
+    TRIAS DEFECTUUM (rota XXI): tria genera mali per NORMAM ad
+    quam mensurantur distinguuntur - vitium ab INTENTIONE
+    (hic), morbus a NATURA (morbus.morbus), damnum ab
+    INTEGRITATE (corporalia.damnum). Ideo programma vitiosum,
+    animal aegrotum, saxum damnatum: quo plus rei debetur, eo
+    plura mala pati potest. Trias eadem in tribus plagulis
+    scripta est ne lector ullam solam inveniens partem pro
+    toto sumat.
+  </nota>
+
+  <dubium>
+    SANATIO REBUS CORPOREIS NON CONVENIT (inventum experimenti
+    pistrinae): sanatio = mutatio fontis, quae rem emendabilem
+    supponit. Panis adustus non emendatur - abicitur et
+    RECOQUITUR. Materia irreversibilis est; emendatio
+    privilegium rerum digitalium. An transitus 'refectio'
+    (novum facere) iuxta 'sanationem' addendus, an vitium
+    corporeum aliud genus omnino? Quadratum ipsum tenuit -
+    hic solus locus flexus est. APERTUM.
+    (Vide corporalia.instrumentum: machina eius iam REFECTIONEM
+    dicit, non sanationem - lingua ibi iam divisit.)
+  </dubium>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="relatum_est"
+      nota="querella accepta, nondum probata"/>
+    <status nomen="confirmatum"/>
+    <status nomen="sanatum"/>
+    <status nomen="clausum"/>
+    <status nomen="non_reproductum"
+      nota="querella quam probare non potuimus - nec falsa
+            declarata nec vera: honeste incognita"/>
+    <status nomen="non_sanandum"
+      nota="mores manent, INTENTIO mutatur: vitium moritur
+            sine mutatione codicis - resolutio per
+            re-declarationem; philosophice ditissimus exitus"/>
+    <transitus a="relatum_est" ad="confirmatum"
+      per="reproductio"
+      nota="reproductio = probatio ex querella facta"/>
+    <transitus a="relatum_est" ad="non_reproductum"
+      per="defectio_reproductionis"/>
+    <transitus a="confirmatum" ad="sanatum" per="sanatio"
+      nota="sanatio = mutatio fontis - vide
+            elementa_programmatis.mutatio"/>
+    <transitus a="confirmatum" ad="non_sanandum"
+      per="re_declaratio"/>
+    <transitus a="sanatum" ad="clausum" per="verificatio"/>
+    <transitus a="clausum" ad="relatum_est" per="regressio"
+      nota="vitium rediens - vide speciem; cyclus honestus"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="violat" ad="postulatum"/>
+    <relatio nomen="habitat_in" ad="*"
+      nota="functio, bibliotheca, sutura - sedes eius in
+            elementis"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="regressio">
+    <definitio>
+      Vitium REDIENS: sanatum olim, reversum - quod semel
+      fractum et refectum, iterum fractum. Causa fundationis
+      probationum domus nostrae: sine probationibus periculum
+      regressionum nimium. Custoditur a probatione
+      regressionis - umbra sua ipsius custos.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     DEBITUM TECHNICUM - imperfectio CONSULTO suscepta
+
+     GENUS PER IUDICIUM (rota XXXIV, Fran): membrum huius
+     generis non ex inspectione legitur sed ASSERITUR ab eo
+     qui vocabularium habet. Non ideo infirmius - tertia
+     pars bibliothecae ita se habet (morbus dignoscitur,
+     vitium iudicatur, incidens declaratur), et hic ipse
+     locus est ubi PERITIA vocabularii pretium suum ostendit:
+     tiro codicem molestum videt, peritus DEBITUM videt, et
+     vocabulum statim actiones affordat (principal aestimare,
+     usuram pensare, solvere an servire).
+     ================================================== -->
+
+<genus nomen="debitum_technicum">
+
+  <definitio>
+    Imperfectio in opere CONSULTO suscepta ut aliquid citius
+    praestetur, cum cognitione pretii posterioris: non defectus
+    sed COMMUTATIO - valor nunc sumptus, pretium postea
+    solvendum. Ideo metaphora nummaria portat: debitum non
+    culpa est sed instrumentum, et sicut in re nummaria debitum
+    bonum et malum datur.
+  </definitio>
+
+  <nota>
+    MENDACIUM VULGARE, ET PIEPERIANUM: usus hodiernus "debitum
+    technicum" pro quolibet codice pravo dicit. Ward Cunningham,
+    qui metaphoram anno 1992 finxit, aliud significabat -
+    emittere quod intellectum PRAESENTEM refert, deinde
+    reficere dum intellectus crescit; ipse dixit se codicem
+    prave scribi numquam probare. Ergo:
+    - imperfectio CONSULTA cum pretio cognito = debitum;
+    - imperfectio INSCIA aut neglegens = non debitum sed
+      vitium aut ars mala.
+    Vocabulum ad usum lapsum est ut culpam excusaret ("debitum
+    habemus" mollius sonat quam "male scripsimus") - abusus
+    linguae exemplum purum, in dominio nostro.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="usura" genus="textus"
+      nota="quod SINGULIS VICIBUS solvitur dum debitum manet:
+            mora cuiusque mutationis, probationes fragiles,
+            tirones tardius discentes. Usura, non principal,
+            decisionem regit - debitum sine usura solvi non
+            oportet"/>
+    <proprietas nomen="consulta" genus="veritas"
+      ordinarius="verum"
+      nota="an suscepta sit sciente auctore - falsum reddit
+            genus dubium (vide notam supra)"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="susceptum"/>
+    <status nomen="servitum"
+      nota="usura solvitur, principal manet - status in quo
+            debita plurima PERPETUO vivunt, quod tabulae raro
+            fatentur"/>
+    <status nomen="solutum"/>
+    <status nomen="remissum"
+      nota="pars codicis deleta aut substituta: debitum sine
+            solutione perit - exitus verus et frequens, quem
+            'refactoring' solum non capit"/>
+    <transitus a="susceptum" ad="servitum" per="mora"/>
+    <transitus a="servitum" ad="solutum" per="solutio"/>
+    <transitus a="servitum" ad="remissum" per="remotio"/>
+    <transitus a="susceptum" ad="solutum" per="solutio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="asseritur_per" ad="iudicium" modulus="iudicium"
+      nota="MEMBRUM PER IUDICIUM: quod hic codex debitum sit
+            affirmatio est cum auctore, momento, gradu assensus -
+            non proprietas ex inspectione lecta. Duo periti
+            dissentire possunt, nec alter ideo errat"/>
+    <relatio nomen="inhaeret" ad="*"
+      nota="cui parti operis - bibliothecae, functioni, schemati"/>
+    <relatio nomen="emit" ad="facultas" multiplex="verum"
+      nota="QUID PRETIO EMPTUM SIT: debitum sine facultate
+            empta debitum non est sed damnum purum. Relatio
+            quae iudicium honestum facit"/>
+    <relatio nomen="solvitur_per" ad="pensum" modulus="operatio"
+      multiplex="verum"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     COMPLICATIO - quod opere solo apparet
+
+     GENUS EX EXPERIENTIA NATUM, non ex dominio hausto
+     (rota XXXV): primum in bibliotheca quod Fran per annos
+     operando PERCEPIT et nominavit, non quod Roma aut
+     Linnaeus aut FRBR iam nominaverat. Ideo probatio
+     Pieperiana hic gravior est: terminus ab experientia
+     ortus custodem externum non habet.
+
+     LATINITAS ONUS FERT: differentia tota inter NON PRAEVISA
+     et NON PRAEVIDENDA stat, quod gerundivum uno morphemate
+     dicit ubi Anglicum periphrasi eget ("was not foreseen"
+     contra "could not have been foreseen").
+     ================================================== -->
+
+<genus nomen="complicatio">
+
+  <definitio>
+    Consideratio implementationis quae consilio praevideri NON
+    POTEST sed opere incepto sola apparet, et consilium
+    retractare potest. Non defectus consilii sed TERMINUS eius:
+    quaedam nisi faciendo non discuntur.
+  </definitio>
+
+  <differentia>
+    NON PRAEVISA contra NON PRAEVIDENDA - discrimen quod totam
+    utilitatem generis portat. Neglegentia praevideri POTUIT et
+    non est: culpa consilii, quam consilium melius sanat.
+    Complicatio praevideri NON POTUIT: nullum consilium eam
+    cepisset, et plus consilii NIHIL profuisset.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="praevidenda" genus="veritas"
+      ordinarius="falsum"
+      nota="AN PRAEVIDERI POTUERIT - iudicium, non factum, et
+            duo periti dissentire possunt. Verum redditum genus
+            TOLLIT: quod praevideri potuit neglegentia est, non
+            complicatio"/>
+    <proprietas nomen="effectus_in_consilium" genus="electio">
+      <optio>nullus</optio>
+      <optio>localis</optio>
+      <optio>consilium_retractandum</optio>
+      <optio>consilium_irritum</optio>
+    </proprietas>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="latens"
+      nota="adest et nemo scit - status verus quamvis nulli
+            observabilis, sicut morbus latens"/>
+    <status nomen="aperta" nota="opere incepto manifesta"/>
+    <status nomen="absorpta" nota="intra consilium tractata"/>
+    <status nomen="consilio_mutato" nota="consilium retractatum"/>
+    <transitus a="latens" ad="aperta" per="inceptio_operis"
+      nota="TRANSITUS SOLA ACTIONE FACTUS: nec mora nec
+            cogitatio eum efficit - unde exemplaria quae
+            complicationes citius aperiant (Fran: simulare
+            implementationem) pretium suum habent"/>
+    <transitus a="aperta" ad="absorpta" per="absorptio"/>
+    <transitus a="aperta" ad="consilio_mutato" per="retractatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="aperitur_in" ad="pensum" modulus="operatio"
+      nota="dum opus agitur, non dum cogitatur"/>
+    <relatio nomen="retractat" ad="consilium"
+      nota="descriptum rota XLV - umbra contra quam hoc genus
+            se definiebat impleta (idem motus quo programma
+            bibliothecam liberavit, cursus V)"/>
+    <relatio nomen="asseritur_per" ad="iudicium" modulus="iudicium"
+      nota="MEMBRUM PER IUDICIUM: an praevideri potuerit
+            asseritur, non legitur - cum auctore, momento,
+            gradu assensus"/>
+  </relationes>
+
+  <nota>
+    VECTIS QUEM VOCABULUM PRAEBET (et cur genus mereatur):
+    remedia DIVERSA sunt et confusio ea invertit.
+    - Neglegentiae remedium: consilium MELIUS.
+    - Complicationis remedium: retractatio VILIOR - cycli
+      breviores, commissio sera, consilium leve.
+    Qui complicationes ut neglegentias tractat plus consilii
+    ante opus poscit - quo complicationes SERIUS apparent et
+    retractatio CARIOR fit. Error se ipsum alit. Vocabulum
+    solum eum frangit: "hoc complicatio fuit, non lapsus"
+    sententia est quae conclusionem recensionis mutat.
+  </nota>
+
+  <nota>
+    CONCEPTUS INSTRUMENTUM PEPERIT, quod signum realitatis
+    validissimum est: Fran artem simulandi implementationem
+    excogitavit (fingere se codicem scribere, singulis
+    "quinque minutis" renuntiare) ut complicationes VILITER
+    ante commissionem veram appareant. Conceptus qui methodum
+    gignit conceptus operans est, non nomen otiosum.
+  </nota>
+
+  <dubium>
+    PERICULUM PIEPERIANUM, aperte notandum: "complicatio" in
+    excusationem verti potest sicut "debitum technicum" versum
+    est - scutum quo lapsus tegatur ("non erravimus, complicatio
+    fuit"). Custodia in proprietate praevidenda stat, quae
+    IUDICIUM est et revocabile: recensio honesta interdum dicit
+    "immo, hoc praevideri potuit". Genus quod se ipsum numquam
+    falsificat iargon est, non vocabularium.
+  </dubium>
+
+</genus>
+
+<!-- ==================================================
+     CONSILIUM - ordo operum propositus
+
+     Umbra gravissima impleta (rota XLV): complicatio contra
+     consilium DEFINIEBATUR ("consilium retractare potest") dum
+     consilium ipsum non exsistebat - eadem absentia structuralis
+     quam programma habuit (bibliotheca contra id se definiebat).
+     Postulatum QUID verum esse debeat dicit; praescriptum
+     QUOMODO res iterabilis fiat; consilium QUO ORDINE opera
+     SEMEL facienda sint. Tres res, tribus generibus.
+     ================================================== -->
+
+<genus nomen="consilium">
+
+  <definitio>
+    Ordo operum propositus ad finem SEMEL petendum: quid quo
+    ordine fiet, quid cui committitur, quid ante quid stare
+    debet. De futuro loquitur et ideo semper provisorium -
+    consilium quod mutari non potest non consilium est sed
+    vinculum.
+  </definitio>
+
+  <differentia>
+    A praescripto ITERATIONE differt: praescriptum vivit quia
+    iteratur (receptum panis cotidie valet), consilium moritur
+    perfectum aut retractatum - campania una, aedificium unum,
+    editio una. A postulato MODO: postulatum quid verum esse
+    debeat dicit et de ordine tacet; consilium ordinem ipsum
+    profitetur.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="horizon" genus="electio"
+      nota="quousque prospiciat - et quo longius, eo plures
+            complicationes latent (illarum enim natura est
+            consilio praevideri non posse)">
+      <optio>operis</optio>
+      <optio>editionis</optio>
+      <optio>anni</optio>
+      <optio>ultra</optio>
+    </proprietas>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="propositum"/>
+    <status nomen="susceptum" nota="opera ex eo aperta"/>
+    <status nomen="perfectum"/>
+    <status nomen="retractatum"
+      nota="mutatum complicatione aperta - non mors sed
+            emendatio: consilium novum idem finem petit"/>
+    <status nomen="derelictum"
+      nota="finis ipse desertus - mors vera"/>
+    <transitus a="propositum" ad="susceptum" per="susceptio"/>
+    <transitus a="susceptum" ad="perfectum" per="perfectio"/>
+    <transitus a="susceptum" ad="retractatum" per="retractatio"
+      nota="complicatio.retractat huc ducit"/>
+    <transitus a="retractatum" ad="susceptum" per="renovatio"
+      nota="CYCLUS (post plantam alter): consilium retractatum
+            renovatur et opus pergit - vita consilii veri est
+            retractari et pergere, non semel recte divinare"/>
+    <transitus a="susceptum" ad="derelictum" per="derelictio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="ordinat" ad="pensum" modulus="operatio"
+      multiplex="verum"
+      nota="opera quae proponit - pensum susceptum consilio
+            respondet"/>
+    <relatio nomen="ad_postulata" ad="postulatum"
+      multiplex="verum"
+      nota="quae implere proponit"/>
+    <relatio nomen="retractatur_a" a="complicatio"
+      inversa="verum"
+      nota="impletur a complicatio.retractat - relatio propter
+            quam genus natum est"/>
+    <relatio nomen="exsequitur_per" ad="iussum" modulus="obligatio"
+      multiplex="verum"
+      nota="NEXUS ROTA L INVENTUS, per collationem quattuor
+            generum directivorum (postulatum/praescriptum/
+            consilium/iussum) quae numquam simul collata erant.
+            Definitio consilii limitem suum IAM dicebat -
+            'consilium quod mutari non potest non consilium est
+            sed VINCULUM' - et vinculum illud rota proxima
+            aedificatum est sub nomine iussi, neutro alterum
+            citante. Genera adiacentia et se mutuo definientia,
+            rotis diversis inventa, sine nexu.
+            RES IPSA: consilium quid fieri debeat PROPONIT et
+            provisorium manet; ubi opus committi debet, iussa
+            emittuntur, quae auctoritatem addunt et obligationem
+            pariunt. Consilium sine iussis exhortatio est"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="consilium_computatum">
+    <definitio>
+      Consilium a machina ex statuum comparatione derivatum:
+      quid scribendum, quid creandum, quid obstat - propositum,
+      numquam ipso facto applicatum.
+    </definitio>
+    <differentia>
+      PROIECTIO est (elementa_programmatis): ex veritate sua
+      integre recomputabile, ideo disponibile - consilium
+      humanum retractatur, computatum simpliciter REGENERATUR.
+      Silex proicere et renovare haec emittunt: 'consilium
+      ordinarium, numquam scribit; scribere = applicatio'.
+      Species domestica bis dogfooded antequam nominata.
+    </differentia>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     DEPRAVATIO - status factus pravus, nondum apparens
+
+     TERMINUS MEDIUS TRIADIS, cursu decimo inventus. Bibliotheca
+     habebat vitium (discrepantia ab INTENTIONE - defectus in
+     faciendo) et incidens (ministerium visibiliter deminutum),
+     et inter ea NIHIL. Sed distantia inter illa vitam habet:
+
+       vitium       codex pravus est
+       depravatio   data nunc prava sunt
+       incidens     ministerium deficit
+
+     ET DISCRIMEN PRETIUM IMMANE FERT: vitio sanato depravatio
+     MANET. Quod hora quarta emendatum est rationes inter horam
+     nonam et quartam corruptas non sanat - emendatio in
+     posterum agit, non retro. Confusio horum duorum est error
+     administrationis pretiosissimus, et bibliotheca eum dicere
+     omnino non poterat.
+     ================================================== -->
+
+<genus nomen="depravatio">
+
+  <definitio>
+    Status rei factus alius quam esse debuit, sive quis animadvertat
+    sive non: non defectus faciendi (id vitium est) nec defectus
+    apparens (id incidens) sed RES IPSA iam prava.
+  </definitio>
+
+  <differentia>
+    LATET NATURA SUA. Vitium in codice legi potest; incidens
+    clamat; depravatio silet - datum pravum tam bene sedet quam
+    rectum, et nihil in eo se prodit. Ideo sola triadis
+    QUAERENDA est: nemo eam invenit nisi eam quaerat, et
+    plerumque quaeritur solum postquam incidens eam prodidit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="ambitus" genus="textus"
+      nota="QUAE res depravatae sint. Prima interrogatio post
+            vitium sanatum, et cui respondere plerumque
+            difficillimum est - unde acta (quae quid mutatum sit
+            servant) hic pretium suum reddunt"/>
+    <proprietas nomen="fenestra" genus="intervallum"
+      modulus="tempus"
+      nota="inter quae momenta res depravatae sint. Terminus
+            prior a vitio ingresso pendet, non a die detectionis
+            - error vulgaris est fenestram a detectione numerare"/>
+    <proprietas nomen="sanabilis" genus="electio"
+      nota="an res rectae restitui possint. QUAESTIO QUAE OMNIA
+            REGIT: ubi acta servantur, recomputari licet; ubi
+            status solus servabatur, veritas prior PERIIT et
+            restitutio coniectura fit. Hic doctrina
+            veritas/proiectio pretium suum extremum reddit">
+      <optio>recomputabilis</optio>
+      <optio>manu_sananda</optio>
+      <optio>insanabilis</optio>
+    </proprietas>
+    <proprietas nomen="propagata" genus="veritas"
+      ordinarius="falsum"
+      nota="an ex ea alia derivata sint (relationes emissae,
+            summae computatae, decisiones factae). Depravatio
+            propagata sanationem multiplicat - et systemata quae
+            aliis nuntiant depravationem SUAM exportant"/>
+    <proprietas nomen="repugnans" genus="veritas"
+      ordinarius="falsum"
+      nota="an status pravus SANATIONEM IPSAM DEFENDAT.
+            Distinctum ab insanabili: insanabile sanari non
+            potest, repugnans sanationem ACTIVE REICIT.
+            Specimen quod hoc coegit ex apicultura venit, nullo
+            contactu computatrali: colonia diu orbata operarias
+            parientes gignit, et talis colonia reginam
+            introductam OCCIDIT - eo ipso quod aegra est,
+            medicinam repellit. Gemina computatralia: promptuarium
+            corruptum quod se renovatione re-inficit, figuratio
+            prava quae depositionem superstat, index qui se ex
+            datis pravis reficit.
+            CONSEQUENTIA PRACTICA: talis status ordine INVERSO
+            tractandus est - prius id quod repugnat tollendum
+            (colonia favo cum ovis reginalibus firmanda, aut
+            longe portanda), deinde sanatio. Qui statim sanare
+            conatur medicinam perdit et nihil discit"/>
+  </proprietates>
+
+  <machina_statuum nomen="cognitio" gerens="individuum">
+    <status nomen="latens" nota="adest, nemo scit"/>
+    <status nomen="detecta"/>
+    <status nomen="circumscripta" nota="ambitus et fenestra noti"/>
+    <status nomen="sanata"/>
+    <status nomen="tolerata"
+      nota="cognita et CONSULTO relicta - sanatio pretiosior
+            damno. Exitus legitimus, non defectus, sed
+            DECLARANDUS: depravatio tolerata quae non scribitur
+            posteris ut recta apparet"/>
+    <transitus a="latens" ad="detecta" per="detectio"/>
+    <transitus a="detecta" ad="circumscripta" per="investigatio"/>
+    <transitus a="circumscripta" ad="sanata" per="sanatio"/>
+    <transitus a="circumscripta" ad="tolerata" per="acceptatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="ex_vitio" ad="vitium"
+      nota="unde orta. NON SEMPER: depravatio ex casu externo
+            oriri potest (octetus in memoria versus, discus
+            corruptus) sine ullo vitio - unde relatio, non
+            subordinatio"/>
+    <relatio nomen="prodita_per" ad="incidens" modulus="operatio"
+      multiplex="verum"
+      nota="incidens quo apparuit. VIA ORDINARIA ET SERA: res
+            prava per menses tacet donec aliquid frangat"/>
+    <relatio nomen="afficit" ad="*" multiplex="verum"/>
+    <relatio nomen="detecta_per" ad="probatio"
+      nota="probatio quae eam invenit - probationes quae DATA
+            examinant (non codicem) hic solae valent, et rarae
+            sunt"/>
+  </relationes>
+
+  <nota>
+    TRIAS COMPLETA: bibliotheca iam TRIADEM DEFECTUUM habebat per
+    NORMAM mensurantem (vitium ab intentione, morbus a natura,
+    damnum ab integritate). Haec alia trias est, per GRADUM
+    MANIFESTATIONIS: vitium in faciendo, depravatio in re,
+    incidens in usu. Duae triades se secant et neutra alteram
+    substituit - quod probat 'defectum' verbum esse trium
+    dimensionum, non unius.
+  </nota>
+
+</genus>
+
+
+<!-- ==================================================
+     INTERVENTIO - actus in rem iam exsistentem
+
+     Cursu quarto decimo (museo) inventa, et doctrina eius non
+     nostra sed CONSERVATORUM: quicquid fit reversibile,
+     minimum, distinguibile esse debet. Charta Venetiarum (1964)
+     idem de aedificiis dicit; medicina idem debilius.
+
+     RATIO REVERSIBILITATIS OPTIMA PARS EST: conservatores
+     posteri PLUS SCIENT. Humilitas epistemica in vinculum
+     operis conversa - non consilium sed regula.
+
+     ET TERTIA CONDICIO ACERRIMA: refectio quae ab originali
+     discerni non potest VITIUM est, quamvis pulchra. Ethica
+     contra fraudem INTRA reparationem ipsam, quam bibliotheca
+     nusquam dicebat.
+
+     IUXTA DEPRAVATIONEM POSITA: illa statum pravum describit,
+     haec quid de eo agatur.
+     ================================================== -->
+
+<genus nomen="interventio">
+
+  <definitio>
+    Actus in rem iam exsistentem susceptus ut servetur, sanetur,
+    aut melior fiat: non factio (nihil novum oritur) nec damnum
+    (nihil laeditur consulto) sed MUTATIO REI ALIENAE TEMPORI,
+    quam et praeteritum et futurum iudicant.
+  </definitio>
+
+  <differentia>
+    Agitur in rem QUAM NON FECISTI, et coram posteris qui plus
+    scient. Inde tres condiciones quae hoc genus ab omni alio
+    opere dividunt - reversibilitas, minimitas, distinguibilitas
+    - quarum nulla ex fine operis fluit sed ex CONDICIONE
+    AGENTIS: nempe quod agens transiens est et res manet.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="reversibilis" genus="veritas"
+      ordinarius="verum"
+      nota="an tolli possit et res ad statum priorem redire.
+            RATIO NON EST TIMIDITAS SED SCIENTIA FUTURA:
+            conservatores posteri methodos meliores habebunt et
+            plus de re scient, unde quod hodie optimum videtur
+            cras impedimentum erit. Qui irreversibiliter agit
+            iudicium suum posteris IMPONIT. Idem de migrationibus
+            datorum, de refactione codicis, de omni opere in re
+            quam alius post te tractabit"/>
+    <proprietas nomen="minima" genus="veritas"
+      ordinarius="verum"
+      nota="an minimum sit quod fini sufficit. Non parsimonia
+            sed idem argumentum: quod non tangis posteris
+            integrum relinquis"/>
+    <proprietas nomen="distinguibilis" genus="veritas"
+      ordinarius="verum"
+      nota="an opus tuum ab originali discerni possit propius
+            inspicienti. CONDICIO ACERRIMA ET MINIME OBVIA:
+            refectio perfecte celata VITIUM est, quamvis
+            pulchrior. Ratio duplex - ne posteri opus tuum pro
+            originali habeant (mendacium in re), et ne iudicium
+            de originali corrumpatur (omnis qui postea studet
+            decipitur). Ethica contra fraudem INTRA reparationem
+            ipsam. In codice: mutatio quae se ut originalem
+            gerit historiam corrumpit"/>
+    <proprietas nomen="documentata" genus="veritas"
+      ordinarius="verum"
+      nota="an acta interventionis cum re perpetuo maneant.
+            Quod distinguibilitas in re praestat, documentatio
+            in actis praestat - et altera alteram non
+            substituit"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="proposita"/>
+    <status nomen="approbata"/>
+    <status nomen="perfecta"/>
+    <status nomen="revocata"
+      nota="sublata, re ad statum priorem reducta - possibilis
+            SOLUM si reversibilis fuit. Status qui proprietatem
+            primam probat: quae irreversibiliter facta sunt hunc
+            statum attingere non possunt, et id est quod
+            'irreversibile' RE VERA significat"/>
+    <transitus a="proposita" ad="approbata" per="approbatio"/>
+    <transitus a="approbata" ad="perfecta" per="exsecutio"/>
+    <transitus a="perfecta" ad="revocata" per="revocatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="in_rem" ad="*"/>
+    <relatio nomen="propter" ad="*"
+      nota="quid eam poposcerit - depravatio, damnum, vitium,
+            morbus, aut simplex vetustas"/>
+    <relatio nomen="agens" ad="*"/>
+    <relatio nomen="acta_sua" ad="acta" modulus="acta"
+      nota="acta interventionum rei adhaerent et rem superstant"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="conservatio">
+    <definitio>
+      Interventio in opus artis aut monumentum ut corruptioni
+      resistat aut lacunae expleantur.
+    </definitio>
+    <nota>
+      Species unde doctrina venit. Lacunae expletio (inpainting)
+      condicionem tertiam purissime ostendit: color additus ab
+      originali propius inspicienti discerni debet - unde
+      technicae quae e longinquo congruunt et e propinquo se
+      produnt (tratteggio). Ars quae SE IPSAM CONFITETUR.
+    </nota>
+  </species>
+
+  <species nomen="restauratio_aedificii">
+    <definitio>
+      Interventio in aedificium historicum: fulcire, reficere,
+      partes amissas supplere.
+    </definitio>
+    <nota>
+      Charta Venetiarum (1964) idem tria praescribit, et unum
+      addit quod museo minus urget: aedificium USUM habere
+      debet, quia quod non adhibetur non servatur. Doctrina
+      eadem, condicio nova.
+    </nota>
+  </species>
+
+  <species nomen="curatio_medica">
+    <definitio>
+      Interventio in corpus viventis ut morbo resistat aut
+      functio restituatur.
+    </definitio>
+    <valor nomen="reversibilis">falsum</valor>
+    <nota>
+      SPECIES QUAE LIMITEM OSTENDIT, ideo electa: hic
+      reversibilitas plerumque IMPOSSIBILIS est (sectio revocari
+      non potest), unde ratio ad minimitatem totam transfertur -
+      'primum non nocere' et interventio minima. Ubi condicio
+      prima negatur, secunda pondus utriusque fert. Probat tres
+      condiciones non aequales esse sed ordinatas.
+    </nota>
+  </species>
+
+</genus>
+
+</natura>

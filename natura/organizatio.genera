@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/organizatio.genera
+  Exemplar semanticum: ORGANIZATIO (versio 8, PLASTICUM)
+
+  Genus a norma et persona POSTULATUM (editor normae organizatio
+  est, non persona nec chorda). Sub-genera prima formae:
+  corpus_normans, societas - arbor Porphyriana profunditatem
+  accipit (attributum sub= + differentia in genere).
+-->
+<natura modulus="organizatio" versio="8" lingua="latina">
+
+<!-- FONTES (mechanismus rotae XVI) -->
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: dies et res gestae ex textibus
+    innumeris haustae. NON VERIFICATUM.
+  </fons>
+</fontes>
+
+<!-- ==================================================
+     UNIVERSITAS - coetus qui UT UNUM agit et membris mutatis
+     PERDURAT
+
+     PARENS ROTA LV NATUS, cursu duodecimo (apicultura) coactus
+     et a Frane iussus. Definitio organizationis rem RECTE
+     dicebat et deinde ad personas ANGUSTABAT: "coetus in finem
+     communem ordinatus qui UT UNUM agit et mutatis membris
+     perdurat". Id examen apum est ad verbum - agit ut unum
+     (calorem temperat, se defendit, pabulatores distribuit),
+     perdurat dum membra omnia intra sex hebdomades mutantur,
+     nomen et numerum apud apiarium habet. Sola verba prima
+     obstabant: "universitas PERSONARUM".
+
+     IUS ROMANUM AMPLITUDINEM IAM HABEBAT: universitas rerum
+     (grex, hereditas) personas non poscit, et species eius in
+     hoc ipso exemplari iam vivebat. Angustia ergo nostra fuit,
+     non traditionis.
+
+     QUID SURSUM IT: perduratio, actio ut unius, membra, divisio
+     et fusio. QUOD APUD ORGANIZATIONEM MANET: personae, capacitas
+     iuridica, officia, editio.
+     ================================================== -->
+
+<genus nomen="universitas">
+
+  <definitio>
+    Coetus in finem communem ordinatus qui UT UNUM agit et
+    mutatis membris PERDURAT: haec perduratio eum a mero acervo
+    distinguit. Non est summa membrorum suorum - membra omnia
+    mutari possunt et idem manet.
+  </definitio>
+
+  <differentia>
+    IDENTITAS NON EX MEMBRIS. Acervus lapidum lapidibus mutatis
+    alius acervus est; universitas eadem manet. Quid ergo eam
+    unam facit? Non materia sed ORDO AD FINEM et continuatio
+    eius - unde universitas dissolvitur non cum membra pereunt
+    sed cum ordo ipse cessat. Quaestio navis Thesei, quam
+    Romani solverunt priusquam poneretur.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="condita" genus="dies"/>
+    <proprietas nomen="dissoluta" genus="dies"
+      nota="vacuum = perdurans"/>
+    <proprietas nomen="sedes" genus="textus"
+      nota="ubi sit. NON ACCIDENS pro multis: examen loco suo
+            ligatum est (pabulatores eo redeunt), societas sede
+            sua ius suum determinat"/>
+    <proprietas nomen="mutatio_membrorum" genus="electio"
+      nota="quomodo membra substituantur, et quam cito. Ubi
+            mutatio VELOX est (examen: membra omnia sex
+            hebdomadibus) identitas manifeste non ex membris
+            pendet - unde apicultura hunc parentem coegit">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </proprietas>
+    <proprietas nomen="unde_ordo" genus="electio"
+      nota="UNDE ORDO AD FINEM VENIAT, cursu tertio decimo
+            (grege ovium) postulatum. Colonia et organizatio SE
+            IPSAS ordinant - examen calorem temperat et
+            pabulatores distribuit nullo iubente; societas fines
+            suos eligit. Grex NON: pastor eum unum tenet, et
+            oves finem communem non habent sed patiuntur.
+            CONSEQUENTIA GRAVIS: quod ab intus ordinatur relinqui
+            potest et manet; quod ab extra ordinatur dissolvitur
+            eo momento quo ordinans desinit. Ideo grex sine
+            pastore in oves solvitur, examen sine apiario non">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </proprietas>
+  </proprietates>
+
+  <actiones>
+    <actio nomen="condi"/>
+    <actio nomen="dissolvi"/>
+    <actio nomen="dividi"
+      nota="in universitates plures secari, nulla earum priore
+            identica. A dissolutione differt: perdurationes
+            NOVAE incipiunt, opera et onera inter eas partiuntur.
+            ACTIO PRO SOCIETATE SCRIPTA (AT&amp;T 1984) QUAM
+            EXAMEN APUM CONFIRMAVIT: examinatio (swarming) hoc
+            ipsum est - regina vetus cum dimidio abit, dimidium
+            reginam novam educat, et utraque pars sola vivere
+            debet. Divisio decreto antitrust et divisio apum
+            eadem actio, quod nemo quaesivit et collatio dedit"/>
+    <actio nomen="fundi"
+      nota="cum alia in unam coire - inversum divisionis, et
+            quaestio identitatis eadem: quae perduratio pergit?"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="membrum" ad="*" multiplex="verum"
+      nota="apertum consulto: personae, animalia, res. Angustare
+            ad personas est parentem in filiam vertere"/>
+    <relatio nomen="pars_de" ad="universitas"
+      nota="sub-universitates"/>
+  </relationes>
+
+</genus>
+
+<genus nomen="organizatio" sub="universitas">
+
+  <differentia>
+    Universitas PERSONARUM: quod membra rationalia sunt omnia
+    sequentia parit - fines eligi possunt et mutari, officia
+    constitui, capacitas iuridica agnosci, opera edi. Auctor
+    esse potest; persona non est sed personarum est.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="nomina" genus="textus" multiplex="verum"
+      nota="sigla inclusa: ISO, IEEE"/>
+  </proprietates>
+
+  <actiones>
+    <actio nomen="edere" nota="opus publicare - normam, chip,
+      programma. Sola actio quae hic manet: condi, dissolvi,
+      dividi, fundi ad universitatem ascenderunt"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="condita_a" ad="persona" modulus="persona"
+      multiplex="verum"/>
+    <relatio nomen="pars_de" ad="organizatio"
+      nota="suborganizationes - Bell Labs pars AT&amp;T erat"/>
+    <relatio nomen="membrum" a="persona" modulus="persona"
+      inversa="verum"
+      nota="persona.membrum_de hanc citat"/>
+    <relatio nomen="administrat" ad="schema_identificandi"
+      modulus="identificatio" multiplex="verum"
+      nota="inversa eius quod identificatio iam declarabat
+            (administrata_a); ab agentia ISBN pulsata"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       individua sub genere NUDO consulto: organizationes quae
+       nulli sub-generi cadunt, et QUOD non cadunt pars
+       descriptionis est -->
+
+  <individuum nomen="debian_project" certitudo="opinio"
+    fons="corpus">
+    <definitio>
+      Coetus voluntariorum qui distributionem Debian curat:
+      organizatio vera cum officiis electis et normis suis
+      (Contractus Socialis 1997), quae persona iuridica esse
+      CONSULTO RECUSAT - bona eius fiduciarius tenet (Software
+      in the Public Interest).
+    </definitio>
+    <valor nomen="nomina">The Debian Project</valor>
+    <valor nomen="condita">1993-08-16</valor>
+    <historia>
+      <eventum quando="1993-08-16" actio="condi"
+        nota="ab Ian Murdock; nomen ex 'Deb' (uxor) + 'Ian' -
+              etymologia vera, non fabula"/>
+    </historia>
+    <nota>
+      SPECIMEN QUOD DIVISIONEM GENERUM PROBAT: organizatio sine
+      persona iuridica - non defectu sed electione. Perdurat
+      mutatis membris, ut unum agit, ducem eligit (officium
+      verum, annuum), et tamen in iure NEMO est. Divisio nostra
+      organizatio/persona_iuridica hoc praevidit; specimen eam
+      confirmat quo modo optimo: per rem quae alteram partem
+      habet et alteram recusat.
+    </nota>
+  </individuum>
+
+  <individuum nomen="agentia_isbn" certitudo="opinio"
+    fons="corpus">
+    <definitio>
+      Agentia internationalis quae schema ISBN administrat:
+      normam NON edit (ISO eam edit) sed OPERATUR - intervalla
+      nationibus assignat, agentias nationales nominat,
+      praefixa editoribus per eas dat.
+    </definitio>
+    <valor nomen="nomina">International ISBN Agency</valor>
+    <relatum nomen="administrat" ad="isbn"
+      modulus="identificatio"/>
+    <nota>
+      NEC CORPUS NORMANS NEC MAGISTRATUS: normam non scribit,
+      imperium non habet - auctoritas eius ex ipso schemate
+      fluit, quod sine administratore assignante nihil est.
+      GENUS FORTASSE LATET: administrator schematis (IANA
+      nominibus interretis, centrum ISSN, GS1 codicibus barrae,
+      officia status civilis nominibus hominum) - specimina
+      quattuor trans dominia. Notatum, non cusum: cleanup non
+      est hora coinandi.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     COLONIA - universitas viventium
+
+     Soror organizationis, et causa cur parens natus sit. Sine
+     ea universitas abstractio esset quam nemo poposcisset;
+     cum ea parens duos filios habet vere diversos, quod
+     abstractionem PROBAT.
+     ================================================== -->
+
+<genus nomen="colonia" sub="universitas">
+
+  <differentia>
+    Universitas VIVENTIUM quorum membra non eligunt: ordo ad
+    finem non consilio sed natura constat, unde nec officia
+    constitui possunt nec fines mutari. Membra fungibilia sunt
+    et velociter substituuntur; et sola inter universitates
+    DIVISIONE SE MULTIPLICAT - quod organizationi accidens est
+    (decretum, mercatura), coloniae ratio generandi.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="membra_fungibilia" genus="veritas"
+      ordinarius="verum"
+      nota="an membrum quodlibet alterius locum implere possit.
+            Verum fere ubique, sed NON OMNINO: apes munera per
+            aetatem mutant (nutrix, cerata, pabulatrix), unde
+            colonia cui aetates desunt munera implere non
+            potest quamvis numerus sufficiat - fungibilitas
+            temporalis, non simultanea"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="species_membrorum" ad="animal" modulus="animal"
+      nota="cuius generis viventia - apertum ad plantas et
+            minora si opus erit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="colonia_apium">
+    <definitio>
+      Universitas apum cum regina una, operariis, fucis: quam
+      apiarius CURAT et numerat, non apes singulas.
+    </definitio>
+    <differentia>
+      Colonia cuius perduratio a REGINA UNA pendet, quae tamen
+      substitui potest: unde status inter reginae mortem et
+      successionem verus est et periculosus.
+    </differentia>
+    <valor nomen="mutatio_membrorum">velox</valor>
+    <relatum nomen="species_membrorum" ad="apis" modulus="animal"/>
+
+    <historia>
+      <eventum quando="1851">favi mobiles a Langstroth inventi -
+        spatium apium (bee space) mensuratum, unde inspectio
+        sine destructione possibilis facta</eventum>
+    </historia>
+
+    <nota>
+      APIARIUS COLONIAM CURAT, NON APES - et hoc genus ipsum
+      probat: nemo apem singulam numerat, nominat, aut aegram
+      curat. Universitas hic non abstractio administrantis est
+      sed unitas quam natura praestat.
+    </nota>
+
+    <nota>
+      REGINA OFFICIUM EST, NON PERSONA (composito cum
+      organizatio.officium): munus stabiliter constitutum quod
+      tenenti non inhaeret, vacare potest, et successorem
+      admittit. Colonia "orbata" officium vacans habet.
+      ET APICULTURA DUAS SUCCESSIONES DISTINGUIT quas nostra
+      lingua nondum distinguebat:
+      SUPERSEDURA - regina deficiens dum adhuc parit successorem
+      educat; tempus est eligendi, et electio bona fit.
+      SUCCESSIO SUBITANEA - regina repente perit, et colonia ex
+      iis larvis quae forte satis iuvenes sunt reginam educere
+      cogitur; saepe deterior exit.
+      DIFFERENTIA NON IN EXSECUTIONE SED IN MATERIA PRAESTO:
+      successio parata melior est non quia rectius agitur sed
+      quia MATERIAM ELIGERE potest. Lex quae ultra apes valet.
+    </nota>
+
+    <nota>
+      EXAMINATIO EST DIVISIO (universitas.dividi): regina vetus
+      cum dimidio operariarum abit, dimidium reginam novam
+      educat, et utraque pars sola vivere debet. Non defectus
+      sed RATIO GENERANDI - unde apiarius eam aut prohibet aut
+      ipse facit ("divisio" artificialis). Actio pro divisione
+      societatum scripta hic intacta convenit.
+    </nota>
+  </species>
+
+  <species nomen="grex">
+    <definitio>
+      Universitas animalium quam homo ad usum suum tenet: oves,
+      boves, equi - numerata, curata, ex qua singula tolluntur
+      et in quam singula adduntur.
+    </definitio>
+    <differentia>
+      AB EXTRA ORDINATA: grex finem communem non habet sed
+      pastoris finem patitur, et pastore desinente in animalia
+      singula solvitur. Unde membra identitatem propriam
+      retinent - numerantur, notantur, singula curantur et
+      venduntur - quod in colonia apum nemo facit.
+    </differentia>
+    <valor nomen="unde_ordo">ab_extra</valor>
+    <valor nomen="membra_fungibilia">falsum</valor>
+    <nota>
+      EXEMPLUM ROMANORUM IPSORUM: iuris consulti GREGE usi sunt
+      ut universitatem rerum explicarent - grex idem manet
+      ovibus mutatis. Genus universitatis rota LV natum hic ab
+      auctoribus vocabuli ipsis confirmatur, non a nobis.
+    </nota>
+    <nota>
+      PERITIA COMMUNIS HIC VIVIT, et distinctionem acuit: grex
+      in monte non saepto pascuum suum novit et intra fines
+      manet, agnis a matribus discentibus (vide
+      iudicium.peritia_communis, species notitia_pascui).
+      Universitas ergo AB EXTRA ordinata quae tamen scientiam
+      PROPRIAM gerit - quam pastor nec habet nec dare potest.
+      Ordo ab extra venit, peritia ab intus: duo axes, non unus.
+    </nota>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     PERSONA IURIDICA - organizatio quae in iure PERSONA est
+     ================================================== -->
+
+<genus nomen="persona_iuridica" sub="organizatio">
+
+  <differentia>
+    Subiectum iurium et obligationum in iure: possidet,
+    contrahit, agit et convenitur SUO nomine, non nomine
+    membrorum. Ideo bona eius non sunt bona sociorum, et
+    debita eius non sunt debita eorum - separatio quae
+    negotium modernum omnino portat.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="perpetua" genus="veritas"
+      ordinarius="verum"
+      nota="membris mortuis aut mutatis manet - perduratio
+            organizationis hic vim IURIDICAM accipit"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="constituta_per" ad="actus_sollemnis"
+      modulus="actus"
+      nota="persona iuridica non oritur sponte sed ACTU
+            constituitur (charta, decretum, erectio canonica) -
+            exemplum relationis 'constituit' ex parte effectus"/>
+  </relationes>
+
+  <nota>
+    Innocentius IV eam "personam fictam" vocavit, et vox
+    manet; realismus tamen moderatus plus concedit: unio
+    ordinata ad finem communem, quae ut unum agit et membris
+    mutatis perdurat, RES VERA est - non fictio sed genus
+    institutum, quale ISBN aut officium. Ficta esset si nihil
+    in rebus responderet; respondet autem ordo ipse.
+  </nota>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="universitas_personarum">
+    <definitio>
+      Persona iuridica ex MEMBRIS constans: collegium,
+      societas, communitas. Membra mutantur, persona manet.
+    </definitio>
+  </species>
+
+  <species nomen="universitas_rerum">
+    <definitio>
+      Persona iuridica ex BONIS AD FINEM DESTINATIS constans,
+      SINE membris: fundatio, pia causa. Nemo eam "habet";
+      curatores eam regunt sed non possident.
+    </definitio>
+    <nota>
+      Distinctio antiqua (ius Romanum et canonicum) quam
+      schemata moderna perdunt: fundatio membra NON habet.
+      Qui personam iuridicam semper ut coetum modellat
+      fundationem dicere non potest - et tamen fundationes,
+      fidei commissa, piae causae ubique sunt.
+    </nota>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     OFFICIUM - munus stabiliter constitutum
+     (inventum cursus quarti: probatio acuta est AN
+     POSITIO VACANS PERSEVERET)
+     ================================================== -->
+
+<genus nomen="officium">
+
+  <definitio>
+    Munus stabiliter constitutum cum oneribus, potestatibus et
+    condicionibus SUIS, quod tenenti suo NON inhaeret: idem
+    officium manet dum alius post alium id tenet, et MANET
+    NULLO TENENTE. Vacatio status verus est, non datum absens.
+  </definitio>
+
+  <nota>
+    REGULA 'MUNERA RELATIONES SUNT' HIC DIVIDITUR, NON TOLLITUR
+    (rota IV vs rota XXV). Probatio: AN POSITIO VACANS
+    PERSEVERET?
+      NON perseverat -> munus nudum, quod RELATIO manet:
+        "auctor" nemo vacat, nulla auctoritas vacans exspectat;
+      PERSEVERAT -> OFFICIUM, res vera onera et potestates
+        ferens, et TENERE illud relatio est.
+    Ideo utrumque verum: officium res est, tenentia relatio.
+    Systemata quae officia ut relationes nudas modellant
+    respondere non possunt "quis hoc facere DEBEAT" sede
+    vacante - quaestio refert ad nihil.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="ad_tempus" genus="veritas"
+      ordinarius="falsum"
+      nota="an terminus praefinitus adsit - officium ad tempus
+            lapsu temporis vacat sine ullo actu"/>
+    <proprietas nomen="collegiale" genus="veritas"
+      ordinarius="falsum"
+      nota="an plures simul idem officium teneant (sedes in
+            consilio) - unde quorum, unde suffragia"/>
+    <proprietas nomen="requisita" genus="textus" multiplex="verum"
+      nota="condiciones eligibilitatis - AD OFFICIUM pertinent,
+            non ad tenentem: mutato tenente eaedem manent"/>
+  </proprietates>
+
+  <machina_statuum nomen="tenentia" gerens="individuum">
+    <status nomen="vacans"
+      nota="STATUS PRIMARIUS HUIUS GENERIS: officium exstat,
+            onera manent, nemo ea portat. 'Sede vacante' vox
+            propria est - et provisio interim (vicarius) non
+            tenentiam sed EXERCITIUM dat"/>
+    <status nomen="occupatum"/>
+    <transitus a="vacans" ad="occupatum" per="provisio"
+      nota="per actum sollemnem (inauguratio) - vide
+            actus.inauguratio"/>
+    <transitus a="occupatum" ad="vacans" per="cessio"/>
+    <transitus a="occupatum" ad="vacans" per="amotio"/>
+    <transitus a="occupatum" ad="vacans" per="mors"/>
+    <transitus a="occupatum" ad="vacans" per="lapsus_temporis"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="intra" ad="organizatio"
+      nota="officium sine organizatione non stat - structura
+            eius est"/>
+    <relatio nomen="tenetur_a" ad="persona" modulus="persona"
+      nota="RELATIO, recte: hic munus relatio manet. Vacuum
+            legitimum est"/>
+    <relatio nomen="exercetur_a" ad="persona" modulus="persona"
+      nota="DISTINCTUM a tenendo: vicarius, administrator,
+            procurator officium exercet quod non tenet -
+            sede vacante quis agat sine eo dici non potest"/>
+    <relatio nomen="constituitur_per" ad="actus_sollemnis"
+      modulus="actus"/>
+    <relatio nomen="postulat" ad="titulus" modulus="obligatio"
+      multiplex="verum"
+      nota="requisitum quod titulo probatur (gradus, ordo,
+            character) - unde officium et titulus se tangunt"/>
+    <relatio nomen="confert_capacitatem" ad="actus_sollemnis"
+      modulus="actus" multiplex="verum"
+      nota="quos actus sollemnes tenens ponere possit -
+            notarius instrumentum publicum, episcopus
+            ordinationem. CAPACITAS ab officio, non a peritia"/>
+    <relatio nomen="subest" ad="officium"
+      nota="ordo officiorum - hierarchia in officiis vivit,
+            non in personis: qui subest OFFICIO subest, non
+            homini"/>
+  </relationes>
+
+  <nota>
+    PATHOLOGIA OFFICII (aviatio, rota XXXIX): auctoritas sedis
+    notitiam SURSUM IMPEDIRE potest - subiectus superiorem non
+    contradicit, etiam cum errare eum videt. Aviatio hoc
+    ruinis didicit et structuram institutam CONSULTO DEBILITAVIT
+    (regimen facultatum gregis: subiecto officium DATUM est
+    dubitandi, gubernatori officium AUDIENDI).
+    Genus hoc auctoritatem dicere potest, defectum eius nondum:
+    quod officium ordinat etiam OBSTRUIT, et remedium non in
+    persona sed in STRUCTURA quaerendum est. Dubium apertum -
+    an proprietas (gradus_auctoritatis), an relatio, an genus
+    proprium (impedimentum institutum).
+  </nota>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="parochus">
+    <definitio>
+      Officium curae animarum in paroecia: pastor proprius,
+      cum oneribus praedicandi, sacramenta ministrandi,
+      tabulas custodiendi.
+    </definitio>
+    <nota>
+      Specimen quod genus peperit. Tabulae paroeciales onus
+      OFFICII sunt, non hominis - unde series earum per
+      saecula continua manet dum parochi succedunt.
+    </nota>
+  </species>
+
+  <species nomen="episcopus">
+    <definitio>
+      Officium regiminis dioecesis, ordine episcopali
+      praesuppositum.
+    </definitio>
+    <nota>
+      Vox "sede vacante" hinc venit et in linguas transiit:
+      SEDES vacat, non homo - locutio ipsa testatur officium
+      rem esse. Interim administrator EXERCET quod non TENET.
+    </nota>
+  </species>
+
+  <species nomen="notarius">
+    <definitio>
+      Officium publicum fidem instrumentis praestans.
+    </definitio>
+    <nota>
+      Testis clarissimus relationis 'confert_capacitatem':
+      eadem verba a privato scripta nihil praesumunt, a
+      notario scripta fidem publicam ferunt (vide
+      actus.confectio_instrumenti actum, acta.attestatio
+      chartam - divisae rota XLIX). Officium, non peritia,
+      discrimen facit.
+    </nota>
+  </species>
+
+  <species nomen="curator">
+    <definitio>
+      Officium bona aliena ad finem alienum administrandi:
+      fiducia, non dominium.
+    </definitio>
+    <nota>
+      Officium quod universitatem RERUM regit (fundationem) -
+      unde persona iuridica sine membris tamen agere potest.
+      Onera eius (fides, diligentia) officio inhaerent.
+    </nota>
+  </species>
+
+  <species nomen="praeses_collegii">
+    <definitio>
+      Officium collegio praesidendi: sedes una inter pares cum
+      potestate ordinandi, non imperandi.
+    </definitio>
+    <valor nomen="ad_tempus">verum</valor>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     CORPUS NORMANS - sub-genus: organizatio quae normas
+     edit et custodit
+     ================================================== -->
+
+<genus nomen="corpus_normans" sub="organizatio">
+
+  <differentia>
+    Finis proprius: normas edere et custodire - descriptiones
+    auctoritativas quibus alii conformantur. Auctoritas eius ex
+    consensu, non ex imperio.
+  </differentia>
+
+  <relationes>
+    <relatio nomen="edit" ad="norma" modulus="norma"
+      multiplex="verum"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="iso">
+    <valor nomen="nomina">International Organization for
+      Standardization</valor>
+    <valor nomen="nomina">ISO</valor>
+    <valor nomen="condita">1947-02-23</valor>
+    <valor nomen="sedes">Geneva</valor>
+  </individuum>
+
+  <individuum nomen="iec">
+    <valor nomen="nomina">International Electrotechnical
+      Commission</valor>
+    <valor nomen="nomina">IEC</valor>
+    <valor nomen="condita">1906</valor>
+    <valor nomen="sedes">Geneva</valor>
+  </individuum>
+
+  <individuum nomen="ieee">
+    <valor nomen="nomina">Institute of Electrical and
+      Electronics Engineers</valor>
+    <valor nomen="nomina">IEEE</valor>
+    <valor nomen="condita">1963-01-01</valor>
+  </individuum>
+
+  <individuum nomen="ansi">
+    <valor nomen="nomina">American National Standards
+      Institute</valor>
+    <valor nomen="nomina">ANSI</valor>
+    <valor nomen="condita">1918-10-19</valor>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     SOCIETAS - sub-genus: organizatio quaestui dedita
+     (ab architectura postulata: auctores architecturarum
+     societates sunt)
+     ================================================== -->
+
+<genus nomen="societas" sub="organizatio">
+
+  <differentia>
+    Finis proprius: quaestus per opera vendita; possessores
+    habet quibus respondet.
+  </differentia>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="intel">
+    <valor nomen="nomina">Intel Corporation</valor>
+    <valor nomen="condita">1968-07-18</valor>
+  </individuum>
+
+  <individuum nomen="amd">
+    <valor nomen="nomina">Advanced Micro Devices</valor>
+    <valor nomen="nomina">AMD</valor>
+    <valor nomen="condita">1969-05-01</valor>
+  </individuum>
+
+  <individuum nomen="arm_ltd">
+    <valor nomen="nomina">Arm Ltd</valor>
+    <valor nomen="condita">1990-11-27</valor>
+  </individuum>
+
+  <individuum nomen="canonical">
+    <valor nomen="nomina">Canonical Ltd</valor>
+    <valor nomen="condita">2004-03-05</valor>
+  </individuum>
+
+  <individuum nomen="apple">
+    <valor nomen="nomina">Apple Inc.</valor>
+    <valor nomen="condita">1976-04-01</valor>
+  </individuum>
+
+  <individuum nomen="microsoft">
+    <valor nomen="nomina">Microsoft Corporation</valor>
+    <valor nomen="condita">1975-04-04</valor>
+  </individuum>
+
+  <individuum nomen="bell_labs">
+    <valor nomen="nomina">Bell Telephone Laboratories</valor>
+    <valor nomen="condita">1925-01-01</valor>
+    <relatum nomen="pars_de" ad="att"
+      valens_a="1925" valens_ad="1996"
+      certitudo="fides" fons="corpus"
+      nota="MENDACIUM NOSTRUM PRIMUM TEMPORE SANATUM (rota
+            XVIII): relatio haec plane affirmabatur, quasi
+            perpetua. Vera fuit 1925-1996, deinde Lucent
+            (postea Nokia) laboratoria accepit. Casus III
+            regulae triplicis - accidens relativum, quod
+            forma plana necessario mentitur"/>
+    <nota>domus linguae C - Ritchie ibi laborabat (1972,
+      intra tempus validitatis supra)</nota>
+  </individuum>
+
+  <individuum nomen="att" certitudo="opinio" fons="corpus">
+    <definitio>
+      American Telephone and Telegraph: monopolium telephonicum
+      Americanum per saeculum fere - "systema Bell". Mater
+      laboratorii Bell, unde Unix et C, quae vendere ei diu NON
+      licebat (decretum 1956: telephonia sola) - unde Unix
+      universitates pretio nominali accepit, et inde mundum.
+    </definitio>
+    <valor nomen="nomina">AT&amp;T</valor>
+    <valor nomen="condita">1885-03-03</valor>
+    <historia>
+      <eventum quando="1984-01-01" actio="dividi"
+        certitudo="fides" fons="corpus">divisio per sententiam
+        (consent decree): societates regionales separatae -
+        actus iuridicus qui societatem maximam mundi in octo
+        secuit</eventum>
+    </historia>
+    <nota>
+      Individuum cuius HISTORIA IURIDICA plus explicat quam
+      merces: quod C liberum fuit ex decreto 1956 sequitur, non
+      ex liberalitate. Arcus casus valens_a/valens_ad supra
+      (pars_de 1925-1996) hic alterum caput habet.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     MAGISTRATUS - sub-genus: organizatio cum imperio
+     (ab experimento pistrinae postulatum: editor legis
+     sanitatis magistratus est, nec corpus normans nec
+     societas - auctoritas eius ex IMPERIO, non ex
+     consensu nec ex quaestu)
+     ================================================== -->
+
+<genus nomen="magistratus" sub="organizatio">
+
+  <differentia>
+    Auctoritas ex IMPERIO super loco, non ex consensu (ut
+    corpus normans) nec ex quaestu (ut societas): leges fert
+    quibus omnes intra iurisdictionem tenentur, sive
+    consentiant sive non. Vis coactiva differentia eius.
+  </differentia>
+
+  <relationes>
+    <relatio nomen="exercet" ad="iurisdictio" modulus="locus"
+      multiplex="verum"/>
+    <relatio nomen="concedit" ad="licentia" modulus="obligatio"
+      multiplex="verum"
+      nota="licentiae fons ordinarius - unilateralis quia
+            imperium unilaterale est"/>
+  </relationes>
+
+  <nota>
+    Corpus normans normas edit quas alii SPONTE sequuntur;
+    magistratus leges fert quas sequi COGUNTUR. Distinctio
+    quam ISO ipsa vivit: normae eius vim non habent donec
+    magistratus eas in legem sumat.
+  </nota>
+
+</genus>
+
+</natura>

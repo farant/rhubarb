@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/formae_datorum.genera
+  Exemplar semanticum: FORMAE DATORUM (versio 0, PLASTICUM)
+  Genus unum, species sex: series, cauda, acervus,
+  tabula_associativa, copia, arbor.
+
+  Formae mathematicae sunt, intemporales, ante omnes linguas -
+  aurum Linnaeanum: taxinomia purissima totius bibliothecae.
+  Doctrina intentionis hic clarissima: forma in operationibus
+  vivit (quae rogare licet et quo pretio), impletio in
+  bibliothecis (xar, tabula_dispersa, capsa) - forma una,
+  impletiones multae.
+
+  Dictionarium huius exemplaris COLLIGI potest, non scribi:
+  bibliothecae domus formas realizant et aedilis eas videt.
+-->
+<natura modulus="formae_datorum" versio="0" lingua="latina">
+
+<genus nomen="forma_datorum">
+
+  <definitio>
+    Figura ordinandi data ab OPERATIONIBUS suis definita, non
+    ab impletione: quae rogare licet, quid promittitur, quo
+    pretio. Essentia in interfacie habitat (quod "typum datorum
+    abstractum" vocant) - impletio sub ea libere mutatur,
+    promissis manentibus.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="realizata_a" ad="bibliotheca"
+      modulus="elementa_programmatis" multiplex="verum"
+      nota="forma una, impletiones multae - series continua
+            aut segmentata, tabula dispersa aut arborea; forma
+            nihil horum scit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="series">
+    <definitio>
+      Ordo per indicem: locus numeratus, accessus per numerum,
+      finis crescens. In domo nostra xar eam realizat -
+      segmentatim, ut monstratores stabiles maneant: electio
+      impletionis quam forma non videt.
+    </definitio>
+  </species>
+
+  <species nomen="cauda">
+    <definitio>
+      Primus intrat, primus exit: disciplina ordinis adventus -
+      iustitia temporis. Promptio eius lectio destructiva est
+      (compositum - vide elementa). In domo nostra capsa
+      actoris eam realizat.
+    </definitio>
+  </species>
+
+  <species nomen="acervus">
+    <definitio>
+      Novissimus primus: disciplina reditus - quod ultimum
+      incepisti, primum finis. Forma vocationum ipsarum: acervum
+      vocationum lingua ipsa realizat, invisibilem sed
+      omnipraesentem - forma datorum quam nemo creat et omnes
+      adhibent.
+    </definitio>
+  </species>
+
+  <species nomen="tabula_associativa">
+    <definitio>
+      Clavis ad valorem, ordo nullus promissus: quaestio "quid
+      sub hac clave?" pretio constanti. Nomen domus nostrae
+      IMPLETIONEM nominat (tabula_dispersa - dispersio modus
+      est), formam non: associatio essentia, dispersio ars.
+    </definitio>
+  </species>
+
+  <species nomen="copia">
+    <definitio>
+      Membra sine duplicatis: quaestio unica "inestne?".
+      Internamentum chordarum domus copia occulta est - unum
+      exemplar cuiusque, comparatio per identitatem.
+    </definitio>
+  </species>
+
+  <species nomen="arbor">
+    <definitio>
+      Hierarchia: parens et filii, radix una, via unica ad
+      quodque. Silva domus nostrae arborem syntacticam realizat
+      - et nomen suum ex hac forma trahit.
+    </definitio>
+  </species>
+
+</genus>
+
+</natura>

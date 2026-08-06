@@ -4801,3 +4801,81 @@ MEASURED after: 33 exemplaria / 177 genera / 384 res / 519 arcus
 MEASURED after: 33 exemplaria / 177 genera / 384 res / 519 arcus
 / 0 vulnera (utroque instrumento) / 1 monitum novum (regula III).
 probatio_natura: 62 assertiones, omnes praetereunt.
+
+---
+
+## 2026-08-06 — round 61: `.genera`, and a gate at the moment of writing
+
+319. EXTENSION CHANGED: `natura/*.stml` -> `natura/*.genera`, 33
+     files, via `git mv` so history follows. Fran's proposal, and
+     the argument that carries it is that **STML is a SYNTAX, not
+     a GENRE** — this repo also writes silva queries, grammar
+     fixtures and vitrea layouts in it. A taxonomy file obeys
+     more: the closed vocabulary of §3/§4 and the loader's
+     contract in §8. So `.genera` is to `.stml` what `.svg` is to
+     `.xml` — same grammar, its own schema, its own validator.
+     The practical payoff is that a tool can now know WHICH
+     CONTRACT APPLIES without opening the file, which is exactly
+     what an edit hook needs.
+     Worklog entries before this one still say `.stml`. LEFT
+     ALONE ON PURPOSE: this log is append-only history, and those
+     entries describe a time when the files really were .stml.
+     Rewriting them would make the record lie to make the present
+     look tidy.
+
+320. THE HOOK EXISTS BECAUSE THE LOADER DOES, and the number is
+     the whole argument:
+
+       tools/natura_visus.sh   14 s
+       bin/natura_examen        0.03 s     (480x)
+
+     Fourteen seconds cannot live in a PostToolUse hook. Thirty
+     milliseconds can. This is the first thing the loader bought
+     that shell could not have been optimised into — and note
+     which direction the win runs: the C tool is not only faster,
+     it sees MORE (rules 9-13 need the inheritance walk).
+     `tools/natura_examen.c` + `tools/natura_struere.sh` ->
+     `bin/natura_examen`; `.claude/hooks/natura-custos.sh`
+     registered PostToolUse, matching the censor-custos PUSH
+     discipline: clean run = NOTHING in context, findings only
+     inject `additionalContext`, never block the turn.
+
+321. THE HOOK'S LOAD-BEARING DECISION — **it always loads ALL 33
+     models even when judging one file.** Rules 2/3/4 cross model
+     boundaries, so a single-file judgment cannot see them: edit
+     `mensura` and the reference that breaks may be in `pharmacon`.
+     `-plagula` therefore filters what is DISPLAYED and never what
+     is CHECKED, and a break anywhere still exits 1. There is a
+     third branch for exactly that case — "this file is sound but
+     the library carries N vulnera elsewhere" — because a
+     cross-model break is USUALLY caused by the edit that just
+     happened, and reporting only on the edited file would hide
+     precisely the failure the whole design exists to catch.
+
+322. EXIT 2 = NOTHING RAN, and the hook treats it as a DEFECT of
+     the gate rather than as health. If the radix is empty or
+     moved, `natura_examen` says so and the hook says so; a gate
+     that silently passes when it ran on zero files is worse than
+     no gate, because it manufactures confidence. Same reason
+     `bin/natura_examen` missing produces a message rather than
+     silence.
+
+323. AND THE PIPE LIED, ON SCHEDULE. Verifying that a planted
+     dangling relatum was caught, I read `exit=0` from
+     `... | tail -2` and nearly recorded that filtering to a clean
+     file wrongly reported health. It was `tail`'s status, not the
+     tool's; unpiped it was 1, correct all along. The documented
+     trap, walked into while testing the very discipline it
+     belongs to. **Never gate on `$?` after a pipe** — the one
+     habit that keeps re-earning its place in memory.
+
+324. RULES 9-13 AND 14 PROMOTED TO [E] in METAMODULUS §8, with a
+     two-enforcer table (visus = slow, emits INDEX/HTML/monita;
+     examen = fast, enforces more, feeds the hook) so a later
+     session does not have to guess which one is authoritative
+     for what. §2 records why the extension exists. §8 records
+     rule 3's second case as a MONITUM with its reasoning.
+
+MEASURED after: 33 exemplaria / 177 genera / 384 res / 0 vulnera
+sub UTROQUE instrumento; differentia apparatus adhuc 1286 = 1286,
+ZERO lineae; probatio_natura 62/62.

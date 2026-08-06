@@ -1,0 +1,1274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/iudicium.genera
+  Exemplar semanticum: IUDICIUM (versio 7, PLASTICUM)
+  Genera: gradus_assensus, fons, observatio, iudicium,
+  periculum, ignotum.
+
+  (versio attributi cum capite non congruebat - v1 in commento,
+  v0 in elemento; sanatum rota XXXVIII.)
+
+  v0->v1: observatio nata (latus testimonii - quod iudicium
+  FUNDAT) et periculum (iudicium de damno futuro). Umbra
+  propria rotae XVI impleta eadem die.
+
+  Natum ex experimento valetudinarii (cursu secundo circuli):
+  DIAGNOSIS in forma nostra dici NON POTERAT. Bibliotheca omnia
+  PLANE asserebat - <valor>3</valor> nec fiduciam nec auctorem
+  nec revocabilitatem ferebat.
+
+  IDEM HIATUS AC DUBIUM <fons> (rota septima apertum): "Ritchie
+  natus 1941-09-09" affirmatio est cum fonte, certitudine,
+  revisibilitate - eadem prorsus forma qua diagnosis. Quaestio
+  citationis numquam de forma scribendi fuit; genus deerat.
+
+  DISTINCTIO ONTOLOGICA QUAE OMNIA REGIT: iudicium NON est res
+  de qua iudicatur. "Aegrota pneumoniam habet" factum est, quod
+  esse aut non esse potest; "medicus die D cum certitudine C
+  iudicavit aegrotam pneumoniam habere" EVENTUS est, qui certo
+  accidit. Iudicium verum manet etiamsi falsum sit - ideo acta
+  medica diagnoses ERRATAS servant: quod iudicatum est pars
+  historiae est, sive res ita se habuit sive non.
+
+  FRATRES TRES PROPOSITIONUM (cognatio nunc plena):
+  - assertio (elementa_programmatis): propositio quam PROGRAMMA
+    ipsum probat, currens;
+  - annotatio (stratum STML/TOLERA): propositio quam INSTRUMENTA
+    probant, extra programma;
+  - iudicium (hic): propositio quam PERSONA tenet, fallibilis,
+    revisibilis, cum gradu assensus.
+  Tres propositiones, tres probatores.
+
+  MECHANISMUS METAMODULI HINC COACTUS (vide worklog rotam XVI):
+  attributa certitudo= et fons= in <valor>, <relatum>, <eventum>;
+  elementum <fontes> in modulo, claves definiens. Non ornamentum
+  sed honestas: scriba huius bibliothecae (Claude) dies
+  historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
+  verificatis, et hoc dicere debet.
+-->
+<natura modulus="iudicium" versio="7" lingua="latina">
+
+<!-- ==================================================
+     GRADUS ASSENSUS - quanto animus adhaeret
+     (taxinomia scholastica, non "alta/media/humilis":
+     genus quod philosophia iam distinxit, et melius)
+     ================================================== -->
+
+<genus nomen="gradus_assensus">
+
+  <definitio>
+    Quanto firmitate animus propositioni adhaeret. Non de re
+    ipsa sed de ADHAESIONE: eadem propositio ab alio scitur, ab
+    alio creditur, ab alio suspicatur. Gradus ideo iudicii
+    proprietas est, non rei.
+  </definitio>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="scientia">
+    <definitio>
+      Certa adhaesio cum causa: quod per demonstrationem aut per
+      definitionem tenetur, sine formidine oppositi. In hac
+      bibliotheca: definitiones nostrae (quas STATUIMUS) et
+      quaecumque machina probare potest.
+    </definitio>
+  </species>
+
+  <species nomen="opinio">
+    <definitio>
+      Adhaesio CUM FORMIDINE OPPOSITI: tenetur, sed contrarium
+      fieri posse conceditur. Iudicia aestimativa hic vivunt -
+      "typatio C debilis est" opinio est, non scientia.
+    </definitio>
+  </species>
+
+  <species nomen="fides">
+    <definitio>
+      Adhaesio propter AUCTORITATEM alterius, non propter rem
+      visam: quod ab alio acceptum tenetur. Dies historici huius
+      dictionarii hic vivunt - scriba eos non vidit nec
+      verificavit; ex corpore institutionis suae accepit.
+      Honestissimus gradus quia dependentiam SUAM nominat.
+    </definitio>
+  </species>
+
+  <species nomen="suspicio">
+    <definitio>
+      Adhaesio levis, ad alteram partem inclinans sine
+      firmitate: quod verisimile videtur. Diagnosis differentialis
+      hic habitat ("fortasse X, excludendum Y").
+    </definitio>
+  </species>
+
+  <species nomen="dubitatio">
+    <definitio>
+      Suspensio adhaesionis: neutram partem tenere. Gradus
+      HONESTUS et in hac bibliotheca frequens - dubia nostra
+      hunc gradum induunt, et melius est dubitare nominatim
+      quam certitudinem fingere.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     FONS - unde propositio venit
+     (dubium rotae VII hic SOLUTUM: non forma citandi
+     sed genus deerat)
+     ================================================== -->
+
+<genus nomen="fons">
+
+  <definitio>
+    Id ex quo propositio accepta est: opus, mensura, testis,
+    corpus institutionis. Fons non probat propositionem veram
+    esse - dicit unde venit, quod aliud est et saepe utilius:
+    fons nominatus verificari potest, fons celatus numquam.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="clavis" genus="textus"
+      nota="nomen breve quo claims eum citant (fons= in valore)"/>
+    <proprietas nomen="verificatus" genus="veritas"
+      ordinarius="falsum"
+      nota="an aliquis fontem re vera inspexerit - defalta
+            FALSUM consulto: honestas negativa"/>
+  </proprietates>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="fons_scriptus">
+    <definitio>
+      Opus citabile: liber, norma, charta. Optimus fontium quia
+      permanens et publicus - nomenclatura biologica hoc semper
+      scivit ("Rosa canina L." auctorem in nomine fert).
+    </definitio>
+  </species>
+
+  <species nomen="fons_mensurae">
+    <definitio>
+      Instrumentum quod legit: thermometrum, horologium,
+      machina. Fons cuius fides ex CALIBRATIONE pendet, non ex
+      auctoritate.
+    </definitio>
+  </species>
+
+  <species nomen="fons_testimonii">
+    <definitio>
+      Persona quae rettulit: aegrota dolorem suum nuntians,
+      testis rem visam. Verificari non potest nisi ab ipso -
+      unde symptomatis natura propria.
+    </definitio>
+  </species>
+
+  <species nomen="corpus_institutionis">
+    <definitio>
+      Memoria machinae discentis: quod ex textibus innumeris
+      hausit sine singulorum memoria. Fons INVERIFICABILIS
+      natura sua - nec falsus necessario nec verus, sed
+      irretractabilis ad originem. Scriba huius bibliothecae
+      hoc fonte plurima dicit, et id fateri debet.
+    </definitio>
+    <nota>
+      Species quam nulla bibliotheca ante nostram aetatem
+      habuit. Honestas eius in hoc: qui hoc fonte utitur,
+      lectorem ad verificationem VOCAT, non ad fidem.
+    </nota>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     OBSERVATIO - quod testimonium praebet
+     (latus alterum iudicii: iudicium OBSERVATIONIBUS
+     nititur; species per hoc dividuntur - QUIS
+     VERIFICARE POSSIT, quod medicina millennia
+     distinxit et schemata computatralia numquam)
+     ================================================== -->
+
+<genus nomen="observatio">
+
+  <definitio>
+    Notitia rei singularis accepta, quae iudicium fundare
+    potest: quid videatur, quid sentiatur, quid metiatur.
+    Ab iudicio differt quia nihil AFFIRMAT ultra id quod
+    apparet - "febris 38.5" observatio est, "pneumoniam
+    habet" iudicium.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="facta" genus="dies"/>
+    <proprietas nomen="verificabilis_ab_alio" genus="veritas"
+      nota="AXIS DIVISIONIS: potestne alius idem videre?
+            Mensura potest, dolor alienus non - hiatus
+            epistemicus qui in datis latet et rationem eorum
+            regit"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="de" ad="*"/>
+    <relatio nomen="ex_fonte" ad="fons"/>
+    <relatio nomen="fundat" a="iudicium" inversa="verum"
+      nota="impletur ab iudicium.fundatur_in"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="symptoma">
+    <definitio>
+      A subiecto ipso relatum: dolor, nausea, vertigo. Ab alio
+      verificari NON POTEST - solus patiens accessum habet.
+      Non ideo minus verum: species quae ostendit veritatem
+      privatam veritatem esse.
+    </definitio>
+    <valor nomen="verificabilis_ab_alio">falsum</valor>
+  </species>
+
+  <species nomen="signum">
+    <definitio>
+      Ab observatore deprehensum: febris, tumor, pallor.
+      Quivis peritus idem videre potest, et instrumentum
+      QUANTITATEM dat (38.5 °C) - unde mensura, unde
+      comparatio.
+    </definitio>
+    <valor nomen="verificabilis_ab_alio">verum</valor>
+  </species>
+
+  <species nomen="testimonium">
+    <definitio>
+      Ab alio relatum de re quam ipse vidit: testis, socius,
+      acta priora. Verificabile per testem, non per rem -
+      unde iuris disciplina tota de testibus.
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     IUDICIUM - propositio ab homine tenta
+     ================================================== -->
+
+<genus nomen="iudicium">
+
+  <definitio>
+    Propositio de re quam aliquis tenet: cum auctore, momento,
+    fundamento, gradu assensus. A FACTO distinguitur - factum
+    est aut non est; iudicium ACCIDIT, et accidisse certum
+    manet etiamsi contentum falsum sit. Ideo acta iudicia
+    errata servant: quod iudicatum est pars historiae est.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quod affirmatur - propositio ipsa"/>
+    <proprietas nomen="latum" genus="dies"
+      nota="quando - momentum iudicii, non rei iudicatae:
+            distinctio quam schemata plana perdunt"/>
+  </proprietates>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="latum"/>
+    <status nomen="confirmatum"
+      nota="testimonio posteriore firmatum"/>
+    <status nomen="revisum"
+      nota="iudicio NOVO superatum - vetus non delectur sed
+            superatur (catena substituit, ut in normis):
+            historia iudiciorum ipsa testimonium est"/>
+    <status nomen="retractatum"
+      nota="ab auctore ipso reiectum - error confessus, qui
+            aliud est quam a posteriore superari"/>
+    <transitus a="latum" ad="confirmatum" per="confirmatio"/>
+    <transitus a="latum" ad="revisum" per="revisio"/>
+    <transitus a="latum" ad="retractatum" per="retractatio"/>
+    <transitus a="confirmatum" ad="revisum" per="revisio"
+      nota="confirmatum non est immutabile: testimonium novum
+            semper venire potest"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="auctor" ad="persona" modulus="persona"
+      nota="QUIS iudicavit - iudicium sine auctore orphanum
+            est, et schemata plana hoc semper perdunt"/>
+    <relatio nomen="de" ad="*"
+      nota="res de qua - apertum consulto: de quovis iudicari
+            potest"/>
+    <relatio nomen="assensus" ad="gradus_assensus"
+      nota="RELATIO non electio: gradus res vera est cum
+            definitione sua, non valor nudus in enumeratione"/>
+    <relatio nomen="fundatur_in" ad="observatio"
+      multiplex="verum"
+      nota="testimonia quibus nititur - umbra rotae XVI hic
+            impleta"/>
+    <relatio nomen="ex_fonte" ad="fons" multiplex="verum"/>
+    <relatio nomen="superat" ad="iudicium"
+      nota="quod hoc iudicium revisit - catena temporalis,
+            ut norma substituit normam"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="diagnosis">
+    <definitio>
+      Iudicium de morbo aegroti: quid habeat. Provisorium natura
+      sua - testimonio novo revisibile, et differentialis
+      (plures simul suspicione tentae) donec una confirmetur.
+      Exemplum generis clarissimum quia medicina fallibilitatem
+      suam FORMALITER tractat.
+    </definitio>
+  </species>
+
+  <species nomen="aestimatio">
+    <definitio>
+      Iudicium de valore rei: quanti sit. Ab aestimatore, in
+      tempore, ad finem (venditio, tributum, assecuratio) -
+      idem res tribus aestimatoribus tria pretia habet, quod
+      non error est sed natura iudicii.
+    </definitio>
+  </species>
+
+  <species nomen="praedictio">
+    <definitio>
+      Iudicium de futuro: quid eventurum sit. Solum genus quod
+      TEMPUS ipsum probat - praedictio expectat verificationem
+      suam.
+    </definitio>
+  </species>
+
+  <species nomen="sententia_iudicis">
+    <definitio>
+      Iudicium auctoritate publica latum quod OBLIGATIONEM
+      parit: non solum tenetur sed VINCIT. Species in qua
+      iudicium et ius se tangunt (vide obligatio: fons
+      obligationis esse potest).
+    </definitio>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     PERICULUM - damnum possibile futurum
+     ================================================== -->
+
+<genus nomen="periculum">
+
+  <definitio>
+    Damnum quod accidere potest nec certum est: species
+    iudicii de futuro, sed DUPLEX - probabilitate et gravitate
+    simul constat. Ideo numero uno dici non potest sine
+    mendacio: quod raro fit sed omnia perdit et quod saepe fit
+    sed parum nocet non sunt idem periculum, etiamsi
+    multiplicatio eadem sit.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="probabilitas" genus="numerus"
+      nota="inter 0 et 1 - et raro SCITUR: plerumque ipsa
+            aestimatur, ideo periculum iudicium de iudicio
+            saepe est"/>
+    <proprietas nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>exitialis</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="minatur" ad="*"
+      nota="cui damnum immineat"/>
+    <relatio nomen="minuitur_per" ad="*" multiplex="verum"
+      nota="cautiones - quae probabilitatem aut gravitatem
+            deprimunt (non tollunt: periculum sublatum
+            periculum non est)"/>
+    <relatio nomen="transfertur_per" ad="contractus"
+      modulus="obligatio"
+      nota="ASSECURATIO: contractus cuius materia ipsa
+            periculum est - alter periculum suscipit pro
+            pretio. Genus quod sine hoc exemplari dici non
+            poterat"/>
+  </relationes>
+
+  <nota>
+    Bibliotheca ante rotam XVI periculum dicere omnino non
+    poterat: nec probabilitatem nec damnum futurum habebat.
+    Hiatus epistemicus non solum diagnoses sed omnem
+    prudentiam excludebat - et prudentia virtus est quae de
+    futuro incerto deliberat.
+  </nota>
+
+</genus>
+
+<!-- ==================================================
+     IGNOTUM - absentia AGNITA, res primi ordinis
+
+     Insight Fran (rota XXXVII), cum analogia ZERI: numeri
+     Romani zerum non habebant, et arithmetica inde laborabat.
+     Zerum non est "nullus numerus" sed NOTA quae absentiam
+     POSITIVE repraesentat - et ea inventa positionalis
+     notatio possibilis facta est. Idem hic: ignotum non est
+     nihil sed RES, cum forma, historia, effectu.
+
+     DISCRIMEN QUOD GENUS FUNDAT: aliud est nescire, aliud
+     SCIRE SE NESCIRE. Prius nullum ignotum habet - lacuna
+     ipsa invisibilis est. Posterius ignotum PONIT: hiatum
+     nominasti, ergo de eo cogitare, eum assignare, eum
+     numerare potes. Ideo ignotum CONDERE actus epistemicus
+     est, non defectus.
+
+     FORMA IAM SEPTIES LOCALITER SOLUTA (unde genus meretur):
+     officium.vacans, fabricatio.non_reproductum,
+     gradus_assensus.dubitatio, et notae quinque "vacuum = ..."
+     quaeque suo loco definientes. Et persona.mortuus
+     CONFUSIONEM FATETUR ("vacuum = vivens aut ignotum") -
+     problema NULLI Coddianum in bibliotheca nostra ipsa.
+     ================================================== -->
+
+<genus nomen="ignotum">
+
+  <definitio>
+    Absentia notitiae AGNITA et nominata: hiatus qui, quia
+    nominatus est, tractari potest. Non ignorantia simplex
+    (quae nihil ponit) sed ignorantia in rem conversa - de qua
+    quaeri, quae assignari, quae numerari, quae solvi potest.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="quaestio" genus="textus"
+      nota="quod nescitur, verbis positum - forma hiatus.
+            Ignotum sine quaestione formata ignotum non est
+            sed inquietudo"/>
+    <proprietas nomen="impediens" genus="veritas"
+      ordinarius="falsum"
+      nota="an opus impediat - ignota plurima innocua sunt, et
+            ea sola quae impediunt pretium investigationis
+            merentur"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="agnitum" nota="hiatus nominatus"/>
+    <status nomen="quaesitum" nota="investigatio suscepta"/>
+    <status nomen="solutum" nota="notitia acquisita"/>
+    <status nomen="relictum"
+      nota="CONSULTO non quaesitum: decisio vera et honesta
+            ('hoc scire non oportet'), quae sine hoc genere
+            perit - schema quod solum 'apertum/clausum' habet
+            eam ut neglegentiam ostendit"/>
+    <status nomen="insolubile"
+      nota="quaesitum et inveniri non posse iudicatum -
+            differt a relicto ut impossibilitas a electione"/>
+    <transitus a="agnitum" ad="quaesitum" per="susceptio"/>
+    <transitus a="quaesitum" ad="solutum" per="inventio"/>
+    <transitus a="agnitum" ad="relictum" per="relictio"/>
+    <transitus a="quaesitum" ad="insolubile" per="defectio"/>
+    <transitus a="solutum" ad="agnitum" per="dubitatio_nova"
+      nota="quod solutum videbatur iterum ignotum fieri potest -
+            testimonio contrario"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="de" ad="*"
+      nota="res de qua nescitur"/>
+    <relatio nomen="agnitum_per" ad="iudicium"
+      nota="hiatum agnoscere IUDICIUM est, cum auctore et
+            momento: alius hiatum videt ubi alius nihil videt -
+            et hoc ipsum peritia est"/>
+    <relatio nomen="impedit" ad="*" multiplex="verum"
+      nota="pensa, consilia, actus quos moratur"/>
+    <relatio nomen="solvitur_per" ad="observatio" multiplex="verum"
+      nota="quid ad solvendum opus sit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       SPECIES QUAEQUE MOTUM ALIUM AFFORDAT - id ipsum est
+       cur genus vectis sit, non tabulatio -->
+
+  <species nomen="ignotum_notum">
+    <definitio>
+      Quaestionem tenes, responsum non: "quanta sit mora huius
+      ministerii ignoramus". MOTUS: assignabile - pensum est,
+      quaere.
+    </definitio>
+    <valor nomen="impediens">verum</valor>
+  </species>
+
+  <species nomen="ignotum_ignotum">
+    <definitio>
+      Quod nescis te nescire: quaestio ipsa nondum formata.
+      MOTUS: singulatim tractari NON POTEST - in summa tantum
+      (spatium in consilio, cycli breviores, redundantia).
+    </definitio>
+    <nota>
+      SPECIES QUAE INDIVIDUA HABERE NON POTEST natura sua:
+      ignotum ignotum nominatum ignotum notum FIT. Casus
+      terminalis criterii addressabilitatis (Fran, rota XXXIII)
+      et probatio eius: SPECIES addressabilis est
+      (/iudicium/ignotum_ignotum), membra non - quod refinamento
+      iam scripto respondet ("membra digna quae seligantur"
+      gradum speciei includit).
+      NEXUS: COMPLICATIO EST IGNOTUM IGNOTUM QUOD APPARUIT
+      (fabricatio.complicatio) - "non praevidenda" hoc ipsum
+      dicit. Unde et remedium idem: non plus consilii sed
+      apparatus qui ea citius aperiat.
+    </nota>
+  </species>
+
+  <species nomen="indeterminatum">
+    <definitio>
+      Nondum est quod sciatur: pretium anni venturi, exitus
+      pugnae navalis crastinae. Non ignorantia sed
+      INDETERMINATIO - nihil deest tibi, quia nihil adhuc est.
+      MOTUS: exspecta, aut decerne (interdum enim decisio tua
+      rem determinat).
+    </definitio>
+    <nota>
+      Distinctio Aristotelica (de futuris contingentibus):
+      ignorantia in SCIENTE est, indeterminatio in RE. Schemata
+      quae utrumque "unknown" vocant utentem in errorem ducunt -
+      alterum investigatione solvitur, alterum numquam.
+    </nota>
+  </species>
+
+  <species nomen="amissum">
+    <definitio>
+      Scitum olim, nunc perditum: tabulae deletae, testis
+      mortuus, acta rotata. MOTUS: recupera si potes, aut
+      absentiam agnosce - sed NOTA quod aliquando scitum est,
+      quia hoc ipsum notitia est.
+    </definitio>
+  </species>
+
+  <species nomen="retentum">
+    <definitio>
+      Aliquis scit et non dicit: ignorantia non in mundo sed in
+      te, ex voluntate alterius. MOTUS: negotiare, cogere, aut
+      sine eo agere - numquam investigare, quia investigatio
+      hic nihil valet.
+    </definitio>
+    <nota>
+      Secretum ex parte tenentis idem est quod hoc ex parte
+      quaerentis - genus unum, duo latera.
+    </nota>
+  </species>
+
+  <species nomen="impertinens">
+    <definitio>
+      Quaestio ad rem non pertinet: "quod nomen virgineum huius
+      societatis?" MOTUS: schema EMENDA - hiatus enim non in
+      notitia est sed in forma quae quaestionem imposuit.
+    </definitio>
+    <nota>
+      NULLUM SECUNDUM Codd, qui duo desideravit ("deest sed
+      applicabile" contra "deest et inapplicabile") et unum
+      accepit - unde confusio quae bases datorum per saecula
+      dimidium vexat. Species quae schema ACCUSAT, non mundum.
+    </nota>
+  </species>
+
+  <species nomen="controversum">
+    <definitio>
+      Responsa PLURA et pugnantia: non nullum sed NIMIS. MOTUS:
+      adiudica - collatis iudiciis, auctoribus, fontibus; non
+      investiga, quia investigatio responsum tertium tantum
+      addet.
+    </definitio>
+    <nota>
+      Species quae ignotum ad iudicium redit: controversia
+      iudicia plura de eadem re supponit, quorum unum praeferri
+      debet - vel omnia in dubitatione relinqui.
+    </nota>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     INVESTIGATIO - inquisitio ordinata in causas
+
+     INVENTUM INSTITUTIONALE AVIATIONIS (rota XXXIX):
+     ICAO Annexum XIII finem unicum investigationis
+     PRAEVENTIONEM declarat, culpae distributionem
+     EXPRESSE excludit, et eam a iudiciis de damnis LEGE
+     separat. Separatio non benignitas est sed
+     MACHINA NOTITIAM EXTRAHENS.
+     ================================================== -->
+
+<genus nomen="investigatio">
+
+  <definitio>
+    Inquisitio ordinata in causas eventus, iudicia de causis
+    producens. Ab observatione differt quia CONCLUDIT, a
+    iudicio simplici quia METHODO procedit et testimonia
+    colligit ante conclusionem.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="finis" genus="electio"
+      nota="PROPRIETAS GRAVISSIMA, et in ea tota fides pendet">
+      <optio>praeventio</optio>
+      <optio>attributio_culpae</optio>
+      <optio>uterque</optio>
+    </proprietas>
+  </proprietates>
+
+  <nota>
+    CUR SEPARATIO NOTITIAM PARIT: qui quid acciderit optime
+    sciunt idem sunt qui culpa periclitantur. Si renuntiare
+    nocet, non renuntiatur - et investigatio sine testimonio
+    eorum qui aderant caeca est. Ergo immunitas non mollities
+    est sed PRETIUM VERITATIS.
+    Unde finis "uterque" MODUS DEFICIENDI est, non compositio:
+    investigatio quae simul praevenire et culpam distribuere
+    conatur neutrum praestat, quia prima condicio alterius
+    (libera confessio) ab altera (consequentia) tollitur.
+    Programmatarii verbum "sine culpa" mutuati sunt,
+    structuram non - unde recensiones nostrae ab humanitate
+    praesentium pendent, non ab instituto.
+  </nota>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="aperta"/>
+    <status nomen="colligens" nota="testimonia et vestigia"/>
+    <status nomen="concludens"/>
+    <status nomen="relata" nota="relatio publicata"/>
+    <status nomen="suspensa"
+      nota="dum iudicium forense pendet - status qui ipse
+            separationis defectum PRODIT"/>
+    <transitus a="aperta" ad="colligens" per="inceptio"/>
+    <transitus a="colligens" ad="concludens" per="satietas"/>
+    <transitus a="concludens" ad="relata" per="publicatio"/>
+    <transitus a="colligens" ad="suspensa" per="interpellatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="de" ad="*"
+      nota="eventus investigatus - incidens, casus, defectus"/>
+    <relatio nomen="colligit" ad="observatio" multiplex="verum"/>
+    <relatio nomen="producit" ad="iudicium" multiplex="verum"
+      nota="conclusiones de causis - iudicia, non facta:
+            revocabiles, cum auctore, cum gradu assensus"/>
+    <relatio nomen="invenit" ad="causa" modulus="causa"
+      multiplex="verum"
+      nota="MULTIPLEX consulto - vide causa: necessaria et
+            sufficiens raro conveniunt, ergo causa una
+            'radicalis' fere semper simplificatio"/>
+    <relatio nomen="parit" ad="postulatum" modulus="fabricatio"
+      multiplex="verum"
+      nota="commendationes: quod investigatio VALET non est
+            scire quid acciderit sed quid mutandum sit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="investigatio_praeventiva">
+    <definitio>
+      Ad praeventionem sola ordinata, culpa expresse exclusa:
+      forma aviatoria, et in medicina conventus mortalitatis
+      et morbositatis.
+    </definitio>
+    <valor nomen="finis">praeventio</valor>
+  </species>
+
+  <species nomen="inquisitio_forensis">
+    <definitio>
+      Ad culpam et damna determinanda: finis legitimus et
+      necessarius, sed ALIUS.
+    </definitio>
+    <valor nomen="finis">attributio_culpae</valor>
+    <nota>
+      SPECIES CONTRARIA QUAE ALTERAM PROBAT: quia haec
+      legitime culpam quaerit, illa eam quaerere NON POTEST -
+      duae institutiones, duo fines, et confusio primam
+      destruit. Non quod culpa quaerenda non sit; sed quod
+      idem processus utrumque praestare nequit.
+    </nota>
+  </species>
+
+  <species nomen="recensio_post_mortem">
+    <definitio>
+      Investigatio praeventiva in arte programmandi post
+      incidens: forma aviatoria mutuata, saepe sine separatione
+      quae eam operantem facit.
+    </definitio>
+    <valor nomen="finis">praeventio</valor>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     SECRETUM - res cuius vis in scientia RESTRICTA consistit
+
+     Cursu nono postulatum (infrastructura fidei): clavis privata
+     citari non potuit. Non est "datum cum regula accessus" -
+     regula accessus rei extrinseca est et mutari potest; hic
+     restrictio ESSENTIA est. Clavis divulgata clavis manet et
+     nihil valet.
+
+     PAR EXEMPLARIS: ignotum absentiam scientiae NOMINAT (nemo
+     scit); secretum scientiam RESTRICTAM (aliqui sciunt, ceteri
+     ne sciant). Duo genera de distributione scientiae, ex
+     lateribus contrariis - unde hic collocatum, non inter res
+     computatrales quas casus cogens attulit.
+     ================================================== -->
+
+<genus nomen="secretum">
+
+  <definitio>
+    Res cuius utilitas in eo consistit quod pauci eam sciunt:
+    divulgata non corrumpitur nec perit sed OFFICIO SUO EXUITUR,
+    integra manens et inutilis facta.
+  </definitio>
+
+  <differentia>
+    Vita eius UNIUS VIAE est, et hoc genus definit: nulla actio
+    secretum divulgatum secretum iterum facit. Res aliae reparari
+    possunt (instrumentum reficitur, vitium sanatur, error
+    corrigitur); secretum non reparatur sed SUBSTITUITUR - et
+    substitutum aliud est, non idem restitutum.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="numerus_scientium" genus="numerus"
+      nota="quot sciant. PROPRIETAS QUAE SOLA CRESCERE POTEST:
+            nemo secretum oblivisci iubetur, unde numerus
+            monotone crescit et periculum cum eo"/>
+    <proprietas nomen="substituibile" genus="veritas"
+      ordinarius="verum"
+      nota="an novum in locum poni possit. DISCRIMEN GRAVISSIMUM
+            inter secreta: clavis rotatur, tessera mutatur - sed
+            notae biometricae, numeri publici identitatis,
+            secreta historica substitui NON possunt, et illorum
+            divulgatio damnum PERPETUUM est. Qui secretum
+            insubstituibile ut substituibile tractat consilium
+            recuperationis nullum habet"/>
+    <proprietas nomen="valor_temporarius" genus="veritas"
+      ordinarius="falsum"
+      nota="an post tempus certum nihil noceat divulgatio
+            (nuntius embargo detentus, consilium bellicum post
+            proelium). Secretum temporarium custodiam
+            proportionatam poscit, non perpetuam"/>
+  </proprietates>
+
+  <machina_statuum nomen="custodia" gerens="individuum">
+    <status nomen="custoditum"/>
+    <status nomen="suspectum"
+      nota="divulgatio nec probata nec excluditur. STATUS QUI
+            DOCTRINAM PORTAT: reditus ad 'custoditum' PROBATIONEM
+            NEGATIVAE poscit (nemo vidit), quae fere semper
+            impossibilis est - unde regula artis 'suspicionem ut
+            compromissum tracta'. Non timiditas sed logica:
+            manere in suspecto est incertitudinem perpetuam
+            eligere"/>
+    <status nomen="compromissum"
+      nota="divulgatum. STATUS TERMINALIS - nulla via retro"/>
+    <status nomen="emeritum"
+      nota="consulto depositum dum adhuc custoditum est
+            (rotatio ante damnum): mors bona secreti, et sola
+            quam eligere licet"/>
+    <transitus a="custoditum" ad="suspectum" per="suspicio"/>
+    <transitus a="custoditum" ad="compromissum" per="divulgatio"/>
+    <transitus a="suspectum" ad="compromissum" per="confirmatio"/>
+    <transitus a="suspectum" ad="custoditum" per="exclusio"
+      nota="TRANSITUS QUI FERE NUMQUAM ITUR - vide notam status
+            suspecti. Positus quia possibilis est, non quia
+            usitatus: forma quae eum omitteret mentiretur"/>
+    <transitus a="custoditum" ad="emeritum" per="rotatio"/>
+    <transitus a="suspectum" ad="emeritum" per="rotatio"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="custodire"/>
+    <actio nomen="communicare" nota="alii scienti addere -
+      actio quae numerum scientium auget et retro agi non potest"/>
+    <actio nomen="rotare" nota="novum in locum ponere"/>
+    <actio nomen="divulgare"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="scitur_a" ad="*" multiplex="verum"
+      nota="quibus notum sit - personae, organizationes,
+            processus"/>
+    <relatio nomen="substituit" ad="secretum"
+      nota="CATENA ROTATIONIS: secretum novum vetus succedit, et
+            vetus emeritum manet, non deletum - quia quae eo
+            signata sunt adhuc verificanda esse possunt.
+            Structura eadem qua norma normam substituit"/>
+    <relatio nomen="custodia_obligat" ad="obligatio"
+      modulus="obligatio" multiplex="verum"
+      nota="secreta plerumque obligationes pariunt (pactum
+            silentii, sigillum confessionis, officium fiduciae) -
+            obligatio tamen secretum non est, nec secretum
+            obligationem semper parit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="clavis_privata">
+    <definitio>
+      Dimidium secretum paris cryptographici: quod signat aut
+      resignat, et cuius comes publicus libere diffunditur.
+    </definitio>
+    <differentia>
+      Secretum cuius comes PUBLICUS esse debet ut secretum
+      utilitatem habeat - forma insolita: par unum, dimidia
+      contraria, et vis ex ipsa asymmetria.
+    </differentia>
+    <valor nomen="substituibile">verum</valor>
+    <nota>
+      Rotatio hic pretium proprium habet: clavis emerita
+      subscriptiones veteres adhuc verificat, unde catena
+      substitutionum servanda est, non purganda.
+    </nota>
+  </species>
+
+  <species nomen="verbum_arcanum">
+    <definitio>
+      Series characterum qua persona se probat: secretum ab
+      homine memorandum, unde debilitas eius.
+    </definitio>
+    <valor nomen="substituibile">verum</valor>
+    <nota>
+      Species cuius vitium in natura sedet: memorabile esse
+      debet, et quod homo meminit alius coniectare potest.
+      Custodia eius (functio unidirectionalis apud recipientem)
+      hoc fatetur - servans ipse secretum nescire debet.
+    </nota>
+  </species>
+
+  <species nomen="secretum_negotii">
+    <definitio>
+      Notitia commercialis cuius valor ex ignorantia
+      competitorum venit: ratio, index clientium, processus.
+    </definitio>
+    <valor nomen="valor_temporarius">falsum</valor>
+    <nota>
+      Sola species quam ius ut PROPRIETATEM tuetur dum secreta
+      manet et cuius tutela divulgatione ipsa perit - contra
+      privilegium inventionis, quod divulgationem EXIGIT et
+      tempore finito tutelam dat. Duae viae contrariae ad idem
+      bonum, et electio inter eas semel pro semper fit.
+    </nota>
+  </species>
+
+  <species nomen="sigillum_confessionis">
+    <definitio>
+      Secretum sacramentale quod confessarius nullo modo, nulla
+      causa, nulli prodere potest.
+    </definitio>
+    <valor nomen="substituibile">falsum</valor>
+    <valor nomen="valor_temporarius">falsum</valor>
+    <differentia>
+      Secretum cuius custodia ABSOLUTA est: ceterae species
+      periculum contra utilitatem pendunt, haec nihil pendit.
+      Nec periculum vitae nec iussum iudicis solvit, et
+      violatio excommunicationem latae sententiae parit.
+    </differentia>
+    <nota>
+      Specimen quod limitem generis ostendit: hic numerus
+      scientium neque crescere POTEST (confessarius alteri
+      communicare non licet), unde proprietas quae alibi
+      monotone crescit hic in uno figitur. Terminus scalae, non
+      exceptio ab ea.
+    </nota>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     PERITIA COMMUNIS - scientia cuius GERENS universitas est
+
+     Cursu tertio decimo (pastura ovium) inventa. Exemplar hoc
+     duo genera de distributione scientiae iam habebat, et
+     tertium deerat:
+       ignotum            NEMO scit (absentia agnita)
+       secretum           ALIQUI sciunt, ceteri ne sciant
+       peritia_communis   COETUS scit, nullum membrum solum
+     Trias completa, per id quod QUIS sciat.
+
+     SPECIMEN COGENS: grex "heftatus" in montibus non saeptis
+     fines suos novit et intra eos manet - nullo saepto, nullo
+     pastore custodiente. Agnae hoc a matribus discunt. Anno
+     2001 pestis pedum et oris greges heftatos in Anglia
+     septentrionali delevit, et damnum non oves fuerunt (emi
+     poterant) sed HEFTA IPSA: scientia periit, et restitutio
+     annos saeptorum et pastorum poposcit.
+     ================================================== -->
+
+<genus nomen="peritia_communis">
+
+  <definitio>
+    Scientia aut ars quae in universitate residet nec in ullo
+    membro tota est: participando traditur, non doctrina sola,
+    et cum coetu dissoluto perit etiamsi nemo eam oblitus sit.
+  </definitio>
+
+  <differentia>
+    GERENS EST COETUS, NON MEMBRUM - unde modus pereundi
+    proprius: non oblivione sed DISCONTINUITATE. Membra
+    singillatim substitui possunt et peritia manet, quia novi a
+    veteribus participando discunt; omnia simul substitui et
+    perit, quamvis singuli aeque periti sint. Ideo damnum non ex
+    numero amissorum aestimatur sed ex EODEM TEMPORE amissorum.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="modus_traditionis" genus="electio"
+      nota="quomodo ad novos transeat">
+      <optio>participatione</optio>
+      <optio>institutione</optio>
+      <optio>utroque</optio>
+    </proprietas>
+    <proprietas nomen="scribi_potest" genus="veritas"
+      ordinarius="falsum"
+      nota="DECIPULA HIC SEDET: quod scribi potest scriptum
+            CONSERVARI NON EST. Documentum heftam non servat -
+            oves legere non possunt, sed nec homo ex libro
+            discit quod manu discitur. Scriptio auxilium est
+            restituendi, non substitutum servandi. Qui hoc
+            confundit se munitum credit et non est"/>
+    <proprietas nomen="tempus_restituendi" genus="quantitas"
+      modulus="mensura"
+      nota="quantum ad reficiendum opus sit POST amissionem, cum
+            omnibus rebus praesto. Heftam restituere annos
+            poscit, opibus abundantibus - quia traditio
+            participatione fit et participatio tempus poscit.
+            Mensura quae peritiam ab omni alia re dividit:
+            pecunia eam accelerare non potest"/>
+  </proprietates>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="vigens"/>
+    <status nomen="attenuata"
+      nota="gerentes pauciores quam ut traditio certa sit -
+            status PERICULOSISSIMUS quia nihil adhuc deest et
+            omnia iam pendent. Nemo eum animadvertit donec unus
+            abeat"/>
+    <status nomen="amissa"/>
+    <status nomen="restituta" nota="longo tempore refecta"/>
+    <transitus a="vigens" ad="attenuata" per="attenuatio"/>
+    <transitus a="attenuata" ad="vigens" per="instauratio"/>
+    <transitus a="attenuata" ad="amissa" per="discontinuatio"/>
+    <transitus a="vigens" ad="amissa" per="discontinuatio"
+      nota="TRANSITUS SUBITUS: coetu simul deleto peritia
+            florens statim perit, gradu medio omisso"/>
+    <transitus a="amissa" ad="restituta" per="restitutio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="residet_in" ad="universitas"
+      modulus="organizatio"
+      nota="coetus qui eam gerit"/>
+    <relatio nomen="de" ad="*" nota="cuius rei sit peritia"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="notitia_pascui">
+    <definitio>
+      Scientia gregis de finibus pascui sui in monte non saepto:
+      quo eundum, ubi manendum, quando descendendum.
+    </definitio>
+    <valor nomen="modus_traditionis">participatione</valor>
+    <valor nomen="scribi_potest">falsum</valor>
+    <nota>
+      Specimen quod genus coegit, et purissimum quod inveniri
+      potest: gerens ne loqui quidem potest, unde nulla
+      confusio inter peritiam et documentum eius possibilis
+      est. Damnum anni 2001 mensuratum: oves emi poterant,
+      hefta non poterat.
+    </nota>
+  </species>
+
+  <species nomen="ars_officinae">
+    <definitio>
+      Modus operandi quem officina tenet: quid quo ordine, quid
+      caveatur, quid non scribatur quia omnes sciunt.
+    </definitio>
+    <valor nomen="modus_traditionis">utroque</valor>
+    <nota>
+      Species ubi 'scribi_potest' fallacissima est: pars scribi
+      potest et scribitur, et scripta pars ea EST quae minus
+      valet - reliquum in manibus manet. Officina cuius
+      artifices simul abeunt libros suos habet et artem non.
+    </nota>
+  </species>
+
+  <species nomen="memoria_operis">
+    <definitio>
+      Scientia coetus de opere suo quae in fontibus non est: cur
+      hoc ita factum sit, quid temptatum et reiectum, ubi
+      periculum lateat.
+    </definitio>
+    <nota>
+      Cur commentaria, worklogi, acta decretorum exsistant:
+      conatus peritiam communem in rem scriptam vertendi
+      antequam attenuetur. Conatus partim tantum felix, ut
+      proprietas 'scribi_potest' monet - et domus haec eum
+      cotidie agit.
+    </nota>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     ATTRIBUTIO - iudicium de ORIGINE rei
+
+     Cursu quarto decimo inventa, et inventum melius quam
+     genus: ars mercatoria vocabularium GRADATUM habet - manu
+     ipsius / attributum / officinae / circuli / sectatoris /
+     post / in modo - cuius quisque terminus significationem
+     statutam et vim iuridicam in auctione fert.
+
+     PRIMO GRADUS ASSENSUS ESSE PUTAVI. NON SUNT. "Officinae
+     Rembrandt" non significat 'incertus sum an Rembrandt sit'
+     sed 'certus sum eum NON fecisse, et certus ex officina eius
+     venire'. Gradus PROPINQUITATIS AD ORIGINEM sunt, et
+     certitudo AXIS ALIUS per omnes currens: de opere 'post
+     Rembrandt' certissimus esse potes aut dubius.
+
+     BIBLIOTHECA AXES CONFUNDEBAT quia alterum solum habebat.
+     Nunc duo: certitudo (quantum animus adhaereat) et
+     propinquitas (quantum manus auctoris adfuerit).
+     ================================================== -->
+
+<genus nomen="attributio" sub="iudicium">
+
+  <differentia>
+    Iudicium de eo QUIS FECERIT, quod duabus mensuris simul
+    utitur: quanto assensu teneatur (certitudo, ut omne
+    iudicium) et quantum auctor nominatus operi adfuerit
+    (propinquitas, huic generi propria). Duae res quas sermo
+    vulgaris in unum 'fortasse' confundit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="propinquitas" genus="electio"
+      nota="quantum manus auctoris nominati adfuerit. SCALA NON
+            CERTITUDINIS SED PARTICIPATIONIS: descendendo minus
+            de auctore ipso, non minus de scientia nostra.
+            Termini in mercatu artis significationes statutas
+            habent et emptorem ligant">
+      <optio>manu_ipsius</optio>
+      <optio>cum_adiutoribus</optio>
+      <optio>officinae</optio>
+      <optio>circuli</optio>
+      <optio>sectatoris</optio>
+      <optio>post_eum</optio>
+      <optio>in_modo_eius</optio>
+    </proprietas>
+    <proprietas nomen="fundamentum_attributionis" genus="fundamentum"
+      modulus="iudicium" multiplex="verum"
+      nota="quibus rebus nitatur - et haec plerumque discrepant,
+            unde controversiae. OPTIONES LOCALES ROTA LIX
+            SUBLATAE: valores nunc species fundamenti sunt
+            (documentum_scriptum, comparatio_stili, mensuratio
+            pro analysi materiae, autopsia pro subscriptione
+            inspecta). Provenientia sola speciem propriam non
+            habet quia CATENA est, non fundamentum unum - vide
+            acta.origo_dominii"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="de_opere" ad="*"/>
+    <relatio nomen="ad_auctorem" ad="persona" modulus="persona"/>
+  </relationes>
+
+  <nota>
+    ATTRIBUTIO MUTATUR ET RES NON. Consilium Investigationis
+    Rembrandtianae opera centena ei abiudicavit: tabulae eaedem
+    manserunt, iudicium mutatum est - et pretium cum iudicio,
+    non cum tabula. Casus purissimus doctrinae domus (membrum
+    per iudicium, revisabile): qui attributionem ut PROPRIETATEM
+    OPERIS servat mutationem eius ut correctionem erroris
+    tractabit, cum sit iudicium novum de re eadem, et historiam
+    utriusque perdet.
+  </nota>
+
+  <nota>
+    CATALOGUS RATIONATUS (catalogue raisonne) acta attributionum
+    est: quis quid quando censuerit, cum ratione. Ideo editiones
+    eius se substituunt more normarum, et editio vetus citabilis
+    manet - quod exemplar normae iam describit.
+  </nota>
+
+</genus>
+
+
+<!-- ==================================================
+     FUNDAMENTUM - id quo nixa propositio stat
+
+     ABSENTIA STRUCTURALIS QUARTA, et prima in gradu
+     PROPRIETATUM. Quattuor proprietates in quattuor rotis natae
+     idem rogabant, nulla parentem habente:
+       attestatio.fundamentum          (PKI, rota LI)
+       interactio.testimonium          (pharmacopolium, XLVI)
+       attributio.fundamentum_attributionis (museum, LVII)
+       incertitudo.genus_aestimationis (metrologia, LVIII)
+     Signum semel iam agnitum et REIECTUM cum bis tantum
+     appareret (idempotens, rota LIII) - recte tunc, quia duae
+     proprietates communes pondus non faciunt. Quattuor faciunt.
+
+     NON EST FONS, et definitio fontis id ipsa dicit: "fons non
+     probat propositionem veram esse - dicit UNDE VENIT". Duae
+     interrogationes: unde acceperim (fons) et quo nitatur
+     (fundamentum). Ex libro accepi; liber stilo nitebatur.
+     ================================================== -->
+
+<genus nomen="fundamentum">
+
+  <definitio>
+    Id quo propositio nititur: non unde accepta sit (id fons
+    est) nec quanto assensu teneatur (id gradus assensus) sed
+    QUALE SIT ID QUOD EAM SUSTINET.
+  </definitio>
+
+  <differentia>
+    Quartus axis claris qualificandae, et quartus DISTINCTUS -
+    bibliotheca iam habebat gradum assensus (quanto animus
+    adhaereat), fontem (unde venerit), incertitudinem (quantus
+    error numeri sit). Hic quaeritur QUALITAS SUSTINENTIS, quae
+    ab omnibus tribus libera est: propositio autopsia nixa
+    dubitanter teneri potest, et coniectura firmissime.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="verificabile_ab_alio" genus="veritas"
+      nota="an alius idem fundamentum inspicere possit.
+            DISCRIMEN PRACTICUM MAXIMUM: documentum et mensura
+            inspici possunt, coniectura periti non - unde
+            controversia de illis solvi potest, de hac non nisi
+            perito altero adhibito. Fundamentum inverificabile
+            non est vitium sed CONDICIO cognoscenda"/>
+    <proprietas nomen="repetibile" genus="veritas"
+      nota="an idem fundamentum iterum haberi possit. Mensura
+            repeti potest; autopsia rei transeuntis non - qui
+            vidit solus vidit, et testimonium eius fundamentum
+            ALIUD fit apud audientem (auctoritas_testis), quo
+            gradu descendimus quotiens narratur"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="sustinet" ad="*"
+      nota="propositionem, iudicium, attestationem, mensuram"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       divisio per MODUM SUSTINENDI, ordine fere descendente
+       quantum ad verificabilitatem -->
+
+  <species nomen="autopsia">
+    <definitio>
+      Ipse vidi: cognitio ex sensu proprio, nullo medio.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">falsum</valor>
+    <nota>
+      Verbum Graecum proprium (auto-opsis, ipse-visio), quod ars
+      medica et historica ambae adhibent. FUNDAMENTUM FIRMISSIMUM
+      ET MINIME COMMUNICABILE: nemo aliena autopsia uti potest -
+      narrata in testimonium vertitur, gradu amisso.
+    </nota>
+  </species>
+
+  <species nomen="mensuratio">
+    <definitio>
+      Instrumento mensuratum: fundamentum quod NUMERUM et
+      incertitudinem simul fert.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">verum</valor>
+    <valor nomen="repetibile">verum</valor>
+    <nota>
+      Solum fundamentum quod errorem suum QUANTITATIVE dicit
+      (vide mensura.incertitudo) - cetera 'quanto certus sis'
+      solum praebent. Unde metrologia inter dominia peculiaris.
+    </nota>
+  </species>
+
+  <species nomen="documentum_scriptum">
+    <definitio>
+      Scriptura rem attestans: acta, instrumentum, tabula,
+      epistula.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">verum</valor>
+    <nota>
+      Fundamentum quod ipsum fundamentum habet, et quaestio
+      regreditur: quo nitebatur qui scripsit? Provenientiae
+      investigatio hoc ipsum agit, et in origine_dominii
+      (acta.radix_fiduciae) desinit.
+    </nota>
+  </species>
+
+  <species nomen="auctoritas_testis">
+    <definitio>
+      Alius mihi dixit: fundamentum quod in fidem alterius
+      resolvitur.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">falsum</valor>
+    <nota>
+      GRADUM AMITTIT QUOTIENS NARRATUR: quod ille autopsia
+      tenuit, ego testimonio teneo, et qui a me audit gradu
+      tertio. Bibliotheca huius fundamento maxima ex parte
+      nititur (corpus_institutionis), quod ideo fatetur.
+    </nota>
+  </species>
+
+  <species nomen="illatio">
+    <definitio>
+      Ex aliis notis conclusum: nemo id vidit nec mensuravit, sed
+      ex his sequitur.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">verum</valor>
+    <nota>
+      Verificabile quia RATIO inspici potest - sed praemissa sua
+      fundamenta habent, unde illatio numquam firmior est quam
+      infimum praemissarum. Fundamentum compositum, ut
+      incertitudo composita.
+    </nota>
+  </species>
+
+  <species nomen="comparatio_stili">
+    <definitio>
+      Ex similitudine formae iudicatum: haec manus illam refert.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">falsum</valor>
+    <nota>
+      Fundamentum quod attributio prae ceteris adhibet, et cuius
+      debilitas nota est: periti dissentiunt, nec ratio in verba
+      plene resolvi potest. Consilium Rembrandtianum hoc solo
+      fere nixum opera centena abiudicavit - unde controversia
+      quae aliter solvi non poterat.
+    </nota>
+  </species>
+
+  <species nomen="coniectura_periti">
+    <definitio>
+      Peritus ita censet, ratione non plene explicata:
+      aestimatio ex usu longo nata.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">falsum</valor>
+    <nota>
+      Fundamentum quod incertitudo TYPI B nominat, et quod in
+      rationibus incertitudinis plerumque PARS MAXIMA est -
+      computatio exacta super aestimationem inexactam aedificata.
+      Non vitium sed condicio, quam GUM ipsa fatetur et rationes
+      pleraeque celant.
+    </nota>
+  </species>
+
+  <species nomen="praesumptio">
+    <definitio>
+      Assumptum donec contrarium probetur: fundamentum quod se
+      fundamentum non esse fatetur.
+    </definitio>
+    <valor nomen="verificabile_ab_alio">verum</valor>
+    <nota>
+      Honestissimum omnium quia se ipsum prodit, et ideo
+      periculosissimum cum tacetur: distributio assumpta in
+      ratione incertitudinis, valor ordinarius in schemate, mos
+      praesumptus in protocollo. Distinctum a fictione iuris
+      (norma): illa contrarium SCIT, haec contrarium NESCIT.
+    </nota>
+  </species>
+
+</genus>
+
+</natura>

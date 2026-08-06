@@ -29,7 +29,7 @@ num() { printf '%.0f' "${1:-0}" 2>/dev/null || printf '0'; }
 CORPUS="$TMP/corpus.txt"
 : > "$CORPUS"
 
-for f in natura/*.stml; do
+for f in natura/*.genera; do
     mod=$(xp "$f" 'string(/natura/@modulus)')
     ng=$(num "$(xp "$f" 'count(//genus)')")
     i=1

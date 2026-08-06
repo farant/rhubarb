@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/norma.genera
+  Exemplar semanticum: NORMA (versio 4, PLASTICUM)
+
+  Genus a Frane petitum: norma res est, non chorda - editorem,
+  diem, statum, successionem habet. Normae se invicem SUBSTITUUNT:
+  catena temporalis (stratum historicum in relationibus ipsis).
+-->
+<natura modulus="norma" versio="4" lingua="latina">
+
+<genus nomen="norma">
+
+  <definitio>
+    Documentum publicum quod formam praescribit: quid conformitas
+    significet definit. A re normata distinguitur - norma de
+    lingua C non EST lingua C; descriptio auctoritativa est.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="index" genus="textus"
+      nota="designatio canonica, e.g. ISO/IEC 9899:1990"/>
+    <proprietas nomen="titulus" genus="textus"/>
+    <proprietas nomen="publicata" genus="dies"/>
+  </proprietates>
+  <!-- editor olim textus erat (mendacium commoditatis conscium)
+       - nunc relatio ad corpus_normans, exemplari organizationis
+       nato (v0->v1) -->
+
+
+  <machina_statuum nomen="vigor">
+    <status nomen="proposita" nota="in deliberatione"/>
+    <status nomen="vigens"/>
+    <status nomen="substituta"
+      nota="a successore; adhuc citabilis - normae veteres non
+            evanescunt, C89 noster testis"/>
+    <status nomen="retracta"/>
+    <transitus a="proposita" ad="vigens" per="publicatio"/>
+    <transitus a="vigens" ad="substituta" per="substitutio"/>
+    <transitus a="vigens" ad="retracta" per="retractio"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="publicari"/>
+    <actio nomen="substitui" nota="a norma recentiore"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="editor" ad="corpus_normans"
+      modulus="organizatio" multiplex="verum"/>
+    <relatio nomen="substituit" ad="norma"
+      nota="catena successionis - historia in relationibus"/>
+    <relatio nomen="normat" ad="*"
+      nota="rem normatam cuiusvis generis - linguam, protocollum,
+            formam plagulae"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="iso_9899_1990">
+    <valor nomen="index">ISO/IEC 9899:1990</valor>
+    <valor nomen="titulus">Programming languages - C</valor>
+    <valor nomen="publicata">1990-12-15</valor>
+    <relatum nomen="editor" ad="iso" modulus="organizatio"/>
+    <relatum nomen="editor" ad="iec" modulus="organizatio"/>
+    <valor nomen="vigor">substituta</valor>
+    <relatum nomen="normat" ad="c89"
+      modulus="lingua_programmandi"/>
+  </individuum>
+
+  <individuum nomen="iso_9899_1999">
+    <valor nomen="index">ISO/IEC 9899:1999</valor>
+    <valor nomen="titulus">Programming languages - C</valor>
+    <valor nomen="publicata">1999-12-01</valor>
+    <relatum nomen="editor" ad="iso" modulus="organizatio"/>
+    <relatum nomen="editor" ad="iec" modulus="organizatio"/>
+    <valor nomen="vigor">substituta</valor>
+    <relatum nomen="substituit" ad="iso_9899_1990"/>
+    <relatum nomen="normat" ad="c99"
+      modulus="lingua_programmandi"/>
+  </individuum>
+
+  <individuum nomen="posix_1">
+    <valor nomen="index">IEEE Std 1003.1</valor>
+    <valor nomen="titulus">Portable Operating System Interface</valor>
+    <valor nomen="publicata">1988</valor>
+    <relatum nomen="editor" ad="ieee" modulus="organizatio"/>
+    <valor nomen="vigor">vigens</valor>
+    <dubium>
+      Editio "1003.1" continenter renovatur (1988, 2001, 2008,
+      2024...) - norma UNA vivens an series normarum se
+      substituentium? Idem dubium quod versiones linguarum:
+      identitas rei trans editiones. Solutio versio-generis
+      fortasse hic quoque valet.
+    </dubium>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     LEX - praeceptum quod OBLIGAT, non quod dirigit
+
+     Divisio quam magistratus (organizatio, rota XIV) iam
+     implicabat et hoc exemplar non secutum est: auctoritas
+     corporis normantis EX CONSENSU, magistratus EX IMPERIO.
+     Ergo et documenta eorum differunt - normae CONFORMARIS,
+     lex TE OBLIGAT sive consentias sive non.
+     ================================================== -->
+
+<genus nomen="lex">
+
+  <definitio>
+    Ordinatio rationis ad bonum commune, ab eo qui curam
+    communitatis habet promulgata (Thomas, ST I-II q.90 a.4):
+    non consilium sed praeceptum, cum vi obligandi et
+    plerumque cum sanctione. A norma differt FONTE
+    AUCTORITATIS - norma conformitatem OFFERT, lex
+    oboedientiam POSCIT.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="sanctio" genus="textus"
+      nota="poena violationi adnexa - non omni legi (leges
+            imperfectae sine poena exsistunt), sed plerisque"/>
+    <proprietas nomen="vacatio" genus="quantitas"
+      modulus="mensura"
+      nota="VACATIO LEGIS: intervallum inter promulgationem et
+            vim obligandi, ut lex sciri possit antequam
+            obliget. Status quem schemata binaria (lata/vigens)
+            perdunt, et quo praeparatio negotiorum tota
+            nititur"/>
+  </proprietates>
+
+  <machina_statuum nomen="vigor" gerens="individuum">
+    <status nomen="lata" nota="ab auctoritate sancita, nondum
+      promulgata - textus, nondum lex"/>
+    <status nomen="promulgata" nota="publicata, in vacatione"/>
+    <status nomen="vigens"/>
+    <status nomen="abrogata" nota="ab auctoritate sublata"/>
+    <status nomen="desueta"
+      nota="vi consuetudinis contrariae amissa, NULLO ACTU -
+            lex quam mora et usus occidunt, non legislator"/>
+    <transitus a="lata" ad="promulgata" per="promulgatio"
+      nota="ACTUS SOLLEMNIS - vide actus.promulgatio: ante eum
+            lex non est, textus tantum"/>
+    <transitus a="promulgata" ad="vigens" per="lapsus_vacationis"/>
+    <transitus a="vigens" ad="abrogata" per="abrogatio"/>
+    <transitus a="vigens" ad="desueta" per="desuetudo"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="lata_a" ad="magistratus" modulus="organizatio"
+      nota="auctoritas ex imperio - unde differentia a norma"/>
+    <relatio nomen="in_iurisdictione" ad="iurisdictio"
+      modulus="locus"
+      nota="lex FINES habet: extra iurisdictionem non obligat.
+            Norma fines non habet (ISO ubique eadem est) -
+            differentia practica gravissima inter genera"/>
+    <relatio nomen="promulgata_per" ad="actus_sollemnis"
+      modulus="actus"/>
+    <relatio nomen="abrogat" ad="lex" multiplex="verum"/>
+    <relatio nomen="parit" ad="obligatio" modulus="obligatio"
+      multiplex="verum"
+      nota="obligatio ex lege - hic fons eius describitur"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       divisio Thomistica (ST I-II qq. 91-95): genera legis
+       per FONTEM, non per materiam -->
+
+  <species nomen="lex_aeterna">
+    <definitio>
+      Ratio divinae sapientiae universum gubernans: fons
+      omnium legum, ipsa a nullo lata.
+    </definitio>
+  </species>
+
+  <species nomen="lex_naturalis">
+    <definitio>
+      Participatio legis aeternae in creatura rationali: quod
+      homo ratione sua cognoscit esse faciendum aut vitandum,
+      nullo legislatore humano dicente.
+    </definitio>
+    <nota>
+      Species quae discrimen legis a norma ad extremum ducit:
+      nemo eam tulit, nulla iurisdictio eam terminat, nulla
+      abrogatio eam tollit - et tamen obligat. Lex sine
+      legislatore humano, quod norma esse omnino non potest.
+    </nota>
+  </species>
+
+  <species nomen="lex_humana">
+    <definitio>
+      Ex lege naturali per rationem derivata et ab auctoritate
+      humana lata: civilis aut canonica. Sola species quam
+      applicationes fere semper tractabunt.
+    </definitio>
+    <nota>
+      Derivatio DUPLEX (Thomas): per CONCLUSIONEM ("noli
+      nocere" ergo "noli occidere" - quod ubique idem est) et
+      per DETERMINATIONEM ("puniendum est" ergo "poena haec" -
+      quod arbitrio legislatoris variat). Unde leges quaedam
+      per orbem conveniunt, aliae per iurisdictiones dissonant:
+      non inconstantia sed duo modi derivandi.
+    </nota>
+  </species>
+
+  <species nomen="lex_divina_positiva">
+    <definitio>
+      A Deo revelata, ratione sola non cognoscibilis: quod
+      humana ratio ad finem supernaturalem non attingit.
+    </definitio>
+  </species>
+
+  <species nomen="consuetudo">
+    <definitio>
+      Usus diuturnus communitatis cum animo se obligandi, a
+      legislatore tolerata: lex NON SCRIPTA quae tamen obligat.
+    </definitio>
+    <nota>
+      Species quae machinam supra FLECTIT: consuetudo nullum
+      actum promulgationis habet - non promulgatur sed CRESCIT,
+      et vim ex tempore et consensu accipit. Machina nostra
+      promulgationem poscit; haec species eam praeterit.
+      Dubium: an transitus "introductio per usum" addendus sit,
+      an consuetudo machinam propriam petat. APERTUM.
+    </nota>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     CLASSIS NORMATIVA - genus quod NORMA constituit et cui
+     consequentiae iuridicae adhaerent
+
+     DUOBUS DOMINIIS POSTULATA, ideo aedificata: pharmacopolium
+     (schedulae substantiarum I-V) et aviatio (gradus eventuum:
+     accidens / incidens grave / incidens - reliquum cursus
+     sexti quod solum manebat). Lex domus 'una instantia
+     observatio, duae in dominiis alienis LEX' impleta - et
+     secunda ex dominio prorsus alieno venit, quod probatio
+     fortissima est.
+
+     CUR NON SPECIES: species genus DIVIDIT secundum id quod
+     res EST; classis normativa res IAM DEFINITAS colligit
+     secundum id quod lex de eis STATUIT. Substantia
+     rescheduletur et natura eius immota manet - quod speciei
+     accidere non potest. Membratio per ACTUM, non per naturam.
+     ================================================== -->
+
+<genus nomen="classis_normativa">
+
+  <definitio>
+    Categoria a norma constituta in quam res assignantur, cui
+    consequentiae (obligationes, prohibitiones, procedurae)
+    ADHAERENT: quod classi debetur omnibus membris debetur, et
+    membrum mutata classe consequentias mutat sine ulla sui
+    mutatione.
+  </definitio>
+
+  <differentia>
+    Consequentiae CLASSI adhaerent, non rei - unde vis eius:
+    norma semel de classe statuit, et res innumerae per
+    assignationem sequuntur. Membratio PER ACTUM confertur
+    (norma edita, assignatio decreta) et per actum tollitur;
+    ideo classis normativa historiam habet quam natura rei non
+    habet.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="ordinata" genus="veritas"
+      nota="an classes seriem GRADUUM faciant (schedulae I-V,
+            accidens>incidens grave>incidens) an categorias
+            pares (classes periculi hazmat). Ordinatae
+            confinia habent, et confinia LITIGANTUR - unde
+            plerumque iudicium, non observatio, membrum
+            assignat"/>
+    <proprietas nomen="criterium" genus="textus"
+      nota="quo res assignetur. SAEPE COMPOSITUM et raro
+            plene mensurabile: schedula II 'usum medicum
+            acceptum CUM limitationibus severis et abusum
+            gravem' coniungit - unde disputationes de cannabi
+            saecularis"/>
+    <proprietas nomen="assignatio_quomodo" genus="electio">
+      <optio>norma_nominatim</optio>
+      <optio>decreto_administrativo</optio>
+      <optio>iudicio_periti</optio>
+    </proprietas>
+  </proprietates>
+
+  <machina_statuum nomen="vigor" gerens="individuum">
+    <status nomen="proposita"/>
+    <status nomen="vigens"/>
+    <status nomen="abrogata"
+      nota="classis ipsa tolli potest, membris ad alias
+            migrantibus - eventus qui res innumeras simul
+            movet"/>
+    <transitus a="proposita" ad="vigens" per="promulgatio"/>
+    <transitus a="vigens" ad="abrogata" per="abrogatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="constituta_per" ad="norma"
+      nota="norma quae classem creat et criterium dicit"/>
+    <relatio nomen="continet" ad="*" multiplex="verum"
+      nota="membra - apertum consulto: substantiae, eventus,
+            aedificia, merces. Quod classem normativam potentem
+            facit est quod QUIDLIBET classificari potest"/>
+    <relatio nomen="imponit" ad="obligatio" modulus="obligatio"
+      multiplex="verum"
+      nota="quid membris debeatur - inventarium perpetuum,
+            custodia clausa, relatio intra horas. RELATIO
+            PROPTER QUAM GENUS EXSISTIT: sine ea classis nomen
+            nudum esset"/>
+    <relatio nomen="assignatur_per" ad="iudicium" modulus="iudicium"
+      nota="MEMBRUM PER ACTUM aut PER IUDICIUM, numquam per
+            naturam: assignatio auctorem, momentum, gradum
+            assensus habet, et mutari potest"/>
+    <relatio nomen="gradus_supra" ad="classis_normativa"
+      nota="si ordinata - classis proxime gravior"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="schedula_substantiarum">
+    <definitio>
+      Classes I-V quibus substantiae regulatae assignantur
+      secundum abusus periculum et usum medicum acceptum:
+      quaeque obligationes custodiae, inventarii, praescribendi
+      proprias imponit.
+    </definitio>
+    <valor nomen="ordinata">verum</valor>
+    <valor nomen="assignatio_quomodo">decreto_administrativo</valor>
+    <nota>
+      Specimen quod GENUS POSTULAVIT: schedula II inventarium
+      perpetuum et praescriptionem sine repetitionibus exigit,
+      schedula V vix plus quam venditionem notatam. Eadem
+      substantia rescheduleta obligationes omnes mutat sine
+      mutatione chemica ulla - probatio purissima quod
+      consequentiae CLASSI adhaerent.
+    </nota>
+  </species>
+
+  <species nomen="gradus_eventus_aviatorii">
+    <definitio>
+      Gradus quibus eventus aviatorii distinguuntur - accidens,
+      incidens grave, incidens - quorum quisque obligationem
+      nuntiandi et investigandi diversam parit.
+    </definitio>
+    <valor nomen="ordinata">verum</valor>
+    <valor nomen="criterium">damnum personarum et aeronavis, ex
+      Annexo XIII</valor>
+    <nota>
+      SPECIMEN SECUNDUM, ex dominio alieno, quod genus aedificari
+      permisit (reliquum cursus sexti). Confinium accidens/
+      incidens grave investigationem publicam a relatione interna
+      dividit - unde litigatur, quod proprietas 'ordinata'
+      praedicit.
+    </nota>
+  </species>
+
+  <species nomen="classis_periculi_mercium">
+    <definitio>
+      Classes quibus merces periculosae in vectura assignantur
+      (explosiva, gasa, inflammabilia, corrosiva...): signa,
+      documenta, segregationem imponunt.
+    </definitio>
+    <valor nomen="ordinata">falsum</valor>
+    <nota>
+      Specimen tertium, et NON ordinatum - classis 3 classe 8
+      neque gravior neque levior est. Probat ordinationem
+      proprietatem esse, non essentiam. Tabulae segregationis
+      huius classis interactiones ponunt (vide pharmacon.interactio):
+      duo genera hic conveniunt.
+    </nota>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     FICTIO IURIS - quod lex TRACTARI IUBET tamquam esset
+
+     Cursu octavo bis eodem die postulata (adoptio; mortis
+     praesumptio), et retro tertium specimen invenit quod
+     bibliotheca IAM habebat sine nomine: persona_iuridica.
+     Universitas personarum "possidet, contrahit, agit et
+     convenitur SUO nomine" - quod nemo umquam vidit facere.
+     Fictionem ut sub-genus tractabamus.
+
+     NON MENDACIUM: mendacium celat, fictio PROFITETUR. Lex
+     scit patrem adoptivum non genuisse et tamen ita tractari
+     iubet, causa dicta. Ideo fictio semper RATIONEM secum
+     fert - qua remota, error simplex manet.
+     ================================================== -->
+
+<genus nomen="fictio_iuris">
+
+  <definitio>
+    Praeceptum quo lex rem aliter se habentem TAMQUAM ALITER
+    tractari iubet, sciens ita non esse, propter bonum quod
+    aliter attingi non potest: non error nec simulatio sed
+    "ac si" consulto susceptum.
+  </definitio>
+
+  <differentia>
+    A praesumptione differt PROBATIONE: praesumptio verum
+    coniectat et contrario probato cedit ("innocens
+    praesumitur"); fictio contrarium IAM SCIT et non cedit -
+    probare patrem adoptivum non genuisse nihil mutat, quia
+    id numquam asserebatur. A mendacio differt PUBLICITATE:
+    utrumque contra rem, sed fictio se profitetur et rationem
+    dicit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="ratio" genus="textus"
+      nota="BONUM propter quod suscipitur - pars fictionis, non
+            commentarius: fictio sine ratione dicta mendacium
+            institutum est. Ideo campus hic praecipuus"/>
+    <proprietas nomen="refragabilis" genus="veritas"
+      ordinarius="falsum"
+      nota="an re contraria probata cadat. Fere semper FALSUM -
+            quod fictionem a praesumptione dividit"/>
+    <proprietas nomen="ambitus" genus="electio"
+      nota="quousque 'ac si' porrigatur. RARO UNIVERSALIS, et
+            hic errores oriuntur: adoptio filiationem in iure
+            hereditario et alimentario facit, impedimenta autem
+            matrimonii SANGUINIS manent - fictio ad finem suum
+            porrigitur, non ultra">
+      <optio>universalis</optio>
+      <optio>ad_certos_effectus</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="instituta_per" ad="norma"
+      nota="fictio a lege sola institui potest - nemo privatus
+            fingit"/>
+    <relatio nomen="applicatur_per" ad="actus_iuridicus"
+      modulus="actus"
+      nota="actus quo fictio huic casui adhibetur (decretum
+            adoptionis, sententia mortis praesumptae) - fictio
+            generalis, applicatio singularis et NUMERATA"/>
+    <relatio nomen="fingit" ad="*"
+      nota="quid tractandum tamquam quid - apertum, quia
+            fictiones res cuiusvis generis fingunt"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="adoptio">
+    <definitio>
+      Fictio qua adoptans parens fit ad omnes fere effectus,
+      sciente lege eum non genuisse.
+    </definitio>
+    <valor nomen="ambitus">ad_certos_effectus</valor>
+    <valor nomen="ratio">bonum pueri, cui parentes debentur
+      quos natura non dedit</valor>
+    <nota>
+      Registrum civile fictionem VISIBILEM facit: introitus
+      prior obsignatur, novus conditur, et adoptantes ut
+      parentes simpliciter inscribuntur - acta ipsa fictionem
+      induunt. Locus rarus ubi acta consulto rem non ut est
+      referunt, et ideo probatio quod 'declaratoria' non semper
+      significat 'speculum naturae'.
+    </nota>
+  </species>
+
+  <species nomen="mors_praesumpta">
+    <definitio>
+      Fictio qua absens per tempus statutum mortuus habetur, ut
+      hereditas, matrimonium, tutela solvi possint.
+    </definitio>
+    <valor nomen="ratio">ne viventium negotia in aeternum
+      pendeant propter absentiam quae probari non potest</valor>
+    <nota>
+      SPECIMEN QUOD PROPRIETATEM POSTULAVIT quam nulla alia
+      res habet: fictio REVERSO ABSENTE partim SUPERSTES est.
+      Bona heredibus tradita plerumque non repetuntur;
+      matrimonium pro iurisdictione redit aut non. Effectus
+      fictionis fictionem ipsam superstant - quod est cur
+      'refragabilis' verum reddere non sufficit: cadit fictio,
+      manent quae sub ea facta sunt. Nexus cum
+      iudicium.ignotum.amissum: ignotum absentiam AGNOSCIT,
+      fictio eam TRACTABILEM facit.
+    </nota>
+  </species>
+
+  <species nomen="personalitas_iuridica">
+    <definitio>
+      Fictio qua coetus (aut massa bonorum) persona habetur:
+      possidet, contrahit, agit, convenitur suo nomine.
+    </definitio>
+    <valor nomen="ratio">ne perpetuitas coetus a mortalitate
+      membrorum pendeat</valor>
+    <nota>
+      SPECIMEN RETRO INVENTUM: bibliotheca genus
+      organizatio.persona_iuridica ab initio habebat et
+      fictionem non nominabat. Nunc nominatur - genus manet
+      ubi est (res vera in iure est), sed QUOMODO vera sit hic
+      dicitur. Casus purus doctrinae domus: fictio ipsa res
+      est, effectus eius aeque reales.
+    </nota>
+  </species>
+
+</genus>
+
+</natura>

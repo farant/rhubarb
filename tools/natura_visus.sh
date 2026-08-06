@@ -1,7 +1,7 @@
 #!/bin/bash
 # natura_visus.sh - proiectio visualis bibliothecae naturae
 #
-# Legit natura/*.stml, emittit build/natura_visus.html:
+# Legit natura/*.genera, emittit build/natura_visus.html:
 #   - silva Porphyriana (genera + sub-genera, numeri specierum)
 #   - arcus trans exemplaria (modulus= relationes)
 #   - UMBRAE: genera superficta (externum=) - agenda COMPUTATA
@@ -39,7 +39,7 @@ num() { printf '%.0f' "${1:-0}" 2>/dev/null || printf '0'; }
 
 MODULI=""
 
-for f in natura/*.stml; do
+for f in natura/*.genera; do
     mod=$(xp "$f" 'string(/natura/@modulus)')
     ver=$(xp "$f" 'string(/natura/@versio)')
     MODULI="$MODULI $mod:$ver"
@@ -277,7 +277,7 @@ ATTRIBUTA_NOTA=" $(echo $_attributa) "
 # crudo - prosa (dubium) syntaxin attributi continere potest
 # ('puritas="verum"' ut exemplum disputatum). Grep textum crudum
 # legens parser non est.
-for f in natura/*.stml; do
+for f in natura/*.genera; do
     mod=$(xp "$f" 'string(/natura/@modulus)')
     perl -0ne 's/<!--.*?-->//gs;
                while (/<([a-z_]+)((?:"[^"]*"|[^<>])*)>/g) {
@@ -323,7 +323,7 @@ while IFS='|' read -r u cls ncit mods; do
 done < "$UMBCLS"
 
 # ---- regula XVII: versio attributi cum capite congruat ----
-for f in natura/*.stml; do
+for f in natura/*.genera; do
     m=$(xp "$f" 'string(/natura/@modulus)')
     va=$(xp "$f" 'string(/natura/@versio)')
     vc=$(grep -o 'versio [0-9]*, PLASTICUM' "$f" | head -1 \
@@ -478,7 +478,7 @@ fi
 nMonita=$(wc -l < "$MONITA" | tr -d ' ')
 
 # ---- numeri ----
-nModuli=$(ls natura/*.stml | wc -l | tr -d ' ')
+nModuli=$(ls natura/*.genera | wc -l | tr -d ' ')
 nGenera=$(wc -l < "$GENERA" | tr -d ' ')
 nRes=$(wc -l < "$RES" | tr -d ' ')
 nArcus=$(wc -l < "$ARCUS" | tr -d ' ')
@@ -634,7 +634,7 @@ echo "## I. Quaestio usitatissima: an genus iam exsistat?"
 echo
 echo '```'
 echo "grep -i '<terminus>' natura/INDEX.md      # genus aut res"
-echo "grep -n 'nomen=\"<genus>\"' natura/*.stml   # sedes definitionis"
+echo "grep -n 'nomen=\"<genus>\"' natura/*.genera   # sedes definitionis"
 echo "./tools/natura_quaere.sh <terminus>        # QUAERE (definitiones+species)"
 echo "./tools/natura_quaere.sh -a mod.genus      # APPARATUS: quid rogare debeas"
 echo '```'

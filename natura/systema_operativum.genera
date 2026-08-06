@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/systema_operativum.genera
+  Exemplar semanticum: SYSTEMA OPERATIVUM (versio 4, PLASTICUM)
+  Tertium paroeciae (post linguas et plagulas).
+
+  MECHANISMUS NOVUS: machina_statuum GERENTEM declarat (attributum
+  gerens=; olim gradus=, renominatum cum exemplar plantarum gradum
+  TAXINOMICUM poposcit - nomen unum duas res significare in
+  bibliotheca de nominatione accurata non licet) -
+  "vita" species fert (DOS derelictum est), "cursus" INDIVIDUA
+  ferunt (installatio mea dormit, species macOS numquam). Machinae
+  cursus instantiae omnes EXTRA bibliothecam vivunt (in voluminibus
+  applicationum) - bibliotheca declarat, mundus ligat: doctrina
+  nostra concreta facta.
+
+  CAPTURA VERITATIS: "Linux est Unix" mendacium schematum vulgare -
+  macOS ex Unix ORTA est (codex BSD descendit), Linux ad exemplum
+  Unix FACTUM est (reimplementatio, nulla descendentia codicis).
+  Relationes duae: orta_ex (descensus) / ad_exemplum_facta
+  (imitatio formae). Genealogia vera utramque eget.
+-->
+<natura modulus="systema_operativum" versio="4" lingua="latina">
+
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: dies et res gestae ex textibus
+    innumeris haustae. NON VERIFICATUM.
+  </fons>
+</fontes>
+
+<genus nomen="systema_operativum">
+
+  <definitio>
+    Programma primarium quod machinam possidet: inter ferrum et
+    programmata mediat - memoriam distribuit, processus custodit
+    et ordinat, plagulis nomina dat, facultates praebet. Programma
+    quod programmata currere sinit.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="genus_nuclei" genus="electio">
+      <optio>monolithicus</optio>
+      <optio>micronucleus</optio>
+      <optio>hybridus</optio>
+    </proprietas>
+    <proprietas nomen="fons_apertus" genus="veritas"/>
+    <proprietas nomen="multiplex_processuum" genus="veritas"
+      ordinarius="verum"
+      nota="hodie omnia; DOS testis quod non semper - describere
+            vetera quoque debemus"/>
+    <proprietas nomen="multiplex_usorum" genus="veritas"
+      ordinarius="verum"/>
+  </proprietates>
+
+  <machina_statuum nomen="vita" gerens="species">
+    <status nomen="nascens"/>
+    <status nomen="vigens"/>
+    <status nomen="senescens"/>
+    <status nomen="derelictum"/>
+    <transitus a="nascens" ad="vigens" per="receptio"/>
+    <transitus a="vigens" ad="senescens" per="senescentia"/>
+    <transitus a="senescens" ad="derelictum" per="derelictio"/>
+  </machina_statuum>
+
+  <machina_statuum nomen="cursus" gerens="individuum"
+    nota="INSTALLATIO hanc fert, non species - individua eius in
+          voluminibus applicationum vivunt (villa nostra olim hos
+          status servorum suorum citabit)">
+    <status nomen="exstinctum"/>
+    <status nomen="initians"/>
+    <status nomen="currens"/>
+    <status nomen="dormiens"/>
+    <transitus a="exstinctum" ad="initians" per="initiatio"/>
+    <transitus a="initians" ad="currens" per="perfectio_initii"/>
+    <transitus a="currens" ad="dormiens" per="somnus"/>
+    <transitus a="dormiens" ad="currens" per="expergiscentia"/>
+    <transitus a="currens" ad="exstinctum" per="clausura"/>
+    <transitus a="currens" ad="exstinctum" per="casus"
+      nota="collapsus: transitus verus, invitus - describere
+            honestum est"/>
+    <transitus a="initians" ad="exstinctum" per="casus"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="ortus" nota="editio publica prima - momentum quo
+      systema in mundum venit. DEFECTUS AB ONERATORE INVENTUS
+      (rota LX): octo individua hanc actionem citabant nusquam
+      declaratam, quia regula XIII resolutionem hereditatis
+      poscit quam sola tabula shell praestare non poterat"/>
+    <actio nomen="edi" nota="versio nova - vide versio_systematis"/>
+    <actio nomen="instalari" nota="individuum novum in machina
+      nascitur"/>
+    <actio nomen="renovari" nota="installatio ad versionem novam
+      transit"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="orta_ex" ad="systema_operativum"
+      nota="descensus verus codicis/formae - macOS ex Unix per
+            BSD/NeXTSTEP"/>
+    <relatio nomen="ad_exemplum_facta" ad="systema_operativum"
+      nota="imitatio sine descendentia - Linux ad exemplum Unix;
+            distinctio quam schema vulgare mentitur"/>
+    <relatio nomen="auctor" ad="persona" modulus="persona"
+      multiplex="verum"/>
+    <relatio nomen="edita_a" ad="organizatio"
+      modulus="organizatio"/>
+    <relatio nomen="exsequitur_in" ad="versio_architecturae"
+      modulus="architectura_machinae" multiplex="verum"/>
+    <relatio nomen="habet_versionem" ad="versio_systematis"/>
+    <relatio nomen="praebet_systema_plagularum"
+      ad="systema_plagularum" modulus="plagula_computatralis"
+      nota="descriptum rota XLIV (nota haec rancida manserat -
+            prosa quam porta XVI videre non potest)"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="windows">
+    <definitio>
+      Systema Microsoft dominans in computatris scriptorii:
+      linea NT (a VMS formata, non ab Unix), compatibilitas
+      retrorsum religiosa ut x86 eius.
+    </definitio>
+    <valor nomen="genus_nuclei">hybridus</valor>
+    <valor nomen="fons_apertus">falsum</valor>
+    <valor nomen="vita">vigens</valor>
+    <relatum nomen="ad_exemplum_facta" ad="vms"
+      nota="Cutler a DEC venit; NT filia VMS spiritu"/>
+    <relatum nomen="edita_a" ad="microsoft" modulus="organizatio"/>
+    <relatum nomen="exsequitur_in" ad="x86_64"
+      modulus="architectura_machinae"/>
+    <historia>
+      <eventum quando="1985-11-20" actio="ortus">Windows 1.0
+        (super DOS)</eventum>
+      <eventum quando="1993-07-27" actio="edi">NT 3.1 - linea
+        nova quae vetera devoravit</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="vms" certitudo="opinio" fons="corpus">
+    <definitio>
+      Systema DEC pro machinis VAX (1977): magnum systema
+      NON-UNIXIFORME quod vivit - versionatio plagularum in
+      systemate plagularum ipso, clusteres ante omnes,
+      stabilitas proverbialis.
+    </definitio>
+    <valor nomen="genus_nuclei">monolithicus</valor>
+    <valor nomen="fons_apertus">falsum</valor>
+    <valor nomen="vita">senescens</valor>
+    <historia>
+      <eventum quando="1977-10-25" actio="ortus">VAX/VMS 1.0
+        cum machina VAX-11/780 una edita</eventum>
+    </historia>
+    <nota>
+      MOMENTUM TAXINOMICUM: contra-exemplum vivum. Arbor nostra
+      systema_unixiforme sub systemate habet; VMS (cum Windows)
+      probat genus parens non vacuum esse - sine eo 'unixiforme'
+      differentia nihil differret. Et versionatio plagularum
+      nativa (plagula;versio) rem fert quam Unix numquam habuit
+      - quod volumen nostrum extra systema plagularum aedificat,
+      VMS intra habebat. Dux consilii Cutler, qui post ad
+      Microsoft NT duxit - unde relatum windows supra.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     SYSTEMA UNIXIFORME - familia, non systema unum
+     (rota XXX: "unix" duas res significabat - genus quo
+     AIX, Solaris, BSD continentur, et systema particulare
+     Bell Labs. Divisa sunt.)
+     ================================================== -->
+
+<genus nomen="systema_unixiforme" sub="systema_operativum">
+
+  <differentia>
+    Ad exemplar Unix formatum: arbor plagularum una a radice,
+    "omnia plagulae sunt", processus cum fistulis componendi,
+    concha ut programma inter cetera. Non genealogia sed FORMA -
+    ideo et progenies vera (macOS) et imitationes (Linux) hic
+    continentur, quod relationes orta_ex et ad_exemplum_facta
+    deinde distinguunt.
+  </differentia>
+
+  <individuum nomen="unix_bell_labs">
+    <definitio>
+      Systema fontale: omnia-plagula-est, processus parvi fistulis
+      iuncti, concha ut lingua. Forma cuius cetera aut filii aut
+      imitatores.
+    </definitio>
+    <differentia>
+      Philosophia composita: instrumenta parva unum bene
+      facientia, textu iuncta.
+    </differentia>
+    <valor nomen="genus_nuclei">monolithicus</valor>
+    <valor nomen="vita">senescens</valor>
+    <relatum nomen="auctor" ad="ken_thompson" modulus="persona"/>
+    <relatum nomen="auctor" ad="dennis_ritchie" modulus="persona"/>
+    <relatum nomen="edita_a" ad="bell_labs" modulus="organizatio"/>
+    <historia>
+      <eventum quando="1969" actio="ortus">in PDP-7, apud Bell
+        Labs</eventum>
+      <eventum quando="1973" actio="edi">rescriptum in C - lingua
+        et systema se invicem probaverunt</eventum>
+    </historia>
+    <nota>
+      Linea AT&amp;T ipsa senescens/derelicta; filii (macOS, BSD)
+      et imitatores (Linux) vigent - species cuius vita in
+      descendentibus continuatur.
+    </nota>
+    <nota>
+      DUBIUM GRADUS (rota XXIX) SOLUTUM more Fran (rota XXX):
+      probatio praedicationis hic sola AMBAS partes probabat
+      quia DUAE RES ERANT. Divisae sunt: systema_unixiforme
+      genus (de quo AIX, Solaris, BSD vere praedicantur), hoc
+      individuum systema PARTICULARE a Bell Labs natum. Nomen
+      qualificatum accipit quia genus nomen simplex meretur -
+      usus enim "unix" familiam saepius significat quam
+      originale. Eadem forma qua lingua et versio distinctae:
+      NOLI PROMOVERE, ADIUNGE.
+    </nota>
+  </individuum>
+
+  <individuum nomen="macos">
+    <definitio>
+      Systema Apple pro machinis suis: nucleus XNU (hybridus),
+      superficies propria, fundamentum Unix (BSD per NeXTSTEP).
+    </definitio>
+    <valor nomen="genus_nuclei">hybridus</valor>
+    <valor nomen="fons_apertus">falsum</valor>
+    <valor nomen="vita">vigens</valor>
+    <relatum nomen="orta_ex" ad="unix_bell_labs"
+      nota="per NeXTSTEP; codex BSD verus intus"/>
+    <relatum nomen="edita_a" ad="apple" modulus="organizatio"/>
+    <relatum nomen="exsequitur_in" ad="armv8"
+      modulus="architectura_machinae"/>
+    <relatum nomen="exsequitur_in" ad="x86_64"
+      modulus="architectura_machinae"
+      nota="transitiones architecturales bis factae (PowerPC ->
+            x86 -> arm) - species migrandi perita"/>
+    <historia>
+      <eventum quando="2001-03-24" actio="ortus">Mac OS X 10.0
+        (linea NeXTSTEP, non linea Mac OS 9)</eventum>
+    </historia>
+    <nota>systema domus nostrae - paroecia</nota>
+  </individuum>
+
+  <individuum nomen="linux">
+    <definitio>
+      Nucleus liber ad exemplum Unix, cum instrumentis GNU
+      systema integrum: fons apertus, ubique a servis ad
+      telephonia.
+    </definitio>
+    <valor nomen="genus_nuclei">monolithicus</valor>
+    <valor nomen="fons_apertus">verum</valor>
+    <valor nomen="vita">vigens</valor>
+    <relatum nomen="ad_exemplum_facta" ad="unix_bell_labs"
+      nota="NON orta_ex: reimplementatio, nulla linea codicis
+            descendit - captura veritatis huius exemplaris"/>
+    <relatum nomen="auctor" ad="linus_torvalds"
+      modulus="persona"/>
+    <relatum nomen="exsequitur_in" ad="x86_64"
+      modulus="architectura_machinae"/>
+    <relatum nomen="exsequitur_in" ad="armv8"
+      modulus="architectura_machinae"/>
+    <historia>
+      <eventum quando="1991-08-25" actio="ortus">nuntius in
+        comp.os.minix: "just a hobby, won't be big"</eventum>
+    </historia>
+    <!-- dubium distributionum SOLUTUM (Fran, v0->v1): distributio
+         GENUS proprium est - "certe genus rerum quas homines
+         tractare debent". Vide genus distributio_systematis
+         infra. -->
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     DISTRIBUTIO SYSTEMATIS - collectio curata systematis
+     (genus a Frane decretum: res quam homines vere tractant.
+     Generale consulto - Linux eam claram fecit, forma non
+     Linux propria est)
+     ================================================== -->
+
+<genus nomen="distributio_systematis">
+
+  <definitio>
+    Collectio curata: nucleus + instrumenta + ordinationes +
+    gestor fasciculorum, ab uno curatore electa, probata, edita.
+    Systema operativum forma est; distributio EDITIO formae
+    vivenda - quod vere instalas.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="gestor_fasciculorum" genus="textus"
+      nota="apt, rpm, pacman... genus programmatis SURGIT,
+            nondum descriptum"/>
+    <proprietas nomen="cadentia_editionum" genus="electio">
+      <optio>statuta</optio>
+      <optio>volvens</optio>
+    </proprietas>
+  </proprietates>
+
+  <actiones>
+    <actio nomen="ortus" nota="distributio primum edita. Genus hoc
+      sub systemate operativo NON est (distributio systema non
+      est sed EDITIO eius vivenda), ergo actiones illius non
+      hereditat - unde declaratio propria"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="distributio_de" ad="systema_operativum"/>
+    <relatio nomen="orta_ex" ad="distributio_systematis"
+      nota="genealogia distributionum vera: Ubuntu ex Debian"/>
+    <relatio nomen="edita_a" ad="organizatio"
+      modulus="organizatio"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="debian">
+    <definitio>
+      Distributio communitatis vetusta: stabilitas supra
+      novitatem, contractus socialis scriptus, apt eius donum
+      mundo.
+    </definitio>
+    <valor nomen="gestor_fasciculorum">apt</valor>
+    <valor nomen="cadentia_editionum">statuta</valor>
+    <relatum nomen="distributio_de" ad="linux"/>
+    <relatum nomen="edita_a" ad="debian_project"
+      modulus="organizatio"
+      nota="descriptum rota XLV sub genere organizationis NUDO
+            consulto - non societas, nec sub-genus novum:
+            'communitas' hic olim proposita dimensionem SECAT
+            (finis trans statum iuridicum), quod refactionem
+            poscit, non speciem - vide worklog"/>
+    <historia>
+      <eventum quando="1993-08-16" actio="ortus"/>
+    </historia>
+  </individuum>
+
+  <individuum nomen="ubuntu">
+    <valor nomen="gestor_fasciculorum">apt</valor>
+    <valor nomen="cadentia_editionum">statuta</valor>
+    <relatum nomen="distributio_de" ad="linux"/>
+    <relatum nomen="orta_ex" ad="debian"/>
+    <relatum nomen="edita_a" ad="canonical"
+      modulus="organizatio"/>
+    <historia>
+      <eventum quando="2004-10-20" actio="ortus"/>
+    </historia>
+  </individuum>
+
+  <individuum nomen="arch">
+    <differentia>
+      Cadentia volvens ut essentia: numquam "editio nova" -
+      fluctus continuus; simplicitas mechanismi supra
+      commoditatem.
+    </differentia>
+    <valor nomen="gestor_fasciculorum">pacman</valor>
+    <valor nomen="cadentia_editionum">volvens</valor>
+    <relatum nomen="distributio_de" ad="linux"/>
+    <historia>
+      <eventum quando="2002-03-11" actio="ortus"/>
+    </historia>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     VERSIO SYSTEMATIS - manu cusa, more decreto (Fran:
+     versiones entia legitima, nullum mechanismum petunt)
+     ================================================== -->
+
+<genus nomen="versio_systematis" sub="versio" modulus="versio">
+
+  <definitio>
+    Editio systematis nominata: quam installatio vere currit -
+    "Darwin 23.6" versionem citat, non speciem.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="titulus" genus="textus"/>
+    <proprietas nomen="edita" genus="dies"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="versio_de" ad="systema_operativum"/>
+    <relatio nomen="sequitur" ad="versio_systematis"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="macos_13_ventura">
+    <valor nomen="titulus">macOS 13 Ventura</valor>
+    <valor nomen="edita">2022-10-24</valor>
+    <relatum nomen="versio_de" ad="macos"/>
+  </individuum>
+
+  <individuum nomen="macos_14_sonoma">
+    <valor nomen="titulus">macOS 14 Sonoma (Darwin 23)</valor>
+    <valor nomen="edita">2023-09-26</valor>
+    <relatum nomen="versio_de" ad="macos"/>
+    <relatum nomen="sequitur" ad="macos_13_ventura"/>
+    <nota>machina huius domus hanc currit (Darwin 23.6)</nota>
+  </individuum>
+
+</genus>
+
+</natura>

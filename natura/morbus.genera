@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/morbus.genera
+  Exemplar semanticum: MORBUS (versio 1, PLASTICUM)
+  Genus morbus, species per CAUSAM divisae.
+
+  Natum ex cursu secundo circuli (valetudinarium).
+
+  FUNDAMENTUM QUOD DOMINIUM DAT: morbus definiri non potest
+  nisi natura supponatur. Aegrotare est deficere ab eo quod
+  rei DEBETUR - ergo id solum aegrotat cui aliquid debetur,
+  id est quod naturam et finem habet. Saxum aegrotare non
+  potest quia nihil ei debetur; machina "fracta" est, non
+  aegrota, quia finis eius ab artifice datus est, non suus.
+  Doctrina Pieperiana in dominio alieno probata: descriptio
+  vera de rebus TELEOLOGIAM supponit, sive velimus sive non.
+
+  RESIDENTIA (regula confirmata iterum): GENERA morborum hic
+  vivunt (pneumonia describi potest sine ullo aegroto);
+  MORBUS HUIUS AEGROTAE in volumine applicationis vivit et hoc
+  exemplar citat. Dominium proprium Linnaeum suum habet:
+  ICD (Classificatio Statistica Internationalis Morborum), ab
+  OMS edita - taxinomia morborum publica, normata, numerata.
+-->
+<natura modulus="morbus" versio="1" lingua="latina">
+
+<genus nomen="morbus">
+
+  <definitio>
+    Dispositio viventis praeter naturam, qua operatio debita
+    impeditur: defectus ab eo quod naturae rei debetur. Non
+    res sed PRIVATIO - quod sanitati deest, ut tenebrae luci.
+    Ideo morbus sine natura definiri nequit.
+  </definitio>
+
+  <nota>
+    TRIAS DEFECTUUM (rota XXI): tria genera mali per NORMAM ad
+    quam mensurantur distinguuntur - vitium ab INTENTIONE
+    (fabricatio.vitium), morbus a NATURA (hic), damnum ab
+    INTEGRITATE (corporalia.damnum). Ideo programma vitiosum,
+    animal aegrotum, saxum damnatum: quo plus rei debetur, eo
+    plura mala pati potest. Trias eadem in tribus plagulis
+    scripta est ne lector ullam solam inveniens partem pro
+    toto sumat.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="contagiosus" genus="veritas"
+      ordinarius="falsum"
+      nota="an ab alio in alium transeat - proprietas quae
+            morbum RELATIONEM SOCIALEM facit, unde
+            quarantena, unde magistratus sanitatis"/>
+    <proprietas nomen="duratio_typica" genus="quantitas"
+      modulus="mensura"
+      nota="ambitus, non punctum"/>
+    <proprietas nomen="letalitas" genus="numerus"
+      nota="pars aegrotantium quae moritur - numerus qui
+            IUDICIUM de periculo fundat, non ipse periculum"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum"
+    nota="cursus in AEGROTO uno, non morbi ipsius: species
+          macOS non dormit, INSTALLATIO dormit - eadem
+          distinctio gerentis (rota V)">
+    <status nomen="latens"
+      nota="praesens, nondum manifestus (incubatio) - status
+            quem nemo observare potest, tamen verus"/>
+    <status nomen="manifestus"/>
+    <status nomen="convalescens"/>
+    <status nomen="sanatus"/>
+    <status nomen="chronicus"
+      nota="manet sine sanatione - exitus quem machinae
+            nostrae priores raro habent: status TERMINALIS
+            qui tamen non finis est"/>
+    <status nomen="lethalis"/>
+    <transitus a="latens" ad="manifestus" per="eruptio"/>
+    <transitus a="manifestus" ad="convalescens" per="remissio"/>
+    <transitus a="convalescens" ad="sanatus" per="sanatio"/>
+    <transitus a="manifestus" ad="chronicus" per="perduratio"/>
+    <transitus a="manifestus" ad="lethalis" per="mors"/>
+    <transitus a="convalescens" ad="manifestus" per="recidivum"
+      nota="CYCLUS: morbus rediens - eadem forma qua vitium
+            regressionis in fabricatione redit. Recidivum et
+            regressio unum genus rei sunt in dominiis duobus"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="afficit" ad="vivens" modulus="corporalia"
+      nota="viventia sola - vide viventis notam"/>
+    <relatio nomen="sedes" ad="*"
+      nota="pars corporis affecta"/>
+    <relatio nomen="dignoscitur_per" ad="iudicium"
+      modulus="iudicium"
+      nota="morbus RES est, diagnosis IUDICIUM de ea:
+            distinctio quae totum stratum epistemicum
+            portat - aegrota morbum habet sive quis
+            dignoverit sive non"/>
+    <relatio nomen="curatur_per" ad="praescriptum"
+      modulus="praescriptum" multiplex="verum"/>
+    <relatio nomen="classificatus_in" ad="norma" modulus="norma"
+      nota="ICD - taxinomia normata, ubi bibliotheca nostra
+            auctoritatem externam citare debet, non fingere"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       species per CAUSAM, non per sedem: causa curationem
+       regit (antibiotica infectioni, non traumati) -->
+
+  <species nomen="morbus_infectiosus">
+    <definitio>
+      Ab organismo alieno illatus (bacterio, viro, fungo):
+      species sola quae AGENTEM habet - vivens aliud quod in
+      vivente vivit. Unde contagio, unde immunitas.
+    </definitio>
+    <valor nomen="contagiosus">verum</valor>
+  </species>
+
+  <species nomen="morbus_geneticus">
+    <definitio>
+      In ipsa constitutione generata: praesens ab initio,
+      etiam dum latet. Morbus quem nemo contraxit - unde
+      quaestiones de culpa omnino absunt.
+    </definitio>
+    <valor nomen="contagiosus">falsum</valor>
+  </species>
+
+  <species nomen="morbus_degenerativus">
+    <definitio>
+      Ex usu et tempore: partes deficiunt quia diu operatae
+      sunt. Confinium cum SENECTUTE tenue et disputatum - quod
+      omnibus tandem accidit, an morbus sit? Dubium quod
+      medicina ipsa aperit tenet.
+    </definitio>
+  </species>
+
+  <species nomen="vulnus">
+    <definitio>
+      Ab externa vi illatum: ictus, sectio, ustio. Species
+      cuius causa TOTA extra corpus est - et quae sola
+      instantanea oritur, ubi ceterae oriuntur per tempus.
+    </definitio>
+    <nota>
+      Nomen idem quod in silice (renovare: VULNUS = plagula
+      manu mutata quam renovatio laedere posset). Homonymia
+      nostra CONSULTA fuit et hic vera invenitur: utrobique
+      integritas ab externa vi laesa.
+    </nota>
+  </species>
+
+</genus>
+
+</natura>

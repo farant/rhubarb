@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/communicatio.genera
+  Exemplar semanticum: COMMUNICATIO (versio 2, PLASTICUM)
+  Genera: actor, nuntius, eventum.
+
+  Natum ex confrontatione cum lib/actor.c - prima collisio
+  consulta exemplaris cum plagula fontis vera. Genera LOGICA
+  sunt (vocabulum Fran): structurae Nuntius/Capsa in actor.c
+  realizationes sunt, non genera ipsa - doctrina intentionis
+  in communicatione.
+
+  INVENTUM STRATI: criterium canalis declarati per gradus
+  invariabile est. Puritas functionis = canalis unus
+  (parametra intro, reditus foras); exemplar actorum = idem
+  criterium in gradu ENTIS - actor statum proprium solus
+  mutat, et via unica qua alii eum movent capsa eius est.
+  Capsa actori quod parametra functioni.
+
+  DISTINCTIO FUNDAMENTALIS: nuntius INSCRIPTUS est
+  (destinatarius ei debetur), eventum NON (accidit coram
+  omnibus, quivis observans videt). Directum contra sparsum.
+-->
+<natura modulus="communicatio" versio="2" lingua="latina">
+
+<!-- ==================================================
+     ACTOR - ens quod solum per nuntios communicat
+     ================================================== -->
+
+<genus nomen="actor">
+
+  <definitio>
+    Ens logicum cum identitate, statu privato, moribus: cum
+    aliis SOLUM per nuntios communicat. Statum suum solus
+    mutat; statum alienum numquam tangit - petit, nuntio
+    misso. Forma ab Hewitt (1973) nominata, ab Erlang probata,
+    a domo nostra in actor.c realizata.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="mittit" ad="nuntius" multiplex="verum"/>
+    <relatio nomen="accipit" ad="nuntius" multiplex="verum"/>
+    <relatio nomen="custodit" ad="status"
+      modulus="elementa_programmatis" multiplex="verum"
+      nota="status PRIVATUS: nemo alius eum legit nec mutat -
+            hoc ipsum exemplar actorum definit"/>
+    <relatio nomen="capsa_eius" ad="cauda"
+      modulus="formae_datorum"
+      nota="canalis declaratus unicus quo alii statum eius
+            movent - capsa actori quod parametra functioni"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     NUNTIUS - communicatio reificata et inscripta
+     ================================================== -->
+
+<genus nomen="nuntius">
+
+  <definitio>
+    Communicatio reificata: data in itinere INSCRIPTA -
+    destinatarius ei debetur. Actus communicandi in rem
+    conversus: poni in caudam, recordari, iterum agi potest.
+    Mittere nuntium = petere ut alter se mutet; petitio ipsa
+    res facta.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="genus_nuntii" genus="textus"
+      nota="species nuntiorum in applicationibus tempore
+            currendi nominantur ('tick', 'click') - hic natura
+            mordere potest: genera nuntiorum a bibliotheca
+            definita"/>
+    <proprietas nomen="disciplina_schematis" genus="electio"
+      nota="sine schemate = sacculus clavium, typi in lectione
+            negotiati (actor.c); cum schemate = claves et typi
+            ante declarati (nuntium.h domus). Realizationes
+            ambae in domo vivunt - forma una, disciplinae
+            oppositae">
+      <optio>sine_schemate</optio>
+      <optio>cum_schemate</optio>
+    </proprietas>
+    <proprietas nomen="garantia_traditionis" genus="electio"
+      nota="quid de traditione promittatur. LEX QUAM NEMO CREDIT
+            DONEC MORDEAT: traditio SEMEL-EXACTE impossibilis
+            est - mittens qui confirmationem non accepit nescit
+            an nuntius an confirmatio perierit, et utrumque
+            eligere (iterare aut tacere) alterutrum vitium
+            admittit. Quod praestari POTEST est tractatio
+            semel-exacte, per idempotentiam apud recipientem.
+            Ideo systemata quae 'exactly once' pollicentur aut
+            idempotentiam supponunt aut mentiuntur - et hoc
+            discrimen consumptor scire debet">
+      <optio>ad_summum_semel</optio>
+      <optio>ad_minimum_semel</optio>
+      <optio>semel_exacte_tractatum</optio>
+    </proprietas>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="creatus"/>
+    <status nomen="missus"/>
+    <status nomen="traditus"
+      nota="in capsa destinatarii, nondum lectus"/>
+    <status nomen="consumptus"/>
+    <transitus a="creatus" ad="missus" per="missio"/>
+    <transitus a="missus" ad="traditus" per="traditio"/>
+    <transitus a="traditus" ad="consumptus" per="consumptio"
+      nota="lectio destructiva caudae - compositum lectionis
+            et mutationis (vide elementa_programmatis.lectio)"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="portat" ad="petitio" modulus="obligatio"
+      nota="nuntius petitionem FERRE potest sed ea non est:
+            petitio perdurat, nuntius transit, et petitio una
+            nuntiis pluribus portari potest (repetitionibus) -
+            quod totam idempotentiae rationem facit"/>
+    <relatio nomen="missus_a" ad="actor"/>
+    <relatio nomen="destinatus_ad" ad="actor"/>
+  </relationes>
+
+</genus>
+
+<!-- ==================================================
+     EVENTUM - res gesta non inscripta
+     ================================================== -->
+
+<genus nomen="eventum">
+
+  <definitio>
+    Res gesta NON inscripta: accidit, et quivis observans
+    videre potest - nulli debetur. A nuntio inscriptione
+    differt: nuntius AD aliquem, eventum CORAM omnibus.
+  </definitio>
+
+  <nota>
+    Elementum "eventum" in historiis exemplarium horum hoc
+    ipsum genus est: historia rei = cauda eventuum eius, status
+    praesens = plicatura. Cognatio vera, non homonymia -
+    metamodulus noster genus suum iam adhibebat.
+  </nota>
+
+  <relationes>
+    <relatio nomen="observatur_ab" ad="actor" multiplex="verum"
+      nota="observantes se subscribunt; res gesta eos non
+            novit - hoc eam a nuntio distinguit"/>
+  </relationes>
+
+</genus>
+
+
+<!-- ==================================================
+     STIGMERGIA - coordinatio per vestigium in medio relictum
+
+     MODUS TERTIUS, cursu duodecimo (apicultura) inventus.
+     Exemplar hoc duos habebat et tertium non videbat:
+       nuntius   INSCRIPTUS - destinatarius ei debetur
+       eventum   non inscriptus, sed MOMENTANEUM - accidit coram
+                 praesentibus et abit
+       stigmergia non inscripta ET MANENS - vestigium in medio
+                 relinquitur, a quolibet transeunte legitur,
+                 et TABESCIT
+     Nulla apis alteri quicquam dicit. Regina feromonum emittit;
+     illud per cuneum diffunditur; operaria concentrationem
+     LOCALEM legit. Infra limen: reginam mortuam esse constat, et
+     educatio incipit. Nemo nuntiavit.
+
+     ET TABESCENTIA MECHANISMUS EST, NON DEFECTUS: semita quae
+     non evanesceret formicas ad florem exhaustum in aeternum
+     duceret. Oblivio hic gratuita est et necessaria - quod ars
+     computatralis "invalidationem promptuarii" vocat et
+     difficillimam habet, natura tempori committit.
+     ================================================== -->
+
+<genus nomen="stigmergia">
+
+  <definitio>
+    Coordinatio per vestigium quod agens in medio communi
+    relinquit: signum nulli inscriptum, quod manet, a quolibet
+    transeunte legi potest, et per se tabescit. Non mittitur nec
+    accidit sed IACET.
+  </definitio>
+
+  <differentia>
+    Sine mittente et sine destinatario SIMUL. Nuntius
+    destinatarium habet, eventum spectatores praesentes; hic
+    neutrum - qui vestigium relinquit nescit an quisquam
+    veniat, et qui legit nescit quis reliquerit. Ideo agentes
+    NEC SE INVICEM NOSSE NEC SIMUL ADESSE debent, quod
+    coordinationem inter multa et ignota et per tempus dispersa
+    solum possibilem facit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="tabescentia" genus="quantitas"
+      modulus="mensura"
+      nota="quam cito vestigium evanescat. PROPRIETAS
+            CARDINALIS, et fere semper neglecta: sine
+            tabescentia coordinatio in praeteritum ligatur -
+            semita ad florem exhaustum manet, promptuarium
+            rancidum servit, directorium aedificationis
+            artefacta mortua tenet. Tabescentia oblivio
+            GRATUITA est, quam nemo agere debet"/>
+    <proprietas nomen="cumulativa" genus="veritas"
+      ordinarius="verum"
+      nota="an vestigia plura idem signum FIRMENT. Ubi verum,
+            suffragium sponte fit sine ullo suffragio:
+            semita quam plures calcaverunt fortior est, et
+            fortior plures trahit - unde electio optimi sine
+            electore. Ubi falsum, vestigium ultimum solum valet
+            (status operis in arbore)"/>
+    <proprietas nomen="medium" genus="textus"
+      nota="quid vestigium ferat - aer, terra, cera, plagula,
+            tabula. MEDIUM PARS RATIONIS EST: quod medium
+            servare non potest, stigmergia dicere non potest"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="relinquitur_a" ad="*" multiplex="verum"/>
+    <relatio nomen="legitur_a" ad="*" multiplex="verum"/>
+    <relatio nomen="movet" ad="*"
+      nota="quid agatur cum vestigium legitur"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="vestigium_chemicum">
+    <definitio>
+      Substantia ab agente relicta quae per diffusionem legitur:
+      semita formicarum, feromonum reginae, signum territorii.
+    </definitio>
+    <nota>
+      Species in qua ABSENTIA signum est: apes reginam vivere ex
+      feromonis PRAESENTIA sciunt, mortuam ex DEFECTU. Nemo
+      mortem nuntiat; silentium eam dicit. Idem quod pulsus
+      (heartbeat) in machinis, quattuor decies milies annis
+      prius.
+    </nota>
+  </species>
+
+  <species nomen="semita_trita">
+    <definitio>
+      Via quam transeuntes calcando faciunt et calcando servant:
+      quod aedificatores "semitas desiderii" vocant.
+    </definitio>
+    <valor nomen="cumulativa">verum</valor>
+    <nota>
+      Specimen purissimum electionis sine electore: nemo semitam
+      designavit, nemo de ea consensit, et tamen optima exit -
+      quia cumulatio suffragium est et tabescentia errorem
+      corrigit. Architecti sapientes eas EXSPECTANT antequam
+      pavimentum ponant.
+    </nota>
+  </species>
+
+  <species nomen="tabula_communis">
+    <definitio>
+      Superficies quam multi mutant et legunt sine ordine
+      praestituto: tabula parietis, commentarius communis,
+      vicipaedia.
+    </definitio>
+    <valor nomen="cumulativa">falsum</valor>
+    <nota>
+      Species ubi tabescentia DEEST et defectus inde sequitur:
+      quod scriptum est manet donec quis deleat, unde tabulae
+      communes rancescunt et nemo scit quid adhuc valeat. Quod
+      natura tempori committit, hic homini committitur - et homo
+      neglegit.
+    </nota>
+  </species>
+
+  <species nomen="vestigia_operis">
+    <definitio>
+      Arbor plagularum quam instrumenta legunt ut quid agendum
+      sit statuant: directorium aedificationis, arbor laborans.
+    </definitio>
+    <nota>
+      Stigmergia inter instrumenta quae se invicem non norunt:
+      compilator artefacta relinquit, ligator ea invenit, nemo
+      alteri nuntiat. Silex ipse hoc agit - proiectio arborem
+      scribit, clang eam legit, et 'proiectio CONTRACTUS est'
+      (visio silicis) stigmergiam ipsam nominat sine nomine.
+    </nota>
+  </species>
+
+</genus>
+
+</natura>

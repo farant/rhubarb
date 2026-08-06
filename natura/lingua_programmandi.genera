@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/lingua_programmandi.genera
+  Exemplar semanticum: LINGUAE PROGRAMMANDI (versio 4, PLASTICUM)
+  Genera: lingua_programmandi (+lingua_iussuum), versio_linguae,
+  implementatio_linguae, verbum_clavis.
+
+  DISCIPLINA (Pieper, De Abusu Linguae): res describimus UT SUNT,
+  non ut applicationes eas velint. Proprietates veras notamus
+  etiam si nulli usui hodierno serviunt.
+
+  STRATUM HISTORICUM: historia rei = cauda eventuum datorum
+  (<historia> in singulis); status praesens = PLICATURA historiae.
+  Doctrina eadem ac stratum repositionis (volumen: acta veritas,
+  status proiectio) - gradu semantico.
+
+  TRANSFORMATIONES (Alexander - mutationes formam servantes):
+  v0->v1: (1) dubium c89 SOLUTUM genere versio_linguae - editio
+  non varietas est sed EVENTUS in rem crystallizatus; (2) auctores
+  ut textus mendacio deposito - relatio ad personam (exemplar
+  persona natum); (3) normae ut textus item - relatio ad normam
+  (exemplar norma natum); (4) annus_ortus proprietas in historiam
+  migravit; (5) distinctio species/individuum EXPLICITA facta
+  (C species est, c89 individuum versionis, Ritchie individuum
+  personae).
+  v1->v2: (6) SUB-GENERA nata (attributum sub= + differentia in
+  genere - arbor Porphyriana profunditatem accipit): dubium bash
+  SOLUTUM subordinatione, non sororitate - lingua_iussuum sub
+  lingua_programmandi (proprietates congruunt = hereditas recta;
+  essentia differt = differentia eam fert); (7) relatio
+  emittit_pro ad architecturam (exemplar architecturae natum).
+  v2->v3: (8) genus verbum_clavis natum (Fran pulsante):
+  vocabularium linguae ipsius, non programmatis; claves ad
+  VERSIONES adduntur (restrict in C99) - lex lapsus in
+  vocabulario quoque.
+-->
+<natura modulus="lingua_programmandi" versio="4" lingua="latina">
+
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: dies et res gestae ex textibus
+    innumeris haustae. NON VERIFICATUM.
+  </fons>
+</fontes>
+
+<genus nomen="lingua_programmandi">
+
+  <definitio>
+    Systema signorum formale ad computationes exprimendas:
+    grammatica definita, semantica praescripta (plus minusve
+    stricte). A suis IMPLEMENTATIONIBUS distinguitur - lingua
+    forma est; compilator aut interpres res est quae formam
+    exsequitur. Multae implementationes, lingua una; editiones
+    per VERSIONES transeunt, identitate manente.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="paradigmata" genus="electio"
+      multiplex="verum">
+      <optio>imperativum</optio>
+      <optio>functionale</optio>
+      <optio>obiectivum</optio>
+      <optio>declarativum</optio>
+      <optio>logicum</optio>
+      <optio>concatenativum</optio>
+    </proprietas>
+    <proprietas nomen="typatio_tempus" genus="electio">
+      <optio>statica</optio>
+      <optio>dynamica</optio>
+      <optio>mixta</optio>
+    </proprietas>
+    <proprietas nomen="typatio_vis" genus="electio">
+      <optio>fortis</optio>
+      <optio>debilis</optio>
+    </proprietas>
+    <proprietas nomen="gestio_memoriae" genus="electio"
+      nota="quod NORMA praescribit, non quod implementatio facit">
+      <optio>manualis</optio>
+      <optio>collecta</optio>
+      <optio>per_possessionem</optio>
+      <!-- optio a Rust POSCITA inter scriptionem v0: veritas
+           formam flexit, ut debet -->
+      <optio>mixta</optio>
+    </proprietas>
+    <proprietas nomen="completa_turing" genus="veritas"
+      ordinarius="verum"
+      nota="non omnes: SQL-92 pura, regex classica..."/>
+  </proprietates>
+
+  <machina_statuum nomen="vita">
+    <status nomen="nascens" nota="proposita, usus angustus"/>
+    <status nomen="vigens"/>
+    <status nomen="senescens"
+      nota="usus decrescens; opera legata eam ferunt"/>
+    <status nomen="derelicta"/>
+    <transitus a="nascens" ad="vigens" per="receptio"/>
+    <transitus a="nascens" ad="derelicta" per="neglectus"/>
+    <transitus a="vigens" ad="senescens" per="senescentia"/>
+    <transitus a="senescens" ad="derelicta" per="derelictio"/>
+    <transitus a="senescens" ad="vigens" per="renascentia"/>
+    <transitus a="derelicta" ad="vigens" per="renascentia"
+      nota="renasci fieri potest - testis lingua latina ipsa"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="ortus" nota="editio publica prima (datum
+      historiae primum, olim proprietas annus_ortus)"/>
+    <actio nomen="edi" nota="versio nova nascitur - vide genus
+      versio_linguae"/>
+    <actio nomen="normari" nota="norma publicatur de hac lingua"/>
+    <actio nomen="implementari"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="orta_ex" ad="lingua_programmandi"
+      nota="genealogia formarum: C orta ex B, B ex BCPL"/>
+    <relatio nomen="auctor" ad="persona" modulus="persona"
+      multiplex="verum"/>
+    <relatio nomen="habet_versionem" ad="versio_linguae"/>
+    <relatio nomen="implementata_ab" ad="implementatio_linguae"/>
+    <relatio nomen="normata_per" ad="norma" modulus="norma"/>
+    <relatio nomen="fons_scriptus_in" a="plagula_fontis"
+      modulus="plagula_computatralis" inversa="verum"
+      nota="impleta: plagula_fontis.scripta_in - promissum v0
+            domum venit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="c">
+    <definitio>
+      Lingua imperativa propinqua machinae: abstractio tenuis
+      super memoriam linearem et monstratores; praeprocessor
+      textualis; bibliotheca normalis parva.
+    </definitio>
+    <differentia>
+      Inter linguas altas humillima - forma portabilis assemblii
+      fere; nihil celat quod machina facit.
+    </differentia>
+    <valor nomen="paradigmata">imperativum</valor>
+    <valor nomen="typatio_tempus">statica</valor>
+    <valor nomen="typatio_vis">debilis</valor>
+    <valor nomen="gestio_memoriae">manualis</valor>
+    <valor nomen="vita">vigens</valor>
+    <relatum nomen="auctor" ad="dennis_ritchie"
+      modulus="persona"/>
+    <relatum nomen="orta_ex" ad="b"/>
+    <historia>
+      <eventum quando="1972" actio="ortus"/>
+      <eventum quando="1978" actio="edi">K&amp;R C (liber ut
+        norma de facto)</eventum>
+      <eventum quando="1990" actio="normari">ISO/IEC
+        9899:1990</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="python">
+    <definitio>
+      Lingua dynamica legibilitati dedita: structura per
+      indentationem, bibliotheca normalis ampla, interpres
+      referentialis CPython.
+    </definitio>
+    <differentia>
+      Legibilitas supra omnia; una via patens praelata.
+    </differentia>
+    <valor nomen="paradigmata">imperativum</valor>
+    <valor nomen="paradigmata">obiectivum</valor>
+    <valor nomen="paradigmata">functionale</valor>
+    <valor nomen="typatio_tempus">dynamica</valor>
+    <valor nomen="typatio_vis">fortis</valor>
+    <valor nomen="gestio_memoriae">collecta</valor>
+    <valor nomen="vita">vigens</valor>
+    <relatum nomen="auctor" ad="guido_van_rossum"
+      modulus="persona"/>
+    <relatum nomen="orta_ex" ad="abc"/>
+    <historia>
+      <eventum quando="1991" actio="ortus"/>
+      <eventum quando="2008-12-03" actio="edi">Python 3 -
+        fractura compatibilitatis consulta</eventum>
+    </historia>
+  </individuum>
+
+  <individuum nomen="rust">
+    <definitio>
+      Lingua systematis sine collectore: tutela memoriae per
+      POSSESSIONEM in compilatione probatam (typi affines);
+      concurrentia sine certaminibus datorum promissa.
+    </definitio>
+    <differentia>
+      Via tertia gestionis memoriae: nec manualis nec collecta -
+      possessio statice probata.
+    </differentia>
+    <valor nomen="paradigmata">imperativum</valor>
+    <valor nomen="paradigmata">functionale</valor>
+    <valor nomen="typatio_tempus">statica</valor>
+    <valor nomen="typatio_vis">fortis</valor>
+    <valor nomen="gestio_memoriae">per_possessionem</valor>
+    <valor nomen="vita">vigens</valor>
+    <relatum nomen="auctor" ad="graydon_hoare"
+      modulus="persona"/>
+    <historia>
+      <eventum quando="2010" actio="ortus"
+        nota="publicatio; inceptum privatum 2006"/>
+      <eventum quando="2015-05-15" actio="edi">1.0 -
+        stabilitas promissa</eventum>
+    </historia>
+  </individuum>
+
+  <!-- MAIORES: umbrae rotae XLV impletae - linguae quas
+       descendentes earum citabant. Mortuae ambae, et ideo
+       maxime describndae: quod vivit se ipsum explicat, quod
+       obiit solum per acta nostra manet -->
+
+  <individuum nomen="b" certitudo="opinio" fons="corpus">
+    <definitio>
+      Lingua Thompsonii sine typis: verbum machinae unicum genus
+      valoris, unde nec character nec structura - omnia numeri.
+      Ex BCPL contracta ut in PDP-7 caberet; parens linguae C,
+      quae typos addidit cum PDP-11 octetos discerneret.
+    </definitio>
+    <valor nomen="typatio_tempus">statica</valor>
+    <valor nomen="gestio_memoriae">manualis</valor>
+    <valor nomen="vita">mortua</valor>
+    <relatum nomen="auctor" ad="ken_thompson" modulus="persona"/>
+    <historia>
+      <eventum quando="1969" actio="ortus"/>
+    </historia>
+    <nota>
+      Individuum cuius INTERITUS causam claram habet: machina
+      nova (PDP-11) octetos et typos poscebat quos B negabat.
+      Lingua a machina occisa - ferrum modum imperat, casus
+      tertius (post fornacem et vehiculum), primus in re
+      incorporali.
+    </nota>
+  </individuum>
+
+  <individuum nomen="abc" certitudo="opinio" fons="corpus">
+    <definitio>
+      Lingua docendi apud CWI Amstelodami: structura per
+      indentationem, quinque genera datorum alta, sine
+      declarationibus - "simplicitas ante potentiam" consulto.
+    </definitio>
+    <valor nomen="typatio_tempus">dynamica</valor>
+    <valor nomen="typatio_vis">fortis</valor>
+    <valor nomen="gestio_memoriae">collecta</valor>
+    <valor nomen="vita">mortua</valor>
+    <historia>
+      <eventum quando="1987" actio="edi" nota="editio 1.0;
+        inceptum ab anno circiter 1975 ut 'B' novum"/>
+    </historia>
+    <nota>
+      Auctores Geurts, Meertens, Pemberton; Guido van Rossum in
+      turba implementantium erat, et quod ABC negavit (extensio,
+      systema apertum) Python concessit - indentatione et
+      simplicitate SERVATIS. Individuum mortuum cuius
+      differentiae in filia vivunt: hereditas sine vita.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     LINGUA IUSSUUM - sub-genus linguae programmandi
+     (dubium v1 de bash SOLUTUM subordinatione: proprietates
+     generis congruunt - hereditas; essentia differt -
+     differentia. Via Porphyriana ipsa.)
+     ================================================== -->
+
+<genus nomen="lingua_iussuum" sub="lingua_programmandi">
+
+  <differentia>
+    Verbum primum = PROCESSUS ALIENUS vocatus, non functio
+    propria: lingua ad imperia oritur (interactiva), scriptilis
+    fit. Fistulae, redirectio, expansio textualis ante omnia.
+  </differentia>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="bash">
+    <definitio>
+      Concha GNU: sh Bourne aucta historia, complemento,
+      arithmeticis; concha ordinaria systematum Linux diu.
+    </definitio>
+    <valor nomen="paradigmata">imperativum</valor>
+    <valor nomen="typatio_tempus">dynamica</valor>
+    <valor nomen="typatio_vis">debilis</valor>
+    <valor nomen="gestio_memoriae">collecta</valor>
+    <valor nomen="vita">vigens</valor>
+    <relatum nomen="auctor" ad="brian_fox" modulus="persona"/>
+    <relatum nomen="normata_per" ad="posix_1" modulus="norma"
+      nota="subset sh"/>
+    <historia>
+      <eventum quando="1989-06-08" actio="ortus"/>
+    </historia>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     VERSIO LINGUAE - editio in rem crystallizata
+     (dubium v0 de c89 hoc genere SOLUTUM: editio eventus
+     est qui rem citabilem gignit - sicut conditio in
+     volumine punctum nominatum caudae est)
+     ================================================== -->
+
+<genus nomen="versio_linguae" sub="versio" modulus="versio">
+
+  <definitio>
+    Editio linguae nominata et citabilis: eventus "edi" in rem
+    conversus. Plagula fontis in VERSIONE scribitur ("hoc c89
+    est"), lingua identitatem trans versiones servat.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="titulus" genus="textus"
+      nota="designatio usitata: c89, python3, rust-2021"/>
+    <proprietas nomen="edita" genus="dies"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="versio_de" ad="lingua_programmandi"/>
+    <relatio nomen="sequitur" ad="versio_linguae"
+      nota="catena editionum - historia in relationibus"/>
+    <relatio nomen="normata_per" ad="norma" modulus="norma"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="c89">
+    <valor nomen="titulus">C89 (ANSI C / C90)</valor>
+    <valor nomen="edita">1990-12-15</valor>
+    <relatum nomen="versio_de" ad="c"/>
+    <relatum nomen="normata_per" ad="iso_9899_1990"
+      modulus="norma"/>
+    <nota>
+      Prototypi functionum; declarationes ante enuntiata; sine
+      commentariis //. Domus nostra in hac versione scribitur.
+    </nota>
+  </individuum>
+
+  <individuum nomen="c99">
+    <valor nomen="titulus">C99</valor>
+    <valor nomen="edita">1999-12-01</valor>
+    <relatum nomen="versio_de" ad="c"/>
+    <relatum nomen="sequitur" ad="c89"/>
+    <relatum nomen="normata_per" ad="iso_9899_1999"
+      modulus="norma"/>
+  </individuum>
+
+  <individuum nomen="c11">
+    <valor nomen="titulus">C11</valor>
+    <valor nomen="edita">2011-12-08</valor>
+    <relatum nomen="versio_de" ad="c"/>
+    <relatum nomen="sequitur" ad="c99"/>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     IMPLEMENTATIO LINGUAE - res quae formam exsequitur
+     (hic vivit "compilata/interpretata" - proprietas
+     IMPLEMENTATIONIS, non linguae: mendacium schematum
+     vulgare in v0 mortuum)
+     ================================================== -->
+
+<genus nomen="implementatio_linguae">
+
+  <definitio>
+    Programma quod linguam exsequitur: compilator, interpres,
+    aut mixtum. Res concreta cum auctoribus, historia, vitiis
+    suis - lingua una, implementationes multae, unaquaeque cum
+    indole propria (tutela memoriae addita, celeritas, portus).
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="modus_exsecutionis" genus="electio">
+      <optio>compilans</optio>
+      <optio>interpretans</optio>
+      <optio>mixtus</optio>
+      <!-- JIT etc.: mixtus donec veritas optionem finiorem
+           poscat -->
+    </proprietas>
+    <proprietas nomen="tutela_memoriae_addita" genus="veritas"
+      ordinarius="falsum"
+      nota="implementatio tutelam dare potest quam lingua non
+            promittit - Fil-C testis principalis"/>
+  </proprietates>
+
+  <actiones>
+    <actio nomen="ortus" nota="emissio publica prima. Genus hoc sub
+      lingua NON est (implementatio lingua non est sed eius
+      effectrix), ergo actiones illius non hereditat"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="implementat" ad="lingua_programmandi"/>
+    <relatio nomen="implementat_versionem" ad="versio_linguae"/>
+    <relatio nomen="scripta_in" ad="lingua_programmandi"
+      nota="implementatio ipsa in lingua scribitur - CPython in
+            C; recursio vera et honesta"/>
+    <relatio nomen="auctor" ad="persona" modulus="persona"
+      multiplex="verum"/>
+    <relatio nomen="emittit_pro" ad="architectura_machinae"
+      modulus="architectura_machinae" multiplex="verum"
+      nota="compilator pro architecturis emittit (interpres pro
+            nulla - modus eius id vitat)"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="gcc">
+    <valor nomen="modus_exsecutionis">compilans</valor>
+    <relatum nomen="implementat" ad="c"/>
+    <historia>
+      <eventum quando="1987-03-22" actio="ortus"/>
+    </historia>
+  </individuum>
+
+  <individuum nomen="clang">
+    <valor nomen="modus_exsecutionis">compilans</valor>
+    <relatum nomen="implementat" ad="c"/>
+    <historia>
+      <eventum quando="2007" actio="ortus"/>
+    </historia>
+  </individuum>
+
+  <individuum nomen="cpython">
+    <valor nomen="modus_exsecutionis">mixtus</valor>
+    <relatum nomen="implementat" ad="python"/>
+    <relatum nomen="scripta_in" ad="c"/>
+    <nota>interpres referentialis - lingua et implementatio
+      saepe confunduntur quia haec dominatur</nota>
+  </individuum>
+
+  <individuum nomen="fil_c">
+    <valor nomen="modus_exsecutionis">compilans</valor>
+    <valor nomen="tutela_memoriae_addita">verum</valor>
+    <relatum nomen="implementat" ad="c"/>
+    <nota>
+      Testis principalis distinctionis lingua/implementatio:
+      C immutatum, tutela memoriae ab implementatione data -
+      proprietas quam in lingua ponere MENDACIUM esset, hic
+      vera est.
+    </nota>
+  </individuum>
+
+  <individuum nomen="officina">
+    <valor nomen="modus_exsecutionis">interpretans</valor>
+    <relatum nomen="implementat" ad="c"/>
+    <relatum nomen="implementat_versionem" ad="c89"/>
+    <relatum nomen="scripta_in" ad="c"/>
+    <nota>
+      Interpres domus nostrae (officina/) - in c89 scriptus,
+      c89 interpretatur. Ipsi in dictionario nostro sumus:
+      naturalista paroeciam suam describit.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     VERBUM CLAVIS - vocabularium linguae ipsius
+     (clavis et "reservatum" stricte non idem: omnia
+     verba clavia C reservata sunt; linguae aliae claves
+     contextuales habent, alibi identificatores licitas)
+     ================================================== -->
+
+<genus nomen="verbum_clavis">
+
+  <definitio>
+    Verbum quod lingua sibi vindicat: grammaticae servit,
+    identificatori negatur. Vocabularium linguae ipsius, non
+    programmatis - programma verba sua fingit, haec ficta
+    accipit ut grammaticam.
+  </definitio>
+
+  <relationes>
+    <relatio nomen="verbum_de" ad="lingua_programmandi"/>
+    <relatio nomen="additum_in" ad="versio_linguae"
+      nota="claves per VERSIONES adduntur - lex lapsus:
+            vocabularium versioni labitur, non linguae"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       bestiarium: claves quae aliquid DOCENT -->
+
+  <individuum nomen="static">
+    <relatum nomen="verbum_de" ad="c"/>
+    <nota>
+      Verbum unum, significata TRIA (nexus internus plagulae /
+      duratio localis manens / utrumque in universalibus) -
+      onus celeberrimum vocabularii C. Domus nostra tribus
+      nominibus id explicat: interior, hic_manens, universalis.
+    </nota>
+  </individuum>
+
+  <individuum nomen="const">
+    <relatum nomen="verbum_de" ad="c"/>
+    <relatum nomen="additum_in" ad="c89"/>
+    <nota>
+      In C89 e C++ receptum. Intentiones DUAS vestit:
+      constantiam rei et pactum viae accessus - vide
+      elementa_programmatis.constans, testis principalis
+      doctrinae intentionis.
+    </nota>
+  </individuum>
+
+  <individuum nomen="goto">
+    <relatum nomen="verbum_de" ad="c"/>
+    <nota>
+      Verbum infame: Dijkstra 1968 "Go To Statement Considered
+      Harmful" - clavis una disputationem de programmatione
+      structa accendit. (Dijkstra personam poscit -
+      superficit, nondum descriptus.)
+    </nota>
+  </individuum>
+
+  <individuum nomen="restrict">
+    <relatum nomen="verbum_de" ad="c"/>
+    <relatum nomen="additum_in" ad="c99"/>
+    <nota>
+      Testis legis lapsus in vocabulario: clavis versioni
+      advenit, non linguae - C89 eam nescit, domus nostra ideo
+      sine ea vivit.
+    </nota>
+  </individuum>
+
+</genus>
+
+</natura>
