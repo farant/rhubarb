@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **30** · genera **140** · res dictionarii **294** · arcus **381**
+Exemplaria **31** · genera **146** · res dictionarii **307** · arcus **405**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -23,6 +23,11 @@ grep -n 'nomen="<genus>"' natura/*.stml   # sedes definitionis
 Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 `⚙` machinam statuum fert · `▣N` partes N declaratas fert
 (partes = index quo ABSENTIA visibilis fit).
+
+### acta (v0, genera 2)
+
+- **acta** ⚙ ▣5 — Series eventuum ordinata cui SOLUM APPENDITUR, et quae rerum descriptarum VERITAS est: status quilibet (summa, manifes
+- **punctum_actorum** — Locus in actis nominatus et allocutione dignus, ita ut interrogatio "qualia erant HIC?" responsum habeat quod homo pet
 
 ### actus (v0, genera 5)
 
@@ -45,7 +50,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **causa** — Id cuius vi aliquid est aut fit: non quod praecedit tantum (id antecedens est) sed quod EFFICIT
 
-### cliens (v0, genera 8)
+### cliens (v1, genera 9)
 
 - **cliens** — Programma quod ministerium alienum consumit, pro utente agens: dimidium petens colloquii
 - **cliens_telae** ⊂ cliens — In navigatro vivit: institutione caret - inscriptio URL ipsa distributio est
@@ -55,8 +60,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **cliens_mcp** ⊂ cliens — Cliens cuius UTENS agens artificialis est: ministeria per protocollum instrumentorum consumit, agens pro homine per ag
 - **cliens_cli** ⊂ cliens — Instrumentum imperii unius: vocatur, agit, exit
 - **cliens_mobilis** ⊂ cliens — In telephono vivit: tactus pro mure, interruptiones pro sessione, pila pro fine - vincula eius differentia sunt
+- **servus** — Programma quod ministerium aliis praebet: dimidium RESPONDENS colloquii
 
-### commercium (v2, genera 9)
+### commercium (v3, genera 9)
 
 - **moneta** — Genus pecuniae ab auctoritate emissum et receptum: unitas mensurae valoris - sed unitas cuius valor ipse MUTATUR (metr
 - **pecunia** — Quantitas in moneta: numerus CUM MONETA - "3,50" nihil est donec moneta adsit (eadem forma qua quantitas unitatem posc
@@ -66,7 +72,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **tessera** — Res cuius EXHIBITIO ius constituit, non probat: differentia ab apocha vulgari tota hic est - apocha te solvisse TESTAT
 - **tessera_negotiabilis** ⊂ tessera — Accipiens bona fide et pretio dato titulum PURUM accipit, etiam si tradens ipse ius non habuit: EXCEPTIO ad regulam 'n
 - **tessera_simplex** ⊂ tessera — Possessio sufficit ad exhibendum, sed nulla titulorum purgatio: qui tesseram furatam exhibet admittitur (custos nescit
-- **ratio_rationaria** — Acta rerum pecuniariarum ordine temporis: veritas est cauda eventuum, status omnis (summa, debitum, lucrum) PLICATURA
+- **ratio_rationaria** ⊂ acta.acta — Acta rerum pecuniariarum ordine temporis: veritas est cauda eventuum, status omnis (summa, debitum, lucrum) PLICATURA
 
 ### communicatio (v0, genera 3)
 
@@ -169,11 +175,12 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **tributum** ⊂ obligatio — Obligatio ad MAGISTRATUM, ex lege orta, non ex consensu: debetur quia lex ita statuit, non quia quis promisit
 - **titulus** — Attestatio publica et permanens ab auctoritate data, quod aliquis aliquid consecutus est aut aliquid EST: non permissi
 
-### operatio (v0, genera 3)
+### operatio (v1, genera 4)
 
 - **ambitus** — Locus ordinatus ubi programmata currunt: machinae, figurationes, data, nomina
 - **pensum** ⚙ — Opus certum alicui commissum: quid agendum, a quo, quo statu
 - **incidens** ⚙ — Interruptio aut deminutio ministerii in ambitu vero: non genus vitii sed vitium EXPOSITUM - idem defectus vitium sempe
+- **processus** ⚙ ▣5 — Programma in exsecutione: instantia formae, statum proprium gerens, dum vivit allocutione digna
 
 ### opus_scriptum (v1, genera 6)
 
@@ -197,7 +204,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **persona** — Naturae rationabilis individua substantia (Boethius)
 
-### plagula_computatralis (v1, genera 7)
+### plagula_computatralis (v2, genera 9)
 
 - **plagula_computatralis** ⚙ — Sequentia octetorum NOMINATA in systemate plagularum: identitas quae perdurat dum contentum mutatur (ut universitas mu
 - **plagula_fontis** ⊂ plagula_computatralis — Textus a personis scriptus, a personis ET translatoribus lectus: forma exsecutionis futurae, non exsecutio ipsa
@@ -206,6 +213,8 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **plagula_figurationis** ⊂ plagula_computatralis — A programmate in initio lecta ut mores suos formet: declarativa, non exsecutiva - dicit quid, numquam quomodo
 - **plagula_datorum** ⊂ plagula_computatralis — Contentum pro programmatibus primo: structura stricta, lector humanus hospes non dominus
 - **plagula_sqlite** ⊂ plagula_datorum — Basis datorum integra in plagula una: tabulae, indices, transactiones - omnia intra sequentiam octetorum unam, sine se
+- **systema_plagularum** ▣3 — Ordinatio quae sequentiis octetorum NOMINA, locum in arbore, et notas circumstantes dat: quod inter medium (discum, re
+- **directorium** — Continens nominatum plagularum et directoriorum aliorum: nodus arboris nominum
 
 ### planta (v1, genera 4)
 
@@ -258,6 +267,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 | genus | exemplar |
 |---|---|
+| acta | acta |
 | actor | communicatio |
 | actus_iuridicus | actus |
 | actus_sollemnis | actus |
@@ -290,6 +300,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | corpus_normans | organizatio |
 | damnum | corporalia |
 | debitum_technicum | fabricatio |
+| directorium | plagula_computatralis |
 | distributio_systematis | systema_operativum |
 | editio | opus_scriptum |
 | eventum | communicatio |
@@ -359,9 +370,11 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | probatio | fabricatio |
 | procedura | praescriptum |
 | procedura_automata | praescriptum |
+| processus | operatio |
 | programma | elementa_programmatis |
 | proiectio | elementa_programmatis |
 | promptuarium | elementa_programmatis |
+| punctum_actorum | acta |
 | quantitas | mensura |
 | ratio_rationaria | commercium |
 | recurrentia | tempus |
@@ -378,9 +391,11 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | schema | schema |
 | schema_identificandi | identificatio |
 | scriptum_exsecutabile | plagula_computatralis |
+| servus | cliens |
 | societas | organizatio |
 | status | elementa_programmatis |
 | systema_operativum | systema_operativum |
+| systema_plagularum | plagula_computatralis |
 | systema_unixiforme | systema_operativum |
 | tessera | commercium |
 | tessera_negotiabilis | commercium |
@@ -401,6 +416,8 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 ## IV. Dictionarium (species et individua descripta)
 
+- `acta.acta` — acta_auditus, acta_publica, acta_transactionum, acta_versionum, regesta
+- `acta.punctum_actorum` — clausura_rationis, conditio, statio
 - `actus.actus_iuridicus` — collatio_tituli, inauguratio, instrumentum_publicum, mancipatio, manumissio, promulgatio, sententia_lata, stipulatio, testamentum
 - `actus.sacramentale` — benedictio, consecratio_loci, exorcismus
 - `actus.sacramentum` — baptismus, confirmatio, eucharistia, matrimonium, ordo, paenitentia, unctio_infirmorum
@@ -409,6 +426,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `architectura_machinae.versio_architecturae` — :armv8, :i386, :x86_64
 - `causa.causa` — causa_efficiens, causa_finalis, causa_formalis, causa_materialis
 - `cliens.cliens_cli` — :curl
+- `cliens.servus` — servus_datorum, servus_mcp, servus_nominum, servus_procuratorius, servus_telae
 - `commercium.moneta` — :dollarium_americanum, :euro
 - `commercium.ratio_rationaria` — ratio_duplex
 - `commercium.tessera_negotiabilis` — apocha_horrei, charta_onerum, nummus_chartaceus, obligatio_ad_portitorem, perscriptio, syngrapha
@@ -489,21 +507,17 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed
 nemo describit. DUAE agendae sunt, non una — ordo intra utramque
 per numerum citationum (quod plura exemplaria poscunt, prius).
 
-### V.a Genera desiderata (10) — opus consilii
+### V.a Genera desiderata (6) — opus consilii
 
 A `relatio` citata: relationes in GENERA tendunt, ergo quaestio
 ontologica et iudicium poscitur.
 
-- **processus** — 4x, a `elementa_programmatis`
 - **typus** — 2x, a `elementa_programmatis`
 - **actio** — 1x, a `praescriptum`
 - **chip** — 1x, a `architectura_machinae`
 - **consilium** — 1x, a `fabricatio`
 - **constructum_linguae** — 1x, a `elementa_programmatis`
-- **directorium** — 1x, a `plagula_computatralis`
 - **instrumentum_aedificationis** — 1x, a `elementa_programmatis`
-- **servus** — 1x, a `cliens`
-- **systema_plagularum** — 1x, a `systema_operativum`
 
 ### V.b Individua desiderata (6) — opus dictionarii
 
@@ -520,6 +534,8 @@ exsistente. Nullum consilium — describi potest quovis momento.
 
 ## VI. Dubia aperta
 
+- `acta` / **punctum_actorum** — RAMI: haec relatio 'praecedens' seriem simplicem supponit. Acta ramosa (git) puncta plura post idem punctum ferunt, et tunc 'plicatura ad punctum' viam eligere 
+- `cliens` / **servus** — AN CLIENS ET SERVUS GENERA SINT AN MUNERA. Servus procuratorius utrumque simul est; bibliotheca autem iam semel ita iudicavit in re simili - "merx non est genus
 - `commercium` / **tessera** — An tessera sub instrumento (corporalia) collocanda sit? Non convenit: instrumentum usu suo OPERATUR (fornax coquit), tessera nihil operatur sed SIGNIFICAT et iu
 - `elementa_programmatis` / **functio_pura** — An proprietas potius quam sub-genus (puritas="verum")? Argumentum sub-generis: fasciculus licentiarum supra. Fran nondum iudicavit - v0 sub-genus audet. 
 - `elementa_programmatis` / **constans** — 'const' in via accessus (parametrum monstratoris) rem ALIAM dicit: pactum non scribendi per hoc nomen - promissum functionis, non constantia rei. Genus proprium
@@ -527,6 +543,7 @@ exsistente. Nullum consilium — describi potest quovis momento.
 - `fabricatio` / **vitium** — SANATIO REBUS CORPOREIS NON CONVENIT (inventum experimenti pistrinae): sanatio = mutatio fontis, quae rem emendabilem supponit. Panis adustus non emendatur - ab
 - `fabricatio` / **complicatio** — PERICULUM PIEPERIANUM, aperte notandum: "complicatio" in excusationem verti potest sicut "debitum technicum" versum est - scutum quo lapsus tegatur ("non erravi
 - `norma` / **posix_1** — Editio "1003.1" continenter renovatur (1988, 2001, 2008, 2024...) - norma UNA vivens an series normarum se substituentium? Idem dubium quod versiones linguarum:
+- `operatio` / **processus** — DAEMON BIS SEDET. Bibliotheca daemonem speciem PROGRAMMATIS facit (elementa_programmatis, divisa per modum finiendi: terminans/perpetuum). At quod daemonem daem
 - `opus_scriptum` / **periodicum** — Machina "compositio" generis parentis periodico male sedet: status perfecta numquam attingitur. Estne differentia satis, an machina propria opus est (vigens/int
 - `planta` / **planta** — Proprietates viventium AMBITUS sunt, non puncta: altitudo "2-5 m", dies florendi "Maius-Iunius". Forma nostra valorem unum fert. Res vivens hanc formam poscit; 
 - `schema` / **genus_valoris** — Paletta domus etiam "area" (textus amplus) et "annus" (dies grossior) habet: species propriae, an textus cum praesentatione et dies cum granularitate? Praesenta

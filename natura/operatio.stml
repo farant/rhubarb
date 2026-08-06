@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/operatio.stml
-  Exemplar semanticum: OPERATIO (versio 0, PLASTICUM)
+  Exemplar semanticum: OPERATIO (versio 1, PLASTICUM)
   Genera: ambitus, pensum, incidens.
 
   Natum ex cursu quinto circuli (praefectus operis / devops).
@@ -15,7 +15,7 @@
   "ruina tertii Martii"); ordo prioritatis non transit -
   ordinatio est, non res.
 -->
-<natura modulus="operatio" versio="0" lingua="latina">
+<natura modulus="operatio" versio="1" lingua="latina">
 
 <!-- ==================================================
      AMBITUS - ubi programma currit
@@ -213,6 +213,132 @@
     <relatio nomen="violat" ad="obligatio" modulus="obligatio"
       nota="SLA obligatio est; incidens eam violare potest"/>
   </relationes>
+
+</genus>
+
+<!-- ==================================================
+     PROCESSUS - programma currens
+
+     Umbra a quattuor locis citata et bis diversimode postulata,
+     quod definitionem PRAESCRIPSIT: programma.currit_ut eam ut
+     INSTANTIAM poscebat ("programma FORMA est, processus
+     instantia currens"), dum tres status individui (:errno,
+     :semen_rand, :index_strtok) geritur_a ad eam mittebant -
+     id est ut GESTOREM STATUS. Genus utrumque esse debet, et
+     coniunctio non fortuita est: quod formam instantiat statum
+     proprium habet, unde 'errno' sine possessore nihil valet.
+     ================================================== -->
+
+<genus nomen="processus">
+
+  <definitio>
+    Programma in exsecutione: instantia formae, statum proprium
+    gerens, dum vivit allocutione digna. Idem programma centies
+    simul currere potest, et centum processus sunt, non unus.
+  </definitio>
+
+  <differentia>
+    Tertia vice bibliotheca formam ab instantia dividit (post
+    linguam/implementationem et opus/expressionem), sed HIC
+    instantia TEMPORALIS est, non alia in signis realizatio:
+    processus incipit, currit, desinit. Editio operis manet;
+    processus manere non potest - finis in natura eius est.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="identificator_currens" genus="numerus"
+      nota="pid. IDENTIFICATOR QUI LOCATUR, NON DATUR: post
+            mortem processus numerus alii redditur, unde
+            identificator hic CONDUCTIO est, non nomen. Omnis
+            alius identificator bibliothecae stabilis est
+            (isbn manet, sigillum manet); hic non. Qui pid in
+            actis servat rem aliam post horam nominat - vitium
+            quod mense octavo mordet, non primo"/>
+    <proprietas nomen="valor_exitus" genus="numerus"
+      nota="quo modo desierit. Vacuus dum currit"/>
+    <proprietas nomen="privilegium" genus="electio">
+      <optio>utentis</optio>
+      <optio>administratoris</optio>
+    </proprietas>
+  </proprietates>
+
+  <!-- partes: quibus carens processus non est -->
+  <partes>
+    <pars nomen="spatium_memoriae" necessaria="verum"/>
+    <pars nomen="tabula_descriptorum" necessaria="verum"
+      nota="quas plagulas apertas teneat - unde 'omnia plagulae
+            sunt' apud systemata unixiformia vim habet"/>
+    <pars nomen="ambitus_variabilium" necessaria="verum"/>
+    <pars nomen="directorium_currens" necessaria="verum"
+      nota="unde viae relativae solvuntur. Pars quam nemo
+            declarat donec fallat"/>
+    <pars nomen="vector_argumentorum" necessaria="verum"
+      nota="argumenta ipsa vacua esse possunt; vector non"/>
+  </partes>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="nascens"/>
+    <status nomen="currens"/>
+    <status nomen="dormiens"
+      nota="exspectans (introitum, tempus, claustrum)"/>
+    <status nomen="suspensus" nota="signo retentus"/>
+    <status nomen="larva"
+      nota="MORTUUS SED NONDUM METATUS: exsecutio finita est,
+            valor exitus superest quia parenti DEBETUR. Status
+            in quo res ipsa periit et RATIO eius manet - quod
+            forma actorum ubique agnoscit (clausura rationis
+            post mortem societatis) et intuitio numquam
+            praevidet. Qui parentem metere neglegit larvas
+            accumulat: non memoria sed NOMINA exhauriuntur"/>
+    <status nomen="sublatus"/>
+    <transitus a="nascens" ad="currens" per="initium"/>
+    <transitus a="currens" ad="dormiens" per="exspectatio"/>
+    <transitus a="dormiens" ad="currens" per="excitatio"/>
+    <transitus a="currens" ad="suspensus" per="suspensio"/>
+    <transitus a="suspensus" ad="currens" per="continuatio"/>
+    <transitus a="currens" ad="larva" per="terminatio"/>
+    <transitus a="larva" ad="sublatus" per="messis"
+      nota="parens valorem exitus legit, et TUNC demum nomen
+            liberatur"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="gigni"/>
+    <actio nomen="terminari" nota="sponte, valorem reddens"/>
+    <actio nomen="occidi" nota="ab alio, signo"/>
+    <actio nomen="meti" nota="a parente, valorem legente"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="instantia_de" ad="programma"
+      modulus="elementa_programmatis"/>
+    <relatio nomen="genitus_a" ad="processus"
+      nota="arbor processuum. Relatio in se ipsam, ut
+            causa.pendet_ex - et hic quoque catena non sponte
+            desinit sed in radice sistitur"/>
+    <relatio nomen="currit_in" ad="ambitus"/>
+    <relatio nomen="gerit" ad="status"
+      modulus="elementa_programmatis" multiplex="verum"
+      nota="INVERSA eius quod tres status individui iam
+            declarabant (geritur_a). Vita status a vita
+            processus terminatur: quod 'ephemerum' in
+            durabilitate status significat HIC mensuram suam
+            invenit"/>
+    <relatio nomen="tenet_apertam" ad="plagula_computatralis"
+      modulus="plagula_computatralis" multiplex="verum"/>
+  </relationes>
+
+  <dubium>
+    DAEMON BIS SEDET. Bibliotheca daemonem speciem PROGRAMMATIS
+    facit (elementa_programmatis, divisa per modum finiendi:
+    terminans/perpetuum). At quod daemonem daemonem facit -
+    a terminali solutus, sessionis princeps, parente in radicem
+    relicto - de PROCESSU dicitur, non de codice: idem
+    exsecutabile daemon esse potest aut non, prout initur. Si
+    ita est, daemon huc migrare debet et speciei programmatis
+    'perpetuum' solum manere. NON DECISUM: casus cogens unus
+    est, et lex domus duos poscit.
+  </dubium>
 
 </genus>
 

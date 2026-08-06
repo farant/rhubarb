@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/plagula_computatralis.stml
-  Exemplar semanticum: PLAGULA COMPUTATRALIS (versio 1, PLASTICUM)
+  Exemplar semanticum: PLAGULA COMPUTATRALIS (versio 2, PLASTICUM)
 
   Exemplar paroeciae maxime nostrum - quod silex olim consumet
   (plagulae repositorii specie sua notatae, non commutatione
@@ -18,7 +18,7 @@
   vs massa contentu addressata). Semantica nostra repositionem
   nostram iam noverat.
 -->
-<natura modulus="plagula_computatralis" versio="1" lingua="latina">
+<natura modulus="plagula_computatralis" versio="2" lingua="latina">
 
 <genus nomen="plagula_computatralis">
 
@@ -61,9 +61,12 @@
 
   <relationes>
     <relatio nomen="continetur_in" ad="directorium"
-      externum="verum"
-      nota="genus directorium SURGIT - estne ipsum plagula?
-            Unix fere dicit ita; nondum descriptum"/>
+      nota="quaesitum umbrae RESOLUTUM (rota XLIV): directorium
+            descriptum est, et 'estne ipsum plagula' relatione
+            (directorium.est_plagula) respondetur, NON
+            subordinatione - quia responsum a systemate pendet,
+            et taxinomia unius systematis consilium in arborem
+            suam inaedificare non debet"/>
     <relatio nomen="conformis_ad" ad="norma" modulus="norma"/>
   </relationes>
 
@@ -291,6 +294,123 @@
       fundum.
     </nota>
   </species>
+
+</genus>
+
+<!-- ==================================================
+     SYSTEMA PLAGULARUM et DIRECTORIUM
+
+     Duae umbrae quae exercitio modellationis (silex+volumen)
+     STATIM obstiterunt: 'fabrica' silicis directorium est, et
+     nullum genus id ferebat. Exemplar plagularum septem genera
+     plagulae habebat et locum ubi plagulae vivunt non habebat.
+     ================================================== -->
+
+<genus nomen="systema_plagularum">
+
+  <definitio>
+    Ordinatio quae sequentiis octetorum NOMINA, locum in arbore,
+    et notas circumstantes dat: quod inter medium (discum,
+    rete, memoriam) et nomina mediat. Sine eo octeti sunt,
+    plagulae non sunt.
+  </definitio>
+
+  <proprietates>
+    <proprietas nomen="capsas_discernit" genus="veritas"
+      nota="an 'Chorda.h' et 'chorda.h' plagulae duae sint.
+            PROPRIETAS QUAE MENSE OCTAVO MORDET: systema
+            domesticum (macos ordinarie) non discernit, servus
+            aedificationis (linux) discernit, unde arbor quae
+            domi aedificatur et in rete frangitur - et nuntius
+            erroris de plagula ABSENTE loquitur quae adest.
+            Nulla alia proprietas huius exemplaris tam saepe
+            horam perdit"/>
+    <proprietas nomen="capsas_servat" genus="veritas"
+      nota="DISTINCTUM a discernendo: systema servare potest
+            quod scripsisti et tamen non discernere. Qui haec
+            duo confundit probationem falsam scribit"/>
+    <proprietas nomen="mensura_nominis_maxima" genus="numerus"/>
+    <proprietas nomen="nexus_fert" genus="electio"
+      nota="an nomina plura ad idem contentum ire possint">
+      <optio>nullos</optio>
+      <optio>symbolicos</optio>
+      <optio>duros</optio>
+      <optio>utrosque</optio>
+    </proprietas>
+    <proprietas nomen="transactiones_fert" genus="veritas"
+      nota="an mutatio plagularum plurium omnia-aut-nihil esse
+            possit. Fere semper FALSUM, quod causa est cur
+            volumen (plagula sqlite una) transactiones habeat
+            quas arbor plagularum praestare non potest -
+            ratio architecturae, non commoditas"/>
+  </proprietates>
+
+  <partes>
+    <pars nomen="radix" necessaria="verum"
+      nota="unde omnis via incipit"/>
+    <pars nomen="directorium" necessaria="falsum"
+      nota="systemata plana exsistunt (obiecta in repositorio
+            nubis nomina cum '/' ferunt quae arborem SIMULANT
+            sine arbore). Ideo non necessaria - et qui arborem
+            supponit ubi nulla est mox 'directorium vacuum'
+            quaerit quod exsistere non potest"/>
+    <pars nomen="notae_circumstantes" necessaria="falsum"
+      nota="tempora, dominus, permissiones"/>
+  </partes>
+
+  <relationes>
+    <relatio nomen="continet" ad="plagula_computatralis"
+      multiplex="verum"/>
+    <relatio nomen="iacet_in" ad="systema_operativum"
+      modulus="systema_operativum"/>
+  </relationes>
+
+  <nota>
+    "Omnia plagulae sunt" (systema_unixiforme) affirmatio de HOC
+    genere est: eadem arbor nominum non solum contenta condita
+    sed etiam machinas, processus, canales exhibet. Affirmatio
+    de nominatione, non de conditura.
+  </nota>
+
+</genus>
+
+<genus nomen="directorium">
+
+  <definitio>
+    Continens nominatum plagularum et directoriorum aliorum:
+    nodus arboris nominum. Contentum eius non octeti sunt sed
+    NOMINA - unde "quid in eo est" enumeratio est, non lectio.
+  </definitio>
+
+  <differentia>
+    Non collocatum sub plagula consulto. Systemata unixiformia
+    directorium plagulam faciunt (genus speciale quod nomina
+    continet), alia non; utrumque describi debet, et taxinomia
+    quae unius systematis consilium in arborem suam inaedificat
+    alterum describere desinit. Relatio infra id quod verum est
+    dicit sine electione.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="occultum" genus="veritas"
+      nota="conventione (nomen puncto incipiens) non structura -
+            unde 'occultum' proprietas NOMINIS est, non rei, et
+            instrumenta quae id ignorant plagulas invisibiles
+            inveniunt quas utens numquam vidit"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="continet" ad="*" multiplex="verum"
+      nota="plagulas et directoria - apertum quia se ipsum
+            includit"/>
+    <relatio nomen="continetur_in" ad="directorium"
+      inversa="continet"
+      nota="radix sola caret"/>
+    <relatio nomen="est_plagula" ad="plagula_computatralis"
+      nota="apud systemata unixiformia directorium plagula EST
+            (genus speciale); alibi non. Relatio, non
+            subordinatio - vide differentiam"/>
+  </relationes>
 
 </genus>
 

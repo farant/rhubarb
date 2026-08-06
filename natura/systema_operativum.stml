@@ -98,7 +98,7 @@
       modulus="architectura_machinae" multiplex="verum"/>
     <relatio nomen="habet_versionem" ad="versio_systematis"/>
     <relatio nomen="praebet_systema_plagularum"
-      ad="systema_plagularum" externum="verum"
+      ad="systema_plagularum" modulus="plagula_computatralis"
       nota="genus SURGIT (APFS, ext4) - nondum descriptum"/>
   </relationes>
 

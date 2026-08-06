@@ -2937,3 +2937,126 @@ because absence has no perceptual signature." Five per cent of
 the corpus exercises the mechanism we claim as the differentiator.
 Either the claim is overstated or the corpus is under-built, and
 which one it is has not been established.
+
+## 2026-08-05 — round forty-four: modelling as a method, and the log that had no name
+
+205. NEW EXERCISE, Fran's: not a coverage loop (which asks what is
+     MISSING) but a MODELLING pass (which asks whether what we
+     have COMPOSES). The distinction matters because every prior
+     round was additive — 140 genera had each been individually
+     defended and never once asked to work together on one
+     subject. Its failure modes are different in kind: not "we
+     lack a genus for X" but "we have every genus and they still
+     don't compose", or "applying them was awkward".
+     Subject: silex + volumen, chosen by Fran because he can
+     verify every claim — which is the only real answer to the
+     scribe's epistemic limit in RATIO §6, where I am equally
+     fluent whether or not I am right.
+
+206. IT MOSTLY COMPOSED, and two results were better than that.
+     (a) `proiectio` PREDICTED A PROPERTY THE CODE HAS A TEST
+     FOR. Its differentia claims an operative property no syntax
+     carries — "licentia delendi: deleting a projection loses
+     nothing that will not be reborn". Volumen's manifest is a
+     projection whose truth is `acta`, and volumen ships an
+     assertion for exactly that: plicam_ad(0) == plagulas_
+     enumerare, which its worklog calls a free pin. Genus and
+     code arrived at the same operative claim without contact.
+     (b) PACIOLI PREDICTED SILEX'S MOST DISTINCTIVE DECISION.
+     `ratio_rationaria`: "correction never by erasure but by a
+     new contrary entry (stornatio) — because a ledger that can
+     be rewritten is not a ledger." `proicere -ad` is
+     deliberately HEADLESS: the log stays whole, the tree becomes
+     old, the next condere makes the past present as a NEW point.
+     That is the accounting discipline, not the git discipline —
+     git has a HEAD and rebase is erasure. A five-century-old
+     genus predicted the choice that most distinguishes silex
+     from the obvious model.
+
+207. AND THE ABSENCE. No genus for an APPEND-ONLY EVENT LOG
+     WHOSE FOLDS ARE THE TRUTH. `ratio_rationaria`'s definitio
+     states the general idea in as many words while its apparatus
+     is monetary (continet→venditio, rationarius→persona): a
+     species whose parent had never been born. Same species of
+     absence as `programma` in run 5.
+     Evidence was unusually heavy — FIVE implementations in one
+     house: gesta, tabularium, volumen, ratio_rationaria itself,
+     and the <historia>/<eventum> mechanism OF OUR OWN FORMAT.
+     The phrase "cauda eventuum" appears three times in the
+     corpus, every time inside prose. Recognised, unnamed.
+
+208. acta.stml BUILT (model 31), and named from Roman public
+     record rather than from event-sourcing — acta diurna,
+     regesta, the ledger all precede the software idea, so the
+     software word would have been the parochial one. Species:
+     acta_publica, regesta, acta_transactionum, acta_versionum,
+     acta_auditus. `ratio_rationaria` RE-PARENTED cross-model
+     (sub="acta"), keeping only what is monetary as differentia.
+     MEASURED PAYOFF: its apparatus went from 2 questions to 17,
+     including the parts checklist — which now makes an
+     accountant asked about a ledger answer "does it have named
+     points?", i.e. period closes.
+     `partes` used deliberately (the 5%-of-corpus mechanism from
+     round 43), and it earns its place here: acta without named
+     points can fold to any position but no MEANINGFUL one —
+     "as at event 4471" always works, "as at release" does not.
+     Nobody feels that absence until they ask.
+
+209. PUNCTUM_ACTORUM — second genus, and it dissolves the
+     awkwardness the exercise measured. silex's `conditio` is a
+     point in a SEQUENCE, not in time; `tempus.momentum` could
+     not carry it because "NUMQUAM timestamp" is a stated law of
+     silex (only content distinguishes "you edited it" from "it
+     is newer"). Clocks disagree, jump backwards, and give two
+     events the same value; a position cannot. Species: conditio
+     (commit), clausura_rationis (period close), statio
+     (checkpoint) — and the third differs from the other two in
+     that it exists only for COST, so it can be deleted without
+     loss. That is a sign the genus carries two offices.
+
+210. FOUR MORE, all obvious kinds that were blocking (Fran's
+     rule: anything a reasonable person knows as a "type of
+     thing" is in scope):
+     - `processus` (→ operatio, not elementa_programmatis: it is
+       a running thing, so it belongs beside ambitus and
+       incidens). Its four citations demanded two different
+       things — instance-of-a-form, and BEARER OF STATE (three
+       status individua declare geritur_a) — and the conjunction
+       is not accidental: errno without an owner means nothing.
+       State `larva` recorded: dead but not yet reaped, the thing
+       gone and its RECORD still owed. And `pid` documented as an
+       identifier that is LEASED, not given — every other
+       identifier in the library is stable, and storing a pid
+       names a different thing an hour later.
+     - `servus` (→ cliens): eight client genera and the answering
+       half had never been named.
+     - `systema_plagularum` + `directorium` (→ plagula_
+       computatralis): these blocked IMMEDIATELY — silex's
+       `fabrica` is a directory. Recorded `capsas_discernit` as
+       the property that costs more hours than any other in that
+       model, and refused to subordinate directorium under
+       plagula: Unix says a directory IS a file and other systems
+       do not, so it is a RELATION (est_plagula). A taxonomy that
+       builds one system's design decision into its tree stops
+       describing the others.
+
+211. THREE DUBIA RECORDED RATHER THAN RESOLVED, each because the
+     forcing case is currently ONE and the house law asks two:
+     whether `daemon` belongs to programma or to processus (what
+     makes a daemon a daemon — detached, session leader — is said
+     of the process, not the code); whether cliens and servus are
+     genera or MUNERA (a proxy is both at once, and the house
+     already ruled this way once: "merx non est genus, esse-venale
+     MUNUS est"); and how branching acta fold, since
+     punctum_actorum.praecedens assumes a simple series.
+
+212. THE GATE CAUGHT ME IMMEDIATELY, as designed. Describing four
+     umbrae made rule XVI fire on all four in the same run —
+     stale `externum` flags whose targets now exist. This is the
+     rule written last round working on its first real occasion,
+     and it is worth noting that the agenda would otherwise have
+     lied in exactly the direction that feels safest: claiming
+     work still open that was already done.
+
+MEASURED after: 31 exemplaria / 146 genera / 307 res / 405 arcus
+/ 0 vulnera / 21 monita / umbrae 16 → 12 (genera 10 → 6).

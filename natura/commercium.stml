@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/commercium.stml
-  Exemplar semanticum: COMMERCIUM (versio 2, PLASTICUM)
+  Exemplar semanticum: COMMERCIUM (versio 3, PLASTICUM)
   Genera: moneta, pecunia, possessio, venditio, pretium,
   ratio_rationaria.
 
@@ -20,7 +20,7 @@
   esse-venale MUNUS est, ergo relatio - panis idem panis manet
   sive venalis sive donatus.
 -->
-<natura modulus="commercium" versio="2" lingua="latina">
+<natura modulus="commercium" versio="3" lingua="latina">
 
 <!-- ==================================================
      MONETA - genus pecuniae
@@ -411,7 +411,13 @@
      (fons eventuum ORIGINALIS - vide caput)
      ================================================== -->
 
-<genus nomen="ratio_rationaria">
+<!-- v2->v3: sub actis collocata (rota XLIV). Definitio infra
+     formam GENERALEM verbis suis dicebat dum apparatus
+     (continet->venditio, rationarius->persona) pecuniarius
+     manebat: species erat cuius parens non exsistebat. Nunc
+     parens natus est et differentia sola hic manet - quod
+     pecuniarium est. -->
+<genus nomen="ratio_rationaria" sub="acta" modulus="acta">
 
   <definitio>
     Acta rerum pecuniariarum ordine temporis: veritas est cauda
@@ -420,6 +426,14 @@
     contrarium (stornatio) - quia ratio quae rescribi potest
     ratio non est.
   </definitio>
+
+  <differentia>
+    Quod acta generalia PECUNIARIA facit: eventus quantitates in
+    moneta ferunt, unde plicatura ARITHMETICA est et invariantes
+    numericae fieri possunt (vide ratio_duplex). Acta quorum
+    eventus numeros non ferunt hanc probationem sui habere non
+    possunt - unde ars rationaria formam prior perfecit.
+  </differentia>
 
   <nota>
     DOCTRINA VOLUMINIS NOSTRI, QUINQUE SAECULIS ANTIQUIOR:

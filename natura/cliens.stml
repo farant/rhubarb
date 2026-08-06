@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/cliens.stml
-  Exemplar semanticum: CLIENS (versio 0, PLASTICUM)
+  Exemplar semanticum: CLIENS (versio 1, PLASTICUM)
   Genus unum, sub-genera septem (indice Fran):
   telae / nativus / terminalis / api / mcp / cli / mobilis.
 
@@ -13,7 +13,7 @@
   Cliens ministrum supponit: genus SERVUS superficit, nondum
   descriptum - dimidium alterum colloquii.
 -->
-<natura modulus="cliens" versio="0" lingua="latina">
+<natura modulus="cliens" versio="1" lingua="latina">
 
 <genus nomen="cliens">
 
@@ -24,7 +24,7 @@
   </definitio>
 
   <relationes>
-    <relatio nomen="consumit" ad="servus" externum="verum"
+    <relatio nomen="consumit" ad="servus"
       multiplex="verum"
       nota="genus servus superficit - hospitium et tabulariumd
             domus testes futuri"/>
@@ -106,6 +106,132 @@
     sessione, pila pro fine - vincula eius differentia sunt.
     In domo: vitrea servus applicationes ad telephonum fert.
   </differentia>
+</genus>
+
+<!-- ==================================================
+     SERVUS - dimidium respondens
+
+     Umbra a cliente ipso citata (consumit->servus) et per octo
+     genera clientium innominata mansit: exemplar dimidium
+     colloquii octo modis divisit et alterum dimidium numquam
+     nominavit.
+     ================================================== -->
+
+<genus nomen="servus">
+
+  <definitio>
+    Programma quod ministerium aliis praebet: dimidium RESPONDENS
+    colloquii. Non incipit sed EXSPECTAT, et cuicumque petenti
+    agit - ubi cliens pro utente uno agit et colloquium incipit.
+  </definitio>
+
+  <differentia>
+    Discrimen non in magnitudine nec in loco (servus in eadem
+    machina currere potest) sed in INITIO: qui vocat cliens est,
+    qui vocatur servus. Inde reliqua sponte sequuntur - servus
+    petitiones simul multas ferre debet, statum inter petitiones
+    servare aut consulto non servare, et se ipsum contra
+    petentes ignotos munire, quae omnia cliens non cogitur.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="status_inter_petitiones" genus="electio"
+      nota="an petitionem petitioni annectat. Electio quae omnia
+            sequentia regit: servus sine statu multiplicari
+            potest quia quaelibet instantia quamlibet petitionem
+            ferre potest; servus cum statu id non potest sine
+            statu communicato, et tunc PROBLEMA statum communem
+            factum est">
+      <optio>sine_statu</optio>
+      <optio>cum_statu</optio>
+    </proprietas>
+    <proprietas nomen="simultas" genus="electio">
+      <optio>singularis</optio>
+      <optio>multiplex</optio>
+    </proprietas>
+    <proprietas nomen="agnitio_petentis" genus="electio"
+      nota="an petentem cognoscat antequam serviat">
+      <optio>nulla</optio>
+      <optio>asserta</optio>
+      <optio>probata</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="praebet" ad="*"
+      nota="ministerium ipsum - genus 'ministerium' nondum
+            natum, unde apertum"/>
+    <relatio nomen="auditur_in" ad="ambitus" modulus="operatio"/>
+    <relatio nomen="currit_ut" ad="processus" modulus="operatio"
+      nota="servus programma est; quod audit processus est"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="servus_telae">
+    <differentia>
+      Protocollo HTTP respondet: petitio sine memoria priorum
+      venit, unde status omnis aut in petitione ipsa aut alibi
+      vivit - vitium quod protocollum in architecturam vertit.
+    </differentia>
+  </species>
+
+  <species nomen="servus_datorum">
+    <differentia>
+      Non documenta sed INTERROGATIONES accipit: petens quid
+      velit dicit, servus quomodo id inveniat eligit. Unde solus
+      inter servos consilium proprium habet quod petens neque
+      videt neque regit.
+    </differentia>
+  </species>
+
+  <species nomen="servus_nominum">
+    <differentia>
+      Nomina in inscriptiones vertit: servus cuius responsa
+      SERVANTUR ab omnibus per quos transeunt, unde mutatio non
+      statim valet sed per horas diffunditur. Congruentia
+      'tandem' hic in protocollum ipsum inaedificata.
+    </differentia>
+  </species>
+
+  <species nomen="servus_procuratorius">
+    <differentia>
+      Petitionem accipit et alteri servo transmittit: SERVUS
+      PETENTI, CLIENS PRAEBENTI - idem programma utrumque
+      simul.
+    </differentia>
+    <nota>
+      Specimen quod dubium infra excitavit: si res una ambo esse
+      potest eodem momento, an ambo genera sint an MUNERA?
+    </nota>
+  </species>
+
+  <species nomen="servus_mcp">
+    <differentia>
+      Instrumenta agenti artificiali praebet: petens homo non
+      est nec programma more solito, sed agens qui instrumenta
+      LEGIT antequam eligat - unde descriptio instrumenti pars
+      interfaciei est, non documentatio eius.
+    </differentia>
+  </species>
+
+  <dubium>
+    AN CLIENS ET SERVUS GENERA SINT AN MUNERA. Servus
+    procuratorius utrumque simul est; bibliotheca autem iam
+    semel ita iudicavit in re simili - "merx non est genus,
+    esse-venale MUNUS est" (commercium, regula multiplicitatis
+    Fran): panis idem manet sive venalis sive donatus. Si eadem
+    ratio hic valet, cliens et servus relationes in colloquio
+    sunt, non genera programmatum, et octo species clientium
+    octo modi PETENDI sunt.
+    CONTRA: cliens telae et servus datorum res vere diversae
+    videntur, non idem res duobus munaribus. Et probatio
+    allocutionis utrumque admittit - servos nominatim
+    alloquimur.
+    NON DECISUM. Notatum quia specimen (procuratorius) verum
+    est, non fictum.
+  </dubium>
+
 </genus>
 
 </natura>

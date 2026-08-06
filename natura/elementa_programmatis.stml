@@ -123,7 +123,7 @@
 
   <individuum nomen="errno">
     <valor nomen="durabilitas">ephemera</valor>
-    <relatum nomen="geritur_a" ad="processus" externum="verum"/>
+    <relatum nomen="geritur_a" ad="processus" modulus="operatio"/>
     <nota>
       Status universalis processus a libc praebitus; status
       occultus celeberrimus - functiones multae eum tacite
@@ -133,13 +133,13 @@
 
   <individuum nomen="semen_rand">
     <valor nomen="durabilitas">ephemera</valor>
-    <relatum nomen="geritur_a" ad="processus" externum="verum"/>
+    <relatum nomen="geritur_a" ad="processus" modulus="operatio"/>
     <nota>Status celatus intra libc quem rand legit et mutat.</nota>
   </individuum>
 
   <individuum nomen="index_strtok">
     <valor nomen="durabilitas">ephemera</valor>
-    <relatum nomen="geritur_a" ad="processus" externum="verum"/>
+    <relatum nomen="geritur_a" ad="processus" modulus="operatio"/>
     <nota>
       Monstrator celatus quem strtok inter vocationes servat -
       status occultus qui vocationes implicatas vetat.
@@ -958,7 +958,7 @@
       nota="functio unica quae non vocatur sed VOCATUR A
             SYSTEMATE - unde 'principale' nomen in domo nostra"/>
     <relatio nomen="adhibet" ad="bibliotheca" multiplex="verum"/>
-    <relatio nomen="currit_ut" ad="processus" externum="verum"
+    <relatio nomen="currit_ut" ad="processus" modulus="operatio"
       nota="programma FORMA est, processus INSTANTIA currens -
             eadem distinctio qua lingua et implementatio;
             genus processus adhuc umbra"/>

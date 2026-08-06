@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/acta.stml
+  Exemplar semanticum: ACTA (versio 0, PLASTICUM)
+
+  ABSENTIA STRUCTURALIS, exercitio modellationis inventa (rota
+  XLIV): non circulus coverturae qui hiatus quaerit, sed subiectum
+  domesticum (silex+volumen) quod bibliotheca DESCRIBERE conata
+  est. Genus deerat quod bibliotheca QUINQUIES iam implebat:
+  gesta, tabularium, volumen, ratio_rationaria, et mechanismus
+  <historia>/<eventum> FORMAE NOSTRAE IPSIUS.
+
+  IDEM GENUS ABSENTIAE QUOD 'programma' (cursus quintus): genus
+  quod solum in forma specializata vivebat. Ibi bibliotheca se
+  contra programma definiebat sine programmate; hic
+  ratio_rationaria formam generalem verbis suis DICEBAT ('veritas
+  est cauda eventuum, status omnis PLICATURA') dum apparatus eius
+  pecuniarius manebat - continet->venditio, rationarius->persona.
+  Species erat cuius parens numquam natus est.
+
+  QUOD NOVUM NON EST: hoc "fontem eventuum" nuper vocamus; ars
+  rationaria ab anno 1494 descriptum tenet, chancellaria regesta
+  sua a saeculo XII, populus Romanus acta diurna ante Christum.
+  Nomen 'acta' ideo non ex arte computatrali sumitur sed ex
+  usu Romano, qui prior est.
+
+  DUO GENERA HIC: acta ipsa, et PUNCTUM ACTORUM - locus nominatus
+  in cauda. Punctum asperitatem mensuratam solvit: conditio
+  silicis in TEMPORE non est sed in SERIE ('numquam timestamp',
+  lex eius), et /tempus/momentum id ferre non potuit.
+-->
+<natura modulus="acta" versio="0" lingua="latina">
+
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: dies et res gestae ex textibus
+    innumeris haustae. NON VERIFICATUM.
+  </fons>
+</fontes>
+
+<genus nomen="acta">
+
+  <definitio>
+    Series eventuum ordinata cui SOLUM APPENDITUR, et quae rerum
+    descriptarum VERITAS est: status quilibet (summa, manifestum,
+    saldum, arbor) non seorsum custoditur sed ex cauda PLICATUR.
+    Emendatio numquam per rasuram sed per eventum novum, quia
+    acta quae rescribi possunt acta non sunt.
+  </definitio>
+
+  <differentia>
+    Non series eventuum quaelibet: series quae PRIMA est. In
+    ratione vulgari status custoditur et acta eum COMITANTUR
+    (annales additi ne quis quaerat "quando mutatum est?"); hic
+    acta sola manent et status omnis derivatus est. Discrimen
+    operativum: proiectionem perdere nihil perdit, acta perdere
+    omnia perdit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="ordinatio" genus="electio"
+      nota="unde ordo veniat. ASPERITAS MENSURATA silicis hic
+            sedet: proicere -ad SEQUENTIAM ambulat, numquam
+            horologium ('NUMQUAM timestamp' lex eius), quia
+            solum contentum 'a te editum' ab 'novius' distinguit.
+            Horologia mentiuntur, discrepant, retro saliunt;
+            positio non potest">
+      <optio>sequentialis</optio>
+      <optio>temporalis</optio>
+      <optio>utraque</optio>
+    </proprietas>
+    <proprietas nomen="immutabilitas" genus="electio"
+      nota="quid appensum custodiat. Distinctio gravis: quod
+            disciplina sola servat servari DESINIT cum quis
+            festinat">
+      <optio>disciplina</optio>
+      <optio>structura</optio>
+      <optio>cryptographica</optio>
+    </proprietas>
+    <proprietas nomen="retentio" genus="quantitas"
+      modulus="mensura"
+      nota="quamdiu servetur. Acta quae truncantur veritas esse
+            DESINUNT pro eo quod truncatum est - unde
+            proiectiones tunc necessariae, non commodae"/>
+    <proprietas nomen="publica" genus="veritas"
+      nota="an quivis legere possit. Acta diurna Romana in foro
+            proponebantur; acta senatus non"/>
+  </proprietates>
+
+  <!-- PARTES: index quo ABSENTIA visibilis fit. Mechanismus a
+       septem generibus solis adhibitus (mensuratum rota XLIII) et
+       hic proprie postulatus: acta sine puncto nominato
+       interrogationi "qualis erat cum emisimus?" respondere NON
+       POSSUNT, et nemo id sentit donec quaerat -->
+  <partes>
+    <pars nomen="eventum" necessaria="verum"
+      nota="introitus ipsi"/>
+    <pars nomen="ordo" necessaria="verum"
+      nota="principium ordinandi - vide proprietatem ordinationis"/>
+    <pars nomen="punctum_nominatum" necessaria="falsum"
+      nota="ABSENTIA MAXIME LATENS: acta sine punctis nominatis
+            plicari possunt ad quemlibet locum sed ad nullum
+            locum SIGNIFICANTEM. 'ut erat ad eventum 4471' semper
+            licet; 'ut erat cum emisimus' non nisi punctum
+            positum sit"/>
+    <pars nomen="proiectio" necessaria="falsum"
+      nota="plicatura materializata. Non necessaria - acta parva
+            ad quamlibet interrogationem replicari possunt;
+            necessaria fit cum replicatio pretiosior est quam
+            custodia"/>
+    <pars nomen="promptuarium_contenti" necessaria="falsum"
+      nota="ubi eventus contentum GRANDE portat, acta plerumque
+            SIGILLUM referunt et contentum alibi condunt (massae
+            voluminis). Tunc veritas DUPLEX est - acta et
+            promptuarium - et neutrum solum sufficit. Hoc facile
+            neglegitur: qui acta sola servat contenta perdidit"/>
+  </partes>
+
+  <machina_statuum nomen="admissio" gerens="individuum">
+    <status nomen="aperta" nota="appensionem admittit"/>
+    <status nomen="clausa"
+      nota="periodus rationaria clausa, emissio sigillata: nihil
+            amplius huc appenditur. Non deletio sed FINIS -
+            emendatio in acta SEQUENTIA it (stornatio)"/>
+    <status nomen="archivata"
+      nota="mota ubi legi potest sed non currit"/>
+    <transitus a="aperta" ad="clausa" per="clausura"/>
+    <transitus a="clausa" ad="archivata" per="archivatio"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="appendere"
+      nota="actio UNICA quae acta mutat"/>
+    <actio nomen="plicare"
+      nota="statum ex cauda computare, ad quemlibet locum"/>
+    <actio nomen="signare"
+      nota="punctum nominatum ponere"/>
+    <actio nomen="stornare"
+      nota="eventum novum appendere qui priorem CONTRARIAT.
+            Verbum artis rationariae; quod VCS 'revert' vocat
+            (non 'rebase' - illud rasura est, quam haec forma
+            vetat)"/>
+    <actio nomen="claudere"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="de" ad="*"
+      nota="cuius rei acta sint - apertum consulto: quidlibet
+            actis describi potest"/>
+    <relatio nomen="plicatur_in" ad="proiectio"
+      modulus="elementa_programmatis" multiplex="verum"
+      nota="plicatura proiectio est, et LICENTIAM DELENDI inde
+            accipit. Voluminis nostri probatio hoc ipsum figit:
+            plicam_ad(0) enumerationi manifesti aequalis - eadem
+            replicatio quae proiectionem probat"/>
+    <relatio nomen="signata_per" ad="punctum_actorum"
+      multiplex="verum"/>
+    <relatio nomen="appenditur_a" ad="*"
+      nota="quis appendat - persona, processus, magistratus"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       divisio per DOMINIUM, quia forma eadem est et usus
+       differt. Nulla harum ficta: omnes nomina propria in
+       dominiis suis ferunt, saecula ante artem computatralem -->
+
+  <species nomen="acta_publica" certitudo="opinio" fons="corpus">
+    <definitio>
+      Res gestae communitatis ordine temporis propositae: acta
+      diurna populi Romani (in foro albata proponebantur), acta
+      senatus. Publicatio pars formae est, non additamentum -
+      quod omnes legere possunt nemo tacite mutat.
+    </definitio>
+    <valor nomen="publica">verum</valor>
+    <nota>
+      Immutabilitas hic non cryptographica sed SOCIALIS:
+      exemplaria multa apud multos, unde emendatio clandestina
+      impossibilis. Eadem ratio qua catenae sigillorum hodie
+      utuntur, per homines potius quam per numeros.
+    </nota>
+  </species>
+
+  <species nomen="regesta" certitudo="opinio" fons="corpus">
+    <definitio>
+      Liber cancellariae in quo acta EMISSA (litterae, privilegia,
+      bullae) ordine describuntur antequam mittantur: exemplar
+      apud emittentem manet, ut quid dictum sit constet cum
+      exemplar acceptoris perierit aut fictum sit.
+    </definitio>
+    <nota>
+      Motivum quod ad hodiernum transit: acta non ad memoriam
+      sed ad PROBATIONEM contra falsarium. Regesta Vaticana
+      hanc formam a saeculo XII continue tenent - series
+      actorum longissima quae currere non desiit.
+    </nota>
+  </species>
+
+  <species nomen="acta_transactionum">
+    <definitio>
+      Cauda mutationum ANTE applicationem scripta (write-ahead):
+      basis datorum ipsa proiectio est, et post casum ex actis
+      reficitur. Forma inversa eius quod intuitio suggerit -
+      acta non basim sequuntur sed praecedunt.
+    </definitio>
+    <valor nomen="ordinatio">sequentialis</valor>
+    <nota>
+      Hic pars 'promptuarium_contenti' abest et abesse debet:
+      eventus contentum suum TOTUM portat, quia post casum nihil
+      aliud superest quo referatur.
+    </nota>
+  </species>
+
+  <species nomen="acta_versionum">
+    <definitio>
+      Acta mutationum plagularum, quorum plicatura ARBOR est:
+      manifestum viarum ad contenta. Quod "commit" vocatur
+      punctum nominatum est, non obiectum.
+    </definitio>
+    <valor nomen="ordinatio">sequentialis</valor>
+    <valor nomen="immutabilitas">cryptographica</valor>
+    <nota>
+      DUAE DISCIPLINAE HIC DIVIDUNTUR, et divisio bibliothecae
+      nostrae aliquid dicit. Instrumenta quae CAPUT ferunt
+      (git) historiam rescribere permittunt - rebase rasura
+      est, quam definitio horum actorum vetat. Volumen nostrum
+      capite CARET consulto: cauda tota manet, arbor vetus fit,
+      conditio sequens praeteritum praesens facit ut punctum
+      NOVUM. Id stornatio est, non rasura - disciplina Pacioli
+      electa ubi disciplina git offerebatur.
+    </nota>
+  </species>
+
+  <species nomen="acta_auditus">
+    <definitio>
+      Acta quorum finis est ut QUIS QUID QUANDO fecerit postea
+      constet, praesertim contra ipsum qui fecit. Unde
+      immutabilitas non commoditas sed ratio essendi.
+    </definitio>
+    <nota>
+      Genus unicum in quo APPENDENS et is contra quem acta
+      valent idem esse possunt - unde structura sola sufficit,
+      disciplina non sufficit. Vide proprietatem
+      immutabilitatis: hic 'disciplina' responsum FALSUM est
+      semper, et hoc dicere pars descriptionis est.
+    </nota>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     PUNCTUM ACTORUM - locus nominatus in cauda
+     ================================================== -->
+
+<genus nomen="punctum_actorum">
+
+  <definitio>
+    Locus in actis nominatus et allocutione dignus, ita ut
+    interrogatio "qualia erant HIC?" responsum habeat quod homo
+    petere velit. Non eventus sed POSITIO inter eventus.
+  </definitio>
+
+  <differentia>
+    Positio in SERIE, non in tempore. Momentum temporis quemlibet
+    locum designare potest sed horologio nititur, quod discrepat,
+    retro salit, et duobus eventibus idem valere potest. Positio
+    haec vitia natura non habet - unde acta quae serio se gerunt
+    per positionem ambulant, non per horas.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="positio" genus="numerus"
+      nota="index in cauda"/>
+    <proprietas nomen="titulus" genus="textus"
+      nota="cur hoc punctum positum sit - 'nuntius conditionis'.
+            Punctum sine titulo positionem habet, significationem
+            non"/>
+    <proprietas nomen="momentum_positionis" genus="citatio"
+      nota="quando positum. ACCIDENS, non identitas: punctum
+            sine horologio integrum manet, quod inversum falsum
+            est"/>
+    <proprietas nomen="automaticum" genus="veritas"
+      nota="a machina positum an ab homine. Puncta automatica
+            (statio basis datorum) multa et muta sunt; humana
+            pauca et significantia. Utraque plicari possunt,
+            sed sola humana interrogationi 'cum emisimus'
+            respondent"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="in" ad="acta"/>
+    <relatio nomen="praecedens" ad="punctum_actorum"
+      nota="punctum proximum ante. Series simplex, non arbor:
+            arbor ramorum (git) puncta MULTIPLICIA post idem
+            punctum ponit, quod haec relatio nondum fert -
+            vide dubium"/>
+    <relatio nomen="positum_a" ad="*"/>
+  </relationes>
+
+  <species nomen="conditio">
+    <definitio>
+      Punctum in actis versionum, cum titulo ab homine dato:
+      quod "commit" vulgo vocatur. Non obiectum quod arborem
+      CONTINET sed locus ad quem arbor plicari potest.
+    </definitio>
+    <nota>
+      Distinctio in silice explicita: "conditio non obiectum sed
+      punctum nominatum in cauda actorum - arbores plicae sunt,
+      manifestum plica currens". Instrumenta quae conditionem
+      OBIECTUM faciunt (git commit continens arborem) idem
+      praestant pretio maiore et historia rescribili.
+    </nota>
+  </species>
+
+  <species nomen="clausura_rationis">
+    <definitio>
+      Punctum quo periodus rationaria clauditur et saldum
+      constat: post id nihil in periodum appenditur, emendatio
+      in periodum sequentem it.
+    </definitio>
+    <valor nomen="automaticum">falsum</valor>
+  </species>
+
+  <species nomen="statio">
+    <definitio>
+      Punctum a machina positum ut plicatura pretiosa semel fiat
+      et postea ab eo, non ab initio, incipiat: quod
+      "checkpoint" aut "snapshot" vocatur.
+    </definitio>
+    <valor nomen="automaticum">verum</valor>
+    <nota>
+      Species quae SOLA propter pretium exsistit, non propter
+      significationem - unde deleri potest sine damno, ubi
+      conditio et clausura non possunt. Signum quod puncta duo
+      genera officiorum gerunt.
+    </nota>
+  </species>
+
+  <dubium>
+    RAMI: haec relatio 'praecedens' seriem simplicem supponit.
+    Acta ramosa (git) puncta plura post idem punctum ferunt, et
+    tunc 'plicatura ad punctum' viam eligere debet. An ramus
+    proprietas actorum sit, an genus proprium (ramus), an acta
+    ramosa acta PLURA sint quae puncta communia participant -
+    non decisum. Silex ramos nondum habet, ergo casus cogens
+    unus tantum est; lex domus DUOS poscit.
+  </dubium>
+
+</genus>
+
+</natura>
