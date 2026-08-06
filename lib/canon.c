@@ -4,6 +4,7 @@
  * PRAESTAT consulto (citationes, hereditas, co-occurrentiae).
  */
 #include "canon.h"
+#include "similitudo.h"
 #include <string.h>
 
 /* ==================================================
@@ -99,6 +100,8 @@ interior b32 album_solum(constans chorda* s);
 interior vacuum _scopos_colligere(StmlNodus* radix,
     constans chorda* intra, StmlNodus* infixus, Xar* scopi,
     Piscina* piscina);
+interior chorda* _suggestio(constans chorda* quaestio,
+    constans chorda* candidati, i32 numerus, Piscina* piscina);
 interior vacuum _subarborem_colligere(StmlNodus* scopus,
     constans chorda* limes, StmlNodus* infixus, Xar* nodi);
 
@@ -299,6 +302,41 @@ vitium_addere(
     v->detail    = detail;
     v->numerus   = numerus;
     v->limes     = limes;
+}
+
+/* 'an X?' pro nomine ignoto - similitudo_optima_decurtata quia
+ * pro NOMINIBUS TOTIS MALE CONIECTIS nata est (cauda decurtatur
+ * donec candidati appareant - errores transpositionis capit quos
+ * subsequentia nuda non potest). NIHIL si nihil simile. */
+interior chorda*
+_suggestio(
+    constans chorda*  quaestio,
+    constans chorda*  candidati,
+    i32               numerus,
+    Piscina*          piscina)
+{
+    SimilitudoFructus fructus;
+    chorda*           d;
+    constans chorda*  optimus;
+
+    si (numerus == ZEPHYRUM ||
+        similitudo_optima_decurtata(*quaestio, candidati, numerus,
+                                    &fructus, I) == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    optimus = &candidati[fructus.index];
+
+    d = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+    d->mensura = III + optimus->mensura + I;
+    d->datum = (i8*)piscina_allocare(piscina,
+                                     (memoriae_index)d->mensura);
+    memcpy(d->datum, "an ", III);
+    memcpy(d->datum + III, optimus->datum,
+           (memoriae_index)optimus->mensura);
+    d->datum[d->mensura - I] = (i8)'?';
+
+    redde d;
 }
 
 /* clavis tabulae: "parens/nomen" pro definitione adstricta */
@@ -568,6 +606,7 @@ canon_ex_nodo(
     c->elementa   = tabula_dispersa_creare_chorda(piscina, LXIV);
     c->unicitates = xar_creare(piscina, (i32)magnitudo(CanonUnicitas*));
     c->citationes = xar_creare(piscina, (i32)magnitudo(CanonCitatio*));
+    c->tituli     = xar_creare(piscina, (i32)magnitudo(chorda*));
     c->radix      = NIHIL;
 
     numerus = stml_numerus_liberorum(elementum);
@@ -640,6 +679,12 @@ canon_ex_nodo(
             si (e->radix)
             {
                 c->radix = titulus;
+            }
+            {
+                chorda** locus_t;
+
+                locus_t = (chorda**)xar_addere(c->tituli);
+                *locus_t = titulus;
             }
 
             nl = stml_numerus_liberorum(n);
@@ -922,8 +967,27 @@ nodum_iudicare(
     e = elementum_quaerere(c, n);
     si (!e)
     {
+        chorda* sug;
+
+        sug = NIHIL;
+        si (xar_numerus(c->tituli) > ZEPHYRUM)
+        {
+            chorda* acies;
+            i32     na;
+            i32     ia;
+
+            na = xar_numerus(c->tituli);
+            acies = (chorda*)piscina_allocare(piscina,
+                magnitudo(chorda) * (memoriae_index)na);
+            per (ia = ZEPHYRUM; ia < na; ia++)
+            {
+                acies[ia] = **(chorda**)xar_obtinere(c->tituli,
+                                                     ia);
+            }
+            sug = _suggestio(n->titulus, acies, na, piscina);
+        }
         vitium_addere(vitia, CANON_ELEMENTUM_IGNOTUM, n,
-                      n->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+                      n->titulus, sug, ZEPHYRUM, ZEPHYRUM);
         redde;   /* ignotum: liberi eius non iudicantur */
     }
 
@@ -950,8 +1014,46 @@ nodum_iudicare(
 
         si (!def)
         {
+            chorda* detail;
+            chorda* sug;
+
+            detail = a->titulus;
+            sug = NIHIL;
+            si (xar_numerus(e->attributa) > ZEPHYRUM)
+            {
+                chorda* acies;
+                i32     na;
+                i32     ia;
+
+                na = xar_numerus(e->attributa);
+                acies = (chorda*)piscina_allocare(piscina,
+                    magnitudo(chorda) * (memoriae_index)na);
+                per (ia = ZEPHYRUM; ia < na; ia++)
+                {
+                    acies[ia] = *((CanonAttributum*)
+                        xar_obtinere(e->attributa, ia))->titulus;
+                }
+                sug = _suggestio(a->titulus, acies, na, piscina);
+            }
+            si (sug)
+            {
+                /* "nomen (an X?)" - nomen ignotum SERVATUR */
+                detail = (chorda*)piscina_allocare(piscina,
+                    magnitudo(chorda));
+                detail->mensura = a->titulus->mensura + II +
+                                  sug->mensura + I;
+                detail->datum = (i8*)piscina_allocare(piscina,
+                    (memoriae_index)detail->mensura);
+                memcpy(detail->datum, a->titulus->datum,
+                       (memoriae_index)a->titulus->mensura);
+                memcpy(detail->datum + a->titulus->mensura,
+                       " (", II);
+                memcpy(detail->datum + a->titulus->mensura + II,
+                       sug->datum, (memoriae_index)sug->mensura);
+                detail->datum[detail->mensura - I] = (i8)')';
+            }
             vitium_addere(vitia, CANON_ATTRIBUTUM_IGNOTUM, n,
-                          e->titulus, a->titulus, ZEPHYRUM,
+                          e->titulus, detail, ZEPHYRUM,
                           ZEPHYRUM);
             perge;
         }

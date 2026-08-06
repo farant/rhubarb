@@ -158,7 +158,11 @@ done < "$ARCUS"
 # exemplum QUARTUM eiusdem vocabularii, et perl super textum
 # crudum currebat dum C super arborem parsatam. Vulnera formae in
 # ordinibus portae iam vivunt (infra colliguntur).
-grep -E "^VULNUS	8	" "$TMP/porta.txt" 2>/dev/null | \
+# regulae CANONIS omnes (V citationes, VIII vocabularium, XII
+# transitus, XV unicitas) - non VIII sola: praesentatio numeris
+# historicis eas dispersit et grep strictus ceteras TACITE
+# amittebat (regressio capta 2026-08-06)
+grep -E "^VULNUS	(5|8|12|15)	" "$TMP/porta.txt" 2>/dev/null | \
 while IFS='	' read -r _g _r _mod _ens _nuntius; do
     echo "$_mod --forma--> $_ens ($_nuntius)" >> "$VULNERA"
 done

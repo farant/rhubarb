@@ -122,6 +122,9 @@ nomen structura {
          TabulaDispersa*  elementa;    /* nomen -> CanonElementum* */
                     Xar*  unicitates;  /* Xar de CanonUnicitas* */
                     Xar*  citationes;  /* Xar de CanonCitatio* */
+                    Xar*  tituli;      /* Xar de chorda* - tituli
+                                        * elementorum, pro
+                                        * suggestione ('an X?') */
                  chorda*  radix;       /* nomen elementi radicis */
 } Canon;
 

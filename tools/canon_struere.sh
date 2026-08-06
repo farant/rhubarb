@@ -23,7 +23,7 @@ declare -a GCC_FLAGS=(
 declare -a INCLUDE_FLAGS=( "-I$RADIX_DIR/include" )
 
 FONTES=(
-    canon stml chorda chorda_aedificator piscina xar
+    canon stml similitudo chorda chorda_aedificator piscina xar
     internamentum tabula_dispersa friatio selectio filum
 )
 

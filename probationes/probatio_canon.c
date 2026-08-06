@@ -404,6 +404,32 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_ATTRIBUTUM_IGNOTUM), I);
 
+        /* suggestio: nomen male scriptum 'an X?' accipit
+         * (similitudo_optima_decurtata - errores caudae) */
+        vitia = iudicare_literis(hortus,
+            "<hortus titulus=\"s\"><plant nomen=\"x\"/>"
+            "<planta nomen=\"y\"/></hortus>", piscina, intern);
+        {
+            i32 iv;
+            b32 inventa;
+
+            inventa = FALSUM;
+            per (iv = ZEPHYRUM; iv < xar_numerus(vitia); iv++)
+            {
+                CanonVitium* v;
+
+                v = (CanonVitium*)xar_obtinere(vitia, iv);
+                si (v->genus == CANON_ELEMENTUM_IGNOTUM)
+                {
+                    inventa = VERUM;
+                    CREDO_NON_NIHIL (v->detail);
+                    CREDO_CHORDA_CONTINET (*v->detail,
+                        chorda_ex_literis("planta", piscina));
+                }
+            }
+            CREDO_VERUM (inventa);
+        }
+
         /* attributum necessarium deest */
         vitia = iudicare_literis(hortus,
             "<hortus titulus=\"c\"><planta/></hortus>",
@@ -715,6 +741,22 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
 
             fons = filum_legere_totum("aedilis.canon", piscina);
+            CREDO_VERUM (fons.mensura > ZEPHYRUM);
+            r = stml_legere(fons, piscina, intern);
+            CREDO_VERUM (r.successus);
+            vitia = canon_iudicare(canon_ipse, r.radix, piscina);
+            CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+            fons = filum_legere_totum(
+                "silva/grammatica/grammatica.canon", piscina);
+            CREDO_VERUM (fons.mensura > ZEPHYRUM);
+            r = stml_legere(fons, piscina, intern);
+            CREDO_VERUM (r.successus);
+            vitia = canon_iudicare(canon_ipse, r.radix, piscina);
+            CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+            fons = filum_legere_totum("silva/quaestiones.canon",
+                                      piscina);
             CREDO_VERUM (fons.mensura > ZEPHYRUM);
             r = stml_legere(fons, piscina, intern);
             CREDO_VERUM (r.successus);
