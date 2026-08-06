@@ -1,7 +1,8 @@
 /* probatio_canon.c - Probationes strati schematis STML (gradus II)
  *
- * Sex sectiones: lectio canonis, iudicium sanum, classes vitiorum
+ * Septem sectiones: lectio canonis, iudicium sanum, classes vitiorum
  * omnes decem, intra= (formae contextu dependentes - casus aedilis),
+ * CANON INFIXUS (liberum primum radicis = contractus, non contentum),
  * registrum (clavis extensionis et clavis radicis), et CORPUS VERUM:
  * canon.canon SE IPSUM iudicat, deinde natura.canon et aedilis.canon,
  * deinde culpa plantata (attributum falso scriptum quod lector tacite
@@ -79,6 +80,78 @@ interior constans character* CANON_CULPA_PLANTATA =
     "<canon dialectus=\"probatio\" versio=\"1\">\n"
     "  <elementum nomen=\"res\" necesarium=\"verum\"/>\n"
     "</canon>\n";
+
+/* canon INFIXUS: liberum primum radicis contractum fert */
+interior constans character* VIRIDARIUM_INFIXO =
+    "<viridarium titulus=\"meum\">\n"
+    "  <canon dialectus=\"viridarium\" versio=\"1\">\n"
+    "    <elementum nomen=\"viridarium\" radix=\"verum\">\n"
+    "      <attributum nomen=\"titulus\" genus=\"nomen\"\n"
+    "        necessarium=\"verum\"/>\n"
+    "      <liberum nomen=\"arbor\" minimum=\"1\"/>\n"
+    "    </elementum>\n"
+    "    <elementum nomen=\"arbor\">\n"
+    "      <attributum nomen=\"nomen\" genus=\"nomen\"\n"
+    "        necessarium=\"verum\"/>\n"
+    "    </elementum>\n"
+    "  </canon>\n"
+    "  <arbor nomen=\"quercus\"/>\n"
+    "</viridarium>\n";
+
+interior constans character* VIRIDARIUM_INFIXO_PECCANS =
+    "<viridarium>\n"
+    "  <canon dialectus=\"viridarium\" versio=\"1\">\n"
+    "    <elementum nomen=\"viridarium\" radix=\"verum\">\n"
+    "      <liberum nomen=\"arbor\"/>\n"
+    "    </elementum>\n"
+    "    <elementum nomen=\"arbor\">\n"
+    "      <attributum nomen=\"nomen\" genus=\"nomen\"\n"
+    "        necessarium=\"verum\"/>\n"
+    "    </elementum>\n"
+    "  </canon>\n"
+    "  <arbor/>\n"
+    "</viridarium>\n";
+
+/* infixus vitiosus ('necesarium') - contra canonem canonum clamat */
+interior constans character* VIRIDARIUM_INFIXUS_VITIOSUS =
+    "<viridarium>\n"
+    "  <canon dialectus=\"viridarium\" versio=\"1\">\n"
+    "    <elementum nomen=\"arbor\" necesarium=\"verum\"/>\n"
+    "  </canon>\n"
+    "  <arbor/>\n"
+    "</viridarium>\n";
+
+/* praeterlapsus unicitatis: canon dialecti unicitatem super
+ * 'elementum' fert; infixus definitiones binas 'res' legitime
+ * continet (intra= diversa) - subarbor infixi praetermittenda est
+ * ne NOMEN_BIS falso flagret */
+interior constans character* CANON_CAPSAE =
+    "<canon dialectus=\"capsa\" versio=\"1\">\n"
+    "  <elementum nomen=\"capsa\" radix=\"verum\">\n"
+    "    <liberum nomen=\"res\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"res\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"nomen\"/>\n"
+    "  </elementum>\n"
+    "  <unicitas nomen=\"resnomina\" attributum=\"nomen\"\n"
+    "    super=\"res elementum\"/>\n"
+    "</canon>\n";
+
+interior constans character* CAPSA_INFIXO =
+    "<capsa>\n"
+    "  <canon dialectus=\"capsa\" versio=\"1\">\n"
+    "    <elementum nomen=\"capsa\" radix=\"verum\">\n"
+    "      <liberum nomen=\"res\"/>\n"
+    "    </elementum>\n"
+    "    <elementum nomen=\"res\" intra=\"capsa\">\n"
+    "      <attributum nomen=\"nomen\" genus=\"nomen\"/>\n"
+    "    </elementum>\n"
+    "    <elementum nomen=\"res\" intra=\"alia\">\n"
+    "      <attributum nomen=\"nomen\" genus=\"nomen\"/>\n"
+    "    </elementum>\n"
+    "  </canon>\n"
+    "  <res nomen=\"unica\"/>\n"
+    "</capsa>\n";
 
 interior constans character* CATALOGUS_FIXTURA =
     "# commentarium praetermittendum\n"
@@ -337,6 +410,91 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: canon infixus - contractus, non contentum
+     * ======================================================== */
+
+    {
+        StmlResultus  r;
+        StmlNodus*    infixus;
+        Canon*        c_inf;
+        Canon*        capsae;
+        Xar*          vitia;
+        chorda        causa;
+
+        imprimere("\n--- Probans canonem infixum ---\n");
+
+        r = stml_legere(chorda_ex_literis(VIRIDARIUM_INFIXO,
+                                          piscina),
+                        piscina, intern);
+        CREDO_VERUM (r.successus);
+
+        /* inventio: liberum primum elementare */
+        infixus = canon_infixum_invenire(r.elementum_radix);
+        CREDO_NON_NIHIL (infixus);
+
+        /* absens ubi non est */
+        {
+            StmlResultus r2;
+
+            r2 = stml_legere(chorda_ex_literis(HORTUS_SANUS,
+                                               piscina),
+                             piscina, intern);
+            CREDO_NIHIL (canon_infixum_invenire(r2.elementum_radix));
+
+            /* positio ipsa regula: <canon> SECUNDUM = contentum */
+            r2 = stml_legere(chorda_ex_literis(
+                "<v><res/><canon/></v>", piscina), piscina, intern);
+            CREDO_NIHIL (canon_infixum_invenire(r2.elementum_radix));
+        }
+
+        /* canon_ex_nodo: struere ex subarbore parsata */
+        c_inf = canon_ex_nodo(infixus, piscina, intern, &causa);
+        CREDO_NON_NIHIL (c_inf);
+        CREDO_CHORDA_AEQUALIS_LITERIS (*c_inf->dialectus,
+                                       "viridarium");
+
+        /* ex nodo non-canonico: NIHIL et causa */
+        CREDO_NIHIL (canon_ex_nodo(r.elementum_radix, piscina,
+                                   intern, &causa));
+        CREDO_CHORDA_NON_VACUA (causa);
+
+        /* contentum contra infixum sanum: liberum <canon> pro
+         * liberis/licentia INVISIBILE esse debet (minimum arboris
+         * nihilominus impletur, nullum LIBERUM_ILLICITUM) */
+        vitia = canon_iudicare(c_inf, r.radix, piscina);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* contentum peccans contra infixum */
+        {
+            StmlResultus r3;
+            Canon*       c3;
+
+            r3 = stml_legere(chorda_ex_literis(
+                VIRIDARIUM_INFIXO_PECCANS, piscina),
+                piscina, intern);
+            CREDO_VERUM (r3.successus);
+            c3 = canon_ex_nodo(
+                canon_infixum_invenire(r3.elementum_radix),
+                piscina, intern, &causa);
+            CREDO_NON_NIHIL (c3);
+            vitia = canon_iudicare(c3, r3.radix, piscina);
+            CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+            CREDO_AEQUALIS_I32 (quot_generis(vitia,
+                CANON_ATTRIBUTUM_DEEST), I);
+        }
+
+        /* unicitas: subarbor infixi praetermittenda - definitiones
+         * binae 'res' (intra= diversa) NOMEN_BIS non sunt */
+        capsae = canon_ex_literis(CANON_CAPSAE, piscina, intern);
+        CREDO_NON_NIHIL (capsae);
+        vitia = iudicare_literis(capsae, CAPSA_INFIXO,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+    }
+
+
+    /* ========================================================
      * PROBARE: registrum - clavis extensionis et clavis radicis
      * ======================================================== */
 
@@ -422,6 +580,25 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
             CREDO_AEQUALIS_I32 (quot_generis(vitia,
                 CANON_ATTRIBUTUM_IGNOTUM), I);
+
+            /* infixus vitiosus contra canonem canonum VERUM:
+             * debilitatio contractus proprii CLAMAT (ambo
+             * iudicant - via 'schemaLocation' XSD clausa) */
+            {
+                StmlResultus r4;
+                StmlNodus*   inf4;
+
+                r4 = stml_legere(chorda_ex_literis(
+                    VIRIDARIUM_INFIXUS_VITIOSUS, piscina),
+                    piscina, intern);
+                CREDO_VERUM (r4.successus);
+                inf4 = canon_infixum_invenire(r4.elementum_radix);
+                CREDO_NON_NIHIL (inf4);
+                vitia = canon_iudicare(canon_ipse, inf4, piscina);
+                CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+                CREDO_AEQUALIS_I32 (quot_generis(vitia,
+                    CANON_ATTRIBUTUM_IGNOTUM), I);
+            }
         }
     }
 

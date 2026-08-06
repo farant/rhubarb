@@ -37,6 +37,22 @@
  * Ea vocantis sunt. Canon fundamentum praestat, non sapientiam;
  * lingua expressionum hic NON invenitur, quia illa via schemata
  * in linguas programmandi vertit (XSD testis).
+ *
+ * CANON INFIXUS (2026-08-06): documentum canonem proprium ut
+ * LIBERUM PRIMUM radicis ferre potest - <radix><canon>...</canon>
+ * contentum...</radix>. Mos subsidii interni DTD, sine entitatibus
+ * (unde DTD periit). Nomen 'canon' ut liberum primum radicis ideo
+ * RESERVATUM est per dialectos omnes: iudex id semper contractum
+ * legit, numquam contentum - liberum 'canon' ALIBI positum
+ * vocabularium dialecti ordinarium manet.
+ *
+ * PRAECEDENTIA: AMBO IUDICANT (decretum Fran 2026-08-06). Canon
+ * registri = pavimentum domus, quod documentum deponere non potest;
+ * canon infixus addere solum potest. Unde documentum contractum
+ * suum clam debilitare nequit (vitium 'schemaLocation' XSD -
+ * documentum de schemate suo mentiens). Infixus ipse contra
+ * canonem canonum (canon.canon) iudicatur: infixus fractus
+ * clamat, non tacite iners fit.
  * ================================================== */
 
 /* ==================================================
@@ -104,6 +120,22 @@ canon_legere(
     Piscina*             piscina,
     InternamentumChorda* intern,
     chorda*              causa);
+
+/* Canonem ex elemento <canon> IAM PARSATO struere - via infixi
+ * (subtree in documento vivente). canon_legere = parsare + hoc. */
+Canon*
+canon_ex_nodo(
+    StmlNodus*           elementum,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    chorda*              causa);
+
+/* Canonem infixum invenire: liberum PRIMUM elementare radicis,
+ * si titulo 'canon' - aliter NIHIL. Positio ipsa regula est:
+ * <canon> serior in documento contentum est, non contractus. */
+StmlNodus*
+canon_infixum_invenire(
+    StmlNodus* elementum_radix);
 
 /* ==================================================
  * Iudicium

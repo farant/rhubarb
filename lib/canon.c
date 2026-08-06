@@ -313,6 +313,40 @@ elementum_quaerere(
     redde (CanonElementum*)valor;
 }
 
+StmlNodus*
+canon_infixum_invenire(
+    StmlNodus* elementum_radix)
+{
+    i32 numerus;
+    i32 i;
+
+    si (!elementum_radix ||
+        elementum_radix->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde NIHIL;
+    }
+
+    numerus = stml_numerus_liberorum(elementum_radix);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+
+        l = stml_liberum_ad_indicem(elementum_radix, i);
+        si (!l || l->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;   /* textus albus et commentaria non numerant */
+        }
+        si (l->titulus &&
+            chorda_aequalis_literis(*l->titulus, "canon"))
+        {
+            redde l;
+        }
+        redde NIHIL;   /* liberum elementare PRIMUM solum */
+    }
+
+    redde NIHIL;
+}
+
 /* ==================================================
  * Lectio canonis
  * ================================================== */
@@ -324,16 +358,7 @@ canon_legere(
     InternamentumChorda*  intern,
     chorda*               causa)
 {
-    StmlResultus  r;
-    Canon*        c;
-    i32           numerus;
-    i32           i;
-
-    si (causa)
-    {
-        causa->datum   = NIHIL;
-        causa->mensura = ZEPHYRUM;
-    }
+    StmlResultus r;
 
     r = stml_legere(fons, piscina, intern);
     si (!r.successus || !r.elementum_radix)
@@ -345,8 +370,31 @@ canon_legere(
         }
         redde NIHIL;
     }
-    si (!chorda_aequalis_literis(*r.elementum_radix->titulus,
-                                 "canon"))
+
+    redde canon_ex_nodo(r.elementum_radix, piscina, intern, causa);
+}
+
+Canon*
+canon_ex_nodo(
+    StmlNodus*            elementum,
+    Piscina*              piscina,
+    InternamentumChorda*  intern,
+    chorda*               causa)
+{
+    Canon*  c;
+    i32     numerus;
+    i32     i;
+
+    si (causa)
+    {
+        causa->datum   = NIHIL;
+        causa->mensura = ZEPHYRUM;
+    }
+
+    si (!elementum ||
+        elementum->genus != STML_NODUS_ELEMENTUM ||
+        !elementum->titulus ||
+        !chorda_aequalis_literis(*elementum->titulus, "canon"))
     {
         si (causa)
         {
@@ -359,21 +407,19 @@ canon_legere(
     c = (Canon*)piscina_allocare(piscina, magnitudo(Canon));
     c->piscina    = piscina;
     c->intern     = intern;
-    c->dialectus  = stml_attributum_capere(r.elementum_radix,
-                                           "dialectus");
-    c->versio     = stml_attributum_capere(r.elementum_radix,
-                                           "versio");
+    c->dialectus  = stml_attributum_capere(elementum, "dialectus");
+    c->versio     = stml_attributum_capere(elementum, "versio");
     c->elementa   = tabula_dispersa_creare_chorda(piscina, LXIV);
     c->unicitates = xar_creare(piscina, (i32)magnitudo(CanonUnicitas*));
     c->radix      = NIHIL;
 
-    numerus = stml_numerus_liberorum(r.elementum_radix);
+    numerus = stml_numerus_liberorum(elementum);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* n;
         chorda*    titulus;
 
-        n = stml_liberum_ad_indicem(r.elementum_radix, i);
+        n = stml_liberum_ad_indicem(elementum, i);
         si (!n || n->genus != STML_NODUS_ELEMENTUM)
         {
             perge;
@@ -569,12 +615,23 @@ nodum_iudicare(
     Piscina*    piscina)
 {
     CanonElementum* e;
+    StmlNodus*      infixus;
     i32             numerus;
     i32             i;
 
     si (!n || n->genus != STML_NODUS_ELEMENTUM || !n->titulus)
     {
         redde;
+    }
+
+    /* canon infixus (liberum primum radicis) contractus est, non
+     * contentum: pro liberis, licentia, textu INVISIBILIS - alibi
+     * eum canon_examen contra canonem canonum iudicat. Radix =
+     * elementum sine parente elementari. */
+    infixus = NIHIL;
+    si (!n->parens || n->parens->genus != STML_NODUS_ELEMENTUM)
+    {
+        infixus = canon_infixum_invenire(n);
     }
 
     e = elementum_quaerere(c, n);
@@ -651,7 +708,8 @@ nodum_iudicare(
             StmlNodus* l;
 
             l = stml_liberum_ad_indicem(n, j);
-            si (l && l->genus == STML_NODUS_ELEMENTUM &&
+            si (l && l != infixus &&
+                l->genus == STML_NODUS_ELEMENTUM &&
                 chorda_aequalis(*l->titulus, *lb->titulus))
             {
                 computa++;
@@ -677,7 +735,7 @@ nodum_iudicare(
         i32        j;
 
         l = stml_liberum_ad_indicem(n, i);
-        si (!l)
+        si (!l || l == infixus)
         {
             perge;
         }
@@ -777,13 +835,16 @@ canon_iudicare(
 
     nodum_iudicare(canon, elementum_radix, vitia, piscina);
 
-    /* ---- unicitates ---- */
+    /* ---- unicitates (subarbore infixi praetermissa) ---- */
     per (i = ZEPHYRUM; i < xar_numerus(canon->unicitates); i++)
     {
         CanonUnicitas*  u;
         TabulaDispersa* visa;
         Xar*            acervus;
+        StmlNodus*      infixus;
         i32             j;
+
+        infixus = canon_infixum_invenire(elementum_radix);
 
         u = *(CanonUnicitas**)xar_obtinere(canon->unicitates, i);
         si (!u->attributum)
@@ -814,7 +875,8 @@ canon_iudicare(
                 StmlNodus*  l;
 
                 l = stml_liberum_ad_indicem(n, k);
-                si (!l || l->genus != STML_NODUS_ELEMENTUM)
+                si (!l || l == infixus ||
+                    l->genus != STML_NODUS_ELEMENTUM)
                 {
                     perge;
                 }

@@ -10,7 +10,13 @@
 # grammatica (4), aedilis (2), quaestiones (1). Una sola custodem
 # habebat; hoc ceteris fundamentum dat.
 # Linea absens = dialectus nondum descriptus, NON dialectus sanus.
+#
+# '.canon -> canon.canon' est CADENS pro radice falso scripta:
+# plagula .canon cum radice '<canonn>' per radicem nihil invenit,
+# per extensionem canon.canon invenit -> RADIX_MALA vitium proprium
+# pro praetermissione tacita.
 
 .genera	natura/natura.canon
 <aedilis>	aedilis.canon
 <canon>	canon.canon
+.canon	canon.canon
