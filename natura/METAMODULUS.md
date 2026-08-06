@@ -549,7 +549,7 @@ exits 1. Exit 2 means NOTHING RAN — never read it as health.
 
 | # | Rule | Status |
 |---|---|---|
-| 1 | Every file is well-formed XML | [E] (`xmllint`) |
+| 1 | Every file is **well-formed STML** | [E] (`bin/natura_examen`) |
 | 2 | `relatio`/`relatum` `ad=` resolves to a genus or dictionary entry in the named model, unless `externum` or `ad="*"` | [E] |
 | 3 | `proprietas` with `modulus=` resolves in that model — to a genus [E]; to a *dictionary entry* it resolves but MONITA (see below) |
 | 4 | `genus` with `sub=` + `modulus=` resolves cross-model | [E] |
@@ -572,6 +572,29 @@ exits 1. Exit 2 means NOTHING RAN — never read it as health.
 Rules 9–13 are the Cyc-consistency defense: they are what makes a
 hand-written library stay coherent past the point where one mind
 holds it.
+
+**Rule 1 is STML, not XML** (Fran's ruling, 2026-08-06). It said
+"well-formed XML, enforced by xmllint" — and that was **false**:
+`natura_visus.sh` used xmllint only as an XPath engine with
+`2>/dev/null`, so a malformed file yielded empty strings everywhere,
+contributed no genera, and reported `VULNERA 0`. It was *counted*
+in `exemplaria`, which made it look processed. Nothing enforced
+rule 1 at all.
+
+The authority is now `bin/natura_examen` — the STML parser itself,
+which rejects tag mismatch, unclosed tags, close-without-open,
+unterminated quotes and unterminated comments (measured against a
+malformed-input battery). STML is a deliberate *superset* of XML,
+so boolean attributes, `</>`, raw tags and fragments are legal here.
+
+**Transitional, until xmllint leaves `natura_visus.sh`:** that tool
+still queries via XPath, so a file that is valid STML but invalid
+XML would break it — silently, in the same way. `visus` therefore
+also asserts xmllint can still read each file and **refuses loudly**
+if not. That guard is temporary and is deleted when the XPath call
+sites (48 of them) move to `lib/selectio.c`. Until then the working
+rule is: STML is the contract, XML-compatibility is a constraint of
+one tool, and their disagreement is never silent.
 
 **Rule 3's second case — a property typed by a dictionary entry.**
 `editio.index_isbn` is typed `genus="isbn"`, and `isbn` is a

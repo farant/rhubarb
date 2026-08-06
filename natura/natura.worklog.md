@@ -4879,3 +4879,62 @@ probatio_natura: 62 assertiones, omnes praetereunt.
 MEASURED after: 33 exemplaria / 177 genera / 384 res / 0 vulnera
 sub UTROQUE instrumento; differentia apparatus adhuc 1286 = 1286,
 ZERO lineae; probatio_natura 62/62.
+
+## 2026-08-06 — round 62: gradus 0 — visus rogat, non duplicat
+
+325. REGULA I ERAT MENDACIUM SCRIPTUM. METAMODULUS §8 dicebat
+     "well-formed XML — [E] (xmllint)". Nihil eam cogebat.
+     `natura_visus.sh` xmllint ut MACHINAM XPATH solam adhibebat,
+     cum `2>/dev/null`, unde plagula malformata chordas vacuas
+     ubique reddebat: genera eius evanescebant, VULNERA nulla
+     nuntiabantur, exitus ZEPHYRUM erat. Peius quam non probare -
+     plagula in 'exemplaria' NUMERABATUR (34), ergo processa
+     videbatur dum nihil ex ea legeretur.
+     Genus idem quod hodie ter iam inventum est: **porta quae
+     'nihil mali' et 'nihil factum' discernere non potest.**
+
+326. CONTRACTUS MUTATUS: regula I iam STML BENE FORMATUM poscit,
+     non XML (Fran, hodie). Mensuratum prius quam mutatum -
+     stml.c iam REICIT quod refert: tag male clausum, tag non
+     clausum ad finem, radicem non clausam, clausuram sine
+     apertura, quotam non clausam, commentum non clausum. Id est
+     tota classis quae documentum vere corrumpit.
+     Differentia vera contra xmllint SEX casus est (attributum
+     sine quotis, attributum duplicatum, radices duae, textus
+     ante radicem, ens ignotum, tag vacuum), quorum QUATTUOR
+     ambulationem arboris post-parsationem solam poscunt - arbor
+     iam exstat. GLR NIHIL ad rem: GLR grammaticis AMBIGUIS
+     servit (C typedef contra identificatorem), STML ambigua non
+     est.
+
+327. GRADUS 0 = VISUS ROGAT, IUDICIUM NON DUPLICAT. Auctoritas
+     regulae I est bin/natura_examen; visus eum vocat et sistit
+     si quid parsari nequit. Nulla altera implementatio regulae I
+     nascitur - una res, una sedes. SOLA regula I obstat: cetera
+     vulnera analysin visus non corrumpunt, ergo eum non morantur.
+
+328. TRES PORTAE, non una, quia tres modi TACENDI erant:
+       porta ABSENS  -> exitus II (non ZEPHYRUM: instrumentum
+                        quod numquam cucurrit successus non est)
+       porta STALA   -> exitus II (lectio legati: binarium stalum
+                        idem mentitur ac binarium absens; lib/
+                        natura.c aut include/natura.h aut
+                        tools/natura_examen.c recentior = sisto)
+       parsatio      -> exitus I, plagula et regula NOMINATAE
+     Porta stala se statim probavit: primo cursu flagravit, quia
+     lib/natura.c horam ante tacta erat dum uncos probaremus.
+
+329. GUARD TRANSITORIUS, et cur necessarius est. Contractu ad STML
+     mutato, `<proprietas multiplex/>` (attributum booleanum) iam
+     LICET - sed visus adhuc per xmllint interrogat, ergo talis
+     plagula eum frangeret EODEM MODO TACITO quem modo clausimus.
+     Ergo visus insuper asserit xmllint plagulam adhuc legere
+     posse, et RECUSAT CLARE si non. Probatum utroque modo:
+     onerator eam ACCIPIT (recte - STML valet), visus RECUSAT
+     (recte - instrumentum eius non valet).
+     Lex: contractus et instrumentum dissentire possunt; dissensus
+     TACERE non potest. Guard delendus cum gradu II (XLVIII sedes
+     xp() ad lib/selectio.c migrantes).
+
+MEASURED: 33 exemplaria / 177 genera / 384 res / 0 vulnera; portae
+IV probatae (sana, malformata, STML-non-XML, porta absens).

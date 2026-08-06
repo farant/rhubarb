@@ -37,6 +37,59 @@ RESGEN="$TMP/resgen.txt"              # mod|genus|res
 xp() { xmllint --xpath "$2" "$1" 2>/dev/null; }
 num() { printf '%.0f' "${1:-0}" 2>/dev/null || printf '0'; }
 
+# ================= PORTA PARSATIONIS (gradus 0) =================
+# CUR: plagula quae parsari nequit hoc instrumentum TACITE
+# corrumpit. xp() errores in /dev/null mittit, ergo plagula fracta
+# chordas vacuas ubique reddit: genera eius evanescunt, VULNERA
+# nulla nuntiantur, exitus ZEPHYRUM est - et 'exemplaria' eam tamen
+# NUMERAT, unde processa videtur. MENSURATUM 2026-08-06: plagula
+# vere malformata per visum transiit cum 'VULNERA 0'.
+#
+# Iudicium NON duplicatur: auctoritas contractus est
+# bin/natura_examen (onerator ipse), quem visus ROGAT. Una res, una
+# sedes. Sola regula I hic obstat - cetera vulnera analysin visus
+# non corrumpunt, ergo eum non morantur.
+
+PORTA=bin/natura_examen
+
+if [ ! -x "$PORTA" ]; then
+    echo "natura_visus: $PORTA ABEST - porta parsationis TACET." >&2
+    echo "  Strue: ./tools/natura_struere.sh" >&2
+    exit 2
+fi
+
+# porta STALA idem mentitur ac porta absens (lectio legati)
+for _f in lib/natura.c include/natura.h tools/natura_examen.c; do
+    if [ "$_f" -nt "$PORTA" ]; then
+        echo "natura_visus: $PORTA STALUS est ($_f recentior)." >&2
+        echo "  Strue: ./tools/natura_struere.sh" >&2
+        exit 2
+    fi
+done
+
+_fracta=$("$PORTA" -machina 2>/dev/null | awk -F'\t' '$1=="VULNUS" && $2==1')
+if [ -n "$_fracta" ]; then
+    echo "natura_visus: PARSATIO FRACTA - analysis fieri NEQUIT" >&2
+    printf '%s\n' "$_fracta" | sed 's/^/  /' >&2
+    exit 1
+fi
+
+# GUARD TRANSITORIUS - delendus cum gradu II (xmllint remoto).
+# Contractus regulae I iam STML BENE FORMATUM est (Fran,
+# 2026-08-06), non XML. Sed HOC instrumentum adhuc per xmllint
+# interrogat, ergo plagula STML-valida-sed-XML-invalida (attributum
+# booleanum, clausura </>, tag crudus) visum frangeret eodem modo
+# TACITO quem porta supra claudit. Dum xmllint manet, dissensus
+# LOQUI debet.
+for _f in natura/*.genera; do
+    if ! xmllint --noout "$_f" 2>/dev/null; then
+        echo "natura_visus: '$_f' STML valet sed XML NON - et hoc" >&2
+        echo "  instrumentum adhuc xmllint adhibet (gradus II id tollet)." >&2
+        xmllint --noout "$_f" 2>&1 | sed 's/^/  /' >&2
+        exit 1
+    fi
+done
+
 MODULI=""
 
 for f in natura/*.genera; do
