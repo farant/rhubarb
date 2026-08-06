@@ -583,6 +583,19 @@ Rules 9–13 are the Cyc-consistency defense: they are what makes a
 hand-written library stay coherent past the point where one mind
 holds it.
 
+**`natura/natura.canon` now states §3/§4 declaratively** (2026-08-06) —
+the closed vocabulary, child cardinality, attribute datatypes and rule
+15's uniqueness, checked by `bin/canon_examen` and shared with the
+house's other STML dialects. It is a general *schema* layer and stops
+where schemas stop: it cannot express rules 9–13, because those need
+the inheritance graph BUILT, not merely described.
+
+**Caution — the vocabulary is currently stated FOUR times**: here as
+prose, in `lib/natura.c`, in `tools/natura_visus.sh`, and in the canon.
+They agree today (verified), but nothing enforces that. The canon only
+starts paying when the others are deleted and this section is generated
+from it; until then it is a second opinion, not a single source.
+
 **Rule 1 is STML, not XML** (Fran's ruling, 2026-08-06). It said
 "well-formed XML, enforced by xmllint" — and that was **false**:
 `natura_visus.sh` used xmllint only as an XPath engine with
