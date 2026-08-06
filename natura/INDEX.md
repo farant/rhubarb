@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **33** · genera **163** · res dictionarii **356** · arcus **488**
+Exemplaria **33** · genera **166** · res dictionarii **360** · arcus **496**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -177,7 +177,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **classis_normativa** ⚙ — Categoria a norma constituta in quam res assignantur, cui consequentiae (obligationes, prohibitiones, procedurae) ADHA
 - **fictio_iuris** — Praeceptum quo lex rem aliter se habentem TAMQUAM ALITER tractari iubet, sciens ita non esse, propter bonum quod alite
 
-### obligatio (v5, genera 7)
+### obligatio (v6, genera 10)
 
 - **obligatio** ⚙ — Iuris vinculum quo quis alicui aliquid praestare adstringitur (Institutiones): non res sed VINCULUM inter personas - d
 - **contractus** — Conventio duorum (aut plurium) quae obligationes parit: consensus est fundamentum - ideo utrumque ligat, et neuter sol
@@ -186,6 +186,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **titulus** — Attestatio publica et permanens ab auctoritate data, quod aliquis aliquid consecutus est aut aliquid EST: non permissi
 - **iussum** ⚙ — Directivum ab eo qui potestatem habet latum, quod agendum quid, a quo, et intra quod tempus determinat, et quod ACTU L
 - **petitio** ⚙ — Rogatio ad alium directa ut aliquid faciat aut praestet, quam ille CONCEDERE AUT NEGARE potest sine ulla violatione: q
+- **delegatio** ⚙ — Potestas alterius nomine agendi, ita ut acta delegati delegantem OBLIGENT tamquam ipse egisset: non licentia agendi se
+- **tractatus** ⊂ contractus ⚙ — Conventio inter eos qui superiorem non habent: nullum tribunal supra partes est, unde consensus non semel datur sed BI
+- **limitatio** — Declaratio unilateralis qua pars, tractatum accipiens, effectum quorundam articulorum in se excludit aut mutat: consen
 
 ### operatio (v1, genera 4)
 
@@ -327,6 +330,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | corpus_normans | organizatio |
 | damnum | corporalia |
 | debitum_technicum | fabricatio |
+| delegatio | obligatio |
 | depravatio | fabricatio |
 | directorium | plagula_computatralis |
 | distributio_systematis | systema_operativum |
@@ -363,6 +367,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | lectio | elementa_programmatis |
 | lex | norma |
 | licentia | obligatio |
+| limitatio | obligatio |
 | lingua_iussuum | lingua_programmandi |
 | lingua_programmandi | lingua_programmandi |
 | locus | locus |
@@ -440,6 +445,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | tessera_negotiabilis | commercium |
 | tessera_simplex | commercium |
 | titulus | obligatio |
+| tractatus | obligatio |
 | tributum | obligatio |
 | unitas_mensurae | mensura |
 | vehiculum | vectura |
@@ -518,10 +524,12 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `norma.lex` — consuetudo, lex_aeterna, lex_divina_positiva, lex_humana, lex_naturalis
 - `norma.norma` — :iso_9899_1990, :iso_9899_1999, :posix_1
 - `obligatio.contractus` — emptio_venditio, locatio_conductio, mandatum, societas_contractus
+- `obligatio.delegatio` — delegatio_canonica, plena_potestas, procuratio
 - `obligatio.iussum` — iussum_emptionis, iussum_ne_resuscitetur, iussum_operis, mandatum_iudicis, praescriptio_medica
 - `obligatio.obligatio` — obligatio_ex_contractu, obligatio_ex_delicto, obligatio_ex_lege
 - `obligatio.petitio` — petitio_assecurationis, petitio_remota, supplicatio
 - `obligatio.titulus` — character_indelebilis, gradus_academicus, titulus_honoris
+- `obligatio.tractatus` — :tractatus_gandavensis
 - `obligatio.tributum` — decuma, portorium, tributum_capitis, vectigal
 - `operatio.ambitus` — ambitus_fabricae, ambitus_probationis, ambitus_producens
 - `opus_scriptum.editio` — :moby_dick_londinensis_1851, :moby_dick_novi_eboraci_1851, :systema_naturae_editio_decima

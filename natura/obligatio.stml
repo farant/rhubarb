@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/obligatio.stml
-  Exemplar semanticum: OBLIGATIO (versio 5, PLASTICUM)
+  Exemplar semanticum: OBLIGATIO (versio 6, PLASTICUM)
   Genera: obligatio, contractus, licentia.
 
   Natum ex experimento pistrinae (ratio caffeae, conductio
@@ -20,7 +20,15 @@
   datur, revocari potest, expirat. Non idem genus - quod
   schemata vulgaria confundunt.
 -->
-<natura modulus="obligatio" versio="5" lingua="latina">
+<natura modulus="obligatio" versio="6" lingua="latina">
+
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: ius Romanum, ius gentium,
+    ius agentiae. NON VERIFICATUM.
+  </fons>
+</fontes>
 
 <!-- ==================================================
      OBLIGATIO - vinculum iuris
@@ -718,6 +726,329 @@
       habet. Eadem duo capita, ordine converso.
     </nota>
   </species>
+
+</genus>
+
+
+<!-- ==================================================
+     DELEGATIO - potestas alterius nomine agendi
+
+     Cursu undecimo (diplomatia ante telegraphum) inventa, et
+     QUATTUOR dominiis simul postulata: plena potestas legati,
+     procuratio, facultas canonica, tessera potestatis
+     computatralis. Bibliotheca licentiam habebat (quid TIBI
+     liceat) et officium (munus stabile) et titulum (quid SIS),
+     et nihil pro potestate qua acta TUA ALIUM obligant.
+
+     IUXTA LICENTIAM POSITA quia contrarium eius acutissimum
+     est: licentia te agere sinit pro te; delegatio acta tua
+     ALTERIUS facit.
+     ================================================== -->
+
+<genus nomen="delegatio">
+
+  <definitio>
+    Potestas alterius nomine agendi, ita ut acta delegati
+    delegantem OBLIGENT tamquam ipse egisset: non licentia
+    agendi sed transfusio auctoritatis, intra fines statutos.
+  </definitio>
+
+  <differentia>
+    A licentia PERSONA OBLIGATA: licentia te agere sinit, et
+    acta tua tua manent; delegatio acta tua ALIENA facit. Ab
+    officio MOBILITATE: officium stabiliter constitutum est et
+    tenentem suum non respicit (vacat, manet); delegatio
+    personae huic datur et morte, revocatione, tempore perit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="ambitus" genus="textus"
+      nota="quid obligari possit. EXTRA AMBITUM ACTUM NEMINEM
+            OBLIGAT - unde ratio cur pars altera plenam
+            potestatem EXHIBERI poscat antequam negotietur:
+            qui potestatem non inspexit periculum suum agit"/>
+    <proprietas nomen="subdelegabilis" genus="veritas"
+      ordinarius="falsum"
+      nota="an delegatus alium substituere possit. Ordinarie
+            NON (delegata potestas non delegatur), quod catenas
+            breves servat - et regula contraria, ubi admittitur,
+            catenam facit cuius fides quantum infimum anulum
+            valet"/>
+    <proprietas nomen="revocabilis" genus="veritas"
+      ordinarius="verum"/>
+    <proprietas nomen="effectus_post_revocationem" genus="electio"
+      nota="CAPUT REI, et hic dominium vetus rem novam docet.
+            Delegans mense Martio revocat; delegatus mense Maio,
+            nihil sciens, signat. Obligaturne delegans? Ius
+            agentiae dicit PLERUMQUE ITA - qui bona fide credidit
+            tuendus est, et damnum in delegantem cadit qui
+            nuntiare debuit. Id est 'auctoritas apparens', et
+            IDEM PRORSUS est quod attestatio de revocatione dicit
+            ('revocatio nuntianda est ne frustra sit'): credentia
+            revocata quae non propagata est adhuc valet apud eum
+            qui nescit. Saecula doctrinae de eo quis damnum
+            ferat, quod ars computatralis vix incohavit">
+      <optio>nullus</optio>
+      <optio>obligat_donec_nuntietur</optio>
+    </proprietas>
+    <proprietas nomen="durat_usque" genus="dies"/>
+  </proprietates>
+
+  <machina_statuum nomen="vigor" gerens="individuum">
+    <status nomen="data"/>
+    <status nomen="exercita" nota="semel aut pluries adhibita"/>
+    <status nomen="revocata"/>
+    <status nomen="elapsa"/>
+    <status nomen="extincta"
+      nota="morte aut incapacitate delegantis - modus finiendi
+            quem nulla nuntiatio praevenit, unde periculum
+            proprium: delegatus vivum se credit agere pro
+            mortuo"/>
+    <transitus a="data" ad="exercita" per="exercitium"/>
+    <transitus a="exercita" ad="exercita" per="exercitium"/>
+    <transitus a="data" ad="revocata" per="revocatio"/>
+    <transitus a="exercita" ad="revocata" per="revocatio"/>
+    <transitus a="data" ad="elapsa" per="lapsus_temporis"/>
+    <transitus a="data" ad="extincta" per="mors_delegantis"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="delegans" ad="*"/>
+    <relatio nomen="delegatus" ad="*"/>
+    <relatio nomen="probatur_per" ad="attestatio" modulus="acta"
+      nota="charta qua potestas exhibetur (litterae plenae
+            potestatis, instrumentum procurationis). CHARTA
+            POTESTAS NON EST: potestas revocari potest charta
+            intacta manente - unde omnia problemata"/>
+    <relatio nomen="obligat_per" ad="actus_sollemnis" modulus="actus"
+      multiplex="verum"
+      nota="actus quos delegatus nomine alieno ponit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="plena_potestas">
+    <definitio>
+      Potestas legato data ut tractatum nomine principis
+      concludat: exhibenda alteri parti ante negotiationem,
+      et ambitu suo circumscripta.
+    </definitio>
+    <valor nomen="subdelegabilis">falsum</valor>
+    <nota>
+      Species quae RATIFICATIONEM explicat: princeps plenam
+      potestatem dat et tamen ratificationem sibi servat -
+      delegatio ergo hic non plena est sed ad SIGNANDUM
+      solum. Duo gradus consulto, ne latentia mensium principem
+      ligaret sine ultima inspectione.
+    </nota>
+  </species>
+
+  <species nomen="procuratio">
+    <definitio>
+      Potestas negotia alterius gerendi, instrumento publico
+      plerumque data: emere, vendere, agere in iudicio.
+    </definitio>
+    <valor nomen="effectus_post_revocationem">obligat_donec_nuntietur</valor>
+    <nota>
+      Species in qua 'extincta' periculum maximum fert:
+      procuratio ordinaria morte mandantis perit ipso facto, et
+      tertius qui nescit tutus non semper est - unde procuratio
+      'durabilis' inventa, quae incapacitatem superstat. Casus
+      purus rei quae in systemate distributo 'sessio orphana'
+      vocaretur.
+    </nota>
+  </species>
+
+  <species nomen="delegatio_canonica">
+    <definitio>
+      Facultas ab ordinario data ut alius potestatem quae ipsi
+      competit exerceat: absolvendi, assistendi matrimonio,
+      confirmandi.
+    </definitio>
+    <nota>
+      Species cuius defectus actum IRRITUM facit, non illicitum
+      solum: qui sine delegatione matrimonio assistit
+      matrimonium non facit. Nexus cum actus_sollemnis
+      (capacitas agentis) hic strictissimus.
+    </nota>
+  </species>
+
+</genus>
+
+<!-- ==================================================
+     TRACTATUS - conventio inter summas potestates
+
+     Structura DUARUM PHASIUM hic non metaphora est sed ius:
+     signatio textum figit et NEMINEM obligat; ratificatio
+     obligat. Inter ea status verus iacet cum lege propria
+     (signatarius obiectum tractatus frustrari non debet) -
+     transactio parata quae claustra sua tenet.
+     ================================================== -->
+
+<genus nomen="tractatus" sub="contractus">
+
+  <differentia>
+    Conventio inter eos qui superiorem non habent: nullum
+    tribunal supra partes est, unde consensus non semel datur
+    sed BIS - a legato signante, a principe ratificante - et
+    exsecutio ex fide et reciprocitate pendet, non ex coactione.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="multilateralis" genus="veritas"
+      ordinarius="falsum"
+      nota="duae partes an plures. Multilateralis omnia
+            complicat: accessio postea fieri potest, limitationes
+            reticulum obligationum pariunt, et vis ex numero
+            ratificantium pendet"/>
+    <proprietas nomen="numerus_ad_vigorem" genus="numerus"
+      nota="quot ratificationes vim pariant - vide actus.quorum,
+            cuius hoc species est"/>
+  </proprietates>
+
+  <machina_statuum nomen="vigor" gerens="individuum">
+    <status nomen="negotiatus"/>
+    <status nomen="signatus"
+      nota="PHASIS PRIMA (paratus): textus fixus, nemo obligatus.
+            NON NIHIL TAMEN - signatarius obiectum et finem
+            tractatus frustrare non debet dum ratificatio pendet.
+            Status verus cum lege propria, quem schema binarium
+            (est/non est) omnino perdit"/>
+    <status nomen="ratificatus" nota="a parte, nondum in vigore"/>
+    <status nomen="vigens"
+      nota="PHASIS SECUNDA PERFECTA: numero ratificationum
+            impleto"/>
+    <status nomen="suspensus"/>
+    <status nomen="terminatus"/>
+    <status nomen="abortus"
+      nota="ratificatione NEGATA: signatio in nihilum abit.
+            Exitus legitimus, non defectus - princeps ratificare
+            non tenetur, et id est cur duae phases exsistant"/>
+    <transitus a="negotiatus" ad="signatus" per="signari"/>
+    <transitus a="signatus" ad="ratificatus" per="ratificari"/>
+    <transitus a="signatus" ad="abortus" per="negari"/>
+    <transitus a="ratificatus" ad="vigens" per="vigere"/>
+    <transitus a="vigens" ad="suspensus" per="suspendi"/>
+    <transitus a="vigens" ad="terminatus" per="denuntiari"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="signari"/>
+    <actio nomen="ratificari"/>
+    <actio nomen="negari"/>
+    <actio nomen="vigere"/>
+    <actio nomen="accedere" nota="ab eo qui non signavit"/>
+    <actio nomen="suspendi"/>
+    <actio nomen="denuntiari" nota="cum praemonitione plerumque"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="depositarius" ad="organizatio"
+      modulus="organizatio"
+      nota="qui textum authenticum et indicem ratificationum,
+            limitationum, accessionum, denuntiationum custodit.
+            ACTA CONSTITUTIVA (vide acta.vis): accedens pars fit
+            cum depositum INSCRIBITUR, non cum mittitur - unde
+            registrum rem facit, non refert"/>
+    <relatio nomen="signatus_per" ad="delegatio" multiplex="verum"
+      nota="plenae potestates quibus signatum est"/>
+    <relatio nomen="limitatus_per" ad="limitatio" multiplex="verum"/>
+    <relatio nomen="ad_vigorem_per" ad="quorum" modulus="actus"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="tractatus_gandavensis" certitudo="opinio"
+    fons="corpus">
+    <definitio>
+      Tractatus quo bellum inter Britanniam et Civitates
+      Foederatas (1812-1815) finitum est, Gandavi confectus.
+    </definitio>
+    <valor nomen="multilateralis">falsum</valor>
+    <historia>
+      <eventum quando="1814-12-24" actio="signari">a legatis
+        Gandavi signatus - textus fixus, nemo obligatus</eventum>
+      <eventum quando="1815-02-17" actio="ratificari">ratificationibus
+        permutatis, bellum vere finitum</eventum>
+    </historia>
+    <nota>
+      INDIVIDUUM QUOD STATUM 'SIGNATUS' DOCET MELIUS QUAM ULLA
+      DEFINITIO: proelium Novae Aureliae die VIII Ianuarii 1815
+      commissum est - post signationem, ante ratificationem, et
+      antequam nuntius Americam attigit. Milia ceciderunt intra
+      fenestram quam structura duarum phasium ipsa creat.
+      Non 'lectio rancida' sola (etsi et ea fuit) sed ACTIO
+      INTRA INTERVALLUM INCERTUM - quod systemata distributa
+      cotidie patiuntur et raro tam caro pretio.
+    </nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     LIMITATIO - consensus partialis
+
+     Nomen electum quia 'reservatio' iam genus est (tempus:
+     capacitas futura alicui servata) et 'exceptio' quoque
+     occupatum - probatio collisionum ante ambulationem hoc
+     ipsum praevenit.
+     ================================================== -->
+
+<genus nomen="limitatio">
+
+  <definitio>
+    Declaratio unilateralis qua pars, tractatum accipiens,
+    effectum quorundam articulorum in se excludit aut mutat:
+    consensus non integer sed circumscriptus.
+  </definitio>
+
+  <differentia>
+    CONSENSUS NON EST BINARIUS, et hoc genus id probat. Sed
+    effectus mirabilior est: limitatio inter limitantem et
+    UNAMQUAMQUE aliam partem seorsum agit, prout illa obiecerit
+    necne. Unde tractatus unus multilateralis in RETICULUM
+    obligationum bilateralium solvitur - una charta, obligationes
+    quot paria sunt. Nulla alia res bibliothecae hanc formam
+    habet.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="articuli" genus="textus"
+      nota="quos articulos tangat"/>
+    <proprietas nomen="modus" genus="electio">
+      <optio>exclusio</optio>
+      <optio>modificatio</optio>
+    </proprietas>
+    <proprietas nomen="compatibilis_cum_fine" genus="veritas"
+      nota="an obiecto et fini tractatus repugnet. LIMES
+            LIMITATIONIS: quae obiectum ipsum evertit non
+            admittitur - aliter pars accipere posset omnia
+            negando. Iudicium, non factum (vide asseritur_per)"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="ad_tractatum" ad="tractatus"/>
+    <relatio nomen="lata_a" ad="*"/>
+    <relatio nomen="obiecta_a" ad="*" multiplex="verum"
+      nota="partes quae obiecerunt. RETICULUM HINC ORITUR:
+            inter limitantem et non-obicientem tractatus
+            limitatus valet; inter limitantem et obicientem
+            articuli tacti inter eos non valent; obiectio
+            gravior totum vinculum inter eos tollere potest.
+            Tres status ex una charta, per paria"/>
+    <relatio nomen="asseritur_per" ad="iudicium" modulus="iudicium"
+      nota="compatibilitas cum fine ASSERITUR, non legitur"/>
+  </relationes>
+
+  <nota>
+    COGNATIO COMPUTATRALIS: negotiatio optionum in protocollis
+    idem facit - duo pares copiam suam offerunt, et colloquium
+    INTERSECTIONE regitur, non norma. Ideo 'norma implementata'
+    parum dicit: quaerendum est quid hic par cum illo pare
+    conveniat. Diplomatia hoc saeculis ante nominavit et
+    doctrinam de limitibus eius (compatibilitas cum fine)
+    elaboravit, quam ars computatralis non habet.
+  </nota>
 
 </genus>
 

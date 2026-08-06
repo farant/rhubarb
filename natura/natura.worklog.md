@@ -4010,3 +4010,112 @@ else.
 
 MEASURED after: 33 exemplaria / 163 genera / 356 res / 488 arcus
 / 0 vulnera / 24 monita / dubia 14 / umbrae 2.
+
+## 2026-08-05 — round fifty-four: diplomacy (coverage loop, run 11)
+
+Chosen deliberately as a CROSS-POLLINATION TEST rather than for
+breadth: a domain that is implicitly a distributed system, aimed
+at the cluster built in run 10, to see whether those genera
+describe the problem or merely the technology.
+
+272. THE PRE-WALK CHECK EARNED ITS PLACE OUTRIGHT: I intended to
+     coin `reservatio` for the treaty-law concept, and it is
+     ALREADY A GENUS — in `tempus`, meaning a booking (capacity
+     held for someone against a future time). `exceptio` was
+     taken too (`commercium`). Both would have been discovered
+     only after the definitio was written and grown attached to.
+     Named `limitatio` instead. This is precisely the failure the
+     run-7 discipline was invented against, arriving on schedule.
+
+273. DELEGATIO built, and it is the round's real find because
+     FOUR domains demanded it at once: diplomatic full powers,
+     the notarial procuratio, canonical faculties, and capability
+     tokens. The library had `licentia` (what YOU may do),
+     `officium` (a standing post) and `titulus` (what you ARE),
+     and nothing for power exercised in ANOTHER'S NAME whose acts
+     bind the principal.
+     PLACED BESIDE LICENTIA because the contrast is the sharpest
+     available: licentia lets you act for yourself and your acts
+     stay yours; delegatio makes your acts ANOTHER'S.
+     AND THE CROSS-POLLINATION IS EXACT. Powers revoked in March;
+     the envoy, hearing nothing, signs in May. Is the sovereign
+     bound? Agency law says generally YES — the counterparty who
+     relied in good faith is protected, and the loss falls on the
+     principal who should have given notice. That is APPARENT
+     AUTHORITY, and it is the same law `attestatio` states as
+     "revocation must be announced or it is futile": a revoked
+     credential that has not propagated still works on whoever
+     has not heard. The old domain has centuries of doctrine on
+     WHO BEARS THE LOSS, which the new one has barely begun.
+     Recorded as `effectus_post_revocationem`.
+     Status `extincta` is the one with no analogue in the new
+     domain and a sharp one in the old: a delegation dies with
+     the principal, and NO NOTIFICATION PRECEDES IT — the agent
+     believes himself to be acting for a living man. Durable
+     powers of attorney exist to defeat exactly that, which is
+     the orphaned-session problem with four centuries of law.
+
+274. TRACTATUS built (sub contractus), and the two-phase
+     structure is NOT a metaphor: signature fixes the text and
+     binds nobody; ratification binds. The interval between is a
+     real legal state carrying a real duty — a signatory must not
+     defeat the treaty's object and purpose while ratification is
+     pending. A prepared transaction holding its locks.
+     `abortus` matters as much: ratification REFUSED is a
+     legitimate outcome, not a fault — and it is the whole reason
+     two phases exist, since months of latency made it intolerable
+     for a sovereign to be bound by an envoy's signature without
+     final inspection. The structure exists BECAUSE of latency,
+     which is why it recurs wherever latency does.
+     And the parent turned out thin again: `contractus` carries
+     initium/finis/partes/parit and NO STATE MACHINE at all —
+     "thin where the domain is thick", now on the genus the child
+     inherits from.
+
+275. THE INDIVIDUUM TEACHES THE STATE BETTER THAN THE DEFINITION.
+     Treaty of Ghent signed 24 Dec 1814; New Orleans fought 8 Jan
+     1815; ratifications exchanged 17 Feb 1815. Thousands died
+     INSIDE THE PREPARED-BUT-NOT-COMMITTED WINDOW — not a stale
+     read merely (though it was that too) but action taken during
+     the interval the two-phase structure itself creates. The
+     cost of the uncommitted window, paid in bodies.
+
+276. LIMITATIO built, and it has a shape nothing else in the
+     library has. A reservation is partial consent — but its
+     effect is PAIRWISE: it operates between the reserving party
+     and each other party separately, according to whether that
+     party objected. One multilateral treaty dissolves into a
+     RETICULUM of bilateral obligations, as many as there are
+     pairs. Three different legal relations can issue from one
+     document.
+     Its computing cousin is option negotiation: two peers offer
+     capability sets and the session is governed by their
+     INTERSECTION, not by the specification — so "implements the
+     standard" says very little. Diplomacy named this centuries
+     earlier AND developed the limit that computing lacks:
+     a reservation incompatible with the object and purpose is
+     not admitted, since otherwise a party could accept
+     everything by denying everything.
+
+277. COMPOSITION WINS: `quorum` took its THIRD domain unchanged
+     (entry into force on the Nth ratification — below it the
+     treaty is not weak but not in force, void rather than
+     wrong, exactly as written); `acta.vis=constitutiva` took its
+     second (you become a party when the deposit is INSCRIBED,
+     not when sent — the register makes the fact); `attestatio`
+     for the depositary's certified copies; `iussum` + `ignotum`
+     for stale instructions.
+     NON-SURFACING RECORDED: instructions stating OBJECTIVES
+     rather than actions, so an envoy out of contact can still
+     act rightly. A remedy, not a kind — but worth the note that
+     a high-latency domain independently invented commander's
+     intent, and that declarative desired-state reconciliation is
+     the same move a third time.
+
+278. Rule 5 fired again: `fons="corpus"` used in a model with no
+     `<fontes>` block. Same gate, third occurrence — and each
+     time the fix is to DECLARE the source rather than delete the
+     honesty.
+
+MEASURED after: 33 exemplaria / 166 genera / 360 res / 496 arcus
+/ 0 vulnera / 24 monita / dubia 14 / umbrae 2.
