@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **32** · genera **157** · res dictionarii **344** · arcus **464**
+Exemplaria **32** · genera **157** · res dictionarii **344** · arcus **465**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -561,8 +561,6 @@ exsistente. Nullum consilium — describi potest quovis momento.
 ## VI. Dubia aperta
 
 - `acta` / **punctum_actorum** — RAMI: haec relatio 'praecedens' seriem simplicem supponit. Acta ramosa (git) puncta plura post idem punctum ferunt, et tunc 'plicatura ad punctum' viam eligere 
-- `cliens` / **servus** — AN CLIENS ET SERVUS GENERA SINT AN MUNERA. Servus procuratorius utrumque simul est; bibliotheca autem iam semel ita iudicavit in re simili - "merx non est genus
-- `commercium` / **tessera** — An tessera sub instrumento (corporalia) collocanda sit? Non convenit: instrumentum usu suo OPERATUR (fornax coquit), tessera nihil operatur sed SIGNIFICAT et iu
 - `elementa_programmatis` / **functio_pura** — An proprietas potius quam sub-genus (puritas="verum")? Argumentum sub-generis: fasciculus licentiarum supra. Fran nondum iudicavit - v0 sub-genus audet. 
 - `elementa_programmatis` / **constans** — 'const' in via accessus (parametrum monstratoris) rem ALIAM dicit: pactum non scribendi per hoc nomen - promissum functionis, non constantia rei. Genus proprium
 - `elementa_programmatis` / **libc** — libc FORMA est quam glibc, musl, msvcrt IMPLEMENTANT - distinctio lingua/implementatio in bibliothecis recurrit. Genus implementatio_bibliothecae nondum natum; 

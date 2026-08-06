@@ -3601,3 +3601,86 @@ stations before they were walked.
 
 MEASURED after: 32 exemplaria / 157 genera / 344 res / 464 arcus
 / 0 vulnera / 24 monita / umbrae 2.
+
+## 2026-08-05 — round fifty: synthesis pass (overlap, dubia, RATIO)
+
+Deliberately between loops: seventeen genera were built this
+session across rounds 43–49, several from a single walk's forcing
+content, and nothing had checked them against each other.
+
+245. THE OVERLAP CHECK NOBODY HAD RUN: four genera about WHAT
+     OUGHT TO HAPPEN, built in four separate rounds and never
+     laid side by side — `postulatum` (what must be TRUE; silent
+     on order and executor), `praescriptum` (HOW, iterated, any
+     competent doer), `consilium` (what ORDER, once, provisional),
+     `iussum` (WHAT, this time, BY AUTHORITY, to a named
+     executor, consumed).
+     RESULT: no overlap. They divide on two clean axes —
+     iterated/once, and authority present/absent — which is a
+     better outcome than it sounds, because four genera coined
+     independently across a month could easily have collided.
+     BUT A MISSING LINK: consilium's own differentia says
+     "consilium quod mutari non potest non consilium est sed
+     VINCULUM" — and that vinculum was built the NEXT round as
+     `iussum`, neither citing the other. Adjacent, mutually
+     defining, discovered a round apart, unconnected. Added
+     `consilium.exsequitur_per → iussum`: a plan proposes and
+     stays provisional; where work must be committed, orders are
+     issued, which add authority and bear obligation. A plan
+     without orders is an exhortation.
+     LESSON: coining genera one at a time is safe for
+     CORRECTNESS and unsafe for CONNECTEDNESS. The gate catches
+     dangling references, never missing ones.
+
+246. TWO DUBIA CLOSED, both by material this session produced
+     without anyone noticing — which is why the sweep was worth
+     running at all.
+     (a) CLIENS/SERVUS — genera or MUNERA? Answer: BOTH, AT
+     DIFFERENT RANKS. The bare genera name munera (positions in
+     a colloquy), which is exactly why a proxy occupies both at
+     once with no contradiction. The SUB-genera are real kinds,
+     because a thing made FOR a role is shaped by it — a browser
+     is not "a program presently requesting" but a thing built to
+     request, and everything else about it follows. House
+     precedent that settles the reasoning:
+     `corporalia.instrumentum`, defined as "ad faciendum factum"
+     — the library already constitutes a genus by ordination to
+     an end.
+     SECOND EVIDENCE, given by round 46 without recognition: in
+     `iussum` I made iubens/exsecutor/beneficiarius RELATIONS
+     without hesitating. Same structure, same judgment, different
+     round. What is solved twice the same way is not arbitrary.
+     GENERAL RULE EXTRACTED: a munus does not make a genus, but a
+     thing MADE FOR a munus is one.
+     (b) TESSERA's parent — solved by TRIPLE NEGATION, which is a
+     real resolution: not `instrumentum` (an instrument OPERATES,
+     a tessera signifies), not `res_corporea` (digital tesserae
+     have no body), and now not `attestatio` either — and that
+     third rejection CLOSES the argument. Attestatio TESTIFIES
+     to a fact recorded elsewhere; tessera CONSTITUTES the right
+     by being presented. Tessera's own definitio had carried the
+     distinction from the start ("apocha te solvisse TESTATUR,
+     tessera ius ipsum FERT") but had no contrary genus to point
+     at, so it could not say what a tessera was NOT.
+     NOTABLE MECHANISM: a new genus can resolve a FOREIGN
+     dubium by supplying the contrast class rather than the
+     parent. Worth watching for.
+
+247. RATIO.md REFRESHED, and its staleness was the argument for
+     the whole round: written round 42 expressly to stop
+     orientation material from drifting, it was seven rounds
+     behind — six loop runs recorded when there were eight, no
+     knowledge of the modelling pass, the domain door, or four
+     later cross-pollination cases. THE DOCUMENT THAT EXISTS TO
+     PREVENT DRIFT DRIFTS TOO, and nothing gates it because
+     prose is not checkable. Added: runs 7–8; the modelling pass
+     as a SECOND instrument with its distinct question; the four
+     later cross-pollination cases (stronger than the original
+     seven, because in each the shared kind was found BEFORE the
+     genus was written); and four new rules of the craft —
+     collision-check before walking, park-then-walk, the
+     acts-holding-an-object tell, and "the gap may be apparatus,
+     not a genus."
+
+MEASURED after: 32 exemplaria / 157 genera / 344 res / 465 arcus
+/ 0 vulnera / 24 monita / DUBIA 15 → 13 / umbrae 2.

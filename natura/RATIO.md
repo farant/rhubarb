@@ -155,13 +155,37 @@ elsewhere poorly solved, and people reimplement e.g. "contract"
 from first principles, painfully. A universal taxonomy makes the
 best-elaborated version available everywhere.
 
-Already measurable — seven instances: Roman law's *obligatio* now
-serves software licensing and SLAs; scholastic degrees of assent
-serve diagnoses, estimates and our own dictionary dates; FRBR
-*bent our versio pattern into something better*; Pacioli gave the
-volumen doctrine a five-century ancestor; medicine's
-latent/chronic/relapse is the same shape as regression; canon
-law's vacant office fixes org software.
+Already measurable — Roman law's *obligatio* now serves software
+licensing and SLAs; scholastic degrees of assent serve diagnoses,
+estimates and our own dictionary dates; FRBR *bent our versio
+pattern into something better*; Pacioli gave the volumen doctrine
+a five-century ancestor; medicine's latent/chronic/relapse is the
+same shape as regression; canon law's vacant office fixes org
+software.
+
+Four later cases are stronger, because in each the shared kind
+was **found before the genus was written**, and the genus exists
+only because of it:
+
+- **`interactio`** — drug interaction and hazmat segregation are
+  the same kind (co-presence changing effect); the genus was
+  built from both at once, so its `inter` relation is open and
+  the hazmat specimen relates *classes*, not goods.
+- **`classis_normativa`** — controlled-substance schedules and
+  the aviation accident/incident gradation. The aviation half
+  had sat unbuilt for two rounds waiting for a second domain,
+  and pharmacy supplied it unprompted.
+- **`acta`** — five implementations in one house (gesta,
+  tabularium, volumen, `ratio_rationaria`, and our own STML
+  `<historia>`) and the general kind unnamed under all of them.
+- **`attestatio`** — and here the prediction ran forward:
+  `acta`, built for event logs, turned out to describe the civil
+  registry's correction-by-marginal-annotation practice, which
+  predates Pacioli by centuries.
+
+It has also run **backwards**: merchant law's negotiability
+revealed that a bearer *token* LACKS clean-title doctrine — a
+commercial-law distinction producing a security insight.
 
 It has also run **backwards**: merchant law's negotiability
 revealed that a bearer *token* LACKS clean-title doctrine — a
@@ -180,13 +204,15 @@ and it paid on its first use (aviation).
 
 ## 5. How we work
 
-### The coverage loop (Fran's instrument)
+There are **two instruments**, and they ask different questions.
+
+### The coverage loop (Fran's instrument) — what is MISSING?
 
 Pick a foreign scenario → walk its stations → **cite or surface**
 at each → harvest candidate genera *with their forcing content*
 → build after blessing.
 
-Six runs, and the pattern they made:
+Eight runs, and the pattern they made:
 
 | run | scenario | what it found |
 |---|---|---|
@@ -196,10 +222,37 @@ Six runs, and the pattern they made:
 | 4 | parish | `officium` — refined an established ruling |
 | 5 | PM / devops | a structural ABSENCE: `programma`, which `bibliotheca` had been defining itself against |
 | 6 | aviation | richest yet; chosen by the punishment heuristic |
+| 7 | pharmacy | `iussum` — the persisting DIRECTIVE, which `actus` and `obligatio` had been standing around without |
+| 8 | civil registry | `attestatio` — *a projection you hand out stops being a projection* |
 
 Run 5 is the one that shows why the loop cannot be replaced by
 introspection: **nobody re-reads their own definitio asking
 whether the thing they contrasted with exists.**
+
+Two later refinements, both learned by being burned:
+
+- **Collision-check candidate names BEFORE walking.** Checking
+  afterwards means arguing with a name you have grown attached
+  to. Run 7 burned three names in advance; run 8's check
+  *pre-decided two stations* — `titulus` is defined as permanent,
+  so a birth certificate could never be one.
+- **A harvest table is a plan, not a gate.** Run 7 recorded its
+  non-surfacings meticulously and lost a real surfacing between
+  the walk and the file. Close each loop by confirming every
+  candidate was built or explicitly refused.
+
+### The modelling pass — does the inventory COMPOSE?
+
+Take one subject and describe it with what exists. The loop is
+additive by nature; this asks whether genera defended one at a
+time actually work together. Its failure modes are different in
+kind: not *"no genus for X"* but **awkward fit** — which is how
+we learned that a VCS commit sits in a *sequence*, not in time,
+a gap `momentum` could not carry.
+
+**Pick a subject the human can verify.** That is the only real
+answer to the scribe's limits in §6 — everywhere else the prose
+is equally fluent whether or not it is right.
 
 ### Rules of the craft
 
@@ -239,6 +292,26 @@ whether the thing they contrasted with exists.**
 - **Grep on raw text is not a parser.** Measured three times in
   one session, on our own tooling. The parse is never the hard
   part; the SHAPE of what the parser returns is.
+- **Park candidates, then WALK them.** Two candidates carried for
+  rounds with specimens attached — `actio` and *scheme
+  administrator* — each died on contact with a real walk, one
+  because checklists confirm STATES not actions, the other
+  because a relation already covered it. Reflection kept both
+  alive indefinitely; walking killed both in a sentence. A
+  candidate that survives only in the abstract has not been
+  tested.
+- **When a genus of ACTS holds a member whose definitio describes
+  an OBJECT, the object wants out.** Found twice from opposite
+  sides: `iussum` (a persisting directive hiding behind the act
+  of ordering) and `attestatio` (a document filed among acts,
+  its own definitio saying "what is written IN IT is presumed
+  true"). The tell is grammatical and cheap to check.
+- **The gap may be APPARATUS, not a genus** — "thin where the
+  domain is thick." `persona` had been revised five times and
+  still had no state machine, while the institutions that handle
+  persons professionally elaborate civil status above all else.
+  Ask of an old genus: what does the domain that specialises in
+  this ask about it?
 
 ---
 
