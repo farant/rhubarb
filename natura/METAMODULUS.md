@@ -540,6 +540,7 @@ job and the reason to build it.
 | 16 | No `externum` flag on a target that is now described (a stale flag makes the agenda LIE) | [E] |
 | 17 | The `versio` attribute matches the version stated in the file's header comment | [E] |
 | 18 | A name bearing another name as its stem (`x_y` where `x` is a name) either descends from it or bears a declared relation to it | [M] |
+| 19 | A bare name used in two models is a declared homonym: a `nota` on each side naming the other and saying why they are not the same kind, and every citation of it carries `modulus=` | [M] → [E] on first use |
 
 Rules 9–13 are the Cyc-consistency defense: they are what makes a
 hand-written library stay coherent past the point where one mind
@@ -556,6 +557,54 @@ coincidence is SEEN ONCE. Its first run found that the three
 this library's most-cited borrowing — was declared and unused at
 the layer it was built for. A heuristic that knows nothing about
 FRBR found that, which is the argument for keeping it noisy.
+
+**Rule 19 is the domain escape hatch, and it is deliberately
+DORMANT.** Rule 15 requires uniqueness *within* a model; across
+models the same bare name is **already legal**, and
+`/chemia/substantia` beside `/metaphysica/substantia` would
+validate today. Nothing needs building for the capability — the
+address `/modulus/nomen` is already `domain::name`.
+
+What is written down here is that **global uniqueness is a
+CONVENTION, not a law** (measured 2026-08-05: 493 names, zero
+homonyms). A session that mistakes the convention for a rule
+reaches for a suffix — `substantia_chemica`, `numerus_dea`,
+`mandatum_iudicis`, `titulus_iuris` — which is what a flat
+namespace makes people do, and which rule 18 then reports as a
+smell. Roughly 5% of names are currently that workaround.
+
+**When to open the door: homonymy only, never convenience.** The
+same word for two genuinely different kinds — the live case in
+this house is scholastic, not medical: `materia` is taken (bulk
+stuff in `corporalia`, not *materia prima*), `actus` is taken (a
+model of solemn acts, not act/potency), and `species`, `genus`,
+`actio`, `fons`, `status` are reserved by §3/§4 besides. Model
+hylomorphism properly and you hit this on the first line.
+
+**Why the door stays stiff.** A domain qualifier lets you skip
+the question *"is this already a kind we have?"* — and that
+question is what the library is for. `interactio` exists only
+because someone asked whether drug interaction and hazmat
+segregation are the same kind; `classis_normativa` only because
+drug schedules and the aviation gradation are; `periculum`,
+written for a clinic, took freight insurance unchanged. Automatic
+per-domain namespacing dissolves all of that. It is the Pieper
+failure one level up again: not *"does this buy us anything"* but
+*"I need not ask whether this is the same thing."*
+
+So the declaration must carry the ARGUMENT — why this is not that
+kind — and prose in a `nota` carries it until prose proves
+insufficient. No new attribute is coined for a case that has
+happened zero times.
+
+**On first use, two gates get built** (recorded so they are not
+rediscovered): undeclared homonymy becomes a VULNUS, and citing a
+homonymous name *without* `modulus=` becomes a VULNUS. That
+second one is the real safety property and does not exist today —
+rule 2 catches a *dangling* reference but never a
+**wrong-but-resolving** one, and 188 citations currently omit
+`modulus=` and resolve to their local model. The gate binds only
+homonymous names, so it costs nothing until the door is used.
 
 *Rules 16 and 17 were enforced by the validator for a full round
 before being written here.* The closed-vocabulary gate (rule 8)
@@ -582,6 +631,7 @@ WRITING the library, and it has grown. In one line each:
 | The Linnaean escape hatch | When abstraction stalls, collect specimens. Precondition: specimen access. Aim it: who is punished for getting X wrong? |
 | Promotion | Do not promote a thing to a kind — coin a SIBLING genus and relate. Test: predicated of, or merely related to? |
 | Cheap vs expensive | Divisions are LOCAL; metamodel changes are GLOBAL. Hence dimensions before nouns. |
+| Domains (rule 19) | Cross-model homonyms are ALREADY legal; global uniqueness is a convention. Open the door for genuine homonymy, never convenience — a domain qualifier lets you skip "is this a kind we already have?", which is the question the library exists to force. |
 
 ### When to make a new genus (Fran's ruling, 2026-08-05)
 

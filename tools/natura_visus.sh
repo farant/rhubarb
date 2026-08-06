@@ -430,6 +430,28 @@ while read -r b; do
         case "$stirps" in *_*) stirps="${stirps%_*}" ;; *) stirps="" ;; esac
     done
 done < "$NOMINA"
+
+# ---- MONITUM: HOMONYMIA TRANS EXEMPLARIA (regula XIX, dormiens)
+# Regula XV unicitatem INTRA exemplar poscit; trans exemplaria
+# nomen idem iam LICET - ianua aperta est, numquam adhibita
+# (mensuratum 2026-08-05: nomina CDXCIII, homonyma NULLA). Ergo
+# unicitas globalis CONSUETUDO est, non lex - et sessio futura id
+# scire debet, ne suffixa ponat (substantia_chemica,
+# numerus_dea) ubi exemplar alienum sufficeret.
+# Hoc monitum ianuam CUSTODIT, non claudit: primo homonymo dicit
+# 'declara aut renomina', ne tacite fiat. Nulla portae severitas
+# ante casum primum - quod nondum accidit probari non potest.
+HOMO="$TMP/homonyma.txt"
+: > "$HOMO"
+cut -d'|' -f1,2 "$GENERA" > "$HOMO"
+awk -F'|' 'NF>=3 {print $1"|"$3}' "$RESGEN" | sed 's/|:/|/' >> "$HOMO"
+cut -d'|' -f2 "$HOMO" | sort | uniq -d | while read -r hn; do
+    hmods=$(grep "|$hn\$" "$HOMO" | cut -d'|' -f1 | sort -u \
+            | paste -sd, - | sed 's/,/, /g')
+    echo "'$hn' in exemplaribus pluribus ($hmods) - homonymia: nota utrimque DECLARANDA (cur non idem genus), et citationes modulum= ferre debent" \
+        >> "$MONITA"
+done
+
 nMonita=$(wc -l < "$MONITA" | tr -d ' ')
 
 # ---- numeri ----

@@ -3325,3 +3325,82 @@ was visible rather than landing in a pile.
 MEASURED after: 32 exemplaria / 155 genera / 338 res / 454 arcus
 / 0 vulnera / 24 monita / umbrae 2 (unchanged — the run added no
 dangling citations, which is what building AFTER a cleanup buys).
+
+## 2026-08-05 — round forty-seven: the domain door, left shut but unlocked
+
+229. Fran raised namespacing — `domain_a::foo` distinct from
+     `domain_b::foo`, opt-in — pressure he felt piling up in the
+     pharmacy round. MEASURED BEFORE DESIGNING, and the
+     measurement reframed the question entirely: 493 names (155
+     genera + 338 residents) and ZERO cross-model homonyms, even
+     though rule 15 only requires uniqueness WITHIN a model.
+     So the capability already exists — `/chemia/substantia`
+     beside `/metaphysica/substantia` validates today, and the
+     address `/modulus/nomen` IS `domain::name`. Nothing needed
+     building. What was missing was permission and a detector.
+     GLOBAL UNIQUENESS IS A CONVENTION, NOT A LAW, and nobody had
+     written that down — so every session (me included) read the
+     convention as a rule and reached for a suffix instead.
+
+230. AND RULE 18 HAD BEEN MEASURING THE PRESSURE ALL ALONG. The
+     monita list is empirically the list of places a domain
+     qualifier got encoded INTO a name because the namespace
+     looked flat: `numerus_dea`, `mandatum_iudicis`,
+     `titulus_iuris`, `fons_c`, `index_verificationis`,
+     `instrumentum_lineae`. ~5% of names. A rule built last round
+     to catch homonyms turned out to be a demand signal for the
+     feature that would prevent them — not designed for that, and
+     visible only because the output was in front of us.
+
+231. THE FORCING CASE IS SCHOLASTIC, NOT MEDICAL, and it is worse
+     than pharmacy's. `materia` is TAKEN (corporalia: bulk
+     measurable stuff, flour and oil — not *materia prima*).
+     `actus` is TAKEN (a model of solemn acts — not act/potency).
+     And `species`, `genus`, `actio`, `fons`, `status` are
+     RESERVED by §3/§4 besides. In a scholastic project the core
+     Aristotelian vocabulary is already occupied or reserved;
+     model hylomorphism properly and it bites on line one.
+     Recorded because it is the case that will actually open the
+     door, and it is nearer than any clinical one.
+
+232. THE ARGUMENT AGAINST, kept on the record because it is the
+     one that would be lost first: NAMESPACING IS A SOLVENT FOR
+     CROSS-POLLINATION. `interactio` exists only because someone
+     asked whether drug interaction and hazmat segregation are
+     the same kind. `classis_normativa` only because drug
+     schedules and the aviation gradation are. `periculum`,
+     written for a clinic, took freight insurance unchanged;
+     `obligatio` from Roman law serves software licensing. Every
+     one of those needed the ABSENCE of a domain wall. Automatic
+     per-domain namespacing would have prevented all of them —
+     it is the Pieper failure one level up again: not "does this
+     buy us anything" but "I need not ask whether this is the
+     same thing." Hence: homonymy only, never convenience, and
+     the declaration must carry the ARGUMENT.
+
+233. BUILT, and deliberately small (Fran: "a milder escape hatch"
+     — and he explicitly allowed 'too early' as an answer):
+     - a MONITUM detector for cross-model homonymy, ~10 lines
+       reusing the measurement itself. Reports nothing today;
+       names both models the moment it is not nothing. PROVEN
+       BOTH WAYS — planted a fake `interactio` in causa, watched
+       it fire, restored. A detector that has never been seen to
+       fire is not a detector.
+     - rule 19 in §8, marked `[M] → [E] on first use`, plus a
+       doctrine row in §9.
+     - NO NEW ATTRIBUTE. Declaration is a `nota` until prose
+       proves insufficient: coining a metamodel element for a
+       case that has occurred zero times is exactly the global
+       change the doctrine says to defer.
+     - the two future gates RECORDED rather than built:
+       undeclared homonymy → VULNUS, and citing a homonymous
+       name without `modulus=` → VULNUS. The second is the real
+       safety property and does NOT exist today — rule 2 catches
+       a DANGLING reference but never a WRONG-BUT-RESOLVING one,
+       and 188 citations currently omit `modulus=` and resolve
+       locally. Writing the design down means the first homonym
+       gets a gate instead of a rediscovery.
+
+MEASURED after: 32 exemplaria / 155 genera / 338 res / 454 arcus
+/ 0 vulnera / 24 monita / homonyma 0. Nothing changed in the
+corpus; the door is unlocked, shut, and watched.
