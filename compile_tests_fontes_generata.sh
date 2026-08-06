@@ -27,6 +27,7 @@ declare -a SOURCE_FILES=(
     "lib/biblia_visus.c"
     "lib/calendario_visus.c"
     "lib/calendarium_liturgicum.c"
+    "lib/canon.c"
     "lib/capitula.c"
     "lib/capsula.c"
     "lib/capsula_caudae.c"

@@ -1,0 +1,97 @@
+<!--
+  canon.canon
+  Canon linguae canonum ipsius (plagulae *.canon) - SE HOSPITANS.
+  Registrum '<canon>' ad hanc plagulam ligat, ergo haec plagula
+  SE IPSAM iudicat quotiens iudicatur.
+
+  CUR: canon_legere ignota TACITE praeterit (mos benignus lectoris,
+  sed porta muta scribentis). Ante hanc plagulam quattuor vitia
+  scribentis silenter transibant:
+    I.   attributum ignotum ('necesarium=') - postulatum evanescit,
+         canon de se ipso mentitur
+    II.  genus ignotum ('nmuerus') - in textus tacite cadit,
+         valores non iam iudicantur
+    III. veritas mala ('radix="vreum"') - in falsum tacite cadit
+    IV.  unicitas sine attributo= aut super= - porta quae nihil
+         custodit sed custodire videtur
+  Omnia quattuor nunc vitia sunt. Porta muta et porta mortua idem
+  videntur (lex domus) - culpa PLANTATA in ortu probanda.
+
+  INVENTUM TERTIO DIALECTO DESCRIBENDO: unicitas per documentum
+  TOTUM currit, ergo 'nomen elementi semel' hic dici NON potest -
+  aedilis.canon duas <elementum nomen="regula"> definitiones
+  legitime fert (intra= diversa). Unicitas ADSTRICTA (per parentem,
+  aut super pari intra+nomen) est postulatio quam dialectus tertius
+  facit sed nondum accipit; si dialectus alius eandem faciet,
+  aedificetur.
+
+  DECISIONES (observatum non est postulatum):
+    - dialectus= et versio= POSTULANTUR quamquam machina sine eis
+      legit: canon sine nomine contractus anonymus est
+    - unicitas attributum= et super= POSTULANTUR quia sine eis
+      unicitas taciturna nihil agit (IV supra) - canon hic
+      STRICTIOR machina est, quod rectum est: lector tolerat,
+      contractus poscit
+    - 'optio sub genus=electio solum' co-occurrentia est, supra
+      canonem (eadem sententia ac natura.canon)
+-->
+<canon dialectus="canon" versio="1">
+
+  <elementum nomen="canon" radix="verum">
+    <attributum nomen="dialectus" genus="nomen"   necessarium="verum"/>
+    <attributum nomen="versio"    genus="numerus" necessarium="verum"/>
+    <liberum nomen="elementum" minimum="1"
+      nota="canon sine elementis nihil describit"/>
+    <liberum nomen="unicitas"/>
+  </elementum>
+
+  <!-- ================= ELEMENTUM ================= -->
+
+  <elementum nomen="elementum">
+    <attributum nomen="nomen"  genus="nomen" necessarium="verum"/>
+    <attributum nomen="intra"  genus="nomen"
+      nota="definitio ad parentem adstricta (mos RELAX NG)"/>
+    <attributum nomen="radix"  genus="veritas"/>
+    <attributum nomen="textus" genus="veritas"/>
+    <attributum nomen="nota"   genus="textus"/>
+    <liberum nomen="attributum"/>
+    <liberum nomen="liberum"/>
+  </elementum>
+
+  <elementum nomen="attributum">
+    <attributum nomen="nomen" genus="nomen" necessarium="verum"/>
+    <attributum nomen="genus" genus="electio"
+      nota="absens = textus (ordinarius lectoris); electio hic
+            vitium II supra claudit">
+      <optio>textus</optio>
+      <optio>nomen</optio>
+      <optio>numerus</optio>
+      <optio>veritas</optio>
+      <optio>dies</optio>
+      <optio>electio</optio>
+    </attributum>
+    <attributum nomen="necessarium" genus="veritas"/>
+    <attributum nomen="nota"        genus="textus"/>
+    <liberum nomen="optio"/>
+  </elementum>
+
+  <elementum nomen="optio" textus="verum"/>
+
+  <elementum nomen="liberum">
+    <attributum nomen="nomen"   genus="nomen" necessarium="verum"/>
+    <attributum nomen="minimum" genus="numerus"/>
+    <attributum nomen="maximum" genus="numerus"/>
+    <attributum nomen="nota"    genus="textus"/>
+  </elementum>
+
+  <!-- ================= UNICITAS ================= -->
+
+  <elementum nomen="unicitas">
+    <attributum nomen="nomen"      genus="nomen" necessarium="verum"/>
+    <attributum nomen="attributum" genus="nomen" necessarium="verum"/>
+    <attributum nomen="super"      genus="textus" necessarium="verum"
+      nota="index spatiis separatus - ergo textus, non nomen"/>
+    <attributum nomen="nota"       genus="textus"/>
+  </elementum>
+
+</canon>
