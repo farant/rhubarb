@@ -3880,3 +3880,133 @@ MEASURED after: 32 exemplaria / 159 genera / 351 res / 470 arcus
 
 MEASURED after: 33 exemplaria / 160 genera / 351 res / 478 arcus
 / 0 vulnera / 24 monita / dubia 14 / umbrae 2.
+
+## 2026-08-05 — round fifty-three: distributed systems (coverage loop, run 10)
+
+Scenario: a card payment through a distributed system —
+authorise, capture, settle. Punished harder than any other
+software domain (double-charge, lost funds, regulators), which is
+why it has elaborated retry, ordering and agreement past anywhere
+else.
+
+264. THE DEFERRAL PAID EXACTLY AS DESIGNED. `petitio` was
+     proposed in run 7 (the insurance claim) and REFUSED on one
+     domain, with the trigger named: "a warranty or legal claim
+     would be the second case that flips it." Run 10 supplied a
+     stronger one than predicted. This is the first time a
+     recorded refusal has been redeemed by its own stated
+     condition, and it is an argument for writing the trigger
+     down rather than just saying no.
+
+265. WHAT THE SECOND DOMAIN ADDED that the first could not: in a
+     single process a call is an EVENT — it happens and is gone.
+     Across a network it CANNOT BE, because the caller who gets
+     no answer will ask again, and the receiver must recognise
+     the second asking as the same asking. So the request
+     acquires identity, a deadline and an attempt count. That is
+     an ontological shift, not an implementation detail, and it
+     is why `identificator_petitionis` carries the load-bearing
+     nota: without it a repetition becomes a NEW petition, and
+     what was owed once is paid twice.
+     `petitio` PLACED BESIDE `iussum` deliberately — round 50
+     taught that mutually-defining genera discovered a round
+     apart stay unlinked. The dividing axis was already written
+     in iussum (`poena_neglegentis`): an order neglected incurs
+     a penalty, a request may be refused with no violation at
+     all. Hence `negata` is a LEGITIMATE OUTCOME, not a failure.
+     Best state in the genus: `elapsa` is a state OF THE ASKER,
+     not of the request — the receiver may still grant it, and
+     often does, after the asker has given up. Two states
+     simultaneously true and contradictory, which no other genus
+     in the library tolerates.
+
+266. QUORUM — cross-pollination running BACKWARDS, which is rarer
+     and better. Distributed systems appear to have invented
+     "majority"; the word is Latin, and canon law and parliaments
+     used it a thousand years earlier FOR THE SAME REASON: below
+     quorum an act is not wrong but VOID. That is exactly
+     `actus_sollemnis` (effect depends on form and the agent's
+     capacity), which the library already had.
+     PLACED IN `actus`, NOT `organizatio`, and the reason is
+     load-bearing: organizatio is defined as "universitas
+     PERSONARUM", and a cluster of machines is not persons.
+     Validity, however, does not require persons. Putting the
+     genus in the validity model captures both domains; putting
+     it with organisations would have excluded the case that
+     surfaced it.
+     `modus_computandi` is the sharp property, and the
+     distributed case makes the ancient one legible: computing
+     from ALL MEMBERS rather than those PRESENT is what prevents
+     split-brain — reckon from those present and both halves of
+     a partition believe themselves quorate, which is the
+     failure itself. The same ambiguity produces litigation in
+     chapter meetings.
+
+267. DEPRAVATIO — the missing middle of a triad. The library had
+     `vitium` (defect against intention — the code is wrong) and
+     `incidens` (visible service degradation — the service is
+     failing), and NOTHING between them for the state that is
+     now wrong and not yet seen.
+     THE COST OF THE GAP IS THE POINT: fixing the fault does not
+     fix the data. A bug repaired at 14:00 leaves balances
+     corrupted between 09:00 and 14:00 corrupted; repair acts
+     forward, never backward. That is among the most expensive
+     misunderstandings in operations and the library could not
+     state it at all.
+     Its differentia is that IT HIDES BY NATURE: a fault can be
+     read in the code, an incident shouts, corruption is silent
+     — a wrong datum sits exactly as well as a right one. Alone
+     of the three it must be SOUGHT, and is usually sought only
+     after an incident betrays it.
+     `sanabilis` is where the house doctrine pays its largest
+     dividend yet: where acta are kept the truth can be
+     recomputed; where only status was stored the prior truth
+     IS GONE and repair becomes guesswork. Veritas/proiectio,
+     cashed at the worst possible moment.
+     SECOND TRIAD RECORDED: the library already had a triad of
+     defects by the NORM measured against (vitium/morbus/damnum).
+     This is a different one, by DEGREE OF MANIFESTATION
+     (vitium/depravatio/incidens). They intersect and neither
+     replaces the other — "defect" is a three-dimensional word.
+
+268. `replica` REFUSED, and the refusal tests the rule made last
+     round: being-a-replica is a MUNUS, and a munus does not make
+     a genus. Nothing is built to be a replica — a database
+     instance is made, then assigned, and promoting it to primary
+     does not change its kind. Recorded with the condition that
+     would admit it: purpose-built read-only appliances would
+     qualify under the same rule that excludes these.
+
+269. THREE COMPOSITION WINS, all PREDICTIVE rather than merely
+     compatible, which is now the pattern worth expecting:
+     - `ignotum` (built for a clinic) states the field's founding
+       fact — a slow node and a dead node are indistinguishable
+       from outside. A timeout is not a failure but a NAMED GAP,
+       and the discipline is to design for it, never to resolve
+       it.
+     - `acta.ordinatio` carries the nota written for silex —
+       "clocks lie, disagree and jump backwards; a position
+       cannot" — which is verbatim the argument for logical
+       clocks, and `punctum_actorum` already is one.
+     - `acta.stornare` IS the compensating transaction. The
+       chain now runs accounting → version control → distributed
+       systems, one genus across all three.
+
+270. Delivery guarantee added to `nuntius` with the law stated
+     plainly: EXACTLY-ONCE DELIVERY IS IMPOSSIBLE, exactly-once
+     PROCESSING is achievable — via idempotence at the receiver.
+     Systems promising the former either assume the latter or are
+     lying, and a consumer needs to know which.
+     Noted but NOT acted on: `idempotens` is declared twice
+     independently (on `mutatio` and on `procedura_automata`).
+     A weaker echo of the several-specialised-no-general signal,
+     at the PROPERTY level — but two shared properties is not the
+     same weight as four duplicated apparatus, and properties
+     legitimately recur. Recorded rather than refactored.
+
+271. Rule 17 caught me mid-round: `actus` had its versio
+     attribute bumped and its header comment left at v0. The
+     gate that exists because I did this before.
+
+MEASURED after: 33 exemplaria / 163 genera / 356 res / 488 arcus
+/ 0 vulnera / 24 monita / dubia 14 / umbrae 2.

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/actus.stml
-  Exemplar semanticum: ACTUS SOLLEMNIS (versio 0, PLASTICUM)
+  Exemplar semanticum: ACTUS SOLLEMNIS (versio 1, PLASTICUM)
   Genera: actus_sollemnis, ritus (+sacramentum, sacramentale),
   actus_iuridicus.
 
@@ -45,7 +45,7 @@
   Searle de regulis constitutivis ("X pro Y valet in C") idem
   quod nos de generibus institutis dicimus, aliis verbis.
 -->
-<natura modulus="actus" versio="0" lingua="latina">
+<natura modulus="actus" versio="1" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -446,6 +446,116 @@
       actus duo, non unum.
     </nota>
     <relatum nomen="constituit" ad="obligatio" modulus="obligatio"/>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     QUORUM - quot adesse debeant ut coetus VALIDE agat
+
+     CROSS-POLLINATIO RETRO CURRENS (cursus decimus): non
+     dominium vetus a novo illustratum sed NOVUM A VETERE.
+     Systemata distributa "maioritatem" excogitasse videntur;
+     verbum ipsum Latinum est et lex canonica parlamentaque eo
+     mille annos ante usa sunt, EADEM RATIONE: infra quorum
+     actus non pravus est sed IRRITUS.
+
+     HIC POSITUM, NON IN ORGANIZATIONE, causa deliberata:
+     organizatio "universitas PERSONARUM" definitur, et coetus
+     machinarum personae non sunt. Validitas autem actus
+     personas non poscit - actus_sollemnis effectum a forma et
+     CAPACITATE AGENTIS pendere dicit, et quorum capacitatis
+     condicio est. Genus in exemplari validitatis collocatum
+     utrumque dominium capit.
+     ================================================== -->
+
+<genus nomen="quorum">
+
+  <definitio>
+    Numerus (aut pars) membrorum cuius praesentia aut consensus
+    requiritur ut coetus valide agat: infra eum acta non fiunt
+    mala sed NULLA - non enim coetus egit sed pauci.
+  </definitio>
+
+  <differentia>
+    Condicio VALIDITATIS, non prudentiae. Consilium paucorum
+    sapiens esse potest et tamen irritum; consilium quorumatum
+    stultum et tamen validum. Quod discrimen totum genus portat:
+    quorum de auctoritate agit, non de bonitate.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="modus_computandi" genus="electio"
+      nota="ex quo numero pars sumatur. FONS ERRORUM PRACTICUS:
+            'maioritas praesentium' et 'maioritas membrorum' in
+            coetu dimidiato res prorsus diversae sunt, et statuta
+            quae id non dicunt lites pariunt">
+      <optio>ex_praesentibus</optio>
+      <optio>ex_membris_omnibus</optio>
+      <optio>ex_suffragiis_latis</optio>
+    </proprietas>
+    <proprietas nomen="pars_requisita" genus="textus"
+      nota="quanta pars - dimidium plus uno, duae tertiae,
+            unanimitas"/>
+    <proprietas nomen="numerus_membrorum" genus="numerus"
+      nota="ex quot constet. NUMERUS IMPAR CONSULTO ELIGITUR ubi
+            divisio timetur: coetus paris numeri aequaliter
+            scindi potest et tunc neutra pars agere valet -
+            ratio eadem qua coetus machinarum tres aut quinque
+            habent, numquam quattuor"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="coetus" ad="*"
+      nota="cuius sit - concilium, curia, capitulum, coetus
+            machinarum. APERTUM CONSULTO: hoc genus utrumque
+            dominium ferre debet, et angustare ad organizationem
+            id ipsum amitteret propter quod aedificatum est"/>
+    <relatio nomen="condicio_actus" ad="actus_sollemnis"
+      multiplex="verum"
+      nota="quos actus validos faciat"/>
+    <relatio nomen="statutum_per" ad="norma" modulus="norma"
+      nota="quorum plerumque scribitur, non ex natura fluit -
+            unde mutari potest, et mutatio quorumatum quorum
+            mutare debet"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="quorum_deliberativum">
+    <definitio>
+      Quot adesse debeant ut concilium (senatus, curia, capitulum)
+      deliberare et decernere possit.
+    </definitio>
+    <valor nomen="modus_computandi">ex_praesentibus</valor>
+    <nota>
+      Species antiquissima et unde nomen: 'quorum' ex formula
+      commissionis Anglicae saeculi XIV venit ("quorum vos...
+      unum esse volumus" - quorum vos unus esse debetis), ubi
+      certi iudices ADESSE debebant ne curia valeret.
+      Praesentia hic actio est: qui abest coetum sistere potest
+      absentia sola, unde secessio instrumentum politicum.
+    </nota>
+  </species>
+
+  <species nomen="maioritas_replicarum">
+    <definitio>
+      Quot ex machinis coetus consentire debeant ut scriptio
+      commissa habeatur: plerumque dimidium plus uno.
+    </definitio>
+    <valor nomen="modus_computandi">ex_membris_omnibus</valor>
+    <nota>
+      SPECIMEN QUOD GENUS TRANS DOMINIA PROBAT. Ratio identica
+      illi capituli: rete discisso, pars maior sola agere valet,
+      et pars minor non errat sed CARET AUCTORITATE - quod
+      'cerebrum scissum' vitat. Computatio EX MEMBRIS OMNIBUS,
+      non ex praesentibus, et haec electio omnia decernit:
+      ex praesentibus computare est utramque partem se
+      quorumatam credere sinere, quod exitium ipsum est.
+      Quod ars computatralis nuper invenisse se putat lex
+      canonica de capitulis dispersis diu tenuit.
+    </nota>
   </species>
 
 </genus>

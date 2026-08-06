@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **33** · genera **160** · res dictionarii **351** · arcus **478**
+Exemplaria **33** · genera **163** · res dictionarii **356** · arcus **488**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -31,13 +31,14 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **attestatio** ⚙ — Exemplar authenticum ex actis auctoritativis sumptum, quod quid in actis steterit MOMENTO EMISSIONIS testatur, et trad
 - **radix_fiduciae** ⚙ — Terminus catenae attestationum, cui fides non ex alia attestatione venit sed ex DECRETO eius qui catenam adhibet: quod
 
-### actus (v0, genera 5)
+### actus (v1, genera 6)
 
 - **actus_sollemnis** ⚙ — Actus cuius EFFECTUS a forma praescripta et ab agentis capacitate pendet, et qui ideo VALIDUS aut IRRITUS est, non bon
 - **ritus** ⊂ actus_sollemnis — Actus sollemnis ad cultum divinum ordinatus: materia sensibilis et forma verborum, per ministrum, ad effectum spiritua
 - **sacramentum** ⊂ ritus — Signum efficax gratiae, a Christo institutum: effectum ponit EX OPERE OPERATO - ex actu ipso rite posito, non ex digni
 - **sacramentale** ⊂ ritus — Ab Ecclesia institutum, non a Christo: effectum ponit EX OPERE OPERANTIS - ex dispositione agentis et Ecclesiae precib
 - **actus_iuridicus** ⊂ actus_sollemnis — Actus sollemnis cuius vim auctoritas civilis praestat: quod lex formam praescribit, lex effectum agnoscit
+- **quorum** — Numerus (aut pars) membrorum cuius praesentia aut consensus requiritur ut coetus valide agat: infra eum acta non fiunt
 
 ### animal (v0, genera 1)
 
@@ -77,7 +78,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **tessera_simplex** ⊂ tessera — Possessio sufficit ad exhibendum, sed nulla titulorum purgatio: qui tesseram furatam exhibet admittitur (custos nescit
 - **ratio_rationaria** ⊂ acta.acta — Acta rerum pecuniariarum ordine temporis: veritas est cauda eventuum, status omnis (summa, debitum, lucrum) PLICATURA
 
-### communicatio (v0, genera 3)
+### communicatio (v1, genera 3)
 
 - **actor** — Ens logicum cum identitate, statu privato, moribus: cum aliis SOLUM per nuntios communicat
 - **nuntius** ⚙ — Communicatio reificata: data in itinere INSCRIPTA - destinatarius ei debetur
@@ -114,7 +115,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **programma** — Collectio elementorum cum INITIO PROPRIO: vocatum currit et ex se ipso pergit, ubi bibliotheca vocata solum vivit
 - **instrumentum_aedificationis** ⊂ programma — Programma cuius finis artefacta aedificationis ex fontibus derivare: graphum dependentiarum novit (quid ex quo), et in
 
-### fabricatio (v4, genera 7)
+### fabricatio (v5, genera 8)
 
 - **postulatum** ⚙ — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
 - **facultas** — Quod opus praestare potest, ab utente aestimatum: unitas VALORIS
@@ -123,6 +124,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **debitum_technicum** ⚙ — Imperfectio in opere CONSULTO suscepta ut aliquid citius praestetur, cum cognitione pretii posterioris: non defectus s
 - **complicatio** ⚙ — Consideratio implementationis quae consilio praevideri NON POTEST sed opere incepto sola apparet, et consilium retract
 - **consilium** ⚙ — Ordo operum propositus ad finem SEMEL petendum: quid quo ordine fiet, quid cui committitur, quid ante quid stare debet
+- **depravatio** ⚙ — Status rei factus alius quam esse debuit, sive quis animadvertat sive non: non defectus faciendi (id vitium est) nec d
 
 ### formae_datorum (v0, genera 1)
 
@@ -175,7 +177,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **classis_normativa** ⚙ — Categoria a norma constituta in quam res assignantur, cui consequentiae (obligationes, prohibitiones, procedurae) ADHA
 - **fictio_iuris** — Praeceptum quo lex rem aliter se habentem TAMQUAM ALITER tractari iubet, sciens ita non esse, propter bonum quod alite
 
-### obligatio (v4, genera 6)
+### obligatio (v5, genera 7)
 
 - **obligatio** ⚙ — Iuris vinculum quo quis alicui aliquid praestare adstringitur (Institutiones): non res sed VINCULUM inter personas - d
 - **contractus** — Conventio duorum (aut plurium) quae obligationes parit: consensus est fundamentum - ideo utrumque ligat, et neuter sol
@@ -183,6 +185,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **tributum** ⊂ obligatio — Obligatio ad MAGISTRATUM, ex lege orta, non ex consensu: debetur quia lex ita statuit, non quia quis promisit
 - **titulus** — Attestatio publica et permanens ab auctoritate data, quod aliquis aliquid consecutus est aut aliquid EST: non permissi
 - **iussum** ⚙ — Directivum ab eo qui potestatem habet latum, quod agendum quid, a quo, et intra quod tempus determinat, et quod ACTU L
+- **petitio** ⚙ — Rogatio ad alium directa ut aliquid faciat aut praestet, quam ille CONCEDERE AUT NEGARE potest sine ulla violatione: q
 
 ### operatio (v1, genera 4)
 
@@ -324,6 +327,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | corpus_normans | organizatio |
 | damnum | corporalia |
 | debitum_technicum | fabricatio |
+| depravatio | fabricatio |
 | directorium | plagula_computatralis |
 | distributio_systematis | systema_operativum |
 | editio | opus_scriptum |
@@ -385,6 +389,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | periodicum | opus_scriptum |
 | persona | persona |
 | persona_iuridica | organizatio |
+| petitio | obligatio |
 | plagula_computatralis | plagula_computatralis |
 | plagula_datorum | plagula_computatralis |
 | plagula_figurationis | plagula_computatralis |
@@ -406,6 +411,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | promptuarium | elementa_programmatis |
 | punctum_actorum | acta |
 | quantitas | mensura |
+| quorum | actus |
 | radix_fiduciae | acta |
 | ratio_rationaria | commercium |
 | recurrentia | tempus |
@@ -455,6 +461,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `acta.punctum_actorum` — clausura_rationis, conditio, statio
 - `acta.radix_fiduciae` — commissio_notarii, origo_dominii, radix_systematis
 - `actus.actus_iuridicus` — collatio_tituli, confectio_instrumenti, inauguratio, mancipatio, manumissio, promulgatio, sententia_lata, stipulatio, testamentum
+- `actus.quorum` — maioritas_replicarum, quorum_deliberativum
 - `actus.sacramentale` — benedictio, consecratio_loci, exorcismus
 - `actus.sacramentum` — baptismus, confirmatio, eucharistia, matrimonium, ordo, paenitentia, unctio_infirmorum
 - `animal.animal` — apis, canis, homo
@@ -513,6 +520,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `obligatio.contractus` — emptio_venditio, locatio_conductio, mandatum, societas_contractus
 - `obligatio.iussum` — iussum_emptionis, iussum_ne_resuscitetur, iussum_operis, mandatum_iudicis, praescriptio_medica
 - `obligatio.obligatio` — obligatio_ex_contractu, obligatio_ex_delicto, obligatio_ex_lege
+- `obligatio.petitio` — petitio_assecurationis, petitio_remota, supplicatio
 - `obligatio.titulus` — character_indelebilis, gradus_academicus, titulus_honoris
 - `obligatio.tributum` — decuma, portorium, tributum_capitis, vectigal
 - `operatio.ambitus` — ambitus_fabricae, ambitus_probationis, ambitus_producens

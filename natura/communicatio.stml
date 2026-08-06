@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/communicatio.stml
-  Exemplar semanticum: COMMUNICATIO (versio 0, PLASTICUM)
+  Exemplar semanticum: COMMUNICATIO (versio 1, PLASTICUM)
   Genera: actor, nuntius, eventum.
 
   Natum ex confrontatione cum lib/actor.c - prima collisio
@@ -21,7 +21,7 @@
   (destinatarius ei debetur), eventum NON (accidit coram
   omnibus, quivis observans videt). Directum contra sparsum.
 -->
-<natura modulus="communicatio" versio="0" lingua="latina">
+<natura modulus="communicatio" versio="1" lingua="latina">
 
 <!-- ==================================================
      ACTOR - ens quod solum per nuntios communicat
@@ -81,6 +81,21 @@
       <optio>sine_schemate</optio>
       <optio>cum_schemate</optio>
     </proprietas>
+    <proprietas nomen="garantia_traditionis" genus="electio"
+      nota="quid de traditione promittatur. LEX QUAM NEMO CREDIT
+            DONEC MORDEAT: traditio SEMEL-EXACTE impossibilis
+            est - mittens qui confirmationem non accepit nescit
+            an nuntius an confirmatio perierit, et utrumque
+            eligere (iterare aut tacere) alterutrum vitium
+            admittit. Quod praestari POTEST est tractatio
+            semel-exacte, per idempotentiam apud recipientem.
+            Ideo systemata quae 'exactly once' pollicentur aut
+            idempotentiam supponunt aut mentiuntur - et hoc
+            discrimen consumptor scire debet">
+      <optio>ad_summum_semel</optio>
+      <optio>ad_minimum_semel</optio>
+      <optio>semel_exacte_tractatum</optio>
+    </proprietas>
   </proprietates>
 
   <machina_statuum nomen="cursus" gerens="individuum">
@@ -97,6 +112,11 @@
   </machina_statuum>
 
   <relationes>
+    <relatio nomen="portat" ad="petitio" modulus="obligatio"
+      nota="nuntius petitionem FERRE potest sed ea non est:
+            petitio perdurat, nuntius transit, et petitio una
+            nuntiis pluribus portari potest (repetitionibus) -
+            quod totam idempotentiae rationem facit"/>
     <relatio nomen="missus_a" ad="actor"/>
     <relatio nomen="destinatus_ad" ad="actor"/>
   </relationes>

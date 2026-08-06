@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/obligatio.stml
-  Exemplar semanticum: OBLIGATIO (versio 4, PLASTICUM)
+  Exemplar semanticum: OBLIGATIO (versio 5, PLASTICUM)
   Genera: obligatio, contractus, licentia.
 
   Natum ex experimento pistrinae (ratio caffeae, conductio
@@ -20,7 +20,7 @@
   datur, revocari potest, expirat. Non idem genus - quod
   schemata vulgaria confundunt.
 -->
-<natura modulus="obligatio" versio="4" lingua="latina">
+<natura modulus="obligatio" versio="5" lingua="latina">
 
 <!-- ==================================================
      OBLIGATIO - vinculum iuris
@@ -566,6 +566,157 @@
       agendum sit aeque imperari potest.
     </differentia>
     <valor nomen="poena_neglegentis">iuridica</valor>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     PETITIO - rogatio quae negari potest
+
+     DIFFERENDI FRUCTUS: cursu septimo (pharmacopolio) proposita
+     et RECUSATA uno dominio, causa nominata - "casus secundus
+     eam vertet". Cursus decimus (systemata distributa) eum
+     attulit, et fortiorem quam sperabatur: ibi petitio res
+     esse DEBET, non eventus.
+
+     IUXTA IUSSUM POSITA CONSULTO (doctrina rotae L: genera se
+     mutuo definientia rotis diversis inventa sine nexu manent).
+     Axis qui ea dividit iam in iusso scriptus erat:
+     poena_neglegentis. Iussum neglectum poenam parit; petitio
+     negari LICET, et negatio nihil violat.
+     ================================================== -->
+
+<genus nomen="petitio">
+
+  <definitio>
+    Rogatio ad alium directa ut aliquid faciat aut praestet, quam
+    ille CONCEDERE AUT NEGARE potest sine ulla violatione: quod
+    petenti debetur non est res petita sed RESPONSUM.
+  </definitio>
+
+  <differentia>
+    A iusso AUCTORITATE: iubens potestatem in exsecutorem habet
+    et neglegentia poenam parit; petens non habet, et negatio
+    legitima est. Ideo petitio SEMPER responsum exspectat -
+    iussum executionem exspectat, petitio iudicium. Utraque
+    perdurant, utraque tempore elabuntur, sed sola petitio
+    negari potest sine culpa.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="identificator_petitionis" genus="textus"
+      nota="QUO PETITIO EADEM AGNOSCITUR SI ITERUM VENIAT. In
+            colloquio certo supervacuus; ubi responsum perire
+            potest, NECESSARIUS - quia petens qui responsum non
+            accepit nescit an petitio pervenerit, et iterum
+            petit. Sine hoc campo repetitio petitionem NOVAM
+            facit, unde bis solvitur quod semel debebatur.
+            Hic petitio ex eventu in REM transit: quod occurrit
+            agnosci non potest, quod nomen habet potest"/>
+    <proprietas nomen="terminus_exspectandi" genus="quantitas"
+      modulus="mensura"
+      nota="quousque petens responsum exspectet. TERMINUS
+            ELAPSUS RESPONSUM NON EST: petens nescit an petitio
+            perierit, an responsum perierit, an adhuc agatur -
+            ignotum verum, non negatio (vide iudicium.ignotum)"/>
+    <proprietas nomen="conatus" genus="numerus"
+      nota="quotiens missa sit. Numerus qui petitionem ab eventu
+            distinguit: eventus semel accidit, petitio saepe
+            eadem manens"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="missa"/>
+    <status nomen="accepta" nota="pervenit, nondum iudicata"/>
+    <status nomen="concessa"/>
+    <status nomen="negata"
+      nota="EXITUS LEGITIMUS, non defectus - quod petitionem a
+            iusso dividit"/>
+    <status nomen="elapsa"
+      nota="termino exspectandi transacto sine responso. STATUS
+            PETENTIS, non petitionis: apud recipientem petitio
+            adhuc concedi potest, et saepe conceditur postquam
+            petens desperavit - unde duo status simul veri et
+            discordes, quod nullum aliud genus bibliothecae
+            patitur"/>
+    <transitus a="missa" ad="accepta" per="receptio"/>
+    <transitus a="missa" ad="elapsa" per="lapsus_termini"/>
+    <transitus a="accepta" ad="concessa" per="concessio"/>
+    <transitus a="accepta" ad="negata" per="negatio"/>
+    <transitus a="accepta" ad="elapsa" per="lapsus_termini"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="peti"/>
+    <actio nomen="concedi"/>
+    <actio nomen="negari"/>
+    <actio nomen="iterari" nota="eadem petitio denuo missa -
+      non nova, quod identificator praestat"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="petens" ad="*"/>
+    <relatio nomen="rogatus" ad="*"/>
+    <relatio nomen="de" ad="*" nota="quid petatur"/>
+    <relatio nomen="iudicatur_per" ad="iudicium" modulus="iudicium"
+      nota="concessio aut negatio IUDICIUM est, cum auctore et
+            fundamento - unde petitiones negatae rationem
+            debent, et systemata quae eam non servant appellare
+            non possunt"/>
+    <relatio nomen="parit" ad="obligatio"
+      nota="petitio CONCESSA obligationem parit; petitio ipsa
+            nullam. Discrimen quod tota ratio assecurationis
+            fert"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="petitio_assecurationis">
+    <definitio>
+      Rogatio ad assecuratorem ut damnum ex polliciatione
+      praestet: quod "claim" vocatur.
+    </definitio>
+    <nota>
+      Specimen cursus septimi, quod solum genus portare non
+      potuit. Hic negatio exitus ordinarius est et appellatio
+      procedura statuta - unde relatio iudicatur_per necessaria,
+      non ornamentum.
+    </nota>
+  </species>
+
+  <species nomen="petitio_remota">
+    <definitio>
+      Rogatio ad programma per rete missa ut operationem agat
+      aut datum reddat.
+    </definitio>
+    <differentia>
+      Species in qua identificator et conatus NECESSARII fiunt,
+      quia responsum perire potest: sola species ubi petens et
+      rogatus de eadem petitione simul dissentire possunt sine
+      culpa utriusque.
+    </differentia>
+    <nota>
+      LEX HUIUS SPECIEI: traditio semel-exacte impossibilis est,
+      TRACTATIO semel-exacte possibilis - per idempotentiam
+      (vide elementa_programmatis.mutatio et
+      praescriptum.procedura_automata, quae eandem proprietatem
+      independenter declarant). Ideo systemata quae 'exactly
+      once' pollicentur aut idempotentiam supponunt aut
+      mentiuntur.
+    </nota>
+  </species>
+
+  <species nomen="supplicatio">
+    <definitio>
+      Rogatio ad auctoritatem directa quae de re sua statuere
+      potest: petitio venia, gratiae, licentiae.
+    </definitio>
+    <nota>
+      Species quae inversionem ostendit: hic rogatus potestatem
+      habet, petens non - contrarium iussi, ubi iubens potestatem
+      habet. Eadem duo capita, ordine converso.
+    </nota>
   </species>
 
 </genus>

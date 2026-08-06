@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/fabricatio.stml
-  Exemplar semanticum: FABRICATIO (versio 4, PLASTICUM)
+  Exemplar semanticum: FABRICATIO (versio 5, PLASTICUM)
   Genera: postulatum, facultas, probatio, vitium.
 
   QUADRATUM INTENTIONIS: postulatum intentionem DECLARAT ante
@@ -15,7 +15,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="4" lingua="latina">
+<natura modulus="fabricatio" versio="5" lingua="latina">
 
 <!-- ==================================================
      POSTULATUM - intentio declarata ante opus
@@ -537,6 +537,117 @@
       Species domestica bis dogfooded antequam nominata.
     </differentia>
   </species>
+
+</genus>
+
+
+<!-- ==================================================
+     DEPRAVATIO - status factus pravus, nondum apparens
+
+     TERMINUS MEDIUS TRIADIS, cursu decimo inventus. Bibliotheca
+     habebat vitium (discrepantia ab INTENTIONE - defectus in
+     faciendo) et incidens (ministerium visibiliter deminutum),
+     et inter ea NIHIL. Sed distantia inter illa vitam habet:
+
+       vitium       codex pravus est
+       depravatio   data nunc prava sunt
+       incidens     ministerium deficit
+
+     ET DISCRIMEN PRETIUM IMMANE FERT: vitio sanato depravatio
+     MANET. Quod hora quarta emendatum est rationes inter horam
+     nonam et quartam corruptas non sanat - emendatio in
+     posterum agit, non retro. Confusio horum duorum est error
+     administrationis pretiosissimus, et bibliotheca eum dicere
+     omnino non poterat.
+     ================================================== -->
+
+<genus nomen="depravatio">
+
+  <definitio>
+    Status rei factus alius quam esse debuit, sive quis animadvertat
+    sive non: non defectus faciendi (id vitium est) nec defectus
+    apparens (id incidens) sed RES IPSA iam prava.
+  </definitio>
+
+  <differentia>
+    LATET NATURA SUA. Vitium in codice legi potest; incidens
+    clamat; depravatio silet - datum pravum tam bene sedet quam
+    rectum, et nihil in eo se prodit. Ideo sola triadis
+    QUAERENDA est: nemo eam invenit nisi eam quaerat, et
+    plerumque quaeritur solum postquam incidens eam prodidit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="ambitus" genus="textus"
+      nota="QUAE res depravatae sint. Prima interrogatio post
+            vitium sanatum, et cui respondere plerumque
+            difficillimum est - unde acta (quae quid mutatum sit
+            servant) hic pretium suum reddunt"/>
+    <proprietas nomen="fenestra" genus="intervallum"
+      modulus="tempus"
+      nota="inter quae momenta res depravatae sint. Terminus
+            prior a vitio ingresso pendet, non a die detectionis
+            - error vulgaris est fenestram a detectione numerare"/>
+    <proprietas nomen="sanabilis" genus="electio"
+      nota="an res rectae restitui possint. QUAESTIO QUAE OMNIA
+            REGIT: ubi acta servantur, recomputari licet; ubi
+            status solus servabatur, veritas prior PERIIT et
+            restitutio coniectura fit. Hic doctrina
+            veritas/proiectio pretium suum extremum reddit">
+      <optio>recomputabilis</optio>
+      <optio>manu_sananda</optio>
+      <optio>insanabilis</optio>
+    </proprietas>
+    <proprietas nomen="propagata" genus="veritas"
+      ordinarius="falsum"
+      nota="an ex ea alia derivata sint (relationes emissae,
+            summae computatae, decisiones factae). Depravatio
+            propagata sanationem multiplicat - et systemata quae
+            aliis nuntiant depravationem SUAM exportant"/>
+  </proprietates>
+
+  <machina_statuum nomen="cognitio" gerens="individuum">
+    <status nomen="latens" nota="adest, nemo scit"/>
+    <status nomen="detecta"/>
+    <status nomen="circumscripta" nota="ambitus et fenestra noti"/>
+    <status nomen="sanata"/>
+    <status nomen="tolerata"
+      nota="cognita et CONSULTO relicta - sanatio pretiosior
+            damno. Exitus legitimus, non defectus, sed
+            DECLARANDUS: depravatio tolerata quae non scribitur
+            posteris ut recta apparet"/>
+    <transitus a="latens" ad="detecta" per="detectio"/>
+    <transitus a="detecta" ad="circumscripta" per="investigatio"/>
+    <transitus a="circumscripta" ad="sanata" per="sanatio"/>
+    <transitus a="circumscripta" ad="tolerata" per="acceptatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="ex_vitio" ad="vitium"
+      nota="unde orta. NON SEMPER: depravatio ex casu externo
+            oriri potest (octetus in memoria versus, discus
+            corruptus) sine ullo vitio - unde relatio, non
+            subordinatio"/>
+    <relatio nomen="prodita_per" ad="incidens" modulus="operatio"
+      multiplex="verum"
+      nota="incidens quo apparuit. VIA ORDINARIA ET SERA: res
+            prava per menses tacet donec aliquid frangat"/>
+    <relatio nomen="afficit" ad="*" multiplex="verum"/>
+    <relatio nomen="detecta_per" ad="probatio"
+      nota="probatio quae eam invenit - probationes quae DATA
+            examinant (non codicem) hic solae valent, et rarae
+            sunt"/>
+  </relationes>
+
+  <nota>
+    TRIAS COMPLETA: bibliotheca iam TRIADEM DEFECTUUM habebat per
+    NORMAM mensurantem (vitium ab intentione, morbus a natura,
+    damnum ab integritate). Haec alia trias est, per GRADUM
+    MANIFESTATIONIS: vitium in faciendo, depravatio in re,
+    incidens in usu. Duae triades se secant et neutra alteram
+    substituit - quod probat 'defectum' verbum esse trium
+    dimensionum, non unius.
+  </nota>
 
 </genus>
 
