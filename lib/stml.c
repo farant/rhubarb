@@ -4435,3 +4435,194 @@ stml_titulum_commutare(
         redde VERUM;  /* Now has it */
     }
 }
+
+/* ==================================================
+ * Strictum - forma BENE FORMATA super parsationem
+ *
+ * Vide stml.h pro doctrina (parser lenis, politia vocantis) et
+ * pro eo QUOD HIC NON EST: attributum sine quotis et ens ignotum
+ * mensurata et ACCEPTA sunt - non omne discrimen ab XML defectus.
+ * ================================================== */
+
+interior vacuum
+_strictum_addere(
+    Xar*               vitia,
+    StmlStrictumGenus  genus,
+    StmlNodus*         nodus,
+    chorda*            causa)
+{
+    StmlStrictumVitium* v;
+
+    v = (StmlStrictumVitium*)xar_addere(vitia);
+    si (!v)
+    {
+        redde;
+    }
+
+    v->genus = genus;
+    v->nodus = nodus;
+    v->causa = causa;
+}
+
+/* an chorda spatium album solum ferat */
+interior b32
+_strictum_album_solum(
+    constans chorda* s)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < s->mensura; i++)
+    {
+        character c;
+
+        c = (character)s->datum[i];
+        si (c != ' ' && c != '\t' && c != '\n' && c != '\r')
+        {
+            redde FALSUM;
+        }
+    }
+
+    redde VERUM;
+}
+
+interior vacuum
+_strictum_nodum(
+    StmlNodus* nodus,
+    Xar*       vitia)
+{
+    i32 numerus;
+    i32 i;
+
+    si (!nodus)
+    {
+        redde;
+    }
+
+    si (nodus->genus == STML_NODUS_ELEMENTUM)
+    {
+        /* elementum sine nomine: '<>' */
+        si (!nodus->titulus || nodus->titulus->mensura == ZEPHYRUM)
+        {
+            si (!nodus->fragmentum)
+            {
+                _strictum_addere(vitia,
+                    STML_STRICTUM_TITULUS_VACUUS, nodus, NIHIL);
+            }
+        }
+
+        /* attributum bis: quadraticum consulto - elementa attributa
+         * pauca ferunt (in corpore naturae maximum VII), et tabula
+         * dispersa hic plus constaret quam solveret */
+        numerus = xar_numerus(nodus->attributa);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            StmlAttributum* a;
+            i32             j;
+
+            a = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+            per (j = ZEPHYRUM; j < i; j++)
+            {
+                StmlAttributum* prius;
+
+                prius = (StmlAttributum*)xar_obtinere(
+                    nodus->attributa, j);
+                si (prius->titulus && a->titulus &&
+                    chorda_aequalis(*prius->titulus, *a->titulus))
+                {
+                    _strictum_addere(vitia,
+                        STML_STRICTUM_ATTRIBUTUM_DUPLICATUM,
+                        nodus, a->titulus);
+                    frange;
+                }
+            }
+        }
+    }
+
+    numerus = stml_numerus_liberorum(nodus);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        _strictum_nodum(stml_liberum_ad_indicem(nodus, i), vitia);
+    }
+}
+
+Xar*
+stml_strictum(
+    StmlNodus* radix,
+    Piscina*   piscina)
+{
+    Xar* vitia;
+    i32  numerus;
+    i32  i;
+    i32  radices;
+
+    si (!piscina)
+    {
+        redde NIHIL;
+    }
+
+    vitia = xar_creare(piscina, (i32)magnitudo(StmlStrictumVitium));
+    si (!vitia || !radix)
+    {
+        redde vitia;
+    }
+
+    /* gradus documenti: radices plures + textus vagus */
+    radices = ZEPHYRUM;
+    numerus = stml_numerus_liberorum(radix);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* liberum;
+
+        liberum = stml_liberum_ad_indicem(radix, i);
+        si (!liberum)
+        {
+            perge;
+        }
+
+        si (liberum->genus == STML_NODUS_ELEMENTUM)
+        {
+            radices++;
+            si (radices == II)
+            {
+                _strictum_addere(vitia,
+                    STML_STRICTUM_RADICES_PLURES, liberum, NIHIL);
+            }
+        }
+        alioquin si (liberum->genus == STML_NODUS_TEXTUS)
+        {
+            si (liberum->valor &&
+                !_strictum_album_solum(liberum->valor))
+            {
+                _strictum_addere(vitia,
+                    STML_STRICTUM_TEXTUS_EXTRA_RADICEM, liberum,
+                    NIHIL);
+            }
+        }
+    }
+
+    _strictum_nodum(radix, vitia);
+
+    redde vitia;
+}
+
+constans character*
+stml_strictum_nuntius(
+    StmlStrictumGenus genus)
+{
+    commutatio (genus)
+    {
+        casus STML_STRICTUM_ATTRIBUTUM_DUPLICATUM:
+            redde "attributum idem bis (primum vincit in lectione, "
+                  "utrumque in scriptura - plagula aliud dicit "
+                  "quam lectores adhibent)";
+        casus STML_STRICTUM_RADICES_PLURES:
+            redde "elementa radicis plura - reliqua tacite "
+                  "ignorantur";
+        casus STML_STRICTUM_TEXTUS_EXTRA_RADICEM:
+            redde "textus extra elementum radicis";
+        casus STML_STRICTUM_TITULUS_VACUUS:
+            redde "elementum sine nomine";
+        ordinarius:
+            redde "vitium ignotum";
+    }
+}

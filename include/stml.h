@@ -571,4 +571,53 @@ stml_duplicare_superficialiter(
     Piscina*             piscina,
     InternamentumChorda* intern);
 
+/* ==================================================
+ * Strictum - forma BENE FORMATA super parsationem
+ *
+ * Parser consulto LENIS est. Haec probationes ea nominant quae
+ * parsationem transeunt sed documentum TACITE ambiguum reddunt.
+ * Politia vocantis est: parser eas non cogit, quia STML fragmenta
+ * et usus alios legitime fert.
+ *
+ * QUOD HIC NON EST, et cur (mensuratum 2026-08-06):
+ * - attributum sine quotis (nomen=valor): recte intellectum,
+ *   ad nomen="valor" normalizatum. Lenitas, non vitium.
+ * - ens ignotum (&ignotum;): ut textus litteralis tractatum,
+ *   consulto. Circuitus mutat, sensus non.
+ * Utrumque probatum et ACCEPTUM - non omne discrimen ab XML
+ * defectus est.
+ * ================================================== */
+
+nomen enumeratio {
+    /* idem attributum bis in uno elemento. PERICULOSISSIMUM:
+     * ambo servantur, capere PRIMUM reddit - unde plagula unum
+     * dicit et omnis lector alterum adhibet */
+    STML_STRICTUM_ATTRIBUTUM_DUPLICATUM = I,
+    /* elementa radicis plura quam unum - reliqua tacite ignorantur
+     * ab omni vocante qui elementum_radix legit */
+    STML_STRICTUM_RADICES_PLURES        = II,
+    /* textus non-albus extra radicem */
+    STML_STRICTUM_TEXTUS_EXTRA_RADICEM  = III,
+    /* elementum sine nomine: '<>' titulum vacuum parit */
+    STML_STRICTUM_TITULUS_VACUUS        = IV
+} StmlStrictumGenus;
+
+nomen structura {
+    StmlStrictumGenus  genus;
+    StmlNodus*         nodus;   /* ubi inventum */
+    chorda*            causa;   /* nomen attributi duplicati, vel NIHIL */
+} StmlStrictumVitium;
+
+/* Probare arborem parsatam. radix = nodus DOCUMENTI (resultus.radix).
+ * Redde: Xar de StmlStrictumVitium (vacuum si sanum) */
+Xar*
+stml_strictum(
+    StmlNodus* radix,
+    Piscina*   piscina);
+
+/* Nuntius legibilis pro genere vitii */
+constans character*
+stml_strictum_nuntius(
+    StmlStrictumGenus genus);
+
 #endif /* STML_H */

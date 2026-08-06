@@ -2772,6 +2772,112 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * PROBARE: stml_strictum - forma bene formata
+     *
+     * Parser consulto lenis est; hae probationes ea nominant quae
+     * parsationem transeunt sed documentum TACITE ambiguum
+     * reddunt. Quaeque VITIO PLANTATO probatur - porta silens et
+     * porta mortua idem spectantur.
+     * ================================================== */
+
+    {
+        StmlResultus        r;
+        Xar*                vitia;
+        StmlStrictumVitium* v;
+
+        imprimere("\n--- Probans stml_strictum ---\n");
+
+        /* sanum: nihil */
+        r = stml_legere_ex_literis("<a n=\"1\"><b>x</b></a>",
+                                   piscina, intern);
+        CREDO_VERUM(r.successus);
+        vitia = stml_strictum(r.radix, piscina);
+        CREDO_NON_NIHIL(vitia);
+        CREDO_AEQUALIS_I32(xar_numerus(vitia), ZEPHYRUM);
+
+        /* attributum duplicatum - periculosissimum: ambo servantur,
+         * capere PRIMUM reddit */
+        r = stml_legere_ex_literis("<a n=\"1\" n=\"2\">x</a>",
+                                   piscina, intern);
+        CREDO_VERUM(r.successus);
+        vitia = stml_strictum(r.radix, piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(vitia), I);
+        v = (StmlStrictumVitium*)xar_obtinere(vitia, ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)v->genus,
+            (i32)STML_STRICTUM_ATTRIBUTUM_DUPLICATUM);
+        CREDO_NON_NIHIL(v->causa);
+        CREDO_VERUM(chorda_aequalis_literis(*v->causa, "n"));
+
+        /* radices plures */
+        r = stml_legere_ex_literis("<a/><b/>", piscina, intern);
+        CREDO_VERUM(r.successus);
+        vitia = stml_strictum(r.radix, piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(vitia), I);
+        v = (StmlStrictumVitium*)xar_obtinere(vitia, ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)v->genus,
+            (i32)STML_STRICTUM_RADICES_PLURES);
+
+        /* radices TRES = vitium unum (non duo) */
+        r = stml_legere_ex_literis("<a/><b/><c/>", piscina, intern);
+        CREDO_VERUM(r.successus);
+        vitia = stml_strictum(r.radix, piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(vitia), I);
+
+        /* textus extra radicem */
+        r = stml_legere_ex_literis("textus<a/>", piscina, intern);
+        CREDO_VERUM(r.successus);
+        vitia = stml_strictum(r.radix, piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(vitia), I);
+        v = (StmlStrictumVitium*)xar_obtinere(vitia, ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)v->genus,
+            (i32)STML_STRICTUM_TEXTUS_EXTRA_RADICEM);
+
+        /* spatium album extra radicem NON est vitium */
+        r = stml_legere_ex_literis("\n  <a/>\n", piscina, intern);
+        CREDO_VERUM(r.successus);
+        vitia = stml_strictum(r.radix, piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(vitia), ZEPHYRUM);
+
+        /* titulus vacuus: '<>' */
+        r = stml_legere_ex_literis("<>x</>", piscina, intern);
+        CREDO_VERUM(r.successus);
+        vitia = stml_strictum(r.radix, piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(vitia), I);
+        v = (StmlStrictumVitium*)xar_obtinere(vitia, ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)v->genus,
+            (i32)STML_STRICTUM_TITULUS_VACUUS);
+
+        /* LENITAS SERVATA - haec mensurata et ACCEPTA sunt
+         * (2026-08-06), non vitia: */
+        r = stml_legere_ex_literis("<a disabled>x</a>", piscina,
+                                   intern);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32(
+            xar_numerus(stml_strictum(r.radix, piscina)), ZEPHYRUM);
+
+        r = stml_legere_ex_literis("<a nomen=valor>x</a>", piscina,
+                                   intern);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32(
+            xar_numerus(stml_strictum(r.radix, piscina)), ZEPHYRUM);
+
+        r = stml_legere_ex_literis("<a>&ignotum;</a>", piscina,
+                                   intern);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32(
+            xar_numerus(stml_strictum(r.radix, piscina)), ZEPHYRUM);
+
+        /* fragmentum titulum vacuum habere LICET */
+        r = stml_legere_ex_literis("<a><#>x</#></a>", piscina,
+                                   intern);
+        CREDO_VERUM(r.successus);
+        CREDO_AEQUALIS_I32(
+            xar_numerus(stml_strictum(r.radix, piscina)), ZEPHYRUM);
+
+        imprimere("  stml_strictum: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

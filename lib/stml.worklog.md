@@ -150,3 +150,58 @@ it actually works, both layers:
 
 Pins: nearest + nested-double byte round-trip, orphan errors loud.
 All first run; root PLENUS, gesta 4/4. Board 01KYSPRF9R.
+
+## 2026-08-06 — stml_strictum: quattuor probationes, et duae quae NON factae sunt
+
+Contractu naturae ad STML BENE FORMATUM muto (ab XML), quaesitum
+est quid stml praeter parsationem probare deberet. Responsum
+MENSURATUM est, non aestimatum, et mensura consilium mutavit.
+
+METHODUS: pro quoque casu quem stml ACCIPIT ubi xmllint reicit,
+arborem inspicere ET CIRCUITUM (parsare -> scribere -> conferre).
+Circuitus oraculum est: si non redit octetim, parser aliud
+intellexit quam scriptum est.
+
+QUOD MENSURA OSTENDIT - duo ex sex 'defectibus' NON defectus sunt:
+
+  attributum sine quotis   <a nomen=valor>
+    -> circuitus '<a nomen="valor">'. RECTE intellectum, ad formam
+       canonicam normalizatum. Lenitas consulta, non vitium.
+  ens ignotum              <a>&ignotum;</a>
+    -> circuitus '<a>&amp;ignotum;</a>'. Ut textus litteralis
+       tractatum, quod praedicibile est et documentum non corrumpit.
+
+Ergo gradus I MINOR factus est quam aestimatus. Non omne discrimen
+ab XML defectus est, et sine mensura utrumque frustra 'emendassem'.
+
+QUATTUOR QUAE VERE NOCENT (omnia post-parsationem, arbore iam
+exstante - nulla mutatio parseris):
+
+  1. ATTRIBUTUM DUPLICATUM - periculosissimum, et non obvium.
+     <a n="1" n="2"/> circuitum IDEM reddit et AMBO servat
+     (xar_numerus == II), sed stml_attributum_capere PRIMUM
+     reddit. Plagula igitur 'n=2' dicit dum omnis lector 'n=1'
+     adhibet. Non error clamans sed DISCRIMEN TACITUM inter id
+     quod scriptum est et id quod valet - genus pessimum, quia
+     inspectio oculis plagulam rectam ostendit.
+  2. RADICES PLURES - quicquid post primum elementum sequitur ab
+     omni vocante qui elementum_radix legit TACITE ignoratur.
+     In .genera hoc genus integrum evanescere sineret.
+  3. TEXTUS EXTRA RADICEM - idem, minore pretio.
+  4. TITULUS VACUUS - '<>' elementum sine nomine parit (mensuratum:
+     titulus->mensura == 0, fragmentum == 0). Fragmenta excipiuntur,
+     quibus titulum vacuum habere LICET.
+
+FORMA: stml_strictum(radix, piscina) -> Xar de StmlStrictumVitium.
+Parser eas NON cogit, quia STML fragmenta et usus alios legitime
+fert; politia vocantis est. natura eas ad regulam I mappat.
+
+Duplicata quadratice quaeruntur consulto: elementa attributa pauca
+ferunt (in corpore naturae maximum VII), et tabula dispersa hic
+plus constaret quam solveret.
+
+PROBATIO: vitium quodque PLANTATUM est - porta silens et porta
+mortua idem spectantur (lectio hodierna ab uncis mortuis empta).
+Lenitas quoque probata est ne postea 'emendetur': attributum sine
+quotis, ens ignotum, attributum booleanum, fragmentum anonymum -
+omnia ZEPHYRUM vitia reddere DEBENT. XXIX assertiones novae.

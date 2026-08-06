@@ -433,6 +433,36 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: strictum -> regula I
+     *
+     * Plagula PARSATUR sed attributum bis fert: parsatio successum
+     * reddit, vitium tamen regulae I fit. Plagula 'nomen=duo'
+     * dicit dum omnis lector 'unum' adhibet - discrimen quod
+     * tacere non licet.
+     * ======================================================== */
+
+    {
+        NaturaBibliotheca* bib;
+
+        imprimere("\n--- Probans strictum in regula I ---\n");
+
+        bib = natura_bibliotheca_creare(piscina);
+        CREDO_NON_NIHIL (bib);
+
+        CREDO_VERUM (natura_legere(bib,
+            chorda_ex_literis(
+                "<natura modulus=\"duplex\" versio=\"1\" lingua=\"latina\">\n"
+                "<genus nomen=\"unum\" nomen=\"duo\">\n"
+                "  <definitio>attributum duplicatum</definitio>\n"
+                "</genus>\n"
+                "</natura>\n", piscina),
+            "duplex"));
+
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, I), I);
+    }
+
+
+    /* ========================================================
      * PROBARE: parsatio fracta (regula I)
      * ======================================================== */
 

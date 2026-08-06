@@ -440,6 +440,26 @@ natura_legere(
         redde FALSUM;
     }
 
+    /* forma BENE FORMATA super parsationem (regula I): parser
+     * consulto lenis est, sed haec documentum TACITE ambiguum
+     * redderent - attributum duplicatum praesertim, ubi plagula
+     * unum dicit et omnis lector alterum adhibet */
+    {
+        Xar* vitia;
+        i32  i;
+
+        vitia = stml_strictum(resultus.radix, bib->piscina);
+        per (i = ZEPHYRUM; i < xar_numerus(vitia); i++)
+        {
+            StmlStrictumVitium* v;
+
+            v = (StmlStrictumVitium*)xar_obtinere(vitia, i);
+            diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, I,
+                chorda_internare_ex_literis(bib->intern, stirps),
+                v->causa, stml_strictum_nuntius(v->genus));
+        }
+    }
+
     ex = (NaturaExemplar*)piscina_allocare(
         bib->piscina, magnitudo(NaturaExemplar));
     ex->stirps = chorda_internare_ex_literis(bib->intern, stirps);
