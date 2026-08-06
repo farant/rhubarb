@@ -4354,3 +4354,122 @@ have.
 
 MEASURED after: 33 exemplaria / 171 genera / 372 res / 505 arcus
 / 0 vulnera / 24 monita / dubia 14 / umbrae 2.
+
+## 2026-08-06 — round fifty-seven: the museum (coverage loop, run 14)
+
+Fran's choice, and it passed all three gates on inspection:
+curators and registrars are punished severely (a forgery bought,
+a provenance lost, an irreversible treatment); the vocabulary
+runs to the Renaissance Kunstkammer; and museum registration
+EXPORTED to digital asset management rather than importing from
+it, so no echo risk.
+
+292. FIDUCIA — and the second domain was already on the books.
+     A museum does not own its collection in the ordinary sense:
+     it holds IN TRUST, with legal title and no beneficial
+     ownership. And round 45 had already recorded that the Debian
+     Project refuses legal personhood and SPI holds its assets.
+     Two domains, two weeks apart, neither prompting the other.
+     PLACED BESIDE DELEGATIO, and the contrast is exact:
+     a delegate acts in ANOTHER'S NAME (his acts bind the
+     principal); a trustee acts in HIS OWN name and holds real
+     title — but the BENEFIT is another's. One alienates the
+     name, the other the benefit.
+     `lucrum_proprium` carries the load: self-dealing is
+     forbidden even when the price is fair, because the trustee's
+     judgment as buyer cannot be separated from his judgment as
+     seller. WHAT IS FORBIDDEN IS THE CONFLICT, NOT THE LOSS —
+     a distinction most access-control thinking never reaches.
+     `beneficiarius` records the hardest case: a museum holds for
+     generations not yet born, who can neither complain nor sue.
+     Where the beneficiary cannot defend himself, external
+     custody (statute, professional norm) becomes structurally
+     necessary rather than merely desirable.
+
+293. AND STATION 7 CONFIRMED THE CUT. Deaccession proceeds are
+     restricted to acquisitions, never to operating costs — and
+     that is not a rule bolted on but a CONSEQUENCE: a trustee
+     may not convert trust property to his own running expenses.
+     When a domain's ethics fall out of the genus rather than
+     needing to be added, the genus was cut at the joint.
+
+294. INTERVENTIO — the conservators' doctrine, which is better
+     than anything the library had for acting on what one did not
+     make. Three conditions: REVERSIBLE, MINIMAL,
+     DISTINGUISHABLE.
+     The reason for the first is the best part and belongs to
+     them, not us: FUTURE CONSERVATORS WILL KNOW MORE. Epistemic
+     humility turned into a hard constraint on work — whoever
+     acts irreversibly IMPOSES HIS JUDGMENT ON POSTERITY. That
+     applies without alteration to migrations, refactors, and
+     every edit to something another will handle after you.
+     The third is the sharpest and least obvious: a repair that
+     cannot be told from the original is a FAULT, however
+     beautiful. An anti-forgery ethic INTERNAL TO REPAIR, for two
+     reasons — that posterity not mistake your work for the
+     original, and that nobody studying the original afterwards
+     be deceived. Nothing in the library said this. Tratteggio is
+     the purest specimen: retouching that matches at viewing
+     distance and reveals itself close up. AN ART THAT CONFESSES
+     ITSELF.
+     `curatio_medica` included deliberately AS THE LIMIT: there
+     reversibility is mostly impossible (an incision cannot be
+     revoked), so the whole weight shifts to minimality — "first
+     do no harm". Which proves the three are ORDERED, not equal.
+
+295. ATTRIBUTIO — and the finding is better than the genus.
+     The art trade has a standardised graded vocabulary — by /
+     attributed to / studio of / circle of / follower of / after
+     / in the manner of — each with settled meaning and legal
+     force at auction.
+     I TOOK THEM FOR DEGREES OF ASSENT AND THEY ARE NOT.
+     "Studio of Rembrandt" does not mean "I am unsure it is
+     Rembrandt"; it means "I am confident it is NOT by him and
+     confident it came from his workshop." They are degrees of
+     PROXIMITY TO ORIGIN, and certainty is a SEPARATE AXIS
+     running across all of them — one can be quite sure a thing
+     is "after Rembrandt".
+     The library carried one axis and silently conflated the
+     other into it. Now `certitudo` (how firmly held) and
+     `propinquitas` (how much of the named hand was present) are
+     distinct, which is why `attributio` had to be a sub-genus of
+     `iudicium` rather than a species: only a genus can declare
+     properties.
+     The Rembrandt Research Project is the individuum-grade
+     lesson: it de-attributed hundreds of paintings. THE PANELS
+     DID NOT CHANGE. The judgment changed, and the price followed
+     the judgment, not the panel. Whoever stores attribution as a
+     PROPERTY OF THE WORK will treat that as correcting an error
+     rather than as a new judgment about the same thing, and will
+     lose the history of both.
+
+296. COMMODATUM — cheap missing species of contractus, and it
+     carries a counter-intuitive rule the Romans held firmly:
+     BECAUSE the loan is gratuitous, the borrower owes a HIGHER
+     standard of care than for his own goods, since he alone
+     profits. Where both parties gain (hire), ordinary care
+     suffices. Benefit INCREASES the burden. Museum loan
+     conditions — light, humidity, courier, insurance — follow
+     that logic exactly.
+
+297. COMPOSITION, and one of them is the best `ignotum` result so
+     far: provenance is a chain of `possessio` over time,
+     `origo_dominii` (built two rounds ago) is precisely the root
+     of title beyond which enquiry cannot pass, and a gap is
+     `ignotum`. But in THIS domain THE GAP IS THE FINDING — an
+     unexplained 1933–45 interval is not missing data awaiting
+     completion but a reportable result with legal consequences.
+     A named absence doing institutional work.
+     Also: an accession number is the ANTI-PID — permanent and
+     never reused even after deaccession, because the record must
+     outlive the object, where a pid is a lease.
+
+298. DEFERRED WITH ITS TRIGGER (the discipline that redeemed
+     `petitio`): THE MATRIX — mould, plate, negative — a thing
+     whose purpose is to generate others, and which can be
+     CANCELLED to make the existing set final. One domain so far.
+     A destroyed signing key or an unreproducible build would be
+     the second.
+
+MEASURED after: 33 exemplaria / 174 genera / 376 res / 509 arcus
+/ 0 vulnera / 24 monita / dubia 14 / umbrae 2.

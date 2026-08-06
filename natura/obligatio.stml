@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/obligatio.stml
-  Exemplar semanticum: OBLIGATIO (versio 7, PLASTICUM)
+  Exemplar semanticum: OBLIGATIO (versio 8, PLASTICUM)
   Genera: obligatio, contractus, licentia.
 
   Natum ex experimento pistrinae (ratio caffeae, conductio
@@ -20,7 +20,7 @@
   datur, revocari potest, expirat. Non idem genus - quod
   schemata vulgaria confundunt.
 -->
-<natura modulus="obligatio" versio="7" lingua="latina">
+<natura modulus="obligatio" versio="8" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -151,6 +151,27 @@
       procurator, agens. (Agens artificialis mandato vivit
       quoque: forma antiqua, materia nova.)
     </definitio>
+  </species>
+
+  <species nomen="commodatum">
+    <definitio>
+      Res certa alicui GRATIS utenda datur, eadem reddenda: non
+      pretium sed beneficium, et res ipsa redit, non similis.
+    </definitio>
+    <differentia>
+      Ex eo quod GRATIS datur sequitur quod nemo exspectat:
+      commodatarius diligentiam MAIOREM debet quam in rebus
+      suis, quia solus commodum capit. Ubi utraque pars lucratur
+      (locatio) diligentia media sufficit. Beneficium onus
+      auget, non minuit - quod intuitio negat et ius Romanum
+      constanter tenuit.
+    </differentia>
+    <nota>
+      Species quam museum poposcit (cursus XIV): commodatum
+      operum inter museos gratuitum est, et condiciones quas
+      commodans imponit (aer, lux, custos comitans, assecuratio)
+      hanc ipsam rationem sequuntur.
+    </nota>
   </species>
 
 </genus>
@@ -578,6 +599,112 @@
 
 </genus>
 
+
+<!-- ==================================================
+     FIDUCIA - tentio suo nomine, alieno commodo
+
+     Cursu quarto decimo (museo) coacta, DUOBUS dominiis iam in
+     actis: museum collectionem suam non possidet more vulgari
+     sed IN FIDE tenet; et rota XLV notatum est Proiectum Debian
+     personam iuridicam consulto recusare, bona eius a Software
+     in the Public Interest TENERI. Duo dominia, duabus
+     hebdomadibus distantia, neutrum alterum pulsante.
+
+     IUXTA DELEGATIONEM POSITA quia contrarium acutissimum est:
+     delegatus ALIENO NOMINE agit et acta eius alium obligant;
+     fiduciarius SUO nomine tenet et titulum verum habet - sed
+     commodum eius alienum est. Illa nomen alienat, haec
+     commodum.
+     ================================================== -->
+
+<genus nomen="fiducia">
+
+  <definitio>
+    Tentio rei suo nomine et titulo, sed ALIENO COMMODO et sub
+    officiis: fiduciarius dominus apparet et dominus non est,
+    quia quod tenet sibi non tenet.
+  </definitio>
+
+  <differentia>
+    A possessione OFFICIO: possessor rem habet et quid ea faciat
+    suum est; fiduciarius rem habet et quid ea faciat
+    PRAESCRIPTUM est. A delegatione LATERE: delegatus alieno
+    nomine agit (acta eius alium obligant); fiduciarius suo
+    nomine agit et titulum verum tenet - sed fructus alienus
+    est. Utraque potestas aliena, altera in NOMINE, altera in
+    COMMODO.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="lucrum_proprium" genus="veritas"
+      ordinarius="falsum"
+      nota="an fiduciarius ex re commodum proprium capere possit.
+            FERE SEMPER FALSUM, et haec prohibitio (ne sibi
+            negotietur) totam institutionem portat: fiduciarius
+            qui rem sibi vendit iustum pretium solvere potest et
+            tamen violat, quia iudicium eius emptoris ab iudicio
+            venditoris separari non potest. Vetatur non damnum
+            sed CONFLICTUS"/>
+    <proprietas nomen="alienatio" genus="electio"
+      nota="an res alienari possit, et quo pretium eat. HIC
+            ETHICA MUSEI EX GENERE SPONTE FLUIT: quod museum
+            vendit ad acquisitiones solas ire debet, numquam ad
+            sumptus cotidianos - non regula addita sed
+            consequentia, quia fiduciarius rem fiduciariam in
+            usus SUOS vertere non potest">
+      <optio>libera</optio>
+      <optio>ad_certos_fines</optio>
+      <optio>nulla</optio>
+    </proprietas>
+    <proprietas nomen="perpetua" genus="veritas"
+      ordinarius="falsum"
+      nota="an in tempus indefinitum duret. Custodia musei
+            perpetua est (nulla generatio collectionem
+            consumit); executio testamenti finem habet - unde
+            officia diversa: illa CONSERVAT, haec DISTRIBUIT
+            et desinit"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="constituta"/>
+    <status nomen="gesta"/>
+    <status nomen="soluta" nota="fine impleto, bonis traditis"/>
+    <status nomen="violata"
+      nota="officio fracto. STATUS QUI RES NON MUTAT: violatio
+            titulum fiduciarii non tollit ipso facto - res adhuc
+            apud eum est, et remedium PETENDUM est. Unde
+            beneficiarius saepe damnum patitur antequam quicquam
+            fieri possit, quod institutionis debilitas propria"/>
+    <transitus a="constituta" ad="gesta" per="susceptio"/>
+    <transitus a="gesta" ad="soluta" per="solutio"/>
+    <transitus a="gesta" ad="violata" per="violatio"/>
+    <transitus a="violata" ad="gesta" per="emendatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="fiduciarius" ad="*"
+      nota="qui tenet"/>
+    <relatio nomen="beneficiarius" ad="*" multiplex="verum"
+      nota="cuius commodo. SAEPE INDETERMINATUS ET FUTURUS:
+            museum generationibus nondum natis tenet, quae nec
+            queri nec agere possunt - unde custodia externa
+            (magistratus, norma professionis) necessaria fit ubi
+            beneficiarius se ipsum tueri non potest"/>
+    <relatio nomen="res_fiduciaria" ad="*" multiplex="verum"/>
+    <relatio nomen="constituta_per" ad="actus_sollemnis"
+      modulus="actus"/>
+    <relatio nomen="officia" ad="obligatio" multiplex="verum"/>
+  </relationes>
+
+  <nota>
+    CAVE HOMONYMIAM: acta.radix_fiduciae de FIDE agit (fiducia ut
+    credulitas - unde catena attestationum pendet); hoc genus de
+    FIDUCIA ut institutione iuris (tentio alieno commodo).
+    Verbum unum, res duae, et Latina utramque fert sicut Anglica.
+    Notatum ne quis eas coniungat.
+  </nota>
+
+</genus>
 
 <!-- ==================================================
      PETITIO - rogatio quae negari potest

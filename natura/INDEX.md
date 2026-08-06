@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **33** · genera **171** · res dictionarii **372** · arcus **505**
+Exemplaria **33** · genera **174** · res dictionarii **376** · arcus **509**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -116,7 +116,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **programma** — Collectio elementorum cum INITIO PROPRIO: vocatum currit et ex se ipso pergit, ubi bibliotheca vocata solum vivit
 - **instrumentum_aedificationis** ⊂ programma — Programma cuius finis artefacta aedificationis ex fontibus derivare: graphum dependentiarum novit (quid ex quo), et in
 
-### fabricatio (v6, genera 8)
+### fabricatio (v7, genera 9)
 
 - **postulatum** ⚙ — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
 - **facultas** — Quod opus praestare potest, ab utente aestimatum: unitas VALORIS
@@ -126,6 +126,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **complicatio** ⚙ — Consideratio implementationis quae consilio praevideri NON POTEST sed opere incepto sola apparet, et consilium retract
 - **consilium** ⚙ — Ordo operum propositus ad finem SEMEL petendum: quid quo ordine fiet, quid cui committitur, quid ante quid stare debet
 - **depravatio** ⚙ — Status rei factus alius quam esse debuit, sive quis animadvertat sive non: non defectus faciendi (id vitium est) nec d
+- **interventio** ⚙ — Actus in rem iam exsistentem susceptus ut servetur, sanetur, aut melior fiat: non factio (nihil novum oritur) nec damn
 
 ### formae_datorum (v0, genera 1)
 
@@ -135,7 +136,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **schema_identificandi** ⚙ ▣3 — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
 
-### iudicium (v5, genera 9)
+### iudicium (v6, genera 10)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
@@ -146,6 +147,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **investigatio** ⚙ — Inquisitio ordinata in causas eventus, iudicia de causis producens
 - **secretum** ⚙ — Res cuius utilitas in eo consistit quod pauci eam sciunt: divulgata non corrumpitur nec perit sed OFFICIO SUO EXUITUR,
 - **peritia_communis** ⚙ — Scientia aut ars quae in universitate residet nec in ullo membro tota est: participando traditur, non doctrina sola, e
+- **attributio** ⊂ iudicium — Iudicium de eo QUIS FECERIT, quod duabus mensuris simul utitur: quanto assensu teneatur (certitudo, ut omne iudicium) 
 
 ### lingua_programmandi (v4, genera 5)
 
@@ -179,7 +181,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **classis_normativa** ⚙ — Categoria a norma constituta in quam res assignantur, cui consequentiae (obligationes, prohibitiones, procedurae) ADHA
 - **fictio_iuris** — Praeceptum quo lex rem aliter se habentem TAMQUAM ALITER tractari iubet, sciens ita non esse, propter bonum quod alite
 
-### obligatio (v7, genera 11)
+### obligatio (v8, genera 12)
 
 - **obligatio** ⚙ — Iuris vinculum quo quis alicui aliquid praestare adstringitur (Institutiones): non res sed VINCULUM inter personas - d
 - **contractus** — Conventio duorum (aut plurium) quae obligationes parit: consensus est fundamentum - ideo utrumque ligat, et neuter sol
@@ -187,6 +189,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **tributum** ⊂ obligatio — Obligatio ad MAGISTRATUM, ex lege orta, non ex consensu: debetur quia lex ita statuit, non quia quis promisit
 - **titulus** — Attestatio publica et permanens ab auctoritate data, quod aliquis aliquid consecutus est aut aliquid EST: non permissi
 - **iussum** ⚙ — Directivum ab eo qui potestatem habet latum, quod agendum quid, a quo, et intra quod tempus determinat, et quod ACTU L
+- **fiducia** ⚙ — Tentio rei suo nomine et titulo, sed ALIENO COMMODO et sub officiis: fiduciarius dominus apparet et dominus non est, q
 - **petitio** ⚙ — Rogatio ad alium directa ut aliquid faciat aut praestet, quam ille CONCEDERE AUT NEGARE potest sine ulla violatione: q
 - **delegatio** ⚙ — Potestas alterius nomine agendi, ita ut acta delegati delegantem OBLIGENT tamquam ipse egisset: non licentia agendi se
 - **tractatus** ⊂ contractus ⚙ — Conventio inter eos qui superiorem non habent: nullum tribunal supra partes est, unde consensus non semel datur sed BI
@@ -310,6 +313,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | artefactum_aedificationis | elementa_programmatis |
 | assertio | elementa_programmatis |
 | attestatio | acta |
+| attributio | iudicium |
 | bibliotheca | elementa_programmatis |
 | calendarium | tempus |
 | campus | schema |
@@ -346,6 +350,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | facultas | fabricatio |
 | fasciculus | opus_scriptum |
 | fictio_iuris | norma |
+| fiducia | obligatio |
 | fons | iudicium |
 | forma_datorum | formae_datorum |
 | functio | elementa_programmatis |
@@ -365,6 +370,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | instrumentum_aedificationis | elementa_programmatis |
 | interactio | pharmacon |
 | intervallum | tempus |
+| interventio | fabricatio |
 | investigatio | iudicium |
 | iter | vectura |
 | iudicium | iudicium |
@@ -511,6 +517,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `elementa_programmatis.programma` — applicatio, daemon, instrumentum_lineae
 - `elementa_programmatis.status` — :errno, :index_strtok, :semen_rand
 - `fabricatio.consilium` — consilium_computatum
+- `fabricatio.interventio` — conservatio, curatio_medica, restauratio_aedificii
 - `fabricatio.probatio` — probatio_fumi, probatio_integrationis, probatio_regressionis, probatio_unitatis
 - `fabricatio.vitium` — regressio
 - `formae_datorum.forma_datorum` — acervus, arbor, cauda, copia, series, tabula_associativa
@@ -535,7 +542,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `norma.fictio_iuris` — adoptio, mors_praesumpta, personalitas_iuridica
 - `norma.lex` — consuetudo, lex_aeterna, lex_divina_positiva, lex_humana, lex_naturalis
 - `norma.norma` — :iso_9899_1990, :iso_9899_1999, :posix_1
-- `obligatio.contractus` — emptio_venditio, locatio_conductio, mandatum, societas_contractus
+- `obligatio.contractus` — commodatum, emptio_venditio, locatio_conductio, mandatum, societas_contractus
 - `obligatio.delegatio` — delegatio_canonica, plena_potestas, procuratio
 - `obligatio.iussum` — iussum_emptionis, iussum_ne_resuscitetur, iussum_operis, mandatum_iudicis, praescriptio_medica
 - `obligatio.obligatio` — obligatio_ex_contractu, obligatio_ex_delicto, obligatio_ex_lege

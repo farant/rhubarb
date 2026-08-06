@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/iudicium.stml
-  Exemplar semanticum: IUDICIUM (versio 5, PLASTICUM)
+  Exemplar semanticum: IUDICIUM (versio 6, PLASTICUM)
   Genera: gradus_assensus, fons, observatio, iudicium,
   periculum, ignotum.
 
@@ -46,7 +46,7 @@
   historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
   verificatis, et hoc dicere debet.
 -->
-<natura modulus="iudicium" versio="5" lingua="latina">
+<natura modulus="iudicium" versio="6" lingua="latina">
 
 <!-- ==================================================
      GRADUS ASSENSUS - quanto animus adhaeret
@@ -1006,6 +1006,90 @@
       cotidie agit.
     </nota>
   </species>
+
+</genus>
+
+
+<!-- ==================================================
+     ATTRIBUTIO - iudicium de ORIGINE rei
+
+     Cursu quarto decimo inventa, et inventum melius quam
+     genus: ars mercatoria vocabularium GRADATUM habet - manu
+     ipsius / attributum / officinae / circuli / sectatoris /
+     post / in modo - cuius quisque terminus significationem
+     statutam et vim iuridicam in auctione fert.
+
+     PRIMO GRADUS ASSENSUS ESSE PUTAVI. NON SUNT. "Officinae
+     Rembrandt" non significat 'incertus sum an Rembrandt sit'
+     sed 'certus sum eum NON fecisse, et certus ex officina eius
+     venire'. Gradus PROPINQUITATIS AD ORIGINEM sunt, et
+     certitudo AXIS ALIUS per omnes currens: de opere 'post
+     Rembrandt' certissimus esse potes aut dubius.
+
+     BIBLIOTHECA AXES CONFUNDEBAT quia alterum solum habebat.
+     Nunc duo: certitudo (quantum animus adhaereat) et
+     propinquitas (quantum manus auctoris adfuerit).
+     ================================================== -->
+
+<genus nomen="attributio" sub="iudicium">
+
+  <differentia>
+    Iudicium de eo QUIS FECERIT, quod duabus mensuris simul
+    utitur: quanto assensu teneatur (certitudo, ut omne
+    iudicium) et quantum auctor nominatus operi adfuerit
+    (propinquitas, huic generi propria). Duae res quas sermo
+    vulgaris in unum 'fortasse' confundit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="propinquitas" genus="electio"
+      nota="quantum manus auctoris nominati adfuerit. SCALA NON
+            CERTITUDINIS SED PARTICIPATIONIS: descendendo minus
+            de auctore ipso, non minus de scientia nostra.
+            Termini in mercatu artis significationes statutas
+            habent et emptorem ligant">
+      <optio>manu_ipsius</optio>
+      <optio>cum_adiutoribus</optio>
+      <optio>officinae</optio>
+      <optio>circuli</optio>
+      <optio>sectatoris</optio>
+      <optio>post_eum</optio>
+      <optio>in_modo_eius</optio>
+    </proprietas>
+    <proprietas nomen="fundamentum_attributionis" genus="electio"
+      multiplex="verum"
+      nota="quibus rebus nitatur - et haec plerumque discrepant,
+            unde controversiae">
+      <optio>subscriptio</optio>
+      <optio>documentum</optio>
+      <optio>provenientia</optio>
+      <optio>stilus</optio>
+      <optio>materia_examinata</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="de_opere" ad="*"/>
+    <relatio nomen="ad_auctorem" ad="persona" modulus="persona"/>
+  </relationes>
+
+  <nota>
+    ATTRIBUTIO MUTATUR ET RES NON. Consilium Investigationis
+    Rembrandtianae opera centena ei abiudicavit: tabulae eaedem
+    manserunt, iudicium mutatum est - et pretium cum iudicio,
+    non cum tabula. Casus purissimus doctrinae domus (membrum
+    per iudicium, revisabile): qui attributionem ut PROPRIETATEM
+    OPERIS servat mutationem eius ut correctionem erroris
+    tractabit, cum sit iudicium novum de re eadem, et historiam
+    utriusque perdet.
+  </nota>
+
+  <nota>
+    CATALOGUS RATIONATUS (catalogue raisonne) acta attributionum
+    est: quis quid quando censuerit, cum ratione. Ideo editiones
+    eius se substituunt more normarum, et editio vetus citabilis
+    manet - quod exemplar normae iam describit.
+  </nota>
 
 </genus>
 

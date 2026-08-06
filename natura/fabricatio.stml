@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/fabricatio.stml
-  Exemplar semanticum: FABRICATIO (versio 6, PLASTICUM)
+  Exemplar semanticum: FABRICATIO (versio 7, PLASTICUM)
   Genera: postulatum, facultas, probatio, vitium.
 
   QUADRATUM INTENTIONIS: postulatum intentionem DECLARAT ante
@@ -15,7 +15,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="6" lingua="latina">
+<natura modulus="fabricatio" versio="7" lingua="latina">
 
 <!-- ==================================================
      POSTULATUM - intentio declarata ante opus
@@ -666,6 +666,152 @@
     substituit - quod probat 'defectum' verbum esse trium
     dimensionum, non unius.
   </nota>
+
+</genus>
+
+
+<!-- ==================================================
+     INTERVENTIO - actus in rem iam exsistentem
+
+     Cursu quarto decimo (museo) inventa, et doctrina eius non
+     nostra sed CONSERVATORUM: quicquid fit reversibile,
+     minimum, distinguibile esse debet. Charta Venetiarum (1964)
+     idem de aedificiis dicit; medicina idem debilius.
+
+     RATIO REVERSIBILITATIS OPTIMA PARS EST: conservatores
+     posteri PLUS SCIENT. Humilitas epistemica in vinculum
+     operis conversa - non consilium sed regula.
+
+     ET TERTIA CONDICIO ACERRIMA: refectio quae ab originali
+     discerni non potest VITIUM est, quamvis pulchra. Ethica
+     contra fraudem INTRA reparationem ipsam, quam bibliotheca
+     nusquam dicebat.
+
+     IUXTA DEPRAVATIONEM POSITA: illa statum pravum describit,
+     haec quid de eo agatur.
+     ================================================== -->
+
+<genus nomen="interventio">
+
+  <definitio>
+    Actus in rem iam exsistentem susceptus ut servetur, sanetur,
+    aut melior fiat: non factio (nihil novum oritur) nec damnum
+    (nihil laeditur consulto) sed MUTATIO REI ALIENAE TEMPORI,
+    quam et praeteritum et futurum iudicant.
+  </definitio>
+
+  <differentia>
+    Agitur in rem QUAM NON FECISTI, et coram posteris qui plus
+    scient. Inde tres condiciones quae hoc genus ab omni alio
+    opere dividunt - reversibilitas, minimitas, distinguibilitas
+    - quarum nulla ex fine operis fluit sed ex CONDICIONE
+    AGENTIS: nempe quod agens transiens est et res manet.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="reversibilis" genus="veritas"
+      ordinarius="verum"
+      nota="an tolli possit et res ad statum priorem redire.
+            RATIO NON EST TIMIDITAS SED SCIENTIA FUTURA:
+            conservatores posteri methodos meliores habebunt et
+            plus de re scient, unde quod hodie optimum videtur
+            cras impedimentum erit. Qui irreversibiliter agit
+            iudicium suum posteris IMPONIT. Idem de migrationibus
+            datorum, de refactione codicis, de omni opere in re
+            quam alius post te tractabit"/>
+    <proprietas nomen="minima" genus="veritas"
+      ordinarius="verum"
+      nota="an minimum sit quod fini sufficit. Non parsimonia
+            sed idem argumentum: quod non tangis posteris
+            integrum relinquis"/>
+    <proprietas nomen="distinguibilis" genus="veritas"
+      ordinarius="verum"
+      nota="an opus tuum ab originali discerni possit propius
+            inspicienti. CONDICIO ACERRIMA ET MINIME OBVIA:
+            refectio perfecte celata VITIUM est, quamvis
+            pulchrior. Ratio duplex - ne posteri opus tuum pro
+            originali habeant (mendacium in re), et ne iudicium
+            de originali corrumpatur (omnis qui postea studet
+            decipitur). Ethica contra fraudem INTRA reparationem
+            ipsam. In codice: mutatio quae se ut originalem
+            gerit historiam corrumpit"/>
+    <proprietas nomen="documentata" genus="veritas"
+      ordinarius="verum"
+      nota="an acta interventionis cum re perpetuo maneant.
+            Quod distinguibilitas in re praestat, documentatio
+            in actis praestat - et altera alteram non
+            substituit"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="proposita"/>
+    <status nomen="approbata"/>
+    <status nomen="perfecta"/>
+    <status nomen="revocata"
+      nota="sublata, re ad statum priorem reducta - possibilis
+            SOLUM si reversibilis fuit. Status qui proprietatem
+            primam probat: quae irreversibiliter facta sunt hunc
+            statum attingere non possunt, et id est quod
+            'irreversibile' RE VERA significat"/>
+    <transitus a="proposita" ad="approbata" per="approbatio"/>
+    <transitus a="approbata" ad="perfecta" per="exsecutio"/>
+    <transitus a="perfecta" ad="revocata" per="revocatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="in_rem" ad="*"/>
+    <relatio nomen="propter" ad="*"
+      nota="quid eam poposcerit - depravatio, damnum, vitium,
+            morbus, aut simplex vetustas"/>
+    <relatio nomen="agens" ad="*"/>
+    <relatio nomen="acta_sua" ad="acta" modulus="acta"
+      nota="acta interventionum rei adhaerent et rem superstant"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="conservatio">
+    <definitio>
+      Interventio in opus artis aut monumentum ut corruptioni
+      resistat aut lacunae expleantur.
+    </definitio>
+    <nota>
+      Species unde doctrina venit. Lacunae expletio (inpainting)
+      condicionem tertiam purissime ostendit: color additus ab
+      originali propius inspicienti discerni debet - unde
+      technicae quae e longinquo congruunt et e propinquo se
+      produnt (tratteggio). Ars quae SE IPSAM CONFITETUR.
+    </nota>
+  </species>
+
+  <species nomen="restauratio_aedificii">
+    <definitio>
+      Interventio in aedificium historicum: fulcire, reficere,
+      partes amissas supplere.
+    </definitio>
+    <nota>
+      Charta Venetiarum (1964) idem tria praescribit, et unum
+      addit quod museo minus urget: aedificium USUM habere
+      debet, quia quod non adhibetur non servatur. Doctrina
+      eadem, condicio nova.
+    </nota>
+  </species>
+
+  <species nomen="curatio_medica">
+    <definitio>
+      Interventio in corpus viventis ut morbo resistat aut
+      functio restituatur.
+    </definitio>
+    <valor nomen="reversibilis">falsum</valor>
+    <nota>
+      SPECIES QUAE LIMITEM OSTENDIT, ideo electa: hic
+      reversibilitas plerumque IMPOSSIBILIS est (sectio revocari
+      non potest), unde ratio ad minimitatem totam transfertur -
+      'primum non nocere' et interventio minima. Ubi condicio
+      prima negatur, secunda pondus utriusque fert. Probat tres
+      condiciones non aequales esse sed ordinatas.
+    </nota>
+  </species>
 
 </genus>
 
