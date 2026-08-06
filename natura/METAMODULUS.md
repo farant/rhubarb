@@ -536,11 +536,21 @@ Two enforcers, both authoritative, different jobs:
 
 | | `tools/natura_visus.sh` | `bin/natura_examen` |
 |---|---|---|
-| written in | shell + xmllint | C (the loader) |
-| cost | ~14 s | ~0.03 s |
-| also emits | INDEX.md, HTML, umbrae, monita (rules 18/19, prose-drift) | diagnostics only |
+| written in | shell (presentation only) | C (the loader) |
+| parses | **nothing** — consumes the loader's tables | the corpus, once |
+| cost | ~4.5 s | ~0.03 s |
+| also emits | INDEX.md, HTML, umbrae, monita (rules 18/19, prose-drift) | diagnostics; `-tabulae`, `-corpus` |
 | enforces | structural [E] | structural [E] **+ 9–13** |
 | used by | hand, before commit | the `.genera` edit hook |
+
+**There is exactly ONE parser (2026-08-06).** There used to be three
+readings of one corpus — the loader via stml, `natura_visus.sh` via
+xmllint, `natura_quaere.sh` via xmllint again — and any disagreement
+between them was structurally silent. The loader now emits what the
+shell tools need (`-tabulae` for visus' 12 extraction tables,
+`-corpus` for quaere's rows) and they do presentation only.
+**xmllint is no longer executed anywhere in this library's tooling**
+(verified by shadowing it with a failing stub: every tool still ran).
 
 `natura_examen` always loads **every** model even when judging one
 file, because rules 2/3/4 cross model boundaries; `-plagula` filters
@@ -587,14 +597,12 @@ unterminated quotes and unterminated comments (measured against a
 malformed-input battery). STML is a deliberate *superset* of XML,
 so boolean attributes, `</>`, raw tags and fragments are legal here.
 
-**Transitional, until xmllint leaves `natura_visus.sh`:** that tool
-still queries via XPath, so a file that is valid STML but invalid
-XML would break it — silently, in the same way. `visus` therefore
-also asserts xmllint can still read each file and **refuses loudly**
-if not. That guard is temporary and is deleted when the XPath call
-sites (48 of them) move to `lib/selectio.c`. Until then the working
-rule is: STML is the contract, XML-compatibility is a constraint of
-one tool, and their disagreement is never silent.
+A transitional guard briefly made `visus` assert that xmllint could
+still read each file — because the contract had moved to STML while
+that tool still queried by XPath, and their disagreement would have
+been silent. **Both the XPath and the guard are gone**; the guard was
+deleted in the same change that removed its reason. STML is now the
+contract *and* the only thing that reads these files.
 
 **Rule 3's second case — a property typed by a dictionary entry.**
 `editio.index_isbn` is typed `genus="isbn"`, and `isbn` is a
