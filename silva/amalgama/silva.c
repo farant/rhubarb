@@ -2926,11 +2926,36 @@ silva_stml_attributum_habet(
     SilvaStmlNodus*           nodus,
     constans character*  titulus);
 
-/* Capere textum internum (concatenatum)
+/* Capere textum internum (concatenatum), VERBATIM
  * "Get inner text content"
+ *
+ * Omnes nodos textus posterorum ordine documenti concatenat,
+ * SINE mutatione - id quod textContent (DOM) et string() (XPath)
+ * significant. Spatium album CONTENTUS est.
+ *
+ * MIGRATIO 2026-08-06: normalizatio prius in PARSATIONE fiebat
+ * (nodi praecidebantur, nodi spatii albi solius abiciebantur).
+ * Gradu falso stabat: circuitum frangebat et contentum mixtum
+ * conglutinabat ('salve <b>munde</b> iterum' -> 'salvemundeiterum';
+ * optiones -> 'disciplinastructuracryptographica'). Nunc arbor
+ * documentum fideliter refert et normalizatio HIC eligitur.
  */
 SilvaChorda
 silva_stml_textus_internus(
+    SilvaStmlNodus* nodus,
+    SilvaPiscina*   piscina);
+
+/* Capere textum internum NORMALIZATUM
+ * "Get inner text content, whitespace-normalized"
+ *
+ * Idem quod stml_textus_internus, deinde spatium album
+ * normalizatum: indentatio communis remota, lineae vacuae
+ * initiales/finales abscisae, textus unius lineae praecisus.
+ * Hoc vult qui STML manu scriptum legit et prosam sine
+ * indentatione fontis expectat.
+ */
+static SilvaChorda
+silva_stml_textus_normalizatus(
     SilvaStmlNodus* nodus,
     SilvaPiscina*   piscina);
 
@@ -2955,6 +2980,43 @@ silva_stml_liberum_ad_indicem(
 
 /* Alias pro stml_liberum_addere (appendChild) */
 #define silva_stml_appendere silva_stml_liberum_addere
+
+/* ==================================================
+ * Strictum - forma BENE FORMATA super parsationem
+ *
+ * Parser consulto LENIS est. Haec probationes ea nominant quae
+ * parsationem transeunt sed documentum TACITE ambiguum reddunt.
+ * Politia vocantis est: parser eas non cogit, quia STML fragmenta
+ * et usus alios legitime fert.
+ *
+ * QUOD HIC NON EST, et cur (mensuratum 2026-08-06):
+ * - attributum sine quotis (nomen=valor): recte intellectum,
+ *   ad nomen="valor" normalizatum. Lenitas, non vitium.
+ * - ens ignotum (&ignotum;): ut textus litteralis tractatum,
+ *   consulto. Circuitus mutat, sensus non.
+ * Utrumque probatum et ACCEPTUM - non omne discrimen ab XML
+ * defectus est.
+ * ================================================== */
+
+nomen enumeratio {
+    /* idem attributum bis in uno elemento. PERICULOSISSIMUM:
+     * ambo servantur, capere PRIMUM reddit - unde plagula unum
+     * dicit et omnis lector alterum adhibet */
+    STML_STRICTUM_ATTRIBUTUM_DUPLICATUM = I,
+    /* elementa radicis plura quam unum - reliqua tacite ignorantur
+     * ab omni vocante qui elementum_radix legit */
+    STML_STRICTUM_RADICES_PLURES        = II,
+    /* textus non-albus extra radicem */
+    STML_STRICTUM_TEXTUS_EXTRA_RADICEM  = III,
+    /* elementum sine nomine: '<>' titulum vacuum parit */
+    STML_STRICTUM_TITULUS_VACUUS        = IV
+} StmlStrictumGenus;
+
+nomen structura {
+    StmlStrictumGenus  genus;
+    SilvaStmlNodus*         nodus;   /* ubi inventum */
+    SilvaChorda*            causa;   /* nomen attributi duplicati, vel NIHIL */
+} StmlStrictumVitium;
 
 #endif /* STML_H */
 
@@ -9935,12 +9997,22 @@ _parser_legere_textus(StmlParserContext* ctx)
 
     contentus = ctx->current.valor;
 
-    /* Normalize whitespace (trim indentation, leading/trailing blank lines) */
-    normalizatus = _normalizare_spatium_album(contentus, ctx->piscina);
+    /* TEXTUS VERBATIM SERVATUR (2026-08-06). Hic prius
+     * _normalizare_spatium_album vocabatur et nodi spatii albi
+     * SOLIUS omnino abiciebantur. Normalizatio bona est sed
+     * GRADU FALSO stabat:
+     *   - circuitus frangebatur: '<p>salve <b>munde</b> iterum</p>'
+     *     ut '<p>salve<b>munde</b>iterum</p>' rescribebatur
+     *   - contentus mixtus verba CONGLUTINABAT (salvemundeiterum)
+     *   - spatium inter elementa fratres periebat, unde optiones
+     *     'disciplinastructuracryptographica' fiebant
+     * Arbor documentum nunc fideliter refert; normalizatio ad
+     * LECTIONEM migravit (stml_textus_normalizatus). */
+    normalizatus = contentus;
 
     _parser_progredi(ctx);
 
-    /* If normalized to empty, skip this text node */
+    /* nodus vere vacuus nihil fert; spatium album CONTENTUS est */
     si (normalizatus.mensura == ZEPHYRUM)
     {
         redde NIHIL;
@@ -10692,6 +10764,22 @@ silva_stml_textus_internus(
     }
 
     redde silva_chorda_aedificator_finire(aed);
+}
+
+static SilvaChorda
+silva_stml_textus_normalizatus(
+    SilvaStmlNodus* nodus,
+    SilvaPiscina*   piscina)
+{
+    SilvaChorda crudus;
+
+    crudus = silva_stml_textus_internus(nodus, piscina);
+    si (crudus.mensura == ZEPHYRUM)
+    {
+        redde crudus;
+    }
+
+    redde _normalizare_spatium_album(crudus, piscina);
 }
 
 i32
@@ -44127,7 +44215,7 @@ _toleram_ex_elemento (SilvaSemantica* sem,
             }
         }
     }
-    textus = silva_stml_textus_internus(nodus, sem->piscina);
+    textus = silva_stml_textus_normalizatus(nodus, sem->piscina);
     per (k = ZEPHYRUM; k < textus.mensura; k++)
     {
         si (textus.datum[k] != ' ' && textus.datum[k] != '\t'
@@ -62729,7 +62817,7 @@ _quaestionem_legere (SilvaPiscina* piscina, SilvaStmlNodus* elementum,
             }
             selector_visus = VERUM;
             nominata->selector = _trimmata(
-                silva_stml_textus_internus(liber, piscina));
+                silva_stml_textus_normalizatus(liber, piscina));
         }
         alioquin si (liber->titulus != NIHIL
             && _aequat(*liber->titulus, "causa"))
@@ -62743,7 +62831,7 @@ _quaestionem_legere (SilvaPiscina* piscina, SilvaStmlNodus* elementum,
             }
             causa_visa = VERUM;
             nominata->causa = _trimmata(
-                silva_stml_textus_internus(liber, piscina));
+                silva_stml_textus_normalizatus(liber, piscina));
         }
         alioquin si (liber->titulus != NIHIL
             && _aequat(*liber->titulus, "parametrum"))

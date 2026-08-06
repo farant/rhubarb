@@ -1730,12 +1730,22 @@ _parser_legere_textus(StmlParserContext* ctx)
 
     contentus = ctx->current.valor;
 
-    /* Normalize whitespace (trim indentation, leading/trailing blank lines) */
-    normalizatus = _normalizare_spatium_album(contentus, ctx->piscina);
+    /* TEXTUS VERBATIM SERVATUR (2026-08-06). Hic prius
+     * _normalizare_spatium_album vocabatur et nodi spatii albi
+     * SOLIUS omnino abiciebantur. Normalizatio bona est sed
+     * GRADU FALSO stabat:
+     *   - circuitus frangebatur: '<p>salve <b>munde</b> iterum</p>'
+     *     ut '<p>salve<b>munde</b>iterum</p>' rescribebatur
+     *   - contentus mixtus verba CONGLUTINABAT (salvemundeiterum)
+     *   - spatium inter elementa fratres periebat, unde optiones
+     *     'disciplinastructuracryptographica' fiebant
+     * Arbor documentum nunc fideliter refert; normalizatio ad
+     * LECTIONEM migravit (stml_textus_normalizatus). */
+    normalizatus = contentus;
 
     _parser_progredi(ctx);
 
-    /* If normalized to empty, skip this text node */
+    /* nodus vere vacuus nihil fert; spatium album CONTENTUS est */
     si (normalizatus.mensura == ZEPHYRUM)
     {
         redde NIHIL;
@@ -2563,6 +2573,43 @@ stml_textus_internus(
     }
 
     redde chorda_aedificator_finire(aed);
+}
+
+/* an chorda spatium album SOLUM ferat (vacua quoque) */
+interior b32
+_spatium_album_solum(
+    constans chorda* s)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < s->mensura; i++)
+    {
+        character c;
+
+        c = (character)s->datum[i];
+        si (c != ' ' && c != '\t' && c != '\n' && c != '\r')
+        {
+            redde FALSUM;
+        }
+    }
+
+    redde VERUM;
+}
+
+chorda
+stml_textus_normalizatus(
+    StmlNodus* nodus,
+    Piscina*   piscina)
+{
+    chorda crudus;
+
+    crudus = stml_textus_internus(nodus, piscina);
+    si (crudus.mensura == ZEPHYRUM)
+    {
+        redde crudus;
+    }
+
+    redde _normalizare_spatium_album(crudus, piscina);
 }
 
 i32
@@ -3766,8 +3813,30 @@ stml_scribere_ad_aedificator(
                 {
                     /* linea capta '\n' terminari DEBET - aliter
                      * frater sequens in relectione devoratur (in
-                     * modo pulchro parens lineam novam praebet) */
-                    chorda_aedificator_appendere_character(aedificator, '\n');
+                     * modo pulchro parens lineam novam praebet).
+                     *
+                     * SED SEMEL TANTUM (2026-08-06): postquam
+                     * parser textum verbatim servat, frater textus
+                     * lineam novam SUAM iam ferre potest. Additio
+                     * caeca eam duplicabat, unde circuitus
+                     * scribere->legere->rescribere lineam vacuam
+                     * quoque cursu CRESCENTEM pariebat. */
+                    StmlNodus* frater;
+                    b32        iam_terminatur;
+
+                    frater = stml_frater_proximus(nodus);
+                    iam_terminatur = (b32)(
+                        frater &&
+                        frater->genus == STML_NODUS_TEXTUS &&
+                        frater->valor &&
+                        frater->valor->mensura > ZEPHYRUM &&
+                        frater->valor->datum[ZEPHYRUM] == '\n');
+
+                    si (!iam_terminatur)
+                    {
+                        chorda_aedificator_appendere_character(
+                            aedificator, '\n');
+                    }
                 }
             }
             alioquin
@@ -3882,9 +3951,23 @@ stml_scribere_ad_aedificator(
             frange;
 
         casus STML_NODUS_TEXTUS:
+            /* DUO MODI, DUAE PROMISSIONES (2026-08-06):
+             * non-pulcher FIDEM praestat (circuitus octetim), ergo
+             * textum verbatim scribit; pulcher LEGIBILITATEM
+             * praestat et dispositionem SUAM generat, ergo nodos
+             * spatii albi SOLIUS omittit.
+             * Aliter compugnant: indentatio servata et indentatio
+             * generata se cumulant, et circuitus
+             * scribere->legere->rescribere quoque cursu CRESCIT
+             * (mensuratum: lineae vacuae duplicantes).
+             * Pulcher fidem numquam promisit - reformator est. */
             si (nodus->valor)
             {
-                _scribere_evasus(aedificator, nodus->valor);
+                si (!pulchrum ||
+                    !_spatium_album_solum(nodus->valor))
+                {
+                    _scribere_evasus(aedificator, nodus->valor);
+                }
             }
             frange;
 

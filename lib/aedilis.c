@@ -166,7 +166,7 @@ _vexilla_colligere (StmlNodus* nodus, Piscina* piscina)
         chorda     textus;
 
         liber = *(StmlNodus**)xar_obtinere(liberi, i);
-        textus = stml_textus_internus(liber, piscina);
+        textus = stml_textus_normalizatus(liber, piscina);
         si (textus.mensura > 0)
         {
             _chordam_addere(fructus, textus);
@@ -238,7 +238,7 @@ aedilis_configurationem_legere (Piscina* piscina,
             chorda     via;
 
             nodus = *(StmlNodus**)xar_obtinere(viae, i);
-            via = stml_textus_internus(nodus, piscina);
+            via = stml_textus_normalizatus(nodus, piscina);
             si (via.mensura > 0)
             {
                 _chordam_addere(configuratio->inclusa, via);
@@ -364,7 +364,7 @@ aedilis_configurationem_legere (Piscina* piscina,
 
                 obiectum_nodus = *(StmlNodus**)xar_obtinere(
                     obiecta, k);
-                via = stml_textus_internus(obiectum_nodus,
+                via = stml_textus_normalizatus(obiectum_nodus,
                     piscina);
                 si (via.mensura > 0)
                 {

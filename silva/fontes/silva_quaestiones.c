@@ -431,7 +431,7 @@ _quaestionem_legere (Piscina* piscina, StmlNodus* elementum,
             }
             selector_visus = VERUM;
             nominata->selector = _trimmata(
-                stml_textus_internus(liber, piscina));
+                stml_textus_normalizatus(liber, piscina));
         }
         alioquin si (liber->titulus != NIHIL
             && _aequat(*liber->titulus, "causa"))
@@ -445,7 +445,7 @@ _quaestionem_legere (Piscina* piscina, StmlNodus* elementum,
             }
             causa_visa = VERUM;
             nominata->causa = _trimmata(
-                stml_textus_internus(liber, piscina));
+                stml_textus_normalizatus(liber, piscina));
         }
         alioquin si (liber->titulus != NIHIL
             && _aequat(*liber->titulus, "parametrum"))

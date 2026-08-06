@@ -209,11 +209,36 @@ stml_attributum_habet(
     StmlNodus*           nodus,
     constans character*  titulus);
 
-/* Capere textum internum (concatenatum)
+/* Capere textum internum (concatenatum), VERBATIM
  * "Get inner text content"
+ *
+ * Omnes nodos textus posterorum ordine documenti concatenat,
+ * SINE mutatione - id quod textContent (DOM) et string() (XPath)
+ * significant. Spatium album CONTENTUS est.
+ *
+ * MIGRATIO 2026-08-06: normalizatio prius in PARSATIONE fiebat
+ * (nodi praecidebantur, nodi spatii albi solius abiciebantur).
+ * Gradu falso stabat: circuitum frangebat et contentum mixtum
+ * conglutinabat ('salve <b>munde</b> iterum' -> 'salvemundeiterum';
+ * optiones -> 'disciplinastructuracryptographica'). Nunc arbor
+ * documentum fideliter refert et normalizatio HIC eligitur.
  */
 chorda
 stml_textus_internus(
+    StmlNodus* nodus,
+    Piscina*   piscina);
+
+/* Capere textum internum NORMALIZATUM
+ * "Get inner text content, whitespace-normalized"
+ *
+ * Idem quod stml_textus_internus, deinde spatium album
+ * normalizatum: indentatio communis remota, lineae vacuae
+ * initiales/finales abscisae, textus unius lineae praecisus.
+ * Hoc vult qui STML manu scriptum legit et prosam sine
+ * indentatione fontis expectat.
+ */
+chorda
+stml_textus_normalizatus(
     StmlNodus* nodus,
     Piscina*   piscina);
 

@@ -439,7 +439,7 @@ silva_gen_grammaticam_legere(
 
                 /* Obtinere textum internum: "expr@sinister PLUS@tok term@dexter"
                  * (albispatia normata - productiones multilineares licitae) */
-                textus = stml_textus_internus(*prod_ptr, piscina);
+                textus = stml_textus_normalizatus(*prod_ptr, piscina);
                 textus = _albispatia_normare(piscina, textus);
                 textus = chorda_praecidere(textus);
 
@@ -676,7 +676,7 @@ silva_gen_grammaticam_legere(
     initium_nodus = stml_invenire_liberum(radix, "initium");
     si (initium_nodus)
     {
-        chorda   textus = stml_textus_internus(initium_nodus, piscina);
+        chorda   textus = stml_textus_normalizatus(initium_nodus, piscina);
         chorda   praecisa = chorda_praecidere(textus);
         chorda*  tit_internum;
         s32      initium_idx;

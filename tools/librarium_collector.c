@@ -152,7 +152,7 @@ _extrahere_tags(StmlNodus* nodus_liber, Piscina* piscina)
 
         si (tag_chorda != NIHIL)
         {
-            *tag_chorda = stml_textus_internus(tag_nodus, piscina);
+            *tag_chorda = stml_textus_normalizatus(tag_nodus, piscina);
         }
     }
 
@@ -411,27 +411,27 @@ principale(integer argc, character** argv)
 
         /* Capere elementa */
         nodus_temp = stml_invenire_liberum(nodus_liber, "titulus");
-        liber->titulus = nodus_temp ? stml_textus_internus(nodus_temp, piscina) :
+        liber->titulus = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
                                        chorda_ex_literis("", piscina);
 
         nodus_temp = stml_invenire_liberum(nodus_liber, "auctor");
-        liber->auctor = nodus_temp ? stml_textus_internus(nodus_temp, piscina) :
+        liber->auctor = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
                                       chorda_ex_literis("", piscina);
 
         nodus_temp = stml_invenire_liberum(nodus_liber, "annus");
-        liber->annus = nodus_temp ? stml_textus_internus(nodus_temp, piscina) :
+        liber->annus = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
                                      chorda_ex_literis("", piscina);
 
         nodus_temp = stml_invenire_liberum(nodus_liber, "summarium");
-        liber->summarium = nodus_temp ? stml_textus_internus(nodus_temp, piscina) :
+        liber->summarium = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
                                          chorda_ex_literis("", piscina);
 
         nodus_temp = stml_invenire_liberum(nodus_liber, "notae");
-        liber->notae = nodus_temp ? stml_textus_internus(nodus_temp, piscina) :
+        liber->notae = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
                                      chorda_ex_literis("", piscina);
 
         nodus_temp = stml_invenire_liberum(nodus_liber, "via");
-        liber->via_originalis = nodus_temp ? stml_textus_internus(nodus_temp, piscina) :
+        liber->via_originalis = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
                                               chorda_ex_literis("", piscina);
 
         liber->tags = _extrahere_tags(nodus_liber, piscina);

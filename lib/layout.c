@@ -381,7 +381,7 @@ _layout_processare_pagina(
     /* Si nodus habet contentum (raw vel liberi), inserere in pagina */
     si (nodus->crudus || stml_numerus_liberorum(nodus) > ZEPHYRUM)
     {
-        chorda textus = stml_textus_internus(nodus, dom->ctx->piscina);
+        chorda textus = stml_textus_normalizatus(nodus, dom->ctx->piscina);
         si (textus.mensura > ZEPHYRUM)
         {
             /* Pagina_inserere_textum requirit null-terminated */
@@ -494,7 +494,7 @@ _layout_processare_libro(
         Pagina* pagina;
         chorda textus;
 
-        textus = stml_textus_internus(nodus, dom->ctx->piscina);
+        textus = stml_textus_normalizatus(nodus, dom->ctx->piscina);
         si (textus.mensura > ZEPHYRUM)
         {
             pagina = libro_pagina_currens(libro);
@@ -952,7 +952,7 @@ _layout_processare_entitas(
         alioquin si (chorda_aequalis_literis(*liberum->titulus, "nota"))
         {
             /* <nota>#tag</nota> - textus contentum est nota */
-            chorda textus = stml_textus_internus(liberum, dom->ctx->piscina);
+            chorda textus = stml_textus_normalizatus(liberum, dom->ctx->piscina);
             si (textus.datum && textus.mensura > ZEPHYRUM)
             {
                 repositorium->nota_addere(

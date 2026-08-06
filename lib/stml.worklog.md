@@ -205,3 +205,67 @@ mortua idem spectantur (lectio hodierna ab uncis mortuis empta).
 Lenitas quoque probata est ne postea 'emendetur': attributum sine
 quotis, ens ignotum, attributum booleanum, fragmentum anonymum -
 omnia ZEPHYRUM vitia reddere DEBENT. XXIX assertiones novae.
+
+## 2026-08-06 — normalizatio a PARSATIONE ad LECTIONEM migrata
+
+Fran rogavit an vitium optionum in bibliotheca emendatum esset an
+solum circumventum. **Circumventum erat** - natura_examen optiones
+manu iungebat, stml intactum manebat. Quaestio recta fuit, et
+inquisitio vitium multo maius aperuit.
+
+VITIUM VERUM, mensuratum non coniectatum:
+
+    '<p>salve <b>munde</b> iterum</p>'
+      -> textus internus 'salvemundeiterum'
+      -> circuitus '<p>salve<b>munde</b>iterum</p>'   FRACTUS
+
+Circuitus contentu mixto quolibet frangebatur. Optiones
+conglutinatae symptoma mitissimum erant.
+
+CAUSA NON ERAT stml_textus_internus (quod fideliter concatenat)
+sed PARSATIO: `_parser_legere_textus` spatium album normalizabat
+et nodos spatii albi SOLIUS omnino abiciebat. Et id CONSULTO
+factum erat - quattuor assertiones id ut morem intentum tenebant
+(praecisio simplex, normalizatio multilinea, indentatio relativa,
+spatium-solum-omissum). Normalizatio bona est: STML manu scriptum
+indentatum legibile facit.
+
+ERGO NON VITIUM FUNCTIONIS SED **RES BONA GRADU FALSO POSITA**.
+
+RADIUS DISPLOSIONIS MENSURATUS ANTE CONSILIUM: normalizatione
+prorsus remota, ex CXVIII probationum gregibus DUO soli fracti
+sunt (stml VI assertiones, aedilis). CXVI intacti. Timor 'omnes
+ab praecisione pendent' FALSUS erat - quod solum mensura ostendit.
+
+FACTUM:
+  - parser textum VERBATIM servat (nodi spatii albi quoque)
+  - stml_textus_internus verbatim concatenat = textContent (DOM)
+    et string() (XPath)
+  - stml_textus_normalizatus() NOVA: idem, deinde normalizatio
+    (indentatio communis remota, lineae vacuae abscisae)
+  - quattuor assertiones ad functionem novam migratae; arborem
+    fontem servare quoque nunc asserunt
+
+DUO VITIA CONSEQUENTIA, utrumque a probationibus captum:
+
+1. LINEA TERMINALIS DUPLICATA. Scriptor post tag crudum
+   line-captantem '\n' caece addebat (recte, cum parser eam
+   abiceret). Textu servato, frater textus eam IAM ferebat: unde
+   circuitus scribere->legere->rescribere lineam vacuam quoque
+   cursu CRESCENTEM pariebat. Emendatum: additur nisi frater
+   sequens iam '\n' incipiat.
+
+2. PULCHRUM ET FIDES COMPUGNANT. Modus pulcher dispositionem
+   SUAM generat; spatio fontis quoque servato, duae indentationes
+   se cumulabant et circuitus rursus crescebat.
+   SOLUTIO DOCTRINALIS, non technica: **duo modi, duae
+   promissiones.** Non-pulcher FIDEM praestat (circuitus octetim)
+   ergo verbatim scribit; pulcher LEGIBILITATEM praestat ergo
+   nodos spatii albi solius OMITTIT. Pulcher fidem numquam
+   promisit - reformator est, non exscriptor. Quod prius latebat
+   quia parser utrumque simul praestare fingebat abiciendo.
+
+LEX GENERALIS: eadem proprietas parseris in uno campo strepitum
+tollit et in alio contentum corrumpit. 'Melius' non est proprietas
+parseris sed USUS. Quapropter normalizatio ELIGI debet, non
+IMPONI - et id est tota migratio.

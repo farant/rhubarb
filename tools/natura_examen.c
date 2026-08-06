@@ -896,45 +896,21 @@ corpus_scribere(
                         _attr(m, "genus",   ty, (i32)magnitudo(ty));
                         _attr(m, "modulus", tm, (i32)magnitudo(tm));
 
-                        /* OPTIONES SEPARATIM IUNGENDAE, non per
-                         * textum internum. MENSURATUM: stml
-                         * nodos textus INTER elementa (spatium
-                         * album solum) omittit, ergo optiones
-                         * CONCATENATAE fiunt -
-                         * 'disciplinastructuracryptographica'.
-                         * xmllint eos servabat. Hic differentia
-                         * non strepitus sed CORRUPTIO est. */
+                        /* CIRCUMVENTIO SUBLATA (2026-08-06):
+                         * optiones hic manu iungebantur quia stml
+                         * nodos spatii albi INTER elementa
+                         * abiciebat, unde 'disciplinastructura...'.
+                         * Vitium in bibliotheca emendatum est
+                         * (normalizatio a parsatione ad lectionem
+                         * migravit), ergo textus internus rursus
+                         * verbatim est et _prosa_ex sufficit. */
+                        _prosa_ex(stml_textus_internus(m, p), op,
+                                  (i32)magnitudo(op), FALSUM);
+                        /* sed 's/ $//' */
+                        k = (i32)strlen(op);
+                        dum (k > ZEPHYRUM && op[k - I] == ' ')
                         {
-                            i32 numerus_o;
-                            i32 io;
-
-                            k = ZEPHYRUM;
-                            op[ZEPHYRUM] = '\0';
-                            numerus_o = stml_numerus_liberorum(m);
-                            per (io = ZEPHYRUM; io < numerus_o; io++)
-                            {
-                                StmlNodus* o;
-                                character  ot[CCLVI];
-
-                                o = stml_liberum_ad_indicem(m, io);
-                                si (!o || o->genus !=
-                                        STML_NODUS_ELEMENTUM)
-                                {
-                                    perge;
-                                }
-                                _prosa_ex(
-                                    stml_textus_internus(o, p), ot,
-                                    (i32)magnitudo(ot), FALSUM);
-                                si (!ot[ZEPHYRUM])
-                                {
-                                    perge;
-                                }
-                                si (k > ZEPHYRUM)
-                                {
-                                    k += (i32)sprintf(op + k, " ");
-                                }
-                                k += (i32)sprintf(op + k, "%s", ot);
-                            }
+                            op[--k] = '\0';
                         }
                         fprintf(f, "P\t%s\t%s\t%s\t%s\t%s\t%s\n",
                                 mod, gn, n, ty, tm, op);

@@ -1051,7 +1051,7 @@ _toleram_ex_elemento (SilvaSemantica* sem,
             }
         }
     }
-    textus = stml_textus_internus(nodus, sem->piscina);
+    textus = stml_textus_normalizatus(nodus, sem->piscina);
     per (k = ZEPHYRUM; k < textus.mensura; k++)
     {
         si (textus.datum[k] != ' ' && textus.datum[k] != '\t'

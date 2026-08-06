@@ -241,7 +241,7 @@ _librarium_visus_carcare_catalogum(
         nodus_temp = stml_invenire_liberum(nodus_liber, "titulus");
         si (nodus_temp)
         {
-            liber->titulus = stml_textus_internus(nodus_temp, visus->piscina);
+            liber->titulus = stml_textus_normalizatus(nodus_temp, visus->piscina);
         }
         alioquin
         {
@@ -252,7 +252,7 @@ _librarium_visus_carcare_catalogum(
         nodus_temp = stml_invenire_liberum(nodus_liber, "auctor");
         si (nodus_temp)
         {
-            liber->auctor = stml_textus_internus(nodus_temp, visus->piscina);
+            liber->auctor = stml_textus_normalizatus(nodus_temp, visus->piscina);
         }
         alioquin
         {
@@ -263,7 +263,7 @@ _librarium_visus_carcare_catalogum(
         nodus_temp = stml_invenire_liberum(nodus_liber, "annus");
         si (nodus_temp)
         {
-            liber->annus = stml_textus_internus(nodus_temp, visus->piscina);
+            liber->annus = stml_textus_normalizatus(nodus_temp, visus->piscina);
         }
         alioquin
         {
@@ -274,7 +274,7 @@ _librarium_visus_carcare_catalogum(
         nodus_temp = stml_invenire_liberum(nodus_liber, "summarium");
         si (nodus_temp)
         {
-            liber->summarium = stml_textus_internus(nodus_temp, visus->piscina);
+            liber->summarium = stml_textus_normalizatus(nodus_temp, visus->piscina);
         }
         alioquin
         {
@@ -285,7 +285,7 @@ _librarium_visus_carcare_catalogum(
         nodus_temp = stml_invenire_liberum(nodus_liber, "notae");
         si (nodus_temp)
         {
-            liber->notae = stml_textus_internus(nodus_temp, visus->piscina);
+            liber->notae = stml_textus_normalizatus(nodus_temp, visus->piscina);
         }
         alioquin
         {
@@ -296,7 +296,7 @@ _librarium_visus_carcare_catalogum(
         nodus_temp = stml_invenire_liberum(nodus_liber, "via");
         si (nodus_temp)
         {
-            liber->via = stml_textus_internus(nodus_temp, visus->piscina);
+            liber->via = stml_textus_normalizatus(nodus_temp, visus->piscina);
         }
         alioquin
         {
@@ -322,7 +322,7 @@ _librarium_visus_carcare_catalogum(
                     nodus_tag = *(StmlNodus**)xar_obtinere(tags_stml, (i32)j);
                     si (nodus_tag)
                     {
-                        tag_textus = stml_textus_internus(nodus_tag, visus->piscina);
+                        tag_textus = stml_textus_normalizatus(nodus_tag, visus->piscina);
                         si (tag_textus.mensura > 0)
                         {
                             *(chorda*)xar_addere(liber->tags) = tag_textus;

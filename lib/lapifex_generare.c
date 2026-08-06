@@ -273,7 +273,7 @@ lapifex_grammaticam_legere(
                 si (!prod_ptr || !*prod_ptr) perge;
 
                 /* Obtinere textum internum: "expr PLUS term" */
-                textus = stml_textus_internus(*prod_ptr, piscina);
+                textus = stml_textus_normalizatus(*prod_ptr, piscina);
                 textus = chorda_praecidere(textus);
 
                 si (textus.mensura == ZEPHYRUM) perge;
@@ -326,7 +326,7 @@ lapifex_grammaticam_legere(
     initium_nodus = stml_invenire_liberum(radix, "initium");
     si (initium_nodus)
     {
-        chorda   textus = stml_textus_internus(initium_nodus, piscina);
+        chorda   textus = stml_textus_normalizatus(initium_nodus, piscina);
         chorda   praecisa = chorda_praecidere(textus);
         chorda*  tit_internum;
         s32      initium_idx;

@@ -1312,9 +1312,19 @@ s32 principale(vacuum)
         textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
         CREDO_NON_NIHIL(textus);
         CREDO_AEQUALIS_I32(textus->genus, STML_NODUS_TEXTUS);
-        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor, "hello world"));
+        /* PARSER SERVAT (2026-08-06): arbor documentum fideliter
+         * refert - normalizatio ad lectionem migravit */
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "  hello world  "));
+        CREDO_VERUM(chorda_aequalis_literis(
+            stml_textus_normalizatus(res.elementum_radix, piscina),
+            "hello world"));
+        /* textus internus VERBATIM, ut textContent/string() */
+        CREDO_VERUM(chorda_aequalis_literis(
+            stml_textus_internus(res.elementum_radix, piscina),
+            "  hello world  "));
 
-        imprimere("  Simple trim: VERUM\n");
+        imprimere("  Simple trim (ad lectionem): VERUM\n");
     }
 
     {
@@ -1336,10 +1346,16 @@ s32 principale(vacuum)
         textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
         CREDO_NON_NIHIL(textus);
 
-        /* Should have removed the leading empty line and normalized indentation */
-        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor, "line one\nline two"));
+        /* normalizatio ad LECTIONEM: linea vacua initialis remota,
+         * indentatio communis abscisa */
+        CREDO_VERUM(chorda_aequalis_literis(
+            stml_textus_normalizatus(res.elementum_radix, piscina),
+            "line one\nline two"));
+        /* arbor autem fontem servat */
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "\n    line one\n    line two\n"));
 
-        imprimere("  Multiline normalization: VERUM\n");
+        imprimere("  Multiline normalization (ad lectionem): VERUM\n");
     }
 
     {
@@ -1386,25 +1402,30 @@ s32 principale(vacuum)
         textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
         CREDO_NON_NIHIL(textus);
 
-        /* 8-space base removed, inner keeps 4-space relative indent */
-        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+        /* basis VIII spatiorum remota, 'inner' IV relativa servat */
+        CREDO_VERUM(chorda_aequalis_literis(
+            stml_textus_normalizatus(res.elementum_radix, piscina),
             "outer\n    inner\nouter again"));
 
-        imprimere("  Relative indentation: VERUM\n");
+        imprimere("  Relative indentation (ad lectionem): VERUM\n");
     }
 
     {
         StmlResultus res;
 
-        /* Whitespace-only text nodes should be skipped */
+        /* SPATIUM ALBUM CONTENTUS EST (2026-08-06): nodus servatur,
+         * aliter circuitus frangitur et fratres conglutinantur */
         res = stml_legere_ex_literis("<root>   \n   \n   </root>", piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
-        /* No text children (whitespace-only skipped) */
-        CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi), ZEPHYRUM);
+        CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi), I);
+        /* sed lectio normalizata eum ad nihil redigit */
+        CREDO_AEQUALIS_I32(
+            stml_textus_normalizatus(res.elementum_radix, piscina).mensura,
+            ZEPHYRUM);
 
-        imprimere("  Whitespace-only skipped: VERUM\n");
+        imprimere("  Whitespace-only servatum, lectio purgat: VERUM\n");
     }
 
     /* ==================================================
