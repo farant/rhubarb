@@ -4993,3 +4993,45 @@ tota abiit - visus liber est, quaere non.
 MENSURATUM: 33 exemplaria / 177 genera / 384 res / 519 arcus /
 0 vulnera / 24 monita; INDEX.md et HTML una linea praedicta
 differunt; probationes natura 65/65, stml 577/577.
+
+335. GRADUS II PERFECTUS: natura_quaere.sh quoque liberatus (XXII
+     sedes). Domus naturae xmllint iam NUSQUAM exsequitur - tres
+     parsationes eiusdem corporis (onerator per stml, visus per
+     xmllint, quaere per xmllint) in UNAM redactae sunt.
+     natura_quaere.sh: CCXVII lineae -> CLVII.
+
+336. ET HIC DIFFERENTIA VITIUM VERUM INVENIT, non strepitum.
+     Corpus quaerentis primo cursu CXXXVIII lineas fractas tulit:
+     optiones electionis CONCATENATAE sine spatiis -
+     'disciplinastructuracryptographica' pro 'disciplina structura
+     cryptographica'.
+     CAUSA: `stml_textus_internus` nodos textus INTER elementa
+     (spatium album solum) OMITTIT, ergo textus optionum
+     adiacentium coalescit; xmllint eos servabat. Eadem proprietas
+     quae in dubiis strepitum tollebat hic CONTENTUM CORRUMPEBAT.
+     Emendatum optiones SEPARATIM iungendo, non per textum
+     internum generis.
+     LEX: eadem differentia parseris in uno campo emendatio est et
+     in alio corruptio. 'Melius' non est proprietas parseris sed
+     proprietas USUS - unde differentia per campos currenda est,
+     non semel iudicanda.
+
+337. RESIDUUM POST NORMALIZATIONEM: DCCCLXXXVI lineae spatio
+     finali solo differunt (stml praecidit, xmllint non) -
+     acceptum ut supra. Normalizatione spatii finalis adhibita:
+     ZERO.
+
+338. PORTA APPARATUS CIRCULARIS FACTA EST, et id notandum antequam
+     obliviscamur. `tools/natura_apparatus_umbra.sh` corpus
+     quaerentis legit; corpus illud nunc ab ONERATORE venit, ergo
+     differentia oneratorem contra se ipsum probaret. Migratio
+     ipsa contra ORACULUM SERVATUM (corpus xmllint-genitum, ante
+     mutationem captum) probata est: 1286 = 1286, ZERO.
+     Deinceps porta illa nihil independens probat. Quod eam
+     substituit: probationes stml/natura (642 assertiones) et
+     differentia INDEX.md contra oraculum. Porta quae vim suam
+     amisit et tacet peior est quam porta nulla - ideo hic scriptum.
+
+MENSURATUM: visus 14 s -> 4.5 s; INDEX.md una linea praedicta
+differt; corpus quaerentis ZERO post normalizationem; apparatus
+1286 = 1286 contra oraculum independens.

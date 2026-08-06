@@ -44,6 +44,8 @@
 interior b32 extensionem_habet(constans chorda* titulus);
 interior vacuum tabulas_scribere(NaturaBibliotheca* bib,
                                  constans character* dir);
+interior vacuum corpus_scribere(NaturaBibliotheca* bib,
+                                constans character* via);
 interior vacuum stirpem_scribere(constans chorda* titulus,
                                  character* exitus, i32 tectum);
 interior b32 viam_congruere(constans chorda* modulus,
@@ -231,10 +233,11 @@ _attr(
  * ante virgulam fert et commentarium ANTE TEMPUS clauderet -
  * quod uncus examinis statim deprehendit. */
 interior vacuum
-_prosa(
+_prosa_ex(
     chorda      textus,
     character*  exitus,
-    i32         tectum)
+    i32         tectum,
+    b32         virgulam_mutare)
 {
     i32 i;
     i32 j;
@@ -252,7 +255,7 @@ _prosa(
         {
             c = ' ';
         }
-        si (c == '|')
+        si (c == '|' && virgulam_mutare)
         {
             c = '/';
         }
@@ -274,6 +277,18 @@ _prosa(
     }
 
     exitus[j] = '\0';
+}
+
+/* tabulae visus virgulam (|) separatorem habent, ergo eam mutant;
+ * corpus quaerentis TABULATIS separatur, ergo virgulam SERVAT -
+ * mutatio ibi contentum falsaret */
+interior vacuum
+_prosa(
+    chorda      textus,
+    character*  exitus,
+    i32         tectum)
+{
+    _prosa_ex(textus, exitus, tectum, VERUM);
 }
 
 /* ordo alphabeticus exemplarium - glob conchae eum praestat, et
@@ -747,6 +762,335 @@ tabulas_scribere(
     fclose(f_moduli);
 }
 
+/* ==================================================
+ * Corpus quaerentis (gradus II) - forma TSV, ordines
+ * G/P/M/A/R/S/U quos natura_quaere.sh consumit.
+ *
+ * P/M/A/R e CONTINENTIBUS DIRECTIS generis sumuntur (non e
+ * posteris): genus nidificatum apparatum suum ipsum fert.
+ * ================================================== */
+
+interior vacuum
+corpus_scribere(
+    NaturaBibliotheca*   bib,
+    constans character*  via)
+{
+    FILE*     f;
+    i32       ie;
+
+    f = fopen(via, "w");
+    si (!f)
+    {
+        fprintf(stderr, "natura_examen: %s scribi nequit\n", via);
+        redde;
+    }
+
+    xar_ordinare(bib->exemplaria, _comparare_exemplaria);
+
+    per (ie = ZEPHYRUM; ie < xar_numerus(bib->exemplaria); ie++)
+    {
+        NaturaExemplar* ex;
+        Piscina*        p;
+        PiscinaNotatio  nota;
+        Xar*            nodi;
+        character       mod[CCLVI];
+        i32             i;
+        i32             ig;
+        constans character* gradus_nomina[II];
+
+        ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria, ie);
+        p  = bib->piscina;
+        nota = piscina_notare(p);
+        _attr(ex->radix, "modulus", mod, (i32)magnitudo(mod));
+
+        nodi = xar_creare(p, (i32)magnitudo(StmlNodus*));
+        _colligere(ex->radix, "genus", nodi);
+
+        per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
+        {
+            StmlNodus* g;
+            character  gn[CCLVI];
+            character  sb[CCLVI];
+            character  sm[CCLVI];
+            character  de[MM];
+            character  di[MM];
+            StmlNodus* n2;
+            i32        ik;
+            constans character* invol[IV];
+            constans character* membra[IV];
+
+            g = *(StmlNodus**)xar_obtinere(nodi, i);
+            _attr(g, "nomen",   gn, (i32)magnitudo(gn));
+            _attr(g, "sub",     sb, (i32)magnitudo(sb));
+            _attr(g, "modulus", sm, (i32)magnitudo(sm));
+            si (!sm[ZEPHYRUM])
+            {
+                memcpy(sm, mod, strlen(mod) + I);
+            }
+            si (!sb[ZEPHYRUM])
+            {
+                sm[ZEPHYRUM] = '\0';
+            }
+
+            de[ZEPHYRUM] = '\0';
+            n2 = stml_invenire_liberum(g, "definitio");
+            si (n2)
+            {
+                _prosa_ex(stml_textus_internus(n2, p), de,
+                          (i32)magnitudo(de), FALSUM);
+            }
+            di[ZEPHYRUM] = '\0';
+            n2 = stml_invenire_liberum(g, "differentia");
+            si (n2)
+            {
+                _prosa_ex(stml_textus_internus(n2, p), di,
+                          (i32)magnitudo(di), FALSUM);
+            }
+
+            fprintf(f, "G\t%s\t%s\t%s\t%s\t%s\t%s\n",
+                    mod, gn, sm, sb, de, di);
+
+            /* machina_statuum liberum DIRECTUM est; cetera in
+             * involucris habitant */
+            invol[ZEPHYRUM] = "proprietates";  membra[ZEPHYRUM] = "proprietas";
+            invol[I]        = NIHIL;           membra[I]        = "machina_statuum";
+            invol[II]       = "partes";        membra[II]       = "pars";
+            invol[III]      = "relationes";    membra[III]      = "relatio";
+
+            per (ik = ZEPHYRUM; ik < IV; ik++)
+            {
+                StmlNodus* sedes;
+                i32        numerus_l;
+                i32        j;
+
+                sedes = invol[ik]
+                        ? stml_invenire_liberum(g, invol[ik]) : g;
+                si (!sedes)
+                {
+                    perge;
+                }
+
+                numerus_l = stml_numerus_liberorum(sedes);
+                per (j = ZEPHYRUM; j < numerus_l; j++)
+                {
+                    StmlNodus* m;
+                    character  n[CCLVI];
+
+                    m = stml_liberum_ad_indicem(sedes, j);
+                    si (!m || m->genus != STML_NODUS_ELEMENTUM ||
+                        !chorda_aequalis_literis(*m->titulus,
+                                                 membra[ik]))
+                    {
+                        perge;
+                    }
+
+                    _attr(m, "nomen", n, (i32)magnitudo(n));
+
+                    si (ik == ZEPHYRUM)
+                    {
+                        character ty[CCLVI];
+                        character tm[CCLVI];
+                        character op[MM];
+                        i32       k;
+
+                        _attr(m, "genus",   ty, (i32)magnitudo(ty));
+                        _attr(m, "modulus", tm, (i32)magnitudo(tm));
+
+                        /* OPTIONES SEPARATIM IUNGENDAE, non per
+                         * textum internum. MENSURATUM: stml
+                         * nodos textus INTER elementa (spatium
+                         * album solum) omittit, ergo optiones
+                         * CONCATENATAE fiunt -
+                         * 'disciplinastructuracryptographica'.
+                         * xmllint eos servabat. Hic differentia
+                         * non strepitus sed CORRUPTIO est. */
+                        {
+                            i32 numerus_o;
+                            i32 io;
+
+                            k = ZEPHYRUM;
+                            op[ZEPHYRUM] = '\0';
+                            numerus_o = stml_numerus_liberorum(m);
+                            per (io = ZEPHYRUM; io < numerus_o; io++)
+                            {
+                                StmlNodus* o;
+                                character  ot[CCLVI];
+
+                                o = stml_liberum_ad_indicem(m, io);
+                                si (!o || o->genus !=
+                                        STML_NODUS_ELEMENTUM)
+                                {
+                                    perge;
+                                }
+                                _prosa_ex(
+                                    stml_textus_internus(o, p), ot,
+                                    (i32)magnitudo(ot), FALSUM);
+                                si (!ot[ZEPHYRUM])
+                                {
+                                    perge;
+                                }
+                                si (k > ZEPHYRUM)
+                                {
+                                    k += (i32)sprintf(op + k, " ");
+                                }
+                                k += (i32)sprintf(op + k, "%s", ot);
+                            }
+                        }
+                        fprintf(f, "P\t%s\t%s\t%s\t%s\t%s\t%s\n",
+                                mod, gn, n, ty, tm, op);
+                    }
+                    alioquin si (ik == I)
+                    {
+                        character st[MM];
+                        i32       numerus_s;
+                        i32       k;
+                        i32       pos;
+
+                        st[ZEPHYRUM] = '\0';
+                        pos = ZEPHYRUM;
+                        numerus_s = stml_numerus_liberorum(m);
+                        per (k = ZEPHYRUM; k < numerus_s; k++)
+                        {
+                            StmlNodus* s;
+                            character  sn[CCLVI];
+
+                            s = stml_liberum_ad_indicem(m, k);
+                            si (!s ||
+                                s->genus != STML_NODUS_ELEMENTUM ||
+                                !chorda_aequalis_literis(
+                                    *s->titulus, "status"))
+                            {
+                                perge;
+                            }
+                            _attr(s, "nomen", sn,
+                                  (i32)magnitudo(sn));
+                            si (!sn[ZEPHYRUM])
+                            {
+                                perge;
+                            }
+                            si (pos > ZEPHYRUM)
+                            {
+                                pos += (i32)sprintf(st + pos, ", ");
+                            }
+                            pos += (i32)sprintf(st + pos, "%s", sn);
+                        }
+                        fprintf(f, "M\t%s\t%s\t%s\t%s\n",
+                                mod, gn, n, st);
+                    }
+                    alioquin si (ik == II)
+                    {
+                        character ne[CCLVI];
+
+                        _attr(m, "necessaria", ne,
+                              (i32)magnitudo(ne));
+                        fprintf(f, "A\t%s\t%s\t%s\t%s\n",
+                                mod, gn, n, ne);
+                    }
+                    alioquin
+                    {
+                        character ad[CCLVI];
+                        character rm[CCLVI];
+
+                        si (!n[ZEPHYRUM])
+                        {
+                            perge;
+                        }
+                        _attr(m, "ad",      ad, (i32)magnitudo(ad));
+                        _attr(m, "modulus", rm, (i32)magnitudo(rm));
+                        si (!rm[ZEPHYRUM])
+                        {
+                            memcpy(rm, mod, strlen(mod) + I);
+                        }
+                        fprintf(f, "R\t%s\t%s\t%s\t%s\t%s\n",
+                                mod, gn, n, rm, ad);
+                    }
+                }
+            }
+        }
+
+        /* species et individua (cultivar NON - quaere ea omittit) */
+        gradus_nomina[ZEPHYRUM] = "species";
+        gradus_nomina[I]        = "individuum";
+        per (ig = ZEPHYRUM; ig < II; ig++)
+        {
+            Xar* rr;
+
+            rr = xar_creare(p, (i32)magnitudo(StmlNodus*));
+            _colligere(ex->radix, gradus_nomina[ig], rr);
+            per (i = ZEPHYRUM; i < xar_numerus(rr); i++)
+            {
+                StmlNodus* r;
+                StmlNodus* maior;
+                StmlNodus* def;
+                character  rn[CCLVI];
+                character  rg[CCLVI];
+                character  rd[MM];
+
+                r = *(StmlNodus**)xar_obtinere(rr, i);
+                _attr(r, "nomen", rn, (i32)magnitudo(rn));
+                si (!rn[ZEPHYRUM])
+                {
+                    perge;
+                }
+
+                rg[ZEPHYRUM] = '\0';
+                per (maior = r->parens; maior; maior = maior->parens)
+                {
+                    si (maior->genus == STML_NODUS_ELEMENTUM &&
+                        chorda_aequalis_literis(*maior->titulus,
+                                                "genus"))
+                    {
+                        _attr(maior, "nomen", rg,
+                              (i32)magnitudo(rg));
+                        frange;
+                    }
+                }
+
+                rd[ZEPHYRUM] = '\0';
+                def = stml_invenire_liberum(r, "definitio");
+                si (def)
+                {
+                    _prosa_ex(stml_textus_internus(def, p), rd,
+                              (i32)magnitudo(rd), FALSUM);
+                }
+
+                fprintf(f, "S\t%s\t%s\t%s\t%s\t%s\n",
+                        mod, rg, gradus_nomina[ig], rn, rd);
+            }
+        }
+
+        /* umbrae */
+        {
+            Xar* omnia;
+
+            omnia = xar_creare(p, (i32)magnitudo(StmlNodus*));
+            _colligere_omnia_elementa(ex->radix, omnia);
+            per (i = ZEPHYRUM; i < xar_numerus(omnia); i++)
+            {
+                StmlNodus* n;
+                chorda*    v;
+
+                n = *(StmlNodus**)xar_obtinere(omnia, i);
+                v = stml_attributum_capere(n, "externum");
+                si (v && chorda_aequalis_literis(*v, "verum"))
+                {
+                    character u[CCLVI];
+
+                    _attr(n, "ad", u, (i32)magnitudo(u));
+                    si (u[ZEPHYRUM])
+                    {
+                        fprintf(f, "U\t%s\t%s\n", mod, u);
+                    }
+                }
+            }
+        }
+
+        piscina_reficere(p, nota);
+    }
+
+    fclose(f);
+}
+
 s32
 principale(
     s32          numerus,
@@ -759,6 +1103,7 @@ principale(
     constans character*   radix;
     constans character*   plagula;
     constans character*   tabulae;
+    constans character*   corpus;
     b32                   machina;
     s32                   i;
     i32                   onerata;
@@ -770,6 +1115,7 @@ principale(
     radix   = "natura";
     plagula = NIHIL;
     tabulae = NIHIL;
+    corpus  = NIHIL;
     machina = FALSUM;
 
     per (i = I; i < numerus; i++)
@@ -793,11 +1139,16 @@ principale(
         {
             tabulae = argumenta[++i];
         }
+        alioquin si (strcmp(argumenta[i], "-corpus") == ZEPHYRUM &&
+                     i + I < numerus)
+        {
+            corpus = argumenta[++i];
+        }
         alioquin
         {
             fprintf(stderr,
                 "usus: natura_examen [-plagula VIA] [-machina] "
-                "[-radix DIR] [-tabulae DIR]\n");
+                "[-radix DIR] [-tabulae DIR] [-corpus VIA]\n");
             redde II;
         }
     }
@@ -869,6 +1220,10 @@ principale(
     si (tabulae)
     {
         tabulas_scribere(bib, tabulae);
+    }
+    si (corpus)
+    {
+        corpus_scribere(bib, corpus);
     }
 
     /* filtrum POST nexuram: regulae trans exemplaria transeunt */

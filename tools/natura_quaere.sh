@@ -23,90 +23,29 @@
 set -u
 cd "$(dirname "$0")/.." || exit 1
 TMP=build/natura_quaere_tmp; mkdir -p "$TMP"
-xp() { xmllint --xpath "$2" "$1" 2>/dev/null; }
 num() { printf '%.0f' "${1:-0}" 2>/dev/null || printf '0'; }
 
 CORPUS="$TMP/corpus.txt"
-: > "$CORPUS"
 
-for f in natura/*.genera; do
-    mod=$(xp "$f" 'string(/natura/@modulus)')
-    ng=$(num "$(xp "$f" 'count(//genus)')")
-    i=1
-    while [ "$i" -le "$ng" ]; do
-        sel="(//genus)[$i]"
-        g=$(xp "$f" "string($sel/@nomen)")
-        sb=$(xp "$f" "string($sel/@sub)")
-        sm=$(xp "$f" "string($sel/@modulus)")
-        [ -z "$sm" ] && sm="$mod"
-        [ -z "$sb" ] && sm=""
-        de=$(xp "$f" "string($sel/definitio)" | tr '\n' ' ' | sed 's/  */ /g;s/^ //')
-        di=$(xp "$f" "string($sel/differentia)" | tr '\n' ' ' | sed 's/  */ /g;s/^ //')
-        printf 'G\t%s\t%s\t%s\t%s\t%s\t%s\n' "$mod" "$g" "$sm" "$sb" "$de" "$di" >> "$CORPUS"
-
-        # CAVE: machina_statuum filius DIRECTUS generis est;
-        # proprietas/pars/relatio in involucris habitant
-        for k in proprietas machina_statuum pars relatio; do
-            case "$k" in
-              proprietas) base="$sel/proprietates/proprietas" ;;
-              machina_statuum) base="$sel/machina_statuum" ;;
-              pars) base="$sel/partes/pars" ;;
-              relatio) base="$sel/relationes/relatio" ;;
-            esac
-            nk=$(num "$(xp "$f" "count($base)")")
-            j=1
-            while [ "$j" -le "$nk" ]; do
-                s2="$base[$j]"
-                n=$(xp "$f" "string($s2/@nomen)")
-                case "$k" in
-                  proprietas)
-                    ty=$(xp "$f" "string($s2/@genus)")
-                    tm=$(xp "$f" "string($s2/@modulus)")
-                    op=$(xp "$f" "string($s2)" | tr '\n' ' ' | sed 's/  */ /g;s/^ //;s/ $//')
-                    printf 'P\t%s\t%s\t%s\t%s\t%s\t%s\n' "$mod" "$g" "$n" "$ty" "$tm" "$op" >> "$CORPUS" ;;
-                  machina_statuum)
-                    # CAVE: xmllint nodos attributorum LINEIS
-                    # separat - iungendum ANTE quam in TSV eat,
-                    # aliter campus lineas plures occupat et
-                    # tabulam frangit
-                    st=$(xp "$f" "$s2/status/@nomen" | tr '\n' ' ' \
-                         | sed 's/ *nomen="/, /g;s/"//g;s/^, //;s/ *$//')
-                    printf 'M\t%s\t%s\t%s\t%s\n' "$mod" "$g" "$n" "$st" >> "$CORPUS" ;;
-                  pars)
-                    ne=$(xp "$f" "string($s2/@necessaria)")
-                    printf 'A\t%s\t%s\t%s\t%s\n' "$mod" "$g" "$n" "$ne" >> "$CORPUS" ;;
-                  relatio|relatum)
-                    ad=$(xp "$f" "string($s2/@ad)")
-                    rm=$(xp "$f" "string($s2/@modulus)")
-                    [ -z "$rm" ] && rm="$mod"
-                    [ -n "$n" ] && printf 'R\t%s\t%s\t%s\t%s\t%s\n' "$mod" "$g" "$n" "$rm" "$ad" >> "$CORPUS" ;;
-                esac
-                j=$((j + 1))
-            done
-        done
-        i=$((i + 1))
-    done
-
-    for gr in species individuum; do
-        nr=$(num "$(xp "$f" "count(//$gr)")")
-        i=1
-        while [ "$i" -le "$nr" ]; do
-            r=$(xp "$f" "string((//$gr)[$i]/@nomen)")
-            rg=$(xp "$f" "string((//$gr)[$i]/ancestor::genus[1]/@nomen)")
-            rd=$(xp "$f" "string((//$gr)[$i]/definitio)" | tr '\n' ' ' | sed 's/  */ /g;s/^ //')
-            [ -n "$r" ] && printf 'S\t%s\t%s\t%s\t%s\t%s\n' "$mod" "$rg" "$gr" "$r" "$rd" >> "$CORPUS"
-            i=$((i + 1))
-        done
-    done
-
-    nu=$(num "$(xp "$f" "count(//*[@externum='verum'])")")
-    i=1
-    while [ "$i" -le "$nu" ]; do
-        u=$(xp "$f" "string((//*[@externum='verum'])[$i]/@ad)")
-        [ -n "$u" ] && printf 'U\t%s\t%s\n' "$mod" "$u" >> "$CORPUS"
-        i=$((i + 1))
-    done
-done
+# ================= CORPUS (gradus II) =================
+# XXII vocationes xmllint hic stabant - parsatio TERTIA eiusdem
+# corporis (onerator per stml, visus per xmllint, hoc rursus per
+# xmllint). Nunc onerator corpus EMITTIT.
+#
+# PORTA: instrumentum quod corpus aedificare NEQUIT tacere non
+# debet - responsum ex corpore vetere peius est quam nullum.
+PORTA=bin/natura_examen
+if [ ! -x "$PORTA" ]; then
+    echo "natura_quaere: $PORTA abest - strue ./tools/natura_struere.sh" >&2
+    exit 2
+fi
+if ! "$PORTA" -corpus "$CORPUS" >/dev/null 2>&1; then
+    # exitus I = VULNERA (corpus tamen scriptum); II = nihil cursum
+    if [ $? -eq 2 ]; then
+        echo "natura_quaere: corpus aedificari NEQUIT (porta exitum II dedit)" >&2
+        exit 2
+    fi
+fi
 
 # ---- maiores: catena sub= (etiam trans exemplaria) ----
 maiores() {   # mod genus -> lineas "mod\tgenus" a se ad radicem
