@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/iudicium.stml
-  Exemplar semanticum: IUDICIUM (versio 4, PLASTICUM)
+  Exemplar semanticum: IUDICIUM (versio 5, PLASTICUM)
   Genera: gradus_assensus, fons, observatio, iudicium,
   periculum, ignotum.
 
@@ -46,7 +46,7 @@
   historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
   verificatis, et hoc dicere debet.
 -->
-<natura modulus="iudicium" versio="4" lingua="latina">
+<natura modulus="iudicium" versio="5" lingua="latina">
 
 <!-- ==================================================
      GRADUS ASSENSUS - quanto animus adhaeret
@@ -867,6 +867,143 @@
       communicare non licet), unde proprietas quae alibi
       monotone crescit hic in uno figitur. Terminus scalae, non
       exceptio ab ea.
+    </nota>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     PERITIA COMMUNIS - scientia cuius GERENS universitas est
+
+     Cursu tertio decimo (pastura ovium) inventa. Exemplar hoc
+     duo genera de distributione scientiae iam habebat, et
+     tertium deerat:
+       ignotum            NEMO scit (absentia agnita)
+       secretum           ALIQUI sciunt, ceteri ne sciant
+       peritia_communis   COETUS scit, nullum membrum solum
+     Trias completa, per id quod QUIS sciat.
+
+     SPECIMEN COGENS: grex "heftatus" in montibus non saeptis
+     fines suos novit et intra eos manet - nullo saepto, nullo
+     pastore custodiente. Agnae hoc a matribus discunt. Anno
+     2001 pestis pedum et oris greges heftatos in Anglia
+     septentrionali delevit, et damnum non oves fuerunt (emi
+     poterant) sed HEFTA IPSA: scientia periit, et restitutio
+     annos saeptorum et pastorum poposcit.
+     ================================================== -->
+
+<genus nomen="peritia_communis">
+
+  <definitio>
+    Scientia aut ars quae in universitate residet nec in ullo
+    membro tota est: participando traditur, non doctrina sola,
+    et cum coetu dissoluto perit etiamsi nemo eam oblitus sit.
+  </definitio>
+
+  <differentia>
+    GERENS EST COETUS, NON MEMBRUM - unde modus pereundi
+    proprius: non oblivione sed DISCONTINUITATE. Membra
+    singillatim substitui possunt et peritia manet, quia novi a
+    veteribus participando discunt; omnia simul substitui et
+    perit, quamvis singuli aeque periti sint. Ideo damnum non ex
+    numero amissorum aestimatur sed ex EODEM TEMPORE amissorum.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="modus_traditionis" genus="electio"
+      nota="quomodo ad novos transeat">
+      <optio>participatione</optio>
+      <optio>institutione</optio>
+      <optio>utroque</optio>
+    </proprietas>
+    <proprietas nomen="scribi_potest" genus="veritas"
+      ordinarius="falsum"
+      nota="DECIPULA HIC SEDET: quod scribi potest scriptum
+            CONSERVARI NON EST. Documentum heftam non servat -
+            oves legere non possunt, sed nec homo ex libro
+            discit quod manu discitur. Scriptio auxilium est
+            restituendi, non substitutum servandi. Qui hoc
+            confundit se munitum credit et non est"/>
+    <proprietas nomen="tempus_restituendi" genus="quantitas"
+      modulus="mensura"
+      nota="quantum ad reficiendum opus sit POST amissionem, cum
+            omnibus rebus praesto. Heftam restituere annos
+            poscit, opibus abundantibus - quia traditio
+            participatione fit et participatio tempus poscit.
+            Mensura quae peritiam ab omni alia re dividit:
+            pecunia eam accelerare non potest"/>
+  </proprietates>
+
+  <machina_statuum nomen="vita" gerens="individuum">
+    <status nomen="vigens"/>
+    <status nomen="attenuata"
+      nota="gerentes pauciores quam ut traditio certa sit -
+            status PERICULOSISSIMUS quia nihil adhuc deest et
+            omnia iam pendent. Nemo eum animadvertit donec unus
+            abeat"/>
+    <status nomen="amissa"/>
+    <status nomen="restituta" nota="longo tempore refecta"/>
+    <transitus a="vigens" ad="attenuata" per="attenuatio"/>
+    <transitus a="attenuata" ad="vigens" per="instauratio"/>
+    <transitus a="attenuata" ad="amissa" per="discontinuatio"/>
+    <transitus a="vigens" ad="amissa" per="discontinuatio"
+      nota="TRANSITUS SUBITUS: coetu simul deleto peritia
+            florens statim perit, gradu medio omisso"/>
+    <transitus a="amissa" ad="restituta" per="restitutio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="residet_in" ad="universitas"
+      modulus="organizatio"
+      nota="coetus qui eam gerit"/>
+    <relatio nomen="de" ad="*" nota="cuius rei sit peritia"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="notitia_pascui">
+    <definitio>
+      Scientia gregis de finibus pascui sui in monte non saepto:
+      quo eundum, ubi manendum, quando descendendum.
+    </definitio>
+    <valor nomen="modus_traditionis">participatione</valor>
+    <valor nomen="scribi_potest">falsum</valor>
+    <nota>
+      Specimen quod genus coegit, et purissimum quod inveniri
+      potest: gerens ne loqui quidem potest, unde nulla
+      confusio inter peritiam et documentum eius possibilis
+      est. Damnum anni 2001 mensuratum: oves emi poterant,
+      hefta non poterat.
+    </nota>
+  </species>
+
+  <species nomen="ars_officinae">
+    <definitio>
+      Modus operandi quem officina tenet: quid quo ordine, quid
+      caveatur, quid non scribatur quia omnes sciunt.
+    </definitio>
+    <valor nomen="modus_traditionis">utroque</valor>
+    <nota>
+      Species ubi 'scribi_potest' fallacissima est: pars scribi
+      potest et scribitur, et scripta pars ea EST quae minus
+      valet - reliquum in manibus manet. Officina cuius
+      artifices simul abeunt libros suos habet et artem non.
+    </nota>
+  </species>
+
+  <species nomen="memoria_operis">
+    <definitio>
+      Scientia coetus de opere suo quae in fontibus non est: cur
+      hoc ita factum sit, quid temptatum et reiectum, ubi
+      periculum lateat.
+    </definitio>
+    <nota>
+      Cur commentaria, worklogi, acta decretorum exsistant:
+      conatus peritiam communem in rem scriptam vertendi
+      antequam attenuetur. Conatus partim tantum felix, ut
+      proprietas 'scribi_potest' monet - et domus haec eum
+      cotidie agit.
     </nota>
   </species>
 

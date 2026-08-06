@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **33** · genera **169** · res dictionarii **365** · arcus **500**
+Exemplaria **33** · genera **171** · res dictionarii **372** · arcus **505**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -135,7 +135,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **schema_identificandi** ⚙ ▣3 — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
 
-### iudicium (v4, genera 8)
+### iudicium (v5, genera 9)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
@@ -145,6 +145,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **ignotum** ⚙ — Absentia notitiae AGNITA et nominata: hiatus qui, quia nominatus est, tractari potest
 - **investigatio** ⚙ — Inquisitio ordinata in causas eventus, iudicia de causis producens
 - **secretum** ⚙ — Res cuius utilitas in eo consistit quod pauci eam sciunt: divulgata non corrumpitur nec perit sed OFFICIO SUO EXUITUR,
+- **peritia_communis** ⚙ — Scientia aut ars quae in universitate residet nec in ullo membro tota est: participando traditur, non doctrina sola, e
 
 ### lingua_programmandi (v4, genera 5)
 
@@ -178,7 +179,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **classis_normativa** ⚙ — Categoria a norma constituta in quam res assignantur, cui consequentiae (obligationes, prohibitiones, procedurae) ADHA
 - **fictio_iuris** — Praeceptum quo lex rem aliter se habentem TAMQUAM ALITER tractari iubet, sciens ita non esse, propter bonum quod alite
 
-### obligatio (v6, genera 10)
+### obligatio (v7, genera 11)
 
 - **obligatio** ⚙ — Iuris vinculum quo quis alicui aliquid praestare adstringitur (Institutiones): non res sed VINCULUM inter personas - d
 - **contractus** — Conventio duorum (aut plurium) quae obligationes parit: consensus est fundamentum - ideo utrumque ligat, et neuter sol
@@ -190,6 +191,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **delegatio** ⚙ — Potestas alterius nomine agendi, ita ut acta delegati delegantem OBLIGENT tamquam ipse egisset: non licentia agendi se
 - **tractatus** ⊂ contractus ⚙ — Conventio inter eos qui superiorem non habent: nullum tribunal supra partes est, unde consensus non semel datur sed BI
 - **limitatio** — Declaratio unilateralis qua pars, tractatum accipiens, effectum quorundam articulorum in se excludit aut mutat: consen
+- **portio_communis** — Pars determinata rei communis finitae qua alicui uti licet, ceteris ex eodem fonte utentibus: ius mensuratum, non meru
 
 ### operatio (v1, genera 4)
 
@@ -207,7 +209,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **periodicum** ⊂ opus_scriptum — Opus quod PERFECTIONEM non petit: in fasciculis continuatur dum curatores volunt - machina compositionis parentis ei f
 - **fasciculus** — Pars periodici tempore signata: numerus unus, die suo editus
 
-### organizatio (v7, genera 8)
+### organizatio (v8, genera 8)
 
 - **universitas** — Coetus in finem communem ordinatus qui UT UNUM agit et mutatis membris PERDURAT: haec perduratio eum a mero acervo dis
 - **organizatio** ⊂ universitas — Universitas PERSONARUM: quod membra rationalia sunt omnia sequentia parit - fines eligi possunt et mutari, officia con
@@ -396,6 +398,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | pensum | operatio |
 | periculum | iudicium |
 | periodicum | opus_scriptum |
+| peritia_communis | iudicium |
 | persona | persona |
 | persona_iuridica | organizatio |
 | petitio | obligatio |
@@ -406,6 +409,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | plagula_notationis | plagula_computatralis |
 | plagula_sqlite | plagula_computatralis |
 | planta | planta |
+| portio_communis | obligatio |
 | possessio | commercium |
 | postulatum | fabricatio |
 | praescriptum | praescriptum |
@@ -517,6 +521,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `iudicium.investigatio` — inquisitio_forensis, investigatio_praeventiva, recensio_post_mortem
 - `iudicium.iudicium` — aestimatio, diagnosis, praedictio, sententia_iudicis
 - `iudicium.observatio` — signum, symptoma, testimonium
+- `iudicium.peritia_communis` — ars_officinae, memoria_operis, notitia_pascui
 - `iudicium.secretum` — clavis_privata, secretum_negotii, sigillum_confessionis, verbum_arcanum
 - `lingua_programmandi.implementatio_linguae` — :clang, :cpython, :fil_c, :gcc, :officina
 - `lingua_programmandi.lingua_iussuum` — :bash
@@ -535,6 +540,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `obligatio.iussum` — iussum_emptionis, iussum_ne_resuscitetur, iussum_operis, mandatum_iudicis, praescriptio_medica
 - `obligatio.obligatio` — obligatio_ex_contractu, obligatio_ex_delicto, obligatio_ex_lege
 - `obligatio.petitio` — petitio_assecurationis, petitio_remota, supplicatio
+- `obligatio.portio_communis` — portio_computandi, portio_pascui, portio_piscandi
 - `obligatio.titulus` — character_indelebilis, gradus_academicus, titulus_honoris
 - `obligatio.tractatus` — :tractatus_gandavensis
 - `obligatio.tributum` — decuma, portorium, tributum_capitis, vectigal
@@ -542,7 +548,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `opus_scriptum.editio` — :moby_dick_londinensis_1851, :moby_dick_novi_eboraci_1851, :systema_naturae_editio_decima
 - `opus_scriptum.expressio` — :abusus_linguae_anglice, :abusus_linguae_germanice
 - `opus_scriptum.opus_scriptum` — :abusus_linguae, :moby_dick, :species_plantarum, :summa_theologiae, :systema_naturae
-- `organizatio.colonia` — colonia_apium
+- `organizatio.colonia` — colonia_apium, grex
 - `organizatio.corpus_normans` — :ansi, :iec, :ieee, :iso
 - `organizatio.officium` — curator, episcopus, notarius, parochus, praeses_collegii
 - `organizatio.organizatio` — :agentia_isbn, :debian_project

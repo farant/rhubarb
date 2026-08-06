@@ -83,7 +83,7 @@ and relations may all cross model boundaries (§5).
 | `genus` | in `natura`, or nested in a `genus`/`species` for taxonomic depth | `nomen`, opt `sub` `modulus` `gradus` | everything below |
 | `species` | in `genus` | `nomen`, opt `gradus` `etiam` | definitio, differentia, valor, relatum, historia, nota, dubium, nested `genus` |
 | `individuum` | in `genus` | `nomen` | same as species |
-| `cultivar` | in `species` | `nomen` | same — a rank below species (`planta` only) |
+| `cultivar` | in `species` | `nomen` | same — a rank below species produced by human selection (cultivar, breed, landrace, strain) |
 
 `species` vs `individuum` is the format's central distinction: a
 species is a KIND (C, pneumonia, the rose), an individuum is a

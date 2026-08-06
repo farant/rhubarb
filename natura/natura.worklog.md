@@ -4245,3 +4245,112 @@ ecosystems or fungal networks would repay a walk.
 
 MEASURED after: 33 exemplaria / 169 genera / 365 res / 500 arcus
 / 0 vulnera / 24 monita / dubia 14 / umbrae 2.
+
+## 2026-08-05 — round fifty-six: sheep (coverage loop, run 13)
+
+Fran chose sheep over gardening or arable, and the choice was
+right for a reason worth recording: a failed garden costs a
+season, but a shepherd is punished hard and continuously, and the
+vocabulary is among the oldest continuous technical language we
+have.
+
+286. THE FLOCK CONFIRMED `universitas` FROM THE SOURCE. Roman
+     jurists used GREX as the paradigm case of universitas rerum
+     — a flock stays the same flock though the sheep change.
+     A genus built one round earlier, validated not by us but by
+     the authors of the word.
+
+287. AND IT FOUND THE BOUNDARY IMMEDIATELY. A bee colony orders
+     ITSELF — thermoregulates, allocates foragers, decides. A
+     flock is ordered BY THE SHEPHERD: it endures as one because
+     someone keeps it as one, and its members keep individual
+     identity (tagged, treated, sold singly) which no bee has.
+     `unde_ordo` (ab_intus / ab_extra) added, and the consequence
+     is not decorative: WHAT IS ORDERED FROM WITHIN CAN BE LEFT
+     ALONE AND PERSISTS; what is ordered from without dissolves
+     the moment the orderer stops. A flock without a shepherd
+     becomes sheep; a colony without a beekeeper is still a
+     colony.
+     The parent was one round old and already needed a dimension
+     — which is the argument for building parents early, while
+     they are still cheap to shape.
+
+288. PERITIA COMMUNIS — the round's find, and it completes a
+     triad the library had been building without noticing:
+       ignotum            NOBODY knows (absence, acknowledged)
+       secretum           SOME know, others must not
+       peritia_communis   THE GROUP knows, no member alone
+     Three genera about the distribution of knowledge, by WHO
+     holds it, and the third arrived from shepherding.
+     THE FORCING CASE: a hefted flock on unfenced fell knows its
+     own ground and stays on it — no wall, no watching. Lambs
+     learn it from their mothers. In 2001 foot-and-mouth culls
+     destroyed hefted flocks across northern England, and the
+     loss was NOT the sheep (those could be bought). The HEFT was
+     gone, and re-hefting took years of fencing and shepherding.
+     Hence the differentia: the bearer is the COLLECTIVE, so the
+     mode of death is DISCONTINUITY, NOT FORGETTING. Members
+     replaced one at a time and it survives, because the new
+     learn from the old; replaced all at once and it dies,
+     however expert each replacement is. Damage is therefore
+     measured not by how many were lost but by HOW MANY AT ONCE.
+     `scribi_potest` carries the trap: writing it down is NOT
+     preserving it. A document does not hold a heft — sheep
+     cannot read, but neither does a person learn from a book
+     what is learned by hand. Writing aids RESTORATION; it does
+     not substitute for CONTINUITY. Whoever confuses the two
+     believes himself covered and is not.
+     `tempus_restituendi` is the property that separates this
+     from everything else in the library: MONEY CANNOT SHORTEN
+     IT, because transmission happens by participation and
+     participation takes time.
+     Species deliberately across three domains — notitia_pascui
+     (the heft, where the bearer cannot even speak, so no
+     confusion between the knowledge and its documentation is
+     possible), ars_officinae (a workshop's practice, where the
+     written part is the part that matters least), and
+     memoria_operis — which is what worklogs, commit messages and
+     decision records are FOR, and which this house does daily.
+
+289. PORTIO COMMUNIS — a stinted common. NOT a licentia: a
+     licence permits what would otherwise be forbidden and
+     implies no pool; a stint presupposes a FINITE RIVALROUS
+     source where your use subtracts from mine, so the measure is
+     part of the essence rather than a modality. And it attaches
+     to the HOLDING, not the person — it sells with the farm.
+     HISTORY WORTH STATING PLAINLY: stinting IS the answer to
+     what was later named the tragedy of the commons and declared
+     inevitable. Commons were stinted for centuries, enforced in
+     manorial courts, and did not collapse. The thing called
+     inevitable had been solved before it was named.
+     `adhaeret` turned out to be the sharpest property, and the
+     species show why: a grazing stint attached to LAND stays in
+     the community by construction; a transferable fishing quota
+     attached to a VESSEL is bought by whoever can pay most, so
+     fisheries concentrate and coastal communities are stripped
+     of their own right. THE DIFFERENCE IS ARCHITECTURAL, NOT
+     MORAL — one structure forbids what the other permits.
+     `portio_computandi` (a rate limit) is the same form again,
+     and it leaves unanswered the two things shepherds settled:
+     what the share ATTACHES TO, and who may transfer it.
+
+290. METAMODEL, one word: `cultivar` was declared "planta only".
+     A Suffolk is a cultivar in exactly the sense Granny Smith
+     is — a rank below species produced by human selection and
+     maintained by human choice. The restriction was arbitrary
+     and only visible once an animal was modelled properly.
+     Relaxed rather than duplicated: a new plant/animal pair of
+     ranks would have been the wrong repair.
+
+291. BEST NON-SURFACING OF THE SESSION: grafting a lamb. A ewe's
+     lamb dies; an orphan needs a mother; the shepherd ties the
+     dead lamb's pelt onto the orphan and the ewe accepts it.
+     That is DELIBERATE SPOOFING OF A BIOLOGICAL AUTHENTICATOR,
+     done by the trusted party, for the animal's good, as routine
+     best practice. The credential is smell, everyone knows it is
+     forgeable, and the forgery is CORRECT. An act, not a kind —
+     so nothing coined — but recorded because it is the sharpest
+     thing in the walk and someone will want it later.
+
+MEASURED after: 33 exemplaria / 171 genera / 372 res / 505 arcus
+/ 0 vulnera / 24 monita / dubia 14 / umbrae 2.

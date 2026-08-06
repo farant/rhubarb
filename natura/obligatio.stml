@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/obligatio.stml
-  Exemplar semanticum: OBLIGATIO (versio 6, PLASTICUM)
+  Exemplar semanticum: OBLIGATIO (versio 7, PLASTICUM)
   Genera: obligatio, contractus, licentia.
 
   Natum ex experimento pistrinae (ratio caffeae, conductio
@@ -20,7 +20,7 @@
   datur, revocari potest, expirat. Non idem genus - quod
   schemata vulgaria confundunt.
 -->
-<natura modulus="obligatio" versio="6" lingua="latina">
+<natura modulus="obligatio" versio="7" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -1049,6 +1049,138 @@
     doctrinam de limitibus eius (compatibilitas cum fine)
     elaboravit, quam ars computatralis non habet.
   </nota>
+
+</genus>
+
+
+<!-- ==================================================
+     PORTIO COMMUNIS - pars determinata rei communis finitae
+
+     Cursu tertio decimo inventa (pascua stincta). NON EST
+     LICENTIA: licentia permittit quod aliter non liceret et
+     nullum fontem communem supponit; portio fontem FINITUM ET
+     RIVALEM supponit, ubi usus tuus meum minuit. Et adhaeret
+     plerumque PRAEDIO, non personae - venditur cum fundo,
+     transit cum eo, personam non sequitur.
+
+     NOTANDUM QUOD HISTORIA DICIT: stinctio RESPONSUM est ad id
+     quod postea "tragoedia communium" nominatum et inevitabile
+     declaratum est. Communia per saecula stincta, in curiis
+     manerialibus custodita, non perierunt. Quod inevitabile
+     dicitur solutum erat antequam nominaretur.
+     ================================================== -->
+
+<genus nomen="portio_communis">
+
+  <definitio>
+    Pars determinata rei communis finitae qua alicui uti licet,
+    ceteris ex eodem fonte utentibus: ius mensuratum, non merum
+    permissum - quia quod tu sumis ceteris deest.
+  </definitio>
+
+  <differentia>
+    A licentia FONTE: licentia quod aliter illicitum esset
+    permittit et de copia tacet; portio copiam FINITAM ET
+    RIVALEM supponit, unde mensura pars essentiae est, non
+    modus. A possessione COMMUNIONE: possessor rem suam habet,
+    portionarius partem rei ALIENAE ET COMMUNIS - fons unus
+    manet et numquam dividitur.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="mensura" genus="quantitas"
+      modulus="mensura"
+      nota="quantum liceat - oves viginti, tonnae piscium,
+            unciae aquae"/>
+    <proprietas nomen="adhaeret" genus="electio"
+      nota="cui res portio inhaereat. AXIS GRAVISSIMUS ET SAEPE
+            NEGLECTUS: portio praedio adhaerens cum fundo
+            venditur et intra communitatem manet; portio
+            personae adhaerens abire potest, et tunc communia a
+            longinquis possideri incipiunt - quod historia
+            piscationis nostrae aetatis abunde docuit">
+      <optio>personae</optio>
+      <optio>praedio</optio>
+      <optio>navi</optio>
+      <optio>officio</optio>
+    </proprietas>
+    <proprietas nomen="transferibilis" genus="veritas"
+      ordinarius="falsum"/>
+    <proprietas nomen="periodica" genus="veritas"
+      ordinarius="falsum"
+      nota="an per periodos renovetur (tonnae per annum) an
+            perpetua sit (oves quolibet tempore). Distinctio
+            quae custodiam totam mutat: perpetua NUMERUM
+            praesentem inspicit, periodica SUMMAM temporis -
+            et altera memoriam poscit quam altera non poscit"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="in_re_communi" ad="*"
+      nota="fons communis - pascuum, piscatio, aqua, aer,
+            spatium radiophonicum, vis computandi"/>
+    <relatio nomen="competit" ad="*"
+      nota="cui - personae, praedio, navi"/>
+    <relatio nomen="statuta_per" ad="norma" modulus="norma"/>
+    <relatio nomen="custodita_per" ad="organizatio"
+      modulus="organizatio"
+      nota="quis excessum puniat. SINE CUSTODE PORTIO NIHIL EST:
+            mensura sine poena exhortatio est, et communia quae
+            custodem amiserunt pereunt - quod curiae maneriales
+            praestabant et quod hodie saepe deest"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="portio_pascui">
+    <definitio>
+      Numerus pecorum quem tenens praedii in communi pascere
+      licet: "stinta" Anglica, curia maneriali custodita.
+    </definitio>
+    <valor nomen="adhaeret">praedio</valor>
+    <valor nomen="periodica">falsum</valor>
+    <nota>
+      Species antiquissima, et ea quae genus coegit. Excessus
+      non erat res privata sed IN OMNES delictum - unde curia,
+      non pactum. Praedio adhaerens consulto: ne ius pascendi a
+      communitate abiret.
+    </nota>
+  </species>
+
+  <species nomen="portio_piscandi">
+    <definitio>
+      Pondus piscium quod navi certae per annum capere licet:
+      quod "quota transferibilis" vocatur.
+    </definitio>
+    <valor nomen="adhaeret">navi</valor>
+    <valor nomen="transferibilis">verum</valor>
+    <valor nomen="periodica">verum</valor>
+    <nota>
+      Species quae PERICULUM TRANSFERIBILITATIS ostendit: portio
+      quae vendi potest ab iis emitur qui plurimum solvere
+      possunt, unde piscatio in paucas manus coit et communitates
+      litorales iure suo exuuntur. Quod stinta praedio adhaerens
+      structura sua vetabat, haec libertate sua admittit -
+      differentia non moralis sed ARCHITECTONICA.
+    </nota>
+  </species>
+
+  <species nomen="portio_computandi">
+    <definitio>
+      Copia petitionum aut operationum quam cliens intra tempus
+      certum facere licet: quod "limes celeritatis" vocatur.
+    </definitio>
+    <valor nomen="adhaeret">personae</valor>
+    <valor nomen="periodica">verum</valor>
+    <nota>
+      Species recentissima et forma eadem: fons finitus rivalis,
+      mensura per tempus, custos qui excessum punit. Quod
+      pastores saeculis ante solverunt - et duo quae illi
+      solverunt et haec species raro solvit: cui portio
+      ADHAEREAT (persona? clavis? societas?) et QUIS eam
+      transferre possit.
+    </nota>
+  </species>
 
 </genus>
 

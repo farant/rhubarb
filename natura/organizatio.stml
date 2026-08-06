@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/organizatio.stml
-  Exemplar semanticum: ORGANIZATIO (versio 7, PLASTICUM)
+  Exemplar semanticum: ORGANIZATIO (versio 8, PLASTICUM)
 
   Genus a norma et persona POSTULATUM (editor normae organizatio
   est, non persona nec chorda). Sub-genera prima formae:
   corpus_normans, societas - arbor Porphyriana profunditatem
   accipit (attributum sub= + differentia in genere).
 -->
-<natura modulus="organizatio" versio="7" lingua="latina">
+<natura modulus="organizatio" versio="8" lingua="latina">
 
 <!-- FONTES (mechanismus rotae XVI) -->
 <fontes>
@@ -77,6 +77,20 @@
       <optio>lenta</optio>
       <optio>velox</optio>
       <optio>nulla</optio>
+    </proprietas>
+    <proprietas nomen="unde_ordo" genus="electio"
+      nota="UNDE ORDO AD FINEM VENIAT, cursu tertio decimo
+            (grege ovium) postulatum. Colonia et organizatio SE
+            IPSAS ordinant - examen calorem temperat et
+            pabulatores distribuit nullo iubente; societas fines
+            suos eligit. Grex NON: pastor eum unum tenet, et
+            oves finem communem non habent sed patiuntur.
+            CONSEQUENTIA GRAVIS: quod ab intus ordinatur relinqui
+            potest et manet; quod ab extra ordinatur dissolvitur
+            eo momento quo ordinans desinit. Ideo grex sine
+            pastore in oves solvitur, examen sine apiario non">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
     </proprietas>
   </proprietates>
 
@@ -288,6 +302,38 @@
       sed RATIO GENERANDI - unde apiarius eam aut prohibet aut
       ipse facit ("divisio" artificialis). Actio pro divisione
       societatum scripta hic intacta convenit.
+    </nota>
+  </species>
+
+  <species nomen="grex">
+    <definitio>
+      Universitas animalium quam homo ad usum suum tenet: oves,
+      boves, equi - numerata, curata, ex qua singula tolluntur
+      et in quam singula adduntur.
+    </definitio>
+    <differentia>
+      AB EXTRA ORDINATA: grex finem communem non habet sed
+      pastoris finem patitur, et pastore desinente in animalia
+      singula solvitur. Unde membra identitatem propriam
+      retinent - numerantur, notantur, singula curantur et
+      venduntur - quod in colonia apum nemo facit.
+    </differentia>
+    <valor nomen="unde_ordo">ab_extra</valor>
+    <valor nomen="membra_fungibilia">falsum</valor>
+    <nota>
+      EXEMPLUM ROMANORUM IPSORUM: iuris consulti GREGE usi sunt
+      ut universitatem rerum explicarent - grex idem manet
+      ovibus mutatis. Genus universitatis rota LV natum hic ab
+      auctoribus vocabuli ipsis confirmatur, non a nobis.
+    </nota>
+    <nota>
+      PERITIA COMMUNIS HIC VIVIT, et distinctionem acuit: grex
+      in monte non saepto pascuum suum novit et intra fines
+      manet, agnis a matribus discentibus (vide
+      iudicium.peritia_communis, species notitia_pascui).
+      Universitas ergo AB EXTRA ordinata quae tamen scientiam
+      PROPRIAM gerit - quam pastor nec habet nec dare potest.
+      Ordo ab extra venit, peritia ab intus: duo axes, non unus.
     </nota>
   </species>
 
