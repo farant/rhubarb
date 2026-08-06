@@ -101,3 +101,47 @@ list inside a broken region contains one of the HIGH-RISK words
 historical offender list), escalate conditio to SUSPECTUM instead of
 PURUS. The suspecta count already exists; only the verdict line
 underplays it. Park with a path back: censor.c verdict logic.
+
+## 2026-08-06 — omnes unci PostToolUse taciti erant (schema JSON)
+
+Inventum dum uncus novus (.genera, natura-custos.sh) probaretur:
+**nullus uncus PostToolUse huius domus quicquam in contextum
+iniciebat, et nemo id sciebat.**
+
+CAUSA: forma exitus. Unci PostToolUse involucrum nidificatum
+poscunt -
+
+    {"hookSpecificOutput":{"hookEventName":"PostToolUse",
+                           "additionalContext":"..."}}
+
+- sed censor/examen/excubitor omnes clavem NUDAM emittebant,
+`{"additionalContext":"..."}`, quae TACITE abicitur. Nulla
+querela, nullus error, nihil in actis: uncus currebat, iudicium
+rectum ferebat, et verbum eius in vacuum cadebat.
+
+QUOMODO INVENTUM SIT, et cur aliter inventum non esset: uncum
+novum probaturus notavi **'uncus tacet' et 'uncus non currit'
+idem prorsus spectari**. Ergo probatio vera non est plagula sana
+(silentium utroque modo) sed VITIUM CONSULTO PLANTATUM - cogere
+portam ut LOQUATUR. Duabus editionibus factis nihil venit;
+uncus tamen sanus stabat cum manu vocaretur. Discrimen
+angustatum est uncum PreToolUse (generata-custos) probando, qui
+editionem RECUSAT - signum binarium quod celari non potest. Ille
+flagravit: ergo unci currebant, et vitium in forma exitus latebat.
+Ille solus formam nidificatam adhibebat.
+
+LEX QUAM HOC DOCET: **porta silens et porta mortua idem spectari
+- ergo nulla porta credenda est donec eam LOQUI COEGERIS.**
+Disciplina 'cursus purus = nihil in contextum' recta manet, sed
+pretium eius est quod defectum PERFECTE occultat. Quapropter
+uncus quisque novus vitio plantato probandus est, semel, in ipsa
+nativitate.
+
+Quattuor plagulae emendatae (censor I, examen III, excubitor I,
+natura IV sedes). Probatum VIVE: vitio in natura/versio.genera
+plantato, editio subsequens nuntium in contextum vere intulit.
+
+QUAMDIU TACUERINT IGNOTUM. Logica uncorum ipsa recta erat toto
+tempore (censor [CENSURA] recte quaerit, exitum I recte legit) -
+quod ipsum peius facit: instrumenta bona, iudicia bona, canalis
+fractus.

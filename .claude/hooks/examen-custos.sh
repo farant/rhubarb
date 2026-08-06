@@ -42,7 +42,7 @@ case "$FILE" in
         jq -n --arg r "CENSOR LATINAE (uncus post-editionem, .m - macra reservata):
 $ROWS
 Verbum latina.h ut identificator = fractura compilationis cryptica. Effusor: ./silva/censor.sh <plagula>." \
-            '{additionalContext:$r}'
+            '{hookSpecificOutput:{hookEventName:"PostToolUse",additionalContext:$r}}'
         exit 0
         ;;
 esac
@@ -62,7 +62,7 @@ VERD=$(printf '%s\n' "$OUT" | awk -F'\t' '$1=="VERDICTUM"{print $2}')
 # munditia - silentium hic mentiretur (01KXS2ETAE)
 if [ "$VERD" = "RECUSO" ]; then
     jq -n --arg r "EXAMEN C89 (uncus post-editionem): VERDICTUM RECUSO - plagula limina silvae excedit (expansio trunca), iudicium fidele impossibile. Iudex efficax solus = clang -std=c89 -Werror." \
-        '{additionalContext:$r}'
+        '{hookSpecificOutput:{hookEventName:"PostToolUse",additionalContext:$r}}'
     exit 0
 fi
 ROWS=$(printf '%s\n' "$OUT" | awk -F'\t' \
@@ -86,5 +86,5 @@ EXCL="$RADIX/silva/probationes/fixa/examinis/exclusiones.txt"
 jq -n --arg r "EXAMEN C89 (uncus post-editionem, verdictum ${VERD:-?}):
 $ROWS
 violatio = constrictio C89 (clang -pedantic-errors reiciet); suspectum = licitum sed suspectum (vocatio implicita etc.). Effusor: ./silva/examen.sh <plagula>. Detail: silva/phase-log.md M4a." \
-    '{additionalContext:$r}'
+    '{hookSpecificOutput:{hookEventName:"PostToolUse",additionalContext:$r}}'
 exit 0

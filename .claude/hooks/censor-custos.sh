@@ -29,6 +29,6 @@ if [ $? -eq 1 ]; then
     jq -n --arg r "CENSOR LATINAE (uncus post-editionem): macrum latinae in positione NOMINIS in plagula modo scripta - identificator alius quam scriptus erit:
 $ROWS
 Muta nomen (verba in latina.h #definita reservata sunt). Detail: silva/instrumenta/principalia/censor.worklog.md" \
-        '{additionalContext:$r}'
+        '{hookSpecificOutput:{hookEventName:"PostToolUse",additionalContext:$r}}'
 fi
 exit 0
