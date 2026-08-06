@@ -3684,3 +3684,123 @@ content, and nothing had checked them against each other.
 
 MEASURED after: 32 exemplaria / 157 genera / 344 res / 465 arcus
 / 0 vulnera / 24 monita / DUBIA 15 → 13 / umbrae 2.
+
+## 2026-08-05 — round fifty-one: PKI (coverage loop, run 9)
+
+Run chosen not by breadth but as a TEST: `attestatio` was one
+round old and already cited, and PKI is its obvious second
+domain. If it survived unchanged, strongest possible
+confirmation; if it broke, far better to know at one round than
+at five citations.
+
+248. IT DID BOTH, which is the useful outcome. Two measured
+     DEFECTS and two PREDICTIONS.
+
+249. DEFECT ONE — NO INTRINSIC EXPIRY. I gave attestatio
+     `aetas_accepta`, noted as "a property of the RECIPIENT, not
+     the paper", modelled on birth certificates: those never
+     expire in themselves, and a registrar refusing a
+     three-month-old one imposes his own rule. A TLS certificate
+     expires IN ITSELF on a date the issuer fixed. The machine
+     already had an `expirata` state — A STATUS WITH NO MOTOR,
+     which nobody noticed because the civil registry never
+     exercised it. Added `expirat`; both properties kept, because
+     both are real and conflating them means renewing when nobody
+     asked or failing to when everyone will.
+
+250. DEFECT TWO — no `fundamentum`: what the issuer actually
+     VERIFIED before attesting. Domain-validated and
+     extended-validation certificates are objects of identical
+     shape carrying wildly different warrant (one proves the
+     applicant could read an email; the other that a company
+     exists and owns the name). Without the field an attestatio
+     says it testifies and stays silent about how much it knows.
+
+251. PREDICTION ONE, and the best result of the session:
+     `ex_actis` carries the sentence "an attestation with no
+     named record is an ASSERTION, not an attestation." A
+     pre-2013 TLS certificate was exactly that — a CA signed, and
+     nobody could enumerate what it had signed, so a mis-issued
+     certificate stayed invisible until used. THAT IS THE
+     DIGINOTAR FAILURE, and Certificate Transparency exists to
+     retrofit the missing register. A genus built from vital
+     records one round earlier states, as a DEFINITIONAL
+     REQUIREMENT, the defect that broke web PKI for two decades.
+     Not a warning bolted on: a consequence of saying what an
+     attestation IS.
+
+252. PREDICTION TWO: the revocation nota already read "revocatio
+     NUNTIANDA est ne frustra sit." Web PKI's central operational
+     failure is soft-fail revocation checking — that sentence
+     unheeded. And the industry's actual remedy is the one the
+     genus implies: unable to announce revocation reliably,
+     SHORTEN VALIDITY. Ninety-day certificates are a workaround
+     for a broken announcement channel, which reads as an
+     accident until the genus makes it a consequence.
+
+253. SECRETUM built (→ iudicium, PAIRED WITH IGNOTUM: ignotum
+     names absence of knowledge — nobody knows; secretum names
+     RESTRICTED knowledge — some know and others must not. Two
+     genera about the distribution of knowledge from opposite
+     sides, which is why it belongs in the epistemic model and
+     not among the computational things that forced it).
+     Not "data with an access rule": an access rule is extrinsic
+     and changeable, while here restriction is the ESSENCE. A
+     disclosed key is still a key and is worth nothing.
+     ONE-WAY LIFE is the differentia: everything else in the
+     library can be repaired (an instrument refitted, a defect
+     healed); a secret is never repaired, only SUBSTITUTED, and
+     the substitute is a different thing.
+     `suspectum` carries the doctrine: returning to `custoditum`
+     requires proving a NEGATIVE, which is why the craft rule is
+     "treat suspicion as compromise" — not timidity but logic.
+     The transition back is present because it is possible, and
+     annotated because it is almost never taken; omitting it
+     would be a lie about the shape.
+     `substituibile` is the property that matters most and is
+     least modelled in practice: keys rotate, passwords change,
+     but biometrics, national identity numbers, and historical
+     secrets CANNOT — and their disclosure is permanent damage.
+     Treating an unsubstitutable secret as substitutable means
+     having no recovery plan at all.
+     `sigillum_confessionis` included as the SCALE TERMINUS, not
+     an exception: the one species where the count of knowers
+     cannot even grow, since the confessor may tell no one.
+
+254. RADIX_FIDUCIAE built (→ acta, beside attestatio). A chain of
+     attestation must END, and the end cannot be proved — proof
+     would be another attestation and the regress would continue.
+     So the terminus is DECIDED.
+     RISK ACKNOWLEDGED IN THE FILE: the library has killed two
+     genera for naming a POSITION rather than a nature (effectus,
+     actio). Argument that this one survives: a root is not a
+     place a thing happens to occupy but a CONFERRED status — a
+     vendor admits it, a statute creates it — with a date, an
+     author, and revocability; and roots are enumerated and
+     addressed. The addressability test passes.
+     `modus_susceptionis` is the sharp property: what ships with
+     the system is chosen by nobody and trusted by everyone —
+     ordinary trust is INHERITED, not decided. And status
+     `reiecta` records the structural hazard: rejecting one root
+     kills every attestation beneath it at once, none of them
+     individually faulty.
+     Specimens deliberately across a millennium — a trust store,
+     a notary's own commission (who notarises the notary? nobody;
+     the law constitutes him and the regress stops), and the root
+     of a chain of title, which is a root by EXHAUSTION rather
+     than decision: nobody chose it, the search simply must stop
+     somewhere and statute says where.
+
+255. RULE XVIII EARNED ITS KEEP BEFORE THE COMMIT: flagged
+     `titulus_originarius` as bearing the stem `titulus` without
+     descending from it — and it was genuinely misleading, since
+     `obligatio.titulus` is an ATTESTATION (a degree, an honour)
+     while this is the origin of a CHAIN OF OWNERSHIP. Both
+     senses are good Latin (titulus = both honour and just cause
+     of acquisition), so it is a real homonym, not an error — and
+     still worth removing from an index. Renamed `origo_dominii`
+     BEFORE the commit. An advisory rule producing a correction
+     at the moment of writing rather than an argument later.
+
+MEASURED after: 32 exemplaria / 159 genera / 351 res / 470 arcus
+/ 0 vulnera / 24 monita / dubia 13 / umbrae 2.

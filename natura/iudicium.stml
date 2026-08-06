@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/iudicium.stml
-  Exemplar semanticum: IUDICIUM (versio 3, PLASTICUM)
+  Exemplar semanticum: IUDICIUM (versio 4, PLASTICUM)
   Genera: gradus_assensus, fons, observatio, iudicium,
   periculum, ignotum.
 
@@ -46,7 +46,7 @@
   historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
   verificatis, et hoc dicere debet.
 -->
-<natura modulus="iudicium" versio="3" lingua="latina">
+<natura modulus="iudicium" versio="4" lingua="latina">
 
 <!-- ==================================================
      GRADUS ASSENSUS - quanto animus adhaeret
@@ -688,6 +688,186 @@
       quae eam operantem facit.
     </definitio>
     <valor nomen="finis">praeventio</valor>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     SECRETUM - res cuius vis in scientia RESTRICTA consistit
+
+     Cursu nono postulatum (infrastructura fidei): clavis privata
+     citari non potuit. Non est "datum cum regula accessus" -
+     regula accessus rei extrinseca est et mutari potest; hic
+     restrictio ESSENTIA est. Clavis divulgata clavis manet et
+     nihil valet.
+
+     PAR EXEMPLARIS: ignotum absentiam scientiae NOMINAT (nemo
+     scit); secretum scientiam RESTRICTAM (aliqui sciunt, ceteri
+     ne sciant). Duo genera de distributione scientiae, ex
+     lateribus contrariis - unde hic collocatum, non inter res
+     computatrales quas casus cogens attulit.
+     ================================================== -->
+
+<genus nomen="secretum">
+
+  <definitio>
+    Res cuius utilitas in eo consistit quod pauci eam sciunt:
+    divulgata non corrumpitur nec perit sed OFFICIO SUO EXUITUR,
+    integra manens et inutilis facta.
+  </definitio>
+
+  <differentia>
+    Vita eius UNIUS VIAE est, et hoc genus definit: nulla actio
+    secretum divulgatum secretum iterum facit. Res aliae reparari
+    possunt (instrumentum reficitur, vitium sanatur, error
+    corrigitur); secretum non reparatur sed SUBSTITUITUR - et
+    substitutum aliud est, non idem restitutum.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="numerus_scientium" genus="numerus"
+      nota="quot sciant. PROPRIETAS QUAE SOLA CRESCERE POTEST:
+            nemo secretum oblivisci iubetur, unde numerus
+            monotone crescit et periculum cum eo"/>
+    <proprietas nomen="substituibile" genus="veritas"
+      ordinarius="verum"
+      nota="an novum in locum poni possit. DISCRIMEN GRAVISSIMUM
+            inter secreta: clavis rotatur, tessera mutatur - sed
+            notae biometricae, numeri publici identitatis,
+            secreta historica substitui NON possunt, et illorum
+            divulgatio damnum PERPETUUM est. Qui secretum
+            insubstituibile ut substituibile tractat consilium
+            recuperationis nullum habet"/>
+    <proprietas nomen="valor_temporarius" genus="veritas"
+      ordinarius="falsum"
+      nota="an post tempus certum nihil noceat divulgatio
+            (nuntius embargo detentus, consilium bellicum post
+            proelium). Secretum temporarium custodiam
+            proportionatam poscit, non perpetuam"/>
+  </proprietates>
+
+  <machina_statuum nomen="custodia" gerens="individuum">
+    <status nomen="custoditum"/>
+    <status nomen="suspectum"
+      nota="divulgatio nec probata nec excluditur. STATUS QUI
+            DOCTRINAM PORTAT: reditus ad 'custoditum' PROBATIONEM
+            NEGATIVAE poscit (nemo vidit), quae fere semper
+            impossibilis est - unde regula artis 'suspicionem ut
+            compromissum tracta'. Non timiditas sed logica:
+            manere in suspecto est incertitudinem perpetuam
+            eligere"/>
+    <status nomen="compromissum"
+      nota="divulgatum. STATUS TERMINALIS - nulla via retro"/>
+    <status nomen="emeritum"
+      nota="consulto depositum dum adhuc custoditum est
+            (rotatio ante damnum): mors bona secreti, et sola
+            quam eligere licet"/>
+    <transitus a="custoditum" ad="suspectum" per="suspicio"/>
+    <transitus a="custoditum" ad="compromissum" per="divulgatio"/>
+    <transitus a="suspectum" ad="compromissum" per="confirmatio"/>
+    <transitus a="suspectum" ad="custoditum" per="exclusio"
+      nota="TRANSITUS QUI FERE NUMQUAM ITUR - vide notam status
+            suspecti. Positus quia possibilis est, non quia
+            usitatus: forma quae eum omitteret mentiretur"/>
+    <transitus a="custoditum" ad="emeritum" per="rotatio"/>
+    <transitus a="suspectum" ad="emeritum" per="rotatio"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="custodire"/>
+    <actio nomen="communicare" nota="alii scienti addere -
+      actio quae numerum scientium auget et retro agi non potest"/>
+    <actio nomen="rotare" nota="novum in locum ponere"/>
+    <actio nomen="divulgare"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="scitur_a" ad="*" multiplex="verum"
+      nota="quibus notum sit - personae, organizationes,
+            processus"/>
+    <relatio nomen="substituit" ad="secretum"
+      nota="CATENA ROTATIONIS: secretum novum vetus succedit, et
+            vetus emeritum manet, non deletum - quia quae eo
+            signata sunt adhuc verificanda esse possunt.
+            Structura eadem qua norma normam substituit"/>
+    <relatio nomen="custodia_obligat" ad="obligatio"
+      modulus="obligatio" multiplex="verum"
+      nota="secreta plerumque obligationes pariunt (pactum
+            silentii, sigillum confessionis, officium fiduciae) -
+            obligatio tamen secretum non est, nec secretum
+            obligationem semper parit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="clavis_privata">
+    <definitio>
+      Dimidium secretum paris cryptographici: quod signat aut
+      resignat, et cuius comes publicus libere diffunditur.
+    </definitio>
+    <differentia>
+      Secretum cuius comes PUBLICUS esse debet ut secretum
+      utilitatem habeat - forma insolita: par unum, dimidia
+      contraria, et vis ex ipsa asymmetria.
+    </differentia>
+    <valor nomen="substituibile">verum</valor>
+    <nota>
+      Rotatio hic pretium proprium habet: clavis emerita
+      subscriptiones veteres adhuc verificat, unde catena
+      substitutionum servanda est, non purganda.
+    </nota>
+  </species>
+
+  <species nomen="verbum_arcanum">
+    <definitio>
+      Series characterum qua persona se probat: secretum ab
+      homine memorandum, unde debilitas eius.
+    </definitio>
+    <valor nomen="substituibile">verum</valor>
+    <nota>
+      Species cuius vitium in natura sedet: memorabile esse
+      debet, et quod homo meminit alius coniectare potest.
+      Custodia eius (functio unidirectionalis apud recipientem)
+      hoc fatetur - servans ipse secretum nescire debet.
+    </nota>
+  </species>
+
+  <species nomen="secretum_negotii">
+    <definitio>
+      Notitia commercialis cuius valor ex ignorantia
+      competitorum venit: ratio, index clientium, processus.
+    </definitio>
+    <valor nomen="valor_temporarius">falsum</valor>
+    <nota>
+      Sola species quam ius ut PROPRIETATEM tuetur dum secreta
+      manet et cuius tutela divulgatione ipsa perit - contra
+      privilegium inventionis, quod divulgationem EXIGIT et
+      tempore finito tutelam dat. Duae viae contrariae ad idem
+      bonum, et electio inter eas semel pro semper fit.
+    </nota>
+  </species>
+
+  <species nomen="sigillum_confessionis">
+    <definitio>
+      Secretum sacramentale quod confessarius nullo modo, nulla
+      causa, nulli prodere potest.
+    </definitio>
+    <valor nomen="substituibile">falsum</valor>
+    <valor nomen="valor_temporarius">falsum</valor>
+    <differentia>
+      Secretum cuius custodia ABSOLUTA est: ceterae species
+      periculum contra utilitatem pendunt, haec nihil pendit.
+      Nec periculum vitae nec iussum iudicis solvit, et
+      violatio excommunicationem latae sententiae parit.
+    </differentia>
+    <nota>
+      Specimen quod limitem generis ostendit: hic numerus
+      scientium neque crescere POTEST (confessarius alteri
+      communicare non licet), unde proprietas quae alibi
+      monotone crescit hic in uno figitur. Terminus scalae, non
+      exceptio ab ea.
+    </nota>
   </species>
 
 </genus>

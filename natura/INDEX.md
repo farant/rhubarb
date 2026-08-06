@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **32** · genera **157** · res dictionarii **344** · arcus **465**
+Exemplaria **32** · genera **159** · res dictionarii **351** · arcus **470**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -24,11 +24,12 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 `⚙` machinam statuum fert · `▣N` partes N declaratas fert
 (partes = index quo ABSENTIA visibilis fit).
 
-### acta (v1, genera 3)
+### acta (v2, genera 4)
 
 - **acta** ⚙ ▣5 — Series eventuum ordinata cui SOLUM APPENDITUR, et quae rerum descriptarum VERITAS est: status quilibet (summa, manifes
 - **punctum_actorum** — Locus in actis nominatus et allocutione dignus, ita ut interrogatio "qualia erant HIC?" responsum habeat quod homo pet
 - **attestatio** ⚙ — Exemplar authenticum ex actis auctoritativis sumptum, quod quid in actis steterit MOMENTO EMISSIONIS testatur, et trad
+- **radix_fiduciae** ⚙ — Terminus catenae attestationum, cui fides non ex alia attestatione venit sed ex DECRETO eius qui catenam adhibet: quod
 
 ### actus (v0, genera 5)
 
@@ -131,7 +132,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **schema_identificandi** ⚙ ▣3 — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
 
-### iudicium (v3, genera 7)
+### iudicium (v4, genera 8)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
@@ -140,6 +141,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **periculum** — Damnum quod accidere potest nec certum est: species iudicii de futuro, sed DUPLEX - probabilitate et gravitate simul c
 - **ignotum** ⚙ — Absentia notitiae AGNITA et nominata: hiatus qui, quia nominatus est, tractari potest
 - **investigatio** ⚙ — Inquisitio ordinata in causas eventus, iudicia de causis producens
+- **secretum** ⚙ — Res cuius utilitas in eo consistit quod pauci eam sciunt: divulgata non corrumpitur nec perit sed OFFICIO SUO EXUITUR,
 
 ### lingua_programmandi (v3, genera 5)
 
@@ -400,6 +402,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | promptuarium | elementa_programmatis |
 | punctum_actorum | acta |
 | quantitas | mensura |
+| radix_fiduciae | acta |
 | ratio_rationaria | commercium |
 | recurrentia | tempus |
 | recurrentia_computata | tempus |
@@ -415,6 +418,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | schema | schema |
 | schema_identificandi | identificatio |
 | scriptum_exsecutabile | plagula_computatralis |
+| secretum | iudicium |
 | servus | cliens |
 | societas | organizatio |
 | status | elementa_programmatis |
@@ -444,6 +448,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `acta.acta` — acta_auditus, acta_publica, acta_transactionum, acta_versionum, regesta
 - `acta.attestatio` — apostilla, attestatio_civilis, instrumentum_publicum
 - `acta.punctum_actorum` — clausura_rationis, conditio, statio
+- `acta.radix_fiduciae` — commissio_notarii, origo_dominii, radix_systematis
 - `actus.actus_iuridicus` — collatio_tituli, confectio_instrumenti, inauguratio, mancipatio, manumissio, promulgatio, sententia_lata, stipulatio, testamentum
 - `actus.sacramentale` — benedictio, consecratio_loci, exorcismus
 - `actus.sacramentum` — baptismus, confirmatio, eucharistia, matrimonium, ordo, paenitentia, unctio_infirmorum
@@ -487,6 +492,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `iudicium.investigatio` — inquisitio_forensis, investigatio_praeventiva, recensio_post_mortem
 - `iudicium.iudicium` — aestimatio, diagnosis, praedictio, sententia_iudicis
 - `iudicium.observatio` — signum, symptoma, testimonium
+- `iudicium.secretum` — clavis_privata, secretum_negotii, sigillum_confessionis, verbum_arcanum
 - `lingua_programmandi.implementatio_linguae` — :clang, :cpython, :fil_c, :gcc, :officina
 - `lingua_programmandi.lingua_iussuum` — :bash
 - `lingua_programmandi.lingua_programmandi` — :abc, :b, :c, :python, :rust

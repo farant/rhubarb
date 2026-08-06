@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/acta.stml
-  Exemplar semanticum: ACTA (versio 1, PLASTICUM)
+  Exemplar semanticum: ACTA (versio 2, PLASTICUM)
 
   ABSENTIA STRUCTURALIS, exercitio modellationis inventa (rota
   XLIV): non circulus coverturae qui hiatus quaerit, sed subiectum
@@ -29,7 +29,7 @@
   silicis in TEMPORE non est sed in SERIE ('numquam timestamp',
   lex eius), et /tempus/momentum id ferre non potuit.
 -->
-<natura modulus="acta" versio="1" lingua="latina">
+<natura modulus="acta" versio="2" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -414,6 +414,29 @@
             menses). PROPRIETAS ACCIPIENTIS, non chartae: eadem
             attestatio ab uno accepta ab alio recusatur, quod
             probat senescentiam in usu vivere, non in re"/>
+    <proprietas nomen="expirat" genus="dies"
+      nota="DEFECTUS MENSURATUS CURSU NONO (infrastructura
+            fidei) et hic sanatus. Genus ex chartis status
+            civilis natum senectutem SOLAM accipientis noverat -
+            attestatio nativitatis per se numquam expirat, et
+            registrarius qui trimestrem recusat REGULAM SUAM
+            imponit. Certificatum autem TLS diem finalem ab
+            EMITTENTE fixum fert: expirat in se, nullo accipiente
+            iudicante. Machina statum 'expirata' iam habebat et
+            causam intrinsecam non habebat - status sine motore.
+            Utraque manent quia utraque vera sunt, et confundere
+            eas est renovationem eo tempore agere quo nemo
+            poposcit (aut non agere cum omnes poscent)"/>
+    <proprietas nomen="fundamentum" genus="textus"
+      nota="QUID EMITTENS RE VERA PROBAVERIT antequam testaretur.
+            Cursu nono postulatum: certificatum 'domanio
+            validatum' et 'validatione extensa' res EIUSDEM
+            FORMAE sunt et warrantum prorsus diversum ferunt -
+            illud probat quod petens litteras electronicas
+            legere potuit, hoc quod societas re vera exsistit et
+            eam possidet. Sine hoc campo attestatio dicit se
+            testari et tacet quantum sciat. Vide iudicium:
+            gradus assensus emittentis hic vivit"/>
     <proprietas nomen="signum_authenticitatis" genus="electio">
       <optio>sigillum</optio>
       <optio>subscriptio</optio>
@@ -454,7 +477,19 @@
   <relationes>
     <relatio nomen="ex_actis" ad="acta"
       nota="fons veritatis. Attestatio sine actis nominatis
-            adseveratio est, non attestatio"/>
+            adseveratio est, non attestatio.
+            HAEC SENTENTIA DEFECTUM HISTORICUM PRAEDIXIT, cursu
+            nono inventa: certificata telae ante annum 2013 acta
+            NULLA habebant - auctoritas signabat et nemo
+            enumerare poterat quid signavisset, unde
+            certificatum male emissum invisibile manebat donec
+            adhiberetur. Id est adseveratio, non attestatio, hac
+            definitione. Transparentia certificatorum (acta
+            solum-appendia, cryptographice immutabilia, publice
+            auditabilia) ACTA DEESSE RETRO ADDIDIT - remedium
+            quod definitio nostra ut REQUISITUM iam ferebat.
+            Genus e registro civili natum vitium quod PKI telae
+            per duo decennia fregit definitione sua dicit"/>
     <relatio nomen="ad_punctum" ad="punctum_actorum"
       nota="qualis status actorum testetur - plerumque tacitum
             ('ut nunc stat'), sed explicitum fieri potest, et
@@ -531,6 +566,149 @@
       (minister, legatio, ministerium alterius) apostilla ad
       gradum UNUM redegit - recursio abbreviata per pactum, non
       per naturam.
+    </nota>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     RADIX FIDUCIAE - ubi regressus PONITUR, non probatur
+
+     Cursu nono inventa. Attestatio attestationem testari potest
+     (relatio testatur, apostilla eam peperit), unde CATENA; sed
+     catena finiri debet, et finis probari non potest - probaretur
+     enim ab attestatione altera, et regressus pergeret. Ergo
+     terminus DECERNITUR.
+
+     PERICULUM POSITIONIS AGNITUM: bibliotheca bis genus occidit
+     quod POSITIONEM nominabat, non naturam (effectus, actio).
+     Cur hoc superest: radix non est locus quem res forte tenet
+     sed STATUS COLLATUS - navigatri auctor radicem ADMITTIT,
+     lex notarium CREAT, et admissio actus est cum die, auctore,
+     revocabilitate. Praeterea radices allocutione dignae sunt
+     et enumerantur. Probatio allocutionis transit.
+     ================================================== -->
+
+<genus nomen="radix_fiduciae">
+
+  <definitio>
+    Terminus catenae attestationum, cui fides non ex alia
+    attestatione venit sed ex DECRETO eius qui catenam
+    adhibet: quod creditur non quia probatum sed quia
+    susceptum.
+  </definitio>
+
+  <differentia>
+    Sola res in catena quae se ipsam attestatur (aut nihil), et
+    hoc non vitium est sed necessitas: regressus infinitus fidem
+    omnem tolleret. Ideo quaestio de radice numquam "estne
+    vera?" sed "CUR HANC SUSCEPIMUS, et quis eam tollere
+    potest?"
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="modus_susceptionis" genus="electio"
+      nota="unde in catenam venerit. AXIS GRAVISSIMUS: quod cum
+            systemate venit nemo eligit, et tamen omnia ei
+            credunt - fiducia ordinaria non decreta sed
+            HEREDITATA est">
+      <optio>cum_systemate_missa</optio>
+      <optio>ab_utente_addita</optio>
+      <optio>lege_statuta</optio>
+      <optio>consuetudine_recepta</optio>
+    </proprietas>
+    <proprietas nomen="tollibilis_a" genus="textus"
+      nota="QUIS eam removere possit. Interrogatio practica quae
+            rem politicam facit: radicem systematis solus
+            venditor systematis tollit, unde qui radices regit
+            fidem interretis regit sine ullo iure formali"/>
+    <proprietas nomen="ambitus_fidei" genus="textus"
+      nota="ad quid valeat - radices modernae limitantur (haec
+            certificata telae sola, illa subscriptiones codicis).
+            Radix sine limite omnia potest, quod olim ordinarium
+            erat et periculum eius sero agnitum"/>
+  </proprietates>
+
+  <machina_statuum nomen="susceptio" gerens="individuum">
+    <status nomen="suscepta"/>
+    <status nomen="limitata"
+      nota="fides angustata sed non ablata - quod fieri solet
+            ubi auctoritas erravit nec tamen tota reicienda est"/>
+    <status nomen="reiecta"
+      nota="EVENTUS QUI OMNIA SUB EA SIMUL OCCIDIT: attestationes
+            innumerae, quarum nulla per se vitiosa, uno decreto
+            cadunt. Damnum collaterale in natura catenae
+            inaedificatum"/>
+    <transitus a="suscepta" ad="limitata" per="limitatio"/>
+    <transitus a="suscepta" ad="reiecta" per="reiectio"/>
+    <transitus a="limitata" ad="reiecta" per="reiectio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="fundat" ad="attestatio" multiplex="verum"
+      nota="quas attestationes (per catenam) sustineat"/>
+    <relatio nomen="suscepta_per" ad="actus_iuridicus"
+      modulus="actus"
+      nota="MEMBRUM PER ACTUM: nemo radix fit natura sua -
+            admittitur, et admissio diem, auctorem, revocationem
+            habet"/>
+    <relatio nomen="tenetur_a" ad="organizatio"
+      modulus="organizatio"
+      nota="cuius sit"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="radix_systematis">
+    <definitio>
+      Auctoritas certificatoria cuius attestatio cum systemate
+      aut navigatro missa est: fides praeinstallata.
+    </definitio>
+    <valor nomen="modus_susceptionis">cum_systemate_missa</valor>
+    <nota>
+      Specimen quod proprietatem 'tollibilis_a' postulavit:
+      utens radicem removere theoretice potest, re vera non -
+      quia remota, dimidium telae frangitur. Fiducia quae
+      technice electiva est et practice necessaria.
+    </nota>
+  </species>
+
+  <species nomen="commissio_notarii">
+    <definitio>
+      Auctoritas ipsius notarii, a magistratu collata: quae
+      instrumenta eius publica facit et ipsa ab alio notario
+      non pendet.
+    </definitio>
+    <valor nomen="modus_susceptionis">lege_statuta</valor>
+    <nota>
+      Radix eiusdem formae in dominio mille annorum: quis
+      notarium notarizat? Nemo - lex eum constituit, et ibi
+      regressus sistit. Specimen quod genus a rebus
+      computatralibus liberat.
+    </nota>
+  </species>
+
+  <species nomen="origo_dominii">
+    <definitio>
+      Primum in catena titulorum praedii, ultra quod investigatio
+      non procedit: concessio principis, adiudicatio, aut
+      possessio antiquissima quae probari potest.
+    </definitio>
+    <valor nomen="modus_susceptionis">consuetudine_recepta</valor>
+    <nota>
+      Nomen mutatum ante commissionem (monitum regulae XVIII):
+      titulus_originarius stirpem titulus ferebat et speciem
+      eius videbatur, cum obligatio.titulus ATTESTATIO sit
+      (gradus, honor) et haec CATENAE DOMINII origo - homonymia
+      Latina vera (titulus = et honor et iusta causa acquirendi)
+      sed in indice fallax. Regula quae monet, non prohibet,
+      hic emendationem ANTE partum peperit.
+      Radix per LASSITUDINEM potius quam per decretum: nemo eam
+      elegit, sed investigatio alicubi desinere debet, et lex
+      terminum statuit (saepe annos LX aut XC). Species quae
+      ostendit radices non semper poni consulto - aliquando
+      catena simpliciter deficit et id quod restat radix fit.
     </nota>
   </species>
 
