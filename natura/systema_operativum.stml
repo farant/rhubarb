@@ -22,6 +22,14 @@
 -->
 <natura modulus="systema_operativum" versio="3" lingua="latina">
 
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: dies et res gestae ex textibus
+    innumeris haustae. NON VERIFICATUM.
+  </fons>
+</fontes>
+
 <genus nomen="systema_operativum">
 
   <definitio>
@@ -99,7 +107,8 @@
     <relatio nomen="habet_versionem" ad="versio_systematis"/>
     <relatio nomen="praebet_systema_plagularum"
       ad="systema_plagularum" modulus="plagula_computatralis"
-      nota="genus SURGIT (APFS, ext4) - nondum descriptum"/>
+      nota="descriptum rota XLIV (nota haec rancida manserat -
+            prosa quam porta XVI videre non potest)"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->
@@ -113,9 +122,8 @@
     <valor nomen="genus_nuclei">hybridus</valor>
     <valor nomen="fons_apertus">falsum</valor>
     <valor nomen="vita">vigens</valor>
-    <relatum nomen="ad_exemplum_facta" ad="vms" externum="verum"
-      nota="Cutler a DEC venit; NT filia VMS spiritu - systema
-            vms nondum descriptum"/>
+    <relatum nomen="ad_exemplum_facta" ad="vms"
+      nota="Cutler a DEC venit; NT filia VMS spiritu"/>
     <relatum nomen="edita_a" ad="microsoft" modulus="organizatio"/>
     <relatum nomen="exsequitur_in" ad="x86_64"
       modulus="architectura_machinae"/>
@@ -125,6 +133,32 @@
       <eventum quando="1993-07-27" actio="edi">NT 3.1 - linea
         nova quae vetera devoravit</eventum>
     </historia>
+  </individuum>
+
+  <individuum nomen="vms" certitudo="opinio" fons="corpus">
+    <definitio>
+      Systema DEC pro machinis VAX (1977): magnum systema
+      NON-UNIXIFORME quod vivit - versionatio plagularum in
+      systemate plagularum ipso, clusteres ante omnes,
+      stabilitas proverbialis.
+    </definitio>
+    <valor nomen="genus_nuclei">monolithicus</valor>
+    <valor nomen="fons_apertus">falsum</valor>
+    <valor nomen="vita">senescens</valor>
+    <historia>
+      <eventum quando="1977-10-25" actio="ortus">VAX/VMS 1.0
+        cum machina VAX-11/780 una edita</eventum>
+    </historia>
+    <nota>
+      MOMENTUM TAXINOMICUM: contra-exemplum vivum. Arbor nostra
+      systema_unixiforme sub systemate habet; VMS (cum Windows)
+      probat genus parens non vacuum esse - sine eo 'unixiforme'
+      differentia nihil differret. Et versionatio plagularum
+      nativa (plagula;versio) rem fert quam Unix numquam habuit
+      - quod volumen nostrum extra systema plagularum aedificat,
+      VMS intra habebat. Dux consilii Cutler, qui post ad
+      Microsoft NT duxit - unde relatum windows supra.
+    </nota>
   </individuum>
 
 </genus>
@@ -286,10 +320,12 @@
     <valor nomen="cadentia_editionum">statuta</valor>
     <relatum nomen="distributio_de" ad="linux"/>
     <relatum nomen="edita_a" ad="debian_project"
-      externum="verum"
-      nota="communitas, non societas - sub-genus organizationis
-            SURGIT (communitas: finis sine quaestu, opera
-            aperta)"/>
+      modulus="organizatio"
+      nota="descriptum rota XLV sub genere organizationis NUDO
+            consulto - non societas, nec sub-genus novum:
+            'communitas' hic olim proposita dimensionem SECAT
+            (finis trans statum iuridicum), quod refactionem
+            poscit, non speciem - vide worklog"/>
     <historia>
       <eventum quando="1993-08-16" actio="ortus"/>
     </historia>

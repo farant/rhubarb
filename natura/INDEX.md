@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **31** · genera **146** · res dictionarii **307** · arcus **405**
+Exemplaria **31** · genera **149** · res dictionarii **318** · arcus **433**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -41,10 +41,11 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **animal** ⊂ corporalia.vivens ⚙ ▣3 — SENSUM habet et motum localem: mundum percipit et se ad eum movet - unde appetitus, unde fuga, unde quaesitio
 
-### architectura_machinae (v0, genera 2)
+### architectura_machinae (v1, genera 3)
 
 - **architectura_machinae** — Forma abstracta machinae computatoriae quam programmata alloquuntur: copia instructionum, registra, modellum memoriae
 - **versio_architecturae** — Editio architecturae nominata: quam copiam instructionum chip vere exsequitur et compilator vere alloquitur - "aedific
+- **processorium** — Exemplar productum circuli computantis: forma nominata quam officina in assulas innumeras imprimit, quae architecturam
 
 ### causa (v0, genera 1)
 
@@ -90,7 +91,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **damnum** ⚙ — Laesio integritatis rei corporeae ab externa vi illata: quod unum erat divisum, quod integrum fractum, quod purum mixt
 - **vivens** ⊂ res_corporea ⚙ — Se ipsum movet, nutrit, generat: principium motus INTRA se habet, ubi artefactum motum ab alio accipit et materia null
 
-### elementa_programmatis (v4, genera 17)
+### elementa_programmatis (v4, genera 18)
 
 - **status** — Valor custoditus qui in tempore mutari potest: inter eventus manet, ab eventibus mutatur
 - **proiectio** ⊂ status — Ex alio statu (VERITATE sua) integre recomputari potest
@@ -109,8 +110,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **commentarium** — Pars fontis quam lingua legere NON promittit: textus intra artefactum, lectoribus aliis quam compilatori inscriptus
 - **identificator** — Nomen cuius essentia REFERENTIA est, non significatio: ansa ad rem
 - **programma** — Collectio elementorum cum INITIO PROPRIO: vocatum currit et ex se ipso pergit, ubi bibliotheca vocata solum vivit
+- **instrumentum_aedificationis** ⊂ programma — Programma cuius finis artefacta aedificationis ex fontibus derivare: graphum dependentiarum novit (quid ex quo), et in
 
-### fabricatio (v3, genera 6)
+### fabricatio (v4, genera 7)
 
 - **postulatum** ⚙ — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
 - **facultas** — Quod opus praestare potest, ab utente aestimatum: unitas VALORIS
@@ -118,6 +120,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **vitium** ⚙ — Discrepantia inter intentionem et mores: programma facit quod scriptum est, non quod volitum - vitium in hiatu vivit
 - **debitum_technicum** ⚙ — Imperfectio in opere CONSULTO suscepta ut aliquid citius praestetur, cum cognitione pretii posterioris: non defectus s
 - **complicatio** ⚙ — Consideratio implementationis quae consilio praevideri NON POTEST sed opere incepto sola apparet, et consilium retract
+- **consilium** ⚙ — Ordo operum propositus ad finem SEMEL petendum: quid quo ordine fiet, quid cui committitur, quid ante quid stare debet
 
 ### formae_datorum (v0, genera 1)
 
@@ -293,6 +296,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | codex | opus_scriptum |
 | commentarium | elementa_programmatis |
 | complicatio | fabricatio |
+| consilium | fabricatio |
 | constans | elementa_programmatis |
 | constans_numerica | elementa_programmatis |
 | constans_textualis | elementa_programmatis |
@@ -323,6 +327,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | index_verificationis | praescriptum |
 | inscriptio | locus |
 | instrumentum | corporalia |
+| instrumentum_aedificationis | elementa_programmatis |
 | intervallum | tempus |
 | investigatio | iudicium |
 | iter | vectura |
@@ -370,6 +375,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | probatio | fabricatio |
 | procedura | praescriptum |
 | procedura_automata | praescriptum |
+| processorium | architectura_machinae |
 | processus | operatio |
 | programma | elementa_programmatis |
 | proiectio | elementa_programmatis |
@@ -423,6 +429,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `actus.sacramentum` — baptismus, confirmatio, eucharistia, matrimonium, ordo, paenitentia, unctio_infirmorum
 - `animal.animal` — apis, canis, homo
 - `architectura_machinae.architectura_machinae` — :arm, :riscv, :x86
+- `architectura_machinae.processorium` — :apple_m1, :intel_8086
 - `architectura_machinae.versio_architecturae` — :armv8, :i386, :x86_64
 - `causa.causa` — causa_efficiens, causa_finalis, causa_formalis, causa_materialis
 - `cliens.cliens_cli` — :curl
@@ -444,10 +451,12 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `elementa_programmatis.functio_pura` — :abs, :strlen
 - `elementa_programmatis.identificator` — identificator_baptismalis, sigillum_contenti
 - `elementa_programmatis.index` — index_arboris, index_inversus
+- `elementa_programmatis.instrumentum_aedificationis` — :aedilis, :make
 - `elementa_programmatis.lectio` — lectio_externa, lectio_memoriae
 - `elementa_programmatis.mutatio` — allocatio, mutatio_memoriae, scriptio_externa, terminatio, transactio
 - `elementa_programmatis.programma` — applicatio, daemon, instrumentum_lineae
 - `elementa_programmatis.status` — :errno, :index_strtok, :semen_rand
+- `fabricatio.consilium` — consilium_computatum
 - `fabricatio.probatio` — probatio_fumi, probatio_integrationis, probatio_regressionis, probatio_unitatis
 - `fabricatio.vitium` — regressio
 - `formae_datorum.forma_datorum` — acervus, arbor, cauda, copia, series, tabula_associativa
@@ -460,7 +469,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `iudicium.observatio` — signum, symptoma, testimonium
 - `lingua_programmandi.implementatio_linguae` — :clang, :cpython, :fil_c, :gcc, :officina
 - `lingua_programmandi.lingua_iussuum` — :bash
-- `lingua_programmandi.lingua_programmandi` — :c, :python, :rust
+- `lingua_programmandi.lingua_programmandi` — :abc, :b, :c, :python, :rust
 - `lingua_programmandi.verbum_clavis` — :const, :goto, :restrict, :static
 - `lingua_programmandi.versio_linguae` — :c11, :c89, :c99
 - `mensura.magnitudo_mensurabilis` — capacitas, longitudo, massa, numerositas, temperatura, tempus_intervallum
@@ -478,8 +487,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `opus_scriptum.opus_scriptum` — :abusus_linguae, :moby_dick, :species_plantarum, :summa_theologiae, :systema_naturae
 - `organizatio.corpus_normans` — :ansi, :iec, :ieee, :iso
 - `organizatio.officium` — curator, episcopus, notarius, parochus, praeses_collegii
+- `organizatio.organizatio` — :agentia_isbn, :debian_project
 - `organizatio.persona_iuridica` — universitas_personarum, universitas_rerum
-- `organizatio.societas` — :amd, :apple, :arm_ltd, :bell_labs, :canonical, :intel, :microsoft
+- `organizatio.societas` — :amd, :apple, :arm_ltd, :att, :bell_labs, :canonical, :intel, :microsoft
 - `persona.persona` — :bertrand_meyer, :brian_fox, :carl_linnaeus, :dennis_ritchie, :duns_scotus, :edsger_dijkstra, :graydon_hoare, :guido_van_rossum, :herman_melville, :josef_pieper, :ken_thompson, :linus_torvalds, :luca_pacioli, :thomas_aquinas
 - `plagula_computatralis.plagula_datorum` — plagula_csv, plagula_json
 - `plagula_computatralis.plagula_figurationis` — plagula_plist, plagula_toml
@@ -492,7 +502,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `praescriptum.procedura_automata` — depositio, fistula_integrationis
 - `schema.genus_valoris` — citatio, dies, electio, numerus, textus, veritas
 - `systema_operativum.distributio_systematis` — :arch, :debian, :ubuntu
-- `systema_operativum.systema_operativum` — :windows
+- `systema_operativum.systema_operativum` — :vms, :windows
 - `systema_operativum.systema_unixiforme` — :linux, :macos, :unix_bell_labs
 - `systema_operativum.versio_systematis` — :macos_13_ventura, :macos_14_sonoma
 - `tempus.calendarium` — :calendarium_gregorianum, :calendarium_liturgicum
@@ -507,30 +517,20 @@ Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed
 nemo describit. DUAE agendae sunt, non una — ordo intra utramque
 per numerum citationum (quod plura exemplaria poscunt, prius).
 
-### V.a Genera desiderata (6) — opus consilii
+### V.a Genera desiderata (2) — opus consilii
 
 A `relatio` citata: relationes in GENERA tendunt, ergo quaestio
 ontologica et iudicium poscitur.
 
 - **typus** — 2x, a `elementa_programmatis`
-- **actio** — 1x, a `praescriptum`
-- **chip** — 1x, a `architectura_machinae`
-- **consilium** — 1x, a `fabricatio`
 - **constructum_linguae** — 1x, a `elementa_programmatis`
-- **instrumentum_aedificationis** — 1x, a `elementa_programmatis`
 
-### V.b Individua desiderata (6) — opus dictionarii
+### V.b Individua desiderata (0) — opus dictionarii
 
 A `relato` SOLO citata: res singularis nominata sub genere iam
 exsistente. Nullum consilium — describi potest quovis momento.
 (EURISTICA, non lex: relatum genus attingere potest.)
 
-- **abc** — 1x, a `lingua_programmandi`
-- **agentia_isbn** — 1x, a `identificatio`
-- **att** — 1x, a `organizatio`
-- **b** — 1x, a `lingua_programmandi`
-- **debian_project** — 1x, a `systema_operativum`
-- **vms** — 1x, a `systema_operativum`
 
 ## VI. Dubia aperta
 
@@ -549,7 +549,7 @@ exsistente. Nullum consilium — describi potest quovis momento.
 - `schema` / **genus_valoris** — Paletta domus etiam "area" (textus amplus) et "annus" (dies grossior) habet: species propriae, an textus cum praesentatione et dies cum granularitate? Praesenta
 - `tempus` / **pascha** — GRADUS AMBIGUUS (rota XXIX): una est regula paschalis, ergo individuum videtur; at "pascha" etiam de quovis anno dicitur ("pascha huius anni"), quod praedicatio
 
-## VII. Monita — stirps communis sine cognatione (21)
+## VII. Monita — stirps communis sine cognatione (22)
 
 Regula XVIII (ADVISORIA, portam non frangit). Nomen quod nomen
 aliud ut stirpem fert, sed nec sub eo stat nec relationem ad id
@@ -567,6 +567,7 @@ coincidentia INVISA transeat.
 - 'fons_rust' stirpem 'fons' fert sed sub ea non stat
 - 'index_strtok' stirpem 'index' fert sed sub ea non stat
 - 'index_verificationis' stirpem 'index' fert sed sub ea non stat
+- 'instrumentum_aedificationis' stirpem 'instrumentum' fert sed sub ea non stat
 - 'instrumentum_lineae' stirpem 'instrumentum' fert sed sub ea non stat
 - 'instrumentum_publicum' stirpem 'instrumentum' fert sed sub ea non stat
 - 'isbn_10' stirpem 'isbn' fert sed sub ea non stat

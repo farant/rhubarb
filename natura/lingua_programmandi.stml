@@ -36,6 +36,14 @@
 -->
 <natura modulus="lingua_programmandi" versio="3" lingua="latina">
 
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: dies et res gestae ex textibus
+    innumeris haustae. NON VERIFICATUM.
+  </fons>
+</fontes>
+
 <genus nomen="lingua_programmandi">
 
   <definitio>
@@ -137,7 +145,7 @@
     <valor nomen="vita">vigens</valor>
     <relatum nomen="auctor" ad="dennis_ritchie"
       modulus="persona"/>
-    <relatum nomen="orta_ex" ad="b" externum="verum"/>
+    <relatum nomen="orta_ex" ad="b"/>
     <historia>
       <eventum quando="1972" actio="ortus"/>
       <eventum quando="1978" actio="edi">K&amp;R C (liber ut
@@ -165,7 +173,7 @@
     <valor nomen="vita">vigens</valor>
     <relatum nomen="auctor" ad="guido_van_rossum"
       modulus="persona"/>
-    <relatum nomen="orta_ex" ad="abc" externum="verum"/>
+    <relatum nomen="orta_ex" ad="abc"/>
     <historia>
       <eventum quando="1991" actio="ortus"/>
       <eventum quando="2008-12-03" actio="edi">Python 3 -
@@ -197,6 +205,57 @@
       <eventum quando="2015-05-15" actio="edi">1.0 -
         stabilitas promissa</eventum>
     </historia>
+  </individuum>
+
+  <!-- MAIORES: umbrae rotae XLV impletae - linguae quas
+       descendentes earum citabant. Mortuae ambae, et ideo
+       maxime describndae: quod vivit se ipsum explicat, quod
+       obiit solum per acta nostra manet -->
+
+  <individuum nomen="b" certitudo="opinio" fons="corpus">
+    <definitio>
+      Lingua Thompsonii sine typis: verbum machinae unicum genus
+      valoris, unde nec character nec structura - omnia numeri.
+      Ex BCPL contracta ut in PDP-7 caberet; parens linguae C,
+      quae typos addidit cum PDP-11 octetos discerneret.
+    </definitio>
+    <valor nomen="typatio_tempus">statica</valor>
+    <valor nomen="gestio_memoriae">manualis</valor>
+    <valor nomen="vita">mortua</valor>
+    <relatum nomen="auctor" ad="ken_thompson" modulus="persona"/>
+    <historia>
+      <eventum quando="1969" actio="ortus"/>
+    </historia>
+    <nota>
+      Individuum cuius INTERITUS causam claram habet: machina
+      nova (PDP-11) octetos et typos poscebat quos B negabat.
+      Lingua a machina occisa - ferrum modum imperat, casus
+      tertius (post fornacem et vehiculum), primus in re
+      incorporali.
+    </nota>
+  </individuum>
+
+  <individuum nomen="abc" certitudo="opinio" fons="corpus">
+    <definitio>
+      Lingua docendi apud CWI Amstelodami: structura per
+      indentationem, quinque genera datorum alta, sine
+      declarationibus - "simplicitas ante potentiam" consulto.
+    </definitio>
+    <valor nomen="typatio_tempus">dynamica</valor>
+    <valor nomen="typatio_vis">fortis</valor>
+    <valor nomen="gestio_memoriae">collecta</valor>
+    <valor nomen="vita">mortua</valor>
+    <historia>
+      <eventum quando="1987" actio="edi" nota="editio 1.0;
+        inceptum ab anno circiter 1975 ut 'B' novum"/>
+    </historia>
+    <nota>
+      Auctores Geurts, Meertens, Pemberton; Guido van Rossum in
+      turba implementantium erat, et quod ABC negavit (extensio,
+      systema apertum) Python concessit - indentatione et
+      simplicitate SERVATIS. Individuum mortuum cuius
+      differentiae in filia vivunt: hereditas sine vita.
+    </nota>
   </individuum>
 
 </genus>

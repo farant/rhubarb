@@ -3060,3 +3060,113 @@ which one it is has not been established.
 
 MEASURED after: 31 exemplaria / 146 genera / 307 res / 405 arcus
 / 0 vulnera / 21 monita / umbrae 16 → 12 (genera 10 → 6).
+
+## 2026-08-05 — round forty-five: the queue cleared before the loop
+
+Cleanup round, deliberately BEFORE the next coverage loop: the
+umbra agenda is now a measured work queue, and harvesting a new
+scenario onto a backlog still holding six any-time items would
+bury the cheap work a second time — the exact failure the V.a/V.b
+split was built to stop. Clear the queue, let the loop refill it.
+
+213. SIX INDIVIDUA (the whole V.b list): `b` and `abc` (both
+     languages MORTUAE — and B's death has a named cause: the
+     PDP-11 discerned bytes and B refused types, a language
+     killed by a machine — ferrum modum imperat, third case and
+     first on an incorporeal thing); `att` (whose LEGAL history
+     explains more than its products: C was free because the 1956
+     decree forbade AT&T to sell it — and the 1984 divestiture
+     forced actio `dividi` onto organizatio, with `fundi` as its
+     honest inverse); `vms` (the living counter-example that
+     keeps `systema_unixiforme` a real differentia — and its
+     native file versioning had inside the filesystem what
+     volumen builds outside it); `debian_project` (SPECIMEN THAT
+     PROVES A DIVISION: an organizatio that deliberately REFUSES
+     legal personhood — SPI holds its assets — so the
+     organizatio/persona_iuridica split is confirmed by a thing
+     that has one half and declines the other); `agentia_isbn`
+     (neither corpus_normans nor magistratus: it operates a
+     scheme it does not write — and a GENUS MAY LURK: scheme
+     administrator, specimens IANA/ISSN centre/GS1/civil
+     registries. Noted, not coined — cleanup is not coining
+     hour).
+
+214. THREE GENERA from the V.a list:
+     - `processorium` (umbra 'chip' RENAMED at birth): 'chip'
+       covered two things — the product model (8086: one thing,
+       millions of dies) and the physical die in your hand. The
+       individua we cite are MODELS; the precedent is :x86
+       itself. Grade MIDDLE in the form-instance series:
+       architecture is pure form, the die is haecceity-bearing
+       artefactum, the product model sits between — a form that
+       can be manufactured. Books already made this split
+       (editio/codex). Two relations designatum_a/fabricatum_a
+       because the fabless age split them (Apple designs, TSMC
+       prints) — and for TSMC I deliberately OMITTED the relatum
+       rather than plant an umbra: honest absence beats a
+       pending citation.
+     - `instrumentum_aedificationis` (sub programma): the
+       ORCHESTRATOR, kept narrow by a collision check — the
+       compiler is implementatio_linguae and stays there; make
+       calls cc, make is a build tool, cc is not. Property
+       graphum_unde declaratum/derivatum turns out to be the
+       whole difference between :make and :aedilis (first
+       house-tool individuum in the library — we are our own
+       fons). Make's origin story recorded: Feldman built it
+       after a colleague lost half a day to a stale executable —
+       dolor → mandatum, forty years before we named it.
+     - `consilium`: the umbra `complicatio` DEFINED ITSELF
+       AGAINST (same structural absence as programma, run 5).
+       Differentia settled by iteration: praescriptum lives by
+       repetition, consilium dies completed or retracted —
+       QUID/QUOMODO/QUO ORDINE = postulatum/praescriptum/
+       consilium. Machine has a CYCLE (second after planta):
+       retractatum → susceptum via renovatio, because the life
+       of a real plan is to be retracted and continue, not to
+       guess right once. Species consilium_computatum = the
+       silex proicere/renovare plan — a PROIECTIO (regenerated,
+       not retracted), dogfooded twice before it was named.
+
+215. ONE UMBRA DISSOLVED RATHER THAN FILLED: `actio`. What
+     index_verificationis confirms is not an action but THE
+     THING AS IT SHOULD BE — "flaps SET" confirms a state, not
+     a hand motion; half of aviation checklists confirm states.
+     Retargeted to ad="*" with the reasoning in the nota.
+     Coining 'actio' would have been an open lie, and it would
+     have collided with the <actio> format element and the
+     actus model besides.
+
+216. DEFERRED, EXPLICITLY: `typus` and `constructum_linguae` —
+     the seam where elementa_programmatis (intentions) meets
+     lingua_programmandi (languages), and typus sits next to
+     schema.genus_valoris ("INTENTIO valoris, non repraesentatio
+     machinae"): same kind, or its representation-level sibling?
+     That is an ontological commitment, not a cleanup item. They
+     are now the ONLY two umbrae in the library.
+
+217. GATES EARNED THEIR KEEP THREE WAYS THIS ROUND: rule 5
+     caught fons="corpus" in four files with no <fontes> block
+     (fixed by declaring, not by removing the honesty); rule 13
+     caught actio= values on eventa with no declared actio
+     (organizatio genuinely LACKED dividi/fundi — the gate
+     forced a real improvement, not just compliance); and TWO
+     STALE PROSE notas ("nondum descriptum" about things now
+     described) were found by eye in citation notas — rule XVI
+     cannot see prose, so the fix-the-nota-when-you-touch-it
+     habit is the only gate that layer has.
+
+218. DIMENSION-CROSSING OBSERVED AND PARKED: the old debian
+     citation proposed sub-genus 'communitas' (finis sine
+     quaestu). But organizatio's sub-genera divide by FINIS
+     (societas/corpus_normans/magistratus) while persona_iuridica
+     divides by LEGAL STATUS — axes already crossing in the tree
+     (a societas typically IS a persona iuridica). 'communitas'
+     would add a third crossing. Dimensions before nouns says
+     this wants a REFACTOR (one axis as property or relation),
+     not another sibling. Parked with the observation; not
+     cleanup material.
+
+MEASURED after: 31 exemplaria / 149 genera / 318 res / 433 arcus
+/ 0 vulnera / 22 monita / UMBRAE 16 → 2 (typus,
+constructum_linguae — both deliberate). The queue is clear; the
+next loop writes onto a clean agenda.

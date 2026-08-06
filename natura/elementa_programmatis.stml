@@ -76,6 +76,14 @@
 -->
 <natura modulus="elementa_programmatis" versio="4" lingua="latina">
 
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: dies et res gestae ex textibus
+    innumeris haustae. NON VERIFICATUM.
+  </fons>
+</fontes>
+
 <!-- ==================================================
      STATUS - valor custoditus mutabilis
      ================================================== -->
@@ -187,9 +195,8 @@
     <relatio nomen="ex_fontibus" ad="plagula_fontis"
       modulus="plagula_computatralis" multiplex="verum"/>
     <relatio nomen="per_instrumentum"
-      ad="instrumentum_aedificationis" externum="verum"
-      nota="genus superficit (make, aedilis domus) - nondum
-            descriptum"/>
+      ad="instrumentum_aedificationis"
+      nota="descriptum rota XLV - vide genus infra"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->
@@ -991,6 +998,97 @@
     </definitio>
     <valor nomen="interactivum">verum</valor>
   </species>
+
+</genus>
+
+<!-- ==================================================
+     INSTRUMENTUM AEDIFICATIONIS - programma quod artefacta
+     ex fontibus derivat
+
+     Umbra rotae XLV impleta. CAVE COLLISIONEM quae hoc genus
+     angustum tenet: compilator NON hic sedet - is
+     implementatio_linguae est (lingua_programmandi). Hoc genus
+     ORCHESTRATOR est: quod implementationes VOCAT, ordinem
+     derivationis novit, et solum mutata reficit. make cc vocat;
+     make instrumentum aedificationis est, cc non est.
+     ================================================== -->
+
+<genus nomen="instrumentum_aedificationis" sub="programma">
+
+  <differentia>
+    Programma cuius finis artefacta aedificationis ex fontibus
+    derivare: graphum dependentiarum novit (quid ex quo), et
+    inde vim suam - solum mutata reficit. Ab implementatione
+    linguae differt ut dux a milite: ordinem imperat, opus
+    ipsum aliis committit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="incrementale" genus="veritas"
+      nota="an solum mutata reficiat. Fundamentum: comparatio
+            per TEMPORA plagularum (make, fragile - horologia
+            mentiuntur) aut per CONTENTA (sigilla - quod silex
+            renovare docuit: numquam timestamp)"/>
+    <proprietas nomen="graphum_unde" genus="electio"
+      nota="unde dependentias sciat">
+      <optio>declaratum</optio>
+      <optio>derivatum</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="invocat" ad="implementatio_linguae"
+      modulus="lingua_programmandi" multiplex="verum"/>
+    <relatio nomen="dirigitur_a" ad="plagula_computatralis"
+      modulus="plagula_computatralis"
+      nota="Makefile, aedificare.sh - plagula quae graphum
+            declarat. Genus eius ambiguum consulto: Makefile
+            inter figurationem et fontem sedet (lingua make
+            completa Turing est - figuratio quae programma
+            facta est, lapsus vulgaris)"/>
+    <relatio nomen="producit" ad="artefactum_aedificationis"
+      multiplex="verum"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="make" certitudo="opinio" fons="corpus">
+    <definitio>
+      Instrumentum Feldmanni (Bell Labs 1976): regulae
+      finis-fontes-mandata, comparatio per tempora plagularum.
+      Forma omnium sequentium, vitiis suis inclusis.
+    </definitio>
+    <valor nomen="incrementale">verum</valor>
+    <valor nomen="graphum_unde">declaratum</valor>
+    <historia>
+      <eventum quando="1976">natum apud Bell Labs</eventum>
+    </historia>
+    <nota>
+      Tertium donum Bell Labs in bibliotheca (post C et Unix) -
+      et natum, ut Feldman narrat, ex collega qui dimidium diei
+      vitium quaerebat quod erat exsecutabile non recompilatum.
+      Instrumentum ex UNO ictu doloris: exemplar purissimum
+      legis domus nostrae 'dolor -> mandatum'.
+    </nota>
+  </individuum>
+
+  <individuum nomen="aedilis">
+    <definitio>
+      Instrumentum domus rhubarb: graphum ex inclusionibus
+      citatis DERIVAT (conventione include/X.h -> lib/X.c),
+      nihil declaratum praeter fontem primum.
+    </definitio>
+    <valor nomen="graphum_unde">derivatum</valor>
+    <relatum nomen="invocat" ad="clang"
+      modulus="lingua_programmandi"/>
+    <nota>
+      Individuum domesticum, ideo sine fonte externo: nos
+      testes sumus. Differentia a make tota in graphum_unde
+      sedet - quod make declarari poscit, aedilis legit. Silex
+      renovare eandem clausuram recomputat: instrumenta domus
+      omnia ex derivatione vivunt.
+    </nota>
+  </individuum>
 
 </genus>
 

@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/architectura_machinae.stml
-  Exemplar semanticum: ARCHITECTURA MACHINAE (versio 0, PLASTICUM)
+  Exemplar semanticum: ARCHITECTURA MACHINAE (versio 1, PLASTICUM)
 
   Distinctio eadem ac lingua/implementatio, gradu ferri:
   architectura FORMA est (copia instructionum quam programma
-  alloquitur); chip res quae eam exsequitur. Genus chip
-  (microarchitectura, exemplaria concreta) SURGIT, nondum
-  descriptum.
+  alloquitur); processorium exemplar producti quod eam
+  exsequitur (v0->v1: umbra 'chip' impleta et renominata -
+  vide genus infra).
 
   EXEMPLUM TERTIUM LEGIS LABENTIS: latitudo verbi non
   architecturae familiae sed VERSIONI pertinet (x86 per 16/32/64
   transiit) - proprietates ad subiectum verum labuntur, sicut
   "compilata" ad implementationem lapsa est.
 -->
-<natura modulus="architectura_machinae" versio="0" lingua="latina">
+<natura modulus="architectura_machinae" versio="1" lingua="latina">
+
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: dies et res gestae ex textibus
+    innumeris haustae. NON VERIFICATUM.
+  </fons>
+</fontes>
 
 <genus nomen="architectura_machinae">
 
@@ -49,8 +57,10 @@
       nota="architecturae a societatibus/consortiis nascuntur,
             raro a personis solis"/>
     <relatio nomen="habet_versionem" ad="versio_architecturae"/>
-    <relatio nomen="exsecuta_a" ad="chip" externum="verum"
-      nota="genus chip nondum descriptum"/>
+    <relatio nomen="exsecuta_a" ad="processorium"
+      nota="umbra 'chip' rota XLV impleta - et renominata:
+            processorium exemplar PRODUCTI est (8086, M1), non
+            assula singula physica. Vide differentiam eius"/>
     <relatio nomen="emissa_pro" a="implementatio_linguae"
       modulus="lingua_programmandi" inversa="verum"
       nota="compilatores pro architecturis emittunt"/>
@@ -165,6 +175,111 @@
     <valor nomen="edita">2011-10-27</valor>
     <relatum nomen="versio_de" ad="arm"/>
     <nota>machinae nostrae (Apple Silicon) hanc exsequuntur</nota>
+  </individuum>
+
+</genus>
+
+<!-- ==================================================
+     PROCESSORIUM - exemplar producti quod architecturam
+     exsequitur
+
+     Umbra 'chip' impleta ET RENOMINATA, quia 'chip' duas res
+     tegebat: exemplar productum (Intel 8086 - res una, milia
+     milium assularum) et assulam physicam singulam (haec in
+     manu, cum vitiis suis). Individua quae citare volumus
+     EXEMPLARIA sunt - praecedens :x86 ipsum: architectura forma
+     est, individua eius formae nominatae, nemo assulam suam.
+     Assula physica artefactum est (corporalia) cum haecceitate;
+     divisio eadem quam libri iam fecerunt (editio/codex).
+     ================================================== -->
+
+<genus nomen="processorium">
+
+  <definitio>
+    Exemplar productum circuli computantis: forma nominata quam
+    officina in assulas innumeras imprimit, quae architecturam
+    (unam pluresve versiones eius) in silicio exsequitur.
+  </definitio>
+
+  <differentia>
+    Tertium in serie forma-instantia bibliothecae, sed gradu
+    MEDIO: architectura forma pura est, assula physica res
+    corporea unica - processorium inter utrumque stat, forma
+    quae fabricari potest. Ab architectura differt quod
+    frequentiam, nucleos, pretium habet; ab assula quod
+    haecceitate caret - "M1" milia milium est et res una.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="nuclei" genus="numerus"/>
+    <proprietas nomen="frequentia" genus="quantitas"
+      modulus="mensura"/>
+    <proprietas nomen="bits" genus="numerus"
+      nota="latitudo verbi: 8, 16, 32, 64"/>
+  </proprietates>
+
+  <actiones>
+    <actio nomen="edi" nota="in mercatum"/>
+    <actio nomen="retiri" nota="productio finita - assulae
+      exstantes vivunt, exemplar mortuum est"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="exsequitur" ad="architectura_machinae"
+      multiplex="verum"
+      nota="inversa exsecuta_a supra; multiplex quia exemplaria
+            hodierna saepe plures (M1: armv8 et Rosetta x86_64
+            translatione)"/>
+    <relatio nomen="fabricatum_a" ad="organizatio"
+      modulus="organizatio"/>
+    <relatio nomen="designatum_a" ad="organizatio"
+      modulus="organizatio"
+      nota="designator et officina saepe diversi (Apple designat,
+            TSMC imprimit) - unde relationes DUAE, quod aetas
+            fabless nominat"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="intel_8086" certitudo="opinio" fons="corpus">
+    <definitio>
+      Processorium quod architecturae x86 nomen dedit: 16 bits,
+      anno 1978 editum - electum ab IBM pro PC (immo frater 8088
+      eius), unde dominatus quadraginta annorum.
+    </definitio>
+    <valor nomen="bits">16</valor>
+    <relatum nomen="exsequitur" ad="x86"/>
+    <relatum nomen="fabricatum_a" ad="intel"
+      modulus="organizatio"/>
+    <relatum nomen="designatum_a" ad="intel"
+      modulus="organizatio"/>
+    <historia>
+      <eventum quando="1978-06-08" actio="edi"/>
+    </historia>
+  </individuum>
+
+  <individuum nomen="apple_m1" certitudo="opinio" fons="corpus">
+    <definitio>
+      Primum processorium Apple pro computatris scriptorii
+      propriis: transitio ab Intel ad designationem domesticam
+      super architecturam arm - "PowerPC -> Intel" iterum, via
+      inversa.
+    </definitio>
+    <valor nomen="nuclei">8</valor>
+    <valor nomen="bits">64</valor>
+    <relatum nomen="exsequitur" ad="armv8"/>
+    <relatum nomen="designatum_a" ad="apple"
+      modulus="organizatio"/>
+    <historia>
+      <eventum quando="2020-11-10" actio="edi"/>
+    </historia>
+    <nota>
+      Designatum ab Apple, impressum a TSMC - specimen quod
+      relationes duas supra poposcit. (TSMC individuum nondum
+      descriptum: umbram non pono quia relatum fabricatum_a
+      simpliciter omitto - absentia honesta, non citatio
+      pendens.)
+    </nota>
   </individuum>
 
 </genus>

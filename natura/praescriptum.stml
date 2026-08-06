@@ -288,8 +288,14 @@
   </nota>
 
   <relationes>
-    <relatio nomen="confirmat" ad="actio" externum="verum"
-      nota="quae iam facta esse debent"/>
+    <relatio nomen="confirmat" ad="*"
+      nota="UMBRA 'actio' SOLUTA RETRO (rota XLV), non genere
+            novo: quod index confirmat non actio est sed RES UT
+            ESSE DEBET - 'flaps SET' statum confirmat, non
+            motum manus. Actio, status, absentia ('area
+            libera') - quidlibet confirmabile. Genus 'actio'
+            coinatum fuisset mendacium apertum: dimidium
+            indicum aviatoriorum status confirmat"/>
     <relatio nomen="adhibetur_in" ad="ambitus" modulus="operatio"
       multiplex="verum"/>
   </relationes>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/fabricatio.stml
-  Exemplar semanticum: FABRICATIO (versio 3, PLASTICUM)
+  Exemplar semanticum: FABRICATIO (versio 4, PLASTICUM)
   Genera: postulatum, facultas, probatio, vitium.
 
   QUADRATUM INTENTIONIS: postulatum intentionem DECLARAT ante
@@ -15,7 +15,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="3" lingua="latina">
+<natura modulus="fabricatio" versio="4" lingua="latina">
 
 <!-- ==================================================
      POSTULATUM - intentio declarata ante opus
@@ -384,11 +384,10 @@
   <relationes>
     <relatio nomen="aperitur_in" ad="pensum" modulus="operatio"
       nota="dum opus agitur, non dum cogitatur"/>
-    <relatio nomen="retractat" ad="consilium" externum="verum"
-      nota="genus CONSILIUM superficit - complicatio contra
-            consilium definitur, et consilium nondum descriptum
-            est (postulatum et pensum partes eius sunt, totum
-            non)"/>
+    <relatio nomen="retractat" ad="consilium"
+      nota="descriptum rota XLV - umbra contra quam hoc genus
+            se definiebat impleta (idem motus quo programma
+            bibliothecam liberavit, cursus V)"/>
     <relatio nomen="asseritur_per" ad="iudicium" modulus="iudicium"
       nota="MEMBRUM PER IUDICIUM: an praevideri potuerit
             asseritur, non legitur - cum auctore, momento,
@@ -426,6 +425,103 @@
     "immo, hoc praevideri potuit". Genus quod se ipsum numquam
     falsificat iargon est, non vocabularium.
   </dubium>
+
+</genus>
+
+<!-- ==================================================
+     CONSILIUM - ordo operum propositus
+
+     Umbra gravissima impleta (rota XLV): complicatio contra
+     consilium DEFINIEBATUR ("consilium retractare potest") dum
+     consilium ipsum non exsistebat - eadem absentia structuralis
+     quam programma habuit (bibliotheca contra id se definiebat).
+     Postulatum QUID verum esse debeat dicit; praescriptum
+     QUOMODO res iterabilis fiat; consilium QUO ORDINE opera
+     SEMEL facienda sint. Tres res, tribus generibus.
+     ================================================== -->
+
+<genus nomen="consilium">
+
+  <definitio>
+    Ordo operum propositus ad finem SEMEL petendum: quid quo
+    ordine fiet, quid cui committitur, quid ante quid stare
+    debet. De futuro loquitur et ideo semper provisorium -
+    consilium quod mutari non potest non consilium est sed
+    vinculum.
+  </definitio>
+
+  <differentia>
+    A praescripto ITERATIONE differt: praescriptum vivit quia
+    iteratur (receptum panis cotidie valet), consilium moritur
+    perfectum aut retractatum - campania una, aedificium unum,
+    editio una. A postulato MODO: postulatum quid verum esse
+    debeat dicit et de ordine tacet; consilium ordinem ipsum
+    profitetur.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="horizon" genus="electio"
+      nota="quousque prospiciat - et quo longius, eo plures
+            complicationes latent (illarum enim natura est
+            consilio praevideri non posse)">
+      <optio>operis</optio>
+      <optio>editionis</optio>
+      <optio>anni</optio>
+      <optio>ultra</optio>
+    </proprietas>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="propositum"/>
+    <status nomen="susceptum" nota="opera ex eo aperta"/>
+    <status nomen="perfectum"/>
+    <status nomen="retractatum"
+      nota="mutatum complicatione aperta - non mors sed
+            emendatio: consilium novum idem finem petit"/>
+    <status nomen="derelictum"
+      nota="finis ipse desertus - mors vera"/>
+    <transitus a="propositum" ad="susceptum" per="susceptio"/>
+    <transitus a="susceptum" ad="perfectum" per="perfectio"/>
+    <transitus a="susceptum" ad="retractatum" per="retractatio"
+      nota="complicatio.retractat huc ducit"/>
+    <transitus a="retractatum" ad="susceptum" per="renovatio"
+      nota="CYCLUS (post plantam alter): consilium retractatum
+            renovatur et opus pergit - vita consilii veri est
+            retractari et pergere, non semel recte divinare"/>
+    <transitus a="susceptum" ad="derelictum" per="derelictio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="ordinat" ad="pensum" modulus="operatio"
+      multiplex="verum"
+      nota="opera quae proponit - pensum susceptum consilio
+            respondet"/>
+    <relatio nomen="ad_postulata" ad="postulatum"
+      multiplex="verum"
+      nota="quae implere proponit"/>
+    <relatio nomen="retractatur_a" a="complicatio"
+      inversa="verum"
+      nota="impletur a complicatio.retractat - relatio propter
+            quam genus natum est"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="consilium_computatum">
+    <definitio>
+      Consilium a machina ex statuum comparatione derivatum:
+      quid scribendum, quid creandum, quid obstat - propositum,
+      numquam ipso facto applicatum.
+    </definitio>
+    <differentia>
+      PROIECTIO est (elementa_programmatis): ex veritate sua
+      integre recomputabile, ideo disponibile - consilium
+      humanum retractatur, computatum simpliciter REGENERATUR.
+      Silex proicere et renovare haec emittunt: 'consilium
+      ordinarium, numquam scribit; scribere = applicatio'.
+      Species domestica bis dogfooded antequam nominata.
+    </differentia>
+  </species>
 
 </genus>
 

@@ -40,6 +40,15 @@
   <actiones>
     <actio nomen="condi"/>
     <actio nomen="dissolvi"/>
+    <actio nomen="dividi"
+      nota="in organizationes plures secari, nulla earum priore
+            identica (AT&amp;T 1984). A dissolutione differt:
+            perdurationes NOVAE incipiunt, opera et obligationes
+            inter eas partiuntur"/>
+    <actio nomen="fundi"
+      nota="cum alia in unam coire - inversum divisionis, et
+            quaestio identitatis eadem: quae perduratio
+            pergit?"/>
     <actio nomen="edere" nota="opus publicare - normam, chip,
       programma"/>
   </actiones>
@@ -52,7 +61,66 @@
     <relatio nomen="membrum" a="persona" modulus="persona"
       inversa="verum"
       nota="persona.membrum_de hanc citat"/>
+    <relatio nomen="administrat" ad="schema_identificandi"
+      modulus="identificatio" multiplex="verum"
+      nota="inversa eius quod identificatio iam declarabat
+            (administrata_a); ab agentia ISBN pulsata"/>
   </relationes>
+
+  <!-- ================= DICTIONARIUM =================
+       individua sub genere NUDO consulto: organizationes quae
+       nulli sub-generi cadunt, et QUOD non cadunt pars
+       descriptionis est -->
+
+  <individuum nomen="debian_project" certitudo="opinio"
+    fons="corpus">
+    <definitio>
+      Coetus voluntariorum qui distributionem Debian curat:
+      organizatio vera cum officiis electis et normis suis
+      (Contractus Socialis 1997), quae persona iuridica esse
+      CONSULTO RECUSAT - bona eius fiduciarius tenet (Software
+      in the Public Interest).
+    </definitio>
+    <valor nomen="nomina">The Debian Project</valor>
+    <valor nomen="condita">1993-08-16</valor>
+    <historia>
+      <eventum quando="1993-08-16" actio="condi"
+        nota="ab Ian Murdock; nomen ex 'Deb' (uxor) + 'Ian' -
+              etymologia vera, non fabula"/>
+    </historia>
+    <nota>
+      SPECIMEN QUOD DIVISIONEM GENERUM PROBAT: organizatio sine
+      persona iuridica - non defectu sed electione. Perdurat
+      mutatis membris, ut unum agit, ducem eligit (officium
+      verum, annuum), et tamen in iure NEMO est. Divisio nostra
+      organizatio/persona_iuridica hoc praevidit; specimen eam
+      confirmat quo modo optimo: per rem quae alteram partem
+      habet et alteram recusat.
+    </nota>
+  </individuum>
+
+  <individuum nomen="agentia_isbn" certitudo="opinio"
+    fons="corpus">
+    <definitio>
+      Agentia internationalis quae schema ISBN administrat:
+      normam NON edit (ISO eam edit) sed OPERATUR - intervalla
+      nationibus assignat, agentias nationales nominat,
+      praefixa editoribus per eas dat.
+    </definitio>
+    <valor nomen="nomina">International ISBN Agency</valor>
+    <relatum nomen="administrat" ad="isbn"
+      modulus="identificatio"/>
+    <nota>
+      NEC CORPUS NORMANS NEC MAGISTRATUS: normam non scribit,
+      imperium non habet - auctoritas eius ex ipso schemate
+      fluit, quod sine administratore assignante nihil est.
+      GENUS FORTASSE LATET: administrator schematis (IANA
+      nominibus interretis, centrum ISSN, GS1 codicibus barrae,
+      officia status civilis nominibus hominum) - specimina
+      quattuor trans dominia. Notatum, non cusum: cleanup non
+      est hora coinandi.
+    </nota>
+  </individuum>
 
 </genus>
 
@@ -384,7 +452,7 @@
   <individuum nomen="bell_labs">
     <valor nomen="nomina">Bell Telephone Laboratories</valor>
     <valor nomen="condita">1925-01-01</valor>
-    <relatum nomen="pars_de" ad="att" externum="verum"
+    <relatum nomen="pars_de" ad="att"
       valens_a="1925" valens_ad="1996"
       certitudo="fides" fons="corpus"
       nota="MENDACIUM NOSTRUM PRIMUM TEMPORE SANATUM (rota
@@ -395,6 +463,31 @@
             forma plana necessario mentitur"/>
     <nota>domus linguae C - Ritchie ibi laborabat (1972,
       intra tempus validitatis supra)</nota>
+  </individuum>
+
+  <individuum nomen="att" certitudo="opinio" fons="corpus">
+    <definitio>
+      American Telephone and Telegraph: monopolium telephonicum
+      Americanum per saeculum fere - "systema Bell". Mater
+      laboratorii Bell, unde Unix et C, quae vendere ei diu NON
+      licebat (decretum 1956: telephonia sola) - unde Unix
+      universitates pretio nominali accepit, et inde mundum.
+    </definitio>
+    <valor nomen="nomina">AT&amp;T</valor>
+    <valor nomen="condita">1885-03-03</valor>
+    <historia>
+      <eventum quando="1984-01-01" actio="dividi"
+        certitudo="fides" fons="corpus">divisio per sententiam
+        (consent decree): societates regionales separatae -
+        actus iuridicus qui societatem maximam mundi in octo
+        secuit</eventum>
+    </historia>
+    <nota>
+      Individuum cuius HISTORIA IURIDICA plus explicat quam
+      merces: quod C liberum fuit ex decreto 1956 sequitur, non
+      ex liberalitate. Arcus casus valens_a/valens_ad supra
+      (pars_de 1925-1996) hic alterum caput habet.
+    </nota>
   </individuum>
 
 </genus>
