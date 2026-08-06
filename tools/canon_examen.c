@@ -38,6 +38,10 @@ interior Canon* canonem_onerare(chorda via_canonis,
 interior i32 vitia_imprimere(constans character* via,
                              constans character* fons_iudicii,
                              Xar* vitia, b32 machina);
+interior vacuum _campum(chorda* c, constans character* cadens);
+interior b32 index_scribere(constans character* via,
+                            Piscina* piscina,
+                            InternamentumChorda* intern);
 
 /* campus 'detail' cum limitibus cardinalitatis */
 interior constans character*
@@ -153,6 +157,199 @@ vitia_imprimere(
     redde numerus;
 }
 
+/* campum TSV imprimere: chorda aut valor cadens; lineae novae et
+ * tabulata in spatia vertuntur ne TSV rumpatur */
+interior vacuum
+_campum(
+    chorda*              c,
+    constans character*  cadens)
+{
+    i32 i;
+
+    si (!c || c->mensura == ZEPHYRUM)
+    {
+        imprimere("%s", cadens);
+        redde;
+    }
+    per (i = ZEPHYRUM; i < c->mensura; i++)
+    {
+        character ch;
+
+        ch = (character)c->datum[i];
+        si (ch == '\n' || ch == '\r' || ch == '\t')
+        {
+            ch = ' ';
+        }
+        putchar(ch);
+    }
+}
+
+/* -index: inventarium canonis ut TSV - ex ARBORE parsata, non ex
+ * Canone onerato (ordo documenti = ordo auctoris; tabula dispersa
+ * eum perderet). Ordines:
+ *   E  elem   intra  radix  textus  nota
+ *   A  elem   attr   genus  nec     nota
+ *   O  elem   attr   optio
+ *   L  elem   liberum min   max     nota
+ *   U  nomen  attr   super  nota
+ * Consumptor primus: tools/natura_metamodulus_generare.sh
+ * (catalogus METAMODULI e canone generatus, ne spec rancescat). */
+interior b32
+index_scribere(
+    constans character*   via,
+    Piscina*              piscina,
+    InternamentumChorda*  intern)
+{
+    chorda        fons;
+    StmlResultus  r;
+    i32           n;
+    i32           i;
+
+    fons = filum_legere_totum(via, piscina);
+    si (fons.mensura == ZEPHYRUM)
+    {
+        fprintf(stderr, "canon_examen: '%s' legi nequit\n", via);
+        redde FALSUM;
+    }
+    r = stml_legere(fons, piscina, intern);
+    si (!r.successus || !r.elementum_radix ||
+        !chorda_aequalis_literis(*r.elementum_radix->titulus,
+                                 "canon"))
+    {
+        fprintf(stderr,
+            "canon_examen: '%s' non est canon parsabilis\n", via);
+        redde FALSUM;
+    }
+
+    n = stml_numerus_liberorum(r.elementum_radix);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        StmlNodus* e;
+        chorda*    e_nomen;
+
+        e = stml_liberum_ad_indicem(r.elementum_radix, i);
+        si (!e || e->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        e_nomen = stml_attributum_capere(e, "nomen");
+        si (!e_nomen)
+        {
+            perge;
+        }
+
+        si (chorda_aequalis_literis(*e->titulus, "unicitas"))
+        {
+            imprimere("U\t");
+            _campum(e_nomen, "-");                imprimere("\t");
+            _campum(stml_attributum_capere(e, "attributum"), "-");
+            imprimere("\t");
+            _campum(stml_attributum_capere(e, "super"), "-");
+            imprimere("\t");
+            _campum(stml_attributum_capere(e, "nota"), "-");
+            imprimere("\n");
+            perge;
+        }
+        si (!chorda_aequalis_literis(*e->titulus, "elementum"))
+        {
+            perge;
+        }
+
+        imprimere("E\t");
+        _campum(e_nomen, "-");                          imprimere("\t");
+        _campum(stml_attributum_capere(e, "intra"), "-");
+        imprimere("\t");
+        _campum(stml_attributum_capere(e, "radix"), "-");
+        imprimere("\t");
+        _campum(stml_attributum_capere(e, "textus"), "-");
+        imprimere("\t");
+        _campum(stml_attributum_capere(e, "nota"), "-");
+        imprimere("\n");
+
+        {
+            i32 nl;
+            i32 j;
+
+            nl = stml_numerus_liberorum(e);
+            per (j = ZEPHYRUM; j < nl; j++)
+            {
+                StmlNodus* l;
+                chorda*    l_nomen;
+
+                l = stml_liberum_ad_indicem(e, j);
+                si (!l || l->genus != STML_NODUS_ELEMENTUM)
+                {
+                    perge;
+                }
+                l_nomen = stml_attributum_capere(l, "nomen");
+                si (!l_nomen)
+                {
+                    perge;
+                }
+
+                si (chorda_aequalis_literis(*l->titulus,
+                                            "attributum"))
+                {
+                    i32 no;
+                    i32 k;
+
+                    imprimere("A\t");
+                    _campum(e_nomen, "-");     imprimere("\t");
+                    _campum(l_nomen, "-");     imprimere("\t");
+                    _campum(stml_attributum_capere(l, "genus"),
+                            "textus");
+                    imprimere("\t");
+                    _campum(stml_attributum_capere(l,
+                            "necessarium"), "-");
+                    imprimere("\t");
+                    _campum(stml_attributum_capere(l, "nota"), "-");
+                    imprimere("\n");
+
+                    no = stml_numerus_liberorum(l);
+                    per (k = ZEPHYRUM; k < no; k++)
+                    {
+                        StmlNodus* o;
+                        chorda     t;
+
+                        o = stml_liberum_ad_indicem(l, k);
+                        si (!o ||
+                            o->genus != STML_NODUS_ELEMENTUM ||
+                            !chorda_aequalis_literis(*o->titulus,
+                                                     "optio"))
+                        {
+                            perge;
+                        }
+                        t = chorda_praecidere(
+                            stml_textus_normalizatus(o, piscina));
+                        imprimere("O\t");
+                        _campum(e_nomen, "-"); imprimere("\t");
+                        _campum(l_nomen, "-"); imprimere("\t");
+                        _campum(&t, "-");
+                        imprimere("\n");
+                    }
+                }
+                alioquin si (chorda_aequalis_literis(*l->titulus,
+                                                     "liberum"))
+                {
+                    imprimere("L\t");
+                    _campum(e_nomen, "-");     imprimere("\t");
+                    _campum(l_nomen, "-");     imprimere("\t");
+                    _campum(stml_attributum_capere(l, "minimum"),
+                            "0");
+                    imprimere("\t");
+                    _campum(stml_attributum_capere(l, "maximum"),
+                            "-");
+                    imprimere("\t");
+                    _campum(stml_attributum_capere(l, "nota"), "-");
+                    imprimere("\n");
+                }
+            }
+        }
+    }
+
+    redde VERUM;
+}
+
 s32
 principale(
     s32          numerus,
@@ -167,10 +364,13 @@ principale(
     i32                  iudicatae;
     i32                  vitia_summa;
 
+    i32 indexatae;
+
     canon_expressus = NIHIL;
     machina         = FALSUM;
     iudicatae       = ZEPHYRUM;
     vitia_summa     = ZEPHYRUM;
+    indexatae       = ZEPHYRUM;
 
     piscina = piscina_generare_dynamicum("canon_examen", 4194304);
     intern  = internamentum_creare(piscina);
@@ -196,6 +396,15 @@ principale(
             i + I < numerus)
         {
             canon_expressus = argumenta[++i];
+            perge;
+        }
+        si (strcmp(argumenta[i], "-index") == ZEPHYRUM &&
+            i + I < numerus)
+        {
+            si (index_scribere(argumenta[++i], piscina, intern))
+            {
+                indexatae++;
+            }
             perge;
         }
 
@@ -321,14 +530,16 @@ principale(
 
     /* NIHIL IUDICATUM et NIHIL INVENTUM: non successus. Plagula
      * parsari nescia vitium est (exitus I), non absentia. */
-    si (iudicatae == ZEPHYRUM && vitia_summa == ZEPHYRUM)
+    si (iudicatae == ZEPHYRUM && vitia_summa == ZEPHYRUM &&
+        indexatae == ZEPHYRUM)
     {
         fprintf(stderr,
             "canon_examen: NULLA plagula iudicata est\n");
         redde II;
     }
 
-    si (!machina)
+    /* -index solum: TSV purum, sine summario */
+    si (!machina && iudicatae > ZEPHYRUM)
     {
         imprimere("canon_examen: plagulae %u / VITIA %u\n",
                   iudicatae, vitia_summa);

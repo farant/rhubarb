@@ -8,29 +8,14 @@
 #include <string.h>
 
 /* ==================================================
- * Vocabularium clausum (regula VIII)
+ * Regula VIII MIGRAVIT (2026-08-06): vocabularium clausum nunc
+ * natura/natura.canon dicit et natura_examen per lib/canon.c
+ * iudicat. Onerator plagulam CANONE SANAM praesumit: elementa
+ * ignota tacite percurrit, ens sine nomine tacite praeterit
+ * (canon utrumque clamat - ATTRIBUTUM_DEEST, ELEMENTUM_IGNOTUM).
+ * Ante migrationem vocabularium QUATER stabat (hic, visus,
+ * METAMODULUS, canon); nunc semel.
  * ================================================== */
-
-interior constans character* constans ELEMENTA_NOTA[] = {
-    "natura", "fontes", "fons",
-    "genus", "species", "individuum", "cultivar",
-    "definitio", "differentia", "nota", "dubium",
-    "proprietates", "proprietas", "optio",
-    "partes", "pars",
-    "machina_statuum", "status", "transitus",
-    "actiones", "actio",
-    "relationes", "relatio",
-    "valor", "relatum", "historia", "eventum"
-};
-
-interior constans character* constans ATTRIBUTA_NOTA[] = {
-    "nomen", "modulus", "versio", "lingua",
-    "sub", "gradus", "etiam", "genus",
-    "ad", "a", "per", "multiplex", "ordinarius",
-    "necessaria", "externum", "inversa", "gerens",
-    "quando", "actio", "clavis", "verificatus",
-    "certitudo", "fons", "valens_a", "valens_ad", "nota"
-};
 
 /* sentinella homonymiae in tabula nominum nudorum */
 interior NaturaEns SENTINELLA_HOMONYMA;
@@ -48,8 +33,6 @@ interior vacuum diagnosticum_addere(
 interior chorda clavis_entis(
     Piscina* piscina, constans chorda* modulus,
     constans chorda* titulus);
-interior b32 in_literis(
-    constans character* constans* tabula, i32 numerus, chorda* s);
 interior vacuum ens_registrare(
     NaturaBibliotheca* bib, NaturaExemplar* ex,
     NaturaEnsDiscrimen discrimen, vacuum* corpus,
@@ -128,25 +111,6 @@ clavis_entis(
            (memoriae_index)titulus->mensura);
 
     redde clavis;
-}
-
-interior b32
-in_literis(
-    constans character* constans* tabula,
-    i32                           numerus,
-    chorda*                       s)
-{
-    i32 i;
-
-    per (i = ZEPHYRUM; i < numerus; i++)
-    {
-        si (chorda_aequalis_literis(*s, tabula[i]))
-        {
-            redde VERUM;
-        }
-    }
-
-    redde FALSUM;
 }
 
 interior NaturaEns*
@@ -274,7 +238,6 @@ arborem_legere(
         StmlNodus* liberum;
         chorda*    titulus_e;
         chorda*    titulus_n;
-        i32        j;
 
         liberum = stml_liberum_ad_indicem(nodus, i);
         si (!liberum || liberum->genus != STML_NODUS_ELEMENTUM)
@@ -284,34 +247,8 @@ arborem_legere(
 
         titulus_e = liberum->titulus;
 
-        /* regula VIII: vocabularium clausum - elementa */
-        si (!in_literis(ELEMENTA_NOTA,
-                (i32)(magnitudo(ELEMENTA_NOTA) /
-                      magnitudo(ELEMENTA_NOTA[ZEPHYRUM])),
-                titulus_e))
-        {
-            diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, VIII,
-                ex->stirps, titulus_e,
-                "elementum ignotum (regula VIII)");
-        }
-
-        /* regula VIII: vocabularium clausum - attributa */
-        per (j = ZEPHYRUM; j < xar_numerus(liberum->attributa); j++)
-        {
-            StmlAttributum* attributum;
-
-            attributum = (StmlAttributum*)xar_obtinere(
-                liberum->attributa, j);
-            si (!in_literis(ATTRIBUTA_NOTA,
-                    (i32)(magnitudo(ATTRIBUTA_NOTA) /
-                          magnitudo(ATTRIBUTA_NOTA[ZEPHYRUM])),
-                    attributum->titulus))
-            {
-                diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, VIII,
-                    ex->stirps, attributum->titulus,
-                    "attributum ignotum (regula VIII)");
-            }
-        }
+        /* vocabularium (olim regula VIII) canon iudicat, non
+         * onerator - elementum ignotum tacite percurritur */
 
         titulus_n = stml_attributum_capere(liberum, "nomen");
 
@@ -322,9 +259,8 @@ arborem_legere(
 
             si (!titulus_n)
             {
-                diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, VIII,
-                    ex->stirps, titulus_e,
-                    "genus sine nomine (regula VIII)");
+                /* sine nomine registrari nequit - canon clamat
+                 * (ATTRIBUTUM_DEEST), onerator praeterit */
                 arborem_legere(bib, ex, liberum, ambiens);
                 perge;
             }
@@ -356,9 +292,8 @@ arborem_legere(
 
             si (!titulus_n)
             {
-                diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, VIII,
-                    ex->stirps, titulus_e,
-                    "res sine nomine (regula VIII)");
+                /* sine nomine registrari nequit - canon clamat
+                 * (ATTRIBUTUM_DEEST), onerator praeterit */
                 arborem_legere(bib, ex, liberum, ambiens);
                 perge;
             }

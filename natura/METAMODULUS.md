@@ -85,6 +85,57 @@ and relations may all cross model boundaries (§5).
 
 ## 3. Element reference
 
+**The normative LETTER of the vocabulary is `natura/natura.canon`**
+— the single source since the 2026-08-06 migration. `natura_examen`
+enforces it through `lib/canon.c` (rule 8), and the catalog below
+is GENERATED from it: to change the vocabulary, edit the canon,
+then run `./tools/natura_metamodulus_generare.sh` (natura_visus
+flags a stale catalog as a vulnus). The subsections after the
+catalog TEACH — shapes, distinctions, rulings; if catalog and
+prose ever disagree, the catalog is right and the prose has
+drifted.
+
+<!-- GENERATUM INITIUM: catalogus vocabularii e natura/natura.canon -->
+*Catalogus GENERATUS - noli manu emendare. Fons:
+`natura/natura.canon`; regenera:
+`./tools/natura_metamodulus_generare.sh`. Attributa
+necessaria **pinguia**; genus additum ubi non textus;
+cardinalitas liberorum min..max.*
+
+| Elementum | Attributa | Liberi | Textus |
+|---|---|---|---|
+| `natura` (radix) | **modulus**:nomen, **versio**:numerus, lingua | `fontes` 0..1, `genus` 1..* | &mdash; |
+| `fontes` | &mdash; | `fons` 1..* | &mdash; |
+| `fons` | **clavis**:nomen, **genus**:nomen, modulus:nomen, verificatus:veritas | &mdash; | licet |
+| `genus` | **nomen**:nomen, sub:nomen, modulus:nomen, gradus | `definitio` 0..1, `differentia` 0..1, `proprietates` 0..1, `partes` 0..1, `actiones` 0..1, `relationes` 0..1, `machina_statuum` 0..*, `species` 0..*, `individuum` 0..*, `genus` 0..*, `valor` 0..*, `relatum` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
+| `definitio` | &mdash; | &mdash; | licet |
+| `differentia` | &mdash; | &mdash; | licet |
+| `nota` | &mdash; | &mdash; | licet |
+| `dubium` | &mdash; | &mdash; | licet |
+| `proprietates` | &mdash; | `proprietas` 1..* | &mdash; |
+| `proprietas` | **nomen**:nomen, **genus**:nomen, modulus:nomen, multiplex:veritas, ordinarius, nota | `optio` 0..* | &mdash; |
+| `optio` | &mdash; | &mdash; | licet |
+| `partes` | &mdash; | `pars` 1..* | &mdash; |
+| `pars` | **nomen**:nomen, necessaria:veritas, nota | &mdash; | &mdash; |
+| `machina_statuum` | **nomen**:nomen, gerens:electio{species\|individuum}, nota | `status` 1..*, `transitus` 0..* | &mdash; |
+| `status` | **nomen**:nomen, nota | &mdash; | &mdash; |
+| `transitus` | **a**:nomen, **ad**:nomen, **per**:nomen, nota | &mdash; | &mdash; |
+| `actiones` | &mdash; | `actio` 1..* | &mdash; |
+| `actio` | **nomen**:nomen, nota | &mdash; | &mdash; |
+| `relationes` | &mdash; | `relatio` 1..* | &mdash; |
+| `relatio` | **nomen**:nomen, ad, a:nomen, inversa:veritas, modulus:nomen, multiplex:veritas, externum:veritas, nota | &mdash; | &mdash; |
+| `species` | **nomen**:nomen, gradus, etiam:nomen, certitudo:nomen, fons:nomen, nota | `definitio` 0..1, `differentia` 0..1, `historia` 0..1, `valor` 0..*, `relatum` 0..*, `species` 0..*, `cultivar` 0..*, `genus` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
+| `individuum` | **nomen**:nomen, certitudo:nomen, fons:nomen, nota | `definitio` 0..1, `differentia` 0..1, `historia` 0..1, `valor` 0..*, `relatum` 0..*, `genus` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
+| `cultivar` | **nomen**:nomen | `definitio` 0..1, `differentia` 0..1, `historia` 0..1, `valor` 0..*, `relatum` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
+| `valor` | **nomen**:nomen, certitudo:nomen, fons:nomen, valens_a:dies, valens_ad:dies, nota | &mdash; | licet |
+| `relatum` | **nomen**:nomen, **ad**, modulus:nomen, externum:veritas, certitudo:nomen, fons:nomen, valens_a:dies, valens_ad:dies, nota | &mdash; | &mdash; |
+| `historia` | &mdash; | `eventum` 1..* | &mdash; |
+| `eventum` | **quando**:dies, actio:nomen, certitudo:nomen, fons:nomen, nota | &mdash; | licet |
+
+**Unicitates:**
+- `entia`: attributum `nomen` super genus species individuum cultivar
+<!-- GENERATUM FINIS -->
+
 ### Structural
 
 | Element | Where | Attributes | Content |
@@ -217,6 +268,10 @@ Module-level bibliography; `fons="KEY"` on a claim cites it (§6).
 ---
 
 ## 4. Attribute reference
+
+*The letter (which attributes exist, where, required or not,
+datatypes) lives in the §3 generated catalog / `natura.canon`;
+this table carries the MEANINGS.*
 
 | Attribute | On | Meaning |
 |---|---|---|
@@ -552,6 +607,18 @@ shell tools need (`-tabulae` for visus' 12 extraction tables,
 **xmllint is no longer executed anywhere in this library's tooling**
 (verified by shadowing it with a failing stub: every tool still ran).
 
+**And exactly ONE vocabulary statement (2026-08-06, later the same
+day).** The closed vocabulary used to stand FOUR times — arrays in
+`lib/natura.c`, shell lists + a perl scan in `natura_visus.sh`,
+this document's prose, `natura.canon` — with nothing enforcing
+their agreement. Now: the canon states it, `natura_examen` enforces
+it (canon vitia surface as `VULNUS regula 8`; `NOMEN_BIS` is
+skipped there because loader rule 15 owns that law — a NOTED
+residual duplication), visus consumes the examen rows, and §3's
+catalog is generated. The loader itself tolerates unknown elements
+silently and *skips* a nameless entity — it presumes canon-sane
+input; the canon does the shouting.
+
 `natura_examen` always loads **every** model even when judging one
 file, because rules 2/3/4 cross model boundaries; `-plagula` filters
 what is *shown*, never what is *checked*, and a break anywhere still
@@ -566,7 +633,7 @@ exits 1. Exit 2 means NOTHING RAN — never read it as health.
 | 5 | `fons=` resolves to a declared `clavis` | [E] |
 | 6 | `certitudo=` is a species of `gradus_assensus` | [E] |
 | 7 | `valens_a`/`valens_ad` are well-formed dates and correctly ordered | [E] |
-| 8 | Only known elements and attributes appear (this document's §3/§4) | [E] |
+| 8 | Only known elements and attributes appear | **[C]** — `natura/natura.canon` via `lib/canon.c`, run inside `natura_examen` (migrated 2026-08-06; the loader no longer holds a vocabulary list) |
 | 9 | `valor nomen=` names a property declared on the entry's genus or an ancestor (or a `machina_statuum`) | [E] |
 | 10 | A `valor` for an `electio` property matches a declared `optio` | [E] |
 | 11 | `relatum nomen=` names a relation declared on the genus or an ancestor | [E] |

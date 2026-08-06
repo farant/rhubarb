@@ -389,7 +389,7 @@ s32 principale (vacuum)
             "iudicium"));
 
         vulnera = natura_nectere(bib);
-        CREDO_AEQUALIS_I32 (vulnera, XV);
+        CREDO_AEQUALIS_I32 (vulnera, XIV);
 
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, II),   I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, III),  I);
@@ -397,7 +397,10 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, V),    I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, VI),   I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, VII),  I);
-        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, VIII), I);
+        /* regula VIII MIGRAVIT ad canonem (2026-08-06): onerator
+         * <mysterium/> tacite percurrit; natura.canon eum clamat
+         * (probatur in probatio_canon corpore vero) */
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, VIII), ZEPHYRUM);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, IX),   I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, X),    I);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XI),   I);

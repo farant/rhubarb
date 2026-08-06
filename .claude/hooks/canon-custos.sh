@@ -3,9 +3,9 @@
 # plagulam .canon aut .stml modo scriptam - canalis PUSH (exemplar
 # natura-custos.sh).
 #
-# .genera NON hic: natura-custos eas fert et natura_examen regulam
-# VIII (vocabularium clausum) iam continet - iudicium duplex esset.
-# Post migrationem (regula VIII in canonem mota) hoc revisendum.
+# .genera NON hic: natura-custos eas fert, et natura_examen post
+# migrationem (2026-08-06) canonem IPSUM intus adhibet (regula
+# VIII per lib/canon.c) - iudex unus, uncus unus, iudicium unum.
 #
 # Disciplina silentii: sanum = NIHIL in contextum; inventa et
 # absentiae solae loquuntur. Dialectus sine linea registri notitiam

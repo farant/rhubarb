@@ -33,6 +33,7 @@
 
 #include "latina.h"
 #include "natura.h"
+#include "canon.h"
 #include "filum.h"
 #include "iter_directoria.h"
 #include <stdio.h>
@@ -1202,9 +1203,158 @@ principale(
         corpus_scribere(bib, corpus);
     }
 
-    /* filtrum POST nexuram: regulae trans exemplaria transeunt */
     monita  = ZEPHYRUM;
     ostensa = ZEPHYRUM;
+
+    /* ---- gradus II: canon (regula VIII MIGRATA 2026-08-06) ----
+     * Vocabularium clausum natura/natura.canon solum dicit; via
+     * per canones.registrum solvitur ne ligamen bis stet. Canon
+     * absens = VULNUS clamans, non silentium (gradus II mortuus
+     * sanus non videtur). NOMEN_BIS praeteritur: regula XV
+     * oneratoris eandem legem tenet - duplicatio residua NOTA. */
+    {
+        chorda  catalogus;
+        chorda  via_canonis;
+        Canon*  canon;
+
+        canon     = NIHIL;
+        catalogus = filum_legere_totum("canones.registrum", piscina);
+        via_canonis = canon_registrum_quaerere(catalogus,
+                                               "x.genera", piscina);
+        si (via_canonis.mensura > ZEPHYRUM)
+        {
+            chorda fons_canonis;
+            chorda causa;
+
+            fons_canonis = filum_legere_totum(
+                chorda_ut_cstr(via_canonis, piscina), piscina);
+            si (fons_canonis.mensura > ZEPHYRUM)
+            {
+                canon = canon_legere(fons_canonis, piscina,
+                                     bib->intern, &causa);
+            }
+        }
+
+        si (!canon)
+        {
+            vulnera++;
+            ostensa++;
+            si (machina)
+            {
+                imprimere("VULNUS\t8\t-\t-\tcanon '.genera' legi "
+                          "nequit - gradus II NON iudicatus "
+                          "(canones.registrum)\n");
+            }
+            alioquin
+            {
+                imprimere("VULNUS  regula  8  [-] -: canon "
+                          "'.genera' legi nequit - gradus II NON "
+                          "iudicatus (canones.registrum)\n");
+            }
+        }
+        alioquin
+        {
+            i32 ie;
+
+            per (ie = ZEPHYRUM; ie < xar_numerus(bib->exemplaria);
+                 ie++)
+            {
+                NaturaExemplar* ex;
+                Xar*            vitia;
+                i32             iv;
+
+                ex = *(NaturaExemplar**)xar_obtinere(
+                    bib->exemplaria, ie);
+                vitia = canon_iudicare(canon, ex->radix, piscina);
+
+                per (iv = ZEPHYRUM; iv < xar_numerus(vitia); iv++)
+                {
+                    CanonVitium* v;
+                    character    campus[CCLVI];
+                    character    nuntius[DXII];
+
+                    v = (CanonVitium*)xar_obtinere(vitia, iv);
+                    si (v->genus == CANON_NOMEN_BIS)
+                    {
+                        perge;   /* regula XV oneratoris */
+                    }
+                    vulnera++;
+
+                    si (plagula && ex->stirps &&
+                        !viam_congruere(ex->stirps, plagula))
+                    {
+                        perge;
+                    }
+                    ostensa++;
+
+                    campus[ZEPHYRUM] = '\0';
+                    si (v->detail)
+                    {
+                        i32 m;
+
+                        m = v->detail->mensura <
+                                (i32)magnitudo(campus) - I
+                            ? v->detail->mensura
+                            : (i32)magnitudo(campus) - I;
+                        memcpy(campus, v->detail->datum,
+                               (memoriae_index)m);
+                        campus[m] = '\0';
+                    }
+                    si (v->genus == CANON_LIBERI_PAUCI ||
+                        v->genus == CANON_LIBERI_MULTI)
+                    {
+                        sprintf(nuntius, "%s: %s (%u, limes %u)",
+                                canon_nuntius(v->genus), campus,
+                                v->numerus, v->limes);
+                    }
+                    alioquin si (campus[ZEPHYRUM])
+                    {
+                        sprintf(nuntius, "%s: %s",
+                                canon_nuntius(v->genus), campus);
+                    }
+                    alioquin
+                    {
+                        sprintf(nuntius, "%s",
+                                canon_nuntius(v->genus));
+                    }
+
+                    si (machina)
+                    {
+                        imprimere("VULNUS\t8\t%.*s\t%.*s\t%s\n",
+                            ex->stirps
+                                ? (integer)ex->stirps->mensura : 1,
+                            ex->stirps
+                                ? (constans character*)
+                                      ex->stirps->datum : "-",
+                            v->elementum
+                                ? (integer)v->elementum->mensura : 1,
+                            v->elementum
+                                ? (constans character*)
+                                      v->elementum->datum : "-",
+                            nuntius);
+                    }
+                    alioquin
+                    {
+                        imprimere("VULNUS  regula  8  [%.*s] %.*s:"
+                                  " %s\n",
+                            ex->stirps
+                                ? (integer)ex->stirps->mensura : 1,
+                            ex->stirps
+                                ? (constans character*)
+                                      ex->stirps->datum : "-",
+                            v->elementum
+                                ? (integer)v->elementum->mensura : 1,
+                            v->elementum
+                                ? (constans character*)
+                                      v->elementum->datum : "-",
+                            nuntius);
+                    }
+                }
+            }
+        }
+    }
+
+    /* filtrum POST nexuram: regulae trans exemplaria transeunt */
     per (j = ZEPHYRUM; j < xar_numerus(bib->diagnostica); j++)
     {
         NaturaDiagnosticum* d;

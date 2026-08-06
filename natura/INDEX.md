@@ -664,11 +664,9 @@ coincidentia INVISA transeat.
 - 'systema_naturae_editio_decima' stirpem 'systema_naturae' fert sed sub ea non stat
 - 'titulus_iuris' stirpem 'titulus' fert sed sub ea non stat
 
-## VIII. Vocabularium formae (omnes tituli licentes)
+## VIII. Vocabularium formae
 
-**Elementa (27):** natura, fontes, fons, genus, definitio, differentia, proprietates, proprietas, optio, partes, pars, machina_statuum, status, transitus, actiones, actio, relationes, relatio, species, individuum, cultivar, valor, relatum, historia, eventum, nota, dubium
-
-**Attributa:** nomen, modulus, versio, lingua, sub, gradus, etiam, genus, ad, a, per, multiplex, ordinarius, necessaria, externum, inversa, gerens, quando, actio, clavis, verificatus, certitudo, fons, valens_a, valens_ad, nota
-
-Vocabularium CLAUSUM est (METAMODULUS regula VIII): titulus novus
-sine emendatione specificationis portam frangit.
+Vocabularium CLAUSUM in natura/natura.canon SOLO vivit (fons
+unicus post migrationem 2026-08-06); natura_examen id per
+lib/canon.c iudicat (VULNUS regula 8). Catalogus legibilis:
+METAMODULUS §3/§4 (e canone generatus).

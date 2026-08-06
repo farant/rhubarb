@@ -24,7 +24,7 @@ declare -a INCLUDE_FLAGS=( "-I$RADIX_DIR/include" )
 
 # clausura oneratoris (bin/aedilis --partes natura.c congruens)
 FONTES=(
-    natura stml chorda chorda_aedificator piscina xar
+    natura canon stml chorda chorda_aedificator piscina xar
     internamentum tabula_dispersa friatio selectio
     filum iter_directoria via
 )

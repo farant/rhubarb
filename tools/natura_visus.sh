@@ -66,7 +66,11 @@ for _f in lib/natura.c include/natura.h tools/natura_examen.c; do
     fi
 done
 
-_fracta=$("$PORTA" -machina 2>/dev/null | awk -F'\t' '$1=="VULNUS" && $2==1')
+# cursus -machina SERVATUR: gradus 0 (regula 1) hic, vulnera
+# formae (regula 8, e canone) infra e eodem cursu colliguntur
+mkdir -p "$TMP"
+"$PORTA" -machina 2>/dev/null > "$TMP/porta.txt"
+_fracta=$(awk -F'\t' '$1=="VULNUS" && $2==1' "$TMP/porta.txt")
 if [ -n "$_fracta" ]; then
     echo "natura_visus: PARSATIO FRACTA - analysis fieri NEQUIT" >&2
     printf '%s\n' "$_fracta" | sed 's/^/  /' >&2
@@ -95,8 +99,14 @@ fi
 # unus (dubium functio_pura) spatio finali caret quod xmllint
 # ferebat. Melius, non peius: spatium finale strepitus erat.
 
-if ! "$PORTA" -tabulae "$TMP" >/dev/null 2>&1; then
-    echo "natura_visus: tabulae scribi nequeunt (porta $PORTA)" >&2
+# exitus I = vulnera in corpore (tabulae nihilominus scriptae);
+# exitus II aut tabula vacua = defectus verus. Porta in solo
+# zephyro pendere non debet - post migrationem regulae VIII
+# corpus vulneratum exitum I DE MORE fert.
+"$PORTA" -tabulae "$TMP" >/dev/null 2>&1
+_st=$?
+if [ "$_st" -eq 2 ] || [ ! -s "$TMP/genera.txt" ]; then
+    echo "natura_visus: tabulae scribi nequeunt (porta $PORTA, exitus $_st)" >&2
     exit 1
 fi
 
@@ -141,56 +151,25 @@ while IFS='|' read -r fm fg rel tm tgt fr; do
     fi
 done < "$ARCUS"
 
-# ---- regula VIII: vocabularium clausum (METAMODULUS §3/§4) ----
-# Spec et corpus se invicem custodiunt: elementum aut attributum
-# novum sine emendatione METAMODULI = vulnus. Ideo documentum
-# rancidum fieri non potest.
-# normalizatio spatiorum OBLIGATORIA: catalogi lineas plures
-# habent, et `case " $x " in *" $e "*` spatia poscit, non lineas
-_elementa="natura fontes fons genus definitio differentia
-proprietates proprietas optio partes pars machina_statuum status
-transitus actiones actio relationes relatio species individuum
-cultivar valor relatum historia eventum nota dubium"
-_attributa="nomen modulus versio lingua sub gradus etiam genus
-ad a per multiplex ordinarius necessaria externum inversa gerens
-quando actio clavis verificatus certitudo fons valens_a valens_ad
-nota version encoding"
-# expansio NON QUOTATA verba findit (lineas quoque) et echo ea
-# spatiis singulis reiungit - aliter linea nova mandatum novum
-# intra $(...) esset
-ELEMENTA_NOTA=" $(echo $_elementa) "
-ATTRIBUTA_NOTA=" $(echo $_attributa) "
-
-# CAVE: vocabularium ex TITULIS solis legendum, non ex textu
-# crudo - prosa (dubium) syntaxin attributi continere potest
-# ('puritas="verum"' ut exemplum disputatum). Grep textum crudum
-# legens parser non est.
-for f in natura/*.genera; do
-    # modulus EX NOMINE PLAGULAE: regula XIV (modulus= stirpi
-    # aequatur) ab oneratore nunc COGITUR, ergo nomen plagulae
-    # fide dignum est et parsatio altera non opus
-    mod=$(basename "$f" .genera)
-    perl -0ne 's/<!--.*?-->//gs;
-               while (/<([a-z_]+)((?:"[^"]*"|[^<>])*)>/g) {
-                 my ($e,$at)=($1,$2); print "E $e\n";
-                 while ($at =~ /([a-z_]+)\s*=\s*"[^"]*"/g) {
-                   print "A $1\n" } }' "$f" | sort -u | \
-    while read -r genusnotae vox; do
-        if [ "$genusnotae" = "E" ]; then
-            case "$ELEMENTA_NOTA" in
-                *" $vox "*) ;;
-                *) echo "$mod --elementum--> <$vox> (extra METAMODULUM §3)" \
-                       >> "$VULNERA" ;;
-            esac
-        else
-            case "$ATTRIBUTA_NOTA" in
-                *" $vox "*) ;;
-                *) echo "$mod --attributum--> $vox= (extra METAMODULUM §4)" \
-                       >> "$VULNERA" ;;
-            esac
-        fi
-    done
+# ---- regula VIII MIGRAVIT (2026-08-06): vocabularium clausum
+# natura/natura.canon solum dicit; natura_examen (porta supra) id
+# per lib/canon.c iudicat et ordines VULNUS regula 8 emittit.
+# Exemplum shell (_elementa/_attributa + perl) hic DELETUM - erat
+# exemplum QUARTUM eiusdem vocabularii, et perl super textum
+# crudum currebat dum C super arborem parsatam. Vulnera formae in
+# ordinibus portae iam vivunt (infra colliguntur).
+grep -E "^VULNUS	8	" "$TMP/porta.txt" 2>/dev/null | \
+while IFS='	' read -r _g _r _mod _ens _nuntius; do
+    echo "$_mod --forma--> $_ens ($_nuntius)" >> "$VULNERA"
 done
+
+# ---- catalogus METAMODULI e canone generatus: rancor = vulnus ----
+# (littera generata committitur, porta rancorem clamat - mos
+# manifestorum silvae)
+if ! ./tools/natura_metamodulus_generare.sh -probare >/dev/null 2>&1; then
+    echo "(spec) --catalogus--> METAMODULUS \$3 rancidus aut porta fracta (regenera: ./tools/natura_metamodulus_generare.sh)" \
+        >> "$VULNERA"
+fi
 
 # ---- regula XV: nomina intra modulum UNICA (METAMODULUS §4b)
 # Allocutio /modulus/nomen ab hac unicitate PENDET - ergo non
@@ -259,7 +238,6 @@ while IFS='|' read -r m nomen va vd; do
 done < "$VALIDITAS"
 nVulnera=$(wc -l < "$VULNERA" | tr -d ' ')
 nValiditas=$(wc -l < "$VALIDITAS" | tr -d ' ')
-nElementa=$(echo $_elementa | wc -w | tr -d " ")
 
 # ---- MONITA: nomina cognata sine cognatione (ADVISORIUM) ----
 # LEX PROPOSITA: stirps communis cognationem SIGNIFICAT. Si 'x_y'
@@ -624,14 +602,12 @@ else
     sed 's/^/- /' "$MONITA"
 fi
 echo
-echo "## VIII. Vocabularium formae (omnes tituli licentes)"
+echo "## VIII. Vocabularium formae"
 echo
-echo "**Elementa (${nElementa}):** $(echo $_elementa | sed 's/ /, /g')"
-echo
-echo "**Attributa:** $(echo $_attributa | sed 's/ version encoding//' | sed 's/ /, /g')"
-echo
-echo "Vocabularium CLAUSUM est (METAMODULUS regula VIII): titulus novus"
-echo "sine emendatione specificationis portam frangit."
+echo "Vocabularium CLAUSUM in natura/natura.canon SOLO vivit (fons"
+echo "unicus post migrationem 2026-08-06); natura_examen id per"
+echo "lib/canon.c iudicat (VULNUS regula 8). Catalogus legibilis:"
+echo "METAMODULUS §3/§4 (e canone generatus)."
 } > natura/INDEX.md
 
 # ---- relatio terminalis ----
