@@ -39,8 +39,12 @@ interior constans character* CANON_HORTUS =
     "    </attributum>\n"
     "    <attributum nomen=\"cultivar\" genus=\"compositum\"/>\n"
     "    <liberum nomen=\"adnotatio\"/>\n"
+    "    <liberum nomen=\"mensura\"/>\n"
     "  </elementum>\n"
     "  <elementum nomen=\"adnotatio\" textus=\"verum\"/>\n"
+    "  <elementum nomen=\"mensura\" textus=\"numerus\"\n"
+    "    nota=\"textus typatus - non vacuus generi congruere\n"
+    "          debet, vacuus praeteritur\"/>\n"
     "  <unicitas nomen=\"plantae\" attributum=\"nomen\"\n"
     "    super=\"planta\"/>\n"
     "</canon>\n";
@@ -53,6 +57,8 @@ interior constans character* HORTUS_SANUS =
     "    sata=\"2020-05-01\" color=\"ruber\"\n"
     "    cultivar=\"alba-plena\">\n"
     "    <adnotatio>pulchra</adnotatio>\n"
+    "    <mensura>-42</mensura>\n"
+    "    <mensura></mensura>\n"
     "  </planta>\n"
     "  <planta nomen=\"lilium\" aetas=\"-1\" viva=\"falsum\"\n"
     "    sata=\"2019\"/>\n"
@@ -355,6 +361,16 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_LIBERI_MULTI), I);
+
+        /* textus TYPATUS malus (vacuus et -42 in fixtura sana
+         * iam probantur) */
+        vitia = iudicare_literis(hortus,
+            "<hortus titulus=\"j\"><planta nomen=\"x\">"
+            "<mensura>tres</mensura></planta></hortus>",
+            piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_TEXTUS_MALUS), I);
 
         /* textus ubi non licet (spatium album semper licet) */
         vitia = iudicare_literis(hortus,

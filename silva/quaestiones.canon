@@ -1,0 +1,69 @@
+<!--
+  silva/quaestiones.canon
+  Canon dialecti QUAESTIONES (bibliotheca selectorum nominatorum) -
+  gradus II
+
+  LECTOR (silva_quaestiones.c) iam validator strictus est: radix,
+  vocabularium clausum, selector/causa singuli non vacui, gradus
+  electio, tituli unici, parametra intra quaestionem unica,
+  invarians sine parametris. Canon legem lectoris ad tempus
+  editionis TRANSCRIBIT - uncus loquitur dum scribis, non suite
+  dum curris. (Plagula praeterea in suite pinnata est:
+  probatio_silva_quaestiones eam ex disco legit.)
+
+  SUPRA CANONEM (lector solus tenet):
+    - 'invarians sine parametris' - co-occurrentia (510)
+    - textus selectoris compilari debet contra tabularium
+      genericum (gradus III/IV - _entrium_validare)
+    - necessitas textus non vacui (selector/causa) - canon vacuum
+      praeterit consulto
+    - parametra INTRA quaestionem unica (472) - unicitas canonis
+      per documentum currit; haec est POSTULATIO SECUNDA pro
+      unicitate adstricta (prima: canon.canon pro elementis
+      intra=; cum tertia veniet, aedificetur). Unicitas globalis
+      super parametrum FALSO flagraret: quaestiones binae
+      parametrum 'functio' legitime ferunt.
+
+  QUID CANON SOLUS DAT: iudicium ante suite (uncus in scriptione),
+  et vocabularium etiam cum suite non currit.
+-->
+<canon dialectus="quaestiones" versio="1">
+
+  <elementum nomen="quaestiones" radix="verum">
+    <liberum nomen="quaestio"
+      nota="vacuum licet - bibliotheca vacua non est vitium"/>
+  </elementum>
+
+  <elementum nomen="quaestio">
+    <attributum nomen="titulus" genus="compositum"
+      necessarium="verum"
+      nota="lector poscit (385) et unicum poscit (593)"/>
+    <attributum nomen="gradus" genus="electio" necessarium="verum"
+      nota="oculi = quaestio; invarians = ZERO congruentias
+            reddere debet (custodia structuralis)">
+      <optio>oculi</optio>
+      <optio>invarians</optio>
+    </attributum>
+    <liberum nomen="selector"   minimum="1" maximum="1"/>
+    <liberum nomen="causa"      minimum="1" maximum="1"/>
+    <liberum nomen="parametrum"/>
+  </elementum>
+
+  <elementum nomen="selector" textus="verum"
+    nota="grammatica selectoris supra canonem (compilatio =
+          gradus III)"/>
+
+  <elementum nomen="causa" textus="verum"
+    nota="prosa: cur selector nomen meruit"/>
+
+  <elementum nomen="parametrum">
+    <attributum nomen="titulus" genus="nomen" necessarium="verum"
+      nota="$titulus in selectore substituitur - nomen, non
+            compositum"/>
+  </elementum>
+
+  <unicitas nomen="quaestionum-tituli" attributum="titulus"
+    super="quaestio"
+    nota="lector eandem legem tenet (593: titulus iteratus)"/>
+
+</canon>

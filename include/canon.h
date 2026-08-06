@@ -88,7 +88,11 @@ nomen enumeratio {
     CANON_LIBERI_MULTI        = VII,
     CANON_TEXTUS_ILLICITUS    = VIII,
     CANON_NOMEN_BIS           = IX,
-    CANON_RADIX_MALA          = X
+    CANON_RADIX_MALA          = X,
+    /* textus TYPATUS (2026-08-06): textus="numerus" etc. - textus
+     * licet ET generi congruere debet. Vacuus praeteritur:
+     * necessitas textus res lectoris est, non canonis. */
+    CANON_TEXTUS_MALUS        = XI
 } CanonVitiumGenus;
 
 nomen structura {

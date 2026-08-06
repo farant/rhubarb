@@ -39,6 +39,10 @@ nomen structura {
     chorda*  intra;
     b32      radix;
     b32      textus_licet;
+    /* TEXTUS ubi licet genus ferre potest (textus="numerus"):
+     * textus non vacuus generi congruere debet. TEXTUS = sine
+     * genere (textus="verum" vetus). */
+    CanonGenusValoris  textus_genus;
     Xar*     attributa;  /* Xar de CanonAttributum */
     Xar*     liberi;     /* Xar de CanonLiberum */
 } CanonElementum;
@@ -454,9 +458,36 @@ canon_ex_nodo(
             attr = stml_attributum_capere(n, "radix");
             e->radix = (b32)(attr &&
                 chorda_aequalis_literis(*attr, "verum"));
+            /* textus=: verum = licet sine genere; genus nominatum
+             * (numerus/dies/...) = licet et congruere debet;
+             * absens aut ignotus = vetitus. 'electio' pro textu
+             * mechanismum optionum non habet - ut verum tractatur
+             * (canon.canon eam ex electione sua excludit). */
+            e->textus_licet = FALSUM;
+            e->textus_genus = CANON_GENUS_TEXTUS;
             attr = stml_attributum_capere(n, "textus");
-            e->textus_licet = (b32)(attr &&
-                chorda_aequalis_literis(*attr, "verum"));
+            si (attr)
+            {
+                si (chorda_aequalis_literis(*attr, "verum"))
+                {
+                    e->textus_licet = VERUM;
+                }
+                alioquin
+                {
+                    CanonGenusValoris g;
+
+                    g = genus_legere(attr);
+                    si (g == CANON_GENUS_ELECTIO)
+                    {
+                        e->textus_licet = VERUM;
+                    }
+                    alioquin si (g != CANON_GENUS_TEXTUS)
+                    {
+                        e->textus_licet = VERUM;
+                        e->textus_genus = g;
+                    }
+                }
+            }
 
             si (e->radix)
             {
@@ -695,6 +726,34 @@ nodum_iudicare(
             vitium_addere(vitia, CANON_ATTRIBUTUM_DEEST, n,
                           e->titulus, def->titulus, ZEPHYRUM,
                           ZEPHYRUM);
+        }
+    }
+
+    /* ---- textus typatus: non vacuus generi congruere debet ---- */
+    si (e->textus_licet && e->textus_genus != CANON_GENUS_TEXTUS)
+    {
+        chorda textus_totus;
+
+        textus_totus = chorda_praecidere(
+            stml_textus_normalizatus(n, piscina));
+        si (textus_totus.mensura > ZEPHYRUM)
+        {
+            CanonAttributum tmp;
+
+            tmp.titulus     = NIHIL;
+            tmp.genus       = e->textus_genus;
+            tmp.necessarium = FALSUM;
+            tmp.optiones    = NIHIL;
+            si (!valor_congruit(&textus_totus, &tmp))
+            {
+                chorda* d;
+
+                d = (chorda*)piscina_allocare(piscina,
+                                              magnitudo(chorda));
+                *d = textus_totus;
+                vitium_addere(vitia, CANON_TEXTUS_MALUS, n,
+                              e->titulus, d, ZEPHYRUM, ZEPHYRUM);
+            }
         }
     }
 
@@ -955,6 +1014,8 @@ canon_nuntius(
             redde "liberi plures quam maximum";
         casus CANON_TEXTUS_ILLICITUS:
             redde "textus ubi non licet";
+        casus CANON_TEXTUS_MALUS:
+            redde "textus generi elementi non congruit";
         casus CANON_NOMEN_BIS:
             redde "nomen bis in spatio unico";
         casus CANON_RADIX_MALA:

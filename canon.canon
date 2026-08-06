@@ -55,7 +55,19 @@
     <attributum nomen="intra"  genus="compositum"
       nota="definitio ad parentem adstricta (mos RELAX NG)"/>
     <attributum nomen="radix"  genus="veritas"/>
-    <attributum nomen="textus" genus="veritas"/>
+    <attributum nomen="textus" genus="electio"
+      nota="verum = textus licet sine genere; genus nominatum =
+            textus non vacuus generi congruere debet (vacuitas
+            praeteritur - necessitas textus lectoris est). electio
+            consulto abest: mechanismus optionum pro textu nondum
+            existit">
+      <optio>verum</optio>
+      <optio>nomen</optio>
+      <optio>numerus</optio>
+      <optio>veritas</optio>
+      <optio>dies</optio>
+      <optio>compositum</optio>
+    </attributum>
     <attributum nomen="nota"   genus="textus"/>
     <liberum nomen="attributum"/>
     <liberum nomen="liberum"/>
