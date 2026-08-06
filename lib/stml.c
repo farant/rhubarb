@@ -1192,6 +1192,9 @@ _parser_creare_nodus(StmlParserContext* ctx, StmlNodusGenus genus)
     nodus->captio_directio = STML_CAPTIO_NIHIL;
     nodus->captio_numerus = ZEPHYRUM;
     nodus->clausura_anonyma = FALSUM;
+    /* nodus nascitur dum token aperiens CURRENS est - linea eius
+     * est linea nodi (tokenizator lineas iam numerat, 1-basatas) */
+    nodus->linea = ctx->current.linea;
 
     redde nodus;
 }
@@ -3149,6 +3152,8 @@ _duplicare_recursivum(
     novum->crudus = nodus->crudus;
     novum->captio_directio = nodus->captio_directio;
     novum->captio_numerus = nodus->captio_numerus;
+    novum->clausura_anonyma = nodus->clausura_anonyma;
+    novum->linea = nodus->linea;
     novum->parens = NIHIL;  /* Novum non habet parentem */
 
     /* Copiare attributa */
@@ -3256,6 +3261,7 @@ stml_elementum_creare(
     nodus->captio_directio = STML_CAPTIO_NIHIL;
     nodus->captio_numerus = ZEPHYRUM;
     nodus->clausura_anonyma = FALSUM;
+    nodus->linea = ZEPHYRUM;   /* non e parsatione */
 
     redde nodus;
 }
@@ -3300,6 +3306,8 @@ stml_textum_creare(
     nodus->crudus = FALSUM;
     nodus->captio_directio = STML_CAPTIO_NIHIL;
     nodus->captio_numerus = ZEPHYRUM;
+    nodus->clausura_anonyma = FALSUM;
+    nodus->linea = ZEPHYRUM;   /* non e parsatione */
 
     redde nodus;
 }
@@ -3327,6 +3335,8 @@ stml_textum_creare_ex_chorda(
     nodus->crudus = FALSUM;
     nodus->captio_directio = STML_CAPTIO_NIHIL;
     nodus->captio_numerus = ZEPHYRUM;
+    nodus->clausura_anonyma = FALSUM;
+    nodus->linea = ZEPHYRUM;   /* non e parsatione */
 
     redde nodus;
 }
@@ -3354,6 +3364,8 @@ stml_commentum_creare(
     nodus->crudus = FALSUM;
     nodus->captio_directio = STML_CAPTIO_NIHIL;
     nodus->captio_numerus = ZEPHYRUM;
+    nodus->clausura_anonyma = FALSUM;
+    nodus->linea = ZEPHYRUM;   /* non e parsatione */
 
     redde nodus;
 }

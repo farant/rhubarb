@@ -1729,6 +1729,8 @@ typedef struct SilvaStmlNodus {
     SilvaXar*               attributa;   /* SilvaStmlAttributum */
     SilvaXar*               liberi;      /* SilvaStmlNodus* */
     struct SilvaStmlNodus*  parens;
+    unsigned int            linea;       /* linea fontis, 1-basata;
+                                          * 0 = non e parsatione */
     int                     crudus;
     SilvaStmlCaptioDirectio captio_directio;
     unsigned int            captio_numerus;
@@ -9459,6 +9461,9 @@ _parser_creare_nodus(StmlParserContext* ctx, SilvaStmlNodusGenus genus)
     nodus->captio_directio = STML_CAPTIO_NIHIL;
     nodus->captio_numerus = ZEPHYRUM;
     nodus->clausura_anonyma = FALSUM;
+    /* nodus nascitur dum token aperiens CURRENS est - linea eius
+     * est linea nodi (tokenizator lineas iam numerat, 1-basatas) */
+    nodus->linea = ctx->current.linea;
 
     redde nodus;
 }

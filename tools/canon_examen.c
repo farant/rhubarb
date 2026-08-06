@@ -11,8 +11,9 @@
  *   2. si canon INFIXUS adest (liberum primum radicis <canon>):
  *      a. infixus IPSE contra canonem canonum   [fons: infixus-ipse]
  *      b. contentum contra infixum              [fons: infixus]
- * Columna ultima (machina) / uncus ultimus (plagula) fontem
- * iudicii nominat.
+ * Machina: via, linea, genus, elementum, campus, nuntius, fons
+ * iudicii. Plagula: 'via:linea:' (forma quam editor aperit);
+ * linea 0 = nodus sine positione (fabricatus, non parsatus).
  *
  * Exitus: 0 = sanum; 1 = VITIA (etiam plagula quae parsari nequit -
  *   inventum est, non absentia); 2 = NIHIL IUDICATUM EST
@@ -126,12 +127,15 @@ vitia_imprimere(
     {
         CanonVitium* v;
         character    buffer[DXII];
+        i32          linea;
 
         v = (CanonVitium*)xar_obtinere(vitia, j);
+        linea = v->nodus ? v->nodus->linea : ZEPHYRUM;
 
         si (machina)
         {
-            imprimere("%s\t%u\t%.*s\t%s\t%s\t%s\n", via,
+            imprimere("%s\t%u\t%u\t%.*s\t%s\t%s\t%s\n", via,
+                linea,
                 (i32)v->genus,
                 v->elementum ? (integer)v->elementum->mensura : 1,
                 v->elementum
@@ -143,7 +147,8 @@ vitia_imprimere(
         }
         alioquin
         {
-            imprimere("%s: <%.*s> %s: %s [%s]\n", via,
+            /* via:linea: - forma universalis quam editor aperit */
+            imprimere("%s:%u: <%.*s> %s: %s [%s]\n", via, linea,
                 v->elementum ? (integer)v->elementum->mensura : 1,
                 v->elementum
                     ? (constans character*)v->elementum->datum

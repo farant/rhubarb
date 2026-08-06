@@ -1716,6 +1716,8 @@ typedef struct SilvaStmlNodus {
     SilvaXar*               attributa;   /* SilvaStmlAttributum */
     SilvaXar*               liberi;      /* SilvaStmlNodus* */
     struct SilvaStmlNodus*  parens;
+    unsigned int            linea;       /* linea fontis, 1-basata;
+                                          * 0 = non e parsatione */
     int                     crudus;
     SilvaStmlCaptioDirectio captio_directio;
     unsigned int            captio_numerus;

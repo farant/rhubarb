@@ -122,6 +122,14 @@ nomen structura StmlNodus {
     Xar*                     liberi;          /* Xar de StmlNodus* */
     structura StmlNodus*     parens;
 
+    /* Linea fontis ubi nodus incipit (1-basata; 0 = non e
+     * parsatione, e.g. stml_elementum_creare). Metadatum
+     * PARSATIONIS SOLUM - emissor eam numquam legit, ergo
+     * fidelitas byte-exacta intacta. Consumptor primus:
+     * diagnostica canonis (vitium sine linea in plagula 49k
+     * linearum venatio est, non diagnosticum). */
+    i32                      linea;
+
     /* STML-specific fields */
     b32                      crudus;          /* Raw content tag (! suffix) */
     StmlCaptioDirectio       captio_directio;

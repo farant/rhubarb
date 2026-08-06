@@ -170,6 +170,61 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare lineas nodorum (metadatum parsationis)
+     * ================================================== */
+
+    imprimere("\n--- Probans lineas nodorum ---\n");
+
+    {
+        StmlResultus res;
+        StmlNodus*   radix_e;
+        StmlNodus*   liberum;
+        i32          i;
+        i32          n;
+
+        res = stml_legere_ex_literis(
+            "<radix>\n"
+            "  <primum/>\n"
+            "  <alterum>\n"
+            "    <intus/>\n"
+            "  </alterum>\n"
+            "</radix>\n", piscina, intern);
+        CREDO_VERUM(res.successus);
+        radix_e = res.elementum_radix;
+        CREDO_AEQUALIS_I32(radix_e->linea, I);
+
+        n = stml_numerus_liberorum(radix_e);
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            liberum = stml_liberum_ad_indicem(radix_e, i);
+            si (!liberum || liberum->genus != STML_NODUS_ELEMENTUM)
+            {
+                perge;
+            }
+            si (_chorda_ptr_eq_literis(liberum->titulus, "primum"))
+            {
+                CREDO_AEQUALIS_I32(liberum->linea, II);
+            }
+            si (_chorda_ptr_eq_literis(liberum->titulus, "alterum"))
+            {
+                StmlNodus* intus;
+
+                CREDO_AEQUALIS_I32(liberum->linea, III);
+                intus = stml_invenire_liberum(liberum, "intus");
+                CREDO_NON_NIHIL(intus);
+                CREDO_AEQUALIS_I32(intus->linea, IV);
+            }
+        }
+
+        /* nodi fabricati (non e parsatione): linea 0 */
+        CREDO_AEQUALIS_I32(
+            stml_elementum_creare(piscina, intern, "fabricatum")
+                ->linea, ZEPHYRUM);
+
+        imprimere("  Lineae nodorum: VERUM\n");
+    }
+
+    /* ==================================================
      * Probare stml_legere cum attributis
      * ================================================== */
 

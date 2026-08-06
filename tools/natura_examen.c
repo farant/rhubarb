@@ -1330,6 +1330,14 @@ principale(
                         sprintf(nuntius, "%s",
                                 canon_nuntius(v->genus));
                     }
+                    /* linea in nuntio, non columna nova: forma
+                     * V-columnaris quam visus et uncus legunt
+                     * stabilis manet */
+                    si (v->nodus && v->nodus->linea > ZEPHYRUM)
+                    {
+                        sprintf(nuntius + strlen(nuntius),
+                                " (linea %u)", v->nodus->linea);
+                    }
 
                     si (machina)
                     {
