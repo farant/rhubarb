@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/acta.stml
-  Exemplar semanticum: ACTA (versio 0, PLASTICUM)
+  Exemplar semanticum: ACTA (versio 1, PLASTICUM)
 
   ABSENTIA STRUCTURALIS, exercitio modellationis inventa (rota
   XLIV): non circulus coverturae qui hiatus quaerit, sed subiectum
@@ -29,7 +29,7 @@
   silicis in TEMPORE non est sed in SERIE ('numquam timestamp',
   lex eius), et /tempus/momentum id ferre non potuit.
 -->
-<natura modulus="acta" versio="0" lingua="latina">
+<natura modulus="acta" versio="1" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -86,6 +86,20 @@
     <proprietas nomen="publica" genus="veritas"
       nota="an quivis legere possit. Acta diurna Romana in foro
             proponebantur; acta senatus non"/>
+    <proprietas nomen="vis" genus="electio"
+      nota="INTERROGATIO QUAM NEMO BASI DATORUM PONIT, cursu
+            octavo (registro civili) postulata: FACIUNTNE ACTA
+            REM, an rem factam RECORDANT? Nativitas declaratoria
+            est - infans natus est sive quis inscribat sive non,
+            et inscriptio falsa esse potest quia veritas alibi
+            iacet. Societas constitutiva: ANTE inscriptionem
+            nihil est de quo erretur. Discrimen practicum
+            immane: acta constitutiva 'ex fonte veritatis
+            synchronizare' velle est veritatem invertere, quia
+            fons ipsa sunt">
+      <optio>declaratoria</optio>
+      <optio>constitutiva</optio>
+    </proprietas>
   </proprietates>
 
   <!-- PARTES: index quo ABSENTIA visibilis fit. Mechanismus a
@@ -345,6 +359,180 @@
     non decisum. Silex ramos nondum habet, ergo casus cogens
     unus tantum est; lex domus DUOS poscit.
   </dubium>
+
+</genus>
+
+
+<!-- ==================================================
+     ATTESTATIO - proiectio DETRACTA
+
+     Cursu octavo inventa (registrum civile), et lex quam fert
+     longe extra registra valet: PROIECTIO QUAM TRADIDISTI
+     PROIECTIO ESSE DESINIT.
+
+     Proiectio (elementa_programmatis) LICENTIAM DELENDI habet -
+     dele et renascitur. Attestatio ea caret non natura sed
+     SITU: in manibus alterius est. Acta mutantur, charta non;
+     et nemo eam revocare potest quia ubi sit ignoratur.
+     Eadem forma: relationes impressae, credentia promptuaria,
+     figurationes distributae, claves API emissae.
+
+     NON EST TITULUS (probatum ante aedificationem): titulus
+     'permanens' definitur, 'non expirat nec revocatur - quod
+     factum est infectum fieri nequit'. Attestatio nativitatis
+     hoc omnino non est: senescit (multae auctoritates eam ultra
+     tres menses natam recusant), superatur, iterum emittitur.
+     Titulus REM attestatam est; attestatio CHARTA.
+     ================================================== -->
+
+<genus nomen="attestatio">
+
+  <definitio>
+    Exemplar authenticum ex actis auctoritativis sumptum, quod
+    quid in actis steterit MOMENTO EMISSIONIS testatur, et
+    traditum ab actis suis SEPARATUR: veritas pergit mutari,
+    charta non.
+  </definitio>
+
+  <differentia>
+    Proiectio quae TRADITA est. Proiectio ordinaria delectionem
+    patitur quia renascitur; haec renasci potest (aliam pete)
+    sed EA QUAM TENES renovari non potest, nec ab emittente
+    attingi. Ideo quaestio propria attestationis non 'estne
+    vera?' sed 'QUANDO vera fuit?' - quam nulla proiectio
+    domestica ponere cogitur.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="emissa" genus="dies"
+      nota="momentum veritatis eius - non accidens sed
+            IDENTITAS: attestatio sine die emissionis nihil
+            asserit, quia quod asserit tempore ligatum est"/>
+    <proprietas nomen="aetas_accepta" genus="quantitas"
+      modulus="mensura"
+      nota="quamdiu accipiens eam recentem habeat (saepe tres
+            menses). PROPRIETAS ACCIPIENTIS, non chartae: eadem
+            attestatio ab uno accepta ab alio recusatur, quod
+            probat senescentiam in usu vivere, non in re"/>
+    <proprietas nomen="signum_authenticitatis" genus="electio">
+      <optio>sigillum</optio>
+      <optio>subscriptio</optio>
+      <optio>charta_secura</optio>
+      <optio>subscriptio_digitalis</optio>
+    </proprietas>
+    <proprietas nomen="integra" genus="veritas"
+      ordinarius="verum"
+      nota="an totum introitum ferat an partem (extractus
+            brevis qui filiationem celat) - attestatio PARTIALIS
+            legitima est et saepe iure postulata"/>
+  </proprietates>
+
+  <machina_statuum nomen="vigor" gerens="individuum">
+    <status nomen="emissa"/>
+    <status nomen="superata"
+      nota="acta post emissionem mutata sunt. CHARTA INTACTA
+            MANET - status hic de RELATIONE ad acta dicitur, non
+            de re ipsa: nihil ei accidit, et tamen falsa facta
+            est. Status quem nulla res corporea habere potest
+            nisi ab alio pendeat"/>
+    <status nomen="revocata"
+      nota="ab emittente irrita declarata - sed charta adhuc in
+            manibus est, unde revocatio NUNTIANDA est ne
+            frustra sit"/>
+    <status nomen="expirata" nota="aetate acceptationis elapsa"/>
+    <transitus a="emissa" ad="superata" per="mutatio_actorum"/>
+    <transitus a="emissa" ad="revocata" per="revocatio"/>
+    <transitus a="emissa" ad="expirata" per="lapsus_temporis"/>
+  </machina_statuum>
+
+  <actiones>
+    <actio nomen="emitti"/>
+    <actio nomen="exhiberi" nota="apud eum qui eam poscit"/>
+    <actio nomen="legalizari" nota="ut extra fines valeat"/>
+  </actiones>
+
+  <relationes>
+    <relatio nomen="ex_actis" ad="acta"
+      nota="fons veritatis. Attestatio sine actis nominatis
+            adseveratio est, non attestatio"/>
+    <relatio nomen="ad_punctum" ad="punctum_actorum"
+      nota="qualis status actorum testetur - plerumque tacitum
+            ('ut nunc stat'), sed explicitum fieri potest, et
+            tunc attestatio superari NON potest quia punctum
+            immotum est. Solutio quam pauci adhibent"/>
+    <relatio nomen="emissa_a" ad="organizatio" modulus="organizatio"/>
+    <relatio nomen="de" ad="*"
+      nota="cuius rei - persona, res, societas, eventus"/>
+    <relatio nomen="testatur" ad="attestatio"
+      nota="attestatio DE ATTESTATIONE (apostilla): recursio
+            quae ex definitione sponte sequitur, nullo
+            mechanismo addito - signum quod genus recte
+            sectum est"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="attestatio_civilis">
+    <definitio>
+      Ex actis status civilis sumpta: nativitatis, matrimonii,
+      mortis. Species usitatissima et exemplar ceterarum.
+    </definitio>
+    <nota>
+      Confusio vulgatissima quam genus tollit: "charta
+      nativitatis mea" identitatem meam NON constituit -
+      introitus in actis eam fert, charta eum refert. Qui
+      chartam perdit nihil perdit nisi chartam; qui acta perdit
+      civem perdit. Registra quae hoc confundunt homines
+      apatridas faciunt cum archivum ardet.
+    </nota>
+  </species>
+
+  <species nomen="instrumentum_publicum">
+    <definitio>
+      A notario (aut persona publica) confectum, cui fides
+      publica inest: quod in eo scriptum est verum praesumitur
+      donec falsitas probetur.
+    </definitio>
+    <differentia>
+      Attestatio cuius acta NOTARII ipsius sunt (protocollum),
+      non magistratus: notarius originale servat et exemplaria
+      authentica partibus emittit - eadem structura prorsus,
+      auctoritate privata gesta.
+    </differentia>
+    <nota>
+      TRANSLATUM ex actus.actus_iuridicus (rota XLIX). Ibi
+      SPECIES ACTUS erat, et definitio ipsa se prodebat: "quod
+      IN EO SCRIPTUM est verum praesumitur" - de charta
+      loquitur, non de actu. Idem discrimen quod iussum solvit
+      (actus momentaneus contra rem perdurantem), hic in
+      altera parte inventum: ibi actus in rem versus, hic res
+      inter actus posita. Actus confectionis manet actus;
+      quod tenes attestatio est.
+      Specimen quod CAPACITATEM purissime ostendit: eadem verba
+      a privato scripta nihil praesumunt. Officium hominem
+      distinguit, non peritia.
+    </nota>
+  </species>
+
+  <species nomen="apostilla">
+    <definitio>
+      Attestatio quae subscriptionem aut sigillum attestationis
+      ALTERIUS authenticam esse testatur, ut extra fines valeat
+      (conventio Hagana 1961).
+    </definitio>
+    <differentia>
+      Cuius subiectum ipsa attestatio est, non res. Nihil de re
+      dicit - de CHARTA sola loquitur, et ideo falsam
+      attestationem authenticam declarare potest sine mendacio:
+      quod testatur signum est, non contentum.
+    </differentia>
+    <nota>
+      Quod ante conventionem catena legalizationum erat
+      (minister, legatio, ministerium alterius) apostilla ad
+      gradum UNUM redegit - recursio abbreviata per pactum, non
+      per naturam.
+    </nota>
+  </species>
 
 </genus>
 

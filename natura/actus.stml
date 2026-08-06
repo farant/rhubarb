@@ -365,13 +365,24 @@
     </nota>
   </species>
 
-  <species nomen="instrumentum_publicum">
+  <species nomen="confectio_instrumenti">
     <definitio>
-      Actus a notario (aut persona publica) confectus, cui
-      fides publica inest: quod in eo scriptum est verum
-      praesumitur donec falsitas probetur.
+      Actus quo notarius (aut persona publica) instrumentum
+      conficit: verba partium in formam publicam redigit,
+      identitates probat, subscriptiones excipit.
     </definitio>
     <nota>
+      TRANSLATIO ROTAE XLIX, et divisio quam translatio
+      docuit. Species haec olim 'instrumentum_publicum'
+      vocabatur et definitione se prodebat: "quod IN EO
+      scriptum est verum praesumitur" - de CHARTA loquens dum
+      inter ACTUS sedet. Duae res erant nomine uno: actus
+      conficiendi (hic manet - momentaneus, capacitate
+      pendens) et charta confecta (nunc acta.attestatio -
+      perdurans, in manibus, senescens).
+      Idem discrimen quod iussum solvit, in altera parte
+      inventum: ibi actus rem perdurantem celabat, hic res
+      inter actus sedebat.
       Specimen quod CAPACITATEM ostendit purissime: eadem verba
       a privato scripta nihil praesumunt, a notario scripta
       fidem publicam ferunt. Officium hominem non peritia

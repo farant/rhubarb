@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **32** · genera **155** · res dictionarii **338** · arcus **455**
+Exemplaria **32** · genera **157** · res dictionarii **344** · arcus **464**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -24,10 +24,11 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 `⚙` machinam statuum fert · `▣N` partes N declaratas fert
 (partes = index quo ABSENTIA visibilis fit).
 
-### acta (v0, genera 2)
+### acta (v1, genera 3)
 
 - **acta** ⚙ ▣5 — Series eventuum ordinata cui SOLUM APPENDITUR, et quae rerum descriptarum VERITAS est: status quilibet (summa, manifes
 - **punctum_actorum** — Locus in actis nominatus et allocutione dignus, ita ut interrogatio "qualia erant HIC?" responsum habeat quod homo pet
+- **attestatio** ⚙ — Exemplar authenticum ex actis auctoritativis sumptum, quod quid in actis steterit MOMENTO EMISSIONIS testatur, et trad
 
 ### actus (v0, genera 5)
 
@@ -165,11 +166,12 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **morbus** ⚙ — Dispositio viventis praeter naturam, qua operatio debita impeditur: defectus ab eo quod naturae rei debetur
 
-### norma (v3, genera 3)
+### norma (v4, genera 4)
 
 - **norma** ⚙ — Documentum publicum quod formam praescribit: quid conformitas significet definit
 - **lex** ⚙ — Ordinatio rationis ad bonum commune, ab eo qui curam communitatis habet promulgata (Thomas, ST I-II q
 - **classis_normativa** ⚙ — Categoria a norma constituta in quam res assignantur, cui consequentiae (obligationes, prohibitiones, procedurae) ADHA
+- **fictio_iuris** — Praeceptum quo lex rem aliter se habentem TAMQUAM ALITER tractari iubet, sciens ita non esse, propter bonum quod alite
 
 ### obligatio (v4, genera 6)
 
@@ -205,9 +207,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **societas** ⊂ organizatio — Finis proprius: quaestus per opera vendita; possessores habet quibus respondet
 - **magistratus** ⊂ organizatio — Auctoritas ex IMPERIO super loco, non ex consensu (ut corpus normans) nec ex quaestu (ut societas): leges fert quibus 
 
-### persona (v5, genera 1)
+### persona (v6, genera 1)
 
-- **persona** — Naturae rationabilis individua substantia (Boethius)
+- **persona** ⚙ — Naturae rationabilis individua substantia (Boethius)
 
 ### pharmacon (v0, genera 4)
 
@@ -290,6 +292,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | artefactum | corporalia |
 | artefactum_aedificationis | elementa_programmatis |
 | assertio | elementa_programmatis |
+| attestatio | acta |
 | bibliotheca | elementa_programmatis |
 | calendarium | tempus |
 | campus | schema |
@@ -322,6 +325,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | expressio | opus_scriptum |
 | facultas | fabricatio |
 | fasciculus | opus_scriptum |
+| fictio_iuris | norma |
 | fons | iudicium |
 | forma_datorum | formae_datorum |
 | functio | elementa_programmatis |
@@ -438,8 +442,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 ## IV. Dictionarium (species et individua descripta)
 
 - `acta.acta` — acta_auditus, acta_publica, acta_transactionum, acta_versionum, regesta
+- `acta.attestatio` — apostilla, attestatio_civilis, instrumentum_publicum
 - `acta.punctum_actorum` — clausura_rationis, conditio, statio
-- `actus.actus_iuridicus` — collatio_tituli, inauguratio, instrumentum_publicum, mancipatio, manumissio, promulgatio, sententia_lata, stipulatio, testamentum
+- `actus.actus_iuridicus` — collatio_tituli, confectio_instrumenti, inauguratio, mancipatio, manumissio, promulgatio, sententia_lata, stipulatio, testamentum
 - `actus.sacramentale` — benedictio, consecratio_loci, exorcismus
 - `actus.sacramentum` — baptismus, confirmatio, eucharistia, matrimonium, ordo, paenitentia, unctio_infirmorum
 - `animal.animal` — apis, canis, homo
@@ -491,6 +496,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `mensura.unitas_mensurae` — :gradus_celsius, :gramma, :kilogramma, :metrum, :minutum, :secundum
 - `morbus.morbus` — morbus_degenerativus, morbus_geneticus, morbus_infectiosus, vulnus
 - `norma.classis_normativa` — classis_periculi_mercium, gradus_eventus_aviatorii, schedula_substantiarum
+- `norma.fictio_iuris` — adoptio, mors_praesumpta, personalitas_iuridica
 - `norma.lex` — consuetudo, lex_aeterna, lex_divina_positiva, lex_humana, lex_naturalis
 - `norma.norma` — :iso_9899_1990, :iso_9899_1999, :posix_1
 - `obligatio.contractus` — emptio_venditio, locatio_conductio, mandatum, societas_contractus

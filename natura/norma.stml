@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/norma.stml
-  Exemplar semanticum: NORMA (versio 3, PLASTICUM)
+  Exemplar semanticum: NORMA (versio 4, PLASTICUM)
 
   Genus a Frane petitum: norma res est, non chorda - editorem,
   diem, statum, successionem habet. Normae se invicem SUBSTITUUNT:
   catena temporalis (stratum historicum in relationibus ipsis).
 -->
-<natura modulus="norma" versio="3" lingua="latina">
+<natura modulus="norma" versio="4" lingua="latina">
 
 <genus nomen="norma">
 
@@ -373,6 +373,135 @@
       proprietatem esse, non essentiam. Tabulae segregationis
       huius classis interactiones ponunt (vide pharmacon.interactio):
       duo genera hic conveniunt.
+    </nota>
+  </species>
+
+</genus>
+
+
+<!-- ==================================================
+     FICTIO IURIS - quod lex TRACTARI IUBET tamquam esset
+
+     Cursu octavo bis eodem die postulata (adoptio; mortis
+     praesumptio), et retro tertium specimen invenit quod
+     bibliotheca IAM habebat sine nomine: persona_iuridica.
+     Universitas personarum "possidet, contrahit, agit et
+     convenitur SUO nomine" - quod nemo umquam vidit facere.
+     Fictionem ut sub-genus tractabamus.
+
+     NON MENDACIUM: mendacium celat, fictio PROFITETUR. Lex
+     scit patrem adoptivum non genuisse et tamen ita tractari
+     iubet, causa dicta. Ideo fictio semper RATIONEM secum
+     fert - qua remota, error simplex manet.
+     ================================================== -->
+
+<genus nomen="fictio_iuris">
+
+  <definitio>
+    Praeceptum quo lex rem aliter se habentem TAMQUAM ALITER
+    tractari iubet, sciens ita non esse, propter bonum quod
+    aliter attingi non potest: non error nec simulatio sed
+    "ac si" consulto susceptum.
+  </definitio>
+
+  <differentia>
+    A praesumptione differt PROBATIONE: praesumptio verum
+    coniectat et contrario probato cedit ("innocens
+    praesumitur"); fictio contrarium IAM SCIT et non cedit -
+    probare patrem adoptivum non genuisse nihil mutat, quia
+    id numquam asserebatur. A mendacio differt PUBLICITATE:
+    utrumque contra rem, sed fictio se profitetur et rationem
+    dicit.
+  </differentia>
+
+  <proprietates>
+    <proprietas nomen="ratio" genus="textus"
+      nota="BONUM propter quod suscipitur - pars fictionis, non
+            commentarius: fictio sine ratione dicta mendacium
+            institutum est. Ideo campus hic praecipuus"/>
+    <proprietas nomen="refragabilis" genus="veritas"
+      ordinarius="falsum"
+      nota="an re contraria probata cadat. Fere semper FALSUM -
+            quod fictionem a praesumptione dividit"/>
+    <proprietas nomen="ambitus" genus="electio"
+      nota="quousque 'ac si' porrigatur. RARO UNIVERSALIS, et
+            hic errores oriuntur: adoptio filiationem in iure
+            hereditario et alimentario facit, impedimenta autem
+            matrimonii SANGUINIS manent - fictio ad finem suum
+            porrigitur, non ultra">
+      <optio>universalis</optio>
+      <optio>ad_certos_effectus</optio>
+    </proprietas>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="instituta_per" ad="norma"
+      nota="fictio a lege sola institui potest - nemo privatus
+            fingit"/>
+    <relatio nomen="applicatur_per" ad="actus_iuridicus"
+      modulus="actus"
+      nota="actus quo fictio huic casui adhibetur (decretum
+            adoptionis, sententia mortis praesumptae) - fictio
+            generalis, applicatio singularis et NUMERATA"/>
+    <relatio nomen="fingit" ad="*"
+      nota="quid tractandum tamquam quid - apertum, quia
+            fictiones res cuiusvis generis fingunt"/>
+  </relationes>
+
+  <!-- ================= DICTIONARIUM ================= -->
+
+  <species nomen="adoptio">
+    <definitio>
+      Fictio qua adoptans parens fit ad omnes fere effectus,
+      sciente lege eum non genuisse.
+    </definitio>
+    <valor nomen="ambitus">ad_certos_effectus</valor>
+    <valor nomen="ratio">bonum pueri, cui parentes debentur
+      quos natura non dedit</valor>
+    <nota>
+      Registrum civile fictionem VISIBILEM facit: introitus
+      prior obsignatur, novus conditur, et adoptantes ut
+      parentes simpliciter inscribuntur - acta ipsa fictionem
+      induunt. Locus rarus ubi acta consulto rem non ut est
+      referunt, et ideo probatio quod 'declaratoria' non semper
+      significat 'speculum naturae'.
+    </nota>
+  </species>
+
+  <species nomen="mors_praesumpta">
+    <definitio>
+      Fictio qua absens per tempus statutum mortuus habetur, ut
+      hereditas, matrimonium, tutela solvi possint.
+    </definitio>
+    <valor nomen="ratio">ne viventium negotia in aeternum
+      pendeant propter absentiam quae probari non potest</valor>
+    <nota>
+      SPECIMEN QUOD PROPRIETATEM POSTULAVIT quam nulla alia
+      res habet: fictio REVERSO ABSENTE partim SUPERSTES est.
+      Bona heredibus tradita plerumque non repetuntur;
+      matrimonium pro iurisdictione redit aut non. Effectus
+      fictionis fictionem ipsam superstant - quod est cur
+      'refragabilis' verum reddere non sufficit: cadit fictio,
+      manent quae sub ea facta sunt. Nexus cum
+      iudicium.ignotum.amissum: ignotum absentiam AGNOSCIT,
+      fictio eam TRACTABILEM facit.
+    </nota>
+  </species>
+
+  <species nomen="personalitas_iuridica">
+    <definitio>
+      Fictio qua coetus (aut massa bonorum) persona habetur:
+      possidet, contrahit, agit, convenitur suo nomine.
+    </definitio>
+    <valor nomen="ratio">ne perpetuitas coetus a mortalitate
+      membrorum pendeat</valor>
+    <nota>
+      SPECIMEN RETRO INVENTUM: bibliotheca genus
+      organizatio.persona_iuridica ab initio habebat et
+      fictionem non nominabat. Nunc nominatur - genus manet
+      ubi est (res vera in iure est), sed QUOMODO vera sit hic
+      dicitur. Casus purus doctrinae domus: fictio ipsa res
+      est, effectus eius aeque reales.
     </nota>
   </species>
 

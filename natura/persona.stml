@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/persona.stml
-  Exemplar semanticum: PERSONA (versio 5, PLASTICUM)
+  Exemplar semanticum: PERSONA (versio 6, PLASTICUM)
   v3->v4: Meyer (bis postulatus: CQS et pactum), Dijkstra
   (superfectus a verbo goto), Scotus (haecceitas ad
   identificatorem) - dictionarium a stratis elementorum et
@@ -24,7 +24,7 @@
   more dictionarii biographici); personae TUAE (contactus, socii)
   in voluminibus applicationum, genus hoc citantes.
 -->
-<natura modulus="persona" versio="5" lingua="latina">
+<natura modulus="persona" versio="6" lingua="latina">
 
 <!-- FONTES: claves quas valores per fons= citant.
      Mechanismus rotae XVI - dubium <fons> (rota VII) solutum
@@ -70,6 +70,39 @@
             capit"/>
   </proprietates>
 
+  <!-- MACHINA STATUS CIVILIS (rota XLIX, registro civili
+       postulata): exemplar hoc quinquies emendatum machinam
+       nullam habebat, dum dominium quod personas PROFESSIONE
+       tractat statum civilem prae omnibus elaborat. Non genus
+       novum - proprie machina, quia status hi personae ipsi
+       insunt et per ACTUS mutantur quos iam habemus. Exemplum
+       eius quod bibliotheca 'tenue ubi dominium densum est'
+       vocare potest: hiatus non in generibus sed in
+       apparatu generis exsistentis -->
+  <machina_statuum nomen="status_civilis" gerens="individuum">
+    <status nomen="caelebs" nota="numquam nuptus"/>
+    <status nomen="coniugatus"/>
+    <status nomen="viduus"
+      nota="STATUS PROPRIUS, non 'caelebs iterum': iura
+            hereditatis, pensionis, nominis ex eo fluunt quae
+            caelibi non competunt. Qui hunc statum ad
+            'caelebs' reducit vidua exheredat"/>
+    <status nomen="divortiatus"
+      nota="item proprius - vinculum solutum, sed effectus
+            (alimenta, nomen, impedimenta affinitatis) manent"/>
+    <transitus a="caelebs" ad="coniugatus" per="matrimonium"
+      nota="actus sollemnis ET iuridicus simul - vide
+            actus.matrimonium et actus.actus_iuridicus:
+            eventus unus, duo genera eum legentia"/>
+    <transitus a="coniugatus" ad="viduus" per="mors_coniugis"
+      nota="TRANSITUS QUEM SUBIECTUM NON AGIT: solus in machina
+            hac ab eventu alieno movetur - status meus mutatur
+            actu quem alius patitur"/>
+    <transitus a="coniugatus" ad="divortiatus" per="divortium"/>
+    <transitus a="viduus" ad="coniugatus" per="matrimonium"/>
+    <transitus a="divortiatus" ad="coniugatus" per="matrimonium"/>
+  </machina_statuum>
+
   <actiones>
     <actio nomen="creare" nota="opus novum gignere - fons
       relationum auctoris trans exemplaria"/>
@@ -81,6 +114,20 @@
             opera personarum genera omnia transeunt"/>
     <relatio nomen="membrum_de" ad="organizatio"
       modulus="organizatio" multiplex="verum"/>
+    <relatio nomen="domicilium" ad="locus" modulus="locus"
+      nota="DOMICILIUM NON EST UBI ES: sedes quam animo
+            manendi habes. Discrimen practicum quod peregrinus
+            statim invenit - iurisdictio in personam
+            plerumque domicilium sequitur, non praesentiam,
+            unde quaestiones tributi, hereditatis, status
+            civilis omnes hinc pendent. Locus mutatur cotidie,
+            domicilium actu et animo"/>
+    <relatio nomen="inscriptus_in" ad="acta" modulus="acta"
+      multiplex="verum"
+      nota="registra in quibus persona introitum habet.
+            IMPLICATIO GRAVIS: qui in nullis inscriptus est
+            iura probare non potest, unde apatridia non
+            defectus personae est sed ACTORUM"/>
   </relationes>
   <!-- dubium organizationis SOLUTUM (v0->v1): exemplar
        organizatio natum - universitas personarum, non persona -->

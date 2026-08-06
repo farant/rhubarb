@@ -3463,3 +3463,141 @@ corpus; the door is unlocked, shut, and watched.
 
 MEASURED: 32 exemplaria / 155 genera / 338 res / 455 arcus /
 0 vulnera / 24 monita / homonyma 0.
+
+## 2026-08-05 — round forty-nine: the civil registry (coverage loop, run 8)
+
+Second run chosen by the punishment heuristic — an institution
+punished for getting identity itself wrong. Collision check run
+BEFORE the walk (the run-7 discipline), and it decided two
+stations before they were walked.
+
+237. THE CHECK PAID IMMEDIATELY, twice, and both hits were
+     semantic rather than nominal:
+     (a) `titulus` is DEFINED as "attestatio publica et
+     permanens ... non expirat nec revocatur - quod factum est
+     infectum fieri nequit". So the certificate candidate could
+     NOT be a titulus: a birth certificate ages (many authorities
+     refuse one over three months old), is superseded, is
+     reissued. Titulus is the thing attested; the certificate is
+     the paper.
+     (b) `instrumentum_publicum` already existed — as a SPECIES
+     OF ACTUS_IURIDICUS — and its own definitio gave it away:
+     "quod IN EO SCRIPTUM est verum praesumitur." That sentence
+     is about a document, sitting inside a genus of acts.
+
+238. ATTESTATIO built (→ acta, since its differentia depends on
+     being an extract FROM a record). The general law it carries
+     is far larger than vital records: A PROJECTION YOU HAND OUT
+     STOPS BEING A PROJECTION.
+     `proiectio` has licentia delendi — delete it, it is reborn.
+     An issued certificate lacks that not by nature but by
+     SITUATION: it is in someone else's hands. The register
+     changes, the paper does not, and nobody can recall it
+     because nobody knows where it is. Same shape as printed
+     reports, cached credentials, distributed configuration,
+     issued API keys.
+     Hence the proper question about an attestatio is never "is
+     it true?" but "WHEN was it true?" — which no in-house
+     projection is ever forced to ask.
+     Status `superata` is the one worth keeping: the acta moved
+     after issue, NOTHING HAPPENED TO THE DOCUMENT, and it became
+     false anyway. A state no corporeal thing can have except by
+     depending on another.
+     And `ad_punctum` records the fix almost nobody uses: an
+     attestatio naming a PUNCTUM_ACTORUM cannot be superseded,
+     because the point does not move.
+
+239. THE MOVE, and what it taught. `instrumentum_publicum` →
+     `acta.attestatio`; what stays in `actus` is renamed
+     `confectio_instrumenti` (the notary's ACT of drawing it up).
+     Two things had shared one name: the act (momentary, capacity-
+     dependent) and the paper (persisting, in hand, ageing).
+     THE SAME SPLIT `iussum` MADE, FOUND FROM THE OTHER SIDE:
+     there an act concealed a persisting thing; here a thing sat
+     among acts. Worth naming as a recurring shape — when a genus
+     of acts contains a member whose definitio describes an
+     object, the object wants out.
+     Notarial structure vindicates the placement exactly:
+     the notary keeps the original in his protocol and issues
+     authenticated copies — a register with extracts, run on
+     private authority.
+
+240. FICTIO_IURIS built (→ norma). Demanded TWICE IN ONE DAY
+     (adoption at station 4, presumed death at station 5), then
+     found a THIRD specimen retroactively that the library had
+     been holding unnamed: `persona_iuridica`. A universitas
+     "possesses, contracts, sues and is sued in its own name" —
+     which nobody has ever watched one do. We had been treating
+     a fiction as a plain sub-genus.
+     NOT A LIE: a lie conceals, a fiction DECLARES. The law knows
+     the adoptive father did not beget the child and directs that
+     he be treated as if he had, stating the reason. Hence
+     `ratio` is a property of the fiction, not commentary — a
+     fiction with its reason stripped is an instituted lie.
+     Distinguished from presumption by PROOF: a presumption
+     yields to contrary evidence; a fiction never does, because
+     it never asserted the thing.
+     `ambitus` came from adoption: the fiction reaches its
+     purpose and no further — parentage for inheritance and
+     support, while consanguinity impediments to marriage remain
+     blood-based. Fictions are almost never universal, and that
+     is where implementations get them wrong.
+     Presumed death forced the honest nota: WHEN THE MISSING MAN
+     RETURNS, the fiction falls but its effects largely stand —
+     property distributed is generally not clawed back. Effects
+     outlive the fiction, which is why `refragabilis=verum`
+     would not have captured it.
+
+241. PERSONA v6 — five revisions and it had NO machina, while the
+     domain that handles persons professionally elaborates civil
+     status above all else. Not a genus: a machine, since the
+     states inhere in the person and are changed by acts already
+     modelled. `viduus` and `divortiatus` recorded as PROPER
+     states rather than "single again" — the rights that flow
+     from them differ, and collapsing widowhood into celibacy
+     disinherits the widow. And one transition is unlike any
+     other in the library: `coniugatus → viduus per mors_coniugis`
+     is MOVED BY AN EVENT THE SUBJECT DOES NOT ACT — my status
+     changes by something another undergoes.
+     Plus `domicilium` (jurisdiction over a person follows
+     domicile, not presence — the distinction every expatriate
+     discovers) and `inscriptus_in → acta`, whose nota records
+     the implication: statelessness is a defect of the REGISTERS,
+     not of the person.
+     PATTERN WORTH A NAME: "thin where the domain is thick." The
+     gap was not a missing genus but a missing APPARATUS on a
+     genus we had had since round one.
+
+242. `vis` ON ACTA (declaratoria / constitutiva) — the question
+     nobody asks of a database: does the record MAKE the fact or
+     RECORD it? Birth is declaratory (the child was born whether
+     or not anyone registers; the entry can be wrong because
+     truth lies elsewhere). A company is constitutive — before
+     registration there is nothing to be wrong about. Building a
+     constitutive register with a "sync from source of truth" job
+     inverts reality, because it IS the source.
+
+243. A PARKED CANDIDATE DISSOLVED ON CONTACT. "Scheme
+     administrator" was parked with four specimens; walking
+     station 6 killed it. `organizatio.administrat →
+     schema_identificandi` already exists, and everything the
+     genus was to hold — assignment policy, delegation to
+     national agencies, fees, disputes — are properties of the
+     SCHEME'S GOVERNANCE, belonging on schema_identificandi.
+     There is a relation and some ungathered properties, and no
+     thing. Second time (after `actio`) a candidate has died on a
+     real walk rather than in reflection — reflection kept both
+     alive, walking killed both.
+
+244. COMPOSITION WIN, unsurfaced by design: correction by
+     MARGINAL ANNOTATION — never erasure, the original left
+     legible. That is `stornatio`, and the civil registry has
+     practised it since centuries before Pacioli. `acta`, built
+     round 44 for event logs, predicted the working practice of
+     the oldest record-keeping institution walked so far.
+     Apostille likewise: an attestatio whose subject is another
+     attestatio, recursion falling out of the definition with no
+     added machinery — a sign the genus was cut at the joint.
+
+MEASURED after: 32 exemplaria / 157 genera / 344 res / 464 arcus
+/ 0 vulnera / 24 monita / umbrae 2.
