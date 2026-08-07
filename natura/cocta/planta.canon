@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e planta - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="planta" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="planta"/>
+    <liberum nomen="rosaceae"/>
+    <liberum nomen="rosa"/>
+    <liberum nomen="malus"/>
+    <liberum nomen="rosa-canina"/>
+    <liberum nomen="malus-domestica"/>
+    <liberum nomen="granny-smith"/>
+  </elementum>
+
+  <elementum nomen="planta">
+    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="habitus" genus="electio">
+      <optio>herba</optio>
+      <optio>frutex</optio>
+      <optio>arbor</optio>
+      <optio>scandens</optio>
+    </attributum>
+    <attributum nomen="durata" genus="electio">
+      <optio>annua</optio>
+      <optio>biennis</optio>
+      <optio>perennis</optio>
+    </attributum>
+    <attributum nomen="folia-permanentia" genus="electio">
+      <optio>decidua</optio>
+      <optio>sempervirens</optio>
+    </attributum>
+    <attributum nomen="altitudo-matura" genus="numerus"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>semen</optio>
+      <optio>germinans</optio>
+      <optio>iuvenis</optio>
+      <optio>florens</optio>
+      <optio>fructifera</optio>
+      <optio>quiescens</optio>
+      <optio>mortua</optio>
+    </attributum>
+    <attributum nomen="auctor-nominis" genus="nomen"/>
+    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
+    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="anima" genus="electio">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="radix" maximum="1"/>
+    <liberum nomen="caulis" maximum="1"/>
+    <liberum nomen="folium" maximum="1"/>
+    <liberum nomen="flos" maximum="1"/>
+    <liberum nomen="fructus" maximum="1"/>
+    <liberum nomen="semen" maximum="1"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="radix" intra="planta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="caulis" intra="planta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="folium" intra="planta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="flos" intra="planta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="fructus" intra="planta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="semen" intra="planta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="generat" intra="planta">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="planta">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="planta">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="rosaceae">
+    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="habitus" genus="electio">
+      <optio>herba</optio>
+      <optio>frutex</optio>
+      <optio>arbor</optio>
+      <optio>scandens</optio>
+    </attributum>
+    <attributum nomen="durata" genus="electio">
+      <optio>annua</optio>
+      <optio>biennis</optio>
+      <optio>perennis</optio>
+    </attributum>
+    <attributum nomen="folia-permanentia" genus="electio">
+      <optio>decidua</optio>
+      <optio>sempervirens</optio>
+    </attributum>
+    <attributum nomen="altitudo-matura" genus="numerus"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>semen</optio>
+      <optio>germinans</optio>
+      <optio>iuvenis</optio>
+      <optio>florens</optio>
+      <optio>fructifera</optio>
+      <optio>quiescens</optio>
+      <optio>mortua</optio>
+    </attributum>
+    <attributum nomen="auctor-nominis" genus="nomen"/>
+    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
+    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="anima" genus="electio">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="radix" maximum="1"/>
+    <liberum nomen="caulis" maximum="1"/>
+    <liberum nomen="folium" maximum="1"/>
+    <liberum nomen="flos" maximum="1"/>
+    <liberum nomen="fructus" maximum="1"/>
+    <liberum nomen="semen" maximum="1"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="radix" intra="rosaceae">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="caulis" intra="rosaceae">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="folium" intra="rosaceae">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="flos" intra="rosaceae">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="fructus" intra="rosaceae">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="semen" intra="rosaceae">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="generat" intra="rosaceae">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="rosaceae">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="rosaceae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="rosa">
+    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="habitus" genus="electio" ordinarius="frutex">
+      <optio>herba</optio>
+      <optio>frutex</optio>
+      <optio>arbor</optio>
+      <optio>scandens</optio>
+    </attributum>
+    <attributum nomen="durata" genus="electio" ordinarius="perennis">
+      <optio>annua</optio>
+      <optio>biennis</optio>
+      <optio>perennis</optio>
+    </attributum>
+    <attributum nomen="folia-permanentia" genus="electio">
+      <optio>decidua</optio>
+      <optio>sempervirens</optio>
+    </attributum>
+    <attributum nomen="altitudo-matura" genus="numerus"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>semen</optio>
+      <optio>germinans</optio>
+      <optio>iuvenis</optio>
+      <optio>florens</optio>
+      <optio>fructifera</optio>
+      <optio>quiescens</optio>
+      <optio>mortua</optio>
+    </attributum>
+    <attributum nomen="auctor-nominis" genus="nomen"/>
+    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
+    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="anima" genus="electio">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="radix" maximum="1"/>
+    <liberum nomen="caulis" maximum="1"/>
+    <liberum nomen="folium" maximum="1"/>
+    <liberum nomen="flos" maximum="1"/>
+    <liberum nomen="fructus" maximum="1"/>
+    <liberum nomen="semen" maximum="1"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="radix" intra="rosa">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="caulis" intra="rosa">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="folium" intra="rosa">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="flos" intra="rosa">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="fructus" intra="rosa">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="semen" intra="rosa">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="generat" intra="rosa">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="rosa">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="rosa">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="malus">
+    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="habitus" genus="electio" ordinarius="arbor">
+      <optio>herba</optio>
+      <optio>frutex</optio>
+      <optio>arbor</optio>
+      <optio>scandens</optio>
+    </attributum>
+    <attributum nomen="durata" genus="electio" ordinarius="perennis">
+      <optio>annua</optio>
+      <optio>biennis</optio>
+      <optio>perennis</optio>
+    </attributum>
+    <attributum nomen="folia-permanentia" genus="electio" ordinarius="decidua">
+      <optio>decidua</optio>
+      <optio>sempervirens</optio>
+    </attributum>
+    <attributum nomen="altitudo-matura" genus="numerus"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>semen</optio>
+      <optio>germinans</optio>
+      <optio>iuvenis</optio>
+      <optio>florens</optio>
+      <optio>fructifera</optio>
+      <optio>quiescens</optio>
+      <optio>mortua</optio>
+    </attributum>
+    <attributum nomen="auctor-nominis" genus="nomen"/>
+    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
+    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="anima" genus="electio">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="radix" maximum="1"/>
+    <liberum nomen="caulis" maximum="1"/>
+    <liberum nomen="folium" maximum="1"/>
+    <liberum nomen="flos" maximum="1"/>
+    <liberum nomen="fructus" maximum="1"/>
+    <liberum nomen="semen" maximum="1"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="radix" intra="malus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="caulis" intra="malus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="folium" intra="malus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="flos" intra="malus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="fructus" intra="malus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="semen" intra="malus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="generat" intra="malus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="malus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="malus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="rosa-canina">
+    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="habitus" genus="electio" ordinarius="frutex">
+      <optio>herba</optio>
+      <optio>frutex</optio>
+      <optio>arbor</optio>
+      <optio>scandens</optio>
+    </attributum>
+    <attributum nomen="durata" genus="electio" ordinarius="perennis">
+      <optio>annua</optio>
+      <optio>biennis</optio>
+      <optio>perennis</optio>
+    </attributum>
+    <attributum nomen="folia-permanentia" genus="electio" ordinarius="decidua">
+      <optio>decidua</optio>
+      <optio>sempervirens</optio>
+    </attributum>
+    <attributum nomen="altitudo-matura" genus="numerus" ordinarius="3"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>semen</optio>
+      <optio>germinans</optio>
+      <optio>iuvenis</optio>
+      <optio>florens</optio>
+      <optio>fructifera</optio>
+      <optio>quiescens</optio>
+      <optio>mortua</optio>
+    </attributum>
+    <attributum nomen="auctor-nominis" genus="nomen"/>
+    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
+    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="anima" genus="electio">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="radix" maximum="1"/>
+    <liberum nomen="caulis" maximum="1"/>
+    <liberum nomen="folium" maximum="1"/>
+    <liberum nomen="flos" maximum="1"/>
+    <liberum nomen="fructus" maximum="1"/>
+    <liberum nomen="semen" maximum="1"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="radix" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="caulis" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="folium" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="flos" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="fructus" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="semen" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="generat" intra="rosa-canina">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="rosa-canina">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="rosa-canina">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="malus-domestica">
+    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="habitus" genus="electio" ordinarius="arbor">
+      <optio>herba</optio>
+      <optio>frutex</optio>
+      <optio>arbor</optio>
+      <optio>scandens</optio>
+    </attributum>
+    <attributum nomen="durata" genus="electio" ordinarius="perennis">
+      <optio>annua</optio>
+      <optio>biennis</optio>
+      <optio>perennis</optio>
+    </attributum>
+    <attributum nomen="folia-permanentia" genus="electio" ordinarius="decidua">
+      <optio>decidua</optio>
+      <optio>sempervirens</optio>
+    </attributum>
+    <attributum nomen="altitudo-matura" genus="numerus" ordinarius="5"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>semen</optio>
+      <optio>germinans</optio>
+      <optio>iuvenis</optio>
+      <optio>florens</optio>
+      <optio>fructifera</optio>
+      <optio>quiescens</optio>
+      <optio>mortua</optio>
+    </attributum>
+    <attributum nomen="auctor-nominis" genus="nomen"/>
+    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
+    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="anima" genus="electio">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="radix" maximum="1"/>
+    <liberum nomen="caulis" maximum="1"/>
+    <liberum nomen="folium" maximum="1"/>
+    <liberum nomen="flos" maximum="1"/>
+    <liberum nomen="fructus" maximum="1"/>
+    <liberum nomen="semen" maximum="1"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="radix" intra="malus-domestica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="caulis" intra="malus-domestica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="folium" intra="malus-domestica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="flos" intra="malus-domestica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="fructus" intra="malus-domestica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="semen" intra="malus-domestica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="generat" intra="malus-domestica">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="malus-domestica">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="malus-domestica">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="granny-smith">
+    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="habitus" genus="electio" ordinarius="arbor">
+      <optio>herba</optio>
+      <optio>frutex</optio>
+      <optio>arbor</optio>
+      <optio>scandens</optio>
+    </attributum>
+    <attributum nomen="durata" genus="electio" ordinarius="perennis">
+      <optio>annua</optio>
+      <optio>biennis</optio>
+      <optio>perennis</optio>
+    </attributum>
+    <attributum nomen="folia-permanentia" genus="electio" ordinarius="decidua">
+      <optio>decidua</optio>
+      <optio>sempervirens</optio>
+    </attributum>
+    <attributum nomen="altitudo-matura" genus="numerus" ordinarius="5"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>semen</optio>
+      <optio>germinans</optio>
+      <optio>iuvenis</optio>
+      <optio>florens</optio>
+      <optio>fructifera</optio>
+      <optio>quiescens</optio>
+      <optio>mortua</optio>
+    </attributum>
+    <attributum nomen="auctor-nominis" genus="nomen"/>
+    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
+    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="anima" genus="electio">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="radix" maximum="1"/>
+    <liberum nomen="caulis" maximum="1"/>
+    <liberum nomen="folium" maximum="1"/>
+    <liberum nomen="flos" maximum="1"/>
+    <liberum nomen="fructus" maximum="1"/>
+    <liberum nomen="semen" maximum="1"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="radix" intra="granny-smith">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="caulis" intra="granny-smith">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="folium" intra="granny-smith">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="flos" intra="granny-smith">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="fructus" intra="granny-smith">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="semen" intra="granny-smith">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="generat" intra="granny-smith">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="granny-smith">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="granny-smith">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>germinare</optio>
+      <optio>florere</optio>
+      <optio>fructificare</optio>
+      <optio>propagari</optio>
+      <optio>nominari</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+</canon>

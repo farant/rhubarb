@@ -19,11 +19,14 @@
 #include <stdio.h>
 
 nomen structura {
-         chorda*  titulus;   /* nomen naturae, snake_case */
+         chorda*  titulus;     /* nomen naturae, snake_case */
          chorda*  modulus;
-    NaturaGenus*  genus;     /* genus ipsum, aut genus rei continentis */
-      StmlNodus*  nodus;     /* nodus entis (genus aut res) */
-             b32  est_res;   /* VERUM = species/individuum/cultivar */
+    NaturaGenus*  genus;       /* genus ipsum, aut genus rei continentis */
+    NaturaGenus*  genus_etiam; /* etiam= resolutum (res sola), vel NIHIL:
+                                * apparatus AMBARUM catenarum debetur
+                                * (natura.h par. NaturaRes) */
+      StmlNodus*  nodus;       /* nodus entis (genus aut res) */
+             b32  est_res;     /* VERUM = species/individuum/cultivar */
 } NcEns;
 
 /* ==================================================
@@ -39,8 +42,21 @@ nomen enumeratio {
     NC_MEMBRUM_LIBERUM    = II   /* -> <liberum> + <elementum intra=> */
 } NcMembrumDiscrimen;
 
+/* unde membrum venit. Discrimen (attributum/liberum) formam DICIT,
+ * originem non: pars et proprietas multiplex ambae liberum fiunt,
+ * sed pars nota= fert et proprietas valorem in textu. Emissor id
+ * ex genere valoris coniectare posset ('nomen' => relatio), sed
+ * coniectura ea nexus est qui tacite frangitur cum genus mutatur. */
+nomen enumeratio {
+    NC_ORIGO_PROPRIETAS = I,
+    NC_ORIGO_PARS       = II,
+    NC_ORIGO_RELATIO    = III,
+    NC_ORIGO_MACHINA    = IV
+} NcMembrumOrigo;
+
 nomen structura {
      NcMembrumDiscrimen  discrimen;
+         NcMembrumOrigo  origo;
                 chorda*  titulus;       /* nomen naturae, snake */
     constans character*  praefixum;     /* "status_" vel NIHIL */
     constans character*  genus_valoris; /* "textus"/"nomen"/... */
@@ -69,5 +85,19 @@ vacuum
 _elementum_inspicere(
     FILE*         f,
     NcElementum*  el);
+
+/* canonem unius plagulae emittere.
+ *   elementa  - Xar de NcElementum* (ordo = ordo emissionis)
+ *   dialectus - nomen dialecti (= modulus), pro <canon dialectus=>
+ *   fons      - unde generatum, pro signo GENERATUM
+ * Redde FALSUM si quid emitti NON potuit (praestitutum generi
+ * repugnans, aut quota in valore): tunc NIHIL scriptum valet et
+ * vocans plagulam abicere debet - canon dimidius mendacium est. */
+b32
+_canonem_emittere(
+    FILE*                f,
+    Xar*                 elementa,
+    constans character*  dialectus,
+    constans character*  fons);
 
 #endif /* NATURA_CANONES_H */

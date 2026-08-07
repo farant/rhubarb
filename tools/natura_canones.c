@@ -51,6 +51,7 @@ interior NcMembrum* _membrum_invenire(Xar* membra,
                                       constans character* praefixum);
 interior b32       _membrum_adest(Xar* membra, constans chorda* titulus,
                                   constans character* praefixum);
+interior b32       _actio_adest(Xar* actiones, constans chorda* titulus);
 interior b32       _genus_valoris_notum(constans chorda* g);
 interior vacuum    _ignotum_numerare(Xar* ignota, chorda* g);
 interior vacuum    _genera_ignota_generis(Xar* ignota, NaturaGenus* g);
@@ -65,8 +66,15 @@ interior vacuum    _valores_ex_nodo(NcElementum* el, StmlNodus* n,
                                     Piscina* piscina);
 interior vacuum    _valores_applicare(NcElementum* el, NcEns* ens,
                                       Piscina* piscina);
+interior vacuum    _apparatum_plicare(NcElementum* el, Xar* apparatus,
+                                      Piscina* piscina);
 interior NcElementum* _elementum_aedificare(NaturaBibliotheca* bib,
                                             NcEns* ens,
+                                            Piscina* piscina);
+interior b32       _canonem_modulo_scribere(NaturaBibliotheca* bib,
+                                            Xar* entia,
+                                            constans character* modulus,
+                                            constans character* via,
                                             Piscina* piscina);
 
 /* an titulus in ".genera" desinat - stirps VACUA non sufficit,
@@ -249,11 +257,12 @@ _entia_colligere(
 
         g = *(NaturaGenus**)xar_obtinere(bib->genera_omnia, i);
         e = (NcEns*)xar_addere(entia);
-        e->titulus  = g->titulus;
-        e->modulus  = g->modulus;
-        e->genus    = g;
-        e->nodus    = g->nodus;
-        e->est_res  = FALSUM;
+        e->titulus     = g->titulus;
+        e->modulus     = g->modulus;
+        e->genus       = g;
+        e->genus_etiam = NIHIL;   /* etiam= rerum solum est */
+        e->nodus       = g->nodus;
+        e->est_res     = FALSUM;
     }
 
     per (i = ZEPHYRUM; i < xar_numerus(bib->res_omnes); i++)
@@ -263,11 +272,12 @@ _entia_colligere(
 
         r = *(NaturaRes**)xar_obtinere(bib->res_omnes, i);
         e = (NcEns*)xar_addere(entia);
-        e->titulus  = r->titulus;
-        e->modulus  = r->modulus;
-        e->genus    = r->genus_suum;
-        e->nodus    = r->nodus;
-        e->est_res  = VERUM;
+        e->titulus     = r->titulus;
+        e->modulus     = r->modulus;
+        e->genus       = r->genus_suum;
+        e->genus_etiam = r->genus_etiam;
+        e->nodus       = r->nodus;
+        e->est_res     = VERUM;
     }
 
     redde entia;
@@ -336,6 +346,30 @@ _membrum_adest(
     constans character*  praefixum)
 {
     redde (b32)(_membrum_invenire(membra, titulus, praefixum) != NIHIL);
+}
+
+/* Catena una actionem bis non fert (natura_apparatus maiores semel
+ * ascendit), sed catenae DUAE rei etiam= maiorem communem habere
+ * possunt: scriptum_conchae sub scripto_exsecutabili stat et
+ * plagulam_fontis etiam nominat, quae AMBAE sub plagula_computatrali
+ * sunt - unde actiones eius bis venirent. MENSURATUM, non
+ * praevisum: exemplar quinque actiones geminas ostendit. */
+interior b32
+_actio_adest(
+    Xar*              actiones,
+    constans chorda*  titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    {
+        si (chorda_aequalis(**(chorda**)xar_obtinere(actiones, i),
+                            *titulus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 /* an canon hoc genus valoris ferre possit. Vocabularium canonis
@@ -682,30 +716,29 @@ _valores_applicare(
         _valores_ex_nodo(el, g->nodus, piscina);
         gradus++;
     }
+
+    /* catena etiam= POST suam, eodem ordine quo apparatus plicatus
+     * est: aliter membrum ex illa hereditatum praestitutum suum
+     * amitteret quamquam natura id dicit */
+    gradus = ZEPHYRUM;
+    per (g = ens->genus_etiam; g && gradus < NC_CATENA_MAXIMA;
+         g = g->parens)
+    {
+        _valores_ex_nodo(el, g->nodus, piscina);
+        gradus++;
+    }
 }
 
-/* apparatum (iam hereditate solutum) in exemplar elementi plicare */
-interior NcElementum*
-_elementum_aedificare(
-    NaturaBibliotheca*  bib,
-    NcEns*              ens,
-    Piscina*            piscina)
+/* apparatum unius catenae (iam hereditate solutum) in exemplar
+ * plicare. Vocari BIS potest (sub= et etiam=); deduplicatio per
+ * membra iam posita currit, ergo catena prior vincit. */
+interior vacuum
+_apparatum_plicare(
+    NcElementum*  el,
+    Xar*          apparatus,
+    Piscina*      piscina)
 {
-    NcElementum* el;
-    Xar*         apparatus;
-    i32          i;
-
-    el           = (NcElementum*)piscina_allocare(piscina,
-                       magnitudo(NcElementum));
-    el->ens      = ens;
-    el->membra   = xar_creare(piscina, (i32)magnitudo(NcMembrum));
-    el->actiones = xar_creare(piscina, (i32)magnitudo(chorda*));
-
-    si (!ens->genus)
-    {
-        redde el;
-    }
-    apparatus = natura_apparatus(bib, ens->genus, piscina);
+    i32 i;
 
     per (i = ZEPHYRUM; i < xar_numerus(apparatus); i++)
     {
@@ -721,7 +754,7 @@ _elementum_aedificare(
         {
             chorda** locus;
 
-            si (!titulus)
+            si (!titulus || _actio_adest(el->actiones, titulus))
             {
                 perge;
             }
@@ -746,6 +779,7 @@ _elementum_aedificare(
             }
             m                = (NcMembrum*)xar_addere(el->membra);
             m->discrimen     = NC_MEMBRUM_ATTRIBUTUM;
+            m->origo         = NC_ORIGO_MACHINA;
             m->titulus       = titulus;
             m->praefixum     = praefixum;
             m->genus_valoris = "electio";
@@ -774,11 +808,13 @@ _elementum_aedificare(
             /* necessaria= CONSULTO ignoratur: necessitas ontologica
              * obligatio documenti non est (spec par. 3.4) */
             m->discrimen     = NC_MEMBRUM_LIBERUM;
+            m->origo         = NC_ORIGO_PARS;
             m->genus_valoris = "textus";
         }
         alioquin si (chorda_aequalis_literis(*am->nodus->titulus,
                                              "relatio"))
         {
+            m->origo         = NC_ORIGO_RELATIO;
             m->genus_valoris = "nomen";
         }
         alioquin
@@ -786,6 +822,7 @@ _elementum_aedificare(
             chorda* g;
 
             g = stml_attributum_capere(am->nodus, "genus");
+            m->origo         = NC_ORIGO_PROPRIETAS;
             m->genus_valoris = "textus";
             si (g && chorda_aequalis_literis(*g, "electio"))
             {
@@ -807,9 +844,116 @@ _elementum_aedificare(
             }
         }
     }
+}
+
+/* exemplar elementi ex ente aedificare.
+ *
+ * CATENAE DUAE cum res etiam= fert: natura.h dicit apparatum
+ * AMBARUM catenarum tali rei deberi (scriptum conchae essentialiter
+ * ET scriptum ET fons est). Catena SUA prima plicatur, deinde
+ * altera: deduplicatio primum vincere sinit, ergo genus proprium
+ * ligamina aequa vincit et 'maxime proprium primum' servatur.
+ * Valores utramque catenam sequuntur eodem ordine, ne membrum ab
+ * altera hereditatum praestitutum suum tacite amittat. */
+interior NcElementum*
+_elementum_aedificare(
+    NaturaBibliotheca*  bib,
+    NcEns*              ens,
+    Piscina*            piscina)
+{
+    NcElementum* el;
+
+    el           = (NcElementum*)piscina_allocare(piscina,
+                       magnitudo(NcElementum));
+    el->ens      = ens;
+    el->membra   = xar_creare(piscina, (i32)magnitudo(NcMembrum));
+    el->actiones = xar_creare(piscina, (i32)magnitudo(chorda*));
+
+    si (!ens->genus)
+    {
+        redde el;
+    }
+
+    _apparatum_plicare(el, natura_apparatus(bib, ens->genus, piscina),
+                       piscina);
+    si (ens->genus_etiam)
+    {
+        _apparatum_plicare(
+            el, natura_apparatus(bib, ens->genus_etiam, piscina),
+            piscina);
+    }
 
     _valores_applicare(el, ens, piscina);
     redde el;
+}
+
+/* canonem unius moduli in plagulam scribere.
+ *
+ * CORPUS TOTUM iam oneratum est (sub= fines modulorum transit),
+ * sed elementa huius moduli SOLA emittuntur - ordo idem quo entia
+ * collecta sunt, id est ordo plagularum ORDINATUS, unde porta
+ * rancoris comparationem byte-pro-byte facere potest.
+ *
+ * Plagula PRIMUM aperitur, deinde scribitur: si emissio recusat,
+ * plagulam SEMIPLENAM delemus. Canon dimidius mendacium est quod
+ * porta proxima pro vero acciperet. */
+interior b32
+_canonem_modulo_scribere(
+    NaturaBibliotheca*   bib,
+    Xar*                 entia,
+    constans character*  modulus,
+    constans character*  via,
+    Piscina*             piscina)
+{
+    Xar*  elementa;
+    FILE* f;
+    b32   sanum;
+    i32   i;
+
+    elementa = xar_creare(piscina, (i32)magnitudo(NcElementum*));
+    per (i = ZEPHYRUM; i < xar_numerus(entia); i++)
+    {
+        NcEns*         e;
+        NcElementum**  locus;
+
+        e = (NcEns*)xar_obtinere(entia, i);
+        si (!chorda_aequalis_literis(*e->modulus, modulus))
+        {
+            perge;
+        }
+        locus  = (NcElementum**)xar_addere(elementa);
+        *locus = _elementum_aedificare(bib, e, piscina);
+    }
+
+    si (xar_numerus(elementa) == ZEPHYRUM)
+    {
+        fprintf(stderr,
+            "natura_canones: modulus '%s' NULLUM ens habet - "
+            "canon vacuus non scribitur\n", modulus);
+        redde FALSUM;
+    }
+
+    f = fopen(via, "w");
+    si (!f)
+    {
+        fprintf(stderr, "natura_canones: '%s' scribi nequit\n", via);
+        redde FALSUM;
+    }
+
+    sanum = _canonem_emittere(f, elementa, modulus, modulus);
+    fclose(f);
+
+    si (!sanum)
+    {
+        remove(via);
+        fprintf(stderr,
+            "natura_canones: '%s' RECUSATUS et deletus\n", via);
+        redde FALSUM;
+    }
+
+    fprintf(stderr, "natura_canones: '%s' scriptus (elementa %u)\n",
+            via, xar_numerus(elementa));
+    redde VERUM;
 }
 
 s32
@@ -822,12 +966,16 @@ principale(
     Xar*                entia;
     constans character* radix;
     constans character* inspiciendum;
+    constans character* modulus;
+    constans character* ad;
     b32                 modus_index;
     i32                 vulnera;
     s32                 i;
 
     radix        = "natura";
     inspiciendum = NIHIL;
+    modulus      = NIHIL;
+    ad           = NIHIL;
     modus_index  = FALSUM;
     vulnera      = ZEPHYRUM;
 
@@ -842,6 +990,16 @@ principale(
         {
             inspiciendum = argumenta[++i];
         }
+        alioquin si (strcmp(argumenta[i], "-modulus") == ZEPHYRUM &&
+                     i + I < numerus)
+        {
+            modulus = argumenta[++i];
+        }
+        alioquin si (strcmp(argumenta[i], "-ad") == ZEPHYRUM &&
+                     i + I < numerus)
+        {
+            ad = argumenta[++i];
+        }
         alioquin si (strcmp(argumenta[i], "-radix") == ZEPHYRUM &&
                      i + I < numerus)
         {
@@ -851,9 +1009,18 @@ principale(
         {
             fprintf(stderr,
                 "usus: natura_canones [-index] [-inspicere GENUS] "
-                "[-radix DIR]\n");
+                "[-modulus NOMEN -ad VIA] [-radix DIR]\n");
             redde II;
         }
+    }
+
+    /* par -modulus/-ad INTEGRUM poscitur: '-modulus planta' solum
+     * canonem in nihilum scriberet, quod successus VIDERETUR */
+    si ((modulus != NIHIL) != (ad != NIHIL))
+    {
+        fprintf(stderr,
+            "natura_canones: -modulus et -ad simul dari debent\n");
+        redde II;
     }
 
     piscina = piscina_generare_dynamicum("natura_canones", 4194304);
@@ -919,6 +1086,16 @@ principale(
         }
         el = _elementum_aedificare(bib, e, piscina);
         _elementum_inspicere(stdout, el);
+        redde ZEPHYRUM;
+    }
+
+    si (modulus)
+    {
+        si (!_canonem_modulo_scribere(bib, entia, modulus, ad,
+                                      piscina))
+        {
+            redde II;
+        }
         redde ZEPHYRUM;
     }
 
