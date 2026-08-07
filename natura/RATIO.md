@@ -103,8 +103,29 @@ outside: not more facts, but knowing what to ask next.
 1. **Read it** as a design reference before writing your schema.
    Works today, zero machinery — the value is distinctions, and
    prose carries distinctions.
-2. **Generate from it** — tables, structs, forms. Needs the
-   loader.
+2. **Generate from it** — **SHIPPED 2026-08-07**, and it needed the
+   loader, which is why it waited. `natura_canones` projects every
+   genus into an element of a generated STML schema; `canon_coquere`
+   turns that schema into a typed C reader. A kind described once
+   yields the tag library, the schema and the struct, with no
+   hand-written schema at any step. 34 canons live in `natura/cocta/`.
+   See `project-specs/natura-canones-generati-spec.md`.
+
+   **What it cost the library was not code but ANSWERS.** A generator
+   has to decide where a person can stay vague, so building it forced
+   four questions the corpus had never been asked: `gerens=` had no
+   stated default though the whole projection turns on it; a multiplex
+   member cannot carry a default at all (51 silently absent); five
+   property genera map to nothing, and four of those five are *genera
+   used as property types* — a typed reference, i.e. a relation, not a
+   datatype; and **`valor` means two different things** — it CONSTRAINS
+   on `rosa` (a rose that is a tree is not a rose) and merely TYPIFIES
+   on `rosa_canina` (a particular bush may be two metres). That last
+   one is recorded as a `<dubium>` and still open.
+
+   Worth generalising: **making a machine commit to an ontology is a
+   different review than reading it.** Prose tolerates a distinction
+   left unmade; a generator must emit something either way.
 3. **Cite it at runtime** — app volumina reference library
    genera, and two apps citing the same genus are talking about
    the same thing. This is the interop story.
