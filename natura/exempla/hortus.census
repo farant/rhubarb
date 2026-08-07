@@ -1,27 +1,28 @@
 <!--
-  natura/exempla/hortus.planta
+  natura/exempla/hortus.census
 
-  Documentum verum sub planta.canon (ipso ex natura/planta.genera
-  generato). Non fixum probationis solum: TESTIMONIUM catenae -
+  Documentum verum sub monolitho (extensio .census -> individua.canon,
+  registrum). Non fixum probationis solum: TESTIMONIUM catenae -
   genus semel descriptum tria parit, bibliothecam tagorum,
   schema, structuram C.
 
   SIGNA (spec canon-referentia): '#' nomen proprium individui -
   in declaratione ET in referentia, congruentia verbatim; '.'
-  genus e vocabulario; valor nudus litteralis est. nomen=
-  identitas est, genere 'identitas' - orthographia (lineola,
-  linea subducta) stylus merus est, signum mechanismus.
+  genus e vocabulario; valor nudus litteralis est.
 
-  auctor-nominis='#carl_linnaeus' sub canone moduli TYPATUR sed
-  non resolvitur (petitum trans modulos - classis D): documentum
-  .planta personam inscribere nequit. Sub monolitho inscriptio
-  poscitur (census sodales suos sedet).
+  INSCRIPTIO (spec census): census sodales suos sedet - linea una
+  <persona nomen="#carl_linnaeus"/> Linnaeum praesentat, et
+  auctor-nominis="#carl_linnaeus" RESOLVITUR. (Sub extensione
+  .planta retirata haec referentia trans modulos inresolubilis
+  erat - verruca classis D, mortua cum extensione.)
 
   Quae absunt PROBANT: habitus et altitudo-matura tacent, ergo
   ordinarius= (ex <valor> naturae per catenam vectus) apparere
   debet - et diversus per genus (frutex rosae, arbor mali).
 -->
 <individua>
+  <persona nomen="#carl_linnaeus"/>
+
   <rosa-canina nomen="#rosa-ad-murum"
                status-vita="florens"
                auctor-nominis="#carl_linnaeus">

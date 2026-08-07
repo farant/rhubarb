@@ -8,7 +8,7 @@
  *       |  canon_coquere
  *   include/planta_lectio.h          (structurae C typatae)
  *       |  haec probatio
- *   natura/exempla/hortus.planta     (documentum verum lectum)
+ *   natura/exempla/hortus.census     (documentum verum lectum)
  *
  * Nullum schema manu scriptum in tota via. Ergo quaeritur non
  * 'legitne lector documentum' sed 'pervenitne quod natura DIXIT
@@ -72,7 +72,7 @@ principale(
 
     imprimere("\n--- Probans planta_individua_legere ---\n");
 
-    fons = filum_legere_totum("natura/exempla/hortus.planta",
+    fons = filum_legere_totum("natura/exempla/hortus.census",
                               piscina);
     CREDO_MAIOR_I32 (fons.mensura, (i32)ZEPHYRUM);
 
@@ -94,9 +94,13 @@ principale(
      *
      * Lector generatus plagulam CANONE SANAM praesumit - ignota
      * tacite praeterit. Ergo fixum e canone lapsum probationem
-     * VIRIDEM tenere posset dum documentum illicitum est. Neque
-     * uncus id capit: canon-custos '.canon|.stml' solas spectat,
-     * '.planta' nullam portam habet. Suita ergo porta sit.
+     * VIRIDEM tenere posset dum documentum illicitum est.
+     *
+     * Canon REGENS iudicat: hortus '.census' est, monolithus eum
+     * regit (registrum), et inscriptio <persona> sub eo sola
+     * resolvitur - planta.canon PROFILUS est quem hoc documentum
+     * consulto non petit. Uncus quoque iudicat (registro ductus),
+     * sed suita porta propria maneat.
      * ======================================================== */
 
     {
@@ -107,8 +111,8 @@ principale(
 
         imprimere("\n--- Probans fixum contra canonem ---\n");
 
-        canon_fons = filum_legere_totum("natura/cocta/planta.canon",
-                                        piscina);
+        canon_fons = filum_legere_totum(
+                         "natura/cocta/individua.canon", piscina);
         CREDO_MAIOR_I32 (canon_fons.mensura, (i32)ZEPHYRUM);
 
         canon_causa.datum   = NIHIL;

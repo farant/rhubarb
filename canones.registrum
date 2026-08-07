@@ -16,17 +16,17 @@
 # per extensionem canon.canon invenit -> RADIX_MALA vitium proprium
 # pro praetermissione tacita.
 
-# Individua naturae: claves EXTENSIONIS SOLAE, consulto. Ambo
-# canones sub radice <individua> sedent, et RADIX VINCIT - ergo
-# clavis '<individua>' canonem UNUM plagulis OMNIBUS falso
-# imponeret (hortus.planta contra monolithum, aut contra plantam
-# quidquid aliud). Absentia clavis radicis DEFECTUS NON EST; noli
-# eam 'corrigere'.
-# Ceteri XXXII canones moduli extra registrum manent, per
-# 'canon_examen -canon <via>' adibiles: XXXIII lineae generandae
-# essent pro lucro exiguo.
-.individua	natura/cocta/individua.canon
-.planta	natura/cocta/planta.canon
+# Documenta naturae: extensio UNA '.census' (spec census par. 3-4,
+# decretum 01KZEMFMDF) - documenta individuorum genera OMNIA libere
+# miscent, monolithus iudicat. Clavis radicis '<individua>' vetita
+# manet: canones moduli quoque sub eadem radice sedent, et RADIX
+# VINCIT - clavis radicis canonem unum plagulis omnibus falso
+# imponeret. Absentia clavis radicis DEFECTUS NON EST.
+# Canones moduli XXXIII PROFILI sunt (angustatio opt-in, e.g.
+# pabulum plantarum solarum), extra registrum, per
+# 'canon_examen -canon <via>' adibiles. Claves '.planta' et
+# '.individua' retiratae 2026-08-08 (historia in git).
+.census	natura/cocta/individua.canon
 
 .genera	natura/natura.canon
 <aedilis>	aedilis.canon
