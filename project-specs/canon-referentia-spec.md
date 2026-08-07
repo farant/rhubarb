@@ -135,9 +135,14 @@ Pass II, per citing value:
   Miss = NEW vitium **`CANON_VOCABULUM_IGNOTUM`** ("vocabulum extra petitum
   citationis"), whose detail uses the existing `_suggestio` machinery to
   offer the nearest kind title.
-- bare value never reaches pass II: it already failed `valor_congruit`
-  (`referentia` rejects bare) — enforced at ALL referentia sites, cited or
-  not.
+- bare value → LEGACY verbatim key lookup (today's behavior). Discovered
+  during planning: `natura/natura.canon` itself carries citations over bare
+  values, and by ruling 2 the `.genera` dialect KEEPS bare references — so
+  the bare branch must stay alive for pre-signum canons. In
+  referentia-typed canons a healthy document never produces a bare citing
+  value (typing already flagged it); a faulty one may collect VALOR_MALUS
+  plus a legacy key-miss — noisy but honest, and the typing vitium names
+  the real fault first.
 
 Uncited relations (open-target `ad='*'` 438 sites, multiplex 587,
 cross-module targets in per-module canons) get typing only — but typing now
