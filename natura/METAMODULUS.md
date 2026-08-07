@@ -108,11 +108,12 @@ liberorum min..max.*
 | `natura` (radix) | **modulus**:nomen, **versio**:numerus, lingua | `fontes` 0..1, `genus` 1..* | &mdash; |
 | `fontes` | &mdash; | `fons` 1..* | &mdash; |
 | `fons` | **clavis**:nomen, **genus**:nomen, modulus:nomen, verificatus:veritas=falsum | &mdash; | licet |
-| `genus` | **nomen**:nomen, sub:nomen, modulus:nomen, gradus | `definitio` 0..1, `differentia` 0..1, `proprietates` 0..1, `partes` 0..1, `actiones` 0..1, `relationes` 0..1, `machina_statuum` 0..*, `species` 0..*, `individuum` 0..*, `genus` 0..*, `valor` 0..*, `relatum` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
+| `genus` | **nomen**:nomen, sub:nomen, modulus:nomen, gradus | `definitio` 0..1, `differentia` 0..1, `glossa` 0..*, `proprietates` 0..1, `partes` 0..1, `actiones` 0..1, `relationes` 0..1, `machina_statuum` 0..*, `species` 0..*, `individuum` 0..*, `genus` 0..*, `valor` 0..*, `relatum` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
 | `definitio` | &mdash; | &mdash; | licet |
 | `differentia` | &mdash; | &mdash; | licet |
 | `nota` | &mdash; | &mdash; | licet |
 | `dubium` | &mdash; | &mdash; | licet |
+| `glossa` | **lingua**:nomen | &mdash; | licet |
 | `proprietates` | &mdash; | `proprietas` 1..* | &mdash; |
 | `proprietas` | **nomen**:nomen, **genus**:nomen, modulus:nomen, multiplex:veritas, ordinarius, nota | `optio` 0..* | &mdash; |
 | `optio` | &mdash; | &mdash; | licet |
@@ -162,8 +163,20 @@ THING (Ritchie, c89, the kilogram).
 |---|---|
 | `definitio` | dictionary prose: what this is |
 | `differentia` | what distinguishes it from its genus |
+| `glossa` | vernacular documentation (`lingua=` ISO 639-1) |
 | `nota` | commentary that is not definitional |
 | `dubium` | an unresolved tension, carried deliberately |
+
+GLOSSA (spec glossae, 2026-08-07): `<glossa lingua="en">` on a
+genus is reader-facing localized documentation — the Latin tag
+stays the sole identity, glossae explain, never rename. Latin
+itself is NOT a glossa: `definitio`/`differentia` remain the `la`
+layer (a sub-genus with only `differentia` counts as documented —
+definitio = genus proximum + differentia). Vocabulary lives in
+natura/natura.canon; natura_canones copies glossae into generated
+canons (the canon is the self-documenting artifact); coverage is
+`./tools/natura_glossae.sh` (`-porta` gate, `-pagina` regenerates
+natura/cocta/glossae.html — encyclopedia and worklist fused).
 
 `dubium` is load-bearing: honest descriptions carry their open
 questions. Resolved dubia become comments recording the

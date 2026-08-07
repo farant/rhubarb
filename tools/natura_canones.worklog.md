@@ -835,3 +835,19 @@ relata) + multiplex branch (<name ad="..."/>); first regen emitted
 snake in kind-space and VOCABULUM_IGNOTUM's own suggestio dictated
 the kebab fix. `_petitum_scribere` now owns the rule: '.' body
 kebab, '#' body verbatim.
+
+### 2026-08-08 — glossae emit-through
+
+`_glossas_scribere` copies a genus's `<glossa>` children into the
+generated elementum (directly after the opening tag), monolith and
+per-module both via the shared `_elementum_scribere`. The only
+signature change in the whole feature: `_canonem_emittere` grew a
+final `Piscina*` (stml_textus_normalizatus needs one), threaded to
+`_elementum_scribere`. Text goes out normalized + escaped via the
+existing `_textum_evasum_scribere`; lingua verbatim via
+`_chordam_scribere` (early forward decl added — its mid-file decl
+sits after the new call site). Reading is generic over ens->nodus:
+res carry no glossae today (natura.canon admits them under genus
+only), but if they ever do, they flow with no emitter change.
+semina.census deliberately carries none (docs describe kinds,
+individua are data) and the suite asserts that negatively.

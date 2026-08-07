@@ -5084,3 +5084,38 @@ MENSURATUM: `natura_canones.sh -probare` → `canones 34 recentes` (proiectio
 immota); `natura_visus.sh` → exit 1 cum tribus vulneribus stantibus solis
 (pharmacon:185, vectura:144, plagula_computatralis:406), nullum quartum;
 dubia 14 → 15.
+
+## 2026-08-08 — glossae: vernacular documentation layer
+
+The `<glossa lingua="en">` element landed (spec glossae): localized
+reader-facing docs on genera, ISO 639-1 keys, the medieval glossa
+arrangement — vernacular glosses on a canonical Latin text that
+never rename it. Three findings worth keeping:
+
+1. ZERO loader change. The hybrid-depth design (typed skeleton +
+   retained StmlNodus) absorbed a new element exactly as its header
+   comment promises — glossae reach every consumer via genus->nodus.
+   Grammar admission was two data edits in natura/natura.canon
+   (liberum under genus + elementum glossa with lingua necessarium);
+   lib/canon.c needed nothing, the generic necessarium machinery
+   enforces lingua.
+2. The `la` column is definitio-OR-differentia, not definitio alone.
+   First real-corpus run of natura_glossae showed la 123/177 with
+   `animal` "missing" — but sub-genera carry only differentia BY
+   DOCTRINE (definitio = genus proximum + differentia; natura_examen's
+   derived gloss falls back the same way). Under the correct rule la
+   is 177/177: the corpus was disciplined all along, the naive rule
+   manufactured 54 false gaps. LEX (again): run every new
+   filter/count on the REAL store before believing it — fixtures
+   share your assumptions.
+3. METAMODULUS §3 is GENERATED — the first draft of this change
+   hand-edited the catalog table inside the GENERATUM span before
+   noticing; the right move was editing natura.canon (already done in
+   step 1) and running natura_metamodulus_generare.sh. The generated
+   span said so at its top; read the span markers before editing any
+   catalog.
+
+MENSURATUM: la 177/177, en 1/177, fr 1/177 (planta seeded en+fr);
+glossae flow genera -> planta.canon + individua.canon (blast radius
+exactly 2 files); pagina natura/cocta/glossae.html deterministic,
+-probare byte-compares.
