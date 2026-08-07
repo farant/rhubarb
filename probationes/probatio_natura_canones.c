@@ -537,9 +537,33 @@ _fons_recentior_binario(
 
         si (stat(NC_FONTES[i], &f) != ZEPHYRUM)
         {
-            perge;
+            perge;   /* absentiam _fons_absens sola nuntiat */
         }
         si (f.st_mtime > b.st_mtime)
+        {
+            redde NC_FONTES[i];
+        }
+    }
+    redde NIHIL;
+}
+
+/* Primum fontem custodiae qui NON EXSTAT reddere, aut NIHIL.
+ *
+ * Gemellus in crusta bis clamat ('custos X ABEST' - natura_canones.sh
+ * et canon_coquere.sh); hic tacebat. Index custodum qui fontem
+ * nominat qui non est custodit MINUS quam pollicetur, et tacite:
+ * exactum quod indices utrosque emendare coegit. Tertia instantia
+ * eiusdem generis; ideo hic quoque clamat. */
+interior constans character*
+_fons_absens(
+    vacuum)
+{
+    structura stat  f;
+    i32             i;
+
+    per (i = ZEPHYRUM; NC_FONTES[i] != NIHIL; i++)
+    {
+        si (stat(NC_FONTES[i], &f) != ZEPHYRUM)
         {
             redde NC_FONTES[i];
         }
@@ -762,7 +786,16 @@ principale(
         CREDO_VERUM (filum_existit("bin/natura_canones"));
 
         {
+            constans character* absens;
             constans character* stalum;
+
+            absens = _fons_absens();
+            si (absens)
+            {
+                imprimere("  custos '%s' ABEST - index custodum fontem"
+                          " nominat qui non est\n", absens);
+            }
+            CREDO_NIHIL (absens);
 
             stalum = _fons_recentior_binario("bin/natura_canones");
             si (stalum)

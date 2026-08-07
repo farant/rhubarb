@@ -127,8 +127,20 @@ Ea onerator tenet et tenebit"*).
 
 A generated canon therefore checks only that the reference **is a
 well-formed name**, and a natura-aware pass confirms the target exists.
-The monolith (§5.2) is the exception: within one document, references
-can become genuine `citatio` and get checked properly.
+
+The monolith (§5.2) is a **partial** exception: within one document
+*some* references become genuine `citatio`. Measured, **217 of 2056
+relation sites** — roughly one in ten. The rest stay name-only, and §5.2
+carries the breakdown and the reason.
+
+The reason is worth stating here, because it is a property of the two
+languages rather than of the generator. **Canon's reference model is
+nominal; natura's is subsumptive.** Canon's `ad=` names an element
+*title*; natura's `ad=` names a *kind*, and in natura a species **is**
+its genus. So the projection is lossy exactly at the inheritance
+boundary — which is natura's central mechanism. A citation to `persona`
+would reject a document naming any of persona's fourteen individuals,
+every one of which genuinely is a persona.
 
 ## 4. The mapping
 

@@ -107,9 +107,11 @@ _elementum_inspicere(
  * tacite inermem relinqueret - id ipsum quod semel iam momordit.
  * Commentarium proprium post signum eum numquam movet.
  *
- * Redde FALSUM si quid emitti NON potuit (praestitutum generi
- * repugnans, aut quota in valore): tunc NIHIL scriptum valet et
- * vocans plagulam abicere debet - canon dimidius mendacium est. */
+ * Redde FALSUM si quid emitti NON potuit: praestitutum generi
+ * repugnans, quota in valore ATTRIBUTI (in textu elementi licet),
+ * aut octetus nullus in nomine entis, membri, actionis. Tunc NIHIL
+ * scriptum valet et vocans plagulam abicere debet - canon dimidius
+ * mendacium est. */
 b32
 _canonem_emittere(
     FILE*                f,
