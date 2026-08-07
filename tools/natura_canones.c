@@ -150,7 +150,11 @@ interior vacuum    _valores_ex_nodo(NcElementum* el, StmlNodus* n,
                                     Piscina* piscina);
 interior vacuum    _valores_applicare(NcElementum* el, NcEns* ens,
                                       Piscina* piscina);
-interior b32       _posteros_habet(NaturaGenus* g);
+interior constans character* _cstr_tutum(constans chorda* c,
+                                     constans character* unde,
+                                     Piscina* piscina);
+interior b32       _posteros_habet(NaturaBibliotheca* bib,
+                                   NaturaGenus* g);
 interior NcCitatioStatus _petitum_citabile(NaturaBibliotheca* bib,
                                      StmlNodus* nodus, b32 multiplex,
                                      chorda** ad_ex, Piscina* piscina);
@@ -838,12 +842,83 @@ _valores_applicare(
  *
  * Filii DIRECTI sufficiunt: si genus subgenus habet, illud iam
  * elementum aliud est, sive ipsum posteros habet sive non. */
+/* chorda -> littera C, RECUSANS si octetum nullum fert.
+ *
+ * PORTA UNICA CONSULTO, non custodia per sedem: chorda mensuram
+ * fert, non terminatorem, ergo octetum nullum ferre POTEST -
+ * chorda_ut_cstr eum fideliter transcribit et terminatorem
+ * addit, sed quaesitor qui litteras C comparat ad eum desinit.
+ * Effectus non est defectio sed DEVIATIO TACITA: 'folium\0zzz'
+ * genus 'folium' invenit, et citatio in genus oritur quod auctor
+ * numquam nominavit.
+ *
+ * Classis eadem in semita valoris clausa est (72149cc,
+ * NC_VALOR_NULLUS); hic in semita QUAESTIONIS reaperta erat.
+ * Ideo porta hic stat et non ad quinque sedes dispersa: sedes
+ * proxima quae chordam in litteras vertit hanc protectionem
+ * HEREDITET, non iterum mereatur.
+ *
+ * NIHIL redditum = recusatio; vocans eam ut irresolubilem
+ * tractet (quod VERA est: nomen tale in corpore non est). */
+interior constans character*
+_cstr_tutum(
+    constans chorda*     c,
+    constans character*  unde,
+    Piscina*             piscina)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < c->mensura; i++)
+    {
+        si ((character)c->datum[i] == '\0')
+        {
+            fprintf(stderr,
+                "natura_canones: '%s' octetum nullum fert - "
+                "quaestio prooemium solum iudicaret et citationem "
+                "in genus alienum dirigeret; RECUSATUR\n", unde);
+            redde NIHIL;
+        }
+    }
+    redde chorda_ut_cstr(*c, piscina);
+}
+
+/* an genus posteros habeat.
+ *
+ * ETIAM= QUOQUE, non sola nidificatio: res quae etiam="G" fert
+ * VERE G est (natura.h: 'membrum essentiale duplex'), sed
+ * lib/natura.c eam in G->res_suae NON ponit - ille index
+ * nidificatione sola impletur. Sine hac inquisitione tale G
+ * folium iudicaretur et citationem acciperet quam ferre non
+ * potest, id est documentum rectum reiceret quod rem illam
+ * nominat. Census praeterea sedem sub 'citatae' numeraret, unde
+ * praefatio plus TUTE examinari diceret quam re vera examinatur.
+ *
+ * Filii DIRECTI sufficiunt: si genus subgenus habet, illud iam
+ * elementum aliud est, sive ipsum posteros habet sive non. */
 interior b32
 _posteros_habet(
-    NaturaGenus*  g)
+    NaturaBibliotheca*  bib,
+    NaturaGenus*        g)
 {
-    redde (b32)(xar_numerus(g->res_suae) > ZEPHYRUM ||
-                xar_numerus(g->liberi)   > ZEPHYRUM);
+    i32 i;
+
+    si (xar_numerus(g->res_suae) > ZEPHYRUM ||
+        xar_numerus(g->liberi)   > ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(bib->res_omnes); i++)
+    {
+        NaturaRes* r;
+
+        r = *(NaturaRes**)xar_obtinere(bib->res_omnes, i);
+        si (r->genus_etiam == g)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 /* Ens quod relatio petit, SI citari potest - aliter NIHIL.
@@ -873,9 +948,11 @@ _petitum_citabile(
     chorda**            ad_ex,
     Piscina*            piscina)
 {
-    chorda*      ad;
-    chorda*      modulus;
-    NaturaGenus* g;
+    chorda*             ad;
+    chorda*             modulus;
+    constans character* ad_cstr;
+    constans character* modulus_cstr;
+    NaturaGenus*        g;
 
     *ad_ex = NIHIL;
 
@@ -897,18 +974,37 @@ _petitum_citabile(
     }
     modulus = stml_attributum_capere(nodus, "modulus");
 
+    /* CONVERSIO SEMEL, ad portam: quaestiones infra litteras C
+     * comparant, ergo quicquid eas ingreditur per _cstr_tutum
+     * transire debet. Recusatum irresolubile est - quod VERUM
+     * est, quia nomen octetum nullum ferens in corpore non est. */
+    ad_cstr = _cstr_tutum(ad, "relatio ad=", piscina);
+    si (!ad_cstr)
+    {
+        redde NC_CIT_IGNOTA;
+    }
+    modulus_cstr = NIHIL;
     si (modulus)
     {
-        g = natura_genus_in(bib, chorda_ut_cstr(*modulus, piscina),
-                            chorda_ut_cstr(*ad, piscina));
+        modulus_cstr = _cstr_tutum(modulus, "relatio modulus=",
+                                   piscina);
+        si (!modulus_cstr)
+        {
+            redde NC_CIT_IGNOTA;
+        }
+    }
+
+    si (modulus_cstr)
+    {
+        g = natura_genus_in(bib, modulus_cstr, ad_cstr);
     }
     alioquin
     {
-        g = natura_genus(bib, chorda_ut_cstr(*ad, piscina));
+        g = natura_genus(bib, ad_cstr);
     }
     si (g)
     {
-        si (_posteros_habet(g))
+        si (_posteros_habet(bib, g))
         {
             redde NC_CIT_POSTERI;
         }
@@ -916,12 +1012,11 @@ _petitum_citabile(
         redde NC_CIT_FIT;
     }
 
-    si (modulus)
+    si (modulus_cstr)
     {
         NaturaEns* e;
 
-        e = natura_ens_in(bib, chorda_ut_cstr(*modulus, piscina),
-                          chorda_ut_cstr(*ad, piscina));
+        e = natura_ens_in(bib, modulus_cstr, ad_cstr);
         si (e && e->discrimen == NATURA_ENS_RES)
         {
             *ad_ex = ((NaturaRes*)e->corpus)->titulus;

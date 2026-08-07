@@ -158,7 +158,56 @@ Note the denominator differs from §1's table — 2056 *sites* here versus 640
 one declaration becomes many sites. Sites are what appear in the canon, so
 sites are what the canon reports.
 
-### 7. Known gaps handed forward
+### 7. Two review findings, both about the citation predicate lying quietly
+
+Neither was live in the corpus. Both made the generator capable of emitting a
+citation it had no right to emit, with no diagnostic — and in both cases the
+census would have counted the site under `citatae`, so the preface would have
+**overstated what is safely checked**. That is the worst shape a bug can take
+here, because the number in the header is the thing a reader trusts instead of
+re-deriving.
+
+**A NUL in `ad=` aimed a citation at a genus nobody named.** `chorda` carries a
+length, not a terminator, so it can hold an embedded NUL; `chorda_ut_cstr`
+faithfully copies it and appends a terminator, and the name lookup then reads
+only the prefix. Measured with a control pair:
+
+| corpus | pre-fix emitted | pre-fix census |
+|---|---|---|
+| `ad="folium_unum\0zzz"` (15 bytes) | `<citatio … ad="folium-unum/nomen"/>` | 0 unresolved |
+| `ad="folium_unumzzz"` (14 bytes) | *no citation* | 1 unresolved |
+
+Two byte-strings that differ only by a NUL produced *opposite* outcomes, and
+the wrong one was silent. This is the class commit `72149cc` closed on the
+**value** path (`NC_VALOR_NULLUS`); I reopened it on the **lookup** path one
+commit later, at five sites in a file that previously had zero `chorda_ut_cstr`
+calls.
+
+Fixed at the boundary rather than per site: `_cstr_tutum` is now the only
+place in this file that calls `chorda_ut_cstr`, it refuses loudly on an
+embedded NUL, and the five call sites collapsed to two guarded conversions. The
+next person who needs a C string here inherits the refusal instead of
+re-earning it. A refused name is reported as unresolvable, which is *true* — no
+such name exists in the corpus.
+
+**`_posteros_habet` was blind to `etiam=`.** A res carrying `etiam="G"` genuinely
+**is** a G (natura.h, *membrum essentiale duplex*), but `lib/natura.c:1011`
+records that as `r->genus_etiam` **without** adding the res to `G->res_suae` —
+that index is filled by nesting only. So such a G looked like a leaf and got a
+citation it cannot support. Demonstrated by planting
+`<species nomen="tabula_lignea" etiam="signum"/>`: pre-fix the generated canon
+**rejected a correct document**, naming an absent key for something that really
+is a `signum`; post-fix the same document is accepted and the census moves the
+site from `citatae` to `posteri`.
+
+Not live today — the corpus's one `etiam=` targets `plagula_fontis`, which is
+not a citation target — which is exactly why it needed catching by construction
+rather than by observation.
+
+Both fixes are inert on the real corpus: all 33 module canons and the monolith
+regenerate byte-identically against pre-fix output (34/34).
+
+### 8. Known gaps handed forward
 
 - `tools/natura_canones.sh` **does not exist**, but every generated canon's
   header says `Regenera: ./tools/natura_canones.sh`. Task 5's to create; it
