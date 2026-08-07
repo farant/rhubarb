@@ -792,3 +792,33 @@ expectations updated to the VERBATIM sigiled values — the reader
 strips nothing, per spec. Readers were byte-identical after
 regeneration (coquere maps both old and new genera to verbatim
 chorda*), so -probare exit 0 was honest, not stale.
+
+## 2026-08-08 — census: individua become data, semina.census born
+
+Third projection output shipped. Individuum entries are no longer
+tags (element count 1982 → 1522; closures taxonomy-sized; the
+impostor hole and `.carl-linnaeus` nonsense died); `.census` is the
+one document extension (`.planta`/`.individua` retired, module
+canons live on as opt-in profiles via `canon_examen -canon`);
+`semina.census` = the 112 dictionary individua as generated
+instances of their kinds' tags — own-node valores as attributes
+(inherited defaults stay in the tag), historia transcribed, nota
+skipped, relation values signum-prefixed by target type.
+
+The self-judging gate (generated data under generated grammar)
+found TWO real corpus wounds on first contact: B and ABC carried
+vita=mortua, a state the lingua machine never had (→ derelicta,
+the machine's own terminal); via_appia's quando="-312" is the BC
+date the dies genus can't say — third ictus on 01KZC7F388, wound
+TOLERATED by name in the suite (omnia==I with the res id; when the
+ruling lands, the assertion goes red and the tolerance is deleted
+— deliberately).
+
+Structural notes: `_elementum_aedificare` + `NcCensusRelationum`
+moved to the shared header (emissio calls the plicator per
+individuum for member appellations); relations whose relatio-level
+ad= names an individuum fall back to the KIND's closure (any
+enrolled persona satisfies — "Linnaeus himself" is beyond canon,
+deliberately); enrollment-by-kind worked BEFORE the exclusion
+landed (ad= lists always carried the kind titles), which is what
+let the hortus migration ship standalone-green first.
