@@ -117,12 +117,50 @@ judge clean with zero citations and no `compositum` outside the identity.
   `compositum`. Spec §5.3 records this exact example being wrong twice before;
   the brief regressed it a third time. A hand-written example is not evidence.
 
-### 5. Known gaps handed forward
+### 5. `unicitas` over `nomen=` — added in review (both modes)
+
+Spec §5.3 requires it and no task had implemented it. Without it, `nomen=` is
+an identity that nothing enforces and §3.2's addressability criterion is
+unbacked.
+
+**One identity space across all kinds**, not one uniqueness per kind — §5.3
+says *across all kind elements*, and it is what makes a citation unambiguous:
+if `<persona nomen="x">` and `<inscriptio nomen="x">` could coexist, then
+`ad="…/nomen"` would not name one thing. Verified in both shapes: two entities
+of the same kind sharing a name is rejected, and so is a name shared across two
+different kinds.
+
+`super=` must list every kind element and is **obligatory** — `lib/canon.c`
+skips any node whose title is not in `super`, so an empty `super` judges
+nothing at all. That is the mute gate `canon.canon`'s own header (IV) forbids.
+Only kinds are listed: parts and multiplex children carry `nota=`/`ad=`, never
+`nomen=`, so listing them would judge nothing and bloat the attribute.
+
+The list is **line-wrapped**, which is safe for both readers and was checked
+rather than assumed: `chorda_fissio` splits on space and `chorda_praecidere`
+trims via `isspace()`, so a newline works as a separator; a conforming XML
+reader normalizes it to a space (§3.3.3) and gets the same list. Confirmed by
+the firing test — the matched names sit on lines 18 and 19 of a 105-line
+attribute.
+
+### 6. The header states relation coverage with LIVE numbers
+
+"The monolith uses real `citatio`" invites the reader to assume relations are
+checked. They mostly are not: 217 of 2056 relation sites in the canon. The
+preface now prints the census and its causes, computed at generation time.
+
+Deliberately **not** hardcoded in a comment: the corpus grows, and a fixed
+number starts lying the moment someone adds a model. A generated file should
+say how much of itself it actually checks.
+
+Note the denominator differs from §1's table — 2056 *sites* here versus 640
+*declarations* there. Dictionary entries inherit their genus's apparatus, so
+one declaration becomes many sites. Sites are what appear in the canon, so
+sites are what the canon reports.
+
+### 7. Known gaps handed forward
 
 - `tools/natura_canones.sh` **does not exist**, but every generated canon's
-  header says `Regenera: ./tools/natura_canones.sh`. Pre-existing from Task 3;
-  the freshness gate of spec §5.5 needs it.
-- No `unicitas` over `nomen=` is emitted, though spec §5.3 calls for one.
-  Citations still resolve without it (duplicate keys just overwrite), so this
-  is a correctness gap in identity, not in citation.
+  header says `Regenera: ./tools/natura_canones.sh`. Task 5's to create; it
+  must now regenerate **both** modes.
 - There is no `probatio_natura_canones.c`. All verification so far is by hand.

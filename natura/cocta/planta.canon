@@ -594,4 +594,8 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
 
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="planta rosaceae rosa malus rosa-canina malus-domestica granny-smith"/>
+
 </canon>

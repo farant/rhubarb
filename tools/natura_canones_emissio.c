@@ -57,6 +57,7 @@ interior b32     _membrum_attributum_scribere(FILE* f,
                                               i32* aliena);
 interior vacuum  _eventum_scribere(FILE* f, Xar* elementa);
 interior vacuum  _citationes_scribere(FILE* f, Xar* elementa);
+interior vacuum  _unicitas_scribere(FILE* f, Xar* elementa);
 
 /* nomen naturae (snake) -> nomen canonis (kebab).
  * Bijectivum: genus 'nomen' naturae lineolam non fert. */
@@ -986,6 +987,75 @@ _eventum_scribere(
     fputs("  </elementum>\n", f);
 }
 
+/* UNICITAS identitatis (spec par. 5.3) - AMBO modi.
+ *
+ * 'nomen=' identitas est, non titulus. Sine hac unicitate id quod
+ * canon identitatem VOCAT nihil cogeret, et criterium par. 3.2
+ * (addressabilitas) infundatum maneret: duo entia idem nomen
+ * ferre possent, et 'ad=' citationis quod eorum peteret non
+ * constaret.
+ *
+ * SPATIUM UNUM per genera omnia, non unicitas per genus: aliter
+ * <persona nomen="x"> et <inscriptio nomen="x"> simul starent et
+ * citatio inter ea ambigua esset. Par. 5.3 'trans elementa
+ * generum omnium' dicit.
+ *
+ * super= OBLIGATORIUM est, et vacuum relictum unicitatem MUTAM
+ * faceret: lib/canon.c nodum omnem praeterit cuius titulus in
+ * super non est, unde super vacuum nihil umquam iudicat - id
+ * ipsum quod canon.canon in capite suo (IV) vetat.
+ *
+ * Genera SOLA numerantur: partes et liberi multiplices 'nomen='
+ * non ferunt (nota= aut ad= ferunt), ergo eos addere nihil
+ * iudicaret et indicem inflaret.
+ *
+ * Index per lineas frangitur: chorda_fissio spatio findit et
+ * chorda_praecidere per isspace() tondet, ergo linea nova
+ * separator valet; lector XML conformis eam in spatium
+ * normalizat (par. 3.3.3), unde AMBO idem legunt. */
+interior vacuum
+_unicitas_scribere(
+    FILE*  f,
+    Xar*   elementa)
+{
+    i32 columna;
+    i32 i;
+
+    si (xar_numerus(elementa) == ZEPHYRUM)
+    {
+        redde;
+    }
+
+    fputs("\n  <unicitas nomen=\"identitas\" attributum=\"nomen\"\n"
+          "    nota=\"nomen= identitas est (par. 5.3): spatium "
+          "nominum UNUM per genera omnia\"\n"
+          "    super=\"", f);
+
+    columna = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(elementa); i++)
+    {
+        NcElementum* el;
+
+        el = *(NcElementum**)xar_obtinere(elementa, i);
+        si (i > ZEPHYRUM)
+        {
+            si (columna > LX)
+            {
+                fputs("\n           ", f);
+                columna = ZEPHYRUM;
+            }
+            alioquin
+            {
+                putc(' ', f);
+                columna++;
+            }
+        }
+        _kebab_scribere(f, el->ens->titulus);
+        columna += el->ens->titulus->mensura;
+    }
+    fputs("\"/>\n", f);
+}
+
 /* Citationes - clavis-relatio INTRA documentum.
  *
  * Emissor hic NIHIL iudicat: membrum citatio_ad fert aut non fert.
@@ -1120,6 +1190,7 @@ _canonem_emittere(
     }
 
     _eventum_scribere(f, elementa);
+    _unicitas_scribere(f, elementa);
     _citationes_scribere(f, elementa);
     fputs("\n</canon>\n", f);
 

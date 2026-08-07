@@ -29,32 +29,59 @@
 /* Praefatio monolithi - in canonem ipsum scripta.
  *
  * LECTOR SCIRE DEBET monolithum canones per modulum NON vincere.
- * Fortior est in relationibus, INFIRMIOR in actionibus, et qui
- * contrarium sumit canonem laxiorem pro strictiore adhibebit. */
-#define NC_PRAEFATIO_TOTIUS \
-"  MONOLITHUS: genera omnia corporis (exemplaria XXXIII) unum\n" \
-"  canonem faciunt, ergo documentum unum genera libere miscet -\n" \
-"  plantam, personam quae eam nominavit, opus ubi nomen editum\n" \
-"  est.\n" \
+ * Fortior est in ALIQUIBUS relationibus, INFIRMIOR in actionibus,
+ * et qui contrarium sumit canonem laxiorem pro strictiore
+ * adhibebit.
+ *
+ * NUMERI VIVI, non fixi: quot relationes vere examinentur ex
+ * corpore hodierno computatur et hic scribitur. Numerus in
+ * commentario fixus eo ipso momento mentiretur quo quis exemplar
+ * addit - et 'citationes veras habet' sine numero lectorem
+ * omnes examinari credere sinit.
+ *
+ * (Nomina elementorum SINE uncis scribuntur consulto: uncus in
+ * commentario instrumenta quae per lineas quaerunt fallit -
+ * numerus citationum mea ipsa prosa iam semel corruptus est.) */
+#define NC_PRAEFATIO_FORMA \
+"  MONOLITHUS: genera omnia corporis unum canonem faciunt, ergo\n" \
+"  documentum unum genera libere miscet - plantam, personam quae\n" \
+"  eam nominavit, opus ubi nomen editum est.\n" \
 "\n" \
-"  FORTIOR in relationibus: relatio quae FOLIUM petit (genus sine\n" \
-"  posteris) vera citatio fit, id est clavis intra documentum\n" \
-"  resoluta. In canone per modulum nomen bene formatum solum\n" \
-"  iudicatur, quia petitum ibi extra plagulam est.\n" \
+"  QUID HIC EXAMINETUR, ET QUID NON:\n" \
 "\n" \
-"  (Nomina elementorum hic SINE uncis scribuntur consulto: uncus\n" \
-"  in commentario instrumenta quae per lineas quaerunt fallit -\n" \
-"  numerus citationum mea ipsa prosa iam semel corruptus est.)\n" \
+"  RELATIONES - ex %u sedibus relationum huius canonis, %u\n" \
+"  citationes VERAE fiunt (clavis intra documentum resoluta);\n" \
+"  %u nomine solo iudicantur, id est sicut in canone per\n" \
+"  modulum. Causae, quae omnes limites mechanismi sunt, non\n" \
+"  neglegentiae:\n" \
+"    %u petitum apertum habent (ad='*') - clavis nulla est;\n" \
+"    %u petitum cum POSTERIS petunt - claves per titulum EXACTUM\n" \
+"      colliguntur, ergo citatio documentum reiceret quod\n" \
+"      subgenus licite nominat (persona posteros XIV habet);\n" \
+"    %u multiplices sunt - super= titulo solo congruit nec\n" \
+"      intra= observat, et nomen liberi per genera communicatur\n" \
+"      quorum petita diversa sunt;\n" \
+"    %u petitum non resolvunt.\n" \
+"  ERGO relationes hic FORTIUS iudicantur quam in canone per\n" \
+"  modulum, sed NON OMNES - reliquae aeque laxae sunt.\n" \
 "\n" \
-"  INFIRMIOR in actionibus: electio eventum/actio hic actiones\n" \
-"  TOTIUS CORPORIS unit, non unius moduli. Ratio: canon intra= ad\n" \
-"  parentem PROXIMUM solum ligat, et parens eventi semper\n" \
-"  'historia' est, quae per genera omnia communis est - unde\n" \
-"  actio cuiuslibet moduli ubique accipitur. Canon per modulum\n" \
-"  eandem electionem ad modulum suum angustat.\n" \
+"  ACTIONES - INFIRMIUS quam in canone per modulum. Electio\n" \
+"  eventum/actio hic actiones TOTIUS CORPORIS unit, non unius\n" \
+"  moduli: canon intra= ad parentem PROXIMUM solum ligat, et\n" \
+"  parens eventi semper 'historia' est, quae per genera omnia\n" \
+"  communis est - unde actio cuiuslibet moduli ubique accipitur.\n" \
+"  Canon per modulum eandem electionem ad modulum suum angustat.\n" \
 "\n" \
-"  ERGO: NEUTER ALTERUM VINCIT. Qui relationes examinari vult hunc\n" \
-"  sumat; qui actiones arte astringi vult canonem moduli sui."
+"  IDENTITAS - unicitas trans genera omnia: spatium nominum UNUM.\n" \
+"\n" \
+"  SUMMA: NEUTER CANON ALTERUM VINCIT. Qui relationes examinari\n" \
+"  vult hunc sumat; qui actiones arte astringi vult canonem\n" \
+"  moduli sui."
+
+/* receptaculum praefationis - forma ipsa ~1600 octetos fert,
+ * numeri sex ~40 addunt. RECUSATIO potius quam truncatio: canon
+ * cuius praefatio dimidia est de se ipso mentitur. */
+#define NC_PRAEFATIO_MAXIMA MMMM
 
 /* genus valoris quod canon non habet - ad textum cadit, sed
  * NUMERATUM: degradatio tacita vitium domus est */
@@ -62,6 +89,33 @@ nomen structura {
     chorda*  genus;      /* nomen generis ut natura id dicit */
         i32  numerus;    /* quot declarationes in corpore */
 } NcGenusIgnotum;
+
+/* cur relatio citatio fiat aut non fiat */
+nomen enumeratio {
+    NC_CIT_FIT       = I,   /* petitum folium - citatio vera */
+    NC_CIT_APERTA    = II,  /* ad="*" aut absens - clavis nulla */
+    NC_CIT_POSTERI   = III, /* petitum posteros habet */
+    NC_CIT_MULTIPLEX = IV,  /* super= adstringi nequit */
+    NC_CIT_IGNOTA    = V    /* petitum non resolvitur */
+} NcCitatioStatus;
+
+/* census relationum - NUMERI IN CANONEM IPSUM SCRIBUNTUR.
+ *
+ * Non hic in commentario fixi: corpus crescit, et numerus fixus
+ * mentiretur eo ipso momento quo quis exemplar addit. Canon
+ * generatus de SE dicat quantum vere examinet.
+ *
+ * SEDES numerantur (membra huius canonis), non declarationes
+ * generum: res apparatum generis sui hereditant, unde numerus
+ * sedium maior est. Sedes autem sunt quae in canone apparent. */
+nomen structura {
+    i32  omnes;
+    i32  citatae;
+    i32  apertae;
+    i32  posteri;
+    i32  multiplices;
+    i32  ignotae;
+} NcCensusRelationum;
 
 interior b32       _extensionem_habet(constans chorda* t);
 interior vacuum    _stirpem_scribere(constans chorda* t, character* ex,
@@ -97,15 +151,22 @@ interior vacuum    _valores_ex_nodo(NcElementum* el, StmlNodus* n,
 interior vacuum    _valores_applicare(NcElementum* el, NcEns* ens,
                                       Piscina* piscina);
 interior b32       _posteros_habet(NaturaGenus* g);
-interior chorda*   _petitum_citabile(NaturaBibliotheca* bib,
-                                     StmlNodus* nodus,
-                                     Piscina* piscina);
+interior NcCitatioStatus _petitum_citabile(NaturaBibliotheca* bib,
+                                     StmlNodus* nodus, b32 multiplex,
+                                     chorda** ad_ex, Piscina* piscina);
+interior vacuum    _censum_notare(NcCensusRelationum* census,
+                                  NcCitatioStatus status);
+interior vacuum    _praefationem_scribere(character* ex, i32 tectum,
+                                  constans NcCensusRelationum* census);
 interior vacuum    _apparatum_plicare(NaturaBibliotheca* bib,
                                       NcElementum* el, Xar* apparatus,
-                                      b32 monolithus, Piscina* piscina);
+                                      b32 monolithus,
+                                      NcCensusRelationum* census,
+                                      Piscina* piscina);
 interior NcElementum* _elementum_aedificare(NaturaBibliotheca* bib,
                                             NcEns* ens,
                                             b32 monolithus,
+                                            NcCensusRelationum* census,
                                             Piscina* piscina);
 interior chorda    _kebab_chorda(constans chorda* t, Piscina* piscina);
 interior i32       _nomina_gemina_numerare(Xar* entia,
@@ -804,20 +865,35 @@ _posteros_habet(
  *
  * Res dictionarii (carl_linnaeus) folium SEMPER est: NaturaRes
  * posteros ferre non potest. */
-interior chorda*
+interior NcCitatioStatus
 _petitum_citabile(
     NaturaBibliotheca*  bib,
     StmlNodus*          nodus,
+    b32                 multiplex,
+    chorda**            ad_ex,
     Piscina*            piscina)
 {
     chorda*      ad;
     chorda*      modulus;
     NaturaGenus* g;
 
+    *ad_ex = NIHIL;
+
+    /* MULTIPLEX PRIMUM: exclusio categorica est, petito
+     * qualicumque. Citans est LIBERUM relationis, et super=
+     * titulo nodi SOLO congruit nec intra= observat - nomen
+     * autem liberi per genera communicatur, quorum petita
+     * diversa sunt ('continet' septem habet). Citatio una ergo
+     * ceteris falso clamaret. */
+    si (multiplex)
+    {
+        redde NC_CIT_MULTIPLEX;
+    }
+
     ad = stml_attributum_capere(nodus, "ad");
     si (!ad || chorda_aequalis_literis(*ad, "*"))
     {
-        redde NIHIL;
+        redde NC_CIT_APERTA;
     }
     modulus = stml_attributum_capere(nodus, "modulus");
 
@@ -832,7 +908,12 @@ _petitum_citabile(
     }
     si (g)
     {
-        redde _posteros_habet(g) ? NIHIL : g->titulus;
+        si (_posteros_habet(g))
+        {
+            redde NC_CIT_POSTERI;
+        }
+        *ad_ex = g->titulus;
+        redde NC_CIT_FIT;
     }
 
     si (modulus)
@@ -843,10 +924,32 @@ _petitum_citabile(
                           chorda_ut_cstr(*ad, piscina));
         si (e && e->discrimen == NATURA_ENS_RES)
         {
-            redde ((NaturaRes*)e->corpus)->titulus;
+            *ad_ex = ((NaturaRes*)e->corpus)->titulus;
+            redde NC_CIT_FIT;
         }
     }
-    redde NIHIL;
+    redde NC_CIT_IGNOTA;
+}
+
+/* causam in censum referre - numeri in praefationem canonis eunt */
+interior vacuum
+_censum_notare(
+    NcCensusRelationum*  census,
+    NcCitatioStatus      status)
+{
+    si (!census)
+    {
+        redde;
+    }
+    census->omnes++;
+    commutatio (status)
+    {
+        casus NC_CIT_FIT:       census->citatae++;     frange;
+        casus NC_CIT_APERTA:    census->apertae++;     frange;
+        casus NC_CIT_POSTERI:   census->posteri++;     frange;
+        casus NC_CIT_MULTIPLEX: census->multiplices++; frange;
+        ordinarius:             census->ignotae++;     frange;
+    }
 }
 
 /* apparatum unius catenae (iam hereditate solutum) in exemplar
@@ -854,11 +957,12 @@ _petitum_citabile(
  * membra iam posita currit, ergo catena prior vincit. */
 interior vacuum
 _apparatum_plicare(
-    NaturaBibliotheca*  bib,
-    NcElementum*        el,
-    Xar*                apparatus,
-    b32                 monolithus,
-    Piscina*            piscina)
+    NaturaBibliotheca*   bib,
+    NcElementum*         el,
+    Xar*                 apparatus,
+    b32                  monolithus,
+    NcCensusRelationum*  census,
+    Piscina*             piscina)
 {
     i32 i;
 
@@ -966,18 +1070,19 @@ _apparatum_plicare(
                  * identitates documenti, ergo snake rectum est. */
                 m->genus_valoris = "compositum";
 
-                si (m->discrimen == NC_MEMBRUM_ATTRIBUTUM)
                 {
-                    m->citatio_ad = _petitum_citabile(bib, am->nodus,
-                                                      piscina);
+                    chorda*         petitum;
+                    NcCitatioStatus status;
+
+                    status = _petitum_citabile(bib, am->nodus,
+                        (b32)(m->discrimen == NC_MEMBRUM_LIBERUM),
+                        &petitum, piscina);
+                    si (status == NC_CIT_FIT)
+                    {
+                        m->citatio_ad = petitum;
+                    }
+                    _censum_notare(census, status);
                 }
-                /* MULTIPLEX CITARI NEQUIT, mensuratum: citantes per
-                 * super= eliguntur, quod titulo nodi SOLO congruit
-                 * (lib/canon.c) - et liberum relationis nomen suum
-                 * cum aliis generibus communicat, quorum petita
-                 * DIVERSA sunt. 'continet' septem petita distincta
-                 * habet: citatio una sex falso clamaret. Genera
-                 * enim per intra= adstringuntur, citationes non. */
             }
         }
         alioquin
@@ -1020,10 +1125,11 @@ _apparatum_plicare(
  * altera hereditatum praestitutum suum tacite amittat. */
 interior NcElementum*
 _elementum_aedificare(
-    NaturaBibliotheca*  bib,
-    NcEns*              ens,
-    b32                 monolithus,
-    Piscina*            piscina)
+    NaturaBibliotheca*   bib,
+    NcEns*               ens,
+    b32                  monolithus,
+    NcCensusRelationum*  census,
+    Piscina*             piscina)
 {
     NcElementum* el;
 
@@ -1040,12 +1146,12 @@ _elementum_aedificare(
 
     _apparatum_plicare(bib, el,
                        natura_apparatus(bib, ens->genus, piscina),
-                       monolithus, piscina);
+                       monolithus, census, piscina);
     si (ens->genus_etiam)
     {
         _apparatum_plicare(
             bib, el, natura_apparatus(bib, ens->genus_etiam, piscina),
-            monolithus, piscina);
+            monolithus, census, piscina);
     }
 
     _valores_applicare(el, ens, piscina);
@@ -1087,7 +1193,8 @@ _canonem_modulo_scribere(
             perge;
         }
         locus  = (NcElementum**)xar_addere(elementa);
-        *locus = _elementum_aedificare(bib, e, FALSUM, piscina);
+        *locus = _elementum_aedificare(bib, e, FALSUM, NIHIL,
+                                      piscina);
     }
 
     si (xar_numerus(elementa) == ZEPHYRUM)
@@ -1196,6 +1303,41 @@ _nomina_gemina_numerare(
     redde gemina;
 }
 
+/* praefationem cum numeris vivis in receptaculum scribere.
+ *
+ * sprintf adhibetur quia forma NOSTRA est et numeri sex soli
+ * variant; receptaculum tamen large mensuratum est et mensura
+ * ANTE scriptionem probatur, ne canon praefatione trunca
+ * nascatur. */
+interior vacuum
+_praefationem_scribere(
+    character*                    ex,
+    i32                           tectum,
+    constans NcCensusRelationum*  census)
+{
+    i32 nudae;
+
+    /* i32 INSIGNATUS est: subtractio quae infra nihilum caderet
+     * numerum immanem pareret. Non potest hic (citatae pars
+     * omnium est), sed custos gratis stat. */
+    nudae = (census->omnes >= census->citatae)
+            ? (census->omnes - census->citatae) : ZEPHYRUM;
+
+    si ((i32)strlen(NC_PRAEFATIO_FORMA) + C >= tectum)
+    {
+        fprintf(stderr,
+            "natura_canones: praefatio receptaculum excedit - "
+            "canon de se ipso mentiretur\n");
+        ex[ZEPHYRUM] = '\0';
+        redde;
+    }
+
+    sprintf(ex, NC_PRAEFATIO_FORMA,
+            census->omnes, census->citatae, nudae,
+            census->apertae, census->posteri, census->multiplices,
+            census->ignotae);
+}
+
 /* MONOLITHUS: corpus totum in canonem unum.
  *
  * Idem emissor, idem exemplar - elementa SOLA differunt (omnia,
@@ -1210,11 +1352,20 @@ _canonem_totum_scribere(
     constans character*  via,
     Piscina*             piscina)
 {
-    Xar*  elementa;
-    FILE* f;
-    b32   sanum;
-    i32   gemina;
-    i32   i;
+    NcCensusRelationum census;
+    character          praefatio[NC_PRAEFATIO_MAXIMA];
+    Xar*               elementa;
+    FILE*              f;
+    b32                sanum;
+    i32                gemina;
+    i32                i;
+
+    census.omnes       = ZEPHYRUM;
+    census.citatae     = ZEPHYRUM;
+    census.apertae     = ZEPHYRUM;
+    census.posteri     = ZEPHYRUM;
+    census.multiplices = ZEPHYRUM;
+    census.ignotae     = ZEPHYRUM;
 
     gemina = _nomina_gemina_numerare(entia, piscina);
     si (gemina > ZEPHYRUM)
@@ -1233,8 +1384,11 @@ _canonem_totum_scribere(
 
         e      = (NcEns*)xar_obtinere(entia, i);
         locus  = (NcElementum**)xar_addere(elementa);
-        *locus = _elementum_aedificare(bib, e, VERUM, piscina);
+        *locus = _elementum_aedificare(bib, e, VERUM, &census,
+                                       piscina);
     }
+    _praefationem_scribere(praefatio, (i32)magnitudo(praefatio),
+                           &census);
 
     f = fopen(via, "w");
     si (!f)
@@ -1244,7 +1398,7 @@ _canonem_totum_scribere(
     }
 
     sanum = _canonem_emittere(f, elementa, "individua",
-                              "natura tota", NC_PRAEFATIO_TOTIUS);
+                              "natura tota", praefatio);
     fclose(f);
 
     si (!sanum)
@@ -1411,7 +1565,7 @@ principale(
                     inspiciendum);
             redde II;
         }
-        el = _elementum_aedificare(bib, e, FALSUM, piscina);
+        el = _elementum_aedificare(bib, e, FALSUM, NIHIL, piscina);
         _elementum_inspicere(stdout, el);
         redde ZEPHYRUM;
     }

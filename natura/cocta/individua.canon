@@ -2,29 +2,40 @@
 <!-- GENERATUM a natura_canones e natura tota - NOLI MANU MUTARE.
      Regenera: ./tools/natura_canones.sh -->
 <!--
-  MONOLITHUS: genera omnia corporis (exemplaria XXXIII) unum
-  canonem faciunt, ergo documentum unum genera libere miscet -
-  plantam, personam quae eam nominavit, opus ubi nomen editum
-  est.
+  MONOLITHUS: genera omnia corporis unum canonem faciunt, ergo
+  documentum unum genera libere miscet - plantam, personam quae
+  eam nominavit, opus ubi nomen editum est.
 
-  FORTIOR in relationibus: relatio quae FOLIUM petit (genus sine
-  posteris) vera citatio fit, id est clavis intra documentum
-  resoluta. In canone per modulum nomen bene formatum solum
-  iudicatur, quia petitum ibi extra plagulam est.
+  QUID HIC EXAMINETUR, ET QUID NON:
 
-  (Nomina elementorum hic SINE uncis scribuntur consulto: uncus
-  in commentario instrumenta quae per lineas quaerunt fallit -
-  numerus citationum mea ipsa prosa iam semel corruptus est.)
+  RELATIONES - ex 2056 sedibus relationum huius canonis, 217
+  citationes VERAE fiunt (clavis intra documentum resoluta);
+  1839 nomine solo iudicantur, id est sicut in canone per
+  modulum. Causae, quae omnes limites mechanismi sunt, non
+  neglegentiae:
+    438 petitum apertum habent (ad='*') - clavis nulla est;
+    804 petitum cum POSTERIS petunt - claves per titulum EXACTUM
+      colliguntur, ergo citatio documentum reiceret quod
+      subgenus licite nominat (persona posteros XIV habet);
+    587 multiplices sunt - super= titulo solo congruit nec
+      intra= observat, et nomen liberi per genera communicatur
+      quorum petita diversa sunt;
+    10 petitum non resolvunt.
+  ERGO relationes hic FORTIUS iudicantur quam in canone per
+  modulum, sed NON OMNES - reliquae aeque laxae sunt.
 
-  INFIRMIOR in actionibus: electio eventum/actio hic actiones
-  TOTIUS CORPORIS unit, non unius moduli. Ratio: canon intra= ad
-  parentem PROXIMUM solum ligat, et parens eventi semper
-  'historia' est, quae per genera omnia communis est - unde
-  actio cuiuslibet moduli ubique accipitur. Canon per modulum
-  eandem electionem ad modulum suum angustat.
+  ACTIONES - INFIRMIUS quam in canone per modulum. Electio
+  eventum/actio hic actiones TOTIUS CORPORIS unit, non unius
+  moduli: canon intra= ad parentem PROXIMUM solum ligat, et
+  parens eventi semper 'historia' est, quae per genera omnia
+  communis est - unde actio cuiuslibet moduli ubique accipitur.
+  Canon per modulum eandem electionem ad modulum suum angustat.
 
-  ERGO: NEUTER ALTERUM VINCIT. Qui relationes examinari vult hunc
-  sumat; qui actiones arte astringi vult canonem moduli sui.
+  IDENTITAS - unicitas trans genera omnia: spatium nominum UNUM.
+
+  SUMMA: NEUTER CANON ALTERUM VINCIT. Qui relationes examinari
+  vult hunc sumat; qui actiones arte astringi vult canonem
+  moduli sui.
 -->
 <canon dialectus="individua" versio="1">
 
@@ -14661,6 +14672,112 @@
     <attributum nomen="fons" genus="nomen"/>
     <attributum nomen="nota" genus="textus"/>
   </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="acta punctum-actorum attestatio radix-fiduciae actus-sollemnis
+           ritus sacramentum sacramentale actus-iuridicus quorum animal architectura-machinae
+           versio-architecturae processorium causa cliens cliens-telae cliens-nativus
+           cliens-terminalis cliens-api cliens-mcp cliens-cli cliens-mobilis
+           servus moneta pecunia possessio pretium venditio tessera tessera-negotiabilis
+           tessera-simplex ratio-rationaria actor nuntius eventum stigmergia
+           res-corporea artefactum materia instrumentum res-sacra damnum
+           vivens status proiectio artefactum-aedificationis promptuarium
+           index lectio mutatio functio functio-pura constans constans-numerica
+           constans-textualis bibliotheca assertio commentarium identificator
+           programma instrumentum-aedificationis postulatum facultas probatio
+           vitium debitum-technicum complicatio consilium depravatio interventio
+           forma-datorum schema-identificandi gradus-assensus fons observatio
+           iudicium periculum ignotum investigatio secretum peritia-communis
+           attributio fundamentum lingua-programmandi lingua-iussuum versio-linguae
+           implementatio-linguae verbum-clavis locus inscriptio iurisdictio
+           aedificium magnitudo-mensurabilis unitas-mensurae quantitas incertitudo
+           instrumentum-mensurae morbus norma lex classis-normativa fictio-iuris
+           obligatio contractus licentia tributum titulus iussum fiducia
+           petitio delegatio tractatus limitatio portio-communis ambitus
+           pensum incidens processus opus-scriptum expressio editio codex
+           periodicum fasciculus universitas organizatio colonia persona-iuridica
+           officium corpus-normans societas magistratus persona substantia-chemica
+           medicamentum coctura interactio plagula-computatralis plagula-fontis
+           scriptum-exsecutabile plagula-notationis plagula-figurationis
+           plagula-datorum plagula-sqlite systema-plagularum directorium
+           planta rosaceae rosa malus procedura procedura-automata praescriptum
+           gradus-praescripti versio-praescripti index-verificationis schema
+           campus genus-valoris systema-operativum systema-unixiforme distributio-systematis
+           versio-systematis momentum intervallum recurrentia recurrentia-computata
+           recurrentia-per-usum horarium calendarium reservatio iter via
+           vehiculum onus versio acta-publica regesta acta-transactionum
+           acta-versionum acta-auditus conditio clausura-rationis statio
+           attestatio-civilis instrumentum-publicum apostilla radix-systematis
+           commissio-notarii origo-dominii baptismus confirmatio eucharistia
+           paenitentia unctio-infirmorum ordo matrimonium benedictio consecratio-loci
+           exorcismus stipulatio mancipatio manumissio testamentum confectio-instrumenti
+           promulgatio inauguratio collatio-tituli sententia-lata quorum-deliberativum
+           maioritas-replicarum apis canis homo x86 arm riscv i386 x86-64
+           armv8 intel-8086 apple-m1 causa-materialis causa-formalis causa-efficiens
+           causa-finalis curl servus-telae servus-datorum servus-nominum
+           servus-procuratorius servus-mcp euro dollarium-americanum charta-onerum
+           apocha-horrei syngrapha perscriptio nummus-chartaceus obligatio-ad-portitorem
+           tessera-spectaculi tessera-repositoria tessera-digitalis ratio-duplex
+           vestigium-chemicum semita-trita tabula-communis vestigia-operis
+           cibus res-sacra-immobilis res-sacra-mobilis reliquiae fractura
+           corruptio contaminatio errno semen-rand index-strtok obiectum-compilatum
+           exsecutabile-ligatum index-inversus index-arboris lectio-memoriae
+           lectio-externa mutatio-memoriae scriptio-externa allocatio terminatio
+           transactio printf scanf memcpy strtok rand malloc abs strlen null
+           pi eof libc sqlite zlib praeconditio postconditio invarians assertio-statica
+           assertio-probationis explicativum documentarium monitum-futuri
+           titulus-iuris codex-sepultus annotatio-machinae identificator-baptismalis
+           sigillum-contenti instrumentum-lineae daemon applicatio make aedilis
+           probatio-unitatis probatio-integrationis probatio-regressionis
+           probatio-fumi regressio consilium-computatum conservatio restauratio-aedificii
+           curatio-medica series cauda acervus tabula-associativa copia arbor
+           uuid ulid isbn isbn-10 isbn-13 issn doi orcid iban e164 gtin uri
+           cas ndc rxnorm numerus-dea scientia opinio fides suspicio dubitatio
+           fons-scriptus fons-mensurae fons-testimonii corpus-institutionis
+           symptoma signum testimonium diagnosis aestimatio praedictio sententia-iudicis
+           ignotum-notum ignotum-ignotum indeterminatum amissum retentum
+           impertinens controversum investigatio-praeventiva inquisitio-forensis
+           recensio-post-mortem clavis-privata verbum-arcanum secretum-negotii
+           sigillum-confessionis notitia-pascui ars-officinae memoria-operis
+           autopsia mensuratio documentum-scriptum auctoritas-testis illatio
+           comparatio-stili coniectura-periti praesumptio c python rust b
+           abc bash c89 c99 c11 gcc clang cpython fil-c officina static const
+           goto restrict longitudo massa tempus-intervallum temperatura capacitas
+           numerositas gramma kilogramma metrum secundum minutum gradus-celsius
+           morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus
+           iso-9899-1990 iso-9899-1999 posix-1 lex-aeterna lex-naturalis
+           lex-humana lex-divina-positiva consuetudo schedula-substantiarum
+           gradus-eventus-aviatorii classis-periculi-mercium adoptio mors-praesumpta
+           personalitas-iuridica obligatio-ex-contractu obligatio-ex-delicto
+           obligatio-ex-lege emptio-venditio locatio-conductio societas-contractus
+           mandatum commodatum portorium vectigal decuma tributum-capitis
+           gradus-academicus character-indelebilis titulus-honoris praescriptio-medica
+           mandatum-iudicis iussum-emptionis iussum-operis iussum-ne-resuscitetur
+           petitio-assecurationis petitio-remota supplicatio plena-potestas
+           procuratio delegatio-canonica tractatus-gandavensis portio-pascui
+           portio-piscandi portio-computandi ambitus-fabricae ambitus-probationis
+           ambitus-producens moby-dick summa-theologiae abusus-linguae systema-naturae
+           species-plantarum abusus-linguae-germanice abusus-linguae-anglice
+           moby-dick-londinensis-1851 moby-dick-novi-eboraci-1851 systema-naturae-editio-decima
+           debian-project agentia-isbn colonia-apium grex universitas-personarum
+           universitas-rerum parochus episcopus notarius curator praeses-collegii
+           iso iec ieee ansi intel amd arm-ltd canonical apple microsoft
+           bell-labs att dennis-ritchie thomas-aquinas carl-linnaeus josef-pieper
+           herman-melville ken-thompson linus-torvalds guido-van-rossum graydon-hoare
+           brian-fox edsger-dijkstra bertrand-meyer luca-pacioli duns-scotus
+           amoxicillinum warfarinum medicamentum-genericum medicamentum-nominatum
+           medicamentum-compositum interactio-medicamentorum interactio-cum-cibo
+           incompatibilitas-mercium fons-c caput-c fons-python fons-rust
+           scriptum-conchae plagula-xml plagula-stml plagula-markdown plagula-toml
+           plagula-plist plagula-json plagula-csv volumen rosa-canina malus-domestica
+           granny-smith fistula-integrationis depositio textus numerus dies
+           veritas electio citatio windows vms unix-bell-labs macos linux
+           debian ubuntu arch macos-13-ventura macos-14-sonoma pascha dies-negotiorum
+           dies-ordinalis-mensis per-horas-operis per-cyclos per-spatium
+           calendarium-gregorianum calendarium-liturgicum via-terrestris
+           via-maritima via-aeria via-appia canalis-suesianus navis currus-onerarius
+           tramen aeroplanum"/>
 
   <!-- CITATIONES: relatio quae folium petit clavem documenti fit.
        Petitum cum posteris citari NEQUIT - documentum subgenus
