@@ -68,6 +68,13 @@ nomen structura {
         Xar*  actiones;   /* Xar de chorda* - pro <eventum actio=> */
 } NcElementum;
 
+/* genus valoris quod canon non habet - ad textum cadit, sed
+ * NUMERATUM: degradatio tacita vitium domus est */
+nomen structura {
+    chorda*  genus;      /* nomen generis ut natura id dicit */
+        i32  numerus;    /* quot declarationes in corpore */
+} NcGenusIgnotum;
+
 interior b32       _extensionem_habet(constans chorda* t);
 interior vacuum    _stirpem_scribere(constans chorda* t, character* ex,
                                      i32 tectum);
@@ -89,8 +96,11 @@ interior NcMembrum* _membrum_invenire(Xar* membra,
                                       constans character* praefixum);
 interior b32       _membrum_adest(Xar* membra, constans chorda* titulus,
                                   constans character* praefixum);
-interior b32       _actio_adest(Xar* actiones,
-                                constans chorda* titulus);
+interior b32       _genus_valoris_notum(constans chorda* g);
+interior vacuum    _ignotum_numerare(Xar* ignota, chorda* g);
+interior vacuum    _genera_ignota_generis(Xar* ignota, NaturaGenus* g);
+interior vacuum    _genera_ignota_nuntiare(NaturaBibliotheca* bib,
+                                           Piscina* piscina);
 interior Xar*      _optiones_colligere(StmlNodus* n, Piscina* piscina);
 interior Xar*      _status_colligere(StmlNodus* n, Piscina* piscina);
 interior b32       _machina_ad_individuum(StmlNodus* n);
@@ -410,26 +420,123 @@ _membrum_adest(
     redde (b32)(_membrum_invenire(membra, titulus, praefixum) != NIHIL);
 }
 
-/* actiones electionem UNAM fiunt (<eventum actio=>), ergo actio
- * hereditata bis nominata optionem duplicem pareret */
+/* an canon hoc genus valoris ferre possit. Vocabularium canonis
+ * (lib/canon.c genus_legere): nomen | numerus | veritas | dies |
+ * electio | compositum | textus. Natura horum quinque sola in
+ * <proprietas genus=> dicit; quicquid aliud dicit ad textum cadit,
+ * quia canon aliud non habet. */
 interior b32
-_actio_adest(
-    Xar*              actiones,
-    constans chorda*  titulus)
+_genus_valoris_notum(
+    constans chorda*  g)
 {
-    i32 i;
+    redde (b32)(chorda_aequalis_literis(*g, "textus")  ||
+                chorda_aequalis_literis(*g, "electio") ||
+                chorda_aequalis_literis(*g, "numerus") ||
+                chorda_aequalis_literis(*g, "veritas") ||
+                chorda_aequalis_literis(*g, "dies"));
+}
 
-    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+interior vacuum
+_ignotum_numerare(
+    Xar*     ignota,
+    chorda*  g)
+{
+    NcGenusIgnotum* e;
+    i32             i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(ignota); i++)
     {
-        chorda* a;
-
-        a = *(chorda**)xar_obtinere(actiones, i);
-        si (chorda_aequalis(*a, *titulus))
+        e = (NcGenusIgnotum*)xar_obtinere(ignota, i);
+        si (chorda_aequalis(*e->genus, *g))
         {
-            redde VERUM;
+            e->numerus++;
+            redde;
         }
     }
-    redde FALSUM;
+    e          = (NcGenusIgnotum*)xar_addere(ignota);
+    e->genus   = g;
+    e->numerus = I;
+}
+
+/* proprietates generis unius (SUAS, non hereditatas) numerare */
+interior vacuum
+_genera_ignota_generis(
+    Xar*          ignota,
+    NaturaGenus*  g)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = stml_numerus_liberorum(g->nodus);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* continens;
+        i32        j;
+        i32        n_intus;
+
+        continens = stml_liberum_ad_indicem(g->nodus, i);
+        si (!continens || continens->genus != STML_NODUS_ELEMENTUM ||
+            !chorda_aequalis_literis(*continens->titulus,
+                                     "proprietates"))
+        {
+            perge;
+        }
+
+        n_intus = stml_numerus_liberorum(continens);
+        per (j = ZEPHYRUM; j < n_intus; j++)
+        {
+            StmlNodus* p;
+            chorda*    gv;
+
+            p = stml_liberum_ad_indicem(continens, j);
+            si (!p || p->genus != STML_NODUS_ELEMENTUM ||
+                !chorda_aequalis_literis(*p->titulus, "proprietas"))
+            {
+                perge;
+            }
+            gv = stml_attributum_capere(p, "genus");
+            si (gv && !_genus_valoris_notum(gv))
+            {
+                _ignotum_numerare(ignota, gv);
+            }
+        }
+    }
+}
+
+/* DECLARATIONES numerantur, non membra plicata: hereditas idem
+ * genus per posteros centies ferret, et numerus inflatus quaestioni
+ * vocabularii (spec par. 8) mentiretur.
+ *
+ * Nuntius modo NON pendet - corpus quod genera ignota fert ea fert
+ * sive index sive elementum unum petitur. */
+interior vacuum
+_genera_ignota_nuntiare(
+    NaturaBibliotheca*  bib,
+    Piscina*            piscina)
+{
+    Xar* ignota;
+    i32  i;
+
+    ignota = xar_creare(piscina, (i32)magnitudo(NcGenusIgnotum));
+
+    per (i = ZEPHYRUM; i < xar_numerus(bib->genera_omnia); i++)
+    {
+        _genera_ignota_generis(
+            ignota, *(NaturaGenus**)xar_obtinere(bib->genera_omnia, i));
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(ignota); i++)
+    {
+        NcGenusIgnotum* e;
+
+        e = (NcGenusIgnotum*)xar_obtinere(ignota, i);
+        fprintf(stderr,
+            "natura_canones: genus proprietatis '%.*s' extra canonem "
+            "- textus adhibetur (%u instantiae)\n",
+            (integer)e->genus->mensura,
+            (constans character*)e->genus->datum,
+            e->numerus);
+    }
 }
 
 /* liberos <optio> in Xar de chorda* colligere */
@@ -648,7 +755,7 @@ _elementum_aedificare(
         {
             chorda** locus;
 
-            si (!titulus || _actio_adest(el->actiones, titulus))
+            si (!titulus)
             {
                 perge;
             }
@@ -881,6 +988,10 @@ principale(
             "natura_canones: corpus vulnera %u - proiectio tamen "
             "pergit\n", vulnera);
     }
+
+    /* degradatio VISIBILIS: genus quod canon non fert ad textum
+     * cadit (recte - aliud non est), sed numquam TACITE */
+    _genera_ignota_nuntiare(bib, piscina);
 
     entia = _entia_colligere(bib, piscina);
     si (xar_numerus(entia) == ZEPHYRUM)
