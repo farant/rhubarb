@@ -105,7 +105,10 @@ nomen enumeratio {
      * valorem clavis alicubi declaratum aequare debet. Cum intra=
      * scopus per INSTANTIAM est (transitus statum machinae SUAE
      * citat). Trans plagulas = gradus III, oneratoris manet. */
-    CANON_CITATIO_IRRITA      = XII
+    CANON_CITATIO_IRRITA      = XII,
+    /* SIGNA (spec canon-referentia): '.genus' extra indicem ad=
+     * citationis - vocabularium generum, sine clavibus iudicatum */
+    CANON_VOCABULUM_IGNOTUM   = XIII
 } CanonVitiumGenus;
 
 nomen structura {

@@ -298,6 +298,42 @@ interior constans character* GREX_MALUS =
     "  <ovis nomen=\".agna-puncto\"/>\n"
     "</grex>\n";
 
+/* dispositio signorum in citatione: '.' vocabularium (sine
+ * clavibus), '#' clavis verbatim; forma vetus nuda (natura.canon)
+ * clavem verbatim retinet - probatur eo quod fixturae veteres
+ * (bibliotheca, silvula) IMMUTATAE virent */
+interior constans character* CANON_GREGIS_CITATI =
+    "<canon dialectus=\"grex2\" versio=\"1\">\n"
+    "  <elementum nomen=\"grex2\" radix=\"verum\">\n"
+    "    <liberum nomen=\"ovis\"/>\n"
+    "    <liberum nomen=\"canis\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"ovis\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+    "    <attributum nomen=\"custos\" genus=\"referentia\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"canis\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+    "  </elementum>\n"
+    "  <citatio nomen=\"custodum\" attributum=\"custos\"\n"
+    "    ad=\"canis/nomen\" super=\"ovis\"/>\n"
+    "</canon>\n";
+
+interior constans character* GREX2_SANUS =
+    "<grex2>\n"
+    "  <canis nomen=\"#canis-unus\"/>\n"
+    "  <ovis nomen=\"#agna\" custos=\".canis\"/>\n"
+    "  <ovis nomen=\"#agnella\" custos=\"#canis-unus\"/>\n"
+    "</grex2>\n";
+
+/* '.ovis' extra vocabularium (index = canis solum);
+ * '#nemo' clavem non habet */
+interior constans character* GREX2_MALUS =
+    "<grex2>\n"
+    "  <ovis nomen=\"#agna\" custos=\".ovis\"/>\n"
+    "  <ovis nomen=\"#agnella\" custos=\"#nemo\"/>\n"
+    "</grex2>\n";
+
 interior constans character* CATALOGUS_FIXTURA =
     "# commentarium praetermittendum\n"
     ".genera\tnatura/natura.canon\n"
@@ -804,6 +840,36 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), V);
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_VALOR_MALUS), V);
+    }
+
+
+    /* ========================================================
+     * PROBARE: dispositio signorum in citatione
+     * ======================================================== */
+
+    {
+        Canon* grex2;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans dispositionem signorum ---\n");
+
+        grex2 = canon_ex_literis(CANON_GREGIS_CITATI,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (grex2);
+
+        vitia = iudicare_literis(grex2, GREX2_SANUS,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        vitia = iudicare_literis(grex2, GREX2_MALUS,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), II);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VOCABULUM_IGNOTUM), I);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_CITATIO_IRRITA), I);
     }
 
 

@@ -1532,12 +1532,74 @@ canon_iudicare(
                     }
 
                     v = stml_attributum_capere(n, attr_cstr);
-                    si (!v)
+                    si (!v || v->mensura == ZEPHYRUM)
                     {
                         perge;
                     }
-                    si (!tabula_dispersa_continet(claves, *v))
+                    si ((character)v->datum[ZEPHYRUM] == '.')
                     {
+                        /* referentia generis: vocabularium ex
+                         * indice ad_elementa - clavibus nihil
+                         * opus, ergo etiam in canone moduli
+                         * currit (spec canon-referentia par. 5) */
+                        chorda corpus;
+                        b32    notum;
+                        i32    mv;
+
+                        corpus = chorda_sectio(*v, I, v->mensura);
+                        notum  = FALSUM;
+                        per (mv = ZEPHYRUM;
+                             mv < xar_numerus(ci->ad_elementa);
+                             mv++)
+                        {
+                            chorda** t;
+
+                            t = (chorda**)xar_obtinere(
+                                ci->ad_elementa, mv);
+                            si (chorda_aequalis(corpus, **t))
+                            {
+                                notum = VERUM;
+                                frange;
+                            }
+                        }
+                        si (!notum)
+                        {
+                            chorda* sug;
+                            i32     nv;
+
+                            sug = NIHIL;
+                            nv  = xar_numerus(ci->ad_elementa);
+                            si (nv > ZEPHYRUM)
+                            {
+                                chorda* acies_v;
+                                i32     iv;
+
+                                acies_v = (chorda*)
+                                    piscina_allocare(piscina,
+                                        magnitudo(chorda) *
+                                        (memoriae_index)nv);
+                                per (iv = ZEPHYRUM; iv < nv; iv++)
+                                {
+                                    acies_v[iv] = **(chorda**)
+                                        xar_obtinere(
+                                            ci->ad_elementa, iv);
+                                }
+                                sug = _suggestio(&corpus, acies_v,
+                                                 nv, piscina);
+                            }
+                            vitium_addere(vitia,
+                                CANON_VOCABULUM_IGNOTUM, n,
+                                n->titulus, sug ? sug : v,
+                                ZEPHYRUM, ZEPHYRUM);
+                        }
+                    }
+                    alioquin si (!tabula_dispersa_continet(claves,
+                                                           *v))
+                    {
+                        /* '#' verbatim (claves quoque signum
+                         * ferunt) ET forma vetus nuda (canones
+                         * sine signis - natura.canon) eadem via:
+                         * clavis verbatim */
                         vitium_addere(vitia, CANON_CITATIO_IRRITA,
                             n, n->titulus, v, ZEPHYRUM, ZEPHYRUM);
                     }
@@ -1579,6 +1641,8 @@ canon_nuntius(
             redde "nomen bis in spatio unico";
         casus CANON_RADIX_MALA:
             redde "elementum radicis aliud quam canon poscit";
+        casus CANON_VOCABULUM_IGNOTUM:
+            redde "vocabulum extra petitum citationis";
         ordinarius:
             redde "vitium ignotum";
     }
