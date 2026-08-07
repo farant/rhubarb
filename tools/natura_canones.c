@@ -15,15 +15,9 @@
  * Exitus: 0 = sanum; 2 = NIHIL CURSUM EST (disciplina domus:
  *   nihil onerari NON est successus).
  */
-#include "latina.h"
-#include "natura.h"
-#include "stml.h"
-#include "chorda.h"
-#include "piscina.h"
-#include "xar.h"
+#include "natura_canones.h"
 #include "filum.h"
 #include "iter_directoria.h"
-#include <stdio.h>
 #include <string.h>
 
 #define EXTENSIO ".genera"
@@ -31,42 +25,6 @@
 /* custos catenae - mos natura_apparatus (catena circularis
  * oneratorem transire non debet, sed hic eam non iudicamus) */
 #define NC_CATENA_MAXIMA XXXII
-
-nomen structura {
-         chorda*  titulus;   /* nomen naturae, snake_case */
-         chorda*  modulus;
-    NaturaGenus*  genus;     /* genus ipsum, aut genus rei continentis */
-      StmlNodus*  nodus;     /* nodus entis (genus aut res) */
-             b32  est_res;   /* VERUM = species/individuum/cultivar */
-} NcEns;
-
-/* ==================================================
- * Exemplar elementi - apparatus PLICATUS
- *
- * natura_apparatus hereditatem iam solvit (catenam sub= trans
- * exemplaria ascendit); hic dispositio sola restat: quid
- * attributum fiat, quid liberum, quid electio.
- * ================================================== */
-
-nomen enumeratio {
-    NC_MEMBRUM_ATTRIBUTUM = I,   /* -> <attributum> */
-    NC_MEMBRUM_LIBERUM    = II   /* -> <liberum> + <elementum intra=> */
-} NcMembrumDiscrimen;
-
-nomen structura {
-     NcMembrumDiscrimen  discrimen;
-                chorda*  titulus;       /* nomen naturae, snake */
-    constans character*  praefixum;     /* "status_" vel NIHIL */
-    constans character*  genus_valoris; /* "textus"/"nomen"/... */
-                   Xar*  optiones;      /* Xar de chorda* - electio */
-                chorda*  praestitutum;  /* ordinarius=, vel NIHIL */
-} NcMembrum;
-
-nomen structura {
-      NcEns*  ens;
-        Xar*  membra;     /* Xar de NcMembrum */
-        Xar*  actiones;   /* Xar de chorda* - pro <eventum actio=> */
-} NcElementum;
 
 /* genus valoris quod canon non habet - ad textum cadit, sed
  * NUMERATUM: degradatio tacita vitium domus est */
@@ -78,9 +36,6 @@ nomen structura {
 interior b32       _extensionem_habet(constans chorda* t);
 interior vacuum    _stirpem_scribere(constans chorda* t, character* ex,
                                      i32 tectum);
-interior vacuum    _kebab_scribere(FILE* f, constans chorda* t);
-interior vacuum    _kebab_literas_scribere(FILE* f,
-                                           constans character* s);
 interior s32       _comparare_titulos(constans vacuum* a,
                                       constans vacuum* b);
 interior b32       _corpus_onerare(NaturaBibliotheca* bib,
@@ -113,45 +68,6 @@ interior vacuum    _valores_applicare(NcElementum* el, NcEns* ens,
 interior NcElementum* _elementum_aedificare(NaturaBibliotheca* bib,
                                             NcEns* ens,
                                             Piscina* piscina);
-interior vacuum    _planum_scribere(FILE* f, constans chorda* t);
-interior vacuum    _elementum_inspicere(FILE* f, NcElementum* el);
-
-/* nomen naturae (snake) -> nomen canonis (kebab).
- * Bijectivum: genus 'nomen' naturae lineolam non fert. */
-interior vacuum
-_kebab_scribere(
-    FILE*             f,
-    constans chorda*  t)
-{
-    i32 i;
-
-    per (i = ZEPHYRUM; i < t->mensura; i++)
-    {
-        character c;
-
-        c = (character)t->datum[i];
-        si (c == '_')
-        {
-            c = '-';
-        }
-        putc(c, f);
-    }
-}
-
-/* idem pro literis C - praefixa ('status_') formam SNAKE in
- * exemplari servant, ergo kebab uno loco solo fit */
-interior vacuum
-_kebab_literas_scribere(
-    FILE*                f,
-    constans character*  s)
-{
-    i32 i;
-
-    per (i = ZEPHYRUM; s[i] != '\0'; i++)
-    {
-        putc(s[i] == '_' ? '-' : s[i], f);
-    }
-}
 
 /* an titulus in ".genera" desinat - stirps VACUA non sufficit,
  * ergo aequalitas quoque reicitur (mos natura_examen) */
@@ -894,90 +810,6 @@ _elementum_aedificare(
 
     _valores_applicare(el, ens, piscina);
     redde el;
-}
-
-/* chorda in unam lineam - valor <valor> prosa MULTILINEA esse
- * potest (normalizatio indentationem tollit, lineas servat), quae
- * TSV crudo emissa unum membrum in plures lineas frangeret.
- * Exemplar valorem VERUM tenet; sola haec species eum planat. */
-interior vacuum
-_planum_scribere(
-    FILE*             f,
-    constans chorda*  t)
-{
-    i32 i;
-
-    per (i = ZEPHYRUM; i < t->mensura; i++)
-    {
-        character c;
-
-        c = (character)t->datum[i];
-        si (c == '\n' || c == '\r' || c == '\t')
-        {
-            c = ' ';
-        }
-        putc(c, f);
-    }
-}
-
-/* exemplar in TSV - linea una per membrum:
- *   ENS  discrimen  nomen  genus  optiones  [=ordinarius]
- * Actio breviter: ENS  actio  nomen */
-interior vacuum
-_elementum_inspicere(
-    FILE*         f,
-    NcElementum*  el)
-{
-    i32 i;
-
-    per (i = ZEPHYRUM; i < xar_numerus(el->membra); i++)
-    {
-        NcMembrum* m;
-        i32        j;
-
-        m = (NcMembrum*)xar_obtinere(el->membra, i);
-
-        _kebab_scribere(f, el->ens->titulus);
-        fputs(m->discrimen == NC_MEMBRUM_ATTRIBUTUM
-              ? "\tattributum\t" : "\tliberum\t", f);
-        si (m->praefixum)
-        {
-            _kebab_literas_scribere(f, m->praefixum);
-        }
-        _kebab_scribere(f, m->titulus);
-        fprintf(f, "\t%s\t", m->genus_valoris);
-
-        per (j = ZEPHYRUM;
-             m->optiones && j < xar_numerus(m->optiones); j++)
-        {
-            chorda* o;
-
-            o = *(chorda**)xar_obtinere(m->optiones, j);
-            si (j > ZEPHYRUM)
-            {
-                putc('|', f);
-            }
-            _planum_scribere(f, o);
-        }
-
-        si (m->praestitutum)
-        {
-            fputs("\t=", f);
-            _planum_scribere(f, m->praestitutum);
-        }
-        putc('\n', f);
-    }
-
-    per (i = ZEPHYRUM; i < xar_numerus(el->actiones); i++)
-    {
-        chorda* a;
-
-        a = *(chorda**)xar_obtinere(el->actiones, i);
-        _kebab_scribere(f, el->ens->titulus);
-        fputs("\tactio\t", f);
-        _kebab_scribere(f, a);
-        putc('\n', f);
-    }
 }
 
 s32
