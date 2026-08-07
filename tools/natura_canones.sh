@@ -74,23 +74,38 @@ QUERELA="$TMPD/querela.txt"
 rancidi=0
 facti=0
 moduli=0
-querela_monstrata=0
+MONSTRATA="$TMPD/monstrata.txt"
+: > "$MONSTRATA"
 
-# Querela portae de CORPORE (genera extra canonem, vulnera) eadem
-# est omni vocatione quia de corpore toto est, non de modulo: semel
-# monstratur ne XXXIV repetitionibus obruatur - sed numquam TACET
-# (degradatio visibilis lex domus est), et in defectu tota
-# effunditur.
+# Querela NOVA semper monstratur; repetita sola tacet.
 #
-# $1 = via scripti: lineae eam nominantes de UNO scripto sunt (nuntii
-# progressus), non de corpore; summa infra numerum veriorem dat, et
-# in modo probandi via TEMPORALIS esset - confusio mera. Via
-# secatur, non verbum: nuntius mutari potest, munus lineae non.
-querelam_semel_monstrare () {
-    if [ "$querela_monstrata" = "0" ] && [ -s "$QUERELA" ]; then
-        grep -v -F "$1" "$QUERELA" >&2
-        querela_monstrata=1
-    fi
+# Pessulus pristinus (primam querelam monstrare, deinde silere) ex
+# praemissa FALSA natus est: putavi querelam omni vocatione eandem
+# esse quia de corpore toto esset. MENSURATUM aliter - octo moduli
+# monita PROPRIA fundunt (valores planati, praestituta omissa), et
+# monolithus, ultimus generatus ergo a pessulo SEMPER devoratus,
+# maximum omnium fundit (citationes 217, valores 22 planati,
+# praestituta 51 omissa).
+#
+# Ea nuntia EMISSIONIS DAMNOSAE sunt - valores planati, praestituta
+# in canonem non transeuntia - id est genus quod minime taceri
+# debet, in instrumento cuius doctrina ipsa est damnum numquam
+# TACITE fieri. Pessulus rem quam custodire debebat delebat.
+#
+# $1 = via scripti: lineae eam nominantes de UNO scripto sunt
+# (nuntii progressus), non de damno. Via secatur, non verbum:
+# nuntius mutari potest, munus lineae non.
+querelam_novam_monstrare () {
+    local linea
+    [ -s "$QUERELA" ] || return 0
+    while IFS= read -r linea || [ -n "$linea" ]; do
+        case "$linea" in *"$1"*) continue ;; esac
+        if ! grep -q -F -x -- "$linea" "$MONSTRATA" 2>/dev/null; then
+            printf '%s\n' "$linea" >&2
+            printf '%s\n' "$linea" >> "$MONSTRATA"
+        fi
+    done < "$QUERELA"
+    return 0
 }
 
 # $1 = via vera, $2... = argumenta portae (sine -ad)
@@ -115,7 +130,7 @@ conferre_aut_scribere () {
         echo "natura_canones: '$vera' generari nequit (exitus $exitus)" >&2
         exit 2
     fi
-    querelam_semel_monstrare "$scriptum"
+    querelam_novam_monstrare "$scriptum"
 
     # instrumentum exitum 0 reddere ET nihil scribere posset: tunc
     # porta nihil conferret et tacite sanaret.

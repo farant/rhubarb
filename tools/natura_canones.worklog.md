@@ -276,7 +276,43 @@ Showing everything is 200 lines of noise in Task 6's hook; showing the first
 invocation verbatim is worse — it names one module, reading as though only one file
 was written, and in `-probare` mode it leaks the temp path.
 
-So the corpus-wide warnings are shown **once** and never suppressed (visible
-degradation is house law), while the progress line is dropped by filtering on the
-*target path* rather than on the message text: the wording may change, the line's
-job may not.
+So novel warnings are always shown and never suppressed (visible degradation is
+house law), while the progress line is dropped by filtering on the *target path*
+rather than on the message text: the wording may change, the line's job may not.
+
+**Correction, same day — the first version of this got it backwards.** What
+shipped first was a boolean latch: show the first invocation's stderr, then go
+silent. The justification written into the code was that the querela is *"eadem
+omni vocatione quia de corpore toto est"* — identical every time because it
+describes the whole corpus.
+
+**That premise is false, and measuring it takes one loop.** Running all 33 modules
+individually, eight emit warnings the corpus-wide set does not contain — `actus`
+(1 value flattened), `identificatio` (15), `norma` (4), `opus_scriptum` (2 values
++ 5 defaults dropped), `lingua_programmandi` (4 defaults), and `organizatio` /
+`persona` / `plagula_computatralis` (14 each). Worse, the **monolith is generated
+last**, so the latch guaranteed its warnings were never seen — and it emits the
+largest set of all: 217 citations, 22 values flattened, **51 defaults dropped**.
+
+So the latch destroyed precisely what it was written to protect. These are
+lossy-emission notices — values flattened, defaults that never reach the canon —
+in the one tool whose stated doctrine is that degradation is never silent. And it
+applied in **both** modes, since the redirect is unconditional, so plain
+regeneration was equally mute.
+
+The fix is to **accumulate rather than latch**: each line is printed unless some
+earlier invocation already printed that exact line. Repetition stays quiet;
+novelty always prints. Output went from 6 lines to 15, and the monolith's three
+now appear.
+
+*Known limit, stated rather than left to be found:* dedup is by exact message
+text, so when three modules emit an identical `praestituta 14 omissa`, it prints
+once. No distinct fact is lost, but multiplicity and module attribution are. The
+messages do not name their module, and prefixing them would either misattribute
+the corpus-wide lines to whichever module ran first or reinflate the output to
+~180 lines. Run a single `-modulus` if you need to know which model a warning came
+from.
+
+The general lesson is the one this file keeps relearning: **a comment asserting a
+property is not evidence of it.** The premise was plausible, cheap to check, and
+wrong, and it sat in the code as a confident justification for the bug.
