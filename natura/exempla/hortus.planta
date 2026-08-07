@@ -1,0 +1,31 @@
+<!--
+  natura/exempla/hortus.planta
+
+  Documentum verum sub planta.canon (ipso ex natura/planta.genera
+  generato). Non fixum probationis solum: TESTIMONIUM catenae -
+  genus semel descriptum tria parit, bibliothecam tagorum,
+  schema, structuram C.
+
+  Duae orthographiae consulto (par. 4.4 rationum): nomina quae
+  generator FINGIT kebab sunt (rosa-canina, status-vita,
+  auctor-nominis); valores qui naturam CITANT ut natura scribit
+  manent (carl_linnaeus). nomen= identitas est, genere
+  'compositum' - ergo 'rosa-ad-murum' licet ubi 'rosa ad murum'
+  vitium esset.
+
+  Quae absunt PROBANT: habitus et altitudo-matura tacent, ergo
+  ordinarius= (ex <valor> naturae per catenam vectus) apparere
+  debet - et diversus per genus (frutex rosae, arbor mali).
+-->
+<individua>
+  <rosa-canina nomen="rosa-ad-murum"
+               status-vita="florens"
+               auctor-nominis="carl_linnaeus">
+    <radix nota="muro proxima"/>
+    <historia>
+      <eventum quando="2024-04" actio="nominari"/>
+    </historia>
+  </rosa-canina>
+
+  <granny-smith nomen="malus-prima" altitudo-matura="4"/>
+</individua>

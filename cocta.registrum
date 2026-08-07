@@ -6,3 +6,8 @@
 # regeneratione = lector mendax de fonte suo).
 # Campi (tab): canon	praefixum	caput	corpus
 silva/quaestiones.canon	Qs	include/quaestiones_lectio.h	lib/quaestiones_lectio.c
+# Catena tota: natura/planta.genera -> (natura_canones) planta.canon
+# -> (canon_coquere) lector typatus. Canon fons GENERATUS est, ergo
+# duae portae serie stant - natura_canones.sh -probare canonem
+# recentem tenet, haec lectorem.
+natura/cocta/planta.canon	Planta	include/planta_lectio.h	lib/planta_lectio.c
