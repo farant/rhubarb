@@ -1356,6 +1356,18 @@ principale(
                     "persona nomen=\"#carl_linnaeus\"",
                     piscina)) >= ZEPHYRUM);
 
+            /* COMPLETUDO, non sola validitas: porta se-iudicans
+             * omissionem non videt - semina sine relatis OMNIBUS
+             * valida manebat (lacuna mensurata 2026-08-08:
+             * genealogia C tacite aberat). Relatum unum attributi
+             * (orta-ex) et unum multiplex (auctor) asseruntur. */
+            CREDO_VERUM (chorda_invenire_index(semina,
+                chorda_ex_literis("orta-ex=\"#b\"",
+                                  piscina)) >= ZEPHYRUM);
+            CREDO_VERUM (chorda_invenire_index(semina,
+                chorda_ex_literis("<auctor ad=\"#dennis_ritchie\"",
+                                  piscina)) >= ZEPHYRUM);
+
             CREDO_VERUM (_documentum_iudicare(monolithus,
                 chorda_ut_cstr(semina, piscina),
                 CANON_ELEMENTUM_IGNOTUM, &ignota, &omnia,

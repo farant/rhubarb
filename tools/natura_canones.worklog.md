@@ -822,3 +822,16 @@ enrolled persona satisfies — "Linnaeus himself" is beyond canon,
 deliberately); enrollment-by-kind worked BEFORE the exclusion
 landed (ad= lists always carried the kind titles), which is what
 let the hortus migration ship standalone-green first.
+
+### 2026-08-08 addendum — the relata gap
+
+Spec par. 2 promised relatum targets with signa; the emitter read
+only <valor> children — every relatum dropped, semina VALID but
+missing C's genealogy and all authorship. Caught by Fran's
+"loose ends?" prompting a spec re-read + corpus grep, NOT by the
+self-judging gate (validity ≠ completeness — the suite now asserts
+sentinel relata by name). Fix chain: pass Ib (attribute-form
+relata) + multiplex branch (<name ad="..."/>); first regen emitted
+snake in kind-space and VOCABULUM_IGNOTUM's own suggestio dictated
+the kebab fix. `_petitum_scribere` now owns the rule: '.' body
+kebab, '#' body verbatim.
