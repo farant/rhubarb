@@ -28,11 +28,11 @@
   </elementum>
 
   <elementum nomen="moneta">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="codex" genus="textus"/>
     <attributum nomen="symbolum" genus="textus"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="moneta">
@@ -40,9 +40,9 @@
   </elementum>
 
   <elementum nomen="pecunia">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="valor" genus="numerus"/>
-    <attributum nomen="in-moneta" genus="nomen"/>
+    <attributum nomen="in-moneta" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="pecunia">
@@ -50,9 +50,9 @@
   </elementum>
 
   <elementum nomen="possessio">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="possessor" genus="nomen"/>
-    <attributum nomen="possessum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="possessor" genus="referentia"/>
+    <attributum nomen="possessum" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="possessio">
@@ -60,11 +60,11 @@
   </elementum>
 
   <elementum nomen="pretium">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="valens-a" genus="dies"/>
     <attributum nomen="valens-ad" genus="dies"/>
-    <attributum nomen="pretium-rei" genus="nomen"/>
-    <attributum nomen="quantum" genus="nomen"/>
+    <attributum nomen="pretium-rei" genus="referentia"/>
+    <attributum nomen="quantum" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="pretium">
@@ -72,23 +72,23 @@
   </elementum>
 
   <elementum nomen="venditio">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="venditor" genus="nomen"/>
-    <attributum nomen="emptor" genus="nomen"/>
-    <attributum nomen="solutum" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="venditor" genus="referentia"/>
+    <attributum nomen="emptor" genus="referentia"/>
+    <attributum nomen="solutum" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="res-vendita"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="res-vendita" intra="venditio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="venditio">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="tessera">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -98,9 +98,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="tessera">
@@ -108,7 +108,7 @@
   </elementum>
 
   <elementum nomen="tessera-negotiabilis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -118,9 +118,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-negotiabilis">
@@ -128,7 +128,7 @@
   </elementum>
 
   <elementum nomen="tessera-simplex">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -138,9 +138,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-simplex">
@@ -148,8 +148,8 @@
   </elementum>
 
   <elementum nomen="ratio-rationaria">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="rationarius" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="rationarius" genus="referentia"/>
     <attributum nomen="ordinatio" genus="electio">
       <optio>sequentialis</optio>
       <optio>temporalis</optio>
@@ -171,8 +171,8 @@
       <optio>clausa</optio>
       <optio>archivata</optio>
     </attributum>
-    <attributum nomen="de" genus="nomen"/>
-    <attributum nomen="appenditur-a" genus="nomen"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="appenditur-a" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="eventum" maximum="1"/>
     <liberum nomen="ordo" maximum="1"/>
@@ -184,7 +184,7 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="continet" intra="ratio-rationaria">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="eventum" intra="ratio-rationaria">
     <attributum nomen="nota" genus="textus"/>
@@ -202,21 +202,21 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="plicatur-in" intra="ratio-rationaria">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="signata-per" intra="ratio-rationaria">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="ratio-rationaria">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="euro">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="codex" genus="textus" ordinarius="EUR"/>
     <attributum nomen="symbolum" genus="textus" ordinarius="€"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="euro">
@@ -224,11 +224,11 @@
   </elementum>
 
   <elementum nomen="dollarium-americanum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="codex" genus="textus" ordinarius="USD"/>
     <attributum nomen="symbolum" genus="textus" ordinarius="$"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="dollarium-americanum">
@@ -236,7 +236,7 @@
   </elementum>
 
   <elementum nomen="charta-onerum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -246,9 +246,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="charta-onerum">
@@ -256,7 +256,7 @@
   </elementum>
 
   <elementum nomen="apocha-horrei">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -266,9 +266,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="apocha-horrei">
@@ -276,7 +276,7 @@
   </elementum>
 
   <elementum nomen="syngrapha">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -286,9 +286,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="syngrapha">
@@ -296,7 +296,7 @@
   </elementum>
 
   <elementum nomen="perscriptio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio" ordinarius="ad_ordinem">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -306,9 +306,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="perscriptio">
@@ -316,7 +316,7 @@
   </elementum>
 
   <elementum nomen="nummus-chartaceus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio" ordinarius="ad_portitorem">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -326,9 +326,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas" ordinarius="falsum"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="nummus-chartaceus">
@@ -336,7 +336,7 @@
   </elementum>
 
   <elementum nomen="obligatio-ad-portitorem">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio" ordinarius="ad_portitorem">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -346,9 +346,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio-ad-portitorem">
@@ -356,7 +356,7 @@
   </elementum>
 
   <elementum nomen="tessera-spectaculi">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -366,9 +366,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-spectaculi">
@@ -376,7 +376,7 @@
   </elementum>
 
   <elementum nomen="tessera-repositoria">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -386,9 +386,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-repositoria">
@@ -396,7 +396,7 @@
   </elementum>
 
   <elementum nomen="tessera-digitalis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio" ordinarius="ad_portitorem">
       <optio>ad_portitorem</optio>
       <optio>ad_ordinem</optio>
@@ -406,9 +406,9 @@
       <optio>digitalis</optio>
     </attributum>
     <attributum nomen="exhibitione-consumitur" genus="veritas" ordinarius="falsum"/>
-    <attributum nomen="fert-ius-in" genus="nomen"/>
-    <attributum nomen="emissa-a" genus="nomen"/>
-    <attributum nomen="possessio-eius" genus="nomen"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-digitalis">
@@ -416,8 +416,8 @@
   </elementum>
 
   <elementum nomen="ratio-duplex">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="rationarius" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="rationarius" genus="referentia"/>
     <attributum nomen="ordinatio" genus="electio">
       <optio>sequentialis</optio>
       <optio>temporalis</optio>
@@ -439,8 +439,8 @@
       <optio>clausa</optio>
       <optio>archivata</optio>
     </attributum>
-    <attributum nomen="de" genus="nomen"/>
-    <attributum nomen="appenditur-a" genus="nomen"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="appenditur-a" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="eventum" maximum="1"/>
     <liberum nomen="ordo" maximum="1"/>
@@ -452,7 +452,7 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="continet" intra="ratio-duplex">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="eventum" intra="ratio-duplex">
     <attributum nomen="nota" genus="textus"/>
@@ -470,10 +470,10 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="plicatur-in" intra="ratio-duplex">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="signata-per" intra="ratio-duplex">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="ratio-duplex">
     <liberum nomen="eventum"/>
@@ -499,5 +499,27 @@
            tessera-simplex ratio-rationaria euro dollarium-americanum charta-onerum
            apocha-horrei syngrapha perscriptio nummus-chartaceus obligatio-ad-portitorem
            tessera-spectaculi tessera-repositoria tessera-digitalis ratio-duplex"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="pecunia-in-moneta" attributum="in-moneta" ad="moneta euro dollarium-americanum/nomen" super="pecunia"/>
+  <citatio nomen="pretium-quantum" attributum="quantum" ad="pecunia/nomen" super="pretium"/>
+  <citatio nomen="venditio-solutum" attributum="solutum" ad="pecunia/nomen" super="venditio"/>
+  <citatio nomen="tessera-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera"/>
+  <citatio nomen="tessera-negotiabilis-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-negotiabilis"/>
+  <citatio nomen="tessera-simplex-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-simplex"/>
+  <citatio nomen="charta-onerum-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="charta-onerum"/>
+  <citatio nomen="apocha-horrei-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="apocha-horrei"/>
+  <citatio nomen="syngrapha-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="syngrapha"/>
+  <citatio nomen="perscriptio-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="perscriptio"/>
+  <citatio nomen="nummus-chartaceus-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="nummus-chartaceus"/>
+  <citatio nomen="obligatio-ad-portitorem-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="obligatio-ad-portitorem"/>
+  <citatio nomen="tessera-spectaculi-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-spectaculi"/>
+  <citatio nomen="tessera-repositoria-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-repositoria"/>
+  <citatio nomen="tessera-digitalis-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-digitalis"/>
 
 </canon>

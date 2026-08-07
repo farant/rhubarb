@@ -12,80 +12,80 @@
   </elementum>
 
   <elementum nomen="causa">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
-    <attributum nomen="causat" genus="nomen"/>
-    <attributum nomen="asseritur-per" genus="nomen"/>
+    <attributum nomen="causat" genus="referentia"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="causa">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="causa-materialis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
-    <attributum nomen="causat" genus="nomen"/>
-    <attributum nomen="asseritur-per" genus="nomen"/>
+    <attributum nomen="causat" genus="referentia"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-materialis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="causa-materialis">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="causa-formalis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
-    <attributum nomen="causat" genus="nomen"/>
-    <attributum nomen="asseritur-per" genus="nomen"/>
+    <attributum nomen="causat" genus="referentia"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-formalis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="causa-formalis">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="causa-efficiens">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
-    <attributum nomen="causat" genus="nomen"/>
-    <attributum nomen="asseritur-per" genus="nomen"/>
+    <attributum nomen="causat" genus="referentia"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-efficiens">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="causa-efficiens">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="causa-finalis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
-    <attributum nomen="causat" genus="nomen"/>
-    <attributum nomen="asseritur-per" genus="nomen"/>
+    <attributum nomen="causat" genus="referentia"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-finalis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="causa-finalis">
     <liberum nomen="eventum"/>

@@ -30,7 +30,7 @@
   </elementum>
 
   <elementum nomen="lingua-programmandi">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="typatio-tempus" genus="electio">
       <optio>statica</optio>
       <optio>dynamica</optio>
@@ -53,25 +53,25 @@
       <optio>senescens</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="orta-ex" genus="nomen"/>
-    <attributum nomen="habet-versionem" genus="nomen"/>
-    <attributum nomen="implementata-ab" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="fons-scriptus-in" genus="nomen"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="implementata-ab" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fons-scriptus-in" genus="referentia"/>
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="paradigmata" intra="lingua-programmandi" textus="verum"/>
   <elementum nomen="auctor" intra="lingua-programmandi">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="lingua-programmandi">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="lingua-iussuum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="typatio-tempus" genus="electio">
       <optio>statica</optio>
       <optio>dynamica</optio>
@@ -94,30 +94,30 @@
       <optio>senescens</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="orta-ex" genus="nomen"/>
-    <attributum nomen="habet-versionem" genus="nomen"/>
-    <attributum nomen="implementata-ab" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="fons-scriptus-in" genus="nomen"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="implementata-ab" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fons-scriptus-in" genus="referentia"/>
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="paradigmata" intra="lingua-iussuum" textus="verum"/>
   <elementum nomen="auctor" intra="lingua-iussuum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="lingua-iussuum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="versio-linguae">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="titulus" genus="textus"/>
     <attributum nomen="edita" genus="dies"/>
-    <attributum nomen="versio-de" genus="nomen"/>
-    <attributum nomen="sequitur" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="versio-de" genus="referentia"/>
+    <attributum nomen="sequitur" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
     <attributum nomen="schema-numerandi" genus="electio">
       <optio>semanticum</optio>
       <optio>sequentiale</optio>
@@ -134,47 +134,47 @@
       <optio>deprecata</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="asseritur-per" genus="nomen"/>
-    <attributum nomen="edita-a" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-linguae">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="versio-linguae">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="implementatio-linguae">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-exsecutionis" genus="electio">
       <optio>compilans</optio>
       <optio>interpretans</optio>
       <optio>mixtus</optio>
     </attributum>
     <attributum nomen="tutela-memoriae-addita" genus="veritas"/>
-    <attributum nomen="implementat" genus="nomen"/>
-    <attributum nomen="implementat-versionem" genus="nomen"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="implementat" genus="referentia"/>
+    <attributum nomen="implementat-versionem" genus="referentia"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="emittit-pro"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="auctor" intra="implementatio-linguae">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="emittit-pro" intra="implementatio-linguae">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="implementatio-linguae">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="verbum-clavis">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="verbum-de" genus="nomen"/>
-    <attributum nomen="additum-in" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="verbum-de" genus="referentia"/>
+    <attributum nomen="additum-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="verbum-clavis">
@@ -182,7 +182,7 @@
   </elementum>
 
   <elementum nomen="c">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="typatio-tempus" genus="electio" ordinarius="statica">
       <optio>statica</optio>
       <optio>dynamica</optio>
@@ -205,25 +205,25 @@
       <optio>senescens</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="orta-ex" genus="nomen"/>
-    <attributum nomen="habet-versionem" genus="nomen"/>
-    <attributum nomen="implementata-ab" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="fons-scriptus-in" genus="nomen"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="implementata-ab" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fons-scriptus-in" genus="referentia"/>
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="paradigmata" intra="c" textus="verum"/>
   <elementum nomen="auctor" intra="c">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="c">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="python">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="typatio-tempus" genus="electio" ordinarius="dynamica">
       <optio>statica</optio>
       <optio>dynamica</optio>
@@ -246,25 +246,25 @@
       <optio>senescens</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="orta-ex" genus="nomen"/>
-    <attributum nomen="habet-versionem" genus="nomen"/>
-    <attributum nomen="implementata-ab" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="fons-scriptus-in" genus="nomen"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="implementata-ab" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fons-scriptus-in" genus="referentia"/>
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="paradigmata" intra="python" textus="verum"/>
   <elementum nomen="auctor" intra="python">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="python">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="rust">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="typatio-tempus" genus="electio" ordinarius="statica">
       <optio>statica</optio>
       <optio>dynamica</optio>
@@ -287,25 +287,25 @@
       <optio>senescens</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="orta-ex" genus="nomen"/>
-    <attributum nomen="habet-versionem" genus="nomen"/>
-    <attributum nomen="implementata-ab" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="fons-scriptus-in" genus="nomen"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="implementata-ab" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fons-scriptus-in" genus="referentia"/>
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="paradigmata" intra="rust" textus="verum"/>
   <elementum nomen="auctor" intra="rust">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="rust">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="b">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="typatio-tempus" genus="electio" ordinarius="statica">
       <optio>statica</optio>
       <optio>dynamica</optio>
@@ -328,25 +328,25 @@
       <optio>senescens</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="orta-ex" genus="nomen"/>
-    <attributum nomen="habet-versionem" genus="nomen"/>
-    <attributum nomen="implementata-ab" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="fons-scriptus-in" genus="nomen"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="implementata-ab" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fons-scriptus-in" genus="referentia"/>
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="paradigmata" intra="b" textus="verum"/>
   <elementum nomen="auctor" intra="b">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="b">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="abc">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="typatio-tempus" genus="electio" ordinarius="dynamica">
       <optio>statica</optio>
       <optio>dynamica</optio>
@@ -369,25 +369,25 @@
       <optio>senescens</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="orta-ex" genus="nomen"/>
-    <attributum nomen="habet-versionem" genus="nomen"/>
-    <attributum nomen="implementata-ab" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="fons-scriptus-in" genus="nomen"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="implementata-ab" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fons-scriptus-in" genus="referentia"/>
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="paradigmata" intra="abc" textus="verum"/>
   <elementum nomen="auctor" intra="abc">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="abc">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="bash">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="typatio-tempus" genus="electio" ordinarius="dynamica">
       <optio>statica</optio>
       <optio>dynamica</optio>
@@ -410,30 +410,30 @@
       <optio>senescens</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="orta-ex" genus="nomen"/>
-    <attributum nomen="habet-versionem" genus="nomen"/>
-    <attributum nomen="implementata-ab" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="fons-scriptus-in" genus="nomen"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <attributum nomen="habet-versionem" genus="referentia"/>
+    <attributum nomen="implementata-ab" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fons-scriptus-in" genus="referentia"/>
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="paradigmata" intra="bash" textus="verum"/>
   <elementum nomen="auctor" intra="bash">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="bash">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="c89">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="titulus" genus="textus" ordinarius="C89 (ANSI C / C90)"/>
     <attributum nomen="edita" genus="dies" ordinarius="1990-12-15"/>
-    <attributum nomen="versio-de" genus="nomen"/>
-    <attributum nomen="sequitur" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="versio-de" genus="referentia"/>
+    <attributum nomen="sequitur" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
     <attributum nomen="schema-numerandi" genus="electio">
       <optio>semanticum</optio>
       <optio>sequentiale</optio>
@@ -450,25 +450,25 @@
       <optio>deprecata</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="asseritur-per" genus="nomen"/>
-    <attributum nomen="edita-a" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="c89">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="c89">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="c99">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="titulus" genus="textus" ordinarius="C99"/>
     <attributum nomen="edita" genus="dies" ordinarius="1999-12-01"/>
-    <attributum nomen="versio-de" genus="nomen"/>
-    <attributum nomen="sequitur" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="versio-de" genus="referentia"/>
+    <attributum nomen="sequitur" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
     <attributum nomen="schema-numerandi" genus="electio">
       <optio>semanticum</optio>
       <optio>sequentiale</optio>
@@ -485,25 +485,25 @@
       <optio>deprecata</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="asseritur-per" genus="nomen"/>
-    <attributum nomen="edita-a" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="c99">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="c99">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="c11">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="titulus" genus="textus" ordinarius="C11"/>
     <attributum nomen="edita" genus="dies" ordinarius="2011-12-08"/>
-    <attributum nomen="versio-de" genus="nomen"/>
-    <attributum nomen="sequitur" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="versio-de" genus="referentia"/>
+    <attributum nomen="sequitur" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
     <attributum nomen="schema-numerandi" genus="electio">
       <optio>semanticum</optio>
       <optio>sequentiale</optio>
@@ -520,147 +520,147 @@
       <optio>deprecata</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="asseritur-per" genus="nomen"/>
-    <attributum nomen="edita-a" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="c11">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="c11">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="gcc">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-exsecutionis" genus="electio" ordinarius="compilans">
       <optio>compilans</optio>
       <optio>interpretans</optio>
       <optio>mixtus</optio>
     </attributum>
     <attributum nomen="tutela-memoriae-addita" genus="veritas"/>
-    <attributum nomen="implementat" genus="nomen"/>
-    <attributum nomen="implementat-versionem" genus="nomen"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="implementat" genus="referentia"/>
+    <attributum nomen="implementat-versionem" genus="referentia"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="emittit-pro"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="auctor" intra="gcc">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="emittit-pro" intra="gcc">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="gcc">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="clang">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-exsecutionis" genus="electio" ordinarius="compilans">
       <optio>compilans</optio>
       <optio>interpretans</optio>
       <optio>mixtus</optio>
     </attributum>
     <attributum nomen="tutela-memoriae-addita" genus="veritas"/>
-    <attributum nomen="implementat" genus="nomen"/>
-    <attributum nomen="implementat-versionem" genus="nomen"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="implementat" genus="referentia"/>
+    <attributum nomen="implementat-versionem" genus="referentia"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="emittit-pro"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="auctor" intra="clang">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="emittit-pro" intra="clang">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="clang">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="cpython">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-exsecutionis" genus="electio" ordinarius="mixtus">
       <optio>compilans</optio>
       <optio>interpretans</optio>
       <optio>mixtus</optio>
     </attributum>
     <attributum nomen="tutela-memoriae-addita" genus="veritas"/>
-    <attributum nomen="implementat" genus="nomen"/>
-    <attributum nomen="implementat-versionem" genus="nomen"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="implementat" genus="referentia"/>
+    <attributum nomen="implementat-versionem" genus="referentia"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="emittit-pro"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="auctor" intra="cpython">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="emittit-pro" intra="cpython">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="cpython">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="fil-c">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-exsecutionis" genus="electio" ordinarius="compilans">
       <optio>compilans</optio>
       <optio>interpretans</optio>
       <optio>mixtus</optio>
     </attributum>
     <attributum nomen="tutela-memoriae-addita" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="implementat" genus="nomen"/>
-    <attributum nomen="implementat-versionem" genus="nomen"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="implementat" genus="referentia"/>
+    <attributum nomen="implementat-versionem" genus="referentia"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="emittit-pro"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="auctor" intra="fil-c">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="emittit-pro" intra="fil-c">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="fil-c">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="officina">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-exsecutionis" genus="electio" ordinarius="interpretans">
       <optio>compilans</optio>
       <optio>interpretans</optio>
       <optio>mixtus</optio>
     </attributum>
     <attributum nomen="tutela-memoriae-addita" genus="veritas"/>
-    <attributum nomen="implementat" genus="nomen"/>
-    <attributum nomen="implementat-versionem" genus="nomen"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="implementat" genus="referentia"/>
+    <attributum nomen="implementat-versionem" genus="referentia"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="emittit-pro"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="auctor" intra="officina">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="emittit-pro" intra="officina">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="officina">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="static">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="verbum-de" genus="nomen"/>
-    <attributum nomen="additum-in" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="verbum-de" genus="referentia"/>
+    <attributum nomen="additum-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="static">
@@ -668,9 +668,9 @@
   </elementum>
 
   <elementum nomen="const">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="verbum-de" genus="nomen"/>
-    <attributum nomen="additum-in" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="verbum-de" genus="referentia"/>
+    <attributum nomen="additum-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="const">
@@ -678,9 +678,9 @@
   </elementum>
 
   <elementum nomen="goto">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="verbum-de" genus="nomen"/>
-    <attributum nomen="additum-in" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="verbum-de" genus="referentia"/>
+    <attributum nomen="additum-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="goto">
@@ -688,9 +688,9 @@
   </elementum>
 
   <elementum nomen="restrict">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="verbum-de" genus="nomen"/>
-    <attributum nomen="additum-in" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="verbum-de" genus="referentia"/>
+    <attributum nomen="additum-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="restrict">
@@ -717,5 +717,72 @@
     super="lingua-programmandi lingua-iussuum versio-linguae implementatio-linguae
            verbum-clavis c python rust b abc bash c89 c99 c11 gcc clang cpython
            fil-c officina static const goto restrict"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="lingua-programmandi-orta-ex" attributum="orta-ex" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="lingua-programmandi"/>
+  <citatio nomen="lingua-programmandi-habet-versionem" attributum="habet-versionem" ad="versio-linguae c89 c99 c11/nomen" super="lingua-programmandi"/>
+  <citatio nomen="lingua-programmandi-implementata-ab" attributum="implementata-ab" ad="implementatio-linguae gcc clang cpython fil-c officina/nomen" super="lingua-programmandi"/>
+  <citatio nomen="lingua-iussuum-orta-ex" attributum="orta-ex" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="lingua-iussuum"/>
+  <citatio nomen="lingua-iussuum-habet-versionem" attributum="habet-versionem" ad="versio-linguae c89 c99 c11/nomen" super="lingua-iussuum"/>
+  <citatio nomen="lingua-iussuum-implementata-ab" attributum="implementata-ab" ad="implementatio-linguae gcc clang cpython fil-c officina/nomen" super="lingua-iussuum"/>
+  <citatio nomen="versio-linguae-versio-de" attributum="versio-de" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="versio-linguae"/>
+  <citatio nomen="versio-linguae-sequitur" attributum="sequitur" ad="versio-linguae c89 c99 c11/nomen" super="versio-linguae"/>
+  <citatio nomen="implementatio-linguae-implementat" attributum="implementat" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="implementatio-linguae"/>
+  <citatio nomen="implementatio-linguae-implementat-versionem" attributum="implementat-versionem" ad="versio-linguae c89 c99 c11/nomen" super="implementatio-linguae"/>
+  <citatio nomen="implementatio-linguae-scripta-in" attributum="scripta-in" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="implementatio-linguae"/>
+  <citatio nomen="verbum-clavis-verbum-de" attributum="verbum-de" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="verbum-clavis"/>
+  <citatio nomen="verbum-clavis-additum-in" attributum="additum-in" ad="versio-linguae c89 c99 c11/nomen" super="verbum-clavis"/>
+  <citatio nomen="c-orta-ex" attributum="orta-ex" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="c"/>
+  <citatio nomen="c-habet-versionem" attributum="habet-versionem" ad="versio-linguae c89 c99 c11/nomen" super="c"/>
+  <citatio nomen="c-implementata-ab" attributum="implementata-ab" ad="implementatio-linguae gcc clang cpython fil-c officina/nomen" super="c"/>
+  <citatio nomen="python-orta-ex" attributum="orta-ex" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="python"/>
+  <citatio nomen="python-habet-versionem" attributum="habet-versionem" ad="versio-linguae c89 c99 c11/nomen" super="python"/>
+  <citatio nomen="python-implementata-ab" attributum="implementata-ab" ad="implementatio-linguae gcc clang cpython fil-c officina/nomen" super="python"/>
+  <citatio nomen="rust-orta-ex" attributum="orta-ex" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="rust"/>
+  <citatio nomen="rust-habet-versionem" attributum="habet-versionem" ad="versio-linguae c89 c99 c11/nomen" super="rust"/>
+  <citatio nomen="rust-implementata-ab" attributum="implementata-ab" ad="implementatio-linguae gcc clang cpython fil-c officina/nomen" super="rust"/>
+  <citatio nomen="b-orta-ex" attributum="orta-ex" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="b"/>
+  <citatio nomen="b-habet-versionem" attributum="habet-versionem" ad="versio-linguae c89 c99 c11/nomen" super="b"/>
+  <citatio nomen="b-implementata-ab" attributum="implementata-ab" ad="implementatio-linguae gcc clang cpython fil-c officina/nomen" super="b"/>
+  <citatio nomen="abc-orta-ex" attributum="orta-ex" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="abc"/>
+  <citatio nomen="abc-habet-versionem" attributum="habet-versionem" ad="versio-linguae c89 c99 c11/nomen" super="abc"/>
+  <citatio nomen="abc-implementata-ab" attributum="implementata-ab" ad="implementatio-linguae gcc clang cpython fil-c officina/nomen" super="abc"/>
+  <citatio nomen="bash-orta-ex" attributum="orta-ex" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="bash"/>
+  <citatio nomen="bash-habet-versionem" attributum="habet-versionem" ad="versio-linguae c89 c99 c11/nomen" super="bash"/>
+  <citatio nomen="bash-implementata-ab" attributum="implementata-ab" ad="implementatio-linguae gcc clang cpython fil-c officina/nomen" super="bash"/>
+  <citatio nomen="c89-versio-de" attributum="versio-de" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="c89"/>
+  <citatio nomen="c89-sequitur" attributum="sequitur" ad="versio-linguae c89 c99 c11/nomen" super="c89"/>
+  <citatio nomen="c99-versio-de" attributum="versio-de" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="c99"/>
+  <citatio nomen="c99-sequitur" attributum="sequitur" ad="versio-linguae c89 c99 c11/nomen" super="c99"/>
+  <citatio nomen="c11-versio-de" attributum="versio-de" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="c11"/>
+  <citatio nomen="c11-sequitur" attributum="sequitur" ad="versio-linguae c89 c99 c11/nomen" super="c11"/>
+  <citatio nomen="gcc-implementat" attributum="implementat" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="gcc"/>
+  <citatio nomen="gcc-implementat-versionem" attributum="implementat-versionem" ad="versio-linguae c89 c99 c11/nomen" super="gcc"/>
+  <citatio nomen="gcc-scripta-in" attributum="scripta-in" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="gcc"/>
+  <citatio nomen="clang-implementat" attributum="implementat" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="clang"/>
+  <citatio nomen="clang-implementat-versionem" attributum="implementat-versionem" ad="versio-linguae c89 c99 c11/nomen" super="clang"/>
+  <citatio nomen="clang-scripta-in" attributum="scripta-in" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="clang"/>
+  <citatio nomen="cpython-implementat" attributum="implementat" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="cpython"/>
+  <citatio nomen="cpython-implementat-versionem" attributum="implementat-versionem" ad="versio-linguae c89 c99 c11/nomen" super="cpython"/>
+  <citatio nomen="cpython-scripta-in" attributum="scripta-in" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="cpython"/>
+  <citatio nomen="fil-c-implementat" attributum="implementat" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="fil-c"/>
+  <citatio nomen="fil-c-implementat-versionem" attributum="implementat-versionem" ad="versio-linguae c89 c99 c11/nomen" super="fil-c"/>
+  <citatio nomen="fil-c-scripta-in" attributum="scripta-in" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="fil-c"/>
+  <citatio nomen="officina-implementat" attributum="implementat" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="officina"/>
+  <citatio nomen="officina-implementat-versionem" attributum="implementat-versionem" ad="versio-linguae c89 c99 c11/nomen" super="officina"/>
+  <citatio nomen="officina-scripta-in" attributum="scripta-in" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="officina"/>
+  <citatio nomen="static-verbum-de" attributum="verbum-de" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="static"/>
+  <citatio nomen="static-additum-in" attributum="additum-in" ad="versio-linguae c89 c99 c11/nomen" super="static"/>
+  <citatio nomen="const-verbum-de" attributum="verbum-de" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="const"/>
+  <citatio nomen="const-additum-in" attributum="additum-in" ad="versio-linguae c89 c99 c11/nomen" super="const"/>
+  <citatio nomen="goto-verbum-de" attributum="verbum-de" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="goto"/>
+  <citatio nomen="goto-additum-in" attributum="additum-in" ad="versio-linguae c89 c99 c11/nomen" super="goto"/>
+  <citatio nomen="restrict-verbum-de" attributum="verbum-de" ad="lingua-programmandi c python rust b abc lingua-iussuum bash/nomen" super="restrict"/>
+  <citatio nomen="restrict-additum-in" attributum="additum-in" ad="versio-linguae c89 c99 c11/nomen" super="restrict"/>
 
 </canon>

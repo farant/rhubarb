@@ -54,6 +54,9 @@
 "  Petitum cum posteris per CLAUSURAM citatur: subgenera resque\n" \
 "  eius omnes in indicem ad= enumerantur, quia claves per\n" \
 "  titulum EXACTUM colliguntur et subgenus titulum alium fert.\n" \
+"  Signa valorum: '#' individuum inscriptum citat (clavis\n" \
+"  verbatim), '.' genus e vocabulario indicis ad= (sine\n" \
+"  clavibus). Valor nudus in referentia vitium TYPI est.\n" \
 "  %u nomine solo iudicantur, id est sicut in canone per\n" \
 "  modulum. Causae, quae omnes limites mechanismi sunt, non\n" \
 "  neglegentiae:\n" \
@@ -96,7 +99,12 @@ nomen enumeratio {
                              * clausura posterorum enumerata */
     NC_CIT_APERTA    = II,  /* ad="*" aut absens - clavis nulla */
     NC_CIT_MULTIPLEX = III, /* super= adstringi nequit */
-    NC_CIT_IGNOTA    = IV   /* petitum non resolvitur */
+    NC_CIT_IGNOTA    = IV,  /* petitum non resolvitur */
+    NC_CIT_ALIENA    = V    /* petitum extra modulum domesticum -
+                             * canon moduli clavem tenere nequit
+                             * (spec canon-referentia par. 6;
+                             * monolithus numquam: requisitum eius
+                             * NIHIL est) */
 } NcCitatioStatus;
 
 /* census relationum - NUMERI IN CANONEM IPSUM SCRIBUNTUR.
@@ -157,9 +165,13 @@ interior vacuum    _genera_clausurae_colligere(NaturaGenus* g,
                                                Xar* genera);
 interior Xar*      _clausuram_colligere(NaturaBibliotheca* bib,
                                         NaturaGenus* g,
+                                        constans character*
+                                            modulus_requisitus,
                                         Piscina* piscina);
 interior NcCitatioStatus _petitum_citabile(NaturaBibliotheca* bib,
                                      StmlNodus* nodus, b32 multiplex,
+                                     constans character*
+                                         modulus_requisitus,
                                      Xar** clausura_ex,
                                      Piscina* piscina);
 interior vacuum    _censum_notare(NcCensusRelationum* census,
@@ -169,6 +181,7 @@ interior vacuum    _praefationem_scribere(character* ex, i32 tectum,
 interior vacuum    _apparatum_plicare(NaturaBibliotheca* bib,
                                       NcElementum* el, Xar* apparatus,
                                       b32 monolithus,
+                                      constans character* modulus_cstr,
                                       NcCensusRelationum* census,
                                       Piscina* piscina);
 interior NcElementum* _elementum_aedificare(NaturaBibliotheca* bib,
@@ -961,6 +974,7 @@ interior Xar*
 _clausuram_colligere(
     NaturaBibliotheca*  bib,
     NaturaGenus*        g,
+    constans character* modulus_requisitus,   /* NIHIL = quilibet */
     Piscina*            piscina)
 {
     Xar* genera;
@@ -977,6 +991,13 @@ _clausuram_colligere(
         NaturaGenus* g2;
 
         g2 = *(NaturaGenus**)xar_obtinere(genera, i);
+        si (modulus_requisitus && g2->modulus &&
+            !chorda_aequalis_literis(*g2->modulus,
+                                     modulus_requisitus))
+        {
+            redde NIHIL;   /* clausura modulum transit - canon
+                            * moduli citare nequit (spec par. 6) */
+        }
         _titulum_semel_addere(tituli, g2->titulus);
         per (j = ZEPHYRUM; j < xar_numerus(g2->res_suae); j++)
         {
@@ -1000,6 +1021,12 @@ _clausuram_colligere(
             si (r->genus_etiam ==
                 *(NaturaGenus**)xar_obtinere(genera, j))
             {
+                si (modulus_requisitus && r->modulus &&
+                    !chorda_aequalis_literis(*r->modulus,
+                                             modulus_requisitus))
+                {
+                    redde NIHIL;   /* res etiam= extra modulum */
+                }
                 _titulum_semel_addere(tituli, r->titulus);
                 frange;
             }
@@ -1032,6 +1059,7 @@ _petitum_citabile(
     NaturaBibliotheca*  bib,
     StmlNodus*          nodus,
     b32                 multiplex,
+    constans character* modulus_requisitus,   /* NIHIL = monolithus */
     Xar**               clausura_ex,
     Piscina*            piscina)
 {
@@ -1091,7 +1119,13 @@ _petitum_citabile(
     }
     si (g)
     {
-        *clausura_ex = _clausuram_colligere(bib, g, piscina);
+        *clausura_ex = _clausuram_colligere(bib, g,
+                                            modulus_requisitus,
+                                            piscina);
+        si (!*clausura_ex)
+        {
+            redde NC_CIT_ALIENA;
+        }
         redde NC_CIT_FIT;
     }
 
@@ -1102,12 +1136,20 @@ _petitum_citabile(
         e = natura_ens_in(bib, modulus_cstr, ad_cstr);
         si (e && e->discrimen == NATURA_ENS_RES)
         {
-            Xar*     tituli;
-            chorda** locus;
+            NaturaRes* r;
+            Xar*       tituli;
+            chorda**   locus;
 
+            r = (NaturaRes*)e->corpus;
+            si (modulus_requisitus && r->modulus &&
+                !chorda_aequalis_literis(*r->modulus,
+                                         modulus_requisitus))
+            {
+                redde NC_CIT_ALIENA;
+            }
             tituli = xar_creare(piscina, (i32)magnitudo(chorda*));
             locus  = (chorda**)xar_addere(tituli);
-            *locus = ((NaturaRes*)e->corpus)->titulus;
+            *locus = r->titulus;
             *clausura_ex = tituli;
             redde NC_CIT_FIT;
         }
@@ -1144,6 +1186,8 @@ _apparatum_plicare(
     NcElementum*         el,
     Xar*                 apparatus,
     b32                  monolithus,
+    constans character*  modulus_cstr,   /* modulus entis; citationi
+                                          * moduli requisitum */
     NcCensusRelationum*  census,
     Piscina*             piscina)
 {
@@ -1226,46 +1270,28 @@ _apparatum_plicare(
                                              "relatio"))
         {
             m->origo         = NC_ORIGO_RELATIO;
-            m->genus_valoris = "nomen";
+            /* referentia UBIQUE (spec canon-referentia par. 4):
+             * signum valoris ('#' individuum, '.' genus) se ipsum
+             * nuntiat, ergo genus valoris idem est in canone
+             * moduli et monolitho - divergentia vetus
+             * nomen/compositum hoc ipso moritur. certitudo= et
+             * fons= intacta manent (claves NATURAE citant, sine
+             * signo) - ea non hac via emittuntur. */
+            m->genus_valoris = "referentia";
 
-            si (monolithus)
             {
-                /* LATIUS SCRIBERE PAR EST AC LEGERE (decretum huius
-                 * operis). Identitas 'compositum' est (par. 5.3:
-                 * datum consumentis, non clavis naturae), ergo
-                 * 'rosa-ad-murum' licite DECLARATUR. Referens sub
-                 * 'nomine' relictus eam nominare NEQUIRET - id est
-                 * identitas licita et inaccessibilis, quod vitium
-                 * gravius est quam laxitas. Compositum superset
-                 * strictum nominis est: nihil prius licitum
-                 * reicitur, clavis naturae snake ('carl_linnaeus')
-                 * eodem modo transit.
-                 *
-                 * OMNIBUS relationibus datur, non citatis solis: in
-                 * monolitho valor cuiusvis relationis identitatem
-                 * documenti nominare potest (id ipsum monolithus
-                 * est), et canon LIMITAT, non poscit (par. 3.4) -
-                 * orthographiam ibi vetare ubi nihil resolvimus
-                 * severitas sine causa esset.
-                 *
-                 * certitudo= et fons= CONSULTO intacta manent:
-                 * ea claves NATURAE citant (<fontes clavis=>), non
-                 * identitates documenti, ergo snake rectum est. */
-                m->genus_valoris = "compositum";
+                Xar*            clausura;
+                NcCitatioStatus status;
 
+                status = _petitum_citabile(bib, am->nodus,
+                    (b32)(m->discrimen == NC_MEMBRUM_LIBERUM),
+                    monolithus ? NIHIL : modulus_cstr,
+                    &clausura, piscina);
+                si (status == NC_CIT_FIT)
                 {
-                    Xar*            clausura;
-                    NcCitatioStatus status;
-
-                    status = _petitum_citabile(bib, am->nodus,
-                        (b32)(m->discrimen == NC_MEMBRUM_LIBERUM),
-                        &clausura, piscina);
-                    si (status == NC_CIT_FIT)
-                    {
-                        m->citatio_ad = clausura;
-                    }
-                    _censum_notare(census, status);
+                    m->citatio_ad = clausura;
                 }
+                _censum_notare(census, status);
             }
         }
         alioquin
@@ -1314,7 +1340,8 @@ _elementum_aedificare(
     NcCensusRelationum*  census,
     Piscina*             piscina)
 {
-    NcElementum* el;
+    NcElementum*        el;
+    constans character* modulus_cstr;
 
     el           = (NcElementum*)piscina_allocare(piscina,
                        magnitudo(NcElementum));
@@ -1327,14 +1354,23 @@ _elementum_aedificare(
         redde el;
     }
 
+    /* moduli nomen pro citatione moduli (spec par. 6): stirpes
+     * plagularum vetitae sunt octeto nullo (nomina plagularum),
+     * ergo chorda_ut_cstr sine porta sufficit */
+    modulus_cstr = NIHIL;
+    si (!monolithus && ens->modulus)
+    {
+        modulus_cstr = chorda_ut_cstr(*ens->modulus, piscina);
+    }
+
     _apparatum_plicare(bib, el,
                        natura_apparatus(bib, ens->genus, piscina),
-                       monolithus, census, piscina);
+                       monolithus, modulus_cstr, census, piscina);
     si (ens->genus_etiam)
     {
         _apparatum_plicare(
             bib, el, natura_apparatus(bib, ens->genus_etiam, piscina),
-            monolithus, census, piscina);
+            monolithus, modulus_cstr, census, piscina);
     }
 
     _valores_applicare(el, ens, piscina);

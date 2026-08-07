@@ -324,6 +324,13 @@ _genus_ex(
         redde CANON_GENUS_ELECTIO;
     si (chorda_aequalis_literis(*s, "compositum"))
         redde CANON_GENUS_COMPOSITUM;
+    /* signa (spec canon-referentia par. 7): valor VERBATIM manet,
+     * signo incluso - chorda* ut textus, CONSULTO (degradatio
+     * tacita vetita: nominatim hic, non per casum ordinarium) */
+    si (chorda_aequalis_literis(*s, "identitas"))
+        redde CANON_GENUS_TEXTUS;
+    si (chorda_aequalis_literis(*s, "referentia"))
+        redde CANON_GENUS_TEXTUS;
 
     redde CANON_GENUS_TEXTUS;
 }

@@ -11,7 +11,7 @@
   </elementum>
 
   <elementum nomen="animal">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="victus" genus="electio">
       <optio>carnivorus</optio>
       <optio>herbivorus</optio>
@@ -25,7 +25,7 @@
       <optio>adultus</optio>
       <optio>senex</optio>
     </attributum>
-    <attributum nomen="pollinat" genus="nomen"/>
+    <attributum nomen="pollinat" genus="referentia"/>
     <attributum nomen="anima" genus="electio" ordinarius="sensitiva">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -42,7 +42,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="caput" maximum="1"/>
     <liberum nomen="cor" maximum="1"/>
     <liberum nomen="membra" maximum="1"/>
@@ -61,20 +61,20 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="praedatur" intra="animal">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="generat" intra="animal">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="animal">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="animal">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="apis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="victus" genus="electio" ordinarius="herbivorus">
       <optio>carnivorus</optio>
       <optio>herbivorus</optio>
@@ -88,7 +88,7 @@
       <optio>adultus</optio>
       <optio>senex</optio>
     </attributum>
-    <attributum nomen="pollinat" genus="nomen"/>
+    <attributum nomen="pollinat" genus="referentia"/>
     <attributum nomen="anima" genus="electio" ordinarius="sensitiva">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -105,7 +105,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="caput" maximum="1"/>
     <liberum nomen="cor" maximum="1"/>
     <liberum nomen="membra" maximum="1"/>
@@ -124,20 +124,20 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="praedatur" intra="apis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="generat" intra="apis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="apis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="apis">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="canis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="victus" genus="electio" ordinarius="omnivorus">
       <optio>carnivorus</optio>
       <optio>herbivorus</optio>
@@ -151,7 +151,7 @@
       <optio>adultus</optio>
       <optio>senex</optio>
     </attributum>
-    <attributum nomen="pollinat" genus="nomen"/>
+    <attributum nomen="pollinat" genus="referentia"/>
     <attributum nomen="anima" genus="electio" ordinarius="sensitiva">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -168,7 +168,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="caput" maximum="1"/>
     <liberum nomen="cor" maximum="1"/>
     <liberum nomen="membra" maximum="1"/>
@@ -187,20 +187,20 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="praedatur" intra="canis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="generat" intra="canis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="canis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="canis">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="homo">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="victus" genus="electio" ordinarius="omnivorus">
       <optio>carnivorus</optio>
       <optio>herbivorus</optio>
@@ -214,7 +214,7 @@
       <optio>adultus</optio>
       <optio>senex</optio>
     </attributum>
-    <attributum nomen="pollinat" genus="nomen"/>
+    <attributum nomen="pollinat" genus="referentia"/>
     <attributum nomen="anima" genus="electio" ordinarius="rationalis">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -231,7 +231,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="caput" maximum="1"/>
     <liberum nomen="cor" maximum="1"/>
     <liberum nomen="membra" maximum="1"/>
@@ -250,13 +250,13 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="praedatur" intra="homo">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="generat" intra="homo">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="homo">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="homo">
     <liberum nomen="eventum"/>

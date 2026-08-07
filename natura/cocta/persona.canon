@@ -22,7 +22,7 @@
   </elementum>
 
   <elementum nomen="persona">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies"/>
     <attributum nomen="mortuus" genus="dies"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -31,8 +31,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -40,17 +40,17 @@
   </elementum>
   <elementum nomen="nomina" intra="persona" textus="verum"/>
   <elementum nomen="membrum-de" intra="persona">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="persona">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="persona">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="dennis-ritchie">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1941-09-09"/>
     <attributum nomen="mortuus" genus="dies" ordinarius="2011-10-12"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -59,8 +59,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -68,17 +68,17 @@
   </elementum>
   <elementum nomen="nomina" intra="dennis-ritchie" textus="verum"/>
   <elementum nomen="membrum-de" intra="dennis-ritchie">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="dennis-ritchie">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="dennis-ritchie">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="thomas-aquinas">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1225"/>
     <attributum nomen="mortuus" genus="dies" ordinarius="1274-03-07"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -87,8 +87,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -96,17 +96,17 @@
   </elementum>
   <elementum nomen="nomina" intra="thomas-aquinas" textus="verum"/>
   <elementum nomen="membrum-de" intra="thomas-aquinas">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="thomas-aquinas">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="thomas-aquinas">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="carl-linnaeus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1707-05-23"/>
     <attributum nomen="mortuus" genus="dies" ordinarius="1778-01-10"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -115,8 +115,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -124,17 +124,17 @@
   </elementum>
   <elementum nomen="nomina" intra="carl-linnaeus" textus="verum"/>
   <elementum nomen="membrum-de" intra="carl-linnaeus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="carl-linnaeus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="carl-linnaeus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="josef-pieper">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1904-05-04"/>
     <attributum nomen="mortuus" genus="dies" ordinarius="1997-11-06"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -143,8 +143,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -152,17 +152,17 @@
   </elementum>
   <elementum nomen="nomina" intra="josef-pieper" textus="verum"/>
   <elementum nomen="membrum-de" intra="josef-pieper">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="josef-pieper">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="josef-pieper">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="herman-melville">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1819-08-01"/>
     <attributum nomen="mortuus" genus="dies" ordinarius="1891-09-28"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -171,8 +171,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -180,17 +180,17 @@
   </elementum>
   <elementum nomen="nomina" intra="herman-melville" textus="verum"/>
   <elementum nomen="membrum-de" intra="herman-melville">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="herman-melville">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="herman-melville">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="ken-thompson">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1943-02-04"/>
     <attributum nomen="mortuus" genus="dies"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -199,8 +199,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -208,17 +208,17 @@
   </elementum>
   <elementum nomen="nomina" intra="ken-thompson" textus="verum"/>
   <elementum nomen="membrum-de" intra="ken-thompson">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="ken-thompson">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="ken-thompson">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="linus-torvalds">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1969-12-28"/>
     <attributum nomen="mortuus" genus="dies"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -227,8 +227,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -236,17 +236,17 @@
   </elementum>
   <elementum nomen="nomina" intra="linus-torvalds" textus="verum"/>
   <elementum nomen="membrum-de" intra="linus-torvalds">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="linus-torvalds">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="linus-torvalds">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="guido-van-rossum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1956-01-31"/>
     <attributum nomen="mortuus" genus="dies"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -255,8 +255,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -264,17 +264,17 @@
   </elementum>
   <elementum nomen="nomina" intra="guido-van-rossum" textus="verum"/>
   <elementum nomen="membrum-de" intra="guido-van-rossum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="guido-van-rossum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="guido-van-rossum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="graydon-hoare">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies"/>
     <attributum nomen="mortuus" genus="dies"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -283,8 +283,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -292,17 +292,17 @@
   </elementum>
   <elementum nomen="nomina" intra="graydon-hoare" textus="verum"/>
   <elementum nomen="membrum-de" intra="graydon-hoare">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="graydon-hoare">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="graydon-hoare">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="brian-fox">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1959"/>
     <attributum nomen="mortuus" genus="dies"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -311,8 +311,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -320,17 +320,17 @@
   </elementum>
   <elementum nomen="nomina" intra="brian-fox" textus="verum"/>
   <elementum nomen="membrum-de" intra="brian-fox">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="brian-fox">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="brian-fox">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="edsger-dijkstra">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1930-05-11"/>
     <attributum nomen="mortuus" genus="dies" ordinarius="2002-08-06"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -339,8 +339,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -348,17 +348,17 @@
   </elementum>
   <elementum nomen="nomina" intra="edsger-dijkstra" textus="verum"/>
   <elementum nomen="membrum-de" intra="edsger-dijkstra">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="edsger-dijkstra">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="edsger-dijkstra">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="bertrand-meyer">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1950-11-21"/>
     <attributum nomen="mortuus" genus="dies"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -367,8 +367,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -376,17 +376,17 @@
   </elementum>
   <elementum nomen="nomina" intra="bertrand-meyer" textus="verum"/>
   <elementum nomen="membrum-de" intra="bertrand-meyer">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="bertrand-meyer">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="bertrand-meyer">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="luca-pacioli">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1447"/>
     <attributum nomen="mortuus" genus="dies" ordinarius="1517-06-19"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -395,8 +395,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -404,17 +404,17 @@
   </elementum>
   <elementum nomen="nomina" intra="luca-pacioli" textus="verum"/>
   <elementum nomen="membrum-de" intra="luca-pacioli">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="luca-pacioli">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="luca-pacioli">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="duns-scotus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="natus" genus="dies" ordinarius="1266"/>
     <attributum nomen="mortuus" genus="dies" ordinarius="1308-11-08"/>
     <attributum nomen="status-civilis" genus="electio">
@@ -423,8 +423,8 @@
       <optio>viduus</optio>
       <optio>divortiatus</optio>
     </attributum>
-    <attributum nomen="auctor-de" genus="nomen"/>
-    <attributum nomen="domicilium" genus="nomen"/>
+    <attributum nomen="auctor-de" genus="referentia"/>
+    <attributum nomen="domicilium" genus="referentia"/>
     <liberum nomen="nomina"/>
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
@@ -432,10 +432,10 @@
   </elementum>
   <elementum nomen="nomina" intra="duns-scotus" textus="verum"/>
   <elementum nomen="membrum-de" intra="duns-scotus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="inscriptus-in" intra="duns-scotus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="duns-scotus">
     <liberum nomen="eventum"/>

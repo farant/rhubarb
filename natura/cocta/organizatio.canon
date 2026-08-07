@@ -38,7 +38,7 @@
   </elementum>
 
   <elementum nomen="universitas">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -51,21 +51,21 @@
       <optio>ab_intus</optio>
       <optio>ab_extra</optio>
     </attributum>
-    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="membrum" intra="universitas">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="universitas">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="organizatio">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -85,19 +85,19 @@
   </elementum>
   <elementum nomen="nomina" intra="organizatio" textus="verum"/>
   <elementum nomen="condita-a" intra="organizatio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="organizatio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="organizatio">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="colonia">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="membra-fungibilia" genus="veritas"/>
-    <attributum nomen="species-membrorum" genus="nomen"/>
+    <attributum nomen="species-membrorum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -110,23 +110,23 @@
       <optio>ab_intus</optio>
       <optio>ab_extra</optio>
     </attributum>
-    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="membrum" intra="colonia">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="colonia">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="persona-iuridica">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="perpetua" genus="veritas"/>
-    <attributum nomen="constituta-per" genus="nomen"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="constituta-per" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -146,28 +146,28 @@
   </elementum>
   <elementum nomen="nomina" intra="persona-iuridica" textus="verum"/>
   <elementum nomen="condita-a" intra="persona-iuridica">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="persona-iuridica">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="persona-iuridica">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="officium">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ad-tempus" genus="veritas"/>
     <attributum nomen="collegiale" genus="veritas"/>
     <attributum nomen="status-tenentia" genus="electio">
       <optio>vacans</optio>
       <optio>occupatum</optio>
     </attributum>
-    <attributum nomen="intra" genus="nomen"/>
-    <attributum nomen="tenetur-a" genus="nomen"/>
-    <attributum nomen="exercetur-a" genus="nomen"/>
-    <attributum nomen="constituitur-per" genus="nomen"/>
-    <attributum nomen="subest" genus="nomen"/>
+    <attributum nomen="intra" genus="referentia"/>
+    <attributum nomen="tenetur-a" genus="referentia"/>
+    <attributum nomen="exercetur-a" genus="referentia"/>
+    <attributum nomen="constituitur-per" genus="referentia"/>
+    <attributum nomen="subest" genus="referentia"/>
     <liberum nomen="requisita"/>
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
@@ -175,19 +175,19 @@
   </elementum>
   <elementum nomen="requisita" intra="officium" textus="verum"/>
   <elementum nomen="postulat" intra="officium">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="confert-capacitatem" intra="officium">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="officium">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="corpus-normans">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -207,23 +207,23 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="edit" intra="corpus-normans">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="nomina" intra="corpus-normans" textus="verum"/>
   <elementum nomen="condita-a" intra="corpus-normans">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="corpus-normans">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="corpus-normans">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="societas">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -243,19 +243,19 @@
   </elementum>
   <elementum nomen="nomina" intra="societas" textus="verum"/>
   <elementum nomen="condita-a" intra="societas">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="societas">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="societas">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="magistratus">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -276,26 +276,26 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="exercet" intra="magistratus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="concedit" intra="magistratus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="nomina" intra="magistratus" textus="verum"/>
   <elementum nomen="condita-a" intra="magistratus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="magistratus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="magistratus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="debian-project">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1993-08-16"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -315,19 +315,19 @@
   </elementum>
   <elementum nomen="nomina" intra="debian-project" textus="verum"/>
   <elementum nomen="condita-a" intra="debian-project">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="debian-project">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="debian-project">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="agentia-isbn">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -347,19 +347,19 @@
   </elementum>
   <elementum nomen="nomina" intra="agentia-isbn" textus="verum"/>
   <elementum nomen="condita-a" intra="agentia-isbn">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="agentia-isbn">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="agentia-isbn">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="colonia-apium">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="membra-fungibilia" genus="veritas"/>
-    <attributum nomen="species-membrorum" genus="nomen"/>
+    <attributum nomen="species-membrorum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -372,21 +372,21 @@
       <optio>ab_intus</optio>
       <optio>ab_extra</optio>
     </attributum>
-    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="membrum" intra="colonia-apium">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="colonia-apium">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="grex">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="membra-fungibilia" genus="veritas" ordinarius="falsum"/>
-    <attributum nomen="species-membrorum" genus="nomen"/>
+    <attributum nomen="species-membrorum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -399,23 +399,23 @@
       <optio>ab_intus</optio>
       <optio>ab_extra</optio>
     </attributum>
-    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="membrum" intra="grex">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="grex">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="universitas-personarum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="perpetua" genus="veritas"/>
-    <attributum nomen="constituta-per" genus="nomen"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="constituta-per" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -435,21 +435,21 @@
   </elementum>
   <elementum nomen="nomina" intra="universitas-personarum" textus="verum"/>
   <elementum nomen="condita-a" intra="universitas-personarum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="universitas-personarum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="universitas-personarum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="universitas-rerum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="perpetua" genus="veritas"/>
-    <attributum nomen="constituta-per" genus="nomen"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="constituta-per" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -469,28 +469,28 @@
   </elementum>
   <elementum nomen="nomina" intra="universitas-rerum" textus="verum"/>
   <elementum nomen="condita-a" intra="universitas-rerum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="universitas-rerum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="universitas-rerum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="parochus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ad-tempus" genus="veritas"/>
     <attributum nomen="collegiale" genus="veritas"/>
     <attributum nomen="status-tenentia" genus="electio">
       <optio>vacans</optio>
       <optio>occupatum</optio>
     </attributum>
-    <attributum nomen="intra" genus="nomen"/>
-    <attributum nomen="tenetur-a" genus="nomen"/>
-    <attributum nomen="exercetur-a" genus="nomen"/>
-    <attributum nomen="constituitur-per" genus="nomen"/>
-    <attributum nomen="subest" genus="nomen"/>
+    <attributum nomen="intra" genus="referentia"/>
+    <attributum nomen="tenetur-a" genus="referentia"/>
+    <attributum nomen="exercetur-a" genus="referentia"/>
+    <attributum nomen="constituitur-per" genus="referentia"/>
+    <attributum nomen="subest" genus="referentia"/>
     <liberum nomen="requisita"/>
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
@@ -498,28 +498,28 @@
   </elementum>
   <elementum nomen="requisita" intra="parochus" textus="verum"/>
   <elementum nomen="postulat" intra="parochus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="confert-capacitatem" intra="parochus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="parochus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="episcopus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ad-tempus" genus="veritas"/>
     <attributum nomen="collegiale" genus="veritas"/>
     <attributum nomen="status-tenentia" genus="electio">
       <optio>vacans</optio>
       <optio>occupatum</optio>
     </attributum>
-    <attributum nomen="intra" genus="nomen"/>
-    <attributum nomen="tenetur-a" genus="nomen"/>
-    <attributum nomen="exercetur-a" genus="nomen"/>
-    <attributum nomen="constituitur-per" genus="nomen"/>
-    <attributum nomen="subest" genus="nomen"/>
+    <attributum nomen="intra" genus="referentia"/>
+    <attributum nomen="tenetur-a" genus="referentia"/>
+    <attributum nomen="exercetur-a" genus="referentia"/>
+    <attributum nomen="constituitur-per" genus="referentia"/>
+    <attributum nomen="subest" genus="referentia"/>
     <liberum nomen="requisita"/>
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
@@ -527,28 +527,28 @@
   </elementum>
   <elementum nomen="requisita" intra="episcopus" textus="verum"/>
   <elementum nomen="postulat" intra="episcopus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="confert-capacitatem" intra="episcopus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="episcopus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="notarius">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ad-tempus" genus="veritas"/>
     <attributum nomen="collegiale" genus="veritas"/>
     <attributum nomen="status-tenentia" genus="electio">
       <optio>vacans</optio>
       <optio>occupatum</optio>
     </attributum>
-    <attributum nomen="intra" genus="nomen"/>
-    <attributum nomen="tenetur-a" genus="nomen"/>
-    <attributum nomen="exercetur-a" genus="nomen"/>
-    <attributum nomen="constituitur-per" genus="nomen"/>
-    <attributum nomen="subest" genus="nomen"/>
+    <attributum nomen="intra" genus="referentia"/>
+    <attributum nomen="tenetur-a" genus="referentia"/>
+    <attributum nomen="exercetur-a" genus="referentia"/>
+    <attributum nomen="constituitur-per" genus="referentia"/>
+    <attributum nomen="subest" genus="referentia"/>
     <liberum nomen="requisita"/>
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
@@ -556,28 +556,28 @@
   </elementum>
   <elementum nomen="requisita" intra="notarius" textus="verum"/>
   <elementum nomen="postulat" intra="notarius">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="confert-capacitatem" intra="notarius">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="notarius">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="curator">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ad-tempus" genus="veritas"/>
     <attributum nomen="collegiale" genus="veritas"/>
     <attributum nomen="status-tenentia" genus="electio">
       <optio>vacans</optio>
       <optio>occupatum</optio>
     </attributum>
-    <attributum nomen="intra" genus="nomen"/>
-    <attributum nomen="tenetur-a" genus="nomen"/>
-    <attributum nomen="exercetur-a" genus="nomen"/>
-    <attributum nomen="constituitur-per" genus="nomen"/>
-    <attributum nomen="subest" genus="nomen"/>
+    <attributum nomen="intra" genus="referentia"/>
+    <attributum nomen="tenetur-a" genus="referentia"/>
+    <attributum nomen="exercetur-a" genus="referentia"/>
+    <attributum nomen="constituitur-per" genus="referentia"/>
+    <attributum nomen="subest" genus="referentia"/>
     <liberum nomen="requisita"/>
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
@@ -585,28 +585,28 @@
   </elementum>
   <elementum nomen="requisita" intra="curator" textus="verum"/>
   <elementum nomen="postulat" intra="curator">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="confert-capacitatem" intra="curator">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="curator">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="praeses-collegii">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ad-tempus" genus="veritas" ordinarius="verum"/>
     <attributum nomen="collegiale" genus="veritas"/>
     <attributum nomen="status-tenentia" genus="electio">
       <optio>vacans</optio>
       <optio>occupatum</optio>
     </attributum>
-    <attributum nomen="intra" genus="nomen"/>
-    <attributum nomen="tenetur-a" genus="nomen"/>
-    <attributum nomen="exercetur-a" genus="nomen"/>
-    <attributum nomen="constituitur-per" genus="nomen"/>
-    <attributum nomen="subest" genus="nomen"/>
+    <attributum nomen="intra" genus="referentia"/>
+    <attributum nomen="tenetur-a" genus="referentia"/>
+    <attributum nomen="exercetur-a" genus="referentia"/>
+    <attributum nomen="constituitur-per" genus="referentia"/>
+    <attributum nomen="subest" genus="referentia"/>
     <liberum nomen="requisita"/>
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
@@ -614,19 +614,19 @@
   </elementum>
   <elementum nomen="requisita" intra="praeses-collegii" textus="verum"/>
   <elementum nomen="postulat" intra="praeses-collegii">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="confert-capacitatem" intra="praeses-collegii">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="praeses-collegii">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="iso">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1947-02-23"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus" ordinarius="Geneva"/>
@@ -646,23 +646,23 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="edit" intra="iso">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="nomina" intra="iso" textus="verum"/>
   <elementum nomen="condita-a" intra="iso">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="iso">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="iso">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="iec">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1906"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus" ordinarius="Geneva"/>
@@ -682,23 +682,23 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="edit" intra="iec">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="nomina" intra="iec" textus="verum"/>
   <elementum nomen="condita-a" intra="iec">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="iec">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="iec">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="ieee">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1963-01-01"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -718,23 +718,23 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="edit" intra="ieee">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="nomina" intra="ieee" textus="verum"/>
   <elementum nomen="condita-a" intra="ieee">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="ieee">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="ieee">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="ansi">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1918-10-19"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -754,23 +754,23 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="edit" intra="ansi">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="nomina" intra="ansi" textus="verum"/>
   <elementum nomen="condita-a" intra="ansi">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="ansi">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="ansi">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="intel">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1968-07-18"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -790,19 +790,19 @@
   </elementum>
   <elementum nomen="nomina" intra="intel" textus="verum"/>
   <elementum nomen="condita-a" intra="intel">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="intel">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="intel">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="amd">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1969-05-01"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -822,19 +822,19 @@
   </elementum>
   <elementum nomen="nomina" intra="amd" textus="verum"/>
   <elementum nomen="condita-a" intra="amd">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="amd">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="amd">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="arm-ltd">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1990-11-27"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -854,19 +854,19 @@
   </elementum>
   <elementum nomen="nomina" intra="arm-ltd" textus="verum"/>
   <elementum nomen="condita-a" intra="arm-ltd">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="arm-ltd">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="arm-ltd">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="canonical">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="2004-03-05"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -886,19 +886,19 @@
   </elementum>
   <elementum nomen="nomina" intra="canonical" textus="verum"/>
   <elementum nomen="condita-a" intra="canonical">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="canonical">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="canonical">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="apple">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1976-04-01"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -918,19 +918,19 @@
   </elementum>
   <elementum nomen="nomina" intra="apple" textus="verum"/>
   <elementum nomen="condita-a" intra="apple">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="apple">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="apple">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="microsoft">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1975-04-04"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -950,19 +950,19 @@
   </elementum>
   <elementum nomen="nomina" intra="microsoft" textus="verum"/>
   <elementum nomen="condita-a" intra="microsoft">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="microsoft">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="microsoft">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="bell-labs">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1925-01-01"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -982,19 +982,19 @@
   </elementum>
   <elementum nomen="nomina" intra="bell-labs" textus="verum"/>
   <elementum nomen="condita-a" intra="bell-labs">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="bell-labs">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="bell-labs">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="att">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="pars-de" genus="nomen"/>
-    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
     <attributum nomen="condita" genus="dies" ordinarius="1885-03-03"/>
     <attributum nomen="dissoluta" genus="dies"/>
     <attributum nomen="sedes" genus="textus"/>
@@ -1014,10 +1014,10 @@
   </elementum>
   <elementum nomen="nomina" intra="att" textus="verum"/>
   <elementum nomen="condita-a" intra="att">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="administrat" intra="att">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="att">
     <liberum nomen="eventum"/>
@@ -1044,5 +1044,49 @@
            grex universitas-personarum universitas-rerum parochus episcopus
            notarius curator praeses-collegii iso iec ieee ansi intel amd
            arm-ltd canonical apple microsoft bell-labs att"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="universitas-pars-de" attributum="pars-de" ad="universitas organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus colonia colonia-apium grex/nomen" super="universitas"/>
+  <citatio nomen="organizatio-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="organizatio"/>
+  <citatio nomen="colonia-pars-de" attributum="pars-de" ad="universitas organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus colonia colonia-apium grex/nomen" super="colonia"/>
+  <citatio nomen="persona-iuridica-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="persona-iuridica"/>
+  <citatio nomen="officium-intra" attributum="intra" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="officium"/>
+  <citatio nomen="officium-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="officium"/>
+  <citatio nomen="corpus-normans-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="corpus-normans"/>
+  <citatio nomen="societas-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="societas"/>
+  <citatio nomen="magistratus-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="magistratus"/>
+  <citatio nomen="debian-project-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="debian-project"/>
+  <citatio nomen="agentia-isbn-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="agentia-isbn"/>
+  <citatio nomen="colonia-apium-pars-de" attributum="pars-de" ad="universitas organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus colonia colonia-apium grex/nomen" super="colonia-apium"/>
+  <citatio nomen="grex-pars-de" attributum="pars-de" ad="universitas organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus colonia colonia-apium grex/nomen" super="grex"/>
+  <citatio nomen="universitas-personarum-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="universitas-personarum"/>
+  <citatio nomen="universitas-rerum-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="universitas-rerum"/>
+  <citatio nomen="parochus-intra" attributum="intra" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="parochus"/>
+  <citatio nomen="parochus-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="parochus"/>
+  <citatio nomen="episcopus-intra" attributum="intra" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="episcopus"/>
+  <citatio nomen="episcopus-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="episcopus"/>
+  <citatio nomen="notarius-intra" attributum="intra" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="notarius"/>
+  <citatio nomen="notarius-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="notarius"/>
+  <citatio nomen="curator-intra" attributum="intra" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="curator"/>
+  <citatio nomen="curator-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="curator"/>
+  <citatio nomen="praeses-collegii-intra" attributum="intra" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="praeses-collegii"/>
+  <citatio nomen="praeses-collegii-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="praeses-collegii"/>
+  <citatio nomen="iso-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="iso"/>
+  <citatio nomen="iec-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="iec"/>
+  <citatio nomen="ieee-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="ieee"/>
+  <citatio nomen="ansi-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="ansi"/>
+  <citatio nomen="intel-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="intel"/>
+  <citatio nomen="amd-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="amd"/>
+  <citatio nomen="arm-ltd-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="arm-ltd"/>
+  <citatio nomen="canonical-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="canonical"/>
+  <citatio nomen="apple-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="apple"/>
+  <citatio nomen="microsoft-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="microsoft"/>
+  <citatio nomen="bell-labs-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="bell-labs"/>
+  <citatio nomen="att-pars-de" attributum="pars-de" ad="organizatio debian-project agentia-isbn persona-iuridica universitas-personarum universitas-rerum corpus-normans iso iec ieee ansi societas intel amd arm-ltd canonical apple microsoft bell-labs att magistratus/nomen" super="att"/>
 
 </canon>

@@ -29,7 +29,7 @@
   </elementum>
 
   <elementum nomen="plagula-computatralis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -39,8 +39,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -50,9 +50,9 @@
   </elementum>
 
   <elementum nomen="plagula-fontis">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
-    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
+    <attributum nomen="scripta-in-versione" genus="referentia"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -62,8 +62,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -73,7 +73,7 @@
   </elementum>
 
   <elementum nomen="scriptum-exsecutabile">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -83,8 +83,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -94,7 +94,7 @@
   </elementum>
 
   <elementum nomen="plagula-notationis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -104,8 +104,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -115,7 +115,7 @@
   </elementum>
 
   <elementum nomen="plagula-figurationis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -125,8 +125,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -136,7 +136,7 @@
   </elementum>
 
   <elementum nomen="plagula-datorum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -146,8 +146,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -157,7 +157,7 @@
   </elementum>
 
   <elementum nomen="plagula-sqlite">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="binaria">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -167,8 +167,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -178,7 +178,7 @@
   </elementum>
 
   <elementum nomen="systema-plagularum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="capsas-discernit" genus="veritas"/>
     <attributum nomen="capsas-servat" genus="veritas"/>
     <attributum nomen="mensura-nominis-maxima" genus="numerus"/>
@@ -189,7 +189,7 @@
       <optio>utrosque</optio>
     </attributum>
     <attributum nomen="transactiones-fert" genus="veritas"/>
-    <attributum nomen="iacet-in" genus="nomen"/>
+    <attributum nomen="iacet-in" genus="referentia"/>
     <liberum nomen="radix" maximum="1"/>
     <liberum nomen="directorium" maximum="1"/>
     <liberum nomen="notae-circumstantes" maximum="1"/>
@@ -206,31 +206,31 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="continet" intra="systema-plagularum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="systema-plagularum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="directorium">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="occultum" genus="veritas"/>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="est-plagula" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="est-plagula" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="continet" intra="directorium">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="directorium">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="fons-c">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
-    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
+    <attributum nomen="scripta-in-versione" genus="referentia"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -240,8 +240,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -251,9 +251,9 @@
   </elementum>
 
   <elementum nomen="caput-c">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
-    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
+    <attributum nomen="scripta-in-versione" genus="referentia"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -263,8 +263,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -274,9 +274,9 @@
   </elementum>
 
   <elementum nomen="fons-python">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
-    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
+    <attributum nomen="scripta-in-versione" genus="referentia"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -286,8 +286,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -297,9 +297,9 @@
   </elementum>
 
   <elementum nomen="fons-rust">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
-    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
+    <attributum nomen="scripta-in-versione" genus="referentia"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -309,8 +309,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -320,7 +320,7 @@
   </elementum>
 
   <elementum nomen="scriptum-conchae">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -330,10 +330,10 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
-    <attributum nomen="scripta-in" genus="nomen"/>
-    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
+    <attributum nomen="scripta-in" genus="referentia"/>
+    <attributum nomen="scripta-in-versione" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -343,7 +343,7 @@
   </elementum>
 
   <elementum nomen="plagula-xml">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -353,8 +353,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -364,7 +364,7 @@
   </elementum>
 
   <elementum nomen="plagula-stml">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -374,8 +374,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -385,7 +385,7 @@
   </elementum>
 
   <elementum nomen="plagula-markdown">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -395,8 +395,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -406,7 +406,7 @@
   </elementum>
 
   <elementum nomen="plagula-toml">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -416,8 +416,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -427,7 +427,7 @@
   </elementum>
 
   <elementum nomen="plagula-plist">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -437,8 +437,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -448,7 +448,7 @@
   </elementum>
 
   <elementum nomen="plagula-json">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -458,8 +458,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -469,7 +469,7 @@
   </elementum>
 
   <elementum nomen="plagula-csv">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -479,8 +479,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -490,7 +490,7 @@
   </elementum>
 
   <elementum nomen="volumen">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="binaria">
       <optio>textualis</optio>
       <optio>binaria</optio>
@@ -500,8 +500,8 @@
       <optio>exsistens</optio>
       <optio>ablata</optio>
     </attributum>
-    <attributum nomen="continetur-in" genus="nomen"/>
-    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -531,5 +531,34 @@
            directorium fons-c caput-c fons-python fons-rust scriptum-conchae
            plagula-xml plagula-stml plagula-markdown plagula-toml plagula-plist
            plagula-json plagula-csv volumen"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="plagula-computatralis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-computatralis"/>
+  <citatio nomen="plagula-fontis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-fontis"/>
+  <citatio nomen="scriptum-exsecutabile-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="scriptum-exsecutabile"/>
+  <citatio nomen="plagula-notationis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-notationis"/>
+  <citatio nomen="plagula-figurationis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-figurationis"/>
+  <citatio nomen="plagula-datorum-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-datorum"/>
+  <citatio nomen="plagula-sqlite-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-sqlite"/>
+  <citatio nomen="directorium-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="directorium"/>
+  <citatio nomen="directorium-est-plagula" attributum="est-plagula" ad="plagula-computatralis plagula-fontis fons-c caput-c fons-python fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis plagula-xml plagula-stml plagula-markdown plagula-figurationis plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv plagula-sqlite volumen/nomen" super="directorium"/>
+  <citatio nomen="fons-c-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="fons-c"/>
+  <citatio nomen="caput-c-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="caput-c"/>
+  <citatio nomen="fons-python-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="fons-python"/>
+  <citatio nomen="fons-rust-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="fons-rust"/>
+  <citatio nomen="scriptum-conchae-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="scriptum-conchae"/>
+  <citatio nomen="plagula-xml-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-xml"/>
+  <citatio nomen="plagula-stml-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-stml"/>
+  <citatio nomen="plagula-markdown-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-markdown"/>
+  <citatio nomen="plagula-toml-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-toml"/>
+  <citatio nomen="plagula-plist-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-plist"/>
+  <citatio nomen="plagula-json-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-json"/>
+  <citatio nomen="plagula-csv-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-csv"/>
+  <citatio nomen="volumen-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="volumen"/>
 
 </canon>

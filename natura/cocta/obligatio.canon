@@ -49,7 +49,7 @@
   </elementum>
 
   <elementum nomen="obligatio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>orta</optio>
       <optio>soluta</optio>
@@ -57,10 +57,10 @@
       <optio>praescripta</optio>
       <optio>violata</optio>
     </attributum>
-    <attributum nomen="debitor" genus="nomen"/>
-    <attributum nomen="creditor" genus="nomen"/>
-    <attributum nomen="praestandum" genus="nomen"/>
-    <attributum nomen="orta-ex" genus="nomen"/>
+    <attributum nomen="debitor" genus="referentia"/>
+    <attributum nomen="creditor" genus="referentia"/>
+    <attributum nomen="praestandum" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio">
@@ -68,7 +68,7 @@
   </elementum>
 
   <elementum nomen="contractus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="initium" genus="dies"/>
     <attributum nomen="finis" genus="dies"/>
     <liberum nomen="partes"/>
@@ -76,17 +76,17 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="partes" intra="contractus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="parit" intra="contractus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="contractus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="licentia">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="data" genus="dies"/>
     <attributum nomen="expirat" genus="dies"/>
     <attributum nomen="recentia-postulata" genus="veritas"/>
@@ -97,9 +97,9 @@
       <optio>revocata</optio>
       <optio>expirata</optio>
     </attributum>
-    <attributum nomen="concedens" genus="nomen"/>
-    <attributum nomen="accipiens" genus="nomen"/>
-    <attributum nomen="secundum-normam" genus="nomen"/>
+    <attributum nomen="concedens" genus="referentia"/>
+    <attributum nomen="accipiens" genus="referentia"/>
+    <attributum nomen="secundum-normam" genus="referentia"/>
     <liberum nomen="condiciones"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -109,7 +109,7 @@
   </elementum>
 
   <elementum nomen="tributum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ratio" genus="electio">
       <optio>ex_transitu</optio>
       <optio>ex_reditu</optio>
@@ -117,8 +117,8 @@
       <optio>ex_venditione</optio>
       <optio>ex_capite</optio>
     </attributum>
-    <attributum nomen="exigitur-a" genus="nomen"/>
-    <attributum nomen="secundum-normam" genus="nomen"/>
+    <attributum nomen="exigitur-a" genus="referentia"/>
+    <attributum nomen="secundum-normam" genus="referentia"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>orta</optio>
       <optio>soluta</optio>
@@ -126,10 +126,10 @@
       <optio>praescripta</optio>
       <optio>violata</optio>
     </attributum>
-    <attributum nomen="debitor" genus="nomen"/>
-    <attributum nomen="creditor" genus="nomen"/>
-    <attributum nomen="praestandum" genus="nomen"/>
-    <attributum nomen="orta-ex" genus="nomen"/>
+    <attributum nomen="debitor" genus="referentia"/>
+    <attributum nomen="creditor" genus="referentia"/>
+    <attributum nomen="praestandum" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="tributum">
@@ -137,12 +137,12 @@
   </elementum>
 
   <elementum nomen="titulus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="collatus" genus="dies"/>
     <attributum nomen="appellatio" genus="textus"/>
-    <attributum nomen="conferens" genus="nomen"/>
-    <attributum nomen="latus-a" genus="nomen"/>
-    <attributum nomen="fundat" genus="nomen"/>
+    <attributum nomen="conferens" genus="referentia"/>
+    <attributum nomen="latus-a" genus="referentia"/>
+    <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="titulus">
@@ -150,7 +150,7 @@
   </elementum>
 
   <elementum nomen="iussum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="usus-reliqui" genus="numerus"/>
     <attributum nomen="valens-ad" genus="dies"/>
     <attributum nomen="transferibile" genus="veritas"/>
@@ -168,12 +168,12 @@
       <optio>elapsum</optio>
       <optio>recusatum</optio>
     </attributum>
-    <attributum nomen="iubens" genus="nomen"/>
-    <attributum nomen="potestate" genus="nomen"/>
-    <attributum nomen="exsecutor" genus="nomen"/>
-    <attributum nomen="beneficiarius" genus="nomen"/>
-    <attributum nomen="latum-per" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="iubens" genus="referentia"/>
+    <attributum nomen="potestate" genus="referentia"/>
+    <attributum nomen="exsecutor" genus="referentia"/>
+    <attributum nomen="beneficiarius" genus="referentia"/>
+    <attributum nomen="latum-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="iussum">
@@ -181,7 +181,7 @@
   </elementum>
 
   <elementum nomen="fiducia">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="lucrum-proprium" genus="veritas"/>
     <attributum nomen="alienatio" genus="electio">
       <optio>libera</optio>
@@ -195,28 +195,28 @@
       <optio>soluta</optio>
       <optio>violata</optio>
     </attributum>
-    <attributum nomen="fiduciarius" genus="nomen"/>
-    <attributum nomen="constituta-per" genus="nomen"/>
+    <attributum nomen="fiduciarius" genus="referentia"/>
+    <attributum nomen="constituta-per" genus="referentia"/>
     <liberum nomen="beneficiarius"/>
     <liberum nomen="res-fiduciaria"/>
     <liberum nomen="officia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="beneficiarius" intra="fiducia">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="res-fiduciaria" intra="fiducia">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="officia" intra="fiducia">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="fiducia">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="petitio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="identificator-petitionis" genus="textus"/>
     <attributum nomen="terminus-exspectandi" genus="textus"/>
     <attributum nomen="conatus" genus="numerus"/>
@@ -227,11 +227,11 @@
       <optio>negata</optio>
       <optio>elapsa</optio>
     </attributum>
-    <attributum nomen="petens" genus="nomen"/>
-    <attributum nomen="rogatus" genus="nomen"/>
-    <attributum nomen="de" genus="nomen"/>
-    <attributum nomen="iudicatur-per" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="petens" genus="referentia"/>
+    <attributum nomen="rogatus" genus="referentia"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="iudicatur-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="petitio">
@@ -239,7 +239,7 @@
   </elementum>
 
   <elementum nomen="delegatio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ambitus" genus="textus"/>
     <attributum nomen="subdelegabilis" genus="veritas"/>
     <attributum nomen="revocabilis" genus="veritas"/>
@@ -255,21 +255,21 @@
       <optio>elapsa</optio>
       <optio>extincta</optio>
     </attributum>
-    <attributum nomen="delegans" genus="nomen"/>
-    <attributum nomen="delegatus" genus="nomen"/>
-    <attributum nomen="probatur-per" genus="nomen"/>
+    <attributum nomen="delegans" genus="referentia"/>
+    <attributum nomen="delegatus" genus="referentia"/>
+    <attributum nomen="probatur-per" genus="referentia"/>
     <liberum nomen="obligat-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="obligat-per" intra="delegatio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="delegatio">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="tractatus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="multilateralis" genus="veritas"/>
     <attributum nomen="numerus-ad-vigorem" genus="numerus"/>
     <attributum nomen="status-vigor" genus="electio">
@@ -281,8 +281,8 @@
       <optio>terminatus</optio>
       <optio>abortus</optio>
     </attributum>
-    <attributum nomen="depositarius" genus="nomen"/>
-    <attributum nomen="ad-vigorem-per" genus="nomen"/>
+    <attributum nomen="depositarius" genus="referentia"/>
+    <attributum nomen="ad-vigorem-per" genus="referentia"/>
     <attributum nomen="initium" genus="dies"/>
     <attributum nomen="finis" genus="dies"/>
     <liberum nomen="signatus-per"/>
@@ -292,44 +292,44 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="signatus-per" intra="tractatus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="limitatus-per" intra="tractatus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="partes" intra="tractatus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="parit" intra="tractatus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="tractatus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="limitatio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="articuli" genus="textus"/>
     <attributum nomen="modus" genus="electio">
       <optio>exclusio</optio>
       <optio>modificatio</optio>
     </attributum>
     <attributum nomen="compatibilis-cum-fine" genus="veritas"/>
-    <attributum nomen="ad-tractatum" genus="nomen"/>
-    <attributum nomen="lata-a" genus="nomen"/>
-    <attributum nomen="asseritur-per" genus="nomen"/>
+    <attributum nomen="ad-tractatum" genus="referentia"/>
+    <attributum nomen="lata-a" genus="referentia"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="obiecta-a"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="obiecta-a" intra="limitatio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="limitatio">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="portio-communis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="mensura" genus="textus"/>
     <attributum nomen="adhaeret" genus="electio">
       <optio>personae</optio>
@@ -339,10 +339,10 @@
     </attributum>
     <attributum nomen="transferibilis" genus="veritas"/>
     <attributum nomen="periodica" genus="veritas"/>
-    <attributum nomen="in-re-communi" genus="nomen"/>
-    <attributum nomen="competit" genus="nomen"/>
-    <attributum nomen="statuta-per" genus="nomen"/>
-    <attributum nomen="custodita-per" genus="nomen"/>
+    <attributum nomen="in-re-communi" genus="referentia"/>
+    <attributum nomen="competit" genus="referentia"/>
+    <attributum nomen="statuta-per" genus="referentia"/>
+    <attributum nomen="custodita-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="portio-communis">
@@ -350,7 +350,7 @@
   </elementum>
 
   <elementum nomen="obligatio-ex-contractu">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>orta</optio>
       <optio>soluta</optio>
@@ -358,10 +358,10 @@
       <optio>praescripta</optio>
       <optio>violata</optio>
     </attributum>
-    <attributum nomen="debitor" genus="nomen"/>
-    <attributum nomen="creditor" genus="nomen"/>
-    <attributum nomen="praestandum" genus="nomen"/>
-    <attributum nomen="orta-ex" genus="nomen"/>
+    <attributum nomen="debitor" genus="referentia"/>
+    <attributum nomen="creditor" genus="referentia"/>
+    <attributum nomen="praestandum" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio-ex-contractu">
@@ -369,7 +369,7 @@
   </elementum>
 
   <elementum nomen="obligatio-ex-delicto">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>orta</optio>
       <optio>soluta</optio>
@@ -377,10 +377,10 @@
       <optio>praescripta</optio>
       <optio>violata</optio>
     </attributum>
-    <attributum nomen="debitor" genus="nomen"/>
-    <attributum nomen="creditor" genus="nomen"/>
-    <attributum nomen="praestandum" genus="nomen"/>
-    <attributum nomen="orta-ex" genus="nomen"/>
+    <attributum nomen="debitor" genus="referentia"/>
+    <attributum nomen="creditor" genus="referentia"/>
+    <attributum nomen="praestandum" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio-ex-delicto">
@@ -388,7 +388,7 @@
   </elementum>
 
   <elementum nomen="obligatio-ex-lege">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>orta</optio>
       <optio>soluta</optio>
@@ -396,10 +396,10 @@
       <optio>praescripta</optio>
       <optio>violata</optio>
     </attributum>
-    <attributum nomen="debitor" genus="nomen"/>
-    <attributum nomen="creditor" genus="nomen"/>
-    <attributum nomen="praestandum" genus="nomen"/>
-    <attributum nomen="orta-ex" genus="nomen"/>
+    <attributum nomen="debitor" genus="referentia"/>
+    <attributum nomen="creditor" genus="referentia"/>
+    <attributum nomen="praestandum" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio-ex-lege">
@@ -407,7 +407,7 @@
   </elementum>
 
   <elementum nomen="emptio-venditio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="initium" genus="dies"/>
     <attributum nomen="finis" genus="dies"/>
     <liberum nomen="partes"/>
@@ -415,17 +415,17 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="partes" intra="emptio-venditio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="parit" intra="emptio-venditio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="emptio-venditio">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="locatio-conductio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="initium" genus="dies"/>
     <attributum nomen="finis" genus="dies"/>
     <liberum nomen="partes"/>
@@ -433,17 +433,17 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="partes" intra="locatio-conductio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="parit" intra="locatio-conductio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="locatio-conductio">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="societas-contractus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="initium" genus="dies"/>
     <attributum nomen="finis" genus="dies"/>
     <liberum nomen="partes"/>
@@ -451,17 +451,17 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="partes" intra="societas-contractus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="parit" intra="societas-contractus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="societas-contractus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="mandatum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="initium" genus="dies"/>
     <attributum nomen="finis" genus="dies"/>
     <liberum nomen="partes"/>
@@ -469,17 +469,17 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="partes" intra="mandatum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="parit" intra="mandatum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="mandatum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="commodatum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="initium" genus="dies"/>
     <attributum nomen="finis" genus="dies"/>
     <liberum nomen="partes"/>
@@ -487,17 +487,17 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="partes" intra="commodatum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="parit" intra="commodatum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="commodatum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="portorium">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ratio" genus="electio" ordinarius="ex_transitu">
       <optio>ex_transitu</optio>
       <optio>ex_reditu</optio>
@@ -505,8 +505,8 @@
       <optio>ex_venditione</optio>
       <optio>ex_capite</optio>
     </attributum>
-    <attributum nomen="exigitur-a" genus="nomen"/>
-    <attributum nomen="secundum-normam" genus="nomen"/>
+    <attributum nomen="exigitur-a" genus="referentia"/>
+    <attributum nomen="secundum-normam" genus="referentia"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>orta</optio>
       <optio>soluta</optio>
@@ -514,10 +514,10 @@
       <optio>praescripta</optio>
       <optio>violata</optio>
     </attributum>
-    <attributum nomen="debitor" genus="nomen"/>
-    <attributum nomen="creditor" genus="nomen"/>
-    <attributum nomen="praestandum" genus="nomen"/>
-    <attributum nomen="orta-ex" genus="nomen"/>
+    <attributum nomen="debitor" genus="referentia"/>
+    <attributum nomen="creditor" genus="referentia"/>
+    <attributum nomen="praestandum" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="portorium">
@@ -525,7 +525,7 @@
   </elementum>
 
   <elementum nomen="vectigal">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ratio" genus="electio" ordinarius="ex_possessione">
       <optio>ex_transitu</optio>
       <optio>ex_reditu</optio>
@@ -533,8 +533,8 @@
       <optio>ex_venditione</optio>
       <optio>ex_capite</optio>
     </attributum>
-    <attributum nomen="exigitur-a" genus="nomen"/>
-    <attributum nomen="secundum-normam" genus="nomen"/>
+    <attributum nomen="exigitur-a" genus="referentia"/>
+    <attributum nomen="secundum-normam" genus="referentia"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>orta</optio>
       <optio>soluta</optio>
@@ -542,10 +542,10 @@
       <optio>praescripta</optio>
       <optio>violata</optio>
     </attributum>
-    <attributum nomen="debitor" genus="nomen"/>
-    <attributum nomen="creditor" genus="nomen"/>
-    <attributum nomen="praestandum" genus="nomen"/>
-    <attributum nomen="orta-ex" genus="nomen"/>
+    <attributum nomen="debitor" genus="referentia"/>
+    <attributum nomen="creditor" genus="referentia"/>
+    <attributum nomen="praestandum" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="vectigal">
@@ -553,7 +553,7 @@
   </elementum>
 
   <elementum nomen="decuma">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ratio" genus="electio" ordinarius="ex_reditu">
       <optio>ex_transitu</optio>
       <optio>ex_reditu</optio>
@@ -561,8 +561,8 @@
       <optio>ex_venditione</optio>
       <optio>ex_capite</optio>
     </attributum>
-    <attributum nomen="exigitur-a" genus="nomen"/>
-    <attributum nomen="secundum-normam" genus="nomen"/>
+    <attributum nomen="exigitur-a" genus="referentia"/>
+    <attributum nomen="secundum-normam" genus="referentia"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>orta</optio>
       <optio>soluta</optio>
@@ -570,10 +570,10 @@
       <optio>praescripta</optio>
       <optio>violata</optio>
     </attributum>
-    <attributum nomen="debitor" genus="nomen"/>
-    <attributum nomen="creditor" genus="nomen"/>
-    <attributum nomen="praestandum" genus="nomen"/>
-    <attributum nomen="orta-ex" genus="nomen"/>
+    <attributum nomen="debitor" genus="referentia"/>
+    <attributum nomen="creditor" genus="referentia"/>
+    <attributum nomen="praestandum" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="decuma">
@@ -581,7 +581,7 @@
   </elementum>
 
   <elementum nomen="tributum-capitis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ratio" genus="electio" ordinarius="ex_capite">
       <optio>ex_transitu</optio>
       <optio>ex_reditu</optio>
@@ -589,8 +589,8 @@
       <optio>ex_venditione</optio>
       <optio>ex_capite</optio>
     </attributum>
-    <attributum nomen="exigitur-a" genus="nomen"/>
-    <attributum nomen="secundum-normam" genus="nomen"/>
+    <attributum nomen="exigitur-a" genus="referentia"/>
+    <attributum nomen="secundum-normam" genus="referentia"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>orta</optio>
       <optio>soluta</optio>
@@ -598,10 +598,10 @@
       <optio>praescripta</optio>
       <optio>violata</optio>
     </attributum>
-    <attributum nomen="debitor" genus="nomen"/>
-    <attributum nomen="creditor" genus="nomen"/>
-    <attributum nomen="praestandum" genus="nomen"/>
-    <attributum nomen="orta-ex" genus="nomen"/>
+    <attributum nomen="debitor" genus="referentia"/>
+    <attributum nomen="creditor" genus="referentia"/>
+    <attributum nomen="praestandum" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="tributum-capitis">
@@ -609,12 +609,12 @@
   </elementum>
 
   <elementum nomen="gradus-academicus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="collatus" genus="dies"/>
     <attributum nomen="appellatio" genus="textus"/>
-    <attributum nomen="conferens" genus="nomen"/>
-    <attributum nomen="latus-a" genus="nomen"/>
-    <attributum nomen="fundat" genus="nomen"/>
+    <attributum nomen="conferens" genus="referentia"/>
+    <attributum nomen="latus-a" genus="referentia"/>
+    <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="gradus-academicus">
@@ -622,12 +622,12 @@
   </elementum>
 
   <elementum nomen="character-indelebilis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="collatus" genus="dies"/>
     <attributum nomen="appellatio" genus="textus"/>
-    <attributum nomen="conferens" genus="nomen"/>
-    <attributum nomen="latus-a" genus="nomen"/>
-    <attributum nomen="fundat" genus="nomen"/>
+    <attributum nomen="conferens" genus="referentia"/>
+    <attributum nomen="latus-a" genus="referentia"/>
+    <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="character-indelebilis">
@@ -635,12 +635,12 @@
   </elementum>
 
   <elementum nomen="titulus-honoris">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="collatus" genus="dies"/>
     <attributum nomen="appellatio" genus="textus"/>
-    <attributum nomen="conferens" genus="nomen"/>
-    <attributum nomen="latus-a" genus="nomen"/>
-    <attributum nomen="fundat" genus="nomen"/>
+    <attributum nomen="conferens" genus="referentia"/>
+    <attributum nomen="latus-a" genus="referentia"/>
+    <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="titulus-honoris">
@@ -648,7 +648,7 @@
   </elementum>
 
   <elementum nomen="praescriptio-medica">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="usus-reliqui" genus="numerus"/>
     <attributum nomen="valens-ad" genus="dies"/>
     <attributum nomen="transferibile" genus="veritas" ordinarius="verum"/>
@@ -666,12 +666,12 @@
       <optio>elapsum</optio>
       <optio>recusatum</optio>
     </attributum>
-    <attributum nomen="iubens" genus="nomen"/>
-    <attributum nomen="potestate" genus="nomen"/>
-    <attributum nomen="exsecutor" genus="nomen"/>
-    <attributum nomen="beneficiarius" genus="nomen"/>
-    <attributum nomen="latum-per" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="iubens" genus="referentia"/>
+    <attributum nomen="potestate" genus="referentia"/>
+    <attributum nomen="exsecutor" genus="referentia"/>
+    <attributum nomen="beneficiarius" genus="referentia"/>
+    <attributum nomen="latum-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="praescriptio-medica">
@@ -679,7 +679,7 @@
   </elementum>
 
   <elementum nomen="mandatum-iudicis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="usus-reliqui" genus="numerus"/>
     <attributum nomen="valens-ad" genus="dies"/>
     <attributum nomen="transferibile" genus="veritas" ordinarius="falsum"/>
@@ -697,12 +697,12 @@
       <optio>elapsum</optio>
       <optio>recusatum</optio>
     </attributum>
-    <attributum nomen="iubens" genus="nomen"/>
-    <attributum nomen="potestate" genus="nomen"/>
-    <attributum nomen="exsecutor" genus="nomen"/>
-    <attributum nomen="beneficiarius" genus="nomen"/>
-    <attributum nomen="latum-per" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="iubens" genus="referentia"/>
+    <attributum nomen="potestate" genus="referentia"/>
+    <attributum nomen="exsecutor" genus="referentia"/>
+    <attributum nomen="beneficiarius" genus="referentia"/>
+    <attributum nomen="latum-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="mandatum-iudicis">
@@ -710,7 +710,7 @@
   </elementum>
 
   <elementum nomen="iussum-emptionis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="usus-reliqui" genus="numerus"/>
     <attributum nomen="valens-ad" genus="dies"/>
     <attributum nomen="transferibile" genus="veritas"/>
@@ -728,12 +728,12 @@
       <optio>elapsum</optio>
       <optio>recusatum</optio>
     </attributum>
-    <attributum nomen="iubens" genus="nomen"/>
-    <attributum nomen="potestate" genus="nomen"/>
-    <attributum nomen="exsecutor" genus="nomen"/>
-    <attributum nomen="beneficiarius" genus="nomen"/>
-    <attributum nomen="latum-per" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="iubens" genus="referentia"/>
+    <attributum nomen="potestate" genus="referentia"/>
+    <attributum nomen="exsecutor" genus="referentia"/>
+    <attributum nomen="beneficiarius" genus="referentia"/>
+    <attributum nomen="latum-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="iussum-emptionis">
@@ -741,7 +741,7 @@
   </elementum>
 
   <elementum nomen="iussum-operis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="usus-reliqui" genus="numerus"/>
     <attributum nomen="valens-ad" genus="dies"/>
     <attributum nomen="transferibile" genus="veritas"/>
@@ -759,12 +759,12 @@
       <optio>elapsum</optio>
       <optio>recusatum</optio>
     </attributum>
-    <attributum nomen="iubens" genus="nomen"/>
-    <attributum nomen="potestate" genus="nomen"/>
-    <attributum nomen="exsecutor" genus="nomen"/>
-    <attributum nomen="beneficiarius" genus="nomen"/>
-    <attributum nomen="latum-per" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="iubens" genus="referentia"/>
+    <attributum nomen="potestate" genus="referentia"/>
+    <attributum nomen="exsecutor" genus="referentia"/>
+    <attributum nomen="beneficiarius" genus="referentia"/>
+    <attributum nomen="latum-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="iussum-operis">
@@ -772,7 +772,7 @@
   </elementum>
 
   <elementum nomen="iussum-ne-resuscitetur">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="usus-reliqui" genus="numerus"/>
     <attributum nomen="valens-ad" genus="dies"/>
     <attributum nomen="transferibile" genus="veritas"/>
@@ -790,12 +790,12 @@
       <optio>elapsum</optio>
       <optio>recusatum</optio>
     </attributum>
-    <attributum nomen="iubens" genus="nomen"/>
-    <attributum nomen="potestate" genus="nomen"/>
-    <attributum nomen="exsecutor" genus="nomen"/>
-    <attributum nomen="beneficiarius" genus="nomen"/>
-    <attributum nomen="latum-per" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="iubens" genus="referentia"/>
+    <attributum nomen="potestate" genus="referentia"/>
+    <attributum nomen="exsecutor" genus="referentia"/>
+    <attributum nomen="beneficiarius" genus="referentia"/>
+    <attributum nomen="latum-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="iussum-ne-resuscitetur">
@@ -803,7 +803,7 @@
   </elementum>
 
   <elementum nomen="petitio-assecurationis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="identificator-petitionis" genus="textus"/>
     <attributum nomen="terminus-exspectandi" genus="textus"/>
     <attributum nomen="conatus" genus="numerus"/>
@@ -814,11 +814,11 @@
       <optio>negata</optio>
       <optio>elapsa</optio>
     </attributum>
-    <attributum nomen="petens" genus="nomen"/>
-    <attributum nomen="rogatus" genus="nomen"/>
-    <attributum nomen="de" genus="nomen"/>
-    <attributum nomen="iudicatur-per" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="petens" genus="referentia"/>
+    <attributum nomen="rogatus" genus="referentia"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="iudicatur-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="petitio-assecurationis">
@@ -826,7 +826,7 @@
   </elementum>
 
   <elementum nomen="petitio-remota">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="identificator-petitionis" genus="textus"/>
     <attributum nomen="terminus-exspectandi" genus="textus"/>
     <attributum nomen="conatus" genus="numerus"/>
@@ -837,11 +837,11 @@
       <optio>negata</optio>
       <optio>elapsa</optio>
     </attributum>
-    <attributum nomen="petens" genus="nomen"/>
-    <attributum nomen="rogatus" genus="nomen"/>
-    <attributum nomen="de" genus="nomen"/>
-    <attributum nomen="iudicatur-per" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="petens" genus="referentia"/>
+    <attributum nomen="rogatus" genus="referentia"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="iudicatur-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="petitio-remota">
@@ -849,7 +849,7 @@
   </elementum>
 
   <elementum nomen="supplicatio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="identificator-petitionis" genus="textus"/>
     <attributum nomen="terminus-exspectandi" genus="textus"/>
     <attributum nomen="conatus" genus="numerus"/>
@@ -860,11 +860,11 @@
       <optio>negata</optio>
       <optio>elapsa</optio>
     </attributum>
-    <attributum nomen="petens" genus="nomen"/>
-    <attributum nomen="rogatus" genus="nomen"/>
-    <attributum nomen="de" genus="nomen"/>
-    <attributum nomen="iudicatur-per" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="petens" genus="referentia"/>
+    <attributum nomen="rogatus" genus="referentia"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="iudicatur-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="supplicatio">
@@ -872,7 +872,7 @@
   </elementum>
 
   <elementum nomen="plena-potestas">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ambitus" genus="textus"/>
     <attributum nomen="subdelegabilis" genus="veritas" ordinarius="falsum"/>
     <attributum nomen="revocabilis" genus="veritas"/>
@@ -888,21 +888,21 @@
       <optio>elapsa</optio>
       <optio>extincta</optio>
     </attributum>
-    <attributum nomen="delegans" genus="nomen"/>
-    <attributum nomen="delegatus" genus="nomen"/>
-    <attributum nomen="probatur-per" genus="nomen"/>
+    <attributum nomen="delegans" genus="referentia"/>
+    <attributum nomen="delegatus" genus="referentia"/>
+    <attributum nomen="probatur-per" genus="referentia"/>
     <liberum nomen="obligat-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="obligat-per" intra="plena-potestas">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="plena-potestas">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="procuratio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ambitus" genus="textus"/>
     <attributum nomen="subdelegabilis" genus="veritas"/>
     <attributum nomen="revocabilis" genus="veritas"/>
@@ -918,21 +918,21 @@
       <optio>elapsa</optio>
       <optio>extincta</optio>
     </attributum>
-    <attributum nomen="delegans" genus="nomen"/>
-    <attributum nomen="delegatus" genus="nomen"/>
-    <attributum nomen="probatur-per" genus="nomen"/>
+    <attributum nomen="delegans" genus="referentia"/>
+    <attributum nomen="delegatus" genus="referentia"/>
+    <attributum nomen="probatur-per" genus="referentia"/>
     <liberum nomen="obligat-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="obligat-per" intra="procuratio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="procuratio">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="delegatio-canonica">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ambitus" genus="textus"/>
     <attributum nomen="subdelegabilis" genus="veritas"/>
     <attributum nomen="revocabilis" genus="veritas"/>
@@ -948,21 +948,21 @@
       <optio>elapsa</optio>
       <optio>extincta</optio>
     </attributum>
-    <attributum nomen="delegans" genus="nomen"/>
-    <attributum nomen="delegatus" genus="nomen"/>
-    <attributum nomen="probatur-per" genus="nomen"/>
+    <attributum nomen="delegans" genus="referentia"/>
+    <attributum nomen="delegatus" genus="referentia"/>
+    <attributum nomen="probatur-per" genus="referentia"/>
     <liberum nomen="obligat-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="obligat-per" intra="delegatio-canonica">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="delegatio-canonica">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="tractatus-gandavensis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="multilateralis" genus="veritas" ordinarius="falsum"/>
     <attributum nomen="numerus-ad-vigorem" genus="numerus"/>
     <attributum nomen="status-vigor" genus="electio">
@@ -974,8 +974,8 @@
       <optio>terminatus</optio>
       <optio>abortus</optio>
     </attributum>
-    <attributum nomen="depositarius" genus="nomen"/>
-    <attributum nomen="ad-vigorem-per" genus="nomen"/>
+    <attributum nomen="depositarius" genus="referentia"/>
+    <attributum nomen="ad-vigorem-per" genus="referentia"/>
     <attributum nomen="initium" genus="dies"/>
     <attributum nomen="finis" genus="dies"/>
     <liberum nomen="signatus-per"/>
@@ -985,23 +985,23 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="signatus-per" intra="tractatus-gandavensis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="limitatus-per" intra="tractatus-gandavensis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="partes" intra="tractatus-gandavensis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="parit" intra="tractatus-gandavensis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="tractatus-gandavensis">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="portio-pascui">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="mensura" genus="textus"/>
     <attributum nomen="adhaeret" genus="electio" ordinarius="praedio">
       <optio>personae</optio>
@@ -1011,10 +1011,10 @@
     </attributum>
     <attributum nomen="transferibilis" genus="veritas"/>
     <attributum nomen="periodica" genus="veritas" ordinarius="falsum"/>
-    <attributum nomen="in-re-communi" genus="nomen"/>
-    <attributum nomen="competit" genus="nomen"/>
-    <attributum nomen="statuta-per" genus="nomen"/>
-    <attributum nomen="custodita-per" genus="nomen"/>
+    <attributum nomen="in-re-communi" genus="referentia"/>
+    <attributum nomen="competit" genus="referentia"/>
+    <attributum nomen="statuta-per" genus="referentia"/>
+    <attributum nomen="custodita-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="portio-pascui">
@@ -1022,7 +1022,7 @@
   </elementum>
 
   <elementum nomen="portio-piscandi">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="mensura" genus="textus"/>
     <attributum nomen="adhaeret" genus="electio" ordinarius="navi">
       <optio>personae</optio>
@@ -1032,10 +1032,10 @@
     </attributum>
     <attributum nomen="transferibilis" genus="veritas" ordinarius="verum"/>
     <attributum nomen="periodica" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="in-re-communi" genus="nomen"/>
-    <attributum nomen="competit" genus="nomen"/>
-    <attributum nomen="statuta-per" genus="nomen"/>
-    <attributum nomen="custodita-per" genus="nomen"/>
+    <attributum nomen="in-re-communi" genus="referentia"/>
+    <attributum nomen="competit" genus="referentia"/>
+    <attributum nomen="statuta-per" genus="referentia"/>
+    <attributum nomen="custodita-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="portio-piscandi">
@@ -1043,7 +1043,7 @@
   </elementum>
 
   <elementum nomen="portio-computandi">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="mensura" genus="textus"/>
     <attributum nomen="adhaeret" genus="electio" ordinarius="personae">
       <optio>personae</optio>
@@ -1053,10 +1053,10 @@
     </attributum>
     <attributum nomen="transferibilis" genus="veritas"/>
     <attributum nomen="periodica" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="in-re-communi" genus="nomen"/>
-    <attributum nomen="competit" genus="nomen"/>
-    <attributum nomen="statuta-per" genus="nomen"/>
-    <attributum nomen="custodita-per" genus="nomen"/>
+    <attributum nomen="in-re-communi" genus="referentia"/>
+    <attributum nomen="competit" genus="referentia"/>
+    <attributum nomen="statuta-per" genus="referentia"/>
+    <attributum nomen="custodita-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="portio-computandi">
@@ -1097,5 +1097,33 @@
            iussum-ne-resuscitetur petitio-assecurationis petitio-remota supplicatio
            plena-potestas procuratio delegatio-canonica tractatus-gandavensis
            portio-pascui portio-piscandi portio-computandi"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="titulus-fundat" attributum="fundat" ad="licentia/nomen" super="titulus"/>
+  <citatio nomen="iussum-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="iussum"/>
+  <citatio nomen="iussum-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="iussum"/>
+  <citatio nomen="petitio-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio"/>
+  <citatio nomen="limitatio-ad-tractatum" attributum="ad-tractatum" ad="tractatus tractatus-gandavensis/nomen" super="limitatio"/>
+  <citatio nomen="gradus-academicus-fundat" attributum="fundat" ad="licentia/nomen" super="gradus-academicus"/>
+  <citatio nomen="character-indelebilis-fundat" attributum="fundat" ad="licentia/nomen" super="character-indelebilis"/>
+  <citatio nomen="titulus-honoris-fundat" attributum="fundat" ad="licentia/nomen" super="titulus-honoris"/>
+  <citatio nomen="praescriptio-medica-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="praescriptio-medica"/>
+  <citatio nomen="praescriptio-medica-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="praescriptio-medica"/>
+  <citatio nomen="mandatum-iudicis-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="mandatum-iudicis"/>
+  <citatio nomen="mandatum-iudicis-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="mandatum-iudicis"/>
+  <citatio nomen="iussum-emptionis-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="iussum-emptionis"/>
+  <citatio nomen="iussum-emptionis-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="iussum-emptionis"/>
+  <citatio nomen="iussum-operis-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="iussum-operis"/>
+  <citatio nomen="iussum-operis-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="iussum-operis"/>
+  <citatio nomen="iussum-ne-resuscitetur-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="iussum-ne-resuscitetur"/>
+  <citatio nomen="iussum-ne-resuscitetur-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="iussum-ne-resuscitetur"/>
+  <citatio nomen="petitio-assecurationis-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio-assecurationis"/>
+  <citatio nomen="petitio-remota-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio-remota"/>
+  <citatio nomen="supplicatio-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="supplicatio"/>
 
 </canon>

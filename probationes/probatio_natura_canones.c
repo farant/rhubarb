@@ -683,15 +683,15 @@ _documentum_iudicare(
 /* PAR, pars prior: clavis in documento adest -> sanum */
 staticus constans character* DOC_RESOLVENS =
     "<individua>\n"
-    "  <aedificium nomen=\"domus-nostra\" inscriptio-eius=\"via-lata-x\"/>\n"
-    "  <inscriptio nomen=\"via-lata-x\"/>\n"
+    "  <aedificium nomen=\"#domus-nostra\" inscriptio-eius=\"#via-lata-x\"/>\n"
+    "  <inscriptio nomen=\"#via-lata-x\"/>\n"
     "</individua>\n";
 
 /* PAR, pars posterior: EADEM structura, clavis quae nihil nominat */
 staticus constans character* DOC_PENDENS =
     "<individua>\n"
-    "  <aedificium nomen=\"domus-nostra\" inscriptio-eius=\"nemo-omnino\"/>\n"
-    "  <inscriptio nomen=\"via-lata-x\"/>\n"
+    "  <aedificium nomen=\"#domus-nostra\" inscriptio-eius=\"#nemo-omnino\"/>\n"
+    "  <inscriptio nomen=\"#via-lata-x\"/>\n"
     "</individua>\n";
 
 /* PAR CLAUSURAE: pollinatur_a petitum 'animal' habet, quod
@@ -701,8 +701,8 @@ staticus constans character* DOC_PENDENS =
  * nulla omnino erat et par hoc indiscernibile. */
 staticus constans character* DOC_CLAUSURA_RESOLVENS =
     "<individua>\n"
-    "  <apis nomen=\"apis-prima\"/>\n"
-    "  <rosa nomen=\"rosa-prima\" pollinatur-a=\"apis-prima\"/>\n"
+    "  <apis nomen=\"#apis-prima\"/>\n"
+    "  <rosa nomen=\"#rosa-prima\" pollinatur-a=\"#apis-prima\"/>\n"
     "</individua>\n";
 
 /* pars posterior: EADEM structura, clavis quae nihil nominat -
@@ -710,8 +710,8 @@ staticus constans character* DOC_CLAUSURA_RESOLVENS =
  * assertio 'ruere debet' sola mutationem probat */
 staticus constans character* DOC_CLAUSURA_PENDENS =
     "<individua>\n"
-    "  <apis nomen=\"apis-prima\"/>\n"
-    "  <rosa nomen=\"rosa-prima\" pollinatur-a=\"nemo-omnino\"/>\n"
+    "  <apis nomen=\"#apis-prima\"/>\n"
+    "  <rosa nomen=\"#rosa-prima\" pollinatur-a=\"#nemo-omnino\"/>\n"
     "</individua>\n";
 
 /* UNICITAS trans genera: genera DUO DIVERSA idem nomen ferunt.
@@ -719,16 +719,16 @@ staticus constans character* DOC_CLAUSURA_PENDENS =
  * elementum hoc acciperet. */
 staticus constans character* DOC_GEMINUM_TRANS =
     "<individua>\n"
-    "  <aedificium nomen=\"idem-nomen\"/>\n"
-    "  <inscriptio nomen=\"idem-nomen\"/>\n"
+    "  <aedificium nomen=\"#idem-nomen\"/>\n"
+    "  <inscriptio nomen=\"#idem-nomen\"/>\n"
     "</individua>\n";
 
 /* UNICITAS intra genus idem - forma facilior, quam spatium per
  * elementum quoque caperet. Ideo sola non sufficit. */
 staticus constans character* DOC_GEMINUM_IDEM =
     "<individua>\n"
-    "  <inscriptio nomen=\"idem-nomen\"/>\n"
-    "  <inscriptio nomen=\"idem-nomen\"/>\n"
+    "  <inscriptio nomen=\"#idem-nomen\"/>\n"
+    "  <inscriptio nomen=\"#idem-nomen\"/>\n"
     "</individua>\n";
 
 
@@ -1303,6 +1303,7 @@ principale(
         i32  radices_malae;
         i32  unicitates_malae;
         i32  citantes_per_modulum;
+        i32  moduli_citantes;
         i32  monolithi;
         i32  nuda_gemina;
         i32  recensiti;
@@ -1320,6 +1321,7 @@ principale(
         radices_malae        = ZEPHYRUM;
         unicitates_malae     = ZEPHYRUM;
         citantes_per_modulum = ZEPHYRUM;
+        moduli_citantes      = ZEPHYRUM;
         monolithi            = ZEPHYRUM;
         nuda_gemina          = ZEPHYRUM;
         recensiti            = ZEPHYRUM;
@@ -1437,9 +1439,10 @@ principale(
             }
             alioquin si (citationes > ZEPHYRUM)
             {
-                imprimere("  '%s': citationes %u (per modulum nullae"
-                          " esse debent)\n", via_c, citationes);
-                citantes_per_modulum++;
+                /* spec canon-referentia par. 6: canon moduli citat
+                 * ubi clausura intra modulum tota iacet - numerus
+                 * positivus nunc SANITAS est, non vitium */
+                moduli_citantes++;
             }
 
             piscina_destruere(pp);
@@ -1466,9 +1469,12 @@ principale(
         CREDO_AEQUALIS_I32 (unicitates_malae, (i32)ZEPHYRUM);
         /* adstrictio (par. 4.2): nomina nuda unica per canonem */
         CREDO_AEQUALIS_I32 (nuda_gemina, (i32)ZEPHYRUM);
-        /* citationes MONOLITHO solae (par. 3.5: relatio trans
-         * plagulas oneratoris est, non canonis) */
+        /* monolithus sine citationibus = mechanismus mortuus
+         * (accumulator nunc ex ramo monolithi solo augetur) */
         CREDO_AEQUALIS_I32 (citantes_per_modulum, (i32)ZEPHYRUM);
+        /* et canones moduli VERE citant (spec canon-referentia
+         * par. 6: clausura intra modulum) - communicatio saltem */
+        CREDO_MAIOR_I32 (moduli_citantes, (i32)ZEPHYRUM);
         CREDO_AEQUALIS_I32 (monolithi, (i32)I);
     }
 

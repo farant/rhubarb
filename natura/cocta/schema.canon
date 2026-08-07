@@ -16,29 +16,29 @@
   </elementum>
 
   <elementum nomen="schema">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="disciplina" genus="electio">
       <optio>constringens</optio>
       <optio>iudicans</optio>
     </attributum>
-    <attributum nomen="describit" genus="nomen"/>
+    <attributum nomen="describit" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="continet" intra="schema">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="schema">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="campus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessarius" genus="veritas"/>
     <attributum nomen="multiplex" genus="veritas"/>
     <attributum nomen="ordinarius-valor" genus="textus"/>
-    <attributum nomen="campus-de" genus="nomen"/>
-    <attributum nomen="genus-eius" genus="nomen"/>
+    <attributum nomen="campus-de" genus="referentia"/>
+    <attributum nomen="genus-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="campus">
@@ -46,7 +46,7 @@
   </elementum>
 
   <elementum nomen="genus-valoris">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="genus-valoris">
@@ -54,7 +54,7 @@
   </elementum>
 
   <elementum nomen="textus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="textus">
@@ -62,7 +62,7 @@
   </elementum>
 
   <elementum nomen="numerus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="numerus">
@@ -70,7 +70,7 @@
   </elementum>
 
   <elementum nomen="dies">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="dies">
@@ -78,7 +78,7 @@
   </elementum>
 
   <elementum nomen="veritas">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="veritas">
@@ -86,7 +86,7 @@
   </elementum>
 
   <elementum nomen="electio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="electio">
@@ -94,7 +94,7 @@
   </elementum>
 
   <elementum nomen="citatio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="citatio">
@@ -113,5 +113,13 @@
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
     super="schema campus genus-valoris textus numerus dies veritas electio
            citatio"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="campus-genus-eius" attributum="genus-eius" ad="genus-valoris textus numerus dies veritas electio citatio/nomen" super="campus"/>
 
 </canon>

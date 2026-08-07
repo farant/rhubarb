@@ -8,7 +8,7 @@
   </elementum>
 
   <elementum nomen="versio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="titulus" genus="textus"/>
     <attributum nomen="edita" genus="dies"/>
     <attributum nomen="schema-numerandi" genus="electio">
@@ -27,15 +27,15 @@
       <optio>deprecata</optio>
       <optio>derelicta</optio>
     </attributum>
-    <attributum nomen="versio-de" genus="nomen"/>
-    <attributum nomen="sequitur" genus="nomen"/>
-    <attributum nomen="asseritur-per" genus="nomen"/>
-    <attributum nomen="edita-a" genus="nomen"/>
+    <attributum nomen="versio-de" genus="referentia"/>
+    <attributum nomen="sequitur" genus="referentia"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="versio">
     <liberum nomen="eventum"/>

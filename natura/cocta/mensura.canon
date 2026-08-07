@@ -24,24 +24,24 @@
   </elementum>
 
   <elementum nomen="magnitudo-mensurabilis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="magnitudo-mensurabilis">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="magnitudo-mensurabilis">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="unitas-mensurae">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="symbolum" genus="textus"/>
     <attributum nomen="fundamentalis" genus="veritas"/>
-    <attributum nomen="mensurat" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="custodita-a" genus="nomen"/>
+    <attributum nomen="mensurat" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="unitas-mensurae">
@@ -49,13 +49,13 @@
   </elementum>
 
   <elementum nomen="quantitas">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="valor" genus="numerus"/>
     <attributum nomen="minimum" genus="numerus"/>
     <attributum nomen="maximum" genus="numerus"/>
     <attributum nomen="praecisio" genus="numerus"/>
-    <attributum nomen="in-unitate" genus="nomen"/>
-    <attributum nomen="cum-incertitudine" genus="nomen"/>
+    <attributum nomen="in-unitate" genus="referentia"/>
+    <attributum nomen="cum-incertitudine" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="quantitas">
@@ -63,7 +63,7 @@
   </elementum>
 
   <elementum nomen="incertitudo">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="magnitudo" genus="numerus"/>
     <attributum nomen="factor-tegumenti" genus="numerus"/>
     <attributum nomen="fiducia-stata" genus="numerus"/>
@@ -71,20 +71,20 @@
       <optio>typus_a</optio>
       <optio>typus_b</optio>
     </attributum>
-    <attributum nomen="de-quantitate" genus="nomen"/>
-    <attributum nomen="asseritur-per" genus="nomen"/>
+    <attributum nomen="de-quantitate" genus="referentia"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="componitur-ex"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="componitur-ex" intra="incertitudo">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="incertitudo">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="instrumentum-mensurae">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="error-systematicus" genus="numerus"/>
     <attributum nomen="dispersio" genus="numerus"/>
     <attributum nomen="resolutio" genus="numerus"/>
@@ -95,8 +95,8 @@
       <optio>expiratum</optio>
       <optio>extra_tolerantiam</optio>
     </attributum>
-    <attributum nomen="calibratum-contra" genus="nomen"/>
-    <attributum nomen="attestatur-per" genus="nomen"/>
+    <attributum nomen="calibratum-contra" genus="referentia"/>
+    <attributum nomen="attestatur-per" genus="referentia"/>
     <attributum nomen="capacitas" genus="textus"/>
     <attributum nomen="status-usus" genus="electio">
       <optio>otiosum</optio>
@@ -104,8 +104,8 @@
       <optio>in_reparatione</optio>
       <optio>fractum</optio>
     </attributum>
-    <attributum nomen="factum-per" genus="nomen"/>
-    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="factum-per" genus="referentia"/>
+    <attributum nomen="factum-a" genus="referentia"/>
     <attributum nomen="massa" genus="textus"/>
     <attributum nomen="perituram" genus="veritas"/>
     <attributum nomen="status-conditio" genus="electio">
@@ -113,7 +113,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
@@ -122,91 +122,91 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="ex-materia" intra="instrumentum-mensurae">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="instrumentum-mensurae">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="longitudo">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="longitudo">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="longitudo">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="massa">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="massa">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="massa">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="tempus-intervallum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="tempus-intervallum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="tempus-intervallum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="temperatura">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="temperatura">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="temperatura">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="capacitas">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="capacitas">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="capacitas">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="numerositas">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="numerositas">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="numerositas">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="gramma">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="symbolum" genus="textus" ordinarius="g"/>
     <attributum nomen="fundamentalis" genus="veritas"/>
-    <attributum nomen="mensurat" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="custodita-a" genus="nomen"/>
+    <attributum nomen="mensurat" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="gramma">
@@ -214,12 +214,12 @@
   </elementum>
 
   <elementum nomen="kilogramma">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="symbolum" genus="textus" ordinarius="kg"/>
     <attributum nomen="fundamentalis" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="mensurat" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="custodita-a" genus="nomen"/>
+    <attributum nomen="mensurat" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="kilogramma">
@@ -227,12 +227,12 @@
   </elementum>
 
   <elementum nomen="metrum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="symbolum" genus="textus" ordinarius="m"/>
     <attributum nomen="fundamentalis" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="mensurat" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="custodita-a" genus="nomen"/>
+    <attributum nomen="mensurat" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="metrum">
@@ -240,12 +240,12 @@
   </elementum>
 
   <elementum nomen="secundum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="symbolum" genus="textus" ordinarius="s"/>
     <attributum nomen="fundamentalis" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="mensurat" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="custodita-a" genus="nomen"/>
+    <attributum nomen="mensurat" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="secundum">
@@ -253,12 +253,12 @@
   </elementum>
 
   <elementum nomen="minutum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="symbolum" genus="textus" ordinarius="min"/>
     <attributum nomen="fundamentalis" genus="veritas"/>
-    <attributum nomen="mensurat" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="custodita-a" genus="nomen"/>
+    <attributum nomen="mensurat" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="minutum">
@@ -266,12 +266,12 @@
   </elementum>
 
   <elementum nomen="gradus-celsius">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="symbolum" genus="textus" ordinarius="°C"/>
     <attributum nomen="fundamentalis" genus="veritas"/>
-    <attributum nomen="mensurat" genus="nomen"/>
-    <attributum nomen="normata-per" genus="nomen"/>
-    <attributum nomen="custodita-a" genus="nomen"/>
+    <attributum nomen="mensurat" genus="referentia"/>
+    <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="gradus-celsius">
@@ -291,5 +291,23 @@
     super="magnitudo-mensurabilis unitas-mensurae quantitas incertitudo instrumentum-mensurae
            longitudo massa tempus-intervallum temperatura capacitas numerositas
            gramma kilogramma metrum secundum minutum gradus-celsius"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="unitas-mensurae-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="unitas-mensurae"/>
+  <citatio nomen="quantitas-in-unitate" attributum="in-unitate" ad="unitas-mensurae gramma kilogramma metrum secundum minutum gradus-celsius/nomen" super="quantitas"/>
+  <citatio nomen="quantitas-cum-incertitudine" attributum="cum-incertitudine" ad="incertitudo/nomen" super="quantitas"/>
+  <citatio nomen="incertitudo-de-quantitate" attributum="de-quantitate" ad="quantitas/nomen" super="incertitudo"/>
+  <citatio nomen="instrumentum-mensurae-calibratum-contra" attributum="calibratum-contra" ad="instrumentum-mensurae/nomen" super="instrumentum-mensurae"/>
+  <citatio nomen="gramma-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="gramma"/>
+  <citatio nomen="kilogramma-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="kilogramma"/>
+  <citatio nomen="metrum-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="metrum"/>
+  <citatio nomen="secundum-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="secundum"/>
+  <citatio nomen="minutum-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="minutum"/>
+  <citatio nomen="gradus-celsius-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="gradus-celsius"/>
 
 </canon>

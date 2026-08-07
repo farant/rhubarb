@@ -11,24 +11,24 @@
   </elementum>
 
   <elementum nomen="locus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="latitudo" genus="numerus"/>
     <attributum nomen="longitudo-geo" genus="numerus"/>
-    <attributum nomen="intra" genus="nomen"/>
+    <attributum nomen="intra" genus="referentia"/>
     <liberum nomen="sub-iurisdictione"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="sub-iurisdictione" intra="locus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="locus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="inscriptio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="codex-postalis" genus="textus"/>
-    <attributum nomen="designat" genus="nomen"/>
+    <attributum nomen="designat" genus="referentia"/>
     <liberum nomen="linea"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -38,23 +38,23 @@
   </elementum>
 
   <elementum nomen="iurisdictio">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="exercetur-a" genus="nomen"/>
-    <attributum nomen="intra" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="exercetur-a" genus="referentia"/>
+    <attributum nomen="intra" genus="referentia"/>
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="fert" intra="iurisdictio">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="iurisdictio">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="aedificium">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="situm-in" genus="nomen"/>
-    <attributum nomen="inscriptio-eius" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="situm-in" genus="referentia"/>
+    <attributum nomen="inscriptio-eius" genus="referentia"/>
     <liberum nomen="spatia" maximum="1"/>
     <liberum nomen="occupatum-a"/>
     <liberum nomen="historia" maximum="1"/>
@@ -63,7 +63,7 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="occupatum-a" intra="aedificium">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="aedificium">
     <liberum nomen="eventum"/>
@@ -80,5 +80,17 @@
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
     super="locus inscriptio iurisdictio aedificium"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="locus-intra" attributum="intra" ad="locus/nomen" super="locus"/>
+  <citatio nomen="inscriptio-designat" attributum="designat" ad="locus/nomen" super="inscriptio"/>
+  <citatio nomen="iurisdictio-intra" attributum="intra" ad="iurisdictio/nomen" super="iurisdictio"/>
+  <citatio nomen="aedificium-situm-in" attributum="situm-in" ad="locus/nomen" super="aedificium"/>
+  <citatio nomen="aedificium-inscriptio-eius" attributum="inscriptio-eius" ad="inscriptio/nomen" super="aedificium"/>
 
 </canon>

@@ -14,7 +14,7 @@
   </elementum>
 
   <elementum nomen="planta">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -40,9 +40,9 @@
       <optio>quiescens</optio>
       <optio>mortua</optio>
     </attributum>
-    <attributum nomen="auctor-nominis" genus="nomen"/>
-    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
-    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="auctor-nominis" genus="referentia"/>
+    <attributum nomen="nomen-publicatum-in" genus="referentia"/>
+    <attributum nomen="pollinatur-a" genus="referentia"/>
     <attributum nomen="anima" genus="electio">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -55,7 +55,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="radix" maximum="1"/>
     <liberum nomen="caulis" maximum="1"/>
     <liberum nomen="folium" maximum="1"/>
@@ -85,17 +85,17 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="generat" intra="planta">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="planta">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="planta">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="rosaceae">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -121,9 +121,9 @@
       <optio>quiescens</optio>
       <optio>mortua</optio>
     </attributum>
-    <attributum nomen="auctor-nominis" genus="nomen"/>
-    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
-    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="auctor-nominis" genus="referentia"/>
+    <attributum nomen="nomen-publicatum-in" genus="referentia"/>
+    <attributum nomen="pollinatur-a" genus="referentia"/>
     <attributum nomen="anima" genus="electio">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -136,7 +136,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="radix" maximum="1"/>
     <liberum nomen="caulis" maximum="1"/>
     <liberum nomen="folium" maximum="1"/>
@@ -166,17 +166,17 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="generat" intra="rosaceae">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="rosaceae">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="rosaceae">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="rosa">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio" ordinarius="frutex">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -202,9 +202,9 @@
       <optio>quiescens</optio>
       <optio>mortua</optio>
     </attributum>
-    <attributum nomen="auctor-nominis" genus="nomen"/>
-    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
-    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="auctor-nominis" genus="referentia"/>
+    <attributum nomen="nomen-publicatum-in" genus="referentia"/>
+    <attributum nomen="pollinatur-a" genus="referentia"/>
     <attributum nomen="anima" genus="electio">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -217,7 +217,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="radix" maximum="1"/>
     <liberum nomen="caulis" maximum="1"/>
     <liberum nomen="folium" maximum="1"/>
@@ -247,17 +247,17 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="generat" intra="rosa">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="rosa">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="rosa">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="malus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio" ordinarius="arbor">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -283,9 +283,9 @@
       <optio>quiescens</optio>
       <optio>mortua</optio>
     </attributum>
-    <attributum nomen="auctor-nominis" genus="nomen"/>
-    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
-    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="auctor-nominis" genus="referentia"/>
+    <attributum nomen="nomen-publicatum-in" genus="referentia"/>
+    <attributum nomen="pollinatur-a" genus="referentia"/>
     <attributum nomen="anima" genus="electio">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -298,7 +298,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="radix" maximum="1"/>
     <liberum nomen="caulis" maximum="1"/>
     <liberum nomen="folium" maximum="1"/>
@@ -328,17 +328,17 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="generat" intra="malus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="malus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="malus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="rosa-canina">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio" ordinarius="frutex">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -364,9 +364,9 @@
       <optio>quiescens</optio>
       <optio>mortua</optio>
     </attributum>
-    <attributum nomen="auctor-nominis" genus="nomen"/>
-    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
-    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="auctor-nominis" genus="referentia"/>
+    <attributum nomen="nomen-publicatum-in" genus="referentia"/>
+    <attributum nomen="pollinatur-a" genus="referentia"/>
     <attributum nomen="anima" genus="electio">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -379,7 +379,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="radix" maximum="1"/>
     <liberum nomen="caulis" maximum="1"/>
     <liberum nomen="folium" maximum="1"/>
@@ -409,17 +409,17 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="generat" intra="rosa-canina">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="rosa-canina">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="rosa-canina">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="malus-domestica">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio" ordinarius="arbor">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -445,9 +445,9 @@
       <optio>quiescens</optio>
       <optio>mortua</optio>
     </attributum>
-    <attributum nomen="auctor-nominis" genus="nomen"/>
-    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
-    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="auctor-nominis" genus="referentia"/>
+    <attributum nomen="nomen-publicatum-in" genus="referentia"/>
+    <attributum nomen="pollinatur-a" genus="referentia"/>
     <attributum nomen="anima" genus="electio">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -460,7 +460,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="radix" maximum="1"/>
     <liberum nomen="caulis" maximum="1"/>
     <liberum nomen="folium" maximum="1"/>
@@ -490,17 +490,17 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="generat" intra="malus-domestica">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="malus-domestica">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="malus-domestica">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="granny-smith">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio" ordinarius="arbor">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -526,9 +526,9 @@
       <optio>quiescens</optio>
       <optio>mortua</optio>
     </attributum>
-    <attributum nomen="auctor-nominis" genus="nomen"/>
-    <attributum nomen="nomen-publicatum-in" genus="nomen"/>
-    <attributum nomen="pollinatur-a" genus="nomen"/>
+    <attributum nomen="auctor-nominis" genus="referentia"/>
+    <attributum nomen="nomen-publicatum-in" genus="referentia"/>
+    <attributum nomen="pollinatur-a" genus="referentia"/>
     <attributum nomen="anima" genus="electio">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -541,7 +541,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="radix" maximum="1"/>
     <liberum nomen="caulis" maximum="1"/>
     <liberum nomen="folium" maximum="1"/>
@@ -571,10 +571,10 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="generat" intra="granny-smith">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="granny-smith">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="granny-smith">
     <liberum nomen="eventum"/>

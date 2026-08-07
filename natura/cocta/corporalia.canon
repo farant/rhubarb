@@ -21,7 +21,7 @@
   </elementum>
 
   <elementum nomen="res-corporea">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="massa" genus="textus"/>
     <attributum nomen="perituram" genus="veritas"/>
     <attributum nomen="status-conditio" genus="electio">
@@ -29,7 +29,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="res-corporea">
@@ -37,9 +37,9 @@
   </elementum>
 
   <elementum nomen="artefactum">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="factum-per" genus="nomen"/>
-    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="factum-per" genus="referentia"/>
+    <attributum nomen="factum-a" genus="referentia"/>
     <attributum nomen="massa" genus="textus"/>
     <attributum nomen="perituram" genus="veritas"/>
     <attributum nomen="status-conditio" genus="electio">
@@ -47,7 +47,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
@@ -56,14 +56,14 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="ex-materia" intra="artefactum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="artefactum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="materia">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="quantitas-praesens" genus="textus"/>
     <attributum nomen="massa" genus="textus"/>
     <attributum nomen="perituram" genus="veritas"/>
@@ -72,19 +72,19 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="ingreditur"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="ingreditur" intra="materia">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="materia">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="instrumentum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="capacitas" genus="textus"/>
     <attributum nomen="status-usus" genus="electio">
       <optio>otiosum</optio>
@@ -92,8 +92,8 @@
       <optio>in_reparatione</optio>
       <optio>fractum</optio>
     </attributum>
-    <attributum nomen="factum-per" genus="nomen"/>
-    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="factum-per" genus="referentia"/>
+    <attributum nomen="factum-a" genus="referentia"/>
     <attributum nomen="massa" genus="textus"/>
     <attributum nomen="perituram" genus="veritas"/>
     <attributum nomen="status-conditio" genus="electio">
@@ -101,7 +101,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
@@ -110,14 +110,14 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="ex-materia" intra="instrumentum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="instrumentum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="res-sacra">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="alienabilis" genus="veritas"/>
     <attributum nomen="status-dedicatio" genus="electio">
       <optio>profana</optio>
@@ -125,8 +125,8 @@
       <optio>violata</optio>
       <optio>reducta</optio>
     </attributum>
-    <attributum nomen="consecrata-per" genus="nomen"/>
-    <attributum nomen="custoditur-ab" genus="nomen"/>
+    <attributum nomen="consecrata-per" genus="referentia"/>
+    <attributum nomen="custoditur-ab" genus="referentia"/>
     <attributum nomen="massa" genus="textus"/>
     <attributum nomen="perituram" genus="veritas"/>
     <attributum nomen="status-conditio" genus="electio">
@@ -134,7 +134,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra">
@@ -142,7 +142,7 @@
   </elementum>
 
   <elementum nomen="damnum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="gravitas" genus="electio">
       <optio>levis</optio>
       <optio>gravis</optio>
@@ -155,9 +155,9 @@
       <optio>refectum</optio>
       <optio>perditum</optio>
     </attributum>
-    <attributum nomen="affligit" genus="nomen"/>
-    <attributum nomen="illatum-per" genus="nomen"/>
-    <attributum nomen="praevisum-ut" genus="nomen"/>
+    <attributum nomen="affligit" genus="referentia"/>
+    <attributum nomen="illatum-per" genus="referentia"/>
+    <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="damnum">
@@ -165,7 +165,7 @@
   </elementum>
 
   <elementum nomen="vivens">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="anima" genus="electio">
       <optio>vegetativa</optio>
       <optio>sensitiva</optio>
@@ -182,25 +182,25 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="generat" intra="vivens">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="laborat" intra="vivens">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="vivens">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="cibus">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="factum-per" genus="nomen"/>
-    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="factum-per" genus="referentia"/>
+    <attributum nomen="factum-a" genus="referentia"/>
     <attributum nomen="massa" genus="textus"/>
     <attributum nomen="perituram" genus="veritas"/>
     <attributum nomen="status-conditio" genus="electio">
@@ -208,7 +208,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
@@ -217,14 +217,14 @@
     <attributum nomen="nota" genus="textus"/>
   </elementum>
   <elementum nomen="ex-materia" intra="cibus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="cibus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="res-sacra-immobilis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="alienabilis" genus="veritas"/>
     <attributum nomen="status-dedicatio" genus="electio">
       <optio>profana</optio>
@@ -232,8 +232,8 @@
       <optio>violata</optio>
       <optio>reducta</optio>
     </attributum>
-    <attributum nomen="consecrata-per" genus="nomen"/>
-    <attributum nomen="custoditur-ab" genus="nomen"/>
+    <attributum nomen="consecrata-per" genus="referentia"/>
+    <attributum nomen="custoditur-ab" genus="referentia"/>
     <attributum nomen="massa" genus="textus"/>
     <attributum nomen="perituram" genus="veritas"/>
     <attributum nomen="status-conditio" genus="electio">
@@ -241,7 +241,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra-immobilis">
@@ -249,7 +249,7 @@
   </elementum>
 
   <elementum nomen="res-sacra-mobilis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="alienabilis" genus="veritas"/>
     <attributum nomen="status-dedicatio" genus="electio">
       <optio>profana</optio>
@@ -257,8 +257,8 @@
       <optio>violata</optio>
       <optio>reducta</optio>
     </attributum>
-    <attributum nomen="consecrata-per" genus="nomen"/>
-    <attributum nomen="custoditur-ab" genus="nomen"/>
+    <attributum nomen="consecrata-per" genus="referentia"/>
+    <attributum nomen="custoditur-ab" genus="referentia"/>
     <attributum nomen="massa" genus="textus"/>
     <attributum nomen="perituram" genus="veritas"/>
     <attributum nomen="status-conditio" genus="electio">
@@ -266,7 +266,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra-mobilis">
@@ -274,7 +274,7 @@
   </elementum>
 
   <elementum nomen="reliquiae">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="alienabilis" genus="veritas" ordinarius="falsum"/>
     <attributum nomen="status-dedicatio" genus="electio">
       <optio>profana</optio>
@@ -282,8 +282,8 @@
       <optio>violata</optio>
       <optio>reducta</optio>
     </attributum>
-    <attributum nomen="consecrata-per" genus="nomen"/>
-    <attributum nomen="custoditur-ab" genus="nomen"/>
+    <attributum nomen="consecrata-per" genus="referentia"/>
+    <attributum nomen="custoditur-ab" genus="referentia"/>
     <attributum nomen="massa" genus="textus"/>
     <attributum nomen="perituram" genus="veritas"/>
     <attributum nomen="status-conditio" genus="electio">
@@ -291,7 +291,7 @@
       <optio>vetus</optio>
       <optio>corrupta</optio>
     </attributum>
-    <attributum nomen="sita-in" genus="nomen"/>
+    <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="reliquiae">
@@ -299,7 +299,7 @@
   </elementum>
 
   <elementum nomen="fractura">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="gravitas" genus="electio">
       <optio>levis</optio>
       <optio>gravis</optio>
@@ -312,9 +312,9 @@
       <optio>refectum</optio>
       <optio>perditum</optio>
     </attributum>
-    <attributum nomen="affligit" genus="nomen"/>
-    <attributum nomen="illatum-per" genus="nomen"/>
-    <attributum nomen="praevisum-ut" genus="nomen"/>
+    <attributum nomen="affligit" genus="referentia"/>
+    <attributum nomen="illatum-per" genus="referentia"/>
+    <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="fractura">
@@ -322,7 +322,7 @@
   </elementum>
 
   <elementum nomen="corruptio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="gravitas" genus="electio">
       <optio>levis</optio>
       <optio>gravis</optio>
@@ -335,9 +335,9 @@
       <optio>refectum</optio>
       <optio>perditum</optio>
     </attributum>
-    <attributum nomen="affligit" genus="nomen"/>
-    <attributum nomen="illatum-per" genus="nomen"/>
-    <attributum nomen="praevisum-ut" genus="nomen"/>
+    <attributum nomen="affligit" genus="referentia"/>
+    <attributum nomen="illatum-per" genus="referentia"/>
+    <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="corruptio">
@@ -345,7 +345,7 @@
   </elementum>
 
   <elementum nomen="contaminatio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="gravitas" genus="electio">
       <optio>levis</optio>
       <optio>gravis</optio>
@@ -358,9 +358,9 @@
       <optio>refectum</optio>
       <optio>perditum</optio>
     </attributum>
-    <attributum nomen="affligit" genus="nomen"/>
-    <attributum nomen="illatum-per" genus="nomen"/>
-    <attributum nomen="praevisum-ut" genus="nomen"/>
+    <attributum nomen="affligit" genus="referentia"/>
+    <attributum nomen="illatum-per" genus="referentia"/>
+    <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="contaminatio">

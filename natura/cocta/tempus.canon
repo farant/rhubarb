@@ -23,7 +23,7 @@
   </elementum>
 
   <elementum nomen="momentum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="praecisio" genus="electio">
       <optio>annus</optio>
       <optio>mensis</optio>
@@ -40,10 +40,10 @@
   </elementum>
 
   <elementum nomen="intervallum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="duratio" genus="textus"/>
-    <attributum nomen="initium" genus="nomen"/>
-    <attributum nomen="finis" genus="nomen"/>
+    <attributum nomen="initium" genus="referentia"/>
+    <attributum nomen="finis" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="intervallum">
@@ -51,7 +51,7 @@
   </elementum>
 
   <elementum nomen="recurrentia">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="periodus" genus="electio">
       <optio>cotidiana</optio>
       <optio>hebdomadaria</optio>
@@ -68,7 +68,7 @@
   </elementum>
 
   <elementum nomen="recurrentia-computata">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="algorithmus" genus="textus"/>
     <attributum nomen="pendet-ex-alia" genus="veritas"/>
     <attributum nomen="periodus" genus="electio">
@@ -87,7 +87,7 @@
   </elementum>
 
   <elementum nomen="recurrentia-per-usum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="mensura-usus" genus="textus"/>
     <attributum nomen="periodus" genus="electio">
       <optio>cotidiana</optio>
@@ -105,25 +105,25 @@
   </elementum>
 
   <elementum nomen="horarium">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="regit" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="regit" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="vinctum-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="continet" intra="horarium">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="vinctum-per" intra="horarium">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="horarium">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="calendarium">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="conditum-a" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="conditum-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="calendarium">
@@ -131,7 +131,7 @@
   </elementum>
 
   <elementum nomen="reservatio">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>petita</optio>
       <optio>confirmata</optio>
@@ -139,10 +139,10 @@
       <optio>deserta</optio>
       <optio>cancellata</optio>
     </attributum>
-    <attributum nomen="tempus-servatum" genus="nomen"/>
-    <attributum nomen="res-servata" genus="nomen"/>
-    <attributum nomen="vindicans" genus="nomen"/>
-    <attributum nomen="parit" genus="nomen"/>
+    <attributum nomen="tempus-servatum" genus="referentia"/>
+    <attributum nomen="res-servata" genus="referentia"/>
+    <attributum nomen="vindicans" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="reservatio">
@@ -150,7 +150,7 @@
   </elementum>
 
   <elementum nomen="pascha">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="algorithmus" genus="textus" ordinarius="computus lunisolaris"/>
     <attributum nomen="pendet-ex-alia" genus="veritas"/>
     <attributum nomen="periodus" genus="electio">
@@ -169,7 +169,7 @@
   </elementum>
 
   <elementum nomen="dies-negotiorum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="algorithmus" genus="textus"/>
     <attributum nomen="pendet-ex-alia" genus="veritas" ordinarius="verum"/>
     <attributum nomen="periodus" genus="electio">
@@ -188,7 +188,7 @@
   </elementum>
 
   <elementum nomen="dies-ordinalis-mensis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="algorithmus" genus="textus"/>
     <attributum nomen="pendet-ex-alia" genus="veritas"/>
     <attributum nomen="periodus" genus="electio">
@@ -207,7 +207,7 @@
   </elementum>
 
   <elementum nomen="per-horas-operis">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="mensura-usus" genus="textus"/>
     <attributum nomen="periodus" genus="electio">
       <optio>cotidiana</optio>
@@ -225,7 +225,7 @@
   </elementum>
 
   <elementum nomen="per-cyclos">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="mensura-usus" genus="textus"/>
     <attributum nomen="periodus" genus="electio">
       <optio>cotidiana</optio>
@@ -243,7 +243,7 @@
   </elementum>
 
   <elementum nomen="per-spatium">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="mensura-usus" genus="textus"/>
     <attributum nomen="periodus" genus="electio">
       <optio>cotidiana</optio>
@@ -261,8 +261,8 @@
   </elementum>
 
   <elementum nomen="calendarium-gregorianum">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="conditum-a" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="conditum-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="calendarium-gregorianum">
@@ -270,8 +270,8 @@
   </elementum>
 
   <elementum nomen="calendarium-liturgicum">
-    <attributum nomen="nomen" genus="compositum"/>
-    <attributum nomen="conditum-a" genus="nomen"/>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="conditum-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="calendarium-liturgicum">
@@ -292,5 +292,15 @@
            horarium calendarium reservatio pascha dies-negotiorum dies-ordinalis-mensis
            per-horas-operis per-cyclos per-spatium calendarium-gregorianum
            calendarium-liturgicum"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="intervallum-initium" attributum="initium" ad="momentum/nomen" super="intervallum"/>
+  <citatio nomen="intervallum-finis" attributum="finis" ad="momentum/nomen" super="intervallum"/>
+  <citatio nomen="reservatio-tempus-servatum" attributum="tempus-servatum" ad="intervallum/nomen" super="reservatio"/>
 
 </canon>

@@ -186,11 +186,11 @@ principale(
                                        "rosa-canina");
 
         /* identitas: 'nomen' reservatum -> campus 'nomen_v';
-         * genus 'compositum' lineolam admittit (quod 'nomen'
-         * vetaret) */
+         * signum '#' VERBATIM manet (spec canon-referentia par. 7:
+         * lector nihil stringit, consumentis res est) */
         CREDO_NON_NIHIL (r->nomen_v);
         CREDO_CHORDA_AEQUALIS_LITERIS (*r->nomen_v,
-                                       "rosa-ad-murum");
+                                       "#rosa-ad-murum");
 
         /* electio in documento posita */
         CREDO_AEQUALIS_I32 ((i32)r->status_vita,
@@ -212,11 +212,11 @@ principale(
         CREDO_AEQUALIS_I32 ((i32)r->anima,
             (i32)PLANTA_ROSA_CANINA_ANIMA_ABSENS);
 
-        /* relatio: nomen attributi kebab (nostrum), valor
-         * snake (naturae) - par. 4.4 rationum */
+        /* relatio: signum '#' verbatim, corpus ut auctor scripsit
+         * (orthographia stylus, signum mechanismus) */
         CREDO_NON_NIHIL (r->auctor_nominis);
         CREDO_CHORDA_AEQUALIS_LITERIS (*r->auctor_nominis,
-                                       "carl_linnaeus");
+                                       "#carl_linnaeus");
 
         /* attributa tacita monstratorem NIHIL retinent */
         CREDO_NIHIL (r->pollinatur_a);
@@ -285,7 +285,7 @@ principale(
         CREDO_NON_NIHIL (g);
 
         CREDO_NON_NIHIL (g->nomen_v);
-        CREDO_CHORDA_AEQUALIS_LITERIS (*g->nomen_v, "malus-prima");
+        CREDO_CHORDA_AEQUALIS_LITERIS (*g->nomen_v, "#malus-prima");
 
         /* IDEM attributum, IDEM silentium in documento, ALIUS
          * ordinarius quam rosae-caninae: arbor, non frutex.

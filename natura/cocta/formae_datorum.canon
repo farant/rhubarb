@@ -14,84 +14,84 @@
   </elementum>
 
   <elementum nomen="forma-datorum">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="realizata-a" intra="forma-datorum">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="forma-datorum">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="series">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="realizata-a" intra="series">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="series">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="cauda">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="realizata-a" intra="cauda">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="cauda">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="acervus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="realizata-a" intra="acervus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="acervus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="tabula-associativa">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="realizata-a" intra="tabula-associativa">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="tabula-associativa">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="copia">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="realizata-a" intra="copia">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="copia">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="arbor">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="realizata-a" intra="arbor">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="arbor">
     <liberum nomen="eventum"/>

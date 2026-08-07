@@ -806,7 +806,7 @@ _elementum_scribere(
      * Compositum superset strictum nominis est (nomen + lineola),
      * unde laxatio nihil constat et nihil prius licitum reicit;
      * spatium tamen adhuc reicitur, ergo identitas manet. */
-    fputs("    <attributum nomen=\"nomen\" genus=\"compositum\"/>\n", f);
+    fputs("    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n", f);
 
     per (i = ZEPHYRUM; i < xar_numerus(el->membra); i++)
     {
@@ -1156,7 +1156,10 @@ _citationes_scribere(
                       "       indicem ad= enumeratur, quia claves "
                       "per titulum exactum\n"
                       "       colliguntur et subgenus titulum "
-                      "alium fert. -->\n", f);
+                      "alium fert. Signa: '#'\n"
+                      "       individuum inscriptum (clavis "
+                      "verbatim), '.' genus e\n"
+                      "       vocabulario indicis. -->\n", f);
             }
             numerus++;
 

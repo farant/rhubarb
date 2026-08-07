@@ -12,7 +12,7 @@
   </elementum>
 
   <elementum nomen="morbus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contagiosus" genus="veritas"/>
     <attributum nomen="duratio-typica" genus="textus"/>
     <attributum nomen="letalitas" genus="numerus"/>
@@ -24,22 +24,22 @@
       <optio>chronicus</optio>
       <optio>lethalis</optio>
     </attributum>
-    <attributum nomen="afficit" genus="nomen"/>
-    <attributum nomen="sedes" genus="nomen"/>
-    <attributum nomen="dignoscitur-per" genus="nomen"/>
-    <attributum nomen="classificatus-in" genus="nomen"/>
+    <attributum nomen="afficit" genus="referentia"/>
+    <attributum nomen="sedes" genus="referentia"/>
+    <attributum nomen="dignoscitur-per" genus="referentia"/>
+    <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="morbus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="morbus-infectiosus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contagiosus" genus="veritas" ordinarius="verum"/>
     <attributum nomen="duratio-typica" genus="textus"/>
     <attributum nomen="letalitas" genus="numerus"/>
@@ -51,22 +51,22 @@
       <optio>chronicus</optio>
       <optio>lethalis</optio>
     </attributum>
-    <attributum nomen="afficit" genus="nomen"/>
-    <attributum nomen="sedes" genus="nomen"/>
-    <attributum nomen="dignoscitur-per" genus="nomen"/>
-    <attributum nomen="classificatus-in" genus="nomen"/>
+    <attributum nomen="afficit" genus="referentia"/>
+    <attributum nomen="sedes" genus="referentia"/>
+    <attributum nomen="dignoscitur-per" genus="referentia"/>
+    <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus-infectiosus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="morbus-infectiosus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="morbus-geneticus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contagiosus" genus="veritas" ordinarius="falsum"/>
     <attributum nomen="duratio-typica" genus="textus"/>
     <attributum nomen="letalitas" genus="numerus"/>
@@ -78,22 +78,22 @@
       <optio>chronicus</optio>
       <optio>lethalis</optio>
     </attributum>
-    <attributum nomen="afficit" genus="nomen"/>
-    <attributum nomen="sedes" genus="nomen"/>
-    <attributum nomen="dignoscitur-per" genus="nomen"/>
-    <attributum nomen="classificatus-in" genus="nomen"/>
+    <attributum nomen="afficit" genus="referentia"/>
+    <attributum nomen="sedes" genus="referentia"/>
+    <attributum nomen="dignoscitur-per" genus="referentia"/>
+    <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus-geneticus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="morbus-geneticus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="morbus-degenerativus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contagiosus" genus="veritas"/>
     <attributum nomen="duratio-typica" genus="textus"/>
     <attributum nomen="letalitas" genus="numerus"/>
@@ -105,22 +105,22 @@
       <optio>chronicus</optio>
       <optio>lethalis</optio>
     </attributum>
-    <attributum nomen="afficit" genus="nomen"/>
-    <attributum nomen="sedes" genus="nomen"/>
-    <attributum nomen="dignoscitur-per" genus="nomen"/>
-    <attributum nomen="classificatus-in" genus="nomen"/>
+    <attributum nomen="afficit" genus="referentia"/>
+    <attributum nomen="sedes" genus="referentia"/>
+    <attributum nomen="dignoscitur-per" genus="referentia"/>
+    <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus-degenerativus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="morbus-degenerativus">
     <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="vulnus">
-    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contagiosus" genus="veritas"/>
     <attributum nomen="duratio-typica" genus="textus"/>
     <attributum nomen="letalitas" genus="numerus"/>
@@ -132,15 +132,15 @@
       <optio>chronicus</optio>
       <optio>lethalis</optio>
     </attributum>
-    <attributum nomen="afficit" genus="nomen"/>
-    <attributum nomen="sedes" genus="nomen"/>
-    <attributum nomen="dignoscitur-per" genus="nomen"/>
-    <attributum nomen="classificatus-in" genus="nomen"/>
+    <attributum nomen="afficit" genus="referentia"/>
+    <attributum nomen="sedes" genus="referentia"/>
+    <attributum nomen="dignoscitur-per" genus="referentia"/>
+    <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="curatur-per" intra="vulnus">
-    <attributum nomen="ad" genus="nomen"/>
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="vulnus">
     <liberum nomen="eventum"/>
