@@ -104,6 +104,16 @@
   </elementum>
 
   <elementum nomen="rosaceae">
+    <glossa lingua="en">The Rosaceae: a plant family whose flowers
+    are usually five-petalled, with stipules at the leaves and
+    fruits of many kinds (pome, drupe, aggregate) - a broadly
+    varied family united by the structure of its flowers, not by
+    the form of its fruits.</glossa>
+    <glossa lingua="fr">Les Rosacées : une famille de plantes aux
+    fleurs le plus souvent à cinq pétales, avec des stipules à la
+    base des feuilles et des fruits de types variés (pomme,
+    drupe, fruit agrégé) - une famille très diverse qu'unit la
+    structure de ses fleurs, non la forme de ses fruits.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio">
       <optio>herba</optio>
@@ -185,6 +195,13 @@
   </elementum>
 
   <elementum nomen="rosa">
+    <glossa lingua="en">Rosa: the rose genus of the Rosaceae,
+      with prickly stems, odd-pinnate leaves, and a fruit that is
+      a fleshy hypanthium (the hip) - not a pome.</glossa>
+    <glossa lingua="fr">Rosa : le genre du rosier, dans les
+      Rosacées, aux tiges aiguillonnées, aux feuilles
+      imparipennées, et dont le fruit est un hypanthe charnu (le
+      cynorhodon) - non une pomme.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio" ordinarius="frutex">
       <optio>herba</optio>
@@ -266,6 +283,13 @@
   </elementum>
 
   <elementum nomen="malus">
+    <glossa lingua="en">Malus: the apple genus of the Rosaceae,
+      whose fruit is a POME (a fleshy hypanthium enclosing the
+      seeds), not a drupe nor a hip.</glossa>
+    <glossa lingua="fr">Malus : le genre du pommier, dans les
+      Rosacées, dont le fruit est une POMME (un hypanthe charnu
+      qui enferme les graines), non une drupe ni un
+      cynorhodon.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio" ordinarius="arbor">
       <optio>herba</optio>

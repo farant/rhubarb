@@ -32,6 +32,17 @@
     scribitur, res cras adveniunt.
   </definitio>
 
+  <glossa lingua="en">A schema: a declared form for data - the
+    shape that things of the same kind must fill out: named
+    fields, kinds of value, requirements. It is a promise about
+    FUTURE data: the schema is written today, the things arrive
+    tomorrow.</glossa>
+  <glossa lingua="fr">Un schéma : une forme de données déclarée
+    - la figure que doivent remplir les choses d'un même genre :
+    champs nommés, genres de valeurs, obligations. C'est une
+    promesse portant sur les données À VENIR : le schéma s'écrit
+    aujourd'hui, les choses arrivent demain.</glossa>
+
   <proprietates>
     <proprietas nomen="disciplina" genus="electio"
       nota="constringens: non congruens REICITUR (basis
@@ -62,6 +73,15 @@
     necessitas. Atomus formae - schema ex campis constat ut
     sententia ex verbis.
   </definitio>
+
+  <glossa lingua="en">A field: a named place in a schema - a
+    name, a kind of value, a requirement. It is the atom of the
+    form: a schema is made of fields as a sentence is made of
+    words.</glossa>
+  <glossa lingua="fr">Un champ : un emplacement nommé dans un
+    schéma - un nom, un genre de valeur, une obligation. C'est
+    l'atome de la forme : un schéma est fait de champs comme une
+    phrase est faite de mots.</glossa>
 
   <proprietates>
     <proprietas nomen="necessarius" genus="veritas"
@@ -96,6 +116,19 @@
     formam). Dies dies manet, sive chorda sive numerus sub ea
     iacet.
   </definitio>
+
+  <glossa lingua="en">A kind of value: the kind of value a field
+    can hold - the INTENT of the value, not its machine
+    representation; s32 and char* are realizations (the language
+    type supplies the matter, the kind of value the form). A date
+    stays a date, whether a string or a number lies under
+    it.</glossa>
+  <glossa lingua="fr">Un genre de valeur : le genre de valeur
+    qu'un champ peut contenir - l'INTENTION de la valeur, non sa
+    représentation machine ; s32 et char* en sont des
+    réalisations (le type du langage fournit la matière, le genre
+    de valeur la forme). Une date reste une date, qu'une chaîne
+    ou un nombre se trouve dessous.</glossa>
 
   <dubium>
     Paletta domus etiam "area" (textus amplus) et "annus"

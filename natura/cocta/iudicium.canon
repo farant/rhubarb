@@ -59,6 +59,16 @@
   </elementum>
 
   <elementum nomen="gradus-assensus">
+    <glossa lingua="en">Degree of assent: how firmly the mind adheres
+    to a proposition. It concerns not the thing itself but the
+    ADHERENCE - the same proposition is known by one person,
+    believed by another, suspected by a third. The degree is
+    therefore a property of the judgement, not of the thing.</glossa>
+    <glossa lingua="fr">Degré d'assentiment : avec quelle fermeté
+    l'esprit adhère à une proposition. Il ne s'agit pas de la chose
+    elle-même mais de l'ADHÉSION - la même proposition est sue par
+    l'un, crue par l'autre, soupçonnée par un troisième. Le degré
+    est donc une propriété du jugement, non de la chose.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
   </elementum>
@@ -67,6 +77,18 @@
   </elementum>
 
   <elementum nomen="fons">
+    <glossa lingua="en">A source: that from which a proposition was
+    received - a work, a measurement, a witness, an institutional
+    corpus. A source does not prove a proposition true; it says
+    where the proposition came from, which is a different thing and
+    often more useful, since a named source can be verified and a
+    concealed one never can.</glossa>
+    <glossa lingua="fr">Une source : ce dont une proposition a été
+    reçue - un ouvrage, une mesure, un témoin, un corpus
+    institutionnel. La source ne prouve pas qu'une proposition soit
+    vraie ; elle dit d'où celle-ci vient, ce qui est autre chose et
+    souvent plus utile, car une source nommée peut être vérifiée et
+    une source cachée jamais.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="clavis" genus="textus"/>
     <attributum nomen="verificatus" genus="veritas"/>
@@ -77,6 +99,17 @@
   </elementum>
 
   <elementum nomen="observatio">
+    <glossa lingua="en">An observation: notice of a particular thing
+    received, able to ground a judgement - what is seen, what is
+    felt, what is measured. It differs from a judgement because it
+    AFFIRMS nothing beyond what appears: "fever 38.5" is an
+    observation, "she has pneumonia" is a judgement.</glossa>
+    <glossa lingua="fr">Une observation : la notice d'une chose
+    singulière reçue, capable de fonder un jugement - ce qui est vu,
+    ce qui est ressenti, ce qui est mesuré. Elle diffère du jugement
+    parce qu'elle n'AFFIRME rien au-delà de ce qui apparaît :
+    « fièvre 38,5 » est une observation, « elle a une pneumonie »
+    est un jugement.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="facta" genus="dies"/>
     <attributum nomen="verificabilis-ab-alio" genus="veritas"/>
@@ -90,6 +123,20 @@
   </elementum>
 
   <elementum nomen="iudicium">
+    <glossa lingua="en">A judgement: a proposition about a thing that
+    someone holds, with an author, a moment, a ground and a degree
+    of assent. It is distinguished from a FACT - a fact either is or
+    is not, whereas a judgement HAPPENS, and its having happened
+    stays certain even if its content is false. This is why records
+    preserve mistaken judgements: what was judged is part of the
+    history.</glossa>
+    <glossa lingua="fr">Un jugement : une proposition sur une chose
+    que quelqu'un tient, avec un auteur, un moment, un fondement et
+    un degré d'assentiment. Il se distingue du FAIT - un fait est ou
+    n'est pas, tandis qu'un jugement ARRIVE, et le fait qu'il soit
+    arrivé demeure certain même si son contenu est faux. C'est
+    pourquoi les archives conservent les jugements erronés : ce qui
+    a été jugé fait partie de l'histoire.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="latum" genus="dies"/>
@@ -118,6 +165,20 @@
   </elementum>
 
   <elementum nomen="periculum">
+    <glossa lingua="en">A risk: a harm that can happen and is not
+    certain - a kind of judgement about the future, but a DOUBLE
+    one, since it consists of probability and gravity at once. It
+    therefore cannot be stated as a single number without lying:
+    what happens rarely but ruins everything and what happens often
+    but harms little are not the same risk, even when the product is
+    the same.</glossa>
+    <glossa lingua="fr">Un risque : un dommage qui peut arriver sans
+    être certain - une espèce de jugement sur l'avenir, mais un
+    jugement DOUBLE, car il consiste à la fois en une probabilité et
+    en une gravité. On ne peut donc l'énoncer par un seul nombre
+    sans mentir : ce qui arrive rarement mais ruine tout et ce qui
+    arrive souvent mais nuit peu ne sont pas le même risque, même
+    lorsque le produit est identique.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="probabilitas" genus="numerus"/>
     <attributum nomen="gravitas" genus="electio">
@@ -138,6 +199,17 @@
   </elementum>
 
   <elementum nomen="ignotum">
+    <glossa lingua="en">An unknown: an absence of knowledge
+    ACKNOWLEDGED and named - a gap that can be handled precisely
+    because it has been named. Not plain ignorance, which posits
+    nothing, but ignorance turned into a thing: something that can
+    be inquired into, assigned, counted and resolved.</glossa>
+    <glossa lingua="fr">Un inconnu : une absence de connaissance
+    RECONNUE et nommée - une lacune que l'on peut traiter justement
+    parce qu'elle a été nommée. Non pas l'ignorance simple, qui ne
+    pose rien, mais l'ignorance convertie en chose : ce sur quoi on
+    peut enquêter, ce que l'on peut assigner, dénombrer et
+    résoudre.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="quaestio" genus="textus"/>
     <attributum nomen="impediens" genus="veritas"/>
@@ -165,6 +237,16 @@
   </elementum>
 
   <elementum nomen="investigatio">
+    <glossa lingua="en">An investigation: an ordered inquiry into the
+    causes of an event, producing judgements about those causes. It
+    differs from an observation because it CONCLUDES, and from a
+    simple judgement because it proceeds by method and gathers
+    testimony before concluding.</glossa>
+    <glossa lingua="fr">Une enquête : une recherche ordonnée sur les
+    causes d'un événement, qui produit des jugements sur ces causes.
+    Elle diffère de l'observation parce qu'elle CONCLUT, et du
+    simple jugement parce qu'elle procède par méthode et recueille
+    les témoignages avant de conclure.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="finis" genus="electio">
       <optio>praeventio</optio>
@@ -202,6 +284,22 @@
   </elementum>
 
   <elementum nomen="secretum">
+    <glossa lingua="en">A secret: a thing whose usefulness consists in
+    the fact that few know it - once divulged it is neither
+    corrupted nor destroyed but STRIPPED OF ITS OFFICE, remaining
+    whole and made useless. Its life runs ONE WAY, and that defines
+    the kind: no action makes a divulged secret secret again. Other
+    things can be repaired; a secret is not repaired but REPLACED,
+    and the replacement is another thing, not the same one
+    restored.</glossa>
+    <glossa lingua="fr">Un secret : une chose dont l'utilité consiste
+    en ce que peu de gens la connaissent - divulguée, elle n'est ni
+    corrompue ni détruite mais DÉPOUILLÉE DE SA FONCTION, demeurant
+    entière et devenue inutile. Sa vie est à SENS UNIQUE, et cela
+    définit le genre : aucune action ne rend secret un secret
+    divulgué. Les autres choses se réparent ; un secret ne se répare
+    pas mais se REMPLACE, et le remplaçant est autre chose, non le
+    même restitué.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="numerus-scientium" genus="numerus"/>
     <attributum nomen="substituibile" genus="veritas"/>
@@ -228,6 +326,26 @@
   </elementum>
 
   <elementum nomen="peritia-communis">
+    <glossa lingua="en">Common expertise: a knowledge or skill that
+    resides in the community as a whole and is complete in no single
+    member - it is handed on by taking part, not by teaching alone,
+    and it perishes when the group is dissolved even though no one
+    has forgotten it. THE BEARER IS THE GROUP, not the member, so
+    its proper way of dying is not forgetfulness but DISCONTINUITY:
+    members can be replaced one at a time and the expertise
+    survives, replaced all at once and it is gone. The loss is
+    therefore measured not by how many were lost but by how many
+    were lost at the same time.</glossa>
+    <glossa lingua="fr">Un savoir-faire collectif : une connaissance
+    ou un art qui réside dans la communauté entière et n'est complet
+    en aucun de ses membres - il se transmet par la participation,
+    non par le seul enseignement, et il périt lorsque le groupe se
+    dissout même si personne ne l'a oublié. LE PORTEUR EST LE
+    GROUPE, non le membre ; sa manière propre de mourir n'est donc
+    pas l'oubli mais la DISCONTINUITÉ : on peut remplacer les
+    membres un à un sans perdre le savoir, tous à la fois et il
+    disparaît. Le dommage se mesure donc non au nombre des perdus
+    mais au nombre de ceux qui furent perdus en même temps.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-traditionis" genus="electio">
       <optio>participatione</optio>
@@ -251,6 +369,21 @@
   </elementum>
 
   <elementum nomen="attributio">
+    <glossa lingua="en">An attribution: a judgement - a proposition
+    held by someone, with author, moment and degree of assent -
+    about WHO MADE a work. It uses two measures at once: how firmly
+    it is held (certainty, as in every judgement) and how far the
+    named author was present to the work (proximity, proper to this
+    kind). Two things that ordinary speech confuses into a single
+    "perhaps".</glossa>
+    <glossa lingua="fr">Une attribution : un jugement - une
+    proposition tenue par quelqu'un, avec auteur, moment et degré
+    d'assentiment - sur QUI A FAIT une œuvre. Elle emploie deux
+    mesures à la fois : la fermeté avec laquelle on la tient (la
+    certitude, comme pour tout jugement) et la part que la main de
+    l'auteur nommé a prise à l'œuvre (la proximité, propre à ce
+    genre). Deux choses que le langage courant confond en un seul
+    « peut-être ».</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="propinquitas" genus="electio">
       <optio>manu_ipsius</optio>
@@ -292,6 +425,21 @@
   </elementum>
 
   <elementum nomen="fundamentum">
+    <glossa lingua="en">A ground: that on which a proposition rests -
+    not where it was received from (that is the source), nor how
+    firmly it is held (that is the degree of assent), but WHAT KIND
+    OF THING SUSTAINS IT. A fourth and distinct axis for qualifying
+    a claim, free of the other three: a proposition resting on
+    firsthand sight may be held hesitantly, and a conjecture most
+    firmly of all.</glossa>
+    <glossa lingua="fr">Un fondement : ce sur quoi une proposition
+    s'appuie - non pas d'où elle a été reçue (c'est la source), ni
+    avec quelle fermeté on la tient (c'est le degré d'assentiment),
+    mais QUELLE EST LA NATURE DE CE QUI LA SOUTIENT. Un quatrième
+    axe, distinct, pour qualifier une assertion, libre des trois
+    autres : une proposition fondée sur la vue directe peut être
+    tenue avec hésitation, et une conjecture avec la plus grande
+    fermeté.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="verificabile-ab-alio" genus="veritas"/>
     <attributum nomen="repetibile" genus="veritas"/>

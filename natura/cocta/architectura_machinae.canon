@@ -10,6 +10,18 @@
   </elementum>
 
   <elementum nomen="architectura-machinae">
+    <glossa lingua="en">A machine architecture: the abstract form
+    of a computing machine that programs address - instruction
+    set, registers, memory model. It is the covenant between
+    compiler and hardware: many chips execute it, the
+    architecture is one; it grows through versions while its
+    identity remains.</glossa>
+    <glossa lingua="fr">Une architecture machine : la forme
+    abstraite d'une machine de calcul à laquelle les programmes
+    s'adressent - jeu d'instructions, registres, modèle de
+    mémoire. C'est le pacte entre le compilateur et le matériel :
+    de nombreuses puces l'exécutent, l'architecture est une ;
+    elle croît par versions tout en gardant son identité.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="indoles-copiae" genus="electio">
       <optio>cisc</optio>
@@ -31,6 +43,15 @@
   </elementum>
 
   <elementum nomen="versio-architecturae">
+    <glossa lingua="en">An architecture version: a named edition
+    of an architecture - which instruction set a chip really
+    executes and a compiler really addresses. To say build for
+    x86_64 is to cite a version, not a family.</glossa>
+    <glossa lingua="fr">Une version d'architecture : une édition
+    nommée d'une architecture - le jeu d'instructions qu'une puce
+    exécute réellement et auquel un compilateur s'adresse
+    réellement. Dire compiler pour x86_64, c'est citer une
+    version, non une famille.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="titulus" genus="textus"/>
     <attributum nomen="latitudo-verbi" genus="numerus"/>
@@ -66,6 +87,22 @@
   </elementum>
 
   <elementum nomen="processorium">
+    <glossa lingua="en">A processor: a product model of a
+    computing circuit - a named form that a foundry prints into
+    countless chips, and which executes an architecture (one or
+    several of its versions) in silicon. It stands midway between
+    the architecture, which is pure form, and the physical chip,
+    which is a single corporeal thing: it has a clock frequency,
+    cores and a price, but no haecceity - M1 is millions of chips
+    and one thing.</glossa>
+    <glossa lingua="fr">Un processeur : un modèle de produit de
+    circuit de calcul - une forme nommée qu'une fonderie imprime
+    en d'innombrables puces, et qui exécute une architecture (une
+    ou plusieurs de ses versions) dans le silicium. Il se tient à
+    mi-chemin entre l'architecture, qui est forme pure, et la
+    puce physique, qui est une chose corporelle unique : il a une
+    fréquence, des coeurs et un prix, mais pas d'eccéité - le M1
+    est des millions de puces et une seule chose.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="nuclei" genus="numerus"/>
     <attributum nomen="frequentia" genus="textus"/>

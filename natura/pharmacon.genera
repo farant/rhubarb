@@ -66,6 +66,20 @@
     substantiam numerat, non acervum.
   </differentia>
 
+  <glossa lingua="en">A chemical substance: a kind of matter
+    determined by its composition - what all samples of the same
+    substance share, wherever and whenever they were made. Not a
+    heap but the KIND of heaps: "aspirin" is one thing we speak of,
+    although the heaps of it are countless. It can be neither
+    weighed nor touched, whereas matter can.</glossa>
+  <glossa lingua="fr">Une substance chimique : un genre de matière
+    déterminé par sa composition - ce que partagent tous les
+    exemplaires d'une même substance, où et quand qu'ils aient été
+    faits. Non pas un tas mais le GENRE des tas : « l'aspirine » est
+    une seule chose dont nous parlons, quoique les tas en soient
+    innombrables. Elle ne peut être ni pesée ni touchée, alors que
+    la matière le peut.</glossa>
+
   <proprietates>
     <proprietas nomen="formula" genus="textus"/>
     <proprietas nomen="massa_molecularis" genus="quantitas"
@@ -138,6 +152,18 @@
     alia). Medicamentum id est de quo iudicium clinicum fertur
     et cui aequivalentia asseritur.
   </differentia>
+
+  <glossa lingua="en">A drug: one substance (or several) prepared
+    with a determinate STRENGTH and FORM for treating illness -
+    what a prescription names and what a pharmacist dispenses.
+    "Amoxicillin 500 mg capsule" is not the substance alone, and is
+    not yet the thing in the hand.</glossa>
+  <glossa lingua="fr">Un médicament : une substance (ou plusieurs)
+    préparée avec une PUISSANCE et une FORME déterminées pour
+    traiter une maladie - ce que l'ordonnance nomme et ce que le
+    pharmacien délivre. « Amoxicilline 500 mg gélule » n'est pas la
+    substance seule, et n'est pas encore la chose que l'on tient en
+    main.</glossa>
 
   <proprietates>
     <proprietas nomen="vis" genus="quantitas" modulus="mensura"
@@ -241,6 +267,17 @@
     formula cras cocta coctura alia est.
   </differentia>
 
+  <glossa lingua="en">A batch: everything made in one manufacturing
+    run, sharing a common provenance and therefore a COMMON FATE -
+    what is contaminated in one unit may be contaminated in all of
+    them, and so a recall addresses the batch and never the single
+    item.</glossa>
+  <glossa lingua="fr">Un lot : tout ce qui a été fait au cours d'une
+    même production, partageant une provenance commune et donc un
+    DESTIN COMMUN - ce qui est contaminé dans une unité peut l'être
+    dans toutes, et c'est pourquoi un rappel vise le lot et jamais
+    l'objet isolé.</glossa>
+
   <proprietates>
     <proprietas nomen="numerus_cocturae" genus="textus"
       nota="quo alloquitur - in unitate ipsa impressus, quia
@@ -314,6 +351,16 @@
     probatio allocutionis). Cave tamen: relata IPSA identitatem
     non accipiunt ab hac relatione - substantiae suam habent.
   </differentia>
+
+  <glossa lingua="en">An interaction: a relation between two things
+    (or more) whose simultaneous presence changes the effect each
+    would have on its own. It is not a property of either one but of
+    a THIRD thing that arises from their conjunction.</glossa>
+  <glossa lingua="fr">Une interaction : une relation entre deux
+    choses (ou davantage) dont la présence simultanée modifie
+    l'effet que chacune aurait seule. Ce n'est pas une propriété de
+    l'une ou de l'autre, mais d'une TROISIÈME chose qui naît de leur
+    conjonction.</glossa>
 
   <proprietates>
     <proprietas nomen="gravitas" genus="electio">

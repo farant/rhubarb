@@ -98,6 +98,18 @@
     portatur, et vita eius vitam gerentis sequitur.
   </definitio>
 
+  <glossa lingua="en">State: a kept value that can change over time -
+    it persists between events and is changed by them. The present
+    state is the FOLD of all past changes (the log is the truth, the
+    state its projection). It is always carried by some BEARER, and
+    its lifetime follows the bearer's.</glossa>
+  <glossa lingua="fr">L'état : une valeur gardée qui peut changer
+    dans le temps - elle subsiste entre les événements et se trouve
+    modifiée par eux. L'état présent est le PLIAGE de toutes les
+    modifications passées (le journal est la vérité, l'état sa
+    projection). Il est toujours porté par un PORTEUR, et sa durée
+    de vie suit celle du porteur.</glossa>
+
   <proprietates>
     <proprietas nomen="durabilitas" genus="electio"
       nota="DERIVATA, non libera: durabilitas vitam gerentis
@@ -172,6 +184,17 @@
     nulla syntaxis fert; sola intentio eam dicit.
   </differentia>
 
+  <glossa lingua="en">A projection: state that can be recomputed in
+    full from another state, its TRUTH. Hence the LICENCE TO DELETE -
+    erasing a projection loses nothing that cannot be reborn, an
+    operational property of the first importance that no syntax
+    carries; intention alone declares it.</glossa>
+  <glossa lingua="fr">Une projection : un état qui peut être
+    entièrement recalculé à partir d'un autre état, sa VÉRITÉ. D'où
+    la LICENCE DE SUPPRIMER - effacer une projection ne perd rien qui
+    ne puisse renaître, propriété opératoire capitale qu'aucune
+    syntaxe ne porte ; seule l'intention la déclare.</glossa>
+
   <relationes>
     <relatio nomen="veritas_sua" ad="status"
       nota="status ex quo recomputatur"/>
@@ -190,6 +213,18 @@
     proiectio - licentia delendi in moribus omnium fabrorum,
     raro nominata.
   </differentia>
+
+  <glossa lingua="en">A build artifact: a projection of the sources
+    made by building - the source is the truth, the artifact the
+    projection. "make clean" is harmless BECAUSE the artifact is a
+    projection; the licence to delete lives in every builder's habits
+    and is rarely named.</glossa>
+  <glossa lingua="fr">Un artefact de construction : une projection
+    des sources produite par la compilation - la source est la
+    vérité, l'artefact la projection. « make clean » est inoffensif
+    PARCE QUE l'artefact est une projection ; la licence de supprimer
+    habite les habitudes de tout constructeur, rarement
+    nommée.</glossa>
 
   <relationes>
     <relatio nomen="ex_fontibus" ad="plagula_fontis"
@@ -224,6 +259,15 @@
     debet - deletio innocens, reparatio supervacua.
   </differentia>
 
+  <glossa lingua="en">A cache: a projection kept for speed - a value
+    computed once so that it need not be computed again. A corrupted
+    cache can be deleted, never repaired: deletion is harmless,
+    repair superfluous.</glossa>
+  <glossa lingua="fr">Un cache : une projection conservée pour la
+    vitesse - une valeur calculée une fois afin de ne pas la
+    recalculer. Un cache corrompu peut être supprimé, jamais réparé :
+    la suppression est inoffensive, la réparation superflue.</glossa>
+
   <machina_statuum nomen="fides" gerens="individuum">
     <status nomen="congruens" nota="veritati consonat"/>
     <status nomen="rancidum"
@@ -249,6 +293,15 @@
     quaerens petit non habet; index eum praebet. ORDO essentia
     eius - data eadem, dispositio nova.
   </differentia>
+
+  <glossa lingua="en">An index: a projection arranged for searching -
+    the truth does not hold the order the searcher asks for, and the
+    index supplies it. ORDER is its essence: the same data, a new
+    arrangement.</glossa>
+  <glossa lingua="fr">Un index : une projection ordonnée pour la
+    recherche - la vérité ne possède pas l'ordre que réclame celui
+    qui cherche, et l'index le fournit. L'ORDRE en est l'essence :
+    les mêmes données, une disposition nouvelle.</glossa>
 
   <!-- ================= DICTIONARIUM ================= -->
 
@@ -293,6 +346,18 @@
     reificant - index accessuum).
   </definitio>
 
+  <glossa lingua="en">A read: the event in which state is observed
+    without being altered - the other half of a state's life, since
+    change writes it and reading draws its fruit. It leaves no trace
+    unless some guard deliberately records it (security regimes
+    reify reads too, as an access log).</glossa>
+  <glossa lingua="fr">Une lecture : l'événement par lequel un état
+    est observé sans être modifié - l'autre moitié de la vie d'un
+    état, car la modification l'écrit et la lecture en tire le fruit.
+    Elle ne laisse aucune trace, à moins qu'une surveillance ne
+    l'enregistre à dessein (les régimes de sécurité réifient aussi
+    les lectures, sous forme de journal d'accès).</glossa>
+
   <nota>
     Lectio "destructiva" (fistula, cauda promens) honeste
     COMPOSITUM est - lectio et mutatio simul, non species
@@ -336,6 +401,22 @@
     praeter canalem declaratum effecta vulgo "effectus
     secundarius" dicitur - positio, non genus (vide supra).
   </definitio>
+
+  <glossa lingua="en">A change: the event in which state is altered -
+    what the log records. Where changes are kept as things in their
+    own right, the whole history remains and any state can be
+    recomputed by folding them; its species divide by the bearer of
+    the state changed - what changes, not how. A change effected
+    outside the declared channel is commonly called a "side effect",
+    which is a position, not a kind.</glossa>
+  <glossa lingua="fr">Une modification : l'événement par lequel un
+    état change - ce que le journal enregistre. Là où les
+    modifications sont conservées comme des choses à part entière,
+    l'histoire entière subsiste et tout état peut être recalculé par
+    pliage ; ses espèces se divisent selon le porteur de l'état
+    modifié - ce qui change, non comment. Une modification effectuée
+    hors du canal déclaré s'appelle communément un « effet de bord »,
+    ce qui est une position et non un genre.</glossa>
 
   <proprietates>
     <proprietas nomen="declaratio" genus="electio"
@@ -418,6 +499,16 @@
     fortasse lectiones haurit. Vocatur et redit - unitas minima
     laboris nominata quam programma iterare potest.
   </definitio>
+
+  <glossa lingua="en">A function: a named subprogram that takes
+    parameters, computes, and may return a value, effect changes, or
+    draw reads. It is called and it returns - the smallest named unit
+    of work a program can repeat.</glossa>
+  <glossa lingua="fr">Une fonction : un sous-programme nommé qui
+    reçoit des paramètres, calcule, et peut rendre une valeur,
+    effectuer des modifications ou puiser des lectures. On l'appelle
+    et elle revient - la plus petite unité de travail nommée qu'un
+    programme puisse répéter.</glossa>
 
   <proprietates>
     <proprietas nomen="reddit_valorem" genus="veritas"
@@ -566,6 +657,26 @@
     substitui potest.
   </differentia>
 
+  <glossa lingua="en">A pure function: a function with no hidden
+    channels - it reads only through its parameters (pointed-to
+    memory included, as strlen shows) and makes NO changes at all,
+    not even through parameters, so its whole fruit is the returned
+    value. The same arguments always yield the same value and a call
+    leaves no trace; saying "without side effects" names only half of
+    it, since a function that merely reads global state is still not
+    pure. Referential transparency follows: a call may be replaced by
+    its value.</glossa>
+  <glossa lingua="fr">Une fonction pure : une fonction sans canaux
+    cachés - elle ne lit que par ses paramètres (mémoire pointée
+    comprise, comme le montre strlen) et n'effectue AUCUNE
+    modification, pas même par ses paramètres, si bien que tout son
+    fruit est la valeur rendue. Les mêmes arguments donnent toujours
+    la même valeur et un appel ne laisse aucune trace ; dire « sans
+    effets de bord » n'en nomme que la moitié, car une fonction qui
+    se borne à lire un état global n'est pas pure pour autant. La
+    transparence référentielle s'ensuit : un appel peut être remplacé
+    par sa valeur.</glossa>
+
   <nota>
     LICENTIAE quas puritas emit (cur differentia haec sub-genus
     meretur): memorare (valorem semel computatum servare),
@@ -615,6 +726,20 @@
     esse potest - vestes quattuor, constans unum.
   </definitio>
 
+  <glossa lingua="en">A constant: a value whose INTENTION is never to
+    change once it has come to be - the opposite of state, which is
+    expected to change where this is forbidden to. The kind comes
+    from the intention, not from the construct: one and the same
+    constant may be dressed as a macro, an enumerator, a qualified
+    object, or bare discipline - four garments, one
+    constant.</glossa>
+  <glossa lingua="fr">Une constante : une valeur dont l'INTENTION est
+    de ne jamais changer une fois née - le contraire de l'état, qui
+    est censé changer là où celle-ci se l'interdit. Le genre vient de
+    l'intention, non du construit : une même constante peut se vêtir
+    en macro, en énumérateur, en objet qualifié ou en simple
+    discipline - quatre vêtements, une seule constante.</glossa>
+
   <relationes>
     <relatio nomen="realizatur_per" ad="constructum_linguae"
       externum="verum" multiplex="verum"
@@ -654,6 +779,17 @@
     suam non fert.
   </differentia>
 
+  <glossa lingua="en">A numeric constant: a constant that is a
+    quantity, so arithmetic is allowed on it. Left without a name it
+    is called a "magic number" - a constant whose intention stayed
+    unspoken, and the best known abuse of the kind, because a bare
+    number does not carry its own intention.</glossa>
+  <glossa lingua="fr">Une constante numérique : une constante qui est
+    une quantité, sur laquelle l'arithmétique est permise. Laissée
+    sans nom, on l'appelle « nombre magique » - une constante dont
+    l'intention est restée tue, et l'abus le plus célèbre du genre,
+    car un nombre nu ne porte pas son intention.</glossa>
+
   <!-- ================= DICTIONARIUM ================= -->
 
   <individuum nomen="pi">
@@ -681,6 +817,13 @@
     nuntia, tituli, formae.
   </differentia>
 
+  <glossa lingua="en">A textual constant: a constant sequence of
+    characters, usually meant for a human reader - messages, titles,
+    formats.</glossa>
+  <glossa lingua="fr">Une constante textuelle : une suite constante
+    de caractères, destinée le plus souvent à un lecteur humain -
+    messages, titres, formats.</glossa>
+
   <nota>
     Captura C89: litterae chordarum typo constanti NON ornantur
     (char*, non const char*) - eas scribere indefinitum est, sed
@@ -703,6 +846,17 @@
     A programmate differt quia initio proprio caret - vivit
     vocata, numquam sponte currit.
   </definitio>
+
+  <glossa lingua="en">A library: a collection of elements -
+    functions, constants, types - published for repeated use; it
+    offers an interface and hides its body. It differs from a program
+    in having no beginning of its own: it lives by being called and
+    never runs of its own accord.</glossa>
+  <glossa lingua="fr">Une bibliothèque : une collection d'éléments -
+    fonctions, constantes, types - publiée pour un usage répété ;
+    elle offre une interface et cache son corps. Elle diffère d'un
+    programme en ce qu'elle n'a pas de commencement propre : elle vit
+    d'être appelée et ne s'exécute jamais d'elle-même.</glossa>
 
   <partes>
     <pars nomen="interfacies" necessaria="verum"
@@ -778,6 +932,17 @@
     potest: falsa clamat.
   </definitio>
 
+  <glossa lingua="en">An assertion: an executable proposition - a
+    claim about the state of the program at a point, which carries
+    its own oracle, so that the running program tests it itself. It
+    is documentation that cannot lie for long: when false, it cries
+    out.</glossa>
+  <glossa lingua="fr">Une assertion : une proposition exécutable -
+    une affirmation sur l'état du programme en un point, qui porte
+    son propre oracle, de sorte que le programme en cours
+    d'exécution la vérifie lui-même. C'est une documentation qui ne
+    peut mentir longtemps : fausse, elle crie.</glossa>
+
   <nota>
     Soror annotationis: assertio a programmate ipso probatur,
     annotatio ab instrumentis externis - ambae propositiones de
@@ -843,6 +1008,17 @@
     loquitur, et de quo tempore.
   </definitio>
 
+  <glossa lingua="en">A comment: the part of the source that the
+    language does NOT promise to read - text inside the artifact,
+    addressed to readers other than the compiler. Its species divide
+    by addressee and intention: to whom it speaks, and about what
+    time.</glossa>
+  <glossa lingua="fr">Un commentaire : la partie du source que le
+    langage ne promet PAS de lire - un texte à l'intérieur de
+    l'artefact, adressé à d'autres lecteurs que le compilateur. Ses
+    espèces se divisent selon le destinataire et l'intention : à qui
+    il parle, et de quel temps.</glossa>
+
   <!-- ================= DICTIONARIUM ================= -->
 
   <species nomen="explicativum">
@@ -906,6 +1082,18 @@
     identitatis dividuntur: data an derivata.
   </definitio>
 
+  <glossa lingua="en">An identifier: a name whose essence is
+    REFERENCE and not meaning - a handle on a thing. What it tries to
+    grasp is what Scotus called "haecceity", the very this-ness of a
+    thing. Its species divide by the SOURCE of the identity: given or
+    derived.</glossa>
+  <glossa lingua="fr">Un identifiant : un nom dont l'essence est la
+    RÉFÉRENCE et non la signification - une poignée sur une chose. Ce
+    qu'il tente de saisir, Duns Scot l'appelait l'« heccéité » : le
+    fait, pour une chose, d'être celle-ci et nulle autre. Ses espèces
+    se divisent selon la SOURCE de l'identité : donnée ou
+    dérivée.</glossa>
+
   <!-- ================= DICTIONARIUM ================= -->
 
   <species nomen="identificator_baptismalis">
@@ -947,6 +1135,18 @@
     Initium (principale) non est ornamentum sed differentia -
     quod incipere potest, fatum suum habet.
   </definitio>
+
+  <glossa lingua="en">A program: a collection of elements with a
+    BEGINNING OF ITS OWN - once invoked it runs and carries on by
+    itself, where a library only lives while it is being called. The
+    beginning (main) is not an ornament but the very difference: what
+    can begin has a destiny of its own.</glossa>
+  <glossa lingua="fr">Un programme : une collection d'éléments dotée
+    d'un COMMENCEMENT PROPRE - une fois lancé, il s'exécute et
+    poursuit de lui-même, là où une bibliothèque ne vit qu'appelée.
+    Le commencement (principale) n'est pas un ornement mais la
+    différence même : ce qui peut commencer a son propre
+    destin.</glossa>
 
   <proprietates>
     <proprietas nomen="modus_finiendi" genus="electio"
@@ -1022,6 +1222,21 @@
     linguae differt ut dux a milite: ordinem imperat, opus
     ipsum aliis committit.
   </differentia>
+
+  <glossa lingua="en">A build tool: a program whose purpose is to
+    derive build artifacts from sources - it knows the dependency
+    graph (what comes from what), and from that graph comes its
+    power, since it rebuilds only what changed. It differs from a
+    language implementation as a commander differs from a soldier: it
+    orders the sequence and entrusts the work itself to
+    others.</glossa>
+  <glossa lingua="fr">Un outil de construction : un programme dont la
+    fin est de dériver les artefacts de construction à partir des
+    sources - il connaît le graphe des dépendances (ce qui vient de
+    quoi), et c'est de ce graphe que vient sa force, puisqu'il ne
+    reconstruit que ce qui a changé. Il diffère d'une implémentation
+    de langage comme le chef diffère du soldat : il commande l'ordre
+    et confie le travail lui-même à d'autres.</glossa>
 
   <proprietates>
     <proprietas nomen="incrementale" genus="veritas"

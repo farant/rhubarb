@@ -55,6 +55,22 @@
     per VERSIONES transeunt, identitate manente.
   </definitio>
 
+  <glossa lingua="en">A programming language: a formal system of
+    signs for expressing computations, with a defined grammar and a
+    prescribed semantics (more or less strictly). It is distinct
+    from its IMPLEMENTATIONS - the language is the form, while a
+    compiler or interpreter is the thing that carries the form out.
+    Many implementations, one language; editions pass by VERSIONS
+    while the identity remains.</glossa>
+  <glossa lingua="fr">Un langage de programmation : un système formel
+    de signes pour exprimer des calculs, à la grammaire définie et à
+    la sémantique prescrite (plus ou moins strictement). Il se
+    distingue de ses IMPLÉMENTATIONS - le langage est la forme,
+    tandis qu'un compilateur ou un interpréteur est la chose qui
+    exécute cette forme. Plusieurs implémentations, un seul langage ;
+    les éditions passent par des VERSIONS, l'identité
+    demeurant.</glossa>
+
   <proprietates>
     <proprietas nomen="paradigmata" genus="electio"
       multiplex="verum">
@@ -275,6 +291,18 @@
     fit. Fistulae, redirectio, expansio textualis ante omnia.
   </differentia>
 
+  <glossa lingua="en">A command language: a programming language
+    whose first word calls an EXTERNAL PROCESS rather than a
+    function of its own. It is born for issuing commands
+    (interactive) and becomes scriptable afterwards; pipes,
+    redirection, and textual expansion come before all else.</glossa>
+  <glossa lingua="fr">Un langage de commandes : un langage de
+    programmation dont le premier mot appelle un PROCESSUS EXTERNE
+    plutôt qu'une fonction propre. Il naît pour donner des ordres
+    (de façon interactive) et devient scriptable ensuite ; les
+    tubes, la redirection et l'expansion textuelle passent avant
+    tout le reste.</glossa>
+
   <!-- ================= DICTIONARIUM ================= -->
 
   <individuum nomen="bash">
@@ -311,6 +339,16 @@
     conversus. Plagula fontis in VERSIONE scribitur ("hoc c89
     est"), lingua identitatem trans versiones servat.
   </definitio>
+
+  <glossa lingua="en">A language version: a named and citable edition
+    of a language - the event of release turned into a thing. A
+    source file is written in a VERSION ("this is c89"), while the
+    language keeps its identity across versions.</glossa>
+  <glossa lingua="fr">Une version de langage : une édition nommée et
+    citable d'un langage - l'événement de publication converti en
+    chose. Un fichier source s'écrit dans une VERSION (« ceci est du
+    c89 »), tandis que le langage garde son identité à travers les
+    versions.</glossa>
 
   <proprietates>
     <proprietas nomen="titulus" genus="textus"
@@ -372,6 +410,19 @@
     suis - lingua una, implementationes multae, unaquaeque cum
     indole propria (tutela memoriae addita, celeritas, portus).
   </definitio>
+
+  <glossa lingua="en">A language implementation: the program that
+    carries a language out - a compiler, an interpreter, or a
+    mixture of the two. It is a concrete thing with its own authors,
+    history, and faults: one language, many implementations, each
+    with a character of its own (added memory safety, speed, the
+    ports it has been given).</glossa>
+  <glossa lingua="fr">Une implémentation de langage : le programme
+    qui exécute un langage - compilateur, interpréteur, ou mélange
+    des deux. C'est une chose concrète, avec ses auteurs, son
+    histoire et ses défauts : un seul langage, de multiples
+    implémentations, chacune avec un caractère propre (protection
+    mémoire ajoutée, rapidité, portages).</glossa>
 
   <proprietates>
     <proprietas nomen="modus_exsecutionis" genus="electio">
@@ -474,6 +525,17 @@
     programmatis - programma verba sua fingit, haec ficta
     accipit ut grammaticam.
   </definitio>
+
+  <glossa lingua="en">A keyword: a word the language claims for
+    itself - it serves the grammar and is denied to identifiers. It
+    is the vocabulary of the language itself, not of the program: a
+    program coins its own words, but receives these already coined,
+    as grammar.</glossa>
+  <glossa lingua="fr">Un mot-clé : un mot que le langage se réserve -
+    il sert la grammaire et est refusé aux identificateurs. C'est le
+    vocabulaire du langage lui-même, non du programme : un programme
+    forge ses propres mots, mais reçoit ceux-ci déjà forgés, comme
+    grammaire.</glossa>
 
   <relationes>
     <relatio nomen="verbum_de" ad="lingua_programmandi"/>

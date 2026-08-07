@@ -25,6 +25,16 @@
   </elementum>
 
   <elementum nomen="postulatum">
+    <glossa lingua="en">A requirement: an intention declared BEFORE
+    the work - what must be true for the work to be called complete.
+    It is the source of judgement for the others: a defect is
+    measured against a requirement, a test interrogates a
+    requirement, a capability fulfils one.</glossa>
+    <glossa lingua="fr">Une exigence : une intention déclarée AVANT le
+    travail - ce qui doit être vrai pour que l'œuvre soit dite
+    achevée. Elle est la source du jugement pour les autres : un
+    défaut se mesure à une exigence, un test interroge une exigence,
+    une capacité en satisfait une.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>propositum</optio>
@@ -41,6 +51,16 @@
   </elementum>
 
   <elementum nomen="facultas">
+    <glossa lingua="en">A capability: what the work is able to
+    deliver, as the user reckons it - the unit of VALUE. A
+    requirement is an intention sought; a capability is an intention
+    possessed, and it is what the user names when saying what the
+    program does.</glossa>
+    <glossa lingua="fr">Une capacité : ce que l'œuvre est en mesure de
+    fournir, telle que l'utilisateur l'estime - l'unité de VALEUR.
+    L'exigence est une intention demandée ; la capacité est une
+    intention possédée, et c'est elle que l'utilisateur nomme
+    lorsqu'il raconte ce que le programme fait.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="implet"/>
     <liberum nomen="realizata-a"/>
@@ -57,6 +77,16 @@
   </elementum>
 
   <elementum nomen="probatio">
+    <glossa lingua="en">A test: an executable interrogation of an
+    intention - a stage prepared, an action exercised, a result set
+    against the expectation. It is a vessel of assertions: a test
+    holds the assertions by which it judges (in this house, the
+    credo library).</glossa>
+    <glossa lingua="fr">Un test : une interrogation exécutable de
+    l'intention - une scène préparée, une action exercée, un
+    résultat confronté à l'attente. C'est un vase d'assertions : le
+    test contient les assertions par lesquelles il juge (dans cette
+    maison, la bibliothèque credo).</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
@@ -74,6 +104,18 @@
   </elementum>
 
   <elementum nomen="vitium">
+    <glossa lingua="en">A defect: the discrepancy between intention
+    and behaviour - the program does what was written, not what was
+    wanted, and the defect lives in that gap. Behaviour by itself
+    cannot be defective: a defect demands a relation to an intention
+    (a requirement, an assertion, an expectation), and without one
+    there is only "behaviour".</glossa>
+    <glossa lingua="fr">Un défaut : l'écart entre l'intention et le
+    comportement - le programme fait ce qui a été écrit, non ce qui
+    a été voulu, et le défaut habite cet intervalle. Le comportement
+    seul ne peut être défectueux : le défaut exige une relation à
+    une intention (une exigence, une assertion, une attente), et
+    sans elle il n'y a que du « comportement ».</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>relatum_est</optio>
@@ -92,6 +134,20 @@
   </elementum>
 
   <elementum nomen="debitum-technicum">
+    <glossa lingua="en">Technical debt: an imperfection in the work
+    taken on DELIBERATELY so that something may be delivered sooner,
+    with knowledge of the later price - not a failing but a TRADE,
+    value drawn now against a price to be paid afterwards. The
+    monetary metaphor therefore carries: debt is not a fault but an
+    instrument, and as in money matters there is such a thing as
+    good debt and bad debt.</glossa>
+    <glossa lingua="fr">Une dette technique : une imperfection
+    assumée DÉLIBÉRÉMENT dans l'œuvre afin de livrer quelque chose
+    plus tôt, en connaissance du prix ultérieur - non un manquement
+    mais un ÉCHANGE, une valeur prise maintenant contre un prix à
+    payer plus tard. La métaphore monétaire porte donc : la dette
+    n'est pas une faute mais un instrument, et comme en matière
+    d'argent il existe de bonnes et de mauvaises dettes.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="usura" genus="textus"/>
     <attributum nomen="consulta" genus="veritas"/>
@@ -118,6 +174,25 @@
   </elementum>
 
   <elementum nomen="complicatio">
+    <glossa lingua="en">A complication: a consideration of
+    implementation that CANNOT be foreseen in planning but appears
+    only once the work has been begun, and that may force the plan
+    to be withdrawn. Not a failure of planning but its LIMIT: some
+    things are learned only by doing. The whole use of the term
+    rests on NOT FORESEEN against NOT FORESEEABLE - negligence could
+    have been foreseen and was not, which better planning cures,
+    while a complication could not have been foreseen at all, and
+    more planning would have availed nothing.</glossa>
+    <glossa lingua="fr">Une complication : une considération
+    d'implémentation qui NE PEUT être prévue lors de la
+    planification et n'apparaît qu'une fois le travail commencé, et
+    qui peut contraindre à retirer le plan. Non un défaut de la
+    planification mais sa LIMITE : certaines choses ne s'apprennent
+    qu'en faisant. Toute l'utilité du terme tient à la distinction
+    entre NON PRÉVU et NON PRÉVISIBLE - la négligence pouvait être
+    prévue et ne l'a pas été, ce que corrige un meilleur plan, alors
+    que la complication ne pouvait aucunement être prévue, et plus
+    de planification n'y eût servi de rien.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="praevidenda" genus="veritas"/>
     <attributum nomen="effectus-in-consilium" genus="electio">
@@ -142,6 +217,26 @@
   </elementum>
 
   <elementum nomen="consilium">
+    <glossa lingua="en">A plan: a proposed ordering of works toward an
+    end to be sought ONCE - what will be done in what order, what is
+    committed to whom, what must stand before what. It speaks of the
+    future and is therefore always provisional: a plan that cannot
+    be changed is not a plan but a binding. It differs from a
+    prescription by ITERATION, since a prescription lives by being
+    repeated while a plan dies once completed or withdrawn, and from
+    a requirement in MODE, since a requirement says what must be
+    true and is silent about order whereas a plan professes the
+    order itself.</glossa>
+    <glossa lingua="fr">Un plan : un ordre de travaux proposé en vue
+    d'une fin à poursuivre UNE SEULE FOIS - ce qui sera fait et dans
+    quel ordre, ce qui est confié à qui, ce qui doit précéder quoi.
+    Il parle de l'avenir et demeure donc toujours provisoire : un
+    plan qui ne peut être modifié n'est pas un plan mais un lien. Il
+    diffère de la prescription par l'ITÉRATION, car la prescription
+    vit de se répéter tandis que le plan meurt une fois achevé ou
+    retiré, et de l'exigence par le MODE, car l'exigence dit ce qui
+    doit être vrai et se tait sur l'ordre, alors que le plan
+    professe l'ordre lui-même.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="horizon" genus="electio">
       <optio>operis</optio>
@@ -176,6 +271,27 @@
   </elementum>
 
   <elementum nomen="depravatio">
+    <glossa lingua="en">Corruption of state: the state of a thing
+    become other than it ought to have been, whether or not anyone
+    notices - not a failure in the making (that is a defect), nor a
+    failure on show (that is an incident), but THE THING ITSELF
+    already gone wrong. It HIDES by its very nature: a defect can be
+    read in the code and an incident cries out, but corruption is
+    silent, since bad data sits as neatly as good and nothing in it
+    gives it away. It is therefore the only one of the three that
+    must be SOUGHT: no one finds it who does not look for it, and
+    usually one looks only after an incident has betrayed it.</glossa>
+    <glossa lingua="fr">Une corruption d'état : l'état d'une chose
+    devenu autre qu'il n'aurait dû être, que quelqu'un s'en aperçoive
+    ou non - non un défaut dans la fabrication (c'est le défaut), ni
+    une défaillance visible (c'est l'incident), mais LA CHOSE
+    ELLE-MÊME déjà faussée. Elle SE CACHE par nature : le défaut se
+    lit dans le code et l'incident crie, mais la corruption se tait,
+    car une donnée fausse s'installe aussi bien qu'une donnée juste
+    et rien en elle ne la trahit. Elle est donc la seule des trois
+    qu'il faille CHERCHER : nul ne la trouve s'il ne la cherche, et
+    l'on ne la cherche d'ordinaire qu'après qu'un incident l'a
+    dénoncée.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ambitus" genus="textus"/>
     <attributum nomen="fenestra" genus="textus"/>
@@ -210,6 +326,29 @@
   </elementum>
 
   <elementum nomen="interventio">
+    <glossa lingua="en">An intervention: an act undertaken upon a
+    thing that already exists, so that it may be preserved, healed
+    or bettered - not making (nothing new comes to be) nor damage
+    (nothing is harmed on purpose) but the ALTERATION OF A THING
+    BELONGING TO ANOTHER TIME, which both the past and the future
+    judge. It is done to a thing YOU DID NOT MAKE, and before
+    successors who will know more. Hence the three conditions that
+    divide this kind from every other work - reversibility,
+    minimality, distinguishability - none of which flows from the
+    purpose of the work but from the CONDITION OF THE AGENT, namely
+    that the agent passes and the thing remains.</glossa>
+    <glossa lingua="fr">Une intervention : un acte entrepris sur une
+    chose déjà existante afin qu'elle soit conservée, réparée ou
+    améliorée - non une fabrication (rien de nouveau ne naît) ni un
+    dommage (rien n'est lésé à dessein) mais la MODIFICATION D'UNE
+    CHOSE APPARTENANT À UN AUTRE TEMPS, que jugent à la fois le
+    passé et l'avenir. Elle s'exerce sur une chose QUE L'ON N'A PAS
+    FAITE, et devant des successeurs qui en sauront davantage. De là
+    les trois conditions qui séparent ce genre de tout autre travail
+    - réversibilité, minimalité, distinguibilité - dont aucune ne
+    découle de la fin de l'ouvrage mais de la CONDITION DE L'AGENT,
+    à savoir que l'agent est passager et que la chose
+    demeure.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="reversibilis" genus="veritas"/>
     <attributum nomen="minima" genus="veritas"/>

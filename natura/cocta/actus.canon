@@ -34,6 +34,20 @@
   </elementum>
 
   <elementum nomen="actus-sollemnis">
+    <glossa lingua="en">A solemn act: an act whose EFFECT depends on a
+    prescribed form and on the capacity of the agent, and which is
+    therefore VALID or VOID rather than good or bad - what is done
+    rightly places its effect infallibly, what is done defectively
+    places nothing at all. INSTITUTIONAL facts arise from here:
+    offices, titles, obligations, and possessions do not come about
+    of themselves but are constituted by a solemn act.</glossa>
+    <glossa lingua="fr">Un acte solennel : un acte dont l'EFFET dépend
+    d'une forme prescrite et de la capacité de l'agent, et qui est
+    donc VALIDE ou NUL, non pas bon ou mauvais - ce qui est fait
+    correctement pose son effet infailliblement, ce qui est fait de
+    façon vicieuse ne pose rien. Les faits INSTITUÉS naissent de là :
+    offices, titres, obligations et possessions ne se font pas
+    d'eux-mêmes mais sont constitués par un acte solennel.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-praescripta" genus="textus"/>
     <attributum nomen="intentio-necessaria" genus="veritas"/>
@@ -63,6 +77,15 @@
   </elementum>
 
   <elementum nomen="ritus">
+    <glossa lingua="en">A rite: a solemn act ordered to divine worship
+    - a sensible matter and a form of words, through a minister, for
+    a spiritual effect. What civil authority supplies in a juridical
+    act, divine or ecclesiastical institution supplies here.</glossa>
+    <glossa lingua="fr">Un rite : un acte solennel ordonné au culte
+    divin - une matière sensible et une forme de paroles, par un
+    ministre, en vue d'un effet spirituel. Ce que l'autorité civile
+    fournit dans un acte juridique, l'institution divine ou
+    ecclésiastique le fournit ici.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="materia-ritus" genus="textus"/>
     <attributum nomen="minister" genus="referentia"/>
@@ -96,6 +119,18 @@
   </elementum>
 
   <elementum nomen="sacramentum">
+    <glossa lingua="en">A sacrament: a rite that is an efficacious sign
+    of grace, instituted by Christ - it places its effect EX OPERE
+    OPERATO, from the act itself rightly performed, and not from the
+    worthiness of the minister or of the recipient. An unworthy
+    minister therefore acts validly, which separates the form from
+    the man ENTIRELY.</glossa>
+    <glossa lingua="fr">Un sacrement : un rite qui est signe efficace
+    de la grâce, institué par le Christ - il pose son effet EX OPERE
+    OPERATO, par l'acte lui-même correctement posé, et non par la
+    dignité du ministre ou de celui qui le reçoit. Un ministre
+    indigne agit donc validement, ce qui sépare TOTALEMENT la forme
+    de l'homme.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="materia-ritus" genus="textus"/>
     <attributum nomen="minister" genus="referentia"/>
@@ -129,6 +164,17 @@
   </elementum>
 
   <elementum nomen="sacramentale">
+    <glossa lingua="en">A sacramental: a rite instituted by the Church
+    and not by Christ - it places its effect EX OPERE OPERANTIS,
+    from the disposition of the one acting and from the prayers of
+    the Church, and not from the work itself. It therefore admits
+    degrees of efficacy where a sacrament has a binary
+    threshold.</glossa>
+    <glossa lingua="fr">Un sacramental : un rite institué par l'Église
+    et non par le Christ - il pose son effet EX OPERE OPERANTIS, par
+    la disposition de celui qui agit et par les prières de l'Église,
+    et non par l'œuvre elle-même. Il connaît donc des degrés
+    d'efficacité là où le sacrement n'a qu'un seuil binaire.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="materia-ritus" genus="textus"/>
     <attributum nomen="minister" genus="referentia"/>
@@ -162,6 +208,18 @@
   </elementum>
 
   <elementum nomen="actus-iuridicus">
+    <glossa lingua="en">A juridical act: a solemn act whose force civil
+    authority supplies - the law prescribes the form, and the law
+    acknowledges the effect. Its form therefore VARIES across
+    jurisdictions where a rite stays the same the world over, and
+    that is the difference which breaks international
+    schemas.</glossa>
+    <glossa lingua="fr">Un acte juridique : un acte solennel dont
+    l'autorité civile fournit la force - la loi prescrit la forme,
+    et la loi reconnaît l'effet. Sa forme VARIE donc selon les
+    juridictions, là où un rite demeure le même par tout le monde,
+    et c'est la différence qui brise les schémas
+    internationaux.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="in-iurisdictione" genus="referentia"/>
     <attributum nomen="forma-praescripta" genus="textus"/>
@@ -192,6 +250,20 @@
   </elementum>
 
   <elementum nomen="quorum">
+    <glossa lingua="en">A quorum: the number (or the fraction) of
+    members whose presence or consent is required for a body to act
+    validly - below it, the acts are not bad but NULL, since it was
+    not the body that acted but a few of its members. It is a
+    condition of VALIDITY, not of prudence: a council of a few may
+    be wise and still void, a quorate one foolish and still
+    valid.</glossa>
+    <glossa lingua="fr">Un quorum : le nombre (ou la part) de membres
+    dont la présence ou le consentement est requis pour qu'une
+    assemblée agisse validement - en dessous, les actes ne sont pas
+    mauvais mais NULS, car ce n'est pas l'assemblée qui a agi mais
+    quelques-uns. C'est une condition de VALIDITÉ et non de
+    prudence : un conseil restreint peut être sage et pourtant nul,
+    un conseil au quorum insensé et pourtant valide.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-computandi" genus="electio">
       <optio>ex_praesentibus</optio>

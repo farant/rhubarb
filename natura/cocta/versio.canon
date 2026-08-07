@@ -8,6 +8,27 @@
   </elementum>
 
   <elementum nomen="versio">
+    <glossa lingua="en">A version: a named and citable edition of a
+    thing, which marks that thing itself across enduring change -
+    there is one thing and many versions, and a version is not
+    another thing but the same thing as it stood at that time. What
+    makes the second version the same thing as the first is not the
+    content, which has changed (that is precisely why there is a new
+    version), but the continuity of the naming authority and of the
+    purpose. Where either of these fails, what you have is not a new
+    version but a different thing - hence forks, which are not
+    versions but births.</glossa>
+    <glossa lingua="fr">Une version : une édition nommée et citable
+    d'une chose, qui marque cette chose même à travers un changement
+    qui dure - il y a une seule chose et plusieurs versions, et une
+    version n'est pas une autre chose mais la même chose telle
+    qu'elle était alors. Ce qui fait que la seconde version est la
+    même chose que la première n'est pas le contenu, qui a changé
+    (c'est bien pour cela qu'il y a une version nouvelle), mais la
+    continuité de l'autorité qui nomme et celle de la fin
+    poursuivie. Là où l'une des deux manque, ce n'est plus une
+    version nouvelle mais une autre chose - d'où les fourches, qui
+    ne sont pas des versions mais des naissances.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="titulus" genus="textus"/>
     <attributum nomen="edita" genus="dies"/>

@@ -24,6 +24,22 @@
   </elementum>
 
   <elementum nomen="universitas">
+    <glossa lingua="en">A corporate body: a gathering ordered to a
+    common end that acts AS ONE and ENDURES though its members
+    change - this endurance is what marks it off from a mere heap,
+    for it is not the sum of its members and all of them may change
+    while it stays the same. What makes it one is not its matter
+    but its ORDER TOWARD AN END and the continuation of that order;
+    so it is dissolved not when its members perish but when the
+    order itself ceases.</glossa>
+    <glossa lingua="fr">Un corps constitué : un ensemble ordonné à une
+    fin commune qui agit COMME UN SEUL et QUI DURE alors que ses
+    membres changent - cette durée le distingue d'un simple tas,
+    car il n'est pas la somme de ses membres : tous peuvent changer
+    et il demeure le même. Ce qui le fait un n'est pas sa matière
+    mais son ORDRE À UNE FIN et la continuation de cet ordre ; il
+    se dissout donc non quand ses membres périssent mais quand
+    l'ordre lui-même cesse.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="condita" genus="dies"/>
     <attributum nomen="dissoluta" genus="dies"/>
@@ -49,6 +65,17 @@
   </elementum>
 
   <elementum nomen="organizatio">
+    <glossa lingua="en">An organization: a corporate body OF PERSONS.
+    Because its members are rational, everything else follows -
+    ends can be chosen and changed, offices established, legal
+    capacity recognized, works published. It can be an author; it
+    is not a person, but it is of persons.</glossa>
+    <glossa lingua="fr">Une organisation : un corps constitué DE
+    PERSONNES. Parce que ses membres sont raisonnables, tout le
+    reste s'ensuit - les fins peuvent être choisies et changées,
+    des offices institués, la capacité juridique reconnue, des
+    œuvres publiées. Elle peut être auteur ; elle n'est pas une
+    personne, mais elle est de personnes.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="pars-de" genus="referentia"/>
     <attributum nomen="membrum" genus="referentia"/>
@@ -81,6 +108,22 @@
   </elementum>
 
   <elementum nomen="colonia">
+    <glossa lingua="en">A colony: a corporate body OF LIVING THINGS
+    whose members do not choose. Its order toward an end stands by
+    nature and not by deliberation, so no offices can be
+    established there and no ends changed. Its members are
+    fungible and are replaced quickly; and alone among corporate
+    bodies it MULTIPLIES BY DIVIDING - what is an accident for an
+    organization (a decree, a sale) is the colony's way of
+    generating.</glossa>
+    <glossa lingua="fr">Une colonie : un corps constitué DE VIVANTS
+    dont les membres ne choisissent pas. Son ordre à une fin tient
+    de la nature et non de la délibération : aucun office ne peut y
+    être institué ni aucune fin changée. Ses membres sont
+    interchangeables et remplacés rapidement ; et, seule parmi les
+    corps constitués, elle SE MULTIPLIE PAR DIVISION - ce qui est
+    un accident pour une organisation (un décret, une vente) est
+    pour la colonie sa manière d'engendrer.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="membra-fungibilia" genus="veritas"/>
     <attributum nomen="species-membrorum" genus="referentia"/>
@@ -108,6 +151,18 @@
   </elementum>
 
   <elementum nomen="persona-iuridica">
+    <glossa lingua="en">A juridical person: an organization that is a
+    subject of rights and obligations in law - it owns, contracts,
+    sues and is sued in ITS OWN name, not in the name of its
+    members. Its goods are therefore not the goods of the
+    associates, nor its debts theirs: a separation on which modern
+    business rests entirely.</glossa>
+    <glossa lingua="fr">Une personne juridique : une organisation qui
+    est sujet de droits et d'obligations en droit - elle possède,
+    contracte, agit et est assignée en SON PROPRE nom, non au nom
+    de ses membres. Ses biens ne sont donc pas ceux des associés,
+    ni ses dettes les leurs : une séparation sur laquelle repose
+    entièrement le commerce moderne.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="perpetua" genus="veritas"/>
     <attributum nomen="constituta-per" genus="referentia"/>
@@ -142,6 +197,17 @@
   </elementum>
 
   <elementum nomen="officium">
+    <glossa lingua="en">An office: a charge stably established, with
+    burdens, powers and conditions OF ITS OWN, which does NOT
+    inhere in the one who holds it - the same office remains while
+    one holder succeeds another, and it REMAINS WITH NO HOLDER AT
+    ALL. Vacancy is a true state, not a missing datum.</glossa>
+    <glossa lingua="fr">Un office : une charge établie de manière
+    stable, avec ses propres devoirs, pouvoirs et conditions, et
+    qui n'adhère PAS à son titulaire - le même office demeure
+    tandis que les titulaires se succèdent, et il DEMEURE MÊME SANS
+    TITULAIRE. La vacance est un état véritable, non une donnée
+    absente.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ad-tempus" genus="veritas"/>
     <attributum nomen="collegiale" genus="veritas"/>
@@ -171,6 +237,15 @@
   </elementum>
 
   <elementum nomen="corpus-normans">
+    <glossa lingua="en">A standards body: an organization whose proper
+    end is to publish and keep standards - authoritative
+    descriptions to which others conform. Its authority comes from
+    consent, not from command.</glossa>
+    <glossa lingua="fr">Un organisme de normalisation : une
+    organisation dont la fin propre est d'éditer et de garder des
+    normes - des descriptions faisant autorité auxquelles les
+    autres se conforment. Son autorité vient du consentement, non
+    du commandement.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="pars-de" genus="referentia"/>
     <attributum nomen="membrum" genus="referentia"/>
@@ -207,6 +282,12 @@
   </elementum>
 
   <elementum nomen="societas">
+    <glossa lingua="en">A company: an organization whose proper end is
+    gain through the works it sells, and which has owners to whom
+    it answers.</glossa>
+    <glossa lingua="fr">Une société : une organisation dont la fin
+    propre est le gain par les ouvrages qu'elle vend, et qui a des
+    propriétaires devant lesquels elle répond.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="pars-de" genus="referentia"/>
     <attributum nomen="membrum" genus="referentia"/>
@@ -239,6 +320,17 @@
   </elementum>
 
   <elementum nomen="magistratus">
+    <glossa lingua="en">A public authority: an organization whose
+    authority comes from COMMAND over a place, not from consent (as
+    a standards body) nor from gain (as a company). It makes laws
+    that bind everyone within its jurisdiction, whether they
+    consent or not; coercive force is its difference.</glossa>
+    <glossa lingua="fr">Une autorité publique : une organisation dont
+    l'autorité vient du COMMANDEMENT sur un territoire, non du
+    consentement (comme un organisme de normalisation) ni du gain
+    (comme une société). Elle porte des lois qui lient tous ceux
+    qui sont dans sa juridiction, qu'ils y consentent ou non ; la
+    force coercitive est sa différence.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="pars-de" genus="referentia"/>
     <attributum nomen="membrum" genus="referentia"/>

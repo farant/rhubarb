@@ -14,6 +14,14 @@
   </elementum>
 
   <elementum nomen="ambitus">
+    <glossa lingua="en">An environment: an ordered place where
+    programs run - machines, configurations, data, names. Not a
+    patch of hardware but the whole context a program finds
+    around itself.</glossa>
+    <glossa lingua="fr">Un environnement : un lieu ordonné où les
+    programmes s'exécutent - machines, configurations, données,
+    noms. Non pas un morceau de matériel mais le contexte entier
+    que le programme trouve autour de lui.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="realitas-consequentiae" genus="electio">
       <optio>ficta</optio>
@@ -32,6 +40,18 @@
   </elementum>
 
   <elementum nomen="pensum">
+    <glossa lingua="en">A task: a definite piece of work entrusted
+    to someone - what is to be done, by whom, in what state. Not
+    a requirement (what must be true), nor a capability (what the
+    work delivers), nor a defect (a discrepancy), but a
+    COMMISSION TO ACT - the fourth term the engineering square
+    was missing.</glossa>
+    <glossa lingua="fr">Une tâche : un travail déterminé confié à
+    quelqu'un - ce qui est à faire, par qui, en quel état. Ni une
+    exigence (ce qui doit être vrai), ni une fonctionnalité (ce
+    que le travail fournit), ni un défaut (un écart), mais une
+    COMMISSION D'AGIR - le quatrième terme qui manquait au carré
+    de la fabrication.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="aestimatio-laboris" genus="textus"/>
     <attributum nomen="terminus" genus="dies"/>
@@ -62,6 +82,17 @@
   </elementum>
 
   <elementum nomen="incidens">
+    <glossa lingua="en">An incident: an interruption or degradation
+    of service in a real environment. Not a kind of defect but a
+    defect EXPOSED - the same fault is always a defect, and
+    becomes an incident when it reaches real people. It has a
+    beginning, an end, a severity, a response.</glossa>
+    <glossa lingua="fr">Un incident : une interruption ou une
+    dégradation du service dans un environnement réel. Non pas
+    une espèce de défaut mais un défaut EXPOSÉ - la même faille
+    est toujours un défaut, et elle devient un incident lorsqu'elle
+    atteint des personnes réelles. Il a un début, une fin, une
+    gravité, une réponse.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="gravitas" genus="electio">
       <optio>levis</optio>
@@ -91,6 +122,19 @@
   </elementum>
 
   <elementum nomen="processus">
+    <glossa lingua="en">A process: a program in execution - an
+    instance of a form, carrying its own state, and worth
+    addressing for as long as it lives. The same program can run
+    a hundred times at once, and those are a hundred processes,
+    not one. Here the instance is TEMPORAL: a process begins,
+    runs, ceases - its ending lies in its nature.</glossa>
+    <glossa lingua="fr">Un processus : un programme en cours
+    d'exécution - une instance d'une forme, portant son propre
+    état, et digne d'être adressée tant qu'elle vit. Le même
+    programme peut s'exécuter cent fois à la fois, et ce sont
+    cent processus, non pas un seul. Ici l'instance est
+    TEMPORELLE : un processus commence, s'exécute, cesse - sa fin
+    est dans sa nature.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="identificator-currens" genus="numerus"/>
     <attributum nomen="valor-exitus" genus="numerus"/>

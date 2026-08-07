@@ -21,6 +21,14 @@
   </elementum>
 
   <elementum nomen="cliens">
+    <glossa lingua="en">A client: a program that consumes someone
+    else's service, acting on behalf of a user - the requesting half
+    of a conversation. A client without a server is nothing; its
+    essence lies in the relation.</glossa>
+    <glossa lingua="fr">Un client : un programme qui consomme le
+    service d'autrui en agissant pour un utilisateur - la moitié
+    demandeuse du dialogue. Un client sans serveur n'est rien ; son
+    essence tient dans la relation.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
@@ -34,6 +42,14 @@
   </elementum>
 
   <elementum nomen="cliens-telae">
+    <glossa lingua="en">A web client: a client that lives in the
+    browser. It needs no installation - the URL is itself the
+    distribution. Everywhere at once, and bounded by the powers the
+    system grants it.</glossa>
+    <glossa lingua="fr">Un client web : un client qui vit dans le
+    navigateur. Il ne demande aucune installation - l'adresse URL
+    est elle-même la distribution. Partout aussitôt, et borné par
+    les pouvoirs que le système lui accorde.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
@@ -47,6 +63,14 @@
   </elementum>
 
   <elementum nomen="cliens-nativus">
+    <glossa lingua="en">A native client: a client that lives on the
+    system itself. It requires installation and is repaid with
+    fullness - files, processes, windows, the whole system lies open
+    to it.</glossa>
+    <glossa lingua="fr">Un client natif : un client qui vit sur le
+    système même. Il exige une installation et s'en trouve
+    récompensé par la plénitude - fichiers, processus, fenêtres,
+    tout le système lui est ouvert.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
@@ -60,6 +84,16 @@
   </elementum>
 
   <elementum nomen="cliens-terminalis">
+    <glossa lingua="en">A terminal client: a client that lives in the
+    terminal and paints with text alone. Wherever the terminal
+    reaches, it reaches - across SSH onto remote machines, without
+    modification. In this house tessera clothes it, and saltuarius
+    is the example.</glossa>
+    <glossa lingua="fr">Un client en terminal : un client qui vit
+    dans le terminal et ne peint qu'avec du texte. Là où parvient le
+    terminal, il parvient - à travers SSH jusqu'aux machines
+    distantes, sans modification. Dans cette maison, tessera
+    l'habille, et saltuarius en est l'exemple.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
@@ -73,6 +107,15 @@
   </elementum>
 
   <elementum nomen="cliens-api">
+    <glossa lingua="en">An API client: a client with no human face,
+    machine serving machine, which consumes a programmatic
+    interface. Its boundary with a library is thin - an API client
+    is often just a library that speaks over the network.</glossa>
+    <glossa lingua="fr">Un client d'API : un client sans visage
+    humain, machine au service de la machine, qui consomme une
+    interface programmatique. Sa frontière avec une bibliothèque est
+    mince - un client d'API n'est souvent qu'une bibliothèque qui
+    parle par le réseau.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
@@ -86,6 +129,17 @@
   </elementum>
 
   <elementum nomen="cliens-mcp">
+    <glossa lingua="en">An MCP client: a client whose user is an
+    artificial agent. It consumes services through a protocol of
+    instruments, acting for a person by way of an agent. Genuinely
+    new to our age - the axis of who is using has gained a third
+    member. In this house: cliens_tabularii and legati.</glossa>
+    <glossa lingua="fr">Un client MCP : un client dont l'utilisateur
+    est un agent artificiel. Il consomme des services par un
+    protocole d'instruments, agissant pour une personne par
+    l'entremise d'un agent. Espèce vraiment nouvelle de notre
+    époque - l'axe du qui s'en sert a reçu un troisième membre. Dans
+    la maison : cliens_tabularii et legati.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
@@ -99,6 +153,16 @@
   </elementum>
 
   <elementum nomen="cliens-cli">
+    <glossa lingua="en">A command-line client: a client that is a
+    tool of one command - it is called, it acts, it exits.
+    Composition is its essence: it joins with others through pipes,
+    its output becoming another's input (the Unix philosophy). In
+    this house: silex and aedilis.</glossa>
+    <glossa lingua="fr">Un client en ligne de commande : un client
+    qui est l'outil d'une seule commande - on l'appelle, il agit, il
+    sort. La composition en est l'essence : il se joint aux autres
+    par des tubes, sa sortie devenant l'entrée d'un autre
+    (philosophie Unix). Dans la maison : silex et aedilis.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
@@ -112,6 +176,16 @@
   </elementum>
 
   <elementum nomen="cliens-mobilis">
+    <glossa lingua="en">A mobile client: a client that lives on the
+    telephone - touch instead of a mouse, interruptions instead of a
+    session, the battery as its limit. Its constraints are what set
+    it apart. In this house, vitrea servus carries applications to
+    the phone.</glossa>
+    <glossa lingua="fr">Un client mobile : un client qui vit sur le
+    téléphone - le toucher au lieu de la souris, les interruptions
+    au lieu d'une session, la batterie pour limite. Ce sont ses
+    contraintes qui le distinguent. Dans la maison, vitrea servus
+    porte les applications jusqu'au téléphone.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
@@ -125,6 +199,21 @@
   </elementum>
 
   <elementum nomen="servus">
+    <glossa lingua="en">A server: a program that offers a service to
+    others - the answering half of a conversation. It does not
+    begin but waits, and it acts for whoever asks, where a client
+    acts for one user and opens the conversation. The dividing line
+    is neither size nor place, since a server may run on the same
+    machine, but who calls first: the caller is the client, the one
+    called is the server.</glossa>
+    <glossa lingua="fr">Un serveur : un programme qui offre un
+    service à autrui - la moitié répondante du dialogue. Il ne
+    commence pas mais attend, et il agit pour quiconque demande, là
+    où le client agit pour un seul utilisateur et ouvre le dialogue.
+    La ligne de partage n'est ni la taille ni le lieu, puisqu'un
+    serveur peut tourner sur la même machine, mais l'initiative :
+    celui qui appelle est le client, celui qu'on appelle est le
+    serveur.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="status-inter-petitiones" genus="electio">
       <optio>sine_statu</optio>

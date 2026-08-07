@@ -37,6 +37,15 @@
     dicit - et in eo tota divisio subsequens stat.
   </definitio>
 
+  <glossa lingua="en">A procedure: an order of operations directed
+    to an end - declared inputs, ordered steps, an expected
+    outcome. It does not say who is to carry them out, and on that
+    silence the whole division below it rests.</glossa>
+  <glossa lingua="fr">Une procédure : un ordre d'opérations en vue
+    d'une fin - entrées déclarées, étapes ordonnées, résultat
+    attendu. Elle ne dit pas qui les exécute, et c'est sur ce
+    silence que repose toute la division qui suit.</glossa>
+
   <relationes>
     <relatio nomen="gradus_eius" ad="gradus_praescripti"
       multiplex="verum"/>
@@ -58,6 +67,22 @@
     Contra: iterari potest infinities eodem prorsus effectu,
     quod homo non praestat.
   </differentia>
+
+  <glossa lingua="en">An automated procedure: one carried out by a
+    MACHINE, and therefore with NO tolerance for ambiguity. Where a
+    recipe may say "until it turns golden" because a person judges,
+    this must settle everything in numbers and conditions; what is
+    trust in a recipe would here be a defect. In exchange it can be
+    repeated endlessly with exactly the same effect, which no
+    person can promise.</glossa>
+  <glossa lingua="fr">Une procédure automatisée : exécutée par une
+    MACHINE, et donc SANS aucune tolérance à l'ambiguïté. Là où une
+    recette peut dire « jusqu'à ce que ce soit doré » parce qu'un
+    homme juge, celle-ci doit tout fixer en nombres et en
+    conditions ; ce qui est confiance dans la recette serait ici un
+    défaut. En revanche elle peut se répéter à l'infini avec
+    exactement le même effet, ce qu'aucun homme ne
+    garantit.</glossa>
 
   <proprietates>
     <proprietas nomen="idempotens" genus="veritas"
@@ -129,6 +154,17 @@
     exsecutor alius.
   </definitio>
 
+  <glossa lingua="en">A recipe, or prescribed procedure: an order
+    of operations directed to an end and to be carried out BY A
+    PERSON - declared inputs (materials, tools), ordered steps, an
+    expected outcome. It is the human cousin of a function: the
+    same shape, a different executor.</glossa>
+  <glossa lingua="fr">Une recette, ou procédure prescrite : un ordre
+    d'opérations en vue d'une fin, à exécuter PAR UN HOMME -
+    entrées déclarées (matières, instruments), étapes ordonnées,
+    résultat attendu. C'est le parent humain de la fonction : même
+    forme, exécutant différent.</glossa>
+
   <proprietates>
     <proprietas nomen="peritia_postulata" genus="electio"
       nota="quantum iudicii exsecutor ferre debet - praescriptum
@@ -197,6 +233,14 @@
     fortasse cum mora, fortasse cum conditione finiendi.
   </definitio>
 
+  <glossa lingua="en">A step of a recipe: one operation within the
+    order - an action, perhaps with a quantity, perhaps with a
+    duration, perhaps with a condition for stopping.</glossa>
+  <glossa lingua="fr">Une étape de la recette : une seule opération
+    dans l'ordre - une action, éventuellement avec une quantité,
+    éventuellement avec une durée, éventuellement avec une
+    condition d'arrêt.</glossa>
+
   <proprietates>
     <proprietas nomen="ordo" genus="numerus"/>
     <proprietas nomen="mora" genus="quantitas" modulus="mensura"/>
@@ -236,6 +280,15 @@
     aviae, ut anno 1998 emendatum").
   </definitio>
 
+  <glossa lingua="en">A version of a recipe: a named and citable
+    issue of it - a recipe passes through revisions while its
+    identity remains ("grandmother's recipe, as revised in
+    1998").</glossa>
+  <glossa lingua="fr">Une version de la recette : une édition
+    nommée et citable - une recette traverse des révisions sans
+    que son identité change (« la recette de grand-mère, telle que
+    révisée en 1998 »).</glossa>
+
   <relationes>
     <relatio nomen="versio_de" ad="praescriptum"/>
     <relatio nomen="sequitur" ad="versio_praescripti"/>
@@ -258,6 +311,18 @@
     sub onere, festinatione, fatigatione. Ideo defectum quem
     prohibet non ignorantia est sed OMISSIO.
   </differentia>
+
+  <glossa lingua="en">A checklist: a procedure that CONFIRMS what
+    has been done; it does not teach how to do it. The one who runs
+    it already holds the art - the list exists because KNOWING IS
+    NOT DOING under burden, haste and fatigue. The failure it
+    prevents is therefore not ignorance but OMISSION.</glossa>
+  <glossa lingua="fr">Une liste de vérification : une procédure qui
+    CONFIRME ce qui a été fait ; elle n'enseigne pas comment le
+    faire. Celui qui l'exécute possède déjà l'art - la liste existe
+    parce que SAVOIR N'EST PAS FAIRE sous la charge, la hâte et la
+    fatigue. Le défaut qu'elle empêche n'est donc pas l'ignorance
+    mais l'OMISSION.</glossa>
 
   <proprietates>
     <proprietas nomen="modus" genus="electio"

@@ -52,6 +52,20 @@
     est, "978-0-13-110362-7" identificator.
   </definitio>
 
+  <glossa lingua="en">An identification scheme: an established way
+    of assigning names to things, such that one name designates one
+    thing within its scope - a defined structure, an administering
+    authority, rules for assignment. It is not the identifier
+    itself but the FORM of identifiers: ISBN is a scheme,
+    "978-0-13-110362-7" is an identifier.</glossa>
+  <glossa lingua="fr">Un schéma d'identification : une manière
+    instituée d'assigner des noms aux choses, de sorte qu'un seul
+    nom désigne une seule chose dans son domaine - une structure
+    définie, une autorité administrante, des règles d'assignation.
+    Ce n'est pas l'identifiant lui-même mais la FORME des
+    identifiants : l'ISBN est un schéma, « 978-0-13-110362-7 » est
+    un identifiant.</glossa>
+
   <proprietates>
     <proprietas nomen="quid_designat" genus="textus"
       nota="PROPRIETAS GRAVISSIMA, et saepissime neglecta: ISBN

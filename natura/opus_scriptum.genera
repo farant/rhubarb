@@ -36,6 +36,16 @@
     legatur, sive charta sive vitro. Res quam auctor CONCEPIT.
   </definitio>
 
+  <glossa lingua="en">A written work: an intellectual creation made
+    of words, distinct from its expressions - Moby-Dick is one work
+    whether it is read in English or in Latin, on paper or on a
+    screen. It is the thing the author CONCEIVED.</glossa>
+  <glossa lingua="fr">Une œuvre écrite : une création
+    intellectuelle faite de mots, distincte de ses expressions -
+    Moby-Dick est une seule œuvre, qu'on la lise en anglais ou en
+    latin, sur papier ou sur écran. C'est la chose que l'auteur a
+    CONÇUE.</glossa>
+
   <proprietates>
     <proprietas nomen="titulus_originalis" genus="textus"/>
     <proprietas nomen="lingua_originalis" genus="textus"/>
@@ -183,6 +193,15 @@
     recensio critica item.
   </definitio>
 
+  <glossa lingua="en">An expression: the realization of a work in
+    determinate signs - this text and no other. A translation is a
+    NEW expression (other words, the same work), and a critical
+    recension is one likewise.</glossa>
+  <glossa lingua="fr">Une expression : la réalisation d'une œuvre en
+    signes déterminés - ce texte-ci et non un autre. Une traduction
+    est une expression NOUVELLE (d'autres mots, la même œuvre) ;
+    une recension critique de même.</glossa>
+
   <proprietates>
     <proprietas nomen="lingua" genus="textus"/>
     <proprietas nomen="genus_expressionis" genus="electio">
@@ -234,6 +253,13 @@
     Corpus editum expressionis: quod praelum vere protulit -
     charta, forma, paginae, index ISBN. Quod in taberna emis.
   </definitio>
+
+  <glossa lingua="en">An edition: the published body of an
+    expression - what the press actually brought forth: the paper,
+    the format, the pages, the ISBN. What you buy in a shop.</glossa>
+  <glossa lingua="fr">Une édition : le corps publié d'une expression
+    - ce que la presse a réellement produit : le papier, le format,
+    les pages, l'ISBN. Ce que vous achetez en librairie.</glossa>
 
   <proprietates>
     <proprietas nomen="index_isbn" genus="isbn"
@@ -322,6 +348,17 @@
     voluminibus possessorum, genus hoc citantia.
   </definitio>
 
+  <glossa lingua="en">A copy: one bodily exemplar of an edition -
+    the one you hold in your hand, with its stains, its marginal
+    notes and its own history of ownership. Its individuals do not
+    live in OUR library but in the owners' own volumes, which cite
+    this kind.</glossa>
+  <glossa lingua="fr">Un exemplaire : un seul exemplaire corporel
+    d'une édition - celui que vous tenez en main, avec ses taches,
+    ses notes marginales et son histoire de possession propre. Ses
+    individus ne vivent pas dans NOTRE bibliothèque mais dans les
+    volumes de leurs possesseurs, qui citent ce genre.</glossa>
+
   <proprietates>
     <proprietas nomen="conditio" genus="electio">
       <optio>integer</optio>
@@ -363,6 +400,18 @@
     Cadentia, non finis.
   </differentia>
 
+  <glossa lingua="en">A periodical: a written work that does not
+    seek COMPLETION - it continues in issues for as long as those
+    who direct it wish. The parent's composition machine is nearly
+    foreign to it (never "finished", often "abandoned"): what rules
+    it is a cadence, not an end.</glossa>
+  <glossa lingua="fr">Un périodique : une œuvre écrite qui ne vise
+    pas l'ACHÈVEMENT - elle se poursuit en fascicules aussi
+    longtemps que ceux qui la dirigent le veulent. La machine à
+    états de composition du genre parent lui convient à peine
+    (jamais « achevée », souvent « abandonnée ») : ce qui la règle
+    est une cadence, non une fin.</glossa>
+
   <proprietates>
     <proprietas nomen="cadentia" genus="electio">
       <optio>cotidiana</optio>
@@ -395,6 +444,17 @@
     Versioni similis sed CADENTIA praevisa, non eventu natus -
     fasciculus futurus exspectatur, versio futura non.
   </definitio>
+
+  <glossa lingua="en">An issue: a part of a periodical marked by its
+    time - one number, published on its own day. It resembles a
+    version, but it is foreseen by a CADENCE rather than born of an
+    event: the next issue is expected, the next version is
+    not.</glossa>
+  <glossa lingua="fr">Un fascicule : une partie d'un périodique
+    marquée par son temps - un numéro, publié à sa date. Il
+    ressemble à une version, mais il est prévu par une CADENCE au
+    lieu de naître d'un événement : le prochain fascicule est
+    attendu, la prochaine version ne l'est pas.</glossa>
 
   <proprietates>
     <proprietas nomen="numerus" genus="textus"

@@ -29,6 +29,18 @@
     nominata est, contentum status eius temporalis.
   </definitio>
 
+  <glossa lingua="en">A computer file: a NAMED sequence of bytes in
+    a file system - an identity that endures while its content
+    changes, as a corporate body endures through a change of
+    members. It is distinguished from its own content: the file is
+    the named thing, the content its passing state.</glossa>
+  <glossa lingua="fr">Un fichier informatique : une suite d'octets
+    NOMMÉE dans un système de fichiers - une identité qui perdure
+    tandis que son contenu change, comme une communauté à travers le
+    renouvellement de ses membres. Il se distingue de son propre
+    contenu : le fichier est la chose nommée, le contenu son état
+    passager.</glossa>
+
   <proprietates>
     <proprietas nomen="forma_contenti" genus="electio">
       <optio>textualis</optio>
@@ -95,6 +107,15 @@
     lectus: forma exsecutionis futurae, non exsecutio ipsa.
   </differentia>
 
+  <glossa lingua="en">A source file: a named file whose content is
+    text written by people and read both by people AND by
+    translators - the form of an execution still to come, not the
+    execution itself.</glossa>
+  <glossa lingua="fr">Un fichier source : un fichier nommé dont le
+    contenu est un texte écrit par des personnes et lu à la fois par
+    des personnes ET par des compilateurs - la forme d'une exécution
+    à venir, non l'exécution elle-même.</glossa>
+
   <valor nomen="forma_contenti">textualis</valor>
   <!-- mechanismus novus: genus proprietatem hereditatam FIGIT -
        species infra omnes textuales sunt -->
@@ -157,6 +178,15 @@
     currere.
   </differentia>
 
+  <glossa lingua="en">An executable script: a named file to be run
+    directly, with no prior compilation - its shebang line (#!)
+    names its own interpreter, making it a file that knows how to
+    run.</glossa>
+  <glossa lingua="fr">Un script exécutable : un fichier nommé
+    destiné à être exécuté directement, sans compilation préalable -
+    sa ligne shebang (#!) nomme elle-même son interprète, ce qui en
+    fait un fichier qui sait comment s'exécuter.</glossa>
+
   <valor nomen="forma_contenti">textualis</valor>
 
   <species nomen="scriptum_conchae" etiam="plagula_fontis">
@@ -184,6 +214,15 @@
     structuram ferunt, textus sensum - pro lectore humano
     per machinam formatus.
   </differentia>
+
+  <glossa lingua="en">A markup file: a named file whose content is
+    prose with structure interleaved - the marks carry the
+    structure, the text carries the sense, laid out by machine for a
+    human reader.</glossa>
+  <glossa lingua="fr">Un fichier de balisage : un fichier nommé dont
+    le contenu est de la prose entrelacée de structure - les signes
+    portent la structure, le texte porte le sens, mis en forme par
+    la machine pour un lecteur humain.</glossa>
 
   <valor nomen="forma_contenti">textualis</valor>
 
@@ -218,6 +257,14 @@
     declarativa, non exsecutiva - dicit quid, numquam quomodo.
   </differentia>
 
+  <glossa lingua="en">A configuration file: a named file read by a
+    program at startup so that it may shape its own behaviour -
+    declarative, not executable; it says what, never how.</glossa>
+  <glossa lingua="fr">Un fichier de configuration : un fichier nommé
+    qu'un programme lit à son démarrage afin de former son propre
+    comportement - déclaratif, non exécutif ; il dit quoi, jamais
+    comment.</glossa>
+
   <valor nomen="forma_contenti">textualis</valor>
 
   <species nomen="plagula_toml">
@@ -242,6 +289,14 @@
     Contentum pro programmatibus primo: structura stricta,
     lector humanus hospes non dominus.
   </differentia>
+
+  <glossa lingua="en">A data file: a named file whose content is
+    meant for programs first - the structure is strict, and the
+    human reader is a guest there rather than the master.</glossa>
+  <glossa lingua="fr">Un fichier de données : un fichier nommé dont
+    le contenu s'adresse d'abord aux programmes - la structure y est
+    stricte, et le lecteur humain y est un hôte plutôt que le
+    maître.</glossa>
 
   <species nomen="plagula_json">
     <valor nomen="forma_contenti">textualis</valor>
@@ -268,6 +323,14 @@
     transactiones - omnia intra sequentiam octetorum unam,
     sine servo.
   </differentia>
+
+  <glossa lingua="en">An SQLite file: a data file holding a whole
+    database in a single file - tables, indexes and transactions,
+    all within one sequence of bytes, with no server.</glossa>
+  <glossa lingua="fr">Un fichier SQLite : un fichier de données
+    contenant une base de données entière dans un seul fichier -
+    tables, index et transactions, le tout dans une seule suite
+    d'octets, sans serveur.</glossa>
 
   <valor nomen="forma_contenti">binaria</valor>
   <valor nomen="suffixus_solitus">.db</valor>
@@ -314,6 +377,18 @@
     rete, memoriam) et nomina mediat. Sine eo octeti sunt,
     plagulae non sunt.
   </definitio>
+
+  <glossa lingua="en">A file system: the arrangement that gives
+    sequences of bytes their NAMES, their place in a tree, and the
+    metadata around them - what mediates between the medium (disk,
+    network, memory) and names. Without it there are bytes, but
+    there are no files.</glossa>
+  <glossa lingua="fr">Un système de fichiers : l'organisation qui
+    donne aux suites d'octets leurs NOMS, leur place dans une
+    arborescence et les métadonnées qui les entourent - ce qui fait
+    la médiation entre le support (disque, réseau, mémoire) et les
+    noms. Sans lui il y a des octets, mais il n'y a pas de
+    fichiers.</glossa>
 
   <proprietates>
     <proprietas nomen="capsas_discernit" genus="veritas"
@@ -390,6 +465,25 @@
     alterum describere desinit. Relatio infra id quod verum est
     dicit sine electione.
   </differentia>
+
+  <glossa lingua="en">A directory: a named container of files and of
+    other directories - a node in the tree of names. Its content is
+    not bytes but NAMES, which is why "what is in it" is an
+    enumeration and not a reading. It is deliberately not placed
+    under file: unix-like systems make a directory a special kind of
+    file and others do not, and a taxonomy that builds one system's
+    decision into its tree stops describing the other, so the
+    relation below states what is true without choosing.</glossa>
+  <glossa lingua="fr">Un répertoire : un conteneur nommé de fichiers
+    et d'autres répertoires - un nœud de l'arbre des noms. Son
+    contenu n'est pas fait d'octets mais de NOMS, d'où le fait que
+    « ce qu'il contient » relève de l'énumération et non de la
+    lecture. Il n'est délibérément pas placé sous le fichier : les
+    systèmes de type unix font du répertoire une sorte particulière
+    de fichier, d'autres non, et une taxonomie qui inscrit dans son
+    arbre le choix d'un seul système cesse de décrire l'autre ; la
+    relation ci-dessous dit donc ce qui est vrai sans
+    choisir.</glossa>
 
   <proprietates>
     <proprietas nomen="occultum" genus="veritas"

@@ -42,6 +42,16 @@
     quod exemplar loci dicere non poterat, hoc dicit.
   </definitio>
 
+  <glossa lingua="en">A journey: the movement of a thing or a person
+    from one place to another, undertaken with a purpose - a
+    beginning, an end, a route, a time. Not a place but a CHANGE of
+    place: what the model of place could not say, this says.</glossa>
+  <glossa lingua="fr">Un trajet : le mouvement d'une chose ou d'une
+    personne d'un lieu à un autre, entrepris dans un but - un
+    commencement, une fin, une voie, un temps. Non pas un lieu mais
+    un CHANGEMENT de lieu : ce que le modèle du lieu ne pouvait pas
+    dire, celui-ci le dit.</glossa>
+
   <proprietates>
     <proprietas nomen="distantia" genus="quantitas"
       modulus="mensura"
@@ -98,6 +108,18 @@
     Appia hodie iacet quamvis nemo per eam onera ferat. Ideo non
     iter sed CONDICIO itineris.
   </definitio>
+
+  <glossa lingua="en">A route: a way along which one can travel,
+    usually a public thing, common to countless journeys. It exists
+    before any journey and remains after it - the via Appia lies
+    there today though no one carries freight along it. Hence not a
+    journey but the CONDITION of a journey.</glossa>
+  <glossa lingua="fr">Une voie : un chemin par lequel on peut aller,
+    le plus souvent une chose publique, commune à d'innombrables
+    trajets. Elle est là avant tout trajet et demeure après lui - la
+    via Appia subsiste aujourd'hui bien que personne n'y transporte
+    de marchandises. Donc non pas un trajet mais la CONDITION du
+    trajet.</glossa>
 
   <proprietates>
     <proprietas nomen="longitudo" genus="quantitas"
@@ -181,6 +203,16 @@
     quod currus non potest, currus quo navis non pervenit.
   </differentia>
 
+  <glossa lingua="en">A vehicle: a tool whose use is MOTION - it
+    moves itself and carries other things. Its capacity and the
+    route proper to it determine its essence: a ship does what a
+    wagon cannot, a wagon reaches where a ship never arrives.</glossa>
+  <glossa lingua="fr">Un véhicule : un instrument dont l'usage est le
+    MOUVEMENT - il se déplace lui-même et transporte autre chose. Sa
+    capacité et la voie qui lui est propre déterminent son essence :
+    le navire fait ce que le chariot ne peut pas, le chariot atteint
+    là où le navire ne parvient jamais.</glossa>
+
   <proprietates>
     <proprietas nomen="capacitas_oneris" genus="quantitas"
       modulus="mensura"
@@ -246,6 +278,17 @@
     supellex dum adhibetur. Munus, ergo relatio (regula
     multiplicitatis rotae IV iterum).
   </definitio>
+
+  <glossa lingua="en">Freight: bodily things while under way - not a
+    kind of thing but a CONDITION of things. The same barrel is
+    freight while it is carried, merchandise while it is sold,
+    furniture while it is used. A role, and therefore a
+    relation.</glossa>
+  <glossa lingua="fr">Une cargaison : des choses corporelles en cours
+    de trajet - non pas un genre de choses mais une CONDITION des
+    choses. Le même tonneau est cargaison tant qu'on le transporte,
+    marchandise tant qu'on le vend, mobilier tant qu'on s'en sert.
+    Un rôle, donc une relation.</glossa>
 
   <proprietates>
     <proprietas nomen="massa_tota" genus="quantitas"

@@ -11,6 +11,15 @@
   </elementum>
 
   <elementum nomen="locus">
+    <glossa lingua="en">A place: a determinate part of space where
+    bodily things can be - a point or an area on the earth. It is
+    prior to all naming: the place remains even if its name
+    perishes.</glossa>
+    <glossa lingua="fr">Un lieu : une partie déterminée de
+    l'espace où des choses corporelles peuvent se trouver - un
+    point ou une aire sur la terre. Il est antérieur à toute
+    dénomination : le lieu demeure même si son nom
+    disparaît.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="latitudo" genus="numerus"/>
     <attributum nomen="longitudo-geo" genus="numerus"/>
@@ -26,6 +35,16 @@
   </elementum>
 
   <elementum nomen="inscriptio">
+    <glossa lingua="en">An address: the agreed name of a place,
+    used to find it - street, number, city, postal code. It is a
+    CONVENTION, not the place: streets are renamed, numbers
+    change, postal codes are invented, while the place itself
+    does not move.</glossa>
+    <glossa lingua="fr">Une adresse : le nom convenu d'un lieu,
+    servant à le trouver - rue, numéro, ville, code postal. C'est
+    une CONVENTION, non le lieu : les rues sont rebaptisées, les
+    numéros changent, les codes postaux sont inventés, alors que
+    le lieu ne bouge pas.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="codex-postalis" genus="textus"/>
     <attributum nomen="designat" genus="referentia"/>
@@ -38,6 +57,17 @@
   </elementum>
 
   <elementum nomen="iurisdictio">
+    <glossa lingua="en">A jurisdiction: the power to make and
+    enforce laws over a place - municipality, province, state.
+    Not a place but a POWER, which is why jurisdictions can
+    overlap (the same place under three at once), something
+    places themselves cannot do.</glossa>
+    <glossa lingua="fr">Une juridiction : le pouvoir de faire des
+    lois et de les faire appliquer sur un lieu - commune,
+    province, État. Non pas un lieu mais un POUVOIR, et c'est
+    pourquoi les juridictions peuvent se superposer (le même lieu
+    sous trois à la fois), ce que les lieux eux-mêmes ne peuvent
+    pas.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="exercetur-a" genus="referentia"/>
     <attributum nomen="intra" genus="referentia"/>
@@ -52,6 +82,14 @@
   </elementum>
 
   <elementum nomen="aedificium">
+    <glossa lingua="en">A building: a structure fixed to a place
+    which people occupy - a bodily thing that cannot be moved.
+    Immobility is its essence, whence the legal term immovable
+    property.</glossa>
+    <glossa lingua="fr">Un bâtiment : une structure fixée à un
+    lieu et que des hommes occupent - une chose corporelle qui ne
+    peut être déplacée. L'immobilité est son essence, d'où le
+    terme juridique de biens immeubles.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="situm-in" genus="referentia"/>
     <attributum nomen="inscriptio-eius" genus="referentia"/>

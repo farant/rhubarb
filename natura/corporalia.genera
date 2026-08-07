@@ -53,6 +53,17 @@
     alterum poscit, copia plagulae nihil.
   </definitio>
 
+  <glossa lingua="en">A bodily thing: what has matter, occupies a
+    place and is corrupted by time - a thing that can be touched
+    with the hands. It differs from digital things in that it
+    CANNOT be copied: a copy of a loaf demands another loaf, a copy
+    of a file demands nothing.</glossa>
+  <glossa lingua="fr">Une chose corporelle : ce qui a de la matière,
+    occupe un lieu et se corrompt avec le temps - une chose que
+    l'on peut toucher de la main. Elle diffère des choses
+    numériques en ce qu'elle ne peut PAS être copiée : copier un
+    pain exige un second pain, copier un fichier n'exige rien.</glossa>
+
   <proprietates>
     <proprietas nomen="massa" genus="quantitas"
       modulus="mensura"/>
@@ -95,6 +106,17 @@
     orta.
   </differentia>
 
+  <glossa lingua="en">An artefact: a bodily thing made by man for an
+    end. It is COUNTABLE and singular and has thisness - this loaf,
+    not another, even when its twin sits beside it. Its form is
+    imposed on it by the maker, it does not arise from
+    nature.</glossa>
+  <glossa lingua="fr">Un artefact : une chose corporelle faite par
+    l'homme en vue d'une fin. Il est DÉNOMBRABLE et singulier et
+    possède une eccéité - ce pain-ci, non un autre, même si son
+    jumeau est à côté. Sa forme lui est imposée par l'artisan, elle
+    ne naît pas de la nature.</glossa>
+
   <partes>
     <pars nomen="materiae_constituentes" necessaria="verum"
       nota="ex quibus fit - in artefacto materiae formam
@@ -135,6 +157,20 @@
     individua ei DEEST - forma sola eam constituit.
   </differentia>
 
+  <glossa lingua="en">Matter, or stuff: a bodily thing that is
+    MEASURED and not counted - flour, water, oil; "three flours"
+    means nothing. Divided, it stays what it was (half a mass of
+    flour is flour), whereas a divided artefact perishes (half a
+    loaf is not a loaf but a part of one). Individual identity is
+    LACKING to it: its form alone constitutes it.</glossa>
+  <glossa lingua="fr">La matière : une chose corporelle que l'on
+    MESURE au lieu de la compter - farine, eau, huile ; « trois
+    farines » ne signifie rien. Divisée, elle reste ce qu'elle
+    était (la moitié d'une masse de farine est de la farine),
+    tandis qu'un artefact divisé périt (une moitié de pain n'est
+    pas un pain mais une partie de pain). L'identité individuelle
+    lui MANQUE : sa forme seule la constitue.</glossa>
+
   <proprietates>
     <proprietas nomen="quantitas_praesens" genus="quantitas"
       modulus="mensura"
@@ -162,6 +198,17 @@
     fornax manet - hoc instrumentum a cibo et materia
     distinguit.
   </differentia>
+
+  <glossa lingua="en">A tool: an artefact made for making and not
+    for consuming. Use PRESERVES it (indeed use is its very end)
+    rather than destroying it: the oven bakes the bread and the
+    oven remains, which is what sets a tool apart from food and
+    from matter.</glossa>
+  <glossa lingua="fr">Un instrument : un artefact fait pour
+    produire, non pour être consommé. L'usage le CONSERVE (l'usage
+    est même sa fin) au lieu de le détruire : le four cuit le pain
+    et le four demeure, ce qui distingue l'instrument de l'aliment
+    et de la matière.</glossa>
 
   <proprietates>
     <proprietas nomen="capacitas" genus="quantitas"
@@ -201,6 +248,19 @@
     probatio pura est doctrinae actus sollemnis - status rei
     ab actu, non a materia.
   </differentia>
+
+  <glossa lingua="en">A sacred thing: a bodily thing set apart for
+    divine worship by an ACT, not by its nature nor by its matter.
+    The same wood can be a table or an altar, and the whole
+    difference rests on the consecration. The kind is therefore a
+    pure test of the doctrine of the solemn act: the status of the
+    thing comes from the act, not from the material.</glossa>
+  <glossa lingua="fr">Une chose sacrée : une chose corporelle dédiée
+    au culte divin par un ACTE, non par sa nature ni par sa
+    matière. Le même bois peut être une table ou un autel, et toute
+    la différence tient à la consécration. Ce genre est donc une
+    épreuve pure de la doctrine de l'acte solennel : le statut de
+    la chose vient de l'acte, non du matériau.</glossa>
 
   <proprietates>
     <proprietas nomen="alienabilis" genus="veritas"
@@ -305,6 +365,19 @@
     etiam iis quae nec finem nec naturam propriam habent.
   </definitio>
 
+  <glossa lingua="en">Damage: an injury to the integrity of a bodily
+    thing inflicted by an outside force - what was one is divided,
+    what was whole is broken, what was pure is mixed. It is a
+    failing not of intention nor of nature but of INTEGRITY, and so
+    it can befall any body whatever, even one that has neither an
+    end nor a nature of its own.</glossa>
+  <glossa lingua="fr">Le dommage : une atteinte à l'intégrité d'une
+    chose corporelle infligée par une force extérieure - ce qui
+    était un est divisé, ce qui était entier est brisé, ce qui
+    était pur est mêlé. Ce n'est un défaut ni de l'intention ni de
+    la nature mais de l'INTÉGRITÉ ; aussi peut-il atteindre tout
+    corps, même celui qui n'a ni fin ni nature propre.</glossa>
+
   <proprietates>
     <proprietas nomen="gravitas" genus="electio">
       <optio>levis</optio>
@@ -382,6 +455,20 @@
     nullum. Non ab homine factum (etiamsi ab homine cultum);
     numerabile et haecceitatem habens, ideo non materia.
   </differentia>
+
+  <glossa lingua="en">A living thing: a bodily thing that moves,
+    feeds and generates itself, holding the principle of its motion
+    WITHIN, where an artefact receives its motion from another and
+    matter has none. It is not made by man (though it may be tended
+    by him); being countable and having thisness, it is not
+    matter.</glossa>
+  <glossa lingua="fr">Un vivant : une chose corporelle qui se meut,
+    se nourrit et s'engendre elle-même, tenant EN elle-même le
+    principe de son mouvement, là où l'artefact reçoit son
+    mouvement d'autrui et où la matière n'en a aucun. Il n'est pas
+    fait par l'homme (même s'il est cultivé par lui) ; étant
+    dénombrable et doté d'une eccéité, il n'est pas de la
+    matière.</glossa>
 
   <proprietates>
     <proprietas nomen="anima" genus="electio"

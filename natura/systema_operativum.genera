@@ -39,6 +39,18 @@
     quod programmata currere sinit.
   </definitio>
 
+  <glossa lingua="en">An operating system: the primary program that
+    owns the machine and mediates between the hardware and other
+    programs - it hands out memory, guards and schedules processes,
+    gives names to files, and offers facilities. The program that
+    lets programs run.</glossa>
+  <glossa lingua="fr">Un système d'exploitation : le programme
+    primordial qui possède la machine et fait la médiation entre le
+    matériel et les autres programmes - il distribue la mémoire,
+    garde et ordonne les processus, donne des noms aux fichiers,
+    offre des facultés. Le programme qui permet aux programmes de
+    s'exécuter.</glossa>
+
   <proprietates>
     <proprietas nomen="genus_nuclei" genus="electio">
       <optio>monolithicus</optio>
@@ -186,6 +198,22 @@
     deinde distinguunt.
   </differentia>
 
+  <glossa lingua="en">A Unix-like system: an operating system shaped
+    on the Unix pattern - one file tree from a single root,
+    "everything is a file", small processes composed with pipes, the
+    shell as a program among the rest. This is FORM and not descent,
+    so both the true offspring (macOS) and the imitations (Linux)
+    belong here, and the relations orta_ex and ad_exemplum_facta
+    then tell the two apart.</glossa>
+  <glossa lingua="fr">Un système de type Unix : un système
+    d'exploitation formé sur le modèle Unix - un seul arbre de
+    fichiers depuis une racine unique, « tout est fichier », de
+    petits processus composés par des tubes, l'interpréteur de
+    commandes comme un programme parmi les autres. C'est la FORME et
+    non la descendance : la vraie progéniture (macOS) comme les
+    imitations (Linux) tiennent ici, et les relations orta_ex et
+    ad_exemplum_facta les distinguent ensuite.</glossa>
+
   <individuum nomen="unix_bell_labs">
     <definitio>
       Systema fontale: omnia-plagula-est, processus parvi fistulis
@@ -295,6 +323,18 @@
     vivenda - quod vere instalas.
   </definitio>
 
+  <glossa lingua="en">A system distribution: a curated collection -
+    kernel plus tools plus configurations plus a package manager -
+    chosen, tested, and released by one curator. The operating
+    system is the form; the distribution is the edition of that form
+    made fit to live in, and it is what you actually install.</glossa>
+  <glossa lingua="fr">Une distribution de système : une collection
+    curatée - noyau, outils, configurations et gestionnaire de
+    paquets - choisie, éprouvée et publiée par un seul curateur. Le
+    système d'exploitation est la forme ; la distribution en est
+    l'édition rendue habitable, et c'est elle que l'on installe
+    réellement.</glossa>
+
   <proprietates>
     <proprietas nomen="gestor_fasciculorum" genus="textus"
       nota="apt, rpm, pacman... genus programmatis SURGIT,
@@ -382,6 +422,14 @@
     Editio systematis nominata: quam installatio vere currit -
     "Darwin 23.6" versionem citat, non speciem.
   </definitio>
+
+  <glossa lingua="en">A system version: a named edition of an
+    operating system - the one an installation actually runs.
+    "Darwin 23.6" cites a version, not a species.</glossa>
+  <glossa lingua="fr">Une version de système : une édition nommée
+    d'un système d'exploitation - celle qu'une installation exécute
+    réellement. « Darwin 23.6 » cite une version, non une
+    espèce.</glossa>
 
   <proprietates>
     <proprietas nomen="titulus" genus="textus"/>

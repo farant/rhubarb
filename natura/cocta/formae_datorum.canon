@@ -14,6 +14,19 @@
   </elementum>
 
   <elementum nomen="forma-datorum">
+    <glossa lingua="en">A data structure: a shape for arranging data
+    defined by its OPERATIONS rather than by its implementation -
+    what you may ask of it, what is promised, and at what cost. The
+    essence lives in the interface (what is called an abstract data
+    type); the implementation beneath it changes freely so long as
+    the promises hold.</glossa>
+    <glossa lingua="fr">Une structure de données : une figure pour
+    ordonner les données, définie par ses OPÉRATIONS et non par son
+    implémentation - ce que l'on peut lui demander, ce qui est
+    promis, et à quel prix. L'essence habite l'interface (ce qu'on
+    appelle un type de données abstrait) ; l'implémentation qui se
+    trouve dessous change librement tant que les promesses
+    tiennent.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>

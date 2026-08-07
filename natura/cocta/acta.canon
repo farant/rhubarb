@@ -25,6 +25,20 @@
   </elementum>
 
   <elementum nomen="acta">
+    <glossa lingua="en">A record (acta): an ordered series of
+    events to which one ONLY APPENDS, and which is the TRUTH of
+    the things it describes. No state (a total, a manifest, a
+    balance, a tree) is kept apart; every state is FOLDED out of
+    the series. Correction never comes by erasure but by a new
+    event, because records that can be rewritten are not
+    records.</glossa>
+    <glossa lingua="fr">Un registre (acta) : une série ordonnée
+    d'événements à laquelle on ne fait qu'AJOUTER, et qui est la
+    VÉRITÉ des choses qu'elle décrit. Aucun état (un total, un
+    manifeste, un solde, un arbre) n'est conservé à part ; tout
+    état est REPLIÉ à partir de la série. La correction ne se
+    fait jamais par rature mais par un événement nouveau, car un
+    registre que l'on peut réécrire n'est pas un registre.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ordinatio" genus="electio">
       <optio>sequentialis</optio>
@@ -84,6 +98,20 @@
   </elementum>
 
   <elementum nomen="punctum-actorum">
+    <glossa lingua="en">A record point: a named, addressable place
+    in a record, so that the question what did things look like
+    HERE has an answer a person would actually want to ask for.
+    Not an event but a POSITION between events - a position in
+    the series, not in time, since clocks disagree, jump
+    backwards, and can read the same for two events.</glossa>
+    <glossa lingua="fr">Un point de registre : un endroit nommé et
+    adressable dans un registre, de sorte que la question de quoi
+    les choses avaient-elles l'air ICI reçoive une réponse qu'une
+    personne voudrait vraiment demander. Non pas un événement
+    mais une POSITION entre les événements - une position dans la
+    série, non dans le temps, car les horloges divergent,
+    reculent, et peuvent donner la même valeur à deux
+    événements.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="positio" genus="numerus"/>
     <attributum nomen="titulus" genus="textus"/>
@@ -99,6 +127,21 @@
   </elementum>
 
   <elementum nomen="attestatio">
+    <glossa lingua="en">An attestation: an authentic copy drawn
+    from authoritative records, testifying to what stood in those
+    records AT THE MOMENT OF ISSUE, and which once handed over is
+    SEPARATED from the records it came from - the truth goes on
+    changing, the paper does not. It is a projection that has
+    been given away, so the question proper to it is not whether
+    it is true but WHEN it was true.</glossa>
+    <glossa lingua="fr">Une attestation : une copie authentique
+    tirée de registres faisant autorité, qui témoigne de ce qui
+    figurait dans ces registres AU MOMENT DE SA DÉLIVRANCE et
+    qui, une fois remise, est SÉPARÉE des registres dont elle
+    provient - la vérité continue de changer, le papier non.
+    C'est une projection que l'on a livrée ; la question qui lui
+    est propre n'est donc pas si elle est vraie, mais QUAND elle
+    l'a été.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="emissa" genus="dies"/>
     <attributum nomen="aetas-accepta" genus="textus"/>
@@ -129,6 +172,21 @@
   </elementum>
 
   <elementum nomen="radix-fiduciae">
+    <glossa lingua="en">A root of trust: the end of a chain of
+    attestations, whose credit comes not from another attestation
+    but from a DECISION of the one who uses the chain - what is
+    believed not because it was proven but because it was
+    accepted. It is the only thing in the chain that attests
+    itself (or nothing), and that is no defect but a necessity,
+    since an infinite regress would destroy all trust.</glossa>
+    <glossa lingua="fr">Une racine de confiance : le terme d'une
+    chaîne d'attestations, dont le crédit ne vient pas d'une
+    autre attestation mais d'une DÉCISION de celui qui emploie la
+    chaîne - ce que l'on croit non parce que cela a été prouvé,
+    mais parce que cela a été accepté. C'est la seule chose de la
+    chaîne qui s'atteste elle-même (ou rien), et ce n'est pas un
+    défaut mais une nécessité, car une régression à l'infini
+    ruinerait toute confiance.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-susceptionis" genus="electio">
       <optio>cum_systemate_missa</optio>

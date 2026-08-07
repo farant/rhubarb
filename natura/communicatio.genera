@@ -37,6 +37,20 @@
     a domo nostra in actor.c realizata.
   </definitio>
 
+  <glossa lingua="en">An actor: a logical entity with an
+    identity, private state, and behaviour, which communicates
+    with others ONLY by messages. It alone changes its own state
+    and never touches anyone else's - it asks, by sending a
+    message. The form was named by Hewitt (1973), proven by
+    Erlang, and realized in this house in actor.c.</glossa>
+  <glossa lingua="fr">Un acteur : une entité logique dotée d'une
+    identité, d'un état privé et de comportements, qui ne
+    communique avec les autres QUE par messages. Lui seul modifie
+    son propre état et ne touche jamais celui d'autrui - il le
+    demande, en envoyant un message. La forme fut nommée par
+    Hewitt (1973), éprouvée par Erlang, et réalisée dans cette
+    maison dans actor.c.</glossa>
+
   <relationes>
     <relatio nomen="mittit" ad="nuntius" multiplex="verum"/>
     <relatio nomen="accipit" ad="nuntius" multiplex="verum"/>
@@ -65,6 +79,19 @@
     Mittere nuntium = petere ut alter se mutet; petitio ipsa
     res facta.
   </definitio>
+
+  <glossa lingua="en">A message: communication made into a thing
+    - data in transit, ADDRESSED, since a recipient is owed to
+    it. The act of communicating turned into an object: it can be
+    put in a queue, recorded, replayed. To send a message is to
+    ask another to change itself; the request itself has been
+    made a thing.</glossa>
+  <glossa lingua="fr">Un message : la communication réifiée -
+    des données en transit, ADRESSÉES, car un destinataire lui
+    est dû. L'acte de communiquer converti en chose : on peut le
+    mettre en file, l'enregistrer, le rejouer. Envoyer un
+    message, c'est demander à un autre de se modifier ; la
+    demande elle-même devenue chose.</glossa>
 
   <proprietates>
     <proprietas nomen="genus_nuntii" genus="textus"
@@ -135,6 +162,17 @@
     differt: nuntius AD aliquem, eventum CORAM omnibus.
   </definitio>
 
+  <glossa lingua="en">An event: something done that is NOT
+    addressed - it happens, and any observer can see it; it is
+    owed to no one. It differs from a message by address: a
+    message goes TO someone, an event happens BEFORE
+    everyone.</glossa>
+  <glossa lingua="fr">Un événement : un fait qui n'est PAS
+    adressé - il survient, et quiconque observe peut le voir ; il
+    n'est dû à personne. Il diffère du message par l'adresse : le
+    message va À quelqu'un, l'événement se produit DEVANT
+    tous.</glossa>
+
   <nota>
     Elementum "eventum" in historiis exemplarium horum hoc
     ipsum genus est: historia rei = cauda eventuum eius, status
@@ -192,6 +230,22 @@
     coordinationem inter multa et ignota et per tempus dispersa
     solum possibilem facit.
   </differentia>
+
+  <glossa lingua="en">Stigmergy: coordination by a trace that an
+    agent leaves in a shared medium - a sign addressed to no one,
+    which remains, which any passer-by can read, and which decays
+    of itself. It is neither sent nor does it merely happen: it
+    LIES there. Having neither sender nor recipient, it makes
+    coordination possible among agents who need neither know one
+    another nor be present at the same time.</glossa>
+  <glossa lingua="fr">La stigmergie : la coordination par une
+    trace qu'un agent laisse dans un milieu commun - un signe
+    adressé à personne, qui demeure, que tout passant peut lire,
+    et qui s'efface de lui-même. Elle n'est ni envoyée ni un
+    simple fait : elle GÎT là. N'ayant ni expéditeur ni
+    destinataire, elle rend possible la coordination d'agents qui
+    n'ont besoin ni de se connaître ni d'être présents en même
+    temps.</glossa>
 
   <proprietates>
     <proprietas nomen="tabescentia" genus="quantitas"

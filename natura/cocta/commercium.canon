@@ -26,6 +26,15 @@
   </elementum>
 
   <elementum nomen="moneta">
+    <glossa lingua="en">A currency: a kind of money issued by an
+    authority and accepted in payment - a unit for measuring value,
+    but a unit whose own value shifts. A metre keeps its length; a
+    currency does not keep its value.</glossa>
+    <glossa lingua="fr">Une monnaie : un genre de numéraire émis par
+    une autorité et reçu en paiement - une unité de mesure de la
+    valeur, mais une unité dont la valeur propre change. Le mètre
+    conserve sa longueur ; la monnaie ne conserve pas la
+    sienne.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="codex" genus="textus"/>
     <attributum nomen="symbolum" genus="textus"/>
@@ -38,6 +47,19 @@
   </elementum>
 
   <elementum nomen="pecunia">
+    <glossa lingua="en">A sum of money: a number together with a
+    currency - "3,50" is nothing until a currency is named, just as
+    a quantity demands a unit. Addition holds only within one
+    currency; across currencies a conversion is needed, and its rate
+    changes over time, so a sum that is right today is wrong
+    tomorrow.</glossa>
+    <glossa lingua="fr">Une somme d'argent : un nombre accompagné
+    d'une monnaie - « 3,50 » n'est rien tant qu'une monnaie n'est
+    pas donnée, de même qu'une quantité réclame une unité.
+    L'addition ne vaut qu'à l'intérieur d'une seule monnaie ; d'une
+    monnaie à l'autre il faut une conversion, dont le taux change
+    avec le temps - une addition juste aujourd'hui ne l'est plus
+    demain.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="valor" genus="numerus"/>
     <attributum nomen="in-moneta" genus="referentia"/>
@@ -48,6 +70,18 @@
   </elementum>
 
   <elementum nomen="possessio">
+    <glossa lingua="en">Ownership: the relation between a person (or
+    an organization) and a thing - who holds what. It is not a
+    property of the thing but a relation; the loaf stays the same
+    loaf when its owner changes, and only the relation changes.
+    That is why a sale never touches the thing: it transfers the
+    relation.</glossa>
+    <glossa lingua="fr">La possession : la relation entre une
+    personne (ou une organisation) et une chose - qui détient quoi.
+    Ce n'est pas une propriété de la chose mais une relation ; le
+    pain reste le même pain quand son maître change, et seule la
+    relation change. C'est pourquoi la vente ne touche jamais la
+    chose : elle transfère la relation.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="possessor" genus="referentia"/>
     <attributum nomen="possessum" genus="referentia"/>
@@ -58,6 +92,16 @@
   </elementum>
 
   <elementum nomen="pretium">
+    <glossa lingua="en">A price: the money asked for a thing - a
+    relation between the thing and money that varies with time, not
+    a property of the thing. The same loaf had a different price
+    yesterday; to suppose that the price inheres in the thing is the
+    common error.</glossa>
+    <glossa lingua="fr">Un prix : l'argent demandé pour une chose -
+    une relation entre la chose et l'argent qui varie avec le temps,
+    et non une propriété de la chose. Le même pain avait hier un
+    autre prix ; croire que le prix est inhérent à la chose est
+    l'erreur courante.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="valens-a" genus="dies"/>
     <attributum nomen="valens-ad" genus="dies"/>
@@ -70,6 +114,18 @@
   </elementum>
 
   <elementum nomen="venditio">
+    <glossa lingua="en">A sale: the event in which ownership of a
+    thing passes one way while money flows the other - a double
+    change at once, which double-entry bookkeeping (Pacioli) wrote
+    down before any computer existed. A sale is not a thing but
+    something that happens; what remains of it is its
+    record.</glossa>
+    <glossa lingua="fr">Une vente : l'événement par lequel la
+    possession d'une chose passe dans un sens tandis que l'argent
+    coule dans l'autre - un double changement simultané, que la
+    comptabilité en partie double (Pacioli) a consigné avant tout
+    ordinateur. Une vente n'est pas une chose mais un fait qui
+    arrive ; ce qui en demeure, ce sont ses écritures.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="venditor" genus="referentia"/>
     <attributum nomen="emptor" genus="referentia"/>
@@ -86,6 +142,18 @@
   </elementum>
 
   <elementum nomen="tessera">
+    <glossa lingua="en">A token: a thing whose presentation
+    constitutes a right rather than proving one. The whole
+    difference from an ordinary receipt lies here - a receipt
+    attests that you paid, a token carries the right itself. So a
+    lost token is a lost right, whereas a lost receipt is only a
+    nuisance.</glossa>
+    <glossa lingua="fr">Un titre (tessera) : une chose dont la
+    présentation constitue un droit au lieu de le prouver.
+    Toute la différence avec un simple reçu tient là - le reçu
+    atteste que vous avez payé, le titre porte le droit lui-même.
+    Un titre perdu est donc un droit perdu, tandis qu'un reçu perdu
+    n'est qu'un désagrément.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
@@ -106,6 +174,23 @@
   </elementum>
 
   <elementum nomen="tessera-negotiabilis">
+    <glossa lingua="en">A negotiable token: a token - a thing whose
+    presentation constitutes a right - such that whoever takes it in
+    good faith and for value receives clean title, even if the one
+    who handed it over held no right himself. This is the exception
+    to the rule that no one gives what he does not have. Not mere
+    possession, which every token confers, but the purging of prior
+    defects: that alone makes a token negotiable, and that alone
+    makes trade between strangers possible.</glossa>
+    <glossa lingua="fr">Un titre négociable : un titre - chose dont
+    la présentation constitue un droit - tel que celui qui le reçoit
+    de bonne foi et à titre onéreux acquiert un titre pur, même si
+    celui qui le remettait n'avait lui-même aucun droit. C'est
+    l'exception à la règle selon laquelle nul ne donne ce qu'il n'a
+    pas. Non la simple possession, commune à tous les titres, mais
+    la purge des vices antérieurs : elle seule fait la
+    négociabilité, et elle seule rend possible le commerce entre
+    inconnus.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
@@ -126,6 +211,21 @@
   </elementum>
 
   <elementum nomen="tessera-simplex">
+    <glossa lingua="en">A plain token: a token - a thing whose
+    presentation constitutes a right - where possession is enough to
+    present it, but where no title is purged. Whoever presents a
+    stolen token is admitted, since the doorkeeper cannot know, and
+    yet he acquires no right: the true owner may still reclaim it.
+    The mechanism is the same as for a negotiable token; the legal
+    doctrine is absent.</glossa>
+    <glossa lingua="fr">Un titre simple : un titre - chose dont la
+    présentation constitue un droit - où la possession suffit pour
+    le présenter, mais où aucun titre n'est purgé. Celui qui
+    présente un titre volé est admis, car le gardien ne peut pas le
+    savoir, et pourtant il n'acquiert aucun droit : le véritable
+    propriétaire peut encore le revendiquer. Le mécanisme est le
+    même que pour le titre négociable ; la doctrine, elle, fait
+    défaut.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
       <optio>ad_portitorem</optio>
@@ -146,6 +246,24 @@
   </elementum>
 
   <elementum nomen="ratio-rationaria">
+    <glossa lingua="en">An account ledger: a record of monetary
+    events in order of time. The truth is the tail of events, and
+    every state - balance, debt, profit - is a fold over them.
+    Correction is never by erasure but by a new and contrary entry
+    (a reversal), because a record that can be rewritten is not a
+    record. What makes it monetary rather than a plain record is
+    that its events carry amounts in a currency, so the fold is
+    arithmetic and numerical invariants become possible.</glossa>
+    <glossa lingua="fr">Un livre de comptes : le registre des faits
+    monétaires par ordre du temps. La vérité, c'est la suite des
+    événements, et tout état - solde, dette, bénéfice - en est le
+    repli. La correction ne se fait jamais par rature mais par une
+    écriture nouvelle et contraire (une contre-passation), car un
+    registre que l'on peut réécrire n'est pas un registre. Ce qui le
+    rend monétaire plutôt que simple registre, c'est que ses
+    événements portent des montants dans une monnaie : le repli est
+    donc arithmétique et des invariants numériques deviennent
+    possibles.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="rationarius" genus="referentia"/>
     <attributum nomen="ordinatio" genus="electio">

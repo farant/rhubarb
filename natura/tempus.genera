@@ -77,6 +77,15 @@
     hinc historiae omnium exemplarium pendent.
   </definitio>
 
+  <glossa lingua="en">A moment: a point in time - when something
+    happens. It has no duration; what lasts is an interval. Every
+    event has its moment, and the histories in every model hang from
+    this.</glossa>
+  <glossa lingua="fr">Un moment : un point dans le temps - quand
+    quelque chose arrive. Il est sans durée ; ce qui dure est un
+    intervalle. Tout événement a son moment, et les histoires de
+    tous les modèles en dépendent.</glossa>
+
   <proprietates>
     <proprietas nomen="praecisio" genus="electio"
       nota="momentum praecisionem SUAM fert: '1225' anno solo
@@ -118,6 +127,17 @@
     non defectus datorum.
   </definitio>
 
+  <glossa lingua="en">An interval: the stretch of time between two
+    moments - a beginning, an end, and therefore a duration. What
+    has no duration is a moment; what has no end, being still
+    running, is an open interval, and that is a true state rather
+    than missing data.</glossa>
+  <glossa lingua="fr">Un intervalle : l'étendue de temps entre deux
+    moments - un début, une fin, et donc une durée. Ce qui est sans
+    durée est un moment ; ce qui est sans fin, parce qu'il court
+    encore, est un intervalle ouvert, et c'est là un état véritable
+    et non une donnée manquante.</glossa>
+
   <proprietates>
     <proprietas nomen="duratio" genus="quantitas"
       modulus="mensura"
@@ -153,6 +173,20 @@
     ut regula; qui in acta expandit, futurum ad terminum
     arbitrarium truncat.
   </definitio>
+
+  <glossa lingua="en">A recurrence: a rule that generates moments
+    (or intervals) - "every day at the fourth hour", "every Monday",
+    "the first day of each month". It is a rule and not a
+    collection, and the collection it yields is often infinite. Keep
+    it as a rule: whoever expands it into records cuts the future
+    off at some arbitrary bound.</glossa>
+  <glossa lingua="fr">Une récurrence : une règle qui engendre des
+    moments (ou des intervalles) - « chaque jour à la quatrième
+    heure », « chaque lundi », « le premier jour de chaque mois ».
+    C'est une règle et non une collection, et la collection qu'elle
+    produit est souvent infinie. Il faut la garder comme règle : qui
+    la déplie en enregistrements tronque l'avenir à une borne
+    arbitraire.</glossa>
 
   <proprietates>
     <proprietas nomen="periodus" genus="electio">
@@ -193,6 +227,20 @@
     computatione responderi non potest - quod periodica semper
     potest.
   </differentia>
+
+  <glossa lingua="en">A computed recurrence: a rule generating
+    moments whose moments arise not from a simple period but from an
+    algorithm - the rule itself contains a calculation, often
+    consulting the heavenly bodies or other recurrences. So "when
+    next?" cannot be answered without computing it, which a merely
+    periodic rule can always do.</glossa>
+  <glossa lingua="fr">Une récurrence calculée : une règle
+    engendrant des moments qui ne naissent pas d'une période simple
+    mais d'un algorithme - la règle contient elle-même un calcul,
+    consultant souvent les corps célestes ou d'autres récurrences.
+    Aussi la question « la prochaine, quand ? » ne peut-elle
+    recevoir de réponse sans calcul, ce qu'une règle simplement
+    périodique permet toujours.</glossa>
 
   <proprietates>
     <proprietas nomen="algorithmus" genus="textus"
@@ -278,6 +326,17 @@
     non potest.
   </differentia>
 
+  <glossa lingua="en">A usage-based recurrence: a rule generating
+    moments that is governed not by time but by accumulated use -
+    hours of work, cycles, distance covered. An idle tool therefore
+    never comes due while a hard-worked one comes due often, which
+    time by itself could never say.</glossa>
+  <glossa lingua="fr">Une récurrence à l'usage : une règle
+    engendrant des moments qui est réglée non par le temps mais par
+    l'usage accumulé - heures de travail, cycles, distance
+    parcourue. Un outil au repos n'échoit donc jamais, un outil très
+    employé souvent, ce que le temps seul ne saurait dire.</glossa>
+
   <proprietates>
     <proprietas nomen="mensura_usus" genus="quantitas"
       modulus="mensura"
@@ -326,6 +385,17 @@
     (aut non conveniunt - unde conflictus vicium).
   </definitio>
 
+  <glossa lingua="en">A schedule: recurrences composed into an
+    order by which work is governed - opening hours, worker shifts,
+    the sequence of baking. Not one rule but a system of rules that
+    agree with one another, or fail to, which is where shift
+    conflicts come from.</glossa>
+  <glossa lingua="fr">Un horaire : des récurrences composées en un
+    ordre qui régit le travail - heures d'ouverture, tours des
+    ouvriers, suite des cuissons. Non pas une règle unique mais un
+    système de règles qui s'accordent entre elles, ou ne s'accordent
+    pas, d'où les conflits de tours.</glossa>
+
   <relationes>
     <relatio nomen="continet" ad="recurrentia" multiplex="verum"/>
     <relatio nomen="regit" ad="*"
@@ -352,6 +422,16 @@
     hebdomadae, anni, dies festi. CONVENTIO cum historia -
     calendaria mutantur, et mutatio dies REVERA delet.
   </definitio>
+
+  <glossa lingua="en">A calendar: the system by which days are
+    named and ordered - months, weeks, years, feast days. It is a
+    convention that has a history: calendars change, and a change
+    really does delete days.</glossa>
+  <glossa lingua="fr">Un calendrier : le système par lequel les
+    jours sont nommés et ordonnés - mois, semaines, années, jours de
+    fête. C'est une convention pourvue d'une histoire : les
+    calendriers changent, et un changement supprime réellement des
+    jours.</glossa>
 
   <relationes>
     <relatio nomen="conditum_a" ad="*"
@@ -397,6 +477,18 @@
     dicere poteramus; DICERE VINDICATUM non poteramus. Duo
     parit simul: ius vindicantis et obligationem servantis.
   </definitio>
+
+  <glossa lingua="en">A reservation: a claim on future capacity -
+    an interval together with a thing (a seat, a room, an hour with
+    the doctor) held for someone so that it is not given to another.
+    It brings two things to birth at once: a right in the one who
+    claims and an obligation in the one who holds.</glossa>
+  <glossa lingua="fr">Une réservation : la revendication d'une
+    capacité future - un intervalle et une chose (un siège, une
+    chambre, une heure chez le médecin) gardés pour quelqu'un afin
+    de n'être pas donnés à un autre. Elle fait naître deux choses à
+    la fois : un droit chez celui qui réserve et une obligation chez
+    celui qui garde.</glossa>
 
   <machina_statuum nomen="vita" gerens="individuum">
     <status nomen="petita"/>

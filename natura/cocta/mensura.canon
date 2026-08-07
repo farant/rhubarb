@@ -18,6 +18,16 @@
   </elementum>
 
   <elementum nomen="magnitudo-mensurabilis">
+    <glossa lingua="en">A measurable magnitude: that which can be
+    measured - length, mass, time, temperature. The Aristotelian
+    category of quantity, prior to all units, which merely PARTITION
+    it: length is there even if no one had ever invented the
+    metre.</glossa>
+    <glossa lingua="fr">Une grandeur mesurable : ce qui peut être
+    mesuré - longueur, masse, temps, température. Le prédicament
+    aristotélicien de la quantité, antérieur à toutes les unités,
+    lesquelles ne font que la PARTAGER : la longueur est là même si
+    personne n'avait inventé le mètre.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
@@ -30,6 +40,16 @@
   </elementum>
 
   <elementum nomen="unitas-mensurae">
+    <glossa lingua="en">A unit of measure: an agreed partition of a
+    measurable magnitude, by which quantities can be counted. It is
+    a CONVENTION and not a nature - but a standardized convention,
+    publicly kept, and therefore a thing about which the truth can
+    be told.</glossa>
+    <glossa lingua="fr">Une unité de mesure : une partition convenue
+    d'une grandeur mesurable, par laquelle les quantités peuvent
+    être dénombrées. C'est une CONVENTION et non une nature - mais
+    une convention normalisée, gardée publiquement, et donc une
+    chose dont on peut dire le vrai.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="symbolum" genus="textus"/>
     <attributum nomen="fundamentalis" genus="veritas"/>
@@ -43,6 +63,21 @@
   </elementum>
 
   <elementum nomen="quantitas">
+    <glossa lingua="en">A quantity: a number WITH A UNIT, the settled
+    measure of a thing. A number by itself is no quantity - "500" is
+    nothing until "grams" is present. Addition is permitted only
+    between quantities of the same magnitude; attempting it across
+    magnitudes is a dimensional error, as the Mars Climate Orbiter
+    lost in 1999 showed, where pounds passed for newtons - a
+    quantity whose unit went unguarded.</glossa>
+    <glossa lingua="fr">Une quantité : un nombre AVEC UNE UNITÉ, la
+    mesure déterminée d'une chose. Un nombre seul n'est pas une
+    quantité - « 500 » n'est rien tant que « grammes » n'est pas là.
+    L'addition n'est permise qu'entre quantités de même grandeur ;
+    la tenter à travers des grandeurs est une erreur de dimensions,
+    comme l'a montré la perte du Mars Climate Orbiter en 1999, où
+    des livres ont été prises pour des newtons - une quantité dont
+    l'unité n'était pas gardée.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="valor" genus="numerus"/>
     <attributum nomen="minimum" genus="numerus"/>
@@ -57,6 +92,19 @@
   </elementum>
 
   <elementum nomen="incertitudo">
+    <glossa lingua="en">An uncertainty: the measure of how much of the
+    true value we do not know - the interval around the measured
+    value within which the true value is believed to lie, at a
+    stated probability. It is ABOUT US, not about the thing: a range
+    says the thing itself varies, an uncertainty says the thing has
+    one value that we do not know exactly.</glossa>
+    <glossa lingua="fr">Une incertitude : la mesure de ce que nous
+    ignorons de la valeur vraie - l'intervalle, autour de la valeur
+    mesurée, dans lequel on croit que la valeur vraie se trouve,
+    avec une probabilité déclarée. Elle porte SUR NOUS et non sur la
+    chose : un intervalle dit que la chose elle-même varie, une
+    incertitude dit que la chose a une seule valeur que nous ne
+    connaissons pas exactement.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="magnitudo" genus="numerus"/>
     <attributum nomen="factor-tegumenti" genus="numerus"/>
@@ -78,6 +126,18 @@
   </elementum>
 
   <elementum nomen="instrumentum-mensurae">
+    <glossa lingua="en">A measuring instrument: a tool that does NOT
+    change its thing but characterizes it - an oven bakes the bread,
+    a balance leaves the bread as it was. And it is the only tool
+    that is ITSELF measured: calibration is the measure of the
+    measurer, which gives it a chain that exists nowhere
+    else.</glossa>
+    <glossa lingua="fr">Un instrument de mesure : un instrument qui ne
+    MODIFIE PAS sa chose mais la caractérise - le four cuit le pain,
+    la balance laisse le pain tel qu'il était. Et c'est le seul
+    instrument qui soit LUI-MÊME mesuré : l'étalonnage est la mesure
+    du mesureur, d'où une chaîne qui n'existe nulle part
+    ailleurs.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="error-systematicus" genus="numerus"/>
     <attributum nomen="dispersio" genus="numerus"/>
