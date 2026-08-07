@@ -71,7 +71,14 @@ nomen enumeratio {
      * iunguntur, quae 'nomen' vetat; sine hoc genere grammatica
      * describi non potuit. Superset nominis consulto: unum genus
      * 'verbum sine spatiis' latius, non genus per dialectum. */
-    CANON_GENUS_COMPOSITUM = VII
+    CANON_GENUS_COMPOSITUM = VII,
+    /* signa (spec canon-referentia): valores se nuntiant.
+     * identitas  = '#' + corpus compositum (nomen proprium - et
+     *              declaratio et referentia, congruentia verbatim)
+     * referentia = '#' aut '.' + corpus compositum ('.' = genus e
+     *              vocabulario; valor nudus VITIUM est) */
+    CANON_GENUS_IDENTITAS  = VIII,
+    CANON_GENUS_REFERENTIA = IX
 } CanonGenusValoris;
 
 /* ==================================================

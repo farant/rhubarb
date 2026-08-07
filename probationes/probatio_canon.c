@@ -267,6 +267,37 @@ interior constans character* SILVULA_MALA =
     "  <avis nomen=\"turdus\" nidificat=\"merula\"/>\n"
     "</silvula>\n";
 
+/* signa (spec canon-referentia): identitas '#' poscit, referentia
+ * '#' aut '.', nudum in utroque VITIUM - referentia litterale
+ * non est */
+interior constans character* CANON_SIGNORUM =
+    "<canon dialectus=\"grex\" versio=\"1\">\n"
+    "  <elementum nomen=\"grex\" radix=\"verum\">\n"
+    "    <liberum nomen=\"ovis\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"ovis\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+    "    <attributum nomen=\"custos\" genus=\"referentia\"/>\n"
+    "  </elementum>\n"
+    "</canon>\n";
+
+interior constans character* GREX_SANUS =
+    "<grex>\n"
+    "  <ovis nomen=\"#agna-prima\" custos=\".ovis\"/>\n"
+    "  <ovis nomen=\"#agna-altera\" custos=\"#agna-prima\"/>\n"
+    "</grex>\n";
+
+/* quinque vitia typorum: nomen nudum, referentia nuda, signum
+ * sine corpore (bis - '#' et '.'), signum identitatis falsum */
+interior constans character* GREX_MALUS =
+    "<grex>\n"
+    "  <ovis nomen=\"agna-nuda\"/>\n"
+    "  <ovis nomen=\"#agna\" custos=\"ovis-nuda\"/>\n"
+    "  <ovis nomen=\"#\"/>\n"
+    "  <ovis nomen=\"#agna-quarta\" custos=\".\"/>\n"
+    "  <ovis nomen=\".agna-puncto\"/>\n"
+    "</grex>\n";
+
 interior constans character* CATALOGUS_FIXTURA =
     "# commentarium praetermittendum\n"
     ".genera\tnatura/natura.canon\n"
@@ -748,6 +779,31 @@ s32 principale (vacuum)
             "<citatio nomen=\"c\" attributum=\"a\""
             " ad=\" /n\"/>"
             "</canon>", piscina, intern));
+    }
+
+
+    /* ========================================================
+     * PROBARE: genera valorum identitas/referentia (signa)
+     * ======================================================== */
+
+    {
+        Canon* grex;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans signa valorum ---\n");
+
+        grex = canon_ex_literis(CANON_SIGNORUM, piscina, intern);
+        CREDO_NON_NIHIL (grex);
+
+        vitia = iudicare_literis(grex, GREX_SANUS, piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        vitia = iudicare_literis(grex, GREX_MALUS, piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), V);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_MALUS), V);
     }
 
 

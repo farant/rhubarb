@@ -78,7 +78,8 @@
     <attributum nomen="nomen" genus="compositum" necessarium="verum"/>
     <attributum nomen="genus" genus="electio"
       nota="absens = textus (ordinarius lectoris); electio hic
-            vitium II supra claudit">
+            vitium II supra claudit; identitas/referentia = signa
+            ('#' individuum, '.' genus) - spec canon-referentia">
       <optio>textus</optio>
       <optio>nomen</optio>
       <optio>numerus</optio>
@@ -86,6 +87,8 @@
       <optio>dies</optio>
       <optio>electio</optio>
       <optio>compositum</optio>
+      <optio>identitas</optio>
+      <optio>referentia</optio>
     </attributum>
     <attributum nomen="necessarium" genus="veritas"/>
     <attributum nomen="ordinarius"  genus="textus"

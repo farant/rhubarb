@@ -142,6 +142,10 @@ genus_legere(
     si (chorda_aequalis_literis(*s, "veritas")) redde CANON_GENUS_VERITAS;
     si (chorda_aequalis_literis(*s, "dies"))    redde CANON_GENUS_DIES;
     si (chorda_aequalis_literis(*s, "electio")) redde CANON_GENUS_ELECTIO;
+    si (chorda_aequalis_literis(*s, "identitas"))
+        redde CANON_GENUS_IDENTITAS;
+    si (chorda_aequalis_literis(*s, "referentia"))
+        redde CANON_GENUS_REFERENTIA;
     si (chorda_aequalis_literis(*s, "compositum"))
         redde CANON_GENUS_COMPOSITUM;
 
@@ -276,6 +280,43 @@ valor_congruit(
                 }
             }
             redde FALSUM;
+
+        casus CANON_GENUS_IDENTITAS:
+        casus CANON_GENUS_REFERENTIA:
+        {
+            character signum;
+
+            si (v->mensura < II)
+            {
+                redde FALSUM;   /* signum sine corpore, aut nihil */
+            }
+            signum = (character)v->datum[ZEPHYRUM];
+            si (a->genus == CANON_GENUS_IDENTITAS)
+            {
+                si (signum != '#')
+                {
+                    redde FALSUM;
+                }
+            }
+            alioquin si (signum != '#' && signum != '.')
+            {
+                redde FALSUM;
+            }
+            per (i = I; i < v->mensura; i++)
+            {
+                character c;
+
+                c = (character)v->datum[i];
+                si (!((c >= 'a' && c <= 'z') ||
+                      (c >= 'A' && c <= 'Z') ||
+                      (c >= '0' && c <= '9') ||
+                      c == '_' || c == '*' || c == '-'))
+                {
+                    redde FALSUM;
+                }
+            }
+            redde VERUM;
+        }
 
         ordinarius:
             redde VERUM;
