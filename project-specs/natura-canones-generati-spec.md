@@ -229,10 +229,65 @@ loads every model even when judging one file.
 
 `natura/cocta/individua.canon` — every kind in the library, ~560
 elements. A document may mix freely (a plant, the person who named it,
-the work the name was published in), and cross-module relations can
+the work the name was published in), and *some* cross-module relations
 become real in-document `citatio` rather than bare names.
 
-Both modes come from one mapping; they differ only in the element set.
+Both modes come from one mapping; they differ in the element set and in
+the two respects below.
+
+**The monolith does NOT strictly dominate the per-module canons.** It is
+stronger on some relations, **weaker** on actions, and equal elsewhere.
+Its generated header states both, with numbers, so a reader need not
+re-derive this.
+
+**Citations can only target LEAF kinds — measured, not chosen.** Canon
+collects citation keys by *exact element-title match*, with no element
+inheritance. A relation declared `ad="persona"` therefore cannot be
+satisfied by `<carl-linnaeus>`, even though a `carl_linnaeus` **is** a
+persona, because in the monolith that individuum is its own element. Of
+640 relations in the corpus, emitting citations for all of them would
+**reject 366 legitimate documents**.
+
+This is not a compromise, it is the whole of what the mechanism can
+express. The obvious alternative — one citation per descendant — fails,
+because multiple citations on one attribute are **conjunctive**: canon
+would require *every* descendant to resolve. "Reference any descendant"
+is inexpressible in canon, and no amount of generator cleverness changes
+that.
+
+So citations are emitted only where the target is a leaf (no subgenera,
+no dictionary entries) and the relation is not `multiplex` (`super=`
+matches an element title and ignores `intra=`, so a multiplex relation
+with several targets cannot be scoped).
+
+**Count in relation SITES, not declarations** — the two differ by a
+factor of three and mixing them produces nonsense. A relation is
+*declared* once on a genus (640 declarations, of which 108 are leaf) but
+appears as a *site* on every kind that inherits it. The canon is built
+from sites, so sites are the honest denominator:
+
+| relation sites in the monolith | 2056 |
+|---|---|
+| real `citatio` | 217 |
+| name-only | 1839 |
+| — target has descendants | 804 |
+| — `multiplex` (cannot be scoped) | 587 |
+| — `ad="*"` (no target) | 438 |
+| — unresolved | 10 |
+
+So roughly **one relation site in ten** gets referential checking; the
+rest are name-only, exactly as in the per-module canons, and are the
+loader's business per §3.5.
+
+The generated header carries these numbers **computed at generation**,
+never hardcoded — a fixed number starts lying the moment a model is
+added.
+
+**`eventum/@actio` is weaker here than per-module.** It cannot be scoped
+per kind at all — canon's `intra=` binds to the *direct* parent, and an
+`eventum`'s parent is always `historia` — so the per-module canon
+constrains it to that module's action union, while the monolith
+necessarily widens it to the corpus-wide union.
 
 ### 5.3 Document shape
 
@@ -240,7 +295,7 @@ Root is `<individua>`, holding any number of kind elements.
 
 ```xml
 <individua>
-  <rosa-canina nomen="rosa ad murum"
+  <rosa-canina nomen="rosa-ad-murum"
                habitus="frutex"
                status-vita="florens"
                auctor-nominis="carl_linnaeus">
@@ -255,6 +310,32 @@ Root is `<individua>`, holding any number of kind elements.
 Note the two casings doing different jobs (§4.4): `rosa-canina`,
 `status-vita` and `auctor-nominis` are generated names; `carl_linnaeus`
 is a natura key, spelled as natura spells it.
+
+**`nomen=` is an IDENTIFIER, not a label**, and it is typed
+`genus="compositum"` — *nomen + lineola*, so it accepts both
+`rosa_ad_murum` and `rosa-ad-murum`. This follows from what element-hood
+means here (§3.2): the criterion is *addressability*, so the identity
+attribute must be addressable, and the `unicitas` over it in §5.3 is only
+meaningful over identifiers.
+
+Why `compositum` rather than the stricter `nomen`: an entity's identity
+is the **consumer's** data, not a natura key, so §4.4's snake-versus-kebab
+rule does not decide it — and `compositum` is a strict superset of
+`nomen`, so widening costs nothing and lets an author spell an id the
+same way they spell the element they are filling in.
+
+This example was wrong twice before it was right, both caught by
+implementation rather than by review: first `"rosa ad murum"` (spaces),
+then `rosa-ad-murum` under `genus="nomen"`, which forbids the hyphen —
+the hyphen belongs to `compositum` (`lib/canon.c:227-228`). Measured:
+under `nomen` the hyphenated form is a vitium and only the snake form is
+licit. The lesson is that a hand-written example is not evidence; the
+only trustworthy check is to feed it to the judge.
+
+A separate human-readable label attribute is a plausible future addition.
+**Trigger:** the first real consumer that needs to display a name it
+cannot derive from the identifier. Not before — adding it speculatively
+means guessing at a presentation concern the library has no stake in.
 
 A generated `unicitas` over `nomen=` across all kind elements makes the
 identity in §3.2 real.
