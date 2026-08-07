@@ -1,7 +1,8 @@
 #!/bin/bash
 # canon-custos.sh - PostToolUse (Write|Edit): iudicium canonicum in
-# plagulam .canon aut .stml modo scriptam - canalis PUSH (exemplar
-# natura-custos.sh).
+# plagulam .canon aut .stml modo scriptam, AUT documentum cuius
+# extensio in canones.registrum registrata est (.planta,
+# .individua, ...) - canalis PUSH (exemplar natura-custos.sh).
 #
 # .genera NON hic: natura-custos eas fert, et natura_examen post
 # migrationem (2026-08-06) canonem IPSUM intus adhibet (regula
@@ -16,8 +17,19 @@ INPUT=$(cat)
 FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty')
 
 case "$FILE" in
+    *.genera) exit 0 ;;
     *.canon|*.stml) ;;
-    *) exit 0 ;;
+    *)
+        # documenta registrata: registrum extensionum auctoritas
+        # UNA - extensio nova registrata uncum SPONTE accipit.
+        # (Lacuna nata 2026-08-07: .planta/.individua registratae,
+        # matcher non extensus - genus lacunae hic occiditur, non
+        # instantia.)
+        RADIX0="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+        TAB="$(printf '\t')"
+        grep -q "^\.${FILE##*.}${TAB}" "$RADIX0/canones.registrum" \
+            2>/dev/null || exit 0
+        ;;
 esac
 case "$FILE" in
     */scratchpad/*|*/build/*|*/probationes/*) exit 0 ;;
