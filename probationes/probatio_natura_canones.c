@@ -43,6 +43,7 @@
  * dicit. Loco eorum RELATIONES asseruntur (census se ipsum
  * reconciliat; canones cocti tot sunt quot exemplaria + I).
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "credo.h"
 #include "chorda.h"
@@ -55,6 +56,7 @@
 #include "iter_directoria.h"
 #include "processus.h"
 #include <stdio.h>
+#include <sys/stat.h>
 
 
 /* ==================================================
@@ -187,6 +189,110 @@ _elementum_invenire(
         }
     }
     redde NIHIL;
+}
+
+/* Elementum ADSTRICTUM (intra=) nomine et scopo datis invenire -
+ * comes eius supra.
+ *
+ * Scopus hic COMPARATUR, non praetermittitur: haec est sola via
+ * qua adstrictio ipsa asseri potest, et adstrictio nusquam aliter
+ * custoditur. Canon eam custodire NEQUIT: unicitas per DOCUMENTUM
+ * currit, ergo 'nomen elementi semel per canonem' inexpressibile
+ * est PRAECISE quia intra= nomina repetita licita facit. */
+interior StmlNodus*
+_elementum_adstrictum_invenire(
+    StmlNodus*  canon_radix,
+    chorda      titulus,
+    chorda      scopus)
+{
+    i32 i;
+
+    si (!canon_radix || !canon_radix->liberi)
+    {
+        redde NIHIL;
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(canon_radix->liberi); i++)
+    {
+        StmlNodus* l;
+        chorda*    n;
+        chorda*    intra;
+
+        l = *(StmlNodus**)xar_obtinere(canon_radix->liberi, i);
+        si (l->genus != STML_NODUS_ELEMENTUM || !l->titulus ||
+            !chorda_aequalis_literis(*l->titulus, "elementum"))
+        {
+            perge;
+        }
+        intra = stml_attributum_capere(l, "intra");
+        si (!intra || !chorda_aequalis(*intra, scopus))
+        {
+            perge;
+        }
+        n = stml_attributum_capere(l, "nomen");
+        si (n && chorda_aequalis(*n, titulus))
+        {
+            redde l;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Nomina elementorum NON adstrictorum bis declarata numerare.
+ *
+ * PROPRIETAS QUAM CANON DICERE NEQUIT, ideo hic: elementa sine
+ * intra= per canonem unica esse DEBENT; adstricta libere nomina
+ * communicant ('historia' per genera omnia). Si generator intra=
+ * omittere coeperit, elementa antea adstricta nuda fiunt et
+ * COLLIDUNT - quod canon_examen exitu 0 acciperet (mensuratum) et
+ * nulla alia porta videret. */
+interior i32
+_nuda_gemina_numerare(
+    StmlNodus*  canon_radix,
+    Piscina*    piscina)
+{
+    TabulaDispersa* visa;
+    i32             gemina;
+    i32             i;
+
+    visa   = tabula_dispersa_creare_chorda(piscina, LXIV);
+    gemina = ZEPHYRUM;
+
+    si (!canon_radix || !canon_radix->liberi)
+    {
+        redde ZEPHYRUM;
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(canon_radix->liberi); i++)
+    {
+        StmlNodus* l;
+        chorda*    n;
+
+        l = *(StmlNodus**)xar_obtinere(canon_radix->liberi, i);
+        si (l->genus != STML_NODUS_ELEMENTUM || !l->titulus ||
+            !chorda_aequalis_literis(*l->titulus, "elementum"))
+        {
+            perge;
+        }
+        si (stml_attributum_habet(l, "intra"))
+        {
+            perge;
+        }
+        n = stml_attributum_capere(l, "nomen");
+        si (!n)
+        {
+            perge;
+        }
+        si (tabula_dispersa_continet(visa, *n))
+        {
+            gemina++;
+        }
+        alioquin
+        {
+            tabula_dispersa_inserere(visa, *n, l);
+        }
+    }
+    redde gemina;
 }
 
 /* Utrum elementum liberum tituli dati cum nomine dato declaret
@@ -376,6 +482,57 @@ _vias_colligere(
  * Adiutoria - generator vocatus
  * ================================================== */
 
+/* Fontes quorum mutatio binarium stalum facit. Idem index quem
+ * ./tools/natura_canones.sh custodit; hic repetitur quia probatio
+ * de BINARIO iudicat, non de canonibus, et duo iudicia seiuncta
+ * manere debent. */
+staticus constans character* NC_FONTES[] = {
+    "tools/natura_canones.c",
+    "tools/natura_canones_emissio.c",
+    "tools/natura_canones.h",
+    NIHIL
+};
+
+/* Fons qui binario RECENTIOR est, vel NIHIL si nullus.
+ *
+ * CUR OMNINO: nihil binarium ad fontem suum ligat, et
+ * compile_tests.sh id numquam struit. MENSURATUM: custode e
+ * tools/natura_canones.c amoto sed binario vetere manente, haec
+ * probatio LXVII/LXVII viridis manebat - id est suita quae
+ * generatorem cuius fons custodem iam non continet APPROBAT.
+ *
+ * Absentia hic NON tractatur (vocans eam prius solvit): binarium
+ * numquam structum et binarium fonti suo dissimile causae DIVERSAE
+ * sunt, et qui eas confundit auctori dicit ut struat cum res vera
+ * aliud poscat. */
+interior constans character*
+_fons_recentior_binario(
+    constans character*  binarium)
+{
+    structura stat  b;
+    i32             i;
+
+    si (stat(binarium, &b) != ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    per (i = ZEPHYRUM; NC_FONTES[i] != NIHIL; i++)
+    {
+        structura stat f;
+
+        si (stat(NC_FONTES[i], &f) != ZEPHYRUM)
+        {
+            perge;
+        }
+        si (f.st_mtime > b.st_mtime)
+        {
+            redde NC_FONTES[i];
+        }
+    }
+    redde NIHIL;
+}
+
 nomen structura {
     b32  cucurrit;         /* processus generatus et exspectatus */
     i32  codex;            /* codex exitus */
@@ -562,11 +719,17 @@ principale(
 
         imprimere("\n--- I. custos nominum geminorum ---\n");
 
-        /* instrumentum absens: struere semel. RANCOR hic NON
-         * tractatur - id ./tools/natura_canones.sh -probare
-         * tenet, quae fontes cum binario confert. Probatio quae
-         * rubet quia instrumentum nondum structum est de
-         * instrumento nihil dicit. */
+        /* DUAE CAUSAE, DUAE VIAE - eas confundere est auctori
+         * dicere ut struat cum res vera aliud poscat.
+         *
+         * (a) ABSENS: struere semel. Probatio quae rubet quia
+         *     instrumentum nondum structum est de instrumento
+         *     nihil dicit, et suita quae in arbore recenti rubet
+         *     mox neglegitur.
+         * (b) STALUS: RECUSARE. Binarium fonti suo dissimile
+         *     probationem de codice qui iam non exsistit facit.
+         *     MENSURATUM: custode e fonte amoto sed binario
+         *     vetere manente, haec probatio tota VIRIDIS manebat. */
         si (!filum_existit("bin/natura_canones"))
         {
             constans character* struere[II];
@@ -583,6 +746,19 @@ principale(
             }
         }
         CREDO_VERUM (filum_existit("bin/natura_canones"));
+
+        {
+            constans character* stalum;
+
+            stalum = _fons_recentior_binario("bin/natura_canones");
+            si (stalum)
+            {
+                imprimere("  bin/natura_canones STALUS ('%s' recentior)"
+                          " - strue primum: ./tools/natura_struere.sh\n",
+                          stalum);
+            }
+            CREDO_NIHIL (stalum);
+        }
 
         CREDO_VERUM (filum_directorium_creare_si_necesse(
                          "build/probatio_natura_canones"));
@@ -941,6 +1117,57 @@ principale(
 
 
     /* ========================================================
+     * VII bis. ADSTRICTIO (intra=) - spec par. 4.2
+     *
+     * Partes et proprietates multiplices intra="<genus>"
+     * declarantur, et id NECESSARIUM est, non ornamentum: in
+     * corpore vero nomen partis nomini generis congruit
+     * (directorium, eventum, proiectio) et nomen proprietatis
+     * quoque (ambitus, codex, index, titulus...).
+     *
+     * NIHIL ALIUD HOC CUSTODIT, et canon custodire NEQUIT:
+     * unicitas per DOCUMENTUM currit, ergo 'nomen elementi semel
+     * per canonem' inexpressibile est praecise quia intra= nomina
+     * repetita licita facit. MENSURATUM: generatore intra=
+     * omittente, canon_examen duo <elementum nomen="radix"> exitu
+     * 0 accipit.
+     *
+     * PAR: adstrictum ADEST, et nudum eiusdem nominis ABEST.
+     * Prior sola non sufficit - generator intra= omittens
+     * elementum adstrictum RELINQUERET et nudum ADDERET.
+     * ======================================================== */
+
+    {
+        chorda        planta_fons;
+        StmlResultus  planta_res;
+
+        imprimere("\n--- VII bis. adstrictio (intra=) ---\n");
+
+        planta_fons = filum_legere_totum("natura/cocta/planta.canon",
+                                         piscina);
+        planta_res  = stml_legere(planta_fons, piscina, intern);
+        CREDO_VERUM (planta_res.successus);
+
+        /* pars 'radix' ad rosam-caninam ADSTRICTA est */
+        CREDO_NON_NIHIL (_elementum_adstrictum_invenire(
+            planta_res.elementum_radix,
+            chorda_ex_literis("radix", piscina),
+            chorda_ex_literis("rosa-canina", piscina)));
+
+        /* ...et NUDA nusquam declaratur. Haec est medietas quae
+         * regressionem vere capit. */
+        CREDO_NIHIL (_elementum_invenire(
+            planta_res.elementum_radix,
+            chorda_ex_literis("radix", piscina)));
+
+        /* et idem generaliter: nomina nuda per canonem UNICA */
+        CREDO_AEQUALIS_I32 (_nuda_gemina_numerare(
+                                planta_res.elementum_radix, piscina),
+                            (i32)ZEPHYRUM);
+    }
+
+
+    /* ========================================================
      * VIII. CORPUS TOTUM CANONUM COCTORUM
      *
      * Per plagulam: nullum minimum usquam; radix una eaque
@@ -962,6 +1189,7 @@ principale(
         i32  unicitates_malae;
         i32  citantes_per_modulum;
         i32  monolithi;
+        i32  nuda_gemina;
 
         imprimere("\n--- VIII. corpus canonum coctorum ---\n");
 
@@ -977,6 +1205,7 @@ principale(
         unicitates_malae     = ZEPHYRUM;
         citantes_per_modulum = ZEPHYRUM;
         monolithi            = ZEPHYRUM;
+        nuda_gemina          = ZEPHYRUM;
 
         per (i = ZEPHYRUM; i < xar_numerus(canones); i++)
         {
@@ -1064,6 +1293,22 @@ principale(
                           via_c, minima);
             }
 
+            /* ADSTRICTIO trans corpus: elementa NUDA nomina unica
+             * ferre debent. Generator intra= omittens elementa
+             * antea adstricta nuda facit, quae COLLIDUNT - et
+             * canon_examen id exitu 0 accipit (mensuratum). */
+            {
+                i32 gemina;
+
+                gemina = _nuda_gemina_numerare(res.elementum_radix, pp);
+                si (gemina > ZEPHYRUM)
+                {
+                    imprimere("  '%s': nomina nuda gemina %u"
+                              " (intra= omissum?)\n", via_c, gemina);
+                    nuda_gemina += gemina;
+                }
+            }
+
             si (est_monolithus)
             {
                 monolithi++;
@@ -1091,6 +1336,8 @@ principale(
         CREDO_AEQUALIS_I32 (radices_malae, (i32)ZEPHYRUM);
         /* identitas: unicitas una in omni canone */
         CREDO_AEQUALIS_I32 (unicitates_malae, (i32)ZEPHYRUM);
+        /* adstrictio (par. 4.2): nomina nuda unica per canonem */
+        CREDO_AEQUALIS_I32 (nuda_gemina, (i32)ZEPHYRUM);
         /* citationes MONOLITHO solae (par. 3.5: relatio trans
          * plagulas oneratoris est, non canonis) */
         CREDO_AEQUALIS_I32 (citantes_per_modulum, (i32)ZEPHYRUM);

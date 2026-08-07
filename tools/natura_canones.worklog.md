@@ -480,17 +480,51 @@ about the tool.
 **It uses a scratch piscina per file** in the 34-canon sweep. The monolith
 alone is 640 KB of source; 34 trees held at once would be held for no reason.
 
-### The gate chain had a hole, and it is closed
+### The gate chain had a hole; the hook narrows it, the TOOL closes it
 
-Task 7 measured it: `natura-custos` gates the canon, `canon-custos` gates the
-reader, and **nobody ever edits a generated canon**. Regenerating via
+**Correction, 2026-08-07 (review).** An earlier version of this entry said the
+hook alone closed the hole. It did not, and the difference is one commit wide.
+
+Task 7 measured the shape: `natura-custos` gates the canon, `canon-custos`
+gates the reader, and **nobody ever edits a generated canon**. Regenerating via
 `natura_canones.sh` is a tool write, not an Edit, so no hook fires and the
-reader goes stale behind a fresh canon, silently. `natura-custos.sh` now runs
-`canon_coquere.sh -probare` as a third gate, so one `.genera` edit checks both
-hops. Exit 1 and exit 2 get **different** messages, mirroring the canon gate
-directly above it — "regenerate" is the wrong advice when the gate could not
-run, because regenerating with a stale tool is precisely how stale output gets
-blessed.
+reader goes stale behind a fresh canon, silently.
+
+`natura-custos.sh` now runs `canon_coquere.sh -probare` as a third gate. Exit 1
+and exit 2 get **different** messages, mirroring the canon gate directly above
+it — "regenerate" is the wrong advice when the gate could not run, because
+regenerating with a stale tool is precisely how stale output gets blessed.
+
+**But the hook is one edit LATE, measured by walking the real workflow:**
+
+| step | what happens | who says anything |
+|---|---|---|
+| edit a `.genera` | canon now stale; reader still matches the **old** canon on disk | gate 2: `canones cocti RANCIDI`. Gate 3 correctly silent — nothing is stale yet |
+| run `natura_canones.sh` as instructed | canons rewritten — **this is the moment the reader goes stale** | *nobody.* A tool write, not an Edit. The tree can be committed here |
+| next `.genera` edit, whenever that is | — | gate 3, at last |
+
+So the hook covers the *steady* state and misses the *transition*, which is
+exactly the window in which someone commits.
+
+**The fix is in `natura_canones.sh` itself**: after regenerating (non-`-probare`
+mode only) it runs `canon_coquere.sh -probare` and, if readers are now stale,
+prints `CATENA INCOMPLETA` and **exits 3**. The tool that creates the staleness
+is the one that reports it, at the moment it creates it.
+
+Two deliberate limits:
+
+- **It does not regenerate the readers.** `cocta.registrum` carries entries with
+  nothing to do with natura, and one regenerator silently driving another
+  couples things that should stay separable. Message and exit code, not action.
+- **Exit 3 is new and documented in the usage header.** Only humans invoke the
+  bare form (grepped: the hook uses `-probare` exclusively), so the stronger
+  contract — *exit 0 means the whole chain is fresh*, not merely *I wrote some
+  files* — costs nothing and stops `... && git commit`.
+
+A message-only fix (gate 2 advising "…then run canon_coquere.sh") was considered
+and rejected as the primary mechanism: a gate whose closure depends on a human
+following an instruction is the thing gates exist to replace. The advice is in
+gate 3's message as well, but it is not what closes the hole.
 
 Birth-tested in four states, since a hook that prints nothing looks identical
 healthy or dead: clean (baseline only), reader stale, **both** stale (one JSON
@@ -534,3 +568,84 @@ bin/canon_coquere <file> -praefixum Planta -caput ... -corpus ...
 The value lands in the generated C as `PLANTA_ROSA_CANINA_HABITUS_SCANDENS`
 and turns **exactly one** assertion red. One `<valor>` in natura, two
 generations, one C enum member.
+
+---
+
+## 2026-08-07 — Task 8 fix round: three things the review found
+
+### 1. `intra=` had NO guard anywhere, and canon cannot supply one
+
+The brief asked for a scoping assertion; I did not write it, and worse, the
+test's own element lookup **deliberately skipped** `intra=` elements, so
+nothing in the file touched spec §4.2 at all.
+
+The reviewer measured the cost. Simulating the generator dropping `intra=`,
+producing two `<elementum nomen="radix">` in one canon:
+
+```
+dup radix elements now: 2
+canon_examen: plagulae 1 / VITIA 0        (exit 0)
+probatio_natura_canones:  67/67, Fracti 0
+```
+
+Both watchers silent — and **`canon_examen` cannot catch it by design.**
+`canon.canon` records that unicitas runs document-wide, so *"element name once
+per canon"* is inexpressible **precisely because `intra=` makes repeated names
+legal**. This is the same shape as the `<optio>` mistake I caught on myself: a
+thing canon cannot say, where a test was the only possible coverage.
+
+Reproduced both scenarios myself, and `canon_examen` exits 0 for each.
+
+Fixed in two layers:
+
+- **the site pair** the review specified — `<elementum nomen="radix"
+  intra="rosa-canina">` exists **and** no *unscoped* `radix` does. The second
+  half is what catches the regression; the first alone would survive a
+  generator that left the scoped element and added a bare one.
+- **a corpus-wide invariant**, `_nuda_gemina_numerare`: across all 34 canons,
+  **unscoped element names must be unique within a canon**. Scoped ones share
+  names freely (`historia` appears in nearly every kind); unscoped ones cannot.
+  Dropping `intra=` collapses the second set into the first and they collide.
+
+Measured: dropping `intra=` from one element reddens 2 assertions; dropping it
+from all of `planta.canon` reddens 4 and reports **54 colliding bare names**.
+
+### 2. The suite green-lit a generator whose source no longer had the guard
+
+Nothing tied `bin/natura_canones` to its source and `compile_tests.sh` never
+builds it. The reviewer neutered the collision guard in
+`tools/natura_canones.c`, left the older binary in place, and got:
+
+```
+Totalis: 67  Praeteriti: 67  Fracti: 0   ✓ TEST PASSED
+```
+
+The assertions themselves are sound — rebuilt against the neutered source, the
+6 guard assertions go red. Only the **input** was unpinned.
+
+Now `_fons_recentior_binario` stats the binary against
+`natura_canones.{c,h}` + `natura_canones_emissio.c` and fails with
+`STALUS ('<file>' recentior) - strue primum`. **Absent and stale stay
+different causes:** absent builds once (a suite that reddens because a tool was
+never built gets ignored), stale **refuses** — certifying a binary that no
+longer matches its source is worse than not testing it. Both paths verified.
+
+This is the `-o /dev/null` lesson in another costume: *proving you CAN compile
+is not proving you DID.* Here, proving a binary passes is not proving that
+binary came from the source in the tree.
+
+### 3. Accounting correction
+
+I reported **122/122**. In an isolated worktree the suite is **122/117/5**, with
+the same five failing identically at parent `b06135e` — pre-existing and
+environment-dependent. The attestable claim is **+1 test, +1 passing, 0 new
+failures**; "122/122" was a main-tree figure and should not have been stated as
+the suite's condition.
+
+### Deferred (review Minors, recorded so they are not lost)
+
+The partial-sweep `frange` lets zero counts read as success; gate 3 truncates
+with `head -5` where the gate directly above computes an overflow count under a
+comment reading `truncatio TACITA nulla`; `mkdir -p` unchecked in
+`canon_coquere.sh`; `citantes_per_modulum` counts two distinct failures in one
+counter; the new fixtures trip `natura-custos` on edit.

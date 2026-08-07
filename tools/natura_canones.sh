@@ -7,8 +7,22 @@
 # rancorem clamat.
 #
 #   sine argumento   omnes regenerare (in locis veris)
+#                    exitus 0 = catena TOTA recens; 2 defectus;
+#                    3 canones scripti sed LECTORES nunc rancidi
 #   -probare         conferre solum: exitus 0 recentes, 1 RANCIDI,
 #                    2 defectus instrumenti (numquam sanitas tacita)
+#
+# CUR EXITUS III EXSISTIT (foramen mensuratum): regeneratio ipsa est
+# quae lectores coctos rancidos FACIT, et scriptio haec ab
+# INSTRUMENTO fit, non ab editione - ergo nullus uncus accenditur et
+# arbor cum lectore stalo committi potest, nemine dicente. Uncus
+# .generorum id demum ad editionem PROXIMAM inveniret. Ideo hoc
+# instrumentum ipsum, eo momento quo rancorem creat, id dicit.
+#
+# Lectores NON regenerantur hic (decretum): canon_coquere.sh
+# introitus fert qui cum natura nihil commune habent, et regenerator
+# unus qui alterum tacite agitat res coniungit quae seiunctae manere
+# debent. Nuntius et codex exitus, non actio.
 #
 # MANIFESTUM NULLUM: corpus ipsum manifestum est. Omne
 # natura/<stirps>.genera canonem natura/cocta/<stirps>.canon parit,
@@ -194,7 +208,41 @@ if [ "$PROBARE" = "1" ]; then
         exit 1
     fi
     echo "natura_canones: canones $facti recentes"
-else
-    echo "natura_canones: canones $facti cocti" >&2
+    exit 0
 fi
-exit 0
+
+echo "natura_canones: canones $facti cocti" >&2
+
+# ------------------------------------------------------------------
+# SALTUS SECUNDUS, EO MOMENTO QUO RANCOR NASCITUR
+#
+# Canones modo mutati sunt; lectores ex eis cocti canonem VETEREM
+# adhuc referunt. Vide rationem in capite: nullus uncus hoc capit,
+# quia scriptio supra instrumenti est, non editionis.
+LECTOR=./tools/canon_coquere.sh
+if [ ! -x "$LECTOR" ]; then
+    echo "natura_canones: $LECTOR abest - an lectores cocti recentes sint IGNORATUR" >&2
+    exit 0
+fi
+
+LQ=$("$LECTOR" -probare 2>&1 >/dev/null)
+LSTATUS=$?
+if [ "$LSTATUS" -eq 0 ]; then
+    exit 0
+fi
+
+if [ "$LSTATUS" -eq 1 ]; then
+    printf '%s\n' "$LQ" | grep '^canon_coquere: RANCIDUS ' >&2
+    echo "natura_canones: CATENA INCOMPLETA - canones scripti, sed" >&2
+    echo "  lectores ex eis cocti nunc RANCIDI sunt (canonem veterem" >&2
+    echo "  referunt). Perfice: ./tools/canon_coquere.sh" >&2
+    exit 3
+fi
+
+# porta lectorum ipsa non cucurrit: id NON est sanitas, et
+# 'regenera' hic consilium falsum esset - instrumento stalo
+# regenerare est litteram stalam benedicere
+printf '%s\n' "$LQ" | tail -3 >&2
+echo "natura_canones: porta lectorum NIHIL probavit (exitus $LSTATUS)" >&2
+echo "  - an lectores cocti recentes sint IGNORATUR" >&2
+exit 3
