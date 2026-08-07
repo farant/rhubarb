@@ -62,6 +62,15 @@ nomen structura {
     constans character*  genus_valoris; /* "textus"/"nomen"/... */
                    Xar*  optiones;      /* Xar de chorda* - electio */
                 chorda*  praestitutum;  /* ordinarius=, vel NIHIL */
+    /* MONOLITHUS solum: nomen entis peti (snake) cuius identitatem
+     * hoc membrum citat, vel NIHIL = nulla citatio. Canon per
+     * modulum id numquam ponit, quia relatio ibi plagulas transit
+     * et documentum clavem non tenet (spec par. 3.5).
+     *
+     * DECRETUM ipsius emissoris est ut hoc scribat, non ut id
+     * COLLIGAT: quae relatio citari possit natura_canones.c solus
+     * iudicat (petitum resolvi debet ET folium esse - vide ibi). */
+                chorda*  citatio_ad;
 } NcMembrum;
 
 nomen structura {
@@ -90,6 +99,14 @@ _elementum_inspicere(
  *   elementa  - Xar de NcElementum* (ordo = ordo emissionis)
  *   dialectus - nomen dialecti (= modulus), pro <canon dialectus=>
  *   fons      - unde generatum, pro signo GENERATUM
+ *   praefatio - commentarium ADDITUM post signum, vel NIHIL
+ *
+ * praefatio SEORSUM stat (non intra signum) CONSULTO: custos
+ * 'head -3' legit et AMBAS locutiones ibi poscit, ergo prosa per
+ * fons= immissa signum in lineam quartam pelleret et plagulam
+ * tacite inermem relinqueret - id ipsum quod semel iam momordit.
+ * Commentarium proprium post signum eum numquam movet.
+ *
  * Redde FALSUM si quid emitti NON potuit (praestitutum generi
  * repugnans, aut quota in valore): tunc NIHIL scriptum valet et
  * vocans plagulam abicere debet - canon dimidius mendacium est. */
@@ -98,6 +115,7 @@ _canonem_emittere(
     FILE*                f,
     Xar*                 elementa,
     constans character*  dialectus,
-    constans character*  fons);
+    constans character*  fons,
+    constans character*  praefatio);
 
 #endif /* NATURA_CANONES_H */

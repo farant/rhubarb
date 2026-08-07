@@ -56,6 +56,7 @@ interior b32     _membrum_attributum_scribere(FILE* f,
                                               i32* planata,
                                               i32* aliena);
 interior vacuum  _eventum_scribere(FILE* f, Xar* elementa);
+interior vacuum  _citationes_scribere(FILE* f, Xar* elementa);
 
 /* nomen naturae (snake) -> nomen canonis (kebab).
  * Bijectivum: genus 'nomen' naturae lineolam non fert. */
@@ -424,13 +425,22 @@ _generi_congruit(
         redde VERUM;
     }
 
-    /* nomen (et compositum, quod hic non generamus) */
+    /* nomen et compositum - lineola SOLI composito licet
+     * (lib/canon.c valor_congruit, casus CANON_GENUS_NOMEN:
+     * 'c == '-' && a->genus == CANON_GENUS_COMPOSITUM').
+     *
+     * Compositum hic olim non generabatur et ramus eum tacite ut
+     * nomen iudicabat; monolithus id generat (relationes identitates
+     * citant, quae lineolam ferunt), ergo speculum id nunc ferre
+     * DEBET - aliter ordinarius licitus falso reiceretur. */
     per (i = ZEPHYRUM; v[i] != '\0'; i++)
     {
         si (!((v[i] >= 'a' && v[i] <= 'z') ||
               (v[i] >= 'A' && v[i] <= 'Z') ||
               (v[i] >= '0' && v[i] <= '9') ||
-              v[i] == '_' || v[i] == '*'))
+              v[i] == '_' || v[i] == '*' ||
+              (v[i] == '-' &&
+               strcmp(genus_valoris, "compositum") == ZEPHYRUM)))
         {
             redde FALSUM;
         }
@@ -877,10 +887,17 @@ _elementum_scribere(
         alioquin si (m->origo == NC_ORIGO_RELATIO)
         {
             /* par. 3.5: relatio trans plagulas oneratoris est;
-             * canon nomen bene formatum SOLUM iudicat */
-            fputs("\">\n", f);
-            fputs("    <attributum nomen=\"ad\" genus=\"nomen\"/>\n", f);
-            fputs("  </elementum>\n", f);
+             * canon nomen bene formatum SOLUM iudicat.
+             *
+             * Genus ex EXEMPLARI sumitur, non hic fixum: canon per
+             * modulum 'nomen' dicit (valor clavis naturae est,
+             * snake), monolithus 'compositum' (valor identitatem
+             * documenti nominat, quae lineolam fert). Fixum hic
+             * relictum monolithum sibi repugnantem faceret -
+             * relatio simplex lineolam ferret, multiplex non. */
+            fprintf(f, "\">\n    <attributum nomen=\"ad\" "
+                       "genus=\"%s\"/>\n  </elementum>\n",
+                    m->genus_valoris);
         }
         alioquin
         {
@@ -969,12 +986,82 @@ _eventum_scribere(
     fputs("  </elementum>\n", f);
 }
 
+/* Citationes - clavis-relatio INTRA documentum.
+ *
+ * Emissor hic NIHIL iudicat: membrum citatio_ad fert aut non fert.
+ * Quae relatio citari possit natura_canones.c solus decernit (et
+ * canon per modulum nullam ponit, unde haec functio ibi silet).
+ *
+ * super= ADSTRINGIT citationem ad elementum quod relationem vere
+ * declarat: sine eo elementum alienum idem nomen attributi ferens
+ * falso caperetur. Nomina generum per corpus unica sunt (CLXI
+ * mensurata), ergo super= unum elementum exacte nominat.
+ *
+ * ad="<petitum>/nomen": clavis identitas est, id est attributum
+ * 'nomen' generis peti - quod omne elementum fert. */
+interior vacuum
+_citationes_scribere(
+    FILE*  f,
+    Xar*   elementa)
+{
+    character ap[NC_APPELLATIO_MAXIMA];
+    i32       numerus;
+    i32       i;
+
+    numerus = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(elementa); i++)
+    {
+        NcElementum* el;
+        i32          j;
+
+        el = *(NcElementum**)xar_obtinere(elementa, i);
+        per (j = ZEPHYRUM; j < xar_numerus(el->membra); j++)
+        {
+            NcMembrum* m;
+
+            m = (NcMembrum*)xar_obtinere(el->membra, j);
+            si (!m->citatio_ad ||
+                !_appellatio_emissa(ap, (i32)magnitudo(ap),
+                                    m->praefixum, m->titulus))
+            {
+                perge;
+            }
+
+            si (numerus == ZEPHYRUM)
+            {
+                fputs("\n  <!-- CITATIONES: relatio quae folium "
+                      "petit clavem documenti fit.\n"
+                      "       Petitum cum posteris citari NEQUIT - "
+                      "documentum subgenus\n"
+                      "       licite nominat, et clavis generis id "
+                      "non caperet. -->\n", f);
+            }
+            numerus++;
+
+            fputs("  <citatio nomen=\"", f);
+            _kebab_scribere(f, el->ens->titulus);
+            fprintf(f, "-%s\" attributum=\"%s\" ad=\"", ap, ap);
+            _kebab_scribere(f, m->citatio_ad);
+            fputs("/nomen\" super=\"", f);
+            _kebab_scribere(f, el->ens->titulus);
+            fputs("\"/>\n", f);
+        }
+    }
+
+    si (numerus > ZEPHYRUM)
+    {
+        fprintf(stderr, "natura_canones: citationes %u emissae\n",
+                numerus);
+    }
+}
+
 b32
 _canonem_emittere(
     FILE*                f,
     Xar*                 elementa,
     constans character*  dialectus,
-    constans character*  fons)
+    constans character*  fons,
+    constans character*  praefatio)
 {
     b32 sanum;
     i32 planata;
@@ -998,6 +1085,14 @@ _canonem_emittere(
         "<!-- GENERATUM a natura_canones e %s - NOLI MANU MUTARE.\n",
         fons);
     fputs("     Regenera: ./tools/natura_canones.sh -->\n", f);
+
+    /* praefatio POST signum: vide natura_canones.h - intra signum
+     * posita locutionem 'NOLI MANU MUTARE' extra 'head -3' pelleret */
+    si (praefatio)
+    {
+        fprintf(f, "<!--\n%s\n-->\n", praefatio);
+    }
+
     fprintf(f, "<canon dialectus=\"%s\" versio=\"1\">\n\n", dialectus);
 
     /* 'individua' SOLA radix= fert */
@@ -1025,6 +1120,7 @@ _canonem_emittere(
     }
 
     _eventum_scribere(f, elementa);
+    _citationes_scribere(f, elementa);
     fputs("\n</canon>\n", f);
 
     /* damna EXPRESSA: quod canon dicere non potest tacitum non
