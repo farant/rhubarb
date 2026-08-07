@@ -104,6 +104,8 @@ interior vacuum    _genera_ignota_nuntiare(NaturaBibliotheca* bib,
 interior Xar*      _optiones_colligere(StmlNodus* n, Piscina* piscina);
 interior Xar*      _status_colligere(StmlNodus* n, Piscina* piscina);
 interior b32       _machina_ad_individuum(StmlNodus* n);
+interior constans character* _praefixum_machinae(
+                                 constans chorda* titulus);
 interior vacuum    _valores_ex_nodo(NcElementum* el, StmlNodus* n,
                                     Piscina* piscina);
 interior vacuum    _valores_applicare(NcElementum* el, NcEns* ens,
@@ -625,6 +627,42 @@ _machina_ad_individuum(
     redde chorda_aequalis_literis(*gerens, "individuum");
 }
 
+/* Praefixum 'status_' machinae, NISI nomen machinae iam eo incipit.
+ *
+ * DECRETUM (Fran), non casus specialis furtim insertus: haec
+ * condicio transformationi puritatem sine exceptione aufert, quae
+ * ipsa erat ratio contra eam. Vicit tamen, quia canon GENERATUS hoc
+ * solo valet quod homo nomen attributi ex exemplari praevidere
+ * potest - et 'status-status-civilis' nomen est quod nemo
+ * coniceret. Duae viae aliae reiectae: nomen turpe mechanice
+ * ferre, aut machinam in natura renominare (natura recte dicit
+ * quod dicit; generator cedat, non exemplar).
+ *
+ *   planta  machina 'vita'           -> status-vita
+ *   persona machina 'status_civilis' -> status-civilis
+ *
+ * Praefixum reddito UTENDUM est et in inquisitione duplicationis
+ * et in membro ipso: si discreparent, machina sub uno nomine
+ * quaereretur et sub alio poneretur. */
+interior constans character*
+_praefixum_machinae(
+    constans chorda*  titulus)
+{
+    constans character* signum;
+    i32                 mensura;
+
+    signum  = "status_";
+    mensura = (i32)strlen(signum);
+
+    si (titulus->mensura >= mensura &&
+        memcmp(titulus->datum, signum,
+               (memoriae_index)mensura) == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    redde signum;
+}
+
 /* liberos <valor> nodi unius ad membra applicare.
  * Membrum iam praestitutum SERVATUR: vocans ab origine maxime
  * propria ascendit, ergo primum scriptum vincit. */
@@ -767,18 +805,21 @@ _elementum_aedificare(
         si (chorda_aequalis_literis(*am->nodus->titulus,
                                     "machina_statuum"))
         {
+            constans character* praefixum;
+
             si (!titulus || !_machina_ad_individuum(am->nodus))
             {
                 perge;
             }
-            si (_membrum_adest(el->membra, titulus, "status_"))
+            praefixum = _praefixum_machinae(titulus);
+            si (_membrum_adest(el->membra, titulus, praefixum))
             {
                 perge;
             }
             m                = (NcMembrum*)xar_addere(el->membra);
             m->discrimen     = NC_MEMBRUM_ATTRIBUTUM;
             m->titulus       = titulus;
-            m->praefixum     = "status_";
+            m->praefixum     = praefixum;
             m->genus_valoris = "electio";
             m->optiones      = _status_colligere(am->nodus, piscina);
             m->praestitutum  = NIHIL;
