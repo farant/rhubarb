@@ -39,9 +39,12 @@ interior b32       _extensionem_habet(constans chorda* t);
 interior vacuum    _stirpem_scribere(constans chorda* t, character* ex,
                                      i32 tectum);
 interior vacuum    _kebab_scribere(FILE* f, constans chorda* t);
+interior s32       _comparare_titulos(constans vacuum* a,
+                                      constans vacuum* b);
 interior b32       _corpus_onerare(NaturaBibliotheca* bib,
                                    constans character* radix,
-                                   Piscina* piscina);
+                                   Piscina* piscina,
+                                   i32* vulnera_ex);
 interior Xar*      _entia_colligere(NaturaBibliotheca* bib,
                                     Piscina* piscina);
 
@@ -103,17 +106,49 @@ _stirpem_scribere(
     ex[n] = '\0';
 }
 
+/* ordo alphabeticus titulorum - ordinem directorii (qui ordo
+ * systematis filorum est) in ordinem STABILEM vertit */
+interior s32
+_comparare_titulos(
+    constans vacuum*  a,
+    constans vacuum*  b)
+{
+    redde chorda_comparare(*(constans chorda*)a, *(constans chorda*)b);
+}
+
 /* exemplaria OMNIA onerare - sub= fines modulorum transit,
- * ergo unum onerare non sufficit (mos natura_examen). */
+ * ergo unum onerare non sufficit (mos natura_examen).
+ *
+ * ORDO: tituli PRIMUM colliguntur et ORDINANTUR, deinde onerantur.
+ * Ordo directorii ordo systematis filorum est, non ordo stabilis:
+ * canon inde generatus ordinem elementorum mutaret quotiens
+ * exemplar additur aut machina mutatur, unde porta rancoris falso
+ * clamaret - et porta quae falso clamat neglegitur. Introitus
+ * praeterea usque ad vocationem proximam SOLUM valet (vide
+ * iter_directoria.h), ergo titulus transcribendus est.
+ *
+ * CORPUS INCOMPLETUM proiectionem abicit: exemplar quod parsari
+ * aut legi nequit corpus minus tacite relinqueret, id est ipsa
+ * condicio quam numeri CLXXVII/CCCLXXXIV deprehendere debent.
+ * Vulnera nexurae ALIUD sunt - ea corpus AEGRUM signant, non
+ * MINUS, ergo reddita sunt ut vocans ea nuntiet et pergat. */
 interior b32
 _corpus_onerare(
     NaturaBibliotheca*   bib,
     constans character*  radix,
-    Piscina*             piscina)
+    Piscina*             piscina,
+    i32*                 vulnera_ex)
 {
     DirectoriumIterator*  iter;
     DirectoriumIntroitus* introitus;
+    Xar*                  tituli;
+    character             via[DXII];
+    character             stirps[CCLVI];
+    i32                   i;
     i32                   onerata;
+    i32                   fracta;
+
+    *vulnera_ex = ZEPHYRUM;
 
     iter = directorium_iterator_aperire(radix, piscina);
     si (!iter)
@@ -122,12 +157,10 @@ _corpus_onerare(
         redde FALSUM;
     }
 
-    onerata = ZEPHYRUM;
+    tituli = xar_creare(piscina, (i32)magnitudo(chorda));
     dum ((introitus = directorium_iterator_proximum(iter)) != NIHIL)
     {
-        character via[DXII];
-        character stirps[CCLVI];
-        chorda    fons;
+        chorda* locus;
 
         si (introitus->genus != INTROITUS_FILUM ||
             !_extensionem_habet(&introitus->titulus))
@@ -141,22 +174,50 @@ _corpus_onerare(
             perge;
         }
 
-        sprintf(via, "%s/%.*s", radix,
-                (integer)introitus->titulus.mensura,
-                (constans character*)introitus->titulus.datum);
-        _stirpem_scribere(&introitus->titulus, stirps,
-                          (i32)magnitudo(stirps));
+        locus  = (chorda*)xar_addere(tituli);
+        *locus = chorda_transcribere(introitus->titulus, piscina);
+    }
+    directorium_iterator_claudere(iter);
+
+    xar_ordinare(tituli, _comparare_titulos);
+
+    onerata = ZEPHYRUM;
+    fracta  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(tituli); i++)
+    {
+        constans chorda* titulus;
+        chorda           fons;
+
+        titulus = (constans chorda*)xar_obtinere(tituli, i);
+
+        sprintf(via, "%s/%.*s", radix, (integer)titulus->mensura,
+                (constans character*)titulus->datum);
+        _stirpem_scribere(titulus, stirps, (i32)magnitudo(stirps));
 
         fons = filum_legere_totum(via, piscina);
         si (fons.mensura == ZEPHYRUM)
         {
             fprintf(stderr, "natura_canones: '%s' legi nequit\n", via);
+            fracta++;
             perge;
         }
-        natura_legere(bib, fons, stirps);
+        si (!natura_legere(bib, fons, stirps))
+        {
+            fprintf(stderr, "natura_canones: '%s' parsari nequit\n",
+                    via);
+            fracta++;
+            perge;
+        }
         onerata++;
     }
-    directorium_iterator_claudere(iter);
+
+    si (fracta > ZEPHYRUM)
+    {
+        fprintf(stderr,
+            "natura_canones: exemplaria %u NON onerata - corpus "
+            "INCOMPLETUM, proiectio abicitur\n", fracta);
+        redde FALSUM;
+    }
 
     si (onerata == ZEPHYRUM)
     {
@@ -165,7 +226,8 @@ _corpus_onerare(
             radix, EXTENSIO);
         redde FALSUM;
     }
-    natura_nectere(bib);
+
+    *vulnera_ex = natura_nectere(bib);
     redde VERUM;
 }
 
@@ -222,10 +284,12 @@ principale(
     Xar*                entia;
     constans character* radix;
     b32                 modus_index;
+    i32                 vulnera;
     s32                 i;
 
     radix       = "natura";
     modus_index = FALSUM;
+    vulnera     = ZEPHYRUM;
 
     per (i = I; i < numerus; i++)
     {
@@ -248,9 +312,20 @@ principale(
 
     piscina = piscina_generare_dynamicum("natura_canones", 4194304);
     bib     = natura_bibliotheca_creare(piscina);
-    si (!bib || !_corpus_onerare(bib, radix, piscina))
+    si (!bib || !_corpus_onerare(bib, radix, piscina, &vulnera))
     {
         redde II;
+    }
+
+    /* corpus AEGRUM proiectionem non impedit (decretum: vulnera
+     * stantia iudicia aperta hominis sunt, et generator qui ob ea
+     * recusaret usque ad eorum solutionem inutilis esset), sed
+     * TACITE numquam transit */
+    si (vulnera > ZEPHYRUM)
+    {
+        fprintf(stderr,
+            "natura_canones: corpus vulnera %u - proiectio tamen "
+            "pergit\n", vulnera);
     }
 
     entia = _entia_colligere(bib, piscina);
