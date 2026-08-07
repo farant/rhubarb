@@ -48,6 +48,14 @@ interior i32    _genus_linguae_quot(NaturaGenus* g,
                                     constans character* codex);
 interior vacuum _columnam_scribere(FILE* f, constans chorda* t,
                                    i32 latitudo);
+interior vacuum _html_textum_scribere(FILE* f, chorda t);
+interior vacuum _lineam_scribere(FILE* f, NaturaGenus* g);
+interior StmlNodus* _glossam_invenire(NaturaGenus* g,
+                                      constans character* codex);
+interior b32    _paginam_scribere(NaturaBibliotheca* bib,
+                                  constans NgLinguae* linguae,
+                                  constans character* via,
+                                  Piscina* piscina);
 
 interior b32
 _extensionem_habet(
@@ -186,6 +194,301 @@ _columnam_scribere(
     {
         putc(' ', f);
     }
+}
+
+/* textus in html: <, >, & evasa; cetera verbatim (UTF-8 transit) */
+interior vacuum
+_html_textum_scribere(
+    FILE*   f,
+    chorda  t)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < t.mensura; i++)
+    {
+        character c;
+
+        c = (character)t.datum[i];
+        si (c == '<')          { fputs("&lt;", f); }
+        alioquin si (c == '>') { fputs("&gt;", f); }
+        alioquin si (c == '&') { fputs("&amp;", f); }
+        alioquin               { putc(c, f); }
+    }
+}
+
+/* catena parentum a radice ad genus: 'vivens &rarr; planta' */
+interior vacuum
+_lineam_scribere(
+    FILE*         f,
+    NaturaGenus*  g)
+{
+    NaturaGenus* catena[XXXII];
+    i32          n;
+    i32          i;
+    NaturaGenus* cursor;
+
+    n = ZEPHYRUM;
+    per (cursor = g; cursor && n < (i32)XXXII;
+         cursor = cursor->parens)
+    {
+        catena[n] = cursor;
+        n++;
+    }
+    per (i = n; i > ZEPHYRUM; i--)
+    {
+        _html_textum_scribere(f, *catena[i - I]->titulus);
+        si (i > I)
+        {
+            fputs(" &rarr; ", f);
+        }
+    }
+}
+
+/* glossam primam linguae datae reddere, vel NIHIL */
+interior StmlNodus*
+_glossam_invenire(
+    NaturaGenus*         g,
+    constans character*  codex)
+{
+    i32 numerus;
+    i32 i;
+
+    numerus = stml_numerus_liberorum(g->nodus);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+        chorda*    lingua;
+
+        l = stml_liberum_ad_indicem(g->nodus, i);
+        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
+            !chorda_aequalis_literis(*l->titulus, "glossa"))
+        {
+            perge;
+        }
+        lingua = stml_attributum_capere(l, "lingua");
+        si (lingua && chorda_aequalis_literis(*lingua, codex))
+        {
+            redde l;
+        }
+    }
+    redde NIHIL;
+}
+
+/* encyclopaedia et lacunae FUSAE (spec glossae par. 6): plagula
+ * una sine ope externa. DETERMINISTICA - nulla tempora, ergo
+ * -probare crustae byte conferre potest. Lacuna VISIBILIS
+ * ('deest') pagina index operum est; soluta e pagina evanescit. */
+interior b32
+_paginam_scribere(
+    NaturaBibliotheca*   bib,
+    constans NgLinguae*  linguae,
+    constans character*  via,
+    Piscina*             piscina)
+{
+    FILE* f;
+    i32   m;
+    i32   g_i;
+    i32   l_i;
+
+    f = fopen(via, "w");
+    si (!f)
+    {
+        redde FALSUM;
+    }
+
+    fputs("<!DOCTYPE html>\n"
+          "<html lang=\"la\"><head><meta charset=\"utf-8\">\n"
+          "<title>Glossae - documentatio generum</title>\n"
+          "<style>\n"
+          " body { font-family: Menlo, monospace; margin: 2rem auto;\n"
+          "        max-width: 72rem; background: #14120f;\n"
+          "        color: #d8d0c0; line-height: 1.5; }\n"
+          " h1 { color: #e8c878; font-size: 1.4rem; }\n"
+          " h2 { color: #b8a878; border-bottom: 1px solid #3a352c;\n"
+          "      padding-bottom: .3rem; margin-top: 2rem;\n"
+          "      font-size: 1.1rem; }\n"
+          " h3 { color: #d8d0c0; margin-bottom: .1rem;\n"
+          "      font-size: 1rem; }\n"
+          " .linea { color: #8a8272; font-size: .85rem;\n"
+          "          margin: 0 0 .3rem 0; }\n"
+          " .def { color: #c8bfa8; margin: .2rem 0; }\n"
+          " .glossa { margin: .2rem 0; }\n"
+          " .glossa b { color: #e8c878; margin-right: .5rem; }\n"
+          " .deest { color: #c86060; margin: .2rem 0; }\n"
+          " .deest b { margin-right: .5rem; }\n"
+          " .numeri { color: #8a8272; }\n"
+          " .numeri b { color: #e8c878; }\n"
+          "</style></head><body>\n"
+          "<h1>GLOSSAE - documentatio generum</h1>\n", f);
+
+    /* ---- compendium ---- */
+    fputs("<p class=\"numeri\">", f);
+    per (l_i = ZEPHYRUM; l_i < linguae->numerus; l_i++)
+    {
+        i32 habentia;
+        i32 omnia;
+
+        habentia = ZEPHYRUM;
+        omnia    = ZEPHYRUM;
+        per (g_i = ZEPHYRUM; g_i < xar_numerus(bib->genera_omnia);
+             g_i++)
+        {
+            NaturaGenus* g;
+
+            g = *(NaturaGenus**)xar_obtinere(bib->genera_omnia,
+                                             g_i);
+            omnia++;
+            si (_genus_linguae_quot(g,
+                    linguae->codices[l_i]) >= (i32)I)
+            {
+                habentia++;
+            }
+        }
+        si (l_i > ZEPHYRUM)
+        {
+            fputs(" &middot; ", f);
+        }
+        fprintf(f, "%s <b>%u/%u</b>", linguae->codices[l_i],
+                habentia, omnia);
+    }
+    fputs("</p>\n", f);
+
+    /* ---- exemplaria ---- */
+    per (m = ZEPHYRUM; m < xar_numerus(bib->exemplaria); m++)
+    {
+        NaturaExemplar* ex;
+        i32             omnia_moduli;
+        i32             habentia[NG_LINGUAE_MAXIMAE];
+
+        ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria, m);
+        omnia_moduli = ZEPHYRUM;
+        per (l_i = ZEPHYRUM; l_i < linguae->numerus; l_i++)
+        {
+            habentia[l_i] = ZEPHYRUM;
+        }
+        per (g_i = ZEPHYRUM; g_i < xar_numerus(bib->genera_omnia);
+             g_i++)
+        {
+            NaturaGenus* g;
+
+            g = *(NaturaGenus**)xar_obtinere(bib->genera_omnia,
+                                             g_i);
+            si (!chorda_aequalis(*g->modulus, *ex->stirps))
+            {
+                perge;
+            }
+            omnia_moduli++;
+            per (l_i = ZEPHYRUM; l_i < linguae->numerus; l_i++)
+            {
+                si (_genus_linguae_quot(g,
+                        linguae->codices[l_i]) >= (i32)I)
+                {
+                    habentia[l_i]++;
+                }
+            }
+        }
+        si (omnia_moduli == ZEPHYRUM)
+        {
+            perge;
+        }
+
+        fputs("<h2>", f);
+        _html_textum_scribere(f, *ex->stirps);
+        fputs(" <span class=\"numeri\">", f);
+        per (l_i = ZEPHYRUM; l_i < linguae->numerus; l_i++)
+        {
+            si (l_i > ZEPHYRUM)
+            {
+                fputs(" &middot; ", f);
+            }
+            fprintf(f, "%s %u/%u", linguae->codices[l_i],
+                    habentia[l_i], omnia_moduli);
+        }
+        fputs("</span></h2>\n", f);
+
+        per (g_i = ZEPHYRUM; g_i < xar_numerus(bib->genera_omnia);
+             g_i++)
+        {
+            NaturaGenus* g;
+            StmlNodus*   def;
+
+            g = *(NaturaGenus**)xar_obtinere(bib->genera_omnia,
+                                             g_i);
+            si (!chorda_aequalis(*g->modulus, *ex->stirps))
+            {
+                perge;
+            }
+
+            fputs("<h3>", f);
+            _html_textum_scribere(f, *g->titulus);
+            fputs("</h3>\n<p class=\"linea\">", f);
+            _lineam_scribere(f, g);
+            fputs("</p>\n", f);
+
+            per (l_i = ZEPHYRUM; l_i < linguae->numerus; l_i++)
+            {
+                constans character* codex;
+
+                codex = linguae->codices[l_i];
+                si (strcmp(codex, "la") == ZEPHYRUM)
+                {
+                    def = stml_invenire_liberum(g->nodus,
+                                                "definitio");
+                    si (!def)
+                    {
+                        def = stml_invenire_liberum(g->nodus,
+                                                    "differentia");
+                    }
+                    si (def)
+                    {
+                        fputs("<p class=\"def\"><b>la</b> ", f);
+                        _html_textum_scribere(f,
+                            stml_textus_normalizatus(def,
+                                                     piscina));
+                        fputs("</p>\n", f);
+                    }
+                    alioquin
+                    {
+                        fputs("<p class=\"deest\"><b>la</b> "
+                              "&#9888; deest</p>\n", f);
+                    }
+                }
+                alioquin
+                {
+                    StmlNodus* gl;
+
+                    gl = _glossam_invenire(g, codex);
+                    si (gl)
+                    {
+                        fprintf(f,
+                            "<p class=\"glossa\"><b>%s</b> ",
+                            codex);
+                        _html_textum_scribere(f,
+                            stml_textus_normalizatus(gl,
+                                                     piscina));
+                        fputs("</p>\n", f);
+                    }
+                    alioquin
+                    {
+                        fprintf(f,
+                            "<p class=\"deest\"><b>%s</b> "
+                            "&#9888; deest</p>\n", codex);
+                    }
+                }
+            }
+        }
+    }
+
+    fputs("<p class=\"numeri\">generata a natura_glossae - "
+          "regenera: ./tools/natura_glossae.sh -pagina</p>\n"
+          "</body></html>\n", f);
+
+    si (fclose(f) != ZEPHYRUM)
+    {
+        remove(via);
+        redde FALSUM;
+    }
+    redde VERUM;
 }
 
 s32
@@ -511,8 +814,16 @@ principale(
         }
     }
 
-    /* via_html: opus V (_paginam_scribere) - hoc loco nondum */
-    (vacuum)via_html;
+    si (via_html)
+    {
+        si (!_paginam_scribere(bib, &linguae, via_html, piscina))
+        {
+            fprintf(stderr,
+                "natura_glossae: pagina '%s' scribi nequit\n",
+                via_html);
+            redde II;
+        }
+    }
 
     si (modus_porta && lacunae > ZEPHYRUM)
     {

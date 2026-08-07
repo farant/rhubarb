@@ -296,6 +296,45 @@ s32 principale (vacuum)
     }
 
 
+    /* ========================================================
+     * V. pagina html: encyclopaedia et lacunae fusae
+     * ======================================================== */
+
+    {
+        ProcessusResultus r;
+        chorda            pagina;
+
+        imprimere("\n--- V. pagina html ---\n");
+
+        r = _censum_currere("probationes/exempla/gl_lacunosum",
+                            "-html", "build/probatio_glossae.html",
+                            NIHIL, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, ZEPHYRUM);
+
+        pagina = filum_legere_totum("build/probatio_glossae.html",
+                                    piscina);
+        CREDO_MAIOR_I32 (pagina.mensura, (i32)ZEPHYRUM);
+        CREDO_VERUM (_continet_literis(pagina, "<!DOCTYPE html>",
+                                       piscina));
+        /* glossa vera transit */
+        CREDO_VERUM (_continet_literis(pagina,
+            "Gap kind: French missing", piscina));
+        /* lacuna VISIBILIS - pagina index operum est */
+        CREDO_VERUM (_continet_literis(pagina, "deest", piscina));
+        /* evasio: '<' fixturae iterum evasum exit */
+        CREDO_VERUM (_continet_literis(pagina,
+            "&lt;markup&gt;", piscina));
+
+        /* artefactum verum commissum: sententia stabilis plantae */
+        pagina = filum_legere_totum("natura/cocta/glossae.html",
+                                    piscina);
+        CREDO_MAIOR_I32 (pagina.mensura, (i32)ZEPHYRUM);
+        CREDO_VERUM (_continet_literis(pagina, "photosynthesis",
+                                       piscina));
+    }
+
+
     imprimere("\n");
     credo_imprimere_compendium();
 
