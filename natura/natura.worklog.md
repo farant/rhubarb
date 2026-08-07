@@ -5035,3 +5035,52 @@ differunt; probationes natura 65/65, stml 577/577.
 MENSURATUM: visus 14 s -> 4.5 s; INDEX.md una linea praedicta
 differt; corpus quaerentis ZERO post normalizationem; apparatus
 1286 = 1286 contra oraculum independens.
+
+## 2026-08-07 — round 64: the two things the generator found in natura
+
+Both were surfaced by **building the projection**, not by reading the models.
+That is the §3.3 rule of the natura→canon spec paying out: *if the generator
+needs a distinction natura does not carry, that is evidence natura may be
+missing a real one.*
+
+339. `gerens=` HAD NO STATED DEFAULT, and the whole instance projection turns
+     on it. A `machina_statuum` with `gerens="species"` describes states of
+     the KIND and must not become an instance attribute; only
+     `gerens="individuum"` projects. `natura.canon` declared the attribute as
+     an optional `electio` with **no `ordinarius=`**, so the generator had to
+     guess for every machine that omits it.
+     Now stated: `ordinarius="individuum"`, with the reason in the `nota`.
+     Which default is right was a natura question, not a generator question.
+
+     THE CHECK IS THE DIFF, NOT THE EDIT. The generator already assumed
+     `individuum`, so `./tools/natura_canones.sh -probare` had to come back
+     `canones 34 recentes` — and did. Had output shifted, the assumption was
+     wrong and the diff would have shown exactly where.
+
+     AND THE CHECK DID NOT COVER MY MISTAKE. Writing the attribute I closed
+     it `/>` and **deleted its two `<optio>` children**. All three of these
+     stayed green: `canon_examen` on `natura.canon` (canon cannot express
+     "electio implies optio" — a co-occurrence, explicitly out of scope per
+     `canon.h`), the canon-freshness gate (the generator reads `.genera`, not
+     `natura.canon`, so no output moved), and the test suite.
+     What caught it was the **generated METAMODULUS catalog**, where
+     `electio{species|individuum}` became a bare `electio=individuum`.
+     LEX: a gate that watches the output of X does not watch X. The catalog
+     earned its keep here precisely because it is a projection of a
+     *different* axis.
+
+340. `valor` MEANS TWO DIFFERENT THINGS, now recorded as a `dubium` on the
+     `planta` genus. `rosa` fixing `habitus` to `frutex` **constrains** — a
+     rose that is a tree is not a rose. `rosa_canina` carrying
+     `altitudo_matura` 3 merely **typifies** — a particular bush may well be
+     two metres. Same element, two readings.
+     Both map safely to `ordinarius=`, because a stated default never
+     rejects, so the first pass did not have to resolve it. But a genus
+     author writing a `<valor>` should know which of the two they are doing,
+     and nothing said so. Resolving it needs a mechanism that distinguishes
+     constraint from exemplar, and that is an editorial judgment for Fran.
+
+MENSURATUM: `natura_canones.sh -probare` → `canones 34 recentes` (proiectio
+immota); `natura_visus.sh` → exit 1 cum tribus vulneribus stantibus solis
+(pharmacon:185, vectura:144, plagula_computatralis:406), nullum quartum;
+dubia 14 → 15.

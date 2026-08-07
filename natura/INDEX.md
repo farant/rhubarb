@@ -626,6 +626,7 @@ exsistente. Nullum consilium — describi potest quovis momento.
 - `opus_scriptum` / **periodicum** — Machina "compositio" generis parentis periodico male sedet: status perfecta numquam attingitur. Estne differentia satis, an machina propria opus est (vigens/int
 - `pharmacon` / **interactio** — AN INTERACTIO SEMPER MALA SIT. Species omnes hic nocumentum ferunt, sed synergismus therapeuticus (medicamenta duo consulto coniuncta ut alterum alterius effect
 - `planta` / **planta** — Proprietates viventium AMBITUS sunt, non puncta: altitudo "2-5 m", dies florendi "Maius-Iunius". Forma nostra valorem unum fert. Res vivens hanc formam poscit; 
+- `planta` / **planta** — VALOR duo dicit, et quod dicat nondum discernimus. 'rosa' habitum ad 'frutex' figens CONSTRINGIT: rosa quae arbor est rosa non est, ergo valor ad definitionem g
 - `schema` / **genus_valoris** — Paletta domus etiam "area" (textus amplus) et "annus" (dies grossior) habet: species propriae, an textus cum praesentatione et dies cum granularitate? Praesenta
 - `tempus` / **pascha** — GRADUS AMBIGUUS (rota XXIX): una est regula paschalis, ergo individuum videtur; at "pascha" etiam de quovis anno dicitur ("pascha huius anni"), quod praedicatio
 - `versio` / **versio** — FURCA (fork) versio non est - continuatio auctoritatis deficit, unde res nova. Sed casus medii sunt: quid de furca quae nomen retinet et auctoritatem novam habe

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FIXUM PROBATIONIS (probatio_natura_canones) - COLLISIO PRIMA:
+  scriptio EADEM in duobus exemplaribus.
+
+  Monolithus spatia nominum omnia in unum fundit, ergo duo genera
+  'res_communis' elementum <res-communis> BIS emitterent et
+  tabula elementorum posterius prius obrueret. Custos hoc
+  RECUSAT (exitus II, nihil scriptum).
+-->
+<natura modulus="alpha" versio="1" lingua="latina">
+  <genus nomen="res_communis">
+    <definitio>Genus quod nomen cum beta communicat.</definitio>
+  </genus>
+</natura>

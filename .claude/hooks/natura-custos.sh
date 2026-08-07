@@ -13,13 +13,26 @@
 # nexuram applicatur. Sumptus: XXIX millesima (natura_visus.sh
 # XIV secunda - unde porta C, non shell).
 #
-# PORTAE DUAE, axes DIVERSI: (I) natura_examen = an exemplar ipsum
+# PORTAE TRES, axes DIVERSI: (I) natura_examen = an exemplar ipsum
 # sanum sit; (II) natura_canones -probare = an canones cocti ex eo
-# recentes sint. Alterum sine altero fieri potest, ergo ambae
-# semper currunt et in UNUM nuntium coeunt. Sumptus totalis fere
-# unum secundum per conservationem (fere omnis in canonibus XXXIV
-# regenerandis et conferendis) - pretium contra litteram generatam
-# quae tacite a fonte suo discedit, in arbore COMMISSA.
+# recentes sint; (III) canon_coquere -probare = an lectores C ex
+# illis canonibus cocti recentes sint. Quaelibet sine ceteris
+# fieri potest, ergo omnes semper currunt et in UNUM nuntium
+# coeunt. Sumptus totalis fere unum secundum per conservationem
+# (fere omnis in canonibus XXXIV regenerandis et conferendis;
+# porta tertia quattuor centesimas capit) - pretium contra
+# litteram generatam quae tacite a fonte suo discedit, in arbore
+# COMMISSA.
+#
+# CUR PORTA TERTIA HIC ET NON IN CANON-CUSTODE (foramen
+# mensuratum, opus VII): catena duos saltus habet - .genera ->
+# canon -> lector. Uncus quisque EDITIONI adhaeret, sed canonem
+# generatum NEMO EDIT: ei qui .genera mutat natura-custos canonem
+# RANCIDUM nuntiat, ille ./tools/natura_canones.sh currit, quod
+# canonem ut INSTRUMENTUM rescribit, non ut editionem - ergo
+# canon-custos numquam accenditur et lector post canonem recentem
+# stalus manet, TACITE. Editio una .generorum ergo catenam TOTAM
+# probet.
 
 INPUT=$(cat)
 FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty')
@@ -36,6 +49,7 @@ esac
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PORTA="$RADIX/bin/natura_examen"
 COCTOR="$RADIX/tools/natura_canones.sh"
+COCTOR_LECTORUM="$RADIX/tools/canon_coquere.sh"
 
 # UNUM obiectum JSON per vocationem: nuntii in NUNTIO congeruntur,
 # emissio semel in fine fit. Antea ramus quisque ipse emittebat et
@@ -109,6 +123,31 @@ else
         CAUSA=$(printf '%s\n' "$RQ" | tail -3)
         adicere "NATURA: porta rancoris NIHIL probavit (exitus $RSTATUS) - canones cocti NON collati sunt:
 $CAUSA"
+    fi
+fi
+
+# ------------------------------------------------------------------
+# SALTUS SECUNDUS: lectores C ex canonibus cocti (cocta.registrum).
+# Vide rationem in capite - hunc saltum nihil aliud custodit, quia
+# canon generatus editur numquam.
+#
+# Codices exitus DISCRETI, sicut supra: I = RANCIDUS (regeneratio
+# sanat), aliud = porta ipsa non cucurrit (et regeneratio
+# instrumento stalo litteram stalam BENEDICIT).
+if [ ! -x "$COCTOR_LECTORUM" ]; then
+    adicere "NATURA: tools/canon_coquere.sh abest - porta lectorum TACET."
+else
+    LQ=$("$COCTOR_LECTORUM" -probare 2>&1 >/dev/null)
+    LSTATUS=$?
+    if [ "$LSTATUS" -eq 1 ]; then
+        LRANCIDI=$(printf '%s\n' "$LQ" | grep '^canon_coquere: RANCIDUS ' \
+                   | cut -d' ' -f3 | head -5 | paste -sd' ' -)
+        [ -n "$LRANCIDI" ] || LRANCIDI="nomina non lecta"
+        adicere "NATURA: lectores cocti RANCIDI ($LRANCIDI) - regenera: ./tools/canon_coquere.sh (si canones quoque rancidi sunt, ./tools/natura_canones.sh PRIUS: catena ordinem servat)"
+    elif [ "$LSTATUS" -ne 0 ]; then
+        LCAUSA=$(printf '%s\n' "$LQ" | tail -3)
+        adicere "NATURA: porta lectorum NIHIL probavit (exitus $LSTATUS) - lectores cocti NON collati sunt:
+$LCAUSA"
     fi
 fi
 

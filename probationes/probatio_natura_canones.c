@@ -1,0 +1,1115 @@
+/* probationes/probatio_natura_canones.c
+ *
+ * CANONES GENERATI - CUSTODIA CORPORIS
+ *
+ * Opera priora catenam struxerunt
+ *
+ *   natura/<modulus>.genera
+ *       |  natura_canones
+ *   natura/cocta/<modulus>.canon  (+ monolithus individua.canon)
+ *       |  canon_coquere
+ *   lector C typatus
+ *
+ * eamque MANU probaverunt. Haec plagula id quod manus semel vidit
+ * in suitam transfert: proprietas quae hic non asseritur proxima
+ * mutatione generatoris TACITE perit, quia littera generata
+ * committitur et diff nemo legit.
+ *
+ * LEX HUIUS PLAGULAE - ORACULUM ANTE
+ *
+ *   De omni assertione quaeritur: 'quid HERI fecisset, ante quam
+ *   mechanismus exstitit?' Si responsum 'praeteriisset' est,
+ *   assertio aliud probat quam scriptor putat.
+ *
+ *   Opus quartum id mensuravit: asserere 'nullam citationem
+ *   emissam esse' ANTE emendationem quoque praeteriisset - quod
+ *   vere discrevit fuit census, id est sedes de sacco in saccum
+ *   MOTA. Ideo hic fere ubique PAR ponitur cuius altera pars
+ *   RUERE debet:
+ *
+ *     - documentum quod citationem RESOLVIT / quod eam PENDENTEM
+ *       relinquit (altera sola nihil probat: canon sine ulla
+ *       citatione utramque acciperet)
+ *     - corpus nominum sanorum quod SCRIBITUR / corpus geminum
+ *       quod RECUSATUR (sine priore, 'exitus II' etiam defectum
+ *       scriptionis significare posset)
+ *     - pars naturae NECESSARIA / NON necessaria quae in canone
+ *       INDISCERNIBILES fiunt (sine posteriore, assertio 'nullum
+ *       minimum' vacua esset)
+ *
+ * NUMERI CORPORIS HIC NON FIGUNTUR. Nemo scribit 'citationes CCXVII'
+ * aut 'canones XXXIV': numerus fixus mentiri incipit quo momento
+ * exemplar additur - id ipsum quod praefatio canonis de se ipsa
+ * dicit. Loco eorum RELATIONES asseruntur (census se ipsum
+ * reconciliat; canones cocti tot sunt quot exemplaria + I).
+ */
+#include "latina.h"
+#include "credo.h"
+#include "chorda.h"
+#include "piscina.h"
+#include "xar.h"
+#include "internamentum.h"
+#include "canon.h"
+#include "stml.h"
+#include "filum.h"
+#include "iter_directoria.h"
+#include "processus.h"
+#include <stdio.h>
+
+
+/* ==================================================
+ * Adiutoria - arbor STML
+ * ================================================== */
+
+/* Nodos elementorum numerare qui attributum nominatum ferunt.
+ * valor NIHIL = valor quilibet. Si primum datum est, primum
+ * inventum ibi ponitur - unde assertio 'unum solum, ET hoc'
+ * uno transitu fit.
+ *
+ * NOTA: nomina attributorum, non valores. '<liberum nomen="radix"/>'
+ * attributum 'radix' NON fert (nomen eius radix est), ergo hoc
+ * cum '<elementum radix="verum">' non confunditur. */
+interior i32
+_ferentes_numerare(
+    StmlNodus*           n,
+    constans character*  attributum,
+    constans character*  valor,
+    StmlNodus**          primum)
+{
+    i32 summa;
+    i32 i;
+
+    summa = ZEPHYRUM;
+    si (!n)
+    {
+        redde ZEPHYRUM;
+    }
+
+    si (n->genus == STML_NODUS_ELEMENTUM)
+    {
+        chorda* v;
+
+        v = stml_attributum_capere(n, attributum);
+        si (v && (!valor || chorda_aequalis_literis(*v, valor)))
+        {
+            si (primum && !*primum)
+            {
+                *primum = n;
+            }
+            summa++;
+        }
+    }
+
+    si (n->liberi)
+    {
+        per (i = ZEPHYRUM; i < xar_numerus(n->liberi); i++)
+        {
+            summa += _ferentes_numerare(
+                *(StmlNodus**)xar_obtinere(n->liberi, i),
+                attributum, valor, primum);
+        }
+    }
+    redde summa;
+}
+
+/* Nodos elementorum titulo dato numerare (tota arbore). */
+interior i32
+_titulo_numerare(
+    StmlNodus*           n,
+    constans character*  titulus)
+{
+    i32 summa;
+    i32 i;
+
+    summa = ZEPHYRUM;
+    si (!n)
+    {
+        redde ZEPHYRUM;
+    }
+
+    si (n->genus == STML_NODUS_ELEMENTUM && n->titulus &&
+        chorda_aequalis_literis(*n->titulus, titulus))
+    {
+        summa++;
+    }
+
+    si (n->liberi)
+    {
+        per (i = ZEPHYRUM; i < xar_numerus(n->liberi); i++)
+        {
+            summa += _titulo_numerare(
+                *(StmlNodus**)xar_obtinere(n->liberi, i), titulus);
+        }
+    }
+    redde summa;
+}
+
+/* Elementum canonis nomine dato inter liberos radicis invenire,
+ * ADSTRICTA (intra=) praetermissa.
+ *
+ * CUR adstricta praetermittuntur: nomina eorum per genera
+ * communicantur ('historia' in canone monolitho centies apparet),
+ * ergo tabula ex illis facta se ipsam obrueret. Citatio autem
+ * per titulum EXACTUM congruit et intra= non observat, ergo
+ * generum elementa (non adstricta) sunt praecise quod hic
+ * quaeritur. */
+interior StmlNodus*
+_elementum_invenire(
+    StmlNodus*  canon_radix,
+    chorda      titulus)
+{
+    i32 i;
+
+    si (!canon_radix || !canon_radix->liberi)
+    {
+        redde NIHIL;
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(canon_radix->liberi); i++)
+    {
+        StmlNodus* l;
+        chorda*    n;
+
+        l = *(StmlNodus**)xar_obtinere(canon_radix->liberi, i);
+        si (l->genus != STML_NODUS_ELEMENTUM || !l->titulus ||
+            !chorda_aequalis_literis(*l->titulus, "elementum"))
+        {
+            perge;
+        }
+        si (stml_attributum_habet(l, "intra"))
+        {
+            perge;
+        }
+        n = stml_attributum_capere(l, "nomen");
+        si (n && chorda_aequalis(*n, titulus))
+        {
+            redde l;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Utrum elementum liberum tituli dati cum nomine dato declaret
+ * ('attributum' aut 'liberum'). */
+interior StmlNodus*
+_declarationem_invenire(
+    StmlNodus*           elementum,
+    constans character*  species,
+    chorda               titulus)
+{
+    i32 i;
+
+    si (!elementum || !elementum->liberi)
+    {
+        redde NIHIL;
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(elementum->liberi); i++)
+    {
+        StmlNodus* l;
+        chorda*    n;
+
+        l = *(StmlNodus**)xar_obtinere(elementum->liberi, i);
+        si (l->genus != STML_NODUS_ELEMENTUM || !l->titulus ||
+            !chorda_aequalis_literis(*l->titulus, species))
+        {
+            perge;
+        }
+        n = stml_attributum_capere(l, "nomen");
+        si (n && chorda_aequalis(*n, titulus))
+        {
+            redde l;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Omnes nodos tituli dati in Xar colligere (transitus profundus). */
+interior vacuum
+_titulo_colligere(
+    StmlNodus*           n,
+    constans character*  titulus,
+    Xar*                 ex)
+{
+    i32 i;
+
+    si (!n)
+    {
+        redde;
+    }
+
+    si (n->genus == STML_NODUS_ELEMENTUM && n->titulus &&
+        chorda_aequalis_literis(*n->titulus, titulus))
+    {
+        *(StmlNodus**)xar_addere(ex) = n;
+    }
+
+    si (n->liberi)
+    {
+        per (i = ZEPHYRUM; i < xar_numerus(n->liberi); i++)
+        {
+            _titulo_colligere(
+                *(StmlNodus**)xar_obtinere(n->liberi, i), titulus, ex);
+        }
+    }
+}
+
+
+/* ==================================================
+ * Adiutoria - textus praefationis
+ * ================================================== */
+
+/* Numerum QUI SIGNUM PRAECEDIT legere.
+ *
+ * Praefatio canonis prosa est ('... ex 2056 sedibus relationum
+ * ...'), et numerus a locutione sua per lineam novam separari
+ * potest. Ergo: signum invenire, spatium album retro transire,
+ * cifras retro legere.
+ *
+ * Redde FALSUM si signum abest aut cifra ante id nulla - quod
+ * ipsum assertio est: praefatio quae numerum suum amisit de se
+ * mentitur. */
+interior b32
+_numerum_ante(
+    chorda               fons,
+    constans character*  signum,
+    Piscina*             piscina,
+    i32*                 ex)
+{
+    s32    sedes;
+    s32    i;
+    s32    finis;
+    chorda cifrae;
+
+    sedes = chorda_invenire_index(fons,
+                                  chorda_ex_literis(signum, piscina));
+    si (sedes < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    i = sedes - I;
+    dum (i >= ZEPHYRUM)
+    {
+        character c;
+
+        c = (character)fons.datum[i];
+        si (c != ' ' && c != '\n' && c != '\t' && c != '\r')
+        {
+            frange;
+        }
+        i--;
+    }
+
+    finis = i + I;
+    dum (i >= ZEPHYRUM)
+    {
+        character c;
+
+        c = (character)fons.datum[i];
+        si (c < '0' || c > '9')
+        {
+            frange;
+        }
+        i--;
+    }
+
+    si (finis == i + I)
+    {
+        redde FALSUM;
+    }
+
+    cifrae = chorda_sectio(fons, (i32)(i + I), (i32)finis);
+    redde chorda_ut_i32(cifrae, ex);
+}
+
+
+/* ==================================================
+ * Adiutoria - directoria
+ * ================================================== */
+
+/* Vias plagularum directorii extensione dato colligere.
+ * Redde: Xar de chorda (via plena, ex piscina). */
+interior Xar*
+_vias_colligere(
+    constans character*  directorium,
+    constans character*  extensio,
+    Piscina*             piscina)
+{
+    DirectoriumIterator*   iter;
+    DirectoriumIntroitus*  e;
+    Xar*                   ex;
+    chorda                 praefixum;
+    chorda                 suffixum;
+
+    ex        = xar_creare(piscina, (i32)magnitudo(chorda));
+    praefixum = chorda_concatenare(
+                    chorda_ex_literis(directorium, piscina),
+                    chorda_ex_literis("/", piscina), piscina);
+    suffixum  = chorda_ex_literis(extensio, piscina);
+
+    iter = directorium_iterator_aperire(directorium, piscina);
+    si (!iter)
+    {
+        redde ex;
+    }
+
+    dum ((e = directorium_iterator_proximum(iter)) != NIHIL)
+    {
+        si (e->genus != INTROITUS_FILUM)
+        {
+            perge;
+        }
+        si (!chorda_terminatur(e->titulus, suffixum))
+        {
+            perge;
+        }
+        *(chorda*)xar_addere(ex) =
+            chorda_concatenare(praefixum, e->titulus, piscina);
+    }
+    directorium_iterator_claudere(iter);
+    redde ex;
+}
+
+
+/* ==================================================
+ * Adiutoria - generator vocatus
+ * ================================================== */
+
+nomen structura {
+    b32  cucurrit;         /* processus generatus et exspectatus */
+    i32  codex;            /* codex exitus */
+    b32  plagula_scripta;  /* an canon in disco iaceat */
+    b32  clamavit;         /* an erratum custodem nominet */
+} NcCursus;
+
+/* bin/natura_canones super corpore dato currere.
+ *
+ * Plagula petita ANTE deletur: 'scripta' aliter ex cursu priore
+ * superesse posset, et custos qui nihil scribit sic scripsisse
+ * VIDERETUR. */
+interior NcCursus
+_generatorem_currere(
+    constans character*  radix_corporis,
+    constans character*  ad,
+    Piscina*             piscina)
+{
+    constans character* argumenta[VII];
+    ProcessusResultus   r;
+    NcCursus            ex;
+
+    filum_delere(ad);
+
+    argumenta[ZEPHYRUM] = "bin/natura_canones";
+    argumenta[I]        = "-radix";
+    argumenta[II]       = radix_corporis;
+    argumenta[III]      = "-totum";
+    argumenta[IV]       = "-ad";
+    argumenta[V]        = ad;
+    argumenta[VI]       = NIHIL;
+
+    r = processus_exsequi(argumenta, 60000, piscina);
+
+    ex.cucurrit        = r.successus;
+    ex.codex           = r.codex_exitus;
+    ex.plagula_scripta = filum_existit(ad);
+    ex.clamavit        = chorda_continet(r.erratum,
+        chorda_ex_literis("GEMINA - monolithus RECUSATUR", piscina));
+
+    si (!r.successus)
+    {
+        imprimere("  processus NON cucurrit: %s\n",
+                  processus_error_nomen(r.error));
+    }
+    redde ex;
+}
+
+/* Documentum contra canonem iudicare: generis_ex numerum vitiorum
+ * generis quaesiti recipit, omnia_ex numerum totalem.
+ *
+ * Redde FALSUM si documentum ipsum parsari nequit. Signum in
+ * REDITU stat, non in numero: i32 INSIGNATUS est, ergo '-I' pro
+ * defectu numerum immanem pareret quem assertio 'aequalis
+ * ZEPHYRO' ut vitium legeret - vera causa (documentum fractum)
+ * tacita maneret. */
+interior b32
+_documentum_iudicare(
+    Canon*                canon,
+    constans character*   documentum,
+    CanonVitiumGenus      quaesitum,
+    i32*                  generis_ex,
+    i32*                  omnia_ex,
+    Piscina*              piscina,
+    InternamentumChorda*  intern)
+{
+    StmlResultus  res;
+    Xar*          vitia;
+    i32           summa;
+    i32           i;
+
+    *generis_ex = ZEPHYRUM;
+    *omnia_ex   = ZEPHYRUM;
+
+    res = stml_legere_ex_literis(documentum, piscina, intern);
+    si (!res.successus || !res.elementum_radix)
+    {
+        imprimere("  FRACTA: documentum parsari nequit\n");
+        redde FALSUM;
+    }
+
+    vitia = canon_iudicare(canon, res.elementum_radix, piscina);
+    summa = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(vitia); i++)
+    {
+        CanonVitium* v;
+
+        v = (CanonVitium*)xar_obtinere(vitia, i);
+        si (v->genus == quaesitum)
+        {
+            summa++;
+        }
+    }
+    *generis_ex = summa;
+    *omnia_ex   = xar_numerus(vitia);
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Documenta probationis
+ *
+ * 'aedificium' et 'inscriptio' electa sunt quia relatio
+ * 'inscriptio_eius' PETITUM FOLIUM habet - sola conditio sub qua
+ * generator citationem veram emittit (opus IV: petitum cum
+ * posteris documenta licita reiceret).
+ * ================================================== */
+
+/* PAR, pars prior: clavis in documento adest -> sanum */
+staticus constans character* DOC_RESOLVENS =
+    "<individua>\n"
+    "  <aedificium nomen=\"domus-nostra\" inscriptio-eius=\"via-lata-x\"/>\n"
+    "  <inscriptio nomen=\"via-lata-x\"/>\n"
+    "</individua>\n";
+
+/* PAR, pars posterior: EADEM structura, clavis quae nihil nominat */
+staticus constans character* DOC_PENDENS =
+    "<individua>\n"
+    "  <aedificium nomen=\"domus-nostra\" inscriptio-eius=\"nemo-omnino\"/>\n"
+    "  <inscriptio nomen=\"via-lata-x\"/>\n"
+    "</individua>\n";
+
+/* UNICITAS trans genera: genera DUO DIVERSA idem nomen ferunt.
+ * Hoc est quod spatium nominum UNUM probat - spatium per
+ * elementum hoc acciperet. */
+staticus constans character* DOC_GEMINUM_TRANS =
+    "<individua>\n"
+    "  <aedificium nomen=\"idem-nomen\"/>\n"
+    "  <inscriptio nomen=\"idem-nomen\"/>\n"
+    "</individua>\n";
+
+/* UNICITAS intra genus idem - forma facilior, quam spatium per
+ * elementum quoque caperet. Ideo sola non sufficit. */
+staticus constans character* DOC_GEMINUM_IDEM =
+    "<individua>\n"
+    "  <inscriptio nomen=\"idem-nomen\"/>\n"
+    "  <inscriptio nomen=\"idem-nomen\"/>\n"
+    "</individua>\n";
+
+
+s32
+principale(
+    vacuum)
+{
+    Piscina*             piscina;
+    InternamentumChorda* intern;
+    chorda               monolithus_fons;
+    StmlResultus         monolithus_res;
+    StmlNodus*           monolithus_radix;
+    Canon*               monolithus;
+    b32                  praeteritus;
+
+    piscina = piscina_generare_dynamicum("probatio_natura_canones",
+                                         8388608);
+    si (!piscina)
+    {
+        imprimere("FRACTA: piscina_generatio\n");
+        redde I;
+    }
+    credo_aperire(piscina);
+    intern = internamentum_creare(piscina);
+
+    monolithus       = NIHIL;
+    monolithus_radix = NIHIL;
+
+
+    /* ========================================================
+     * I. CUSTOS NOMINUM GEMINORUM
+     *
+     * Monolithus spatia nominum XXXIII in unum fundit; duo
+     * genera eodem nomine elementum duplex emitterent et
+     * tabula elementorum posterius prius obrueret - canon
+     * dimidiam veritatem pro tota praebens.
+     *
+     * TRES CURSUS, non unus: sine corpore SANO 'exitus II'
+     * etiam significare posset directorium non scribi posse,
+     * et tunc probatio custodem laudaret ubi defectus est.
+     * ======================================================== */
+
+    {
+        NcCursus sana;
+        NcCursus gemina;
+        NcCursus kebab;
+
+        imprimere("\n--- I. custos nominum geminorum ---\n");
+
+        /* instrumentum absens: struere semel. RANCOR hic NON
+         * tractatur - id ./tools/natura_canones.sh -probare
+         * tenet, quae fontes cum binario confert. Probatio quae
+         * rubet quia instrumentum nondum structum est de
+         * instrumento nihil dicit. */
+        si (!filum_existit("bin/natura_canones"))
+        {
+            constans character* struere[II];
+            ProcessusResultus   rs;
+
+            imprimere("  (bin/natura_canones abest - struo semel)\n");
+            struere[ZEPHYRUM] = "./tools/natura_struere.sh";
+            struere[I]        = NIHIL;
+            rs = processus_exsequi(struere, 300000, piscina);
+            si (!rs.successus || rs.codex_exitus != ZEPHYRUM)
+            {
+                imprimere("  structor fefellit (codex %u)\n",
+                          rs.codex_exitus);
+            }
+        }
+        CREDO_VERUM (filum_existit("bin/natura_canones"));
+
+        CREDO_VERUM (filum_directorium_creare_si_necesse(
+                         "build/probatio_natura_canones"));
+
+        /* PROBA CONTRARIA: nomina distincta -> canon SCRIPTUS */
+        sana = _generatorem_currere(
+                   "probationes/exempla/nc_nomina_sana",
+                   "build/probatio_natura_canones/sana.canon",
+                   piscina);
+        CREDO_VERUM (sana.cucurrit);
+        CREDO_AEQUALIS_I32 (sana.codex, (i32)ZEPHYRUM);
+        CREDO_VERUM (sana.plagula_scripta);
+        CREDO_FALSUM (sana.clamavit);
+
+        /* FORMA PRIMA: scriptio eadem in exemplaribus duobus */
+        gemina = _generatorem_currere(
+                     "probationes/exempla/nc_nomina_gemina",
+                     "build/probatio_natura_canones/gemina.canon",
+                     piscina);
+        CREDO_VERUM (gemina.cucurrit);
+        CREDO_AEQUALIS_I32 (gemina.codex, (i32)II);
+        CREDO_FALSUM (gemina.plagula_scripta);
+        CREDO_VERUM (gemina.clamavit);
+
+        /* FORMA SECUNDA: 'res_communis' et 'res-communis' -
+         * nomina naturae DIVERSA quae in idem nomen canonis
+         * plicantur. Custos qui snake solum compararet hanc
+         * TACITE emitteret. */
+        kebab = _generatorem_currere(
+                    "probationes/exempla/nc_nomina_kebab",
+                    "build/probatio_natura_canones/kebab.canon",
+                    piscina);
+        CREDO_VERUM (kebab.cucurrit);
+        CREDO_AEQUALIS_I32 (kebab.codex, (i32)II);
+        CREDO_FALSUM (kebab.plagula_scripta);
+        CREDO_VERUM (kebab.clamavit);
+    }
+
+
+    /* ========================================================
+     * II. MONOLITHUS ONERATUR
+     * ======================================================== */
+
+    {
+        chorda causa;
+
+        imprimere("\n--- II. monolithus oneratur ---\n");
+
+        monolithus_fons = filum_legere_totum(
+                              "natura/cocta/individua.canon", piscina);
+        CREDO_MAIOR_I32 (monolithus_fons.mensura, (i32)ZEPHYRUM);
+
+        causa.datum   = NIHIL;
+        causa.mensura = ZEPHYRUM;
+        monolithus = canon_legere(monolithus_fons, piscina, intern,
+                                  &causa);
+        CREDO_NON_NIHIL (monolithus);
+        CREDO_CHORDA_VACUA (causa);
+
+        monolithus_res = stml_legere(monolithus_fons, piscina, intern);
+        CREDO_VERUM (monolithus_res.successus);
+        monolithus_radix = monolithus_res.elementum_radix;
+        CREDO_NON_NIHIL (monolithus_radix);
+    }
+
+    si (!monolithus || !monolithus_radix)
+    {
+        imprimere("FRACTA: monolithus legi nequit - cetera omissa\n");
+        credo_imprimere_compendium();
+        credo_claudere();
+        redde I;
+    }
+
+
+    /* ========================================================
+     * III. CITATIONES - PAR, ambae partes necessariae
+     *
+     * 'nulla citatio irrita' sola nihil probat: canon qui
+     * NULLAM citationem fert utrumque documentum acciperet.
+     * Quod discernit est documentum PENDENS quod ruere DEBET
+     * dum resolvens transit.
+     * ======================================================== */
+
+    {
+        i32 omnia;
+        i32 irrita;
+
+        imprimere("\n--- III. citationes (par) ---\n");
+
+        /* mechanismus omnino vivus est */
+        CREDO_MAIOR_I32 (xar_numerus(monolithus->citationes),
+                         (i32)ZEPHYRUM);
+
+        CREDO_VERUM (_documentum_iudicare(monolithus, DOC_RESOLVENS,
+            CANON_CITATIO_IRRITA, &irrita, &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (irrita, (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        CREDO_VERUM (_documentum_iudicare(monolithus, DOC_PENDENS,
+            CANON_CITATIO_IRRITA, &irrita, &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (irrita, (i32)I);
+        CREDO_AEQUALIS_I32 (omnia, (i32)I);
+    }
+
+
+    /* ========================================================
+     * IV. UNICITAS TRANS GENERA
+     *
+     * Genera DUO DIVERSA idem nomen ferentia: hoc solum probat
+     * spatium nominum UNUM esse, non unum per elementum.
+     * ======================================================== */
+
+    {
+        i32 omnia;
+        i32 bis;
+
+        imprimere("\n--- IV. unicitas trans genera ---\n");
+
+        CREDO_MAIOR_I32 (xar_numerus(monolithus->unicitates),
+                         (i32)ZEPHYRUM);
+
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            DOC_GEMINUM_TRANS, CANON_NOMEN_BIS, &bis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (bis, (i32)I);
+        CREDO_AEQUALIS_I32 (omnia, (i32)I);
+
+        /* forma facilior, quam spatium per elementum quoque
+         * caperet - ideo sola non sufficeret */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            DOC_GEMINUM_IDEM, CANON_NOMEN_BIS, &bis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (bis, (i32)I);
+
+        /* et NON clamat ubi nomina distincta sunt (documentum
+         * resolvens supra duo nomina diversa fert) */
+        CREDO_VERUM (_documentum_iudicare(monolithus, DOC_RESOLVENS,
+            CANON_NOMEN_BIS, &bis, &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (bis, (i32)ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * V. CENSUS RELATIONUM se ipsum reconciliat
+     *
+     * Praefatio numeros ad generationem COMPUTATOS fert.
+     * Numerus quem lector credit loco proprii computandi
+     * ligatus esse debet ad id quod re vera emissum est -
+     * aliter canon de se ipso mentitur, quod peius est quam
+     * tacere.
+     * ======================================================== */
+
+    {
+        i32 sedes;
+        i32 citatae;
+        i32 nudae;
+        i32 apertae;
+        i32 posteri;
+        i32 multiplices;
+        i32 ignotae;
+
+        imprimere("\n--- V. census relationum ---\n");
+
+        CREDO_VERUM (_numerum_ante(monolithus_fons,
+            "sedibus relationum", piscina, &sedes));
+        CREDO_VERUM (_numerum_ante(monolithus_fons,
+            "citationes VERAE", piscina, &citatae));
+        CREDO_VERUM (_numerum_ante(monolithus_fons,
+            "nomine solo iudicantur", piscina, &nudae));
+        CREDO_VERUM (_numerum_ante(monolithus_fons,
+            "petitum apertum habent", piscina, &apertae));
+        CREDO_VERUM (_numerum_ante(monolithus_fons,
+            "petitum cum POSTERIS", piscina, &posteri));
+        CREDO_VERUM (_numerum_ante(monolithus_fons,
+            "multiplices sunt", piscina, &multiplices));
+        CREDO_VERUM (_numerum_ante(monolithus_fons,
+            "petitum non resolvunt", piscina, &ignotae));
+
+        imprimere("  sedes %u = citatae %u + nudae %u"
+                  " (apertae %u + posteri %u + multiplices %u"
+                  " + ignotae %u)\n",
+                  sedes, citatae, nudae,
+                  apertae, posteri, multiplices, ignotae);
+
+        /* causae omnes sedes nudas exhauriunt */
+        CREDO_AEQUALIS_I32 (apertae + posteri + multiplices + ignotae,
+                            nudae);
+        /* et nudae + citatae sedes omnes */
+        CREDO_AEQUALIS_I32 (citatae + nudae, sedes);
+
+        /* PROSA STRUCTURAE LIGATA: numerus quem praefatio dicit
+         * numerus citationum vere emissarum est. Sine hac
+         * assertione praefatio libere errare posset - et
+         * numerus in capite est id quod lector credit loco
+         * canonis ipsius legendi. */
+        CREDO_AEQUALIS_I32 (citatae,
+                            xar_numerus(monolithus->citationes));
+        CREDO_AEQUALIS_I32 (citatae,
+                            _titulo_numerare(monolithus_radix,
+                                             "citatio"));
+    }
+
+
+    /* ========================================================
+     * VI. CITATIO OMNIS AD REM VERAM SPECTAT
+     *
+     * Opus IV hoc SEMEL manu recensuit; hic manet. Vitium quod
+     * capit iam bis vere accidit: citatio in genus emissa quod
+     * auctor numquam nominavit, censu tamen ut RESOLUTA
+     * numerata (octetus nullus in 'ad='; caecitas 'etiam=').
+     * Utrumque tacitum erat.
+     * ======================================================== */
+
+    {
+        Xar* citationes;
+        i32  malae;
+        i32  i;
+
+        imprimere("\n--- VI. citationes omnes veras esse ---\n");
+
+        citationes = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+        _titulo_colligere(monolithus_radix, "citatio", citationes);
+        CREDO_MAIOR_I32 (xar_numerus(citationes), (i32)ZEPHYRUM);
+
+        malae = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < xar_numerus(citationes); i++)
+        {
+            StmlNodus* c;
+            StmlNodus* petitum;
+            StmlNodus* citans;
+            chorda*    ad;
+            chorda*    super;
+            chorda*    attributum;
+            s32        virgula;
+
+            c          = *(StmlNodus**)xar_obtinere(citationes, i);
+            ad         = stml_attributum_capere(c, "ad");
+            super      = stml_attributum_capere(c, "super");
+            attributum = stml_attributum_capere(c, "attributum");
+
+            si (!ad || !super || !attributum)
+            {
+                malae++;
+                perge;
+            }
+
+            /* ad="elementum/attributum" */
+            virgula = chorda_invenire_index(*ad,
+                          chorda_ex_literis("/", piscina));
+            si (virgula <= ZEPHYRUM)
+            {
+                malae++;
+                perge;
+            }
+
+            petitum = _elementum_invenire(monolithus_radix,
+                          chorda_sectio(*ad, (i32)ZEPHYRUM,
+                                        (i32)virgula));
+            citans  = _elementum_invenire(monolithus_radix, *super);
+
+            si (!petitum || !citans)
+            {
+                malae++;
+                perge;
+            }
+            /* clavis in petito declarata est */
+            si (!_declarationem_invenire(petitum, "attributum",
+                    chorda_sectio(*ad, (i32)(virgula + I),
+                                  ad->mensura)))
+            {
+                malae++;
+                perge;
+            }
+            /* et attributum citans in citante declaratum */
+            si (!_declarationem_invenire(citans, "attributum",
+                                         *attributum))
+            {
+                malae++;
+            }
+        }
+        imprimere("  citationes %u recensitae, malae %u\n",
+                  xar_numerus(citationes), malae);
+        CREDO_AEQUALIS_I32 (malae, (i32)ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * VII. LENITAS - NECESSITAS ONTOLOGICA NON EST
+     *      OBLIGATIO DOCUMENTALIS (spec par. 3.4)
+     *
+     * Custodia REGRESSIONIS, et fatemur eam talem esse: haec
+     * ANTE quoque praeteriisset, quia generator minimum=
+     * numquam emisit. Vim habet quia in fonte DISCRIMEN VERUM
+     * iacet quod canon consulto DEPONIT - radix/caulis/folium
+     * necessaria sunt, flos/fructus/semen non; in canone
+     * INDISCERNIBILES fiunt. Qui necessaria= in minimum="1"
+     * verteret hoc par statim frangeret.
+     * ======================================================== */
+
+    {
+        chorda        genera_fons;
+        StmlResultus  genera_res;
+        chorda        planta_fons;
+        StmlResultus  planta_res;
+        StmlNodus*    rosa_canina;
+        StmlNodus*    liberum_radix;
+        StmlNodus*    liberum_flos;
+
+        imprimere("\n--- VII. lenitas (nullum minimum) ---\n");
+
+        /* (a) FONS discrimen vere fert */
+        genera_fons = filum_legere_totum("natura/planta.genera",
+                                         piscina);
+        CREDO_MAIOR_I32 (genera_fons.mensura, (i32)ZEPHYRUM);
+        genera_res = stml_legere(genera_fons, piscina, intern);
+        CREDO_VERUM (genera_res.successus);
+        CREDO_MAIOR_I32 (_ferentes_numerare(genera_res.elementum_radix,
+                             "necessaria", "verum", NIHIL),
+                         (i32)ZEPHYRUM);
+        CREDO_MAIOR_I32 (_ferentes_numerare(genera_res.elementum_radix,
+                             "necessaria", "falsum", NIHIL),
+                         (i32)ZEPHYRUM);
+
+        /* (b) CANON id deponit: partes ambae eodem modo emissae */
+        planta_fons = filum_legere_totum("natura/cocta/planta.canon",
+                                         piscina);
+        CREDO_MAIOR_I32 (planta_fons.mensura, (i32)ZEPHYRUM);
+        planta_res = stml_legere(planta_fons, piscina, intern);
+        CREDO_VERUM (planta_res.successus);
+
+        rosa_canina = _elementum_invenire(planta_res.elementum_radix,
+                          chorda_ex_literis("rosa-canina", piscina));
+        CREDO_NON_NIHIL (rosa_canina);
+
+        liberum_radix = _declarationem_invenire(rosa_canina, "liberum",
+                            chorda_ex_literis("radix", piscina));
+        liberum_flos  = _declarationem_invenire(rosa_canina, "liberum",
+                            chorda_ex_literis("flos", piscina));
+        CREDO_NON_NIHIL (liberum_radix);
+        CREDO_NON_NIHIL (liberum_flos);
+
+        si (liberum_radix && liberum_flos)
+        {
+            /* pars NECESSARIA: minimum nullum */
+            CREDO_FALSUM (stml_attributum_habet(liberum_radix,
+                                                "minimum"));
+            CREDO_VERUM (stml_attributum_habet(liberum_radix,
+                                               "maximum"));
+            /* pars NON necessaria: forma EADEM */
+            CREDO_FALSUM (stml_attributum_habet(liberum_flos,
+                                                "minimum"));
+            CREDO_VERUM (stml_attributum_habet(liberum_flos,
+                                               "maximum"));
+        }
+    }
+
+
+    /* ========================================================
+     * VIII. CORPUS TOTUM CANONUM COCTORUM
+     *
+     * Per plagulam: nullum minimum usquam; radix una eaque
+     * <individua>; unicitas una; citationes SOLI monolitho.
+     *
+     * Numerus plagularum non figitur sed DERIVATUR: canones
+     * cocti tot sunt quot exemplaria naturae + I (monolithus).
+     * Numerus fixus mentiri inciperet quo momento exemplar
+     * additur; forma derivata contra exemplar novum cuius
+     * canon numquam generatus est CLAMAT.
+     * ======================================================== */
+
+    {
+        Xar* canones;
+        Xar* exemplaria;
+        i32  i;
+        i32  minima_omnia;
+        i32  radices_malae;
+        i32  unicitates_malae;
+        i32  citantes_per_modulum;
+        i32  monolithi;
+
+        imprimere("\n--- VIII. corpus canonum coctorum ---\n");
+
+        canones    = _vias_colligere("natura/cocta", ".canon", piscina);
+        exemplaria = _vias_colligere("natura", ".genera", piscina);
+
+        CREDO_MAIOR_I32 (xar_numerus(exemplaria), (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (xar_numerus(canones),
+                            xar_numerus(exemplaria) + I);
+
+        minima_omnia         = ZEPHYRUM;
+        radices_malae        = ZEPHYRUM;
+        unicitates_malae     = ZEPHYRUM;
+        citantes_per_modulum = ZEPHYRUM;
+        monolithi            = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < xar_numerus(canones); i++)
+        {
+            /* piscina PROPRIA per plagulam: arbores XXXIV
+             * simul servatae memoriam sine causa tenerent
+             * (monolithus solus DCXL kibioctetos fonte est).
+             * Nihil ex hac piscina hanc ansam superat. */
+            Piscina*             pp;
+            InternamentumChorda* pi;
+            chorda               via;
+            character*           via_c;
+            chorda               fons;
+            StmlResultus         res;
+            StmlNodus*           radix_nodus;
+            i32                  minima;
+            i32                  radices;
+            i32                  unicitates;
+            i32                  citationes;
+            b32                  est_monolithus;
+
+            via   = *(chorda*)xar_obtinere(canones, i);
+            pp    = piscina_generare_dynamicum("probatio_nc_plagula",
+                                               2097152);
+            si (!pp)
+            {
+                imprimere("  FRACTA: piscina plagulae\n");
+                frange;
+            }
+            pi    = internamentum_creare(pp);
+            via_c = chorda_ut_cstr(via, pp);
+            fons  = filum_legere_totum(via_c, pp);
+            res   = stml_legere(fons, pp, pi);
+
+            si (!res.successus || !res.elementum_radix)
+            {
+                imprimere("  FRACTA: '%s' parsari nequit\n", via_c);
+                piscina_destruere(pp);
+                radices_malae++;
+                perge;
+            }
+
+            radix_nodus    = NIHIL;
+            minima         = _ferentes_numerare(res.elementum_radix,
+                                 "minimum", NIHIL, NIHIL);
+            radices        = _ferentes_numerare(res.elementum_radix,
+                                 "radix", "verum", &radix_nodus);
+            unicitates     = _titulo_numerare(res.elementum_radix,
+                                 "unicitas");
+            citationes     = _titulo_numerare(res.elementum_radix,
+                                 "citatio");
+            est_monolithus = chorda_terminatur(via,
+                                 chorda_ex_literis("/individua.canon",
+                                                   pp));
+
+            minima_omnia += minima;
+
+            si (radices != I)
+            {
+                imprimere("  '%s': radices %u (una exspectata)\n",
+                          via_c, radices);
+                radices_malae++;
+            }
+            alioquin
+            {
+                chorda* n;
+
+                n = stml_attributum_capere(radix_nodus, "nomen");
+                si (!n || !chorda_aequalis_literis(*n, "individua"))
+                {
+                    imprimere("  '%s': radix non 'individua'\n", via_c);
+                    radices_malae++;
+                }
+            }
+
+            si (unicitates != I)
+            {
+                imprimere("  '%s': unicitates %u (una exspectata)\n",
+                          via_c, unicitates);
+                unicitates_malae++;
+            }
+
+            si (minima > ZEPHYRUM)
+            {
+                imprimere("  '%s': minimum= %u sedibus\n",
+                          via_c, minima);
+            }
+
+            si (est_monolithus)
+            {
+                monolithi++;
+                si (citationes == ZEPHYRUM)
+                {
+                    imprimere("  monolithus citationes NULLAS fert\n");
+                    citantes_per_modulum++;
+                }
+            }
+            alioquin si (citationes > ZEPHYRUM)
+            {
+                imprimere("  '%s': citationes %u (per modulum nullae"
+                          " esse debent)\n", via_c, citationes);
+                citantes_per_modulum++;
+            }
+
+            piscina_destruere(pp);
+        }
+
+        imprimere("  canones %u recensiti\n", xar_numerus(canones));
+
+        /* LENITAS super corpus totum: nusquam minimum= */
+        CREDO_AEQUALIS_I32 (minima_omnia, (i32)ZEPHYRUM);
+        /* 'individua' radix SOLA, in omni canone */
+        CREDO_AEQUALIS_I32 (radices_malae, (i32)ZEPHYRUM);
+        /* identitas: unicitas una in omni canone */
+        CREDO_AEQUALIS_I32 (unicitates_malae, (i32)ZEPHYRUM);
+        /* citationes MONOLITHO solae (par. 3.5: relatio trans
+         * plagulas oneratoris est, non canonis) */
+        CREDO_AEQUALIS_I32 (citantes_per_modulum, (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (monolithi, (i32)I);
+    }
+
+
+    imprimere("\n");
+    credo_imprimere_compendium();
+
+    praeteritus = credo_omnia_praeterierunt();
+    credo_claudere();
+
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
+}

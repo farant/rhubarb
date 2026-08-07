@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FIXUM PROBATIONIS (probatio_natura_canones) - corpus MINIMUM,
+  duo exemplaria, nomina DISTINCTA.
+
+  Hoc fixum est PROBA CONTRARIA custodis nominum geminorum: si
+  custos taceret quia scriptio ipsa fefellit (directorium
+  absens, via non scriptibilis), 'exitus II' idem VIDERETUR.
+  Hic canon SCRIBI DEBET - unde exitus II alibi custodem
+  significat, non defectum.
+-->
+<natura modulus="alpha" versio="1" lingua="latina">
+  <genus nomen="res_alpha">
+    <definitio>Genus fictum unius exemplaris probationis.</definitio>
+  </genus>
+</natura>

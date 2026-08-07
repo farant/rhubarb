@@ -410,3 +410,127 @@ never silent on a `.genera` save. Both predate this task series
   Roman roads and cannot currently express a BC date.
 
 Not touched: out of scope, and neither is a regression.
+
+## 2026-08-07 — Task 8: the corpus assertions, and natura's two debts
+
+Tasks 1-7 were hand-verified end to end and **none of it survived into CI**.
+This closes that: `probationes/probatio_natura_canones.c`, 67 assertions,
+0.4 s.
+
+### The test-design law, and what it cost
+
+Task 4's implementer put the rule that governs this file: asserting *"no
+citation emitted"* alone **would have passed before the fixes too**. What
+discriminated was the census reclassification — a site moving from one bucket
+to another. So the question asked of every assertion here was *what would this
+have done yesterday?*, and where the answer was "passed", the assertion was
+rewritten as a **pair whose halves differ in one dimension and where one half
+must go red**:
+
+| pair | the half that must fail |
+|---|---|
+| document that resolves its citation / one that dangles | the dangling one — a canon with *no* citations accepts both |
+| name corpus that is clean / two that collide | the clean one — it proves the write path works, so exit 2 elsewhere is the guard and not a failed `fopen` |
+| natura part `necessaria="verum"` / `necessaria="falsum"` | neither — the point is they come out **identical**, which is the leniency doctrine |
+
+Every section was then driven red by a planted fault and restored. The matrix,
+run for real:
+
+| planted | assertions that went red | that stayed green |
+|---|---|---|
+| delete 1 of 217 `<citatio>` from the monolith | dangling doc now legal (2); header number ≠ emitted count (2) | the resolving doc — correctly, it never needed the citation |
+| `minimum="1"` on rosa-canina's `radix` | the site assertion + the corpus sweep | `flos`, its non-necessary twin |
+| preface says 2056 → 2057 | census arithmetic | everything else |
+| second `radix="verum"` in `animal.canon` | radix uniqueness | — |
+| `<unicitas>` removed from `animal.canon` | unicitas presence | — |
+| `<citatio>` added to a per-module canon | per-module-citation-free | — |
+| collision fixture **de**-collided | exit code, file-written, stderr-names-the-guard | the kebab-fold fixture — the two shapes bind independently |
+| citation aimed at `locus-qui-non-est` | the audit (`malae 1`) | the census — count unchanged, which is exactly the shape of the two bugs Task 4 fixed |
+
+That last row is the one worth remembering. Both Task 4 bugs (NUL in `ad=`,
+the `etiam=` blind spot) emitted a citation **into a genus the author never
+named** while the census counted the site as resolved. Count-based assertions
+cannot see that; the audit can, and it is now permanent rather than a one-off
+review.
+
+### Numbers are NOT pinned
+
+Nothing in the test says "217 citations" or "34 canons". A fixed number starts
+lying the moment a model is added — the same argument the generated preface
+makes about itself. What is asserted are **relations**:
+
+- `citatae == xar_numerus(canon->citationes) == count of <citatio> nodes`
+  (prose in the header bound to structure on disk)
+- `apertae + posteri + multiplices + ignotae == nudae`, `citatae + nudae == sedes`
+- **`count(natura/cocta/*.canon) == count(natura/*.genera) + 1`** — derived, so
+  it also catches a new model whose canon was never generated
+
+### Two things the test needs that a probatio usually does not
+
+**It spawns `bin/natura_canones`.** The collision guard is `interior` in a
+file with a `principale`, so it cannot be linked; the only honest test is to
+run the binary on a corpus with a planted collision. Fixtures are committed
+under `probationes/exempla/nc_nomina_{sana,gemina,kebab}/` — two `.genera`
+files each, outside the `natura/` glob so no other tool sees them. If the
+binary is absent the test builds it once via `natura_struere.sh`; **staleness
+is deliberately not handled here** — that is `natura_canones.sh -probare`'s
+job, and a test that reddens because a tool was never built says nothing
+about the tool.
+
+**It uses a scratch piscina per file** in the 34-canon sweep. The monolith
+alone is 640 KB of source; 34 trees held at once would be held for no reason.
+
+### The gate chain had a hole, and it is closed
+
+Task 7 measured it: `natura-custos` gates the canon, `canon-custos` gates the
+reader, and **nobody ever edits a generated canon**. Regenerating via
+`natura_canones.sh` is a tool write, not an Edit, so no hook fires and the
+reader goes stale behind a fresh canon, silently. `natura-custos.sh` now runs
+`canon_coquere.sh -probare` as a third gate, so one `.genera` edit checks both
+hops. Exit 1 and exit 2 get **different** messages, mirroring the canon gate
+directly above it — "regenerate" is the wrong advice when the gate could not
+run, because regenerating with a stale tool is precisely how stale output gets
+blessed.
+
+Birth-tested in four states, since a hook that prints nothing looks identical
+healthy or dead: clean (baseline only), reader stale, **both** stale (one JSON
+object, three messages, chain order), and `cocta.registrum` removed (exit 2
+message naming the cause). One `hookSpecificOutput` envelope throughout — the
+accumulator introduced for the second gate is what makes the third free.
+
+**Side fix, forced by the change.** `canon_coquere.sh` used a *fixed*
+`build/canon_coquere_tmp`. Task 6 already hit this on `natura_canones.sh` and
+solved it with `$$` + `trap`; adding a second trigger to `canon_coquere.sh`
+recreates the race, so it got the same treatment. Verified the gate still
+fires on a planted fault and leaves no directories behind.
+
+### Do NOT generate the monolith's reader
+
+Measured, not guessed (Task 7): planta's **72 elements → 5,312 lines**. The
+monolith has **1,982**, i.e. ~27.5×, extrapolating to **~146,000 lines /
+4.2 MB in one translation unit** — which would link into *every* test binary,
+the way `planta_lectio.c` now does. The monolith's reader wants splitting,
+probably by module, and that is its own piece of work with its own design.
+Per-module readers are the usable artifact today.
+
+### Coverage is narrow by design — do not over-read it
+
+`probatio_planta_lectio` exercises **2 of 7 kinds** and none of
+`generat`/`laborat`, so the non-empty multiplex-child path in the generated
+reader is **compiled and never executed**. That was deliberate — Task 7's goal
+was proving the chain, not covering the canon — but a later reader could
+mistake a green suite for coverage.
+
+### The chain proof, so it survives compaction
+
+Change `natura/planta.genera:190` `<valor nomen="habitus">frutex</valor>` to
+`scandens`, then:
+
+```
+bin/natura_canones -modulus planta -radix <dir> -ad <file>
+bin/canon_coquere <file> -praefixum Planta -caput ... -corpus ...
+```
+
+The value lands in the generated C as `PLANTA_ROSA_CANINA_HABITUS_SCANDENS`
+and turns **exactly one** assertion red. One `<valor>` in natura, two
+generations, one C enum member.

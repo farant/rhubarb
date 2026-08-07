@@ -118,7 +118,7 @@ liberorum min..max.*
 | `optio` | &mdash; | &mdash; | licet |
 | `partes` | &mdash; | `pars` 1..* | &mdash; |
 | `pars` | **nomen**:nomen, necessaria:veritas, nota | &mdash; | &mdash; |
-| `machina_statuum` | **nomen**:nomen, gerens:electio{species\|individuum}, nota | `status` 1..*, `transitus` 0..* | &mdash; |
+| `machina_statuum` | **nomen**:nomen, gerens:electio{species\|individuum}=individuum, nota | `status` 1..*, `transitus` 0..* | &mdash; |
 | `status` | **nomen**:nomen, nota | &mdash; | &mdash; |
 | `transitus` | **a**:nomen, **ad**:nomen, **per**:nomen, nota | &mdash; | &mdash; |
 | `actiones` | &mdash; | `actio` 1..* | &mdash; |

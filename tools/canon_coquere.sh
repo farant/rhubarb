@@ -31,8 +31,17 @@ if [ ! -f "$MANIFESTUM" ]; then
     exit 2
 fi
 
-TMPD=build/canon_coquere_tmp
+# TMPD per PROCESSUM proprium ($$), mos natura_canones.sh: duo
+# unci hanc portam nunc accendunt (canon-custos in .canon,
+# natura-custos in .genera), et duae conservationes celeres
+# cursus duos simul dant. Loco fixo PROBANDUM inter cursus
+# intertexeretur, et PROBANDUM alienum collatum RANCOREM FALSUM
+# pareret - id est porta quae de re sana clamat, quod portae mors
+# est. (Substitutiones sed infra valorem TMPD verum adhibent,
+# ergo nomen mutatum eas non tangit.)
+TMPD=build/canon_coquere_tmp.$$
 mkdir -p "$TMPD"
+trap 'rm -rf "build/canon_coquere_tmp.$$"' EXIT
 
 rancidi=0
 facti=0

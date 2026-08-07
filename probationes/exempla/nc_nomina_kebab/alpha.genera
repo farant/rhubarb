@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FIXUM PROBATIONIS (probatio_natura_canones) - COLLISIO SECUNDA:
+  scriptiones DIVERSAE quae in idem nomen canonis PLICANTUR.
+
+  'res_communis' et 'res-communis' nomina naturae distincta sunt;
+  proiectio autem '_' in '-' vertit (par. 4.3), ergo AMBO
+  <res-communis> fiunt. Custos ideo formam KEBAB comparat, non
+  formam naturae - qui snake solum compararet hanc collisionem
+  TACITE emitteret.
+-->
+<natura modulus="alpha" versio="1" lingua="latina">
+  <genus nomen="res_communis">
+    <definitio>Genus scriptum forma snake.</definitio>
+  </genus>
+</natura>

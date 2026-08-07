@@ -123,7 +123,15 @@
 
   <elementum nomen="machina_statuum">
     <attributum nomen="nomen"  genus="nomen" necessarium="verum"/>
-    <attributum nomen="gerens" genus="electio">
+    <attributum nomen="gerens" genus="electio"
+      ordinarius="individuum"
+      nota="praestitutum DICTUM 2026-08-07: proiectio instantiarum
+            (natura_canones, spec par. 4.1) ab hoc PENDET - machina
+            gerens='species' status GENERIS describit et attributum
+            instantiae fieri non debet. Dum praestitutum taceret,
+            generator pro omni machina quae gerens= omittit
+            CONIECTARE cogebatur. Coniectura tacita in canone
+            scripta est, non in generatore.">
       <optio>species</optio>
       <optio>individuum</optio>
     </attributum>
