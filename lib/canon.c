@@ -69,15 +69,19 @@ nomen structura {
 
 /* citatio: clavis-relatio intra documentum (mos xs:key/keyref).
  * Elementum sub 'super' (aut quodlibet si vacuum) attributum
- * ferens valorem clavis 'ad_elementum/ad_attributum' aequare
- * debet. Cum intra=: claves et citantes intra EANDEM instantiam
+ * ferens valorem clavis alicuius tituli in 'ad_elementa' (cum
+ * 'ad_attributum') aequare debet. Tituli PLURES subsumptionem
+ * compilatam ferunt: claves per titulum EXACTUM colliguntur et
+ * subgenus titulum alium fert, ergo generator petitum cum
+ * posteris omnibus enumerat - canon ipse hereditatem numquam
+ * discit. Cum intra=: claves et citantes intra EANDEM instantiam
  * quaeruntur - transitus statum machinae SUAE citat, non alienae. */
 nomen structura {
     chorda*  titulus;
     chorda*  attributum;
     Xar*     super;          /* vacuum = elementum quodlibet */
     chorda*  intra;
-    chorda*  ad_elementum;
+    Xar*     ad_elementa;    /* Xar de chorda* - tituli clavigeri */
     chorda*  ad_attributum;
 } CanonCitatio;
 
@@ -823,12 +827,13 @@ canon_ex_nodo(
             ci->intra         = stml_attributum_capere(n, "intra");
             ci->super         = xar_creare(piscina,
                                     (i32)magnitudo(chorda*));
-            ci->ad_elementum  = NIHIL;
+            ci->ad_elementa   = NIHIL;
             ci->ad_attributum = NIHIL;
 
-            /* ad="elementum/attributum" - solidus OBLIGATORIUS.
-             * Forma mala canonem totum frangit (clamans), ne
-             * citatio muta nihil custodiat custodire visa. */
+            /* ad="elementum.../attributum" - solidus OBLIGATORIUS,
+             * tituli spatiis separati ante eum (unus = forma
+             * simplex). Forma mala canonem totum frangit (clamans),
+             * ne citatio muta nihil custodiat custodire visa. */
             ad = stml_attributum_capere(n, "ad");
             si (ad)
             {
@@ -856,8 +861,46 @@ canon_ex_nodo(
                     }
                     redde NIHIL;
                 }
-                ci->ad_elementum = chorda_internare(intern,
-                    chorda_sectio(*ad, ZEPHYRUM, (i32)solidus));
+                {
+                    chorda                pars;
+                    chorda_fissio_fructus f;
+                    i32                   m;
+
+                    pars = chorda_sectio(*ad, ZEPHYRUM,
+                                         (i32)solidus);
+                    ci->ad_elementa = xar_creare(piscina,
+                        (i32)magnitudo(chorda*));
+                    f = chorda_fissio(pars, ' ', piscina);
+                    per (m = ZEPHYRUM; m < f.numerus; m++)
+                    {
+                        chorda   t;
+                        chorda** locus_t;
+
+                        t = chorda_praecidere(f.elementa[m]);
+                        si (t.mensura == ZEPHYRUM)
+                        {
+                            perge;
+                        }
+                        locus_t = (chorda**)xar_addere(
+                            ci->ad_elementa);
+                        *locus_t = chorda_internare(intern, t);
+                    }
+                    /* album solum ante solidum: clamare, non
+                     * tacere - citatio sine clavigero nihil
+                     * custodiret custodire visa */
+                    si (xar_numerus(ci->ad_elementa) == ZEPHYRUM)
+                    {
+                        si (causa)
+                        {
+                            *causa = chorda_ex_literis(
+                                "citatio 'ad' sine titulis ante "
+                                "solidum (forma: "
+                                "elementum.../attributum)",
+                                piscina);
+                        }
+                        redde NIHIL;
+                    }
+                }
                 ci->ad_attributum = chorda_internare(intern,
                     chorda_sectio(*ad, (i32)(solidus + I),
                                   ad->mensura));
@@ -1351,7 +1394,7 @@ canon_iudicare(
                                                i);
             /* citatio manca (attributa absentia) INERS relinquitur
              * hic - canon.canon eam in ipso canone clamat */
-            si (!ci->attributum || !ci->ad_elementum ||
+            si (!ci->attributum || !ci->ad_elementa ||
                 !ci->ad_attributum)
             {
                 perge;
@@ -1379,15 +1422,32 @@ canon_iudicare(
                                   (i32)magnitudo(StmlNodus*));
                 _subarborem_colligere(s, ci->intra, infixus, nodi);
 
-                /* passus I: claves scopi colligere */
+                /* passus I: claves scopi colligere - nodus
+                 * clavigerus est si titulus eius in indice
+                 * ad_elementa stat (idem mos ac super= infra) */
                 per (j = ZEPHYRUM; j < xar_numerus(nodi); j++)
                 {
                     StmlNodus* n;
                     chorda*    v;
+                    b32        clavigerum;
+                    i32        m;
 
                     n = *(StmlNodus**)xar_obtinere(nodi, j);
-                    si (!chorda_aequalis(*n->titulus,
-                                         *ci->ad_elementum))
+                    clavigerum = FALSUM;
+                    per (m = ZEPHYRUM;
+                         m < xar_numerus(ci->ad_elementa); m++)
+                    {
+                        chorda** t;
+
+                        t = (chorda**)xar_obtinere(
+                            ci->ad_elementa, m);
+                        si (chorda_aequalis(*n->titulus, **t))
+                        {
+                            clavigerum = VERUM;
+                            frange;
+                        }
+                    }
+                    si (!clavigerum)
                     {
                         perge;
                     }

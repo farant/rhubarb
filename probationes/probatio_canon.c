@@ -226,6 +226,47 @@ interior constans character* BIBLIOTHECA_MALA =
     "  </machina>\n"
     "</bibliotheca>\n";
 
+/* citatio cum titulis PLURIBUS ante solidum - subsumptio
+ * compilata: generator naturae petitum cum posteris omnibus
+ * enumerat quia claves per titulum exactum colliguntur. Claves
+ * hic ex quercu ET fago colliguntur, ex ave NON. */
+interior constans character* CANON_SILVAE =
+    "<canon dialectus=\"silvula\" versio=\"1\">\n"
+    "  <elementum nomen=\"silvula\" radix=\"verum\">\n"
+    "    <liberum nomen=\"quercus\"/>\n"
+    "    <liberum nomen=\"fagus\"/>\n"
+    "    <liberum nomen=\"avis\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"quercus\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"nomen\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"fagus\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"nomen\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"avis\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"nomen\"/>\n"
+    "    <attributum nomen=\"nidificat\" genus=\"nomen\"/>\n"
+    "  </elementum>\n"
+    "  <citatio nomen=\"nidorum\" attributum=\"nidificat\"\n"
+    "    ad=\"quercus fagus/nomen\" super=\"avis\"/>\n"
+    "</canon>\n";
+
+/* clavis sub titulo SECUNDO indicis stat - hoc ipsum indicem
+ * probat (forma simplici solum quercus clavigera esset) */
+interior constans character* SILVULA_SANA =
+    "<silvula>\n"
+    "  <fagus nomen=\"fagia\"/>\n"
+    "  <avis nomen=\"merula\" nidificat=\"fagia\"/>\n"
+    "</silvula>\n";
+
+/* valor adest sed sub titulo EXTRA indicem (avis alia): titulus
+ * extra indicem clavem non fert, citatio irrita clamare debet */
+interior constans character* SILVULA_MALA =
+    "<silvula>\n"
+    "  <avis nomen=\"merula\"/>\n"
+    "  <avis nomen=\"turdus\" nidificat=\"merula\"/>\n"
+    "</silvula>\n";
+
 interior constans character* CATALOGUS_FIXTURA =
     "# commentarium praetermittendum\n"
     ".genera\tnatura/natura.canon\n"
@@ -663,6 +704,49 @@ s32 principale (vacuum)
             "<elementum nomen=\"r\" radix=\"verum\"/>"
             "<citatio nomen=\"c\" attributum=\"a\""
             " ad=\"sine_solido\"/>"
+            "</canon>", piscina, intern));
+    }
+
+
+    /* ========================================================
+     * PROBARE: citatio cum titulis pluribus (index ad=)
+     *
+     * PAR obligatorium: sana clavem sub titulo SECUNDO fert
+     * (indicem probat - forma simplici rueret), mala valorem
+     * sub titulo extra indicem (clamorem probat - canon sine
+     * citatione utramque acciperet).
+     * ======================================================== */
+
+    {
+        Canon* silvula;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans citationem indicis ---\n");
+
+        silvula = canon_ex_literis(CANON_SILVAE, piscina, intern);
+        CREDO_NON_NIHIL (silvula);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(silvula->citationes),
+                            I);
+
+        vitia = iudicare_literis(silvula, SILVULA_SANA,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        vitia = iudicare_literis(silvula, SILVULA_MALA,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_CITATIO_IRRITA), I);
+
+        /* album solum ante solidum CLAMAT, non tacet - citatio
+         * sine clavigero (ad=' /n') porta muta esset */
+        CREDO_NIHIL (canon_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\"/>"
+            "<citatio nomen=\"c\" attributum=\"a\""
+            " ad=\" /n\"/>"
             "</canon>", piscina, intern));
     }
 

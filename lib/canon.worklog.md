@@ -147,3 +147,24 @@ nobody had copied the number onto nodes. Ten lines at
 _parser_creare_nodus. En route: clausura_anonyma was never
 initialized in the copy function or three builder constructors —
 uninitialized memory in every copied node until today.
+
+## 2026-08-07 — citatio ad= accipit indicem titulorum
+
+`ad="elementum/attributum"` grew a list form: `ad="animal apis
+canis homo/nomen"` — space-separated titles before the solidus,
+split with the same fissio+praecidere idiom super= already used
+(the membership test on the check side is likewise a near-copy of
+the super= loop twenty lines below it; three symmetries for one
+feature). One title = the old form, byte-compatible.
+
+WHY: canon collects keys by EXACT title, natura's references are
+subsumptive (a species IS its genus). The natura generator now
+compiles subsumption into enumeration — the closure of a target
+kind becomes the ad= list — instead of refusing to cite non-leaf
+targets. Canon still never learns inheritance.
+
+Hardening found en route: `ad=" /n"` (whitespace-only element
+part) used to intern a one-space title that matched nothing — a
+citation that silently guarded nothing. Now clamat like the
+missing-solidus form. Pre-fix oracle held: the whitespace test and
+the closure-pendens test both fail on the old code.

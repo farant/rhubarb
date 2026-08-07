@@ -135,9 +135,11 @@
       nota="attributum citans - valor eius clavem aequare debet"/>
     <attributum nomen="ad"          genus="textus"
       necessarium="verum"
-      nota="forma 'elementum/attributum' - solidus extra
-            compositum, ergo textus; machina formam malam
-            clamans frangit"/>
+      nota="forma 'elementum.../attributum' - tituli spatiis
+            separati ante solidum (unus = forma simplex; plures =
+            subsumptio compilata, generator posteros enumerat);
+            solidus extra compositum, ergo textus; machina formam
+            malam clamans frangit"/>
     <attributum nomen="super"       genus="textus"
       nota="index elementorum citantium spatiis separatus;
             absens = elementum quodlibet attributum ferens"/>
