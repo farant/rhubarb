@@ -5119,3 +5119,19 @@ MENSURATUM: la 177/177, en 1/177, fr 1/177 (planta seeded en+fr);
 glossae flow genera -> planta.canon + individua.canon (blast radius
 exactly 2 files); pagina natura/cocta/glossae.html deterministic,
 -probare byte-compares.
+
+## 2026-08-08 — the debt paid in an afternoon
+
+Six parallel Opus glossators (partitioned BY FILE — no conflicts, no
+worktrees needed) authored all 352 en/fr glossae in one pass:
+2232 insertions, 0 deletions, both gates clean per agent, census
+177/177 in all three languages, page free of every deest marker.
+Each agent surfaced its translation judgments (universitas = corps
+constitué not university; codex = FRBR copy not manuscript; iussum
+kept apart from praescriptum per the file's own warning; tessera =
+titre, with "au porteur" self-caught as contradicting the genus's
+own modus_transferendi). One agent caught the verify-recipe flaw:
+loose greps match genus NAMES across modules — filter on the
+modulus COLUMN. Regeneration ran ONCE after all six landed (the
+agents each independently declined to run it mid-flight — shared
+state discipline held).
