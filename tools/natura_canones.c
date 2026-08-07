@@ -9,6 +9,7 @@
  *
  * Usus:
  *   bin/natura_canones -index          index entium (TSV)
+ *   bin/natura_canones -inspicere G    exemplar elementi unius (TSV)
  *   bin/natura_canones -radix DIR      alia sedes exemplarium
  *
  * Exitus: 0 = sanum; 2 = NIHIL CURSUM EST (disciplina domus:
@@ -27,6 +28,10 @@
 
 #define EXTENSIO ".genera"
 
+/* custos catenae - mos natura_apparatus (catena circularis
+ * oneratorem transire non debet, sed hic eam non iudicamus) */
+#define NC_CATENA_MAXIMA XXXII
+
 nomen structura {
          chorda*  titulus;   /* nomen naturae, snake_case */
          chorda*  modulus;
@@ -35,10 +40,40 @@ nomen structura {
              b32  est_res;   /* VERUM = species/individuum/cultivar */
 } NcEns;
 
+/* ==================================================
+ * Exemplar elementi - apparatus PLICATUS
+ *
+ * natura_apparatus hereditatem iam solvit (catenam sub= trans
+ * exemplaria ascendit); hic dispositio sola restat: quid
+ * attributum fiat, quid liberum, quid electio.
+ * ================================================== */
+
+nomen enumeratio {
+    NC_MEMBRUM_ATTRIBUTUM = I,   /* -> <attributum> */
+    NC_MEMBRUM_LIBERUM    = II   /* -> <liberum> + <elementum intra=> */
+} NcMembrumDiscrimen;
+
+nomen structura {
+     NcMembrumDiscrimen  discrimen;
+                chorda*  titulus;       /* nomen naturae, snake */
+    constans character*  praefixum;     /* "status_" vel NIHIL */
+    constans character*  genus_valoris; /* "textus"/"nomen"/... */
+                   Xar*  optiones;      /* Xar de chorda* - electio */
+                chorda*  praestitutum;  /* ordinarius=, vel NIHIL */
+} NcMembrum;
+
+nomen structura {
+      NcEns*  ens;
+        Xar*  membra;     /* Xar de NcMembrum */
+        Xar*  actiones;   /* Xar de chorda* - pro <eventum actio=> */
+} NcElementum;
+
 interior b32       _extensionem_habet(constans chorda* t);
 interior vacuum    _stirpem_scribere(constans chorda* t, character* ex,
                                      i32 tectum);
 interior vacuum    _kebab_scribere(FILE* f, constans chorda* t);
+interior vacuum    _kebab_literas_scribere(FILE* f,
+                                           constans character* s);
 interior s32       _comparare_titulos(constans vacuum* a,
                                       constans vacuum* b);
 interior b32       _corpus_onerare(NaturaBibliotheca* bib,
@@ -47,6 +82,27 @@ interior b32       _corpus_onerare(NaturaBibliotheca* bib,
                                    i32* vulnera_ex);
 interior Xar*      _entia_colligere(NaturaBibliotheca* bib,
                                     Piscina* piscina);
+interior NcEns*    _ens_invenire(Xar* entia,
+                                 constans character* titulus);
+interior NcMembrum* _membrum_invenire(Xar* membra,
+                                      constans chorda* titulus,
+                                      constans character* praefixum);
+interior b32       _membrum_adest(Xar* membra, constans chorda* titulus,
+                                  constans character* praefixum);
+interior b32       _actio_adest(Xar* actiones,
+                                constans chorda* titulus);
+interior Xar*      _optiones_colligere(StmlNodus* n, Piscina* piscina);
+interior Xar*      _status_colligere(StmlNodus* n, Piscina* piscina);
+interior b32       _machina_ad_individuum(StmlNodus* n);
+interior vacuum    _valores_ex_nodo(NcElementum* el, StmlNodus* n,
+                                    Piscina* piscina);
+interior vacuum    _valores_applicare(NcElementum* el, NcEns* ens,
+                                      Piscina* piscina);
+interior NcElementum* _elementum_aedificare(NaturaBibliotheca* bib,
+                                            NcEns* ens,
+                                            Piscina* piscina);
+interior vacuum    _planum_scribere(FILE* f, constans chorda* t);
+interior vacuum    _elementum_inspicere(FILE* f, NcElementum* el);
 
 /* nomen naturae (snake) -> nomen canonis (kebab).
  * Bijectivum: genus 'nomen' naturae lineolam non fert. */
@@ -67,6 +123,21 @@ _kebab_scribere(
             c = '-';
         }
         putc(c, f);
+    }
+}
+
+/* idem pro literis C - praefixa ('status_') formam SNAKE in
+ * exemplari servant, ergo kebab uno loco solo fit */
+interior vacuum
+_kebab_literas_scribere(
+    FILE*                f,
+    constans character*  s)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; s[i] != '\0'; i++)
+    {
+        putc(s[i] == '_' ? '-' : s[i], f);
     }
 }
 
@@ -274,6 +345,481 @@ _entia_colligere(
     redde entia;
 }
 
+/* ens nomine nudo - modus inspiciendi hominis est, ergo primum
+ * congruens sufficit (nomina generum per corpus unica sunt; res
+ * homonymae theoretice possibiles, nondum factae) */
+interior NcEns*
+_ens_invenire(
+    Xar*                 entia,
+    constans character*  titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(entia); i++)
+    {
+        NcEns* e;
+
+        e = (NcEns*)xar_obtinere(entia, i);
+        si (chorda_aequalis_literis(*e->titulus, titulus))
+        {
+            redde e;
+        }
+    }
+    redde NIHIL;
+}
+
+/* membrum iam positum? (apparatus NON deduplicat: primum
+ * occurrens = maxime proprium, ergo primum vincit) */
+interior NcMembrum*
+_membrum_invenire(
+    Xar*                 membra,
+    constans chorda*     titulus,
+    constans character*  praefixum)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(membra); i++)
+    {
+        NcMembrum* m;
+
+        m = (NcMembrum*)xar_obtinere(membra, i);
+        si (!chorda_aequalis(*m->titulus, *titulus))
+        {
+            perge;
+        }
+        si ((m->praefixum == NIHIL) != (praefixum == NIHIL))
+        {
+            perge;
+        }
+        si (m->praefixum &&
+            strcmp(m->praefixum, praefixum) != ZEPHYRUM)
+        {
+            perge;
+        }
+        redde m;
+    }
+    redde NIHIL;
+}
+
+interior b32
+_membrum_adest(
+    Xar*                 membra,
+    constans chorda*     titulus,
+    constans character*  praefixum)
+{
+    redde (b32)(_membrum_invenire(membra, titulus, praefixum) != NIHIL);
+}
+
+/* actiones electionem UNAM fiunt (<eventum actio=>), ergo actio
+ * hereditata bis nominata optionem duplicem pareret */
+interior b32
+_actio_adest(
+    Xar*              actiones,
+    constans chorda*  titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    {
+        chorda* a;
+
+        a = *(chorda**)xar_obtinere(actiones, i);
+        si (chorda_aequalis(*a, *titulus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* liberos <optio> in Xar de chorda* colligere */
+interior Xar*
+_optiones_colligere(
+    StmlNodus*  n,
+    Piscina*    piscina)
+{
+    Xar* optiones;
+    i32  i;
+    i32  numerus;
+
+    optiones = xar_creare(piscina, (i32)magnitudo(chorda*));
+    numerus  = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+
+        l = stml_liberum_ad_indicem(n, i);
+        si (l && l->genus == STML_NODUS_ELEMENTUM &&
+            chorda_aequalis_literis(*l->titulus, "optio"))
+        {
+            chorda*  valor;
+            chorda** locus;
+
+            valor  = (chorda*)piscina_allocare(piscina,
+                                               magnitudo(chorda));
+            *valor = stml_textus_normalizatus(l, piscina);
+            locus  = (chorda**)xar_addere(optiones);
+            *locus = valor;
+        }
+    }
+    redde optiones;
+}
+
+/* idem, sed nomina <status> - electio machinae ex nominibus
+ * statuum fit, non ex textu */
+interior Xar*
+_status_colligere(
+    StmlNodus*  n,
+    Piscina*    piscina)
+{
+    Xar* nomina;
+    i32  i;
+    i32  numerus;
+
+    nomina  = xar_creare(piscina, (i32)magnitudo(chorda*));
+    numerus = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+
+        l = stml_liberum_ad_indicem(n, i);
+        si (l && l->genus == STML_NODUS_ELEMENTUM &&
+            chorda_aequalis_literis(*l->titulus, "status"))
+        {
+            chorda*  titulus;
+            chorda** locus;
+
+            titulus = stml_attributum_capere(l, "nomen");
+            si (!titulus)
+            {
+                perge;
+            }
+            locus  = (chorda**)xar_addere(nomina);
+            *locus = titulus;
+        }
+    }
+    redde nomina;
+}
+
+/* an machina statuum ad INDIVIDUUM pertineat (spec par. 4.1).
+ * gerens= absens: natura praestitutum non dicit - vide spec
+ * par. 8.1. Interim 'individuum' sumimus, quod casus usitatus est. */
+interior b32
+_machina_ad_individuum(
+    StmlNodus*  n)
+{
+    chorda* gerens;
+
+    gerens = stml_attributum_capere(n, "gerens");
+    si (!gerens)
+    {
+        redde VERUM;
+    }
+    redde chorda_aequalis_literis(*gerens, "individuum");
+}
+
+/* liberos <valor> nodi unius ad membra applicare.
+ * Membrum iam praestitutum SERVATUR: vocans ab origine maxime
+ * propria ascendit, ergo primum scriptum vincit. */
+interior vacuum
+_valores_ex_nodo(
+    NcElementum*  el,
+    StmlNodus*    n,
+    Piscina*      piscina)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus*  l;
+        chorda*     titulus;
+        chorda*     valor;
+        NcMembrum*  m;
+
+        l = stml_liberum_ad_indicem(n, i);
+        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
+            !chorda_aequalis_literis(*l->titulus, "valor"))
+        {
+            perge;
+        }
+        titulus = stml_attributum_capere(l, "nomen");
+        si (!titulus)
+        {
+            perge;
+        }
+        m = _membrum_invenire(el->membra, titulus, NIHIL);
+        si (!m || m->praestitutum)
+        {
+            perge;
+        }
+        valor  = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        *valor = stml_textus_normalizatus(l, piscina);
+
+        m->praestitutum = valor;
+    }
+}
+
+/* elementum <valor> ad quemlibet gradum stat (spec par. 4):
+ * rosa 'habitus frutex' dicit, unde rosa_canina eum fert.
+ * Utraque lectio valoris (constringens et typificans, par. 8.2) ad
+ * ordinarius= tuto cadit, ergo hereditas eius secura est.
+ *
+ * ORDO: proprium, deinde res continentes, deinde catena generum -
+ * maxime proprium primum, quia primum scriptum vincit.
+ * Continentia rei specificatio est (cultivar in specie, species
+ * in genere), ergo valores eius descendunt sicut generum. */
+interior vacuum
+_valores_applicare(
+    NcElementum*  el,
+    NcEns*        ens,
+    Piscina*      piscina)
+{
+    NaturaGenus* g;
+    StmlNodus*   n;
+    i32          gradus;
+
+    si (ens->est_res)
+    {
+        gradus = ZEPHYRUM;
+        per (n = ens->nodus; n && gradus < NC_CATENA_MAXIMA;
+             n = n->parens)
+        {
+            si (n->genus != STML_NODUS_ELEMENTUM)
+            {
+                frange;
+            }
+            si (n != ens->nodus &&
+                !chorda_aequalis_literis(*n->titulus, "species") &&
+                !chorda_aequalis_literis(*n->titulus, "individuum") &&
+                !chorda_aequalis_literis(*n->titulus, "cultivar"))
+            {
+                frange;
+            }
+            _valores_ex_nodo(el, n, piscina);
+            gradus++;
+        }
+    }
+
+    gradus = ZEPHYRUM;
+    per (g = ens->genus; g && gradus < NC_CATENA_MAXIMA;
+         g = g->parens)
+    {
+        _valores_ex_nodo(el, g->nodus, piscina);
+        gradus++;
+    }
+}
+
+/* apparatum (iam hereditate solutum) in exemplar elementi plicare */
+interior NcElementum*
+_elementum_aedificare(
+    NaturaBibliotheca*  bib,
+    NcEns*              ens,
+    Piscina*            piscina)
+{
+    NcElementum* el;
+    Xar*         apparatus;
+    i32          i;
+
+    el           = (NcElementum*)piscina_allocare(piscina,
+                       magnitudo(NcElementum));
+    el->ens      = ens;
+    el->membra   = xar_creare(piscina, (i32)magnitudo(NcMembrum));
+    el->actiones = xar_creare(piscina, (i32)magnitudo(chorda*));
+
+    si (!ens->genus)
+    {
+        redde el;
+    }
+    apparatus = natura_apparatus(bib, ens->genus, piscina);
+
+    per (i = ZEPHYRUM; i < xar_numerus(apparatus); i++)
+    {
+        NaturaApparatusMembrum* am;
+        chorda*                 titulus;
+        chorda*                 multiplex;
+        NcMembrum*              m;
+
+        am      = (NaturaApparatusMembrum*)xar_obtinere(apparatus, i);
+        titulus = stml_attributum_capere(am->nodus, "nomen");
+
+        si (chorda_aequalis_literis(*am->nodus->titulus, "actio"))
+        {
+            chorda** locus;
+
+            si (!titulus || _actio_adest(el->actiones, titulus))
+            {
+                perge;
+            }
+            locus  = (chorda**)xar_addere(el->actiones);
+            *locus = titulus;
+            perge;
+        }
+
+        si (chorda_aequalis_literis(*am->nodus->titulus,
+                                    "machina_statuum"))
+        {
+            si (!titulus || !_machina_ad_individuum(am->nodus))
+            {
+                perge;
+            }
+            si (_membrum_adest(el->membra, titulus, "status_"))
+            {
+                perge;
+            }
+            m                = (NcMembrum*)xar_addere(el->membra);
+            m->discrimen     = NC_MEMBRUM_ATTRIBUTUM;
+            m->titulus       = titulus;
+            m->praefixum     = "status_";
+            m->genus_valoris = "electio";
+            m->optiones      = _status_colligere(am->nodus, piscina);
+            m->praestitutum  = NIHIL;
+            perge;
+        }
+
+        si (!titulus || _membrum_adest(el->membra, titulus, NIHIL))
+        {
+            perge;
+        }
+        multiplex = stml_attributum_capere(am->nodus, "multiplex");
+
+        m               = (NcMembrum*)xar_addere(el->membra);
+        m->titulus      = titulus;
+        m->praefixum    = NIHIL;
+        m->optiones     = NIHIL;
+        m->praestitutum = NIHIL;
+        m->discrimen    = (multiplex &&
+                           chorda_aequalis_literis(*multiplex, "verum"))
+                          ? NC_MEMBRUM_LIBERUM : NC_MEMBRUM_ATTRIBUTUM;
+
+        si (chorda_aequalis_literis(*am->nodus->titulus, "pars"))
+        {
+            /* necessaria= CONSULTO ignoratur: necessitas ontologica
+             * obligatio documenti non est (spec par. 3.4) */
+            m->discrimen     = NC_MEMBRUM_LIBERUM;
+            m->genus_valoris = "textus";
+        }
+        alioquin si (chorda_aequalis_literis(*am->nodus->titulus,
+                                             "relatio"))
+        {
+            m->genus_valoris = "nomen";
+        }
+        alioquin
+        {
+            chorda* g;
+
+            g = stml_attributum_capere(am->nodus, "genus");
+            m->genus_valoris = "textus";
+            si (g && chorda_aequalis_literis(*g, "electio"))
+            {
+                m->genus_valoris = "electio";
+                m->optiones      = _optiones_colligere(am->nodus,
+                                                       piscina);
+            }
+            alioquin si (g && chorda_aequalis_literis(*g, "numerus"))
+            {
+                m->genus_valoris = "numerus";
+            }
+            alioquin si (g && chorda_aequalis_literis(*g, "veritas"))
+            {
+                m->genus_valoris = "veritas";
+            }
+            alioquin si (g && chorda_aequalis_literis(*g, "dies"))
+            {
+                m->genus_valoris = "dies";
+            }
+        }
+    }
+
+    _valores_applicare(el, ens, piscina);
+    redde el;
+}
+
+/* chorda in unam lineam - valor <valor> prosa MULTILINEA esse
+ * potest (normalizatio indentationem tollit, lineas servat), quae
+ * TSV crudo emissa unum membrum in plures lineas frangeret.
+ * Exemplar valorem VERUM tenet; sola haec species eum planat. */
+interior vacuum
+_planum_scribere(
+    FILE*             f,
+    constans chorda*  t)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < t->mensura; i++)
+    {
+        character c;
+
+        c = (character)t->datum[i];
+        si (c == '\n' || c == '\r' || c == '\t')
+        {
+            c = ' ';
+        }
+        putc(c, f);
+    }
+}
+
+/* exemplar in TSV - linea una per membrum:
+ *   ENS  discrimen  nomen  genus  optiones  [=ordinarius]
+ * Actio breviter: ENS  actio  nomen */
+interior vacuum
+_elementum_inspicere(
+    FILE*         f,
+    NcElementum*  el)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(el->membra); i++)
+    {
+        NcMembrum* m;
+        i32        j;
+
+        m = (NcMembrum*)xar_obtinere(el->membra, i);
+
+        _kebab_scribere(f, el->ens->titulus);
+        fputs(m->discrimen == NC_MEMBRUM_ATTRIBUTUM
+              ? "\tattributum\t" : "\tliberum\t", f);
+        si (m->praefixum)
+        {
+            _kebab_literas_scribere(f, m->praefixum);
+        }
+        _kebab_scribere(f, m->titulus);
+        fprintf(f, "\t%s\t", m->genus_valoris);
+
+        per (j = ZEPHYRUM;
+             m->optiones && j < xar_numerus(m->optiones); j++)
+        {
+            chorda* o;
+
+            o = *(chorda**)xar_obtinere(m->optiones, j);
+            si (j > ZEPHYRUM)
+            {
+                putc('|', f);
+            }
+            _planum_scribere(f, o);
+        }
+
+        si (m->praestitutum)
+        {
+            fputs("\t=", f);
+            _planum_scribere(f, m->praestitutum);
+        }
+        putc('\n', f);
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(el->actiones); i++)
+    {
+        chorda* a;
+
+        a = *(chorda**)xar_obtinere(el->actiones, i);
+        _kebab_scribere(f, el->ens->titulus);
+        fputs("\tactio\t", f);
+        _kebab_scribere(f, a);
+        putc('\n', f);
+    }
+}
+
 s32
 principale(
     s32          numerus,
@@ -283,19 +829,26 @@ principale(
     NaturaBibliotheca*  bib;
     Xar*                entia;
     constans character* radix;
+    constans character* inspiciendum;
     b32                 modus_index;
     i32                 vulnera;
     s32                 i;
 
-    radix       = "natura";
-    modus_index = FALSUM;
-    vulnera     = ZEPHYRUM;
+    radix        = "natura";
+    inspiciendum = NIHIL;
+    modus_index  = FALSUM;
+    vulnera      = ZEPHYRUM;
 
     per (i = I; i < numerus; i++)
     {
         si (strcmp(argumenta[i], "-index") == ZEPHYRUM)
         {
             modus_index = VERUM;
+        }
+        alioquin si (strcmp(argumenta[i], "-inspicere") == ZEPHYRUM &&
+                     i + I < numerus)
+        {
+            inspiciendum = argumenta[++i];
         }
         alioquin si (strcmp(argumenta[i], "-radix") == ZEPHYRUM &&
                      i + I < numerus)
@@ -305,7 +858,8 @@ principale(
         alioquin
         {
             fprintf(stderr,
-                "usus: natura_canones [-index] [-radix DIR]\n");
+                "usus: natura_canones [-index] [-inspicere GENUS] "
+                "[-radix DIR]\n");
             redde II;
         }
     }
@@ -355,6 +909,24 @@ principale(
         redde ZEPHYRUM;
     }
 
-    fprintf(stderr, "natura_canones: nihil petitum (adde -index)\n");
+    si (inspiciendum)
+    {
+        NcEns*       e;
+        NcElementum* el;
+
+        e = _ens_invenire(entia, inspiciendum);
+        si (!e)
+        {
+            fprintf(stderr, "natura_canones: ens '%s' non inventum\n",
+                    inspiciendum);
+            redde II;
+        }
+        el = _elementum_aedificare(bib, e, piscina);
+        _elementum_inspicere(stdout, el);
+        redde ZEPHYRUM;
+    }
+
+    fprintf(stderr,
+        "natura_canones: nihil petitum (adde -index aut -inspicere)\n");
     redde II;
 }
