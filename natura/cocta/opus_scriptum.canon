@@ -10,16 +10,6 @@
     <liberum nomen="codex"/>
     <liberum nomen="periodicum"/>
     <liberum nomen="fasciculus"/>
-    <liberum nomen="moby-dick"/>
-    <liberum nomen="summa-theologiae"/>
-    <liberum nomen="abusus-linguae"/>
-    <liberum nomen="systema-naturae"/>
-    <liberum nomen="species-plantarum"/>
-    <liberum nomen="abusus-linguae-germanice"/>
-    <liberum nomen="abusus-linguae-anglice"/>
-    <liberum nomen="moby-dick-londinensis-1851"/>
-    <liberum nomen="moby-dick-novi-eboraci-1851"/>
-    <liberum nomen="systema-naturae-editio-decima"/>
   </elementum>
 
   <elementum nomen="opus-scriptum">
@@ -156,238 +146,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="moby-dick">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="titulus-originalis" genus="textus" ordinarius="Moby-Dick; or, The       Whale"/>
-    <attributum nomen="lingua-originalis" genus="textus" ordinarius="anglica"/>
-    <attributum nomen="status-compositio" genus="electio">
-      <optio>concepta</optio>
-      <optio>in_scriptione</optio>
-      <optio>perfecta</optio>
-      <optio>imperfecta_relicta</optio>
-    </attributum>
-    <attributum nomen="habet-expressionem" genus="referentia"/>
-    <attributum nomen="continuatio-de" genus="referentia"/>
-    <attributum nomen="respondet-ad" genus="referentia"/>
-    <attributum nomen="pars-de" genus="referentia"/>
-    <liberum nomen="materia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="materia" intra="moby-dick" textus="verum"/>
-  <elementum nomen="auctor" intra="moby-dick">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="moby-dick">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="summa-theologiae">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="titulus-originalis" genus="textus" ordinarius="Summa Theologiae"/>
-    <attributum nomen="lingua-originalis" genus="textus" ordinarius="latina"/>
-    <attributum nomen="status-compositio" genus="electio">
-      <optio>concepta</optio>
-      <optio>in_scriptione</optio>
-      <optio>perfecta</optio>
-      <optio>imperfecta_relicta</optio>
-    </attributum>
-    <attributum nomen="habet-expressionem" genus="referentia"/>
-    <attributum nomen="continuatio-de" genus="referentia"/>
-    <attributum nomen="respondet-ad" genus="referentia"/>
-    <attributum nomen="pars-de" genus="referentia"/>
-    <liberum nomen="materia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="materia" intra="summa-theologiae" textus="verum"/>
-  <elementum nomen="auctor" intra="summa-theologiae">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="summa-theologiae">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="abusus-linguae">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="titulus-originalis" genus="textus" ordinarius="Missbrauch der Sprache,       Missbrauch der Macht"/>
-    <attributum nomen="lingua-originalis" genus="textus" ordinarius="germanica"/>
-    <attributum nomen="status-compositio" genus="electio">
-      <optio>concepta</optio>
-      <optio>in_scriptione</optio>
-      <optio>perfecta</optio>
-      <optio>imperfecta_relicta</optio>
-    </attributum>
-    <attributum nomen="habet-expressionem" genus="referentia"/>
-    <attributum nomen="continuatio-de" genus="referentia"/>
-    <attributum nomen="respondet-ad" genus="referentia"/>
-    <attributum nomen="pars-de" genus="referentia"/>
-    <liberum nomen="materia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="materia" intra="abusus-linguae" textus="verum"/>
-  <elementum nomen="auctor" intra="abusus-linguae">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="abusus-linguae">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="systema-naturae">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="titulus-originalis" genus="textus" ordinarius="Systema Naturae"/>
-    <attributum nomen="lingua-originalis" genus="textus" ordinarius="latina"/>
-    <attributum nomen="status-compositio" genus="electio">
-      <optio>concepta</optio>
-      <optio>in_scriptione</optio>
-      <optio>perfecta</optio>
-      <optio>imperfecta_relicta</optio>
-    </attributum>
-    <attributum nomen="habet-expressionem" genus="referentia"/>
-    <attributum nomen="continuatio-de" genus="referentia"/>
-    <attributum nomen="respondet-ad" genus="referentia"/>
-    <attributum nomen="pars-de" genus="referentia"/>
-    <liberum nomen="materia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="materia" intra="systema-naturae" textus="verum"/>
-  <elementum nomen="auctor" intra="systema-naturae">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="systema-naturae">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="species-plantarum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="titulus-originalis" genus="textus" ordinarius="Species Plantarum"/>
-    <attributum nomen="lingua-originalis" genus="textus" ordinarius="latina"/>
-    <attributum nomen="status-compositio" genus="electio">
-      <optio>concepta</optio>
-      <optio>in_scriptione</optio>
-      <optio>perfecta</optio>
-      <optio>imperfecta_relicta</optio>
-    </attributum>
-    <attributum nomen="habet-expressionem" genus="referentia"/>
-    <attributum nomen="continuatio-de" genus="referentia"/>
-    <attributum nomen="respondet-ad" genus="referentia"/>
-    <attributum nomen="pars-de" genus="referentia"/>
-    <liberum nomen="materia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="materia" intra="species-plantarum" textus="verum"/>
-  <elementum nomen="auctor" intra="species-plantarum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="species-plantarum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="abusus-linguae-germanice">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="lingua" genus="textus" ordinarius="germanica"/>
-    <attributum nomen="genus-expressionis" genus="electio" ordinarius="originalis">
-      <optio>originalis</optio>
-      <optio>translata</optio>
-      <optio>recensita</optio>
-      <optio>abbreviata</optio>
-    </attributum>
-    <attributum nomen="expressio-de" genus="referentia"/>
-    <attributum nomen="translata-ex" genus="referentia"/>
-    <liberum nomen="translator"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="translator" intra="abusus-linguae-germanice">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="abusus-linguae-germanice">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="abusus-linguae-anglice">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="lingua" genus="textus" ordinarius="anglica"/>
-    <attributum nomen="genus-expressionis" genus="electio" ordinarius="translata">
-      <optio>originalis</optio>
-      <optio>translata</optio>
-      <optio>recensita</optio>
-      <optio>abbreviata</optio>
-    </attributum>
-    <attributum nomen="expressio-de" genus="referentia"/>
-    <attributum nomen="translata-ex" genus="referentia"/>
-    <liberum nomen="translator"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="translator" intra="abusus-linguae-anglice">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="abusus-linguae-anglice">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="moby-dick-londinensis-1851">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="index-isbn" genus="textus"/>
-    <attributum nomen="paginae" genus="numerus" ordinarius="927"/>
-    <attributum nomen="forma-corporis" genus="electio" ordinarius="codex_duro_tegmine">
-      <optio>codex_duro_tegmine</optio>
-      <optio>codex_molli_tegmine</optio>
-      <optio>volumen_membranaceum</optio>
-      <optio>electronica</optio>
-    </attributum>
-    <attributum nomen="publicata" genus="dies" ordinarius="1851-10-18"/>
-    <attributum nomen="editio-de" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <attributum nomen="impressa-in" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="moby-dick-londinensis-1851">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="moby-dick-novi-eboraci-1851">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="index-isbn" genus="textus"/>
-    <attributum nomen="paginae" genus="numerus"/>
-    <attributum nomen="forma-corporis" genus="electio" ordinarius="codex_duro_tegmine">
-      <optio>codex_duro_tegmine</optio>
-      <optio>codex_molli_tegmine</optio>
-      <optio>volumen_membranaceum</optio>
-      <optio>electronica</optio>
-    </attributum>
-    <attributum nomen="publicata" genus="dies" ordinarius="1851-11-14"/>
-    <attributum nomen="editio-de" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <attributum nomen="impressa-in" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="moby-dick-novi-eboraci-1851">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="systema-naturae-editio-decima">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="index-isbn" genus="textus"/>
-    <attributum nomen="paginae" genus="numerus"/>
-    <attributum nomen="forma-corporis" genus="electio">
-      <optio>codex_duro_tegmine</optio>
-      <optio>codex_molli_tegmine</optio>
-      <optio>volumen_membranaceum</optio>
-      <optio>electronica</optio>
-    </attributum>
-    <attributum nomen="publicata" genus="dies" ordinarius="1758"/>
-    <attributum nomen="editio-de" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <attributum nomen="impressa-in" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="systema-naturae-editio-decima">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>
     <attributum nomen="actio" genus="electio">
@@ -403,10 +161,7 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="opus-scriptum expressio editio codex periodicum fasciculus moby-dick
-           summa-theologiae abusus-linguae systema-naturae species-plantarum
-           abusus-linguae-germanice abusus-linguae-anglice moby-dick-londinensis-1851
-           moby-dick-novi-eboraci-1851 systema-naturae-editio-decima"/>
+    super="opus-scriptum expressio editio codex periodicum fasciculus"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -414,46 +169,19 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
-  <citatio nomen="opus-scriptum-habet-expressionem" attributum="habet-expressionem" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="opus-scriptum"/>
-  <citatio nomen="opus-scriptum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="opus-scriptum"/>
-  <citatio nomen="opus-scriptum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="opus-scriptum"/>
-  <citatio nomen="opus-scriptum-pars-de" attributum="pars-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="opus-scriptum"/>
-  <citatio nomen="expressio-expressio-de" attributum="expressio-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="expressio"/>
-  <citatio nomen="expressio-translata-ex" attributum="translata-ex" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="expressio"/>
-  <citatio nomen="editio-editio-de" attributum="editio-de" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="editio"/>
-  <citatio nomen="codex-exemplar-de" attributum="exemplar-de" ad="editio moby-dick-londinensis-1851 moby-dick-novi-eboraci-1851 systema-naturae-editio-decima/nomen" super="codex"/>
+  <citatio nomen="opus-scriptum-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="opus-scriptum"/>
+  <citatio nomen="opus-scriptum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum periodicum/nomen" super="opus-scriptum"/>
+  <citatio nomen="opus-scriptum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum periodicum/nomen" super="opus-scriptum"/>
+  <citatio nomen="opus-scriptum-pars-de" attributum="pars-de" ad="opus-scriptum periodicum/nomen" super="opus-scriptum"/>
+  <citatio nomen="expressio-expressio-de" attributum="expressio-de" ad="opus-scriptum periodicum/nomen" super="expressio"/>
+  <citatio nomen="expressio-translata-ex" attributum="translata-ex" ad="expressio/nomen" super="expressio"/>
+  <citatio nomen="editio-editio-de" attributum="editio-de" ad="expressio/nomen" super="editio"/>
+  <citatio nomen="codex-exemplar-de" attributum="exemplar-de" ad="editio/nomen" super="codex"/>
   <citatio nomen="periodicum-habet-fasciculum" attributum="habet-fasciculum" ad="fasciculus/nomen" super="periodicum"/>
-  <citatio nomen="periodicum-habet-expressionem" attributum="habet-expressionem" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="periodicum"/>
-  <citatio nomen="periodicum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="periodicum"/>
-  <citatio nomen="periodicum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="periodicum"/>
-  <citatio nomen="periodicum-pars-de" attributum="pars-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="periodicum"/>
+  <citatio nomen="periodicum-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="periodicum"/>
+  <citatio nomen="periodicum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum periodicum/nomen" super="periodicum"/>
+  <citatio nomen="periodicum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum periodicum/nomen" super="periodicum"/>
+  <citatio nomen="periodicum-pars-de" attributum="pars-de" ad="opus-scriptum periodicum/nomen" super="periodicum"/>
   <citatio nomen="fasciculus-fasciculus-de" attributum="fasciculus-de" ad="periodicum/nomen" super="fasciculus"/>
-  <citatio nomen="moby-dick-habet-expressionem" attributum="habet-expressionem" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="moby-dick"/>
-  <citatio nomen="moby-dick-continuatio-de" attributum="continuatio-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="moby-dick"/>
-  <citatio nomen="moby-dick-respondet-ad" attributum="respondet-ad" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="moby-dick"/>
-  <citatio nomen="moby-dick-pars-de" attributum="pars-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="moby-dick"/>
-  <citatio nomen="summa-theologiae-habet-expressionem" attributum="habet-expressionem" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="summa-theologiae"/>
-  <citatio nomen="summa-theologiae-continuatio-de" attributum="continuatio-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="summa-theologiae"/>
-  <citatio nomen="summa-theologiae-respondet-ad" attributum="respondet-ad" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="summa-theologiae"/>
-  <citatio nomen="summa-theologiae-pars-de" attributum="pars-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="summa-theologiae"/>
-  <citatio nomen="abusus-linguae-habet-expressionem" attributum="habet-expressionem" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="abusus-linguae"/>
-  <citatio nomen="abusus-linguae-continuatio-de" attributum="continuatio-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="abusus-linguae"/>
-  <citatio nomen="abusus-linguae-respondet-ad" attributum="respondet-ad" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="abusus-linguae"/>
-  <citatio nomen="abusus-linguae-pars-de" attributum="pars-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="abusus-linguae"/>
-  <citatio nomen="systema-naturae-habet-expressionem" attributum="habet-expressionem" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="systema-naturae"/>
-  <citatio nomen="systema-naturae-continuatio-de" attributum="continuatio-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="systema-naturae"/>
-  <citatio nomen="systema-naturae-respondet-ad" attributum="respondet-ad" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="systema-naturae"/>
-  <citatio nomen="systema-naturae-pars-de" attributum="pars-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="systema-naturae"/>
-  <citatio nomen="species-plantarum-habet-expressionem" attributum="habet-expressionem" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="species-plantarum"/>
-  <citatio nomen="species-plantarum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="species-plantarum"/>
-  <citatio nomen="species-plantarum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="species-plantarum"/>
-  <citatio nomen="species-plantarum-pars-de" attributum="pars-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="species-plantarum"/>
-  <citatio nomen="abusus-linguae-germanice-expressio-de" attributum="expressio-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="abusus-linguae-germanice"/>
-  <citatio nomen="abusus-linguae-germanice-translata-ex" attributum="translata-ex" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="abusus-linguae-germanice"/>
-  <citatio nomen="abusus-linguae-anglice-expressio-de" attributum="expressio-de" ad="opus-scriptum moby-dick summa-theologiae abusus-linguae systema-naturae species-plantarum periodicum/nomen" super="abusus-linguae-anglice"/>
-  <citatio nomen="abusus-linguae-anglice-translata-ex" attributum="translata-ex" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="abusus-linguae-anglice"/>
-  <citatio nomen="moby-dick-londinensis-1851-editio-de" attributum="editio-de" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="moby-dick-londinensis-1851"/>
-  <citatio nomen="moby-dick-novi-eboraci-1851-editio-de" attributum="editio-de" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="moby-dick-novi-eboraci-1851"/>
-  <citatio nomen="systema-naturae-editio-decima-editio-de" attributum="editio-de" ad="expressio abusus-linguae-germanice abusus-linguae-anglice/nomen" super="systema-naturae-editio-decima"/>
 
 </canon>

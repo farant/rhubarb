@@ -13,8 +13,6 @@
     <liberum nomen="tessera-negotiabilis"/>
     <liberum nomen="tessera-simplex"/>
     <liberum nomen="ratio-rationaria"/>
-    <liberum nomen="euro"/>
-    <liberum nomen="dollarium-americanum"/>
     <liberum nomen="charta-onerum"/>
     <liberum nomen="apocha-horrei"/>
     <liberum nomen="syngrapha"/>
@@ -208,30 +206,6 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="ratio-rationaria">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="euro">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="codex" genus="textus" ordinarius="EUR"/>
-    <attributum nomen="symbolum" genus="textus" ordinarius="€"/>
-    <attributum nomen="emissa-a" genus="referentia"/>
-    <attributum nomen="normata-per" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="euro">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="dollarium-americanum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="codex" genus="textus" ordinarius="USD"/>
-    <attributum nomen="symbolum" genus="textus" ordinarius="$"/>
-    <attributum nomen="emissa-a" genus="referentia"/>
-    <attributum nomen="normata-per" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="dollarium-americanum">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -496,9 +470,9 @@
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
     super="moneta pecunia possessio pretium venditio tessera tessera-negotiabilis
-           tessera-simplex ratio-rationaria euro dollarium-americanum charta-onerum
-           apocha-horrei syngrapha perscriptio nummus-chartaceus obligatio-ad-portitorem
-           tessera-spectaculi tessera-repositoria tessera-digitalis ratio-duplex"/>
+           tessera-simplex ratio-rationaria charta-onerum apocha-horrei syngrapha
+           perscriptio nummus-chartaceus obligatio-ad-portitorem tessera-spectaculi
+           tessera-repositoria tessera-digitalis ratio-duplex"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -506,7 +480,7 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
-  <citatio nomen="pecunia-in-moneta" attributum="in-moneta" ad="moneta euro dollarium-americanum/nomen" super="pecunia"/>
+  <citatio nomen="pecunia-in-moneta" attributum="in-moneta" ad="moneta/nomen" super="pecunia"/>
   <citatio nomen="pretium-quantum" attributum="quantum" ad="pecunia/nomen" super="pretium"/>
   <citatio nomen="venditio-solutum" attributum="solutum" ad="pecunia/nomen" super="venditio"/>
   <citatio nomen="tessera-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera"/>

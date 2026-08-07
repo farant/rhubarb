@@ -727,11 +727,12 @@ staticus constans character* DOC_GENUS_IGNOTUM =
     "  <rosa nomen=\"#rosa-una\" pollinatur-a=\".piscis-volans\"/>\n"
     "</individua>\n";
 
-/* INSCRIPTIO (spec par. 3.1): census sodales suos sedet - linea
- * una individuum dictionarii praesentat, et referentia resolvit */
+/* INSCRIPTIO (spec census): census sodales suos sedet - per tag
+ * GENERIS (individuum tags mortua): linea una individuum
+ * dictionarii praesentat, et referentia resolvit */
 staticus constans character* DOC_INSCRIPTUS =
     "<individua>\n"
-    "  <carl-linnaeus nomen=\"#carl_linnaeus\"/>\n"
+    "  <persona nomen=\"#carl_linnaeus\"/>\n"
     "  <rosa nomen=\"#rosa-una\" auctor-nominis=\"#carl_linnaeus\"/>\n"
     "</individua>\n";
 
@@ -1313,6 +1314,33 @@ principale(
         CREDO_AEQUALIS_I32 (mala, (i32)I);
         CREDO_AEQUALIS_I32 (omnia_m, omnia_t);
         CREDO_AEQUALIS_I32 (omnia_m, (i32)I);
+    }
+
+
+    /* ========================================================
+     * XI. INDIVIDUA NON SUNT TAGS (spec census par. 1)
+     * ======================================================== */
+
+    {
+        i32    ignota;
+        i32    omnia;
+        chorda cl;
+
+        imprimere("\n--- XI. individua non tags ---\n");
+
+        cl = chorda_ex_literis("carl-linnaeus", piscina);
+        CREDO_NIHIL (_elementum_invenire(monolithus_radix, cl));
+
+        /* foramen impostoris mortuum: tag individui IGNOTUM est
+         * (ante: <carl-linnaeus nomen="#impostor"/> licitum erat -
+         * tag Linnaeum dicebat, identitas aliud, nemo clamabat) */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <carl-linnaeus nomen=\"#impostor\"/>\n"
+            "</individua>\n",
+            CANON_ELEMENTUM_IGNOTUM, &ignota, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (ignota, (i32)I);
     }
 
 

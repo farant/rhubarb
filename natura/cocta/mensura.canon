@@ -15,12 +15,6 @@
     <liberum nomen="temperatura"/>
     <liberum nomen="capacitas"/>
     <liberum nomen="numerositas"/>
-    <liberum nomen="gramma"/>
-    <liberum nomen="kilogramma"/>
-    <liberum nomen="metrum"/>
-    <liberum nomen="secundum"/>
-    <liberum nomen="minutum"/>
-    <liberum nomen="gradus-celsius"/>
   </elementum>
 
   <elementum nomen="magnitudo-mensurabilis">
@@ -200,84 +194,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="gramma">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="symbolum" genus="textus" ordinarius="g"/>
-    <attributum nomen="fundamentalis" genus="veritas"/>
-    <attributum nomen="mensurat" genus="referentia"/>
-    <attributum nomen="normata-per" genus="referentia"/>
-    <attributum nomen="custodita-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="gramma">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="kilogramma">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="symbolum" genus="textus" ordinarius="kg"/>
-    <attributum nomen="fundamentalis" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="mensurat" genus="referentia"/>
-    <attributum nomen="normata-per" genus="referentia"/>
-    <attributum nomen="custodita-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="kilogramma">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="metrum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="symbolum" genus="textus" ordinarius="m"/>
-    <attributum nomen="fundamentalis" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="mensurat" genus="referentia"/>
-    <attributum nomen="normata-per" genus="referentia"/>
-    <attributum nomen="custodita-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="metrum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="secundum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="symbolum" genus="textus" ordinarius="s"/>
-    <attributum nomen="fundamentalis" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="mensurat" genus="referentia"/>
-    <attributum nomen="normata-per" genus="referentia"/>
-    <attributum nomen="custodita-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="secundum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="minutum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="symbolum" genus="textus" ordinarius="min"/>
-    <attributum nomen="fundamentalis" genus="veritas"/>
-    <attributum nomen="mensurat" genus="referentia"/>
-    <attributum nomen="normata-per" genus="referentia"/>
-    <attributum nomen="custodita-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="minutum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="gradus-celsius">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="symbolum" genus="textus" ordinarius="°C"/>
-    <attributum nomen="fundamentalis" genus="veritas"/>
-    <attributum nomen="mensurat" genus="referentia"/>
-    <attributum nomen="normata-per" genus="referentia"/>
-    <attributum nomen="custodita-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="gradus-celsius">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>
     <attributum nomen="actio" genus="nomen"/>
@@ -289,8 +205,7 @@
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
     super="magnitudo-mensurabilis unitas-mensurae quantitas incertitudo instrumentum-mensurae
-           longitudo massa tempus-intervallum temperatura capacitas numerositas
-           gramma kilogramma metrum secundum minutum gradus-celsius"/>
+           longitudo massa tempus-intervallum temperatura capacitas numerositas"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -299,15 +214,9 @@
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
   <citatio nomen="unitas-mensurae-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="unitas-mensurae"/>
-  <citatio nomen="quantitas-in-unitate" attributum="in-unitate" ad="unitas-mensurae gramma kilogramma metrum secundum minutum gradus-celsius/nomen" super="quantitas"/>
+  <citatio nomen="quantitas-in-unitate" attributum="in-unitate" ad="unitas-mensurae/nomen" super="quantitas"/>
   <citatio nomen="quantitas-cum-incertitudine" attributum="cum-incertitudine" ad="incertitudo/nomen" super="quantitas"/>
   <citatio nomen="incertitudo-de-quantitate" attributum="de-quantitate" ad="quantitas/nomen" super="incertitudo"/>
   <citatio nomen="instrumentum-mensurae-calibratum-contra" attributum="calibratum-contra" ad="instrumentum-mensurae/nomen" super="instrumentum-mensurae"/>
-  <citatio nomen="gramma-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="gramma"/>
-  <citatio nomen="kilogramma-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="kilogramma"/>
-  <citatio nomen="metrum-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="metrum"/>
-  <citatio nomen="secundum-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="secundum"/>
-  <citatio nomen="minutum-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="minutum"/>
-  <citatio nomen="gradus-celsius-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="gradus-celsius"/>
 
 </canon>

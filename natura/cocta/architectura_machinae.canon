@@ -7,14 +7,6 @@
     <liberum nomen="architectura-machinae"/>
     <liberum nomen="versio-architecturae"/>
     <liberum nomen="processorium"/>
-    <liberum nomen="x86"/>
-    <liberum nomen="arm"/>
-    <liberum nomen="riscv"/>
-    <liberum nomen="i386"/>
-    <liberum nomen="x86-64"/>
-    <liberum nomen="armv8"/>
-    <liberum nomen="intel-8086"/>
-    <liberum nomen="apple-m1"/>
   </elementum>
 
   <elementum nomen="architectura-machinae">
@@ -90,208 +82,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="x86">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="indoles-copiae" genus="electio" ordinarius="cisc">
-      <optio>cisc</optio>
-      <optio>risc</optio>
-      <optio>mixta</optio>
-    </attributum>
-    <attributum nomen="licentia-aperta" genus="veritas"/>
-    <attributum nomen="habet-versionem" genus="referentia"/>
-    <attributum nomen="exsecuta-a" genus="referentia"/>
-    <attributum nomen="emissa-pro" genus="referentia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="auctor" intra="x86">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="x86">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="arm">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="indoles-copiae" genus="electio" ordinarius="risc">
-      <optio>cisc</optio>
-      <optio>risc</optio>
-      <optio>mixta</optio>
-    </attributum>
-    <attributum nomen="licentia-aperta" genus="veritas"/>
-    <attributum nomen="habet-versionem" genus="referentia"/>
-    <attributum nomen="exsecuta-a" genus="referentia"/>
-    <attributum nomen="emissa-pro" genus="referentia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="auctor" intra="arm">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="arm">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="riscv">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="indoles-copiae" genus="electio" ordinarius="risc">
-      <optio>cisc</optio>
-      <optio>risc</optio>
-      <optio>mixta</optio>
-    </attributum>
-    <attributum nomen="licentia-aperta" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="habet-versionem" genus="referentia"/>
-    <attributum nomen="exsecuta-a" genus="referentia"/>
-    <attributum nomen="emissa-pro" genus="referentia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="auctor" intra="riscv">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="riscv">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="i386">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="titulus" genus="textus" ordinarius="i386 (IA-32)"/>
-    <attributum nomen="latitudo-verbi" genus="numerus" ordinarius="32"/>
-    <attributum nomen="edita" genus="dies" ordinarius="1985-10"/>
-    <attributum nomen="versio-de" genus="referentia"/>
-    <attributum nomen="sequitur" genus="referentia"/>
-    <attributum nomen="schema-numerandi" genus="electio">
-      <optio>semanticum</optio>
-      <optio>sequentiale</optio>
-      <optio>temporale</optio>
-      <optio>nominale</optio>
-      <optio>mixtum</optio>
-    </attributum>
-    <attributum nomen="retro-compatibilis" genus="veritas"/>
-    <attributum nomen="mutationes-fractoriae" genus="textus"/>
-    <attributum nomen="status-sustentatio" genus="electio">
-      <optio>praenuntiata</optio>
-      <optio>vigens</optio>
-      <optio>sustentata</optio>
-      <optio>deprecata</optio>
-      <optio>derelicta</optio>
-    </attributum>
-    <attributum nomen="asseritur-per" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <liberum nomen="compatibilis-cum"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="compatibilis-cum" intra="i386">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="i386">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="x86-64">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="titulus" genus="textus" ordinarius="x86-64 (AMD64)"/>
-    <attributum nomen="latitudo-verbi" genus="numerus" ordinarius="64"/>
-    <attributum nomen="edita" genus="dies" ordinarius="2003-04-22"/>
-    <attributum nomen="versio-de" genus="referentia"/>
-    <attributum nomen="sequitur" genus="referentia"/>
-    <attributum nomen="schema-numerandi" genus="electio">
-      <optio>semanticum</optio>
-      <optio>sequentiale</optio>
-      <optio>temporale</optio>
-      <optio>nominale</optio>
-      <optio>mixtum</optio>
-    </attributum>
-    <attributum nomen="retro-compatibilis" genus="veritas"/>
-    <attributum nomen="mutationes-fractoriae" genus="textus"/>
-    <attributum nomen="status-sustentatio" genus="electio">
-      <optio>praenuntiata</optio>
-      <optio>vigens</optio>
-      <optio>sustentata</optio>
-      <optio>deprecata</optio>
-      <optio>derelicta</optio>
-    </attributum>
-    <attributum nomen="asseritur-per" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <liberum nomen="compatibilis-cum"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="compatibilis-cum" intra="x86-64">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="x86-64">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="armv8">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="titulus" genus="textus" ordinarius="ARMv8-A (AArch64)"/>
-    <attributum nomen="latitudo-verbi" genus="numerus" ordinarius="64"/>
-    <attributum nomen="edita" genus="dies" ordinarius="2011-10-27"/>
-    <attributum nomen="versio-de" genus="referentia"/>
-    <attributum nomen="sequitur" genus="referentia"/>
-    <attributum nomen="schema-numerandi" genus="electio">
-      <optio>semanticum</optio>
-      <optio>sequentiale</optio>
-      <optio>temporale</optio>
-      <optio>nominale</optio>
-      <optio>mixtum</optio>
-    </attributum>
-    <attributum nomen="retro-compatibilis" genus="veritas"/>
-    <attributum nomen="mutationes-fractoriae" genus="textus"/>
-    <attributum nomen="status-sustentatio" genus="electio">
-      <optio>praenuntiata</optio>
-      <optio>vigens</optio>
-      <optio>sustentata</optio>
-      <optio>deprecata</optio>
-      <optio>derelicta</optio>
-    </attributum>
-    <attributum nomen="asseritur-per" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <liberum nomen="compatibilis-cum"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="compatibilis-cum" intra="armv8">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="armv8">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="intel-8086">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="nuclei" genus="numerus"/>
-    <attributum nomen="frequentia" genus="textus"/>
-    <attributum nomen="bits" genus="numerus" ordinarius="16"/>
-    <attributum nomen="fabricatum-a" genus="referentia"/>
-    <attributum nomen="designatum-a" genus="referentia"/>
-    <liberum nomen="exsequitur"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="exsequitur" intra="intel-8086">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="intel-8086">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="apple-m1">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="nuclei" genus="numerus" ordinarius="8"/>
-    <attributum nomen="frequentia" genus="textus"/>
-    <attributum nomen="bits" genus="numerus" ordinarius="64"/>
-    <attributum nomen="fabricatum-a" genus="referentia"/>
-    <attributum nomen="designatum-a" genus="referentia"/>
-    <liberum nomen="exsequitur"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="exsequitur" intra="apple-m1">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="apple-m1">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>
     <attributum nomen="actio" genus="electio">
@@ -308,8 +98,7 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="architectura-machinae versio-architecturae processorium x86 arm
-           riscv i386 x86-64 armv8 intel-8086 apple-m1"/>
+    super="architectura-machinae versio-architecturae processorium"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -317,21 +106,9 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
-  <citatio nomen="architectura-machinae-habet-versionem" attributum="habet-versionem" ad="versio-architecturae i386 x86-64 armv8/nomen" super="architectura-machinae"/>
-  <citatio nomen="architectura-machinae-exsecuta-a" attributum="exsecuta-a" ad="processorium intel-8086 apple-m1/nomen" super="architectura-machinae"/>
-  <citatio nomen="versio-architecturae-versio-de" attributum="versio-de" ad="architectura-machinae x86 arm riscv/nomen" super="versio-architecturae"/>
-  <citatio nomen="versio-architecturae-sequitur" attributum="sequitur" ad="versio-architecturae i386 x86-64 armv8/nomen" super="versio-architecturae"/>
-  <citatio nomen="x86-habet-versionem" attributum="habet-versionem" ad="versio-architecturae i386 x86-64 armv8/nomen" super="x86"/>
-  <citatio nomen="x86-exsecuta-a" attributum="exsecuta-a" ad="processorium intel-8086 apple-m1/nomen" super="x86"/>
-  <citatio nomen="arm-habet-versionem" attributum="habet-versionem" ad="versio-architecturae i386 x86-64 armv8/nomen" super="arm"/>
-  <citatio nomen="arm-exsecuta-a" attributum="exsecuta-a" ad="processorium intel-8086 apple-m1/nomen" super="arm"/>
-  <citatio nomen="riscv-habet-versionem" attributum="habet-versionem" ad="versio-architecturae i386 x86-64 armv8/nomen" super="riscv"/>
-  <citatio nomen="riscv-exsecuta-a" attributum="exsecuta-a" ad="processorium intel-8086 apple-m1/nomen" super="riscv"/>
-  <citatio nomen="i386-versio-de" attributum="versio-de" ad="architectura-machinae x86 arm riscv/nomen" super="i386"/>
-  <citatio nomen="i386-sequitur" attributum="sequitur" ad="versio-architecturae i386 x86-64 armv8/nomen" super="i386"/>
-  <citatio nomen="x86-64-versio-de" attributum="versio-de" ad="architectura-machinae x86 arm riscv/nomen" super="x86-64"/>
-  <citatio nomen="x86-64-sequitur" attributum="sequitur" ad="versio-architecturae i386 x86-64 armv8/nomen" super="x86-64"/>
-  <citatio nomen="armv8-versio-de" attributum="versio-de" ad="architectura-machinae x86 arm riscv/nomen" super="armv8"/>
-  <citatio nomen="armv8-sequitur" attributum="sequitur" ad="versio-architecturae i386 x86-64 armv8/nomen" super="armv8"/>
+  <citatio nomen="architectura-machinae-habet-versionem" attributum="habet-versionem" ad="versio-architecturae/nomen" super="architectura-machinae"/>
+  <citatio nomen="architectura-machinae-exsecuta-a" attributum="exsecuta-a" ad="processorium/nomen" super="architectura-machinae"/>
+  <citatio nomen="versio-architecturae-versio-de" attributum="versio-de" ad="architectura-machinae/nomen" super="versio-architecturae"/>
+  <citatio nomen="versio-architecturae-sequitur" attributum="sequitur" ad="versio-architecturae/nomen" super="versio-architecturae"/>
 
 </canon>

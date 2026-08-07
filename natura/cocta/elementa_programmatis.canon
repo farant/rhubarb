@@ -22,9 +22,6 @@
     <liberum nomen="identificator"/>
     <liberum nomen="programma"/>
     <liberum nomen="instrumentum-aedificationis"/>
-    <liberum nomen="errno"/>
-    <liberum nomen="semen-rand"/>
-    <liberum nomen="index-strtok"/>
     <liberum nomen="obiectum-compilatum"/>
     <liberum nomen="exsecutabile-ligatum"/>
     <liberum nomen="index-inversus"/>
@@ -36,20 +33,6 @@
     <liberum nomen="allocatio"/>
     <liberum nomen="terminatio"/>
     <liberum nomen="transactio"/>
-    <liberum nomen="printf"/>
-    <liberum nomen="scanf"/>
-    <liberum nomen="memcpy"/>
-    <liberum nomen="strtok"/>
-    <liberum nomen="rand"/>
-    <liberum nomen="malloc"/>
-    <liberum nomen="abs"/>
-    <liberum nomen="strlen"/>
-    <liberum nomen="null"/>
-    <liberum nomen="pi"/>
-    <liberum nomen="eof"/>
-    <liberum nomen="libc"/>
-    <liberum nomen="sqlite"/>
-    <liberum nomen="zlib"/>
     <liberum nomen="praeconditio"/>
     <liberum nomen="postconditio"/>
     <liberum nomen="invarians"/>
@@ -66,8 +49,6 @@
     <liberum nomen="instrumentum-lineae"/>
     <liberum nomen="daemon"/>
     <liberum nomen="applicatio"/>
-    <liberum nomen="make"/>
-    <liberum nomen="aedilis"/>
   </elementum>
 
   <elementum nomen="status">
@@ -434,63 +415,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="errno">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="durabilitas" genus="electio" ordinarius="ephemera">
-      <optio>ephemera</optio>
-      <optio>persistens</optio>
-    </attributum>
-    <attributum nomen="congruentia" genus="electio">
-      <optio>statim</optio>
-      <optio>tandem</optio>
-    </attributum>
-    <attributum nomen="geritur-a" genus="referentia"/>
-    <attributum nomen="legitur-a" genus="referentia"/>
-    <attributum nomen="mutatur-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="errno">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="semen-rand">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="durabilitas" genus="electio" ordinarius="ephemera">
-      <optio>ephemera</optio>
-      <optio>persistens</optio>
-    </attributum>
-    <attributum nomen="congruentia" genus="electio">
-      <optio>statim</optio>
-      <optio>tandem</optio>
-    </attributum>
-    <attributum nomen="geritur-a" genus="referentia"/>
-    <attributum nomen="legitur-a" genus="referentia"/>
-    <attributum nomen="mutatur-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="semen-rand">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="index-strtok">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="durabilitas" genus="electio" ordinarius="ephemera">
-      <optio>ephemera</optio>
-      <optio>persistens</optio>
-    </attributum>
-    <attributum nomen="congruentia" genus="electio">
-      <optio>statim</optio>
-      <optio>tandem</optio>
-    </attributum>
-    <attributum nomen="geritur-a" genus="referentia"/>
-    <attributum nomen="legitur-a" genus="referentia"/>
-    <attributum nomen="mutatur-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="index-strtok">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="obiectum-compilatum">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="per-instrumentum" genus="referentia"/>
@@ -681,477 +605,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="printf">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="reddit-valorem" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="parametra-varia" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="mortua" genus="veritas"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>vigens</optio>
-      <optio>deprecata</optio>
-      <optio>remota</optio>
-    </attributum>
-    <attributum nomen="reddit" genus="referentia"/>
-    <attributum nomen="praebetur-a" genus="referentia"/>
-    <liberum nomen="accipit"/>
-    <liberum nomen="vocat"/>
-    <liberum nomen="legit"/>
-    <liberum nomen="mutat"/>
-    <liberum nomen="efficit"/>
-    <liberum nomen="haurit"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="accipit" intra="printf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="vocat" intra="printf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="legit" intra="printf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="mutat" intra="printf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="efficit" intra="printf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="haurit" intra="printf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="printf">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="scanf">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="reddit-valorem" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="parametra-varia" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="mortua" genus="veritas"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>vigens</optio>
-      <optio>deprecata</optio>
-      <optio>remota</optio>
-    </attributum>
-    <attributum nomen="reddit" genus="referentia"/>
-    <attributum nomen="praebetur-a" genus="referentia"/>
-    <liberum nomen="accipit"/>
-    <liberum nomen="vocat"/>
-    <liberum nomen="legit"/>
-    <liberum nomen="mutat"/>
-    <liberum nomen="efficit"/>
-    <liberum nomen="haurit"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="accipit" intra="scanf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="vocat" intra="scanf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="legit" intra="scanf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="mutat" intra="scanf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="efficit" intra="scanf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="haurit" intra="scanf">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="scanf">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="memcpy">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="reddit-valorem" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="parametra-varia" genus="veritas"/>
-    <attributum nomen="mortua" genus="veritas"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>vigens</optio>
-      <optio>deprecata</optio>
-      <optio>remota</optio>
-    </attributum>
-    <attributum nomen="reddit" genus="referentia"/>
-    <attributum nomen="praebetur-a" genus="referentia"/>
-    <liberum nomen="accipit"/>
-    <liberum nomen="vocat"/>
-    <liberum nomen="legit"/>
-    <liberum nomen="mutat"/>
-    <liberum nomen="efficit"/>
-    <liberum nomen="haurit"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="accipit" intra="memcpy">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="vocat" intra="memcpy">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="legit" intra="memcpy">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="mutat" intra="memcpy">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="efficit" intra="memcpy">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="haurit" intra="memcpy">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="memcpy">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="strtok">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="reddit-valorem" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="parametra-varia" genus="veritas"/>
-    <attributum nomen="mortua" genus="veritas"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>vigens</optio>
-      <optio>deprecata</optio>
-      <optio>remota</optio>
-    </attributum>
-    <attributum nomen="reddit" genus="referentia"/>
-    <attributum nomen="praebetur-a" genus="referentia"/>
-    <liberum nomen="accipit"/>
-    <liberum nomen="vocat"/>
-    <liberum nomen="legit"/>
-    <liberum nomen="mutat"/>
-    <liberum nomen="efficit"/>
-    <liberum nomen="haurit"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="accipit" intra="strtok">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="vocat" intra="strtok">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="legit" intra="strtok">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="mutat" intra="strtok">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="efficit" intra="strtok">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="haurit" intra="strtok">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="strtok">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="rand">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="reddit-valorem" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="parametra-varia" genus="veritas"/>
-    <attributum nomen="mortua" genus="veritas"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>vigens</optio>
-      <optio>deprecata</optio>
-      <optio>remota</optio>
-    </attributum>
-    <attributum nomen="reddit" genus="referentia"/>
-    <attributum nomen="praebetur-a" genus="referentia"/>
-    <liberum nomen="accipit"/>
-    <liberum nomen="vocat"/>
-    <liberum nomen="legit"/>
-    <liberum nomen="mutat"/>
-    <liberum nomen="efficit"/>
-    <liberum nomen="haurit"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="accipit" intra="rand">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="vocat" intra="rand">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="legit" intra="rand">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="mutat" intra="rand">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="efficit" intra="rand">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="haurit" intra="rand">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="rand">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="malloc">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="reddit-valorem" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="parametra-varia" genus="veritas"/>
-    <attributum nomen="mortua" genus="veritas"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>vigens</optio>
-      <optio>deprecata</optio>
-      <optio>remota</optio>
-    </attributum>
-    <attributum nomen="reddit" genus="referentia"/>
-    <attributum nomen="praebetur-a" genus="referentia"/>
-    <liberum nomen="accipit"/>
-    <liberum nomen="vocat"/>
-    <liberum nomen="legit"/>
-    <liberum nomen="mutat"/>
-    <liberum nomen="efficit"/>
-    <liberum nomen="haurit"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="accipit" intra="malloc">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="vocat" intra="malloc">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="legit" intra="malloc">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="mutat" intra="malloc">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="efficit" intra="malloc">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="haurit" intra="malloc">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="malloc">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="abs">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="reddit-valorem" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="parametra-varia" genus="veritas"/>
-    <attributum nomen="mortua" genus="veritas"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>vigens</optio>
-      <optio>deprecata</optio>
-      <optio>remota</optio>
-    </attributum>
-    <attributum nomen="reddit" genus="referentia"/>
-    <attributum nomen="praebetur-a" genus="referentia"/>
-    <liberum nomen="accipit"/>
-    <liberum nomen="vocat"/>
-    <liberum nomen="legit"/>
-    <liberum nomen="mutat"/>
-    <liberum nomen="efficit"/>
-    <liberum nomen="haurit"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="accipit" intra="abs">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="vocat" intra="abs">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="legit" intra="abs">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="mutat" intra="abs">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="efficit" intra="abs">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="haurit" intra="abs">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="abs">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="strlen">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="reddit-valorem" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="parametra-varia" genus="veritas"/>
-    <attributum nomen="mortua" genus="veritas"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>vigens</optio>
-      <optio>deprecata</optio>
-      <optio>remota</optio>
-    </attributum>
-    <attributum nomen="reddit" genus="referentia"/>
-    <attributum nomen="praebetur-a" genus="referentia"/>
-    <liberum nomen="accipit"/>
-    <liberum nomen="vocat"/>
-    <liberum nomen="legit"/>
-    <liberum nomen="mutat"/>
-    <liberum nomen="efficit"/>
-    <liberum nomen="haurit"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="accipit" intra="strlen">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="vocat" intra="strlen">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="legit" intra="strlen">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="mutat" intra="strlen">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="efficit" intra="strlen">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="haurit" intra="strlen">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="strlen">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="null">
-    <attributum nomen="nomen" genus="identitas"/>
-    <liberum nomen="realizatur-per"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="realizatur-per" intra="null">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="null">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="pi">
-    <attributum nomen="nomen" genus="identitas"/>
-    <liberum nomen="realizatur-per"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="realizatur-per" intra="pi">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="pi">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="eof">
-    <attributum nomen="nomen" genus="identitas"/>
-    <liberum nomen="realizatur-per"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="realizatur-per" intra="eof">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="eof">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="libc">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="scripta-in" genus="referentia"/>
-    <liberum nomen="interfacies" maximum="1"/>
-    <liberum nomen="corpus" maximum="1"/>
-    <liberum nomen="probationes" maximum="1"/>
-    <liberum nomen="documenta" maximum="1"/>
-    <liberum nomen="praebet"/>
-    <liberum nomen="dependet-ex"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="interfacies" intra="libc">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="corpus" intra="libc">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="probationes" intra="libc">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="documenta" intra="libc">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="praebet" intra="libc">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="dependet-ex" intra="libc">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="libc">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="sqlite">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="scripta-in" genus="referentia"/>
-    <liberum nomen="interfacies" maximum="1"/>
-    <liberum nomen="corpus" maximum="1"/>
-    <liberum nomen="probationes" maximum="1"/>
-    <liberum nomen="documenta" maximum="1"/>
-    <liberum nomen="praebet"/>
-    <liberum nomen="dependet-ex"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="interfacies" intra="sqlite">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="corpus" intra="sqlite">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="probationes" intra="sqlite">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="documenta" intra="sqlite">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="praebet" intra="sqlite">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="dependet-ex" intra="sqlite">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="sqlite">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="zlib">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="scripta-in" genus="referentia"/>
-    <liberum nomen="interfacies" maximum="1"/>
-    <liberum nomen="corpus" maximum="1"/>
-    <liberum nomen="probationes" maximum="1"/>
-    <liberum nomen="documenta" maximum="1"/>
-    <liberum nomen="praebet"/>
-    <liberum nomen="dependet-ex"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="interfacies" intra="zlib">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="corpus" intra="zlib">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="probationes" intra="zlib">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="documenta" intra="zlib">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="praebet" intra="zlib">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="dependet-ex" intra="zlib">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="zlib">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="praeconditio">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="affirmat-de" genus="referentia"/>
@@ -1318,72 +771,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="make">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="incrementale" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="graphum-unde" genus="electio" ordinarius="declaratum">
-      <optio>declaratum</optio>
-      <optio>derivatum</optio>
-    </attributum>
-    <attributum nomen="dirigitur-a" genus="referentia"/>
-    <attributum nomen="modus-finiendi" genus="electio">
-      <optio>terminans</optio>
-      <optio>perpetuum</optio>
-    </attributum>
-    <attributum nomen="interactivum" genus="veritas"/>
-    <attributum nomen="initium" genus="referentia"/>
-    <attributum nomen="currit-ut" genus="referentia"/>
-    <liberum nomen="invocat"/>
-    <liberum nomen="producit"/>
-    <liberum nomen="adhibet"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="invocat" intra="make">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="producit" intra="make">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="adhibet" intra="make">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="make">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="aedilis">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="incrementale" genus="veritas"/>
-    <attributum nomen="graphum-unde" genus="electio" ordinarius="derivatum">
-      <optio>declaratum</optio>
-      <optio>derivatum</optio>
-    </attributum>
-    <attributum nomen="dirigitur-a" genus="referentia"/>
-    <attributum nomen="modus-finiendi" genus="electio">
-      <optio>terminans</optio>
-      <optio>perpetuum</optio>
-    </attributum>
-    <attributum nomen="interactivum" genus="veritas"/>
-    <attributum nomen="initium" genus="referentia"/>
-    <attributum nomen="currit-ut" genus="referentia"/>
-    <liberum nomen="invocat"/>
-    <liberum nomen="producit"/>
-    <liberum nomen="adhibet"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="invocat" intra="aedilis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="producit" intra="aedilis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="adhibet" intra="aedilis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="aedilis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>
     <attributum nomen="actio" genus="electio">
@@ -1400,15 +787,13 @@
     super="status proiectio artefactum-aedificationis promptuarium index
            lectio mutatio functio functio-pura constans constans-numerica
            constans-textualis bibliotheca assertio commentarium identificator
-           programma instrumentum-aedificationis errno semen-rand index-strtok
-           obiectum-compilatum exsecutabile-ligatum index-inversus index-arboris
-           lectio-memoriae lectio-externa mutatio-memoriae scriptio-externa
-           allocatio terminatio transactio printf scanf memcpy strtok rand
-           malloc abs strlen null pi eof libc sqlite zlib praeconditio postconditio
-           invarians assertio-statica assertio-probationis explicativum documentarium
-           monitum-futuri titulus-iuris codex-sepultus annotatio-machinae
+           programma instrumentum-aedificationis obiectum-compilatum exsecutabile-ligatum
+           index-inversus index-arboris lectio-memoriae lectio-externa mutatio-memoriae
+           scriptio-externa allocatio terminatio transactio praeconditio
+           postconditio invarians assertio-statica assertio-probationis explicativum
+           documentarium monitum-futuri titulus-iuris codex-sepultus annotatio-machinae
            identificator-baptismalis sigillum-contenti instrumentum-lineae
-           daemon applicatio make aedilis"/>
+           daemon applicatio"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -1416,38 +801,36 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
-  <citatio nomen="proiectio-veritas-sua" attributum="veritas-sua" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="proiectio"/>
-  <citatio nomen="artefactum-aedificationis-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis make aedilis/nomen" super="artefactum-aedificationis"/>
-  <citatio nomen="artefactum-aedificationis-veritas-sua" attributum="veritas-sua" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="artefactum-aedificationis"/>
-  <citatio nomen="promptuarium-veritas-sua" attributum="veritas-sua" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="promptuarium"/>
-  <citatio nomen="index-veritas-sua" attributum="veritas-sua" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index"/>
-  <citatio nomen="lectio-obiectum" attributum="obiectum" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio"/>
-  <citatio nomen="mutatio-obiectum" attributum="obiectum" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio"/>
-  <citatio nomen="assertio-affirmat-de" attributum="affirmat-de" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio"/>
-  <citatio nomen="programma-initium" attributum="initium" ad="functio printf scanf memcpy strtok rand malloc functio-pura abs strlen/nomen" super="programma"/>
-  <citatio nomen="instrumentum-aedificationis-initium" attributum="initium" ad="functio printf scanf memcpy strtok rand malloc functio-pura abs strlen/nomen" super="instrumentum-aedificationis"/>
-  <citatio nomen="obiectum-compilatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis make aedilis/nomen" super="obiectum-compilatum"/>
-  <citatio nomen="obiectum-compilatum-veritas-sua" attributum="veritas-sua" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="obiectum-compilatum"/>
-  <citatio nomen="exsecutabile-ligatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis make aedilis/nomen" super="exsecutabile-ligatum"/>
-  <citatio nomen="exsecutabile-ligatum-veritas-sua" attributum="veritas-sua" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="exsecutabile-ligatum"/>
-  <citatio nomen="index-inversus-veritas-sua" attributum="veritas-sua" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index-inversus"/>
-  <citatio nomen="index-arboris-veritas-sua" attributum="veritas-sua" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index-arboris"/>
-  <citatio nomen="lectio-memoriae-obiectum" attributum="obiectum" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio-memoriae"/>
-  <citatio nomen="lectio-externa-obiectum" attributum="obiectum" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio-externa"/>
-  <citatio nomen="mutatio-memoriae-obiectum" attributum="obiectum" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio-memoriae"/>
-  <citatio nomen="scriptio-externa-obiectum" attributum="obiectum" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="scriptio-externa"/>
-  <citatio nomen="allocatio-obiectum" attributum="obiectum" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="allocatio"/>
-  <citatio nomen="terminatio-obiectum" attributum="obiectum" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="terminatio"/>
-  <citatio nomen="transactio-obiectum" attributum="obiectum" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="transactio"/>
-  <citatio nomen="praeconditio-affirmat-de" attributum="affirmat-de" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="praeconditio"/>
-  <citatio nomen="postconditio-affirmat-de" attributum="affirmat-de" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="postconditio"/>
-  <citatio nomen="invarians-affirmat-de" attributum="affirmat-de" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="invarians"/>
-  <citatio nomen="assertio-statica-affirmat-de" attributum="affirmat-de" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-statica"/>
-  <citatio nomen="assertio-probationis-affirmat-de" attributum="affirmat-de" ad="status errno semen-rand index-strtok proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-probationis"/>
-  <citatio nomen="instrumentum-lineae-initium" attributum="initium" ad="functio printf scanf memcpy strtok rand malloc functio-pura abs strlen/nomen" super="instrumentum-lineae"/>
-  <citatio nomen="daemon-initium" attributum="initium" ad="functio printf scanf memcpy strtok rand malloc functio-pura abs strlen/nomen" super="daemon"/>
-  <citatio nomen="applicatio-initium" attributum="initium" ad="functio printf scanf memcpy strtok rand malloc functio-pura abs strlen/nomen" super="applicatio"/>
-  <citatio nomen="make-initium" attributum="initium" ad="functio printf scanf memcpy strtok rand malloc functio-pura abs strlen/nomen" super="make"/>
-  <citatio nomen="aedilis-initium" attributum="initium" ad="functio printf scanf memcpy strtok rand malloc functio-pura abs strlen/nomen" super="aedilis"/>
+  <citatio nomen="proiectio-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="proiectio"/>
+  <citatio nomen="artefactum-aedificationis-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="artefactum-aedificationis"/>
+  <citatio nomen="artefactum-aedificationis-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="artefactum-aedificationis"/>
+  <citatio nomen="promptuarium-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="promptuarium"/>
+  <citatio nomen="index-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index"/>
+  <citatio nomen="lectio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio"/>
+  <citatio nomen="mutatio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio"/>
+  <citatio nomen="assertio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio"/>
+  <citatio nomen="programma-initium" attributum="initium" ad="functio functio-pura/nomen" super="programma"/>
+  <citatio nomen="instrumentum-aedificationis-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-aedificationis"/>
+  <citatio nomen="obiectum-compilatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="obiectum-compilatum"/>
+  <citatio nomen="obiectum-compilatum-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="obiectum-compilatum"/>
+  <citatio nomen="exsecutabile-ligatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="exsecutabile-ligatum"/>
+  <citatio nomen="exsecutabile-ligatum-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="exsecutabile-ligatum"/>
+  <citatio nomen="index-inversus-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index-inversus"/>
+  <citatio nomen="index-arboris-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index-arboris"/>
+  <citatio nomen="lectio-memoriae-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio-memoriae"/>
+  <citatio nomen="lectio-externa-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio-externa"/>
+  <citatio nomen="mutatio-memoriae-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio-memoriae"/>
+  <citatio nomen="scriptio-externa-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="scriptio-externa"/>
+  <citatio nomen="allocatio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="allocatio"/>
+  <citatio nomen="terminatio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="terminatio"/>
+  <citatio nomen="transactio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="transactio"/>
+  <citatio nomen="praeconditio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="praeconditio"/>
+  <citatio nomen="postconditio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="postconditio"/>
+  <citatio nomen="invarians-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="invarians"/>
+  <citatio nomen="assertio-statica-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-statica"/>
+  <citatio nomen="assertio-probationis-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-probationis"/>
+  <citatio nomen="instrumentum-lineae-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-lineae"/>
+  <citatio nomen="daemon-initium" attributum="initium" ad="functio functio-pura/nomen" super="daemon"/>
+  <citatio nomen="applicatio-initium" attributum="initium" ad="functio functio-pura/nomen" super="applicatio"/>
 
 </canon>

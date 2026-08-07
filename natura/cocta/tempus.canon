@@ -18,8 +18,6 @@
     <liberum nomen="per-horas-operis"/>
     <liberum nomen="per-cyclos"/>
     <liberum nomen="per-spatium"/>
-    <liberum nomen="calendarium-gregorianum"/>
-    <liberum nomen="calendarium-liturgicum"/>
   </elementum>
 
   <elementum nomen="momentum">
@@ -260,24 +258,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="calendarium-gregorianum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="conditum-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="calendarium-gregorianum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="calendarium-liturgicum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="conditum-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="calendarium-liturgicum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>
     <attributum nomen="actio" genus="nomen"/>
@@ -290,8 +270,7 @@
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
     super="momentum intervallum recurrentia recurrentia-computata recurrentia-per-usum
            horarium calendarium reservatio pascha dies-negotiorum dies-ordinalis-mensis
-           per-horas-operis per-cyclos per-spatium calendarium-gregorianum
-           calendarium-liturgicum"/>
+           per-horas-operis per-cyclos per-spatium"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in

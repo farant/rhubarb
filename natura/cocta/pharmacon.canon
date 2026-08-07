@@ -8,8 +8,6 @@
     <liberum nomen="medicamentum"/>
     <liberum nomen="coctura"/>
     <liberum nomen="interactio"/>
-    <liberum nomen="amoxicillinum"/>
-    <liberum nomen="warfarinum"/>
     <liberum nomen="medicamentum-genericum"/>
     <liberum nomen="medicamentum-nominatum"/>
     <liberum nomen="medicamentum-compositum"/>
@@ -120,54 +118,6 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="interactio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="amoxicillinum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="formula" genus="textus" ordinarius="C16H19N3O5S"/>
-    <attributum nomen="massa-molecularis" genus="textus"/>
-    <attributum nomen="solubilitas" genus="electio">
-      <optio>aquosa</optio>
-      <optio>lipidica</optio>
-      <optio>utraque</optio>
-    </attributum>
-    <attributum nomen="interagit" genus="referentia"/>
-    <liberum nomen="exemplatur-in"/>
-    <liberum nomen="classificata-ut"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="exemplatur-in" intra="amoxicillinum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="classificata-ut" intra="amoxicillinum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="amoxicillinum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="warfarinum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="formula" genus="textus" ordinarius="C19H16O4"/>
-    <attributum nomen="massa-molecularis" genus="textus"/>
-    <attributum nomen="solubilitas" genus="electio">
-      <optio>aquosa</optio>
-      <optio>lipidica</optio>
-      <optio>utraque</optio>
-    </attributum>
-    <attributum nomen="interagit" genus="referentia"/>
-    <liberum nomen="exemplatur-in"/>
-    <liberum nomen="classificata-ut"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="exemplatur-in" intra="warfarinum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="classificata-ut" intra="warfarinum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="warfarinum">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -358,9 +308,9 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="substantia-chemica medicamentum coctura interactio amoxicillinum
-           warfarinum medicamentum-genericum medicamentum-nominatum medicamentum-compositum
-           interactio-medicamentorum interactio-cum-cibo incompatibilitas-mercium"/>
+    super="substantia-chemica medicamentum coctura interactio medicamentum-genericum
+           medicamentum-nominatum medicamentum-compositum interactio-medicamentorum
+           interactio-cum-cibo incompatibilitas-mercium"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in

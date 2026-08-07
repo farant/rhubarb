@@ -8,9 +8,6 @@
     <liberum nomen="lex"/>
     <liberum nomen="classis-normativa"/>
     <liberum nomen="fictio-iuris"/>
-    <liberum nomen="iso-9899-1990"/>
-    <liberum nomen="iso-9899-1999"/>
-    <liberum nomen="posix-1"/>
     <liberum nomen="lex-aeterna"/>
     <liberum nomen="lex-naturalis"/>
     <liberum nomen="lex-humana"/>
@@ -120,75 +117,6 @@
     <liberum nomen="historia" maximum="1"/>
   </elementum>
   <elementum nomen="historia" intra="fictio-iuris">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="iso-9899-1990">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="index" genus="textus" ordinarius="ISO/IEC 9899:1990"/>
-    <attributum nomen="titulus" genus="textus" ordinarius="Programming languages - C"/>
-    <attributum nomen="publicata" genus="dies" ordinarius="1990-12-15"/>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>proposita</optio>
-      <optio>vigens</optio>
-      <optio>substituta</optio>
-      <optio>retracta</optio>
-    </attributum>
-    <attributum nomen="substituit" genus="referentia"/>
-    <attributum nomen="normat" genus="referentia"/>
-    <liberum nomen="editor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="editor" intra="iso-9899-1990">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="iso-9899-1990">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="iso-9899-1999">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="index" genus="textus" ordinarius="ISO/IEC 9899:1999"/>
-    <attributum nomen="titulus" genus="textus" ordinarius="Programming languages - C"/>
-    <attributum nomen="publicata" genus="dies" ordinarius="1999-12-01"/>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>proposita</optio>
-      <optio>vigens</optio>
-      <optio>substituta</optio>
-      <optio>retracta</optio>
-    </attributum>
-    <attributum nomen="substituit" genus="referentia"/>
-    <attributum nomen="normat" genus="referentia"/>
-    <liberum nomen="editor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="editor" intra="iso-9899-1999">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="iso-9899-1999">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="posix-1">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="index" genus="textus" ordinarius="IEEE Std 1003.1"/>
-    <attributum nomen="titulus" genus="textus" ordinarius="Portable Operating System Interface"/>
-    <attributum nomen="publicata" genus="dies" ordinarius="1988"/>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>proposita</optio>
-      <optio>vigens</optio>
-      <optio>substituta</optio>
-      <optio>retracta</optio>
-    </attributum>
-    <attributum nomen="substituit" genus="referentia"/>
-    <attributum nomen="normat" genus="referentia"/>
-    <liberum nomen="editor"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="editor" intra="posix-1">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="posix-1">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -489,10 +417,10 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="norma lex classis-normativa fictio-iuris iso-9899-1990 iso-9899-1999
-           posix-1 lex-aeterna lex-naturalis lex-humana lex-divina-positiva
-           consuetudo schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium
-           adoptio mors-praesumpta personalitas-iuridica"/>
+    super="norma lex classis-normativa fictio-iuris lex-aeterna lex-naturalis
+           lex-humana lex-divina-positiva consuetudo schedula-substantiarum
+           gradus-eventus-aviatorii classis-periculi-mercium adoptio mors-praesumpta
+           personalitas-iuridica"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -500,21 +428,18 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
-  <citatio nomen="norma-substituit" attributum="substituit" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="norma"/>
-  <citatio nomen="classis-normativa-constituta-per" attributum="constituta-per" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="classis-normativa"/>
+  <citatio nomen="norma-substituit" attributum="substituit" ad="norma/nomen" super="norma"/>
+  <citatio nomen="classis-normativa-constituta-per" attributum="constituta-per" ad="norma/nomen" super="classis-normativa"/>
   <citatio nomen="classis-normativa-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="classis-normativa"/>
-  <citatio nomen="fictio-iuris-instituta-per" attributum="instituta-per" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="fictio-iuris"/>
-  <citatio nomen="iso-9899-1990-substituit" attributum="substituit" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="iso-9899-1990"/>
-  <citatio nomen="iso-9899-1999-substituit" attributum="substituit" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="iso-9899-1999"/>
-  <citatio nomen="posix-1-substituit" attributum="substituit" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="posix-1"/>
-  <citatio nomen="schedula-substantiarum-constituta-per" attributum="constituta-per" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="schedula-substantiarum"/>
+  <citatio nomen="fictio-iuris-instituta-per" attributum="instituta-per" ad="norma/nomen" super="fictio-iuris"/>
+  <citatio nomen="schedula-substantiarum-constituta-per" attributum="constituta-per" ad="norma/nomen" super="schedula-substantiarum"/>
   <citatio nomen="schedula-substantiarum-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="schedula-substantiarum"/>
-  <citatio nomen="gradus-eventus-aviatorii-constituta-per" attributum="constituta-per" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="gradus-eventus-aviatorii"/>
+  <citatio nomen="gradus-eventus-aviatorii-constituta-per" attributum="constituta-per" ad="norma/nomen" super="gradus-eventus-aviatorii"/>
   <citatio nomen="gradus-eventus-aviatorii-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="gradus-eventus-aviatorii"/>
-  <citatio nomen="classis-periculi-mercium-constituta-per" attributum="constituta-per" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="classis-periculi-mercium"/>
+  <citatio nomen="classis-periculi-mercium-constituta-per" attributum="constituta-per" ad="norma/nomen" super="classis-periculi-mercium"/>
   <citatio nomen="classis-periculi-mercium-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="classis-periculi-mercium"/>
-  <citatio nomen="adoptio-instituta-per" attributum="instituta-per" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="adoptio"/>
-  <citatio nomen="mors-praesumpta-instituta-per" attributum="instituta-per" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="mors-praesumpta"/>
-  <citatio nomen="personalitas-iuridica-instituta-per" attributum="instituta-per" ad="norma iso-9899-1990 iso-9899-1999 posix-1/nomen" super="personalitas-iuridica"/>
+  <citatio nomen="adoptio-instituta-per" attributum="instituta-per" ad="norma/nomen" super="adoptio"/>
+  <citatio nomen="mors-praesumpta-instituta-per" attributum="instituta-per" ad="norma/nomen" super="mors-praesumpta"/>
+  <citatio nomen="personalitas-iuridica-instituta-per" attributum="instituta-per" ad="norma/nomen" super="personalitas-iuridica"/>
 
 </canon>

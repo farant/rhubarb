@@ -57,6 +57,9 @@
 "  Signa valorum: '#' individuum inscriptum citat (clavis\n" \
 "  verbatim), '.' genus e vocabulario indicis ad= (sine\n" \
 "  clavibus). Valor nudus in referentia vitium TYPI est.\n" \
+"  INDIVIDUA dictionarii elementa NON sunt (praedicabile non\n" \
+"  est): semina.census ea ut DATA fert; inscriptio per tag\n" \
+"  generis fit.\n" \
 "  %u nomine solo iudicantur, id est sicut in canone per\n" \
 "  modulum. Causae, quae omnes limites mechanismi sunt, non\n" \
 "  neglegentiae:\n" \
@@ -160,6 +163,7 @@ interior vacuum    _valores_applicare(NcElementum* el, NcEns* ens,
 interior constans character* _cstr_tutum(constans chorda* c,
                                      constans character* unde,
                                      Piscina* piscina);
+interior b32       _nodus_individuum_est(constans StmlNodus* n);
 interior vacuum    _titulum_semel_addere(Xar* tituli, chorda* t);
 interior vacuum    _genera_clausurae_colligere(NaturaGenus* g,
                                                Xar* genera);
@@ -919,6 +923,17 @@ _cstr_tutum(
     redde chorda_ut_cstr(*c, piscina);
 }
 
+/* an nodus fontis individuum sit - individuum tags NON gignit
+ * (spec census par. 1: praedicabile non est; individuum de nullo
+ * praedicatur). Species et cultivar genera sunt et tags manent. */
+interior b32
+_nodus_individuum_est(
+    constans StmlNodus*  n)
+{
+    redde (b32)(n && n->titulus &&
+                chorda_aequalis_literis(*n->titulus, "individuum"));
+}
+
 /* titulum semel addere - clausurae parvae sunt (maxima corporis
  * sub XX titulis), inquisitio linearis sufficit */
 interior vacuum
@@ -1001,9 +1016,15 @@ _clausuram_colligere(
         _titulum_semel_addere(tituli, g2->titulus);
         per (j = ZEPHYRUM; j < xar_numerus(g2->res_suae); j++)
         {
-            _titulum_semel_addere(tituli,
-                (*(NaturaRes**)xar_obtinere(g2->res_suae,
-                                            j))->titulus);
+            NaturaRes* rs;
+
+            rs = *(NaturaRes**)xar_obtinere(g2->res_suae, j);
+            si (_nodus_individuum_est(rs->nodus))
+            {
+                perge;   /* individua tags non sunt (spec census):
+                          * claves eorum instantiae generis ferunt */
+            }
+            _titulum_semel_addere(tituli, rs->titulus);
         }
     }
 
@@ -1021,6 +1042,10 @@ _clausuram_colligere(
             si (r->genus_etiam ==
                 *(NaturaGenus**)xar_obtinere(genera, j))
             {
+                si (_nodus_individuum_est(r->nodus))
+                {
+                    frange;   /* individuum: tags non sunt */
+                }
                 si (modulus_requisitus && r->modulus &&
                     !chorda_aequalis_literis(*r->modulus,
                                              modulus_requisitus))
@@ -1141,6 +1166,21 @@ _petitum_citabile(
             chorda**   locus;
 
             r = (NaturaRes*)e->corpus;
+            si (_nodus_individuum_est(r->nodus))
+            {
+                /* petitum individuum (e.g. auctor_nominis ad=
+                 * carl_linnaeus): tag eius mortuus - clavis ab
+                 * instantia GENERIS inscripta venit, ergo clausura
+                 * generis. Laxius ('persona quaevis inscripta'),
+                 * sed sanum; 'Linnaeus ipse' canon dicere nequit. */
+                *clausura_ex = _clausuram_colligere(bib,
+                    r->genus_suum, modulus_requisitus, piscina);
+                si (!*clausura_ex)
+                {
+                    redde NC_CIT_ALIENA;
+                }
+                redde NC_CIT_FIT;
+            }
             si (modulus_requisitus && r->modulus &&
                 !chorda_aequalis_literis(*r->modulus,
                                          modulus_requisitus))
@@ -1411,6 +1451,11 @@ _canonem_modulo_scribere(
         {
             perge;
         }
+        si (_nodus_individuum_est(e->nodus))
+        {
+            perge;   /* individua data sunt, non grammatica -
+                      * semina.census ea fert (spec census par. 2) */
+        }
         locus  = (NcElementum**)xar_addere(elementa);
         *locus = _elementum_aedificare(bib, e, FALSUM, NIHIL,
                                       piscina);
@@ -1614,7 +1659,12 @@ _canonem_totum_scribere(
         NcEns*        e;
         NcElementum** locus;
 
-        e      = (NcEns*)xar_obtinere(entia, i);
+        e = (NcEns*)xar_obtinere(entia, i);
+        si (_nodus_individuum_est(e->nodus))
+        {
+            perge;   /* individua data sunt, non grammatica -
+                      * semina.census ea fert (spec census par. 2) */
+        }
         locus  = (NcElementum**)xar_addere(elementa);
         *locus = _elementum_aedificare(bib, e, VERUM, &census,
                                        piscina);

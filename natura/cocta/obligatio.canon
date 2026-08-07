@@ -42,7 +42,6 @@
     <liberum nomen="plena-potestas"/>
     <liberum nomen="procuratio"/>
     <liberum nomen="delegatio-canonica"/>
-    <liberum nomen="tractatus-gandavensis"/>
     <liberum nomen="portio-pascui"/>
     <liberum nomen="portio-piscandi"/>
     <liberum nomen="portio-computandi"/>
@@ -961,45 +960,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="tractatus-gandavensis">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="multilateralis" genus="veritas" ordinarius="falsum"/>
-    <attributum nomen="numerus-ad-vigorem" genus="numerus"/>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>negotiatus</optio>
-      <optio>signatus</optio>
-      <optio>ratificatus</optio>
-      <optio>vigens</optio>
-      <optio>suspensus</optio>
-      <optio>terminatus</optio>
-      <optio>abortus</optio>
-    </attributum>
-    <attributum nomen="depositarius" genus="referentia"/>
-    <attributum nomen="ad-vigorem-per" genus="referentia"/>
-    <attributum nomen="initium" genus="dies"/>
-    <attributum nomen="finis" genus="dies"/>
-    <liberum nomen="signatus-per"/>
-    <liberum nomen="limitatus-per"/>
-    <liberum nomen="partes"/>
-    <liberum nomen="parit"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="signatus-per" intra="tractatus-gandavensis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="limitatus-per" intra="tractatus-gandavensis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="partes" intra="tractatus-gandavensis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="parit" intra="tractatus-gandavensis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="tractatus-gandavensis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="portio-pascui">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="mensura" genus="textus"/>
@@ -1095,8 +1055,8 @@
            tributum-capitis gradus-academicus character-indelebilis titulus-honoris
            praescriptio-medica mandatum-iudicis iussum-emptionis iussum-operis
            iussum-ne-resuscitetur petitio-assecurationis petitio-remota supplicatio
-           plena-potestas procuratio delegatio-canonica tractatus-gandavensis
-           portio-pascui portio-piscandi portio-computandi"/>
+           plena-potestas procuratio delegatio-canonica portio-pascui portio-piscandi
+           portio-computandi"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -1108,7 +1068,7 @@
   <citatio nomen="iussum-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="iussum"/>
   <citatio nomen="iussum-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="iussum"/>
   <citatio nomen="petitio-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio"/>
-  <citatio nomen="limitatio-ad-tractatum" attributum="ad-tractatum" ad="tractatus tractatus-gandavensis/nomen" super="limitatio"/>
+  <citatio nomen="limitatio-ad-tractatum" attributum="ad-tractatum" ad="tractatus/nomen" super="limitatio"/>
   <citatio nomen="gradus-academicus-fundat" attributum="fundat" ad="licentia/nomen" super="gradus-academicus"/>
   <citatio nomen="character-indelebilis-fundat" attributum="fundat" ad="licentia/nomen" super="character-indelebilis"/>
   <citatio nomen="titulus-honoris-fundat" attributum="fundat" ad="licentia/nomen" super="titulus-honoris"/>

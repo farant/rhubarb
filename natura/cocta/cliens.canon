@@ -13,7 +13,6 @@
     <liberum nomen="cliens-cli"/>
     <liberum nomen="cliens-mobilis"/>
     <liberum nomen="servus"/>
-    <liberum nomen="curl"/>
     <liberum nomen="servus-telae"/>
     <liberum nomen="servus-datorum"/>
     <liberum nomen="servus-nominum"/>
@@ -149,19 +148,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="curl">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="agit-pro" genus="referentia"/>
-    <liberum nomen="consumit"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="consumit" intra="curl">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="curl">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="servus-telae">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="status-inter-petitiones" genus="electio">
@@ -293,7 +279,7 @@
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
     super="cliens cliens-telae cliens-nativus cliens-terminalis cliens-api
-           cliens-mcp cliens-cli cliens-mobilis servus curl servus-telae
-           servus-datorum servus-nominum servus-procuratorius servus-mcp"/>
+           cliens-mcp cliens-cli cliens-mobilis servus servus-telae servus-datorum
+           servus-nominum servus-procuratorius servus-mcp"/>
 
 </canon>

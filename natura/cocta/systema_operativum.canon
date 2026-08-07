@@ -8,16 +8,6 @@
     <liberum nomen="systema-unixiforme"/>
     <liberum nomen="distributio-systematis"/>
     <liberum nomen="versio-systematis"/>
-    <liberum nomen="windows"/>
-    <liberum nomen="vms"/>
-    <liberum nomen="unix-bell-labs"/>
-    <liberum nomen="macos"/>
-    <liberum nomen="linux"/>
-    <liberum nomen="debian"/>
-    <liberum nomen="ubuntu"/>
-    <liberum nomen="arch"/>
-    <liberum nomen="macos-13-ventura"/>
-    <liberum nomen="macos-14-sonoma"/>
   </elementum>
 
   <elementum nomen="systema-operativum">
@@ -140,297 +130,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="windows">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="genus-nuclei" genus="electio" ordinarius="hybridus">
-      <optio>monolithicus</optio>
-      <optio>micronucleus</optio>
-      <optio>hybridus</optio>
-    </attributum>
-    <attributum nomen="fons-apertus" genus="veritas" ordinarius="falsum"/>
-    <attributum nomen="multiplex-processuum" genus="veritas"/>
-    <attributum nomen="multiplex-usorum" genus="veritas"/>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>exstinctum</optio>
-      <optio>initians</optio>
-      <optio>currens</optio>
-      <optio>dormiens</optio>
-    </attributum>
-    <attributum nomen="orta-ex" genus="referentia"/>
-    <attributum nomen="ad-exemplum-facta" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <attributum nomen="habet-versionem" genus="referentia"/>
-    <attributum nomen="praebet-systema-plagularum" genus="referentia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="exsequitur-in"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="auctor" intra="windows">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="exsequitur-in" intra="windows">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="windows">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="vms">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="genus-nuclei" genus="electio" ordinarius="monolithicus">
-      <optio>monolithicus</optio>
-      <optio>micronucleus</optio>
-      <optio>hybridus</optio>
-    </attributum>
-    <attributum nomen="fons-apertus" genus="veritas" ordinarius="falsum"/>
-    <attributum nomen="multiplex-processuum" genus="veritas"/>
-    <attributum nomen="multiplex-usorum" genus="veritas"/>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>exstinctum</optio>
-      <optio>initians</optio>
-      <optio>currens</optio>
-      <optio>dormiens</optio>
-    </attributum>
-    <attributum nomen="orta-ex" genus="referentia"/>
-    <attributum nomen="ad-exemplum-facta" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <attributum nomen="habet-versionem" genus="referentia"/>
-    <attributum nomen="praebet-systema-plagularum" genus="referentia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="exsequitur-in"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="auctor" intra="vms">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="exsequitur-in" intra="vms">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="vms">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="unix-bell-labs">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="genus-nuclei" genus="electio" ordinarius="monolithicus">
-      <optio>monolithicus</optio>
-      <optio>micronucleus</optio>
-      <optio>hybridus</optio>
-    </attributum>
-    <attributum nomen="fons-apertus" genus="veritas"/>
-    <attributum nomen="multiplex-processuum" genus="veritas"/>
-    <attributum nomen="multiplex-usorum" genus="veritas"/>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>exstinctum</optio>
-      <optio>initians</optio>
-      <optio>currens</optio>
-      <optio>dormiens</optio>
-    </attributum>
-    <attributum nomen="orta-ex" genus="referentia"/>
-    <attributum nomen="ad-exemplum-facta" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <attributum nomen="habet-versionem" genus="referentia"/>
-    <attributum nomen="praebet-systema-plagularum" genus="referentia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="exsequitur-in"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="auctor" intra="unix-bell-labs">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="exsequitur-in" intra="unix-bell-labs">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="unix-bell-labs">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="macos">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="genus-nuclei" genus="electio" ordinarius="hybridus">
-      <optio>monolithicus</optio>
-      <optio>micronucleus</optio>
-      <optio>hybridus</optio>
-    </attributum>
-    <attributum nomen="fons-apertus" genus="veritas" ordinarius="falsum"/>
-    <attributum nomen="multiplex-processuum" genus="veritas"/>
-    <attributum nomen="multiplex-usorum" genus="veritas"/>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>exstinctum</optio>
-      <optio>initians</optio>
-      <optio>currens</optio>
-      <optio>dormiens</optio>
-    </attributum>
-    <attributum nomen="orta-ex" genus="referentia"/>
-    <attributum nomen="ad-exemplum-facta" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <attributum nomen="habet-versionem" genus="referentia"/>
-    <attributum nomen="praebet-systema-plagularum" genus="referentia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="exsequitur-in"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="auctor" intra="macos">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="exsequitur-in" intra="macos">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="macos">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="linux">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="genus-nuclei" genus="electio" ordinarius="monolithicus">
-      <optio>monolithicus</optio>
-      <optio>micronucleus</optio>
-      <optio>hybridus</optio>
-    </attributum>
-    <attributum nomen="fons-apertus" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="multiplex-processuum" genus="veritas"/>
-    <attributum nomen="multiplex-usorum" genus="veritas"/>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>exstinctum</optio>
-      <optio>initians</optio>
-      <optio>currens</optio>
-      <optio>dormiens</optio>
-    </attributum>
-    <attributum nomen="orta-ex" genus="referentia"/>
-    <attributum nomen="ad-exemplum-facta" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <attributum nomen="habet-versionem" genus="referentia"/>
-    <attributum nomen="praebet-systema-plagularum" genus="referentia"/>
-    <liberum nomen="auctor"/>
-    <liberum nomen="exsequitur-in"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="auctor" intra="linux">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="exsequitur-in" intra="linux">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="linux">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="debian">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="gestor-fasciculorum" genus="textus" ordinarius="apt"/>
-    <attributum nomen="cadentia-editionum" genus="electio" ordinarius="statuta">
-      <optio>statuta</optio>
-      <optio>volvens</optio>
-    </attributum>
-    <attributum nomen="distributio-de" genus="referentia"/>
-    <attributum nomen="orta-ex" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="debian">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="ubuntu">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="gestor-fasciculorum" genus="textus" ordinarius="apt"/>
-    <attributum nomen="cadentia-editionum" genus="electio" ordinarius="statuta">
-      <optio>statuta</optio>
-      <optio>volvens</optio>
-    </attributum>
-    <attributum nomen="distributio-de" genus="referentia"/>
-    <attributum nomen="orta-ex" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="ubuntu">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="arch">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="gestor-fasciculorum" genus="textus" ordinarius="pacman"/>
-    <attributum nomen="cadentia-editionum" genus="electio" ordinarius="volvens">
-      <optio>statuta</optio>
-      <optio>volvens</optio>
-    </attributum>
-    <attributum nomen="distributio-de" genus="referentia"/>
-    <attributum nomen="orta-ex" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="historia" intra="arch">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="macos-13-ventura">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="titulus" genus="textus" ordinarius="macOS 13 Ventura"/>
-    <attributum nomen="edita" genus="dies" ordinarius="2022-10-24"/>
-    <attributum nomen="versio-de" genus="referentia"/>
-    <attributum nomen="sequitur" genus="referentia"/>
-    <attributum nomen="schema-numerandi" genus="electio">
-      <optio>semanticum</optio>
-      <optio>sequentiale</optio>
-      <optio>temporale</optio>
-      <optio>nominale</optio>
-      <optio>mixtum</optio>
-    </attributum>
-    <attributum nomen="retro-compatibilis" genus="veritas"/>
-    <attributum nomen="mutationes-fractoriae" genus="textus"/>
-    <attributum nomen="status-sustentatio" genus="electio">
-      <optio>praenuntiata</optio>
-      <optio>vigens</optio>
-      <optio>sustentata</optio>
-      <optio>deprecata</optio>
-      <optio>derelicta</optio>
-    </attributum>
-    <attributum nomen="asseritur-per" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <liberum nomen="compatibilis-cum"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="compatibilis-cum" intra="macos-13-ventura">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="macos-13-ventura">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="macos-14-sonoma">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="titulus" genus="textus" ordinarius="macOS 14 Sonoma (Darwin 23)"/>
-    <attributum nomen="edita" genus="dies" ordinarius="2023-09-26"/>
-    <attributum nomen="versio-de" genus="referentia"/>
-    <attributum nomen="sequitur" genus="referentia"/>
-    <attributum nomen="schema-numerandi" genus="electio">
-      <optio>semanticum</optio>
-      <optio>sequentiale</optio>
-      <optio>temporale</optio>
-      <optio>nominale</optio>
-      <optio>mixtum</optio>
-    </attributum>
-    <attributum nomen="retro-compatibilis" genus="veritas"/>
-    <attributum nomen="mutationes-fractoriae" genus="textus"/>
-    <attributum nomen="status-sustentatio" genus="electio">
-      <optio>praenuntiata</optio>
-      <optio>vigens</optio>
-      <optio>sustentata</optio>
-      <optio>deprecata</optio>
-      <optio>derelicta</optio>
-    </attributum>
-    <attributum nomen="asseritur-per" genus="referentia"/>
-    <attributum nomen="edita-a" genus="referentia"/>
-    <liberum nomen="compatibilis-cum"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="compatibilis-cum" intra="macos-14-sonoma">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="macos-14-sonoma">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>
     <attributum nomen="actio" genus="electio">
@@ -448,9 +147,7 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="systema-operativum systema-unixiforme distributio-systematis versio-systematis
-           windows vms unix-bell-labs macos linux debian ubuntu arch macos-13-ventura
-           macos-14-sonoma"/>
+    super="systema-operativum systema-unixiforme distributio-systematis versio-systematis"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -458,40 +155,15 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
-  <citatio nomen="systema-operativum-orta-ex" attributum="orta-ex" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="systema-operativum"/>
-  <citatio nomen="systema-operativum-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="systema-operativum"/>
-  <citatio nomen="systema-operativum-habet-versionem" attributum="habet-versionem" ad="versio-systematis macos-13-ventura macos-14-sonoma/nomen" super="systema-operativum"/>
-  <citatio nomen="systema-unixiforme-orta-ex" attributum="orta-ex" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="systema-unixiforme"/>
-  <citatio nomen="systema-unixiforme-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="systema-unixiforme"/>
-  <citatio nomen="systema-unixiforme-habet-versionem" attributum="habet-versionem" ad="versio-systematis macos-13-ventura macos-14-sonoma/nomen" super="systema-unixiforme"/>
-  <citatio nomen="distributio-systematis-distributio-de" attributum="distributio-de" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="distributio-systematis"/>
-  <citatio nomen="distributio-systematis-orta-ex" attributum="orta-ex" ad="distributio-systematis debian ubuntu arch/nomen" super="distributio-systematis"/>
-  <citatio nomen="versio-systematis-versio-de" attributum="versio-de" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="versio-systematis"/>
-  <citatio nomen="versio-systematis-sequitur" attributum="sequitur" ad="versio-systematis macos-13-ventura macos-14-sonoma/nomen" super="versio-systematis"/>
-  <citatio nomen="windows-orta-ex" attributum="orta-ex" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="windows"/>
-  <citatio nomen="windows-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="windows"/>
-  <citatio nomen="windows-habet-versionem" attributum="habet-versionem" ad="versio-systematis macos-13-ventura macos-14-sonoma/nomen" super="windows"/>
-  <citatio nomen="vms-orta-ex" attributum="orta-ex" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="vms"/>
-  <citatio nomen="vms-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="vms"/>
-  <citatio nomen="vms-habet-versionem" attributum="habet-versionem" ad="versio-systematis macos-13-ventura macos-14-sonoma/nomen" super="vms"/>
-  <citatio nomen="unix-bell-labs-orta-ex" attributum="orta-ex" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="unix-bell-labs"/>
-  <citatio nomen="unix-bell-labs-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="unix-bell-labs"/>
-  <citatio nomen="unix-bell-labs-habet-versionem" attributum="habet-versionem" ad="versio-systematis macos-13-ventura macos-14-sonoma/nomen" super="unix-bell-labs"/>
-  <citatio nomen="macos-orta-ex" attributum="orta-ex" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="macos"/>
-  <citatio nomen="macos-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="macos"/>
-  <citatio nomen="macos-habet-versionem" attributum="habet-versionem" ad="versio-systematis macos-13-ventura macos-14-sonoma/nomen" super="macos"/>
-  <citatio nomen="linux-orta-ex" attributum="orta-ex" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="linux"/>
-  <citatio nomen="linux-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="linux"/>
-  <citatio nomen="linux-habet-versionem" attributum="habet-versionem" ad="versio-systematis macos-13-ventura macos-14-sonoma/nomen" super="linux"/>
-  <citatio nomen="debian-distributio-de" attributum="distributio-de" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="debian"/>
-  <citatio nomen="debian-orta-ex" attributum="orta-ex" ad="distributio-systematis debian ubuntu arch/nomen" super="debian"/>
-  <citatio nomen="ubuntu-distributio-de" attributum="distributio-de" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="ubuntu"/>
-  <citatio nomen="ubuntu-orta-ex" attributum="orta-ex" ad="distributio-systematis debian ubuntu arch/nomen" super="ubuntu"/>
-  <citatio nomen="arch-distributio-de" attributum="distributio-de" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="arch"/>
-  <citatio nomen="arch-orta-ex" attributum="orta-ex" ad="distributio-systematis debian ubuntu arch/nomen" super="arch"/>
-  <citatio nomen="macos-13-ventura-versio-de" attributum="versio-de" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="macos-13-ventura"/>
-  <citatio nomen="macos-13-ventura-sequitur" attributum="sequitur" ad="versio-systematis macos-13-ventura macos-14-sonoma/nomen" super="macos-13-ventura"/>
-  <citatio nomen="macos-14-sonoma-versio-de" attributum="versio-de" ad="systema-operativum windows vms systema-unixiforme unix-bell-labs macos linux/nomen" super="macos-14-sonoma"/>
-  <citatio nomen="macos-14-sonoma-sequitur" attributum="sequitur" ad="versio-systematis macos-13-ventura macos-14-sonoma/nomen" super="macos-14-sonoma"/>
+  <citatio nomen="systema-operativum-orta-ex" attributum="orta-ex" ad="systema-operativum systema-unixiforme/nomen" super="systema-operativum"/>
+  <citatio nomen="systema-operativum-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum systema-unixiforme/nomen" super="systema-operativum"/>
+  <citatio nomen="systema-operativum-habet-versionem" attributum="habet-versionem" ad="versio-systematis/nomen" super="systema-operativum"/>
+  <citatio nomen="systema-unixiforme-orta-ex" attributum="orta-ex" ad="systema-operativum systema-unixiforme/nomen" super="systema-unixiforme"/>
+  <citatio nomen="systema-unixiforme-ad-exemplum-facta" attributum="ad-exemplum-facta" ad="systema-operativum systema-unixiforme/nomen" super="systema-unixiforme"/>
+  <citatio nomen="systema-unixiforme-habet-versionem" attributum="habet-versionem" ad="versio-systematis/nomen" super="systema-unixiforme"/>
+  <citatio nomen="distributio-systematis-distributio-de" attributum="distributio-de" ad="systema-operativum systema-unixiforme/nomen" super="distributio-systematis"/>
+  <citatio nomen="distributio-systematis-orta-ex" attributum="orta-ex" ad="distributio-systematis/nomen" super="distributio-systematis"/>
+  <citatio nomen="versio-systematis-versio-de" attributum="versio-de" ad="systema-operativum systema-unixiforme/nomen" super="versio-systematis"/>
+  <citatio nomen="versio-systematis-sequitur" attributum="sequitur" ad="versio-systematis/nomen" super="versio-systematis"/>
 
 </canon>

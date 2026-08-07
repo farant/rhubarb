@@ -11,8 +11,6 @@
     <liberum nomen="via-terrestris"/>
     <liberum nomen="via-maritima"/>
     <liberum nomen="via-aeria"/>
-    <liberum nomen="via-appia"/>
-    <liberum nomen="canalis-suesianus"/>
     <liberum nomen="navis"/>
     <liberum nomen="currus-onerarius"/>
     <liberum nomen="tramen"/>
@@ -182,42 +180,6 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="via-aeria">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="via-appia">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="longitudo" genus="textus"/>
-    <attributum nomen="publica" genus="veritas" ordinarius="verum"/>
-    <liberum nomen="iungit"/>
-    <liberum nomen="sub-iurisdictione"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="iungit" intra="via-appia">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="sub-iurisdictione" intra="via-appia">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="via-appia">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="canalis-suesianus">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="longitudo" genus="textus"/>
-    <attributum nomen="publica" genus="veritas"/>
-    <liberum nomen="iungit"/>
-    <liberum nomen="sub-iurisdictione"/>
-    <liberum nomen="historia" maximum="1"/>
-  </elementum>
-  <elementum nomen="iungit" intra="canalis-suesianus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="sub-iurisdictione" intra="canalis-suesianus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="canalis-suesianus">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -392,7 +354,7 @@
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
     super="iter via vehiculum onus via-terrestris via-maritima via-aeria
-           via-appia canalis-suesianus navis currus-onerarius tramen aeroplanum"/>
+           navis currus-onerarius tramen aeroplanum"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
