@@ -18,9 +18,10 @@
 #define NC_VALOR_MAXIMUS      M
 
 nomen enumeratio {
-    NC_VALOR_BONUS = I,
-    NC_VALOR_QUOTA = II,   /* '"' - STML valorem PRAECIDERET */
-    NC_VALOR_MAIOR = III   /* receptaculum non capit */
+    NC_VALOR_BONUS  = I,
+    NC_VALOR_QUOTA  = II,   /* '"' - STML valorem PRAECIDERET */
+    NC_VALOR_MAIOR  = III,  /* receptaculum non capit */
+    NC_VALOR_NULLUS = IV    /* octetus nullus - vide infra */
 } NcValorStatus;
 
 interior vacuum  _kebab_literas_scribere(FILE* f,
@@ -262,6 +263,18 @@ _valorem_planare(
         si (c == '"')
         {
             redde NC_VALOR_QUOTA;
+        }
+        /* chorda octetus nullos ferre POTEST (mensuram fert, non
+         * terminatorem); receptaculum autem litterae C est, et
+         * fprintf et strcmp ibi desinunt. Valor ergo TACITE
+         * praecideretur - et comparatio generis prooemium solum
+         * iudicaret. Unica lenitas quam speculum contra
+         * valor_congruit habebat (quod chorda_aequalis per
+         * mensuram comparat); clauditur ut RECUSATIO, quia
+         * praecisio tacita vitium gravius est quam recusatio. */
+        si (c == '\0')
+        {
+            redde NC_VALOR_NULLUS;
         }
         si (c == '\n' || c == '\r' || c == '\t')
         {
@@ -623,6 +636,16 @@ _membrum_attributum_scribere(
                 (integer)el->ens->titulus->mensura,
                 (constans character*)el->ens->titulus->datum, ap,
                 (i32)NC_VALOR_MAXIMUS);
+            redde FALSUM;
+        }
+        si (status == NC_VALOR_NULLUS)
+        {
+            fprintf(stderr,
+                "natura_canones: <%.*s> '%s' ordinarius octetum "
+                "nullum fert - valor tacite praecideretur, canon "
+                "RECUSATUR\n",
+                (integer)el->ens->titulus->mensura,
+                (constans character*)el->ens->titulus->datum, ap);
             redde FALSUM;
         }
         si (!_generi_congruit(genus_valoris, valor, m->optiones))
