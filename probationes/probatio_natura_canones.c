@@ -674,9 +674,10 @@ _documentum_iudicare(
  * Documenta probationis
  *
  * 'aedificium' et 'inscriptio' electa sunt quia relatio
- * 'inscriptio_eius' PETITUM FOLIUM habet - sola conditio sub qua
- * generator citationem veram emittit (opus IV: petitum cum
- * posteris documenta licita reiceret).
+ * 'inscriptio_eius' petitum FOLIUM habet - clausura titulo uno,
+ * forma simplicissima citationis. Par clausurae infra petitum
+ * cum posteris probat (pollinatur_a -> animal, clavis sub
+ * titulo SUBGENERIS stans).
  * ================================================== */
 
 /* PAR, pars prior: clavis in documento adest -> sanum */
@@ -691,6 +692,26 @@ staticus constans character* DOC_PENDENS =
     "<individua>\n"
     "  <aedificium nomen=\"domus-nostra\" inscriptio-eius=\"nemo-omnino\"/>\n"
     "  <inscriptio nomen=\"via-lata-x\"/>\n"
+    "</individua>\n";
+
+/* PAR CLAUSURAE: pollinatur_a petitum 'animal' habet, quod
+ * posteros fert (apis res eius est). Clavis sub titulo apis
+ * stat - forma simplici (titulo solo 'animal') citatio eam non
+ * caperet et documentum RECTUM rueret; ante clausuram citatio
+ * nulla omnino erat et par hoc indiscernibile. */
+staticus constans character* DOC_CLAUSURA_RESOLVENS =
+    "<individua>\n"
+    "  <apis nomen=\"apis-prima\"/>\n"
+    "  <rosa nomen=\"rosa-prima\" pollinatur-a=\"apis-prima\"/>\n"
+    "</individua>\n";
+
+/* pars posterior: EADEM structura, clavis quae nihil nominat -
+ * ANTE clausuram haec quoque transibat (citatio nulla), ergo
+ * assertio 'ruere debet' sola mutationem probat */
+staticus constans character* DOC_CLAUSURA_PENDENS =
+    "<individua>\n"
+    "  <apis nomen=\"apis-prima\"/>\n"
+    "  <rosa nomen=\"rosa-prima\" pollinatur-a=\"nemo-omnino\"/>\n"
     "</individua>\n";
 
 /* UNICITAS trans genera: genera DUO DIVERSA idem nomen ferunt.
@@ -908,6 +929,22 @@ principale(
             CANON_CITATIO_IRRITA, &irrita, &omnia, piscina, intern));
         CREDO_AEQUALIS_I32 (irrita, (i32)I);
         CREDO_AEQUALIS_I32 (omnia, (i32)I);
+
+        /* PAR CLAUSURAE: petitum cum posteris. Resolvens clavem
+         * sub titulo SUBGENERIS fert - indicem ad= probat (forma
+         * titulo solo rueret); pendens ruere DEBET - ante
+         * clausuram citatio nulla erat et utraque transibat. */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            DOC_CLAUSURA_RESOLVENS, CANON_CITATIO_IRRITA, &irrita,
+            &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (irrita, (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            DOC_CLAUSURA_PENDENS, CANON_CITATIO_IRRITA, &irrita,
+            &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (irrita, (i32)I);
+        CREDO_AEQUALIS_I32 (omnia, (i32)I);
     }
 
 
@@ -963,7 +1000,6 @@ principale(
         i32 citatae;
         i32 nudae;
         i32 apertae;
-        i32 posteri;
         i32 multiplices;
         i32 ignotae;
 
@@ -978,20 +1014,17 @@ principale(
         CREDO_VERUM (_numerum_ante(monolithus_fons,
             "petitum apertum habent", piscina, &apertae));
         CREDO_VERUM (_numerum_ante(monolithus_fons,
-            "petitum cum POSTERIS", piscina, &posteri));
-        CREDO_VERUM (_numerum_ante(monolithus_fons,
             "multiplices sunt", piscina, &multiplices));
         CREDO_VERUM (_numerum_ante(monolithus_fons,
             "petitum non resolvunt", piscina, &ignotae));
 
         imprimere("  sedes %u = citatae %u + nudae %u"
-                  " (apertae %u + posteri %u + multiplices %u"
-                  " + ignotae %u)\n",
+                  " (apertae %u + multiplices %u + ignotae %u)\n",
                   sedes, citatae, nudae,
-                  apertae, posteri, multiplices, ignotae);
+                  apertae, multiplices, ignotae);
 
         /* causae omnes sedes nudas exhauriunt */
-        CREDO_AEQUALIS_I32 (apertae + posteri + multiplices + ignotae,
+        CREDO_AEQUALIS_I32 (apertae + multiplices + ignotae,
                             nudae);
         /* et nudae + citatae sedes omnes */
         CREDO_AEQUALIS_I32 (citatae + nudae, sedes);
@@ -1052,7 +1085,10 @@ principale(
                 perge;
             }
 
-            /* ad="elementum/attributum" */
+            /* ad="titulus.../attributum" - tituli OMNES indicis
+             * resolvi debent et clavem declarare (clausura in
+             * genus numquam nominatum emissa = idem vitium quod
+             * hoc recensum genuit, forma nova) */
             virgula = chorda_invenire_index(*ad,
                           chorda_ex_literis("/", piscina));
             si (virgula <= ZEPHYRUM)
@@ -1061,20 +1097,52 @@ principale(
                 perge;
             }
 
-            petitum = _elementum_invenire(monolithus_radix,
-                          chorda_sectio(*ad, (i32)ZEPHYRUM,
-                                        (i32)virgula));
-            citans  = _elementum_invenire(monolithus_radix, *super);
-
-            si (!petitum || !citans)
             {
-                malae++;
-                perge;
+                chorda_fissio_fructus f;
+                i32                   k;
+                i32                   sani;
+                b32                   mala_haec;
+
+                f = chorda_fissio(
+                        chorda_sectio(*ad, (i32)ZEPHYRUM,
+                                      (i32)virgula),
+                        ' ', piscina);
+                sani      = ZEPHYRUM;
+                mala_haec = FALSUM;
+                per (k = ZEPHYRUM; k < f.numerus; k++)
+                {
+                    chorda t;
+
+                    t = chorda_praecidere(f.elementa[k]);
+                    si (t.mensura == ZEPHYRUM)
+                    {
+                        perge;
+                    }
+                    petitum = _elementum_invenire(monolithus_radix,
+                                                  t);
+                    si (petitum &&
+                        _declarationem_invenire(petitum,
+                            "attributum",
+                            chorda_sectio(*ad, (i32)(virgula + I),
+                                          ad->mensura)))
+                    {
+                        sani++;
+                    }
+                    alioquin
+                    {
+                        mala_haec = VERUM;
+                        frange;
+                    }
+                }
+                si (mala_haec || sani == ZEPHYRUM)
+                {
+                    malae++;
+                    perge;
+                }
             }
-            /* clavis in petito declarata est */
-            si (!_declarationem_invenire(petitum, "attributum",
-                    chorda_sectio(*ad, (i32)(virgula + I),
-                                  ad->mensura)))
+
+            citans = _elementum_invenire(monolithus_radix, *super);
+            si (!citans)
             {
                 malae++;
                 perge;

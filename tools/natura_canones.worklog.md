@@ -739,3 +739,29 @@ caller is born.
 `./silva/examen.sh` returned `ACCIPE` on a file `clang -Werror` rejected for
 `'/*' within block comment` — I had written `tools/*` inside a block comment.
 The build caught it immediately, but `-Wcomment` is a gap in the C89 judge.
+
+## 2026-08-07 — clausura pro folio: subsumptio compilata
+
+The leaf rule (`petitum resolvi debet ET folium esse`) is gone.
+`_petitum_citabile` now returns the target's CLOSURE — the kind,
+its subgenera transitively, their res, plus etiam=-bearing res —
+and the emitter writes it as canon's new list-form `ad=`. Same
+move as the inheritance fold: canon stays extensional, the
+generator translates intension at build time.
+
+Measured: citations 217 → 1021 (the 804 posteri sites, to the
+site). Census causes now apertae 438 + multiplices 587 + ignotae
+10 = 1035; NC_CIT_POSTERI deleted. Section VI's audit got
+STRONGER: every title of every index must resolve AND declare the
+key — 1021 recensitae, malae 0.
+
+Trap honored from the old `_posteros_habet`: etiam= res are NOT
+in `res_suae` (loader fills that index by nesting only), so the
+closure does a separate pass over res_omnes against the collected
+genera set. Same blindness that bit the leaf predicate once.
+
+Res targets stay single-title closures: NaturaRes carries no
+posteri IN THE GRAPH (nested species land in the enclosing
+genus's res_suae, flat) — if a relation ever targets a res with
+ontological descendants, that is a loader question, not an
+emitter one.

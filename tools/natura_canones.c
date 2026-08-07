@@ -50,14 +50,14 @@
 "  QUID HIC EXAMINETUR, ET QUID NON:\n" \
 "\n" \
 "  RELATIONES - ex %u sedibus relationum huius canonis, %u\n" \
-"  citationes VERAE fiunt (clavis intra documentum resoluta);\n" \
+"  citationes VERAE fiunt (clavis intra documentum resoluta).\n" \
+"  Petitum cum posteris per CLAUSURAM citatur: subgenera resque\n" \
+"  eius omnes in indicem ad= enumerantur, quia claves per\n" \
+"  titulum EXACTUM colliguntur et subgenus titulum alium fert.\n" \
 "  %u nomine solo iudicantur, id est sicut in canone per\n" \
 "  modulum. Causae, quae omnes limites mechanismi sunt, non\n" \
 "  neglegentiae:\n" \
 "    %u petitum apertum habent (ad='*') - clavis nulla est;\n" \
-"    %u petitum cum POSTERIS petunt - claves per titulum EXACTUM\n" \
-"      colliguntur, ergo citatio documentum reiceret quod\n" \
-"      subgenus licite nominat (persona posteros XIV habet);\n" \
 "    %u multiplices sunt - super= titulo solo congruit nec\n" \
 "      intra= observat, et nomen liberi per genera communicatur\n" \
 "      quorum petita diversa sunt;\n" \
@@ -92,11 +92,11 @@ nomen structura {
 
 /* cur relatio citatio fiat aut non fiat */
 nomen enumeratio {
-    NC_CIT_FIT       = I,   /* petitum folium - citatio vera */
+    NC_CIT_FIT       = I,   /* petitum resolutum - citatio vera,
+                             * clausura posterorum enumerata */
     NC_CIT_APERTA    = II,  /* ad="*" aut absens - clavis nulla */
-    NC_CIT_POSTERI   = III, /* petitum posteros habet */
-    NC_CIT_MULTIPLEX = IV,  /* super= adstringi nequit */
-    NC_CIT_IGNOTA    = V    /* petitum non resolvitur */
+    NC_CIT_MULTIPLEX = III, /* super= adstringi nequit */
+    NC_CIT_IGNOTA    = IV   /* petitum non resolvitur */
 } NcCitatioStatus;
 
 /* census relationum - NUMERI IN CANONEM IPSUM SCRIBUNTUR.
@@ -112,7 +112,6 @@ nomen structura {
     i32  omnes;
     i32  citatae;
     i32  apertae;
-    i32  posteri;
     i32  multiplices;
     i32  ignotae;
 } NcCensusRelationum;
@@ -153,11 +152,16 @@ interior vacuum    _valores_applicare(NcElementum* el, NcEns* ens,
 interior constans character* _cstr_tutum(constans chorda* c,
                                      constans character* unde,
                                      Piscina* piscina);
-interior b32       _posteros_habet(NaturaBibliotheca* bib,
-                                   NaturaGenus* g);
+interior vacuum    _titulum_semel_addere(Xar* tituli, chorda* t);
+interior vacuum    _genera_clausurae_colligere(NaturaGenus* g,
+                                               Xar* genera);
+interior Xar*      _clausuram_colligere(NaturaBibliotheca* bib,
+                                        NaturaGenus* g,
+                                        Piscina* piscina);
 interior NcCitatioStatus _petitum_citabile(NaturaBibliotheca* bib,
                                      StmlNodus* nodus, b32 multiplex,
-                                     chorda** ad_ex, Piscina* piscina);
+                                     Xar** clausura_ex,
+                                     Piscina* piscina);
 interior vacuum    _censum_notare(NcCensusRelationum* census,
                                   NcCitatioStatus status);
 interior vacuum    _praefationem_scribere(character* ex, i32 tectum,
@@ -902,31 +906,84 @@ _cstr_tutum(
     redde chorda_ut_cstr(*c, piscina);
 }
 
-/* an genus posteros habeat - id est an aliud elementum monolithi
- * instantiam eius ferre possit.
+/* titulum semel addere - clausurae parvae sunt (maxima corporis
+ * sub XX titulis), inquisitio linearis sufficit */
+interior vacuum
+_titulum_semel_addere(
+    Xar*     tituli,
+    chorda*  t)
+{
+    i32      i;
+    chorda** locus;
+
+    per (i = ZEPHYRUM; i < xar_numerus(tituli); i++)
+    {
+        si (chorda_aequalis(**(chorda**)xar_obtinere(tituli, i),
+                            *t))
+        {
+            redde;
+        }
+    }
+    locus  = (chorda**)xar_addere(tituli);
+    *locus = t;
+}
+
+/* genera clausurae: petitum ipsum et subgenera transitive */
+interior vacuum
+_genera_clausurae_colligere(
+    NaturaGenus*  g,
+    Xar*          genera)
+{
+    NaturaGenus** locus;
+    i32           i;
+
+    locus  = (NaturaGenus**)xar_addere(genera);
+    *locus = g;
+    per (i = ZEPHYRUM; i < xar_numerus(g->liberi); i++)
+    {
+        _genera_clausurae_colligere(
+            *(NaturaGenus**)xar_obtinere(g->liberi, i), genera);
+    }
+}
+
+/* clausura petiti: tituli omnium entium quae VERE petitum sunt -
+ * genus ipsum, subgenera transitive, res eorum nidificatae,
+ * resque quae etiam= in quodvis eorum ferunt.
  *
  * ETIAM= QUOQUE, non sola nidificatio: res quae etiam="G" fert
  * VERE G est (natura.h: 'membrum essentiale duplex'), sed
  * lib/natura.c eam in G->res_suae NON ponit - ille index
- * nidificatione sola impletur. Sine hac inquisitione tale G
- * folium iudicaretur et citationem acciperet quam ferre non
- * potest, id est documentum rectum reiceret quod rem illam
- * nominat. Census praeterea sedem sub 'citatae' numeraret, unde
- * praefatio plus TUTE examinari diceret quam re vera examinatur.
- *
- * Filii DIRECTI sufficiunt: si genus subgenus habet, illud iam
- * elementum aliud est, sive ipsum posteros habet sive non. */
-interior b32
-_posteros_habet(
+ * nidificatione sola impletur. Sine hac inquisitione talis res
+ * extra indicem staret, id est documentum rectum reiceretur quod
+ * eam nominat - idem vitium quod regulam foliorum priorem semel
+ * momordit, forma minore rediens. */
+interior Xar*
+_clausuram_colligere(
     NaturaBibliotheca*  bib,
-    NaturaGenus*        g)
+    NaturaGenus*        g,
+    Piscina*            piscina)
 {
-    i32 i;
+    Xar* genera;
+    Xar* tituli;
+    i32  i;
+    i32  j;
 
-    si (xar_numerus(g->res_suae) > ZEPHYRUM ||
-        xar_numerus(g->liberi)   > ZEPHYRUM)
+    genera = xar_creare(piscina, (i32)magnitudo(NaturaGenus*));
+    tituli = xar_creare(piscina, (i32)magnitudo(chorda*));
+    _genera_clausurae_colligere(g, genera);
+
+    per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
     {
-        redde VERUM;
+        NaturaGenus* g2;
+
+        g2 = *(NaturaGenus**)xar_obtinere(genera, i);
+        _titulum_semel_addere(tituli, g2->titulus);
+        per (j = ZEPHYRUM; j < xar_numerus(g2->res_suae); j++)
+        {
+            _titulum_semel_addere(tituli,
+                (*(NaturaRes**)xar_obtinere(g2->res_suae,
+                                            j))->titulus);
+        }
     }
 
     per (i = ZEPHYRUM; i < xar_numerus(bib->res_omnes); i++)
@@ -934,39 +991,48 @@ _posteros_habet(
         NaturaRes* r;
 
         r = *(NaturaRes**)xar_obtinere(bib->res_omnes, i);
-        si (r->genus_etiam == g)
+        si (!r->genus_etiam)
         {
-            redde VERUM;
+            perge;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(genera); j++)
+        {
+            si (r->genus_etiam ==
+                *(NaturaGenus**)xar_obtinere(genera, j))
+            {
+                _titulum_semel_addere(tituli, r->titulus);
+                frange;
+            }
         }
     }
-    redde FALSUM;
+
+    redde tituli;
 }
 
-/* Ens quod relatio petit, SI citari potest - aliter NIHIL.
+/* Clausura entium quae relatio petit, SI citari potest - aliter
+ * status causam recusationis dicit et *clausura_ex NIHIL manet.
  *
- * CUR FOLIUM POSCITUR (decretum huius operis, mensuratum non
- * praevisum): citatio claves ex nodis titulo EXACTO congruentibus
- * colligit (lib/canon.c: chorda_aequalis(n->titulus,
- * ci->ad_elementum)); subgenus titulum ALIUM fert. Ergo relatio
- * ad 'persona' citata documentum RECTUM reiceret quod
- * <carl-linnaeus nomen="lin"/> ponit et 'lin' citat - persona
- * posteros XIV habet, et carl_linnaeus eorum unus est.
+ * CUR CLAUSURA ENUMERATUR (decretum alterum huius operis; prius
+ * folium poscebat et sedes DCCCIV tunc mensuratas sine porta
+ * relinquebat): citatio claves ex nodis titulo EXACTO
+ * congruentibus colligit (lib/canon.c), et subgenus titulum
+ * ALIUM fert - relatio ad 'persona' titulo solo citata
+ * documentum RECTUM reiceret quod carl-linnaeus nomen="lin"
+ * ponit et 'lin' citat. Subsumptio ergo hic COMPILATUR: petitum
+ * cum posteris omnibus in indicem ad= it, ut clavis sub quovis
+ * eorum titulorum colligatur - canon hereditatem numquam discit,
+ * sicut nec plicaturam sub= didicit. Posterus novus additus
+ * regeneratione in indicem venit; porta staleness catenam iam
+ * custodit.
  *
- * MENSURATUM in corpore: relationes DCXL, quarum
- *   CLVII petitum apertum (ad="*") habent - clavis nulla;
- *   CCCLXVI petitum CUM POSTERIS - citatio falso clamaret;
- *   CVIII petitum FOLIUM - citatio vera fieri potest.
- * Porta quae falso clamat neglegitur (mos huius plagulae supra),
- * ergo CCCLXVI illas non ponimus et damnum NUMERAMUS.
- *
- * Res dictionarii (carl_linnaeus) folium SEMPER est: NaturaRes
- * posteros ferre non potest. */
+ * Res dictionarii (carl_linnaeus) posteros in grapho ferre non
+ * potest: clausura eius titulus unus est. */
 interior NcCitatioStatus
 _petitum_citabile(
     NaturaBibliotheca*  bib,
     StmlNodus*          nodus,
     b32                 multiplex,
-    chorda**            ad_ex,
+    Xar**               clausura_ex,
     Piscina*            piscina)
 {
     chorda*             ad;
@@ -975,7 +1041,7 @@ _petitum_citabile(
     constans character* modulus_cstr;
     NaturaGenus*        g;
 
-    *ad_ex = NIHIL;
+    *clausura_ex = NIHIL;
 
     /* MULTIPLEX PRIMUM: exclusio categorica est, petito
      * qualicumque. Citans est LIBERUM relationis, et super=
@@ -1025,11 +1091,7 @@ _petitum_citabile(
     }
     si (g)
     {
-        si (_posteros_habet(bib, g))
-        {
-            redde NC_CIT_POSTERI;
-        }
-        *ad_ex = g->titulus;
+        *clausura_ex = _clausuram_colligere(bib, g, piscina);
         redde NC_CIT_FIT;
     }
 
@@ -1040,7 +1102,13 @@ _petitum_citabile(
         e = natura_ens_in(bib, modulus_cstr, ad_cstr);
         si (e && e->discrimen == NATURA_ENS_RES)
         {
-            *ad_ex = ((NaturaRes*)e->corpus)->titulus;
+            Xar*     tituli;
+            chorda** locus;
+
+            tituli = xar_creare(piscina, (i32)magnitudo(chorda*));
+            locus  = (chorda**)xar_addere(tituli);
+            *locus = ((NaturaRes*)e->corpus)->titulus;
+            *clausura_ex = tituli;
             redde NC_CIT_FIT;
         }
     }
@@ -1062,7 +1130,6 @@ _censum_notare(
     {
         casus NC_CIT_FIT:       census->citatae++;     frange;
         casus NC_CIT_APERTA:    census->apertae++;     frange;
-        casus NC_CIT_POSTERI:   census->posteri++;     frange;
         casus NC_CIT_MULTIPLEX: census->multiplices++; frange;
         ordinarius:             census->ignotae++;     frange;
     }
@@ -1187,15 +1254,15 @@ _apparatum_plicare(
                 m->genus_valoris = "compositum";
 
                 {
-                    chorda*         petitum;
+                    Xar*            clausura;
                     NcCitatioStatus status;
 
                     status = _petitum_citabile(bib, am->nodus,
                         (b32)(m->discrimen == NC_MEMBRUM_LIBERUM),
-                        &petitum, piscina);
+                        &clausura, piscina);
                     si (status == NC_CIT_FIT)
                     {
-                        m->citatio_ad = petitum;
+                        m->citatio_ad = clausura;
                     }
                     _censum_notare(census, status);
                 }
@@ -1464,7 +1531,7 @@ _praefationem_scribere(
 
     sprintf(ex, NC_PRAEFATIO_FORMA,
             census->omnes, census->citatae, nudae,
-            census->apertae, census->posteri, census->multiplices,
+            census->apertae, census->multiplices,
             census->ignotae);
 }
 
@@ -1493,7 +1560,6 @@ _canonem_totum_scribere(
     census.omnes       = ZEPHYRUM;
     census.citatae     = ZEPHYRUM;
     census.apertae     = ZEPHYRUM;
-    census.posteri     = ZEPHYRUM;
     census.multiplices = ZEPHYRUM;
     census.ignotae     = ZEPHYRUM;
 

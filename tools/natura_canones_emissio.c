@@ -1106,16 +1106,19 @@ _unicitas_scribere(
 /* Citationes - clavis-relatio INTRA documentum.
  *
  * Emissor hic NIHIL iudicat: membrum citatio_ad fert aut non fert.
- * Quae relatio citari possit natura_canones.c solus decernit (et
- * canon per modulum nullam ponit, unde haec functio ibi silet).
+ * Quae relatio citari possit et quae clausura eius sit
+ * natura_canones.c solus decernit (et canon per modulum nullam
+ * ponit, unde haec functio ibi silet).
  *
  * super= ADSTRINGIT citationem ad elementum quod relationem vere
  * declarat: sine eo elementum alienum idem nomen attributi ferens
  * falso caperetur. Nomina generum per corpus unica sunt (CLXI
  * mensurata), ergo super= unum elementum exacte nominat.
  *
- * ad="<petitum>/nomen": clavis identitas est, id est attributum
- * 'nomen' generis peti - quod omne elementum fert. */
+ * ad="<clausura>/nomen": clavis identitas est, id est attributum
+ * 'nomen' - quod omne elementum fert. Tituli plures (spatiis
+ * separati) subsumptionem compilatam ferunt: petitum primus
+ * stat, posteri sequuntur (vide _clausuram_colligere). */
 interior vacuum
 _citationes_scribere(
     FILE*  f,
@@ -1146,19 +1149,35 @@ _citationes_scribere(
 
             si (numerus == ZEPHYRUM)
             {
-                fputs("\n  <!-- CITATIONES: relatio quae folium "
-                      "petit clavem documenti fit.\n"
-                      "       Petitum cum posteris citari NEQUIT - "
-                      "documentum subgenus\n"
-                      "       licite nominat, et clavis generis id "
-                      "non caperet. -->\n", f);
+                fputs("\n  <!-- CITATIONES: relatio petitum "
+                      "resolutum ferens clavem documenti fit.\n"
+                      "       Subsumptio COMPILATA est: petitum "
+                      "cum posteris omnibus in\n"
+                      "       indicem ad= enumeratur, quia claves "
+                      "per titulum exactum\n"
+                      "       colliguntur et subgenus titulum "
+                      "alium fert. -->\n", f);
             }
             numerus++;
 
             fputs("  <citatio nomen=\"", f);
             _kebab_scribere(f, el->ens->titulus);
             fprintf(f, "-%s\" attributum=\"%s\" ad=\"", ap, ap);
-            _kebab_scribere(f, m->citatio_ad);
+            {
+                i32 k;
+
+                per (k = ZEPHYRUM;
+                     k < xar_numerus(m->citatio_ad); k++)
+                {
+                    si (k > ZEPHYRUM)
+                    {
+                        fputc(' ', f);
+                    }
+                    _kebab_scribere(f,
+                        *(chorda**)xar_obtinere(m->citatio_ad,
+                                                k));
+                }
+            }
             fputs("/nomen\" super=\"", f);
             _kebab_scribere(f, el->ens->titulus);
             fputs("\"/>\n", f);
@@ -1231,9 +1250,9 @@ _mensura_tuta(
  * semitam 'RECUSATUS et deletus' iam exstantem cadit.
  *
  * TITULI ENTIUM SATIS SUNT pro citationibus quoque: citatio_ad
- * titulum generis aut rei fert, et genera resque OMNIA elementa
- * monolithi fiunt - solius monolithi citationes sunt. Quod hic
- * transit, ibi iam transiit.
+ * titulos generum rerumque fert (clausuram petiti), et genera
+ * resque OMNIA elementa monolithi fiunt - solius monolithi
+ * citationes sunt. Quod hic transit, ibi iam transiit.
  *
  * SUBIECTUM NOMINATUR (genus et membrum): recusatio quae solum
  * 'octetus nullus' dicit auctorem per corpus totum quaerere cogit,

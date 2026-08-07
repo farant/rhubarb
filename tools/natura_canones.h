@@ -62,15 +62,19 @@ nomen structura {
     constans character*  genus_valoris; /* "textus"/"nomen"/... */
                    Xar*  optiones;      /* Xar de chorda* - electio */
                 chorda*  praestitutum;  /* ordinarius=, vel NIHIL */
-    /* MONOLITHUS solum: nomen entis peti (snake) cuius identitatem
-     * hoc membrum citat, vel NIHIL = nulla citatio. Canon per
-     * modulum id numquam ponit, quia relatio ibi plagulas transit
-     * et documentum clavem non tenet (spec par. 3.5).
+    /* MONOLITHUS solum: index nominum entium (snake) quorum
+     * identitates hoc membrum citare licet - petitum primum, tum
+     * posteri eius omnes (catena sub= ET etiam=), quia claves per
+     * titulum EXACTUM colliguntur et subgenus titulum alium fert;
+     * NIHIL = nulla citatio. Canon per modulum id numquam ponit,
+     * quia relatio ibi plagulas transit et documentum clavem non
+     * tenet (spec par. 3.5).
      *
      * DECRETUM ipsius emissoris est ut hoc scribat, non ut id
-     * COLLIGAT: quae relatio citari possit natura_canones.c solus
-     * iudicat (petitum resolvi debet ET folium esse - vide ibi). */
-                chorda*  citatio_ad;
+     * COLLIGAT: quae relatio citari possit et quae clausura eius
+     * sit natura_canones.c solus iudicat (petitum resolvi debet -
+     * vide ibi). */
+                   Xar*  citatio_ad;   /* Xar de chorda* */
 } NcMembrum;
 
 nomen structura {
