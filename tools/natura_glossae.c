@@ -48,6 +48,8 @@ interior i32    _genus_linguae_quot(NaturaGenus* g,
                                     constans character* codex);
 interior vacuum _columnam_scribere(FILE* f, constans chorda* t,
                                    i32 latitudo);
+interior i32*   _ordo_exemplarium(NaturaBibliotheca* bib,
+                                  Piscina* piscina);
 interior vacuum _html_textum_scribere(FILE* f, chorda t);
 interior vacuum _lineam_scribere(FILE* f, NaturaGenus* g);
 interior StmlNodus* _glossam_invenire(NaturaGenus* g,
@@ -196,6 +198,63 @@ _columnam_scribere(
     }
 }
 
+/* indices exemplarium ordine alphabetico stirpium - ordo lectionis
+ * directorii systematis plagularum est (arbitrarius ET inter
+ * machinas instabilis); relatio et pagina ambae hoc ordine
+ * scribuntur, unde output vere deterministicum fit */
+interior i32*
+_ordo_exemplarium(
+    NaturaBibliotheca*  bib,
+    Piscina*            piscina)
+{
+    i32* ordo;
+    i32  n;
+    i32  i;
+    i32  j;
+
+    n    = xar_numerus(bib->exemplaria);
+    ordo = (i32*)piscina_allocare(piscina,
+               (i32)((size_t)n * magnitudo(i32)));
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        ordo[i] = i;
+    }
+
+    per (i = I; i < n; i++)
+    {
+        i32 clavis;
+
+        clavis = ordo[i];
+        j = i;
+        dum (j > ZEPHYRUM)
+        {
+            NaturaExemplar* a;
+            NaturaExemplar* b;
+            i32             minima;
+            integer         ordo_bytium;
+
+            a = *(NaturaExemplar**)xar_obtinere(bib->exemplaria,
+                                                ordo[j - I]);
+            b = *(NaturaExemplar**)xar_obtinere(bib->exemplaria,
+                                                clavis);
+            minima = a->stirps->mensura < b->stirps->mensura
+                         ? a->stirps->mensura : b->stirps->mensura;
+            ordo_bytium = memcmp(a->stirps->datum, b->stirps->datum,
+                                 (size_t)minima);
+            si (ordo_bytium < ZEPHYRUM ||
+                (ordo_bytium == ZEPHYRUM &&
+                 a->stirps->mensura <= b->stirps->mensura))
+            {
+                frange;
+            }
+            ordo[j] = ordo[j - I];
+            j--;
+        }
+        ordo[j] = clavis;
+    }
+    redde ordo;
+}
+
 /* textus in html: <, >, & evasa; cetera verbatim (UTF-8 transit) */
 interior vacuum
 _html_textum_scribere(
@@ -286,6 +345,7 @@ _paginam_scribere(
     Piscina*             piscina)
 {
     FILE* f;
+    i32*  ordo;
     i32   m;
     i32   g_i;
     i32   l_i;
@@ -295,6 +355,7 @@ _paginam_scribere(
     {
         redde FALSUM;
     }
+    ordo = _ordo_exemplarium(bib, piscina);
 
     fputs("<!DOCTYPE html>\n"
           "<html lang=\"la\"><head><meta charset=\"utf-8\">\n"
@@ -318,6 +379,10 @@ _paginam_scribere(
           " .deest b { margin-right: .5rem; }\n"
           " .numeri { color: #8a8272; }\n"
           " .numeri b { color: #e8c878; }\n"
+          " .tabula { color: #8a8272; line-height: 1.9; }\n"
+          " .tabula a { color: #b8a878; text-decoration: none;\n"
+          "             margin-right: .6rem; }\n"
+          " .tabula a:hover { color: #e8c878; }\n"
           "</style></head><body>\n"
           "<h1>GLOSSAE - documentatio generum</h1>\n", f);
 
@@ -353,6 +418,42 @@ _paginam_scribere(
     }
     fputs("</p>\n", f);
 
+    /* ---- tabula saltuum: modulus quisque ancoram fert ---- */
+    fputs("<p class=\"tabula\">", f);
+    per (m = ZEPHYRUM; m < xar_numerus(bib->exemplaria); m++)
+    {
+        NaturaExemplar* ex;
+        b32             genera_habet;
+
+        ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria,
+                                             ordo[m]);
+        genera_habet = FALSUM;
+        per (g_i = ZEPHYRUM; g_i < xar_numerus(bib->genera_omnia);
+             g_i++)
+        {
+            NaturaGenus* g;
+
+            g = *(NaturaGenus**)xar_obtinere(bib->genera_omnia,
+                                             g_i);
+            si (chorda_aequalis(*g->modulus, *ex->stirps))
+            {
+                genera_habet = VERUM;
+                frange;
+            }
+        }
+        si (!genera_habet)
+        {
+            perge;
+        }
+        fputs("<a href=\"#", f);
+        fprintf(f, "%.*s", (integer)ex->stirps->mensura,
+                (constans character*)ex->stirps->datum);
+        fputs("\">", f);
+        _html_textum_scribere(f, *ex->stirps);
+        fputs("</a>\n", f);
+    }
+    fputs("</p>\n", f);
+
     /* ---- exemplaria ---- */
     per (m = ZEPHYRUM; m < xar_numerus(bib->exemplaria); m++)
     {
@@ -360,7 +461,8 @@ _paginam_scribere(
         i32             omnia_moduli;
         i32             habentia[NG_LINGUAE_MAXIMAE];
 
-        ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria, m);
+        ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria,
+                                             ordo[m]);
         omnia_moduli = ZEPHYRUM;
         per (l_i = ZEPHYRUM; l_i < linguae->numerus; l_i++)
         {
@@ -392,7 +494,10 @@ _paginam_scribere(
             perge;
         }
 
-        fputs("<h2>", f);
+        fputs("<h2 id=\"", f);
+        fprintf(f, "%.*s", (integer)ex->stirps->mensura,
+                (constans character*)ex->stirps->datum);
+        fputs("\">", f);
         _html_textum_scribere(f, *ex->stirps);
         fputs(" <span class=\"numeri\">", f);
         per (l_i = ZEPHYRUM; l_i < linguae->numerus; l_i++)
@@ -507,6 +612,7 @@ principale(
     b32                   modus_porta;
     b32                   modus_machina;
     s32                   i;
+    i32*                  ordo;
     i32                   onerata;
     i32                   lacunae;
     i32                   m;
@@ -627,6 +733,8 @@ principale(
      * copertura etiam super corpore vulnerato numeratur */
     natura_nectere(bib);
 
+    ordo = _ordo_exemplarium(bib, piscina);
+
     /* ---- tabula coperturae ---- */
 
     summa_omnia = ZEPHYRUM;
@@ -651,7 +759,8 @@ principale(
         i32             omnia_moduli;
         i32             habentia[NG_LINGUAE_MAXIMAE];
 
-        ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria, m);
+        ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria,
+                                             ordo[m]);
         omnia_moduli = ZEPHYRUM;
         per (l_i = ZEPHYRUM; l_i < linguae.numerus; l_i++)
         {
@@ -745,7 +854,7 @@ principale(
             NaturaExemplar* ex;
 
             ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria,
-                                                 m);
+                                                 ordo[m]);
             per (g_i = ZEPHYRUM;
                  g_i < xar_numerus(bib->genera_omnia); g_i++)
             {
