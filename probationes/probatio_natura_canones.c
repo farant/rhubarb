@@ -1341,6 +1341,32 @@ principale(
             CANON_ELEMENTUM_IGNOTUM, &ignota, &omnia,
             piscina, intern));
         CREDO_AEQUALIS_I32 (ignota, (i32)I);
+
+        /* SEMINA: dictionarium in censum proiectum - data generata
+         * sub grammatica generata (porta se-iudicans, spec census
+         * par. 5): vitium emissoris in UTROVIS fructu hic rubet */
+        {
+            chorda semina;
+
+            semina = filum_legere_totum(
+                         "natura/cocta/semina.census", piscina);
+            CREDO_MAIOR_I32 (semina.mensura, (i32)ZEPHYRUM);
+            CREDO_VERUM (chorda_invenire_index(semina,
+                chorda_ex_literis(
+                    "persona nomen=\"#carl_linnaeus\"",
+                    piscina)) >= ZEPHYRUM);
+
+            CREDO_VERUM (_documentum_iudicare(monolithus,
+                chorda_ut_cstr(semina, piscina),
+                CANON_ELEMENTUM_IGNOTUM, &ignota, &omnia,
+                piscina, intern));
+            /* TOLERA vulnus UNUM: quando="-312" (via_appia,
+             * vectura) - dies annos a.C.n. dicere nequit, res
+             * 01KZC7F388 APERTA (ictus tertius). Cum regula
+             * cadat et vulnus sanetur, haec assertio RUBET et
+             * toleratio deletur - id ipsum volumus. */
+            CREDO_AEQUALIS_I32 (omnia, (i32)I);
+        }
     }
 
 

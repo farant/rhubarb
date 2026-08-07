@@ -209,6 +209,10 @@ fi
 
 conferre_aut_scribere "$COCTA/individua.canon" -totum
 
+# semina: dictionarium in censum proiectum (spec census par. 2) -
+# data generata sub grammatica generata; porta se-iudicans in suita
+conferre_aut_scribere "$COCTA/semina.census" -semina
+
 if [ "$facti" -eq 0 ]; then
     echo "natura_canones: NIHIL factum" >&2
     exit 2

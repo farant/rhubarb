@@ -221,7 +221,7 @@
     </definitio>
     <valor nomen="typatio_tempus">statica</valor>
     <valor nomen="gestio_memoriae">manualis</valor>
-    <valor nomen="vita">mortua</valor>
+    <valor nomen="vita">derelicta</valor>
     <relatum nomen="auctor" ad="ken_thompson" modulus="persona"/>
     <historia>
       <eventum quando="1969" actio="ortus"/>
@@ -244,7 +244,7 @@
     <valor nomen="typatio_tempus">dynamica</valor>
     <valor nomen="typatio_vis">fortis</valor>
     <valor nomen="gestio_memoriae">collecta</valor>
-    <valor nomen="vita">mortua</valor>
+    <valor nomen="vita">derelicta</valor>
     <historia>
       <eventum quando="1987" actio="edi" nota="editio 1.0;
         inceptum ab anno circiter 1975 ut 'B' novum"/>

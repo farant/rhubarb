@@ -1194,6 +1194,282 @@ _citationes_scribere(
     }
 }
 
+/* ==================================================
+ * Semina - dictionarium in censum proiectum (spec census par. 2)
+ * ================================================== */
+
+/* signum valoris relationis in semine: petitum individuum '#',
+ * genus aut species/cultivar '.', irresolutum nudum cum querela
+ * (corpus 0 pendentia fert - via haec calcari non debet) */
+interior constans character*
+_signum_petiti(
+    NaturaBibliotheca*  bib,
+    constans chorda*    v,
+    Piscina*            piscina)
+{
+    constans character* vc;
+    i32                 i;
+
+    vc = chorda_ut_cstr(*v, piscina);
+    si (natura_genus(bib, vc))
+    {
+        redde ".";
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(bib->res_omnes); i++)
+    {
+        NaturaRes* r;
+
+        r = *(NaturaRes**)xar_obtinere(bib->res_omnes, i);
+        si (chorda_aequalis_literis(*r->titulus, vc))
+        {
+            redde _nodus_individuum_est(r->nodus) ? "#" : ".";
+        }
+    }
+    fprintf(stderr, "natura_canones: semina - petitum '%s' non "
+            "resolvitur, valor nudus emittitur\n", vc);
+    redde "";
+}
+
+/* membrum exemplaris titulo naturae (snake) invenire */
+interior NcMembrum*
+_membrum_invenire(
+    Xar*              membra,
+    constans chorda*  titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(membra); i++)
+    {
+        NcMembrum* m;
+
+        m = (NcMembrum*)xar_obtinere(membra, i);
+        si (m->titulus && chorda_aequalis(*m->titulus, *titulus))
+        {
+            redde m;
+        }
+    }
+    redde NIHIL;
+}
+
+/* chordam crudam scribere */
+interior vacuum
+_chordam_scribere(
+    FILE*             f,
+    constans chorda*  c)
+{
+    fprintf(f, "%.*s", (integer)c->mensura,
+            (constans character*)c->datum);
+}
+
+/* individuum unum ut instantiam tagi generis sui emittere */
+interior vacuum
+_semen_emittere(
+    FILE*               f,
+    NaturaBibliotheca*  bib,
+    NcEns*              e,
+    Xar*                membra,
+    Piscina*            piscina)
+{
+    character ap[NC_APPELLATIO_MAXIMA];
+    b32       liberos_habet;
+    i32       j;
+
+    fputs("\n  <", f);
+    _kebab_scribere(f, e->genus->titulus);
+    fputs(" nomen=\"#", f);
+    _chordam_scribere(f, e->titulus);
+    fputc('"', f);
+
+    /* passus I: valores formae ATTRIBUTI (ante liberos stare
+     * debent) */
+    per (j = ZEPHYRUM; j < xar_numerus(e->nodus->liberi); j++)
+    {
+        StmlNodus* vn;
+        chorda*    tv;
+        chorda     textus;
+        NcMembrum* m;
+
+        vn = *(StmlNodus**)xar_obtinere(e->nodus->liberi, j);
+        si (vn->genus != STML_NODUS_ELEMENTUM ||
+            !chorda_aequalis_literis(*vn->titulus, "valor"))
+        {
+            perge;
+        }
+        tv = stml_attributum_capere(vn, "nomen");
+        si (!tv)
+        {
+            perge;
+        }
+        m = _membrum_invenire(membra, tv);
+        si (!m || m->discrimen != NC_MEMBRUM_ATTRIBUTUM ||
+            !_appellatio_emissa(ap, (i32)magnitudo(ap),
+                                m->praefixum, m->titulus))
+        {
+            perge;
+        }
+        textus = stml_textus_normalizatus(vn, piscina);
+        fprintf(f, " %s=\"", ap);
+        si (m->origo == NC_ORIGO_RELATIO)
+        {
+            fputs(_signum_petiti(bib, &textus, piscina), f);
+        }
+        _chordam_scribere(f, &textus);
+        fputc('"', f);
+    }
+
+    /* passus II: valores formae LIBERI + historia */
+    liberos_habet = FALSUM;
+    per (j = ZEPHYRUM; j < xar_numerus(e->nodus->liberi); j++)
+    {
+        StmlNodus* vn;
+        chorda*    tv;
+        chorda     textus;
+        NcMembrum* m;
+
+        vn = *(StmlNodus**)xar_obtinere(e->nodus->liberi, j);
+        si (vn->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (chorda_aequalis_literis(*vn->titulus, "historia"))
+        {
+            i32 k;
+
+            si (!liberos_habet)
+            {
+                fputc('>', f);
+                liberos_habet = VERUM;
+            }
+            fputs("\n    <historia>", f);
+            per (k = ZEPHYRUM; k < xar_numerus(vn->liberi); k++)
+            {
+                StmlNodus* ev;
+                i32        a;
+
+                ev = *(StmlNodus**)xar_obtinere(vn->liberi, k);
+                si (ev->genus != STML_NODUS_ELEMENTUM)
+                {
+                    perge;
+                }
+                fputs("\n      <eventum", f);
+                per (a = ZEPHYRUM; a < xar_numerus(ev->attributa);
+                     a++)
+                {
+                    StmlAttributum* at;
+
+                    at = (StmlAttributum*)xar_obtinere(
+                        ev->attributa, a);
+                    fputc(' ', f);
+                    _chordam_scribere(f, at->titulus);
+                    fputs("=\"", f);
+                    _chordam_scribere(f, at->valor);
+                    fputc('"', f);
+                }
+                textus = stml_textus_normalizatus(ev, piscina);
+                si (textus.mensura > ZEPHYRUM)
+                {
+                    fputc('>', f);
+                    _chordam_scribere(f, &textus);
+                    fputs("</eventum>", f);
+                }
+                alioquin
+                {
+                    fputs("/>", f);
+                }
+            }
+            fputs("\n    </historia>", f);
+            perge;
+        }
+        si (!chorda_aequalis_literis(*vn->titulus, "valor"))
+        {
+            perge;   /* nota curatorialis etc. OMITTITUR */
+        }
+        tv = stml_attributum_capere(vn, "nomen");
+        si (!tv)
+        {
+            perge;
+        }
+        m = _membrum_invenire(membra, tv);
+        si (!m || m->discrimen != NC_MEMBRUM_LIBERUM ||
+            !_appellatio_emissa(ap, (i32)magnitudo(ap),
+                                m->praefixum, m->titulus))
+        {
+            perge;
+        }
+        si (!liberos_habet)
+        {
+            fputc('>', f);
+            liberos_habet = VERUM;
+        }
+        textus = stml_textus_normalizatus(vn, piscina);
+        fprintf(f, "\n    <%s>", ap);
+        _chordam_scribere(f, &textus);
+        fprintf(f, "</%s>", ap);
+    }
+
+    si (liberos_habet)
+    {
+        fputs("\n  </", f);
+        _kebab_scribere(f, e->genus->titulus);
+        fputs(">\n", f);
+    }
+    alioquin
+    {
+        fputs("/>\n", f);
+    }
+}
+
+b32
+_censum_seminum_scribere(
+    NaturaBibliotheca*   bib,
+    Xar*                 entia,
+    constans character*  via,
+    Piscina*             piscina)
+{
+    FILE* f;
+    i32   i;
+    i32   numerus;
+
+    f = fopen(via, "w");
+    si (!f)
+    {
+        fprintf(stderr,
+            "natura_canones: '%s' aperiri nequit\n", via);
+        redde FALSUM;
+    }
+
+    fputs("<!-- GENERATUM a natura_canones e dictionario naturae - "
+          "NOLI MANU MUTARE.\n"
+          "     Regenera: ./tools/natura_canones.sh -->\n", f);
+    fputs("<individua>\n", f);
+
+    numerus = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(entia); i++)
+    {
+        NcEns*       e;
+        NcElementum* el;
+
+        e = (NcEns*)xar_obtinere(entia, i);
+        si (!_nodus_individuum_est(e->nodus) || !e->genus)
+        {
+            perge;
+        }
+        el = _elementum_aedificare(bib, e, VERUM, NIHIL, piscina);
+        _semen_emittere(f, bib, e, el->membra, piscina);
+        numerus++;
+    }
+
+    fputs("</individua>\n", f);
+    si (fclose(f) != ZEPHYRUM)
+    {
+        fprintf(stderr,
+            "natura_canones: '%s' claudi nequit\n", via);
+        redde FALSUM;
+    }
+    fprintf(stderr, "natura_canones: semina %u emissa\n", numerus);
+    redde VERUM;
+}
+
 /* index primi octeti nulli, vel -I si nullus adest */
 interior s32
 _nullus_index(

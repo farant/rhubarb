@@ -1,0 +1,544 @@
+<!-- GENERATUM a natura_canones e dictionario naturae - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<individua>
+
+  <architectura-machinae nomen="#x86" indoles-copiae="cisc">
+    <historia>
+      <eventum quando="1978-06-08" actio="ortus">8086</eventum>
+    </historia>
+  </architectura-machinae>
+
+  <architectura-machinae nomen="#arm" indoles-copiae="risc">
+    <historia>
+      <eventum quando="1985-04-26" actio="ortus">ARM1 (apud
+        Acorn)</eventum>
+    </historia>
+  </architectura-machinae>
+
+  <architectura-machinae nomen="#riscv" indoles-copiae="risc" licentia-aperta="verum">
+    <historia>
+      <eventum quando="2010" actio="ortus">apud Berkeley</eventum>
+    </historia>
+  </architectura-machinae>
+
+  <versio-architecturae nomen="#i386" titulus="i386 (IA-32)" latitudo-verbi="32" edita="1985-10"/>
+
+  <versio-architecturae nomen="#x86_64" titulus="x86-64 (AMD64)" latitudo-verbi="64" edita="2003-04-22"/>
+
+  <versio-architecturae nomen="#armv8" titulus="ARMv8-A (AArch64)" latitudo-verbi="64" edita="2011-10-27"/>
+
+  <processorium nomen="#intel_8086" bits="16">
+    <historia>
+      <eventum quando="1978-06-08" actio="edi"/>
+    </historia>
+  </processorium>
+
+  <processorium nomen="#apple_m1" nuclei="8" bits="64">
+    <historia>
+      <eventum quando="2020-11-10" actio="edi"/>
+    </historia>
+  </processorium>
+
+  <cliens-cli nomen="#curl"/>
+
+  <moneta nomen="#euro" codex="EUR" symbolum="€">
+    <historia>
+      <eventum quando="1999-01-01">rationibus introducta</eventum>
+      <eventum quando="2002-01-01">nummis et chartis</eventum>
+    </historia>
+  </moneta>
+
+  <moneta nomen="#dollarium_americanum" codex="USD" symbolum="$"/>
+
+  <status nomen="#errno" durabilitas="ephemera"/>
+
+  <status nomen="#semen_rand" durabilitas="ephemera"/>
+
+  <status nomen="#index_strtok" durabilitas="ephemera"/>
+
+  <functio nomen="#printf" reddit-valorem="verum" parametra-varia="verum"/>
+
+  <functio nomen="#scanf" reddit-valorem="verum" parametra-varia="verum"/>
+
+  <functio nomen="#memcpy" reddit-valorem="verum"/>
+
+  <functio nomen="#strtok" reddit-valorem="verum"/>
+
+  <functio nomen="#rand" reddit-valorem="verum"/>
+
+  <functio nomen="#malloc" reddit-valorem="verum"/>
+
+  <functio-pura nomen="#abs" reddit-valorem="verum"/>
+
+  <functio-pura nomen="#strlen" reddit-valorem="verum"/>
+
+  <constans nomen="#null"/>
+
+  <constans-numerica nomen="#pi"/>
+
+  <constans-numerica nomen="#eof"/>
+
+  <bibliotheca nomen="#libc"/>
+
+  <bibliotheca nomen="#sqlite"/>
+
+  <bibliotheca nomen="#zlib"/>
+
+  <instrumentum-aedificationis nomen="#make" incrementale="verum" graphum-unde="declaratum">
+    <historia>
+      <eventum quando="1976">natum apud Bell Labs</eventum>
+    </historia>
+  </instrumentum-aedificationis>
+
+  <instrumentum-aedificationis nomen="#aedilis" graphum-unde="derivatum"/>
+
+  <lingua-programmandi nomen="#c" typatio-tempus="statica" typatio-vis="debilis" gestio-memoriae="manualis" status-vita="vigens">
+    <paradigmata>imperativum</paradigmata>
+    <historia>
+      <eventum quando="1972" actio="ortus"/>
+      <eventum quando="1978" actio="edi">K&R C (liber ut
+        norma de facto)</eventum>
+      <eventum quando="1990" actio="normari">ISO/IEC
+        9899:1990</eventum>
+    </historia>
+  </lingua-programmandi>
+
+  <lingua-programmandi nomen="#python" typatio-tempus="dynamica" typatio-vis="fortis" gestio-memoriae="collecta" status-vita="vigens">
+    <paradigmata>imperativum</paradigmata>
+    <paradigmata>obiectivum</paradigmata>
+    <paradigmata>functionale</paradigmata>
+    <historia>
+      <eventum quando="1991" actio="ortus"/>
+      <eventum quando="2008-12-03" actio="edi">Python 3 -
+        fractura compatibilitatis consulta</eventum>
+    </historia>
+  </lingua-programmandi>
+
+  <lingua-programmandi nomen="#rust" typatio-tempus="statica" typatio-vis="fortis" gestio-memoriae="per_possessionem" status-vita="vigens">
+    <paradigmata>imperativum</paradigmata>
+    <paradigmata>functionale</paradigmata>
+    <historia>
+      <eventum quando="2010" actio="ortus" nota="publicatio; inceptum privatum 2006"/>
+      <eventum quando="2015-05-15" actio="edi">1.0 -
+        stabilitas promissa</eventum>
+    </historia>
+  </lingua-programmandi>
+
+  <lingua-programmandi nomen="#b" typatio-tempus="statica" gestio-memoriae="manualis" status-vita="derelicta">
+    <historia>
+      <eventum quando="1969" actio="ortus"/>
+    </historia>
+  </lingua-programmandi>
+
+  <lingua-programmandi nomen="#abc" typatio-tempus="dynamica" typatio-vis="fortis" gestio-memoriae="collecta" status-vita="derelicta">
+    <historia>
+      <eventum quando="1987" actio="edi" nota="editio 1.0;
+        inceptum ab anno circiter 1975 ut 'B' novum"/>
+    </historia>
+  </lingua-programmandi>
+
+  <lingua-iussuum nomen="#bash" typatio-tempus="dynamica" typatio-vis="debilis" gestio-memoriae="collecta" status-vita="vigens">
+    <paradigmata>imperativum</paradigmata>
+    <historia>
+      <eventum quando="1989-06-08" actio="ortus"/>
+    </historia>
+  </lingua-iussuum>
+
+  <versio-linguae nomen="#c89" titulus="C89 (ANSI C / C90)" edita="1990-12-15"/>
+
+  <versio-linguae nomen="#c99" titulus="C99" edita="1999-12-01"/>
+
+  <versio-linguae nomen="#c11" titulus="C11" edita="2011-12-08"/>
+
+  <implementatio-linguae nomen="#gcc" modus-exsecutionis="compilans">
+    <historia>
+      <eventum quando="1987-03-22" actio="ortus"/>
+    </historia>
+  </implementatio-linguae>
+
+  <implementatio-linguae nomen="#clang" modus-exsecutionis="compilans">
+    <historia>
+      <eventum quando="2007" actio="ortus"/>
+    </historia>
+  </implementatio-linguae>
+
+  <implementatio-linguae nomen="#cpython" modus-exsecutionis="mixtus"/>
+
+  <implementatio-linguae nomen="#fil_c" modus-exsecutionis="compilans" tutela-memoriae-addita="verum"/>
+
+  <implementatio-linguae nomen="#officina" modus-exsecutionis="interpretans"/>
+
+  <verbum-clavis nomen="#static"/>
+
+  <verbum-clavis nomen="#const"/>
+
+  <verbum-clavis nomen="#goto"/>
+
+  <verbum-clavis nomen="#restrict"/>
+
+  <unitas-mensurae nomen="#gramma" symbolum="g"/>
+
+  <unitas-mensurae nomen="#kilogramma" symbolum="kg" fundamentalis="verum">
+    <historia>
+      <eventum quando="1889">prototypum ex platino-iridio in
+        BIPM depositum - unitas quae RES erat</eventum>
+      <eventum quando="2019-05-20">per constantem Planck
+        redefinitum - unitas quae LEX facta est; artefactum
+        physicum deposuit</eventum>
+    </historia>
+  </unitas-mensurae>
+
+  <unitas-mensurae nomen="#metrum" symbolum="m" fundamentalis="verum">
+    <historia>
+      <eventum quando="1799">decima milionesima pars quadrantis
+        meridiani - mensura ex terra ipsa sumpta</eventum>
+      <eventum quando="1983">per celeritatem lucis definitum
+        (1/299792458 secundi)</eventum>
+    </historia>
+  </unitas-mensurae>
+
+  <unitas-mensurae nomen="#secundum" symbolum="s" fundamentalis="verum"/>
+
+  <unitas-mensurae nomen="#minutum" symbolum="min"/>
+
+  <unitas-mensurae nomen="#gradus_celsius" symbolum="°C"/>
+
+  <norma nomen="#iso_9899_1990" index="ISO/IEC 9899:1990" titulus="Programming languages - C" publicata="1990-12-15" status-vigor="substituta"/>
+
+  <norma nomen="#iso_9899_1999" index="ISO/IEC 9899:1999" titulus="Programming languages - C" publicata="1999-12-01" status-vigor="substituta"/>
+
+  <norma nomen="#posix_1" index="IEEE Std 1003.1" titulus="Portable Operating System Interface" publicata="1988" status-vigor="vigens"/>
+
+  <tractatus nomen="#tractatus_gandavensis" multilateralis="falsum">
+    <historia>
+      <eventum quando="1814-12-24" actio="signari">a legatis
+        Gandavi signatus - textus fixus, nemo obligatus</eventum>
+      <eventum quando="1815-02-17" actio="ratificari">ratificationibus
+        permutatis, bellum vere finitum</eventum>
+    </historia>
+  </tractatus>
+
+  <opus-scriptum nomen="#moby_dick" titulus-originalis="Moby-Dick; or, The
+      Whale" lingua-originalis="anglica" status-compositio="perfecta">
+    <materia>cetorum venatio</materia>
+    <materia>obsessio</materia>
+    <historia>
+      <eventum quando="1851" actio="edi">editiones DUAE
+        divergentes eodem anno</eventum>
+    </historia>
+  </opus-scriptum>
+
+  <opus-scriptum nomen="#summa_theologiae" titulus-originalis="Summa Theologiae" lingua-originalis="latina" status-compositio="imperfecta_relicta">
+    <materia>theologia</materia>
+    <historia>
+      <eventum quando="1265" actio="componi">inceptum</eventum>
+      <eventum quando="1273-12-06" actio="deseri">scribere desiit ("omnia quae scripsi videntur mihi
+palea")</eventum>
+    </historia>
+  </opus-scriptum>
+
+  <opus-scriptum nomen="#abusus_linguae" titulus-originalis="Missbrauch der Sprache,
+      Missbrauch der Macht" lingua-originalis="germanica" status-compositio="perfecta">
+    <materia>lingua</materia>
+    <materia>potestas</materia>
+    <materia>veritas</materia>
+  </opus-scriptum>
+
+  <opus-scriptum nomen="#systema_naturae" titulus-originalis="Systema Naturae" lingua-originalis="latina" status-compositio="perfecta">
+    <materia>taxinomia</materia>
+  </opus-scriptum>
+
+  <opus-scriptum nomen="#species_plantarum" titulus-originalis="Species Plantarum" lingua-originalis="latina">
+    <materia>botanica</materia>
+  </opus-scriptum>
+
+  <expressio nomen="#abusus_linguae_germanice" lingua="germanica" genus-expressionis="originalis"/>
+
+  <expressio nomen="#abusus_linguae_anglice" lingua="anglica" genus-expressionis="translata"/>
+
+  <editio nomen="#moby_dick_londinensis_1851" paginae="927" publicata="1851-10-18" forma-corporis="codex_duro_tegmine"/>
+
+  <editio nomen="#moby_dick_novi_eboraci_1851" publicata="1851-11-14" forma-corporis="codex_duro_tegmine"/>
+
+  <editio nomen="#systema_naturae_editio_decima" publicata="1758"/>
+
+  <organizatio nomen="#debian_project" condita="1993-08-16">
+    <nomina>The Debian Project</nomina>
+    <historia>
+      <eventum quando="1993-08-16" actio="condi" nota="ab Ian Murdock; nomen ex 'Deb' (uxor) + 'Ian' -
+              etymologia vera, non fabula"/>
+    </historia>
+  </organizatio>
+
+  <organizatio nomen="#agentia_isbn">
+    <nomina>International ISBN Agency</nomina>
+  </organizatio>
+
+  <corpus-normans nomen="#iso" condita="1947-02-23" sedes="Geneva">
+    <nomina>International Organization for
+      Standardization</nomina>
+    <nomina>ISO</nomina>
+  </corpus-normans>
+
+  <corpus-normans nomen="#iec" condita="1906" sedes="Geneva">
+    <nomina>International Electrotechnical
+      Commission</nomina>
+    <nomina>IEC</nomina>
+  </corpus-normans>
+
+  <corpus-normans nomen="#ieee" condita="1963-01-01">
+    <nomina>Institute of Electrical and
+      Electronics Engineers</nomina>
+    <nomina>IEEE</nomina>
+  </corpus-normans>
+
+  <corpus-normans nomen="#ansi" condita="1918-10-19">
+    <nomina>American National Standards
+      Institute</nomina>
+    <nomina>ANSI</nomina>
+  </corpus-normans>
+
+  <societas nomen="#intel" condita="1968-07-18">
+    <nomina>Intel Corporation</nomina>
+  </societas>
+
+  <societas nomen="#amd" condita="1969-05-01">
+    <nomina>Advanced Micro Devices</nomina>
+    <nomina>AMD</nomina>
+  </societas>
+
+  <societas nomen="#arm_ltd" condita="1990-11-27">
+    <nomina>Arm Ltd</nomina>
+  </societas>
+
+  <societas nomen="#canonical" condita="2004-03-05">
+    <nomina>Canonical Ltd</nomina>
+  </societas>
+
+  <societas nomen="#apple" condita="1976-04-01">
+    <nomina>Apple Inc.</nomina>
+  </societas>
+
+  <societas nomen="#microsoft" condita="1975-04-04">
+    <nomina>Microsoft Corporation</nomina>
+  </societas>
+
+  <societas nomen="#bell_labs" condita="1925-01-01">
+    <nomina>Bell Telephone Laboratories</nomina>
+  </societas>
+
+  <societas nomen="#att" condita="1885-03-03">
+    <nomina>AT&T</nomina>
+    <historia>
+      <eventum quando="1984-01-01" actio="dividi" certitudo="fides" fons="corpus">divisio per sententiam
+        (consent decree): societates regionales separatae -
+        actus iuridicus qui societatem maximam mundi in octo
+        secuit</eventum>
+    </historia>
+  </societas>
+
+  <persona nomen="#dennis_ritchie" natus="1941-09-09" mortuus="2011-10-12">
+    <nomina>Dennis MacAlistair Ritchie</nomina>
+    <historia>
+      <eventum quando="1972" actio="creare">lingua C</eventum>
+      <eventum quando="1978" actio="creare">liber "The C
+        Programming Language" (cum Kernighan)</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#thomas_aquinas" natus="1225" mortuus="1274-03-07">
+    <nomina>Thomas de Aquino</nomina>
+    <historia>
+      <eventum quando="1265" actio="creare">Summa Theologiae
+        (inceptum; imperfecta relicta)</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#carl_linnaeus" natus="1707-05-23" mortuus="1778-01-10">
+    <nomina>Carl Linnaeus</nomina>
+    <nomina>Carolus Linnaeus</nomina>
+    <historia>
+      <eventum quando="1735" actio="creare">Systema Naturae</eventum>
+      <eventum quando="1753" actio="creare">Species
+        Plantarum</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#josef_pieper" natus="1904-05-04" mortuus="1997-11-06">
+    <nomina>Josef Pieper</nomina>
+    <historia>
+      <eventum quando="1974" actio="creare">Missbrauch der
+        Sprache, Missbrauch der Macht</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#herman_melville" natus="1819-08-01" mortuus="1891-09-28">
+    <nomina>Herman Melville</nomina>
+    <historia>
+      <eventum quando="1851" actio="creare">Moby-Dick</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#ken_thompson" natus="1943-02-04">
+    <nomina>Kenneth Lane Thompson</nomina>
+    <historia>
+      <eventum quando="1969" actio="creare">Unix (cum
+        Ritchie)</eventum>
+      <eventum quando="1969" actio="creare">lingua B</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#linus_torvalds" natus="1969-12-28">
+    <nomina>Linus Benedict Torvalds</nomina>
+    <historia>
+      <eventum quando="1991" actio="creare">nucleus Linux</eventum>
+      <eventum quando="2005" actio="creare">git</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#guido_van_rossum" natus="1956-01-31">
+    <nomina>Guido van Rossum</nomina>
+    <historia>
+      <eventum quando="1991" actio="creare">lingua Python</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#graydon_hoare">
+    <nomina>Graydon Hoare</nomina>
+    <historia>
+      <eventum quando="2006" actio="creare" certitudo="fides" fons="corpus">lingua Rust (inceptum privatum; publicum
+        2010)</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#brian_fox" natus="1959">
+    <nomina>Brian Jhan Fox</nomina>
+    <historia>
+      <eventum quando="1989" actio="creare">bash</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#edsger_dijkstra" natus="1930-05-11" mortuus="2002-08-06">
+    <nomina>Edsger Wybe Dijkstra</nomina>
+    <historia>
+      <eventum quando="1968" actio="creare">epistula "Go To
+        Statement Considered Harmful"</eventum>
+      <eventum quando="1965" actio="creare">semaphora</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#bertrand_meyer" natus="1950-11-21">
+    <nomina>Bertrand Meyer</nomina>
+    <historia>
+      <eventum quando="1985" actio="creare">lingua
+        Eiffel</eventum>
+      <eventum quando="1988" actio="creare">liber
+        "Object-Oriented Software Construction" (pactum ut
+        disciplina)</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#luca_pacioli" natus="1447" mortuus="1517-06-19">
+    <nomina>Luca Bartolomeo de Pacioli</nomina>
+    <historia>
+      <eventum quando="1494" actio="creare">Summa de arithmetica,
+        geometria, proportioni et proportionalita - ratio duplex
+        descripta</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="#duns_scotus" natus="1266" mortuus="1308-11-08">
+    <nomina>Ioannes Duns Scotus</nomina>
+    <historia>
+      <eventum quando="1300" actio="creare">Ordinatio
+        (inceptum; imperfecta relicta)</eventum>
+    </historia>
+  </persona>
+
+  <substantia-chemica nomen="#amoxicillinum" formula="C16H19N3O5S"/>
+
+  <substantia-chemica nomen="#warfarinum" formula="C19H16O4"/>
+
+  <systema-operativum nomen="#windows" genus-nuclei="hybridus" fons-apertus="falsum">
+    <historia>
+      <eventum quando="1985-11-20" actio="ortus">Windows 1.0
+        (super DOS)</eventum>
+      <eventum quando="1993-07-27" actio="edi">NT 3.1 - linea
+        nova quae vetera devoravit</eventum>
+    </historia>
+  </systema-operativum>
+
+  <systema-operativum nomen="#vms" genus-nuclei="monolithicus" fons-apertus="falsum">
+    <historia>
+      <eventum quando="1977-10-25" actio="ortus">VAX/VMS 1.0
+        cum machina VAX-11/780 una edita</eventum>
+    </historia>
+  </systema-operativum>
+
+  <systema-unixiforme nomen="#unix_bell_labs" genus-nuclei="monolithicus">
+    <historia>
+      <eventum quando="1969" actio="ortus">in PDP-7, apud Bell
+        Labs</eventum>
+      <eventum quando="1973" actio="edi">rescriptum in C - lingua
+        et systema se invicem probaverunt</eventum>
+    </historia>
+  </systema-unixiforme>
+
+  <systema-unixiforme nomen="#macos" genus-nuclei="hybridus" fons-apertus="falsum">
+    <historia>
+      <eventum quando="2001-03-24" actio="ortus">Mac OS X 10.0
+        (linea NeXTSTEP, non linea Mac OS 9)</eventum>
+    </historia>
+  </systema-unixiforme>
+
+  <systema-unixiforme nomen="#linux" genus-nuclei="monolithicus" fons-apertus="verum">
+    <historia>
+      <eventum quando="1991-08-25" actio="ortus">nuntius in
+        comp.os.minix: "just a hobby, won't be big"</eventum>
+    </historia>
+  </systema-unixiforme>
+
+  <distributio-systematis nomen="#debian" gestor-fasciculorum="apt" cadentia-editionum="statuta">
+    <historia>
+      <eventum quando="1993-08-16" actio="ortus"/>
+    </historia>
+  </distributio-systematis>
+
+  <distributio-systematis nomen="#ubuntu" gestor-fasciculorum="apt" cadentia-editionum="statuta">
+    <historia>
+      <eventum quando="2004-10-20" actio="ortus"/>
+    </historia>
+  </distributio-systematis>
+
+  <distributio-systematis nomen="#arch" gestor-fasciculorum="pacman" cadentia-editionum="volvens">
+    <historia>
+      <eventum quando="2002-03-11" actio="ortus"/>
+    </historia>
+  </distributio-systematis>
+
+  <versio-systematis nomen="#macos_13_ventura" titulus="macOS 13 Ventura" edita="2022-10-24"/>
+
+  <versio-systematis nomen="#macos_14_sonoma" titulus="macOS 14 Sonoma (Darwin 23)" edita="2023-09-26"/>
+
+  <calendarium nomen="#calendarium_gregorianum">
+    <historia>
+      <eventum quando="1582-10-15">a Gregorio XIII introductum:
+        dies decem OMISSI (4 Oct sequebatur 15 Oct) - momenta
+        quae numquam fuerunt, in historia vera</eventum>
+    </historia>
+  </calendarium>
+
+  <calendarium nomen="#calendarium_liturgicum"/>
+
+  <via nomen="#via_appia" publica="verum">
+    <historia>
+      <eventum quando="-312" certitudo="fides" fons="corpus">ab Appio Claudio Caeco incepta - "regina viarum"</eventum>
+    </historia>
+  </via>
+
+  <via nomen="#canalis_suesianus">
+    <historia>
+      <eventum quando="1869-11-17" certitudo="fides" fons="corpus">apertus - via facta ubi terra erat</eventum>
+    </historia>
+  </via>
+</individua>

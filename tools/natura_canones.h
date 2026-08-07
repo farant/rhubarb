@@ -124,4 +124,50 @@ _canonem_emittere(
     constans character*  fons,
     constans character*  praefatio);
 
+/* census relationum - NUMERI IN CANONEM IPSUM SCRIBUNTUR.
+ *
+ * Non in commentario fixi: corpus crescit, et numerus fixus
+ * mentiretur eo ipso momento quo quis exemplar addit. Canon
+ * generatus de SE dicat quantum vere examinet. SEDES numerantur
+ * (membra huius canonis), non declarationes generum. */
+nomen structura {
+    i32  omnes;
+    i32  citatae;
+    i32  apertae;
+    i32  multiplices;
+    i32  ignotae;
+} NcCensusRelationum;
+
+/* exemplar elementi ex ente aedificare (plicatio hereditate iam
+ * soluta) - definitio in natura_canones.c; emissio (semina) per
+ * individuum vocat ut membra pro appellationibus habeat */
+NcElementum*
+_elementum_aedificare(
+    NaturaBibliotheca*   bib,
+    NcEns*               ens,
+    b32                  monolithus,
+    NcCensusRelationum*  census,
+    Piscina*             piscina);
+
+/* an nodus fontis individuum sit (spec census par. 1: praedicabile
+ * non est, tag non gignit) - communis inter iudicium
+ * (natura_canones.c) et semina (emissio) */
+b32
+_nodus_individuum_est(
+    constans StmlNodus*  n);
+
+/* censum seminum scribere (spec census par. 2): individua
+ * dictionarii ut DATA - instantiae tagorum generum suorum in
+ * documento .census generato. Valores NODI PROPRII soli (hereditata
+ * per ordinarius= tagi veniunt); relationes signum ferunt ('#' si
+ * petitum individuum, '.' si genus/species); historia subarbor
+ * transcribitur (textus normalizatus); nota curatorialis OMITTITUR.
+ * Redde FALSUM ut _canonem_emittere: nihil scriptum valet. */
+b32
+_censum_seminum_scribere(
+    NaturaBibliotheca*   bib,
+    Xar*                 entia,
+    constans character*  via,
+    Piscina*             piscina);
+
 #endif /* NATURA_CANONES_H */

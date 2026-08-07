@@ -110,22 +110,8 @@ nomen enumeratio {
                              * NIHIL est) */
 } NcCitatioStatus;
 
-/* census relationum - NUMERI IN CANONEM IPSUM SCRIBUNTUR.
- *
- * Non hic in commentario fixi: corpus crescit, et numerus fixus
- * mentiretur eo ipso momento quo quis exemplar addit. Canon
- * generatus de SE dicat quantum vere examinet.
- *
- * SEDES numerantur (membra huius canonis), non declarationes
- * generum: res apparatum generis sui hereditant, unde numerus
- * sedium maior est. Sedes autem sunt quae in canone apparent. */
-nomen structura {
-    i32  omnes;
-    i32  citatae;
-    i32  apertae;
-    i32  multiplices;
-    i32  ignotae;
-} NcCensusRelationum;
+/* NcCensusRelationum in natura_canones.h migravit (2026-08-08):
+ * prototypum _elementum_aedificare ibi eum nominat */
 
 interior b32       _extensionem_habet(constans chorda* t);
 interior vacuum    _stirpem_scribere(constans chorda* t, character* ex,
@@ -163,7 +149,6 @@ interior vacuum    _valores_applicare(NcElementum* el, NcEns* ens,
 interior constans character* _cstr_tutum(constans chorda* c,
                                      constans character* unde,
                                      Piscina* piscina);
-interior b32       _nodus_individuum_est(constans StmlNodus* n);
 interior vacuum    _titulum_semel_addere(Xar* tituli, chorda* t);
 interior vacuum    _genera_clausurae_colligere(NaturaGenus* g,
                                                Xar* genera);
@@ -188,11 +173,7 @@ interior vacuum    _apparatum_plicare(NaturaBibliotheca* bib,
                                       constans character* modulus_cstr,
                                       NcCensusRelationum* census,
                                       Piscina* piscina);
-interior NcElementum* _elementum_aedificare(NaturaBibliotheca* bib,
-                                            NcEns* ens,
-                                            b32 monolithus,
-                                            NcCensusRelationum* census,
-                                            Piscina* piscina);
+/* prototypum in natura_canones.h - emissio (semina) quoque vocat */
 interior chorda    _kebab_chorda(constans chorda* t, Piscina* piscina);
 interior i32       _nomina_gemina_numerare(Xar* entia,
                                            Piscina* piscina);
@@ -925,8 +906,9 @@ _cstr_tutum(
 
 /* an nodus fontis individuum sit - individuum tags NON gignit
  * (spec census par. 1: praedicabile non est; individuum de nullo
- * praedicatur). Species et cultivar genera sunt et tags manent. */
-interior b32
+ * praedicatur). Species et cultivar genera sunt et tags manent.
+ * Non interior: emissio (semina) eodem discrimine utitur. */
+b32
 _nodus_individuum_est(
     constans StmlNodus*  n)
 {
@@ -1372,7 +1354,7 @@ _apparatum_plicare(
  * ligamina aequa vincit et 'maxime proprium primum' servatur.
  * Valores utramque catenam sequuntur eodem ordine, ne membrum ab
  * altera hereditatum praestitutum suum tacite amittat. */
-interior NcElementum*
+NcElementum*
 _elementum_aedificare(
     NaturaBibliotheca*   bib,
     NcEns*               ens,
@@ -1718,6 +1700,7 @@ principale(
     constans character* ad;
     b32                 modus_index;
     b32                 modus_totum;
+    b32                 modus_semina;
     i32                 vulnera;
     s32                 i;
 
@@ -1727,6 +1710,7 @@ principale(
     ad           = NIHIL;
     modus_index  = FALSUM;
     modus_totum  = FALSUM;
+    modus_semina = FALSUM;
     vulnera      = ZEPHYRUM;
 
     per (i = I; i < numerus; i++)
@@ -1738,6 +1722,10 @@ principale(
         alioquin si (strcmp(argumenta[i], "-totum") == ZEPHYRUM)
         {
             modus_totum = VERUM;
+        }
+        alioquin si (strcmp(argumenta[i], "-semina") == ZEPHYRUM)
+        {
+            modus_semina = VERUM;
         }
         alioquin si (strcmp(argumenta[i], "-inspicere") == ZEPHYRUM &&
                      i + I < numerus)
@@ -1764,7 +1752,7 @@ principale(
             fprintf(stderr,
                 "usus: natura_canones [-index] [-inspicere GENUS] "
                 "[-modulus NOMEN -ad VIA] [-totum -ad VIA] "
-                "[-radix DIR]\n");
+                "[-semina -ad VIA] [-radix DIR]\n");
             redde II;
         }
     }
@@ -1782,7 +1770,8 @@ principale(
     /* par -modulus/-ad INTEGRUM poscitur: '-modulus planta' solum
      * canonem in nihilum scriberet, quod successus VIDERETUR.
      * -totum eadem ratione -ad poscit. */
-    si ((modulus != NIHIL) != (ad != NIHIL) && !modus_totum)
+    si ((modulus != NIHIL) != (ad != NIHIL) && !modus_totum &&
+        !modus_semina)
     {
         fprintf(stderr,
             "natura_canones: -modulus et -ad simul dari debent\n");
@@ -1791,6 +1780,17 @@ principale(
     si (modus_totum && !ad)
     {
         fprintf(stderr, "natura_canones: -totum -ad VIA poscit\n");
+        redde II;
+    }
+    si (modus_semina && (modus_totum || modulus))
+    {
+        fprintf(stderr,
+            "natura_canones: -semina solum stat (-ad VIA)\n");
+        redde II;
+    }
+    si (modus_semina && !ad)
+    {
+        fprintf(stderr, "natura_canones: -semina -ad VIA poscit\n");
         redde II;
     }
 
@@ -1873,6 +1873,15 @@ principale(
     si (modus_totum)
     {
         si (!_canonem_totum_scribere(bib, entia, ad, piscina))
+        {
+            redde II;
+        }
+        redde ZEPHYRUM;
+    }
+
+    si (modus_semina)
+    {
+        si (!_censum_seminum_scribere(bib, entia, ad, piscina))
         {
             redde II;
         }
