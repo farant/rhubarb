@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e corporalia - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="corporalia" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="res-corporea"/>
+    <liberum nomen="artefactum"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="instrumentum"/>
+    <liberum nomen="res-sacra"/>
+    <liberum nomen="damnum"/>
+    <liberum nomen="vivens"/>
+    <liberum nomen="cibus"/>
+    <liberum nomen="res-sacra-immobilis"/>
+    <liberum nomen="res-sacra-mobilis"/>
+    <liberum nomen="reliquiae"/>
+    <liberum nomen="fractura"/>
+    <liberum nomen="corruptio"/>
+    <liberum nomen="contaminatio"/>
+  </elementum>
+
+  <elementum nomen="res-corporea">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="res-corporea">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="artefactum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="factum-per" genus="nomen"/>
+    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="artefactum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="artefactum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="artefactum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="materia">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quantitas-praesens" genus="textus"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="ingreditur"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="ingreditur" intra="materia">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="materia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="instrumentum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="capacitas" genus="textus"/>
+    <attributum nomen="status-usus" genus="electio">
+      <optio>otiosum</optio>
+      <optio>in_usu</optio>
+      <optio>in_reparatione</optio>
+      <optio>fractum</optio>
+    </attributum>
+    <attributum nomen="factum-per" genus="nomen"/>
+    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="instrumentum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="instrumentum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="instrumentum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="res-sacra">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="alienabilis" genus="veritas"/>
+    <attributum nomen="status-dedicatio" genus="electio">
+      <optio>profana</optio>
+      <optio>sacra</optio>
+      <optio>violata</optio>
+      <optio>reducta</optio>
+    </attributum>
+    <attributum nomen="consecrata-per" genus="nomen"/>
+    <attributum nomen="custoditur-ab" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="res-sacra">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="damnum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>totalis</optio>
+    </attributum>
+    <attributum nomen="reparabile" genus="veritas"/>
+    <attributum nomen="status-integritas" genus="electio">
+      <optio>integrum</optio>
+      <optio>damnatum</optio>
+      <optio>refectum</optio>
+      <optio>perditum</optio>
+    </attributum>
+    <attributum nomen="affligit" genus="nomen"/>
+    <attributum nomen="illatum-per" genus="nomen"/>
+    <attributum nomen="praevisum-ut" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="damnum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="vivens">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="anima" genus="electio">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>vivum</optio>
+      <optio>mortuum</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="generat" intra="vivens">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="vivens">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="vivens">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="cibus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="factum-per" genus="nomen"/>
+    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="cibus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="cibus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="cibus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="res-sacra-immobilis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="alienabilis" genus="veritas"/>
+    <attributum nomen="status-dedicatio" genus="electio">
+      <optio>profana</optio>
+      <optio>sacra</optio>
+      <optio>violata</optio>
+      <optio>reducta</optio>
+    </attributum>
+    <attributum nomen="consecrata-per" genus="nomen"/>
+    <attributum nomen="custoditur-ab" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="res-sacra-immobilis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="res-sacra-mobilis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="alienabilis" genus="veritas"/>
+    <attributum nomen="status-dedicatio" genus="electio">
+      <optio>profana</optio>
+      <optio>sacra</optio>
+      <optio>violata</optio>
+      <optio>reducta</optio>
+    </attributum>
+    <attributum nomen="consecrata-per" genus="nomen"/>
+    <attributum nomen="custoditur-ab" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="res-sacra-mobilis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="reliquiae">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="alienabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="status-dedicatio" genus="electio">
+      <optio>profana</optio>
+      <optio>sacra</optio>
+      <optio>violata</optio>
+      <optio>reducta</optio>
+    </attributum>
+    <attributum nomen="consecrata-per" genus="nomen"/>
+    <attributum nomen="custoditur-ab" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="reliquiae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fractura">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>totalis</optio>
+    </attributum>
+    <attributum nomen="reparabile" genus="veritas"/>
+    <attributum nomen="status-integritas" genus="electio">
+      <optio>integrum</optio>
+      <optio>damnatum</optio>
+      <optio>refectum</optio>
+      <optio>perditum</optio>
+    </attributum>
+    <attributum nomen="affligit" genus="nomen"/>
+    <attributum nomen="illatum-per" genus="nomen"/>
+    <attributum nomen="praevisum-ut" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="fractura">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="corruptio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>totalis</optio>
+    </attributum>
+    <attributum nomen="reparabile" genus="veritas"/>
+    <attributum nomen="status-integritas" genus="electio">
+      <optio>integrum</optio>
+      <optio>damnatum</optio>
+      <optio>refectum</optio>
+      <optio>perditum</optio>
+    </attributum>
+    <attributum nomen="affligit" genus="nomen"/>
+    <attributum nomen="illatum-per" genus="nomen"/>
+    <attributum nomen="praevisum-ut" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="corruptio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="contaminatio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>totalis</optio>
+    </attributum>
+    <attributum nomen="reparabile" genus="veritas"/>
+    <attributum nomen="status-integritas" genus="electio">
+      <optio>integrum</optio>
+      <optio>damnatum</optio>
+      <optio>refectum</optio>
+      <optio>perditum</optio>
+    </attributum>
+    <attributum nomen="affligit" genus="nomen"/>
+    <attributum nomen="illatum-per" genus="nomen"/>
+    <attributum nomen="praevisum-ut" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="contaminatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="res-corporea artefactum materia instrumentum res-sacra damnum
+           vivens cibus res-sacra-immobilis res-sacra-mobilis reliquiae fractura
+           corruptio contaminatio"/>
+
+</canon>

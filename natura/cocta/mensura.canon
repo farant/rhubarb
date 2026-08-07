@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e mensura - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="mensura" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="magnitudo-mensurabilis"/>
+    <liberum nomen="unitas-mensurae"/>
+    <liberum nomen="quantitas"/>
+    <liberum nomen="incertitudo"/>
+    <liberum nomen="instrumentum-mensurae"/>
+    <liberum nomen="longitudo"/>
+    <liberum nomen="massa"/>
+    <liberum nomen="tempus-intervallum"/>
+    <liberum nomen="temperatura"/>
+    <liberum nomen="capacitas"/>
+    <liberum nomen="numerositas"/>
+    <liberum nomen="gramma"/>
+    <liberum nomen="kilogramma"/>
+    <liberum nomen="metrum"/>
+    <liberum nomen="secundum"/>
+    <liberum nomen="minutum"/>
+    <liberum nomen="gradus-celsius"/>
+  </elementum>
+
+  <elementum nomen="magnitudo-mensurabilis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="magnitudo-mensurabilis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="magnitudo-mensurabilis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="unitas-mensurae">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="symbolum" genus="textus"/>
+    <attributum nomen="fundamentalis" genus="veritas"/>
+    <attributum nomen="mensurat" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="custodita-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="unitas-mensurae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="quantitas">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="valor" genus="numerus"/>
+    <attributum nomen="minimum" genus="numerus"/>
+    <attributum nomen="maximum" genus="numerus"/>
+    <attributum nomen="praecisio" genus="numerus"/>
+    <attributum nomen="in-unitate" genus="nomen"/>
+    <attributum nomen="cum-incertitudine" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="quantitas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="incertitudo">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="magnitudo" genus="numerus"/>
+    <attributum nomen="factor-tegumenti" genus="numerus"/>
+    <attributum nomen="fiducia-stata" genus="numerus"/>
+    <attributum nomen="genus-aestimationis" genus="electio">
+      <optio>typus_a</optio>
+      <optio>typus_b</optio>
+    </attributum>
+    <attributum nomen="de-quantitate" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="componitur-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="componitur-ex" intra="incertitudo">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="incertitudo">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="instrumentum-mensurae">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="error-systematicus" genus="numerus"/>
+    <attributum nomen="dispersio" genus="numerus"/>
+    <attributum nomen="resolutio" genus="numerus"/>
+    <attributum nomen="intervallum-calibrationis" genus="textus"/>
+    <attributum nomen="status-fides" genus="electio">
+      <optio>calibratum</optio>
+      <optio>in_usu</optio>
+      <optio>expiratum</optio>
+      <optio>extra_tolerantiam</optio>
+    </attributum>
+    <attributum nomen="calibratum-contra" genus="nomen"/>
+    <attributum nomen="attestatur-per" genus="nomen"/>
+    <attributum nomen="capacitas" genus="textus"/>
+    <attributum nomen="status-usus" genus="electio">
+      <optio>otiosum</optio>
+      <optio>in_usu</optio>
+      <optio>in_reparatione</optio>
+      <optio>fractum</optio>
+    </attributum>
+    <attributum nomen="factum-per" genus="nomen"/>
+    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="instrumentum-mensurae">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="instrumentum-mensurae">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="instrumentum-mensurae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="longitudo">
+    <attributum nomen="nomen" genus="compositum"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="longitudo">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="longitudo">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="massa">
+    <attributum nomen="nomen" genus="compositum"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="massa">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="massa">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="tempus-intervallum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="tempus-intervallum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="tempus-intervallum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="temperatura">
+    <attributum nomen="nomen" genus="compositum"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="temperatura">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="temperatura">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="capacitas">
+    <attributum nomen="nomen" genus="compositum"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="capacitas">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="capacitas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="numerositas">
+    <attributum nomen="nomen" genus="compositum"/>
+    <liberum nomen="mensuratur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="mensuratur-per" intra="numerositas">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="numerositas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="gramma">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="symbolum" genus="textus" ordinarius="g"/>
+    <attributum nomen="fundamentalis" genus="veritas"/>
+    <attributum nomen="mensurat" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="custodita-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="gramma">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="kilogramma">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="symbolum" genus="textus" ordinarius="kg"/>
+    <attributum nomen="fundamentalis" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="mensurat" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="custodita-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="kilogramma">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="metrum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="symbolum" genus="textus" ordinarius="m"/>
+    <attributum nomen="fundamentalis" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="mensurat" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="custodita-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="metrum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="secundum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="symbolum" genus="textus" ordinarius="s"/>
+    <attributum nomen="fundamentalis" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="mensurat" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="custodita-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="secundum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="minutum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="symbolum" genus="textus" ordinarius="min"/>
+    <attributum nomen="fundamentalis" genus="veritas"/>
+    <attributum nomen="mensurat" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="custodita-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="minutum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="gradus-celsius">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="symbolum" genus="textus" ordinarius="°C"/>
+    <attributum nomen="fundamentalis" genus="veritas"/>
+    <attributum nomen="mensurat" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="custodita-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="gradus-celsius">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="magnitudo-mensurabilis unitas-mensurae quantitas incertitudo instrumentum-mensurae
+           longitudo massa tempus-intervallum temperatura capacitas numerositas
+           gramma kilogramma metrum secundum minutum gradus-celsius"/>
+
+</canon>

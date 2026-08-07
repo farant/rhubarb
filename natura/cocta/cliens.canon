@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e cliens - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="cliens" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="cliens"/>
+    <liberum nomen="cliens-telae"/>
+    <liberum nomen="cliens-nativus"/>
+    <liberum nomen="cliens-terminalis"/>
+    <liberum nomen="cliens-api"/>
+    <liberum nomen="cliens-mcp"/>
+    <liberum nomen="cliens-cli"/>
+    <liberum nomen="cliens-mobilis"/>
+    <liberum nomen="servus"/>
+    <liberum nomen="curl"/>
+    <liberum nomen="servus-telae"/>
+    <liberum nomen="servus-datorum"/>
+    <liberum nomen="servus-nominum"/>
+    <liberum nomen="servus-procuratorius"/>
+    <liberum nomen="servus-mcp"/>
+  </elementum>
+
+  <elementum nomen="cliens">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="agit-pro" genus="nomen"/>
+    <liberum nomen="consumit"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="consumit" intra="cliens">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="cliens">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="cliens-telae">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="agit-pro" genus="nomen"/>
+    <liberum nomen="consumit"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="consumit" intra="cliens-telae">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="cliens-telae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="cliens-nativus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="agit-pro" genus="nomen"/>
+    <liberum nomen="consumit"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="consumit" intra="cliens-nativus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="cliens-nativus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="cliens-terminalis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="agit-pro" genus="nomen"/>
+    <liberum nomen="consumit"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="consumit" intra="cliens-terminalis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="cliens-terminalis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="cliens-api">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="agit-pro" genus="nomen"/>
+    <liberum nomen="consumit"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="consumit" intra="cliens-api">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="cliens-api">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="cliens-mcp">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="agit-pro" genus="nomen"/>
+    <liberum nomen="consumit"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="consumit" intra="cliens-mcp">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="cliens-mcp">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="cliens-cli">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="agit-pro" genus="nomen"/>
+    <liberum nomen="consumit"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="consumit" intra="cliens-cli">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="cliens-cli">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="cliens-mobilis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="agit-pro" genus="nomen"/>
+    <liberum nomen="consumit"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="consumit" intra="cliens-mobilis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="cliens-mobilis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="servus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="status-inter-petitiones" genus="electio">
+      <optio>sine_statu</optio>
+      <optio>cum_statu</optio>
+    </attributum>
+    <attributum nomen="simultas" genus="electio">
+      <optio>singularis</optio>
+      <optio>multiplex</optio>
+    </attributum>
+    <attributum nomen="agnitio-petentis" genus="electio">
+      <optio>nulla</optio>
+      <optio>asserta</optio>
+      <optio>probata</optio>
+    </attributum>
+    <attributum nomen="praebet" genus="nomen"/>
+    <attributum nomen="auditur-in" genus="nomen"/>
+    <attributum nomen="currit-ut" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="servus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="curl">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="agit-pro" genus="nomen"/>
+    <liberum nomen="consumit"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="consumit" intra="curl">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="curl">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="servus-telae">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="status-inter-petitiones" genus="electio">
+      <optio>sine_statu</optio>
+      <optio>cum_statu</optio>
+    </attributum>
+    <attributum nomen="simultas" genus="electio">
+      <optio>singularis</optio>
+      <optio>multiplex</optio>
+    </attributum>
+    <attributum nomen="agnitio-petentis" genus="electio">
+      <optio>nulla</optio>
+      <optio>asserta</optio>
+      <optio>probata</optio>
+    </attributum>
+    <attributum nomen="praebet" genus="nomen"/>
+    <attributum nomen="auditur-in" genus="nomen"/>
+    <attributum nomen="currit-ut" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="servus-telae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="servus-datorum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="status-inter-petitiones" genus="electio">
+      <optio>sine_statu</optio>
+      <optio>cum_statu</optio>
+    </attributum>
+    <attributum nomen="simultas" genus="electio">
+      <optio>singularis</optio>
+      <optio>multiplex</optio>
+    </attributum>
+    <attributum nomen="agnitio-petentis" genus="electio">
+      <optio>nulla</optio>
+      <optio>asserta</optio>
+      <optio>probata</optio>
+    </attributum>
+    <attributum nomen="praebet" genus="nomen"/>
+    <attributum nomen="auditur-in" genus="nomen"/>
+    <attributum nomen="currit-ut" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="servus-datorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="servus-nominum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="status-inter-petitiones" genus="electio">
+      <optio>sine_statu</optio>
+      <optio>cum_statu</optio>
+    </attributum>
+    <attributum nomen="simultas" genus="electio">
+      <optio>singularis</optio>
+      <optio>multiplex</optio>
+    </attributum>
+    <attributum nomen="agnitio-petentis" genus="electio">
+      <optio>nulla</optio>
+      <optio>asserta</optio>
+      <optio>probata</optio>
+    </attributum>
+    <attributum nomen="praebet" genus="nomen"/>
+    <attributum nomen="auditur-in" genus="nomen"/>
+    <attributum nomen="currit-ut" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="servus-nominum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="servus-procuratorius">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="status-inter-petitiones" genus="electio">
+      <optio>sine_statu</optio>
+      <optio>cum_statu</optio>
+    </attributum>
+    <attributum nomen="simultas" genus="electio">
+      <optio>singularis</optio>
+      <optio>multiplex</optio>
+    </attributum>
+    <attributum nomen="agnitio-petentis" genus="electio">
+      <optio>nulla</optio>
+      <optio>asserta</optio>
+      <optio>probata</optio>
+    </attributum>
+    <attributum nomen="praebet" genus="nomen"/>
+    <attributum nomen="auditur-in" genus="nomen"/>
+    <attributum nomen="currit-ut" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="servus-procuratorius">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="servus-mcp">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="status-inter-petitiones" genus="electio">
+      <optio>sine_statu</optio>
+      <optio>cum_statu</optio>
+    </attributum>
+    <attributum nomen="simultas" genus="electio">
+      <optio>singularis</optio>
+      <optio>multiplex</optio>
+    </attributum>
+    <attributum nomen="agnitio-petentis" genus="electio">
+      <optio>nulla</optio>
+      <optio>asserta</optio>
+      <optio>probata</optio>
+    </attributum>
+    <attributum nomen="praebet" genus="nomen"/>
+    <attributum nomen="auditur-in" genus="nomen"/>
+    <attributum nomen="currit-ut" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="servus-mcp">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="cliens cliens-telae cliens-nativus cliens-terminalis cliens-api
+           cliens-mcp cliens-cli cliens-mobilis servus curl servus-telae
+           servus-datorum servus-nominum servus-procuratorius servus-mcp"/>
+
+</canon>

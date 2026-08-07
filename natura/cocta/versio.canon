@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e versio - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="versio" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="versio"/>
+  </elementum>
+
+  <elementum nomen="versio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="titulus" genus="textus"/>
+    <attributum nomen="edita" genus="dies"/>
+    <attributum nomen="schema-numerandi" genus="electio">
+      <optio>semanticum</optio>
+      <optio>sequentiale</optio>
+      <optio>temporale</optio>
+      <optio>nominale</optio>
+      <optio>mixtum</optio>
+    </attributum>
+    <attributum nomen="retro-compatibilis" genus="veritas"/>
+    <attributum nomen="mutationes-fractoriae" genus="textus"/>
+    <attributum nomen="status-sustentatio" genus="electio">
+      <optio>praenuntiata</optio>
+      <optio>vigens</optio>
+      <optio>sustentata</optio>
+      <optio>deprecata</optio>
+      <optio>derelicta</optio>
+    </attributum>
+    <attributum nomen="versio-de" genus="nomen"/>
+    <attributum nomen="sequitur" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <attributum nomen="edita-a" genus="nomen"/>
+    <liberum nomen="compatibilis-cum"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="compatibilis-cum" intra="versio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="versio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>edi</optio>
+      <optio>deprecari</optio>
+      <optio>derelinqui</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="versio"/>
+
+</canon>

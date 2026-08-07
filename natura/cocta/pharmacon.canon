@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e pharmacon - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="pharmacon" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="substantia-chemica"/>
+    <liberum nomen="medicamentum"/>
+    <liberum nomen="coctura"/>
+    <liberum nomen="interactio"/>
+    <liberum nomen="amoxicillinum"/>
+    <liberum nomen="warfarinum"/>
+    <liberum nomen="medicamentum-genericum"/>
+    <liberum nomen="medicamentum-nominatum"/>
+    <liberum nomen="medicamentum-compositum"/>
+    <liberum nomen="interactio-medicamentorum"/>
+    <liberum nomen="interactio-cum-cibo"/>
+    <liberum nomen="incompatibilitas-mercium"/>
+  </elementum>
+
+  <elementum nomen="substantia-chemica">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="formula" genus="textus"/>
+    <attributum nomen="massa-molecularis" genus="textus"/>
+    <attributum nomen="solubilitas" genus="electio">
+      <optio>aquosa</optio>
+      <optio>lipidica</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="interagit" genus="nomen"/>
+    <liberum nomen="exemplatur-in"/>
+    <liberum nomen="classificata-ut"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exemplatur-in" intra="substantia-chemica">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="classificata-ut" intra="substantia-chemica">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="substantia-chemica">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="medicamentum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="vis" genus="textus"/>
+    <attributum nomen="forma-sumendi" genus="electio">
+      <optio>capsula</optio>
+      <optio>tabella</optio>
+      <optio>suspensio</optio>
+      <optio>unguentum</optio>
+      <optio>iniectio</optio>
+    </attributum>
+    <attributum nomen="via-sumendi" genus="electio">
+      <optio>oralis</optio>
+      <optio>topica</optio>
+      <optio>venosa</optio>
+      <optio>muscularis</optio>
+    </attributum>
+    <attributum nomen="sine-praescriptione" genus="veritas"/>
+    <attributum nomen="conservatio" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="aequivalens"/>
+    <liberum nomen="fabricatum-in"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="continet" intra="medicamentum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="aequivalens" intra="medicamentum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="fabricatum-in" intra="medicamentum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="medicamentum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="coctura">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="numerus-cocturae" genus="textus"/>
+    <attributum nomen="quantitas-facta" genus="textus"/>
+    <attributum nomen="expirat" genus="dies"/>
+    <attributum nomen="status" genus="electio">
+      <optio>fabricata</optio>
+      <optio>probata</optio>
+      <optio>dimissa</optio>
+      <optio>revocata</optio>
+      <optio>exhausta</optio>
+      <optio>elapsa</optio>
+    </attributum>
+    <attributum nomen="coquitur" genus="nomen"/>
+    <attributum nomen="fabricata-a" genus="nomen"/>
+    <attributum nomen="acta-sua" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="coctura">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="interactio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>moderata</optio>
+      <optio>gravis</optio>
+      <optio>contraindicatio</optio>
+    </attributum>
+    <attributum nomen="mechanismus" genus="textus"/>
+    <attributum nomen="testimonium" genus="textus"/>
+    <attributum nomen="consilium" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="inter"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="inter" intra="interactio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="interactio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="amoxicillinum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="formula" genus="textus" ordinarius="C16H19N3O5S"/>
+    <attributum nomen="massa-molecularis" genus="textus"/>
+    <attributum nomen="solubilitas" genus="electio">
+      <optio>aquosa</optio>
+      <optio>lipidica</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="interagit" genus="nomen"/>
+    <liberum nomen="exemplatur-in"/>
+    <liberum nomen="classificata-ut"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exemplatur-in" intra="amoxicillinum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="classificata-ut" intra="amoxicillinum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="amoxicillinum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="warfarinum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="formula" genus="textus" ordinarius="C19H16O4"/>
+    <attributum nomen="massa-molecularis" genus="textus"/>
+    <attributum nomen="solubilitas" genus="electio">
+      <optio>aquosa</optio>
+      <optio>lipidica</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="interagit" genus="nomen"/>
+    <liberum nomen="exemplatur-in"/>
+    <liberum nomen="classificata-ut"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exemplatur-in" intra="warfarinum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="classificata-ut" intra="warfarinum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="warfarinum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="medicamentum-genericum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="vis" genus="textus"/>
+    <attributum nomen="forma-sumendi" genus="electio">
+      <optio>capsula</optio>
+      <optio>tabella</optio>
+      <optio>suspensio</optio>
+      <optio>unguentum</optio>
+      <optio>iniectio</optio>
+    </attributum>
+    <attributum nomen="via-sumendi" genus="electio">
+      <optio>oralis</optio>
+      <optio>topica</optio>
+      <optio>venosa</optio>
+      <optio>muscularis</optio>
+    </attributum>
+    <attributum nomen="sine-praescriptione" genus="veritas"/>
+    <attributum nomen="conservatio" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="aequivalens"/>
+    <liberum nomen="fabricatum-in"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="continet" intra="medicamentum-genericum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="aequivalens" intra="medicamentum-genericum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="fabricatum-in" intra="medicamentum-genericum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="medicamentum-genericum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="medicamentum-nominatum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="vis" genus="textus"/>
+    <attributum nomen="forma-sumendi" genus="electio">
+      <optio>capsula</optio>
+      <optio>tabella</optio>
+      <optio>suspensio</optio>
+      <optio>unguentum</optio>
+      <optio>iniectio</optio>
+    </attributum>
+    <attributum nomen="via-sumendi" genus="electio">
+      <optio>oralis</optio>
+      <optio>topica</optio>
+      <optio>venosa</optio>
+      <optio>muscularis</optio>
+    </attributum>
+    <attributum nomen="sine-praescriptione" genus="veritas"/>
+    <attributum nomen="conservatio" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="aequivalens"/>
+    <liberum nomen="fabricatum-in"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="continet" intra="medicamentum-nominatum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="aequivalens" intra="medicamentum-nominatum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="fabricatum-in" intra="medicamentum-nominatum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="medicamentum-nominatum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="medicamentum-compositum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="vis" genus="textus"/>
+    <attributum nomen="forma-sumendi" genus="electio">
+      <optio>capsula</optio>
+      <optio>tabella</optio>
+      <optio>suspensio</optio>
+      <optio>unguentum</optio>
+      <optio>iniectio</optio>
+    </attributum>
+    <attributum nomen="via-sumendi" genus="electio">
+      <optio>oralis</optio>
+      <optio>topica</optio>
+      <optio>venosa</optio>
+      <optio>muscularis</optio>
+    </attributum>
+    <attributum nomen="sine-praescriptione" genus="veritas"/>
+    <attributum nomen="conservatio" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="aequivalens"/>
+    <liberum nomen="fabricatum-in"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="continet" intra="medicamentum-compositum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="aequivalens" intra="medicamentum-compositum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="fabricatum-in" intra="medicamentum-compositum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="medicamentum-compositum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="interactio-medicamentorum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>moderata</optio>
+      <optio>gravis</optio>
+      <optio>contraindicatio</optio>
+    </attributum>
+    <attributum nomen="mechanismus" genus="textus"/>
+    <attributum nomen="testimonium" genus="textus"/>
+    <attributum nomen="consilium" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="inter"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="inter" intra="interactio-medicamentorum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="interactio-medicamentorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="interactio-cum-cibo">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>moderata</optio>
+      <optio>gravis</optio>
+      <optio>contraindicatio</optio>
+    </attributum>
+    <attributum nomen="mechanismus" genus="textus"/>
+    <attributum nomen="testimonium" genus="textus"/>
+    <attributum nomen="consilium" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="inter"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="inter" intra="interactio-cum-cibo">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="interactio-cum-cibo">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="incompatibilitas-mercium">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>moderata</optio>
+      <optio>gravis</optio>
+      <optio>contraindicatio</optio>
+    </attributum>
+    <attributum nomen="mechanismus" genus="textus"/>
+    <attributum nomen="testimonium" genus="textus"/>
+    <attributum nomen="consilium" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="inter"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="inter" intra="incompatibilitas-mercium">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="incompatibilitas-mercium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="substantia-chemica medicamentum coctura interactio amoxicillinum
+           warfarinum medicamentum-genericum medicamentum-nominatum medicamentum-compositum
+           interactio-medicamentorum interactio-cum-cibo incompatibilitas-mercium"/>
+
+</canon>

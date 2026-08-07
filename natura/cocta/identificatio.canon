@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e identificatio - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="identificatio" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="schema-identificandi"/>
+    <liberum nomen="uuid"/>
+    <liberum nomen="ulid"/>
+    <liberum nomen="isbn"/>
+    <liberum nomen="isbn-10"/>
+    <liberum nomen="isbn-13"/>
+    <liberum nomen="issn"/>
+    <liberum nomen="doi"/>
+    <liberum nomen="orcid"/>
+    <liberum nomen="iban"/>
+    <liberum nomen="e164"/>
+    <liberum nomen="gtin"/>
+    <liberum nomen="uri"/>
+    <liberum nomen="cas"/>
+    <liberum nomen="ndc"/>
+    <liberum nomen="rxnorm"/>
+    <liberum nomen="numerus-dea"/>
+  </elementum>
+
+  <elementum nomen="schema-identificandi">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus"/>
+    <attributum nomen="opacus" genus="veritas"/>
+    <attributum nomen="reassignabilis" genus="veritas"/>
+    <attributum nomen="probabilis-solus" genus="veritas"/>
+    <attributum nomen="longitudo-fixa" genus="veritas"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="schema-identificandi">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="schema-identificandi">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="schema-identificandi">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="schema-identificandi">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="uuid">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="quidlibet - ambitus ab       applicatione datur, non a ratione"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="reassignabilis" genus="veritas"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="praesentatio" genus="textus" ordinarius="octo-quattuor-quattuor-quattuor-       duodecim digiti hexadecimales lineolis iuncti"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="uuid">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="uuid">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="uuid">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="uuid">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ulid">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="reassignabilis" genus="veritas"/>
+    <attributum nomen="probabilis-solus" genus="veritas"/>
+    <attributum nomen="longitudo-fixa" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="ulid">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="ulid">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="ulid">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="ulid">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="isbn">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="EDITIONEM (manifestationem),       non opus nec expressionem"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="reassignabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="isbn">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="isbn">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="isbn">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="isbn">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="isbn-10">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="EDITIONEM (manifestationem),       non opus nec expressionem"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="reassignabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="isbn-10">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="isbn-10">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="isbn-10">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="isbn-10">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="isbn-13">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="EDITIONEM (manifestationem),       non opus nec expressionem"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="reassignabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="isbn-13">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="isbn-13">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="isbn-13">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="isbn-13">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="issn">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="SERIEM ipsam, non fasciculum       nec articulum - unde ISSN unum per ephemeridem, per       saecula"/>
+    <attributum nomen="opacus" genus="veritas"/>
+    <attributum nomen="reassignabilis" genus="veritas"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="issn">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="issn">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="issn">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="issn">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="doi">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="documentum (articulum,       datorum copiam) trans mutationes loci"/>
+    <attributum nomen="opacus" genus="veritas"/>
+    <attributum nomen="reassignabilis" genus="veritas"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="doi">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="doi">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="doi">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="doi">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="orcid">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="personam - trans nomina       mutata, institutiones, homonymos"/>
+    <attributum nomen="opacus" genus="veritas"/>
+    <attributum nomen="reassignabilis" genus="veritas"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="orcid">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="orcid">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="orcid">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="orcid">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="iban">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="rationem argentariam"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="reassignabilis" genus="veritas"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="iban">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="iban">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="iban">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="iban">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="e164">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="LINEAM (aut abonnement), non       hominem - discrimen quod schemata identitatis       perdunt"/>
+    <attributum nomen="opacus" genus="veritas"/>
+    <attributum nomen="reassignabilis" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="e164">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="e164">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="e164">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="e164">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="gtin">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="GENUS mercis, non exemplar       singulare - omnes eiusdem lactis lagoenae idem GTIN       ferunt"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="reassignabilis" genus="veritas"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="gtin">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="gtin">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="gtin">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="gtin">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="uri">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="quidlibet - schema intus       ambitum determinat"/>
+    <attributum nomen="opacus" genus="veritas"/>
+    <attributum nomen="reassignabilis" genus="veritas"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="uri">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="uri">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="uri">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="uri">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="cas">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="SUBSTANTIAM chemicam, non       acervum nec productum"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="reassignabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="cas">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="cas">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="cas">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="cas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ndc">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="PRODUCTUM in fasciculo certo -       gradum supra medicamentum, infra cocturam"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="reassignabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="ndc">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="ndc">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="ndc">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="ndc">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="rxnorm">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="MEDICAMENTUM clinicum       (substantia + vis + forma)"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="reassignabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="probabilis-solus" genus="veritas"/>
+    <attributum nomen="longitudo-fixa" genus="veritas"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="rxnorm">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="rxnorm">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="rxnorm">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="rxnorm">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="numerus-dea">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="quid-designat" genus="textus" ordinarius="AUCTORITATEM praescribendi -       personam qua praescriptor, non personam simpliciter"/>
+    <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="reassignabilis" genus="veritas"/>
+    <attributum nomen="probabilis-solus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="longitudo-fixa" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="praesentatio" genus="textus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>vigens</optio>
+      <optio>clausa</optio>
+      <optio>obsoleta</optio>
+    </attributum>
+    <attributum nomen="administrata-a" genus="nomen"/>
+    <attributum nomen="normata-per" genus="nomen"/>
+    <attributum nomen="gignit" genus="nomen"/>
+    <attributum nomen="successit" genus="nomen"/>
+    <liberum nomen="praefixum" maximum="1"/>
+    <liberum nomen="corpus-identificatoris" maximum="1"/>
+    <liberum nomen="nota-custos" maximum="1"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixum" intra="numerus-dea">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="corpus-identificatoris" intra="numerus-dea">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="nota-custos" intra="numerus-dea">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="historia" intra="numerus-dea">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="schema-identificandi uuid ulid isbn isbn-10 isbn-13 issn doi orcid
+           iban e164 gtin uri cas ndc rxnorm numerus-dea"/>
+
+</canon>

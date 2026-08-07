@@ -1,0 +1,874 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e actus - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="actus" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="actus-sollemnis"/>
+    <liberum nomen="ritus"/>
+    <liberum nomen="sacramentum"/>
+    <liberum nomen="sacramentale"/>
+    <liberum nomen="actus-iuridicus"/>
+    <liberum nomen="quorum"/>
+    <liberum nomen="baptismus"/>
+    <liberum nomen="confirmatio"/>
+    <liberum nomen="eucharistia"/>
+    <liberum nomen="paenitentia"/>
+    <liberum nomen="unctio-infirmorum"/>
+    <liberum nomen="ordo"/>
+    <liberum nomen="matrimonium"/>
+    <liberum nomen="benedictio"/>
+    <liberum nomen="consecratio-loci"/>
+    <liberum nomen="exorcismus"/>
+    <liberum nomen="stipulatio"/>
+    <liberum nomen="mancipatio"/>
+    <liberum nomen="manumissio"/>
+    <liberum nomen="testamentum"/>
+    <liberum nomen="confectio-instrumenti"/>
+    <liberum nomen="promulgatio"/>
+    <liberum nomen="inauguratio"/>
+    <liberum nomen="collatio-tituli"/>
+    <liberum nomen="sententia-lata"/>
+    <liberum nomen="quorum-deliberativum"/>
+    <liberum nomen="maioritas-replicarum"/>
+  </elementum>
+
+  <elementum nomen="actus-sollemnis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="actus-sollemnis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="actus-sollemnis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ritus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="ritus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="ritus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="sacramentum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="sacramentum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="sacramentum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="sacramentale">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="sacramentale">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="sacramentale">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="actus-iuridicus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="in-iurisdictione" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="actus-iuridicus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="actus-iuridicus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="quorum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="modus-computandi" genus="electio">
+      <optio>ex_praesentibus</optio>
+      <optio>ex_membris_omnibus</optio>
+      <optio>ex_suffragiis_latis</optio>
+    </attributum>
+    <attributum nomen="pars-requisita" genus="textus"/>
+    <attributum nomen="numerus-membrorum" genus="numerus"/>
+    <attributum nomen="coetus" genus="nomen"/>
+    <attributum nomen="statutum-per" genus="nomen"/>
+    <liberum nomen="condicio-actus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="condicio-actus" intra="quorum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="quorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="baptismus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus" ordinarius="aqua"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="baptismus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="baptismus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="confirmatio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus" ordinarius="chrisma"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="confirmatio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="confirmatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eucharistia">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus" ordinarius="panis et vinum"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="eucharistia">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="eucharistia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="paenitentia">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="paenitentia">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="paenitentia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="unctio-infirmorum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="unctio-infirmorum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="unctio-infirmorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ordo">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="ordo">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="ordo">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="matrimonium">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="testes-postulati" genus="numerus" ordinarius="2"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="matrimonium">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="matrimonium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="benedictio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="benedictio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="benedictio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="consecratio-loci">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="consecratio-loci">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="consecratio-loci">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="exorcismus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="nomen"/>
+    <attributum nomen="recipiens" genus="nomen"/>
+    <attributum nomen="adhibet" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="exorcismus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="exorcismus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="stipulatio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="in-iurisdictione" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus" ordinarius="interrogatio et responsus       congruens, unus actus, ambo praesentes"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="stipulatio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="stipulatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="mancipatio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="in-iurisdictione" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus" ordinarius="5"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="mancipatio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="mancipatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="manumissio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="in-iurisdictione" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="manumissio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="manumissio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="testamentum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="in-iurisdictione" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="testamentum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="testamentum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="confectio-instrumenti">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="in-iurisdictione" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="confectio-instrumenti">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="confectio-instrumenti">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="promulgatio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="in-iurisdictione" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="promulgatio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="promulgatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="inauguratio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="in-iurisdictione" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="inauguratio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="inauguratio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="collatio-tituli">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="in-iurisdictione" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="collatio-tituli">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="collatio-tituli">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="sententia-lata">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="in-iurisdictione" genus="nomen"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="nomen"/>
+    <attributum nomen="capacitas-per" genus="nomen"/>
+    <attributum nomen="constituit" genus="nomen"/>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="secundum-legem" genus="nomen"/>
+    <attributum nomen="forma-eius" genus="nomen"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="testes" intra="sententia-lata">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="sententia-lata">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="quorum-deliberativum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="modus-computandi" genus="electio" ordinarius="ex_praesentibus">
+      <optio>ex_praesentibus</optio>
+      <optio>ex_membris_omnibus</optio>
+      <optio>ex_suffragiis_latis</optio>
+    </attributum>
+    <attributum nomen="pars-requisita" genus="textus"/>
+    <attributum nomen="numerus-membrorum" genus="numerus"/>
+    <attributum nomen="coetus" genus="nomen"/>
+    <attributum nomen="statutum-per" genus="nomen"/>
+    <liberum nomen="condicio-actus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="condicio-actus" intra="quorum-deliberativum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="quorum-deliberativum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="maioritas-replicarum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="modus-computandi" genus="electio" ordinarius="ex_membris_omnibus">
+      <optio>ex_praesentibus</optio>
+      <optio>ex_membris_omnibus</optio>
+      <optio>ex_suffragiis_latis</optio>
+    </attributum>
+    <attributum nomen="pars-requisita" genus="textus"/>
+    <attributum nomen="numerus-membrorum" genus="numerus"/>
+    <attributum nomen="coetus" genus="nomen"/>
+    <attributum nomen="statutum-per" genus="nomen"/>
+    <liberum nomen="condicio-actus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="condicio-actus" intra="maioritas-replicarum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="maioritas-replicarum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="actus-sollemnis ritus sacramentum sacramentale actus-iuridicus
+           quorum baptismus confirmatio eucharistia paenitentia unctio-infirmorum
+           ordo matrimonium benedictio consecratio-loci exorcismus stipulatio
+           mancipatio manumissio testamentum confectio-instrumenti promulgatio
+           inauguratio collatio-tituli sententia-lata quorum-deliberativum
+           maioritas-replicarum"/>
+
+</canon>

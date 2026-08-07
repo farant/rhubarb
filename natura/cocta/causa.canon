@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e causa - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="causa" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="causa"/>
+    <liberum nomen="causa-materialis"/>
+    <liberum nomen="causa-formalis"/>
+    <liberum nomen="causa-efficiens"/>
+    <liberum nomen="causa-finalis"/>
+  </elementum>
+
+  <elementum nomen="causa">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="necessaria" genus="veritas"/>
+    <attributum nomen="sufficiens" genus="veritas"/>
+    <attributum nomen="causat" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="pendet-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="pendet-ex" intra="causa">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="causa">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="causa-materialis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="necessaria" genus="veritas"/>
+    <attributum nomen="sufficiens" genus="veritas"/>
+    <attributum nomen="causat" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="pendet-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="pendet-ex" intra="causa-materialis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="causa-materialis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="causa-formalis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="necessaria" genus="veritas"/>
+    <attributum nomen="sufficiens" genus="veritas"/>
+    <attributum nomen="causat" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="pendet-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="pendet-ex" intra="causa-formalis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="causa-formalis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="causa-efficiens">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="necessaria" genus="veritas"/>
+    <attributum nomen="sufficiens" genus="veritas"/>
+    <attributum nomen="causat" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="pendet-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="pendet-ex" intra="causa-efficiens">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="causa-efficiens">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="causa-finalis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="necessaria" genus="veritas"/>
+    <attributum nomen="sufficiens" genus="veritas"/>
+    <attributum nomen="causat" genus="nomen"/>
+    <attributum nomen="asseritur-per" genus="nomen"/>
+    <liberum nomen="pendet-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="pendet-ex" intra="causa-finalis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="causa-finalis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="causa causa-materialis causa-formalis causa-efficiens causa-finalis"/>
+
+</canon>

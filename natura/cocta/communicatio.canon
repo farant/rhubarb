@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e communicatio - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="communicatio" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="actor"/>
+    <liberum nomen="nuntius"/>
+    <liberum nomen="eventum"/>
+    <liberum nomen="stigmergia"/>
+    <liberum nomen="vestigium-chemicum"/>
+    <liberum nomen="semita-trita"/>
+    <liberum nomen="tabula-communis"/>
+    <liberum nomen="vestigia-operis"/>
+  </elementum>
+
+  <elementum nomen="actor">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="capsa-eius" genus="nomen"/>
+    <liberum nomen="mittit"/>
+    <liberum nomen="accipit"/>
+    <liberum nomen="custodit"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="mittit" intra="actor">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="accipit" intra="actor">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="custodit" intra="actor">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="actor">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nuntius">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="genus-nuntii" genus="textus"/>
+    <attributum nomen="disciplina-schematis" genus="electio">
+      <optio>sine_schemate</optio>
+      <optio>cum_schemate</optio>
+    </attributum>
+    <attributum nomen="garantia-traditionis" genus="electio">
+      <optio>ad_summum_semel</optio>
+      <optio>ad_minimum_semel</optio>
+      <optio>semel_exacte_tractatum</optio>
+    </attributum>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>creatus</optio>
+      <optio>missus</optio>
+      <optio>traditus</optio>
+      <optio>consumptus</optio>
+    </attributum>
+    <attributum nomen="portat" genus="nomen"/>
+    <attributum nomen="missus-a" genus="nomen"/>
+    <attributum nomen="destinatus-ad" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="nuntius">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <liberum nomen="observatur-ab"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="observatur-ab" intra="eventum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="eventum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="stigmergia">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="tabescentia" genus="textus"/>
+    <attributum nomen="cumulativa" genus="veritas"/>
+    <attributum nomen="medium" genus="textus"/>
+    <attributum nomen="movet" genus="nomen"/>
+    <liberum nomen="relinquitur-a"/>
+    <liberum nomen="legitur-a"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="relinquitur-a" intra="stigmergia">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="legitur-a" intra="stigmergia">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="stigmergia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="vestigium-chemicum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="tabescentia" genus="textus"/>
+    <attributum nomen="cumulativa" genus="veritas"/>
+    <attributum nomen="medium" genus="textus"/>
+    <attributum nomen="movet" genus="nomen"/>
+    <liberum nomen="relinquitur-a"/>
+    <liberum nomen="legitur-a"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="relinquitur-a" intra="vestigium-chemicum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="legitur-a" intra="vestigium-chemicum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="vestigium-chemicum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="semita-trita">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="tabescentia" genus="textus"/>
+    <attributum nomen="cumulativa" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="medium" genus="textus"/>
+    <attributum nomen="movet" genus="nomen"/>
+    <liberum nomen="relinquitur-a"/>
+    <liberum nomen="legitur-a"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="relinquitur-a" intra="semita-trita">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="legitur-a" intra="semita-trita">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="semita-trita">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="tabula-communis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="tabescentia" genus="textus"/>
+    <attributum nomen="cumulativa" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="medium" genus="textus"/>
+    <attributum nomen="movet" genus="nomen"/>
+    <liberum nomen="relinquitur-a"/>
+    <liberum nomen="legitur-a"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="relinquitur-a" intra="tabula-communis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="legitur-a" intra="tabula-communis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="tabula-communis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="vestigia-operis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="tabescentia" genus="textus"/>
+    <attributum nomen="cumulativa" genus="veritas"/>
+    <attributum nomen="medium" genus="textus"/>
+    <attributum nomen="movet" genus="nomen"/>
+    <liberum nomen="relinquitur-a"/>
+    <liberum nomen="legitur-a"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="relinquitur-a" intra="vestigia-operis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="legitur-a" intra="vestigia-operis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="vestigia-operis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="actor nuntius eventum stigmergia vestigium-chemicum semita-trita
+           tabula-communis vestigia-operis"/>
+
+</canon>

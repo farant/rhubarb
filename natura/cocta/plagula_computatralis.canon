@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e plagula_computatralis - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="plagula_computatralis" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="plagula-computatralis"/>
+    <liberum nomen="plagula-fontis"/>
+    <liberum nomen="scriptum-exsecutabile"/>
+    <liberum nomen="plagula-notationis"/>
+    <liberum nomen="plagula-figurationis"/>
+    <liberum nomen="plagula-datorum"/>
+    <liberum nomen="plagula-sqlite"/>
+    <liberum nomen="systema-plagularum"/>
+    <liberum nomen="directorium"/>
+    <liberum nomen="fons-c"/>
+    <liberum nomen="caput-c"/>
+    <liberum nomen="fons-python"/>
+    <liberum nomen="fons-rust"/>
+    <liberum nomen="scriptum-conchae"/>
+    <liberum nomen="plagula-xml"/>
+    <liberum nomen="plagula-stml"/>
+    <liberum nomen="plagula-markdown"/>
+    <liberum nomen="plagula-toml"/>
+    <liberum nomen="plagula-plist"/>
+    <liberum nomen="plagula-json"/>
+    <liberum nomen="plagula-csv"/>
+    <liberum nomen="volumen"/>
+  </elementum>
+
+  <elementum nomen="plagula-computatralis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-computatralis" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-computatralis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-fontis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-fontis" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-fontis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="scriptum-exsecutabile">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="scriptum-exsecutabile" textus="verum"/>
+  <elementum nomen="historia" intra="scriptum-exsecutabile">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-notationis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-notationis" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-notationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-figurationis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-figurationis" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-figurationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-datorum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-datorum" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-datorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-sqlite">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="binaria">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-sqlite" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-sqlite">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="systema-plagularum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="capsas-discernit" genus="veritas"/>
+    <attributum nomen="capsas-servat" genus="veritas"/>
+    <attributum nomen="mensura-nominis-maxima" genus="numerus"/>
+    <attributum nomen="nexus-fert" genus="electio">
+      <optio>nullos</optio>
+      <optio>symbolicos</optio>
+      <optio>duros</optio>
+      <optio>utrosque</optio>
+    </attributum>
+    <attributum nomen="transactiones-fert" genus="veritas"/>
+    <attributum nomen="iacet-in" genus="nomen"/>
+    <liberum nomen="radix" maximum="1"/>
+    <liberum nomen="directorium" maximum="1"/>
+    <liberum nomen="notae-circumstantes" maximum="1"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="radix" intra="systema-plagularum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="directorium" intra="systema-plagularum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="notae-circumstantes" intra="systema-plagularum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="continet" intra="systema-plagularum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="systema-plagularum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="directorium">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="occultum" genus="veritas"/>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="est-plagula" genus="nomen"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="continet" intra="directorium">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="directorium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fons-c">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus" ordinarius="text/x-c"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="fons-c" textus="verum"/>
+  <elementum nomen="historia" intra="fons-c">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="caput-c">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="caput-c" textus="verum"/>
+  <elementum nomen="historia" intra="caput-c">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fons-python">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="fons-python" textus="verum"/>
+  <elementum nomen="historia" intra="fons-python">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fons-rust">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="fons-rust" textus="verum"/>
+  <elementum nomen="historia" intra="fons-rust">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="scriptum-conchae">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <attributum nomen="scripta-in" genus="nomen"/>
+    <attributum nomen="scripta-in-versione" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="scriptum-conchae" textus="verum"/>
+  <elementum nomen="historia" intra="scriptum-conchae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-xml">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus" ordinarius="application/xml"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-xml" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-xml">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-stml">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-stml" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-stml">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-markdown">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus" ordinarius="text/markdown"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-markdown" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-markdown">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-toml">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-toml" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-toml">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-plist">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-plist" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-plist">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-json">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus" ordinarius="application/json"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-json" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-json">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-csv">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-csv" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-csv">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="volumen">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="binaria">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="nomen"/>
+    <attributum nomen="conformis-ad" genus="nomen"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="volumen" textus="verum"/>
+  <elementum nomen="historia" intra="volumen">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>creari</optio>
+      <optio>scribi</optio>
+      <optio>legi</optio>
+      <optio>moveri</optio>
+      <optio>deleri</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="plagula-computatralis plagula-fontis scriptum-exsecutabile plagula-notationis
+           plagula-figurationis plagula-datorum plagula-sqlite systema-plagularum
+           directorium fons-c caput-c fons-python fons-rust scriptum-conchae
+           plagula-xml plagula-stml plagula-markdown plagula-toml plagula-plist
+           plagula-json plagula-csv volumen"/>
+
+</canon>

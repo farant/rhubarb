@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e tempus - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="tempus" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="momentum"/>
+    <liberum nomen="intervallum"/>
+    <liberum nomen="recurrentia"/>
+    <liberum nomen="recurrentia-computata"/>
+    <liberum nomen="recurrentia-per-usum"/>
+    <liberum nomen="horarium"/>
+    <liberum nomen="calendarium"/>
+    <liberum nomen="reservatio"/>
+    <liberum nomen="pascha"/>
+    <liberum nomen="dies-negotiorum"/>
+    <liberum nomen="dies-ordinalis-mensis"/>
+    <liberum nomen="per-horas-operis"/>
+    <liberum nomen="per-cyclos"/>
+    <liberum nomen="per-spatium"/>
+    <liberum nomen="calendarium-gregorianum"/>
+    <liberum nomen="calendarium-liturgicum"/>
+  </elementum>
+
+  <elementum nomen="momentum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="praecisio" genus="electio">
+      <optio>annus</optio>
+      <optio>mensis</optio>
+      <optio>dies</optio>
+      <optio>hora</optio>
+      <optio>secundum</optio>
+      <optio>minutia</optio>
+    </attributum>
+    <attributum nomen="zona-horaria" genus="textus"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="momentum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="intervallum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="duratio" genus="textus"/>
+    <attributum nomen="initium" genus="nomen"/>
+    <attributum nomen="finis" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="intervallum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="recurrentia">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="recurrentia" textus="dies"/>
+  <elementum nomen="historia" intra="recurrentia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="recurrentia-computata">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="algorithmus" genus="textus"/>
+    <attributum nomen="pendet-ex-alia" genus="veritas"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="recurrentia-computata" textus="dies"/>
+  <elementum nomen="historia" intra="recurrentia-computata">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="recurrentia-per-usum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="mensura-usus" genus="textus"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="recurrentia-per-usum" textus="dies"/>
+  <elementum nomen="historia" intra="recurrentia-per-usum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="horarium">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="regit" genus="nomen"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="vinctum-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="continet" intra="horarium">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="vinctum-per" intra="horarium">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="horarium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="calendarium">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="conditum-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="calendarium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="reservatio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>petita</optio>
+      <optio>confirmata</optio>
+      <optio>adhibita</optio>
+      <optio>deserta</optio>
+      <optio>cancellata</optio>
+    </attributum>
+    <attributum nomen="tempus-servatum" genus="nomen"/>
+    <attributum nomen="res-servata" genus="nomen"/>
+    <attributum nomen="vindicans" genus="nomen"/>
+    <attributum nomen="parit" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="reservatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="pascha">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="algorithmus" genus="textus" ordinarius="computus lunisolaris"/>
+    <attributum nomen="pendet-ex-alia" genus="veritas"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="pascha" textus="dies"/>
+  <elementum nomen="historia" intra="pascha">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="dies-negotiorum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="algorithmus" genus="textus"/>
+    <attributum nomen="pendet-ex-alia" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="dies-negotiorum" textus="dies"/>
+  <elementum nomen="historia" intra="dies-negotiorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="dies-ordinalis-mensis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="algorithmus" genus="textus"/>
+    <attributum nomen="pendet-ex-alia" genus="veritas"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="dies-ordinalis-mensis" textus="dies"/>
+  <elementum nomen="historia" intra="dies-ordinalis-mensis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="per-horas-operis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="mensura-usus" genus="textus"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="per-horas-operis" textus="dies"/>
+  <elementum nomen="historia" intra="per-horas-operis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="per-cyclos">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="mensura-usus" genus="textus"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="per-cyclos" textus="dies"/>
+  <elementum nomen="historia" intra="per-cyclos">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="per-spatium">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="mensura-usus" genus="textus"/>
+    <attributum nomen="periodus" genus="electio">
+      <optio>cotidiana</optio>
+      <optio>hebdomadaria</optio>
+      <optio>menstrua</optio>
+      <optio>annua</optio>
+    </attributum>
+    <attributum nomen="frequentia" genus="numerus"/>
+    <liberum nomen="exceptiones"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exceptiones" intra="per-spatium" textus="dies"/>
+  <elementum nomen="historia" intra="per-spatium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="calendarium-gregorianum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="conditum-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="calendarium-gregorianum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="calendarium-liturgicum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="conditum-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="calendarium-liturgicum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="momentum intervallum recurrentia recurrentia-computata recurrentia-per-usum
+           horarium calendarium reservatio pascha dies-negotiorum dies-ordinalis-mensis
+           per-horas-operis per-cyclos per-spatium calendarium-gregorianum
+           calendarium-liturgicum"/>
+
+</canon>

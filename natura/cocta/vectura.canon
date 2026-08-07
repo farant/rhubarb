@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e vectura - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="vectura" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="iter"/>
+    <liberum nomen="via"/>
+    <liberum nomen="vehiculum"/>
+    <liberum nomen="onus"/>
+    <liberum nomen="via-terrestris"/>
+    <liberum nomen="via-maritima"/>
+    <liberum nomen="via-aeria"/>
+    <liberum nomen="via-appia"/>
+    <liberum nomen="canalis-suesianus"/>
+    <liberum nomen="navis"/>
+    <liberum nomen="currus-onerarius"/>
+    <liberum nomen="tramen"/>
+    <liberum nomen="aeroplanum"/>
+  </elementum>
+
+  <elementum nomen="iter">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="distantia" genus="textus"/>
+    <attributum nomen="mora-aestimata" genus="textus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>paratum</optio>
+      <optio>in_cursu</optio>
+      <optio>perfectum</optio>
+      <optio>interruptum</optio>
+    </attributum>
+    <attributum nomen="a-loco" genus="nomen"/>
+    <attributum nomen="ad-locum" genus="nomen"/>
+    <attributum nomen="vehitur" genus="nomen"/>
+    <attributum nomen="suscipitur-a" genus="nomen"/>
+    <liberum nomen="per-viam"/>
+    <liberum nomen="fert"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="per-viam" intra="iter">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="fert" intra="iter">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="iter">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="via">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="longitudo" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <liberum nomen="iungit"/>
+    <liberum nomen="sub-iurisdictione"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="iungit" intra="via">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="sub-iurisdictione" intra="via">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="via">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="vehiculum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="capacitas-oneris" genus="textus"/>
+    <attributum nomen="velocitas-media" genus="textus"/>
+    <attributum nomen="regitur-a" genus="nomen"/>
+    <attributum nomen="capacitas" genus="textus"/>
+    <attributum nomen="status-usus" genus="electio">
+      <optio>otiosum</optio>
+      <optio>in_usu</optio>
+      <optio>in_reparatione</optio>
+      <optio>fractum</optio>
+    </attributum>
+    <attributum nomen="factum-per" genus="nomen"/>
+    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="apta-viae"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="apta-viae" intra="vehiculum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="vehiculum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="vehiculum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="vehiculum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="onus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="massa-tota" genus="textus"/>
+    <attributum nomen="periturum" genus="veritas"/>
+    <attributum nomen="status-custodia" genus="electio">
+      <optio>susceptum</optio>
+      <optio>in_itinere</optio>
+      <optio>traditum</optio>
+      <optio>amissum</optio>
+    </attributum>
+    <attributum nomen="fertur-per" genus="nomen"/>
+    <attributum nomen="possessio-eius" genus="nomen"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="passum"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="continet" intra="onus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="passum" intra="onus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="onus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="via-terrestris">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="longitudo" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <liberum nomen="iungit"/>
+    <liberum nomen="sub-iurisdictione"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="iungit" intra="via-terrestris">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="sub-iurisdictione" intra="via-terrestris">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="via-terrestris">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="via-maritima">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="longitudo" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <liberum nomen="iungit"/>
+    <liberum nomen="sub-iurisdictione"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="iungit" intra="via-maritima">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="sub-iurisdictione" intra="via-maritima">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="via-maritima">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="via-aeria">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="longitudo" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <liberum nomen="iungit"/>
+    <liberum nomen="sub-iurisdictione"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="iungit" intra="via-aeria">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="sub-iurisdictione" intra="via-aeria">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="via-aeria">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="via-appia">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="longitudo" genus="textus"/>
+    <attributum nomen="publica" genus="veritas" ordinarius="verum"/>
+    <liberum nomen="iungit"/>
+    <liberum nomen="sub-iurisdictione"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="iungit" intra="via-appia">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="sub-iurisdictione" intra="via-appia">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="via-appia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="canalis-suesianus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="longitudo" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <liberum nomen="iungit"/>
+    <liberum nomen="sub-iurisdictione"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="iungit" intra="canalis-suesianus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="sub-iurisdictione" intra="canalis-suesianus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="canalis-suesianus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="navis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="capacitas-oneris" genus="textus"/>
+    <attributum nomen="velocitas-media" genus="textus"/>
+    <attributum nomen="regitur-a" genus="nomen"/>
+    <attributum nomen="capacitas" genus="textus"/>
+    <attributum nomen="status-usus" genus="electio">
+      <optio>otiosum</optio>
+      <optio>in_usu</optio>
+      <optio>in_reparatione</optio>
+      <optio>fractum</optio>
+    </attributum>
+    <attributum nomen="factum-per" genus="nomen"/>
+    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="apta-viae"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="apta-viae" intra="navis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="navis">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="navis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="navis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="currus-onerarius">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="capacitas-oneris" genus="textus"/>
+    <attributum nomen="velocitas-media" genus="textus"/>
+    <attributum nomen="regitur-a" genus="nomen"/>
+    <attributum nomen="capacitas" genus="textus"/>
+    <attributum nomen="status-usus" genus="electio">
+      <optio>otiosum</optio>
+      <optio>in_usu</optio>
+      <optio>in_reparatione</optio>
+      <optio>fractum</optio>
+    </attributum>
+    <attributum nomen="factum-per" genus="nomen"/>
+    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="apta-viae"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="apta-viae" intra="currus-onerarius">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="currus-onerarius">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="currus-onerarius">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="currus-onerarius">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="tramen">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="capacitas-oneris" genus="textus"/>
+    <attributum nomen="velocitas-media" genus="textus"/>
+    <attributum nomen="regitur-a" genus="nomen"/>
+    <attributum nomen="capacitas" genus="textus"/>
+    <attributum nomen="status-usus" genus="electio">
+      <optio>otiosum</optio>
+      <optio>in_usu</optio>
+      <optio>in_reparatione</optio>
+      <optio>fractum</optio>
+    </attributum>
+    <attributum nomen="factum-per" genus="nomen"/>
+    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="apta-viae"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="apta-viae" intra="tramen">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="tramen">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="tramen">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="tramen">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="aeroplanum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="capacitas-oneris" genus="textus"/>
+    <attributum nomen="velocitas-media" genus="textus"/>
+    <attributum nomen="regitur-a" genus="nomen"/>
+    <attributum nomen="capacitas" genus="textus"/>
+    <attributum nomen="status-usus" genus="electio">
+      <optio>otiosum</optio>
+      <optio>in_usu</optio>
+      <optio>in_reparatione</optio>
+      <optio>fractum</optio>
+    </attributum>
+    <attributum nomen="factum-per" genus="nomen"/>
+    <attributum nomen="factum-a" genus="nomen"/>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="apta-viae"/>
+    <liberum nomen="materiae-constituentes" maximum="1"/>
+    <liberum nomen="ex-materia"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="apta-viae" intra="aeroplanum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="materiae-constituentes" intra="aeroplanum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ex-materia" intra="aeroplanum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="aeroplanum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="iter via vehiculum onus via-terrestris via-maritima via-aeria
+           via-appia canalis-suesianus navis currus-onerarius tramen aeroplanum"/>
+
+</canon>

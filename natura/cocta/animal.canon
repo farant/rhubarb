@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e animal - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="animal" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="animal"/>
+    <liberum nomen="apis"/>
+    <liberum nomen="canis"/>
+    <liberum nomen="homo"/>
+  </elementum>
+
+  <elementum nomen="animal">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="victus" genus="electio">
+      <optio>carnivorus</optio>
+      <optio>herbivorus</optio>
+      <optio>omnivorus</optio>
+    </attributum>
+    <attributum nomen="sanguine-calidus" genus="veritas"/>
+    <attributum nomen="vita-media" genus="textus"/>
+    <attributum nomen="status-aetas" genus="electio">
+      <optio>fetus</optio>
+      <optio>pullus</optio>
+      <optio>adultus</optio>
+      <optio>senex</optio>
+    </attributum>
+    <attributum nomen="pollinat" genus="nomen"/>
+    <attributum nomen="anima" genus="electio" ordinarius="sensitiva">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>vivum</optio>
+      <optio>mortuum</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="caput" maximum="1"/>
+    <liberum nomen="cor" maximum="1"/>
+    <liberum nomen="membra" maximum="1"/>
+    <liberum nomen="praedatur"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="caput" intra="animal">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="cor" intra="animal">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="membra" intra="animal">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="praedatur" intra="animal">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="generat" intra="animal">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="animal">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="animal">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="apis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="victus" genus="electio" ordinarius="herbivorus">
+      <optio>carnivorus</optio>
+      <optio>herbivorus</optio>
+      <optio>omnivorus</optio>
+    </attributum>
+    <attributum nomen="sanguine-calidus" genus="veritas"/>
+    <attributum nomen="vita-media" genus="textus"/>
+    <attributum nomen="status-aetas" genus="electio">
+      <optio>fetus</optio>
+      <optio>pullus</optio>
+      <optio>adultus</optio>
+      <optio>senex</optio>
+    </attributum>
+    <attributum nomen="pollinat" genus="nomen"/>
+    <attributum nomen="anima" genus="electio" ordinarius="sensitiva">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>vivum</optio>
+      <optio>mortuum</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="caput" maximum="1"/>
+    <liberum nomen="cor" maximum="1"/>
+    <liberum nomen="membra" maximum="1"/>
+    <liberum nomen="praedatur"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="caput" intra="apis">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="cor" intra="apis">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="membra" intra="apis">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="praedatur" intra="apis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="generat" intra="apis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="apis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="apis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="canis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="victus" genus="electio" ordinarius="omnivorus">
+      <optio>carnivorus</optio>
+      <optio>herbivorus</optio>
+      <optio>omnivorus</optio>
+    </attributum>
+    <attributum nomen="sanguine-calidus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="vita-media" genus="textus"/>
+    <attributum nomen="status-aetas" genus="electio">
+      <optio>fetus</optio>
+      <optio>pullus</optio>
+      <optio>adultus</optio>
+      <optio>senex</optio>
+    </attributum>
+    <attributum nomen="pollinat" genus="nomen"/>
+    <attributum nomen="anima" genus="electio" ordinarius="sensitiva">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>vivum</optio>
+      <optio>mortuum</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="caput" maximum="1"/>
+    <liberum nomen="cor" maximum="1"/>
+    <liberum nomen="membra" maximum="1"/>
+    <liberum nomen="praedatur"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="caput" intra="canis">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="cor" intra="canis">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="membra" intra="canis">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="praedatur" intra="canis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="generat" intra="canis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="canis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="canis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="homo">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="victus" genus="electio" ordinarius="omnivorus">
+      <optio>carnivorus</optio>
+      <optio>herbivorus</optio>
+      <optio>omnivorus</optio>
+    </attributum>
+    <attributum nomen="sanguine-calidus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="vita-media" genus="textus"/>
+    <attributum nomen="status-aetas" genus="electio">
+      <optio>fetus</optio>
+      <optio>pullus</optio>
+      <optio>adultus</optio>
+      <optio>senex</optio>
+    </attributum>
+    <attributum nomen="pollinat" genus="nomen"/>
+    <attributum nomen="anima" genus="electio" ordinarius="rationalis">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>vivum</optio>
+      <optio>mortuum</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="nomen"/>
+    <liberum nomen="caput" maximum="1"/>
+    <liberum nomen="cor" maximum="1"/>
+    <liberum nomen="membra" maximum="1"/>
+    <liberum nomen="praedatur"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="caput" intra="homo">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="cor" intra="homo">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="membra" intra="homo">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="praedatur" intra="homo">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="generat" intra="homo">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="laborat" intra="homo">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="homo">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>sentire</optio>
+      <optio>moveri</optio>
+      <optio>generare</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="animal apis canis homo"/>
+
+</canon>

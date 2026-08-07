@@ -1,0 +1,1048 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e organizatio - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="organizatio" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="universitas"/>
+    <liberum nomen="organizatio"/>
+    <liberum nomen="colonia"/>
+    <liberum nomen="persona-iuridica"/>
+    <liberum nomen="officium"/>
+    <liberum nomen="corpus-normans"/>
+    <liberum nomen="societas"/>
+    <liberum nomen="magistratus"/>
+    <liberum nomen="debian-project"/>
+    <liberum nomen="agentia-isbn"/>
+    <liberum nomen="colonia-apium"/>
+    <liberum nomen="grex"/>
+    <liberum nomen="universitas-personarum"/>
+    <liberum nomen="universitas-rerum"/>
+    <liberum nomen="parochus"/>
+    <liberum nomen="episcopus"/>
+    <liberum nomen="notarius"/>
+    <liberum nomen="curator"/>
+    <liberum nomen="praeses-collegii"/>
+    <liberum nomen="iso"/>
+    <liberum nomen="iec"/>
+    <liberum nomen="ieee"/>
+    <liberum nomen="ansi"/>
+    <liberum nomen="intel"/>
+    <liberum nomen="amd"/>
+    <liberum nomen="arm-ltd"/>
+    <liberum nomen="canonical"/>
+    <liberum nomen="apple"/>
+    <liberum nomen="microsoft"/>
+    <liberum nomen="bell-labs"/>
+    <liberum nomen="att"/>
+  </elementum>
+
+  <elementum nomen="universitas">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <liberum nomen="membrum"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="membrum" intra="universitas">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="universitas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="organizatio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="organizatio" textus="verum"/>
+  <elementum nomen="condita-a" intra="organizatio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="organizatio">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="organizatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="colonia">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="membra-fungibilia" genus="veritas"/>
+    <attributum nomen="species-membrorum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <liberum nomen="membrum"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="membrum" intra="colonia">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="colonia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="persona-iuridica">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="perpetua" genus="veritas"/>
+    <attributum nomen="constituta-per" genus="nomen"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="persona-iuridica" textus="verum"/>
+  <elementum nomen="condita-a" intra="persona-iuridica">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="persona-iuridica">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="persona-iuridica">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="officium">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ad-tempus" genus="veritas"/>
+    <attributum nomen="collegiale" genus="veritas"/>
+    <attributum nomen="status-tenentia" genus="electio">
+      <optio>vacans</optio>
+      <optio>occupatum</optio>
+    </attributum>
+    <attributum nomen="intra" genus="nomen"/>
+    <attributum nomen="tenetur-a" genus="nomen"/>
+    <attributum nomen="exercetur-a" genus="nomen"/>
+    <attributum nomen="constituitur-per" genus="nomen"/>
+    <attributum nomen="subest" genus="nomen"/>
+    <liberum nomen="requisita"/>
+    <liberum nomen="postulat"/>
+    <liberum nomen="confert-capacitatem"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="requisita" intra="officium" textus="verum"/>
+  <elementum nomen="postulat" intra="officium">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="confert-capacitatem" intra="officium">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="officium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="corpus-normans">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="edit"/>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="edit" intra="corpus-normans">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="nomina" intra="corpus-normans" textus="verum"/>
+  <elementum nomen="condita-a" intra="corpus-normans">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="corpus-normans">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="corpus-normans">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="societas">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="societas" textus="verum"/>
+  <elementum nomen="condita-a" intra="societas">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="societas">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="societas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="magistratus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="exercet"/>
+    <liberum nomen="concedit"/>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="exercet" intra="magistratus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="concedit" intra="magistratus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="nomina" intra="magistratus" textus="verum"/>
+  <elementum nomen="condita-a" intra="magistratus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="magistratus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="magistratus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="debian-project">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1993-08-16"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="debian-project" textus="verum"/>
+  <elementum nomen="condita-a" intra="debian-project">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="debian-project">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="debian-project">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="agentia-isbn">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="agentia-isbn" textus="verum"/>
+  <elementum nomen="condita-a" intra="agentia-isbn">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="agentia-isbn">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="agentia-isbn">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="colonia-apium">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="membra-fungibilia" genus="veritas"/>
+    <attributum nomen="species-membrorum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio" ordinarius="velox">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <liberum nomen="membrum"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="membrum" intra="colonia-apium">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="colonia-apium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="grex">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="membra-fungibilia" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="species-membrorum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio" ordinarius="ab_extra">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <liberum nomen="membrum"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="membrum" intra="grex">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="grex">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="universitas-personarum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="perpetua" genus="veritas"/>
+    <attributum nomen="constituta-per" genus="nomen"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="universitas-personarum" textus="verum"/>
+  <elementum nomen="condita-a" intra="universitas-personarum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="universitas-personarum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="universitas-personarum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="universitas-rerum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="perpetua" genus="veritas"/>
+    <attributum nomen="constituta-per" genus="nomen"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="universitas-rerum" textus="verum"/>
+  <elementum nomen="condita-a" intra="universitas-rerum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="universitas-rerum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="universitas-rerum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="parochus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ad-tempus" genus="veritas"/>
+    <attributum nomen="collegiale" genus="veritas"/>
+    <attributum nomen="status-tenentia" genus="electio">
+      <optio>vacans</optio>
+      <optio>occupatum</optio>
+    </attributum>
+    <attributum nomen="intra" genus="nomen"/>
+    <attributum nomen="tenetur-a" genus="nomen"/>
+    <attributum nomen="exercetur-a" genus="nomen"/>
+    <attributum nomen="constituitur-per" genus="nomen"/>
+    <attributum nomen="subest" genus="nomen"/>
+    <liberum nomen="requisita"/>
+    <liberum nomen="postulat"/>
+    <liberum nomen="confert-capacitatem"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="requisita" intra="parochus" textus="verum"/>
+  <elementum nomen="postulat" intra="parochus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="confert-capacitatem" intra="parochus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="parochus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="episcopus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ad-tempus" genus="veritas"/>
+    <attributum nomen="collegiale" genus="veritas"/>
+    <attributum nomen="status-tenentia" genus="electio">
+      <optio>vacans</optio>
+      <optio>occupatum</optio>
+    </attributum>
+    <attributum nomen="intra" genus="nomen"/>
+    <attributum nomen="tenetur-a" genus="nomen"/>
+    <attributum nomen="exercetur-a" genus="nomen"/>
+    <attributum nomen="constituitur-per" genus="nomen"/>
+    <attributum nomen="subest" genus="nomen"/>
+    <liberum nomen="requisita"/>
+    <liberum nomen="postulat"/>
+    <liberum nomen="confert-capacitatem"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="requisita" intra="episcopus" textus="verum"/>
+  <elementum nomen="postulat" intra="episcopus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="confert-capacitatem" intra="episcopus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="episcopus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="notarius">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ad-tempus" genus="veritas"/>
+    <attributum nomen="collegiale" genus="veritas"/>
+    <attributum nomen="status-tenentia" genus="electio">
+      <optio>vacans</optio>
+      <optio>occupatum</optio>
+    </attributum>
+    <attributum nomen="intra" genus="nomen"/>
+    <attributum nomen="tenetur-a" genus="nomen"/>
+    <attributum nomen="exercetur-a" genus="nomen"/>
+    <attributum nomen="constituitur-per" genus="nomen"/>
+    <attributum nomen="subest" genus="nomen"/>
+    <liberum nomen="requisita"/>
+    <liberum nomen="postulat"/>
+    <liberum nomen="confert-capacitatem"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="requisita" intra="notarius" textus="verum"/>
+  <elementum nomen="postulat" intra="notarius">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="confert-capacitatem" intra="notarius">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="notarius">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="curator">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ad-tempus" genus="veritas"/>
+    <attributum nomen="collegiale" genus="veritas"/>
+    <attributum nomen="status-tenentia" genus="electio">
+      <optio>vacans</optio>
+      <optio>occupatum</optio>
+    </attributum>
+    <attributum nomen="intra" genus="nomen"/>
+    <attributum nomen="tenetur-a" genus="nomen"/>
+    <attributum nomen="exercetur-a" genus="nomen"/>
+    <attributum nomen="constituitur-per" genus="nomen"/>
+    <attributum nomen="subest" genus="nomen"/>
+    <liberum nomen="requisita"/>
+    <liberum nomen="postulat"/>
+    <liberum nomen="confert-capacitatem"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="requisita" intra="curator" textus="verum"/>
+  <elementum nomen="postulat" intra="curator">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="confert-capacitatem" intra="curator">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="curator">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="praeses-collegii">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ad-tempus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="collegiale" genus="veritas"/>
+    <attributum nomen="status-tenentia" genus="electio">
+      <optio>vacans</optio>
+      <optio>occupatum</optio>
+    </attributum>
+    <attributum nomen="intra" genus="nomen"/>
+    <attributum nomen="tenetur-a" genus="nomen"/>
+    <attributum nomen="exercetur-a" genus="nomen"/>
+    <attributum nomen="constituitur-per" genus="nomen"/>
+    <attributum nomen="subest" genus="nomen"/>
+    <liberum nomen="requisita"/>
+    <liberum nomen="postulat"/>
+    <liberum nomen="confert-capacitatem"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="requisita" intra="praeses-collegii" textus="verum"/>
+  <elementum nomen="postulat" intra="praeses-collegii">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="confert-capacitatem" intra="praeses-collegii">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="praeses-collegii">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="iso">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1947-02-23"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus" ordinarius="Geneva"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="edit"/>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="edit" intra="iso">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="nomina" intra="iso" textus="verum"/>
+  <elementum nomen="condita-a" intra="iso">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="iso">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="iso">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="iec">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1906"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus" ordinarius="Geneva"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="edit"/>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="edit" intra="iec">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="nomina" intra="iec" textus="verum"/>
+  <elementum nomen="condita-a" intra="iec">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="iec">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="iec">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ieee">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1963-01-01"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="edit"/>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="edit" intra="ieee">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="nomina" intra="ieee" textus="verum"/>
+  <elementum nomen="condita-a" intra="ieee">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="ieee">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="ieee">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ansi">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1918-10-19"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="edit"/>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="edit" intra="ansi">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="nomina" intra="ansi" textus="verum"/>
+  <elementum nomen="condita-a" intra="ansi">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="ansi">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="ansi">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="intel">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1968-07-18"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="intel" textus="verum"/>
+  <elementum nomen="condita-a" intra="intel">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="intel">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="intel">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="amd">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1969-05-01"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="amd" textus="verum"/>
+  <elementum nomen="condita-a" intra="amd">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="amd">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="amd">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="arm-ltd">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1990-11-27"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="arm-ltd" textus="verum"/>
+  <elementum nomen="condita-a" intra="arm-ltd">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="arm-ltd">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="arm-ltd">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="canonical">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="2004-03-05"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="canonical" textus="verum"/>
+  <elementum nomen="condita-a" intra="canonical">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="canonical">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="canonical">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="apple">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1976-04-01"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="apple" textus="verum"/>
+  <elementum nomen="condita-a" intra="apple">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="apple">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="apple">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="microsoft">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1975-04-04"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="microsoft" textus="verum"/>
+  <elementum nomen="condita-a" intra="microsoft">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="microsoft">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="microsoft">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="bell-labs">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1925-01-01"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="bell-labs" textus="verum"/>
+  <elementum nomen="condita-a" intra="bell-labs">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="bell-labs">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="bell-labs">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="att">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="pars-de" genus="nomen"/>
+    <attributum nomen="membrum" genus="nomen"/>
+    <attributum nomen="condita" genus="dies" ordinarius="1885-03-03"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="nomina" intra="att" textus="verum"/>
+  <elementum nomen="condita-a" intra="att">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="administrat" intra="att">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="att">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>condi</optio>
+      <optio>dissolvi</optio>
+      <optio>dividi</optio>
+      <optio>fundi</optio>
+      <optio>edere</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="universitas organizatio colonia persona-iuridica officium corpus-normans
+           societas magistratus debian-project agentia-isbn colonia-apium
+           grex universitas-personarum universitas-rerum parochus episcopus
+           notarius curator praeses-collegii iso iec ieee ansi intel amd
+           arm-ltd canonical apple microsoft bell-labs att"/>
+
+</canon>

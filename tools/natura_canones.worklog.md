@@ -213,3 +213,70 @@ regenerate byte-identically against pre-fix output (34/34).
   header says `Regenera: ./tools/natura_canones.sh`. Task 5's to create; it
   must now regenerate **both** modes.
 - There is no `probatio_natura_canones.c`. All verification so far is by hand.
+
+## 2026-08-07 — Task 5: the driver and the `-probare` gate
+
+`tools/natura_canones.sh` now exists, closing the gap section 8 handed forward:
+every generated canon's header said `Regenera: ./tools/natura_canones.sh`, and
+`generata-custos.sh` tells a blocked reader to "muta FONTEM et regenera" — until
+now both pointed at nothing. All 34 canons (33 modules + monolith) are committed;
+previously only `planta` and `individua` were, which made per-module regressions
+uncheckable, since a missing baseline and a regression look identical.
+
+### No `sed` substitutions were needed — and that is load-bearing
+
+`canon_coquere.sh` needs three substitutions because it bakes temp paths into its
+output (the regen command, the include guard, the `#include` basename), and a
+false-positive bug came from missing one. This emitter bakes **nothing**: the
+`Regenera:` line is a fixed literal and provenance names the *module* (`e planta`),
+not a plagula. Verified rather than assumed — generated `planta` into an unrelated
+scratch path and it came out byte-identical to the committed canon, with zero hits
+for `/tmp`, `/private`, `/Users`, `build/`. The detector was itself checked with a
+positive control (same grep, pattern `Regenera`, hits), because a `grep` that
+matches nothing and a `grep` that is broken print the same thing.
+
+**If a substitution ever becomes necessary, that is the signal the emitter has
+started baking a path.** Report it; do not work around it in the shell.
+
+### Birth test: both halves, because only the pair proves anything
+
+- Semantic fault (new `<proprietas>` in `planta.genera`) → `RANCIDUS` on
+  `planta.canon` **and** `individua.canon`, exit 1. The fault was confirmed real
+  *before* trusting the verdict — it changes emitted output at 7 sites, since it
+  inherits down the whole planta chain.
+- Comment-only edit → exit 0. This is the half that distinguishes a semantic gate
+  from an mtime check wearing its clothes. `git diff --stat` confirmed the file was
+  genuinely modified, so the green is not vacuous.
+
+An mtime gate would cry wolf on every comment edit, and a gate that cries wolf is
+one people learn to ignore — which is how a gate dies while still appearing to run.
+
+### Guard: the gate must never exit 0 having compared nothing
+
+Three defect modes, all exit 2, all exercised: missing/stale binary (named the
+culprit file), unknown argument, empty corpus. The argument check matters more than
+it looks — a typo'd `-probar` silently falling through to the write path would turn
+"judge this" into "rewrite this", which is the same class of bug as gating on a
+piped `$?`.
+
+The empty-corpus guard is **defense in depth, not a fix**: measured, the tool itself
+already exits 2 there (`NULLUM exemplar in 'natura'`). The script-level guard buys a
+message naming the real cause and an assertion that does not depend on the tool
+continuing to behave that way.
+
+Also: `rm -f` the temp before each generation, and require the output non-empty
+afterwards. A tool that exits 0 while writing nothing would otherwise leave the
+gate comparing the *previous* module's bytes.
+
+### Per-invocation stderr is filtered by path, not by wording
+
+The tool re-emits its corpus-wide warnings (5 lines: property genera outside the
+canon) on all 34 invocations, plus one per-target `'X' scriptus` progress line.
+Showing everything is 200 lines of noise in Task 6's hook; showing the first
+invocation verbatim is worse — it names one module, reading as though only one file
+was written, and in `-probare` mode it leaks the temp path.
+
+So the corpus-wide warnings are shown **once** and never suppressed (visible
+degradation is house law), while the progress line is dropped by filtering on the
+*target path* rather than on the message text: the wording may change, the line's
+job may not.

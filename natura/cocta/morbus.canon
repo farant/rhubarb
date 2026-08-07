@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e morbus - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="morbus" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="morbus"/>
+    <liberum nomen="morbus-infectiosus"/>
+    <liberum nomen="morbus-geneticus"/>
+    <liberum nomen="morbus-degenerativus"/>
+    <liberum nomen="vulnus"/>
+  </elementum>
+
+  <elementum nomen="morbus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="contagiosus" genus="veritas"/>
+    <attributum nomen="duratio-typica" genus="textus"/>
+    <attributum nomen="letalitas" genus="numerus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>latens</optio>
+      <optio>manifestus</optio>
+      <optio>convalescens</optio>
+      <optio>sanatus</optio>
+      <optio>chronicus</optio>
+      <optio>lethalis</optio>
+    </attributum>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="sedes" genus="nomen"/>
+    <attributum nomen="dignoscitur-per" genus="nomen"/>
+    <attributum nomen="classificatus-in" genus="nomen"/>
+    <liberum nomen="curatur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="curatur-per" intra="morbus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="morbus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="morbus-infectiosus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="contagiosus" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="duratio-typica" genus="textus"/>
+    <attributum nomen="letalitas" genus="numerus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>latens</optio>
+      <optio>manifestus</optio>
+      <optio>convalescens</optio>
+      <optio>sanatus</optio>
+      <optio>chronicus</optio>
+      <optio>lethalis</optio>
+    </attributum>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="sedes" genus="nomen"/>
+    <attributum nomen="dignoscitur-per" genus="nomen"/>
+    <attributum nomen="classificatus-in" genus="nomen"/>
+    <liberum nomen="curatur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="curatur-per" intra="morbus-infectiosus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="morbus-infectiosus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="morbus-geneticus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="contagiosus" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="duratio-typica" genus="textus"/>
+    <attributum nomen="letalitas" genus="numerus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>latens</optio>
+      <optio>manifestus</optio>
+      <optio>convalescens</optio>
+      <optio>sanatus</optio>
+      <optio>chronicus</optio>
+      <optio>lethalis</optio>
+    </attributum>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="sedes" genus="nomen"/>
+    <attributum nomen="dignoscitur-per" genus="nomen"/>
+    <attributum nomen="classificatus-in" genus="nomen"/>
+    <liberum nomen="curatur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="curatur-per" intra="morbus-geneticus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="morbus-geneticus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="morbus-degenerativus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="contagiosus" genus="veritas"/>
+    <attributum nomen="duratio-typica" genus="textus"/>
+    <attributum nomen="letalitas" genus="numerus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>latens</optio>
+      <optio>manifestus</optio>
+      <optio>convalescens</optio>
+      <optio>sanatus</optio>
+      <optio>chronicus</optio>
+      <optio>lethalis</optio>
+    </attributum>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="sedes" genus="nomen"/>
+    <attributum nomen="dignoscitur-per" genus="nomen"/>
+    <attributum nomen="classificatus-in" genus="nomen"/>
+    <liberum nomen="curatur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="curatur-per" intra="morbus-degenerativus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="morbus-degenerativus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="vulnus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="contagiosus" genus="veritas"/>
+    <attributum nomen="duratio-typica" genus="textus"/>
+    <attributum nomen="letalitas" genus="numerus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>latens</optio>
+      <optio>manifestus</optio>
+      <optio>convalescens</optio>
+      <optio>sanatus</optio>
+      <optio>chronicus</optio>
+      <optio>lethalis</optio>
+    </attributum>
+    <attributum nomen="afficit" genus="nomen"/>
+    <attributum nomen="sedes" genus="nomen"/>
+    <attributum nomen="dignoscitur-per" genus="nomen"/>
+    <attributum nomen="classificatus-in" genus="nomen"/>
+    <liberum nomen="curatur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="curatur-per" intra="vulnus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="vulnus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus
+           vulnus"/>
+
+</canon>

@@ -1,0 +1,697 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e acta - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="acta" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="acta"/>
+    <liberum nomen="punctum-actorum"/>
+    <liberum nomen="attestatio"/>
+    <liberum nomen="radix-fiduciae"/>
+    <liberum nomen="acta-publica"/>
+    <liberum nomen="regesta"/>
+    <liberum nomen="acta-transactionum"/>
+    <liberum nomen="acta-versionum"/>
+    <liberum nomen="acta-auditus"/>
+    <liberum nomen="conditio"/>
+    <liberum nomen="clausura-rationis"/>
+    <liberum nomen="statio"/>
+    <liberum nomen="attestatio-civilis"/>
+    <liberum nomen="instrumentum-publicum"/>
+    <liberum nomen="apostilla"/>
+    <liberum nomen="radix-systematis"/>
+    <liberum nomen="commissio-notarii"/>
+    <liberum nomen="origo-dominii"/>
+  </elementum>
+
+  <elementum nomen="acta">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ordinatio" genus="electio">
+      <optio>sequentialis</optio>
+      <optio>temporalis</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="immutabilitas" genus="electio">
+      <optio>disciplina</optio>
+      <optio>structura</optio>
+      <optio>cryptographica</optio>
+    </attributum>
+    <attributum nomen="retentio" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <attributum nomen="vis" genus="electio">
+      <optio>declaratoria</optio>
+      <optio>constitutiva</optio>
+    </attributum>
+    <attributum nomen="status-admissio" genus="electio">
+      <optio>aperta</optio>
+      <optio>clausa</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <attributum nomen="de" genus="nomen"/>
+    <attributum nomen="appenditur-a" genus="nomen"/>
+    <liberum nomen="eventum" maximum="1"/>
+    <liberum nomen="ordo" maximum="1"/>
+    <liberum nomen="punctum-nominatum" maximum="1"/>
+    <liberum nomen="proiectio" maximum="1"/>
+    <liberum nomen="promptuarium-contenti" maximum="1"/>
+    <liberum nomen="plicatur-in"/>
+    <liberum nomen="signata-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="eventum" intra="acta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ordo" intra="acta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="punctum-nominatum" intra="acta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="proiectio" intra="acta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="promptuarium-contenti" intra="acta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="plicatur-in" intra="acta">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="signata-per" intra="acta">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="acta">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="punctum-actorum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="positio" genus="numerus"/>
+    <attributum nomen="titulus" genus="textus"/>
+    <attributum nomen="momentum-positionis" genus="textus"/>
+    <attributum nomen="automaticum" genus="veritas"/>
+    <attributum nomen="in" genus="nomen"/>
+    <attributum nomen="praecedens" genus="nomen"/>
+    <attributum nomen="positum-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="punctum-actorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="attestatio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="emissa" genus="dies"/>
+    <attributum nomen="aetas-accepta" genus="textus"/>
+    <attributum nomen="expirat" genus="dies"/>
+    <attributum nomen="fundamentum" genus="textus"/>
+    <attributum nomen="signum-authenticitatis" genus="electio">
+      <optio>sigillum</optio>
+      <optio>subscriptio</optio>
+      <optio>charta_secura</optio>
+      <optio>subscriptio_digitalis</optio>
+    </attributum>
+    <attributum nomen="integra" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>emissa</optio>
+      <optio>superata</optio>
+      <optio>revocata</optio>
+      <optio>expirata</optio>
+    </attributum>
+    <attributum nomen="ex-actis" genus="nomen"/>
+    <attributum nomen="ad-punctum" genus="nomen"/>
+    <attributum nomen="emissa-a" genus="nomen"/>
+    <attributum nomen="de" genus="nomen"/>
+    <attributum nomen="testatur" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="attestatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="radix-fiduciae">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="modus-susceptionis" genus="electio">
+      <optio>cum_systemate_missa</optio>
+      <optio>ab_utente_addita</optio>
+      <optio>lege_statuta</optio>
+      <optio>consuetudine_recepta</optio>
+    </attributum>
+    <attributum nomen="tollibilis-a" genus="textus"/>
+    <attributum nomen="ambitus-fidei" genus="textus"/>
+    <attributum nomen="status-susceptio" genus="electio">
+      <optio>suscepta</optio>
+      <optio>limitata</optio>
+      <optio>reiecta</optio>
+      <optio>refundata</optio>
+    </attributum>
+    <attributum nomen="suscepta-per" genus="nomen"/>
+    <attributum nomen="tenetur-a" genus="nomen"/>
+    <liberum nomen="fundat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="fundat" intra="radix-fiduciae">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="radix-fiduciae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="acta-publica">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ordinatio" genus="electio">
+      <optio>sequentialis</optio>
+      <optio>temporalis</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="immutabilitas" genus="electio">
+      <optio>disciplina</optio>
+      <optio>structura</optio>
+      <optio>cryptographica</optio>
+    </attributum>
+    <attributum nomen="retentio" genus="textus"/>
+    <attributum nomen="publica" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="vis" genus="electio">
+      <optio>declaratoria</optio>
+      <optio>constitutiva</optio>
+    </attributum>
+    <attributum nomen="status-admissio" genus="electio">
+      <optio>aperta</optio>
+      <optio>clausa</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <attributum nomen="de" genus="nomen"/>
+    <attributum nomen="appenditur-a" genus="nomen"/>
+    <liberum nomen="eventum" maximum="1"/>
+    <liberum nomen="ordo" maximum="1"/>
+    <liberum nomen="punctum-nominatum" maximum="1"/>
+    <liberum nomen="proiectio" maximum="1"/>
+    <liberum nomen="promptuarium-contenti" maximum="1"/>
+    <liberum nomen="plicatur-in"/>
+    <liberum nomen="signata-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="eventum" intra="acta-publica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ordo" intra="acta-publica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="punctum-nominatum" intra="acta-publica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="proiectio" intra="acta-publica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="promptuarium-contenti" intra="acta-publica">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="plicatur-in" intra="acta-publica">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="signata-per" intra="acta-publica">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="acta-publica">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="regesta">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ordinatio" genus="electio">
+      <optio>sequentialis</optio>
+      <optio>temporalis</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="immutabilitas" genus="electio">
+      <optio>disciplina</optio>
+      <optio>structura</optio>
+      <optio>cryptographica</optio>
+    </attributum>
+    <attributum nomen="retentio" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <attributum nomen="vis" genus="electio">
+      <optio>declaratoria</optio>
+      <optio>constitutiva</optio>
+    </attributum>
+    <attributum nomen="status-admissio" genus="electio">
+      <optio>aperta</optio>
+      <optio>clausa</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <attributum nomen="de" genus="nomen"/>
+    <attributum nomen="appenditur-a" genus="nomen"/>
+    <liberum nomen="eventum" maximum="1"/>
+    <liberum nomen="ordo" maximum="1"/>
+    <liberum nomen="punctum-nominatum" maximum="1"/>
+    <liberum nomen="proiectio" maximum="1"/>
+    <liberum nomen="promptuarium-contenti" maximum="1"/>
+    <liberum nomen="plicatur-in"/>
+    <liberum nomen="signata-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="eventum" intra="regesta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ordo" intra="regesta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="punctum-nominatum" intra="regesta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="proiectio" intra="regesta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="promptuarium-contenti" intra="regesta">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="plicatur-in" intra="regesta">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="signata-per" intra="regesta">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="regesta">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="acta-transactionum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ordinatio" genus="electio" ordinarius="sequentialis">
+      <optio>sequentialis</optio>
+      <optio>temporalis</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="immutabilitas" genus="electio">
+      <optio>disciplina</optio>
+      <optio>structura</optio>
+      <optio>cryptographica</optio>
+    </attributum>
+    <attributum nomen="retentio" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <attributum nomen="vis" genus="electio">
+      <optio>declaratoria</optio>
+      <optio>constitutiva</optio>
+    </attributum>
+    <attributum nomen="status-admissio" genus="electio">
+      <optio>aperta</optio>
+      <optio>clausa</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <attributum nomen="de" genus="nomen"/>
+    <attributum nomen="appenditur-a" genus="nomen"/>
+    <liberum nomen="eventum" maximum="1"/>
+    <liberum nomen="ordo" maximum="1"/>
+    <liberum nomen="punctum-nominatum" maximum="1"/>
+    <liberum nomen="proiectio" maximum="1"/>
+    <liberum nomen="promptuarium-contenti" maximum="1"/>
+    <liberum nomen="plicatur-in"/>
+    <liberum nomen="signata-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="eventum" intra="acta-transactionum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ordo" intra="acta-transactionum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="punctum-nominatum" intra="acta-transactionum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="proiectio" intra="acta-transactionum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="promptuarium-contenti" intra="acta-transactionum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="plicatur-in" intra="acta-transactionum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="signata-per" intra="acta-transactionum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="acta-transactionum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="acta-versionum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ordinatio" genus="electio" ordinarius="sequentialis">
+      <optio>sequentialis</optio>
+      <optio>temporalis</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="immutabilitas" genus="electio" ordinarius="cryptographica">
+      <optio>disciplina</optio>
+      <optio>structura</optio>
+      <optio>cryptographica</optio>
+    </attributum>
+    <attributum nomen="retentio" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <attributum nomen="vis" genus="electio">
+      <optio>declaratoria</optio>
+      <optio>constitutiva</optio>
+    </attributum>
+    <attributum nomen="status-admissio" genus="electio">
+      <optio>aperta</optio>
+      <optio>clausa</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <attributum nomen="de" genus="nomen"/>
+    <attributum nomen="appenditur-a" genus="nomen"/>
+    <liberum nomen="eventum" maximum="1"/>
+    <liberum nomen="ordo" maximum="1"/>
+    <liberum nomen="punctum-nominatum" maximum="1"/>
+    <liberum nomen="proiectio" maximum="1"/>
+    <liberum nomen="promptuarium-contenti" maximum="1"/>
+    <liberum nomen="plicatur-in"/>
+    <liberum nomen="signata-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="eventum" intra="acta-versionum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ordo" intra="acta-versionum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="punctum-nominatum" intra="acta-versionum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="proiectio" intra="acta-versionum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="promptuarium-contenti" intra="acta-versionum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="plicatur-in" intra="acta-versionum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="signata-per" intra="acta-versionum">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="acta-versionum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="acta-auditus">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="ordinatio" genus="electio">
+      <optio>sequentialis</optio>
+      <optio>temporalis</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="immutabilitas" genus="electio">
+      <optio>disciplina</optio>
+      <optio>structura</optio>
+      <optio>cryptographica</optio>
+    </attributum>
+    <attributum nomen="retentio" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <attributum nomen="vis" genus="electio">
+      <optio>declaratoria</optio>
+      <optio>constitutiva</optio>
+    </attributum>
+    <attributum nomen="status-admissio" genus="electio">
+      <optio>aperta</optio>
+      <optio>clausa</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <attributum nomen="de" genus="nomen"/>
+    <attributum nomen="appenditur-a" genus="nomen"/>
+    <liberum nomen="eventum" maximum="1"/>
+    <liberum nomen="ordo" maximum="1"/>
+    <liberum nomen="punctum-nominatum" maximum="1"/>
+    <liberum nomen="proiectio" maximum="1"/>
+    <liberum nomen="promptuarium-contenti" maximum="1"/>
+    <liberum nomen="plicatur-in"/>
+    <liberum nomen="signata-per"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="eventum" intra="acta-auditus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ordo" intra="acta-auditus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="punctum-nominatum" intra="acta-auditus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="proiectio" intra="acta-auditus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="promptuarium-contenti" intra="acta-auditus">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="plicatur-in" intra="acta-auditus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="signata-per" intra="acta-auditus">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="acta-auditus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="conditio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="positio" genus="numerus"/>
+    <attributum nomen="titulus" genus="textus"/>
+    <attributum nomen="momentum-positionis" genus="textus"/>
+    <attributum nomen="automaticum" genus="veritas"/>
+    <attributum nomen="in" genus="nomen"/>
+    <attributum nomen="praecedens" genus="nomen"/>
+    <attributum nomen="positum-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="conditio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="clausura-rationis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="positio" genus="numerus"/>
+    <attributum nomen="titulus" genus="textus"/>
+    <attributum nomen="momentum-positionis" genus="textus"/>
+    <attributum nomen="automaticum" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="in" genus="nomen"/>
+    <attributum nomen="praecedens" genus="nomen"/>
+    <attributum nomen="positum-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="clausura-rationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="statio">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="positio" genus="numerus"/>
+    <attributum nomen="titulus" genus="textus"/>
+    <attributum nomen="momentum-positionis" genus="textus"/>
+    <attributum nomen="automaticum" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="in" genus="nomen"/>
+    <attributum nomen="praecedens" genus="nomen"/>
+    <attributum nomen="positum-a" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="statio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="attestatio-civilis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="emissa" genus="dies"/>
+    <attributum nomen="aetas-accepta" genus="textus"/>
+    <attributum nomen="expirat" genus="dies"/>
+    <attributum nomen="fundamentum" genus="textus"/>
+    <attributum nomen="signum-authenticitatis" genus="electio">
+      <optio>sigillum</optio>
+      <optio>subscriptio</optio>
+      <optio>charta_secura</optio>
+      <optio>subscriptio_digitalis</optio>
+    </attributum>
+    <attributum nomen="integra" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>emissa</optio>
+      <optio>superata</optio>
+      <optio>revocata</optio>
+      <optio>expirata</optio>
+    </attributum>
+    <attributum nomen="ex-actis" genus="nomen"/>
+    <attributum nomen="ad-punctum" genus="nomen"/>
+    <attributum nomen="emissa-a" genus="nomen"/>
+    <attributum nomen="de" genus="nomen"/>
+    <attributum nomen="testatur" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="attestatio-civilis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="instrumentum-publicum">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="emissa" genus="dies"/>
+    <attributum nomen="aetas-accepta" genus="textus"/>
+    <attributum nomen="expirat" genus="dies"/>
+    <attributum nomen="fundamentum" genus="textus"/>
+    <attributum nomen="signum-authenticitatis" genus="electio">
+      <optio>sigillum</optio>
+      <optio>subscriptio</optio>
+      <optio>charta_secura</optio>
+      <optio>subscriptio_digitalis</optio>
+    </attributum>
+    <attributum nomen="integra" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>emissa</optio>
+      <optio>superata</optio>
+      <optio>revocata</optio>
+      <optio>expirata</optio>
+    </attributum>
+    <attributum nomen="ex-actis" genus="nomen"/>
+    <attributum nomen="ad-punctum" genus="nomen"/>
+    <attributum nomen="emissa-a" genus="nomen"/>
+    <attributum nomen="de" genus="nomen"/>
+    <attributum nomen="testatur" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="instrumentum-publicum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="apostilla">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="emissa" genus="dies"/>
+    <attributum nomen="aetas-accepta" genus="textus"/>
+    <attributum nomen="expirat" genus="dies"/>
+    <attributum nomen="fundamentum" genus="textus"/>
+    <attributum nomen="signum-authenticitatis" genus="electio">
+      <optio>sigillum</optio>
+      <optio>subscriptio</optio>
+      <optio>charta_secura</optio>
+      <optio>subscriptio_digitalis</optio>
+    </attributum>
+    <attributum nomen="integra" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>emissa</optio>
+      <optio>superata</optio>
+      <optio>revocata</optio>
+      <optio>expirata</optio>
+    </attributum>
+    <attributum nomen="ex-actis" genus="nomen"/>
+    <attributum nomen="ad-punctum" genus="nomen"/>
+    <attributum nomen="emissa-a" genus="nomen"/>
+    <attributum nomen="de" genus="nomen"/>
+    <attributum nomen="testatur" genus="nomen"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="historia" intra="apostilla">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="radix-systematis">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="modus-susceptionis" genus="electio" ordinarius="cum_systemate_missa">
+      <optio>cum_systemate_missa</optio>
+      <optio>ab_utente_addita</optio>
+      <optio>lege_statuta</optio>
+      <optio>consuetudine_recepta</optio>
+    </attributum>
+    <attributum nomen="tollibilis-a" genus="textus"/>
+    <attributum nomen="ambitus-fidei" genus="textus"/>
+    <attributum nomen="status-susceptio" genus="electio">
+      <optio>suscepta</optio>
+      <optio>limitata</optio>
+      <optio>reiecta</optio>
+      <optio>refundata</optio>
+    </attributum>
+    <attributum nomen="suscepta-per" genus="nomen"/>
+    <attributum nomen="tenetur-a" genus="nomen"/>
+    <liberum nomen="fundat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="fundat" intra="radix-systematis">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="radix-systematis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="commissio-notarii">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="modus-susceptionis" genus="electio" ordinarius="lege_statuta">
+      <optio>cum_systemate_missa</optio>
+      <optio>ab_utente_addita</optio>
+      <optio>lege_statuta</optio>
+      <optio>consuetudine_recepta</optio>
+    </attributum>
+    <attributum nomen="tollibilis-a" genus="textus"/>
+    <attributum nomen="ambitus-fidei" genus="textus"/>
+    <attributum nomen="status-susceptio" genus="electio">
+      <optio>suscepta</optio>
+      <optio>limitata</optio>
+      <optio>reiecta</optio>
+      <optio>refundata</optio>
+    </attributum>
+    <attributum nomen="suscepta-per" genus="nomen"/>
+    <attributum nomen="tenetur-a" genus="nomen"/>
+    <liberum nomen="fundat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="fundat" intra="commissio-notarii">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="commissio-notarii">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="origo-dominii">
+    <attributum nomen="nomen" genus="compositum"/>
+    <attributum nomen="modus-susceptionis" genus="electio" ordinarius="consuetudine_recepta">
+      <optio>cum_systemate_missa</optio>
+      <optio>ab_utente_addita</optio>
+      <optio>lege_statuta</optio>
+      <optio>consuetudine_recepta</optio>
+    </attributum>
+    <attributum nomen="tollibilis-a" genus="textus"/>
+    <attributum nomen="ambitus-fidei" genus="textus"/>
+    <attributum nomen="status-susceptio" genus="electio">
+      <optio>suscepta</optio>
+      <optio>limitata</optio>
+      <optio>reiecta</optio>
+      <optio>refundata</optio>
+    </attributum>
+    <attributum nomen="suscepta-per" genus="nomen"/>
+    <attributum nomen="tenetur-a" genus="nomen"/>
+    <liberum nomen="fundat"/>
+    <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="fundat" intra="origo-dominii">
+    <attributum nomen="ad" genus="nomen"/>
+  </elementum>
+  <elementum nomen="historia" intra="origo-dominii">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>appendere</optio>
+      <optio>plicare</optio>
+      <optio>signare</optio>
+      <optio>stornare</optio>
+      <optio>claudere</optio>
+      <optio>emitti</optio>
+      <optio>exhiberi</optio>
+      <optio>legalizari</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="acta punctum-actorum attestatio radix-fiduciae acta-publica regesta
+           acta-transactionum acta-versionum acta-auditus conditio clausura-rationis
+           statio attestatio-civilis instrumentum-publicum apostilla radix-systematis
+           commissio-notarii origo-dominii"/>
+
+</canon>
