@@ -332,6 +332,16 @@ s32 principale (vacuum)
         CREDO_MAIOR_I32 (pagina.mensura, (i32)ZEPHYRUM);
         CREDO_VERUM (_continet_literis(pagina, "photosynthesis",
                                        piscina));
+
+        /* syntaxis: exemplum canonicum tagi e canone cocto -
+         * attributum identitatis, optiones electionis, liberum
+         * nidificatum (historia -> eventum) */
+        CREDO_VERUM (_continet_literis(pagina,
+            "&lt;planta nomen=\"#nomen\"", piscina));
+        CREDO_VERUM (_continet_literis(pagina,
+            "herba|frutex|arbor|scandens", piscina));
+        CREDO_VERUM (_continet_literis(pagina, "&lt;eventum",
+                                       piscina));
     }
 
 

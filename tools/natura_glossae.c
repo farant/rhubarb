@@ -54,8 +54,19 @@ interior vacuum _html_textum_scribere(FILE* f, chorda t);
 interior vacuum _lineam_scribere(FILE* f, NaturaGenus* g);
 interior StmlNodus* _glossam_invenire(NaturaGenus* g,
                                       constans character* codex);
+interior StmlNodus* _definitio_elementi(StmlNodus* radix_canonis,
+                                        constans chorda* petitum,
+                                        constans chorda* intra);
+interior vacuum _valorem_fictum_scribere(FILE* f,
+                                         StmlNodus* def_attributi,
+                                         Piscina* piscina);
+interior vacuum _syntaxin_scribere(FILE* f,
+                                   StmlNodus* radix_canonis,
+                                   StmlNodus* def, i32 gradus,
+                                   Piscina* piscina);
 interior b32    _paginam_scribere(NaturaBibliotheca* bib,
                                   constans NgLinguae* linguae,
+                                  StmlNodus* radix_canonis,
                                   constans character* via,
                                   Piscina* piscina);
 
@@ -333,6 +344,287 @@ _glossam_invenire(
     redde NIHIL;
 }
 
+/* definitionem elementi in canone cocto invenire: intra= parentem
+ * IMMEDIATUM nominat (eventum intra="historia"), ergo congruentia
+ * intra praefertur, definitio sine intra cadens est. Canon plagula
+ * STML est - lectio recta, sine lib/canon.c. */
+interior StmlNodus*
+_definitio_elementi(
+    StmlNodus*        radix_canonis,
+    constans chorda*  petitum,
+    constans chorda*  intra)
+{
+    StmlNodus* planum;
+    i32        numerus;
+    i32        i;
+
+    planum  = NIHIL;
+    numerus = stml_numerus_liberorum(radix_canonis);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+        chorda*    titulus_n;
+        chorda*    intra_n;
+
+        l = stml_liberum_ad_indicem(radix_canonis, i);
+        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
+            !chorda_aequalis_literis(*l->titulus, "elementum"))
+        {
+            perge;
+        }
+        titulus_n = stml_attributum_capere(l, "nomen");
+        si (!titulus_n || !chorda_aequalis(*titulus_n, *petitum))
+        {
+            perge;
+        }
+        intra_n = stml_attributum_capere(l, "intra");
+        si (intra_n)
+        {
+            si (intra && chorda_aequalis(*intra_n, *intra))
+            {
+                redde l;
+            }
+        }
+        alioquin si (!planum)
+        {
+            planum = l;
+        }
+    }
+    redde planum;
+}
+
+/* valor fictus pro genere attributi: electio optiones veras
+ * monstrat (usque ad IV), cetera formam generis */
+interior vacuum
+_valorem_fictum_scribere(
+    FILE*       f,
+    StmlNodus*  def_attributi,
+    Piscina*    piscina)
+{
+    chorda* genus_v;
+
+    genus_v = stml_attributum_capere(def_attributi, "genus");
+    si (!genus_v)
+    {
+        fputs("...", f);
+        redde;
+    }
+    si (chorda_aequalis_literis(*genus_v, "electio"))
+    {
+        i32 numerus;
+        i32 i;
+        i32 scriptae;
+
+        scriptae = ZEPHYRUM;
+        numerus  = stml_numerus_liberorum(def_attributi);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            StmlNodus* l;
+
+            l = stml_liberum_ad_indicem(def_attributi, i);
+            si (!l || l->genus != STML_NODUS_ELEMENTUM ||
+                !chorda_aequalis_literis(*l->titulus, "optio"))
+            {
+                perge;
+            }
+            si (scriptae == IV)
+            {
+                fputs("|...", f);
+                frange;
+            }
+            si (scriptae > ZEPHYRUM)
+            {
+                putc('|', f);
+            }
+            _html_textum_scribere(f,
+                stml_textus_normalizatus(l, piscina));
+            scriptae++;
+        }
+        si (scriptae == ZEPHYRUM)
+        {
+            fputs("...", f);
+        }
+    }
+    alioquin si (chorda_aequalis_literis(*genus_v, "identitas"))
+    {
+        fputs("#nomen", f);
+    }
+    alioquin si (chorda_aequalis_literis(*genus_v, "referentia"))
+    {
+        fputs("#res|.genus", f);
+    }
+    alioquin si (chorda_aequalis_literis(*genus_v, "numerus"))
+    {
+        putc('0', f);
+    }
+    alioquin si (chorda_aequalis_literis(*genus_v, "veritas"))
+    {
+        fputs("verum|falsum", f);
+    }
+    alioquin si (chorda_aequalis_literis(*genus_v, "dies"))
+    {
+        fputs("AAAA-MM-DD", f);
+    }
+    alioquin
+    {
+        fputs("...", f);
+    }
+}
+
+/* exemplum syntacticum tagi e definitione canonis: attributa cum
+ * valoribus fictis, liberi nidificati (profunditas II), textus
+ * '...'. Effusio iam evasa ('lt;' litteralis) - intra <pre> it. */
+interior vacuum
+_syntaxin_scribere(
+    FILE*       f,
+    StmlNodus*  radix_canonis,
+    StmlNodus*  def,
+    i32         gradus,
+    Piscina*    piscina)
+{
+    chorda* titulus_t;
+    b32     textus_habet;
+    i32     n_attributa;
+    i32     n_liberorum;
+    i32     numerus;
+    i32     i;
+    i32     scripta;
+
+    titulus_t = stml_attributum_capere(def, "nomen");
+    si (!titulus_t)
+    {
+        redde;
+    }
+    textus_habet = stml_attributum_capere(def, "textus") != NIHIL;
+
+    n_attributa = ZEPHYRUM;
+    n_liberorum = ZEPHYRUM;
+    numerus     = stml_numerus_liberorum(def);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+
+        l = stml_liberum_ad_indicem(def, i);
+        si (!l || l->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (chorda_aequalis_literis(*l->titulus, "attributum"))
+        {
+            n_attributa++;
+        }
+        alioquin si (chorda_aequalis_literis(*l->titulus,
+                                             "liberum"))
+        {
+            n_liberorum++;
+        }
+    }
+
+    per (i = ZEPHYRUM; i < gradus * II; i++)
+    {
+        putc(' ', f);
+    }
+    fputs("&lt;", f);
+    _html_textum_scribere(f, *titulus_t);
+
+    scripta = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+        chorda*    titulus_a;
+
+        l = stml_liberum_ad_indicem(def, i);
+        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
+            !chorda_aequalis_literis(*l->titulus, "attributum"))
+        {
+            perge;
+        }
+        titulus_a = stml_attributum_capere(l, "nomen");
+        si (!titulus_a)
+        {
+            perge;
+        }
+        si (n_attributa > III && scripta > ZEPHYRUM)
+        {
+            i32 j;
+
+            fputs("\n", f);
+            per (j = ZEPHYRUM; j < gradus * II + IV; j++)
+            {
+                putc(' ', f);
+            }
+        }
+        alioquin
+        {
+            putc(' ', f);
+        }
+        _html_textum_scribere(f, *titulus_a);
+        fputs("=\"", f);
+        _valorem_fictum_scribere(f, l, piscina);
+        putc('"', f);
+        scripta++;
+    }
+
+    si (textus_habet)
+    {
+        fputs("&gt;...&lt;/", f);
+        _html_textum_scribere(f, *titulus_t);
+        fputs("&gt;\n", f);
+        redde;
+    }
+    si (n_liberorum == ZEPHYRUM || gradus >= II)
+    {
+        fputs("/&gt;\n", f);
+        redde;
+    }
+
+    fputs("&gt;\n", f);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+        chorda*    petitum;
+        StmlNodus* def_l;
+
+        l = stml_liberum_ad_indicem(def, i);
+        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
+            !chorda_aequalis_literis(*l->titulus, "liberum"))
+        {
+            perge;
+        }
+        petitum = stml_attributum_capere(l, "nomen");
+        si (!petitum)
+        {
+            perge;
+        }
+        def_l = _definitio_elementi(radix_canonis, petitum,
+                                    titulus_t);
+        si (def_l)
+        {
+            _syntaxin_scribere(f, radix_canonis, def_l,
+                               gradus + I, piscina);
+        }
+        alioquin
+        {
+            i32 j;
+
+            per (j = ZEPHYRUM; j < (gradus + I) * II; j++)
+            {
+                putc(' ', f);
+            }
+            fputs("&lt;", f);
+            _html_textum_scribere(f, *petitum);
+            fputs("/&gt;\n", f);
+        }
+    }
+    per (i = ZEPHYRUM; i < gradus * II; i++)
+    {
+        putc(' ', f);
+    }
+    fputs("&lt;/", f);
+    _html_textum_scribere(f, *titulus_t);
+    fputs("&gt;\n", f);
+}
+
 /* encyclopaedia et lacunae FUSAE (spec glossae par. 6): plagula
  * una sine ope externa. DETERMINISTICA - nulla tempora, ergo
  * -probare crustae byte conferre potest. Lacuna VISIBILIS
@@ -341,6 +633,7 @@ interior b32
 _paginam_scribere(
     NaturaBibliotheca*   bib,
     constans NgLinguae*  linguae,
+    StmlNodus*           radix_canonis,
     constans character*  via,
     Piscina*             piscina)
 {
@@ -383,6 +676,17 @@ _paginam_scribere(
           " .tabula a { color: #b8a878; text-decoration: none;\n"
           "             margin-right: .6rem; }\n"
           " .tabula a:hover { color: #e8c878; }\n"
+          " details.syn { margin: .1rem 0 .8rem 0; }\n"
+          " details.syn summary { color: #8a8272;\n"
+          "                       cursor: pointer;\n"
+          "                       font-size: .85rem; }\n"
+          " details.syn pre { background: #1c1914;\n"
+          "                   border: 1px solid #3a352c;\n"
+          "                   padding: .6rem .8rem;\n"
+          "                   overflow-x: auto; color: #c8bfa8;\n"
+          "                   font-size: .85rem;\n"
+          "                   line-height: 1.45;\n"
+          "                   margin: .3rem 0 0 0; }\n"
           "</style></head><body>\n"
           "<h1>GLOSSAE - documentatio generum</h1>\n", f);
 
@@ -579,6 +883,43 @@ _paginam_scribere(
                             "<p class=\"deest\"><b>%s</b> "
                             "&#9888; deest</p>\n", codex);
                     }
+                }
+            }
+
+            /* syntaxis: exemplum canonicum tagi (definitio in
+             * canone cocto kebab stat, titulus generis snake) */
+            si (radix_canonis)
+            {
+                character  kebab[CCLVI];
+                chorda     petitum;
+                StmlNodus* def_g;
+                i32        k;
+                i32        longitudo;
+
+                longitudo = g->titulus->mensura;
+                si (longitudo >= (i32)magnitudo(kebab))
+                {
+                    longitudo = (i32)magnitudo(kebab) - I;
+                }
+                per (k = ZEPHYRUM; k < longitudo; k++)
+                {
+                    character c;
+
+                    c = (character)g->titulus->datum[k];
+                    kebab[k] = c == '_' ? '-' : c;
+                }
+                kebab[longitudo] = '\0';
+                petitum = chorda_ex_literis(kebab, piscina);
+
+                def_g = _definitio_elementi(radix_canonis,
+                                            &petitum, NIHIL);
+                si (def_g)
+                {
+                    fputs("<details class=\"syn\"><summary>"
+                          "syntaxis</summary>\n<pre>", f);
+                    _syntaxin_scribere(f, radix_canonis, def_g,
+                                       ZEPHYRUM, piscina);
+                    fputs("</pre></details>\n", f);
                 }
             }
         }
@@ -925,7 +1266,36 @@ principale(
 
     si (via_html)
     {
-        si (!_paginam_scribere(bib, &linguae, via_html, piscina))
+        StmlNodus* radix_canonis;
+
+        /* canon coctus monolithi pro syntaxi tagorum - absens
+         * (corpus fictum probationum) = pagina sine syntaxi,
+         * numquam defectus */
+        radix_canonis = NIHIL;
+        si (strlen(radix) + XXXII < (size_t)DXII)
+        {
+            character via_canonis[DXII];
+            chorda    fons_canonis;
+
+            sprintf(via_canonis, "%s/cocta/individua.canon",
+                    radix);
+            fons_canonis = filum_legere_totum(via_canonis,
+                                              piscina);
+            si (fons_canonis.mensura > ZEPHYRUM)
+            {
+                StmlResultus r;
+
+                r = stml_legere(fons_canonis, piscina,
+                                bib->intern);
+                si (r.successus)
+                {
+                    radix_canonis = r.elementum_radix;
+                }
+            }
+        }
+
+        si (!_paginam_scribere(bib, &linguae, radix_canonis,
+                               via_html, piscina))
         {
             fprintf(stderr,
                 "natura_glossae: pagina '%s' scribi nequit\n",
