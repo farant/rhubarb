@@ -35,21 +35,32 @@ individuum named `apis` and reject a true statement.
 
 ## 2. The design in one paragraph
 
-Individuum proper names carry a leading `#` **everywhere they appear** —
-declaration and reference alike (`nomen="#rosa-ad-murum"`,
-`pollinatur-a="#apis-prima"`). Bare values in reference position name
-**kinds**, in canon vocabulary (kebab, the same names used as tags:
-`pollinatur-a="apis"`). The `#` is a one-character dispatcher between two dumb
-checks: `#`-values resolve against document keys (citatio, verbatim match —
-keys are sigiled too, so there is NO stripping anywhere); bare values must be
-one of the kinds in the citation's existing `ad=` closure list (vocabulary
-check, needs no keys, works identically per-module and monolith). Canon learns
-no expression language.
+Attribute values partition into THREE marked spaces. Individuum proper names
+carry a leading `#` **everywhere they appear** — declaration and reference
+alike (`nomen="#rosa-ad-murum"`, `pollinatur-a="#apis-prima"`). Kind
+references carry a leading `.` (`pollinatur-a=".apis"` — "bee-pollinated, no
+particular bee"), in canon vocabulary (kebab, the same names used as tags).
+**Bare values are always literals** — text, numbers, dates, electio tokens —
+so `attr="foo"` is unambiguously data at a glance. The sigils dispatch two
+dumb checks: `#`-values resolve against document keys (citatio, verbatim
+match — keys are sigiled too, so no stripping on that branch); `.`-values
+must name a kind in the citation's existing `ad=` closure list (vocabulary
+check, one char stripped for title comparison, needs no keys, works
+identically per-module and monolith). An UNSIGILED value in a reference
+attribute is a TYPE error (`valor_congruit`), which means "references
+announce themselves" is enforced on ALL relation sites — including the
+open-target and multiplex ones citation cannot reach. Canon learns no
+expression language.
 
-Precedents: HTML `id`/`href="#x"`, CSS `#id` vs type selectors, house `##`
-nids ("hash = identity" is existing house vocabulary). Philosophically: the
-`#` marks rigid designation (a proper name) vs classification (a description)
-— markup's capital letter.
+Precedents: the CSS selector sigils EXACTLY — `#id` = identity, `.class` =
+kind-membership, bare = literal/type — same marks, same semantics; HTML
+`id`/`href="#x"`; house `##` nids ("hash = identity" is existing house
+vocabulary). Philosophically: `#` marks rigid designation (a proper name),
+`.` marks classification (a predicate) — markup's capital letter and its
+common noun. Known overload, accepted with eyes open: `.planta` also reads
+as a file extension (canones.registrum uses that very string as one), but
+the two live in different value spaces, as CSS classes have cohabited with
+extensions for thirty years.
 
 ## 3. Rulings (made in-session, 2026-08-07)
 
@@ -70,6 +81,13 @@ nids ("hash = identity" is existing house vocabulary). Philosophically: the
    occurrence of a proper name is visually marked, and keys/references match
    verbatim. Any future format that writes an individuum identifier carries
    the signum with it (doctrine; out of scope here).
+4. **Full trichotomy** (Fran, same session): kind references carry `.`,
+   so bare values are ALWAYS literals. Rationale: `attr="foo"` should not
+   require consulting the canon to know whether foo is data or a reference.
+   Consequence: electio tokens, text, numbers, dates stay bare (they are
+   literal-space); `.x` resolves in taxonomy kind-space only — things that
+   exist as tags. If natura later promotes an electio token to a genus, the
+   spelling change in documents is deliberate and visible.
 
 ## 4. Grammar — two new value-genera
 
@@ -80,9 +98,16 @@ Added to canon's genus electio (canon.canon + `genus_legere` +
   For identity attributes (`nomen=`). A bare identity is a VITIUM: the type
   system itself enforces that baptism is always marked.
 - **`referentia`** — either `#` + non-empty `compositum` body (instance
-  reference) or a bare `compositum` (kind reference). For all relation-origin
-  attributes, including multiplex `ad=` (e.g. `generat`), in BOTH per-module
-  canons and the monolith.
+  reference) or `.` + non-empty `compositum` body (kind reference). A BARE
+  value is a VITIUM (`CANON_VALOR_MALUS`, existing machinery) — references
+  always announce themselves. For all relation-origin attributes, including
+  multiplex `ad=` (e.g. `generat`), in BOTH per-module canons and the
+  monolith.
+
+The sigil-bearing genera are EXACTLY these two; every other genus (textus,
+numerus, dies, veritas, electio, nomen, compositum) is literal-space and
+never sigiled. Element text content (`textus=` elements) is prose, not
+value-space — `#` and `.` appear there freely with no meaning.
 
 Notes:
 - `referentia` everywhere kills the class-1 typing divergence
@@ -91,10 +116,10 @@ Notes:
 - `certitudo=` and `fons=` stay `genus="nomen"` — they cite natura's keys
   (dictionary-side), never take the signum. (When ruling 2's named future
   lands, revisit.)
-- Bare kind references are KEBAB (canon vocabulary = element titles), not
+- Kind references (`.x`) are KEBAB (canon vocabulary = element titles), not
   snake. The duae-orthographiae convention (hortus header par.) is RETIRED:
-  spelling is style, the signum is the mechanism.
-- `#` alone (empty body) is a vitium under both genera.
+  spelling is style, the sigils are the mechanism.
+- A lone sigil (`#` or `.` with empty body) is a vitium under both genera.
 
 ## 5. Machina — citatio's signum dispatch (lib/canon.c)
 
@@ -105,16 +130,20 @@ makes key-space and kind-vocabulary disjoint by construction.
 Pass II, per citing value:
 - value begins with `#` → look up in keys **verbatim** (no stripping). Miss =
   existing `CANON_CITATIO_IRRITA`.
-- bare value → must equal one of the `ad_elementa` titles. Miss = NEW vitium
-  **`CANON_VOCABULUM_IGNOTUM`** ("vocabulum extra petitum citationis"), whose
-  detail uses the existing `_suggestio` machinery to offer the nearest kind
-  title AND the hint that an instance reference wants `#` (the commonest
-  authoring mistake will be an unsigiled instance name).
+- value begins with `.` → strip the one sigil character, compare against the
+  `ad_elementa` titles (tags cannot carry sigils, so the list stays bare).
+  Miss = NEW vitium **`CANON_VOCABULUM_IGNOTUM`** ("vocabulum extra petitum
+  citationis"), whose detail uses the existing `_suggestio` machinery to
+  offer the nearest kind title.
+- bare value never reaches pass II: it already failed `valor_congruit`
+  (`referentia` rejects bare) — enforced at ALL referentia sites, cited or
+  not.
 
 Uncited relations (open-target `ad='*'` 438 sites, multiplex 587,
-cross-module targets in per-module canons) get typing (`referentia`) only —
-same as today, now with intent visible. Honest limit, stated in the monolith
-praefatio.
+cross-module targets in per-module canons) get typing only — but typing now
+carries real weight: the value must be a well-formed `#`- or `.`-reference
+even where nothing resolves it. Honest limit on resolution, stated in the
+monolith praefatio.
 
 ## 6. Generator (tools/natura_canones.c + _emissio.c)
 
@@ -153,19 +182,22 @@ praefatio.
   Linnaeus (a `.planta` root admits only planta-module elements) — that is
   the class-D boundary made visible, not a defect.
 - Test documents (probatio_natura_canones DOC_* pairs, probatio_canon
-  fixtures): identities and instance references gain `#`.
+  fixtures): identities and instance references gain `#`, kind references
+  gain `.`.
 
 ## 9. Testing (pre-fix-oracle discipline throughout)
 
 1. **Typing pairs**: `identitas` rejects bare / accepts `#x`; `referentia`
-   accepts both forms, rejects lone `#`. Bare-`nomen=` vitium test fails on
-   old code (was legal compositum) — true oracle.
-2. **Vocabulary pair**: bare kind in closure passes; bare non-kind gets
-   `CANON_VOCABULUM_IGNOTUM` with suggestion. Fails-before/passes-after.
+   accepts `#x` and `.x`, rejects BARE, rejects lone `#` and lone `.`.
+   Bare-`nomen=` and bare-referentia vitium tests fail on old code (both
+   were legal) — true oracles.
+2. **Vocabulary pair**: `.apis` (kind in closure) passes; `.piscis-volans`
+   (unknown kind) gets `CANON_VOCABULUM_IGNOTUM` with suggestion.
+   Fails-before/passes-after.
 3. **Signum citation pair**: `#`-reference resolving (enrolled) passes;
    `#`-reference dangling gets `CITATIO_IRRITA`. (Extends today's closure
    pair.)
-4. **Kind-level statement**: `pollinatur-a="apis"` VALID — inexpressible
+4. **Kind-level statement**: `pollinatur-a=".apis"` VALID — inexpressible
    before this spec; the capability test.
 5. **Enrollment exemplar**: an `.individua` test document enrolling
    `#carl_linnaeus` and citing him — green; same document without enrollment
