@@ -168,3 +168,24 @@ part) used to intern a one-space title that matched nothing — a
 citation that silently guarded nothing. Now clamat like the
 missing-solidus form. Pre-fix oracle held: the whitespace test and
 the closure-pendens test both fail on the old code.
+
+## 2026-08-07 — signa: identitas + referentia (the # / . trichotomy)
+
+Two new value-genera. `identitas` = mandatory `#` + compositum body
+(nomen= declarations); `referentia` = `#` or `.` + body (relation
+values). Bare in referentia is a TYPE error — so "references
+announce themselves" holds at every relation site, including the
+open-target and multiplex ones citation can't reach.
+
+Citatio pass II dispatches on the first character: `.` → vocabulary
+check against the ad_elementa titles (no keys needed — works
+per-module); everything else → verbatim key lookup, which covers
+BOTH `#` (keys are sigiled too, so declaration and reference match
+byte-for-byte, no stripping anywhere) AND the legacy bare form.
+The legacy branch is load-bearing: natura.canon itself cites bare
+values and the .genera dialect keeps them by ruling.
+
+New vitium CANON_VOCABULUM_IGNOTUM (XIII — first attempt at XI
+collided with CANON_TEXTUS_MALUS; the vitium enum runs past the
+window I had sampled. Grep a WINDOW, collide with the enum).
+Suggestion via the existing _suggestio idiom.

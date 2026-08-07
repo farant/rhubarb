@@ -765,3 +765,30 @@ posteri IN THE GRAPH (nested species land in the enclosing
 genus's res_suae, flat) — if a relation ever targets a res with
 ontological descendants, that is a loader question, not an
 emitter one.
+
+## 2026-08-07 (later) — signa emitted + per-module citations
+
+nomen= now emits genus="identitas", relations genus="referentia"
+in BOTH canon kinds — the nomen/compositum typing divergence died
+as a side effect (it was a task-boundary scar: the monolith task
+widened relation typing under `si (monolithus)` and nobody
+revisited per-module because nothing forced it).
+
+Per-module canons now cite wherever the target closure lies wholly
+inside the module (`_clausuram_colligere` gained
+modulus_requisitus; impure closure → NIHIL → NC_CIT_ALIENA, which
+never reaches the census because the monolith passes requisitus
+NIHIL). Measured: communicatio 2, lingua_programmandi 60,
+elementa_programmatis 33, others — the "per modulum nullae esse
+debent" gate in the corpus audit INVERTED to "moduli VERE citant".
+
+The module with the intra-module nuntius→actor pair is
+communicatio, not a "nuntium" module — the plan guessed the
+filename from the citation name and the verification grep caught
+it. Modules are files; citations are named after entities.
+
+hortus.planta migrated (all identities sigiled); planta_lectio's
+expectations updated to the VERBATIM sigiled values — the reader
+strips nothing, per spec. Readers were byte-identical after
+regeneration (coquere maps both old and new genera to verbatim
+chorda*), so -probare exit 0 was honest, not stale.
