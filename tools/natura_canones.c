@@ -627,7 +627,8 @@ _machina_ad_individuum(
     redde chorda_aequalis_literis(*gerens, "individuum");
 }
 
-/* Praefixum 'status_' machinae, NISI nomen machinae iam eo incipit.
+/* Praefixum 'status_' machinae, NISI nomen machinae stirpem
+ * 'status' iam fert.
  *
  * DECRETUM (Fran), non casus specialis furtim insertus: haec
  * condicio transformationi puritatem sine exceptione aufert, quae
@@ -640,6 +641,15 @@ _machina_ad_individuum(
  *
  *   planta  machina 'vita'           -> status-vita
  *   persona machina 'status_civilis' -> status-civilis
+ *   coctura machina 'status'         -> status
+ *
+ * STIRPS quaeritur, non praefixum plenum: machina simpliciter
+ * 'status' nominata lineolam sequentem non fert, et balbutiem
+ * eandem ('status-status') pareret quam decretum tollere iubet.
+ *
+ * Duae chordae distinctae CONSULTO: 'status' quaeritur, 'status_'
+ * redditur. Si una eademque essent, machina 'vita' attributum
+ * 'statusvita' pareret.
  *
  * Praefixum reddito UTENDUM est et in inquisitione duplicationis
  * et in membro ipso: si discreparent, machina sub uno nomine
@@ -648,19 +658,21 @@ interior constans character*
 _praefixum_machinae(
     constans chorda*  titulus)
 {
-    constans character* signum;
+    constans character* praefixum;
+    constans character* stirps;
     i32                 mensura;
 
-    signum  = "status_";
-    mensura = (i32)strlen(signum);
+    praefixum = "status_";
+    stirps    = "status";
+    mensura   = (i32)strlen(stirps);
 
     si (titulus->mensura >= mensura &&
-        memcmp(titulus->datum, signum,
+        memcmp(titulus->datum, stirps,
                (memoriae_index)mensura) == ZEPHYRUM)
     {
         redde NIHIL;
     }
-    redde signum;
+    redde praefixum;
 }
 
 /* liberos <valor> nodi unius ad membra applicare.
