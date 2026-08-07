@@ -66,8 +66,17 @@ for _f in lib/natura.c include/natura.h lib/stml.c \
 done
 
 mkdir -p "$COCTA" || exit 2
-TMPD=build/natura_canones_tmp
+
+# TMPD per PROCESSUM proprium ($$): uncus .genera hanc portam ad
+# omnem conservationem accendit, et duae conservationes celeres
+# (mos scribendi ordinarius) duos cursus simul dant. Loco fixo
+# PROBANDUM inter cursus intertexeretur - et PROBANDUM alienum
+# collatum RANCOREM FALSUM parit, id est portam quae de re sana
+# clamat. Nomen proprium tria simul claudit (PROBANDUM, QUERELA,
+# MONSTRATA).
+TMPD=build/natura_canones_tmp.$$
 mkdir -p "$TMPD" || exit 2
+trap 'rm -rf "build/natura_canones_tmp.$$"' EXIT
 PROBANDUM="$TMPD/probandum.canon"
 QUERELA="$TMPD/querela.txt"
 

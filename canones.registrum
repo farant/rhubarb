@@ -16,6 +16,18 @@
 # per extensionem canon.canon invenit -> RADIX_MALA vitium proprium
 # pro praetermissione tacita.
 
+# Individua naturae: claves EXTENSIONIS SOLAE, consulto. Ambo
+# canones sub radice <individua> sedent, et RADIX VINCIT - ergo
+# clavis '<individua>' canonem UNUM plagulis OMNIBUS falso
+# imponeret (hortus.planta contra monolithum, aut contra plantam
+# quidquid aliud). Absentia clavis radicis DEFECTUS NON EST; noli
+# eam 'corrigere'.
+# Ceteri XXXII canones moduli extra registrum manent, per
+# 'canon_examen -canon <via>' adibiles: XXXIII lineae generandae
+# essent pro lucro exiguo.
+.individua	natura/cocta/individua.canon
+.planta	natura/cocta/planta.canon
+
 .genera	natura/natura.canon
 <aedilis>	aedilis.canon
 <canon>	canon.canon

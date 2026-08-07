@@ -316,3 +316,97 @@ from.
 The general lesson is the one this file keeps relearning: **a comment asserting a
 property is not evidence of it.** The premise was plausible, cheap to check, and
 wrong, and it sat in the code as a confident justification for the bug.
+
+---
+
+## 2026-08-07 — Registry dispatch, the `.genera` hook, and a race the hook would have lit
+
+Task 6: bind instance documents to the generated canons, and make a stale canon
+announce itself on save.
+
+### Extension keys only, and why the missing root key is the design
+
+`canones.registrum` states **RADIX VINCIT** — a root-element key beats an
+extension key. Both `individua.canon` (monolith) and `planta.canon` root at
+`<individua>`. So a `<individua>` root key would bind *every* instance document
+to whichever canon claimed it, and it would do so silently, because being
+judged against the wrong canon still produces a confident verdict.
+
+Measured, on one byte-identical document containing a `<canis>`:
+
+    hortus/vivarium.individua  ->  individua.canon  ->  exit 0
+    hortus/vivarium.planta     ->  planta.canon     ->  exit 1
+        <individua> liberum hic non licet: canis
+        <canis> elementum extra canonem: an rosa-canina?
+
+Same bytes, opposite verdicts, and both correct — that difference is exactly
+what a root key would have erased. A comment above the two lines records this,
+because the omission looks like an oversight and invites a "fix".
+
+The other 32 module canons stay out of the registry and are reached with
+`canon_examen -canon <via>`. That flag already existed (`canon_examen.c:421`);
+the brief's step 3 was obsolete.
+
+### The hook now emits from one place, because it grew a second axis
+
+`natura-custos.sh` previously emitted-and-exited inside each branch. That kept
+the one-JSON-per-invocation contract only as long as nobody added a branch. The
+rancour gate *is* a new branch and it is **orthogonal** to the others — a model
+can be semantically sound while its cooked canon is stale, and both facts want
+saying in the same breath. So messages now accumulate into `NUNTIUS` and emit
+once at the end: the contract is held by structure, not by remembering.
+
+Verified with `jq -s length` = 1 while both a VULNUS and a rancour line were
+present.
+
+### Exit 1 and exit 2 must not give the same advice
+
+- exit 1 = `RANCIDUS` -> regenerate. The stale canons are **named** in the
+  message (editing `planta.genera` correctly names both `planta.canon` and the
+  `individua.canon` monolith).
+- exit 2 = the gate did not run. Here the message passes through the tail of the
+  tool's own stderr rather than hardcoding "run natura_struere.sh".
+
+That last choice earned itself immediately. A *third* exit-2 shape showed up in
+testing that the brief did not anticipate: when the `.genera` has a semantic
+fault, the generator refuses to emit a canon it could not load back
+(`canon se ipsum onerare non posset, RECUSATUR`) and exits 2. Hardcoded "the
+binary is stale, rebuild it" advice would have been simply wrong there.
+Telling an author to regenerate with a stale binary is precisely how stale
+output gets blessed, so the two paths are kept apart.
+
+### The race: pre-existing, harmless, and armed by this hook
+
+`PROBANDUM`/`QUERELA`/`MONSTRATA` sat at fixed paths under
+`build/natura_canones_tmp`. Two concurrent runs interleave, and a `PROBANDUM`
+written by *another* run compared against a real canon yields a **false
+RANCIDUS**. Nobody ran this concurrently before — but the hook fires on every
+save, and two quick `.genera` saves is ordinary editing. A `$$` suffix plus an
+EXIT trap closes all three at once.
+
+Proven rather than assumed. Six concurrent runs, old fixed path:
+
+    exits: 2 2 1 2 0 0
+    natura_canones: RANCIDUS natura/cocta/norma.canon   <- FALSE
+
+Six concurrent runs, `$$` path: `0 0 0 0 0 0`, no leftover directories.
+
+*Cost:* the hook goes from ~0.03 s to ~0.95 s per `.genera` save, essentially
+all of it the 34-canon regenerate-and-compare. Judged worth it — the thing it
+prevents is generated output silently drifting from its source in a committed
+tree — but if `.genera` editing ever gets interactive this is the line item.
+
+### Unrelated finding, left alone
+
+The library carries **3 pre-existing rule-8 wounds** at HEAD, so the hook is
+never silent on a `.genera` save. Both predate this task series
+(`git log -S` -> 7099651, 4f9f82e):
+
+- `inversa` has `genus="veritas"`, but `pharmacon`/`plagula_computatralis` use
+  it to name the inverse relation (`inversa="coquitur"`) rather than assert a
+  boolean. The model and the usage genuinely disagree; someone has to decide
+  which is right.
+- `vectura` has `quando="-312"` against `genus="dies"` — the library models
+  Roman roads and cannot currently express a BC date.
+
+Not touched: out of scope, and neither is a regression.
