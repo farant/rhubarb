@@ -714,6 +714,58 @@ staticus constans character* DOC_CLAUSURA_PENDENS =
     "  <rosa nomen=\"#rosa-prima\" pollinatur-a=\"#nemo-omnino\"/>\n"
     "</individua>\n";
 
+/* '.apis' = genus e vocabulario - sententia gradus GENERIS
+ * ('a apibus pollinatur, apis nulla certa') ANTE signa
+ * inexprimibilis erat */
+staticus constans character* DOC_GENUS_REF =
+    "<individua>\n"
+    "  <rosa nomen=\"#rosa-una\" pollinatur-a=\".apis\"/>\n"
+    "</individua>\n";
+
+staticus constans character* DOC_GENUS_IGNOTUM =
+    "<individua>\n"
+    "  <rosa nomen=\"#rosa-una\" pollinatur-a=\".piscis-volans\"/>\n"
+    "</individua>\n";
+
+/* INSCRIPTIO (spec par. 3.1): census sodales suos sedet - linea
+ * una individuum dictionarii praesentat, et referentia resolvit */
+staticus constans character* DOC_INSCRIPTUS =
+    "<individua>\n"
+    "  <carl-linnaeus nomen=\"#carl_linnaeus\"/>\n"
+    "  <rosa nomen=\"#rosa-una\" auctor-nominis=\"#carl_linnaeus\"/>\n"
+    "</individua>\n";
+
+staticus constans character* DOC_NON_INSCRIPTUS =
+    "<individua>\n"
+    "  <rosa nomen=\"#rosa-una\" auctor-nominis=\"#carl_linnaeus\"/>\n"
+    "</individua>\n";
+
+/* CANON MODULI: communicatio petitum intra modulum habet
+ * (nuntius missus-a -> actor) - canon moduli citare potest */
+staticus constans character* DOC_NUNTII_SANUS =
+    "<individua>\n"
+    "  <actor nomen=\"#actor-unus\"/>\n"
+    "  <nuntius nomen=\"#n-unus\" missus-a=\"#actor-unus\"/>\n"
+    "</individua>\n";
+
+staticus constans character* DOC_NUNTII_PENDENS =
+    "<individua>\n"
+    "  <nuntius nomen=\"#n-unus\" missus-a=\"#nemo\"/>\n"
+    "</individua>\n";
+
+/* RESTRICTIO: documentum uni-modulare sine referentiis trans
+ * modulos verdictum IDEM sub canone moduli et monolitho accipit
+ * (spec par. 1 - divergentia = scopus, numquam accidens) */
+staticus constans character* DOC_PURUS =
+    "<individua>\n"
+    "  <rosa-canina nomen=\"#rosa-una\" status-vita=\"florens\"/>\n"
+    "</individua>\n";
+
+staticus constans character* DOC_PURUS_VITIOSUS =
+    "<individua>\n"
+    "  <rosa-canina nomen=\"#rosa-una\" status-vita=\"volans\"/>\n"
+    "</individua>\n";
+
 /* UNICITAS trans genera: genera DUO DIVERSA idem nomen ferunt.
  * Hoc est quod spatium nominum UNUM probat - spatium per
  * elementum hoc acciperet. */
@@ -1157,6 +1209,110 @@ principale(
         imprimere("  citationes %u recensitae, malae %u\n",
                   xar_numerus(citationes), malae);
         CREDO_AEQUALIS_I32 (malae, (i32)ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * IX. SIGNA - vocabularium et inscriptio (sub monolitho)
+     * ======================================================== */
+
+    {
+        i32 irrita;
+        i32 vocab;
+        i32 omnia;
+
+        imprimere("\n--- IX. signa (vocabularium/inscriptio) ---\n");
+
+        CREDO_VERUM (_documentum_iudicare(monolithus, DOC_GENUS_REF,
+            CANON_VOCABULUM_IGNOTUM, &vocab, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (vocab, (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            DOC_GENUS_IGNOTUM, CANON_VOCABULUM_IGNOTUM, &vocab,
+            &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (vocab, (i32)I);
+        CREDO_AEQUALIS_I32 (omnia, (i32)I);
+
+        CREDO_VERUM (_documentum_iudicare(monolithus, DOC_INSCRIPTUS,
+            CANON_CITATIO_IRRITA, &irrita, &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (irrita, (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            DOC_NON_INSCRIPTUS, CANON_CITATIO_IRRITA, &irrita,
+            &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (irrita, (i32)I);
+        CREDO_AEQUALIS_I32 (omnia, (i32)I);
+    }
+
+
+    /* ========================================================
+     * X. CANON MODULI CITAT (communicatio: actor intra
+     *     modulum) et RESTRICTIO (planta: verdicta congruunt)
+     * ======================================================== */
+
+    {
+        chorda  fons_moduli;
+        chorda  causa;
+        Canon*  communicatio;
+        Canon*  planta;
+        i32     irrita;
+        i32     mala;
+        i32     omnia_m;
+        i32     omnia_t;
+
+        imprimere("\n--- X. canon moduli + restrictio ---\n");
+
+        causa.datum   = NIHIL;
+        causa.mensura = ZEPHYRUM;
+        fons_moduli = filum_legere_totum(
+                          "natura/cocta/communicatio.canon",
+                          piscina);
+        CREDO_MAIOR_I32 (fons_moduli.mensura, (i32)ZEPHYRUM);
+        communicatio = canon_legere(fons_moduli, piscina, intern,
+                                    &causa);
+        CREDO_NON_NIHIL (communicatio);
+        CREDO_MAIOR_I32 (xar_numerus(communicatio->citationes),
+                         (i32)ZEPHYRUM);
+
+        CREDO_VERUM (_documentum_iudicare(communicatio,
+            DOC_NUNTII_SANUS, CANON_CITATIO_IRRITA, &irrita,
+            &omnia_m, piscina, intern));
+        CREDO_AEQUALIS_I32 (irrita, (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (omnia_m, (i32)ZEPHYRUM);
+
+        CREDO_VERUM (_documentum_iudicare(communicatio,
+            DOC_NUNTII_PENDENS, CANON_CITATIO_IRRITA, &irrita,
+            &omnia_m, piscina, intern));
+        CREDO_AEQUALIS_I32 (irrita, (i32)I);
+
+        fons_moduli = filum_legere_totum(
+                          "natura/cocta/planta.canon", piscina);
+        CREDO_MAIOR_I32 (fons_moduli.mensura, (i32)ZEPHYRUM);
+        planta = canon_legere(fons_moduli, piscina, intern, &causa);
+        CREDO_NON_NIHIL (planta);
+
+        /* restrictio: verdicta TOTA congruunt (omnia, non genus
+         * unum) - sub utroque canone */
+        CREDO_VERUM (_documentum_iudicare(planta, DOC_PURUS,
+            CANON_VALOR_MALUS, &mala, &omnia_m, piscina, intern));
+        CREDO_VERUM (_documentum_iudicare(monolithus, DOC_PURUS,
+            CANON_VALOR_MALUS, &mala, &omnia_t, piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia_m, omnia_t);
+        CREDO_AEQUALIS_I32 (omnia_m, (i32)ZEPHYRUM);
+
+        CREDO_VERUM (_documentum_iudicare(planta,
+            DOC_PURUS_VITIOSUS, CANON_VALOR_MALUS, &mala,
+            &omnia_m, piscina, intern));
+        CREDO_AEQUALIS_I32 (mala, (i32)I);
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            DOC_PURUS_VITIOSUS, CANON_VALOR_MALUS, &mala,
+            &omnia_t, piscina, intern));
+        CREDO_AEQUALIS_I32 (mala, (i32)I);
+        CREDO_AEQUALIS_I32 (omnia_m, omnia_t);
+        CREDO_AEQUALIS_I32 (omnia_m, (i32)I);
     }
 
 
