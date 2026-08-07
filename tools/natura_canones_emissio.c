@@ -1230,6 +1230,32 @@ _signum_petiti(
     redde "";
 }
 
+interior vacuum _chordam_scribere(FILE* f, constans chorda* c);
+
+/* petitum signatum scribere: '.' corpus KEBAB (vocabularium =
+ * tituli elementorum canonis), '#' corpus verbatim (identitas -
+ * compositum snake sinit, claves seminum ita congruunt) */
+interior vacuum
+_petitum_scribere(
+    FILE*               f,
+    NaturaBibliotheca*  bib,
+    constans chorda*    v,
+    Piscina*            piscina)
+{
+    constans character* sig;
+
+    sig = _signum_petiti(bib, v, piscina);
+    fputs(sig, f);
+    si (sig[ZEPHYRUM] == '.')
+    {
+        _kebab_scribere(f, v);
+    }
+    alioquin
+    {
+        _chordam_scribere(f, v);
+    }
+}
+
 /* membrum exemplaris titulo naturae (snake) invenire */
 interior NcMembrum*
 _membrum_invenire(
@@ -1311,9 +1337,45 @@ _semen_emittere(
         fprintf(f, " %s=\"", ap);
         si (m->origo == NC_ORIGO_RELATIO)
         {
-            fputs(_signum_petiti(bib, &textus, piscina), f);
+            _petitum_scribere(f, bib, &textus, piscina);
         }
-        _chordam_scribere(f, &textus);
+        alioquin
+        {
+            _chordam_scribere(f, &textus);
+        }
+        fputc('"', f);
+    }
+
+    /* passus I b: RELATA formae attributi (spec census par. 2:
+     * petita signum ferunt - genealogia C, auctores, normae) */
+    per (j = ZEPHYRUM; j < xar_numerus(e->nodus->liberi); j++)
+    {
+        StmlNodus* rn;
+        chorda*    tv;
+        chorda*    ad_v;
+        NcMembrum* m;
+
+        rn = *(StmlNodus**)xar_obtinere(e->nodus->liberi, j);
+        si (rn->genus != STML_NODUS_ELEMENTUM ||
+            !chorda_aequalis_literis(*rn->titulus, "relatum"))
+        {
+            perge;
+        }
+        tv   = stml_attributum_capere(rn, "nomen");
+        ad_v = stml_attributum_capere(rn, "ad");
+        si (!tv || !ad_v)
+        {
+            perge;
+        }
+        m = _membrum_invenire(membra, tv);
+        si (!m || m->discrimen != NC_MEMBRUM_ATTRIBUTUM ||
+            !_appellatio_emissa(ap, (i32)magnitudo(ap),
+                                m->praefixum, m->titulus))
+        {
+            perge;
+        }
+        fprintf(f, " %s=\"", ap);
+        _petitum_scribere(f, bib, ad_v, piscina);
         fputc('"', f);
     }
 
@@ -1378,6 +1440,34 @@ _semen_emittere(
                 }
             }
             fputs("\n    </historia>", f);
+            perge;
+        }
+        si (chorda_aequalis_literis(*vn->titulus, "relatum"))
+        {
+            chorda* ad_v;
+
+            /* relata MULTIPLICIA: liberum cum ad= signato */
+            tv   = stml_attributum_capere(vn, "nomen");
+            ad_v = stml_attributum_capere(vn, "ad");
+            si (!tv || !ad_v)
+            {
+                perge;
+            }
+            m = _membrum_invenire(membra, tv);
+            si (!m || m->discrimen != NC_MEMBRUM_LIBERUM ||
+                !_appellatio_emissa(ap, (i32)magnitudo(ap),
+                                    m->praefixum, m->titulus))
+            {
+                perge;
+            }
+            si (!liberos_habet)
+            {
+                fputc('>', f);
+                liberos_habet = VERUM;
+            }
+            fprintf(f, "\n    <%s ad=\"", ap);
+            _petitum_scribere(f, bib, ad_v, piscina);
+            fputs("\"/>", f);
             perge;
         }
         si (!chorda_aequalis_literis(*vn->titulus, "valor"))
