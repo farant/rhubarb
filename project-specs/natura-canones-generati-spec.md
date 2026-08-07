@@ -477,23 +477,27 @@ change.
 
 ## 10. Open questions
 
-1. **Per-module extensions.** Registering all 33 in `canones.registrum`
-   means a generated block with markers (the METAMODULUS §3 pattern).
-   Registering only the monolith plus the pilot is simpler. Deciding
-   this needs to know whether per-module instance files get written in
-   practice at all — the monolith may simply be the useful artifact.
-2. **`canon_examen` has no explicit `-canon` flag.** Without one, a
-   canon that is not in the registry cannot be used to judge a file.
-   Either add the flag or accept registry-only dispatch.
-3. **Whether kinds may nest inside kinds.** The first pass allows kinds
-   as children of `<individua>` only; a kind's children are its parts,
-   `historia`, and multiplex properties. Whether "the tree in this
-   garden" should nest structurally, or be expressed by relation, is a
-   real modelling question and is not answered here.
-4. **`canon_coquere` on ~560 elements.** The monolith's generated C
-   reader will be large. Whether that is acceptable or wants splitting
-   is unknown until measured — the pilot answers it for one module and
-   the number can be extrapolated.
+1. **Per-module extensions — ANSWERED (deliberately, not by default).**
+   Only `.individua` and `.planta` are registered. The other 32 stay
+   unregistered and are reachable via `canon_examen -canon`, which makes
+   a generated registry block unnecessary. Registering 33 extensions
+   would cost a marker-delimited generated section for little gain.
+2. **`canon_examen -canon` — CLOSED. The flag already existed** (parsed
+   `canon_examen.c:421-424`, consumed `:460-462`), which implementation
+   discovered and used to prove all 33 canons *load*. Nothing was built.
+3. **Whether kinds may nest inside kinds — STILL OPEN.** The first pass
+   allows kinds as children of `<individua>` only; a kind's children are
+   its parts, `historia`, and multiplex properties. Whether "the tree in
+   this garden" should nest structurally or be expressed by relation is
+   a real modelling question and is not answered here.
+4. **`canon_coquere` on the monolith — MEASURED, and the answer is
+   don't.** The pilot's 72 elements produce a 5,312-line reader, so the
+   monolith's 1,982 elements extrapolate to roughly **146,000 lines /
+   4.2 MB in a single translation unit**. That is not a size to discover
+   by trying it. The monolith's reader wants splitting — by module, most
+   likely — and that is its own piece of work with its own design, not a
+   step in this one. Per-module readers are the usable artifact today;
+   the pilot's is committed and proven.
 
 ## 11. Incidental finding
 
