@@ -32,6 +32,7 @@ interior b32     _appellatio_emissa(character* ex, i32 tectum,
                                     constans chorda* titulus);
 interior NcValorStatus _valorem_planare(constans chorda* v,
                                         character* ex, i32 tectum,
+                                        b32 quota_licet,
                                         b32* planatum);
 interior b32     _generi_congruit(constans character* genus_valoris,
                                   constans character* v,
@@ -58,6 +59,9 @@ interior b32     _membrum_attributum_scribere(FILE* f,
 interior vacuum  _eventum_scribere(FILE* f, Xar* elementa);
 interior vacuum  _citationes_scribere(FILE* f, Xar* elementa);
 interior vacuum  _unicitas_scribere(FILE* f, Xar* elementa);
+interior s32     _nullus_index(constans chorda* c);
+interior integer _mensura_tuta(constans chorda* c);
+interior b32     _nomina_tuta(Xar* elementa);
 
 /* nomen naturae (snake) -> nomen canonis (kebab).
  * Bijectivum: genus 'nomen' naturae lineolam non fert. */
@@ -224,16 +228,27 @@ _appellatio_emissa(
     redde VERUM;
 }
 
-/* praestitutum in valorem attributi vertere.
+/* chordam in receptaculum litterarum planare - pro valore
+ * ATTRIBUTI (quota_licet FALSUM) aut pro textu ELEMENTI
+ * (quota_licet VERUM).
  *
  * STML valores attributorum VERBATIM legit (lib/stml.c
  * _tok_legere_valor_attributi): nec spatium album normalizat nec
  * entitates solvit. Inde duo consilia:
  *
- *   QUOTA ('"') RECUSATUR - valorem in medio praecideret et
- *   reliquum in attributa nova retokenizaret. Corruptio certa;
- *   '&quot;' remedium non est, quia lector noster entitates in
- *   attributis non solvit et sex litteras redderet.
+ *   QUOTA ('"') IN ATTRIBUTO RECUSATUR - valorem in medio
+ *   praecideret et reliquum in attributa nova retokenizaret.
+ *   Corruptio certa; '&quot;' remedium non est, quia lector noster
+ *   entitates in attributis non solvit et sex litteras redderet.
+ *
+ *   QUOTA IN TEXTU ELEMENTI LICET, et licere DEBET: <optio> non
+ *   attributum sed contentum est, ubi quota et STML et XML licita
+ *   est, et _textum_evasum_scribere quod evadendum est iam evadit.
+ *   Regula attributi huc translata prosam LICITAM reiceret - una
+ *   quota in una optione canonem MODULI TOTIUS abiceret - et porta
+ *   quae falso clamat mox neglegitur, id est mors portae. Hoc
+ *   solum periculum harum plagularum est quod auctor cras scribens
+ *   excitat, non octetus corruptus.
  *
  *   SPATIUM ALBUM PLANATUR - linea nova per STML superesset, sed
  *   XML 1.0 par. 3.3.3 normalizationem valorum poscit, unde lector
@@ -247,6 +262,7 @@ _valorem_planare(
     constans chorda*  v,
     character*        ex,
     i32               tectum,
+    b32               quota_licet,
     b32*              planatum)
 {
     i32 n;
@@ -262,7 +278,7 @@ _valorem_planare(
         character c;
 
         c = (character)v->datum[i];
-        si (c == '"')
+        si (c == '"' && !quota_licet)
         {
             redde NC_VALOR_QUOTA;
         }
@@ -339,9 +355,16 @@ _generi_congruit(
             character     planum[NC_VALOR_MAXIMUS];
             b32           mutatum;
 
+            /* QUOTA LICITA hic quoque: optio textus elementi est,
+             * et forma qua COMPARATUR eadem esse debet qua
+             * EMITTITUR - aliter canon optionem ferret quam
+             * congruentia fingeret non exsistere. (Valor attributi
+             * quotam ferre nequit, ergo optio quotata nulli
+             * ordinario congruit - sed id comparatio dicat, non
+             * elisio tacita.) */
             o = *(chorda**)xar_obtinere(optiones, i);
             si (_valorem_planare(o, planum, (i32)magnitudo(planum),
-                                 &mutatum) != NC_VALOR_BONUS)
+                                 VERUM, &mutatum) != NC_VALOR_BONUS)
             {
                 perge;
             }
@@ -628,35 +651,56 @@ _membrum_attributum_scribere(
     {
         NcValorStatus status;
 
+        /* ordinarius= valor ATTRIBUTI est: quota vetita manet */
         status = _valorem_planare(m->praestitutum, valor,
-                                  (i32)magnitudo(valor), &planatum);
-        si (status == NC_VALOR_QUOTA)
+                                  (i32)magnitudo(valor), FALSUM,
+                                  &planatum);
+
+        /* FORMA CLAUSA ('non BONUS'), non series aperta: eadem
+         * enumeratio septuaginta lineis infra iam sic iudicatur, et
+         * series quae tres valores nominatos excipit et cetera
+         * transire sinit statum QUARTUM additum TACITE acciperet -
+         * in plagula cuius doctrina tota est damnum numquam tacite
+         * fieri. Nuntius proprius intra portam manet, ergo nihil
+         * amittitur. */
+        si (status != NC_VALOR_BONUS)
         {
-            fprintf(stderr,
-                "natura_canones: <%.*s> '%s' ordinarius QUOTAM fert - "
-                "STML valorem praecideret, canon RECUSATUR\n",
-                (integer)el->ens->titulus->mensura,
-                (constans character*)el->ens->titulus->datum, ap);
-            redde FALSUM;
-        }
-        si (status == NC_VALOR_MAIOR)
-        {
-            fprintf(stderr,
-                "natura_canones: <%.*s> '%s' ordinarius maior quam "
-                "%u - canon RECUSATUR\n",
-                (integer)el->ens->titulus->mensura,
-                (constans character*)el->ens->titulus->datum, ap,
-                (i32)NC_VALOR_MAXIMUS);
-            redde FALSUM;
-        }
-        si (status == NC_VALOR_NULLUS)
-        {
-            fprintf(stderr,
-                "natura_canones: <%.*s> '%s' ordinarius octetum "
-                "nullum fert - valor tacite praecideretur, canon "
-                "RECUSATUR\n",
-                (integer)el->ens->titulus->mensura,
-                (constans character*)el->ens->titulus->datum, ap);
+            si (status == NC_VALOR_QUOTA)
+            {
+                fprintf(stderr,
+                    "natura_canones: <%.*s> '%s' ordinarius QUOTAM "
+                    "fert - STML valorem praecideret, canon "
+                    "RECUSATUR\n",
+                    (integer)el->ens->titulus->mensura,
+                    (constans character*)el->ens->titulus->datum, ap);
+            }
+            alioquin si (status == NC_VALOR_MAIOR)
+            {
+                fprintf(stderr,
+                    "natura_canones: <%.*s> '%s' ordinarius maior "
+                    "quam %u - canon RECUSATUR\n",
+                    (integer)el->ens->titulus->mensura,
+                    (constans character*)el->ens->titulus->datum, ap,
+                    (i32)NC_VALOR_MAXIMUS);
+            }
+            alioquin si (status == NC_VALOR_NULLUS)
+            {
+                fprintf(stderr,
+                    "natura_canones: <%.*s> '%s' ordinarius octetum "
+                    "nullum fert - valor tacite praecideretur, canon "
+                    "RECUSATUR\n",
+                    (integer)el->ens->titulus->mensura,
+                    (constans character*)el->ens->titulus->datum, ap);
+            }
+            alioquin
+            {
+                fprintf(stderr,
+                    "natura_canones: <%.*s> '%s' ordinarius statum "
+                    "IGNOTUM (%u) reddidit - canon RECUSATUR\n",
+                    (integer)el->ens->titulus->mensura,
+                    (constans character*)el->ens->titulus->datum, ap,
+                    (i32)status);
+            }
             redde FALSUM;
         }
         si (!_generi_congruit(genus_valoris, valor, m->optiones))
@@ -701,9 +745,12 @@ _membrum_attributum_scribere(
         character planum[NC_VALOR_MAXIMUS];
         b32       mutatum;
 
+        /* optio TEXTUS ELEMENTI est, non valor attributi: quota hic
+         * licet (vide _valorem_planare). Cetera - octetus nullus,
+         * receptaculum superatum - recusant ut ante. */
         o = *(chorda**)xar_obtinere(m->optiones, i);
         si (_valorem_planare(o, planum, (i32)magnitudo(planum),
-                             &mutatum) != NC_VALOR_BONUS)
+                             VERUM, &mutatum) != NC_VALOR_BONUS)
         {
             fprintf(stderr,
                 "natura_canones: <%.*s> '%s' optio emitti nequit - "
@@ -1125,6 +1172,141 @@ _citationes_scribere(
     }
 }
 
+/* index primi octeti nulli, vel -I si nullus adest */
+interior s32
+_nullus_index(
+    constans chorda*  c)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < c->mensura; i++)
+    {
+        si ((character)c->datum[i] == '\0')
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* mensura ad IMPRIMENDUM tuta - usque ad octetum nullum primum.
+ * Nuntius qui octetum nullum crudum effundit se ipsum praecidit
+ * (terminale et annales ibi desinunt), id est diagnosticum quod
+ * eadem via corrumpitur qua res de qua queritur. */
+interior integer
+_mensura_tuta(
+    constans chorda*  c)
+{
+    s32 sedes;
+
+    sedes = _nullus_index(c);
+    si (sedes < ZEPHYRUM)
+    {
+        redde (integer)c->mensura;
+    }
+    redde (integer)sedes;
+}
+
+/* OCTETUS NULLUS IN NOMINE - porta unica ad introitum emissionis.
+ *
+ * Semita VALORIS iam clausa est (NC_VALOR_NULLUS, 72149cc); semita
+ * NOMINIS tres ianuas apertas habebat, quarum unaquaeque ALITER
+ * fallebat:
+ *   _kebab_scribere octetum crudum in canonem COMMISSUM scribit
+ *     (nomina elementorum, unicitas super=, citationes omnes);
+ *   '<optio>%.*s' idem, pro nominibus actionum;
+ *   _appellatio_emissa eum transcribit et POST eum terminat, unde
+ *     strcmp et %s ibi desinunt - canon nomen ALIUD emittit quam
+ *     natura declarat, et custodes duplicationis et nominum
+ *     reservatorum cum nomine PRAECISO consentiunt, ergo nemo
+ *     clamat.
+ * Tres politiae uni periculo: corruptio tacita plagulae, nominis
+ * substitutio tacita, et (in semita quaestionis) recusatio loco
+ * alieno numerata.
+ *
+ * PORTA UNA, HIC: sedes proxima quae chordam in litteras vertit
+ * hanc protectionem HEREDITET, non iterum mereatur (mos
+ * _cstr_tutum, natura_canones.c). Introitus emissionis est ultimus
+ * locus ubi NIHIL adhuc scriptum est, ergo recusatio hinc in
+ * semitam 'RECUSATUS et deletus' iam exstantem cadit.
+ *
+ * TITULI ENTIUM SATIS SUNT pro citationibus quoque: citatio_ad
+ * titulum generis aut rei fert, et genera resque OMNIA elementa
+ * monolithi fiunt - solius monolithi citationes sunt. Quod hic
+ * transit, ibi iam transiit.
+ *
+ * SUBIECTUM NOMINATUR (genus et membrum): recusatio quae solum
+ * 'octetus nullus' dicit auctorem per corpus totum quaerere cogit,
+ * et porta cuius sanatio ignoratur porta non est.
+ *
+ * OMNIA recensentur ante reditum: auctor qui corpus corruptum
+ * ferat sedes OMNES semel videat, non unam per cursum. */
+interior b32
+_nomina_tuta(
+    Xar*  elementa)
+{
+    b32 tuta;
+    i32 i;
+
+    tuta = VERUM;
+    per (i = ZEPHYRUM; i < xar_numerus(elementa); i++)
+    {
+        NcElementum* el;
+        i32          j;
+
+        el = *(NcElementum**)xar_obtinere(elementa, i);
+
+        si (_nullus_index(el->ens->titulus) >= ZEPHYRUM)
+        {
+            fprintf(stderr,
+                "natura_canones: genus '%.*s' octetum nullum in "
+                "nomine fert - canon eum crudum scriberet, RECUSATUR\n",
+                _mensura_tuta(el->ens->titulus),
+                (constans character*)el->ens->titulus->datum);
+            tuta = FALSUM;
+        }
+
+        per (j = ZEPHYRUM; j < xar_numerus(el->membra); j++)
+        {
+            NcMembrum* m;
+
+            m = (NcMembrum*)xar_obtinere(el->membra, j);
+            si (_nullus_index(m->titulus) >= ZEPHYRUM)
+            {
+                fprintf(stderr,
+                    "natura_canones: <%.*s> membrum '%.*s' octetum "
+                    "nullum fert - nomen emissum ALIUD esset quam "
+                    "natura declarat, canon RECUSATUR\n",
+                    _mensura_tuta(el->ens->titulus),
+                    (constans character*)el->ens->titulus->datum,
+                    _mensura_tuta(m->titulus),
+                    (constans character*)m->titulus->datum);
+                tuta = FALSUM;
+            }
+        }
+
+        per (j = ZEPHYRUM; j < xar_numerus(el->actiones); j++)
+        {
+            chorda* a;
+
+            a = *(chorda**)xar_obtinere(el->actiones, j);
+            si (_nullus_index(a) >= ZEPHYRUM)
+            {
+                fprintf(stderr,
+                    "natura_canones: <%.*s> actio '%.*s' octetum "
+                    "nullum fert - electio eum crudum scriberet, "
+                    "canon RECUSATUR\n",
+                    _mensura_tuta(el->ens->titulus),
+                    (constans character*)el->ens->titulus->datum,
+                    _mensura_tuta(a),
+                    (constans character*)a->datum);
+                tuta = FALSUM;
+            }
+        }
+    }
+    redde tuta;
+}
+
 b32
 _canonem_emittere(
     FILE*                f,
@@ -1143,6 +1325,15 @@ _canonem_emittere(
     planata = ZEPHYRUM;
     aliena  = ZEPHYRUM;
     omissa  = ZEPHYRUM;
+
+    /* ANTE SCRIPTIONEM ULLAM: octetus nullus in nomine tres semitas
+     * emissionis diverse corrumpit, ergo semel hic iudicatur.
+     * Reditus hinc plagulam VACUAM relinquit, quam vocans iam
+     * delere scit. */
+    si (!_nomina_tuta(elementa))
+    {
+        redde FALSUM;
+    }
 
     /* SIGNUM: 'GENERATUM' et 'NOLI MANU MUTARE' AMBO in linea II
      * stare debent. generata-custos.sh 'head -3' solum legit et

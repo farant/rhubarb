@@ -203,16 +203,41 @@ _extensionem_habet(
                 ZEPHYRUM);
 }
 
-/* 'mensura.genera' -> 'mensura' */
+/* 'mensura.genera' -> 'mensura'
+ *
+ * PRAECONDICIO INTRA MUNUS AFFIRMATA: i32 INSIGNATUS est, ergo
+ * titulus extensione BREVIOR subtractionem circumvolveret, n ad
+ * tectum - I clamparetur, et memcpy CCLV octetos ex chorda pauciora
+ * ferente legeret - lectio ULTRA FINES, non ramus mortuus.
+ * _extensionem_habet id hodie praestat, sed custos et usus in
+ * ansis DIVERSIS nunc stant, et munus quod praecondicionem suam
+ * ipsum non tenet eam amittit quo momento vocans alius nascitur. */
 interior vacuum
 _stirpem_scribere(
     constans chorda*  t,
     character*        ex,
     i32               tectum)
 {
+    i32 mensura_ext;
     i32 n;
 
-    n = t->mensura - (i32)strlen(EXTENSIO);
+    mensura_ext = (i32)strlen(EXTENSIO);
+    si (tectum == ZEPHYRUM)
+    {
+        redde;
+    }
+    si (t->mensura <= mensura_ext)
+    {
+        fprintf(stderr,
+            "natura_canones: titulus '%.*s' extensionem '%s' non "
+            "fert - stirps vacua\n",
+            (integer)t->mensura, (constans character*)t->datum,
+            EXTENSIO);
+        ex[ZEPHYRUM] = '\0';
+        redde;
+    }
+
+    n = t->mensura - mensura_ext;
     si (n >= tectum)
     {
         n = tectum - I;
@@ -837,11 +862,6 @@ _valores_applicare(
     }
 }
 
-/* an genus posteros habeat - id est an aliud elementum monolithi
- * instantiam eius ferre possit.
- *
- * Filii DIRECTI sufficiunt: si genus subgenus habet, illud iam
- * elementum aliud est, sive ipsum posteros habet sive non. */
 /* chorda -> littera C, RECUSANS si octetum nullum fert.
  *
  * PORTA UNICA CONSULTO, non custodia per sedem: chorda mensuram
@@ -882,7 +902,8 @@ _cstr_tutum(
     redde chorda_ut_cstr(*c, piscina);
 }
 
-/* an genus posteros habeat.
+/* an genus posteros habeat - id est an aliud elementum monolithi
+ * instantiam eius ferre possit.
  *
  * ETIAM= QUOQUE, non sola nidificatio: res quae etiam="G" fert
  * VERE G est (natura.h: 'membrum essentiale duplex'), sed
@@ -1308,7 +1329,21 @@ _canonem_modulo_scribere(
     }
 
     sanum = _canonem_emittere(f, elementa, modulus, modulus, NIHIL);
-    fclose(f);
+
+    /* FCLOSE IUDICATUR: scriptio pendens hic demum in discum it,
+     * ergo defectus (discus plenus, quota exhausta) hic SOLUM
+     * apparet. Neglectus caudam perditam sub nuntio 'scriptus'
+     * abscondit, exitum 0 reddit, et '&& git commit' canonem
+     * TRUNCUM committit - quod caput huius plagulae ipsum vetat
+     * ('canon dimidius mendacium est'). Porta shell hoc capere
+     * NEQUIT: plagulam vacuam solam probat. */
+    si (fclose(f) != ZEPHYRUM)
+    {
+        sanum = FALSUM;
+        fprintf(stderr,
+            "natura_canones: '%s' claudi nequit - scriptio ultima "
+            "perdita, canon truncus esset\n", via);
+    }
 
     si (!sanum)
     {
@@ -1494,7 +1529,15 @@ _canonem_totum_scribere(
 
     sanum = _canonem_emittere(f, elementa, "individua",
                               "natura tota", praefatio);
-    fclose(f);
+
+    /* FCLOSE IUDICATUR - vide _canonem_modulo_scribere supra */
+    si (fclose(f) != ZEPHYRUM)
+    {
+        sanum = FALSUM;
+        fprintf(stderr,
+            "natura_canones: '%s' claudi nequit - scriptio ultima "
+            "perdita, canon truncus esset\n", via);
+    }
 
     si (!sanum)
     {

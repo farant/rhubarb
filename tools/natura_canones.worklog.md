@@ -649,3 +649,93 @@ with `head -5` where the gate directly above computes an overflow count under a
 comment reading `truncatio TACITA nulla`; `mkdir -p` unchecked in
 `canon_coquere.sh`; `citantes_per_modulum` counts two distinct failures in one
 counter; the new fixtures trip `natura-custos` on edit.
+
+---
+
+## 2026-08-07 — fix wave before merge (four items from the whole-branch triage)
+
+Sixty lines across six files, none of them changing emitted output: the 34
+canons and both generated readers are byte-identical to `6106ae0` afterwards.
+Method for every item: build the pre-fix binary from `HEAD` beside the fixed
+one and run **both** against the same planted condition. What follows is what
+the measurements said, including where they contradicted the triage.
+
+### `fclose` was the last place a wrong artifact reached git under a success message
+
+Forced with a 600 KiB HFS+ RAM disk rather than argued about. Filled to leave
+less space than the canon needs, the pre-fix binary wrote **466,944 of 590,145
+bytes** of the monolith — truncated mid-token, `<attributum n` — printed
+`'…' scriptus (elementa 561)` and **exited 0**. The shell gate only checks the
+file is non-empty, so it passes; `&& git commit` commits it. Same shape at the
+per-module site: 16,384 of 21,435 bytes.
+
+The general lesson is the buffering one: **`fwrite` succeeding is not the write
+happening.** Everything still in the stdio buffer lands at `fclose`, so
+`fclose` is where disk-full and quota surface — and it was the one call whose
+return nobody read.
+
+### `%.*s` stops at a NUL — the triage had this door misclassified
+
+The review listed `fprintf(f, "<optio>%.*s</optio>", …)` as writing a raw NUL
+into the file, alongside `_kebab_scribere`. Measured, it does not: a precision
+does not make `%s` read past a null terminator (C89 §7.9.6.1). So the three
+name-path doors had **three different failure modes**, not two:
+
+- `_kebab_scribere` — `putc` per byte, genuine raw write. **4 raw 0x00 bytes**
+  measured in a canon reported as `scriptus`.
+- `_appellatio_emissa` — copies the NUL, terminates after it. Declared
+  `folium\0zzz`, emitted `nomen="folium"`. Silent substitution.
+- `<optio>%.*s` — silent truncation, no NUL in the file.
+
+Worth keeping because the *fix* is the same one sweep either way, but the
+*diagnosis* would have sent someone looking for raw bytes that were never there.
+
+### Assertions that compare an accumulator against zero cannot see a short sweep
+
+Five of the six corpus assertions are `accumulator == ZEPHYRUM`, and an
+accumulator never incremented is zero. So a `frange` out of the sweep passes
+all five while the summary prints the number it *intended* to read. Planting
+`frange` on the **last** iteration (the monolith is third-from-last in
+directory order, so `monolithi == 1` still holds) reddened **only** the new
+`recensiti == xar_numerus(canones)` assertion — nothing else noticed 33 of 34.
+
+Generalisable: any sweep whose assertions are all zero-comparisons needs a
+completed-iteration count, or it reports on the corpus it meant to read.
+
+### `-nt` against a missing file is false, so a renamed source leaves a guard silently
+
+Both freshness scripts degraded this way, and `include/stml.h` was missing from
+both lists while `include/canon.h` sat correctly beside `lib/canon.c` in the
+same list — the right pattern present and applied to one library only.
+`NC_FONTES` in the probatio claimed parity with the shell list under a comment
+saying so while listing half of it; with `lib/natura.c` newer the shell gate
+refused at exit 2 while the suite stayed green at 73/73 on that same binary.
+
+One sentence covers all of it: **a guard must fail loudly when it cannot check,
+and must not claim coverage it does not have.**
+
+### A gate that refuses valid input is a dead gate, and this one was one quote away
+
+`_valorem_planare` applied attribute-value rules to element text. A `"` is
+correctly fatal in an attribute; in `<optio>` content it is legal STML and legal
+XML. Measured: one quote in one option made the pre-fix binary abort that
+module's entire canon. Zero quoted options in the corpus today, so it was
+latent — but unlike every other deferred item it is triggered by prose a person
+writes, not by a corrupt byte. Now parameterised (`quota_licet`), and the
+quote-bearing canon it produces passes `canon_examen` at `VITIA 0`.
+
+### `_stirpem_scribere`: unreachable, and still undefined behaviour
+
+`i32` is unsigned, so a title shorter than `.genera` wrapped, clamped to 255,
+and `memcpy`'d 255 bytes out of a shorter chorda. Driven directly through a
+throwaway harness (`#include` the translation unit with `principale` renamed):
+AddressSanitizer reports `stack-buffer-overflow / READ of size 255`. The guard
+that made it unreachable had drifted into a different loop from the use. A
+function that does not hold its own precondition loses it the moment a second
+caller is born.
+
+### Tooling note
+
+`./silva/examen.sh` returned `ACCIPE` on a file `clang -Werror` rejected for
+`'/*' within block comment` — I had written `tools/*` inside a block comment.
+The build caught it immediately, but `-Wcomment` is a gap in the C89 judge.

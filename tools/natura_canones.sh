@@ -70,9 +70,17 @@ if [ ! -x "$PORTA" ]; then
     echo "natura_canones: $PORTA abest - strue: $STRUCTOR" >&2
     exit 2
 fi
-for _f in lib/natura.c include/natura.h lib/stml.c \
+# CAPITA CUM CORPORIBUS: '-nt' plagulae ABSENTIS falsum est, ergo
+# fons renominatus ex custodia TACITE cadit - porta muta a porta
+# mortua non discernitur. Absentia ergo defectus instrumenti est
+# (exitus 2), non silentium.
+for _f in lib/natura.c include/natura.h lib/stml.c include/stml.h \
           tools/natura_canones.c tools/natura_canones_emissio.c \
           tools/natura_canones.h; do
+    if [ ! -e "$_f" ]; then
+        echo "natura_canones: custos '$_f' ABEST - index custodum fontem nominat qui non est" >&2
+        exit 2
+    fi
     if [ "$_f" -nt "$PORTA" ]; then
         echo "natura_canones: $PORTA STALUS ($_f recentior) - strue: $STRUCTOR" >&2
         exit 2
@@ -90,7 +98,11 @@ mkdir -p "$COCTA" || exit 2
 # MONSTRATA).
 TMPD=build/natura_canones_tmp.$$
 mkdir -p "$TMPD" || exit 2
-trap 'rm -rf "build/natura_canones_tmp.$$"' EXIT
+# apostrophus SIMPLEX: '$TMPD' ad tempus laquei solvitur, ergo
+# nomen uno loco solo stat. Via litteralis repetita duo loca
+# consentire cogeret, et RELATIVA est - recta solum quia scriptum
+# semel ad radicem descendit et numquam iterum.
+trap 'rm -rf "$TMPD"' EXIT
 PROBANDUM="$TMPD/probandum.canon"
 QUERELA="$TMPD/querela.txt"
 
@@ -221,8 +233,12 @@ echo "natura_canones: canones $facti cocti" >&2
 # quia scriptio supra instrumenti est, non editionis.
 LECTOR=./tools/canon_coquere.sh
 if [ ! -x "$LECTOR" ]; then
+    # EXITUS III, non 0: contractus in capite exitum 0 'catena TOTA
+    # recens' vocat, et catena hic ignota est - gemellus infra
+    # eandem sententiam dicit et III reddit. Exitus 0 hinc redditus
+    # '&& git commit' transire sineret cum lector stalus esse posset.
     echo "natura_canones: $LECTOR abest - an lectores cocti recentes sint IGNORATUR" >&2
-    exit 0
+    exit 3
 fi
 
 LQ=$("$LECTOR" -probare 2>&1 >/dev/null)

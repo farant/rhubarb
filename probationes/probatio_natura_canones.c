@@ -485,11 +485,25 @@ _vias_colligere(
 /* Fontes quorum mutatio binarium stalum facit. Idem index quem
  * ./tools/natura_canones.sh custodit; hic repetitur quia probatio
  * de BINARIO iudicat, non de canonibus, et duo iudicia seiuncta
- * manere debent. */
+ * manere debent.
+ *
+ * INDEX PLENUS, ne commentarium supra mentiatur: natura_struere.sh
+ * clausuram naturae TOTAM in bin/natura_canones nectit, ergo
+ * lib/natura.c, include/natura.h, lib/stml.c et include/stml.h
+ * binarium aeque stalum faciunt quam fontes ipsius instrumenti.
+ * MENSURATUM cum tribus solis: lib/natura.c recentiore, porta
+ * shell exitu II recusabat dum haec probatio eodem binario
+ * LXXIII/LXXIII viridis manebat - id est index qui paritatem
+ * CLAMAT et dimidiam praestat, quod peius est quam nullus, quia
+ * lectorem ab ipsa reconciliatione avertit. */
 staticus constans character* NC_FONTES[] = {
     "tools/natura_canones.c",
     "tools/natura_canones_emissio.c",
     "tools/natura_canones.h",
+    "lib/natura.c",
+    "include/natura.h",
+    "lib/stml.c",
+    "include/stml.h",
     NIHIL
 };
 
@@ -1190,6 +1204,7 @@ principale(
         i32  citantes_per_modulum;
         i32  monolithi;
         i32  nuda_gemina;
+        i32  recensiti;
 
         imprimere("\n--- VIII. corpus canonum coctorum ---\n");
 
@@ -1206,6 +1221,7 @@ principale(
         citantes_per_modulum = ZEPHYRUM;
         monolithi            = ZEPHYRUM;
         nuda_gemina          = ZEPHYRUM;
+        recensiti            = ZEPHYRUM;
 
         per (i = ZEPHYRUM; i < xar_numerus(canones); i++)
         {
@@ -1326,10 +1342,21 @@ principale(
             }
 
             piscina_destruere(pp);
+            recensiti++;
         }
 
-        imprimere("  canones %u recensiti\n", xar_numerus(canones));
+        imprimere("  canones %u ex %u recensiti\n",
+                  recensiti, xar_numerus(canones));
 
+        /* TRANSITUS INTEGER, ante cetera: quinque ex sex
+         * assertionibus infra accumulatorem cum ZEPHYRO conferunt,
+         * et accumulator numquam auctus ZEPHYRUM est - ergo ansa
+         * abrupta (piscina defecta: 'frange') OMNES praeteriret,
+         * dum summa supra numerum quem legere INTENDIT nuntiaret.
+         * Numerus peractorum eum ligat, et omnem formam exitus
+         * praemature facti in assertionem RUBRAM vertit, non hanc
+         * solam. */
+        CREDO_AEQUALIS_I32 (recensiti, xar_numerus(canones));
         /* LENITAS super corpus totum: nusquam minimum= */
         CREDO_AEQUALIS_I32 (minima_omnia, (i32)ZEPHYRUM);
         /* 'individua' radix SOLA, in omni canone */

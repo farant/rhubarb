@@ -20,9 +20,20 @@ if [ ! -x "$PORTA" ]; then
     echo "canon_coquere: $PORTA abest - strue: ./tools/canon_struere.sh" >&2
     exit 2
 fi
-for _f in lib/canon.c include/canon.h tools/canon_coquere.c lib/stml.c; do
+# CAPUT CUM CORPORE SUO: canon.h iam iuxta canon.c stabat, stml.h
+# non - et lector stml.h mutato aeque stalus fit. Forma recta in
+# eodem indice iam aderat, uni bibliothecae applicata, alteri non.
+# Absentia praeterea defectus est, non silentium: '-nt'
+# plagulae absentis falsum est, unde fons renominatus ex custodia
+# TACITE caderet.
+for _f in lib/canon.c include/canon.h tools/canon_coquere.c \
+          lib/stml.c include/stml.h; do
+    if [ ! -e "$_f" ]; then
+        echo "canon_coquere: custos '$_f' ABEST - index custodum fontem nominat qui non est" >&2
+        exit 2
+    fi
     if [ "$_f" -nt "$PORTA" ]; then
-        echo "canon_coquere: $PORTA STALUS - strue: ./tools/canon_struere.sh" >&2
+        echo "canon_coquere: $PORTA STALUS ($_f recentior) - strue: ./tools/canon_struere.sh" >&2
         exit 2
     fi
 done
@@ -40,8 +51,11 @@ fi
 # est. (Substitutiones sed infra valorem TMPD verum adhibent,
 # ergo nomen mutatum eas non tangit.)
 TMPD=build/canon_coquere_tmp.$$
-mkdir -p "$TMPD"
-trap 'rm -rf "build/canon_coquere_tmp.$$"' EXIT
+mkdir -p "$TMPD" || exit 2
+# apostrophus SIMPLEX: '$TMPD' ad tempus laquei solvitur, ergo
+# nomen uno loco solo stat (via litteralis repetita duo loca
+# consentire cogeret, et RELATIVA est).
+trap 'rm -rf "$TMPD"' EXIT
 
 rancidi=0
 facti=0
