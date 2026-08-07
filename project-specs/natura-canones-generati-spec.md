@@ -148,6 +148,26 @@ can become genuine `citatio` and get checked properly.
 | `valor nomen="P"` at any level | stated default (see §8.2) | `ordinarius=` |
 | `historia` / `eventum` | reused verbatim | same vocabulary as natura |
 
+**A multiplex member loses its default entirely.** Canon carries
+`ordinarius=` on an *attribute* and never on a child element — so the
+moment `multiplex="verum"` turns a member into a `liberum` (row 3
+above), any `<valor>` default it had has nowhere to go. Measured on the
+corpus: **51 defaults are silently absent** from the generated canons
+for this reason.
+
+This is correct given canon's shape rather than a defect, and widening
+canon to carry defaults on children would be a large change for a small
+gain. But it is a real hole in the projection and belongs stated rather
+than discovered — a genus author who writes a `<valor>` for a multiplex
+property will not find it in the canon, and nothing else tells them why.
+The generator reports the count on stderr at generation time.
+
+It also resolves a puzzle from implementation. `organizatio` carries
+`AT&amp;T` in a `<valor>`, and a foreign-character counter that should
+have fired on it reported zero. Both observations were true: `nomina` is
+multiplex, so the default was dropped under this rule before it ever
+reached the counter.
+
 Canon has no inheritance and does not need any: flattening at generation
 is correct, because a generated file is a projection and projections are
 allowed to be redundant.
