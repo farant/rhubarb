@@ -1701,6 +1701,47 @@ principale(
     }
 
 
+    /* ========================================================
+     * XII. glossae in canones transcriptae (spec glossae par. 4)
+     * ======================================================== */
+
+    {
+        chorda moduli_canon;
+        chorda monolithus;
+        chorda semina;
+
+        imprimere("\n--- XII. glossae transcriptae ---\n");
+
+        /* COMPLETUDO, non sola validitas (lex 2026-08-08): porta
+         * se-iudicans omissionem non videt - sententiae certae
+         * asseruntur, in canone moduli ET in monolitho */
+        moduli_canon = filum_legere_totum(
+                           "natura/cocta/planta.canon", piscina);
+        CREDO_MAIOR_I32 (moduli_canon.mensura, (i32)ZEPHYRUM);
+        CREDO_VERUM (chorda_invenire_index(moduli_canon,
+            chorda_ex_literis("<glossa lingua=\"en\">",
+                              piscina)) >= ZEPHYRUM);
+        CREDO_VERUM (chorda_invenire_index(moduli_canon,
+            chorda_ex_literis("photosynthesis",
+                              piscina)) >= ZEPHYRUM);
+
+        monolithus = filum_legere_totum(
+                         "natura/cocta/individua.canon", piscina);
+        CREDO_MAIOR_I32 (monolithus.mensura, (i32)ZEPHYRUM);
+        CREDO_VERUM (chorda_invenire_index(monolithus,
+            chorda_ex_literis("<glossa lingua=\"fr\">",
+                              piscina)) >= ZEPHYRUM);
+
+        /* census glossas NUMQUAM fert - docs GENERA describunt,
+         * individua data sunt (spec par. 4) */
+        semina = filum_legere_totum(
+                     "natura/cocta/semina.census", piscina);
+        CREDO_MAIOR_I32 (semina.mensura, (i32)ZEPHYRUM);
+        CREDO_VERUM (chorda_invenire_index(semina,
+            chorda_ex_literis("<glossa", piscina)) < ZEPHYRUM);
+    }
+
+
     imprimere("\n");
     credo_imprimere_compendium();
 

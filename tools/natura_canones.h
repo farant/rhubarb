@@ -122,7 +122,8 @@ _canonem_emittere(
     Xar*                 elementa,
     constans character*  dialectus,
     constans character*  fons,
-    constans character*  praefatio);
+    constans character*  praefatio,
+    Piscina*             piscina);
 
 /* census relationum - NUMERI IN CANONEM IPSUM SCRIBUNTUR.
  *

@@ -14,6 +14,15 @@
   </elementum>
 
   <elementum nomen="planta">
+    <glossa lingua="en">A plant: a living thing rooted in place that
+    turns light into food (photosynthesis); it grows by its parts
+    and multiplies by seed or cutting. Vegetative soul only -
+    nutrition, growth, generation, without sensation.</glossa>
+    <glossa lingua="fr">Une plante : un vivant enraciné qui ne se
+    déplace pas et transforme la lumière en nourriture
+    (photosynthèse) ; il croît par ses parties et se multiplie par
+    graine ou bouture. Âme végétative seule - nutrition,
+    croissance, génération, sans sensation.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="habitus" genus="electio">
       <optio>herba</optio>

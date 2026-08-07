@@ -47,9 +47,12 @@ interior b32     _actio_iam_scripta(Xar* elementa, i32 usque_el,
                                     i32 usque_ac, constans chorda* a);
 interior constans character* _textus_generis(
                                  constans character* genus_valoris);
+interior vacuum  _glossas_scribere(FILE* f, StmlNodus* nodus,
+                                   Piscina* piscina);
+interior vacuum  _chordam_scribere(FILE* f, constans chorda* c);
 interior b32     _elementum_scribere(FILE* f, NcElementum* el,
                                      i32* planata, i32* aliena,
-                                     i32* omissa);
+                                     i32* omissa, Piscina* piscina);
 interior b32     _membrum_attributum_scribere(FILE* f,
                                               NcElementum* el,
                                               NcMembrum* m,
@@ -779,13 +782,62 @@ _membrum_attributum_scribere(
  * nominat. Eadem ratione historia intra genus, eventum intra
  * historiam: acta.genera partem 'eventum' habet, et sine scopo
  * definitiones duae idem nomen peterent. */
+/* glossae generis in canonem transcribere (spec glossae par. 4):
+ * documentatio vernacula elementum generatum comitatur - qui
+ * canonem solum tenet, docs habet, sine .genera. Textus
+ * normalizatus (ut valores), evasus (ut optiones). Res dictionarii
+ * glossas hodie non ferunt (natura.canon sub genere solo admittit)
+ * - lectio generica tamen: si umquam ferent, sponte transibunt. */
+interior vacuum
+_glossas_scribere(
+    FILE*       f,
+    StmlNodus*  nodus,
+    Piscina*    piscina)
+{
+    i32 numerus;
+    i32 i;
+
+    si (!nodus)
+    {
+        redde;
+    }
+
+    numerus = stml_numerus_liberorum(nodus);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+        chorda*    lingua;
+        chorda     textus;
+
+        l = stml_liberum_ad_indicem(nodus, i);
+        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
+            !chorda_aequalis_literis(*l->titulus, "glossa"))
+        {
+            perge;
+        }
+        lingua = stml_attributum_capere(l, "lingua");
+        si (!lingua)
+        {
+            perge;   /* natura_examen id iam clamat - hic tacetur */
+        }
+
+        fputs("    <glossa lingua=\"", f);
+        _chordam_scribere(f, lingua);
+        fputs("\">", f);
+        textus = stml_textus_normalizatus(l, piscina);
+        _textum_evasum_scribere(f, chorda_ut_cstr(textus, piscina));
+        fputs("</glossa>\n", f);
+    }
+}
+
 interior b32
 _elementum_scribere(
     FILE*         f,
     NcElementum*  el,
     i32*          planata,
     i32*          aliena,
-    i32*          omissa)
+    i32*          omissa,
+    Piscina*      piscina)
 {
     character ap[NC_APPELLATIO_MAXIMA];
     b32       sanum;
@@ -796,6 +848,8 @@ _elementum_scribere(
     fputs("\n  <elementum nomen=\"", f);
     _kebab_scribere(f, el->ens->titulus);
     fputs("\">\n", f);
+
+    _glossas_scribere(f, el->ens->nodus, piscina);
 
     /* Identitas: omne genus nomen suum ferre potest (par. 3.2).
      *
@@ -1701,7 +1755,8 @@ _canonem_emittere(
     Xar*                 elementa,
     constans character*  dialectus,
     constans character*  fons,
-    constans character*  praefatio)
+    constans character*  praefatio,
+    Piscina*             piscina)
 {
     b32 sanum;
     i32 planata;
@@ -1762,7 +1817,8 @@ _canonem_emittere(
         NcElementum* el;
 
         el = *(NcElementum**)xar_obtinere(elementa, i);
-        si (!_elementum_scribere(f, el, &planata, &aliena, &omissa))
+        si (!_elementum_scribere(f, el, &planata, &aliena, &omissa,
+                                 piscina))
         {
             sanum = FALSUM;
         }
