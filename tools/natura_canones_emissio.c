@@ -868,7 +868,7 @@ _elementum_scribere(
     redde sanum;
 }
 
-/* <eventum> SEMEL, intra historiam.
+/* Elementum 'eventum' SEMEL, intra historiam.
  *
  * DEVIATIO A MANDATO, mensurata: mandatum electionem 'super
  * actionibus HUIUS elementi' poposcit. Fieri nequit - canon intra=
@@ -969,7 +969,7 @@ _canonem_emittere(
     fputs("     Regenera: ./tools/natura_canones.sh -->\n", f);
     fprintf(f, "<canon dialectus=\"%s\" versio=\"1\">\n\n", dialectus);
 
-    /* <individua> SOLA radix= fert */
+    /* 'individua' SOLA radix= fert */
     fputs("  <elementum nomen=\"individua\" radix=\"verum\">\n", f);
     per (i = ZEPHYRUM; i < xar_numerus(elementa); i++)
     {
