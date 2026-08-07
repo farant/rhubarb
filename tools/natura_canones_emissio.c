@@ -739,8 +739,16 @@ _elementum_scribere(
     _kebab_scribere(f, el->ens->titulus);
     fputs("\">\n", f);
 
-    /* identitas: omne genus nomen suum ferre potest (par. 3.2) */
-    fputs("    <attributum nomen=\"nomen\" genus=\"nomen\"/>\n", f);
+    /* Identitas: omne genus nomen suum ferre potest (par. 3.2).
+     *
+     * COMPOSITUM, non nomen (decretum Franis, bis emendatum): id
+     * entis datum CONSUMENTIS est, non clavis naturae, ergo regula
+     * par. 4.4 (nomina kebab, valores naturae snake) hic non regit -
+     * auctor id eodem more scribat quo elementum quod implet.
+     * Compositum superset strictum nominis est (nomen + lineola),
+     * unde laxatio nihil constat et nihil prius licitum reicit;
+     * spatium tamen adhuc reicitur, ergo identitas manet. */
+    fputs("    <attributum nomen=\"nomen\" genus=\"compositum\"/>\n", f);
 
     per (i = ZEPHYRUM; i < xar_numerus(el->membra); i++)
     {

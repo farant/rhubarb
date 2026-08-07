@@ -14,7 +14,7 @@
   </elementum>
 
   <elementum nomen="planta">
-    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="nomen" genus="compositum"/>
     <attributum nomen="habitus" genus="electio">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -95,7 +95,7 @@
   </elementum>
 
   <elementum nomen="rosaceae">
-    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="nomen" genus="compositum"/>
     <attributum nomen="habitus" genus="electio">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -176,7 +176,7 @@
   </elementum>
 
   <elementum nomen="rosa">
-    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="nomen" genus="compositum"/>
     <attributum nomen="habitus" genus="electio" ordinarius="frutex">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -257,7 +257,7 @@
   </elementum>
 
   <elementum nomen="malus">
-    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="nomen" genus="compositum"/>
     <attributum nomen="habitus" genus="electio" ordinarius="arbor">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -338,7 +338,7 @@
   </elementum>
 
   <elementum nomen="rosa-canina">
-    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="nomen" genus="compositum"/>
     <attributum nomen="habitus" genus="electio" ordinarius="frutex">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -419,7 +419,7 @@
   </elementum>
 
   <elementum nomen="malus-domestica">
-    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="nomen" genus="compositum"/>
     <attributum nomen="habitus" genus="electio" ordinarius="arbor">
       <optio>herba</optio>
       <optio>frutex</optio>
@@ -500,7 +500,7 @@
   </elementum>
 
   <elementum nomen="granny-smith">
-    <attributum nomen="nomen" genus="nomen"/>
+    <attributum nomen="nomen" genus="compositum"/>
     <attributum nomen="habitus" genus="electio" ordinarius="arbor">
       <optio>herba</optio>
       <optio>frutex</optio>
