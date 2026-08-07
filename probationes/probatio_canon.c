@@ -399,6 +399,37 @@ quot_generis(
 }
 
 /* ==================================================
+ * Fixturae - glossae (spec glossae): documentatio vernacula.
+ * Forma sola canonis est (lingua necessaria per machinam genericam
+ * necessarium=verum); copertura lintri (natura_glossae) est.
+ * ================================================== */
+
+interior constans character* GLOSSA_SUB_ELEMENTO =
+    "<canon dialectus=\"probatio\" versio=\"1\">\n"
+    "  <elementum nomen=\"radix\" radix=\"verum\">\n"
+    "    <glossa lingua=\"en\">A test root element.</glossa>\n"
+    "    <glossa lingua=\"fr\">Un element racine d'essai.</glossa>\n"
+    "    <attributum nomen=\"nomen\" genus=\"nomen\"/>\n"
+    "  </elementum>\n"
+    "</canon>\n";
+
+interior constans character* GLOSSA_SUB_GENERE =
+    "<natura modulus=\"probatio\" versio=\"1\" lingua=\"latina\">\n"
+    "  <genus nomen=\"probandum\">\n"
+    "    <definitio>Res probationis.</definitio>\n"
+    "    <glossa lingua=\"en\">A thing under test.</glossa>\n"
+    "    <glossa lingua=\"fr\">Une chose a l'essai.</glossa>\n"
+    "  </genus>\n"
+    "</natura>\n";
+
+interior constans character* GLOSSA_SINE_LINGUA =
+    "<natura modulus=\"probatio\" versio=\"1\" lingua=\"latina\">\n"
+    "  <genus nomen=\"probandum\">\n"
+    "    <glossa>Sine lingua.</glossa>\n"
+    "  </genus>\n"
+    "</natura>\n";
+
+/* ==================================================
  * Principale
  * ================================================== */
 
@@ -995,6 +1026,49 @@ s32 principale (vacuum)
                     CANON_ATTRIBUTUM_IGNOTUM), I);
             }
         }
+    }
+
+
+    /* ========================================================
+     * PROBARE: glossae in grammaticis (spec glossae)
+     * ======================================================== */
+
+    {
+        Canon* canon_canonum;
+        Canon* canon_naturae;
+        chorda fons;
+        chorda causa;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans glossas in grammaticis ---\n");
+
+        fons = filum_legere_totum("canon.canon", piscina);
+        CREDO_MAIOR_I32 (fons.mensura, (i32)ZEPHYRUM);
+        canon_canonum = canon_legere(fons, piscina, intern, &causa);
+        CREDO_NON_NIHIL (canon_canonum);
+
+        vitia = iudicare_literis(canon_canonum, GLOSSA_SUB_ELEMENTO,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        fons = filum_legere_totum("natura/natura.canon", piscina);
+        CREDO_MAIOR_I32 (fons.mensura, (i32)ZEPHYRUM);
+        canon_naturae = canon_legere(fons, piscina, intern, &causa);
+        CREDO_NON_NIHIL (canon_naturae);
+
+        vitia = iudicare_literis(canon_naturae, GLOSSA_SUB_GENERE,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* lingua necessaria: machina generica (necessarium=verum)
+         * eam cogit - nullus codex novus in lib/canon.c */
+        vitia = iudicare_literis(canon_naturae, GLOSSA_SINE_LINGUA,
+                                 piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_ATTRIBUTUM_DEEST), I);
     }
 
 

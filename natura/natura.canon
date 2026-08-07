@@ -63,6 +63,7 @@
     <attributum nomen="gradus"  genus="textus"/>
     <liberum nomen="definitio"       maximum="1"/>
     <liberum nomen="differentia"     maximum="1"/>
+    <liberum nomen="glossa"/>
     <liberum nomen="proprietates"    maximum="1"/>
     <liberum nomen="partes"          maximum="1"/>
     <liberum nomen="actiones"        maximum="1"/>
@@ -86,6 +87,14 @@
   <elementum nomen="differentia" textus="verum"/>
   <elementum nomen="nota"        textus="verum"/>
   <elementum nomen="dubium"      textus="verum"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="documentatio vernacula (spec glossae): lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet - glossa
+          explicat, numquam renominat. Copertura lintri est
+          (natura_glossae), non canonis">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <!-- ================= PROPRIETATES ================= -->
 

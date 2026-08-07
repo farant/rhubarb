@@ -72,6 +72,7 @@
     <attributum nomen="nota"   genus="textus"/>
     <liberum nomen="attributum"/>
     <liberum nomen="liberum"/>
+    <liberum nomen="glossa"/>
   </elementum>
 
   <elementum nomen="attributum">
@@ -107,6 +108,14 @@
     <attributum nomen="minimum" genus="numerus"/>
     <attributum nomen="maximum" genus="numerus"/>
     <attributum nomen="nota"    genus="textus"/>
+  </elementum>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="documentatio vernacula in canone (spec glossae) - iudicium
+          eam numquam AGIT, formam solam cogit (lingua necessaria).
+          canon_legere et canon_coquere eam praetereunt (liberum
+          sine nomen=)">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
   </elementum>
 
   <!-- ================= UNICITAS ================= -->
