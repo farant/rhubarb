@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- fixtura probationis natura_glossae: LACUNAE - gamma sine fr,
+     delta sine definitione (la) et cum en GEMINA. gamma en fert
+     entitatem &lt; ut evasio HTML (opus V) probetur. -->
+<natura modulus="probatio" versio="1" lingua="latina">
+
+<genus nomen="gamma">
+  <definitio>Res cum lacuna Gallica.</definitio>
+  <glossa lingua="en">Gap kind: French missing; uses &lt;markup&gt;
+    safely.</glossa>
+</genus>
+
+<genus nomen="delta">
+  <glossa lingua="en">First English gloss.</glossa>
+  <glossa lingua="en">Second English gloss - duplicate.</glossa>
+  <glossa lingua="fr">Une glose française.</glossa>
+</genus>
+
+</natura>
