@@ -2091,6 +2091,42 @@ principale(
     }
 
 
+    /* ========================================================
+     * XVIII. documentatio (spec documentatio-spec.md):
+     * exercet apertum, modulus lectoris, census scenarii
+     * ======================================================== */
+
+    {
+        chorda fons;
+        chorda causa;
+        Canon* monolithus;
+        i32    generis;
+        i32    omnia;
+
+        imprimere("\n--- XVIII. documentatio ---\n");
+
+        fons = filum_legere_totum("natura/cocta/individua.canon",
+                                  piscina);
+        CREDO_MAIOR_I32 (fons.mensura, (i32)ZEPHYRUM);
+        monolithus = canon_legere(fons, piscina, intern, &causa);
+        CREDO_NON_NIHIL (monolithus);
+
+        /* probatio opus exercere potest (L15; ORACULUM: rubuit
+         * ante aperturam clausurae, viret post - praecedens
+         * coquitur/L2) */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <opus-scriptum nomen=\"#pagina\"/>\n"
+            "  <probatio nomen=\"#ambulatio-cruda\">\n"
+            "    <exercet ad=\"#pagina\"/>\n"
+            "  </probatio>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+    }
+
+
     imprimere("\n");
     credo_imprimere_compendium();
 

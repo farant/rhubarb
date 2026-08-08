@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1583 sedibus relationum huius canonis, 1143
+  RELATIONES - ex 1583 sedibus relationum huius canonis, 1138
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  440 nomine solo iudicantur, id est sicut in canone per
+  445 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    433 petitum apertum habent (ad='*') - clavis nulla est;
+    438 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -14372,7 +14372,6 @@
   <citatio nomen="facultas-implet" attributum="ad" ad="postulatum/nomen" super="facultas/implet"/>
   <citatio nomen="probatio-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio"/>
   <citatio nomen="probatio-continet" attributum="ad" ad="assertio praeconditio postconditio invarians assertio-statica assertio-probationis/nomen" super="probatio/continet"/>
-  <citatio nomen="probatio-exercet" attributum="ad" ad="functio functio-pura/nomen" super="probatio/exercet"/>
   <citatio nomen="vitium-violat" attributum="violat" ad="postulatum/nomen" super="vitium"/>
   <citatio nomen="debitum-technicum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="debitum-technicum"/>
   <citatio nomen="debitum-technicum-emit" attributum="ad" ad="facultas/nomen" super="debitum-technicum/emit"/>
@@ -14945,16 +14944,12 @@
   <citatio nomen="applicatio-currit-ut" attributum="currit-ut" ad="processus/nomen" super="applicatio"/>
   <citatio nomen="probatio-unitatis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-unitatis"/>
   <citatio nomen="probatio-unitatis-continet" attributum="ad" ad="assertio praeconditio postconditio invarians assertio-statica assertio-probationis/nomen" super="probatio-unitatis/continet"/>
-  <citatio nomen="probatio-unitatis-exercet" attributum="ad" ad="functio functio-pura/nomen" super="probatio-unitatis/exercet"/>
   <citatio nomen="probatio-integrationis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-integrationis"/>
   <citatio nomen="probatio-integrationis-continet" attributum="ad" ad="assertio praeconditio postconditio invarians assertio-statica assertio-probationis/nomen" super="probatio-integrationis/continet"/>
-  <citatio nomen="probatio-integrationis-exercet" attributum="ad" ad="functio functio-pura/nomen" super="probatio-integrationis/exercet"/>
   <citatio nomen="probatio-regressionis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-regressionis"/>
   <citatio nomen="probatio-regressionis-continet" attributum="ad" ad="assertio praeconditio postconditio invarians assertio-statica assertio-probationis/nomen" super="probatio-regressionis/continet"/>
-  <citatio nomen="probatio-regressionis-exercet" attributum="ad" ad="functio functio-pura/nomen" super="probatio-regressionis/exercet"/>
   <citatio nomen="probatio-fumi-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-fumi"/>
   <citatio nomen="probatio-fumi-continet" attributum="ad" ad="assertio praeconditio postconditio invarians assertio-statica assertio-probationis/nomen" super="probatio-fumi/continet"/>
-  <citatio nomen="probatio-fumi-exercet" attributum="ad" ad="functio functio-pura/nomen" super="probatio-fumi/exercet"/>
   <citatio nomen="regressio-violat" attributum="violat" ad="postulatum/nomen" super="regressio"/>
   <citatio nomen="consilium-computatum-ordinat" attributum="ad" ad="pensum/nomen" super="consilium-computatum/ordinat"/>
   <citatio nomen="consilium-computatum-ad-postulata" attributum="ad" ad="postulatum/nomen" super="consilium-computatum/ad-postulata"/>

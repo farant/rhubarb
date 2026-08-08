@@ -152,8 +152,11 @@
     <relatio nomen="interrogat" ad="postulatum"/>
     <relatio nomen="continet" ad="assertio"
       modulus="elementa_programmatis" multiplex="verum"/>
-    <relatio nomen="exercet" ad="functio"
-      modulus="elementa_programmatis" multiplex="verum"/>
+    <relatio nomen="exercet" ad="*" multiplex="verum"
+      nota="apertum 2026-08-08 (L15; praecedens coquitur/L2):
+            genus iam generale erat, clausura sola non. Species
+            restringunt ubi custodia valet - documentatio:
+            ambulatio_lectoris ad opus_scriptum"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->
