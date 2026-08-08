@@ -1,0 +1,476 @@
+<!--
+  documentatio_probatio.census
+
+  CENSUS PROBANS: res gestae dierum 2026-08-07/08 in hac domo -
+  pagina glossarum generata, sex glossatores, peregrinus qui eam
+  solam legit, et porta machinae quae documentum eius iudicavit.
+
+  FINIS: non documentum pulchrum sed MENSURA. Quod dici potest
+  generibus 177 iam exstantibus hic dicitur; quod dici non potest
+  in lacunis (documentatio_lacunae.md) numeratur.
+
+  MODUS: signa spec canon-referentia - '#' individuum inscriptum,
+  '.' genus e vocabulario, valor nudus litteralis.
+
+  VITIA COACTA (III), consulto relicta ut TESTIMONIUM sint. Quodque
+  factum rei verae portat quod aliter dici non potest:
+    1. iudicium auctor="#canon_examen" - porta iudicium tulit, et
+       auctor iudicii PERSONA esse debet (clausura). Persona autem
+       definitur "auctor esse potest, non solum causa" - ergo non
+       lapsus clausurae sed DOCTRINA. Machina quae iudicat auctor
+       non est, nec bibliotheca aliud nomen ei habet.
+    2. coctura coquitur="#glossae_opus" - coctura CCCLII glossarum,
+       et 'coquitur' medicamenta sola admittit. Differentia generis
+       ('provenientia communis, fatum commune') dominium transit;
+       clausura eius non transit.
+    3. plagula conformis-ad="#canon_individuorum" - 'conformis-ad'
+       normas solas admittit. Documentum schemati conforme esse
+       dici non potest; inversio ('schema describit') aliud dicit -
+       GENUS rerum, non hanc rem.
+-->
+<individua>
+
+  <!-- ==================================================
+       I. AGENTES
+       Fran persona est. Sex glossatores et peregrinus NON sunt -
+       'actor' (communicatio) electus quia identitatem, statum
+       privatum, et communicationem per nuntios SOLAM habent, quod
+       de his verum est (SendMessage). Quod auctores esse non
+       possunt in lacunis stat.
+       ================================================== -->
+
+  <persona nomen="#fran"/>
+
+  <actor nomen="#glossator_a"/>
+  <actor nomen="#glossator_b"/>
+  <actor nomen="#glossator_c"/>
+  <actor nomen="#glossator_d"/>
+  <actor nomen="#glossator_e"/>
+  <actor nomen="#glossator_f"/>
+  <actor nomen="#peregrinus"/>
+
+  <!-- ==================================================
+       II. INSTRUMENTA
+       ================================================== -->
+
+  <instrumentum-aedificationis nomen="#natura_glossae"
+      incrementale="falsum" graphum-unde="derivatum"
+      modus-finiendi="terminans" interactivum="falsum">
+    <producit ad="#glossae_plagula"/>
+    <adhibet ad="#canon_individuorum"/>
+  </instrumentum-aedificationis>
+
+  <instrumentum-lineae nomen="#canon_examen"
+      modus-finiendi="terminans" interactivum="falsum">
+    <adhibet ad="#canon_individuorum"/>
+  </instrumentum-lineae>
+
+  <!-- ==================================================
+       III. CORPUS, OPUS, EXPRESSIONES, PLAGULA
+       Quattuor gradus FRBR hic vere laborant: opus (quod pagina
+       DICIT), expressiones tres (latina, anglica, gallica),
+       artefactum (quod aedificatio protulit), plagula (octeti).
+       ================================================== -->
+
+  <opus-scriptum nomen="#natura_corpus"
+      titulus-originalis="Natura" lingua-originalis="latina"
+      status-compositio="in_scriptione">
+    <materia>genera rerum</materia>
+    <materia>taxinomia</materia>
+    <auctor ad="#fran"/>
+  </opus-scriptum>
+
+  <opus-scriptum nomen="#glossae_opus"
+      titulus-originalis="Glossae generum naturae"
+      lingua-originalis="latina" status-compositio="perfecta"
+      pars-de="#natura_corpus">
+    <materia>genera naturae</materia>
+    <materia>syntaxis documentorum</materia>
+    <historia>
+      <eventum quando="2026-08-07" actio="generare">a natura_glossae
+        ex corpore toto - CLXXVII genera, singulis definitio
+        latina, glossae duae vernaculae, adumbratio syntaxis ex
+        canone individuorum ducta</eventum>
+    </historia>
+  </opus-scriptum>
+
+  <expressio nomen="#glossae_latine" lingua="latina"
+      genus-expressionis="originalis" expressio-de="#glossae_opus"/>
+
+  <expressio nomen="#glossae_anglice" lingua="anglica"
+      genus-expressionis="translata" expressio-de="#glossae_opus"
+      translata-ex="#glossae_latine"/>
+
+  <expressio nomen="#glossae_gallice" lingua="gallica"
+      genus-expressionis="translata" expressio-de="#glossae_opus"
+      translata-ex="#glossae_latine"/>
+
+  <artefactum-aedificationis nomen="#glossae_artefactum"
+      per-instrumentum="#natura_glossae"
+      durabilitas="persistens" congruentia="tandem">
+    <ex-fontibus ad="#natura_corpus"/>
+  </artefactum-aedificationis>
+
+  <plagula-notationis nomen="#glossae_plagula"
+      mimen-solitum="text/html" forma-contenti="textualis"
+      status-exsistentia="exsistens"/>
+
+  <!-- Coctura: CCCLII glossae uno pomeridiano a sex agentibus.
+       Genus e pharmacopolio mutuatum et hic RECTE sedet -
+       provenientia communis, fatum commune (si regula glossandi
+       prava fuit, omnes simul pravae sunt). -->
+  <coctura nomen="#coctura_glossarum"
+      numerus-cocturae="glossae 2026-08-07"
+      quantitas-facta="352" status="probata"
+      coquitur="#glossae_opus">
+    <historia>
+      <eventum quando="2026-08-07" actio="scribi">sex glossatores
+        parallel per corpus divisum</eventum>
+    </historia>
+  </coctura>
+
+  <!-- ==================================================
+       IV. CANON UT SCHEMA
+       Schema 'iudicans', non 'constringens': documentum sine eo
+       exsistit et iudicium post factum venit.
+       ================================================== -->
+
+  <schema nomen="#canon_individuorum" disciplina="iudicans"
+      describit=".plagula-stml">
+    <continet ad="#campus_actionis"/>
+    <continet ad="#campus_altitudinis_maturae"/>
+    <continet ad="#campus_fontis"/>
+  </schema>
+
+  <campus nomen="#campus_actionis" necessarius="falsum"
+      multiplex="falsum" genus-eius=".electio"
+      campus-de="#canon_individuorum"/>
+
+  <campus nomen="#campus_altitudinis_maturae" necessarius="falsum"
+      multiplex="falsum" genus-eius=".numerus"
+      campus-de="#canon_individuorum"/>
+
+  <campus nomen="#campus_fontis" necessarius="falsum"
+      multiplex="falsum" genus-eius=".textus"
+      campus-de="#canon_individuorum"/>
+
+  <!-- ==================================================
+       V. PEREGRINUS: POSTULATUM, PROBATIO, INVESTIGATIO
+       Ambulatio peregrini PROBATIO est generis nostri: scaena
+       parata (pagina sola), actio exercita (documentum scribere),
+       effectus contra exspectationem collatus (porta iudicat).
+       ================================================== -->
+
+  <postulatum nomen="#postulatum_paginae" status-vita="propositum"/>
+
+  <probatio-integrationis nomen="#probatio_peregrini"
+      interrogat="#postulatum_paginae"/>
+
+  <plagula-stml nomen="#documentum_peregrini"
+      mimen-solitum="application/xml" forma-contenti="textualis"
+      status-exsistentia="exsistens"
+      conformis-ad="#canon_individuorum">
+    <historia>
+      <eventum quando="2026-08-08" actio="scribi">a peregrino ex
+        pagina sola, cum coniecturis XIII insertis</eventum>
+      <eventum quando="2026-08-08" actio="recusari">a porta
+        canon_examen</eventum>
+    </historia>
+  </plagula-stml>
+
+  <investigatio nomen="#investigatio_peregrini" finis="praeventio"
+      status-cursus="relata" de="#glossae_opus">
+    <colligit ad="#observatio_silentii_radicis"/>
+    <colligit ad="#observatio_ambiguitatis_ellipsis"/>
+    <colligit ad="#observatio_truncationis"/>
+    <producit ad="#coniectura_radicis"/>
+    <producit ad="#coniectura_fontis_prima"/>
+    <producit ad="#coniectura_fontis_altera"/>
+    <invenit ad="#causa_dictionarii"/>
+    <parit ad="#postulatum_exempli_perfecti"/>
+    <parit ad="#postulatum_legendae"/>
+    <parit ad="#postulatum_radicis_nominandae"/>
+  </investigatio>
+
+  <!-- Causa quam investigatio invenit: pagina DICTIONARIUM est
+       (quid genus sit), et opus erat MANUALE (quid cum genere
+       agatur). Nec necessaria nec sufficiens sola. -->
+  <causa nomen="#causa_dictionarii" necessaria="falsum"
+      sufficiens="falsum" causat="#vitium_silentii"/>
+
+  <!-- ==================================================
+       VI. FONS ET FUNDAMENTA
+       Pagina fons UNICUS peregrini fuit - consulto.
+       ================================================== -->
+
+  <fons-scriptus nomen="#fons_paginae" clavis="glossae"
+      verificatus="verum"/>
+
+  <illatio nomen="#illatio_ex_adumbratione"
+      verificabile-ab-alio="verum" repetibile="verum"
+      sustinet="#coniectura_radicis"/>
+
+  <praesumptio nomen="#praesumptio_vocabularii_aperti"
+      verificabile-ab-alio="verum" repetibile="verum"
+      sustinet="#coniectura_verbi_plantandi"/>
+
+  <!-- ==================================================
+       VII. OBSERVATIONES PEREGRINI
+       Quod VIDIT, ante omne iudicium.
+       ================================================== -->
+
+  <observatio nomen="#observatio_silentii_radicis"
+      facta="2026-08-08" verificabilis-ab-alio="verum"
+      de="#glossae_opus" ex-fonte="#fons_paginae"/>
+
+  <observatio nomen="#observatio_ambiguitatis_ellipsis"
+      facta="2026-08-08" verificabilis-ab-alio="verum"
+      de="#glossae_opus" ex-fonte="#fons_paginae"/>
+
+  <observatio nomen="#observatio_truncationis"
+      facta="2026-08-08" verificabilis-ab-alio="verum"
+      de="#glossae_opus" ex-fonte="#fons_paginae"/>
+
+  <!-- ==================================================
+       VIII. IGNOTA - XXI quaestiones quas pagina non solvit
+       Quinque hic scripta; reliqua sedecim eiusdem formae.
+       (Numerus ipse dici NON potest - vide lacunas.)
+       Species electa per MOTUM quem affordat, ut genus praescribit.
+       ================================================== -->
+
+  <ignotum-notum nomen="#ignotum_radicis"
+      quaestio="Quod sit elementum radix documenti census?"
+      impediens="verum" status-cursus="agnitum"
+      de="#canon_individuorum">
+    <impedit ad="#documentum_peregrini"/>
+    <solvitur-per ad="#observatio_silentii_radicis"/>
+  </ignotum-notum>
+
+  <ignotum-notum nomen="#ignotum_vocabularii_eventorum"
+      quaestio="An vocabularium actionum eventi clausum sit, et si
+                clausum, quae verba contineat?"
+      impediens="verum" status-cursus="agnitum"
+      de="#campus_actionis">
+    <impedit ad="#documentum_peregrini"/>
+  </ignotum-notum>
+
+  <ignotum-notum nomen="#ignotum_decimalium"
+      quaestio="An genus valoris 'numerus' puncta decimalia
+                admittat?"
+      impediens="verum" status-cursus="agnitum"
+      de="#campus_altitudinis_maturae">
+    <impedit ad="#documentum_peregrini"/>
+  </ignotum-notum>
+
+  <controversum nomen="#ignotum_fontis"
+      quaestio="Quomodo attributum fons= scribatur - nomine nudo,
+                signo '#', an signo '.'?"
+      impediens="verum" status-cursus="agnitum"
+      de="#campus_fontis">
+    <impedit ad="#documentum_peregrini"/>
+  </controversum>
+
+  <ignotum-notum nomen="#ignotum_clausurae_sitae"
+      quaestio="Quae genera relatio 'sita-in' admittat?"
+      impediens="verum" status-cursus="agnitum"
+      de="#canon_individuorum">
+    <impedit ad="#documentum_peregrini"/>
+  </ignotum-notum>
+
+  <!-- ==================================================
+       IX. CONIECTURAE - XIII in documento insertae
+       Quattuor hic. Gradus assensus RELATIO est, non numerus:
+       peregrinus centesimas dixit (0%-70%); bibliotheca quinque
+       gradus scholasticos habet et numerum non habet.
+       ================================================== -->
+
+  <iudicium nomen="#coniectura_radicis"
+      contentum="radix documenti est &lt;hortus&gt;"
+      latum="2026-08-08" status-vita="revisum"
+      assensus=".suspicio" de="#documentum_peregrini">
+    <fundatur-in ad="#observatio_silentii_radicis"/>
+    <ex-fonte ad="#fons_paginae"/>
+  </iudicium>
+
+  <iudicium nomen="#coniectura_verbi_plantandi"
+      contentum="verbum eventi 'plantare' licet, quia vocabularium
+                 apertum videtur"
+      latum="2026-08-08" status-vita="revisum"
+      assensus=".opinio" de="#campus_actionis">
+    <ex-fonte ad="#fons_paginae"/>
+  </iudicium>
+
+  <iudicium nomen="#coniectura_fontis_prima"
+      contentum="fons= nomine nudo scribitur"
+      latum="2026-08-08" status-vita="revisum"
+      assensus=".dubitatio" de="#campus_fontis">
+    <ex-fonte ad="#fons_paginae"/>
+  </iudicium>
+
+  <iudicium nomen="#coniectura_fontis_altera"
+      contentum="fons= signo '#' scribitur"
+      latum="2026-08-08" status-vita="revisum"
+      assensus=".dubitatio" de="#campus_fontis"
+      superat="#coniectura_fontis_prima"/>
+
+  <!-- ==================================================
+       X. IUDICIA PORTAE
+       Quinque genera recusationis, et unum PLACITUM QUOD FALSUM
+       EST. Auctor iudicii persona esse debet; porta persona non
+       est - vide lacunas (hic vitium COACTUM relinquitur).
+       ================================================== -->
+
+  <iudicium nomen="#iudicium_radicis_ignotae"
+      contentum="ELEMENTUM_IGNOTUM: radix 'hortus' in canone non est"
+      latum="2026-08-08" status-vita="latum" assensus=".scientia"
+      auctor="#canon_examen"
+      de="#documentum_peregrini"
+      superat="#coniectura_radicis"/>
+
+  <iudicium nomen="#iudicium_verborum_fictorum"
+      contentum="VOCABULUM_IGNOTUM quater: plantare, putare,
+                 irrigare, metere - vocabularium actionum CLAUSUM est"
+      latum="2026-08-08" status-vita="latum" assensus=".scientia"
+      de="#documentum_peregrini"
+      superat="#coniectura_verbi_plantandi"/>
+
+  <iudicium nomen="#iudicium_fontis_recusati"
+      contentum="utraque forma fontis recusata - nec nomen nudum nec
+                 signum '#' rectum fuit"
+      latum="2026-08-08" status-vita="latum" assensus=".scientia"
+      de="#documentum_peregrini"
+      superat="#coniectura_fontis_altera"/>
+
+  <iudicium nomen="#iudicium_decimalis_recusatae"
+      contentum="valor '0.5' recusatus: numerus puncta decimalia non
+                 admittit"
+      latum="2026-08-08" status-vita="latum" assensus=".scientia"
+      de="#campus_altitudinis_maturae"/>
+
+  <iudicium nomen="#iudicium_clausurae_violatae"
+      contentum="rosa 'sita-in' murum recusata: clausura relationis
+                 loca sola admittit"
+      latum="2026-08-08" status-vita="latum" assensus=".scientia"
+      de="#documentum_peregrini"/>
+
+  <!-- IUDICIUM QUOD OMNIA REGIT: documentum VALIDUM declaratum
+       quamvis altitudinem PRAESENTEM in campo altitudinis MATURAE
+       ferat. Validitas veritas non est - et porta hoc dicere non
+       potest quia veritatem non videt. -->
+  <iudicium nomen="#iudicium_validitatis_altitudinis"
+      contentum="altitudo-matura='1' VALIDA est (numerus, campus
+                 exsistens) - de veritate porta tacet"
+      latum="2026-08-08" status-vita="latum" assensus=".scientia"
+      de="#campus_altitudinis_maturae"/>
+
+  <!-- ==================================================
+       XI. DEPRAVATIO - falsum quod portam transiit
+       Genus quod hunc casum EXACTE describit: 'datum pravum tam
+       bene sedet quam rectum, et nihil in eo se prodit'. Ideo
+       sola triadis QUAERENDA est - et porta eam non quaerit.
+       ================================================== -->
+
+  <depravatio nomen="#depravatio_altitudinis"
+      ambitus="unus valor in documento peregrini: altitudo praesens
+               in campo altitudinis maturae posita"
+      fenestra="ab scriptione documenti 2026-08-08"
+      sanabilis="manu_sananda" propagata="falsum" repugnans="falsum"
+      status-cognitio="latens">
+    <afficit ad="#documentum_peregrini"/>
+  </depravatio>
+
+  <!-- ==================================================
+       XII. VITIA PAGINAE - tres modi deficiendi
+       Classificatio peregrini ipsius. Omnia contra idem
+       postulatum mensurantur.
+       ================================================== -->
+
+  <vitium nomen="#vitium_silentii" status-vita="confirmatum"
+      violat="#postulatum_paginae" habitat-in="#glossae_opus">
+    <historia>
+      <eventum quando="2026-08-08" actio="ferri">pagina radicem
+        documenti NUMQUAM nominat</eventum>
+    </historia>
+  </vitium>
+
+  <vitium nomen="#vitium_ambiguitatis" status-vita="confirmatum"
+      violat="#postulatum_paginae" habitat-in="#glossae_opus">
+    <historia>
+      <eventum quando="2026-08-08" actio="ferri">signum '...' tria
+        diversa significat</eventum>
+    </historia>
+  </vitium>
+
+  <vitium nomen="#vitium_fallendi" status-vita="confirmatum"
+      violat="#postulatum_paginae" habitat-in="#glossae_opus">
+    <historia>
+      <eventum quando="2026-08-08" actio="ferri">truncatio
+        'a|b|c|d|...' valorem 'mortua' celavit, unde lector didicit
+        mortem plantae dici non posse - PEIUS silentio</eventum>
+    </historia>
+  </vitium>
+
+  <!-- ==================================================
+       XIII. POSTULATA EX INVESTIGATIONE
+       Tria, ORDINE DIGESTA a peregrino - ordo dici non potest.
+       ================================================== -->
+
+  <postulatum nomen="#postulatum_exempli_perfecti"
+      status-vita="propositum"/>
+
+  <postulatum nomen="#postulatum_legendae"
+      status-vita="propositum"/>
+
+  <postulatum nomen="#postulatum_radicis_nominandae"
+      status-vita="propositum"/>
+
+  <!-- ==================================================
+       XIV. PERITIA COMMUNIS
+       Quod pagina scribere CONATUR. Proprietas 'scribi-potest'
+       decipulam nominat quam hic cursus mensuravit: scriptum est,
+       et peregrinus tamen defecit.
+       ================================================== -->
+
+  <memoria-operis nomen="#peritia_scribendi_census"
+      modus-traditionis="utroque" scribi-potest="falsum"
+      tempus-restituendi="ignotum" status-vita="vigens"
+      de="#canon_individuorum"/>
+
+  <!-- ==================================================
+       XV. TESTIS CONTRA PAGINAM
+       Truncatio 'a|b|c|d|...' valorem 'mortua' celavit et lectorem
+       docuit mortem plantae dici non posse. Linea haec probat
+       CONTRARIUM: corpus id dicere semper potuit, et pagina sola
+       tacuit. Ideo defectus paginae est, non corporis - quod sine
+       hac linea coniectura maneret.
+       ================================================== -->
+
+  <planta nomen="#planta_testis" status-vita="mortua"/>
+
+  <!-- ==================================================
+       XVI. NUMERI
+       Numerare POSSUMUS, quamvis primo negassem: magnitudo
+       'numerositas' iam exstat, unde unitas rerum numeratarum
+       fingi potest et quantitas eam citare. Lacuna quae non erat -
+       nota est ne in indice lacunarum falso sedeat.
+       ================================================== -->
+
+  <unitas-mensurae nomen="#unitas_rerum" symbolum="res"
+      fundamentalis="falsum" mensurat=".numerositas"/>
+
+  <quantitas nomen="#numerus_glossarum" valor="352"
+      in-unitate="#unitas_rerum"/>
+
+  <quantitas nomen="#numerus_quaestionum" valor="21"
+      in-unitate="#unitas_rerum"/>
+
+  <quantitas nomen="#numerus_coniecturarum" valor="13"
+      in-unitate="#unitas_rerum"/>
+
+  <quantitas nomen="#numerus_fallaciarum" valor="10"
+      in-unitate="#unitas_rerum"/>
+
+  <quantitas nomen="#numerus_generum" valor="177"
+      in-unitate="#unitas_rerum"/>
+
+</individua>
