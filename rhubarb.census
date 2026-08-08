@@ -17,29 +17,49 @@
 
   <causa-finalis nomen="#instauratio">
     <nota>Radix censūs: civilizationem catholicam instaurare per
-      opera quae saecula durent. Extra hoc documentum causa eius
-      nulla est (RM 21.2).</nota>
+      opera quae saecula durent. PARENTELA EXTRA DOCUMENTUM -
+      causa eius extra hoc documentum iacet (RM 21.2).</nota>
   </causa-finalis>
 
-  <causa-finalis nomen="#perennitas" causat="#c">
+  <causa-finalis nomen="#perennitas">
     <pendet-ex ad="#instauratio"/>
+    <causat ad="#c"/>
+    <causat ad="#piscina"/>
+    <causat ad="#chorda"/>
+    <causat ad="#stml"/>
+    <causat ad="#canon"/>
+    <causat ad="#norma-vexillorum"/>
     <nota>Opera sine putredine: nullae dependentiae externae,
-      bibliothecae propriae, C89 electum quia stabile manet.
-      Iustificat etiam: normas omnes, chordam, piscinam.</nota>
+      bibliothecae propriae, C89 electum quia stabile manet.</nota>
   </causa-finalis>
 
-  <causa-finalis nomen="#intellectus" causat="#claude-md">
+  <causa-finalis nomen="#intellectus">
     <pendet-ex ad="#instauratio"/>
+    <causat ad="#claude-md"/>
+    <causat ad="#index-naturae"/>
+    <causat ad="#natura"/>
+    <causat ad="#metamodulus"/>
+    <causat ad="#norma-latinitatis"/>
+    <causat ad="#norma-plagularum-privatarum"/>
+    <causat ad="#annales-tabularii"/>
     <nota>Fran codicem OMNEM intellegit - homo est RAG systematis
-      totius. Iustificat etiam: worklogs, INDEX, glossas,
-      documentationem omnem.</nota>
+      totius; quidquid intellectum servat, hic pendet.</nota>
   </causa-finalis>
 
-  <causa-finalis nomen="#dominium" causat="#silva">
+  <causa-finalis nomen="#dominium">
     <pendet-ex ad="#instauratio"/>
+    <causat ad="#silva"/>
+    <causat ad="#legatus"/>
+    <causat ad="#canon-examen"/>
+    <causat ad="#natura-examen"/>
+    <causat ad="#aedilis"/>
+    <causat ad="#tabulariumd"/>
+    <causat ad="#vps-debianum"/>
+    <causat ad="#clavis-vps"/>
+    <causat ad="#monolithus-canonum"/>
+    <causat ad="#claude-code"/>
     <nota>Machinae nostrae: LSP proprium, analysta proprius,
-      instrumenta propria - fiducia crescens in apparatu domus.
-      Iustificat etiam: legatum, aedilem, examina.</nota>
+      instrumenta propria - fiducia crescens in apparatu domus.</nota>
   </causa-finalis>
 
   <!-- ============ LINGUA ============ -->
@@ -204,15 +224,17 @@
 
   <persona nomen="#fran">
     <nota>Auctor respondens operum omnium; solus homo censūs.
-      Parentela eius extra documentum iacet (ut radix).</nota>
+      PARENTELA EXTRA DOCUMENTUM - non projecto servit sed
+      proiectum ei.</nota>
   </persona>
 
   <!-- ============ MESSIS AMBULATIONIS (compendium) ============
-       Familia dependentiae DIVES: dependet-ex/adhibet 11 res
-       ligant. Familia iustificationis PAUPER: causat singulare
-       (3 res iustificatae), pendet-ex causis solis, relatio
-       'propter' universalis DEEST - orbitas plena in relatu.
-       Cetera: genus machinae deest; proiectum/inceptum deest;
+       Prima contactu (a791638): familia iustificationis PAUPER
+       mensurata - causat singulare, 3/23 iustificatae, orbi 19.
+       DITATA 2026-08-08: causat multiplex (lege editio_de/L12),
+       spina omnia iustificat, orbi 0 (exempti 2 declarati:
+       radix + persona). Custos: ./tools/census_orbi.sh
+       Manent: genus machinae deest; proiectum/inceptum deest;
        citatio trans documenta deest (duplicatum #c); etiam= in
        documentis deest (tabulariumd bis-generis); causa
        contentum proprium non habet (nota sola). -->
