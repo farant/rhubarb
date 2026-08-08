@@ -46,6 +46,7 @@
     <attributum nomen="normat" genus="referentia"/>
     <liberum nomen="editor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="editor" intra="norma">
     <attributum nomen="ad" genus="referentia"/>
@@ -84,6 +85,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="lex">
     <attributum nomen="ad" genus="referentia"/>
@@ -132,6 +134,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="imponit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="classis-normativa">
     <attributum nomen="ad" genus="referentia"/>
@@ -171,6 +174,7 @@
     <attributum nomen="applicatur-per" genus="referentia"/>
     <attributum nomen="fingit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fictio-iuris">
     <liberum nomen="eventum"/>
@@ -193,6 +197,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="lex-aeterna">
     <attributum nomen="ad" genus="referentia"/>
@@ -221,6 +226,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="lex-naturalis">
     <attributum nomen="ad" genus="referentia"/>
@@ -249,6 +255,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="lex-humana">
     <attributum nomen="ad" genus="referentia"/>
@@ -277,6 +284,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="lex-divina-positiva">
     <attributum nomen="ad" genus="referentia"/>
@@ -305,6 +313,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="consuetudo">
     <attributum nomen="ad" genus="referentia"/>
@@ -336,6 +345,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="imponit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="schedula-substantiarum">
     <attributum nomen="ad" genus="referentia"/>
@@ -367,6 +377,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="imponit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="gradus-eventus-aviatorii">
     <attributum nomen="ad" genus="referentia"/>
@@ -398,6 +409,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="imponit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="classis-periculi-mercium">
     <attributum nomen="ad" genus="referentia"/>
@@ -421,6 +433,7 @@
     <attributum nomen="applicatur-per" genus="referentia"/>
     <attributum nomen="fingit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="adoptio">
     <liberum nomen="eventum"/>
@@ -438,6 +451,7 @@
     <attributum nomen="applicatur-per" genus="referentia"/>
     <attributum nomen="fingit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="mors-praesumpta">
     <liberum nomen="eventum"/>
@@ -455,10 +469,15 @@
     <attributum nomen="applicatur-per" genus="referentia"/>
     <attributum nomen="fingit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="personalitas-iuridica">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

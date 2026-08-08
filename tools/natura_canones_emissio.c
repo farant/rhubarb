@@ -976,6 +976,11 @@ _elementum_scribere(
     }
 
     fputs("    <liberum nomen=\"historia\" maximum=\"1\"/>\n", f);
+    /* nota universalis (lacuna L5): margo curatorialis quam
+     * stratum generum iam habebat, stratum documenti non -
+     * explicationes in commenta XML fugiebant, quae nemo
+     * quaerere potest */
+    fputs("    <liberum nomen=\"nota\"/>\n", f);
     fputs("  </elementum>\n", f);
 
     /* definitiones liberorum, ad hoc genus ADSTRICTAE */
@@ -1862,6 +1867,13 @@ _canonem_emittere(
             sanum = FALSUM;
         }
     }
+
+    /* nota universalis (lacuna L5): definitio UNA, omnibus
+     * communis - textus liber, sine attributis */
+    fputs("\n  <elementum nomen=\"nota\" textus=\"verum\"\n"
+          "    nota=\"margo curatorialis individui - stratum\n"
+          "          documenti quod stratum generum iam habebat\"/>"
+          "\n", f);
 
     _eventum_scribere(f, elementa);
     _unicitas_scribere(f, elementa);

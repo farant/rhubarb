@@ -40,6 +40,7 @@
     </attributum>
     <attributum nomen="zona-horaria" genus="textus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="momentum">
     <liberum nomen="eventum"/>
@@ -61,6 +62,7 @@
     <attributum nomen="initium" genus="referentia"/>
     <attributum nomen="finis" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="intervallum">
     <liberum nomen="eventum"/>
@@ -90,6 +92,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="recurrentia" textus="dies"/>
   <elementum nomen="historia" intra="recurrentia">
@@ -122,6 +125,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="recurrentia-computata" textus="dies"/>
   <elementum nomen="historia" intra="recurrentia-computata">
@@ -150,6 +154,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="recurrentia-per-usum" textus="dies"/>
   <elementum nomen="historia" intra="recurrentia-per-usum">
@@ -172,6 +177,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="vinctum-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="horarium">
     <attributum nomen="ad" genus="referentia"/>
@@ -196,6 +202,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="conditum-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="calendarium">
     <liberum nomen="eventum"/>
@@ -226,6 +233,7 @@
     <attributum nomen="vindicans" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="reservatio">
     <liberum nomen="eventum"/>
@@ -244,6 +252,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="pascha" textus="dies"/>
   <elementum nomen="historia" intra="pascha">
@@ -263,6 +272,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="dies-negotiorum" textus="dies"/>
   <elementum nomen="historia" intra="dies-negotiorum">
@@ -282,6 +292,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="dies-ordinalis-mensis" textus="dies"/>
   <elementum nomen="historia" intra="dies-ordinalis-mensis">
@@ -300,6 +311,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="per-horas-operis" textus="dies"/>
   <elementum nomen="historia" intra="per-horas-operis">
@@ -318,6 +330,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="per-cyclos" textus="dies"/>
   <elementum nomen="historia" intra="per-cyclos">
@@ -336,11 +349,16 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="per-spatium" textus="dies"/>
   <elementum nomen="historia" intra="per-spatium">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

@@ -309,8 +309,13 @@
   </machina_statuum>
 
   <relationes>
-    <relatio nomen="coquitur" ad="medicamentum"
-      nota="cuius medicamenti haec coctura sit"/>
+    <relatio nomen="coquitur" ad="*"
+      nota="cuius rei haec coctura sit. Clausura medicamenti
+            APERTA 2026-08-08 (lacuna L2): parochialis erat,
+            differentia numquam - glossae, assulae, panes uno
+            cursu factae aeque coquuntur. Radix universalis non
+            est, ergo relatio aperta (signum manet, clavis
+            nulla)"/>
     <relatio nomen="fabricata_a" ad="organizatio"
       modulus="organizatio"/>
     <relatio nomen="acta_sua" ad="acta" modulus="acta"

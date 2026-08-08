@@ -42,6 +42,7 @@
     <liberum nomen="exemplatur-in"/>
     <liberum nomen="classificata-ut"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exemplatur-in" intra="substantia-chemica">
     <attributum nomen="ad" genus="referentia"/>
@@ -87,6 +88,7 @@
     <liberum nomen="aequivalens"/>
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum">
     <attributum nomen="ad" genus="referentia"/>
@@ -128,6 +130,7 @@
     <attributum nomen="fabricata-a" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="coctura">
     <liberum nomen="eventum"/>
@@ -156,6 +159,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="inter" intra="interactio">
     <attributum nomen="ad" genus="referentia"/>
@@ -187,6 +191,7 @@
     <liberum nomen="aequivalens"/>
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum-genericum">
     <attributum nomen="ad" genus="referentia"/>
@@ -224,6 +229,7 @@
     <liberum nomen="aequivalens"/>
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum-nominatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -261,6 +267,7 @@
     <liberum nomen="aequivalens"/>
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum-compositum">
     <attributum nomen="ad" genus="referentia"/>
@@ -289,6 +296,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="inter" intra="interactio-medicamentorum">
     <attributum nomen="ad" genus="referentia"/>
@@ -311,6 +319,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="inter" intra="interactio-cum-cibo">
     <attributum nomen="ad" genus="referentia"/>
@@ -333,6 +342,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="inter" intra="incompatibilitas-mercium">
     <attributum nomen="ad" genus="referentia"/>
@@ -340,6 +350,10 @@
   <elementum nomen="historia" intra="incompatibilitas-mercium">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>
@@ -364,7 +378,6 @@
   <citatio nomen="medicamentum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum/continet"/>
   <citatio nomen="medicamentum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum/aequivalens"/>
   <citatio nomen="medicamentum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum/fabricatum-in"/>
-  <citatio nomen="coctura-coquitur" attributum="coquitur" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="coctura"/>
   <citatio nomen="medicamentum-genericum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum-genericum/continet"/>
   <citatio nomen="medicamentum-genericum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum-genericum/aequivalens"/>
   <citatio nomen="medicamentum-genericum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum-genericum/fabricatum-in"/>

@@ -30,6 +30,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="forma-datorum">
     <attributum nomen="ad" genus="referentia"/>
@@ -42,6 +43,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="series">
     <attributum nomen="ad" genus="referentia"/>
@@ -54,6 +56,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="cauda">
     <attributum nomen="ad" genus="referentia"/>
@@ -66,6 +69,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="acervus">
     <attributum nomen="ad" genus="referentia"/>
@@ -78,6 +82,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="tabula-associativa">
     <attributum nomen="ad" genus="referentia"/>
@@ -90,6 +95,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="copia">
     <attributum nomen="ad" genus="referentia"/>
@@ -102,6 +108,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="arbor">
     <attributum nomen="ad" genus="referentia"/>
@@ -109,6 +116,10 @@
   <elementum nomen="historia" intra="arbor">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

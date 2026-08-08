@@ -68,6 +68,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="actus-sollemnis">
     <attributum nomen="ad" genus="referentia"/>
@@ -110,6 +111,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="ritus">
     <attributum nomen="ad" genus="referentia"/>
@@ -155,6 +157,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="sacramentum">
     <attributum nomen="ad" genus="referentia"/>
@@ -199,6 +202,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="sacramentale">
     <attributum nomen="ad" genus="referentia"/>
@@ -241,6 +245,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="actus-iuridicus">
     <attributum nomen="ad" genus="referentia"/>
@@ -276,6 +281,7 @@
     <attributum nomen="statutum-per" genus="referentia"/>
     <liberum nomen="condicio-actus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="condicio-actus" intra="quorum">
     <attributum nomen="ad" genus="referentia"/>
@@ -309,6 +315,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="baptismus">
     <attributum nomen="ad" genus="referentia"/>
@@ -342,6 +349,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="confirmatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -375,6 +383,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="eucharistia">
     <attributum nomen="ad" genus="referentia"/>
@@ -408,6 +417,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="paenitentia">
     <attributum nomen="ad" genus="referentia"/>
@@ -441,6 +451,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="unctio-infirmorum">
     <attributum nomen="ad" genus="referentia"/>
@@ -474,6 +485,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="ordo">
     <attributum nomen="ad" genus="referentia"/>
@@ -507,6 +519,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="matrimonium">
     <attributum nomen="ad" genus="referentia"/>
@@ -540,6 +553,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="benedictio">
     <attributum nomen="ad" genus="referentia"/>
@@ -573,6 +587,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="consecratio-loci">
     <attributum nomen="ad" genus="referentia"/>
@@ -606,6 +621,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="exorcismus">
     <attributum nomen="ad" genus="referentia"/>
@@ -636,6 +652,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="stipulatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -666,6 +683,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="mancipatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -696,6 +714,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="manumissio">
     <attributum nomen="ad" genus="referentia"/>
@@ -726,6 +745,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="testamentum">
     <attributum nomen="ad" genus="referentia"/>
@@ -756,6 +776,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="confectio-instrumenti">
     <attributum nomen="ad" genus="referentia"/>
@@ -786,6 +807,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="promulgatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -816,6 +838,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="inauguratio">
     <attributum nomen="ad" genus="referentia"/>
@@ -846,6 +869,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="collatio-tituli">
     <attributum nomen="ad" genus="referentia"/>
@@ -876,6 +900,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="sententia-lata">
     <attributum nomen="ad" genus="referentia"/>
@@ -897,6 +922,7 @@
     <attributum nomen="statutum-per" genus="referentia"/>
     <liberum nomen="condicio-actus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="condicio-actus" intra="quorum-deliberativum">
     <attributum nomen="ad" genus="referentia"/>
@@ -918,6 +944,7 @@
     <attributum nomen="statutum-per" genus="referentia"/>
     <liberum nomen="condicio-actus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="condicio-actus" intra="maioritas-replicarum">
     <attributum nomen="ad" genus="referentia"/>
@@ -925,6 +952,10 @@
   <elementum nomen="historia" intra="maioritas-replicarum">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

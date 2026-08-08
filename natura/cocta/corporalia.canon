@@ -41,6 +41,7 @@
     </attributum>
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="res-corporea">
     <liberum nomen="eventum"/>
@@ -71,6 +72,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="artefactum">
     <attributum nomen="nota" genus="textus"/>
@@ -108,6 +110,7 @@
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="ingreditur"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="ingreditur" intra="materia">
     <attributum nomen="ad" genus="referentia"/>
@@ -148,6 +151,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="instrumentum">
     <attributum nomen="nota" genus="textus"/>
@@ -191,6 +195,7 @@
     </attributum>
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra">
     <liberum nomen="eventum"/>
@@ -226,6 +231,7 @@
     <attributum nomen="illatum-per" genus="referentia"/>
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="damnum">
     <liberum nomen="eventum"/>
@@ -266,6 +272,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="generat" intra="vivens">
     <attributum nomen="ad" genus="referentia"/>
@@ -292,6 +299,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="cibus">
     <attributum nomen="nota" genus="textus"/>
@@ -323,6 +331,7 @@
     </attributum>
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra-immobilis">
     <liberum nomen="eventum"/>
@@ -348,6 +357,7 @@
     </attributum>
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra-mobilis">
     <liberum nomen="eventum"/>
@@ -373,6 +383,7 @@
     </attributum>
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="reliquiae">
     <liberum nomen="eventum"/>
@@ -396,6 +407,7 @@
     <attributum nomen="illatum-per" genus="referentia"/>
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fractura">
     <liberum nomen="eventum"/>
@@ -419,6 +431,7 @@
     <attributum nomen="illatum-per" genus="referentia"/>
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="corruptio">
     <liberum nomen="eventum"/>
@@ -442,10 +455,15 @@
     <attributum nomen="illatum-per" genus="referentia"/>
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="contaminatio">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

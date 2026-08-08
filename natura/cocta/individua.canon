@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1578 sedibus relationum huius canonis, 1143
+  RELATIONES - ex 1578 sedibus relationum huius canonis, 1142
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  435 nomine solo iudicantur, id est sicut in canone per
+  436 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    428 petitum apertum habent (ad='*') - clavis nulla est;
+    429 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -544,6 +544,7 @@
     <liberum nomen="plicatur-in"/>
     <liberum nomen="signata-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="eventum" intra="acta">
     <attributum nomen="nota" genus="textus"/>
@@ -594,6 +595,7 @@
     <attributum nomen="praecedens" genus="referentia"/>
     <attributum nomen="positum-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="punctum-actorum">
     <liberum nomen="eventum"/>
@@ -639,6 +641,7 @@
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="testatur" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="attestatio">
     <liberum nomen="eventum"/>
@@ -679,6 +682,7 @@
     <attributum nomen="tenetur-a" genus="referentia"/>
     <liberum nomen="fundat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fundat" intra="radix-fiduciae">
     <attributum nomen="ad" genus="referentia"/>
@@ -722,6 +726,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="actus-sollemnis">
     <attributum nomen="ad" genus="referentia"/>
@@ -764,6 +769,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="ritus">
     <attributum nomen="ad" genus="referentia"/>
@@ -809,6 +815,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="sacramentum">
     <attributum nomen="ad" genus="referentia"/>
@@ -853,6 +860,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="sacramentale">
     <attributum nomen="ad" genus="referentia"/>
@@ -895,6 +903,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="actus-iuridicus">
     <attributum nomen="ad" genus="referentia"/>
@@ -930,6 +939,7 @@
     <attributum nomen="statutum-per" genus="referentia"/>
     <liberum nomen="condicio-actus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="condicio-actus" intra="quorum">
     <attributum nomen="ad" genus="referentia"/>
@@ -987,6 +997,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="caput" intra="animal">
     <attributum nomen="nota" genus="textus"/>
@@ -1035,6 +1046,7 @@
     <attributum nomen="emissa-pro" genus="referentia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="auctor" intra="architectura-machinae">
     <attributum nomen="ad" genus="referentia"/>
@@ -1079,6 +1091,7 @@
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-architecturae">
     <attributum nomen="ad" genus="referentia"/>
@@ -1112,6 +1125,7 @@
     <attributum nomen="designatum-a" genus="referentia"/>
     <liberum nomen="exsequitur"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exsequitur" intra="processorium">
     <attributum nomen="ad" genus="referentia"/>
@@ -1138,6 +1152,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa">
     <attributum nomen="ad" genus="referentia"/>
@@ -1159,6 +1174,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens">
     <attributum nomen="ad" genus="referentia"/>
@@ -1180,6 +1196,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-telae">
     <attributum nomen="ad" genus="referentia"/>
@@ -1201,6 +1218,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-nativus">
     <attributum nomen="ad" genus="referentia"/>
@@ -1224,6 +1242,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-terminalis">
     <attributum nomen="ad" genus="referentia"/>
@@ -1246,6 +1265,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-api">
     <attributum nomen="ad" genus="referentia"/>
@@ -1270,6 +1290,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-mcp">
     <attributum nomen="ad" genus="referentia"/>
@@ -1293,6 +1314,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-cli">
     <attributum nomen="ad" genus="referentia"/>
@@ -1316,6 +1338,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-mobilis">
     <attributum nomen="ad" genus="referentia"/>
@@ -1358,6 +1381,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus">
     <liberum nomen="eventum"/>
@@ -1379,6 +1403,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="normata-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="moneta">
     <liberum nomen="eventum"/>
@@ -1402,6 +1427,7 @@
     <attributum nomen="valor" genus="numerus"/>
     <attributum nomen="in-moneta" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="pecunia">
     <liberum nomen="eventum"/>
@@ -1424,6 +1450,7 @@
     <attributum nomen="possessor" genus="referentia"/>
     <attributum nomen="possessum" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="possessio">
     <liberum nomen="eventum"/>
@@ -1446,6 +1473,7 @@
     <attributum nomen="pretium-rei" genus="referentia"/>
     <attributum nomen="quantum" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="pretium">
     <liberum nomen="eventum"/>
@@ -1471,6 +1499,7 @@
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="res-vendita"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="res-vendita" intra="venditio">
     <attributum nomen="ad" genus="referentia"/>
@@ -1506,6 +1535,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="tessera">
     <liberum nomen="eventum"/>
@@ -1543,6 +1573,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-negotiabilis">
     <liberum nomen="eventum"/>
@@ -1578,6 +1609,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-simplex">
     <liberum nomen="eventum"/>
@@ -1636,6 +1668,7 @@
     <liberum nomen="plicatur-in"/>
     <liberum nomen="signata-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="ratio-rationaria">
     <attributum nomen="ad" genus="referentia"/>
@@ -1685,6 +1718,7 @@
     <liberum nomen="accipit"/>
     <liberum nomen="custodit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mittit" intra="actor">
     <attributum nomen="ad" genus="referentia"/>
@@ -1733,6 +1767,7 @@
     <attributum nomen="missus-a" genus="referentia"/>
     <attributum nomen="destinatus-ad" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="nuntius">
     <liberum nomen="eventum"/>
@@ -1752,6 +1787,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="observatur-ab"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="observatur-ab" intra="eventum">
     <attributum nomen="ad" genus="referentia"/>
@@ -1784,6 +1820,7 @@
     <liberum nomen="relinquitur-a"/>
     <liberum nomen="legitur-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="relinquitur-a" intra="stigmergia">
     <attributum nomen="ad" genus="referentia"/>
@@ -1816,6 +1853,7 @@
     </attributum>
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="res-corporea">
     <liberum nomen="eventum"/>
@@ -1846,6 +1884,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="artefactum">
     <attributum nomen="nota" genus="textus"/>
@@ -1883,6 +1922,7 @@
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="ingreditur"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="ingreditur" intra="materia">
     <attributum nomen="ad" genus="referentia"/>
@@ -1923,6 +1963,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="instrumentum">
     <attributum nomen="nota" genus="textus"/>
@@ -1966,6 +2007,7 @@
     </attributum>
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra">
     <liberum nomen="eventum"/>
@@ -2001,6 +2043,7 @@
     <attributum nomen="illatum-per" genus="referentia"/>
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="damnum">
     <liberum nomen="eventum"/>
@@ -2041,6 +2084,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="generat" intra="vivens">
     <attributum nomen="ad" genus="referentia"/>
@@ -2077,6 +2121,7 @@
     <attributum nomen="legitur-a" genus="referentia"/>
     <attributum nomen="mutatur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="status">
     <liberum nomen="eventum"/>
@@ -2107,6 +2152,7 @@
     <attributum nomen="legitur-a" genus="referentia"/>
     <attributum nomen="mutatur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="proiectio">
     <liberum nomen="eventum"/>
@@ -2140,6 +2186,7 @@
     <attributum nomen="mutatur-a" genus="referentia"/>
     <liberum nomen="ex-fontibus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="ex-fontibus" intra="artefactum-aedificationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -2175,6 +2222,7 @@
     <attributum nomen="legitur-a" genus="referentia"/>
     <attributum nomen="mutatur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="promptuarium">
     <liberum nomen="eventum"/>
@@ -2203,6 +2251,7 @@
     <attributum nomen="legitur-a" genus="referentia"/>
     <attributum nomen="mutatur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="index">
     <liberum nomen="eventum"/>
@@ -2224,6 +2273,7 @@
     <attributum nomen="obiectum" genus="referentia"/>
     <attributum nomen="hauritur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="lectio">
     <liberum nomen="eventum"/>
@@ -2255,6 +2305,7 @@
     <attributum nomen="obiectum" genus="referentia"/>
     <attributum nomen="efficitur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="mutatio">
     <liberum nomen="eventum"/>
@@ -2288,6 +2339,7 @@
     <liberum nomen="efficit"/>
     <liberum nomen="haurit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="accipit" intra="functio">
     <attributum nomen="ad" genus="referentia"/>
@@ -2349,6 +2401,7 @@
     <liberum nomen="efficit"/>
     <liberum nomen="haurit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="accipit" intra="functio-pura">
     <attributum nomen="ad" genus="referentia"/>
@@ -2389,6 +2442,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizatur-per" intra="constans">
     <attributum nomen="ad" genus="referentia"/>
@@ -2411,6 +2465,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizatur-per" intra="constans-numerica">
     <attributum nomen="ad" genus="referentia"/>
@@ -2429,6 +2484,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizatur-per" intra="constans-textualis">
     <attributum nomen="ad" genus="referentia"/>
@@ -2457,6 +2513,7 @@
     <liberum nomen="praebet"/>
     <liberum nomen="dependet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="interfacies" intra="bibliotheca">
     <attributum nomen="nota" genus="textus"/>
@@ -2494,6 +2551,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="affirmat-de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="assertio">
     <liberum nomen="eventum"/>
@@ -2512,6 +2570,7 @@
     il parle, et de quel temps.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="commentarium">
     <liberum nomen="eventum"/>
@@ -2531,6 +2590,7 @@
     dérivée.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="identificator">
     <liberum nomen="eventum"/>
@@ -2558,6 +2618,7 @@
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="adhibet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="adhibet" intra="programma">
     <attributum nomen="ad" genus="referentia"/>
@@ -2599,6 +2660,7 @@
     <liberum nomen="producit"/>
     <liberum nomen="adhibet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="invocat" intra="instrumentum-aedificationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -2625,6 +2687,8 @@
     défaut se mesure à une exigence, un test interroge une exigence,
     une capacité en satisfait une.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="ordo" genus="numerus" minimum="1"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>propositum</optio>
       <optio>receptum</optio>
@@ -2634,6 +2698,7 @@
     <attributum nomen="impletur-a" genus="referentia"/>
     <attributum nomen="interrogatur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="postulatum">
     <liberum nomen="eventum"/>
@@ -2651,9 +2716,11 @@
     intention possédée, et c'est elle que l'utilisateur nomme
     lorsqu'il raconte ce que le programme fait.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <liberum nomen="implet"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="implet" intra="facultas">
     <attributum nomen="ad" genus="referentia"/>
@@ -2677,10 +2744,12 @@
     test contient les assertions par lesquelles il juge (dans cette
     maison, la bibliothèque credo).</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="probatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -2706,6 +2775,11 @@
     une intention (une exigence, une assertion, une attente), et
     sans elle il n'y a que du « comportement ».</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+    </attributum>
     <attributum nomen="status-vita" genus="electio">
       <optio>relatum_est</optio>
       <optio>confirmatum</optio>
@@ -2717,6 +2791,7 @@
     <attributum nomen="violat" genus="referentia"/>
     <attributum nomen="habitat-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="vitium">
     <liberum nomen="eventum"/>
@@ -2751,6 +2826,7 @@
     <liberum nomen="emit"/>
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="emit" intra="debitum-technicum">
     <attributum nomen="ad" genus="referentia"/>
@@ -2800,6 +2876,7 @@
     <attributum nomen="retractat" genus="referentia"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="complicatio">
     <liberum nomen="eventum"/>
@@ -2845,6 +2922,7 @@
     <liberum nomen="ad-postulata"/>
     <liberum nomen="exsequitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="ordinat" intra="consilium">
     <attributum nomen="ad" genus="referentia"/>
@@ -2903,6 +2981,7 @@
     <liberum nomen="prodita-per"/>
     <liberum nomen="afficit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="prodita-per" intra="depravatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -2954,6 +3033,7 @@
     <attributum nomen="agens" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="interventio">
     <liberum nomen="eventum"/>
@@ -2976,6 +3056,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="forma-datorum">
     <attributum nomen="ad" genus="referentia"/>
@@ -3018,6 +3099,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="schema-identificandi">
     <attributum nomen="nota" genus="textus"/>
@@ -3045,6 +3127,7 @@
     est donc une propriété du jugement, non de la chose.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="gradus-assensus">
     <liberum nomen="eventum"/>
@@ -3067,6 +3150,7 @@
     <attributum nomen="clavis" genus="textus"/>
     <attributum nomen="verificatus" genus="veritas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fons">
     <liberum nomen="eventum"/>
@@ -3091,6 +3175,7 @@
     <attributum nomen="ex-fonte" genus="referentia"/>
     <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="observatio">
     <liberum nomen="eventum"/>
@@ -3127,6 +3212,7 @@
     <liberum nomen="fundatur-in"/>
     <liberum nomen="ex-fonte"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fundatur-in" intra="iudicium">
     <attributum nomen="ad" genus="referentia"/>
@@ -3164,6 +3250,7 @@
     <attributum nomen="transfertur-per" genus="referentia"/>
     <liberum nomen="minuitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="minuitur-per" intra="periculum">
     <attributum nomen="ad" genus="referentia"/>
@@ -3199,6 +3286,7 @@
     <liberum nomen="impedit"/>
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="impedit" intra="ignotum">
     <attributum nomen="ad" genus="referentia"/>
@@ -3240,6 +3328,7 @@
     <liberum nomen="invenit"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="colligit" intra="investigatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -3288,6 +3377,7 @@
     <liberum nomen="scitur-a"/>
     <liberum nomen="custodia-obligat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="scitur-a" intra="secretum">
     <attributum nomen="ad" genus="referentia"/>
@@ -3337,6 +3427,7 @@
     <attributum nomen="residet-in" genus="referentia"/>
     <attributum nomen="de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="peritia-communis">
     <liberum nomen="eventum"/>
@@ -3386,6 +3477,7 @@
     <liberum nomen="fundatur-in"/>
     <liberum nomen="ex-fonte"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fundamentum-attributionis" intra="attributio" textus="verum"/>
   <elementum nomen="fundatur-in" intra="attributio">
@@ -3419,6 +3511,7 @@
     <attributum nomen="repetibile" genus="veritas"/>
     <attributum nomen="sustinet" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fundamentum">
     <liberum nomen="eventum"/>
@@ -3471,6 +3564,7 @@
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="paradigmata" intra="lingua-programmandi" textus="verum"/>
   <elementum nomen="auctor" intra="lingua-programmandi">
@@ -3523,6 +3617,7 @@
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="paradigmata" intra="lingua-iussuum" textus="verum"/>
   <elementum nomen="auctor" intra="lingua-iussuum">
@@ -3568,6 +3663,7 @@
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-linguae">
     <attributum nomen="ad" genus="referentia"/>
@@ -3602,6 +3698,7 @@
     <liberum nomen="auctor"/>
     <liberum nomen="emittit-pro"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="auctor" intra="implementatio-linguae">
     <attributum nomen="ad" genus="referentia"/>
@@ -3628,6 +3725,7 @@
     <attributum nomen="verbum-de" genus="referentia"/>
     <attributum nomen="additum-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="verbum-clavis">
     <liberum nomen="eventum"/>
@@ -3649,6 +3747,7 @@
     <attributum nomen="intra" genus="referentia"/>
     <liberum nomen="sub-iurisdictione"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="sub-iurisdictione" intra="locus">
     <attributum nomen="ad" genus="referentia"/>
@@ -3673,6 +3772,7 @@
     <attributum nomen="designat" genus="referentia"/>
     <liberum nomen="linea"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="linea" intra="inscriptio" textus="verum"/>
   <elementum nomen="historia" intra="inscriptio">
@@ -3696,6 +3796,7 @@
     <attributum nomen="intra" genus="referentia"/>
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fert" intra="iurisdictio">
     <attributum nomen="ad" genus="referentia"/>
@@ -3719,6 +3820,7 @@
     <liberum nomen="spatia" maximum="1"/>
     <liberum nomen="occupatum-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="spatia" intra="aedificium">
     <attributum nomen="nota" genus="textus"/>
@@ -3744,6 +3846,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="magnitudo-mensurabilis">
     <attributum nomen="ad" genus="referentia"/>
@@ -3770,6 +3873,7 @@
     <attributum nomen="normata-per" genus="referentia"/>
     <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="unitas-mensurae">
     <liberum nomen="eventum"/>
@@ -3799,6 +3903,7 @@
     <attributum nomen="in-unitate" genus="referentia"/>
     <attributum nomen="cum-incertitudine" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="quantitas">
     <liberum nomen="eventum"/>
@@ -3830,6 +3935,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="componitur-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="componitur-ex" intra="incertitudo">
     <attributum nomen="ad" genus="referentia"/>
@@ -3884,6 +3990,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="instrumentum-mensurae">
     <attributum nomen="nota" genus="textus"/>
@@ -3927,6 +4034,7 @@
     <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus">
     <attributum nomen="ad" genus="referentia"/>
@@ -3960,6 +4068,7 @@
     <attributum nomen="normat" genus="referentia"/>
     <liberum nomen="editor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="editor" intra="norma">
     <attributum nomen="ad" genus="referentia"/>
@@ -3998,6 +4107,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="lex">
     <attributum nomen="ad" genus="referentia"/>
@@ -4046,6 +4156,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="imponit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="classis-normativa">
     <attributum nomen="ad" genus="referentia"/>
@@ -4085,6 +4196,7 @@
     <attributum nomen="applicatur-per" genus="referentia"/>
     <attributum nomen="fingit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fictio-iuris">
     <liberum nomen="eventum"/>
@@ -4114,6 +4226,7 @@
     <attributum nomen="praestandum" genus="referentia"/>
     <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio">
     <liberum nomen="eventum"/>
@@ -4137,6 +4250,7 @@
     <liberum nomen="partes"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="partes" intra="contractus">
     <attributum nomen="ad" genus="referentia"/>
@@ -4177,6 +4291,7 @@
     <attributum nomen="secundum-normam" genus="referentia"/>
     <liberum nomen="condiciones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="condiciones" intra="licentia" textus="verum"/>
   <elementum nomen="historia" intra="licentia">
@@ -4218,6 +4333,7 @@
     <attributum nomen="praestandum" genus="referentia"/>
     <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="tributum">
     <liberum nomen="eventum"/>
@@ -4241,6 +4357,7 @@
     <attributum nomen="latus-a" genus="referentia"/>
     <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="titulus">
     <liberum nomen="eventum"/>
@@ -4292,6 +4409,7 @@
     <attributum nomen="latum-per" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="iussum">
     <liberum nomen="eventum"/>
@@ -4336,6 +4454,7 @@
     <liberum nomen="res-fiduciaria"/>
     <liberum nomen="officia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="beneficiarius" intra="fiducia">
     <attributum nomen="ad" genus="referentia"/>
@@ -4385,6 +4504,7 @@
     <attributum nomen="iudicatur-per" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="petitio">
     <liberum nomen="eventum"/>
@@ -4433,6 +4553,7 @@
     <attributum nomen="probatur-per" genus="referentia"/>
     <liberum nomen="obligat-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="obligat-per" intra="delegatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -4474,6 +4595,7 @@
     <liberum nomen="partes"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="signatus-per" intra="tractatus">
     <attributum nomen="ad" genus="referentia"/>
@@ -4523,6 +4645,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="obiecta-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="obiecta-a" intra="limitatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -4569,6 +4692,7 @@
     <attributum nomen="statuta-per" genus="referentia"/>
     <attributum nomen="custodita-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="portio-communis">
     <liberum nomen="eventum"/>
@@ -4592,6 +4716,7 @@
     <attributum nomen="situs-in" genus="referentia"/>
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fert" intra="ambitus">
     <attributum nomen="ad" genus="referentia"/>
@@ -4628,6 +4753,7 @@
     <liberum nomen="sanat"/>
     <liberum nomen="impeditur-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="implet" intra="pensum">
     <attributum nomen="ad" genus="referentia"/>
@@ -4674,6 +4800,7 @@
     <attributum nomen="violat" genus="referentia"/>
     <liberum nomen="causa-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="causa-eius" intra="incidens">
     <attributum nomen="ad" genus="referentia"/>
@@ -4722,6 +4849,7 @@
     <liberum nomen="gerit"/>
     <liberum nomen="tenet-apertam"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="spatium-memoriae" intra="processus">
     <attributum nomen="nota" genus="textus"/>
@@ -4774,6 +4902,7 @@
     <liberum nomen="materia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materia" intra="opus-scriptum" textus="verum"/>
   <elementum nomen="auctor" intra="opus-scriptum">
@@ -4794,6 +4923,7 @@
     une recension critique de même.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="lingua" genus="textus"/>
+    <attributum nomen="auctoritativa" genus="veritas"/>
     <attributum nomen="genus-expressionis" genus="electio">
       <optio>originalis</optio>
       <optio>translata</optio>
@@ -4804,6 +4934,7 @@
     <attributum nomen="translata-ex" genus="referentia"/>
     <liberum nomen="translator"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="translator" intra="expressio">
     <attributum nomen="ad" genus="referentia"/>
@@ -4833,6 +4964,7 @@
     <attributum nomen="impressa-in" genus="referentia"/>
     <liberum nomen="editio-de"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="editio-de" intra="editio">
     <attributum nomen="ad" genus="referentia"/>
@@ -4867,6 +4999,7 @@
     <attributum nomen="exemplar-de" genus="referentia"/>
     <attributum nomen="possessor" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="codex">
     <liberum nomen="eventum"/>
@@ -4909,6 +5042,7 @@
     <liberum nomen="materia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materia" intra="periodicum" textus="verum"/>
   <elementum nomen="auctor" intra="periodicum">
@@ -4934,6 +5068,7 @@
     <attributum nomen="publicatus" genus="dies"/>
     <attributum nomen="fasciculus-de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fasciculus">
     <liberum nomen="eventum"/>
@@ -4972,6 +5107,7 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="membrum" intra="universitas">
     <attributum nomen="ad" genus="referentia"/>
@@ -5011,6 +5147,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="organizatio" textus="verum"/>
   <elementum nomen="condita-a" intra="organizatio">
@@ -5058,6 +5195,7 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="membrum" intra="colonia">
     <attributum nomen="ad" genus="referentia"/>
@@ -5100,6 +5238,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="persona-iuridica" textus="verum"/>
   <elementum nomen="condita-a" intra="persona-iuridica">
@@ -5140,6 +5279,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="officium" textus="verum"/>
   <elementum nomen="postulat" intra="officium">
@@ -5182,6 +5322,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="edit" intra="corpus-normans">
     <attributum nomen="ad" genus="referentia"/>
@@ -5223,6 +5364,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="societas" textus="verum"/>
   <elementum nomen="condita-a" intra="societas">
@@ -5268,6 +5410,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exercet" intra="magistratus">
     <attributum nomen="ad" genus="referentia"/>
@@ -5308,6 +5451,7 @@
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="persona" textus="verum"/>
   <elementum nomen="membrum-de" intra="persona">
@@ -5346,6 +5490,7 @@
     <liberum nomen="exemplatur-in"/>
     <liberum nomen="classificata-ut"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exemplatur-in" intra="substantia-chemica">
     <attributum nomen="ad" genus="referentia"/>
@@ -5391,6 +5536,7 @@
     <liberum nomen="aequivalens"/>
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum">
     <attributum nomen="ad" genus="referentia"/>
@@ -5432,6 +5578,7 @@
     <attributum nomen="fabricata-a" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="coctura">
     <liberum nomen="eventum"/>
@@ -5460,6 +5607,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="inter" intra="interactio">
     <attributum nomen="ad" genus="referentia"/>
@@ -5494,6 +5642,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-computatralis" textus="verum"/>
   <elementum nomen="historia" intra="plagula-computatralis">
@@ -5525,6 +5674,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-fontis" textus="verum"/>
   <elementum nomen="historia" intra="plagula-fontis">
@@ -5554,6 +5704,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="scriptum-exsecutabile" textus="verum"/>
   <elementum nomen="historia" intra="scriptum-exsecutabile">
@@ -5583,6 +5734,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-notationis" textus="verum"/>
   <elementum nomen="historia" intra="plagula-notationis">
@@ -5611,6 +5763,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-figurationis" textus="verum"/>
   <elementum nomen="historia" intra="plagula-figurationis">
@@ -5639,6 +5792,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-datorum" textus="verum"/>
   <elementum nomen="historia" intra="plagula-datorum">
@@ -5667,6 +5821,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-sqlite" textus="verum"/>
   <elementum nomen="historia" intra="plagula-sqlite">
@@ -5702,6 +5857,7 @@
     <liberum nomen="notae-circumstantes" maximum="1"/>
     <liberum nomen="continet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="systema-plagularum">
     <attributum nomen="nota" genus="textus"/>
@@ -5744,6 +5900,7 @@
     <attributum nomen="est-plagula" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="directorium">
     <attributum nomen="ad" genus="referentia"/>
@@ -5813,6 +5970,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="planta">
     <attributum nomen="nota" genus="textus"/>
@@ -5904,6 +6062,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="rosaceae">
     <attributum nomen="nota" genus="textus"/>
@@ -5992,6 +6151,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="rosa">
     <attributum nomen="nota" genus="textus"/>
@@ -6080,6 +6240,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="malus">
     <attributum nomen="nota" genus="textus"/>
@@ -6121,6 +6282,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="gradus-eius" intra="procedura">
     <attributum nomen="ad" genus="referentia"/>
@@ -6160,6 +6322,7 @@
     <liberum nomen="efficit"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="efficit" intra="procedura-automata">
     <attributum nomen="ad" genus="referentia"/>
@@ -6207,6 +6370,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materiae" intra="praescriptum">
     <attributum nomen="nota" genus="textus"/>
@@ -6243,6 +6407,7 @@
     <attributum nomen="gradus-de" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="gradus-praescripti">
     <attributum nomen="ad" genus="referentia"/>
@@ -6286,6 +6451,7 @@
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-praescripti">
     <attributum nomen="ad" genus="referentia"/>
@@ -6316,6 +6482,7 @@
     <liberum nomen="adhibetur-in"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="adhibetur-in" intra="index-verificationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -6346,6 +6513,7 @@
     <attributum nomen="describit" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="schema">
     <attributum nomen="ad" genus="referentia"/>
@@ -6370,6 +6538,7 @@
     <attributum nomen="campus-de" genus="referentia"/>
     <attributum nomen="genus-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="campus">
     <liberum nomen="eventum"/>
@@ -6390,6 +6559,7 @@
     ou un nombre se trouve dessous.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="genus-valoris">
     <liberum nomen="eventum"/>
@@ -6430,6 +6600,7 @@
     <liberum nomen="auctor"/>
     <liberum nomen="exsequitur-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="auctor" intra="systema-operativum">
     <attributum nomen="ad" genus="referentia"/>
@@ -6480,6 +6651,7 @@
     <liberum nomen="auctor"/>
     <liberum nomen="exsequitur-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="auctor" intra="systema-unixiforme">
     <attributum nomen="ad" genus="referentia"/>
@@ -6513,6 +6685,7 @@
     <attributum nomen="orta-ex" genus="referentia"/>
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="distributio-systematis">
     <liberum nomen="eventum"/>
@@ -6551,6 +6724,7 @@
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-systematis">
     <attributum nomen="ad" genus="referentia"/>
@@ -6579,6 +6753,7 @@
     </attributum>
     <attributum nomen="zona-horaria" genus="textus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="momentum">
     <liberum nomen="eventum"/>
@@ -6600,6 +6775,7 @@
     <attributum nomen="initium" genus="referentia"/>
     <attributum nomen="finis" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="intervallum">
     <liberum nomen="eventum"/>
@@ -6629,6 +6805,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="recurrentia" textus="dies"/>
   <elementum nomen="historia" intra="recurrentia">
@@ -6661,6 +6838,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="recurrentia-computata" textus="dies"/>
   <elementum nomen="historia" intra="recurrentia-computata">
@@ -6689,6 +6867,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="recurrentia-per-usum" textus="dies"/>
   <elementum nomen="historia" intra="recurrentia-per-usum">
@@ -6711,6 +6890,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="vinctum-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="horarium">
     <attributum nomen="ad" genus="referentia"/>
@@ -6735,6 +6915,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="conditum-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="calendarium">
     <liberum nomen="eventum"/>
@@ -6765,6 +6946,7 @@
     <attributum nomen="vindicans" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="reservatio">
     <liberum nomen="eventum"/>
@@ -6796,6 +6978,7 @@
     <liberum nomen="per-viam"/>
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="per-viam" intra="iter">
     <attributum nomen="ad" genus="referentia"/>
@@ -6825,6 +7008,7 @@
     <liberum nomen="iungit"/>
     <liberum nomen="sub-iurisdictione"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="iungit" intra="via">
     <attributum nomen="ad" genus="referentia"/>
@@ -6871,6 +7055,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="apta-viae" intra="vehiculum">
     <attributum nomen="ad" genus="referentia"/>
@@ -6910,6 +7095,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="passum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="onus">
     <attributum nomen="ad" genus="referentia"/>
@@ -6968,6 +7154,7 @@
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio">
     <attributum nomen="ad" genus="referentia"/>
@@ -7009,6 +7196,7 @@
     <liberum nomen="plicatur-in"/>
     <liberum nomen="signata-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="eventum" intra="acta-publica">
     <attributum nomen="nota" genus="textus"/>
@@ -7068,6 +7256,7 @@
     <liberum nomen="plicatur-in"/>
     <liberum nomen="signata-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="eventum" intra="regesta">
     <attributum nomen="nota" genus="textus"/>
@@ -7127,6 +7316,7 @@
     <liberum nomen="plicatur-in"/>
     <liberum nomen="signata-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="eventum" intra="acta-transactionum">
     <attributum nomen="nota" genus="textus"/>
@@ -7186,6 +7376,7 @@
     <liberum nomen="plicatur-in"/>
     <liberum nomen="signata-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="eventum" intra="acta-versionum">
     <attributum nomen="nota" genus="textus"/>
@@ -7245,6 +7436,7 @@
     <liberum nomen="plicatur-in"/>
     <liberum nomen="signata-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="eventum" intra="acta-auditus">
     <attributum nomen="nota" genus="textus"/>
@@ -7281,6 +7473,7 @@
     <attributum nomen="praecedens" genus="referentia"/>
     <attributum nomen="positum-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="conditio">
     <liberum nomen="eventum"/>
@@ -7296,6 +7489,7 @@
     <attributum nomen="praecedens" genus="referentia"/>
     <attributum nomen="positum-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="clausura-rationis">
     <liberum nomen="eventum"/>
@@ -7311,6 +7505,7 @@
     <attributum nomen="praecedens" genus="referentia"/>
     <attributum nomen="positum-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="statio">
     <liberum nomen="eventum"/>
@@ -7341,6 +7536,7 @@
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="testatur" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="attestatio-civilis">
     <liberum nomen="eventum"/>
@@ -7371,6 +7567,7 @@
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="testatur" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="instrumentum-publicum">
     <liberum nomen="eventum"/>
@@ -7401,6 +7598,7 @@
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="testatur" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="apostilla">
     <liberum nomen="eventum"/>
@@ -7426,6 +7624,7 @@
     <attributum nomen="tenetur-a" genus="referentia"/>
     <liberum nomen="fundat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fundat" intra="radix-systematis">
     <attributum nomen="ad" genus="referentia"/>
@@ -7454,6 +7653,7 @@
     <attributum nomen="tenetur-a" genus="referentia"/>
     <liberum nomen="fundat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fundat" intra="commissio-notarii">
     <attributum nomen="ad" genus="referentia"/>
@@ -7482,6 +7682,7 @@
     <attributum nomen="tenetur-a" genus="referentia"/>
     <liberum nomen="fundat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fundat" intra="origo-dominii">
     <attributum nomen="ad" genus="referentia"/>
@@ -7515,6 +7716,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="baptismus">
     <attributum nomen="ad" genus="referentia"/>
@@ -7548,6 +7750,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="confirmatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -7581,6 +7784,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="eucharistia">
     <attributum nomen="ad" genus="referentia"/>
@@ -7614,6 +7818,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="paenitentia">
     <attributum nomen="ad" genus="referentia"/>
@@ -7647,6 +7852,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="unctio-infirmorum">
     <attributum nomen="ad" genus="referentia"/>
@@ -7680,6 +7886,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="ordo">
     <attributum nomen="ad" genus="referentia"/>
@@ -7713,6 +7920,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="matrimonium">
     <attributum nomen="ad" genus="referentia"/>
@@ -7746,6 +7954,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="benedictio">
     <attributum nomen="ad" genus="referentia"/>
@@ -7779,6 +7988,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="consecratio-loci">
     <attributum nomen="ad" genus="referentia"/>
@@ -7812,6 +8022,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="exorcismus">
     <attributum nomen="ad" genus="referentia"/>
@@ -7842,6 +8053,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="stipulatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -7872,6 +8084,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="mancipatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -7902,6 +8115,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="manumissio">
     <attributum nomen="ad" genus="referentia"/>
@@ -7932,6 +8146,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="testamentum">
     <attributum nomen="ad" genus="referentia"/>
@@ -7962,6 +8177,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="confectio-instrumenti">
     <attributum nomen="ad" genus="referentia"/>
@@ -7992,6 +8208,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="promulgatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -8022,6 +8239,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="inauguratio">
     <attributum nomen="ad" genus="referentia"/>
@@ -8052,6 +8270,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="collatio-tituli">
     <attributum nomen="ad" genus="referentia"/>
@@ -8082,6 +8301,7 @@
     <attributum nomen="forma-eius" genus="referentia"/>
     <liberum nomen="testes"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="testes" intra="sententia-lata">
     <attributum nomen="ad" genus="referentia"/>
@@ -8103,6 +8323,7 @@
     <attributum nomen="statutum-per" genus="referentia"/>
     <liberum nomen="condicio-actus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="condicio-actus" intra="quorum-deliberativum">
     <attributum nomen="ad" genus="referentia"/>
@@ -8124,6 +8345,7 @@
     <attributum nomen="statutum-per" genus="referentia"/>
     <liberum nomen="condicio-actus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="condicio-actus" intra="maioritas-replicarum">
     <attributum nomen="ad" genus="referentia"/>
@@ -8172,6 +8394,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="caput" intra="apis">
     <attributum nomen="nota" genus="textus"/>
@@ -8235,6 +8458,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="caput" intra="canis">
     <attributum nomen="nota" genus="textus"/>
@@ -8298,6 +8522,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="caput" intra="homo">
     <attributum nomen="nota" genus="textus"/>
@@ -8329,6 +8554,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-materialis">
     <attributum nomen="ad" genus="referentia"/>
@@ -8345,6 +8571,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-formalis">
     <attributum nomen="ad" genus="referentia"/>
@@ -8361,6 +8588,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-efficiens">
     <attributum nomen="ad" genus="referentia"/>
@@ -8377,6 +8605,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-finalis">
     <attributum nomen="ad" genus="referentia"/>
@@ -8404,6 +8633,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus-telae">
     <liberum nomen="eventum"/>
@@ -8428,6 +8658,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus-datorum">
     <liberum nomen="eventum"/>
@@ -8452,6 +8683,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus-nominum">
     <liberum nomen="eventum"/>
@@ -8476,6 +8708,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus-procuratorius">
     <liberum nomen="eventum"/>
@@ -8500,6 +8733,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus-mcp">
     <liberum nomen="eventum"/>
@@ -8520,6 +8754,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="charta-onerum">
     <liberum nomen="eventum"/>
@@ -8540,6 +8775,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="apocha-horrei">
     <liberum nomen="eventum"/>
@@ -8560,6 +8796,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="syngrapha">
     <liberum nomen="eventum"/>
@@ -8580,6 +8817,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="perscriptio">
     <liberum nomen="eventum"/>
@@ -8600,6 +8838,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="nummus-chartaceus">
     <liberum nomen="eventum"/>
@@ -8620,6 +8859,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio-ad-portitorem">
     <liberum nomen="eventum"/>
@@ -8640,6 +8880,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-spectaculi">
     <liberum nomen="eventum"/>
@@ -8660,6 +8901,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-repositoria">
     <liberum nomen="eventum"/>
@@ -8680,6 +8922,7 @@
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-digitalis">
     <liberum nomen="eventum"/>
@@ -8720,6 +8963,7 @@
     <liberum nomen="plicatur-in"/>
     <liberum nomen="signata-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="ratio-duplex">
     <attributum nomen="ad" genus="referentia"/>
@@ -8758,6 +9002,7 @@
     <liberum nomen="relinquitur-a"/>
     <liberum nomen="legitur-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="relinquitur-a" intra="vestigium-chemicum">
     <attributum nomen="ad" genus="referentia"/>
@@ -8778,6 +9023,7 @@
     <liberum nomen="relinquitur-a"/>
     <liberum nomen="legitur-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="relinquitur-a" intra="semita-trita">
     <attributum nomen="ad" genus="referentia"/>
@@ -8798,6 +9044,7 @@
     <liberum nomen="relinquitur-a"/>
     <liberum nomen="legitur-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="relinquitur-a" intra="tabula-communis">
     <attributum nomen="ad" genus="referentia"/>
@@ -8818,6 +9065,7 @@
     <liberum nomen="relinquitur-a"/>
     <liberum nomen="legitur-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="relinquitur-a" intra="vestigia-operis">
     <attributum nomen="ad" genus="referentia"/>
@@ -8844,6 +9092,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="cibus">
     <attributum nomen="nota" genus="textus"/>
@@ -8875,6 +9124,7 @@
     </attributum>
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra-immobilis">
     <liberum nomen="eventum"/>
@@ -8900,6 +9150,7 @@
     </attributum>
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra-mobilis">
     <liberum nomen="eventum"/>
@@ -8925,6 +9176,7 @@
     </attributum>
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="reliquiae">
     <liberum nomen="eventum"/>
@@ -8948,6 +9200,7 @@
     <attributum nomen="illatum-per" genus="referentia"/>
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fractura">
     <liberum nomen="eventum"/>
@@ -8971,6 +9224,7 @@
     <attributum nomen="illatum-per" genus="referentia"/>
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="corruptio">
     <liberum nomen="eventum"/>
@@ -8994,6 +9248,7 @@
     <attributum nomen="illatum-per" genus="referentia"/>
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="contaminatio">
     <liberum nomen="eventum"/>
@@ -9016,6 +9271,7 @@
     <attributum nomen="mutatur-a" genus="referentia"/>
     <liberum nomen="ex-fontibus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="ex-fontibus" intra="obiectum-compilatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -9041,6 +9297,7 @@
     <attributum nomen="mutatur-a" genus="referentia"/>
     <liberum nomen="ex-fontibus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="ex-fontibus" intra="exsecutabile-ligatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -9064,6 +9321,7 @@
     <attributum nomen="legitur-a" genus="referentia"/>
     <attributum nomen="mutatur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="index-inversus">
     <liberum nomen="eventum"/>
@@ -9084,6 +9342,7 @@
     <attributum nomen="legitur-a" genus="referentia"/>
     <attributum nomen="mutatur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="index-arboris">
     <liberum nomen="eventum"/>
@@ -9094,6 +9353,7 @@
     <attributum nomen="obiectum" genus="referentia"/>
     <attributum nomen="hauritur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="lectio-memoriae">
     <liberum nomen="eventum"/>
@@ -9104,6 +9364,7 @@
     <attributum nomen="obiectum" genus="referentia"/>
     <attributum nomen="hauritur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="lectio-externa">
     <liberum nomen="eventum"/>
@@ -9120,6 +9381,7 @@
     <attributum nomen="obiectum" genus="referentia"/>
     <attributum nomen="efficitur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="mutatio-memoriae">
     <liberum nomen="eventum"/>
@@ -9136,6 +9398,7 @@
     <attributum nomen="obiectum" genus="referentia"/>
     <attributum nomen="efficitur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="scriptio-externa">
     <liberum nomen="eventum"/>
@@ -9152,6 +9415,7 @@
     <attributum nomen="obiectum" genus="referentia"/>
     <attributum nomen="efficitur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="allocatio">
     <liberum nomen="eventum"/>
@@ -9168,6 +9432,7 @@
     <attributum nomen="obiectum" genus="referentia"/>
     <attributum nomen="efficitur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="terminatio">
     <liberum nomen="eventum"/>
@@ -9184,6 +9449,7 @@
     <attributum nomen="obiectum" genus="referentia"/>
     <attributum nomen="efficitur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="transactio">
     <liberum nomen="eventum"/>
@@ -9193,6 +9459,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="affirmat-de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="praeconditio">
     <liberum nomen="eventum"/>
@@ -9202,6 +9469,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="affirmat-de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="postconditio">
     <liberum nomen="eventum"/>
@@ -9211,6 +9479,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="affirmat-de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="invarians">
     <liberum nomen="eventum"/>
@@ -9220,6 +9489,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="affirmat-de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="assertio-statica">
     <liberum nomen="eventum"/>
@@ -9229,6 +9499,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="affirmat-de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="assertio-probationis">
     <liberum nomen="eventum"/>
@@ -9237,6 +9508,7 @@
   <elementum nomen="explicativum">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="explicativum">
     <liberum nomen="eventum"/>
@@ -9245,6 +9517,7 @@
   <elementum nomen="documentarium">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="documentarium">
     <liberum nomen="eventum"/>
@@ -9253,6 +9526,7 @@
   <elementum nomen="monitum-futuri">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="monitum-futuri">
     <liberum nomen="eventum"/>
@@ -9261,6 +9535,7 @@
   <elementum nomen="titulus-iuris">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="titulus-iuris">
     <liberum nomen="eventum"/>
@@ -9269,6 +9544,7 @@
   <elementum nomen="codex-sepultus">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="codex-sepultus">
     <liberum nomen="eventum"/>
@@ -9277,6 +9553,7 @@
   <elementum nomen="annotatio-machinae">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="annotatio-machinae">
     <liberum nomen="eventum"/>
@@ -9285,6 +9562,7 @@
   <elementum nomen="identificator-baptismalis">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="identificator-baptismalis">
     <liberum nomen="eventum"/>
@@ -9293,6 +9571,7 @@
   <elementum nomen="sigillum-contenti">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="sigillum-contenti">
     <liberum nomen="eventum"/>
@@ -9309,6 +9588,7 @@
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="adhibet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="adhibet" intra="instrumentum-lineae">
     <attributum nomen="ad" genus="referentia"/>
@@ -9328,6 +9608,7 @@
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="adhibet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="adhibet" intra="daemon">
     <attributum nomen="ad" genus="referentia"/>
@@ -9347,6 +9628,7 @@
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="adhibet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="adhibet" intra="applicatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -9357,10 +9639,12 @@
 
   <elementum nomen="probatio-unitatis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-unitatis">
     <attributum nomen="ad" genus="referentia"/>
@@ -9374,10 +9658,12 @@
 
   <elementum nomen="probatio-integrationis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-integrationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -9391,10 +9677,12 @@
 
   <elementum nomen="probatio-regressionis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-regressionis">
     <attributum nomen="ad" genus="referentia"/>
@@ -9408,10 +9696,12 @@
 
   <elementum nomen="probatio-fumi">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-fumi">
     <attributum nomen="ad" genus="referentia"/>
@@ -9425,6 +9715,11 @@
 
   <elementum nomen="regressio">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+    </attributum>
     <attributum nomen="status-vita" genus="electio">
       <optio>relatum_est</optio>
       <optio>confirmatum</optio>
@@ -9436,6 +9731,7 @@
     <attributum nomen="violat" genus="referentia"/>
     <attributum nomen="habitat-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="regressio">
     <liberum nomen="eventum"/>
@@ -9461,6 +9757,7 @@
     <liberum nomen="ad-postulata"/>
     <liberum nomen="exsequitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="ordinat" intra="consilium-computatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -9492,6 +9789,7 @@
     <attributum nomen="agens" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="conservatio">
     <liberum nomen="eventum"/>
@@ -9514,6 +9812,7 @@
     <attributum nomen="agens" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="restauratio-aedificii">
     <liberum nomen="eventum"/>
@@ -9536,6 +9835,7 @@
     <attributum nomen="agens" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="curatio-medica">
     <liberum nomen="eventum"/>
@@ -9545,6 +9845,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="series">
     <attributum nomen="ad" genus="referentia"/>
@@ -9557,6 +9858,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="cauda">
     <attributum nomen="ad" genus="referentia"/>
@@ -9569,6 +9871,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="acervus">
     <attributum nomen="ad" genus="referentia"/>
@@ -9581,6 +9884,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="tabula-associativa">
     <attributum nomen="ad" genus="referentia"/>
@@ -9593,6 +9897,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="copia">
     <attributum nomen="ad" genus="referentia"/>
@@ -9605,6 +9910,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="realizata-a" intra="arbor">
     <attributum nomen="ad" genus="referentia"/>
@@ -9634,6 +9940,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="uuid">
     <attributum nomen="nota" genus="textus"/>
@@ -9669,6 +9976,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="ulid">
     <attributum nomen="nota" genus="textus"/>
@@ -9704,6 +10012,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="isbn">
     <attributum nomen="nota" genus="textus"/>
@@ -9739,6 +10048,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="isbn-10">
     <attributum nomen="nota" genus="textus"/>
@@ -9774,6 +10084,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="isbn-13">
     <attributum nomen="nota" genus="textus"/>
@@ -9809,6 +10120,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="issn">
     <attributum nomen="nota" genus="textus"/>
@@ -9844,6 +10156,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="doi">
     <attributum nomen="nota" genus="textus"/>
@@ -9879,6 +10192,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="orcid">
     <attributum nomen="nota" genus="textus"/>
@@ -9914,6 +10228,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="iban">
     <attributum nomen="nota" genus="textus"/>
@@ -9949,6 +10264,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="e164">
     <attributum nomen="nota" genus="textus"/>
@@ -9984,6 +10300,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="gtin">
     <attributum nomen="nota" genus="textus"/>
@@ -10019,6 +10336,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="uri">
     <attributum nomen="nota" genus="textus"/>
@@ -10054,6 +10372,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="cas">
     <attributum nomen="nota" genus="textus"/>
@@ -10089,6 +10408,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="ndc">
     <attributum nomen="nota" genus="textus"/>
@@ -10124,6 +10444,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="rxnorm">
     <attributum nomen="nota" genus="textus"/>
@@ -10159,6 +10480,7 @@
     <liberum nomen="corpus-identificatoris" maximum="1"/>
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="praefixum" intra="numerus-dea">
     <attributum nomen="nota" genus="textus"/>
@@ -10176,6 +10498,7 @@
   <elementum nomen="scientia">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="scientia">
     <liberum nomen="eventum"/>
@@ -10184,6 +10507,7 @@
   <elementum nomen="opinio">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="opinio">
     <liberum nomen="eventum"/>
@@ -10192,6 +10516,7 @@
   <elementum nomen="fides">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fides">
     <liberum nomen="eventum"/>
@@ -10200,6 +10525,7 @@
   <elementum nomen="suspicio">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="suspicio">
     <liberum nomen="eventum"/>
@@ -10208,6 +10534,7 @@
   <elementum nomen="dubitatio">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="dubitatio">
     <liberum nomen="eventum"/>
@@ -10218,6 +10545,7 @@
     <attributum nomen="clavis" genus="textus"/>
     <attributum nomen="verificatus" genus="veritas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fons-scriptus">
     <liberum nomen="eventum"/>
@@ -10228,6 +10556,7 @@
     <attributum nomen="clavis" genus="textus"/>
     <attributum nomen="verificatus" genus="veritas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fons-mensurae">
     <liberum nomen="eventum"/>
@@ -10238,6 +10567,7 @@
     <attributum nomen="clavis" genus="textus"/>
     <attributum nomen="verificatus" genus="veritas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fons-testimonii">
     <liberum nomen="eventum"/>
@@ -10248,6 +10578,7 @@
     <attributum nomen="clavis" genus="textus"/>
     <attributum nomen="verificatus" genus="veritas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="corpus-institutionis">
     <liberum nomen="eventum"/>
@@ -10261,6 +10592,7 @@
     <attributum nomen="ex-fonte" genus="referentia"/>
     <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="symptoma">
     <liberum nomen="eventum"/>
@@ -10274,6 +10606,7 @@
     <attributum nomen="ex-fonte" genus="referentia"/>
     <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="signum">
     <liberum nomen="eventum"/>
@@ -10287,6 +10620,7 @@
     <attributum nomen="ex-fonte" genus="referentia"/>
     <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="testimonium">
     <liberum nomen="eventum"/>
@@ -10309,6 +10643,7 @@
     <liberum nomen="fundatur-in"/>
     <liberum nomen="ex-fonte"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fundatur-in" intra="diagnosis">
     <attributum nomen="ad" genus="referentia"/>
@@ -10337,6 +10672,7 @@
     <liberum nomen="fundatur-in"/>
     <liberum nomen="ex-fonte"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fundatur-in" intra="aestimatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -10365,6 +10701,7 @@
     <liberum nomen="fundatur-in"/>
     <liberum nomen="ex-fonte"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fundatur-in" intra="praedictio">
     <attributum nomen="ad" genus="referentia"/>
@@ -10393,6 +10730,7 @@
     <liberum nomen="fundatur-in"/>
     <liberum nomen="ex-fonte"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fundatur-in" intra="sententia-iudicis">
     <attributum nomen="ad" genus="referentia"/>
@@ -10420,6 +10758,7 @@
     <liberum nomen="impedit"/>
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="impedit" intra="ignotum-notum">
     <attributum nomen="ad" genus="referentia"/>
@@ -10447,6 +10786,7 @@
     <liberum nomen="impedit"/>
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="impedit" intra="ignotum-ignotum">
     <attributum nomen="ad" genus="referentia"/>
@@ -10474,6 +10814,7 @@
     <liberum nomen="impedit"/>
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="impedit" intra="indeterminatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -10501,6 +10842,7 @@
     <liberum nomen="impedit"/>
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="impedit" intra="amissum">
     <attributum nomen="ad" genus="referentia"/>
@@ -10528,6 +10870,7 @@
     <liberum nomen="impedit"/>
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="impedit" intra="retentum">
     <attributum nomen="ad" genus="referentia"/>
@@ -10555,6 +10898,7 @@
     <liberum nomen="impedit"/>
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="impedit" intra="impertinens">
     <attributum nomen="ad" genus="referentia"/>
@@ -10582,6 +10926,7 @@
     <liberum nomen="impedit"/>
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="impedit" intra="controversum">
     <attributum nomen="ad" genus="referentia"/>
@@ -10613,6 +10958,7 @@
     <liberum nomen="invenit"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="colligit" intra="investigatio-praeventiva">
     <attributum nomen="ad" genus="referentia"/>
@@ -10650,6 +10996,7 @@
     <liberum nomen="invenit"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="colligit" intra="inquisitio-forensis">
     <attributum nomen="ad" genus="referentia"/>
@@ -10687,6 +11034,7 @@
     <liberum nomen="invenit"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="colligit" intra="recensio-post-mortem">
     <attributum nomen="ad" genus="referentia"/>
@@ -10719,6 +11067,7 @@
     <liberum nomen="scitur-a"/>
     <liberum nomen="custodia-obligat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="scitur-a" intra="clavis-privata">
     <attributum nomen="ad" genus="referentia"/>
@@ -10745,6 +11094,7 @@
     <liberum nomen="scitur-a"/>
     <liberum nomen="custodia-obligat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="scitur-a" intra="verbum-arcanum">
     <attributum nomen="ad" genus="referentia"/>
@@ -10771,6 +11121,7 @@
     <liberum nomen="scitur-a"/>
     <liberum nomen="custodia-obligat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="scitur-a" intra="secretum-negotii">
     <attributum nomen="ad" genus="referentia"/>
@@ -10797,6 +11148,7 @@
     <liberum nomen="scitur-a"/>
     <liberum nomen="custodia-obligat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="scitur-a" intra="sigillum-confessionis">
     <attributum nomen="ad" genus="referentia"/>
@@ -10826,6 +11178,7 @@
     <attributum nomen="residet-in" genus="referentia"/>
     <attributum nomen="de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="notitia-pascui">
     <liberum nomen="eventum"/>
@@ -10849,6 +11202,7 @@
     <attributum nomen="residet-in" genus="referentia"/>
     <attributum nomen="de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="ars-officinae">
     <liberum nomen="eventum"/>
@@ -10872,6 +11226,7 @@
     <attributum nomen="residet-in" genus="referentia"/>
     <attributum nomen="de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="memoria-operis">
     <liberum nomen="eventum"/>
@@ -10883,6 +11238,7 @@
     <attributum nomen="repetibile" genus="veritas"/>
     <attributum nomen="sustinet" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="autopsia">
     <liberum nomen="eventum"/>
@@ -10894,6 +11250,7 @@
     <attributum nomen="repetibile" genus="veritas" ordinarius="verum"/>
     <attributum nomen="sustinet" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="mensuratio">
     <liberum nomen="eventum"/>
@@ -10905,6 +11262,7 @@
     <attributum nomen="repetibile" genus="veritas"/>
     <attributum nomen="sustinet" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="documentum-scriptum">
     <liberum nomen="eventum"/>
@@ -10916,6 +11274,7 @@
     <attributum nomen="repetibile" genus="veritas"/>
     <attributum nomen="sustinet" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="auctoritas-testis">
     <liberum nomen="eventum"/>
@@ -10927,6 +11286,7 @@
     <attributum nomen="repetibile" genus="veritas"/>
     <attributum nomen="sustinet" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="illatio">
     <liberum nomen="eventum"/>
@@ -10938,6 +11298,7 @@
     <attributum nomen="repetibile" genus="veritas"/>
     <attributum nomen="sustinet" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="comparatio-stili">
     <liberum nomen="eventum"/>
@@ -10949,6 +11310,7 @@
     <attributum nomen="repetibile" genus="veritas"/>
     <attributum nomen="sustinet" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="coniectura-periti">
     <liberum nomen="eventum"/>
@@ -10960,6 +11322,7 @@
     <attributum nomen="repetibile" genus="veritas"/>
     <attributum nomen="sustinet" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="praesumptio">
     <liberum nomen="eventum"/>
@@ -10969,6 +11332,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="longitudo">
     <attributum nomen="ad" genus="referentia"/>
@@ -10981,6 +11345,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="massa">
     <attributum nomen="ad" genus="referentia"/>
@@ -10993,6 +11358,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="tempus-intervallum">
     <attributum nomen="ad" genus="referentia"/>
@@ -11005,6 +11371,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="temperatura">
     <attributum nomen="ad" genus="referentia"/>
@@ -11017,6 +11384,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="capacitas">
     <attributum nomen="ad" genus="referentia"/>
@@ -11029,6 +11397,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="numerositas">
     <attributum nomen="ad" genus="referentia"/>
@@ -11056,6 +11425,7 @@
     <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus-infectiosus">
     <attributum nomen="ad" genus="referentia"/>
@@ -11083,6 +11453,7 @@
     <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus-geneticus">
     <attributum nomen="ad" genus="referentia"/>
@@ -11110,6 +11481,7 @@
     <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus-degenerativus">
     <attributum nomen="ad" genus="referentia"/>
@@ -11137,6 +11509,7 @@
     <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="curatur-per" intra="vulnus">
     <attributum nomen="ad" genus="referentia"/>
@@ -11162,6 +11535,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="lex-aeterna">
     <attributum nomen="ad" genus="referentia"/>
@@ -11190,6 +11564,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="lex-naturalis">
     <attributum nomen="ad" genus="referentia"/>
@@ -11218,6 +11593,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="lex-humana">
     <attributum nomen="ad" genus="referentia"/>
@@ -11246,6 +11622,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="lex-divina-positiva">
     <attributum nomen="ad" genus="referentia"/>
@@ -11274,6 +11651,7 @@
     <liberum nomen="abrogat"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="abrogat" intra="consuetudo">
     <attributum nomen="ad" genus="referentia"/>
@@ -11305,6 +11683,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="imponit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="schedula-substantiarum">
     <attributum nomen="ad" genus="referentia"/>
@@ -11336,6 +11715,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="imponit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="gradus-eventus-aviatorii">
     <attributum nomen="ad" genus="referentia"/>
@@ -11367,6 +11747,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="imponit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="classis-periculi-mercium">
     <attributum nomen="ad" genus="referentia"/>
@@ -11390,6 +11771,7 @@
     <attributum nomen="applicatur-per" genus="referentia"/>
     <attributum nomen="fingit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="adoptio">
     <liberum nomen="eventum"/>
@@ -11407,6 +11789,7 @@
     <attributum nomen="applicatur-per" genus="referentia"/>
     <attributum nomen="fingit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="mors-praesumpta">
     <liberum nomen="eventum"/>
@@ -11424,6 +11807,7 @@
     <attributum nomen="applicatur-per" genus="referentia"/>
     <attributum nomen="fingit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="personalitas-iuridica">
     <liberum nomen="eventum"/>
@@ -11443,6 +11827,7 @@
     <attributum nomen="praestandum" genus="referentia"/>
     <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio-ex-contractu">
     <liberum nomen="eventum"/>
@@ -11462,6 +11847,7 @@
     <attributum nomen="praestandum" genus="referentia"/>
     <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio-ex-delicto">
     <liberum nomen="eventum"/>
@@ -11481,6 +11867,7 @@
     <attributum nomen="praestandum" genus="referentia"/>
     <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio-ex-lege">
     <liberum nomen="eventum"/>
@@ -11493,6 +11880,7 @@
     <liberum nomen="partes"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="partes" intra="emptio-venditio">
     <attributum nomen="ad" genus="referentia"/>
@@ -11511,6 +11899,7 @@
     <liberum nomen="partes"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="partes" intra="locatio-conductio">
     <attributum nomen="ad" genus="referentia"/>
@@ -11529,6 +11918,7 @@
     <liberum nomen="partes"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="partes" intra="societas-contractus">
     <attributum nomen="ad" genus="referentia"/>
@@ -11547,6 +11937,7 @@
     <liberum nomen="partes"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="partes" intra="mandatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -11565,6 +11956,7 @@
     <liberum nomen="partes"/>
     <liberum nomen="parit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="partes" intra="commodatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -11599,6 +11991,7 @@
     <attributum nomen="praestandum" genus="referentia"/>
     <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="portorium">
     <liberum nomen="eventum"/>
@@ -11627,6 +12020,7 @@
     <attributum nomen="praestandum" genus="referentia"/>
     <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="vectigal">
     <liberum nomen="eventum"/>
@@ -11655,6 +12049,7 @@
     <attributum nomen="praestandum" genus="referentia"/>
     <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="decuma">
     <liberum nomen="eventum"/>
@@ -11683,6 +12078,7 @@
     <attributum nomen="praestandum" genus="referentia"/>
     <attributum nomen="orta-ex" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="tributum-capitis">
     <liberum nomen="eventum"/>
@@ -11696,6 +12092,7 @@
     <attributum nomen="latus-a" genus="referentia"/>
     <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="gradus-academicus">
     <liberum nomen="eventum"/>
@@ -11709,6 +12106,7 @@
     <attributum nomen="latus-a" genus="referentia"/>
     <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="character-indelebilis">
     <liberum nomen="eventum"/>
@@ -11722,6 +12120,7 @@
     <attributum nomen="latus-a" genus="referentia"/>
     <attributum nomen="fundat" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="titulus-honoris">
     <liberum nomen="eventum"/>
@@ -11753,6 +12152,7 @@
     <attributum nomen="latum-per" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="praescriptio-medica">
     <liberum nomen="eventum"/>
@@ -11784,6 +12184,7 @@
     <attributum nomen="latum-per" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="mandatum-iudicis">
     <liberum nomen="eventum"/>
@@ -11815,6 +12216,7 @@
     <attributum nomen="latum-per" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="iussum-emptionis">
     <liberum nomen="eventum"/>
@@ -11846,6 +12248,7 @@
     <attributum nomen="latum-per" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="iussum-operis">
     <liberum nomen="eventum"/>
@@ -11877,6 +12280,7 @@
     <attributum nomen="latum-per" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="iussum-ne-resuscitetur">
     <liberum nomen="eventum"/>
@@ -11900,6 +12304,7 @@
     <attributum nomen="iudicatur-per" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="petitio-assecurationis">
     <liberum nomen="eventum"/>
@@ -11923,6 +12328,7 @@
     <attributum nomen="iudicatur-per" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="petitio-remota">
     <liberum nomen="eventum"/>
@@ -11946,6 +12352,7 @@
     <attributum nomen="iudicatur-per" genus="referentia"/>
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="supplicatio">
     <liberum nomen="eventum"/>
@@ -11973,6 +12380,7 @@
     <attributum nomen="probatur-per" genus="referentia"/>
     <liberum nomen="obligat-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="obligat-per" intra="plena-potestas">
     <attributum nomen="ad" genus="referentia"/>
@@ -12003,6 +12411,7 @@
     <attributum nomen="probatur-per" genus="referentia"/>
     <liberum nomen="obligat-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="obligat-per" intra="procuratio">
     <attributum nomen="ad" genus="referentia"/>
@@ -12033,6 +12442,7 @@
     <attributum nomen="probatur-per" genus="referentia"/>
     <liberum nomen="obligat-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="obligat-per" intra="delegatio-canonica">
     <attributum nomen="ad" genus="referentia"/>
@@ -12057,6 +12467,7 @@
     <attributum nomen="statuta-per" genus="referentia"/>
     <attributum nomen="custodita-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="portio-pascui">
     <liberum nomen="eventum"/>
@@ -12078,6 +12489,7 @@
     <attributum nomen="statuta-per" genus="referentia"/>
     <attributum nomen="custodita-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="portio-piscandi">
     <liberum nomen="eventum"/>
@@ -12099,6 +12511,7 @@
     <attributum nomen="statuta-per" genus="referentia"/>
     <attributum nomen="custodita-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="portio-computandi">
     <liberum nomen="eventum"/>
@@ -12114,6 +12527,7 @@
     <attributum nomen="situs-in" genus="referentia"/>
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fert" intra="ambitus-fabricae">
     <attributum nomen="ad" genus="referentia"/>
@@ -12132,6 +12546,7 @@
     <attributum nomen="situs-in" genus="referentia"/>
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fert" intra="ambitus-probationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -12150,6 +12565,7 @@
     <attributum nomen="situs-in" genus="referentia"/>
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fert" intra="ambitus-producens">
     <attributum nomen="ad" genus="referentia"/>
@@ -12177,6 +12593,7 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="membrum" intra="colonia-apium">
     <attributum nomen="ad" genus="referentia"/>
@@ -12204,6 +12621,7 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="membrum" intra="grex">
     <attributum nomen="ad" genus="referentia"/>
@@ -12234,6 +12652,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="universitas-personarum" textus="verum"/>
   <elementum nomen="condita-a" intra="universitas-personarum">
@@ -12268,6 +12687,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="universitas-rerum" textus="verum"/>
   <elementum nomen="condita-a" intra="universitas-rerum">
@@ -12297,6 +12717,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="parochus" textus="verum"/>
   <elementum nomen="postulat" intra="parochus">
@@ -12326,6 +12747,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="episcopus" textus="verum"/>
   <elementum nomen="postulat" intra="episcopus">
@@ -12355,6 +12777,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="notarius" textus="verum"/>
   <elementum nomen="postulat" intra="notarius">
@@ -12384,6 +12807,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="curator" textus="verum"/>
   <elementum nomen="postulat" intra="curator">
@@ -12413,6 +12837,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="praeses-collegii" textus="verum"/>
   <elementum nomen="postulat" intra="praeses-collegii">
@@ -12448,6 +12873,7 @@
     <liberum nomen="aequivalens"/>
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum-genericum">
     <attributum nomen="ad" genus="referentia"/>
@@ -12485,6 +12911,7 @@
     <liberum nomen="aequivalens"/>
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum-nominatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -12522,6 +12949,7 @@
     <liberum nomen="aequivalens"/>
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum-compositum">
     <attributum nomen="ad" genus="referentia"/>
@@ -12550,6 +12978,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="inter" intra="interactio-medicamentorum">
     <attributum nomen="ad" genus="referentia"/>
@@ -12572,6 +13001,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="inter" intra="interactio-cum-cibo">
     <attributum nomen="ad" genus="referentia"/>
@@ -12594,6 +13024,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="inter" intra="incompatibilitas-mercium">
     <attributum nomen="ad" genus="referentia"/>
@@ -12619,6 +13050,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="fons-c" textus="verum"/>
   <elementum nomen="historia" intra="fons-c">
@@ -12642,6 +13074,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="caput-c" textus="verum"/>
   <elementum nomen="historia" intra="caput-c">
@@ -12665,6 +13098,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="fons-python" textus="verum"/>
   <elementum nomen="historia" intra="fons-python">
@@ -12688,6 +13122,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="fons-rust" textus="verum"/>
   <elementum nomen="historia" intra="fons-rust">
@@ -12711,6 +13146,7 @@
     <attributum nomen="scripta-in-versione" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="scriptum-conchae" textus="verum"/>
   <elementum nomen="historia" intra="scriptum-conchae">
@@ -12732,6 +13168,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-xml" textus="verum"/>
   <elementum nomen="historia" intra="plagula-xml">
@@ -12753,6 +13190,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-stml" textus="verum"/>
   <elementum nomen="historia" intra="plagula-stml">
@@ -12774,6 +13212,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-markdown" textus="verum"/>
   <elementum nomen="historia" intra="plagula-markdown">
@@ -12795,6 +13234,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-toml" textus="verum"/>
   <elementum nomen="historia" intra="plagula-toml">
@@ -12816,6 +13256,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-plist" textus="verum"/>
   <elementum nomen="historia" intra="plagula-plist">
@@ -12837,6 +13278,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-json" textus="verum"/>
   <elementum nomen="historia" intra="plagula-json">
@@ -12858,6 +13300,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-csv" textus="verum"/>
   <elementum nomen="historia" intra="plagula-csv">
@@ -12879,6 +13322,7 @@
     <attributum nomen="conformis-ad" genus="referentia"/>
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="volumen" textus="verum"/>
   <elementum nomen="historia" intra="volumen">
@@ -12937,6 +13381,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="rosa-canina">
     <attributum nomen="nota" genus="textus"/>
@@ -13018,6 +13463,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="malus-domestica">
     <attributum nomen="nota" genus="textus"/>
@@ -13099,6 +13545,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="granny-smith">
     <attributum nomen="nota" genus="textus"/>
@@ -13144,6 +13591,7 @@
     <liberum nomen="efficit"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="efficit" intra="fistula-integrationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -13171,6 +13619,7 @@
     <liberum nomen="efficit"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="efficit" intra="depositio">
     <attributum nomen="ad" genus="referentia"/>
@@ -13185,6 +13634,7 @@
   <elementum nomen="textus">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="textus">
     <liberum nomen="eventum"/>
@@ -13193,6 +13643,7 @@
   <elementum nomen="numerus">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="numerus">
     <liberum nomen="eventum"/>
@@ -13201,6 +13652,7 @@
   <elementum nomen="dies">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="dies">
     <liberum nomen="eventum"/>
@@ -13209,6 +13661,7 @@
   <elementum nomen="veritas">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="veritas">
     <liberum nomen="eventum"/>
@@ -13217,6 +13670,7 @@
   <elementum nomen="electio">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="electio">
     <liberum nomen="eventum"/>
@@ -13225,6 +13679,7 @@
   <elementum nomen="citatio">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="citatio">
     <liberum nomen="eventum"/>
@@ -13243,6 +13698,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="pascha" textus="dies"/>
   <elementum nomen="historia" intra="pascha">
@@ -13262,6 +13718,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="dies-negotiorum" textus="dies"/>
   <elementum nomen="historia" intra="dies-negotiorum">
@@ -13281,6 +13738,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="dies-ordinalis-mensis" textus="dies"/>
   <elementum nomen="historia" intra="dies-ordinalis-mensis">
@@ -13299,6 +13757,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="per-horas-operis" textus="dies"/>
   <elementum nomen="historia" intra="per-horas-operis">
@@ -13317,6 +13776,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="per-cyclos" textus="dies"/>
   <elementum nomen="historia" intra="per-cyclos">
@@ -13335,6 +13795,7 @@
     <attributum nomen="frequentia" genus="numerus"/>
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exceptiones" intra="per-spatium" textus="dies"/>
   <elementum nomen="historia" intra="per-spatium">
@@ -13348,6 +13809,7 @@
     <liberum nomen="iungit"/>
     <liberum nomen="sub-iurisdictione"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="iungit" intra="via-terrestris">
     <attributum nomen="ad" genus="referentia"/>
@@ -13366,6 +13828,7 @@
     <liberum nomen="iungit"/>
     <liberum nomen="sub-iurisdictione"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="iungit" intra="via-maritima">
     <attributum nomen="ad" genus="referentia"/>
@@ -13384,6 +13847,7 @@
     <liberum nomen="iungit"/>
     <liberum nomen="sub-iurisdictione"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="iungit" intra="via-aeria">
     <attributum nomen="ad" genus="referentia"/>
@@ -13421,6 +13885,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="apta-viae" intra="navis">
     <attributum nomen="ad" genus="referentia"/>
@@ -13461,6 +13926,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="apta-viae" intra="currus-onerarius">
     <attributum nomen="ad" genus="referentia"/>
@@ -13501,6 +13967,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="apta-viae" intra="tramen">
     <attributum nomen="ad" genus="referentia"/>
@@ -13541,6 +14008,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="apta-viae" intra="aeroplanum">
     <attributum nomen="ad" genus="referentia"/>
@@ -13554,6 +14022,10 @@
   <elementum nomen="historia" intra="aeroplanum">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>
@@ -14071,7 +14543,6 @@
   <citatio nomen="medicamentum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum/aequivalens"/>
   <citatio nomen="medicamentum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="medicamentum"/>
   <citatio nomen="medicamentum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum/fabricatum-in"/>
-  <citatio nomen="coctura-coquitur" attributum="coquitur" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="coctura"/>
   <citatio nomen="coctura-fabricata-a" attributum="fabricata-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="coctura"/>
   <citatio nomen="coctura-acta-sua" attributum="acta-sua" ad="acta acta-publica regesta acta-transactionum acta-versionum acta-auditus ratio-rationaria ratio-duplex/nomen" super="coctura"/>
   <citatio nomen="interactio-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="interactio"/>

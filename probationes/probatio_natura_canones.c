@@ -1976,6 +1976,66 @@ principale(
             CANON_CITATIO_IRRITA, &generis, &omnia,
             piscina, intern));
         CREDO_AEQUALIS_I32 (generis, (i32)I);
+
+        /* ----------------------------------------------------
+         * XVI. manipulus vilis circuitus documentationis:
+         * L2 coquitur apertum, L5 contentum + nota universalis,
+         * L6 ordo finitus, L14 auctoritativa
+         * ---------------------------------------------------- */
+        imprimere("\n--- XVI. manipulus vilis ---\n");
+
+        /* L5+L6: quadratum intentionis loquitur; ordo finem fert */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <postulatum nomen=\"#exemplum-integrum\""
+            " contentum=\"pagina documentum integrum monstret\""
+            " ordo=\"1\"/>\n"
+            "  <vitium nomen=\"#truncatio\" contentum=\"optiones"
+            " praecisae mortem celaverunt\" gravitas=\"gravis\"/>\n"
+            "</individua>\n",
+            CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <postulatum nomen=\"#nullus\" ordo=\"0\"/>\n"
+            "</individua>\n",
+            CANON_VALOR_EXTRA_FINES, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
+
+        /* nota universalis: margo curatorialis in quolibet */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <planta nomen=\"#p\"><nota>margo</nota></planta>\n"
+            "</individua>\n",
+            CANON_ELEMENTUM_IGNOTUM, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        /* L14: auctoritativa veritas est */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <expressio nomen=\"#versio-legalis\""
+            " auctoritativa=\"verum\"/>\n"
+            "</individua>\n",
+            CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        /* L2: coctura rem QUAMLIBET coquit - signum manet, clavis
+         * nulla (relatio aperta) */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <coctura nomen=\"#cursus-glossarum\""
+            " coquitur=\"#opus-quodlibet\"/>\n"
+            "</individua>\n",
+            CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <coctura nomen=\"#c\" coquitur=\"nudum\"/>\n"
+            "</individua>\n",
+            CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
     }
 
 

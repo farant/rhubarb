@@ -38,6 +38,7 @@
     <liberum nomen="materia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materia" intra="opus-scriptum" textus="verum"/>
   <elementum nomen="auctor" intra="opus-scriptum">
@@ -58,6 +59,7 @@
     une recension critique de même.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="lingua" genus="textus"/>
+    <attributum nomen="auctoritativa" genus="veritas"/>
     <attributum nomen="genus-expressionis" genus="electio">
       <optio>originalis</optio>
       <optio>translata</optio>
@@ -68,6 +70,7 @@
     <attributum nomen="translata-ex" genus="referentia"/>
     <liberum nomen="translator"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="translator" intra="expressio">
     <attributum nomen="ad" genus="referentia"/>
@@ -97,6 +100,7 @@
     <attributum nomen="impressa-in" genus="referentia"/>
     <liberum nomen="editio-de"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="editio-de" intra="editio">
     <attributum nomen="ad" genus="referentia"/>
@@ -131,6 +135,7 @@
     <attributum nomen="exemplar-de" genus="referentia"/>
     <attributum nomen="possessor" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="codex">
     <liberum nomen="eventum"/>
@@ -173,6 +178,7 @@
     <liberum nomen="materia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materia" intra="periodicum" textus="verum"/>
   <elementum nomen="auctor" intra="periodicum">
@@ -198,10 +204,15 @@
     <attributum nomen="publicatus" genus="dies"/>
     <attributum nomen="fasciculus-de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fasciculus">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

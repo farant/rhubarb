@@ -36,6 +36,8 @@
     défaut se mesure à une exigence, un test interroge une exigence,
     une capacité en satisfait une.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="ordo" genus="numerus" minimum="1"/>
     <attributum nomen="status-vita" genus="electio">
       <optio>propositum</optio>
       <optio>receptum</optio>
@@ -45,6 +47,7 @@
     <attributum nomen="impletur-a" genus="referentia"/>
     <attributum nomen="interrogatur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="postulatum">
     <liberum nomen="eventum"/>
@@ -62,9 +65,11 @@
     intention possédée, et c'est elle que l'utilisateur nomme
     lorsqu'il raconte ce que le programme fait.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <liberum nomen="implet"/>
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="implet" intra="facultas">
     <attributum nomen="ad" genus="referentia"/>
@@ -88,10 +93,12 @@
     test contient les assertions par lesquelles il juge (dans cette
     maison, la bibliothèque credo).</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="probatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -117,6 +124,11 @@
     une intention (une exigence, une assertion, une attente), et
     sans elle il n'y a que du « comportement ».</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+    </attributum>
     <attributum nomen="status-vita" genus="electio">
       <optio>relatum_est</optio>
       <optio>confirmatum</optio>
@@ -128,6 +140,7 @@
     <attributum nomen="violat" genus="referentia"/>
     <attributum nomen="habitat-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="vitium">
     <liberum nomen="eventum"/>
@@ -162,6 +175,7 @@
     <liberum nomen="emit"/>
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="emit" intra="debitum-technicum">
     <attributum nomen="ad" genus="referentia"/>
@@ -211,6 +225,7 @@
     <attributum nomen="retractat" genus="referentia"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="complicatio">
     <liberum nomen="eventum"/>
@@ -256,6 +271,7 @@
     <liberum nomen="ad-postulata"/>
     <liberum nomen="exsequitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="ordinat" intra="consilium">
     <attributum nomen="ad" genus="referentia"/>
@@ -314,6 +330,7 @@
     <liberum nomen="prodita-per"/>
     <liberum nomen="afficit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="prodita-per" intra="depravatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -365,6 +382,7 @@
     <attributum nomen="agens" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="interventio">
     <liberum nomen="eventum"/>
@@ -372,10 +390,12 @@
 
   <elementum nomen="probatio-unitatis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-unitatis">
     <attributum nomen="ad" genus="referentia"/>
@@ -389,10 +409,12 @@
 
   <elementum nomen="probatio-integrationis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-integrationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -406,10 +428,12 @@
 
   <elementum nomen="probatio-regressionis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-regressionis">
     <attributum nomen="ad" genus="referentia"/>
@@ -423,10 +447,12 @@
 
   <elementum nomen="probatio-fumi">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="interrogat" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-fumi">
     <attributum nomen="ad" genus="referentia"/>
@@ -440,6 +466,11 @@
 
   <elementum nomen="regressio">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+    </attributum>
     <attributum nomen="status-vita" genus="electio">
       <optio>relatum_est</optio>
       <optio>confirmatum</optio>
@@ -451,6 +482,7 @@
     <attributum nomen="violat" genus="referentia"/>
     <attributum nomen="habitat-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="regressio">
     <liberum nomen="eventum"/>
@@ -476,6 +508,7 @@
     <liberum nomen="ad-postulata"/>
     <liberum nomen="exsequitur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="ordinat" intra="consilium-computatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -507,6 +540,7 @@
     <attributum nomen="agens" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="conservatio">
     <liberum nomen="eventum"/>
@@ -529,6 +563,7 @@
     <attributum nomen="agens" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="restauratio-aedificii">
     <liberum nomen="eventum"/>
@@ -551,10 +586,15 @@
     <attributum nomen="agens" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="curatio-medica">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

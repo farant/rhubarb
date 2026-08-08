@@ -45,6 +45,7 @@
     <liberum nomen="auctor"/>
     <liberum nomen="exsequitur-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="auctor" intra="systema-operativum">
     <attributum nomen="ad" genus="referentia"/>
@@ -95,6 +96,7 @@
     <liberum nomen="auctor"/>
     <liberum nomen="exsequitur-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="auctor" intra="systema-unixiforme">
     <attributum nomen="ad" genus="referentia"/>
@@ -128,6 +130,7 @@
     <attributum nomen="orta-ex" genus="referentia"/>
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="distributio-systematis">
     <liberum nomen="eventum"/>
@@ -166,6 +169,7 @@
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-systematis">
     <attributum nomen="ad" genus="referentia"/>
@@ -173,6 +177,10 @@
   <elementum nomen="historia" intra="versio-systematis">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

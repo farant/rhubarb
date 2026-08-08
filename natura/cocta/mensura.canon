@@ -31,6 +31,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="magnitudo-mensurabilis">
     <attributum nomen="ad" genus="referentia"/>
@@ -57,6 +58,7 @@
     <attributum nomen="normata-per" genus="referentia"/>
     <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="unitas-mensurae">
     <liberum nomen="eventum"/>
@@ -86,6 +88,7 @@
     <attributum nomen="in-unitate" genus="referentia"/>
     <attributum nomen="cum-incertitudine" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="quantitas">
     <liberum nomen="eventum"/>
@@ -117,6 +120,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="componitur-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="componitur-ex" intra="incertitudo">
     <attributum nomen="ad" genus="referentia"/>
@@ -171,6 +175,7 @@
     <liberum nomen="materiae-constituentes" maximum="1"/>
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="instrumentum-mensurae">
     <attributum nomen="nota" genus="textus"/>
@@ -186,6 +191,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="longitudo">
     <attributum nomen="ad" genus="referentia"/>
@@ -198,6 +204,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="massa">
     <attributum nomen="ad" genus="referentia"/>
@@ -210,6 +217,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="tempus-intervallum">
     <attributum nomen="ad" genus="referentia"/>
@@ -222,6 +230,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="temperatura">
     <attributum nomen="ad" genus="referentia"/>
@@ -234,6 +243,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="capacitas">
     <attributum nomen="ad" genus="referentia"/>
@@ -246,6 +256,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="mensuratur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="mensuratur-per" intra="numerositas">
     <attributum nomen="ad" genus="referentia"/>
@@ -253,6 +264,10 @@
   <elementum nomen="historia" intra="numerositas">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

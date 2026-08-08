@@ -56,6 +56,7 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="membrum" intra="universitas">
     <attributum nomen="ad" genus="referentia"/>
@@ -95,6 +96,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="organizatio" textus="verum"/>
   <elementum nomen="condita-a" intra="organizatio">
@@ -142,6 +144,7 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="membrum" intra="colonia">
     <attributum nomen="ad" genus="referentia"/>
@@ -184,6 +187,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="persona-iuridica" textus="verum"/>
   <elementum nomen="condita-a" intra="persona-iuridica">
@@ -224,6 +228,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="officium" textus="verum"/>
   <elementum nomen="postulat" intra="officium">
@@ -266,6 +271,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="edit" intra="corpus-normans">
     <attributum nomen="ad" genus="referentia"/>
@@ -307,6 +313,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="societas" textus="verum"/>
   <elementum nomen="condita-a" intra="societas">
@@ -352,6 +359,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exercet" intra="magistratus">
     <attributum nomen="ad" genus="referentia"/>
@@ -389,6 +397,7 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="membrum" intra="colonia-apium">
     <attributum nomen="ad" genus="referentia"/>
@@ -416,6 +425,7 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="membrum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="membrum" intra="grex">
     <attributum nomen="ad" genus="referentia"/>
@@ -446,6 +456,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="universitas-personarum" textus="verum"/>
   <elementum nomen="condita-a" intra="universitas-personarum">
@@ -480,6 +491,7 @@
     <liberum nomen="condita-a"/>
     <liberum nomen="administrat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="universitas-rerum" textus="verum"/>
   <elementum nomen="condita-a" intra="universitas-rerum">
@@ -509,6 +521,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="parochus" textus="verum"/>
   <elementum nomen="postulat" intra="parochus">
@@ -538,6 +551,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="episcopus" textus="verum"/>
   <elementum nomen="postulat" intra="episcopus">
@@ -567,6 +581,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="notarius" textus="verum"/>
   <elementum nomen="postulat" intra="notarius">
@@ -596,6 +611,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="curator" textus="verum"/>
   <elementum nomen="postulat" intra="curator">
@@ -625,6 +641,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="confert-capacitatem"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="requisita" intra="praeses-collegii" textus="verum"/>
   <elementum nomen="postulat" intra="praeses-collegii">
@@ -636,6 +653,10 @@
   <elementum nomen="historia" intra="praeses-collegii">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

@@ -58,6 +58,7 @@
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="paradigmata" intra="lingua-programmandi" textus="verum"/>
   <elementum nomen="auctor" intra="lingua-programmandi">
@@ -110,6 +111,7 @@
     <liberum nomen="paradigmata"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="paradigmata" intra="lingua-iussuum" textus="verum"/>
   <elementum nomen="auctor" intra="lingua-iussuum">
@@ -155,6 +157,7 @@
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-linguae">
     <attributum nomen="ad" genus="referentia"/>
@@ -189,6 +192,7 @@
     <liberum nomen="auctor"/>
     <liberum nomen="emittit-pro"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="auctor" intra="implementatio-linguae">
     <attributum nomen="ad" genus="referentia"/>
@@ -215,10 +219,15 @@
     <attributum nomen="verbum-de" genus="referentia"/>
     <attributum nomen="additum-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="verbum-clavis">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

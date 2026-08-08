@@ -29,6 +29,7 @@
     <liberum nomen="membrum-de"/>
     <liberum nomen="inscriptus-in"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="nomina" intra="persona" textus="verum"/>
   <elementum nomen="membrum-de" intra="persona">
@@ -40,6 +41,10 @@
   <elementum nomen="historia" intra="persona">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

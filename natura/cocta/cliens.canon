@@ -33,6 +33,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens">
     <attributum nomen="ad" genus="referentia"/>
@@ -54,6 +55,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-telae">
     <attributum nomen="ad" genus="referentia"/>
@@ -75,6 +77,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-nativus">
     <attributum nomen="ad" genus="referentia"/>
@@ -98,6 +101,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-terminalis">
     <attributum nomen="ad" genus="referentia"/>
@@ -120,6 +124,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-api">
     <attributum nomen="ad" genus="referentia"/>
@@ -144,6 +149,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-mcp">
     <attributum nomen="ad" genus="referentia"/>
@@ -167,6 +173,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-cli">
     <attributum nomen="ad" genus="referentia"/>
@@ -190,6 +197,7 @@
     <attributum nomen="agit-pro" genus="referentia"/>
     <liberum nomen="consumit"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="consumit" intra="cliens-mobilis">
     <attributum nomen="ad" genus="referentia"/>
@@ -232,6 +240,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus">
     <liberum nomen="eventum"/>
@@ -256,6 +265,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus-telae">
     <liberum nomen="eventum"/>
@@ -280,6 +290,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus-datorum">
     <liberum nomen="eventum"/>
@@ -304,6 +315,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus-nominum">
     <liberum nomen="eventum"/>
@@ -328,6 +340,7 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus-procuratorius">
     <liberum nomen="eventum"/>
@@ -352,10 +365,15 @@
     <attributum nomen="auditur-in" genus="referentia"/>
     <attributum nomen="currit-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="servus-mcp">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

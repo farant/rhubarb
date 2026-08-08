@@ -59,6 +59,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="caput" intra="animal">
     <attributum nomen="nota" genus="textus"/>
@@ -122,6 +123,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="caput" intra="apis">
     <attributum nomen="nota" genus="textus"/>
@@ -185,6 +187,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="caput" intra="canis">
     <attributum nomen="nota" genus="textus"/>
@@ -248,6 +251,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="caput" intra="homo">
     <attributum nomen="nota" genus="textus"/>
@@ -270,6 +274,10 @@
   <elementum nomen="historia" intra="homo">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

@@ -41,6 +41,17 @@
     défaut se mesure à une exigence, un test interroge une exigence,
     une capacité en satisfait une.</glossa>
 
+  <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quod postulatur, verbis ipsis - quadratum intentionis
+            sine contentis mutum erat (lacuna L5): postulatum
+            exsistere et impleri dici poterat, numquam quid
+            diceret"/>
+    <proprietas nomen="ordo" genus="numerus" minimum="1"
+      nota="gradus prioritatis inter postulata paria (lacuna L6);
+            iudicium comparativum plenum futurum nominatum manet"/>
+  </proprietates>
+
   <machina_statuum nomen="vita" gerens="individuum">
     <status nomen="propositum"/>
     <status nomen="receptum"/>
@@ -86,6 +97,11 @@
     intention possédée, et c'est elle que l'utilisateur nomme
     lorsqu'il raconte ce que le programme fait.</glossa>
 
+  <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quod praestatur, verbis (lacuna L5)"/>
+  </proprietates>
+
   <relationes>
     <relatio nomen="implet" ad="postulatum" multiplex="verum"/>
     <relatio nomen="realizata_a" ad="*" multiplex="verum"
@@ -126,6 +142,11 @@
     apparatus qui assumptiones communicant). Probatio transiens
     id solum probat quod re vera exercuit.
   </nota>
+
+  <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quid interrogetur, verbis (lacuna L5)"/>
+  </proprietates>
 
   <relationes>
     <relatio nomen="interrogat" ad="postulatum"/>
@@ -225,6 +246,17 @@
     (Vide corporalia.instrumentum: machina eius iam REFECTIONEM
     dicit, non sanationem - lingua ibi iam divisit.)
   </dubium>
+
+  <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quae discrepantia sit, verbis (lacuna L5)"/>
+    <proprietas nomen="gravitas" genus="electio"
+      nota="mos periculi (levis|gravis) - sonda descriptoris
+            gravitatem vitii dicere non poterat">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+    </proprietas>
+  </proprietates>
 
   <machina_statuum nomen="vita" gerens="individuum">
     <status nomen="relatum_est"

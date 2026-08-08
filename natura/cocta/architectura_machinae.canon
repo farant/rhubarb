@@ -34,6 +34,7 @@
     <attributum nomen="emissa-pro" genus="referentia"/>
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="auctor" intra="architectura-machinae">
     <attributum nomen="ad" genus="referentia"/>
@@ -78,6 +79,7 @@
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-architecturae">
     <attributum nomen="ad" genus="referentia"/>
@@ -111,6 +113,7 @@
     <attributum nomen="designatum-a" genus="referentia"/>
     <liberum nomen="exsequitur"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="exsequitur" intra="processorium">
     <attributum nomen="ad" genus="referentia"/>
@@ -118,6 +121,10 @@
   <elementum nomen="historia" intra="processorium">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

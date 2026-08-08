@@ -74,6 +74,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="planta">
     <attributum nomen="nota" genus="textus"/>
@@ -165,6 +166,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="rosaceae">
     <attributum nomen="nota" genus="textus"/>
@@ -253,6 +255,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="rosa">
     <attributum nomen="nota" genus="textus"/>
@@ -341,6 +344,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="malus">
     <attributum nomen="nota" genus="textus"/>
@@ -422,6 +426,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="rosa-canina">
     <attributum nomen="nota" genus="textus"/>
@@ -503,6 +508,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="malus-domestica">
     <attributum nomen="nota" genus="textus"/>
@@ -584,6 +590,7 @@
     <liberum nomen="generat"/>
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="radix" intra="granny-smith">
     <attributum nomen="nota" genus="textus"/>
@@ -612,6 +619,10 @@
   <elementum nomen="historia" intra="granny-smith">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

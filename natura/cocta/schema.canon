@@ -34,6 +34,7 @@
     <attributum nomen="describit" genus="referentia"/>
     <liberum nomen="continet"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="continet" intra="schema">
     <attributum nomen="ad" genus="referentia"/>
@@ -58,6 +59,7 @@
     <attributum nomen="campus-de" genus="referentia"/>
     <attributum nomen="genus-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="campus">
     <liberum nomen="eventum"/>
@@ -78,6 +80,7 @@
     ou un nombre se trouve dessous.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="genus-valoris">
     <liberum nomen="eventum"/>
@@ -86,6 +89,7 @@
   <elementum nomen="textus">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="textus">
     <liberum nomen="eventum"/>
@@ -94,6 +98,7 @@
   <elementum nomen="numerus">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="numerus">
     <liberum nomen="eventum"/>
@@ -102,6 +107,7 @@
   <elementum nomen="dies">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="dies">
     <liberum nomen="eventum"/>
@@ -110,6 +116,7 @@
   <elementum nomen="veritas">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="veritas">
     <liberum nomen="eventum"/>
@@ -118,6 +125,7 @@
   <elementum nomen="electio">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="electio">
     <liberum nomen="eventum"/>
@@ -126,10 +134,15 @@
   <elementum nomen="citatio">
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="citatio">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

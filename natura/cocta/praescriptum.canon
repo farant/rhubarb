@@ -26,6 +26,7 @@
     <attributum nomen="nomen" genus="identitas"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="gradus-eius" intra="procedura">
     <attributum nomen="ad" genus="referentia"/>
@@ -65,6 +66,7 @@
     <liberum nomen="efficit"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="efficit" intra="procedura-automata">
     <attributum nomen="ad" genus="referentia"/>
@@ -112,6 +114,7 @@
     <liberum nomen="postulat"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materiae" intra="praescriptum">
     <attributum nomen="nota" genus="textus"/>
@@ -148,6 +151,7 @@
     <attributum nomen="gradus-de" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="gradus-praescripti">
     <attributum nomen="ad" genus="referentia"/>
@@ -191,6 +195,7 @@
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-praescripti">
     <attributum nomen="ad" genus="referentia"/>
@@ -221,6 +226,7 @@
     <liberum nomen="adhibetur-in"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="adhibetur-in" intra="index-verificationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -248,6 +254,7 @@
     <liberum nomen="efficit"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="efficit" intra="fistula-integrationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -275,6 +282,7 @@
     <liberum nomen="efficit"/>
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="efficit" intra="depositio">
     <attributum nomen="ad" genus="referentia"/>
@@ -285,6 +293,10 @@
   <elementum nomen="historia" intra="depositio">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

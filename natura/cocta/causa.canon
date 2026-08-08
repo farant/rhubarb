@@ -29,6 +29,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa">
     <attributum nomen="ad" genus="referentia"/>
@@ -45,6 +46,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-materialis">
     <attributum nomen="ad" genus="referentia"/>
@@ -61,6 +63,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-formalis">
     <attributum nomen="ad" genus="referentia"/>
@@ -77,6 +80,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-efficiens">
     <attributum nomen="ad" genus="referentia"/>
@@ -93,6 +97,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-finalis">
     <attributum nomen="ad" genus="referentia"/>
@@ -100,6 +105,10 @@
   <elementum nomen="historia" intra="causa-finalis">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

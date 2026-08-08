@@ -26,6 +26,7 @@
     <attributum nomen="intra" genus="referentia"/>
     <liberum nomen="sub-iurisdictione"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="sub-iurisdictione" intra="locus">
     <attributum nomen="ad" genus="referentia"/>
@@ -50,6 +51,7 @@
     <attributum nomen="designat" genus="referentia"/>
     <liberum nomen="linea"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="linea" intra="inscriptio" textus="verum"/>
   <elementum nomen="historia" intra="inscriptio">
@@ -73,6 +75,7 @@
     <attributum nomen="intra" genus="referentia"/>
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="fert" intra="iurisdictio">
     <attributum nomen="ad" genus="referentia"/>
@@ -96,6 +99,7 @@
     <liberum nomen="spatia" maximum="1"/>
     <liberum nomen="occupatum-a"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="spatia" intra="aedificium">
     <attributum nomen="nota" genus="textus"/>
@@ -106,6 +110,10 @@
   <elementum nomen="historia" intra="aedificium">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

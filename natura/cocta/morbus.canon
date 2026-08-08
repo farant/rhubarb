@@ -43,6 +43,7 @@
     <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus">
     <attributum nomen="ad" genus="referentia"/>
@@ -70,6 +71,7 @@
     <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus-infectiosus">
     <attributum nomen="ad" genus="referentia"/>
@@ -97,6 +99,7 @@
     <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus-geneticus">
     <attributum nomen="ad" genus="referentia"/>
@@ -124,6 +127,7 @@
     <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="curatur-per" intra="morbus-degenerativus">
     <attributum nomen="ad" genus="referentia"/>
@@ -151,6 +155,7 @@
     <attributum nomen="classificatus-in" genus="referentia"/>
     <liberum nomen="curatur-per"/>
     <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="curatur-per" intra="vulnus">
     <attributum nomen="ad" genus="referentia"/>
@@ -158,6 +163,10 @@
   <elementum nomen="historia" intra="vulnus">
     <liberum nomen="eventum"/>
   </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

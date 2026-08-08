@@ -204,6 +204,11 @@
 
   <proprietates>
     <proprietas nomen="lingua" genus="textus"/>
+    <proprietas nomen="auctoritativa" genus="veritas"
+      nota="an haec expressio REGAT: translatio iurata legis
+            regit, translatio comitatis non - derivatio
+            (translata_ex) auctoritatem non fert (lacuna L14).
+            Glossae nostrae definitione subordinatae sunt"/>
     <proprietas nomen="genus_expressionis" genus="electio">
       <optio>originalis</optio>
       <optio>translata</optio>
