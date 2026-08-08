@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1578 sedibus relationum huius canonis, 1142
+  RELATIONES - ex 1583 sedibus relationum huius canonis, 1143
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  436 nomine solo iudicantur, id est sicut in canone per
+  440 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    429 petitum apertum habent (ad='*') - clavis nulla est;
+    433 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -123,6 +123,7 @@
     <liberum nomen="fons"/>
     <liberum nomen="observatio"/>
     <liberum nomen="iudicium"/>
+    <liberum nomen="annotatio"/>
     <liberum nomen="periculum"/>
     <liberum nomen="ignotum"/>
     <liberum nomen="investigatio"/>
@@ -3224,6 +3225,31 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="annotatio">
+    <glossa lingua="en">A machine-proved proposition: proved by an
+    instrument running outside the program - no assent, no
+    revision by persuasion; against its rule it stands or falls.
+    Its authority is transitive, flowing through the rule and
+    through the instrument's maker - the machine is the proximate
+    prover, never the author.</glossa>
+    <glossa lingua="fr">Une proposition prouvée par machine : prouvée
+    par un instrument hors du programme - sans assentiment, sans
+    révision par persuasion ; devant sa règle elle tient ou tombe.
+    Son autorité est transitive, coulant par la règle et par
+    l'artisan de l'instrument - la machine est le prouveur
+    prochain, jamais l'auteur.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="probator" genus="referentia"/>
+    <attributum nomen="ex-regula" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="annotatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="periculum">
     <glossa lingua="en">A risk: a harm that can happen and is not
     certain - a kind of judgement about the future, but a DOUBLE
@@ -4901,11 +4927,15 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="materia"/>
     <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materia" intra="opus-scriptum" textus="verum"/>
   <elementum nomen="auctor" intra="opus-scriptum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="opus-scriptum">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="opus-scriptum">
@@ -5041,11 +5071,15 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="materia"/>
     <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materia" intra="periodicum" textus="verum"/>
   <elementum nomen="auctor" intra="periodicum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="periodicum">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="periodicum">
@@ -14115,7 +14149,7 @@
            programma instrumentum-aedificationis postulatum facultas probatio
            vitium debitum-technicum complicatio consilium depravatio interventio
            forma-datorum schema-identificandi gradus-assensus fons observatio
-           iudicium periculum ignotum investigatio secretum peritia-communis
+           iudicium annotatio periculum ignotum investigatio secretum peritia-communis
            attributio fundamentum lingua-programmandi lingua-iussuum versio-linguae
            implementatio-linguae verbum-clavis locus inscriptio iurisdictio
            aedificium magnitudo-mensurabilis unitas-mensurae quantitas incertitudo
@@ -14364,6 +14398,7 @@
   <citatio nomen="iudicium-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="iudicium/fundatur-in"/>
   <citatio nomen="iudicium-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="iudicium/ex-fonte"/>
   <citatio nomen="iudicium-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="iudicium"/>
+  <citatio nomen="annotatio-probator" attributum="probator" ad="programma instrumentum-lineae daemon applicatio instrumentum-aedificationis/nomen" super="annotatio"/>
   <citatio nomen="periculum-transfertur-per" attributum="transfertur-per" ad="contractus emptio-venditio locatio-conductio societas-contractus mandatum commodatum tractatus/nomen" super="periculum"/>
   <citatio nomen="ignotum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum"/>
   <citatio nomen="ignotum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="ignotum/solvitur-per"/>

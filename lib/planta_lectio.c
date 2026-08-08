@@ -390,6 +390,7 @@ planta_planta_legere_nodum(
     res->generat = xar_creare(piscina, (i32)magnitudo(PlantaPlantaGenerat*));
     res->laborat = xar_creare(piscina, (i32)magnitudo(PlantaPlantaLaborat*));
     res->historia = NIHIL;
+    res->nota = xar_creare(piscina, (i32)magnitudo(PlantaNota*));
     {
         i32 n;
         i32 i;
@@ -499,6 +500,19 @@ planta_planta_legere_nodum(
                     res->historia =
                         planta_planta_historia_legere_nodum(
                             l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "nota"))
+            {
+                PlantaNota* filius;
+                PlantaNota** locus;
+
+                filius = planta_nota_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaNota**)xar_addere(res->nota);
+                    *locus = filius;
                 }
             }
         }
@@ -946,6 +960,7 @@ planta_rosaceae_legere_nodum(
     res->generat = xar_creare(piscina, (i32)magnitudo(PlantaRosaceaeGenerat*));
     res->laborat = xar_creare(piscina, (i32)magnitudo(PlantaRosaceaeLaborat*));
     res->historia = NIHIL;
+    res->nota = xar_creare(piscina, (i32)magnitudo(PlantaNota*));
     {
         i32 n;
         i32 i;
@@ -1055,6 +1070,19 @@ planta_rosaceae_legere_nodum(
                     res->historia =
                         planta_rosaceae_historia_legere_nodum(
                             l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "nota"))
+            {
+                PlantaNota* filius;
+                PlantaNota** locus;
+
+                filius = planta_nota_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaNota**)xar_addere(res->nota);
+                    *locus = filius;
                 }
             }
         }
@@ -1502,6 +1530,7 @@ planta_rosa_legere_nodum(
     res->generat = xar_creare(piscina, (i32)magnitudo(PlantaRosaGenerat*));
     res->laborat = xar_creare(piscina, (i32)magnitudo(PlantaRosaLaborat*));
     res->historia = NIHIL;
+    res->nota = xar_creare(piscina, (i32)magnitudo(PlantaNota*));
     {
         i32 n;
         i32 i;
@@ -1611,6 +1640,19 @@ planta_rosa_legere_nodum(
                     res->historia =
                         planta_rosa_historia_legere_nodum(
                             l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "nota"))
+            {
+                PlantaNota* filius;
+                PlantaNota** locus;
+
+                filius = planta_nota_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaNota**)xar_addere(res->nota);
+                    *locus = filius;
                 }
             }
         }
@@ -2058,6 +2100,7 @@ planta_malus_legere_nodum(
     res->generat = xar_creare(piscina, (i32)magnitudo(PlantaMalusGenerat*));
     res->laborat = xar_creare(piscina, (i32)magnitudo(PlantaMalusLaborat*));
     res->historia = NIHIL;
+    res->nota = xar_creare(piscina, (i32)magnitudo(PlantaNota*));
     {
         i32 n;
         i32 i;
@@ -2167,6 +2210,19 @@ planta_malus_legere_nodum(
                     res->historia =
                         planta_malus_historia_legere_nodum(
                             l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "nota"))
+            {
+                PlantaNota* filius;
+                PlantaNota** locus;
+
+                filius = planta_nota_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaNota**)xar_addere(res->nota);
+                    *locus = filius;
                 }
             }
         }
@@ -2614,6 +2670,7 @@ planta_rosa_canina_legere_nodum(
     res->generat = xar_creare(piscina, (i32)magnitudo(PlantaRosaCaninaGenerat*));
     res->laborat = xar_creare(piscina, (i32)magnitudo(PlantaRosaCaninaLaborat*));
     res->historia = NIHIL;
+    res->nota = xar_creare(piscina, (i32)magnitudo(PlantaNota*));
     {
         i32 n;
         i32 i;
@@ -2723,6 +2780,19 @@ planta_rosa_canina_legere_nodum(
                     res->historia =
                         planta_rosa_canina_historia_legere_nodum(
                             l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "nota"))
+            {
+                PlantaNota* filius;
+                PlantaNota** locus;
+
+                filius = planta_nota_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaNota**)xar_addere(res->nota);
+                    *locus = filius;
                 }
             }
         }
@@ -3170,6 +3240,7 @@ planta_malus_domestica_legere_nodum(
     res->generat = xar_creare(piscina, (i32)magnitudo(PlantaMalusDomesticaGenerat*));
     res->laborat = xar_creare(piscina, (i32)magnitudo(PlantaMalusDomesticaLaborat*));
     res->historia = NIHIL;
+    res->nota = xar_creare(piscina, (i32)magnitudo(PlantaNota*));
     {
         i32 n;
         i32 i;
@@ -3279,6 +3350,19 @@ planta_malus_domestica_legere_nodum(
                     res->historia =
                         planta_malus_domestica_historia_legere_nodum(
                             l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "nota"))
+            {
+                PlantaNota* filius;
+                PlantaNota** locus;
+
+                filius = planta_nota_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaNota**)xar_addere(res->nota);
+                    *locus = filius;
                 }
             }
         }
@@ -3726,6 +3810,7 @@ planta_granny_smith_legere_nodum(
     res->generat = xar_creare(piscina, (i32)magnitudo(PlantaGrannySmithGenerat*));
     res->laborat = xar_creare(piscina, (i32)magnitudo(PlantaGrannySmithLaborat*));
     res->historia = NIHIL;
+    res->nota = xar_creare(piscina, (i32)magnitudo(PlantaNota*));
     {
         i32 n;
         i32 i;
@@ -3835,6 +3920,19 @@ planta_granny_smith_legere_nodum(
                     res->historia =
                         planta_granny_smith_historia_legere_nodum(
                             l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "nota"))
+            {
+                PlantaNota* filius;
+                PlantaNota** locus;
+
+                filius = planta_nota_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaNota**)xar_addere(res->nota);
+                    *locus = filius;
                 }
             }
         }
@@ -4066,6 +4164,28 @@ planta_granny_smith_historia_legere_nodum(
             }
         }
     }
+
+    redde res;
+}
+
+PlantaNota*
+planta_nota_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaNota* res;
+
+    (vacuum)intern;
+    res = (PlantaNota*)piscina_allocare(piscina,
+        magnitudo(PlantaNota));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+    res->textus = chorda_praecidere(
+        stml_textus_normalizatus(nodus, piscina));
 
     redde res;
 }

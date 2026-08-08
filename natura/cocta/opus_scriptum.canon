@@ -37,11 +37,15 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="materia"/>
     <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materia" intra="opus-scriptum" textus="verum"/>
   <elementum nomen="auctor" intra="opus-scriptum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="opus-scriptum">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="opus-scriptum">
@@ -177,11 +181,15 @@
     <attributum nomen="pars-de" genus="referentia"/>
     <liberum nomen="materia"/>
     <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="materia" intra="periodicum" textus="verum"/>
   <elementum nomen="auctor" intra="periodicum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="periodicum">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="periodicum">

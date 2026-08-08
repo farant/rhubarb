@@ -8,6 +8,7 @@
     <liberum nomen="fons"/>
     <liberum nomen="observatio"/>
     <liberum nomen="iudicium"/>
+    <liberum nomen="annotatio"/>
     <liberum nomen="periculum"/>
     <liberum nomen="ignotum"/>
     <liberum nomen="investigatio"/>
@@ -165,6 +166,31 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="iudicium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="annotatio">
+    <glossa lingua="en">A machine-proved proposition: proved by an
+    instrument running outside the program - no assent, no
+    revision by persuasion; against its rule it stands or falls.
+    Its authority is transitive, flowing through the rule and
+    through the instrument's maker - the machine is the proximate
+    prover, never the author.</glossa>
+    <glossa lingua="fr">Une proposition prouvée par machine : prouvée
+    par un instrument hors du programme - sans assentiment, sans
+    révision par persuasion ; devant sa règle elle tient ou tombe.
+    Son autorité est transitive, coulant par la règle et par
+    l'artisan de l'instrument - la machine est le prouveur
+    prochain, jamais l'auteur.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="probator" genus="referentia"/>
+    <attributum nomen="ex-regula" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="annotatio">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -1313,16 +1339,17 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="gradus-assensus fons observatio iudicium periculum ignotum investigatio
-           secretum peritia-communis attributio fundamentum scientia opinio
-           fides suspicio dubitatio fons-scriptus fons-mensurae fons-testimonii
-           corpus-institutionis symptoma signum testimonium diagnosis aestimatio
-           praedictio sententia-iudicis ignotum-notum ignotum-ignotum indeterminatum
-           amissum retentum impertinens controversum investigatio-praeventiva
-           inquisitio-forensis recensio-post-mortem clavis-privata verbum-arcanum
-           secretum-negotii sigillum-confessionis notitia-pascui ars-officinae
-           memoria-operis autopsia mensuratio documentum-scriptum auctoritas-testis
-           illatio comparatio-stili coniectura-periti praesumptio"/>
+    super="gradus-assensus fons observatio iudicium annotatio periculum ignotum
+           investigatio secretum peritia-communis attributio fundamentum
+           scientia opinio fides suspicio dubitatio fons-scriptus fons-mensurae
+           fons-testimonii corpus-institutionis symptoma signum testimonium
+           diagnosis aestimatio praedictio sententia-iudicis ignotum-notum
+           ignotum-ignotum indeterminatum amissum retentum impertinens controversum
+           investigatio-praeventiva inquisitio-forensis recensio-post-mortem
+           clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis
+           notitia-pascui ars-officinae memoria-operis autopsia mensuratio
+           documentum-scriptum auctoritas-testis illatio comparatio-stili
+           coniectura-periti praesumptio"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in

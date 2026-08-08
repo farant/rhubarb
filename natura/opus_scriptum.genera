@@ -84,7 +84,15 @@
 
   <relationes>
     <relatio nomen="auctor" ad="persona" modulus="persona"
-      multiplex="verum"/>
+      multiplex="verum"
+      nota="qui RESPONDET - personis clausus manet (persona:
+            'auctor esse potest, non solum causa')"/>
+    <relatio nomen="scriba" ad="*" multiplex="verum"
+      nota="qui litteram exsecutus est, auctore respondente -
+            Tertius scripsit, Paulus auctor (Rom 16,22). Petitum
+            apertum: persona, officina, minister machinalis omnes
+            scribunt. Genus ministri machinalis CONSULTO dilatum
+            donec census verus tag poscat (parcum 01KZFM3GW0)"/>
     <relatio nomen="habet_expressionem" ad="expressio"/>
     <relatio nomen="continuatio_de" ad="opus_scriptum"
       nota="series: opus quod aliud sequitur"/>

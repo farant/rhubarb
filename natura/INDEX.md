@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **33** · genera **177** · res dictionarii **384** · arcus **519**
+Exemplaria **33** · genera **178** · res dictionarii **385** · arcus **521**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -136,12 +136,13 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **schema_identificandi** ⚙ ▣3 — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
 
-### iudicium (v7, genera 11)
+### iudicium (v7, genera 12)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
 - **observatio** — Notitia rei singularis accepta, quae iudicium fundare potest: quid videatur, quid sentiatur, quid metiatur
 - **iudicium** ⚙ — Propositio de re quam aliquis tenet: cum auctore, momento, fundamento, gradu assensus
+- **annotatio** — Propositio quam instrumentum probat, extra programma currens: sine assensu, sine revisione per persuasionem - secundum
 - **periculum** — Damnum quod accidere potest nec certum est: species iudicii de futuro, sed DUPLEX - probabilitate et gravitate simul c
 - **ignotum** ⚙ — Absentia notitiae AGNITA et nominata: hiatus qui, quia nominatus est, tractari potest
 - **investigatio** ⚙ — Inquisitio ordinata in causas eventus, iudicia de causis producens
@@ -311,6 +312,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | aedificium | locus |
 | ambitus | operatio |
 | animal | animal |
+| annotatio | iudicium |
 | architectura_machinae | architectura_machinae |
 | artefactum | corporalia |
 | artefactum_aedificationis | elementa_programmatis |
@@ -495,7 +497,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `animal.animal` — apis, canis, homo
 - `architectura_machinae.architectura_machinae` — :arm, :riscv, :x86
 - `architectura_machinae.processorium` — :apple_m1, :intel_8086
-- `architectura_machinae.versio_architecturae` — :armv8, :i386, :x86_64
+- `architectura_machinae.versio_architecturae` — :armv8, :i386, :x86_16, :x86_64
 - `causa.causa` — causa_efficiens, causa_finalis, causa_formalis, causa_materialis
 - `cliens.cliens_cli` — :curl
 - `cliens.servus` — servus_datorum, servus_mcp, servus_nominum, servus_procuratorius, servus_telae
@@ -631,7 +633,7 @@ exsistente. Nullum consilium — describi potest quovis momento.
 - `tempus` / **pascha** — GRADUS AMBIGUUS (rota XXIX): una est regula paschalis, ergo individuum videtur; at "pascha" etiam de quovis anno dicitur ("pascha huius anni"), quod praedicatio
 - `versio` / **versio** — FURCA (fork) versio non est - continuatio auctoritatis deficit, unde res nova. Sed casus medii sunt: quid de furca quae nomen retinet et auctoritatem novam habe
 
-## VII. Monita — stirps communis sine cognatione (24)
+## VII. Monita — stirps communis sine cognatione (25)
 
 Regula XVIII (ADVISORIA, portam non frangit). Nomen quod nomen
 aliud ut stirpem fert, sed nec sub eo stat nec relationem ad id
@@ -640,6 +642,7 @@ declarat. **Pleraque LEGITIMA sunt** — homonyma honesta:
 regulae non est quod defectus inveniat sed quod nulla talis
 coincidentia INVISA transeat.
 
+- 'annotatio_machinae' stirpem 'annotatio' fert sed sub ea non stat
 - 'artefactum_aedificationis' stirpem 'artefactum' fert sed sub ea non stat
 - 'codex_sepultus' stirpem 'codex' fert sed sub ea non stat
 - 'dies_negotiorum' stirpem 'dies' fert sed sub ea non stat

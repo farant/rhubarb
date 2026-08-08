@@ -37,7 +37,7 @@
                    margin: .3rem 0 0 0; }
 </style></head><body>
 <h1>GLOSSAE - documentatio generum</h1>
-<p class="numeri">la <b>177/177</b> &middot; en <b>177/177</b> &middot; fr <b>177/177</b></p>
+<p class="numeri">la <b>178/178</b> &middot; en <b>178/178</b> &middot; fr <b>178/178</b></p>
 <p class="tabula"><a href="#acta">acta</a>
 <a href="#actus">actus</a>
 <a href="#animal">animal</a>
@@ -2752,7 +2752,7 @@ est, "978-0-13-110362-7" identificator.</p>
   &lt;nota&gt;...&lt;/nota&gt;
 &lt;/schema-identificandi&gt;
 </pre></details>
-<h2 id="iudicium">iudicium <span class="numeri">la 11/11 &middot; en 11/11 &middot; fr 11/11</span></h2>
+<h2 id="iudicium">iudicium <span class="numeri">la 12/12 &middot; en 12/12 &middot; fr 12/12</span></h2>
 <h3>gradus_assensus</h3>
 <p class="linea">gradus_assensus</p>
 <p class="def"><b>la</b> Quanto firmitate animus propositioni adhaeret. Non de re
@@ -2887,6 +2887,42 @@ errata servant: quod iudicatum est pars historiae est.</p>
   &lt;/historia&gt;
   &lt;nota&gt;...&lt;/nota&gt;
 &lt;/iudicium&gt;
+</pre></details>
+<h3>annotatio</h3>
+<p class="linea">annotatio</p>
+<p class="def"><b>la</b> Propositio quam instrumentum probat, extra programma currens:
+sine assensu, sine revisione per persuasionem - secundum
+regulam quam applicat aut stat aut cadit. Auctoritas eius
+transitiva est: per regulam et per artificem instrumenti
+fluit (causa instrumentalis) - machina probator proximus,
+numquam auctor.</p>
+<p class="glossa"><b>en</b> A machine-proved proposition: proved by an
+    instrument running outside the program - no assent, no
+    revision by persuasion; against its rule it stands or falls.
+    Its authority is transitive, flowing through the rule and
+    through the instrument's maker - the machine is the proximate
+    prover, never the author.</p>
+<p class="glossa"><b>fr</b> Une proposition prouvée par machine : prouvée
+    par un instrument hors du programme - sans assentiment, sans
+    révision par persuasion ; devant sa règle elle tient ou tombe.
+    Son autorité est transitive, coulant par la règle et par
+    l'artisan de l'instrument - la machine est le prouveur
+    prochain, jamais l'auteur.</p>
+<details class="syn"><summary>syntaxis</summary>
+<pre>&lt;annotatio nomen="#nomen"
+    contentum="..."
+    de="#res|.genus"
+    probator="#res|.genus"
+    ex-regula="#res|.genus"&gt;
+  &lt;historia&gt;
+    &lt;eventum quando="AAAA-MM-DD"
+        actio="appendere|plicare|signare|stornare|..."
+        certitudo="..."
+        fons="..."
+        nota="..."&gt;...&lt;/eventum&gt;
+  &lt;/historia&gt;
+  &lt;nota&gt;...&lt;/nota&gt;
+&lt;/annotatio&gt;
 </pre></details>
 <h3>periculum</h3>
 <p class="linea">periculum</p>
@@ -4525,6 +4561,7 @@ legatur, sive charta sive vitro. Res quam auctor CONCEPIT.</p>
     pars-de="#res|.genus"&gt;
   &lt;materia&gt;...&lt;/materia&gt;
   &lt;auctor ad="#res|.genus"/&gt;
+  &lt;scriba ad="#res|.genus"/&gt;
   &lt;historia&gt;
     &lt;eventum quando="AAAA-MM-DD"
         actio="appendere|plicare|signare|stornare|..."
@@ -4658,6 +4695,7 @@ Cadentia, non finis.</p>
     pars-de="#res|.genus"&gt;
   &lt;materia&gt;...&lt;/materia&gt;
   &lt;auctor ad="#res|.genus"/&gt;
+  &lt;scriba ad="#res|.genus"/&gt;
   &lt;historia&gt;
     &lt;eventum quando="AAAA-MM-DD"
         actio="appendere|plicare|signare|stornare|..."

@@ -397,6 +397,74 @@
 </genus>
 
 <!-- ==================================================
+     ANNOTATIO - frater tertius, tandem genus
+
+     Caput huius plagulae tres propositiones tresque probatores
+     ab initio nominavit (assertio/annotatio/iudicium) - et
+     annotatio sola genus non erat. Corpus lacunam suam ipse
+     nominaverat (circuitus documentationis, lacuna L1); axis
+     capitis PROBATOR est, non scriptor: inscriptio TOLERA ab
+     homine scripta et verdictum canon_examinis ab instrumento
+     prolatum AMBO ab instrumento probantur - species (inscripta/
+     prolata) contentu cogente venient. Collisio cum
+     annotatio_machinae (species commentarii) soluta: illa
+     INSCRIPTIO est (artefactum scriptum), haec PROPOSITIO -
+     inscriptio annotationem FERT.
+     ================================================== -->
+
+<genus nomen="annotatio">
+
+  <definitio>
+    Propositio quam instrumentum probat, extra programma currens:
+    sine assensu, sine revisione per persuasionem - secundum
+    regulam quam applicat aut stat aut cadit. Auctoritas eius
+    transitiva est: per regulam et per artificem instrumenti
+    fluit (causa instrumentalis) - machina probator proximus,
+    numquam auctor.
+  </definitio>
+
+  <glossa lingua="en">A machine-proved proposition: proved by an
+    instrument running outside the program - no assent, no
+    revision by persuasion; against its rule it stands or falls.
+    Its authority is transitive, flowing through the rule and
+    through the instrument's maker - the machine is the proximate
+    prover, never the author.</glossa>
+  <glossa lingua="fr">Une proposition prouvée par machine : prouvée
+    par un instrument hors du programme - sans assentiment, sans
+    révision par persuasion ; devant sa règle elle tient ou tombe.
+    Son autorité est transitive, coulant par la règle et par
+    l'artisan de l'instrument - la machine est le prouveur
+    prochain, jamais l'auteur.</glossa>
+
+  <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quod propositio dicit, verbis - ut iudicium suum
+            contentum fert"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="de" ad="*"
+      nota="quod annotatur - res quaelibet (mos iudicii)"/>
+    <relatio nomen="probator" ad="programma"
+      modulus="elementa_programmatis"
+      nota="instrumentum quod probavit - canon_examen ipse
+            programma est. Verbum capitis ('tres probatores');
+            'instrumentum' vitatum ne genus corporalium
+            obumbraret"/>
+    <relatio nomen="ex_regula" ad="*"
+      nota="norma/canon applicata - auctoritas per eam fluit;
+            derivatio non auctoritas (mos expressionis, L14)"/>
+  </relationes>
+
+  <nota>
+    Gradus assensus CONSULTO abest: absentia eius differentia
+    ipsa est - iudicium assentitur et revisibile est, annotatio
+    stat aut cadit.
+  </nota>
+
+</genus>
+
+<!-- ==================================================
      PERICULUM - damnum possibile futurum
      ================================================== -->
 

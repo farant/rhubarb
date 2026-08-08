@@ -2036,6 +2036,58 @@ principale(
             "</individua>\n",
             CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
         CREDO_AEQUALIS_I32 (generis, (i32)I);
+
+        /* ----------------------------------------------------
+         * XVII. annotatio et scriba (L1/L3/L8): frater tertius
+         * iudicii genus fit; auctor respondet, scriba exsequitur
+         * ---------------------------------------------------- */
+        imprimere("\n--- XVII. annotatio et scriba ---\n");
+
+        /* verdictum machinae: probator programma, resolutum */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <programma nomen=\"#canon-examen-noster\"/>\n"
+            "  <annotatio nomen=\"#verdictum-primum\""
+            " contentum=\"radix documenti falsa\""
+            " probator=\"#canon-examen-noster\"/>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        /* probator quem nemo declaravit RUBET (clausura
+         * programmatis) */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <annotatio nomen=\"#orbum\""
+            " probator=\"#nusquam\"/>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
+
+        /* scriba apertum: minister machinalis scribere potest,
+         * auctor personis clausus MANET (dentes doctrinae) */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <programma nomen=\"#glossator-a\"/>\n"
+            "  <opus-scriptum nomen=\"#glossae-nostrae\">\n"
+            "    <scriba ad=\"#glossator-a\"/>\n"
+            "  </opus-scriptum>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <programma nomen=\"#glossator-a\"/>\n"
+            "  <opus-scriptum nomen=\"#male-adscriptum\">\n"
+            "    <auctor ad=\"#glossator-a\"/>\n"
+            "  </opus-scriptum>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
     }
 
 
