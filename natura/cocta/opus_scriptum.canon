@@ -93,10 +93,13 @@
       <optio>electronica</optio>
     </attributum>
     <attributum nomen="publicata" genus="dies"/>
-    <attributum nomen="editio-de" genus="referentia"/>
     <attributum nomen="edita-a" genus="referentia"/>
     <attributum nomen="impressa-in" genus="referentia"/>
+    <liberum nomen="editio-de"/>
     <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="editio-de" intra="editio">
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="editio">
     <liberum nomen="eventum"/>
@@ -229,7 +232,7 @@
   <citatio nomen="opus-scriptum-pars-de" attributum="pars-de" ad="opus-scriptum periodicum/nomen" super="opus-scriptum"/>
   <citatio nomen="expressio-expressio-de" attributum="expressio-de" ad="opus-scriptum periodicum/nomen" super="expressio"/>
   <citatio nomen="expressio-translata-ex" attributum="translata-ex" ad="expressio/nomen" super="expressio"/>
-  <citatio nomen="editio-editio-de" attributum="editio-de" ad="expressio/nomen" super="editio"/>
+  <citatio nomen="editio-editio-de" attributum="ad" ad="expressio/nomen" super="editio/editio-de"/>
   <citatio nomen="codex-exemplar-de" attributum="exemplar-de" ad="editio/nomen" super="codex"/>
   <citatio nomen="periodicum-habet-fasciculum" attributum="habet-fasciculum" ad="fasciculus/nomen" super="periodicum"/>
   <citatio nomen="periodicum-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="periodicum"/>

@@ -287,7 +287,11 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="editio_de" ad="expressio"/>
+    <relatio nomen="editio_de" ad="expressio" multiplex="verum"
+      nota="FRBR ipsa manifestationem plures expressiones amplecti
+            sinit (paginae adversae bilingues) - lacuna L12
+            circuitus documentationis; pagina glossarum nostra
+            tres exprimit"/>
     <relatio nomen="edita_a" ad="organizatio"
       modulus="organizatio"
       nota="domus editoria - sub-genus organizationis SURGIT

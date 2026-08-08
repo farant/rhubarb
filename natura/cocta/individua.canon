@@ -4829,10 +4829,13 @@
       <optio>electronica</optio>
     </attributum>
     <attributum nomen="publicata" genus="dies"/>
-    <attributum nomen="editio-de" genus="referentia"/>
     <attributum nomen="edita-a" genus="referentia"/>
     <attributum nomen="impressa-in" genus="referentia"/>
+    <liberum nomen="editio-de"/>
     <liberum nomen="historia" maximum="1"/>
+  </elementum>
+  <elementum nomen="editio-de" intra="editio">
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="editio">
     <liberum nomen="eventum"/>
@@ -14018,7 +14021,7 @@
   <citatio nomen="expressio-expressio-de" attributum="expressio-de" ad="opus-scriptum periodicum/nomen" super="expressio"/>
   <citatio nomen="expressio-translator" attributum="ad" ad="persona/nomen" super="expressio/translator"/>
   <citatio nomen="expressio-translata-ex" attributum="translata-ex" ad="expressio/nomen" super="expressio"/>
-  <citatio nomen="editio-editio-de" attributum="editio-de" ad="expressio/nomen" super="editio"/>
+  <citatio nomen="editio-editio-de" attributum="ad" ad="expressio/nomen" super="editio/editio-de"/>
   <citatio nomen="editio-edita-a" attributum="edita-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="editio"/>
   <citatio nomen="editio-impressa-in" attributum="impressa-in" ad="planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="editio"/>
   <citatio nomen="codex-exemplar-de" attributum="exemplar-de" ad="editio/nomen" super="codex"/>

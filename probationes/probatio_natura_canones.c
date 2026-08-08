@@ -1948,6 +1948,37 @@ principale(
             CANON_CITATIO_IRRITA, &generis, &omnia,
             piscina, intern));
         CREDO_AEQUALIS_I32 (generis, (i32)I);
+
+        /* ----------------------------------------------------
+         * XV. editio plures expressiones fert (lacuna L12):
+         * FRBR ipsa manifestationem plures amplecti sinit -
+         * paginae adversae bilingues casus scholae. Multiplex
+         * CUM citatione advenit (via super-adstricti).
+         * ---------------------------------------------------- */
+        imprimere("\n--- XV. editio multiplex ---\n");
+
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <expressio nomen=\"#latina\"/>\n"
+            "  <expressio nomen=\"#anglica\"/>\n"
+            "  <editio nomen=\"#bilinguis\">\n"
+            "    <editio-de ad=\"#latina\"/>\n"
+            "    <editio-de ad=\"#anglica\"/>\n"
+            "  </editio>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <editio nomen=\"#orba\">\n"
+            "    <editio-de ad=\"#nusquam\"/>\n"
+            "  </editio>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
     }
 
 
