@@ -72,6 +72,35 @@
  * attributum 'radix' NON fert (nomen eius radix est), ergo hoc
  * cum '<elementum radix="verum">' non confunditur. */
 interior i32
+_libera_cum_minimo_numerare(
+    StmlNodus*  n)
+{
+    i32 summa;
+    i32 i;
+
+    summa = ZEPHYRUM;
+    si (!n)
+    {
+        redde ZEPHYRUM;
+    }
+    si (n->genus == STML_NODUS_ELEMENTUM &&
+        chorda_aequalis_literis(*n->titulus, "liberum") &&
+        stml_attributum_capere(n, "minimum"))
+    {
+        summa++;
+    }
+    si (n->liberi)
+    {
+        per (i = ZEPHYRUM; i < xar_numerus(n->liberi); i++)
+        {
+            summa += _libera_cum_minimo_numerare(
+                *(StmlNodus**)xar_obtinere(n->liberi, i));
+        }
+    }
+    redde summa;
+}
+
+interior i32
 _ferentes_numerare(
     StmlNodus*           n,
     constans character*  attributum,
@@ -1589,8 +1618,11 @@ principale(
             }
 
             radix_nodus    = NIHIL;
-            minima         = _ferentes_numerare(res.elementum_radix,
-                                 "minimum", NIHIL, NIHIL);
+            /* libera SOLA: minimum= in attributo FINES sunt (spec
+             * fines, legitima), in libero necessitas (lenitas
+             * vetat). Numerator elementum discernit. */
+            minima         = _libera_cum_minimo_numerare(
+                                 res.elementum_radix);
             radices        = _ferentes_numerare(res.elementum_radix,
                                  "radix", "verum", &radix_nodus);
             unicitates     = _titulo_numerare(res.elementum_radix,
@@ -1683,7 +1715,9 @@ principale(
          * praemature facti in assertionem RUBRAM vertit, non hanc
          * solam. */
         CREDO_AEQUALIS_I32 (recensiti, xar_numerus(canones));
-        /* LENITAS super corpus totum: nusquam minimum= */
+        /* LENITAS super corpus totum: nusquam <liberum minimum=>
+         * (necessitas ontologica non obligatio documentalis).
+         * Fines attributorum (spec fines) legitimi, non numerati. */
         CREDO_AEQUALIS_I32 (minima_omnia, (i32)ZEPHYRUM);
         /* 'individua' radix SOLA, in omni canone */
         CREDO_AEQUALIS_I32 (radices_malae, (i32)ZEPHYRUM);
@@ -1739,6 +1773,56 @@ principale(
         CREDO_MAIOR_I32 (semina.mensura, (i32)ZEPHYRUM);
         CREDO_VERUM (chorda_invenire_index(semina,
             chorda_ex_literis("<glossa", piscina)) < ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * XIII. fines in canones transcripti (spec fines)
+     * ======================================================== */
+
+    {
+        chorda moduli_canon;
+        Canon* monolithus;
+        chorda fons;
+        chorda causa;
+        i32    generis;
+        i32    omnia;
+
+        imprimere("\n--- XIII. fines transcripti ---\n");
+
+        /* COMPLETUDO: sententia certa in canone moduli iudicii
+         * (probabilitas periculi - lacuna L4 documentationis) */
+        moduli_canon = filum_legere_totum(
+                           "natura/cocta/iudicium.canon", piscina);
+        CREDO_MAIOR_I32 (moduli_canon.mensura, (i32)ZEPHYRUM);
+        CREDO_VERUM (chorda_invenire_index(moduli_canon,
+            chorda_ex_literis(
+                "fractio=\"verum\" minimum=\"0\" maximum=\"1\"",
+                piscina)) >= ZEPHYRUM);
+
+        /* sonda descriptoris nunc VIRIDIS: decimalis intra fines */
+        fons = filum_legere_totum("natura/cocta/individua.canon",
+                                  piscina);
+        CREDO_MAIOR_I32 (fons.mensura, (i32)ZEPHYRUM);
+        monolithus = canon_legere(fons, piscina, intern, &causa);
+        CREDO_NON_NIHIL (monolithus);
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <periculum nomen=\"#p\" probabilitas=\"0.7\"/>\n"
+            "</individua>\n",
+            CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        /* et extra fines vitio PROPRIO clamat */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <periculum nomen=\"#p\" probabilitas=\"1.5\"/>\n"
+            "</individua>\n",
+            CANON_VALOR_EXTRA_FINES, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
+        CREDO_AEQUALIS_I32 (omnia, (i32)I);
     }
 
 

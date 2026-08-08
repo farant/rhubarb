@@ -428,9 +428,11 @@
 
   <proprietates>
     <proprietas nomen="probabilitas" genus="numerus"
-      nota="inter 0 et 1 - et raro SCITUR: plerumque ipsa
-            aestimatur, ideo periculum iudicium de iudicio
-            saepe est"/>
+      fractio="verum" minimum="0" maximum="1"
+      nota="raro SCITUR: plerumque ipsa aestimatur, ideo
+            periculum iudicium de iudicio saepe est. Fines olim
+            in hac nota tantum stabant - lacuna L4 circuitus
+            documentationis: 0.7 dici non poterat"/>
     <proprietas nomen="gravitas" genus="electio">
       <optio>levis</optio>
       <optio>gravis</optio>

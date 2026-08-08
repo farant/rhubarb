@@ -1261,6 +1261,9 @@ _apparatum_plicare(
             m->optiones      = _status_colligere(am->nodus, piscina);
             m->praestitutum  = NIHIL;
             m->citatio_ad    = NIHIL;
+            m->fractio       = NIHIL;
+            m->finis_minimus = NIHIL;
+            m->finis_maximus = NIHIL;
             perge;
         }
 
@@ -1270,12 +1273,15 @@ _apparatum_plicare(
         }
         multiplex = stml_attributum_capere(am->nodus, "multiplex");
 
-        m               = (NcMembrum*)xar_addere(el->membra);
-        m->titulus      = titulus;
-        m->praefixum    = NIHIL;
-        m->optiones     = NIHIL;
-        m->praestitutum = NIHIL;
-        m->citatio_ad   = NIHIL;
+        m                = (NcMembrum*)xar_addere(el->membra);
+        m->titulus       = titulus;
+        m->praefixum     = NIHIL;
+        m->optiones      = NIHIL;
+        m->praestitutum  = NIHIL;
+        m->citatio_ad    = NIHIL;
+        m->fractio       = NIHIL;
+        m->finis_minimus = NIHIL;
+        m->finis_maximus = NIHIL;
         m->discrimen    = (multiplex &&
                            chorda_aequalis_literis(*multiplex, "verum"))
                           ? NC_MEMBRUM_LIBERUM : NC_MEMBRUM_ATTRIBUTUM;
@@ -1332,6 +1338,14 @@ _apparatum_plicare(
             alioquin si (g && chorda_aequalis_literis(*g, "numerus"))
             {
                 m->genus_valoris = "numerus";
+                /* FINES (spec fines): verbatim in canonem coctum -
+                 * numerus solus eos fert, lectio canonis id cogit */
+                m->fractio       = stml_attributum_capere(am->nodus,
+                                                          "fractio");
+                m->finis_minimus = stml_attributum_capere(am->nodus,
+                                                          "minimum");
+                m->finis_maximus = stml_attributum_capere(am->nodus,
+                                                          "maximum");
             }
             alioquin si (g && chorda_aequalis_literis(*g, "veritas"))
             {

@@ -180,7 +180,7 @@
     arrive souvent mais nuit peu ne sont pas le même risque, même
     lorsque le produit est identique.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="probabilitas" genus="numerus"/>
+    <attributum nomen="probabilitas" genus="numerus" fractio="verum" minimum="0" maximum="1"/>
     <attributum nomen="gravitas" genus="electio">
       <optio>levis</optio>
       <optio>gravis</optio>

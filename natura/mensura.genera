@@ -220,14 +220,14 @@
     l'unité n'était pas gardée.</glossa>
 
   <proprietates>
-    <proprietas nomen="valor" genus="numerus"/>
-    <proprietas nomen="minimum" genus="numerus"
+    <proprietas nomen="valor" genus="numerus" fractio="verum"/>
+    <proprietas nomen="minimum" genus="numerus" fractio="verum"
       nota="AMBITUS (cum maximo): altitudo rosae 2-5 m,
             fornax 170-190 °C. Dubium plantae hic partim
             solutum - res verae saepe ambitum habent, non
             punctum"/>
-    <proprietas nomen="maximum" genus="numerus"/>
-    <proprietas nomen="praecisio" genus="numerus"
+    <proprietas nomen="maximum" genus="numerus" fractio="verum"/>
+    <proprietas nomen="praecisio" genus="numerus" fractio="verum"
       nota="figurae significantes: '500 g' et '500.0 g' idem
             valorem, aliam praecisionem dicunt - mensura
             praecisionem suam FERT"/>

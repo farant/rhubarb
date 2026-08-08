@@ -79,10 +79,10 @@
     des livres ont été prises pour des newtons - une quantité dont
     l'unité n'était pas gardée.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="valor" genus="numerus"/>
-    <attributum nomen="minimum" genus="numerus"/>
-    <attributum nomen="maximum" genus="numerus"/>
-    <attributum nomen="praecisio" genus="numerus"/>
+    <attributum nomen="valor" genus="numerus" fractio="verum"/>
+    <attributum nomen="minimum" genus="numerus" fractio="verum"/>
+    <attributum nomen="maximum" genus="numerus" fractio="verum"/>
+    <attributum nomen="praecisio" genus="numerus" fractio="verum"/>
     <attributum nomen="in-unitate" genus="referentia"/>
     <attributum nomen="cum-incertitudine" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>

@@ -730,6 +730,27 @@ _membrum_attributum_scribere(
 
     fprintf(f, "    <attributum nomen=\"%s\" genus=\"%s\"", ap,
             genus_valoris);
+
+    /* fines verbatim (spec fines) - captura numerum solum onerat */
+    si (m->fractio)
+    {
+        fputs(" fractio=\"", f);
+        _chordam_scribere(f, m->fractio);
+        putc('"', f);
+    }
+    si (m->finis_minimus)
+    {
+        fputs(" minimum=\"", f);
+        _chordam_scribere(f, m->finis_minimus);
+        putc('"', f);
+    }
+    si (m->finis_maximus)
+    {
+        fputs(" maximum=\"", f);
+        _chordam_scribere(f, m->finis_maximus);
+        putc('"', f);
+    }
+
     si (habet_valorem)
     {
         fprintf(f, " ordinarius=\"%s\"", valor);

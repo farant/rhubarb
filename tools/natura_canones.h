@@ -62,6 +62,11 @@ nomen structura {
     constans character*  genus_valoris; /* "textus"/"nomen"/... */
                    Xar*  optiones;      /* Xar de chorda* - electio */
                 chorda*  praestitutum;  /* ordinarius=, vel NIHIL */
+    /* FINES (spec fines) - verbatim e proprietate in canonem
+     * coctum, numerus solus; NIHIL = absens */
+                chorda*  fractio;
+                chorda*  finis_minimus;
+                chorda*  finis_maximus;
     /* MONOLITHUS solum: index nominum entium (snake) quorum
      * identitates hoc membrum citare licet - petitum primum, tum
      * posteri eius omnes (catena sub= ET etiam=), quia claves per
