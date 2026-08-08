@@ -23,14 +23,16 @@
     </historia>
   </architectura-machinae>
 
-  <versio-architecturae nomen="#i386" titulus="i386 (IA-32)" latitudo-verbi="32" edita="1985-10" versio-de="#x86"/>
+  <versio-architecturae nomen="#x86_16" titulus="x86-16 (8086)" latitudo-verbi="16" edita="1978-06-08" versio-de="#x86"/>
+
+  <versio-architecturae nomen="#i386" titulus="i386 (IA-32)" latitudo-verbi="32" edita="1985-10" versio-de="#x86" sequitur="#x86_16"/>
 
   <versio-architecturae nomen="#x86_64" titulus="x86-64 (AMD64)" latitudo-verbi="64" edita="2003-04-22" versio-de="#x86" sequitur="#i386"/>
 
   <versio-architecturae nomen="#armv8" titulus="ARMv8-A (AArch64)" latitudo-verbi="64" edita="2011-10-27" versio-de="#arm"/>
 
   <processorium nomen="#intel_8086" bits="16" fabricatum-a="#intel" designatum-a="#intel">
-    <exsequitur ad="#x86"/>
+    <exsequitur ad="#x86_16"/>
     <historia>
       <eventum quando="1978-06-08" actio="edi"/>
     </historia>

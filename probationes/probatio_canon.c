@@ -1251,6 +1251,47 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_VALOR_MALUS), I);
 
+        /* ----------------------------------------------------
+         * dies ante Christum natum (decretum Franis 2026-08-08,
+         * res 01KZC7F388): '-' praefixum lectione HISTORICA -
+         * '-312' = annus 312 a.C.n., annus zephyrus NON est.
+         * Annus solus digitis I..IV sine suppletione; formae
+         * cum mense quattuor digitos servant.
+         * ---------------------------------------------------- */
+        vitia = iudicare_literis(hortus,
+            "<hortus titulus=\"b\">"
+            "<planta nomen=\"rosa\" sata=\"-312\"/></hortus>",
+            piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+        vitia = iudicare_literis(hortus,
+            "<hortus titulus=\"b\">"
+            "<planta nomen=\"rosa\" sata=\"-4\"/></hortus>",
+            piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+        vitia = iudicare_literis(hortus,
+            "<hortus titulus=\"b\">"
+            "<planta nomen=\"rosa\" sata=\"-0312-04-01\"/></hortus>",
+            piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+        vitia = iudicare_literis(hortus,
+            "<hortus titulus=\"b\">"
+            "<planta nomen=\"rosa\" sata=\"--312\"/></hortus>",
+            piscina, intern);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_MALUS), I);
+        vitia = iudicare_literis(hortus,
+            "<hortus titulus=\"b\">"
+            "<planta nomen=\"rosa\" sata=\"-\"/></hortus>",
+            piscina, intern);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_MALUS), I);
+        vitia = iudicare_literis(hortus,
+            "<hortus titulus=\"b\">"
+            "<planta nomen=\"rosa\" sata=\"-31234\"/></hortus>",
+            piscina, intern);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_MALUS), I);
+
         /* canones mendaces in ortu reiciuntur */
         CREDO_NIHIL (canon_ex_literis(CANON_ORDINARIUS_EXTRA,
                                       piscina, intern));

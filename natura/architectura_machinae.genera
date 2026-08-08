@@ -172,11 +172,26 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
+  <individuum nomen="x86_16">
+    <valor nomen="titulus">x86-16 (8086)</valor>
+    <valor nomen="latitudo_verbi">16</valor>
+    <valor nomen="edita">1978-06-08</valor>
+    <relatum nomen="versio_de" ad="x86"/>
+    <nota>
+      Forma condens: ISA quam 8086 attulit et quae familiae
+      nomen dedit. Mintata decreto 01KZFGHCEC - granularitas
+      mixta exsequituris (architectura an versio?) citatione
+      multiplici detecta; versiones exsequuntur, et forma
+      condens versio quoque est.
+    </nota>
+  </individuum>
+
   <individuum nomen="i386">
     <valor nomen="titulus">i386 (IA-32)</valor>
     <valor nomen="latitudo_verbi">32</valor>
     <valor nomen="edita">1985-10</valor>
     <relatum nomen="versio_de" ad="x86"/>
+    <relatum nomen="sequitur" ad="x86_16"/>
   </individuum>
 
   <individuum nomen="x86_64">
@@ -265,7 +280,7 @@
   </actiones>
 
   <relationes>
-    <relatio nomen="exsequitur" ad="architectura_machinae"
+    <relatio nomen="exsequitur" ad="versio_architecturae"
       multiplex="verum"
       nota="inversa exsecuta_a supra; multiplex quia exemplaria
             hodierna saepe plures (M1: armv8 et Rosetta x86_64
@@ -288,7 +303,7 @@
       eius), unde dominatus quadraginta annorum.
     </definitio>
     <valor nomen="bits">16</valor>
-    <relatum nomen="exsequitur" ad="x86"/>
+    <relatum nomen="exsequitur" ad="x86_16"/>
     <relatum nomen="fabricatum_a" ad="intel"
       modulus="organizatio"/>
     <relatum nomen="designatum_a" ad="intel"

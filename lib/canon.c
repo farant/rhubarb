@@ -177,6 +177,46 @@ dies_bene_formata(
 {
     i32 i;
 
+    /* annus ante Christum natum (decretum Franis 2026-08-08, res
+     * 01KZC7F388): '-' praefixum lectione HISTORICA - '-312' =
+     * annus 312 a.C.n., annus zephyrus NON est. ISO 8601
+     * astronomicum CONSULTO reiectum: liber omnis '312 a.C.n.'
+     * dicit, et lectio uno differens venenum tacitum esset.
+     * Annus solus digitis I..IV sine suppletione ('-4' = Herodes
+     * moritur); formae cum mense post signum quattuor digitos
+     * servant (recursio in reliquum, digito primo custodito ne
+     * '--312' signum geminum ferat). */
+    si (d->mensura > I &&
+        (character)d->datum[ZEPHYRUM] == '-')
+    {
+        si ((character)d->datum[I] < '0' ||
+            (character)d->datum[I] > '9')
+        {
+            redde FALSUM;
+        }
+        si (d->mensura <= V)
+        {
+            per (i = I; i < d->mensura; i++)
+            {
+                character c;
+
+                c = (character)d->datum[i];
+                si (c < '0' || c > '9')
+                {
+                    redde FALSUM;
+                }
+            }
+            redde VERUM;
+        }
+        {
+            chorda reliqua;
+
+            reliqua.datum   = d->datum + I;
+            reliqua.mensura = d->mensura - I;
+            redde dies_bene_formata(&reliqua);
+        }
+    }
+
     si (d->mensura != IV && d->mensura != VII && d->mensura != X)
     {
         redde FALSUM;

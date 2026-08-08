@@ -1485,16 +1485,13 @@ principale(
                 chorda_ut_cstr(semina, piscina),
                 CANON_ELEMENTUM_IGNOTUM, &ignota, &omnia,
                 piscina, intern));
-            /* TOLERA vulnera DUO, ambo nominatim:
-             * (1) quando="-312" (via_appia) - dies annos a.C.n.
-             *     dicere nequit, res 01KZC7F388 APERTA;
-             * (2) exsequitur ad="#armv8" (apple_m1) - granularitas
-             *     mixta architectura/versio, res 01KZFGHCEC
-             *     APERTA. Aera nomine-solo hoc celavit; citatio
-             *     multiplex (spec super-adstrictum) id detexit.
-             * Cum regula cadat et vulnus sanetur, haec assertio
-             * RUBET et toleratio angustatur - id ipsum volumus. */
-            CREDO_AEQUALIS_I32 (omnia, (i32)II);
+            /* TOLERANTIA MORTUA 2026-08-08 - decreta Franis ambo
+             * vulnera sanaverunt: dies a.C.n. ('-312' historice,
+             * res 01KZC7F388 CLAUSA) et exsequitur ad versionem
+             * (x86_16 mintatum, res 01KZFGHCEC CLAUSA). Semina
+             * primum ab ortu suo PLANE sana - et haec assertio
+             * nunc quodlibet vulnus novum statim clamat. */
+            CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
         }
     }
 

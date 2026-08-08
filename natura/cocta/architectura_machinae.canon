@@ -147,6 +147,6 @@
   <citatio nomen="architectura-machinae-exsecuta-a" attributum="exsecuta-a" ad="processorium/nomen" super="architectura-machinae"/>
   <citatio nomen="versio-architecturae-versio-de" attributum="versio-de" ad="architectura-machinae/nomen" super="versio-architecturae"/>
   <citatio nomen="versio-architecturae-sequitur" attributum="sequitur" ad="versio-architecturae/nomen" super="versio-architecturae"/>
-  <citatio nomen="processorium-exsequitur" attributum="ad" ad="architectura-machinae/nomen" super="processorium/exsequitur"/>
+  <citatio nomen="processorium-exsequitur" attributum="ad" ad="versio-architecturae/nomen" super="processorium/exsequitur"/>
 
 </canon>

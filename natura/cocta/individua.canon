@@ -13778,7 +13778,7 @@
   <citatio nomen="versio-architecturae-compatibilis-cum" attributum="ad" ad="versio versio-architecturae versio-linguae versio-praescripti versio-systematis/nomen" super="versio-architecturae/compatibilis-cum"/>
   <citatio nomen="versio-architecturae-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="versio-architecturae"/>
   <citatio nomen="versio-architecturae-edita-a" attributum="edita-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="versio-architecturae"/>
-  <citatio nomen="processorium-exsequitur" attributum="ad" ad="architectura-machinae/nomen" super="processorium/exsequitur"/>
+  <citatio nomen="processorium-exsequitur" attributum="ad" ad="versio-architecturae/nomen" super="processorium/exsequitur"/>
   <citatio nomen="processorium-fabricatum-a" attributum="fabricatum-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="processorium"/>
   <citatio nomen="processorium-designatum-a" attributum="designatum-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="processorium"/>
   <citatio nomen="causa-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa/pendet-ex"/>
