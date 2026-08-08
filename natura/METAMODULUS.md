@@ -115,7 +115,7 @@ liberorum min..max.*
 | `dubium` | &mdash; | &mdash; | licet |
 | `glossa` | **lingua**:nomen | &mdash; | licet |
 | `proprietates` | &mdash; | `proprietas` 1..* | &mdash; |
-| `proprietas` | **nomen**:nomen, **genus**:nomen, modulus:nomen, multiplex:veritas, ordinarius, nota | `optio` 0..* | &mdash; |
+| `proprietas` | **nomen**:nomen, **genus**:nomen, modulus:nomen, multiplex:veritas, ordinarius, fractio:veritas, minimum:numerus, maximum:numerus, nota | `optio` 0..* | &mdash; |
 | `optio` | &mdash; | &mdash; | licet |
 | `partes` | &mdash; | `pars` 1..* | &mdash; |
 | `pars` | **nomen**:nomen, necessaria:veritas, nota | &mdash; | &mdash; |

@@ -472,6 +472,19 @@ interior constans character* GLOSSA_SINE_LINGUA =
     "  </genus>\n"
     "</natura>\n";
 
+/* fines in proprietate (spec fines): grammatica generum eadem
+ * tria attributa fert quae canon - catena .genera -> canon coctus */
+interior constans character* PROPRIETAS_CUM_FINIBUS =
+    "<natura modulus=\"probatio\" versio=\"1\" lingua=\"latina\">\n"
+    "  <genus nomen=\"probandum\">\n"
+    "    <definitio>Res probationis.</definitio>\n"
+    "    <proprietates>\n"
+    "      <proprietas nomen=\"probabilitas\" genus=\"numerus\"\n"
+    "        fractio=\"verum\" minimum=\"0\" maximum=\"1\"/>\n"
+    "    </proprietates>\n"
+    "  </genus>\n"
+    "</natura>\n";
+
 /* ==================================================
  * Principale
  * ================================================== */
@@ -1188,6 +1201,13 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
             CANON_ATTRIBUTUM_DEEST), I);
+
+        /* fines in proprietate admissi (spec fines) */
+        vitia = iudicare_literis(canon_naturae,
+                                 PROPRIETAS_CUM_FINIBUS,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
     }
 
 

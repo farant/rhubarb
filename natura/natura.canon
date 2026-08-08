@@ -108,6 +108,11 @@
     <attributum nomen="modulus"    genus="nomen"/>
     <attributum nomen="multiplex"  genus="veritas"/>
     <attributum nomen="ordinarius" genus="textus"/>
+    <attributum nomen="fractio" genus="veritas"
+      nota="FINES (spec fines), genus numerus solum: punctum
+            decimale licet. In canonem coctum transit verbatim"/>
+    <attributum nomen="minimum" genus="numerus" fractio="verum"/>
+    <attributum nomen="maximum" genus="numerus" fractio="verum"/>
     <attributum nomen="nota"       genus="textus"/>
     <liberum nomen="optio"
       nota="cum genus='electio'; nexus ille CONDICIONALIS est,
