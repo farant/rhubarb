@@ -461,4 +461,14 @@
            vivens cibus res-sacra-immobilis res-sacra-mobilis reliquiae fractura
            corruptio contaminatio"/>
 
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="artefactum-ex-materia" attributum="ad" ad="materia/nomen" super="artefactum/ex-materia"/>
+  <citatio nomen="instrumentum-ex-materia" attributum="ad" ad="materia/nomen" super="instrumentum/ex-materia"/>
+  <citatio nomen="cibus-ex-materia" attributum="ad" ad="materia/nomen" super="cibus/ex-materia"/>
+
 </canon>

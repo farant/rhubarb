@@ -150,6 +150,7 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
+  <citatio nomen="schema-continet" attributum="ad" ad="campus/nomen" super="schema/continet"/>
   <citatio nomen="campus-genus-eius" attributum="genus-eius" ad="genus-valoris textus numerus dies veritas electio citatio/nomen" super="campus"/>
 
 </canon>

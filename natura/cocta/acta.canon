@@ -758,9 +758,16 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
+  <citatio nomen="acta-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="acta/signata-per"/>
   <citatio nomen="punctum-actorum-praecedens" attributum="praecedens" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="punctum-actorum"/>
   <citatio nomen="attestatio-ad-punctum" attributum="ad-punctum" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="attestatio"/>
   <citatio nomen="attestatio-testatur" attributum="testatur" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="attestatio"/>
+  <citatio nomen="radix-fiduciae-fundat" attributum="ad" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="radix-fiduciae/fundat"/>
+  <citatio nomen="acta-publica-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="acta-publica/signata-per"/>
+  <citatio nomen="regesta-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="regesta/signata-per"/>
+  <citatio nomen="acta-transactionum-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="acta-transactionum/signata-per"/>
+  <citatio nomen="acta-versionum-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="acta-versionum/signata-per"/>
+  <citatio nomen="acta-auditus-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="acta-auditus/signata-per"/>
   <citatio nomen="conditio-praecedens" attributum="praecedens" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="conditio"/>
   <citatio nomen="clausura-rationis-praecedens" attributum="praecedens" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="clausura-rationis"/>
   <citatio nomen="statio-praecedens" attributum="praecedens" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="statio"/>
@@ -770,5 +777,8 @@
   <citatio nomen="instrumentum-publicum-testatur" attributum="testatur" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="instrumentum-publicum"/>
   <citatio nomen="apostilla-ad-punctum" attributum="ad-punctum" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="apostilla"/>
   <citatio nomen="apostilla-testatur" attributum="testatur" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="apostilla"/>
+  <citatio nomen="radix-systematis-fundat" attributum="ad" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="radix-systematis/fundat"/>
+  <citatio nomen="commissio-notarii-fundat" attributum="ad" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="commissio-notarii/fundat"/>
+  <citatio nomen="origo-dominii-fundat" attributum="ad" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="origo-dominii/fundat"/>
 
 </canon>

@@ -113,4 +113,16 @@
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
     super="causa causa-materialis causa-formalis causa-efficiens causa-finalis"/>
 
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="causa-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa/pendet-ex"/>
+  <citatio nomen="causa-materialis-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa-materialis/pendet-ex"/>
+  <citatio nomen="causa-formalis-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa-formalis/pendet-ex"/>
+  <citatio nomen="causa-efficiens-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa-efficiens/pendet-ex"/>
+  <citatio nomen="causa-finalis-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa-finalis/pendet-ex"/>
+
 </canon>

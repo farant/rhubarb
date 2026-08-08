@@ -64,10 +64,10 @@
 "  modulum. Causae, quae omnes limites mechanismi sunt, non\n" \
 "  neglegentiae:\n" \
 "    %u petitum apertum habent (ad='*') - clavis nulla est;\n" \
-"    %u multiplices sunt - super= titulo solo congruit nec\n" \
-"      intra= observat, et nomen liberi per genera communicatur\n" \
-"      quorum petita diversa sunt;\n" \
 "    %u petitum non resolvunt.\n" \
+"  Multiplicia OLIM hic stabant (sedes CDII nomine solo) -\n" \
+"  spec super-adstrictum viam 'parens/titulus' dedit et\n" \
+"  citantur nunc ut attributa.\n" \
 "  ERGO relationes hic FORTIUS iudicantur quam in canone per\n" \
 "  modulum, sed NON OMNES - reliquae aeque laxae sunt.\n" \
 "\n" \
@@ -1078,16 +1078,12 @@ _petitum_citabile(
 
     *clausura_ex = NIHIL;
 
-    /* MULTIPLEX PRIMUM: exclusio categorica est, petito
-     * qualicumque. Citans est LIBERUM relationis, et super=
-     * titulo nodi SOLO congruit nec intra= observat - nomen
-     * autem liberi per genera communicatur, quorum petita
-     * diversa sunt ('continet' septem habet). Citatio una ergo
-     * ceteris falso clamaret. */
-    si (multiplex)
-    {
-        redde NC_CIT_MULTIPLEX;
-    }
+    /* Exclusio multiplicium MORTUA (spec super-adstrictum):
+     * super= nunc viam 'parens/titulus' fert, ergo liberum
+     * relationis sub parente SUO solo citatur - nomen commune
+     * ('continet' septem petita) iam non confundit. Emissor
+     * viam scribit; clausura eadem ac attributi computatur. */
+    (vacuum)multiplex;
 
     ad = stml_attributum_capere(nodus, "ad");
     si (!ad || chorda_aequalis_literis(*ad, "*"))
@@ -1609,8 +1605,7 @@ _praefationem_scribere(
 
     sprintf(ex, NC_PRAEFATIO_FORMA,
             census->omnes, census->citatae, nudae,
-            census->apertae, census->multiplices,
-            census->ignotae);
+            census->apertae, census->ignotae);
 }
 
 /* MONOLITHUS: corpus totum in canonem unum.

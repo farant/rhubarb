@@ -1247,11 +1247,21 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
+  <citatio nomen="contractus-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="contractus/parit"/>
   <citatio nomen="titulus-fundat" attributum="fundat" ad="licentia/nomen" super="titulus"/>
   <citatio nomen="iussum-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="iussum"/>
   <citatio nomen="iussum-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="iussum"/>
+  <citatio nomen="fiducia-officia" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="fiducia/officia"/>
   <citatio nomen="petitio-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio"/>
+  <citatio nomen="tractatus-signatus-per" attributum="ad" ad="delegatio plena-potestas procuratio delegatio-canonica/nomen" super="tractatus/signatus-per"/>
+  <citatio nomen="tractatus-limitatus-per" attributum="ad" ad="limitatio/nomen" super="tractatus/limitatus-per"/>
+  <citatio nomen="tractatus-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="tractatus/parit"/>
   <citatio nomen="limitatio-ad-tractatum" attributum="ad-tractatum" ad="tractatus/nomen" super="limitatio"/>
+  <citatio nomen="emptio-venditio-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="emptio-venditio/parit"/>
+  <citatio nomen="locatio-conductio-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="locatio-conductio/parit"/>
+  <citatio nomen="societas-contractus-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="societas-contractus/parit"/>
+  <citatio nomen="mandatum-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="mandatum/parit"/>
+  <citatio nomen="commodatum-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="commodatum/parit"/>
   <citatio nomen="gradus-academicus-fundat" attributum="fundat" ad="licentia/nomen" super="gradus-academicus"/>
   <citatio nomen="character-indelebilis-fundat" attributum="fundat" ad="licentia/nomen" super="character-indelebilis"/>
   <citatio nomen="titulus-honoris-fundat" attributum="fundat" ad="licentia/nomen" super="titulus-honoris"/>

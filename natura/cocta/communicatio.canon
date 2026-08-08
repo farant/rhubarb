@@ -243,7 +243,10 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
+  <citatio nomen="actor-mittit" attributum="ad" ad="nuntius/nomen" super="actor/mittit"/>
+  <citatio nomen="actor-accipit" attributum="ad" ad="nuntius/nomen" super="actor/accipit"/>
   <citatio nomen="nuntius-missus-a" attributum="missus-a" ad="actor/nomen" super="nuntius"/>
   <citatio nomen="nuntius-destinatus-ad" attributum="destinatus-ad" ad="actor/nomen" super="nuntius"/>
+  <citatio nomen="eventum-observatur-ab" attributum="ad" ad="actor/nomen" super="eventum/observatur-ab"/>
 
 </canon>

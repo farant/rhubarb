@@ -361,6 +361,18 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
+  <citatio nomen="medicamentum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum/continet"/>
+  <citatio nomen="medicamentum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum/aequivalens"/>
+  <citatio nomen="medicamentum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum/fabricatum-in"/>
   <citatio nomen="coctura-coquitur" attributum="coquitur" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="coctura"/>
+  <citatio nomen="medicamentum-genericum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum-genericum/continet"/>
+  <citatio nomen="medicamentum-genericum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum-genericum/aequivalens"/>
+  <citatio nomen="medicamentum-genericum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum-genericum/fabricatum-in"/>
+  <citatio nomen="medicamentum-nominatum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum-nominatum/continet"/>
+  <citatio nomen="medicamentum-nominatum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum-nominatum/aequivalens"/>
+  <citatio nomen="medicamentum-nominatum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum-nominatum/fabricatum-in"/>
+  <citatio nomen="medicamentum-compositum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum-compositum/continet"/>
+  <citatio nomen="medicamentum-compositum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum-compositum/aequivalens"/>
+  <citatio nomen="medicamentum-compositum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum-compositum/fabricatum-in"/>
 
 </canon>

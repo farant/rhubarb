@@ -265,6 +265,7 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
+  <citatio nomen="pensum-impeditur-a" attributum="ad" ad="pensum/nomen" super="pensum/impeditur-a"/>
   <citatio nomen="incidens-in-ambitu" attributum="in-ambitu" ad="ambitus ambitus-fabricae ambitus-probationis ambitus-producens/nomen" super="incidens"/>
   <citatio nomen="processus-genitus-a" attributum="genitus-a" ad="processus/nomen" super="processus"/>
   <citatio nomen="processus-currit-in" attributum="currit-in" ad="ambitus ambitus-fabricae ambitus-probationis ambitus-producens/nomen" super="processus"/>

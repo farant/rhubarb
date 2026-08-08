@@ -401,6 +401,13 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
+  <citatio nomen="iter-per-viam" attributum="ad" ad="via via-terrestris via-maritima via-aeria/nomen" super="iter/per-viam"/>
   <citatio nomen="iter-vehitur" attributum="vehitur" ad="vehiculum navis currus-onerarius tramen aeroplanum/nomen" super="iter"/>
+  <citatio nomen="iter-fert" attributum="ad" ad="onus/nomen" super="iter/fert"/>
+  <citatio nomen="vehiculum-apta-viae" attributum="ad" ad="via via-terrestris via-maritima via-aeria/nomen" super="vehiculum/apta-viae"/>
+  <citatio nomen="navis-apta-viae" attributum="ad" ad="via via-terrestris via-maritima via-aeria/nomen" super="navis/apta-viae"/>
+  <citatio nomen="currus-onerarius-apta-viae" attributum="ad" ad="via via-terrestris via-maritima via-aeria/nomen" super="currus-onerarius/apta-viae"/>
+  <citatio nomen="tramen-apta-viae" attributum="ad" ad="via via-terrestris via-maritima via-aeria/nomen" super="tramen/apta-viae"/>
+  <citatio nomen="aeroplanum-apta-viae" attributum="ad" ad="via via-terrestris via-maritima via-aeria/nomen" super="aeroplanum/apta-viae"/>
 
 </canon>

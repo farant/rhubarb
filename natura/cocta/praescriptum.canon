@@ -309,8 +309,15 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
+  <citatio nomen="procedura-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="procedura/gradus-eius"/>
+  <citatio nomen="procedura-automata-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="procedura-automata/gradus-eius"/>
   <citatio nomen="praescriptum-ortum-ex" attributum="ortum-ex" ad="praescriptum/nomen" super="praescriptum"/>
+  <citatio nomen="praescriptum-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="praescriptum/gradus-eius"/>
+  <citatio nomen="gradus-praescripti-pendet-ex" attributum="ad" ad="gradus-praescripti/nomen" super="gradus-praescripti/pendet-ex"/>
   <citatio nomen="versio-praescripti-versio-de" attributum="versio-de" ad="praescriptum/nomen" super="versio-praescripti"/>
   <citatio nomen="versio-praescripti-sequitur" attributum="sequitur" ad="versio-praescripti/nomen" super="versio-praescripti"/>
+  <citatio nomen="index-verificationis-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="index-verificationis/gradus-eius"/>
+  <citatio nomen="fistula-integrationis-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="fistula-integrationis/gradus-eius"/>
+  <citatio nomen="depositio-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="depositio/gradus-eius"/>
 
 </canon>

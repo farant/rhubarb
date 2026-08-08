@@ -364,6 +364,7 @@
        vocabulario indicis. -->
   <citatio nomen="intervallum-initium" attributum="initium" ad="momentum/nomen" super="intervallum"/>
   <citatio nomen="intervallum-finis" attributum="finis" ad="momentum/nomen" super="intervallum"/>
+  <citatio nomen="horarium-continet" attributum="ad" ad="recurrentia recurrentia-computata pascha dies-negotiorum dies-ordinalis-mensis recurrentia-per-usum per-horas-operis per-cyclos per-spatium/nomen" super="horarium/continet"/>
   <citatio nomen="reservatio-tempus-servatum" attributum="tempus-servatum" ad="intervallum/nomen" super="reservatio"/>
 
 </canon>

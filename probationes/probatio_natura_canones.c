@@ -185,6 +185,41 @@ _titulo_numerare(
  * generum elementa (non adstricta) sunt praecise quod hic
  * quaeritur. */
 interior StmlNodus*
+_definitio_intra_invenire(
+    StmlNodus*  canon_radix,
+    chorda      titulus,
+    chorda      intra)
+{
+    i32 i;
+
+    si (!canon_radix || !canon_radix->liberi)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(canon_radix->liberi); i++)
+    {
+        StmlNodus* l;
+        chorda*    n;
+        chorda*    in_a;
+
+        l = *(StmlNodus**)xar_obtinere(canon_radix->liberi, i);
+        si (l->genus != STML_NODUS_ELEMENTUM || !l->titulus ||
+            !chorda_aequalis_literis(*l->titulus, "elementum"))
+        {
+            perge;
+        }
+        n    = stml_attributum_capere(l, "nomen");
+        in_a = stml_attributum_capere(l, "intra");
+        si (n && in_a && chorda_aequalis(*n, titulus) &&
+            chorda_aequalis(*in_a, intra))
+        {
+            redde l;
+        }
+    }
+    redde NIHIL;
+}
+
+interior StmlNodus*
 _elementum_invenire(
     StmlNodus*  canon_radix,
     chorda      titulus)
@@ -1096,14 +1131,16 @@ principale(
         CREDO_VERUM (_numerum_ante(monolithus_fons,
             "petitum apertum habent", piscina, &apertae));
         CREDO_VERUM (_numerum_ante(monolithus_fons,
-            "multiplices sunt", piscina, &multiplices));
-        CREDO_VERUM (_numerum_ante(monolithus_fons,
             "petitum non resolvunt", piscina, &ignotae));
 
+        /* multiplicia e praefatione EXIERUNT (spec super-
+         * adstrictum): citantur nunc ut attributa, causa
+         * 'multiplices sunt' mortua est */
+        multiplices = ZEPHYRUM;
+
         imprimere("  sedes %u = citatae %u + nudae %u"
-                  " (apertae %u + multiplices %u + ignotae %u)\n",
-                  sedes, citatae, nudae,
-                  apertae, multiplices, ignotae);
+                  " (apertae %u + ignotae %u)\n",
+                  sedes, citatae, nudae, apertae, ignotae);
 
         /* causae omnes sedes nudas exhauriunt */
         CREDO_AEQUALIS_I32 (apertae + multiplices + ignotae,
@@ -1219,6 +1256,53 @@ principale(
                 si (mala_haec || sani == ZEPHYRUM)
                 {
                     malae++;
+                    perge;
+                }
+            }
+
+            /* super cum via 'parens/titulus' (spec super-
+             * adstrictum): parens elementum sit, definitio
+             * liberi intra=parens sit, et attributum in EA
+             * declaratum */
+            {
+                b32 sol_est;
+                i32 sol;
+                i32 sk;
+
+                sol_est = FALSUM;
+                sol     = ZEPHYRUM;
+                per (sk = ZEPHYRUM; sk < super->mensura; sk++)
+                {
+                    si ((character)super->datum[sk] == '/')
+                    {
+                        sol     = sk;
+                        sol_est = VERUM;
+                        frange;
+                    }
+                }
+                si (sol_est)
+                {
+                    chorda     pars_p;
+                    chorda     pars_l;
+                    StmlNodus* def_l;
+
+                    pars_p = chorda_sectio(*super, ZEPHYRUM, sol);
+                    pars_l = chorda_sectio(*super, sol + I,
+                                           super->mensura);
+                    si (!_elementum_invenire(monolithus_radix,
+                                             pars_p))
+                    {
+                        malae++;
+                        perge;
+                    }
+                    def_l = _definitio_intra_invenire(
+                                monolithus_radix, pars_l, pars_p);
+                    si (!def_l ||
+                        !_declarationem_invenire(def_l,
+                            "attributum", *attributum))
+                    {
+                        malae++;
+                    }
                     perge;
                 }
             }
@@ -1401,12 +1485,16 @@ principale(
                 chorda_ut_cstr(semina, piscina),
                 CANON_ELEMENTUM_IGNOTUM, &ignota, &omnia,
                 piscina, intern));
-            /* TOLERA vulnus UNUM: quando="-312" (via_appia,
-             * vectura) - dies annos a.C.n. dicere nequit, res
-             * 01KZC7F388 APERTA (ictus tertius). Cum regula
-             * cadat et vulnus sanetur, haec assertio RUBET et
-             * toleratio deletur - id ipsum volumus. */
-            CREDO_AEQUALIS_I32 (omnia, (i32)I);
+            /* TOLERA vulnera DUO, ambo nominatim:
+             * (1) quando="-312" (via_appia) - dies annos a.C.n.
+             *     dicere nequit, res 01KZC7F388 APERTA;
+             * (2) exsequitur ad="#armv8" (apple_m1) - granularitas
+             *     mixta architectura/versio, res 01KZFGHCEC
+             *     APERTA. Aera nomine-solo hoc celavit; citatio
+             *     multiplex (spec super-adstrictum) id detexit.
+             * Cum regula cadat et vulnus sanetur, haec assertio
+             * RUBET et toleratio angustatur - id ipsum volumus. */
+            CREDO_AEQUALIS_I32 (omnia, (i32)II);
         }
     }
 
@@ -1823,6 +1911,43 @@ principale(
             piscina, intern));
         CREDO_AEQUALIS_I32 (generis, (i32)I);
         CREDO_AEQUALIS_I32 (omnia, (i32)I);
+
+        /* ----------------------------------------------------
+         * XIV. super adstrictum: multiplicia citantur (spec
+         * super-adstrictum) - FORAMEN MENSURATUM descriptoris
+         * clauditur: <auctor ad="#nemo"/> olim VIRIDE transiit
+         * (sedes CDII nomine solo), nunc CITATIO_IRRITA.
+         * ---------------------------------------------------- */
+        imprimere("\n--- XIV. multiplicia citata ---\n");
+
+        /* canon coctus viam fert */
+        CREDO_VERUM (chorda_invenire_index(fons,
+            chorda_ex_literis("super=\"opus-scriptum/auctor",
+                              piscina)) >= ZEPHYRUM);
+
+        /* petitum inscriptum resolvitur */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <persona nomen=\"#plinius\"/>\n"
+            "  <opus-scriptum nomen=\"#historia\">\n"
+            "    <auctor ad=\"#plinius\"/>\n"
+            "  </opus-scriptum>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        /* petitum quod nemo declaravit RUBET */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <opus-scriptum nomen=\"#historia\">\n"
+            "    <auctor ad=\"#nemo\"/>\n"
+            "  </opus-scriptum>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
     }
 
 

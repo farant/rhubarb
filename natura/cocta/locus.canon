@@ -126,6 +126,7 @@
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
   <citatio nomen="locus-intra" attributum="intra" ad="locus/nomen" super="locus"/>
+  <citatio nomen="locus-sub-iurisdictione" attributum="ad" ad="iurisdictio/nomen" super="locus/sub-iurisdictione"/>
   <citatio nomen="inscriptio-designat" attributum="designat" ad="locus/nomen" super="inscriptio"/>
   <citatio nomen="iurisdictio-intra" attributum="intra" ad="iurisdictio/nomen" super="iurisdictio"/>
   <citatio nomen="aedificium-situm-in" attributum="situm-in" ad="locus/nomen" super="aedificium"/>

@@ -287,4 +287,15 @@
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
     super="animal apis canis homo"/>
 
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="animal-praedatur" attributum="ad" ad="animal apis canis homo/nomen" super="animal/praedatur"/>
+  <citatio nomen="apis-praedatur" attributum="ad" ad="animal apis canis homo/nomen" super="apis/praedatur"/>
+  <citatio nomen="canis-praedatur" attributum="ad" ad="animal apis canis homo/nomen" super="canis/praedatur"/>
+  <citatio nomen="homo-praedatur" attributum="ad" ad="animal apis canis homo/nomen" super="homo/praedatur"/>
+
 </canon>

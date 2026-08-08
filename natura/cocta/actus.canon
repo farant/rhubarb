@@ -943,4 +943,14 @@
            inauguratio collatio-tituli sententia-lata quorum-deliberativum
            maioritas-replicarum"/>
 
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="quorum-condicio-actus" attributum="ad" ad="actus-sollemnis ritus sacramentum baptismus confirmatio eucharistia paenitentia unctio-infirmorum ordo matrimonium sacramentale benedictio consecratio-loci exorcismus actus-iuridicus stipulatio mancipatio manumissio testamentum confectio-instrumenti promulgatio inauguratio collatio-tituli sententia-lata/nomen" super="quorum/condicio-actus"/>
+  <citatio nomen="quorum-deliberativum-condicio-actus" attributum="ad" ad="actus-sollemnis ritus sacramentum baptismus confirmatio eucharistia paenitentia unctio-infirmorum ordo matrimonium sacramentale benedictio consecratio-loci exorcismus actus-iuridicus stipulatio mancipatio manumissio testamentum confectio-instrumenti promulgatio inauguratio collatio-tituli sententia-lata/nomen" super="quorum-deliberativum/condicio-actus"/>
+  <citatio nomen="maioritas-replicarum-condicio-actus" attributum="ad" ad="actus-sollemnis ritus sacramentum baptismus confirmatio eucharistia paenitentia unctio-infirmorum ordo matrimonium sacramentale benedictio consecratio-loci exorcismus actus-iuridicus stipulatio mancipatio manumissio testamentum confectio-instrumenti promulgatio inauguratio collatio-tituli sententia-lata/nomen" super="maioritas-replicarum/condicio-actus"/>
+
 </canon>

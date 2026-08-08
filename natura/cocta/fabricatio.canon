@@ -577,9 +577,12 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
+  <citatio nomen="facultas-implet" attributum="ad" ad="postulatum/nomen" super="facultas/implet"/>
   <citatio nomen="probatio-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio"/>
   <citatio nomen="vitium-violat" attributum="violat" ad="postulatum/nomen" super="vitium"/>
+  <citatio nomen="debitum-technicum-emit" attributum="ad" ad="facultas/nomen" super="debitum-technicum/emit"/>
   <citatio nomen="complicatio-retractat" attributum="retractat" ad="consilium consilium-computatum/nomen" super="complicatio"/>
+  <citatio nomen="consilium-ad-postulata" attributum="ad" ad="postulatum/nomen" super="consilium/ad-postulata"/>
   <citatio nomen="depravatio-ex-vitio" attributum="ex-vitio" ad="vitium regressio/nomen" super="depravatio"/>
   <citatio nomen="depravatio-detecta-per" attributum="detecta-per" ad="probatio probatio-unitatis probatio-integrationis probatio-regressionis probatio-fumi/nomen" super="depravatio"/>
   <citatio nomen="probatio-unitatis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-unitatis"/>
@@ -587,5 +590,6 @@
   <citatio nomen="probatio-regressionis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-regressionis"/>
   <citatio nomen="probatio-fumi-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-fumi"/>
   <citatio nomen="regressio-violat" attributum="violat" ad="postulatum/nomen" super="regressio"/>
+  <citatio nomen="consilium-computatum-ad-postulata" attributum="ad" ad="postulatum/nomen" super="consilium-computatum/ad-postulata"/>
 
 </canon>

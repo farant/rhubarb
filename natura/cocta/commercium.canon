@@ -604,6 +604,7 @@
   <citatio nomen="tessera-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera"/>
   <citatio nomen="tessera-negotiabilis-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-negotiabilis"/>
   <citatio nomen="tessera-simplex-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-simplex"/>
+  <citatio nomen="ratio-rationaria-continet" attributum="ad" ad="venditio/nomen" super="ratio-rationaria/continet"/>
   <citatio nomen="charta-onerum-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="charta-onerum"/>
   <citatio nomen="apocha-horrei-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="apocha-horrei"/>
   <citatio nomen="syngrapha-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="syngrapha"/>
@@ -613,5 +614,6 @@
   <citatio nomen="tessera-spectaculi-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-spectaculi"/>
   <citatio nomen="tessera-repositoria-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-repositoria"/>
   <citatio nomen="tessera-digitalis-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-digitalis"/>
+  <citatio nomen="ratio-duplex-continet" attributum="ad" ad="venditio/nomen" super="ratio-duplex/continet"/>
 
 </canon>

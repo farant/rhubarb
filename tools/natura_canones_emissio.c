@@ -1240,7 +1240,18 @@ _citationes_scribere(
 
             fputs("  <citatio nomen=\"", f);
             _kebab_scribere(f, el->ens->titulus);
-            fprintf(f, "-%s\" attributum=\"%s\" ad=\"", ap, ap);
+            /* multiplex = LIBERUM relationis: attributum eius
+             * 'ad' est et super viam 'parens/titulus' fert
+             * (spec super-adstrictum) */
+            si (m->discrimen == NC_MEMBRUM_LIBERUM)
+            {
+                fprintf(f, "-%s\" attributum=\"ad\" ad=\"", ap);
+            }
+            alioquin
+            {
+                fprintf(f, "-%s\" attributum=\"%s\" ad=\"",
+                        ap, ap);
+            }
             {
                 i32 k;
 
@@ -1258,7 +1269,14 @@ _citationes_scribere(
             }
             fputs("/nomen\" super=\"", f);
             _kebab_scribere(f, el->ens->titulus);
-            fputs("\"/>\n", f);
+            si (m->discrimen == NC_MEMBRUM_LIBERUM)
+            {
+                fprintf(f, "/%s\"/>\n", ap);
+            }
+            alioquin
+            {
+                fputs("\"/>\n", f);
+            }
         }
     }
 

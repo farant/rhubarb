@@ -1005,9 +1005,23 @@
   <citatio nomen="index-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index"/>
   <citatio nomen="lectio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio"/>
   <citatio nomen="mutatio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio"/>
+  <citatio nomen="functio-vocat" attributum="ad" ad="functio functio-pura/nomen" super="functio/vocat"/>
+  <citatio nomen="functio-legit" attributum="ad" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="functio/legit"/>
+  <citatio nomen="functio-mutat" attributum="ad" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="functio/mutat"/>
+  <citatio nomen="functio-efficit" attributum="ad" ad="mutatio mutatio-memoriae scriptio-externa allocatio terminatio transactio/nomen" super="functio/efficit"/>
+  <citatio nomen="functio-haurit" attributum="ad" ad="lectio lectio-memoriae lectio-externa/nomen" super="functio/haurit"/>
+  <citatio nomen="functio-pura-vocat" attributum="ad" ad="functio functio-pura/nomen" super="functio-pura/vocat"/>
+  <citatio nomen="functio-pura-legit" attributum="ad" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="functio-pura/legit"/>
+  <citatio nomen="functio-pura-mutat" attributum="ad" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="functio-pura/mutat"/>
+  <citatio nomen="functio-pura-efficit" attributum="ad" ad="mutatio mutatio-memoriae scriptio-externa allocatio terminatio transactio/nomen" super="functio-pura/efficit"/>
+  <citatio nomen="functio-pura-haurit" attributum="ad" ad="lectio lectio-memoriae lectio-externa/nomen" super="functio-pura/haurit"/>
+  <citatio nomen="bibliotheca-dependet-ex" attributum="ad" ad="bibliotheca/nomen" super="bibliotheca/dependet-ex"/>
   <citatio nomen="assertio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio"/>
   <citatio nomen="programma-initium" attributum="initium" ad="functio functio-pura/nomen" super="programma"/>
+  <citatio nomen="programma-adhibet" attributum="ad" ad="bibliotheca/nomen" super="programma/adhibet"/>
+  <citatio nomen="instrumentum-aedificationis-producit" attributum="ad" ad="artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum/nomen" super="instrumentum-aedificationis/producit"/>
   <citatio nomen="instrumentum-aedificationis-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-aedificationis"/>
+  <citatio nomen="instrumentum-aedificationis-adhibet" attributum="ad" ad="bibliotheca/nomen" super="instrumentum-aedificationis/adhibet"/>
   <citatio nomen="obiectum-compilatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="obiectum-compilatum"/>
   <citatio nomen="obiectum-compilatum-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="obiectum-compilatum"/>
   <citatio nomen="exsecutabile-ligatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="exsecutabile-ligatum"/>
@@ -1027,7 +1041,10 @@
   <citatio nomen="assertio-statica-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-statica"/>
   <citatio nomen="assertio-probationis-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-probationis"/>
   <citatio nomen="instrumentum-lineae-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-lineae"/>
+  <citatio nomen="instrumentum-lineae-adhibet" attributum="ad" ad="bibliotheca/nomen" super="instrumentum-lineae/adhibet"/>
   <citatio nomen="daemon-initium" attributum="initium" ad="functio functio-pura/nomen" super="daemon"/>
+  <citatio nomen="daemon-adhibet" attributum="ad" ad="bibliotheca/nomen" super="daemon/adhibet"/>
   <citatio nomen="applicatio-initium" attributum="initium" ad="functio functio-pura/nomen" super="applicatio"/>
+  <citatio nomen="applicatio-adhibet" attributum="ad" ad="bibliotheca/nomen" super="applicatio/adhibet"/>
 
 </canon>

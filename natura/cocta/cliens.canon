@@ -371,4 +371,19 @@
            cliens-mcp cliens-cli cliens-mobilis servus servus-telae servus-datorum
            servus-nominum servus-procuratorius servus-mcp"/>
 
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="cliens-consumit" attributum="ad" ad="servus servus-telae servus-datorum servus-nominum servus-procuratorius servus-mcp/nomen" super="cliens/consumit"/>
+  <citatio nomen="cliens-telae-consumit" attributum="ad" ad="servus servus-telae servus-datorum servus-nominum servus-procuratorius servus-mcp/nomen" super="cliens-telae/consumit"/>
+  <citatio nomen="cliens-nativus-consumit" attributum="ad" ad="servus servus-telae servus-datorum servus-nominum servus-procuratorius servus-mcp/nomen" super="cliens-nativus/consumit"/>
+  <citatio nomen="cliens-terminalis-consumit" attributum="ad" ad="servus servus-telae servus-datorum servus-nominum servus-procuratorius servus-mcp/nomen" super="cliens-terminalis/consumit"/>
+  <citatio nomen="cliens-api-consumit" attributum="ad" ad="servus servus-telae servus-datorum servus-nominum servus-procuratorius servus-mcp/nomen" super="cliens-api/consumit"/>
+  <citatio nomen="cliens-mcp-consumit" attributum="ad" ad="servus servus-telae servus-datorum servus-nominum servus-procuratorius servus-mcp/nomen" super="cliens-mcp/consumit"/>
+  <citatio nomen="cliens-cli-consumit" attributum="ad" ad="servus servus-telae servus-datorum servus-nominum servus-procuratorius servus-mcp/nomen" super="cliens-cli/consumit"/>
+  <citatio nomen="cliens-mobilis-consumit" attributum="ad" ad="servus servus-telae servus-datorum servus-nominum servus-procuratorius servus-mcp/nomen" super="cliens-mobilis/consumit"/>
+
 </canon>

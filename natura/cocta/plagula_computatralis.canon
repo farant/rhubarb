@@ -630,6 +630,7 @@
   <citatio nomen="plagula-figurationis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-figurationis"/>
   <citatio nomen="plagula-datorum-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-datorum"/>
   <citatio nomen="plagula-sqlite-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-sqlite"/>
+  <citatio nomen="systema-plagularum-continet" attributum="ad" ad="plagula-computatralis plagula-fontis fons-c caput-c fons-python fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis plagula-xml plagula-stml plagula-markdown plagula-figurationis plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv plagula-sqlite volumen/nomen" super="systema-plagularum/continet"/>
   <citatio nomen="directorium-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="directorium"/>
   <citatio nomen="directorium-est-plagula" attributum="est-plagula" ad="plagula-computatralis plagula-fontis fons-c caput-c fons-python fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis plagula-xml plagula-stml plagula-markdown plagula-figurationis plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv plagula-sqlite volumen/nomen" super="directorium"/>
   <citatio nomen="fons-c-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="fons-c"/>

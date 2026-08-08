@@ -485,9 +485,15 @@
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
   <citatio nomen="norma-substituit" attributum="substituit" ad="norma/nomen" super="norma"/>
+  <citatio nomen="lex-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="lex/abrogat"/>
   <citatio nomen="classis-normativa-constituta-per" attributum="constituta-per" ad="norma/nomen" super="classis-normativa"/>
   <citatio nomen="classis-normativa-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="classis-normativa"/>
   <citatio nomen="fictio-iuris-instituta-per" attributum="instituta-per" ad="norma/nomen" super="fictio-iuris"/>
+  <citatio nomen="lex-aeterna-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="lex-aeterna/abrogat"/>
+  <citatio nomen="lex-naturalis-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="lex-naturalis/abrogat"/>
+  <citatio nomen="lex-humana-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="lex-humana/abrogat"/>
+  <citatio nomen="lex-divina-positiva-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="lex-divina-positiva/abrogat"/>
+  <citatio nomen="consuetudo-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="consuetudo/abrogat"/>
   <citatio nomen="schedula-substantiarum-constituta-per" attributum="constituta-per" ad="norma/nomen" super="schedula-substantiarum"/>
   <citatio nomen="schedula-substantiarum-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="schedula-substantiarum"/>
   <citatio nomen="gradus-eventus-aviatorii-constituta-per" attributum="constituta-per" ad="norma/nomen" super="gradus-eventus-aviatorii"/>
