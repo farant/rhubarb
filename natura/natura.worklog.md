@@ -5135,3 +5135,47 @@ loose greps match genus NAMES across modules — filter on the
 modulus COLUMN. Regeneration ran ONCE after all six landed (the
 agents each independently declined to run it mid-flight — shared
 state discipline held).
+
+## 2026-08-08 — the documentation loop closes: annotatio, scriba, and the cheap batch
+
+The genera-generation loop on "documentation" (descriptor's 15-miss
+ledger, project-specs/documentatio-lacunae.md) resolved into corpus
+work this day. Modeling-side record:
+
+- ANNOTATIO minted (genus 178, iudicium): the corpus had NAMED its
+  own missing genus in iudicium's header ("tres propositiones, tres
+  probatores") years-in-corpus-time before any loop found it. The
+  load-bearing reading: the header's axis is the PROBATOR, not the
+  writer — so TOLERA inscriptions (human-written, tool-proven) and
+  canon_examen verdicts (tool-derived, tool-proven) are ONE kind;
+  inscripta/prolata species can come when content forces. Relation
+  named `probator` (the header's own word — 'instrumentum' would
+  shadow corporalia). gradus_assensus deliberately ABSENT: the
+  absence is the differentia from iudicium. annotatio_machinae
+  (commentarium species) is the INSCRIPTION; this is the
+  PROPOSITION — the inscription carries it.
+- SCRIBA beside auctor on opus_scriptum: auctor respondet, scriba
+  exsequitur (Rom 16,22 — Tertius/Paulus). auctor stays
+  persona-CLOSED and, since scoped-super, that closure has TEETH
+  (probe: programma as auctor = CITATIO_IRRITA). scriba ad='*'
+  multiplex — persons, workshops, machine ministers all scribe.
+  The agent GENUS is deliberately parked (01KZFM3GW0) until a real
+  census forces the tag; Varro's 'instrumentum vocale' is among
+  the recorded candidates, Fran's call alone.
+- Rulings healed the two oldest tolerated wounds the same day:
+  dies takes '-YYYY' (HISTORICAL a.C.n., no year zero, ISO
+  astronomical explicitly rejected); exsequitur targets
+  versio_architecturae with x86_16 minted (the founding ISA that
+  named the family — resident 385). semina.census judges PLANE
+  SANA for the first time since it exists; tolerance apparatus
+  deleted, omnia==0.
+- Cheap batch: coquitur ad='*' (regula II taught the sanctioned
+  open form via the hook); contentum across the intention
+  quadrangle + gravitas on vitium; ordo on postulatum BORN with
+  minimum="1" (fines dogfooded); auctoritativa on expressio;
+  UNIVERSAL <nota> on every generated kind-tag (curatorial margin
+  the document layer lacked — census explanations no longer hide
+  in unqueryable XML comments).
+
+Remaining from the loop: documentatio.genera itself — status and
+the five open forks in nota 01KZFMTPR2.
