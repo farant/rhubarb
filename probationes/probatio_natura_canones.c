@@ -2124,6 +2124,70 @@ principale(
             CANON_CITATIO_IRRITA, &generis, &omnia,
             piscina, intern));
         CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        /* census scenarii ex disco viret (fixtura stans - eadem
+         * res quae ledger lacunarum peperit, nunc dicibilis) */
+        {
+            chorda census;
+
+            census = filum_legere_totum(
+                         "natura/exempla/documentatio.census",
+                         piscina);
+            CREDO_MAIOR_I32 (census.mensura, (i32)ZEPHYRUM);
+            CREDO_VERUM (_documentum_iudicare(monolithus,
+                chorda_ut_cstr(census, piscina),
+                CANON_CITATIO_IRRITA, &generis, &omnia,
+                piscina, intern));
+            CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+        }
+
+        /* invenit defectibus clausum: dictionarium non-defectus */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <dictionarium nomen=\"#pag\"/>\n"
+            "  <ambulatio-lectoris nomen=\"#amb\">\n"
+            "    <invenit ad=\"#pag\"/>\n"
+            "  </ambulatio-lectoris>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
+
+        /* exercet in ambulatione RESTRICTUM: functio rubet
+         * (parens apertus, species angustat - praecedens
+         * versio_de) */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <functio nomen=\"#f\"/>\n"
+            "  <ambulatio-lectoris nomen=\"#amb\">\n"
+            "    <exercet ad=\"#f\"/>\n"
+            "  </ambulatio-lectoris>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
+
+        /* in-opere ad ignotum rubet */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <silentium nomen=\"#s\" in-opere=\"#nusquam\"/>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
+
+        /* dentes doctrinae PERSEVERANT: auctor in dictionario
+         * (hereditate ab opere scripto) personis clausus manet */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <programma nomen=\"#robotum\"/>\n"
+            "  <dictionarium nomen=\"#male\">\n"
+            "    <auctor ad=\"#robotum\"/>\n"
+            "  </dictionarium>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (generis, (i32)I);
     }
 
 

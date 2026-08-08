@@ -5179,3 +5179,44 @@ work this day. Modeling-side record:
 
 Remaining from the loop: documentatio.genera itself — status and
 the five open forks in nota 01KZFMTPR2.
+
+## 2026-08-08 — documentatio.genera: the module the loop was for
+
+The reader-task module shipped (spec project-specs/documentatio-spec.md,
+plan documentatio-plan.md, decretum 01KZFPWPXH). The five forks all
+resolved in one brainstorm with Fran:
+
+1. **Genre = intent on the WORK; fit = verdict on the WALK.** A manual
+   is authored as a manual (finis); "served this reader" is the walk's
+   sentence. The same page can be intended-dictionary and
+   measured-failed-manual without contradiction — which is literally
+   what happened to glossae.html.
+2. **defectus_documenti minted, NOT vitium widened.** Differentia
+   deliberately parallel without inheritance: vitium = intention vs
+   BEHAVIOR; this = owed vs what a READING yields. Species by force:
+   deceptio (has a victim) > silentium > ambiguitas.
+3. **The walk bears the failure sentence**, citing annotatio
+   (agent-reader) / iudicium (person) / invenit → defectus.
+4. **ambulatio_lectoris = cross-model species of probatio.** The
+   enabling move was the L2 precedent replayed exactly: probatio's
+   genus was already general, only exercet's closure wasn't → ad="*"
+   at the parent, species narrows back to opus_scriptum.
+5. **Parts are works.** pars_de ALREADY EXISTED on opus_scriptum
+   ("pars Summae") — fork 5 needed zero mechanism. hortus.census is
+   an exemplum now; a legend is a small work inside a host work.
+
+Names: collision check BEFORE drafting paid again — bare `lectio` is
+taken (elementa_programmatis state-read), `exemplar` is
+format-reserved; hence ambulatio_lectoris and exemplum.
+
+Proof: natura/exempla/documentatio.census — the peregrinus scenario
+re-told in the new vocabulary, GREEN from disk on first contact. The
+three facts the ledger opened with (L9/L10/L11's unsayables) are now
+first-class tags. Suite section XVIII: exercet-aperture oracle
+(verified red pre-change), disk-green census, four red probes — incl.
+auctor's persona-teeth surviving inheritance into dictionarium.
+
+Corpus after: 34 modules, 187 genera, glossae 187/187 ×3, 36 canons.
+Deferred: minister machinalis still parked (01KZFM3GW0; lector/scriba
+both ad="*" awaiting it), genre species beyond the measured four,
+pars_de multiplex (no measured multi-host part).
