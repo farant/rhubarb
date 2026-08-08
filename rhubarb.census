@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  rhubarb.census - census rerum huius repositorii (ambulatio XVI)
+
+  DISCIPLINA (KAOS/DO-178C): radix una (causa finalis), nihil
+  orbum - omnis res parentem habere debet. Ubi relatio deest,
+  parentela in nota prosa iacet et in MESSE numeratur: hoc
+  documentum mensurat quantum corpus dicere possit, non fingit.
+
+  FOCUS: mesofacta - quae annos vera manent, deinde tacite
+  mutantur (numeri, sedes, claves, conventiones).
+  Iudicatur per monolithum (registrum: .census).
+-->
+<individua>
+
+  <!-- ============ RADIX ET FINES (spina) ============ -->
+
+  <causa-finalis nomen="#instauratio">
+    <nota>Radix censūs: civilizationem catholicam instaurare per
+      opera quae saecula durent. Extra hoc documentum causa eius
+      nulla est (RM 21.2).</nota>
+  </causa-finalis>
+
+  <causa-finalis nomen="#perennitas" causat="#c">
+    <pendet-ex ad="#instauratio"/>
+    <nota>Opera sine putredine: nullae dependentiae externae,
+      bibliothecae propriae, C89 electum quia stabile manet.
+      Iustificat etiam: normas omnes, chordam, piscinam.</nota>
+  </causa-finalis>
+
+  <causa-finalis nomen="#intellectus" causat="#claude-md">
+    <pendet-ex ad="#instauratio"/>
+    <nota>Fran codicem OMNEM intellegit - homo est RAG systematis
+      totius. Iustificat etiam: worklogs, INDEX, glossas,
+      documentationem omnem.</nota>
+  </causa-finalis>
+
+  <causa-finalis nomen="#dominium" causat="#silva">
+    <pendet-ex ad="#instauratio"/>
+    <nota>Machinae nostrae: LSP proprium, analysta proprius,
+      instrumenta propria - fiducia crescens in apparatu domus.
+      Iustificat etiam: legatum, aedilem, examina.</nota>
+  </causa-finalis>
+
+  <!-- ============ LINGUA ============ -->
+
+  <lingua-programmandi nomen="#c">
+    <nota>C89 stricte (-pedantic). MESOFACTUM: duplicatum lexici
+      naturae (#c in semina.census) - citatio trans documenta
+      nondum exsistit.</nota>
+  </lingua-programmandi>
+
+  <!-- ============ BIBLIOTHECAE (specimina, gradus 0-2) ==== -->
+
+  <bibliotheca nomen="#piscina" scripta-in="#c">
+    <nota>Arena memoriae. Gradus 0.</nota>
+  </bibliotheca>
+
+  <bibliotheca nomen="#chorda" scripta-in="#c">
+    <nota>Chorda mensuram fert, NUMQUAM nullo terminatur -
+      functiones bibliothecae vulgaris alienae sunt. Gradus 0.</nota>
+  </bibliotheca>
+
+  <bibliotheca nomen="#stml" scripta-in="#c">
+    <dependet-ex ad="#piscina"/>
+    <dependet-ex ad="#chorda"/>
+    <nota>XML-varians domus. textus internus VERBATIM est
+      (migratio 2026-08-06). silva exemplar suum vendicat -
+      amalgamare.sh post mutationes.</nota>
+  </bibliotheca>
+
+  <bibliotheca nomen="#canon" scripta-in="#c">
+    <dependet-ex ad="#stml"/>
+    <nota>Schemata STML: vocabularium, cardinalitas, genera
+      valorum, citationes, fines. Lingua expressionum NUMQUAM.</nota>
+  </bibliotheca>
+
+  <bibliotheca nomen="#natura" scripta-in="#c">
+    <dependet-ex ad="#stml"/>
+    <dependet-ex ad="#canon"/>
+    <nota>MESOFACTUM: exemplaria 34, genera 187, residentes
+      lexici 385, canones cocti 36 (2026-08-08 - numeri hi
+      putrescunt primi).</nota>
+  </bibliotheca>
+
+  <bibliotheca nomen="#silva" scripta-in="#c">
+    <dependet-ex ad="#piscina"/>
+    <dependet-ex ad="#chorda"/>
+    <nota>Analysta C89 robustus: emissio byte-fidelis, codices
+      54-88, fundamentum legati et instrumentorum.</nota>
+  </bibliotheca>
+
+  <!-- ============ PROGRAMMATA ============ -->
+
+  <daemon nomen="#tabulariumd">
+    <adhibet ad="#piscina"/>
+    <adhibet ad="#chorda"/>
+    <nota>Tabularium residens (MCP super TCP). Refectio: pkill
+      tabulariumd. Servus_mcp QUOQUE est - sodalitas secundaria
+      (etiam=) in documentis censūs indicibilis. Veritas eius:
+      #annales-tabularii.</nota>
+  </daemon>
+
+  <daemon nomen="#legatus">
+    <adhibet ad="#silva"/>
+    <nota>LSP residens + legati MCP. CAVE: promptuarium
+      plagularum capitis numquam revalidat (01KZ6GH88Z) -
+      examen frigidum auctoritas post editiones capitum.</nota>
+  </daemon>
+
+  <instrumentum-lineae nomen="#canon-examen">
+    <adhibet ad="#canon"/>
+    <adhibet ad="#stml"/>
+    <nota>Iudex documentorum per registrum (canones.registrum in
+      radice). Exitus 2 = NIHIL iudicatum, defectus non salus.</nota>
+  </instrumentum-lineae>
+
+  <instrumentum-lineae nomen="#natura-examen">
+    <adhibet ad="#natura"/>
+    <adhibet ad="#canon"/>
+    <nota>Porta celeris (0.03s contra visus 14s), uncus
+      natura-custos eam ignit in *.genera.</nota>
+  </instrumentum-lineae>
+
+  <instrumentum-lineae nomen="#aedilis">
+    <adhibet ad="#silva"/>
+    <nota>Stratum aedificationis: clausura inclusionum, --partes,
+      indices generati.</nota>
+  </instrumentum-lineae>
+
+  <!-- ============ NORMAE (conventiones domus) ============ -->
+
+  <norma nomen="#norma-vexillorum" titulus="vexilla compilationis"
+    status-vigor="vigens">
+    <nota>MESOFACTUM: -pedantic -Wall -Wextra -Werror -Wconversion
+      -Wsign-conversion -Wcast-qual -Wstrict-prototypes
+      -Wmissing-prototypes -Wwrite-strings. Propter #perennitas
+      (relatione carens - vide MESSEM).</nota>
+  </norma>
+
+  <norma nomen="#norma-latinitatis" titulus="latinitas nominum"
+    status-vigor="vigens">
+    <nota>Identificatores, commenta, nuntii Latine; verba
+      latina.h IDENTIFICATORES VETITI (nomen, casus, per...).
+      Propter #perennitas et #intellectus.</nota>
+  </norma>
+
+  <norma nomen="#norma-plagularum-privatarum"
+    titulus="plagulae Franis numquam committuntur"
+    status-vigor="vigens">
+    <nota>MESOFACTUM: FAQ.md, gesta/annales/forum.jsonl,
+      gesta/annales/tabula.md, gesta/annales/tabularium.jsonl.
+      Additio explicita per viam, numquam git add -A.</nota>
+  </norma>
+
+  <norma nomen="#metamodulus" titulus="METAMODULUS - forma naturae"
+    status-vigor="vigens" normat="#natura">
+    <nota>natura/METAMODULUS.md: par.8 contractus lectoris, par.9
+      doctrina. Tabula par.3 GENERATA - natura.canon fons, numquam
+      tabula ipsa editur.</nota>
+  </norma>
+
+  <!-- ============ OPERA SCRIPTA (documentatio!) ============ -->
+
+  <manuale nomen="#claude-md">
+    <nota>CLAUDE.md radicis: onboarding agentis - quomodo hic
+      laboretur. Stratum mesofactorum eius putrescit citissime
+      (hoc census illud stratum suscipere debet).</nota>
+  </manuale>
+
+  <dictionarium nomen="#index-naturae">
+    <nota>natura/INDEX.md, GENERATUM per visus - numquam manu.
+      Veritas: corpus generum; hoc proiectio inspectionis.</nota>
+  </dictionarium>
+
+  <!-- ============ CETERA ============ -->
+
+  <systema-unixiforme nomen="#vps-debianum">
+    <nota>Servus villae (administratio remota). MESSIS: genus
+      MACHINAE deest - systema dicibile, ferrum non.</nota>
+  </systema-unixiforme>
+
+  <clavis-privata nomen="#clavis-vps">
+    <nota>Clavis SSH ad VPS. NUMQUAM in repositorio; arca
+      (daemon secretorum, 01KYAMMMF58F) domum futuram dabit.</nota>
+  </clavis-privata>
+
+  <acta nomen="#annales-tabularii">
+    <nota>gesta/annales/tabularium.jsonl - VERITAS committenda;
+      .db proiectio refectibilis. Frigide: ./gesta/frigida.sh.</nota>
+  </acta>
+
+  <artefactum-aedificationis nomen="#monolithus-canonum">
+    <nota>natura/cocta/individua.canon, generatum ex corpore.
+      L13 adhuc stat: veritas_sua corpus nominare nequit
+      (clausura ad statum programmatis clausa).</nota>
+  </artefactum-aedificationis>
+
+  <applicatio nomen="#claude-code">
+    <nota>Agens aedificans (Fable 5 intus). Minister machinalis
+      genus PARCATUM (01KZFM3GW0) - interea applicatio, quod
+      verum sed tenue est.</nota>
+  </applicatio>
+
+  <persona nomen="#fran">
+    <nota>Auctor respondens operum omnium; solus homo censūs.
+      Parentela eius extra documentum iacet (ut radix).</nota>
+  </persona>
+
+  <!-- ============ MESSIS AMBULATIONIS (compendium) ============
+       Familia dependentiae DIVES: dependet-ex/adhibet 11 res
+       ligant. Familia iustificationis PAUPER: causat singulare
+       (3 res iustificatae), pendet-ex causis solis, relatio
+       'propter' universalis DEEST - orbitas plena in relatu.
+       Cetera: genus machinae deest; proiectum/inceptum deest;
+       citatio trans documenta deest (duplicatum #c); etiam= in
+       documentis deest (tabulariumd bis-generis); causa
+       contentum proprium non habet (nota sola). -->
+
+</individua>
