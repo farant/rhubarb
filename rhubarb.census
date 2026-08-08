@@ -15,13 +15,11 @@
 
   <!-- ============ RADIX ET FINES (spina) ============ -->
 
-  <causa-finalis nomen="#instauratio">
-    <nota>Radix censūs: civilizationem catholicam instaurare per
-      opera quae saecula durent. PARENTELA EXTRA DOCUMENTUM -
-      causa eius extra hoc documentum iacet (RM 21.2).</nota>
-  </causa-finalis>
+  <causa-finalis nomen="#instauratio" extra-ordinem="verum"
+    contentum="Civilizationem catholicam instaurare per opera quae saecula durent."/>
 
-  <causa-finalis nomen="#perennitas">
+  <causa-finalis nomen="#perennitas"
+    contentum="Opera sine putredine: nullae dependentiae externae, bibliothecae propriae, C89 quia stabile manet.">
     <pendet-ex ad="#instauratio"/>
     <causat ad="#c"/>
     <causat ad="#piscina"/>
@@ -30,11 +28,10 @@
     <causat ad="#canon"/>
     <causat ad="#norma-vexillorum"/>
     <causat ad="#norma-latinitatis"/>
-    <nota>Opera sine putredine: nullae dependentiae externae,
-      bibliothecae propriae, C89 electum quia stabile manet.</nota>
   </causa-finalis>
 
-  <causa-finalis nomen="#intellectus">
+  <causa-finalis nomen="#intellectus"
+    contentum="Fran codicem OMNEM intellegit - homo est RAG systematis totius; quidquid intellectum servat, hic pendet.">
     <pendet-ex ad="#instauratio"/>
     <causat ad="#claude-md"/>
     <causat ad="#index-naturae"/>
@@ -43,11 +40,10 @@
     <causat ad="#norma-latinitatis"/>
     <causat ad="#norma-plagularum-privatarum"/>
     <causat ad="#annales-tabularii"/>
-    <nota>Fran codicem OMNEM intellegit - homo est RAG systematis
-      totius; quidquid intellectum servat, hic pendet.</nota>
   </causa-finalis>
 
-  <causa-finalis nomen="#dominium">
+  <causa-finalis nomen="#dominium"
+    contentum="Machinae nostrae: LSP proprium, analysta proprius, instrumenta propria - fiducia crescens in apparatu domus.">
     <pendet-ex ad="#instauratio"/>
     <causat ad="#silva"/>
     <causat ad="#legatus"/>
@@ -59,8 +55,6 @@
     <causat ad="#clavis-vps"/>
     <causat ad="#monolithus-canonum"/>
     <causat ad="#claude-code"/>
-    <nota>Machinae nostrae: LSP proprium, analysta proprius,
-      instrumenta propria - fiducia crescens in apparatu domus.</nota>
   </causa-finalis>
 
   <!-- ============ LINGUA ============ -->
@@ -99,13 +93,8 @@
   <bibliotheca nomen="#natura" scripta-in="#c">
     <dependet-ex ad="#stml"/>
     <dependet-ex ad="#canon"/>
-    <nota>MESOFACTA (2026-08-08, numeri hi putrescunt primi -
-      QUISQUE mensuratus, non memoria haustus): exemplaria 34
-      (ls natura/*.genera), genera 187 (grep -c '&lt;genus '),
-      canones in cocta/ 35 (ls natura/cocta/*.canon), individua
-      in semina 113. CAVE: natura_canones.sh 'canones 36' dicit
-      dum disci 35 sunt - numerus instrumenti proprius uno
-      errat (quaestio 01KZGX4ED0).</nota>
+    <nota>Numeri eius NON hic iacent sed in signis infra:
+      quisque viam suam fert, ideo re-examinari potest.</nota>
   </bibliotheca>
 
   <bibliotheca nomen="#silva" scripta-in="#c">
@@ -156,33 +145,52 @@
   <!-- ============ NORMAE (conventiones domus) ============ -->
 
   <norma nomen="#norma-vexillorum" titulus="vexilla compilationis"
-    status-vigor="vigens">
-    <nota>MESOFACTUM: -pedantic -Wall -Wextra -Werror -Wconversion
-      -Wsign-conversion -Wcast-qual -Wstrict-prototypes
-      -Wmissing-prototypes -Wwrite-strings.</nota>
-  </norma>
+    status-vigor="vigens"
+    contentum="-pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings"/>
 
   <norma nomen="#norma-latinitatis" titulus="latinitas nominum"
-    status-vigor="vigens">
-    <nota>Identificatores, commenta, nuntii Latine; verba
-      latina.h IDENTIFICATORES VETITI (nomen, casus, per...).
-      DUOS fines habet (superdeterminata: RM 18) - vide spinam.</nota>
+    status-vigor="vigens"
+    contentum="Identificatores, commenta, nuntii Latine; verba latina.h identificatores VETITI (nomen, casus, per, magnitudo, structura...).">
+    <nota>Duos fines habet (superdeterminata: RM 18) - vide
+      spinam.</nota>
   </norma>
 
   <norma nomen="#norma-plagularum-privatarum"
     titulus="plagulae Franis numquam committuntur"
-    status-vigor="vigens">
-    <nota>MESOFACTUM: FAQ.md, gesta/annales/forum.jsonl,
-      gesta/annales/tabula.md, gesta/annales/tabularium.jsonl.
-      Additio explicita per viam, numquam git add -A.</nota>
-  </norma>
+    status-vigor="vigens"
+    contentum="FAQ.md, gesta/annales/forum.jsonl, gesta/annales/tabula.md, gesta/annales/tabularium.jsonl: additio explicita per viam, numquam 'git add -A'."/>
 
   <norma nomen="#metamodulus" titulus="METAMODULUS - forma naturae"
-    status-vigor="vigens" normat="#natura">
-    <nota>natura/METAMODULUS.md: par.8 contractus lectoris, par.9
-      doctrina. Tabula par.3 GENERATA - natura.canon fons, numquam
-      tabula ipsa editur.</nota>
-  </norma>
+    status-vigor="vigens" normat="#natura"
+    contentum="Forma exemplarium naturae: par.8 contractus lectoris (regulae XVII), par.9 doctrina. Tabula par.3 GENERATA - natura.canon fons, numquam tabula ipsa editur."/>
+
+  <!-- ============ PERICULA (laquei quos domus novit) ======= -->
+
+  <periculum nomen="#periculum-chordae"
+    contentum="Functiones bibliothecae vulgaris in chorda adhibitae: chorda mensuram fert nec nullo terminatur, ideo strcpy/strlen silenter corrumpunt."
+    probabilitas="0.6" gravitas="gravis" minatur="#claude-code">
+    <minuitur-per ad="#claude-md"/>
+  </periculum>
+
+  <periculum nomen="#periculum-promptuarii-legati"
+    contentum="Legatus capita promptuaria numquam revalidat: post caput editum verdictum REICE falsum reddit et 'renovare' se recentem dicit."
+    probabilitas="0.7" gravitas="levis" minatur="#claude-code">
+    <minuitur-per ad="#claude-md"/>
+    <nota>Mensuratum 01KZ6GH88Z. Remedium: examen frigidum
+      auctoritas est post editiones capitum.</nota>
+  </periculum>
+
+  <periculum nomen="#periculum-exitus-secundi"
+    contentum="Porta quae NIHIL probavit exitum 2 reddit: qui solum exitum 0 spectat fiduciam falsam accipit - porta vacua fiduciam FABRICAT."
+    probabilitas="0.4" gravitas="gravis" minatur="#claude-code">
+    <minuitur-per ad="#claude-md"/>
+  </periculum>
+
+  <periculum nomen="#periculum-additionis-totius"
+    contentum="'git add -A' plagulas Franis privatas committit (FAQ.md, gesta/annales/*) - damnum in acta publica transit."
+    probabilitas="0.3" gravitas="gravis" minatur="#fran">
+    <minuitur-per ad="#norma-plagularum-privatarum"/>
+  </periculum>
 
   <!-- ============ OPERA SCRIPTA (documentatio!) ============ -->
 
@@ -228,19 +236,73 @@
 
   <persona nomen="#fran">
     <nota>Auctor respondens operum omnium; solus homo censūs.
-      PARENTELA EXTRA DOCUMENTUM - non projecto servit sed
-      proiectum ei.</nota>
+      PARENTELA EXTRA DOCUMENTUM - non proiecto servit sed
+      proiectum ei. INVENTUM AMBULATIONIS: disciplina KAOS omnia
+      MEDIA esse praesumit, sed inceptum PARTICIPES quoque habet,
+      qui fini non serviunt sed eum persequuntur. Relatio vera
+      (participatio) genus 'proiectum' exspectat - parcum
+      01KZGYS87E.</nota>
   </persona>
 
+  <!-- ====== SIGNA: numeri viam suam ferentes (ancorae) ======
+       Signum = observationis species quam instrumentum dat.
+       'via' methodum fert, ideo quisque numerus RE-EXAMINARI
+       potest - lectio ambulationis XVI: duo ex quattuor
+       numeris post horam falsi erant, quia ex memoria
+       scripti non mensurati. -->
+
+  <signum nomen="#mensura-exemplarium" de="#natura"
+    contentum="exemplaria 34" facta="2026-08-08"
+    via="ls natura/*.genera | wc -l"/>
+
+  <signum nomen="#mensura-generum" de="#natura"
+    contentum="genera 187" facta="2026-08-08"
+    via="grep -c '&lt;genus ' natura/*.genera | awk -F: '{s+=$2} END {print s}'"/>
+
+  <signum nomen="#mensura-canonum" de="#natura"
+    contentum="canones in cocta/ 35" facta="2026-08-08"
+    via="ls natura/cocta/*.canon | wc -l">
+    <nota>CAVE: natura_canones.sh 'canones 36' nuntiat dum in
+      disco 35 sunt - numerus instrumenti proprius uno errat
+      (quaestio 01KZGX4ED0). Numerus hic DISCI est.</nota>
+  </signum>
+
+  <signum nomen="#mensura-seminum" de="#natura"
+    contentum="individua in semina 113" facta="2026-08-08"
+    via="grep -c 'nomen=&quot;#' natura/cocta/semina.census"/>
+
   <!-- ============ MESSIS AMBULATIONIS (compendium) ============
-       Prima contactu (a791638): familia iustificationis PAUPER
-       mensurata - causat singulare, 3/23 iustificatae, orbi 19.
-       DITATA 2026-08-08: causat multiplex (lege editio_de/L12),
-       spina omnia iustificat, orbi 0 (exempti 2 declarati:
-       radix + persona). Custos: ./tools/census_orbi.sh
-       Manent: genus machinae deest; proiectum/inceptum deest;
-       citatio trans documenta deest (duplicatum #c); etiam= in
-       documentis deest (tabulariumd bis-generis); causa
-       contentum proprium non habet (nota sola). -->
+
+       I. Prima contactu (a791638): familia iustificationis
+       PAUPER - causat singulare, 3/23 iustificatae, orbi 19.
+
+       II. DITATA: causat multiplex (lege editio_de/L12), spina
+       omnia iustificat, orbi 0.
+
+       III. AUDITUS (111ed81): ex quattuor numeris DUO falsi
+       post horam - non quia res mutatae sint sed quia ex
+       memoria scripti. Unde signa cum 'via': numerus sine
+       methodo sua re-examinari non potest, ideo tacite
+       putrescit.
+
+       IV. SEGES PROSAE (haec editio): contentum quater deerat -
+       causa, norma, observatio, periculum propositionem suam
+       dicere non poterant (lacuna L5 in strata causale et
+       epistemicum lapsa, quater mensurata). Addita. Praeterea:
+       extra_ordinem in causa (terminus DECLARATUS contra
+       lacunam - chorda magica in custode mortua); via in
+       observatione (ancora); veritas_sua aperta (L13, quater
+       hic mensurata). Laquei per PERICULUM dicti - candidatus
+       'cautio' mortuus in contactu, minuitur_per iam
+       'cautiones' vocabatur. Candidatus 'mensuratio' mortuus
+       quoque: nomen apud fundamentum sedebat (custos invenit
+       quod inspectio mea truncata celaverat - eadem lectio ac
+       peregrini '|...').
+
+       MANENT: machina (ferrum sub systemate), uncus, proiectum
+       + participatio (parcum 01KZGYS87E); citatio trans
+       documenta (duplicatum #c); etiam= in documentis
+       (tabulariumd daemon ET servus_mcp).
+       Custos: ./tools/census_orbi.sh -->
 
 </individua>

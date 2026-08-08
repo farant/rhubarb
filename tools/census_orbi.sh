@@ -2,8 +2,13 @@
 # census_orbi.sh - orbos in censu invenire (disciplina KAOS)
 #
 # Res ORBA est nisi: (a) a causat citata, (b) causa cum pendet-ex
-# (spinae ancorata), aut (c) 'PARENTELA EXTRA DOCUMENTUM' in nota
-# fert (exemptio DECLARATA - radix, personae).
+# (spinae ancorata), (c) PRAEDICATA - de= aut minatur= ad rem
+# aliam ferens, aut (d) exempta DECLARATE (extra-ordinem="verum"
+# in causa, aut 'PARENTELA EXTRA DOCUMENTUM' in nota).
+#
+# CUR (c): disciplina KAOS omnia MEDIA praesumit, sed census
+# etiam PRAEDICATA fert - signum de re, periculum rei minans.
+# Sententia de re ancorata orba non est: subiecto suo pendet.
 #
 # Usus: ./tools/census_orbi.sh <via.census>
 # Exitus: 0 = nihil orbum; 1 = orbi nominati; 2 = NIHIL lectum
@@ -35,7 +40,10 @@ awk '
     /<pendet-ex ad="#/ || /pendet-ex="#/ {
         if (praesens != "") ancorata[praesens] = 1
     }
-    /PARENTELA EXTRA DOCUMENTUM/ {
+    /<de ad="#/ || /[ \t]de="#/ || /minatur="#/ || /<minatur ad="#/ {
+        if (praesens != "") praedicata[praesens] = 1
+    }
+    /PARENTELA EXTRA DOCUMENTUM/ || /extra-ordinem="verum"/ {
         if (praesens != "") exempta[praesens] = 1
     }
     END {
@@ -44,17 +52,18 @@ awk '
         if (quot == 0) exit 2
         for (n in declarata) {
             if (!(n in iustificata) && !(n in ancorata) \
-                && !(n in exempta)) {
+                && !(n in praedicata) && !(n in exempta)) {
                 printf "ORBUM: #%s (linea %d)\n", n, declarata[n]
                 orbae++
             }
         }
-        ni = 0; na = 0; ne = 0
+        ni = 0; na = 0; np = 0; ne = 0
         for (n in iustificata) if (n in declarata) ni++
         for (n in ancorata) na++
+        for (n in praedicata) np++
         for (n in exempta) ne++
-        printf "census_orbi: res %d / iustificatae %d / ancoratae %d / exemptae %d / ORBAE %d\n", \
-            quot, ni, na, ne, orbae
+        printf "census_orbi: res %d / iustificatae %d / ancoratae %d / praedicata %d / exemptae %d / ORBAE %d\n", \
+            quot, ni, na, np, ne, orbae
         exit (orbae > 0 ? 1 : 0)
     }
 ' "$si_via"
