@@ -29,6 +29,7 @@
     <causat ad="#stml"/>
     <causat ad="#canon"/>
     <causat ad="#norma-vexillorum"/>
+    <causat ad="#norma-latinitatis"/>
     <nota>Opera sine putredine: nullae dependentiae externae,
       bibliothecae propriae, C89 electum quia stabile manet.</nota>
   </causa-finalis>
@@ -98,9 +99,13 @@
   <bibliotheca nomen="#natura" scripta-in="#c">
     <dependet-ex ad="#stml"/>
     <dependet-ex ad="#canon"/>
-    <nota>MESOFACTUM: exemplaria 34, genera 187, residentes
-      lexici 385, canones cocti 36 (2026-08-08 - numeri hi
-      putrescunt primi).</nota>
+    <nota>MESOFACTA (2026-08-08, numeri hi putrescunt primi -
+      QUISQUE mensuratus, non memoria haustus): exemplaria 34
+      (ls natura/*.genera), genera 187 (grep -c '&lt;genus '),
+      canones in cocta/ 35 (ls natura/cocta/*.canon), individua
+      in semina 113. CAVE: natura_canones.sh 'canones 36' dicit
+      dum disci 35 sunt - numerus instrumenti proprius uno
+      errat (quaestio 01KZGX4ED0).</nota>
   </bibliotheca>
 
   <bibliotheca nomen="#silva" scripta-in="#c">
@@ -154,15 +159,14 @@
     status-vigor="vigens">
     <nota>MESOFACTUM: -pedantic -Wall -Wextra -Werror -Wconversion
       -Wsign-conversion -Wcast-qual -Wstrict-prototypes
-      -Wmissing-prototypes -Wwrite-strings. Propter #perennitas
-      (relatione carens - vide MESSEM).</nota>
+      -Wmissing-prototypes -Wwrite-strings.</nota>
   </norma>
 
   <norma nomen="#norma-latinitatis" titulus="latinitas nominum"
     status-vigor="vigens">
     <nota>Identificatores, commenta, nuntii Latine; verba
       latina.h IDENTIFICATORES VETITI (nomen, casus, per...).
-      Propter #perennitas et #intellectus.</nota>
+      DUOS fines habet (superdeterminata: RM 18) - vide spinam.</nota>
   </norma>
 
   <norma nomen="#norma-plagularum-privatarum"
