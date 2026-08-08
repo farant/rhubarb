@@ -244,6 +244,89 @@
       01KZGYS87E.</nota>
   </persona>
 
+  <!-- ============ ARS NATURAE ET PRAECEPTA EIUS ============
+       Doctrina domus de generibus condendis: non norma (nemo
+       eam promulgavit) sed PERITIA, quae participando traditur
+       et experientia emendatur. Delectus tantum - praecepta
+       plena in natura/METAMODULUS.md par.9 et natura/RATIO.md.
+       Quodque praeceptum CASUM SUUM fert: sententia sine casu
+       maxima est, cui quisque adnuit et quam quisque neglegit. -->
+
+  <peritia-communis nomen="#ars-naturae"
+    modus-traditionis="utroque" scribi-potest="verum"
+    status-vita="vigens" de="#natura">
+    <nota>Ars genera condendi: in domo residet (Fran + agentes +
+      corpus ipsum), in nullo membro tota - sessio quaeque
+      partem tenet, worklog reliquum. RESIDET-IN vacuum: domus
+      organizatio non est (universitas personarum requiritur),
+      lacuna in ambulatione documentationis iam mensurata.</nota>
+  </peritia-communis>
+
+  <praeceptum nomen="#praeceptum-realitatis" pertinet-ad="#ars-naturae"
+    contentum="Nomen condere ONTOLOGICUM est, non pragmaticum: quaere 'estne res vera?', numquam 'quid hoc nobis praestat?'"
+    tendit-ad="#intellectus">
+    <natum-ex ad="#norma-pieper"/>
+  </praeceptum>
+
+  <praeceptum nomen="#praeceptum-dividendi" pertinet-ad="#ars-naturae"
+    contentum="Dubitans DIVIDE: duo genera falsa emendari possunt, unum genus duas res confundens non potest."
+    tendit-ad="#intellectus"/>
+
+  <praeceptum nomen="#praeceptum-addressabilitatis"
+    pertinet-ad="#ars-naturae"
+    contentum="Quidquid individua habet quae ID suo alloquereris genus meretur. Relationes ID non accipiunt - relata accipiunt."
+    tendit-ad="#intellectus">
+    <nota>Franis praeceptum; omnem refusionem priorem reddit.</nota>
+  </praeceptum>
+
+  <praeceptum nomen="#praeceptum-legis-secundae"
+    pertinet-ad="#ars-naturae"
+    contentum="Una occurrentia observatio est, duae lex: ne condas ex uno casu, ne differas post duos."
+    tendit-ad="#intellectus"/>
+
+  <praeceptum nomen="#praeceptum-ambulandi" pertinet-ad="#ars-naturae"
+    contentum="Candidatos parca, deinde AMBULA: quod sola cogitatione superest probatum non est."
+    tendit-ad="#intellectus">
+    <natum-ex ad="#casus-actionis-mortuae"/>
+  </praeceptum>
+
+  <praeceptum nomen="#praeceptum-collisionis" pertinet-ad="#ars-naturae"
+    contentum="Nomina ANTE ambulationem collide: qui post scriptionem probat cum nomine iam amato litigat."
+    tendit-ad="#intellectus">
+    <natum-ex ad="#casus-truncationis"/>
+  </praeceptum>
+
+  <praeceptum nomen="#praeceptum-dimensionum" pertinet-ad="#ars-naturae"
+    contentum="Dimensiones ante nomina: divisiones LOCALES sunt, mutationes metamoduli GLOBALES."
+    tendit-ad="#perennitas"/>
+
+  <praeceptum nomen="#praeceptum-absentiae-structuralis"
+    pertinet-ad="#ars-naturae"
+    contentum="Plura specialia, nullum generale = absentia structuralis. Quater solutum (programma, acta, versio, fundamentum); ad duas occurrentias RECTE recusatum."
+    tendit-ad="#intellectus"/>
+
+  <praeceptum nomen="#praeceptum-adiungendi" pertinet-ad="#ars-naturae"
+    contentum="Noli promovere, ADIUNGE: res quae sub-res acquirit genus FRATREM cum relatione meretur, non promotionem. Probatio: praedicatur de eo, an tantum ad eum refertur?"
+    tendit-ad="#intellectus"/>
+
+  <praeceptum nomen="#praeceptum-refusionis" pertinet-ad="#ars-naturae"
+    contentum="Cum recusas, SCRIBE CONDICIONEM quae sententiam vertat: refusio cum condicione sua mandatum stans est, non via clausa."
+    tendit-ad="#intellectus"/>
+
+  <norma nomen="#norma-pieper" titulus="Pieper: res ut sunt"
+    status-vigor="vigens"
+    contentum="Describe res SICUT SUNT. Schema ad usum unum factum adulatio est et in casu N+1 frangitur."/>
+
+  <!-- casus qui praecepta coegerunt: OBSERVATIONES sunt
+       (candidatus 'casus' mortuus in contactu - notitia rei
+       singularis quae iudicium fundat iam observatio est) -->
+
+  <observatio nomen="#casus-actionis-mortuae"
+    contentum="Candidati 'actio' et 'administrator' cogitatione superfuerunt, ambulatione perierunt - alter relatione iam exsistente tectus, alter proprietatibus gubernationis."/>
+
+  <observatio nomen="#casus-truncationis"
+    contentum="Inspectio nominis per 'head -c 60' truncata tag '[species:...]' abscidit: candidatus 'mensuratio' liber visus est dum apud fundamentum sedebat. Custos generum invenit quod inspectio celaverat - eadem lectio ac peregrini '|...'."/>
+
   <!-- ====== SIGNA: numeri viam suam ferentes (ancorae) ======
        Signum = observationis species quam instrumentum dat.
        'via' methodum fert, ideo quisque numerus RE-EXAMINARI
@@ -256,8 +339,20 @@
     via="ls natura/*.genera | wc -l"/>
 
   <signum nomen="#mensura-generum" de="#natura"
-    contentum="genera 187" facta="2026-08-08"
-    via="grep -c '&lt;genus ' natura/*.genera | awk -F: '{s+=$2} END {print s}'"/>
+    contentum="genera 188" facta="2026-08-08"
+    via="bin/natura_examen | tail -1"/>
+
+  <signum nomen="#mensura-rerum" de="#natura"
+    contentum="res lexici 385" facta="2026-08-08"
+    via="bin/natura_examen | tail -1">
+    <nota>LECTIO DE ANCORIS: hic numerus in auditu primo
+      'inverificabilis' damnatus est quia VIA FALSA quaesitus
+      ('grep -c &lt;res ' nihil invenit - lexicon species et
+      individua fert, non tag 'res'). Numerus verus erat;
+      methodus mea falsa. Ancora cum via prava falsum negativum
+      parit: sententiam VERAM damnat, quod peius est quam
+      numerus non-ancoratus, quia fiduciam speciem habet.</nota>
+  </signum>
 
   <signum nomen="#mensura-canonum" de="#natura"
     contentum="canones in cocta/ 35" facta="2026-08-08"
@@ -298,6 +393,19 @@
        quoque: nomen apud fundamentum sedebat (custos invenit
        quod inspectio mea truncata celaverat - eadem lectio ac
        peregrini '|...').
+
+       V. DOCTRINA ENROLLATA: ars naturae ut PERITIA COMMUNIS
+       (non norma - nemo eam promulgavit; participando
+       traditur), praecepta X cum casibus suis. Genus
+       'praeceptum' natum: a norma differt origine et vi (norma
+       promulgatur et indice citatur, praeceptum DISCITUR).
+       Candidatus 'casus' mortuus in contactu - notitia rei
+       singularis quae iudicium fundat IAM observatio est.
+       Custos quoque emendatus: indicem marginum crescentem
+       tenere portam lente dilatabat, ideo nunc PERTINENTIAM
+       veram computat (margines non diriguntur, radix
+       declarata). Culpa plantata probata: signum ad rem orbam
+       ligatum ipsum natat - quod custos vetus admisisset.
 
        MANENT: machina (ferrum sub systemate), uncus, proiectum
        + participatio (parcum 01KZGYS87E); citatio trans

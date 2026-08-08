@@ -7,6 +7,7 @@
     <liberum nomen="gradus-assensus"/>
     <liberum nomen="fons"/>
     <liberum nomen="observatio"/>
+    <liberum nomen="praeceptum"/>
     <liberum nomen="iudicium"/>
     <liberum nomen="annotatio"/>
     <liberum nomen="periculum"/>
@@ -125,6 +126,37 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="observatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="praeceptum">
+    <glossa lingua="en">A precept of an art: a briefly stated rule
+    that directs the practitioner in cases no specification
+    covers - skill compressed into a sentence. It differs from a
+    standard in origin and force: a standard is promulgated and
+    cited by index, a precept is LEARNED and corrected by
+    experience; breaking a standard makes you non-conforming,
+    ignoring a precept makes you a poor craftsman.</glossa>
+    <glossa lingua="fr">Un précepte d'un art : une règle brièvement
+    énoncée qui dirige le praticien dans les cas qu'aucune
+    spécification ne couvre - le savoir-faire condensé en une
+    phrase. Il diffère d'une norme par l'origine et la force : la
+    norme est promulguée et citée par son indice, le précepte
+    s'APPREND et se corrige par l'expérience ; enfreindre une
+    norme rend non conforme, négliger un précepte fait le mauvais
+    artisan.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="pertinet-ad" genus="referentia"/>
+    <attributum nomen="tendit-ad" genus="referentia"/>
+    <liberum nomen="natum-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="natum-ex" intra="praeceptum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="praeceptum">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -1348,17 +1380,17 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="gradus-assensus fons observatio iudicium annotatio periculum ignotum
-           investigatio secretum peritia-communis attributio fundamentum
-           scientia opinio fides suspicio dubitatio fons-scriptus fons-mensurae
-           fons-testimonii corpus-institutionis symptoma signum testimonium
-           diagnosis aestimatio praedictio sententia-iudicis ignotum-notum
-           ignotum-ignotum indeterminatum amissum retentum impertinens controversum
-           investigatio-praeventiva inquisitio-forensis recensio-post-mortem
-           clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis
-           notitia-pascui ars-officinae memoria-operis autopsia mensuratio
-           documentum-scriptum auctoritas-testis illatio comparatio-stili
-           coniectura-periti praesumptio"/>
+    super="gradus-assensus fons observatio praeceptum iudicium annotatio
+           periculum ignotum investigatio secretum peritia-communis attributio
+           fundamentum scientia opinio fides suspicio dubitatio fons-scriptus
+           fons-mensurae fons-testimonii corpus-institutionis symptoma signum
+           testimonium diagnosis aestimatio praedictio sententia-iudicis
+           ignotum-notum ignotum-ignotum indeterminatum amissum retentum
+           impertinens controversum investigatio-praeventiva inquisitio-forensis
+           recensio-post-mortem clavis-privata verbum-arcanum secretum-negotii
+           sigillum-confessionis notitia-pascui ars-officinae memoria-operis
+           autopsia mensuratio documentum-scriptum auctoritas-testis illatio
+           comparatio-stili coniectura-periti praesumptio"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -1367,6 +1399,7 @@
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
   <citatio nomen="observatio-ex-fonte" attributum="ex-fonte" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="observatio"/>
+  <citatio nomen="praeceptum-pertinet-ad" attributum="pertinet-ad" ad="peritia-communis notitia-pascui ars-officinae memoria-operis/nomen" super="praeceptum"/>
   <citatio nomen="iudicium-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="iudicium"/>
   <citatio nomen="iudicium-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="iudicium/fundatur-in"/>
   <citatio nomen="iudicium-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="iudicium/ex-fonte"/>

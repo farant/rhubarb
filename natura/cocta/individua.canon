@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1616 sedibus relationum huius canonis, 1158
+  RELATIONES - ex 1619 sedibus relationum huius canonis, 1159
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  458 nomine solo iudicantur, id est sicut in canone per
+  460 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    451 petitum apertum habent (ad='*') - clavis nulla est;
+    453 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -131,6 +131,7 @@
     <liberum nomen="gradus-assensus"/>
     <liberum nomen="fons"/>
     <liberum nomen="observatio"/>
+    <liberum nomen="praeceptum"/>
     <liberum nomen="iudicium"/>
     <liberum nomen="annotatio"/>
     <liberum nomen="periculum"/>
@@ -3469,6 +3470,37 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="observatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="praeceptum">
+    <glossa lingua="en">A precept of an art: a briefly stated rule
+    that directs the practitioner in cases no specification
+    covers - skill compressed into a sentence. It differs from a
+    standard in origin and force: a standard is promulgated and
+    cited by index, a precept is LEARNED and corrected by
+    experience; breaking a standard makes you non-conforming,
+    ignoring a precept makes you a poor craftsman.</glossa>
+    <glossa lingua="fr">Un précepte d'un art : une règle brièvement
+    énoncée qui dirige le praticien dans les cas qu'aucune
+    spécification ne couvre - le savoir-faire condensé en une
+    phrase. Il diffère d'une norme par l'origine et la force : la
+    norme est promulguée et citée par son indice, le précepte
+    s'APPREND et se corrige par l'expérience ; enfreindre une
+    norme rend non conforme, négliger un précepte fait le mauvais
+    artisan.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="pertinet-ad" genus="referentia"/>
+    <attributum nomen="tendit-ad" genus="referentia"/>
+    <liberum nomen="natum-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="natum-ex" intra="praeceptum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="praeceptum">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -14468,18 +14500,19 @@
            assertio commentarium identificator programma instrumentum-aedificationis
            postulatum facultas probatio vitium debitum-technicum complicatio
            consilium depravatio interventio forma-datorum schema-identificandi
-           gradus-assensus fons observatio iudicium annotatio periculum ignotum
-           investigatio secretum peritia-communis attributio fundamentum
-           lingua-programmandi lingua-iussuum versio-linguae implementatio-linguae
-           verbum-clavis locus inscriptio iurisdictio aedificium magnitudo-mensurabilis
-           unitas-mensurae quantitas incertitudo instrumentum-mensurae morbus
-           norma lex classis-normativa fictio-iuris obligatio contractus
-           licentia tributum titulus iussum fiducia petitio delegatio tractatus
-           limitatio portio-communis ambitus pensum incidens processus opus-scriptum
-           expressio editio codex periodicum fasciculus universitas organizatio
-           colonia persona-iuridica officium corpus-normans societas magistratus
-           persona substantia-chemica medicamentum coctura interactio plagula-computatralis
-           plagula-fontis scriptum-exsecutabile plagula-notationis plagula-figurationis
+           gradus-assensus fons observatio praeceptum iudicium annotatio
+           periculum ignotum investigatio secretum peritia-communis attributio
+           fundamentum lingua-programmandi lingua-iussuum versio-linguae
+           implementatio-linguae verbum-clavis locus inscriptio iurisdictio
+           aedificium magnitudo-mensurabilis unitas-mensurae quantitas incertitudo
+           instrumentum-mensurae morbus norma lex classis-normativa fictio-iuris
+           obligatio contractus licentia tributum titulus iussum fiducia
+           petitio delegatio tractatus limitatio portio-communis ambitus
+           pensum incidens processus opus-scriptum expressio editio codex
+           periodicum fasciculus universitas organizatio colonia persona-iuridica
+           officium corpus-normans societas magistratus persona substantia-chemica
+           medicamentum coctura interactio plagula-computatralis plagula-fontis
+           scriptum-exsecutabile plagula-notationis plagula-figurationis
            plagula-datorum plagula-sqlite systema-plagularum directorium
            planta rosaceae rosa malus procedura procedura-automata praescriptum
            gradus-praescripti versio-praescripti index-verificationis schema
@@ -14735,6 +14768,7 @@
   <citatio nomen="schema-identificandi-gignit" attributum="gignit" ad="identificator-baptismalis/nomen" super="schema-identificandi"/>
   <citatio nomen="schema-identificandi-successit" attributum="successit" ad="schema-identificandi uuid ulid isbn isbn-10 isbn-13 issn doi orcid iban e164 gtin uri cas ndc rxnorm numerus-dea/nomen" super="schema-identificandi"/>
   <citatio nomen="observatio-ex-fonte" attributum="ex-fonte" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="observatio"/>
+  <citatio nomen="praeceptum-pertinet-ad" attributum="pertinet-ad" ad="peritia-communis notitia-pascui ars-officinae memoria-operis/nomen" super="praeceptum"/>
   <citatio nomen="iudicium-auctor" attributum="auctor" ad="persona/nomen" super="iudicium"/>
   <citatio nomen="iudicium-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="iudicium"/>
   <citatio nomen="iudicium-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="iudicium/fundatur-in"/>

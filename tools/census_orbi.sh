@@ -1,19 +1,24 @@
 #!/bin/sh
 # census_orbi.sh - orbos in censu invenire (disciplina KAOS)
 #
-# Res ORBA est nisi: (a) a causat citata, (b) causa cum pendet-ex
-# (spinae ancorata), (c) PRAEDICATA - de= aut minatur= ad rem
-# aliam ferens, aut (d) exempta DECLARATE (extra-ordinem="verum"
-# in causa, aut 'PARENTELA EXTRA DOCUMENTUM' in nota).
+# REGULA: nihil natat. Quaeque res per catenam citationum
+# QUAMLIBET ad radicem declaratam pertingere debet; margines
+# NON DIRIGUNTUR - res quae aliam citat ei coniungitur, et
+# quae ab alia citatur pariter.
 #
-# CUR (c): disciplina KAOS omnia MEDIA praesumit, sed census
-# etiam PRAEDICATA fert - signum de re, periculum rei minans.
-# Sententia de re ancorata orba non est: subiecto suo pendet.
+# CUR NON 'a fine iustificata': disciplina KAOS omnia MEDIA
+# praesumit, sed census plura fert - PARTICIPES (qui fini non
+# serviunt sed eum persequuntur), PRAEDICATA (signum de re,
+# periculum rei minans), SODALES (praeceptum artis suae).
+# Indicem nominum marginum crescentem tenere = portam
+# lente dilatare donec nihil vetet. Pertinentia sola regula.
+#
+# RADIX = res 'extra-ordinem="verum"' aut cum 'PARENTELA EXTRA
+# DOCUMENTUM' in nota: TERMINUS DECLARATUS, non lacuna.
 #
 # Usus: ./tools/census_orbi.sh <via.census>
-# Exitus: 0 = nihil orbum; 1 = orbi nominati; 2 = NIHIL lectum
-# (plagula vacua aut sine rebus - defectus portae, non salus).
-# NB: unum ad="#..." per lineam legitur (stilus domus).
+# Exitus: 0 = nihil natat; 1 = orbi nominati; 2 = NIHIL lectum
+# (defectus portae, non salus).
 
 si_via="$1"
 if [ -z "$si_via" ] || [ ! -f "$si_via" ]; then
@@ -22,48 +27,76 @@ if [ -z "$si_via" ] || [ ! -f "$si_via" ]; then
 fi
 
 awk '
-    /nomen="#/ {
-        if (match($0, /nomen="#[^"]*"/)) {
-            n = substr($0, RSTART + 8, RLENGTH - 9)
-            declarata[n] = NR
-            praesens = n
+    {
+        linea = $0
+
+        if (match(linea, /nomen="#[A-Za-z0-9_-]+"/)) {
+            praesens = substr(linea, RSTART + 8, RLENGTH - 9)
+            declarata[praesens] = NR
         }
-    }
-    /<causat ad="#/ || /causat="#/ {
-        if (match($0, /causat( ad)?="#[^"]*"/)) {
-            s = substr($0, RSTART, RLENGTH)
-            sub(/^causat( ad)?="#/, "", s)
-            sub(/"$/, "", s)
-            iustificata[s] = 1
+
+        reliquum = linea
+        while (match(reliquum, /"#[A-Za-z0-9_-]+"/)) {
+            citatum = substr(reliquum, RSTART + 2, RLENGTH - 3)
+            if (praesens != "" && citatum != praesens) {
+                vicini[praesens] = vicini[praesens] " " citatum
+                vicini[citatum] = vicini[citatum] " " praesens
+            }
+            reliquum = substr(reliquum, RSTART + RLENGTH)
         }
-    }
-    /<pendet-ex ad="#/ || /pendet-ex="#/ {
-        if (praesens != "") ancorata[praesens] = 1
-    }
-    /<de ad="#/ || /[ \t]de="#/ || /minatur="#/ || /<minatur ad="#/ {
-        if (praesens != "") praedicata[praesens] = 1
-    }
-    /PARENTELA EXTRA DOCUMENTUM/ || /extra-ordinem="verum"/ {
-        if (praesens != "") exempta[praesens] = 1
+
+        if (linea ~ /extra-ordinem="verum"/ ||
+            linea ~ /PARENTELA EXTRA DOCUMENTUM/) {
+            if (praesens != "") semina[praesens] = 1
+        }
     }
     END {
-        quot = 0; orbae = 0
+        quot = 0
         for (n in declarata) quot++
         if (quot == 0) exit 2
+
+        quot_seminum = 0
+        for (n in semina) {
+            if (n in declarata) {
+                agmen[++cauda] = n
+                tactum[n] = 1
+                quot_seminum++
+            }
+        }
+        if (quot_seminum == 0) {
+            print "census_orbi: RADIX NULLA declarata - " \
+                  "adde extra-ordinem=\"verum\"" > "/dev/stderr"
+            exit 2
+        }
+
+        caput = 0
+        while (caput < cauda) {
+            hic = agmen[++caput]
+            quot_vicinorum = split(vicini[hic], v, " ")
+            for (i = 1; i <= quot_vicinorum; i++) {
+                if (v[i] != "" && !(v[i] in tactum)) {
+                    tactum[v[i]] = 1
+                    agmen[++cauda] = v[i]
+                }
+            }
+        }
+
+        orbae = 0
         for (n in declarata) {
-            if (!(n in iustificata) && !(n in ancorata) \
-                && !(n in praedicata) && !(n in exempta)) {
+            if (!(n in tactum)) {
                 printf "ORBUM: #%s (linea %d)\n", n, declarata[n]
                 orbae++
             }
         }
-        ni = 0; na = 0; np = 0; ne = 0
-        for (n in iustificata) if (n in declarata) ni++
-        for (n in ancorata) na++
-        for (n in praedicata) np++
-        for (n in exempta) ne++
-        printf "census_orbi: res %d / iustificatae %d / ancoratae %d / praedicata %d / exemptae %d / ORBAE %d\n", \
-            quot, ni, na, np, ne, orbae
+
+        pendentes = 0
+        for (n in vicini) if (!(n in declarata)) pendentes++
+
+        printf "census_orbi: res %d / radices %d / pertingentes %d / ORBAE %d\n", \
+            quot, quot_seminum, quot - orbae, orbae
+        if (pendentes > 0)
+            printf "census_orbi: CAVE citationes ad %d nomina non declarata\n", \
+                pendentes
         exit (orbae > 0 ? 1 : 0)
     }
 ' "$si_via"

@@ -296,6 +296,58 @@
 
 </genus>
 
+<genus nomen="praeceptum">
+
+  <definitio>
+    Regula artis breviter dicta quae agentem in casibus non
+    plene descriptis dirigit: peritia in sententiam contracta.
+    A NORMA differt origine et vi - norma promulgatur et indice
+    citatur, praeceptum DISCITUR et experientia emendatur; qui
+    normam violat non conformis est, qui praeceptum neglegit
+    male artem exercet.
+  </definitio>
+
+  <glossa lingua="en">A precept of an art: a briefly stated rule
+    that directs the practitioner in cases no specification
+    covers - skill compressed into a sentence. It differs from a
+    standard in origin and force: a standard is promulgated and
+    cited by index, a precept is LEARNED and corrected by
+    experience; breaking a standard makes you non-conforming,
+    ignoring a precept makes you a poor craftsman.</glossa>
+  <glossa lingua="fr">Un précepte d'un art : une règle brièvement
+    énoncée qui dirige le praticien dans les cas qu'aucune
+    spécification ne couvre - le savoir-faire condensé en une
+    phrase. Il diffère d'une norme par l'origine et la force : la
+    norme est promulguée et citée par son indice, le précepte
+    s'APPREND et se corrige par l'expérience ; enfreindre une
+    norme rend non conforme, négliger un précepte fait le mauvais
+    artisan.</glossa>
+
+  <nota>
+    OCCASIO GRAVIOR QUAM SENTENTIA: praeceptum sine casu suo
+    maxima est, quam quisque adnuens neglegit. 'Casus qui
+    coegit' ideo relatio prima huius generis - domus ipsa hanc
+    disciplinam tenet (worklogs mechanismum cum contento quod
+    eum coegit servant).
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="praeceptum ipsum, quam brevissime - longitudo
+            memoriae inimica est"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="pertinet_ad" ad="peritia_communis"
+      nota="ars cuius est - praeceptum sine arte non stat"/>
+    <relatio nomen="natum_ex" ad="*" multiplex="verum"
+      nota="casus qui id coegit: sine eo praeceptum auctoritate
+            caret et primo argumento speciose cedit"/>
+    <relatio nomen="tendit_ad" ad="*"
+      nota="quo bono - praeceptum artis fini alicui servit"/>
+  </relationes>
+</genus>
+
 <!-- ==================================================
      IUDICIUM - propositio ab homine tenta
      ================================================== -->
