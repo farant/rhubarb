@@ -59,3 +59,8 @@ clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$SCRIPT_DIR/natura_glossae.c" \
     $obj_files -o "$RADIX_DIR/bin/natura_glossae" || exit 1
 echo "bin/natura_glossae paratum" >&2
+
+clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+    "$SCRIPT_DIR/natura_quaesitor.c" \
+    $obj_files -o "$RADIX_DIR/bin/natura" || exit 1
+echo "bin/natura paratum" >&2
