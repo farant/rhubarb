@@ -233,7 +233,23 @@
     est un jugement.</glossa>
 
   <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quid notatum sit, verbis - 'febris 38.5' ipsa
+            (lacuna L5: observatio notitiam esse dicebatur nec
+            notitiam ipsam ferre poterat)"/>
     <proprietas nomen="facta" genus="dies"/>
+    <proprietas nomen="via" genus="textus"
+      nota="methodus qua notitia quaesita est - mandatum,
+            instrumentum, gradus: quidquid alius sequi possit ut
+            idem inveniat. ANCORA: notitia sine via sua
+            re-examinari non potest, ideo tacite putrescit
+            (ambulatio XVI: census quattuor numeros tulit, duo
+            post horam falsi - non quia res mutatae sint sed
+            quia ex memoria scripti). Candidatus 'mensuratio'
+            hic MORTUUS: nomen apud fundamentum iam sedet
+            (mensuratio ut GENUS FUNDAMENTI - quo propositio
+            nititur), et signum instrumento datam quantitatem
+            iam fert; sola via deerat"/>
     <proprietas nomen="verificabilis_ab_alio" genus="veritas"
       nota="AXIS DIVISIONIS: potestne alius idem videre?
             Mensura potest, dolor alienus non - hiatus
@@ -495,6 +511,10 @@
     lorsque le produit est identique.</glossa>
 
   <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quod damnum immineat, verbis - periculum
+            probabilitatem et gravitatem ferebat nec damnum
+            ipsum nominare poterat (lacuna L5)"/>
     <proprietas nomen="probabilitas" genus="numerus"
       fractio="verum" minimum="0" maximum="1"
       nota="raro SCITUR: plerumque ipsa aestimatur, ideo

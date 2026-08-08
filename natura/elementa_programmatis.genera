@@ -196,8 +196,14 @@
     syntaxe ne porte ; seule l'intention la déclare.</glossa>
 
   <relationes>
-    <relatio nomen="veritas_sua" ad="status"
-      nota="status ex quo recomputatur"/>
+    <relatio nomen="veritas_sua" ad="*"
+      nota="id ex quo recomputatur. APERTUM 2026-08-08 (lacuna
+            L13, quater in ambulatione XVI mensurata): clausura
+            ad statum programmatis facta erat, quia doctrina
+            veritas/proiectio in statu nata est - sed documentum
+            generatum fontem habet qui OPUS est, non status
+            (INDEX ex corpore generum, monolithus ex corpore,
+            .db ex actis). Proiectio documentaria eadem res est"/>
   </relationes>
 
   <!-- dictionarium v1 (species tres) ad sub-genera promotum

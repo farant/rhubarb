@@ -1047,11 +1047,7 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
-  <citatio nomen="proiectio-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="proiectio"/>
   <citatio nomen="artefactum-aedificationis-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="artefactum-aedificationis"/>
-  <citatio nomen="artefactum-aedificationis-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="artefactum-aedificationis"/>
-  <citatio nomen="promptuarium-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="promptuarium"/>
-  <citatio nomen="index-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index"/>
   <citatio nomen="lectio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio"/>
   <citatio nomen="mutatio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio"/>
   <citatio nomen="functio-vocat" attributum="ad" ad="functio functio-pura/nomen" super="functio/vocat"/>
@@ -1072,11 +1068,7 @@
   <citatio nomen="instrumentum-aedificationis-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-aedificationis"/>
   <citatio nomen="instrumentum-aedificationis-adhibet" attributum="ad" ad="bibliotheca/nomen" super="instrumentum-aedificationis/adhibet"/>
   <citatio nomen="obiectum-compilatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="obiectum-compilatum"/>
-  <citatio nomen="obiectum-compilatum-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="obiectum-compilatum"/>
   <citatio nomen="exsecutabile-ligatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="exsecutabile-ligatum"/>
-  <citatio nomen="exsecutabile-ligatum-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="exsecutabile-ligatum"/>
-  <citatio nomen="index-inversus-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index-inversus"/>
-  <citatio nomen="index-arboris-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index-arboris"/>
   <citatio nomen="lectio-memoriae-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio-memoriae"/>
   <citatio nomen="lectio-externa-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio-externa"/>
   <citatio nomen="mutatio-memoriae-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio-memoriae"/>

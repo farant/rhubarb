@@ -23,6 +23,8 @@
     aujourd'hui négligée : une fois admis le sophisme « post hoc
     ergo propter hoc », toute la question est à terre.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="extra-ordinem" genus="veritas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
@@ -43,6 +45,8 @@
 
   <elementum nomen="causa-materialis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="extra-ordinem" genus="veritas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
@@ -63,6 +67,8 @@
 
   <elementum nomen="causa-formalis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="extra-ordinem" genus="veritas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
@@ -83,6 +89,8 @@
 
   <elementum nomen="causa-efficiens">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="extra-ordinem" genus="veritas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
@@ -103,6 +111,8 @@
 
   <elementum nomen="causa-finalis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="extra-ordinem" genus="veritas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
     <attributum nomen="asseritur-per" genus="referentia"/>

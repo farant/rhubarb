@@ -29,6 +29,11 @@
     faisant autorité.</glossa>
 
   <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quid norma praescribat, verbis - titulus normam
+            NOMINAT, contentum eam DICIT (lacuna L5: norma
+            conformitatem definire dicebatur nec quid postularet
+            enuntiare poterat)"/>
     <proprietas nomen="index" genus="textus"
       nota="designatio canonica, e.g. ISO/IEC 9899:1990"/>
     <proprietas nomen="titulus" genus="textus"/>

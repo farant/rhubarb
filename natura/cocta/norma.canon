@@ -33,6 +33,7 @@
     du langage C n'EST pas le langage C ; c'est une description
     faisant autorité.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="index" genus="textus"/>
     <attributum nomen="titulus" genus="textus"/>
     <attributum nomen="publicata" genus="dies"/>

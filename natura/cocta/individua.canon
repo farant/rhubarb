@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1616 sedibus relationum huius canonis, 1166
+  RELATIONES - ex 1616 sedibus relationum huius canonis, 1158
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  450 nomine solo iudicantur, id est sicut in canone per
+  458 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    443 petitum apertum habent (ad='*') - clavis nulla est;
+    451 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -1156,6 +1156,8 @@
     aujourd'hui négligée : une fois admis le sophisme « post hoc
     ergo propter hoc », toute la question est à terre.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="extra-ordinem" genus="veritas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
@@ -3456,7 +3458,9 @@
     « fièvre 38,5 » est une observation, « elle a une pneumonie »
     est un jugement.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
     <attributum nomen="verificabilis-ab-alio" genus="veritas"/>
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="ex-fonte" genus="referentia"/>
@@ -3552,6 +3556,7 @@
     arrive souvent mais nuit peu ne sont pas le même risque, même
     lorsque le produit est identique.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="probabilitas" genus="numerus" fractio="verum" minimum="0" maximum="1"/>
     <attributum nomen="gravitas" genus="electio">
       <optio>levis</optio>
@@ -4367,6 +4372,7 @@
     du langage C n'EST pas le langage C ; c'est une description
     faisant autorité.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="index" genus="textus"/>
     <attributum nomen="titulus" genus="textus"/>
     <attributum nomen="publicata" genus="dies"/>
@@ -8868,6 +8874,8 @@
 
   <elementum nomen="causa-materialis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="extra-ordinem" genus="veritas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
@@ -8888,6 +8896,8 @@
 
   <elementum nomen="causa-formalis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="extra-ordinem" genus="veritas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
@@ -8908,6 +8918,8 @@
 
   <elementum nomen="causa-efficiens">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="extra-ordinem" genus="veritas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
@@ -8928,6 +8940,8 @@
 
   <elementum nomen="causa-finalis">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="extra-ordinem" genus="veritas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
@@ -10918,7 +10932,9 @@
 
   <elementum nomen="symptoma">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
     <attributum nomen="verificabilis-ab-alio" genus="veritas" ordinarius="falsum"/>
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="ex-fonte" genus="referentia"/>
@@ -10932,7 +10948,9 @@
 
   <elementum nomen="signum">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
     <attributum nomen="verificabilis-ab-alio" genus="veritas" ordinarius="verum"/>
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="ex-fonte" genus="referentia"/>
@@ -10946,7 +10964,9 @@
 
   <elementum nomen="testimonium">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
     <attributum nomen="verificabilis-ab-alio" genus="veritas"/>
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="ex-fonte" genus="referentia"/>
@@ -14666,12 +14686,8 @@
   <citatio nomen="ambulatio-lectoris-exercet" attributum="ad" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="ambulatio-lectoris/exercet"/>
   <citatio nomen="ambulatio-lectoris-interrogat" attributum="interrogat" ad="postulatum/nomen" super="ambulatio-lectoris"/>
   <citatio nomen="ambulatio-lectoris-continet" attributum="ad" ad="assertio praeconditio postconditio invarians assertio-statica assertio-probationis/nomen" super="ambulatio-lectoris/continet"/>
-  <citatio nomen="proiectio-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="proiectio"/>
   <citatio nomen="artefactum-aedificationis-ex-fontibus" attributum="ad" ad="plagula-fontis fons-c caput-c fons-python fons-rust scriptum-conchae/nomen" super="artefactum-aedificationis/ex-fontibus"/>
   <citatio nomen="artefactum-aedificationis-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="artefactum-aedificationis"/>
-  <citatio nomen="artefactum-aedificationis-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="artefactum-aedificationis"/>
-  <citatio nomen="promptuarium-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="promptuarium"/>
-  <citatio nomen="index-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index"/>
   <citatio nomen="lectio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio"/>
   <citatio nomen="mutatio-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio"/>
   <citatio nomen="functio-vocat" attributum="ad" ad="functio functio-pura/nomen" super="functio/vocat"/>
@@ -15242,12 +15258,8 @@
   <citatio nomen="contaminatio-praevisum-ut" attributum="praevisum-ut" ad="periculum/nomen" super="contaminatio"/>
   <citatio nomen="obiectum-compilatum-ex-fontibus" attributum="ad" ad="plagula-fontis fons-c caput-c fons-python fons-rust scriptum-conchae/nomen" super="obiectum-compilatum/ex-fontibus"/>
   <citatio nomen="obiectum-compilatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="obiectum-compilatum"/>
-  <citatio nomen="obiectum-compilatum-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="obiectum-compilatum"/>
   <citatio nomen="exsecutabile-ligatum-ex-fontibus" attributum="ad" ad="plagula-fontis fons-c caput-c fons-python fons-rust scriptum-conchae/nomen" super="exsecutabile-ligatum/ex-fontibus"/>
   <citatio nomen="exsecutabile-ligatum-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="exsecutabile-ligatum"/>
-  <citatio nomen="exsecutabile-ligatum-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="exsecutabile-ligatum"/>
-  <citatio nomen="index-inversus-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index-inversus"/>
-  <citatio nomen="index-arboris-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="index-arboris"/>
   <citatio nomen="lectio-memoriae-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio-memoriae"/>
   <citatio nomen="lectio-externa-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="lectio-externa"/>
   <citatio nomen="mutatio-memoriae-obiectum" attributum="obiectum" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="mutatio-memoriae"/>

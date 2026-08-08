@@ -114,7 +114,9 @@
     « fièvre 38,5 » est une observation, « elle a une pneumonie »
     est un jugement.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
     <attributum nomen="verificabilis-ab-alio" genus="veritas"/>
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="ex-fonte" genus="referentia"/>
@@ -210,6 +212,7 @@
     arrive souvent mais nuit peu ne sont pas le même risque, même
     lorsque le produit est identique.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="probabilitas" genus="numerus" fractio="verum" minimum="0" maximum="1"/>
     <attributum nomen="gravitas" genus="electio">
       <optio>levis</optio>
@@ -578,7 +581,9 @@
 
   <elementum nomen="symptoma">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
     <attributum nomen="verificabilis-ab-alio" genus="veritas" ordinarius="falsum"/>
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="ex-fonte" genus="referentia"/>
@@ -592,7 +597,9 @@
 
   <elementum nomen="signum">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
     <attributum nomen="verificabilis-ab-alio" genus="veritas" ordinarius="verum"/>
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="ex-fonte" genus="referentia"/>
@@ -606,7 +613,9 @@
 
   <elementum nomen="testimonium">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
     <attributum nomen="verificabilis-ab-alio" genus="veritas"/>
     <attributum nomen="de" genus="referentia"/>
     <attributum nomen="ex-fonte" genus="referentia"/>

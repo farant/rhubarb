@@ -2193,6 +2193,48 @@ principale(
             piscina, intern));
         CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
 
+        /* MESSIS AMBULATIONIS XVI - contentum per stratum
+         * epistemicum et causale (lacuna L5 iterum, quater):
+         * causa, norma, observatio, periculum propositionem
+         * suam dicere non poterant. ORACULUM: rubuit ante */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <causa-finalis nomen=\"#f\" contentum=\"finis\""
+            " extra-ordinem=\"verum\"/>\n"
+            "  <norma nomen=\"#n\" contentum=\"regula\"/>\n"
+            "  <observatio nomen=\"#o\" contentum=\"quod visum\"/>\n"
+            "  <periculum nomen=\"#p\" contentum=\"quod damnum\"/>\n"
+            "</individua>\n",
+            CANON_ATTRIBUTUM_IGNOTUM, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        /* ANCORA: signum (observationis species instrumento
+         * data) viam suam fert - numerus re-examinabilis.
+         * Candidatus 'mensuratio' MORTUUS in contactu: nomen
+         * apud fundamentum sedet (mensuratio = genus
+         * FUNDAMENTI), signum quantitatem iam ferebat */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <signum nomen=\"#m\" contentum=\"genera 187\""
+            " via=\"grep -c\" facta=\"2026-08-08\"/>\n"
+            "</individua>\n",
+            CANON_ATTRIBUTUM_IGNOTUM, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
+        /* veritas_sua aperta (L13, quater in censu mensurata):
+         * proiectio documenti fontem suum nominare potest */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <opus-scriptum nomen=\"#corpus\"/>\n"
+            "  <proiectio nomen=\"#pagina\""
+            " veritas-sua=\"#corpus\"/>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
         /* dentes doctrinae PERSEVERANT: auctor in dictionario
          * (hereditate ab opere scripto) personis clausus manet */
         CREDO_VERUM (_documentum_iudicare(monolithus,

@@ -46,6 +46,16 @@
     ergo propter hoc », toute la question est à terre.</glossa>
 
   <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quid haec causa sit, verbis - finis ipse, non de eo
+            commentarium (lacuna L5 in stratum causale lapsa:
+            causa fines dicere non poterat, ideo radix cuiusque
+            spinae in prosa iacebat; ambulatio XVI mensuravit)"/>
+    <proprietas nomen="extra_ordinem" genus="veritas"
+      nota="TERMINUS DECLARATUS: causa huius causae extra
+            ordinem hic consideratum iacet - non lacuna sed
+            finis relationis. Distinguit terminum legitimum ab
+            omissione, quod aliter custos divinare non potest"/>
     <proprietas nomen="necessaria" genus="veritas"
       nota="an sine ea effectus omnino non fiat"/>
     <proprietas nomen="sufficiens" genus="veritas"
