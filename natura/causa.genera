@@ -57,9 +57,12 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="causat" ad="*"
+    <relatio nomen="causat" ad="*" multiplex="verum"
       nota="effectus - apertum consulto: quidlibet causari
-            potest"/>
+            potest. Multiplex 2026-08-08 (ambulatio XVI, lege
+            editio_de/L12): finis unus multa iustificat -
+            cardinalitas singularis familiam iustificationis
+            pauperem tenebat (3/23 res iustificatae)"/>
     <relatio nomen="pendet_ex" ad="causa" multiplex="verum"
       nota="CATENA causarum: quod causa est etiam effectus
             esse potest. Ideo 'causa radicalis' terminus

@@ -2176,6 +2176,23 @@ principale(
             piscina, intern));
         CREDO_AEQUALIS_I32 (generis, (i32)I);
 
+        /* causat multiplex (familia iustificationis, ambulatio
+         * XVI): finis unus multa iustificat - cardinalitas
+         * eadem lege ac editio_de (L12) correcta. ORACULUM:
+         * rubuit dum causat singulare, viret post */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            "<individua>\n"
+            "  <opus-scriptum nomen=\"#a\"/>\n"
+            "  <opus-scriptum nomen=\"#b\"/>\n"
+            "  <causa-finalis nomen=\"#finis\">\n"
+            "    <causat ad=\"#a\"/>\n"
+            "    <causat ad=\"#b\"/>\n"
+            "  </causa-finalis>\n"
+            "</individua>\n",
+            CANON_CITATIO_IRRITA, &generis, &omnia,
+            piscina, intern));
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
+
         /* dentes doctrinae PERSEVERANT: auctor in dictionario
          * (hereditate ab opere scripto) personis clausus manet */
         CREDO_VERUM (_documentum_iudicare(monolithus,

@@ -1158,11 +1158,14 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
-    <attributum nomen="causat" genus="referentia"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="causat"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="causat" intra="causa">
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa">
     <attributum nomen="ad" genus="referentia"/>
@@ -8867,11 +8870,14 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
-    <attributum nomen="causat" genus="referentia"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="causat"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="causat" intra="causa-materialis">
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-materialis">
     <attributum nomen="ad" genus="referentia"/>
@@ -8884,11 +8890,14 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
-    <attributum nomen="causat" genus="referentia"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="causat"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="causat" intra="causa-formalis">
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-formalis">
     <attributum nomen="ad" genus="referentia"/>
@@ -8901,11 +8910,14 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
-    <attributum nomen="causat" genus="referentia"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="causat"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="causat" intra="causa-efficiens">
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-efficiens">
     <attributum nomen="ad" genus="referentia"/>
@@ -8918,11 +8930,14 @@
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="necessaria" genus="veritas"/>
     <attributum nomen="sufficiens" genus="veritas"/>
-    <attributum nomen="causat" genus="referentia"/>
     <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="causat"/>
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="causat" intra="causa-finalis">
+    <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="causa-finalis">
     <attributum nomen="ad" genus="referentia"/>
