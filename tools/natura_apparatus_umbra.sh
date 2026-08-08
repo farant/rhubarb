@@ -5,8 +5,13 @@
 # (ordo natura_quaere.sh -a).
 set -eu
 
-CORPUS=build/natura_quaere_tmp/corpus.txt
-[ -r "$CORPUS" ] || { echo "corpus absens - curre ./tools/natura_quaere.sh planta"; exit 2; }
+CORPUS=build/natura_apparatus_umbra/corpus.txt
+mkdir -p build/natura_apparatus_umbra
+# corpus IPSE generat: natura_quaere.sh id non iam scribit - munus
+# eius in bin/natura migravit 2026-08-08, et pendere ab effectu
+# secundario alterius instrumenti fragile erat.
+bin/natura_examen -corpus "$CORPUS" >/dev/null 2>&1 || true
+[ -r "$CORPUS" ] || { echo "corpus generari nequit - strue ./tools/natura_struere.sh"; exit 2; }
 
 # parens: modulus.genus -> modulus.genus
 # CAMPI ut maiores() in natura_quaere.sh eos legit: $4 = modulus

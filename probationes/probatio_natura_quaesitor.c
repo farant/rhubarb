@@ -172,8 +172,11 @@ s32 principale (vacuum)
                                        piscina));
         CREDO_VERUM (_continet_literis(r.effusio, "in_opere",
                                        piscina));
-        CREDO_VERUM (_continet_literis(r.effusio, "hereditarium",
-                                       piscina));
+        /* auctor hereditatis NOMINATUR (non solum "hereditarium"
+         * nudum): lector scit UBI membrum definitum sit */
+        CREDO_VERUM (_continet_literis(
+            r.effusio, "[a documentatio.defectus_documenti]",
+            piscina));
     }
 
     /* ========================================================
@@ -233,6 +236,114 @@ s32 principale (vacuum)
                                        "SENTENTIA\tOCCUPATUM",
                                        piscina));
         CREDO_VERUM (_continet_literis(r.effusio, "RES\tiudicium",
+                                       piscina));
+    }
+
+    /* ========================================================
+     * VIII. UMBRAE: tertius status sententiae
+     *
+     * Umbra nomen TENET nec describitur. Ideo nec OCCUPATUM
+     * (nullum ens id fert) nec LIBERUM (adhibetur): condere eo
+     * nomine umbram IMPLET. Sententia binaria hic mentiretur.
+     * ======================================================== */
+    {
+        ProcessusResultus r;
+
+        imprimere("\n--- VIII. umbrae (sententia triplex) ---\n");
+
+        r = _currere("quaere", "typus", NIHIL, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, (i32)ZEPHYRUM);
+        CREDO_VERUM (_continet_literis(r.effusio, "UMBRATUM",
+                                       piscina));
+        CREDO_VERUM (_continet_literis(r.effusio, "superfectum",
+                                       piscina));
+        /* umbra eadem multis locis citatur - SEMEL nuntianda */
+        CREDO_AEQUALIS_I32 (
+            chorda_numerare_occurrentia(
+                r.effusio,
+                chorda_ex_literis("UMBRA [NOMEN IPSUM]", piscina)),
+            (i32)I);
+    }
+
+    /* ========================================================
+     * IX. APPARATUS DIVES (munus a natura_quaere.sh migratum):
+     * optiones electionis, status machinae, necessitas partium,
+     * petitum relationis, catena in arbore, species.
+     * ======================================================== */
+    {
+        ProcessusResultus r;
+
+        imprimere("\n--- IX. apparatus dives ---\n");
+
+        r = _currere("apparatus", "planta.planta", NIHIL, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, (i32)ZEPHYRUM);
+
+        /* forma 'modulus.genus' quoque valet (memoria manuum) */
+        CREDO_VERUM (_continet_literis(r.effusio, "/planta/planta",
+                                       piscina));
+        /* optiones electionis NOMINANTUR */
+        CREDO_VERUM (_continet_literis(r.effusio,
+                                       "herba|frutex|arbor",
+                                       piscina));
+        /* necessitas partium */
+        CREDO_VERUM (_continet_literis(r.effusio, "[NECESSARIA]",
+                                       piscina));
+        /* machina statuum cum statibus */
+        CREDO_VERUM (_continet_literis(r.effusio, "quo statu",
+                                       piscina));
+        CREDO_VERUM (_continet_literis(r.effusio, "germinans",
+                                       piscina));
+        /* catena hereditatis trans exemplaria */
+        CREDO_VERUM (_continet_literis(r.effusio, "IN ARBORE",
+                                       piscina));
+        CREDO_VERUM (_continet_literis(r.effusio,
+                                       "corporalia.vivens",
+                                       piscina));
+    }
+
+    /* ========================================================
+     * IXb. species enumerantur (genus quod eas RECTA habet -
+     * plantae species sub sub-generibus sedent, non sub ipsa)
+     * ======================================================== */
+    {
+        ProcessusResultus r;
+
+        imprimere("\n--- IXb. species enumeratae ---\n");
+
+        r = _currere("apparatus", "observatio", NIHIL, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (_continet_literis(r.effusio, "QUAE SPECIES SIT",
+                                       piscina));
+        CREDO_VERUM (_continet_literis(r.effusio, "symptoma",
+                                       piscina));
+        CREDO_VERUM (_continet_literis(r.effusio, "testimonium",
+                                       piscina));
+    }
+
+    /* ========================================================
+     * X. petitum relationis NOMINATUR (non solum nomen relationis)
+     * ======================================================== */
+    {
+        ProcessusResultus r;
+
+        imprimere("\n--- X. petita relationum ---\n");
+
+        r = _currere("apparatus", "ambulatio_lectoris", NIHIL,
+                     piscina);
+        CREDO_VERUM (r.successus);
+        /* clausura restricta: opus_scriptum nominatum */
+        CREDO_VERUM (_continet_literis(r.effusio, "exercet ->",
+                                       piscina));
+        CREDO_VERUM (_continet_literis(r.effusio,
+                                       "opus_scriptum.opus_scriptum",
+                                       piscina));
+        /* clausura aperta legitur '(quidlibet)', non '*' nudum */
+        CREDO_VERUM (_continet_literis(r.effusio, "(quidlibet)",
+                                       piscina));
+        /* multiplex notatur */
+        CREDO_VERUM (_continet_literis(r.effusio, "[multiplex]",
                                        piscina));
     }
 

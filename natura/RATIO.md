@@ -96,7 +96,7 @@ relation (`emit` — what capability did it *buy*?). **Naming hands
 you the next questions**, which is what expertise looks like from
 outside: not more facts, but knowing what to ask next.
 
-`./tools/natura_quaere.sh -a <genus>` makes that mechanical.
+`bin/natura apparatus <genus>` makes that mechanical.
 
 ### Four modes of use
 
