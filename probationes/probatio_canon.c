@@ -442,6 +442,74 @@ interior constans character* CANON_FINES_TEXTUS =
     "</canon>\n";
 
 /* ==================================================
+ * Fixturae - super adstrictum (spec super-adstrictum): liberi
+ * multiplicati nomen trans parentes communicant, clausurae
+ * differunt - 'parens/titulus' in super= parentem nominat.
+ * Fixtura: auctor sub libro homines citat, sub nave portus.
+ * ================================================== */
+
+interior constans character* CANON_SUPER_ADSTRICTI =
+    "<canon dialectus=\"probatio\" versio=\"1\">\n"
+    "  <elementum nomen=\"radix\" radix=\"verum\">\n"
+    "    <liberum nomen=\"homo\"/>\n"
+    "    <liberum nomen=\"portus\"/>\n"
+    "    <liberum nomen=\"liber\"/>\n"
+    "    <liberum nomen=\"navis\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"homo\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"portus\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"liber\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+    "    <liberum nomen=\"auctor\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"navis\">\n"
+    "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+    "    <liberum nomen=\"auctor\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"auctor\" intra=\"liber\">\n"
+    "    <attributum nomen=\"ad\" genus=\"referentia\"/>\n"
+    "  </elementum>\n"
+    "  <elementum nomen=\"auctor\" intra=\"navis\">\n"
+    "    <attributum nomen=\"ad\" genus=\"referentia\"/>\n"
+    "  </elementum>\n"
+    "  <citatio nomen=\"auctores-librorum\" attributum=\"ad\"\n"
+    "    super=\"liber/auctor\" ad=\"homo/nomen\"/>\n"
+    "  <citatio nomen=\"auctores-navium\" attributum=\"ad\"\n"
+    "    super=\"navis/auctor\" ad=\"portus/nomen\"/>\n"
+    "</canon>\n";
+
+interior constans character* SUPER_SANUM =
+    "<radix>\n"
+    "  <homo nomen=\"#plinius\"/>\n"
+    "  <portus nomen=\"#ostia\"/>\n"
+    "  <liber nomen=\"#historia-naturalis\">\n"
+    "    <auctor ad=\"#plinius\"/>\n"
+    "  </liber>\n"
+    "  <navis nomen=\"#classis-prima\">\n"
+    "    <auctor ad=\"#ostia\"/>\n"
+    "  </navis>\n"
+    "</radix>\n";
+
+/* EADEM structura, clausurae PERMUTATAE: auctor libri portum
+ * citat, auctor navis hominem - utraque citatio suam viam solam
+ * videt, ergo vitium BIS */
+interior constans character* SUPER_PERMUTATUM =
+    "<radix>\n"
+    "  <homo nomen=\"#plinius\"/>\n"
+    "  <portus nomen=\"#ostia\"/>\n"
+    "  <liber nomen=\"#historia-naturalis\">\n"
+    "    <auctor ad=\"#ostia\"/>\n"
+    "  </liber>\n"
+    "  <navis nomen=\"#classis-prima\">\n"
+    "    <auctor ad=\"#plinius\"/>\n"
+    "  </navis>\n"
+    "</radix>\n";
+
+/* ==================================================
  * Fixturae - glossae (spec glossae): documentatio vernacula.
  * Forma sola canonis est (lingua necessaria per machinam genericam
  * necessarium=verum); copertura lintri (natura_glossae) est.
@@ -1082,6 +1150,38 @@ s32 principale (vacuum)
                     CANON_ATTRIBUTUM_IGNOTUM), I);
             }
         }
+    }
+
+
+    /* ========================================================
+     * PROBARE: super adstrictum (spec super-adstrictum)
+     * ======================================================== */
+
+    {
+        Canon* adstrictus;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans super adstrictum ---\n");
+
+        adstrictus = canon_ex_literis(CANON_SUPER_ADSTRICTI,
+                                      piscina, intern);
+        CREDO_NON_NIHIL (adstrictus);
+
+        /* clausurae rectae per viam: nulla vitia */
+        vitia = iudicare_literis(adstrictus, SUPER_SANUM,
+                                 piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* clausurae permutatae: utraque via suam clausuram solam
+         * videt - CITATIO_IRRITA bis. Ante mechanismum entries
+         * cum solido nihil congruebant et NIHIL iudicabatur -
+         * foramen mensuratum descriptoris. */
+        vitia = iudicare_literis(adstrictus, SUPER_PERMUTATUM,
+                                 piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), II);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_CITATIO_IRRITA), II);
     }
 
 

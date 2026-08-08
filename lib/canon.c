@@ -108,6 +108,7 @@ interior s32 _magnitudines_comparare(constans chorda* a, i32 ia,
 interior s32 _numeros_comparare(constans chorda* a,
                                 constans chorda* b);
 interior b32 _intra_fines(constans chorda* v, CanonAttributum* a);
+interior b32 _super_congruit(StmlNodus* n, constans chorda* t);
 interior vacuum vitium_addere(Xar* vitia, CanonVitiumGenus genus,
     StmlNodus* nodus, chorda* elementum, chorda* detail,
     i32 numerus, i32 limes);
@@ -366,6 +367,57 @@ _numeros_comparare(
     ordo = _magnitudines_comparare(a, ia, na, fa, nfa,
                                    b, ib, nb, fb, nfb);
     redde neg_a ? -ordo : ordo;
+}
+
+/* congruentia super=: 'titulus' = elementum quodlibet eo titulo;
+ * 'parens/titulus' = elementum eo titulo SUB parente illo (spec
+ * super-adstrictum). Liberi multiplicati nomen trans parentes
+ * communicant clausuris diversis - via sola eos discernit; ante
+ * eam generator multiplicia citare non poterat et sedes CDII
+ * nomine solo iudicabantur. */
+interior b32
+_super_congruit(
+    StmlNodus*        n,
+    constans chorda*  t)
+{
+    b32 inventus;
+    i32 solidus;
+    i32 i;
+
+    inventus = FALSUM;
+    solidus  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < t->mensura; i++)
+    {
+        si ((character)t->datum[i] == '/')
+        {
+            solidus  = i;
+            inventus = VERUM;
+            frange;
+        }
+    }
+    si (!inventus)
+    {
+        redde chorda_aequalis(*n->titulus, *t);
+    }
+
+    {
+        chorda pars_parentis;
+        chorda pars_liberi;
+
+        pars_parentis = chorda_sectio(*t, ZEPHYRUM, solidus);
+        pars_liberi   = chorda_sectio(*t, solidus + I, t->mensura);
+        si (!chorda_aequalis(*n->titulus, pars_liberi))
+        {
+            redde FALSUM;
+        }
+        si (!n->parens ||
+            n->parens->genus != STML_NODUS_ELEMENTUM ||
+            !n->parens->titulus)
+        {
+            redde FALSUM;
+        }
+        redde chorda_aequalis(*n->parens->titulus, pars_parentis);
+    }
 }
 
 /* an valor (formae iam sanae) intra fines declaratos sit - numerus
@@ -1796,7 +1848,7 @@ canon_iudicare(
 
                             t = (chorda**)xar_obtinere(ci->super,
                                                        m);
-                            si (chorda_aequalis(*n->titulus, **t))
+                            si (_super_congruit(n, *t))
                             {
                                 sub = VERUM;
                                 frange;

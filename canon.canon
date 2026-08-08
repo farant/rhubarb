@@ -164,7 +164,10 @@
             malam clamans frangit"/>
     <attributum nomen="super"       genus="textus"
       nota="index elementorum citantium spatiis separatus;
-            absens = elementum quodlibet attributum ferens"/>
+            absens = elementum quodlibet attributum ferens.
+            Forma 'parens/titulus' (spec super-adstrictum):
+            elementum sub parente illo solo - liberi multiplicati
+            nomen trans parentes communicant, clausurae differunt"/>
     <attributum nomen="intra"       genus="compositum"
       nota="claves et citantes intra EANDEM instantiam (transitus
             statum machinae SUAE citat); absens = documentum"/>
