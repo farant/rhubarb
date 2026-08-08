@@ -246,18 +246,11 @@
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
   <citatio nomen="opus-scriptum-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="opus-scriptum"/>
-  <citatio nomen="opus-scriptum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum periodicum/nomen" super="opus-scriptum"/>
-  <citatio nomen="opus-scriptum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum periodicum/nomen" super="opus-scriptum"/>
-  <citatio nomen="opus-scriptum-pars-de" attributum="pars-de" ad="opus-scriptum periodicum/nomen" super="opus-scriptum"/>
-  <citatio nomen="expressio-expressio-de" attributum="expressio-de" ad="opus-scriptum periodicum/nomen" super="expressio"/>
   <citatio nomen="expressio-translata-ex" attributum="translata-ex" ad="expressio/nomen" super="expressio"/>
   <citatio nomen="editio-editio-de" attributum="ad" ad="expressio/nomen" super="editio/editio-de"/>
   <citatio nomen="codex-exemplar-de" attributum="exemplar-de" ad="editio/nomen" super="codex"/>
   <citatio nomen="periodicum-habet-fasciculum" attributum="habet-fasciculum" ad="fasciculus/nomen" super="periodicum"/>
   <citatio nomen="periodicum-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="periodicum"/>
-  <citatio nomen="periodicum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum periodicum/nomen" super="periodicum"/>
-  <citatio nomen="periodicum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum periodicum/nomen" super="periodicum"/>
-  <citatio nomen="periodicum-pars-de" attributum="pars-de" ad="opus-scriptum periodicum/nomen" super="periodicum"/>
   <citatio nomen="fasciculus-fasciculus-de" attributum="fasciculus-de" ad="periodicum/nomen" super="fasciculus"/>
 
 </canon>

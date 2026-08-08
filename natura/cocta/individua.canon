@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1583 sedibus relationum huius canonis, 1138
+  RELATIONES - ex 1616 sedibus relationum huius canonis, 1166
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  445 nomine solo iudicantur, id est sicut in canone per
+  450 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    438 petitum apertum habent (ad='*') - clavis nulla est;
+    443 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -90,6 +90,15 @@
     <liberum nomen="res-sacra"/>
     <liberum nomen="damnum"/>
     <liberum nomen="vivens"/>
+    <liberum nomen="dictionarium"/>
+    <liberum nomen="manuale"/>
+    <liberum nomen="exemplum"/>
+    <liberum nomen="legenda"/>
+    <liberum nomen="defectus-documenti"/>
+    <liberum nomen="deceptio"/>
+    <liberum nomen="silentium"/>
+    <liberum nomen="ambiguitas"/>
+    <liberum nomen="ambulatio-lectoris"/>
     <liberum nomen="status"/>
     <liberum nomen="proiectio"/>
     <liberum nomen="artefactum-aedificationis"/>
@@ -2094,6 +2103,280 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="vivens">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="dictionarium">
+    <glossa lingua="en">A dictionary (reference work): a work
+    intended for consultation - it teaches what things ARE, entry
+    by entry, ordered for seeking rather than reading. The reader
+    comes for one thing, finds it, and leaves; the work is
+    visited, not read through.</glossa>
+    <glossa lingua="fr">Un dictionnaire (ouvrage de référence) :
+    une œuvre destinée à la consultation - elle enseigne ce que
+    SONT les choses, entrée par entrée, ordonnée pour chercher et
+    non pour lire. Le lecteur vient pour une chose, la trouve et
+    s'en va ; l'œuvre se consulte, elle ne se lit pas d'un
+    trait.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus-originalis" genus="textus"/>
+    <attributum nomen="lingua-originalis" genus="textus"/>
+    <attributum nomen="status-compositio" genus="electio">
+      <optio>concepta</optio>
+      <optio>in_scriptione</optio>
+      <optio>perfecta</optio>
+      <optio>imperfecta_relicta</optio>
+    </attributum>
+    <attributum nomen="habet-expressionem" genus="referentia"/>
+    <attributum nomen="continuatio-de" genus="referentia"/>
+    <attributum nomen="respondet-ad" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="materia" intra="dictionarium" textus="verum"/>
+  <elementum nomen="auctor" intra="dictionarium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="dictionarium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="dictionarium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="manuale">
+    <glossa lingua="en">A manual: a work intended for action - it
+    teaches what is to be DONE. The reader wants to accomplish some
+    task and receives the steps from the text; a dictionary says
+    what a thing is, a manual says how it is done.</glossa>
+    <glossa lingua="fr">Un manuel : une œuvre destinée à l'action -
+    elle enseigne ce qu'il faut FAIRE. Le lecteur veut accomplir
+    une tâche et reçoit du texte les étapes ; le dictionnaire dit
+    ce qu'est une chose, le manuel dit comment elle se
+    fait.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus-originalis" genus="textus"/>
+    <attributum nomen="lingua-originalis" genus="textus"/>
+    <attributum nomen="status-compositio" genus="electio">
+      <optio>concepta</optio>
+      <optio>in_scriptione</optio>
+      <optio>perfecta</optio>
+      <optio>imperfecta_relicta</optio>
+    </attributum>
+    <attributum nomen="habet-expressionem" genus="referentia"/>
+    <attributum nomen="continuatio-de" genus="referentia"/>
+    <attributum nomen="respondet-ad" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="materia" intra="manuale" textus="verum"/>
+  <elementum nomen="auctor" intra="manuale">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="manuale">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="manuale">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="exemplum">
+    <glossa lingua="en">A worked example: a complete specimen meant
+    for imitation - it shows rather than describes. The reader
+    copies it and adapts it; completeness is the differentia - a
+    fragment demonstrates, a worked example gets you
+    started.</glossa>
+    <glossa lingua="fr">Un exemple complet : un spécimen intégral
+    destiné à l'imitation - il montre au lieu de décrire. Le
+    lecteur le transcrit et l'adapte ; l'intégralité fait la
+    différence - un fragment démontre, un exemple complet fait
+    démarrer.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus-originalis" genus="textus"/>
+    <attributum nomen="lingua-originalis" genus="textus"/>
+    <attributum nomen="status-compositio" genus="electio">
+      <optio>concepta</optio>
+      <optio>in_scriptione</optio>
+      <optio>perfecta</optio>
+      <optio>imperfecta_relicta</optio>
+    </attributum>
+    <attributum nomen="habet-expressionem" genus="referentia"/>
+    <attributum nomen="continuatio-de" genus="referentia"/>
+    <attributum nomen="respondet-ad" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="materia" intra="exemplum" textus="verum"/>
+  <elementum nomen="auctor" intra="exemplum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="exemplum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="exemplum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="legenda">
+    <glossa lingua="en">A legend: the key to a notation - it teaches
+    what the signs in another work mean. Without a legend a
+    notation is mute: the reader sees a mark and cannot tell
+    ornament from statement.</glossa>
+    <glossa lingua="fr">Une légende : la clef d'une notation - elle
+    enseigne ce que signifient les signes d'une autre œuvre. Sans
+    légende, une notation est muette : le lecteur voit un signe
+    sans savoir s'il est ornement ou énoncé.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus-originalis" genus="textus"/>
+    <attributum nomen="lingua-originalis" genus="textus"/>
+    <attributum nomen="status-compositio" genus="electio">
+      <optio>concepta</optio>
+      <optio>in_scriptione</optio>
+      <optio>perfecta</optio>
+      <optio>imperfecta_relicta</optio>
+    </attributum>
+    <attributum nomen="habet-expressionem" genus="referentia"/>
+    <attributum nomen="continuatio-de" genus="referentia"/>
+    <attributum nomen="respondet-ad" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="materia" intra="legenda" textus="verum"/>
+  <elementum nomen="auctor" intra="legenda">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="legenda">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="legenda">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="defectus-documenti">
+    <glossa lingua="en">A document defect: what the text owed the
+    reader and a reading does not yield - the discrepancy between
+    what the document owed and what a reader can construe from it.
+    Parallel to vitium without inheriting from it: a vitium sets
+    intention against behavior, and a document has no behavior -
+    it does not act, it is read.</glossa>
+    <glossa lingua="fr">Un défaut de document : ce que le texte
+    devait au lecteur et qu'une lecture ne rend pas - l'écart
+    entre ce que le document devait et ce que le lecteur peut en
+    tirer. Parallèle au vitium sans en hériter : le vitium oppose
+    l'intention au comportement, et un document n'a pas de
+    comportement - il n'agit pas, il se lit.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="in-opere" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="defectus-documenti">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="deceptio">
+    <glossa lingua="en">Active misleading: the text teaches a
+    falsehood - a correct reading leads the reader into error. It
+    has a victim, hence its rank first in force: the trouble is
+    not what is missing but what is falsely present.</glossa>
+    <glossa lingua="fr">L'égarement actif : le texte enseigne une
+    fausseté - une lecture correcte conduit le lecteur à l'erreur.
+    Il a une victime, d'où son rang premier en force : le mal
+    n'est pas ce qui manque mais ce qui est faussement
+    présent.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="in-opere" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="deceptio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="silentium">
+    <glossa lingua="en">Silence: the text withholds what it knows -
+    the knowledge exists and the telling omits it. Distinct from
+    iudicium's ignotum, which is the reader's named gap; this is
+    the page's side of the same absence.</glossa>
+    <glossa lingua="fr">Le silence : le texte tait ce qu'il sait -
+    le savoir existe et le récit l'omet. Distinct de l'ignotum du
+    iudicium, qui est la lacune nommée du lecteur ; ici c'est le
+    versant de la page de la même absence.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="in-opere" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="silentium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ambiguitas">
+    <glossa lingua="en">Ambiguity: the text admits several readings
+    and gives the reader no ground to choose among them.</glossa>
+    <glossa lingua="fr">L'ambiguïté : le texte admet plusieurs
+    lectures et ne donne au lecteur aucun fondement pour choisir
+    entre elles.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="in-opere" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="ambiguitas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ambulatio-lectoris">
+    <glossa lingua="en">A reader-walk: a test of a document by a
+    restricted reader - the reader is confined to the source under
+    test, so that the source itself is what gets measured. The
+    oracle is not an assertion but the reader's success at a
+    stated task.</glossa>
+    <glossa lingua="fr">Une marche de lecteur : un test d'un
+    document par un lecteur restreint - le lecteur est confiné à
+    la source testée, afin que ce soit la source elle-même qui
+    soit mesurée. L'oracle n'est pas une assertion mais la
+    réussite du lecteur à une tâche donnée.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="lector" genus="referentia"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interrogat" genus="referentia"/>
+    <liberum nomen="invenit"/>
+    <liberum nomen="exercet"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="invenit" intra="ambulatio-lectoris">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="exercet" intra="ambulatio-lectoris">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="continet" intra="ambulatio-lectoris">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="ambulatio-lectoris">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -14080,6 +14363,9 @@
       <optio>deprecari</optio>
       <optio>derelinqui</optio>
       <optio>retiri</optio>
+      <optio>componi</optio>
+      <optio>exprimi</optio>
+      <optio>deseri</optio>
       <optio>vocari</optio>
       <optio>definiri</optio>
       <optio>custodire</optio>
@@ -14108,9 +14394,6 @@
       <optio>terminari</optio>
       <optio>occidi</optio>
       <optio>meti</optio>
-      <optio>componi</optio>
-      <optio>exprimi</optio>
-      <optio>deseri</optio>
       <optio>condi</optio>
       <optio>dissolvi</optio>
       <optio>dividi</optio>
@@ -14143,24 +14426,25 @@
            servus moneta pecunia possessio pretium venditio tessera tessera-negotiabilis
            tessera-simplex ratio-rationaria actor nuntius eventum stigmergia
            res-corporea artefactum materia instrumentum res-sacra damnum
-           vivens status proiectio artefactum-aedificationis promptuarium
-           index lectio mutatio functio functio-pura constans constans-numerica
-           constans-textualis bibliotheca assertio commentarium identificator
-           programma instrumentum-aedificationis postulatum facultas probatio
-           vitium debitum-technicum complicatio consilium depravatio interventio
-           forma-datorum schema-identificandi gradus-assensus fons observatio
-           iudicium annotatio periculum ignotum investigatio secretum peritia-communis
-           attributio fundamentum lingua-programmandi lingua-iussuum versio-linguae
-           implementatio-linguae verbum-clavis locus inscriptio iurisdictio
-           aedificium magnitudo-mensurabilis unitas-mensurae quantitas incertitudo
-           instrumentum-mensurae morbus norma lex classis-normativa fictio-iuris
-           obligatio contractus licentia tributum titulus iussum fiducia
-           petitio delegatio tractatus limitatio portio-communis ambitus
-           pensum incidens processus opus-scriptum expressio editio codex
-           periodicum fasciculus universitas organizatio colonia persona-iuridica
-           officium corpus-normans societas magistratus persona substantia-chemica
-           medicamentum coctura interactio plagula-computatralis plagula-fontis
-           scriptum-exsecutabile plagula-notationis plagula-figurationis
+           vivens dictionarium manuale exemplum legenda defectus-documenti
+           deceptio silentium ambiguitas ambulatio-lectoris status proiectio
+           artefactum-aedificationis promptuarium index lectio mutatio functio
+           functio-pura constans constans-numerica constans-textualis bibliotheca
+           assertio commentarium identificator programma instrumentum-aedificationis
+           postulatum facultas probatio vitium debitum-technicum complicatio
+           consilium depravatio interventio forma-datorum schema-identificandi
+           gradus-assensus fons observatio iudicium annotatio periculum ignotum
+           investigatio secretum peritia-communis attributio fundamentum
+           lingua-programmandi lingua-iussuum versio-linguae implementatio-linguae
+           verbum-clavis locus inscriptio iurisdictio aedificium magnitudo-mensurabilis
+           unitas-mensurae quantitas incertitudo instrumentum-mensurae morbus
+           norma lex classis-normativa fictio-iuris obligatio contractus
+           licentia tributum titulus iussum fiducia petitio delegatio tractatus
+           limitatio portio-communis ambitus pensum incidens processus opus-scriptum
+           expressio editio codex periodicum fasciculus universitas organizatio
+           colonia persona-iuridica officium corpus-normans societas magistratus
+           persona substantia-chemica medicamentum coctura interactio plagula-computatralis
+           plagula-fontis scriptum-exsecutabile plagula-notationis plagula-figurationis
            plagula-datorum plagula-sqlite systema-plagularum directorium
            planta rosaceae rosa malus procedura procedura-automata praescriptum
            gradus-praescripti versio-praescripti index-verificationis schema
@@ -14339,6 +14623,34 @@
   <citatio nomen="vivens-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="vivens/generat"/>
   <citatio nomen="vivens-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="vivens/laborat"/>
   <citatio nomen="vivens-sita-in" attributum="sita-in" ad="locus/nomen" super="vivens"/>
+  <citatio nomen="dictionarium-auctor" attributum="ad" ad="persona/nomen" super="dictionarium/auctor"/>
+  <citatio nomen="dictionarium-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="dictionarium"/>
+  <citatio nomen="dictionarium-continuatio-de" attributum="continuatio-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="dictionarium"/>
+  <citatio nomen="dictionarium-respondet-ad" attributum="respondet-ad" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="dictionarium"/>
+  <citatio nomen="dictionarium-pars-de" attributum="pars-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="dictionarium"/>
+  <citatio nomen="manuale-auctor" attributum="ad" ad="persona/nomen" super="manuale/auctor"/>
+  <citatio nomen="manuale-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="manuale"/>
+  <citatio nomen="manuale-continuatio-de" attributum="continuatio-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="manuale"/>
+  <citatio nomen="manuale-respondet-ad" attributum="respondet-ad" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="manuale"/>
+  <citatio nomen="manuale-pars-de" attributum="pars-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="manuale"/>
+  <citatio nomen="exemplum-auctor" attributum="ad" ad="persona/nomen" super="exemplum/auctor"/>
+  <citatio nomen="exemplum-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="exemplum"/>
+  <citatio nomen="exemplum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="exemplum"/>
+  <citatio nomen="exemplum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="exemplum"/>
+  <citatio nomen="exemplum-pars-de" attributum="pars-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="exemplum"/>
+  <citatio nomen="legenda-auctor" attributum="ad" ad="persona/nomen" super="legenda/auctor"/>
+  <citatio nomen="legenda-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="legenda"/>
+  <citatio nomen="legenda-continuatio-de" attributum="continuatio-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="legenda"/>
+  <citatio nomen="legenda-respondet-ad" attributum="respondet-ad" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="legenda"/>
+  <citatio nomen="legenda-pars-de" attributum="pars-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="legenda"/>
+  <citatio nomen="defectus-documenti-in-opere" attributum="in-opere" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="defectus-documenti"/>
+  <citatio nomen="deceptio-in-opere" attributum="in-opere" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="deceptio"/>
+  <citatio nomen="silentium-in-opere" attributum="in-opere" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="silentium"/>
+  <citatio nomen="ambiguitas-in-opere" attributum="in-opere" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="ambiguitas"/>
+  <citatio nomen="ambulatio-lectoris-invenit" attributum="ad" ad="defectus-documenti deceptio silentium ambiguitas/nomen" super="ambulatio-lectoris/invenit"/>
+  <citatio nomen="ambulatio-lectoris-exercet" attributum="ad" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="ambulatio-lectoris/exercet"/>
+  <citatio nomen="ambulatio-lectoris-interrogat" attributum="interrogat" ad="postulatum/nomen" super="ambulatio-lectoris"/>
+  <citatio nomen="ambulatio-lectoris-continet" attributum="ad" ad="assertio praeconditio postconditio invarians assertio-statica assertio-probationis/nomen" super="ambulatio-lectoris/continet"/>
   <citatio nomen="proiectio-veritas-sua" attributum="veritas-sua" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="proiectio"/>
   <citatio nomen="artefactum-aedificationis-ex-fontibus" attributum="ad" ad="plagula-fontis fons-c caput-c fons-python fons-rust scriptum-conchae/nomen" super="artefactum-aedificationis/ex-fontibus"/>
   <citatio nomen="artefactum-aedificationis-per-instrumentum" attributum="per-instrumentum" ad="instrumentum-aedificationis/nomen" super="artefactum-aedificationis"/>
@@ -14384,7 +14696,7 @@
   <citatio nomen="consilium-exsequitur-per" attributum="ad" ad="iussum praescriptio-medica mandatum-iudicis iussum-emptionis iussum-operis iussum-ne-resuscitetur/nomen" super="consilium/exsequitur-per"/>
   <citatio nomen="depravatio-ex-vitio" attributum="ex-vitio" ad="vitium regressio/nomen" super="depravatio"/>
   <citatio nomen="depravatio-prodita-per" attributum="ad" ad="incidens/nomen" super="depravatio/prodita-per"/>
-  <citatio nomen="depravatio-detecta-per" attributum="detecta-per" ad="probatio probatio-unitatis probatio-integrationis probatio-regressionis probatio-fumi/nomen" super="depravatio"/>
+  <citatio nomen="depravatio-detecta-per" attributum="detecta-per" ad="probatio probatio-unitatis probatio-integrationis probatio-regressionis probatio-fumi ambulatio-lectoris/nomen" super="depravatio"/>
   <citatio nomen="interventio-acta-sua" attributum="acta-sua" ad="acta acta-publica regesta acta-transactionum acta-versionum acta-auditus ratio-rationaria ratio-duplex/nomen" super="interventio"/>
   <citatio nomen="forma-datorum-realizata-a" attributum="ad" ad="bibliotheca/nomen" super="forma-datorum/realizata-a"/>
   <citatio nomen="schema-identificandi-administrata-a" attributum="administrata-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="schema-identificandi"/>
@@ -14521,10 +14833,10 @@
   <citatio nomen="processus-tenet-apertam" attributum="ad" ad="plagula-computatralis plagula-fontis fons-c caput-c fons-python fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis plagula-xml plagula-stml plagula-markdown plagula-figurationis plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv plagula-sqlite volumen/nomen" super="processus/tenet-apertam"/>
   <citatio nomen="opus-scriptum-auctor" attributum="ad" ad="persona/nomen" super="opus-scriptum/auctor"/>
   <citatio nomen="opus-scriptum-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="opus-scriptum"/>
-  <citatio nomen="opus-scriptum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum periodicum/nomen" super="opus-scriptum"/>
-  <citatio nomen="opus-scriptum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum periodicum/nomen" super="opus-scriptum"/>
-  <citatio nomen="opus-scriptum-pars-de" attributum="pars-de" ad="opus-scriptum periodicum/nomen" super="opus-scriptum"/>
-  <citatio nomen="expressio-expressio-de" attributum="expressio-de" ad="opus-scriptum periodicum/nomen" super="expressio"/>
+  <citatio nomen="opus-scriptum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="opus-scriptum"/>
+  <citatio nomen="opus-scriptum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="opus-scriptum"/>
+  <citatio nomen="opus-scriptum-pars-de" attributum="pars-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="opus-scriptum"/>
+  <citatio nomen="expressio-expressio-de" attributum="expressio-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="expressio"/>
   <citatio nomen="expressio-translator" attributum="ad" ad="persona/nomen" super="expressio/translator"/>
   <citatio nomen="expressio-translata-ex" attributum="translata-ex" ad="expressio/nomen" super="expressio"/>
   <citatio nomen="editio-editio-de" attributum="ad" ad="expressio/nomen" super="editio/editio-de"/>
@@ -14535,9 +14847,9 @@
   <citatio nomen="periodicum-habet-fasciculum" attributum="habet-fasciculum" ad="fasciculus/nomen" super="periodicum"/>
   <citatio nomen="periodicum-auctor" attributum="ad" ad="persona/nomen" super="periodicum/auctor"/>
   <citatio nomen="periodicum-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="periodicum"/>
-  <citatio nomen="periodicum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum periodicum/nomen" super="periodicum"/>
-  <citatio nomen="periodicum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum periodicum/nomen" super="periodicum"/>
-  <citatio nomen="periodicum-pars-de" attributum="pars-de" ad="opus-scriptum periodicum/nomen" super="periodicum"/>
+  <citatio nomen="periodicum-continuatio-de" attributum="continuatio-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="periodicum"/>
+  <citatio nomen="periodicum-respondet-ad" attributum="respondet-ad" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="periodicum"/>
+  <citatio nomen="periodicum-pars-de" attributum="pars-de" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="periodicum"/>
   <citatio nomen="fasciculus-fasciculus-de" attributum="fasciculus-de" ad="periodicum/nomen" super="fasciculus"/>
   <citatio nomen="universitas-pars-de" attributum="pars-de" ad="universitas organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus colonia colonia-apium grex/nomen" super="universitas"/>
   <citatio nomen="organizatio-condita-a" attributum="ad" ad="persona/nomen" super="organizatio/condita-a"/>
@@ -14601,25 +14913,25 @@
   <citatio nomen="directorium-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="directorium"/>
   <citatio nomen="directorium-est-plagula" attributum="est-plagula" ad="plagula-computatralis plagula-fontis fons-c caput-c fons-python fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis plagula-xml plagula-stml plagula-markdown plagula-figurationis plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv plagula-sqlite volumen/nomen" super="directorium"/>
   <citatio nomen="planta-auctor-nominis" attributum="auctor-nominis" ad="persona/nomen" super="planta"/>
-  <citatio nomen="planta-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum periodicum/nomen" super="planta"/>
+  <citatio nomen="planta-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="planta"/>
   <citatio nomen="planta-pollinatur-a" attributum="pollinatur-a" ad="animal apis canis homo/nomen" super="planta"/>
   <citatio nomen="planta-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="planta/generat"/>
   <citatio nomen="planta-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="planta/laborat"/>
   <citatio nomen="planta-sita-in" attributum="sita-in" ad="locus/nomen" super="planta"/>
   <citatio nomen="rosaceae-auctor-nominis" attributum="auctor-nominis" ad="persona/nomen" super="rosaceae"/>
-  <citatio nomen="rosaceae-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum periodicum/nomen" super="rosaceae"/>
+  <citatio nomen="rosaceae-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="rosaceae"/>
   <citatio nomen="rosaceae-pollinatur-a" attributum="pollinatur-a" ad="animal apis canis homo/nomen" super="rosaceae"/>
   <citatio nomen="rosaceae-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="rosaceae/generat"/>
   <citatio nomen="rosaceae-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="rosaceae/laborat"/>
   <citatio nomen="rosaceae-sita-in" attributum="sita-in" ad="locus/nomen" super="rosaceae"/>
   <citatio nomen="rosa-auctor-nominis" attributum="auctor-nominis" ad="persona/nomen" super="rosa"/>
-  <citatio nomen="rosa-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum periodicum/nomen" super="rosa"/>
+  <citatio nomen="rosa-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="rosa"/>
   <citatio nomen="rosa-pollinatur-a" attributum="pollinatur-a" ad="animal apis canis homo/nomen" super="rosa"/>
   <citatio nomen="rosa-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="rosa/generat"/>
   <citatio nomen="rosa-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="rosa/laborat"/>
   <citatio nomen="rosa-sita-in" attributum="sita-in" ad="locus/nomen" super="rosa"/>
   <citatio nomen="malus-auctor-nominis" attributum="auctor-nominis" ad="persona/nomen" super="malus"/>
-  <citatio nomen="malus-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum periodicum/nomen" super="malus"/>
+  <citatio nomen="malus-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="malus"/>
   <citatio nomen="malus-pollinatur-a" attributum="pollinatur-a" ad="animal apis canis homo/nomen" super="malus"/>
   <citatio nomen="malus-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="malus/generat"/>
   <citatio nomen="malus-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="malus/laborat"/>
@@ -14631,7 +14943,7 @@
   <citatio nomen="procedura-automata-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="procedura-automata/gradus-eius"/>
   <citatio nomen="praescriptum-postulat" attributum="ad" ad="materia/nomen" super="praescriptum/postulat"/>
   <citatio nomen="praescriptum-efficit" attributum="efficit" ad="artefactum cibus instrumentum instrumentum-mensurae vehiculum navis currus-onerarius tramen aeroplanum/nomen" super="praescriptum"/>
-  <citatio nomen="praescriptum-publicatum-in" attributum="publicatum-in" ad="opus-scriptum periodicum/nomen" super="praescriptum"/>
+  <citatio nomen="praescriptum-publicatum-in" attributum="publicatum-in" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="praescriptum"/>
   <citatio nomen="praescriptum-auctor" attributum="auctor" ad="persona/nomen" super="praescriptum"/>
   <citatio nomen="praescriptum-ortum-ex" attributum="ortum-ex" ad="praescriptum/nomen" super="praescriptum"/>
   <citatio nomen="praescriptum-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="praescriptum/gradus-eius"/>
@@ -15312,19 +15624,19 @@
   <citatio nomen="volumen-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="volumen"/>
   <citatio nomen="volumen-conformis-ad" attributum="conformis-ad" ad="norma/nomen" super="volumen"/>
   <citatio nomen="rosa-canina-auctor-nominis" attributum="auctor-nominis" ad="persona/nomen" super="rosa-canina"/>
-  <citatio nomen="rosa-canina-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum periodicum/nomen" super="rosa-canina"/>
+  <citatio nomen="rosa-canina-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="rosa-canina"/>
   <citatio nomen="rosa-canina-pollinatur-a" attributum="pollinatur-a" ad="animal apis canis homo/nomen" super="rosa-canina"/>
   <citatio nomen="rosa-canina-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="rosa-canina/generat"/>
   <citatio nomen="rosa-canina-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="rosa-canina/laborat"/>
   <citatio nomen="rosa-canina-sita-in" attributum="sita-in" ad="locus/nomen" super="rosa-canina"/>
   <citatio nomen="malus-domestica-auctor-nominis" attributum="auctor-nominis" ad="persona/nomen" super="malus-domestica"/>
-  <citatio nomen="malus-domestica-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum periodicum/nomen" super="malus-domestica"/>
+  <citatio nomen="malus-domestica-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="malus-domestica"/>
   <citatio nomen="malus-domestica-pollinatur-a" attributum="pollinatur-a" ad="animal apis canis homo/nomen" super="malus-domestica"/>
   <citatio nomen="malus-domestica-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="malus-domestica/generat"/>
   <citatio nomen="malus-domestica-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="malus-domestica/laborat"/>
   <citatio nomen="malus-domestica-sita-in" attributum="sita-in" ad="locus/nomen" super="malus-domestica"/>
   <citatio nomen="granny-smith-auctor-nominis" attributum="auctor-nominis" ad="persona/nomen" super="granny-smith"/>
-  <citatio nomen="granny-smith-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum periodicum/nomen" super="granny-smith"/>
+  <citatio nomen="granny-smith-nomen-publicatum-in" attributum="nomen-publicatum-in" ad="opus-scriptum dictionarium manuale exemplum legenda periodicum/nomen" super="granny-smith"/>
   <citatio nomen="granny-smith-pollinatur-a" attributum="pollinatur-a" ad="animal apis canis homo/nomen" super="granny-smith"/>
   <citatio nomen="granny-smith-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="granny-smith/generat"/>
   <citatio nomen="granny-smith-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="granny-smith/laborat"/>

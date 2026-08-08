@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/documentatio.genera
+  Exemplar semanticum: DOCUMENTATIO (versio 1)
+
+  Modulus RELATIONIS inter textum et opus lectoris. Natus ex
+  circuitu generationis I (2026-08-08): scenarium glossarum
+  peregrino restricto mensuratum, lacunae XV in
+  project-specs/documentatio-lacunae.md, furcae quinque decisae
+  (decretum 01KZFPWPXH), spec project-specs/documentatio-spec.md.
+
+  SUTURA: possidet genus operis secundum opus lectoris (quattuor
+  species operis scripti), trichotomiam defectuum documenti, et
+  ambulationem lectoris (species probationis). CITAT
+  opus_scriptum (identitas; pars_de iam compositionem fert),
+  iudicium (status epistemicus lectoris, annotatio), fabricatio
+  (quadratum intentionis), schema (grammatica quam documentum
+  docet).
+
+  FURCA I (decretum): genus operis INTENTIO auctoris est (finis),
+  aptitudo VERDICTUM ambulationis - opus idem dictionarium
+  intentum et manuale mensuratum-defectum esse potest sine
+  contradictione. Genus numquam successum affirmat.
+-->
+<natura modulus="documentatio" versio="1" lingua="latina">
+
+<fontes>
+  <fons clavis="corpus" genus="corpus_institutionis"
+    modulus="iudicium" verificatus="falsum">
+    Corpus institutionis scribae: FRBR, ars lexicographica,
+    paedagogia technica. NON VERIFICATUM - sed divisiones huius
+    moduli non inde sumptae: e scenario mensurato (ledger
+    lacunarum) natae, quod in repositorio ipso iacet.
+  </fons>
+</fontes>
+
+<!-- ============= QUATTUOR GENERA OPERIS ==============
+     Species operis scripti, divisae secundum QUOD OPUS
+     LECTORI PRAESTARE DESTINATUR. Quattuor mensuratae solae;
+     divisio aperta manet donec scenarium novum plura metiatur.
+     Opera hybrida per etiam= (sodalitas secundaria). -->
+
+<genus nomen="dictionarium" sub="opus_scriptum"
+  modulus="opus_scriptum">
+
+  <differentia>
+    Ad INSPECTIONEM destinatum: quid res sint docet, singulatim,
+    ordine quaerendi non legendi. Lector rem petit, invenit,
+    discedit - opus aditur, non perlegitur.
+  </differentia>
+
+  <glossa lingua="en">A dictionary (reference work): a work
+    intended for consultation - it teaches what things ARE, entry
+    by entry, ordered for seeking rather than reading. The reader
+    comes for one thing, finds it, and leaves; the work is
+    visited, not read through.</glossa>
+  <glossa lingua="fr">Un dictionnaire (ouvrage de référence) :
+    une œuvre destinée à la consultation - elle enseigne ce que
+    SONT les choses, entrée par entrée, ordonnée pour chercher et
+    non pour lire. Le lecteur vient pour une chose, la trouve et
+    s'en va ; l'œuvre se consulte, elle ne se lit pas d'un
+    trait.</glossa>
+
+  <nota>
+    DIVISIO INTENTA (furca I, decretum 01KZFPWPXH): hoc genus et
+    tria sequentia intentionem auctoris ferunt, non successum -
+    pagina glossarum dictionarium bonum ET manuale defectum uno
+    tempore fuit; aptitudo per ambulationem lectoris mensuratur.
+  </nota>
+</genus>
+
+<genus nomen="manuale" sub="opus_scriptum"
+  modulus="opus_scriptum">
+
+  <differentia>
+    Ad ACTIONEM destinatum: quid faciendum sit docet. Lector opus
+    aliquod perficere vult et gradus a textu accipit - dictionarium
+    quid sit dicit, manuale quomodo fiat.
+  </differentia>
+
+  <glossa lingua="en">A manual: a work intended for action - it
+    teaches what is to be DONE. The reader wants to accomplish some
+    task and receives the steps from the text; a dictionary says
+    what a thing is, a manual says how it is done.</glossa>
+  <glossa lingua="fr">Un manuel : une œuvre destinée à l'action -
+    elle enseigne ce qu'il faut FAIRE. Le lecteur veut accomplir
+    une tâche et reçoit du texte les étapes ; le dictionnaire dit
+    ce qu'est une chose, le manuel dit comment elle se
+    fait.</glossa>
+
+  <nota>
+    Casus mensuratus: peregrinus manuale postulabat et paginam
+    dictionarii accepit - descriptio integra, instrumentum nullum
+    (lacuna L9).
+  </nota>
+</genus>
+
+<genus nomen="exemplum" sub="opus_scriptum"
+  modulus="opus_scriptum">
+
+  <differentia>
+    Specimen INTEGRUM ad imitandum: non describit sed monstrat.
+    Lector exemplum transcribit et mutat; integritas differentiam
+    fert - fragmentum demonstrat, exemplum incipere facit.
+  </differentia>
+
+  <glossa lingua="en">A worked example: a complete specimen meant
+    for imitation - it shows rather than describes. The reader
+    copies it and adapts it; completeness is the differentia - a
+    fragment demonstrates, a worked example gets you
+    started.</glossa>
+  <glossa lingua="fr">Un exemple complet : un spécimen intégral
+    destiné à l'imitation - il montre au lieu de décrire. Le
+    lecteur le transcrit et l'adapte ; l'intégralité fait la
+    différence - un fragment démontre, un exemple complet fait
+    démarrer.</glossa>
+
+  <nota>
+    natura/exempla/hortus.census exemplum est - corpus tandem
+    verbum habet pro eo quod iam continebat (lacuna L10).
+    NB: 'exemplar' formato reservatum; hoc genus 'exemplum'.
+  </nota>
+</genus>
+
+<genus nomen="legenda" sub="opus_scriptum"
+  modulus="opus_scriptum">
+
+  <differentia>
+    Clavis notationis: quid signa in opere alio significent docet.
+    Sine legenda notatio muta est - lector signum videt nec scit
+    utrum ornamentum an sententia sit.
+  </differentia>
+
+  <glossa lingua="en">A legend: the key to a notation - it teaches
+    what the signs in another work mean. Without a legend a
+    notation is mute: the reader sees a mark and cannot tell
+    ornament from statement.</glossa>
+  <glossa lingua="fr">Une légende : la clef d'une notation - elle
+    enseigne ce que signifient les signes d'une autre œuvre. Sans
+    légende, une notation est muette : le lecteur voit un signe
+    sans savoir s'il est ornement ou énoncé.</glossa>
+
+  <nota>
+    Legenda opus parvum intra opus maius esse solet - compositio
+    per opus_scriptum.pars_de, iam exsistentem (furca V: partes
+    opera sunt, genus partis nullum).
+  </nota>
+</genus>
+
+<!-- ============= DEFECTUS DOCUMENTI ============== -->
+
+<genus nomen="defectus_documenti">
+
+  <definitio>
+    Quod textus lectori debuit nec lectio reddit: discrepantia
+    inter debitum documenti et quod lector inde construere potest.
+    Vitio parallelum SINE hereditate - vitium intentionem contra
+    mores fert; documentum mores non habet, non agit sed legitur:
+    alterum membrum hic LECTIO est.
+  </definitio>
+
+  <glossa lingua="en">A document defect: what the text owed the
+    reader and a reading does not yield - the discrepancy between
+    what the document owed and what a reader can construe from it.
+    Parallel to vitium without inheriting from it: a vitium sets
+    intention against behavior, and a document has no behavior -
+    it does not act, it is read.</glossa>
+  <glossa lingua="fr">Un défaut de document : ce que le texte
+    devait au lecteur et qu'une lecture ne rend pas - l'écart
+    entre ce que le document devait et ce que le lecteur peut en
+    tirer. Parallèle au vitium sans en hériter : le vitium oppose
+    l'intention au comportement, et un document n'a pas de
+    comportement - il n'agit pas, il se lit.</glossa>
+
+  <nota>
+    Trichotomia vi ordinata: deceptio (victimam habet), silentium,
+    ambiguitas. Defectus contra OPUS lectoris definitur, non
+    contra normam solam; inventio ordinaria per ambulationem
+    lectoris.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="quid praecise defuit aut fefellit, verbis"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="in_opere" ad="opus_scriptum"
+      modulus="opus_scriptum"
+      nota="ubi inhaeret - defectus semper alicuius operis est"/>
+  </relationes>
+</genus>
+
+<genus nomen="deceptio" sub="defectus_documenti">
+
+  <differentia>
+    Textus falsum DOCET: lectio recta lectorem in errorem ducit.
+    Victimam habet, unde vis maxima - malum non quod deest sed
+    quod mendaciter adest.
+  </differentia>
+
+  <glossa lingua="en">Active misleading: the text teaches a
+    falsehood - a correct reading leads the reader into error. It
+    has a victim, hence its rank first in force: the trouble is
+    not what is missing but what is falsely present.</glossa>
+  <glossa lingua="fr">L'égarement actif : le texte enseigne une
+    fausseté - une lecture correcte conduit le lecteur à l'erreur.
+    Il a une victime, d'où son rang premier en force : le mal
+    n'est pas ce qui manque mais ce qui est faussement
+    présent.</glossa>
+
+  <nota>
+    Casus mensuratus: truncatio '|...' valorem 'mortua' celavit -
+    pagina docuit mortem plantae dici non posse, dum
+    'status-vita="mortua"' semper transibat. A depravatione
+    distinguitur: illa datum pravum, haec textus qui falsum DOCET.
+  </nota>
+</genus>
+
+<genus nomen="silentium" sub="defectus_documenti">
+
+  <differentia>
+    Textus tacet quod scit: scientia exstat et narratio eam
+    retinet. Ab ignoto iudicii distinguitur - illud lacuna
+    LECTORIS nominata, hoc lacuna NARRATIONIS.
+  </differentia>
+
+  <glossa lingua="en">Silence: the text withholds what it knows -
+    the knowledge exists and the telling omits it. Distinct from
+    iudicium's ignotum, which is the reader's named gap; this is
+    the page's side of the same absence.</glossa>
+  <glossa lingua="fr">Le silence : le texte tait ce qu'il sait -
+    le savoir existe et le récit l'omet. Distinct de l'ignotum du
+    iudicium, qui est la lacune nommée du lecteur ; ici c'est le
+    versant de la page de la même absence.</glossa>
+
+  <nota>
+    Casus mensuratus: elementum radicis documenti numquam in
+    pagina nominatur - peregrinus radicem divinare debuit.
+  </nota>
+</genus>
+
+<genus nomen="ambiguitas" sub="defectus_documenti">
+
+  <differentia>
+    Textus plures sensus admittit nec fundamentum eligendi
+    praebet: lector inter construenda sine causa eligere cogitur.
+  </differentia>
+
+  <glossa lingua="en">Ambiguity: the text admits several readings
+    and gives the reader no ground to choose among them.</glossa>
+  <glossa lingua="fr">L'ambiguïté : le texte admet plusieurs
+    lectures et ne donne au lecteur aucun fondement pour choisir
+    entre elles.</glossa>
+
+  <nota>
+    Casus mensuratus: signum '...' tria diversa in eadem pagina
+    significabat (truncatio electionis, textus liber, vacuum).
+  </nota>
+</genus>
+
+<!-- ============= AMBULATIO LECTORIS ============== -->
+
+<genus nomen="ambulatio_lectoris" sub="probatio"
+  modulus="fabricatio">
+
+  <differentia>
+    Probatio documenti per lectorem RESTRICTUM: lector ad fontem
+    sub probatione solum adstringitur, ut fons ipse mensuretur.
+    Oraculum non assertio sed successus lectoris in opere dato.
+  </differentia>
+
+  <glossa lingua="en">A reader-walk: a test of a document by a
+    restricted reader - the reader is confined to the source under
+    test, so that the source itself is what gets measured. The
+    oracle is not an assertion but the reader's success at a
+    stated task.</glossa>
+  <glossa lingua="fr">Une marche de lecteur : un test d'un
+    document par un lecteur restreint - le lecteur est confiné à
+    la source testée, afin que ce soit la source elle-même qui
+    soit mesurée. L'oracle n'est pas une assertion mais la
+    réussite du lecteur à une tâche donnée.</glossa>
+
+  <nota>
+    Propositiones ambulationis vehicula exsistentia vehunt:
+    annotatio (lector programma), iudicium (lector persona),
+    investigatio quae parit postulata (index emendationum).
+    Proprietas hereditaria contentum opus temptatum fert ('quid
+    interrogetur' - hic: quid lector facere conatus sit).
+  </nota>
+
+  <relationes>
+    <relatio nomen="lector" ad="*"
+      nota="persona aut programma - eadem apertio consulta ac
+            scriba (parcum 01KZFM3GW0: genus ministri machinalis
+            dilatum donec census verus tag poscat)"/>
+    <relatio nomen="invenit" ad="defectus_documenti"
+      multiplex="verum"
+      nota="defectus quos ambulatio in aperto posuit"/>
+    <relatio nomen="exercet" ad="opus_scriptum"
+      modulus="opus_scriptum" multiplex="verum"
+      nota="restrictio relationis hereditariae (praecedens
+            versio_de): lector codicem physice legit, ambulatio
+            OPUS ut expressum probat"/>
+  </relationes>
+</genus>
+
+</natura>

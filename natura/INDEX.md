@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **33** · genera **178** · res dictionarii **385** · arcus **521**
+Exemplaria **34** · genera **187** · res dictionarii **385** · arcus **528**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -94,6 +94,18 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **res_sacra** ⊂ res_corporea ⚙ — Divino cultui per ACTUM dedicata, non per naturam nec per materiam: idem lignum mensa aut altare esse potest, et diffe
 - **damnum** ⚙ — Laesio integritatis rei corporeae ab externa vi illata: quod unum erat divisum, quod integrum fractum, quod purum mixt
 - **vivens** ⊂ res_corporea ⚙ — Se ipsum movet, nutrit, generat: principium motus INTRA se habet, ubi artefactum motum ab alio accipit et materia null
+
+### documentatio (v1, genera 9)
+
+- **dictionarium** ⊂ opus_scriptum.opus_scriptum — Ad INSPECTIONEM destinatum: quid res sint docet, singulatim, ordine quaerendi non legendi
+- **manuale** ⊂ opus_scriptum.opus_scriptum — Ad ACTIONEM destinatum: quid faciendum sit docet
+- **exemplum** ⊂ opus_scriptum.opus_scriptum — Specimen INTEGRUM ad imitandum: non describit sed monstrat
+- **legenda** ⊂ opus_scriptum.opus_scriptum — Clavis notationis: quid signa in opere alio significent docet
+- **defectus_documenti** — Quod textus lectori debuit nec lectio reddit: discrepantia inter debitum documenti et quod lector inde construere pote
+- **deceptio** ⊂ defectus_documenti — Textus falsum DOCET: lectio recta lectorem in errorem ducit
+- **silentium** ⊂ defectus_documenti — Textus tacet quod scit: scientia exstat et narratio eam retinet
+- **ambiguitas** ⊂ defectus_documenti — Textus plures sensus admittit nec fundamentum eligendi praebet: lector inter construenda sine causa eligere cogitur
+- **ambulatio_lectoris** ⊂ fabricatio.probatio — Probatio documenti per lectorem RESTRICTUM: lector ad fontem sub probatione solum adstringitur, ut fons ipse mensuretu
 
 ### elementa_programmatis (v4, genera 18)
 
@@ -310,7 +322,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | actus_iuridicus | actus |
 | actus_sollemnis | actus |
 | aedificium | locus |
+| ambiguitas | documentatio |
 | ambitus | operatio |
+| ambulatio_lectoris | documentatio |
 | animal | animal |
 | annotatio | iudicium |
 | architectura_machinae | architectura_machinae |
@@ -345,12 +359,16 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | corpus_normans | organizatio |
 | damnum | corporalia |
 | debitum_technicum | fabricatio |
+| deceptio | documentatio |
+| defectus_documenti | documentatio |
 | delegatio | obligatio |
 | depravatio | fabricatio |
+| dictionarium | documentatio |
 | directorium | plagula_computatralis |
 | distributio_systematis | systema_operativum |
 | editio | opus_scriptum |
 | eventum | communicatio |
+| exemplum | documentatio |
 | expressio | opus_scriptum |
 | facultas | fabricatio |
 | fasciculus | opus_scriptum |
@@ -385,6 +403,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | iurisdictio | locus |
 | iussum | obligatio |
 | lectio | elementa_programmatis |
+| legenda | documentatio |
 | lex | norma |
 | licentia | obligatio |
 | limitatio | obligatio |
@@ -394,6 +413,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | magistratus | organizatio |
 | magnitudo_mensurabilis | mensura |
 | malus | planta |
+| manuale | documentatio |
 | materia | corporalia |
 | medicamentum | pharmacon |
 | momentum | tempus |
@@ -457,6 +477,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | scriptum_exsecutabile | plagula_computatralis |
 | secretum | iudicium |
 | servus | cliens |
+| silentium | documentatio |
 | societas | organizatio |
 | status | elementa_programmatis |
 | stigmergia | communicatio |

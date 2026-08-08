@@ -624,7 +624,6 @@
   <citatio nomen="complicatio-retractat" attributum="retractat" ad="consilium consilium-computatum/nomen" super="complicatio"/>
   <citatio nomen="consilium-ad-postulata" attributum="ad" ad="postulatum/nomen" super="consilium/ad-postulata"/>
   <citatio nomen="depravatio-ex-vitio" attributum="ex-vitio" ad="vitium regressio/nomen" super="depravatio"/>
-  <citatio nomen="depravatio-detecta-per" attributum="detecta-per" ad="probatio probatio-unitatis probatio-integrationis probatio-regressionis probatio-fumi/nomen" super="depravatio"/>
   <citatio nomen="probatio-unitatis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-unitatis"/>
   <citatio nomen="probatio-integrationis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-integrationis"/>
   <citatio nomen="probatio-regressionis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-regressionis"/>

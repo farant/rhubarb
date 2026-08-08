@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e documentatio - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="documentatio" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <liberum nomen="dictionarium"/>
+    <liberum nomen="manuale"/>
+    <liberum nomen="exemplum"/>
+    <liberum nomen="legenda"/>
+    <liberum nomen="defectus-documenti"/>
+    <liberum nomen="deceptio"/>
+    <liberum nomen="silentium"/>
+    <liberum nomen="ambiguitas"/>
+    <liberum nomen="ambulatio-lectoris"/>
+  </elementum>
+
+  <elementum nomen="dictionarium">
+    <glossa lingua="en">A dictionary (reference work): a work
+    intended for consultation - it teaches what things ARE, entry
+    by entry, ordered for seeking rather than reading. The reader
+    comes for one thing, finds it, and leaves; the work is
+    visited, not read through.</glossa>
+    <glossa lingua="fr">Un dictionnaire (ouvrage de référence) :
+    une œuvre destinée à la consultation - elle enseigne ce que
+    SONT les choses, entrée par entrée, ordonnée pour chercher et
+    non pour lire. Le lecteur vient pour une chose, la trouve et
+    s'en va ; l'œuvre se consulte, elle ne se lit pas d'un
+    trait.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus-originalis" genus="textus"/>
+    <attributum nomen="lingua-originalis" genus="textus"/>
+    <attributum nomen="status-compositio" genus="electio">
+      <optio>concepta</optio>
+      <optio>in_scriptione</optio>
+      <optio>perfecta</optio>
+      <optio>imperfecta_relicta</optio>
+    </attributum>
+    <attributum nomen="habet-expressionem" genus="referentia"/>
+    <attributum nomen="continuatio-de" genus="referentia"/>
+    <attributum nomen="respondet-ad" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="materia" intra="dictionarium" textus="verum"/>
+  <elementum nomen="auctor" intra="dictionarium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="dictionarium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="dictionarium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="manuale">
+    <glossa lingua="en">A manual: a work intended for action - it
+    teaches what is to be DONE. The reader wants to accomplish some
+    task and receives the steps from the text; a dictionary says
+    what a thing is, a manual says how it is done.</glossa>
+    <glossa lingua="fr">Un manuel : une œuvre destinée à l'action -
+    elle enseigne ce qu'il faut FAIRE. Le lecteur veut accomplir
+    une tâche et reçoit du texte les étapes ; le dictionnaire dit
+    ce qu'est une chose, le manuel dit comment elle se
+    fait.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus-originalis" genus="textus"/>
+    <attributum nomen="lingua-originalis" genus="textus"/>
+    <attributum nomen="status-compositio" genus="electio">
+      <optio>concepta</optio>
+      <optio>in_scriptione</optio>
+      <optio>perfecta</optio>
+      <optio>imperfecta_relicta</optio>
+    </attributum>
+    <attributum nomen="habet-expressionem" genus="referentia"/>
+    <attributum nomen="continuatio-de" genus="referentia"/>
+    <attributum nomen="respondet-ad" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="materia" intra="manuale" textus="verum"/>
+  <elementum nomen="auctor" intra="manuale">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="manuale">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="manuale">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="exemplum">
+    <glossa lingua="en">A worked example: a complete specimen meant
+    for imitation - it shows rather than describes. The reader
+    copies it and adapts it; completeness is the differentia - a
+    fragment demonstrates, a worked example gets you
+    started.</glossa>
+    <glossa lingua="fr">Un exemple complet : un spécimen intégral
+    destiné à l'imitation - il montre au lieu de décrire. Le
+    lecteur le transcrit et l'adapte ; l'intégralité fait la
+    différence - un fragment démontre, un exemple complet fait
+    démarrer.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus-originalis" genus="textus"/>
+    <attributum nomen="lingua-originalis" genus="textus"/>
+    <attributum nomen="status-compositio" genus="electio">
+      <optio>concepta</optio>
+      <optio>in_scriptione</optio>
+      <optio>perfecta</optio>
+      <optio>imperfecta_relicta</optio>
+    </attributum>
+    <attributum nomen="habet-expressionem" genus="referentia"/>
+    <attributum nomen="continuatio-de" genus="referentia"/>
+    <attributum nomen="respondet-ad" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="materia" intra="exemplum" textus="verum"/>
+  <elementum nomen="auctor" intra="exemplum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="exemplum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="exemplum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="legenda">
+    <glossa lingua="en">A legend: the key to a notation - it teaches
+    what the signs in another work mean. Without a legend a
+    notation is mute: the reader sees a mark and cannot tell
+    ornament from statement.</glossa>
+    <glossa lingua="fr">Une légende : la clef d'une notation - elle
+    enseigne ce que signifient les signes d'une autre œuvre. Sans
+    légende, une notation est muette : le lecteur voit un signe
+    sans savoir s'il est ornement ou énoncé.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="titulus-originalis" genus="textus"/>
+    <attributum nomen="lingua-originalis" genus="textus"/>
+    <attributum nomen="status-compositio" genus="electio">
+      <optio>concepta</optio>
+      <optio>in_scriptione</optio>
+      <optio>perfecta</optio>
+      <optio>imperfecta_relicta</optio>
+    </attributum>
+    <attributum nomen="habet-expressionem" genus="referentia"/>
+    <attributum nomen="continuatio-de" genus="referentia"/>
+    <attributum nomen="respondet-ad" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <liberum nomen="materia"/>
+    <liberum nomen="auctor"/>
+    <liberum nomen="scriba"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="materia" intra="legenda" textus="verum"/>
+  <elementum nomen="auctor" intra="legenda">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="scriba" intra="legenda">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="legenda">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="defectus-documenti">
+    <glossa lingua="en">A document defect: what the text owed the
+    reader and a reading does not yield - the discrepancy between
+    what the document owed and what a reader can construe from it.
+    Parallel to vitium without inheriting from it: a vitium sets
+    intention against behavior, and a document has no behavior -
+    it does not act, it is read.</glossa>
+    <glossa lingua="fr">Un défaut de document : ce que le texte
+    devait au lecteur et qu'une lecture ne rend pas - l'écart
+    entre ce que le document devait et ce que le lecteur peut en
+    tirer. Parallèle au vitium sans en hériter : le vitium oppose
+    l'intention au comportement, et un document n'a pas de
+    comportement - il n'agit pas, il se lit.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="in-opere" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="defectus-documenti">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="deceptio">
+    <glossa lingua="en">Active misleading: the text teaches a
+    falsehood - a correct reading leads the reader into error. It
+    has a victim, hence its rank first in force: the trouble is
+    not what is missing but what is falsely present.</glossa>
+    <glossa lingua="fr">L'égarement actif : le texte enseigne une
+    fausseté - une lecture correcte conduit le lecteur à l'erreur.
+    Il a une victime, d'où son rang premier en force : le mal
+    n'est pas ce qui manque mais ce qui est faussement
+    présent.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="in-opere" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="deceptio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="silentium">
+    <glossa lingua="en">Silence: the text withholds what it knows -
+    the knowledge exists and the telling omits it. Distinct from
+    iudicium's ignotum, which is the reader's named gap; this is
+    the page's side of the same absence.</glossa>
+    <glossa lingua="fr">Le silence : le texte tait ce qu'il sait -
+    le savoir existe et le récit l'omet. Distinct de l'ignotum du
+    iudicium, qui est la lacune nommée du lecteur ; ici c'est le
+    versant de la page de la même absence.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="in-opere" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="silentium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ambiguitas">
+    <glossa lingua="en">Ambiguity: the text admits several readings
+    and gives the reader no ground to choose among them.</glossa>
+    <glossa lingua="fr">L'ambiguïté : le texte admet plusieurs
+    lectures et ne donne au lecteur aucun fondement pour choisir
+    entre elles.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="in-opere" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="ambiguitas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ambulatio-lectoris">
+    <glossa lingua="en">A reader-walk: a test of a document by a
+    restricted reader - the reader is confined to the source under
+    test, so that the source itself is what gets measured. The
+    oracle is not an assertion but the reader's success at a
+    stated task.</glossa>
+    <glossa lingua="fr">Une marche de lecteur : un test d'un
+    document par un lecteur restreint - le lecteur est confiné à
+    la source testée, afin que ce soit la source elle-même qui
+    soit mesurée. L'oracle n'est pas une assertion mais la
+    réussite du lecteur à une tâche donnée.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="lector" genus="referentia"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interrogat" genus="referentia"/>
+    <liberum nomen="invenit"/>
+    <liberum nomen="exercet"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="invenit" intra="ambulatio-lectoris">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="exercet" intra="ambulatio-lectoris">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="continet" intra="ambulatio-lectoris">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="ambulatio-lectoris">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="electio">
+      <optio>componi</optio>
+      <optio>exprimi</optio>
+      <optio>edi</optio>
+      <optio>deseri</optio>
+    </attributum>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="dictionarium manuale exemplum legenda defectus-documenti deceptio
+           silentium ambiguitas ambulatio-lectoris"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="ambulatio-lectoris-invenit" attributum="ad" ad="defectus-documenti deceptio silentium ambiguitas/nomen" super="ambulatio-lectoris/invenit"/>
+
+</canon>
