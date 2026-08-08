@@ -39,7 +39,8 @@ interior vacuum ens_registrare(
     chorda* titulus);
 interior vacuum arborem_legere(
     NaturaBibliotheca* bib, NaturaExemplar* ex,
-    StmlNodus* nodus, NaturaGenus* ambiens);
+    StmlNodus* nodus, NaturaGenus* ambiens,
+    NaturaRes* ambiens_res);
 interior StmlNodus* in_catena_invenire(
     NaturaGenus* genus, constans character* continens,
     constans character* elementum, chorda* quaesitum);
@@ -223,7 +224,8 @@ arborem_legere(
     NaturaBibliotheca* bib,
     NaturaExemplar*    ex,
     StmlNodus*         nodus,
-    NaturaGenus*       ambiens)
+    NaturaGenus*       ambiens,
+    NaturaRes*         ambiens_res)
 {
     i32 numerus;
     i32 i;
@@ -258,7 +260,8 @@ arborem_legere(
             {
                 /* sine nomine registrari nequit - canon clamat
                  * (ATTRIBUTUM_DEEST), onerator praeterit */
-                arborem_legere(bib, ex, liberum, ambiens);
+                arborem_legere(bib, ex, liberum, ambiens,
+                               ambiens_res);
                 perge;
             }
 
@@ -278,7 +281,7 @@ arborem_legere(
 
             ens_registrare(bib, ex, NATURA_ENS_GENUS, novum,
                            titulus_n);
-            arborem_legere(bib, ex, liberum, novum);
+            arborem_legere(bib, ex, liberum, novum, NIHIL);
         }
         alioquin si (chorda_aequalis_literis(*titulus_e, "species") ||
                      chorda_aequalis_literis(*titulus_e, "individuum") ||
@@ -291,7 +294,8 @@ arborem_legere(
             {
                 /* sine nomine registrari nequit - canon clamat
                  * (ATTRIBUTUM_DEEST), onerator praeterit */
-                arborem_legere(bib, ex, liberum, ambiens);
+                arborem_legere(bib, ex, liberum, ambiens,
+                               ambiens_res);
                 perge;
             }
 
@@ -300,6 +304,9 @@ arborem_legere(
             nova->titulus    = titulus_n;
             nova->modulus    = ex->stirps;
             nova->genus_suum = ambiens;
+            nova->continens  = ambiens_res;
+            nova->res_suae   = xar_creare(bib->piscina,
+                                 (i32)magnitudo(NaturaRes*));
             nova->nodus      = liberum;
 
             locus = (NaturaRes**)xar_addere(bib->res_omnes);
@@ -313,15 +320,28 @@ arborem_legere(
                 *locus_g = nova;
             }
 
+            /* catena TAXINOMIAE: res nidificata continenti suae
+             * quoque adscribitur (catena apparatus supra intacta
+             * manet - genus->res_suae planum est CONSULTO) */
+            si (ambiens_res)
+            {
+                NaturaRes** locus_r;
+
+                locus_r = (NaturaRes**)xar_addere(
+                              ambiens_res->res_suae);
+                *locus_r = nova;
+            }
+
             ens_registrare(bib, ex, NATURA_ENS_RES, nova, titulus_n);
             /* genus nidificatum in specie parentem GENUS ambientem
              * accipit (profunditas Porphyriana est taxinomia, non
-             * catena apparatus) */
-            arborem_legere(bib, ex, liberum, ambiens);
+             * catena apparatus) - sed continens ipsa NUNC
+             * traditur, ut taxinomia dici possit */
+            arborem_legere(bib, ex, liberum, ambiens, nova);
         }
         alioquin
         {
-            arborem_legere(bib, ex, liberum, ambiens);
+            arborem_legere(bib, ex, liberum, ambiens, ambiens_res);
         }
     }
 }
@@ -401,7 +421,8 @@ natura_legere(
             "attributum modulus stirpi plagulae non aequat (regula XIV)");
     }
 
-    arborem_legere(bib, ex, resultus.elementum_radix, NIHIL);
+    arborem_legere(bib, ex, resultus.elementum_radix, NIHIL,
+                   NIHIL);
 
     bib->nexum = FALSUM;  /* lectio nova nexuram novam poscit */
 

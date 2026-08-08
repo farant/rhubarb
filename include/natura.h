@@ -62,17 +62,37 @@ structura NaturaGenus {
       StmlNodus*  nodus;      /* subtree - cetera hinc leguntur */
 };
 
-/* res dictionarii: species / individuum / cultivar */
-nomen structura {
+/* res dictionarii: species / individuum / cultivar
+ *
+ * DUAE CATENAE, CONSULTO DISTINCTAE (2026-08-08):
+ *   genus_suum + genus->res_suae = catena APPARATUS. Genus
+ *     ambiens, res mediis PRAETERMISSIS: species apparatum non
+ *     confert (valorem solum figit), ergo hereditas eam recte
+ *     transilit. Planum manet: genus->res_suae res OMNES sub eo
+ *     fert, etiam nidificatas.
+ *   continens + res_suae = catena TAXINOMIAE. Quod re vera quid
+ *     continet: <species isbn> speciem isbn_10 continet,
+ *     <species malus_domestica> cultivar granny_smith. Haec
+ *     profunditas Porphyriana in plagulis SEMPER fuit; hic
+ *     demum in graphum venit (ante hoc dici non poterat).
+ * Neutra alteram substituit - apparatus quaerit quid HEREDITET,
+ * taxinomia quid SIT. */
+nomen structura NaturaRes NaturaRes;
+structura NaturaRes {
          chorda*  titulus;
          chorda*  modulus;
-    NaturaGenus*  genus_suum;   /* genus continens */
+    NaturaGenus*  genus_suum;   /* genus continens (APPARATUS) */
     NaturaGenus*  genus_etiam;  /* etiam= resolutum: membrum
                                  * essentiale duplex (par.3/4).
                                  * Apparatus AMBARUM catenarum
                                  * huic rei debetur */
+      NaturaRes*  continens;    /* res ambiens si nidificata,
+                                 * NIHIL si sub genere recta
+                                 * (TAXINOMIA) */
+            Xar*  res_suae;     /* Xar de NaturaRes*: res HUIC
+                                 * rei proxime nidificatae */
       StmlNodus*  nodus;
-} NaturaRes;
+};
 
 /* discrimen entis - genera et res dictionarii spatium nominum
  * UNUM per exemplar habent (regula XV), ergo index unus */

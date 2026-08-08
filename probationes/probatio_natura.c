@@ -55,6 +55,13 @@ interior constans character* FIXTURA_PROBATUM =
     "      <historia>\n"
     "        <eventum quando=\"1800-05\" actio=\"nasci\">descripta</eventum>\n"
     "      </historia>\n"
+    /* NIDIFICATIO: cultivar intra speciem - profunditas quam
+     * plagulae verae ferunt (planta: malus_domestica >
+     * granny_smith; identificatio: isbn > isbn_10) */
+    "      <cultivar nomen=\"rosa_alba\">\n"
+    "        <definitio>rosa colore albo</definitio>\n"
+    "        <valor nomen=\"color\">albus</valor>\n"
+    "      </cultivar>\n"
     "    </species>\n"
     "  </genus>\n"
     "</genus>\n"
@@ -216,7 +223,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(bib->exemplaria), III);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(bib->genera_omnia),
                             IX);
-        CREDO_AEQUALIS_I32 ((i32)xar_numerus(bib->res_omnes), IV);
+        /* V post nidificationem (rosa_alba addita 2026-08-08) */
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(bib->res_omnes), V);
 
 
         /* ====================================================
@@ -253,9 +261,12 @@ s32 principale (vacuum)
                 natura_genus_in(bib, "probatum", "geminus"),
                 natura_genus_in(bib, "metrum_probatum", "geminus"));
 
-            /* res_suae */
+            /* res_suae generis PLANUM est: rosa ET rosa_alba
+             * nidificata - II, non I. Haec ipsa assertio custodit
+             * ne catena taxinomiae catenam apparatus angustet
+             * (consumptores planitiem exspectant). */
             CREDO_AEQUALIS_I32 ((i32)xar_numerus(planta->res_suae),
-                                I);
+                                II);
         }
 
 
@@ -284,6 +295,83 @@ s32 principale (vacuum)
                                 natura_genus(bib, "artificium"));
             CREDO_AEQUALIS_PTR (corona->genus_etiam,
                                 natura_genus(bib, "planta"));
+            /* res sub genere RECTA continentem non habet */
+            CREDO_NIHIL (corona->continens);
+        }
+
+
+        /* ====================================================
+         * TAXINOMIA vs APPARATUS: catenae duae distinctae
+         *
+         * Plagulae profunditatem Porphyrianam SEMPER tulerunt
+         * (<species isbn> speciem isbn_10 continet; <species
+         * malus_domestica> cultivar granny_smith) sed graphus
+         * eam non ferebat: res omnes ad genus ambiens
+         * planabantur. Nunc AMBAE dicuntur - et haec probatio
+         * custodit ne altera alteram corrumpat.
+         * ==================================================== */
+        {
+            NaturaEns* granny_ens;
+            NaturaEns* malus_d_ens;
+            NaturaRes* granny;
+            NaturaRes* malus_d;
+
+            imprimere("\n--- Taxinomia nidificata ---\n");
+
+            granny_ens  = natura_ens_in(bib, "probatum",
+                                        "rosa_alba");
+            malus_d_ens = natura_ens_in(bib, "probatum",
+                                        "rosa");
+            CREDO_NON_NIHIL (granny_ens);
+            CREDO_NON_NIHIL (malus_d_ens);
+
+            granny  = (NaturaRes*)granny_ens->corpus;
+            malus_d = (NaturaRes*)malus_d_ens->corpus;
+
+            /* TAXINOMIA: continens vera dicitur (ante hoc NIHIL) */
+            CREDO_AEQUALIS_PTR (granny->continens, malus_d);
+            CREDO_NIHIL (malus_d->continens);
+
+            /* et deorsum quoque ambulabilis */
+            CREDO_MAIOR_I32 (xar_numerus(malus_d->res_suae),
+                             (i32)ZEPHYRUM);
+            CREDO_AEQUALIS_PTR (
+                *(NaturaRes**)xar_obtinere(malus_d->res_suae,
+                                           ZEPHYRUM),
+                granny);
+
+            /* APPARATUS INTACTUS (custodia regressionis): granny
+             * genus AMBIENS servat, non speciem - species
+             * apparatum non confert, ergo hereditas eam recte
+             * transilit. Si haec assertio rubet, mutatio
+             * taxinomiae catenam hereditatis corrupit et
+             * canones generati moventur. */
+            CREDO_AEQUALIS_PTR (granny->genus_suum,
+                                natura_genus(bib, "planta"));
+            CREDO_AEQUALIS_PTR (malus_d->genus_suum,
+                                natura_genus(bib, "planta"));
+
+            /* genus->res_suae PLANUM manet (omnes sub eo, etiam
+             * nidificatae) - consumptores eo nituntur */
+            {
+                NaturaGenus* malus;
+                i32          i;
+                b32          granny_inventa;
+
+                malus = natura_genus(bib, "planta");
+                CREDO_NON_NIHIL (malus);
+                granny_inventa = FALSUM;
+                per (i = ZEPHYRUM;
+                     i < xar_numerus(malus->res_suae); i++)
+                {
+                    si (*(NaturaRes**)xar_obtinere(
+                            malus->res_suae, i) == granny)
+                    {
+                        granny_inventa = VERUM;
+                    }
+                }
+                CREDO_VERUM (granny_inventa);
+            }
         }
 
 

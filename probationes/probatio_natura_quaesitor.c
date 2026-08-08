@@ -347,6 +347,35 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+    /* ========================================================
+     * XI. TAXINOMIA NIDIFICATA (2026-08-08): species speciem
+     * continere potest. Ante hoc graphus id planabat, ergo
+     * 'intra isbn' dici non poterat - res ad genus ambiens
+     * solum referebatur.
+     * ======================================================== */
+    {
+        ProcessusResultus r;
+
+        imprimere("\n--- XI. taxinomia nidificata ---\n");
+
+        /* species INTRA speciem */
+        r = _currere("quaere", "isbn_10", NIHIL, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (_continet_literis(r.effusio, "intra isbn",
+                                       piscina));
+        /* utraque catena dicitur: continens ET genus */
+        CREDO_VERUM (_continet_literis(
+            r.effusio, "in genere schema_identificandi", piscina));
+
+        /* cultivar intra speciem, arbore inclusa */
+        r = _currere("apparatus", "malus", NIHIL, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (_continet_literis(r.effusio, "malus_domestica",
+                                       piscina));
+        CREDO_VERUM (_continet_literis(r.effusio, "> granny_smith",
+                                       piscina));
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

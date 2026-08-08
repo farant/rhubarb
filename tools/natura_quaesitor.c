@@ -484,9 +484,25 @@ _congruentiam_scribere(
         }
         alioquin
         {
-            imprimere("  RES%s     /%s/%s   (in genere %s)\n",
+            character intra[NOMINIS_TECTUM];
+
+            /* TAXINOMIA ante apparatum: continens PROXIMA prius,
+             * quia lector 'ubi sedet?' quaerit, non 'unde
+             * hereditat?' */
+            intra[ZEPHYRUM] = '\0';
+            si (c->res->continens)
+            {
+                _chordam_scribere(c->res->continens->titulus, intra,
+                                  (i32)magnitudo(intra));
+            }
+            imprimere("  RES%s     /%s/%s   (",
                       c->nomine ? " [NOMEN IPSUM]" : "     ",
-                      mod, tit, apud[ZEPHYRUM] ? apud : "-");
+                      mod, tit);
+            si (intra[ZEPHYRUM])
+            {
+                imprimere("intra %s, ", intra);
+            }
+            imprimere("in genere %s)\n", apud[ZEPHYRUM] ? apud : "-");
         }
         si (sensus[ZEPHYRUM])
         {
@@ -911,6 +927,42 @@ _membrum_scribere(
     }
 }
 
+/* res nidificatas RECURRENTER scribere (taxinomia Porphyriana:
+ * <species isbn> speciem isbn_10 continet, <species
+ * malus_domestica> cultivar granny_smith) */
+interior vacuum
+_nidificatas_scribere(
+    NaturaRes*  parens,
+    i32         gradus,
+    Piscina*    piscina)
+{
+    i32 i;
+
+    si (!parens->res_suae || gradus > VIII)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(parens->res_suae); i++)
+    {
+        NaturaRes*          n;
+        constans character* kind;
+        character           tit[NOMINIS_TECTUM];
+        character           sensus[PROSAE_TECTUM];
+
+        n    = *(NaturaRes**)xar_obtinere(parens->res_suae, i);
+        kind = (n->nodus && n->nodus->titulus) ?
+                   (constans character*)n->nodus->titulus->datum : "?";
+        _chordam_scribere(n->titulus, tit, (i32)magnitudo(tit));
+        _sensum_scribere(n->nodus, piscina, sensus,
+                         (i32)magnitudo(sensus));
+
+        imprimere("  %*s%s %-*s %.50s\n", (integer)(gradus * II), "",
+                  strcmp(kind, "individuum") == ZEPHYRUM ? ":" : ">",
+                  (integer)(25 - gradus * II), tit, sensus);
+        _nidificatas_scribere(n, gradus + I, piscina);
+    }
+}
+
 interior vacuum
 _species_scribere(
     NaturaGenus*  genus,
@@ -957,11 +1009,18 @@ _species_scribere(
         {
             perge;
         }
+        /* nidificatas hic PRAETERIT: sub continente sua infra
+         * scribuntur, ne bis appareant */
+        si (r->continens)
+        {
+            perge;
+        }
         _chordam_scribere(r->titulus, tit, (i32)magnitudo(tit));
         _sensum_scribere(r->nodus, piscina, sensus,
                          (i32)magnitudo(sensus));
-        imprimere("  %s%-26s %.70s\n", individuum ? ":" : " ", tit,
+        imprimere("  %s%-26s %.60s\n", individuum ? ":" : " ", tit,
                   sensus);
+        _nidificatas_scribere(r, I, piscina);
     }
 }
 
