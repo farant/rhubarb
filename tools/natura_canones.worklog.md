@@ -851,3 +851,15 @@ res carry no glossae today (natura.canon admits them under genus
 only), but if they ever do, they flow with no emitter change.
 semina.census deliberately carries none (docs describe kinds,
 individua are data) and the suite asserts that negatively.
+
+### 2026-08-08 — fines carry-through
+
+proprietas fractio/minimum/maximum -> NcMembrum (three chorda*
+verbatim, numerus branch only) -> emitted between genus= and
+ordinarius=. Nothing parses values in the projection: the canon
+layer validates at load, the generator is a courier. Corpus v1:
+periculum.probabilitas (0..1, nota migrated to grammar — L4 probe
+probabilitas="0.7" now a green sentinel), quantitas valor/minimum/
+maximum/praecisio fractio (measure ranges like "2-5 m" want
+decimals; quantitas minimum/maximum are DATA properties, unrelated
+to canon fines despite sharing the words).

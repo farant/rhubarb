@@ -189,3 +189,33 @@ New vitium CANON_VOCABULUM_IGNOTUM (XIII — first attempt at XI
 collided with CANON_TEXTUS_MALUS; the vitium enum runs past the
 window I had sampled. Grep a WINDOW, collide with the enum).
 Suggestion via the existing _suggestio idiom.
+
+## 2026-08-08 — fines: structured value constraints
+
+`fractio="verum"` + inclusive `minimum=`/`maximum=` on attributa,
+numerus only (spec fines; forced by documentation-loop miss L4 —
+probabilitas documented "inter 0 et 1" in a nota could legally hold
+only 0 and 1). The ruling line: canon may state a value's WRITTEN
+FORM and value space, never its storage — dies always did this for
+dates; numerus now can for decimals and ranges. Vocabulary stays a
+closed set of declarative attributes (no expression language, ever).
+
+Implementation notes:
+- Comparison WITHOUT floats: _numerum_secare strips sign/leading/
+  trailing zeros, _magnitudines_comparare compares digit strings
+  with fraction padding. '-0' == '0' handled at parse.
+- New vitium VALOR_EXTRA_FINES (XIV) fires only on FORM-VALID
+  values outside bounds; form failures stay VALOR_MALUS. Ordering
+  in the judgment: congruit first, fines second.
+- Lying canons break at load (causa): fines on non-numerus, ill-
+  formed bounds, minimum>maximum, ordinarius outside fines. Bounds
+  themselves obey the attribute's own fractio.
+- canon.canon self-hosts: its minimum/maximum declared
+  genus="numerus" fractio="verum", judged by the code they set up.
+- TRAP paid twice this feature: an Edit whose old_string starts at
+  the function NAME orphans the `interior b32` specifier line above
+  it — "specificatores mixti". Anchor edits at the specifier line.
+- The name-reuse is deliberate: minimum/maximum on <liberum> =
+  cardinality, on <attributum> = value bounds. The corpus-audit
+  gate in probatio_natura_canones had to learn the difference
+  (element-aware counter) — leniency doctrine unchanged.
