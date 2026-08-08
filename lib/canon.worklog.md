@@ -219,3 +219,15 @@ Implementation notes:
   cardinality, on <attributum> = value bounds. The corpus-audit
   gate in probatio_natura_canones had to learn the difference
   (element-aware counter) — leniency doctrine unchanged.
+
+## 2026-08-08 — super adstrictum: path-scoped citations
+
+super= entries learn 'parens/titulus' (_super_congruit): child title
+AND parent title must match. One helper, one swapped comparison in
+pass II; pass I (keys from ad= closures) untouched. This was the
+whole missing piece for citing multiplex relation children — their
+names collide across parents ('continet' has seven petita), so
+global title-match could never aim at them and the generator
+refused to emit (its own comment named the reason). Fixture: auctor
+under liber cites men, under navis cites ports; swapping targets
+fires CITATIO_IRRITA twice.

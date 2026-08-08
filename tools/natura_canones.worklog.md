@@ -863,3 +863,19 @@ probabilitas="0.7" now a green sentinel), quantitas valor/minimum/
 maximum/praecisio fractio (measure ranges like "2-5 m" want
 decimals; quantitas minimum/maximum are DATA properties, unrelated
 to canon fines despite sharing the words).
+
+### 2026-08-08 — multiplex citations on + editio_de multiplex
+
+Removed the categorical NC_CIT_MULTIPLEX exclusion (its comment had
+named the lib-side gap all along); writer emits attributum="ad" +
+super="parens/child" for LIBERUM relation members. Monolith 798 ->
+1143 citations; nudae 780 -> 435 (all remaining = open petita 428 +
+unresolved 7). FIRST ACTIVATION found a five-month-latent wound:
+exsequitur mixes architecture/version granularity (8086 -> x86 the
+architecture, M1 -> armv8 the version) — quaestio 01KZFGHCEC,
+tolerated BY NAME in the semina gate (omnia==II now, each vitium
+named). Two audit gates needed the same lesson as the judge: the
+preface parser (multiplices cause-line died) and the citation
+auditor (path-aware super checking + _definitio_intra_invenire).
+editio_de flipped multiplex (L12) with zero migration surface —
+and lands CITED, which is why the mechanism went first.
