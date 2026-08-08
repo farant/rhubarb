@@ -399,6 +399,49 @@ quot_generis(
 }
 
 /* ==================================================
+ * Fixturae - fines (spec fines): constrictiones valorum
+ * structuratae - fractio (punctum decimale), minimum/maximum
+ * INCLUSIVA. Forma mala = VALOR_MALUS; forma sana extra fines =
+ * VALOR_EXTRA_FINES. Canones mendaces (ordinarius extra, fines
+ * inversi, fines in genere non numerico) in ORTU reiciuntur.
+ * ================================================== */
+
+interior constans character* CANON_FINIUM =
+    "<canon dialectus=\"probatio\" versio=\"1\">\n"
+    "  <elementum nomen=\"radix\" radix=\"verum\">\n"
+    "    <attributum nomen=\"gradus\" genus=\"numerus\"\n"
+    "      fractio=\"verum\" minimum=\"0\" maximum=\"1\"/>\n"
+    "    <attributum nomen=\"aetas\" genus=\"numerus\"/>\n"
+    "    <attributum nomen=\"calor\" genus=\"numerus\"\n"
+    "      fractio=\"verum\" minimum=\"-40\" maximum=\"0.5\"/>\n"
+    "  </elementum>\n"
+    "</canon>\n";
+
+interior constans character* CANON_ORDINARIUS_EXTRA =
+    "<canon dialectus=\"probatio\" versio=\"1\">\n"
+    "  <elementum nomen=\"radix\" radix=\"verum\">\n"
+    "    <attributum nomen=\"gradus\" genus=\"numerus\"\n"
+    "      minimum=\"0\" maximum=\"1\" ordinarius=\"2\"/>\n"
+    "  </elementum>\n"
+    "</canon>\n";
+
+interior constans character* CANON_FINES_INVERSI =
+    "<canon dialectus=\"probatio\" versio=\"1\">\n"
+    "  <elementum nomen=\"radix\" radix=\"verum\">\n"
+    "    <attributum nomen=\"gradus\" genus=\"numerus\"\n"
+    "      minimum=\"2\" maximum=\"1\"/>\n"
+    "  </elementum>\n"
+    "</canon>\n";
+
+interior constans character* CANON_FINES_TEXTUS =
+    "<canon dialectus=\"probatio\" versio=\"1\">\n"
+    "  <elementum nomen=\"radix\" radix=\"verum\">\n"
+    "    <attributum nomen=\"titulus\" genus=\"textus\"\n"
+    "      minimum=\"0\"/>\n"
+    "  </elementum>\n"
+    "</canon>\n";
+
+/* ==================================================
  * Fixturae - glossae (spec glossae): documentatio vernacula.
  * Forma sola canonis est (lingua necessaria per machinam genericam
  * necessarium=verum); copertura lintri (natura_glossae) est.
@@ -1026,6 +1069,82 @@ s32 principale (vacuum)
                     CANON_ATTRIBUTUM_IGNOTUM), I);
             }
         }
+    }
+
+
+    /* ========================================================
+     * PROBARE: fines valorum (spec fines)
+     * ======================================================== */
+
+    {
+        Canon* finium;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans fines valorum ---\n");
+
+        finium = canon_ex_literis(CANON_FINIUM, piscina, intern);
+        CREDO_NON_NIHIL (finium);
+
+        /* fractio: forma decimalis intra fines */
+        vitia = iudicare_literis(finium,
+            "<radix gradus=\"0.7\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* sine fractio punctum reicitur (forma, non fines) */
+        vitia = iudicare_literis(finium,
+            "<radix aetas=\"0.5\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_MALUS), I);
+
+        /* extra fines - vitium proprium, non forma */
+        vitia = iudicare_literis(finium,
+            "<radix gradus=\"1.5\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_EXTRA_FINES), I);
+        vitia = iudicare_literis(finium,
+            "<radix gradus=\"-1\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_EXTRA_FINES), I);
+
+        /* fines INCLUSIVI */
+        vitia = iudicare_literis(finium,
+            "<radix gradus=\"0\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+        vitia = iudicare_literis(finium,
+            "<radix gradus=\"1\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* zephyra caudalia: 0.50 == 0.5 (finis maximus caloris) */
+        vitia = iudicare_literis(finium,
+            "<radix calor=\"0.50\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* finis minimus negativus */
+        vitia = iudicare_literis(finium,
+            "<radix calor=\"-39.5\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+        vitia = iudicare_literis(finium,
+            "<radix calor=\"-40.5\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_EXTRA_FINES), I);
+
+        /* forma prava: punctum sine digito utrimque */
+        vitia = iudicare_literis(finium,
+            "<radix gradus=\".5\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_MALUS), I);
+        vitia = iudicare_literis(finium,
+            "<radix gradus=\"5.\"/>", piscina, intern);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_MALUS), I);
+
+        /* canones mendaces in ortu reiciuntur */
+        CREDO_NIHIL (canon_ex_literis(CANON_ORDINARIUS_EXTRA,
+                                      piscina, intern));
+        CREDO_NIHIL (canon_ex_literis(CANON_FINES_INVERSI,
+                                      piscina, intern));
+        CREDO_NIHIL (canon_ex_literis(CANON_FINES_TEXTUS,
+                                      piscina, intern));
     }
 
 

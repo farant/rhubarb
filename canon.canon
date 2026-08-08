@@ -97,6 +97,16 @@
             DICIT non applicat (documentatio, catalogus, generatio
             codicis); machina conformitatem generi in lectione
             cogit (praestitutum mendax canonem frangit)"/>
+    <attributum nomen="fractio" genus="veritas"
+      nota="FINES (spec fines), numerus solus: punctum decimale
+            licet (digiti utrimque). Constrictio spatii valorum,
+            numquam repraesentatio machinae"/>
+    <attributum nomen="minimum" genus="numerus" fractio="verum"
+      nota="finis INCLUSIVUS inferior - eadem verba ac cardinalitas
+            liberi, elementum aliud, res alia (valor, non numerus
+            liberorum). Machina in lectione cogit: fines inversi
+            aut formae pravae canonem frangunt"/>
+    <attributum nomen="maximum" genus="numerus" fractio="verum"/>
     <attributum nomen="nota"        genus="textus"/>
     <liberum nomen="optio"/>
   </elementum>

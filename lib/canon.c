@@ -34,6 +34,13 @@ nomen structura {
      * (initiatio structurarum). Conformitas generi in lectione
      * cogitur: praestitutum mendax canonem clamans frangit. */
     chorda*            praestitutum;
+    /* FINES (spec fines) - numerus solus: fractio = punctum
+     * decimale licet; minimum/maximum INCLUSIVA, forma eadem
+     * lexicali scripta (fractio finium formam regit). Constrictio
+     * spatii valorum, numquam repraesentatio machinae. */
+    b32                fractio;
+    chorda*            finis_minimus;
+    chorda*            finis_maximus;
 } CanonAttributum;
 
 nomen structura {
@@ -91,6 +98,16 @@ nomen structura {
 
 interior CanonGenusValoris genus_legere(constans chorda* s);
 interior b32 valor_congruit(constans chorda* v, CanonAttributum* a);
+interior vacuum _numerum_secare(constans chorda* v, b32* negativus,
+                                i32* integri_a, i32* integri_n,
+                                i32* fracti_a, i32* fracti_n);
+interior s32 _magnitudines_comparare(constans chorda* a, i32 ia,
+                                     i32 na, i32 fa, i32 nfa,
+                                     constans chorda* b, i32 ib,
+                                     i32 nb, i32 fb, i32 nfb);
+interior s32 _numeros_comparare(constans chorda* a,
+                                constans chorda* b);
+interior b32 _intra_fines(constans chorda* v, CanonAttributum* a);
 interior vacuum vitium_addere(Xar* vitia, CanonVitiumGenus genus,
     StmlNodus* nodus, chorda* elementum, chorda* detail,
     i32 numerus, i32 limes);
@@ -205,6 +222,176 @@ dies_bene_formata(
     redde VERUM;
 }
 
+/* partes numeri lexicalis secare: signum, digiti integri (zephyris
+ * ducentibus demptis), digiti fracti (zephyris caudalibus demptis).
+ * Formam SANAM praesumit (valor_congruit ante iudicavit).
+ * '-0' == '0': signum sine digitis significantibus tollitur. */
+interior vacuum
+_numerum_secare(
+    constans chorda*  v,
+    b32*              negativus,
+    i32*              integri_a,
+    i32*              integri_n,
+    i32*              fracti_a,
+    i32*              fracti_n)
+{
+    i32 initium;
+    i32 punctum;
+    i32 finis;
+    i32 i;
+
+    initium    = ZEPHYRUM;
+    *negativus = FALSUM;
+    si (v->mensura > ZEPHYRUM)
+    {
+        character c;
+
+        c = (character)v->datum[ZEPHYRUM];
+        si (c == '-')
+        {
+            *negativus = VERUM;
+            initium = I;
+        }
+        alioquin si (c == '+')
+        {
+            initium = I;
+        }
+    }
+
+    punctum = v->mensura;
+    per (i = initium; i < v->mensura; i++)
+    {
+        si ((character)v->datum[i] == '.')
+        {
+            punctum = i;
+            frange;
+        }
+    }
+
+    dum (initium < punctum &&
+         (character)v->datum[initium] == '0')
+    {
+        initium++;
+    }
+    *integri_a = initium;
+    *integri_n = punctum - initium;
+
+    si (punctum < v->mensura)
+    {
+        i32 post;
+
+        post  = punctum + I;
+        finis = v->mensura;
+        dum (finis > post &&
+             (character)v->datum[finis - I] == '0')
+        {
+            finis--;
+        }
+        *fracti_a = post;
+        *fracti_n = finis - post;
+    }
+    alioquin
+    {
+        *fracti_a = ZEPHYRUM;
+        *fracti_n = ZEPHYRUM;
+    }
+
+    si (*integri_n == ZEPHYRUM && *fracti_n == ZEPHYRUM)
+    {
+        *negativus = FALSUM;
+    }
+}
+
+interior s32
+_magnitudines_comparare(
+    constans chorda* a, i32 ia, i32 na, i32 fa, i32 nfa,
+    constans chorda* b, i32 ib, i32 nb, i32 fb, i32 nfb)
+{
+    i32 i;
+    i32 maxima;
+
+    si (na != nb)
+    {
+        redde na < nb ? -I : I;
+    }
+    per (i = ZEPHYRUM; i < na; i++)
+    {
+        character ca;
+        character cb;
+
+        ca = (character)a->datum[ia + i];
+        cb = (character)b->datum[ib + i];
+        si (ca != cb)
+        {
+            redde ca < cb ? -I : I;
+        }
+    }
+    maxima = nfa > nfb ? nfa : nfb;
+    per (i = ZEPHYRUM; i < maxima; i++)
+    {
+        character ca;
+        character cb;
+
+        ca = i < nfa ? (character)a->datum[fa + i] : '0';
+        cb = i < nfb ? (character)b->datum[fb + i] : '0';
+        si (ca != cb)
+        {
+            redde ca < cb ? -I : I;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+/* numeros lexicales SINE fluitantibus comparare: negativum si a<b,
+ * zephyrum si aequales, positivum si a>b. Formas sanas praesumit -
+ * comparatio digitorum, numquam conversio. */
+interior s32
+_numeros_comparare(
+    constans chorda*  a,
+    constans chorda*  b)
+{
+    b32 neg_a;
+    b32 neg_b;
+    i32 ia; i32 na; i32 fa; i32 nfa;
+    i32 ib; i32 nb; i32 fb; i32 nfb;
+    s32 ordo;
+
+    _numerum_secare(a, &neg_a, &ia, &na, &fa, &nfa);
+    _numerum_secare(b, &neg_b, &ib, &nb, &fb, &nfb);
+
+    si (neg_a != neg_b)
+    {
+        redde neg_a ? -I : I;
+    }
+    ordo = _magnitudines_comparare(a, ia, na, fa, nfa,
+                                   b, ib, nb, fb, nfb);
+    redde neg_a ? -ordo : ordo;
+}
+
+/* an valor (formae iam sanae) intra fines declaratos sit - numerus
+ * solus fines fert (lectio canonis id cogit) */
+interior b32
+_intra_fines(
+    constans chorda*  v,
+    CanonAttributum*  a)
+{
+    si (a->genus != CANON_GENUS_NUMERUS)
+    {
+        redde VERUM;
+    }
+    si (a->finis_minimus &&
+        _numeros_comparare(v, a->finis_minimus) < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (a->finis_maximus &&
+        _numeros_comparare(v, a->finis_maximus) > ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 interior b32
 valor_congruit(
     constans chorda*  v,
@@ -241,10 +428,18 @@ valor_congruit(
             redde VERUM;
 
         casus CANON_GENUS_NUMERUS:
+        {
+            b32 punctum_visum;
+            b32 digitus_ante;
+            b32 digitus_post;
+
             si (v->mensura == ZEPHYRUM)
             {
                 redde FALSUM;
             }
+            punctum_visum = FALSUM;
+            digitus_ante  = FALSUM;
+            digitus_post  = FALSUM;
             per (i = ZEPHYRUM; i < v->mensura; i++)
             {
                 character c;
@@ -254,12 +449,35 @@ valor_congruit(
                 {
                     perge;
                 }
+                si (c == '.' && a->fractio && !punctum_visum &&
+                    digitus_ante)
+                {
+                    punctum_visum = VERUM;
+                    perge;
+                }
                 si (c < '0' || c > '9')
                 {
                     redde FALSUM;
                 }
+                si (punctum_visum)
+                {
+                    digitus_post = VERUM;
+                }
+                alioquin
+                {
+                    digitus_ante = VERUM;
+                }
+            }
+            si (!digitus_ante)
+            {
+                redde FALSUM;
+            }
+            si (punctum_visum && !digitus_post)
+            {
+                redde FALSUM;
             }
             redde VERUM;
+        }
 
         casus CANON_GENUS_VERITAS:
             redde (b32)(chorda_aequalis_literis(*v, "verum") ||
@@ -789,15 +1007,64 @@ canon_ex_nodo(
                         *locus = chorda_internare(intern, t);
                     }
 
-                    /* ordinarius= post optiones legendas: valor
-                     * praestitutus electionis contra eas iudicatur.
+                    /* FINES ante ordinarium (spec fines): numerus
+                     * solus eos fert; ipsi formae sanae et recto
+                     * ordine esse debent - canon mendax de se ipso
+                     * fractura clamans est, non documentatio. */
+                    g = stml_attributum_capere(l, "fractio");
+                    a->fractio = (b32)(g &&
+                        chorda_aequalis_literis(*g, "verum"));
+                    a->finis_minimus =
+                        stml_attributum_capere(l, "minimum");
+                    a->finis_maximus =
+                        stml_attributum_capere(l, "maximum");
+                    si ((a->fractio || a->finis_minimus ||
+                         a->finis_maximus) &&
+                        a->genus != CANON_GENUS_NUMERUS)
+                    {
+                        si (causa)
+                        {
+                            *causa = chorda_ex_literis(
+                                "fines generi non numerico",
+                                piscina);
+                        }
+                        redde NIHIL;
+                    }
+                    si ((a->finis_minimus &&
+                         !valor_congruit(a->finis_minimus, a)) ||
+                        (a->finis_maximus &&
+                         !valor_congruit(a->finis_maximus, a)))
+                    {
+                        si (causa)
+                        {
+                            *causa = chorda_ex_literis(
+                                "finis formae pravae", piscina);
+                        }
+                        redde NIHIL;
+                    }
+                    si (a->finis_minimus && a->finis_maximus &&
+                        _numeros_comparare(a->finis_minimus,
+                                           a->finis_maximus) >
+                            ZEPHYRUM)
+                    {
+                        si (causa)
+                        {
+                            *causa = chorda_ex_literis(
+                                "fines inversi", piscina);
+                        }
+                        redde NIHIL;
+                    }
+
+                    /* ordinarius= post optiones et fines legendos:
+                     * valor praestitutus contra AMBO iudicatur.
                      * Praestitutum generi non congruens = canon
                      * mendax de se ipso - fractura clamans, non
                      * documentatio falsa tacita. */
                     a->praestitutum =
                         stml_attributum_capere(l, "ordinarius");
                     si (a->praestitutum &&
-                        !valor_congruit(a->praestitutum, a))
+                        (!valor_congruit(a->praestitutum, a) ||
+                         !_intra_fines(a->praestitutum, a)))
                     {
                         si (causa)
                         {
@@ -1146,6 +1413,12 @@ nodum_iudicare(
             vitium_addere(vitia, CANON_VALOR_MALUS, n, e->titulus,
                           a->titulus, ZEPHYRUM, ZEPHYRUM);
         }
+        alioquin si (!_intra_fines(a->valor, def))
+        {
+            vitium_addere(vitia, CANON_VALOR_EXTRA_FINES, n,
+                          e->titulus, a->titulus, ZEPHYRUM,
+                          ZEPHYRUM);
+        }
     }
 
     /* ---- attributa necessaria ---- */
@@ -1175,11 +1448,15 @@ nodum_iudicare(
         {
             CanonAttributum tmp;
 
-            tmp.titulus      = NIHIL;
-            tmp.genus        = e->textus_genus;
-            tmp.necessarium  = FALSUM;
-            tmp.optiones     = NIHIL;
-            tmp.praestitutum = NIHIL;
+            tmp.titulus       = NIHIL;
+            tmp.genus         = e->textus_genus;
+            tmp.necessarium   = FALSUM;
+            tmp.optiones      = NIHIL;
+            tmp.praestitutum  = NIHIL;
+            /* fines in textu typato v1 NON stant (spec fines) */
+            tmp.fractio       = FALSUM;
+            tmp.finis_minimus = NIHIL;
+            tmp.finis_maximus = NIHIL;
             si (!valor_congruit(&textus_totus, &tmp))
             {
                 chorda* d;
@@ -1643,6 +1920,8 @@ canon_nuntius(
             redde "elementum radicis aliud quam canon poscit";
         casus CANON_VOCABULUM_IGNOTUM:
             redde "vocabulum extra petitum citationis";
+        casus CANON_VALOR_EXTRA_FINES:
+            redde "valor extra fines declaratos";
         ordinarius:
             redde "vitium ignotum";
     }

@@ -108,7 +108,11 @@ nomen enumeratio {
     CANON_CITATIO_IRRITA      = XII,
     /* SIGNA (spec canon-referentia): '.genus' extra indicem ad=
      * citationis - vocabularium generum, sine clavibus iudicatum */
-    CANON_VOCABULUM_IGNOTUM   = XIII
+    CANON_VOCABULUM_IGNOTUM   = XIII,
+    /* FINES (spec fines): valor formae SANAE extra minimum/maximum
+     * declaratum (inclusiva, numerus solus). Forma mala manet
+     * VALOR_MALUS - diagnosticum hoc finem violatum nominat. */
+    CANON_VALOR_EXTRA_FINES   = XIV
 } CanonVitiumGenus;
 
 nomen structura {
