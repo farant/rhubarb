@@ -5220,3 +5220,116 @@ Corpus after: 34 modules, 187 genera, glossae 187/187 ×3, 36 canons.
 Deferred: minister machinalis still parked (01KZFM3GW0; lector/scriba
 both ad="*" awaiting it), genre species beyond the measured four,
 pars_de multiplex (no measured multi-host part).
+
+## 2026-08-08 — the census arc: rhubarb.census, bin/natura, two chains
+
+Fran's manifest vision (project-specs-adjacent, RM sententiae) landed
+as a walk rather than a design: **coverage run 16, aimed at this
+repository**. What it produced, in order:
+
+**rhubarb.census** (a791638) — the repo's own census, KAOS-rooted:
+one root, nothing floats. Green through five rewrites. It measured
+what it was built to measure: the corpus can say "X uses Y" richly
+(dependet-ex/adhibet wired 11 res on first pass) and "X exists for
+the sake of Y" almost not at all — `causat` was single-valued, so
+3 of 23 res carried justification and 19 were orphans-by-poverty.
+
+**causat multiplex** (fd3c228) — the editio_de/L12 move exactly: one
+finis, many effects. Orphans 19 → 0. The refused alternative is
+recorded: a universal `propter` conflates *enrollment*-reason with
+*existence*-reason (a rose in hortus.census serves no project goal),
+so justification writes DOWNWARD from the spine. That also makes the
+no-orphan check nearly free — all edges concentrate in one section.
+
+**The audit is the finding** (111ed81). Four numbers in the census,
+checked 40 minutes after writing: **two were wrong.** Nothing had
+changed — I wrote them from memory instead of measuring. Worse, one
+"correction" was itself wrong: I condemned `res 385` as unverifiable
+because MY method (`grep -c '<res '`) found zero; the number was
+right. **A bad anchor yields a FALSE NEGATIVE — it condemns a true
+claim while wearing the look of verification.** Hence `<signum>`
+entries carrying `via=` (the command), and `observatio.via` in the
+model. A nota also rotted inside the same session: "propter
+#perennitas (relation lacking)" was true when written and false
+forty minutes later when I added the edge.
+
+**The prose sweep** (1742f40) — L5 again, ×4: `causa`, `norma`,
+`observatio`, `periculum` all lacked `contentum`, so the ROOT of the
+census spine was a final cause whose statement lived in a comment.
+All four fixed. Plus `causa.extra_ordinem` (a DECLARED terminus,
+which killed the magic string the lint had been grepping for) and
+**`veritas_sua` widened to `*` — L13 CLOSED**, four occurrences in
+one census.
+
+**Four candidates died on contact**, which is the better half of the
+work: `cautio/laqueus` (periculum takes all four house traps; its
+`minuitur_per` was already annotated "cautiones"), `mensuratio`
+(already a species of fundamentum), `casus` (a forcing case IS an
+observatio), universal `propter`. One genus minted: **`praeceptum`**
+— a rule of an art, LEARNED and experience-corrected, vs `norma`
+which is promulgated and cited by index. It carries `natum_ex`
+because a maxim without its case is a platitude everyone nods at.
+House doctrine now enrolled as #ars-naturae (peritia_communis) with
+ten praecepta (e7aa93b).
+
+**bin/natura** (f79d4d3, 6bb0b46, 02ceb7e) — born from a measured
+failure: my collision check piped `natura_quaere.sh` through
+`head -c 60`, which cut the `[species:...]` tag, so `mensuratio`
+looked free while sitting under `fundamentum`. The natura gate caught
+it AFTER I'd written the genus. The fix I first wrote to memory was
+"read the whole row" — i.e. discipline, which is the shape of a
+tool-shaped hole. So `quaere` ends with a **verdict line** that
+survives truncation, and the verdict is **tri-state**: OCCUPATUM /
+**UMBRATUM** (name used but undescribed — minting it FULFILLS the
+shadow) / LIBERUM. natura_quaere.sh is now a forwarding shim.
+
+**Two chains** (6800bc2, decretum 01KZH3Y1QH) — Fran asked whether
+nesting is honored. It wasn't: `<species isbn>` holds isbn_10/13 and
+`<species malus_domestica>` holds granny_smith, but the graph
+flattened all res to the ambient genus. **The flattening was
+deliberate and half-right** — the comment says "profunditas
+Porphyriana est taxinomia, non catena apparatus", and that IS correct
+for inheritance, since a species declares no apparatus (grammar
+verified: no proprietates/relationes/machina/actiones/partes; it only
+fixes values). The defect was that taxonomy was acknowledged and not
+stored. So: ADDITIVE. `NaturaRes` gains `continens` + its own
+`res_suae`; `genus_suum` and `genus->res_suae` keep their meanings,
+the latter deliberately FLAT. **Regression proof = generated canons
+byte-identical** after the change.
+
+### What the shell lied about (three times, one day)
+- awk state machine fooled TWICE by self-closing `<species .../>`
+  (no closing tag → depth never resets) — invented nested genera
+  that don't exist.
+- `cut -c9-` mangled names because `uniq -c` pads its count field to
+  variable width.
+- `perl -pi -e` interpolated `$CORPUS` and `$(dirname ...)` as ITS
+  variables, mangling a script into garbage.
+Simple counts survived (tool and grep agree at 432 relations);
+STRUCTURE did not. Hence `bin/natura census` + `relationes`.
+
+### Open, with evidence attached (nothing decided)
+- **Relation vocabulary is impoverished**: 432 relations, 325 names,
+  **272 used exactly once (83%)**, and the singletons CLUSTER —
+  12 names for origin/causation, 10 for part-whole, 4 each for
+  dependency and succession. `<relatio>` carries a target and three
+  booleans; `<proprietas>` can be typed, bounded, defaulted, given
+  options. The corpus states what things ARE richly and how they
+  STAND crudely. **89 open closures (`ad="*"`)** are the same bill.
+- **Roles have no home**: round 50 already ruled GENERA NUDA MUNERA
+  SUNT (cliens/servus ARE roles) — relation-ends have no names, so
+  roles get reified into genera. `munus` and `potentia` both free;
+  they are NOT synonyms (position vs capacity).
+- **genus-vs-species IS the proprium question**, unmarked: a
+  `<genus sub=>` ADDS apparatus, a `<species>` only DETERMINES what
+  it inherited. Real distinction, carried by which tag you type.
+  `isbn` is plausibly mis-filed (its definitio names four parts in
+  prose it cannot declare).
+- **finis**: 39/188 genera state their END in prose only, and the
+  corpus's own rule says the end CONSTITUTES the kind ("quod ad finem
+  ordinatur ab illo fine formatur"). Cross-cutting, not core.
+- **`<valor>` binds or defaults?** — recorded `<dubium>` on planta;
+  the projection silently answered "default" (`ordinarius=`).
+- Latent: a `<genus>` nested in a `<species>` would lose its
+  container (same gap, one level up) — legal, used ZERO times, filed
+  01KZHAFCYZ with its trigger.
