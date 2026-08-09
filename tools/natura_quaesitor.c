@@ -1173,6 +1173,362 @@ _maiores_scribere(
     }
 }
 
+/* ==================================================
+ * relationes / census - mensurae structurales
+ *
+ * CUR IN INSTRUMENTO, NON IN CRUSTA (occasio 2026-08-08):
+ * mensurae hae per grep/awk/sed factae sunt, et TER mentitae:
+ * (i) machina awk tag speciei se-claudente decepta est, bis;
+ * (ii) 'cut -c9-' nomina truncavit quia campus numeri latitudine
+ * variat. Nemo mendacium vidit nisi quia numeri absurdi erant.
+ * Instrumentum arborem PARSATAM ambulat: eas culpas facere non
+ * potest. Semantica (in quas familias nomina cadant) hominis
+ * manet - hic numeri soli, sed VERI.
+ * ================================================== */
+
+/* membra directa unius blocci (NON recursive: genera nidificata
+ * sua propria habent, aliter bis numerarentur) */
+interior Xar*
+_membra_directa(
+    NaturaGenus*         genus,
+    constans character*  bloccus,
+    constans character*  elementum,
+    Piscina*             piscina)
+{
+    Xar*        exitus;
+    StmlNodus*  continens;
+    i32         n;
+    i32         i;
+
+    exitus = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    si (!genus->nodus)
+    {
+        redde exitus;
+    }
+    continens = stml_invenire_liberum(genus->nodus, bloccus);
+    si (!continens)
+    {
+        redde exitus;
+    }
+    n = stml_numerus_liberorum(continens);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        StmlNodus* m;
+
+        m = stml_liberum_ad_indicem(continens, i);
+        si (m && m->genus == STML_NODUS_ELEMENTUM && m->titulus &&
+            chorda_aequalis_literis(*m->titulus, elementum))
+        {
+            *(StmlNodus**)xar_addere(exitus) = m;
+        }
+    }
+    redde exitus;
+}
+
+interior vacuum
+_relationes_scribere(
+    NaturaBibliotheca*  bib,
+    b32                 machina,
+    Piscina*            piscina)
+{
+    i32 g;
+
+    si (!machina)
+    {
+        imprimere("%-22s %-26s %-24s %-6s %s\n", "MODULUS", "GENUS",
+                  "RELATIO", "MULT", "AD");
+    }
+    per (g = ZEPHYRUM; g < xar_numerus(bib->genera_omnia); g++)
+    {
+        NaturaGenus* genus;
+        Xar*         relationes;
+        i32          i;
+        character    gm[NOMINIS_TECTUM];
+        character    gn[NOMINIS_TECTUM];
+
+        genus = *(NaturaGenus**)xar_obtinere(bib->genera_omnia, g);
+        _chordam_scribere(genus->modulus, gm, (i32)magnitudo(gm));
+        _chordam_scribere(genus->titulus, gn, (i32)magnitudo(gn));
+
+        relationes = _membra_directa(genus, "relationes", "relatio",
+                                     piscina);
+        per (i = ZEPHYRUM; i < xar_numerus(relationes); i++)
+        {
+            StmlNodus* r;
+            character  rn[NOMINIS_TECTUM];
+            character  ad[NOMINIS_TECTUM];
+            character  rm[NOMINIS_TECTUM];
+            character  mx[NOMINIS_TECTUM];
+
+            r = *(StmlNodus**)xar_obtinere(relationes, i);
+            _chordam_scribere(stml_attributum_capere(r, "nomen"), rn,
+                              (i32)magnitudo(rn));
+            _chordam_scribere(stml_attributum_capere(r, "ad"), ad,
+                              (i32)magnitudo(ad));
+            _chordam_scribere(stml_attributum_capere(r, "modulus"),
+                              rm, (i32)magnitudo(rm));
+            _chordam_scribere(stml_attributum_capere(r, "multiplex"),
+                              mx, (i32)magnitudo(mx));
+
+            si (machina)
+            {
+                imprimere("%s\t%s\t%s\t%s\t%s\t%s\n", gm, gn, rn,
+                          strcmp(mx, "verum") == ZEPHYRUM ?
+                              "multiplex" : "unum",
+                          rm[ZEPHYRUM] ? rm : gm,
+                          ad[ZEPHYRUM] ? ad : "-");
+            }
+            alioquin
+            {
+                imprimere("%-22s %-26s %-24s %-6s %s%s%s\n", gm, gn,
+                          rn,
+                          strcmp(mx, "verum") == ZEPHYRUM ?
+                              "*" : "-",
+                          rm[ZEPHYRUM] ? rm : "",
+                          rm[ZEPHYRUM] ? "." : "",
+                          ad[ZEPHYRUM] ? ad : "-");
+            }
+        }
+    }
+}
+
+interior vacuum
+_censum_scribere(
+    NaturaBibliotheca*  bib,
+    b32                 machina,
+    Piscina*            piscina)
+{
+    Xar* nomina_relationum;
+    i32  g;
+    i32  i;
+    i32  quot_relationum;
+    i32  quot_apertarum;
+    i32  quot_inversarum;
+    i32  quot_proprietatum;
+    i32  quot_partium;
+    i32  quot_actionum;
+    i32  quot_machinarum;
+    i32  quot_subgenerum;
+    i32  quot_specierum;
+    i32  quot_individuorum;
+    i32  quot_cultivarum;
+    i32  quot_nidificatarum;
+    i32  distincta;
+    i32  semel_adhibita;
+
+    nomina_relationum = xar_creare(piscina,
+                                   (i32)magnitudo(character*));
+    quot_relationum   = ZEPHYRUM;
+    quot_apertarum    = ZEPHYRUM;
+    quot_inversarum   = ZEPHYRUM;
+    quot_proprietatum = ZEPHYRUM;
+    quot_partium      = ZEPHYRUM;
+    quot_actionum     = ZEPHYRUM;
+    quot_machinarum   = ZEPHYRUM;
+    quot_subgenerum   = ZEPHYRUM;
+
+    per (g = ZEPHYRUM; g < xar_numerus(bib->genera_omnia); g++)
+    {
+        NaturaGenus* genus;
+        Xar*         membra;
+
+        genus = *(NaturaGenus**)xar_obtinere(bib->genera_omnia, g);
+        si (genus->parens)
+        {
+            quot_subgenerum++;
+        }
+
+        membra = _membra_directa(genus, "relationes", "relatio",
+                                 piscina);
+        per (i = ZEPHYRUM; i < xar_numerus(membra); i++)
+        {
+            StmlNodus* r;
+            character  rn[NOMINIS_TECTUM];
+            chorda*    ad;
+            chorda*    inv;
+
+            r = *(StmlNodus**)xar_obtinere(membra, i);
+            quot_relationum++;
+
+            ad = stml_attributum_capere(r, "ad");
+            si (ad && chorda_aequalis_literis(*ad, "*"))
+            {
+                quot_apertarum++;
+            }
+            inv = stml_attributum_capere(r, "inversa");
+            si (inv && chorda_aequalis_literis(*inv, "verum"))
+            {
+                quot_inversarum++;
+            }
+            _chordam_scribere(stml_attributum_capere(r, "nomen"), rn,
+                              (i32)magnitudo(rn));
+            si (rn[ZEPHYRUM])
+            {
+                *(character**)xar_addere(nomina_relationum) =
+                    (character*)chorda_ut_cstr(
+                        chorda_ex_literis(rn, piscina), piscina);
+            }
+        }
+
+        quot_proprietatum += xar_numerus(
+            _membra_directa(genus, "proprietates", "proprietas",
+                            piscina));
+        quot_partium += xar_numerus(
+            _membra_directa(genus, "partes", "pars", piscina));
+        quot_actionum += xar_numerus(
+            _membra_directa(genus, "actiones", "actio", piscina));
+        {
+            i32 k;
+            i32 n;
+
+            n = genus->nodus ?
+                    stml_numerus_liberorum(genus->nodus) : ZEPHYRUM;
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                StmlNodus* m;
+
+                m = stml_liberum_ad_indicem(genus->nodus, k);
+                si (m && m->genus == STML_NODUS_ELEMENTUM &&
+                    m->titulus &&
+                    chorda_aequalis_literis(*m->titulus,
+                                            "machina_statuum"))
+                {
+                    quot_machinarum++;
+                }
+            }
+        }
+    }
+
+    /* nomina distincta et SEMEL adhibita (indicium 'plura
+     * specialia, nullum generale' in stratum relationum) */
+    distincta      = ZEPHYRUM;
+    semel_adhibita = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(nomina_relationum); i++)
+    {
+        constans character* hoc;
+        i32                 k;
+        i32                 quot;
+        b32                 primum;
+
+        hoc    = *(character**)xar_obtinere(nomina_relationum, i);
+        quot   = ZEPHYRUM;
+        primum = VERUM;
+        per (k = ZEPHYRUM; k < xar_numerus(nomina_relationum); k++)
+        {
+            si (strcmp(*(character**)xar_obtinere(
+                           nomina_relationum, k), hoc) == ZEPHYRUM)
+            {
+                quot++;
+                si (k < i)
+                {
+                    primum = FALSUM;
+                }
+            }
+        }
+        si (primum)
+        {
+            distincta++;
+            si (quot == I)
+            {
+                semel_adhibita++;
+            }
+        }
+    }
+
+    quot_specierum     = ZEPHYRUM;
+    quot_individuorum  = ZEPHYRUM;
+    quot_cultivarum    = ZEPHYRUM;
+    quot_nidificatarum = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(bib->res_omnes); i++)
+    {
+        NaturaRes*          r;
+        constans character* kind;
+
+        r    = *(NaturaRes**)xar_obtinere(bib->res_omnes, i);
+        kind = (r->nodus && r->nodus->titulus) ?
+                   (constans character*)r->nodus->titulus->datum : "?";
+        si (strncmp(kind, "species", VII) == ZEPHYRUM)
+        {
+            quot_specierum++;
+        }
+        alioquin si (strncmp(kind, "individuum", X) == ZEPHYRUM)
+        {
+            quot_individuorum++;
+        }
+        alioquin si (strncmp(kind, "cultivar", VIII) == ZEPHYRUM)
+        {
+            quot_cultivarum++;
+        }
+        si (r->continens)
+        {
+            quot_nidificatarum++;
+        }
+    }
+
+    si (machina)
+    {
+        imprimere("exemplaria\t%d\n",
+                  (integer)xar_numerus(bib->exemplaria));
+        imprimere("genera\t%d\n",
+                  (integer)xar_numerus(bib->genera_omnia));
+        imprimere("subgenera\t%d\n", (integer)quot_subgenerum);
+        imprimere("species\t%d\n", (integer)quot_specierum);
+        imprimere("individua\t%d\n", (integer)quot_individuorum);
+        imprimere("cultivares\t%d\n", (integer)quot_cultivarum);
+        imprimere("res_nidificatae\t%d\n",
+                  (integer)quot_nidificatarum);
+        imprimere("relationes\t%d\n", (integer)quot_relationum);
+        imprimere("relationes_nomina_distincta\t%d\n",
+                  (integer)distincta);
+        imprimere("relationes_nomina_semel\t%d\n",
+                  (integer)semel_adhibita);
+        imprimere("relationes_apertae\t%d\n", (integer)quot_apertarum);
+        imprimere("relationes_inversae\t%d\n",
+                  (integer)quot_inversarum);
+        imprimere("proprietates\t%d\n", (integer)quot_proprietatum);
+        imprimere("partes\t%d\n", (integer)quot_partium);
+        imprimere("actiones\t%d\n", (integer)quot_actionum);
+        imprimere("machinae\t%d\n", (integer)quot_machinarum);
+        redde;
+    }
+
+    imprimere("CENSUS BIBLIOTHECAE\n\n");
+    imprimere("  exemplaria           %5d\n",
+              (integer)xar_numerus(bib->exemplaria));
+    imprimere("  genera               %5d  (sub alio: %d)\n",
+              (integer)xar_numerus(bib->genera_omnia),
+              (integer)quot_subgenerum);
+    imprimere("  species              %5d\n", (integer)quot_specierum);
+    imprimere("  individua            %5d\n",
+              (integer)quot_individuorum);
+    imprimere("  cultivares           %5d\n",
+              (integer)quot_cultivarum);
+    imprimere("  res nidificatae      %5d  (intra aliam rem)\n",
+              (integer)quot_nidificatarum);
+    imprimere("\n  APPARATUS\n");
+    imprimere("  proprietates         %5d\n",
+              (integer)quot_proprietatum);
+    imprimere("  partes               %5d\n", (integer)quot_partium);
+    imprimere("  actiones             %5d\n", (integer)quot_actionum);
+    imprimere("  machinae statuum     %5d\n",
+              (integer)quot_machinarum);
+    imprimere("\n  RELATIONES\n");
+    imprimere("  relationes           %5d\n",
+              (integer)quot_relationum);
+    imprimere("  nomina distincta     %5d\n", (integer)distincta);
+    imprimere("  nomina SEMEL adhibita%5d", (integer)semel_adhibita);
+    si (distincta > ZEPHYRUM)
+    {
+        imprimere("  (%d%% nominum)",
+                  (integer)((semel_adhibita * C) / distincta));
+    }
+    imprimere("\n");
+    imprimere("  clausurae APERTAE    %5d  (ad=\"*\")\n",
+              (integer)quot_apertarum);
+    imprimere("  inversae declaratae  %5d\n",
+              (integer)quot_inversarum);
+}
+
 interior vacuum
 _indicem_scribere(
     NaturaBibliotheca* bib,
@@ -1227,6 +1583,10 @@ _usum_scribere(vacuum)
         "hereditate\n"
         "  maiores <genus>     catena parentum ad radicem\n"
         "  index               inventarium generum omnium\n"
+        "  census              mensurae structurales corporis\n"
+        "  relationes          relationes OMNES (nomen, petitum,\n"
+        "                      multiplex) - materia prima pro\n"
+        "                      familiis inveniendis\n"
         "genus: 'planta' aut '/modulus/planta' (homonyma "
         "modulum poscunt)\n");
 }
@@ -1304,6 +1664,18 @@ main(
     si (strcmp(mandatum, "index") == ZEPHYRUM)
     {
         _indicem_scribere(bib, machina, piscina);
+        redde ZEPHYRUM;
+    }
+
+    si (strcmp(mandatum, "census") == ZEPHYRUM)
+    {
+        _censum_scribere(bib, machina, piscina);
+        redde ZEPHYRUM;
+    }
+
+    si (strcmp(mandatum, "relationes") == ZEPHYRUM)
+    {
+        _relationes_scribere(bib, machina, piscina);
         redde ZEPHYRUM;
     }
 

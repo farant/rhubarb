@@ -376,6 +376,41 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+    /* ========================================================
+     * XII. CENSUS + RELATIONES: mensurae ex arbore PARSATA
+     *
+     * Occasio: mensurae hae per grep/awk factae sunt et TER
+     * mentitae (machina awk tag se-claudente decepta bis; 'cut
+     * -c9-' nomina truncavit). Numeri simplices veri erant,
+     * STRUCTURALES falsi - quod peius est, quia nemo eos contra
+     * quicquam conferre potest.
+     * ======================================================== */
+    {
+        ProcessusResultus r;
+
+        imprimere("\n--- XII. census et relationes ---\n");
+
+        r = _currere("census", "-machina", NIHIL, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, (i32)ZEPHYRUM);
+        /* claves adsunt (numeri NON figuntur: corpus crescit) */
+        CREDO_VERUM (_continet_literis(r.effusio, "relationes_apertae",
+                                       piscina));
+        CREDO_VERUM (_continet_literis(
+            r.effusio, "relationes_nomina_semel", piscina));
+        CREDO_VERUM (_continet_literis(r.effusio, "res_nidificatae",
+                                       piscina));
+
+        r = _currere("relationes", "-machina", NIHIL, piscina);
+        CREDO_VERUM (r.successus);
+        /* clausura aperta ut '*' emissa, non ut vacuum */
+        CREDO_VERUM (_continet_literis(r.effusio, "\tmultiplex\t",
+                                       piscina));
+        /* relatio nota cum petito suo */
+        CREDO_VERUM (_continet_literis(r.effusio, "ambulatio_lectoris",
+                                       piscina));
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 
