@@ -35,7 +35,11 @@
     <attributum nomen="versio"  genus="numerus" necessarium="verum"/>
     <attributum nomen="lingua"  genus="textus"/>
     <liberum nomen="fontes" maximum="1"/>
-    <liberum nomen="genus"  minimum="1"/>
+    <liberum nomen="genus"
+      nota="minimum sublatum 2026-08-10: modulus sine genere licet
+            si necessitudines fert - regula XXV oneratoris
+            (co-occurrentia supra canonem, ut 'ad AUT a')"/>
+    <liberum nomen="necessitudo"/>
   </elementum>
 
   <!-- ================= FONTES ================= -->
@@ -68,6 +72,7 @@
     <liberum nomen="partes"          maximum="1"/>
     <liberum nomen="actiones"        maximum="1"/>
     <liberum nomen="relationes"      maximum="1"/>
+    <liberum nomen="termini"         maximum="1"/>
     <liberum nomen="machina_statuum"/>
     <liberum nomen="species"/>
     <liberum nomen="individuum"/>
@@ -188,10 +193,61 @@
             'ad AUT a' co-occurrentia est, supra canonem"/>
     <attributum nomen="a"         genus="nomen"/>
     <attributum nomen="inversa"   genus="veritas"/>
+    <attributum nomen="necessitudo" genus="nomen"
+      nota="citatio identitatis declaratae (spec necessitudines):
+            absens = praesumptio per nomen/conversum/scripturam"/>
     <attributum nomen="modulus"   genus="nomen"/>
     <attributum nomen="multiplex" genus="veritas"/>
     <attributum nomen="externum"  genus="veritas"/>
     <attributum nomen="nota"      genus="textus"/>
+  </elementum>
+
+  <!-- ========= NECESSITUDINES (relationes primae classis) =========
+       2026-08-10, spec necessitudines: genus relationis SEMEL
+       declaratur (identitas), sedes usus leves manent (tituli).
+       Tres strata: identitas / titulus / scriptura. -->
+
+  <elementum nomen="necessitudo">
+    <attributum nomen="nomen"     genus="nomen" necessarium="verum"/>
+    <attributum nomen="conversum" genus="nomen"
+      nota="nomen directionis conversae - IDENTITAS UNA, scripturae
+            duae (vulnus inversae hac via moritur)"/>
+    <attributum nomen="sub"       genus="nomen"/>
+    <attributum nomen="modulus"   genus="nomen"/>
+    <attributum nomen="a"         genus="textus"
+      nota="finis gerentis: quod genus eam ferre potest ('*' apertum)"/>
+    <attributum nomen="ad"        genus="textus"
+      nota="finis petiti ('*' apertum)"/>
+    <attributum nomen="nota"      genus="textus"/>
+    <liberum nomen="definitio" maximum="1"/>
+    <liberum nomen="glossa"/>
+    <liberum nomen="scriptio"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="dubium"/>
+  </elementum>
+
+  <elementum nomen="scriptio" textus="verum"
+    nota="scriptura altera eiusdem necessitudinis (concordantia
+          grammatica: situm/sita/situs_in) - identitas una"/>
+
+  <elementum nomen="termini"
+    nota="compages actus: fines nominati qui actum una constituunt
+          (termini actus; munus = finis nominatus)">
+    <liberum nomen="terminus" minimum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+
+  <elementum nomen="terminus">
+    <attributum nomen="munus"       genus="nomen" necessarium="verum"/>
+    <attributum nomen="necessitudo" genus="nomen"/>
+    <attributum nomen="ad"          genus="textus"/>
+    <attributum nomen="modulus"     genus="nomen"/>
+    <attributum nomen="multiplex"   genus="veritas"/>
+    <attributum nomen="necessaria"  genus="veritas"
+      nota="apparatus solum - proiectio eam numquam legit
+            (necessitas ontologica obligatio documenti non est)"/>
+    <attributum nomen="nota"        genus="textus"/>
+    <liberum nomen="nota"/>
   </elementum>
 
   <!-- ================= DICTIONARIUM ================= -->
@@ -277,7 +333,7 @@
   <!-- ================= UNICITAS (regula XV) ================= -->
 
   <unicitas nomen="entia" attributum="nomen"
-    super="genus species individuum cultivar"
+    super="genus species individuum cultivar necessitudo"
     nota="allocutio /modulus/nomen ab hac unicitate PENDET
           (METAMODULUS §4b): genera et res unum spatium nominum
           communicant, quia allocutio gradum non fert"/>
