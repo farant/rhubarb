@@ -3,13 +3,15 @@
 Consolidated 2026-08-10. ONE document for every STML design idea across
 three generations of design, with an honest status on each. Sources:
 
-- **G1** — "XML Macro System" notes (Fran, pre-STML; shared 2026-08-10,
-  previously unwritten in any repo): Lisp-style macros over XML,
+- **G1** — "XML Macro System" notes (Fran, pre-STML; previously
+  unwritten, recovered 2026-08-10 — **verbatim archive:
+  `archivum-xml-macro-system.md`**): Lisp-style macros over XML,
   selectors, the `%` mutation family, pipelines, stylesheets.
 - **G2** — "Complete XML-Based Language Definition" (Fran, pre-STML;
-  shared 2026-08-10): the full homoiconic C-targeting language —
-  `@` variables, `:`/`::` parameters, arity markers, infix/postfix,
-  fragments, transclusion-with-pipe.
+  recovered 2026-08-10 — **verbatim archive:
+  `archivum-lingua-homoiconica-xml.md`**): the full homoiconic
+  C-targeting language — `@` variables, `:`/`::` parameters, arity
+  markers, infix/postfix, fragments, transclusion-with-pipe.
 - **G3a** — `../stml-parser/STML_SPEC.md` (TypeScript era): STML proper.
 - **G3b** — `include/stml.h` + `lib/stml.c` (rhubarb, C89): the LIVING
   implementation, substrate of canon/natura/vitrea/silex.
