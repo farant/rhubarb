@@ -123,7 +123,8 @@ Plain (non-vitrea) novum's generated scripts are UNCHANGED.
 ## Acceptance (item 6 — the gate)
 
 In silicetum, with the fabrica renamed away (corpus-only):
-`silex novum salve-vitreum -d . -vitrea` → `./aedificare.sh` →
+`silex novum salve_vitreum -d . -vitrea` (hyphens refused — the
+titulus becomes a C symbol) → `./aedificare.sh` →
 `./probare.sh` green → `./bin/salve-vitreum` opens a window showing
 «salve, munde…» + the visit count, which INCREMENTS across
 relaunches (persistence visible) → `silex partes` shows M and V
