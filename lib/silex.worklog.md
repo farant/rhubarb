@@ -328,3 +328,21 @@ all in-project, fabrica renamed away, then restored.
 Also: /bin/sh set -e did NOT abort on a failing `a && b` list inside
 the first walk script (condere ran after aedificare failed) — walk
 scripts now guard each step with explicit `|| exit`.
+
+## 2026-08-10 — novum -vitrea ships; 01KZ6CSBQN's arc closes
+Spec/plan: project-specs/silex-vitrea-{spec,plan}.md. The heartbeat
+seed (bridge + volumen visit count) scaffolds vocabularium's
+architecture verbatim: pipa split, capsula-ante-omnia, four-tier
+generated scripts with COMPUTED per-target source lists (app / tool /
+probatio closures — seeds scanned from the templates' own includes,
+never a hand list). Scripts are stamped PROIECTIONES.
+THE WALK'S CATCH (again): first run failed at probare — the probatio
+closure (credo) was used to GENERATE the script but never MERGED into
+the vendored set; the app never pulls credo. Fixed + regression
+assertion. Second walk, fabrica renamed away: novum → aedificare (all
+four tiers) → probare GREEN (the scaffold's own generated probatio) →
+two window launches → partes 4×M/V ADEST → condere. Persistence
+proxy: 2 salutatio acta after 2 launches — the count climbs across
+relaunches. AMBULATIO-VITREA-PLENA.
+Deviation from vocabularium worth noting: hyphens refused in vitrea
+tituli (the titulus becomes the capsula C symbol).
