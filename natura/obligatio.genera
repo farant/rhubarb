@@ -34,7 +34,7 @@
      OBLIGATIO - vinculum iuris
      ================================================== -->
 
-<genus nomen="obligatio">
+<.genus nomen="obligatio">
 
   <definitio>
     Iuris vinculum quo quis alicui aliquid praestare adstringitur
@@ -86,34 +86,34 @@
   <!-- ================= DICTIONARIUM =================
        divisio Gaiana: ex contractu / ex delicto -->
 
-  <species nomen="obligatio_ex_contractu">
+  <.species nomen="obligatio_ex_contractu">
     <definitio>
       Ex consensu orta: quod promisisti praestandum est.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="obligatio_ex_delicto">
+  <.species nomen="obligatio_ex_delicto">
     <definitio>
       Ex damno illato orta: qui nocuit reparare tenetur -
       obligatio quam nemo VOLUIT, tamen vera. Testis quod
       obligatio consensum non postulat.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="obligatio_ex_lege">
+  <.species nomen="obligatio_ex_lege">
     <definitio>
       Ex lege ipsa orta: tributa, alimenta - nec pactum nec
       damnum, sed praeceptum publicum.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      CONTRACTUS - conventio obligationes pariens
      ================================================== -->
 
-<genus nomen="contractus">
+<.genus nomen="contractus">
 
   <definitio>
     Conventio duorum (aut plurium) quae obligationes parit:
@@ -148,35 +148,35 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="emptio_venditio">
+  <.species nomen="emptio_venditio">
     <definitio>Res pro pretio: contractus omnium
       frequentissimus.</definitio>
-  </species>
+  </.species>
 
-  <species nomen="locatio_conductio">
+  <.species nomen="locatio_conductio">
     <definitio>
       Usus rei aut opera pro mercede: sub hac specie ius
       Romanum et habitationem et LABOREM ponit - conductio
       operarum, unde nostra "conductio" hodierna.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="societas_contractus">
+  <.species nomen="societas_contractus">
     <definitio>
       Plures in commune negotium: unde organizatio ipsa nascitur
       - contractus qui personam novam (societatem) parit.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="mandatum">
+  <.species nomen="mandatum">
     <definitio>
       Alius pro me agit: fundamentum repraesentationis -
       procurator, agens. (Agens artificialis mandato vivit
       quoque: forma antiqua, materia nova.)
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="commodatum">
+  <.species nomen="commodatum">
     <definitio>
       Res certa alicui GRATIS utenda datur, eadem reddenda: non
       pretium sed beneficium, et res ipsa redit, non similis.
@@ -195,15 +195,15 @@
       commodans imponit (aer, lux, custos comitans, assecuratio)
       hanc ipsam rationem sequuntur.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      LICENTIA - concessio unilateralis auctoritatis
      ================================================== -->
 
-<genus nomen="licentia">
+<.genus nomen="licentia">
 
   <definitio>
     Concessio ab auctoritate data ut quid liceat quod aliter non
@@ -276,7 +276,7 @@
     forense et computatrale idem genus habent.
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      TRIBUTUM - obligatio ad magistratum ex lege
@@ -285,7 +285,7 @@
      ius Romanum descripsit et verba eius nostra sunt)
      ================================================== -->
 
-<genus nomen="tributum" sub="obligatio">
+<.genus nomen="tributum" sub="obligatio">
 
   <differentia>
     Obligatio ad MAGISTRATUM, ex lege orta, non ex consensu:
@@ -327,7 +327,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="portorium">
+  <.species nomen="portorium">
     <definitio>
       Tributum ex TRANSITU limitis: quod merces limitem
       transeuntes debent. Species quae iurisdictionem ipsam
@@ -339,36 +339,36 @@
       Nomen Romanum, res eadem: portoria ad portus et pontes
       exigebantur. Duo milia annorum, mechanismus idem.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="vectigal">
+  <.species nomen="vectigal">
     <definitio>
       Reditus publicus ex re publica: ex agris, salinis,
       viis. Tributum quod non ex persona sed ex USU rei
       publicae oritur.
     </definitio>
     <valor nomen="ratio">ex_possessione</valor>
-  </species>
+  </.species>
 
-  <species nomen="decuma">
+  <.species nomen="decuma">
     <definitio>
       Pars decima fructuum: tributum ratione PARTIS, non
       summae - forma antiquissima, quae quantitatem numeratam
       non poscit sed proportionem.
     </definitio>
     <valor nomen="ratio">ex_reditu</valor>
-  </species>
+  </.species>
 
-  <species nomen="tributum_capitis">
+  <.species nomen="tributum_capitis">
     <definitio>
       Ex capite, non ex re: debetur quia es, non quia habes.
       Species cuius aequitas per saecula disputata est -
       exemplum quod tributum iudicium morale semper fert.
     </definitio>
     <valor nomen="ratio">ex_capite</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      TITULUS - attestatio permanens auctoritatis
@@ -380,7 +380,7 @@
      numquam)
      ================================================== -->
 
-<genus nomen="titulus">
+<.genus nomen="titulus">
 
   <definitio>
     Attestatio publica et permanens ab auctoritate data, quod
@@ -419,7 +419,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="gradus_academicus">
+  <.species nomen="gradus_academicus">
     <definitio>
       Ab universitate collatus post studia probata:
       baccalaureatus, licentia (nomen antiquum!), doctoratus.
@@ -431,9 +431,9 @@
       et nomen hodiernum "licentiae" ex illa radice manet.
       Historia verborum distinctionem generum servat.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="character_indelebilis">
+  <.species nomen="character_indelebilis">
     <definitio>
       Signum spirituale quod sacramenta tria imprimunt
       (baptismus, confirmatio, ordo): ontologicum, unicum,
@@ -449,18 +449,18 @@
       videri potest - character manens, facultas ministrandi
       suspensa: distinctio non subtilis sed practica.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="titulus_honoris">
+  <.species nomen="titulus_honoris">
     <definitio>
       Ob merita collatus, non ob probationem: honores,
       dignitates. Species in qua auctoritas non factum
       testatur sed AESTIMATIONEM suam publicat - unde
       iudicium (aestimatio) et titulus se tangunt.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      IUSSUM - directivum auctoritate latum quod PERDURAT
@@ -486,7 +486,7 @@
      structura: potestas alterius actum validum facit.
      ================================================== -->
 
-<genus nomen="iussum">
+<.genus nomen="iussum">
 
   <definitio>
     Directivum ab eo qui potestatem habet latum, quod agendum
@@ -603,7 +603,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="praescriptio_medica">
+  <.species nomen="praescriptio_medica">
     <definitio>
       Iussum medici quo pharmacopola medicamentum aegro certo
       dispensare iubetur: substantia, vis, quantitas, modus
@@ -618,9 +618,9 @@
     </differentia>
     <valor nomen="transferibile">verum</valor>
     <valor nomen="poena_neglegentis">iuridica</valor>
-  </species>
+  </.species>
 
-  <species nomen="mandatum_iudicis">
+  <.species nomen="mandatum_iudicis">
     <definitio>
       Iussum a iudice latum quo quis aliquid facere aut omittere
       iubetur: vis publica post illud stat.
@@ -631,9 +631,9 @@
       Species in qua neglegentia CONTUMACIA fit - poena non ex
       damno sed ex contemptu auctoritatis ipsius.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="iussum_emptionis">
+  <.species nomen="iussum_emptionis">
     <definitio>
       Iussum quo organizatio a venditore merces poscit, pretio
       et condicionibus praestitutis: quod "purchase order"
@@ -647,9 +647,9 @@
       consumit, tempore elapsum. Confinium cum petitione, quod
       axis poenae mensurat.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="iussum_operis">
+  <.species nomen="iussum_operis">
     <definitio>
       Iussum internum quo opus certum alicui committitur, saepe
       cum loco, tempore, materiis: quod "work order" vocatur.
@@ -661,9 +661,9 @@
       opus ipsum quod suscipitur et perficitur. Unum iussum
       pensa plura parere potest.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="iussum_ne_resuscitetur">
+  <.species nomen="iussum_ne_resuscitetur">
     <definitio>
       Iussum quo medicus, aegro consentiente aut prius
       declarante, resuscitationem cardiopulmonalem OMITTI
@@ -676,9 +676,9 @@
       agendum sit aeque imperari potest.
     </differentia>
     <valor nomen="poena_neglegentis">iuridica</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -698,7 +698,7 @@
      commodum.
      ================================================== -->
 
-<genus nomen="fiducia">
+<.genus nomen="fiducia">
 
   <definitio>
     Tentio rei suo nomine et titulo, sed ALIENO COMMODO et sub
@@ -804,7 +804,7 @@
     Notatum ne quis eas coniungat.
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PETITIO - rogatio quae negari potest
@@ -822,7 +822,7 @@
      negari LICET, et negatio nihil violat.
      ================================================== -->
 
-<genus nomen="petitio">
+<.genus nomen="petitio">
 
   <definitio>
     Rogatio ad alium directa ut aliquid faciat aut praestet, quam
@@ -925,7 +925,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="petitio_assecurationis">
+  <.species nomen="petitio_assecurationis">
     <definitio>
       Rogatio ad assecuratorem ut damnum ex polliciatione
       praestet: quod "claim" vocatur.
@@ -936,9 +936,9 @@
       procedura statuta - unde relatio iudicatur_per necessaria,
       non ornamentum.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="petitio_remota">
+  <.species nomen="petitio_remota">
     <definitio>
       Rogatio ad programma per rete missa ut operationem agat
       aut datum reddat.
@@ -958,9 +958,9 @@
       once' pollicentur aut idempotentiam supponunt aut
       mentiuntur.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="supplicatio">
+  <.species nomen="supplicatio">
     <definitio>
       Rogatio ad auctoritatem directa quae de re sua statuere
       potest: petitio venia, gratiae, licentiae.
@@ -970,9 +970,9 @@
       habet, petens non - contrarium iussi, ubi iubens potestatem
       habet. Eadem duo capita, ordine converso.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -990,7 +990,7 @@
      ALTERIUS facit.
      ================================================== -->
 
-<genus nomen="delegatio">
+<.genus nomen="delegatio">
 
   <definitio>
     Potestas alterius nomine agendi, ita ut acta delegati
@@ -1094,7 +1094,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="plena_potestas">
+  <.species nomen="plena_potestas">
     <definitio>
       Potestas legato data ut tractatum nomine principis
       concludat: exhibenda alteri parti ante negotiationem,
@@ -1108,9 +1108,9 @@
       solum. Duo gradus consulto, ne latentia mensium principem
       ligaret sine ultima inspectione.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="procuratio">
+  <.species nomen="procuratio">
     <definitio>
       Potestas negotia alterius gerendi, instrumento publico
       plerumque data: emere, vendere, agere in iudicio.
@@ -1124,9 +1124,9 @@
       purus rei quae in systemate distributo 'sessio orphana'
       vocaretur.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="delegatio_canonica">
+  <.species nomen="delegatio_canonica">
     <definitio>
       Facultas ab ordinario data ut alius potestatem quae ipsi
       competit exerceat: absolvendi, assistendi matrimonio,
@@ -1138,9 +1138,9 @@
       matrimonium non facit. Nexus cum actus_sollemnis
       (capacitas agentis) hic strictissimus.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      TRACTATUS - conventio inter summas potestates
@@ -1152,7 +1152,7 @@
      transactio parata quae claustra sua tenet.
      ================================================== -->
 
-<genus nomen="tractatus" sub="contractus">
+<.genus nomen="tractatus" sub="contractus">
 
   <differentia>
     Conventio inter eos qui superiorem non habent: nullum
@@ -1262,7 +1262,7 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      LIMITATIO - consensus partialis
@@ -1273,7 +1273,7 @@
      ipsum praevenit.
      ================================================== -->
 
-<genus nomen="limitatio">
+<.genus nomen="limitatio">
 
   <definitio>
     Declaratio unilateralis qua pars, tractatum accipiens,
@@ -1349,7 +1349,7 @@
     elaboravit, quam ars computatralis non habet.
   </nota>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -1369,7 +1369,7 @@
      dicitur solutum erat antequam nominaretur.
      ================================================== -->
 
-<genus nomen="portio_communis">
+<.genus nomen="portio_communis">
 
   <definitio>
     Pars determinata rei communis finitae qua alicui uti licet,
@@ -1454,7 +1454,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="portio_pascui">
+  <.species nomen="portio_pascui">
     <definitio>
       Numerus pecorum quem tenens praedii in communi pascere
       licet: "stinta" Anglica, curia maneriali custodita.
@@ -1467,9 +1467,9 @@
       non pactum. Praedio adhaerens consulto: ne ius pascendi a
       communitate abiret.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="portio_piscandi">
+  <.species nomen="portio_piscandi">
     <definitio>
       Pondus piscium quod navi certae per annum capere licet:
       quod "quota transferibilis" vocatur.
@@ -1485,9 +1485,9 @@
       structura sua vetabat, haec libertate sua admittit -
       differentia non moralis sed ARCHITECTONICA.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="portio_computandi">
+  <.species nomen="portio_computandi">
     <definitio>
       Copia petitionum aut operationum quam cliens intra tempus
       certum facere licet: quod "limes celeritatis" vocatur.
@@ -1502,8 +1502,8 @@
       ADHAEREAT (persona? clavis? societas?) et QUIS eam
       transferre possit.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

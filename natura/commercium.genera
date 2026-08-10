@@ -26,7 +26,7 @@
      MONETA - genus pecuniae
      ================================================== -->
 
-<genus nomen="moneta">
+<.genus nomen="moneta">
 
   <definitio>
     Genus pecuniae ab auctoritate emissum et receptum: unitas
@@ -77,13 +77,13 @@
     <valor nomen="symbolum">$</valor>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PECUNIA - quantitas monetae
      ================================================== -->
 
-<genus nomen="pecunia">
+<.genus nomen="pecunia">
 
   <definitio>
     Quantitas in moneta: numerus CUM MONETA - "3,50" nihil est
@@ -122,13 +122,13 @@
     repraesentationem suam praescribit, raro sed vere.
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      POSSESSIO - relatio iuris ad rem
      ================================================== -->
 
-<genus nomen="possessio">
+<.genus nomen="possessio">
 
   <definitio>
     Relatio inter personam (aut organizationem) et rem: quis
@@ -158,13 +158,13 @@
             (ius, nomen) - apertum consulto"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PRETIUM - valor petitus in tempore
      ================================================== -->
 
-<genus nomen="pretium">
+<.genus nomen="pretium">
 
   <definitio>
     Pecunia pro re petita: relatio TEMPORE VARIANS inter rem et
@@ -195,13 +195,13 @@
     <relatio nomen="quantum" ad="pecunia"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      VENDITIO - eventus quo possessio transit
      ================================================== -->
 
-<genus nomen="venditio">
+<.genus nomen="venditio">
 
   <definitio>
     Eventus quo possessio rei transit et pecunia contrarie
@@ -243,7 +243,7 @@
             obligationis"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      TESSERA - res cuius exhibitio ius CONSTITUIT
@@ -264,7 +264,7 @@
      diversa, nulla confusio: haec natura, illa codex.)
      ================================================== -->
 
-<genus nomen="tessera">
+<.genus nomen="tessera">
 
   <definitio>
     Res cuius EXHIBITIO ius constituit, non probat: differentia
@@ -348,13 +348,13 @@
     potest praebendo classem contrariam, non parentem.
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      TESSERA NEGOTIABILIS - quae titulum PURGAT
      ================================================== -->
 
-<genus nomen="tessera_negotiabilis" sub="tessera">
+<.genus nomen="tessera_negotiabilis" sub="tessera">
 
   <differentia>
     Accipiens bona fide et pretio dato titulum PURUM accipit,
@@ -395,7 +395,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="charta_onerum">
+  <.species nomen="charta_onerum">
     <definitio>
       A vectore data, merces acceptas testans et dominium
       earum ferens: dum navis navigat, merces venduntur charta
@@ -403,9 +403,9 @@
     </definitio>
     <valor nomen="exhibitione_consumitur">verum</valor>
     <relatum nomen="fert_ius_in" ad="onus" modulus="vectura"/>
-  </species>
+  </.species>
 
-  <species nomen="apocha_horrei">
+  <.species nomen="apocha_horrei">
     <definitio>
       Idem officium, re QUIESCENTE: merces in horreo positas
       testatur et dominium earum fert. Geminum chartae onerum
@@ -414,17 +414,17 @@
     </definitio>
     <relatum nomen="fert_ius_in" ad="res_corporea"
       modulus="corporalia"/>
-  </species>
+  </.species>
 
-  <species nomen="syngrapha">
+  <.species nomen="syngrapha">
     <definitio>
       Promissum scriptum solvendi: debitum ipsum in chartam
       versum, ideo vendibile. Obligatio quae MERX fit.
     </definitio>
     <relatum nomen="fert_ius_in" ad="pecunia"/>
-  </species>
+  </.species>
 
-  <species nomen="perscriptio">
+  <.species nomen="perscriptio">
     <definitio>
       Iussum argentario datum ut ex ratione solvat: pecunia
       quae non movetur sed IUBETUR moveri - charta pro
@@ -432,9 +432,9 @@
     </definitio>
     <valor nomen="modus_transferendi">ad_ordinem</valor>
     <relatum nomen="fert_ius_in" ad="pecunia"/>
-  </species>
+  </.species>
 
-  <species nomen="nummus_chartaceus">
+  <.species nomen="nummus_chartaceus">
     <definitio>
       Tessera ad portitorem quam nemo tesseram vocat: "promitto
       me portitori ad petitionem soluturum" in chartis
@@ -451,24 +451,24 @@
       species non est, definitio nostra falsa erat. Est - ergo
       pecunia et tessera se tangunt, quod v0 non vidit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="obligatio_ad_portitorem">
+  <.species nomen="obligatio_ad_portitorem">
     <definitio>
       Debitum publicum sine nomine, cum foliis usurariis
       resecandis: species fere exstincta, cuius mors CAUSAM
       generis illustrat (tributa vitata, pecunia lota).
     </definitio>
     <valor nomen="modus_transferendi">ad_portitorem</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      TESSERA SIMPLEX - possessio sufficit, titulus non purgatur
      ================================================== -->
 
-<genus nomen="tessera_simplex" sub="tessera">
+<.genus nomen="tessera_simplex" sub="tessera">
 
   <differentia>
     Possessio sufficit ad exhibendum, sed nulla titulorum
@@ -495,23 +495,23 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="tessera_spectaculi">
+  <.species nomen="tessera_spectaculi">
     <definitio>
       Ius admissionis ad locum et tempus certum: exhibetur,
       consumitur, exstinguitur.
     </definitio>
     <valor nomen="exhibitione_consumitur">verum</valor>
-  </species>
+  </.species>
 
-  <species nomen="tessera_repositoria">
+  <.species nomen="tessera_repositoria">
     <definitio>
       Ius recipiendi rem certam depositam (vestiarium, pignus):
       tessera rem INDIVIDUAM designat, non genus - unde numerus
       in ea scriptus rem unam significat.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="tessera_digitalis">
+  <.species nomen="tessera_digitalis">
     <definitio>
       Tessera ad portitorem sine corpore: qui eam tenet
       auctoritatem exercet, nullo nomine quaesito. In arte
@@ -532,9 +532,9 @@
       et responsum quaestioni apertae rotae XXII, in partem
       inexspectatam.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      RATIO RATIONARIA - acta rerum pecuniariarum
@@ -547,7 +547,7 @@
      manebat: species erat cuius parens non exsistebat. Nunc
      parens natus est et differentia sola hic manet - quod
      pecuniarium est. -->
-<genus nomen="ratio_rationaria" sub="acta" modulus="acta">
+<.genus nomen="ratio_rationaria" sub="acta" modulus="acta">
 
   <definitio>
     Acta rerum pecuniariarum ordine temporis: veritas est cauda
@@ -599,7 +599,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="ratio_duplex">
+  <.species nomen="ratio_duplex">
     <definitio>
       Omnis eventus BIS scribitur (debitum et creditum): summa
       omnium debitorum summae creditorum semper aequalis -
@@ -608,8 +608,8 @@
       computatra). Error se ipsum prodit cum summae non
       conveniunt.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

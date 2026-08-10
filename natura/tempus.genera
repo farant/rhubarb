@@ -69,7 +69,7 @@
      MOMENTUM - punctum in tempore
      ================================================== -->
 
-<genus nomen="momentum">
+<.genus nomen="momentum">
 
   <definitio>
     Punctum in tempore: quando aliquid accidit. Sine duratione -
@@ -112,13 +112,13 @@
     pro omni tempore ex horologio).
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      INTERVALLUM - spatium inter momenta
      ================================================== -->
 
-<genus nomen="intervallum">
+<.genus nomen="intervallum">
 
   <definitio>
     Spatium temporis inter duo momenta: initium, finis, ideo
@@ -158,13 +158,13 @@
     duae eodem tempore" quaestio de superpositione est.
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      RECURRENTIA - regula momenta gignens
      ================================================== -->
 
-<genus nomen="recurrentia">
+<.genus nomen="recurrentia">
 
   <definitio>
     Regula quae momenta (aut intervalla) gignit: "omni die hora
@@ -210,7 +210,7 @@
     res quaedam iterum atque iterum fiunt.
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      RECURRENTIA COMPUTATA - regula quae CALCULUM poscit
@@ -218,7 +218,7 @@
      periodum simplicem excedunt)
      ================================================== -->
 
-<genus nomen="recurrentia_computata" sub="recurrentia">
+<.genus nomen="recurrentia_computata" sub="recurrentia">
 
   <differentia>
     Momenta non ex periodo simplici sed ex ALGORITHMO oriuntur:
@@ -263,7 +263,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="pascha">
+  <.species nomen="pascha">
     <definitio>
       Dominica post plenilunium quod aequinoctium vernum
       sequitur: computus lunisolaris, unde festa mobilia tota
@@ -284,9 +284,9 @@
       OCCURRENTIAS quas gignit (quae in voluminibus vivunt, per
       regulam residentiae). APERTUM.
     </dubium>
-  </species>
+  </.species>
 
-  <species nomen="dies_negotiorum">
+  <.species nomen="dies_negotiorum">
     <definitio>
       "Post dies negotiorum triginta": dies festis et diebus
       Solis exclusis - regula quae ALIAM recurrentiam
@@ -300,24 +300,24 @@
       unde eadem clausula in duabus civitatibus duos dies
       significat.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="dies_ordinalis_mensis">
+  <.species nomen="dies_ordinalis_mensis">
     <definitio>
       "Tertia feria secunda cuiusque mensis": ordo intra
       mensem, non intervallum fixum - unde intervalla inaequalia
       (28 aut 35 dies) sine ullo errore.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      RECURRENTIA PER USUM - clavis non tempus sed USUS
      (aviatio poposcit: "post horas volatus quingentas")
      ================================================== -->
 
-<genus nomen="recurrentia_per_usum" sub="recurrentia">
+<.genus nomen="recurrentia_per_usum" sub="recurrentia">
 
   <differentia>
     Non tempore sed USU ACCUMULATO regitur: horis operis,
@@ -354,29 +354,29 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="per_horas_operis">
+  <.species nomen="per_horas_operis">
     <definitio>Horis quibus res re vera operata est.</definitio>
-  </species>
+  </.species>
 
-  <species nomen="per_cyclos">
+  <.species nomen="per_cyclos">
     <definitio>
       Numero vicium quibus res a quiete ad opus et retro
       transiit: ubi damnum ex TRANSITU oritur, non ex duratione
       (metallum fatigatur pressione alternante, non stante).
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="per_spatium">
+  <.species nomen="per_spatium">
     <definitio>Distantia confecta: vehiculis propria.</definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      HORARIUM - recurrentiae ordinatae ad opus
      ================================================== -->
 
-<genus nomen="horarium">
+<.genus nomen="horarium">
 
   <definitio>
     Recurrentiae in ordinem compositae quibus opus regitur:
@@ -409,13 +409,13 @@
             imperat"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      CALENDARIUM - systema dierum nominandorum
      ================================================== -->
 
-<genus nomen="calendarium">
+<.genus nomen="calendarium">
 
   <definitio>
     Systema quo dies nominantur et ordinantur: menses,
@@ -463,13 +463,13 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      RESERVATIO - vindicatio capacitatis futurae
      ================================================== -->
 
-<genus nomen="reservatio">
+<.genus nomen="reservatio">
 
   <definitio>
     Vindicatio capacitatis futurae: intervallum et res (sedes,
@@ -524,6 +524,6 @@
     solum rem explicat.
   </nota>
 
-</genus>
+</.genus>
 
 </natura>

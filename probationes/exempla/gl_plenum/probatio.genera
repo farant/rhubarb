@@ -3,16 +3,16 @@
      (la per definitionem, en/fr per glossas) -->
 <natura modulus="probatio" versio="1" lingua="latina">
 
-<genus nomen="alpha">
+<.genus nomen="alpha">
   <definitio>Prima res probationis.</definitio>
   <glossa lingua="en">The first test kind.</glossa>
   <glossa lingua="fr">La première sorte d'essai.</glossa>
-</genus>
+</.genus>
 
-<genus nomen="beta" sub="alpha">
+<.genus nomen="beta" sub="alpha">
   <definitio>Secunda res probationis.</definitio>
   <glossa lingua="en">The second test kind.</glossa>
   <glossa lingua="fr">La seconde sorte d'essai.</glossa>
-</genus>
+</.genus>
 
 </natura>

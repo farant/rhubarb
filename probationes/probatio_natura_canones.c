@@ -1745,7 +1745,7 @@ principale(
                 fons_e = filum_legere_totum(
                     chorda_ut_cstr(via_e, piscina), piscina);
                 si (chorda_continet(fons_e,
-                        chorda_ex_literis("<genus ", piscina)))
+                        chorda_ex_literis("<.genus ", piscina)))
                 {
                     coquentia++;
                 }

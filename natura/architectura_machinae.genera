@@ -24,7 +24,7 @@
   </fons>
 </fontes>
 
-<genus nomen="architectura_machinae">
+<.genus nomen="architectura_machinae">
 
   <definitio>
     Forma abstracta machinae computatoriae quam programmata
@@ -131,7 +131,7 @@
     </historia>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      VERSIO ARCHITECTURAE - eadem solutio ac versio_linguae:
@@ -139,7 +139,7 @@
      HIC vivit, non in familia.
      ================================================== -->
 
-<genus nomen="versio_architecturae" sub="versio" modulus="versio">
+<.genus nomen="versio_architecturae" sub="versio" modulus="versio">
 
   <definitio>
     Editio architecturae nominata: quam copiam instructionum
@@ -215,7 +215,7 @@
     <nota>machinae nostrae (Apple Silicon) hanc exsequuntur</nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PROCESSORIUM - exemplar producti quod architecturam
@@ -231,7 +231,7 @@
      divisio eadem quam libri iam fecerunt (editio/codex).
      ================================================== -->
 
-<genus nomen="processorium">
+<.genus nomen="processorium">
 
   <definitio>
     Exemplar productum circuli computantis: forma nominata quam
@@ -337,6 +337,6 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 </natura>

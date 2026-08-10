@@ -88,7 +88,7 @@
      STATUS - valor custoditus mutabilis
      ================================================== -->
 
-<genus nomen="status">
+<.genus nomen="status">
 
   <definitio>
     Valor custoditus qui in tempore mutari potest: inter eventus
@@ -166,7 +166,7 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PROIECTIO - status ex alio statu recomputabilis
@@ -175,7 +175,7 @@
      arbor laborans - antequam hic scripta est)
      ================================================== -->
 
-<genus nomen="proiectio" sub="status">
+<.genus nomen="proiectio" sub="status">
 
   <differentia>
     Ex alio statu (VERITATE sua) integre recomputari potest.
@@ -209,9 +209,9 @@
   <!-- dictionarium v1 (species tres) ad sub-genera promotum
        v2 Fran iubente: quaeque suam machinam afferebat -->
 
-</genus>
+</.genus>
 
-<genus nomen="artefactum_aedificationis" sub="proiectio">
+<.genus nomen="artefactum_aedificationis" sub="proiectio">
 
   <differentia>
     Proiectio fontium per aedificationem facta: fons veritas,
@@ -242,22 +242,22 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="obiectum_compilatum">
+  <.species nomen="obiectum_compilatum">
     <definitio>
       Plagula obiecti ex fonte uno: gradus intermedius, ligando
       destinatus.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="exsecutabile_ligatum">
+  <.species nomen="exsecutabile_ligatum">
     <definitio>
       Artefactum ultimum: obiecta ligata quae currere possunt.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
-<genus nomen="promptuarium" sub="proiectio">
+<.genus nomen="promptuarium" sub="proiectio">
 
   <differentia>
     Proiectio ad celeritatem servata: valor semel computatus ne
@@ -290,9 +290,9 @@
     habitant.
   </nota>
 
-</genus>
+</.genus>
 
-<genus nomen="index" sub="proiectio">
+<.genus nomen="index" sub="proiectio">
 
   <differentia>
     Proiectio ad quaerendum ordinata: veritas ordinem quem
@@ -311,21 +311,21 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="index_inversus">
+  <.species nomen="index_inversus">
     <definitio>
       A verbo ad loca: quaestioni plenitextus servit - textus
       per documenta currit, index per verba.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="index_arboris">
+  <.species nomen="index_arboris">
     <definitio>
       Claves ordinatae in arbore: quaestioni per clavem et
       per intervallum servit - forma basium datorum.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      GEMINI STATUS - lectio et mutatio
@@ -342,7 +342,7 @@
      divisio ubique recurrit quia realis est.
      ================================================== -->
 
-<genus nomen="lectio">
+<.genus nomen="lectio">
 
   <definitio>
     Eventus quo status observatur, ipso immutato: dimidium
@@ -379,24 +379,24 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="lectio_memoriae">
+  <.species nomen="lectio_memoriae">
     <definitio>
       Status processu gestus legitur: variabilis universalis,
       hic_manens, aut memoria per monstratorem designata.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="lectio_externa">
+  <.species nomen="lectio_externa">
     <definitio>
       Status extra processum legitur: plagula, terminale, rete,
       horologium. Dimidium legens eius quod vulgo I/O dicitur -
       geminum scriptionis externae.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
-<genus nomen="mutatio">
+<.genus nomen="mutatio">
 
   <definitio>
     Eventus quo status mutatur: quod ACTA recordant. Ubi
@@ -451,44 +451,44 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="mutatio_memoriae">
+  <.species nomen="mutatio_memoriae">
     <definitio>
       Status processu gestus mutatur: variabilis universalis,
       hic_manens, aut memoria vocantis per monstratorem.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="scriptio_externa">
+  <.species nomen="scriptio_externa">
     <definitio>
       Status extra processum mutatur: plagula, terminale, rete.
       Dimidium scribens eius quod vulgo I/O dicitur - geminum
       lectionis externae.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="allocatio">
+  <.species nomen="allocatio">
     <definitio>
       Status allocatoris mutatur: memoria petita aut reddita.
       In domo nostra piscina gerens est.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="terminatio">
+  <.species nomen="terminatio">
     <definitio>
       Processus ipse finitur - mutatio quae gerentem omnium
       statuum ephemerorum tollit; ultima ideo mutationum.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="transactio">
+  <.species nomen="transactio">
     <definitio>
       Mutatio composita atomica: tota fit aut nulla - partes
       eius numquam separatim visibiles. In domo nostra lex
       prima voluminis (plagulam condere = transactio una).
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      FUNCTIO - subprogramma nominatum
@@ -497,7 +497,7 @@
      omnia "functiones" vocat, plurima procedurae sunt)
      ================================================== -->
 
-<genus nomen="functio">
+<.genus nomen="functio">
 
   <definitio>
     Subprogramma nominatum: parametra accipit, computat,
@@ -642,13 +642,13 @@
     <relatum nomen="praebetur_a" ad="libc"/>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      FUNCTIO PURA - sine occultis
      ================================================== -->
 
-<genus nomen="functio_pura" sub="functio">
+<.genus nomen="functio_pura" sub="functio">
 
   <differentia>
     Criterium UNUM in geminos applicatum: lectiones solum per
@@ -714,7 +714,7 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      CONSTANS - valor cui intentio est numquam mutari
@@ -722,7 +722,7 @@
      innocens, in generatione C futura cavendum)
      ================================================== -->
 
-<genus nomen="constans">
+<.genus nomen="constans">
 
   <definitio>
     Valor cuius INTENTIO est numquam post ortum mutari -
@@ -774,9 +774,9 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
-<genus nomen="constans_numerica" sub="constans">
+<.genus nomen="constans_numerica" sub="constans">
 
   <differentia>
     Quantitas: arithmetica in ea licet. Nomine carens "numerus
@@ -814,9 +814,9 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
-<genus nomen="constans_textualis" sub="constans">
+<.genus nomen="constans_textualis" sub="constans">
 
   <differentia>
     Series characterum constans, plerumque homini destinata:
@@ -838,13 +838,13 @@
     semper compilat, quia intentioni credit, non typo.
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      BIBLIOTHECA - elementa ad usum repetendum edita
      ================================================== -->
 
-<genus nomen="bibliotheca">
+<.genus nomen="bibliotheca">
 
   <definitio>
     Collectio elementorum (functionum, constantium, typorum) ad
@@ -923,13 +923,13 @@
       systematibus innumeris eadem.</nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      ASSERTIO - propositio exsecutabilis
      ================================================== -->
 
-<genus nomen="assertio">
+<.genus nomen="assertio">
 
   <definitio>
     Propositio exsecutabilis: affirmatio de statu programmatis
@@ -963,49 +963,49 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="praeconditio">
+  <.species nomen="praeconditio">
     <definitio>
       Quod vocans debet: verum ante introitum, aut culpa
       vocantis est.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="postconditio">
+  <.species nomen="postconditio">
     <definitio>
       Quod functio promittit: verum ante reditum, aut culpa
       functionis est.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="invarians">
+  <.species nomen="invarians">
     <definitio>
       Quod semper tenet: verum inter omnes mutationes rei -
       forma rei ipsa, ut propositio custodita.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="assertio_statica">
+  <.species nomen="assertio_statica">
     <definitio>
       In compilatione probata: propositio quam compilator
       iudicat, exsecutione non indiget.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="assertio_probationis">
+  <.species nomen="assertio_probationis">
     <definitio>
       In probationibus vivens: affirmatio de effectu exspectato
       post actionem. In domo nostra bibliotheca credo eam
       realizat.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      COMMENTARIUM - quod lingua legere non promittit
      ================================================== -->
 
-<genus nomen="commentarium">
+<.genus nomen="commentarium">
 
   <definitio>
     Pars fontis quam lingua legere NON promittit: textus intra
@@ -1027,59 +1027,59 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="explicativum">
+  <.species nomen="explicativum">
     <definitio>
       CUR, non quid - homini legenti id quod codex ipse dicere
       non potest: consilium, vinculum, causa electionis.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="documentarium">
+  <.species nomen="documentarium">
     <definitio>
       Promissum interfaciei descriptum: pars contractus, iuxta
       declarationem habitans.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="monitum_futuri">
+  <.species nomen="monitum_futuri">
     <definitio>
       Intentio de opere futuro in artefacto praesenti servata
       (TODO, FIXME): debitum nominatum ubi debetur.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="titulus_iuris">
+  <.species nomen="titulus_iuris">
     <definitio>
       Ius et licentia: homini legali inscriptum, saepe a nemine
       lectum, a machinis collectum.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="codex_sepultus">
+  <.species nomen="codex_sepultus">
     <definitio>
       Codex exclusus commento: mendacium categoriae - codex
       vestem commentarii gerens, nec vivus nec mortuus. Ubi
       custodia versionum adest, sepulcrum supervacuum est:
       historia iam servat quod commentum celat.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="annotatio_machinae">
+  <.species nomen="annotatio_machinae">
     <definitio>
       Machinae inscripta per canalem neglectum: propositiones
       quas instrumenta legunt, lingua ipsa numquam. In domo
       nostra stratum STML/TOLERA - et silva commentaria ad
       litteram servat, ideo sensus adest.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      IDENTIFICATOR - ansa ad haecceitatem
      ================================================== -->
 
-<genus nomen="identificator">
+<.genus nomen="identificator">
 
   <definitio>
     Nomen cuius essentia REFERENTIA est, non significatio: ansa
@@ -1102,15 +1102,15 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="identificator_baptismalis">
+  <.species nomen="identificator_baptismalis">
     <definitio>
       Identitas DATA: nomen rei impositum (nomen proprium,
       ULID, UUID). Haecceitatem individui prensat - HOC, non
       aliud, etiam si gemella perfecta adsint.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="sigillum_contenti">
+  <.species nomen="sigillum_contenti">
     <definitio>
       Identitas DERIVATA: ex ipso contento computata. FORMAM
       prensat, non haecceitatem - plagulae duae identicae
@@ -1120,9 +1120,9 @@
       volumen secundum lineam Scoti divisum antequam
       vocabularium habuimus.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PROGRAMMA - quod initium proprium habet
@@ -1133,7 +1133,7 @@
      introspectio non invenerat.)
      ================================================== -->
 
-<genus nomen="programma">
+<.genus nomen="programma">
 
   <definitio>
     Collectio elementorum cum INITIO PROPRIO: vocatum currit et
@@ -1179,33 +1179,33 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="instrumentum_lineae">
+  <.species nomen="instrumentum_lineae">
     <definitio>
       Vocatur, agit, exit: compositioni per fistulas aptum
       (vide cliens.cliens_cli, quod idem ex parte ministerii
       describit).
     </definitio>
     <valor nomen="modus_finiendi">terminans</valor>
-  </species>
+  </.species>
 
-  <species nomen="daemon">
+  <.species nomen="daemon">
     <definitio>
       Perpetuum, sine terminali, petitionibus serviens: non
       finem quaerit sed statum servat.
     </definitio>
     <valor nomen="modus_finiendi">perpetuum</valor>
     <valor nomen="interactivum">falsum</valor>
-  </species>
+  </.species>
 
-  <species nomen="applicatio">
+  <.species nomen="applicatio">
     <definitio>
       Homini praesens, fenestris aut terminali: dum homo
       adest currit.
     </definitio>
     <valor nomen="interactivum">verum</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      INSTRUMENTUM AEDIFICATIONIS - programma quod artefacta
@@ -1219,7 +1219,7 @@
      make instrumentum aedificationis est, cc non est.
      ================================================== -->
 
-<genus nomen="instrumentum_aedificationis" sub="programma">
+<.genus nomen="instrumentum_aedificationis" sub="programma">
 
   <differentia>
     Programma cuius finis artefacta aedificationis ex fontibus
@@ -1311,6 +1311,6 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 </natura>

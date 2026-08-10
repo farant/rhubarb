@@ -42,7 +42,7 @@
   </fons>
 </fontes>
 
-<genus nomen="schema_identificandi">
+<.genus nomen="schema_identificandi">
 
   <definitio>
     Ratio instituta nomina rebus assignandi, ita ut nomen unum
@@ -139,7 +139,7 @@
        probatio EXPOSITIONIS: his omnibus applicatio quaevis
        fere occurret -->
 
-  <species nomen="uuid">
+  <.species nomen="uuid">
     <definitio>
       Identificator 128 bitorum sine auctoritate centrali:
       spatium tam amplum ut collisio fortuita neglegi possit.
@@ -159,9 +159,9 @@
       est. Pretium carentiae auctoritatis - nemo probat quia
       nemo administrat.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="ulid">
+  <.species nomen="ulid">
     <definitio>
       Identificator 128 bitorum cuius pars prior TEMPUS fert,
       ideo lexicographice ordinabilis: unde in indicibus
@@ -175,9 +175,9 @@
       et momentum creationis PRODIT - quod aliquando commodum,
       aliquando indiscretio.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="isbn">
+  <.species nomen="isbn">
     <definitio>
       Ratio libros identificandi ab industria libraria
       instituta: praefixum coetus, editor, titulus, nota
@@ -201,7 +201,7 @@
       vocant. Moby-Dick opus unum, ISBN multa.
     </nota>
 
-    <species nomen="isbn_10">
+    <.species nomen="isbn_10">
       <definitio>
         Forma antiquior, decem characterum: nota custos modulo
         undecim, unde character 'X' pro valore decem - unicus
@@ -217,9 +217,9 @@
           nova assignatio cessavit - ad ISBN-13 transitum
         </eventum>
       </historia>
-    </species>
+    </.species>
 
-    <species nomen="isbn_13">
+    <.species nomen="isbn_13">
       <definitio>
         Forma hodierna, tredecim digitorum: praefixo 978 aut
         979 aucta, ut in spatium EAN codicum mercium
@@ -231,10 +231,10 @@
         GTIN migravit ut libri in tabernis ut merces ceterae
         legerentur. Numerus idem duas rationes simul servit.
       </nota>
-    </species>
-  </species>
+    </.species>
+  </.species>
 
-  <species nomen="issn">
+  <.species nomen="issn">
     <definitio>
       Ratio SERIES identificandi (ephemerides, acta): octo
       digiti, nota custos modulo undecim cum 'X'.
@@ -248,9 +248,9 @@
       secat: liber editiones habet, ephemeris fasciculos - et
       ISSN totum designat, ISBN partem.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="doi">
+  <.species nomen="doi">
     <definitio>
       Identificator documentorum PERSISTENS et RESOLVABILIS:
       praefixum editoris (10.NNNN) et suffixus liber. Non
@@ -267,9 +267,9 @@
       poscit ut vivat - si registrum cadit, identificator
       nomen nudum fit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="orcid">
+  <.species nomen="orcid">
     <definitio>
       Identificator PERSONARUM in re litteraria: sedecim
       digiti, nota custos ISO 7064 modulo 11-2 cum 'X'.
@@ -286,9 +286,9 @@
       exemplaris personae esse MULTIPLICEM - et ostendit cur
       identificator opus sit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="iban">
+  <.species nomen="iban">
     <definitio>
       Ratio rationum argentariarum trans fines: codex
       civitatis, duo digiti custodes, codex argentariae et
@@ -305,9 +305,9 @@
       fortissima harum: errores scribendi et transpositiones
       fere omnes capit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="e164">
+  <.species nomen="e164">
     <definitio>
       Ratio numerorum telephonicorum mundi: codex civitatis et
       numerus nationalis, quindecim digitis non excedens.
@@ -334,9 +334,9 @@
       ratio generalis (E.164) rationem localem NON continet,
       et applicatio utramque scire debet.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="gtin">
+  <.species nomen="gtin">
     <definitio>
       Ratio mercium in commercio (EAN, UPC): praefixum
       societatis, numerus mercis, nota custos modulo decem
@@ -352,9 +352,9 @@
       numerat, numerus seriei individuum. Qui GTIN pro
       individuo habet duas lagoenas unam putabit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="uri">
+  <.species nomen="uri">
     <definitio>
       Ratio generalissima: nomen cum schemate quod
       interpretationem regit (http, mailto, urn, et nostrum
@@ -371,7 +371,7 @@
       est. Ratio quae rationes ALIAS continere potest
       (urn:isbn:...), unde vis eius et ambiguitas.
     </nota>
-  </species>
+  </.species>
 
   <!-- ORDO PHARMACEUTICUS (cursus septimus): quattuor schemata
        quae SCALAM pharmaci alloquuntur, singula gradu suo -
@@ -380,7 +380,7 @@
        additur ut specimen schematis quod AUCTORITATEM
        identificat, non rem. -->
 
-  <species nomen="cas">
+  <.species nomen="cas">
     <definitio>
       Numerus quo Chemical Abstracts Service substantias
       chemicas registrat: nihil de structura dicens, sed unicus
@@ -398,9 +398,9 @@
       probatio quod ille gradus res vera est, non abstractio
       nostra.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="ndc">
+  <.species nomen="ndc">
     <definitio>
       Codex nationalis medicamentorum (Civitatum Foederatarum):
       tres partes - fabricator, productum (substantia, vis,
@@ -417,9 +417,9 @@
       debet - quod probat cocturam gradum proprium esse, non
       NDC subdivisionem.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="rxnorm">
+  <.species nomen="rxnorm">
     <definitio>
       Vocabularium normatum quo medicamenta clinica nominantur
       et gradus inter se nectuntur: ingrediens, medicamentum
@@ -436,9 +436,9 @@
       relinquunt. Quod bibliotheca nostra generibus facit,
       RxNorm intra schema unum fecit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="numerus_dea">
+  <.species nomen="numerus_dea">
     <definitio>
       Numerus quo auctoritas Americana eos registrat quibus
       substantias regulatas praescribere aut tractare licet:
@@ -459,8 +459,8 @@
       munus SECURITATIS quoque gerere - pharmacopola numerum
       computare potest antequam credat.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

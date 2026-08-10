@@ -200,7 +200,7 @@ for fons in natura/*.genera; do
     # recusat (exitus 2), ergo eum ne vocemus quidem. Grep in
     # textu crudo hic licet: quaestio est 'estne quod coqui
     # possit', non iudicium semanticum - id generator tenet.
-    if ! grep -q '<genus ' "$fons"; then
+    if ! grep -q '<\.genus ' "$fons"; then
         continue
     fi
     moduli=$((moduli + 1))

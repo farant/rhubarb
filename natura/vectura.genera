@@ -34,7 +34,7 @@
      ITER - motus a loco ad locum cum proposito
      ================================================== -->
 
-<genus nomen="iter">
+<.genus nomen="iter">
 
   <definitio>
     Motus rei aut personae a loco ad locum, proposito susceptus:
@@ -94,13 +94,13 @@
       nota="vector - qui iter agit"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      VIA - iter possibile, ante omne iter
      ================================================== -->
 
-<genus nomen="via">
+<.genus nomen="via">
 
   <definitio>
     Semita per quam iri potest: res publica plerumque, itineribus
@@ -140,25 +140,25 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="via_terrestris">
+  <.species nomen="via_terrestris">
     <definitio>Per terram: strata, semita, via ferrata.</definitio>
-  </species>
+  </.species>
 
-  <species nomen="via_maritima">
+  <.species nomen="via_maritima">
     <definitio>
       Per mare: nullo opere facta plerumque, sed vera - cursus
       quos naves servant propter ventos, fluctus, praedones.
       Species quae ostendit viam non semper AEDIFICATAM esse.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="via_aeria">
+  <.species nomen="via_aeria">
     <definitio>
       Per aerem, corridoribus a magistratibus definitis:
       via quae LEGE sola exsistit - nec aedificata nec
       naturalis, sed non ideo minus vera.
     </definitio>
-  </species>
+  </.species>
 
   <individuum nomen="via_appia">
     <valor nomen="publica">verum</valor>
@@ -187,7 +187,7 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      VEHICULUM - instrumentum quod movetur et fert
@@ -195,7 +195,7 @@
      corporalibus habitat - arbor una est)
      ================================================== -->
 
-<genus nomen="vehiculum" sub="instrumentum" modulus="corporalia">
+<.genus nomen="vehiculum" sub="instrumentum" modulus="corporalia">
 
   <differentia>
     Instrumentum cuius usus MOTUS est: se movet et alia fert.
@@ -234,43 +234,43 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="navis">
+  <.species nomen="navis">
     <definitio>
       Vehiculum aquae: capacitatis maximae, velocitatis minimae -
       unde onera gravia et vilia mari eunt, levia et cara aere.
       Ratio quae commercium mundi ordinat.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="currus_onerarius">
+  <.species nomen="currus_onerarius">
     <definitio>
       Vehiculum viae terrestris: solum quod ab ostio ad ostium
       pervenit - unde ultimum iteris membrum fere semper eius.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="tramen">
+  <.species nomen="tramen">
     <definitio>
       Vehiculum viae ferratae: viam PROPRIAM postulat, et ideo
       quo via ferrata non it, non it - vinculum durissimum
       omnium vehiculorum.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="aeroplanum">
+  <.species nomen="aeroplanum">
     <definitio>
       Vehiculum aeris: velocissimum, capacitatis minimae pro
       pretio - electio cum tempus pretium superat.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      ONUS - res quae fertur
      ================================================== -->
 
-<genus nomen="onus">
+<.genus nomen="onus">
 
   <definitio>
     Res corporeae sub itinere: non genus rerum sed CONDICIO
@@ -338,6 +338,6 @@
     nostri in onere navali.
   </nota>
 
-</genus>
+</.genus>
 
 </natura>

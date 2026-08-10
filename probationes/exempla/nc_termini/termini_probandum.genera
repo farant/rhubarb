@@ -13,7 +13,7 @@
   <necessitudo nomen="participatio_pr" a="*" ad="*">
     <definitio>Necessitudo ficta probationis compagum.</definitio>
   </necessitudo>
-  <genus nomen="pactum_pr">
+  <.genus nomen="pactum_pr">
     <definitio>Pactum fictum: compages cum teste relationis.</definitio>
     <termini>
       <terminus munus="dator_rei" necessitudo="participatio_pr"
@@ -23,5 +23,5 @@
       <relatio nomen="testis_rel" necessitudo="participatio_pr"
         ad="pactum_pr"/>
     </relationes>
-  </genus>
+  </.genus>
 </natura>

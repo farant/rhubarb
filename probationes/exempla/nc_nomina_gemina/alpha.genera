@@ -9,7 +9,7 @@
   RECUSAT (exitus II, nihil scriptum).
 -->
 <natura modulus="alpha" versio="1" lingua="latina">
-  <genus nomen="res_communis">
+  <.genus nomen="res_communis">
     <definitio>Genus quod nomen cum beta communicat.</definitio>
-  </genus>
+  </.genus>
 </natura>

@@ -1130,7 +1130,7 @@ _species_scribere(
         r    = *(NaturaRes**)xar_obtinere(genus->res_suae, i);
         kind = (r->nodus && r->nodus->titulus) ?
                    (constans character*)r->nodus->titulus->datum : "?";
-        si (strncmp(kind, "species", VII) != ZEPHYRUM &&
+        si (strncmp(kind, ".species", VIII) != ZEPHYRUM &&
             strncmp(kind, "individuum", X) != ZEPHYRUM)
         {
             perge;   /* cultivar omittitur (mos natura_quaere.sh) */
@@ -1155,7 +1155,7 @@ _species_scribere(
         kind = (r->nodus && r->nodus->titulus) ?
                    (constans character*)r->nodus->titulus->datum : "?";
         individuum = (b32)(strncmp(kind, "individuum", X) == ZEPHYRUM);
-        si (strncmp(kind, "species", VII) != ZEPHYRUM && !individuum)
+        si (strncmp(kind, ".species", VIII) != ZEPHYRUM && !individuum)
         {
             perge;
         }
@@ -1808,7 +1808,7 @@ _censum_scribere(
         r    = *(NaturaRes**)xar_obtinere(bib->res_omnes, i);
         kind = (r->nodus && r->nodus->titulus) ?
                    (constans character*)r->nodus->titulus->datum : "?";
-        si (strncmp(kind, "species", VII) == ZEPHYRUM)
+        si (strncmp(kind, ".species", VIII) == ZEPHYRUM)
         {
             quot_specierum++;
         }
@@ -1816,7 +1816,7 @@ _censum_scribere(
         {
             quot_individuorum++;
         }
-        alioquin si (strncmp(kind, "cultivar", VIII) == ZEPHYRUM)
+        alioquin si (strncmp(kind, ".cultivar", IX) == ZEPHYRUM)
         {
             quot_cultivarum++;
         }

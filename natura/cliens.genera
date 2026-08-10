@@ -15,7 +15,7 @@
 -->
 <natura modulus="cliens" versio="1" lingua="latina">
 
-<genus nomen="cliens">
+<.genus nomen="cliens">
 
   <definitio>
     Programma quod ministerium alienum consumit, pro utente
@@ -42,9 +42,9 @@
             divisionis"/>
   </relationes>
 
-</genus>
+</.genus>
 
-<genus nomen="cliens_telae" sub="cliens">
+<.genus nomen="cliens_telae" sub="cliens">
   <differentia>
     In navigatro vivit: institutione caret - inscriptio URL
     ipsa distributio est. Ubique statim, potestate systematis
@@ -60,9 +60,9 @@
     les pouvoirs que le système lui accorde.</glossa>
   <!-- vitrea domus hybrida honesta: cliens telae in vase
        nativo (webview) - tela intus, nativus extrinsecus -->
-</genus>
+</.genus>
 
-<genus nomen="cliens_nativus" sub="cliens">
+<.genus nomen="cliens_nativus" sub="cliens">
   <differentia>
     In systemate ipso vivit: institutione indiget, plenitudine
     praemiatur - plagulae, processus, fenestrae, omnia
@@ -76,9 +76,9 @@
     système même. Il exige une installation et s'en trouve
     récompensé par la plénitude - fichiers, processus, fenêtres,
     tout le système lui est ouvert.</glossa>
-</genus>
+</.genus>
 
-<genus nomen="cliens_terminalis" sub="cliens">
+<.genus nomen="cliens_terminalis" sub="cliens">
   <differentia>
     In terminali vivit, textu solo pingit: quo terminale
     pervenit, is pervenit - trans SSH in machinas remotas sine
@@ -95,9 +95,9 @@
     terminal, il parvient - à travers SSH jusqu'aux machines
     distantes, sans modification. Dans cette maison, tessera
     l'habille, et saltuarius en est l'exemple.</glossa>
-</genus>
+</.genus>
 
-<genus nomen="cliens_api" sub="cliens">
+<.genus nomen="cliens_api" sub="cliens">
   <differentia>
     Machina machinae, sine facie humana: interfaciem
     programmaticam consumit. Limes cum bibliotheca tenuis -
@@ -112,9 +112,9 @@
     interface programmatique. Sa frontière avec une bibliothèque est
     mince - un client d'API n'est souvent qu'une bibliothèque qui
     parle par le réseau.</glossa>
-</genus>
+</.genus>
 
-<genus nomen="cliens_mcp" sub="cliens">
+<.genus nomen="cliens_mcp" sub="cliens">
   <differentia>
     Cliens cuius UTENS agens artificialis est: ministeria per
     protocollum instrumentorum consumit, agens pro homine per
@@ -133,9 +133,9 @@
     l'entremise d'un agent. Espèce vraiment nouvelle de notre
     époque - l'axe du qui s'en sert a reçu un troisième membre. Dans
     la maison : cliens_tabularii et legati.</glossa>
-</genus>
+</.genus>
 
-<genus nomen="cliens_cli" sub="cliens">
+<.genus nomen="cliens_cli" sub="cliens">
   <differentia>
     Instrumentum imperii unius: vocatur, agit, exit.
     Compositio essentia eius - per fistulas cum aliis
@@ -163,9 +163,9 @@
       cliens_api uno corpore esse possunt.
     </nota>
   </individuum>
-</genus>
+</.genus>
 
-<genus nomen="cliens_mobilis" sub="cliens">
+<.genus nomen="cliens_mobilis" sub="cliens">
   <differentia>
     In telephono vivit: tactus pro mure, interruptiones pro
     sessione, pila pro fine - vincula eius differentia sunt.
@@ -181,7 +181,7 @@
     au lieu d'une session, la batterie pour limite. Ce sont ses
     contraintes qui le distinguent. Dans la maison, vitrea servus
     porte les applications jusqu'au téléphone.</glossa>
-</genus>
+</.genus>
 
 <!-- ==================================================
      SERVUS - dimidium respondens
@@ -192,7 +192,7 @@
      nominavit.
      ================================================== -->
 
-<genus nomen="servus">
+<.genus nomen="servus">
 
   <definitio>
     Programma quod ministerium aliis praebet: dimidium RESPONDENS
@@ -259,33 +259,33 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="servus_telae">
+  <.species nomen="servus_telae">
     <differentia>
       Protocollo HTTP respondet: petitio sine memoria priorum
       venit, unde status omnis aut in petitione ipsa aut alibi
       vivit - vitium quod protocollum in architecturam vertit.
     </differentia>
-  </species>
+  </.species>
 
-  <species nomen="servus_datorum">
+  <.species nomen="servus_datorum">
     <differentia>
       Non documenta sed INTERROGATIONES accipit: petens quid
       velit dicit, servus quomodo id inveniat eligit. Unde solus
       inter servos consilium proprium habet quod petens neque
       videt neque regit.
     </differentia>
-  </species>
+  </.species>
 
-  <species nomen="servus_nominum">
+  <.species nomen="servus_nominum">
     <differentia>
       Nomina in inscriptiones vertit: servus cuius responsa
       SERVANTUR ab omnibus per quos transeunt, unde mutatio non
       statim valet sed per horas diffunditur. Congruentia
       'tandem' hic in protocollum ipsum inaedificata.
     </differentia>
-  </species>
+  </.species>
 
-  <species nomen="servus_procuratorius">
+  <.species nomen="servus_procuratorius">
     <differentia>
       Petitionem accipit et alteri servo transmittit: SERVUS
       PETENTI, CLIENS PRAEBENTI - idem programma utrumque
@@ -295,16 +295,16 @@
       Specimen quod dubium infra excitavit: si res una ambo esse
       potest eodem momento, an ambo genera sint an MUNERA?
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="servus_mcp">
+  <.species nomen="servus_mcp">
     <differentia>
       Instrumenta agenti artificiali praebet: petens homo non
       est nec programma more solito, sed agens qui instrumenta
       LEGIT antequam eligat - unde descriptio instrumenti pars
       interfaciei est, non documentatio eius.
     </differentia>
-  </species>
+  </.species>
 
   <nota>
     DUBIUM SOLUTUM (rota L): UTRUMQUE VERUM, GRADIBUS DIVERSIS.
@@ -339,6 +339,6 @@
     procuratorius neutram partem frangit.
   </nota>
 
-</genus>
+</.genus>
 
 </natura>

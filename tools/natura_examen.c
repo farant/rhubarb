@@ -435,7 +435,7 @@ tabulas_scribere(
 
         /* ---- genera ---- */
         nodi = xar_creare(p, (i32)magnitudo(StmlNodus*));
-        _colligere(ex->radix, "genus", nodi);
+        _colligere(ex->radix, ".genus", nodi);
         per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
         {
             StmlNodus* g;
@@ -474,7 +474,7 @@ tabulas_scribere(
 
             fprintf(f_genera, "%s|%s|%s|%u|%u|%u|%u|%u\n",
                     mod, gn, sub,
-                    _numerare_liberos(g, "species"),
+                    _numerare_liberos(g, ".species"),
                     _numerare_liberos(g, "individuum"),
                     xar_numerus(dubia_sub),
                     _numerare_liberos(g, "machina_statuum"),
@@ -514,9 +514,9 @@ tabulas_scribere(
         }
 
         /* ---- res dictionarii (ordine graduum, ut visus) ---- */
-        gradus_nomina[ZEPHYRUM] = "species";
+        gradus_nomina[ZEPHYRUM] = ".species";
         gradus_nomina[I]        = "individuum";
-        gradus_nomina[II]       = "cultivar";
+        gradus_nomina[II]       = ".cultivar";
         per (ig = ZEPHYRUM; ig < III; ig++)
         {
             Xar* rr;
@@ -542,7 +542,7 @@ tabulas_scribere(
                 {
                     si (maior->genus == STML_NODUS_ELEMENTUM &&
                         chorda_aequalis_literis(*maior->titulus,
-                                                "genus"))
+                                                ".genus"))
                     {
                         _attr(maior, "nomen", rg,
                               (i32)magnitudo(rg));
@@ -615,7 +615,7 @@ tabulas_scribere(
                             si (maior->genus ==
                                     STML_NODUS_ELEMENTUM &&
                                 chorda_aequalis_literis(
-                                    *maior->titulus, "genus"))
+                                    *maior->titulus, ".genus"))
                             {
                                 _attr(maior, "nomen", fg,
                                       (i32)magnitudo(fg));
@@ -674,7 +674,7 @@ tabulas_scribere(
             {
                 si (maior->genus == STML_NODUS_ELEMENTUM &&
                     chorda_aequalis_literis(*maior->titulus,
-                                            "genus"))
+                                            ".genus"))
                 {
                     _attr(maior, "nomen", pf, (i32)magnitudo(pf));
                     frange;
@@ -867,7 +867,7 @@ corpus_scribere(
         _attr(ex->radix, "modulus", mod, (i32)magnitudo(mod));
 
         nodi = xar_creare(p, (i32)magnitudo(StmlNodus*));
-        _colligere(ex->radix, "genus", nodi);
+        _colligere(ex->radix, ".genus", nodi);
 
         per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
         {
@@ -1052,7 +1052,7 @@ corpus_scribere(
         }
 
         /* species et individua (cultivar NON - quaere ea omittit) */
-        gradus_nomina[ZEPHYRUM] = "species";
+        gradus_nomina[ZEPHYRUM] = ".species";
         gradus_nomina[I]        = "individuum";
         per (ig = ZEPHYRUM; ig < II; ig++)
         {
@@ -1081,7 +1081,7 @@ corpus_scribere(
                 {
                     si (maior->genus == STML_NODUS_ELEMENTUM &&
                         chorda_aequalis_literis(*maior->titulus,
-                                                "genus"))
+                                                ".genus"))
                     {
                         _attr(maior, "nomen", rg,
                               (i32)magnitudo(rg));

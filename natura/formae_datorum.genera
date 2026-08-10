@@ -17,7 +17,7 @@
 -->
 <natura modulus="formae_datorum" versio="0" lingua="latina">
 
-<genus nomen="forma_datorum">
+<.genus nomen="forma_datorum">
 
   <definitio>
     Figura ordinandi data ab OPERATIONIBUS suis definita, non
@@ -51,25 +51,25 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="series">
+  <.species nomen="series">
     <definitio>
       Ordo per indicem: locus numeratus, accessus per numerum,
       finis crescens. In domo nostra xar eam realizat -
       segmentatim, ut monstratores stabiles maneant: electio
       impletionis quam forma non videt.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="cauda">
+  <.species nomen="cauda">
     <definitio>
       Primus intrat, primus exit: disciplina ordinis adventus -
       iustitia temporis. Promptio eius lectio destructiva est
       (compositum - vide elementa). In domo nostra capsa
       actoris eam realizat.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="acervus">
+  <.species nomen="acervus">
     <definitio>
       Novissimus primus: disciplina reditus - quod ultimum
       incepisti, primum finis. Forma vocationum ipsarum: acervum
@@ -77,33 +77,33 @@
       omnipraesentem - forma datorum quam nemo creat et omnes
       adhibent.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="tabula_associativa">
+  <.species nomen="tabula_associativa">
     <definitio>
       Clavis ad valorem, ordo nullus promissus: quaestio "quid
       sub hac clave?" pretio constanti. Nomen domus nostrae
       IMPLETIONEM nominat (tabula_dispersa - dispersio modus
       est), formam non: associatio essentia, dispersio ars.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="copia">
+  <.species nomen="copia">
     <definitio>
       Membra sine duplicatis: quaestio unica "inestne?".
       Internamentum chordarum domus copia occulta est - unum
       exemplar cuiusque, comparatio per identitatem.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="arbor">
+  <.species nomen="arbor">
     <definitio>
       Hierarchia: parens et filii, radix una, via unica ad
       quodque. Silva domus nostrae arborem syntacticam realizat
       - et nomen suum ex hac forma trahit.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

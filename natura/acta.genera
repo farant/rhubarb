@@ -39,7 +39,7 @@
   </fons>
 </fontes>
 
-<genus nomen="acta">
+<.genus nomen="acta">
 
   <definitio>
     Series eventuum ordinata cui SOLUM APPENDITUR, et quae rerum
@@ -194,7 +194,7 @@
        differt. Nulla harum ficta: omnes nomina propria in
        dominiis suis ferunt, saecula ante artem computatralem -->
 
-  <species nomen="acta_publica" certitudo="opinio" fons="corpus">
+  <.species nomen="acta_publica" certitudo="opinio" fons="corpus">
     <definitio>
       Res gestae communitatis ordine temporis propositae: acta
       diurna populi Romani (in foro albata proponebantur), acta
@@ -208,9 +208,9 @@
       impossibilis. Eadem ratio qua catenae sigillorum hodie
       utuntur, per homines potius quam per numeros.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="regesta" certitudo="opinio" fons="corpus">
+  <.species nomen="regesta" certitudo="opinio" fons="corpus">
     <definitio>
       Liber cancellariae in quo acta EMISSA (litterae, privilegia,
       bullae) ordine describuntur antequam mittantur: exemplar
@@ -223,9 +223,9 @@
       hanc formam a saeculo XII continue tenent - series
       actorum longissima quae currere non desiit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="acta_transactionum">
+  <.species nomen="acta_transactionum">
     <definitio>
       Cauda mutationum ANTE applicationem scripta (write-ahead):
       basis datorum ipsa proiectio est, et post casum ex actis
@@ -238,9 +238,9 @@
       eventus contentum suum TOTUM portat, quia post casum nihil
       aliud superest quo referatur.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="acta_versionum">
+  <.species nomen="acta_versionum">
     <definitio>
       Acta mutationum plagularum, quorum plicatura ARBOR est:
       manifestum viarum ad contenta. Quod "commit" vocatur
@@ -258,9 +258,9 @@
       NOVUM. Id stornatio est, non rasura - disciplina Pacioli
       electa ubi disciplina git offerebatur.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="acta_auditus">
+  <.species nomen="acta_auditus">
     <definitio>
       Acta quorum finis est ut QUIS QUID QUANDO fecerit postea
       constet, praesertim contra ipsum qui fecit. Unde
@@ -273,15 +273,15 @@
       immutabilitatis: hic 'disciplina' responsum FALSUM est
       semper, et hoc dicere pars descriptionis est.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PUNCTUM ACTORUM - locus nominatus in cauda
      ================================================== -->
 
-<genus nomen="punctum_actorum">
+<.genus nomen="punctum_actorum">
 
   <definitio>
     Locus in actis nominatus et allocutione dignus, ita ut
@@ -341,7 +341,7 @@
     <relatio nomen="positum_a" ad="*"/>
   </relationes>
 
-  <species nomen="conditio">
+  <.species nomen="conditio">
     <definitio>
       Punctum in actis versionum, cum titulo ab homine dato:
       quod "commit" vulgo vocatur. Non obiectum quod arborem
@@ -354,18 +354,18 @@
       OBIECTUM faciunt (git commit continens arborem) idem
       praestant pretio maiore et historia rescribili.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="clausura_rationis">
+  <.species nomen="clausura_rationis">
     <definitio>
       Punctum quo periodus rationaria clauditur et saldum
       constat: post id nihil in periodum appenditur, emendatio
       in periodum sequentem it.
     </definitio>
     <valor nomen="automaticum">falsum</valor>
-  </species>
+  </.species>
 
-  <species nomen="statio">
+  <.species nomen="statio">
     <definitio>
       Punctum a machina positum ut plicatura pretiosa semel fiat
       et postea ab eo, non ab initio, incipiat: quod
@@ -378,7 +378,7 @@
       conditio et clausura non possunt. Signum quod puncta duo
       genera officiorum gerunt.
     </nota>
-  </species>
+  </.species>
 
   <dubium>
     RAMI: haec relatio 'praecedens' seriem simplicem supponit.
@@ -390,7 +390,7 @@
     unus tantum est; lex domus DUOS poscit.
   </dubium>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -415,7 +415,7 @@
      Titulus REM attestatam est; attestatio CHARTA.
      ================================================== -->
 
-<genus nomen="attestatio">
+<.genus nomen="attestatio">
 
   <definitio>
     Exemplar authenticum ex actis auctoritativis sumptum, quod
@@ -557,7 +557,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="attestatio_civilis">
+  <.species nomen="attestatio_civilis">
     <definitio>
       Ex actis status civilis sumpta: nativitatis, matrimonii,
       mortis. Species usitatissima et exemplar ceterarum.
@@ -570,9 +570,9 @@
       civem perdit. Registra quae hoc confundunt homines
       apatridas faciunt cum archivum ardet.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="instrumentum_publicum">
+  <.species nomen="instrumentum_publicum">
     <definitio>
       A notario (aut persona publica) confectum, cui fides
       publica inest: quod in eo scriptum est verum praesumitur
@@ -597,9 +597,9 @@
       a privato scripta nihil praesumunt. Officium hominem
       distinguit, non peritia.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="apostilla">
+  <.species nomen="apostilla">
     <definitio>
       Attestatio quae subscriptionem aut sigillum attestationis
       ALTERIUS authenticam esse testatur, ut extra fines valeat
@@ -617,9 +617,9 @@
       gradum UNUM redegit - recursio abbreviata per pactum, non
       per naturam.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -640,7 +640,7 @@
      et enumerantur. Probatio allocutionis transit.
      ================================================== -->
 
-<genus nomen="radix_fiduciae">
+<.genus nomen="radix_fiduciae">
 
   <definitio>
     Terminus catenae attestationum, cui fides non ex alia
@@ -752,7 +752,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="radix_systematis">
+  <.species nomen="radix_systematis">
     <definitio>
       Auctoritas certificatoria cuius attestatio cum systemate
       aut navigatro missa est: fides praeinstallata.
@@ -764,9 +764,9 @@
       quia remota, dimidium telae frangitur. Fiducia quae
       technice electiva est et practice necessaria.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="commissio_notarii">
+  <.species nomen="commissio_notarii">
     <definitio>
       Auctoritas ipsius notarii, a magistratu collata: quae
       instrumenta eius publica facit et ipsa ab alio notario
@@ -779,9 +779,9 @@
       regressus sistit. Specimen quod genus a rebus
       computatralibus liberat.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="origo_dominii">
+  <.species nomen="origo_dominii">
     <definitio>
       Primum in catena titulorum praedii, ultra quod investigatio
       non procedit: concessio principis, adiudicatio, aut
@@ -802,8 +802,8 @@
       ostendit radices non semper poni consulto - aliquando
       catena simpliciter deficit et id quod restat radix fit.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

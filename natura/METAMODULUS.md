@@ -105,10 +105,10 @@ liberorum min..max.*
 
 | Elementum | Attributa | Liberi | Textus |
 |---|---|---|---|
-| `natura` (radix) | **modulus**:nomen, **versio**:numerus, lingua | `fontes` 0..1, `genus` 0..*, `necessitudo` 0..* | &mdash; |
+| `natura` (radix) | **modulus**:nomen, **versio**:numerus, lingua | `fontes` 0..1, `.genus` 0..*, `necessitudo` 0..* | &mdash; |
 | `fontes` | &mdash; | `fons` 1..* | &mdash; |
 | `fons` | **clavis**:nomen, **genus**:nomen, modulus:nomen, verificatus:veritas=falsum | &mdash; | licet |
-| `genus` | **nomen**:nomen, sub:nomen, modulus:nomen, gradus | `definitio` 0..1, `differentia` 0..1, `glossa` 0..*, `proprietates` 0..1, `partes` 0..1, `actiones` 0..1, `relationes` 0..1, `termini` 0..1, `machina_statuum` 0..*, `species` 0..*, `individuum` 0..*, `genus` 0..*, `valor` 0..*, `relatum` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
+| `.genus` | **nomen**:nomen, sub:nomen, modulus:nomen, gradus, etiam:nomen, certitudo:nomen, fons:nomen, nota | `definitio` 0..1, `differentia` 0..1, `historia` 0..1, `glossa` 0..*, `proprietates` 0..1, `partes` 0..1, `actiones` 0..1, `relationes` 0..1, `termini` 0..1, `machina_statuum` 0..*, `.species` 0..*, `individuum` 0..*, `.genus` 0..*, `valor` 0..*, `relatum` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
 | `definitio` | &mdash; | &mdash; | licet |
 | `differentia` | &mdash; | &mdash; | licet |
 | `nota` | &mdash; | &mdash; | licet |
@@ -130,16 +130,16 @@ liberorum min..max.*
 | `scriptio` | &mdash; | &mdash; | licet |
 | `termini` | &mdash; | `terminus` 1..*, `nota` 0..* | &mdash; |
 | `terminus` | **munus**:nomen, necessitudo:nomen, ad, modulus:nomen, multiplex:veritas, necessaria:veritas, nota | `nota` 0..* | &mdash; |
-| `species` | **nomen**:nomen, gradus, etiam:nomen, certitudo:nomen, fons:nomen, nota | `definitio` 0..1, `differentia` 0..1, `historia` 0..1, `valor` 0..*, `relatum` 0..*, `species` 0..*, `cultivar` 0..*, `genus` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
-| `individuum` | **nomen**:nomen, certitudo:nomen, fons:nomen, nota | `definitio` 0..1, `differentia` 0..1, `historia` 0..1, `valor` 0..*, `relatum` 0..*, `genus` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
-| `cultivar` | **nomen**:nomen | `definitio` 0..1, `differentia` 0..1, `historia` 0..1, `valor` 0..*, `relatum` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
+| `.species` | **nomen**:nomen, gradus, etiam:nomen, certitudo:nomen, fons:nomen, nota | `definitio` 0..1, `differentia` 0..1, `historia` 0..1, `glossa` 0..*, `proprietates` 0..1, `partes` 0..1, `actiones` 0..1, `relationes` 0..1, `termini` 0..1, `machina_statuum` 0..*, `valor` 0..*, `relatum` 0..*, `.species` 0..*, `.cultivar` 0..*, `.genus` 0..*, `individuum` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
+| `individuum` | **nomen**:nomen, certitudo:nomen, fons:nomen, nota | `definitio` 0..1, `differentia` 0..1, `historia` 0..1, `valor` 0..*, `relatum` 0..*, `.genus` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
+| `.cultivar` | **nomen**:nomen, gradus, etiam:nomen, certitudo:nomen, fons:nomen, nota | `definitio` 0..1, `differentia` 0..1, `historia` 0..1, `glossa` 0..*, `proprietates` 0..1, `partes` 0..1, `actiones` 0..1, `relationes` 0..1, `termini` 0..1, `machina_statuum` 0..*, `valor` 0..*, `relatum` 0..*, `.cultivar` 0..*, `individuum` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
 | `valor` | **nomen**:nomen, certitudo:nomen, fons:nomen, valens_a:dies, valens_ad:dies, nota | &mdash; | licet |
 | `relatum` | **nomen**:nomen, **ad**, modulus:nomen, externum:veritas, certitudo:nomen, fons:nomen, valens_a:dies, valens_ad:dies, nota | &mdash; | &mdash; |
 | `historia` | &mdash; | `eventum` 1..* | &mdash; |
 | `eventum` | **quando**:dies, actio:nomen, certitudo:nomen, fons:nomen, nota | &mdash; | licet |
 
 **Unicitates:**
-- `entia`: attributum `nomen` super genus species individuum cultivar necessitudo
+- `entia`: attributum `nomen` super .genus .species individuum .cultivar necessitudo
 
 **Citationes** (clavis-relationes intra documentum):
 - `fontium`: attributum `fons` → `fons/clavis`

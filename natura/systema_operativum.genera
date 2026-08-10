@@ -30,7 +30,7 @@
   </fons>
 </fontes>
 
-<genus nomen="systema_operativum">
+<.genus nomen="systema_operativum">
 
   <definitio>
     Programma primarium quod machinam possidet: inter ferrum et
@@ -178,7 +178,7 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      SYSTEMA UNIXIFORME - familia, non systema unum
@@ -187,7 +187,7 @@
      Bell Labs. Divisa sunt.)
      ================================================== -->
 
-<genus nomen="systema_unixiforme" sub="systema_operativum">
+<.genus nomen="systema_unixiforme" sub="systema_operativum">
 
   <differentia>
     Ad exemplar Unix formatum: arbor plagularum una a radice,
@@ -305,7 +305,7 @@
          infra. -->
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      DISTRIBUTIO SYSTEMATIS - collectio curata systematis
@@ -314,7 +314,7 @@
      Linux propria est)
      ================================================== -->
 
-<genus nomen="distributio_systematis">
+<.genus nomen="distributio_systematis">
 
   <definitio>
     Collectio curata: nucleus + instrumenta + ordinationes +
@@ -409,14 +409,14 @@
     </historia>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      VERSIO SYSTEMATIS - manu cusa, more decreto (Fran:
      versiones entia legitima, nullum mechanismum petunt)
      ================================================== -->
 
-<genus nomen="versio_systematis" sub="versio" modulus="versio">
+<.genus nomen="versio_systematis" sub="versio" modulus="versio">
 
   <definitio>
     Editio systematis nominata: quam installatio vere currit -
@@ -457,6 +457,6 @@
     <nota>machina huius domus hanc currit (Darwin 23.6)</nota>
   </individuum>
 
-</genus>
+</.genus>
 
 </natura>

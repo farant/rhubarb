@@ -28,7 +28,7 @@
 -->
 <natura modulus="opus_scriptum" versio="1" lingua="latina">
 
-<genus nomen="opus_scriptum">
+<.genus nomen="opus_scriptum">
 
   <definitio>
     Creatio intellectualis verbis constans, ab expressionibus suis
@@ -187,13 +187,13 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      EXPRESSIO (FRBR Expression) - realizatio operis
      ================================================== -->
 
-<genus nomen="expressio">
+<.genus nomen="expressio">
 
   <definitio>
     Realizatio operis in signis certis: textus hic, non alius.
@@ -251,7 +251,7 @@
       legimus; opus idem, verba aliena</nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      EDITIO (FRBR Manifestation) - corpus editum
@@ -260,7 +260,7 @@
      editionem (opus unum, ISBN multa)
      ================================================== -->
 
-<genus nomen="editio">
+<.genus nomen="editio">
 
   <definitio>
     Corpus editum expressionis: quod praelum vere protulit -
@@ -347,7 +347,7 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      CODEX (FRBR Item) - exemplar singulare
@@ -356,7 +356,7 @@
      residentiae nostrae exacte hic cadit
      ================================================== -->
 
-<genus nomen="codex">
+<.genus nomen="codex">
 
   <definitio>
     Exemplar unum corporeum editionis: hoc quod manu tenes, cum
@@ -402,13 +402,13 @@
     <relatio nomen="possessor" ad="persona" modulus="persona"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PERIODICUM - sub-genus operis: opus quod non finitur
      ================================================== -->
 
-<genus nomen="periodicum" sub="opus_scriptum">
+<.genus nomen="periodicum" sub="opus_scriptum">
 
   <differentia>
     Opus quod PERFECTIONEM non petit: in fasciculis continuatur
@@ -452,9 +452,9 @@
     decet - tensio nova, APERTA.
   </dubium>
 
-</genus>
+</.genus>
 
-<genus nomen="fasciculus">
+<.genus nomen="fasciculus">
 
   <definitio>
     Pars periodici tempore signata: numerus unus, die suo editus.
@@ -484,6 +484,6 @@
     <relatio nomen="fasciculus_de" ad="periodicum"/>
   </relationes>
 
-</genus>
+</.genus>
 
 </natura>

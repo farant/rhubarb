@@ -23,7 +23,7 @@
      SCHEMA - forma datorum declarata
      ================================================== -->
 
-<genus nomen="schema">
+<.genus nomen="schema">
 
   <definitio>
     Forma datorum declarata: figura quam res eiusdem generis
@@ -60,13 +60,13 @@
       nota="genus rerum quas format - schema de aliquo est"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      CAMPUS - atomus formae
      ================================================== -->
 
-<genus nomen="campus">
+<.genus nomen="campus">
 
   <definitio>
     Locus nominatus in schemate: nomen, genus valoris,
@@ -101,13 +101,13 @@
     <relatio nomen="genus_eius" ad="genus_valoris"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      GENUS VALORIS - intentio valoris, non repraesentatio
      ================================================== -->
 
-<genus nomen="genus_valoris">
+<.genus nomen="genus_valoris">
 
   <definitio>
     Genus valoris quod campus tenere potest: INTENTIO valoris,
@@ -141,41 +141,41 @@
   <!-- ================= DICTIONARIUM =================
        paletta ipsa: dictionarium harvestum e metamodulo -->
 
-  <species nomen="textus">
+  <.species nomen="textus">
     <definitio>Series characterum libera: nomen, titulus,
       prosa.</definitio>
-  </species>
+  </.species>
 
-  <species nomen="numerus">
+  <.species nomen="numerus">
     <definitio>Quantitas: comparari, ordinari, computari
       potest.</definitio>
-  </species>
+  </.species>
 
-  <species nomen="dies">
+  <.species nomen="dies">
     <definitio>Punctum in tempore civili: ordinandum,
       intervallis mensurandum.</definitio>
-  </species>
+  </.species>
 
-  <species nomen="veritas">
+  <.species nomen="veritas">
     <definitio>Duorum alterum: est aut non est.</definitio>
-  </species>
+  </.species>
 
-  <species nomen="electio">
+  <.species nomen="electio">
     <definitio>
       Valor e copia clausa optionum: quod optiones declaratae
       sunt, forma valores novos non timet.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="citatio">
+  <.species nomen="citatio">
     <definitio>
       Valor qui RES ALIA est: campus rem citat, non describit
       (in paletta domus "relatio" dictum). Clavis externa
       basium, nexus voluminum - unde interoperabilitas: res
       duae eandem rem citantes de eadem re loquuntur.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

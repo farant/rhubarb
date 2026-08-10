@@ -27,7 +27,7 @@
      ACTOR - ens quod solum per nuntios communicat
      ================================================== -->
 
-<genus nomen="actor">
+<.genus nomen="actor">
 
   <definitio>
     Ens logicum cum identitate, statu privato, moribus: cum
@@ -64,13 +64,13 @@
             movent - capsa actori quod parametra functioni"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      NUNTIUS - communicatio reificata et inscripta
      ================================================== -->
 
-<genus nomen="nuntius">
+<.genus nomen="nuntius">
 
   <definitio>
     Communicatio reificata: data in itinere INSCRIPTA -
@@ -148,13 +148,13 @@
     <relatio nomen="destinatus_ad" ad="actor"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      EVENTUM - res gesta non inscripta
      ================================================== -->
 
-<genus nomen="eventum">
+<.genus nomen="eventum">
 
   <definitio>
     Res gesta NON inscripta: accidit, et quivis observans
@@ -186,7 +186,7 @@
             novit - hoc eam a nuntio distinguit"/>
   </relationes>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -212,7 +212,7 @@
      difficillimam habet, natura tempori committit.
      ================================================== -->
 
-<genus nomen="stigmergia">
+<.genus nomen="stigmergia">
 
   <definitio>
     Coordinatio per vestigium quod agens in medio communi
@@ -280,7 +280,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="vestigium_chemicum">
+  <.species nomen="vestigium_chemicum">
     <definitio>
       Substantia ab agente relicta quae per diffusionem legitur:
       semita formicarum, feromonum reginae, signum territorii.
@@ -292,9 +292,9 @@
       (heartbeat) in machinis, quattuor decies milies annis
       prius.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="semita_trita">
+  <.species nomen="semita_trita">
     <definitio>
       Via quam transeuntes calcando faciunt et calcando servant:
       quod aedificatores "semitas desiderii" vocant.
@@ -307,9 +307,9 @@
       corrigit. Architecti sapientes eas EXSPECTANT antequam
       pavimentum ponant.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="tabula_communis">
+  <.species nomen="tabula_communis">
     <definitio>
       Superficies quam multi mutant et legunt sine ordine
       praestituto: tabula parietis, commentarius communis,
@@ -323,9 +323,9 @@
       natura tempori committit, hic homini committitur - et homo
       neglegit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="vestigia_operis">
+  <.species nomen="vestigia_operis">
     <definitio>
       Arbor plagularum quam instrumenta legunt ut quid agendum
       sit statuant: directorium aedificationis, arbor laborans.
@@ -337,8 +337,8 @@
       scribit, clang eam legit, et 'proiectio CONTRACTUS est'
       (visio silicis) stigmergiam ipsam nominat sine nomine.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

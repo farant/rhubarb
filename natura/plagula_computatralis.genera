@@ -20,7 +20,7 @@
 -->
 <natura modulus="plagula_computatralis" versio="2" lingua="latina">
 
-<genus nomen="plagula_computatralis">
+<.genus nomen="plagula_computatralis">
 
   <definitio>
     Sequentia octetorum NOMINATA in systemate plagularum:
@@ -94,13 +94,13 @@
        habet tot habet. -->
 
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PLAGULA FONTIS - textus pro translatore et persona
      ================================================== -->
 
-<genus nomen="plagula_fontis" sub="plagula_computatralis">
+<.genus nomen="plagula_fontis" sub="plagula_computatralis">
 
   <differentia>
     Textus a personis scriptus, a personis ET translatoribus
@@ -131,16 +131,16 @@
             hoc cotidie dicit"/>
   </relationes>
 
-  <species nomen="fons_c">
+  <.species nomen="fons_c">
     <definitio>Corpus translationis C: definitiones functionum
       et datorum.</definitio>
     <valor nomen="suffixus_solitus">.c</valor>
     <valor nomen="mimen_solitum">text/x-c</valor>
     <relatum nomen="scripta_in" ad="c"
       modulus="lingua_programmandi"/>
-  </species>
+  </.species>
 
-  <species nomen="caput_c">
+  <.species nomen="caput_c">
     <definitio>Caput C: declarationes communicandae -
       interfacies, non corpus. Convenio aedilis nostri: caput
       corpus suum nominat (include/X.h -> lib/X.c).</definitio>
@@ -149,28 +149,28 @@
     <valor nomen="suffixus_solitus">.h</valor>
     <relatum nomen="scripta_in" ad="c"
       modulus="lingua_programmandi"/>
-  </species>
+  </.species>
 
-  <species nomen="fons_python">
+  <.species nomen="fons_python">
     <valor nomen="suffixus_solitus">.py</valor>
     <relatum nomen="scripta_in" ad="python"
       modulus="lingua_programmandi"/>
-  </species>
+  </.species>
 
-  <species nomen="fons_rust">
+  <.species nomen="fons_rust">
     <valor nomen="suffixus_solitus">.rs</valor>
     <relatum nomen="scripta_in" ad="rust"
       modulus="lingua_programmandi"/>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      SCRIPTUM EXSECUTABILE - plagula quae programma EST
      (dubium divisionis transversae in genere parente)
      ================================================== -->
 
-<genus nomen="scriptum_exsecutabile" sub="plagula_computatralis">
+<.genus nomen="scriptum_exsecutabile" sub="plagula_computatralis">
 
   <differentia>
     Directe exsequenda sine translatione praevia: crena (#!)
@@ -189,7 +189,7 @@
 
   <valor nomen="forma_contenti">textualis</valor>
 
-  <species nomen="scriptum_conchae" etiam="plagula_fontis">
+  <.species nomen="scriptum_conchae" etiam="plagula_fontis">
     <definitio>Scriptum linguae iussuum: imperia quae manu dari
       possent, conservata.</definitio>
     <valor nomen="suffixus_solitus">.sh</valor>
@@ -199,15 +199,15 @@
     <!-- etiam: omne scriptum conchae essentialiter ET fons est
          (textus pro translatore) - membrum generum duorum,
          exemplum primum attributi etiam= -->
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PLAGULA NOTATIONIS - structura et prosa intertextae
      ================================================== -->
 
-<genus nomen="plagula_notationis" sub="plagula_computatralis">
+<.genus nomen="plagula_notationis" sub="plagula_computatralis">
 
   <differentia>
     Contentum = prosa cum structura interposita: signa
@@ -226,31 +226,31 @@
 
   <valor nomen="forma_contenti">textualis</valor>
 
-  <species nomen="plagula_xml">
+  <.species nomen="plagula_xml">
     <valor nomen="suffixus_solitus">.xml</valor>
     <valor nomen="mimen_solitum">application/xml</valor>
-  </species>
+  </.species>
 
-  <species nomen="plagula_stml">
+  <.species nomen="plagula_stml">
     <definitio>Varians XML domus nostrae: notatio annotationum,
       quaestionum silvae, et horum ipsorum exemplarium.</definitio>
     <differentia>Hoc ipsum documentum species haec est -
       dictionarium se ipsum continet, honeste.</differentia>
     <valor nomen="suffixus_solitus">.stml</valor>
-  </species>
+  </.species>
 
-  <species nomen="plagula_markdown">
+  <.species nomen="plagula_markdown">
     <valor nomen="suffixus_solitus">.md</valor>
     <valor nomen="mimen_solitum">text/markdown</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PLAGULA FIGURATIONIS - mores programmatis declarati
      ================================================== -->
 
-<genus nomen="plagula_figurationis" sub="plagula_computatralis">
+<.genus nomen="plagula_figurationis" sub="plagula_computatralis">
 
   <differentia>
     A programmate in initio lecta ut mores suos formet:
@@ -267,23 +267,23 @@
 
   <valor nomen="forma_contenti">textualis</valor>
 
-  <species nomen="plagula_toml">
+  <.species nomen="plagula_toml">
     <valor nomen="suffixus_solitus">.toml</valor>
     <nota>silex.toml nostra - capsulae figurantur hac specie</nota>
-  </species>
+  </.species>
 
-  <species nomen="plagula_plist">
+  <.species nomen="plagula_plist">
     <valor nomen="suffixus_solitus">.plist</valor>
     <nota>paroecia macOS</nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PLAGULA DATORUM - pro programmatibus, non personis
      ================================================== -->
 
-<genus nomen="plagula_datorum" sub="plagula_computatralis">
+<.genus nomen="plagula_datorum" sub="plagula_computatralis">
 
   <differentia>
     Contentum pro programmatibus primo: structura stricta,
@@ -298,25 +298,25 @@
     stricte, et le lecteur humain y est un hôte plutôt que le
     maître.</glossa>
 
-  <species nomen="plagula_json">
+  <.species nomen="plagula_json">
     <valor nomen="forma_contenti">textualis</valor>
     <valor nomen="suffixus_solitus">.json</valor>
     <valor nomen="mimen_solitum">application/json</valor>
-  </species>
+  </.species>
 
-  <species nomen="plagula_csv">
+  <.species nomen="plagula_csv">
     <valor nomen="forma_contenti">textualis</valor>
     <valor nomen="suffixus_solitus">.csv</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PLAGULA SQLITE - sub-sub-genus (datorum profundius):
      basis datorum in plagula una
      ================================================== -->
 
-<genus nomen="plagula_sqlite" sub="plagula_datorum">
+<.genus nomen="plagula_sqlite" sub="plagula_datorum">
 
   <differentia>
     Basis datorum integra in plagula una: tabulae, indices,
@@ -335,7 +335,7 @@
   <valor nomen="forma_contenti">binaria</valor>
   <valor nomen="suffixus_solitus">.db</valor>
 
-  <species nomen="volumen">
+  <.species nomen="volumen">
     <definitio>
       Plagula sqlite schemate domus nostrae: acta (veritas,
       solum-appende), massae (contentum sigillo addressatum),
@@ -356,9 +356,9 @@
       dictionarii res nostra propria est - paroecia usque ad
       fundum.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      SYSTEMA PLAGULARUM et DIRECTORIUM
@@ -369,7 +369,7 @@
      plagulae habebat et locum ubi plagulae vivunt non habebat.
      ================================================== -->
 
-<genus nomen="systema_plagularum">
+<.genus nomen="systema_plagularum">
 
   <definitio>
     Ordinatio quae sequentiis octetorum NOMINA, locum in arbore,
@@ -447,9 +447,9 @@
     de nominatione, non de conditura.
   </nota>
 
-</genus>
+</.genus>
 
-<genus nomen="directorium">
+<.genus nomen="directorium">
 
   <definitio>
     Continens nominatum plagularum et directoriorum aliorum:
@@ -506,6 +506,6 @@
             subordinatio - vide differentiam"/>
   </relationes>
 
-</genus>
+</.genus>
 
 </natura>

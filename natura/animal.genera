@@ -26,7 +26,7 @@
 -->
 <natura modulus="animal" versio="0" lingua="latina">
 
-<genus nomen="animal" sub="vivens" modulus="corporalia">
+<.genus nomen="animal" sub="vivens" modulus="corporalia">
 
   <differentia>
     SENSUM habet et motum localem: mundum percipit et se ad eum
@@ -101,7 +101,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="apis" gradus="genus">
+  <.species nomen="apis" gradus="genus">
     <definitio>
       Insectum sociale mel faciens: colonia ut unum agens
       (examen), communicatio per saltationem, pollinatio ut
@@ -123,9 +123,9 @@
       ut umbra stetit - testimonium quod umbrae computatae
       (natura_visus) agenda vera sunt, non decor.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="canis" gradus="species">
+  <.species nomen="canis" gradus="species">
     <definitio>
       Canis familiaris: lupus ab homine per millennia mutatus -
       species cuius forma ipsa OPUS HOMINIS est, sicut malus
@@ -138,9 +138,9 @@
       minus quam homo eam - relatio quam nulla proprietas
       capit, sed historia utriusque fert.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="homo" gradus="species">
+  <.species nomen="homo" gradus="species">
     <definitio>
       Animal rationale: corpus animale cum anima quae
       intellegit et eligit. Species in qua arbor Porphyriana
@@ -163,8 +163,8 @@
       Individua hominum in PERSONA vivunt, non hic: qui de
       Ritchie loquitur de persona loquitur, non de corpore.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

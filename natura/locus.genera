@@ -18,7 +18,7 @@
 -->
 <natura modulus="locus" versio="0" lingua="latina">
 
-<genus nomen="locus">
+<.genus nomen="locus">
 
   <definitio>
     Pars spatii determinata ubi res corporeae esse possunt:
@@ -53,13 +53,13 @@
             civitate simul est - potestates se superponunt"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      INSCRIPTIO - nomen loci conventum
      ================================================== -->
 
-<genus nomen="inscriptio">
+<.genus nomen="inscriptio">
 
   <definitio>
     Nomen loci ad inveniendum conventum: via, numerus, urbs,
@@ -91,13 +91,13 @@
     <relatio nomen="designat" ad="locus"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      IURISDICTIO - potestas super locum
      ================================================== -->
 
-<genus nomen="iurisdictio">
+<.genus nomen="iurisdictio">
 
   <definitio>
     Potestas legum ferendarum et exigendarum super loco:
@@ -132,13 +132,13 @@
             locorum"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      AEDIFICIUM - res corporea loco fixa
      ================================================== -->
 
-<genus nomen="aedificium">
+<.genus nomen="aedificium">
 
   <definitio>
     Structura loco fixa quam homines occupant: res corporea
@@ -169,6 +169,6 @@
             plerumque (vide obligatio.locatio_conductio)"/>
   </relationes>
 
-</genus>
+</.genus>
 
 </natura>

@@ -54,7 +54,7 @@
      genus quod philosophia iam distinxit, et melius)
      ================================================== -->
 
-<genus nomen="gradus_assensus">
+<.genus nomen="gradus_assensus">
 
   <definitio>
     Quanto firmitate animus propositioni adhaeret. Non de re
@@ -76,24 +76,24 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="scientia">
+  <.species nomen="scientia">
     <definitio>
       Certa adhaesio cum causa: quod per demonstrationem aut per
       definitionem tenetur, sine formidine oppositi. In hac
       bibliotheca: definitiones nostrae (quas STATUIMUS) et
       quaecumque machina probare potest.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="opinio">
+  <.species nomen="opinio">
     <definitio>
       Adhaesio CUM FORMIDINE OPPOSITI: tenetur, sed contrarium
       fieri posse conceditur. Iudicia aestimativa hic vivunt -
       "typatio C debilis est" opinio est, non scientia.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="fides">
+  <.species nomen="fides">
     <definitio>
       Adhaesio propter AUCTORITATEM alterius, non propter rem
       visam: quod ab alio acceptum tenetur. Dies historici huius
@@ -101,26 +101,26 @@
       verificavit; ex corpore institutionis suae accepit.
       Honestissimus gradus quia dependentiam SUAM nominat.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="suspicio">
+  <.species nomen="suspicio">
     <definitio>
       Adhaesio levis, ad alteram partem inclinans sine
       firmitate: quod verisimile videtur. Diagnosis differentialis
       hic habitat ("fortasse X, excludendum Y").
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="dubitatio">
+  <.species nomen="dubitatio">
     <definitio>
       Suspensio adhaesionis: neutram partem tenere. Gradus
       HONESTUS et in hac bibliotheca frequens - dubia nostra
       hunc gradum induunt, et melius est dubitare nominatim
       quam certitudinem fingere.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      FONS - unde propositio venit
@@ -128,7 +128,7 @@
      sed genus deerat)
      ================================================== -->
 
-<genus nomen="fons">
+<.genus nomen="fons">
 
   <definitio>
     Id ex quo propositio accepta est: opus, mensura, testis,
@@ -161,31 +161,31 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="fons_scriptus">
+  <.species nomen="fons_scriptus">
     <definitio>
       Opus citabile: liber, norma, charta. Optimus fontium quia
       permanens et publicus - nomenclatura biologica hoc semper
       scivit ("Rosa canina L." auctorem in nomine fert).
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="fons_mensurae">
+  <.species nomen="fons_mensurae">
     <definitio>
       Instrumentum quod legit: thermometrum, horologium,
       machina. Fons cuius fides ex CALIBRATIONE pendet, non ex
       auctoritate.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="fons_testimonii">
+  <.species nomen="fons_testimonii">
     <definitio>
       Persona quae rettulit: aegrota dolorem suum nuntians,
       testis rem visam. Verificari non potest nisi ab ipso -
       unde symptomatis natura propria.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="corpus_institutionis">
+  <.species nomen="corpus_institutionis">
     <definitio>
       Memoria machinae discentis: quod ex textibus innumeris
       hausit sine singulorum memoria. Fons INVERIFICABILIS
@@ -198,9 +198,9 @@
       habuit. Honestas eius in hoc: qui hoc fonte utitur,
       lectorem ad verificationem VOCAT, non ad fidem.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      OBSERVATIO - quod testimonium praebet
@@ -210,7 +210,7 @@
      distinxit et schemata computatralia numquam)
      ================================================== -->
 
-<genus nomen="observatio">
+<.genus nomen="observatio">
 
   <definitio>
     Notitia rei singularis accepta, quae iudicium fundare
@@ -266,7 +266,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="symptoma">
+  <.species nomen="symptoma">
     <definitio>
       A subiecto ipso relatum: dolor, nausea, vertigo. Ab alio
       verificari NON POTEST - solus patiens accessum habet.
@@ -274,9 +274,9 @@
       privatam veritatem esse.
     </definitio>
     <valor nomen="verificabilis_ab_alio">falsum</valor>
-  </species>
+  </.species>
 
-  <species nomen="signum">
+  <.species nomen="signum">
     <definitio>
       Ab observatore deprehensum: febris, tumor, pallor.
       Quivis peritus idem videre potest, et instrumentum
@@ -284,19 +284,19 @@
       comparatio.
     </definitio>
     <valor nomen="verificabilis_ab_alio">verum</valor>
-  </species>
+  </.species>
 
-  <species nomen="testimonium">
+  <.species nomen="testimonium">
     <definitio>
       Ab alio relatum de re quam ipse vidit: testis, socius,
       acta priora. Verificabile per testem, non per rem -
       unde iuris disciplina tota de testibus.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
-<genus nomen="praeceptum">
+<.genus nomen="praeceptum">
 
   <definitio>
     Regula artis breviter dicta quae agentem in casibus non
@@ -346,13 +346,13 @@
     <relatio nomen="tendit_ad" ad="*"
       nota="quo bono - praeceptum artis fini alicui servit"/>
   </relationes>
-</genus>
+</.genus>
 
 <!-- ==================================================
      IUDICIUM - propositio ab homine tenta
      ================================================== -->
 
-<genus nomen="iudicium">
+<.genus nomen="iudicium">
 
   <definitio>
     Propositio de re quam aliquis tenet: cum auctore, momento,
@@ -426,7 +426,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="diagnosis">
+  <.species nomen="diagnosis">
     <definitio>
       Iudicium de morbo aegroti: quid habeat. Provisorium natura
       sua - testimonio novo revisibile, et differentialis
@@ -434,35 +434,35 @@
       Exemplum generis clarissimum quia medicina fallibilitatem
       suam FORMALITER tractat.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="aestimatio">
+  <.species nomen="aestimatio">
     <definitio>
       Iudicium de valore rei: quanti sit. Ab aestimatore, in
       tempore, ad finem (venditio, tributum, assecuratio) -
       idem res tribus aestimatoribus tria pretia habet, quod
       non error est sed natura iudicii.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="praedictio">
+  <.species nomen="praedictio">
     <definitio>
       Iudicium de futuro: quid eventurum sit. Solum genus quod
       TEMPUS ipsum probat - praedictio expectat verificationem
       suam.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="sententia_iudicis">
+  <.species nomen="sententia_iudicis">
     <definitio>
       Iudicium auctoritate publica latum quod OBLIGATIONEM
       parit: non solum tenetur sed VINCIT. Species in qua
       iudicium et ius se tangunt (vide obligatio: fons
       obligationis esse potest).
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      ANNOTATIO - frater tertius, tandem genus
@@ -480,7 +480,7 @@
      inscriptio annotationem FERT.
      ================================================== -->
 
-<genus nomen="annotatio">
+<.genus nomen="annotatio">
 
   <definitio>
     Propositio quam instrumentum probat, extra programma currens:
@@ -530,13 +530,13 @@
     stat aut cadit.
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PERICULUM - damnum possibile futurum
      ================================================== -->
 
-<genus nomen="periculum">
+<.genus nomen="periculum">
 
   <definitio>
     Damnum quod accidere potest nec certum est: species
@@ -603,7 +603,7 @@
     futuro incerto deliberat.
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      IGNOTUM - absentia AGNITA, res primi ordinis
@@ -630,7 +630,7 @@
      problema NULLI Coddianum in bibliotheca nostra ipsa.
      ================================================== -->
 
-<genus nomen="ignotum">
+<.genus nomen="ignotum">
 
   <definitio>
     Absentia notitiae AGNITA et nominata: hiatus qui, quia
@@ -701,16 +701,16 @@
        SPECIES QUAEQUE MOTUM ALIUM AFFORDAT - id ipsum est
        cur genus vectis sit, non tabulatio -->
 
-  <species nomen="ignotum_notum">
+  <.species nomen="ignotum_notum">
     <definitio>
       Quaestionem tenes, responsum non: "quanta sit mora huius
       ministerii ignoramus". MOTUS: assignabile - pensum est,
       quaere.
     </definitio>
     <valor nomen="impediens">verum</valor>
-  </species>
+  </.species>
 
-  <species nomen="ignotum_ignotum">
+  <.species nomen="ignotum_ignotum">
     <definitio>
       Quod nescis te nescire: quaestio ipsa nondum formata.
       MOTUS: singulatim tractari NON POTEST - in summa tantum
@@ -729,9 +729,9 @@
       dicit. Unde et remedium idem: non plus consilii sed
       apparatus qui ea citius aperiat.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="indeterminatum">
+  <.species nomen="indeterminatum">
     <definitio>
       Nondum est quod sciatur: pretium anni venturi, exitus
       pugnae navalis crastinae. Non ignorantia sed
@@ -745,18 +745,18 @@
       quae utrumque "unknown" vocant utentem in errorem ducunt -
       alterum investigatione solvitur, alterum numquam.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="amissum">
+  <.species nomen="amissum">
     <definitio>
       Scitum olim, nunc perditum: tabulae deletae, testis
       mortuus, acta rotata. MOTUS: recupera si potes, aut
       absentiam agnosce - sed NOTA quod aliquando scitum est,
       quia hoc ipsum notitia est.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="retentum">
+  <.species nomen="retentum">
     <definitio>
       Aliquis scit et non dicit: ignorantia non in mundo sed in
       te, ex voluntate alterius. MOTUS: negotiare, cogere, aut
@@ -767,9 +767,9 @@
       Secretum ex parte tenentis idem est quod hoc ex parte
       quaerentis - genus unum, duo latera.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="impertinens">
+  <.species nomen="impertinens">
     <definitio>
       Quaestio ad rem non pertinet: "quod nomen virgineum huius
       societatis?" MOTUS: schema EMENDA - hiatus enim non in
@@ -781,9 +781,9 @@
       accepit - unde confusio quae bases datorum per saecula
       dimidium vexat. Species quae schema ACCUSAT, non mundum.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="controversum">
+  <.species nomen="controversum">
     <definitio>
       Responsa PLURA et pugnantia: non nullum sed NIMIS. MOTUS:
       adiudica - collatis iudiciis, auctoribus, fontibus; non
@@ -795,9 +795,9 @@
       iudicia plura de eadem re supponit, quorum unum praeferri
       debet - vel omnia in dubitatione relinqui.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      INVESTIGATIO - inquisitio ordinata in causas
@@ -810,7 +810,7 @@
      MACHINA NOTITIAM EXTRAHENS.
      ================================================== -->
 
-<genus nomen="investigatio">
+<.genus nomen="investigatio">
 
   <definitio>
     Inquisitio ordinata in causas eventus, iudicia de causis
@@ -888,16 +888,16 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="investigatio_praeventiva">
+  <.species nomen="investigatio_praeventiva">
     <definitio>
       Ad praeventionem sola ordinata, culpa expresse exclusa:
       forma aviatoria, et in medicina conventus mortalitatis
       et morbositatis.
     </definitio>
     <valor nomen="finis">praeventio</valor>
-  </species>
+  </.species>
 
-  <species nomen="inquisitio_forensis">
+  <.species nomen="inquisitio_forensis">
     <definitio>
       Ad culpam et damna determinanda: finis legitimus et
       necessarius, sed ALIUS.
@@ -910,18 +910,18 @@
       destruit. Non quod culpa quaerenda non sit; sed quod
       idem processus utrumque praestare nequit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="recensio_post_mortem">
+  <.species nomen="recensio_post_mortem">
     <definitio>
       Investigatio praeventiva in arte programmandi post
       incidens: forma aviatoria mutuata, saepe sine separatione
       quae eam operantem facit.
     </definitio>
     <valor nomen="finis">praeventio</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -940,7 +940,7 @@
      computatrales quas casus cogens attulit.
      ================================================== -->
 
-<genus nomen="secretum">
+<.genus nomen="secretum">
 
   <definitio>
     Res cuius utilitas in eo consistit quod pauci eam sciunt:
@@ -1049,7 +1049,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="clavis_privata">
+  <.species nomen="clavis_privata">
     <definitio>
       Dimidium secretum paris cryptographici: quod signat aut
       resignat, et cuius comes publicus libere diffunditur.
@@ -1065,9 +1065,9 @@
       subscriptiones veteres adhuc verificat, unde catena
       substitutionum servanda est, non purganda.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="verbum_arcanum">
+  <.species nomen="verbum_arcanum">
     <definitio>
       Series characterum qua persona se probat: secretum ab
       homine memorandum, unde debilitas eius.
@@ -1079,9 +1079,9 @@
       Custodia eius (functio unidirectionalis apud recipientem)
       hoc fatetur - servans ipse secretum nescire debet.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="secretum_negotii">
+  <.species nomen="secretum_negotii">
     <definitio>
       Notitia commercialis cuius valor ex ignorantia
       competitorum venit: ratio, index clientium, processus.
@@ -1094,9 +1094,9 @@
       tempore finito tutelam dat. Duae viae contrariae ad idem
       bonum, et electio inter eas semel pro semper fit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="sigillum_confessionis">
+  <.species nomen="sigillum_confessionis">
     <definitio>
       Secretum sacramentale quod confessarius nullo modo, nulla
       causa, nulli prodere potest.
@@ -1116,9 +1116,9 @@
       monotone crescit hic in uno figitur. Terminus scalae, non
       exceptio ab ea.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -1141,7 +1141,7 @@
      annos saeptorum et pastorum poposcit.
      ================================================== -->
 
-<genus nomen="peritia_communis">
+<.genus nomen="peritia_communis">
 
   <definitio>
     Scientia aut ars quae in universitate residet nec in ullo
@@ -1231,7 +1231,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="notitia_pascui">
+  <.species nomen="notitia_pascui">
     <definitio>
       Scientia gregis de finibus pascui sui in monte non saepto:
       quo eundum, ubi manendum, quando descendendum.
@@ -1245,9 +1245,9 @@
       est. Damnum anni 2001 mensuratum: oves emi poterant,
       hefta non poterat.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="ars_officinae">
+  <.species nomen="ars_officinae">
     <definitio>
       Modus operandi quem officina tenet: quid quo ordine, quid
       caveatur, quid non scribatur quia omnes sciunt.
@@ -1259,9 +1259,9 @@
       valet - reliquum in manibus manet. Officina cuius
       artifices simul abeunt libros suos habet et artem non.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="memoria_operis">
+  <.species nomen="memoria_operis">
     <definitio>
       Scientia coetus de opere suo quae in fontibus non est: cur
       hoc ita factum sit, quid temptatum et reiectum, ubi
@@ -1274,9 +1274,9 @@
       proprietas 'scribi_potest' monet - et domus haec eum
       cotidie agit.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -1300,7 +1300,7 @@
      propinquitas (quantum manus auctoris adfuerit).
      ================================================== -->
 
-<genus nomen="attributio" sub="iudicium">
+<.genus nomen="attributio" sub="iudicium">
 
   <differentia>
     Iudicium de eo QUIS FECERIT, quod duabus mensuris simul
@@ -1376,7 +1376,7 @@
     manet - quod exemplar normae iam describit.
   </nota>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -1399,7 +1399,7 @@
      (fundamentum). Ex libro accepi; liber stilo nitebatur.
      ================================================== -->
 
-<genus nomen="fundamentum">
+<.genus nomen="fundamentum">
 
   <definitio>
     Id quo propositio nititur: non unde accepta sit (id fons
@@ -1457,7 +1457,7 @@
        divisio per MODUM SUSTINENDI, ordine fere descendente
        quantum ad verificabilitatem -->
 
-  <species nomen="autopsia">
+  <.species nomen="autopsia">
     <definitio>
       Ipse vidi: cognitio ex sensu proprio, nullo medio.
     </definitio>
@@ -1468,9 +1468,9 @@
       ET MINIME COMMUNICABILE: nemo aliena autopsia uti potest -
       narrata in testimonium vertitur, gradu amisso.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="mensuratio">
+  <.species nomen="mensuratio">
     <definitio>
       Instrumento mensuratum: fundamentum quod NUMERUM et
       incertitudinem simul fert.
@@ -1482,9 +1482,9 @@
       (vide mensura.incertitudo) - cetera 'quanto certus sis'
       solum praebent. Unde metrologia inter dominia peculiaris.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="documentum_scriptum">
+  <.species nomen="documentum_scriptum">
     <definitio>
       Scriptura rem attestans: acta, instrumentum, tabula,
       epistula.
@@ -1496,9 +1496,9 @@
       investigatio hoc ipsum agit, et in origine_dominii
       (acta.radix_fiduciae) desinit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="auctoritas_testis">
+  <.species nomen="auctoritas_testis">
     <definitio>
       Alius mihi dixit: fundamentum quod in fidem alterius
       resolvitur.
@@ -1510,9 +1510,9 @@
       tertio. Bibliotheca huius fundamento maxima ex parte
       nititur (corpus_institutionis), quod ideo fatetur.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="illatio">
+  <.species nomen="illatio">
     <definitio>
       Ex aliis notis conclusum: nemo id vidit nec mensuravit, sed
       ex his sequitur.
@@ -1524,9 +1524,9 @@
       infimum praemissarum. Fundamentum compositum, ut
       incertitudo composita.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="comparatio_stili">
+  <.species nomen="comparatio_stili">
     <definitio>
       Ex similitudine formae iudicatum: haec manus illam refert.
     </definitio>
@@ -1538,9 +1538,9 @@
       fere nixum opera centena abiudicavit - unde controversia
       quae aliter solvi non poterat.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="coniectura_periti">
+  <.species nomen="coniectura_periti">
     <definitio>
       Peritus ita censet, ratione non plene explicata:
       aestimatio ex usu longo nata.
@@ -1553,9 +1553,9 @@
       Non vitium sed condicio, quam GUM ipsa fatetur et rationes
       pleraeque celant.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="praesumptio">
+  <.species nomen="praesumptio">
     <definitio>
       Assumptum donec contrarium probetur: fundamentum quod se
       fundamentum non esse fatetur.
@@ -1568,8 +1568,8 @@
       praesumptus in protocollo. Distinctum a fictione iuris
       (norma): illa contrarium SCIT, haec contrarium NESCIT.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

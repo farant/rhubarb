@@ -24,7 +24,7 @@
 -->
 <natura modulus="morbus" versio="1" lingua="latina">
 
-<genus nomen="morbus">
+<.genus nomen="morbus">
 
   <definitio>
     Dispositio viventis praeter naturam, qua operatio debita
@@ -120,34 +120,34 @@
        species per CAUSAM, non per sedem: causa curationem
        regit (antibiotica infectioni, non traumati) -->
 
-  <species nomen="morbus_infectiosus">
+  <.species nomen="morbus_infectiosus">
     <definitio>
       Ab organismo alieno illatus (bacterio, viro, fungo):
       species sola quae AGENTEM habet - vivens aliud quod in
       vivente vivit. Unde contagio, unde immunitas.
     </definitio>
     <valor nomen="contagiosus">verum</valor>
-  </species>
+  </.species>
 
-  <species nomen="morbus_geneticus">
+  <.species nomen="morbus_geneticus">
     <definitio>
       In ipsa constitutione generata: praesens ab initio,
       etiam dum latet. Morbus quem nemo contraxit - unde
       quaestiones de culpa omnino absunt.
     </definitio>
     <valor nomen="contagiosus">falsum</valor>
-  </species>
+  </.species>
 
-  <species nomen="morbus_degenerativus">
+  <.species nomen="morbus_degenerativus">
     <definitio>
       Ex usu et tempore: partes deficiunt quia diu operatae
       sunt. Confinium cum SENECTUTE tenue et disputatum - quod
       omnibus tandem accidit, an morbus sit? Dubium quod
       medicina ipsa aperit tenet.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="vulnus">
+  <.species nomen="vulnus">
     <definitio>
       Ab externa vi illatum: ictus, sectio, ustio. Species
       cuius causa TOTA extra corpus est - et quae sola
@@ -159,8 +159,8 @@
       nostra CONSULTA fuit et hic vera invenitur: utrobique
       integritas ab externa vi laesa.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

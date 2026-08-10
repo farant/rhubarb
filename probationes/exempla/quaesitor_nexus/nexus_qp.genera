@@ -15,7 +15,7 @@
     <definitio>Necessitudo ficta: totum partem tenet.</definitio>
     <scriptio>contenta_qp</scriptio>
   </necessitudo>
-  <genus nomen="pactum_qp">
+  <.genus nomen="pactum_qp">
     <definitio>Pactum fictum probationis quaesitoris.</definitio>
     <termini>
       <terminus munus="dator_qp" necessitudo="continet_qp"
@@ -26,5 +26,5 @@
       <relatio nomen="ignotum_qp" ad="pactum_qp"/>
       <relatio nomen="volat_qp" a="pactum_qp" inversa="verum"/>
     </relationes>
-  </genus>
+  </.genus>
 </natura>

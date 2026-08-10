@@ -35,7 +35,7 @@
     <attributum nomen="versio"  genus="numerus" necessarium="verum"/>
     <attributum nomen="lingua"  genus="textus"/>
     <liberum nomen="fontes" maximum="1"/>
-    <liberum nomen="genus"
+    <liberum nomen=".genus"
       nota="minimum sublatum 2026-08-10: modulus sine genere licet
             si necessitudines fert - regula XXV oneratoris
             (co-occurrentia supra canonem, ut 'ad AUT a')"/>
@@ -60,13 +60,23 @@
 
   <!-- ================= GENUS ================= -->
 
-  <elementum nomen="genus">
-    <attributum nomen="nomen"   genus="nomen" necessarium="verum"/>
-    <attributum nomen="sub"     genus="nomen"/>
-    <attributum nomen="modulus" genus="nomen"/>
-    <attributum nomen="gradus"  genus="textus"/>
+  <!-- arbor porphyriana (2026-08-10, decretum 01KZPK4B7X): genus et
+       species MUNERA relativa sunt, non naturae - exemplar contenti
+       UNUM, orthographiae tres (.genus liberum, .species/.cultivar
+       nidificatione parentata). sub=/modulus= generi soli: species
+       parentem e positione derivat. -->
+  <elementum nomen=".genus">
+    <attributum nomen="nomen"     genus="nomen" necessarium="verum"/>
+    <attributum nomen="sub"       genus="nomen"/>
+    <attributum nomen="modulus"   genus="nomen"/>
+    <attributum nomen="gradus"    genus="textus"/>
+    <attributum nomen="etiam"     genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons"      genus="nomen"/>
+    <attributum nomen="nota"      genus="textus"/>
     <liberum nomen="definitio"       maximum="1"/>
     <liberum nomen="differentia"     maximum="1"/>
+    <liberum nomen="historia"        maximum="1"/>
     <liberum nomen="glossa"/>
     <liberum nomen="proprietates"    maximum="1"/>
     <liberum nomen="partes"          maximum="1"/>
@@ -74,9 +84,9 @@
     <liberum nomen="relationes"      maximum="1"/>
     <liberum nomen="termini"         maximum="1"/>
     <liberum nomen="machina_statuum"/>
-    <liberum nomen="species"/>
+    <liberum nomen=".species"/>
     <liberum nomen="individuum"/>
-    <liberum nomen="genus"
+    <liberum nomen=".genus"
       nota="nidificatio = profunditas taxinomica (§3)"/>
     <liberum nomen="valor"
       nota="valor ad gradum GENERIS proprietatem hereditatam figit -
@@ -252,7 +262,10 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <elementum nomen="species">
+  <!-- .species/.cultivar = exemplar contenti .generis totum (arbor
+       porphyriana), SINE sub=/modulus= (parens e nidificatione).
+       certitudo/fons = provenientia; etiam = membrum duplex. -->
+  <elementum nomen=".species">
     <attributum nomen="nomen"     genus="nomen" necessarium="verum"/>
     <attributum nomen="gradus"    genus="textus"/>
     <attributum nomen="etiam"     genus="nomen"/>
@@ -262,11 +275,19 @@
     <liberum nomen="definitio"   maximum="1"/>
     <liberum nomen="differentia" maximum="1"/>
     <liberum nomen="historia"    maximum="1"/>
+    <liberum nomen="glossa"/>
+    <liberum nomen="proprietates"    maximum="1"/>
+    <liberum nomen="partes"          maximum="1"/>
+    <liberum nomen="actiones"        maximum="1"/>
+    <liberum nomen="relationes"      maximum="1"/>
+    <liberum nomen="termini"         maximum="1"/>
+    <liberum nomen="machina_statuum"/>
     <liberum nomen="valor"/>
     <liberum nomen="relatum"/>
-    <liberum nomen="species"/>
-    <liberum nomen="cultivar"/>
-    <liberum nomen="genus"/>
+    <liberum nomen=".species"/>
+    <liberum nomen=".cultivar"/>
+    <liberum nomen=".genus"/>
+    <liberum nomen="individuum"/>
     <liberum nomen="nota"/>
     <liberum nomen="dubium"/>
   </elementum>
@@ -281,18 +302,32 @@
     <liberum nomen="historia"    maximum="1"/>
     <liberum nomen="valor"/>
     <liberum nomen="relatum"/>
-    <liberum nomen="genus"/>
+    <liberum nomen=".genus"/>
     <liberum nomen="nota"/>
     <liberum nomen="dubium"/>
   </elementum>
 
-  <elementum nomen="cultivar">
-    <attributum nomen="nomen" genus="nomen" necessarium="verum"/>
+  <elementum nomen=".cultivar">
+    <attributum nomen="nomen"     genus="nomen" necessarium="verum"/>
+    <attributum nomen="gradus"    genus="textus"/>
+    <attributum nomen="etiam"     genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons"      genus="nomen"/>
+    <attributum nomen="nota"      genus="textus"/>
     <liberum nomen="definitio"   maximum="1"/>
     <liberum nomen="differentia" maximum="1"/>
     <liberum nomen="historia"    maximum="1"/>
+    <liberum nomen="glossa"/>
+    <liberum nomen="proprietates"    maximum="1"/>
+    <liberum nomen="partes"          maximum="1"/>
+    <liberum nomen="actiones"        maximum="1"/>
+    <liberum nomen="relationes"      maximum="1"/>
+    <liberum nomen="termini"         maximum="1"/>
+    <liberum nomen="machina_statuum"/>
     <liberum nomen="valor"/>
     <liberum nomen="relatum"/>
+    <liberum nomen=".cultivar"/>
+    <liberum nomen="individuum"/>
     <liberum nomen="nota"/>
     <liberum nomen="dubium"/>
   </elementum>
@@ -333,7 +368,7 @@
   <!-- ================= UNICITAS (regula XV) ================= -->
 
   <unicitas nomen="entia" attributum="nomen"
-    super="genus species individuum cultivar necessitudo"
+    super=".genus .species individuum .cultivar necessitudo"
     nota="allocutio /modulus/nomen ab hac unicitate PENDET
           (METAMODULUS §4b): genera et res unum spatium nominum
           communicant, quia allocutio gradum non fert"/>

@@ -26,7 +26,7 @@
      MAGNITUDO MENSURABILIS - quod mensurari potest
      ================================================== -->
 
-<genus nomen="magnitudo_mensurabilis">
+<.genus nomen="magnitudo_mensurabilis">
 
   <definitio>
     Id quod mensurari potest: longitudo, massa, tempus,
@@ -56,26 +56,26 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="longitudo"/>
-  <species nomen="massa"
+  <.species nomen="longitudo"/>
+  <.species nomen="massa"
     nota="a PONDERE distinguenda: pondus vis est, massa
           quantitas materiae - confusio vulgaris"/>
-  <species nomen="tempus_intervallum"/>
-  <species nomen="temperatura"/>
-  <species nomen="capacitas"
+  <.species nomen="tempus_intervallum"/>
+  <.species nomen="temperatura"/>
+  <.species nomen="capacitas"
     nota="volumen liquidorum - pistrina utrumque adhibet"/>
-  <species nomen="numerositas"
+  <.species nomen="numerositas"
     nota="res NUMERATAE, non mensuratae: duodecim ova. Discrimen
           reale inter numerabilia et mensurabilia (vide
           materia)"/>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      UNITAS MENSURAE - partitio conventa magnitudinis
      ================================================== -->
 
-<genus nomen="unitas_mensurae">
+<.genus nomen="unitas_mensurae">
 
   <definitio>
     Partitio conventa magnitudinis mensurabilis, qua quantitates
@@ -186,13 +186,13 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      QUANTITAS - numerus cum unitate
      ================================================== -->
 
-<genus nomen="quantitas">
+<.genus nomen="quantitas">
 
   <definitio>
     Numerus CUM UNITATE: mensura rei determinata. Numerus solus
@@ -245,7 +245,7 @@
             fere ubique adhuc peccat, et honeste notandum"/>
   </relationes>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -264,7 +264,7 @@
      naturae pro ignorantia sua sumit, aut contra.
      ================================================== -->
 
-<genus nomen="incertitudo">
+<.genus nomen="incertitudo">
 
   <definitio>
     Mensura eius quantum de valore vero ignoremus: intervallum
@@ -348,13 +348,13 @@
     historia utraque utitur.
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      INSTRUMENTUM MENSURAE - quod characterizat, non mutat
      ================================================== -->
 
-<genus nomen="instrumentum_mensurae" sub="instrumentum"
+<.genus nomen="instrumentum_mensurae" sub="instrumentum"
   modulus="corporalia">
 
   <differentia>
@@ -452,6 +452,6 @@
     mutato convenit.
   </nota>
 
-</genus>
+</.genus>
 
 </natura>

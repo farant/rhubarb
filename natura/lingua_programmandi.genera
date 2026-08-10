@@ -44,7 +44,7 @@
   </fons>
 </fontes>
 
-<genus nomen="lingua_programmandi">
+<.genus nomen="lingua_programmandi">
 
   <definitio>
     Systema signorum formale ad computationes exprimendas:
@@ -274,7 +274,7 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      LINGUA IUSSUUM - sub-genus linguae programmandi
@@ -283,7 +283,7 @@
      differentia. Via Porphyriana ipsa.)
      ================================================== -->
 
-<genus nomen="lingua_iussuum" sub="lingua_programmandi">
+<.genus nomen="lingua_iussuum" sub="lingua_programmandi">
 
   <differentia>
     Verbum primum = PROCESSUS ALIENUS vocatus, non functio
@@ -323,7 +323,7 @@
     </historia>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      VERSIO LINGUAE - editio in rem crystallizata
@@ -332,7 +332,7 @@
      volumine punctum nominatum caudae est)
      ================================================== -->
 
-<genus nomen="versio_linguae" sub="versio" modulus="versio">
+<.genus nomen="versio_linguae" sub="versio" modulus="versio">
 
   <definitio>
     Editio linguae nominata et citabilis: eventus "edi" in rem
@@ -393,7 +393,7 @@
     <relatum nomen="sequitur" ad="c99"/>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      IMPLEMENTATIO LINGUAE - res quae formam exsequitur
@@ -402,7 +402,7 @@
      vulgare in v0 mortuum)
      ================================================== -->
 
-<genus nomen="implementatio_linguae">
+<.genus nomen="implementatio_linguae">
 
   <definitio>
     Programma quod linguam exsequitur: compilator, interpres,
@@ -508,7 +508,7 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      VERBUM CLAVIS - vocabularium linguae ipsius
@@ -517,7 +517,7 @@
      contextuales habent, alibi identificatores licitas)
      ================================================== -->
 
-<genus nomen="verbum_clavis">
+<.genus nomen="verbum_clavis">
 
   <definitio>
     Verbum quod lingua sibi vindicat: grammaticae servit,
@@ -588,6 +588,6 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 </natura>

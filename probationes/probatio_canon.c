@@ -533,31 +533,31 @@ interior constans character* GLOSSA_SUB_ELEMENTO =
 
 interior constans character* GLOSSA_SUB_GENERE =
     "<natura modulus=\"probatio\" versio=\"1\" lingua=\"latina\">\n"
-    "  <genus nomen=\"probandum\">\n"
+    "  <.genus nomen=\"probandum\">\n"
     "    <definitio>Res probationis.</definitio>\n"
     "    <glossa lingua=\"en\">A thing under test.</glossa>\n"
     "    <glossa lingua=\"fr\">Une chose a l'essai.</glossa>\n"
-    "  </genus>\n"
+    "  </.genus>\n"
     "</natura>\n";
 
 interior constans character* GLOSSA_SINE_LINGUA =
     "<natura modulus=\"probatio\" versio=\"1\" lingua=\"latina\">\n"
-    "  <genus nomen=\"probandum\">\n"
+    "  <.genus nomen=\"probandum\">\n"
     "    <glossa>Sine lingua.</glossa>\n"
-    "  </genus>\n"
+    "  </.genus>\n"
     "</natura>\n";
 
 /* fines in proprietate (spec fines): grammatica generum eadem
  * tria attributa fert quae canon - catena .genera -> canon coctus */
 interior constans character* PROPRIETAS_CUM_FINIBUS =
     "<natura modulus=\"probatio\" versio=\"1\" lingua=\"latina\">\n"
-    "  <genus nomen=\"probandum\">\n"
+    "  <.genus nomen=\"probandum\">\n"
     "    <definitio>Res probationis.</definitio>\n"
     "    <proprietates>\n"
     "      <proprietas nomen=\"probabilitas\" genus=\"numerus\"\n"
     "        fractio=\"verum\" minimum=\"0\" maximum=\"1\"/>\n"
     "    </proprietates>\n"
-    "  </genus>\n"
+    "  </.genus>\n"
     "</natura>\n";
 
 /* ==================================================

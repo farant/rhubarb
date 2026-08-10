@@ -21,7 +21,7 @@
      POSTULATUM - intentio declarata ante opus
      ================================================== -->
 
-<genus nomen="postulatum">
+<.genus nomen="postulatum">
 
   <definitio>
     Intentio declarata ANTE opus: quod verum esse debet ut opus
@@ -71,13 +71,13 @@
   <!-- in domo: postulata_posix.h nomen ipsum gerit - quae
        plagula a systemate POSIX postulat, declarata primo -->
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      FACULTAS - intentio possessa
      ================================================== -->
 
-<genus nomen="facultas">
+<.genus nomen="facultas">
 
   <definitio>
     Quod opus praestare potest, ab utente aestimatum: unitas
@@ -109,13 +109,13 @@
             efficiunt - facultas una, elementa multa"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PROBATIO - interrogatio exsecutabilis intentionis
      ================================================== -->
 
-<genus nomen="probatio">
+<.genus nomen="probatio">
 
   <definitio>
     Interrogatio exsecutabilis intentionis: scaena parata,
@@ -161,43 +161,43 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="probatio_unitatis">
+  <.species nomen="probatio_unitatis">
     <definitio>
       Elementum SOLUM probat, in insula: unum genus, unus mos,
       apparatus minimus. In domo nostra probationes/ per
       bibliothecam - unitas est bibliotheca.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="probatio_integrationis">
+  <.species nomen="probatio_integrationis">
     <definitio>
       Elementa UNA probat: suturae ipsae interrogantur - nam
       vitia in suturis habitant, ubi assumptiones duorum
       elementorum conveniunt nec semper congruunt.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="probatio_regressionis">
+  <.species nomen="probatio_regressionis">
     <definitio>
       Nata ex vitio: umbra vitii sanati custos posita, ne
       redeat. Orta ex re quam custodit - probatio cum historia.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="probatio_fumi">
+  <.species nomen="probatio_fumi">
     <definitio>
       "Vivitne omnino?" - levissima latissima: nihil profundum,
       omnia tacta. Prima post mutationem magnam, non ultima.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      VITIUM - discrepantia inter intentionem et mores
      ================================================== -->
 
-<genus nomen="vitium">
+<.genus nomen="vitium">
 
   <definitio>
     Discrepantia inter intentionem et mores: programma facit
@@ -298,7 +298,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="regressio">
+  <.species nomen="regressio">
     <definitio>
       Vitium REDIENS: sanatum olim, reversum - quod semel
       fractum et refectum, iterum fractum. Causa fundationis
@@ -306,9 +306,9 @@
       regressionum nimium. Custoditur a probatione
       regressionis - umbra sua ipsius custos.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      DEBITUM TECHNICUM - imperfectio CONSULTO suscepta
@@ -324,7 +324,7 @@
      usuram pensare, solvere an servire).
      ================================================== -->
 
-<genus nomen="debitum_technicum">
+<.genus nomen="debitum_technicum">
 
   <definitio>
     Imperfectio in opere CONSULTO suscepta ut aliquid citius
@@ -411,7 +411,7 @@
       multiplex="verum"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      COMPLICATIO - quod opere solo apparet
@@ -429,7 +429,7 @@
      contra "could not have been foreseen").
      ================================================== -->
 
-<genus nomen="complicatio">
+<.genus nomen="complicatio">
 
   <definitio>
     Consideratio implementationis quae consilio praevideri NON
@@ -542,7 +542,7 @@
     falsificat iargon est, non vocabularium.
   </dubium>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      CONSILIUM - ordo operum propositus
@@ -556,7 +556,7 @@
      SEMEL facienda sint. Tres res, tribus generibus.
      ================================================== -->
 
-<genus nomen="consilium">
+<.genus nomen="consilium">
 
   <definitio>
     Ordo operum propositus ad finem SEMEL petendum: quid quo
@@ -659,7 +659,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="consilium_computatum">
+  <.species nomen="consilium_computatum">
     <definitio>
       Consilium a machina ex statuum comparatione derivatum:
       quid scribendum, quid creandum, quid obstat - propositum,
@@ -673,9 +673,9 @@
       ordinarium, numquam scribit; scribere = applicatio'.
       Species domestica bis dogfooded antequam nominata.
     </differentia>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -698,7 +698,7 @@
      omnino non poterat.
      ================================================== -->
 
-<genus nomen="depravatio">
+<.genus nomen="depravatio">
 
   <definitio>
     Status rei factus alius quam esse debuit, sive quis animadvertat
@@ -826,7 +826,7 @@
     dimensionum, non unius.
   </nota>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -850,7 +850,7 @@
      haec quid de eo agatur.
      ================================================== -->
 
-<genus nomen="interventio">
+<.genus nomen="interventio">
 
   <definitio>
     Actus in rem iam exsistentem susceptus ut servetur, sanetur,
@@ -953,7 +953,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="conservatio">
+  <.species nomen="conservatio">
     <definitio>
       Interventio in opus artis aut monumentum ut corruptioni
       resistat aut lacunae expleantur.
@@ -965,9 +965,9 @@
       technicae quae e longinquo congruunt et e propinquo se
       produnt (tratteggio). Ars quae SE IPSAM CONFITETUR.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="restauratio_aedificii">
+  <.species nomen="restauratio_aedificii">
     <definitio>
       Interventio in aedificium historicum: fulcire, reficere,
       partes amissas supplere.
@@ -978,9 +978,9 @@
       debet, quia quod non adhibetur non servatur. Doctrina
       eadem, condicio nova.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="curatio_medica">
+  <.species nomen="curatio_medica">
     <definitio>
       Interventio in corpus viventis ut morbo resistat aut
       functio restituatur.
@@ -994,8 +994,8 @@
       prima negatur, secunda pondus utriusque fert. Probat tres
       condiciones non aequales esse sed ordinatas.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- FIXUM PROBATIONIS - vide alpha.genera in eodem directorio. -->
 <natura modulus="beta" versio="1" lingua="latina">
-  <genus nomen="res_communis">
+  <.genus nomen="res_communis">
     <definitio>Genus quod nomen cum alpha communicat.</definitio>
-  </genus>
+  </.genus>
 </natura>

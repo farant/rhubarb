@@ -43,7 +43,7 @@
      iuridica, officia, editio.
      ================================================== -->
 
-<genus nomen="universitas">
+<.genus nomen="universitas">
 
   <definitio>
     Coetus in finem communem ordinatus qui UT UNUM agit et
@@ -137,9 +137,9 @@
       nota="sub-universitates"/>
   </relationes>
 
-</genus>
+</.genus>
 
-<genus nomen="organizatio" sub="universitas">
+<.genus nomen="organizatio" sub="universitas">
 
   <differentia>
     Universitas PERSONARUM: quod membra rationalia sunt omnia
@@ -240,7 +240,7 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      COLONIA - universitas viventium
@@ -251,7 +251,7 @@
      abstractionem PROBAT.
      ================================================== -->
 
-<genus nomen="colonia" sub="universitas">
+<.genus nomen="colonia" sub="universitas">
 
   <differentia>
     Universitas VIVENTIUM quorum membra non eligunt: ordo ad
@@ -298,7 +298,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="colonia_apium">
+  <.species nomen="colonia_apium">
     <definitio>
       Universitas apum cum regina una, operariis, fucis: quam
       apiarius CURAT et numerat, non apes singulas.
@@ -349,9 +349,9 @@
       ipse facit ("divisio" artificialis). Actio pro divisione
       societatum scripta hic intacta convenit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="grex">
+  <.species nomen="grex">
     <definitio>
       Universitas animalium quam homo ad usum suum tenet: oves,
       boves, equi - numerata, curata, ex qua singula tolluntur
@@ -381,15 +381,15 @@
       PROPRIAM gerit - quam pastor nec habet nec dare potest.
       Ordo ab extra venit, peritia ab intus: duo axes, non unus.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PERSONA IURIDICA - organizatio quae in iure PERSONA est
      ================================================== -->
 
-<genus nomen="persona_iuridica" sub="organizatio">
+<.genus nomen="persona_iuridica" sub="organizatio">
 
   <differentia>
     Subiectum iurium et obligationum in iure: possidet,
@@ -438,14 +438,14 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="universitas_personarum">
+  <.species nomen="universitas_personarum">
     <definitio>
       Persona iuridica ex MEMBRIS constans: collegium,
       societas, communitas. Membra mutantur, persona manet.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="universitas_rerum">
+  <.species nomen="universitas_rerum">
     <definitio>
       Persona iuridica ex BONIS AD FINEM DESTINATIS constans,
       SINE membris: fundatio, pia causa. Nemo eam "habet";
@@ -458,9 +458,9 @@
       fundationem dicere non potest - et tamen fundationes,
       fidei commissa, piae causae ubique sunt.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      OFFICIUM - munus stabiliter constitutum
@@ -468,7 +468,7 @@
      POSITIO VACANS PERSEVERET)
      ================================================== -->
 
-<genus nomen="officium">
+<.genus nomen="officium">
 
   <definitio>
     Munus stabiliter constitutum cum oneribus, potestatibus et
@@ -577,7 +577,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="parochus">
+  <.species nomen="parochus">
     <definitio>
       Officium curae animarum in paroecia: pastor proprius,
       cum oneribus praedicandi, sacramenta ministrandi,
@@ -588,9 +588,9 @@
       OFFICII sunt, non hominis - unde series earum per
       saecula continua manet dum parochi succedunt.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="episcopus">
+  <.species nomen="episcopus">
     <definitio>
       Officium regiminis dioecesis, ordine episcopali
       praesuppositum.
@@ -600,9 +600,9 @@
       SEDES vacat, non homo - locutio ipsa testatur officium
       rem esse. Interim administrator EXERCET quod non TENET.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="notarius">
+  <.species nomen="notarius">
     <definitio>
       Officium publicum fidem instrumentis praestans.
     </definitio>
@@ -614,9 +614,9 @@
       chartam - divisae rota XLIX). Officium, non peritia,
       discrimen facit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="curator">
+  <.species nomen="curator">
     <definitio>
       Officium bona aliena ad finem alienum administrandi:
       fiducia, non dominium.
@@ -626,24 +626,24 @@
       unde persona iuridica sine membris tamen agere potest.
       Onera eius (fides, diligentia) officio inhaerent.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="praeses_collegii">
+  <.species nomen="praeses_collegii">
     <definitio>
       Officium collegio praesidendi: sedes una inter pares cum
       potestate ordinandi, non imperandi.
     </definitio>
     <valor nomen="ad_tempus">verum</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      CORPUS NORMANS - sub-genus: organizatio quae normas
      edit et custodit
      ================================================== -->
 
-<genus nomen="corpus_normans" sub="organizatio">
+<.genus nomen="corpus_normans" sub="organizatio">
 
   <differentia>
     Finis proprius: normas edere et custodire - descriptiones
@@ -698,7 +698,7 @@
     <valor nomen="condita">1918-10-19</valor>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      SOCIETAS - sub-genus: organizatio quaestui dedita
@@ -706,7 +706,7 @@
      societates sunt)
      ================================================== -->
 
-<genus nomen="societas" sub="organizatio">
+<.genus nomen="societas" sub="organizatio">
 
   <differentia>
     Finis proprius: quaestus per opera vendita; possessores
@@ -794,7 +794,7 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      MAGISTRATUS - sub-genus: organizatio cum imperio
@@ -804,7 +804,7 @@
      consensu nec ex quaestu)
      ================================================== -->
 
-<genus nomen="magistratus" sub="organizatio">
+<.genus nomen="magistratus" sub="organizatio">
 
   <differentia>
     Auctoritas ex IMPERIO super loco, non ex consensu (ut
@@ -841,6 +841,6 @@
     magistratus eas in legem sumat.
   </nota>
 
-</genus>
+</.genus>
 
 </natura>

@@ -833,9 +833,9 @@ _valores_applicare(
                 frange;
             }
             si (n != ens->nodus &&
-                !chorda_aequalis_literis(*n->titulus, "species") &&
+                !chorda_aequalis_literis(*n->titulus, ".species") &&
                 !chorda_aequalis_literis(*n->titulus, "individuum") &&
-                !chorda_aequalis_literis(*n->titulus, "cultivar"))
+                !chorda_aequalis_literis(*n->titulus, ".cultivar"))
             {
                 frange;
             }

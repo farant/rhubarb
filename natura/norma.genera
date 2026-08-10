@@ -9,7 +9,7 @@
 -->
 <natura modulus="norma" versio="4" lingua="latina">
 
-<genus nomen="norma">
+<.genus nomen="norma">
 
   <definitio>
     Documentum publicum quod formam praescribit: quid conformitas
@@ -111,7 +111,7 @@
     </dubium>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      LEX - praeceptum quod OBLIGAT, non quod dirigit
@@ -123,7 +123,7 @@
      lex TE OBLIGAT sive consentias sive non.
      ================================================== -->
 
-<genus nomen="lex">
+<.genus nomen="lex">
 
   <definitio>
     Ordinatio rationis ad bonum commune, ab eo qui curam
@@ -198,14 +198,14 @@
        divisio Thomistica (ST I-II qq. 91-95): genera legis
        per FONTEM, non per materiam -->
 
-  <species nomen="lex_aeterna">
+  <.species nomen="lex_aeterna">
     <definitio>
       Ratio divinae sapientiae universum gubernans: fons
       omnium legum, ipsa a nullo lata.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="lex_naturalis">
+  <.species nomen="lex_naturalis">
     <definitio>
       Participatio legis aeternae in creatura rationali: quod
       homo ratione sua cognoscit esse faciendum aut vitandum,
@@ -217,9 +217,9 @@
       abrogatio eam tollit - et tamen obligat. Lex sine
       legislatore humano, quod norma esse omnino non potest.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="lex_humana">
+  <.species nomen="lex_humana">
     <definitio>
       Ex lege naturali per rationem derivata et ab auctoritate
       humana lata: civilis aut canonica. Sola species quam
@@ -233,16 +233,16 @@
       per orbem conveniunt, aliae per iurisdictiones dissonant:
       non inconstantia sed duo modi derivandi.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="lex_divina_positiva">
+  <.species nomen="lex_divina_positiva">
     <definitio>
       A Deo revelata, ratione sola non cognoscibilis: quod
       humana ratio ad finem supernaturalem non attingit.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="consuetudo">
+  <.species nomen="consuetudo">
     <definitio>
       Usus diuturnus communitatis cum animo se obligandi, a
       legislatore tolerata: lex NON SCRIPTA quae tamen obligat.
@@ -255,9 +255,9 @@
       Dubium: an transitus "introductio per usum" addendus sit,
       an consuetudo machinam propriam petat. APERTUM.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -279,7 +279,7 @@
      accidere non potest. Membratio per ACTUM, non per naturam.
      ================================================== -->
 
-<genus nomen="classis_normativa">
+<.genus nomen="classis_normativa">
 
   <definitio>
     Categoria a norma constituta in quam res assignantur, cui
@@ -371,7 +371,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="schedula_substantiarum">
+  <.species nomen="schedula_substantiarum">
     <definitio>
       Classes I-V quibus substantiae regulatae assignantur
       secundum abusus periculum et usum medicum acceptum:
@@ -388,9 +388,9 @@
       mutatione chemica ulla - probatio purissima quod
       consequentiae CLASSI adhaerent.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="gradus_eventus_aviatorii">
+  <.species nomen="gradus_eventus_aviatorii">
     <definitio>
       Gradus quibus eventus aviatorii distinguuntur - accidens,
       incidens grave, incidens - quorum quisque obligationem
@@ -406,9 +406,9 @@
       dividit - unde litigatur, quod proprietas 'ordinata'
       praedicit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="classis_periculi_mercium">
+  <.species nomen="classis_periculi_mercium">
     <definitio>
       Classes quibus merces periculosae in vectura assignantur
       (explosiva, gasa, inflammabilia, corrosiva...): signa,
@@ -422,9 +422,9 @@
       huius classis interactiones ponunt (vide pharmacon.interactio):
       duo genera hic conveniunt.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -443,7 +443,7 @@
      fert - qua remota, error simplex manet.
      ================================================== -->
 
-<genus nomen="fictio_iuris">
+<.genus nomen="fictio_iuris">
 
   <definitio>
     Praeceptum quo lex rem aliter se habentem TAMQUAM ALITER
@@ -515,7 +515,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="adoptio">
+  <.species nomen="adoptio">
     <definitio>
       Fictio qua adoptans parens fit ad omnes fere effectus,
       sciente lege eum non genuisse.
@@ -531,9 +531,9 @@
       referunt, et ideo probatio quod 'declaratoria' non semper
       significat 'speculum naturae'.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="mors_praesumpta">
+  <.species nomen="mors_praesumpta">
     <definitio>
       Fictio qua absens per tempus statutum mortuus habetur, ut
       hereditas, matrimonium, tutela solvi possint.
@@ -551,9 +551,9 @@
       iudicium.ignotum.amissum: ignotum absentiam AGNOSCIT,
       fictio eam TRACTABILEM facit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="personalitas_iuridica">
+  <.species nomen="personalitas_iuridica">
     <definitio>
       Fictio qua coetus (aut massa bonorum) persona habetur:
       possidet, contrahit, agit, convenitur suo nomine.
@@ -568,8 +568,8 @@
       dicitur. Casus purus doctrinae domus: fictio ipsa res
       est, effectus eius aeque reales.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

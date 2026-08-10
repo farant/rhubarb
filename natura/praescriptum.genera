@@ -29,7 +29,7 @@
      poscit, haec minus.)
      ================================================== -->
 
-<genus nomen="procedura">
+<.genus nomen="procedura">
 
   <definitio>
     Ordo operationum ad finem: introitus declarati, gradus
@@ -51,13 +51,13 @@
       multiplex="verum"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PROCEDURA AUTOMATA - a machina exsecuta
      ================================================== -->
 
-<genus nomen="procedura_automata" sub="procedura">
+<.genus nomen="procedura_automata" sub="procedura">
 
   <differentia>
     A MACHINA exsecuta, ideo AMBIGUITATIS TOLERANTIA NULLA:
@@ -127,25 +127,25 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="fistula_integrationis">
+  <.species nomen="fistula_integrationis">
     <definitio>
       Procedura quae fontes mutatos aedificat et probat: porta
       quae opus ante coniunctionem iudicat.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="depositio">
+  <.species nomen="depositio">
     <definitio>
       Procedura quae artefactum in ambitum ponit: actus qui
       mutat quid re vera currat - unde in ambitu producente
       gravissima omnium.
     </definitio>
     <valor nomen="reversibilis">verum</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
-<genus nomen="praescriptum" sub="procedura">
+<.genus nomen="praescriptum" sub="procedura">
 
   <definitio>
     Ordo operationum ad finem, ab homine exsequendus: introitus
@@ -220,13 +220,13 @@
             eadem forma qua linguae ex linguis oriuntur"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      GRADUS PRAESCRIPTI - operatio una ordinata
      ================================================== -->
 
-<genus nomen="gradus_praescripti">
+<.genus nomen="gradus_praescripti">
 
   <definitio>
     Operatio una in ordine: actio, fortasse cum quantitate,
@@ -263,7 +263,7 @@
             ut seriem scribitur, conveniendi causa est"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      VERSIO PRAESCRIPTI - editio nominata
@@ -272,7 +272,7 @@
      manu cusa, sine mechanismo)
      ================================================== -->
 
-<genus nomen="versio_praescripti" sub="versio" modulus="versio">
+<.genus nomen="versio_praescripti" sub="versio" modulus="versio">
 
   <definitio>
     Editio praescripti nominata et citabilis: quod praescriptum
@@ -295,7 +295,7 @@
     <relatio nomen="emendata_a" ad="persona" modulus="persona"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      INDEX VERIFICATIONIS - qui CONFIRMAT, non docet
@@ -303,7 +303,7 @@
      praecepta NON est - gubernator volare scit)
      ================================================== -->
 
-<genus nomen="index_verificationis" sub="procedura">
+<.genus nomen="index_verificationis" sub="procedura">
 
   <differentia>
     CONFIRMAT quod factum sit; non docet quomodo fiat. Exsecutor
@@ -365,6 +365,6 @@
       multiplex="verum"/>
   </relationes>
 
-</genus>
+</.genus>
 
 </natura>

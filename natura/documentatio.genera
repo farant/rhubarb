@@ -40,7 +40,7 @@
      divisio aperta manet donec scenarium novum plura metiatur.
      Opera hybrida per etiam= (sodalitas secundaria). -->
 
-<genus nomen="dictionarium" sub="opus_scriptum"
+<.genus nomen="dictionarium" sub="opus_scriptum"
   modulus="opus_scriptum">
 
   <differentia>
@@ -67,9 +67,9 @@
     pagina glossarum dictionarium bonum ET manuale defectum uno
     tempore fuit; aptitudo per ambulationem lectoris mensuratur.
   </nota>
-</genus>
+</.genus>
 
-<genus nomen="manuale" sub="opus_scriptum"
+<.genus nomen="manuale" sub="opus_scriptum"
   modulus="opus_scriptum">
 
   <differentia>
@@ -93,9 +93,9 @@
     dictionarii accepit - descriptio integra, instrumentum nullum
     (lacuna L9).
   </nota>
-</genus>
+</.genus>
 
-<genus nomen="exemplum" sub="opus_scriptum"
+<.genus nomen="exemplum" sub="opus_scriptum"
   modulus="opus_scriptum">
 
   <differentia>
@@ -120,9 +120,9 @@
     verbum habet pro eo quod iam continebat (lacuna L10).
     NB: 'exemplar' formato reservatum; hoc genus 'exemplum'.
   </nota>
-</genus>
+</.genus>
 
-<genus nomen="legenda" sub="opus_scriptum"
+<.genus nomen="legenda" sub="opus_scriptum"
   modulus="opus_scriptum">
 
   <differentia>
@@ -145,11 +145,11 @@
     per opus_scriptum.pars_de, iam exsistentem (furca V: partes
     opera sunt, genus partis nullum).
   </nota>
-</genus>
+</.genus>
 
 <!-- ============= DEFECTUS DOCUMENTI ============== -->
 
-<genus nomen="defectus_documenti">
+<.genus nomen="defectus_documenti">
 
   <definitio>
     Quod textus lectori debuit nec lectio reddit: discrepantia
@@ -189,9 +189,9 @@
       modulus="opus_scriptum"
       nota="ubi inhaeret - defectus semper alicuius operis est"/>
   </relationes>
-</genus>
+</.genus>
 
-<genus nomen="deceptio" sub="defectus_documenti">
+<.genus nomen="deceptio" sub="defectus_documenti">
 
   <differentia>
     Textus falsum DOCET: lectio recta lectorem in errorem ducit.
@@ -215,9 +215,9 @@
     'status-vita="mortua"' semper transibat. A depravatione
     distinguitur: illa datum pravum, haec textus qui falsum DOCET.
   </nota>
-</genus>
+</.genus>
 
-<genus nomen="silentium" sub="defectus_documenti">
+<.genus nomen="silentium" sub="defectus_documenti">
 
   <differentia>
     Textus tacet quod scit: scientia exstat et narratio eam
@@ -238,9 +238,9 @@
     Casus mensuratus: elementum radicis documenti numquam in
     pagina nominatur - peregrinus radicem divinare debuit.
   </nota>
-</genus>
+</.genus>
 
-<genus nomen="ambiguitas" sub="defectus_documenti">
+<.genus nomen="ambiguitas" sub="defectus_documenti">
 
   <differentia>
     Textus plures sensus admittit nec fundamentum eligendi
@@ -257,11 +257,11 @@
     Casus mensuratus: signum '...' tria diversa in eadem pagina
     significabat (truncatio electionis, textus liber, vacuum).
   </nota>
-</genus>
+</.genus>
 
 <!-- ============= AMBULATIO LECTORIS ============== -->
 
-<genus nomen="ambulatio_lectoris" sub="probatio"
+<.genus nomen="ambulatio_lectoris" sub="probatio"
   modulus="fabricatio">
 
   <differentia>
@@ -303,6 +303,6 @@
             versio_de): lector codicem physice legit, ambulatio
             OPUS ut expressum probat"/>
   </relationes>
-</genus>
+</.genus>
 
 </natura>

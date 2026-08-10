@@ -20,7 +20,7 @@ interior constans character* FIXTURA_PROBATUM =
     "  <fons clavis=\"corpus\" genus=\"corpus_institutionis\"\n"
     "    modulus=\"iudicium\">memoria scribae</fons>\n"
     "</fontes>\n"
-    "<genus nomen=\"vivens\">\n"
+    "<.genus nomen=\"vivens\">\n"
     "  <definitio>quod vivit</definitio>\n"
     "  <proprietates>\n"
     "    <proprietas nomen=\"aetas\" genus=\"numerus\"/>\n"
@@ -41,12 +41,12 @@ interior constans character* FIXTURA_PROBATUM =
     "    <relatio nomen=\"edit\" ad=\"vivens\"/>\n"
     "    <relatio nomen=\"videt\" ad=\"umbra_ignota\" externum=\"verum\"/>\n"
     "  </relationes>\n"
-    "  <genus nomen=\"planta\">\n"
+    "  <.genus nomen=\"planta\">\n"
     "    <proprietates>\n"
     "      <proprietas nomen=\"altitudo\" genus=\"quantitas\"\n"
     "        modulus=\"metrum_probatum\"/>\n"
     "    </proprietates>\n"
-    "    <species nomen=\"rosa\">\n"
+    "    <.species nomen=\"rosa\">\n"
     "      <definitio>flos notissimus</definitio>\n"
     "      <valor nomen=\"color\" certitudo=\"scientia\"\n"
     "        fons=\"corpus\">ruber</valor>\n"
@@ -58,14 +58,14 @@ interior constans character* FIXTURA_PROBATUM =
     /* NIDIFICATIO: cultivar intra speciem - profunditas quam
      * plagulae verae ferunt (planta: malus_domestica >
      * granny_smith; identificatio: isbn > isbn_10) */
-    "      <cultivar nomen=\"rosa_alba\">\n"
+    "      <.cultivar nomen=\"rosa_alba\">\n"
     "        <definitio>rosa colore albo</definitio>\n"
     "        <valor nomen=\"color\">albus</valor>\n"
-    "      </cultivar>\n"
-    "    </species>\n"
-    "  </genus>\n"
-    "</genus>\n"
-    "<genus nomen=\"artificium\">\n"
+    "      </.cultivar>\n"
+    "    </.species>\n"
+    "  </.genus>\n"
+    "</.genus>\n"
+    "<.genus nomen=\"artificium\">\n"
     "  <actiones>\n"
     "    <actio nomen=\"fieri\"/>\n"
     "  </actiones>\n"
@@ -75,45 +75,45 @@ interior constans character* FIXTURA_PROBATUM =
     "  <proprietates>\n"
     "    <proprietas nomen=\"pretium\" genus=\"numerus\"/>\n"
     "  </proprietates>\n"
-    "  <species nomen=\"corona\" etiam=\"planta\">\n"
+    "  <.species nomen=\"corona\" etiam=\"planta\">\n"
     "    <valor nomen=\"pretium\">10</valor>\n"
     "    <valor nomen=\"color\">albus</valor>\n"
     "    <relatum nomen=\"edit\" ad=\"rosa\"/>\n"
     "    <historia>\n"
     "      <eventum quando=\"1900\" actio=\"nasci\">texta</eventum>\n"
     "    </historia>\n"
-    "  </species>\n"
-    "</genus>\n"
-    "<genus nomen=\"geminus\"/>\n"
+    "  </.species>\n"
+    "</.genus>\n"
+    "<.genus nomen=\"geminus\"/>\n"
     "</natura>\n";
 
 interior constans character* FIXTURA_METRUM =
     "<natura modulus=\"metrum_probatum\" versio=\"1\" lingua=\"latina\">\n"
-    "<genus nomen=\"quantitas\">\n"
+    "<.genus nomen=\"quantitas\">\n"
     "  <definitio>quantum mensuratum</definitio>\n"
-    "</genus>\n"
-    "<genus nomen=\"alienum\" sub=\"vivens\" modulus=\"probatum\">\n"
+    "</.genus>\n"
+    "<.genus nomen=\"alienum\" sub=\"vivens\" modulus=\"probatum\">\n"
     "  <definitio>peregrinus sub vivente</definitio>\n"
-    "</genus>\n"
-    "<genus nomen=\"geminus\"/>\n"
+    "</.genus>\n"
+    "<.genus nomen=\"geminus\"/>\n"
     "</natura>\n";
 
 interior constans character* FIXTURA_IUDICIUM =
     "<natura modulus=\"iudicium\" versio=\"1\" lingua=\"latina\">\n"
-    "<genus nomen=\"gradus_assensus\">\n"
+    "<.genus nomen=\"gradus_assensus\">\n"
     "  <definitio>quam firmiter tenetur</definitio>\n"
-    "  <species nomen=\"scientia\"/>\n"
-    "  <species nomen=\"opinio\"/>\n"
-    "</genus>\n"
-    "<genus nomen=\"corpus_institutionis\">\n"
+    "  <.species nomen=\"scientia\"/>\n"
+    "  <.species nomen=\"opinio\"/>\n"
+    "</.genus>\n"
+    "<.genus nomen=\"corpus_institutionis\">\n"
     "  <definitio>memoria exercitationis</definitio>\n"
-    "</genus>\n"
+    "</.genus>\n"
     "</natura>\n";
 
 /* regulam quamque semel violat; lecta cum stirpe \"aliud\" (XIV) */
 interior constans character* FIXTURA_VITIOSA =
     "<natura modulus=\"vitiosum\" versio=\"1\" lingua=\"latina\">\n"
-    "<genus nomen=\"basis\">\n"
+    "<.genus nomen=\"basis\">\n"
     "  <proprietates>\n"
     "    <proprietas nomen=\"modus\" genus=\"electio\">\n"
     "      <optio>unus</optio>\n"
@@ -132,7 +132,7 @@ interior constans character* FIXTURA_VITIOSA =
     "    <relatio nomen=\"videt\" ad=\"basis\" externum=\"verum\"/>\n"
     "  </relationes>\n"
     "  <mysterium/>\n"
-    "  <species nomen=\"exemplum\">\n"
+    "  <.species nomen=\"exemplum\">\n"
     "    <valor nomen=\"inexistens\">x</valor>\n"
     "    <valor nomen=\"modus\" fons=\"ignotus\">duo</valor>\n"
     "    <valor nomen=\"cursus\" valens_a=\"2020\"\n"
@@ -142,10 +142,10 @@ interior constans character* FIXTURA_VITIOSA =
     "    <historia>\n"
     "      <eventum quando=\"2000\" actio=\"volare\">volavit</eventum>\n"
     "    </historia>\n"
-    "  </species>\n"
-    "  <species nomen=\"exemplum\"/>\n"
-    "</genus>\n"
-    "<genus nomen=\"filius\" sub=\"absens\"/>\n"
+    "  </.species>\n"
+    "  <.species nomen=\"exemplum\"/>\n"
+    "</.genus>\n"
+    "<.genus nomen=\"filius\" sub=\"absens\"/>\n"
     "</natura>\n";
 
 /* declarationes necessitudinum: registratio, ligatio (nomen /
@@ -159,7 +159,7 @@ interior constans character* FIXTURA_NECESSITUDINES =
     "  <scriptio>contenta_in</scriptio>\n"
     "</necessitudo>\n"
     "<necessitudo nomen=\"pars_de\" sub=\"continet\" a=\"*\" ad=\"*\"/>\n"
-    "<genus nomen=\"actus_probandus\">\n"
+    "<.genus nomen=\"actus_probandus\">\n"
     "  <definitio>actus fictus probationis</definitio>\n"
     "  <termini>\n"
     "    <terminus munus=\"possessor_primus\" necessitudo=\"continet\"\n"
@@ -174,11 +174,11 @@ interior constans character* FIXTURA_NECESSITUDINES =
     "    <relatio nomen=\"y\" necessitudo=\"non_exstat\"\n"
     "      ad=\"actus_probandus\"/>\n"
     "  </relationes>\n"
-    "  <species nomen=\"exemplum_actus\">\n"
+    "  <.species nomen=\"exemplum_actus\">\n"
     "    <relatum nomen=\"possessor_primus\" ad=\"actus_probandus\"/>\n"
-    "  </species>\n"
-    "</genus>\n"
-    "<genus nomen=\"subactus_probandus\" sub=\"actus_probandus\"/>\n"
+    "  </.species>\n"
+    "</.genus>\n"
+    "<.genus nomen=\"subactus_probandus\" sub=\"actus_probandus\"/>\n"
     "</natura>\n";
 
 /* ==================================================
@@ -362,7 +362,7 @@ s32 principale (vacuum)
          * TAXINOMIA vs APPARATUS: catenae duae distinctae
          *
          * Plagulae profunditatem Porphyrianam SEMPER tulerunt
-         * (<species isbn> speciem isbn_10 continet; <species
+         * (<.species isbn> speciem isbn_10 continet; <.species
          * malus_domestica> cultivar granny_smith) sed graphus
          * eam non ferebat: res omnes ad genus ambiens
          * planabantur. Nunc AMBAE dicuntur - et haec probatio
@@ -626,20 +626,20 @@ s32 principale (vacuum)
         CREDO_VERUM (natura_legere(bib,
             chorda_ex_literis(
                 "<natura modulus=\"fines_probandum\" versio=\"1\">\n"
-                "<genus nomen=\"animal_p\"/>\n"
-                "<genus nomen=\"canis_p\" sub=\"animal_p\"/>\n"
-                "<genus nomen=\"lapis_p\"/>\n"
+                "<.genus nomen=\"animal_p\"/>\n"
+                "<.genus nomen=\"canis_p\" sub=\"animal_p\"/>\n"
+                "<.genus nomen=\"lapis_p\"/>\n"
                 "<necessitudo nomen=\"mordet\" a=\"*\" ad=\"animal_p\"/>\n"
                 "<necessitudo nomen=\"mordet_canem\" sub=\"mordet\"\n"
                 "  ad=\"canis_p\"/>\n"
                 "<necessitudo nomen=\"mordet_omnia\" sub=\"mordet\"\n"
                 "  ad=\"*\"/>\n"
-                "<genus nomen=\"pulex_p\">\n"
+                "<.genus nomen=\"pulex_p\">\n"
                 "  <relationes>\n"
                 "    <relatio nomen=\"mordet\" ad=\"lapis_p\"/>\n"
                 "    <relatio nomen=\"mordet\" ad=\"canis_p\"/>\n"
                 "  </relationes>\n"
-                "</genus>\n"
+                "</.genus>\n"
                 "</natura>\n", piscina),
             "fines_probandum"));
 
@@ -661,14 +661,14 @@ s32 principale (vacuum)
             chorda_ex_literis(
                 "<natura modulus=\"munus_probandum\" versio=\"1\">\n"
                 "<necessitudo nomen=\"participatio_p\" a=\"*\" ad=\"*\"/>\n"
-                "<genus nomen=\"pactum_p\">\n"
+                "<.genus nomen=\"pactum_p\">\n"
                 "  <termini>\n"
                 "    <terminus munus=\"dator\"\n"
                 "      necessitudo=\"participatio_p\" ad=\"*\"/>\n"
                 "    <terminus munus=\"dator\"\n"
                 "      necessitudo=\"participatio_p\" ad=\"*\"/>\n"
                 "  </termini>\n"
-                "</genus>\n"
+                "</.genus>\n"
                 "</natura>\n", piscina),
             "munus_probandum"));
 
@@ -708,11 +708,11 @@ s32 principale (vacuum)
             chorda_ex_literis(
                 "<natura modulus=\"discrimen_probandum\" versio=\"1\">\n"
                 "<necessitudo nomen=\"tangere\" a=\"*\" ad=\"*\"/>\n"
-                "<genus nomen=\"res_probata\">\n"
+                "<.genus nomen=\"res_probata\">\n"
                 "  <relationes>\n"
                 "    <relatio nomen=\"x\" ad=\"tangere\"/>\n"
                 "  </relationes>\n"
-                "</genus>\n"
+                "</.genus>\n"
                 "</natura>\n", piscina),
             "discrimen_probandum"));
 
@@ -813,9 +813,9 @@ s32 principale (vacuum)
         CREDO_VERUM (natura_legere(bib,
             chorda_ex_literis(
                 "<natura modulus=\"duplex\" versio=\"1\" lingua=\"latina\">\n"
-                "<genus nomen=\"unum\" nomen=\"duo\">\n"
+                "<.genus nomen=\"unum\" nomen=\"duo\">\n"
                 "  <definitio>attributum duplicatum</definitio>\n"
-                "</genus>\n"
+                "</.genus>\n"
                 "</natura>\n", piscina),
             "duplex"));
 
@@ -836,7 +836,7 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (bib);
 
         CREDO_FALSUM (natura_legere(bib,
-            chorda_ex_literis("<natura modulus=\"x\"><genus",
+            chorda_ex_literis("<natura modulus=\"x\"><.genus",
                               piscina),
             "x"));
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, I), I);

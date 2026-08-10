@@ -56,7 +56,7 @@
   </fons>
 </fontes>
 
-<genus nomen="actus_sollemnis">
+<.genus nomen="actus_sollemnis">
 
   <definitio>
     Actus cuius EFFECTUS a forma praescripta et ab agentis
@@ -159,13 +159,13 @@
             operatur et factum institutum ponit"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      RITUS - actus sollemnis rei sacrae
      ================================================== -->
 
-<genus nomen="ritus" sub="actus_sollemnis">
+<.genus nomen="ritus" sub="actus_sollemnis">
 
   <differentia>
     Actus sollemnis ad cultum divinum ordinatus: materia
@@ -200,9 +200,9 @@
             consecratae, quarum alienatio restricta"/>
   </relationes>
 
-</genus>
+</.genus>
 
-<genus nomen="sacramentum" sub="ritus">
+<.genus nomen="sacramentum" sub="ritus">
 
   <differentia>
     Signum efficax gratiae, a Christo institutum: effectum
@@ -236,7 +236,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="baptismus">
+  <.species nomen="baptismus">
     <definitio>
       Ablutio aquae cum verbis trinitariis: ianua sacramentorum.
     </definitio>
@@ -250,26 +250,26 @@
       ordine solus episcopus), quod probat capacitatem
       proprietatem ACTUS esse, non generis.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="confirmatio">
+  <.species nomen="confirmatio">
     <valor nomen="materia_ritus">chrisma</valor>
     <valor nomen="iterabilis">falsum</valor>
-  </species>
+  </.species>
 
-  <species nomen="eucharistia">
+  <.species nomen="eucharistia">
     <valor nomen="materia_ritus">panis et vinum</valor>
     <nota>
       Solum sacramentum quod non actionem transeuntem sed REM
       PERMANENTEM relinquit - unde res_sacra et custodia eius.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="paenitentia"/>
+  <.species nomen="paenitentia"/>
 
-  <species nomen="unctio_infirmorum"/>
+  <.species nomen="unctio_infirmorum"/>
 
-  <species nomen="ordo">
+  <.species nomen="ordo">
     <valor nomen="iterabilis">falsum</valor>
     <nota>
       Actus qui CAPACITATEM ad alios actus confert: ordinatus
@@ -277,9 +277,9 @@
       'capacitas_per' - actus sollemnis potestatem ponendi
       alios actus sollemnes constituit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="matrimonium">
+  <.species nomen="matrimonium">
     <valor nomen="revocabilis">falsum</valor>
     <valor nomen="testes_postulati">2</valor>
     <nota>
@@ -289,11 +289,11 @@
       rescissionis/solutionis: nullitas dicit matrimonium
       numquam fuisse, quod aliud est omnino quam solutio.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
-<genus nomen="sacramentale" sub="ritus">
+<.genus nomen="sacramentale" sub="ritus">
 
   <differentia>
     Ab Ecclesia institutum, non a Christo: effectum ponit EX
@@ -316,24 +316,24 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="benedictio"/>
-  <species nomen="consecratio_loci">
+  <.species nomen="benedictio"/>
+  <.species nomen="consecratio_loci">
     <nota>
       Actus qui rem in genus RES_SACRA transfert - mutatio
       status per actum sollemnem, exemplum purissimum
       relationis 'constituit'.
     </nota>
-  </species>
-  <species nomen="exorcismus"/>
+  </.species>
+  <.species nomen="exorcismus"/>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      ACTUS IURIDICUS - actus sollemnis auctoritate civili
      (collectio quam specimina rotae XXV poposcerunt)
      ================================================== -->
 
-<genus nomen="actus_iuridicus" sub="actus_sollemnis">
+<.genus nomen="actus_iuridicus" sub="actus_sollemnis">
 
   <differentia>
     Actus sollemnis cuius vim auctoritas civilis praestat:
@@ -367,7 +367,7 @@
   <!-- ================= DICTIONARIUM =================
        specimina electa quia FORMAM PURAM ostendunt -->
 
-  <species nomen="stipulatio">
+  <.species nomen="stipulatio">
     <definitio>
       Contractus verbis: interrogatio et responsus congruentes,
       utroque praesente ("Spondesne? Spondeo"). Obligatio ex
@@ -382,9 +382,9 @@
       annorum descripsit; ius Romanum eis iam utebatur.
     </nota>
     <relatum nomen="constituit" ad="obligatio" modulus="obligatio"/>
-  </species>
+  </.species>
 
-  <species nomen="mancipatio">
+  <.species nomen="mancipatio">
     <definitio>
       Traditio sollemnis rerum mancipi: libripens cum libra
       aenea, testes quinque cives, verba praescripta, aes
@@ -399,9 +399,9 @@
       separari potest et tamen operari.
     </nota>
     <relatum nomen="constituit" ad="possessio" modulus="commercium"/>
-  </species>
+  </.species>
 
-  <species nomen="manumissio">
+  <.species nomen="manumissio">
     <definitio>
       Actus quo servus liber fit: vindicta apud magistratum,
       censu, aut testamento - formae tres, effectus unus.
@@ -411,9 +411,9 @@
       specimen quod 'afficit' a 'constituit' distinguit -
       persona eadem manet, condicio eius alia fit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="testamentum">
+  <.species nomen="testamentum">
     <definitio>
       Dispositio bonorum in mortem, forma sollemni facta:
       subscriptio, testes, interdum manus propria tota.
@@ -426,9 +426,9 @@
       unicum est. Et unde probationes formales tam strictae:
       testis principalis interrogari non potest.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="confectio_instrumenti">
+  <.species nomen="confectio_instrumenti">
     <definitio>
       Actus quo notarius (aut persona publica) instrumentum
       conficit: verba partium in formam publicam redigit,
@@ -451,9 +451,9 @@
       fidem publicam ferunt. Officium hominem non peritia
       distinguit.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="promulgatio">
+  <.species nomen="promulgatio">
     <definitio>
       Actus quo lex vim accipit: publicatio forma praescripta.
       Lex ante promulgationem lex non est - textus tantum.
@@ -465,9 +465,9 @@
       sed in constitutione quiescit.
     </nota>
     <relatum nomen="constituit" ad="lex" modulus="norma"/>
-  </species>
+  </.species>
 
-  <species nomen="inauguratio">
+  <.species nomen="inauguratio">
     <definitio>
       Iusiurandum aut investitura qua quis officium suscipit:
       ante actum candidatus, post actum tenens.
@@ -480,9 +480,9 @@
       inter officium (rem stantem) et tenentem (relationem).
     </nota>
     <relatum nomen="constituit" ad="officium" modulus="organizatio"/>
-  </species>
+  </.species>
 
-  <species nomen="collatio_tituli">
+  <.species nomen="collatio_tituli">
     <definitio>
       Actus quo auctoritas titulum confert: gradus academicus,
       dignitas, honor.
@@ -494,9 +494,9 @@
       ibi natura.
     </nota>
     <relatum nomen="constituit" ad="titulus" modulus="obligatio"/>
-  </species>
+  </.species>
 
-  <species nomen="sententia_lata">
+  <.species nomen="sententia_lata">
     <definitio>
       Actus quo iudex iudicium suum PRONUNTIAT et vim ei dat:
       ante pronuntiationem opinio, post pronuntiationem ius.
@@ -509,9 +509,9 @@
       actus duo, non unum.
     </nota>
     <relatum nomen="constituit" ad="obligatio" modulus="obligatio"/>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 
 <!-- ==================================================
@@ -533,7 +533,7 @@
      utrumque dominium capit.
      ================================================== -->
 
-<genus nomen="quorum">
+<.genus nomen="quorum">
 
   <definitio>
     Numerus (aut pars) membrorum cuius praesentia aut consensus
@@ -601,7 +601,7 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="quorum_deliberativum">
+  <.species nomen="quorum_deliberativum">
     <definitio>
       Quot adesse debeant ut concilium (senatus, curia, capitulum)
       deliberare et decernere possit.
@@ -615,9 +615,9 @@
       Praesentia hic actio est: qui abest coetum sistere potest
       absentia sola, unde secessio instrumentum politicum.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="maioritas_replicarum">
+  <.species nomen="maioritas_replicarum">
     <definitio>
       Quot ex machinis coetus consentire debeant ut scriptio
       commissa habeatur: plerumque dimidium plus uno.
@@ -634,8 +634,8 @@
       Quod ars computatralis nuper invenisse se putat lex
       canonica de capitulis dispersis diu tenuit.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

@@ -274,7 +274,7 @@ arborem_legere(
 
         titulus_n = stml_attributum_capere(liberum, "nomen");
 
-        si (chorda_aequalis_literis(*titulus_e, "genus"))
+        si (chorda_aequalis_literis(*titulus_e, ".genus"))
         {
             NaturaGenus*  novum;
             NaturaGenus** locus;
@@ -306,9 +306,9 @@ arborem_legere(
                            titulus_n);
             arborem_legere(bib, ex, liberum, novum, NIHIL);
         }
-        alioquin si (chorda_aequalis_literis(*titulus_e, "species") ||
+        alioquin si (chorda_aequalis_literis(*titulus_e, ".species") ||
                      chorda_aequalis_literis(*titulus_e, "individuum") ||
-                     chorda_aequalis_literis(*titulus_e, "cultivar"))
+                     chorda_aequalis_literis(*titulus_e, ".cultivar"))
         {
             NaturaRes*  nova;
             NaturaRes** locus;
@@ -1056,7 +1056,7 @@ arborem_nectere(
         pertinens = res_c ? res_c->genus_suum : genus_c;
         pertinens_etiam = res_c ? res_c->genus_etiam : NIHIL;
 
-        si (chorda_aequalis_literis(*titulus_e, "genus"))
+        si (chorda_aequalis_literis(*titulus_e, ".genus"))
         {
             NaturaEns* ens;
 
@@ -1074,10 +1074,10 @@ arborem_nectere(
                                 genus_c, res_c, insoluta);
             }
         }
-        alioquin si (chorda_aequalis_literis(*titulus_e, "species") ||
+        alioquin si (chorda_aequalis_literis(*titulus_e, ".species") ||
                      chorda_aequalis_literis(*titulus_e,
                                              "individuum") ||
-                     chorda_aequalis_literis(*titulus_e, "cultivar"))
+                     chorda_aequalis_literis(*titulus_e, ".cultivar"))
         {
             NaturaEns* ens;
 

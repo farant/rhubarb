@@ -21,7 +21,7 @@
      AMBITUS - ubi programma currit
      ================================================== -->
 
-<genus nomen="ambitus">
+<.genus nomen="ambitus">
 
   <definitio>
     Locus ordinatus ubi programmata currunt: machinae,
@@ -64,24 +64,24 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="ambitus_fabricae">
+  <.species nomen="ambitus_fabricae">
     <definitio>
       Ubi faber ipse operatur: fractura nihil nocet, ideo
       libertas maxima.
     </definitio>
     <valor nomen="realitas_consequentiae">ficta</valor>
-  </species>
+  </.species>
 
-  <species nomen="ambitus_probationis">
+  <.species nomen="ambitus_probationis">
     <definitio>
       Producentem imitatur ut errores ante producentem
       appareant: pretium eius in FIDELITATE stat - quo minus
       similis, eo minus probat.
     </definitio>
     <valor nomen="realitas_consequentiae">ficta</valor>
-  </species>
+  </.species>
 
-  <species nomen="ambitus_producens">
+  <.species nomen="ambitus_producens">
     <definitio>
       Ubi homines veri re vera utuntur: error hic damnum verum
       est, non nuntius. Unicus ambitus cuius vitia in mundum
@@ -89,15 +89,15 @@
     </definitio>
     <valor nomen="realitas_consequentiae">vera</valor>
     <valor nomen="data_vera">verum</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PENSUM - commissio agendi
      ================================================== -->
 
-<genus nomen="pensum">
+<.genus nomen="pensum">
 
   <definitio>
     Opus certum alicui commissum: quid agendum, a quo, quo
@@ -160,13 +160,13 @@
             'via critica'"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      INCIDENS - vitium in ambitu vero manifestum
      ================================================== -->
 
-<genus nomen="incidens">
+<.genus nomen="incidens">
 
   <definitio>
     Interruptio aut deminutio ministerii in ambitu vero: non
@@ -248,7 +248,7 @@
       nota="SLA obligatio est; incidens eam violare potest"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      PROCESSUS - programma currens
@@ -263,7 +263,7 @@
      proprium habet, unde 'errno' sine possessore nihil valet.
      ================================================== -->
 
-<genus nomen="processus">
+<.genus nomen="processus">
 
   <definitio>
     Programma in exsecutione: instantia formae, statum proprium
@@ -388,6 +388,6 @@
     est, et lex domus duos poscit.
   </dubium>
 
-</genus>
+</.genus>
 
 </natura>

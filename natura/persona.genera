@@ -40,7 +40,7 @@
   </fons>
 </fontes>
 
-<genus nomen="persona">
+<.genus nomen="persona">
 
   <definitio>
     Naturae rationabilis individua substantia (Boethius).
@@ -322,6 +322,6 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 </natura>

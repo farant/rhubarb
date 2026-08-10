@@ -4,16 +4,16 @@
      entitatem &lt; ut evasio HTML (opus V) probetur. -->
 <natura modulus="probatio" versio="1" lingua="latina">
 
-<genus nomen="gamma">
+<.genus nomen="gamma">
   <definitio>Res cum lacuna Gallica.</definitio>
   <glossa lingua="en">Gap kind: French missing; uses &lt;markup&gt;
     safely.</glossa>
-</genus>
+</.genus>
 
-<genus nomen="delta">
+<.genus nomen="delta">
   <glossa lingua="en">First English gloss.</glossa>
   <glossa lingua="en">Second English gloss - duplicate.</glossa>
   <glossa lingua="fr">Une glose française.</glossa>
-</genus>
+</.genus>
 
 </natura>

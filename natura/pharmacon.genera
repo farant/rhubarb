@@ -48,7 +48,7 @@
      SUBSTANTIA CHEMICA - quid est
      ================================================== -->
 
-<genus nomen="substantia_chemica">
+<.genus nomen="substantia_chemica">
 
   <definitio>
     Genus materiae compositione determinatum: quod omnia
@@ -130,13 +130,13 @@
     </nota>
   </individuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      MEDICAMENTUM - quid praescribitur
      ================================================== -->
 
-<genus nomen="medicamentum">
+<.genus nomen="medicamentum">
 
   <definitio>
     Substantia (aut plures) cum VI et FORMA determinatis ad
@@ -217,21 +217,21 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="medicamentum_genericum">
+  <.species nomen="medicamentum_genericum">
     <differentia>
       Post privilegium inventionis elapsum ab aliis fabricatum,
       aequivalentia asserta, nomine substantiae venditum.
     </differentia>
-  </species>
+  </.species>
 
-  <species nomen="medicamentum_nominatum">
+  <.species nomen="medicamentum_nominatum">
     <differentia>
       Nomine mercatorio venditum, plerumque ab eo qui invenit -
       idem medicamentum, nomen aliud, pretium aliud.
     </differentia>
-  </species>
+  </.species>
 
-  <species nomen="medicamentum_compositum">
+  <.species nomen="medicamentum_compositum">
     <definitio>
       In officina pharmacopolii ad singularem aegrum
       praeparatum, quia forma mercatoria non convenit (dosis
@@ -244,15 +244,15 @@
       est quia iteratur, charta iussum quia hunc aegrum
       nominat.
     </differentia>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      COCTURA - quid hoc cursu factum est
      ================================================== -->
 
-<genus nomen="coctura">
+<.genus nomen="coctura">
 
   <definitio>
     Omnia quae uno cursu fabricationis facta sunt, provenientiam
@@ -336,13 +336,13 @@
     potuit (bis occupata: mensura.massa et massae voluminis).
   </nota>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      INTERACTIO - relatio reificata incompatibilitatis
      ================================================== -->
 
-<genus nomen="interactio">
+<.genus nomen="interactio">
 
   <definitio>
     Relatio inter res duas (aut plures) quarum praesentia
@@ -407,22 +407,22 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="interactio_medicamentorum">
+  <.species nomen="interactio_medicamentorum">
     <definitio>
       Inter medicamenta duo: alterum alterius concentrationem
       aut effectum mutat, plerumque per enzymata hepatis aut
       per viam eandem.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="interactio_cum_cibo">
+  <.species nomen="interactio_cum_cibo">
     <definitio>
       Inter medicamentum et cibum: absorptio mutata, aut
       substantia in cibo eandem viam occupans.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="incompatibilitas_mercium">
+  <.species nomen="incompatibilitas_mercium">
     <definitio>
       Inter merces periculosas quae simul vehi aut condi non
       debent: oxidantia cum inflammabilibus, acida cum basibus.
@@ -439,7 +439,7 @@
       singulas - interactio inter classes, non inter res.
       Confirmat relationem 'inter' apertam recte esse.
     </nota>
-  </species>
+  </.species>
 
   <dubium>
     AN INTERACTIO SEMPER MALA SIT. Species omnes hic nocumentum
@@ -452,6 +452,6 @@
     non solutum.
   </dubium>
 
-</genus>
+</.genus>
 
 </natura>

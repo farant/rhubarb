@@ -10,7 +10,7 @@
   significat, non defectum.
 -->
 <natura modulus="alpha" versio="1" lingua="latina">
-  <genus nomen="res_alpha">
+  <.genus nomen="res_alpha">
     <definitio>Genus fictum unius exemplaris probationis.</definitio>
-  </genus>
+  </.genus>
 </natura>

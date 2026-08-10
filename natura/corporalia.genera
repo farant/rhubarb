@@ -44,7 +44,7 @@
      RES CORPOREA - quod materiam et locum habet
      ================================================== -->
 
-<genus nomen="res_corporea">
+<.genus nomen="res_corporea">
 
   <definitio>
     Quod materiam habet, locum occupat, tempore corrumpitur:
@@ -91,13 +91,13 @@
             res digitalis non habet"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      ARTEFACTUM - res corporea ab homine facta
      ================================================== -->
 
-<genus nomen="artefactum" sub="res_corporea">
+<.genus nomen="artefactum" sub="res_corporea">
 
   <differentia>
     Ab homine facta ad finem: NUMERABILIS, singularis,
@@ -133,21 +133,21 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="cibus">
+  <.species nomen="cibus">
     <definitio>
       Artefactum consumendo destinatum: usus eum DESTRUIT -
       nota quae cibum ab omnibus fere artefactis distinguit
       (instrumentum usu servatur, cibus usu perit).
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      MATERIA - quod mensuratur, non numeratur
      ================================================== -->
 
-<genus nomen="materia" sub="res_corporea">
+<.genus nomen="materia" sub="res_corporea">
 
   <differentia>
     MENSURABILIS non numerabilis: farina, aqua, oleum - "tres
@@ -184,13 +184,13 @@
             quod erat - transformatio, non compositio sola"/>
   </relationes>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      INSTRUMENTUM - artefactum ad faciendum
      ================================================== -->
 
-<genus nomen="instrumentum" sub="artefactum">
+<.genus nomen="instrumentum" sub="artefactum">
 
   <differentia>
     Ad faciendum factum, non ad consumendum: usu SERVATUR (immo
@@ -233,13 +233,13 @@
             fabricatione"/>
   </machina_statuum>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      RES SACRA - res actu segregata a profano usu
      ================================================== -->
 
-<genus nomen="res_sacra" sub="res_corporea">
+<.genus nomen="res_sacra" sub="res_corporea">
 
   <differentia>
     Divino cultui per ACTUM dedicata, non per naturam nec per
@@ -311,21 +311,21 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="res_sacra_immobilis">
+  <.species nomen="res_sacra_immobilis">
     <definitio>
       Ecclesia, altare, coemeterium: loco fixa et ideo
       iurisdictioni loci obnoxia simul ac dedicationi.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="res_sacra_mobilis">
+  <.species nomen="res_sacra_mobilis">
     <definitio>
       Vasa sacra, vestes, libri liturgici: quae moveri possunt
       et ideo alienari, unde regulae strictiores.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="reliquiae">
+  <.species nomen="reliquiae">
     <definitio>
       Corporis sancti partes aut res ei contactae: species
       cuius venditio omnino prohibita est (simonia), non
@@ -333,9 +333,9 @@
       possideri potest et VENDI NUMQUAM.
     </definitio>
     <valor nomen="alienabilis">falsum</valor>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      DAMNUM - laesio integritatis rei corporeae
@@ -355,7 +355,7 @@
      debetur, eo plura mala pati potest.
      ================================================== -->
 
-<genus nomen="damnum">
+<.genus nomen="damnum">
 
   <definitio>
     Laesio integritatis rei corporeae ab externa vi illata: quod
@@ -419,35 +419,35 @@
 
   <!-- ================= DICTIONARIUM ================= -->
 
-  <species nomen="fractura">
+  <.species nomen="fractura">
     <definitio>Divisio quod unum esse debet.</definitio>
-  </species>
+  </.species>
 
-  <species nomen="corruptio">
+  <.species nomen="corruptio">
     <definitio>
       Mutatio substantiae ipsius: putredo, rubigo, umor. Species
       quam MORA sola efficere potest, sine ulla vi externa -
       confinium cum transitu 'per moram' rei corporeae.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="contaminatio">
+  <.species nomen="contaminatio">
     <definitio>
       Admixtio alieni: quod purum esse debet mixtum est. Species
       quae MATERIAM praecipue afflicit (numerabilia frangi,
       mensurabilia contaminari solent) - divisio v0
       hic fructum fert.
     </definitio>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      VIVENS - ramus tertius rei corporeae
      (nec factum nec materia: quod se movet)
      ================================================== -->
 
-<genus nomen="vivens" sub="res_corporea">
+<.genus nomen="vivens" sub="res_corporea">
 
   <differentia>
     Se ipsum movet, nutrit, generat: principium motus INTRA se
@@ -515,6 +515,6 @@
     taxinomia inventa est, non ficta.
   </nota>
 
-</genus>
+</.genus>
 
 </natura>

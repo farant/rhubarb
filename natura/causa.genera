@@ -25,7 +25,7 @@
 -->
 <natura modulus="causa" versio="0" lingua="latina">
 
-<genus nomen="causa">
+<.genus nomen="causa">
 
   <definitio>
     Id cuius vi aliquid est aut fit: non quod praecedit tantum
@@ -88,23 +88,23 @@
        divisio Aristotelica (Phys. II, Metaph. V): non per
        materiam sed per MODUM CAUSANDI -->
 
-  <species nomen="causa_materialis">
+  <.species nomen="causa_materialis">
     <definitio>
       Id ex quo aliquid fit et in quo manet: aes statuae, farina
       panis. In bibliotheca nostra iam vivebat -
       corporalia.artefactum.ex_materia hoc ipsum est.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="causa_formalis">
+  <.species nomen="causa_formalis">
     <definitio>
       Forma quae rem hoc ipsum facit quod est: figura statuae,
       ratio circuli. Iam vivebat in differentia et definitione -
       quas omni genere scribimus.
     </definitio>
-  </species>
+  </.species>
 
-  <species nomen="causa_efficiens">
+  <.species nomen="causa_efficiens">
     <definitio>
       Unde principium motus: artifex statuae, actus qui officium
       constituit. Sola quam usus hodiernus "causam" vocat, unde
@@ -115,9 +115,9 @@
       relationibus per bibliotheca sparsis. Hoc exemplar eas non
       substituit sed NOMINAT.
     </nota>
-  </species>
+  </.species>
 
-  <species nomen="causa_finalis">
+  <.species nomen="causa_finalis">
     <definitio>
       Id cuius gratia aliquid fit: sanitas ambulationis, bonum
       commune legis. Causa quam mechanismus modernus negat et
@@ -129,8 +129,8 @@
       habet. Saxum aegrotare non potest. Quod ibi tacite
       adhibuimus, hic nominatur.
     </nota>
-  </species>
+  </.species>
 
-</genus>
+</.genus>
 
 </natura>

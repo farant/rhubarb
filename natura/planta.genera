@@ -38,7 +38,7 @@
      ramum suum in arbore Porphyriana tenet - et proprietas
      'anima' a vivente hereditata (vegetativa) differentiam
      eius iam dicebat sine verbo. -->
-<genus nomen="planta" sub="vivens" modulus="corporalia">
+<.genus nomen="planta" sub="vivens" modulus="corporalia">
 
   <definitio>
     Vivens quod se ex loco non movet et lucem in cibum vertit
@@ -184,7 +184,7 @@
     natura-canones-generati par. 8.2.
   </dubium>
 
-</genus>
+</.genus>
 
 <!-- ==================================================
      RANKS TAXINOMICI - genera cum gradu nominato
@@ -193,7 +193,7 @@
      biologia ranks NOMINARI vult quia lex eos nominat)
      ================================================== -->
 
-<genus nomen="rosaceae" sub="planta" gradus="familia">
+<.genus nomen="rosaceae" sub="planta" gradus="familia">
 
   <differentia>
     Flores quinque-petali plerumque, stipulae ad folia, fructus
@@ -224,7 +224,7 @@
 
   <!-- ============ ROSA (genus taxinomicum) ============ -->
 
-  <genus nomen="rosa" sub="rosaceae" gradus="genus">
+  <.genus nomen="rosa" sub="rosaceae" gradus="genus">
     <differentia>
       Caules aculeati, folia imparipinnata, fructus hypanthium
       carnosum (cynorrhodon) - non pomum.
@@ -243,7 +243,7 @@
     <relatum nomen="nomen_publicatum_in" ad="species_plantarum"
       modulus="opus_scriptum"/>
 
-    <species nomen="rosa_canina" gradus="species">
+    <.species nomen="rosa_canina" gradus="species">
       <definitio>
         Rosa silvestris Europae: flores simplices roseo-albi,
         cynorrhoda rubra vitamine C dives, aculei recurvi.
@@ -260,12 +260,12 @@
         provenientiam in nomine ipso fert; exemplum quod
         elementum &lt;fons&gt; nostrum olim imitetur.
       </nota>
-    </species>
-  </genus>
+    </.species>
+  </.genus>
 
   <!-- ============ MALUS (genus taxinomicum) ============ -->
 
-  <genus nomen="malus" sub="rosaceae" gradus="genus">
+  <.genus nomen="malus" sub="rosaceae" gradus="genus">
     <differentia>
       Fructus POMUM (hypanthium carnosum quod semina includit),
       non drupa nec cynorrhodon.
@@ -281,7 +281,7 @@
     <valor nomen="durata">perennis</valor>
     <valor nomen="folia_permanentia">decidua</valor>
 
-    <species nomen="malus_domestica" gradus="species">
+    <.species nomen="malus_domestica" gradus="species">
       <definitio>
         Malus culta, ex hybridatione longa orta (M. sieversii
         praecipue): fructus edulis, per insitionem propagata quia
@@ -300,7 +300,7 @@
         eadem trans saecula.
       </nota>
 
-      <cultivar nomen="granny_smith">
+      <.cultivar nomen="granny_smith">
         <definitio>
           Cultivar Australianus: fructus viridis, acidus, durus,
           conservationi aptus.
@@ -314,10 +314,10 @@
           <eventum quando="1868" actio="nominari">apud Mariam Ann
             Smith in Australia inventa</eventum>
         </historia>
-      </cultivar>
-    </species>
-  </genus>
+      </.cultivar>
+    </.species>
+  </.genus>
 
-</genus>
+</.genus>
 
 </natura>

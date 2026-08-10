@@ -36,7 +36,7 @@
   </fons>
 </fontes>
 
-<genus nomen="versio">
+<.genus nomen="versio">
 
   <definitio>
     Editio rei nominata et citabilis, quae rem ipsam per
@@ -194,6 +194,6 @@
     Casus cogens unus adhuc.
   </dubium>
 
-</genus>
+</.genus>
 
 </natura>
