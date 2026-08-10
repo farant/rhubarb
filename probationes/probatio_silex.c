@@ -265,20 +265,25 @@ s32 principale (vacuum)
             { "corpus.versio", "commit=abc123 dies=2026-08-10\n" },
             { "include/minima.h", "/* minima */\n" },
             { "lib/minima.c",
-              "#include \"minima.h\"\n/* corpus m */\n" },
+              "#include \"minima.h\"\n"
+              "#include \"../vendor/parva.h\"\n" },
             { "include/altera.h",
               "#include \"minima.h\"\n" },
-            { "lib/altera.c", "/* altera */\n" }
+            { "lib/altera.c", "/* altera */\n" },
+            { "include/obiectiva.h", "/* ob */\n" },
+            { "lib/obiectiva_macos.m", "/* ob m */\n" },
+            { "vendor/parva.h", "/* v */\n" },
+            { "vendor/parva.c", "/* vc */\n" }
         };
         interior constans character* constans SEMINA2[] = {
-            "altera.h"
+            "altera.h", "obiectiva.h"
         };
         SilexFons*   discus;
         SilexFons*   corpus;
         Xar*         ex_disco;
         Xar*         ex_corpore;
         i32          index;
-        CapsulaEmbed embed = _corpus_fictum(piscina, PARIA, 5);
+        CapsulaEmbed embed = _corpus_fictum(piscina, PARIA, 9);
 
         imprimere("\n--- Probans corpus == discus ---\n");
         filum_directorium_creare_si_necesse("build");
@@ -286,7 +291,8 @@ s32 principale (vacuum)
         filum_directorium_creare_si_necesse(AREA "/ficta2");
         filum_directorium_creare_si_necesse(AREA "/ficta2/include");
         filum_directorium_creare_si_necesse(AREA "/ficta2/lib");
-        per (index = 1; index < 5; index = index + 1)
+        filum_directorium_creare_si_necesse(AREA "/ficta2/vendor");
+        per (index = 1; index < 9; index = index + 1)
         {
             CREDO_VERUM(filum_scribere_literis(
                 _texere_probationis(piscina, AREA "/ficta2/",
@@ -301,9 +307,9 @@ s32 principale (vacuum)
             piscina), chorda_ex_literis("abc123", piscina));
 
         ex_disco = silex_clausuram_colligere(piscina, discus,
-            SEMINA2, 1);
+            SEMINA2, 2);
         ex_corpore = silex_clausuram_colligere(piscina, corpus,
-            SEMINA2, 1);
+            SEMINA2, 2);
         CREDO_NON_NIHIL(ex_disco);
         CREDO_NON_NIHIL(ex_corpore);
         CREDO_AEQUALIS_I32((i32)xar_numerus(ex_disco),
@@ -318,9 +324,19 @@ s32 principale (vacuum)
             CREDO_CHORDA_AEQUALIS(a->via, b->via);
             CREDO_CHORDA_AEQUALIS(a->contentum, b->contentum);
         }
-        /* clausura plena: altera par + minima par (BFS idem
-         * ambobus) */
-        CREDO_AEQUALIS_I32((i32)xar_numerus(ex_disco), (i32)4);
+        /* regulae clausurae: geminus obiectivus .m ubi lib/X.c
+         * abest; par venditorium normalizatum (numquam '..') */
+        CREDO_VERUM(_manifestum_continet(ex_disco,
+            "lib/obiectiva_macos.m"));
+        CREDO_VERUM(_manifestum_continet(ex_disco,
+            "vendor/parva.h"));
+        CREDO_VERUM(_manifestum_continet(ex_disco,
+            "vendor/parva.c"));
+        CREDO_FALSUM(_manifestum_continet(ex_disco,
+            "include/../vendor/parva.h"));
+        /* altera par II + minima par II + obiectiva.h +
+         * obiectiva_macos.m + vendor par II = VIII */
+        CREDO_AEQUALIS_I32((i32)xar_numerus(ex_disco), (i32)8);
     }
 
     /* ========================================================

@@ -298,6 +298,40 @@ _inclusiones_scrutari (chorda contentum, Xar* opus)
  * ================================================== */
 
 interior b32
+_vendor_basim (chorda caput, chorda* basis);
+
+/* 'vendor/' in nomine (quocumque praefixo, e.g. '../vendor/x.h')
+ * -> basis post eam, si sine '/' ulteriore. Normalizatio: claves
+ * corporis '..' resolvere nequeunt, ergo par venditorium semper
+ * 'vendor/<basis>' fit. */
+interior b32
+_vendor_basim (chorda caput, chorda* basis)
+{
+    i32 i;
+
+    per (i = 0; i + 7 <= caput.mensura; i = i + 1)
+    {
+        si (memcmp(caput.datum + i, "vendor/", 7) == 0)
+        {
+            chorda cauda = chorda_ex_buffer(caput.datum + i + 7,
+                caput.mensura - i - 7);
+            i32 j;
+
+            per (j = 0; j < cauda.mensura; j = j + 1)
+            {
+                si (cauda.datum[j] == '/')
+                {
+                    redde FALSUM;
+                }
+            }
+            *basis = cauda;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior b32
 _plagulam_e_fonte_colligere (Piscina* piscina,
     constans SilexFons* fons, constans character* pars,
     chorda titulus, Xar* fructus, Xar* opus);
@@ -380,6 +414,43 @@ silex_clausuram_colligere (Piscina* piscina,
     per (index = 0; index < xar_numerus(opus); index = index + 1)
     {
         chorda caput = *(chorda*)xar_obtinere(opus, index);
+        chorda basis_vendoris;
+
+        si (_vendor_basim(caput, &basis_vendoris))
+        {
+            chorda caput_normale = _praefigere(piscina, "vendor/",
+                basis_vendoris);
+
+            si (tabula_dispersa_continet(visa, caput_normale))
+            {
+                perge;
+            }
+            tabula_dispersa_inserere(visa, caput_normale,
+                (vacuum*)fructus);
+            si (!_plagulam_e_fonte_colligere(piscina, fons,
+                "vendor/", basis_vendoris, fructus, opus))
+            {
+                fprintf(stderr, "silex: monitio - venditorium"
+                    " citatum in fonte deest: %.*s\n",
+                    (integer)basis_vendoris.mensura,
+                    (constans character*)basis_vendoris.datum);
+            }
+            /* geminus .c si basis '.h' terminatur */
+            si (basis_vendoris.mensura > 2
+                && basis_vendoris.datum[basis_vendoris.mensura - 2]
+                    == '.'
+                && basis_vendoris.datum[basis_vendoris.mensura - 1]
+                    == 'h')
+            {
+                chorda basis_c = _praefigere(piscina, "",
+                    basis_vendoris);
+
+                basis_c.datum[basis_c.mensura - 1] = 'c';
+                (vacuum)_plagulam_e_fonte_colligere(piscina, fons,
+                    "vendor/", basis_c, fructus, opus);
+            }
+            perge;
+        }
 
         si (tabula_dispersa_continet(visa, caput))
         {
@@ -417,8 +488,23 @@ silex_clausuram_colligere (Piscina* piscina,
                 chorda_aedificator_appendere_literis(aed, ".c");
                 titulus_c = chorda_aedificator_finire(aed);
             }
-            (vacuum)_plagulam_e_fonte_colligere(piscina, fons,
-                "lib/", titulus_c, fructus, opus);
+            si (!_plagulam_e_fonte_colligere(piscina, fons,
+                "lib/", titulus_c, fructus, opus))
+            {
+                /* geminus obiectivus: conventione aedilis
+                 * lib/X_macos.m ubi lib/X.c abest */
+                ChordaAedificator* aed_m =
+                    chorda_aedificator_creare(piscina,
+                        (memoriae_index)64);
+
+                chorda_aedificator_appendere_chorda(aed_m,
+                    radix_capitis);
+                chorda_aedificator_appendere_literis(aed_m,
+                    "_macos.m");
+                (vacuum)_plagulam_e_fonte_colligere(piscina, fons,
+                    "lib/", chorda_aedificator_finire(aed_m),
+                    fructus, opus);
+            }
         }
     }
 
