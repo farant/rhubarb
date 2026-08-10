@@ -671,10 +671,37 @@ exits 1. Exit 2 means NOTHING RAN — never read it as health.
 | 17 | The `versio` attribute matches the version stated in the file's header comment | [E] |
 | 18 | A name bearing another name as its stem (`x_y` where `x` is a name) either descends from it or bears a declared relation to it | [M] |
 | 19 | A bare name used in two models is a declared homonym: a `nota` on each side naming the other and saying why they are not the same kind, and every citation of it carries `modulus=` | [M] → [E] on first use |
+| 20 | Slot names (relatio `nomen=`, terminus `munus=`) that bind to no declared necessitudo are counted per model, ONE aggregated monitum each (top names + count) — the burn-down metric; silent while zero necessitudines are declared | [M] (2026-08-10) |
+| 21 | An explicit `necessitudo=` citation resolves to a declared necessitudo; no spelling (nomen/conversum/scriptio) maps to two declarations | [E] (2026-08-10) |
+| 22 | A slot's `ad=` lies within the bound necessitudo's effective end (direction-aware: a converse-named slot checks `a=`); a sub-necessitudo never widens an inherited end | [E] (2026-08-10) |
+| 23 | `munus=` is unique within one frame (`<termini>`) | [E] (2026-08-10) |
+| 24 | (reserved) | — |
+| 25 | A model declares at least one `genus` OR one `necessitudo` (replaces the canon's old `minimum="1"` on genus — co-occurrence above the canon, like "ad AUT a") | [E] (2026-08-10) |
 
 Rules 9–13 are the Cyc-consistency defense: they are what makes a
 hand-written library stay coherent past the point where one mind
 holds it.
+
+**NECESSITUDINES — relations as first-class kinds** (2026-08-10,
+spec `project-specs/necessitudines-spec.md`). A relation kind is
+declared ONCE (`<necessitudo>` in `natura/necessitudines.genera` or
+any model), with `sub=` inheritance into the family spine,
+`conversum=` (one identity, two direction-names — this is what
+retired the `inversa`-as-name wound), and `<scriptio>` children for
+grammatical spelling variants (`situm_in`/`sita_in`/`situs_in` are
+ONE relation). Use sites stay light: a `relatio` or `terminus`
+whose name matches a declared nomen/conversum/scriptio binds
+automatically; `necessitudo=` cites explicitly when the domain word
+diverges. Act-genera declare FRAMES — `<termini>` wrapping
+`<terminus munus=…>` ends; a munus is frame-local (never in the
+global namespace) and `relatum` resolves through termini as well as
+relationes (rule 11). `necessaria=` on a terminus is
+apparatus-level only — the projection never reads it (ontological
+necessity is not documentary obligation). The projection treats a
+terminus exactly as the relatio it replaces (byte-identity proven
+on the venditio migration); `necessitudo=` never reaches generated
+canons. The three layers: IDENTITY (declaration) / LABEL (slot
+name or munus) / SPELLING (scriptio).
 
 **`natura/natura.canon` now states §3/§4 declaratively** (2026-08-06) —
 the closed vocabulary, child cardinality, attribute datatypes and rule

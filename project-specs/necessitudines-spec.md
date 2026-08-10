@@ -242,3 +242,35 @@ Inside an act-genus, an explicit frame:
    (e.g. a frame-wide necessitudo default)? v1 says no (YAGNI).
 4. Should `bin/natura relationes` learn a `-familiae` view (grouped by
    bound family) in v1 or wait for the burn-down to need it?
+
+## 9. Rulings at build (2026-08-10, arc shipped e49a61b..7da1869)
+
+- **Declarations-only model** (measured blocker): canon's
+  `minimum="1"` on root genus DROPPED; loader rule XXV enforces "at
+  least one genus OR necessitudo" — co-occurrence above the canon,
+  the "ad AUT a" precedent. Fran's ruling.
+- **necessitudo** stands as the element name (8.1 closed by review).
+- **dependet_ex = scriptio of pendet_ex** (8.2 closed — identical
+  sense, one identity). 8.3 and 8.4 remain deferred, YAGNI.
+- **necessaria= on terminus is apparatus-only** — the projection
+  ignores it by standing doctrine ("necessitas ontologica obligatio
+  documenti non est"). Stated in the canon nota and METAMODULUS §8.
+- **Frame migration ordering rule**: `<termini>` must occupy the
+  document position of the `<relationes>` it replaces and munus=
+  must equal the old nomen=, or generated canons move (member order
+  = container document order). Proven: venditio byte-identical.
+- **Monitum XX is per-model** (modulus= always set — a NIHIL-module
+  diagnostic would print on every `-plagula` run) and **silent while
+  zero necessitudines are declared** (a metric without a norm
+  measures nothing). Slots with a broken explicit citation count as
+  XXI only, never double as unbound.
+- **Family name collision measured**: `promulgatio` taken
+  (/actus/promulgatio) → family named `evulgatio`. 88 names checked,
+  1 collision — the collision praeceptum paid.
+- **Genus-less modules cook no canon**: the driver skips them (the
+  generator's refusal to write an empty canon stands); the canones
+  reconciliation invariant counts COOKING modules + 1.
+- **Numbers at ship**: 64+1 declarations; 432 slots → 163 LIGATA
+  (38%) by name alone, 269 soluta (the burn-down baseline);
+  VULNERA 2 → 0 (corpus SANUM, first time); 4 true citations born
+  in the monolith (pollinat + heirs).

@@ -5333,3 +5333,71 @@ STRUCTURE did not. Hence `bin/natura census` + `relationes`.
 - Latent: a `<genus>` nested in a `<species>` would lose its
   container (same gap, one level up) — legal, used ZERO times, filed
   01KZHAFCYZ with its trigger.
+
+## 2026-08-10 — Necessitudines: relations become first-class (the classification, then the arc)
+
+**The classification** (this is the part that must survive — raw
+material was `bin/natura relationes -machina`, 432 usages, 325 names,
+272 singletons/83%). Reading all 325 names against bearers and targets
+produced ~17 families and five structural discoveries:
+
+1. **Role-frames are the biggest family (~36 names)** — the singletons
+   cluster ON act-genera as participant roles (venditio: emptor/
+   venditor/res_vendita/solutum; iter: a_loco/ad_locum/per_viam;
+   fiducia: fiduciarius/beneficiarius/res_fiduciaria). Terminus a quo
+   / ad quem was independently reinvented THREE times (a_loco/ad_locum,
+   missus_a/destinatus_ad, initium/finis). Roles were never
+   impoverished vocabulary — they are case frames, and munus's home is
+   the named end of a frame.
+2. **Morphological fragmentation** — situm_in/sita_in/situs_in are ONE
+   relation spelled by the bearer's gender; likewise statuta/statutum_per,
+   custodita_a/custodita_per/custoditur_ab. String-keyed names fragment
+   on Latin grammar — the sharpest ergonomics finding.
+3. **Undeclared converse pairs everywhere** — pollinat/pollinatur_a,
+   continet/continetur_in, legit/legitur_a, efficit/efficitur_a… —
+   active/passive morphology doing what the format couldn't declare
+   (the inversa wound at corpus scale).
+4. **The _de pattern (~14 names)**: versio_de, pars_de, editio_de… —
+   relation = bearer's kind + "of", a relational-noun shape.
+5. **Reuse tracks generality**: de(9), continet(9), asseritur_per(8),
+   parit(7), auctor(7) converge; causat appeared ONCE in the dictionary
+   while being rhubarb.census's spine. Plus one plain synonym pair a
+   dictionary would have prevented: dependet_ex/pendet_ex.
+
+Families (names ≈): munera actuum 36 · norma 27 · iustificatio 25 ·
+successio/FRBR 19 · exsecutio 17 · custodia 16 · origo 15 ·
+dependentia 15 · locus 14 · mensura 14 · evulgatio 13 · communicatio
+13 · causa/finis 12 · pars/totum 11 · mutatio 11 · auctoritas 7 ·
+biologica 6.
+
+**The design that fell out**: identity / label / spelling as three
+layers; declaration-once (necessitudo with sub= into the family
+spine, conversum=, scriptio children), use-sites light with
+name-defaulting; frames as <termini> on act-genera with munus= ends;
+symmetric with proprietas (a relation slot = named slot typed by a
+relation-kind, as a property = named slot typed by a value-kind).
+
+**The arc** (e49a61b..7da1869, 8 tasks): grammar → loader (discrimen
+III, rules XX-XXIII+XXV) → binding above the inversa short-circuit →
+apparatus chain (the canones fold read titulus from nomen= only, so a
+terminus DROPPED SILENTLY — planted as a red test before the fix) →
+quaere's fourth walk (pollinat was LIBERUM while alive in two modules
+— measured before, OCCUPATUM after) → core module (16 families + 49
+workhorses; promulgatio collision measured, evulgatio minted) →
+migrations. Venditio's frame proved BYTE-IDENTICAL under the
+canones gate (termini at the relationes position, munus = old nomen).
+The two standing VULNERA (inversa-as-name: pharmacon
+fabricatum_in/coquitur, plagula continetur_in/continet) died by
+declaration — **corpus SANUM (VULNERA 0) for the first time**, and
+the monolith gained 4 TRUE citations (pollinat + heirs) where an
+invisible site had been. Burn-down baseline: 163/432 slots LIGATA
+(38%) by name alone, 269 to converge, one aggregated monitum per
+module counting them.
+
+Traps for the next reader: the apparatus hoists EVERY element child
+of a whitelisted container — a <nota> inside <termini> is a member
+node (display paths skip it; the fold skips it via the nomen= guard).
+Monitum XX must carry modulus= or -plagula prints it everywhere. The
+canones driver skips genus-less modules (the generator refuses empty
+canons with exit 2, correctly); the suite's reconciliation counts
+COOKING modules + 1, derived not fixed.
