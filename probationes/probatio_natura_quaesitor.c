@@ -24,6 +24,11 @@ interior ProcessusResultus _currere(constans character* arg1,
                                     constans character* arg2,
                                     constans character* arg3,
                                     Piscina* piscina);
+interior ProcessusResultus _currere4(constans character* arg1,
+                                     constans character* arg2,
+                                     constans character* arg3,
+                                     constans character* arg4,
+                                     Piscina* piscina);
 interior b32 _continet_literis(chorda effusio,
                                constans character* literae,
                                Piscina* piscina);
@@ -44,6 +49,28 @@ _currere(
     si (arg2) { argumenta[n++] = arg2; }
     si (arg3) { argumenta[n++] = arg3; }
     argumenta[n] = NIHIL;
+
+    redde processus_exsequi(argumenta, 60000, piscina);
+}
+
+interior ProcessusResultus
+_currere4(
+    constans character*  arg1,
+    constans character*  arg2,
+    constans character*  arg3,
+    constans character*  arg4,
+    Piscina*             piscina)
+{
+    constans character* argumenta[VI];
+    i32                 n;
+
+    n = ZEPHYRUM;
+    argumenta[n++] = "bin/natura";
+    argumenta[n++] = arg1;
+    argumenta[n++] = arg2;
+    argumenta[n++] = arg3;
+    argumenta[n++] = arg4;
+    argumenta[n]   = NIHIL;
 
     redde processus_exsequi(argumenta, 60000, piscina);
 }
@@ -408,6 +435,87 @@ s32 principale (vacuum)
                                        piscina));
         /* relatio nota cum petito suo */
         CREDO_VERUM (_continet_literis(r.effusio, "ambulatio_lectoris",
+                                       piscina));
+    }
+
+    /* ========================================================
+     * XIII. NECESSITUDINES (corpus fictum -radix): ambulatio
+     * quarta quaerentis, columna ligata/soluta, cohors
+     * conversorum (a= solo), TERMINI in apparatu, census.
+     * ======================================================== */
+    {
+        ProcessusResultus r;
+
+        imprimere("\n--- XIII. necessitudines (quaesitor) ---\n");
+
+        /* nomen primarium necessitudinis OCCUPATUM */
+        r = _currere4("quaere", "continet_qp", "-radix",
+                      "probationes/exempla/quaesitor_nexus", piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, (i32)ZEPHYRUM);
+        CREDO_VERUM (_continet_literis(r.effusio, "OCCUPATUM",
+                                       piscina));
+        CREDO_VERUM (_continet_literis(r.effusio, "NECESSITUDO",
+                                       piscina));
+
+        /* scriptura altera EANDEM identitatem occupat */
+        r = _currere4("quaere", "contenta_qp", "-radix",
+                      "probationes/exempla/quaesitor_nexus", piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (_continet_literis(r.effusio, "OCCUPATUM",
+                                       piscina));
+
+        /* conversum quoque */
+        r = _currere4("quaere", "continetur_qp", "-radix",
+                      "probationes/exempla/quaesitor_nexus", piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (_continet_literis(r.effusio, "OCCUPATUM",
+                                       piscina));
+
+        /* LIBERUM contractum NOVUM nominat (necessitudines) */
+        r = _currere4("quaere", "zzz-nihil-qp", "-radix",
+                      "probationes/exempla/quaesitor_nexus", piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (_continet_literis(r.effusio,
+            "genera, res, necessitudines, umbrae", piscina));
+
+        /* relationes: columna ligata/soluta APPENSA; sedes
+         * inversa (a= solo) petitum suum in columna VI fert */
+        r = _currere4("relationes", "-machina", "-radix",
+                      "probationes/exempla/quaesitor_nexus", piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (_continet_literis(r.effusio,
+            "continet_qp\tunum\tnexus_qp\tpactum_qp\tligata",
+            piscina));
+        CREDO_VERUM (_continet_literis(r.effusio,
+            "ignotum_qp\tunum\tnexus_qp\tpactum_qp\tsoluta",
+            piscina));
+        CREDO_VERUM (_continet_literis(r.effusio,
+            "volat_qp\tunum\tnexus_qp\tpactum_qp\tsoluta",
+            piscina));
+        /* terminus quoque sedes est - munere nominatus, ligatus */
+        CREDO_VERUM (_continet_literis(r.effusio,
+            "dator_qp\tunum\tnexus_qp\tpactum_qp\tligata",
+            piscina));
+
+        /* census: claves novae (appensae, veteres intactae) */
+        r = _currere4("census", "-machina", "-radix",
+                      "probationes/exempla/quaesitor_nexus", piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (_continet_literis(r.effusio,
+                                       "relationes_ligatae", piscina));
+        CREDO_VERUM (_continet_literis(r.effusio,
+                                       "relationes_solutae", piscina));
+        CREDO_VERUM (_continet_literis(r.effusio,
+                                       "necessitudines\t1", piscina));
+
+        /* apparatus: compages ut bloccus proprius */
+        r = _currere4("apparatus", "pactum_qp", "-radix",
+                      "probationes/exempla/quaesitor_nexus", piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (_continet_literis(r.effusio, "TERMINI",
+                                       piscina));
+        CREDO_VERUM (_continet_literis(r.effusio, "dator_qp",
                                        piscina));
     }
 

@@ -412,11 +412,22 @@ _umbras_tractare(
 #define PUNCTUM_NOMEN        VI
 #define PUNCTUM_PROSAE       III
 
+/* discrimen expressum, non veritas monstratoris: 'si (c->genus)'
+ * necessitudinem tacite ut rem tractaret (tertium genus additum
+ * 2026-08-10) */
+nomen enumeratio {
+    QC_GENUS       = I,
+    QC_RES         = II,
+    QC_NECESSITUDO = III
+} QuaesitiCongruentiaDiscrimen;
+
 nomen structura {
-    NaturaGenus*  genus;   /* alterutrum, alterum NIHIL */
-      NaturaRes*  res;
-             i32  punctum;
-             b32  nomine;
+    QuaesitiCongruentiaDiscrimen  discrimen;
+    NaturaGenus*        genus;
+    NaturaRes*          res;
+    NaturaNecessitudo*  necessitudo;
+    i32                 punctum;
+    b32                 nomine;
 } QuaesitiCongruentia;
 
 interior vacuum
@@ -432,7 +443,7 @@ _congruentiam_scribere(
 
     apud[ZEPHYRUM] = '\0';
 
-    si (c->genus)
+    si (c->discrimen == QC_GENUS)
     {
         _chordam_scribere(c->genus->titulus, tit,
                           (i32)magnitudo(tit));
@@ -443,6 +454,21 @@ _congruentiam_scribere(
         si (c->genus->parens && c->genus->parens->titulus)
         {
             _chordam_scribere(c->genus->parens->titulus, apud,
+                              (i32)magnitudo(apud));
+        }
+    }
+    alioquin si (c->discrimen == QC_NECESSITUDO)
+    {
+        _chordam_scribere(c->necessitudo->titulus, tit,
+                          (i32)magnitudo(tit));
+        _chordam_scribere(c->necessitudo->modulus, mod,
+                          (i32)magnitudo(mod));
+        _sensum_scribere(c->necessitudo->nodus, piscina, sensus,
+                         (i32)magnitudo(sensus));
+        /* apud = conversum (directio altera eiusdem identitatis) */
+        si (c->necessitudo->conversum)
+        {
+            _chordam_scribere(c->necessitudo->conversum, apud,
                               (i32)magnitudo(apud));
         }
     }
@@ -464,23 +490,32 @@ _congruentiam_scribere(
     si (machina)
     {
         imprimere("%s\t%s\t%s\t%s\t%s\n",
-                  c->genus ? "GENUS" : "RES", mod, tit,
+                  c->discrimen == QC_GENUS ? "GENUS" :
+                  c->discrimen == QC_NECESSITUDO ? "NECESSITUDO" :
+                      "RES",
+                  mod, tit,
                   c->nomine ? "EXACTUM" : "-",
                   apud[ZEPHYRUM] ? apud : "-");
     }
     alioquin
     {
-        si (c->genus)
+        si (c->discrimen == QC_GENUS)
         {
-            imprimere("  GENUS%s   /%s/%s%s%s\n",
+            imprimere("  GENUS%s   /%s/%s%s%s%s\n",
                       c->nomine ? " [NOMEN IPSUM]" : "        ",
                       mod, tit,
                       apud[ZEPHYRUM] ? "   (sub " : "",
-                      apud[ZEPHYRUM] ? apud : "");
-            si (apud[ZEPHYRUM])
-            {
-                imprimere(")\n");
-            }
+                      apud[ZEPHYRUM] ? apud : "",
+                      apud[ZEPHYRUM] ? ")" : "");
+        }
+        alioquin si (c->discrimen == QC_NECESSITUDO)
+        {
+            imprimere("  NECESSITUDO%s   /%s/%s%s%s%s\n",
+                      c->nomine ? " [NOMEN IPSUM]" : "        ",
+                      mod, tit,
+                      apud[ZEPHYRUM] ? "   (conversum " : "",
+                      apud[ZEPHYRUM] ? apud : "",
+                      apud[ZEPHYRUM] ? ")" : "");
         }
         alioquin
         {
@@ -568,10 +603,12 @@ _quaerere(
             QuaesitiCongruentia* c;
 
             c = (QuaesitiCongruentia*)xar_addere(congruentiae);
-            c->genus   = g;
-            c->res     = NIHIL;
-            c->punctum = punctum;
-            c->nomine  = (b32)(punctum == PUNCTUM_NOMEN_IPSUM);
+            c->discrimen   = QC_GENUS;
+            c->genus       = g;
+            c->res         = NIHIL;
+            c->necessitudo = NIHIL;
+            c->punctum     = punctum;
+            c->nomine      = (b32)(punctum == PUNCTUM_NOMEN_IPSUM);
             si (c->nomine)
             {
                 exacta++;
@@ -613,10 +650,104 @@ _quaerere(
             QuaesitiCongruentia* c;
 
             c = (QuaesitiCongruentia*)xar_addere(congruentiae);
-            c->genus   = NIHIL;
-            c->res     = r;
-            c->punctum = punctum;
-            c->nomine  = (b32)(punctum == PUNCTUM_NOMEN_IPSUM);
+            c->discrimen   = QC_RES;
+            c->genus       = NIHIL;
+            c->res         = r;
+            c->necessitudo = NIHIL;
+            c->punctum     = punctum;
+            c->nomine      = (b32)(punctum == PUNCTUM_NOMEN_IPSUM);
+            si (c->nomine)
+            {
+                exacta++;
+            }
+        }
+    }
+
+    /* AMBULATIO QUARTA: necessitudines. Nomen primarium,
+     * conversum, et scriptura quaevis IDENTITATEM UNAM occupant -
+     * quaere quod tres inspicere debet, aliter 'pollinat' liber
+     * videretur dum relatio viva est (caecitas mensurata
+     * 2026-08-10, ante hanc ambulationem). */
+    per (i = ZEPHYRUM;
+         i < xar_numerus(bib->necessitudines_omnes); i++)
+    {
+        NaturaNecessitudo* nx;
+        character          tit[NOMINIS_TECTUM];
+        character          sensus[PROSAE_TECTUM];
+        i32                punctum;
+
+        nx = *(NaturaNecessitudo**)xar_obtinere(
+            bib->necessitudines_omnes, i);
+        _chordam_scribere(nx->titulus, tit, (i32)magnitudo(tit));
+        _sensum_scribere(nx->nodus, piscina, sensus,
+                         (i32)magnitudo(sensus));
+
+        punctum = ZEPHYRUM;
+        si (strcmp(tit, terminus) == ZEPHYRUM)
+        {
+            punctum = PUNCTUM_NOMEN_IPSUM;
+        }
+        si (punctum == ZEPHYRUM && nx->conversum)
+        {
+            character conv[NOMINIS_TECTUM];
+
+            _chordam_scribere(nx->conversum, conv,
+                              (i32)magnitudo(conv));
+            si (strcmp(conv, terminus) == ZEPHYRUM)
+            {
+                punctum = PUNCTUM_NOMEN_IPSUM;
+            }
+        }
+        si (punctum == ZEPHYRUM && nx->nodus)
+        {
+            i32 n_s;
+            i32 j;
+
+            n_s = stml_numerus_liberorum(nx->nodus);
+            per (j = ZEPHYRUM; j < n_s; j++)
+            {
+                StmlNodus* s;
+                character  scr[NOMINIS_TECTUM];
+
+                s = stml_liberum_ad_indicem(nx->nodus, j);
+                si (!s || s->genus != STML_NODUS_ELEMENTUM ||
+                    !chorda_aequalis_literis(*s->titulus,
+                                             "scriptio"))
+                {
+                    perge;
+                }
+                _prosa(stml_textus_internus(s, piscina), scr,
+                       (i32)magnitudo(scr));
+                si (strcmp(scr, terminus) == ZEPHYRUM)
+                {
+                    punctum = PUNCTUM_NOMEN_IPSUM;
+                    frange;
+                }
+            }
+        }
+        si (punctum == ZEPHYRUM && _continet(tit, terminus))
+        {
+            punctum = PUNCTUM_NOMEN;
+        }
+        si (punctum == ZEPHYRUM && _continet(sensus, terminus))
+        {
+            punctum = PUNCTUM_PROSAE;
+        }
+        si (punctum == ZEPHYRUM)
+        {
+            perge;
+        }
+
+        {
+            QuaesitiCongruentia* c;
+
+            c = (QuaesitiCongruentia*)xar_addere(congruentiae);
+            c->discrimen   = QC_NECESSITUDO;
+            c->genus       = NIHIL;
+            c->res         = NIHIL;
+            c->necessitudo = nx;
+            c->punctum     = punctum;
+            c->nomine      = (b32)(punctum == PUNCTUM_NOMEN_IPSUM);
             si (c->nomine)
             {
                 exacta++;
@@ -692,8 +823,9 @@ _quaerere(
             }
             alioquin
             {
-                imprimere("LIBERUM est (genera, res, umbrae "
-                          "omnia inspecta).\n");
+                imprimere("LIBERUM est (genera, res, "
+                          "necessitudines, umbrae omnia "
+                          "inspecta).\n");
             }
             imprimere("  [congruentia %d]\n",
                       (integer)xar_numerus(congruentiae));
@@ -814,12 +946,19 @@ _membrum_scribere(
     NaturaGenus*             genus,
     Piscina*                 piscina)
 {
-    constans character* kind;
-    character           nom[NOMINIS_TECTUM];
-    character           praefixum[NOMINIS_TECTUM];
+    character  nom[NOMINIS_TECTUM];
+    character  praefixum[NOMINIS_TECTUM];
+    character  kind[NOMINIS_TECTUM];
 
-    kind = (m->nodus->titulus) ?
-               (constans character*)m->nodus->titulus->datum : "?";
+    /* titulus chordae NON terminatur - copia terminata, ne
+     * dispatch ultra mensuram legat (laqueus mensuratus) */
+    kind[ZEPHYRUM] = '?';
+    kind[I]        = '\0';
+    si (m->nodus->titulus)
+    {
+        _chordam_scribere(m->nodus->titulus, kind,
+                          (i32)magnitudo(kind));
+    }
     _chordam_scribere(stml_attributum_capere(m->nodus, "nomen"),
                       nom, (i32)magnitudo(nom));
 
@@ -832,6 +971,12 @@ _membrum_scribere(
         _chordam_scribere(m->auctor->modulus, am, (i32)magnitudo(am));
         _chordam_scribere(m->auctor->titulus, ag, (i32)magnitudo(ag));
         sprintf(praefixum, "[a %s.%s] ", am, ag);
+    }
+
+    si (strcmp(kind, "terminus") == ZEPHYRUM)
+    {
+        /* in blocco TERMINI proprio scribitur, non hic */
+        redde;
     }
 
     si (strcmp(kind, "proprietas") == ZEPHYRUM)
@@ -1045,9 +1190,14 @@ _apparatum_scribere(
             character               auc[NOMINIS_TECTUM];
 
             m = (NaturaApparatusMembrum*)xar_obtinere(membra, i);
+            /* terminus munere nominatur, non nomine */
             _chordam_scribere(
-                stml_attributum_capere(m->nodus, "nomen"), nom,
-                (i32)magnitudo(nom));
+                stml_attributum_capere(m->nodus,
+                    (m->nodus->titulus &&
+                     chorda_aequalis_literis(*m->nodus->titulus,
+                                             "terminus"))
+                        ? "munus" : "nomen"),
+                nom, (i32)magnitudo(nom));
             auc[ZEPHYRUM] = '\0';
             si (m->auctor)
             {
@@ -1121,6 +1271,104 @@ _apparatum_scribere(
         _membrum_scribere(
             (NaturaApparatusMembrum*)xar_obtinere(membra, i),
             genus, piscina);
+    }
+
+    /* TERMINI - compages actus ut index integer legitur ("quis
+     * emit? quis vendit? quid? quanti?"), ideo bloccus proprius,
+     * non lineae inter cetera sparsae */
+    {
+        i32 quot_terminorum;
+
+        quot_terminorum = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < xar_numerus(membra); i++)
+        {
+            NaturaApparatusMembrum* m;
+
+            m = (NaturaApparatusMembrum*)xar_obtinere(membra, i);
+            si (m->nodus->titulus &&
+                chorda_aequalis_literis(*m->nodus->titulus,
+                                        "terminus"))
+            {
+                quot_terminorum++;
+            }
+        }
+
+        si (quot_terminorum > ZEPHYRUM)
+        {
+            imprimere("\n--- TERMINI (compages actus) ---\n");
+            per (i = ZEPHYRUM; i < xar_numerus(membra); i++)
+            {
+                NaturaApparatusMembrum* m;
+                character               mun[NOMINIS_TECTUM];
+                character               ad[NOMINIS_TECTUM];
+                character               rm[NOMINIS_TECTUM];
+                character               nex[NOMINIS_TECTUM];
+                character               mx[NOMINIS_TECTUM];
+                character               ne[NOMINIS_TECTUM];
+
+                m = (NaturaApparatusMembrum*)xar_obtinere(membra,
+                                                          i);
+                si (!m->nodus->titulus ||
+                    !chorda_aequalis_literis(*m->nodus->titulus,
+                                             "terminus"))
+                {
+                    perge;
+                }
+                _chordam_scribere(
+                    stml_attributum_capere(m->nodus, "munus"),
+                    mun, (i32)magnitudo(mun));
+                _chordam_scribere(
+                    stml_attributum_capere(m->nodus, "ad"),
+                    ad, (i32)magnitudo(ad));
+                _chordam_scribere(
+                    stml_attributum_capere(m->nodus, "modulus"),
+                    rm, (i32)magnitudo(rm));
+                _chordam_scribere(
+                    stml_attributum_capere(m->nodus,
+                                           "necessitudo"),
+                    nex, (i32)magnitudo(nex));
+                _chordam_scribere(
+                    stml_attributum_capere(m->nodus, "multiplex"),
+                    mx, (i32)magnitudo(mx));
+                _chordam_scribere(
+                    stml_attributum_capere(m->nodus, "necessaria"),
+                    ne, (i32)magnitudo(ne));
+
+                imprimere("  ? quis '%s' stet -> ", mun);
+                si (!ad[ZEPHYRUM] ||
+                    strcmp(ad, "*") == ZEPHYRUM)
+                {
+                    imprimere("(quidlibet)");
+                }
+                alioquin
+                {
+                    imprimere("%s%s%s", rm[ZEPHYRUM] ? rm : "",
+                              rm[ZEPHYRUM] ? "." : "", ad);
+                }
+                si (nex[ZEPHYRUM])
+                {
+                    imprimere("  [necessitudo %s]", nex);
+                }
+                si (strcmp(mx, "verum") == ZEPHYRUM)
+                {
+                    imprimere("  [multiplex]");
+                }
+                si (strcmp(ne, "verum") == ZEPHYRUM)
+                {
+                    imprimere("  [NECESSARIA]");
+                }
+                si (m->auctor != genus && m->auctor &&
+                    m->auctor->titulus)
+                {
+                    character ag[NOMINIS_TECTUM];
+
+                    _chordam_scribere(m->auctor->titulus, ag,
+                                      (i32)magnitudo(ag));
+                    imprimere("  [a %s]", ag);
+                }
+                imprimere("\n");
+            }
+        }
     }
 
     _species_scribere(genus, piscina);
@@ -1225,6 +1473,77 @@ _membra_directa(
     redde exitus;
 }
 
+/* sedes una (relatio aut terminus) ut ordo scribitur. Columna
+ * petiti a= quoque legit (sedes inversae aliter petitum suum
+ * celabant - cohors XVIII conversorum, metrum ligaminis primum);
+ * columna VII 'ligata'/'soluta' APPENSA (formatum -machina
+ * append-only: consumptores columnas priores asserunt). */
+interior vacuum
+_sedem_relationis_scribere(
+    NaturaBibliotheca*   bib,
+    b32                  machina,
+    constans character*  gm,
+    constans character*  gn,
+    StmlNodus*           r,
+    b32                  terminus_est)
+{
+    character           rn[NOMINIS_TECTUM];
+    character           ad[NOMINIS_TECTUM];
+    character           rm[NOMINIS_TECTUM];
+    character           mx[NOMINIS_TECTUM];
+    character           nex[NOMINIS_TECTUM];
+    constans character* ligamen;
+
+    _chordam_scribere(
+        stml_attributum_capere(r, terminus_est ? "munus" : "nomen"),
+        rn, (i32)magnitudo(rn));
+    _chordam_scribere(stml_attributum_capere(r, "ad"), ad,
+                      (i32)magnitudo(ad));
+    si (!ad[ZEPHYRUM])
+    {
+        _chordam_scribere(stml_attributum_capere(r, "a"), ad,
+                          (i32)magnitudo(ad));
+    }
+    _chordam_scribere(stml_attributum_capere(r, "modulus"),
+                      rm, (i32)magnitudo(rm));
+    _chordam_scribere(stml_attributum_capere(r, "multiplex"),
+                      mx, (i32)magnitudo(mx));
+    _chordam_scribere(stml_attributum_capere(r, "necessitudo"),
+                      nex, (i32)magnitudo(nex));
+
+    si (nex[ZEPHYRUM])
+    {
+        ligamen = natura_necessitudo(bib, nex) ? "ligata"
+                                               : "soluta";
+    }
+    alioquin
+    {
+        ligamen = natura_necessitudo(bib, rn) ? "ligata"
+                                              : "soluta";
+    }
+
+    si (machina)
+    {
+        imprimere("%s\t%s\t%s\t%s\t%s\t%s\t%s\n", gm, gn, rn,
+                  strcmp(mx, "verum") == ZEPHYRUM ?
+                      "multiplex" : "unum",
+                  rm[ZEPHYRUM] ? rm : gm,
+                  ad[ZEPHYRUM] ? ad : "-",
+                  ligamen);
+    }
+    alioquin
+    {
+        imprimere("%-22s %-26s %-24s %-6s %-7s %s%s%s\n", gm, gn,
+                  rn,
+                  strcmp(mx, "verum") == ZEPHYRUM ?
+                      "*" : "-",
+                  ligamen,
+                  rm[ZEPHYRUM] ? rm : "",
+                  rm[ZEPHYRUM] ? "." : "",
+                  ad[ZEPHYRUM] ? ad : "-");
+    }
+}
+
 interior vacuum
 _relationes_scribere(
     NaturaBibliotheca*  bib,
@@ -1235,13 +1554,13 @@ _relationes_scribere(
 
     si (!machina)
     {
-        imprimere("%-22s %-26s %-24s %-6s %s\n", "MODULUS", "GENUS",
-                  "RELATIO", "MULT", "AD");
+        imprimere("%-22s %-26s %-24s %-6s %-7s %s\n", "MODULUS",
+                  "GENUS", "RELATIO", "MULT", "LIG", "AD");
     }
     per (g = ZEPHYRUM; g < xar_numerus(bib->genera_omnia); g++)
     {
         NaturaGenus* genus;
-        Xar*         relationes;
+        Xar*         sedes;
         i32          i;
         character    gm[NOMINIS_TECTUM];
         character    gn[NOMINIS_TECTUM];
@@ -1250,44 +1569,20 @@ _relationes_scribere(
         _chordam_scribere(genus->modulus, gm, (i32)magnitudo(gm));
         _chordam_scribere(genus->titulus, gn, (i32)magnitudo(gn));
 
-        relationes = _membra_directa(genus, "relationes", "relatio",
-                                     piscina);
-        per (i = ZEPHYRUM; i < xar_numerus(relationes); i++)
+        sedes = _membra_directa(genus, "relationes", "relatio",
+                                piscina);
+        per (i = ZEPHYRUM; i < xar_numerus(sedes); i++)
         {
-            StmlNodus* r;
-            character  rn[NOMINIS_TECTUM];
-            character  ad[NOMINIS_TECTUM];
-            character  rm[NOMINIS_TECTUM];
-            character  mx[NOMINIS_TECTUM];
+            _sedem_relationis_scribere(bib, machina, gm, gn,
+                *(StmlNodus**)xar_obtinere(sedes, i), FALSUM);
+        }
 
-            r = *(StmlNodus**)xar_obtinere(relationes, i);
-            _chordam_scribere(stml_attributum_capere(r, "nomen"), rn,
-                              (i32)magnitudo(rn));
-            _chordam_scribere(stml_attributum_capere(r, "ad"), ad,
-                              (i32)magnitudo(ad));
-            _chordam_scribere(stml_attributum_capere(r, "modulus"),
-                              rm, (i32)magnitudo(rm));
-            _chordam_scribere(stml_attributum_capere(r, "multiplex"),
-                              mx, (i32)magnitudo(mx));
-
-            si (machina)
-            {
-                imprimere("%s\t%s\t%s\t%s\t%s\t%s\n", gm, gn, rn,
-                          strcmp(mx, "verum") == ZEPHYRUM ?
-                              "multiplex" : "unum",
-                          rm[ZEPHYRUM] ? rm : gm,
-                          ad[ZEPHYRUM] ? ad : "-");
-            }
-            alioquin
-            {
-                imprimere("%-22s %-26s %-24s %-6s %s%s%s\n", gm, gn,
-                          rn,
-                          strcmp(mx, "verum") == ZEPHYRUM ?
-                              "*" : "-",
-                          rm[ZEPHYRUM] ? rm : "",
-                          rm[ZEPHYRUM] ? "." : "",
-                          ad[ZEPHYRUM] ? ad : "-");
-            }
+        sedes = _membra_directa(genus, "termini", "terminus",
+                                piscina);
+        per (i = ZEPHYRUM; i < xar_numerus(sedes); i++)
+        {
+            _sedem_relationis_scribere(bib, machina, gm, gn,
+                *(StmlNodus**)xar_obtinere(sedes, i), VERUM);
         }
     }
 }
@@ -1304,6 +1599,9 @@ _censum_scribere(
     i32  quot_relationum;
     i32  quot_apertarum;
     i32  quot_inversarum;
+    i32  quot_ligatarum;
+    i32  quot_solutarum;
+    i32  quot_terminorum;
     i32  quot_proprietatum;
     i32  quot_partium;
     i32  quot_actionum;
@@ -1321,6 +1619,9 @@ _censum_scribere(
     quot_relationum   = ZEPHYRUM;
     quot_apertarum    = ZEPHYRUM;
     quot_inversarum   = ZEPHYRUM;
+    quot_ligatarum    = ZEPHYRUM;
+    quot_solutarum    = ZEPHYRUM;
+    quot_terminorum   = ZEPHYRUM;
     quot_proprietatum = ZEPHYRUM;
     quot_partium      = ZEPHYRUM;
     quot_actionum     = ZEPHYRUM;
@@ -1367,6 +1668,56 @@ _censum_scribere(
                 *(character**)xar_addere(nomina_relationum) =
                     (character*)chorda_ut_cstr(
                         chorda_ex_literis(rn, piscina), piscina);
+            }
+
+            /* metrum ligaminis (necessitudines): citatio
+             * explicita aut praesumptio nomine */
+            {
+                character nex[NOMINIS_TECTUM];
+
+                _chordam_scribere(
+                    stml_attributum_capere(r, "necessitudo"), nex,
+                    (i32)magnitudo(nex));
+                si ((nex[ZEPHYRUM]
+                         ? natura_necessitudo(bib, nex)
+                         : natura_necessitudo(bib, rn)) != NIHIL)
+                {
+                    quot_ligatarum++;
+                }
+                alioquin
+                {
+                    quot_solutarum++;
+                }
+            }
+        }
+
+        /* termini sedes relationum quoque sunt (munere nominatae,
+         * nomina eorum NON in vocabularium nominum - munus locale
+         * compagi est) */
+        membra = _membra_directa(genus, "termini", "terminus",
+                                 piscina);
+        per (i = ZEPHYRUM; i < xar_numerus(membra); i++)
+        {
+            StmlNodus* r;
+            character  rn[NOMINIS_TECTUM];
+            character  nex[NOMINIS_TECTUM];
+
+            r = *(StmlNodus**)xar_obtinere(membra, i);
+            quot_terminorum++;
+            _chordam_scribere(stml_attributum_capere(r, "munus"),
+                              rn, (i32)magnitudo(rn));
+            _chordam_scribere(
+                stml_attributum_capere(r, "necessitudo"), nex,
+                (i32)magnitudo(nex));
+            si ((nex[ZEPHYRUM]
+                     ? natura_necessitudo(bib, nex)
+                     : natura_necessitudo(bib, rn)) != NIHIL)
+            {
+                quot_ligatarum++;
+            }
+            alioquin
+            {
+                quot_solutarum++;
             }
         }
 
@@ -1485,6 +1836,13 @@ _censum_scribere(
         imprimere("relationes_apertae\t%d\n", (integer)quot_apertarum);
         imprimere("relationes_inversae\t%d\n",
                   (integer)quot_inversarum);
+        imprimere("relationes_ligatae\t%d\n",
+                  (integer)quot_ligatarum);
+        imprimere("relationes_solutae\t%d\n",
+                  (integer)quot_solutarum);
+        imprimere("termini\t%d\n", (integer)quot_terminorum);
+        imprimere("necessitudines\t%d\n",
+                  (integer)xar_numerus(bib->necessitudines_omnes));
         imprimere("proprietates\t%d\n", (integer)quot_proprietatum);
         imprimere("partes\t%d\n", (integer)quot_partium);
         imprimere("actiones\t%d\n", (integer)quot_actionum);
@@ -1527,6 +1885,15 @@ _censum_scribere(
               (integer)quot_apertarum);
     imprimere("  inversae declaratae  %5d\n",
               (integer)quot_inversarum);
+    imprimere("\n  NECESSITUDINES\n");
+    imprimere("  declaratae           %5d\n",
+              (integer)xar_numerus(bib->necessitudines_omnes));
+    imprimere("  sedes ligatae        %5d\n",
+              (integer)quot_ligatarum);
+    imprimere("  sedes solutae        %5d  (metrum deustionis)\n",
+              (integer)quot_solutarum);
+    imprimere("  termini compagum     %5d\n",
+              (integer)quot_terminorum);
 }
 
 interior vacuum
@@ -1584,9 +1951,10 @@ _usum_scribere(vacuum)
         "  maiores <genus>     catena parentum ad radicem\n"
         "  index               inventarium generum omnium\n"
         "  census              mensurae structurales corporis\n"
-        "  relationes          relationes OMNES (nomen, petitum,\n"
-        "                      multiplex) - materia prima pro\n"
-        "                      familiis inveniendis\n"
+        "                      (+ ligatae/solutae, necessitudines)\n"
+        "  relationes          sedes OMNES (relatio + terminus;\n"
+        "                      columna VII ligata/soluta = metrum\n"
+        "                      deustionis nominum insolutorum)\n"
         "genus: 'planta' aut '/modulus/planta' (homonyma "
         "modulum poscunt)\n");
 }

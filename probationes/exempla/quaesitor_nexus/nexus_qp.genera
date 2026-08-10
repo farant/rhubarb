@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FIXUM PROBATIONIS (probatio_natura_quaesitor) - necessitudines.
+
+  Corpus proprium, non nc_termini (fixa communicata ordinem
+  probationum ligant - lectio debugging-lessons). Fert:
+  necessitudinem cum converso ET scriptura (quaere ambulatio
+  quarta), compagem (apparatus TERMINI), sedem nomine ligatam,
+  sedem insolutam, sedem inversam a= solo (columna petiti e
+  cohorte conversorum).
+-->
+<natura modulus="nexus_qp" versio="1" lingua="latina">
+  <necessitudo nomen="continet_qp" conversum="continetur_qp"
+    a="*" ad="*">
+    <definitio>Necessitudo ficta: totum partem tenet.</definitio>
+    <scriptio>contenta_qp</scriptio>
+  </necessitudo>
+  <genus nomen="pactum_qp">
+    <definitio>Pactum fictum probationis quaesitoris.</definitio>
+    <termini>
+      <terminus munus="dator_qp" necessitudo="continet_qp"
+        ad="pactum_qp"/>
+    </termini>
+    <relationes>
+      <relatio nomen="continet_qp" ad="pactum_qp"/>
+      <relatio nomen="ignotum_qp" ad="pactum_qp"/>
+      <relatio nomen="volat_qp" a="pactum_qp" inversa="verum"/>
+    </relationes>
+  </genus>
+</natura>
