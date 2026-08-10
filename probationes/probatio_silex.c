@@ -515,6 +515,38 @@ s32 principale (vacuum)
         optiones.titulus = "malum-nomen";
         fructus = silex_novum(piscina, &optiones);
         CREDO_FALSUM(fructus.successus);
+
+        /* ordines generati: stampa, sine globo, listae
+         * computatae */
+        {
+            chorda aed = filum_legere_totum(
+                AREA "/vitreum/aedificare.sh", piscina);
+            chorda prob = filum_legere_totum(
+                AREA "/vitreum/probare.sh", piscina);
+
+            CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
+                "GENERATUM a silice (novum -vitrea", piscina));
+            CREDO_FALSUM(chorda_continet(aed,
+                chorda_ex_literis("lib/*.c", piscina)));
+            CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
+                "lib/toml.c", piscina));
+            CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
+                "lib/vitrea_macos.m", piscina));
+            CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
+                "vendor/sqlite3.c", piscina));
+            CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
+                "-framework Cocoa -framework WebKit", piscina));
+            CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
+                "rm -f bin/vitreum", piscina));
+            CREDO_CHORDA_CONTINET(prob, chorda_ex_literis(
+                "GENERATUM a silice", piscina));
+            CREDO_FALSUM(chorda_continet(prob,
+                chorda_ex_literis("lib/*.c", piscina)));
+            CREDO_FALSUM(chorda_continet(prob,
+                chorda_ex_literis("_macos.m", piscina)));
+            CREDO_CHORDA_CONTINET(prob, chorda_ex_literis(
+                "fontes/vitreum_pipa.c", piscina));
+        }
     }
 
     /* ========================================================
