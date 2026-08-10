@@ -928,6 +928,40 @@ s32 principale (vacuum)
             CREDO_VERUM(addenda_caput);
             CREDO_VERUM(addenda_lib);
         }
+
+        /* VIII. partes: oraculum clausurae cum columna ADEST.
+         * addenda nondum vendicata (VII consilium solum erat) ->
+         * ABEST; nova.h vendicata (V) et in disco -> ADEST.
+         * (minima e ficta deleta VI - in clausura non apparet.) */
+        {
+            Xar* partes = silex_partes(piscina, AREA "/renovandum",
+                fons_fictae, NIHIL);
+            b32  addenda_abest = FALSUM;
+            b32  nova_adest = FALSUM;
+            i32  index;
+
+            imprimere("\n--- Probans partes ---\n");
+            CREDO_NON_NIHIL(partes);
+            per (index = 0; index < xar_numerus(partes);
+                index = index + 1)
+            {
+                SilexPartesRes* pr = (SilexPartesRes*)xar_obtinere(
+                    partes, index);
+
+                si (chorda_aequalis_literis(pr->via,
+                    "include/addenda.h") && !pr->adest)
+                {
+                    addenda_abest = VERUM;
+                }
+                si (chorda_aequalis_literis(pr->via,
+                    "include/nova.h") && pr->adest)
+                {
+                    nova_adest = VERUM;
+                }
+            }
+            CREDO_VERUM(addenda_abest);
+            CREDO_VERUM(nova_adest);
+        }
     }
 
     /* ========================================================

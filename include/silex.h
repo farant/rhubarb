@@ -288,4 +288,25 @@ silex_renovare (
     constans SilexFons* fons,
     b32                 scribere);
 
+/* ==================================================
+ * Partes: oraculum clausurae ut verbum. Clausura ex seminibus
+ * auctoratis proiecti (aut plagula data), cum examine
+ * adest-in-arbore: ABEST = quod 'renovare -scribere' vendicaret.
+ * ================================================== */
+
+nomen structura {
+    chorda              via;
+    constans character* origo;
+    b32                 adest;   /* in arbore proiecti */
+} SilexPartesRes;
+
+/* plagula data (via in disco proiecti) aut NIHIL = auctoratae
+ * omnes; Xar de SilexPartesRes; NIHIL si clausura colligi nequit */
+Xar*
+silex_partes (
+    Piscina*            piscina,
+    constans character* proiectum_dir,
+    constans SilexFons* fons,
+    constans character* plagula);
+
 #endif /* SILEX_H */

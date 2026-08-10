@@ -437,7 +437,8 @@ principale (integer argc, character** argv)
         "silex - proiecta nova e fabrica rhubarb excudere");
     argumenta_addere_positionalem(parser, "verbum",
         "verbum (novum | ui | status | condere | historia |"
-        " proicere | renovare; sine argumentis = ui)", FALSUM);
+        " proicere | renovare | partes; sine argumentis = ui)",
+        FALSUM);
     argumenta_addere_positionalem(parser, "titulus",
         "nomen proiecti (pro novo)", FALSUM);
     argumenta_addere_optionem(parser, "-f", "--fabrica",
@@ -451,6 +452,8 @@ principale (integer argc, character** argv)
         "proicere: plica usque ad seq (iter temporis)");
     argumenta_addere_vexillum(parser, "-scribere", "--scribere",
         "proicere: consilium applicare (ordinarie consilium solum)");
+    argumenta_addere_vexillum(parser, "-machina", "--machina",
+        "partes: TSV machinale (ordo, praesentia, via)");
     argumenta_addere_exemplum(parser,
         "silex novum 001 -f ~/Documents/projects/rhubarb");
     argumenta_addere_exemplum(parser,
@@ -498,6 +501,66 @@ principale (integer argc, character** argv)
         || chorda_aequalis_literis(verbum, "ui"))
     {
         redde _ui_currere(piscina, fabrica);
+    }
+
+    /* partes: oraculum clausurae (proiectum = cwd; positionale
+     * secundum = plagula una optionalis) */
+    si (chorda_aequalis_literis(verbum, "partes"))
+    {
+        constans character* plagula = titulus.mensura > ZEPHYRUM
+            ? chorda_ut_cstr(titulus, piscina) : NIHIL;
+        b32  machina = argumenta_habet_vexillum(lecta,
+            "--machina");
+        Xar* partes;
+        i32  index;
+
+        si (fons == NIHIL)
+        {
+            fprintf(stderr, "silex partes: fons deest\n");
+            redde II;
+        }
+        partes = silex_partes(piscina, ".", fons, plagula);
+        si (partes == NIHIL)
+        {
+            fprintf(stderr, "silex partes: clausura colligi non"
+                " potuit\n");
+            redde II;
+        }
+        per (index = 0; index < xar_numerus(partes);
+            index = index + 1)
+        {
+            SilexPartesRes* r = (SilexPartesRes*)xar_obtinere(
+                partes, index);
+            constans character* ordo =
+                chorda_incipit(r->via,
+                    chorda_ex_literis("vendor/", piscina)) ? "V"
+                : chorda_incipit(r->via,
+                    chorda_ex_literis("include/", piscina)) ? "C"
+                : (r->via.mensura > 0
+                    && r->via.datum[r->via.mensura - 1] == 'm')
+                    ? "M" : "O";
+            constans character* praesentia = r->adest
+                ? "ADEST" : "ABEST";
+
+            si (machina)
+            {
+                imprimere("%s\t%s\t%.*s\n", ordo, praesentia,
+                    (integer)r->via.mensura,
+                    (constans character*)r->via.datum);
+            }
+            alioquin
+            {
+                imprimere("  %s %s  %.*s\n", ordo, praesentia,
+                    (integer)r->via.mensura,
+                    (constans character*)r->via.datum);
+            }
+        }
+        si (!machina)
+        {
+            imprimere("(ABEST = quod 'renovare -scribere'"
+                " vendicaret; fons %s)\n", fons->titulus);
+        }
+        redde ZEPHYRUM;
     }
 
     /* verba VCS: via = positionale secundum (ordinarie ".") */
@@ -761,7 +824,7 @@ principale (integer argc, character** argv)
     {
         fprintf(stderr, "silex: verbum ignotum: %.*s"
             " (verba: novum, ui, status, condere, historia,"
-            " proicere, renovare)\n",
+            " proicere, renovare, partes)\n",
             (integer)verbum.mensura,
             (constans character*)verbum.datum);
         redde I;

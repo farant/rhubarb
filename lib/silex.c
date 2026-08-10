@@ -337,7 +337,8 @@ _plagulam_e_fonte_colligere (Piscina* piscina,
     chorda titulus, Xar* fructus, Xar* opus);
 
 /* pars = "include/" | "lib/" | "vendor/"; VERUM = plagula in fonte
- * exsistit et lecta */
+ * exsistit et lecta. opus NIHIL = folium (venditoria: contenta
+ * eorum numquam scrutantur - sqlite3.c windows.h citat!) */
 interior b32
 _plagulam_e_fonte_colligere (Piscina* piscina,
     constans SilexFons* fons, constans character* pars,
@@ -372,7 +373,10 @@ _plagulam_e_fonte_colligere (Piscina* piscina,
     res->via = via_rel;
     res->contentum = contentum;
     res->origo = _texere(piscina, "vendicata:", via_rel_cstr, NIHIL);
-    _inclusiones_scrutari(contentum, opus);
+    si (opus != NIHIL)
+    {
+        _inclusiones_scrutari(contentum, opus);
+    }
     redde VERUM;
 }
 
@@ -427,8 +431,11 @@ silex_clausuram_colligere (Piscina* piscina,
             }
             tabula_dispersa_inserere(visa, caput_normale,
                 (vacuum*)fructus);
+            /* venditoria FOLIA sunt (opus NIHIL): contenta eorum
+             * inclusiones proprias citant (windows.h...) quae
+             * clausuram domus non sunt */
             si (!_plagulam_e_fonte_colligere(piscina, fons,
-                "vendor/", basis_vendoris, fructus, opus))
+                "vendor/", basis_vendoris, fructus, NIHIL))
             {
                 fprintf(stderr, "silex: monitio - venditorium"
                     " citatum in fonte deest: %.*s\n",
@@ -447,7 +454,7 @@ silex_clausuram_colligere (Piscina* piscina,
 
                 basis_c.datum[basis_c.mensura - 1] = 'c';
                 (vacuum)_plagulam_e_fonte_colligere(piscina, fons,
-                    "vendor/", basis_c, fructus, opus);
+                    "vendor/", basis_c, fructus, NIHIL);
             }
             perge;
         }
@@ -2313,5 +2320,172 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
     }
     volumen_claudere(vol);
     fructus.successus = VERUM;
+    redde fructus;
+}
+
+Xar*
+silex_partes (Piscina* piscina, constans character* proiectum_dir,
+    constans SilexFons* fons, constans character* plagula)
+{
+    Xar*            nomina = xar_creare(piscina,
+        (i32)magnitudo(chorda));
+    TabulaDispersa* bases = tabula_dispersa_creare_chorda(piscina,
+        32);
+    TabulaDispersa* electa = tabula_dispersa_creare_chorda(
+        piscina, 64);
+    Xar*            semina_ch = xar_creare(piscina,
+        (i32)magnitudo(chorda));
+    chorda          radix_absoluta;
+    Xar*            clausura;
+    Xar*            fructus;
+    i32             n;
+
+    si (nomina == NIHIL || bases == NIHIL || electa == NIHIL
+        || semina_ch == NIHIL || fons == NIHIL)
+    {
+        redde NIHIL;
+    }
+    radix_absoluta = via_absoluta(
+        chorda_ex_literis(proiectum_dir, piscina), piscina);
+    si (plagula != NIHIL)
+    {
+        constans character* via_plena = _texere(piscina,
+            chorda_ut_cstr(radix_absoluta, piscina), "/",
+            plagula);
+
+        si (!filum_existit(via_plena))
+        {
+            redde NIHIL;
+        }
+        /* basis plagulae datae: caput proprium non quaerendum */
+        tabula_dispersa_inserere(bases,
+            _basis_viae(chorda_ex_literis(plagula, piscina)),
+            (vacuum*)nomina);
+        _inclusiones_scrutari(filum_legere_totum(via_plena,
+            piscina), nomina);
+    }
+    alioquin
+    {
+        _semina_auctorata_colligere(piscina,
+            chorda_ut_cstr(radix_absoluta, piscina), nomina,
+            bases);
+        /* capita vendicata e manifesto - aequivalentia cum
+         * renovare (ABEST = quod '-scribere' vendicaret); volumen
+         * absens = auctoratae solae (directorium quodvis licet) */
+        {
+            constans character* volumen_via =
+                silex_volumen_viam_invenire(piscina,
+                    chorda_ut_cstr(radix_absoluta, piscina));
+            Volumen* vol = volumen_via == NIHIL ? NIHIL
+                : volumen_aperire(piscina, volumen_via);
+
+            si (vol != NIHIL)
+            {
+                Xar* plica = volumen_plicam_ad(vol, (s64)0,
+                    piscina);
+                i32  p;
+
+                si (plica != NIHIL)
+                {
+                    per (p = 0; p < xar_numerus(plica);
+                        p = p + 1)
+                    {
+                        VolumenPlagula* pl = (VolumenPlagula*)
+                            xar_obtinere(plica, p);
+
+                        si (pl == NIHIL
+                            || !_praefixum_habet(pl->via,
+                                "include/")
+                            || !_praefixum_habet(pl->origo,
+                                "vendicata:"))
+                        {
+                            perge;
+                        }
+                        {
+                            chorda* cella = (chorda*)xar_addere(
+                                nomina);
+
+                            si (cella != NIHIL)
+                            {
+                                *cella = chorda_ex_buffer(
+                                    pl->via.datum + 8,
+                                    pl->via.mensura - 8);
+                            }
+                        }
+                    }
+                }
+                volumen_claudere(vol);
+            }
+        }
+    }
+    per (n = 0; n < xar_numerus(nomina); n = n + 1)
+    {
+        chorda nomen_capitis = *(chorda*)xar_obtinere(nomina, n);
+
+        /* basis comparatur (inclusio '../fontes/x.h' plagulam
+         * auctoratam 'fontes/x.h' nominat); capsula_* generata */
+        si (tabula_dispersa_continet(bases,
+                _basis_viae(nomen_capitis))
+            || _praefixum_habet(_basis_viae(nomen_capitis),
+                "capsula_")
+            || tabula_dispersa_continet(electa, nomen_capitis))
+        {
+            perge;
+        }
+        tabula_dispersa_inserere(electa, nomen_capitis,
+            (vacuum*)nomina);
+        {
+            chorda* cella = (chorda*)xar_addere(semina_ch);
+
+            si (cella != NIHIL)
+            {
+                *cella = nomen_capitis;
+            }
+        }
+    }
+    {
+        constans character** semina = (constans character**)
+            piscina_allocare(piscina, (memoriae_index)(
+                ((memoriae_index)xar_numerus(semina_ch) + I)
+                * magnitudo(constans character*)));
+        i32 s;
+
+        si (semina == NIHIL)
+        {
+            redde NIHIL;
+        }
+        per (s = 0; s < xar_numerus(semina_ch); s = s + 1)
+        {
+            semina[s] = chorda_ut_cstr(
+                *(chorda*)xar_obtinere(semina_ch, s), piscina);
+        }
+        clausura = silex_clausuram_colligere(piscina, fons,
+            (constans character* constans*)semina,
+            xar_numerus(semina_ch));
+    }
+    si (clausura == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fructus = xar_creare(piscina, (i32)magnitudo(SilexPartesRes));
+    si (fructus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (n = 0; n < xar_numerus(clausura); n = n + 1)
+    {
+        SilexRes*       e = (SilexRes*)xar_obtinere(clausura, n);
+        SilexPartesRes* r = (SilexPartesRes*)xar_addere(fructus);
+
+        si (r == NIHIL)
+        {
+            perge;
+        }
+        r->via = e->via;
+        r->origo = e->origo;
+        r->adest = filum_existit(_texere(piscina,
+            chorda_ut_cstr(radix_absoluta, piscina), "/",
+            chorda_ut_cstr(e->via, piscina)));
+    }
     redde fructus;
 }
