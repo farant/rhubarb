@@ -1071,6 +1071,28 @@ _membrum_scribere(
     {
         imprimere("  ? %sactio '%s'\n", praefixum, nom);
     }
+    alioquin si (strcmp(kind, "valor") == ZEPHYRUM)
+    {
+        /* determinatio: valor in genere proprietatem hereditatam
+         * CLAUDIT pro membris omnibus (praefixum auctorem alienum
+         * fert - '[a mod.genus]' = quis determinavit) */
+        chorda    textus;
+        character val[NOMINIS_TECTUM];
+
+        textus = stml_textus_internus(m->nodus, piscina);
+        _chordam_scribere(&textus, val, (i32)magnitudo(val));
+        imprimere("  = %svalor '%s' -> %.60s   (determinatio)\n",
+                  praefixum, nom, val);
+    }
+    alioquin si (strcmp(kind, "relatum") == ZEPHYRUM)
+    {
+        character ad[NOMINIS_TECTUM];
+
+        _chordam_scribere(stml_attributum_capere(m->nodus, "ad"),
+                          ad, (i32)magnitudo(ad));
+        imprimere("  = %srelatum '%s' -> %s   (determinatio)\n",
+                  praefixum, nom, ad);
+    }
     alioquin
     {
         imprimere("  ? %s%s %s\n", praefixum, kind, nom);

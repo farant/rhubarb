@@ -533,6 +533,60 @@ s32 principale (vacuum)
             CREDO_VERUM (chorda_aequalis_literis(
                 *membrum->nodus->titulus, "machina_statuum"));
         }
+
+
+        /* ====================================================
+         * PROBARE: determinationes in apparatu (arbor
+         * porphyriana - valor in genere proprietatem hereditatam
+         * CLAUDIT et apparatus id ostendere debet)
+         * ==================================================== */
+
+        {
+            NaturaGenus*            rosa;
+            Xar*                    apparatus;
+            i32                     j;
+            i32                     valores;
+            i32                     relata;
+            NaturaGenus*            auctor_valoris;
+
+            imprimere("\n--- Probans determinationes ---\n");
+
+            rosa = natura_genus(bib, "rosa");
+            CREDO_NON_NIHIL (rosa);
+
+            apparatus = natura_apparatus(bib, rosa, piscina);
+            CREDO_NON_NIHIL (apparatus);
+
+            /* rosa: valor color + valor vita + relatum edit (III)
+             * planta: altitudo (I); vivens: VI - summa X */
+            CREDO_AEQUALIS_I32 ((i32)xar_numerus(apparatus), X);
+
+            valores        = ZEPHYRUM;
+            relata         = ZEPHYRUM;
+            auctor_valoris = NIHIL;
+            per (j = ZEPHYRUM; j < xar_numerus(apparatus); j++)
+            {
+                NaturaApparatusMembrum* m;
+
+                m = (NaturaApparatusMembrum*)xar_obtinere(
+                    apparatus, j);
+                si (chorda_aequalis_literis(*m->nodus->titulus,
+                                            "valor"))
+                {
+                    valores++;
+                    auctor_valoris = m->auctor;
+                }
+                alioquin si (chorda_aequalis_literis(
+                                 *m->nodus->titulus, "relatum"))
+                {
+                    relata++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (valores, II);
+            CREDO_AEQUALIS_I32 (relata, I);
+            /* auctor = genus quod determinavit (rosa ipsa) */
+            CREDO_AEQUALIS_PTR (auctor_valoris, rosa);
+        }
     }
 
 

@@ -1996,8 +1996,14 @@ apparatui_contribuere(
 
         titulus_e = liberum->titulus;
 
-        si (chorda_aequalis_literis(*titulus_e, "machina_statuum"))
+        si (chorda_aequalis_literis(*titulus_e, "machina_statuum") ||
+            chorda_aequalis_literis(*titulus_e, "valor") ||
+            chorda_aequalis_literis(*titulus_e, "relatum"))
         {
+            /* valor/relatum in genere = DETERMINATIO (proprietatem
+             * aut relationem hereditatam claudit pro membris
+             * omnibus) - apparatus eas ostendit cum auctore
+             * (arbor porphyriana 2026-08-10) */
             NaturaApparatusMembrum* membrum;
 
             membrum = (NaturaApparatusMembrum*)xar_addere(apparatus);
