@@ -77,7 +77,10 @@ if [ "$regen" = 1 ]; then
     echo "  [corpus] stampa + capsula (tardum semel)"
     STAMPA="commit=$(git rev-parse --short HEAD 2>/dev/null \
         || echo ignotum)"
-    if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+    # sorditia SCOPATA ad contenta corporis - plagulae aliae (FAQ,
+    # gesta) semper mutatae sunt nec in capsulam eunt
+    if [ -n "$(git status --porcelain -- lib include vendor \
+            tools/capsula_generare.c 2>/dev/null)" ]; then
         STAMPA="$STAMPA SORDIDUM"
     fi
     STAMPA="$STAMPA dies=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
