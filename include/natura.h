@@ -94,16 +94,33 @@ structura NaturaRes {
       StmlNodus*  nodus;
 };
 
-/* discrimen entis - genera et res dictionarii spatium nominum
- * UNUM per exemplar habent (regula XV), ergo index unus */
+/* necessitudo - genus relationis PRIMAE CLASSIS (spec
+ * necessitudines, 2026-08-10): identitas semel declarata quam
+ * sedes usus (relatio/terminus) titulo suo, converso, aut
+ * scriptura ligant. Tres strata: identitas / titulus / scriptura. */
+nomen structura NaturaNecessitudo NaturaNecessitudo;
+structura NaturaNecessitudo {
+              chorda*  titulus;    /* nomen= (internatum) */
+              chorda*  conversum;  /* conversum= aut NIHIL -
+                                    * IDENTITAS UNA, scripturae duae */
+              chorda*  modulus;
+    NaturaNecessitudo*  parens;    /* sub= resolutum (nectere) */
+           StmlNodus*  nodus;      /* a=/ad=/scriptiones hinc */
+};
+
+/* discrimen entis - genera, res dictionarii, et necessitudines
+ * spatium nominum UNUM per exemplar habent (regula XV), ergo
+ * index unus */
 nomen enumeratio {
-    NATURA_ENS_GENUS = I,
-    NATURA_ENS_RES   = II
+    NATURA_ENS_GENUS         = I,
+    NATURA_ENS_RES           = II,
+    NATURA_ENS_NECESSITUDO   = III
 } NaturaEnsDiscrimen;
 
 nomen structura {
     NaturaEnsDiscrimen  discrimen;
-               vacuum*  corpus;   /* NaturaGenus* aut NaturaRes* */
+               vacuum*  corpus;   /* NaturaGenus* aut NaturaRes*
+                                   * aut NaturaNecessitudo* */
 } NaturaEns;
 
 nomen structura {
@@ -122,6 +139,12 @@ nomen structura {
          TabulaDispersa*  nomina;        /* nomen nudum -> NaturaEns*
                                           * (homonyma -> sentinella,
                                           * quaestio NIHIL reddit) */
+                    Xar*  necessitudines_omnes;
+                                         /* Xar de NaturaNecessitudo* */
+         TabulaDispersa*  scriptiones;   /* scriptura quaevis (nomen/
+                                          * conversum/scriptio) ->
+                                          * NaturaNecessitudo*; nectere
+                                          * aedificat, NIHIL ante */
                     Xar*  diagnostica;   /* Xar de NaturaDiagnosticum */
                      b32  nexum;         /* nectere iam factum? */
 } NaturaBibliotheca;
@@ -188,6 +211,14 @@ NaturaEns*
 natura_ens_in(
     NaturaBibliotheca*   bib,
     constans character*  modulus,
+    constans character*  titulus);
+
+/* necessitudo scriptura quavis (nomen / conversum / scriptio) -
+ * NIHIL si absens aut ambigua. Ante nectere nomen primarium solum
+ * resolvit. */
+NaturaNecessitudo*
+natura_necessitudo(
+    NaturaBibliotheca*   bib,
     constans character*  titulus);
 
 /* catena parentum, a proximo ad radicem

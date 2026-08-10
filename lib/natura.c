@@ -161,13 +161,16 @@ natura_bibliotheca_creare(
     bib->res_omnes    = xar_creare(piscina, (i32)magnitudo(NaturaRes*));
     bib->entia        = tabula_dispersa_creare_chorda(piscina, CXXVIII);
     bib->nomina       = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+    bib->necessitudines_omnes = xar_creare(piscina,
+                                   (i32)magnitudo(NaturaNecessitudo*));
+    bib->scriptiones  = NIHIL;  /* nectere aedificat */
     bib->diagnostica  = xar_creare(piscina,
                                    (i32)magnitudo(NaturaDiagnosticum));
     bib->nexum        = FALSUM;
 
     si (!bib->intern || !bib->exemplaria || !bib->genera_omnia ||
         !bib->res_omnes || !bib->entia || !bib->nomina ||
-        !bib->diagnostica)
+        !bib->necessitudines_omnes || !bib->diagnostica)
     {
         redde NIHIL;
     }
@@ -339,6 +342,35 @@ arborem_legere(
              * traditur, ut taxinomia dici possit */
             arborem_legere(bib, ex, liberum, ambiens, nova);
         }
+        alioquin si (chorda_aequalis_literis(*titulus_e,
+                                             "necessitudo"))
+        {
+            NaturaNecessitudo*  declarata;
+            NaturaNecessitudo** locus;
+
+            si (!titulus_n)
+            {
+                /* sine nomine registrari nequit - canon clamat */
+                perge;
+            }
+
+            declarata = (NaturaNecessitudo*)piscina_allocare(
+                bib->piscina, magnitudo(NaturaNecessitudo));
+            declarata->titulus   = titulus_n;
+            declarata->conversum = stml_attributum_capere(liberum,
+                                                          "conversum");
+            declarata->modulus   = ex->stirps;
+            declarata->parens    = NIHIL;  /* sub= in nectere */
+            declarata->nodus     = liberum;
+
+            locus = (NaturaNecessitudo**)xar_addere(
+                bib->necessitudines_omnes);
+            *locus = declarata;
+
+            ens_registrare(bib, ex, NATURA_ENS_NECESSITUDO,
+                           declarata, titulus_n);
+            /* non descendimus: scriptiones nectere legit */
+        }
         alioquin
         {
             arborem_legere(bib, ex, liberum, ambiens, ambiens_res);
@@ -421,8 +453,27 @@ natura_legere(
             "attributum modulus stirpi plagulae non aequat (regula XIV)");
     }
 
-    arborem_legere(bib, ex, resultus.elementum_radix, NIHIL,
-                   NIHIL);
+    /* regula XXV: modulus genus AUT necessitudinem declarare debet
+     * (canon minimum='1' generis 2026-08-10 sustulit - regula
+     * co-occurrentiae supra canonem vivit, ut 'ad AUT a') */
+    {
+        i32 genera_ante;
+        i32 nexus_ante;
+
+        genera_ante = xar_numerus(bib->genera_omnia);
+        nexus_ante  = xar_numerus(bib->necessitudines_omnes);
+
+        arborem_legere(bib, ex, resultus.elementum_radix, NIHIL,
+                       NIHIL);
+
+        si (xar_numerus(bib->genera_omnia) == genera_ante &&
+            xar_numerus(bib->necessitudines_omnes) == nexus_ante)
+        {
+            diagnosticum_addere(bib, NATURA_GRADUS_VULNUS, XXV,
+                ex->stirps, NIHIL,
+                "modulus nec genus nec necessitudinem declarat (regula XXV)");
+        }
+    }
 
     bib->nexum = FALSUM;  /* lectio nova nexuram novam poscit */
 
@@ -803,6 +854,16 @@ arborem_nectere(
                         II, ex->stirps, ad_attr,
                         "relatio scopum non invenit (regula II)");
                 }
+                alioquin si (scopus->discrimen ==
+                             NATURA_ENS_NECESSITUDO)
+                {
+                    /* foramen clausum eadem commissione qua
+                     * necessitudines in entia venerunt: ad=
+                     * ens petit, non genus relationis */
+                    diagnosticum_addere(bib, NATURA_GRADUS_VULNUS,
+                        II, ex->stirps, ad_attr,
+                        "ad necessitudinem nominat, non ens (regula II)");
+                }
             }
         }
         alioquin si (chorda_aequalis_literis(*titulus_e, "relatum"))
@@ -850,6 +911,13 @@ arborem_nectere(
                     diagnosticum_addere(bib, NATURA_GRADUS_VULNUS,
                         II, ex->stirps, ad_attr,
                         "relatum scopum non invenit (regula II)");
+                }
+                alioquin si (scopus->discrimen ==
+                             NATURA_ENS_NECESSITUDO)
+                {
+                    diagnosticum_addere(bib, NATURA_GRADUS_VULNUS,
+                        II, ex->stirps, ad_attr,
+                        "ad necessitudinem nominat, non ens (regula II)");
                 }
             }
 
@@ -1162,6 +1230,50 @@ natura_genus(
     }
 
     redde (NaturaGenus*)ens->corpus;
+}
+
+NaturaNecessitudo*
+natura_necessitudo(
+    NaturaBibliotheca*   bib,
+    constans character*  titulus)
+{
+    vacuum*    valor;
+    NaturaEns* ens;
+
+    si (!bib || !titulus)
+    {
+        redde NIHIL;
+    }
+
+    /* scriptiones (nectere aedificatae) primae: conversum et
+     * scripturae alterae ibi solae resolvunt */
+    si (bib->scriptiones)
+    {
+        si (tabula_dispersa_invenire_literis(bib->scriptiones,
+                                             titulus, &valor))
+        {
+            si (valor == (vacuum*)&SENTINELLA_HOMONYMA)
+            {
+                redde NIHIL;
+            }
+            redde (NaturaNecessitudo*)valor;
+        }
+    }
+
+    si (!tabula_dispersa_invenire_literis(bib->nomina, titulus,
+                                          &valor))
+    {
+        redde NIHIL;
+    }
+
+    ens = (NaturaEns*)valor;
+    si (ens == &SENTINELLA_HOMONYMA ||
+        ens->discrimen != NATURA_ENS_NECESSITUDO)
+    {
+        redde NIHIL;
+    }
+
+    redde (NaturaNecessitudo*)ens->corpus;
 }
 
 NaturaEns*

@@ -148,6 +148,17 @@ interior constans character* FIXTURA_VITIOSA =
     "<genus nomen=\"filius\" sub=\"absens\"/>\n"
     "</natura>\n";
 
+/* declarationes necessitudinum (Task 2): registratio + XXV + II */
+interior constans character* FIXTURA_NECESSITUDINES =
+    "<natura modulus=\"nexus_probandus\" versio=\"1\">\n"
+    "<necessitudo nomen=\"continet\" conversum=\"continetur_in\"\n"
+    "  a=\"*\" ad=\"*\">\n"
+    "  <definitio>Totum partem intra se habet.</definitio>\n"
+    "  <scriptio>contenta_in</scriptio>\n"
+    "</necessitudo>\n"
+    "<necessitudo nomen=\"pars_de\" sub=\"continet\" a=\"*\" ad=\"*\"/>\n"
+    "</natura>\n";
+
 /* ==================================================
  * Auxilia
  * ================================================== */
@@ -454,6 +465,79 @@ s32 principale (vacuum)
             CREDO_VERUM (chorda_aequalis_literis(
                 *membrum->nodus->titulus, "machina_statuum"));
         }
+    }
+
+
+    /* ========================================================
+     * PROBARE: necessitudines - registratio et regulae novae
+     * ======================================================== */
+
+    {
+        NaturaBibliotheca* bib;
+        i32                vulnera;
+
+        imprimere("\n--- Probans necessitudines (registratio) ---\n");
+
+        bib = natura_bibliotheca_creare(piscina);
+        CREDO_NON_NIHIL (bib);
+
+        CREDO_VERUM (natura_legere(bib,
+            chorda_ex_literis(FIXTURA_NECESSITUDINES, piscina),
+            "nexus_probandus"));
+
+        vulnera = natura_nectere(bib);
+        CREDO_AEQUALIS_I32 (vulnera, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (
+            (i32)xar_numerus(bib->necessitudines_omnes), II);
+
+        /* nomen nudum resolvit; genus eodem nomine NIHIL */
+        CREDO_NON_NIHIL (natura_necessitudo(bib, "continet"));
+        CREDO_NIHIL (natura_genus(bib, "continet"));
+
+        /* modulus cum necessitudine sola regulam XXV non violat */
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXV), ZEPHYRUM);
+    }
+
+    {
+        NaturaBibliotheca* bib;
+
+        imprimere("\n--- Probans regulam XXV (modulus vacuus) ---\n");
+
+        bib = natura_bibliotheca_creare(piscina);
+        CREDO_NON_NIHIL (bib);
+
+        CREDO_VERUM (natura_legere(bib,
+            chorda_ex_literis(
+                "<natura modulus=\"vacuus\" versio=\"1\">\n"
+                "<nota>nihil declaratur</nota>\n"
+                "</natura>\n", piscina),
+            "vacuus"));
+
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXV), I);
+    }
+
+    {
+        NaturaBibliotheca* bib;
+
+        imprimere("\n--- Probans foramen II (ad= necessitudinem) ---\n");
+
+        bib = natura_bibliotheca_creare(piscina);
+        CREDO_NON_NIHIL (bib);
+
+        CREDO_VERUM (natura_legere(bib,
+            chorda_ex_literis(
+                "<natura modulus=\"discrimen_probandum\" versio=\"1\">\n"
+                "<necessitudo nomen=\"tangere\" a=\"*\" ad=\"*\"/>\n"
+                "<genus nomen=\"res_probata\">\n"
+                "  <relationes>\n"
+                "    <relatio nomen=\"x\" ad=\"tangere\"/>\n"
+                "  </relationes>\n"
+                "</genus>\n"
+                "</natura>\n", piscina),
+            "discrimen_probandum"));
+
+        (vacuum)natura_nectere(bib);
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, II), I);
     }
 
 
