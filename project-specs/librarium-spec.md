@@ -38,11 +38,33 @@ generated-canon + registry). All anchors verified.
   snake (:1408-1412). Key comparison in the citation machinery is
   verbatim-with-sigil (signa migration ruling) — the embedded block
   therefore carries the SAME sigiled verbatim form.
-- **`<%` is a loud error today**: unclaimed sigil (zero literal `%`
-  in lib/stml.c), and `<% …>` takes byte-for-byte the same path as
-  the asserted `<@x>` test — STML_TOKEN_ERRATUM →
-  STML_ERROR_SYNTAXIS. The dispatch slot at lib/stml.c:1197-1201
-  (before the :1203 fall-through, same shape as `<(`) is clean.
+- **`<%` is a loud error today** — MEASURED (canon_examen: "parsari
+  nequit, gradus I"): unclaimed sigil (zero literal `%` in
+  lib/stml.c), same path as the asserted `<@x>` test. The dispatch
+  slot at lib/stml.c:1197-1201 is clean.
+- **The collision set is ALREADY non-empty — 2 live keys**
+  (measured: semina mints 114, rhubarb.census mints 51,
+  intersection 2): `&c;` (same genus both sides — the known stub)
+  and **`&aedilis;`** (rhubarb: instrumentum-lineae with `adhibet
+  ad="&silva;"` + nota; semina: instrumentum-aedificationis with
+  `invocat ad="&clang;"` — SAME REFERENT, DIFFERENT GENUS). Both
+  must be resolved as part of the arc, not discovered by the gate;
+  W2's tripwire turns rhubarb.census red the day it ships
+  otherwise. Baseline note: all three censuses judge VITIA 0 today,
+  and rhubarb.census is fully self-contained (mints all 30 keys it
+  cites) — the self-containment W1 exists to relax.
+- **Key symmetry CONFIRMED at the seams** (insert :1905, lookup
+  :2003): keys stored and compared verbatim WITH sigil and
+  semicolon (`&c;` byte-identical both sides). The embedded list
+  stores the full sigiled form. (Stale `'#'` wording in the comment
+  at lib/canon.c:2006-2009 — fix in passing.)
+- **Single scope in practice**: zero of the 1163 generated
+  citationes carry intra=, so every .census judgment runs one
+  document-wide scope whose claves table is built at
+  lib/canon.c:1867 — THE W1 SEAM: seed that table with the external
+  keys before passus I, marking seeded entries with a sentinel
+  StmlNodus* so W2 can distinguish external (citable-only) from
+  document-minted. W2's mirror sits in the unicitas loop at :1820.
 
 ## §1 W1 — the embedded export table (claves externae)
 
@@ -177,11 +199,16 @@ read-side projection, trails separately; validation never needs it.
   it honestly — and dishonestly carrying it is a hand-edit of a
   signed generated file, which generata-custos already treats as
   the crime it is.
-- **Planted fault**: rhubarb.census:62 IS the fault — the tripwire
-  must scream at it before the stub's deletion, and go green
-  after. Sweep gate: canon_examen over all authored censuses;
-  collisions found beyond &c; get ruled individually (W6
-  measurement = this run).
+- **Planted faults**: rhubarb.census's TWO measured collisions ARE
+  the faults — the tripwire must scream at both before their
+  migrations, and go green after. `&c;`: stub deleted, nota becomes
+  the `<% &c;>` augmentation. `&aedilis;`: per Fran's ruling on the
+  genus disagreement (library-wins + augmentation / etiam= dual
+  membership / census-wins) — the census's `adhibet ad="&silva;"`
+  and nota move into `<% &aedilis;>` either way. End-to-end tests
+  land in probatio_natura_canones.c (the .census-loading suite);
+  unit tests in probatio_canon.c (:981 citation family slot, :1036
+  collision slot).
 
 ## §4 Sequencing + gates summary
 
@@ -206,3 +233,15 @@ read-side projection, trails separately; validation never needs it.
   augmentations with per-claim provenance).
 - Per-document "which externals do I cite" REPORT (cheap visus
   addition; derived, never authored).
+
+## §6 Rulings (Fran, 2026-08-10, post-mapping)
+
+1. **Order W1→W3→W2 stands** (scout's W1+W2-first considered and
+   declined): migrations happen once, lawfully, finally — no
+   relations parked in comments during an interim. Collision
+   protection arrives last; acceptable while the corpus has one
+   author.
+2. **&aedilis;: library wins.** instrumentum-aedificationis stands
+   (essence over operation — Pieper); the census's `adhibet
+   ad="&silva;"` + nota become the `<% &aedilis;>` augmentation at
+   W3's migration. CLI-ness is invocation, not classification.
