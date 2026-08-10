@@ -284,3 +284,47 @@ plain sh from silicetum/vocabularium resolves ~/.bin/silex, historia
 works; status works even with SILEX_FABRICA unset (cwd verbs never
 touch the fabrica). The "unplug the fabrica" test now fails only
 where it should: novum/renovare.
+
+## 2026-08-10 — the corpus lands: silex carries the registry inside
+Spec/plan: project-specs/silex-corpus-{spec,plan}.md. Seven commits
+216cd22..5164f36. What shipped:
+- **SilexFons seam** (DISCUS|CORPUS): the one disk-reading function
+  (_plagulam_e_fonte_colligere) reads through a two-op fons; the
+  differential gate (hand-built CapsulaEmbed vs disk ficta) pins
+  corpus==discus byte-exact.
+- **Closure rules complete**: lib/X_macos.m twin when lib/X.c absent;
+  vendor pairs normalized ('../vendor/y.h' -> vendor/y.h — capsula
+  keys can't resolve '..'); vendor files are LEAVES (their contents
+  cite windows.h/tclsqlite.h — never scanned; caught live on
+  vocabularium, not by fixtures).
+- **Renovare re-rooted**: seeds = includes of authored DISK files
+  (pre-condere includes count — the vocabularium scenario was the
+  pre-fix oracle, RED then GREEN) ∪ vendored capita; basis-compared
+  filter (../fontes/x.h names an authored header; capsula_* generated
+  names dropped).
+- **partes verb**: closure oracle with ADEST/ABEST, -machina TSV;
+  seeds union the manifest's vendored capita so ABEST == what
+  renovare -scribere would vendor. v1 takes at most ONE named plagula
+  (parser has two fixed positionals; plural when argumenta grows
+  varargs).
+- **Corpus in struere**: root toml generated (never hand-listed),
+  gzip'd capsula (24MB raw -> binary 11MB->18MB), regen mtime-guarded
+  so the stamp = last corpus-affecting build; SORDIDUM scoped to
+  corpus content (Fran's staging files always dirty, not corpus).
+  Build: 7s total including regen.
+- **Resolution**: -f > ascent > corpus; SILEX_FABRICA deleted (code +
+  ~/.zshenv).
+
+THE WALK'S CATCH (why acceptance walks exist): first unplugged-fabrica
+run resolved the fons to THE SCAFFOLD ITSELF — every silex project
+carries the fabrica signum (include/latina.h + lib/), so ascent found
+probandum as its own registry, xar.h "deest", corpus never touched.
+Masked before by SILEX_FABRICA outranking ascent. Fix: a directory
+with a root *.volumen is a PROJECT and never a fabrica candidate
+(silex_volumen_viam_invenire == NIHIL joins the signum). Second walk:
+AMBULATIO PLENA — novum/partes/renovare/aedificare/probare/condere,
+all in-project, fabrica renamed away, then restored.
+
+Also: /bin/sh set -e did NOT abort on a failing `a && b` list inside
+the first walk script (condere ran after aedificare failed) — walk
+scripts now guard each step with explicit `|| exit`.
