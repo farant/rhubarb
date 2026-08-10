@@ -148,7 +148,9 @@ interior constans character* FIXTURA_VITIOSA =
     "<genus nomen=\"filius\" sub=\"absens\"/>\n"
     "</natura>\n";
 
-/* declarationes necessitudinum (Task 2): registratio + XXV + II */
+/* declarationes necessitudinum: registratio, ligatio (nomen /
+ * conversum / scriptura / citatio explicita), compages (termini),
+ * regulae XX-XXIII et XXV */
 interior constans character* FIXTURA_NECESSITUDINES =
     "<natura modulus=\"nexus_probandus\" versio=\"1\">\n"
     "<necessitudo nomen=\"continet\" conversum=\"continetur_in\"\n"
@@ -157,6 +159,25 @@ interior constans character* FIXTURA_NECESSITUDINES =
     "  <scriptio>contenta_in</scriptio>\n"
     "</necessitudo>\n"
     "<necessitudo nomen=\"pars_de\" sub=\"continet\" a=\"*\" ad=\"*\"/>\n"
+    "<genus nomen=\"actus_probandus\">\n"
+    "  <definitio>actus fictus probationis</definitio>\n"
+    "  <termini>\n"
+    "    <terminus munus=\"possessor_primus\" necessitudo=\"continet\"\n"
+    "      ad=\"actus_probandus\"/>\n"
+    "    <terminus munus=\"possessor_alter\" necessitudo=\"continet\"\n"
+    "      ad=\"actus_probandus\"/>\n"
+    "  </termini>\n"
+    "  <relationes>\n"
+    "    <relatio nomen=\"pars_de\" ad=\"actus_probandus\"/>\n"
+    "    <relatio nomen=\"contenta_in\" ad=\"actus_probandus\"/>\n"
+    "    <relatio nomen=\"ignotum_x\" ad=\"actus_probandus\"/>\n"
+    "    <relatio nomen=\"y\" necessitudo=\"non_exstat\"\n"
+    "      ad=\"actus_probandus\"/>\n"
+    "  </relationes>\n"
+    "  <species nomen=\"exemplum_actus\">\n"
+    "    <relatum nomen=\"possessor_primus\" ad=\"actus_probandus\"/>\n"
+    "  </species>\n"
+    "</genus>\n"
     "</natura>\n";
 
 /* ==================================================
@@ -164,6 +185,7 @@ interior constans character* FIXTURA_NECESSITUDINES =
  * ================================================== */
 
 interior i32 vulnera_regulae(NaturaBibliotheca* bib, i32 regula);
+interior i32 monita_regulae(NaturaBibliotheca* bib, i32 regula);
 
 interior i32
 vulnera_regulae(
@@ -180,6 +202,30 @@ vulnera_regulae(
 
         d = (NaturaDiagnosticum*)xar_obtinere(bib->diagnostica, i);
         si (d->gradus == NATURA_GRADUS_VULNUS && d->regula == regula)
+        {
+            numerus++;
+        }
+    }
+
+    redde numerus;
+}
+
+interior i32
+monita_regulae(
+    NaturaBibliotheca* bib,
+    i32                regula)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(bib->diagnostica); i++)
+    {
+        NaturaDiagnosticum* d;
+
+        d = (NaturaDiagnosticum*)xar_obtinere(bib->diagnostica, i);
+        si (d->gradus == NATURA_GRADUS_MONITUM &&
+            d->regula == regula)
         {
             numerus++;
         }
@@ -486,7 +532,9 @@ s32 principale (vacuum)
             "nexus_probandus"));
 
         vulnera = natura_nectere(bib);
-        CREDO_AEQUALIS_I32 (vulnera, ZEPHYRUM);
+        /* vulnus unum: citatio 'non_exstat' (regula XXI) */
+        CREDO_AEQUALIS_I32 (vulnera, I);
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXI), I);
         CREDO_AEQUALIS_I32 (
             (i32)xar_numerus(bib->necessitudines_omnes), II);
 
@@ -494,8 +542,89 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (natura_necessitudo(bib, "continet"));
         CREDO_NIHIL (natura_genus(bib, "continet"));
 
+        /* scriptura et conversum IDENTITATEM UNAM resolvunt */
+        CREDO_AEQUALIS_PTR (natura_necessitudo(bib, "contenta_in"),
+                            natura_necessitudo(bib, "continet"));
+        CREDO_AEQUALIS_PTR (natura_necessitudo(bib, "continetur_in"),
+                            natura_necessitudo(bib, "continet"));
+
+        /* sub= necessitudinis resolutum */
+        CREDO_AEQUALIS_PTR (
+            natura_necessitudo(bib, "pars_de")->parens,
+            natura_necessitudo(bib, "continet"));
+
+        /* monitum XX aggregatum: nomen unum insolutum (ignotum_x)
+         * - 'y' non numeratur (citatio eius XXI iam clamavit) */
+        CREDO_AEQUALIS_I32 (monita_regulae(bib, XX), I);
+
+        /* relatum munus compagis invenit (regula XI tacet) */
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XI), ZEPHYRUM);
+
         /* modulus cum necessitudine sola regulam XXV non violat */
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXV), ZEPHYRUM);
+    }
+
+    {
+        NaturaBibliotheca* bib;
+
+        imprimere("\n--- Probans fines (regula XXII) ---\n");
+
+        bib = natura_bibliotheca_creare(piscina);
+        CREDO_NON_NIHIL (bib);
+
+        CREDO_VERUM (natura_legere(bib,
+            chorda_ex_literis(
+                "<natura modulus=\"fines_probandum\" versio=\"1\">\n"
+                "<genus nomen=\"animal_p\"/>\n"
+                "<genus nomen=\"canis_p\" sub=\"animal_p\"/>\n"
+                "<genus nomen=\"lapis_p\"/>\n"
+                "<necessitudo nomen=\"mordet\" a=\"*\" ad=\"animal_p\"/>\n"
+                "<necessitudo nomen=\"mordet_canem\" sub=\"mordet\"\n"
+                "  ad=\"canis_p\"/>\n"
+                "<necessitudo nomen=\"mordet_omnia\" sub=\"mordet\"\n"
+                "  ad=\"*\"/>\n"
+                "<genus nomen=\"pulex_p\">\n"
+                "  <relationes>\n"
+                "    <relatio nomen=\"mordet\" ad=\"lapis_p\"/>\n"
+                "    <relatio nomen=\"mordet\" ad=\"canis_p\"/>\n"
+                "  </relationes>\n"
+                "</genus>\n"
+                "</natura>\n", piscina),
+            "fines_probandum"));
+
+        (vacuum)natura_nectere(bib);
+        /* dilatatio (mordet_omnia ad='*') + sedes extra finem
+         * (lapis_p extra animal_p); mordet->canis_p INTRA finem */
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXII), II);
+    }
+
+    {
+        NaturaBibliotheca* bib;
+
+        imprimere("\n--- Probans munus geminum (regula XXIII) ---\n");
+
+        bib = natura_bibliotheca_creare(piscina);
+        CREDO_NON_NIHIL (bib);
+
+        CREDO_VERUM (natura_legere(bib,
+            chorda_ex_literis(
+                "<natura modulus=\"munus_probandum\" versio=\"1\">\n"
+                "<necessitudo nomen=\"participatio_p\" a=\"*\" ad=\"*\"/>\n"
+                "<genus nomen=\"pactum_p\">\n"
+                "  <termini>\n"
+                "    <terminus munus=\"dator\"\n"
+                "      necessitudo=\"participatio_p\" ad=\"*\"/>\n"
+                "    <terminus munus=\"dator\"\n"
+                "      necessitudo=\"participatio_p\" ad=\"*\"/>\n"
+                "  </termini>\n"
+                "</genus>\n"
+                "</natura>\n", piscina),
+            "munus_probandum"));
+
+        (vacuum)natura_nectere(bib);
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXIII), I);
+        /* termini citati ligantur - nihil insolutum */
+        CREDO_AEQUALIS_I32 (monita_regulae(bib, XX), ZEPHYRUM);
     }
 
     {
