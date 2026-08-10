@@ -1219,6 +1219,18 @@ _apparatum_plicare(
         NcMembrum*              m;
 
         am      = (NaturaApparatusMembrum*)xar_obtinere(apparatus, i);
+
+        /* determinationes (valor/relatum in genere, apparatus
+         * 2026-08-10) hic PRAETEREUNDAE: via sua est
+         * (_valores_applicare -> ordinarius=). Sine hoc custode
+         * valor 'forma_contenti' proprietatem veram obumbrat et
+         * electio ad textum degradat (porta -probare id cepit). */
+        si (chorda_aequalis_literis(*am->nodus->titulus, "valor") ||
+            chorda_aequalis_literis(*am->nodus->titulus, "relatum"))
+        {
+            perge;
+        }
+
         /* terminus compagis munere nominatur, non nomine - sine
          * hoc titulus NIHIL est et membrum TACITE peribat (par
          * discernens in probatio_natura_canones I-b) */
