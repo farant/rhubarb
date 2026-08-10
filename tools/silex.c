@@ -462,6 +462,8 @@ principale (integer argc, character** argv)
         "partes: TSV machinale (ordo, praesentia, via)");
     argumenta_addere_vexillum(parser, "-versio", "--versio",
         "versionem et stampam corporis imprimere");
+    argumenta_addere_vexillum(parser, "-vitrea", "--vitrea",
+        "novum: semen vitreum (cor voluminis + ordines IV)");
     argumenta_addere_exemplum(parser,
         "silex novum 001 -f ~/Documents/projects/rhubarb");
     argumenta_addere_exemplum(parser,
@@ -882,6 +884,7 @@ principale (integer argc, character** argv)
     optiones.fons = fons;
     optiones.destinatio = destinatio;
     optiones.titulus = chorda_ut_cstr(titulus, piscina);
+    optiones.vitrea = argumenta_habet_vexillum(lecta, "--vitrea");
 
     fructus = silex_novum(piscina, &optiones);
     si (!fructus.successus)

@@ -745,6 +745,668 @@ _readme_fingere (Piscina* piscina, constans character* titulus)
 }
 
 /* ==================================================
+ * Plagulae genitae (-vitrea): cor voluminis - pons ET
+ * persistentia una salutatione probata. Identificatores C FIXI
+ * (Pipa, pipa_*); titulus in nomina plagularum et chordas solum.
+ * ================================================== */
+
+interior chorda
+_pipa_h_fingere (Piscina* piscina, constans character* titulus);
+
+interior chorda
+_pipa_h_fingere (Piscina* piscina, constans character* titulus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)1024);
+
+    chorda_aedificator_appendere_literis(a, "/* ");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "_pipa.h - pipa cordis: tractator salve super volumine.\n"
+        " * C = pipa stulta; facies in assets/ vivit. (A silice"
+        " genita.) */\n"
+        "#ifndef PIPA_H\n"
+        "#define PIPA_H\n"
+        "\n"
+        "#include \"latina.h\"\n"
+        "#include \"piscina.h\"\n"
+        "#include \"chorda.h\"\n"
+        "#include \"json.h\"\n"
+        "#include \"volumen.h\"\n"
+        "\n"
+        "nomen structura {\n"
+        "    Volumen* volumen;\n"
+        "} Pipa;\n"
+        "\n"
+        "/* salve {} -> {nuntius, numerus}: actum 'salutatio'"
+        " appendit et\n"
+        " * salutationes omnes numerat - pons ET persistentia una"
+        " probatione */\n"
+        "JsonValor*\n"
+        "pipa_salve_tractare (\n"
+        "    JsonValor* argumenta,\n"
+        "    Piscina*   piscina,\n"
+        "    vacuum*    datum,\n"
+        "    chorda*    culpa);\n"
+        "\n"
+        "/* ~/.rhubarb/");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".volumen; NIHIL si HOME abest */\n"
+        "constans character*\n"
+        "pipa_viam_voluminis (\n"
+        "    Piscina* piscina);\n"
+        "\n"
+        "#endif /* PIPA_H */\n");
+    redde chorda_aedificator_finire(a);
+}
+
+interior chorda
+_pipa_c_fingere (Piscina* piscina, constans character* titulus);
+
+interior chorda
+_pipa_c_fingere (Piscina* piscina, constans character* titulus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)4096);
+
+    chorda_aedificator_appendere_literis(a, "/* ");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "_pipa.c - vide caput (a silice genita) */\n"
+        "#include \"");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "_pipa.h\"\n"
+        "#include \"chorda_aedificator.h\"\n"
+        "#include \"xar.h\"\n"
+        "#include <stdlib.h>\n"
+        "\n"
+        "JsonValor*\n"
+        "pipa_salve_tractare (JsonValor* argumenta, Piscina*"
+        " piscina,\n"
+        "    vacuum* datum, chorda* culpa)\n"
+        "{\n"
+        "    Pipa*      pipa = (Pipa*)datum;\n"
+        "    s64        seq;\n"
+        "    Xar*       acta;\n"
+        "    s64        numerus = 0;\n"
+        "    i32        i;\n"
+        "    JsonValor* fructus;\n"
+        "\n"
+        "    (vacuum)argumenta;\n"
+        "    seq = volumen_actum_appendere(pipa->volumen,"
+        " \"salutatio\",\n"
+        "        chorda_ex_literis(\"{}\", piscina));\n"
+        "    si (seq <= ZEPHYRUM)\n"
+        "    {\n"
+        "        constans character* err ="
+        " volumen_error(pipa->volumen);\n"
+        "\n"
+        "        *culpa = chorda_ex_literis((err != NIHIL)\n"
+        "            ? err : \"volumen: actum non scriptum\","
+        " piscina);\n"
+        "        redde NIHIL;\n"
+        "    }\n"
+        "    acta = volumen_acta_legere(pipa->volumen, (s64)0,"
+        " piscina);\n"
+        "    si (acta != NIHIL)\n"
+        "    {\n"
+        "        per (i = 0; i < xar_numerus(acta); i = i + 1)\n"
+        "        {\n"
+        "            VolumenActum* a ="
+        " (VolumenActum*)xar_obtinere(acta, i);\n"
+        "\n"
+        "            si (a != NIHIL &&"
+        " chorda_aequalis_literis(a->genus,\n"
+        "                \"salutatio\"))\n"
+        "            {\n"
+        "                numerus = numerus + 1;\n"
+        "            }\n"
+        "        }\n"
+        "    }\n"
+        "    fructus = json_objectum_creare(piscina);\n"
+        "    json_objectum_ponere(fructus, \"nuntius\",\n"
+        "        json_chorda_creare_literis(piscina,\n"
+        "            \"salve, munde - hic ");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "\"));\n"
+        "    json_objectum_ponere(fructus, \"numerus\",\n"
+        "        json_integer_creare(piscina, numerus));\n"
+        "    redde fructus;\n"
+        "}\n"
+        "\n"
+        "constans character*\n"
+        "pipa_viam_voluminis (Piscina* piscina)\n"
+        "{\n"
+        "    constans character* domus = getenv(\"HOME\");\n"
+        "    ChordaAedificator*  aed;\n"
+        "\n"
+        "    si (domus == NIHIL || domus[0] == '\\0')\n"
+        "    {\n"
+        "        redde NIHIL;\n"
+        "    }\n"
+        "    aed = chorda_aedificator_creare(piscina,"
+        " (memoriae_index)128);\n"
+        "    si (aed == NIHIL)\n"
+        "    {\n"
+        "        redde NIHIL;\n"
+        "    }\n"
+        "    chorda_aedificator_appendere_literis(aed, domus);\n"
+        "    chorda_aedificator_appendere_literis(aed,\n"
+        "        \"/.rhubarb/");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".volumen\");\n"
+        "    redde chorda_ut_cstr(chorda_aedificator_finire(aed),"
+        " piscina);\n"
+        "}\n");
+    redde chorda_aedificator_finire(a);
+}
+
+interior chorda
+_fontem_vitreum_fingere (Piscina* piscina,
+    constans character* titulus);
+
+interior chorda
+_fontem_vitreum_fingere (Piscina* piscina,
+    constans character* titulus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)8192);
+
+    chorda_aedificator_appendere_literis(a, "/* ");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".c - fenestra vitreae cordis: pons + persistentia una\n"
+        " * salutatione probata. Pipa in ");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "_pipa.c; facies in assets/.\n"
+        " * (A silice genita - exemplar: vocabularium/villa.) */\n"
+        "#include \"latina.h\"\n"
+        "#include \"piscina.h\"\n"
+        "#include \"chorda.h\"\n"
+        "#include \"json.h\"\n"
+        "#include \"fenestra.h\"\n"
+        "#include \"capsula.h\"\n"
+        "#include \"vitrea.h\"\n"
+        "#include \"internuntius.h\"\n"
+        "#include \"volumen.h\"\n"
+        "#include \"");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "_pipa.h\"\n"
+        "#include \"capsula_");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".h\"\n"
+        "#include <stdio.h>\n"
+        "\n"
+        "#define TICTUS_MS 200\n"
+        "\n"
+        "s32\n"
+        "principale (vacuum)\n"
+        "{\n"
+        "    Piscina* piscina = piscina_generare_dynamicum(\n"
+        "        \"");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "\", 16777216);\n"
+        "    Piscina* piscina_vocationis ="
+        " piscina_generare_dynamicum(\n"
+        "        \"");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "_vocationes\", 8388608);\n"
+        "    constans character* via;\n"
+        "    Pipa          pipa;\n"
+        "    FenestraConfiguratio figura_fenestrae;\n"
+        "    VitreaConfiguratio   figura_vitreae;\n"
+        "    Fenestra*     fenestra;\n"
+        "    Capsula*      capsula;\n"
+        "    Vitrea*       vitrea;\n"
+        "    Internuntius* inx;\n"
+        "\n"
+        "    si (piscina == NIHIL || piscina_vocationis =="
+        " NIHIL)\n"
+        "    {\n"
+        "        redde I;\n"
+        "    }\n"
+        "    via = pipa_viam_voluminis(piscina);\n"
+        "    si (via == NIHIL)\n"
+        "    {\n"
+        "        imprimere(\"FRACTA: HOME ignotum\\n\");\n"
+        "        redde I;\n"
+        "    }\n"
+        "    pipa.volumen = volumen_aperire_aut_creare(piscina,"
+        " via);\n"
+        "    si (pipa.volumen == NIHIL)\n"
+        "    {\n"
+        "        imprimere(\"FRACTA: volumen non apertum:"
+        " %s\\n\", via);\n"
+        "        imprimere(\"  (directorium ~/.rhubarb"
+        " exsistat?)\\n\");\n"
+        "        redde I;\n"
+        "    }\n"
+        "\n"
+        "    figura_fenestrae.titulus  = \"");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "\";\n"
+        "    figura_fenestrae.x        = CC;\n"
+        "    figura_fenestrae.y        = CC;\n"
+        "    figura_fenestrae.latitudo = 640;\n"
+        "    figura_fenestrae.altitudo = 400;\n"
+        "    figura_fenestrae.vexilla  = FENESTRA_CLAUDIBILIS\n"
+        "        | FENESTRA_MUTABILIS | FENESTRA_CENTRATA;\n"
+        "    fenestra = fenestra_creare(piscina,"
+        " &figura_fenestrae);\n"
+        "    si (fenestra == NIHIL)\n"
+        "    {\n"
+        "        imprimere(\"FRACTA: fenestra\\n\");\n"
+        "        redde I;\n"
+        "    }\n"
+        "    capsula = capsula_aperire(&capsula_");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ", piscina);\n"
+        "    si (capsula == NIHIL)\n"
+        "    {\n"
+        "        imprimere(\"FRACTA: capsula\\n\");\n"
+        "        redde I;\n"
+        "    }\n"
+        "    figura_vitreae.origo         ="
+        " VITREA_ORIGO_CAPSULA;\n"
+        "    figura_vitreae.capsula       = capsula;\n"
+        "    figura_vitreae.via_initialis = \"index.html\";\n"
+        "    figura_vitreae.url           = NIHIL;\n"
+        "    figura_vitreae.inspectabilis = VERUM;\n"
+        "    vitrea = vitrea_creare(piscina, fenestra,"
+        " &figura_vitreae);\n"
+        "    si (vitrea == NIHIL)\n"
+        "    {\n"
+        "        imprimere(\"FRACTA: vitrea\\n\");\n"
+        "        redde I;\n"
+        "    }\n"
+        "    inx = internuntius_creare(piscina, vitrea_missor,"
+        " vitrea);\n"
+        "    si (inx == NIHIL)\n"
+        "    {\n"
+        "        imprimere(\"FRACTA: internuntius\\n\");\n"
+        "        redde I;\n"
+        "    }\n"
+        "    (vacuum)internuntius_praebere(inx, \"salve\",\n"
+        "        pipa_salve_tractare, &pipa);\n"
+        "\n"
+        "    imprimere(\"[");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "] fenestra aperta (volumen %s)\\n\", via);\n"
+        "    fflush(stdout);\n"
+        "\n"
+        "    dum (!fenestra_debet_claudere(fenestra))\n"
+        "    {\n"
+        "        Eventus            eventus;\n"
+        "        chorda             nuntium;\n"
+        "        VitreaNuntiusGenus genus_nuntii;\n"
+        "        PiscinaNotatio     nota;\n"
+        "\n"
+        "        fenestra_expectare_eventus(fenestra,"
+        " TICTUS_MS);\n"
+        "        dum (fenestra_obtinere_eventus(fenestra,"
+        " &eventus))\n"
+        "        {\n"
+        "            /* JS omnia tractat */\n"
+        "        }\n"
+        "        nota = piscina_notare(piscina_vocationis);\n"
+        "        dum (vitrea_obtinere_nuntium(vitrea, &nuntium,\n"
+        "            &genus_nuntii))\n"
+        "        {\n"
+        "            si (genus_nuntii == VITREA_NUNTIUS_PONS)\n"
+        "            {\n"
+        "                internuntius_tractare(inx, nuntium,\n"
+        "                    piscina_vocationis);\n"
+        "            }\n"
+        "            alioquin\n"
+        "            {\n"
+        "                vitrea_recargare(vitrea);\n"
+        "            }\n"
+        "        }\n"
+        "        piscina_reficere(piscina_vocationis, nota);\n"
+        "    }\n"
+        "\n"
+        "    vitrea_destruere(vitrea);\n"
+        "    fenestra_destruere(fenestra);\n"
+        "    volumen_claudere(pipa.volumen);\n"
+        "    piscina_destruere(piscina_vocationis);\n"
+        "    piscina_destruere(piscina);\n"
+        "    redde ZEPHYRUM;\n"
+        "}\n");
+    redde chorda_aedificator_finire(a);
+}
+
+interior chorda
+_toml_fingere (Piscina* piscina, constans character* titulus);
+
+interior chorda
+_toml_fingere (Piscina* piscina, constans character* titulus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)512);
+
+    chorda_aedificator_appendere_literis(a,
+        "# Capsula frontis (a silice genita)\n"
+        "# aedificare.sh eam OMNI aedificatione regenerat -"
+        " capsula ante omnia\n"
+        "\n");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "_files = [\"index.html\", \"");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a, ".js\"]\n");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "_compress = false\n");
+    redde chorda_aedificator_finire(a);
+}
+
+interior chorda
+_index_html_fingere (Piscina* piscina,
+    constans character* titulus);
+
+interior chorda
+_index_html_fingere (Piscina* piscina,
+    constans character* titulus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)1024);
+
+    chorda_aedificator_appendere_literis(a,
+        "<!DOCTYPE html>\n"
+        "<html lang=\"la\">\n"
+        "<head>\n"
+        "<meta charset=\"utf-8\">\n"
+        "<title>");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "</title>\n"
+        "<style>\n"
+        "  :root { color-scheme: light dark; }\n"
+        "  body { font-family: -apple-system, sans-serif;"
+        " display: flex;\n"
+        "         align-items: center; justify-content:"
+        " center;\n"
+        "         min-height: 90vh; margin: 0; }\n"
+        "  main { text-align: center; }\n"
+        "  h1 { letter-spacing: .06em; }\n"
+        "  #salutatio { font-size: 1.3rem; }\n"
+        "</style>\n"
+        "</head>\n"
+        "<body>\n"
+        "<main>\n"
+        "  <h1>");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "</h1>\n"
+        "  <p id=\"salutatio\">…</p>\n"
+        "</main>\n"
+        "<script src=\"");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".js\"></script>\n"
+        "</body>\n"
+        "</html>\n");
+    redde chorda_aedificator_finire(a);
+}
+
+interior chorda
+_js_fingere (Piscina* piscina, constans character* titulus);
+
+interior chorda
+_js_fingere (Piscina* piscina, constans character* titulus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)512);
+
+    chorda_aedificator_appendere_literis(a, "/* ");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".js - pons probatur: una vocatio, responsum in pagina.\n"
+        " * (A silice genita. internuntius a vitrea iniectus"
+        " est.) */\n"
+        "internuntius.vocare('salve', {})\n"
+        "  .then(function (r) {\n"
+        "    document.getElementById('salutatio').textContent =\n"
+        "      r.nuntius + ' — visitatio ' + r.numerus;\n"
+        "  })\n"
+        "  .catch(function (e) {\n"
+        "    document.getElementById('salutatio').textContent =\n"
+        "      'CULPA: ' + e.message;\n"
+        "  });\n");
+    redde chorda_aedificator_finire(a);
+}
+
+interior chorda
+_probationem_vitream_fingere (Piscina* piscina,
+    constans character* titulus);
+
+interior chorda
+_probationem_vitream_fingere (Piscina* piscina,
+    constans character* titulus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)4096);
+
+    chorda_aedificator_appendere_literis(a, "/* probatio_");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".c - pipa cordis: circuitus per volumen\n"
+        " * (a silice genita) */\n"
+        "#include \"latina.h\"\n"
+        "#include \"piscina.h\"\n"
+        "#include \"chorda.h\"\n"
+        "#include \"credo.h\"\n"
+        "#include \"json.h\"\n"
+        "#include \"volumen.h\"\n"
+        "#include \"../fontes/");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "_pipa.h\"\n"
+        "#include <stdio.h>\n"
+        "\n"
+        "#define VIA_PROBATIONIS \"build/probatio.volumen\"\n"
+        "\n"
+        "s32\n"
+        "principale (vacuum)\n"
+        "{\n"
+        "    Piscina* piscina = piscina_generare_dynamicum(\n"
+        "        \"probatio_");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "\", 8388608);\n"
+        "    Volumen* volumen;\n"
+        "    Pipa     pipa;\n"
+        "    chorda   culpa;\n"
+        "\n"
+        "    si (piscina == NIHIL)\n"
+        "    {\n"
+        "        imprimere(\"FRACTA: piscina\\n\");\n"
+        "        redde I;\n"
+        "    }\n"
+        "    credo_aperire(piscina);\n"
+        "\n"
+        "    remove(VIA_PROBATIONIS);\n"
+        "    volumen = volumen_aperire_aut_creare(piscina,"
+        " VIA_PROBATIONIS);\n"
+        "    CREDO_NON_NIHIL(volumen);\n"
+        "    pipa.volumen = volumen;\n"
+        "\n"
+        "    imprimere(\"\\n--- Probans pipam cordis ---\\n\");\n"
+        "    {\n"
+        "        JsonValor* r;\n"
+        "\n"
+        "        culpa.datum = NIHIL; culpa.mensura = ZEPHYRUM;\n"
+        "        r = pipa_salve_tractare(NIHIL, piscina, &pipa,"
+        " &culpa);\n"
+        "        CREDO_NON_NIHIL(r);\n"
+        "        CREDO_AEQUALIS_I32((i32)culpa.mensura,"
+        " ZEPHYRUM);\n"
+        "        CREDO_VERUM(json_ad_integer(\n"
+        "            json_objectum_capere(r, \"numerus\")) =="
+        " 1);\n"
+        "\n"
+        "        r = pipa_salve_tractare(NIHIL, piscina, &pipa,"
+        " &culpa);\n"
+        "        CREDO_NON_NIHIL(r);\n"
+        "        CREDO_VERUM(json_ad_integer(\n"
+        "            json_objectum_capere(r, \"numerus\")) =="
+        " 2);\n"
+        "        CREDO_CHORDA_NON_VACUA(json_ad_chorda(\n"
+        "            json_objectum_capere(r, \"nuntius\")));\n"
+        "    }\n"
+        "    {\n"
+        "        constans character* via ="
+        " pipa_viam_voluminis(piscina);\n"
+        "\n"
+        "        CREDO_VERUM(via != NIHIL);\n"
+        "    }\n"
+        "\n"
+        "    volumen_claudere(volumen);\n"
+        "    remove(VIA_PROBATIONIS);\n"
+        "\n"
+        "    imprimere(\"\\n\");\n"
+        "    credo_imprimere_compendium();\n"
+        "    si (credo_omnia_praeterierunt())\n"
+        "    {\n"
+        "        redde ZEPHYRUM;\n"
+        "    }\n"
+        "    redde I;\n"
+        "}\n");
+    redde chorda_aedificator_finire(a);
+}
+
+interior chorda
+_readme_vitreum_fingere (Piscina* piscina,
+    constans character* titulus);
+
+interior chorda
+_readme_vitreum_fingere (Piscina* piscina,
+    constans character* titulus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)1024);
+
+    chorda_aedificator_appendere_literis(a, "# ");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "\n\n"
+        "App vitrea cordis a silice excusa. Veritas fontium in\n"
+        "`");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".volumen`; data in `~/.rhubarb/");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".volumen`.\n"
+        "\n"
+        "- `./aedificare.sh && ./bin/");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "` — fenestra (numerus visitationum\n"
+        "  trans aperturas crescit — persistentia visibilis)\n"
+        "- `./probare.sh` — probationes\n"
+        "- `silex partes` — clausura; `silex renovare -scribere`"
+        " post\n"
+        "  inclusiones novas\n"
+        "\n"
+        "Scripta aedificationis PROIECTIONES sunt (generatae a"
+        " silice) —\n"
+        "mutare licet.\n");
+    redde chorda_aedificator_finire(a);
+}
+
+/* prototypa praemissa - definitiones infra (sectio VCS/semina) */
+interior b32
+_praefixum_habet (chorda via, constans character* praefixum);
+interior b32
+_suffixum_habet (chorda via, constans character* suffixum);
+interior chorda
+_basis_viae (chorda via);
+
+/* semina = inclusiones contentorum datorum (dedup); NIHIL si
+ * clausura fracta. Capita propria templi (<t>_pipa.h,
+ * capsula_<t>.h) non quaeruntur in fonte. */
+interior Xar*
+_clausuram_e_contentis (Piscina* piscina,
+    constans SilexFons* fons, constans chorda* contenta,
+    i32 numerus);
+
+interior Xar*
+_clausuram_e_contentis (Piscina* piscina,
+    constans SilexFons* fons, constans chorda* contenta,
+    i32 numerus)
+{
+    Xar*            nomina = xar_creare(piscina,
+        (i32)magnitudo(chorda));
+    TabulaDispersa* electa = tabula_dispersa_creare_chorda(
+        piscina, 32);
+    Xar*            semina_ch = xar_creare(piscina,
+        (i32)magnitudo(chorda));
+    i32             i;
+
+    si (nomina == NIHIL || electa == NIHIL || semina_ch == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = 0; i < numerus; i = i + 1)
+    {
+        _inclusiones_scrutari(contenta[i], nomina);
+    }
+    per (i = 0; i < xar_numerus(nomina); i = i + 1)
+    {
+        chorda n = *(chorda*)xar_obtinere(nomina, i);
+
+        si (tabula_dispersa_continet(electa, n)
+            || _suffixum_habet(n, "_pipa.h")
+            || _praefixum_habet(_basis_viae(n), "capsula_"))
+        {
+            perge;
+        }
+        tabula_dispersa_inserere(electa, n, (vacuum*)nomina);
+        {
+            chorda* cella = (chorda*)xar_addere(semina_ch);
+
+            si (cella != NIHIL)
+            {
+                *cella = n;
+            }
+        }
+    }
+    {
+        constans character** semina = (constans character**)
+            piscina_allocare(piscina, (memoriae_index)(
+                ((memoriae_index)xar_numerus(semina_ch) + I)
+                * magnitudo(constans character*)));
+        i32 s;
+
+        si (semina == NIHIL)
+        {
+            redde NIHIL;
+        }
+        per (s = 0; s < xar_numerus(semina_ch); s = s + 1)
+        {
+            semina[s] = chorda_ut_cstr(
+                *(chorda*)xar_obtinere(semina_ch, s), piscina);
+        }
+        redde silex_clausuram_colligere(piscina, fons,
+            (constans character* constans*)semina,
+            xar_numerus(semina_ch));
+    }
+}
+
+/* ==================================================
  * Novum
  * ================================================== */
 
@@ -803,6 +1465,12 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
                     "titulus characteres '/' aut '.' fert";
                 redde fructus;
             }
+            si (optiones->vitrea && *t == '-')
+            {
+                fructus.erratum = "titulus vitreus characteres"
+                    " '-' ferre nequit (symbolum C fit)";
+                redde fructus;
+            }
             t = t + 1;
         }
     }
@@ -817,30 +1485,162 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
         redde fructus;
     }
 
-    /* clausura e fabrica */
-    res_omnes = silex_clausuram_colligere(piscina, optiones->fons,
-        SEMINA, (i32)(magnitudo(SEMINA) / magnitudo(SEMINA[0])));
-    si (res_omnes == NIHIL)
+    si (!optiones->vitrea)
     {
-        fructus.erratum = "clausura bibliothecarum fracta";
-        redde fructus;
-    }
-    fructus.vendicatae = xar_numerus(res_omnes);
+        /* clausura e fonte (semen simplex) */
+        res_omnes = silex_clausuram_colligere(piscina,
+            optiones->fons, SEMINA,
+            (i32)(magnitudo(SEMINA) / magnitudo(SEMINA[0])));
+        si (res_omnes == NIHIL)
+        {
+            fructus.erratum = "clausura bibliothecarum fracta";
+            redde fructus;
+        }
+        fructus.vendicatae = xar_numerus(res_omnes);
 
-    /* plagulae genitae */
-    _rem_genitam_addere(piscina, res_omnes,
-        _texere(piscina, "fontes/", optiones->titulus, ".c"),
-        _fontem_fingere(piscina, optiones->titulus));
-    _rem_genitam_addere(piscina, res_omnes,
-        _texere(piscina, "probationes/probatio_", optiones->titulus,
-            ".c"),
-        _probationem_fingere(piscina, optiones->titulus));
-    _rem_genitam_addere(piscina, res_omnes, "aedificare.sh",
-        _aedificare_sh_fingere(piscina, optiones->titulus));
-    _rem_genitam_addere(piscina, res_omnes, "probare.sh",
-        _probare_sh_fingere(piscina, optiones->titulus));
-    _rem_genitam_addere(piscina, res_omnes, "README.md",
-        _readme_fingere(piscina, optiones->titulus));
+        /* plagulae genitae */
+        _rem_genitam_addere(piscina, res_omnes,
+            _texere(piscina, "fontes/", optiones->titulus, ".c"),
+            _fontem_fingere(piscina, optiones->titulus));
+        _rem_genitam_addere(piscina, res_omnes,
+            _texere(piscina, "probationes/probatio_",
+                optiones->titulus, ".c"),
+            _probationem_fingere(piscina, optiones->titulus));
+        _rem_genitam_addere(piscina, res_omnes, "aedificare.sh",
+            _aedificare_sh_fingere(piscina, optiones->titulus));
+        _rem_genitam_addere(piscina, res_omnes, "probare.sh",
+            _probare_sh_fingere(piscina, optiones->titulus));
+        _rem_genitam_addere(piscina, res_omnes, "README.md",
+            _readme_fingere(piscina, optiones->titulus));
+    }
+    alioquin
+    {
+        /* semen vitreum: cor voluminis. Semina clausurae ex
+         * IPSIS templis leguntur - numquam index manu servatus. */
+        chorda fons_c = _fontem_vitreum_fingere(piscina,
+            optiones->titulus);
+        chorda pipa_h = _pipa_h_fingere(piscina,
+            optiones->titulus);
+        chorda pipa_c = _pipa_c_fingere(piscina,
+            optiones->titulus);
+        chorda probatio_c = _probationem_vitream_fingere(piscina,
+            optiones->titulus);
+        chorda contenta_app[3];
+        chorda contentum_instrumenti;
+        Xar*   clausura_instrumenti;
+        b32    inventum = FALSUM;
+
+        contenta_app[0] = fons_c;
+        contenta_app[1] = pipa_c;
+        contenta_app[2] = pipa_h;
+        res_omnes = _clausuram_e_contentis(piscina,
+            optiones->fons, contenta_app, 3);
+        si (res_omnes == NIHIL)
+        {
+            fructus.erratum = "clausura bibliothecarum fracta";
+            redde fructus;
+        }
+
+        contentum_instrumenti = silex_fons_legere(optiones->fons,
+            "tools/capsula_generare.c", piscina, &inventum);
+        si (!inventum)
+        {
+            fructus.erratum = "instrumentum capsulae in fonte"
+                " deest (tools/capsula_generare.c)";
+            redde fructus;
+        }
+        clausura_instrumenti = _clausuram_e_contentis(piscina,
+            optiones->fons, &contentum_instrumenti, 1);
+        si (clausura_instrumenti == NIHIL)
+        {
+            fructus.erratum = "clausura instrumenti fracta";
+            redde fructus;
+        }
+        /* mergere dedup per viam */
+        {
+            TabulaDispersa* viae = tabula_dispersa_creare_chorda(
+                piscina, 128);
+            i32 k;
+
+            si (viae == NIHIL)
+            {
+                fructus.erratum = "memoria defecit";
+                redde fructus;
+            }
+            per (k = 0; k < xar_numerus(res_omnes); k = k + 1)
+            {
+                SilexRes* e = (SilexRes*)xar_obtinere(res_omnes,
+                    k);
+
+                tabula_dispersa_inserere(viae, e->via,
+                    (vacuum*)e);
+            }
+            per (k = 0; k < xar_numerus(clausura_instrumenti);
+                k = k + 1)
+            {
+                SilexRes* e = (SilexRes*)xar_obtinere(
+                    clausura_instrumenti, k);
+
+                si (!tabula_dispersa_continet(viae, e->via))
+                {
+                    SilexRes* novus = (SilexRes*)xar_addere(
+                        res_omnes);
+
+                    si (novus != NIHIL)
+                    {
+                        *novus = *e;
+                        tabula_dispersa_inserere(viae,
+                            novus->via, (vacuum*)novus);
+                    }
+                }
+            }
+        }
+        /* instrumentum ipsum */
+        {
+            SilexRes* res = (SilexRes*)xar_addere(res_omnes);
+
+            si (res != NIHIL)
+            {
+                res->via = chorda_ex_literis(
+                    "instrumenta/capsula_generare.c", piscina);
+                res->contentum = contentum_instrumenti;
+                res->origo = "vendicata:tools/capsula_generare.c";
+            }
+        }
+        fructus.vendicatae = xar_numerus(res_omnes);
+
+        /* plagulae genitae */
+        _rem_genitam_addere(piscina, res_omnes,
+            _texere(piscina, "fontes/", optiones->titulus, ".c"),
+            fons_c);
+        _rem_genitam_addere(piscina, res_omnes,
+            _texere(piscina, "fontes/", optiones->titulus,
+                "_pipa.h"), pipa_h);
+        _rem_genitam_addere(piscina, res_omnes,
+            _texere(piscina, "fontes/", optiones->titulus,
+                "_pipa.c"), pipa_c);
+        _rem_genitam_addere(piscina, res_omnes,
+            _texere(piscina, "probationes/probatio_",
+                optiones->titulus, ".c"), probatio_c);
+        _rem_genitam_addere(piscina, res_omnes,
+            _texere(piscina, "assets/", optiones->titulus,
+                ".toml"),
+            _toml_fingere(piscina, optiones->titulus));
+        _rem_genitam_addere(piscina, res_omnes,
+            "assets/index.html",
+            _index_html_fingere(piscina, optiones->titulus));
+        _rem_genitam_addere(piscina, res_omnes,
+            _texere(piscina, "assets/", optiones->titulus, ".js"),
+            _js_fingere(piscina, optiones->titulus));
+        _rem_genitam_addere(piscina, res_omnes, "README.md",
+            _readme_vitreum_fingere(piscina, optiones->titulus));
+        /* ordines: pro tempore simplices - generatio IV ordinum
+         * sequitur (consilium -vitrea, opus II) */
+        _rem_genitam_addere(piscina, res_omnes, "aedificare.sh",
+            _aedificare_sh_fingere(piscina, optiones->titulus));
+        _rem_genitam_addere(piscina, res_omnes, "probare.sh",
+            _probare_sh_fingere(piscina, optiones->titulus));
+    }
     fructus.genitae = xar_numerus(res_omnes) - fructus.vendicatae;
 
     /* volumen primum (veritas), deinde proiectio */

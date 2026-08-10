@@ -85,6 +85,8 @@ nomen structura {
     constans SilexFons* fons;         /* unde bibliothecae */
     constans character* destinatio;   /* directorium parens ("."...) */
     constans character* titulus;      /* nomen proiecti */
+    b32                 vitrea;       /* semen vitreum (cor voluminis)
+                                       * + ordines IV generati */
 } SilexNovumOptiones;
 
 nomen structura {

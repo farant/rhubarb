@@ -382,6 +382,7 @@ s32 principale (vacuum)
 
         optiones.fons = silex_fons_disci(piscina, ".");
         optiones.destinatio = AREA;
+        optiones.vitrea = FALSUM;
         optiones.titulus = "specimen";
         fructus = silex_novum(piscina, &optiones);
         si (!fructus.successus)
@@ -462,6 +463,58 @@ s32 principale (vacuum)
             piscina);
         CREDO_CHORDAE_AEQUALES(radix,
             chorda_ut_cstr(expectata, piscina));
+    }
+
+    /* ========================================================
+     * PROBARE: novum -vitrea - inventarium seminis cordis
+     * ======================================================== */
+
+    {
+        SilexNovumOptiones optiones;
+        SilexNovumFructus  fructus;
+
+        imprimere("\n--- Probans novum -vitrea ---\n");
+
+        optiones.fons = silex_fons_disci(piscina, ".");
+        optiones.destinatio = AREA;
+        optiones.titulus = "vitreum";
+        optiones.vitrea = VERUM;
+        fructus = silex_novum(piscina, &optiones);
+        si (!fructus.successus)
+        {
+            imprimere("novum -vitrea erratum: %s\n",
+                fructus.erratum);
+        }
+        CREDO_VERUM(fructus.successus);
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/fontes/vitreum.c"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/fontes/vitreum_pipa.h"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/fontes/vitreum_pipa.c"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/assets/vitreum.toml"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/assets/index.html"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/assets/vitreum.js"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/instrumenta/capsula_generare.c"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/probationes/probatio_vitreum.c"));
+        /* clausura vitreae tier: .m par + venditorium par */
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/lib/vitrea_macos.m"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/lib/fenestra_macos.m"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/vendor/sqlite3.c"));
+        /* clausura instrumenti: toml quod app non trahit */
+        CREDO_VERUM(filum_existit(AREA "/vitreum/lib/toml.c"));
+        /* titulus cum '-' recusatur (symbolum C fieret) */
+        optiones.titulus = "malum-nomen";
+        fructus = silex_novum(piscina, &optiones);
+        CREDO_FALSUM(fructus.successus);
     }
 
     /* ========================================================
@@ -1036,6 +1089,7 @@ s32 principale (vacuum)
 
         optiones.fons = silex_fons_disci(piscina, ".");
         optiones.destinatio = AREA;
+        optiones.vitrea = FALSUM;
         optiones.titulus = "malus/titulus";
         fructus = silex_novum(piscina, &optiones);
         CREDO_FALSUM(fructus.successus);
