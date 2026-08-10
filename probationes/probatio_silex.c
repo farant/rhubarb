@@ -883,6 +883,51 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_existit(
             AREA "/renovandum/include/minima.h"));
         CREDO_VERUM(filum_existit(AREA "/renovandum/lib/minima.c"));
+
+        /* VII. RE-RADICATIO: plagula auctorata (disco solo, ante
+         * conditionem!) inclusionem novam accipit -> ADDENDA e
+         * clausura recomputata. ORACULUM: ante emendationem hoc
+         * FALLIT ('omnia recentia' praeter derelictas - semina
+         * erant capita vendicata sola; mensuratum in vocabulario
+         * 2026-08-09). */
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/ficta/include/addenda.h", "/* addenda */\n"));
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/ficta/lib/addenda.c", "/* addenda c */\n"));
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/renovandum/fontes/novus.c",
+            "#include \"addenda.h\"\n"));
+        r = silex_renovare(piscina, AREA "/renovandum",
+            fons_fictae, FALSUM);
+        CREDO_VERUM(r.successus);
+        {
+            b32 addenda_caput = FALSUM;
+            b32 addenda_lib = FALSUM;
+            i32 index;
+
+            per (index = 0; index < xar_numerus(r.res);
+                index = index + 1)
+            {
+                SilexRenovatioRes* rr = (SilexRenovatioRes*)
+                    xar_obtinere(r.res, index);
+
+                si (rr->status == SILEX_RENOVATIO_ADDENDA)
+                {
+                    si (chorda_aequalis_literis(rr->via,
+                        "include/addenda.h"))
+                    {
+                        addenda_caput = VERUM;
+                    }
+                    si (chorda_aequalis_literis(rr->via,
+                        "lib/addenda.c"))
+                    {
+                        addenda_lib = VERUM;
+                    }
+                }
+            }
+            CREDO_VERUM(addenda_caput);
+            CREDO_VERUM(addenda_lib);
+        }
     }
 
     /* ========================================================

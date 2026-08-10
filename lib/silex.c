@@ -1761,6 +1761,122 @@ _sigillum_contenti (Piscina* piscina, chorda contentum)
     redde chorda_ex_literis(hex, piscina);
 }
 
+/* ==================================================
+ * Semina auctorata (re-radicatio renovationis + partes):
+ * inclusiones plagularum auctoratarum in DISCO (etiam ante
+ * conditionem - alioquin inclusio recens invisibilis, mensuratum
+ * in vocabulario 2026-08-09), bases earum notatae ne capita
+ * propria proiecti in fonte quaerantur.
+ * ================================================== */
+
+nomen structura {
+    Piscina*        piscina;
+    i32             radix_mensura;
+    Xar*            nomina;             /* chorda: nomina capitum */
+    TabulaDispersa* bases_auctoratae;   /* basis -> praesens */
+} SeminaContextus;
+
+interior chorda
+_basis_viae (chorda via);
+
+interior chorda
+_basis_viae (chorda via)
+{
+    i32 i;
+
+    per (i = via.mensura; i > 0; i = i - 1)
+    {
+        si (via.datum[i - 1] == '/')
+        {
+            redde chorda_ex_buffer(via.datum + i,
+                via.mensura - i);
+        }
+    }
+    redde via;
+}
+
+interior b32
+_fons_codicis_est (chorda via);
+
+interior b32
+_fons_codicis_est (chorda via)
+{
+    redde _suffixum_habet(via, ".c")
+        || _suffixum_habet(via, ".h")
+        || _suffixum_habet(via, ".m");
+}
+
+interior s32
+_semina_ambulator (chorda via_plena,
+    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+
+interior s32
+_semina_ambulator (chorda via_plena,
+    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+{
+    SeminaContextus* ctx = (SeminaContextus*)contextus;
+    chorda           via_rel;
+
+    si (introitus->genus != INTROITUS_FILUM)
+    {
+        redde 0;
+    }
+    si (via_plena.mensura <= ctx->radix_mensura)
+    {
+        redde 0;
+    }
+    via_rel = chorda_ex_buffer(
+        via_plena.datum + ctx->radix_mensura,
+        via_plena.mensura - ctx->radix_mensura);
+    si (_praetermittenda(via_rel)
+        || _praefixum_habet(via_rel, "lib/")
+        || _praefixum_habet(via_rel, "include/")
+        || _praefixum_habet(via_rel, "vendor/"))
+    {
+        redde 0;
+    }
+    {
+        chorda basis = _basis_viae(via_rel);
+
+        si (_praefixum_habet(basis, "capsula_"))
+        {
+            redde 0;   /* paria generata - nec semina nec bases */
+        }
+        tabula_dispersa_inserere(ctx->bases_auctoratae, basis,
+            (vacuum*)ctx);
+    }
+    si (_fons_codicis_est(via_rel))
+    {
+        _inclusiones_scrutari(filum_legere_totum(
+            chorda_ut_cstr(via_plena, ctx->piscina),
+            ctx->piscina), ctx->nomina);
+    }
+    redde 0;
+}
+
+interior vacuum
+_semina_auctorata_colligere (Piscina* piscina,
+    constans character* radix_absoluta, Xar* nomina,
+    TabulaDispersa* bases_auctoratae);
+
+interior vacuum
+_semina_auctorata_colligere (Piscina* piscina,
+    constans character* radix_absoluta, Xar* nomina,
+    TabulaDispersa* bases_auctoratae)
+{
+    SeminaContextus    ctx;
+    DirectoriumFiltrum filtrum;
+
+    ctx.piscina = piscina;
+    ctx.radix_mensura = (i32)strlen(radix_absoluta) + 1;
+    ctx.nomina = nomina;
+    ctx.bases_auctoratae = bases_auctoratae;
+    filtrum = directorium_filtrum_omnia();
+    filtrum.includere_occultos = FALSUM;
+    directorium_ambulare(radix_absoluta, &filtrum,
+        _semina_ambulator, &ctx, piscina);
+}
+
 SilexRenovatioFructus
 silex_renovare (Piscina* piscina, constans character* proiectum_dir,
     constans SilexFons* fons, b32 scribere)
@@ -1864,59 +1980,105 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
         }
     }
 
-    /* semina = capita vendicata; clausura recomputata = missum-
-     * novum (contentum incluso) + dependentiae novae (addendae).
-     * CAVE: Xar SEGMENTATUS est - tabulatum planum e piscina
-     * aedificandum, numquam xar_obtinere(x, 0) ut tabulatum */
+    /* semina = inclusiones plagularum auctoratarum (DISCI) +
+     * capita vendicata (continuitas); bases auctoratae excluduntur
+     * (capita propria proiecti). Ante: capita vendicata SOLA -
+     * codex novus clausuram numquam trahebat (mensuratum in
+     * vocabulario 2026-08-09). CAVE: Xar SEGMENTATUS est -
+     * tabulatum planum e piscina aedificandum. */
+    radix_absoluta = via_absoluta(
+        chorda_ex_literis(proiectum_dir, piscina), piscina);
     {
-        i32 numerus_capitum = 0;
-        i32 s = 0;
-        constans character** semina;
-        TabulaIterator iter;
-        chorda  clavis;
-        vacuum* valor;
+        Xar*            nomina = xar_creare(piscina,
+            (i32)magnitudo(chorda));
+        TabulaDispersa* bases = tabula_dispersa_creare_chorda(
+            piscina, 32);
+        TabulaDispersa* electa = tabula_dispersa_creare_chorda(
+            piscina, 64);
+        Xar*            semina_ch = xar_creare(piscina,
+            (i32)magnitudo(chorda));
+        TabulaIterator  iter;
+        chorda          clavis;
+        vacuum*         valor;
+        i32             n;
 
-        iter = tabula_dispersa_iterator_initium(tunc);
-        dum (tabula_dispersa_iterator_proximum(&iter, &clavis,
-            &valor))
-        {
-            si (_praefixum_habet(clavis, "include/"))
-            {
-                numerus_capitum = numerus_capitum + 1;
-            }
-        }
-        si (numerus_capitum == 0)
-        {
-            volumen_claudere(vol);
-            fructus.res = xar_creare(piscina,
-                (i32)magnitudo(SilexRenovatioRes));
-            fructus.successus = VERUM;   /* nihil vendicatum */
-            redde fructus;
-        }
-        semina = (constans character**)piscina_allocare(piscina,
-            (memoriae_index)((memoriae_index)numerus_capitum
-                * magnitudo(constans character*)));
-        si (semina == NIHIL)
+        si (nomina == NIHIL || bases == NIHIL || electa == NIHIL
+            || semina_ch == NIHIL)
         {
             volumen_claudere(vol);
             fructus.erratum = "memoria defecit";
             redde fructus;
         }
+        _semina_auctorata_colligere(piscina,
+            chorda_ut_cstr(radix_absoluta, piscina), nomina,
+            bases);
         iter = tabula_dispersa_iterator_initium(tunc);
         dum (tabula_dispersa_iterator_proximum(&iter, &clavis,
             &valor))
         {
             si (_praefixum_habet(clavis, "include/"))
             {
-                semina[s] = chorda_ut_cstr(chorda_ex_buffer(
-                    clavis.datum + 8, clavis.mensura - 8),
-                    piscina);
-                s = s + 1;
+                chorda* cella = (chorda*)xar_addere(nomina);
+
+                si (cella != NIHIL)
+                {
+                    *cella = chorda_ex_buffer(clavis.datum + 8,
+                        clavis.mensura - 8);
+                }
             }
         }
-        clausura = silex_clausuram_colligere(piscina, fons,
-            (constans character* constans*)semina,
-            numerus_capitum);
+        per (n = 0; n < xar_numerus(nomina); n = n + 1)
+        {
+            chorda nomen_capitis = *(chorda*)xar_obtinere(nomina,
+                n);
+
+            si (tabula_dispersa_continet(bases, nomen_capitis)
+                || tabula_dispersa_continet(electa, nomen_capitis))
+            {
+                perge;
+            }
+            tabula_dispersa_inserere(electa, nomen_capitis,
+                (vacuum*)nomina);
+            {
+                chorda* cella = (chorda*)xar_addere(semina_ch);
+
+                si (cella != NIHIL)
+                {
+                    *cella = nomen_capitis;
+                }
+            }
+        }
+        si (xar_numerus(semina_ch) == 0)
+        {
+            volumen_claudere(vol);
+            fructus.res = xar_creare(piscina,
+                (i32)magnitudo(SilexRenovatioRes));
+            fructus.successus = VERUM;   /* nihil quaerendum */
+            redde fructus;
+        }
+        {
+            constans character** semina = (constans character**)
+                piscina_allocare(piscina, (memoriae_index)(
+                    (memoriae_index)xar_numerus(semina_ch)
+                    * magnitudo(constans character*)));
+            i32 s;
+
+            si (semina == NIHIL)
+            {
+                volumen_claudere(vol);
+                fructus.erratum = "memoria defecit";
+                redde fructus;
+            }
+            per (s = 0; s < xar_numerus(semina_ch); s = s + 1)
+            {
+                semina[s] = chorda_ut_cstr(
+                    *(chorda*)xar_obtinere(semina_ch, s),
+                    piscina);
+            }
+            clausura = silex_clausuram_colligere(piscina, fons,
+                (constans character* constans*)semina,
+                xar_numerus(semina_ch));
+        }
     }
     si (clausura == NIHIL)
     {
@@ -1943,9 +2105,6 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
 
         tabula_dispersa_inserere(novum, e->via, (vacuum*)e);
     }
-
-    radix_absoluta = via_absoluta(
-        chorda_ex_literis(proiectum_dir, piscina), piscina);
 
     /* classificatio: clausura (novum) contra tunc et discum */
     per (index = 0; index < xar_numerus(clausura);
@@ -2132,7 +2291,11 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
             (s32)fructus.renovatae);
         chorda_aedificator_appendere_literis(aed, ",\"additae\":");
         chorda_aedificator_appendere_s32(aed, (s32)fructus.additae);
-        chorda_aedificator_appendere_literis(aed, "}");
+        /* stampa fontis: via fabricae aut stampa corporis (nostra
+         * ambae - sine characteribus JSON-hostilibus) */
+        chorda_aedificator_appendere_literis(aed, ",\"fons\":\"");
+        chorda_aedificator_appendere_literis(aed, fons->titulus);
+        chorda_aedificator_appendere_literis(aed, "\"}");
         datum = chorda_aedificator_finire(aed);
         si (volumen_actum_appendere(vol, "conditio", datum) == 0)
         {
