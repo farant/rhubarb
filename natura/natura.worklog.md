@@ -5401,3 +5401,62 @@ Monitum XX must carry modulus= or -plagula prints it everywhere. The
 canones driver skips genus-less modules (the generator refuses empty
 canons with exit 2, correctly); the suite's reconciliation counts
 COOKING modules + 1, derived not fixed.
+
+## 2026-08-10 — ARBOR PORPHYRIANA: species sunt genera, signum `.` in nomine
+
+The eight-commit arc (e825ce3..b6f5d5c) that unified the kind layer.
+Decreta: species = nested-genus sugar (one NATURA_ENS_GENUS, element
+name carries only the ROLE); the dot is PART of the element name
+(`<.genus>`/`<.species>`/`<.cultivar>`); individuum stays unmarked
+(the absolute universale/particulare line is dotted-vs-undotted); the
+dot is an open registry for future kind-minters.
+
+**Measured before**: 271 species + 1 cultivar of 385 "res" were kinds
+stored as instances; loader had ONE branch for species/individuum/
+cultivar; apis was `gradus="genus"` yet uninstantiable; currying-only
+species could not recurse (isbn declares nothing, isbn_10 curries
+nothing); 13 kind-level valores in planta authored, canon-blessed,
+read by NO consumer. **After**: genera 460 / res 113 / VULNERA 0,
+`quaere apis` → GENUS (sub animal), `apparatus rosa` shows
+`= valor 'durata' -> perennis (determinatio)`.
+
+Structure that made it safe: RENAME FIRST (T4: every literal flips,
+species still load as res, gates prove counts UNCHANGED 188/385 and
+cocta byte-identical) then UNIFY (T5: dispatch reroute, counts flip
+460/113). Separating rename-risk from semantics-risk meant each phase
+had a clean reconciliation gate.
+
+Landmines hit and survived:
+- **Rule VI vocabulary** read gradus_assensus's res_suae — members
+  are now liberi. Missed = 26 certitudo vulnera; VULNERA 0 proves it.
+- **strncmp-with-length on unterminated chorda** (quaesitor census):
+  dotted names change lengths; missed = counts silently 0. Census
+  271/113/1 exact proves all sites hit.
+- **The T6/T7 coupling**: widening natura_apparatus with valor/relatum
+  members leaked determinations into _apparatum_plicare — a valor
+  SHADOWED the real proprietas (electio degraded to textus, 650 lines
+  lost from generated canons). The -probare rancor gate caught it;
+  the fold now skips determination members (its own path is
+  _valores_applicare → ordinarius=). LESSON: apparatus is a shared
+  API — widening it audits every consumer, and the generated-artifact
+  byte-gate is the audit that cannot lie.
+- Conservation proof for regenerated canons: glossae/ordinarius/
+  element counts equal per file; only element ORDER moved (document
+  order now interleaves former species). semina.census byte-identical
+  (113 = individua, filter untouched).
+- documentatio-probatio.census VITIA 7 measured PRE-EXISTING
+  (judged against pre-arc canon: identical) → quaestio 01KZPSA3G1,
+  not this arc's debt.
+
+Deliberate deviation: examen -tabulae/-corpus stay RAW-partitioned
+(genera.txt 188 rows, res.txt 385) — they are the "what the files
+say" layer and visus is green/self-consistent on them; the graph
+layer (examen summary, census, index) carries the new ontology
+(460/113). Repartitioning the display layer is a contained follow-up
+if wanted.
+
+parens_etiam ported the dual-membership doctrine from res to kinds
+(scriptum_conchae etiam=plagula_fontis — apparatus walks both
+chains). Rule III monitum "proprietas ad rem solvit" evanuit
+CONSULTO — species-typed proprietates are now clean kind references
+(that was the point).

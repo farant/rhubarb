@@ -151,15 +151,24 @@ liberorum min..max.*
 
 | Element | Where | Attributes | Content |
 |---|---|---|---|
-| `natura` | root | `modulus` `versio` `lingua` | genera, optional `fontes` |
-| `genus` | in `natura`, or nested in a `genus`/`species` for taxonomic depth | `nomen`, opt `sub` `modulus` `gradus` | everything below |
-| `species` | in `genus` | `nomen`, opt `gradus` `etiam` | definitio, differentia, valor, relatum, historia, nota, dubium, nested `genus` |
-| `individuum` | in `genus` | `nomen` | same as species |
-| `cultivar` | in `species` | `nomen` | same — a rank below species produced by human selection (cultivar, breed, landrace, strain) |
+| `natura` | root | `modulus` `versio` `lingua` | kinds, optional `fontes` |
+| `.genus` | in `natura`, or nested for taxonomic depth | `nomen`, opt `sub` `modulus` `gradus` `etiam` `certitudo` `fons` | the full kind vocabulary |
+| `.species` | in a kind | `nomen`, opt `gradus` `etiam` `certitudo` `fons` | SAME kind vocabulary as `.genus` (no `sub`/`modulus` — parent comes from nesting) |
+| `individuum` | in a kind | `nomen`, opt `certitudo` `fons` | definitio, differentia, valor, relatum, historia, nota, dubium |
+| `.cultivar` | in `.species` | as `.species` | same — a rank below species produced by human selection (cultivar, breed, landrace, strain) |
 
-`species` vs `individuum` is the format's central distinction: a
-species is a KIND (C, pneumonia, the rose), an individuum is a
-THING (Ritchie, c89, the kilogram).
+**Arbor porphyriana (2026-08-10, decretum 01KZPK4B7X):** genus and
+species are RELATIVE roles — every intermediate kind is a species of
+what is above and a genus of what is below — so `.genus`/`.species`/
+`.cultivar` all register as ONE thing (a kind); the element name
+carries only authoring posture. The leading `.` is part of the NAME
+and marks kind-MINTING: creation rhymes with citation (`<.species
+nomen="apis">` mints what `.apis` cites). The ABSOLUTE line is
+kind vs `individuum` — dotted vs unmarked: a kind is a universal
+(C, pneumonia, the rose), an individuum is a THING (Ritchie, c89,
+the kilogram). Three-layer reading at every depth: *proprietas
+opens · valor-on-kind closes (determinatio — the proprium's home) ·
+valor-on-individuum reports.*
 
 ### Descriptive
 
@@ -301,9 +310,9 @@ this table carries the MEANINGS.*
 | `nomen` | nearly everything | the identifier |
 | `modulus` | natura; genus; proprietas; relatio; relatum; fons | which model the referenced thing lives in |
 | `versio` `lingua` | natura | model version; always `latina` so far |
-| `sub` | genus | parent genus (Porphyrian spine) |
-| `gradus` | genus, species | rank name in domain terms (familia/genus/species/cultivar) |
-| `etiam` | species | essential dual membership (rare by design) |
+| `sub` | .genus | parent kind (Porphyrian spine; .species/.cultivar parent by NESTING instead) |
+| `gradus` | any kind | rank name in domain terms (familia/genus/species/cultivar) |
+| `etiam` | any kind; individuum | essential dual membership (rare by design; kinds carry it via parens_etiam since 2026-08-10) |
 | `genus` | proprietas, fons | the value kind / the source kind |
 | `ad` | relatio, relatum, transitus | target (or destination state) |
 | `a` | relatio, transitus | source model of an inverse / origin state |

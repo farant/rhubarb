@@ -271,3 +271,17 @@ Implementation notes:
 - Reader-gate refused (exit 2) mid-migration because bin/canon_examen
   was stale after canon.c changed — canon_struere.sh, then green. The
   staleness refusal doing its job.
+
+## 2026-08-10 — genus 'titulus' (dotted element names)
+
+canon.canon typed elementum/liberum @nomen as COMPOSITUM, whose
+charset has no `.` — so `nomen=".genus"` was vitium IV and the arbor
+porphyriana rename was blocked at the grammar's grammar. New
+CanonGenusValoris CANON_GENUS_TITULUS = compositum + one optional
+leading dot; elementum/@nomen, elementum/@intra, liberum/@nomen moved
+to it; attributum/@nomen STAYS compositum. The asymmetry is the
+point: the canon grammar mirrors the stml lexer exactly (tags may
+dot, attributes never), so a schema cannot describe what the parser
+cannot parse. canon.canon self-judges VITIA 0 with the new genus.
+Note valor_congruit's dash rule flipped from `== COMPOSITUM` to
+`!= NOMEN` when TITULUS joined the case — titulus admits kebab too.

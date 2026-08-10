@@ -269,3 +269,34 @@ LEX GENERALIS: eadem proprietas parseris in uno campo strepitum
 tollit et in alio contentum corrumpit. 'Melius' non est proprietas
 parseris sed USUS. Quapropter normalizatio ELIGI debet, non
 IMPONI - et id est tota migratio.
+
+## 2026-08-10 — dotted tag names + the empty-name crash family
+
+Two changes shipped together (arbor porphyriana tasks I-II, e825ce3 +
+6a9ad05):
+
+**The crash that was already there.** Any tag whose name starts outside
+`[a-zA-Z_:]` (`<9bad/>`, `<.x>`) made `_tok_legere_nomen` return an
+empty chorda with the position UNMOVED. Downstream, two different
+failures: with attributes present, consumers dereferencing the empty
+interned title segfaulted (canon_examen exit 139); without attributes,
+the anonymous-close machinery `</>` swallowed the malformed close and
+the parse SUCCEEDED with a corrupted tree (`<.species>x</.species>`
+emitted as `<>.species&gt;x</>.species&gt;`, successus=1). The silent
+form is the nastier one — no test could assert on an error that never
+fired. Fix: `_titulus_male_incipit` guard at all four tag-name read
+sites (open/close/backward/sandwich) → STML_TOKEN_ERRATUM →
+STML_ERROR_SYNTAXIS. `<>` stays lenient (pinned: strictum judges
+TITULUS_VACUUS), `</>` stays legal.
+
+**Leading dot.** `_tok_legere_nomen` accepts ONE leading `.` iff
+followed by a normal name-start char. The dot is part of the NAME
+(byte-exact round-trip free; close tags match by ordinary equality).
+Attributes can never get it: the attribute path gates on
+`_est_nomen_initium` BEFORE calling the reader — do not "fix" that
+gate. Writer, raw-close matchers, and tag dispatch were measured
+dot-transparent before the change. coloratio.c (private lexer copy)
+taught the same rule at its tag-position sites.
+
+Trap for the future: `_est_nomen_initium` IS the attribute gate.
+Adding `.` to it silently legalizes `<a .attr="x">`.

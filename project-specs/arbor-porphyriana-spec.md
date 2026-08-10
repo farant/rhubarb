@@ -272,3 +272,35 @@ before its green is believed.
 - **Hand-glossing the 272 new kinds** (glossae are definitio-fallback
   meanwhile) — curation arc, not this migration.
 - **Taxonomy gap 4** (finis in prose only) — untouched by this arc.
+
+---
+
+## §10 Rulings from the build (2026-08-10, commits e825ce3..b6f5d5c)
+
+1. **The empty-name crash predated the arc** and was two-faced:
+   segfault with attributes, SILENT tree corruption without (the
+   anonymous-close machinery swallowed the malformed close). Fixed
+   first, on its own merits; `<>` lenity was pinned by an existing
+   test and preserved (strictum judges TITULUS_VACUUS).
+2. **Canon needed a second grammar change** beyond the plan: a new
+   value-genus `titulus` (compositum + one optional leading dot) for
+   elementum/liberum/intra names — attributum names stay compositum,
+   so the canon grammar mirrors the lexer exactly.
+3. **Rename-then-unify held.** T4's gates: examen summary byte-equal
+   (188/385/65/0), census exact, cocta byte-identical, INDEX
+   regenerated identical. T5's gates: 460/113/VULNERA 0, -index 573
+   rows with exactly 272 flipped.
+4. **The apparatus is a shared API** — T6's widening (valor/relatum
+   members) leaked into the canones fold and shadowed a real
+   proprietas; the -probare byte-gate caught it; the fold skips
+   determination members (T7). Conservation proven by
+   glossae/ordinarius/element counts per generated file.
+5. **Deviation**: examen -tabulae/-corpus (and therefore visus
+   tables/INDEX counts) stay raw-partitioned — the document layer
+   still says "species", the graph layer says "kind". Green and
+   self-consistent; repartition is a contained follow-up.
+6. **Pre-existing debt surfaced**: documentatio-probatio.census
+   VITIA 7 (quaestio 01KZPSA3G1) — measured against the pre-arc
+   canon, identical.
+7. Rule III's "proprietas typed by a res" monitum disappeared BY
+   DESIGN (fixture updated to ZEPHYRUM with the reason in place).
