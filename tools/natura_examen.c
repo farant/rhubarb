@@ -176,6 +176,16 @@ _colligere_omnia_elementa(
     }
 }
 
+/* titulus elementi ordo generum est? (.genus/.species/.cultivar -
+ * arbor porphyriana: munera tria, genus unum) */
+interior b32
+_kind_titulus_est(constans chorda* titulus)
+{
+    redde chorda_aequalis_literis(*titulus, ".genus") ||
+          chorda_aequalis_literis(*titulus, ".species") ||
+          chorda_aequalis_literis(*titulus, ".cultivar");
+}
+
 /* liberos DIRECTOS numerare */
 interior i32
 _numerare_liberos(
@@ -361,8 +371,6 @@ tabulas_scribere(
         Xar*            nodi;
         i32             i;
         character       mod[CCLVI];
-        constans character* gradus_nomina[III];
-        i32             ig;
 
         ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria, ie);
         p  = bib->piscina;
@@ -433,96 +441,132 @@ tabulas_scribere(
                     mod, nn, cv, sb, fa, fad, scr);
         }
 
-        /* ---- genera ---- */
-        nodi = xar_creare(p, (i32)magnitudo(StmlNodus*));
-        _colligere(ex->radix, ".genus", nodi);
-        per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
+        /* ---- genera (arbor porphyriana: .genus/.species/.cultivar
+         * ordines OMNES generum sunt; munus = columna IX; species
+         * parentem e nidificatione in columna sub ferunt) ---- */
         {
-            StmlNodus* g;
-            character  gn[CCLVI];
-            character  sub[CCLVI];
-            character  submod[CCLVI];
-            character  glossa[DXII];
-            StmlNodus* def;
-            Xar*       dubia_sub;
-            i32        npa;
-            StmlNodus* partes;
+            constans character* kind_nomina[III];
+            constans character* kind_munera[III];
+            i32                 ik;
 
-            g = *(StmlNodus**)xar_obtinere(nodi, i);
-            _attr(g, "nomen",   gn,     (i32)magnitudo(gn));
-            _attr(g, "sub",     sub,    (i32)magnitudo(sub));
-            _attr(g, "modulus", submod, (i32)magnitudo(submod));
+            kind_nomina[ZEPHYRUM] = ".genus";
+            kind_nomina[I]        = ".species";
+            kind_nomina[II]       = ".cultivar";
+            kind_munera[ZEPHYRUM] = "genus";
+            kind_munera[I]        = "species";
+            kind_munera[II]       = "cultivar";
 
-            /* subordinatio TRANS EXEMPLARIA: arcus, et radix in
-             * silva sua (mechanismus rotae XVII) */
-            si (sub[ZEPHYRUM] && submod[ZEPHYRUM] &&
-                strcmp(submod, mod) != ZEPHYRUM)
+            per (ik = ZEPHYRUM; ik < III; ik++)
             {
-                fprintf(f_arcus, "%s|%s|sub|%s|%s|%s\n",
-                        mod, gn, submod, sub, gn);
-                fprintf(f_transradices, "%s|%s|%s.%s\n",
-                        mod, gn, submod, sub);
-                sub[ZEPHYRUM] = '\0';
-            }
-
-            dubia_sub = xar_creare(p, (i32)magnitudo(StmlNodus*));
-            _colligere(g, "dubium", dubia_sub);
-
-            partes = stml_invenire_liberum(g, "partes");
-            npa = partes ? _numerare_liberos(partes, "pars")
-                         : ZEPHYRUM;
-
-            fprintf(f_genera, "%s|%s|%s|%u|%u|%u|%u|%u\n",
-                    mod, gn, sub,
-                    _numerare_liberos(g, ".species"),
-                    _numerare_liberos(g, "individuum"),
-                    xar_numerus(dubia_sub),
-                    _numerare_liberos(g, "machina_statuum"),
-                    npa);
-
-            /* glossa: sententia prima definitionis (aut
-             * differentiae, qua sub-genera saepe sola utuntur) */
-            def = stml_invenire_liberum(g, "definitio");
-            si (!def)
+            nodi = xar_creare(p, (i32)magnitudo(StmlNodus*));
+            _colligere(ex->radix, kind_nomina[ik], nodi);
+            per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
             {
-                def = stml_invenire_liberum(g, "differentia");
-            }
-            si (def)
-            {
-                character bruta[MM];
-                i32       k;
+                StmlNodus* g;
+                character  gn[CCLVI];
+                character  sub[CCLVI];
+                character  submod[CCLVI];
+                character  glossa[DXII];
+                StmlNodus* def;
+                Xar*       dubia_sub;
+                i32        npa;
+                StmlNodus* partes;
 
-                _prosa(stml_textus_internus(def, p), bruta,
-                       (i32)magnitudo(bruta));
-                /* cut -d'.' -f1 deinde cut -c1-118 */
-                per (k = ZEPHYRUM; bruta[k]; k++)
+                g = *(StmlNodus**)xar_obtinere(nodi, i);
+                _attr(g, "nomen",   gn,     (i32)magnitudo(gn));
+                _attr(g, "sub",     sub,    (i32)magnitudo(sub));
+                _attr(g, "modulus", submod, (i32)magnitudo(submod));
+
+                /* subordinatio TRANS EXEMPLARIA: arcus, et radix in
+                 * silva sua (mechanismus rotae XVII) */
+                si (sub[ZEPHYRUM] && submod[ZEPHYRUM] &&
+                    strcmp(submod, mod) != ZEPHYRUM)
                 {
-                    si (bruta[k] == '.')
+                    fprintf(f_arcus, "%s|%s|sub|%s|%s|%s\n",
+                            mod, gn, submod, sub, gn);
+                    fprintf(f_transradices, "%s|%s|%s.%s\n",
+                            mod, gn, submod, sub);
+                    sub[ZEPHYRUM] = '\0';
+                }
+
+                /* species/cultivar: parens e nidificatione (sub=
+                 * eis vetitum est) - columna sub impletur ut
+                 * tabula PARENS visus genera omnia tegat */
+                si (!sub[ZEPHYRUM] && ik > ZEPHYRUM)
+                {
+                    StmlNodus* maior;
+
+                    per (maior = g->parens; maior;
+                         maior = maior->parens)
                     {
-                        bruta[k] = '\0';
-                        frange;
+                        si (maior->genus == STML_NODUS_ELEMENTUM &&
+                            _kind_titulus_est(maior->titulus))
+                        {
+                            _attr(maior, "nomen", sub,
+                                  (i32)magnitudo(sub));
+                            frange;
+                        }
                     }
                 }
-                bruta[CXVIII] = '\0';
-                memcpy(glossa, bruta, strlen(bruta) + I);
+
+                dubia_sub = xar_creare(p, (i32)magnitudo(StmlNodus*));
+                _colligere(g, "dubium", dubia_sub);
+
+                partes = stml_invenire_liberum(g, "partes");
+                npa = partes ? _numerare_liberos(partes, "pars")
+                             : ZEPHYRUM;
+
+                fprintf(f_genera, "%s|%s|%s|%u|%u|%u|%u|%u|%s\n",
+                        mod, gn, sub,
+                        _numerare_liberos(g, ".species"),
+                        _numerare_liberos(g, "individuum"),
+                        xar_numerus(dubia_sub),
+                        _numerare_liberos(g, "machina_statuum"),
+                        npa,
+                        kind_munera[ik]);
+
+                /* glossa: sententia prima definitionis (aut
+                 * differentiae, qua sub-genera saepe sola utuntur) */
+                def = stml_invenire_liberum(g, "definitio");
+                si (!def)
+                {
+                    def = stml_invenire_liberum(g, "differentia");
+                }
+                si (def)
+                {
+                    character bruta[MM];
+                    i32       k;
+
+                    _prosa(stml_textus_internus(def, p), bruta,
+                           (i32)magnitudo(bruta));
+                    /* cut -d'.' -f1 deinde cut -c1-118 */
+                    per (k = ZEPHYRUM; bruta[k]; k++)
+                    {
+                        si (bruta[k] == '.')
+                        {
+                            bruta[k] = '\0';
+                            frange;
+                        }
+                    }
+                    bruta[CXVIII] = '\0';
+                    memcpy(glossa, bruta, strlen(bruta) + I);
+                }
+                alioquin
+                {
+                    glossa[ZEPHYRUM] = '\0';
+                }
+                fprintf(f_glossae, "%s|%s|%s\n", mod, gn, glossa);
             }
-            alioquin
-            {
-                glossa[ZEPHYRUM] = '\0';
             }
-            fprintf(f_glossae, "%s|%s|%s\n", mod, gn, glossa);
         }
 
-        /* ---- res dictionarii (ordine graduum, ut visus) ---- */
-        gradus_nomina[ZEPHYRUM] = ".species";
-        gradus_nomina[I]        = "individuum";
-        gradus_nomina[II]       = ".cultivar";
-        per (ig = ZEPHYRUM; ig < III; ig++)
+        /* ---- res dictionarii = INDIVIDUA SOLA (arbor
+         * porphyriana; maior = genus proximus CUIUSVIS ordinis) */
         {
             Xar* rr;
 
             rr = xar_creare(p, (i32)magnitudo(StmlNodus*));
-            _colligere(ex->radix, gradus_nomina[ig], rr);
+            _colligere(ex->radix, "individuum", rr);
             per (i = ZEPHYRUM; i < xar_numerus(rr); i++)
             {
                 StmlNodus* r;
@@ -541,8 +585,7 @@ tabulas_scribere(
                 per (maior = r->parens; maior; maior = maior->parens)
                 {
                     si (maior->genus == STML_NODUS_ELEMENTUM &&
-                        chorda_aequalis_literis(*maior->titulus,
-                                                ".genus"))
+                        _kind_titulus_est(maior->titulus))
                     {
                         _attr(maior, "nomen", rg,
                               (i32)magnitudo(rg));
@@ -551,8 +594,7 @@ tabulas_scribere(
                 }
 
                 fprintf(f_res, "%s|%s\n", mod, rn);
-                fprintf(f_resgen, "%s|%s|%s%s\n", mod, rg,
-                        ig == I ? ":" : "", rn);
+                fprintf(f_resgen, "%s|%s|:%s\n", mod, rg, rn);
             }
         }
 
@@ -614,8 +656,7 @@ tabulas_scribere(
                         {
                             si (maior->genus ==
                                     STML_NODUS_ELEMENTUM &&
-                                chorda_aequalis_literis(
-                                    *maior->titulus, ".genus"))
+                                _kind_titulus_est(maior->titulus))
                             {
                                 _attr(maior, "nomen", fg,
                                       (i32)magnitudo(fg));
@@ -673,8 +714,7 @@ tabulas_scribere(
             per (maior = pr->parens; maior; maior = maior->parens)
             {
                 si (maior->genus == STML_NODUS_ELEMENTUM &&
-                    chorda_aequalis_literis(*maior->titulus,
-                                            ".genus"))
+                    _kind_titulus_est(maior->titulus))
                 {
                     _attr(maior, "nomen", pf, (i32)magnitudo(pf));
                     frange;
@@ -858,8 +898,6 @@ corpus_scribere(
         Xar*            nodi;
         character       mod[CCLVI];
         i32             i;
-        i32             ig;
-        constans character* gradus_nomina[II];
 
         ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria, ie);
         p  = bib->piscina;
@@ -867,7 +905,11 @@ corpus_scribere(
         _attr(ex->radix, "modulus", mod, (i32)magnitudo(mod));
 
         nodi = xar_creare(p, (i32)magnitudo(StmlNodus*));
+        /* ordines generum OMNES (arbor porphyriana) - umbra
+         * apparatus inde genera CDLX tegit */
         _colligere(ex->radix, ".genus", nodi);
+        _colligere(ex->radix, ".species", nodi);
+        _colligere(ex->radix, ".cultivar", nodi);
 
         per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
         {
@@ -1051,15 +1093,13 @@ corpus_scribere(
             }
         }
 
-        /* species et individua (cultivar NON - quaere ea omittit) */
-        gradus_nomina[ZEPHYRUM] = ".species";
-        gradus_nomina[I]        = "individuum";
-        per (ig = ZEPHYRUM; ig < II; ig++)
+        /* individua sola (arbor porphyriana: species in flumine G
+         * supra; maior = genus proximus CUIUSVIS ordinis) */
         {
             Xar* rr;
 
             rr = xar_creare(p, (i32)magnitudo(StmlNodus*));
-            _colligere(ex->radix, gradus_nomina[ig], rr);
+            _colligere(ex->radix, "individuum", rr);
             per (i = ZEPHYRUM; i < xar_numerus(rr); i++)
             {
                 StmlNodus* r;
@@ -1080,8 +1120,7 @@ corpus_scribere(
                 per (maior = r->parens; maior; maior = maior->parens)
                 {
                     si (maior->genus == STML_NODUS_ELEMENTUM &&
-                        chorda_aequalis_literis(*maior->titulus,
-                                                ".genus"))
+                        _kind_titulus_est(maior->titulus))
                     {
                         _attr(maior, "nomen", rg,
                               (i32)magnitudo(rg));
@@ -1097,8 +1136,8 @@ corpus_scribere(
                               (i32)magnitudo(rd), FALSUM);
                 }
 
-                fprintf(f, "S\t%s\t%s\t%s\t%s\t%s\n",
-                        mod, rg, gradus_nomina[ig], rn, rd);
+                fprintf(f, "S\t%s\t%s\tindividuum\t%s\t%s\n",
+                        mod, rg, rn, rd);
             }
         }
 

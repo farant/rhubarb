@@ -18,8 +18,11 @@ EXITUS=build/natura_visus.html
 TMP=build/natura_visus_tmp
 mkdir -p "$TMP"
 
-GENERA="$TMP/genera.txt"     # mod|genus|sub|nSp|nIn|nDu|nMa
-RES="$TMP/res.txt"           # mod|nomen (species+individua+cultivar)
+GENERA="$TMP/genera.txt"     # mod|genus|sub|nSp|nIn|nDu|nMa|nPa|munus
+                             # (arbor porphyriana: ordines generum
+                             # OMNES; munus=genus|species|cultivar;
+                             # sub species = parens nidificationis)
+RES="$TMP/res.txt"           # mod|nomen (individua sola)
 ARCUS="$TMP/arcus.txt"       # fromMod|fromGenus|rel|toMod|target|genus
 UMBRAE="$TMP/umbrae.txt"     # target|fromMod
 DUBIA="$TMP/dubia.txt"       # mod|contextus
@@ -216,8 +219,10 @@ while IFS='|' read -r m clavis nomen; do
             >> "$VULNERA"
     fi
 done < "$CITATIONES"
+# gradus assensus GENERA sunt post arborem porphyrianam (columnae
+# GENERA: mod|gn|...), non res
 while IFS='|' read -r m gradus; do
-    if ! grep -q "^iudicium|$gradus\$" "$RES"; then
+    if ! grep -q "^iudicium|$gradus|" "$GENERA"; then
         echo "$m --certitudo--> '$gradus' (gradus assensus ignotus)" \
             >> "$VULNERA"
     fi
@@ -400,9 +405,9 @@ echo "<p class='numeri'>exemplaria <b>$nModuli</b> &middot; genera <b>$nGenera</
 echo "<h2>SILVA PORPHYRIANA</h2>"
 
 rami() { # mod parens
-    local mod="$1" parens="$2" linea g s nsp nin ndu nma npa insig
+    local mod="$1" parens="$2" linea g s nsp nin ndu nma npa munus insig
     echo "<ul>"
-    while IFS='|' read -r _ g s nsp nin ndu nma npa; do
+    while IFS='|' read -r _ g s nsp nin ndu nma npa munus; do
         [ "$s" != "$parens" ] && continue
         insig=""
         [ "$nsp" -gt 0 ] && insig="$insig species:$nsp"
@@ -549,7 +554,7 @@ sort -t'|' -k2,2 "$GLOSSAE" | while IFS='|' read -r m g _; do
     echo "| $g | $m |"
 done
 echo
-echo "## IV. Dictionarium (species et individua descripta)"
+echo "## IV. Dictionarium (individua descripta; species inter genera §II)"
 echo
 for mv in $MODULI; do
     mod="${mv%%:*}"
