@@ -77,8 +77,8 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans clausuram (latina sola) ---\n");
 
-        res_omnes = silex_clausuram_colligere(piscina, ".",
-            SEMINA_LATINA, 1);
+        res_omnes = silex_clausuram_colligere(piscina,
+            silex_fons_disci(piscina, "."), SEMINA_LATINA, 1);
         CREDO_NON_NIHIL(res_omnes);
         CREDO_AEQUALIS_I32((i32)xar_numerus(res_omnes), (i32)1);
         CREDO_VERUM(_manifestum_continet(res_omnes,
@@ -98,8 +98,8 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans clausuram (chorda + trans.) ---\n");
 
-        res_omnes = silex_clausuram_colligere(piscina, ".",
-            SEMINA_CHORDA, 1);
+        res_omnes = silex_clausuram_colligere(piscina,
+            silex_fons_disci(piscina, "."), SEMINA_CHORDA, 1);
         CREDO_NON_NIHIL(res_omnes);
         CREDO_VERUM(_manifestum_continet(res_omnes,
             "include/chorda.h"));
@@ -116,7 +116,7 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
-     * PROBARE: fabrica invalida = recusatio
+     * PROBARE: fabrica invalida = recusatio (in constructore)
      * ======================================================== */
 
     {
@@ -127,9 +127,33 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans recusationem fabricae ---\n");
 
+        CREDO_NIHIL(silex_fons_disci(piscina,
+            "/non/exsistit/fabrica"));
         res_omnes = silex_clausuram_colligere(piscina,
-            "/non/exsistit/fabrica", SEMINA_LATINA, 1);
+            silex_fons_disci(piscina, "/non/exsistit/fabrica"),
+            SEMINA_LATINA, 1);
         CREDO_NIHIL(res_omnes);
+    }
+
+    /* ========================================================
+     * PROBARE: fons disci - existit/legere
+     * ======================================================== */
+
+    {
+        SilexFons* fons = silex_fons_disci(piscina, ".");
+        b32        inventum = FALSUM;
+        chorda     contentum;
+
+        imprimere("\n--- Probans fontem disci ---\n");
+        CREDO_NON_NIHIL(fons);
+        CREDO_VERUM(silex_fons_existit(fons, "include/latina.h",
+            piscina));
+        CREDO_FALSUM(silex_fons_existit(fons, "include/nusquam.h",
+            piscina));
+        contentum = silex_fons_legere(fons, "include/latina.h",
+            piscina, &inventum);
+        CREDO_VERUM(inventum);
+        CREDO_VERUM(contentum.mensura > 0);
     }
 
     /* ========================================================
@@ -173,7 +197,7 @@ s32 principale (vacuum)
         filum_directorium_creare_si_necesse("build");
         filum_directorium_creare_si_necesse(AREA);
 
-        optiones.fabrica = ".";
+        optiones.fons = silex_fons_disci(piscina, ".");
         optiones.destinatio = AREA;
         optiones.titulus = "specimen";
         fructus = silex_novum(piscina, &optiones);
@@ -485,6 +509,7 @@ s32 principale (vacuum)
         Volumen*              vol;
         chorda                contentum;
         b32                   bene;
+        SilexFons*            fons_fictae;
 
         imprimere("\n--- Probans renovare (fabrica ficta) ---\n");
 
@@ -497,6 +522,8 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_scribere_literis(
             AREA "/ficta/lib/minima.c",
             "#include \"minima.h\"\n/* corpus v1 */\n"));
+        fons_fictae = silex_fons_disci(piscina, AREA "/ficta");
+        CREDO_NON_NIHIL(fons_fictae);
 
         /* proiectum manu vendicatum (v1 utrimque) + plagula genita */
         filum_directorium_creare_si_necesse(AREA "/renovandum");
@@ -537,7 +564,7 @@ s32 principale (vacuum)
 
         /* I. omnia recentia */
         r = silex_renovare(piscina, AREA "/renovandum",
-            AREA "/ficta", FALSUM);
+            fons_fictae, FALSUM);
         CREDO_VERUM(r.successus);
         CREDO_AEQUALIS_I32((i32)xar_numerus(r.res), (i32)0);
         CREDO_AEQUALIS_I32((i32)r.intactae, (i32)2);
@@ -546,7 +573,7 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_scribere_literis(
             AREA "/ficta/include/minima.h", "/* minima v2 */\n"));
         r = silex_renovare(piscina, AREA "/renovandum",
-            AREA "/ficta", FALSUM);
+            fons_fictae, FALSUM);
         CREDO_VERUM(r.successus);
         CREDO_AEQUALIS_I32((i32)xar_numerus(r.res), (i32)1);
         {
@@ -558,7 +585,7 @@ s32 principale (vacuum)
                 "include/minima.h");
         }
         r = silex_renovare(piscina, AREA "/renovandum",
-            AREA "/ficta", VERUM);
+            fons_fictae, VERUM);
         CREDO_VERUM(r.successus);
         CREDO_AEQUALIS_I32((i32)r.renovatae, (i32)1);
         contentum = filum_legere_totum(
@@ -567,7 +594,7 @@ s32 principale (vacuum)
             "/* minima v2 */\n");
         /* idempotens: iterum = omnia recentia (tunc novum factum) */
         r = silex_renovare(piscina, AREA "/renovandum",
-            AREA "/ficta", FALSUM);
+            fons_fictae, FALSUM);
         CREDO_AEQUALIS_I32((i32)xar_numerus(r.res), (i32)0);
         CREDO_AEQUALIS_I32((i32)r.intactae, (i32)2);
 
@@ -575,7 +602,7 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_scribere_literis(
             AREA "/renovandum/lib/minima.c", "/* meum iam */\n"));
         r = silex_renovare(piscina, AREA "/renovandum",
-            AREA "/ficta", VERUM);
+            fons_fictae, VERUM);
         CREDO_VERUM(r.successus);
         CREDO_AEQUALIS_I32((i32)r.renovatae, (i32)0);
         CREDO_AEQUALIS_I32((i32)xar_numerus(r.res), (i32)1);
@@ -594,7 +621,7 @@ s32 principale (vacuum)
             AREA "/ficta/lib/minima.c",
             "#include \"minima.h\"\n/* corpus v2 */\n"));
         r = silex_renovare(piscina, AREA "/renovandum",
-            AREA "/ficta", VERUM);
+            fons_fictae, VERUM);
         CREDO_VERUM(r.successus);
         CREDO_AEQUALIS_I32((i32)r.renovatae, (i32)0);
         {
@@ -612,7 +639,7 @@ s32 principale (vacuum)
             AREA "/renovandum/lib/minima.c",
             "#include \"minima.h\"\n/* corpus v1 */\n"));
         r = silex_renovare(piscina, AREA "/renovandum",
-            AREA "/ficta", VERUM);
+            fons_fictae, VERUM);
         CREDO_VERUM(r.successus);
         CREDO_AEQUALIS_I32((i32)r.renovatae, (i32)1);
         contentum = filum_legere_totum(
@@ -627,7 +654,7 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_scribere_literis(
             AREA "/ficta/include/nova.h", "/* nova v1 */\n"));
         r = silex_renovare(piscina, AREA "/renovandum",
-            AREA "/ficta", VERUM);
+            fons_fictae, VERUM);
         CREDO_VERUM(r.successus);
         CREDO_AEQUALIS_I32((i32)r.renovatae, (i32)1);
         CREDO_AEQUALIS_I32((i32)r.additae, (i32)1);
@@ -650,7 +677,7 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_delere(AREA "/ficta/include/minima.h"));
         CREDO_VERUM(filum_delere(AREA "/ficta/lib/minima.c"));
         r = silex_renovare(piscina, AREA "/renovandum",
-            AREA "/ficta", FALSUM);
+            fons_fictae, FALSUM);
         CREDO_VERUM(r.successus);
         CREDO_AEQUALIS_I32((i32)xar_numerus(r.res), (i32)2);
         {
@@ -720,7 +747,7 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans recusationem tituli ---\n");
 
-        optiones.fabrica = ".";
+        optiones.fons = silex_fons_disci(piscina, ".");
         optiones.destinatio = AREA;
         optiones.titulus = "malus/titulus";
         fructus = silex_novum(piscina, &optiones);

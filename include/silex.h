@@ -27,6 +27,52 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "capsula.h"
+
+/* ==================================================
+ * Fons bibliothecarum: DISCUS (fabrica in disco) aut CORPUS
+ * (capsula in binario infixa). Lector unicus clausurae - omnes
+ * verbi (novum/renovare/partes) per eundem fontem legunt.
+ * ================================================== */
+
+nomen enumeratio {
+    SILEX_FONS_DISCUS = 0,   /* fabrica in disco */
+    SILEX_FONS_CORPUS        /* capsula in binario infixa */
+} SilexFonsGenus;
+
+nomen structura {
+    SilexFonsGenus      genus;
+    constans character* fabrica;   /* DISCUS: radix arboris */
+    Capsula*            capsula;   /* CORPUS: corpus apertum */
+    constans character* titulus;   /* pro nuntiis: via aut stampa */
+} SilexFons;
+
+/* DISCUS: include/ adsit; NIHIL si invalida */
+SilexFons*
+silex_fons_disci (
+    Piscina*            piscina,
+    constans character* fabrica);
+
+/* CORPUS: capsulam aperit; titulus e clave 'corpus.versio'
+ * (absente: "(corpus sine stampa)"); NIHIL si capsula fracta */
+SilexFons*
+silex_fons_corporis (
+    Piscina*               piscina,
+    constans CapsulaEmbed* embed);
+
+b32
+silex_fons_existit (
+    constans SilexFons* fons,
+    constans character* via_relativa,
+    Piscina*            piscina);
+
+/* *inventum FALSUM si via ignota */
+chorda
+silex_fons_legere (
+    constans SilexFons* fons,
+    constans character* via_relativa,
+    Piscina*            piscina,
+    b32*                inventum);
 
 /* plagula colligenda: via relativa proiecti + contentum + origo */
 nomen structura {
@@ -36,7 +82,7 @@ nomen structura {
 } SilexRes;
 
 nomen structura {
-    constans character* fabrica;      /* radix arboris rhubarb */
+    constans SilexFons* fons;         /* unde bibliothecae */
     constans character* destinatio;   /* directorium parens ("."...) */
     constans character* titulus;      /* nomen proiecti */
 } SilexNovumOptiones;
@@ -50,12 +96,12 @@ nomen structura {
 } SilexNovumFructus;
 
 /* clausura bibliothecarum: BFS ex seminibus (nomina capitum,
- * e.g. "chorda.h"); Xar de SilexRes (include/... et lib/...);
- * NIHIL si fabrica invalida */
+ * e.g. "chorda.h"); Xar de SilexRes (include/... et lib/... et
+ * vendor/...); NIHIL si fons NIHIL */
 Xar*
 silex_clausuram_colligere (
     Piscina*                      piscina,
-    constans character*           fabrica,
+    constans SilexFons*           fons,
     constans character* constans* semina,
     i32                           numerus_seminum);
 
@@ -239,7 +285,7 @@ SilexRenovatioFructus
 silex_renovare (
     Piscina*            piscina,
     constans character* proiectum_dir,
-    constans character* fabrica,
+    constans SilexFons* fons,
     b32                 scribere);
 
 #endif /* SILEX_H */

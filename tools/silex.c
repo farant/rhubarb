@@ -421,6 +421,7 @@ principale (integer argc, character** argv)
     chorda              destinatio_opt;
     constans character* fabrica;
     constans character* destinatio;
+    SilexFons*          fons = NIHIL;
     SilexNovumOptiones  optiones;
     SilexNovumFructus   fructus;
 
@@ -487,6 +488,10 @@ principale (integer argc, character** argv)
     {
         fabrica = silex_fabricam_invenire(piscina, ".");
     }
+    si (fabrica != NIHIL)
+    {
+        fons = silex_fons_disci(piscina, fabrica);
+    }
 
     /* sine argumentis aut 'ui' = fenestra */
     si (argumenta_numerus_positionalium(lecta) == 0
@@ -547,13 +552,13 @@ principale (integer argc, character** argv)
             SilexRenovatioFructus r;
             i32 index;
 
-            si (fabrica == NIHIL)
+            si (fons == NIHIL)
             {
                 fprintf(stderr, "silex renovare: fabrica ignota -"
                     " da --fabrica aut SILEX_FABRICA pone\n");
                 redde I;
             }
-            r = silex_renovare(piscina, via_proiecti, fabrica,
+            r = silex_renovare(piscina, via_proiecti, fons,
                 applicare);
             si (r.res == NIHIL)
             {
@@ -566,7 +571,7 @@ principale (integer argc, character** argv)
                     " (%d intactae)\n", (integer)r.intactae);
                 redde ZEPHYRUM;
             }
-            imprimere("silex renovare (e %s):\n", fabrica);
+            imprimere("silex renovare (e %s):\n", fons->titulus);
             per (index = 0; index < xar_numerus(r.res);
                 index = index + 1)
             {
@@ -766,7 +771,7 @@ principale (integer argc, character** argv)
         fprintf(stderr, "silex novum: titulus deest\n");
         redde I;
     }
-    si (fabrica == NIHIL)
+    si (fons == NIHIL)
     {
         fprintf(stderr, "silex: fabrica ignota - da --fabrica,"
             " SILEX_FABRICA pone, aut ex arbore rhubarb curre\n");
@@ -784,7 +789,7 @@ principale (integer argc, character** argv)
         destinatio = ".";
     }
 
-    optiones.fabrica = fabrica;
+    optiones.fons = fons;
     optiones.destinatio = destinatio;
     optiones.titulus = chorda_ut_cstr(titulus, piscina);
 
@@ -800,7 +805,7 @@ principale (integer argc, character** argv)
     imprimere("silex novum: %s excusum\n", optiones.titulus);
     imprimere("  volumen:    %s (veritas)\n", fructus.volumen_via);
     imprimere("  vendicatae: %d plagulae (e %s)\n",
-        (integer)fructus.vendicatae, fabrica);
+        (integer)fructus.vendicatae, fons->titulus);
     imprimere("  genitae:    %d plagulae\n",
         (integer)fructus.genitae);
     imprimere("  deinde:     cd %s/%s && ./aedificare.sh &&"

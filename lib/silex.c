@@ -96,6 +96,124 @@ silex_fabricam_invenire (Piscina* piscina,
 }
 
 /* ==================================================
+ * Fons bibliothecarum (DISCUS | CORPUS)
+ * ================================================== */
+
+SilexFons*
+silex_fons_disci (Piscina* piscina, constans character* fabrica)
+{
+    SilexFons* fons;
+
+    si (fabrica == NIHIL || !filum_directorium_existit(
+        _texere(piscina, fabrica, "/include", NIHIL)))
+    {
+        redde NIHIL;
+    }
+    fons = (SilexFons*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(SilexFons));
+    si (fons == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fons->genus   = SILEX_FONS_DISCUS;
+    fons->fabrica = fabrica;
+    fons->capsula = NIHIL;
+    fons->titulus = fabrica;
+    redde fons;
+}
+
+SilexFons*
+silex_fons_corporis (Piscina* piscina,
+    constans CapsulaEmbed* embed)
+{
+    SilexFons* fons;
+    Capsula*   capsula = capsula_aperire(embed, piscina);
+
+    si (capsula == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fons = (SilexFons*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(SilexFons));
+    si (fons == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fons->genus   = SILEX_FONS_CORPUS;
+    fons->fabrica = NIHIL;
+    fons->capsula = capsula;
+    fons->titulus = "(corpus sine stampa)";
+    {
+        CapsulaFructus stampa = capsula_legere(capsula,
+            "corpus.versio", piscina);
+
+        si (stampa.status == CAPSULA_OK
+            && stampa.datum.mensura > 0)
+        {
+            chorda linea = stampa.datum;
+
+            /* linea prima sine terminatione */
+            dum (linea.mensura > 0
+                && (linea.datum[linea.mensura - 1] == '\n'
+                    || linea.datum[linea.mensura - 1] == '\r'))
+            {
+                linea.mensura = linea.mensura - 1;
+            }
+            fons->titulus = _texere(piscina, "(corpus ",
+                chorda_ut_cstr(linea, piscina), ")");
+        }
+    }
+    redde fons;
+}
+
+b32
+silex_fons_existit (constans SilexFons* fons,
+    constans character* via_relativa, Piscina* piscina)
+{
+    si (fons->genus == SILEX_FONS_CORPUS)
+    {
+        redde capsula_habet(fons->capsula, via_relativa);
+    }
+    redde filum_existit(_texere(piscina, fons->fabrica, "/",
+        via_relativa));
+}
+
+chorda
+silex_fons_legere (constans SilexFons* fons,
+    constans character* via_relativa, Piscina* piscina,
+    b32* inventum)
+{
+    chorda vacua;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = 0;
+    *inventum = FALSUM;
+    si (fons->genus == SILEX_FONS_CORPUS)
+    {
+        CapsulaFructus f = capsula_legere(fons->capsula,
+            via_relativa, piscina);
+
+        si (f.status != CAPSULA_OK)
+        {
+            redde vacua;
+        }
+        *inventum = VERUM;
+        redde f.datum;
+    }
+    {
+        constans character* via_plena = _texere(piscina,
+            fons->fabrica, "/", via_relativa);
+
+        si (!filum_existit(via_plena))
+        {
+            redde vacua;
+        }
+        *inventum = VERUM;
+        redde filum_legere_totum(via_plena, piscina);
+    }
+}
+
+/* ==================================================
  * Scrutatio inclusionum (v0 textualis, lineatim)
  * ================================================== */
 
@@ -180,30 +298,38 @@ _inclusiones_scrutari (chorda contentum, Xar* opus)
  * ================================================== */
 
 interior b32
-_plagulam_e_fabrica_colligere (Piscina* piscina,
-    constans character* fabrica, constans character* pars,
+_plagulam_e_fonte_colligere (Piscina* piscina,
+    constans SilexFons* fons, constans character* pars,
     chorda titulus, Xar* fructus, Xar* opus);
 
-/* pars = "include/" aut "lib/"; VERUM = plagula exsistit et lecta */
+/* pars = "include/" | "lib/" | "vendor/"; VERUM = plagula in fonte
+ * exsistit et lecta */
 interior b32
-_plagulam_e_fabrica_colligere (Piscina* piscina,
-    constans character* fabrica, constans character* pars,
+_plagulam_e_fonte_colligere (Piscina* piscina,
+    constans SilexFons* fons, constans character* pars,
     chorda titulus, Xar* fructus, Xar* opus)
 {
     chorda              via_rel;
     constans character* via_rel_cstr;
-    constans character* via_plena;
     chorda              contentum;
     SilexRes*           res;
 
     via_rel = _praefigere(piscina, pars, titulus);
     via_rel_cstr = chorda_ut_cstr(via_rel, piscina);
-    via_plena = _texere(piscina, fabrica, "/", via_rel_cstr);
-    si (!filum_existit(via_plena))
+    si (!silex_fons_existit(fons, via_rel_cstr, piscina))
     {
         redde FALSUM;
     }
-    contentum = filum_legere_totum(via_plena, piscina);
+    {
+        b32 inventum = FALSUM;
+
+        contentum = silex_fons_legere(fons, via_rel_cstr, piscina,
+            &inventum);
+        si (!inventum)
+        {
+            redde FALSUM;
+        }
+    }
     res = (SilexRes*)xar_addere(fructus);
     si (res == NIHIL)
     {
@@ -218,7 +344,7 @@ _plagulam_e_fabrica_colligere (Piscina* piscina,
 
 Xar*
 silex_clausuram_colligere (Piscina* piscina,
-    constans character* fabrica,
+    constans SilexFons* fons,
     constans character* constans* semina, i32 numerus_seminum)
 {
     Xar*            opus;
@@ -227,13 +353,9 @@ silex_clausuram_colligere (Piscina* piscina,
     i32             s;
     i32             index;
 
-    si (!filum_directorium_existit(
-        _texere(piscina, fabrica, "/include", NIHIL)))
+    si (fons == NIHIL)
     {
-        fprintf(stderr,
-            "silex: fabrica invalida (include/ deest): %s\n",
-            fabrica);
-        redde NIHIL;
+        redde NIHIL;   /* validatio in constructoribus fontis */
     }
 
     opus = xar_creare(piscina, (i32)magnitudo(chorda));
@@ -265,7 +387,7 @@ silex_clausuram_colligere (Piscina* piscina,
         }
         tabula_dispersa_inserere(visa, caput, (vacuum*)fructus);
 
-        si (!_plagulam_e_fabrica_colligere(piscina, fabrica,
+        si (!_plagulam_e_fonte_colligere(piscina, fons,
             "include/", caput, fructus, opus))
         {
             /* citata sine fonte: monitio, non mors (commentaria
@@ -295,8 +417,8 @@ silex_clausuram_colligere (Piscina* piscina,
                 chorda_aedificator_appendere_literis(aed, ".c");
                 titulus_c = chorda_aedificator_finire(aed);
             }
-            _plagulam_e_fabrica_colligere(piscina, fabrica, "lib/",
-                titulus_c, fructus, opus);
+            (vacuum)_plagulam_e_fonte_colligere(piscina, fons,
+                "lib/", titulus_c, fructus, opus);
         }
     }
 
@@ -595,7 +717,7 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
     }
 
     /* clausura e fabrica */
-    res_omnes = silex_clausuram_colligere(piscina, optiones->fabrica,
+    res_omnes = silex_clausuram_colligere(piscina, optiones->fons,
         SEMINA, (i32)(magnitudo(SEMINA) / magnitudo(SEMINA[0])));
     si (res_omnes == NIHIL)
     {
@@ -1555,7 +1677,7 @@ _sigillum_contenti (Piscina* piscina, chorda contentum)
 
 SilexRenovatioFructus
 silex_renovare (Piscina* piscina, constans character* proiectum_dir,
-    constans character* fabrica, b32 scribere)
+    constans SilexFons* fons, b32 scribere)
 {
     SilexRenovatioFructus fructus;
     constans character*   volumen_via;
@@ -1706,7 +1828,7 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
                 s = s + 1;
             }
         }
-        clausura = silex_clausuram_colligere(piscina, fabrica,
+        clausura = silex_clausuram_colligere(piscina, fons,
             (constans character* constans*)semina,
             numerus_capitum);
     }
