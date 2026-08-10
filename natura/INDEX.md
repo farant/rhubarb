@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **34** · genera **187** · res dictionarii **385** · arcus **527**
+Exemplaria **34** · genera **188** · res dictionarii **385** · necessitudines **0** · arcus **528**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -14,8 +14,8 @@ Historia et doctrina: `natura/natura.worklog.md` (LEGE PRIMUM).
 ```
 grep -i '<terminus>' natura/INDEX.md      # genus aut res
 grep -n 'nomen="<genus>"' natura/*.genera   # sedes definitionis
-./tools/natura_quaere.sh <terminus>        # QUAERE (definitiones+species)
-./tools/natura_quaere.sh -a mod.genus      # APPARATUS: quid rogare debeas
+bin/natura quaere <terminus>               # QUAERE (+ umbrae, necessitudines, sententia collisionis)
+bin/natura apparatus mod.genus             # APPARATUS: quid rogare debeas
 ```
 
 ## II. Genera per exemplar
@@ -148,11 +148,12 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 - **schema_identificandi** ⚙ ▣3 — Ratio instituta nomina rebus assignandi, ita ut nomen unum rem unam designet intra ambitum suum: structura definita, a
 
-### iudicium (v7, genera 12)
+### iudicium (v7, genera 13)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
 - **observatio** — Notitia rei singularis accepta, quae iudicium fundare potest: quid videatur, quid sentiatur, quid metiatur
+- **praeceptum** — Regula artis breviter dicta quae agentem in casibus non plene descriptis dirigit: peritia in sententiam contracta
 - **iudicium** ⚙ — Propositio de re quam aliquis tenet: cum auctore, momento, fundamento, gradu assensus
 - **annotatio** — Propositio quam instrumentum probat, extra programma currens: sine assensu, sine revisione per persuasionem - secundum
 - **periculum** — Damnum quod accidere potest nec certum est: species iudicii de futuro, sed DUPLEX - probabilitate et gravitate simul c
@@ -446,6 +447,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | portio_communis | obligatio |
 | possessio | commercium |
 | postulatum | fabricatio |
+| praeceptum | iudicium |
 | praescriptum | praescriptum |
 | pretium | commercium |
 | probatio | fabricatio |
@@ -615,13 +617,22 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `vectura.vehiculum` — aeroplanum, currus_onerarius, navis, tramen
 - `vectura.via` — :canalis_suesianus, :via_appia, via_aeria, via_maritima, via_terrestris
 
-## V. Umbrae — superficta, nondum descripta
+## V. Necessitudines — relationes declaratae (0)
+
+Identitas relationis SEMEL declaratur; sedes usus (relatio,
+terminus) titulo, converso, aut scriptura ligant. Familiae =
+necessitudines altae (columna sub vacua).
+
+| necessitudo | conversum | sub | a | ad | scripturae | exemplar |
+|---|---|---|---|---|---|---|
+
+## VI. Umbrae — superficta, nondum descripta
 
 Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed
 nemo describit. DUAE agendae sunt, non una — ordo intra utramque
 per numerum citationum (quod plura exemplaria poscunt, prius).
 
-### V.a Genera desiderata (2) — opus consilii
+### VI.a Genera desiderata (2) — opus consilii
 
 A `relatio` citata: relationes in GENERA tendunt, ergo quaestio
 ontologica et iudicium poscitur.
@@ -629,14 +640,14 @@ ontologica et iudicium poscitur.
 - **typus** — 2x, a `elementa_programmatis`
 - **constructum_linguae** — 1x, a `elementa_programmatis`
 
-### V.b Individua desiderata (0) — opus dictionarii
+### VI.b Individua desiderata (0) — opus dictionarii
 
 A `relato` SOLO citata: res singularis nominata sub genere iam
 exsistente. Nullum consilium — describi potest quovis momento.
 (EURISTICA, non lex: relatum genus attingere potest.)
 
 
-## VI. Dubia aperta
+## VII. Dubia aperta
 
 - `acta` / **punctum_actorum** — RAMI: haec relatio 'praecedens' seriem simplicem supponit. Acta ramosa (git) puncta plura post idem punctum ferunt, et tunc 'plicatura ad punctum' viam eligere 
 - `elementa_programmatis` / **functio_pura** — An proprietas potius quam sub-genus (puritas="verum")? Argumentum sub-generis: fasciculus licentiarum supra. Fran nondum iudicavit - v0 sub-genus audet. 
@@ -654,7 +665,7 @@ exsistente. Nullum consilium — describi potest quovis momento.
 - `tempus` / **pascha** — GRADUS AMBIGUUS (rota XXIX): una est regula paschalis, ergo individuum videtur; at "pascha" etiam de quovis anno dicitur ("pascha huius anni"), quod praedicatio
 - `versio` / **versio** — FURCA (fork) versio non est - continuatio auctoritatis deficit, unde res nova. Sed casus medii sunt: quid de furca quae nomen retinet et auctoritatem novam habe
 
-## VII. Monita — stirps communis sine cognatione (25)
+## VIII. Monita — stirps communis sine cognatione (25)
 
 Regula XVIII (ADVISORIA, portam non frangit). Nomen quod nomen
 aliud ut stirpem fert, sed nec sub eo stat nec relationem ad id
@@ -689,7 +700,7 @@ coincidentia INVISA transeat.
 - 'systema_naturae_editio_decima' stirpem 'systema_naturae' fert sed sub ea non stat
 - 'titulus_iuris' stirpem 'titulus' fert sed sub ea non stat
 
-## VIII. Vocabularium formae
+## IX. Vocabularium formae
 
 Vocabularium CLAUSUM in natura/natura.canon SOLO vivit (fons
 unicus post migrationem 2026-08-06); natura_examen id per

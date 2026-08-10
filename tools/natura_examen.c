@@ -326,6 +326,7 @@ tabulas_scribere(
     FILE*     f_glossae;
     FILE*     f_resgen;
     FILE*     f_moduli;
+    FILE*     f_necessitudines;
     character via[DXII];
     i32       ie;
 
@@ -347,6 +348,7 @@ tabulas_scribere(
     APERIRE(f_glossae,      "glossae.txt")
     APERIRE(f_resgen,       "resgen.txt")
     APERIRE(f_moduli,       "moduli.txt")
+    APERIRE(f_necessitudines, "necessitudines.txt")
 #undef APERIRE
 
     xar_ordinare(bib->exemplaria, _comparare_exemplaria);
@@ -372,6 +374,63 @@ tabulas_scribere(
 
             _attr(ex->radix, "versio", ver, (i32)magnitudo(ver));
             fprintf(f_moduli, "%s:%s\n", mod, ver);
+        }
+
+        /* ---- necessitudines (declarationes) ---- */
+        nodi = xar_creare(p, (i32)magnitudo(StmlNodus*));
+        _colligere(ex->radix, "necessitudo", nodi);
+        per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
+        {
+            StmlNodus* nx;
+            character  nn[CCLVI];
+            character  cv[CCLVI];
+            character  sb[CCLVI];
+            character  fa[CCLVI];
+            character  fad[CCLVI];
+            character  scr[DXII];
+            i32        j;
+            i32        n_l;
+            i32        pos;
+
+            nx = *(StmlNodus**)xar_obtinere(nodi, i);
+            _attr(nx, "nomen",     nn,  (i32)magnitudo(nn));
+            _attr(nx, "conversum", cv,  (i32)magnitudo(cv));
+            _attr(nx, "sub",       sb,  (i32)magnitudo(sb));
+            _attr(nx, "a",         fa,  (i32)magnitudo(fa));
+            _attr(nx, "ad",        fad, (i32)magnitudo(fad));
+
+            scr[ZEPHYRUM] = '\0';
+            pos = ZEPHYRUM;
+            n_l = stml_numerus_liberorum(nx);
+            per (j = ZEPHYRUM; j < n_l; j++)
+            {
+                StmlNodus* s;
+                character  unum[CCLVI];
+
+                s = stml_liberum_ad_indicem(nx, j);
+                si (!s || s->genus != STML_NODUS_ELEMENTUM ||
+                    !chorda_aequalis_literis(*s->titulus,
+                                             "scriptio"))
+                {
+                    perge;
+                }
+                _prosa_ex(stml_textus_internus(s, p), unum,
+                          (i32)magnitudo(unum), FALSUM);
+                si (!unum[ZEPHYRUM] ||
+                    pos + (i32)strlen(unum) + II >
+                        (i32)magnitudo(scr))
+                {
+                    perge;
+                }
+                si (pos > ZEPHYRUM)
+                {
+                    pos += (i32)sprintf(scr + pos, " ");
+                }
+                pos += (i32)sprintf(scr + pos, "%s", unum);
+            }
+
+            fprintf(f_necessitudines, "%s|%s|%s|%s|%s|%s|%s\n",
+                    mod, nn, cv, sb, fa, fad, scr);
         }
 
         /* ---- genera ---- */
@@ -763,7 +822,7 @@ tabulas_scribere(
     fclose(f_citationes);   fclose(f_assensus);
     fclose(f_transradices); fclose(f_validitas);
     fclose(f_glossae);      fclose(f_resgen);
-    fclose(f_moduli);
+    fclose(f_moduli);       fclose(f_necessitudines);
 }
 
 /* ==================================================
@@ -1443,9 +1502,11 @@ principale(
             imprimere("\n");
         }
         imprimere("  exemplaria %u / genera %u / res %u"
-                  " / VULNERA %u / MONITA %u\n",
+                  " / necessitudines %u / VULNERA %u / MONITA %u\n",
                   onerata, xar_numerus(bib->genera_omnia),
-                  xar_numerus(bib->res_omnes), vulnera, monita);
+                  xar_numerus(bib->res_omnes),
+                  xar_numerus(bib->necessitudines_omnes),
+                  vulnera, monita);
     }
 
     redde vulnera > ZEPHYRUM ? I : ZEPHYRUM;

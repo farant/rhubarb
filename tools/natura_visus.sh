@@ -130,7 +130,8 @@ for u in $(cut -d'|' -f1 "$UMBRAE" | sort -u); do
            | sed 's/,/, /g')
     # relatio VINCIT: si utroque modo citatur, genus prius est,
     # quia individuum sub genere nondum nato poni non potest
-    if echo "$lineae" | cut -d'|' -f3 | grep -q '^relatio$'; then
+    # terminus quoque relatio est (compages actus, 2026-08-10)
+    if echo "$lineae" | cut -d'|' -f3 | grep -Eq '^(relatio|terminus)$'; then
         cls="genus"
     else
         cls="individuum"
@@ -355,6 +356,7 @@ nModuli=$(ls natura/*.genera | wc -l | tr -d ' ')
 nGenera=$(wc -l < "$GENERA" | tr -d ' ')
 nRes=$(wc -l < "$RES" | tr -d ' ')
 nArcus=$(wc -l < "$ARCUS" | tr -d ' ')
+nNecess=$(wc -l < "$TMP/necessitudines.txt" | tr -d ' ')
 nUmbrae=$(sort -u -t'|' -k1,1 "$UMBRAE" | wc -l | tr -d ' ')
 nDubia=$(wc -l < "$DUBIA" | tr -d ' ')
 nVulnera=$(wc -l < "$VULNERA" | tr -d ' ')
@@ -497,7 +499,7 @@ echo
 echo "**GENERATUM** a \`tools/natura_visus.sh\` — noli manu emendare."
 echo "Regenera: \`./tools/natura_visus.sh\` (idem cursus qui portam custodit)."
 echo
-echo "Exemplaria **$nModuli** · genera **$nGenera** · res dictionarii **$nRes** · arcus **$nArcus**"
+echo "Exemplaria **$nModuli** · genera **$nGenera** · res dictionarii **$nRes** · necessitudines **$nNecess** · arcus **$nArcus**"
 echo
 echo "Cur haec exsistat, cui serviat, quomodo laboremus: \`natura/RATIO.md\`."
 echo "Forma ipsa (elementa, attributa, regulae): \`natura/METAMODULUS.md\`."
@@ -508,7 +510,7 @@ echo
 echo '```'
 echo "grep -i '<terminus>' natura/INDEX.md      # genus aut res"
 echo "grep -n 'nomen=\"<genus>\"' natura/*.genera   # sedes definitionis"
-echo "bin/natura quaere <terminus>               # QUAERE (+ umbrae, sententia collisionis)"
+echo "bin/natura quaere <terminus>               # QUAERE (+ umbrae, necessitudines, sententia collisionis)"
 echo "bin/natura apparatus mod.genus             # APPARATUS: quid rogare debeas"
 echo '```'
 echo
@@ -558,13 +560,26 @@ for mv in $MODULI; do
     done
 done
 echo
-echo "## V. Umbrae — superficta, nondum descripta"
+echo "## V. Necessitudines — relationes declaratae ($nNecess)"
+echo
+echo "Identitas relationis SEMEL declaratur; sedes usus (relatio,"
+echo "terminus) titulo, converso, aut scriptura ligant. Familiae ="
+echo "necessitudines altae (columna sub vacua)."
+echo
+echo "| necessitudo | conversum | sub | a | ad | scripturae | exemplar |"
+echo "|---|---|---|---|---|---|---|"
+sort -t'|' -k2,2 "$TMP/necessitudines.txt" | \
+while IFS='|' read -r m nn cv sb fa fad scr; do
+    echo "| $nn | ${cv:--} | ${sb:--} | ${fa:--} | ${fad:--} | ${scr:--} | $m |"
+done
+echo
+echo "## VI. Umbrae — superficta, nondum descripta"
 echo
 echo "Agenda COMPUTATA (non memorata): quod aliquod exemplar citat sed"
 echo "nemo describit. DUAE agendae sunt, non una — ordo intra utramque"
 echo "per numerum citationum (quod plura exemplaria poscunt, prius)."
 echo
-echo "### V.a Genera desiderata ($nUmbGen) — opus consilii"
+echo "### VI.a Genera desiderata ($nUmbGen) — opus consilii"
 echo
 echo "A \`relatio\` citata: relationes in GENERA tendunt, ergo quaestio"
 echo "ontologica et iudicium poscitur."
@@ -574,7 +589,7 @@ sort -t'|' -k3,3nr "$UMBCLS" | while IFS='|' read -r u cls ncit mods; do
     echo "- **$u** — ${ncit}x, a \`$mods\`"
 done
 echo
-echo "### V.b Individua desiderata ($nUmbInd) — opus dictionarii"
+echo "### VI.b Individua desiderata ($nUmbInd) — opus dictionarii"
 echo
 echo "A \`relato\` SOLO citata: res singularis nominata sub genere iam"
 echo "exsistente. Nullum consilium — describi potest quovis momento."
@@ -585,13 +600,13 @@ sort -t'|' -k3,3nr "$UMBCLS" | while IFS='|' read -r u cls ncit mods; do
     echo "- **$u** — ${ncit}x, a \`$mods\`"
 done
 echo
-echo "## VI. Dubia aperta"
+echo "## VII. Dubia aperta"
 echo
 while IFS='|' read -r m c t; do
     echo "- \`$m\` / **$c** — $t"
 done < "$DUBIA"
 echo
-echo "## VII. Monita — stirps communis sine cognatione ($nMonita)"
+echo "## VIII. Monita — stirps communis sine cognatione ($nMonita)"
 echo
 echo "Regula XVIII (ADVISORIA, portam non frangit). Nomen quod nomen"
 echo "aliud ut stirpem fert, sed nec sub eo stat nec relationem ad id"
@@ -606,7 +621,7 @@ else
     sed 's/^/- /' "$MONITA"
 fi
 echo
-echo "## VIII. Vocabularium formae"
+echo "## IX. Vocabularium formae"
 echo
 echo "Vocabularium CLAUSUM in natura/natura.canon SOLO vivit (fons"
 echo "unicus post migrationem 2026-08-06); natura_examen id per"
@@ -616,7 +631,7 @@ echo "METAMODULUS §3/§4 (e canone generatus)."
 
 # ---- relatio terminalis ----
 echo "natura_visus: $EXITUS scriptum"
-echo "  exemplaria $nModuli / genera $nGenera / res $nRes / arcus $nArcus"
+echo "  exemplaria $nModuli / genera $nGenera / res $nRes / necessitudines $nNecess / arcus $nArcus"
 echo "  umbrae $nUmbrae (genera $nUmbGen, individua $nUmbInd) / dubia $nDubia"
 echo "  tempus-validitatis $nValiditas / MONITA $nMonita / VULNERA $nVulnera"
 if [ "$nVulnera" -gt 0 ]; then
