@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **35** · genera **460** · res dictionarii **113** · necessitudines **65** · arcus **528**
+Exemplaria **35** · genera **460** · res dictionarii **114** · necessitudines **65** · arcus **528**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -1056,6 +1056,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 
 ## IV. Dictionarium (individua descripta; species inter genera §II)
 
+- `animal.canis` — :laika
 - `architectura_machinae.architectura_machinae` — :arm, :riscv, :x86
 - `architectura_machinae.processorium` — :apple_m1, :intel_8086
 - `architectura_machinae.versio_architecturae` — :armv8, :i386, :x86_16, :x86_64

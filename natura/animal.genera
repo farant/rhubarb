@@ -138,6 +138,25 @@
       minus quam homo eam - relatio quam nulla proprietas
       capit, sed historia utriusque fert.
     </nota>
+
+    <individuum nomen="laika" certitudo="scientia"
+      nota="individuum primum sub specie (arbor porphyriana
+            2026-08-10): species instantiabilis facta - olim
+            canon individuum sub specie vetabat">
+      <definitio>
+        Canis Moscoviensis errabunda, primum animal quod orbem
+        Terrae circumivit: in Sputnik II missa, in ipso itinere
+        mortua. Res publici iuris - monumentum Moscuae stat.
+      </definitio>
+      <historia>
+        <eventum quando="1957-11-03" certitudo="scientia">
+          in Sputnik II in orbitam missa
+        </eventum>
+        <eventum quando="2008-04-11" certitudo="fides">
+          monumentum Moscuae dedicatum
+        </eventum>
+      </historia>
+    </individuum>
   </.species>
 
   <.species nomen="homo" gradus="species">

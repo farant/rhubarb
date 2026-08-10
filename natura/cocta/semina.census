@@ -2,6 +2,13 @@
      Regenera: ./tools/natura_canones.sh -->
 <individua>
 
+  <canis nomen="&laika;">
+    <historia>
+      <eventum quando="1957-11-03" certitudo="scientia">in Sputnik II in orbitam missa</eventum>
+      <eventum quando="2008-04-11" certitudo="fides">monumentum Moscuae dedicatum</eventum>
+    </historia>
+  </canis>
+
   <architectura-machinae nomen="&x86;" indoles-copiae="cisc">
     <auctor ad="&intel;"/>
     <historia>

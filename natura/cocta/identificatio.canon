@@ -146,6 +146,8 @@
 
   <elementum nomen="isbn">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modulus-custodis" genus="numerus"/>
+    <attributum nomen="longitudo" genus="numerus"/>
     <attributum nomen="quid-designat" genus="textus" ordinarius="EDITIONEM (manifestationem),       non opus nec expressionem"/>
     <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
     <attributum nomen="reassignabilis" genus="veritas" ordinarius="falsum"/>
@@ -182,6 +184,8 @@
 
   <elementum nomen="isbn-10">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modulus-custodis" genus="numerus" ordinarius="11"/>
+    <attributum nomen="longitudo" genus="numerus" ordinarius="10"/>
     <attributum nomen="quid-designat" genus="textus" ordinarius="EDITIONEM (manifestationem),       non opus nec expressionem"/>
     <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
     <attributum nomen="reassignabilis" genus="veritas" ordinarius="falsum"/>
@@ -218,6 +222,12 @@
 
   <elementum nomen="isbn-13">
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="praefixum-ean" genus="electio">
+      <optio>978</optio>
+      <optio>979</optio>
+    </attributum>
+    <attributum nomen="modulus-custodis" genus="numerus" ordinarius="10"/>
+    <attributum nomen="longitudo" genus="numerus" ordinarius="13"/>
     <attributum nomen="quid-designat" genus="textus" ordinarius="EDITIONEM (manifestationem),       non opus nec expressionem"/>
     <attributum nomen="opacus" genus="veritas" ordinarius="falsum"/>
     <attributum nomen="reassignabilis" genus="veritas" ordinarius="falsum"/>

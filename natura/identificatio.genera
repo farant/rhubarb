@@ -201,6 +201,19 @@
       vocant. Moby-Dick opus unum, ISBN multa.
     </nota>
 
+    <proprietates>
+      <proprietas nomen="modulus_custodis" genus="numerus"
+        nota="modulus notae custodis - quod prosa definitionum
+              semper dixit, nunc quaestio declarata. Differentia
+              exercita (arbor porphyriana 2026-08-10): species
+              quaestiones APERIT quas formae eius CLAUDUNT - olim
+              species declarare nihil poterat, scala post gradum
+              unum frangebatur"/>
+      <proprietas nomen="longitudo" genus="numerus"
+        nota="numerus characterum; longitudo_fixa parentis QUOD
+              fixum dicit, haec QUANTUM"/>
+    </proprietates>
+
     <.species nomen="isbn_10">
       <definitio>
         Forma antiquior, decem characterum: nota custos modulo
@@ -208,6 +221,8 @@
         in his rationibus qui litteram in nota custode fert.
       </definitio>
       <valor nomen="vigor">clausa</valor>
+      <valor nomen="modulus_custodis">11</valor>
+      <valor nomen="longitudo">10</valor>
       <historia>
         <eventum quando="1970" certitudo="fides" fons="corpus">
           ut norma ISO recepta
@@ -231,6 +246,17 @@
         GTIN migravit ut libri in tabernis ut merces ceterae
         legerentur. Numerus idem duas rationes simul servit.
       </nota>
+      <valor nomen="modulus_custodis">10</valor>
+      <valor nomen="longitudo">13</valor>
+      <proprietates>
+        <proprietas nomen="praefixum_ean" genus="electio"
+          nota="folium quoque quaestiones aperire potest:
+                praefixum per exemplar respondetur, non per
+                subspeciem">
+          <optio>978</optio>
+          <optio>979</optio>
+        </proprietas>
+      </proprietates>
     </.species>
   </.species>
 
