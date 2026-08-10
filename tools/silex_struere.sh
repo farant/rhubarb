@@ -70,3 +70,11 @@ clang "${GCC_FLAGS[@]}" -Iinclude \
     -framework Cocoa -framework Security -framework WebKit \
     -o bin/silex || exit 1
 echo "aedificatum: bin/silex"
+
+# institutio: exemplum in ~/.bin (in PATH) - proiecta silicetum
+# silicem sine via fabricae vocant; rm ante cp (macOS binarium
+# superscriptum SIGKILL dat - inodus recens obligatorius)
+mkdir -p "$HOME/.bin"
+rm -f "$HOME/.bin/silex"
+cp bin/silex "$HOME/.bin/silex"
+echo "institutum: ~/.bin/silex"

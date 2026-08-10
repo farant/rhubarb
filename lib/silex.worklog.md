@@ -272,3 +272,15 @@ chip deleted, three DECLARED cards in index.html:
 - A visus at seq 0 is a view of the PRESENT manifest — it will
   honestly change content after a condere. Views at seq N are
   frozen forever. Both are correct; worth feeling in the hands.
+
+## 2026-08-10 — silex installed as a real binary
+silex_struere.sh now installs to ~/.bin/silex (rm-before-cp, the
+macOS SIGKILL-on-overwrite trap). Fran's zshrc alias removed —
+aliases only exist in interactive shells, so scripts and subshells
+never saw silex; SILEX_FABRICA moved .zshrc → .zshenv so
+non-interactive zsh gets it too. Posture: the fabrica is a registry
+you name (-f / SILEX_FABRICA), not a room you work in. Verified:
+plain sh from silicetum/vocabularium resolves ~/.bin/silex, historia
+works; status works even with SILEX_FABRICA unset (cwd verbs never
+touch the fabrica). The "unplug the fabrica" test now fails only
+where it should: novum/renovare.
