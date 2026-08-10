@@ -15,8 +15,10 @@
 #include "volumen.h"
 #include "processus.h"
 #include "credo.h"
+#include "chorda_aedificator.h"
 
 #include <stdio.h>
+#include <string.h>
 
 #define AREA "build/probatio_silex_area"
 
@@ -39,6 +41,104 @@ _manifestum_continet (Xar* res_omnes, constans character* via)
         }
     }
     redde FALSUM;
+}
+
+/* ==================================================
+ * Corpus fictum: capsula in memoria (forma: caput XII + TOC
+ * XX/introitum + chordae + data; comp==raw = introitus crudus)
+ * ================================================== */
+
+nomen structura {
+    constans character* via;
+    constans character* contentum;
+} ParFictum;
+
+interior vacuum
+_i32_le_scribere (i8* p, i32 v);
+
+interior vacuum
+_i32_le_scribere (i8* p, i32 v)
+{
+    p[0] = (i8)(v & 0xFF);
+    p[1] = (i8)((v >> VIII) & 0xFF);
+    p[2] = (i8)((v >> XVI) & 0xFF);
+    p[3] = (i8)((v >> XXIV) & 0xFF);
+}
+
+interior CapsulaEmbed
+_corpus_fictum (Piscina* piscina, constans ParFictum* paria,
+    i32 numerus);
+
+interior CapsulaEmbed
+_corpus_fictum (Piscina* piscina, constans ParFictum* paria,
+    i32 numerus)
+{
+    CapsulaEmbed embed;
+    i32 chordae_mensura = 0;
+    i32 datorum_mensura = 0;
+    i32 i;
+    i32 summa;
+    i8* buf;
+    i32 chorda_off;
+    i32 datum_off;
+
+    per (i = 0; i < numerus; i = i + 1)
+    {
+        chordae_mensura = chordae_mensura
+            + (i32)strlen(paria[i].via);
+        datorum_mensura = datorum_mensura
+            + (i32)strlen(paria[i].contentum);
+    }
+    summa = XII + numerus * XX + chordae_mensura + datorum_mensura;
+    buf = (i8*)piscina_allocare(piscina, (memoriae_index)summa);
+    si (buf == NIHIL)
+    {
+        embed.datum = NIHIL;
+        embed.mensura = 0;
+        redde embed;
+    }
+    _i32_le_scribere(buf, (i32)0x53504143);
+    _i32_le_scribere(buf + IV, I);
+    _i32_le_scribere(buf + VIII, numerus);
+    chorda_off = XII + numerus * XX;
+    datum_off  = chorda_off + chordae_mensura;
+    per (i = 0; i < numerus; i = i + 1)
+    {
+        i8* introitus = buf + XII + i * XX;
+        i32 via_mensura = (i32)strlen(paria[i].via);
+        i32 datum_mensura = (i32)strlen(paria[i].contentum);
+
+        _i32_le_scribere(introitus, chorda_off);
+        _i32_le_scribere(introitus + IV, via_mensura);
+        _i32_le_scribere(introitus + VIII, datum_off);
+        _i32_le_scribere(introitus + XII, datum_mensura);
+        _i32_le_scribere(introitus + XVI, datum_mensura);
+        memcpy(buf + chorda_off, paria[i].via,
+            (size_t)via_mensura);
+        memcpy(buf + datum_off, paria[i].contentum,
+            (size_t)datum_mensura);
+        chorda_off = chorda_off + via_mensura;
+        datum_off  = datum_off + datum_mensura;
+    }
+    embed.datum = buf;
+    embed.mensura = summa;
+    redde embed;
+}
+
+interior constans character*
+_texere_probationis (Piscina* piscina, constans character* a,
+    constans character* b);
+
+interior constans character*
+_texere_probationis (Piscina* piscina, constans character* a,
+    constans character* b)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+        (memoriae_index)128);
+
+    chorda_aedificator_appendere_literis(aed, a);
+    chorda_aedificator_appendere_literis(aed, b);
+    redde chorda_ut_cstr(chorda_aedificator_finire(aed), piscina);
 }
 
 s32 principale (vacuum)
@@ -154,6 +254,73 @@ s32 principale (vacuum)
             piscina, &inventum);
         CREDO_VERUM(inventum);
         CREDO_VERUM(contentum.mensura > 0);
+    }
+
+    /* ========================================================
+     * PROBARE: fons corporis == fons disci (porta differentialis)
+     * ======================================================== */
+
+    {
+        interior constans ParFictum PARIA[] = {
+            { "corpus.versio", "commit=abc123 dies=2026-08-10\n" },
+            { "include/minima.h", "/* minima */\n" },
+            { "lib/minima.c",
+              "#include \"minima.h\"\n/* corpus m */\n" },
+            { "include/altera.h",
+              "#include \"minima.h\"\n" },
+            { "lib/altera.c", "/* altera */\n" }
+        };
+        interior constans character* constans SEMINA2[] = {
+            "altera.h"
+        };
+        SilexFons*   discus;
+        SilexFons*   corpus;
+        Xar*         ex_disco;
+        Xar*         ex_corpore;
+        i32          index;
+        CapsulaEmbed embed = _corpus_fictum(piscina, PARIA, 5);
+
+        imprimere("\n--- Probans corpus == discus ---\n");
+        filum_directorium_creare_si_necesse("build");
+        filum_directorium_creare_si_necesse(AREA);
+        filum_directorium_creare_si_necesse(AREA "/ficta2");
+        filum_directorium_creare_si_necesse(AREA "/ficta2/include");
+        filum_directorium_creare_si_necesse(AREA "/ficta2/lib");
+        per (index = 1; index < 5; index = index + 1)
+        {
+            CREDO_VERUM(filum_scribere_literis(
+                _texere_probationis(piscina, AREA "/ficta2/",
+                    PARIA[index].via), PARIA[index].contentum));
+        }
+
+        discus = silex_fons_disci(piscina, AREA "/ficta2");
+        corpus = silex_fons_corporis(piscina, &embed);
+        CREDO_NON_NIHIL(discus);
+        CREDO_NON_NIHIL(corpus);
+        CREDO_CHORDA_CONTINET(chorda_ex_literis(corpus->titulus,
+            piscina), chorda_ex_literis("abc123", piscina));
+
+        ex_disco = silex_clausuram_colligere(piscina, discus,
+            SEMINA2, 1);
+        ex_corpore = silex_clausuram_colligere(piscina, corpus,
+            SEMINA2, 1);
+        CREDO_NON_NIHIL(ex_disco);
+        CREDO_NON_NIHIL(ex_corpore);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(ex_disco),
+            (i32)xar_numerus(ex_corpore));
+        per (index = 0; index < xar_numerus(ex_disco);
+            index = index + 1)
+        {
+            SilexRes* a = (SilexRes*)xar_obtinere(ex_disco, index);
+            SilexRes* b = (SilexRes*)xar_obtinere(ex_corpore,
+                index);
+
+            CREDO_CHORDA_AEQUALIS(a->via, b->via);
+            CREDO_CHORDA_AEQUALIS(a->contentum, b->contentum);
+        }
+        /* clausura plena: altera par + minima par (BFS idem
+         * ambobus) */
+        CREDO_AEQUALIS_I32((i32)xar_numerus(ex_disco), (i32)4);
     }
 
     /* ========================================================
