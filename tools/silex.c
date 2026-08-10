@@ -6,8 +6,9 @@
  *   silex                       # fenestra vitrea (ui)
  *   silex ui
  *   silex novum 001 -f /via/ad/rhubarb -d /via/ad/silicetum
- *   SILEX_FABRICA=/via/ad/rhubarb silex novum 001
  *   cd intra/arborem/rhubarb && silex novum 001   # ascensus sponte
+ *   silex novum 001 -d .        # alibi: corpus infixum (stampa
+ *                               # per 'silex -versio' visibilis)
  *
  * Aedificatio: ./tools/silex_struere.sh (capsula frontis +
  * obiecta suite; compile_tools.sh capsulam nesciret) */
@@ -32,6 +33,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+/* corpus bibliothecarum a struere genitum - externus directus
+ * (mos consumptoris: caput generatum non includitur) */
+/* <aedilis obiectum="build/capsula_corpus_silicis.c"/> */
+externus constans CapsulaEmbed capsula_corpus_silicis;
 
 #define SILEX_VERSIO "v0"
 
@@ -61,7 +67,7 @@ _status_tractare (JsonValor* argumenta, Piscina* piscina,
         json_chorda_creare_literis(piscina, SILEX_VERSIO));
     json_objectum_ponere(fructus, "fabrica",
         json_chorda_creare_literis(piscina,
-            fabrica == NIHIL ? "(ignota - SILEX_FABRICA pone)"
+            fabrica == NIHIL ? "(corpus infixum)"
                 : fabrica));
     json_objectum_ponere(fructus, "fabrica_valida",
         json_boolean_creare(piscina, valida));
@@ -442,8 +448,8 @@ principale (integer argc, character** argv)
     argumenta_addere_positionalem(parser, "titulus",
         "nomen proiecti (pro novo)", FALSUM);
     argumenta_addere_optionem(parser, "-f", "--fabrica",
-        "radix arboris rhubarb (aut SILEX_FABRICA,"
-        " aut ascensus e cwd)");
+        "radix arboris rhubarb (alioquin ascensus e cwd,"
+        " alioquin corpus infixum)");
     argumenta_addere_optionem(parser, "-d", "--destinatio",
         "directorium parens proiecti (ordinarie '.')");
     argumenta_addere_optionem(parser, "-n", "--nuntius",
@@ -454,6 +460,8 @@ principale (integer argc, character** argv)
         "proicere: consilium applicare (ordinarie consilium solum)");
     argumenta_addere_vexillum(parser, "-machina", "--machina",
         "partes: TSV machinale (ordo, praesentia, via)");
+    argumenta_addere_vexillum(parser, "-versio", "--versio",
+        "versionem et stampam corporis imprimere");
     argumenta_addere_exemplum(parser,
         "silex novum 001 -f ~/Documents/projects/rhubarb");
     argumenta_addere_exemplum(parser,
@@ -471,29 +479,50 @@ principale (integer argc, character** argv)
     verbum = argumenta_obtinere_positionalem(lecta, 0, piscina);
     titulus = argumenta_obtinere_positionalem(lecta, 1, piscina);
 
-    /* fabrica: optio > ambiens > ascensus e cwd > NIHIL
-     * (ui tolerat, novum poscit) */
+    /* fons: optio > ascensus e cwd > corpus infixum
+     * (SILEX_FABRICA REMOTUM 2026-08-10 - via missa = via viva) */
     fabrica_opt = argumenta_obtinere_optionem(lecta, "--fabrica",
         piscina);
     si (fabrica_opt.mensura > ZEPHYRUM)
     {
         fabrica = chorda_ut_cstr(fabrica_opt, piscina);
+        fons = silex_fons_disci(piscina, fabrica);
+        si (fons == NIHIL)
+        {
+            fprintf(stderr, "silex: fabrica invalida (include/"
+                " deest): %s\n", fabrica);
+            redde I;
+        }
     }
     alioquin
     {
-        fabrica = getenv("SILEX_FABRICA");
-        si (fabrica != NIHIL && fabrica[0] == '\0')
+        fabrica = silex_fabricam_invenire(piscina, ".");
+        si (fabrica != NIHIL)
         {
-            fabrica = NIHIL;
+            fons = silex_fons_disci(piscina, fabrica);
         }
     }
-    si (fabrica == NIHIL)
+    si (fons == NIHIL)
     {
-        fabrica = silex_fabricam_invenire(piscina, ".");
+        fons = silex_fons_corporis(piscina,
+            &capsula_corpus_silicis);
+        si (fons == NIHIL)
+        {
+            fprintf(stderr, "silex: nec fabrica nec corpus -"
+                " binarium sine corpore aedificatum?\n");
+            redde I;
+        }
     }
-    si (fabrica != NIHIL)
+
+    si (argumenta_habet_vexillum(lecta, "--versio"))
     {
-        fons = silex_fons_disci(piscina, fabrica);
+        SilexFons* corpus = silex_fons_corporis(piscina,
+            &capsula_corpus_silicis);
+
+        imprimere("silex %s\n", SILEX_VERSIO);
+        imprimere("corpus: %s\n", corpus == NIHIL
+            ? "(FRACTUM aut abest)" : corpus->titulus);
+        redde ZEPHYRUM;
     }
 
     /* sine argumentis aut 'ui' = fenestra */
@@ -617,8 +646,7 @@ principale (integer argc, character** argv)
 
             si (fons == NIHIL)
             {
-                fprintf(stderr, "silex renovare: fabrica ignota -"
-                    " da --fabrica aut SILEX_FABRICA pone\n");
+                fprintf(stderr, "silex renovare: fons deest\n");
                 redde I;
             }
             r = silex_renovare(piscina, via_proiecti, fons,
@@ -836,8 +864,7 @@ principale (integer argc, character** argv)
     }
     si (fons == NIHIL)
     {
-        fprintf(stderr, "silex: fabrica ignota - da --fabrica,"
-            " SILEX_FABRICA pone, aut ex arbore rhubarb curre\n");
+        fprintf(stderr, "silex novum: fons deest\n");
         redde I;
     }
 

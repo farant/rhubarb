@@ -440,6 +440,31 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: ascensus proiectum silicis PRAETERIT (volumen
+     * radicis = proiectum, numquam fabrica sui ipsius - AMBULATIO
+     * ACCEPTIONIS 2026-08-10: partes intra probandum fabricam
+     * probandum ipsum invenit, xar.h 'deest', corpus numquam
+     * attactum)
+     * ======================================================== */
+
+    {
+        constans character* radix;
+        chorda              expectata;
+
+        imprimere("\n--- Probans ascensum praeter proiectum ---\n");
+
+        /* AREA/specimen signum fabricae fert (include/latina.h +
+         * lib/) SED volumen radicis habet -> praetermittendum;
+         * ascensus radicem repositorii veri inveniat */
+        radix = silex_fabricam_invenire(piscina, AREA "/specimen");
+        CREDO_VERUM(radix != NIHIL);
+        expectata = via_absoluta(chorda_ex_literis(".", piscina),
+            piscina);
+        CREDO_CHORDAE_AEQUALES(radix,
+            chorda_ut_cstr(expectata, piscina));
+    }
+
+    /* ========================================================
      * PROBARE: VCS - status/condere/historia in specimine
      * ======================================================== */
 

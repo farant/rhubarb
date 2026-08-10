@@ -62,10 +62,44 @@ if [ tools/silex_assets/index.html -nt \
     ./bin/capsula_generare tools/silex_assets/silex.toml || exit 1
 fi
 
+# corpus bibliothecarum: capsula infixa. Regeneratum SOLUM cum
+# fontes mutantur - stampa commit eius temporis fixatur (semantica
+# recta: stampa = ultima mutatio corporis, non ultima aedificatio)
+CORPUS_C=build/capsula_corpus_silicis.c
+regen=0
+if [ ! -f "$CORPUS_C" ]; then
+    regen=1
+elif [ -n "$(find lib include vendor tools/capsula_generare.c \
+        -newer "$CORPUS_C" -print -quit 2>/dev/null)" ]; then
+    regen=1
+fi
+if [ "$regen" = 1 ]; then
+    echo "  [corpus] stampa + capsula (tardum semel)"
+    STAMPA="commit=$(git rev-parse --short HEAD 2>/dev/null \
+        || echo ignotum)"
+    if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+        STAMPA="$STAMPA SORDIDUM"
+    fi
+    STAMPA="$STAMPA dies=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    printf '%s\n' "$STAMPA" > corpus.versio
+    cat > corpus_silicis.toml <<'TOML'
+# GENERATUM a silex_struere.sh - NE MANU EDITES (gitignoratum)
+corpus_silicis_files = ["lib/*.c", "lib/*.m", "include/*.h", "vendor/*", "tools/capsula_generare.c", "corpus.versio"]
+corpus_silicis_compress = true
+TOML
+    if [ ! -x bin/capsula_generare ]; then
+        ./compile_tools.sh capsula_generare >/dev/null || exit 1
+    fi
+    ./bin/capsula_generare corpus_silicis.toml || exit 1
+    mv capsula_corpus_silicis.h capsula_corpus_silicis.c build/ \
+        || exit 1
+fi
+
 mkdir -p bin
-echo "  [silex] tools/silex.c + capsula_silex_frons.c"
+echo "  [silex] tools/silex.c + capsula_silex_frons.c + corpus"
 clang "${GCC_FLAGS[@]}" -Iinclude \
     tools/silex.c tools/silex_assets/capsula_silex_frons.c \
+    build/capsula_corpus_silicis.c \
     build/*.o \
     -framework Cocoa -framework Security -framework WebKit \
     -o bin/silex || exit 1

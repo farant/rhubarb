@@ -81,7 +81,15 @@ silex_fabricam_invenire (Piscina* piscina,
         si (filum_existit(_texere(piscina, radix,
                 "/include/latina.h", NIHIL))
             && filum_directorium_existit(_texere(piscina, radix,
-                "/lib", NIHIL)))
+                "/lib", NIHIL))
+            /* proiectum silicis (volumen radicis) fabrica sui
+             * ipsius NUMQUAM est - scaffolda signum fabricae
+             * ferunt (latina.h + lib/ vendicata)! Mensuratum in
+             * ambulatione acceptionis 2026-08-10: partes intra
+             * proiectum se ipsum invenit, corpus numquam
+             * attactum. */
+            && silex_volumen_viam_invenire(piscina, radix)
+                == NIHIL)
         {
             redde radix;
         }

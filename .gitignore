@@ -44,3 +44,7 @@ forum.db-shm
 # capturae crudae villae (nomina vera - expurgata sola committuntur)
 probationes/fixa/villa/cruda/
 privata/
+corpus.versio
+corpus_silicis.toml
+capsula_corpus_silicis.h
+capsula_corpus_silicis.c
