@@ -166,6 +166,8 @@ genus_legere(
         redde CANON_GENUS_REFERENTIA;
     si (chorda_aequalis_literis(*s, "compositum"))
         redde CANON_GENUS_COMPOSITUM;
+    si (chorda_aequalis_literis(*s, "titulus"))
+        redde CANON_GENUS_TITULUS;
 
     redde CANON_GENUS_TEXTUS;
 }
@@ -498,11 +500,25 @@ valor_congruit(
 
         casus CANON_GENUS_NOMEN:
         casus CANON_GENUS_COMPOSITUM:
-            si (v->mensura == ZEPHYRUM)
+        casus CANON_GENUS_TITULUS:
+        {
+            i32 initium;
+
+            /* titulus: punctum UNUM ducens licitum ('.species'),
+             * corpus dein compositum; punctum solum vetatur */
+            initium = ZEPHYRUM;
+            si (a->genus == CANON_GENUS_TITULUS &&
+                v->mensura > I &&
+                (character)v->datum[ZEPHYRUM] == '.')
+            {
+                initium = I;
+            }
+
+            si (v->mensura == initium)
             {
                 redde FALSUM;
             }
-            per (i = ZEPHYRUM; i < v->mensura; i++)
+            per (i = initium; i < v->mensura; i++)
             {
                 character c;
 
@@ -512,12 +528,13 @@ valor_congruit(
                       (c >= '0' && c <= '9') ||
                       c == '_' || c == '*' ||
                       (c == '-' &&
-                       a->genus == CANON_GENUS_COMPOSITUM)))
+                       a->genus != CANON_GENUS_NOMEN)))
                 {
                     redde FALSUM;
                 }
             }
             redde VERUM;
+        }
 
         casus CANON_GENUS_NUMERUS:
         {

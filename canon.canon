@@ -48,12 +48,14 @@
 
   <!-- ================= ELEMENTUM ================= -->
 
-  <!-- nomina elementorum GENERIS COMPOSITI sunt (nomen + lineola):
-       grammatica 'genera-extra' et regulas kebab fert - dialectus
-       tertius genus novum coegit, ut secundus 'intra=' coegit -->
+  <!-- nomina elementorum GENERIS TITULI sunt (compositum + punctum
+       unum ducens optionale): grammatica 'genera-extra' et regulas
+       kebab fert; arbor porphyriana '<.species>' (2026-08-10) punctum
+       coegit. Nomina attributorum composita MANENT (speculum
+       lexatoris stml: tags puncta accipiunt, attributa numquam) -->
   <elementum nomen="elementum">
-    <attributum nomen="nomen"  genus="compositum" necessarium="verum"/>
-    <attributum nomen="intra"  genus="compositum"
+    <attributum nomen="nomen"  genus="titulus" necessarium="verum"/>
+    <attributum nomen="intra"  genus="titulus"
       nota="definitio ad parentem adstricta (mos RELAX NG)"/>
     <attributum nomen="radix"  genus="veritas"/>
     <attributum nomen="textus" genus="electio"
@@ -90,6 +92,7 @@
       <optio>compositum</optio>
       <optio>identitas</optio>
       <optio>referentia</optio>
+      <optio>titulus</optio>
     </attributum>
     <attributum nomen="necessarium" genus="veritas"/>
     <attributum nomen="ordinarius"  genus="textus"
@@ -114,7 +117,7 @@
   <elementum nomen="optio" textus="verum"/>
 
   <elementum nomen="liberum">
-    <attributum nomen="nomen"   genus="compositum" necessarium="verum"/>
+    <attributum nomen="nomen"   genus="titulus" necessarium="verum"/>
     <attributum nomen="minimum" genus="numerus"/>
     <attributum nomen="maximum" genus="numerus"/>
     <attributum nomen="nota"    genus="textus"/>

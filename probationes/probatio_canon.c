@@ -1358,6 +1358,60 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
     }
 
+    /* ========================================================
+     * PROBARE: genus 'titulus' - nomina elementorum punctata
+     * (arbor porphyriana 2026-08-10: '<.species>' etc.)
+     * ======================================================== */
+
+    {
+        chorda   fons;
+        chorda   causa;
+        Canon*   canon_ipse2;
+        Xar*     vitia;
+
+        imprimere("\n--- Probans genus titulus (nomina punctata) ---\n");
+
+        fons = filum_legere_totum("canon.canon", piscina);
+        CREDO_MAIOR_I32 (fons.mensura, (i32)ZEPHYRUM);
+        canon_ipse2 = canon_legere(fons, piscina, intern, &causa);
+        CREDO_NON_NIHIL (canon_ipse2);
+
+        /* elementum/liberum/intra nomina punctata ACCIPIUNT */
+        vitia = iudicare_literis(canon_ipse2,
+            "<canon dialectus=\"probandus\" versio=\"1\">\n"
+            "  <elementum nomen=\".probandum\" radix=\"verum\">\n"
+            "    <attributum nomen=\"nomen\" genus=\"nomen\"/>\n"
+            "    <liberum nomen=\".filius\"/>\n"
+            "  </elementum>\n"
+            "  <elementum nomen=\".filius\" intra=\".probandum\"/>\n"
+            "</canon>\n",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* attributum punctatum NUMQUAM (compositum manet) */
+        vitia = iudicare_literis(canon_ipse2,
+            "<canon dialectus=\"probandus\" versio=\"1\">\n"
+            "  <elementum nomen=\"probandum\" radix=\"verum\">\n"
+            "    <attributum nomen=\".malus\" genus=\"nomen\"/>\n"
+            "  </elementum>\n"
+            "</canon>\n",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_MALUS), I);
+
+        /* punctum solum / geminatum in nomine elementi = vitium */
+        vitia = iudicare_literis(canon_ipse2,
+            "<canon dialectus=\"probandus\" versio=\"1\">\n"
+            "  <elementum nomen=\"..x\" radix=\"verum\"/>\n"
+            "</canon>\n",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_MAIOR_I32 (quot_generis(vitia, CANON_VALOR_MALUS),
+                         (i32)ZEPHYRUM);
+    }
+
 
     imprimere("\n");
     credo_imprimere_compendium();

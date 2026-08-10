@@ -78,7 +78,12 @@ nomen enumeratio {
      * referentia = '#' aut '.' + corpus compositum ('.' = genus e
      *              vocabulario; valor nudus VITIUM est) */
     CANON_GENUS_IDENTITAS  = VIII,
-    CANON_GENUS_REFERENTIA = IX
+    CANON_GENUS_REFERENTIA = IX,
+    /* titulus elementi: compositum + punctum UNUM ducens optionale
+     * ('.species' = elementum generum generans - arbor porphyriana
+     * 2026-08-10). Nomina elementorum/liberorum/intra sola; nomina
+     * attributorum composita manent (speculum lexatoris stml). */
+    CANON_GENUS_TITULUS    = X
 } CanonGenusValoris;
 
 /* ==================================================
