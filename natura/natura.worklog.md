@@ -5460,3 +5460,32 @@ parens_etiam ported the dual-membership doctrine from res to kinds
 chains). Rule III monitum "proprietas ad rem solvit" evanuit
 CONSULTO — species-typed proprietates are now clean kind references
 (that was the point).
+
+## 2026-08-10 — propagatio (36e205a..6d0cba7, same day as the arc)
+
+Four consistency items, Fran-ordered:
+1. natura.h DUAE CATENAE comment rewritten (was teaching the
+   pre-porphyrian chains — the header everyone reads first).
+2. Examen tables repartitioned: genera.txt = all 460 kinds with a
+   9th MUNUS column (genus|species|cultivar) and nesting-parent in
+   the sub column (PARENS table now full); res/resgen/S = individua
+   only; ancestor walks accept any kind order (_kind_titulus_est) —
+   an individuum under a species attributes to the species, which
+   laika immediately exercised. visus rule-VI mirror moved to
+   GENERA; rami() reads the new column; umbra's G-stream covers
+   460. MONITA 25→23: arcs declared inside species now attribute
+   correctly. Document layer and graph layer agree at last.
+3. gerens="genus" (Fran ruled): the OS vita machine bears the
+   KIND's lifecycle (macOS vigens, CP/M derelictum) — the canon's
+   own nota had said "status GENERIS describit" all along.
+4. Differentia exercised with real content: isbn DECLARES
+   modulus_custodis + longitudo, isbn_10/isbn_13 CURRY them
+   (11/10, 10/13), isbn_13 opens its own praefixum_ean (978|979) —
+   the recursion the unification promised, visible in one
+   apparatus view. And laika: first individuum under a species
+   (canis), public record, res 114.
+
+Trap note: <proprietates> is a bare container — no nota= attribute
+(hook caught it twice; prose belongs on the proprietas rows).
+Left open deliberately: glossae curation (177/460 hand-written),
+quaestio 01KZPSA3G1 (pre-existing red census).
