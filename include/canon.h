@@ -145,7 +145,20 @@ nomen structura {
                                         * elementorum, pro
                                         * suggestione ('an X?') */
                  chorda*  radix;       /* nomen elementi radicis */
+         TabulaDispersa*  claves_externae; /* librarium (W1): clavis
+                                        * sigillata verbatim ->
+                                        * CanonClavisExterna*
+                                        * (lib/canon.c); NIHIL si
+                                        * canon blocum non fert.
+                                        * Citabiles, non cudendae */
+                 chorda*  claves_fons; /* bibliotheca possidens */
 } Canon;
+
+/* clavis externa - individuum bibliothecae citabile (librarium) */
+nomen structura {
+    chorda*  clavis;   /* forma sigillata verbatim: &nomen; */
+    chorda*  genus;    /* elementum generis in eodem canone (kebab) */
+} CanonClavisExterna;
 
 /* ==================================================
  * Lectio

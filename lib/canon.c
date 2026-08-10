@@ -1001,6 +1001,8 @@ canon_ex_nodo(
     c->citationes = xar_creare(piscina, (i32)magnitudo(CanonCitatio*));
     c->tituli     = xar_creare(piscina, (i32)magnitudo(chorda*));
     c->radix      = NIHIL;
+    c->claves_externae = NIHIL;
+    c->claves_fons     = NIHIL;
 
     numerus = stml_numerus_liberorum(elementum);
     per (i = ZEPHYRUM; i < numerus; i++)
@@ -1011,6 +1013,52 @@ canon_ex_nodo(
         n = stml_liberum_ad_indicem(elementum, i);
         si (!n || n->genus != STML_NODUS_ELEMENTUM)
         {
+            perge;
+        }
+
+        /* claves externae (librarium W1): involucrum SINE nomen= -
+         * ante custodem infra tractandum, ne tacite caderet (custos
+         * :infra liberos innominatos praeterit) */
+        si (chorda_aequalis_literis(*n->titulus, "claves-externae"))
+        {
+            i32 nl;
+            i32 j;
+
+            c->claves_fons = stml_attributum_capere(n, "fons");
+            si (!c->claves_externae)
+            {
+                c->claves_externae = tabula_dispersa_creare_chorda(
+                    piscina, CXXVIII);
+            }
+            nl = stml_numerus_liberorum(n);
+            per (j = ZEPHYRUM; j < nl; j++)
+            {
+                StmlNodus*          cl;
+                CanonClavisExterna* ce;
+                chorda              textus;
+
+                cl = stml_liberum_ad_indicem(n, j);
+                si (!cl || cl->genus != STML_NODUS_ELEMENTUM ||
+                    !cl->titulus ||
+                    !chorda_aequalis_literis(*cl->titulus, "clavis"))
+                {
+                    perge;
+                }
+                /* textus VERBATIM = clavis sigillata (&nomen; -
+                 * entia ignota litteralia manent, ergo octeta
+                 * eadem quae comparatio citationum videt) */
+                textus = stml_textus_internus(cl, piscina);
+                si (textus.mensura == ZEPHYRUM)
+                {
+                    perge;
+                }
+                ce = (CanonClavisExterna*)piscina_allocare(piscina,
+                    magnitudo(CanonClavisExterna));
+                ce->clavis = chorda_internare(intern, textus);
+                ce->genus  = stml_attributum_capere(cl, "genus");
+                tabula_dispersa_inserere(c->claves_externae,
+                                         *ce->clavis, ce);
+            }
             perge;
         }
 
@@ -2001,12 +2049,16 @@ canon_iudicare(
                         }
                     }
                     alioquin si (!tabula_dispersa_continet(claves,
-                                                           *v))
+                                                           *v) &&
+                                 !(canon->claves_externae &&
+                                   tabula_dispersa_continet(
+                                       canon->claves_externae, *v)))
                     {
-                        /* '#' verbatim (claves quoque signum
-                         * ferunt) ET forma vetus nuda (canones
-                         * sine signis - natura.canon) eadem via:
-                         * clavis verbatim */
+                        /* clavis verbatim, signo incluso ('&x;'
+                         * post migrationem signorum; forma nuda
+                         * canonum sine signis eadem via). Scopus =
+                         * claves documenti + claves externae
+                         * bibliothecae (librarium W1) */
                         vitium_addere(vitia, CANON_CITATIO_IRRITA,
                             n, n->titulus, v, ZEPHYRUM, ZEPHYRUM);
                     }

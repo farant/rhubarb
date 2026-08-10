@@ -1800,6 +1800,65 @@ _nomina_tuta(
     redde tuta;
 }
 
+/* claves externae (librarium W1, 2026-08-10): index individuorum
+ * bibliothecae in canonem INFIXUS - scopus citationum .census
+ * clavibus mundi augetur, iudicium par duorum manet (sine I/O
+ * tertio in lib/canon.c). Idem discrimen ac semina (:1648):
+ * _nodus_individuum_est + genus resolutum. Clavis = forma
+ * sigillata VERBATIM (&titulus; - eadem octeta quae comparatio
+ * citationum adhibet); genus= = elementum generis kebab in hoc
+ * ipso canone (fundamentum augmentationis W3). */
+interior vacuum
+_claves_externas_scribere(
+    FILE*  f,
+    Xar*   entia)
+{
+    i32 i;
+    i32 quot;
+
+    quot = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(entia); i++)
+    {
+        NcEns* e;
+
+        e = (NcEns*)xar_obtinere(entia, i);
+        si (_nodus_individuum_est(e->nodus) && e->genus)
+        {
+            quot++;
+        }
+    }
+    si (quot == ZEPHYRUM)
+    {
+        /* index vacuus mendacium esset - blocus omittitur
+         * (canon.canon: clavis minimum='1') */
+        redde;
+    }
+
+    fputs("\n  <!-- CLAVES EXTERNAE (librarium): individua "
+          "bibliothecae citabilia.\n"
+          "       Cudere clavem hinc = collisio (suppositum "
+          "aequivocum esse nequit). -->\n", f);
+    fputs("  <claves-externae fons=\"natura\">\n", f);
+    per (i = ZEPHYRUM; i < xar_numerus(entia); i++)
+    {
+        NcEns* e;
+
+        e = (NcEns*)xar_obtinere(entia, i);
+        si (!_nodus_individuum_est(e->nodus) || !e->genus)
+        {
+            perge;
+        }
+        fputs("    <clavis genus=\"", f);
+        _kebab_scribere(f, e->genus->titulus);
+        fputs("\">&", f);
+        _chordam_scribere(f, e->titulus);
+        fputs(";</clavis>\n", f);
+    }
+    fputs("  </claves-externae>\n", f);
+    fprintf(stderr, "natura_canones: claves externae %u emissae\n",
+            (insignatus)quot);
+}
+
 b32
 _canonem_emittere(
     FILE*                f,
@@ -1807,6 +1866,7 @@ _canonem_emittere(
     constans character*  dialectus,
     constans character*  fons,
     constans character*  praefatio,
+    Xar*                 entia,
     Piscina*             piscina)
 {
     b32 sanum;
@@ -1885,6 +1945,10 @@ _canonem_emittere(
     _eventum_scribere(f, elementa);
     _unicitas_scribere(f, elementa);
     _citationes_scribere(f, elementa);
+    si (entia)
+    {
+        _claves_externas_scribere(f, entia);
+    }
     fputs("\n</canon>\n", f);
 
     /* damna EXPRESSA: quod canon dicere non potest tacitum non

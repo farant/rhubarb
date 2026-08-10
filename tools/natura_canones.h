@@ -128,6 +128,9 @@ _canonem_emittere(
     constans character*  dialectus,
     constans character*  fons,
     constans character*  praefatio,
+    Xar*                 entia,      /* NIHIL = sine clavibus
+                                      * externis; monolithus entia
+                                      * tradit (librarium W1) */
     Piscina*             piscina);
 
 /* census relationum - NUMERI IN CANONEM IPSUM SCRIBUNTUR.

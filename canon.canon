@@ -44,6 +44,7 @@
       nota="canon sine elementis nihil describit"/>
     <liberum nomen="unicitas"/>
     <liberum nomen="citatio"/>
+    <liberum nomen="claves-externae"/>
   </elementum>
 
   <!-- ================= ELEMENTUM ================= -->
@@ -151,8 +152,9 @@
 
   <elementum nomen="citatio"
     nota="clavis-relatio INTRA documentum (mos xs:key/keyref -
-          quod unum XSD recte fecit). Trans plagulas = gradus III,
-          oneratoris manet">
+          quod unum XSD recte fecit). Trans plagulas: claves-externae
+          infra (librarium 2026-08-10) scopum bibliothecae addit -
+          gradus III per canonem ipsum advenit, non per oneratorem">
     <attributum nomen="nomen"       genus="compositum"
       necessarium="verum"/>
     <attributum nomen="attributum"  genus="compositum"
@@ -175,6 +177,29 @@
       nota="claves et citantes intra EANDEM instantiam (transitus
             statum machinae SUAE citat); absens = documentum"/>
     <attributum nomen="nota"        genus="textus"/>
+  </elementum>
+
+  <!-- ============ CLAVES EXTERNAE (librarium) ============
+       Index clavium bibliothecae in canone INFIXUS (2026-08-10):
+       scopus citationum documenti clavibus mundi augetur - iudicium
+       par duorum manet (documentum + canon), sine I/O tertio.
+       clavis textum SIGILLATUM VERBATIM fert (&nomen; - eadem
+       octeta quae comparatio citationum adhibet); genus= elementum
+       generis in hoc ipso canone nominat (fundamentum augmentationis
+       <% futurae). Claves externae CITABILES sunt, non cudendae -
+       cusio = collisio (vitium XV, opus W2). -->
+
+  <elementum nomen="claves-externae">
+    <attributum nomen="fons" genus="compositum" necessarium="verum"
+      nota="bibliotheca quae has claves possidet; locus stampae
+            versionis futurae (librarium W5)"/>
+    <liberum nomen="clavis" minimum="1"
+      nota="index vacuus mendacium esset - bibliotheca sine
+            individuis blocum omittit"/>
+  </elementum>
+
+  <elementum nomen="clavis" textus="verum">
+    <attributum nomen="genus" genus="titulus" necessarium="verum"/>
   </elementum>
 
 </canon>

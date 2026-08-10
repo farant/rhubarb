@@ -981,6 +981,68 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: claves externae (librarium W1, 2026-08-10)
+     *
+     * Scopus citationum = claves documenti + claves bibliothecae
+     * in canone INFIXAE. Culpa plantata viva: ante W1 citatio
+     * '&quercus_prima;' sine clave locali 'clavis absens' erat.
+     * ======================================================== */
+
+    {
+        Canon* c;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans claves externas ---\n");
+
+        c = canon_ex_literis(
+            "<canon dialectus=\"nemus\" versio=\"1\">\n"
+            "  <elementum nomen=\"silva\" radix=\"verum\">\n"
+            "    <liberum nomen=\"avis\"/>\n"
+            "    <liberum nomen=\"quercus\"/>\n"
+            "  </elementum>\n"
+            "  <elementum nomen=\"quercus\">\n"
+            "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+            "  </elementum>\n"
+            "  <elementum nomen=\"avis\">\n"
+            "    <attributum nomen=\"nidificat\""
+            " genus=\"referentia\"/>\n"
+            "  </elementum>\n"
+            "  <citatio nomen=\"nidorum\" attributum=\"nidificat\"\n"
+            "    ad=\"quercus/nomen\" super=\"avis\"/>\n"
+            "  <claves-externae fons=\"probatum\">\n"
+            "    <clavis genus=\"quercus\">&quercus_prima;</clavis>\n"
+            "  </claves-externae>\n"
+            "</canon>\n", piscina, intern);
+        CREDO_NON_NIHIL (c);
+        CREDO_NON_NIHIL (c->claves_externae);
+
+        /* citatio per clavem externam SOLVIT sine clave locali */
+        vitia = iudicare_literis(c,
+            "<silva><avis nidificat=\"&quercus_prima;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* clavis ignota vitium MANET (pinna negativa) */
+        vitia = iudicare_literis(c,
+            "<silva><avis nidificat=\"&nemo;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_CITATIO_IRRITA), I);
+
+        /* clavis localis et externa simul - utraque solvit */
+        vitia = iudicare_literis(c,
+            "<silva><quercus nomen=\"&quercus_domi;\"/>"
+            "<avis nidificat=\"&quercus_domi;\"/>"
+            "<avis nidificat=\"&quercus_prima;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+    }
+
+
+    /* ========================================================
      * PROBARE: genera valorum identitas/referentia (signa)
      * ======================================================== */
 

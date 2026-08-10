@@ -1488,7 +1488,7 @@ _canonem_modulo_scribere(
     }
 
     sanum = _canonem_emittere(f, elementa, modulus, modulus, NIHIL,
-                              piscina);
+                              NIHIL, piscina);
 
     /* FCLOSE IUDICATUR: scriptio pendens hic demum in discum it,
      * ergo defectus (discus plenus, quota exhausta) hic SOLUM
@@ -1691,7 +1691,8 @@ _canonem_totum_scribere(
     }
 
     sanum = _canonem_emittere(f, elementa, "individua",
-                              "natura tota", praefatio, piscina);
+                              "natura tota", praefatio, entia,
+                              piscina);
 
     /* FCLOSE IUDICATUR - vide _canonem_modulo_scribere supra */
     si (fclose(f) != ZEPHYRUM)

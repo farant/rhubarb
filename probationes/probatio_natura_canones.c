@@ -800,7 +800,17 @@ staticus constans character* DOC_INSCRIPTUS =
     "  <rosa nomen=\"&rosa-una;\" auctor-nominis=\"&carl_linnaeus;\"/>\n"
     "</individua>\n";
 
+/* LIBRARIUM (W1, 2026-08-10): clavis bibliothecae SINE inscriptione
+ * locali resolvit - &carl_linnaeus; in clavibus externis stat.
+ * Necessitas inscriptionis pro clavibus mundi CONSULTO retirata
+ * est (id ipsum W1 efficiebat); citatio insolubilis vera clavem
+ * VERE ignotam poscit */
 staticus constans character* DOC_NON_INSCRIPTUS =
+    "<individua>\n"
+    "  <rosa nomen=\"&rosa-una;\" auctor-nominis=\"&nemo_ignotus;\"/>\n"
+    "</individua>\n";
+
+staticus constans character* DOC_CLAVIS_MUNDI =
     "<individua>\n"
     "  <rosa nomen=\"&rosa-una;\" auctor-nominis=\"&carl_linnaeus;\"/>\n"
     "</individua>\n";
@@ -1435,6 +1445,13 @@ principale(
             &omnia, piscina, intern));
         CREDO_AEQUALIS_I32 (irrita, (i32)I);
         CREDO_AEQUALIS_I32 (omnia, (i32)I);
+
+        /* librarium W1: clavis mundi sine inscriptione SOLVIT */
+        CREDO_VERUM (_documentum_iudicare(monolithus,
+            DOC_CLAVIS_MUNDI, CANON_CITATIO_IRRITA, &irrita,
+            &omnia, piscina, intern));
+        CREDO_AEQUALIS_I32 (irrita, (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
     }
 
 
