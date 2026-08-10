@@ -31,6 +31,8 @@ awk -F'\t' '$1=="G"{print $2"\t"$3}' "$CORPUS" | while IFS='	' read -r m g; do
             '$1=="M"&&$2==m&&$3==g{print om"\t"og"\tmachina_statuum\t"$4"\t"m"\t"g}' "$CORPUS"
         awk -F'\t' -v m="$cm" -v g="$cg" -v om="$m" -v og="$g" \
             '$1=="R"&&$2==m&&$3==g{print om"\t"og"\trelatio\t"$4"\t"m"\t"g}' "$CORPUS"
+        awk -F'\t' -v m="$cm" -v g="$cg" -v om="$m" -v og="$g" \
+            '$1=="T"&&$2==m&&$3==g{print om"\t"og"\tterminus\t"$4"\t"m"\t"g}' "$CORPUS"
         cur=$(grep -m1 "^$cur	" "$PARENS" | cut -f2 || true)
         i=$((i + 1))
     done

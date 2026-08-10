@@ -178,6 +178,7 @@ interior constans character* FIXTURA_NECESSITUDINES =
     "    <relatum nomen=\"possessor_primus\" ad=\"actus_probandus\"/>\n"
     "  </species>\n"
     "</genus>\n"
+    "<genus nomen=\"subactus_probandus\" sub=\"actus_probandus\"/>\n"
     "</natura>\n";
 
 /* ==================================================
@@ -562,6 +563,56 @@ s32 principale (vacuum)
 
         /* modulus cum necessitudine sola regulam XXV non violat */
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXV), ZEPHYRUM);
+
+        /* TERMINI IN APPARATU: compages actus membra apparatus
+         * sunt, et sub-actus compagem HEREDITAT (catena maiorum
+         * eadem quae proprietatibus servit) */
+        {
+            NaturaGenus* actus_g;
+            NaturaGenus* subactus_g;
+            Xar*         apparatus;
+            i32          k;
+            i32          termini_numerus;
+
+            actus_g    = natura_genus(bib, "actus_probandus");
+            subactus_g = natura_genus(bib, "subactus_probandus");
+            CREDO_NON_NIHIL (actus_g);
+            CREDO_NON_NIHIL (subactus_g);
+
+            apparatus = natura_apparatus(bib, actus_g, piscina);
+            CREDO_NON_NIHIL (apparatus);
+            termini_numerus = ZEPHYRUM;
+            per (k = ZEPHYRUM; k < xar_numerus(apparatus); k++)
+            {
+                NaturaApparatusMembrum* m;
+
+                m = (NaturaApparatusMembrum*)xar_obtinere(
+                    apparatus, k);
+                si (chorda_aequalis_literis(*m->nodus->titulus,
+                                            "terminus"))
+                {
+                    termini_numerus++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (termini_numerus, II);
+
+            apparatus = natura_apparatus(bib, subactus_g, piscina);
+            CREDO_NON_NIHIL (apparatus);
+            termini_numerus = ZEPHYRUM;
+            per (k = ZEPHYRUM; k < xar_numerus(apparatus); k++)
+            {
+                NaturaApparatusMembrum* m;
+
+                m = (NaturaApparatusMembrum*)xar_obtinere(
+                    apparatus, k);
+                si (chorda_aequalis_literis(*m->nodus->titulus,
+                                            "terminus"))
+                {
+                    termini_numerus++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (termini_numerus, II);
+        }
     }
 
     {

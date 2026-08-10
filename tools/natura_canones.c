@@ -1219,7 +1219,12 @@ _apparatum_plicare(
         NcMembrum*              m;
 
         am      = (NaturaApparatusMembrum*)xar_obtinere(apparatus, i);
-        titulus = stml_attributum_capere(am->nodus, "nomen");
+        /* terminus compagis munere nominatur, non nomine - sine
+         * hoc titulus NIHIL est et membrum TACITE peribat (par
+         * discernens in probatio_natura_canones I-b) */
+        titulus = stml_attributum_capere(am->nodus,
+            chorda_aequalis_literis(*am->nodus->titulus, "terminus")
+                ? "munus" : "nomen");
 
         si (chorda_aequalis_literis(*am->nodus->titulus, "actio"))
         {
@@ -1291,7 +1296,9 @@ _apparatum_plicare(
             m->genus_valoris = "textus";
         }
         alioquin si (chorda_aequalis_literis(*am->nodus->titulus,
-                                             "relatio"))
+                                             "relatio") ||
+                     chorda_aequalis_literis(*am->nodus->titulus,
+                                             "terminus"))
         {
             m->origo         = NC_ORIGO_RELATIO;
             /* referentia UBIQUE (spec canon-referentia par. 4):

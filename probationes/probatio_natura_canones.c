@@ -984,6 +984,82 @@ principale(
 
 
     /* ========================================================
+     * I-b. TERMINI IN CANONE COCTO - par discernens
+     *
+     * Lapsus TACITUS mensuratus: plicatio titulum e nomen= solo
+     * legebat, ergo <terminus munus=...> sine diagnostico e
+     * canone peribat. Par: terminus et relatio EADEM
+     * necessitudine in eodem genere - si terminus perit dum
+     * relatio manet, culpa in bracchio termini est, non in fixo.
+     * ======================================================== */
+
+    {
+        NcCursus     termini_cursus;
+        chorda       fons_termini;
+        StmlResultus res_termini;
+        StmlNodus*   pactum_el;
+        StmlNodus*   decl_terminus;
+        StmlNodus*   decl_relatio;
+
+        imprimere("\n--- I-b. termini in canone cocto ---\n");
+
+        termini_cursus = _generatorem_currere(
+                             "probationes/exempla/nc_termini",
+                             "build/probatio_natura_canones/termini.canon",
+                             piscina);
+        CREDO_VERUM (termini_cursus.cucurrit);
+        CREDO_AEQUALIS_I32 (termini_cursus.codex, (i32)ZEPHYRUM);
+        CREDO_VERUM (termini_cursus.plagula_scripta);
+
+        fons_termini = filum_legere_totum(
+            "build/probatio_natura_canones/termini.canon", piscina);
+        CREDO_MAIOR_I32 (fons_termini.mensura, (i32)ZEPHYRUM);
+        res_termini = stml_legere(fons_termini, piscina, intern);
+        CREDO_VERUM (res_termini.successus);
+
+        pactum_el = _elementum_invenire(res_termini.elementum_radix,
+            chorda_ex_literis("pactum-pr", piscina));
+        CREDO_NON_NIHIL (pactum_el);
+
+        /* pars discriminis: RELATIO manet (fixum coquitur)... */
+        decl_relatio = _declarationem_invenire(pactum_el,
+            "attributum", chorda_ex_literis("testis-rel", piscina));
+        CREDO_NON_NIHIL (decl_relatio);
+
+        /* ...et TERMINUS quoque manere DEBET, ut referentia */
+        decl_terminus = _declarationem_invenire(pactum_el,
+            "attributum", chorda_ex_literis("dator-rei", piscina));
+        CREDO_NON_NIHIL (decl_terminus);
+        si (decl_terminus)
+        {
+            chorda* genus_valoris;
+
+            genus_valoris = stml_attributum_capere(decl_terminus,
+                                                   "genus");
+            CREDO_NON_NIHIL (genus_valoris);
+            si (genus_valoris)
+            {
+                CREDO_VERUM (chorda_aequalis_literis(
+                    *genus_valoris, "referentia"));
+            }
+        }
+        si (decl_relatio)
+        {
+            chorda* genus_valoris;
+
+            genus_valoris = stml_attributum_capere(decl_relatio,
+                                                   "genus");
+            CREDO_NON_NIHIL (genus_valoris);
+            si (genus_valoris)
+            {
+                CREDO_VERUM (chorda_aequalis_literis(
+                    *genus_valoris, "referentia"));
+            }
+        }
+    }
+
+
+    /* ========================================================
      * II. MONOLITHUS ONERATUR
      * ======================================================== */
 

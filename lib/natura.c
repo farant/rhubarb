@@ -1957,7 +1957,8 @@ apparatui_contribuere(
             chorda_aequalis_literis(*titulus_e, "proprietates") ||
             chorda_aequalis_literis(*titulus_e, "partes") ||
             chorda_aequalis_literis(*titulus_e, "actiones") ||
-            chorda_aequalis_literis(*titulus_e, "relationes"))
+            chorda_aequalis_literis(*titulus_e, "relationes") ||
+            chorda_aequalis_literis(*titulus_e, "termini"))
         {
             i32 n_intus;
             i32 j;

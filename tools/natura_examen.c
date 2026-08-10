@@ -497,19 +497,20 @@ tabulas_scribere(
             }
         }
 
-        /* ---- arcus: relatio/relatum ---- */
+        /* ---- arcus: relatio/relatum/terminus ---- */
         {
-            constans character* elementa[II];
+            constans character* elementa[III];
             constans character* attributa[II];
             i32                 ielem;
             i32                 iattr;
 
             elementa[ZEPHYRUM]  = "relatio";
             elementa[I]         = "relatum";
+            elementa[II]        = "terminus";
             attributa[ZEPHYRUM] = "ad";
             attributa[I]        = "a";
 
-            per (ielem = ZEPHYRUM; ielem < II; ielem++)
+            per (ielem = ZEPHYRUM; ielem < III; ielem++)
             {
                 per (iattr = ZEPHYRUM; iattr < II; iattr++)
                 {
@@ -538,7 +539,9 @@ tabulas_scribere(
                             perge;
                         }
 
-                        _attr(r, "nomen",   rel, (i32)magnitudo(rel));
+                        /* terminus munere nominatur, non nomine */
+                        _attr(r, ielem == II ? "munus" : "nomen",
+                              rel, (i32)magnitudo(rel));
                         _attr(r, "modulus", tm,  (i32)magnitudo(tm));
                         si (!tm[ZEPHYRUM])
                         {
@@ -817,8 +820,8 @@ corpus_scribere(
             character  di[MM];
             StmlNodus* n2;
             i32        ik;
-            constans character* invol[IV];
-            constans character* membra[IV];
+            constans character* invol[V];
+            constans character* membra[V];
 
             g = *(StmlNodus**)xar_obtinere(nodi, i);
             _attr(g, "nomen",   gn, (i32)magnitudo(gn));
@@ -857,8 +860,9 @@ corpus_scribere(
             invol[I]        = NIHIL;           membra[I]        = "machina_statuum";
             invol[II]       = "partes";        membra[II]       = "pars";
             invol[III]      = "relationes";    membra[III]      = "relatio";
+            invol[IV]       = "termini";       membra[IV]       = "terminus";
 
-            per (ik = ZEPHYRUM; ik < IV; ik++)
+            per (ik = ZEPHYRUM; ik < V; ik++)
             {
                 StmlNodus* sedes;
                 i32        numerus_l;
@@ -885,7 +889,9 @@ corpus_scribere(
                         perge;
                     }
 
-                    _attr(m, "nomen", n, (i32)magnitudo(n));
+                    /* terminus munere nominatur, non nomine */
+                    _attr(m, ik == IV ? "munus" : "nomen", n,
+                          (i32)magnitudo(n));
 
                     si (ik == ZEPHYRUM)
                     {
@@ -978,7 +984,8 @@ corpus_scribere(
                         {
                             memcpy(rm, mod, strlen(mod) + I);
                         }
-                        fprintf(f, "R\t%s\t%s\t%s\t%s\t%s\n",
+                        fprintf(f, "%s\t%s\t%s\t%s\t%s\t%s\n",
+                                ik == IV ? "T" : "R",
                                 mod, gn, n, rm, ad);
                     }
                 }

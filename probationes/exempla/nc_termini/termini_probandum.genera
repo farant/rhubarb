@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FIXUM PROBATIONIS (probatio_natura_canones) - termini in canone.
+
+  PAR DISCERNENS: genus unum fert terminum compagis ET sedem
+  relationis, AMBO eadem necessitudine citata. Si plicatio
+  (natura_canones) terminos praetermittit (titulus e nomen= solo
+  legitur - lapsus TACITUS mensuratus), attributum 'dator-rei'
+  e canone SILENTER perit dum 'testis-rel' manet: par quod
+  culpam in bracchio termini solo ponit, non in fixo.
+-->
+<natura modulus="termini_probandum" versio="1" lingua="latina">
+  <necessitudo nomen="participatio_pr" a="*" ad="*">
+    <definitio>Necessitudo ficta probationis compagum.</definitio>
+  </necessitudo>
+  <genus nomen="pactum_pr">
+    <definitio>Pactum fictum: compages cum teste relationis.</definitio>
+    <termini>
+      <terminus munus="dator_rei" necessitudo="participatio_pr"
+        ad="pactum_pr"/>
+    </termini>
+    <relationes>
+      <relatio nomen="testis_rel" necessitudo="participatio_pr"
+        ad="pactum_pr"/>
+    </relationes>
+  </genus>
+</natura>
