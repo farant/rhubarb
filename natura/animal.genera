@@ -92,10 +92,10 @@
   </actiones>
 
   <relationes>
-    <relatio nomen="pollinat" a="planta" modulus="planta"
-      inversa="verum"
-      nota="impletur a planta.pollinatur_a - relatio mutua,
-            nunc utrimque descripta"/>
+    <relatio nomen="pollinat" ad="planta" modulus="planta"
+      nota="conversum planta.pollinatur_a - identitas UNA in
+            necessitudines declarata (par conversum primum),
+            directio utraque nomine suo"/>
     <relatio nomen="praedatur" ad="animal" multiplex="verum"/>
   </relationes>
 

@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **35** · genera **188** · res dictionarii **385** · necessitudines **64** · arcus **528**
+Exemplaria **35** · genera **188** · res dictionarii **385** · necessitudines **65** · arcus **528**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -620,7 +620,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `vectura.vehiculum` — aeroplanum, currus_onerarius, navis, tramen
 - `vectura.via` — :canalis_suesianus, :via_appia, via_aeria, via_maritima, via_terrestris
 
-## V. Necessitudines — relationes declaratae (64)
+## V. Necessitudines — relationes declaratae (65)
 
 Identitas relationis SEMEL declaratur; sedes usus (relatio,
 terminus) titulo, converso, aut scriptura ligant. Familiae =
@@ -654,6 +654,7 @@ necessitudines altae (columna sub vacua).
 | exercet | exercetur_a | exsecutio | * | * | - | necessitudines |
 | exsecutio | - | - | * | * | - | necessitudines |
 | exsequitur | - | exsecutio | * | * | - | necessitudines |
+| fabricatum_in | coquitur | origo | * | * | - | necessitudines |
 | fert | - | dependentia | * | * | - | necessitudines |
 | fundat | fundatur_in | fundatio | * | * | - | necessitudines |
 | fundatio | - | - | * | * | - | necessitudines |

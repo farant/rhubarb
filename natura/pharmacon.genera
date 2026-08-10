@@ -208,8 +208,11 @@
             aequivalentia NON esse possunt"/>
     <relatio nomen="asseritur_per" ad="iudicium" modulus="iudicium"
       nota="aequivalentiam vide supra"/>
-    <relatio nomen="fabricatum_in" ad="coctura" inversa="coquitur"
-      multiplex="verum"/>
+    <relatio nomen="fabricatum_in" ad="coctura"
+      multiplex="verum"
+      nota="conversum coctura.coquitur - identitas in
+            necessitudines declarata (vulnus inversae-ut-nominis
+            hac via sanatum)"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->

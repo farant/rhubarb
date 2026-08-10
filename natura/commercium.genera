@@ -223,11 +223,20 @@
     ordinateur. Une vente n'est pas une chose mais un fait qui
     arrive ; ce qui en demeure, ce sont ses écritures.</glossa>
 
+  <termini>
+    <nota>compages actus (spec necessitudines): venditio per
+      fines suos CONSTITUITUR - quis vendat, quis emat, quid,
+      quanti. Munera = fines nominati; ordo terminorum ordinem
+      priorem relationum servat (canon byte-idem, porta
+      probata).</nota>
+    <terminus munus="venditor" necessitudo="participatio" ad="*"/>
+    <terminus munus="emptor" necessitudo="participatio" ad="*"/>
+    <terminus munus="res_vendita" necessitudo="obiectum_actus"
+      ad="*" multiplex="verum"/>
+    <terminus munus="solutum" necessitudo="obiectum_actus"
+      ad="pecunia"/>
+  </termini>
   <relationes>
-    <relatio nomen="venditor" ad="*"/>
-    <relatio nomen="emptor" ad="*"/>
-    <relatio nomen="res_vendita" ad="*" multiplex="verum"/>
-    <relatio nomen="solutum" ad="pecunia"/>
     <relatio nomen="parit" ad="obligatio" modulus="obligatio"
       nota="venditio sine solutione statim OBLIGATIONEM parit
             (ratio caffeae mensualis) - unde exemplar

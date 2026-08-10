@@ -253,6 +253,15 @@
     <glossa lingua="en">From-a-defect: root-cause link.</glossa>
   </necessitudo>
 
+  <necessitudo nomen="fabricatum_in" conversum="coquitur"
+      sub="origo" a="*" ad="*">
+    <definitio>Medicamentum in coctura sua fabricatum; conversa
+      via, coctura quae medicamentum coquit. Par quod vulnus
+      inversae stantem (pharmacon) sanavit.</definitio>
+    <glossa lingua="en">Fabricated-in / cooks - the pair that
+      healed the standing inversa wound.</glossa>
+  </necessitudo>
+
   <!-- familia evulgatio -->
 
   <necessitudo nomen="edita_a" sub="evulgatio" a="*" ad="*">

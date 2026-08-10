@@ -978,6 +978,11 @@ _membrum_scribere(
         /* in blocco TERMINI proprio scribitur, non hic */
         redde;
     }
+    si (strcmp(kind, "nota") == ZEPHYRUM)
+    {
+        /* margo curatorialis, non quaestio apparatus */
+        redde;
+    }
 
     si (strcmp(kind, "proprietas") == ZEPHYRUM)
     {
@@ -1190,6 +1195,11 @@ _apparatum_scribere(
             character               auc[NOMINIS_TECTUM];
 
             m = (NaturaApparatusMembrum*)xar_obtinere(membra, i);
+            si (m->nodus->titulus &&
+                chorda_aequalis_literis(*m->nodus->titulus, "nota"))
+            {
+                perge;  /* margo curatorialis, non membrum */
+            }
             /* terminus munere nominatur, non nomine */
             _chordam_scribere(
                 stml_attributum_capere(m->nodus,

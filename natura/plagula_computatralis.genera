@@ -498,8 +498,8 @@
       nota="plagulas et directoria - apertum quia se ipsum
             includit"/>
     <relatio nomen="continetur_in" ad="directorium"
-      inversa="continet"
-      nota="radix sola caret"/>
+      nota="radix sola caret; conversum necessitudinis continet
+            (declaratae) - inversa-ut-nomen sanatum"/>
     <relatio nomen="est_plagula" ad="plagula_computatralis"
       nota="apud systemata unixiformia directorium plagula EST
             (genus speciale); alibi non. Relatio, non

@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1619 sedibus relationum huius canonis, 1159
+  RELATIONES - ex 1619 sedibus relationum huius canonis, 1163
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  460 nomine solo iudicantur, id est sicut in canone per
+  456 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    453 petitum apertum habent (ad='*') - clavis nulla est;
+    449 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -14624,6 +14624,7 @@
   <citatio nomen="actus-iuridicus-forma-eius" attributum="forma-eius" ad="praescriptum/nomen" super="actus-iuridicus"/>
   <citatio nomen="quorum-condicio-actus" attributum="ad" ad="actus-sollemnis ritus sacramentum baptismus confirmatio eucharistia paenitentia unctio-infirmorum ordo matrimonium sacramentale benedictio consecratio-loci exorcismus actus-iuridicus stipulatio mancipatio manumissio testamentum confectio-instrumenti promulgatio inauguratio collatio-tituli sententia-lata/nomen" super="quorum/condicio-actus"/>
   <citatio nomen="quorum-statutum-per" attributum="statutum-per" ad="norma/nomen" super="quorum"/>
+  <citatio nomen="animal-pollinat" attributum="pollinat" ad="planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="animal"/>
   <citatio nomen="animal-praedatur" attributum="ad" ad="animal apis canis homo/nomen" super="animal/praedatur"/>
   <citatio nomen="animal-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="animal/generat"/>
   <citatio nomen="animal-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="animal/laborat"/>
@@ -15228,14 +15229,17 @@
   <citatio nomen="quorum-deliberativum-statutum-per" attributum="statutum-per" ad="norma/nomen" super="quorum-deliberativum"/>
   <citatio nomen="maioritas-replicarum-condicio-actus" attributum="ad" ad="actus-sollemnis ritus sacramentum baptismus confirmatio eucharistia paenitentia unctio-infirmorum ordo matrimonium sacramentale benedictio consecratio-loci exorcismus actus-iuridicus stipulatio mancipatio manumissio testamentum confectio-instrumenti promulgatio inauguratio collatio-tituli sententia-lata/nomen" super="maioritas-replicarum/condicio-actus"/>
   <citatio nomen="maioritas-replicarum-statutum-per" attributum="statutum-per" ad="norma/nomen" super="maioritas-replicarum"/>
+  <citatio nomen="apis-pollinat" attributum="pollinat" ad="planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="apis"/>
   <citatio nomen="apis-praedatur" attributum="ad" ad="animal apis canis homo/nomen" super="apis/praedatur"/>
   <citatio nomen="apis-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="apis/generat"/>
   <citatio nomen="apis-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="apis/laborat"/>
   <citatio nomen="apis-sita-in" attributum="sita-in" ad="locus/nomen" super="apis"/>
+  <citatio nomen="canis-pollinat" attributum="pollinat" ad="planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="canis"/>
   <citatio nomen="canis-praedatur" attributum="ad" ad="animal apis canis homo/nomen" super="canis/praedatur"/>
   <citatio nomen="canis-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="canis/generat"/>
   <citatio nomen="canis-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="canis/laborat"/>
   <citatio nomen="canis-sita-in" attributum="sita-in" ad="locus/nomen" super="canis"/>
+  <citatio nomen="homo-pollinat" attributum="pollinat" ad="planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="homo"/>
   <citatio nomen="homo-praedatur" attributum="ad" ad="animal apis canis homo/nomen" super="homo/praedatur"/>
   <citatio nomen="homo-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="homo/generat"/>
   <citatio nomen="homo-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="homo/laborat"/>
