@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **34** · genera **188** · res dictionarii **385** · necessitudines **0** · arcus **528**
+Exemplaria **35** · genera **188** · res dictionarii **385** · necessitudines **64** · arcus **528**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -190,6 +190,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 ### morbus (v1, genera 1)
 
 - **morbus** ⚙ — Dispositio viventis praeter naturam, qua operatio debita impeditur: defectus ab eo quod naturae rei debetur
+
+### necessitudines (v1, genera 0)
+
 
 ### norma (v4, genera 4)
 
@@ -617,7 +620,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `vectura.vehiculum` — aeroplanum, currus_onerarius, navis, tramen
 - `vectura.via` — :canalis_suesianus, :via_appia, via_aeria, via_maritima, via_terrestris
 
-## V. Necessitudines — relationes declaratae (0)
+## V. Necessitudines — relationes declaratae (64)
 
 Identitas relationis SEMEL declaratur; sedes usus (relatio,
 terminus) titulo, converso, aut scriptura ligant. Familiae =
@@ -625,6 +628,70 @@ necessitudines altae (columna sub vacua).
 
 | necessitudo | conversum | sub | a | ad | scripturae | exemplar |
 |---|---|---|---|---|---|---|
+| accipit | - | translatio_nuntii | * | * | - | necessitudines |
+| adhibet | - | dependentia | * | * | - | necessitudines |
+| administrat | administrata_a | custodia | * | * | - | necessitudines |
+| afficit | - | effectio | * | * | - | necessitudines |
+| asseritur_per | - | fundatio | * | * | - | necessitudines |
+| auctor | - | origo | * | * | - | necessitudines |
+| causalitas | - | - | * | * | - | necessitudines |
+| causat | - | causalitas | * | * | - | necessitudines |
+| conformitas | - | - | * | * | - | necessitudines |
+| constituta_per | - | origo | * | * | constituitur_per | necessitudines |
+| continet | continetur_in | pars_totum | * | * | - | necessitudines |
+| currit_ut | - | exsecutio | * | * | - | necessitudines |
+| custodia | - | - | * | * | - | necessitudines |
+| custodit | custoditur_ab | custodia | * | * | custodita_a custodita_per | necessitudines |
+| de | - | fundatio | * | * | - | necessitudines |
+| dependentia | - | - | * | * | - | necessitudines |
+| edita_a | - | evulgatio | * | * | - | necessitudines |
+| effectio | - | - | * | * | - | necessitudines |
+| efficit | efficitur_a | effectio | * | * | - | necessitudines |
+| emissa_a | - | evulgatio | * | * | - | necessitudines |
+| evulgatio | - | origo | * | * | - | necessitudines |
+| ex_fonte | - | fundatio | * | * | ex_fontibus | necessitudines |
+| ex_vitio | - | causalitas | * | * | - | necessitudines |
+| exercet | exercetur_a | exsecutio | * | * | - | necessitudines |
+| exsecutio | - | - | * | * | - | necessitudines |
+| exsequitur | - | exsecutio | * | * | - | necessitudines |
+| fert | - | dependentia | * | * | - | necessitudines |
+| fundat | fundatur_in | fundatio | * | * | - | necessitudines |
+| fundatio | - | - | * | * | - | necessitudines |
+| habet_versionem | - | successio | * | * | - | necessitudines |
+| implet | impletur_a | conformitas | * | * | - | necessitudines |
+| intra | - | situs | * | * | - | necessitudines |
+| lata_a | - | evulgatio | * | * | latum_per latus_a | necessitudines |
+| membrum | membrum_de | pars_totum | * | * | - | necessitudines |
+| mensuratur_per | - | repraesentatio | * | * | - | necessitudines |
+| minatur | - | causalitas | * | * | - | necessitudines |
+| minuitur_per | - | causalitas | * | * | - | necessitudines |
+| mittit | missus_a | translatio_nuntii | * | * | - | necessitudines |
+| natum_ex | - | causalitas | * | * | - | necessitudines |
+| normata_per | - | conformitas | * | * | - | necessitudines |
+| obiectum_actus | - | participatio | * | * | - | necessitudines |
+| origo | ortum_dat | - | * | * | - | necessitudines |
+| orta_ex | - | origo | * | * | ortum_ex | necessitudines |
+| parit | - | origo | * | * | - | necessitudines |
+| pars_de | - | pars_totum | * | * | - | necessitudines |
+| pars_totum | - | - | * | * | - | necessitudines |
+| participatio | - | - | * | * | - | necessitudines |
+| pendet_ex | - | dependentia | * | * | dependet_ex | necessitudines |
+| pertinet_ad | - | fundatio | * | * | - | necessitudines |
+| pollinat | pollinatur_a | effectio | * | * | - | necessitudines |
+| praebet | praebetur_a | dependentia | * | * | - | necessitudines |
+| repraesentatio | - | - | * | * | - | necessitudines |
+| scripta_in | - | dependentia | * | * | - | necessitudines |
+| secundum_normam | - | conformitas | * | * | secundum_legem | necessitudines |
+| sequitur | praecedens | successio | * | * | - | necessitudines |
+| situm_in | - | situs | * | * | sita_in situs_in | necessitudines |
+| situs | - | - | * | * | - | necessitudines |
+| substituit | - | successio | * | * | - | necessitudines |
+| successio | - | - | * | * | - | necessitudines |
+| tendit_ad | - | causalitas | * | * | - | necessitudines |
+| tenetur_a | - | custodia | * | * | - | necessitudines |
+| translatio_nuntii | - | - | * | * | - | necessitudines |
+| versio_de | - | successio | * | * | - | necessitudines |
+| violat | - | conformitas | * | * | - | necessitudines |
 
 ## VI. Umbrae — superficta, nondum descripta
 

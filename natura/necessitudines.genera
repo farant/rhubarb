@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  necessitudines.genera - modulus cardinis necessitudinum
+
+  RELATIONES PRIMAE CLASSIS (spec necessitudines, 2026-08-10):
+  genus relationis SEMEL hic declaratur; sedes usus (relatio,
+  terminus) per totum corpus titulo suo, converso, aut scriptura
+  ligant. Tres strata: IDENTITAS (hic) / TITULUS (sedes) /
+  SCRIPTURA (flexio grammatica).
+
+  SPINA FAMILIARUM e classificatione corporis 2026-08-10 (432
+  sedes, 325 nomina, 272 singularia): familiae ipsae ex USU
+  ductae sunt, non ex ontologia superiore importatae (decipula
+  echus). Modulus hic genera NON fert - regula XXV oneratoris
+  modulum sine genere admittit qui necessitudines declarat.
+
+  FINES a="*" ad="*" ubique in v1: angustatio cum necessitate
+  vera adveniet, non ante (canon LIMITAT, numquam POSCIT).
+
+  NOTA COLLISIONIS: familia evulgationis 'promulgatio' vocari
+  non potuit - /actus/promulgatio res est (species actus
+  iuridici). Custos collisionum ante scriptionem mensuravit.
+-->
+<natura modulus="necessitudines" versio="1" lingua="latina">
+
+  <!-- ========== FAMILIAE (spina taxinomiae) ========== -->
+
+  <necessitudo nomen="participatio" a="*" ad="*">
+    <definitio>Status participis in actu: quomodo quis in eventu
+      stet quem non est sed agit, patitur, aut testatur. Familia
+      finium compagum - munera (emptor, fiduciarius, testis)
+      fines nominati huius generis sunt.</definitio>
+    <glossa lingua="en">Standing of a participant in an act - the
+      family behind frame-ends (munera). The biggest family the
+      corpus classification found (~36 singleton role
+      names).</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="obiectum_actus" sub="participatio"
+      a="*" ad="*">
+    <definitio>Finis patientis: res circa quam actus versatur -
+      quod venditur, quod solvitur, quod traditur.</definitio>
+    <glossa lingua="en">The patient/object end of an act's frame:
+      what the act is about or upon.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="origo" conversum="ortum_dat" a="*" ad="*">
+    <definitio>Causa efficiens: unde res orta est - quis aut quid
+      eam genuit, fecit, condidit.</definitio>
+    <glossa lingua="en">Efficient origin: what brought the bearer
+      into being.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="evulgatio" sub="origo" a="*" ad="*">
+    <definitio>Origo in publicum: editio, emissio, latio,
+      promulgatio - actus quo res publice exit ab auctoritate.
+      ('promulgatio' nomen res acti iuridici iam tenet.)</definitio>
+    <glossa lingua="en">Issuing into public: publication,
+      emission, enactment - origin with an authority
+      flavor.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="pars_totum" a="*" ad="*">
+    <definitio>Pars et totum: quod intra aliud iacet aut aliud
+      intra se habet, sive materialiter sive ut membrum.</definitio>
+    <glossa lingua="en">Part-whole and membership.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="situs" a="*" ad="*">
+    <definitio>Positio in loco: ubi res sit, sedeat, habitet.</definitio>
+    <glossa lingua="en">Placement: where the bearer is.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="dependentia" a="*" ad="*">
+    <definitio>Quod alio utitur aut ab alio pendet ut sit aut
+      operetur.</definitio>
+    <glossa lingua="en">Depends-on / uses.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="successio" a="*" ad="*">
+    <definitio>Ordo rerum in tempore aut in serie: quod post
+      aliud venit, aliud substituit, versionem aut expressionem
+      alterius est. Familia FRBR.</definitio>
+    <glossa lingua="en">Succession, versioning, replacement - the
+      FRBR-shaped cluster.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="conformitas" a="*" ad="*">
+    <definitio>Status erga normam: quod normae subest, secundum
+      eam fit, eam implet aut violat.</definitio>
+    <glossa lingua="en">Standing toward a norm: governed-by,
+      according-to, fulfils, violates.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="fundatio" a="*" ad="*">
+    <definitio>Necessitudo epistemica: de quo propositio sit,
+      quo fundetur, per quod asseratur aut probetur.</definitio>
+    <glossa lingua="en">Epistemic standing: aboutness, grounding,
+      assertion, attestation.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="causalitas" a="*" ad="*">
+    <definitio>Causa et finis inter res: quod aliud causat, ad
+      aliud tendit, alii minatur aut mederi potest. Spina
+      iustificationis censuum.</definitio>
+    <glossa lingua="en">Cause and end between things - the census
+      justification spine's family.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="exsecutio" a="*" ad="*">
+    <definitio>Quod aliud exsequitur, currit, implet ut opus:
+      programma in processorio, praescriptum a persona.</definitio>
+    <glossa lingua="en">Performing / running / carrying
+      out.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="effectio" a="*" ad="*">
+    <definitio>Mutatio in aliud illata: quod aliud afficit,
+      mutat, sanat, laedit. ('mutatio' nomen genus elementorum
+      programmatis iam tenet.)</definitio>
+    <glossa lingua="en">Change wrought on another.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="translatio_nuntii" a="*" ad="*">
+    <definitio>Communicatio et vectio: quod mittitur, accipitur,
+      portatur, transfertur inter partes.</definitio>
+    <glossa lingua="en">Communication and transfer between
+      parties.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="custodia" a="*" ad="*">
+    <definitio>Cura et administratio: quod ab alio custoditur,
+      administratur, tenetur, gubernatur.</definitio>
+    <glossa lingua="en">Keeping, holding, administering.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="repraesentatio" a="*" ad="*">
+    <definitio>Necessitudo mensurae et schematis: quod aliud
+      describit, mensurat, aut in forma sua repraesentat.</definitio>
+    <glossa lingua="en">Measure / schema / data-aboutness.</glossa>
+  </necessitudo>
+
+  <!-- ========== NOMINA MULTI-USUS (opifices corporis) ==========
+       Ordinata per familias; usus in corpore numeros
+       classificationis 2026-08-10 sequitur. -->
+
+  <!-- familia fundatio -->
+
+  <necessitudo nomen="de" sub="fundatio" a="*" ad="*">
+    <definitio>Intentionalitas nuda: propositio aut opus DE re -
+      necessitudo epistemica generalissima (usus IX, maximus
+      corporis).</definitio>
+    <glossa lingua="en">Aboutness - the most-reused relation name
+      in the corpus (9 uses).</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="asseritur_per" sub="fundatio" a="*" ad="*">
+    <definitio>Quod per iudicium asseritur: modus membri per
+      iudicium (usus VIII).</definitio>
+    <glossa lingua="en">Asserted-through-a-judgment.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="fundat" conversum="fundatur_in"
+      sub="fundatio" a="*" ad="*">
+    <definitio>Quod alii fundamentum praebet; conversa via, quod
+      in alio fundatur.</definitio>
+    <glossa lingua="en">Grounds / is-grounded-in - one identity,
+      two directions.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="pertinet_ad" sub="fundatio" a="*" ad="*">
+    <definitio>Quod ad aliud spectat aut sub eius cura iacet
+      (praeceptum ad artem suam).</definitio>
+    <glossa lingua="en">Pertains-to.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="ex_fonte" sub="fundatio" a="*" ad="*">
+    <definitio>Unde propositio RECEPTA est - fons, non
+      fundamentum (fons dicit unde venerit, non quod verum
+      sit).</definitio>
+    <glossa lingua="en">From-source: provenance, not
+      truth.</glossa>
+    <scriptio>ex_fontibus</scriptio>
+  </necessitudo>
+
+  <necessitudo nomen="mensuratur_per" sub="repraesentatio"
+      a="*" ad="*">
+    <definitio>Quod per mensuram dicitur: magnitudo instrumento
+      aut unitate ligata.</definitio>
+    <glossa lingua="en">Measured-by.</glossa>
+  </necessitudo>
+
+  <!-- familia pars_totum -->
+
+  <necessitudo nomen="continet" conversum="continetur_in"
+      sub="pars_totum" a="*" ad="*">
+    <definitio>Totum quod partem intra se habet; conversa via,
+      pars quae in toto iacet (usus IX + II).</definitio>
+    <glossa lingua="en">Containment: the whole holds the part.
+      Bound from either direction by name.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="pars_de" sub="pars_totum" a="*" ad="*">
+    <definitio>Pars alterius esse: nomen relationis a genere
+      gerentis ductum (forma '_de' corporis).</definitio>
+    <glossa lingua="en">Is-part-of (the '_de' relational-noun
+      shape).</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="membrum" conversum="membrum_de"
+      sub="pars_totum" a="*" ad="*">
+    <definitio>Sodalitas: totum quod membra habet; conversa via,
+      membrum universitatis aut organizationis.</definitio>
+    <glossa lingua="en">Membership - has-member /
+      is-member-of.</glossa>
+  </necessitudo>
+
+  <!-- familia origo -->
+
+  <necessitudo nomen="auctor" sub="origo" a="*" ad="*">
+    <definitio>Persona quae operi respondet - origo cum
+      responsione (usus VII; persona clausa: scriba pro
+      machinis).</definitio>
+    <glossa lingua="en">Author: origin with answerability. The
+      auctor/scriba split lives at the use sites.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="parit" sub="origo" a="*" ad="*">
+    <definitio>Quod aliud gignit ut effectum iuridicum aut
+      naturalem: lex obligationem, venditio obligationem (usus
+      VII).</definitio>
+    <glossa lingua="en">Begets / gives-rise-to.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="orta_ex" sub="origo" a="*" ad="*">
+    <definitio>Unde res orta est: systema e systemate, lingua e
+      lingua (usus IV; scriptura genere flectitur).</definitio>
+    <glossa lingua="en">Arose-from; spelling follows the bearer's
+      gender.</glossa>
+    <scriptio>ortum_ex</scriptio>
+  </necessitudo>
+
+  <necessitudo nomen="constituta_per" sub="origo" a="*" ad="*">
+    <definitio>Quod per actum sollemnem constitutum est: persona
+      iuridica, fiducia, classis normativa.</definitio>
+    <glossa lingua="en">Constituted-by-a-solemn-act.</glossa>
+    <scriptio>constituitur_per</scriptio>
+  </necessitudo>
+
+  <necessitudo nomen="ex_vitio" sub="causalitas" a="*" ad="*">
+    <definitio>Quod e vitio natum est: depravatio aut incidens
+      cuius radix vitium est.</definitio>
+    <glossa lingua="en">From-a-defect: root-cause link.</glossa>
+  </necessitudo>
+
+  <!-- familia evulgatio -->
+
+  <necessitudo nomen="edita_a" sub="evulgatio" a="*" ad="*">
+    <definitio>Ab organizatione edita: versio, systema, editio
+      (usus IV).</definitio>
+    <glossa lingua="en">Published-by.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="emissa_a" sub="evulgatio" a="*" ad="*">
+    <definitio>Ab auctoritate emissa: moneta, tessera,
+      attestatio.</definitio>
+    <glossa lingua="en">Issued-by.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="lata_a" sub="evulgatio" a="*" ad="*">
+    <definitio>Ab auctoritate lata: lex, limitatio, iussum,
+      titulus (scripturae genere flectuntur).</definitio>
+    <glossa lingua="en">Enacted/borne-by; three gender
+      spellings, one identity.</glossa>
+    <scriptio>latum_per</scriptio>
+    <scriptio>latus_a</scriptio>
+  </necessitudo>
+
+  <!-- familia successio -->
+
+  <necessitudo nomen="sequitur" conversum="praecedens"
+      sub="successio" a="*" ad="*">
+    <definitio>Quod post aliud in serie venit; conversa via, quod
+      ante stat (usus V + I).</definitio>
+    <glossa lingua="en">Follows / precedes - one succession, two
+      directions.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="substituit" sub="successio" a="*" ad="*">
+    <definitio>Quod aliud in loco eius ponit: norma normam,
+      secretum secretum.</definitio>
+    <glossa lingua="en">Supersedes.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="versio_de" sub="successio" a="*" ad="*">
+    <definitio>Versio alterius esse (forma '_de'; usus V trans
+      species versionum).</definitio>
+    <glossa lingua="en">Is-a-version-of.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="habet_versionem" sub="successio"
+      a="*" ad="*">
+    <definitio>Quod versiones habet: latus alterum catenae
+      versionum (usus III).</definitio>
+    <glossa lingua="en">Has-version.</glossa>
+  </necessitudo>
+
+  <!-- familia conformitas -->
+
+  <necessitudo nomen="normata_per" sub="conformitas" a="*" ad="*">
+    <definitio>Quod norma regitur: moneta, lingua, unitas
+      mensurae (usus V).</definitio>
+    <glossa lingua="en">Governed-by-a-norm.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="secundum_normam" sub="conformitas"
+      a="*" ad="*">
+    <definitio>Quod secundum normam aut legem fit: licentia,
+      tributum, actus sollemnis.</definitio>
+    <glossa lingua="en">According-to-a-norm.</glossa>
+    <scriptio>secundum_legem</scriptio>
+  </necessitudo>
+
+  <necessitudo nomen="violat" sub="conformitas" a="*" ad="*">
+    <definitio>Quod normam aut obligationem frangit: vitium
+      intentionem, incidens obligationem.</definitio>
+    <glossa lingua="en">Violates.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="implet" conversum="impletur_a"
+      sub="conformitas" a="*" ad="*">
+    <definitio>Quod postulatum satisfacit; conversa via,
+      postulatum quod ab opere impletur.</definitio>
+    <glossa lingua="en">Fulfils / is-fulfilled-by.</glossa>
+  </necessitudo>
+
+  <!-- familia dependentia -->
+
+  <necessitudo nomen="pendet_ex" sub="dependentia" a="*" ad="*">
+    <definitio>Quod ex alio pendet ut sit aut operetur.
+      ('dependet_ex' scriptura eiusdem - synonymum corporis quod
+      dictionarium unum facit.)</definitio>
+    <glossa lingua="en">Depends-on; 'dependet_ex' was the
+      corpus's accidental synonym, now a spelling.</glossa>
+    <scriptio>dependet_ex</scriptio>
+  </necessitudo>
+
+  <necessitudo nomen="adhibet" sub="dependentia" a="*" ad="*">
+    <definitio>Quod alio utitur in opere suo: programma
+      bibliotheca, ritus corporalibus.</definitio>
+    <glossa lingua="en">Uses / employs.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="praebet" conversum="praebetur_a"
+      sub="dependentia" a="*" ad="*">
+    <definitio>Quod alii aliquid ministrat; conversa via, quod
+      ab alio ministratur.</definitio>
+    <glossa lingua="en">Provides / is-provided-by.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="scripta_in" sub="dependentia" a="*" ad="*">
+    <definitio>Quod in lingua programmandi scriptum est (usus
+      III).</definitio>
+    <glossa lingua="en">Written-in (a programming
+      language).</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="fert" sub="dependentia" a="*" ad="*">
+    <definitio>Quod aliud secum portat aut praestat: iurisdictio
+      normas, ambitus elementa.</definitio>
+    <glossa lingua="en">Carries / bears.</glossa>
+  </necessitudo>
+
+  <!-- familia situs -->
+
+  <necessitudo nomen="intra" sub="situs" a="*" ad="*">
+    <definitio>Quod intra aliud iacet: locus in loco, iurisdictio
+      in loco (usus III).</definitio>
+    <glossa lingua="en">Within.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="situm_in" sub="situs" a="*" ad="*">
+    <definitio>Res in loco posita. Scripturae genere gerentis
+      flectuntur - identitas una, tres formae (casus mensuratus
+      classificationis).</definitio>
+    <glossa lingua="en">Located-in; the three spellings are one
+      relation agreeing with the bearer's gender - the measured
+      fragmentation case.</glossa>
+    <scriptio>sita_in</scriptio>
+    <scriptio>situs_in</scriptio>
+  </necessitudo>
+
+  <!-- familia exsecutio -->
+
+  <necessitudo nomen="exercet" conversum="exercetur_a"
+      sub="exsecutio" a="*" ad="*">
+    <definitio>Quod aliud exercet aut in eo operatur; conversa
+      via, quod ab alio exercetur (usus III + II).</definitio>
+    <glossa lingua="en">Exercises / is-exercised-by.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="exsequitur" sub="exsecutio" a="*" ad="*">
+    <definitio>Quod aliud ad effectum ducit: processorium
+      architecturam, persona praescriptum.</definitio>
+    <glossa lingua="en">Executes / carries-out.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="currit_ut" sub="exsecutio" a="*" ad="*">
+    <definitio>Quod ut operatio currit: programma, servus.</definitio>
+    <glossa lingua="en">Runs-as.</glossa>
+  </necessitudo>
+
+  <!-- familia effectio -->
+
+  <necessitudo nomen="efficit" conversum="efficitur_a"
+      sub="effectio" a="*" ad="*">
+    <definitio>Quod effectum in alio operatur; conversa via, quod
+      ab alio efficitur (usus III + I).</definitio>
+    <glossa lingua="en">Effects / is-effected-by.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="afficit" sub="effectio" a="*" ad="*">
+    <definitio>Quod aliud tangit et mutat: morbus corpus,
+      depravatio fabricationem (usus III).</definitio>
+    <glossa lingua="en">Affects.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="pollinat" conversum="pollinatur_a"
+      sub="effectio" a="*" ad="*">
+    <definitio>Animal quod plantae pollinem transfert; conversa
+      via, planta quae ab animali pollinatur. Par conversum
+      primum corporis (animal/planta).</definitio>
+    <glossa lingua="en">Pollinates / is-pollinated-by - the
+      corpus's first measured converse pair.</glossa>
+  </necessitudo>
+
+  <!-- familia causalitas -->
+
+  <necessitudo nomen="causat" sub="causalitas" a="*" ad="*">
+    <definitio>Quod aliud efficit aut ad esse adducit - spina
+      iustificationis censuum (in dictionario semel, in
+      documentis opifex).</definitio>
+    <glossa lingua="en">Causes; the census justification spine's
+      forward direction.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="tendit_ad" sub="causalitas" a="*" ad="*">
+    <definitio>Quod ad finem ordinatur: praeceptum ad finem
+      domus.</definitio>
+    <glossa lingua="en">Tends-toward (final causality).</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="natum_ex" sub="causalitas" a="*" ad="*">
+    <definitio>Quod e casu cogente natum est: praeceptum sine
+      casu suo maxima vacua est.</definitio>
+    <glossa lingua="en">Born-from (the forcing case).</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="minatur" sub="causalitas" a="*" ad="*">
+    <definitio>Quod alii periculum fert.</definitio>
+    <glossa lingua="en">Threatens.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="minuitur_per" sub="causalitas" a="*" ad="*">
+    <definitio>Periculum quod per cautiones minuitur.</definitio>
+    <glossa lingua="en">Mitigated-by.</glossa>
+  </necessitudo>
+
+  <!-- familia translatio_nuntii -->
+
+  <necessitudo nomen="mittit" conversum="missus_a"
+      sub="translatio_nuntii" a="*" ad="*">
+    <definitio>Quod nuntium mittit; conversa via, nuntius ab
+      actore missus.</definitio>
+    <glossa lingua="en">Sends / sent-by.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="accipit" sub="translatio_nuntii"
+      a="*" ad="*">
+    <definitio>Quod nuntium aut rem accipit.</definitio>
+    <glossa lingua="en">Receives.</glossa>
+  </necessitudo>
+
+  <!-- familia custodia -->
+
+  <necessitudo nomen="custodit" conversum="custoditur_ab"
+      sub="custodia" a="*" ad="*">
+    <definitio>Quod aliud servat et curat; conversa via, quod ab
+      alio custoditur (scripturae genere flectuntur).</definitio>
+    <glossa lingua="en">Keeps / is-kept-by; gender spellings
+      collapse into one identity.</glossa>
+    <scriptio>custodita_a</scriptio>
+    <scriptio>custodita_per</scriptio>
+  </necessitudo>
+
+  <necessitudo nomen="tenetur_a" sub="custodia" a="*" ad="*">
+    <definitio>Officium aut radix a persona vel organizatione
+      tenta.</definitio>
+    <glossa lingua="en">Held-by.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="administrat" conversum="administrata_a"
+      sub="custodia" a="*" ad="*">
+    <definitio>Quod aliud gubernat et ordinat; conversa via, quod
+      ab alio administratur.</definitio>
+    <glossa lingua="en">Administers / administered-by.</glossa>
+  </necessitudo>
+
+</natura>

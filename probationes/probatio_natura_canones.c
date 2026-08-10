@@ -1726,8 +1726,33 @@ principale(
         exemplaria = _vias_colligere("natura", ".genera", piscina);
 
         CREDO_MAIOR_I32 (xar_numerus(exemplaria), (i32)ZEPHYRUM);
-        CREDO_AEQUALIS_I32 (xar_numerus(canones),
-                            xar_numerus(exemplaria) + I);
+
+        /* moduli sine generibus (necessitudines solae - regula XXV
+         * eos admittit) canonem NON coquunt, ergo reconciliatio
+         * COQUENTIA numerat, non exemplaria omnia. Derivatur, non
+         * figitur: exemplar novum genus ferens cuius canon deest
+         * etiamnunc CLAMAT. */
+        {
+            i32 coquentia;
+
+            coquentia = ZEPHYRUM;
+            per (i = ZEPHYRUM; i < xar_numerus(exemplaria); i++)
+            {
+                chorda via_e;
+                chorda fons_e;
+
+                via_e  = *(chorda*)xar_obtinere(exemplaria, i);
+                fons_e = filum_legere_totum(
+                    chorda_ut_cstr(via_e, piscina), piscina);
+                si (chorda_continet(fons_e,
+                        chorda_ex_literis("<genus ", piscina)))
+                {
+                    coquentia++;
+                }
+            }
+            CREDO_MAIOR_I32 (coquentia, (i32)ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(canones), coquentia + I);
+        }
 
         minima_omnia         = ZEPHYRUM;
         radices_malae        = ZEPHYRUM;
