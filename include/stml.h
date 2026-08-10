@@ -95,7 +95,10 @@ nomen enumeratio {
     STML_TOKEN_FRAGMENTUM_AUTO      = XV,    /* <#/> aut <#id/>; cum
                                                 captio_numerus > 0 =
                                                 <# (> / <#id (> / <(> */
-    STML_TOKEN_TRANSCLUSIO          = XVI    /* <<selector>> */
+    STML_TOKEN_TRANSCLUSIO          = XVI,   /* <<selector>> */
+    STML_TOKEN_ERRATUM              = XVII   /* titulus illegaliter
+                                              * incipiens ('<.x>',
+                                              * '<9bad>') - vitium */
 } StmlTokenGenus;
 
 /* ==================================================

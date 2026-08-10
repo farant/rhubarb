@@ -2954,6 +2954,48 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probans titulum illegaliter incipientem (vitium 2026-08-10)
+     *
+     * Olim: '<.x>' vel '<9bad>' nomen VACUUM legebat, positus non
+     * progrediebatur, et clausura anonyma vitium TACITE devorabat
+     * (successus=VERUM, arbor corrupta). Nunc: vitium clarum.
+     * '<>' lenis MANET (strictum TITULUS_VACUUS iudicat, supra).
+     * ================================================== */
+    imprimere("\n--- Probans titulum illegaliter incipientem ---\n");
+    {
+        StmlResultus r;
+
+        /* corruptio tacita pristina - nunc vitium clarum */
+        r = stml_legere_ex_literis("<.x>y</.x>", piscina, intern);
+        CREDO_VERUM(!r.successus);
+        CREDO_AEQUALIS_I32((i32)r.status,
+                           (i32)STML_ERROR_SYNTAXIS);
+
+        r = stml_legere_ex_literis("<a><.b>x</.b></a>", piscina,
+                                   intern);
+        CREDO_VERUM(!r.successus);
+        CREDO_AEQUALIS_I32((i32)r.status,
+                           (i32)STML_ERROR_SYNTAXIS);
+
+        /* initium numericum - eadem familia (olim SIGSEGV apud
+         * consumptores arboris per titulos vacuos) */
+        r = stml_legere_ex_literis("<9bad/>", piscina, intern);
+        CREDO_VERUM(!r.successus);
+
+        /* clausura mala intra elementum sanum */
+        r = stml_legere_ex_literis("<a>x</.a>", piscina, intern);
+        CREDO_VERUM(!r.successus);
+
+        /* lenitates pinnatae MANENT */
+        r = stml_legere_ex_literis("<>x</>", piscina, intern);
+        CREDO_VERUM(r.successus);
+        r = stml_legere_ex_literis("<a>x</>", piscina, intern);
+        CREDO_VERUM(r.successus);
+
+        imprimere("  titulus illegalis: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

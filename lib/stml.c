@@ -141,6 +141,25 @@ _tok_praeterire_spatium(StmlTokenContext* ctx)
     }
 }
 
+/* Nomen vacuum coram charactere non-structurali = initium tituli
+ * illegale (e.g. '<.x>', '<9bad>'). Olim positus non progrediebatur
+ * et clausura anonyma vitium TACITE devorabat (arbor corrupta,
+ * successus=VERUM). '<>' lenis manet (strictum TITULUS_VACUUS). */
+interior b32
+_titulus_male_incipit(StmlTokenContext* ctx, chorda titulus)
+{
+    character c;
+
+    si (titulus.mensura > ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    c = _tok_aspicere(ctx, ZEPHYRUM);
+    redde c != '>' && c != '/' && c != '!' && c != '(' &&
+          c != '=' && c != '\0' && !_est_spatium(c);
+}
+
 interior chorda
 _tok_legere_nomen(StmlTokenContext* ctx)
 {
@@ -507,6 +526,16 @@ _tok_legere_tag(StmlTokenContext* ctx)
         _tok_praeterire_spatium(ctx);
 
         titulus = _tok_legere_nomen(ctx);
+        si (_titulus_male_incipit(ctx, titulus))
+        {
+            token.genus = STML_TOKEN_ERRATUM;
+            token.valor = titulus;
+            token.positus_initium = initium;
+            token.positus_finis = ctx->positus;
+            token.linea = initium_linea;
+            token.columna = initium_columna;
+            redde token;
+        }
         _tok_praeterire_spatium(ctx);
 
         /* Expect => */
@@ -537,6 +566,16 @@ _tok_legere_tag(StmlTokenContext* ctx)
 
         _tok_praeterire_spatium(ctx);
         titulus = _tok_legere_nomen(ctx);
+        si (_titulus_male_incipit(ctx, titulus))
+        {
+            token.genus = STML_TOKEN_ERRATUM;
+            token.valor = titulus;
+            token.positus_initium = initium;
+            token.positus_finis = ctx->positus;
+            token.linea = initium_linea;
+            token.columna = initium_columna;
+            redde token;
+        }
         _tok_praeterire_spatium(ctx);
 
         si (_tok_aspicere(ctx, ZEPHYRUM) == '>')
@@ -559,6 +598,16 @@ _tok_legere_tag(StmlTokenContext* ctx)
     {
         _tok_progredi(ctx, I);
         titulus = _tok_legere_nomen(ctx);
+        si (_titulus_male_incipit(ctx, titulus))
+        {
+            token.genus = STML_TOKEN_ERRATUM;
+            token.valor = titulus;
+            token.positus_initium = initium;
+            token.positus_finis = ctx->positus;
+            token.linea = initium_linea;
+            token.columna = initium_columna;
+            redde token;
+        }
 
         /* Handle ! in closing tags for raw content */
         si (_tok_aspicere(ctx, ZEPHYRUM) == '!')
@@ -584,6 +633,16 @@ _tok_legere_tag(StmlTokenContext* ctx)
 
     /* Regular opening tag */
     titulus = _tok_legere_nomen(ctx);
+    si (_titulus_male_incipit(ctx, titulus))
+    {
+        token.genus = STML_TOKEN_ERRATUM;
+        token.valor = titulus;
+        token.positus_initium = initium;
+        token.positus_finis = ctx->positus;
+        token.linea = initium_linea;
+        token.columna = initium_columna;
+        redde token;
+    }
 
     /* Check for ! suffix (raw content) */
     est_crudus = FALSUM;
@@ -1987,6 +2046,15 @@ _parser_legere_nodus(StmlParserContext* ctx)
 
         casus STML_TOKEN_TRANSCLUSIO:
             redde _parser_legere_transclusio(ctx);
+
+        casus STML_TOKEN_ERRATUM:
+            /* Titulus illegaliter incipiens ('<.x>', '<9bad>') -
+             * olim arbor tacite corrumpebatur (2026-08-10) */
+            ctx->status = STML_ERROR_SYNTAXIS;
+            ctx->linea_erroris = ctx->current.linea;
+            ctx->columna_erroris = ctx->current.columna;
+            _parser_progredi(ctx);  /* Consume to avoid infinite loop */
+            redde NIHIL;
 
         casus STML_TOKEN_CLAUDERE:
         casus STML_TOKEN_FRAGMENTUM_CLAUDERE:
