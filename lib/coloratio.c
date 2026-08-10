@@ -888,11 +888,13 @@ _colorare_tags(
                 col++;
             }
 
-            /* Scandere nomen tag */
+            /* Scandere nomen tag ('.' ducens = titulus generum,
+             * ut '<.species>'; _est_nomen_character punctum iam
+             * interius admittit) */
             si (col < tabula->latitudo)
             {
                 c = tabula_cellula(tabula, linea, col);
-                si (_est_nomen_initium(c))
+                si (_est_nomen_initium(c) || c == '.')
                 {
                     dum (col < tabula->latitudo)
                     {

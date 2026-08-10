@@ -168,7 +168,17 @@ _tok_legere_nomen(StmlTokenContext* ctx)
 
     initium = ctx->positus;
 
-    si (!_est_nomen_initium(_tok_aspicere(ctx, ZEPHYRUM)))
+    /* Punctum UNUM ducens in titulis elementorum licitum (spatium
+     * generum: '<.species>' generat quod '.species' citat; punctum
+     * pars NOMINIS est). Attributa numquam puncta accipiunt - custos
+     * eorum (_est_nomen_initium ante vocationem) punctum reicit
+     * priusquam huc veniat. */
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '.' &&
+        _est_nomen_initium(_tok_aspicere(ctx, I)))
+    {
+        _tok_progredi(ctx, I);
+    }
+    alioquin si (!_est_nomen_initium(_tok_aspicere(ctx, ZEPHYRUM)))
     {
         result.datum = NIHIL;
         result.mensura = ZEPHYRUM;

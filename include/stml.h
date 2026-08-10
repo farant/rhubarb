@@ -22,6 +22,11 @@
  * - Clausura anonyma: </> elementum apertum proximum claudit
  *   (elementa sola - crudi et fragmenta clausuram expressam
  *   tenent); forma authoris in scriptura SERVATUR (octetim)
+ * - Tituli punctati: <.species> - punctum UNUM ducens in titulo
+ *   elementi licitum, pars NOMINIS ipsius (spatium generum:
+ *   creatio cum citatione '.species' rimatur). Attributa puncta
+ *   ducentia numquam accipiunt. Titulus illegaliter incipiens
+ *   ('<..x>', '<9bad>') = STML_ERROR_SYNTAXIS.
  *
  * Proprietates:
  * - DOM-stylus arbor

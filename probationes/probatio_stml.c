@@ -2965,13 +2965,15 @@ s32 principale(vacuum)
     {
         StmlResultus r;
 
-        /* corruptio tacita pristina - nunc vitium clarum */
-        r = stml_legere_ex_literis("<.x>y</.x>", piscina, intern);
+        /* corruptio tacita pristina - nunc vitium clarum
+         * (puncta ducentia postea legalia facta - sectio sequens;
+         * hic characteres PERPETUO illegales) */
+        r = stml_legere_ex_literis("<@x>y</@x>", piscina, intern);
         CREDO_VERUM(!r.successus);
         CREDO_AEQUALIS_I32((i32)r.status,
                            (i32)STML_ERROR_SYNTAXIS);
 
-        r = stml_legere_ex_literis("<a><.b>x</.b></a>", piscina,
+        r = stml_legere_ex_literis("<a><9b>x</9b></a>", piscina,
                                    intern);
         CREDO_VERUM(!r.successus);
         CREDO_AEQUALIS_I32((i32)r.status,
@@ -2983,7 +2985,7 @@ s32 principale(vacuum)
         CREDO_VERUM(!r.successus);
 
         /* clausura mala intra elementum sanum */
-        r = stml_legere_ex_literis("<a>x</.a>", piscina, intern);
+        r = stml_legere_ex_literis("<a>x</@a>", piscina, intern);
         CREDO_VERUM(!r.successus);
 
         /* lenitates pinnatae MANENT */
@@ -2993,6 +2995,57 @@ s32 principale(vacuum)
         CREDO_VERUM(r.successus);
 
         imprimere("  titulus illegalis: PRAETERITUM\n");
+    }
+
+    /* ==================================================
+     * Probans titulos punctatos (spatium generum, 2026-08-10)
+     *
+     * '<.species>' generat quod '.species' citat - signum '.' in
+     * positione tituli, pars NOMINIS ipsius. Punctum unum ducens,
+     * dein character initialis normalis. Attributa numquam.
+     * ================================================== */
+    imprimere("\n--- Probans titulos punctatos ---\n");
+    {
+        StmlResultus r;
+        chorda scripta;
+
+        /* parse + structura + punctum in nomine servatum */
+        r = stml_legere_ex_literis(
+            "<.species nomen=\"apis\"><.b>x</.b></.species>",
+            piscina, intern);
+        CREDO_VERUM(r.successus);
+        CREDO_NON_NIHIL(r.elementum_radix);
+        CREDO_VERUM(_chorda_ptr_eq_literis(r.elementum_radix->titulus,
+                                           ".species"));
+
+        /* iter rotundum octetim */
+        scripta = stml_scribere(r.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scripta,
+            "<.species nomen=\"apis\"><.b>x</.b></.species>");
+
+        /* auto-clausum */
+        r = stml_legere_ex_literis("<.s/>", piscina, intern);
+        CREDO_VERUM(r.successus);
+
+        /* contentum crudum punctatum (clausura crudi punctata) */
+        r = stml_legere_ex_literis("<.cru!>a<b</.cru!>",
+                                   piscina, intern);
+        CREDO_VERUM(r.successus);
+
+        /* clausura anonyma cum titulo punctato */
+        r = stml_legere_ex_literis("<.a>x</>", piscina, intern);
+        CREDO_VERUM(r.successus);
+
+        /* NEGATIVA: punctum solum, geminatum, attributum punctatum */
+        r = stml_legere_ex_literis("<.>x</.>", piscina, intern);
+        CREDO_VERUM(!r.successus);
+        r = stml_legere_ex_literis("<..x>y</..x>", piscina, intern);
+        CREDO_VERUM(!r.successus);
+        r = stml_legere_ex_literis("<a .attr=\"x\"/>",
+                                   piscina, intern);
+        CREDO_VERUM(!r.successus);
+
+        imprimere("  tituli punctati: PRAETERITUM\n");
     }
 
     /* ==================================================
