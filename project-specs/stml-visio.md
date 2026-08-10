@@ -62,7 +62,9 @@ reference sigils carve three spaces:
 | `(>` / `((>` … | forward capture, arity = paren count | **VIVIT** (C: `captio_numerus`; TS per spec; G2 origin) |
 | `<) tag>` | backward capture | **VIVIT** (C + TS) |
 | `<= tag =>` | sandwich capture | **VIVIT** (C + TS) |
-| `<#>` `<#id>` | fragments (anonymous/named) | **VIVIT** (C + TS); C adds capturing fragments `<# (>` and sugar `<(>` |
+| `<#>` `<#id>` | fragments (anonymous/named) | **VIVIT** (C + TS) |
+| `<#id (>` `<# (>` | capturing fragments — fragment captures following siblings (forward direction ONLY) | **VIVIT** (C) |
+| `<(>` | anonymous forward-capturing fragment (sugar for `<# (>`); the WRITER normalizes it to `<# (>` on serialization — read-side sugar, canonical write-side form | **VIVIT** (C) |
 | `</>` | anonymous close (author's form preserved byte-wise) | **VIVIT** (C) |
 | `<<selector>>` | transclusion | **VIVIT-as-node** in C (`STML_NODUS_TRANSCLUSIO` — parsed, carried); **RESOLUTION = RESERVATUM** (TS resolves with CSS selectors; C consumers don't yet) |
 | `<<x \| transform>>` | transclusion with pipe-transform (G1) | **RESERVATUM** — earmarked as the textual form of computed VIEWS in generated projections ("`&c;` with augmentations applied"); never in truth-files |
