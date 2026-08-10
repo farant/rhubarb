@@ -28,11 +28,13 @@ SIGILLATUM).
 
 ## 0. What you need
 
-- the rhubarb checkout, `./compile_tests.sh` green
-- **the silex binary**: build it with `./tools/silex_struere.sh`, invoke
-  as `./bin/silex` (or put the checkout's `bin/` on your PATH / alias it)
-- **tell silex where the libraries live**: `export SILEX_FABRICA=/path/to/rhubarb`
-  once, or pass `-f /path/to/rhubarb` per command
+- **the silex binary**: `./tools/silex_struere.sh` in a rhubarb
+  checkout builds AND installs it to `~/.bin/silex` — with the whole
+  library corpus embedded (2026-08-10). After that the checkout is
+  optional: silex carries its own registry (`silex -versio` names the
+  snapshot). No environment variable exists; `-f /path/to/rhubarb`
+  overrides per command, ascent-from-cwd covers working in-tree.
+  (SILEX_FABRICA was RETIRED 2026-08-10.)
 - for chapters 8+: a VPS you can ssh into, nginx + letsencrypt already
   configured, a domain pointed at it
 
@@ -67,8 +69,11 @@ from its first breath.
 > - `silex novum` (console flavor): **EXSTAT** — vendors the closure from
 >   the fabrica, scaffolds hello + probatio + scripts, volumen-first.
 >   G1 re-homed from the imagined `aedilis novum` to silex, and shipped.
-> - `--vitrea` flavor (window + assets + internuntius wiring): **DEEST** —
->   the remaining slice of G1; silex ui itself is the pattern to template.
+> - `-vitrea` flavor (window + assets + internuntius wiring): **EXSTAT**
+>   2026-08-10 — heartbeat seed (bridge + persistent visit count), pipa
+>   split, vendored capsula tool, FOUR-TIER generated scripts with
+>   computed per-target source lists. G1 CLOSED (01KZ6CSBQN impletum).
+>   Hyphens refused in vitrea tituli (titulus becomes a C symbol).
 > - vitrea + fenestra + capsula + `include/X.h → lib/X.c`: **EXSTAT**
 
 ---

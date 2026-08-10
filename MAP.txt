@@ -1,6 +1,6 @@
 RHUBARB CODEBASE MAP
 ====================
-Last updated: 2026-08-03
+Last updated: 2026-08-10
 
 A C89 monorepo for building catholic civilization.
 All identifiers in Latin. No dependencies. Long-term thinking.
@@ -69,14 +69,16 @@ rhubarb/
 │   capitula (ToC parser), numerus_romanus, paginatio (page
 │   designators - books/reading arc in the forum app);
 │   silva/instrumenta/silva_iudicium (shared examen judgment recipe).
-│   SILEX ARC (2026-08-04): volumen (document = one sqlite file:
-│   acta/massae/plagulae + plicam_ad = fold at any seq, G2 seed),
-│   silex (bin/silex - project scaffolder + VCS, FIVE verbs:
-│   novum/ui/status/condere/historia/proicere/renovare; build via
-│   ./tools/silex_struere.sh -- NOT compile_tools.sh, it carries a
-│   frons capsula), mensa (+ mensa_assets/ - thinkboard frontend
-│   battery: cards, z-order, pagination, genus registry),
-│   tools/glomerare.sh (JS concat bundler).
+│   SILEX ARC (2026-08-04, corpus 2026-08-10): volumen (document =
+│   one sqlite file: acta/massae/plagulae + plicam_ad = fold at any
+│   seq, G2 seed), silex (installed ~/.bin/silex - scaffolder + VCS
+│   + EMBEDDED LIBRARY CORPUS: novum [-vitrea]/ui/status/condere/
+│   historia/proicere/renovare/partes, -versio = corpus stamp;
+│   resolution -f > ascent > corpus, SILEX_FABRICA retired; build
+│   via ./tools/silex_struere.sh -- NOT compile_tools.sh: frons
+│   capsula + corpus capsula + ~/.bin install), mensa
+│   (+ mensa_assets/ - thinkboard frontend battery: cards, z-order,
+│   pagination, genus registry), tools/glomerare.sh (JS bundler).
 │   Tutorial: project-specs/compages-rationes-tutorial.md.
 ├── natura/          SEMANTIC LIBRARY - hand-crafted taxonomy + dictionary
 │                    in STML. "OOP done right": the taxonomy layer.
