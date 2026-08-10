@@ -69,21 +69,26 @@ structura NaturaGenus {
       StmlNodus*  nodus;      /* subtree - cetera hinc leguntur */
 };
 
-/* res dictionarii: species / individuum / cultivar
+/* res = INDIVIDUA SOLA (arbor porphyriana 2026-08-10, decretum
+ * 01KZPK4B7X - haec doctrina catenas veteres SUBSTITUIT):
  *
- * DUAE CATENAE, CONSULTO DISTINCTAE (2026-08-08):
- *   genus_suum + genus->res_suae = catena APPARATUS. Genus
- *     ambiens, res mediis PRAETERMISSIS: species apparatum non
- *     confert (valorem solum figit), ergo hereditas eam recte
- *     transilit. Planum manet: genus->res_suae res OMNES sub eo
- *     fert, etiam nidificatas.
- *   continens + res_suae = catena TAXINOMIAE. Quod re vera quid
- *     continet: <species isbn> speciem isbn_10 continet,
- *     <species malus_domestica> cultivar granny_smith. Haec
- *     profunditas Porphyriana in plagulis SEMPER fuit; hic
- *     demum in graphum venit (ante hoc dici non poterat).
- * Neutra alteram substituit - apparatus quaerit quid HEREDITET,
- * taxinomia quid SIT. */
+ *   Genus et species MUNERA relativa sunt, non naturae - ergo
+ *   .genus/.species/.cultivar UNUM registrant (NaturaGenus supra)
+ *   et profunditas Porphyriana catena UNA fertur: parens/liberi.
+ *   Species apparatum CONFERT (proprietates suas aperit, valores
+ *   determinat - differentia esse addit, non solum eligit);
+ *   hereditas per parentelam fluit, nihil transilitur.
+ *
+ *   Rebus (individuis) catenae duae manent:
+ *     genus_suum = catena APPARATUS (quid hereditet - genus aut
+ *       species proxime continens, iam plene genus);
+ *     continens + res_suae = catena TAXINOMIAE (quid re vera quid
+ *       contineat - individuum intra individuum solum, quia
+ *       nidificatio kind-in-kind nunc parentela est).
+ *
+ * Lectio trium stratorum, ubique eadem: proprietas APERIT -
+ * valor in genere CLAUDIT (determinatio, domus proprii) - valor
+ * in individuo REFERT. */
 nomen structura NaturaRes NaturaRes;
 structura NaturaRes {
          chorda*  titulus;
