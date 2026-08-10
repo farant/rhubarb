@@ -245,3 +245,42 @@ read-side projection, trails separately; validation never needs it.
    (essence over operation — Pieper); the census's `adhibet
    ad="&silva;"` + nota become the `<% &aedilis;>` augmentation at
    W3's migration. CLI-ness is invocation, not classification.
+
+## §7 W1 build record + W3 pickup notes (2026-08-10, 591a6ea)
+
+**W1 IMPLETUM.** All §1 gates ran: &laika; probe RED→GREEN measured;
+&nemo_est; negative held; block-stripped canon broke the citation
+(block provably read); five-file world VITIA 0; both -probare 0;
+inscription doctrine retired openly (DOC_NON_INSCRIPTUS now uses a
+truly-unknown key; DOC_CLAVIS_MUNDI pins the librarium behavior).
+Deviation from §0's seed-at-:1867 sketch: lookup FALLBACK to one
+canon-held table instead of seeding per-citation scope tables
+(114×1163 inserts avoided; W2 reads the same table).
+
+Repeatable block-removal gate:
+`grep -v '<clavis |claves-externae' natura/cocta/individua.canon >
+/tmp/sine.canon && bin/canon_examen -canon /tmp/sine.canon <census>`
+— must produce the clavis-absens vitium.
+
+**W3 pickup (fresh-session checklist)** — spec §2 has the design;
+these are the map details not repeated there:
+- stml probatio slot: after the "genus titulus" section closing
+  brace (probatio_canon.c:~1414 pre-W1; find the section by its
+  banner). probatio_canon's piscina is 262144 — large fixture sets
+  may need it raised. probatio_stml round-trip idiom: :2128-2134.
+- Parser dispatch case slot: `_parser_legere_nodus` beside the
+  ERRATUM arm; `_parser_creare_nodus` leaves fragmentum/
+  fragmentum_id UNINITIALIZED — initialize the new discriminator,
+  do not copy that bug.
+- W3 canon-judgment consumes canon->claves_externae (key →
+  CanonClavisExterna{clavis, genus}) — the genus attr finds the
+  target's kind element; additive-only = the member exists as an
+  unbounded `<liberum>` on that element (single-valued members are
+  `<attributum>` — mechanical conflict test).
+- Migration order inside W3: grammar green first (stml suite +
+  amalgam + silva), then canon judgment, then rhubarb.census
+  migrations (&c; stub → `<% &c;>` nota; &aedilis; entry →
+  `<% &aedilis;>` with adhibet+nota, library genus stands per §6).
+- After W3, W2 is small: vitium XV beside NOMEN_BIS (:1820 mirror),
+  semina root fons= exemption, tripwire proof on the two measured
+  collisions.

@@ -285,3 +285,28 @@ dot, attributes never), so a schema cannot describe what the parser
 cannot parse. canon.canon self-judges VITIA 0 with the new genus.
 Note valor_congruit's dash rule flipped from `== COMPOSITUM` to
 `!= NOMEN` when TITULUS joined the case — titulus admits kebab too.
+
+## 2026-08-10 — librarium W1: claves externae
+
+The citation scope grew its second tier: document keys first, then
+the canon-held external table (claves-externae block, parsed once).
+Design choice vs the scout's sketch: NO per-citation seeding — the
+lookup falls back to `canon->claves_externae` (one TabulaDispersa
+built at parse), which W2's collision check will read too.
+
+Traps hit/avoided:
+- The top-level dispatch loop skips children lacking nomen= — the
+  claves-externae branch sits BEFORE that guard, and the suite gate
+  proves the block is read (canon-without-block must fail the
+  citation). A wrapper that parsed-but-did-nothing would have been
+  the perfect silent gate.
+- `<clavis>` text is read with stml_textus_internus (VERBATIM) and
+  unknown entities stay literal, so `&laika;` arrives as the same
+  bytes citation comparison uses. Any future normalization of that
+  path would corrupt every key silently.
+- Emission: NcEns xar stores VALUES inline (`(NcEns*)xar_obtinere`),
+  not pointers — `*(NcEns**)` segfaulted the generator (exit 139,
+  loud). Same idiom as _censum_seminum_scribere; copy from there.
+- Retired openly: the inscription requirement for world keys
+  (probatio_natura_canones DOC_NON_INSCRIPTUS) — that doctrine WAS
+  the gap W1 closes; the fixture now guards true-unknown keys.
