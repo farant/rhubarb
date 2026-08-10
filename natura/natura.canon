@@ -156,12 +156,15 @@
       ordinarius="individuum"
       nota="praestitutum DICTUM 2026-08-07: proiectio instantiarum
             (natura_canones, spec par. 4.1) ab hoc PENDET - machina
-            gerens='species' status GENERIS describit et attributum
-            instantiae fieri non debet. Dum praestitutum taceret,
+            gerens='genus' status GENERIS IPSIUS describit (macOS
+            genus 'vigens', CP/M 'derelictum') et attributum
+            instantiae fieri non debet. Valor olim 'species'
+            dictus; arbor porphyriana verbum uni ontologiae aptavit
+            (decretum Franis 2026-08-10). Dum praestitutum taceret,
             generator pro omni machina quae gerens= omittit
             CONIECTARE cogebatur. Coniectura tacita in canone
             scripta est, non in generatore.">
-      <optio>species</optio>
+      <optio>genus</optio>
       <optio>individuum</optio>
     </attributum>
     <attributum nomen="nota" genus="textus"/>

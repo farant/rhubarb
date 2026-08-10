@@ -66,7 +66,7 @@
       ordinarius="verum"/>
   </proprietates>
 
-  <machina_statuum nomen="vita" gerens="species">
+  <machina_statuum nomen="vita" gerens="genus">
     <status nomen="nascens"/>
     <status nomen="vigens"/>
     <status nomen="senescens"/>
