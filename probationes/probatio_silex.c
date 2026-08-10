@@ -511,6 +511,9 @@ s32 principale (vacuum)
             AREA "/vitreum/vendor/sqlite3.c"));
         /* clausura instrumenti: toml quod app non trahit */
         CREDO_VERUM(filum_existit(AREA "/vitreum/lib/toml.c"));
+        /* clausura probationis: credo quem app non trahit
+         * (ambulatio acceptionis hoc cepit) */
+        CREDO_VERUM(filum_existit(AREA "/vitreum/lib/credo.c"));
         /* titulus cum '-' recusatur (symbolum C fieret) */
         optiones.titulus = "malum-nomen";
         fructus = silex_novum(piscina, &optiones);

@@ -1842,12 +1842,24 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
                 tabula_dispersa_inserere(viae, e->via,
                     (vacuum*)e);
             }
-            per (k = 0; k < xar_numerus(clausura_instrumenti);
+            /* instrumenti ET probationis clausurae mergendae -
+             * probatio credonem trahit quem app numquam trahit
+             * (AMBULATIO ACCEPTIONIS 2026-08-10: probare.sh
+             * lib/credo.c nominavit quod vendicatum non erat) */
+            per (k = 0; k < xar_numerus(clausura_instrumenti)
+                    + xar_numerus(clausura_probationis);
                 k = k + 1)
             {
-                SilexRes* e = (SilexRes*)xar_obtinere(
-                    clausura_instrumenti, k);
+                SilexRes* e = k < xar_numerus(clausura_instrumenti)
+                    ? (SilexRes*)xar_obtinere(clausura_instrumenti,
+                        k)
+                    : (SilexRes*)xar_obtinere(clausura_probationis,
+                        k - xar_numerus(clausura_instrumenti));
 
+                si (e == NIHIL)
+                {
+                    perge;
+                }
                 si (!tabula_dispersa_continet(viae, e->via))
                 {
                     SilexRes* novus = (SilexRes*)xar_addere(
