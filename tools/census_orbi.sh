@@ -30,14 +30,15 @@ awk '
     {
         linea = $0
 
-        if (match(linea, /nomen="#[A-Za-z0-9_-]+"/)) {
-            praesens = substr(linea, RSTART + 8, RLENGTH - 9)
+        # signum "&nomen;" (decretum 2026-08-10; olim "#nomen")
+        if (match(linea, /nomen="&[A-Za-z0-9_-]+;"/)) {
+            praesens = substr(linea, RSTART + 8, RLENGTH - 10)
             declarata[praesens] = NR
         }
 
         reliquum = linea
-        while (match(reliquum, /"#[A-Za-z0-9_-]+"/)) {
-            citatum = substr(reliquum, RSTART + 2, RLENGTH - 3)
+        while (match(reliquum, /"&[A-Za-z0-9_-]+;"/)) {
+            citatum = substr(reliquum, RSTART + 2, RLENGTH - 4)
             if (praesens != "" && citatum != praesens) {
                 vicini[praesens] = vicini[praesens] " " citatum
                 vicini[citatum] = vicini[citatum] " " praesens
@@ -84,7 +85,7 @@ awk '
         orbae = 0
         for (n in declarata) {
             if (!(n in tactum)) {
-                printf "ORBUM: #%s (linea %d)\n", n, declarata[n]
+                printf "ORBUM: &%s; (linea %d)\n", n, declarata[n]
                 orbae++
             }
         }

@@ -1320,7 +1320,9 @@ _signum_petiti(
         r = *(NaturaRes**)xar_obtinere(bib->res_omnes, i);
         si (chorda_aequalis_literis(*r->titulus, vc))
         {
-            redde _nodus_individuum_est(r->nodus) ? "#" : ".";
+            /* '&' = individuum (decretum 2026-08-10; terminator
+             * ';' in _petitum_scribere additur) */
+            redde _nodus_individuum_est(r->nodus) ? "&" : ".";
         }
     }
     fprintf(stderr, "natura_canones: semina - petitum '%s' non "
@@ -1331,8 +1333,9 @@ _signum_petiti(
 interior vacuum _chordam_scribere(FILE* f, constans chorda* c);
 
 /* petitum signatum scribere: '.' corpus KEBAB (vocabularium =
- * tituli elementorum canonis), '#' corpus verbatim (identitas -
- * compositum snake sinit, claves seminum ita congruunt) */
+ * tituli elementorum canonis), '&corpus;' verbatim (identitas -
+ * compositum snake sinit, claves seminum ita congruunt;
+ * terminator ';' obligatorius, decretum 2026-08-10) */
 interior vacuum
 _petitum_scribere(
     FILE*               f,
@@ -1351,6 +1354,10 @@ _petitum_scribere(
     alioquin
     {
         _chordam_scribere(f, v);
+        si (sig[ZEPHYRUM] == '&')
+        {
+            fputc(';', f);
+        }
     }
 }
 
@@ -1400,9 +1407,9 @@ _semen_emittere(
 
     fputs("\n  <", f);
     _kebab_scribere(f, e->genus->titulus);
-    fputs(" nomen=\"#", f);
+    fputs(" nomen=\"&", f);
     _chordam_scribere(f, e->titulus);
-    fputc('"', f);
+    fputs(";\"", f);
 
     /* passus I: valores formae ATTRIBUTI (ante liberos stare
      * debent) */

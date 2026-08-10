@@ -595,24 +595,45 @@ valor_congruit(
         casus CANON_GENUS_REFERENTIA:
         {
             character signum;
+            i32       finis_corporis;
 
             si (v->mensura < II)
             {
                 redde FALSUM;   /* signum sine corpore, aut nihil */
             }
             signum = (character)v->datum[ZEPHYRUM];
-            si (a->genus == CANON_GENUS_IDENTITAS)
+
+            /* decretum 2026-08-10: '&nomen;' = individuum
+             * (spatium mundi - syntaxis quam STML_SPEC ipsa
+             * reservavit: singleton nominatum, semantica
+             * wikilink); '.genus' = vocabularium (referentia
+             * sola). Signum vetus '#' spatio DOCUMENTI
+             * (fragmenta STML) redditum est - valor
+             * '#'-praefixus hic vitium est, numquam litterale
+             * tacitum (custos migrationis). Terminator ';'
+             * obligatorius ubique: prosam tutam facit (AT&T
+             * litterale manet quia ';' deest) et grammaticam
+             * UNAM inter attributa et textum servat. */
+            si (signum == '&')
             {
-                si (signum != '#')
+                si (v->mensura < III ||
+                    (character)v->datum[v->mensura - I] != ';')
                 {
                     redde FALSUM;
                 }
+                finis_corporis = v->mensura - I;
             }
-            alioquin si (signum != '#' && signum != '.')
+            alioquin si (a->genus == CANON_GENUS_REFERENTIA &&
+                         signum == '.')
+            {
+                finis_corporis = v->mensura;
+            }
+            alioquin
             {
                 redde FALSUM;
             }
-            per (i = I; i < v->mensura; i++)
+
+            per (i = I; i < finis_corporis; i++)
             {
                 character c;
 

@@ -747,15 +747,15 @@ _documentum_iudicare(
 /* PAR, pars prior: clavis in documento adest -> sanum */
 staticus constans character* DOC_RESOLVENS =
     "<individua>\n"
-    "  <aedificium nomen=\"#domus-nostra\" inscriptio-eius=\"#via-lata-x\"/>\n"
-    "  <inscriptio nomen=\"#via-lata-x\"/>\n"
+    "  <aedificium nomen=\"&domus-nostra;\" inscriptio-eius=\"&via-lata-x;\"/>\n"
+    "  <inscriptio nomen=\"&via-lata-x;\"/>\n"
     "</individua>\n";
 
 /* PAR, pars posterior: EADEM structura, clavis quae nihil nominat */
 staticus constans character* DOC_PENDENS =
     "<individua>\n"
-    "  <aedificium nomen=\"#domus-nostra\" inscriptio-eius=\"#nemo-omnino\"/>\n"
-    "  <inscriptio nomen=\"#via-lata-x\"/>\n"
+    "  <aedificium nomen=\"&domus-nostra;\" inscriptio-eius=\"&nemo-omnino;\"/>\n"
+    "  <inscriptio nomen=\"&via-lata-x;\"/>\n"
     "</individua>\n";
 
 /* PAR CLAUSURAE: pollinatur_a petitum 'animal' habet, quod
@@ -765,8 +765,8 @@ staticus constans character* DOC_PENDENS =
  * nulla omnino erat et par hoc indiscernibile. */
 staticus constans character* DOC_CLAUSURA_RESOLVENS =
     "<individua>\n"
-    "  <apis nomen=\"#apis-prima\"/>\n"
-    "  <rosa nomen=\"#rosa-prima\" pollinatur-a=\"#apis-prima\"/>\n"
+    "  <apis nomen=\"&apis-prima;\"/>\n"
+    "  <rosa nomen=\"&rosa-prima;\" pollinatur-a=\"&apis-prima;\"/>\n"
     "</individua>\n";
 
 /* pars posterior: EADEM structura, clavis quae nihil nominat -
@@ -774,8 +774,8 @@ staticus constans character* DOC_CLAUSURA_RESOLVENS =
  * assertio 'ruere debet' sola mutationem probat */
 staticus constans character* DOC_CLAUSURA_PENDENS =
     "<individua>\n"
-    "  <apis nomen=\"#apis-prima\"/>\n"
-    "  <rosa nomen=\"#rosa-prima\" pollinatur-a=\"#nemo-omnino\"/>\n"
+    "  <apis nomen=\"&apis-prima;\"/>\n"
+    "  <rosa nomen=\"&rosa-prima;\" pollinatur-a=\"&nemo-omnino;\"/>\n"
     "</individua>\n";
 
 /* '.apis' = genus e vocabulario - sententia gradus GENERIS
@@ -783,12 +783,12 @@ staticus constans character* DOC_CLAUSURA_PENDENS =
  * inexprimibilis erat */
 staticus constans character* DOC_GENUS_REF =
     "<individua>\n"
-    "  <rosa nomen=\"#rosa-una\" pollinatur-a=\".apis\"/>\n"
+    "  <rosa nomen=\"&rosa-una;\" pollinatur-a=\".apis\"/>\n"
     "</individua>\n";
 
 staticus constans character* DOC_GENUS_IGNOTUM =
     "<individua>\n"
-    "  <rosa nomen=\"#rosa-una\" pollinatur-a=\".piscis-volans\"/>\n"
+    "  <rosa nomen=\"&rosa-una;\" pollinatur-a=\".piscis-volans\"/>\n"
     "</individua>\n";
 
 /* INSCRIPTIO (spec census): census sodales suos sedet - per tag
@@ -796,26 +796,26 @@ staticus constans character* DOC_GENUS_IGNOTUM =
  * dictionarii praesentat, et referentia resolvit */
 staticus constans character* DOC_INSCRIPTUS =
     "<individua>\n"
-    "  <persona nomen=\"#carl_linnaeus\"/>\n"
-    "  <rosa nomen=\"#rosa-una\" auctor-nominis=\"#carl_linnaeus\"/>\n"
+    "  <persona nomen=\"&carl_linnaeus;\"/>\n"
+    "  <rosa nomen=\"&rosa-una;\" auctor-nominis=\"&carl_linnaeus;\"/>\n"
     "</individua>\n";
 
 staticus constans character* DOC_NON_INSCRIPTUS =
     "<individua>\n"
-    "  <rosa nomen=\"#rosa-una\" auctor-nominis=\"#carl_linnaeus\"/>\n"
+    "  <rosa nomen=\"&rosa-una;\" auctor-nominis=\"&carl_linnaeus;\"/>\n"
     "</individua>\n";
 
 /* CANON MODULI: communicatio petitum intra modulum habet
  * (nuntius missus-a -> actor) - canon moduli citare potest */
 staticus constans character* DOC_NUNTII_SANUS =
     "<individua>\n"
-    "  <actor nomen=\"#actor-unus\"/>\n"
-    "  <nuntius nomen=\"#n-unus\" missus-a=\"#actor-unus\"/>\n"
+    "  <actor nomen=\"&actor-unus;\"/>\n"
+    "  <nuntius nomen=\"&n-unus;\" missus-a=\"&actor-unus;\"/>\n"
     "</individua>\n";
 
 staticus constans character* DOC_NUNTII_PENDENS =
     "<individua>\n"
-    "  <nuntius nomen=\"#n-unus\" missus-a=\"#nemo\"/>\n"
+    "  <nuntius nomen=\"&n-unus;\" missus-a=\"&nemo;\"/>\n"
     "</individua>\n";
 
 /* RESTRICTIO: documentum uni-modulare sine referentiis trans
@@ -823,12 +823,12 @@ staticus constans character* DOC_NUNTII_PENDENS =
  * (spec par. 1 - divergentia = scopus, numquam accidens) */
 staticus constans character* DOC_PURUS =
     "<individua>\n"
-    "  <rosa-canina nomen=\"#rosa-una\" status-vita=\"florens\"/>\n"
+    "  <rosa-canina nomen=\"&rosa-una;\" status-vita=\"florens\"/>\n"
     "</individua>\n";
 
 staticus constans character* DOC_PURUS_VITIOSUS =
     "<individua>\n"
-    "  <rosa-canina nomen=\"#rosa-una\" status-vita=\"volans\"/>\n"
+    "  <rosa-canina nomen=\"&rosa-una;\" status-vita=\"volans\"/>\n"
     "</individua>\n";
 
 /* UNICITAS trans genera: genera DUO DIVERSA idem nomen ferunt.
@@ -836,16 +836,16 @@ staticus constans character* DOC_PURUS_VITIOSUS =
  * elementum hoc acciperet. */
 staticus constans character* DOC_GEMINUM_TRANS =
     "<individua>\n"
-    "  <aedificium nomen=\"#idem-nomen\"/>\n"
-    "  <inscriptio nomen=\"#idem-nomen\"/>\n"
+    "  <aedificium nomen=\"&idem-nomen;\"/>\n"
+    "  <inscriptio nomen=\"&idem-nomen;\"/>\n"
     "</individua>\n";
 
 /* UNICITAS intra genus idem - forma facilior, quam spatium per
  * elementum quoque caperet. Ideo sola non sufficit. */
 staticus constans character* DOC_GEMINUM_IDEM =
     "<individua>\n"
-    "  <inscriptio nomen=\"#idem-nomen\"/>\n"
-    "  <inscriptio nomen=\"#idem-nomen\"/>\n"
+    "  <inscriptio nomen=\"&idem-nomen;\"/>\n"
+    "  <inscriptio nomen=\"&idem-nomen;\"/>\n"
     "</individua>\n";
 
 
@@ -1525,7 +1525,7 @@ principale(
          * tag Linnaeum dicebat, identitas aliud, nemo clamabat) */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <carl-linnaeus nomen=\"#impostor\"/>\n"
+            "  <carl-linnaeus nomen=\"&impostor;\"/>\n"
             "</individua>\n",
             CANON_ELEMENTUM_IGNOTUM, &ignota, &omnia,
             piscina, intern));
@@ -1542,7 +1542,7 @@ principale(
             CREDO_MAIOR_I32 (semina.mensura, (i32)ZEPHYRUM);
             CREDO_VERUM (chorda_invenire_index(semina,
                 chorda_ex_literis(
-                    "persona nomen=\"#carl_linnaeus\"",
+                    "persona nomen=\"&carl_linnaeus;\"",
                     piscina)) >= ZEPHYRUM);
 
             /* COMPLETUDO, non sola validitas: porta se-iudicans
@@ -1551,10 +1551,10 @@ principale(
              * genealogia C tacite aberat). Relatum unum attributi
              * (orta-ex) et unum multiplex (auctor) asseruntur. */
             CREDO_VERUM (chorda_invenire_index(semina,
-                chorda_ex_literis("orta-ex=\"#b\"",
+                chorda_ex_literis("orta-ex=\"&b;\"",
                                   piscina)) >= ZEPHYRUM);
             CREDO_VERUM (chorda_invenire_index(semina,
-                chorda_ex_literis("<auctor ad=\"#dennis_ritchie\"",
+                chorda_ex_literis("<auctor ad=\"&dennis_ritchie;\"",
                                   piscina)) >= ZEPHYRUM);
 
             CREDO_VERUM (_documentum_iudicare(monolithus,
@@ -1994,7 +1994,7 @@ principale(
         CREDO_NON_NIHIL (monolithus);
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <periculum nomen=\"#p\" probabilitas=\"0.7\"/>\n"
+            "  <periculum nomen=\"&p;\" probabilitas=\"0.7\"/>\n"
             "</individua>\n",
             CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
         CREDO_AEQUALIS_I32 (generis, (i32)ZEPHYRUM);
@@ -2003,7 +2003,7 @@ principale(
         /* et extra fines vitio PROPRIO clamat */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <periculum nomen=\"#p\" probabilitas=\"1.5\"/>\n"
+            "  <periculum nomen=\"&p;\" probabilitas=\"1.5\"/>\n"
             "</individua>\n",
             CANON_VALOR_EXTRA_FINES, &generis, &omnia,
             piscina, intern));
@@ -2026,9 +2026,9 @@ principale(
         /* petitum inscriptum resolvitur */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <persona nomen=\"#plinius\"/>\n"
-            "  <opus-scriptum nomen=\"#historia\">\n"
-            "    <auctor ad=\"#plinius\"/>\n"
+            "  <persona nomen=\"&plinius;\"/>\n"
+            "  <opus-scriptum nomen=\"&historia;\">\n"
+            "    <auctor ad=\"&plinius;\"/>\n"
             "  </opus-scriptum>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
@@ -2039,8 +2039,8 @@ principale(
         /* petitum quod nemo declaravit RUBET */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <opus-scriptum nomen=\"#historia\">\n"
-            "    <auctor ad=\"#nemo\"/>\n"
+            "  <opus-scriptum nomen=\"&historia;\">\n"
+            "    <auctor ad=\"&nemo;\"/>\n"
             "  </opus-scriptum>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
@@ -2057,11 +2057,11 @@ principale(
 
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <expressio nomen=\"#latina\"/>\n"
-            "  <expressio nomen=\"#anglica\"/>\n"
-            "  <editio nomen=\"#bilinguis\">\n"
-            "    <editio-de ad=\"#latina\"/>\n"
-            "    <editio-de ad=\"#anglica\"/>\n"
+            "  <expressio nomen=\"&latina;\"/>\n"
+            "  <expressio nomen=\"&anglica;\"/>\n"
+            "  <editio nomen=\"&bilinguis;\">\n"
+            "    <editio-de ad=\"&latina;\"/>\n"
+            "    <editio-de ad=\"&anglica;\"/>\n"
             "  </editio>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
@@ -2070,8 +2070,8 @@ principale(
 
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <editio nomen=\"#orba\">\n"
-            "    <editio-de ad=\"#nusquam\"/>\n"
+            "  <editio nomen=\"&orba;\">\n"
+            "    <editio-de ad=\"&nusquam;\"/>\n"
             "  </editio>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
@@ -2088,17 +2088,17 @@ principale(
         /* L5+L6: quadratum intentionis loquitur; ordo finem fert */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <postulatum nomen=\"#exemplum-integrum\""
+            "  <postulatum nomen=\"&exemplum-integrum;\""
             " contentum=\"pagina documentum integrum monstret\""
             " ordo=\"1\"/>\n"
-            "  <vitium nomen=\"#truncatio\" contentum=\"optiones"
+            "  <vitium nomen=\"&truncatio;\" contentum=\"optiones"
             " praecisae mortem celaverunt\" gravitas=\"gravis\"/>\n"
             "</individua>\n",
             CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
         CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <postulatum nomen=\"#nullus\" ordo=\"0\"/>\n"
+            "  <postulatum nomen=\"&nullus;\" ordo=\"0\"/>\n"
             "</individua>\n",
             CANON_VALOR_EXTRA_FINES, &generis, &omnia,
             piscina, intern));
@@ -2107,7 +2107,7 @@ principale(
         /* nota universalis: margo curatorialis in quolibet */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <planta nomen=\"#p\"><nota>margo</nota></planta>\n"
+            "  <planta nomen=\"&p;\"><nota>margo</nota></planta>\n"
             "</individua>\n",
             CANON_ELEMENTUM_IGNOTUM, &generis, &omnia,
             piscina, intern));
@@ -2116,7 +2116,7 @@ principale(
         /* L14: auctoritativa veritas est */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <expressio nomen=\"#versio-legalis\""
+            "  <expressio nomen=\"&versio-legalis;\""
             " auctoritativa=\"verum\"/>\n"
             "</individua>\n",
             CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
@@ -2126,14 +2126,14 @@ principale(
          * nulla (relatio aperta) */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <coctura nomen=\"#cursus-glossarum\""
-            " coquitur=\"#opus-quodlibet\"/>\n"
+            "  <coctura nomen=\"&cursus-glossarum;\""
+            " coquitur=\"&opus-quodlibet;\"/>\n"
             "</individua>\n",
             CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
         CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <coctura nomen=\"#c\" coquitur=\"nudum\"/>\n"
+            "  <coctura nomen=\"&c;\" coquitur=\"nudum\"/>\n"
             "</individua>\n",
             CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
         CREDO_AEQUALIS_I32 (generis, (i32)I);
@@ -2147,10 +2147,10 @@ principale(
         /* verdictum machinae: probator programma, resolutum */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <programma nomen=\"#canon-examen-noster\"/>\n"
-            "  <annotatio nomen=\"#verdictum-primum\""
+            "  <programma nomen=\"&canon-examen-noster;\"/>\n"
+            "  <annotatio nomen=\"&verdictum-primum;\""
             " contentum=\"radix documenti falsa\""
-            " probator=\"#canon-examen-noster\"/>\n"
+            " probator=\"&canon-examen-noster;\"/>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
             piscina, intern));
@@ -2160,8 +2160,8 @@ principale(
          * programmatis) */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <annotatio nomen=\"#orbum\""
-            " probator=\"#nusquam\"/>\n"
+            "  <annotatio nomen=\"&orbum;\""
+            " probator=\"&nusquam;\"/>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
             piscina, intern));
@@ -2171,9 +2171,9 @@ principale(
          * auctor personis clausus MANET (dentes doctrinae) */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <programma nomen=\"#glossator-a\"/>\n"
-            "  <opus-scriptum nomen=\"#glossae-nostrae\">\n"
-            "    <scriba ad=\"#glossator-a\"/>\n"
+            "  <programma nomen=\"&glossator-a;\"/>\n"
+            "  <opus-scriptum nomen=\"&glossae-nostrae;\">\n"
+            "    <scriba ad=\"&glossator-a;\"/>\n"
             "  </opus-scriptum>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
@@ -2181,9 +2181,9 @@ principale(
         CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <programma nomen=\"#glossator-a\"/>\n"
-            "  <opus-scriptum nomen=\"#male-adscriptum\">\n"
-            "    <auctor ad=\"#glossator-a\"/>\n"
+            "  <programma nomen=\"&glossator-a;\"/>\n"
+            "  <opus-scriptum nomen=\"&male-adscriptum;\">\n"
+            "    <auctor ad=\"&glossator-a;\"/>\n"
             "  </opus-scriptum>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
@@ -2217,9 +2217,9 @@ principale(
          * coquitur/L2) */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <opus-scriptum nomen=\"#pagina\"/>\n"
-            "  <probatio nomen=\"#ambulatio-cruda\">\n"
-            "    <exercet ad=\"#pagina\"/>\n"
+            "  <opus-scriptum nomen=\"&pagina;\"/>\n"
+            "  <probatio nomen=\"&ambulatio-cruda;\">\n"
+            "    <exercet ad=\"&pagina;\"/>\n"
             "  </probatio>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
@@ -2245,9 +2245,9 @@ principale(
         /* invenit defectibus clausum: dictionarium non-defectus */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <dictionarium nomen=\"#pag\"/>\n"
-            "  <ambulatio-lectoris nomen=\"#amb\">\n"
-            "    <invenit ad=\"#pag\"/>\n"
+            "  <dictionarium nomen=\"&pag;\"/>\n"
+            "  <ambulatio-lectoris nomen=\"&amb;\">\n"
+            "    <invenit ad=\"&pag;\"/>\n"
             "  </ambulatio-lectoris>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
@@ -2259,9 +2259,9 @@ principale(
          * versio_de) */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <functio nomen=\"#f\"/>\n"
-            "  <ambulatio-lectoris nomen=\"#amb\">\n"
-            "    <exercet ad=\"#f\"/>\n"
+            "  <functio nomen=\"&f;\"/>\n"
+            "  <ambulatio-lectoris nomen=\"&amb;\">\n"
+            "    <exercet ad=\"&f;\"/>\n"
             "  </ambulatio-lectoris>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
@@ -2271,7 +2271,7 @@ principale(
         /* in-opere ad ignotum rubet */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <silentium nomen=\"#s\" in-opere=\"#nusquam\"/>\n"
+            "  <silentium nomen=\"&s;\" in-opere=\"&nusquam;\"/>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
             piscina, intern));
@@ -2283,11 +2283,11 @@ principale(
          * rubuit dum causat singulare, viret post */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <opus-scriptum nomen=\"#a\"/>\n"
-            "  <opus-scriptum nomen=\"#b\"/>\n"
-            "  <causa-finalis nomen=\"#finis\">\n"
-            "    <causat ad=\"#a\"/>\n"
-            "    <causat ad=\"#b\"/>\n"
+            "  <opus-scriptum nomen=\"&a;\"/>\n"
+            "  <opus-scriptum nomen=\"&b;\"/>\n"
+            "  <causa-finalis nomen=\"&finis;\">\n"
+            "    <causat ad=\"&a;\"/>\n"
+            "    <causat ad=\"&b;\"/>\n"
             "  </causa-finalis>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
@@ -2300,11 +2300,11 @@ principale(
          * suam dicere non poterant. ORACULUM: rubuit ante */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <causa-finalis nomen=\"#f\" contentum=\"finis\""
+            "  <causa-finalis nomen=\"&f;\" contentum=\"finis\""
             " extra-ordinem=\"verum\"/>\n"
-            "  <norma nomen=\"#n\" contentum=\"regula\"/>\n"
-            "  <observatio nomen=\"#o\" contentum=\"quod visum\"/>\n"
-            "  <periculum nomen=\"#p\" contentum=\"quod damnum\"/>\n"
+            "  <norma nomen=\"&n;\" contentum=\"regula\"/>\n"
+            "  <observatio nomen=\"&o;\" contentum=\"quod visum\"/>\n"
+            "  <periculum nomen=\"&p;\" contentum=\"quod damnum\"/>\n"
             "</individua>\n",
             CANON_ATTRIBUTUM_IGNOTUM, &generis, &omnia,
             piscina, intern));
@@ -2317,7 +2317,7 @@ principale(
          * FUNDAMENTI), signum quantitatem iam ferebat */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <signum nomen=\"#m\" contentum=\"genera 187\""
+            "  <signum nomen=\"&m;\" contentum=\"genera 187\""
             " via=\"grep -c\" facta=\"2026-08-08\"/>\n"
             "</individua>\n",
             CANON_ATTRIBUTUM_IGNOTUM, &generis, &omnia,
@@ -2328,9 +2328,9 @@ principale(
          * proiectio documenti fontem suum nominare potest */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <opus-scriptum nomen=\"#corpus\"/>\n"
-            "  <proiectio nomen=\"#pagina\""
-            " veritas-sua=\"#corpus\"/>\n"
+            "  <opus-scriptum nomen=\"&corpus;\"/>\n"
+            "  <proiectio nomen=\"&pagina;\""
+            " veritas-sua=\"&corpus;\"/>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,
             piscina, intern));
@@ -2340,9 +2340,9 @@ principale(
          * (hereditate ab opere scripto) personis clausus manet */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <programma nomen=\"#robotum\"/>\n"
-            "  <dictionarium nomen=\"#male\">\n"
-            "    <auctor ad=\"#robotum\"/>\n"
+            "  <programma nomen=\"&robotum;\"/>\n"
+            "  <dictionarium nomen=\"&male;\">\n"
+            "    <auctor ad=\"&robotum;\"/>\n"
             "  </dictionarium>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,

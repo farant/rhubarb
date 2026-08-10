@@ -267,9 +267,12 @@ interior constans character* SILVULA_MALA =
     "  <avis nomen=\"turdus\" nidificat=\"merula\"/>\n"
     "</silvula>\n";
 
-/* signa (spec canon-referentia): identitas '#' poscit, referentia
- * '#' aut '.', nudum in utroque VITIUM - referentia litterale
- * non est */
+/* signa (spec canon-referentia + decretum 2026-08-10): identitas
+ * '&nomen;' poscit, referentia '&nomen;' aut '.genus', nudum in
+ * utroque VITIUM - referentia litterale non est. Signum vetus '#'
+ * spatio documenti (fragmenta STML) redditum: hic vitium CLAMANS,
+ * numquam litterale tacitum (custos migrationis). Terminator ';'
+ * obligatorius - prosam tutam facit (AT&T litterale manet). */
 interior constans character* CANON_SIGNORUM =
     "<canon dialectus=\"grex\" versio=\"1\">\n"
     "  <elementum nomen=\"grex\" radix=\"verum\">\n"
@@ -283,19 +286,23 @@ interior constans character* CANON_SIGNORUM =
 
 interior constans character* GREX_SANUS =
     "<grex>\n"
-    "  <ovis nomen=\"#agna-prima\" custos=\".ovis\"/>\n"
-    "  <ovis nomen=\"#agna-altera\" custos=\"#agna-prima\"/>\n"
+    "  <ovis nomen=\"&agna-prima;\" custos=\".ovis\"/>\n"
+    "  <ovis nomen=\"&agna-altera;\" custos=\"&agna-prima;\"/>\n"
     "</grex>\n";
 
-/* quinque vitia typorum: nomen nudum, referentia nuda, signum
- * sine corpore (bis - '#' et '.'), signum identitatis falsum */
+/* septem vitia typorum: nomen nudum, referentia nuda, signum sine
+ * corpore (bis - '&;' et '.'), signum identitatis falsum
+ * (punctum), SIGNUM VETUS '#' (custos migrationis), terminator
+ * ';' deest */
 interior constans character* GREX_MALUS =
     "<grex>\n"
     "  <ovis nomen=\"agna-nuda\"/>\n"
-    "  <ovis nomen=\"#agna\" custos=\"ovis-nuda\"/>\n"
-    "  <ovis nomen=\"#\"/>\n"
-    "  <ovis nomen=\"#agna-quarta\" custos=\".\"/>\n"
+    "  <ovis nomen=\"&agna;\" custos=\"ovis-nuda\"/>\n"
+    "  <ovis nomen=\"&;\"/>\n"
+    "  <ovis nomen=\"&agna-quarta;\" custos=\".\"/>\n"
     "  <ovis nomen=\".agna-puncto\"/>\n"
+    "  <ovis nomen=\"#agna-vetus\"/>\n"
+    "  <ovis nomen=\"&agna-sine\"/>\n"
     "</grex>\n";
 
 /* dispositio signorum in citatione: '.' vocabularium (sine
@@ -321,17 +328,17 @@ interior constans character* CANON_GREGIS_CITATI =
 
 interior constans character* GREX2_SANUS =
     "<grex2>\n"
-    "  <canis nomen=\"#canis-unus\"/>\n"
-    "  <ovis nomen=\"#agna\" custos=\".canis\"/>\n"
-    "  <ovis nomen=\"#agnella\" custos=\"#canis-unus\"/>\n"
+    "  <canis nomen=\"&canis-unus;\"/>\n"
+    "  <ovis nomen=\"&agna;\" custos=\".canis\"/>\n"
+    "  <ovis nomen=\"&agnella;\" custos=\"&canis-unus;\"/>\n"
     "</grex2>\n";
 
 /* '.ovis' extra vocabularium (index = canis solum);
- * '#nemo' clavem non habet */
+ * '&nemo;' clavem non habet */
 interior constans character* GREX2_MALUS =
     "<grex2>\n"
-    "  <ovis nomen=\"#agna\" custos=\".ovis\"/>\n"
-    "  <ovis nomen=\"#agnella\" custos=\"#nemo\"/>\n"
+    "  <ovis nomen=\"&agna;\" custos=\".ovis\"/>\n"
+    "  <ovis nomen=\"&agnella;\" custos=\"&nemo;\"/>\n"
     "</grex2>\n";
 
 interior constans character* CATALOGUS_FIXTURA =
@@ -484,13 +491,13 @@ interior constans character* CANON_SUPER_ADSTRICTI =
 
 interior constans character* SUPER_SANUM =
     "<radix>\n"
-    "  <homo nomen=\"#plinius\"/>\n"
-    "  <portus nomen=\"#ostia\"/>\n"
-    "  <liber nomen=\"#historia-naturalis\">\n"
-    "    <auctor ad=\"#plinius\"/>\n"
+    "  <homo nomen=\"&plinius;\"/>\n"
+    "  <portus nomen=\"&ostia;\"/>\n"
+    "  <liber nomen=\"&historia-naturalis;\">\n"
+    "    <auctor ad=\"&plinius;\"/>\n"
     "  </liber>\n"
-    "  <navis nomen=\"#classis-prima\">\n"
-    "    <auctor ad=\"#ostia\"/>\n"
+    "  <navis nomen=\"&classis-prima;\">\n"
+    "    <auctor ad=\"&ostia;\"/>\n"
     "  </navis>\n"
     "</radix>\n";
 
@@ -499,13 +506,13 @@ interior constans character* SUPER_SANUM =
  * videt, ergo vitium BIS */
 interior constans character* SUPER_PERMUTATUM =
     "<radix>\n"
-    "  <homo nomen=\"#plinius\"/>\n"
-    "  <portus nomen=\"#ostia\"/>\n"
-    "  <liber nomen=\"#historia-naturalis\">\n"
-    "    <auctor ad=\"#ostia\"/>\n"
+    "  <homo nomen=\"&plinius;\"/>\n"
+    "  <portus nomen=\"&ostia;\"/>\n"
+    "  <liber nomen=\"&historia-naturalis;\">\n"
+    "    <auctor ad=\"&ostia;\"/>\n"
     "  </liber>\n"
-    "  <navis nomen=\"#classis-prima\">\n"
-    "    <auctor ad=\"#plinius\"/>\n"
+    "  <navis nomen=\"&classis-prima;\">\n"
+    "    <auctor ad=\"&plinius;\"/>\n"
     "  </navis>\n"
     "</radix>\n";
 
@@ -992,9 +999,9 @@ s32 principale (vacuum)
 
         vitia = iudicare_literis(grex, GREX_MALUS, piscina, intern);
         CREDO_NON_NIHIL (vitia);
-        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), V);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), VII);
         CREDO_AEQUALIS_I32 (quot_generis(vitia,
-            CANON_VALOR_MALUS), V);
+            CANON_VALOR_MALUS), VII);
     }
 
 

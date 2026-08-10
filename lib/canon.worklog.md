@@ -231,3 +231,43 @@ global title-match could never aim at them and the generator
 refused to emit (its own comment named the reason). Fixture: auctor
 under liber cites men, under navis cites ports; swapping targets
 fires CITATIO_IRRITA twice.
+
+## 2026-08-10 — Signa migration: `#` returned to document-space, individua become `&name;`
+
+Fran's ruling (decretum 01KZPEXT74), sparked by the fragment-vs-individuum
+sigil collision surfacing during the cross-document citation design. The
+discovery that settled it: STML_SPEC had already RESERVED `&name;` as an
+entity reference ("named singleton, deduplicated, semantically a
+wikilink") — the signa trichotomy of 2026-08-07 had squatted on `#`,
+which STML assigns to fragments. Migration = convergence, not invention.
+
+Three spaces, three sigils: `#` = document-space (fragments, anchors),
+`&name;` = world-space (individua; C address-of, the et-ligature),
+`.` = kind-space (unchanged). Semicolon EVERYWHERE including attributes:
+the terminator is what makes `&` prose-safe (AT&T stays literal — the
+corpus case is real) and keeps one grammar between attribute and future
+text positions (wikilink layer for sententiae/forum).
+
+Implementation notes:
+- The ENTIRE C change is valor_congruit's IDENTITAS/REFERENTIA case:
+  `&` requires trailing `;`, `.` unchanged (referentia only), `#` now
+  FALSUM — the migration tripwire (proven with a planted fault: old
+  sigil = line-anchored vitium, exit 1, never a silent literal).
+- The citation machinery needed ZERO changes: keys and references
+  compare VERBATIM (both carry the sigil), so migrating both sides
+  preserved symmetry for free.
+- Consumers found by grep-then-verify: natura_canones_emissio (sigil
+  chooser + semina writer + reference writer with conditional `;`),
+  census_orbi.sh (awk patterns + RLENGTH arithmetic — a consumer the
+  first recon MISSED; the lesson is the usual one, the sigil had
+  quietly acquired a parser outside the canon layer).
+- glossae.html's `#` are HTML anchors — untouched, and now
+  unambiguously distinct from individuum references, which is the
+  whole point of the ruling.
+- probatio_canon keeps ONE `#` on purpose: the tripwire fixture
+  (`#agna-vetus`). The perl sweep needed a lookahead guard to avoid
+  migrating its own tripwire — worth remembering for future sigil
+  migrations.
+- Reader-gate refused (exit 2) mid-migration because bin/canon_examen
+  was stale after canon.c changed — canon_struere.sh, then green. The
+  staleness refusal doing its job.

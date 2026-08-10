@@ -10,34 +10,34 @@
 -->
 <individua>
 
-  <programma nomen="#peregrinus"/>
+  <programma nomen="&peregrinus;"/>
 
-  <dictionarium nomen="#pagina-glossarum"/>
+  <dictionarium nomen="&pagina-glossarum;"/>
 
-  <exemplum nomen="#hortus-census"/>
+  <exemplum nomen="&hortus-census;"/>
 
-  <ambulatio-lectoris nomen="#ambulatio-peregrini"
-    lector="#peregrinus"
+  <ambulatio-lectoris nomen="&ambulatio-peregrini;"
+    lector="&peregrinus;"
     contentum="censum validum ex pagina sola scribere">
-    <exercet ad="#pagina-glossarum"/>
-    <invenit ad="#deceptio-truncationis"/>
-    <invenit ad="#silentium-radicis"/>
-    <invenit ad="#ambiguitas-punctorum"/>
+    <exercet ad="&pagina-glossarum;"/>
+    <invenit ad="&deceptio-truncationis;"/>
+    <invenit ad="&silentium-radicis;"/>
+    <invenit ad="&ambiguitas-punctorum;"/>
   </ambulatio-lectoris>
 
-  <deceptio nomen="#deceptio-truncationis"
-    in-opere="#pagina-glossarum"
+  <deceptio nomen="&deceptio-truncationis;"
+    in-opere="&pagina-glossarum;"
     contentum="truncatio electionum valorem mortua celavit - mors plantae indicibilis docta"/>
 
-  <silentium nomen="#silentium-radicis"
-    in-opere="#pagina-glossarum"
+  <silentium nomen="&silentium-radicis;"
+    in-opere="&pagina-glossarum;"
     contentum="elementum radicis documenti numquam nominatur"/>
 
-  <ambiguitas nomen="#ambiguitas-punctorum"
-    in-opere="#pagina-glossarum"
+  <ambiguitas nomen="&ambiguitas-punctorum;"
+    in-opere="&pagina-glossarum;"
     contentum="signum trium punctorum tria diversa significat"/>
 
-  <postulatum nomen="#postulatum-legendae" ordo="1"
+  <postulatum nomen="&postulatum-legendae;" ordo="1"
     contentum="legenda signorum addenda"/>
 
 </individua>
