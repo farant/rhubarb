@@ -6,12 +6,12 @@
   <elementum nomen="individua" radix="verum">
     <liberum nomen="procedura"/>
     <liberum nomen="procedura-automata"/>
+    <liberum nomen="fistula-integrationis"/>
+    <liberum nomen="depositio"/>
     <liberum nomen="praescriptum"/>
     <liberum nomen="gradus-praescripti"/>
     <liberum nomen="versio-praescripti"/>
     <liberum nomen="index-verificationis"/>
-    <liberum nomen="fistula-integrationis"/>
-    <liberum nomen="depositio"/>
   </elementum>
 
   <elementum nomen="procedura">
@@ -75,6 +75,62 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="procedura-automata">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fistula-integrationis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="reversibilis" genus="veritas"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>exspectans</optio>
+      <optio>currens</optio>
+      <optio>perfecta</optio>
+      <optio>lapsa</optio>
+      <optio>intercepta</optio>
+    </attributum>
+    <attributum nomen="porta-humana" genus="referentia"/>
+    <attributum nomen="agit-in" genus="referentia"/>
+    <liberum nomen="efficit"/>
+    <liberum nomen="gradus-eius"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="efficit" intra="fistula-integrationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="gradus-eius" intra="fistula-integrationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="fistula-integrationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="depositio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="idempotens" genus="veritas"/>
+    <attributum nomen="reversibilis" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>exspectans</optio>
+      <optio>currens</optio>
+      <optio>perfecta</optio>
+      <optio>lapsa</optio>
+      <optio>intercepta</optio>
+    </attributum>
+    <attributum nomen="porta-humana" genus="referentia"/>
+    <attributum nomen="agit-in" genus="referentia"/>
+    <liberum nomen="efficit"/>
+    <liberum nomen="gradus-eius"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="efficit" intra="depositio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="gradus-eius" intra="depositio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="depositio">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -238,62 +294,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="fistula-integrationis">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="idempotens" genus="veritas"/>
-    <attributum nomen="reversibilis" genus="veritas"/>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>exspectans</optio>
-      <optio>currens</optio>
-      <optio>perfecta</optio>
-      <optio>lapsa</optio>
-      <optio>intercepta</optio>
-    </attributum>
-    <attributum nomen="porta-humana" genus="referentia"/>
-    <attributum nomen="agit-in" genus="referentia"/>
-    <liberum nomen="efficit"/>
-    <liberum nomen="gradus-eius"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="efficit" intra="fistula-integrationis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="gradus-eius" intra="fistula-integrationis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="fistula-integrationis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="depositio">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="idempotens" genus="veritas"/>
-    <attributum nomen="reversibilis" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>exspectans</optio>
-      <optio>currens</optio>
-      <optio>perfecta</optio>
-      <optio>lapsa</optio>
-      <optio>intercepta</optio>
-    </attributum>
-    <attributum nomen="porta-humana" genus="referentia"/>
-    <attributum nomen="agit-in" genus="referentia"/>
-    <liberum nomen="efficit"/>
-    <liberum nomen="gradus-eius"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="efficit" intra="depositio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="gradus-eius" intra="depositio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="depositio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
@@ -312,8 +312,8 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="procedura procedura-automata praescriptum gradus-praescripti versio-praescripti
-           index-verificationis fistula-integrationis depositio"/>
+    super="procedura procedura-automata fistula-integrationis depositio praescriptum
+           gradus-praescripti versio-praescripti index-verificationis"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -323,13 +323,13 @@
        vocabulario indicis. -->
   <citatio nomen="procedura-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="procedura/gradus-eius"/>
   <citatio nomen="procedura-automata-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="procedura-automata/gradus-eius"/>
+  <citatio nomen="fistula-integrationis-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="fistula-integrationis/gradus-eius"/>
+  <citatio nomen="depositio-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="depositio/gradus-eius"/>
   <citatio nomen="praescriptum-ortum-ex" attributum="ortum-ex" ad="praescriptum/nomen" super="praescriptum"/>
   <citatio nomen="praescriptum-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="praescriptum/gradus-eius"/>
   <citatio nomen="gradus-praescripti-pendet-ex" attributum="ad" ad="gradus-praescripti/nomen" super="gradus-praescripti/pendet-ex"/>
   <citatio nomen="versio-praescripti-versio-de" attributum="versio-de" ad="praescriptum/nomen" super="versio-praescripti"/>
   <citatio nomen="versio-praescripti-sequitur" attributum="sequitur" ad="versio-praescripti/nomen" super="versio-praescripti"/>
   <citatio nomen="index-verificationis-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="index-verificationis/gradus-eius"/>
-  <citatio nomen="fistula-integrationis-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="fistula-integrationis/gradus-eius"/>
-  <citatio nomen="depositio-gradus-eius" attributum="ad" ad="gradus-praescripti/nomen" super="depositio/gradus-eius"/>
 
 </canon>

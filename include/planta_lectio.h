@@ -45,16 +45,6 @@ nomen structura PlantaRosaSemen PlantaRosaSemen;
 nomen structura PlantaRosaGenerat PlantaRosaGenerat;
 nomen structura PlantaRosaLaborat PlantaRosaLaborat;
 nomen structura PlantaRosaHistoria PlantaRosaHistoria;
-nomen structura PlantaMalus PlantaMalus;
-nomen structura PlantaMalusRadix PlantaMalusRadix;
-nomen structura PlantaMalusCaulis PlantaMalusCaulis;
-nomen structura PlantaMalusFolium PlantaMalusFolium;
-nomen structura PlantaMalusFlos PlantaMalusFlos;
-nomen structura PlantaMalusFructus PlantaMalusFructus;
-nomen structura PlantaMalusSemen PlantaMalusSemen;
-nomen structura PlantaMalusGenerat PlantaMalusGenerat;
-nomen structura PlantaMalusLaborat PlantaMalusLaborat;
-nomen structura PlantaMalusHistoria PlantaMalusHistoria;
 nomen structura PlantaRosaCanina PlantaRosaCanina;
 nomen structura PlantaRosaCaninaRadix PlantaRosaCaninaRadix;
 nomen structura PlantaRosaCaninaCaulis PlantaRosaCaninaCaulis;
@@ -65,6 +55,16 @@ nomen structura PlantaRosaCaninaSemen PlantaRosaCaninaSemen;
 nomen structura PlantaRosaCaninaGenerat PlantaRosaCaninaGenerat;
 nomen structura PlantaRosaCaninaLaborat PlantaRosaCaninaLaborat;
 nomen structura PlantaRosaCaninaHistoria PlantaRosaCaninaHistoria;
+nomen structura PlantaMalus PlantaMalus;
+nomen structura PlantaMalusRadix PlantaMalusRadix;
+nomen structura PlantaMalusCaulis PlantaMalusCaulis;
+nomen structura PlantaMalusFolium PlantaMalusFolium;
+nomen structura PlantaMalusFlos PlantaMalusFlos;
+nomen structura PlantaMalusFructus PlantaMalusFructus;
+nomen structura PlantaMalusSemen PlantaMalusSemen;
+nomen structura PlantaMalusGenerat PlantaMalusGenerat;
+nomen structura PlantaMalusLaborat PlantaMalusLaborat;
+nomen structura PlantaMalusHistoria PlantaMalusHistoria;
 nomen structura PlantaMalusDomestica PlantaMalusDomestica;
 nomen structura PlantaMalusDomesticaRadix PlantaMalusDomesticaRadix;
 nomen structura PlantaMalusDomesticaCaulis PlantaMalusDomesticaCaulis;
@@ -227,52 +227,6 @@ nomen enumeratio {
 } PlantaRosaStatusConditio;
 
 nomen enumeratio {
-    PLANTA_MALUS_HABITUS_ABSENS = ZEPHYRUM,
-    PLANTA_MALUS_HABITUS_HERBA,
-    PLANTA_MALUS_HABITUS_FRUTEX,
-    PLANTA_MALUS_HABITUS_ARBOR,
-    PLANTA_MALUS_HABITUS_SCANDENS
-} PlantaMalusHabitus;
-
-nomen enumeratio {
-    PLANTA_MALUS_DURATA_ABSENS = ZEPHYRUM,
-    PLANTA_MALUS_DURATA_ANNUA,
-    PLANTA_MALUS_DURATA_BIENNIS,
-    PLANTA_MALUS_DURATA_PERENNIS
-} PlantaMalusDurata;
-
-nomen enumeratio {
-    PLANTA_MALUS_FOLIA_PERMANENTIA_ABSENS = ZEPHYRUM,
-    PLANTA_MALUS_FOLIA_PERMANENTIA_DECIDUA,
-    PLANTA_MALUS_FOLIA_PERMANENTIA_SEMPERVIRENS
-} PlantaMalusFoliaPermanentia;
-
-nomen enumeratio {
-    PLANTA_MALUS_STATUS_VITA_ABSENS = ZEPHYRUM,
-    PLANTA_MALUS_STATUS_VITA_SEMEN,
-    PLANTA_MALUS_STATUS_VITA_GERMINANS,
-    PLANTA_MALUS_STATUS_VITA_IUVENIS,
-    PLANTA_MALUS_STATUS_VITA_FLORENS,
-    PLANTA_MALUS_STATUS_VITA_FRUCTIFERA,
-    PLANTA_MALUS_STATUS_VITA_QUIESCENS,
-    PLANTA_MALUS_STATUS_VITA_MORTUA
-} PlantaMalusStatusVita;
-
-nomen enumeratio {
-    PLANTA_MALUS_ANIMA_ABSENS = ZEPHYRUM,
-    PLANTA_MALUS_ANIMA_VEGETATIVA,
-    PLANTA_MALUS_ANIMA_SENSITIVA,
-    PLANTA_MALUS_ANIMA_RATIONALIS
-} PlantaMalusAnima;
-
-nomen enumeratio {
-    PLANTA_MALUS_STATUS_CONDITIO_ABSENS = ZEPHYRUM,
-    PLANTA_MALUS_STATUS_CONDITIO_RECENS,
-    PLANTA_MALUS_STATUS_CONDITIO_VETUS,
-    PLANTA_MALUS_STATUS_CONDITIO_CORRUPTA
-} PlantaMalusStatusConditio;
-
-nomen enumeratio {
     PLANTA_ROSA_CANINA_HABITUS_ABSENS = ZEPHYRUM,
     PLANTA_ROSA_CANINA_HABITUS_HERBA,
     PLANTA_ROSA_CANINA_HABITUS_FRUTEX,
@@ -317,6 +271,52 @@ nomen enumeratio {
     PLANTA_ROSA_CANINA_STATUS_CONDITIO_VETUS,
     PLANTA_ROSA_CANINA_STATUS_CONDITIO_CORRUPTA
 } PlantaRosaCaninaStatusConditio;
+
+nomen enumeratio {
+    PLANTA_MALUS_HABITUS_ABSENS = ZEPHYRUM,
+    PLANTA_MALUS_HABITUS_HERBA,
+    PLANTA_MALUS_HABITUS_FRUTEX,
+    PLANTA_MALUS_HABITUS_ARBOR,
+    PLANTA_MALUS_HABITUS_SCANDENS
+} PlantaMalusHabitus;
+
+nomen enumeratio {
+    PLANTA_MALUS_DURATA_ABSENS = ZEPHYRUM,
+    PLANTA_MALUS_DURATA_ANNUA,
+    PLANTA_MALUS_DURATA_BIENNIS,
+    PLANTA_MALUS_DURATA_PERENNIS
+} PlantaMalusDurata;
+
+nomen enumeratio {
+    PLANTA_MALUS_FOLIA_PERMANENTIA_ABSENS = ZEPHYRUM,
+    PLANTA_MALUS_FOLIA_PERMANENTIA_DECIDUA,
+    PLANTA_MALUS_FOLIA_PERMANENTIA_SEMPERVIRENS
+} PlantaMalusFoliaPermanentia;
+
+nomen enumeratio {
+    PLANTA_MALUS_STATUS_VITA_ABSENS = ZEPHYRUM,
+    PLANTA_MALUS_STATUS_VITA_SEMEN,
+    PLANTA_MALUS_STATUS_VITA_GERMINANS,
+    PLANTA_MALUS_STATUS_VITA_IUVENIS,
+    PLANTA_MALUS_STATUS_VITA_FLORENS,
+    PLANTA_MALUS_STATUS_VITA_FRUCTIFERA,
+    PLANTA_MALUS_STATUS_VITA_QUIESCENS,
+    PLANTA_MALUS_STATUS_VITA_MORTUA
+} PlantaMalusStatusVita;
+
+nomen enumeratio {
+    PLANTA_MALUS_ANIMA_ABSENS = ZEPHYRUM,
+    PLANTA_MALUS_ANIMA_VEGETATIVA,
+    PLANTA_MALUS_ANIMA_SENSITIVA,
+    PLANTA_MALUS_ANIMA_RATIONALIS
+} PlantaMalusAnima;
+
+nomen enumeratio {
+    PLANTA_MALUS_STATUS_CONDITIO_ABSENS = ZEPHYRUM,
+    PLANTA_MALUS_STATUS_CONDITIO_RECENS,
+    PLANTA_MALUS_STATUS_CONDITIO_VETUS,
+    PLANTA_MALUS_STATUS_CONDITIO_CORRUPTA
+} PlantaMalusStatusConditio;
 
 nomen enumeratio {
     PLANTA_MALUS_DOMESTICA_HABITUS_ABSENS = ZEPHYRUM,
@@ -424,8 +424,8 @@ structura PlantaIndividua {
     Xar*        planta;   /* PlantaPlanta* */
     Xar*        rosaceae;   /* PlantaRosaceae* */
     Xar*        rosa;   /* PlantaRosa* */
-    Xar*        malus;   /* PlantaMalus* */
     Xar*        rosa_canina;   /* PlantaRosaCanina* */
+    Xar*        malus;   /* PlantaMalus* */
     Xar*        malus_domestica;   /* PlantaMalusDomestica* */
     Xar*        granny_smith;   /* PlantaGrannySmith* */
 };
@@ -655,81 +655,6 @@ structura PlantaRosaHistoria {
     Xar*        eventum;   /* PlantaHistoriaEventum* */
 };
 
-structura PlantaMalus {
-    StmlNodus*  nodus;
-    chorda*     nomen_v;
-    PlantaMalusHabitus habitus;
-    PlantaMalusDurata durata;
-    PlantaMalusFoliaPermanentia folia_permanentia;
-    s64         altitudo_matura;
-    b32         altitudo_matura_praesens;
-    PlantaMalusStatusVita status_vita;
-    chorda*     auctor_nominis;
-    chorda*     nomen_publicatum_in;
-    chorda*     pollinatur_a;
-    PlantaMalusAnima anima;
-    chorda*     massa;
-    b32         perituram;
-    b32         perituram_praesens;
-    PlantaMalusStatusConditio status_conditio;
-    chorda*     sita_in;
-    PlantaMalusRadix* radix;
-    PlantaMalusCaulis* caulis;
-    PlantaMalusFolium* folium;
-    PlantaMalusFlos* flos;
-    PlantaMalusFructus* fructus;
-    PlantaMalusSemen* semen;
-    Xar*        generat;   /* PlantaMalusGenerat* */
-    Xar*        laborat;   /* PlantaMalusLaborat* */
-    PlantaMalusHistoria* historia;
-    Xar*        nota;   /* PlantaNota* */
-};
-
-structura PlantaMalusRadix {
-    StmlNodus*  nodus;
-    chorda*     nota;
-};
-
-structura PlantaMalusCaulis {
-    StmlNodus*  nodus;
-    chorda*     nota;
-};
-
-structura PlantaMalusFolium {
-    StmlNodus*  nodus;
-    chorda*     nota;
-};
-
-structura PlantaMalusFlos {
-    StmlNodus*  nodus;
-    chorda*     nota;
-};
-
-structura PlantaMalusFructus {
-    StmlNodus*  nodus;
-    chorda*     nota;
-};
-
-structura PlantaMalusSemen {
-    StmlNodus*  nodus;
-    chorda*     nota;
-};
-
-structura PlantaMalusGenerat {
-    StmlNodus*  nodus;
-    chorda*     ad;
-};
-
-structura PlantaMalusLaborat {
-    StmlNodus*  nodus;
-    chorda*     ad;
-};
-
-structura PlantaMalusHistoria {
-    StmlNodus*  nodus;
-    Xar*        eventum;   /* PlantaHistoriaEventum* */
-};
-
 structura PlantaRosaCanina {
     StmlNodus*  nodus;
     chorda*     nomen_v;
@@ -801,6 +726,81 @@ structura PlantaRosaCaninaLaborat {
 };
 
 structura PlantaRosaCaninaHistoria {
+    StmlNodus*  nodus;
+    Xar*        eventum;   /* PlantaHistoriaEventum* */
+};
+
+structura PlantaMalus {
+    StmlNodus*  nodus;
+    chorda*     nomen_v;
+    PlantaMalusHabitus habitus;
+    PlantaMalusDurata durata;
+    PlantaMalusFoliaPermanentia folia_permanentia;
+    s64         altitudo_matura;
+    b32         altitudo_matura_praesens;
+    PlantaMalusStatusVita status_vita;
+    chorda*     auctor_nominis;
+    chorda*     nomen_publicatum_in;
+    chorda*     pollinatur_a;
+    PlantaMalusAnima anima;
+    chorda*     massa;
+    b32         perituram;
+    b32         perituram_praesens;
+    PlantaMalusStatusConditio status_conditio;
+    chorda*     sita_in;
+    PlantaMalusRadix* radix;
+    PlantaMalusCaulis* caulis;
+    PlantaMalusFolium* folium;
+    PlantaMalusFlos* flos;
+    PlantaMalusFructus* fructus;
+    PlantaMalusSemen* semen;
+    Xar*        generat;   /* PlantaMalusGenerat* */
+    Xar*        laborat;   /* PlantaMalusLaborat* */
+    PlantaMalusHistoria* historia;
+    Xar*        nota;   /* PlantaNota* */
+};
+
+structura PlantaMalusRadix {
+    StmlNodus*  nodus;
+    chorda*     nota;
+};
+
+structura PlantaMalusCaulis {
+    StmlNodus*  nodus;
+    chorda*     nota;
+};
+
+structura PlantaMalusFolium {
+    StmlNodus*  nodus;
+    chorda*     nota;
+};
+
+structura PlantaMalusFlos {
+    StmlNodus*  nodus;
+    chorda*     nota;
+};
+
+structura PlantaMalusFructus {
+    StmlNodus*  nodus;
+    chorda*     nota;
+};
+
+structura PlantaMalusSemen {
+    StmlNodus*  nodus;
+    chorda*     nota;
+};
+
+structura PlantaMalusGenerat {
+    StmlNodus*  nodus;
+    chorda*     ad;
+};
+
+structura PlantaMalusLaborat {
+    StmlNodus*  nodus;
+    chorda*     ad;
+};
+
+structura PlantaMalusHistoria {
     StmlNodus*  nodus;
     Xar*        eventum;   /* PlantaHistoriaEventum* */
 };
@@ -1066,36 +1066,6 @@ PlantaRosaLaborat* planta_rosa_laborat_legere_nodum(
 PlantaRosaHistoria* planta_rosa_historia_legere_nodum(
     StmlNodus* nodus, Piscina* piscina,
     InternamentumChorda* intern);
-PlantaMalus* planta_malus_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
-    InternamentumChorda* intern);
-PlantaMalusRadix* planta_malus_radix_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
-    InternamentumChorda* intern);
-PlantaMalusCaulis* planta_malus_caulis_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
-    InternamentumChorda* intern);
-PlantaMalusFolium* planta_malus_folium_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
-    InternamentumChorda* intern);
-PlantaMalusFlos* planta_malus_flos_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
-    InternamentumChorda* intern);
-PlantaMalusFructus* planta_malus_fructus_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
-    InternamentumChorda* intern);
-PlantaMalusSemen* planta_malus_semen_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
-    InternamentumChorda* intern);
-PlantaMalusGenerat* planta_malus_generat_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
-    InternamentumChorda* intern);
-PlantaMalusLaborat* planta_malus_laborat_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
-    InternamentumChorda* intern);
-PlantaMalusHistoria* planta_malus_historia_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
-    InternamentumChorda* intern);
 PlantaRosaCanina* planta_rosa_canina_legere_nodum(
     StmlNodus* nodus, Piscina* piscina,
     InternamentumChorda* intern);
@@ -1124,6 +1094,36 @@ PlantaRosaCaninaLaborat* planta_rosa_canina_laborat_legere_nodum(
     StmlNodus* nodus, Piscina* piscina,
     InternamentumChorda* intern);
 PlantaRosaCaninaHistoria* planta_rosa_canina_historia_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaMalus* planta_malus_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaMalusRadix* planta_malus_radix_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaMalusCaulis* planta_malus_caulis_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaMalusFolium* planta_malus_folium_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaMalusFlos* planta_malus_flos_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaMalusFructus* planta_malus_fructus_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaMalusSemen* planta_malus_semen_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaMalusGenerat* planta_malus_generat_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaMalusLaborat* planta_malus_laborat_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaMalusHistoria* planta_malus_historia_legere_nodum(
     StmlNodus* nodus, Piscina* piscina,
     InternamentumChorda* intern);
 PlantaMalusDomestica* planta_malus_domestica_legere_nodum(

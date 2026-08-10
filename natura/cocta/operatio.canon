@@ -5,12 +5,12 @@
 
   <elementum nomen="individua" radix="verum">
     <liberum nomen="ambitus"/>
-    <liberum nomen="pensum"/>
-    <liberum nomen="incidens"/>
-    <liberum nomen="processus"/>
     <liberum nomen="ambitus-fabricae"/>
     <liberum nomen="ambitus-probationis"/>
     <liberum nomen="ambitus-producens"/>
+    <liberum nomen="pensum"/>
+    <liberum nomen="incidens"/>
+    <liberum nomen="processus"/>
   </elementum>
 
   <elementum nomen="ambitus">
@@ -37,6 +37,63 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="ambitus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ambitus-fabricae">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="realitas-consequentiae" genus="electio" ordinarius="ficta">
+      <optio>ficta</optio>
+      <optio>vera</optio>
+    </attributum>
+    <attributum nomen="data-vera" genus="veritas"/>
+    <attributum nomen="situs-in" genus="referentia"/>
+    <liberum nomen="fert"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="fert" intra="ambitus-fabricae">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="ambitus-fabricae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ambitus-probationis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="realitas-consequentiae" genus="electio" ordinarius="ficta">
+      <optio>ficta</optio>
+      <optio>vera</optio>
+    </attributum>
+    <attributum nomen="data-vera" genus="veritas"/>
+    <attributum nomen="situs-in" genus="referentia"/>
+    <liberum nomen="fert"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="fert" intra="ambitus-probationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="ambitus-probationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ambitus-producens">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="realitas-consequentiae" genus="electio" ordinarius="vera">
+      <optio>ficta</optio>
+      <optio>vera</optio>
+    </attributum>
+    <attributum nomen="data-vera" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="situs-in" genus="referentia"/>
+    <liberum nomen="fert"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="fert" intra="ambitus-producens">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="ambitus-producens">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -191,63 +248,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="ambitus-fabricae">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="realitas-consequentiae" genus="electio" ordinarius="ficta">
-      <optio>ficta</optio>
-      <optio>vera</optio>
-    </attributum>
-    <attributum nomen="data-vera" genus="veritas"/>
-    <attributum nomen="situs-in" genus="referentia"/>
-    <liberum nomen="fert"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="fert" intra="ambitus-fabricae">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="ambitus-fabricae">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="ambitus-probationis">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="realitas-consequentiae" genus="electio" ordinarius="ficta">
-      <optio>ficta</optio>
-      <optio>vera</optio>
-    </attributum>
-    <attributum nomen="data-vera" genus="veritas"/>
-    <attributum nomen="situs-in" genus="referentia"/>
-    <liberum nomen="fert"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="fert" intra="ambitus-probationis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="ambitus-probationis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="ambitus-producens">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="realitas-consequentiae" genus="electio" ordinarius="vera">
-      <optio>ficta</optio>
-      <optio>vera</optio>
-    </attributum>
-    <attributum nomen="data-vera" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="situs-in" genus="referentia"/>
-    <liberum nomen="fert"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="fert" intra="ambitus-producens">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="ambitus-producens">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
@@ -267,8 +267,8 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="ambitus pensum incidens processus ambitus-fabricae ambitus-probationis
-           ambitus-producens"/>
+    super="ambitus ambitus-fabricae ambitus-probationis ambitus-producens
+           pensum incidens processus"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in

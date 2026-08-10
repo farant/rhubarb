@@ -6,26 +6,26 @@
   <elementum nomen="individua" radix="verum">
     <liberum nomen="plagula-computatralis"/>
     <liberum nomen="plagula-fontis"/>
-    <liberum nomen="scriptum-exsecutabile"/>
-    <liberum nomen="plagula-notationis"/>
-    <liberum nomen="plagula-figurationis"/>
-    <liberum nomen="plagula-datorum"/>
-    <liberum nomen="plagula-sqlite"/>
-    <liberum nomen="systema-plagularum"/>
-    <liberum nomen="directorium"/>
     <liberum nomen="fons-c"/>
     <liberum nomen="caput-c"/>
     <liberum nomen="fons-python"/>
     <liberum nomen="fons-rust"/>
+    <liberum nomen="scriptum-exsecutabile"/>
     <liberum nomen="scriptum-conchae"/>
+    <liberum nomen="plagula-notationis"/>
     <liberum nomen="plagula-xml"/>
     <liberum nomen="plagula-stml"/>
     <liberum nomen="plagula-markdown"/>
+    <liberum nomen="plagula-figurationis"/>
     <liberum nomen="plagula-toml"/>
     <liberum nomen="plagula-plist"/>
+    <liberum nomen="plagula-datorum"/>
     <liberum nomen="plagula-json"/>
     <liberum nomen="plagula-csv"/>
+    <liberum nomen="plagula-sqlite"/>
     <liberum nomen="volumen"/>
+    <liberum nomen="systema-plagularum"/>
+    <liberum nomen="directorium"/>
   </elementum>
 
   <elementum nomen="plagula-computatralis">
@@ -90,234 +90,6 @@
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-fontis" textus="verum"/>
   <elementum nomen="historia" intra="plagula-fontis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="scriptum-exsecutabile">
-    <glossa lingua="en">An executable script: a named file to be run
-    directly, with no prior compilation - its shebang line (#!)
-    names its own interpreter, making it a file that knows how to
-    run.</glossa>
-    <glossa lingua="fr">Un script exécutable : un fichier nommé
-    destiné à être exécuté directement, sans compilation préalable -
-    sa ligne shebang (#!) nomme elle-même son interprète, ce qui en
-    fait un fichier qui sait comment s'exécuter.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
-      <optio>textualis</optio>
-      <optio>binaria</optio>
-    </attributum>
-    <attributum nomen="mimen-solitum" genus="textus"/>
-    <attributum nomen="status-exsistentia" genus="electio">
-      <optio>exsistens</optio>
-      <optio>ablata</optio>
-    </attributum>
-    <attributum nomen="continetur-in" genus="referentia"/>
-    <attributum nomen="conformis-ad" genus="referentia"/>
-    <liberum nomen="suffixus-solitus"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="suffixus-solitus" intra="scriptum-exsecutabile" textus="verum"/>
-  <elementum nomen="historia" intra="scriptum-exsecutabile">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="plagula-notationis">
-    <glossa lingua="en">A markup file: a named file whose content is
-    prose with structure interleaved - the marks carry the
-    structure, the text carries the sense, laid out by machine for a
-    human reader.</glossa>
-    <glossa lingua="fr">Un fichier de balisage : un fichier nommé dont
-    le contenu est de la prose entrelacée de structure - les signes
-    portent la structure, le texte porte le sens, mis en forme par
-    la machine pour un lecteur humain.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
-      <optio>textualis</optio>
-      <optio>binaria</optio>
-    </attributum>
-    <attributum nomen="mimen-solitum" genus="textus"/>
-    <attributum nomen="status-exsistentia" genus="electio">
-      <optio>exsistens</optio>
-      <optio>ablata</optio>
-    </attributum>
-    <attributum nomen="continetur-in" genus="referentia"/>
-    <attributum nomen="conformis-ad" genus="referentia"/>
-    <liberum nomen="suffixus-solitus"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="suffixus-solitus" intra="plagula-notationis" textus="verum"/>
-  <elementum nomen="historia" intra="plagula-notationis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="plagula-figurationis">
-    <glossa lingua="en">A configuration file: a named file read by a
-    program at startup so that it may shape its own behaviour -
-    declarative, not executable; it says what, never how.</glossa>
-    <glossa lingua="fr">Un fichier de configuration : un fichier nommé
-    qu'un programme lit à son démarrage afin de former son propre
-    comportement - déclaratif, non exécutif ; il dit quoi, jamais
-    comment.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
-      <optio>textualis</optio>
-      <optio>binaria</optio>
-    </attributum>
-    <attributum nomen="mimen-solitum" genus="textus"/>
-    <attributum nomen="status-exsistentia" genus="electio">
-      <optio>exsistens</optio>
-      <optio>ablata</optio>
-    </attributum>
-    <attributum nomen="continetur-in" genus="referentia"/>
-    <attributum nomen="conformis-ad" genus="referentia"/>
-    <liberum nomen="suffixus-solitus"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="suffixus-solitus" intra="plagula-figurationis" textus="verum"/>
-  <elementum nomen="historia" intra="plagula-figurationis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="plagula-datorum">
-    <glossa lingua="en">A data file: a named file whose content is
-    meant for programs first - the structure is strict, and the
-    human reader is a guest there rather than the master.</glossa>
-    <glossa lingua="fr">Un fichier de données : un fichier nommé dont
-    le contenu s'adresse d'abord aux programmes - la structure y est
-    stricte, et le lecteur humain y est un hôte plutôt que le
-    maître.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="forma-contenti" genus="electio">
-      <optio>textualis</optio>
-      <optio>binaria</optio>
-    </attributum>
-    <attributum nomen="mimen-solitum" genus="textus"/>
-    <attributum nomen="status-exsistentia" genus="electio">
-      <optio>exsistens</optio>
-      <optio>ablata</optio>
-    </attributum>
-    <attributum nomen="continetur-in" genus="referentia"/>
-    <attributum nomen="conformis-ad" genus="referentia"/>
-    <liberum nomen="suffixus-solitus"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="suffixus-solitus" intra="plagula-datorum" textus="verum"/>
-  <elementum nomen="historia" intra="plagula-datorum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="plagula-sqlite">
-    <glossa lingua="en">An SQLite file: a data file holding a whole
-    database in a single file - tables, indexes and transactions,
-    all within one sequence of bytes, with no server.</glossa>
-    <glossa lingua="fr">Un fichier SQLite : un fichier de données
-    contenant une base de données entière dans un seul fichier -
-    tables, index et transactions, le tout dans une seule suite
-    d'octets, sans serveur.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="forma-contenti" genus="electio" ordinarius="binaria">
-      <optio>textualis</optio>
-      <optio>binaria</optio>
-    </attributum>
-    <attributum nomen="mimen-solitum" genus="textus"/>
-    <attributum nomen="status-exsistentia" genus="electio">
-      <optio>exsistens</optio>
-      <optio>ablata</optio>
-    </attributum>
-    <attributum nomen="continetur-in" genus="referentia"/>
-    <attributum nomen="conformis-ad" genus="referentia"/>
-    <liberum nomen="suffixus-solitus"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="suffixus-solitus" intra="plagula-sqlite" textus="verum"/>
-  <elementum nomen="historia" intra="plagula-sqlite">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="systema-plagularum">
-    <glossa lingua="en">A file system: the arrangement that gives
-    sequences of bytes their NAMES, their place in a tree, and the
-    metadata around them - what mediates between the medium (disk,
-    network, memory) and names. Without it there are bytes, but
-    there are no files.</glossa>
-    <glossa lingua="fr">Un système de fichiers : l'organisation qui
-    donne aux suites d'octets leurs NOMS, leur place dans une
-    arborescence et les métadonnées qui les entourent - ce qui fait
-    la médiation entre le support (disque, réseau, mémoire) et les
-    noms. Sans lui il y a des octets, mais il n'y a pas de
-    fichiers.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="capsas-discernit" genus="veritas"/>
-    <attributum nomen="capsas-servat" genus="veritas"/>
-    <attributum nomen="mensura-nominis-maxima" genus="numerus"/>
-    <attributum nomen="nexus-fert" genus="electio">
-      <optio>nullos</optio>
-      <optio>symbolicos</optio>
-      <optio>duros</optio>
-      <optio>utrosque</optio>
-    </attributum>
-    <attributum nomen="transactiones-fert" genus="veritas"/>
-    <attributum nomen="iacet-in" genus="referentia"/>
-    <liberum nomen="radix" maximum="1"/>
-    <liberum nomen="directorium" maximum="1"/>
-    <liberum nomen="notae-circumstantes" maximum="1"/>
-    <liberum nomen="continet"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="radix" intra="systema-plagularum">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="directorium" intra="systema-plagularum">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="notae-circumstantes" intra="systema-plagularum">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="continet" intra="systema-plagularum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="systema-plagularum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="directorium">
-    <glossa lingua="en">A directory: a named container of files and of
-    other directories - a node in the tree of names. Its content is
-    not bytes but NAMES, which is why "what is in it" is an
-    enumeration and not a reading. It is deliberately not placed
-    under file: unix-like systems make a directory a special kind of
-    file and others do not, and a taxonomy that builds one system's
-    decision into its tree stops describing the other, so the
-    relation below states what is true without choosing.</glossa>
-    <glossa lingua="fr">Un répertoire : un conteneur nommé de fichiers
-    et d'autres répertoires - un nœud de l'arbre des noms. Son
-    contenu n'est pas fait d'octets mais de NOMS, d'où le fait que
-    « ce qu'il contient » relève de l'énumération et non de la
-    lecture. Il n'est délibérément pas placé sous le fichier : les
-    systèmes de type unix font du répertoire une sorte particulière
-    de fichier, d'autres non, et une taxonomie qui inscrit dans son
-    arbre le choix d'un seul système cesse de décrire l'autre ; la
-    relation ci-dessous dit donc ce qui est vrai sans
-    choisir.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="occultum" genus="veritas"/>
-    <attributum nomen="continetur-in" genus="referentia"/>
-    <attributum nomen="est-plagula" genus="referentia"/>
-    <liberum nomen="continet"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="continet" intra="directorium">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="directorium">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -417,6 +189,36 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="scriptum-exsecutabile">
+    <glossa lingua="en">An executable script: a named file to be run
+    directly, with no prior compilation - its shebang line (#!)
+    names its own interpreter, making it a file that knows how to
+    run.</glossa>
+    <glossa lingua="fr">Un script exécutable : un fichier nommé
+    destiné à être exécuté directement, sans compilation préalable -
+    sa ligne shebang (#!) nomme elle-même son interprète, ce qui en
+    fait un fichier qui sait comment s'exécuter.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="scriptum-exsecutabile" textus="verum"/>
+  <elementum nomen="historia" intra="scriptum-exsecutabile">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="scriptum-conchae">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
@@ -438,6 +240,36 @@
   </elementum>
   <elementum nomen="suffixus-solitus" intra="scriptum-conchae" textus="verum"/>
   <elementum nomen="historia" intra="scriptum-conchae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-notationis">
+    <glossa lingua="en">A markup file: a named file whose content is
+    prose with structure interleaved - the marks carry the
+    structure, the text carries the sense, laid out by machine for a
+    human reader.</glossa>
+    <glossa lingua="fr">Un fichier de balisage : un fichier nommé dont
+    le contenu est de la prose entrelacée de structure - les signes
+    portent la structure, le texte porte le sens, mis en forme par
+    la machine pour un lecteur humain.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-notationis" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-notationis">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -507,6 +339,35 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="plagula-figurationis">
+    <glossa lingua="en">A configuration file: a named file read by a
+    program at startup so that it may shape its own behaviour -
+    declarative, not executable; it says what, never how.</glossa>
+    <glossa lingua="fr">Un fichier de configuration : un fichier nommé
+    qu'un programme lit à son démarrage afin de former son propre
+    comportement - déclaratif, non exécutif ; il dit quoi, jamais
+    comment.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-figurationis" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-figurationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="plagula-toml">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="textualis">
@@ -548,6 +409,35 @@
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-plist" textus="verum"/>
   <elementum nomen="historia" intra="plagula-plist">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="plagula-datorum">
+    <glossa lingua="en">A data file: a named file whose content is
+    meant for programs first - the structure is strict, and the
+    human reader is a guest there rather than the master.</glossa>
+    <glossa lingua="fr">Un fichier de données : un fichier nommé dont
+    le contenu s'adresse d'abord aux programmes - la structure y est
+    stricte, et le lecteur humain y est un hôte plutôt que le
+    maître.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="forma-contenti" genus="electio">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-datorum" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-datorum">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -595,6 +485,35 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="plagula-sqlite">
+    <glossa lingua="en">An SQLite file: a data file holding a whole
+    database in a single file - tables, indexes and transactions,
+    all within one sequence of bytes, with no server.</glossa>
+    <glossa lingua="fr">Un fichier SQLite : un fichier de données
+    contenant une base de données entière dans un seul fichier -
+    tables, index et transactions, le tout dans une seule suite
+    d'octets, sans serveur.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="forma-contenti" genus="electio" ordinarius="binaria">
+      <optio>textualis</optio>
+      <optio>binaria</optio>
+    </attributum>
+    <attributum nomen="mimen-solitum" genus="textus"/>
+    <attributum nomen="status-exsistentia" genus="electio">
+      <optio>exsistens</optio>
+      <optio>ablata</optio>
+    </attributum>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="conformis-ad" genus="referentia"/>
+    <liberum nomen="suffixus-solitus"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="suffixus-solitus" intra="plagula-sqlite" textus="verum"/>
+  <elementum nomen="historia" intra="plagula-sqlite">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="volumen">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="forma-contenti" genus="electio" ordinarius="binaria">
@@ -614,6 +533,87 @@
   </elementum>
   <elementum nomen="suffixus-solitus" intra="volumen" textus="verum"/>
   <elementum nomen="historia" intra="volumen">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="systema-plagularum">
+    <glossa lingua="en">A file system: the arrangement that gives
+    sequences of bytes their NAMES, their place in a tree, and the
+    metadata around them - what mediates between the medium (disk,
+    network, memory) and names. Without it there are bytes, but
+    there are no files.</glossa>
+    <glossa lingua="fr">Un système de fichiers : l'organisation qui
+    donne aux suites d'octets leurs NOMS, leur place dans une
+    arborescence et les métadonnées qui les entourent - ce qui fait
+    la médiation entre le support (disque, réseau, mémoire) et les
+    noms. Sans lui il y a des octets, mais il n'y a pas de
+    fichiers.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="capsas-discernit" genus="veritas"/>
+    <attributum nomen="capsas-servat" genus="veritas"/>
+    <attributum nomen="mensura-nominis-maxima" genus="numerus"/>
+    <attributum nomen="nexus-fert" genus="electio">
+      <optio>nullos</optio>
+      <optio>symbolicos</optio>
+      <optio>duros</optio>
+      <optio>utrosque</optio>
+    </attributum>
+    <attributum nomen="transactiones-fert" genus="veritas"/>
+    <attributum nomen="iacet-in" genus="referentia"/>
+    <liberum nomen="radix" maximum="1"/>
+    <liberum nomen="directorium" maximum="1"/>
+    <liberum nomen="notae-circumstantes" maximum="1"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="radix" intra="systema-plagularum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="directorium" intra="systema-plagularum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="notae-circumstantes" intra="systema-plagularum">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="continet" intra="systema-plagularum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="systema-plagularum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="directorium">
+    <glossa lingua="en">A directory: a named container of files and of
+    other directories - a node in the tree of names. Its content is
+    not bytes but NAMES, which is why "what is in it" is an
+    enumeration and not a reading. It is deliberately not placed
+    under file: unix-like systems make a directory a special kind of
+    file and others do not, and a taxonomy that builds one system's
+    decision into its tree stops describing the other, so the
+    relation below states what is true without choosing.</glossa>
+    <glossa lingua="fr">Un répertoire : un conteneur nommé de fichiers
+    et d'autres répertoires - un nœud de l'arbre des noms. Son
+    contenu n'est pas fait d'octets mais de NOMS, d'où le fait que
+    « ce qu'il contient » relève de l'énumération et non de la
+    lecture. Il n'est délibérément pas placé sous le fichier : les
+    systèmes de type unix font du répertoire une sorte particulière
+    de fichier, d'autres non, et une taxonomie qui inscrit dans son
+    arbre le choix d'un seul système cesse de décrire l'autre ; la
+    relation ci-dessous dit donc ce qui est vrai sans
+    choisir.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="occultum" genus="veritas"/>
+    <attributum nomen="continetur-in" genus="referentia"/>
+    <attributum nomen="est-plagula" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="continet" intra="directorium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="directorium">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -637,11 +637,11 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="plagula-computatralis plagula-fontis scriptum-exsecutabile plagula-notationis
-           plagula-figurationis plagula-datorum plagula-sqlite systema-plagularum
-           directorium fons-c caput-c fons-python fons-rust scriptum-conchae
-           plagula-xml plagula-stml plagula-markdown plagula-toml plagula-plist
-           plagula-json plagula-csv volumen"/>
+    super="plagula-computatralis plagula-fontis fons-c caput-c fons-python
+           fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis
+           plagula-xml plagula-stml plagula-markdown plagula-figurationis
+           plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv
+           plagula-sqlite volumen systema-plagularum directorium"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -651,26 +651,26 @@
        vocabulario indicis. -->
   <citatio nomen="plagula-computatralis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-computatralis"/>
   <citatio nomen="plagula-fontis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-fontis"/>
-  <citatio nomen="scriptum-exsecutabile-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="scriptum-exsecutabile"/>
-  <citatio nomen="plagula-notationis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-notationis"/>
-  <citatio nomen="plagula-figurationis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-figurationis"/>
-  <citatio nomen="plagula-datorum-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-datorum"/>
-  <citatio nomen="plagula-sqlite-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-sqlite"/>
-  <citatio nomen="systema-plagularum-continet" attributum="ad" ad="plagula-computatralis plagula-fontis fons-c caput-c fons-python fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis plagula-xml plagula-stml plagula-markdown plagula-figurationis plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv plagula-sqlite volumen/nomen" super="systema-plagularum/continet"/>
-  <citatio nomen="directorium-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="directorium"/>
-  <citatio nomen="directorium-est-plagula" attributum="est-plagula" ad="plagula-computatralis plagula-fontis fons-c caput-c fons-python fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis plagula-xml plagula-stml plagula-markdown plagula-figurationis plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv plagula-sqlite volumen/nomen" super="directorium"/>
   <citatio nomen="fons-c-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="fons-c"/>
   <citatio nomen="caput-c-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="caput-c"/>
   <citatio nomen="fons-python-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="fons-python"/>
   <citatio nomen="fons-rust-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="fons-rust"/>
+  <citatio nomen="scriptum-exsecutabile-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="scriptum-exsecutabile"/>
   <citatio nomen="scriptum-conchae-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="scriptum-conchae"/>
+  <citatio nomen="plagula-notationis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-notationis"/>
   <citatio nomen="plagula-xml-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-xml"/>
   <citatio nomen="plagula-stml-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-stml"/>
   <citatio nomen="plagula-markdown-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-markdown"/>
+  <citatio nomen="plagula-figurationis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-figurationis"/>
   <citatio nomen="plagula-toml-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-toml"/>
   <citatio nomen="plagula-plist-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-plist"/>
+  <citatio nomen="plagula-datorum-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-datorum"/>
   <citatio nomen="plagula-json-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-json"/>
   <citatio nomen="plagula-csv-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-csv"/>
+  <citatio nomen="plagula-sqlite-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-sqlite"/>
   <citatio nomen="volumen-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="volumen"/>
+  <citatio nomen="systema-plagularum-continet" attributum="ad" ad="plagula-computatralis plagula-fontis fons-c caput-c fons-python fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis plagula-xml plagula-stml plagula-markdown plagula-figurationis plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv plagula-sqlite volumen/nomen" super="systema-plagularum/continet"/>
+  <citatio nomen="directorium-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="directorium"/>
+  <citatio nomen="directorium-est-plagula" attributum="est-plagula" ad="plagula-computatralis plagula-fontis fons-c caput-c fons-python fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis plagula-xml plagula-stml plagula-markdown plagula-figurationis plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv plagula-sqlite volumen/nomen" super="directorium"/>
 
 </canon>

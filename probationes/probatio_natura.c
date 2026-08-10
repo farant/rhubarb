@@ -277,12 +277,15 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(bib->diagnostica),
                             ZEPHYRUM);
 
-        /* mensurae bibliothecae */
+        /* mensurae bibliothecae - arbor porphyriana (2026-08-10):
+         * species/cultivares GENERA sunt (IX + rosa + rosa_alba +
+         * corona + scientia + opinio = XIV); res = individua sola
+         * (fixturae nulla habent) */
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(bib->exemplaria), III);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(bib->genera_omnia),
-                            IX);
-        /* V post nidificationem (rosa_alba addita 2026-08-08) */
-        CREDO_AEQUALIS_I32 ((i32)xar_numerus(bib->res_omnes), V);
+                            XIV);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(bib->res_omnes),
+                            ZEPHYRUM);
 
 
         /* ====================================================
@@ -302,12 +305,15 @@ s32 principale (vacuum)
             CREDO_NON_NIHIL (vivens);
             CREDO_AEQUALIS_PTR (planta->parens, vivens);
 
-            /* res non genus */
-            CREDO_NIHIL (natura_genus(bib, "rosa"));
+            /* species genus EST (arbor porphyriana): rosa per
+             * natura_genus invenitur, parens e nidificatione */
+            CREDO_NON_NIHIL (natura_genus(bib, "rosa"));
             rosa_ens = natura_ens_in(bib, "probatum", "rosa");
             CREDO_NON_NIHIL (rosa_ens);
             CREDO_AEQUALIS_I32 ((i32)rosa_ens->discrimen,
-                                (i32)NATURA_ENS_RES);
+                                (i32)NATURA_ENS_GENUS);
+            CREDO_AEQUALIS_PTR (
+                ((NaturaGenus*)rosa_ens->corpus)->parens, planta);
 
             /* homonyma: nudum NIHIL, addressatum utrumque */
             CREDO_NIHIL (natura_genus(bib, "geminus"));
@@ -319,12 +325,29 @@ s32 principale (vacuum)
                 natura_genus_in(bib, "probatum", "geminus"),
                 natura_genus_in(bib, "metrum_probatum", "geminus"));
 
-            /* res_suae generis PLANUM est: rosa ET rosa_alba
-             * nidificata - II, non I. Haec ipsa assertio custodit
-             * ne catena taxinomiae catenam apparatus angustet
-             * (consumptores planitiem exspectant). */
+            /* arbor porphyriana: res_suae individua sola tenet
+             * (vacuum hic); subgenera per liberi - planta rosam
+             * fert, rosa rosam_albam (profunditas = parentela) */
             CREDO_AEQUALIS_I32 ((i32)xar_numerus(planta->res_suae),
-                                II);
+                                ZEPHYRUM);
+            {
+                NaturaGenus* rosa_g;
+                i32          j;
+                b32          rosa_inventa;
+
+                rosa_g = natura_genus(bib, "rosa");
+                rosa_inventa = FALSUM;
+                per (j = ZEPHYRUM;
+                     j < xar_numerus(planta->liberi); j++)
+                {
+                    si (*(NaturaGenus**)xar_obtinere(
+                            planta->liberi, j) == rosa_g)
+                    {
+                        rosa_inventa = VERUM;
+                    }
+                }
+                CREDO_VERUM (rosa_inventa);
+            }
         }
 
 
@@ -338,23 +361,23 @@ s32 principale (vacuum)
          * ==================================================== */
 
         {
-            NaturaEns* corona_ens;
-            NaturaRes* corona;
+            NaturaEns*   corona_ens;
+            NaturaGenus* corona;
 
             imprimere("\n--- Probans etiam ---\n");
 
             corona_ens = natura_ens_in(bib, "probatum", "corona");
             CREDO_NON_NIHIL (corona_ens);
+            /* arbor porphyriana: corona GENUS, catena secunda per
+             * parens_etiam (doctrina a rebus portata) */
             CREDO_AEQUALIS_I32 ((i32)corona_ens->discrimen,
-                                (i32)NATURA_ENS_RES);
+                                (i32)NATURA_ENS_GENUS);
 
-            corona = (NaturaRes*)corona_ens->corpus;
-            CREDO_AEQUALIS_PTR (corona->genus_suum,
+            corona = (NaturaGenus*)corona_ens->corpus;
+            CREDO_AEQUALIS_PTR (corona->parens,
                                 natura_genus(bib, "artificium"));
-            CREDO_AEQUALIS_PTR (corona->genus_etiam,
+            CREDO_AEQUALIS_PTR (corona->parens_etiam,
                                 natura_genus(bib, "planta"));
-            /* res sub genere RECTA continentem non habet */
-            CREDO_NIHIL (corona->continens);
         }
 
 
@@ -369,10 +392,10 @@ s32 principale (vacuum)
          * custodit ne altera alteram corrumpat.
          * ==================================================== */
         {
-            NaturaEns* granny_ens;
-            NaturaEns* malus_d_ens;
-            NaturaRes* granny;
-            NaturaRes* malus_d;
+            NaturaEns*   granny_ens;
+            NaturaEns*   malus_d_ens;
+            NaturaGenus* granny;
+            NaturaGenus* malus_d;
 
             imprimere("\n--- Taxinomia nidificata ---\n");
 
@@ -383,52 +406,50 @@ s32 principale (vacuum)
             CREDO_NON_NIHIL (granny_ens);
             CREDO_NON_NIHIL (malus_d_ens);
 
-            granny  = (NaturaRes*)granny_ens->corpus;
-            malus_d = (NaturaRes*)malus_d_ens->corpus;
+            /* CUSTODIA INVERSA CONSULTO (2026-08-10): custodia
+             * pristina hic genus_suum planum servabat - arbor
+             * porphyriana eam ipsam mutat. Nunc species/cultivar
+             * GENERA sunt: profunditas taxinomica = parentela
+             * generum, catena UNA pro universalibus. */
+            CREDO_AEQUALIS_I32 ((i32)granny_ens->discrimen,
+                                (i32)NATURA_ENS_GENUS);
+            CREDO_AEQUALIS_I32 ((i32)malus_d_ens->discrimen,
+                                (i32)NATURA_ENS_GENUS);
 
-            /* TAXINOMIA: continens vera dicitur (ante hoc NIHIL) */
-            CREDO_AEQUALIS_PTR (granny->continens, malus_d);
-            CREDO_NIHIL (malus_d->continens);
+            granny  = (NaturaGenus*)granny_ens->corpus;
+            malus_d = (NaturaGenus*)malus_d_ens->corpus;
 
-            /* et deorsum quoque ambulabilis */
-            CREDO_MAIOR_I32 (xar_numerus(malus_d->res_suae),
-                             (i32)ZEPHYRUM);
-            CREDO_AEQUALIS_PTR (
-                *(NaturaRes**)xar_obtinere(malus_d->res_suae,
-                                           ZEPHYRUM),
-                granny);
-
-            /* APPARATUS INTACTUS (custodia regressionis): granny
-             * genus AMBIENS servat, non speciem - species
-             * apparatum non confert, ergo hereditas eam recte
-             * transilit. Si haec assertio rubet, mutatio
-             * taxinomiae catenam hereditatis corrupit et
-             * canones generati moventur. */
-            CREDO_AEQUALIS_PTR (granny->genus_suum,
-                                natura_genus(bib, "planta"));
-            CREDO_AEQUALIS_PTR (malus_d->genus_suum,
+            /* parentela: rosa_alba sub rosa, rosa sub planta */
+            CREDO_AEQUALIS_PTR (granny->parens, malus_d);
+            CREDO_AEQUALIS_PTR (malus_d->parens,
                                 natura_genus(bib, "planta"));
 
-            /* genus->res_suae PLANUM manet (omnes sub eo, etiam
-             * nidificatae) - consumptores eo nituntur */
+            /* et deorsum quoque ambulabilis (liberi) */
             {
-                NaturaGenus* malus;
-                i32          i;
-                b32          granny_inventa;
+                i32 j;
+                b32 granny_inventa;
 
-                malus = natura_genus(bib, "planta");
-                CREDO_NON_NIHIL (malus);
                 granny_inventa = FALSUM;
-                per (i = ZEPHYRUM;
-                     i < xar_numerus(malus->res_suae); i++)
+                per (j = ZEPHYRUM;
+                     j < xar_numerus(malus_d->liberi); j++)
                 {
-                    si (*(NaturaRes**)xar_obtinere(
-                            malus->res_suae, i) == granny)
+                    si (*(NaturaGenus**)xar_obtinere(
+                            malus_d->liberi, j) == granny)
                     {
                         granny_inventa = VERUM;
                     }
                 }
                 CREDO_VERUM (granny_inventa);
+            }
+
+            /* hereditas apparatus per parentelam fluit: maiores
+             * granny = rosa -> planta -> vivens */
+            {
+                Xar* maiores;
+
+                maiores = natura_maiores(granny, piscina);
+                CREDO_NON_NIHIL (maiores);
+                CREDO_AEQUALIS_I32 ((i32)xar_numerus(maiores), III);
             }
         }
 
@@ -768,8 +789,10 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XV),   ZEPHYRUM);
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XVI),  I);
 
-        /* proprietas re dictionarii typata SOLVIT - monitum, non
-         * vulnus (regula II parem gradum iam accipit) */
+        /* proprietas specie typata MUNDA est post arborem
+         * porphyrianam: species genus est, ergo typus ad GENUS
+         * solvit - monitum pristinum ('ad rem solvit') evanuit
+         * CONSULTO (id ipsum quod migratio emendabat) */
         {
             i32 monita;
             i32 j;
@@ -788,7 +811,7 @@ s32 principale (vacuum)
                     monita++;
                 }
             }
-            CREDO_AEQUALIS_I32 (monita, I);
+            CREDO_AEQUALIS_I32 (monita, ZEPHYRUM);
         }
     }
 

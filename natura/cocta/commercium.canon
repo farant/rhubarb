@@ -11,17 +11,17 @@
     <liberum nomen="venditio"/>
     <liberum nomen="tessera"/>
     <liberum nomen="tessera-negotiabilis"/>
-    <liberum nomen="tessera-simplex"/>
-    <liberum nomen="ratio-rationaria"/>
     <liberum nomen="charta-onerum"/>
     <liberum nomen="apocha-horrei"/>
     <liberum nomen="syngrapha"/>
     <liberum nomen="perscriptio"/>
     <liberum nomen="nummus-chartaceus"/>
     <liberum nomen="obligatio-ad-portitorem"/>
+    <liberum nomen="tessera-simplex"/>
     <liberum nomen="tessera-spectaculi"/>
     <liberum nomen="tessera-repositoria"/>
     <liberum nomen="tessera-digitalis"/>
+    <liberum nomen="ratio-rationaria"/>
     <liberum nomen="ratio-duplex"/>
   </elementum>
 
@@ -217,125 +217,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="tessera-simplex">
-    <glossa lingua="en">A plain token: a token - a thing whose
-    presentation constitutes a right - where possession is enough to
-    present it, but where no title is purged. Whoever presents a
-    stolen token is admitted, since the doorkeeper cannot know, and
-    yet he acquires no right: the true owner may still reclaim it.
-    The mechanism is the same as for a negotiable token; the legal
-    doctrine is absent.</glossa>
-    <glossa lingua="fr">Un titre simple : un titre - chose dont la
-    présentation constitue un droit - où la possession suffit pour
-    le présenter, mais où aucun titre n'est purgé. Celui qui
-    présente un titre volé est admis, car le gardien ne peut pas le
-    savoir, et pourtant il n'acquiert aucun droit : le véritable
-    propriétaire peut encore le revendiquer. Le mécanisme est le
-    même que pour le titre négociable ; la doctrine, elle, fait
-    défaut.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="modus-transferendi" genus="electio">
-      <optio>ad_portitorem</optio>
-      <optio>ad_ordinem</optio>
-    </attributum>
-    <attributum nomen="materia-tesserae" genus="electio">
-      <optio>corporea</optio>
-      <optio>digitalis</optio>
-    </attributum>
-    <attributum nomen="exhibitione-consumitur" genus="veritas"/>
-    <attributum nomen="fert-ius-in" genus="referentia"/>
-    <attributum nomen="emissa-a" genus="referentia"/>
-    <attributum nomen="possessio-eius" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="tessera-simplex">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="ratio-rationaria">
-    <glossa lingua="en">An account ledger: a record of monetary
-    events in order of time. The truth is the tail of events, and
-    every state - balance, debt, profit - is a fold over them.
-    Correction is never by erasure but by a new and contrary entry
-    (a reversal), because a record that can be rewritten is not a
-    record. What makes it monetary rather than a plain record is
-    that its events carry amounts in a currency, so the fold is
-    arithmetic and numerical invariants become possible.</glossa>
-    <glossa lingua="fr">Un livre de comptes : le registre des faits
-    monétaires par ordre du temps. La vérité, c'est la suite des
-    événements, et tout état - solde, dette, bénéfice - en est le
-    repli. La correction ne se fait jamais par rature mais par une
-    écriture nouvelle et contraire (une contre-passation), car un
-    registre que l'on peut réécrire n'est pas un registre. Ce qui le
-    rend monétaire plutôt que simple registre, c'est que ses
-    événements portent des montants dans une monnaie : le repli est
-    donc arithmétique et des invariants numériques deviennent
-    possibles.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="rationarius" genus="referentia"/>
-    <attributum nomen="ordinatio" genus="electio">
-      <optio>sequentialis</optio>
-      <optio>temporalis</optio>
-      <optio>utraque</optio>
-    </attributum>
-    <attributum nomen="immutabilitas" genus="electio">
-      <optio>disciplina</optio>
-      <optio>structura</optio>
-      <optio>cryptographica</optio>
-    </attributum>
-    <attributum nomen="retentio" genus="textus"/>
-    <attributum nomen="publica" genus="veritas"/>
-    <attributum nomen="vis" genus="electio">
-      <optio>declaratoria</optio>
-      <optio>constitutiva</optio>
-    </attributum>
-    <attributum nomen="status-admissio" genus="electio">
-      <optio>aperta</optio>
-      <optio>clausa</optio>
-      <optio>archivata</optio>
-    </attributum>
-    <attributum nomen="de" genus="referentia"/>
-    <attributum nomen="appenditur-a" genus="referentia"/>
-    <liberum nomen="continet"/>
-    <liberum nomen="eventum" maximum="1"/>
-    <liberum nomen="ordo" maximum="1"/>
-    <liberum nomen="punctum-nominatum" maximum="1"/>
-    <liberum nomen="proiectio" maximum="1"/>
-    <liberum nomen="promptuarium-contenti" maximum="1"/>
-    <liberum nomen="plicatur-in"/>
-    <liberum nomen="signata-per"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="continet" intra="ratio-rationaria">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="eventum" intra="ratio-rationaria">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="ordo" intra="ratio-rationaria">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="punctum-nominatum" intra="ratio-rationaria">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="proiectio" intra="ratio-rationaria">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="promptuarium-contenti" intra="ratio-rationaria">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="plicatur-in" intra="ratio-rationaria">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="signata-per" intra="ratio-rationaria">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="ratio-rationaria">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="charta-onerum">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
@@ -462,6 +343,42 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="tessera-simplex">
+    <glossa lingua="en">A plain token: a token - a thing whose
+    presentation constitutes a right - where possession is enough to
+    present it, but where no title is purged. Whoever presents a
+    stolen token is admitted, since the doorkeeper cannot know, and
+    yet he acquires no right: the true owner may still reclaim it.
+    The mechanism is the same as for a negotiable token; the legal
+    doctrine is absent.</glossa>
+    <glossa lingua="fr">Un titre simple : un titre - chose dont la
+    présentation constitue un droit - où la possession suffit pour
+    le présenter, mais où aucun titre n'est purgé. Celui qui
+    présente un titre volé est admis, car le gardien ne peut pas le
+    savoir, et pourtant il n'acquiert aucun droit : le véritable
+    propriétaire peut encore le revendiquer. Le mécanisme est le
+    même que pour le titre négociable ; la doctrine, elle, fait
+    défaut.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modus-transferendi" genus="electio">
+      <optio>ad_portitorem</optio>
+      <optio>ad_ordinem</optio>
+    </attributum>
+    <attributum nomen="materia-tesserae" genus="electio">
+      <optio>corporea</optio>
+      <optio>digitalis</optio>
+    </attributum>
+    <attributum nomen="exhibitione-consumitur" genus="veritas"/>
+    <attributum nomen="fert-ius-in" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="possessio-eius" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="tessera-simplex">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="tessera-spectaculi">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-transferendi" genus="electio">
@@ -522,6 +439,89 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-digitalis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ratio-rationaria">
+    <glossa lingua="en">An account ledger: a record of monetary
+    events in order of time. The truth is the tail of events, and
+    every state - balance, debt, profit - is a fold over them.
+    Correction is never by erasure but by a new and contrary entry
+    (a reversal), because a record that can be rewritten is not a
+    record. What makes it monetary rather than a plain record is
+    that its events carry amounts in a currency, so the fold is
+    arithmetic and numerical invariants become possible.</glossa>
+    <glossa lingua="fr">Un livre de comptes : le registre des faits
+    monétaires par ordre du temps. La vérité, c'est la suite des
+    événements, et tout état - solde, dette, bénéfice - en est le
+    repli. La correction ne se fait jamais par rature mais par une
+    écriture nouvelle et contraire (une contre-passation), car un
+    registre que l'on peut réécrire n'est pas un registre. Ce qui le
+    rend monétaire plutôt que simple registre, c'est que ses
+    événements portent des montants dans une monnaie : le repli est
+    donc arithmétique et des invariants numériques deviennent
+    possibles.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="rationarius" genus="referentia"/>
+    <attributum nomen="ordinatio" genus="electio">
+      <optio>sequentialis</optio>
+      <optio>temporalis</optio>
+      <optio>utraque</optio>
+    </attributum>
+    <attributum nomen="immutabilitas" genus="electio">
+      <optio>disciplina</optio>
+      <optio>structura</optio>
+      <optio>cryptographica</optio>
+    </attributum>
+    <attributum nomen="retentio" genus="textus"/>
+    <attributum nomen="publica" genus="veritas"/>
+    <attributum nomen="vis" genus="electio">
+      <optio>declaratoria</optio>
+      <optio>constitutiva</optio>
+    </attributum>
+    <attributum nomen="status-admissio" genus="electio">
+      <optio>aperta</optio>
+      <optio>clausa</optio>
+      <optio>archivata</optio>
+    </attributum>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="appenditur-a" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="eventum" maximum="1"/>
+    <liberum nomen="ordo" maximum="1"/>
+    <liberum nomen="punctum-nominatum" maximum="1"/>
+    <liberum nomen="proiectio" maximum="1"/>
+    <liberum nomen="promptuarium-contenti" maximum="1"/>
+    <liberum nomen="plicatur-in"/>
+    <liberum nomen="signata-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="continet" intra="ratio-rationaria">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="eventum" intra="ratio-rationaria">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="ordo" intra="ratio-rationaria">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="punctum-nominatum" intra="ratio-rationaria">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="proiectio" intra="ratio-rationaria">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="promptuarium-contenti" intra="ratio-rationaria">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="plicatur-in" intra="ratio-rationaria">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="signata-per" intra="ratio-rationaria">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="ratio-rationaria">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -611,9 +611,9 @@
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
     super="moneta pecunia possessio pretium venditio tessera tessera-negotiabilis
-           tessera-simplex ratio-rationaria charta-onerum apocha-horrei syngrapha
-           perscriptio nummus-chartaceus obligatio-ad-portitorem tessera-spectaculi
-           tessera-repositoria tessera-digitalis ratio-duplex"/>
+           charta-onerum apocha-horrei syngrapha perscriptio nummus-chartaceus
+           obligatio-ad-portitorem tessera-simplex tessera-spectaculi tessera-repositoria
+           tessera-digitalis ratio-rationaria ratio-duplex"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -626,17 +626,17 @@
   <citatio nomen="venditio-solutum" attributum="solutum" ad="pecunia/nomen" super="venditio"/>
   <citatio nomen="tessera-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera"/>
   <citatio nomen="tessera-negotiabilis-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-negotiabilis"/>
-  <citatio nomen="tessera-simplex-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-simplex"/>
-  <citatio nomen="ratio-rationaria-continet" attributum="ad" ad="venditio/nomen" super="ratio-rationaria/continet"/>
   <citatio nomen="charta-onerum-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="charta-onerum"/>
   <citatio nomen="apocha-horrei-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="apocha-horrei"/>
   <citatio nomen="syngrapha-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="syngrapha"/>
   <citatio nomen="perscriptio-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="perscriptio"/>
   <citatio nomen="nummus-chartaceus-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="nummus-chartaceus"/>
   <citatio nomen="obligatio-ad-portitorem-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="obligatio-ad-portitorem"/>
+  <citatio nomen="tessera-simplex-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-simplex"/>
   <citatio nomen="tessera-spectaculi-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-spectaculi"/>
   <citatio nomen="tessera-repositoria-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-repositoria"/>
   <citatio nomen="tessera-digitalis-possessio-eius" attributum="possessio-eius" ad="possessio/nomen" super="tessera-digitalis"/>
+  <citatio nomen="ratio-rationaria-continet" attributum="ad" ad="venditio/nomen" super="ratio-rationaria/continet"/>
   <citatio nomen="ratio-duplex-continet" attributum="ad" ad="venditio/nomen" super="ratio-duplex/continet"/>
 
 </canon>

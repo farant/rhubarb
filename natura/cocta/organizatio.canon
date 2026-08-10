@@ -7,20 +7,20 @@
     <liberum nomen="universitas"/>
     <liberum nomen="organizatio"/>
     <liberum nomen="colonia"/>
-    <liberum nomen="persona-iuridica"/>
-    <liberum nomen="officium"/>
-    <liberum nomen="corpus-normans"/>
-    <liberum nomen="societas"/>
-    <liberum nomen="magistratus"/>
     <liberum nomen="colonia-apium"/>
     <liberum nomen="grex"/>
+    <liberum nomen="persona-iuridica"/>
     <liberum nomen="universitas-personarum"/>
     <liberum nomen="universitas-rerum"/>
+    <liberum nomen="officium"/>
     <liberum nomen="parochus"/>
     <liberum nomen="episcopus"/>
     <liberum nomen="notarius"/>
     <liberum nomen="curator"/>
     <liberum nomen="praeses-collegii"/>
+    <liberum nomen="corpus-normans"/>
+    <liberum nomen="societas"/>
+    <liberum nomen="magistratus"/>
   </elementum>
 
   <elementum nomen="universitas">
@@ -153,231 +153,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="persona-iuridica">
-    <glossa lingua="en">A juridical person: an organization that is a
-    subject of rights and obligations in law - it owns, contracts,
-    sues and is sued in ITS OWN name, not in the name of its
-    members. Its goods are therefore not the goods of the
-    associates, nor its debts theirs: a separation on which modern
-    business rests entirely.</glossa>
-    <glossa lingua="fr">Une personne juridique : une organisation qui
-    est sujet de droits et d'obligations en droit - elle possède,
-    contracte, agit et est assignée en SON PROPRE nom, non au nom
-    de ses membres. Ses biens ne sont donc pas ceux des associés,
-    ni ses dettes les leurs : une séparation sur laquelle repose
-    entièrement le commerce moderne.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="perpetua" genus="veritas"/>
-    <attributum nomen="constituta-per" genus="referentia"/>
-    <attributum nomen="pars-de" genus="referentia"/>
-    <attributum nomen="membrum" genus="referentia"/>
-    <attributum nomen="condita" genus="dies"/>
-    <attributum nomen="dissoluta" genus="dies"/>
-    <attributum nomen="sedes" genus="textus"/>
-    <attributum nomen="mutatio-membrorum" genus="electio">
-      <optio>lenta</optio>
-      <optio>velox</optio>
-      <optio>nulla</optio>
-    </attributum>
-    <attributum nomen="unde-ordo" genus="electio">
-      <optio>ab_intus</optio>
-      <optio>ab_extra</optio>
-    </attributum>
-    <liberum nomen="nomina"/>
-    <liberum nomen="condita-a"/>
-    <liberum nomen="administrat"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="nomina" intra="persona-iuridica" textus="verum"/>
-  <elementum nomen="condita-a" intra="persona-iuridica">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="administrat" intra="persona-iuridica">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="persona-iuridica">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="officium">
-    <glossa lingua="en">An office: a charge stably established, with
-    burdens, powers and conditions OF ITS OWN, which does NOT
-    inhere in the one who holds it - the same office remains while
-    one holder succeeds another, and it REMAINS WITH NO HOLDER AT
-    ALL. Vacancy is a true state, not a missing datum.</glossa>
-    <glossa lingua="fr">Un office : une charge établie de manière
-    stable, avec ses propres devoirs, pouvoirs et conditions, et
-    qui n'adhère PAS à son titulaire - le même office demeure
-    tandis que les titulaires se succèdent, et il DEMEURE MÊME SANS
-    TITULAIRE. La vacance est un état véritable, non une donnée
-    absente.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="ad-tempus" genus="veritas"/>
-    <attributum nomen="collegiale" genus="veritas"/>
-    <attributum nomen="status-tenentia" genus="electio">
-      <optio>vacans</optio>
-      <optio>occupatum</optio>
-    </attributum>
-    <attributum nomen="intra" genus="referentia"/>
-    <attributum nomen="tenetur-a" genus="referentia"/>
-    <attributum nomen="exercetur-a" genus="referentia"/>
-    <attributum nomen="constituitur-per" genus="referentia"/>
-    <attributum nomen="subest" genus="referentia"/>
-    <liberum nomen="requisita"/>
-    <liberum nomen="postulat"/>
-    <liberum nomen="confert-capacitatem"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="requisita" intra="officium" textus="verum"/>
-  <elementum nomen="postulat" intra="officium">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="confert-capacitatem" intra="officium">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="officium">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="corpus-normans">
-    <glossa lingua="en">A standards body: an organization whose proper
-    end is to publish and keep standards - authoritative
-    descriptions to which others conform. Its authority comes from
-    consent, not from command.</glossa>
-    <glossa lingua="fr">Un organisme de normalisation : une
-    organisation dont la fin propre est d'éditer et de garder des
-    normes - des descriptions faisant autorité auxquelles les
-    autres se conforment. Son autorité vient du consentement, non
-    du commandement.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="pars-de" genus="referentia"/>
-    <attributum nomen="membrum" genus="referentia"/>
-    <attributum nomen="condita" genus="dies"/>
-    <attributum nomen="dissoluta" genus="dies"/>
-    <attributum nomen="sedes" genus="textus"/>
-    <attributum nomen="mutatio-membrorum" genus="electio">
-      <optio>lenta</optio>
-      <optio>velox</optio>
-      <optio>nulla</optio>
-    </attributum>
-    <attributum nomen="unde-ordo" genus="electio">
-      <optio>ab_intus</optio>
-      <optio>ab_extra</optio>
-    </attributum>
-    <liberum nomen="edit"/>
-    <liberum nomen="nomina"/>
-    <liberum nomen="condita-a"/>
-    <liberum nomen="administrat"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="edit" intra="corpus-normans">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="nomina" intra="corpus-normans" textus="verum"/>
-  <elementum nomen="condita-a" intra="corpus-normans">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="administrat" intra="corpus-normans">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="corpus-normans">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="societas">
-    <glossa lingua="en">A company: an organization whose proper end is
-    gain through the works it sells, and which has owners to whom
-    it answers.</glossa>
-    <glossa lingua="fr">Une société : une organisation dont la fin
-    propre est le gain par les ouvrages qu'elle vend, et qui a des
-    propriétaires devant lesquels elle répond.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="pars-de" genus="referentia"/>
-    <attributum nomen="membrum" genus="referentia"/>
-    <attributum nomen="condita" genus="dies"/>
-    <attributum nomen="dissoluta" genus="dies"/>
-    <attributum nomen="sedes" genus="textus"/>
-    <attributum nomen="mutatio-membrorum" genus="electio">
-      <optio>lenta</optio>
-      <optio>velox</optio>
-      <optio>nulla</optio>
-    </attributum>
-    <attributum nomen="unde-ordo" genus="electio">
-      <optio>ab_intus</optio>
-      <optio>ab_extra</optio>
-    </attributum>
-    <liberum nomen="nomina"/>
-    <liberum nomen="condita-a"/>
-    <liberum nomen="administrat"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="nomina" intra="societas" textus="verum"/>
-  <elementum nomen="condita-a" intra="societas">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="administrat" intra="societas">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="societas">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="magistratus">
-    <glossa lingua="en">A public authority: an organization whose
-    authority comes from COMMAND over a place, not from consent (as
-    a standards body) nor from gain (as a company). It makes laws
-    that bind everyone within its jurisdiction, whether they
-    consent or not; coercive force is its difference.</glossa>
-    <glossa lingua="fr">Une autorité publique : une organisation dont
-    l'autorité vient du COMMANDEMENT sur un territoire, non du
-    consentement (comme un organisme de normalisation) ni du gain
-    (comme une société). Elle porte des lois qui lient tous ceux
-    qui sont dans sa juridiction, qu'ils y consentent ou non ; la
-    force coercitive est sa différence.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="pars-de" genus="referentia"/>
-    <attributum nomen="membrum" genus="referentia"/>
-    <attributum nomen="condita" genus="dies"/>
-    <attributum nomen="dissoluta" genus="dies"/>
-    <attributum nomen="sedes" genus="textus"/>
-    <attributum nomen="mutatio-membrorum" genus="electio">
-      <optio>lenta</optio>
-      <optio>velox</optio>
-      <optio>nulla</optio>
-    </attributum>
-    <attributum nomen="unde-ordo" genus="electio">
-      <optio>ab_intus</optio>
-      <optio>ab_extra</optio>
-    </attributum>
-    <liberum nomen="exercet"/>
-    <liberum nomen="concedit"/>
-    <liberum nomen="nomina"/>
-    <liberum nomen="condita-a"/>
-    <liberum nomen="administrat"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="exercet" intra="magistratus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="concedit" intra="magistratus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="nomina" intra="magistratus" textus="verum"/>
-  <elementum nomen="condita-a" intra="magistratus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="administrat" intra="magistratus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="magistratus">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="colonia-apium">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="membra-fungibilia" genus="veritas"/>
@@ -431,6 +206,53 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="grex">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="persona-iuridica">
+    <glossa lingua="en">A juridical person: an organization that is a
+    subject of rights and obligations in law - it owns, contracts,
+    sues and is sued in ITS OWN name, not in the name of its
+    members. Its goods are therefore not the goods of the
+    associates, nor its debts theirs: a separation on which modern
+    business rests entirely.</glossa>
+    <glossa lingua="fr">Une personne juridique : une organisation qui
+    est sujet de droits et d'obligations en droit - elle possède,
+    contracte, agit et est assignée en SON PROPRE nom, non au nom
+    de ses membres. Ses biens ne sont donc pas ceux des associés,
+    ni ses dettes les leurs : une séparation sur laquelle repose
+    entièrement le commerce moderne.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="perpetua" genus="veritas"/>
+    <attributum nomen="constituta-per" genus="referentia"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="nomina" intra="persona-iuridica" textus="verum"/>
+  <elementum nomen="condita-a" intra="persona-iuridica">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="administrat" intra="persona-iuridica">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="persona-iuridica">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -501,6 +323,47 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="universitas-rerum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="officium">
+    <glossa lingua="en">An office: a charge stably established, with
+    burdens, powers and conditions OF ITS OWN, which does NOT
+    inhere in the one who holds it - the same office remains while
+    one holder succeeds another, and it REMAINS WITH NO HOLDER AT
+    ALL. Vacancy is a true state, not a missing datum.</glossa>
+    <glossa lingua="fr">Un office : une charge établie de manière
+    stable, avec ses propres devoirs, pouvoirs et conditions, et
+    qui n'adhère PAS à son titulaire - le même office demeure
+    tandis que les titulaires se succèdent, et il DEMEURE MÊME SANS
+    TITULAIRE. La vacance est un état véritable, non une donnée
+    absente.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="ad-tempus" genus="veritas"/>
+    <attributum nomen="collegiale" genus="veritas"/>
+    <attributum nomen="status-tenentia" genus="electio">
+      <optio>vacans</optio>
+      <optio>occupatum</optio>
+    </attributum>
+    <attributum nomen="intra" genus="referentia"/>
+    <attributum nomen="tenetur-a" genus="referentia"/>
+    <attributum nomen="exercetur-a" genus="referentia"/>
+    <attributum nomen="constituitur-per" genus="referentia"/>
+    <attributum nomen="subest" genus="referentia"/>
+    <liberum nomen="requisita"/>
+    <liberum nomen="postulat"/>
+    <liberum nomen="confert-capacitatem"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="requisita" intra="officium" textus="verum"/>
+  <elementum nomen="postulat" intra="officium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="confert-capacitatem" intra="officium">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="officium">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -654,6 +517,143 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="corpus-normans">
+    <glossa lingua="en">A standards body: an organization whose proper
+    end is to publish and keep standards - authoritative
+    descriptions to which others conform. Its authority comes from
+    consent, not from command.</glossa>
+    <glossa lingua="fr">Un organisme de normalisation : une
+    organisation dont la fin propre est d'éditer et de garder des
+    normes - des descriptions faisant autorité auxquelles les
+    autres se conforment. Son autorité vient du consentement, non
+    du commandement.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="edit"/>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="edit" intra="corpus-normans">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="nomina" intra="corpus-normans" textus="verum"/>
+  <elementum nomen="condita-a" intra="corpus-normans">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="administrat" intra="corpus-normans">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="corpus-normans">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="societas">
+    <glossa lingua="en">A company: an organization whose proper end is
+    gain through the works it sells, and which has owners to whom
+    it answers.</glossa>
+    <glossa lingua="fr">Une société : une organisation dont la fin
+    propre est le gain par les ouvrages qu'elle vend, et qui a des
+    propriétaires devant lesquels elle répond.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="nomina" intra="societas" textus="verum"/>
+  <elementum nomen="condita-a" intra="societas">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="administrat" intra="societas">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="societas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="magistratus">
+    <glossa lingua="en">A public authority: an organization whose
+    authority comes from COMMAND over a place, not from consent (as
+    a standards body) nor from gain (as a company). It makes laws
+    that bind everyone within its jurisdiction, whether they
+    consent or not; coercive force is its difference.</glossa>
+    <glossa lingua="fr">Une autorité publique : une organisation dont
+    l'autorité vient du COMMANDEMENT sur un territoire, non du
+    consentement (comme un organisme de normalisation) ni du gain
+    (comme une société). Elle porte des lois qui lient tous ceux
+    qui sont dans sa juridiction, qu'ils y consentent ou non ; la
+    force coercitive est sa différence.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="pars-de" genus="referentia"/>
+    <attributum nomen="membrum" genus="referentia"/>
+    <attributum nomen="condita" genus="dies"/>
+    <attributum nomen="dissoluta" genus="dies"/>
+    <attributum nomen="sedes" genus="textus"/>
+    <attributum nomen="mutatio-membrorum" genus="electio">
+      <optio>lenta</optio>
+      <optio>velox</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="unde-ordo" genus="electio">
+      <optio>ab_intus</optio>
+      <optio>ab_extra</optio>
+    </attributum>
+    <liberum nomen="exercet"/>
+    <liberum nomen="concedit"/>
+    <liberum nomen="nomina"/>
+    <liberum nomen="condita-a"/>
+    <liberum nomen="administrat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="exercet" intra="magistratus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="concedit" intra="magistratus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="nomina" intra="magistratus" textus="verum"/>
+  <elementum nomen="condita-a" intra="magistratus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="administrat" intra="magistratus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="magistratus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
@@ -674,9 +674,9 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="universitas organizatio colonia persona-iuridica officium corpus-normans
-           societas magistratus colonia-apium grex universitas-personarum
-           universitas-rerum parochus episcopus notarius curator praeses-collegii"/>
+    super="universitas organizatio colonia colonia-apium grex persona-iuridica
+           universitas-personarum universitas-rerum officium parochus episcopus
+           notarius curator praeses-collegii corpus-normans societas magistratus"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -687,16 +687,13 @@
   <citatio nomen="universitas-pars-de" attributum="pars-de" ad="universitas organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus colonia colonia-apium grex/nomen" super="universitas"/>
   <citatio nomen="organizatio-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="organizatio"/>
   <citatio nomen="colonia-pars-de" attributum="pars-de" ad="universitas organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus colonia colonia-apium grex/nomen" super="colonia"/>
-  <citatio nomen="persona-iuridica-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="persona-iuridica"/>
-  <citatio nomen="officium-intra" attributum="intra" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="officium"/>
-  <citatio nomen="officium-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="officium"/>
-  <citatio nomen="corpus-normans-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="corpus-normans"/>
-  <citatio nomen="societas-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="societas"/>
-  <citatio nomen="magistratus-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="magistratus"/>
   <citatio nomen="colonia-apium-pars-de" attributum="pars-de" ad="universitas organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus colonia colonia-apium grex/nomen" super="colonia-apium"/>
   <citatio nomen="grex-pars-de" attributum="pars-de" ad="universitas organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus colonia colonia-apium grex/nomen" super="grex"/>
+  <citatio nomen="persona-iuridica-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="persona-iuridica"/>
   <citatio nomen="universitas-personarum-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="universitas-personarum"/>
   <citatio nomen="universitas-rerum-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="universitas-rerum"/>
+  <citatio nomen="officium-intra" attributum="intra" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="officium"/>
+  <citatio nomen="officium-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="officium"/>
   <citatio nomen="parochus-intra" attributum="intra" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="parochus"/>
   <citatio nomen="parochus-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="parochus"/>
   <citatio nomen="episcopus-intra" attributum="intra" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="episcopus"/>
@@ -707,5 +704,8 @@
   <citatio nomen="curator-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="curator"/>
   <citatio nomen="praeses-collegii-intra" attributum="intra" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="praeses-collegii"/>
   <citatio nomen="praeses-collegii-subest" attributum="subest" ad="officium parochus episcopus notarius curator praeses-collegii/nomen" super="praeses-collegii"/>
+  <citatio nomen="corpus-normans-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="corpus-normans"/>
+  <citatio nomen="societas-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="societas"/>
+  <citatio nomen="magistratus-pars-de" attributum="pars-de" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="magistratus"/>
 
 </canon>

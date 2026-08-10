@@ -21,8 +21,8 @@ planta_individua_legere_nodum(
     res->planta = xar_creare(piscina, (i32)magnitudo(PlantaPlanta*));
     res->rosaceae = xar_creare(piscina, (i32)magnitudo(PlantaRosaceae*));
     res->rosa = xar_creare(piscina, (i32)magnitudo(PlantaRosa*));
-    res->malus = xar_creare(piscina, (i32)magnitudo(PlantaMalus*));
     res->rosa_canina = xar_creare(piscina, (i32)magnitudo(PlantaRosaCanina*));
+    res->malus = xar_creare(piscina, (i32)magnitudo(PlantaMalus*));
     res->malus_domestica = xar_creare(piscina, (i32)magnitudo(PlantaMalusDomestica*));
     res->granny_smith = xar_creare(piscina, (i32)magnitudo(PlantaGrannySmith*));
     {
@@ -80,19 +80,6 @@ planta_individua_legere_nodum(
                 }
             }
             alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "malus"))
-            {
-                PlantaMalus* filius;
-                PlantaMalus** locus;
-
-                filius = planta_malus_legere_nodum(l, piscina, intern);
-                si (filius)
-                {
-                    locus = (PlantaMalus**)xar_addere(res->malus);
-                    *locus = filius;
-                }
-            }
-            alioquin si (chorda_aequalis_literis(*l->titulus,
                     "rosa-canina"))
             {
                 PlantaRosaCanina* filius;
@@ -102,6 +89,19 @@ planta_individua_legere_nodum(
                 si (filius)
                 {
                     locus = (PlantaRosaCanina**)xar_addere(res->rosa_canina);
+                    *locus = filius;
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "malus"))
+            {
+                PlantaMalus* filius;
+                PlantaMalus** locus;
+
+                filius = planta_malus_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaMalus**)xar_addere(res->malus);
                     *locus = filius;
                 }
             }
@@ -1888,576 +1888,6 @@ planta_rosa_historia_legere_nodum(
     redde res;
 }
 
-PlantaMalus*
-planta_malus_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
-    InternamentumChorda* intern)
-{
-    PlantaMalus* res;
-
-    (vacuum)intern;
-    res = (PlantaMalus*)piscina_allocare(piscina,
-        magnitudo(PlantaMalus));
-    si (!res)
-    {
-        redde NIHIL;
-    }
-    res->nodus = nodus;
-
-    res->nomen_v = stml_attributum_capere(nodus, "nomen");
-
-    res->habitus = PLANTA_MALUS_HABITUS_ARBOR;
-    {
-        chorda* v;
-
-        v = stml_attributum_capere(nodus, "habitus");
-        si (v)
-        {
-            si (chorda_aequalis_literis(*v, "herba"))
-            {
-                res->habitus = PLANTA_MALUS_HABITUS_HERBA;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "frutex"))
-            {
-                res->habitus = PLANTA_MALUS_HABITUS_FRUTEX;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "arbor"))
-            {
-                res->habitus = PLANTA_MALUS_HABITUS_ARBOR;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "scandens"))
-            {
-                res->habitus = PLANTA_MALUS_HABITUS_SCANDENS;
-            }
-        }
-    }
-
-    res->durata = PLANTA_MALUS_DURATA_PERENNIS;
-    {
-        chorda* v;
-
-        v = stml_attributum_capere(nodus, "durata");
-        si (v)
-        {
-            si (chorda_aequalis_literis(*v, "annua"))
-            {
-                res->durata = PLANTA_MALUS_DURATA_ANNUA;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "biennis"))
-            {
-                res->durata = PLANTA_MALUS_DURATA_BIENNIS;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "perennis"))
-            {
-                res->durata = PLANTA_MALUS_DURATA_PERENNIS;
-            }
-        }
-    }
-
-    res->folia_permanentia = PLANTA_MALUS_FOLIA_PERMANENTIA_DECIDUA;
-    {
-        chorda* v;
-
-        v = stml_attributum_capere(nodus, "folia-permanentia");
-        si (v)
-        {
-            si (chorda_aequalis_literis(*v, "decidua"))
-            {
-                res->folia_permanentia = PLANTA_MALUS_FOLIA_PERMANENTIA_DECIDUA;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "sempervirens"))
-            {
-                res->folia_permanentia = PLANTA_MALUS_FOLIA_PERMANENTIA_SEMPERVIRENS;
-            }
-        }
-    }
-
-    res->altitudo_matura = ZEPHYRUM;
-    res->altitudo_matura_praesens = FALSUM;
-    {
-        chorda* v;
-        s32 tv;
-
-        v = stml_attributum_capere(nodus, "altitudo-matura");
-        si (v && chorda_ut_s32(*v, &tv))
-        {
-            res->altitudo_matura = (s64)tv;
-            res->altitudo_matura_praesens = VERUM;
-        }
-    }
-
-    res->status_vita = PLANTA_MALUS_STATUS_VITA_ABSENS;
-    {
-        chorda* v;
-
-        v = stml_attributum_capere(nodus, "status-vita");
-        si (v)
-        {
-            si (chorda_aequalis_literis(*v, "semen"))
-            {
-                res->status_vita = PLANTA_MALUS_STATUS_VITA_SEMEN;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "germinans"))
-            {
-                res->status_vita = PLANTA_MALUS_STATUS_VITA_GERMINANS;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "iuvenis"))
-            {
-                res->status_vita = PLANTA_MALUS_STATUS_VITA_IUVENIS;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "florens"))
-            {
-                res->status_vita = PLANTA_MALUS_STATUS_VITA_FLORENS;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "fructifera"))
-            {
-                res->status_vita = PLANTA_MALUS_STATUS_VITA_FRUCTIFERA;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "quiescens"))
-            {
-                res->status_vita = PLANTA_MALUS_STATUS_VITA_QUIESCENS;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "mortua"))
-            {
-                res->status_vita = PLANTA_MALUS_STATUS_VITA_MORTUA;
-            }
-        }
-    }
-
-    res->auctor_nominis = stml_attributum_capere(nodus, "auctor-nominis");
-
-    res->nomen_publicatum_in = stml_attributum_capere(nodus, "nomen-publicatum-in");
-
-    res->pollinatur_a = stml_attributum_capere(nodus, "pollinatur-a");
-
-    res->anima = PLANTA_MALUS_ANIMA_ABSENS;
-    {
-        chorda* v;
-
-        v = stml_attributum_capere(nodus, "anima");
-        si (v)
-        {
-            si (chorda_aequalis_literis(*v, "vegetativa"))
-            {
-                res->anima = PLANTA_MALUS_ANIMA_VEGETATIVA;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "sensitiva"))
-            {
-                res->anima = PLANTA_MALUS_ANIMA_SENSITIVA;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "rationalis"))
-            {
-                res->anima = PLANTA_MALUS_ANIMA_RATIONALIS;
-            }
-        }
-    }
-
-    res->massa = stml_attributum_capere(nodus, "massa");
-
-    res->perituram = FALSUM;
-    res->perituram_praesens = FALSUM;
-    {
-        chorda* v;
-
-        v = stml_attributum_capere(nodus, "perituram");
-        si (v)
-        {
-            res->perituram = (b32)chorda_aequalis_literis(*v, "verum");
-            res->perituram_praesens = VERUM;
-        }
-    }
-
-    res->status_conditio = PLANTA_MALUS_STATUS_CONDITIO_ABSENS;
-    {
-        chorda* v;
-
-        v = stml_attributum_capere(nodus, "status-conditio");
-        si (v)
-        {
-            si (chorda_aequalis_literis(*v, "recens"))
-            {
-                res->status_conditio = PLANTA_MALUS_STATUS_CONDITIO_RECENS;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "vetus"))
-            {
-                res->status_conditio = PLANTA_MALUS_STATUS_CONDITIO_VETUS;
-            }
-            alioquin si (chorda_aequalis_literis(*v, "corrupta"))
-            {
-                res->status_conditio = PLANTA_MALUS_STATUS_CONDITIO_CORRUPTA;
-            }
-        }
-    }
-
-    res->sita_in = stml_attributum_capere(nodus, "sita-in");
-    res->radix = NIHIL;
-    res->caulis = NIHIL;
-    res->folium = NIHIL;
-    res->flos = NIHIL;
-    res->fructus = NIHIL;
-    res->semen = NIHIL;
-    res->generat = xar_creare(piscina, (i32)magnitudo(PlantaMalusGenerat*));
-    res->laborat = xar_creare(piscina, (i32)magnitudo(PlantaMalusLaborat*));
-    res->historia = NIHIL;
-    res->nota = xar_creare(piscina, (i32)magnitudo(PlantaNota*));
-    {
-        i32 n;
-        i32 i;
-
-        n = stml_numerus_liberorum(nodus);
-        per (i = ZEPHYRUM; i < n; i++)
-        {
-            StmlNodus* l;
-
-            l = stml_liberum_ad_indicem(nodus, i);
-            si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-                !l->titulus)
-            {
-                perge;
-            }
-            si (chorda_aequalis_literis(*l->titulus,
-                    "radix"))
-            {
-                si (!res->radix)
-                {
-                    res->radix =
-                        planta_malus_radix_legere_nodum(
-                            l, piscina, intern);
-                }
-            }
-            alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "caulis"))
-            {
-                si (!res->caulis)
-                {
-                    res->caulis =
-                        planta_malus_caulis_legere_nodum(
-                            l, piscina, intern);
-                }
-            }
-            alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "folium"))
-            {
-                si (!res->folium)
-                {
-                    res->folium =
-                        planta_malus_folium_legere_nodum(
-                            l, piscina, intern);
-                }
-            }
-            alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "flos"))
-            {
-                si (!res->flos)
-                {
-                    res->flos =
-                        planta_malus_flos_legere_nodum(
-                            l, piscina, intern);
-                }
-            }
-            alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "fructus"))
-            {
-                si (!res->fructus)
-                {
-                    res->fructus =
-                        planta_malus_fructus_legere_nodum(
-                            l, piscina, intern);
-                }
-            }
-            alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "semen"))
-            {
-                si (!res->semen)
-                {
-                    res->semen =
-                        planta_malus_semen_legere_nodum(
-                            l, piscina, intern);
-                }
-            }
-            alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "generat"))
-            {
-                PlantaMalusGenerat* filius;
-                PlantaMalusGenerat** locus;
-
-                filius = planta_malus_generat_legere_nodum(l, piscina, intern);
-                si (filius)
-                {
-                    locus = (PlantaMalusGenerat**)xar_addere(res->generat);
-                    *locus = filius;
-                }
-            }
-            alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "laborat"))
-            {
-                PlantaMalusLaborat* filius;
-                PlantaMalusLaborat** locus;
-
-                filius = planta_malus_laborat_legere_nodum(l, piscina, intern);
-                si (filius)
-                {
-                    locus = (PlantaMalusLaborat**)xar_addere(res->laborat);
-                    *locus = filius;
-                }
-            }
-            alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "historia"))
-            {
-                si (!res->historia)
-                {
-                    res->historia =
-                        planta_malus_historia_legere_nodum(
-                            l, piscina, intern);
-                }
-            }
-            alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "nota"))
-            {
-                PlantaNota* filius;
-                PlantaNota** locus;
-
-                filius = planta_nota_legere_nodum(l, piscina, intern);
-                si (filius)
-                {
-                    locus = (PlantaNota**)xar_addere(res->nota);
-                    *locus = filius;
-                }
-            }
-        }
-    }
-
-    redde res;
-}
-
-PlantaMalusRadix*
-planta_malus_radix_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
-    InternamentumChorda* intern)
-{
-    PlantaMalusRadix* res;
-
-    (vacuum)intern;
-    res = (PlantaMalusRadix*)piscina_allocare(piscina,
-        magnitudo(PlantaMalusRadix));
-    si (!res)
-    {
-        redde NIHIL;
-    }
-    res->nodus = nodus;
-
-    res->nota = stml_attributum_capere(nodus, "nota");
-
-    redde res;
-}
-
-PlantaMalusCaulis*
-planta_malus_caulis_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
-    InternamentumChorda* intern)
-{
-    PlantaMalusCaulis* res;
-
-    (vacuum)intern;
-    res = (PlantaMalusCaulis*)piscina_allocare(piscina,
-        magnitudo(PlantaMalusCaulis));
-    si (!res)
-    {
-        redde NIHIL;
-    }
-    res->nodus = nodus;
-
-    res->nota = stml_attributum_capere(nodus, "nota");
-
-    redde res;
-}
-
-PlantaMalusFolium*
-planta_malus_folium_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
-    InternamentumChorda* intern)
-{
-    PlantaMalusFolium* res;
-
-    (vacuum)intern;
-    res = (PlantaMalusFolium*)piscina_allocare(piscina,
-        magnitudo(PlantaMalusFolium));
-    si (!res)
-    {
-        redde NIHIL;
-    }
-    res->nodus = nodus;
-
-    res->nota = stml_attributum_capere(nodus, "nota");
-
-    redde res;
-}
-
-PlantaMalusFlos*
-planta_malus_flos_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
-    InternamentumChorda* intern)
-{
-    PlantaMalusFlos* res;
-
-    (vacuum)intern;
-    res = (PlantaMalusFlos*)piscina_allocare(piscina,
-        magnitudo(PlantaMalusFlos));
-    si (!res)
-    {
-        redde NIHIL;
-    }
-    res->nodus = nodus;
-
-    res->nota = stml_attributum_capere(nodus, "nota");
-
-    redde res;
-}
-
-PlantaMalusFructus*
-planta_malus_fructus_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
-    InternamentumChorda* intern)
-{
-    PlantaMalusFructus* res;
-
-    (vacuum)intern;
-    res = (PlantaMalusFructus*)piscina_allocare(piscina,
-        magnitudo(PlantaMalusFructus));
-    si (!res)
-    {
-        redde NIHIL;
-    }
-    res->nodus = nodus;
-
-    res->nota = stml_attributum_capere(nodus, "nota");
-
-    redde res;
-}
-
-PlantaMalusSemen*
-planta_malus_semen_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
-    InternamentumChorda* intern)
-{
-    PlantaMalusSemen* res;
-
-    (vacuum)intern;
-    res = (PlantaMalusSemen*)piscina_allocare(piscina,
-        magnitudo(PlantaMalusSemen));
-    si (!res)
-    {
-        redde NIHIL;
-    }
-    res->nodus = nodus;
-
-    res->nota = stml_attributum_capere(nodus, "nota");
-
-    redde res;
-}
-
-PlantaMalusGenerat*
-planta_malus_generat_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
-    InternamentumChorda* intern)
-{
-    PlantaMalusGenerat* res;
-
-    (vacuum)intern;
-    res = (PlantaMalusGenerat*)piscina_allocare(piscina,
-        magnitudo(PlantaMalusGenerat));
-    si (!res)
-    {
-        redde NIHIL;
-    }
-    res->nodus = nodus;
-
-    res->ad = stml_attributum_capere(nodus, "ad");
-
-    redde res;
-}
-
-PlantaMalusLaborat*
-planta_malus_laborat_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
-    InternamentumChorda* intern)
-{
-    PlantaMalusLaborat* res;
-
-    (vacuum)intern;
-    res = (PlantaMalusLaborat*)piscina_allocare(piscina,
-        magnitudo(PlantaMalusLaborat));
-    si (!res)
-    {
-        redde NIHIL;
-    }
-    res->nodus = nodus;
-
-    res->ad = stml_attributum_capere(nodus, "ad");
-
-    redde res;
-}
-
-PlantaMalusHistoria*
-planta_malus_historia_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
-    InternamentumChorda* intern)
-{
-    PlantaMalusHistoria* res;
-
-    (vacuum)intern;
-    res = (PlantaMalusHistoria*)piscina_allocare(piscina,
-        magnitudo(PlantaMalusHistoria));
-    si (!res)
-    {
-        redde NIHIL;
-    }
-    res->nodus = nodus;
-    res->eventum = xar_creare(piscina, (i32)magnitudo(PlantaHistoriaEventum*));
-    {
-        i32 n;
-        i32 i;
-
-        n = stml_numerus_liberorum(nodus);
-        per (i = ZEPHYRUM; i < n; i++)
-        {
-            StmlNodus* l;
-
-            l = stml_liberum_ad_indicem(nodus, i);
-            si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-                !l->titulus)
-            {
-                perge;
-            }
-            si (chorda_aequalis_literis(*l->titulus,
-                    "eventum"))
-            {
-                PlantaHistoriaEventum* filius;
-                PlantaHistoriaEventum** locus;
-
-                filius = planta_historia_eventum_legere_nodum(l, piscina, intern);
-                si (filius)
-                {
-                    locus = (PlantaHistoriaEventum**)xar_addere(res->eventum);
-                    *locus = filius;
-                }
-            }
-        }
-    }
-
-    redde res;
-}
-
 PlantaRosaCanina*
 planta_rosa_canina_legere_nodum(
     StmlNodus*           nodus,
@@ -2988,6 +2418,576 @@ planta_rosa_canina_historia_legere_nodum(
     (vacuum)intern;
     res = (PlantaRosaCaninaHistoria*)piscina_allocare(piscina,
         magnitudo(PlantaRosaCaninaHistoria));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+    res->eventum = xar_creare(piscina, (i32)magnitudo(PlantaHistoriaEventum*));
+    {
+        i32 n;
+        i32 i;
+
+        n = stml_numerus_liberorum(nodus);
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            StmlNodus* l;
+
+            l = stml_liberum_ad_indicem(nodus, i);
+            si (!l || l->genus != STML_NODUS_ELEMENTUM ||
+                !l->titulus)
+            {
+                perge;
+            }
+            si (chorda_aequalis_literis(*l->titulus,
+                    "eventum"))
+            {
+                PlantaHistoriaEventum* filius;
+                PlantaHistoriaEventum** locus;
+
+                filius = planta_historia_eventum_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaHistoriaEventum**)xar_addere(res->eventum);
+                    *locus = filius;
+                }
+            }
+        }
+    }
+
+    redde res;
+}
+
+PlantaMalus*
+planta_malus_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaMalus* res;
+
+    (vacuum)intern;
+    res = (PlantaMalus*)piscina_allocare(piscina,
+        magnitudo(PlantaMalus));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+
+    res->nomen_v = stml_attributum_capere(nodus, "nomen");
+
+    res->habitus = PLANTA_MALUS_HABITUS_ARBOR;
+    {
+        chorda* v;
+
+        v = stml_attributum_capere(nodus, "habitus");
+        si (v)
+        {
+            si (chorda_aequalis_literis(*v, "herba"))
+            {
+                res->habitus = PLANTA_MALUS_HABITUS_HERBA;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "frutex"))
+            {
+                res->habitus = PLANTA_MALUS_HABITUS_FRUTEX;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "arbor"))
+            {
+                res->habitus = PLANTA_MALUS_HABITUS_ARBOR;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "scandens"))
+            {
+                res->habitus = PLANTA_MALUS_HABITUS_SCANDENS;
+            }
+        }
+    }
+
+    res->durata = PLANTA_MALUS_DURATA_PERENNIS;
+    {
+        chorda* v;
+
+        v = stml_attributum_capere(nodus, "durata");
+        si (v)
+        {
+            si (chorda_aequalis_literis(*v, "annua"))
+            {
+                res->durata = PLANTA_MALUS_DURATA_ANNUA;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "biennis"))
+            {
+                res->durata = PLANTA_MALUS_DURATA_BIENNIS;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "perennis"))
+            {
+                res->durata = PLANTA_MALUS_DURATA_PERENNIS;
+            }
+        }
+    }
+
+    res->folia_permanentia = PLANTA_MALUS_FOLIA_PERMANENTIA_DECIDUA;
+    {
+        chorda* v;
+
+        v = stml_attributum_capere(nodus, "folia-permanentia");
+        si (v)
+        {
+            si (chorda_aequalis_literis(*v, "decidua"))
+            {
+                res->folia_permanentia = PLANTA_MALUS_FOLIA_PERMANENTIA_DECIDUA;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "sempervirens"))
+            {
+                res->folia_permanentia = PLANTA_MALUS_FOLIA_PERMANENTIA_SEMPERVIRENS;
+            }
+        }
+    }
+
+    res->altitudo_matura = ZEPHYRUM;
+    res->altitudo_matura_praesens = FALSUM;
+    {
+        chorda* v;
+        s32 tv;
+
+        v = stml_attributum_capere(nodus, "altitudo-matura");
+        si (v && chorda_ut_s32(*v, &tv))
+        {
+            res->altitudo_matura = (s64)tv;
+            res->altitudo_matura_praesens = VERUM;
+        }
+    }
+
+    res->status_vita = PLANTA_MALUS_STATUS_VITA_ABSENS;
+    {
+        chorda* v;
+
+        v = stml_attributum_capere(nodus, "status-vita");
+        si (v)
+        {
+            si (chorda_aequalis_literis(*v, "semen"))
+            {
+                res->status_vita = PLANTA_MALUS_STATUS_VITA_SEMEN;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "germinans"))
+            {
+                res->status_vita = PLANTA_MALUS_STATUS_VITA_GERMINANS;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "iuvenis"))
+            {
+                res->status_vita = PLANTA_MALUS_STATUS_VITA_IUVENIS;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "florens"))
+            {
+                res->status_vita = PLANTA_MALUS_STATUS_VITA_FLORENS;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "fructifera"))
+            {
+                res->status_vita = PLANTA_MALUS_STATUS_VITA_FRUCTIFERA;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "quiescens"))
+            {
+                res->status_vita = PLANTA_MALUS_STATUS_VITA_QUIESCENS;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "mortua"))
+            {
+                res->status_vita = PLANTA_MALUS_STATUS_VITA_MORTUA;
+            }
+        }
+    }
+
+    res->auctor_nominis = stml_attributum_capere(nodus, "auctor-nominis");
+
+    res->nomen_publicatum_in = stml_attributum_capere(nodus, "nomen-publicatum-in");
+
+    res->pollinatur_a = stml_attributum_capere(nodus, "pollinatur-a");
+
+    res->anima = PLANTA_MALUS_ANIMA_ABSENS;
+    {
+        chorda* v;
+
+        v = stml_attributum_capere(nodus, "anima");
+        si (v)
+        {
+            si (chorda_aequalis_literis(*v, "vegetativa"))
+            {
+                res->anima = PLANTA_MALUS_ANIMA_VEGETATIVA;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "sensitiva"))
+            {
+                res->anima = PLANTA_MALUS_ANIMA_SENSITIVA;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "rationalis"))
+            {
+                res->anima = PLANTA_MALUS_ANIMA_RATIONALIS;
+            }
+        }
+    }
+
+    res->massa = stml_attributum_capere(nodus, "massa");
+
+    res->perituram = FALSUM;
+    res->perituram_praesens = FALSUM;
+    {
+        chorda* v;
+
+        v = stml_attributum_capere(nodus, "perituram");
+        si (v)
+        {
+            res->perituram = (b32)chorda_aequalis_literis(*v, "verum");
+            res->perituram_praesens = VERUM;
+        }
+    }
+
+    res->status_conditio = PLANTA_MALUS_STATUS_CONDITIO_ABSENS;
+    {
+        chorda* v;
+
+        v = stml_attributum_capere(nodus, "status-conditio");
+        si (v)
+        {
+            si (chorda_aequalis_literis(*v, "recens"))
+            {
+                res->status_conditio = PLANTA_MALUS_STATUS_CONDITIO_RECENS;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "vetus"))
+            {
+                res->status_conditio = PLANTA_MALUS_STATUS_CONDITIO_VETUS;
+            }
+            alioquin si (chorda_aequalis_literis(*v, "corrupta"))
+            {
+                res->status_conditio = PLANTA_MALUS_STATUS_CONDITIO_CORRUPTA;
+            }
+        }
+    }
+
+    res->sita_in = stml_attributum_capere(nodus, "sita-in");
+    res->radix = NIHIL;
+    res->caulis = NIHIL;
+    res->folium = NIHIL;
+    res->flos = NIHIL;
+    res->fructus = NIHIL;
+    res->semen = NIHIL;
+    res->generat = xar_creare(piscina, (i32)magnitudo(PlantaMalusGenerat*));
+    res->laborat = xar_creare(piscina, (i32)magnitudo(PlantaMalusLaborat*));
+    res->historia = NIHIL;
+    res->nota = xar_creare(piscina, (i32)magnitudo(PlantaNota*));
+    {
+        i32 n;
+        i32 i;
+
+        n = stml_numerus_liberorum(nodus);
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            StmlNodus* l;
+
+            l = stml_liberum_ad_indicem(nodus, i);
+            si (!l || l->genus != STML_NODUS_ELEMENTUM ||
+                !l->titulus)
+            {
+                perge;
+            }
+            si (chorda_aequalis_literis(*l->titulus,
+                    "radix"))
+            {
+                si (!res->radix)
+                {
+                    res->radix =
+                        planta_malus_radix_legere_nodum(
+                            l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "caulis"))
+            {
+                si (!res->caulis)
+                {
+                    res->caulis =
+                        planta_malus_caulis_legere_nodum(
+                            l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "folium"))
+            {
+                si (!res->folium)
+                {
+                    res->folium =
+                        planta_malus_folium_legere_nodum(
+                            l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "flos"))
+            {
+                si (!res->flos)
+                {
+                    res->flos =
+                        planta_malus_flos_legere_nodum(
+                            l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "fructus"))
+            {
+                si (!res->fructus)
+                {
+                    res->fructus =
+                        planta_malus_fructus_legere_nodum(
+                            l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "semen"))
+            {
+                si (!res->semen)
+                {
+                    res->semen =
+                        planta_malus_semen_legere_nodum(
+                            l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "generat"))
+            {
+                PlantaMalusGenerat* filius;
+                PlantaMalusGenerat** locus;
+
+                filius = planta_malus_generat_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaMalusGenerat**)xar_addere(res->generat);
+                    *locus = filius;
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "laborat"))
+            {
+                PlantaMalusLaborat* filius;
+                PlantaMalusLaborat** locus;
+
+                filius = planta_malus_laborat_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaMalusLaborat**)xar_addere(res->laborat);
+                    *locus = filius;
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "historia"))
+            {
+                si (!res->historia)
+                {
+                    res->historia =
+                        planta_malus_historia_legere_nodum(
+                            l, piscina, intern);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(*l->titulus,
+                    "nota"))
+            {
+                PlantaNota* filius;
+                PlantaNota** locus;
+
+                filius = planta_nota_legere_nodum(l, piscina, intern);
+                si (filius)
+                {
+                    locus = (PlantaNota**)xar_addere(res->nota);
+                    *locus = filius;
+                }
+            }
+        }
+    }
+
+    redde res;
+}
+
+PlantaMalusRadix*
+planta_malus_radix_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaMalusRadix* res;
+
+    (vacuum)intern;
+    res = (PlantaMalusRadix*)piscina_allocare(piscina,
+        magnitudo(PlantaMalusRadix));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+
+    res->nota = stml_attributum_capere(nodus, "nota");
+
+    redde res;
+}
+
+PlantaMalusCaulis*
+planta_malus_caulis_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaMalusCaulis* res;
+
+    (vacuum)intern;
+    res = (PlantaMalusCaulis*)piscina_allocare(piscina,
+        magnitudo(PlantaMalusCaulis));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+
+    res->nota = stml_attributum_capere(nodus, "nota");
+
+    redde res;
+}
+
+PlantaMalusFolium*
+planta_malus_folium_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaMalusFolium* res;
+
+    (vacuum)intern;
+    res = (PlantaMalusFolium*)piscina_allocare(piscina,
+        magnitudo(PlantaMalusFolium));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+
+    res->nota = stml_attributum_capere(nodus, "nota");
+
+    redde res;
+}
+
+PlantaMalusFlos*
+planta_malus_flos_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaMalusFlos* res;
+
+    (vacuum)intern;
+    res = (PlantaMalusFlos*)piscina_allocare(piscina,
+        magnitudo(PlantaMalusFlos));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+
+    res->nota = stml_attributum_capere(nodus, "nota");
+
+    redde res;
+}
+
+PlantaMalusFructus*
+planta_malus_fructus_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaMalusFructus* res;
+
+    (vacuum)intern;
+    res = (PlantaMalusFructus*)piscina_allocare(piscina,
+        magnitudo(PlantaMalusFructus));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+
+    res->nota = stml_attributum_capere(nodus, "nota");
+
+    redde res;
+}
+
+PlantaMalusSemen*
+planta_malus_semen_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaMalusSemen* res;
+
+    (vacuum)intern;
+    res = (PlantaMalusSemen*)piscina_allocare(piscina,
+        magnitudo(PlantaMalusSemen));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+
+    res->nota = stml_attributum_capere(nodus, "nota");
+
+    redde res;
+}
+
+PlantaMalusGenerat*
+planta_malus_generat_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaMalusGenerat* res;
+
+    (vacuum)intern;
+    res = (PlantaMalusGenerat*)piscina_allocare(piscina,
+        magnitudo(PlantaMalusGenerat));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+
+    res->ad = stml_attributum_capere(nodus, "ad");
+
+    redde res;
+}
+
+PlantaMalusLaborat*
+planta_malus_laborat_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaMalusLaborat* res;
+
+    (vacuum)intern;
+    res = (PlantaMalusLaborat*)piscina_allocare(piscina,
+        magnitudo(PlantaMalusLaborat));
+    si (!res)
+    {
+        redde NIHIL;
+    }
+    res->nodus = nodus;
+
+    res->ad = stml_attributum_capere(nodus, "ad");
+
+    redde res;
+}
+
+PlantaMalusHistoria*
+planta_malus_historia_legere_nodum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    PlantaMalusHistoria* res;
+
+    (vacuum)intern;
+    res = (PlantaMalusHistoria*)piscina_allocare(piscina,
+        magnitudo(PlantaMalusHistoria));
     si (!res)
     {
         redde NIHIL;

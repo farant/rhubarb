@@ -56,9 +56,16 @@ structura NaturaGenus {
          chorda*  titulus;    /* attributum nomen= (internatum) */
          chorda*  modulus;    /* exemplar domesticum */
     NaturaGenus*  parens;     /* sub= resolutum (trans-exemplar),
-                               * vel genus ambiens si nidificatum */
+                               * vel genus ambiens si nidificatum
+                               * (.species/.cultivar semper hoc) */
+    NaturaGenus*  parens_etiam; /* etiam= resolutum: membrum
+                               * essentiale duplex GENERUM (arbor
+                               * porphyriana 2026-08-10 - doctrina
+                               * a rebus portata; apparatus ambas
+                               * catenas debet) */
             Xar*  liberi;     /* index reversus: Xar de NaturaGenus* */
-            Xar*  res_suae;   /* Xar de NaturaRes* (species/individua) */
+            Xar*  res_suae;   /* Xar de NaturaRes* (individua sola
+                               * post arborem porphyrianam) */
       StmlNodus*  nodus;      /* subtree - cetera hinc leguntur */
 };
 

@@ -274,7 +274,14 @@ arborem_legere(
 
         titulus_n = stml_attributum_capere(liberum, "nomen");
 
-        si (chorda_aequalis_literis(*titulus_e, ".genus"))
+        /* arbor porphyriana (2026-08-10): .genus/.species/.cultivar
+         * UNUM genus registrant - nomen elementi munus solum fert
+         * (species = subdivisio inscripta, parens e nidificatione;
+         * genus = forma libera, sub= licitum). individuum solum res
+         * manet - linea absoluta universale/particulare. */
+        si (chorda_aequalis_literis(*titulus_e, ".genus") ||
+            chorda_aequalis_literis(*titulus_e, ".species") ||
+            chorda_aequalis_literis(*titulus_e, ".cultivar"))
         {
             NaturaGenus*  novum;
             NaturaGenus** locus;
@@ -290,14 +297,16 @@ arborem_legere(
 
             novum = (NaturaGenus*)piscina_allocare(
                 bib->piscina, magnitudo(NaturaGenus));
-            novum->titulus  = titulus_n;
-            novum->modulus  = ex->stirps;
-            novum->parens   = ambiens;  /* nidificatio; sub= in nectere */
-            novum->liberi   = xar_creare(bib->piscina,
-                                 (i32)magnitudo(NaturaGenus*));
-            novum->res_suae = xar_creare(bib->piscina,
-                                 (i32)magnitudo(NaturaRes*));
-            novum->nodus    = liberum;
+            novum->titulus      = titulus_n;
+            novum->modulus      = ex->stirps;
+            novum->parens       = ambiens;  /* nidificatio; sub= in
+                                             * nectere (generi soli) */
+            novum->parens_etiam = NIHIL;    /* etiam= in nectere */
+            novum->liberi       = xar_creare(bib->piscina,
+                                     (i32)magnitudo(NaturaGenus*));
+            novum->res_suae     = xar_creare(bib->piscina,
+                                     (i32)magnitudo(NaturaRes*));
+            novum->nodus        = liberum;
 
             locus = (NaturaGenus**)xar_addere(bib->genera_omnia);
             *locus = novum;
@@ -306,9 +315,7 @@ arborem_legere(
                            titulus_n);
             arborem_legere(bib, ex, liberum, novum, NIHIL);
         }
-        alioquin si (chorda_aequalis_literis(*titulus_e, ".species") ||
-                     chorda_aequalis_literis(*titulus_e, "individuum") ||
-                     chorda_aequalis_literis(*titulus_e, ".cultivar"))
+        alioquin si (chorda_aequalis_literis(*titulus_e, "individuum"))
         {
             NaturaRes*  nova;
             NaturaRes** locus;
@@ -1054,9 +1061,12 @@ arborem_nectere(
         titulus_e = liberum->titulus;
         titulus_n = stml_attributum_capere(liberum, "nomen");
         pertinens = res_c ? res_c->genus_suum : genus_c;
-        pertinens_etiam = res_c ? res_c->genus_etiam : NIHIL;
+        pertinens_etiam = res_c ? res_c->genus_etiam :
+            (genus_c ? genus_c->parens_etiam : NIHIL);
 
-        si (chorda_aequalis_literis(*titulus_e, ".genus"))
+        si (chorda_aequalis_literis(*titulus_e, ".genus") ||
+            chorda_aequalis_literis(*titulus_e, ".species") ||
+            chorda_aequalis_literis(*titulus_e, ".cultivar"))
         {
             NaturaEns* ens;
 
@@ -1074,10 +1084,8 @@ arborem_nectere(
                                 genus_c, res_c, insoluta);
             }
         }
-        alioquin si (chorda_aequalis_literis(*titulus_e, ".species") ||
-                     chorda_aequalis_literis(*titulus_e,
-                                             "individuum") ||
-                     chorda_aequalis_literis(*titulus_e, ".cultivar"))
+        alioquin si (chorda_aequalis_literis(*titulus_e,
+                                             "individuum"))
         {
             NaturaEns* ens;
 
@@ -1482,7 +1490,39 @@ natura_nectere(
             }
         }
 
-        /* etiam=: membrum essentiale duplex (species solae) */
+        /* etiam= GENERUM: membrum essentiale duplex portatum a
+         * rebus (arbor porphyriana - casus scriptum_conchae) */
+        per (i = ZEPHYRUM; i < xar_numerus(bib->genera_omnia); i++)
+        {
+            NaturaGenus* g;
+            chorda*      etiam_attr;
+
+            g = *(NaturaGenus**)xar_obtinere(bib->genera_omnia, i);
+            etiam_attr = stml_attributum_capere(g->nodus, "etiam");
+            si (etiam_attr)
+            {
+                chorda*    modulus_attr;
+                NaturaEns* ens;
+
+                modulus_attr = stml_attributum_capere(g->nodus,
+                                                      "modulus");
+                ens = ens_quaerere(bib,
+                    modulus_attr ? modulus_attr : g->modulus,
+                    etiam_attr);
+                si (ens && ens->discrimen == NATURA_ENS_GENUS)
+                {
+                    g->parens_etiam = (NaturaGenus*)ens->corpus;
+                }
+                alioquin
+                {
+                    diagnosticum_addere(bib, NATURA_GRADUS_VULNUS,
+                        IV, g->modulus, g->titulus,
+                        "etiam genus non invenit (regula IV)");
+                }
+            }
+        }
+
+        /* etiam= individuorum */
         per (i = ZEPHYRUM; i < xar_numerus(bib->res_omnes); i++)
         {
             NaturaRes* r;
@@ -1678,7 +1718,9 @@ natura_nectere(
             }
         }
 
-        /* species gradus_assensus pro regula VI */
+        /* vocabularium gradus_assensus pro regula VI: membra post
+         * arborem porphyrianam GENERA sunt (liberi), individua
+         * residua quoque admissa (unio) */
         gradus_noti = NIHIL;
         {
             chorda*    modulus_i;
@@ -1698,6 +1740,15 @@ natura_nectere(
                 g = (NaturaGenus*)ens->corpus;
                 gradus_noti = xar_creare(bib->piscina,
                                          (i32)magnitudo(chorda*));
+                per (j = ZEPHYRUM; j < xar_numerus(g->liberi); j++)
+                {
+                    NaturaGenus* l;
+                    chorda**     locus;
+
+                    l = *(NaturaGenus**)xar_obtinere(g->liberi, j);
+                    locus = (chorda**)xar_addere(gradus_noti);
+                    *locus = l->titulus;
+                }
                 per (j = ZEPHYRUM; j < xar_numerus(g->res_suae); j++)
                 {
                     NaturaRes* r;
@@ -2008,6 +2059,20 @@ natura_apparatus(
     {
         apparatui_contribuere(apparatus, g);
         gradus_catenae++;
+    }
+
+    /* catena altera: etiam= (membrum essentiale duplex - apparatus
+     * AMBARUM catenarum generi debetur, ut rebus antea) */
+    si (genus->parens_etiam)
+    {
+        gradus_catenae = ZEPHYRUM;
+        per (g = genus->parens_etiam;
+             g && gradus_catenae < NATURA_CATENA_MAXIMA;
+             g = g->parens)
+        {
+            apparatui_contribuere(apparatus, g);
+            gradus_catenae++;
+        }
     }
 
     redde apparatus;

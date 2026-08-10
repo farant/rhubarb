@@ -5,20 +5,20 @@
 
   <elementum nomen="individua" radix="verum">
     <liberum nomen="acta"/>
-    <liberum nomen="punctum-actorum"/>
-    <liberum nomen="attestatio"/>
-    <liberum nomen="radix-fiduciae"/>
     <liberum nomen="acta-publica"/>
     <liberum nomen="regesta"/>
     <liberum nomen="acta-transactionum"/>
     <liberum nomen="acta-versionum"/>
     <liberum nomen="acta-auditus"/>
+    <liberum nomen="punctum-actorum"/>
     <liberum nomen="conditio"/>
     <liberum nomen="clausura-rationis"/>
     <liberum nomen="statio"/>
+    <liberum nomen="attestatio"/>
     <liberum nomen="attestatio-civilis"/>
     <liberum nomen="instrumentum-publicum"/>
     <liberum nomen="apostilla"/>
+    <liberum nomen="radix-fiduciae"/>
     <liberum nomen="radix-systematis"/>
     <liberum nomen="commissio-notarii"/>
     <liberum nomen="origo-dominii"/>
@@ -95,126 +95,6 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="acta">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="punctum-actorum">
-    <glossa lingua="en">A record point: a named, addressable place
-    in a record, so that the question what did things look like
-    HERE has an answer a person would actually want to ask for.
-    Not an event but a POSITION between events - a position in
-    the series, not in time, since clocks disagree, jump
-    backwards, and can read the same for two events.</glossa>
-    <glossa lingua="fr">Un point de registre : un endroit nommé et
-    adressable dans un registre, de sorte que la question de quoi
-    les choses avaient-elles l'air ICI reçoive une réponse qu'une
-    personne voudrait vraiment demander. Non pas un événement
-    mais une POSITION entre les événements - une position dans la
-    série, non dans le temps, car les horloges divergent,
-    reculent, et peuvent donner la même valeur à deux
-    événements.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="positio" genus="numerus"/>
-    <attributum nomen="titulus" genus="textus"/>
-    <attributum nomen="momentum-positionis" genus="textus"/>
-    <attributum nomen="automaticum" genus="veritas"/>
-    <attributum nomen="in" genus="referentia"/>
-    <attributum nomen="praecedens" genus="referentia"/>
-    <attributum nomen="positum-a" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="punctum-actorum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="attestatio">
-    <glossa lingua="en">An attestation: an authentic copy drawn
-    from authoritative records, testifying to what stood in those
-    records AT THE MOMENT OF ISSUE, and which once handed over is
-    SEPARATED from the records it came from - the truth goes on
-    changing, the paper does not. It is a projection that has
-    been given away, so the question proper to it is not whether
-    it is true but WHEN it was true.</glossa>
-    <glossa lingua="fr">Une attestation : une copie authentique
-    tirée de registres faisant autorité, qui témoigne de ce qui
-    figurait dans ces registres AU MOMENT DE SA DÉLIVRANCE et
-    qui, une fois remise, est SÉPARÉE des registres dont elle
-    provient - la vérité continue de changer, le papier non.
-    C'est une projection que l'on a livrée ; la question qui lui
-    est propre n'est donc pas si elle est vraie, mais QUAND elle
-    l'a été.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="emissa" genus="dies"/>
-    <attributum nomen="aetas-accepta" genus="textus"/>
-    <attributum nomen="expirat" genus="dies"/>
-    <attributum nomen="fundamentum" genus="textus"/>
-    <attributum nomen="signum-authenticitatis" genus="electio">
-      <optio>sigillum</optio>
-      <optio>subscriptio</optio>
-      <optio>charta_secura</optio>
-      <optio>subscriptio_digitalis</optio>
-    </attributum>
-    <attributum nomen="integra" genus="veritas"/>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>emissa</optio>
-      <optio>superata</optio>
-      <optio>revocata</optio>
-      <optio>expirata</optio>
-    </attributum>
-    <attributum nomen="ex-actis" genus="referentia"/>
-    <attributum nomen="ad-punctum" genus="referentia"/>
-    <attributum nomen="emissa-a" genus="referentia"/>
-    <attributum nomen="de" genus="referentia"/>
-    <attributum nomen="testatur" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="attestatio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="radix-fiduciae">
-    <glossa lingua="en">A root of trust: the end of a chain of
-    attestations, whose credit comes not from another attestation
-    but from a DECISION of the one who uses the chain - what is
-    believed not because it was proven but because it was
-    accepted. It is the only thing in the chain that attests
-    itself (or nothing), and that is no defect but a necessity,
-    since an infinite regress would destroy all trust.</glossa>
-    <glossa lingua="fr">Une racine de confiance : le terme d'une
-    chaîne d'attestations, dont le crédit ne vient pas d'une
-    autre attestation mais d'une DÉCISION de celui qui emploie la
-    chaîne - ce que l'on croit non parce que cela a été prouvé,
-    mais parce que cela a été accepté. C'est la seule chose de la
-    chaîne qui s'atteste elle-même (ou rien), et ce n'est pas un
-    défaut mais une nécessité, car une régression à l'infini
-    ruinerait toute confiance.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="modus-susceptionis" genus="electio">
-      <optio>cum_systemate_missa</optio>
-      <optio>ab_utente_addita</optio>
-      <optio>lege_statuta</optio>
-      <optio>consuetudine_recepta</optio>
-    </attributum>
-    <attributum nomen="tollibilis-a" genus="textus"/>
-    <attributum nomen="ambitus-fidei" genus="textus"/>
-    <attributum nomen="status-susceptio" genus="electio">
-      <optio>suscepta</optio>
-      <optio>limitata</optio>
-      <optio>reiecta</optio>
-      <optio>refundata</optio>
-    </attributum>
-    <attributum nomen="suscepta-per" genus="referentia"/>
-    <attributum nomen="tenetur-a" genus="referentia"/>
-    <liberum nomen="fundat"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="fundat" intra="radix-fiduciae">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="radix-fiduciae">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -518,6 +398,36 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="punctum-actorum">
+    <glossa lingua="en">A record point: a named, addressable place
+    in a record, so that the question what did things look like
+    HERE has an answer a person would actually want to ask for.
+    Not an event but a POSITION between events - a position in
+    the series, not in time, since clocks disagree, jump
+    backwards, and can read the same for two events.</glossa>
+    <glossa lingua="fr">Un point de registre : un endroit nommé et
+    adressable dans un registre, de sorte que la question de quoi
+    les choses avaient-elles l'air ICI reçoive une réponse qu'une
+    personne voudrait vraiment demander. Non pas un événement
+    mais une POSITION entre les événements - une position dans la
+    série, non dans le temps, car les horloges divergent,
+    reculent, et peuvent donner la même valeur à deux
+    événements.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="positio" genus="numerus"/>
+    <attributum nomen="titulus" genus="textus"/>
+    <attributum nomen="momentum-positionis" genus="textus"/>
+    <attributum nomen="automaticum" genus="veritas"/>
+    <attributum nomen="in" genus="referentia"/>
+    <attributum nomen="praecedens" genus="referentia"/>
+    <attributum nomen="positum-a" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="punctum-actorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="conditio">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="positio" genus="numerus"/>
@@ -563,6 +473,52 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="statio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="attestatio">
+    <glossa lingua="en">An attestation: an authentic copy drawn
+    from authoritative records, testifying to what stood in those
+    records AT THE MOMENT OF ISSUE, and which once handed over is
+    SEPARATED from the records it came from - the truth goes on
+    changing, the paper does not. It is a projection that has
+    been given away, so the question proper to it is not whether
+    it is true but WHEN it was true.</glossa>
+    <glossa lingua="fr">Une attestation : une copie authentique
+    tirée de registres faisant autorité, qui témoigne de ce qui
+    figurait dans ces registres AU MOMENT DE SA DÉLIVRANCE et
+    qui, une fois remise, est SÉPARÉE des registres dont elle
+    provient - la vérité continue de changer, le papier non.
+    C'est une projection que l'on a livrée ; la question qui lui
+    est propre n'est donc pas si elle est vraie, mais QUAND elle
+    l'a été.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="emissa" genus="dies"/>
+    <attributum nomen="aetas-accepta" genus="textus"/>
+    <attributum nomen="expirat" genus="dies"/>
+    <attributum nomen="fundamentum" genus="textus"/>
+    <attributum nomen="signum-authenticitatis" genus="electio">
+      <optio>sigillum</optio>
+      <optio>subscriptio</optio>
+      <optio>charta_secura</optio>
+      <optio>subscriptio_digitalis</optio>
+    </attributum>
+    <attributum nomen="integra" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>emissa</optio>
+      <optio>superata</optio>
+      <optio>revocata</optio>
+      <optio>expirata</optio>
+    </attributum>
+    <attributum nomen="ex-actis" genus="referentia"/>
+    <attributum nomen="ad-punctum" genus="referentia"/>
+    <attributum nomen="emissa-a" genus="referentia"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="testatur" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="attestatio">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -656,6 +612,50 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="apostilla">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="radix-fiduciae">
+    <glossa lingua="en">A root of trust: the end of a chain of
+    attestations, whose credit comes not from another attestation
+    but from a DECISION of the one who uses the chain - what is
+    believed not because it was proven but because it was
+    accepted. It is the only thing in the chain that attests
+    itself (or nothing), and that is no defect but a necessity,
+    since an infinite regress would destroy all trust.</glossa>
+    <glossa lingua="fr">Une racine de confiance : le terme d'une
+    chaîne d'attestations, dont le crédit ne vient pas d'une
+    autre attestation mais d'une DÉCISION de celui qui emploie la
+    chaîne - ce que l'on croit non parce que cela a été prouvé,
+    mais parce que cela a été accepté. C'est la seule chose de la
+    chaîne qui s'atteste elle-même (ou rien), et ce n'est pas un
+    défaut mais une nécessité, car une régression à l'infini
+    ruinerait toute confiance.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modus-susceptionis" genus="electio">
+      <optio>cum_systemate_missa</optio>
+      <optio>ab_utente_addita</optio>
+      <optio>lege_statuta</optio>
+      <optio>consuetudine_recepta</optio>
+    </attributum>
+    <attributum nomen="tollibilis-a" genus="textus"/>
+    <attributum nomen="ambitus-fidei" genus="textus"/>
+    <attributum nomen="status-susceptio" genus="electio">
+      <optio>suscepta</optio>
+      <optio>limitata</optio>
+      <optio>reiecta</optio>
+      <optio>refundata</optio>
+    </attributum>
+    <attributum nomen="suscepta-per" genus="referentia"/>
+    <attributum nomen="tenetur-a" genus="referentia"/>
+    <liberum nomen="fundat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="fundat" intra="radix-fiduciae">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="radix-fiduciae">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -769,9 +769,9 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="acta punctum-actorum attestatio radix-fiduciae acta-publica regesta
-           acta-transactionum acta-versionum acta-auditus conditio clausura-rationis
-           statio attestatio-civilis instrumentum-publicum apostilla radix-systematis
+    super="acta acta-publica regesta acta-transactionum acta-versionum acta-auditus
+           punctum-actorum conditio clausura-rationis statio attestatio attestatio-civilis
+           instrumentum-publicum apostilla radix-fiduciae radix-systematis
            commissio-notarii origo-dominii"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
@@ -781,24 +781,24 @@
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
   <citatio nomen="acta-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="acta/signata-per"/>
-  <citatio nomen="punctum-actorum-praecedens" attributum="praecedens" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="punctum-actorum"/>
-  <citatio nomen="attestatio-ad-punctum" attributum="ad-punctum" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="attestatio"/>
-  <citatio nomen="attestatio-testatur" attributum="testatur" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="attestatio"/>
-  <citatio nomen="radix-fiduciae-fundat" attributum="ad" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="radix-fiduciae/fundat"/>
   <citatio nomen="acta-publica-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="acta-publica/signata-per"/>
   <citatio nomen="regesta-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="regesta/signata-per"/>
   <citatio nomen="acta-transactionum-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="acta-transactionum/signata-per"/>
   <citatio nomen="acta-versionum-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="acta-versionum/signata-per"/>
   <citatio nomen="acta-auditus-signata-per" attributum="ad" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="acta-auditus/signata-per"/>
+  <citatio nomen="punctum-actorum-praecedens" attributum="praecedens" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="punctum-actorum"/>
   <citatio nomen="conditio-praecedens" attributum="praecedens" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="conditio"/>
   <citatio nomen="clausura-rationis-praecedens" attributum="praecedens" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="clausura-rationis"/>
   <citatio nomen="statio-praecedens" attributum="praecedens" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="statio"/>
+  <citatio nomen="attestatio-ad-punctum" attributum="ad-punctum" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="attestatio"/>
+  <citatio nomen="attestatio-testatur" attributum="testatur" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="attestatio"/>
   <citatio nomen="attestatio-civilis-ad-punctum" attributum="ad-punctum" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="attestatio-civilis"/>
   <citatio nomen="attestatio-civilis-testatur" attributum="testatur" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="attestatio-civilis"/>
   <citatio nomen="instrumentum-publicum-ad-punctum" attributum="ad-punctum" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="instrumentum-publicum"/>
   <citatio nomen="instrumentum-publicum-testatur" attributum="testatur" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="instrumentum-publicum"/>
   <citatio nomen="apostilla-ad-punctum" attributum="ad-punctum" ad="punctum-actorum conditio clausura-rationis statio/nomen" super="apostilla"/>
   <citatio nomen="apostilla-testatur" attributum="testatur" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="apostilla"/>
+  <citatio nomen="radix-fiduciae-fundat" attributum="ad" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="radix-fiduciae/fundat"/>
   <citatio nomen="radix-systematis-fundat" attributum="ad" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="radix-systematis/fundat"/>
   <citatio nomen="commissio-notarii-fundat" attributum="ad" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="commissio-notarii/fundat"/>
   <citatio nomen="origo-dominii-fundat" attributum="ad" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="origo-dominii/fundat"/>

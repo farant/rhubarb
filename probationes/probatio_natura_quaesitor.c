@@ -262,7 +262,8 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet_literis(r.effusio,
                                        "SENTENTIA\tOCCUPATUM",
                                        piscina));
-        CREDO_VERUM (_continet_literis(r.effusio, "RES\tiudicium",
+        /* arbor porphyriana: mensuratio GENUS est (olim RES) */
+        CREDO_VERUM (_continet_literis(r.effusio, "GENUS\tiudicium",
                                        piscina));
     }
 
@@ -385,14 +386,14 @@ s32 principale (vacuum)
 
         imprimere("\n--- XI. taxinomia nidificata ---\n");
 
-        /* species INTRA speciem */
+        /* species INTRA speciem - arbor porphyriana: isbn_10 GENUS
+         * est, parens isbn (nidificatio = parentela generum) */
         r = _currere("quaere", "isbn_10", NIHIL, piscina);
         CREDO_VERUM (r.successus);
-        CREDO_VERUM (_continet_literis(r.effusio, "intra isbn",
+        CREDO_VERUM (_continet_literis(r.effusio, "GENUS",
                                        piscina));
-        /* utraque catena dicitur: continens ET genus */
-        CREDO_VERUM (_continet_literis(
-            r.effusio, "in genere schema_identificandi", piscina));
+        CREDO_VERUM (_continet_literis(r.effusio, "(sub isbn)",
+                                       piscina));
 
         /* cultivar intra speciem, arbore inclusa */
         r = _currere("apparatus", "malus", NIHIL, piscina);

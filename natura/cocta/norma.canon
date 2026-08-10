@@ -6,16 +6,16 @@
   <elementum nomen="individua" radix="verum">
     <liberum nomen="norma"/>
     <liberum nomen="lex"/>
-    <liberum nomen="classis-normativa"/>
-    <liberum nomen="fictio-iuris"/>
     <liberum nomen="lex-aeterna"/>
     <liberum nomen="lex-naturalis"/>
     <liberum nomen="lex-humana"/>
     <liberum nomen="lex-divina-positiva"/>
     <liberum nomen="consuetudo"/>
+    <liberum nomen="classis-normativa"/>
     <liberum nomen="schedula-substantiarum"/>
     <liberum nomen="gradus-eventus-aviatorii"/>
     <liberum nomen="classis-periculi-mercium"/>
+    <liberum nomen="fictio-iuris"/>
     <liberum nomen="adoptio"/>
     <liberum nomen="mors-praesumpta"/>
     <liberum nomen="personalitas-iuridica"/>
@@ -95,89 +95,6 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="lex">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="classis-normativa">
-    <glossa lingua="en">A regulatory class: a category established
-    by a standard, into which things are assigned and to which
-    consequences (obligations, prohibitions, procedures) ATTACH.
-    What is owed to the class is owed to every member, and a
-    member that changes class changes its consequences without
-    changing in itself at all. Membership is conferred by an act
-    and taken away by an act, so a regulatory class has a history
-    that the nature of a thing does not.</glossa>
-    <glossa lingua="fr">Une classe réglementaire : une catégorie
-    établie par une norme, dans laquelle des choses sont
-    assignées et à laquelle des conséquences (obligations,
-    interdictions, procédures) SONT ATTACHÉES. Ce qui est dû à la
-    classe est dû à tous ses membres, et un membre qui change de
-    classe change de conséquences sans changer en lui-même.
-    L'appartenance est conférée par un acte et retirée par un
-    acte ; la classe réglementaire a donc une histoire que la
-    nature d'une chose n'a pas.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="ordinata" genus="veritas"/>
-    <attributum nomen="criterium" genus="textus"/>
-    <attributum nomen="assignatio-quomodo" genus="electio">
-      <optio>norma_nominatim</optio>
-      <optio>decreto_administrativo</optio>
-      <optio>iudicio_periti</optio>
-    </attributum>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>proposita</optio>
-      <optio>vigens</optio>
-      <optio>abrogata</optio>
-    </attributum>
-    <attributum nomen="constituta-per" genus="referentia"/>
-    <attributum nomen="assignatur-per" genus="referentia"/>
-    <attributum nomen="gradus-supra" genus="referentia"/>
-    <liberum nomen="continet"/>
-    <liberum nomen="imponit"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="continet" intra="classis-normativa">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="imponit" intra="classis-normativa">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="classis-normativa">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="fictio-iuris">
-    <glossa lingua="en">A legal fiction: a precept by which the
-    law orders a thing that stands one way to be treated AS IF it
-    stood otherwise, knowing that it does not, for the sake of a
-    good that cannot be reached any other way. Not an error nor a
-    pretence but an as-if deliberately undertaken - it differs
-    from a presumption in that a presumption yields once the
-    contrary is proven, while a fiction already knows the
-    contrary and does not yield.</glossa>
-    <glossa lingua="fr">Une fiction juridique : un précepte par
-    lequel la loi ordonne de traiter une chose COMME SI elle
-    était autre, sachant qu'elle ne l'est pas, en vue d'un bien
-    qui ne peut être atteint autrement. Ni une erreur ni une
-    simulation, mais un comme-si délibérément assumé - elle
-    diffère de la présomption en ce que la présomption cède
-    lorsque le contraire est prouvé, tandis que la fiction sait
-    déjà le contraire et ne cède pas.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="ratio" genus="textus"/>
-    <attributum nomen="refragabilis" genus="veritas"/>
-    <attributum nomen="ambitus" genus="electio">
-      <optio>universalis</optio>
-      <optio>ad_certos_effectus</optio>
-    </attributum>
-    <attributum nomen="instituta-per" genus="referentia"/>
-    <attributum nomen="applicatur-per" genus="referentia"/>
-    <attributum nomen="fingit" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="fictio-iuris">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -326,6 +243,55 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="classis-normativa">
+    <glossa lingua="en">A regulatory class: a category established
+    by a standard, into which things are assigned and to which
+    consequences (obligations, prohibitions, procedures) ATTACH.
+    What is owed to the class is owed to every member, and a
+    member that changes class changes its consequences without
+    changing in itself at all. Membership is conferred by an act
+    and taken away by an act, so a regulatory class has a history
+    that the nature of a thing does not.</glossa>
+    <glossa lingua="fr">Une classe réglementaire : une catégorie
+    établie par une norme, dans laquelle des choses sont
+    assignées et à laquelle des conséquences (obligations,
+    interdictions, procédures) SONT ATTACHÉES. Ce qui est dû à la
+    classe est dû à tous ses membres, et un membre qui change de
+    classe change de conséquences sans changer en lui-même.
+    L'appartenance est conférée par un acte et retirée par un
+    acte ; la classe réglementaire a donc une histoire que la
+    nature d'une chose n'a pas.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="ordinata" genus="veritas"/>
+    <attributum nomen="criterium" genus="textus"/>
+    <attributum nomen="assignatio-quomodo" genus="electio">
+      <optio>norma_nominatim</optio>
+      <optio>decreto_administrativo</optio>
+      <optio>iudicio_periti</optio>
+    </attributum>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>proposita</optio>
+      <optio>vigens</optio>
+      <optio>abrogata</optio>
+    </attributum>
+    <attributum nomen="constituta-per" genus="referentia"/>
+    <attributum nomen="assignatur-per" genus="referentia"/>
+    <attributum nomen="gradus-supra" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="imponit"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="continet" intra="classis-normativa">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="imponit" intra="classis-normativa">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="classis-normativa">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="schedula-substantiarum">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ordinata" genus="veritas" ordinarius="verum"/>
@@ -422,6 +388,40 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="fictio-iuris">
+    <glossa lingua="en">A legal fiction: a precept by which the
+    law orders a thing that stands one way to be treated AS IF it
+    stood otherwise, knowing that it does not, for the sake of a
+    good that cannot be reached any other way. Not an error nor a
+    pretence but an as-if deliberately undertaken - it differs
+    from a presumption in that a presumption yields once the
+    contrary is proven, while a fiction already knows the
+    contrary and does not yield.</glossa>
+    <glossa lingua="fr">Une fiction juridique : un précepte par
+    lequel la loi ordonne de traiter une chose COMME SI elle
+    était autre, sachant qu'elle ne l'est pas, en vue d'un bien
+    qui ne peut être atteint autrement. Ni une erreur ni une
+    simulation, mais un comme-si délibérément assumé - elle
+    diffère de la présomption en ce que la présomption cède
+    lorsque le contraire est prouvé, tandis que la fiction sait
+    déjà le contraire et ne cède pas.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="ratio" genus="textus"/>
+    <attributum nomen="refragabilis" genus="veritas"/>
+    <attributum nomen="ambitus" genus="electio">
+      <optio>universalis</optio>
+      <optio>ad_certos_effectus</optio>
+    </attributum>
+    <attributum nomen="instituta-per" genus="referentia"/>
+    <attributum nomen="applicatur-per" genus="referentia"/>
+    <attributum nomen="fingit" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="fictio-iuris">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="adoptio">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="ratio" genus="textus" ordinarius="bonum pueri, cui parentes debentur       quos natura non dedit"/>
@@ -493,9 +493,9 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="norma lex classis-normativa fictio-iuris lex-aeterna lex-naturalis
-           lex-humana lex-divina-positiva consuetudo schedula-substantiarum
-           gradus-eventus-aviatorii classis-periculi-mercium adoptio mors-praesumpta
+    super="norma lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva
+           consuetudo classis-normativa schedula-substantiarum gradus-eventus-aviatorii
+           classis-periculi-mercium fictio-iuris adoptio mors-praesumpta
            personalitas-iuridica"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
@@ -506,20 +506,20 @@
        vocabulario indicis. -->
   <citatio nomen="norma-substituit" attributum="substituit" ad="norma/nomen" super="norma"/>
   <citatio nomen="lex-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="lex/abrogat"/>
-  <citatio nomen="classis-normativa-constituta-per" attributum="constituta-per" ad="norma/nomen" super="classis-normativa"/>
-  <citatio nomen="classis-normativa-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="classis-normativa"/>
-  <citatio nomen="fictio-iuris-instituta-per" attributum="instituta-per" ad="norma/nomen" super="fictio-iuris"/>
   <citatio nomen="lex-aeterna-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="lex-aeterna/abrogat"/>
   <citatio nomen="lex-naturalis-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="lex-naturalis/abrogat"/>
   <citatio nomen="lex-humana-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="lex-humana/abrogat"/>
   <citatio nomen="lex-divina-positiva-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="lex-divina-positiva/abrogat"/>
   <citatio nomen="consuetudo-abrogat" attributum="ad" ad="lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva consuetudo/nomen" super="consuetudo/abrogat"/>
+  <citatio nomen="classis-normativa-constituta-per" attributum="constituta-per" ad="norma/nomen" super="classis-normativa"/>
+  <citatio nomen="classis-normativa-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="classis-normativa"/>
   <citatio nomen="schedula-substantiarum-constituta-per" attributum="constituta-per" ad="norma/nomen" super="schedula-substantiarum"/>
   <citatio nomen="schedula-substantiarum-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="schedula-substantiarum"/>
   <citatio nomen="gradus-eventus-aviatorii-constituta-per" attributum="constituta-per" ad="norma/nomen" super="gradus-eventus-aviatorii"/>
   <citatio nomen="gradus-eventus-aviatorii-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="gradus-eventus-aviatorii"/>
   <citatio nomen="classis-periculi-mercium-constituta-per" attributum="constituta-per" ad="norma/nomen" super="classis-periculi-mercium"/>
   <citatio nomen="classis-periculi-mercium-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="classis-periculi-mercium"/>
+  <citatio nomen="fictio-iuris-instituta-per" attributum="instituta-per" ad="norma/nomen" super="fictio-iuris"/>
   <citatio nomen="adoptio-instituta-per" attributum="instituta-per" ad="norma/nomen" super="adoptio"/>
   <citatio nomen="mors-praesumpta-instituta-per" attributum="instituta-per" ad="norma/nomen" super="mors-praesumpta"/>
   <citatio nomen="personalitas-iuridica-instituta-per" attributum="instituta-per" ad="norma/nomen" super="personalitas-iuridica"/>

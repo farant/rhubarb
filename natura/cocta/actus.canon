@@ -7,9 +7,6 @@
     <liberum nomen="actus-sollemnis"/>
     <liberum nomen="ritus"/>
     <liberum nomen="sacramentum"/>
-    <liberum nomen="sacramentale"/>
-    <liberum nomen="actus-iuridicus"/>
-    <liberum nomen="quorum"/>
     <liberum nomen="baptismus"/>
     <liberum nomen="confirmatio"/>
     <liberum nomen="eucharistia"/>
@@ -17,9 +14,11 @@
     <liberum nomen="unctio-infirmorum"/>
     <liberum nomen="ordo"/>
     <liberum nomen="matrimonium"/>
+    <liberum nomen="sacramentale"/>
     <liberum nomen="benedictio"/>
     <liberum nomen="consecratio-loci"/>
     <liberum nomen="exorcismus"/>
+    <liberum nomen="actus-iuridicus"/>
     <liberum nomen="stipulatio"/>
     <liberum nomen="mancipatio"/>
     <liberum nomen="manumissio"/>
@@ -29,6 +28,7 @@
     <liberum nomen="inauguratio"/>
     <liberum nomen="collatio-tituli"/>
     <liberum nomen="sententia-lata"/>
+    <liberum nomen="quorum"/>
     <liberum nomen="quorum-deliberativum"/>
     <liberum nomen="maioritas-replicarum"/>
   </elementum>
@@ -163,130 +163,6 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="sacramentum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="sacramentale">
-    <glossa lingua="en">A sacramental: a rite instituted by the Church
-    and not by Christ - it places its effect EX OPERE OPERANTIS,
-    from the disposition of the one acting and from the prayers of
-    the Church, and not from the work itself. It therefore admits
-    degrees of efficacy where a sacrament has a binary
-    threshold.</glossa>
-    <glossa lingua="fr">Un sacramental : un rite institué par l'Église
-    et non par le Christ - il pose son effet EX OPERE OPERANTIS, par
-    la disposition de celui qui agit et par les prières de l'Église,
-    et non par l'œuvre elle-même. Il connaît donc des degrés
-    d'efficacité là où le sacrement n'a qu'un seuil binaire.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="materia-ritus" genus="textus"/>
-    <attributum nomen="minister" genus="referentia"/>
-    <attributum nomen="recipiens" genus="referentia"/>
-    <attributum nomen="adhibet" genus="referentia"/>
-    <attributum nomen="forma-praescripta" genus="textus"/>
-    <attributum nomen="intentio-necessaria" genus="veritas"/>
-    <attributum nomen="testes-postulati" genus="numerus"/>
-    <attributum nomen="iterabilis" genus="veritas"/>
-    <attributum nomen="revocabilis" genus="veritas"/>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>perfectus</optio>
-      <optio>irritus</optio>
-      <optio>rescissus</optio>
-      <optio>solutus</optio>
-    </attributum>
-    <attributum nomen="agens" genus="referentia"/>
-    <attributum nomen="capacitas-per" genus="referentia"/>
-    <attributum nomen="constituit" genus="referentia"/>
-    <attributum nomen="afficit" genus="referentia"/>
-    <attributum nomen="secundum-legem" genus="referentia"/>
-    <attributum nomen="forma-eius" genus="referentia"/>
-    <liberum nomen="testes"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="testes" intra="sacramentale">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="sacramentale">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="actus-iuridicus">
-    <glossa lingua="en">A juridical act: a solemn act whose force civil
-    authority supplies - the law prescribes the form, and the law
-    acknowledges the effect. Its form therefore VARIES across
-    jurisdictions where a rite stays the same the world over, and
-    that is the difference which breaks international
-    schemas.</glossa>
-    <glossa lingua="fr">Un acte juridique : un acte solennel dont
-    l'autorité civile fournit la force - la loi prescrit la forme,
-    et la loi reconnaît l'effet. Sa forme VARIE donc selon les
-    juridictions, là où un rite demeure le même par tout le monde,
-    et c'est la différence qui brise les schémas
-    internationaux.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="in-iurisdictione" genus="referentia"/>
-    <attributum nomen="forma-praescripta" genus="textus"/>
-    <attributum nomen="intentio-necessaria" genus="veritas"/>
-    <attributum nomen="testes-postulati" genus="numerus"/>
-    <attributum nomen="iterabilis" genus="veritas"/>
-    <attributum nomen="revocabilis" genus="veritas"/>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>perfectus</optio>
-      <optio>irritus</optio>
-      <optio>rescissus</optio>
-      <optio>solutus</optio>
-    </attributum>
-    <attributum nomen="agens" genus="referentia"/>
-    <attributum nomen="capacitas-per" genus="referentia"/>
-    <attributum nomen="constituit" genus="referentia"/>
-    <attributum nomen="afficit" genus="referentia"/>
-    <attributum nomen="secundum-legem" genus="referentia"/>
-    <attributum nomen="forma-eius" genus="referentia"/>
-    <liberum nomen="testes"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="testes" intra="actus-iuridicus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="actus-iuridicus">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="quorum">
-    <glossa lingua="en">A quorum: the number (or the fraction) of
-    members whose presence or consent is required for a body to act
-    validly - below it, the acts are not bad but NULL, since it was
-    not the body that acted but a few of its members. It is a
-    condition of VALIDITY, not of prudence: a council of a few may
-    be wise and still void, a quorate one foolish and still
-    valid.</glossa>
-    <glossa lingua="fr">Un quorum : le nombre (ou la part) de membres
-    dont la présence ou le consentement est requis pour qu'une
-    assemblée agisse validement - en dessous, les actes ne sont pas
-    mauvais mais NULS, car ce n'est pas l'assemblée qui a agi mais
-    quelques-uns. C'est une condition de VALIDITÉ et non de
-    prudence : un conseil restreint peut être sage et pourtant nul,
-    un conseil au quorum insensé et pourtant valide.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="modus-computandi" genus="electio">
-      <optio>ex_praesentibus</optio>
-      <optio>ex_membris_omnibus</optio>
-      <optio>ex_suffragiis_latis</optio>
-    </attributum>
-    <attributum nomen="pars-requisita" genus="textus"/>
-    <attributum nomen="numerus-membrorum" genus="numerus"/>
-    <attributum nomen="coetus" genus="referentia"/>
-    <attributum nomen="statutum-per" genus="referentia"/>
-    <liberum nomen="condicio-actus"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="condicio-actus" intra="quorum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="quorum">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -528,6 +404,51 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="sacramentale">
+    <glossa lingua="en">A sacramental: a rite instituted by the Church
+    and not by Christ - it places its effect EX OPERE OPERANTIS,
+    from the disposition of the one acting and from the prayers of
+    the Church, and not from the work itself. It therefore admits
+    degrees of efficacy where a sacrament has a binary
+    threshold.</glossa>
+    <glossa lingua="fr">Un sacramental : un rite institué par l'Église
+    et non par le Christ - il pose son effet EX OPERE OPERANTIS, par
+    la disposition de celui qui agit et par les prières de l'Église,
+    et non par l'œuvre elle-même. Il connaît donc des degrés
+    d'efficacité là où le sacrement n'a qu'un seuil binaire.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="materia-ritus" genus="textus"/>
+    <attributum nomen="minister" genus="referentia"/>
+    <attributum nomen="recipiens" genus="referentia"/>
+    <attributum nomen="adhibet" genus="referentia"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="referentia"/>
+    <attributum nomen="capacitas-per" genus="referentia"/>
+    <attributum nomen="constituit" genus="referentia"/>
+    <attributum nomen="afficit" genus="referentia"/>
+    <attributum nomen="secundum-legem" genus="referentia"/>
+    <attributum nomen="forma-eius" genus="referentia"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="testes" intra="sacramentale">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="sacramentale">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="benedictio">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="materia-ritus" genus="textus"/>
@@ -627,6 +548,49 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="exorcismus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="actus-iuridicus">
+    <glossa lingua="en">A juridical act: a solemn act whose force civil
+    authority supplies - the law prescribes the form, and the law
+    acknowledges the effect. Its form therefore VARIES across
+    jurisdictions where a rite stays the same the world over, and
+    that is the difference which breaks international
+    schemas.</glossa>
+    <glossa lingua="fr">Un acte juridique : un acte solennel dont
+    l'autorité civile fournit la force - la loi prescrit la forme,
+    et la loi reconnaît l'effet. Sa forme VARIE donc selon les
+    juridictions, là où un rite demeure le même par tout le monde,
+    et c'est la différence qui brise les schémas
+    internationaux.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="in-iurisdictione" genus="referentia"/>
+    <attributum nomen="forma-praescripta" genus="textus"/>
+    <attributum nomen="intentio-necessaria" genus="veritas"/>
+    <attributum nomen="testes-postulati" genus="numerus"/>
+    <attributum nomen="iterabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>perfectus</optio>
+      <optio>irritus</optio>
+      <optio>rescissus</optio>
+      <optio>solutus</optio>
+    </attributum>
+    <attributum nomen="agens" genus="referentia"/>
+    <attributum nomen="capacitas-per" genus="referentia"/>
+    <attributum nomen="constituit" genus="referentia"/>
+    <attributum nomen="afficit" genus="referentia"/>
+    <attributum nomen="secundum-legem" genus="referentia"/>
+    <attributum nomen="forma-eius" genus="referentia"/>
+    <liberum nomen="testes"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="testes" intra="actus-iuridicus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="actus-iuridicus">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -909,6 +873,42 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="quorum">
+    <glossa lingua="en">A quorum: the number (or the fraction) of
+    members whose presence or consent is required for a body to act
+    validly - below it, the acts are not bad but NULL, since it was
+    not the body that acted but a few of its members. It is a
+    condition of VALIDITY, not of prudence: a council of a few may
+    be wise and still void, a quorate one foolish and still
+    valid.</glossa>
+    <glossa lingua="fr">Un quorum : le nombre (ou la part) de membres
+    dont la présence ou le consentement est requis pour qu'une
+    assemblée agisse validement - en dessous, les actes ne sont pas
+    mauvais mais NULS, car ce n'est pas l'assemblée qui a agi mais
+    quelques-uns. C'est une condition de VALIDITÉ et non de
+    prudence : un conseil restreint peut être sage et pourtant nul,
+    un conseil au quorum insensé et pourtant valide.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modus-computandi" genus="electio">
+      <optio>ex_praesentibus</optio>
+      <optio>ex_membris_omnibus</optio>
+      <optio>ex_suffragiis_latis</optio>
+    </attributum>
+    <attributum nomen="pars-requisita" genus="textus"/>
+    <attributum nomen="numerus-membrorum" genus="numerus"/>
+    <attributum nomen="coetus" genus="referentia"/>
+    <attributum nomen="statutum-per" genus="referentia"/>
+    <liberum nomen="condicio-actus"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="condicio-actus" intra="quorum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="quorum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="quorum-deliberativum">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-computandi" genus="electio" ordinarius="ex_praesentibus">
@@ -967,12 +967,11 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="actus-sollemnis ritus sacramentum sacramentale actus-iuridicus
-           quorum baptismus confirmatio eucharistia paenitentia unctio-infirmorum
-           ordo matrimonium benedictio consecratio-loci exorcismus stipulatio
-           mancipatio manumissio testamentum confectio-instrumenti promulgatio
-           inauguratio collatio-tituli sententia-lata quorum-deliberativum
-           maioritas-replicarum"/>
+    super="actus-sollemnis ritus sacramentum baptismus confirmatio eucharistia
+           paenitentia unctio-infirmorum ordo matrimonium sacramentale benedictio
+           consecratio-loci exorcismus actus-iuridicus stipulatio mancipatio
+           manumissio testamentum confectio-instrumenti promulgatio inauguratio
+           collatio-tituli sententia-lata quorum quorum-deliberativum maioritas-replicarum"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in

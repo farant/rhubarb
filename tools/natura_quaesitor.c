@@ -1095,19 +1095,80 @@ _nidificatas_scribere(
     per (i = ZEPHYRUM; i < xar_numerus(parens->res_suae); i++)
     {
         NaturaRes*          n;
-        constans character* kind;
         character           tit[NOMINIS_TECTUM];
         character           sensus[PROSAE_TECTUM];
 
         n    = *(NaturaRes**)xar_obtinere(parens->res_suae, i);
-        kind = (n->nodus && n->nodus->titulus) ?
-                   (constans character*)n->nodus->titulus->datum : "?";
         _chordam_scribere(n->titulus, tit, (i32)magnitudo(tit));
         _sensum_scribere(n->nodus, piscina, sensus,
                          (i32)magnitudo(sensus));
 
-        imprimere("  %*s%s %-*s %.50s\n", (integer)(gradus * II), "",
-                  strcmp(kind, "individuum") == ZEPHYRUM ? ":" : ">",
+        imprimere("  %*s: %-*s %.50s\n", (integer)(gradus * II), "",
+                  (integer)(25 - gradus * II), tit, sensus);
+        _nidificatas_scribere(n, gradus + I, piscina);
+    }
+}
+
+/* genus dictionarii = subgenus inscriptum (.species/.cultivar) -
+ * liberi taxinomici (.genus, sub=) alibi ostenduntur */
+interior b32
+_genus_dictionarii_est(NaturaGenus* g)
+{
+    constans character* kind;
+
+    si (!g->nodus || !g->nodus->titulus)
+    {
+        redde FALSUM;
+    }
+    kind = (constans character*)g->nodus->titulus->datum;
+    redde (b32)(strncmp(kind, ".species", VIII) == ZEPHYRUM ||
+                strncmp(kind, ".cultivar", IX) == ZEPHYRUM);
+}
+
+/* subgenera dictionarii + individua generis, recursive (arbor
+ * porphyriana: liberi generum, res_suae individuorum) */
+interior vacuum
+_nidificata_genera_scribere(
+    NaturaGenus*  parens,
+    i32           gradus,
+    Piscina*      piscina)
+{
+    i32 i;
+
+    si (gradus > VIII)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(parens->liberi); i++)
+    {
+        NaturaGenus* l;
+        character    tit[NOMINIS_TECTUM];
+        character    sensus[PROSAE_TECTUM];
+
+        l = *(NaturaGenus**)xar_obtinere(parens->liberi, i);
+        si (!_genus_dictionarii_est(l))
+        {
+            perge;
+        }
+        _chordam_scribere(l->titulus, tit, (i32)magnitudo(tit));
+        _sensum_scribere(l->nodus, piscina, sensus,
+                         (i32)magnitudo(sensus));
+        imprimere("  %*s> %-*s %.50s\n", (integer)(gradus * II), "",
+                  (integer)(25 - gradus * II), tit, sensus);
+        _nidificata_genera_scribere(l, gradus + I, piscina);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(parens->res_suae); i++)
+    {
+        NaturaRes* n;
+        character  tit[NOMINIS_TECTUM];
+        character  sensus[PROSAE_TECTUM];
+
+        n = *(NaturaRes**)xar_obtinere(parens->res_suae, i);
+        imprimere("  %*s", (integer)(gradus * II), "");
+        _chordam_scribere(n->titulus, tit, (i32)magnitudo(tit));
+        _sensum_scribere(n->nodus, piscina, sensus,
+                         (i32)magnitudo(sensus));
+        imprimere(": %-*s %.50s\n",
                   (integer)(25 - gradus * II), tit, sensus);
         _nidificatas_scribere(n, gradus + I, piscina);
     }
@@ -1122,43 +1183,47 @@ _species_scribere(
     i32 quot;
 
     quot = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < xar_numerus(genus->res_suae); i++)
+    per (i = ZEPHYRUM; i < xar_numerus(genus->liberi); i++)
     {
-        NaturaRes*          r;
-        constans character* kind;
+        NaturaGenus* l;
 
-        r    = *(NaturaRes**)xar_obtinere(genus->res_suae, i);
-        kind = (r->nodus && r->nodus->titulus) ?
-                   (constans character*)r->nodus->titulus->datum : "?";
-        si (strncmp(kind, ".species", VIII) != ZEPHYRUM &&
-            strncmp(kind, "individuum", X) != ZEPHYRUM)
+        l = *(NaturaGenus**)xar_obtinere(genus->liberi, i);
+        si (_genus_dictionarii_est(l))
         {
-            perge;   /* cultivar omittitur (mos natura_quaere.sh) */
+            quot++;
         }
-        quot++;
     }
+    quot += xar_numerus(genus->res_suae);
     si (quot == ZEPHYRUM)
     {
         redde;
     }
 
     imprimere("\n--- QUAE SPECIES SIT? ---\n");
-    per (i = ZEPHYRUM; i < xar_numerus(genus->res_suae); i++)
+    per (i = ZEPHYRUM; i < xar_numerus(genus->liberi); i++)
     {
-        NaturaRes*          r;
-        constans character* kind;
-        character           tit[NOMINIS_TECTUM];
-        character           sensus[PROSAE_TECTUM];
-        b32                 individuum;
+        NaturaGenus* l;
+        character    tit[NOMINIS_TECTUM];
+        character    sensus[PROSAE_TECTUM];
 
-        r    = *(NaturaRes**)xar_obtinere(genus->res_suae, i);
-        kind = (r->nodus && r->nodus->titulus) ?
-                   (constans character*)r->nodus->titulus->datum : "?";
-        individuum = (b32)(strncmp(kind, "individuum", X) == ZEPHYRUM);
-        si (strncmp(kind, ".species", VIII) != ZEPHYRUM && !individuum)
+        l = *(NaturaGenus**)xar_obtinere(genus->liberi, i);
+        si (!_genus_dictionarii_est(l))
         {
             perge;
         }
+        _chordam_scribere(l->titulus, tit, (i32)magnitudo(tit));
+        _sensum_scribere(l->nodus, piscina, sensus,
+                         (i32)magnitudo(sensus));
+        imprimere("   %-26s %.60s\n", tit, sensus);
+        _nidificata_genera_scribere(l, I, piscina);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(genus->res_suae); i++)
+    {
+        NaturaRes* r;
+        character  tit[NOMINIS_TECTUM];
+        character  sensus[PROSAE_TECTUM];
+
+        r = *(NaturaRes**)xar_obtinere(genus->res_suae, i);
         /* nidificatas hic PRAETERIT: sub continente sua infra
          * scribuntur, ne bis appareant */
         si (r->continens)
@@ -1168,8 +1233,7 @@ _species_scribere(
         _chordam_scribere(r->titulus, tit, (i32)magnitudo(tit));
         _sensum_scribere(r->nodus, piscina, sensus,
                          (i32)magnitudo(sensus));
-        imprimere("  %s%-26s %.60s\n", individuum ? ":" : " ", tit,
-                  sensus);
+        imprimere("  :%-26s %.60s\n", tit, sensus);
         _nidificatas_scribere(r, I, piscina);
     }
 }
@@ -1800,6 +1864,25 @@ _censum_scribere(
     quot_individuorum  = ZEPHYRUM;
     quot_cultivarum    = ZEPHYRUM;
     quot_nidificatarum = ZEPHYRUM;
+    /* species/cultivares GENERA sunt post arborem porphyrianam -
+     * numerantur e genera_omnia per titulum elementi */
+    per (i = ZEPHYRUM; i < xar_numerus(bib->genera_omnia); i++)
+    {
+        NaturaGenus*        g;
+        constans character* kind;
+
+        g    = *(NaturaGenus**)xar_obtinere(bib->genera_omnia, i);
+        kind = (g->nodus && g->nodus->titulus) ?
+                   (constans character*)g->nodus->titulus->datum : "?";
+        si (strncmp(kind, ".species", VIII) == ZEPHYRUM)
+        {
+            quot_specierum++;
+        }
+        alioquin si (strncmp(kind, ".cultivar", IX) == ZEPHYRUM)
+        {
+            quot_cultivarum++;
+        }
+    }
     per (i = ZEPHYRUM; i < xar_numerus(bib->res_omnes); i++)
     {
         NaturaRes*          r;
@@ -1808,17 +1891,9 @@ _censum_scribere(
         r    = *(NaturaRes**)xar_obtinere(bib->res_omnes, i);
         kind = (r->nodus && r->nodus->titulus) ?
                    (constans character*)r->nodus->titulus->datum : "?";
-        si (strncmp(kind, ".species", VIII) == ZEPHYRUM)
-        {
-            quot_specierum++;
-        }
-        alioquin si (strncmp(kind, "individuum", X) == ZEPHYRUM)
+        si (strncmp(kind, "individuum", X) == ZEPHYRUM)
         {
             quot_individuorum++;
-        }
-        alioquin si (strncmp(kind, ".cultivar", IX) == ZEPHYRUM)
-        {
-            quot_cultivarum++;
         }
         si (r->continens)
         {

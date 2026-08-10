@@ -7,18 +7,18 @@
     <liberum nomen="postulatum"/>
     <liberum nomen="facultas"/>
     <liberum nomen="probatio"/>
-    <liberum nomen="vitium"/>
-    <liberum nomen="debitum-technicum"/>
-    <liberum nomen="complicatio"/>
-    <liberum nomen="consilium"/>
-    <liberum nomen="depravatio"/>
-    <liberum nomen="interventio"/>
     <liberum nomen="probatio-unitatis"/>
     <liberum nomen="probatio-integrationis"/>
     <liberum nomen="probatio-regressionis"/>
     <liberum nomen="probatio-fumi"/>
+    <liberum nomen="vitium"/>
     <liberum nomen="regressio"/>
+    <liberum nomen="debitum-technicum"/>
+    <liberum nomen="complicatio"/>
+    <liberum nomen="consilium"/>
     <liberum nomen="consilium-computatum"/>
+    <liberum nomen="depravatio"/>
+    <liberum nomen="interventio"/>
     <liberum nomen="conservatio"/>
     <liberum nomen="restauratio-aedificii"/>
     <liberum nomen="curatio-medica"/>
@@ -110,6 +110,82 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="probatio-unitatis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interrogat" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="exercet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="continet" intra="probatio-unitatis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="exercet" intra="probatio-unitatis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="probatio-unitatis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="probatio-integrationis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interrogat" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="exercet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="continet" intra="probatio-integrationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="exercet" intra="probatio-integrationis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="probatio-integrationis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="probatio-regressionis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interrogat" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="exercet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="continet" intra="probatio-regressionis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="exercet" intra="probatio-regressionis">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="probatio-regressionis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="probatio-fumi">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="interrogat" genus="referentia"/>
+    <liberum nomen="continet"/>
+    <liberum nomen="exercet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="continet" intra="probatio-fumi">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="exercet" intra="probatio-fumi">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="probatio-fumi">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="vitium">
     <glossa lingua="en">A defect: the discrepancy between intention
     and behaviour - the program does what was written, not what was
@@ -143,6 +219,30 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="vitium">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="regressio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+    </attributum>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>relatum_est</optio>
+      <optio>confirmatum</optio>
+      <optio>sanatum</optio>
+      <optio>clausum</optio>
+      <optio>non_reproductum</optio>
+      <optio>non_sanandum</optio>
+    </attributum>
+    <attributum nomen="violat" genus="referentia"/>
+    <attributum nomen="habitat-in" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="regressio">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -286,6 +386,41 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="consilium-computatum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="horizon" genus="electio">
+      <optio>operis</optio>
+      <optio>editionis</optio>
+      <optio>anni</optio>
+      <optio>ultra</optio>
+    </attributum>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>propositum</optio>
+      <optio>susceptum</optio>
+      <optio>perfectum</optio>
+      <optio>retractatum</optio>
+      <optio>derelictum</optio>
+    </attributum>
+    <attributum nomen="retractatur-a" genus="referentia"/>
+    <liberum nomen="ordinat"/>
+    <liberum nomen="ad-postulata"/>
+    <liberum nomen="exsequitur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="ordinat" intra="consilium-computatum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="ad-postulata" intra="consilium-computatum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="exsequitur-per" intra="consilium-computatum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="consilium-computatum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="depravatio">
     <glossa lingua="en">Corruption of state: the state of a thing
     become other than it ought to have been, whether or not anyone
@@ -388,141 +523,6 @@
     <liberum nomen="eventum"/>
   </elementum>
 
-  <elementum nomen="probatio-unitatis">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="interrogat" genus="referentia"/>
-    <liberum nomen="continet"/>
-    <liberum nomen="exercet"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="continet" intra="probatio-unitatis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="exercet" intra="probatio-unitatis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="probatio-unitatis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="probatio-integrationis">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="interrogat" genus="referentia"/>
-    <liberum nomen="continet"/>
-    <liberum nomen="exercet"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="continet" intra="probatio-integrationis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="exercet" intra="probatio-integrationis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="probatio-integrationis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="probatio-regressionis">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="interrogat" genus="referentia"/>
-    <liberum nomen="continet"/>
-    <liberum nomen="exercet"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="continet" intra="probatio-regressionis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="exercet" intra="probatio-regressionis">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="probatio-regressionis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="probatio-fumi">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="interrogat" genus="referentia"/>
-    <liberum nomen="continet"/>
-    <liberum nomen="exercet"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="continet" intra="probatio-fumi">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="exercet" intra="probatio-fumi">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="probatio-fumi">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="regressio">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="gravitas" genus="electio">
-      <optio>levis</optio>
-      <optio>gravis</optio>
-    </attributum>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>relatum_est</optio>
-      <optio>confirmatum</optio>
-      <optio>sanatum</optio>
-      <optio>clausum</optio>
-      <optio>non_reproductum</optio>
-      <optio>non_sanandum</optio>
-    </attributum>
-    <attributum nomen="violat" genus="referentia"/>
-    <attributum nomen="habitat-in" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="regressio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="consilium-computatum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="horizon" genus="electio">
-      <optio>operis</optio>
-      <optio>editionis</optio>
-      <optio>anni</optio>
-      <optio>ultra</optio>
-    </attributum>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>propositum</optio>
-      <optio>susceptum</optio>
-      <optio>perfectum</optio>
-      <optio>retractatum</optio>
-      <optio>derelictum</optio>
-    </attributum>
-    <attributum nomen="retractatur-a" genus="referentia"/>
-    <liberum nomen="ordinat"/>
-    <liberum nomen="ad-postulata"/>
-    <liberum nomen="exsequitur-per"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="ordinat" intra="consilium-computatum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="ad-postulata" intra="consilium-computatum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="exsequitur-per" intra="consilium-computatum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="consilium-computatum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
   <elementum nomen="conservatio">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="reversibilis" genus="veritas"/>
@@ -606,9 +606,9 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="postulatum facultas probatio vitium debitum-technicum complicatio
-           consilium depravatio interventio probatio-unitatis probatio-integrationis
-           probatio-regressionis probatio-fumi regressio consilium-computatum
+    super="postulatum facultas probatio probatio-unitatis probatio-integrationis
+           probatio-regressionis probatio-fumi vitium regressio debitum-technicum
+           complicatio consilium consilium-computatum depravatio interventio
            conservatio restauratio-aedificii curatio-medica"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
@@ -619,16 +619,16 @@
        vocabulario indicis. -->
   <citatio nomen="facultas-implet" attributum="ad" ad="postulatum/nomen" super="facultas/implet"/>
   <citatio nomen="probatio-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio"/>
-  <citatio nomen="vitium-violat" attributum="violat" ad="postulatum/nomen" super="vitium"/>
-  <citatio nomen="debitum-technicum-emit" attributum="ad" ad="facultas/nomen" super="debitum-technicum/emit"/>
-  <citatio nomen="complicatio-retractat" attributum="retractat" ad="consilium consilium-computatum/nomen" super="complicatio"/>
-  <citatio nomen="consilium-ad-postulata" attributum="ad" ad="postulatum/nomen" super="consilium/ad-postulata"/>
-  <citatio nomen="depravatio-ex-vitio" attributum="ex-vitio" ad="vitium regressio/nomen" super="depravatio"/>
   <citatio nomen="probatio-unitatis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-unitatis"/>
   <citatio nomen="probatio-integrationis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-integrationis"/>
   <citatio nomen="probatio-regressionis-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-regressionis"/>
   <citatio nomen="probatio-fumi-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio-fumi"/>
+  <citatio nomen="vitium-violat" attributum="violat" ad="postulatum/nomen" super="vitium"/>
   <citatio nomen="regressio-violat" attributum="violat" ad="postulatum/nomen" super="regressio"/>
+  <citatio nomen="debitum-technicum-emit" attributum="ad" ad="facultas/nomen" super="debitum-technicum/emit"/>
+  <citatio nomen="complicatio-retractat" attributum="retractat" ad="consilium consilium-computatum/nomen" super="complicatio"/>
+  <citatio nomen="consilium-ad-postulata" attributum="ad" ad="postulatum/nomen" super="consilium/ad-postulata"/>
   <citatio nomen="consilium-computatum-ad-postulata" attributum="ad" ad="postulatum/nomen" super="consilium-computatum/ad-postulata"/>
+  <citatio nomen="depravatio-ex-vitio" attributum="ex-vitio" ad="vitium regressio/nomen" super="depravatio"/>
 
 </canon>

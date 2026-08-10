@@ -5,43 +5,43 @@
 
   <elementum nomen="individua" radix="verum">
     <liberum nomen="obligatio"/>
-    <liberum nomen="contractus"/>
-    <liberum nomen="licentia"/>
-    <liberum nomen="tributum"/>
-    <liberum nomen="titulus"/>
-    <liberum nomen="iussum"/>
-    <liberum nomen="fiducia"/>
-    <liberum nomen="petitio"/>
-    <liberum nomen="delegatio"/>
-    <liberum nomen="tractatus"/>
-    <liberum nomen="limitatio"/>
-    <liberum nomen="portio-communis"/>
     <liberum nomen="obligatio-ex-contractu"/>
     <liberum nomen="obligatio-ex-delicto"/>
     <liberum nomen="obligatio-ex-lege"/>
+    <liberum nomen="contractus"/>
     <liberum nomen="emptio-venditio"/>
     <liberum nomen="locatio-conductio"/>
     <liberum nomen="societas-contractus"/>
     <liberum nomen="mandatum"/>
     <liberum nomen="commodatum"/>
+    <liberum nomen="licentia"/>
+    <liberum nomen="tributum"/>
     <liberum nomen="portorium"/>
     <liberum nomen="vectigal"/>
     <liberum nomen="decuma"/>
     <liberum nomen="tributum-capitis"/>
+    <liberum nomen="titulus"/>
     <liberum nomen="gradus-academicus"/>
     <liberum nomen="character-indelebilis"/>
     <liberum nomen="titulus-honoris"/>
+    <liberum nomen="iussum"/>
     <liberum nomen="praescriptio-medica"/>
     <liberum nomen="mandatum-iudicis"/>
     <liberum nomen="iussum-emptionis"/>
     <liberum nomen="iussum-operis"/>
     <liberum nomen="iussum-ne-resuscitetur"/>
+    <liberum nomen="fiducia"/>
+    <liberum nomen="petitio"/>
     <liberum nomen="petitio-assecurationis"/>
     <liberum nomen="petitio-remota"/>
     <liberum nomen="supplicatio"/>
+    <liberum nomen="delegatio"/>
     <liberum nomen="plena-potestas"/>
     <liberum nomen="procuratio"/>
     <liberum nomen="delegatio-canonica"/>
+    <liberum nomen="tractatus"/>
+    <liberum nomen="limitatio"/>
+    <liberum nomen="portio-communis"/>
     <liberum nomen="portio-pascui"/>
     <liberum nomen="portio-piscandi"/>
     <liberum nomen="portio-computandi"/>
@@ -74,472 +74,6 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="contractus">
-    <glossa lingua="en">A contract: an agreement of two parties (or
-    more) that gives birth to obligations. Consent is its foundation,
-    which is why it binds both sides and neither may undo it alone.
-    One thing, several obligations: a contract of hire demands wages
-    from the one party and labour from the other.</glossa>
-    <glossa lingua="fr">Un contrat : une convention de deux parties (ou
-    plus) qui engendre des obligations. Le consentement en est le
-    fondement : voilà pourquoi il lie les deux côtés, et aucun ne
-    peut le défaire seul. Une seule chose, plusieurs obligations : le
-    louage d'ouvrage exige un salaire de l'un et un travail de
-    l'autre.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="initium" genus="dies"/>
-    <attributum nomen="finis" genus="dies"/>
-    <liberum nomen="partes"/>
-    <liberum nomen="parit"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="partes" intra="contractus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="parit" intra="contractus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="contractus">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="licentia">
-    <glossa lingua="en">A licence: a grant made by an authority so that
-    something becomes lawful which otherwise would not be. It is
-    UNILATERAL (it needs no consent from the one receiving it),
-    REVOCABLE (the grantor may take it away), and often TEMPORARY. It
-    is therefore not a contract - a distinction that common schemas
-    confuse.</glossa>
-    <glossa lingua="fr">Une licence : une concession accordée par une
-    autorité pour rendre licite ce qui autrement ne le serait pas.
-    Elle est UNILATÉRALE (elle n'exige pas le consentement de celui
-    qui la reçoit), RÉVOCABLE (celui qui l'accorde peut la retirer)
-    et souvent TEMPORAIRE. Ce n'est donc pas un contrat - distinction
-    que les schémas courants confondent.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="data" genus="dies"/>
-    <attributum nomen="expirat" genus="dies"/>
-    <attributum nomen="recentia-postulata" genus="veritas"/>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>petita</optio>
-      <optio>concessa</optio>
-      <optio>suspensa</optio>
-      <optio>revocata</optio>
-      <optio>expirata</optio>
-    </attributum>
-    <attributum nomen="concedens" genus="referentia"/>
-    <attributum nomen="accipiens" genus="referentia"/>
-    <attributum nomen="secundum-normam" genus="referentia"/>
-    <liberum nomen="condiciones"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="condiciones" intra="licentia" textus="verum"/>
-  <elementum nomen="historia" intra="licentia">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="tributum">
-    <glossa lingua="en">A tax: an obligation owed to the MAGISTRATE,
-    arising from law and not from consent - it is due because the law
-    so provides, not because anyone promised. It can therefore
-    neither be refused nor privately forgiven: the creditor cannot
-    release it, because the creditor is not a person but the
-    commonwealth.</glossa>
-    <glossa lingua="fr">Un impôt : une obligation envers le MAGISTRAT,
-    née de la loi et non du consentement - il est dû parce que la loi
-    le prescrit, non parce que quelqu'un l'a promis. Il ne peut donc
-    être ni refusé ni remis à titre privé : le créancier ne peut en
-    faire remise, car le créancier n'est pas une personne mais la
-    chose publique.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="ratio" genus="electio">
-      <optio>ex_transitu</optio>
-      <optio>ex_reditu</optio>
-      <optio>ex_possessione</optio>
-      <optio>ex_venditione</optio>
-      <optio>ex_capite</optio>
-    </attributum>
-    <attributum nomen="exigitur-a" genus="referentia"/>
-    <attributum nomen="secundum-normam" genus="referentia"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>orta</optio>
-      <optio>soluta</optio>
-      <optio>remissa</optio>
-      <optio>praescripta</optio>
-      <optio>violata</optio>
-    </attributum>
-    <attributum nomen="debitor" genus="referentia"/>
-    <attributum nomen="creditor" genus="referentia"/>
-    <attributum nomen="praestandum" genus="referentia"/>
-    <attributum nomen="orta-ex" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="tributum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="titulus">
-    <glossa lingua="en">A title: a public and permanent attestation
-    given by an authority that someone has attained something or IS
-    something - not a permission to act but testimony to a fact. It
-    therefore neither expires nor is revoked: what has been done
-    cannot be undone.</glossa>
-    <glossa lingua="fr">Un titre : une attestation publique et
-    permanente donnée par une autorité, portant que quelqu'un a
-    obtenu quelque chose ou EST quelque chose - non une permission
-    d'agir mais le témoignage d'un fait. Il n'expire donc pas et ne
-    se révoque pas : ce qui a été fait ne peut être défait.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="collatus" genus="dies"/>
-    <attributum nomen="appellatio" genus="textus"/>
-    <attributum nomen="conferens" genus="referentia"/>
-    <attributum nomen="latus-a" genus="referentia"/>
-    <attributum nomen="fundat" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="titulus">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="iussum">
-    <glossa lingua="en">An order: a directive issued by one who holds
-    the power to issue it, determining what is to be done, by whom,
-    and within what time, and which ENDURES once issued - a thing
-    made, not a bygone event. Its effect depends on its form and on
-    the authority of the one commanding, so it is VALID or VOID
-    rather than good or bad. It differs from an obligation, which is
-    a bond between persons, in being a thing one holds, shows,
-    transfers, and uses up; and from a procedure, which teaches HOW
-    and is repeated, in commanding WHAT this once and dying when
-    exhausted.</glossa>
-    <glossa lingua="fr">Un ordre : une directive émise par celui qui en
-    a le pouvoir, déterminant ce qui doit être fait, par qui et dans
-    quel délai, et qui SUBSISTE une fois émise - une chose faite, non
-    un événement passé. Son effet dépend de sa forme et de l'autorité
-    de celui qui commande : il est donc VALIDE ou NUL, et non bon ou
-    mauvais. Il diffère de l'obligation, qui est un lien entre
-    personnes, en ce qu'il est une chose que l'on tient, montre,
-    transfère et consomme ; et de la procédure, qui enseigne COMMENT
-    et se répète, en ce qu'il commande QUOI cette fois-ci et meurt
-    une fois épuisé.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="usus-reliqui" genus="numerus"/>
-    <attributum nomen="valens-ad" genus="dies"/>
-    <attributum nomen="transferibile" genus="veritas"/>
-    <attributum nomen="poena-neglegentis" genus="electio">
-      <optio>nulla</optio>
-      <optio>disciplinaris</optio>
-      <optio>iuridica</optio>
-    </attributum>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>latum</optio>
-      <optio>acceptum</optio>
-      <optio>exsecutum</optio>
-      <optio>exhaustum</optio>
-      <optio>revocatum</optio>
-      <optio>elapsum</optio>
-      <optio>recusatum</optio>
-    </attributum>
-    <attributum nomen="iubens" genus="referentia"/>
-    <attributum nomen="potestate" genus="referentia"/>
-    <attributum nomen="exsecutor" genus="referentia"/>
-    <attributum nomen="beneficiarius" genus="referentia"/>
-    <attributum nomen="latum-per" genus="referentia"/>
-    <attributum nomen="parit" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="iussum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="fiducia">
-    <glossa lingua="en">A trust: the holding of a thing in one's own
-    name and title, but for ANOTHER'S BENEFIT and under duties - the
-    trustee looks like the owner and is not, because what is held is
-    not held for the holder. It differs from possession by DUTY (a
-    possessor may do as they please with their own thing, whereas
-    what a trustee may do is prescribed) and from delegation by SIDE:
-    a delegate acts in another's name, while a trustee acts in their
-    own name and holds true title, yet the fruit belongs to
-    another.</glossa>
-    <glossa lingua="fr">Une fiducie : la détention d'une chose en son
-    propre nom et sous son propre titre, mais au PROFIT D'AUTRUI et
-    sous des devoirs - le fiduciaire paraît propriétaire et ne l'est
-    pas, car ce qu'il détient, il ne le détient pas pour lui-même.
-    Elle diffère de la possession par le DEVOIR (le possesseur fait
-    de sa chose ce qu'il veut, tandis que l'usage du fiduciaire est
-    prescrit) et de la délégation par le CÔTÉ : le délégué agit au
-    nom d'autrui, tandis que le fiduciaire agit en son propre nom et
-    détient un titre véritable, mais le fruit est à autrui.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="lucrum-proprium" genus="veritas"/>
-    <attributum nomen="alienatio" genus="electio">
-      <optio>libera</optio>
-      <optio>ad_certos_fines</optio>
-      <optio>nulla</optio>
-    </attributum>
-    <attributum nomen="perpetua" genus="veritas"/>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>constituta</optio>
-      <optio>gesta</optio>
-      <optio>soluta</optio>
-      <optio>violata</optio>
-    </attributum>
-    <attributum nomen="fiduciarius" genus="referentia"/>
-    <attributum nomen="constituta-per" genus="referentia"/>
-    <liberum nomen="beneficiarius"/>
-    <liberum nomen="res-fiduciaria"/>
-    <liberum nomen="officia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="beneficiarius" intra="fiducia">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="res-fiduciaria" intra="fiducia">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="officia" intra="fiducia">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="fiducia">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="petitio">
-    <glossa lingua="en">A request: an asking directed to another that
-    they do or render something, which they may GRANT OR REFUSE
-    without any breach - what is owed to the one asking is not the
-    thing asked for but an ANSWER. It differs from an order by
-    AUTHORITY: whoever commands holds power over the executor and
-    neglect brings a penalty, whereas whoever asks holds none and
-    refusal is legitimate. A request therefore always awaits an
-    answer, where an order awaits execution.</glossa>
-    <glossa lingua="fr">Une demande : une requête adressée à autrui
-    pour qu'il fasse ou fournisse quelque chose, et qu'il peut
-    ACCORDER OU REFUSER sans aucune violation - ce qui est dû au
-    demandeur n'est pas la chose demandée mais une RÉPONSE. Elle
-    diffère de l'ordre par l'AUTORITÉ : celui qui commande a pouvoir
-    sur l'exécutant et la négligence entraîne une peine, tandis que
-    celui qui demande n'en a aucun et le refus est légitime. La
-    demande attend donc toujours une réponse, là où l'ordre attend
-    une exécution.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="identificator-petitionis" genus="textus"/>
-    <attributum nomen="terminus-exspectandi" genus="textus"/>
-    <attributum nomen="conatus" genus="numerus"/>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>missa</optio>
-      <optio>accepta</optio>
-      <optio>concessa</optio>
-      <optio>negata</optio>
-      <optio>elapsa</optio>
-    </attributum>
-    <attributum nomen="petens" genus="referentia"/>
-    <attributum nomen="rogatus" genus="referentia"/>
-    <attributum nomen="de" genus="referentia"/>
-    <attributum nomen="iudicatur-per" genus="referentia"/>
-    <attributum nomen="parit" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="petitio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="delegatio">
-    <glossa lingua="en">A delegation: the power to act in another's
-    name, such that the delegate's acts BIND the one delegating as
-    though that person had acted - not a licence to act but a
-    transfusion of authority, within stated bounds. It differs from a
-    licence by WHO IS BOUND (a licence lets you act and your acts
-    stay yours, whereas delegation makes your acts another's) and
-    from an office by MOBILITY: an office is stably constituted and
-    does not depend on who holds it, while a delegation is given to
-    this person and perishes by death, revocation, or lapse of
-    time.</glossa>
-    <glossa lingua="fr">Une délégation : le pouvoir d'agir au nom
-    d'autrui, de telle sorte que les actes du délégué OBLIGENT le
-    délégant comme si celui-ci avait agi lui-même - non une licence
-    d'agir mais une transfusion d'autorité, dans des limites fixées.
-    Elle diffère de la licence par la PERSONNE OBLIGÉE (la licence
-    vous laisse agir et vos actes restent les vôtres, tandis que la
-    délégation rend vos actes ceux d'un autre) et de la charge par la
-    MOBILITÉ : une charge est constituée de façon stable et ne
-    dépend pas de qui l'occupe, tandis qu'une délégation est donnée à
-    cette personne-ci et périt par la mort, la révocation ou
-    l'écoulement du temps.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="ambitus" genus="textus"/>
-    <attributum nomen="subdelegabilis" genus="veritas"/>
-    <attributum nomen="revocabilis" genus="veritas"/>
-    <attributum nomen="effectus-post-revocationem" genus="electio">
-      <optio>nullus</optio>
-      <optio>obligat_donec_nuntietur</optio>
-    </attributum>
-    <attributum nomen="durat-usque" genus="dies"/>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>data</optio>
-      <optio>exercita</optio>
-      <optio>revocata</optio>
-      <optio>elapsa</optio>
-      <optio>extincta</optio>
-    </attributum>
-    <attributum nomen="delegans" genus="referentia"/>
-    <attributum nomen="delegatus" genus="referentia"/>
-    <attributum nomen="probatur-per" genus="referentia"/>
-    <liberum nomen="obligat-per"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="obligat-per" intra="delegatio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="delegatio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="tractatus">
-    <glossa lingua="en">A treaty: a contract between parties who have
-    no superior - no tribunal stands above them, so consent is given
-    not once but TWICE, by the envoy who signs and by the sovereign
-    who ratifies, and performance rests on good faith and reciprocity
-    rather than on compulsion.</glossa>
-    <glossa lingua="fr">Un traité : un contrat entre parties qui n'ont
-    pas de supérieur - aucun tribunal ne se tient au-dessus d'elles,
-    si bien que le consentement n'est pas donné une fois mais DEUX,
-    par le légat qui signe et par le prince qui ratifie, et
-    l'exécution repose sur la bonne foi et la réciprocité plutôt que
-    sur la contrainte.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="multilateralis" genus="veritas"/>
-    <attributum nomen="numerus-ad-vigorem" genus="numerus"/>
-    <attributum nomen="status-vigor" genus="electio">
-      <optio>negotiatus</optio>
-      <optio>signatus</optio>
-      <optio>ratificatus</optio>
-      <optio>vigens</optio>
-      <optio>suspensus</optio>
-      <optio>terminatus</optio>
-      <optio>abortus</optio>
-    </attributum>
-    <attributum nomen="depositarius" genus="referentia"/>
-    <attributum nomen="ad-vigorem-per" genus="referentia"/>
-    <attributum nomen="initium" genus="dies"/>
-    <attributum nomen="finis" genus="dies"/>
-    <liberum nomen="signatus-per"/>
-    <liberum nomen="limitatus-per"/>
-    <liberum nomen="partes"/>
-    <liberum nomen="parit"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="signatus-per" intra="tractatus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="limitatus-per" intra="tractatus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="partes" intra="tractatus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="parit" intra="tractatus">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="tractatus">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="limitatio">
-    <glossa lingua="en">A reservation: a unilateral declaration by
-    which a party, in accepting a treaty, excludes or alters for
-    itself the effect of certain articles - consent that is not
-    entire but circumscribed. CONSENT IS NOT BINARY, and this kind
-    proves it; stranger still, a reservation works separately between
-    the reserving party and EACH other party, according to whether
-    that party objected. One multilateral treaty thus dissolves into
-    a NETWORK of bilateral obligations - one document, as many
-    obligations as there are pairs.</glossa>
-    <glossa lingua="fr">Une réserve : une déclaration unilatérale par
-    laquelle une partie, en acceptant un traité, exclut ou modifie
-    pour elle-même l'effet de certains articles - un consentement non
-    entier mais circonscrit. LE CONSENTEMENT N'EST PAS BINAIRE, et ce
-    genre le prouve ; plus étrange encore, une réserve joue
-    séparément entre la partie réservataire et CHACUNE des autres
-    parties, selon que celle-ci a objecté ou non. Un seul traité
-    multilatéral se dissout ainsi en un RÉSEAU d'obligations
-    bilatérales - un seul document, autant d'obligations qu'il y a de
-    paires.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="articuli" genus="textus"/>
-    <attributum nomen="modus" genus="electio">
-      <optio>exclusio</optio>
-      <optio>modificatio</optio>
-    </attributum>
-    <attributum nomen="compatibilis-cum-fine" genus="veritas"/>
-    <attributum nomen="ad-tractatum" genus="referentia"/>
-    <attributum nomen="lata-a" genus="referentia"/>
-    <attributum nomen="asseritur-per" genus="referentia"/>
-    <liberum nomen="obiecta-a"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="obiecta-a" intra="limitatio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="limitatio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="portio-communis">
-    <glossa lingua="en">A common share: a determined part of a finite
-    common resource that someone is allowed to use while others draw
-    on the same source - a measured right, not a mere permission,
-    because what you take is missing to the rest. It differs from a
-    licence by the SOURCE (a licence permits what would otherwise be
-    unlawful and says nothing about supply, whereas a share
-    presupposes a finite and rival supply, so that measure belongs to
-    its essence) and from possession by COMMUNALITY: a possessor has
-    a thing of their own, while a shareholder has a part of a thing
-    that is another's and common - the source stays one and is never
-    divided.</glossa>
-    <glossa lingua="fr">Une part commune : une partie déterminée d'une
-    ressource commune finie dont quelqu'un peut user tandis que
-    d'autres puisent à la même source - un droit mesuré, non une
-    simple permission, car ce que vous prenez manque aux autres. Elle
-    diffère de la licence par la SOURCE (la licence permet ce qui
-    autrement serait illicite et ne dit rien de l'abondance, tandis
-    que la part suppose une ressource finie et rivale, si bien que la
-    mesure appartient à son essence) et de la possession par la
-    COMMUNAUTÉ : le possesseur a une chose à lui, tandis que le
-    titulaire d'une part a une partie d'une chose autre et commune -
-    la source demeure une et n'est jamais divisée.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="mensura" genus="textus"/>
-    <attributum nomen="adhaeret" genus="electio">
-      <optio>personae</optio>
-      <optio>praedio</optio>
-      <optio>navi</optio>
-      <optio>officio</optio>
-    </attributum>
-    <attributum nomen="transferibilis" genus="veritas"/>
-    <attributum nomen="periodica" genus="veritas"/>
-    <attributum nomen="in-re-communi" genus="referentia"/>
-    <attributum nomen="competit" genus="referentia"/>
-    <attributum nomen="statuta-per" genus="referentia"/>
-    <attributum nomen="custodita-per" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="portio-communis">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -600,6 +134,36 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio-ex-lege">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="contractus">
+    <glossa lingua="en">A contract: an agreement of two parties (or
+    more) that gives birth to obligations. Consent is its foundation,
+    which is why it binds both sides and neither may undo it alone.
+    One thing, several obligations: a contract of hire demands wages
+    from the one party and labour from the other.</glossa>
+    <glossa lingua="fr">Un contrat : une convention de deux parties (ou
+    plus) qui engendre des obligations. Le consentement en est le
+    fondement : voilà pourquoi il lie les deux côtés, et aucun ne
+    peut le défaire seul. Une seule chose, plusieurs obligations : le
+    louage d'ouvrage exige un salaire de l'un et un travail de
+    l'autre.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="initium" genus="dies"/>
+    <attributum nomen="finis" genus="dies"/>
+    <liberum nomen="partes"/>
+    <liberum nomen="parit"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="partes" intra="contractus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="parit" intra="contractus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="contractus">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -695,6 +259,83 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="commodatum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="licentia">
+    <glossa lingua="en">A licence: a grant made by an authority so that
+    something becomes lawful which otherwise would not be. It is
+    UNILATERAL (it needs no consent from the one receiving it),
+    REVOCABLE (the grantor may take it away), and often TEMPORARY. It
+    is therefore not a contract - a distinction that common schemas
+    confuse.</glossa>
+    <glossa lingua="fr">Une licence : une concession accordée par une
+    autorité pour rendre licite ce qui autrement ne le serait pas.
+    Elle est UNILATÉRALE (elle n'exige pas le consentement de celui
+    qui la reçoit), RÉVOCABLE (celui qui l'accorde peut la retirer)
+    et souvent TEMPORAIRE. Ce n'est donc pas un contrat - distinction
+    que les schémas courants confondent.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="data" genus="dies"/>
+    <attributum nomen="expirat" genus="dies"/>
+    <attributum nomen="recentia-postulata" genus="veritas"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>petita</optio>
+      <optio>concessa</optio>
+      <optio>suspensa</optio>
+      <optio>revocata</optio>
+      <optio>expirata</optio>
+    </attributum>
+    <attributum nomen="concedens" genus="referentia"/>
+    <attributum nomen="accipiens" genus="referentia"/>
+    <attributum nomen="secundum-normam" genus="referentia"/>
+    <liberum nomen="condiciones"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="condiciones" intra="licentia" textus="verum"/>
+  <elementum nomen="historia" intra="licentia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="tributum">
+    <glossa lingua="en">A tax: an obligation owed to the MAGISTRATE,
+    arising from law and not from consent - it is due because the law
+    so provides, not because anyone promised. It can therefore
+    neither be refused nor privately forgiven: the creditor cannot
+    release it, because the creditor is not a person but the
+    commonwealth.</glossa>
+    <glossa lingua="fr">Un impôt : une obligation envers le MAGISTRAT,
+    née de la loi et non du consentement - il est dû parce que la loi
+    le prescrit, non parce que quelqu'un l'a promis. Il ne peut donc
+    être ni refusé ni remis à titre privé : le créancier ne peut en
+    faire remise, car le créancier n'est pas une personne mais la
+    chose publique.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="ratio" genus="electio">
+      <optio>ex_transitu</optio>
+      <optio>ex_reditu</optio>
+      <optio>ex_possessione</optio>
+      <optio>ex_venditione</optio>
+      <optio>ex_capite</optio>
+    </attributum>
+    <attributum nomen="exigitur-a" genus="referentia"/>
+    <attributum nomen="secundum-normam" genus="referentia"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>orta</optio>
+      <optio>soluta</optio>
+      <optio>remissa</optio>
+      <optio>praescripta</optio>
+      <optio>violata</optio>
+    </attributum>
+    <attributum nomen="debitor" genus="referentia"/>
+    <attributum nomen="creditor" genus="referentia"/>
+    <attributum nomen="praestandum" genus="referentia"/>
+    <attributum nomen="orta-ex" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="tributum">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -814,6 +455,30 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="titulus">
+    <glossa lingua="en">A title: a public and permanent attestation
+    given by an authority that someone has attained something or IS
+    something - not a permission to act but testimony to a fact. It
+    therefore neither expires nor is revoked: what has been done
+    cannot be undone.</glossa>
+    <glossa lingua="fr">Un titre : une attestation publique et
+    permanente donnée par une autorité, portant que quelqu'un a
+    obtenu quelque chose ou EST quelque chose - non une permission
+    d'agir mais le témoignage d'un fait. Il n'expire donc pas et ne
+    se révoque pas : ce qui a été fait ne peut être défait.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="collatus" genus="dies"/>
+    <attributum nomen="appellatio" genus="textus"/>
+    <attributum nomen="conferens" genus="referentia"/>
+    <attributum nomen="latus-a" genus="referentia"/>
+    <attributum nomen="fundat" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="titulus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="gradus-academicus">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="collatus" genus="dies"/>
@@ -853,6 +518,58 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="titulus-honoris">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="iussum">
+    <glossa lingua="en">An order: a directive issued by one who holds
+    the power to issue it, determining what is to be done, by whom,
+    and within what time, and which ENDURES once issued - a thing
+    made, not a bygone event. Its effect depends on its form and on
+    the authority of the one commanding, so it is VALID or VOID
+    rather than good or bad. It differs from an obligation, which is
+    a bond between persons, in being a thing one holds, shows,
+    transfers, and uses up; and from a procedure, which teaches HOW
+    and is repeated, in commanding WHAT this once and dying when
+    exhausted.</glossa>
+    <glossa lingua="fr">Un ordre : une directive émise par celui qui en
+    a le pouvoir, déterminant ce qui doit être fait, par qui et dans
+    quel délai, et qui SUBSISTE une fois émise - une chose faite, non
+    un événement passé. Son effet dépend de sa forme et de l'autorité
+    de celui qui commande : il est donc VALIDE ou NUL, et non bon ou
+    mauvais. Il diffère de l'obligation, qui est un lien entre
+    personnes, en ce qu'il est une chose que l'on tient, montre,
+    transfère et consomme ; et de la procédure, qui enseigne COMMENT
+    et se répète, en ce qu'il commande QUOI cette fois-ci et meurt
+    une fois épuisé.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="usus-reliqui" genus="numerus"/>
+    <attributum nomen="valens-ad" genus="dies"/>
+    <attributum nomen="transferibile" genus="veritas"/>
+    <attributum nomen="poena-neglegentis" genus="electio">
+      <optio>nulla</optio>
+      <optio>disciplinaris</optio>
+      <optio>iuridica</optio>
+    </attributum>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>latum</optio>
+      <optio>acceptum</optio>
+      <optio>exsecutum</optio>
+      <optio>exhaustum</optio>
+      <optio>revocatum</optio>
+      <optio>elapsum</optio>
+      <optio>recusatum</optio>
+    </attributum>
+    <attributum nomen="iubens" genus="referentia"/>
+    <attributum nomen="potestate" genus="referentia"/>
+    <attributum nomen="exsecutor" genus="referentia"/>
+    <attributum nomen="beneficiarius" genus="referentia"/>
+    <attributum nomen="latum-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="iussum">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -1016,6 +733,101 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="fiducia">
+    <glossa lingua="en">A trust: the holding of a thing in one's own
+    name and title, but for ANOTHER'S BENEFIT and under duties - the
+    trustee looks like the owner and is not, because what is held is
+    not held for the holder. It differs from possession by DUTY (a
+    possessor may do as they please with their own thing, whereas
+    what a trustee may do is prescribed) and from delegation by SIDE:
+    a delegate acts in another's name, while a trustee acts in their
+    own name and holds true title, yet the fruit belongs to
+    another.</glossa>
+    <glossa lingua="fr">Une fiducie : la détention d'une chose en son
+    propre nom et sous son propre titre, mais au PROFIT D'AUTRUI et
+    sous des devoirs - le fiduciaire paraît propriétaire et ne l'est
+    pas, car ce qu'il détient, il ne le détient pas pour lui-même.
+    Elle diffère de la possession par le DEVOIR (le possesseur fait
+    de sa chose ce qu'il veut, tandis que l'usage du fiduciaire est
+    prescrit) et de la délégation par le CÔTÉ : le délégué agit au
+    nom d'autrui, tandis que le fiduciaire agit en son propre nom et
+    détient un titre véritable, mais le fruit est à autrui.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="lucrum-proprium" genus="veritas"/>
+    <attributum nomen="alienatio" genus="electio">
+      <optio>libera</optio>
+      <optio>ad_certos_fines</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="perpetua" genus="veritas"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>constituta</optio>
+      <optio>gesta</optio>
+      <optio>soluta</optio>
+      <optio>violata</optio>
+    </attributum>
+    <attributum nomen="fiduciarius" genus="referentia"/>
+    <attributum nomen="constituta-per" genus="referentia"/>
+    <liberum nomen="beneficiarius"/>
+    <liberum nomen="res-fiduciaria"/>
+    <liberum nomen="officia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="beneficiarius" intra="fiducia">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="res-fiduciaria" intra="fiducia">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="officia" intra="fiducia">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="fiducia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="petitio">
+    <glossa lingua="en">A request: an asking directed to another that
+    they do or render something, which they may GRANT OR REFUSE
+    without any breach - what is owed to the one asking is not the
+    thing asked for but an ANSWER. It differs from an order by
+    AUTHORITY: whoever commands holds power over the executor and
+    neglect brings a penalty, whereas whoever asks holds none and
+    refusal is legitimate. A request therefore always awaits an
+    answer, where an order awaits execution.</glossa>
+    <glossa lingua="fr">Une demande : une requête adressée à autrui
+    pour qu'il fasse ou fournisse quelque chose, et qu'il peut
+    ACCORDER OU REFUSER sans aucune violation - ce qui est dû au
+    demandeur n'est pas la chose demandée mais une RÉPONSE. Elle
+    diffère de l'ordre par l'AUTORITÉ : celui qui commande a pouvoir
+    sur l'exécutant et la négligence entraîne une peine, tandis que
+    celui qui demande n'en a aucun et le refus est légitime. La
+    demande attend donc toujours une réponse, là où l'ordre attend
+    une exécution.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="identificator-petitionis" genus="textus"/>
+    <attributum nomen="terminus-exspectandi" genus="textus"/>
+    <attributum nomen="conatus" genus="numerus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>missa</optio>
+      <optio>accepta</optio>
+      <optio>concessa</optio>
+      <optio>negata</optio>
+      <optio>elapsa</optio>
+    </attributum>
+    <attributum nomen="petens" genus="referentia"/>
+    <attributum nomen="rogatus" genus="referentia"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="iudicatur-per" genus="referentia"/>
+    <attributum nomen="parit" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="petitio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="petitio-assecurationis">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="identificator-petitionis" genus="textus"/>
@@ -1085,6 +897,58 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="supplicatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="delegatio">
+    <glossa lingua="en">A delegation: the power to act in another's
+    name, such that the delegate's acts BIND the one delegating as
+    though that person had acted - not a licence to act but a
+    transfusion of authority, within stated bounds. It differs from a
+    licence by WHO IS BOUND (a licence lets you act and your acts
+    stay yours, whereas delegation makes your acts another's) and
+    from an office by MOBILITY: an office is stably constituted and
+    does not depend on who holds it, while a delegation is given to
+    this person and perishes by death, revocation, or lapse of
+    time.</glossa>
+    <glossa lingua="fr">Une délégation : le pouvoir d'agir au nom
+    d'autrui, de telle sorte que les actes du délégué OBLIGENT le
+    délégant comme si celui-ci avait agi lui-même - non une licence
+    d'agir mais une transfusion d'autorité, dans des limites fixées.
+    Elle diffère de la licence par la PERSONNE OBLIGÉE (la licence
+    vous laisse agir et vos actes restent les vôtres, tandis que la
+    délégation rend vos actes ceux d'un autre) et de la charge par la
+    MOBILITÉ : une charge est constituée de façon stable et ne
+    dépend pas de qui l'occupe, tandis qu'une délégation est donnée à
+    cette personne-ci et périt par la mort, la révocation ou
+    l'écoulement du temps.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="ambitus" genus="textus"/>
+    <attributum nomen="subdelegabilis" genus="veritas"/>
+    <attributum nomen="revocabilis" genus="veritas"/>
+    <attributum nomen="effectus-post-revocationem" genus="electio">
+      <optio>nullus</optio>
+      <optio>obligat_donec_nuntietur</optio>
+    </attributum>
+    <attributum nomen="durat-usque" genus="dies"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>data</optio>
+      <optio>exercita</optio>
+      <optio>revocata</optio>
+      <optio>elapsa</optio>
+      <optio>extincta</optio>
+    </attributum>
+    <attributum nomen="delegans" genus="referentia"/>
+    <attributum nomen="delegatus" genus="referentia"/>
+    <attributum nomen="probatur-per" genus="referentia"/>
+    <liberum nomen="obligat-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="obligat-per" intra="delegatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="delegatio">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -1178,6 +1042,142 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="delegatio-canonica">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="tractatus">
+    <glossa lingua="en">A treaty: a contract between parties who have
+    no superior - no tribunal stands above them, so consent is given
+    not once but TWICE, by the envoy who signs and by the sovereign
+    who ratifies, and performance rests on good faith and reciprocity
+    rather than on compulsion.</glossa>
+    <glossa lingua="fr">Un traité : un contrat entre parties qui n'ont
+    pas de supérieur - aucun tribunal ne se tient au-dessus d'elles,
+    si bien que le consentement n'est pas donné une fois mais DEUX,
+    par le légat qui signe et par le prince qui ratifie, et
+    l'exécution repose sur la bonne foi et la réciprocité plutôt que
+    sur la contrainte.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="multilateralis" genus="veritas"/>
+    <attributum nomen="numerus-ad-vigorem" genus="numerus"/>
+    <attributum nomen="status-vigor" genus="electio">
+      <optio>negotiatus</optio>
+      <optio>signatus</optio>
+      <optio>ratificatus</optio>
+      <optio>vigens</optio>
+      <optio>suspensus</optio>
+      <optio>terminatus</optio>
+      <optio>abortus</optio>
+    </attributum>
+    <attributum nomen="depositarius" genus="referentia"/>
+    <attributum nomen="ad-vigorem-per" genus="referentia"/>
+    <attributum nomen="initium" genus="dies"/>
+    <attributum nomen="finis" genus="dies"/>
+    <liberum nomen="signatus-per"/>
+    <liberum nomen="limitatus-per"/>
+    <liberum nomen="partes"/>
+    <liberum nomen="parit"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="signatus-per" intra="tractatus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="limitatus-per" intra="tractatus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="partes" intra="tractatus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="parit" intra="tractatus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="tractatus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="limitatio">
+    <glossa lingua="en">A reservation: a unilateral declaration by
+    which a party, in accepting a treaty, excludes or alters for
+    itself the effect of certain articles - consent that is not
+    entire but circumscribed. CONSENT IS NOT BINARY, and this kind
+    proves it; stranger still, a reservation works separately between
+    the reserving party and EACH other party, according to whether
+    that party objected. One multilateral treaty thus dissolves into
+    a NETWORK of bilateral obligations - one document, as many
+    obligations as there are pairs.</glossa>
+    <glossa lingua="fr">Une réserve : une déclaration unilatérale par
+    laquelle une partie, en acceptant un traité, exclut ou modifie
+    pour elle-même l'effet de certains articles - un consentement non
+    entier mais circonscrit. LE CONSENTEMENT N'EST PAS BINAIRE, et ce
+    genre le prouve ; plus étrange encore, une réserve joue
+    séparément entre la partie réservataire et CHACUNE des autres
+    parties, selon que celle-ci a objecté ou non. Un seul traité
+    multilatéral se dissout ainsi en un RÉSEAU d'obligations
+    bilatérales - un seul document, autant d'obligations qu'il y a de
+    paires.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="articuli" genus="textus"/>
+    <attributum nomen="modus" genus="electio">
+      <optio>exclusio</optio>
+      <optio>modificatio</optio>
+    </attributum>
+    <attributum nomen="compatibilis-cum-fine" genus="veritas"/>
+    <attributum nomen="ad-tractatum" genus="referentia"/>
+    <attributum nomen="lata-a" genus="referentia"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="obiecta-a"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="obiecta-a" intra="limitatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="limitatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="portio-communis">
+    <glossa lingua="en">A common share: a determined part of a finite
+    common resource that someone is allowed to use while others draw
+    on the same source - a measured right, not a mere permission,
+    because what you take is missing to the rest. It differs from a
+    licence by the SOURCE (a licence permits what would otherwise be
+    unlawful and says nothing about supply, whereas a share
+    presupposes a finite and rival supply, so that measure belongs to
+    its essence) and from possession by COMMUNALITY: a possessor has
+    a thing of their own, while a shareholder has a part of a thing
+    that is another's and common - the source stays one and is never
+    divided.</glossa>
+    <glossa lingua="fr">Une part commune : une partie déterminée d'une
+    ressource commune finie dont quelqu'un peut user tandis que
+    d'autres puisent à la même source - un droit mesuré, non une
+    simple permission, car ce que vous prenez manque aux autres. Elle
+    diffère de la licence par la SOURCE (la licence permet ce qui
+    autrement serait illicite et ne dit rien de l'abondance, tandis
+    que la part suppose une ressource finie et rivale, si bien que la
+    mesure appartient à son essence) et de la possession par la
+    COMMUNAUTÉ : le possesseur a une chose à lui, tandis que le
+    titulaire d'une part a une partie d'une chose autre et commune -
+    la source demeure une et n'est jamais divisée.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="mensura" genus="textus"/>
+    <attributum nomen="adhaeret" genus="electio">
+      <optio>personae</optio>
+      <optio>praedio</optio>
+      <optio>navi</optio>
+      <optio>officio</optio>
+    </attributum>
+    <attributum nomen="transferibilis" genus="veritas"/>
+    <attributum nomen="periodica" genus="veritas"/>
+    <attributum nomen="in-re-communi" genus="referentia"/>
+    <attributum nomen="competit" genus="referentia"/>
+    <attributum nomen="statuta-per" genus="referentia"/>
+    <attributum nomen="custodita-per" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="portio-communis">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -1276,15 +1276,15 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="obligatio contractus licentia tributum titulus iussum fiducia
-           petitio delegatio tractatus limitatio portio-communis obligatio-ex-contractu
-           obligatio-ex-delicto obligatio-ex-lege emptio-venditio locatio-conductio
-           societas-contractus mandatum commodatum portorium vectigal decuma
-           tributum-capitis gradus-academicus character-indelebilis titulus-honoris
-           praescriptio-medica mandatum-iudicis iussum-emptionis iussum-operis
-           iussum-ne-resuscitetur petitio-assecurationis petitio-remota supplicatio
-           plena-potestas procuratio delegatio-canonica portio-pascui portio-piscandi
-           portio-computandi"/>
+    super="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege
+           contractus emptio-venditio locatio-conductio societas-contractus
+           mandatum commodatum licentia tributum portorium vectigal decuma
+           tributum-capitis titulus gradus-academicus character-indelebilis
+           titulus-honoris iussum praescriptio-medica mandatum-iudicis iussum-emptionis
+           iussum-operis iussum-ne-resuscitetur fiducia petitio petitio-assecurationis
+           petitio-remota supplicatio delegatio plena-potestas procuratio
+           delegatio-canonica tractatus limitatio portio-communis portio-pascui
+           portio-piscandi portio-computandi"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
@@ -1293,23 +1293,17 @@
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
   <citatio nomen="contractus-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="contractus/parit"/>
-  <citatio nomen="titulus-fundat" attributum="fundat" ad="licentia/nomen" super="titulus"/>
-  <citatio nomen="iussum-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="iussum"/>
-  <citatio nomen="iussum-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="iussum"/>
-  <citatio nomen="fiducia-officia" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="fiducia/officia"/>
-  <citatio nomen="petitio-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio"/>
-  <citatio nomen="tractatus-signatus-per" attributum="ad" ad="delegatio plena-potestas procuratio delegatio-canonica/nomen" super="tractatus/signatus-per"/>
-  <citatio nomen="tractatus-limitatus-per" attributum="ad" ad="limitatio/nomen" super="tractatus/limitatus-per"/>
-  <citatio nomen="tractatus-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="tractatus/parit"/>
-  <citatio nomen="limitatio-ad-tractatum" attributum="ad-tractatum" ad="tractatus/nomen" super="limitatio"/>
   <citatio nomen="emptio-venditio-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="emptio-venditio/parit"/>
   <citatio nomen="locatio-conductio-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="locatio-conductio/parit"/>
   <citatio nomen="societas-contractus-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="societas-contractus/parit"/>
   <citatio nomen="mandatum-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="mandatum/parit"/>
   <citatio nomen="commodatum-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="commodatum/parit"/>
+  <citatio nomen="titulus-fundat" attributum="fundat" ad="licentia/nomen" super="titulus"/>
   <citatio nomen="gradus-academicus-fundat" attributum="fundat" ad="licentia/nomen" super="gradus-academicus"/>
   <citatio nomen="character-indelebilis-fundat" attributum="fundat" ad="licentia/nomen" super="character-indelebilis"/>
   <citatio nomen="titulus-honoris-fundat" attributum="fundat" ad="licentia/nomen" super="titulus-honoris"/>
+  <citatio nomen="iussum-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="iussum"/>
+  <citatio nomen="iussum-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="iussum"/>
   <citatio nomen="praescriptio-medica-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="praescriptio-medica"/>
   <citatio nomen="praescriptio-medica-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="praescriptio-medica"/>
   <citatio nomen="mandatum-iudicis-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="mandatum-iudicis"/>
@@ -1320,8 +1314,14 @@
   <citatio nomen="iussum-operis-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="iussum-operis"/>
   <citatio nomen="iussum-ne-resuscitetur-potestate" attributum="potestate" ad="titulus gradus-academicus character-indelebilis titulus-honoris/nomen" super="iussum-ne-resuscitetur"/>
   <citatio nomen="iussum-ne-resuscitetur-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="iussum-ne-resuscitetur"/>
+  <citatio nomen="fiducia-officia" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="fiducia/officia"/>
+  <citatio nomen="petitio-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio"/>
   <citatio nomen="petitio-assecurationis-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio-assecurationis"/>
   <citatio nomen="petitio-remota-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio-remota"/>
   <citatio nomen="supplicatio-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="supplicatio"/>
+  <citatio nomen="tractatus-signatus-per" attributum="ad" ad="delegatio plena-potestas procuratio delegatio-canonica/nomen" super="tractatus/signatus-per"/>
+  <citatio nomen="tractatus-limitatus-per" attributum="ad" ad="limitatio/nomen" super="tractatus/limitatus-per"/>
+  <citatio nomen="tractatus-parit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="tractatus/parit"/>
+  <citatio nomen="limitatio-ad-tractatum" attributum="ad-tractatum" ad="tractatus/nomen" super="limitatio"/>
 
 </canon>

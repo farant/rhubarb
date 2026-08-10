@@ -6,11 +6,11 @@
   <elementum nomen="individua" radix="verum">
     <liberum nomen="substantia-chemica"/>
     <liberum nomen="medicamentum"/>
-    <liberum nomen="coctura"/>
-    <liberum nomen="interactio"/>
     <liberum nomen="medicamentum-genericum"/>
     <liberum nomen="medicamentum-nominatum"/>
     <liberum nomen="medicamentum-compositum"/>
+    <liberum nomen="coctura"/>
+    <liberum nomen="interactio"/>
     <liberum nomen="interactio-medicamentorum"/>
     <liberum nomen="interactio-cum-cibo"/>
     <liberum nomen="incompatibilitas-mercium"/>
@@ -100,71 +100,6 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="medicamentum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="coctura">
-    <glossa lingua="en">A batch: everything made in one manufacturing
-    run, sharing a common provenance and therefore a COMMON FATE -
-    what is contaminated in one unit may be contaminated in all of
-    them, and so a recall addresses the batch and never the single
-    item.</glossa>
-    <glossa lingua="fr">Un lot : tout ce qui a été fait au cours d'une
-    même production, partageant une provenance commune et donc un
-    DESTIN COMMUN - ce qui est contaminé dans une unité peut l'être
-    dans toutes, et c'est pourquoi un rappel vise le lot et jamais
-    l'objet isolé.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="numerus-cocturae" genus="textus"/>
-    <attributum nomen="quantitas-facta" genus="textus"/>
-    <attributum nomen="expirat" genus="dies"/>
-    <attributum nomen="status" genus="electio">
-      <optio>fabricata</optio>
-      <optio>probata</optio>
-      <optio>dimissa</optio>
-      <optio>revocata</optio>
-      <optio>exhausta</optio>
-      <optio>elapsa</optio>
-    </attributum>
-    <attributum nomen="coquitur" genus="referentia"/>
-    <attributum nomen="fabricata-a" genus="referentia"/>
-    <attributum nomen="acta-sua" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="coctura">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="interactio">
-    <glossa lingua="en">An interaction: a relation between two things
-    (or more) whose simultaneous presence changes the effect each
-    would have on its own. It is not a property of either one but of
-    a THIRD thing that arises from their conjunction.</glossa>
-    <glossa lingua="fr">Une interaction : une relation entre deux
-    choses (ou davantage) dont la présence simultanée modifie
-    l'effet que chacune aurait seule. Ce n'est pas une propriété de
-    l'une ou de l'autre, mais d'une TROISIÈME chose qui naît de leur
-    conjonction.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="gravitas" genus="electio">
-      <optio>levis</optio>
-      <optio>moderata</optio>
-      <optio>gravis</optio>
-      <optio>contraindicatio</optio>
-    </attributum>
-    <attributum nomen="mechanismus" genus="textus"/>
-    <attributum nomen="testimonium" genus="textus"/>
-    <attributum nomen="consilium" genus="textus"/>
-    <attributum nomen="asseritur-per" genus="referentia"/>
-    <liberum nomen="inter"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="inter" intra="interactio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="interactio">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -282,6 +217,71 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="coctura">
+    <glossa lingua="en">A batch: everything made in one manufacturing
+    run, sharing a common provenance and therefore a COMMON FATE -
+    what is contaminated in one unit may be contaminated in all of
+    them, and so a recall addresses the batch and never the single
+    item.</glossa>
+    <glossa lingua="fr">Un lot : tout ce qui a été fait au cours d'une
+    même production, partageant une provenance commune et donc un
+    DESTIN COMMUN - ce qui est contaminé dans une unité peut l'être
+    dans toutes, et c'est pourquoi un rappel vise le lot et jamais
+    l'objet isolé.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="numerus-cocturae" genus="textus"/>
+    <attributum nomen="quantitas-facta" genus="textus"/>
+    <attributum nomen="expirat" genus="dies"/>
+    <attributum nomen="status" genus="electio">
+      <optio>fabricata</optio>
+      <optio>probata</optio>
+      <optio>dimissa</optio>
+      <optio>revocata</optio>
+      <optio>exhausta</optio>
+      <optio>elapsa</optio>
+    </attributum>
+    <attributum nomen="coquitur" genus="referentia"/>
+    <attributum nomen="fabricata-a" genus="referentia"/>
+    <attributum nomen="acta-sua" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="coctura">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="interactio">
+    <glossa lingua="en">An interaction: a relation between two things
+    (or more) whose simultaneous presence changes the effect each
+    would have on its own. It is not a property of either one but of
+    a THIRD thing that arises from their conjunction.</glossa>
+    <glossa lingua="fr">Une interaction : une relation entre deux
+    choses (ou davantage) dont la présence simultanée modifie
+    l'effet que chacune aurait seule. Ce n'est pas une propriété de
+    l'une ou de l'autre, mais d'une TROISIÈME chose qui naît de leur
+    conjonction.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>moderata</optio>
+      <optio>gravis</optio>
+      <optio>contraindicatio</optio>
+    </attributum>
+    <attributum nomen="mechanismus" genus="textus"/>
+    <attributum nomen="testimonium" genus="textus"/>
+    <attributum nomen="consilium" genus="textus"/>
+    <attributum nomen="asseritur-per" genus="referentia"/>
+    <liberum nomen="inter"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="inter" intra="interactio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="interactio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="interactio-medicamentorum">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="gravitas" genus="electio">
@@ -365,8 +365,8 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="substantia-chemica medicamentum coctura interactio medicamentum-genericum
-           medicamentum-nominatum medicamentum-compositum interactio-medicamentorum
+    super="substantia-chemica medicamentum medicamentum-genericum medicamentum-nominatum
+           medicamentum-compositum coctura interactio interactio-medicamentorum
            interactio-cum-cibo incompatibilitas-mercium"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.

@@ -5,34 +5,29 @@
 
   <elementum nomen="individua" radix="verum">
     <liberum nomen="gradus-assensus"/>
-    <liberum nomen="fons"/>
-    <liberum nomen="observatio"/>
-    <liberum nomen="praeceptum"/>
-    <liberum nomen="iudicium"/>
-    <liberum nomen="annotatio"/>
-    <liberum nomen="periculum"/>
-    <liberum nomen="ignotum"/>
-    <liberum nomen="investigatio"/>
-    <liberum nomen="secretum"/>
-    <liberum nomen="peritia-communis"/>
-    <liberum nomen="attributio"/>
-    <liberum nomen="fundamentum"/>
     <liberum nomen="scientia"/>
     <liberum nomen="opinio"/>
     <liberum nomen="fides"/>
     <liberum nomen="suspicio"/>
     <liberum nomen="dubitatio"/>
+    <liberum nomen="fons"/>
     <liberum nomen="fons-scriptus"/>
     <liberum nomen="fons-mensurae"/>
     <liberum nomen="fons-testimonii"/>
     <liberum nomen="corpus-institutionis"/>
+    <liberum nomen="observatio"/>
     <liberum nomen="symptoma"/>
     <liberum nomen="signum"/>
     <liberum nomen="testimonium"/>
+    <liberum nomen="praeceptum"/>
+    <liberum nomen="iudicium"/>
     <liberum nomen="diagnosis"/>
     <liberum nomen="aestimatio"/>
     <liberum nomen="praedictio"/>
     <liberum nomen="sententia-iudicis"/>
+    <liberum nomen="annotatio"/>
+    <liberum nomen="periculum"/>
+    <liberum nomen="ignotum"/>
     <liberum nomen="ignotum-notum"/>
     <liberum nomen="ignotum-ignotum"/>
     <liberum nomen="indeterminatum"/>
@@ -40,16 +35,21 @@
     <liberum nomen="retentum"/>
     <liberum nomen="impertinens"/>
     <liberum nomen="controversum"/>
+    <liberum nomen="investigatio"/>
     <liberum nomen="investigatio-praeventiva"/>
     <liberum nomen="inquisitio-forensis"/>
     <liberum nomen="recensio-post-mortem"/>
+    <liberum nomen="secretum"/>
     <liberum nomen="clavis-privata"/>
     <liberum nomen="verbum-arcanum"/>
     <liberum nomen="secretum-negotii"/>
     <liberum nomen="sigillum-confessionis"/>
+    <liberum nomen="peritia-communis"/>
     <liberum nomen="notitia-pascui"/>
     <liberum nomen="ars-officinae"/>
     <liberum nomen="memoria-operis"/>
+    <liberum nomen="attributio"/>
+    <liberum nomen="fundamentum"/>
     <liberum nomen="autopsia"/>
     <liberum nomen="mensuratio"/>
     <liberum nomen="documentum-scriptum"/>
@@ -79,6 +79,51 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="scientia">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="scientia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="opinio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="opinio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fides">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="fides">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="suspicio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="suspicio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="dubitatio">
+    <attributum nomen="nomen" genus="identitas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="dubitatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="fons">
     <glossa lingua="en">A source: that from which a proposition was
     received - a work, a measurement, a witness, an institutional
@@ -99,6 +144,50 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="fons">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fons-scriptus">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="clavis" genus="textus"/>
+    <attributum nomen="verificatus" genus="veritas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="fons-scriptus">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fons-mensurae">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="clavis" genus="textus"/>
+    <attributum nomen="verificatus" genus="veritas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="fons-mensurae">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fons-testimonii">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="clavis" genus="textus"/>
+    <attributum nomen="verificatus" genus="veritas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="fons-testimonii">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="corpus-institutionis">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="clavis" genus="textus"/>
+    <attributum nomen="verificatus" genus="veritas"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="corpus-institutionis">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -126,6 +215,54 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="observatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="symptoma">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
+    <attributum nomen="verificabilis-ab-alio" genus="veritas" ordinarius="falsum"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="ex-fonte" genus="referentia"/>
+    <attributum nomen="fundat" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="symptoma">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="signum">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
+    <attributum nomen="verificabilis-ab-alio" genus="veritas" ordinarius="verum"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="ex-fonte" genus="referentia"/>
+    <attributum nomen="fundat" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="signum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="testimonium">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="via" genus="textus"/>
+    <attributum nomen="verificabilis-ab-alio" genus="veritas"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="ex-fonte" genus="referentia"/>
+    <attributum nomen="fundat" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="testimonium">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -200,462 +337,6 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="iudicium">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="annotatio">
-    <glossa lingua="en">A machine-proved proposition: proved by an
-    instrument running outside the program - no assent, no
-    revision by persuasion; against its rule it stands or falls.
-    Its authority is transitive, flowing through the rule and
-    through the instrument's maker - the machine is the proximate
-    prover, never the author.</glossa>
-    <glossa lingua="fr">Une proposition prouvée par machine : prouvée
-    par un instrument hors du programme - sans assentiment, sans
-    révision par persuasion ; devant sa règle elle tient ou tombe.
-    Son autorité est transitive, coulant par la règle et par
-    l'artisan de l'instrument - la machine est le prouveur
-    prochain, jamais l'auteur.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="de" genus="referentia"/>
-    <attributum nomen="probator" genus="referentia"/>
-    <attributum nomen="ex-regula" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="annotatio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="periculum">
-    <glossa lingua="en">A risk: a harm that can happen and is not
-    certain - a kind of judgement about the future, but a DOUBLE
-    one, since it consists of probability and gravity at once. It
-    therefore cannot be stated as a single number without lying:
-    what happens rarely but ruins everything and what happens often
-    but harms little are not the same risk, even when the product is
-    the same.</glossa>
-    <glossa lingua="fr">Un risque : un dommage qui peut arriver sans
-    être certain - une espèce de jugement sur l'avenir, mais un
-    jugement DOUBLE, car il consiste à la fois en une probabilité et
-    en une gravité. On ne peut donc l'énoncer par un seul nombre
-    sans mentir : ce qui arrive rarement mais ruine tout et ce qui
-    arrive souvent mais nuit peu ne sont pas le même risque, même
-    lorsque le produit est identique.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="probabilitas" genus="numerus" fractio="verum" minimum="0" maximum="1"/>
-    <attributum nomen="gravitas" genus="electio">
-      <optio>levis</optio>
-      <optio>gravis</optio>
-      <optio>exitialis</optio>
-    </attributum>
-    <attributum nomen="minatur" genus="referentia"/>
-    <attributum nomen="transfertur-per" genus="referentia"/>
-    <liberum nomen="minuitur-per"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="minuitur-per" intra="periculum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="periculum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="ignotum">
-    <glossa lingua="en">An unknown: an absence of knowledge
-    ACKNOWLEDGED and named - a gap that can be handled precisely
-    because it has been named. Not plain ignorance, which posits
-    nothing, but ignorance turned into a thing: something that can
-    be inquired into, assigned, counted and resolved.</glossa>
-    <glossa lingua="fr">Un inconnu : une absence de connaissance
-    RECONNUE et nommée - une lacune que l'on peut traiter justement
-    parce qu'elle a été nommée. Non pas l'ignorance simple, qui ne
-    pose rien, mais l'ignorance convertie en chose : ce sur quoi on
-    peut enquêter, ce que l'on peut assigner, dénombrer et
-    résoudre.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="quaestio" genus="textus"/>
-    <attributum nomen="impediens" genus="veritas"/>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>agnitum</optio>
-      <optio>quaesitum</optio>
-      <optio>solutum</optio>
-      <optio>relictum</optio>
-      <optio>insolubile</optio>
-    </attributum>
-    <attributum nomen="de" genus="referentia"/>
-    <attributum nomen="agnitum-per" genus="referentia"/>
-    <liberum nomen="impedit"/>
-    <liberum nomen="solvitur-per"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="impedit" intra="ignotum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="solvitur-per" intra="ignotum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="ignotum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="investigatio">
-    <glossa lingua="en">An investigation: an ordered inquiry into the
-    causes of an event, producing judgements about those causes. It
-    differs from an observation because it CONCLUDES, and from a
-    simple judgement because it proceeds by method and gathers
-    testimony before concluding.</glossa>
-    <glossa lingua="fr">Une enquête : une recherche ordonnée sur les
-    causes d'un événement, qui produit des jugements sur ces causes.
-    Elle diffère de l'observation parce qu'elle CONCLUT, et du
-    simple jugement parce qu'elle procède par méthode et recueille
-    les témoignages avant de conclure.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="finis" genus="electio">
-      <optio>praeventio</optio>
-      <optio>attributio_culpae</optio>
-      <optio>uterque</optio>
-    </attributum>
-    <attributum nomen="status-cursus" genus="electio">
-      <optio>aperta</optio>
-      <optio>colligens</optio>
-      <optio>concludens</optio>
-      <optio>relata</optio>
-      <optio>suspensa</optio>
-    </attributum>
-    <attributum nomen="de" genus="referentia"/>
-    <liberum nomen="colligit"/>
-    <liberum nomen="producit"/>
-    <liberum nomen="invenit"/>
-    <liberum nomen="parit"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="colligit" intra="investigatio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="producit" intra="investigatio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="invenit" intra="investigatio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="parit" intra="investigatio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="investigatio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="secretum">
-    <glossa lingua="en">A secret: a thing whose usefulness consists in
-    the fact that few know it - once divulged it is neither
-    corrupted nor destroyed but STRIPPED OF ITS OFFICE, remaining
-    whole and made useless. Its life runs ONE WAY, and that defines
-    the kind: no action makes a divulged secret secret again. Other
-    things can be repaired; a secret is not repaired but REPLACED,
-    and the replacement is another thing, not the same one
-    restored.</glossa>
-    <glossa lingua="fr">Un secret : une chose dont l'utilité consiste
-    en ce que peu de gens la connaissent - divulguée, elle n'est ni
-    corrompue ni détruite mais DÉPOUILLÉE DE SA FONCTION, demeurant
-    entière et devenue inutile. Sa vie est à SENS UNIQUE, et cela
-    définit le genre : aucune action ne rend secret un secret
-    divulgué. Les autres choses se réparent ; un secret ne se répare
-    pas mais se REMPLACE, et le remplaçant est autre chose, non le
-    même restitué.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="numerus-scientium" genus="numerus"/>
-    <attributum nomen="substituibile" genus="veritas"/>
-    <attributum nomen="valor-temporarius" genus="veritas"/>
-    <attributum nomen="status-custodia" genus="electio">
-      <optio>custoditum</optio>
-      <optio>suspectum</optio>
-      <optio>compromissum</optio>
-      <optio>emeritum</optio>
-    </attributum>
-    <attributum nomen="substituit" genus="referentia"/>
-    <liberum nomen="scitur-a"/>
-    <liberum nomen="custodia-obligat"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="scitur-a" intra="secretum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="custodia-obligat" intra="secretum">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="secretum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="peritia-communis">
-    <glossa lingua="en">Common expertise: a knowledge or skill that
-    resides in the community as a whole and is complete in no single
-    member - it is handed on by taking part, not by teaching alone,
-    and it perishes when the group is dissolved even though no one
-    has forgotten it. THE BEARER IS THE GROUP, not the member, so
-    its proper way of dying is not forgetfulness but DISCONTINUITY:
-    members can be replaced one at a time and the expertise
-    survives, replaced all at once and it is gone. The loss is
-    therefore measured not by how many were lost but by how many
-    were lost at the same time.</glossa>
-    <glossa lingua="fr">Un savoir-faire collectif : une connaissance
-    ou un art qui réside dans la communauté entière et n'est complet
-    en aucun de ses membres - il se transmet par la participation,
-    non par le seul enseignement, et il périt lorsque le groupe se
-    dissout même si personne ne l'a oublié. LE PORTEUR EST LE
-    GROUPE, non le membre ; sa manière propre de mourir n'est donc
-    pas l'oubli mais la DISCONTINUITÉ : on peut remplacer les
-    membres un à un sans perdre le savoir, tous à la fois et il
-    disparaît. Le dommage se mesure donc non au nombre des perdus
-    mais au nombre de ceux qui furent perdus en même temps.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="modus-traditionis" genus="electio">
-      <optio>participatione</optio>
-      <optio>institutione</optio>
-      <optio>utroque</optio>
-    </attributum>
-    <attributum nomen="scribi-potest" genus="veritas"/>
-    <attributum nomen="tempus-restituendi" genus="textus"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>vigens</optio>
-      <optio>attenuata</optio>
-      <optio>amissa</optio>
-      <optio>restituta</optio>
-    </attributum>
-    <attributum nomen="residet-in" genus="referentia"/>
-    <attributum nomen="de" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="peritia-communis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="attributio">
-    <glossa lingua="en">An attribution: a judgement - a proposition
-    held by someone, with author, moment and degree of assent -
-    about WHO MADE a work. It uses two measures at once: how firmly
-    it is held (certainty, as in every judgement) and how far the
-    named author was present to the work (proximity, proper to this
-    kind). Two things that ordinary speech confuses into a single
-    "perhaps".</glossa>
-    <glossa lingua="fr">Une attribution : un jugement - une
-    proposition tenue par quelqu'un, avec auteur, moment et degré
-    d'assentiment - sur QUI A FAIT une œuvre. Elle emploie deux
-    mesures à la fois : la fermeté avec laquelle on la tient (la
-    certitude, comme pour tout jugement) et la part que la main de
-    l'auteur nommé a prise à l'œuvre (la proximité, propre à ce
-    genre). Deux choses que le langage courant confond en un seul
-    « peut-être ».</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="propinquitas" genus="electio">
-      <optio>manu_ipsius</optio>
-      <optio>cum_adiutoribus</optio>
-      <optio>officinae</optio>
-      <optio>circuli</optio>
-      <optio>sectatoris</optio>
-      <optio>post_eum</optio>
-      <optio>in_modo_eius</optio>
-    </attributum>
-    <attributum nomen="de-opere" genus="referentia"/>
-    <attributum nomen="ad-auctorem" genus="referentia"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="latum" genus="dies"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>latum</optio>
-      <optio>confirmatum</optio>
-      <optio>revisum</optio>
-      <optio>retractatum</optio>
-    </attributum>
-    <attributum nomen="auctor" genus="referentia"/>
-    <attributum nomen="de" genus="referentia"/>
-    <attributum nomen="assensus" genus="referentia"/>
-    <attributum nomen="superat" genus="referentia"/>
-    <liberum nomen="fundamentum-attributionis"/>
-    <liberum nomen="fundatur-in"/>
-    <liberum nomen="ex-fonte"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="fundamentum-attributionis" intra="attributio" textus="verum"/>
-  <elementum nomen="fundatur-in" intra="attributio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="ex-fonte" intra="attributio">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="attributio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="fundamentum">
-    <glossa lingua="en">A ground: that on which a proposition rests -
-    not where it was received from (that is the source), nor how
-    firmly it is held (that is the degree of assent), but WHAT KIND
-    OF THING SUSTAINS IT. A fourth and distinct axis for qualifying
-    a claim, free of the other three: a proposition resting on
-    firsthand sight may be held hesitantly, and a conjecture most
-    firmly of all.</glossa>
-    <glossa lingua="fr">Un fondement : ce sur quoi une proposition
-    s'appuie - non pas d'où elle a été reçue (c'est la source), ni
-    avec quelle fermeté on la tient (c'est le degré d'assentiment),
-    mais QUELLE EST LA NATURE DE CE QUI LA SOUTIENT. Un quatrième
-    axe, distinct, pour qualifier une assertion, libre des trois
-    autres : une proposition fondée sur la vue directe peut être
-    tenue avec hésitation, et une conjecture avec la plus grande
-    fermeté.</glossa>
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="verificabile-ab-alio" genus="veritas"/>
-    <attributum nomen="repetibile" genus="veritas"/>
-    <attributum nomen="sustinet" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="fundamentum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="scientia">
-    <attributum nomen="nomen" genus="identitas"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="scientia">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="opinio">
-    <attributum nomen="nomen" genus="identitas"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="opinio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="fides">
-    <attributum nomen="nomen" genus="identitas"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="fides">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="suspicio">
-    <attributum nomen="nomen" genus="identitas"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="suspicio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="dubitatio">
-    <attributum nomen="nomen" genus="identitas"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="dubitatio">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="fons-scriptus">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="clavis" genus="textus"/>
-    <attributum nomen="verificatus" genus="veritas"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="fons-scriptus">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="fons-mensurae">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="clavis" genus="textus"/>
-    <attributum nomen="verificatus" genus="veritas"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="fons-mensurae">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="fons-testimonii">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="clavis" genus="textus"/>
-    <attributum nomen="verificatus" genus="veritas"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="fons-testimonii">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="corpus-institutionis">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="clavis" genus="textus"/>
-    <attributum nomen="verificatus" genus="veritas"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="corpus-institutionis">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="symptoma">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="facta" genus="dies"/>
-    <attributum nomen="via" genus="textus"/>
-    <attributum nomen="verificabilis-ab-alio" genus="veritas" ordinarius="falsum"/>
-    <attributum nomen="de" genus="referentia"/>
-    <attributum nomen="ex-fonte" genus="referentia"/>
-    <attributum nomen="fundat" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="symptoma">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="signum">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="facta" genus="dies"/>
-    <attributum nomen="via" genus="textus"/>
-    <attributum nomen="verificabilis-ab-alio" genus="veritas" ordinarius="verum"/>
-    <attributum nomen="de" genus="referentia"/>
-    <attributum nomen="ex-fonte" genus="referentia"/>
-    <attributum nomen="fundat" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="signum">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="testimonium">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="contentum" genus="textus"/>
-    <attributum nomen="facta" genus="dies"/>
-    <attributum nomen="via" genus="textus"/>
-    <attributum nomen="verificabilis-ab-alio" genus="veritas"/>
-    <attributum nomen="de" genus="referentia"/>
-    <attributum nomen="ex-fonte" genus="referentia"/>
-    <attributum nomen="fundat" genus="referentia"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="historia" intra="testimonium">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -772,6 +453,106 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="sententia-iudicis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="annotatio">
+    <glossa lingua="en">A machine-proved proposition: proved by an
+    instrument running outside the program - no assent, no
+    revision by persuasion; against its rule it stands or falls.
+    Its authority is transitive, flowing through the rule and
+    through the instrument's maker - the machine is the proximate
+    prover, never the author.</glossa>
+    <glossa lingua="fr">Une proposition prouvée par machine : prouvée
+    par un instrument hors du programme - sans assentiment, sans
+    révision par persuasion ; devant sa règle elle tient ou tombe.
+    Son autorité est transitive, coulant par la règle et par
+    l'artisan de l'instrument - la machine est le prouveur
+    prochain, jamais l'auteur.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="probator" genus="referentia"/>
+    <attributum nomen="ex-regula" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="annotatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="periculum">
+    <glossa lingua="en">A risk: a harm that can happen and is not
+    certain - a kind of judgement about the future, but a DOUBLE
+    one, since it consists of probability and gravity at once. It
+    therefore cannot be stated as a single number without lying:
+    what happens rarely but ruins everything and what happens often
+    but harms little are not the same risk, even when the product is
+    the same.</glossa>
+    <glossa lingua="fr">Un risque : un dommage qui peut arriver sans
+    être certain - une espèce de jugement sur l'avenir, mais un
+    jugement DOUBLE, car il consiste à la fois en une probabilité et
+    en une gravité. On ne peut donc l'énoncer par un seul nombre
+    sans mentir : ce qui arrive rarement mais ruine tout et ce qui
+    arrive souvent mais nuit peu ne sont pas le même risque, même
+    lorsque le produit est identique.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="probabilitas" genus="numerus" fractio="verum" minimum="0" maximum="1"/>
+    <attributum nomen="gravitas" genus="electio">
+      <optio>levis</optio>
+      <optio>gravis</optio>
+      <optio>exitialis</optio>
+    </attributum>
+    <attributum nomen="minatur" genus="referentia"/>
+    <attributum nomen="transfertur-per" genus="referentia"/>
+    <liberum nomen="minuitur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="minuitur-per" intra="periculum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="periculum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="ignotum">
+    <glossa lingua="en">An unknown: an absence of knowledge
+    ACKNOWLEDGED and named - a gap that can be handled precisely
+    because it has been named. Not plain ignorance, which posits
+    nothing, but ignorance turned into a thing: something that can
+    be inquired into, assigned, counted and resolved.</glossa>
+    <glossa lingua="fr">Un inconnu : une absence de connaissance
+    RECONNUE et nommée - une lacune que l'on peut traiter justement
+    parce qu'elle a été nommée. Non pas l'ignorance simple, qui ne
+    pose rien, mais l'ignorance convertie en chose : ce sur quoi on
+    peut enquêter, ce que l'on peut assigner, dénombrer et
+    résoudre.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="quaestio" genus="textus"/>
+    <attributum nomen="impediens" genus="veritas"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>agnitum</optio>
+      <optio>quaesitum</optio>
+      <optio>solutum</optio>
+      <optio>relictum</optio>
+      <optio>insolubile</optio>
+    </attributum>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="agnitum-per" genus="referentia"/>
+    <liberum nomen="impedit"/>
+    <liberum nomen="solvitur-per"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="impedit" intra="ignotum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="solvitur-per" intra="ignotum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="ignotum">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -971,6 +752,54 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="investigatio">
+    <glossa lingua="en">An investigation: an ordered inquiry into the
+    causes of an event, producing judgements about those causes. It
+    differs from an observation because it CONCLUDES, and from a
+    simple judgement because it proceeds by method and gathers
+    testimony before concluding.</glossa>
+    <glossa lingua="fr">Une enquête : une recherche ordonnée sur les
+    causes d'un événement, qui produit des jugements sur ces causes.
+    Elle diffère de l'observation parce qu'elle CONCLUT, et du
+    simple jugement parce qu'elle procède par méthode et recueille
+    les témoignages avant de conclure.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="finis" genus="electio">
+      <optio>praeventio</optio>
+      <optio>attributio_culpae</optio>
+      <optio>uterque</optio>
+    </attributum>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>aperta</optio>
+      <optio>colligens</optio>
+      <optio>concludens</optio>
+      <optio>relata</optio>
+      <optio>suspensa</optio>
+    </attributum>
+    <attributum nomen="de" genus="referentia"/>
+    <liberum nomen="colligit"/>
+    <liberum nomen="producit"/>
+    <liberum nomen="invenit"/>
+    <liberum nomen="parit"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="colligit" intra="investigatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="producit" intra="investigatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="invenit" intra="investigatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="parit" intra="investigatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="investigatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="investigatio-praeventiva">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="finis" genus="electio" ordinarius="praeventio">
@@ -1085,6 +914,49 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="secretum">
+    <glossa lingua="en">A secret: a thing whose usefulness consists in
+    the fact that few know it - once divulged it is neither
+    corrupted nor destroyed but STRIPPED OF ITS OFFICE, remaining
+    whole and made useless. Its life runs ONE WAY, and that defines
+    the kind: no action makes a divulged secret secret again. Other
+    things can be repaired; a secret is not repaired but REPLACED,
+    and the replacement is another thing, not the same one
+    restored.</glossa>
+    <glossa lingua="fr">Un secret : une chose dont l'utilité consiste
+    en ce que peu de gens la connaissent - divulguée, elle n'est ni
+    corrompue ni détruite mais DÉPOUILLÉE DE SA FONCTION, demeurant
+    entière et devenue inutile. Sa vie est à SENS UNIQUE, et cela
+    définit le genre : aucune action ne rend secret un secret
+    divulgué. Les autres choses se réparent ; un secret ne se répare
+    pas mais se REMPLACE, et le remplaçant est autre chose, non le
+    même restitué.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="numerus-scientium" genus="numerus"/>
+    <attributum nomen="substituibile" genus="veritas"/>
+    <attributum nomen="valor-temporarius" genus="veritas"/>
+    <attributum nomen="status-custodia" genus="electio">
+      <optio>custoditum</optio>
+      <optio>suspectum</optio>
+      <optio>compromissum</optio>
+      <optio>emeritum</optio>
+    </attributum>
+    <attributum nomen="substituit" genus="referentia"/>
+    <liberum nomen="scitur-a"/>
+    <liberum nomen="custodia-obligat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="scitur-a" intra="secretum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="custodia-obligat" intra="secretum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="secretum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="clavis-privata">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="numerus-scientium" genus="numerus"/>
@@ -1193,6 +1065,50 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="peritia-communis">
+    <glossa lingua="en">Common expertise: a knowledge or skill that
+    resides in the community as a whole and is complete in no single
+    member - it is handed on by taking part, not by teaching alone,
+    and it perishes when the group is dissolved even though no one
+    has forgotten it. THE BEARER IS THE GROUP, not the member, so
+    its proper way of dying is not forgetfulness but DISCONTINUITY:
+    members can be replaced one at a time and the expertise
+    survives, replaced all at once and it is gone. The loss is
+    therefore measured not by how many were lost but by how many
+    were lost at the same time.</glossa>
+    <glossa lingua="fr">Un savoir-faire collectif : une connaissance
+    ou un art qui réside dans la communauté entière et n'est complet
+    en aucun de ses membres - il se transmet par la participation,
+    non par le seul enseignement, et il périt lorsque le groupe se
+    dissout même si personne ne l'a oublié. LE PORTEUR EST LE
+    GROUPE, non le membre ; sa manière propre de mourir n'est donc
+    pas l'oubli mais la DISCONTINUITÉ : on peut remplacer les
+    membres un à un sans perdre le savoir, tous à la fois et il
+    disparaît. Le dommage se mesure donc non au nombre des perdus
+    mais au nombre de ceux qui furent perdus en même temps.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="modus-traditionis" genus="electio">
+      <optio>participatione</optio>
+      <optio>institutione</optio>
+      <optio>utroque</optio>
+    </attributum>
+    <attributum nomen="scribi-potest" genus="veritas"/>
+    <attributum nomen="tempus-restituendi" genus="textus"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>vigens</optio>
+      <optio>attenuata</optio>
+      <optio>amissa</optio>
+      <optio>restituta</optio>
+    </attributum>
+    <attributum nomen="residet-in" genus="referentia"/>
+    <attributum nomen="de" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="peritia-communis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="notitia-pascui">
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-traditionis" genus="electio" ordinarius="participatione">
@@ -1262,6 +1178,90 @@
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="historia" intra="memoria-operis">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="attributio">
+    <glossa lingua="en">An attribution: a judgement - a proposition
+    held by someone, with author, moment and degree of assent -
+    about WHO MADE a work. It uses two measures at once: how firmly
+    it is held (certainty, as in every judgement) and how far the
+    named author was present to the work (proximity, proper to this
+    kind). Two things that ordinary speech confuses into a single
+    "perhaps".</glossa>
+    <glossa lingua="fr">Une attribution : un jugement - une
+    proposition tenue par quelqu'un, avec auteur, moment et degré
+    d'assentiment - sur QUI A FAIT une œuvre. Elle emploie deux
+    mesures à la fois : la fermeté avec laquelle on la tient (la
+    certitude, comme pour tout jugement) et la part que la main de
+    l'auteur nommé a prise à l'œuvre (la proximité, propre à ce
+    genre). Deux choses que le langage courant confond en un seul
+    « peut-être ».</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="propinquitas" genus="electio">
+      <optio>manu_ipsius</optio>
+      <optio>cum_adiutoribus</optio>
+      <optio>officinae</optio>
+      <optio>circuli</optio>
+      <optio>sectatoris</optio>
+      <optio>post_eum</optio>
+      <optio>in_modo_eius</optio>
+    </attributum>
+    <attributum nomen="de-opere" genus="referentia"/>
+    <attributum nomen="ad-auctorem" genus="referentia"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="latum" genus="dies"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>latum</optio>
+      <optio>confirmatum</optio>
+      <optio>revisum</optio>
+      <optio>retractatum</optio>
+    </attributum>
+    <attributum nomen="auctor" genus="referentia"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="assensus" genus="referentia"/>
+    <attributum nomen="superat" genus="referentia"/>
+    <liberum nomen="fundamentum-attributionis"/>
+    <liberum nomen="fundatur-in"/>
+    <liberum nomen="ex-fonte"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="fundamentum-attributionis" intra="attributio" textus="verum"/>
+  <elementum nomen="fundatur-in" intra="attributio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="ex-fonte" intra="attributio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="attributio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="fundamentum">
+    <glossa lingua="en">A ground: that on which a proposition rests -
+    not where it was received from (that is the source), nor how
+    firmly it is held (that is the degree of assent), but WHAT KIND
+    OF THING SUSTAINS IT. A fourth and distinct axis for qualifying
+    a claim, free of the other three: a proposition resting on
+    firsthand sight may be held hesitantly, and a conjecture most
+    firmly of all.</glossa>
+    <glossa lingua="fr">Un fondement : ce sur quoi une proposition
+    s'appuie - non pas d'où elle a été reçue (c'est la source), ni
+    avec quelle fermeté on la tient (c'est le degré d'assentiment),
+    mais QUELLE EST LA NATURE DE CE QUI LA SOUTIENT. Un quatrième
+    axe, distinct, pour qualifier une assertion, libre des trois
+    autres : une proposition fondée sur la vue directe peut être
+    tenue avec hésitation, et une conjecture avec la plus grande
+    fermeté.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="verificabile-ab-alio" genus="veritas"/>
+    <attributum nomen="repetibile" genus="veritas"/>
+    <attributum nomen="sustinet" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="historia" intra="fundamentum">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -1380,15 +1380,15 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="gradus-assensus fons observatio praeceptum iudicium annotatio
-           periculum ignotum investigatio secretum peritia-communis attributio
-           fundamentum scientia opinio fides suspicio dubitatio fons-scriptus
-           fons-mensurae fons-testimonii corpus-institutionis symptoma signum
-           testimonium diagnosis aestimatio praedictio sententia-iudicis
+    super="gradus-assensus scientia opinio fides suspicio dubitatio fons
+           fons-scriptus fons-mensurae fons-testimonii corpus-institutionis
+           observatio symptoma signum testimonium praeceptum iudicium diagnosis
+           aestimatio praedictio sententia-iudicis annotatio periculum ignotum
            ignotum-notum ignotum-ignotum indeterminatum amissum retentum
-           impertinens controversum investigatio-praeventiva inquisitio-forensis
-           recensio-post-mortem clavis-privata verbum-arcanum secretum-negotii
-           sigillum-confessionis notitia-pascui ars-officinae memoria-operis
+           impertinens controversum investigatio investigatio-praeventiva
+           inquisitio-forensis recensio-post-mortem secretum clavis-privata
+           verbum-arcanum secretum-negotii sigillum-confessionis peritia-communis
+           notitia-pascui ars-officinae memoria-operis attributio fundamentum
            autopsia mensuratio documentum-scriptum auctoritas-testis illatio
            comparatio-stili coniectura-periti praesumptio"/>
 
@@ -1399,23 +1399,14 @@
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
   <citatio nomen="observatio-ex-fonte" attributum="ex-fonte" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="observatio"/>
+  <citatio nomen="symptoma-ex-fonte" attributum="ex-fonte" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="symptoma"/>
+  <citatio nomen="signum-ex-fonte" attributum="ex-fonte" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="signum"/>
+  <citatio nomen="testimonium-ex-fonte" attributum="ex-fonte" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="testimonium"/>
   <citatio nomen="praeceptum-pertinet-ad" attributum="pertinet-ad" ad="peritia-communis notitia-pascui ars-officinae memoria-operis/nomen" super="praeceptum"/>
   <citatio nomen="iudicium-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="iudicium"/>
   <citatio nomen="iudicium-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="iudicium/fundatur-in"/>
   <citatio nomen="iudicium-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="iudicium/ex-fonte"/>
   <citatio nomen="iudicium-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="iudicium"/>
-  <citatio nomen="ignotum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum"/>
-  <citatio nomen="ignotum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="ignotum/solvitur-per"/>
-  <citatio nomen="investigatio-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="investigatio/colligit"/>
-  <citatio nomen="investigatio-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="investigatio/producit"/>
-  <citatio nomen="secretum-substituit" attributum="substituit" ad="secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis/nomen" super="secretum"/>
-  <citatio nomen="attributio-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="attributio"/>
-  <citatio nomen="attributio-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="attributio/fundatur-in"/>
-  <citatio nomen="attributio-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="attributio/ex-fonte"/>
-  <citatio nomen="attributio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="attributio"/>
-  <citatio nomen="symptoma-ex-fonte" attributum="ex-fonte" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="symptoma"/>
-  <citatio nomen="signum-ex-fonte" attributum="ex-fonte" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="signum"/>
-  <citatio nomen="testimonium-ex-fonte" attributum="ex-fonte" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="testimonium"/>
   <citatio nomen="diagnosis-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="diagnosis"/>
   <citatio nomen="diagnosis-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="diagnosis/fundatur-in"/>
   <citatio nomen="diagnosis-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="diagnosis/ex-fonte"/>
@@ -1432,6 +1423,8 @@
   <citatio nomen="sententia-iudicis-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="sententia-iudicis/fundatur-in"/>
   <citatio nomen="sententia-iudicis-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="sententia-iudicis/ex-fonte"/>
   <citatio nomen="sententia-iudicis-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="sententia-iudicis"/>
+  <citatio nomen="ignotum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum"/>
+  <citatio nomen="ignotum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="ignotum/solvitur-per"/>
   <citatio nomen="ignotum-notum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum-notum"/>
   <citatio nomen="ignotum-notum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="ignotum-notum/solvitur-per"/>
   <citatio nomen="ignotum-ignotum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum-ignotum"/>
@@ -1446,15 +1439,22 @@
   <citatio nomen="impertinens-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="impertinens/solvitur-per"/>
   <citatio nomen="controversum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="controversum"/>
   <citatio nomen="controversum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="controversum/solvitur-per"/>
+  <citatio nomen="investigatio-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="investigatio/colligit"/>
+  <citatio nomen="investigatio-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="investigatio/producit"/>
   <citatio nomen="investigatio-praeventiva-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="investigatio-praeventiva/colligit"/>
   <citatio nomen="investigatio-praeventiva-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="investigatio-praeventiva/producit"/>
   <citatio nomen="inquisitio-forensis-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="inquisitio-forensis/colligit"/>
   <citatio nomen="inquisitio-forensis-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="inquisitio-forensis/producit"/>
   <citatio nomen="recensio-post-mortem-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="recensio-post-mortem/colligit"/>
   <citatio nomen="recensio-post-mortem-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="recensio-post-mortem/producit"/>
+  <citatio nomen="secretum-substituit" attributum="substituit" ad="secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis/nomen" super="secretum"/>
   <citatio nomen="clavis-privata-substituit" attributum="substituit" ad="secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis/nomen" super="clavis-privata"/>
   <citatio nomen="verbum-arcanum-substituit" attributum="substituit" ad="secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis/nomen" super="verbum-arcanum"/>
   <citatio nomen="secretum-negotii-substituit" attributum="substituit" ad="secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis/nomen" super="secretum-negotii"/>
   <citatio nomen="sigillum-confessionis-substituit" attributum="substituit" ad="secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis/nomen" super="sigillum-confessionis"/>
+  <citatio nomen="attributio-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="attributio"/>
+  <citatio nomen="attributio-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="attributio/fundatur-in"/>
+  <citatio nomen="attributio-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="attributio/ex-fonte"/>
+  <citatio nomen="attributio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="attributio"/>
 
 </canon>

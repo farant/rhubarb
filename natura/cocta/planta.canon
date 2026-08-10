@@ -7,8 +7,8 @@
     <liberum nomen="planta"/>
     <liberum nomen="rosaceae"/>
     <liberum nomen="rosa"/>
-    <liberum nomen="malus"/>
     <liberum nomen="rosa-canina"/>
+    <liberum nomen="malus"/>
     <liberum nomen="malus-domestica"/>
     <liberum nomen="granny-smith"/>
   </elementum>
@@ -285,6 +285,88 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="rosa-canina">
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="habitus" genus="electio" ordinarius="frutex">
+      <optio>herba</optio>
+      <optio>frutex</optio>
+      <optio>arbor</optio>
+      <optio>scandens</optio>
+    </attributum>
+    <attributum nomen="durata" genus="electio" ordinarius="perennis">
+      <optio>annua</optio>
+      <optio>biennis</optio>
+      <optio>perennis</optio>
+    </attributum>
+    <attributum nomen="folia-permanentia" genus="electio" ordinarius="decidua">
+      <optio>decidua</optio>
+      <optio>sempervirens</optio>
+    </attributum>
+    <attributum nomen="altitudo-matura" genus="numerus" ordinarius="3"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>semen</optio>
+      <optio>germinans</optio>
+      <optio>iuvenis</optio>
+      <optio>florens</optio>
+      <optio>fructifera</optio>
+      <optio>quiescens</optio>
+      <optio>mortua</optio>
+    </attributum>
+    <attributum nomen="auctor-nominis" genus="referentia"/>
+    <attributum nomen="nomen-publicatum-in" genus="referentia"/>
+    <attributum nomen="pollinatur-a" genus="referentia"/>
+    <attributum nomen="anima" genus="electio">
+      <optio>vegetativa</optio>
+      <optio>sensitiva</optio>
+      <optio>rationalis</optio>
+    </attributum>
+    <attributum nomen="massa" genus="textus"/>
+    <attributum nomen="perituram" genus="veritas"/>
+    <attributum nomen="status-conditio" genus="electio">
+      <optio>recens</optio>
+      <optio>vetus</optio>
+      <optio>corrupta</optio>
+    </attributum>
+    <attributum nomen="sita-in" genus="referentia"/>
+    <liberum nomen="radix" maximum="1"/>
+    <liberum nomen="caulis" maximum="1"/>
+    <liberum nomen="folium" maximum="1"/>
+    <liberum nomen="flos" maximum="1"/>
+    <liberum nomen="fructus" maximum="1"/>
+    <liberum nomen="semen" maximum="1"/>
+    <liberum nomen="generat"/>
+    <liberum nomen="laborat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="radix" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="caulis" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="folium" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="flos" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="fructus" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="semen" intra="rosa-canina">
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+  <elementum nomen="generat" intra="rosa-canina">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="laborat" intra="rosa-canina">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="rosa-canina">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="malus">
     <glossa lingua="en">Malus: the apple genus of the Rosaceae,
       whose fruit is a POME (a fleshy hypanthium enclosing the
@@ -371,88 +453,6 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="malus">
-    <liberum nomen="eventum"/>
-  </elementum>
-
-  <elementum nomen="rosa-canina">
-    <attributum nomen="nomen" genus="identitas"/>
-    <attributum nomen="habitus" genus="electio" ordinarius="frutex">
-      <optio>herba</optio>
-      <optio>frutex</optio>
-      <optio>arbor</optio>
-      <optio>scandens</optio>
-    </attributum>
-    <attributum nomen="durata" genus="electio" ordinarius="perennis">
-      <optio>annua</optio>
-      <optio>biennis</optio>
-      <optio>perennis</optio>
-    </attributum>
-    <attributum nomen="folia-permanentia" genus="electio" ordinarius="decidua">
-      <optio>decidua</optio>
-      <optio>sempervirens</optio>
-    </attributum>
-    <attributum nomen="altitudo-matura" genus="numerus" ordinarius="3"/>
-    <attributum nomen="status-vita" genus="electio">
-      <optio>semen</optio>
-      <optio>germinans</optio>
-      <optio>iuvenis</optio>
-      <optio>florens</optio>
-      <optio>fructifera</optio>
-      <optio>quiescens</optio>
-      <optio>mortua</optio>
-    </attributum>
-    <attributum nomen="auctor-nominis" genus="referentia"/>
-    <attributum nomen="nomen-publicatum-in" genus="referentia"/>
-    <attributum nomen="pollinatur-a" genus="referentia"/>
-    <attributum nomen="anima" genus="electio">
-      <optio>vegetativa</optio>
-      <optio>sensitiva</optio>
-      <optio>rationalis</optio>
-    </attributum>
-    <attributum nomen="massa" genus="textus"/>
-    <attributum nomen="perituram" genus="veritas"/>
-    <attributum nomen="status-conditio" genus="electio">
-      <optio>recens</optio>
-      <optio>vetus</optio>
-      <optio>corrupta</optio>
-    </attributum>
-    <attributum nomen="sita-in" genus="referentia"/>
-    <liberum nomen="radix" maximum="1"/>
-    <liberum nomen="caulis" maximum="1"/>
-    <liberum nomen="folium" maximum="1"/>
-    <liberum nomen="flos" maximum="1"/>
-    <liberum nomen="fructus" maximum="1"/>
-    <liberum nomen="semen" maximum="1"/>
-    <liberum nomen="generat"/>
-    <liberum nomen="laborat"/>
-    <liberum nomen="historia" maximum="1"/>
-    <liberum nomen="nota"/>
-  </elementum>
-  <elementum nomen="radix" intra="rosa-canina">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="caulis" intra="rosa-canina">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="folium" intra="rosa-canina">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="flos" intra="rosa-canina">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="fructus" intra="rosa-canina">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="semen" intra="rosa-canina">
-    <attributum nomen="nota" genus="textus"/>
-  </elementum>
-  <elementum nomen="generat" intra="rosa-canina">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="laborat" intra="rosa-canina">
-    <attributum nomen="ad" genus="referentia"/>
-  </elementum>
-  <elementum nomen="historia" intra="rosa-canina">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -640,6 +640,6 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="planta rosaceae rosa malus rosa-canina malus-domestica granny-smith"/>
+    super="planta rosaceae rosa rosa-canina malus malus-domestica granny-smith"/>
 
 </canon>
