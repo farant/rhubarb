@@ -647,7 +647,10 @@ s32 principale (vacuum)
 
 
     /* ========================================================
-     * PROBARE: classes vitiorum omnes decem
+     * PROBARE: classes vitiorum primigenae (X priores; recentiores
+     * - TEXTUS_MALUS, CITATIO_IRRITA, VOCABULUM_IGNOTUM,
+     * VALOR_EXTRA_FINES, AUGMENTUM_PUGNANS - sectionibus suis
+     * probantur)
      * ======================================================== */
 
     {
@@ -1036,6 +1039,126 @@ s32 principale (vacuum)
             "<silva><quercus nomen=\"&quercus_domi;\"/>"
             "<avis nidificat=\"&quercus_domi;\"/>"
             "<avis nidificat=\"&quercus_prima;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: augmentatio <% &clavis;> (librarium W3, 2026-08-10)
+     *
+     * Contentum additivum individuo bibliothecae appositum.
+     * Additivum MECHANICE = fissio LIBERUM/ATTRIBUTUM quam
+     * generator iam computat: liberum sine maximo = multiplex =
+     * augmentabile; attributum aut liberum maximo adstrictum =
+     * singulare = pugna (bibliothecam ipsam muta). Membrum
+     * ignotum = vitium ordinarium. Liberi legales pleno more
+     * recursive iudicantur (modellum contenti eorum vivit).
+     * ======================================================== */
+
+    {
+        Canon* c;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans augmentationem ---\n");
+
+        c = canon_ex_literis(
+            "<canon dialectus=\"nemus\" versio=\"1\">\n"
+            "  <elementum nomen=\"silva\" radix=\"verum\">\n"
+            "    <liberum nomen=\"quercus\"/>\n"
+            "  </elementum>\n"
+            "  <elementum nomen=\"quercus\">\n"
+            "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+            "    <attributum nomen=\"aetas\" genus=\"numerus\"/>\n"
+            "    <liberum nomen=\"ramus\"/>\n"
+            "    <liberum nomen=\"historia\" maximum=\"1\"/>\n"
+            "    <liberum nomen=\"nota\"/>\n"
+            "  </elementum>\n"
+            "  <elementum nomen=\"ramus\">\n"
+            "    <attributum nomen=\"longitudo\""
+            " genus=\"numerus\"/>\n"
+            "  </elementum>\n"
+            "  <elementum nomen=\"nota\" textus=\"verum\"/>\n"
+            "  <elementum nomen=\"historia\" textus=\"verum\"/>\n"
+            "  <claves-externae fons=\"probatum\">\n"
+            "    <clavis genus=\"quercus\">&quercus_prima;</clavis>\n"
+            "  </claves-externae>\n"
+            "</canon>\n", piscina, intern);
+        CREDO_NON_NIHIL (c);
+
+        /* legalis: clavis externa, membra multiplicia + nota;
+         * augmentatio vocabulario parentis INVISIBILIS (silva
+         * liberum '%' non fert - nullum vitium tamen) */
+        vitia = iudicare_literis(c,
+            "<silva><% &quercus_prima;>"
+            "<ramus longitudo=\"3\"/><nota>bene</nota>"
+            "</%></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* recursio viva: modellum liberi legalis iudicatur */
+        vitia = iudicare_literis(c,
+            "<silva><% &quercus_prima;>"
+            "<ramus longitudo=\"non_numerus\"/>"
+            "</%></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VALOR_MALUS), I);
+
+        /* clavis ignota: augmentatio inexsistentis */
+        vitia = iudicare_literis(c,
+            "<silva><% &nemo_est;><nota>x</nota></%></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_CITATIO_IRRITA), I);
+
+        /* pugna: attributum (singulare per naturam) */
+        vitia = iudicare_literis(c,
+            "<silva><% &quercus_prima;>"
+            "<aetas>5</aetas></%></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_AUGMENTUM_PUGNANS), I);
+
+        /* pugna: liberum maximo adstrictum (historia maximum=1 -
+         * alterum per augmentationem canonem basis frangeret) */
+        vitia = iudicare_literis(c,
+            "<silva><% &quercus_prima;>"
+            "<historia>olim</historia></%></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_AUGMENTUM_PUGNANS), I);
+
+        /* membrum ignotum: vitium ordinarium */
+        vitia = iudicare_literis(c,
+            "<silva><% &quercus_prima;><rota/></%></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_LIBERUM_ILLICITUM), I);
+
+        /* textus nudus in augmentatione */
+        vitia = iudicare_literis(c,
+            "<silva><% &quercus_prima;>textus nudus</%></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_TEXTUS_ILLICITUS), I);
+
+        /* clavis domi cusa: augmentatio ANTE cusionem in ordine
+         * documenti - passus cusas prius totas colligit */
+        vitia = iudicare_literis(c,
+            "<silva>"
+            "<% &quercus_domi;><ramus longitudo=\"4\"/></%>"
+            "<quercus nomen=\"&quercus_domi;\"/>"
+            "</silva>",
             piscina, intern);
         CREDO_NON_NIHIL (vitia);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);

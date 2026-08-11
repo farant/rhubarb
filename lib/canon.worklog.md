@@ -310,3 +310,38 @@ Traps hit/avoided:
 - Retired openly: the inscription requirement for world keys
   (probatio_natura_canones DOC_NON_INSCRIPTUS) — that doctrine WAS
   the gap W1 closes; the fixture now guards true-unknown keys.
+
+## 2026-08-10 — augmentation judgment (librarium W3 gradus II)
+
+`<%` nodes are judged in a DEDICATED pass at the end of
+canon_iudicare, not inline in nodum_iudicare — because the document's
+minted keys (identitas-genus attribute values) must be collected in
+FULL before any augmentation is judged (a mint may legally appear
+after the augmentation in document order; pinned in probatio).
+nodum_iudicare treats augmentations like the infixus: invisible to
+licentia, cardinality, and recursion (early-return guard + child-loop
+skip), so a parent's content model never has to declare "%".
+
+One collection walk (`_augmenta_cusasque_colligere`) gathers both the
+mint table (clavis → minting node) and the augmentation list; it
+descends INTO augmentations (nested ones judged independently, each
+collected on its own). Target resolution order: home mints first
+(genus = the minting node's own element def via elementum_quaerere,
+so intra= scoping just works), then claves_externae (genus= kebab →
+c->elementa lookup). Unknown key = CITATIO_IRRITA reused — an
+augmentation IS a citation; no new code needed for that case.
+
+**CANON_AUGMENTUM_PUGNANS = XV** is the one new vitium: the additive
+test is purely mechanical, exactly as the spec promised — a member
+found among the kind's liberi WITHOUT maximum= is multiplex (lawful,
+then judged recursively in full), a member that is an attributum OR a
+bounded liberum is singular (pugna), anything else is ordinary
+LIBERUM_ILLICITUM. Measured surprise: the spec's "(+ universal
+nota/historia)" parenthetical is half-wrong against the real fold —
+nota is unbounded on all 460 kinds (lawful via the ordinary rule, no
+special case), but historia carries maximum="1" everywhere, so
+augmenting it is CORRECTLY a conflict (a second historia would break
+the base canon). The mechanical rule governs; the parenthetical dies.
+
+W2 note: CLAVIS_COLLISA becomes XVI, not XV as the spec sketched.
+The stale "omnes decem" banner in probatio_canon fixed while here.

@@ -167,6 +167,20 @@ mechanical):
 4. Provenance: overlay children carry `fons=`/`certitudo=` as any
    census content does; nothing new.
 
+**As built (2026-08-10, W3 gradus II)**: conflict-vitium =
+`CANON_AUGMENTUM_PUGNANS = XV` (so W2's CLAVIS_COLLISA lands at
+XVI). The "(+ universal nota/historia)" parenthetical above died
+against measurement: nota is unbounded on all 460 kinds (lawful via
+the ordinary rule), but historia carries `maximum="1"` everywhere —
+augmenting it is CORRECTLY a conflict, since a second historia would
+break the base canon. Bounded liberi conflict same as attributa; the
+mechanical rule governs with no special cases. Judgment runs as a
+dedicated pass after citations (mints collected in FULL first —
+mint-after-augmentation document order is legal and pinned); the
+augmentation node is invisible to parent content models like the
+infixus. Internal targets resolve genus via the minting node's own
+element def, so intra= scoping works unchanged.
+
 **Migration**: rhubarb.census stub becomes
 
 ```xml
@@ -180,13 +194,13 @@ read-side projection, trails separately; validation never needs it.
 
 ## §3 W2 — the collision tripwire
 
-- New vitium `CANON_CLAVIS_COLLISA = XV` (the enum currently ends
-  at CANON_VALOR_EXTRA_FINES = XIV): a document MINTS an identitas
+- New vitium `CANON_CLAVIS_COLLISA = XVI` (W3 took XV for
+  AUGMENTUM_PUGNANS; the enum ends there now): a document MINTS an identitas
   key that exists in claves-externae → collision ("suppositum
   aequivocum esse nequit"). Sits beside the existing
   within-document unicitas machinery (NOMEN_BIS); one lookup in
-  the W1 table. (The probatio banner "classes vitiorum omnes
-  decem" is already stale at fourteen — renumber it in this arc.)
+  the W1 table. (The stale "omnes decem" probatio banner was
+  already fixed in W3.)
 - **The semina exemption** (discovered in mapping): semina.census
   is itself a `.census` judged by individua.canon, and its keys
   ARE the external set — the library's own export must not collide

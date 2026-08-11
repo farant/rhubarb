@@ -117,7 +117,15 @@ nomen enumeratio {
     /* FINES (spec fines): valor formae SANAE extra minimum/maximum
      * declaratum (inclusiva, numerus solus). Forma mala manet
      * VALOR_MALUS - diagnosticum hoc finem violatum nominat. */
-    CANON_VALOR_EXTRA_FINES   = XIV
+    CANON_VALOR_EXTRA_FINES   = XIV,
+    /* AUGMENTATIO (librarium W3): '<% &clavis;>' membrum SINGULARE
+     * generis destinati addere conatur - attributum, aut liberum
+     * maximo adstrictum (alterum canonem basis frangeret). Additivum
+     * mechanice = fissio liberum-sine-maximo/attributum quam
+     * generator canonum iam computat. Remedium: bibliothecam ipsam
+     * muta, non documentum. Membrum IGNOTUM manet LIBERUM_ILLICITUM;
+     * clavis ignota manet CITATIO_IRRITA. */
+    CANON_AUGMENTUM_PUGNANS   = XV
 } CanonVitiumGenus;
 
 nomen structura {

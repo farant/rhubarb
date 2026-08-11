@@ -118,6 +118,11 @@ interior chorda clavis_scopi(Piscina* p, constans chorda* intra,
     constans chorda* titulus);
 interior vacuum nodum_iudicare(Canon* c, StmlNodus* n, Xar* vitia,
     Piscina* piscina);
+interior vacuum _augmenta_cusasque_colligere(Canon* c, StmlNodus* n,
+    StmlNodus* infixus, Xar* augmenta, TabulaDispersa* cusa,
+    Piscina* piscina);
+interior vacuum _augmentum_iudicare(Canon* c, StmlNodus* a,
+    TabulaDispersa* cusa, Xar* vitia, Piscina* piscina);
 interior b32 album_solum(constans chorda* s);
 interior vacuum _scopos_colligere(StmlNodus* radix,
     constans chorda* intra, StmlNodus* infixus, Xar* scopi,
@@ -1466,6 +1471,228 @@ canon_ex_nodo(
  * Iudicium
  * ================================================== */
 
+/* claves domi cusas + augmentationes colligere transitu UNO.
+ * Cusio = valor attributi generis IDENTITAS in elemento noto.
+ * Subarbor infixi praetermissa; in augmenta DESCENDIT (cusio intra
+ * augmentum rara sed legalis; augmenta nidificata quaeque suo iure
+ * colliguntur). */
+interior vacuum
+_augmenta_cusasque_colligere(
+    Canon*           c,
+    StmlNodus*       n,
+    StmlNodus*       infixus,
+    Xar*             augmenta,
+    TabulaDispersa*  cusa,
+    Piscina*         piscina)
+{
+    i32 i;
+    i32 numerus;
+
+    si (!n || n == infixus || n->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde;
+    }
+
+    si (n->augmentum_clavis)
+    {
+        StmlNodus** slot;
+
+        slot = (StmlNodus**)xar_addere(augmenta);
+        si (slot)
+        {
+            *slot = n;
+        }
+    }
+    alioquin
+    {
+        CanonElementum* e;
+
+        e = elementum_quaerere(c, n);
+        si (e)
+        {
+            per (i = ZEPHYRUM; i < xar_numerus(e->attributa); i++)
+            {
+                CanonAttributum* def;
+                chorda*          v;
+
+                def = (CanonAttributum*)xar_obtinere(e->attributa,
+                                                     i);
+                si (def->genus != CANON_GENUS_IDENTITAS)
+                {
+                    perge;
+                }
+                v = stml_attributum_capere(n,
+                    chorda_ut_cstr(*def->titulus, piscina));
+                si (v && v->mensura > ZEPHYRUM)
+                {
+                    tabula_dispersa_inserere(cusa, *v, n);
+                }
+            }
+        }
+    }
+
+    numerus = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        _augmenta_cusasque_colligere(c,
+            stml_liberum_ad_indicem(n, i), infixus, augmenta,
+            cusa, piscina);
+    }
+}
+
+/* augmentationem unam iudicare: clavis in scopo (cusae domi ∪
+ * claves externae), genus destinatum per genus= clavis externae
+ * aut per elementum nodi cudentis, membra ADDITIVA sola - liberum
+ * sine maximo legale (recursione plena iudicatum), attributum aut
+ * liberum adstrictum = pugna, ignotum = vitium ordinarium. */
+interior vacuum
+_augmentum_iudicare(
+    Canon*           c,
+    StmlNodus*       a,
+    TabulaDispersa*  cusa,
+    Xar*             vitia,
+    Piscina*         piscina)
+{
+    CanonElementum* genus_def;
+    vacuum*         valor;
+    i32             i;
+    i32             numerus;
+
+    genus_def = NIHIL;
+
+    si (tabula_dispersa_invenire(cusa, *a->augmentum_clavis,
+                                 &valor))
+    {
+        /* clavis domi cusa: genus = elementum nodi cudentis. Nodus
+         * cudens extra canonem iam suo loco clamavit - hic tacemus */
+        genus_def = elementum_quaerere(c, (StmlNodus*)valor);
+        si (!genus_def)
+        {
+            redde;
+        }
+    }
+    alioquin si (c->claves_externae &&
+                 tabula_dispersa_invenire(c->claves_externae,
+                                          *a->augmentum_clavis,
+                                          &valor))
+    {
+        CanonClavisExterna* ce;
+
+        ce = (CanonClavisExterna*)valor;
+        si (ce->genus &&
+            tabula_dispersa_invenire(c->elementa, *ce->genus,
+                                     &valor))
+        {
+            genus_def = (CanonElementum*)valor;
+        }
+        si (!genus_def)
+        {
+            /* clavis nota, elementum generis absens - bibliotheca
+             * ipsa manca (genus= extra canonem) */
+            vitium_addere(vitia, CANON_ELEMENTUM_IGNOTUM, a,
+                          ce->genus ? ce->genus : a->titulus,
+                          a->augmentum_clavis, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+    }
+    alioquin
+    {
+        /* augmentatio inexsistentis */
+        vitium_addere(vitia, CANON_CITATIO_IRRITA, a, a->titulus,
+                      a->augmentum_clavis, ZEPHYRUM, ZEPHYRUM);
+        redde;
+    }
+
+    numerus = stml_numerus_liberorum(a);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+        b32        legale;
+        b32        pugna;
+        i32        j;
+
+        l = stml_liberum_ad_indicem(a, i);
+        si (!l)
+        {
+            perge;
+        }
+        si (l->genus == STML_NODUS_TEXTUS)
+        {
+            si (l->valor && !album_solum(l->valor))
+            {
+                vitium_addere(vitia, CANON_TEXTUS_ILLICITUS, l,
+                              a->titulus, NIHIL, ZEPHYRUM,
+                              ZEPHYRUM);
+            }
+            perge;
+        }
+        si (l->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (l->augmentum_clavis)
+        {
+            /* nidificata suo iure iudicatur (collecta transitu
+             * eodem) */
+            perge;
+        }
+
+        legale = FALSUM;
+        pugna  = FALSUM;
+        per (j = ZEPHYRUM; j < xar_numerus(genus_def->liberi); j++)
+        {
+            CanonLiberum* lb;
+
+            lb = (CanonLiberum*)xar_obtinere(genus_def->liberi, j);
+            si (chorda_aequalis(*lb->titulus, *l->titulus))
+            {
+                si (lb->maximum < ZEPHYRUM)
+                {
+                    legale = VERUM;   /* multiplex - additivum */
+                }
+                alioquin
+                {
+                    pugna = VERUM;    /* adstrictum - singulare */
+                }
+                frange;
+            }
+        }
+        si (!legale && !pugna)
+        {
+            per (j = ZEPHYRUM;
+                 j < xar_numerus(genus_def->attributa); j++)
+            {
+                CanonAttributum* def;
+
+                def = (CanonAttributum*)xar_obtinere(
+                    genus_def->attributa, j);
+                si (chorda_aequalis(*def->titulus, *l->titulus))
+                {
+                    pugna = VERUM;    /* attributum - singulare */
+                    frange;
+                }
+            }
+        }
+
+        si (pugna)
+        {
+            vitium_addere(vitia, CANON_AUGMENTUM_PUGNANS, l,
+                          genus_def->titulus, l->titulus,
+                          ZEPHYRUM, ZEPHYRUM);
+        }
+        alioquin si (!legale)
+        {
+            vitium_addere(vitia, CANON_LIBERUM_ILLICITUM, l,
+                          genus_def->titulus, l->titulus,
+                          ZEPHYRUM, ZEPHYRUM);
+        }
+        alioquin
+        {
+            nodum_iudicare(c, l, vitia, piscina);
+        }
+    }
+}
+
 interior vacuum
 nodum_iudicare(
     Canon*      c,
@@ -1479,6 +1706,13 @@ nodum_iudicare(
     i32             i;
 
     si (!n || n->genus != STML_NODUS_ELEMENTUM || !n->titulus)
+    {
+        redde;
+    }
+
+    /* augmentatio passu proprio iudicatur (canon_iudicare) - hic
+     * numquam vocabulario mensuranda */
+    si (n->augmentum_clavis)
     {
         redde;
     }
@@ -1707,6 +1941,15 @@ nodum_iudicare(
             perge;
         }
         si (l->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+
+        /* augmentatio '<% &clavis;>' vocabulario INVISIBILIS (sicut
+         * infixus): nec licentia nec cardinalitas eam vident. Passus
+         * proprius in canon_iudicare eam contra genus destinatum
+         * iudicat - cusa clavium prius TOTA colligenda. */
+        si (l->augmentum_clavis)
         {
             perge;
         }
@@ -2065,6 +2308,30 @@ canon_iudicare(
                 }
             }
         }
+
+        /* ---- augmentationes: <% &clavis;> contra genus
+         * destinatum. Passus proprius: cusa clavium domi TOTA
+         * prius colligenda (cusio post augmentum in ordine
+         * documenti legalis). Scopus idem ac citationum: cusae
+         * domi + claves externae bibliothecae (librarium W3). ---- */
+        {
+            Xar*            augmenta;
+            TabulaDispersa* cusa;
+            i32             ia;
+
+            augmenta = xar_creare(piscina,
+                                  (i32)magnitudo(StmlNodus*));
+            cusa = tabula_dispersa_creare_chorda(piscina, XXXII);
+            _augmenta_cusasque_colligere(canon, elementum_radix,
+                                         infixus, augmenta, cusa,
+                                         piscina);
+            per (ia = ZEPHYRUM; ia < xar_numerus(augmenta); ia++)
+            {
+                _augmentum_iudicare(canon,
+                    *(StmlNodus**)xar_obtinere(augmenta, ia),
+                    cusa, vitia, piscina);
+            }
+        }
     }
 
     redde vitia;
@@ -2104,6 +2371,9 @@ canon_nuntius(
             redde "vocabulum extra petitum citationis";
         casus CANON_VALOR_EXTRA_FINES:
             redde "valor extra fines declaratos";
+        casus CANON_AUGMENTUM_PUGNANS:
+            redde "augmentatio membri singularis "
+                  "(bibliothecam ipsam muta, non documentum)";
         ordinarius:
             redde "vitium ignotum";
     }
