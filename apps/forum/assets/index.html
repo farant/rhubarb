@@ -416,6 +416,15 @@
   #tergale-domus button { background: transparent; border: none;
     font-size: 1.1em; cursor: pointer; padding: .1em .15em; }
   #tergale-arca { display: none; }
+  /* ---- charta (tabula censūs) - ne confundas cum classe .charta
+     (pyxis chartae); nomina paginae a Frane approbata ---- */
+  #charta-domus { position: relative; margin-top: .7em; }
+  #charta-tela { display: block; width: 100%; height: 78vh;
+    background: #171512; border: 1px solid #453d2f;
+    border-radius: 4px; cursor: grab; touch-action: none; }
+  #charta-tela.trahens { cursor: grabbing; }
+  #charta-status { color: #8a7a55; font-size: .75em;
+    margin: .3em 0 0 0; }
 </style>
 </head>
 <body>
@@ -430,6 +439,7 @@
     <a id="nav-tags">Tags</a>
     <a id="nav-sententiae">Sententiae</a>
     <a id="nav-libri">Libri</a>
+    <a id="nav-charta">Charta</a>
     <a id="nav-telephonum">Telephonum</a>
   </nav>
 </header>
@@ -610,6 +620,13 @@
     </div>
     <h2 id="codex-titulus"></h2>
     <div id="lector-codicis"></div>
+  </div>
+</section>
+
+<section id="visus-charta" hidden>
+  <div id="charta-domus">
+    <canvas id="charta-tela"></canvas>
+    <div id="charta-status"></div>
   </div>
 </section>
 
@@ -986,6 +1003,7 @@ function vertere(novus) {
   document.getElementById('visus-tags').hidden = novus !== 'tags';
   document.getElementById('visus-sententiae').hidden = novus !== 'sententiae';
   document.getElementById('visus-libri').hidden = novus !== 'libri';
+  document.getElementById('visus-charta').hidden = novus !== 'charta';
   document.getElementById('visus-telephonum').hidden = novus !== 'telephonum';
   /* tabulam Rerum relinquens vestigium relinquit */
   if (novus !== 'res') { res_reditus = null; }
@@ -1009,11 +1027,14 @@ function vertere(novus) {
     (novus === 'sententiae') ? 'activa' : '';
   document.getElementById('nav-libri').className =
     (novus === 'libri') ? 'activa' : '';
+  document.getElementById('nav-charta').className =
+    (novus === 'charta') ? 'activa' : '';
   document.getElementById('nav-telephonum').className =
     (novus === 'telephonum') ? 'activa' : '';
   document.body.className =
     ((novus === 'scholia' && scholia_visus === 'codex')
-     || (novus === 'sententiae' && sent_visus === 'lector')) ? 'latus' : '';
+     || (novus === 'sententiae' && sent_visus === 'lector')
+     || novus === 'charta') ? 'latus' : '';
   erroris.textContent = '';
   ultima = {};
   anquirere();
@@ -1028,10 +1049,508 @@ document.getElementById('nav-scholia').onclick = function () { scholia_vertere('
 document.getElementById('nav-tags').onclick = function () { tags_vertere('arbor'); vertere('tags'); };
 document.getElementById('nav-sententiae').onclick = function () { sententiae_vertere('index'); vertere('sententiae'); };
 document.getElementById('nav-libri').onclick = function () { libri_vertere('index'); vertere('libri'); };
+document.getElementById('nav-charta').onclick = function () {
+  vertere('charta'); charta_intrare();
+};
 document.getElementById('nav-telephonum').onclick = function () {
   vertere('telephonum'); telephonum_reficere();
 };
 document.getElementById('retro-articuli').onclick = function () { vertere('articuli'); };
+
+/* ---- charta: tabula censūs (spec: project-specs/charta-spec.md)
+ *
+ * Tela infinita graphi censūs. LEGENDI SOLUM - proiectio uni-viae:
+ * census veritas manet, tela numquam scribit. Positus determinati
+ * ut memoria muscularis nascatur (recargatio calida nodos non
+ * miscebit). Cursus: WASD + tractus muris + rota (+ tactus in
+ * telephono). Ansa rAF solum dum tabula visibilis currit.
+ *
+ * HARNESIUM: functiones telae (getContext, rAF) numquam in onere
+ * tanguntur - DOM fictum probationum eas non fert. */
+
+var charta_datum    = null;  /* fructus censum_legere ultimus bonus */
+var charta_positus  = null;  /* clavis -> {x, y, lat, alt, stratum} */
+var charta_fasciae  = [];    /* tituli fasciarum pro pictura */
+var charta_camera   = { x: 0, y: 0, scala: 1, initum: false };
+var charta_claves   = {};    /* wasd pressae */
+var charta_gyrus_it = false; /* ansa rAF currit */
+var charta_electum  = null;  /* clavis nodi electi (tabella: gradus V) */
+var charta_tactum   = null;  /* clavis nodi sub mure */
+var charta_trahens  = null;  /* status tractus muris */
+var charta_tempus   = 0;     /* tempus rAF prius */
+var charta_parata   = false;
+
+/* strata: tabula generis -> fascia. VECTIS (spec par. V): si
+ * tabula manualis mentiri incipit, e sceleto causali derivanda.
+ * Genus ignotum in fasciam 'alia' cadit - numquam tacite. */
+var CHARTA_STRATA = [
+  { titulus: 'fines',    color: '#d8b978',
+    genera: ['causa-finalis'] },
+  { titulus: 'res',      color: '#9fb87a',
+    genera: ['bibliotheca', 'instrumentum-lineae', 'daemon',
+             'applicatio', 'artefactum-aedificationis',
+             'systema-unixiforme', 'clavis-privata', 'acta'] },
+  { titulus: 'lex',      color: '#c9885a',
+    genera: ['pactum', 'praeceptum', 'norma', 'peritia-communis'] },
+  { titulus: 'cognitio', color: '#7ea7c4',
+    genera: ['observatio', 'signum', 'manuale', 'dictionarium'] },
+  { titulus: 'eventus',  color: '#a98fc0',
+    genera: ['ambulatio'] },
+  { titulus: 'custodia', color: '#c46a5a',
+    genera: ['uncus', 'periculum'] },
+  { titulus: 'externi',  color: '#8a7a55',
+    genera: ['persona', 'organizatio'] }
+];
+var CHARTA_ALIA = { titulus: 'alia', color: '#6a6156' };
+
+/* spina causalis: familiae arboris technicae (crassae, aureae).
+ * Tabula velaminis ut strata - spec par. II.5. */
+var CHARTA_SPINA = { 'causat': true, 'pendet-ex': true,
+                     'dependet-ex': true };
+
+function charta_titulus_nodi(clavis) {
+  if (clavis.charAt(0) === '&') { return clavis.slice(1, -1); }
+  return clavis;   /* '.genus' / '#locus' sigilla sua retinent */
+}
+
+function charta_praecidere(s, n) {
+  return s.length > n ? s.slice(0, n - 1) + '…' : s;
+}
+
+function charta_stratum_generis(genus, externus) {
+  var i;
+  for (i = 0; i < CHARTA_STRATA.length; i++) {
+    if (CHARTA_STRATA[i].genera.indexOf(genus) !== -1) { return i; }
+  }
+  if (externus) { return CHARTA_STRATA.length - 1; }  /* externi */
+  return CHARTA_STRATA.length;                        /* alia */
+}
+
+/* dispositio provisoria (gradus III barycentrum super sceleto
+ * addet): fasciae per strata, intra fasciam ordo clavium stabilis,
+ * versus ad octonos, quisque versus in medio. DETERMINATA: input
+ * idem -> positus idem - fundamentum recargationis calidae. */
+function charta_disponere(r) {
+  var LAT = 190, ALT = 46, SP_X = 26, SP_Y = 34, SP_FASCIA = 96;
+  var PER_VERSUM = 8;
+  var fasciae = [];
+  var positus = {};
+  var claves = [];
+  var i, k, f, y, versus;
+
+  charta_fasciae = [];
+  for (i = 0; i <= CHARTA_STRATA.length; i++) { fasciae.push([]); }
+  for (k in r.nodi) {
+    if (r.nodi.hasOwnProperty(k)) { claves.push(k); }
+  }
+  claves.sort();
+  for (i = 0; i < claves.length; i++) {
+    k = claves[i];
+    f = charta_stratum_generis(r.nodi[k].genus, r.nodi[k].externus);
+    fasciae[f].push(k);
+  }
+  y = 0;
+  for (f = 0; f < fasciae.length; f++) {
+    if (!fasciae[f].length) { continue; }
+    versus = Math.ceil(fasciae[f].length / PER_VERSUM);
+    for (i = 0; i < fasciae[f].length; i++) {
+      var v = Math.floor(i / PER_VERSUM);
+      var c = i % PER_VERSUM;
+      var in_versu = Math.min(PER_VERSUM,
+        fasciae[f].length - v * PER_VERSUM);
+      var lat_versus = in_versu * (LAT + SP_X) - SP_X;
+      positus[fasciae[f][i]] = {
+        x: c * (LAT + SP_X) - lat_versus / 2,
+        y: y + v * (ALT + SP_Y),
+        lat: LAT, alt: ALT, stratum: f
+      };
+    }
+    charta_fasciae.push({
+      titulus: (f < CHARTA_STRATA.length
+        ? CHARTA_STRATA[f] : CHARTA_ALIA).titulus,
+      color: (f < CHARTA_STRATA.length
+        ? CHARTA_STRATA[f] : CHARTA_ALIA).color,
+      y: y - 18
+    });
+    y += versus * (ALT + SP_Y) - SP_Y + SP_FASCIA;
+  }
+  return positus;
+}
+
+function charta_tela_capere() {
+  return document.getElementById('charta-tela');
+}
+
+/* scaena (px CSS, origo = tela) -> mundus */
+function charta_ex_scaena(mx, my) {
+  var tela = charta_tela_capere();
+  return {
+    x: charta_camera.x
+      + (mx - tela.clientWidth / 2) / charta_camera.scala,
+    y: charta_camera.y
+      + (my - tela.clientHeight / 2) / charta_camera.scala
+  };
+}
+
+function charta_nodus_sub(mx, my) {
+  var m = charta_ex_scaena(mx, my);
+  var k, p;
+  if (!charta_positus) { return null; }
+  for (k in charta_positus) {
+    if (!charta_positus.hasOwnProperty(k)) { continue; }
+    p = charta_positus[k];
+    if (m.x >= p.x && m.x <= p.x + p.lat
+        && m.y >= p.y && m.y <= p.y + p.alt) {
+      return k;
+    }
+  }
+  return null;
+}
+
+function charta_rect_rotundum(ctx, x, y, lat, alt, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + lat, y, x + lat, y + alt, r);
+  ctx.arcTo(x + lat, y + alt, x, y + alt, r);
+  ctx.arcTo(x, y + alt, x, y, r);
+  ctx.arcTo(x, y, x + lat, y, r);
+  ctx.closePath();
+}
+
+/* punctum ubi linea (x1,y1)->(x2,y2) oram rectanguli p intrat
+ * (methodus laminarum) - ibi cuspis sagittae sedet */
+function charta_ad_oram(x1, y1, x2, y2, p) {
+  var dx = x2 - x1, dy = y2 - y1;
+  var t = 0;
+  if (dx !== 0) {
+    t = Math.max(t, Math.min((p.x - x1) / dx,
+                             (p.x + p.lat - x1) / dx));
+  }
+  if (dy !== 0) {
+    t = Math.max(t, Math.min((p.y - y1) / dy,
+                             (p.y + p.alt - y1) / dy));
+  }
+  if (t <= 0 || t >= 1) { t = 1; }
+  return { x: x1 + dx * t, y: y1 + dy * t, dx: dx, dy: dy };
+}
+
+function charta_color_aristae(a, nexa) {
+  if (nexa) { return 'rgba(236,229,216,0.9)'; }
+  if (CHARTA_SPINA[a.familia]) { return 'rgba(216,185,120,0.55)'; }
+  if (a.familia === 'informat') { return 'rgba(159,184,122,0.5)'; }
+  if (a.familia === 'adhibet' || a.familia === 'scripta-in') {
+    return 'rgba(126,167,196,0.4)';
+  }
+  return 'rgba(138,122,85,0.35)';
+}
+
+function charta_aristam_pingere(ctx, a, pa, pad) {
+  var x1 = pa.x + pa.lat / 2, y1 = pa.y + pa.alt / 2;
+  var x2 = pad.x + pad.lat / 2, y2 = pad.y + pad.alt / 2;
+  var cuspis = charta_ad_oram(x1, y1, x2, y2, pad);
+  var nexa = charta_electum !== null
+    && (a.a === charta_electum || a.ad === charta_electum);
+  var longit = Math.sqrt(cuspis.dx * cuspis.dx
+    + cuspis.dy * cuspis.dy);
+  var ux, uy;
+
+  if (longit < 1) { return; }
+  ux = cuspis.dx / longit; uy = cuspis.dy / longit;
+  ctx.strokeStyle = charta_color_aristae(a, nexa);
+  ctx.lineWidth = nexa ? 2 : (CHARTA_SPINA[a.familia] ? 1.6 : 1);
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(cuspis.x, cuspis.y);
+  ctx.stroke();
+  /* sagitta */
+  ctx.fillStyle = ctx.strokeStyle;
+  ctx.beginPath();
+  ctx.moveTo(cuspis.x, cuspis.y);
+  ctx.lineTo(cuspis.x - ux * 9 - uy * 4, cuspis.y - uy * 9 + ux * 4);
+  ctx.lineTo(cuspis.x - ux * 9 + uy * 4, cuspis.y - uy * 9 - ux * 4);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function charta_nodum_pingere(ctx, clavis, p) {
+  var s = p.stratum < CHARTA_STRATA.length
+    ? CHARTA_STRATA[p.stratum] : CHARTA_ALIA;
+  var n = charta_datum.nodi[clavis];
+  var electum = clavis === charta_electum;
+  var tactum = clavis === charta_tactum;
+
+  ctx.fillStyle = '#1d1a17';
+  ctx.strokeStyle = electum ? '#ece5d8' : s.color;
+  ctx.lineWidth = (electum || tactum) ? 2.4 : 1.2;
+  charta_rect_rotundum(ctx, p.x, p.y, p.lat, p.alt, 6);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#ece5d8';
+  ctx.font = '12px monospace';
+  ctx.fillText(charta_praecidere(charta_titulus_nodi(clavis), 23),
+    p.x + 9, p.y + 19);
+  ctx.fillStyle = s.color;
+  ctx.font = '9px monospace';
+  ctx.fillText(n.genus + (n.externus ? ' ·ext' : ''),
+    p.x + 9, p.y + 36);
+}
+
+function charta_pingere() {
+  var tela = charta_tela_capere();
+  var dpr, lat, alt, ctx, k, i, m0x, m0y, m1x, m1y, p, a, pa, pad;
+
+  if (!tela.getContext) { return; }   /* harnesium */
+  dpr = window.devicePixelRatio || 1;
+  lat = tela.clientWidth; alt = tela.clientHeight;
+  if (!lat || !alt) { return; }
+  if (tela.width !== Math.round(lat * dpr)
+      || tela.height !== Math.round(alt * dpr)) {
+    tela.width = Math.round(lat * dpr);
+    tela.height = Math.round(alt * dpr);
+  }
+  ctx = tela.getContext('2d');
+  k = charta_camera.scala * dpr;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = '#171512';
+  ctx.fillRect(0, 0, tela.width, tela.height);
+  ctx.setTransform(k, 0, 0, k,
+    tela.width / 2 - charta_camera.x * k,
+    tela.height / 2 - charta_camera.y * k);
+  if (!charta_datum || !charta_positus) { return; }
+
+  /* fines mundi visibiles + margo (cribrum extra-telae) */
+  m0x = charta_camera.x - lat / 2 / charta_camera.scala - 250;
+  m1x = charta_camera.x + lat / 2 / charta_camera.scala + 250;
+  m0y = charta_camera.y - alt / 2 / charta_camera.scala - 250;
+  m1y = charta_camera.y + alt / 2 / charta_camera.scala + 250;
+
+  for (i = 0; i < charta_datum.aristae.length; i++) {
+    a = charta_datum.aristae[i];
+    pa = charta_positus[a.a];
+    pad = charta_positus[a.ad];
+    if (!pa || !pad) { continue; }
+    if (Math.max(pa.x, pad.x) < m0x
+        || Math.min(pa.x, pad.x) > m1x
+        || Math.max(pa.y, pad.y) < m0y
+        || Math.min(pa.y, pad.y) > m1y) { continue; }
+    charta_aristam_pingere(ctx, a, pa, pad);
+  }
+  ctx.font = '11px monospace';
+  for (i = 0; i < charta_fasciae.length; i++) {
+    ctx.fillStyle = charta_fasciae[i].color;
+    ctx.fillText(charta_fasciae[i].titulus.toUpperCase(), m0x + 270,
+      charta_fasciae[i].y);
+  }
+  for (i in charta_positus) {
+    if (!charta_positus.hasOwnProperty(i)) { continue; }
+    p = charta_positus[i];
+    if (p.x + p.lat < m0x || p.x > m1x
+        || p.y + p.alt < m0y || p.y > m1y) { continue; }
+    charta_nodum_pingere(ctx, i, p);
+  }
+}
+
+function charta_medium_ponere() {
+  var x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  var tela = charta_tela_capere();
+  var k, p;
+
+  for (k in charta_positus) {
+    if (!charta_positus.hasOwnProperty(k)) { continue; }
+    p = charta_positus[k];
+    if (p.x < x0) { x0 = p.x; }
+    if (p.x + p.lat > x1) { x1 = p.x + p.lat; }
+    if (p.y < y0) { y0 = p.y; }
+    if (p.y + p.alt > y1) { y1 = p.y + p.alt; }
+  }
+  if (x0 > x1) { return; }
+  charta_camera.x = (x0 + x1) / 2;
+  charta_camera.y = (y0 + y1) / 2;
+  if (tela.clientWidth && tela.clientHeight) {
+    charta_camera.scala = Math.max(0.12, Math.min(1,
+      0.92 * tela.clientWidth / (x1 - x0 + 120),
+      0.92 * tela.clientHeight / (y1 - y0 + 120)));
+  }
+}
+
+function charta_reficere() {
+  internuntius.vocare('censum_legere', {})
+    .then(function (r) {
+      var status = document.getElementById('charta-status');
+      var n = 0, k;
+
+      if (!r || r.vitium) {
+        status.textContent = 'census non legibilis: '
+          + (r ? r.vitium : 'responsum nullum');
+        return;
+      }
+      charta_datum = r;
+      charta_positus = charta_disponere(r);
+      for (k in r.nodi) {
+        if (r.nodi.hasOwnProperty(k)) { n++; }
+      }
+      status.textContent = n + ' nodi · '
+        + r.aristae.length + ' aristae'
+        + (r.praetermissa ? ' · praetermissa: '
+            + r.praetermissa : '')
+        + (r.monita && r.monita.length ? ' · '
+            + r.monita.join('; ') : '');
+      if (!charta_camera.initum) {
+        charta_camera.initum = true;
+        charta_medium_ponere();
+      }
+    });
+}
+
+function charta_gyrus(t) {
+  var v;
+
+  if (visus !== 'charta') { charta_gyrus_it = false; return; }
+  v = charta_tempus ? Math.min(50, t - charta_tempus) : 16;
+  charta_tempus = t;
+  v = 0.9 * v / charta_camera.scala;  /* celeritas scaenae constans */
+  if (charta_claves.w) { charta_camera.y -= v; }
+  if (charta_claves.s) { charta_camera.y += v; }
+  if (charta_claves.a) { charta_camera.x -= v; }
+  if (charta_claves.d) { charta_camera.x += v; }
+  charta_pingere();
+  requestAnimationFrame(charta_gyrus);
+}
+
+function charta_parare() {
+  var tela = charta_tela_capere();
+  var tactus_prior = null;
+
+  if (charta_parata) { return; }
+  charta_parata = true;
+
+  tela.onmousedown = function (ev) {
+    charta_trahens = { x: ev.clientX, y: ev.clientY, motum: false };
+    tela.className = 'trahens';
+  };
+  tela.onmousemove = function (ev) {
+    var r = tela.getBoundingClientRect();
+    var dx, dy;
+
+    if (charta_trahens) {
+      dx = ev.clientX - charta_trahens.x;
+      dy = ev.clientY - charta_trahens.y;
+      if (Math.abs(dx) + Math.abs(dy) > 3) {
+        charta_trahens.motum = true;
+      }
+      charta_camera.x -= dx / charta_camera.scala;
+      charta_camera.y -= dy / charta_camera.scala;
+      charta_trahens.x = ev.clientX;
+      charta_trahens.y = ev.clientY;
+    } else {
+      charta_tactum = charta_nodus_sub(ev.clientX - r.left,
+        ev.clientY - r.top);
+      tela.style.cursor = charta_tactum ? 'pointer' : '';
+    }
+  };
+  tela.onmouseup = function (ev) {
+    var r = tela.getBoundingClientRect();
+
+    if (charta_trahens && !charta_trahens.motum) {
+      charta_electum = charta_nodus_sub(ev.clientX - r.left,
+        ev.clientY - r.top);
+      /* gradus V: tabella singulorum hic aperietur */
+    }
+    charta_trahens = null;
+    tela.className = '';
+  };
+  tela.onmouseleave = function () {
+    charta_trahens = null;
+    charta_tactum = null;
+    tela.className = '';
+  };
+  tela.onwheel = function (ev) {
+    var r = tela.getBoundingClientRect();
+    var mx = ev.clientX - r.left - tela.clientWidth / 2;
+    var my = ev.clientY - r.top - tela.clientHeight / 2;
+    var nova = Math.min(4, Math.max(0.12, charta_camera.scala
+      * Math.exp(-ev.deltaY * 0.0015)));
+
+    ev.preventDefault();
+    /* punctum mundi sub mure fixum manet */
+    charta_camera.x += mx / charta_camera.scala - mx / nova;
+    charta_camera.y += my / charta_camera.scala - my / nova;
+    charta_camera.scala = nova;
+  };
+  /* tactus (telephonum): digitus unus trahit, duo scalam mutant */
+  tela.ontouchstart = function (ev) {
+    var t0 = ev.touches[0], t1 = ev.touches[1];
+
+    ev.preventDefault();
+    if (ev.touches.length === 1) {
+      tactus_prior = { x: t0.clientX, y: t0.clientY };
+    } else if (ev.touches.length === 2) {
+      tactus_prior = {
+        longit: Math.sqrt(
+          (t1.clientX - t0.clientX) * (t1.clientX - t0.clientX)
+          + (t1.clientY - t0.clientY) * (t1.clientY - t0.clientY))
+      };
+    }
+  };
+  tela.ontouchmove = function (ev) {
+    var t0 = ev.touches[0], t1 = ev.touches[1];
+    var longit, nova;
+
+    ev.preventDefault();
+    if (!tactus_prior) { return; }
+    if (ev.touches.length === 1 && tactus_prior.x !== undefined) {
+      charta_camera.x -= (t0.clientX - tactus_prior.x)
+        / charta_camera.scala;
+      charta_camera.y -= (t0.clientY - tactus_prior.y)
+        / charta_camera.scala;
+      tactus_prior = { x: t0.clientX, y: t0.clientY };
+    } else if (ev.touches.length === 2
+        && tactus_prior.longit !== undefined) {
+      longit = Math.sqrt(
+        (t1.clientX - t0.clientX) * (t1.clientX - t0.clientX)
+        + (t1.clientY - t0.clientY) * (t1.clientY - t0.clientY));
+      nova = Math.min(4, Math.max(0.12,
+        charta_camera.scala * longit / (tactus_prior.longit || 1)));
+      charta_camera.scala = nova;
+      tactus_prior = { longit: longit };
+    }
+  };
+  tela.ontouchend = function () { tactus_prior = null; };
+
+  /* claves globales: WASD solum dum charta visibilis et nihil
+   * scribitur - nemo alius document.onkeydown tenet (probatum) */
+  document.onkeydown = function (ev) {
+    var ae = document.activeElement;
+    var c;
+
+    if (visus !== 'charta') { return; }
+    if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')) {
+      return;
+    }
+    c = ev.key ? ev.key.toLowerCase() : '';
+    if (c === 'w' || c === 'a' || c === 's' || c === 'd') {
+      charta_claves[c] = true;
+      ev.preventDefault();
+    } else if (ev.key === 'Escape') {
+      charta_electum = null;
+    }
+  };
+  document.onkeyup = function (ev) {
+    var c = ev.key ? ev.key.toLowerCase() : '';
+
+    if (charta_claves[c]) { delete charta_claves[c]; }
+  };
+}
+
+function charta_intrare() {
+  charta_parare();
+  if (!charta_datum) { charta_reficere(); }
+  if (!charta_gyrus_it) {
+    charta_gyrus_it = true;
+    charta_tempus = 0;
+    requestAnimationFrame(charta_gyrus);
+  }
+}
 
 /* ---- telephonum: servus + QR ----
  *

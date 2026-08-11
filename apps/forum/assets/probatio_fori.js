@@ -1076,6 +1076,45 @@ curare_cum(defs_vetera).then(function () {
     fracta.push("exceptio: " + (e && (e.message || e)));
 });
 
+/* ---- charta: dispositio pura (semen gradūs II; gradus III
+ * barycentrum et probationes plures addet). Functio pura: datum
+ * intrat, positus exit - nulla tela, nullum rAF. ---- */
+(function () {
+    var r = { nodi: {
+        "&piscina;": { genus: "bibliotheca", externus: false },
+        "&chorda;":  { genus: "bibliotheca", externus: false },
+        "&instauratio;": { genus: "causa-finalis", externus: false },
+        "&censor;": { genus: "uncus", externus: false },
+        "&steenberg;": { genus: "persona", externus: true },
+        "&mirum;": { genus: "res-nova-ignota", externus: false },
+        ".uncus": { genus: "genus", externus: true }
+    }, aristae: [] };
+    var p1 = charta_disponere(r);
+    var p2 = charta_disponere(r);
+    var k, idem = true, numerus = 0;
+    for (k in p1) {
+        if (!p1.hasOwnProperty(k)) { continue; }
+        numerus++;
+        if (!p2[k] || p2[k].x !== p1[k].x || p2[k].y !== p1[k].y) {
+            idem = false;
+        }
+    }
+    aequale(numerus, 7, "charta: nodi omnes positi");
+    proba(idem, "charta: dispositio determinata (bis eadem)");
+    proba(p1["&instauratio;"].y < p1["&piscina;"].y,
+        "charta: fines supra res");
+    proba(p1["&piscina;"].y < p1["&censor;"].y,
+        "charta: res supra custodiam");
+    aequale(p1["&mirum;"].stratum, CHARTA_STRATA.length,
+        "charta: genus ignotum in fasciam 'alia' cadit, non tacite");
+    aequale(p1["&steenberg;"].stratum, CHARTA_STRATA.length - 1,
+        "charta: externi in fasciam externorum");
+    aequale(charta_titulus_nodi("&piscina;"), "piscina",
+        "charta: sigillum '&;' exuitur");
+    aequale(charta_titulus_nodi(".uncus"), ".uncus",
+        "charta: sigillum generis '.' retinetur");
+})();
+
 /* Synchrona omnia (vide Sync supra), ergo hic tuto iudicamus.
  * IACTUS, non $.exit: $.exit in hoc ambitu non exstat, et iactus
  * osascript exitu non-zephyro terminat (porta exitus, ut
