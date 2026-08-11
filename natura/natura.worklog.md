@@ -5895,3 +5895,35 @@ de_quantitate, componitur_ex + 2) — the deliberate finale, a
 design session: these are not citation work but a coherent
 measurement cluster likely wanting declarations under
 repraesentatio (mensuratur_per already lives there).
+
+## 2026-08-11 — mensura: the finale, and the burn-down reads ZERO
+
+7 → 0. natura_examen: SANUM, MONITA 0, VULNERA 0 — 432/432 sedes
+ligatae. The burn-down that started at 263 unbound sites across 33
+models is complete: 85 necessitudines, 13 converse pairs, ~20
+frames, every inversa= wound healed, and the whole corpus's
+relation vocabulary machine-checkable.
+
+The design-session hypothesis DISSOLVED on contact (the
+corpus-contact law applies to design predictions too): no new
+sub-family was needed. mensurat was mensuratur_per's missing
+conversum (one core attribute); in_unitate followed the in_moneta
+precedent; componitur_ex (the uncertainty budget) is pars_totum
+composition; calibratum_contra → fundat — THE METROLOGY
+TRACEABILITY CHAIN AND THE PKI ATTESTATION CHAIN ARE ONE RELATION,
+which the model's own nota anticipated ("catena attestationum quae
+in radice fiduciae desinit"); attestatur_per → fundatio.
+
+The one real decision, Fran's: cum_incertitudine/de_quantitate
+sub=REPRAESENTATIO (not fundatio) — the GUM completeness doctrine
+wins: "500 ± 2 g" is one representation, not a claim plus a
+meta-claim; the epistemic content ("de nobis, non de re") lives in
+incertitudo's definitio and its asseritur_per. Declared as a
+domain converse pair. quantitas and incertitudo framed (numerus
+CUM UNITATE — the definitio names its own terminus, one last
+time).
+
+Named deferral: mensura is the natural first home for waking
+necessitudo-level fines (mensurat is truly unitas→magnitudo) —
+gated behind the direction-marking mechanism (01KZQCPZ5E),
+declared a=*/ad=* like everything else until that arc.

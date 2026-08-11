@@ -183,11 +183,12 @@
     <scriptio>ex_fontibus</scriptio>
   </necessitudo>
 
-  <necessitudo nomen="mensuratur_per" sub="repraesentatio"
-      a="*" ad="*">
+  <necessitudo nomen="mensuratur_per" conversum="mensurat"
+      sub="repraesentatio" a="*" ad="*">
     <definitio>Quod per mensuram dicitur: magnitudo instrumento
-      aut unitate ligata.</definitio>
-    <glossa lingua="en">Measured-by.</glossa>
+      aut unitate ligata; conversa via, unitas quae magnitudinem
+      mensurat.</definitio>
+    <glossa lingua="en">Measured-by / measures.</glossa>
   </necessitudo>
 
   <!-- familia pars_totum -->

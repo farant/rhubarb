@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/mensura.genera
-  Exemplar semanticum: MENSURA (versio 1, PLASTICUM)
+  Exemplar semanticum: MENSURA (versio 2, PLASTICUM)
   Genera: quantitas, unitas_mensurae, magnitudo_mensurabilis.
 
   Natum ex experimento pistrinae: "500 grammata", "180 gradus",
@@ -20,7 +20,24 @@
   "quantitas" esse debeat, an ambitus proprietas CAMPI sit
   (vide schema), apertum manet.
 -->
-<natura modulus="mensura" versio="1" lingua="latina">
+<natura modulus="mensura" versio="2" lingua="latina">
+
+<!-- ========== NECESSITUDINES DOMESTICAE ==========
+     Par quantitatis et incertitudinis suae: sub repraesentatione
+     (decretum Franis 2026-08-11) - mensura sine incertitudine
+     INCOMPLETA est (GUM), ergo incertitudo pars repraesentationis
+     ipsius, non propositio de propositione. Contentum epistemicum
+     ('de nobis, non de re') in definitione incertitudinis et in
+     asseritur_per vivit. -->
+
+<necessitudo nomen="cum_incertitudine" conversum="de_quantitate"
+    sub="repraesentatio" modulus="necessitudines" a="*" ad="*">
+  <definitio>Quantitas quae incertitudinem suam fert; conversa
+    via, incertitudo de quantitate sua. Mensura sine hac
+    incompleta - non imprecisa sed manca.</definitio>
+  <glossa lingua="en">Carries-uncertainty / uncertainty-of: the
+    GUM completeness bond.</glossa>
+</necessitudo>
 
 <!-- ==================================================
      MAGNITUDO MENSURABILIS - quod mensurari potest
@@ -233,9 +250,13 @@
             praecisionem suam FERT"/>
   </proprietates>
 
-  <relationes>
-    <relatio nomen="in_unitate" ad="unitas_mensurae"/>
-    <relatio nomen="cum_incertitudine" ad="incertitudo"
+  <termini>
+    <nota>compages quantitatis: definitio ipsa 'numerus CUM
+      UNITATE' - unitas finis constitutivus, et incertitudo
+      completionis pars (GUM).</nota>
+    <terminus munus="in_unitate" necessitudo="mensuratur_per"
+      ad="unitas_mensurae"/>
+    <terminus munus="cum_incertitudine" ad="incertitudo"
       nota="quantum de valore vero ignoretur. NON IDEM QUOD
             minimum/maximum supra: illa AMBITUM rei dicunt (rosa
             vere inter duo et quinque metra crescit), haec
@@ -243,7 +264,7 @@
             metrologiae: quantitas sine incertitudine INCOMPLETA
             est, non modo imprecisa - quod bibliotheca nostra
             fere ubique adhuc peccat, et honeste notandum"/>
-  </relationes>
+  </termini>
 
 </.genus>
 
@@ -320,10 +341,14 @@
     </proprietas>
   </proprietates>
 
+  <termini>
+    <terminus munus="de_quantitate" ad="quantitas"
+      nota="incertitudo sine quantitate sua non est - finis
+            constitutivus (conversum declarationis supra)"/>
+  </termini>
   <relationes>
-    <relatio nomen="de_quantitate" ad="quantitas"/>
     <relatio nomen="componitur_ex" ad="incertitudo"
-      multiplex="verum"
+      multiplex="verum" necessitudo="pars_totum"
       nota="RATIO INCERTITUDINIS (uncertainty budget): incertitudo
             composita ex partibus surgit - incertitudo
             exemplaris, repetibilitas, resolutio, effectus
@@ -425,6 +450,7 @@
 
   <relationes>
     <relatio nomen="calibratum_contra" ad="instrumentum_mensurae"
+      necessitudo="fundat"
       nota="CATENA TRACTUS (traceability): quodque instrumentum
             contra melius calibratur, illud contra melius, usque
             ad exemplar nationale et definitionem SI. Catena
@@ -433,6 +459,7 @@
             incertitudinem propriam addit, unde catena longa
             incertitudinem auget quantumvis exacta singula sint"/>
     <relatio nomen="attestatur_per" ad="attestatio" modulus="acta"
+      necessitudo="fundatio"
       nota="attestatio calibrationis: 'expirat' et 'fundamentum'
             eius (quae PKI addere coegit) hic prorsus conveniunt -
             dies proximae calibrationis ab EMITTENTE statutus, et
