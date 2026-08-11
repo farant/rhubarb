@@ -722,6 +722,55 @@ s32 principale (vacuum)
         /* dilatatio (mordet_omnia ad='*') + sedes extra finem
          * (lapis_p extra animal_p); mordet->canis_p INTRA finem */
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXII), II);
+
+        /* regula XXIV: tres familiae sine converso fines impares
+         * habent (mordet a=* ad=animal_p; mordet_canem ad=canis_p;
+         * mordet_omnia ad=animal_p hereditatum) - directio
+         * innominata, monitum in declaratione */
+        CREDO_AEQUALIS_I32 (monita_regulae(bib, XXIV), III);
+    }
+
+    {
+        NaturaBibliotheca* bib;
+
+        imprimere("\n--- Probans directionem citationis"
+                  " (regula XXII) ---\n");
+
+        bib = natura_bibliotheca_creare(piscina);
+        CREDO_NON_NIHIL (bib);
+
+        CREDO_VERUM (natura_legere(bib,
+            chorda_ex_literis(
+                "<natura modulus=\"directio_probandum\" versio=\"1\">\n"
+                "<.genus nomen=\"basis_p\"/>\n"
+                "<.genus nomen=\"aedes_p\"/>\n"
+                "<necessitudo nomen=\"fundat_p\"\n"
+                "  conversum=\"fundatur_in_p\"\n"
+                "  a=\"basis_p\" ad=\"aedes_p\"/>\n"
+                "<.genus nomen=\"turris_p\" sub=\"aedes_p\">\n"
+                "  <relationes>\n"
+                "    <relatio nomen=\"stat_super\"\n"
+                "      necessitudo=\"fundatur_in_p\" ad=\"basis_p\"/>\n"
+                "    <relatio nomen=\"nititur_in\"\n"
+                "      necessitudo=\"fundatur_in_p\" ad=\"basis_p\"/>\n"
+                "    <relatio nomen=\"stat_male\"\n"
+                "      necessitudo=\"fundatur_in_p\" ad=\"aedes_p\"/>\n"
+                "    <relatio nomen=\"fundatur_in_p\" ad=\"basis_p\"/>\n"
+                "  </relationes>\n"
+                "</.genus>\n"
+                "</natura>\n", piscina),
+            "directio_probandum"));
+
+        (vacuum)natura_nectere(bib);
+        /* citatio DIRECTIONEM nominat (decretum 2026-08-11):
+         * stat_super et nititur_in conversam citant, ad=basis_p
+         * intra finem a= - LEGALES (ante decretum contra ad=
+         * iudicatae essent). stat_male conversam citat sed
+         * ad=aedes_p extra a=basis_p - VULNUS UNUM. sedes
+         * verbo-ligata conversa (fundatur_in_p) legalis manet. */
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXII), I);
+        /* fundat_p conversum habet - regula XXIV tacet */
+        CREDO_AEQUALIS_I32 (monita_regulae(bib, XXIV), ZEPHYRUM);
     }
 
     {
@@ -751,6 +800,9 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXIII), I);
         /* termini citati ligantur - nihil insolutum */
         CREDO_AEQUALIS_I32 (monita_regulae(bib, XX), ZEPHYRUM);
+        /* participatio_p sine converso sed fines pares (*,*) -
+         * regula XXIV tacet */
+        CREDO_AEQUALIS_I32 (monita_regulae(bib, XXIV), ZEPHYRUM);
     }
 
     {

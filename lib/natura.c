@@ -817,11 +817,16 @@ sedem_ligare(
         {
             constans character* quod;
             chorda*             finis_decl;
+            chorda*             nomen_efficax;
 
-            /* directio: scriptura conversa fines commutat */
+            /* directio: nomen efficax fines commutat - citatio
+             * DIRECTIONEM nominat, non familiam (decretum Franis
+             * 2026-08-11); sine citatione verbum sedis ipsum
+             * nomen est */
+            nomen_efficax = nex_attr ? nex_attr : titulus_sedis;
             quod = "ad";
-            si (ligata->conversum && titulus_sedis &&
-                chorda_aequalis(*titulus_sedis, *ligata->conversum))
+            si (ligata->conversum && nomen_efficax &&
+                chorda_aequalis(*nomen_efficax, *ligata->conversum))
             {
                 quod = "a";
             }
@@ -1684,6 +1689,37 @@ natura_nectere(
                             "necessitudo finem parentis excedit (regula XXII)");
                     }
                 }
+            }
+        }
+
+        /* regula XXIV: fines impares nomina bina postulant.
+         * necessitudo sine converso cuius fines effectivi
+         * discrepant dimidiam identitatem innominatam habet -
+         * sedes citans directionem suam dicere non potest.
+         * monitum in DECLARATIONE (res una, monitum unum), non
+         * in sedibus */
+        per (i = ZEPHYRUM;
+             i < xar_numerus(bib->necessitudines_omnes); i++)
+        {
+            NaturaNecessitudo* declarata;
+            chorda*            finis_a;
+            chorda*            finis_ad;
+
+            declarata = *(NaturaNecessitudo**)xar_obtinere(
+                bib->necessitudines_omnes, i);
+            si (declarata->conversum)
+            {
+                perge;
+            }
+            finis_a  = finem_effectivum(declarata, "a");
+            finis_ad = finem_effectivum(declarata, "ad");
+            si ((finis_a || finis_ad) &&
+                (!finis_a || !finis_ad ||
+                 !chorda_aequalis(*finis_a, *finis_ad)))
+            {
+                diagnosticum_addere(bib, NATURA_GRADUS_MONITUM,
+                    XXIV, declarata->modulus, declarata->titulus,
+                    "fines impares sine converso - directio innominata (regula XXIV)");
             }
         }
 
