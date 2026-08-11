@@ -1145,6 +1145,63 @@ curare_cum(defs_vetera).then(function () {
         "charta: rima inter greges generum maior quam intra gregem");
 })();
 
+/* ---- charta: tabula nidificata (scaena) - advenientes supra,
+ * subiectum medium, exeuntes fascia una per familiam; nodus
+ * utroque versu ligatus SEMEL ponitur ---- */
+(function () {
+    var r = { nodi: {
+        "&piscina;": { genus: "bibliotheca", externus: false },
+        "&pactum-p;": { genus: "pactum", externus: false },
+        "&credo;": { genus: "bibliotheca", externus: false },
+        "&c;": { genus: "lingua-programmandi", externus: true }
+    }, aristae: [
+        { a: "&pactum-p;", ad: "&piscina;", familia: "informat" },
+        { a: "&credo;", ad: "&piscina;", familia: "dependet-ex" },
+        { a: "&piscina;", ad: "&c;", familia: "scripta-in" },
+        { a: "&piscina;", ad: "&credo;", familia: "adhibet" }
+    ] };
+    var p = charta_disponere_nidi(r, "&piscina;");
+    var numerus = 0, k, tituli = [];
+
+    for (k in p) { if (p.hasOwnProperty(k)) { numerus++; } }
+    aequale(numerus, 4,
+        "charta nidus: nodus utroque versu ligatus semel ponitur");
+    proba(p["&pactum-p;"].y < p["&piscina;"].y
+        && p["&credo;"].y < p["&piscina;"].y,
+        "charta nidus: advenientes supra subiectum");
+    proba(p["&c;"].y > p["&piscina;"].y,
+        "charta nidus: exeuntes infra subiectum");
+    for (k = 0; k < charta_fasciae.length; k++) {
+        tituli.push(charta_fasciae[k].titulus);
+    }
+    proba(tituli.indexOf("advenientes") !== -1
+        && tituli.indexOf("scripta-in") !== -1,
+        "charta nidus: fasciae advenientium et familiarum nominatae");
+
+    /* intrare/retro: acervus, camera reddita, retro visibile */
+    charta_datum = r;
+    charta_positus = charta_disponere(r);
+    charta_camera.x = 77; charta_camera.y = 5;
+    charta_camera.scala = 0.5;
+    charta_scaenam_intrare("&piscina;");
+    proba(charta_scaena !== null && charta_acervus.length === 1,
+        "charta nidus: intrare scaenam ponit et acervum auget");
+    aequale(document.getElementById("charta-retro").hidden, false,
+        "charta nidus: retro visibile in scaena");
+    charta_retro();
+    proba(charta_scaena === null && charta_camera.x === 77
+        && charta_camera.scala === 0.5,
+        "charta nidus: retro cameram censūs reddit");
+    aequale(document.getElementById("charta-retro").hidden, true,
+        "charta nidus: retro celatum in censu");
+
+    /* purgatio */
+    charta_datum = null; charta_positus = null;
+    charta_camera.x = 0; charta_camera.y = 0;
+    charta_camera.scala = 1; charta_camera.initum = false;
+    charta_acervus = []; charta_scaena = null;
+})();
+
 /* ---- charta: recargatio calida (gradus IV) - differentia pura
  * + receptio (vitium retinet, bonum purgat, camera immota) ---- */
 (function () {

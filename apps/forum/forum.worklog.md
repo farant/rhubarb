@@ -173,6 +173,35 @@ green, the rest from a fixed palette in sorted-name order.
 - Harness: 254 assertions (+9). Planted fault (inverted
   default-visibility) → FRACTA (1). Full smoke green.
 
+## 2026-08-11 — charta: nested boards (scaena, client-side)
+
+Fran's design: manually-picked genera (CHARTA_NIDI, bibliotheca
+first) expand on double-click into an ego-board — incoming
+entities one grouped band above ("advenientes"), the subject
+alone in the middle, one band per outgoing FAMILIA below, each
+labeled in its legend color. The pleasant discovery: zero
+serializer changes — every neighbor is already in the payload, so
+a nested board is a pure re-layout of the same data. Aliases keep
+full census identity (colors, panel, glossae, stml tab).
+
+- Back chip fixed top-left ("← parent · subject"); vexillum moved
+  down to make room. Esc closes panel first, THEN leaves the
+  board. Boards STACK (bibliotheca-from-bibliotheca works, e.g.
+  piscina → credo via the adhibet band); camera saved on enter,
+  restored on back.
+- On a board, subject-incident edges ALL draw (toggles don't
+  apply — the board is about those edges); non-subject edges
+  don't. Legend checkboxes are inert there; accepted.
+- Reload re-lays the CURRENT board (charta_disponere_praesens
+  dispatch); a subject deleted mid-reload falls back to census
+  with the stack cleared.
+- Dedup rule: a node linked both directions places once,
+  advenientes win; both edges still draw. Asserted.
+- Phone gap: no double-tap detection yet — boards are
+  mouse/trackpad only until someone asks.
+- Harness 268 (+8: dedup, above/below, band labels, enter/back
+  with camera restore); planted fault red; smoke green.
+
 ## 2026-08-11 — charta: kind-grouped ordering replaces barycenter
 
 Fran asked how the res band was sorted — the honest answer was

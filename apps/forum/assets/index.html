@@ -425,7 +425,12 @@
   #charta-tela.trahens { cursor: grabbing; }
   #charta-status { color: #8a7a55; font-size: .75em;
     margin: .3em 0 0 0; }
-  #charta-vexillum { position: absolute; top: .6em; left: .6em;
+  #charta-retro { position: absolute; top: .6em; left: .6em;
+    background: rgba(23,21,18,.92); border: 1px solid #453d2f;
+    border-radius: 4px; padding: .2em .6em; font-size: .78em;
+    color: #9fb87a; cursor: pointer; }
+  #charta-retro:hover { color: #d8b978; }
+  #charta-vexillum { position: absolute; top: 2.9em; left: .6em;
     background: #3a2420; color: #c46a5a; border: 1px solid #c46a5a;
     border-radius: 4px; padding: .2em .6em; font-size: .75em; }
   #charta-tabella { position: absolute; top: .6em; right: .6em;
@@ -666,6 +671,7 @@
 <section id="visus-charta" hidden>
   <div id="charta-domus">
     <canvas id="charta-tela"></canvas>
+    <a id="charta-retro" hidden></a>
     <div id="charta-vexillum" hidden>census non legibilis
       (servatio media?) - graphum ultimum bonum monstratur</div>
     <div id="charta-tabella" hidden></div>
@@ -1131,6 +1137,12 @@ var charta_iter     = null;  /* {x,y} - camera eo labitur (electio
                                 usoris SOLA; recargatio numquam) */
 var charta_tabella_visus = 'res';   /* 'res' | 'stml' - haeret */
 
+/* tabulae nidificatae (Fran manu genera eligit - vectis):
+ * genus hic notatum tactu duplici tabulam propriam pandit */
+var CHARTA_NIDI = { 'bibliotheca': true };
+var charta_scaena  = null;   /* null = census; alioquin {clavis} */
+var charta_acervus = [];     /* via retro: [{scaena, camera}] */
+
 /* strata: tabula generis -> fascia. VECTIS (spec par. V): si
  * tabula manualis mentiri incipit, e sceleto causali derivanda.
  * Genus ignotum in fasciam 'alia' cadit - numquam tacite. */
@@ -1296,6 +1308,163 @@ function charta_disponere(r) {
     y += versus_numerus * (ALT + SP_Y) - SP_Y + SP_FASCIA;
   }
   return positus;
+}
+
+/* tabula nidificata unius entis (scaena): visus EIUSDEM dati -
+ * nihil e C novum petitur, aliae positus solum. Advenientes supra
+ * (fascia una, gregatim per genus), subiectum solum in medio,
+ * exeuntes infra FASCIA UNA PER FAMILIAM (strata localia entis).
+ * Nodus utroque versu ligatus semel ponitur (advenientes vincunt);
+ * arista utraque nihilominus pingitur. */
+function charta_disponere_nidi(r, subiectum) {
+  var LAT = 190, ALT = 46, SP_X = 26, SP_GREX = 24, SP_Y = 34,
+      SP_FASCIA = 110, PER_VERSUM = 8;
+  var positus = {};
+  var advenientes = [];
+  var exeuntes = {};
+  var familiae = [];
+  var positi = {};
+  var i, a, y;
+
+  charta_fasciae = [];
+  positi[subiectum] = true;
+  for (i = 0; i < r.aristae.length; i++) {
+    a = r.aristae[i];
+    if (a.ad === subiectum && a.a !== subiectum && !positi[a.a]
+        && r.nodi[a.a]) {
+      advenientes.push(a.a);
+      positi[a.a] = true;
+    }
+  }
+  for (i = 0; i < r.aristae.length; i++) {
+    a = r.aristae[i];
+    if (a.a === subiectum && a.ad !== subiectum && !positi[a.ad]
+        && r.nodi[a.ad]) {
+      if (!exeuntes[a.familia]) {
+        exeuntes[a.familia] = [];
+        familiae.push(a.familia);
+      }
+      exeuntes[a.familia].push(a.ad);
+      positi[a.ad] = true;
+    }
+  }
+  familiae.sort();
+
+  function ordinare(ordo) {
+    ordo.sort(function (p, q) {
+      var gp = r.nodi[p].genus, gq = r.nodi[q].genus;
+
+      if (gp !== gq) { return gp < gq ? -1 : 1; }
+      return p < q ? -1 : (p > q ? 1 : 0);
+    });
+  }
+  /* versus ad octonos, medium, rima inter greges generum -
+   * variabiles PROPRIAE (lectio functionis interioris) */
+  function fasciam_ponere(ordo, yf) {
+    var vn = Math.ceil(ordo.length / PER_VERSUM);
+    var fi, fj;
+
+    for (fi = 0; fi < vn; fi++) {
+      var initium = fi * PER_VERSUM;
+      var finis = Math.min(initium + PER_VERSUM, ordo.length);
+      var xs = [];
+      var x = 0;
+
+      for (fj = initium; fj < finis; fj++) {
+        if (fj > initium && r.nodi[ordo[fj]].genus
+            !== r.nodi[ordo[fj - 1]].genus) {
+          x += SP_GREX;
+        }
+        xs.push(x);
+        x += LAT + SP_X;
+      }
+      x -= SP_X;
+      for (fj = initium; fj < finis; fj++) {
+        positus[ordo[fj]] = {
+          x: xs[fj - initium] - x / 2,
+          y: yf + fi * (ALT + SP_Y),
+          lat: LAT, alt: ALT,
+          stratum: charta_stratum_generis(r.nodi[ordo[fj]].genus,
+            r.nodi[ordo[fj]].externus)
+        };
+      }
+    }
+    return vn ? vn * (ALT + SP_Y) - SP_Y : 0;
+  }
+
+  y = 0;
+  if (advenientes.length) {
+    ordinare(advenientes);
+    charta_fasciae.push({ titulus: 'advenientes',
+      color: '#8a7a55', y: y - 18 });
+    y += fasciam_ponere(advenientes, y) + SP_FASCIA;
+  }
+  positus[subiectum] = {
+    x: -LAT / 2, y: y, lat: LAT, alt: ALT,
+    stratum: charta_stratum_generis(r.nodi[subiectum].genus,
+      r.nodi[subiectum].externus)
+  };
+  y += ALT + SP_FASCIA;
+  for (i = 0; i < familiae.length; i++) {
+    ordinare(exeuntes[familiae[i]]);
+    charta_fasciae.push({ titulus: familiae[i],
+      color: charta_color_familiae(familiae[i]), y: y - 18 });
+    y += fasciam_ponere(exeuntes[familiae[i]], y) + SP_FASCIA;
+  }
+  return positus;
+}
+
+/* dispositio tabulae praesentis (census aut scaena) */
+function charta_disponere_praesens() {
+  charta_positus = charta_scaena
+    ? charta_disponere_nidi(charta_datum, charta_scaena.clavis)
+    : charta_disponere(charta_datum);
+}
+
+function charta_retro_monstrare() {
+  var retro = document.getElementById('charta-retro');
+  var parens;
+
+  retro.hidden = charta_scaena === null;
+  if (charta_scaena) {
+    parens = charta_acervus.length
+      ? charta_acervus[charta_acervus.length - 1].scaena : null;
+    retro.textContent = '← '
+      + (parens ? charta_titulus_nodi(parens.clavis) : 'census')
+      + ' · ' + charta_titulus_nodi(charta_scaena.clavis);
+  }
+}
+
+function charta_scaenam_intrare(clavis) {
+  charta_acervus.push({ scaena: charta_scaena,
+    camera: { x: charta_camera.x, y: charta_camera.y,
+              scala: charta_camera.scala } });
+  charta_scaena = { clavis: clavis };
+  charta_eligere(null);
+  charta_iter = null;
+  charta_disponere_praesens();
+  charta_medium_ponere();
+  charta_retro_monstrare();
+}
+
+function charta_retro() {
+  var prior = charta_acervus.pop();
+
+  if (!prior) { return; }
+  charta_scaena = prior.scaena;
+  /* scaena reversa cuius subiectum interea periit -> census */
+  if (charta_scaena
+      && (!charta_datum || !charta_datum.nodi[charta_scaena.clavis])) {
+    charta_scaena = null;
+    charta_acervus = [];
+  }
+  charta_eligere(null);
+  charta_iter = null;
+  charta_disponere_praesens();
+  charta_camera.x = prior.camera.x;
+  charta_camera.y = prior.camera.y;
+  charta_camera.scala = prior.camera.scala;
+  charta_retro_monstrare();
 }
 
 function charta_tela_capere() {
@@ -1481,7 +1650,12 @@ function charta_pingere() {
 
   for (i = 0; i < charta_datum.aristae.length; i++) {
     a = charta_datum.aristae[i];
-    if (!charta_arista_visibilis(a)) { continue; }
+    /* in scaena: aristae subiecti OMNES (tabula de eis est,
+     * toggles nihil dicunt), aliae nullae */
+    if (charta_scaena) {
+      if (a.a !== charta_scaena.clavis
+          && a.ad !== charta_scaena.clavis) { continue; }
+    } else if (!charta_arista_visibilis(a)) { continue; }
     pa = charta_positus[a.a];
     pad = charta_positus[a.ad];
     if (!pa || !pad) { continue; }
@@ -1823,7 +1997,13 @@ function charta_recipere(r) {
   vetus = charta_datum;
   charta_datum = r;
   charta_signum = r.signum || null;
-  charta_positus = charta_disponere(r);
+  /* scaena cuius subiectum periit -> census (tela numquam vacua) */
+  if (charta_scaena && !r.nodi[charta_scaena.clavis]) {
+    charta_scaena = null;
+    charta_acervus = [];
+    charta_retro_monstrare();
+  }
+  charta_disponere_praesens();
   if (vetus) {
     delta = charta_differre(vetus, r);
     nunc = Date.now();
@@ -1956,6 +2136,21 @@ function charta_parare() {
     charta_tactum = null;
     tela.className = '';
   };
+  /* tactus duplex: genus in CHARTA_NIDI tabulam propriam pandit */
+  tela.ondblclick = function (ev) {
+    var r = tela.getBoundingClientRect();
+    var clavis = charta_nodus_sub(ev.clientX - r.left,
+      ev.clientY - r.top);
+
+    if (!clavis || !charta_datum) { return; }
+    if (CHARTA_NIDI[charta_datum.nodi[clavis].genus]
+        && !(charta_scaena && charta_scaena.clavis === clavis)) {
+      charta_scaenam_intrare(clavis);
+    }
+  };
+  document.getElementById('charta-retro').onclick = function () {
+    charta_retro();
+  };
   tela.onwheel = function (ev) {
     var r = tela.getBoundingClientRect();
     var mx = ev.clientX - r.left - tela.clientWidth / 2;
@@ -2025,8 +2220,15 @@ function charta_parare() {
       charta_claves[c] = true;
       ev.preventDefault();
     } else if (ev.key === 'Escape') {
-      charta_eligere(null);
-      charta_iter = null;
+      /* Esc primum tabellam claudit, deinde scaenam relinquit */
+      if (charta_electum !== null) {
+        charta_eligere(null);
+        charta_iter = null;
+      } else if (charta_scaena) {
+        charta_retro();
+      } else {
+        charta_iter = null;
+      }
     }
   };
   document.onkeyup = function (ev) {

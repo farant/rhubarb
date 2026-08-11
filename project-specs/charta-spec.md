@@ -112,8 +112,25 @@ cleverness; the mtime check IS the cache):
 
 Stub nodes are minted for edge targets not declared in the census:
 genus from semina when resolvable, else "genus" (dot-citation),
-"locus" (#-citation), or "ignotum". A later nested view = a second
-scaena requested by nomen. v1 never sends more than one.
+"locus" (#-citation), or "ignotum".
+
+**Nested boards (shipped post-v1, Fran's design).** The hatch
+opened CLIENT-SIDE: a nested board is a re-layout of the SAME
+payload, no second scaena requested — every neighbor is already in
+`nodi`. `CHARTA_NIDI` (view-side table) lists the genera Fran has
+picked to expand; double-clicking such a node enters its ego-board:
+**incoming entities as one grouped band on top ("advenientes"),
+the subject alone in the middle, one band per outgoing familia
+beneath** (labeled with the familia's legend color). Aliases keep
+their census identity — same colors, panel, glossae. Only
+subject-incident edges draw, ALL of them (toggles don't apply — the
+board is about those edges). A back chip sits fixed top-left
+("← parent · subject"); Esc closes the panel first, then leaves the
+board; boards stack (board-from-board works) and the camera
+restores on return. Hot reload re-lays the current board; a subject
+deleted mid-reload falls back to the census. The server-side
+`scaena` envelope remains reserved for boards whose content ISN'T
+in the census payload (e.g. a natura-level board).
 
 ## 4. Renderer (index.html, dependency-free)
 
