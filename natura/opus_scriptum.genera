@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/opus_scriptum.genera
-  Exemplar semanticum: OPUS SCRIPTUM (versio 1, PLASTICUM)
+  Exemplar semanticum: OPUS SCRIPTUM (versio 2, PLASTICUM)
   PRIMUM EXEMPLAR ALIENUM - extra paroeciam computatralem consulto
   (probatio formae: mechanismi omnes hactenus a programmate coacti;
   forma quae solum domum suam descripsit occulte ei aptata esse
@@ -25,8 +25,36 @@
   paginarum EDITIONI pertinet, non operi (idem opus, editiones
   variae, paginae variae) - lex igitur non programmatis propria
   sed rerum.
+
+  VERSIO 2 (2026-08-10): migratio necessitudinum - catena FRBR ad
+  familiam successionis ligata (quae se ipsam 'familiam FRBR'
+  nominavit antequam hoc exemplar migraret); paria conversa
+  habet_expressionem/expressio_de et habet_fasciculum/fasciculus_de
+  declarata. Catena relationes manent, non termini: gradus FRBR
+  LINEA est inter res, non munera. Sedes solutae 13 -> 0.
 -->
-<natura modulus="opus_scriptum" versio="1" lingua="latina">
+<natura modulus="opus_scriptum" versio="2" lingua="latina">
+
+<!-- ========== NECESSITUDINES DOMESTICAE ==========
+     Paria conversa catenae FRBR (praecedens fabricationis). -->
+
+<necessitudo nomen="habet_expressionem" conversum="expressio_de"
+    sub="successio" modulus="necessitudines" a="*" ad="*">
+  <definitio>Opus quod expressionem habet; conversa via,
+    expressio operis - gradus realizationis FRBR (opus in verba
+    certa redactum).</definitio>
+  <glossa lingua="en">Has-expression / expression-of: the FRBR
+    realization step.</glossa>
+</necessitudo>
+
+<necessitudo nomen="habet_fasciculum" conversum="fasciculus_de"
+    sub="successio" modulus="necessitudines" a="*" ad="*">
+  <definitio>Periodicum quod fasciculos edit; conversa via,
+    fasciculus periodici - ordo serialis, successio per
+    numeros.</definitio>
+  <glossa lingua="en">Has-issue / issue-of: serial
+    succession.</glossa>
+</necessitudo>
 
 <.genus nomen="opus_scriptum">
 
@@ -88,15 +116,20 @@
       nota="qui RESPONDET - personis clausus manet (persona:
             'auctor esse potest, non solum causa')"/>
     <relatio nomen="scriba" ad="*" multiplex="verum"
+      necessitudo="origo"
       nota="qui litteram exsecutus est, auctore respondente -
             Tertius scripsit, Paulus auctor (Rom 16,22). Petitum
             apertum: persona, officina, minister machinalis omnes
             scribunt. Genus ministri machinalis CONSULTO dilatum
-            donec census verus tag poscat (parcum 01KZFM3GW0)"/>
+            donec census verus tag poscat (parcum 01KZFM3GW0).
+            Familia originis SINE responsione - id ipsum eum ab
+            auctore dividit"/>
     <relatio nomen="habet_expressionem" ad="expressio"/>
     <relatio nomen="continuatio_de" ad="opus_scriptum"
+      necessitudo="sequitur"
       nota="series: opus quod aliud sequitur"/>
     <relatio nomen="respondet_ad" ad="opus_scriptum"
+      necessitudo="translatio_nuntii"
       nota="opus contra aliud scriptum - genus disputationis
             scholasticae, relatio vera inter opera"/>
     <relatio nomen="pars_de" ad="opus_scriptum"
@@ -228,12 +261,15 @@
   <relationes>
     <relatio nomen="expressio_de" ad="opus_scriptum"/>
     <relatio nomen="translator" ad="persona" modulus="persona"
+      necessitudo="origo"
       multiplex="verum"
       nota="translator auctor expressionis est, non operis -
             distinctio quam schema planum perdit"/>
     <relatio nomen="translata_ex" ad="expressio"
+      necessitudo="orta_ex"
       nota="translationes ex translationibus fiunt (via
-            intermedia) - historia textuum vera"/>
+            intermedia) - historia textuum vera ('lingua e
+            lingua' in ipsa definitione ortae_ex)"/>
   </relationes>
 
   <individuum nomen="abusus_linguae_germanice">
@@ -301,16 +337,19 @@
 
   <relationes>
     <relatio nomen="editio_de" ad="expressio" multiplex="verum"
+      necessitudo="successio"
       nota="FRBR ipsa manifestationem plures expressiones amplecti
             sinit (paginae adversae bilingues) - lacuna L12
             circuitus documentationis; pagina glossarum nostra
-            tres exprimit"/>
+            tres exprimit. Gradus incorporationis FRBR - familia
+            successionis"/>
     <relatio nomen="edita_a" ad="organizatio"
       modulus="organizatio"
       nota="domus editoria - sub-genus organizationis SURGIT
             (nec pure societas: praela universitatum quaestui
             non dedita)"/>
     <relatio nomen="impressa_in" ad="planta" modulus="planta"
+      necessitudo="origo"
       nota="charta ex ligno fit - nexus tenuis consulto, formae
             probatio non nexuum omnium. (externum sublatum:
             exemplar plantae post hanc lineam natum est -
@@ -398,8 +437,14 @@
   </machina_statuum>
 
   <relationes>
-    <relatio nomen="exemplar_de" ad="editio"/>
-    <relatio nomen="possessor" ad="persona" modulus="persona"/>
+    <relatio nomen="exemplar_de" ad="editio"
+      necessitudo="successio"
+      nota="gradus exemplificationis FRBR - familia
+            successionis"/>
+    <relatio nomen="possessor" ad="persona" modulus="persona"
+      necessitudo="tenetur_a"
+      nota="cum historia possessionis propria - codex a domino
+            tenetur"/>
   </relationes>
 
 </.genus>

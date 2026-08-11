@@ -5656,3 +5656,33 @@ Flag for later: producit's definitio (in elementa_programmatis)
 is build-flavored but now serves investigatio's
 conclusion-production too — third use should trigger promotion to
 core with a widened definitio.
+
+## 2026-08-10 — opus_scriptum burn-down: FRBR comes home
+
+13 → 0 (global 174 → 161, ligata 271), monita 27, necessitudines
+75, canons byte-identical.
+
+The family met its namesake: successio was BORN calling itself
+"the FRBR-shaped cluster" during the corpus classification, and
+this is the model it was named for. The whole chain bound into it:
+editio_de (embodiment) and exemplar_de (exemplification) cite the
+family; habet_expressionem/expressio_de (realization) and
+habet_fasciculum/fasciculus_de (serial issue) became domain
+converse-pair declarations; continuatio_de cites sequitur.
+
+DELIBERATE NON-FRAMING, recorded as precedent: the FRBR levels
+did NOT become termini although each level is arguably constituted
+by its relation to the level above. The chain is a LINEAGE between
+independent entities (a work outlives its expressions; an edition
+is a thing, not a role) — frames are for munera, successio for
+descent. The heuristic after five models: role-clusters and
+events frame; lineages and standings cite.
+
+The auctor/scriba split got its families: auctor (answerability)
+was already a declared workhorse sub=origo; scriba cites the
+origo FAMILY bare — origin without answerability is exactly what
+distinguishes it (Tertius scripsit, Paulus auctor). translator
+likewise origo (author of the expression, not the work);
+translata_ex cites orta_ex, whose definitio already said "lingua
+e lingua". possessor → tenetur_a; impressa_in → origo (the
+deliberately thin paper-from-wood link stays thin: family cite).
