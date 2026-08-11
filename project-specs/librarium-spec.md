@@ -332,3 +332,10 @@ screams; fons exemption pinned both ways; live world VITIA 0;
 suites PLENUS; -probare chain 0. THE ARC IS CLOSED: cite (W1),
 augment (W3), never counterfeit (W2). Remaining futures live in
 §5 only (W4 world declaration, W5 stamping, fold view).
+
+**Post-arc slice (2026-08-11, 1786fae)**: external kind-check
+(CANON_CITATIO_ALIENA XVII — the genus= the table always carried is
+now compared against the compiled ad-closure) + star citations
+(ad="*/nomen", 449 rules, monolith-only) — every wildcard slot is
+existence-checked, closing the "petita aperta 428" audit tail.
+Detail: lib/canon.worklog.md.
