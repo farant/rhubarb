@@ -6057,3 +6057,34 @@ unaffected (they check a=).
 
 The zsh === trap bit a THIRD time (echo ===DEMO2 separator) and
 nearly framed the new tool for a phantom exit 1 — ictus VII filed.
+
+## 2026-08-11 — Genus pactum + proprium_de (the regeneration walk)
+
+The census-as-seed decretum needed a kind for design covenants —
+what advena (the context-free rebuilder) actually lacked when it
+asked for headers. Born: **pactum** (fabricatio, beside
+postulatum) = standing design covenant binding ALL works in ANY
+implementation language; differs from norma by SUBJECT (practice
+vs artifact form) and from postulatum by SCOPE (one work judged
+at completion vs all works perpetually). Collision walk first:
+'pactum' was LIBERUM (obligatio speaks it only in prose);
+'postulatum' occupied and genuinely adjacent — the definitio
+comparison ("intentio ANTE opus" vs "sine termino ligat") decided
+the split.
+
+**proprium_de** (sub=pertinet_ad): Fran's generic/specific
+layering — relation ABSENT means commune (any language honors
+it), present means proper to one technology. Rule of two was
+satisfied the same day it was proposed: pactum and norma both
+needed the slot. The scholastic proprium/commune distinction
+doing schema work. Slot word "proprium" cites the family
+(divergent word, forward direction — the new direction doctrine
+applied on day two of its life).
+
+Census walk result: 13 pacta enrolled (1 proprium=C — the
+latina.h macro mechanism, which was advena's "biggest style
+guess"; 12 commune), res 49→65, all ten advena gaps addressed.
+The canon-custos caught a forward-reference mid-batch (pactum
+cited an observatio not yet written) — the gate working live.
+census_orbi's perpetual "CAVE 2 nomina" measured as pre-existing
+librarium blindness (quaestio 01KZRS606V).
