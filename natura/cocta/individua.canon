@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1621 sedibus relationum huius canonis, 1165
+  RELATIONES - ex 1625 sedibus relationum huius canonis, 1165
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  456 nomine solo iudicantur, id est sicut in canone per
+  460 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    449 petitum apertum habent (ad='*') - clavis nulla est;
+    453 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -213,6 +213,7 @@
     <liberum nomen="daemon"/>
     <liberum nomen="applicatio"/>
     <liberum nomen="instrumentum-aedificationis"/>
+    <liberum nomen="pactum"/>
     <liberum nomen="postulatum"/>
     <liberum nomen="facultas"/>
     <liberum nomen="probatio"/>
@@ -5463,6 +5464,27 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="pactum">
+    <glossa lingua="en">A standing design covenant: what must
+    always hold about the SHAPE of artifacts, binding every work
+    in any implementation language. Differs from norma by subject
+    (practice vs artifact form), from postulatum by scope (one
+    work, judged at completion, vs all works perpetually).</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="proprium" genus="referentia"/>
+    <attributum nomen="tendit-ad" genus="referentia"/>
+    <liberum nomen="natum-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="natum-ex" intra="pactum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="pactum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="postulatum">
     <glossa lingua="en">A requirement: an intention declared BEFORE
     the work - what must be true for the work to be called complete.
@@ -8811,6 +8833,7 @@
     </attributum>
     <attributum nomen="substituit" genus="referentia"/>
     <attributum nomen="normat" genus="referentia"/>
+    <attributum nomen="proprium" genus="referentia"/>
     <liberum nomen="editor"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
@@ -14532,7 +14555,7 @@
            documentarium monitum-futuri titulus-iuris codex-sepultus annotatio-machinae
            identificator identificator-baptismalis sigillum-contenti programma
            instrumentum-lineae daemon applicatio instrumentum-aedificationis
-           postulatum facultas probatio probatio-unitatis probatio-integrationis
+           pactum postulatum facultas probatio probatio-unitatis probatio-integrationis
            probatio-regressionis probatio-fumi vitium regressio debitum-technicum
            complicatio consilium consilium-computatum depravatio interventio
            conservatio restauratio-aedificii curatio-medica forma-datorum
@@ -15228,6 +15251,9 @@
   <citatio nomen="instrumentum-aedificationis-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-aedificationis"/>
   <citatio nomen="instrumentum-aedificationis-adhibet" attributum="ad" ad="bibliotheca/nomen" super="instrumentum-aedificationis/adhibet"/>
   <citatio nomen="instrumentum-aedificationis-currit-ut" attributum="currit-ut" ad="processus/nomen" super="instrumentum-aedificationis"/>
+  <citatio nomen="pactum-proprium" attributum="proprium" ad="*/nomen" super="pactum"/>
+  <citatio nomen="pactum-tendit-ad" attributum="tendit-ad" ad="*/nomen" super="pactum"/>
+  <citatio nomen="pactum-natum-ex" attributum="ad" ad="*/nomen" super="pactum/natum-ex"/>
   <citatio nomen="postulatum-impletur-a" attributum="impletur-a" ad="*/nomen" super="postulatum"/>
   <citatio nomen="postulatum-interrogatur-a" attributum="interrogatur-a" ad="*/nomen" super="postulatum"/>
   <citatio nomen="facultas-implet" attributum="ad" ad="postulatum/nomen" super="facultas/implet"/>
@@ -15587,6 +15613,7 @@
   <citatio nomen="norma-editor" attributum="ad" ad="corpus-normans/nomen" super="norma/editor"/>
   <citatio nomen="norma-substituit" attributum="substituit" ad="norma/nomen" super="norma"/>
   <citatio nomen="norma-normat" attributum="normat" ad="*/nomen" super="norma"/>
+  <citatio nomen="norma-proprium" attributum="proprium" ad="*/nomen" super="norma"/>
   <citatio nomen="lex-lata-a" attributum="lata-a" ad="magistratus/nomen" super="lex"/>
   <citatio nomen="lex-in-iurisdictione" attributum="in-iurisdictione" ad="iurisdictio/nomen" super="lex"/>
   <citatio nomen="lex-promulgata-per" attributum="promulgata-per" ad="actus-sollemnis ritus sacramentum baptismus confirmatio eucharistia paenitentia unctio-infirmorum ordo matrimonium sacramentale benedictio consecratio-loci exorcismus actus-iuridicus stipulatio mancipatio manumissio testamentum confectio-instrumenti promulgatio inauguratio collatio-tituli sententia-lata/nomen" super="lex"/>

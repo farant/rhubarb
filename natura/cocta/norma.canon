@@ -46,6 +46,7 @@
     </attributum>
     <attributum nomen="substituit" genus="referentia"/>
     <attributum nomen="normat" genus="referentia"/>
+    <attributum nomen="proprium" genus="referentia"/>
     <liberum nomen="editor"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>

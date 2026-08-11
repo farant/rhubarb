@@ -174,6 +174,17 @@
     <glossa lingua="en">Pertains-to.</glossa>
   </necessitudo>
 
+  <necessitudo nomen="proprium_de" sub="pertinet_ad" a="*" ad="*">
+    <definitio>Quod uni linguae, technologiae, aut dominio
+      proprium est - RELATIO ABSENS commune significat (pactum
+      commune quavis lingua honoratur, proprium unius est).
+      Regula duorum die uno impleta: pactum et norma ambo eam
+      poscunt (ambulatio regenerationis I).</definitio>
+    <glossa lingua="en">Proper-to: scoped to one language or
+      technology; absence of the relation means generic. The
+      scholastic proprium/commune distinction as a slot.</glossa>
+  </necessitudo>
+
   <necessitudo nomen="ex_fonte" sub="fundatio" a="*" ad="*">
     <definitio>Unde propositio RECEPTA est - fons, non
       fundamentum (fons dicit unde venerit, non quod verum

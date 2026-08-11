@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/fabricatio.genera
-  Exemplar semanticum: FABRICATIO (versio 8, PLASTICUM)
+  Exemplar semanticum: FABRICATIO (versio 9, PLASTICUM)
   Genera: postulatum, facultas, probatio, vitium.
 
   VERSIO 8 (2026-08-10): migratio necessitudinum - paria conversa
@@ -21,7 +21,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="8" lingua="latina">
+<natura modulus="fabricatio" versio="9" lingua="latina">
 
 <!-- ========== NECESSITUDINES DOMESTICAE ==========
      Paria conversa quadrati intentionis: sedes antiquae formam
@@ -50,6 +50,47 @@
 <!-- ==================================================
      POSTULATUM - intentio declarata ante opus
      ================================================== -->
+
+<.genus nomen="pactum">
+
+  <definitio>
+    Foedus consilii stans: quod de FORMA artefactorum semper
+    tenendum est, opera OMNIA perpetuo ligans - implementatio
+    quaevis, lingua quavis, id honorare debet. A norma differt
+    subiecto (norma praxin gubernat, pactum formam artefacti);
+    a postulato ambitu (postulatum operi UNI ante opus dicitur
+    et in perfectione iudicatur, pactum sine termino ligat).
+  </definitio>
+
+  <glossa lingua="en">A standing design covenant: what must
+    always hold about the SHAPE of artifacts, binding every work
+    in any implementation language. Differs from norma by subject
+    (practice vs artifact form), from postulatum by scope (one
+    work, judged at completion, vs all works perpetually).</glossa>
+
+  <nota>
+    Natum in ambulatione regenerationis I (2026-08-11): advena
+    sine contextu capita poscebat, sed censui pacta debentur -
+    forma sine implementatione, quam reaedificator lingua sua
+    honorare potest. Relatio proprium ABSENS commune significat.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="contentum" genus="textus"
+      nota="foedus ipsum, breviter - quod semper tenendum"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="proprium" ad="*" necessitudo="proprium_de"
+      nota="linguae aut technologiae cui proprium est; absens =
+            COMMUNE (lingua quavis honorandum)"/>
+    <relatio nomen="tendit_ad" ad="*"
+      nota="quo bono spinae - nihil orbum"/>
+    <relatio nomen="natum_ex" ad="*" multiplex="verum"
+      nota="casus qui foedus coegit"/>
+  </relationes>
+
+</.genus>
 
 <.genus nomen="postulatum">
 

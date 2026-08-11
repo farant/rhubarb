@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **35** · genera **460** · res dictionarii **114** · necessitudines **85** · arcus **529**
+Exemplaria **35** · genera **461** · res dictionarii **114** · necessitudines **86** · arcus **529**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -223,8 +223,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **daemon** ⊂ programma — Perpetuum, sine terminali, petitionibus serviens: non finem quaerit sed statum servat
 - **applicatio** ⊂ programma — Homini praesens, fenestris aut terminali: dum homo adest currit
 
-### fabricatio (v8, genera 18)
+### fabricatio (v9, genera 19)
 
+- **pactum** — Foedus consilii stans: quod de FORMA artefactorum semper tenendum est, opera OMNIA perpetuo ligans - implementatio qua
 - **postulatum** ⚙ — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
 - **facultas** — Quod opus praestare potest, ab utente aestimatum: unitas VALORIS
 - **probatio** — Interrogatio exsecutabilis intentionis: scaena parata, actio exercita, effectus contra exspectationem collatus
@@ -371,7 +372,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 ### necessitudines (v1, genera 0)
 
 
-### norma (v6, genera 15)
+### norma (v7, genera 15)
 
 - **norma** ⚙ — Documentum publicum quod formam praescribit: quid conformitas significet definit
 - **lex** ⚙ — Ordinatio rationis ad bonum commune, ab eo qui curam communitatis habet promulgata (Thomas, ST I-II q
@@ -873,6 +874,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | ordo | actus |
 | organizatio | organizatio |
 | origo_dominii | acta |
+| pactum | fabricatio |
 | paenitentia | actus |
 | parochus | organizatio |
 | pascha | tempus |
@@ -1092,7 +1094,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `tempus.calendarium` — :calendarium_gregorianum, :calendarium_liturgicum
 - `vectura.via` — :canalis_suesianus, :via_appia
 
-## V. Necessitudines — relationes declaratae (85)
+## V. Necessitudines — relationes declaratae (86)
 
 Identitas relationis SEMEL declaratur; sedes usus (relatio,
 terminus) titulo, converso, aut scriptura ligant. Familiae =
@@ -1168,6 +1170,7 @@ necessitudines altae (columna sub vacua).
 | postulat | - | dependentia | * | * | - | necessitudines |
 | praebet | praebetur_a | dependentia | * | * | - | necessitudines |
 | producit | per_instrumentum | origo | * | * | - | elementa_programmatis |
+| proprium_de | - | pertinet_ad | * | * | - | necessitudines |
 | realizata_a | - | effectio | * | * | realizatur_per | necessitudines |
 | repraesentatio | - | - | * | * | - | necessitudines |
 | retractat | retractatur_a | effectio | * | * | - | fabricatio |

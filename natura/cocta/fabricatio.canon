@@ -5,6 +5,7 @@
 
   <elementum nomen="individua" radix="verum">
     <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="pactum"/>
     <liberum nomen="postulatum"/>
     <liberum nomen="facultas"/>
     <liberum nomen="probatio"/>
@@ -23,6 +24,27 @@
     <liberum nomen="conservatio"/>
     <liberum nomen="restauratio-aedificii"/>
     <liberum nomen="curatio-medica"/>
+  </elementum>
+
+  <elementum nomen="pactum">
+    <glossa lingua="en">A standing design covenant: what must
+    always hold about the SHAPE of artifacts, binding every work
+    in any implementation language. Differs from norma by subject
+    (practice vs artifact form), from postulatum by scope (one
+    work, judged at completion, vs all works perpetually).</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="proprium" genus="referentia"/>
+    <attributum nomen="tendit-ad" genus="referentia"/>
+    <liberum nomen="natum-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="natum-ex" intra="pactum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="pactum">
+    <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="postulatum">
@@ -607,7 +629,7 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="postulatum facultas probatio probatio-unitatis probatio-integrationis
+    super="pactum postulatum facultas probatio probatio-unitatis probatio-integrationis
            probatio-regressionis probatio-fumi vitium regressio debitum-technicum
            complicatio consilium consilium-computatum depravatio interventio
            conservatio restauratio-aedificii curatio-medica"/>
