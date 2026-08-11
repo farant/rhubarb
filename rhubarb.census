@@ -362,12 +362,20 @@
   <pactum nomen="&pactum-interfaciei-primae;"
     contentum="Interfacies thesaurus est, implementatio fluit: interfaciem primam recte fingere; implementatio post libere emendatur, interfacies refingi dolet."
     ex-fonte="&eskil_steenberg;" tendit-ad="&perennitas;">
+    <glossa lingua="en">The interface is the treasure and the
+      implementation flows: get the interface right first. An
+      implementation can be freely mended later; reshaping an
+      interface hurts everyone already leaning on it.</glossa>
     <informat ad=".bibliotheca"/>
   </pactum>
 
   <pactum nomen="&pactum-chordae;"
     contentum="Chorda par (datum, mensura) est, sentinella NUMQUAM terminata; limes ad mundum sentinellarum functio una explicita. Mensura portatur, non quaeritur."
     tendit-ad="&perennitas;">
+    <glossa lingua="en">A string is a (data, length) pair, never
+      ended by a sentinel; the border to the sentinel world is one
+      explicit function. The length is carried, never searched
+      for.</glossa>
     <informat ad="&chorda;"/>
     <nota>Commune: in C disciplina est (vide periculum
       chordae), in linguis recentioribus natura ipsa.</nota>
@@ -376,12 +384,20 @@
   <pactum nomen="&pactum-piscinae;"
     contentum="Memoria per piscinas: sumptio in arenam ambitūs, liberatio TOTIUS simul, rei singulae numquam; interfacies sumens piscinam EXPLICITE accipit."
     tendit-ad="&perennitas;">
+    <glossa lingua="en">Memory through pools: allocate into the
+      arena of your scope, free the WHOLE pool at once and never
+      one thing at a time; any interface that allocates takes its
+      pool explicitly.</glossa>
     <informat ad="&piscina;"/>
   </pactum>
 
   <pactum nomen="&pactum-exituum;"
     contentum="Exitus 0 purus, 1 defectus inventi, 2 NIHIL CURSUM - defectus, non salus. Custos omnis hoc pactum servat; qui solum 0 spectat fallitur."
     tendit-ad="&dominium;">
+    <glossa lingua="en">Exit codes: 0 clean, 1 findings found,
+      2 NOTHING RAN - which is a failure, not a pass. Every guard
+      keeps this covenant; whoever watches only for zero is
+      deceived.</glossa>
     <natum-ex ad="&periculum-exitus-secundi;"/>
     <informat ad=".instrumentum-lineae"/>
     <informat ad=".uncus"/>
@@ -389,39 +405,69 @@
 
   <pactum nomen="&pactum-recusationis;"
     contentum="Defectus CLARE recusat et causam nominat; degradatio tacita vetita - quod tacet, fidem fabricat."
-    tendit-ad="&dominium;"/>
+    tendit-ad="&dominium;">
+    <glossa lingua="en">Failure refuses LOUDLY and names its
+      cause; silent degradation is forbidden - what keeps quiet
+      manufactures false trust.</glossa>
+  </pactum>
 
   <pactum nomen="&pactum-fidelitatis;"
     contentum="Analysta circuitum byte-idem servat: quod legitur et remittitur idem est (silva in C, stml sine ornatu). Scriptor lectorem probat."
     tendit-ad="&dominium;">
+    <glossa lingua="en">A parser keeps the byte-identical round
+      trip: what is read and written back is the same bytes
+      (silva for C, stml unadorned). The writer proves the
+      reader.</glossa>
     <informat ad="&stml;"/>
     <informat ad="&silva;"/>
   </pactum>
 
   <pactum nomen="&pactum-parseris-unius;"
     contentum="Analysta UNUS cuique formae; instrumenta cetera tabulas eius consumunt, praesentatio sola. Lectiones plures corporis unius dissensum tacitum parant."
-    tendit-ad="&intellectus;"/>
+    tendit-ad="&intellectus;">
+    <glossa lingua="en">ONE parser per format; every other tool
+      consumes its tables and only presents. Multiple readings of
+      one body breed silent disagreement.</glossa>
+  </pactum>
 
   <pactum nomen="&pactum-veritatis;"
     contentum="Veritas UNA committitur; visus omnis proiectio refectibilis (annales/db, corpus/INDEX, liber/arbor). Quod bis stat, semel mentietur."
     tendit-ad="&intellectus;">
+    <glossa lingua="en">ONE truth is committed; every view is a
+      rebuildable projection (journal/database, corpus/index,
+      book/tree). What stands in two places will one day
+      lie.</glossa>
     <informat ad="&annales-tabularii;"/>
   </pactum>
 
   <pactum nomen="&pactum-portae-natalis;"
     contentum="Porta quaeque culpa plantata RUBRA nascitur antequam viridi eius creditur: porta tacita et porta mortua idem videntur."
     tendit-ad="&dominium;">
+    <glossa lingua="en">Every gate is born RED by a planted fault
+      before its green is believed: a silent gate and a dead gate
+      look identical from the outside.</glossa>
     <natum-ex ad="&casus-uncorum-mutorum;"/>
     <informat ad=".uncus"/>
   </pactum>
 
   <pactum nomen="&pactum-numerorum;"
     contentum="Numeri insignati ordinarii, signati nominatim (domi: i32/i64 insignati, s32/s64 signati); quod ex horologio venit SEMPER signatum - differentia temporis natura sua signata est, involutio insignata ramus est qui tacite numquam currit."
-    tendit-ad="&perennitas;"/>
+    tendit-ad="&perennitas;">
+    <glossa lingua="en">Numbers are unsigned by default and signed
+      by name (in this house i32/i64 are unsigned, s32/s64
+      signed); whatever comes from a clock is ALWAYS signed - a
+      time difference is signed by nature, and an unsigned
+      wraparound is a branch that silently never runs.</glossa>
+  </pactum>
 
   <pactum nomen="&pactum-latinitatis-fontis;"
     contentum="Fons PER macros latina.h scribitur (si, alioquin, per, dum, redde, structura...): verba clavium Latina in ipso textu stant, unde macro-verba identificatoribus VETITA."
     proprium="&c;" tendit-ad="&intellectus;">
+    <glossa lingua="en">Source is written THROUGH the latina.h
+      macros (si, alioquin, per, dum, redde, structura...): the
+      Latin keywords stand in the text itself - which is why every
+      macro word is FORBIDDEN as an identifier. The one covenant
+      proper to C alone.</glossa>
     <nota>Coniectura stili maxima advenae I ('mutat omnem
       lineam') hic soluta: per macros, non solum praeter
       verba.</nota>
@@ -429,11 +475,18 @@
 
   <pactum nomen="&pactum-suturae;"
     contentum="Quod machinae proprium est post suturam iacet; nucleus systema numquam directe vocat - portatio suturam novam scribit, nucleum numquam."
-    tendit-ad="&perennitas;"/>
+    tendit-ad="&perennitas;">
+    <glossa lingua="en">What belongs to the machine lies behind a
+      seam; the core never calls the system directly - porting
+      means writing a new seam, never rewriting the core.</glossa>
+  </pactum>
 
   <pactum nomen="&pactum-generatorum;"
     contentum="Artefactum generatum generatorem suum se ipso declarat et manu numquam editur: fons mutatur, artefactum refit."
     tendit-ad="&intellectus;">
+    <glossa lingua="en">A generated artifact declares its own
+      generator inside itself and is never edited by hand: change
+      the source, remake the artifact.</glossa>
     <informat ad="&monolithus-canonum;"/>
     <informat ad="&index-naturae;"/>
   </pactum>
