@@ -5686,3 +5686,27 @@ likewise origo (author of the expression, not the work);
 translata_ex cites orta_ex, whose definitio already said "lingua
 e lingua". possessor → tenetur_a; impressa_in → origo (the
 deliberately thin paper-from-wood link stays thin: family cite).
+
+## 2026-08-10 — vectura burn-down: the circumstantiae frame
+
+12 → 0, and 2 more elsewhere for free (global 161 → 147, ligata
+285 = 66%): sub_iurisdictione and possessio_eius each had a twin
+site in another model, so their core declarations bound four
+sites for two rules-of-two. Monita 26, necessitudines 77, canons
+byte-identical, versio 0 → 1.
+
+iter got the prettiest frame yet: its six slots in original order
+ARE the classical circumstantiae (unde, quo, qua, quo vehiculo,
+quid ferens, a quo) — a full six-terminus frame with zero
+reordering, and the 2026-08-10 classification had already
+sketched it (a_loco/ad_locum/per_viam named as a frame before
+frames existed). The munus="fert" terminus binds BY NAME to the
+fert workhorse — first terminus bound by name-match rather than
+citation. fert itself gained conversum="fertur_per" in core
+(onus.fertur_per was an old inversa= site).
+
+via also framed (one terminus: iungit → situs — a road IS
+constituted by the places it joins; "condicio itineris" stands by
+its ends). Citations: apta_viae → conformitas (built to suit),
+regitur_a → exercet (the driver operates the vehicle), passum →
+afficit via converse.

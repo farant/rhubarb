@@ -374,10 +374,12 @@
       language).</glossa>
   </necessitudo>
 
-  <necessitudo nomen="fert" sub="dependentia" a="*" ad="*">
+  <necessitudo nomen="fert" conversum="fertur_per"
+      sub="dependentia" a="*" ad="*">
     <definitio>Quod aliud secum portat aut praestat: iurisdictio
-      normas, ambitus elementa.</definitio>
-    <glossa lingua="en">Carries / bears.</glossa>
+      normas, ambitus elementa, iter onus; conversa via, quod
+      per aliud fertur.</definitio>
+    <glossa lingua="en">Carries / is-carried-through.</glossa>
   </necessitudo>
 
   <!-- familia situs -->
@@ -534,6 +536,24 @@
     <definitio>Quod aliud gubernat et ordinat; conversa via, quod
       ab alio administratur.</definitio>
     <glossa lingua="en">Administers / administered-by.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="sub_iurisdictione" sub="custodia"
+      a="*" ad="*">
+    <definitio>Quod sub potestate iurisdictionis iacet: via,
+      locus, negotium. Duobus exemplaribus adhibitum - regula
+      duorum impleta.</definitio>
+    <glossa lingua="en">Under-the-jurisdiction-of. Two models
+      used the name before it was declared.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="possessio_eius" sub="custodia"
+      a="*" ad="*">
+    <definitio>Res ad possessionem suam: cuius sit, quo titulo
+      teneatur. Duobus exemplaribus adhibitum - regula duorum
+      impleta.</definitio>
+    <glossa lingua="en">Its-ownership: the thing's tie to the
+      possession that holds it.</glossa>
   </necessitudo>
 
 </natura>

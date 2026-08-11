@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/vectura.genera
-  Exemplar semanticum: VECTURA (versio 0, PLASTICUM)
+  Exemplar semanticum: VECTURA (versio 1, PLASTICUM)
   Genera: iter, via, vehiculum, onus.
 
   Natum ex cursu tertio circuli (redemptor onerum), electo
@@ -20,7 +20,7 @@
   (via Appia, canalis Suesianus - res quae describi possunt
   nemine vehente).
 -->
-<natura modulus="vectura" versio="0" lingua="latina">
+<natura modulus="vectura" versio="1" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -82,17 +82,26 @@
     <transitus a="interruptum" ad="in_cursu" per="resumptio"/>
   </machina_statuum>
 
-  <relationes>
-    <relatio nomen="a_loco" ad="locus" modulus="locus"/>
-    <relatio nomen="ad_locum" ad="locus" modulus="locus"/>
-    <relatio nomen="per_viam" ad="via" multiplex="verum"
+  <termini>
+    <nota>compages itineris = circumstantiae classicae: unde,
+      quo, qua, quo vehiculo, quid ferens, a quo. Sex fines,
+      ordo pristinus, actus purus (compagem suam classificatio
+      ipsa 2026-08-10 delineavit: a_loco/ad_locum/per_viam).</nota>
+    <terminus munus="a_loco" necessitudo="situs" ad="locus"
+      modulus="locus"/>
+    <terminus munus="ad_locum" necessitudo="situs" ad="locus"
+      modulus="locus"/>
+    <terminus munus="per_viam" necessitudo="situs" ad="via"
+      multiplex="verum"
       nota="iter unum vias plures adhibere potest - unde
             transitus onerum de vehiculo in vehiculum"/>
-    <relatio nomen="vehitur" ad="vehiculum"/>
-    <relatio nomen="fert" ad="onus" multiplex="verum"/>
-    <relatio nomen="suscipitur_a" ad="persona" modulus="persona"
+    <terminus munus="vehitur" necessitudo="fert" ad="vehiculum"
+      nota="via conversa: vehiculum iter secum portat"/>
+    <terminus munus="fert" ad="onus" multiplex="verum"/>
+    <terminus munus="suscipitur_a" necessitudo="participatio"
+      ad="persona" modulus="persona"
       nota="vector - qui iter agit"/>
-  </relationes>
+  </termini>
 
 </.genus>
 
@@ -129,9 +138,13 @@
             unde ius transeundi (servitus) apud iurisconsultos"/>
   </proprietates>
 
+  <termini>
+    <terminus munus="iungit" necessitudo="situs" ad="locus"
+      multiplex="verum" modulus="locus"
+      nota="via per loca quae iungit constituitur - condicio
+            itineris finibus suis stat"/>
+  </termini>
   <relationes>
-    <relatio nomen="iungit" ad="locus" modulus="locus"
-      multiplex="verum"/>
     <relatio nomen="sub_iurisdictione" ad="iurisdictio"
       modulus="locus" multiplex="verum"
       nota="via longa iurisdictiones plures transit - unde
@@ -225,9 +238,11 @@
 
   <relationes>
     <relatio nomen="apta_viae" ad="via" multiplex="verum"
+      necessitudo="conformitas"
       nota="vehiculum viae suae ligatum est - unde
             transbordatio, unde portus: loca ubi viae mutantur"/>
     <relatio nomen="regitur_a" ad="persona" modulus="persona"
+      necessitudo="exercet"
       nota="rector - cuius licentia (obligatio.licentia)
             postulatur, et cuius horae normis reguntur"/>
   </relationes>
@@ -326,6 +341,7 @@
             Unde charta negotiabilis (commercium), quae dominium
             transfert dum res in nave manet"/>
     <relatio nomen="passum" ad="damnum" modulus="corporalia"
+      necessitudo="afficit"
       multiplex="verum"/>
   </relationes>
 
