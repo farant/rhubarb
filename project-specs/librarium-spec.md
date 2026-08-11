@@ -295,6 +295,27 @@ these are the map details not repeated there:
   amalgam + silva), then canon judgment, then rhubarb.census
   migrations (&c; stub → `<% &c;>` nota; &aedilis; entry →
   `<% &aedilis;>` with adhibet+nota, library genus stands per §6).
-- After W3, W2 is small: vitium XV beside NOMEN_BIS (:1820 mirror),
+- After W3, W2 is small: vitium XVI beside NOMEN_BIS (:1820 mirror),
   semina root fons= exemption, tripwire proof on the two measured
   collisions.
+
+**W3 IMPLETUM (2026-08-10, 87b5944 + 320aab8 + gradus III).** All
+three stages shipped: stml grammar (PERCENTUM_APERIRE/CLAUDERE
+XVIII/XIX, strict-at-birth negatives, byte round-trip, amalgam
+VERIFICATUM, silva 38/38), canon judgment (AUGMENTUM_PUGNANS = XV,
+dedicated pass, mints-collected-first pinned), and both census
+migrations (&c; stub dead, &aedilis; augmented, VITIA 0). Deviations
+from the sketch above, all recorded in lib/canon.worklog.md:
+- "(+ universal nota/historia)" died against measurement — historia
+  is maximum="1" everywhere, correctly a conflict; mechanical rule
+  only.
+- Corpus-found bug: overlay members with intra=-scoped definitions
+  need the target genus as SEMANTIC parent for the def lookup
+  (`_elementum_quaerere_vi` parens_vi thread); fixtures with only
+  global members missed it.
+- Citations inside overlays are judged by the ordinary citation
+  pass for free (the walk doesn't skip overlay interiors).
+- The two W2 collisions are now GONE from the corpus (the
+  migrations were the collision sites) — W2's planted faults must
+  be scratch fixtures recreating the pre-migration shape, not the
+  live census.

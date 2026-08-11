@@ -1072,12 +1072,16 @@ s32 principale (vacuum)
             "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
             "    <attributum nomen=\"aetas\" genus=\"numerus\"/>\n"
             "    <liberum nomen=\"ramus\"/>\n"
+            "    <liberum nomen=\"folium\"/>\n"
             "    <liberum nomen=\"historia\" maximum=\"1\"/>\n"
             "    <liberum nomen=\"nota\"/>\n"
             "  </elementum>\n"
             "  <elementum nomen=\"ramus\">\n"
             "    <attributum nomen=\"longitudo\""
             " genus=\"numerus\"/>\n"
+            "  </elementum>\n"
+            "  <elementum nomen=\"folium\" intra=\"quercus\">\n"
+            "    <attributum nomen=\"color\" genus=\"nomen\"/>\n"
             "  </elementum>\n"
             "  <elementum nomen=\"nota\" textus=\"verum\"/>\n"
             "  <elementum nomen=\"historia\" textus=\"verum\"/>\n"
@@ -1093,6 +1097,18 @@ s32 principale (vacuum)
         vitia = iudicare_literis(c,
             "<silva><% &quercus_prima;>"
             "<ramus longitudo=\"3\"/><nota>bene</nota>"
+            "</%></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* membrum intra= adstrictum: parens semanticus = genus
+         * destinatum, non '%' (vitium corpore VERO inventum -
+         * 'adhibet' intra='instrumentum-aedificationis' in censu
+         * ELEMENTUM_IGNOTUM falso clamabat) */
+        vitia = iudicare_literis(c,
+            "<silva><% &quercus_prima;>"
+            "<folium color=\"viridis\"/>"
             "</%></silva>",
             piscina, intern);
         CREDO_NON_NIHIL (vitia);

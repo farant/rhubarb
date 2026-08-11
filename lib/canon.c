@@ -114,10 +114,12 @@ interior vacuum vitium_addere(Xar* vitia, CanonVitiumGenus genus,
     i32 numerus, i32 limes);
 interior CanonElementum* elementum_quaerere(Canon* c,
     StmlNodus* n);
+interior CanonElementum* _elementum_quaerere_vi(Canon* c,
+    StmlNodus* n, constans chorda* parens_vi);
 interior chorda clavis_scopi(Piscina* p, constans chorda* intra,
     constans chorda* titulus);
 interior vacuum nodum_iudicare(Canon* c, StmlNodus* n, Xar* vitia,
-    Piscina* piscina);
+    Piscina* piscina, constans chorda* parens_vi);
 interior vacuum _augmenta_cusasque_colligere(Canon* c, StmlNodus* n,
     StmlNodus* infixus, Xar* augmenta, TabulaDispersa* cusa,
     Piscina* piscina);
@@ -758,22 +760,36 @@ clavis_scopi(
 
 /* Definitionem ADSTRICTAM prius quaerere, deinde globalem:
  * specialius vincit. */
+/* parens_vi: parens SEMANTICUS pro clavibus intra= - liberi
+ * augmentationis '<% &clavis;>' parentem arboris '%' ferunt, sed
+ * definitiones eorum ad GENUS destinatum adstrictae sunt (e.g.
+ * 'adhibet' intra='instrumentum-aedificationis'). NIHIL = parens
+ * arboris (mos ordinarius). */
 interior CanonElementum*
-elementum_quaerere(
-    Canon*      c,
-    StmlNodus*  n)
+_elementum_quaerere_vi(
+    Canon*               c,
+    StmlNodus*           n,
+    constans chorda*     parens_vi)
 {
-    vacuum* valor;
+    vacuum*          valor;
+    constans chorda* parens_titulus;
 
-    si (n->parens && n->parens->genus == STML_NODUS_ELEMENTUM &&
+    parens_titulus = parens_vi;
+    si (!parens_titulus && n->parens &&
+        n->parens->genus == STML_NODUS_ELEMENTUM &&
         n->parens->titulus)
+    {
+        parens_titulus = n->parens->titulus;
+    }
+
+    si (parens_titulus)
     {
         PiscinaNotatio nota;
         chorda         k;
         b32            inventum;
 
         nota = piscina_notare(c->piscina);
-        k = clavis_scopi(c->piscina, n->parens->titulus, n->titulus);
+        k = clavis_scopi(c->piscina, parens_titulus, n->titulus);
         inventum = tabula_dispersa_invenire(c->elementa, k, &valor);
         piscina_reficere(c->piscina, nota);
         si (inventum)
@@ -788,6 +804,14 @@ elementum_quaerere(
     }
 
     redde (CanonElementum*)valor;
+}
+
+interior CanonElementum*
+elementum_quaerere(
+    Canon*      c,
+    StmlNodus*  n)
+{
+    redde _elementum_quaerere_vi(c, n, NIHIL);
 }
 
 /* instantias scopi colligere: intra NIHIL = radix sola (scopus
@@ -1688,17 +1712,24 @@ _augmentum_iudicare(
         }
         alioquin
         {
-            nodum_iudicare(c, l, vitia, piscina);
+            /* parens semanticus = genus destinatum (definitiones
+             * intra= liberorum ad id adstrictae) */
+            nodum_iudicare(c, l, vitia, piscina,
+                           genus_def->titulus);
         }
     }
 }
 
+/* parens_vi: parens semanticus pro definitionibus intra= (vide
+ * _elementum_quaerere_vi) - NIHIL ubique praeter liberos
+ * augmentationum, quibus genus destinatum traditur. */
 interior vacuum
 nodum_iudicare(
-    Canon*      c,
-    StmlNodus*  n,
-    Xar*        vitia,
-    Piscina*    piscina)
+    Canon*           c,
+    StmlNodus*       n,
+    Xar*             vitia,
+    Piscina*         piscina,
+    constans chorda* parens_vi)
 {
     CanonElementum* e;
     StmlNodus*      infixus;
@@ -1727,7 +1758,7 @@ nodum_iudicare(
         infixus = canon_infixum_invenire(n);
     }
 
-    e = elementum_quaerere(c, n);
+    e = _elementum_quaerere_vi(c, n, parens_vi);
     si (!e)
     {
         chorda* sug;
@@ -1973,7 +2004,7 @@ nodum_iudicare(
                           ZEPHYRUM);
         }
 
-        nodum_iudicare(c, l, vitia, piscina);
+        nodum_iudicare(c, l, vitia, piscina, NIHIL);
     }
 }
 
@@ -2031,7 +2062,7 @@ canon_iudicare(
                       ZEPHYRUM, ZEPHYRUM);
     }
 
-    nodum_iudicare(canon, elementum_radix, vitia, piscina);
+    nodum_iudicare(canon, elementum_radix, vitia, piscina, NIHIL);
 
     /* ---- unicitates et citationes: per SCOPOS iudicantur.
      * Sine intra= scopus = documentum (mos vetus); cum intra=

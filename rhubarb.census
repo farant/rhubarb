@@ -59,11 +59,11 @@
 
   <!-- ============ LINGUA ============ -->
 
-  <lingua-programmandi nomen="&c;">
-    <nota>C89 stricte (-pedantic). MESOFACTUM: duplicatum lexici
-      naturae (#c in semina.census) - citatio trans documenta
-      nondum exsistit.</nota>
-  </lingua-programmandi>
+  <!-- &c; in bibliotheca naturae vivit (claves externae, W1);
+       augmentatio notam domus apponit - duplicatum mortuum -->
+  <% &c;>
+    <nota>C89 stricte (-pedantic).</nota>
+  </%>
 
   <!-- ============ BIBLIOTHECAE (specimina, gradus 0-2) ==== -->
 
@@ -136,11 +136,15 @@
       natura-custos eam ignit in *.genera.</nota>
   </instrumentum-lineae>
 
-  <instrumentum-lineae nomen="&aedilis;">
+  <!-- &aedilis; in bibliotheca naturae vivit (genus
+       instrumentum-aedificationis stat - essentia super
+       operationem, decretum Franis); census adhibitionem
+       silvae et notam apponit -->
+  <% &aedilis;>
     <adhibet ad="&silva;"/>
     <nota>Stratum aedificationis: clausura inclusionum, --partes,
       indices generati.</nota>
-  </instrumentum-lineae>
+  </%>
 
   <!-- ============ NORMAE (conventiones domus) ============ -->
 

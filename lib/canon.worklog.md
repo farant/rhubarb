@@ -345,3 +345,31 @@ the base canon). The mechanical rule governs; the parenthetical dies.
 
 W2 note: CLAVIS_COLLISA becomes XVI, not XV as the spec sketched.
 The stale "omnes decem" banner in probatio_canon fixed while here.
+
+## 2026-08-10 — census migration + the intra= bug the corpus found (W3 gradus III)
+
+rhubarb.census migrated: the &c; stub died (its MESOFACTUM sentence
+— "citatio trans documenta nondum exsistit" — was made false by W1
+itself), nota lives on as `<% &c;>`; &aedilis; became `<% &aedilis;>`
+carrying adhibet+nota (library genus instrumentum-aedificationis
+stands per Fran's ruling).
+
+The canon-custos hook caught a REAL W3-2 bug on first contact with
+the corpus that all eight unit fixtures missed: overlay members with
+intra=-scoped definitions (adhibet intra="instrumentum-…") failed
+ELEMENTUM_IGNOTUM, because elementum_quaerere keys the scoped lookup
+on the TREE parent — which inside an overlay is "%". nota (global)
+passed, adhibet (intra) failed — fixtures had only global members.
+Fix: `_elementum_quaerere_vi(c, n, parens_vi)` — a semantic-parent
+override; nodum_iudicare threads it (NIHIL everywhere except
+augmentation members, which get the target genus title). Pinned in
+probatio with an intra= fixture member (folium intra=quercus).
+Corpus-contact law confirmed again: the real store carries shapes
+fixtures don't imagine.
+
+Tripwire probes against the REAL individua.canon (scratch): PUGNANS
+on typatio-vis (single-valued attribute), IRRITA on &nemo_omnino;,
+ILLICITUM on rota-quadrata — all scream, all self-describing.
+Citations INSIDE overlays (adhibet ad="&silva;") are judged by the
+ordinary citation pass unchanged — the walk doesn't skip overlay
+interiors, so that property came free.
