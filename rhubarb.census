@@ -118,6 +118,10 @@
   </bibliotheca>
 
   <bibliotheca nomen="&chorda;" scripta-in="&c;" gradus="1">
+    <glossa lingua="en">The string library: a chorda carries its
+      length and is NEVER null-terminated - the standard library's
+      string functions are foreign to it. Functions that allocate
+      take a pool.</glossa>
     <dependet-ex ad="&piscina;"/>
     <nota>Chorda mensuram fert, NUMQUAM nullo terminatur -
       functiones bibliothecae vulgaris alienae sunt. Functiones
@@ -126,6 +130,10 @@
   </bibliotheca>
 
   <bibliotheca nomen="&stml;" scripta-in="&c;" gradus="2">
+    <glossa lingua="en">The house XML-variant: inner text reads
+      VERBATIM (normalization is the consumer's choice, never the
+      parser's). silva vendors its own copy - run amalgamare.sh
+      after changes.</glossa>
     <dependet-ex ad="&piscina;"/>
     <dependet-ex ad="&chorda;"/>
     <nota>XML-varians domus. textus internus VERBATIM est
@@ -134,12 +142,19 @@
   </bibliotheca>
 
   <bibliotheca nomen="&canon;" scripta-in="&c;" gradus="3">
+    <glossa lingua="en">Schemas for STML documents: vocabulary,
+      cardinality, value kinds, citations, bounds - and an
+      expression language NEVER.</glossa>
     <dependet-ex ad="&stml;"/>
     <nota>Schemata STML: vocabularium, cardinalitas, genera
       valorum, citationes, fines. Lingua expressionum NUMQUAM.</nota>
   </bibliotheca>
 
   <bibliotheca nomen="&natura;" scripta-in="&c;" gradus="4">
+    <glossa lingua="en">The semantic dictionary of the house. Its
+      numbers do not live here but in the signa below: each
+      carries its own measuring path, so each can be measured
+      again.</glossa>
     <dependet-ex ad="&stml;"/>
     <dependet-ex ad="&canon;"/>
     <nota>Numeri eius NON hic iacent sed in signis infra:
@@ -147,6 +162,9 @@
   </bibliotheca>
 
   <bibliotheca nomen="&silva;" scripta-in="&c;" gradus="2">
+    <glossa lingua="en">The robust C89 parser: byte-faithful
+      emission, the diagnostic codices, the ground beneath the
+      language server and the house tools.</glossa>
     <dependet-ex ad="&piscina;"/>
     <dependet-ex ad="&chorda;"/>
     <nota>Analysta C89 robustus: emissio byte-fidelis, codices
@@ -154,6 +172,11 @@
   </bibliotheca>
 
   <bibliotheca nomen="&credo;" scripta-in="&c;" gradus="1">
+    <glossa lingua="en">The house testing library: CREDO_*
+      assertions and the test summary. Canonical usage lives in
+      probatio_piscina.c. The first stranger's sharpest finding
+      was silence: an earlier census never mentioned testing at
+      all.</glossa>
     <dependet-ex ad="&piscina;"/>
     <nota>Probationum bibliotheca domus: asserta CREDO_*,
       compendium probationis. Exemplar usūs canonicum:
@@ -183,6 +206,10 @@
   </daemon>
 
   <instrumentum-lineae nomen="&canon-examen;">
+    <glossa lingua="en">The document judge: dispatches by registry
+      (canones.registrum at the root) to each dialect's canon.
+      Exit 2 means NOTHING was judged - a failure, not a
+      pass.</glossa>
     <adhibet ad="&canon;"/>
     <adhibet ad="&stml;"/>
     <nota>Iudex documentorum per registrum (canones.registrum in
@@ -190,6 +217,9 @@
   </instrumentum-lineae>
 
   <instrumentum-lineae nomen="&natura-examen;">
+    <glossa lingua="en">The fast gate over the semantic
+      dictionary; the natura-custos hook fires it on every
+      .genera save.</glossa>
     <adhibet ad="&natura;"/>
     <adhibet ad="&canon;"/>
     <nota>Porta celeris (0.03s contra visus 14s), uncus
@@ -197,6 +227,9 @@
   </instrumentum-lineae>
 
   <instrumentum-lineae nomen="&silva-examen;">
+    <glossa lingua="en">Cold C89 judgment straight from disk - the
+      AUTHORITY after header edits, when a resident's cache may
+      lie.</glossa>
     <adhibet ad="&silva;"/>
     <nota>./silva/examen.sh via - iudicium C89 frigidum ex
       disco: AUCTORITAS post editiones capitum (remedium
@@ -206,6 +239,10 @@
   </instrumentum-lineae>
 
   <instrumentum-lineae nomen="&compile-tests;">
+    <glossa lingua="en">The root suite runner: matches a pattern
+      against test filenames; exit 2 means NOTHING RAN - a
+      failure, not a pass. Its flags are the one true source of
+      the flag norm.</glossa>
     <adhibet ad="&credo;"/>
     <nota>./compile_tests.sh pars - cursor suitarum radicis
       (congruentia contra nomina plagularum probationis; exitus
@@ -214,6 +251,9 @@
   </instrumentum-lineae>
 
   <instrumentum-lineae nomen="&amalgamare;">
+    <glossa lingua="en">Synchronizes silva's vendored copy of
+      stml; MUST run after stml changes, or silva quietly
+      disagrees with the very library it carries.</glossa>
     <adhibet ad="&stml;"/>
     <adhibet ad="&silva;"/>
     <nota>./silva/amalgamare.sh - exemplar stml venditum silvae
@@ -222,6 +262,9 @@
   </instrumentum-lineae>
 
   <instrumentum-lineae nomen="&frigida;">
+    <glossa lingua="en">The ledger's cold path: writes straight to
+      the annales when the resident daemon is down. The hot/cold
+      pair is what proves the journal is the truth.</glossa>
     <adhibet ad="&annales-tabularii;"/>
     <nota>./gesta/frigida.sh - via frigida tabularii: scribit
       in annales cum residens iacet. Par calidi/frigidi quod
@@ -229,6 +272,11 @@
   </instrumentum-lineae>
 
   <instrumentum-lineae nomen="&census-orbi;">
+    <glossa lingua="en">The orphan-guard of this very document:
+      traceability discipline in the DO-178C/KAOS manner - a
+      declared root, real pertinence computed, unknown citations
+      NAMED with exit 1. Its own pertinence was once fiction;
+      healed the day it was found.</glossa>
     <adhibet ad="&do_178c;"/>
     <nota>./tools/census_orbi.sh via - custos orbitatis huius
       ipsius documenti: disciplinam traceabilitatis DO-178C/KAOS
@@ -240,6 +288,10 @@
   </instrumentum-lineae>
 
   <instrumentum-lineae nomen="&census-recensere;">
+    <glossa lingua="en">Checks this document's signa against their
+      own measuring paths: FRESH / MOVED / DEAD PATH (a path's
+      health is its exit code). Closes the measurement loop - a
+      number nobody re-measures quietly rots.</glossa>
     <adhibet ad="&stml;"/>
     <nota>./tools/census_recensere.sh - signa huius documenti
       contra vias suas confert: RECENS / MOTUS / VIA MORTUA
