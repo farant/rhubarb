@@ -80,3 +80,30 @@ Notes:
   — a red-test copy must run from a dir with that subtree in place.
   Proven red: inverted "fines supra res" → FRACTA (1), exit 1.
   Green: 233 assertions (225 + 8 charta layout/sigil).
+
+## 2026-08-11 — charta step 3: barycenter + band labels
+
+Fran's first screenshot (layout.jpg) was the input: bands read
+well, but alphabetical order scattered every parent's children
+across its band (dominium's ten causat targets = a fan of crossing
+lines), and the band labels were invisible (world-space drawing
+put them under nodes / off-viewport at fit zoom).
+
+- **Barycenter over ALL edge families, spine weighted ×2** —
+  refinement over the spec's skeleton-only rule, recorded in spec
+  §5.2: the pacta band's connective tissue is `informat`;
+  skeleton-only would leave it alphabetical. Toggle-stability
+  holds because the layout's edge set is fixed regardless of
+  drawing toggles. 4 down + 4 up passes, alphabetical seed,
+  neighbor-less nodes hold their slot, nomen tiebreak — fully
+  deterministic (asserted twice-identical WITH edges).
+- **Inner-function scoping bug caught before it shipped**:
+  `positus_scribere`'s `for (f = …)` reused the CALLER's `f`, so
+  the pass loop would have ended after one band — silently, as a
+  layout that "worked" but never iterated. Inner helpers now own
+  their locals; comment in code warns.
+- **Band labels screen-pinned** (transform reset, left margin,
+  projected band y, clipped to viewport).
+- Harness: 235 assertions; crossing-reduction fixture
+  (alpha→secundus / beta→primus uncrossed after passes) proven
+  red-capable via inverted copy.

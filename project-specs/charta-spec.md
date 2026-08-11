@@ -156,10 +156,17 @@ positions.
    no-silent-caps law). The table is a LEVER: strata can later be
    re-derived from the causal skeleton itself if the hand-table starts
    lying.
-2. **Within-layer ordering**: barycenter passes (fixed count, e.g. 4
-   down + 4 up) over the **causal skeleton only** (finalis + formalis
-   edges) so family toggles never reshuffle. Tiebreak = stable sort by
-   nomen.
+2. **Within-layer ordering**: barycenter passes (4 down + 4 up,
+   fixed) over **all edge families with spine (causat / pendet-ex /
+   dependet-ex) weighted double**. (Shipped refinement over the
+   first draft's skeleton-only rule: the pacta/praecepta band's
+   connective tissue is `informat` — skeleton-only would leave it
+   alphabetical. Toggle-stability is preserved because the layout's
+   edge set is FIXED regardless of what is drawn.) Alphabetical
+   initial order; nodes without neighbors hold their slot; ties
+   break by nomen — fully deterministic. Band labels draw
+   screen-pinned at the left margin (world-space labels hid under
+   nodes — first-screenshot lesson).
 3. **Stability under growth**: a new entity inserts by its own
    neighbors and nomen; existing relative order is preserved by the
    stable sorts. Authored/pinned positions are a future option, not

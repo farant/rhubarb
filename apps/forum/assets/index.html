@@ -1126,17 +1126,21 @@ function charta_stratum_generis(genus, externus) {
   return CHARTA_STRATA.length;                        /* alia */
 }
 
-/* dispositio provisoria (gradus III barycentrum super sceleto
- * addet): fasciae per strata, intra fasciam ordo clavium stabilis,
- * versus ad octonos, quisque versus in medio. DETERMINATA: input
- * idem -> positus idem - fundamentum recargationis calidae. */
+/* dispositio: fasciae per strata, intra fasciam ordo barycentri
+ * super aristis OMNIBUS (spina bis ponderata - spec par. V: pacta
+ * sine 'informat' texturam nullam haberent), versus ad octonos,
+ * quisque versus in medio. Toggles picturae dispositioni NIHIL
+ * dicunt - copia aristarum dispositioni FIXA est, ergo stabilitas
+ * manet. DETERMINATA: initium alphabeticum, transitus fixi IV,
+ * paritas clavium omnia dirimit - input idem -> positus idem. */
 function charta_disponere(r) {
   var LAT = 190, ALT = 46, SP_X = 26, SP_Y = 34, SP_FASCIA = 96;
   var PER_VERSUM = 8;
   var fasciae = [];
   var positus = {};
   var claves = [];
-  var i, k, f, y, versus;
+  var vicini = {};
+  var i, j, k, f, transitus, a, w;
 
   charta_fasciae = [];
   for (i = 0; i <= CHARTA_STRATA.length; i++) { fasciae.push([]); }
@@ -1149,30 +1153,95 @@ function charta_disponere(r) {
     f = charta_stratum_generis(r.nodi[k].genus, r.nodi[k].externus);
     fasciae[f].push(k);
   }
-  y = 0;
-  for (f = 0; f < fasciae.length; f++) {
-    if (!fasciae[f].length) { continue; }
-    versus = Math.ceil(fasciae[f].length / PER_VERSUM);
-    for (i = 0; i < fasciae[f].length; i++) {
-      var v = Math.floor(i / PER_VERSUM);
-      var c = i % PER_VERSUM;
-      var in_versu = Math.min(PER_VERSUM,
-        fasciae[f].length - v * PER_VERSUM);
-      var lat_versus = in_versu * (LAT + SP_X) - SP_X;
-      positus[fasciae[f][i]] = {
-        x: c * (LAT + SP_X) - lat_versus / 2,
-        y: y + v * (ALT + SP_Y),
-        lat: LAT, alt: ALT, stratum: f
-      };
+
+  /* vicinitas ex aristis (utroque versu; spina bis) */
+  for (i = 0; i < r.aristae.length; i++) {
+    a = r.aristae[i];
+    w = CHARTA_SPINA[a.familia] ? 2 : 1;
+    if (!vicini[a.a]) { vicini[a.a] = []; }
+    if (!vicini[a.ad]) { vicini[a.ad] = []; }
+    for (j = 0; j < w; j++) {
+      vicini[a.a].push(a.ad);
+      vicini[a.ad].push(a.a);
     }
-    charta_fasciae.push({
-      titulus: (f < CHARTA_STRATA.length
-        ? CHARTA_STRATA[f] : CHARTA_ALIA).titulus,
-      color: (f < CHARTA_STRATA.length
-        ? CHARTA_STRATA[f] : CHARTA_ALIA).color,
-      y: y - 18
+  }
+
+  /* positus ex ordine fasciarum praesenti (versus pleni, medium).
+   * CAVE: variabiles PROPRIAE - functio interior quae indices
+   * vocantis communes teneret ansam eius post reditum finiret
+   * (semel factum, semel satis) */
+  function positus_scribere() {
+    var fi, ii, yi = 0, vs;
+
+    charta_fasciae = [];
+    for (fi = 0; fi < fasciae.length; fi++) {
+      if (!fasciae[fi].length) { continue; }
+      vs = Math.ceil(fasciae[fi].length / PER_VERSUM);
+      for (ii = 0; ii < fasciae[fi].length; ii++) {
+        var v = Math.floor(ii / PER_VERSUM);
+        var c = ii % PER_VERSUM;
+        var in_versu = Math.min(PER_VERSUM,
+          fasciae[fi].length - v * PER_VERSUM);
+        var lat_versus = in_versu * (LAT + SP_X) - SP_X;
+        positus[fasciae[fi][ii]] = {
+          x: c * (LAT + SP_X) - lat_versus / 2,
+          y: yi + v * (ALT + SP_Y),
+          lat: LAT, alt: ALT, stratum: fi
+        };
+      }
+      charta_fasciae.push({
+        titulus: (fi < CHARTA_STRATA.length
+          ? CHARTA_STRATA[fi] : CHARTA_ALIA).titulus,
+        color: (fi < CHARTA_STRATA.length
+          ? CHARTA_STRATA[fi] : CHARTA_ALIA).color,
+        y: yi - 18
+      });
+      yi += vs * (ALT + SP_Y) - SP_Y + SP_FASCIA;
+    }
+  }
+
+  /* barycentrum unius fasciae: clavis quaeque ad mediam vicinorum
+   * x trahitur; sine vicinis locum praesentem tenet; paritas
+   * clavibus dirimitur (ordo totalis = determinatus) */
+  function fasciam_ordinare(fx) {
+    var ordo = fasciae[fx];
+    var bary = {};
+    var ii, ji, ki;
+
+    for (ii = 0; ii < ordo.length; ii++) {
+      ki = ordo[ii];
+      var vv = vicini[ki];
+      var summa = 0, n = 0;
+      if (vv) {
+        for (ji = 0; ji < vv.length; ji++) {
+          var p = positus[vv[ji]];
+          if (p) { summa += p.x + p.lat / 2; n++; }
+        }
+      }
+      bary[ki] = n ? summa / n
+        : positus[ki].x + positus[ki].lat / 2;
+    }
+    ordo.sort(function (p, q) {
+      if (bary[p] !== bary[q]) { return bary[p] - bary[q]; }
+      return p < q ? -1 : (p > q ? 1 : 0);
     });
-    y += versus * (ALT + SP_Y) - SP_Y + SP_FASCIA;
+  }
+
+  positus_scribere();
+  for (transitus = 0; transitus < 4; transitus++) {
+    /* deorsum, deinde sursum - vices fixae */
+    for (f = 0; f < fasciae.length; f++) {
+      if (fasciae[f].length > 1) {
+        fasciam_ordinare(f);
+        positus_scribere();
+      }
+    }
+    for (f = fasciae.length - 1; f >= 0; f--) {
+      if (fasciae[f].length > 1) {
+        fasciam_ordinare(f);
+        positus_scribere();
+      }
+    }
   }
   return positus;
 }
@@ -1335,18 +1404,24 @@ function charta_pingere() {
         || Math.min(pa.y, pad.y) > m1y) { continue; }
     charta_aristam_pingere(ctx, a, pa, pad);
   }
-  ctx.font = '11px monospace';
-  for (i = 0; i < charta_fasciae.length; i++) {
-    ctx.fillStyle = charta_fasciae[i].color;
-    ctx.fillText(charta_fasciae[i].titulus.toUpperCase(), m0x + 270,
-      charta_fasciae[i].y);
-  }
   for (i in charta_positus) {
     if (!charta_positus.hasOwnProperty(i)) { continue; }
     p = charta_positus[i];
     if (p.x + p.lat < m0x || p.x > m1x
         || p.y + p.alt < m0y || p.y > m1y) { continue; }
     charta_nodum_pingere(ctx, i, p);
+  }
+  /* tituli fasciarum FIXI SCAENAE (margo sinister), non mundo -
+   * in mundo sub nodis latebant aut extra telam cadebant
+   * (screenshot Franis primus id docuit) */
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.font = '11px monospace';
+  for (i = 0; i < charta_fasciae.length; i++) {
+    p = (charta_fasciae[i].y - charta_camera.y)
+      * charta_camera.scala + alt / 2;
+    if (p < 12 || p > alt - 4) { continue; }
+    ctx.fillStyle = charta_fasciae[i].color;
+    ctx.fillText(charta_fasciae[i].titulus.toUpperCase(), 10, p);
   }
 }
 

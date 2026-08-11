@@ -1115,6 +1115,30 @@ curare_cum(defs_vetera).then(function () {
         "charta: sigillum generis '.' retinetur");
 })();
 
+/* ---- charta: barycentrum decussationem tollit (gradus III).
+ * Ordo alphabeticus aristas decussat (alpha->secundus,
+ * beta->primus); post transitus ordo scoporum ordinem fontium
+ * sequitur - et bis idem (determinatum etiam cum aristis). ---- */
+(function () {
+    var r = { nodi: {
+        "&alpha;": { genus: "causa-finalis", externus: false },
+        "&beta;":  { genus: "causa-finalis", externus: false },
+        "&primus;":   { genus: "bibliotheca", externus: false },
+        "&secundus;": { genus: "bibliotheca", externus: false }
+    }, aristae: [
+        { a: "&alpha;", ad: "&secundus;", familia: "causat" },
+        { a: "&beta;",  ad: "&primus;",   familia: "causat" }
+    ] };
+    var p1 = charta_disponere(r);
+    var p2 = charta_disponere(r);
+    proba((p1["&alpha;"].x < p1["&beta;"].x)
+        === (p1["&secundus;"].x < p1["&primus;"].x),
+        "charta: barycentrum decussationem tollit");
+    proba(p1["&alpha;"].x === p2["&alpha;"].x
+        && p1["&primus;"].x === p2["&primus;"].x,
+        "charta: dispositio cum aristis quoque determinata");
+})();
+
 /* Synchrona omnia (vide Sync supra), ergo hic tuto iudicamus.
  * IACTUS, non $.exit: $.exit in hoc ambitu non exstat, et iactus
  * osascript exitu non-zephyro terminat (porta exitus, ut
