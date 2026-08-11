@@ -1739,6 +1739,11 @@ typedef struct SilvaStmlNodus {
                                                * authoris servat */
     int                     fragmentum;
     SilvaChorda*            fragmentum_id;
+    SilvaChorda*            augmentum_clavis; /* '<% &clavis;>' -
+                                               * clavis VERBATIM
+                                               * sigillata; NIHIL =
+                                               * elementum
+                                               * ordinarium */
 } SilvaStmlNodus;
 
 typedef struct {
@@ -2883,9 +2888,11 @@ nomen enumeratio {
                                                 captio_numerus > 0 =
                                                 <# (> / <#id (> / <(> */
     STML_TOKEN_TRANSCLUSIO          = XVI,   /* <<selector>> */
-    STML_TOKEN_ERRATUM              = XVII   /* titulus illegaliter
+    STML_TOKEN_ERRATUM              = XVII,  /* titulus illegaliter
                                               * incipiens ('<.x>',
                                               * '<9bad>') - vitium */
+    STML_TOKEN_PERCENTUM_APERIRE    = XVIII, /* <% &clavis;> */
+    STML_TOKEN_PERCENTUM_CLAUDERE   = XIX    /* </%> */
 } StmlTokenGenus;
 
 /* ==================================================
@@ -9160,6 +9167,122 @@ _tok_legere_fragmentum_claudere(StmlTokenContext* ctx)
     redde token;
 }
 
+/* Parse augmentation tag <% &clavis;> - clavis destinata sola,
+ * sine attributis (verbum in signo latet: unum verbum legale,
+ * appositio). Stricte a nativitate: clavis sigillata OBLIGATORIA
+ * ('<%>', '<% laika>', '<% .canis>', '<% &;>' = ERRATUM), post
+ * clavem spatium tum '>' solum. Clavis VERBATIM cum sigillis
+ * servatur ('&c;' - eaedem litterae quibus citationes canonis
+ * comparantur). */
+interior StmlToken
+_tok_legere_percentum(StmlTokenContext* ctx)
+{
+    StmlToken token;
+    i32 initium;
+    i32 initium_linea;
+    i32 initium_columna;
+    i32 clavis_initium;
+    b32 sana;
+
+    initium = ctx->positus;
+    initium_linea = ctx->linea;
+    initium_columna = ctx->columna;
+
+    token.attributa = NIHIL;
+    token.captio_numerus = ZEPHYRUM;
+    token.habet_captus = FALSUM;
+    token.captus_contentus.datum = NIHIL;
+    token.captus_contentus.mensura = ZEPHYRUM;
+    token.valor.datum = NIHIL;
+    token.valor.mensura = ZEPHYRUM;
+
+    /* Skip <% */
+    _tok_progredi(ctx, II);
+    _tok_praeterire_spatium(ctx);
+
+    sana = FALSUM;
+    clavis_initium = ctx->positus;
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '&')
+    {
+        _tok_progredi(ctx, I);
+        dum (ctx->positus < ctx->input.mensura &&
+             _est_nomen_character(_tok_aspicere(ctx, ZEPHYRUM)))
+        {
+            _tok_progredi(ctx, I);
+        }
+        /* ';' post nomen non vacuum ('&;' reicitur) */
+        si (_tok_aspicere(ctx, ZEPHYRUM) == ';' &&
+            ctx->positus - clavis_initium > I)
+        {
+            _tok_progredi(ctx, I);
+            token.valor.datum = ctx->input.datum + clavis_initium;
+            token.valor.mensura = ctx->positus - clavis_initium;
+            _tok_praeterire_spatium(ctx);
+            si (_tok_aspicere(ctx, ZEPHYRUM) == '>')
+            {
+                _tok_progredi(ctx, I);
+                sana = VERUM;
+            }
+        }
+    }
+
+    si (sana)
+    {
+        token.genus = STML_TOKEN_PERCENTUM_APERIRE;
+    }
+    alioquin
+    {
+        token.genus = STML_TOKEN_ERRATUM;
+    }
+    token.positus_initium = initium;
+    token.positus_finis = ctx->positus;
+    token.linea = initium_linea;
+    token.columna = initium_columna;
+    redde token;
+}
+
+/* Parse augmentation closing tag </%> - stricte ('</%x>' =
+ * ERRATUM) */
+interior StmlToken
+_tok_legere_percentum_claudere(StmlTokenContext* ctx)
+{
+    StmlToken token;
+    i32 initium;
+    i32 initium_linea;
+    i32 initium_columna;
+
+    initium = ctx->positus;
+    initium_linea = ctx->linea;
+    initium_columna = ctx->columna;
+
+    token.attributa = NIHIL;
+    token.captio_numerus = ZEPHYRUM;
+    token.habet_captus = FALSUM;
+    token.captus_contentus.datum = NIHIL;
+    token.captus_contentus.mensura = ZEPHYRUM;
+    token.valor.datum = NIHIL;
+    token.valor.mensura = ZEPHYRUM;
+
+    /* Skip </% */
+    _tok_progredi(ctx, III);
+    _tok_praeterire_spatium(ctx);
+
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '>')
+    {
+        _tok_progredi(ctx, I);
+        token.genus = STML_TOKEN_PERCENTUM_CLAUDERE;
+    }
+    alioquin
+    {
+        token.genus = STML_TOKEN_ERRATUM;
+    }
+    token.positus_initium = initium;
+    token.positus_finis = ctx->positus;
+    token.linea = initium_linea;
+    token.columna = initium_columna;
+    redde token;
+}
+
 /* Parse bare capture sugar <(> or <((> - anonymous fragment.
  * Saccharum authoris: scriptor ad <# (> normalizat (forma nuda
  * ephemera est - stampatio gestarum lineam rescribit). */
@@ -9460,10 +9583,23 @@ _tok_proximus(StmlTokenContext* ctx)
             redde _tok_legere_fragmentum_claudere(ctx);
         }
 
+        /* Check for augmentation closing tag </%> */
+        si (_tok_aspicere(ctx, I) == '/' &&
+            _tok_aspicere(ctx, II) == '%')
+        {
+            redde _tok_legere_percentum_claudere(ctx);
+        }
+
         /* Check for fragment opening tag <#> or <#id> */
         si (_tok_aspicere(ctx, I) == '#')
         {
             redde _tok_legere_fragmentum(ctx);
+        }
+
+        /* Check for augmentation opening tag <% &clavis;> */
+        si (_tok_aspicere(ctx, I) == '%')
+        {
+            redde _tok_legere_percentum(ctx);
         }
 
         /* Saccharum capturae nudae <(> - fragmentum anonymum */
@@ -9533,6 +9669,12 @@ _parser_creare_nodus(StmlParserContext* ctx, SilvaStmlNodusGenus genus)
     nodus->captio_directio = STML_CAPTIO_NIHIL;
     nodus->captio_numerus = ZEPHYRUM;
     nodus->clausura_anonyma = FALSUM;
+    /* olim fragmentum/fragmentum_id hic NON initiabantur - piscina
+     * recens zephyrata eos texit, sed piscina reusa non spondet.
+     * Omnes campi explicite (2026-08-10). */
+    nodus->fragmentum = FALSUM;
+    nodus->fragmentum_id = NIHIL;
+    nodus->augmentum_clavis = NIHIL;
     /* nodus nascitur dum token aperiens CURRENS est - linea eius
      * est linea nodi (tokenizator lineas iam numerat, 1-basatas) */
     nodus->linea = ctx->current.linea;
@@ -10247,6 +10389,56 @@ _parser_legere_fragmentum_auto(StmlParserContext* ctx)
     redde nodus;
 }
 
+/* Parse augmentation <% &clavis;> ... </%> - elementum titulo "%"
+ * clavem destinatam ferens. Non clausum ad finem = vitium (aliter
+ * augmentatio reliquum documenti tacite devoraret). */
+interior SilvaStmlNodus*
+_parser_legere_percentum(StmlParserContext* ctx)
+{
+    SilvaStmlNodus* nodus;
+    SilvaStmlNodus* liberum;
+    SilvaStmlNodus** slot;
+    SilvaChorda* titulus_ptr;
+
+    nodus = _parser_creare_nodus(ctx, STML_NODUS_ELEMENTUM);
+    si (!nodus) redde NIHIL;
+
+    titulus_ptr = silva_chorda_internare_ex_literis(ctx->intern, "%");
+    nodus->titulus = titulus_ptr;
+    nodus->augmentum_clavis = silva_chorda_internare(ctx->intern,
+                                               ctx->current.valor);
+
+    nodus->liberi = silva_xar_creare(ctx->piscina, magnitudo(SilvaStmlNodus*));
+
+    _parser_progredi(ctx);
+
+    /* Parse children until </%> */
+    dum (ctx->current.genus != STML_TOKEN_PERCENTUM_CLAUDERE &&
+         ctx->current.genus != STML_TOKEN_FINIS)
+    {
+        liberum = _parser_legere_nodus(ctx);
+        si (liberum)
+        {
+            liberum->parens = nodus;
+            slot = silva_xar_addere(nodus->liberi);
+            si (slot) *slot = liberum;
+        }
+    }
+
+    si (ctx->current.genus == STML_TOKEN_PERCENTUM_CLAUDERE)
+    {
+        _parser_progredi(ctx);
+    }
+    alioquin
+    {
+        ctx->status = STML_ERROR_TAG_NON_CLAUSUM;
+        ctx->linea_erroris = ctx->current.linea;
+        ctx->columna_erroris = ctx->current.columna;
+    }
+
+    redde nodus;
+}
+
 /* Parse transclusion <<selector>> */
 interior SilvaStmlNodus*
 _parser_legere_transclusio(StmlParserContext* ctx)
@@ -10326,6 +10518,9 @@ _parser_legere_nodus(StmlParserContext* ctx)
         casus STML_TOKEN_FRAGMENTUM_AUTO:
             redde _parser_legere_fragmentum_auto(ctx);
 
+        casus STML_TOKEN_PERCENTUM_APERIRE:
+            redde _parser_legere_percentum(ctx);
+
         casus STML_TOKEN_TRANSCLUSIO:
             redde _parser_legere_transclusio(ctx);
 
@@ -10340,6 +10535,7 @@ _parser_legere_nodus(StmlParserContext* ctx)
 
         casus STML_TOKEN_CLAUDERE:
         casus STML_TOKEN_FRAGMENTUM_CLAUDERE:
+        casus STML_TOKEN_PERCENTUM_CLAUDERE:
             /* Orphan closing tag - no matching open tag */
             ctx->status = STML_ERROR_TAG_IMPROPRIE;
             ctx->linea_erroris = ctx->current.linea;

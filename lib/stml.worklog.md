@@ -300,3 +300,52 @@ taught the same rule at its tag-position sites.
 
 Trap for the future: `_est_nomen_initium` IS the attribute gate.
 Adding `.` to it silently legalizes `<a .attr="x">`.
+
+## 2026-08-10 — augmentation `<% &clavis;> … </%>` (librarium W3)
+
+New construct: an element-typed node (titulus "%", genus stays
+ELEMENTUM so every genus-switch consumer is untouched) carrying a
+mandatory sigiled target key. The key is stored VERBATIM including
+`&`/`;` in `augmentum_clavis` — the same bytes the canon citation
+lookup compares against claves-externae, so the canon layer needs
+zero re-sigiling. One lawful verb (append) lives in the sigil; no
+attributes on `<%` itself.
+
+Shape follows the fragment (`<#>`) precedent exactly: paired
+open/close tokens (PERCENTUM_APERIRE XVIII / PERCENTUM_CLAUDERE
+XIX), dedicated lexer functions dispatched in `_tok_proximus`
+(`</%` check BEFORE the fall-through to `_tok_legere_tag`), a
+`_parser_legere_percentum` that loops children until the close
+token, and a writer arm ahead of the fragment arm emitting the
+canonical `<% ` + key + `>` … `</%>` (byte-exact over canonical
+form; children serialized inline non-pretty, like fragments).
+
+Deliberate STRICTNESS at birth (unlike the lenient legacy paths):
+missing/bare/kind/empty key (`<%>`, `<% laika>`, `<% .canis>`,
+`<% &;>`) = ERRATUM → SYNTAXIS; `</%x>` = ERRATUM; unclosed at EOF
+= TAG_NON_CLAUSUM (an augmentation must never silently swallow the
+rest of the document).
+
+Two lessons:
+1. **Status is last-error-wins.** `<%></%>` carries TWO errors (bad
+   open → SYNTAXIS, then orphan close → TAG_IMPROPRIE) and the
+   parser overwrites status, so the second wins. Negative pins that
+   assert an EXACT status must use inputs with exactly one vitium.
+2. **The uninitialized-field family was real and got fixed.**
+   `_parser_creare_nodus`, all four public creators, and
+   `_duplicare_recursivum` never touched fragmentum/fragmentum_id —
+   fresh-piscina zeroing hid it (a DUPLICATED fragment silently
+   became an ordinary element named "#", which only round-tripped
+   by coincidence of the `<#` spelling). All three fields
+   (fragmentum, fragmentum_id, augmentum_clavis) now explicit at
+   every allocation site, and duplicare copies them.
+
+Amalgam note: the amalgamator drops the StmlNodus DEFINITION from
+the body because hand-written silva/amalgama/silva.h owns it
+(CADENDA_DEFINITIO) — a new struct field must be added there BY
+HAND (vanilla C89 idiom) or the standalone verify fails with
+"no member named …". Done; hospes 37/37, nm-intersectio 0.
+
+Cosmetic follow-up not taken: coloratio has no `<%`-aware arm (its
+`#` handling is hashtag styling, not STML tag structure) — `%`
+renders as operator color, acceptable.

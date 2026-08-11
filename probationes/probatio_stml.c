@@ -3049,6 +3049,90 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probans augmentationem <% &clavis;> (librarium W3, 2026-08-10)
+     *
+     * '<% &y;> ... </%>' contentum additivum individuo bibliothecae
+     * &y; apponit. Clavis destinata sola - verbum in signo latet
+     * (unum verbum legale, appositio). Clavis VERBATIM sigillata
+     * servatur ('&c;' - eaedem litterae quibus citationes
+     * comparantur). Ante hoc '<%' vitium clarum erat (titulus
+     * illegaliter incipiens) - grammatica aperta, non mutata.
+     * ================================================== */
+    imprimere("\n--- Probans augmentationem ---\n");
+    {
+        StmlResultus r;
+        StmlNodus*   aug;
+        chorda       scripta;
+
+        /* parse + structura: elementum titulo "%" cum clave */
+        r = stml_legere_ex_literis(
+            "<res><% &c;><nota>x</nota></%></res>", piscina, intern);
+        CREDO_VERUM(r.successus);
+        CREDO_NON_NIHIL(r.elementum_radix);
+        aug = stml_primus_liberum(r.elementum_radix);
+        CREDO_NON_NIHIL(aug);
+        CREDO_AEQUALIS_I32((i32)aug->genus,
+                           (i32)STML_NODUS_ELEMENTUM);
+        CREDO_VERUM(_chorda_ptr_eq_literis(aug->titulus, "%"));
+        CREDO_NON_NIHIL(aug->augmentum_clavis);
+        CREDO_VERUM(_chorda_ptr_eq_literis(aug->augmentum_clavis,
+                                           "&c;"));
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(aug), I);
+
+        /* iter rotundum octetim */
+        scripta = stml_scribere(r.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scripta,
+            "<res><% &c;><nota>x</nota></%></res>");
+
+        /* clavis composita (lineola subter) + vacua augmentatio */
+        r = stml_legere_ex_literis("<% &quercus_prima;></%>",
+                                   piscina, intern);
+        CREDO_VERUM(r.successus);
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            r.elementum_radix->augmentum_clavis, "&quercus_prima;"));
+        scripta = stml_scribere(r.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scripta,
+            "<% &quercus_prima;></%>");
+
+        /* duplicatio clavem fert */
+        aug = stml_duplicare(r.elementum_radix, piscina, intern);
+        CREDO_NON_NIHIL(aug);
+        CREDO_VERUM(_chorda_ptr_eq_literis(aug->augmentum_clavis,
+                                           "&quercus_prima;"));
+
+        /* NEGATIVA: sine clave, clavis nuda, clavis generis,
+         * clavis vacua (sine </%> - vitium UNUM quodque, status
+         * exactus ita adfirmabilis: vitium posterius priorem
+         * superscribit) */
+        r = stml_legere_ex_literis("<%>", piscina, intern);
+        CREDO_VERUM(!r.successus);
+        CREDO_AEQUALIS_I32((i32)r.status,
+                           (i32)STML_ERROR_SYNTAXIS);
+        r = stml_legere_ex_literis("<% laika>", piscina, intern);
+        CREDO_VERUM(!r.successus);
+        CREDO_AEQUALIS_I32((i32)r.status,
+                           (i32)STML_ERROR_SYNTAXIS);
+        r = stml_legere_ex_literis("<% .canis>", piscina, intern);
+        CREDO_VERUM(!r.successus);
+        r = stml_legere_ex_literis("<% &;>", piscina, intern);
+        CREDO_VERUM(!r.successus);
+
+        /* non clausum ad finem = vitium (ambitum tacite devorare
+         * vetitum - augmentatio quae reliquum documenti caperet) */
+        r = stml_legere_ex_literis("<% &c;><nota>x</nota>",
+                                   piscina, intern);
+        CREDO_VERUM(!r.successus);
+        CREDO_AEQUALIS_I32((i32)r.status,
+                           (i32)STML_ERROR_TAG_NON_CLAUSUM);
+
+        /* clausura orba */
+        r = stml_legere_ex_literis("<a>x</%></a>", piscina, intern);
+        CREDO_VERUM(!r.successus);
+
+        imprimere("  augmentatio: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

@@ -27,6 +27,11 @@
  *   creatio cum citatione '.species' rimatur). Attributa puncta
  *   ducentia numquam accipiunt. Titulus illegaliter incipiens
  *   ('<..x>', '<9bad>') = STML_ERROR_SYNTAXIS.
+ * - Augmentatio: <% &clavis;> ... </%> - contentum additivum
+ *   individuo bibliothecae &clavis; appositum (librarium).
+ *   Clavis destinata sola, sine attributis - verbum in signo
+ *   latet (unum verbum legale, appositio). Stricte: clavis
+ *   sigillata obligatoria, non clausa ad finem = vitium.
  *
  * Proprietates:
  * - DOM-stylus arbor
@@ -101,9 +106,11 @@ nomen enumeratio {
                                                 captio_numerus > 0 =
                                                 <# (> / <#id (> / <(> */
     STML_TOKEN_TRANSCLUSIO          = XVI,   /* <<selector>> */
-    STML_TOKEN_ERRATUM              = XVII   /* titulus illegaliter
+    STML_TOKEN_ERRATUM              = XVII,  /* titulus illegaliter
                                               * incipiens ('<.x>',
                                               * '<9bad>') - vitium */
+    STML_TOKEN_PERCENTUM_APERIRE    = XVIII, /* <% &clavis;> */
+    STML_TOKEN_PERCENTUM_CLAUDERE   = XIX    /* </%> */
 } StmlTokenGenus;
 
 /* ==================================================
@@ -148,6 +155,13 @@ nomen structura StmlNodus {
     /* Fragment fields */
     b32                      fragmentum;      /* Is this a fragment? <#> or <#id> */
     chorda*                  fragmentum_id;   /* Fragment ID (NIHIL for anonymous) */
+
+    /* Augmentatio (librarium): '<% &clavis;>' - clavis destinata
+     * VERBATIM sigillata servatur ('&c;' - eaedem litterae quibus
+     * citationes canonis comparantur). NIHIL = elementum
+     * ordinarium; genus manet ELEMENTUM (titulus "%" geritur),
+     * ergo consumptores generum intacti. */
+    chorda*                  augmentum_clavis;
 } StmlNodus;
 
 /* StmlResultus - Resultus parsationis

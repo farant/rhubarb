@@ -1726,6 +1726,11 @@ typedef struct SilvaStmlNodus {
                                                * authoris servat */
     int                     fragmentum;
     SilvaChorda*            fragmentum_id;
+    SilvaChorda*            augmentum_clavis; /* '<% &clavis;>' -
+                                               * clavis VERBATIM
+                                               * sigillata; NIHIL =
+                                               * elementum
+                                               * ordinarium */
 } SilvaStmlNodus;
 
 typedef struct {
