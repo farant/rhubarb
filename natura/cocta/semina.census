@@ -1,6 +1,6 @@
 <!-- GENERATUM a natura_canones e dictionario naturae - NOLI MANU MUTARE.
      Regenera: ./tools/natura_canones.sh -->
-<individua>
+<individua fons="natura">
 
   <canis nomen="&laika;">
     <historia>

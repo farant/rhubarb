@@ -319,3 +319,16 @@ from the sketch above, all recorded in lib/canon.worklog.md:
   migrations were the collision sites) — W2's planted faults must
   be scratch fixtures recreating the pre-migration shape, not the
   live census.
+
+**W2 IMPLETUM (2026-08-10).** CANON_CLAVIS_COLLISA = XVI; the check
+rides W3's mint-collection walk (the §3 unicitas-mirror sketch
+died — cheaper home). Semina root emits `fons="natura"` and the
+individua root element admits fons= (genus nomen); exemption =
+root fons= equals canon->claves_fons. Going live, the tripwire
+immediately caught two REAL latent fixture collisions
+(&carl_linnaeus; and &b; — lingua B) in probatio_natura_canones —
+keys renamed home-scoped. Proofs: pre-migration-shape scratch
+screams; fons exemption pinned both ways; live world VITIA 0;
+suites PLENUS; -probare chain 0. THE ARC IS CLOSED: cite (W1),
+augment (W3), never counterfeit (W2). Remaining futures live in
+§5 only (W4 world declaration, W5 stamping, fold view).

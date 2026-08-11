@@ -4,6 +4,7 @@
 <canon dialectus="plagula_computatralis" versio="1">
 
   <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
     <liberum nomen="plagula-computatralis"/>
     <liberum nomen="plagula-fontis"/>
     <liberum nomen="fons-c"/>

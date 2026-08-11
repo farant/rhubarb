@@ -1182,6 +1182,74 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: collisio clavium (librarium W2, 2026-08-10)
+     *
+     * Documentum clavem identitatis CUDENS quae in clavibus
+     * externis iam vivit ambiguitatem committit - suppositum
+     * aequivocum esse nequit. EXEMPTIO seminum: documentum cuius
+     * radix fons= fontem clavium externarum aequat IPSA bibliotheca
+     * est (claves eius claves externae SUNT) - collisio secum
+     * praetermittitur. Fons alienus exemptionem NON dat.
+     * ======================================================== */
+
+    {
+        Canon* c;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans collisionem clavium ---\n");
+
+        c = canon_ex_literis(
+            "<canon dialectus=\"nemus\" versio=\"1\">\n"
+            "  <elementum nomen=\"silva\" radix=\"verum\">\n"
+            "    <attributum nomen=\"fons\" genus=\"nomen\"/>\n"
+            "    <liberum nomen=\"quercus\"/>\n"
+            "  </elementum>\n"
+            "  <elementum nomen=\"quercus\">\n"
+            "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+            "  </elementum>\n"
+            "  <claves-externae fons=\"probatum\">\n"
+            "    <clavis genus=\"quercus\">&quercus_prima;</clavis>\n"
+            "  </claves-externae>\n"
+            "</canon>\n", piscina, intern);
+        CREDO_NON_NIHIL (c);
+
+        /* cusio clavis bibliothecae = collisio */
+        vitia = iudicare_literis(c,
+            "<silva><quercus nomen=\"&quercus_prima;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_CLAVIS_COLLISA), I);
+
+        /* cusio clavis novae libera manet */
+        vitia = iudicare_literis(c,
+            "<silva><quercus nomen=\"&quercus_domi;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* exemptio: radix fons= fontem clavium aequat - documentum
+         * IPSA bibliotheca est, claves eius claves externae SUNT */
+        vitia = iudicare_literis(c,
+            "<silva fons=\"probatum\">"
+            "<quercus nomen=\"&quercus_prima;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* fons alienus exemptionem NON dat */
+        vitia = iudicare_literis(c,
+            "<silva fons=\"alienum\">"
+            "<quercus nomen=\"&quercus_prima;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_CLAVIS_COLLISA), I);
+    }
+
+
+    /* ========================================================
      * PROBARE: genera valorum identitas/referentia (signa)
      * ======================================================== */
 

@@ -4,6 +4,7 @@
 <canon dialectus="persona" versio="1">
 
   <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
     <liberum nomen="persona"/>
   </elementum>
 

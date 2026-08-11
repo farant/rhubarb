@@ -4,6 +4,7 @@
 <canon dialectus="obligatio" versio="1">
 
   <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
     <liberum nomen="obligatio"/>
     <liberum nomen="obligatio-ex-contractu"/>
     <liberum nomen="obligatio-ex-delicto"/>

@@ -373,3 +373,36 @@ ILLICITUM on rota-quadrata — all scream, all self-describing.
 Citations INSIDE overlays (adhibet ad="&silva;") are judged by the
 ordinary citation pass unchanged — the walk doesn't skip overlay
 interiors, so that property came free.
+
+## 2026-08-10 — collision tripwire (librarium W2, the arc closes)
+
+CANON_CLAVIS_COLLISA = XVI: a document minting an identitas key
+that lives in claves-externae. The check rides the W3 judgment
+pass for free — `_augmenta_cusasque_colligere` already builds the
+mint table, so collision = iterate cusa, one claves_externae
+lookup each (the spec's :1820 unicitas-mirror sketch died; W3's
+walk was the cheaper home). Message carries the remedy: "cita aut
+auge, ne itera".
+
+The semina exemption: generated semina root now carries
+fons="natura" (same literal as the claves-externae block);
+collision skips documents whose root fons= equals canon->
+claves_fons — the library cannot collide with itself. The
+individua root element def admits fons= (genus nomen, optional).
+A dishonest fons on an authored document is a hand-edit of a
+signed generated file — generata-custos territory, pinned anyway
+(the exemption mechanism itself is unit-tested both ways).
+
+The tripwire found TWO REAL latent collisions in the natura_canones
+fixtures the moment it went live: DOC_INSCRIPTUS minted
+&carl_linnaeus; (a library person) and the causat-multiplex fixture
+minted &b; — which is lingua B, an actual library individuum.
+Fixture keys renamed to home-scoped names; the fixtures' purposes
+(local citation mechanics, causat cardinality) survive intact.
+That's the tripwire's value demonstrated before it ever reached an
+authored document.
+
+Proofs: scratch census in the exact pre-migration shape (minting
+&c;) screams COLLISA against the real individua.canon; scratch
+with fons="natura" is exempt; live world (rhubarb.census + semina)
+VITIA 0; both suites PLENUS; -probare chain exit 0.

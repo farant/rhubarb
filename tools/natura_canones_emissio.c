@@ -1636,7 +1636,11 @@ _censum_seminum_scribere(
     fputs("<!-- GENERATUM a natura_canones e dictionario naturae - "
           "NOLI MANU MUTARE.\n"
           "     Regenera: ./tools/natura_canones.sh -->\n", f);
-    fputs("<individua>\n", f);
+    /* fons= radicis fontem clavium externarum aequat (librarium
+     * W2): claves huius documenti claves externae IPSAE sunt -
+     * collisio secum exempta. Litterae eaedem ac in
+     * '<claves-externae fons=' supra. */
+    fputs("<individua fons=\"natura\">\n", f);
 
     numerus = ZEPHYRUM;
     per (i = ZEPHYRUM; i < xar_numerus(entia); i++)
@@ -1910,8 +1914,11 @@ _canonem_emittere(
 
     fprintf(f, "<canon dialectus=\"%s\" versio=\"1\">\n\n", dialectus);
 
-    /* 'individua' SOLA radix= fert */
+    /* 'individua' SOLA radix= fert. fons= optionale: documentum
+     * bibliothecae ipsius (semina) fontem clavium profitetur -
+     * exemptio collisionis (librarium W2). */
     fputs("  <elementum nomen=\"individua\" radix=\"verum\">\n", f);
+    fputs("    <attributum nomen=\"fons\" genus=\"nomen\"/>\n", f);
     per (i = ZEPHYRUM; i < xar_numerus(elementa); i++)
     {
         NcElementum* el;

@@ -4,6 +4,7 @@
 <canon dialectus="systema_operativum" versio="1">
 
   <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
     <liberum nomen="systema-operativum"/>
     <liberum nomen="systema-unixiforme"/>
     <liberum nomen="distributio-systematis"/>

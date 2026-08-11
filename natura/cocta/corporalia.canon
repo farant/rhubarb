@@ -4,6 +4,7 @@
 <canon dialectus="corporalia" versio="1">
 
   <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
     <liberum nomen="res-corporea"/>
     <liberum nomen="artefactum"/>
     <liberum nomen="cibus"/>

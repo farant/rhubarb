@@ -125,7 +125,15 @@ nomen enumeratio {
      * generator canonum iam computat. Remedium: bibliothecam ipsam
      * muta, non documentum. Membrum IGNOTUM manet LIBERUM_ILLICITUM;
      * clavis ignota manet CITATIO_IRRITA. */
-    CANON_AUGMENTUM_PUGNANS   = XV
+    CANON_AUGMENTUM_PUGNANS   = XV,
+    /* COLLISIO (librarium W2): documentum clavem identitatis CUDIT
+     * quae in clavibus externis iam vivit - suppositum aequivocum
+     * esse nequit (cita aut auge, ne itera). EXEMPTIO: documentum
+     * cuius radix fons= fontem clavium externarum aequat ipsa
+     * bibliotheca est (semina - claves eius claves externae SUNT);
+     * fons mendax editio manualis plagulae generatae signatae est,
+     * quam generata-custos iam ut crimen tractat. */
+    CANON_CLAVIS_COLLISA      = XVI
 } CanonVitiumGenus;
 
 nomen structura {

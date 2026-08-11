@@ -794,10 +794,14 @@ staticus constans character* DOC_GENUS_IGNOTUM =
 /* INSCRIPTIO (spec census): census sodales suos sedet - per tag
  * GENERIS (individuum tags mortua): linea una individuum
  * dictionarii praesentat, et referentia resolvit */
+/* LIBRARIUM (W2, 2026-08-10): clavis DOMI cusa clave NOVA - olim
+ * '&carl_linnaeus;' hic cudebatur, sed is clavis bibliothecae est
+ * et cusio iterata nunc CLAVIS_COLLISA clamat (recte - cita aut
+ * auge, ne itera). Mechanica citationis localis manet probata. */
 staticus constans character* DOC_INSCRIPTUS =
     "<individua>\n"
-    "  <persona nomen=\"&carl_linnaeus;\"/>\n"
-    "  <rosa nomen=\"&rosa-una;\" auctor-nominis=\"&carl_linnaeus;\"/>\n"
+    "  <persona nomen=\"&persona_domi;\"/>\n"
+    "  <rosa nomen=\"&rosa-una;\" auctor-nominis=\"&persona_domi;\"/>\n"
     "</individua>\n";
 
 /* LIBRARIUM (W1, 2026-08-10): clavis bibliothecae SINE inscriptione
@@ -2298,13 +2302,16 @@ principale(
          * XVI): finis unus multa iustificat - cardinalitas
          * eadem lege ac editio_de (L12) correcta. ORACULUM:
          * rubuit dum causat singulare, viret post */
+        /* W2: claves '&a;'/'&b;' olim hic - sed '&b;' lingua B
+         * bibliothecae est (collisio vera in fictura inventa!);
+         * claves domi nunc nomina domi ferunt */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
-            "  <opus-scriptum nomen=\"&a;\"/>\n"
-            "  <opus-scriptum nomen=\"&b;\"/>\n"
+            "  <opus-scriptum nomen=\"&opus_a;\"/>\n"
+            "  <opus-scriptum nomen=\"&opus_b;\"/>\n"
             "  <causa-finalis nomen=\"&finis;\">\n"
-            "    <causat ad=\"&a;\"/>\n"
-            "    <causat ad=\"&b;\"/>\n"
+            "    <causat ad=\"&opus_a;\"/>\n"
+            "    <causat ad=\"&opus_b;\"/>\n"
             "  </causa-finalis>\n"
             "</individua>\n",
             CANON_CITATIO_IRRITA, &generis, &omnia,

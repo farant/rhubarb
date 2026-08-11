@@ -4,6 +4,7 @@
 <canon dialectus="mensura" versio="1">
 
   <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
     <liberum nomen="magnitudo-mensurabilis"/>
     <liberum nomen="longitudo"/>
     <liberum nomen="massa"/>

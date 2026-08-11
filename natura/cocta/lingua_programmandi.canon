@@ -4,6 +4,7 @@
 <canon dialectus="lingua_programmandi" versio="1">
 
   <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
     <liberum nomen="lingua-programmandi"/>
     <liberum nomen="lingua-iussuum"/>
     <liberum nomen="versio-linguae"/>

@@ -2362,6 +2362,60 @@ canon_iudicare(
                     *(StmlNodus**)xar_obtinere(augmenta, ia),
                     cusa, vitia, piscina);
             }
+
+            /* ---- collisio (librarium W2): cusae domi contra
+             * claves externas - suppositum aequivocum esse nequit.
+             * EXEMPTIO: radix fons= fontem clavium aequans =
+             * documentum IPSA bibliotheca est (semina; claves eius
+             * claves externae SUNT). Fons mendax editio plagulae
+             * generatae signatae est - generata-custos vigilat. */
+            si (canon->claves_externae)
+            {
+                b32 exemptum;
+
+                exemptum = FALSUM;
+                si (canon->claves_fons)
+                {
+                    chorda* fons_doc;
+
+                    fons_doc = stml_attributum_capere(
+                        elementum_radix, "fons");
+                    si (fons_doc &&
+                        chorda_aequalis(*fons_doc,
+                                        *canon->claves_fons))
+                    {
+                        exemptum = VERUM;
+                    }
+                }
+
+                si (!exemptum)
+                {
+                    TabulaIterator it;
+                    chorda         clavis;
+                    vacuum*        v;
+
+                    it = tabula_dispersa_iterator_initium(cusa);
+                    dum (tabula_dispersa_iterator_proximum(
+                             &it, &clavis, &v))
+                    {
+                        si (tabula_dispersa_continet(
+                                canon->claves_externae, clavis))
+                        {
+                            StmlNodus* cudens;
+                            chorda*    d;
+
+                            cudens = (StmlNodus*)v;
+                            d = (chorda*)piscina_allocare(piscina,
+                                magnitudo(chorda));
+                            *d = clavis;
+                            vitium_addere(vitia,
+                                CANON_CLAVIS_COLLISA, cudens,
+                                cudens->titulus, d, ZEPHYRUM,
+                                ZEPHYRUM);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -2405,6 +2459,9 @@ canon_nuntius(
         casus CANON_AUGMENTUM_PUGNANS:
             redde "augmentatio membri singularis "
                   "(bibliothecam ipsam muta, non documentum)";
+        casus CANON_CLAVIS_COLLISA:
+            redde "clavis bibliothecae iterum cusa "
+                  "(cita aut auge, ne itera)";
         ordinarius:
             redde "vitium ignotum";
     }

@@ -4,6 +4,7 @@
 <canon dialectus="operatio" versio="1">
 
   <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
     <liberum nomen="ambitus"/>
     <liberum nomen="ambitus-fabricae"/>
     <liberum nomen="ambitus-probationis"/>
