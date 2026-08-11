@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1625 sedibus relationum huius canonis, 1165
+  RELATIONES - ex 1632 sedibus relationum huius canonis, 1160
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  460 nomine solo iudicantur, id est sicut in canone per
+  472 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    453 petitum apertum habent (ad='*') - clavis nulla est;
+    465 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -159,6 +159,7 @@
     <liberum nomen="corruptio"/>
     <liberum nomen="contaminatio"/>
     <liberum nomen="vivens"/>
+    <liberum nomen="ambulatio"/>
     <liberum nomen="dictionarium"/>
     <liberum nomen="manuale"/>
     <liberum nomen="exemplum"/>
@@ -214,6 +215,7 @@
     <liberum nomen="applicatio"/>
     <liberum nomen="instrumentum-aedificationis"/>
     <liberum nomen="pactum"/>
+    <liberum nomen="uncus"/>
     <liberum nomen="postulatum"/>
     <liberum nomen="facultas"/>
     <liberum nomen="probatio"/>
@@ -4228,6 +4230,29 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="ambulatio">
+    <glossa lingua="en">A walk: traversing a document against
+    reality, every sentence tested on the corpus - what survives
+    thought alone is not tested. A dated event with a harvest:
+    findings, dead candidates, changes. Notable species: the
+    REGENERATION, where a context-free stranger receives only the
+    document and its gaps become the harvest.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="tendit-ad" genus="referentia"/>
+    <liberum nomen="invenit"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="invenit" intra="ambulatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="ambulatio">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="dictionarium">
     <glossa lingua="en">A dictionary (reference work): a work
     intended for consultation - it teaches what things ARE, entry
@@ -5112,6 +5137,7 @@
     programme en ce qu'elle n'a pas de commencement propre : elle vit
     d'être appelée et ne s'exécute jamais d'elle-même.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gradus" genus="numerus"/>
     <attributum nomen="scripta-in" genus="referentia"/>
     <liberum nomen="interfacies" maximum="1"/>
     <liberum nomen="corpus" maximum="1"/>
@@ -5474,6 +5500,7 @@
     <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="proprium" genus="referentia"/>
     <attributum nomen="tendit-ad" genus="referentia"/>
+    <attributum nomen="ex-fonte" genus="referentia"/>
     <liberum nomen="natum-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
@@ -5482,6 +5509,26 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="pactum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="uncus">
+    <glossa lingua="en">A hook: a machine guard bound to an event -
+    it fires of itself (on edit, save, change) and returns
+    judgement at once. It differs from a test in how it is
+    invoked: a test is CALLED, a hook WATCHES; nobody runs it,
+    the event summons it.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="eventus" genus="textus"/>
+    <attributum nomen="custodit" genus="referentia"/>
+    <liberum nomen="adhibet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="adhibet" intra="uncus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="uncus">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -8834,6 +8881,7 @@
     <attributum nomen="substituit" genus="referentia"/>
     <attributum nomen="normat" genus="referentia"/>
     <attributum nomen="proprium" genus="referentia"/>
+    <attributum nomen="ex-fonte" genus="referentia"/>
     <liberum nomen="editor"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
@@ -14544,7 +14592,7 @@
            vestigium-chemicum semita-trita tabula-communis vestigia-operis
            res-corporea artefactum cibus materia instrumentum res-sacra res-sacra-immobilis
            res-sacra-mobilis reliquiae damnum fractura corruptio contaminatio
-           vivens dictionarium manuale exemplum legenda defectus-documenti
+           vivens ambulatio dictionarium manuale exemplum legenda defectus-documenti
            deceptio silentium ambiguitas ambulatio-lectoris status proiectio
            artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum
            promptuarium index index-inversus index-arboris lectio lectio-memoriae
@@ -14555,7 +14603,7 @@
            documentarium monitum-futuri titulus-iuris codex-sepultus annotatio-machinae
            identificator identificator-baptismalis sigillum-contenti programma
            instrumentum-lineae daemon applicatio instrumentum-aedificationis
-           pactum postulatum facultas probatio probatio-unitatis probatio-integrationis
+           pactum uncus postulatum facultas probatio probatio-unitatis probatio-integrationis
            probatio-regressionis probatio-fumi vitium regressio debitum-technicum
            complicatio consilium consilium-computatum depravatio interventio
            conservatio restauratio-aedificii curatio-medica forma-datorum
@@ -15120,6 +15168,9 @@
   <citatio nomen="vivens-generat" attributum="ad" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="vivens/generat"/>
   <citatio nomen="vivens-laborat" attributum="ad" ad="morbus morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus/nomen" super="vivens/laborat"/>
   <citatio nomen="vivens-sita-in" attributum="sita-in" ad="locus/nomen" super="vivens"/>
+  <citatio nomen="ambulatio-de" attributum="de" ad="*/nomen" super="ambulatio"/>
+  <citatio nomen="ambulatio-invenit" attributum="ad" ad="*/nomen" super="ambulatio/invenit"/>
+  <citatio nomen="ambulatio-tendit-ad" attributum="tendit-ad" ad="*/nomen" super="ambulatio"/>
   <citatio nomen="dictionarium-auctor" attributum="ad" ad="persona/nomen" super="dictionarium/auctor"/>
   <citatio nomen="dictionarium-scriba" attributum="ad" ad="*/nomen" super="dictionarium/scriba"/>
   <citatio nomen="dictionarium-habet-expressionem" attributum="habet-expressionem" ad="expressio/nomen" super="dictionarium"/>
@@ -15234,26 +15285,29 @@
   <citatio nomen="assertio-statica-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-statica"/>
   <citatio nomen="assertio-probationis-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-probationis"/>
   <citatio nomen="programma-initium" attributum="initium" ad="functio functio-pura/nomen" super="programma"/>
-  <citatio nomen="programma-adhibet" attributum="ad" ad="bibliotheca/nomen" super="programma/adhibet"/>
+  <citatio nomen="programma-adhibet" attributum="ad" ad="*/nomen" super="programma/adhibet"/>
   <citatio nomen="programma-currit-ut" attributum="currit-ut" ad="processus/nomen" super="programma"/>
   <citatio nomen="instrumentum-lineae-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-lineae"/>
-  <citatio nomen="instrumentum-lineae-adhibet" attributum="ad" ad="bibliotheca/nomen" super="instrumentum-lineae/adhibet"/>
+  <citatio nomen="instrumentum-lineae-adhibet" attributum="ad" ad="*/nomen" super="instrumentum-lineae/adhibet"/>
   <citatio nomen="instrumentum-lineae-currit-ut" attributum="currit-ut" ad="processus/nomen" super="instrumentum-lineae"/>
   <citatio nomen="daemon-initium" attributum="initium" ad="functio functio-pura/nomen" super="daemon"/>
-  <citatio nomen="daemon-adhibet" attributum="ad" ad="bibliotheca/nomen" super="daemon/adhibet"/>
+  <citatio nomen="daemon-adhibet" attributum="ad" ad="*/nomen" super="daemon/adhibet"/>
   <citatio nomen="daemon-currit-ut" attributum="currit-ut" ad="processus/nomen" super="daemon"/>
   <citatio nomen="applicatio-initium" attributum="initium" ad="functio functio-pura/nomen" super="applicatio"/>
-  <citatio nomen="applicatio-adhibet" attributum="ad" ad="bibliotheca/nomen" super="applicatio/adhibet"/>
+  <citatio nomen="applicatio-adhibet" attributum="ad" ad="*/nomen" super="applicatio/adhibet"/>
   <citatio nomen="applicatio-currit-ut" attributum="currit-ut" ad="processus/nomen" super="applicatio"/>
   <citatio nomen="instrumentum-aedificationis-invocat" attributum="ad" ad="implementatio-linguae/nomen" super="instrumentum-aedificationis/invocat"/>
   <citatio nomen="instrumentum-aedificationis-dirigitur-a" attributum="dirigitur-a" ad="plagula-computatralis plagula-fontis fons-c caput-c fons-python fons-rust scriptum-exsecutabile scriptum-conchae plagula-notationis plagula-xml plagula-stml plagula-markdown plagula-figurationis plagula-toml plagula-plist plagula-datorum plagula-json plagula-csv plagula-sqlite volumen/nomen" super="instrumentum-aedificationis"/>
   <citatio nomen="instrumentum-aedificationis-producit" attributum="ad" ad="artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum/nomen" super="instrumentum-aedificationis/producit"/>
   <citatio nomen="instrumentum-aedificationis-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-aedificationis"/>
-  <citatio nomen="instrumentum-aedificationis-adhibet" attributum="ad" ad="bibliotheca/nomen" super="instrumentum-aedificationis/adhibet"/>
+  <citatio nomen="instrumentum-aedificationis-adhibet" attributum="ad" ad="*/nomen" super="instrumentum-aedificationis/adhibet"/>
   <citatio nomen="instrumentum-aedificationis-currit-ut" attributum="currit-ut" ad="processus/nomen" super="instrumentum-aedificationis"/>
   <citatio nomen="pactum-proprium" attributum="proprium" ad="*/nomen" super="pactum"/>
   <citatio nomen="pactum-tendit-ad" attributum="tendit-ad" ad="*/nomen" super="pactum"/>
   <citatio nomen="pactum-natum-ex" attributum="ad" ad="*/nomen" super="pactum/natum-ex"/>
+  <citatio nomen="pactum-ex-fonte" attributum="ex-fonte" ad="*/nomen" super="pactum"/>
+  <citatio nomen="uncus-custodit" attributum="custodit" ad="*/nomen" super="uncus"/>
+  <citatio nomen="uncus-adhibet" attributum="ad" ad="*/nomen" super="uncus/adhibet"/>
   <citatio nomen="postulatum-impletur-a" attributum="impletur-a" ad="*/nomen" super="postulatum"/>
   <citatio nomen="postulatum-interrogatur-a" attributum="interrogatur-a" ad="*/nomen" super="postulatum"/>
   <citatio nomen="facultas-implet" attributum="ad" ad="postulatum/nomen" super="facultas/implet"/>
@@ -15614,6 +15668,7 @@
   <citatio nomen="norma-substituit" attributum="substituit" ad="norma/nomen" super="norma"/>
   <citatio nomen="norma-normat" attributum="normat" ad="*/nomen" super="norma"/>
   <citatio nomen="norma-proprium" attributum="proprium" ad="*/nomen" super="norma"/>
+  <citatio nomen="norma-ex-fonte" attributum="ex-fonte" ad="*/nomen" super="norma"/>
   <citatio nomen="lex-lata-a" attributum="lata-a" ad="magistratus/nomen" super="lex"/>
   <citatio nomen="lex-in-iurisdictione" attributum="in-iurisdictione" ad="iurisdictio/nomen" super="lex"/>
   <citatio nomen="lex-promulgata-per" attributum="promulgata-per" ad="actus-sollemnis ritus sacramentum baptismus confirmatio eucharistia paenitentia unctio-infirmorum ordo matrimonium sacramentale benedictio consecratio-loci exorcismus actus-iuridicus stipulatio mancipatio manumissio testamentum confectio-instrumenti promulgatio inauguratio collatio-tituli sententia-lata/nomen" super="lex"/>
@@ -16296,6 +16351,7 @@
     <clavis genus="unitas-mensurae">&secundum;</clavis>
     <clavis genus="unitas-mensurae">&minutum;</clavis>
     <clavis genus="unitas-mensurae">&gradus_celsius;</clavis>
+    <clavis genus="norma">&do_178c;</clavis>
     <clavis genus="norma">&iso_9899_1990;</clavis>
     <clavis genus="norma">&iso_9899_1999;</clavis>
     <clavis genus="norma">&posix_1;</clavis>
@@ -16315,6 +16371,7 @@
     <clavis genus="corpus-normans">&iso;</clavis>
     <clavis genus="corpus-normans">&iec;</clavis>
     <clavis genus="corpus-normans">&ieee;</clavis>
+    <clavis genus="corpus-normans">&rtca;</clavis>
     <clavis genus="corpus-normans">&ansi;</clavis>
     <clavis genus="societas">&intel;</clavis>
     <clavis genus="societas">&amd;</clavis>
@@ -16329,6 +16386,7 @@
     <clavis genus="persona">&carl_linnaeus;</clavis>
     <clavis genus="persona">&josef_pieper;</clavis>
     <clavis genus="persona">&herman_melville;</clavis>
+    <clavis genus="persona">&eskil_steenberg;</clavis>
     <clavis genus="persona">&ken_thompson;</clavis>
     <clavis genus="persona">&linus_torvalds;</clavis>
     <clavis genus="persona">&guido_van_rossum;</clavis>

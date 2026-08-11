@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **35** · genera **461** · res dictionarii **114** · necessitudines **86** · arcus **529**
+Exemplaria **35** · genera **463** · res dictionarii **117** · necessitudines **86** · arcus **529**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -163,8 +163,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **corruptio** ⊂ damnum — Mutatio substantiae ipsius: putredo, rubigo, umor
 - **contaminatio** ⊂ damnum — Admixtio alieni: quod purum esse debet mixtum est
 
-### documentatio (v2, genera 9)
+### documentatio (v4, genera 10)
 
+- **ambulatio** — Percursus documenti contra rem: documentum totum ambulatur et quaeque sententia contra corpus probatur - quod sola cog
 - **dictionarium** ⊂ opus_scriptum.opus_scriptum — Ad INSPECTIONEM destinatum: quid res sint docet, singulatim, ordine quaerendi non legendi
 - **manuale** ⊂ opus_scriptum.opus_scriptum — Ad ACTIONEM destinatum: quid faciendum sit docet
 - **exemplum** ⊂ opus_scriptum.opus_scriptum — Specimen INTEGRUM ad imitandum: non describit sed monstrat
@@ -175,7 +176,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **ambiguitas** ⊂ defectus_documenti — Textus plures sensus admittit nec fundamentum eligendi praebet: lector inter construenda sine causa eligere cogitur
 - **ambulatio_lectoris** ⊂ fabricatio.probatio — Probatio documenti per lectorem RESTRICTUM: lector ad fontem sub probatione solum adstringitur, ut fons ipse mensuretu
 
-### elementa_programmatis (v6, genera 45)
+### elementa_programmatis (v8, genera 45)
 
 - **status** — Valor custoditus qui in tempore mutari potest: inter eventus manet, ab eventibus mutatur
 - **proiectio** ⊂ status — Ex alio statu (VERITATE sua) integre recomputari potest
@@ -223,9 +224,10 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **daemon** ⊂ programma — Perpetuum, sine terminali, petitionibus serviens: non finem quaerit sed statum servat
 - **applicatio** ⊂ programma — Homini praesens, fenestris aut terminali: dum homo adest currit
 
-### fabricatio (v9, genera 19)
+### fabricatio (v10, genera 20)
 
 - **pactum** — Foedus consilii stans: quod de FORMA artefactorum semper tenendum est, opera OMNIA perpetuo ligans - implementatio qua
+- **uncus** — Custos machinalis eventui ligatus: sponte ignitur (editione, servatione, mutatione) et iudicium statim reddit
 - **postulatum** ⚙ — Intentio declarata ANTE opus: quod verum esse debet ut opus perfectum dicatur
 - **facultas** — Quod opus praestare potest, ab utente aestimatum: unitas VALORIS
 - **probatio** — Interrogatio exsecutabilis intentionis: scaena parata, actio exercita, effectus contra exspectationem collatus
@@ -372,7 +374,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 ### necessitudines (v1, genera 0)
 
 
-### norma (v7, genera 15)
+### norma (v8, genera 15)
 
 - **norma** ⚙ — Documentum publicum quod formam praescribit: quid conformitas significet definit
 - **lex** ⚙ — Ordinatio rationis ad bonum commune, ab eo qui curam communitatis habet promulgata (Thomas, ST I-II q
@@ -453,7 +455,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **periodicum** ⊂ opus_scriptum — Opus quod PERFECTIONEM non petit: in fasciculis continuatur dum curatores volunt - machina compositionis parentis ei f
 - **fasciculus** — Pars periodici tempore signata: numerus unus, die suo editus
 
-### organizatio (v10, genera 17)
+### organizatio (v11, genera 17)
 
 - **universitas** — Coetus in finem communem ordinatus qui UT UNUM agit et mutatis membris PERDURAT: haec perduratio eum a mero acervo dis
 - **organizatio** ⊂ universitas — Universitas PERSONARUM: quod membra rationalia sunt omnia sequentia parit - fines eligi possunt et mutari, officia con
@@ -473,7 +475,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **curator** ⊂ officium — Officium bona aliena ad finem alienum administrandi: fiducia, non dominium
 - **praeses_collegii** ⊂ officium — Officium collegio praesidendi: sedes una inter pares cum potestate ordinandi, non imperandi
 
-### persona (v8, genera 1)
+### persona (v9, genera 1)
 
 - **persona** ⚙ — Naturae rationabilis individua substantia (Boethius)
 
@@ -613,6 +615,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | ambitus_fabricae | operatio |
 | ambitus_probationis | operatio |
 | ambitus_producens | operatio |
+| ambulatio | documentatio |
 | ambulatio_lectoris | documentatio |
 | amissum | iudicium |
 | animal | animal |
@@ -1028,6 +1031,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 | tributum_capitis | obligatio |
 | ulid | identificatio |
 | unctio_infirmorum | actus |
+| uncus | fabricatio |
 | unitas_mensurae | mensura |
 | universitas | organizatio |
 | universitas_personarum | organizatio |
@@ -1077,15 +1081,15 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `lingua_programmandi.verbum_clavis` — :const, :goto, :restrict, :static
 - `lingua_programmandi.versio_linguae` — :c11, :c89, :c99
 - `mensura.unitas_mensurae` — :gradus_celsius, :gramma, :kilogramma, :metrum, :minutum, :secundum
-- `norma.norma` — :iso_9899_1990, :iso_9899_1999, :posix_1
+- `norma.norma` — :do_178c, :iso_9899_1990, :iso_9899_1999, :posix_1
 - `obligatio.tractatus` — :tractatus_gandavensis
 - `opus_scriptum.editio` — :moby_dick_londinensis_1851, :moby_dick_novi_eboraci_1851, :systema_naturae_editio_decima
 - `opus_scriptum.expressio` — :abusus_linguae_anglice, :abusus_linguae_germanice
 - `opus_scriptum.opus_scriptum` — :abusus_linguae, :moby_dick, :species_plantarum, :summa_theologiae, :systema_naturae
-- `organizatio.corpus_normans` — :ansi, :iec, :ieee, :iso
+- `organizatio.corpus_normans` — :ansi, :iec, :ieee, :iso, :rtca
 - `organizatio.organizatio` — :agentia_isbn, :debian_project
 - `organizatio.societas` — :amd, :apple, :arm_ltd, :att, :bell_labs, :canonical, :intel, :microsoft
-- `persona.persona` — :bertrand_meyer, :brian_fox, :carl_linnaeus, :dennis_ritchie, :duns_scotus, :edsger_dijkstra, :graydon_hoare, :guido_van_rossum, :herman_melville, :josef_pieper, :ken_thompson, :linus_torvalds, :luca_pacioli, :thomas_aquinas
+- `persona.persona` — :bertrand_meyer, :brian_fox, :carl_linnaeus, :dennis_ritchie, :duns_scotus, :edsger_dijkstra, :eskil_steenberg, :graydon_hoare, :guido_van_rossum, :herman_melville, :josef_pieper, :ken_thompson, :linus_torvalds, :luca_pacioli, :thomas_aquinas
 - `pharmacon.substantia_chemica` — :amoxicillinum, :warfarinum
 - `systema_operativum.distributio_systematis` — :arch, :debian, :ubuntu
 - `systema_operativum.systema_operativum` — :vms, :windows
@@ -1228,7 +1232,7 @@ exsistente. Nullum consilium — describi potest quovis momento.
 - `tempus` / **pascha** — GRADUS AMBIGUUS (rota XXIX): una est regula paschalis, ergo individuum videtur; at "pascha" etiam de quovis anno dicitur ("pascha huius anni"), quod praedicatio
 - `versio` / **versio** — FURCA (fork) versio non est - continuatio auctoritatis deficit, unde res nova. Sed casus medii sunt: quid de furca quae nomen retinet et auctoritatem novam habe
 
-## VIII. Monita — stirps communis sine cognatione (23)
+## VIII. Monita — stirps communis sine cognatione (24)
 
 Regula XVIII (ADVISORIA, portam non frangit). Nomen quod nomen
 aliud ut stirpem fert, sed nec sub eo stat nec relationem ad id
@@ -1237,6 +1241,7 @@ declarat. **Pleraque LEGITIMA sunt** — homonyma honesta:
 regulae non est quod defectus inveniat sed quod nulla talis
 coincidentia INVISA transeat.
 
+- 'ambulatio_lectoris' stirpem 'ambulatio' fert sed sub ea non stat
 - 'annotatio_machinae' stirpem 'annotatio' fert sed sub ea non stat
 - 'artefactum_aedificationis' stirpem 'artefactum' fert sed sub ea non stat
 - 'codex_sepultus' stirpem 'codex' fert sed sub ea non stat

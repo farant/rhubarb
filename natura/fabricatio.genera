@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/fabricatio.genera
-  Exemplar semanticum: FABRICATIO (versio 9, PLASTICUM)
+  Exemplar semanticum: FABRICATIO (versio 10, PLASTICUM)
   Genera: postulatum, facultas, probatio, vitium.
 
   VERSIO 8 (2026-08-10): migratio necessitudinum - paria conversa
@@ -21,7 +21,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="9" lingua="latina">
+<natura modulus="fabricatio" versio="10" lingua="latina">
 
 <!-- ========== NECESSITUDINES DOMESTICAE ==========
      Paria conversa quadrati intentionis: sedes antiquae formam
@@ -88,6 +88,48 @@
       nota="quo bono spinae - nihil orbum"/>
     <relatio nomen="natum_ex" ad="*" multiplex="verum"
       nota="casus qui foedus coegit"/>
+    <relatio nomen="ex_fonte" ad="*"
+      nota="auctor externus doctrinae (Steenberg interfaciei
+            primae) - provenientia, non veritas"/>
+  </relationes>
+
+</.genus>
+
+<.genus nomen="uncus">
+
+  <definitio>
+    Custos machinalis eventui ligatus: sponte ignitur (editione,
+    servatione, mutatione) et iudicium statim reddit. A probatione
+    differt modo vocationis - probatio VOCATUR, uncus VIGILAT;
+    nemo eum currit, eventus eum evocat.
+  </definitio>
+
+  <glossa lingua="en">A hook: a machine guard bound to an event -
+    it fires of itself (on edit, save, change) and returns
+    judgement at once. It differs from a test in how it is
+    invoked: a test is CALLED, a hook WATCHES; nobody runs it,
+    the event summons it.</glossa>
+
+  <nota>
+    Natum ambulatione realista censūs (2026-08-11): unci domus
+    sex in prosa vivebant dum observatio de morte eorum communi
+    iam stabat (quattuor muti, tempus ignotum) - res cum
+    biographia sine genere. Vigilantia sine vocatione etiam
+    periculum suum fert: uncus mortuus et uncus tacens idem
+    videntur (pactum portae natalis).
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="eventus" genus="textus"
+      nota="quid eum evocet: editio plagulae cuius formae,
+            servatio, mutatio"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="custodit" ad="*"
+      nota="quid custodiat - bibliothecam, corpus, normam"/>
+    <relatio nomen="adhibet" ad="*" multiplex="verum"
+      nota="instrumenta quae currit"/>
   </relationes>
 
 </.genus>

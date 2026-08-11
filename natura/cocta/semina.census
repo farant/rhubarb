@@ -238,6 +238,11 @@
 
   <unitas-mensurae nomen="&gradus_celsius;" symbolum="°C" mensurat=".temperatura"/>
 
+  <norma nomen="&do_178c;" index="RTCA DO-178C" titulus="Software Considerations in Airborne
+      Systems and Equipment Certification" publicata="2011-12-13" status-vigor="vigens">
+    <editor ad="&rtca;"/>
+  </norma>
+
   <norma nomen="&iso_9899_1990;" index="ISO/IEC 9899:1990" titulus="Programming languages - C" publicata="1990-12-15" status-vigor="substituta" normat="&c89;">
     <editor ad="&iso;"/>
     <editor ad="&iec;"/>
@@ -341,6 +346,12 @@ palea")</eventum>
     <nomina>IEEE</nomina>
   </corpus-normans>
 
+  <corpus-normans nomen="&rtca;" condita="1935-01-01">
+    <nomina>RTCA, Inc.</nomina>
+    <nomina>Radio Technical Commission for
+      Aeronautics</nomina>
+  </corpus-normans>
+
   <corpus-normans nomen="&ansi;" condita="1918-10-19">
     <nomina>American National Standards
       Institute</nomina>
@@ -425,6 +436,16 @@ palea")</eventum>
     <nomina>Herman Melville</nomina>
     <historia>
       <eventum quando="1851" actio="creare">Moby-Dick</eventum>
+    </historia>
+  </persona>
+
+  <persona nomen="&eskil_steenberg;">
+    <nomina>Eskil Steenberg</nomina>
+    <historia>
+      <eventum quando="2010" actio="creare">Love (ludus MMO ab
+        uno homine factus)</eventum>
+      <eventum quando="2016" actio="creare">oratio "How I
+        program C"</eventum>
     </historia>
   </persona>
 

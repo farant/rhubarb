@@ -5,6 +5,7 @@
 
   <elementum nomen="individua" radix="verum">
     <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="ambulatio"/>
     <liberum nomen="dictionarium"/>
     <liberum nomen="manuale"/>
     <liberum nomen="exemplum"/>
@@ -14,6 +15,29 @@
     <liberum nomen="silentium"/>
     <liberum nomen="ambiguitas"/>
     <liberum nomen="ambulatio-lectoris"/>
+  </elementum>
+
+  <elementum nomen="ambulatio">
+    <glossa lingua="en">A walk: traversing a document against
+    reality, every sentence tested on the corpus - what survives
+    thought alone is not tested. A dated event with a harvest:
+    findings, dead candidates, changes. Notable species: the
+    REGENERATION, where a context-free stranger receives only the
+    document and its gaps become the harvest.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="facta" genus="dies"/>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="tendit-ad" genus="referentia"/>
+    <liberum nomen="invenit"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="invenit" intra="ambulatio">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="ambulatio">
+    <liberum nomen="eventum"/>
   </elementum>
 
   <elementum nomen="dictionarium">
@@ -309,8 +333,8 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="dictionarium manuale exemplum legenda defectus-documenti deceptio
-           silentium ambiguitas ambulatio-lectoris"/>
+    super="ambulatio dictionarium manuale exemplum legenda defectus-documenti
+           deceptio silentium ambiguitas ambulatio-lectoris"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in

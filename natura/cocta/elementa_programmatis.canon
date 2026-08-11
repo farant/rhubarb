@@ -662,6 +662,7 @@
     programme en ce qu'elle n'a pas de commencement propre : elle vit
     d'être appelée et ne s'exécute jamais d'elle-même.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="gradus" genus="numerus"/>
     <attributum nomen="scripta-in" genus="referentia"/>
     <liberum nomen="interfacies" maximum="1"/>
     <liberum nomen="corpus" maximum="1"/>
@@ -1078,15 +1079,10 @@
   <citatio nomen="assertio-statica-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-statica"/>
   <citatio nomen="assertio-probationis-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio-probationis"/>
   <citatio nomen="programma-initium" attributum="initium" ad="functio functio-pura/nomen" super="programma"/>
-  <citatio nomen="programma-adhibet" attributum="ad" ad="bibliotheca/nomen" super="programma/adhibet"/>
   <citatio nomen="instrumentum-lineae-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-lineae"/>
-  <citatio nomen="instrumentum-lineae-adhibet" attributum="ad" ad="bibliotheca/nomen" super="instrumentum-lineae/adhibet"/>
   <citatio nomen="daemon-initium" attributum="initium" ad="functio functio-pura/nomen" super="daemon"/>
-  <citatio nomen="daemon-adhibet" attributum="ad" ad="bibliotheca/nomen" super="daemon/adhibet"/>
   <citatio nomen="applicatio-initium" attributum="initium" ad="functio functio-pura/nomen" super="applicatio"/>
-  <citatio nomen="applicatio-adhibet" attributum="ad" ad="bibliotheca/nomen" super="applicatio/adhibet"/>
   <citatio nomen="instrumentum-aedificationis-producit" attributum="ad" ad="artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum/nomen" super="instrumentum-aedificationis/producit"/>
   <citatio nomen="instrumentum-aedificationis-initium" attributum="initium" ad="functio functio-pura/nomen" super="instrumentum-aedificationis"/>
-  <citatio nomen="instrumentum-aedificationis-adhibet" attributum="ad" ad="bibliotheca/nomen" super="instrumentum-aedificationis/adhibet"/>
 
 </canon>

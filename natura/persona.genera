@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/persona.genera
-  Exemplar semanticum: PERSONA (versio 8, PLASTICUM)
+  Exemplar semanticum: PERSONA (versio 9, PLASTICUM)
   v3->v4: Meyer (bis postulatus: CQS et pactum), Dijkstra
   (superfectus a verbo goto), Scotus (haecceitas ad
   identificatorem) - dictionarium a stratis elementorum et
@@ -24,7 +24,7 @@
   more dictionarii biographici); personae TUAE (contactus, socii)
   in voluminibus applicationum, genus hoc citantes.
 -->
-<natura modulus="persona" versio="8" lingua="latina">
+<natura modulus="persona" versio="9" lingua="latina">
 
 <!-- FONTES: claves quas valores per fons= citant.
      Mechanismus rotae XVI - dubium <fons> (rota VII) solutum
@@ -207,6 +207,20 @@
     <historia>
       <eventum quando="1851" actio="creare">Moby-Dick</eventum>
     </historia>
+  </individuum>
+
+  <individuum nomen="eskil_steenberg">
+    <valor nomen="nomina">Eskil Steenberg</valor>
+    <historia>
+      <eventum quando="2010" actio="creare">Love (ludus MMO ab
+        uno homine factus)</eventum>
+      <eventum quando="2016" actio="creare">oratio "How I
+        program C"</eventum>
+    </historia>
+    <nota>Auctor doctrinae interfaciei primae (pactum censūs):
+      interfacies thesaurus, implementatio fluit. C89 et
+      bibliothecae propriae - via quam domus sequitur. Dies
+      natalis fontibus nostris incertus - omissus, non fictus.</nota>
   </individuum>
 
   <individuum nomen="ken_thompson">

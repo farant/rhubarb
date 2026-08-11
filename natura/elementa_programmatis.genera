@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/elementa_programmatis.genera
-  Exemplar semanticum: ELEMENTA PROGRAMMATIS (versio 6, PLASTICUM)
+  Exemplar semanticum: ELEMENTA PROGRAMMATIS (versio 8, PLASTICUM)
 
   VERSIO 5 (2026-08-10): migratio necessitudinum - paria conversa
   vitae status declarata (legit/mutat/haurit + producit), gemini
@@ -81,7 +81,7 @@
   lingua_programmandi pertinet (differentia universalis/
   specialis, inserta/externa) - editio futura illius plagulae.
 -->
-<natura modulus="elementa_programmatis" versio="6" lingua="latina">
+<natura modulus="elementa_programmatis" versio="8" lingua="latina">
 
 <!-- ========== NECESSITUDINES DOMESTICAE ==========
      Paria conversa vitae status et aedificationis: sedes formam
@@ -937,6 +937,14 @@
     <pars nomen="documenta" necessaria="falsum"/>
   </partes>
 
+  <proprietates>
+    <proprietas nomen="gradus" genus="numerus"
+      nota="longitudo catenae dependentiarum domesticarum: 0 =
+            sola bibliotheca vulgaris, n = maximum fontium + 1;
+            mensurabilis per aedilis --partes (census prior eum
+            in prosa notarum ferebat - vestis parsimoniae)"/>
+  </proprietates>
+
   <relationes>
     <relatio nomen="praebet" ad="*" multiplex="verum"
       nota="elementa interfaciei: functiones, constantia, typi"/>
@@ -1235,7 +1243,12 @@
             SYSTEMATE - unde 'principale' nomen in domo nostra.
             Pars distincta: continentia cuius munus nomen sedis
             fert"/>
-    <relatio nomen="adhibet" ad="bibliotheca" multiplex="verum"/>
+    <relatio nomen="adhibet" ad="*" multiplex="verum"
+      nota="olim ad bibliothecam angustum - sed programma re
+            vera daemonibus, actis, formatis quoque utitur
+            (frigida annales adhibet, casus primus falso
+            reiectus 2026-08-11): angustia supposita, non
+            mensurata"/>
     <relatio nomen="currit_ut" ad="processus" modulus="operatio"
       nota="programma FORMA est, processus INSTANTIA currens -
             eadem distinctio qua lingua et implementatio;

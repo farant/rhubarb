@@ -6,6 +6,7 @@
   <elementum nomen="individua" radix="verum">
     <attributum nomen="fons" genus="nomen"/>
     <liberum nomen="pactum"/>
+    <liberum nomen="uncus"/>
     <liberum nomen="postulatum"/>
     <liberum nomen="facultas"/>
     <liberum nomen="probatio"/>
@@ -36,6 +37,7 @@
     <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="proprium" genus="referentia"/>
     <attributum nomen="tendit-ad" genus="referentia"/>
+    <attributum nomen="ex-fonte" genus="referentia"/>
     <liberum nomen="natum-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
@@ -44,6 +46,26 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="pactum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="uncus">
+    <glossa lingua="en">A hook: a machine guard bound to an event -
+    it fires of itself (on edit, save, change) and returns
+    judgement at once. It differs from a test in how it is
+    invoked: a test is CALLED, a hook WATCHES; nobody runs it,
+    the event summons it.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="eventus" genus="textus"/>
+    <attributum nomen="custodit" genus="referentia"/>
+    <liberum nomen="adhibet"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+  </elementum>
+  <elementum nomen="adhibet" intra="uncus">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="uncus">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -629,7 +651,7 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="pactum postulatum facultas probatio probatio-unitatis probatio-integrationis
+    super="pactum uncus postulatum facultas probatio probatio-unitatis probatio-integrationis
            probatio-regressionis probatio-fumi vitium regressio debitum-technicum
            complicatio consilium consilium-computatum depravatio interventio
            conservatio restauratio-aedificii curatio-medica"/>

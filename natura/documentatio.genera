@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/documentatio.genera
-  Exemplar semanticum: DOCUMENTATIO (versio 2)
+  Exemplar semanticum: DOCUMENTATIO (versio 4)
 
   Modulus RELATIONIS inter textum et opus lectoris. Natus ex
   circuitu generationis I (2026-08-08): scenarium glossarum
@@ -22,7 +22,7 @@
   intentum et manuale mensuratum-defectum esse potest sine
   contradictione. Genus numquam successum affirmat.
 -->
-<natura modulus="documentatio" versio="2" lingua="latina">
+<natura modulus="documentatio" versio="4" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -39,6 +39,52 @@
      LECTORI PRAESTARE DESTINATUR. Quattuor mensuratae solae;
      divisio aperta manet donec scenarium novum plura metiatur.
      Opera hybrida per etiam= (sodalitas secundaria). -->
+
+<.genus nomen="ambulatio">
+
+  <definitio>
+    Percursus documenti contra rem: documentum totum ambulatur et
+    quaeque sententia contra corpus probatur - quod sola
+    cogitatione superest probatum non est. Eventus datus cum
+    messe: inventa, candidati mortui, mutationes. Species notae:
+    REGENERATIO, ubi advena sine contextu documentum solum
+    accipit et lacunae eius messis fiunt.
+  </definitio>
+
+  <glossa lingua="en">A walk: traversing a document against
+    reality, every sentence tested on the corpus - what survives
+    thought alone is not tested. A dated event with a harvest:
+    findings, dead candidates, changes. Notable species: the
+    REGENERATION, where a context-free stranger receives only the
+    document and its gaps become the harvest.</glossa>
+
+  <nota>
+    Natum ambulatione realista censūs (2026-08-11): ambulationes
+    sex in commento MESSIS vivebant - historia in medio quod
+    machina propria legere nequit, dum praecepta ab iis coacta
+    natum_ex sine scopo citabant.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="facta" genus="dies"/>
+    <proprietas nomen="contentum" genus="textus"
+      nota="messis breviter - narratio plena in commento aut
+            worklog manet"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="de" ad="*"
+      nota="documentum aut corpus ambulatum"/>
+    <relatio nomen="invenit" ad="*" necessitudo="fundatio"
+      multiplex="verum"
+      nota="quae in aperto posuit - observationes, vitia,
+            genera nova"/>
+    <relatio nomen="tendit_ad" ad="*"
+      nota="quo bono - ambulatio intellectui servit (spina
+            causarum, nihil orbum)"/>
+  </relationes>
+
+</.genus>
 
 <.genus nomen="dictionarium" sub="opus_scriptum"
   modulus="opus_scriptum">

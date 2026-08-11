@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/organizatio.genera
-  Exemplar semanticum: ORGANIZATIO (versio 10, PLASTICUM)
+  Exemplar semanticum: ORGANIZATIO (versio 11, PLASTICUM)
 
   Genus a norma et persona POSTULATUM (editor normae organizatio
   est, non persona nec chorda). Sub-genera prima formae:
   corpus_normans, societas - arbor Porphyriana profunditatem
   accipit (attributum sub= + differentia in genere).
 -->
-<natura modulus="organizatio" versio="10" lingua="latina">
+<natura modulus="organizatio" versio="11" lingua="latina">
 
 <!-- FONTES (mechanismus rotae XVI) -->
 <fontes>
@@ -692,6 +692,15 @@
       Electronics Engineers</valor>
     <valor nomen="nomina">IEEE</valor>
     <valor nomen="condita">1963-01-01</valor>
+  </individuum>
+
+  <individuum nomen="rtca">
+    <valor nomen="nomina">RTCA, Inc.</valor>
+    <valor nomen="nomina">Radio Technical Commission for
+      Aeronautics</valor>
+    <valor nomen="condita">1935-01-01</valor>
+    <nota>Corpus normans aeronauticum privatum - editor
+      DO-178C, fontis disciplinae censūs nostri.</nota>
   </individuum>
 
   <individuum nomen="ansi">

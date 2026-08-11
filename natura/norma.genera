@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/norma.genera
-  Exemplar semanticum: NORMA (versio 7, PLASTICUM)
+  Exemplar semanticum: NORMA (versio 8, PLASTICUM)
 
   Genus a Frane petitum: norma res est, non chorda - editorem,
   diem, statum, successionem habet. Normae se invicem SUBSTITUUNT:
   catena temporalis (stratum historicum in relationibus ipsis).
 -->
-<natura modulus="norma" versio="7" lingua="latina">
+<natura modulus="norma" versio="8" lingua="latina">
 
 <.genus nomen="norma">
 
@@ -73,9 +73,24 @@
     <relatio nomen="proprium" ad="*" necessitudo="proprium_de"
       nota="linguae aut technologiae cui norma propria est
             (norma vexillorum clang propria); absens = communis"/>
+    <relatio nomen="ex_fonte" ad="*"
+      nota="auctor externus doctrinae adoptatae (Pieper normae
+            realitatis) - provenientia, non veritas"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->
+
+  <individuum nomen="do_178c">
+    <valor nomen="index">RTCA DO-178C</valor>
+    <valor nomen="titulus">Software Considerations in Airborne
+      Systems and Equipment Certification</valor>
+    <valor nomen="publicata">2011-12-13</valor>
+    <relatum nomen="editor" ad="rtca" modulus="organizatio"/>
+    <valor nomen="vigor">vigens</valor>
+    <nota>Fons disciplinae traceabilitatis censūs (cum KAOS):
+      radix una, nihil orbum, omnis res parentem habet. Norma
+      aviationis quam domus ad documenta sua transtulit.</nota>
+  </individuum>
 
   <individuum nomen="iso_9899_1990">
     <valor nomen="index">ISO/IEC 9899:1990</valor>
