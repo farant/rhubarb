@@ -118,10 +118,12 @@ scaena requested by nomen. v1 never sends more than one.
 ## 4. Renderer (index.html, dependency-free)
 
 - Canvas 2D, camera `{x, y, scala}`, world→screen transform.
-- **WASD** velocity in a rAF loop, **drag-pan**, **wheel-zoom**
-  (zoom toward cursor). Drag + pinch matter because telephonum has no
-  keyboard. WASD listeners active only while the Charta tab is shown
-  (must not fight text inputs on other pages).
+- **WASD** velocity in a rAF loop, **Q/E keyboard zoom**
+  (out/in, exponential, about the viewport center — camera holds;
+  added post-v1 so one hand navigates fully), **drag-pan**,
+  **wheel-zoom** (zoom toward cursor). Drag + pinch matter because
+  telephonum has no keyboard. Key listeners active only while the
+  Charta tab is shown (must not fight text inputs on other pages).
 - Offscreen culling from day one — trivial at 84 nodes, load-bearing
   if a scaena ever holds natura-scale graphs (463+).
 - Node = rounded box: titulus + small genus tag; color by stratum

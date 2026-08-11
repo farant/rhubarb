@@ -1888,6 +1888,14 @@ function charta_gyrus(t) {
   if (charta_claves.s) { charta_camera.y += v; charta_iter = null; }
   if (charta_claves.a) { charta_camera.x -= v; charta_iter = null; }
   if (charta_claves.d) { charta_camera.x += v; charta_iter = null; }
+  /* q/e: scala e claviatura (manus una cum WASD) - circa medium
+   * telae, ergo camera immota; lapsus vivere pergit (volare ad
+   * nodum dum scalam mutas licet) */
+  if (charta_claves.q || charta_claves.e) {
+    charta_camera.scala = Math.min(4, Math.max(0.12,
+      charta_camera.scala
+        * Math.exp((charta_claves.e ? 1 : -1) * 0.0009 * dt)));
+  }
   /* lapsus ad electum (ex ordine aristae in tabella) */
   if (charta_iter) {
     var lx = charta_iter.x - charta_camera.x;
@@ -2012,7 +2020,8 @@ function charta_parare() {
       return;
     }
     c = ev.key ? ev.key.toLowerCase() : '';
-    if (c === 'w' || c === 'a' || c === 's' || c === 'd') {
+    if (c === 'w' || c === 'a' || c === 's' || c === 'd'
+        || c === 'q' || c === 'e') {
       charta_claves[c] = true;
       ev.preventDefault();
     } else if (ev.key === 'Escape') {
