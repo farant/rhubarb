@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/elementa_programmatis.genera
-  Exemplar semanticum: ELEMENTA PROGRAMMATIS (versio 5, PLASTICUM)
+  Exemplar semanticum: ELEMENTA PROGRAMMATIS (versio 6, PLASTICUM)
 
   VERSIO 5 (2026-08-10): migratio necessitudinum - paria conversa
   vitae status declarata (legit/mutat/haurit + producit), gemini
@@ -81,7 +81,7 @@
   lingua_programmandi pertinet (differentia universalis/
   specialis, inserta/externa) - editio futura illius plagulae.
 -->
-<natura modulus="elementa_programmatis" versio="5" lingua="latina">
+<natura modulus="elementa_programmatis" versio="6" lingua="latina">
 
 <!-- ========== NECESSITUDINES DOMESTICAE ==========
      Paria conversa vitae status et aedificationis: sedes formam
@@ -176,11 +176,11 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="geritur_a" ad="*" necessitudo="fert"
+    <relatio nomen="geritur_a" ad="*" necessitudo="fertur_per"
       nota="gerens: vocatio (localis), processus (universalis,
             hic_manens), plagula, volumen, machina. Aperta
-            consulto - gerentes exemplaria transeunt (fert via
-            conversa: gerens statum secum portat)"/>
+            consulto - gerentes exemplaria transeunt (fertur_per:
+            gerens statum secum portat)"/>
     <relatio nomen="legitur_a" a="functio" inversa="verum"
       nota="impletur a functio.legit"/>
     <relatio nomen="mutatur_a" a="functio" inversa="verum"
@@ -244,9 +244,9 @@
     syntaxe ne porte ; seule l'intention la déclare.</glossa>
 
   <relationes>
-    <relatio nomen="veritas_sua" ad="*" necessitudo="fundat"
+    <relatio nomen="veritas_sua" ad="*" necessitudo="fundatur_in"
       nota="id ex quo recomputatur - proiectio in veritate sua
-            FUNDATUR (via conversa). APERTUM 2026-08-08 (lacuna
+            FUNDATUR (fundatur_in). APERTUM 2026-08-08 (lacuna
             L13, quater in ambulatione XVI mensurata): clausura
             ad statum programmatis facta erat, quia doctrina
             veritas/proiectio in statu nata est - sed documentum
@@ -1328,9 +1328,9 @@
       necessitudo="exsecutio"
       nota="dux militem exsequitur - eadem familia ac vocat"/>
     <relatio nomen="dirigitur_a" ad="plagula_computatralis"
-      modulus="plagula_computatralis" necessitudo="administrat"
+      modulus="plagula_computatralis" necessitudo="administrata_a"
       nota="Makefile, aedificare.sh - plagula quae graphum
-            declarat (administrat via conversa: plagula
+            declarat (administrata_a: plagula
             instrumentum gubernat). Genus eius ambiguum consulto:
             Makefile inter figurationem et fontem sedet (lingua
             make completa Turing est - figuratio quae programma

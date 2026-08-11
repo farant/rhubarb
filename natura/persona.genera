@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/persona.genera
-  Exemplar semanticum: PERSONA (versio 7, PLASTICUM)
+  Exemplar semanticum: PERSONA (versio 8, PLASTICUM)
   v3->v4: Meyer (bis postulatus: CQS et pactum), Dijkstra
   (superfectus a verbo goto), Scotus (haecceitas ad
   identificatorem) - dictionarium a stratis elementorum et
@@ -24,7 +24,7 @@
   more dictionarii biographici); personae TUAE (contactus, socii)
   in voluminibus applicationum, genus hoc citantes.
 -->
-<natura modulus="persona" versio="7" lingua="latina">
+<natura modulus="persona" versio="8" lingua="latina">
 
 <!-- FONTES: claves quas valores per fons= citant.
      Mechanismus rotae XVI - dubium <fons> (rota VII) solutum
@@ -116,7 +116,7 @@
   </actiones>
 
   <relationes>
-    <relatio nomen="auctor_de" ad="*" necessitudo="auctor"
+    <relatio nomen="auctor_de" ad="*"
       nota="ad opus cuiusvis generis - relatio aperta consulto:
             opera personarum genera omnia transeunt"/>
     <relatio nomen="membrum_de" ad="organizatio"
@@ -131,7 +131,7 @@
             civilis omnes hinc pendent. Locus mutatur cotidie,
             domicilium actu et animo"/>
     <relatio nomen="inscriptus_in" ad="acta"
-      necessitudo="continet" modulus="acta"
+      necessitudo="continetur_in" modulus="acta"
       multiplex="verum"
       nota="registra in quibus persona introitum habet.
             IMPLICATIO GRAVIS: qui in nullis inscriptus est

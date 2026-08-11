@@ -24,7 +24,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 `⚙` machinam statuum fert · `▣N` partes N declaratas fert
 (partes = index quo ABSENTIA visibilis fit).
 
-### acta (v4, genera 18)
+### acta (v5, genera 18)
 
 - **acta** ⚙ ▣5 — Series eventuum ordinata cui SOLUM APPENDITUR, et quae rerum descriptarum VERITAS est: status quilibet (summa, manifes
 - **punctum_actorum** — Locus in actis nominatus et allocutione dignus, ita ut interrogatio "qualia erant HIC?" responsum habeat quod homo pet
@@ -45,7 +45,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **commissio_notarii** ⊂ radix_fiduciae — Auctoritas ipsius notarii, a magistratu collata: quae instrumenta eius publica facit et ipsa ab alio notario non pende
 - **origo_dominii** ⊂ radix_fiduciae — Primum in catena titulorum praedii, ultra quod investigatio non procedit: concessio principis, adiudicatio, aut posses
 
-### actus (v2, genera 27)
+### actus (v3, genera 27)
 
 - **actus_sollemnis** ⚙ — Actus cuius EFFECTUS a forma praescripta et ab agentis capacitate pendet, et qui ideo VALIDUS aut IRRITUS est, non bon
 - **ritus** ⊂ actus_sollemnis — Actus sollemnis ad cultum divinum ordinatus: materia sensibilis et forma verborum, per ministrum, ad effectum spiritua
@@ -82,7 +82,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **canis** ⊂ animal — Canis familiaris: lupus ab homine per millennia mutatus - species cuius forma ipsa OPUS HOMINIS est, sicut malus domes
 - **homo** ⊂ animal — Animal rationale: corpus animale cum anima quae intellegit et eligit
 
-### architectura_machinae (v3, genera 3)
+### architectura_machinae (v4, genera 3)
 
 - **architectura_machinae** — Forma abstracta machinae computatoriae quam programmata alloquuntur: copia instructionum, registra, modellum memoriae
 - **versio_architecturae** ⊂ versio.versio — Editio architecturae nominata: quam copiam instructionum chip vere exsequitur et compilator vere alloquitur - "aedific
@@ -135,7 +135,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **tessera_digitalis** ⊂ tessera_simplex — Tessera ad portitorem sine corpore: qui eam tenet auctoritatem exercet, nullo nomine quaesito
 - **ratio_duplex** ⊂ ratio_rationaria — Omnis eventus BIS scribitur (debitum et creditum): summa omnium debitorum summae creditorum semper aequalis - INVARIAN
 
-### communicatio (v3, genera 8)
+### communicatio (v4, genera 8)
 
 - **actor** — Ens logicum cum identitate, statu privato, moribus: cum aliis SOLUM per nuntios communicat
 - **nuntius** ⚙ — Communicatio reificata: data in itinere INSCRIPTA - destinatarius ei debetur
@@ -146,7 +146,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **tabula_communis** ⊂ stigmergia — Superficies quam multi mutant et legunt sine ordine praestituto: tabula parietis, commentarius communis, vicipaedia
 - **vestigia_operis** ⊂ stigmergia — Arbor plagularum quam instrumenta legunt ut quid agendum sit statuant: directorium aedificationis, arbor laborans
 
-### corporalia (v4, genera 14)
+### corporalia (v5, genera 14)
 
 - **res_corporea** ⚙ — Quod materiam habet, locum occupat, tempore corrumpitur: res quae manibus tangi potest
 - **artefactum** ⊂ res_corporea ▣1 — Ab homine facta ad finem: NUMERABILIS, singularis, haecceitatem habens - hic panis, non alius, etiamsi gemellus adsit
@@ -175,7 +175,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **ambiguitas** ⊂ defectus_documenti — Textus plures sensus admittit nec fundamentum eligendi praebet: lector inter construenda sine causa eligere cogitur
 - **ambulatio_lectoris** ⊂ fabricatio.probatio — Probatio documenti per lectorem RESTRICTUM: lector ad fontem sub probatione solum adstringitur, ut fons ipse mensuretu
 
-### elementa_programmatis (v5, genera 45)
+### elementa_programmatis (v6, genera 45)
 
 - **status** — Valor custoditus qui in tempore mutari potest: inter eventus manet, ab eventibus mutatur
 - **proiectio** ⊂ status — Ex alio statu (VERITATE sua) integre recomputari potest
@@ -274,7 +274,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **rxnorm** ⊂ schema_identificandi — Vocabularium normatum quo medicamenta clinica nominantur et gradus inter se nectuntur: ingrediens, medicamentum clinic
 - **numerus_dea** ⊂ schema_identificandi — Numerus quo auctoritas Americana eos registrat quibus substantias regulatas praescribere aut tractare licet: litterae 
 
-### iudicium (v8, genera 54)
+### iudicium (v9, genera 54)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
@@ -346,7 +346,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **iurisdictio** — Potestas legum ferendarum et exigendarum super loco: municipium, provincia, civitas
 - **aedificium** ▣1 — Structura loco fixa quam homines occupant: res corporea quae moveri non potest - immobilitas essentia eius, unde "res 
 
-### mensura (v2, genera 11)
+### mensura (v3, genera 11)
 
 - **magnitudo_mensurabilis** — Id quod mensurari potest: longitudo, massa, tempus, temperatura
 - **unitas_mensurae** — Partitio conventa magnitudinis mensurabilis, qua quantitates numerari possunt
@@ -371,7 +371,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 ### necessitudines (v1, genera 0)
 
 
-### norma (v5, genera 15)
+### norma (v6, genera 15)
 
 - **norma** ⚙ — Documentum publicum quod formam praescribit: quid conformitas significet definit
 - **lex** ⚙ — Ordinatio rationis ad bonum commune, ab eo qui curam communitatis habet promulgata (Thomas, ST I-II q
@@ -389,7 +389,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **mors_praesumpta** ⊂ fictio_iuris — Fictio qua absens per tempus statutum mortuus habetur, ut hereditas, matrimonium, tutela solvi possint
 - **personalitas_iuridica** ⊂ fictio_iuris — Fictio qua coetus (aut massa bonorum) persona habetur: possidet, contrahit, agit, convenitur suo nomine
 
-### obligatio (v9, genera 41)
+### obligatio (v10, genera 41)
 
 - **obligatio** ⚙ — Iuris vinculum quo quis alicui aliquid praestare adstringitur (Institutiones): non res sed VINCULUM inter personas - d
 - **contractus** — Conventio duorum (aut plurium) quae obligationes parit: consensus est fundamentum - ideo utrumque ligat, et neuter sol
@@ -433,7 +433,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **portio_piscandi** ⊂ portio_communis — Pondus piscium quod navi certae per annum capere licet: quod "quota transferibilis" vocatur
 - **portio_computandi** ⊂ portio_communis — Copia petitionum aut operationum quam cliens intra tempus certum facere licet: quod "limes celeritatis" vocatur
 
-### operatio (v2, genera 7)
+### operatio (v3, genera 7)
 
 - **ambitus** — Locus ordinatus ubi programmata currunt: machinae, figurationes, data, nomina
 - **pensum** ⚙ — Opus certum alicui commissum: quid agendum, a quo, quo statu
@@ -452,7 +452,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **periodicum** ⊂ opus_scriptum — Opus quod PERFECTIONEM non petit: in fasciculis continuatur dum curatores volunt - machina compositionis parentis ei f
 - **fasciculus** — Pars periodici tempore signata: numerus unus, die suo editus
 
-### organizatio (v9, genera 17)
+### organizatio (v10, genera 17)
 
 - **universitas** — Coetus in finem communem ordinatus qui UT UNUM agit et mutatis membris PERDURAT: haec perduratio eum a mero acervo dis
 - **organizatio** ⊂ universitas — Universitas PERSONARUM: quod membra rationalia sunt omnia sequentia parit - fines eligi possunt et mutari, officia con
@@ -472,7 +472,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **curator** ⊂ officium — Officium bona aliena ad finem alienum administrandi: fiducia, non dominium
 - **praeses_collegii** ⊂ officium — Officium collegio praesidendi: sedes una inter pares cum potestate ordinandi, non imperandi
 
-### persona (v7, genera 1)
+### persona (v8, genera 1)
 
 - **persona** ⚙ — Naturae rationabilis individua substantia (Boethius)
 
@@ -514,7 +514,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **plagula_csv** ⊂ plagula_datorum — 
 - **volumen** ⊂ plagula_sqlite — Plagula sqlite schemate domus nostrae: acta (veritas, solum-appende), massae (contentum sigillo addressatum), plagulae
 
-### planta (v2, genera 7)
+### planta (v3, genera 7)
 
 - **planta** ⊂ corporalia.vivens ⚙ ▣6 — Vivens quod se ex loco non movet et lucem in cibum vertit (photosynthesis): radicibus haeret, per partes crescit, semi
 - **rosaceae** ⊂ planta — Flores quinque-petali plerumque, stipulae ad folia, fructus varii (pomum, drupa, aggregatus) - familia late diversa qu
@@ -524,7 +524,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **malus_domestica** ⊂ malus — Malus culta, ex hybridatione longa orta (M
 - **granny_smith** ⊂ malus_domestica — Cultivar Australianus: fructus viridis, acidus, durus, conservationi aptus
 
-### praescriptum (v4, genera 8)
+### praescriptum (v5, genera 8)
 
 - **procedura** — Ordo operationum ad finem: introitus declarati, gradus ordinati, exitus exspectatus
 - **procedura_automata** ⊂ procedura ⚙ — A MACHINA exsecuta, ideo AMBIGUITATIS TOLERANTIA NULLA: ubi praescriptum "donec aureum fiat" dicere potest quia homo i
@@ -554,7 +554,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **distributio_systematis** — Collectio curata: nucleus + instrumenta + ordinationes + gestor fasciculorum, ab uno curatore electa, probata, edita
 - **versio_systematis** ⊂ versio.versio — Editio systematis nominata: quam installatio vere currit - "Darwin 23
 
-### tempus (v5, genera 14)
+### tempus (v6, genera 14)
 
 - **momentum** — Punctum in tempore: quando aliquid accidit
 - **intervallum** — Spatium temporis inter duo momenta: initium, finis, ideo duratio
@@ -571,7 +571,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **per_cyclos** ⊂ recurrentia_per_usum — Numero vicium quibus res a quiete ad opus et retro transiit: ubi damnum ex TRANSITU oritur, non ex duratione (metallum
 - **per_spatium** ⊂ recurrentia_per_usum — Distantia confecta: vehiculis propria
 
-### vectura (v1, genera 11)
+### vectura (v2, genera 11)
 
 - **iter** ⚙ — Motus rei aut personae a loco ad locum, proposito susceptus: initium, finis, via, tempus
 - **via** — Semita per quam iri potest: res publica plerumque, itineribus innumeris communis
@@ -1101,16 +1101,16 @@ necessitudines altae (columna sub vacua).
 | necessitudo | conversum | sub | a | ad | scripturae | exemplar |
 |---|---|---|---|---|---|---|
 | accipit | - | translatio_nuntii | * | * | - | necessitudines |
-| adhibet | - | dependentia | * | * | - | necessitudines |
+| adhibet | adhibetur_ab | dependentia | * | * | - | necessitudines |
 | administrat | administrata_a | custodia | * | * | - | necessitudines |
-| afficit | - | effectio | * | * | - | necessitudines |
+| afficit | afficitur_a | effectio | * | * | - | necessitudines |
 | asseritur_per | - | fundatio | * | * | - | necessitudines |
-| auctor | - | origo | * | * | - | necessitudines |
+| auctor | auctor_de | origo | * | * | - | necessitudines |
 | causalitas | - | - | * | * | - | necessitudines |
-| causat | - | causalitas | * | * | - | necessitudines |
+| causat | causatur_a | causalitas | * | * | - | necessitudines |
 | condita_a | - | origo | * | * | conditum_a | necessitudines |
 | conformitas | - | - | * | * | - | necessitudines |
-| constituta_per | - | origo | * | * | constituitur_per | necessitudines |
+| constituta_per | constituit | origo | * | * | constituitur_per | necessitudines |
 | continet | continetur_in | pars_totum | * | * | - | necessitudines |
 | cum_incertitudine | de_quantitate | repraesentatio | * | * | - | mensura |
 | currit_ut | - | exsecutio | * | * | - | necessitudines |
@@ -1118,7 +1118,7 @@ necessitudines altae (columna sub vacua).
 | custodit | custoditur_ab | custodia | * | * | custodita_a custodita_per | necessitudines |
 | de | - | fundatio | * | * | - | necessitudines |
 | dependentia | - | - | * | * | - | necessitudines |
-| edita_a | - | evulgatio | * | * | - | necessitudines |
+| edita_a | edit | evulgatio | * | * | - | necessitudines |
 | effectio | - | - | * | * | - | necessitudines |
 | efficit | efficitur_a | effectio | * | * | - | necessitudines |
 | emissa_a | - | evulgatio | * | * | - | necessitudines |
@@ -1127,7 +1127,7 @@ necessitudines altae (columna sub vacua).
 | ex_vitio | - | causalitas | * | * | - | necessitudines |
 | exercet | exercetur_a | exsecutio | * | * | - | necessitudines |
 | exsecutio | - | - | * | * | - | necessitudines |
-| exsequitur | - | exsecutio | * | * | - | necessitudines |
+| exsequitur | exsecuta_a | exsecutio | * | * | - | necessitudines |
 | fabricatum_in | coquitur | origo | * | * | - | necessitudines |
 | fert | fertur_per | dependentia | * | * | - | necessitudines |
 | fundat | fundatur_in | fundatio | * | * | - | necessitudines |
@@ -1153,11 +1153,11 @@ necessitudines altae (columna sub vacua).
 | mittit | missus_a | translatio_nuntii | * | * | - | necessitudines |
 | mutat | mutatur_a | effectio | * | * | - | elementa_programmatis |
 | natum_ex | - | causalitas | * | * | - | necessitudines |
-| normata_per | - | conformitas | * | * | - | necessitudines |
+| normata_per | normat | conformitas | * | * | - | necessitudines |
 | obiectum_actus | - | participatio | * | * | - | necessitudines |
 | origo | ortum_dat | - | * | * | - | necessitudines |
 | orta_ex | - | origo | * | * | ortum_ex | necessitudines |
-| parit | - | origo | * | * | - | necessitudines |
+| parit | genitus_a | origo | * | * | - | necessitudines |
 | pars_de | - | pars_totum | * | * | - | necessitudines |
 | pars_totum | - | - | * | * | - | necessitudines |
 | participatio | - | - | * | * | - | necessitudines |
@@ -1181,7 +1181,7 @@ necessitudines altae (columna sub vacua).
 | substituit | - | successio | * | * | - | necessitudines |
 | successio | - | - | * | * | - | necessitudines |
 | tendit_ad | - | causalitas | * | * | - | necessitudines |
-| tenetur_a | - | custodia | * | * | - | necessitudines |
+| tenetur_a | tenet | custodia | * | * | - | necessitudines |
 | translatio_nuntii | - | - | * | * | - | necessitudines |
 | versio_de | - | successio | * | * | - | necessitudines |
 | violat | - | conformitas | * | * | - | necessitudines |

@@ -218,7 +218,8 @@
 
   <!-- familia origo -->
 
-  <necessitudo nomen="auctor" sub="origo" a="*" ad="*">
+  <necessitudo nomen="auctor" conversum="auctor_de"
+      sub="origo" a="*" ad="*">
     <definitio>Persona quae operi respondet - origo cum
       responsione (usus VII; persona clausa: scriba pro
       machinis).</definitio>
@@ -226,7 +227,8 @@
       auctor/scriba split lives at the use sites.</glossa>
   </necessitudo>
 
-  <necessitudo nomen="parit" sub="origo" a="*" ad="*">
+  <necessitudo nomen="parit" conversum="genitus_a"
+      sub="origo" a="*" ad="*">
     <definitio>Quod aliud gignit ut effectum iuridicum aut
       naturalem: lex obligationem, venditio obligationem (usus
       VII).</definitio>
@@ -241,7 +243,8 @@
     <scriptio>ortum_ex</scriptio>
   </necessitudo>
 
-  <necessitudo nomen="constituta_per" sub="origo" a="*" ad="*">
+  <necessitudo nomen="constituta_per" conversum="constituit"
+      sub="origo" a="*" ad="*">
     <definitio>Quod per actum sollemnem constitutum est: persona
       iuridica, fiducia, classis normativa.</definitio>
     <glossa lingua="en">Constituted-by-a-solemn-act.</glossa>
@@ -265,7 +268,8 @@
 
   <!-- familia evulgatio -->
 
-  <necessitudo nomen="edita_a" sub="evulgatio" a="*" ad="*">
+  <necessitudo nomen="edita_a" conversum="edit"
+      sub="evulgatio" a="*" ad="*">
     <definitio>Ab organizatione edita: versio, systema, editio
       (usus IV).</definitio>
     <glossa lingua="en">Published-by.</glossa>
@@ -317,7 +321,8 @@
 
   <!-- familia conformitas -->
 
-  <necessitudo nomen="normata_per" sub="conformitas" a="*" ad="*">
+  <necessitudo nomen="normata_per" conversum="normat"
+      sub="conformitas" a="*" ad="*">
     <definitio>Quod norma regitur: moneta, lingua, unitas
       mensurae (usus V).</definitio>
     <glossa lingua="en">Governed-by-a-norm.</glossa>
@@ -355,7 +360,8 @@
     <scriptio>dependet_ex</scriptio>
   </necessitudo>
 
-  <necessitudo nomen="adhibet" sub="dependentia" a="*" ad="*">
+  <necessitudo nomen="adhibet" conversum="adhibetur_ab"
+      sub="dependentia" a="*" ad="*">
     <definitio>Quod alio utitur in opere suo: programma
       bibliotheca, ritus corporalibus.</definitio>
     <glossa lingua="en">Uses / employs.</glossa>
@@ -438,7 +444,8 @@
     <glossa lingua="en">Exercises / is-exercised-by.</glossa>
   </necessitudo>
 
-  <necessitudo nomen="exsequitur" sub="exsecutio" a="*" ad="*">
+  <necessitudo nomen="exsequitur" conversum="exsecuta_a"
+      sub="exsecutio" a="*" ad="*">
     <definitio>Quod aliud ad effectum ducit: processorium
       architecturam, persona praescriptum.</definitio>
     <glossa lingua="en">Executes / carries-out.</glossa>
@@ -467,7 +474,8 @@
     <glossa lingua="en">Effects / is-effected-by.</glossa>
   </necessitudo>
 
-  <necessitudo nomen="afficit" sub="effectio" a="*" ad="*">
+  <necessitudo nomen="afficit" conversum="afficitur_a"
+      sub="effectio" a="*" ad="*">
     <definitio>Quod aliud tangit et mutat: morbus corpus,
       depravatio fabricationem (usus III).</definitio>
     <glossa lingua="en">Affects.</glossa>
@@ -505,7 +513,8 @@
 
   <!-- familia causalitas -->
 
-  <necessitudo nomen="causat" sub="causalitas" a="*" ad="*">
+  <necessitudo nomen="causat" conversum="causatur_a"
+      sub="causalitas" a="*" ad="*">
     <definitio>Quod aliud efficit aut ad esse adducit - spina
       iustificationis censuum (in dictionario semel, in
       documentis opifex).</definitio>
@@ -562,7 +571,8 @@
     <scriptio>custodita_per</scriptio>
   </necessitudo>
 
-  <necessitudo nomen="tenetur_a" sub="custodia" a="*" ad="*">
+  <necessitudo nomen="tenetur_a" conversum="tenet"
+      sub="custodia" a="*" ad="*">
     <definitio>Officium aut radix a persona vel organizatione
       tenta.</definitio>
     <glossa lingua="en">Held-by.</glossa>

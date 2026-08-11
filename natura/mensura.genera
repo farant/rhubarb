@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/mensura.genera
-  Exemplar semanticum: MENSURA (versio 2, PLASTICUM)
+  Exemplar semanticum: MENSURA (versio 3, PLASTICUM)
   Genera: quantitas, unitas_mensurae, magnitudo_mensurabilis.
 
   Natum ex experimento pistrinae: "500 grammata", "180 gradus",
@@ -20,7 +20,7 @@
   "quantitas" esse debeat, an ambitus proprietas CAMPI sit
   (vide schema), apertum manet.
 -->
-<natura modulus="mensura" versio="2" lingua="latina">
+<natura modulus="mensura" versio="3" lingua="latina">
 
 <!-- ========== NECESSITUDINES DOMESTICAE ==========
      Par quantitatis et incertitudinis suae: sub repraesentatione
@@ -450,7 +450,7 @@
 
   <relationes>
     <relatio nomen="calibratum_contra" ad="instrumentum_mensurae"
-      necessitudo="fundat"
+      necessitudo="fundatur_in"
       nota="CATENA TRACTUS (traceability): quodque instrumentum
             contra melius calibratur, illud contra melius, usque
             ad exemplar nationale et definitionem SI. Catena

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/iudicium.genera
-  Exemplar semanticum: IUDICIUM (versio 8, PLASTICUM)
+  Exemplar semanticum: IUDICIUM (versio 9, PLASTICUM)
 
   VERSIO 8 (2026-08-10): migratio necessitudinum - iudicium ipsum
   compagem accepit (definitio quattuor fines nominat: auctor, de,
@@ -53,7 +53,7 @@
   historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
   verificatis, et hoc dicere debet.
 -->
-<natura modulus="iudicium" versio="8" lingua="latina">
+<natura modulus="iudicium" versio="9" lingua="latina">
 
 <!-- ==================================================
      GRADUS ASSENSUS - quanto animus adhaeret
@@ -427,8 +427,7 @@
       ad="gradus_assensus"
       nota="RELATIO non electio: gradus res vera est cum
             definitione sua, non valor nudus in enumeratione"/>
-    <terminus munus="fundatur_in" necessitudo="fundat"
-      ad="observatio" multiplex="verum"
+    <terminus munus="fundatur_in" ad="observatio" multiplex="verum"
       nota="testimonia quibus nititur - umbra rotae XVI hic
             impleta"/>
   </termini>

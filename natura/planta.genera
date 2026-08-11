@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/planta.genera
-  Exemplar semanticum: PLANTA (versio 2, PLASTICUM)
+  Exemplar semanticum: PLANTA (versio 3, PLASTICUM)
   EXEMPLAR ALIENUM SECUNDUM, et maxime alienum: res VIVENTES,
   quibus nihil computatrale subest.
 
@@ -30,7 +30,7 @@
   CITAT. Praxis vera; et probatio quod citatio trans-modularis
   extra paroeciam nostram valet.
 -->
-<natura modulus="planta" versio="2" lingua="latina">
+<natura modulus="planta" versio="3" lingua="latina">
 
 <!-- v0->v1: planta sub VIVENTE collocata (subordinatio trans
      exemplaria, mechanismus rotae XVII): arbor una est,
@@ -137,7 +137,7 @@
             nomen SPECIEI auctorem habet, quod in nominibus
             computatralibus nemo praestat"/>
     <relatio nomen="nomen_publicatum_in" ad="opus_scriptum"
-      necessitudo="continet"
+      necessitudo="continetur_in"
       modulus="opus_scriptum"
       nota="citatio trans dominia aliena duo: Species Plantarum
             1753 principium iuridicum"/>

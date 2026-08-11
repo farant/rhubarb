@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/praescriptum.genera
-  Exemplar semanticum: PRAESCRIPTUM (versio 4, PLASTICUM)
+  Exemplar semanticum: PRAESCRIPTUM (versio 5, PLASTICUM)
   Genera: praescriptum, gradus_praescripti, versio_praescripti.
 
   Natum ex experimento pistrinae: recepta panis. Cognatum
@@ -19,7 +19,7 @@
   correspondentis fori, indices verificationis, ipsae normae
   huius bibliothecae in CLAUDE.md scriptae.
 -->
-<natura modulus="praescriptum" versio="4" lingua="latina">
+<natura modulus="praescriptum" versio="5" lingua="latina">
 
 <!-- ========== NECESSITUDINES DOMESTICAE ========== -->
 
@@ -222,7 +222,7 @@
       multiplex="verum"/>
     <relatio nomen="efficit" ad="artefactum" modulus="corporalia"/>
     <relatio nomen="publicatum_in" ad="opus_scriptum"
-      necessitudo="continet"
+      necessitudo="continetur_in"
       modulus="opus_scriptum"
       nota="liber coquinarius praescripta CONTINET - opus quod
             genus aliud continet, nexus trans exemplaria
@@ -376,7 +376,7 @@
             coinatum fuisset mendacium apertum: dimidium
             indicum aviatoriorum status confirmat"/>
     <relatio nomen="adhibetur_in" ad="ambitus" modulus="operatio"
-      necessitudo="adhibet"
+      necessitudo="adhibetur_ab"
       multiplex="verum"/>
   </relationes>
 

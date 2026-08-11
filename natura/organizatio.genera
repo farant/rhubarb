@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/organizatio.genera
-  Exemplar semanticum: ORGANIZATIO (versio 9, PLASTICUM)
+  Exemplar semanticum: ORGANIZATIO (versio 10, PLASTICUM)
 
   Genus a norma et persona POSTULATUM (editor normae organizatio
   est, non persona nec chorda). Sub-genera prima formae:
   corpus_normans, societas - arbor Porphyriana profunditatem
   accipit (attributum sub= + differentia in genere).
 -->
-<natura modulus="organizatio" versio="9" lingua="latina">
+<natura modulus="organizatio" versio="10" lingua="latina">
 
 <!-- FONTES (mechanismus rotae XVI) -->
 <fontes>
@@ -557,7 +557,8 @@
       nota="quos actus sollemnes tenens ponere possit -
             notarius instrumentum publicum, episcopus
             ordinationem. CAPACITAS ab officio, non a peritia"/>
-    <relatio nomen="subest" ad="officium" necessitudo="administrat"
+    <relatio nomen="subest" ad="officium"
+      necessitudo="administrata_a"
       nota="ordo officiorum - hierarchia in officiis vivit,
             non in personis: qui subest OFFICIO subest, non
             homini"/>
@@ -664,7 +665,7 @@
     du commandement.</glossa>
 
   <relationes>
-    <relatio nomen="edit" ad="norma" necessitudo="edita_a" modulus="norma"
+    <relatio nomen="edit" ad="norma" modulus="norma"
       multiplex="verum"/>
   </relationes>
 

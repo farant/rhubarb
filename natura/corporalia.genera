@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/corporalia.genera
-  Exemplar semanticum: CORPORALIA (versio 4, PLASTICUM)
+  Exemplar semanticum: CORPORALIA (versio 5, PLASTICUM)
   Genera: res_corporea, artefactum, materia, instrumentum,
   vivens.
 
@@ -38,7 +38,7 @@
   ad sigillum contenti accedit (forma sola), artefactum ad
   baptismum.
 -->
-<natura modulus="corporalia" versio="4" lingua="latina">
+<natura modulus="corporalia" versio="5" lingua="latina">
 
 <!-- ========== NECESSITUDINES DOMESTICAE ========== -->
 
@@ -422,7 +422,7 @@
   <relationes>
     <relatio nomen="affligit" ad="res_corporea"
       necessitudo="afficit"/>
-    <relatio nomen="illatum_per" ad="*" necessitudo="causat"
+    <relatio nomen="illatum_per" ad="*" necessitudo="causatur_a"
       nota="causa: vis, casus, neglegentia, alius homo - et
             si per hominem, OBLIGATIO oritur ex delicto
             (obligatio.obligatio_ex_delicto): unde damnum et
@@ -518,7 +518,7 @@
       nota="viventia sola sui similia gignunt - artefacta
             fabricantur, viventia generantur"/>
     <relatio nomen="laborat" ad="morbus" modulus="morbus"
-      necessitudo="afficit"
+      necessitudo="afficitur_a"
       multiplex="verum"
       nota="MORBUS SOLIS VIVENTIBUS ACCIDIT: aegrotare potest
             quod naturam habet ad quam mensuratur; saxum

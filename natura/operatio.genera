@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/operatio.genera
-  Exemplar semanticum: OPERATIO (versio 2, PLASTICUM)
+  Exemplar semanticum: OPERATIO (versio 3, PLASTICUM)
   Genera: ambitus, pensum, incidens.
 
   Natum ex cursu quinto circuli (praefectus operis / devops).
@@ -15,7 +15,7 @@
   "ruina tertii Martii"); ordo prioritatis non transit -
   ordinatio est, non res.
 -->
-<natura modulus="operatio" versio="2" lingua="latina">
+<natura modulus="operatio" versio="3" lingua="latina">
 
 <!-- ==================================================
      AMBITUS - ubi programma currit
@@ -238,7 +238,7 @@
             ex onere, ex defectu ferri oriri potest sine ullo
             vitio codicis"/>
     <relatio nomen="causa_eius" ad="causa" modulus="causa"
-      necessitudo="causat"
+      necessitudo="causatur_a"
       multiplex="verum"
       nota="MULTIPLEX consulto: 'causa radicalis' singularis
             fere semper simplificatio est (vide causa: necessaria
@@ -368,25 +368,24 @@
       nota="forma et instantia - gradus idem quo FRBR exemplar
             de editione (familia successionis)"/>
     <relatio nomen="genitus_a" ad="processus"
-      necessitudo="parit"
       nota="arbor processuum. Relatio in se ipsam, ut
             causa.pendet_ex - et hic quoque catena non sponte
-            desinit sed in radice sistitur (parit via conversa:
+            desinit sed in radice sistitur (genitus_a:
             parens filium gignit)"/>
     <relatio nomen="currit_in" ad="ambitus" necessitudo="intra"/>
     <relatio nomen="gerit" ad="status"
       modulus="elementa_programmatis" multiplex="verum"
       necessitudo="fert"
       nota="INVERSA eius quod tres status individui iam
-            declarabant (geritur_a - quae eandem necessitudinem
-            fert citat, via conversa). Vita status a vita
+            declarabant (geritur_a - quae conversam fertur_per
+            citat). Vita status a vita
             processus terminatur: quod 'ephemerum' in
             durabilitate status significat HIC mensuram suam
             invenit"/>
     <relatio nomen="tenet_apertam" ad="plagula_computatralis"
       modulus="plagula_computatralis" multiplex="verum"
-      necessitudo="tenetur_a"
-      nota="via recta: processus plagulam tenet"/>
+      necessitudo="tenet"
+      nota="conversum tenet: processus plagulam tenet"/>
   </relationes>
 
   <dubium>

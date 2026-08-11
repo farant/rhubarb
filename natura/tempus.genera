@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/tempus.genera
-  Exemplar semanticum: TEMPUS (versio 5, PLASTICUM)
+  Exemplar semanticum: TEMPUS (versio 6, PLASTICUM)
   Genera: momentum, intervallum, recurrentia, horarium,
   calendarium, reservatio.
 
@@ -63,7 +63,7 @@
   mensuram temporis (secundum, minutum) in exemplari mensurae
   invenies; hic de temporis STRUCTURA agitur, non de mensura.
 -->
-<natura modulus="tempus" versio="5" lingua="latina">
+<natura modulus="tempus" versio="6" lingua="latina">
 
 <!-- ==================================================
      MOMENTUM - punctum in tempore
@@ -405,7 +405,7 @@
       nota="organizatio, aedificium, persona - quod horario
             ordinatur"/>
     <relatio nomen="vinctum_per" ad="instrumentum"
-      necessitudo="administrat"
+      necessitudo="administrata_a"
       modulus="corporalia" multiplex="verum"
       nota="capacitas instrumenti horarium DETERMINAT: fornax
             duodecim panes simul - vinculum corporeum quod

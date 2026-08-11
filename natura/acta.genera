@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/acta.genera
-  Exemplar semanticum: ACTA (versio 4, PLASTICUM)
+  Exemplar semanticum: ACTA (versio 5, PLASTICUM)
 
   ABSENTIA STRUCTURALIS, exercitio modellationis inventa (rota
   XLIV): non circulus coverturae qui hiatus quaerit, sed subiectum
@@ -29,7 +29,7 @@
   silicis in TEMPORE non est sed in SERIE ('numquam timestamp',
   lex eius), et /tempus/momentum id ferre non potuit.
 -->
-<natura modulus="acta" versio="4" lingua="latina">
+<natura modulus="acta" versio="5" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -178,7 +178,7 @@
       nota="cuius rei acta sint - apertum consulto: quidlibet
             actis describi potest"/>
     <relatio nomen="plicatur_in" ad="proiectio"
-      necessitudo="fundat"
+      necessitudo="fundatur_in"
       modulus="elementa_programmatis" multiplex="verum"
       nota="plicatura proiectio est, et LICENTIAM DELENDI inde
             accipit. Voluminis nostri probatio hoc ipsum figit:
@@ -543,7 +543,7 @@
             Genus e registro civili natum vitium quod PKI telae
             per duo decennia fregit definitione sua dicit"/>
     <relatio nomen="ad_punctum" ad="punctum_actorum"
-      necessitudo="fundat"
+      necessitudo="fundatur_in"
       nota="qualis status actorum testetur - plerumque tacitum
             ('ut nunc stat'), sed explicitum fieri potest, et
             tunc attestatio superari NON potest quia punctum

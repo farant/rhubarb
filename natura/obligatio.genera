@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/obligatio.genera
-  Exemplar semanticum: OBLIGATIO (versio 9, PLASTICUM)
+  Exemplar semanticum: OBLIGATIO (versio 10, PLASTICUM)
   Genera: obligatio, contractus, licentia.
 
   VERSIO 9 (2026-08-10): migratio necessitudinum - fines
@@ -26,7 +26,7 @@
   datur, revocari potest, expirat. Non idem genus - quod
   schemata vulgaria confundunt.
 -->
-<natura modulus="obligatio" versio="9" lingua="latina">
+<natura modulus="obligatio" versio="10" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -609,13 +609,14 @@
     <terminus munus="iubens" necessitudo="participatio" ad="*"
       nota="persona aut organizatio - sed non quaelibet: vide
             terminum potestatis infra"/>
-    <terminus munus="potestate" necessitudo="fundat" ad="titulus"
+    <terminus munus="potestate" necessitudo="fundatur_in"
+      ad="titulus"
       nota="QUA AUCTORITATE iubeat. Iussum sine potestate
             IRRITUM est, non malum - unde titulus (licentia
             medici, officium iudicis) pars validitatis, non
             ornamentum. Finis constitutivus non-personalis:
             fundamentum (iussum in titulo fundatur -
-            necessitudo fundat, via conversa)"/>
+            necessitudo fundatur_in)"/>
     <terminus munus="exsecutor" necessitudo="participatio" ad="*"
       nota="cui exsequendum - saepe non idem ac beneficiarius:
             medicus iubet, pharmacopola exsequitur, aeger
@@ -1279,13 +1280,13 @@
   </termini>
   <relationes>
     <relatio nomen="signatus_per" ad="delegatio" multiplex="verum"
-      necessitudo="fundat"
+      necessitudo="fundatur_in"
       nota="plenae potestates quibus signatum est - validitas
-            signationis in his fundatur (via conversa, ut
+            signationis in his fundatur (fundatur_in, ut
             iussum.potestate)"/>
     <relatio nomen="limitatus_per" ad="limitatio" multiplex="verum"
-      necessitudo="afficit"
-      nota="via conversa: limitatio effectum tractatus afficit"/>
+      necessitudo="afficitur_a"
+      nota="afficitur_a: limitatio effectum tractatus afficit"/>
     <relatio nomen="ad_vigorem_per" ad="quorum" modulus="actus"
       necessitudo="conformitas"
       nota="vigor postulato quori impleto venit"/>

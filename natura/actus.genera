@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/actus.genera
-  Exemplar semanticum: ACTUS SOLLEMNIS (versio 2, PLASTICUM)
+  Exemplar semanticum: ACTUS SOLLEMNIS (versio 3, PLASTICUM)
   Genera: actus_sollemnis, ritus (+sacramentum, sacramentale),
   actus_iuridicus.
 
@@ -45,7 +45,7 @@
   Searle de regulis constitutivis ("X pro Y valet in C") idem
   quod nos de generibus institutis dicimus, aliis verbis.
 -->
-<natura modulus="actus" versio="2" lingua="latina">
+<natura modulus="actus" versio="3" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -140,13 +140,13 @@
     <terminus munus="agens" necessitudo="participatio"
       ad="persona" modulus="persona"
       nota="qui actum ponit - non quilibet"/>
-    <terminus munus="capacitas_per" necessitudo="fundat" ad="*"
+    <terminus munus="capacitas_per" necessitudo="fundatur_in"
+      ad="*"
       nota="unde agenti potestas: officium, titulus, character,
             licentia. CAPACITAS non PERITIA - vide caput.
-            Fundamentum validitatis, via conversa (ut
+            Fundamentum validitatis (fundatur_in, ut
             iussum.potestate)"/>
-    <terminus munus="constituit" necessitudo="constituta_per"
-      ad="*"
+    <terminus munus="constituit" ad="*"
       nota="RELATIO CARDINALIS HUIUS EXEMPLARIS: factum
             institutum quod actus in esse ponit - officium,
             titulum, obligationem, possessionem, matrimonium.
@@ -605,9 +605,9 @@
             dominium ferre debet, et angustare ad organizationem
             id ipsum amitteret propter quod aedificatum est"/>
     <relatio nomen="condicio_actus" ad="actus_sollemnis"
-      multiplex="verum" necessitudo="implet"
+      multiplex="verum" necessitudo="impletur_a"
       nota="quos actus validos faciat - postulatum quod actus
-            implere debet (implet via conversa)"/>
+            implere debet (impletur_a)"/>
     <relatio nomen="statutum_per" ad="norma" modulus="norma"
       necessitudo="constituta_per"
       nota="quorum plerumque scribitur, non ex natura fluit -

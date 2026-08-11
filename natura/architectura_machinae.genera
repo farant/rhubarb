@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/architectura_machinae.genera
-  Exemplar semanticum: ARCHITECTURA MACHINAE (versio 3, PLASTICUM)
+  Exemplar semanticum: ARCHITECTURA MACHINAE (versio 4, PLASTICUM)
 
   Distinctio eadem ac lingua/implementatio, gradu ferri:
   architectura FORMA est (copia instructionum quam programma
@@ -14,7 +14,7 @@
   transiit) - proprietates ad subiectum verum labuntur, sicut
   "compilata" ad implementationem lapsa est.
 -->
-<natura modulus="architectura_machinae" versio="3" lingua="latina">
+<natura modulus="architectura_machinae" versio="4" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -71,7 +71,6 @@
             raro a personis solis"/>
     <relatio nomen="habet_versionem" ad="versio_architecturae"/>
     <relatio nomen="exsecuta_a" ad="processorium"
-      necessitudo="exsequitur"
       nota="umbra 'chip' rota XLV impleta - et renominata:
             processorium exemplar PRODUCTI est (8086, M1), non
             assula singula physica. Vide differentiam eius"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/vectura.genera
-  Exemplar semanticum: VECTURA (versio 1, PLASTICUM)
+  Exemplar semanticum: VECTURA (versio 2, PLASTICUM)
   Genera: iter, via, vehiculum, onus.
 
   Natum ex cursu tertio circuli (redemptor onerum), electo
@@ -20,7 +20,7 @@
   (via Appia, canalis Suesianus - res quae describi possunt
   nemine vehente).
 -->
-<natura modulus="vectura" versio="1" lingua="latina">
+<natura modulus="vectura" versio="2" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -95,8 +95,9 @@
       multiplex="verum"
       nota="iter unum vias plures adhibere potest - unde
             transitus onerum de vehiculo in vehiculum"/>
-    <terminus munus="vehitur" necessitudo="fert" ad="vehiculum"
-      nota="via conversa: vehiculum iter secum portat"/>
+    <terminus munus="vehitur" necessitudo="fertur_per"
+      ad="vehiculum"
+      nota="fertur_per: vehiculum iter secum portat"/>
     <terminus munus="fert" ad="onus" multiplex="verum"/>
     <terminus munus="suscipitur_a" necessitudo="participatio"
       ad="persona" modulus="persona"
@@ -242,7 +243,7 @@
       nota="vehiculum viae suae ligatum est - unde
             transbordatio, unde portus: loca ubi viae mutantur"/>
     <relatio nomen="regitur_a" ad="persona" modulus="persona"
-      necessitudo="exercet"
+      necessitudo="exercetur_a"
       nota="rector - cuius licentia (obligatio.licentia)
             postulatur, et cuius horae normis reguntur"/>
   </relationes>
@@ -341,7 +342,7 @@
             Unde charta negotiabilis (commercium), quae dominium
             transfert dum res in nave manet"/>
     <relatio nomen="passum" ad="damnum" modulus="corporalia"
-      necessitudo="afficit"
+      necessitudo="afficitur_a"
       multiplex="verum"/>
   </relationes>
 

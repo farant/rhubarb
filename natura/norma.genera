@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/norma.genera
-  Exemplar semanticum: NORMA (versio 5, PLASTICUM)
+  Exemplar semanticum: NORMA (versio 6, PLASTICUM)
 
   Genus a Frane petitum: norma res est, non chorda - editorem,
   diem, statum, successionem habet. Normae se invicem SUBSTITUUNT:
   catena temporalis (stratum historicum in relationibus ipsis).
 -->
-<natura modulus="norma" versio="5" lingua="latina">
+<natura modulus="norma" versio="6" lingua="latina">
 
 <.genus nomen="norma">
 
@@ -68,7 +68,6 @@
     <relatio nomen="substituit" ad="norma"
       nota="catena successionis - historia in relationibus"/>
     <relatio nomen="normat" ad="*"
-      necessitudo="normata_per"
       nota="rem normatam cuiusvis generis - linguam, protocollum,
             formam plagulae"/>
   </relationes>

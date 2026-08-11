@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/communicatio.genera
-  Exemplar semanticum: COMMUNICATIO (versio 3, PLASTICUM)
+  Exemplar semanticum: COMMUNICATIO (versio 4, PLASTICUM)
   Genera: actor, nuntius, eventum.
 
   Natum ex confrontatione cum lib/actor.c - prima collisio
@@ -21,7 +21,7 @@
   (destinatarius ei debetur), eventum NON (accidit coram
   omnibus, quivis observans videt). Directum contra sparsum.
 -->
-<natura modulus="communicatio" versio="3" lingua="latina">
+<natura modulus="communicatio" versio="4" lingua="latina">
 
 <!-- ==================================================
      ACTOR - ens quod solum per nuntios communicat
@@ -59,7 +59,7 @@
       nota="status PRIVATUS: nemo alius eum legit nec mutat -
             hoc ipsum exemplar actorum definit"/>
     <relatio nomen="capsa_eius" ad="cauda"
-      necessitudo="tenetur_a"
+      necessitudo="tenet"
       modulus="formae_datorum"
       nota="canalis declaratus unicus quo alii statum eius
             movent - capsa actori quod parametra functioni"/>
@@ -184,7 +184,7 @@
 
   <relationes>
     <relatio nomen="observatur_ab" ad="actor"
-      necessitudo="legit" multiplex="verum"
+      necessitudo="legitur_a" multiplex="verum"
       nota="observantes se subscribunt; res gesta eos non
             novit - hoc eam a nuntio distinguit"/>
   </relationes>
