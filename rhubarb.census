@@ -318,6 +318,11 @@
   <norma nomen="&norma-vexillorum;" titulus="vexilla compilationis"
     status-vigor="vigens" proprium="&c;"
     contentum="clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -Wno-long-long -Wno-overlength-strings -fbracket-depth=512">
+    <glossa lingua="en">The house compilation flags: strict C89
+      with every warning a hard error - fourteen flags. The true
+      source is compile_tests.sh; an earlier index carried ten
+      from memory with -std=c89 itself missing, and the first
+      regeneration stranger caught it.</glossa>
     <nota>Fons verus: compile_tests.sh GCC_FLAGS. ADVENA I
       (regeneratio prima) defectum invenit: index prior X vexilla
       ex memoria ferebat, re vera XIV - et -std=c89 IPSUM aberat,
@@ -328,6 +333,11 @@
   <norma nomen="&norma-latinitatis;" titulus="latinitas nominum"
     status-vigor="vigens"
     contentum="Identificatores, commenta, nuntii Latine; verba technica singula (offset...) intacta licent. Verba latina.h identificatores VETITI (nomen, casus, per, magnitudo, structura...) - mechanismus in pacto latinitatis fontis.">
+    <glossa lingua="en">Identifiers, comments, and messages in
+      Latin; isolated technical terms (offset...) may stand
+      untranslated. The latina.h macro words are FORBIDDEN as
+      identifiers - the mechanism lives in the source-Latinity
+      covenant.</glossa>
     <nota>Duos fines habet (superdeterminata: RM 18) - vide
       spinam. VOCABULARIUM RESERVATUM praeter latina.h: verba
       par.3/4 METAMODULI in dominio naturae (genus, species,
@@ -341,6 +351,11 @@
     titulus="plagulae Franis ab agente numquam tanguntur"
     status-vigor="vigens"
     contentum="FAQ.md, gesta/annales/forum.jsonl, gesta/annales/tabula.md, gesta/annales/tabularium.jsonl: Fran solus eas addit et committit; agens numquam ('git add -A' vetitum, additio explicita per viam). Plagulae ipsae COMMITTUNTUR - annales veritas committenda est. Vetitum de AGENTE est, non de plagulis.">
+    <glossa lingua="en">Fran's staging files (FAQ.md, the
+      annales): Fran alone stages and commits them, the agent
+      never does - git add -A is forbidden, staging is explicit by
+      path. The files themselves ARE committed: the prohibition is
+      about the AGENT, not the files.</glossa>
     <nota>ADVENA I contradictionem invenit: titulus prior 'numquam
       committuntur' cum annalibus 'VERITAS committenda' pugnabat -
       reaedificator disciplinam git sorte dimidia male fecisset.
@@ -349,7 +364,13 @@
 
   <norma nomen="&metamodulus;" titulus="METAMODULUS - forma naturae"
     status-vigor="vigens" normat="&natura;"
-    contentum="Forma exemplarium naturae: par.8 contractus lectoris (regulae XVII), par.9 doctrina. Tabula par.3 GENERATA - natura.canon fons, numquam tabula ipsa editur."/>
+    contentum="Forma exemplarium naturae: par.8 contractus lectoris (regulae XVII), par.9 doctrina. Tabula par.3 GENERATA - natura.canon fons, numquam tabula ipsa editur.">
+    <glossa lingua="en">The METAMODULUS, the form of natura's
+      models: its section 8 is the loader's contract (the
+      seventeen rules), section 9 the doctrine at a glance. The
+      section 3 table is GENERATED - natura.canon is the source,
+      the table itself is never edited.</glossa>
+  </norma>
 
   <!-- ============ PACTA (foedera consilii) ============
        Forma artefactorum quam implementatio QUAEVIS honorare
@@ -613,57 +634,98 @@
   <praeceptum nomen="&praeceptum-realitatis;" pertinet-ad="&ars-naturae;"
     contentum="Nomen condere ONTOLOGICUM est, non pragmaticum: quaere 'estne res vera?', numquam 'quid hoc nobis praestat?'"
     tendit-ad="&intellectus;">
+    <glossa lingua="en">Minting a name is an ONTOLOGICAL act, not
+      a pragmatic one: ask "is this a real thing?", never "what
+      does this buy us?"</glossa>
     <natum-ex ad="&norma-pieper;"/>
   </praeceptum>
 
   <praeceptum nomen="&praeceptum-dividendi;" pertinet-ad="&ars-naturae;"
     contentum="Dubitans DIVIDE: duo genera falsa emendari possunt, unum genus duas res confundens non potest."
-    tendit-ad="&intellectus;"/>
+    tendit-ad="&intellectus;">
+    <glossa lingua="en">When in doubt, SPLIT: two wrong kinds can
+      be mended later; one kind confusing two things
+      cannot.</glossa>
+  </praeceptum>
 
   <praeceptum nomen="&praeceptum-addressabilitatis;"
     pertinet-ad="&ars-naturae;"
     contentum="Quidquid individua habet quae ID suo alloquereris genus meretur. Relationes ID non accipiunt - relata accipiunt."
     tendit-ad="&intellectus;">
+    <glossa lingua="en">Whatever has individuals you would address
+      by their own ID deserves a kind. Relations get no IDs - the
+      things they relate do.</glossa>
     <nota>Franis praeceptum; omnem refusionem priorem reddit.</nota>
   </praeceptum>
 
   <praeceptum nomen="&praeceptum-legis-secundae;"
     pertinet-ad="&ars-naturae;"
     contentum="Una occurrentia observatio est, duae lex: ne condas ex uno casu, ne differas post duos."
-    tendit-ad="&intellectus;"/>
+    tendit-ad="&intellectus;">
+    <glossa lingua="en">One occurrence is an observation, two are
+      a law: never mint from a single case, never postpone past
+      two.</glossa>
+  </praeceptum>
 
   <praeceptum nomen="&praeceptum-ambulandi;" pertinet-ad="&ars-naturae;"
     contentum="Candidatos parca, deinde AMBULA: quod sola cogitatione superest probatum non est."
     tendit-ad="&intellectus;">
+    <glossa lingua="en">Park the candidates, then WALK: what
+      survives by thinking alone has not been tested.</glossa>
     <natum-ex ad="&casus-actionis-mortuae;"/>
   </praeceptum>
 
   <praeceptum nomen="&praeceptum-collisionis;" pertinet-ad="&ars-naturae;"
     contentum="Nomina ANTE ambulationem collide: qui post scriptionem probat cum nomine iam amato litigat."
     tendit-ad="&intellectus;">
+    <glossa lingua="en">Collide names BEFORE the walk: whoever
+      checks after writing is already litigating against a name
+      they love.</glossa>
     <natum-ex ad="&casus-truncationis;"/>
   </praeceptum>
 
   <praeceptum nomen="&praeceptum-dimensionum;" pertinet-ad="&ars-naturae;"
     contentum="Dimensiones ante nomina: divisiones LOCALES sunt, mutationes metamoduli GLOBALES."
-    tendit-ad="&perennitas;"/>
+    tendit-ad="&perennitas;">
+    <glossa lingua="en">Dimensions before names: a new subdivision
+      touches one model, a metamodel change touches them
+      all.</glossa>
+  </praeceptum>
 
   <praeceptum nomen="&praeceptum-absentiae-structuralis;"
     pertinet-ad="&ars-naturae;"
     contentum="Plura specialia, nullum generale = absentia structuralis. Quater solutum (programma, acta, versio, fundamentum); ad duas occurrentias RECTE recusatum."
-    tendit-ad="&intellectus;"/>
+    tendit-ad="&intellectus;">
+    <glossa lingua="en">Many specifics with no general above them
+      = a structural absence. Solved four times over (programma,
+      acta, versio, fundamentum) - and rightly refused when the
+      occurrences were only two.</glossa>
+  </praeceptum>
 
   <praeceptum nomen="&praeceptum-adiungendi;" pertinet-ad="&ars-naturae;"
     contentum="Noli promovere, ADIUNGE: res quae sub-res acquirit genus FRATREM cum relatione meretur, non promotionem. Probatio: praedicatur de eo, an tantum ad eum refertur?"
-    tendit-ad="&intellectus;"/>
+    tendit-ad="&intellectus;">
+    <glossa lingua="en">Do not promote, ADJOIN: a thing that
+      acquires sub-things deserves a SIBLING kind with a relation,
+      not a promotion. The test: is it predicated OF the thing, or
+      merely referred to it?</glossa>
+  </praeceptum>
 
   <praeceptum nomen="&praeceptum-refusionis;" pertinet-ad="&ars-naturae;"
     contentum="Cum recusas, SCRIBE CONDICIONEM quae sententiam vertat: refusio cum condicione sua mandatum stans est, non via clausa."
-    tendit-ad="&intellectus;"/>
+    tendit-ad="&intellectus;">
+    <glossa lingua="en">When you refuse, WRITE THE CONDITION that
+      would reverse the verdict: a refusal carrying its own
+      condition is a standing instruction, not a closed
+      road.</glossa>
+  </praeceptum>
 
   <norma nomen="&norma-pieper;" titulus="Pieper: res ut sunt"
     status-vigor="vigens" ex-fonte="&josef_pieper;"
     contentum="Describe res SICUT SUNT. Schema ad usum unum factum adulatio est et in casu N+1 frangitur.">
+    <glossa lingua="en">Describe things AS THEY ARE. A schema
+      built for a single use is flattery, and it breaks on case
+      N+1.</glossa>
     <nota>Fons persona in bibliotheca vivit (persona.genera) -
       ambulatio realista auctoritates e prosa in arcus vertit:
       provenientia, non veritas (ex fonte).</nota>
