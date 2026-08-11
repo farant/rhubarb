@@ -443,6 +443,16 @@
       corpus's first measured converse pair.</glossa>
   </necessitudo>
 
+  <necessitudo nomen="realizata_a" sub="effectio" a="*" ad="*">
+    <definitio>Intentio quae per elementa concreta efficitur:
+      facultas per functiones, forma per implementationes.
+      Duobus exemplaribus adhibita (fabricatio,
+      formae_datorum) - regula duorum impleta.</definitio>
+    <glossa lingua="en">Realized-by: an intention effected by
+      concrete elements. Two models used the name before it was
+      declared.</glossa>
+  </necessitudo>
+
   <!-- familia causalitas -->
 
   <necessitudo nomen="causat" sub="causalitas" a="*" ad="*">

@@ -5540,3 +5540,43 @@ cooked canon byte-identical.
 - Singleton domain words CITE (family or workhorse); nothing was
   newly declared — rule of two held, zero additions to
   necessitudines.genera.
+
+## 2026-08-10 — fabricatio burn-down: the first declarations
+
+fabricatio 19 soluta → 0 (global 231 → 212), monita 31 → 30 —
+TWO monita died because one declaration served two models.
+
+Unlike obligatio (pure binding), fabricatio needed THREE
+declarations — each earned under the rule of two:
+- `realizata_a` sub=effectio in the CORE module: fabricatio and
+  formae_datorum both used the name; one declaration bound both
+  sites and killed both monita. First core addition since the
+  migration shipped.
+- `interrogat`/`interrogatur_a` and `retractat`/`retractatur_a`
+  as DOMAIN declarations in fabricatio.genera itself (the
+  quadratum's own verbs, both sites local): each pair had two
+  sites in the old `inversa="verum"` + `a=` form — the exact
+  wound-shape conversum= exists to heal (pollinat precedent).
+  Sites untouched; declaration alone bound both directions.
+  TRAP: a domain necessitudo citing a core family via sub= needs
+  `modulus="necessitudines"` — bare sub= looks only in-module
+  (rule IV vulnus, hook caught it mid-batch).
+- interventio got a frame (it IS an actus — the file's only
+  true one): termini(in_rem→obiectum_actus, agens→participatio).
+  Its frame slots were interleaved with non-frame ones, so the
+  cooked canon REORDERED (agens before propter) — first
+  non-byte-identical migration, deliberately accepted: the diff
+  is two attribute lines swapping, licentia/cardinality are
+  name-keyed, -probare chain stayed 0.
+
+Citation pattern extended: the epistemic-manifestation cluster
+(aperitur_in, detecta_per, prodita_per) all cite the fundatio
+FAMILY ("per quod probetur" covers detection/betrayal/opening);
+inherence-in-substrate (habitat_in, inhaeret) cites situs
+("ubi res sedeat, habitet" — figurative place is still place);
+solvitur_per/exsequitur_per cite exsecutio; ordinat cites
+administrat (its definitio literally contains "ordinat");
+ad_postulata cites tendit_ad (proposal, not yet fulfilment);
+emit cites causat (the trade brought the capability to be);
+propter cites natum_ex (the forcing case); acta_sua cites
+repraesentatio.

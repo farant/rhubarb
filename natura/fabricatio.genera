@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/fabricatio.genera
-  Exemplar semanticum: FABRICATIO (versio 7, PLASTICUM)
+  Exemplar semanticum: FABRICATIO (versio 8, PLASTICUM)
   Genera: postulatum, facultas, probatio, vitium.
+
+  VERSIO 8 (2026-08-10): migratio necessitudinum - paria conversa
+  quadrati (interrogat/interrogatur_a, retractat/retractatur_a)
+  declarata (vulnus 'inversa=' sanatum), interventio compagem
+  accepit (actus verus), relationes ceterae necessitudine citata
+  ligatae. Sedes solutae 19 -> 0.
 
   QUADRATUM INTENTIONIS: postulatum intentionem DECLARAT ante
   opus; facultas intentio POSSESSA est; probatio realizationem
@@ -15,7 +21,31 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="7" lingua="latina">
+<natura modulus="fabricatio" versio="8" lingua="latina">
+
+<!-- ========== NECESSITUDINES DOMESTICAE ==========
+     Paria conversa quadrati intentionis: sedes antiquae formam
+     'inversa=verum' ferebant (vulnus quod migratio necessitudinum
+     sanat - praecedens fabricatum_in/coquitur); declaratione una
+     ambae directiones titulo ligant, sedibus intactis. -->
+
+<necessitudo nomen="interrogat" conversum="interrogatur_a"
+    sub="fundatio" modulus="necessitudines" a="*" ad="*">
+  <definitio>Probatio quae postulatum interrogat; conversa via,
+    postulatum quod a probatione interrogatur. Verbum proprium
+    quadrati intentionis.</definitio>
+  <glossa lingua="en">Interrogates / is-interrogated-by - the
+    intention square's own verb.</glossa>
+</necessitudo>
+
+<necessitudo nomen="retractat" conversum="retractatur_a"
+    sub="effectio" modulus="necessitudines" a="*" ad="*">
+  <definitio>Complicatio quae consilium retractare cogit;
+    conversa via, consilium a complicatione retractatum. Relatio
+    propter quam genus complicationis natum est.</definitio>
+  <glossa lingua="en">Forces-withdrawal-of / is-withdrawn-by -
+    the relation the complicatio genus was born for.</glossa>
+</necessitudo>
 
 <!-- ==================================================
      POSTULATUM - intentio declarata ante opus
@@ -106,7 +136,9 @@
     <relatio nomen="implet" ad="postulatum" multiplex="verum"/>
     <relatio nomen="realizata_a" ad="*" multiplex="verum"
       nota="functiones, bibliothecae, elementa quae eam
-            efficiunt - facultas una, elementa multa"/>
+            efficiunt - facultas una, elementa multa (necessitudo
+            in modulo cardinis declarata: formae_datorum eadem
+            voce utitur)"/>
   </relationes>
 
 </.genus>
@@ -291,9 +323,10 @@
 
   <relationes>
     <relatio nomen="violat" ad="postulatum"/>
-    <relatio nomen="habitat_in" ad="*"
+    <relatio nomen="habitat_in" ad="*" necessitudo="situs"
       nota="functio, bibliotheca, sutura - sedes eius in
-            elementis"/>
+            elementis (familia situs: 'ubi res sedeat,
+            habitet')"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->
@@ -401,14 +434,17 @@
             affirmatio est cum auctore, momento, gradu assensus -
             non proprietas ex inspectione lecta. Duo periti
             dissentire possunt, nec alter ideo errat"/>
-    <relatio nomen="inhaeret" ad="*"
+    <relatio nomen="inhaeret" ad="*" necessitudo="situs"
       nota="cui parti operis - bibliothecae, functioni, schemati"/>
     <relatio nomen="emit" ad="facultas" multiplex="verum"
+      necessitudo="causat"
       nota="QUID PRETIO EMPTUM SIT: debitum sine facultate
             empta debitum non est sed damnum purum. Relatio
-            quae iudicium honestum facit"/>
+            quae iudicium honestum facit (commutatio facultatem
+            ad esse adduxit - causat)"/>
     <relatio nomen="solvitur_per" ad="pensum" modulus="operatio"
-      multiplex="verum"/>
+      multiplex="verum" necessitudo="exsecutio"
+      nota="opus quod solutionem exsequitur"/>
   </relationes>
 
 </.genus>
@@ -499,7 +535,9 @@
 
   <relationes>
     <relatio nomen="aperitur_in" ad="pensum" modulus="operatio"
-      nota="dum opus agitur, non dum cogitatur"/>
+      necessitudo="fundatio"
+      nota="dum opus agitur, non dum cogitatur - manifestatio
+            epistemica: opus eam prodit"/>
     <relatio nomen="retractat" ad="consilium"
       nota="descriptum rota XLV - umbra contra quam hoc genus
             se definiebat impleta (idem motus quo programma
@@ -630,18 +668,19 @@
 
   <relationes>
     <relatio nomen="ordinat" ad="pensum" modulus="operatio"
-      multiplex="verum"
+      multiplex="verum" necessitudo="administrat"
       nota="opera quae proponit - pensum susceptum consilio
-            respondet"/>
+            respondet (administrat: 'gubernat et ordinat')"/>
     <relatio nomen="ad_postulata" ad="postulatum"
-      multiplex="verum"
-      nota="quae implere proponit"/>
+      multiplex="verum" necessitudo="tendit_ad"
+      nota="quae implere proponit - ordinatio ad finem, nondum
+            impletio"/>
     <relatio nomen="retractatur_a" a="complicatio"
       inversa="verum"
       nota="impletur a complicatio.retractat - relatio propter
             quam genus natum est"/>
     <relatio nomen="exsequitur_per" ad="iussum" modulus="obligatio"
-      multiplex="verum"
+      multiplex="verum" necessitudo="exsecutio"
       nota="NEXUS ROTA L INVENTUS, per collationem quattuor
             generum directivorum (postulatum/praescriptum/
             consilium/iussum) quae numquam simul collata erant.
@@ -806,14 +845,15 @@
             corruptus) sine ullo vitio - unde relatio, non
             subordinatio"/>
     <relatio nomen="prodita_per" ad="incidens" modulus="operatio"
-      multiplex="verum"
+      multiplex="verum" necessitudo="fundatio"
       nota="incidens quo apparuit. VIA ORDINARIA ET SERA: res
             prava per menses tacet donec aliquid frangat"/>
     <relatio nomen="afficit" ad="*" multiplex="verum"/>
     <relatio nomen="detecta_per" ad="probatio"
+      necessitudo="fundatio"
       nota="probatio quae eam invenit - probationes quae DATA
             examinant (non codicem) hic solae valent, et rarae
-            sunt"/>
+            sunt (familia fundationis: 'per quod probetur')"/>
   </relationes>
 
   <nota>
@@ -941,13 +981,21 @@
     <transitus a="perfecta" ad="revocata" per="revocatio"/>
   </machina_statuum>
 
+  <termini>
+    <nota>compages actus veri (interventio ACTUS est - definitio
+      ipsa dicit): agens et res constituunt. Ordo mutatus (agens
+      post propter stabat) - canon coctus hic reordinatur,
+      semanticum idem.</nota>
+    <terminus munus="in_rem" necessitudo="obiectum_actus"
+      ad="*"/>
+    <terminus munus="agens" necessitudo="participatio" ad="*"/>
+  </termini>
   <relationes>
-    <relatio nomen="in_rem" ad="*"/>
-    <relatio nomen="propter" ad="*"
+    <relatio nomen="propter" ad="*" necessitudo="natum_ex"
       nota="quid eam poposcerit - depravatio, damnum, vitium,
-            morbus, aut simplex vetustas"/>
-    <relatio nomen="agens" ad="*"/>
+            morbus, aut simplex vetustas (casus cogens)"/>
     <relatio nomen="acta_sua" ad="acta" modulus="acta"
+      necessitudo="repraesentatio"
       nota="acta interventionum rei adhaerent et rem superstant"/>
   </relationes>
 

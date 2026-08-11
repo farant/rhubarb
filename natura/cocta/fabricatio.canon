@@ -514,8 +514,8 @@
       <optio>revocata</optio>
     </attributum>
     <attributum nomen="in-rem" genus="referentia"/>
-    <attributum nomen="propter" genus="referentia"/>
     <attributum nomen="agens" genus="referentia"/>
+    <attributum nomen="propter" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
@@ -537,8 +537,8 @@
       <optio>revocata</optio>
     </attributum>
     <attributum nomen="in-rem" genus="referentia"/>
-    <attributum nomen="propter" genus="referentia"/>
     <attributum nomen="agens" genus="referentia"/>
+    <attributum nomen="propter" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
@@ -560,8 +560,8 @@
       <optio>revocata</optio>
     </attributum>
     <attributum nomen="in-rem" genus="referentia"/>
-    <attributum nomen="propter" genus="referentia"/>
     <attributum nomen="agens" genus="referentia"/>
+    <attributum nomen="propter" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
@@ -583,8 +583,8 @@
       <optio>revocata</optio>
     </attributum>
     <attributum nomen="in-rem" genus="referentia"/>
-    <attributum nomen="propter" genus="referentia"/>
     <attributum nomen="agens" genus="referentia"/>
+    <attributum nomen="propter" genus="referentia"/>
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
