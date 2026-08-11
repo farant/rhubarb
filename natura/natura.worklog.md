@@ -5792,3 +5792,27 @@ for that word-shape); factum_a → origo bare (making without
 answerability, the scriba pattern); factum_per → exsecutio;
 illatum_per → causat via converse; praevisum_ut → fundatio (the
 periculum was the forward-looking judgment the damnum realized).
+
+## 2026-08-10 — praescriptum + acta burn-down
+
+9 + 9 → 0 (global 104 → 86, ligata 346 = 80%), monita 20,
+necessitudines 81, canons byte-identical, both versio 3 → 4.
+
+praescriptum: gradus_eius/gradus_de declared (old inversa= pair,
+steps as ordered parts sub=pars_totum); porta_humana →
+participatio (the human gate is a ROLE in the automated
+procedure); postulat → dependentia family; publicatum_in →
+continet via converse (the cookbook contains the recipe);
+adhibetur_in → adhibet converse; agit_in → intra (third
+runs-in-environment site, all intra).
+
+acta: the DOCTRINE SYMMETRY closed — plicatur_in (the log folds
+into projections) cites fundat FORWARD, meeting veritas_sua's
+converse citation from elementa_programmatis: veritas/proiectio
+now rides one declared identity from both ends. The attestation
+chain is fundat-shaped throughout: testatur (one attestation
+grounds the next — the trust chain), ad_punctum (anchored at a
+log point), signata_per → fundatio. ex_actis → ex_fonte (the
+house fons/fundamentum distinction applied: "ex" is provenance);
+suscepta_per → constituta_per (fifth site for the shape);
+appenditur_a and positum_a → origo (the scriba pattern).

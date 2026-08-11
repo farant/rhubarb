@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/praescriptum.genera
-  Exemplar semanticum: PRAESCRIPTUM (versio 3, PLASTICUM)
+  Exemplar semanticum: PRAESCRIPTUM (versio 4, PLASTICUM)
   Genera: praescriptum, gradus_praescripti, versio_praescripti.
 
   Natum ex experimento pistrinae: recepta panis. Cognatum
@@ -19,7 +19,17 @@
   correspondentis fori, indices verificationis, ipsae normae
   huius bibliothecae in CLAUDE.md scriptae.
 -->
-<natura modulus="praescriptum" versio="3" lingua="latina">
+<natura modulus="praescriptum" versio="4" lingua="latina">
+
+<!-- ========== NECESSITUDINES DOMESTICAE ========== -->
+
+<necessitudo nomen="gradus_eius" conversum="gradus_de"
+    sub="pars_totum" modulus="necessitudines" a="*" ad="*">
+  <definitio>Procedura quae gradus suos habet; conversa via,
+    gradus procedurae. Partes ordinatae operis iterabilis.</definitio>
+  <glossa lingua="en">Has-steps / step-of: the procedure's ordered
+    parts.</glossa>
+</necessitudo>
 
 <!-- ==================================================
      PROCEDURA - ordo operationum ad finem
@@ -115,12 +125,14 @@
 
   <relationes>
     <relatio nomen="porta_humana" ad="persona" modulus="persona"
+      necessitudo="participatio"
       nota="gradus qui approbationem hominis exspectat: locus
             ubi procedura automata in actum sollemnem transit -
             approbatio enim capacitatem poscit, non peritiam"/>
     <relatio nomen="efficit" ad="artefactum_aedificationis"
       modulus="elementa_programmatis" multiplex="verum"/>
     <relatio nomen="agit_in" ad="ambitus" modulus="operatio"
+      necessitudo="intra"
       nota="ubi currat - et differentia ambitus (realitas
             consequentiae) huic proprietatem gravissimam dat"/>
   </relationes>
@@ -207,9 +219,11 @@
     <relatio nomen="exsequitur" a="persona" modulus="persona"
       inversa="verum"/>
     <relatio nomen="postulat" ad="materia" modulus="corporalia"
+      necessitudo="dependentia"
       multiplex="verum"/>
     <relatio nomen="efficit" ad="artefactum" modulus="corporalia"/>
     <relatio nomen="publicatum_in" ad="opus_scriptum"
+      necessitudo="continet"
       modulus="opus_scriptum"
       nota="liber coquinarius praescripta CONTINET - opus quod
             genus aliud continet, nexus trans exemplaria
@@ -292,7 +306,8 @@
   <relationes>
     <relatio nomen="versio_de" ad="praescriptum"/>
     <relatio nomen="sequitur" ad="versio_praescripti"/>
-    <relatio nomen="emendata_a" ad="persona" modulus="persona"/>
+    <relatio nomen="emendata_a" ad="persona" modulus="persona"
+      necessitudo="origo"/>
   </relationes>
 
 </.genus>
@@ -353,7 +368,7 @@
   </nota>
 
   <relationes>
-    <relatio nomen="confirmat" ad="*"
+    <relatio nomen="confirmat" ad="*" necessitudo="fundatio"
       nota="UMBRA 'actio' SOLUTA RETRO (rota XLV), non genere
             novo: quod index confirmat non actio est sed RES UT
             ESSE DEBET - 'flaps SET' statum confirmat, non
@@ -362,6 +377,7 @@
             coinatum fuisset mendacium apertum: dimidium
             indicum aviatoriorum status confirmat"/>
     <relatio nomen="adhibetur_in" ad="ambitus" modulus="operatio"
+      necessitudo="adhibet"
       multiplex="verum"/>
   </relationes>
 

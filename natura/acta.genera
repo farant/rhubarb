@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/acta.genera
-  Exemplar semanticum: ACTA (versio 3, PLASTICUM)
+  Exemplar semanticum: ACTA (versio 4, PLASTICUM)
 
   ABSENTIA STRUCTURALIS, exercitio modellationis inventa (rota
   XLIV): non circulus coverturae qui hiatus quaerit, sed subiectum
@@ -29,7 +29,7 @@
   silicis in TEMPORE non est sed in SERIE ('numquam timestamp',
   lex eius), et /tempus/momentum id ferre non potuit.
 -->
-<natura modulus="acta" versio="3" lingua="latina">
+<natura modulus="acta" versio="4" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -178,14 +178,16 @@
       nota="cuius rei acta sint - apertum consulto: quidlibet
             actis describi potest"/>
     <relatio nomen="plicatur_in" ad="proiectio"
+      necessitudo="fundat"
       modulus="elementa_programmatis" multiplex="verum"
       nota="plicatura proiectio est, et LICENTIAM DELENDI inde
             accipit. Voluminis nostri probatio hoc ipsum figit:
             plicam_ad(0) enumerationi manifesti aequalis - eadem
             replicatio quae proiectionem probat"/>
     <relatio nomen="signata_per" ad="punctum_actorum"
+      necessitudo="fundatio"
       multiplex="verum"/>
-    <relatio nomen="appenditur_a" ad="*"
+    <relatio nomen="appenditur_a" ad="*" necessitudo="origo"
       nota="quis appendat - persona, processus, magistratus"/>
   </relationes>
 
@@ -332,13 +334,13 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="in" ad="acta"/>
+    <relatio nomen="in" ad="acta" necessitudo="intra"/>
     <relatio nomen="praecedens" ad="punctum_actorum"
       nota="punctum proximum ante. Series simplex, non arbor:
             arbor ramorum (git) puncta MULTIPLICIA post idem
             punctum ponit, quod haec relatio nondum fert -
             vide dubium"/>
-    <relatio nomen="positum_a" ad="*"/>
+    <relatio nomen="positum_a" ad="*" necessitudo="origo"/>
   </relationes>
 
   <.species nomen="conditio">
@@ -525,7 +527,7 @@
   </actiones>
 
   <relationes>
-    <relatio nomen="ex_actis" ad="acta"
+    <relatio nomen="ex_actis" ad="acta" necessitudo="ex_fonte"
       nota="fons veritatis. Attestatio sine actis nominatis
             adseveratio est, non attestatio.
             HAEC SENTENTIA DEFECTUM HISTORICUM PRAEDIXIT, cursu
@@ -541,6 +543,7 @@
             Genus e registro civili natum vitium quod PKI telae
             per duo decennia fregit definitione sua dicit"/>
     <relatio nomen="ad_punctum" ad="punctum_actorum"
+      necessitudo="fundat"
       nota="qualis status actorum testetur - plerumque tacitum
             ('ut nunc stat'), sed explicitum fieri potest, et
             tunc attestatio superari NON potest quia punctum
@@ -549,6 +552,7 @@
     <relatio nomen="de" ad="*"
       nota="cuius rei - persona, res, societas, eventus"/>
     <relatio nomen="testatur" ad="attestatio"
+      necessitudo="fundat"
       nota="attestatio DE ATTESTATIONE (apostilla): recursio
             quae ex definitione sponte sequitur, nullo
             mechanismo addito - signum quod genus recte
@@ -741,6 +745,7 @@
     <relatio nomen="fundat" ad="attestatio" multiplex="verum"
       nota="quas attestationes (per catenam) sustineat"/>
     <relatio nomen="suscepta_per" ad="actus_iuridicus"
+      necessitudo="constituta_per"
       modulus="actus"
       nota="MEMBRUM PER ACTUM: nemo radix fit natura sua -
             admittitur, et admissio diem, auctorem, revocationem
