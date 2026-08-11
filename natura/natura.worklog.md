@@ -6124,3 +6124,41 @@ enrollment is the difference between recording and modeling.
 New queryable question the walk created: which pericula have a
 MACHINE watching them vs only prose? (chordae: none — known gap,
 recorded in its nota.)
+
+## 2026-08-11 — The causal layer: causa= + informat (Fran's quadrant question)
+
+Fran asked: are libraries ever the PARENT of requirement-type
+things? They never were — the graph only flowed ends→artifacts.
+But reality has the reverse arrow (pactum-chordae exists because
+chorda's design crystallized; DO-178C calls these "derived
+requirements"), and the missing edge type was exactly the
+formal-cause quadrant.
+
+Shipped as a LAYER, not a law (Fran's framing: a lens we can look
+through, never the only lens):
+- causa= attribute on necessitudo declarations (finalis |
+  formalis | materialis | efficiens; ABSENT = untyped). No rule
+  reads it; the canon byte-gate proved the fold never sees it.
+  Eleven families typed conservatively; causat left untyped ON
+  PURPOSE — its census usage is final ("perennitas causat
+  piscina") while its definitio is efficient ("efficit"), and
+  that fork is deferred to whichever walk builds the
+  justified-vs-reachable orbi distinction.
+- Necessitudo informat/informatur_a (sub causalitas, formalis):
+  forma informat materiam. Pactum genus gained the slot; eight
+  census pacta wired to their artifacts.
+- Dot-sigil kind-citations WORK in census documents: informat
+  ad=".uncus" cites the GENUS (the star rule's '.'-vocabulary
+  path) — a pactum can inform a whole class. First live use
+  outside fixtures.
+- Table column VIII (causa) appended — prior readers see I-VII
+  unchanged. The lens is queryable: awk -F'|' '$8!=""'.
+
+Also this arc: census_recensere born (C extracts signa via stml,
+shell runs the vias; RECENS/MOTUS/VIA-MORTUA — grep -c prints 0
+with exit 1, so via health = exit code not output); the semina
+via was found DEAD (sigil migration broke the method itself);
+census_orbi learned external keys, learned to NAME unknowns, and
+was caught deriving its own pertinence from a parser leak
+(praesens flowing into augmentation blocks — the orphan-checker
+was an orphan and nobody knew).
