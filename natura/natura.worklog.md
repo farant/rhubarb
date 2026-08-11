@@ -5842,3 +5842,29 @@ NON-declaration recorded: initium appears in two models (programma
 entry-function → continet; intervallum bound → pars_totum) — same
 bare name, DIFFERENT relations; rule-19 homonym territory, cited
 per-site, never to be unified.
+
+## 2026-08-11 — tail sweep 1: organizatio + lingua_programmandi + communicatio
+
+20 → 0 (global 64 → 44, ligata 388 = 90%), monita 14,
+necessitudines 84, canons byte-identical.
+
+The tail generates its own rules-of-two: postulat (praescriptum
+materials + officium titles) and condita_a (organizations founded
++ calendars — conditum_a as gender scriptio) both promoted to
+core, with the earlier same-name citations REMOVED per the
+family-rule (third and fourth applications of the
+declaration-beats-citation dance). Domain pair:
+implementat/implementata_ab sub=effectio — the family's
+realizata_a definitio already said "forma per implementationes".
+
+Closures worth noting: confert_capacitatem → fundat FORWARD,
+meeting actus.capacitas_per's converse — the office-confers /
+act-grounded-in loop is now one identity end-to-end;
+observatur_ab → legit (the state-life pair reached actor-model
+event observation); edit → edita_a forward (corpus_normans edit
+normam / norma edita_a corpore); portat → fert; verbum_de →
+pars_de (a keyword is part of the language's vocabulary);
+subest → administrat converse (org hierarchy);
+fons_scriptus_in was an a=-form site — the TSV normalizes
+direction display, the file carries a= (pattern note for the
+rest of the tail).

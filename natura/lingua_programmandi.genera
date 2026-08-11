@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/lingua_programmandi.genera
-  Exemplar semanticum: LINGUAE PROGRAMMANDI (versio 4, PLASTICUM)
+  Exemplar semanticum: LINGUAE PROGRAMMANDI (versio 5, PLASTICUM)
   Genera: lingua_programmandi (+lingua_iussuum), versio_linguae,
   implementatio_linguae, verbum_clavis.
 
@@ -34,7 +34,18 @@
   VERSIONES adduntur (restrict in C99) - lex lapsus in
   vocabulario quoque.
 -->
-<natura modulus="lingua_programmandi" versio="4" lingua="latina">
+<natura modulus="lingua_programmandi" versio="5" lingua="latina">
+
+<!-- ========== NECESSITUDINES DOMESTICAE ========== -->
+
+<necessitudo nomen="implementat" conversum="implementata_ab"
+    sub="effectio" modulus="necessitudines" a="*" ad="*">
+  <definitio>Implementatio quae linguam realizat; conversa via,
+    lingua ab implementatione realizata. Familia effectionis
+    'forma per implementationes' iam dicebat (realizata_a).</definitio>
+  <glossa lingua="en">Implements / is-implemented-by: form made
+    runnable.</glossa>
+</necessitudo>
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -137,6 +148,7 @@
     <relatio nomen="implementata_ab" ad="implementatio_linguae"/>
     <relatio nomen="normata_per" ad="norma" modulus="norma"/>
     <relatio nomen="fons_scriptus_in" a="plagula_fontis"
+      necessitudo="situs"
       modulus="plagula_computatralis" inversa="verum"
       nota="impleta: plagula_fontis.scripta_in - promissum v0
             domum venit"/>
@@ -446,13 +458,15 @@
 
   <relationes>
     <relatio nomen="implementat" ad="lingua_programmandi"/>
-    <relatio nomen="implementat_versionem" ad="versio_linguae"/>
+    <relatio nomen="implementat_versionem" ad="versio_linguae"
+      necessitudo="implementat"/>
     <relatio nomen="scripta_in" ad="lingua_programmandi"
       nota="implementatio ipsa in lingua scribitur - CPython in
             C; recursio vera et honesta"/>
     <relatio nomen="auctor" ad="persona" modulus="persona"
       multiplex="verum"/>
     <relatio nomen="emittit_pro" ad="architectura_machinae"
+      necessitudo="conformitas"
       modulus="architectura_machinae" multiplex="verum"
       nota="compilator pro architecturis emittit (interpres pro
             nulla - modus eius id vitat)"/>
@@ -538,8 +552,10 @@
     grammaire.</glossa>
 
   <relationes>
-    <relatio nomen="verbum_de" ad="lingua_programmandi"/>
+    <relatio nomen="verbum_de" ad="lingua_programmandi"
+      necessitudo="pars_de"/>
     <relatio nomen="additum_in" ad="versio_linguae"
+      necessitudo="origo"
       nota="claves per VERSIONES adduntur - lex lapsus:
             vocabularium versioni labitur, non linguae"/>
   </relationes>

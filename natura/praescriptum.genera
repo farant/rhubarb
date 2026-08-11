@@ -219,7 +219,6 @@
     <relatio nomen="exsequitur" a="persona" modulus="persona"
       inversa="verum"/>
     <relatio nomen="postulat" ad="materia" modulus="corporalia"
-      necessitudo="dependentia"
       multiplex="verum"/>
     <relatio nomen="efficit" ad="artefactum" modulus="corporalia"/>
     <relatio nomen="publicatum_in" ad="opus_scriptum"

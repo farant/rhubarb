@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/organizatio.genera
-  Exemplar semanticum: ORGANIZATIO (versio 8, PLASTICUM)
+  Exemplar semanticum: ORGANIZATIO (versio 9, PLASTICUM)
 
   Genus a norma et persona POSTULATUM (editor normae organizatio
   est, non persona nec chorda). Sub-genera prima formae:
   corpus_normans, societas - arbor Porphyriana profunditatem
   accipit (attributum sub= + differentia in genere).
 -->
-<natura modulus="organizatio" versio="8" lingua="latina">
+<natura modulus="organizatio" versio="9" lingua="latina">
 
 <!-- FONTES (mechanismus rotae XVI) -->
 <fontes>
@@ -291,7 +291,8 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="species_membrorum" ad="animal" modulus="animal"
+    <relatio nomen="species_membrorum" ad="animal"
+      necessitudo="membrum" modulus="animal"
       nota="cuius generis viventia - apertum ad plantas et
             minora si opus erit"/>
   </relationes>
@@ -551,11 +552,12 @@
       nota="requisitum quod titulo probatur (gradus, ordo,
             character) - unde officium et titulus se tangunt"/>
     <relatio nomen="confert_capacitatem" ad="actus_sollemnis"
+      necessitudo="fundat"
       modulus="actus" multiplex="verum"
       nota="quos actus sollemnes tenens ponere possit -
             notarius instrumentum publicum, episcopus
             ordinationem. CAPACITAS ab officio, non a peritia"/>
-    <relatio nomen="subest" ad="officium"
+    <relatio nomen="subest" ad="officium" necessitudo="administrat"
       nota="ordo officiorum - hierarchia in officiis vivit,
             non in personis: qui subest OFFICIO subest, non
             homini"/>
@@ -662,7 +664,7 @@
     du commandement.</glossa>
 
   <relationes>
-    <relatio nomen="edit" ad="norma" modulus="norma"
+    <relatio nomen="edit" ad="norma" necessitudo="edita_a" modulus="norma"
       multiplex="verum"/>
   </relationes>
 
@@ -828,7 +830,7 @@
   <relationes>
     <relatio nomen="exercet" ad="iurisdictio" modulus="locus"
       multiplex="verum"/>
-    <relatio nomen="concedit" ad="licentia" modulus="obligatio"
+    <relatio nomen="concedit" ad="licentia" necessitudo="parit" modulus="obligatio"
       multiplex="verum"
       nota="licentiae fons ordinarius - unilateralis quia
             imperium unilaterale est"/>

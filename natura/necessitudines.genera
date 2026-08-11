@@ -360,6 +360,24 @@
     <glossa lingua="en">Uses / employs.</glossa>
   </necessitudo>
 
+  <necessitudo nomen="postulat" sub="dependentia" a="*" ad="*">
+    <definitio>Quod aliud requirit ut sit aut operetur:
+      praescriptum materias, officium titulos. Duobus
+      exemplaribus adhibitum - regula duorum impleta.</definitio>
+    <glossa lingua="en">Requires / demands. Two models used the
+      name before it was declared.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="condita_a" sub="origo" a="*" ad="*">
+    <definitio>A conditore condita: organizatio a personis,
+      calendarium a Gregorio. Scriptura genere gerentis
+      flectitur. Duobus exemplaribus adhibita - regula duorum
+      impleta.</definitio>
+    <glossa lingua="en">Founded-by; spelling follows the bearer's
+      gender.</glossa>
+    <scriptio>conditum_a</scriptio>
+  </necessitudo>
+
   <necessitudo nomen="praebet" conversum="praebetur_a"
       sub="dependentia" a="*" ad="*">
     <definitio>Quod alii aliquid ministrat; conversa via, quod

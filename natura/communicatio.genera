@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/communicatio.genera
-  Exemplar semanticum: COMMUNICATIO (versio 2, PLASTICUM)
+  Exemplar semanticum: COMMUNICATIO (versio 3, PLASTICUM)
   Genera: actor, nuntius, eventum.
 
   Natum ex confrontatione cum lib/actor.c - prima collisio
@@ -21,7 +21,7 @@
   (destinatarius ei debetur), eventum NON (accidit coram
   omnibus, quivis observans videt). Directum contra sparsum.
 -->
-<natura modulus="communicatio" versio="2" lingua="latina">
+<natura modulus="communicatio" versio="3" lingua="latina">
 
 <!-- ==================================================
      ACTOR - ens quod solum per nuntios communicat
@@ -59,6 +59,7 @@
       nota="status PRIVATUS: nemo alius eum legit nec mutat -
             hoc ipsum exemplar actorum definit"/>
     <relatio nomen="capsa_eius" ad="cauda"
+      necessitudo="tenetur_a"
       modulus="formae_datorum"
       nota="canalis declaratus unicus quo alii statum eius
             movent - capsa actori quod parametra functioni"/>
@@ -139,13 +140,14 @@
   </machina_statuum>
 
   <relationes>
-    <relatio nomen="portat" ad="petitio" modulus="obligatio"
+    <relatio nomen="portat" ad="petitio" necessitudo="fert" modulus="obligatio"
       nota="nuntius petitionem FERRE potest sed ea non est:
             petitio perdurat, nuntius transit, et petitio una
             nuntiis pluribus portari potest (repetitionibus) -
             quod totam idempotentiae rationem facit"/>
     <relatio nomen="missus_a" ad="actor"/>
-    <relatio nomen="destinatus_ad" ad="actor"/>
+    <relatio nomen="destinatus_ad" ad="actor"
+      necessitudo="translatio_nuntii"/>
   </relationes>
 
 </.genus>
@@ -181,7 +183,8 @@
   </nota>
 
   <relationes>
-    <relatio nomen="observatur_ab" ad="actor" multiplex="verum"
+    <relatio nomen="observatur_ab" ad="actor"
+      necessitudo="legit" multiplex="verum"
       nota="observantes se subscribunt; res gesta eos non
             novit - hoc eam a nuntio distinguit"/>
   </relationes>
@@ -272,9 +275,9 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="relinquitur_a" ad="*" multiplex="verum"/>
+    <relatio nomen="relinquitur_a" ad="*" necessitudo="origo" multiplex="verum"/>
     <relatio nomen="legitur_a" ad="*" multiplex="verum"/>
-    <relatio nomen="movet" ad="*"
+    <relatio nomen="movet" ad="*" necessitudo="afficit"
       nota="quid agatur cum vestigium legitur"/>
   </relationes>
 
