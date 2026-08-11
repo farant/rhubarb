@@ -18,6 +18,8 @@ planta_individua_legere_nodum(
         redde NIHIL;
     }
     res->nodus = nodus;
+
+    res->fons = stml_attributum_capere(nodus, "fons");
     res->planta = xar_creare(piscina, (i32)magnitudo(PlantaPlanta*));
     res->rosaceae = xar_creare(piscina, (i32)magnitudo(PlantaRosaceae*));
     res->rosa = xar_creare(piscina, (i32)magnitudo(PlantaRosa*));

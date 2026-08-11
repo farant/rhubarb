@@ -421,6 +421,7 @@ nomen enumeratio {
 
 structura PlantaIndividua {
     StmlNodus*  nodus;
+    chorda*     fons;
     Xar*        planta;   /* PlantaPlanta* */
     Xar*        rosaceae;   /* PlantaRosaceae* */
     Xar*        rosa;   /* PlantaRosa* */
