@@ -2687,6 +2687,10 @@
   </elementum>
 
   <elementum nomen="causa-finalis">
+    <glossa lingua="en">The final cause: that for the sake of
+      which a thing is done - health for the walk, the common
+      good for the law. The cause modern mechanism denies and
+      every true description presupposes.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="extra-ordinem" genus="veritas"/>
@@ -8001,6 +8005,11 @@
   </elementum>
 
   <elementum nomen="clavis-privata">
+    <glossa lingua="en">The private key: the secret half of a
+      cryptographic pair - it signs or unseals while its public
+      companion spreads freely. A rare shape of secret: one pair,
+      opposite halves, and the power lives in the asymmetry
+      itself.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="numerus-scientium" genus="numerus"/>
     <attributum nomen="substituibile" genus="veritas" ordinarius="verum"/>

@@ -115,6 +115,10 @@
   </elementum>
 
   <elementum nomen="causa-finalis">
+    <glossa lingua="en">The final cause: that for the sake of
+      which a thing is done - health for the walk, the common
+      good for the law. The cause modern mechanism denies and
+      every true description presupposes.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="extra-ordinem" genus="veritas"/>

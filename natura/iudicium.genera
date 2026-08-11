@@ -1089,6 +1089,11 @@
       Dimidium secretum paris cryptographici: quod signat aut
       resignat, et cuius comes publicus libere diffunditur.
     </definitio>
+    <glossa lingua="en">The private key: the secret half of a
+      cryptographic pair - it signs or unseals while its public
+      companion spreads freely. A rare shape of secret: one pair,
+      opposite halves, and the power lives in the asymmetry
+      itself.</glossa>
     <differentia>
       Secretum cuius comes PUBLICUS esse debet ut secretum
       utilitatem habeat - forma insolita: par unum, dimidia
