@@ -63,7 +63,8 @@ interior b32 genus_subsumitur(
     NaturaBibliotheca* bib, NaturaGenus* genus,
     constans chorda* latius);
 interior vacuum sedem_ligare(
-    NaturaBibliotheca* bib, NaturaExemplar* ex, Xar* insoluta,
+    NaturaBibliotheca* bib, NaturaExemplar* ex,
+    NaturaGenus* possessor, Xar* insoluta,
     StmlNodus* sedes, chorda* titulus_sedis);
 interior constans character* nuntium_insolutarum_fingere(
     Piscina* piscina, Xar* insoluta);
@@ -186,11 +187,14 @@ natura_bibliotheca_creare(
     bib->scriptiones  = NIHIL;  /* nectere aedificat */
     bib->diagnostica  = xar_creare(piscina,
                                    (i32)magnitudo(NaturaDiagnosticum));
+    bib->sedes_ligatae = xar_creare(piscina,
+                                   (i32)magnitudo(NaturaSedesLigata));
     bib->nexum        = FALSUM;
 
     si (!bib->intern || !bib->exemplaria || !bib->genera_omnia ||
         !bib->res_omnes || !bib->entia || !bib->nomina ||
-        !bib->necessitudines_omnes || !bib->diagnostica)
+        !bib->necessitudines_omnes || !bib->diagnostica ||
+        !bib->sedes_ligatae)
     {
         redde NIHIL;
     }
@@ -751,6 +755,7 @@ interior vacuum
 sedem_ligare(
     NaturaBibliotheca* bib,
     NaturaExemplar*    ex,
+    NaturaGenus*       possessor,
     Xar*               insoluta,
     StmlNodus*         sedes,
     chorda*            titulus_sedis)
@@ -807,29 +812,43 @@ sedem_ligare(
         }
     }
 
-    /* regula XXII: sedes ad= intra finem declaratum */
+    /* regula XXII: sedes ad= intra finem declaratum - et ordo
+     * tabulae sedium pro OMNI sede ligata (fundamentum '-sedes') */
     si (ligata)
     {
-        chorda* ad_attr;
+        NaturaSedesLigata* series;
+        chorda*            ad_attr;
+        chorda*            nomen_efficax;
+        b32                conversa;
+
+        /* directio: nomen efficax fines commutat - citatio
+         * DIRECTIONEM nominat, non familiam (decretum Franis
+         * 2026-08-11); sine citatione verbum sedis ipsum
+         * nomen est */
+        nomen_efficax = nex_attr ? nex_attr : titulus_sedis;
+        conversa = (ligata->conversum && nomen_efficax &&
+                    chorda_aequalis(*nomen_efficax,
+                                    *ligata->conversum))
+                   ? VERUM : FALSUM;
 
         ad_attr = stml_attributum_capere(sedes, "ad");
+
+        series = (NaturaSedesLigata*)xar_addere(bib->sedes_ligatae);
+        series->exemplar  = ex;
+        series->possessor = possessor;
+        series->nodus     = sedes;
+        series->titulus   = titulus_sedis;
+        series->ligata    = ligata;
+        series->conversa  = conversa;
+        series->ad_attr   = ad_attr;
+        series->verdictum = NATURA_SEDES_APERTA;
+
         si (ad_attr && !chorda_aequalis_literis(*ad_attr, "*"))
         {
             constans character* quod;
             chorda*             finis_decl;
-            chorda*             nomen_efficax;
 
-            /* directio: nomen efficax fines commutat - citatio
-             * DIRECTIONEM nominat, non familiam (decretum Franis
-             * 2026-08-11); sine citatione verbum sedis ipsum
-             * nomen est */
-            nomen_efficax = nex_attr ? nex_attr : titulus_sedis;
-            quod = "ad";
-            si (ligata->conversum && nomen_efficax &&
-                chorda_aequalis(*nomen_efficax, *ligata->conversum))
-            {
-                quod = "a";
-            }
+            quod = conversa ? "a" : "ad";
             finis_decl = finem_effectivum(ligata, quod);
             si (finis_decl)
             {
@@ -854,13 +873,21 @@ sedem_ligare(
                     scopus_genus =
                         ((NaturaRes*)scopus->corpus)->genus_suum;
                 }
-                si (scopus_genus &&
-                    !genus_subsumitur(bib, scopus_genus,
-                                      finis_decl))
+                si (scopus_genus)
                 {
-                    diagnosticum_addere(bib, NATURA_GRADUS_VULNUS,
-                        XXII, ex->stirps, ad_attr,
-                        "sedes finem necessitudinis excedit (regula XXII)");
+                    si (genus_subsumitur(bib, scopus_genus,
+                                         finis_decl))
+                    {
+                        series->verdictum = NATURA_SEDES_INTRA;
+                    }
+                    alioquin
+                    {
+                        series->verdictum = NATURA_SEDES_EXCEDIT;
+                        diagnosticum_addere(bib,
+                            NATURA_GRADUS_VULNUS,
+                            XXII, ex->stirps, ad_attr,
+                            "sedes finem necessitudinis excedit (regula XXII)");
+                    }
                 }
             }
         }
@@ -1159,7 +1186,8 @@ arborem_nectere(
 
             /* LIGATIO ante omnia - etiam sedes inversae ligantur
              * (aliter cohors inversarum numquam ligabilis esset) */
-            sedem_ligare(bib, ex, insoluta, liberum, titulus_n);
+            sedem_ligare(bib, ex, genus_c, insoluta, liberum,
+                         titulus_n);
 
             si (stml_attributum_capere(liberum, "inversa"))
             {
@@ -1436,8 +1464,8 @@ arborem_nectere(
                 }
 
                 /* ligatio termini (clavis munus) */
-                sedem_ligare(bib, ex, insoluta, terminus_j,
-                             munus_j);
+                sedem_ligare(bib, ex, genus_c, insoluta,
+                             terminus_j, munus_j);
             }
         }
         alioquin
@@ -1839,6 +1867,88 @@ natura_nectere(
     }
 
     redde vulnera;
+}
+
+b32
+natura_finem_superponere(
+    NaturaBibliotheca*   bib,
+    constans character*  familia,
+    constans character*  finis,
+    constans character*  valor)
+{
+    i32 i;
+
+    si (!bib || bib->nexum || !familia || !finis || !valor)
+    {
+        redde FALSUM;
+    }
+    si (strcmp(finis, "a") != ZEPHYRUM &&
+        strcmp(finis, "ad") != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    per (i = ZEPHYRUM;
+         i < xar_numerus(bib->necessitudines_omnes); i++)
+    {
+        NaturaNecessitudo* declarata;
+        chorda*            novus;
+        i32                j;
+        i32                n_a;
+
+        declarata = *(NaturaNecessitudo**)xar_obtinere(
+            bib->necessitudines_omnes, i);
+        si (!chorda_aequalis_literis(*declarata->titulus, familia))
+        {
+            perge;
+        }
+
+        /* attributa internata sunt - monstratorem valoris
+         * resedere, numquam rem monstratam rescribere */
+        novus = (chorda*)piscina_allocare(bib->piscina,
+                                          magnitudo(chorda));
+        si (!novus)
+        {
+            redde FALSUM;
+        }
+        *novus = chorda_ex_literis(valor, bib->piscina);
+
+        si (declarata->nodus->attributa)
+        {
+            n_a = xar_numerus(declarata->nodus->attributa);
+            per (j = ZEPHYRUM; j < n_a; j++)
+            {
+                StmlAttributum* attr;
+
+                attr = (StmlAttributum*)xar_obtinere(
+                    declarata->nodus->attributa, j);
+                si (attr && attr->titulus &&
+                    chorda_aequalis_literis(*attr->titulus,
+                                            finis))
+                {
+                    attr->valor = novus;
+                    redde VERUM;
+                }
+            }
+        }
+        redde stml_attributum_addere(declarata->nodus,
+                                     bib->piscina, bib->intern,
+                                     finis, valor);
+    }
+
+    redde FALSUM;
+}
+
+chorda*
+natura_finem_effectivum(
+    NaturaNecessitudo*   declarata,
+    constans character*  finis)
+{
+    si (!declarata || !finis)
+    {
+        redde NIHIL;
+    }
+    redde finem_effectivum(declarata, finis);
 }
 
 /* ==================================================

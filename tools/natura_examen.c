@@ -1173,6 +1173,162 @@ corpus_scribere(
     fclose(f);
 }
 
+/* relatio sedium unius familiae: quis dependet, qua directione,
+ * quo verdicto - sedes probatae ET praetereuntes (silentium non
+ * fides est). Sub -angustatio eadem relatio hypothesi servit. */
+interior vacuum
+sedes_referre(
+    NaturaBibliotheca*  bib,
+    NaturaNecessitudo*  decl,
+    constans character* familia,
+    b32                 machina)
+{
+    chorda* finis_a;
+    chorda* finis_ad;
+    i32     i;
+    i32     summa_s;
+    i32     conversae;
+    i32     intra_n;
+    i32     excedit_n;
+    i32     aperta_n;
+
+    finis_a  = natura_finem_effectivum(decl, "a");
+    finis_ad = natura_finem_effectivum(decl, "ad");
+
+    si (!machina)
+    {
+        imprimere("\nsedes familiae '%s'", familia);
+        si (decl->conversum)
+        {
+            imprimere(" (conversum '%.*s')",
+                (integer)decl->conversum->mensura,
+                (constans character*)decl->conversum->datum);
+        }
+        imprimere("  a=%.*s ad=%.*s\n",
+            finis_a ? (integer)finis_a->mensura : I,
+            finis_a ? (constans character*)finis_a->datum : "*",
+            finis_ad ? (integer)finis_ad->mensura : I,
+            finis_ad ? (constans character*)finis_ad->datum : "*");
+    }
+
+    summa_s   = ZEPHYRUM;
+    conversae = ZEPHYRUM;
+    intra_n   = ZEPHYRUM;
+    excedit_n = ZEPHYRUM;
+    aperta_n  = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < xar_numerus(bib->sedes_ligatae); i++)
+    {
+        NaturaSedesLigata*  s;
+        constans character* directio;
+        constans character* verdictum;
+
+        s = (NaturaSedesLigata*)xar_obtinere(bib->sedes_ligatae, i);
+        si (s->ligata != decl)
+        {
+            perge;
+        }
+        summa_s++;
+        si (s->conversa)
+        {
+            conversae++;
+        }
+        commutatio (s->verdictum)
+        {
+            casus NATURA_SEDES_INTRA:
+                verdictum = "INTRA";   intra_n++;   frange;
+            casus NATURA_SEDES_EXCEDIT:
+                verdictum = "EXCEDIT"; excedit_n++; frange;
+            ordinarius:
+                verdictum = "APERTA";  aperta_n++;  frange;
+        }
+        directio = s->conversa ? "conversa" : "recta";
+
+        si (machina)
+        {
+            imprimere("SEDES\t%s\t%.*s\t%.*s\t%.*s\t%.*s\t%s\t%.*s\t%s\n",
+                familia,
+                (integer)s->exemplar->stirps->mensura,
+                (constans character*)s->exemplar->stirps->datum,
+                s->possessor ?
+                    (integer)s->possessor->titulus->mensura : I,
+                s->possessor ?
+                    (constans character*)s->possessor->titulus->datum
+                    : "-",
+                s->titulus ? (integer)s->titulus->mensura : I,
+                s->titulus ?
+                    (constans character*)s->titulus->datum : "-",
+                (integer)s->nodus->titulus->mensura,
+                (constans character*)s->nodus->titulus->datum,
+                directio,
+                s->ad_attr ? (integer)s->ad_attr->mensura : I,
+                s->ad_attr ?
+                    (constans character*)s->ad_attr->datum : "-",
+                verdictum);
+        }
+        alioquin
+        {
+            imprimere("  %-16.*s %-22.*s %-20.*s %-8s %-20.*s %s\n",
+                (integer)s->exemplar->stirps->mensura,
+                (constans character*)s->exemplar->stirps->datum,
+                s->possessor ?
+                    (integer)s->possessor->titulus->mensura : I,
+                s->possessor ?
+                    (constans character*)s->possessor->titulus->datum
+                    : "-",
+                s->titulus ? (integer)s->titulus->mensura : I,
+                s->titulus ?
+                    (constans character*)s->titulus->datum : "-",
+                directio,
+                s->ad_attr ? (integer)s->ad_attr->mensura : I,
+                s->ad_attr ?
+                    (constans character*)s->ad_attr->datum : "-",
+                verdictum);
+
+            /* excedenti catenam scopi monstrare - iudicium
+             * humanum materia sua eget */
+            si (s->verdictum == NATURA_SEDES_EXCEDIT && s->ad_attr)
+            {
+                chorda*      modulus_attr;
+                NaturaGenus* g;
+
+                modulus_attr = stml_attributum_capere(s->nodus,
+                                                      "modulus");
+                g = natura_genus_in(bib,
+                    modulus_attr ?
+                        chorda_ut_cstr(*modulus_attr, bib->piscina)
+                        : chorda_ut_cstr(*s->exemplar->stirps,
+                                         bib->piscina),
+                    chorda_ut_cstr(*s->ad_attr, bib->piscina));
+                si (g)
+                {
+                    imprimere("      catena scopi:");
+                    dum (g)
+                    {
+                        imprimere(" %.*s",
+                            (integer)g->titulus->mensura,
+                            (constans character*)g->titulus->datum);
+                        g = g->parens;
+                        si (g)
+                        {
+                            imprimere(" <");
+                        }
+                    }
+                    imprimere("\n");
+                }
+            }
+        }
+    }
+
+    si (!machina)
+    {
+        imprimere("  summa: sedes %u (rectae %u / conversae %u)"
+                  " - INTRA %u / EXCEDIT %u / APERTA %u\n",
+                  summa_s, summa_s - conversae, conversae,
+                  intra_n, excedit_n, aperta_n);
+    }
+}
+
 s32
 principale(
     s32          numerus,
@@ -1186,6 +1342,8 @@ principale(
     constans character*   plagula;
     constans character*   tabulae;
     constans character*   corpus;
+    constans character*   familia_sedes;
+    constans character*   angustatio_par;
     b32                   machina;
     s32                   i;
     i32                   onerata;
@@ -1199,12 +1357,25 @@ principale(
     tabulae = NIHIL;
     corpus  = NIHIL;
     machina = FALSUM;
+    familia_sedes  = NIHIL;
+    angustatio_par = NIHIL;
 
     per (i = I; i < numerus; i++)
     {
         si (strcmp(argumenta[i], "-machina") == ZEPHYRUM)
         {
             machina = VERUM;
+        }
+        alioquin si (strcmp(argumenta[i], "-sedes") == ZEPHYRUM &&
+                     i + I < numerus)
+        {
+            familia_sedes = argumenta[++i];
+        }
+        alioquin si (strcmp(argumenta[i], "-angustatio") == ZEPHYRUM &&
+                     i + II < numerus)
+        {
+            familia_sedes  = argumenta[++i];
+            angustatio_par = argumenta[++i];
         }
         alioquin si (strcmp(argumenta[i], "-radix") == ZEPHYRUM &&
                      i + I < numerus)
@@ -1230,7 +1401,9 @@ principale(
         {
             fprintf(stderr,
                 "usus: natura_examen [-plagula VIA] [-machina] "
-                "[-radix DIR] [-tabulae DIR] [-corpus VIA]\n");
+                "[-radix DIR] [-tabulae DIR] [-corpus VIA]\n"
+                "      [-sedes FAMILIA] "
+                "[-angustatio FAMILIA a|ad=GENUS]\n");
             redde II;
         }
     }
@@ -1295,6 +1468,51 @@ principale(
             "natura_examen: NULLUM exemplar in '%s' inventum "
             "(extensio '%s')\n", radix, EXTENSIO);
         redde II;
+    }
+
+    /* superpositio finis ANTE nexuram: hypothesis in memoria
+     * sola, plagulae intactae; regulae omnes sub ea currunt */
+    si (angustatio_par)
+    {
+        character           finis_b[IV];
+        constans character* aequale;
+        size_t              mensura_f;
+
+        aequale = strchr(angustatio_par, '=');
+        si (!aequale || aequale == angustatio_par ||
+            *(aequale + I) == '\0')
+        {
+            fprintf(stderr,
+                "natura_examen: -angustatio postulat a|ad=GENUS"
+                " (datum '%s') - NIHIL probatum\n", angustatio_par);
+            redde II;
+        }
+        mensura_f = (size_t)(aequale - angustatio_par);
+        si (mensura_f >= magnitudo(finis_b))
+        {
+            fprintf(stderr,
+                "natura_examen: finis '%s' ignotus (a aut ad)"
+                " - NIHIL probatum\n", angustatio_par);
+            redde II;
+        }
+        memcpy(finis_b, angustatio_par, mensura_f);
+        finis_b[mensura_f] = '\0';
+
+        si (!natura_finem_superponere(bib, familia_sedes, finis_b,
+                                      aequale + I))
+        {
+            fprintf(stderr,
+                "natura_examen: superpositio recusata (familia"
+                " '%s' ignota aut finis '%s' pravus) - NIHIL"
+                " probatum\n", familia_sedes, finis_b);
+            redde II;
+        }
+        si (!machina)
+        {
+            imprimere("HYPOTHESIS: %s %s -> %s (plagulae"
+                      " intactae)\n", familia_sedes, finis_b,
+                      aequale + I);
+        }
     }
 
     vulnera = natura_nectere(bib);
@@ -1527,6 +1745,22 @@ principale(
                 d->ens ? (constans character*)d->ens->datum : "-",
                 d->nuntius);
         }
+    }
+
+    /* relatio sedium (post diagnostica, ante summam) */
+    si (familia_sedes)
+    {
+        NaturaNecessitudo* decl;
+
+        decl = natura_necessitudo(bib, familia_sedes);
+        si (!decl)
+        {
+            fprintf(stderr,
+                "natura_examen: familia '%s' ignota - NIHIL"
+                " relatum\n", familia_sedes);
+            redde II;
+        }
+        sedes_referre(bib, decl, familia_sedes, machina);
     }
 
     si (!machina)

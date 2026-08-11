@@ -6019,3 +6019,41 @@ name on first use (rule of two). Module-canon note: mensura.canon
 dropped 8 citations because moneta made their closures
 cross-module (designed NC_CIT_ALIENA behavior); the monolith keeps
 all of them enriched. Gates: examen SANUM 85/0/0, six suites green.
+
+## 2026-08-11 — -sedes + -angustatio: the narrowing pre-flight
+
+Two new examen verbs, fixtures written red-first (compile-red on
+the absent API, then green on first implementation — including the
+overlay fixture's sub-family assert: hypothetical mordet
+ad=lapis_p correctly tripped mordet_canem's inherited-end excess,
+the coupling a manual walk misses).
+
+Mechanism:
+- nectere now fills bib->sedes_ligatae: one row per bound site
+  (exemplar, possessor genus, slot node, word/munus, family,
+  direction, ad=, verdict INTRA/EXCEDIT/APERTA). Rule XXII writes
+  its verdict into the row it was already computing — the table
+  cost nothing extra. This is also the fictor's future input.
+- natura_finem_superponere(bib, familia, finis, valor): between
+  legere and nectere only (post-nexum refused); RESEATS the
+  attribute's valor pointer — attributes are interned, so
+  overwriting the pointee would corrupt shared strings.
+- bin/natura_examen -sedes FAMILIA: every bound site with
+  direction and verdict, passing sites INCLUDED (silence is not
+  evidence), target chains on EXCEDIT rows, summary line.
+  -machina TSV rows (SEDES\t...). Familia ignota = exit 2.
+- -angustatio FAMILIA a|ad=GENUS: superponere then the full
+  ordinary judgment + the -sedes report under the hypothesis.
+  Files untouched; exit 1 if the hypothesis draws vulnera —
+  "can I narrow this?" is now a scriptable gate.
+
+Live demos: -sedes mensuratur_per shows 4 sites (3 recta INTRA,
+1 conversa APERTA). -angustatio mensuratur_per a=magnitudo_
+mensurabilis is CLEAN (all 4 INTRA) — the a-side narrowing is
+lawful whenever wanted. -angustatio fundat ad=titulus shows the
+direction split at a glance (6 recta / 8 conversa): 4 forward
+sites EXCEDIT with chains, all 8 converse sites correctly
+unaffected (they check a=).
+
+The zsh === trap bit a THIRD time (echo ===DEMO2 separator) and
+nearly framed the new tool for a phantom exit 1 — ictus VII filed.

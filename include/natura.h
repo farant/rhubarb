@@ -141,6 +141,31 @@ nomen structura {
            StmlNodus*  radix;          /* elementum <natura> */
 } NaturaExemplar;
 
+/* verdictum sedis ligatae contra fines familiae (regula XXII
+ * in tabula servatum): APERTA = nihil probandum (sedes sine ad=
+ * aut finis familiae ipse apertus aut scopus irresolutus) */
+nomen enumeratio {
+    NATURA_SEDES_APERTA   = ZEPHYRUM,
+    NATURA_SEDES_INTRA    = I,
+    NATURA_SEDES_EXCEDIT  = II
+} NaturaSedesVerdictum;
+
+/* sedes ligata - ordo tabulae quam nectere pro OMNI sede ligata
+ * implet (fundamentum relationis '-sedes': quis familiae huic
+ * dependet, qua directione, quo verdicto) */
+nomen structura {
+          NaturaExemplar*  exemplar;
+             NaturaGenus*  possessor;  /* genus sedem ferens */
+               StmlNodus*  nodus;      /* relatio aut terminus */
+                  chorda*  titulus;    /* verbum sedis aut munus */
+       NaturaNecessitudo*  ligata;
+                      b32  conversa;   /* directio e nomine
+                                        * efficaci (decretum
+                                        * 2026-08-11) */
+                  chorda*  ad_attr;    /* NIHIL si absens */
+     NaturaSedesVerdictum  verdictum;
+} NaturaSedesLigata;
+
 nomen structura {
                 Piscina*  piscina;
     InternamentumChorda*  intern;
@@ -158,6 +183,8 @@ nomen structura {
                                           * NaturaNecessitudo*; nectere
                                           * aedificat, NIHIL ante */
                     Xar*  diagnostica;   /* Xar de NaturaDiagnosticum */
+                    Xar*  sedes_ligatae; /* Xar de NaturaSedesLigata -
+                                          * nectere implet */
                      b32  nexum;         /* nectere iam factum? */
 } NaturaBibliotheca;
 
@@ -200,6 +227,27 @@ natura_legere(
 i32
 natura_nectere(
     NaturaBibliotheca* bib);
+
+/* finem familiae HYPOTHETICE superponere - inter legere et
+ * nectere solum (post nexuram recusat). Familia NOMINE suo
+ * (non converso); finis "a" aut "ad". Arbor in memoria sola
+ * mutatur - plagulae intactae. Fundamentum '-angustatio':
+ * regulae OMNES sub hypothesi currunt (XXII sedium, XXII
+ * declarationum, XXIV), quod ambulatio manualis non praestat.
+ * FALSUM = familia ignota aut iam nexum. */
+b32
+natura_finem_superponere(
+    NaturaBibliotheca*   bib,
+    constans character*  familia,
+    constans character*  finis,
+    constans character*  valor);
+
+/* finis effectivus declarationis ("a" aut "ad"): proximus
+ * non-'*' in catena sub= - NIHIL = apertus */
+chorda*
+natura_finem_effectivum(
+    NaturaNecessitudo*   declarata,
+    constans character*  finis);
 
 /* ==================================================
  * Quaestiones (superficies Steenbergiana)

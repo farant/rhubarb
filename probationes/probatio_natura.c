@@ -181,6 +181,25 @@ interior constans character* FIXTURA_NECESSITUDINES =
     "<.genus nomen=\"subactus_probandus\" sub=\"actus_probandus\"/>\n"
     "</natura>\n";
 
+/* fines et angustatio: fixtura communis duobus scaenis */
+interior constans character* FIXTURA_FINES =
+    "<natura modulus=\"fines_probandum\" versio=\"1\">\n"
+    "<.genus nomen=\"animal_p\"/>\n"
+    "<.genus nomen=\"canis_p\" sub=\"animal_p\"/>\n"
+    "<.genus nomen=\"lapis_p\"/>\n"
+    "<necessitudo nomen=\"mordet\" a=\"*\" ad=\"animal_p\"/>\n"
+    "<necessitudo nomen=\"mordet_canem\" sub=\"mordet\"\n"
+    "  ad=\"canis_p\"/>\n"
+    "<necessitudo nomen=\"mordet_omnia\" sub=\"mordet\"\n"
+    "  ad=\"*\"/>\n"
+    "<.genus nomen=\"pulex_p\">\n"
+    "  <relationes>\n"
+    "    <relatio nomen=\"mordet\" ad=\"lapis_p\"/>\n"
+    "    <relatio nomen=\"mordet\" ad=\"canis_p\"/>\n"
+    "  </relationes>\n"
+    "</.genus>\n"
+    "</natura>\n";
+
 /* ==================================================
  * Auxilia
  * ================================================== */
@@ -699,29 +718,54 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (bib);
 
         CREDO_VERUM (natura_legere(bib,
-            chorda_ex_literis(
-                "<natura modulus=\"fines_probandum\" versio=\"1\">\n"
-                "<.genus nomen=\"animal_p\"/>\n"
-                "<.genus nomen=\"canis_p\" sub=\"animal_p\"/>\n"
-                "<.genus nomen=\"lapis_p\"/>\n"
-                "<necessitudo nomen=\"mordet\" a=\"*\" ad=\"animal_p\"/>\n"
-                "<necessitudo nomen=\"mordet_canem\" sub=\"mordet\"\n"
-                "  ad=\"canis_p\"/>\n"
-                "<necessitudo nomen=\"mordet_omnia\" sub=\"mordet\"\n"
-                "  ad=\"*\"/>\n"
-                "<.genus nomen=\"pulex_p\">\n"
-                "  <relationes>\n"
-                "    <relatio nomen=\"mordet\" ad=\"lapis_p\"/>\n"
-                "    <relatio nomen=\"mordet\" ad=\"canis_p\"/>\n"
-                "  </relationes>\n"
-                "</.genus>\n"
-                "</natura>\n", piscina),
+            chorda_ex_literis(FIXTURA_FINES, piscina),
             "fines_probandum"));
 
         (vacuum)natura_nectere(bib);
         /* dilatatio (mordet_omnia ad='*') + sedes extra finem
          * (lapis_p extra animal_p); mordet->canis_p INTRA finem */
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXII), II);
+
+        /* tabula sedium ligatarum: mordet II sedes fert, ambae
+         * recta directione - canis_p INTRA, lapis_p EXCEDIT */
+        {
+            NaturaNecessitudo* mordet_n;
+            i32                k;
+            i32                numerus_s;
+            i32                intra_n;
+            i32                excedit_n;
+
+            mordet_n = natura_necessitudo(bib, "mordet");
+            CREDO_NON_NIHIL (mordet_n);
+            numerus_s = ZEPHYRUM;
+            intra_n   = ZEPHYRUM;
+            excedit_n = ZEPHYRUM;
+            per (k = ZEPHYRUM;
+                 k < xar_numerus(bib->sedes_ligatae); k++)
+            {
+                NaturaSedesLigata* s;
+
+                s = (NaturaSedesLigata*)xar_obtinere(
+                    bib->sedes_ligatae, k);
+                si (s->ligata != mordet_n)
+                {
+                    perge;
+                }
+                numerus_s++;
+                CREDO_VERUM (!s->conversa);
+                si (s->verdictum == NATURA_SEDES_INTRA)
+                {
+                    intra_n++;
+                }
+                si (s->verdictum == NATURA_SEDES_EXCEDIT)
+                {
+                    excedit_n++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (numerus_s, II);
+            CREDO_AEQUALIS_I32 (intra_n, I);
+            CREDO_AEQUALIS_I32 (excedit_n, I);
+        }
 
         /* regula XXIV: tres familiae sine converso fines impares
          * habent (mordet a=* ad=animal_p; mordet_canem ad=canis_p;
@@ -771,6 +815,83 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXII), I);
         /* fundat_p conversum habet - regula XXIV tacet */
         CREDO_AEQUALIS_I32 (monita_regulae(bib, XXIV), ZEPHYRUM);
+
+        /* tabula: IV sedes fundat_p, omnes conversae (citatio aut
+         * verbum ipsum conversum); stat_male sola EXCEDIT */
+        {
+            NaturaNecessitudo* fundat_n;
+            i32                k;
+            i32                numerus_s;
+            i32                intra_n;
+            i32                excedit_n;
+
+            fundat_n = natura_necessitudo(bib, "fundat_p");
+            CREDO_NON_NIHIL (fundat_n);
+            numerus_s = ZEPHYRUM;
+            intra_n   = ZEPHYRUM;
+            excedit_n = ZEPHYRUM;
+            per (k = ZEPHYRUM;
+                 k < xar_numerus(bib->sedes_ligatae); k++)
+            {
+                NaturaSedesLigata* s;
+
+                s = (NaturaSedesLigata*)xar_obtinere(
+                    bib->sedes_ligatae, k);
+                si (s->ligata != fundat_n)
+                {
+                    perge;
+                }
+                numerus_s++;
+                CREDO_VERUM (s->conversa);
+                si (s->verdictum == NATURA_SEDES_INTRA)
+                {
+                    intra_n++;
+                }
+                si (s->verdictum == NATURA_SEDES_EXCEDIT)
+                {
+                    excedit_n++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (numerus_s, IV);
+            CREDO_AEQUALIS_I32 (intra_n, III);
+            CREDO_AEQUALIS_I32 (excedit_n, I);
+        }
+    }
+
+    {
+        NaturaBibliotheca* bib;
+
+        imprimere("\n--- Probans superpositionem finis"
+                  " (angustatio) ---\n");
+
+        bib = natura_bibliotheca_creare(piscina);
+        CREDO_NON_NIHIL (bib);
+
+        CREDO_VERUM (natura_legere(bib,
+            chorda_ex_literis(FIXTURA_FINES, piscina),
+            "fines_probandum"));
+
+        /* familia ignota recusatur */
+        CREDO_VERUM (!natura_finem_superponere(bib, "non_est",
+                                               "ad", "lapis_p"));
+        /* superpositio ante nexuram: mordet ad -> lapis_p */
+        CREDO_VERUM (natura_finem_superponere(bib, "mordet",
+                                              "ad", "lapis_p"));
+
+        (vacuum)natura_nectere(bib);
+
+        /* verdicta VERSA sub hypothesi: lapis_p INTRA fit,
+         * canis_p EXCEDIT; insuper mordet_canem (ad=canis_p)
+         * finem parentis novum excedit (nexus subfamiliarum quem
+         * ambulatio manualis non videt); dilatatio mordet_omnia
+         * manet - III vulnera XXII */
+        CREDO_AEQUALIS_I32 (vulnera_regulae(bib, XXII), III);
+        /* regula XXIV sub hypothesi quoque currit */
+        CREDO_AEQUALIS_I32 (monita_regulae(bib, XXIV), III);
+
+        /* post nexuram superpositio recusatur */
+        CREDO_VERUM (!natura_finem_superponere(bib, "mordet",
+                                               "ad", "animal_p"));
     }
 
     {
