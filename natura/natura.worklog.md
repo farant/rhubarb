@@ -5775,3 +5775,20 @@ of secundum_normam), quibus testibus (participatio), qua forma
 quorum: condicio_actus → implet via converse (a quorum is a
 postulatum the act must fulfil); statutum_per → constituta_per
 (third site for that word-shape); coetus → de.
+
+## 2026-08-10 — corporalia burn-down
+
+10 → 0 (global 114 → 104, ligata 328 = 76%), monita 22,
+necessitudines 80, canons byte-identical, versio 3 → 4.
+
+The material-cause pair declared in-model: ingreditur/ex_materia
+(materia enters the artifact / artifact made-from) sub=pars_totum,
+whose definitio says "sive materialiter" verbatim. Citations:
+laborat → afficit via converse (the family's own example is
+"morbus corpus"); affligit → afficit; generat → parit
+("naturalem" is in parit's definitio); consecrata_per →
+constituta_per (consecration constitutes sacredness — fourth site
+for that word-shape); factum_a → origo bare (making without
+answerability, the scriba pattern); factum_per → exsecutio;
+illatum_per → causat via converse; praevisum_ut → fundatio (the
+periculum was the forward-looking judgment the damnum realized).

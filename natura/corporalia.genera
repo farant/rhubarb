@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/corporalia.genera
-  Exemplar semanticum: CORPORALIA (versio 3, PLASTICUM)
+  Exemplar semanticum: CORPORALIA (versio 4, PLASTICUM)
   Genera: res_corporea, artefactum, materia, instrumentum,
   vivens.
 
@@ -38,7 +38,18 @@
   ad sigillum contenti accedit (forma sola), artefactum ad
   baptismum.
 -->
-<natura modulus="corporalia" versio="3" lingua="latina">
+<natura modulus="corporalia" versio="4" lingua="latina">
+
+<!-- ========== NECESSITUDINES DOMESTICAE ========== -->
+
+<necessitudo nomen="ingreditur" conversum="ex_materia"
+    sub="pars_totum" modulus="necessitudines" a="*" ad="*">
+  <definitio>Materia quae in artefactum intrat; conversa via,
+    artefactum ex materia factum. Causa materialis - familia
+    partis-toti 'sive materialiter' ipsa dicit.</definitio>
+  <glossa lingua="en">Enters-into / made-from: the material-cause
+    pair.</glossa>
+</necessitudo>
 
 <!-- ==================================================
      RES CORPOREA - quod materiam et locum habet
@@ -126,8 +137,11 @@
 
   <relationes>
     <relatio nomen="factum_per" ad="praescriptum"
+      necessitudo="exsecutio"
       modulus="praescriptum"/>
-    <relatio nomen="factum_a" ad="persona" modulus="persona"/>
+    <relatio nomen="factum_a" ad="persona" modulus="persona"
+      necessitudo="origo"
+      nota="factio sine responsione - mos scribae, non auctoris"/>
     <relatio nomen="ex_materia" ad="materia" multiplex="verum"/>
   </relationes>
 
@@ -292,6 +306,7 @@
 
   <relationes>
     <relatio nomen="consecrata_per" ad="actus_sollemnis"
+      necessitudo="constituta_per"
       modulus="actus"/>
     <relatio nomen="custoditur_ab" ad="officium"
       modulus="organizatio"
@@ -405,13 +420,15 @@
   </machina_statuum>
 
   <relationes>
-    <relatio nomen="affligit" ad="res_corporea"/>
-    <relatio nomen="illatum_per" ad="*"
+    <relatio nomen="affligit" ad="res_corporea"
+      necessitudo="afficit"/>
+    <relatio nomen="illatum_per" ad="*" necessitudo="causat"
       nota="causa: vis, casus, neglegentia, alius homo - et
             si per hominem, OBLIGATIO oritur ex delicto
             (obligatio.obligatio_ex_delicto): unde damnum et
             ius se tangunt"/>
     <relatio nomen="praevisum_ut" ad="periculum" modulus="iudicium"
+      necessitudo="fundatio"
       nota="damnum factum est quod periculum praedixit -
             periculum ante, damnum post; assecuratio inter
             utrumque stat"/>
@@ -497,9 +514,11 @@
 
   <relationes>
     <relatio nomen="generat" ad="vivens" multiplex="verum"
+      necessitudo="parit"
       nota="viventia sola sui similia gignunt - artefacta
             fabricantur, viventia generantur"/>
     <relatio nomen="laborat" ad="morbus" modulus="morbus"
+      necessitudo="afficit"
       multiplex="verum"
       nota="MORBUS SOLIS VIVENTIBUS ACCIDIT: aegrotare potest
             quod naturam habet ad quam mensuratur; saxum
