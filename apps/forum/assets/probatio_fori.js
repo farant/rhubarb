@@ -1115,28 +1115,34 @@ curare_cum(defs_vetera).then(function () {
         "charta: sigillum generis '.' retinetur");
 })();
 
-/* ---- charta: barycentrum decussationem tollit (gradus III).
- * Ordo alphabeticus aristas decussat (alpha->secundus,
- * beta->primus); post transitus ordo scoporum ordinem fontium
- * sequitur - et bis idem (determinatum etiam cum aristis). ---- */
+/* ---- charta: ordo gregatim-per-genus (decretum Franis
+ * 2026-08-11; barycentrum cbf09b9..a5a64e4 - historia git eum
+ * servat). Genus ante alphabetum, intra genus alphabetice, et
+ * aristae positus NUMQUAM movent. ---- */
 (function () {
     var r = { nodi: {
-        "&alpha;": { genus: "causa-finalis", externus: false },
-        "&beta;":  { genus: "causa-finalis", externus: false },
-        "&primus;":   { genus: "bibliotheca", externus: false },
-        "&secundus;": { genus: "bibliotheca", externus: false }
-    }, aristae: [
-        { a: "&alpha;", ad: "&secundus;", familia: "causat" },
-        { a: "&beta;",  ad: "&primus;",   familia: "causat" }
+        "&z-bib;": { genus: "bibliotheca", externus: false },
+        "&a-bib;": { genus: "bibliotheca", externus: false },
+        "&a-instr;": { genus: "instrumentum-lineae",
+            externus: false }
+    }, aristae: [] };
+    var r2 = { nodi: r.nodi, aristae: [
+        { a: "&a-instr;", ad: "&z-bib;", familia: "adhibet" },
+        { a: "&a-instr;", ad: "&a-bib;", familia: "causat" }
     ] };
     var p1 = charta_disponere(r);
-    var p2 = charta_disponere(r);
-    proba((p1["&alpha;"].x < p1["&beta;"].x)
-        === (p1["&secundus;"].x < p1["&primus;"].x),
-        "charta: barycentrum decussationem tollit");
-    proba(p1["&alpha;"].x === p2["&alpha;"].x
-        && p1["&primus;"].x === p2["&primus;"].x,
-        "charta: dispositio cum aristis quoque determinata");
+    var p2 = charta_disponere(r2);
+    proba(p1["&z-bib;"].x < p1["&a-instr;"].x,
+        "charta: genus ante alphabetum (z-bib ante a-instr)");
+    proba(p1["&a-bib;"].x < p1["&z-bib;"].x,
+        "charta: intra genus alphabetice");
+    proba(p1["&z-bib;"].x === p2["&z-bib;"].x
+        && p1["&a-bib;"].x === p2["&a-bib;"].x
+        && p1["&a-instr;"].x === p2["&a-instr;"].x,
+        "charta: aristae positus NUMQUAM movent");
+    proba(p1["&a-instr;"].x - p1["&z-bib;"].x
+        > p1["&z-bib;"].x - p1["&a-bib;"].x,
+        "charta: rima inter greges generum maior quam intra gregem");
 })();
 
 /* ---- charta: recargatio calida (gradus IV) - differentia pura

@@ -1221,21 +1221,23 @@ function charta_stratum_generis(genus, externus) {
   return CHARTA_STRATA.length;                        /* alia */
 }
 
-/* dispositio: fasciae per strata, intra fasciam ordo barycentri
- * super aristis OMNIBUS (spina bis ponderata - spec par. V: pacta
- * sine 'informat' texturam nullam haberent), versus ad octonos,
- * quisque versus in medio. Toggles picturae dispositioni NIHIL
- * dicunt - copia aristarum dispositioni FIXA est, ergo stabilitas
- * manet. DETERMINATA: initium alphabeticum, transitus fixi IV,
- * paritas clavium omnia dirimit - input idem -> positus idem. */
+/* dispositio: fasciae per strata; intra fasciam GREGATIM PER
+ * GENUS, deinde alphabetice (decretum Franis 2026-08-11 - vixit
+ * cum barycentro cbf09b9..a5a64e4 et memoriam muscularem
+ * praetulit: nodum INVENIRE pluris est quam decussationes minuere
+ * apud XCII nodos; historia git barycentrum servat). Rima parva
+ * inter greges generum. Positus functio PURA copiae nodorum
+ * SOLIUS - aristae positus NUMQUAM movent (adserto), ergo
+ * recargatio calida etiam stabilior: arista nova nihil miscet.
+ * Determinata: ordo totalis (genus, clavis). */
 function charta_disponere(r) {
-  var LAT = 190, ALT = 46, SP_X = 26, SP_Y = 34, SP_FASCIA = 96;
+  var LAT = 190, ALT = 46, SP_X = 26, SP_GREX = 24, SP_Y = 34,
+      SP_FASCIA = 96;
   var PER_VERSUM = 8;
   var fasciae = [];
   var positus = {};
   var claves = [];
-  var vicini = {};
-  var i, j, k, f, transitus, a, w;
+  var i, j, k, f, y;
 
   charta_fasciae = [];
   for (i = 0; i <= CHARTA_STRATA.length; i++) { fasciae.push([]); }
@@ -1248,95 +1250,50 @@ function charta_disponere(r) {
     f = charta_stratum_generis(r.nodi[k].genus, r.nodi[k].externus);
     fasciae[f].push(k);
   }
+  y = 0;
+  for (f = 0; f < fasciae.length; f++) {
+    var ordo = fasciae[f];
+    var versus_numerus;
 
-  /* vicinitas ex aristis (utroque versu; spina bis) */
-  for (i = 0; i < r.aristae.length; i++) {
-    a = r.aristae[i];
-    w = CHARTA_SPINA[a.familia] ? 2 : 1;
-    if (!vicini[a.a]) { vicini[a.a] = []; }
-    if (!vicini[a.ad]) { vicini[a.ad] = []; }
-    for (j = 0; j < w; j++) {
-      vicini[a.a].push(a.ad);
-      vicini[a.ad].push(a.a);
-    }
-  }
-
-  /* positus ex ordine fasciarum praesenti (versus pleni, medium).
-   * CAVE: variabiles PROPRIAE - functio interior quae indices
-   * vocantis communes teneret ansam eius post reditum finiret
-   * (semel factum, semel satis) */
-  function positus_scribere() {
-    var fi, ii, yi = 0, vs;
-
-    charta_fasciae = [];
-    for (fi = 0; fi < fasciae.length; fi++) {
-      if (!fasciae[fi].length) { continue; }
-      vs = Math.ceil(fasciae[fi].length / PER_VERSUM);
-      for (ii = 0; ii < fasciae[fi].length; ii++) {
-        var v = Math.floor(ii / PER_VERSUM);
-        var c = ii % PER_VERSUM;
-        var in_versu = Math.min(PER_VERSUM,
-          fasciae[fi].length - v * PER_VERSUM);
-        var lat_versus = in_versu * (LAT + SP_X) - SP_X;
-        positus[fasciae[fi][ii]] = {
-          x: c * (LAT + SP_X) - lat_versus / 2,
-          y: yi + v * (ALT + SP_Y),
-          lat: LAT, alt: ALT, stratum: fi
-        };
-      }
-      charta_fasciae.push({
-        titulus: (fi < CHARTA_STRATA.length
-          ? CHARTA_STRATA[fi] : CHARTA_ALIA).titulus,
-        color: (fi < CHARTA_STRATA.length
-          ? CHARTA_STRATA[fi] : CHARTA_ALIA).color,
-        y: yi - 18
-      });
-      yi += vs * (ALT + SP_Y) - SP_Y + SP_FASCIA;
-    }
-  }
-
-  /* barycentrum unius fasciae: clavis quaeque ad mediam vicinorum
-   * x trahitur; sine vicinis locum praesentem tenet; paritas
-   * clavibus dirimitur (ordo totalis = determinatus) */
-  function fasciam_ordinare(fx) {
-    var ordo = fasciae[fx];
-    var bary = {};
-    var ii, ji, ki;
-
-    for (ii = 0; ii < ordo.length; ii++) {
-      ki = ordo[ii];
-      var vv = vicini[ki];
-      var summa = 0, n = 0;
-      if (vv) {
-        for (ji = 0; ji < vv.length; ji++) {
-          var p = positus[vv[ji]];
-          if (p) { summa += p.x + p.lat / 2; n++; }
-        }
-      }
-      bary[ki] = n ? summa / n
-        : positus[ki].x + positus[ki].lat / 2;
-    }
+    if (!ordo.length) { continue; }
     ordo.sort(function (p, q) {
-      if (bary[p] !== bary[q]) { return bary[p] - bary[q]; }
+      var gp = r.nodi[p].genus, gq = r.nodi[q].genus;
+
+      if (gp !== gq) { return gp < gq ? -1 : 1; }
       return p < q ? -1 : (p > q ? 1 : 0);
     });
-  }
+    versus_numerus = Math.ceil(ordo.length / PER_VERSUM);
+    for (i = 0; i < versus_numerus; i++) {
+      var initium = i * PER_VERSUM;
+      var finis = Math.min(initium + PER_VERSUM, ordo.length);
+      var xs = [];
+      var x = 0;
 
-  positus_scribere();
-  for (transitus = 0; transitus < 4; transitus++) {
-    /* deorsum, deinde sursum - vices fixae */
-    for (f = 0; f < fasciae.length; f++) {
-      if (fasciae[f].length > 1) {
-        fasciam_ordinare(f);
-        positus_scribere();
+      for (j = initium; j < finis; j++) {
+        if (j > initium && r.nodi[ordo[j]].genus
+            !== r.nodi[ordo[j - 1]].genus) {
+          x += SP_GREX;   /* rima inter greges generum */
+        }
+        xs.push(x);
+        x += LAT + SP_X;
+      }
+      x -= SP_X;   /* latitudo versūs tota */
+      for (j = initium; j < finis; j++) {
+        positus[ordo[j]] = {
+          x: xs[j - initium] - x / 2,
+          y: y + i * (ALT + SP_Y),
+          lat: LAT, alt: ALT, stratum: f
+        };
       }
     }
-    for (f = fasciae.length - 1; f >= 0; f--) {
-      if (fasciae[f].length > 1) {
-        fasciam_ordinare(f);
-        positus_scribere();
-      }
-    }
+    charta_fasciae.push({
+      titulus: (f < CHARTA_STRATA.length
+        ? CHARTA_STRATA[f] : CHARTA_ALIA).titulus,
+      color: (f < CHARTA_STRATA.length
+        ? CHARTA_STRATA[f] : CHARTA_ALIA).color,
+      y: y - 18
+    });
+    y += versus_numerus * (ALT + SP_Y) - SP_Y + SP_FASCIA;
   }
   return positus;
 }

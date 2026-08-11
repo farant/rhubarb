@@ -173,6 +173,24 @@ green, the rest from a fixed palette in sorted-name order.
 - Harness: 254 assertions (+9). Planted fault (inverted
   default-visibility) → FRACTA (1). Full smoke green.
 
+## 2026-08-11 — charta: kind-grouped ordering replaces barycenter
+
+Fran asked how the res band was sorted — the honest answer was
+"by barycenter, i.e. by who you're connected to," which reads as
+organic disorder. His ruling: grouped by genus, alphabetical
+within, per band — muscle memory beats crossing-minimization at
+92 nodes. Implemented with a small SP_GREX gap between kind
+groups; rows wrap at 8 with per-row centering (variable widths
+because of the gaps — measure pass then place pass).
+
+The deeper win: layout is now a pure function of the NODE SET —
+edges never move nodes (new assert), so hot reload can't reshuffle
+a band no matter what lands. The barycenter (vicini build, passes,
+the inner-function scoping lesson) lived cbf09b9..a5a64e4 and
+stays in git history for a denser scaena someday. Harness 260
+(kind-before-alphabet, within-kind order, edges-don't-move,
+group-gap-wider-than-intra); planted fault red; smoke green.
+
 ## 2026-08-11 — charta: raw-STML tab in the detail panel
 
 Fran's ask after v1: see the verbatim source beside the parsed

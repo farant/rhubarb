@@ -159,15 +159,16 @@ positions.
    no-silent-caps law). The table is a LEVER: strata can later be
    re-derived from the causal skeleton itself if the hand-table starts
    lying.
-2. **Within-layer ordering**: barycenter passes (4 down + 4 up,
-   fixed) over **all edge families with spine (causat / pendet-ex /
-   dependet-ex) weighted double**. (Shipped refinement over the
-   first draft's skeleton-only rule: the pacta/praecepta band's
-   connective tissue is `informat` — skeleton-only would leave it
-   alphabetical. Toggle-stability is preserved because the layout's
-   edge set is FIXED regardless of what is drawn.) Alphabetical
-   initial order; nodes without neighbors hold their slot; ties
-   break by nomen — fully deterministic. Band labels draw
+2. **Within-layer ordering: grouped by kind, then alphabetical**,
+   with a small visual gap between kind-groups (Fran's ruling
+   2026-08-11 after living with the barycenter for a day:
+   *finding* a node beats minimizing crossings at this scale —
+   muscle memory wants kind-then-alphabetical). The barycenter
+   era (cbf09b9..a5a64e4, all-families spine-weighted) lives in
+   git history if a denser scaena ever wants it back. Layout is
+   now a pure function of the NODE SET alone — **edges never move
+   nodes** (asserted), which makes hot-reload stability absolute:
+   a new edge cannot reshuffle a band. Band labels draw
    screen-pinned at the left margin (world-space labels hid under
    nodes — first-screenshot lesson).
 3. **Stability under growth**: a new entity inserts by its own
