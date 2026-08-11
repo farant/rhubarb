@@ -169,7 +169,13 @@
 
   <norma nomen="&norma-vexillorum;" titulus="vexilla compilationis"
     status-vigor="vigens"
-    contentum="-pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings"/>
+    contentum="clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -Wno-long-long -Wno-overlength-strings -fbracket-depth=512">
+    <nota>Fons verus: compile_tests.sh GCC_FLAGS. ADVENA I
+      (regeneratio prima) defectum invenit: index prior X vexilla
+      ex memoria ferebat, re vera XIV - et -std=c89 IPSUM aberat,
+      constrictio cardinalis in indice scripto nusquam. Idem
+      defectus in CLAUDE.md adhuc manet (X vexilla, sine -std).</nota>
+  </norma>
 
   <norma nomen="&norma-latinitatis;" titulus="latinitas nominum"
     status-vigor="vigens"
@@ -179,9 +185,14 @@
   </norma>
 
   <norma nomen="&norma-plagularum-privatarum;"
-    titulus="plagulae Franis numquam committuntur"
+    titulus="plagulae Franis ab agente numquam tanguntur"
     status-vigor="vigens"
-    contentum="FAQ.md, gesta/annales/forum.jsonl, gesta/annales/tabula.md, gesta/annales/tabularium.jsonl: additio explicita per viam, numquam 'git add -A'."/>
+    contentum="FAQ.md, gesta/annales/forum.jsonl, gesta/annales/tabula.md, gesta/annales/tabularium.jsonl: Fran solus eas addit et committit; agens numquam ('git add -A' vetitum, additio explicita per viam). Plagulae ipsae COMMITTUNTUR - annales veritas committenda est. Vetitum de AGENTE est, non de plagulis.">
+    <nota>ADVENA I contradictionem invenit: titulus prior 'numquam
+      committuntur' cum annalibus 'VERITAS committenda' pugnabat -
+      reaedificator disciplinam git sorte dimidia male fecisset.
+      Subiectum vetiti deerat; nunc dictum.</nota>
+  </norma>
 
   <norma nomen="&metamodulus;" titulus="METAMODULUS - forma naturae"
     status-vigor="vigens" normat="&natura;"
