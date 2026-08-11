@@ -48,6 +48,14 @@ awk '
             declarata[praesens] = NR
         }
 
+        # augmentatio <% &nomen;> praesens SUA est: margines eius
+        # rei augmentatae pertinent, non rei superiori (mendum
+        # inventum 2026-08-11: praesens in augmentationem manabat
+        # et pertinentiam fictam vicino dabat)
+        if (match(linea, /<% &[A-Za-z0-9_-]+;>/)) {
+            praesens = substr(linea, RSTART + 4, RLENGTH - 6)
+        }
+
         reliquum = linea
         while (match(reliquum, /"&[A-Za-z0-9_-]+;"/)) {
             citatum = substr(reliquum, RSTART + 2, RLENGTH - 4)

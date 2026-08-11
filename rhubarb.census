@@ -206,11 +206,14 @@
   </instrumentum-lineae>
 
   <instrumentum-lineae nomen="&census-orbi;">
+    <adhibet ad="&do_178c;"/>
     <nota>./tools/census_orbi.sh via - custos orbitatis huius
-      ipsius documenti: radix declarata, pertinentia vera
-      computata. Claves externas seminum novit et nomina ignota
-      NOMINAT exitu 1 (caecitas prior sanata 2026-08-11,
-      quaestio 01KZRS606V clausa).</nota>
+      ipsius documenti: disciplinam traceabilitatis DO-178C/KAOS
+      applicat (radix declarata, pertinentia vera computata).
+      Claves externas seminum novit et nomina ignota NOMINAT
+      exitu 1 (01KZRS606V clausa). Pertinentia sua prior FICTA
+      erat: praesens analystae in augmentationem sequentem
+      manabat - mendum sanatum eodem die quo inventum.</nota>
   </instrumentum-lineae>
 
   <instrumentum-lineae nomen="&census-recensere;">
@@ -596,7 +599,9 @@
     contentum="Prima contactu (a791638): familia iustificationis pauper - causat singulare, 3/23 iustificatae, orbi 19."/>
 
   <ambulatio nomen="&ambulatio-ii;" tendit-ad="&intellectus;" facta="2026-08-08"
-    contentum="Spina ditata (7bbcdb4): causat multiplex, omnia iustificat, orbi 0; custos census_orbi natus."/>
+    contentum="Spina ditata (7bbcdb4): causat multiplex, omnia iustificat, orbi 0; custos census_orbi natus.">
+    <invenit ad="&census-orbi;"/>
+  </ambulatio>
 
   <ambulatio nomen="&ambulatio-iii;" tendit-ad="&intellectus;" facta="2026-08-08"
     contentum="Auditus (111ed81): duo ex quattuor numeris falsi post horam quia ex memoria scripti - inde signa cum via."/>
