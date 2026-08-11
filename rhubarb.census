@@ -208,9 +208,19 @@
   <instrumentum-lineae nomen="&census-orbi;">
     <nota>./tools/census_orbi.sh via - custos orbitatis huius
       ipsius documenti: radix declarata, pertinentia vera
-      computata. Claves externas librarii nondum novit (CAVE
-      perpetuum in &amp;c;/&amp;aedilis; - quaestio
-      01KZRS606V).</nota>
+      computata. Claves externas seminum novit et nomina ignota
+      NOMINAT exitu 1 (caecitas prior sanata 2026-08-11,
+      quaestio 01KZRS606V clausa).</nota>
+  </instrumentum-lineae>
+
+  <instrumentum-lineae nomen="&census-recensere;">
+    <adhibet ad="&stml;"/>
+    <nota>./tools/census_recensere.sh - signa huius documenti
+      contra vias suas confert: RECENS / MOTUS / VIA MORTUA
+      (via sana exitu 0 mensurat). Circuitus mensurae clausus:
+      numerus sine recensore tacite putrescebat, quod census
+      contra CLAUDE.md nasci fecit. Pars C per stml analysat -
+      pactum parseris unius.</nota>
   </instrumentum-lineae>
 
   <!-- &aedilis; in bibliotheca naturae vivit (genus
