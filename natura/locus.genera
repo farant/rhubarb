@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/locus.genera
-  Exemplar semanticum: LOCUS (versio 0, PLASTICUM)
+  Exemplar semanticum: LOCUS (versio 1, PLASTICUM)
   Genera: locus, inscriptio, iurisdictio, aedificium.
 
   Natum ex experimento pistrinae: taberna alicubi EST, et hoc
@@ -16,7 +16,7 @@
   iurisdictio mutari potest sine motu quoque (fines mutantur,
   civitates oriuntur).
 -->
-<natura modulus="locus" versio="0" lingua="latina">
+<natura modulus="locus" versio="1" lingua="latina">
 
 <.genus nomen="locus">
 
@@ -88,7 +88,8 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="designat" ad="locus"/>
+    <relatio nomen="designat" ad="locus"
+      necessitudo="repraesentatio"/>
   </relationes>
 
 </.genus>
@@ -163,8 +164,9 @@
 
   <relationes>
     <relatio nomen="situm_in" ad="locus"/>
-    <relatio nomen="inscriptio_eius" ad="inscriptio"/>
-    <relatio nomen="occupatum_a" ad="*" multiplex="verum"
+    <relatio nomen="inscriptio_eius" ad="inscriptio"
+      necessitudo="repraesentatio"/>
+    <relatio nomen="occupatum_a" ad="*" necessitudo="intra" multiplex="verum"
       nota="persona aut organizatio - per contractum locationis
             plerumque (vide obligatio.locatio_conductio)"/>
   </relationes>

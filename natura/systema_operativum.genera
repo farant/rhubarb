@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/systema_operativum.genera
-  Exemplar semanticum: SYSTEMA OPERATIVUM (versio 4, PLASTICUM)
+  Exemplar semanticum: SYSTEMA OPERATIVUM (versio 5, PLASTICUM)
   Tertium paroeciae (post linguas et plagulas).
 
   MECHANISMUS NOVUS: machina_statuum GERENTEM declarat (attributum
@@ -20,7 +20,7 @@
   Relationes duae: orta_ex (descensus) / ad_exemplum_facta
   (imitatio formae). Genealogia vera utramque eget.
 -->
-<natura modulus="systema_operativum" versio="4" lingua="latina">
+<natura modulus="systema_operativum" versio="5" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -113,6 +113,7 @@
       nota="descensus verus codicis/formae - macOS ex Unix per
             BSD/NeXTSTEP"/>
     <relatio nomen="ad_exemplum_facta" ad="systema_operativum"
+      necessitudo="orta_ex"
       nota="imitatio sine descendentia - Linux ad exemplum Unix;
             distinctio quam schema vulgare mentitur"/>
     <relatio nomen="auctor" ad="persona" modulus="persona"
@@ -120,9 +121,11 @@
     <relatio nomen="edita_a" ad="organizatio"
       modulus="organizatio"/>
     <relatio nomen="exsequitur_in" ad="versio_architecturae"
+      necessitudo="exsecutio"
       modulus="architectura_machinae" multiplex="verum"/>
     <relatio nomen="habet_versionem" ad="versio_systematis"/>
     <relatio nomen="praebet_systema_plagularum"
+      necessitudo="praebet"
       ad="systema_plagularum" modulus="plagula_computatralis"
       nota="descriptum rota XLIV (nota haec rancida manserat -
             prosa quam porta XVI videre non potest)"/>
@@ -353,7 +356,8 @@
   </actiones>
 
   <relationes>
-    <relatio nomen="distributio_de" ad="systema_operativum"/>
+    <relatio nomen="distributio_de" ad="systema_operativum"
+      necessitudo="successio"/>
     <relatio nomen="orta_ex" ad="distributio_systematis"
       nota="genealogia distributionum vera: Ubuntu ex Debian"/>
     <relatio nomen="edita_a" ad="organizatio"

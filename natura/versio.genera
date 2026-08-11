@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/versio.genera
-  Exemplar semanticum: VERSIO (versio 0, PLASTICUM)
+  Exemplar semanticum: VERSIO (versio 1, PLASTICUM)
 
   ABSENTIA STRUCTURALIS TERTIA, eodem signo inventa quo programma
   (cursus V) et acta (rota XLIV): formae speciales exstabant,
@@ -26,7 +26,7 @@
   vetere stare possit - quae sola interrogatio est propter quam
   homines versiones omnino numerant.
 -->
-<natura modulus="versio" versio="0" lingua="latina">
+<natura modulus="versio" versio="1" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -156,7 +156,8 @@
             quid sit dicit, filia quid hic liceat"/>
     <relatio nomen="sequitur" ad="versio"
       nota="versio proxime prior in eadem serie"/>
-    <relatio nomen="compatibilis_cum" ad="versio" multiplex="verum"
+    <relatio nomen="compatibilis_cum" ad="versio"
+      necessitudo="conformitas" multiplex="verum"
       nota="RELATIO PROPTER QUAM VERSIONES NUMERANTUR, et quam
             quattuor formae speciales omnes omiserunt.
             Compatibilitas non semper cum PROXIMA sola agitur:

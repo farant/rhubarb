@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/persona.genera
-  Exemplar semanticum: PERSONA (versio 6, PLASTICUM)
+  Exemplar semanticum: PERSONA (versio 7, PLASTICUM)
   v3->v4: Meyer (bis postulatus: CQS et pactum), Dijkstra
   (superfectus a verbo goto), Scotus (haecceitas ad
   identificatorem) - dictionarium a stratis elementorum et
@@ -24,7 +24,7 @@
   more dictionarii biographici); personae TUAE (contactus, socii)
   in voluminibus applicationum, genus hoc citantes.
 -->
-<natura modulus="persona" versio="6" lingua="latina">
+<natura modulus="persona" versio="7" lingua="latina">
 
 <!-- FONTES: claves quas valores per fons= citant.
      Mechanismus rotae XVI - dubium <fons> (rota VII) solutum
@@ -116,12 +116,13 @@
   </actiones>
 
   <relationes>
-    <relatio nomen="auctor_de" ad="*"
+    <relatio nomen="auctor_de" ad="*" necessitudo="auctor"
       nota="ad opus cuiusvis generis - relatio aperta consulto:
             opera personarum genera omnia transeunt"/>
     <relatio nomen="membrum_de" ad="organizatio"
       modulus="organizatio" multiplex="verum"/>
-    <relatio nomen="domicilium" ad="locus" modulus="locus"
+    <relatio nomen="domicilium" ad="locus"
+      necessitudo="situm_in" modulus="locus"
       nota="DOMICILIUM NON EST UBI ES: sedes quam animo
             manendi habes. Discrimen practicum quod peregrinus
             statim invenit - iurisdictio in personam
@@ -129,7 +130,8 @@
             unde quaestiones tributi, hereditatis, status
             civilis omnes hinc pendent. Locus mutatur cotidie,
             domicilium actu et animo"/>
-    <relatio nomen="inscriptus_in" ad="acta" modulus="acta"
+    <relatio nomen="inscriptus_in" ad="acta"
+      necessitudo="continet" modulus="acta"
       multiplex="verum"
       nota="registra in quibus persona introitum habet.
             IMPLICATIO GRAVIS: qui in nullis inscriptus est

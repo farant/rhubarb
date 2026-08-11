@@ -5868,3 +5868,30 @@ subest → administrat converse (org hierarchy);
 fons_scriptus_in was an a=-form site — the TSV normalizes
 direction display, the file carries a= (pattern note for the
 rest of the tail).
+
+## 2026-08-11 — tail sweep 2: thirteen models, the burn-down's last line work
+
+37 → 0 across animal, architectura_machinae, cliens, documentatio,
+identificatio, locus, morbus, persona, plagula_computatralis,
+planta, schema, systema_operativum, versio (global 44 → 7, ligata
+425; MONITA = 1, mensura's alone). Zero new declarations — the
+84 necessitudines absorbed every site, which is the convergence
+the classification promised.
+
+Definitios kept naming their own cases: morbus.sedes → situs
+("ubi res SEDEAT"); exsecuta_a → exsequitur ("processorium
+architecturam" is its example); ad_exemplum_facta → orta_ex
+("systema e systemate", also its example); iacet_in/occupatum_a →
+intra ("quod intra aliud IACET"); gignit → parit (the definitio
+verb itself); describit/designat/inscriptio_eius → repraesentatio
+("quod aliud DESCRIBIT"). auctor reached its forward sites
+(persona.auctor_de, planta.auctor_nominis — Linnaeus as name
+author). Pattern note: a=-form sites (campus_de, emissa_pro,
+fons_scriptus_in) — the TSV displays direction normalized; match
+the FILE.
+
+REMAINING: mensura 7 (mensurat, in_unitate, cum_incertitudine,
+de_quantitate, componitur_ex + 2) — the deliberate finale, a
+design session: these are not citation work but a coherent
+measurement cluster likely wanting declarations under
+repraesentatio (mensuratur_per already lives there).

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/plagula_computatralis.genera
-  Exemplar semanticum: PLAGULA COMPUTATRALIS (versio 2, PLASTICUM)
+  Exemplar semanticum: PLAGULA COMPUTATRALIS (versio 3, PLASTICUM)
 
   Exemplar paroeciae maxime nostrum - quod silex olim consumet
   (plagulae repositorii specie sua notatae, non commutatione
@@ -18,7 +18,7 @@
   vs massa contentu addressata). Semantica nostra repositionem
   nostram iam noverat.
 -->
-<natura modulus="plagula_computatralis" versio="2" lingua="latina">
+<natura modulus="plagula_computatralis" versio="3" lingua="latina">
 
 <.genus nomen="plagula_computatralis">
 
@@ -79,7 +79,8 @@
             subordinatione - quia responsum a systemate pendet,
             et taxinomia unius systematis consilium in arborem
             suam inaedificare non debet"/>
-    <relatio nomen="conformis_ad" ad="norma" modulus="norma"/>
+    <relatio nomen="conformis_ad" ad="norma"
+      necessitudo="conformitas" modulus="norma"/>
   </relationes>
 
   <!-- dubium divisionis transversae SOLUTUM (Fran, v0->v1):
@@ -126,6 +127,7 @@
       nota="relatio fons_scriptus_in exemplaris linguarum HIC
             impletur - externum v0 tandem domum venit"/>
     <relatio nomen="scripta_in_versione" ad="versio_linguae"
+      necessitudo="scripta_in"
       modulus="lingua_programmandi"
       nota="finius quam lingua: 'hoc c89 est' - domus nostra
             hoc cotidie dicit"/>
@@ -437,6 +439,7 @@
     <relatio nomen="continet" ad="plagula_computatralis"
       multiplex="verum"/>
     <relatio nomen="iacet_in" ad="systema_operativum"
+      necessitudo="intra"
       modulus="systema_operativum"/>
   </relationes>
 
@@ -501,6 +504,7 @@
       nota="radix sola caret; conversum necessitudinis continet
             (declaratae) - inversa-ut-nomen sanatum"/>
     <relatio nomen="est_plagula" ad="plagula_computatralis"
+      necessitudo="realizata_a"
       nota="apud systemata unixiformia directorium plagula EST
             (genus speciale); alibi non. Relatio, non
             subordinatio - vide differentiam"/>

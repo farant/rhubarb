@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/animal.genera
-  Exemplar semanticum: ANIMAL (versio 0, PLASTICUM)
+  Exemplar semanticum: ANIMAL (versio 1, PLASTICUM)
   Genus animal (sub corporalia.vivens), species homo inclusa.
 
   Umbra vetustissima bibliothecae IMPLETA: animal a planta
@@ -24,7 +24,7 @@
   multiplicitatis (rota IV) hic maximum fructum fert: duo
   genera vera, unum ens.
 -->
-<natura modulus="animal" versio="0" lingua="latina">
+<natura modulus="animal" versio="1" lingua="latina">
 
 <.genus nomen="animal" sub="vivens" modulus="corporalia">
 
@@ -96,7 +96,8 @@
       nota="conversum planta.pollinatur_a - identitas UNA in
             necessitudines declarata (par conversum primum),
             directio utraque nomine suo"/>
-    <relatio nomen="praedatur" ad="animal" multiplex="verum"/>
+    <relatio nomen="praedatur" ad="animal"
+      necessitudo="afficit" multiplex="verum"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/cliens.genera
-  Exemplar semanticum: CLIENS (versio 1, PLASTICUM)
+  Exemplar semanticum: CLIENS (versio 2, PLASTICUM)
   Genus unum, sub-genera septem (indice Fran):
   telae / nativus / terminalis / api / mcp / cli / mobilis.
 
@@ -13,7 +13,7 @@
   Cliens ministrum supponit: genus SERVUS superficit, nondum
   descriptum - dimidium alterum colloquii.
 -->
-<natura modulus="cliens" versio="1" lingua="latina">
+<natura modulus="cliens" versio="2" lingua="latina">
 
 <.genus nomen="cliens">
 
@@ -33,11 +33,11 @@
     essence tient dans la relation.</glossa>
 
   <relationes>
-    <relatio nomen="consumit" ad="servus"
+    <relatio nomen="consumit" ad="servus" necessitudo="adhibet"
       multiplex="verum"
       nota="genus servus superficit - hospitium et tabulariumd
             domus testes futuri"/>
-    <relatio nomen="agit_pro" ad="*"
+    <relatio nomen="agit_pro" ad="*" necessitudo="exsecutio"
       nota="utens: homo aut machina aut agens - axis primus
             divisionis"/>
   </relationes>
@@ -252,7 +252,8 @@
     <relatio nomen="praebet" ad="*"
       nota="ministerium ipsum - genus 'ministerium' nondum
             natum, unde apertum"/>
-    <relatio nomen="auditur_in" ad="ambitus" modulus="operatio"/>
+    <relatio nomen="auditur_in" ad="ambitus"
+      necessitudo="intra" modulus="operatio"/>
     <relatio nomen="currit_ut" ad="processus" modulus="operatio"
       nota="servus programma est; quod audit processus est"/>
   </relationes>

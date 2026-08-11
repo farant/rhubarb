@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/identificatio.genera
-  Exemplar semanticum: IDENTIFICATIO (versio 1, PLASTICUM)
+  Exemplar semanticum: IDENTIFICATIO (versio 2, PLASTICUM)
   Genus schema_identificandi + species e teste EXPOSITIONIS
   electae.
 
@@ -29,7 +29,7 @@
   codices nationales, tesserae fiscales caudam longam
   incolunt et exspectent donec specimen adveniat.
 -->
-<natura modulus="identificatio" versio="1" lingua="latina">
+<natura modulus="identificatio" versio="2" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -128,11 +128,13 @@
             dat, quis conflictus solvit"/>
     <relatio nomen="normata_per" ad="norma" modulus="norma"/>
     <relatio nomen="gignit" ad="identificator_baptismalis"
+      necessitudo="parit"
       modulus="elementa_programmatis"
       nota="ratio identificandi MACHINA est quae identificatores
             baptismales cudit (vide lineam Scoti): nomen datum,
             non ex contento derivatum"/>
-    <relatio nomen="successit" ad="schema_identificandi"/>
+    <relatio nomen="successit" ad="schema_identificandi"
+      necessitudo="substituit"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM =================

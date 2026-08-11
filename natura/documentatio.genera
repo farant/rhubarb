@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/documentatio.genera
-  Exemplar semanticum: DOCUMENTATIO (versio 1)
+  Exemplar semanticum: DOCUMENTATIO (versio 2)
 
   Modulus RELATIONIS inter textum et opus lectoris. Natus ex
   circuitu generationis I (2026-08-08): scenarium glossarum
@@ -22,7 +22,7 @@
   intentum et manuale mensuratum-defectum esse potest sine
   contradictione. Genus numquam successum affirmat.
 -->
-<natura modulus="documentatio" versio="1" lingua="latina">
+<natura modulus="documentatio" versio="2" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -186,6 +186,7 @@
 
   <relationes>
     <relatio nomen="in_opere" ad="opus_scriptum"
+      necessitudo="situs"
       modulus="opus_scriptum"
       nota="ubi inhaeret - defectus semper alicuius operis est"/>
   </relationes>
@@ -290,11 +291,12 @@
   </nota>
 
   <relationes>
-    <relatio nomen="lector" ad="*"
+    <relatio nomen="lector" ad="*" necessitudo="participatio"
       nota="persona aut programma - eadem apertio consulta ac
             scriba (parcum 01KZFM3GW0: genus ministri machinalis
             dilatum donec census verus tag poscat)"/>
     <relatio nomen="invenit" ad="defectus_documenti"
+      necessitudo="fundatio"
       multiplex="verum"
       nota="defectus quos ambulatio in aperto posuit"/>
     <relatio nomen="exercet" ad="opus_scriptum"

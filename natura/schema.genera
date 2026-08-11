@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/schema.genera
-  Exemplar semanticum: SCHEMA (versio 0, PLASTICUM)
+  Exemplar semanticum: SCHEMA (versio 1, PLASTICUM)
   Genera: schema, campus, genus_valoris.
 
   SUI DESCRIPTIO: exemplar hoc ossa bibliothecae ipsius
@@ -17,7 +17,7 @@
   iudicat, non constringit"). Iudicans veritatem numquam
   amittit; constringens eam ante portam vertit.
 -->
-<natura modulus="schema" versio="0" lingua="latina">
+<natura modulus="schema" versio="1" lingua="latina">
 
 <!-- ==================================================
      SCHEMA - forma datorum declarata
@@ -56,7 +56,7 @@
 
   <relationes>
     <relatio nomen="continet" ad="campus" multiplex="verum"/>
-    <relatio nomen="describit" ad="*"
+    <relatio nomen="describit" ad="*" necessitudo="repraesentatio"
       nota="genus rerum quas format - schema de aliquo est"/>
   </relationes>
 
@@ -97,8 +97,10 @@
 
   <relationes>
     <relatio nomen="campus_de" a="schema" inversa="verum"
+      necessitudo="pars_de"
       nota="impletur a schema.continet"/>
-    <relatio nomen="genus_eius" ad="genus_valoris"/>
+    <relatio nomen="genus_eius" ad="genus_valoris"
+      necessitudo="repraesentatio"/>
   </relationes>
 
 </.genus>

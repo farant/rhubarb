@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/morbus.genera
-  Exemplar semanticum: MORBUS (versio 1, PLASTICUM)
+  Exemplar semanticum: MORBUS (versio 2, PLASTICUM)
   Genus morbus, species per CAUSAM divisae.
 
   Natum ex cursu secundo circuli (valetudinarium).
@@ -22,7 +22,7 @@
   ICD (Classificatio Statistica Internationalis Morborum), ab
   OMS edita - taxinomia morborum publica, normata, numerata.
 -->
-<natura modulus="morbus" versio="1" lingua="latina">
+<natura modulus="morbus" versio="2" lingua="latina">
 
 <.genus nomen="morbus">
 
@@ -101,17 +101,20 @@
   <relationes>
     <relatio nomen="afficit" ad="vivens" modulus="corporalia"
       nota="viventia sola - vide viventis notam"/>
-    <relatio nomen="sedes" ad="*"
+    <relatio nomen="sedes" ad="*" necessitudo="situs"
       nota="pars corporis affecta"/>
     <relatio nomen="dignoscitur_per" ad="iudicium"
+      necessitudo="fundatio"
       modulus="iudicium"
       nota="morbus RES est, diagnosis IUDICIUM de ea:
             distinctio quae totum stratum epistemicum
             portat - aegrota morbum habet sive quis
             dignoverit sive non"/>
     <relatio nomen="curatur_per" ad="praescriptum"
+      necessitudo="effectio"
       modulus="praescriptum" multiplex="verum"/>
-    <relatio nomen="classificatus_in" ad="norma" modulus="norma"
+    <relatio nomen="classificatus_in" ad="norma"
+      necessitudo="normata_per" modulus="norma"
       nota="ICD - taxinomia normata, ubi bibliotheca nostra
             auctoritatem externam citare debet, non fingere"/>
   </relationes>
