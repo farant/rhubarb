@@ -249,6 +249,10 @@
   </elementum>
 
   <elementum nomen="signum">
+    <glossa lingua="en">A sign: caught by an observer - fever,
+      swelling, pallor. Any trained eye can see the same thing,
+      and an instrument gives a QUANTITY (38.5 °C) - whence
+      measurement, whence comparison.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="contentum" genus="textus"/>
     <attributum nomen="facta" genus="dies"/>
