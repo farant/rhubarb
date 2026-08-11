@@ -338,23 +338,30 @@
 
   <pactum nomen="&pactum-interfaciei-primae;"
     contentum="Interfacies thesaurus est, implementatio fluit: interfaciem primam recte fingere; implementatio post libere emendatur, interfacies refingi dolet."
-    ex-fonte="&eskil_steenberg;" tendit-ad="&perennitas;"/>
+    ex-fonte="&eskil_steenberg;" tendit-ad="&perennitas;">
+    <informat ad=".bibliotheca"/>
+  </pactum>
 
   <pactum nomen="&pactum-chordae;"
     contentum="Chorda par (datum, mensura) est, sentinella NUMQUAM terminata; limes ad mundum sentinellarum functio una explicita. Mensura portatur, non quaeritur."
     tendit-ad="&perennitas;">
+    <informat ad="&chorda;"/>
     <nota>Commune: in C disciplina est (vide periculum
       chordae), in linguis recentioribus natura ipsa.</nota>
   </pactum>
 
   <pactum nomen="&pactum-piscinae;"
     contentum="Memoria per piscinas: sumptio in arenam ambitūs, liberatio TOTIUS simul, rei singulae numquam; interfacies sumens piscinam EXPLICITE accipit."
-    tendit-ad="&perennitas;"/>
+    tendit-ad="&perennitas;">
+    <informat ad="&piscina;"/>
+  </pactum>
 
   <pactum nomen="&pactum-exituum;"
     contentum="Exitus 0 purus, 1 defectus inventi, 2 NIHIL CURSUM - defectus, non salus. Custos omnis hoc pactum servat; qui solum 0 spectat fallitur."
     tendit-ad="&dominium;">
     <natum-ex ad="&periculum-exitus-secundi;"/>
+    <informat ad=".instrumentum-lineae"/>
+    <informat ad=".uncus"/>
   </pactum>
 
   <pactum nomen="&pactum-recusationis;"
@@ -363,7 +370,10 @@
 
   <pactum nomen="&pactum-fidelitatis;"
     contentum="Analysta circuitum byte-idem servat: quod legitur et remittitur idem est (silva in C, stml sine ornatu). Scriptor lectorem probat."
-    tendit-ad="&dominium;"/>
+    tendit-ad="&dominium;">
+    <informat ad="&stml;"/>
+    <informat ad="&silva;"/>
+  </pactum>
 
   <pactum nomen="&pactum-parseris-unius;"
     contentum="Analysta UNUS cuique formae; instrumenta cetera tabulas eius consumunt, praesentatio sola. Lectiones plures corporis unius dissensum tacitum parant."
@@ -371,12 +381,15 @@
 
   <pactum nomen="&pactum-veritatis;"
     contentum="Veritas UNA committitur; visus omnis proiectio refectibilis (annales/db, corpus/INDEX, liber/arbor). Quod bis stat, semel mentietur."
-    tendit-ad="&intellectus;"/>
+    tendit-ad="&intellectus;">
+    <informat ad="&annales-tabularii;"/>
+  </pactum>
 
   <pactum nomen="&pactum-portae-natalis;"
     contentum="Porta quaeque culpa plantata RUBRA nascitur antequam viridi eius creditur: porta tacita et porta mortua idem videntur."
     tendit-ad="&dominium;">
     <natum-ex ad="&casus-uncorum-mutorum;"/>
+    <informat ad=".uncus"/>
   </pactum>
 
   <pactum nomen="&pactum-numerorum;"
@@ -397,7 +410,10 @@
 
   <pactum nomen="&pactum-generatorum;"
     contentum="Artefactum generatum generatorem suum se ipso declarat et manu numquam editur: fons mutatur, artefactum refit."
-    tendit-ad="&intellectus;"/>
+    tendit-ad="&intellectus;">
+    <informat ad="&monolithus-canonum;"/>
+    <informat ad="&index-naturae;"/>
+  </pactum>
 
   <!-- ============ PERICULA (laquei quos domus novit) ======= -->
 
