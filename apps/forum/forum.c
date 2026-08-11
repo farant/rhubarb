@@ -37,6 +37,8 @@
 #include "sententiae.h"
 #include "capitula.h"
 #include "xar.h"
+#include "stml.h"
+#include "filum.h"
 #include "capsula_forum.h"
 #include "moneta.h"
 #include "qr.h"
@@ -422,6 +424,655 @@ _capitula_parsare (JsonValor* argumenta, Piscina* piscina,
     json_objectum_ponere(fructus, "capitula", tabulatum);
     json_objectum_ponere(fructus, "gradus_maximus",
         json_integer_creare(piscina, (s64)idx.gradus_maximus));
+    redde fructus;
+}
+
+/* ==================================================
+ * CHARTA - censum legere: proiectio graphi censūs pro tabula
+ * infinita (spec: project-specs/charta-spec.md). LEGENDI SOLUM -
+ * census veritas manet, haec via numquam scribit.
+ * ================================================== */
+
+#define CHARTA_CENSUS_VIA "rhubarb.census"
+#define CHARTA_SEMINA_VIA "natura/cocta/semina.census"
+#define CHARTA_CANON_VIA  "natura/cocta/individua.canon"
+
+/* nodus natus, cum ansis ad quas postea additur */
+nomen structura {
+    chorda     clavis;     /* citatio verbatim: '&x;' */
+    chorda     genus;
+    JsonValor* obiectum;
+    JsonValor* notae;
+} ChartaNodus;
+
+/* semen externum: citatio -> genus (e semina.census) */
+nomen structura {
+    chorda clavis;
+    chorda genus;
+} ChartaSemen;
+
+/* citatio-ne? '&x;' (individuum), '.x' (genus), '#x' (locus
+ * documenti) - sigilla librarii. Ceterum valor verbatim est. */
+interior b32
+_charta_citatio_est (chorda valor)
+{
+    si (valor.mensura < II)
+    {
+        redde FALSUM;
+    }
+    si (valor.datum[ZEPHYRUM] == '&')
+    {
+        redde valor.datum[valor.mensura - I] == ';';
+    }
+    redde valor.datum[ZEPHYRUM] == '.'
+        || valor.datum[ZEPHYRUM] == '#';
+}
+
+/* signum unius limae: mtime.magnitudo.inodus - inodus servationem
+ * atomicam (lima nova eadem secunda) capit, quam mtime solum
+ * perderet */
+interior vacuum
+_charta_signum_limae (constans character* via, character* exitus)
+{
+    structura stat status;
+
+    si (stat(via, &status) == ZEPHYRUM)
+    {
+        sprintf(exitus, "%ld.%ld.%lu",
+            (longus)status.st_mtime,
+            (longus)status.st_size,
+            (insignatus longus)status.st_ino);
+    }
+    alioquin
+    {
+        sprintf(exitus, "x");
+    }
+}
+
+/* signum trium limarum in exitus (>= 160 octeti). FALSUM = census
+ * ipse abest - sine eo nihil pingendum est. */
+interior b32
+_charta_signum_componere (character* exitus)
+{
+    structura stat probatio;
+    character  s1[48];
+    character  s2[48];
+    character  s3[48];
+
+    si (stat(CHARTA_CENSUS_VIA, &probatio) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    _charta_signum_limae(CHARTA_CENSUS_VIA, s1);
+    _charta_signum_limae(CHARTA_SEMINA_VIA, s2);
+    _charta_signum_limae(CHARTA_CANON_VIA, s3);
+    sprintf(exitus, "%s-%s-%s", s1, s2, s3);
+    redde VERUM;
+}
+
+/* vitium proiectionis: responsum plenum, NON culpa RPC - cliens
+ * inter tubulum fractum et censum non-parsabilem (servatio media)
+ * distinguere debet: graphum bonum ultimum retinet, vexillum
+ * monstrat, tela numquam vacua fit (spec par. VIII) */
+interior JsonValor*
+_charta_vitium (Piscina* piscina, constans character* textus)
+{
+    JsonValor* fructus = json_objectum_creare(piscina);
+
+    json_objectum_ponere(fructus, "vitium",
+        json_chorda_creare_literis(piscina, textus));
+    redde fructus;
+}
+
+/* radix elementaris documenti (nodum documenti transit) */
+interior StmlNodus*
+_charta_elementum_radicis (StmlNodus* documentum)
+{
+    i32 i;
+    i32 numerus;
+
+    si (documentum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (documentum->genus == STML_NODUS_ELEMENTUM)
+    {
+        redde documentum;
+    }
+    numerus = stml_numerus_liberorum(documentum);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* liber = stml_liberum_ad_indicem(documentum, i);
+
+        si (liber != NIHIL && liber->genus == STML_NODUS_ELEMENTUM)
+        {
+            redde liber;
+        }
+    }
+    redde NIHIL;
+}
+
+/* semina externa: citatio -> genus. Defectus NON letalis - monitum
+ * apponitur et stipites 'ignotum' manent (numquam tacite). */
+interior Xar*
+_charta_semina_legere (Piscina* piscina, JsonValor* monita)
+{
+    Xar*         semina;
+    chorda       fons;
+    StmlResultus resultus;
+    StmlNodus*   radix;
+    i32          i;
+    i32          numerus;
+
+    semina = xar_creare(piscina, magnitudo(ChartaSemen));
+    fons = filum_legere_totum(CHARTA_SEMINA_VIA, piscina);
+    si (fons.mensura == ZEPHYRUM)
+    {
+        json_tabulatum_addere(monita, json_chorda_creare_literis(
+            piscina, "semina non lecta - externi 'ignotum' erunt"));
+        redde semina;
+    }
+    resultus = stml_legere(fons, piscina,
+        internamentum_creare(piscina));
+    si (!resultus.successus || resultus.radix == NIHIL)
+    {
+        json_tabulatum_addere(monita, json_chorda_creare_literis(
+            piscina, "semina non parsata - externi 'ignotum' erunt"));
+        redde semina;
+    }
+    radix = _charta_elementum_radicis(resultus.radix);
+    numerus = radix ? stml_numerus_liberorum(radix) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* liber = stml_liberum_ad_indicem(radix, i);
+        chorda*    clavis_attr;
+
+        si (liber == NIHIL || liber->genus != STML_NODUS_ELEMENTUM
+            || liber->titulus == NIHIL)
+        {
+            perge;
+        }
+        clavis_attr = stml_attributum_capere(liber, "nomen");
+        si (clavis_attr != NIHIL)
+        {
+            ChartaSemen* semen = (ChartaSemen*)xar_addere(semina);
+
+            semen->clavis = *clavis_attr;
+            semen->genus  = *liber->titulus;
+        }
+    }
+    redde semina;
+}
+
+interior chorda
+_charta_genus_seminis (Xar* semina, chorda clavis)
+{
+    chorda vacua;
+    i32    i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(semina); i++)
+    {
+        ChartaSemen* semen = (ChartaSemen*)xar_obtinere(semina, i);
+
+        si (semen != NIHIL && chorda_aequalis(semen->clavis, clavis))
+        {
+            redde semen->genus;
+        }
+    }
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum   = NIHIL;
+    redde vacua;
+}
+
+interior ChartaNodus*
+_charta_nodum_invenire (Xar* tabula, chorda clavis)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(tabula); i++)
+    {
+        ChartaNodus* nodus = (ChartaNodus*)xar_obtinere(tabula, i);
+
+        si (nodus != NIHIL && chorda_aequalis(nodus->clavis, clavis))
+        {
+            redde nodus;
+        }
+    }
+    redde NIHIL;
+}
+
+/* CAVE: index in tabulam redditus tantum valet dum xar_addere in
+ * eandem tabulam non iterum vocatur (tabula crescens migrat) */
+interior ChartaNodus*
+_charta_nodum_creare (Xar* tabula, JsonValor* nodi, chorda clavis,
+    chorda genus, b32 alienus, Piscina* piscina)
+{
+    ChartaNodus* nodus = (ChartaNodus*)xar_addere(tabula);
+
+    nodus->clavis   = clavis;
+    nodus->genus    = genus;
+    nodus->obiectum = json_objectum_creare(piscina);
+    nodus->notae    = json_tabulatum_creare(piscina);
+    json_objectum_ponere(nodus->obiectum, "genus",
+        json_chorda_creare(piscina, genus));
+    json_objectum_ponere(nodus->obiectum, "externus",
+        json_boolean_creare(piscina, alienus));
+    json_objectum_ponere(nodus->obiectum, "notae", nodus->notae);
+    json_objectum_ponere_chorda(nodi, clavis, nodus->obiectum);
+    redde nodus;
+}
+
+interior vacuum
+_charta_aristam_addere (JsonValor* aristae, Xar* scopi,
+    chorda a, chorda ad, chorda familia, Piscina* piscina)
+{
+    JsonValor* arista = json_objectum_creare(piscina);
+    chorda*    scopus = (chorda*)xar_addere(scopi);
+
+    *scopus = ad;
+    json_objectum_ponere(arista, "a",
+        json_chorda_creare(piscina, a));
+    json_objectum_ponere(arista, "ad",
+        json_chorda_creare(piscina, ad));
+    json_objectum_ponere(arista, "familia",
+        json_chorda_creare(piscina, familia));
+    json_tabulatum_addere(aristae, arista);
+}
+
+/* entitas una censūs -> nodus + aristae. Elementum '%' est
+ * augmentatio librarii: clavis destinata nomen est, contentum
+ * additivum (notae, aristae) nodo externo apponitur.
+ * Attributa: valor-citatio -> arista singularis; ceterum verbatim.
+ * Liberi: nota/glossa -> prosa; ad= -> arista; ceterum numeratur
+ * (praetermissa - nihil tacite cadit). */
+interior vacuum
+_charta_entitatem_legere (StmlNodus* elementum, Xar* tabula,
+    Xar* semina, JsonValor* nodi, JsonValor* aristae, Xar* scopi,
+    i32* praetermissa, Piscina* piscina)
+{
+    chorda       clavis;
+    ChartaNodus* nodus;
+    JsonValor*   attributa = NIHIL;
+    i32          i;
+    i32          numerus;
+
+    si (elementum == NIHIL
+        || elementum->genus != STML_NODUS_ELEMENTUM
+        || elementum->titulus == NIHIL)
+    {
+        redde;   /* commenta, textus albus - non numerantur */
+    }
+
+    si (chorda_aequalis_literis(*elementum->titulus, "%"))
+    {
+        si (elementum->augmentum_clavis == NIHIL)
+        {
+            (*praetermissa)++;
+            redde;
+        }
+        clavis = *elementum->augmentum_clavis;
+        nodus = _charta_nodum_invenire(tabula, clavis);
+        si (nodus == NIHIL)
+        {
+            chorda genus = _charta_genus_seminis(semina, clavis);
+
+            si (genus.mensura == ZEPHYRUM)
+            {
+                genus = chorda_ex_literis("ignotum", piscina);
+            }
+            nodus = _charta_nodum_creare(tabula, nodi, clavis,
+                genus, VERUM, piscina);
+        }
+    }
+    alioquin
+    {
+        chorda* clavis_attr = stml_attributum_capere(elementum,
+            "nomen");
+
+        si (clavis_attr == NIHIL)
+        {
+            (*praetermissa)++;
+            redde;
+        }
+        clavis = *clavis_attr;
+        nodus = _charta_nodum_invenire(tabula, clavis);
+        si (nodus == NIHIL)
+        {
+            nodus = _charta_nodum_creare(tabula, nodi, clavis,
+                *elementum->titulus, FALSUM, piscina);
+        }
+    }
+
+    numerus = elementum->attributa
+        ? xar_numerus(elementum->attributa) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlAttributum* attr = (StmlAttributum*)xar_obtinere(
+            elementum->attributa, i);
+
+        si (attr == NIHIL || attr->titulus == NIHIL
+            || attr->valor == NIHIL
+            || chorda_aequalis_literis(*attr->titulus, "nomen"))
+        {
+            perge;
+        }
+        si (_charta_citatio_est(*attr->valor))
+        {
+            _charta_aristam_addere(aristae, scopi, clavis,
+                *attr->valor, *attr->titulus, piscina);
+        }
+        alioquin
+        {
+            si (attributa == NIHIL)
+            {
+                attributa = json_objectum_creare(piscina);
+                json_objectum_ponere(nodus->obiectum, "attributa",
+                    attributa);
+            }
+            json_objectum_ponere_chorda(attributa, *attr->titulus,
+                json_chorda_creare(piscina, *attr->valor));
+        }
+    }
+
+    numerus = stml_numerus_liberorum(elementum);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* liber = stml_liberum_ad_indicem(elementum, i);
+        chorda*    ad;
+
+        si (liber == NIHIL || liber->genus != STML_NODUS_ELEMENTUM
+            || liber->titulus == NIHIL)
+        {
+            perge;
+        }
+        si (chorda_aequalis_literis(*liber->titulus, "nota"))
+        {
+            json_tabulatum_addere(nodus->notae,
+                json_chorda_creare(piscina,
+                    stml_textus_normalizatus(liber, piscina)));
+            perge;
+        }
+        si (chorda_aequalis_literis(*liber->titulus, "glossa"))
+        {
+            chorda* lingua = stml_attributum_capere(liber, "lingua");
+
+            si ((lingua == NIHIL
+                    || chorda_aequalis_literis(*lingua, "en"))
+                && json_objectum_capere(nodus->obiectum, "glossa")
+                    == NIHIL)
+            {
+                json_objectum_ponere(nodus->obiectum, "glossa",
+                    json_chorda_creare(piscina,
+                        stml_textus_normalizatus(liber, piscina)));
+            }
+            perge;
+        }
+        ad = stml_attributum_capere(liber, "ad");
+        si (ad != NIHIL)
+        {
+            _charta_aristam_addere(aristae, scopi, clavis, *ad,
+                *liber->titulus, piscina);
+            perge;
+        }
+        (*praetermissa)++;
+    }
+}
+
+/* glossa Anglica generis e canone monolitho. Octeti in piscina
+ * canonis vivunt - vocans transcribat antequam piscina pereat. */
+interior chorda
+_charta_glossam_generis (StmlNodus* radix_canonis, chorda genus,
+    Piscina* piscina_canonis)
+{
+    chorda vacua;
+    i32    i;
+    i32    numerus = stml_numerus_liberorum(radix_canonis);
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum   = NIHIL;
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* liber = stml_liberum_ad_indicem(radix_canonis, i);
+        chorda*    clavis_attr;
+        i32        j;
+        i32        n;
+
+        si (liber == NIHIL || liber->genus != STML_NODUS_ELEMENTUM
+            || liber->titulus == NIHIL
+            || !chorda_aequalis_literis(*liber->titulus, "elementum"))
+        {
+            perge;
+        }
+        clavis_attr = stml_attributum_capere(liber, "nomen");
+        si (clavis_attr == NIHIL
+            || !chorda_aequalis(*clavis_attr, genus))
+        {
+            perge;
+        }
+        n = stml_numerus_liberorum(liber);
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            StmlNodus* g = stml_liberum_ad_indicem(liber, j);
+            chorda*    lingua;
+
+            si (g == NIHIL || g->genus != STML_NODUS_ELEMENTUM
+                || g->titulus == NIHIL
+                || !chorda_aequalis_literis(*g->titulus, "glossa"))
+            {
+                perge;
+            }
+            lingua = stml_attributum_capere(g, "lingua");
+            si (lingua != NIHIL
+                && chorda_aequalis_literis(*lingua, "en"))
+            {
+                redde stml_textus_normalizatus(g, piscina_canonis);
+            }
+        }
+        redde vacua;   /* elementum inventum, glossa Anglica abest */
+    }
+    redde vacua;
+}
+
+/* glossae generum e canone monolitho (846 KB) apponere. Piscina
+ * PROPRIA effimera - piscinam vocationis (VIII MB) arbor canonis
+ * saturaret (OOM plagularum immanium notum, 01KYQ4H5ZG). Parsatio
+ * sola in reaedificatione plena currit - interrogationes signo
+ * breviantur. Numerus appositarum redditur - porta fumi >0 poscit. */
+interior i32
+_charta_glossas_apponere (Xar* tabula, JsonValor* monita,
+    Piscina* piscina)
+{
+    Piscina*     piscina_canonis;
+    chorda       fons;
+    StmlResultus resultus;
+    StmlNodus*   radix;
+    i32          appositae = ZEPHYRUM;
+    i32          i;
+
+    piscina_canonis = piscina_generare_dynamicum("charta_canon",
+        8388608);
+    si (piscina_canonis == NIHIL)
+    {
+        json_tabulatum_addere(monita, json_chorda_creare_literis(
+            piscina,
+            "piscina canonis deest - glossae generum absunt"));
+        redde ZEPHYRUM;
+    }
+    resultus.successus = FALSUM;
+    resultus.radix = NIHIL;
+    fons = filum_legere_totum(CHARTA_CANON_VIA, piscina_canonis);
+    si (fons.mensura > ZEPHYRUM)
+    {
+        resultus = stml_legere(fons, piscina_canonis,
+            internamentum_creare(piscina_canonis));
+    }
+    si (!resultus.successus || resultus.radix == NIHIL)
+    {
+        json_tabulatum_addere(monita, json_chorda_creare_literis(
+            piscina, "canon non lectus - glossae generum absunt"));
+        piscina_destruere(piscina_canonis);
+        redde ZEPHYRUM;
+    }
+    radix = _charta_elementum_radicis(resultus.radix);
+    per (i = ZEPHYRUM; radix != NIHIL && i < xar_numerus(tabula); i++)
+    {
+        ChartaNodus* nodus = (ChartaNodus*)xar_obtinere(tabula, i);
+        chorda       glossa;
+
+        si (nodus == NIHIL)
+        {
+            perge;
+        }
+        glossa = _charta_glossam_generis(radix, nodus->genus,
+            piscina_canonis);
+        si (glossa.mensura > ZEPHYRUM)
+        {
+            /* transcribere: octeti piscinae canonis mox pereunt */
+            json_objectum_ponere(nodus->obiectum, "glossa_generis",
+                json_chorda_creare(piscina,
+                    chorda_transcribere(glossa, piscina)));
+            appositae++;
+        }
+    }
+    piscina_destruere(piscina_canonis);
+    redde appositae;
+}
+
+/* censum_legere {signum?} -> graphum censūs, aut {mutatum:falsum}
+ * (signum aequale - tres stat, nulla parsatio), aut {vitium}
+ * (census abest/non parsatur - cliens graphum ultimum retinet).
+ * Involucrum scaenae: {scaena, signum, nodi, aristae, ...} -
+ * porta effugii nidificationis (spec par. III). */
+interior JsonValor*
+_censum_legere (JsonValor* argumenta, Piscina* piscina,
+    vacuum* datum, chorda* culpa)
+{
+    character    signum_novum[192];
+    chorda       signum_vetus;
+    chorda       fons;
+    StmlResultus resultus;
+    StmlNodus*   radix;
+    JsonValor*   fructus;
+    JsonValor*   nodi;
+    JsonValor*   aristae;
+    JsonValor*   monita;
+    Xar*         tabula;
+    Xar*         semina;
+    Xar*         scopi;
+    i32          praetermissa = ZEPHYRUM;
+    i32          glossae_generum;
+    i32          i;
+    i32          numerus;
+
+    (vacuum)datum;
+    (vacuum)culpa;   /* vitium in fructu, non culpa RPC (spec II.6) */
+
+    si (!_charta_signum_componere(signum_novum))
+    {
+        redde _charta_vitium(piscina,
+            "rhubarb.census abest (stat)");
+    }
+    signum_vetus.mensura = ZEPHYRUM;
+    signum_vetus.datum   = NIHIL;
+    si (argumenta != NIHIL)
+    {
+        signum_vetus = json_ad_chorda(json_objectum_capere(
+            argumenta, "signum"));
+    }
+    si (signum_vetus.mensura > ZEPHYRUM
+        && chorda_aequalis_literis(signum_vetus, signum_novum))
+    {
+        fructus = json_objectum_creare(piscina);
+        json_objectum_ponere(fructus, "mutatum",
+            json_boolean_creare(piscina, FALSUM));
+        redde fructus;
+    }
+
+    fons = filum_legere_totum(CHARTA_CENSUS_VIA, piscina);
+    si (fons.mensura == ZEPHYRUM)
+    {
+        redde _charta_vitium(piscina, "rhubarb.census legi nequit");
+    }
+    resultus = stml_legere(fons, piscina,
+        internamentum_creare(piscina));
+    si (!resultus.successus || resultus.radix == NIHIL)
+    {
+        redde _charta_vitium(piscina,
+            "census non parsatur (servatio media?)");
+    }
+    radix = _charta_elementum_radicis(resultus.radix);
+    si (radix == NIHIL)
+    {
+        redde _charta_vitium(piscina, "census sine radice");
+    }
+
+    fructus = json_objectum_creare(piscina);
+    nodi    = json_objectum_creare(piscina);
+    aristae = json_tabulatum_creare(piscina);
+    monita  = json_tabulatum_creare(piscina);
+    tabula  = xar_creare(piscina, magnitudo(ChartaNodus));
+    scopi   = xar_creare(piscina, magnitudo(chorda));
+    semina  = _charta_semina_legere(piscina, monita);
+
+    numerus = stml_numerus_liberorum(radix);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        _charta_entitatem_legere(stml_liberum_ad_indicem(radix, i),
+            tabula, semina, nodi, aristae, scopi, &praetermissa,
+            piscina);
+    }
+
+    /* stipites: scopi extra censum minti (semina aut ignoti) -
+     * arista sine nodo utroque telae nihil diceret */
+    per (i = ZEPHYRUM; i < xar_numerus(scopi); i++)
+    {
+        chorda* scopus = (chorda*)xar_obtinere(scopi, i);
+        chorda  genus;
+        chorda  clavis;
+
+        si (scopus == NIHIL)
+        {
+            perge;
+        }
+        clavis = *scopus;
+        si (_charta_nodum_invenire(tabula, clavis) != NIHIL)
+        {
+            perge;
+        }
+        genus = _charta_genus_seminis(semina, clavis);
+        si (genus.mensura == ZEPHYRUM)
+        {
+            si (clavis.datum[ZEPHYRUM] == '.')
+            {
+                genus = chorda_ex_literis("genus", piscina);
+            }
+            alioquin si (clavis.datum[ZEPHYRUM] == '#')
+            {
+                genus = chorda_ex_literis("locus", piscina);
+            }
+            alioquin
+            {
+                genus = chorda_ex_literis("ignotum", piscina);
+            }
+        }
+        (vacuum)_charta_nodum_creare(tabula, nodi, clavis, genus,
+            VERUM, piscina);
+    }
+
+    glossae_generum = _charta_glossas_apponere(tabula, monita,
+        piscina);
+
+    json_objectum_ponere(fructus, "scaena",
+        json_chorda_creare_literis(piscina, "census"));
+    json_objectum_ponere(fructus, "signum",
+        json_chorda_creare_literis(piscina, signum_novum));
+    json_objectum_ponere(fructus, "nodi", nodi);
+    json_objectum_ponere(fructus, "aristae", aristae);
+    json_objectum_ponere(fructus, "glossae_generum",
+        json_integer_creare(piscina, (s64)glossae_generum));
+    json_objectum_ponere(fructus, "praetermissa",
+        json_integer_creare(piscina, (s64)praetermissa));
+    json_objectum_ponere(fructus, "monita", monita);
     redde fructus;
 }
 
@@ -1167,6 +1818,8 @@ _methodos_praebere (Internuntius* inx, InternuntiusModus modus,
         _sententias_parsare, f);
     (vacuum)internuntius_praebere(inx, "capitula_parsare",
         _capitula_parsare, f);
+    (vacuum)internuntius_praebere(inx, "censum_legere",
+        _censum_legere, f);
     (vacuum)internuntius_praebere(inx, "tergale_ponere",
         _tergale_ponere, f);
     (vacuum)internuntius_praebere(inx, "tergale_capere",
@@ -1278,6 +1931,61 @@ s32 principale (integer argc, character** argv)
         imprimere("[forum] fumus: %d pipata, %d articuli\n",
             (int)json_tabulatum_numerus(pipata),
             (int)json_tabulatum_numerus(articuli));
+        /* charta: graphum censūs contra limas VERAS (lex
+         * conditorii veri - fixturae assumpta communia habent) */
+        {
+            chorda     culpa_ch;
+            JsonValor* graphum;
+            JsonValor* nodi_f;
+            JsonValor* aristae_f;
+            JsonValor* iterum;
+            JsonValor* arg_signum;
+
+            culpa_ch.mensura = ZEPHYRUM;
+            culpa_ch.datum   = NIHIL;
+            graphum = _censum_legere(NIHIL, piscina, &forum,
+                &culpa_ch);
+            si (graphum == NIHIL
+                || json_objectum_capere(graphum, "vitium") != NIHIL)
+            {
+                imprimere("[forum] fumus charta FRACTUS: vitium\n");
+                redde I;
+            }
+            nodi_f    = json_objectum_capere(graphum, "nodi");
+            aristae_f = json_objectum_capere(graphum, "aristae");
+            si (json_objectum_numerus(nodi_f) == ZEPHYRUM
+                || json_tabulatum_numerus(aristae_f) == ZEPHYRUM
+                || json_ad_integer(json_objectum_capere(graphum,
+                       "glossae_generum")) == (s64)ZEPHYRUM)
+            {
+                imprimere("[forum] fumus charta FRACTUS: graphum"
+                    " vacuum aut glossae absunt\n");
+                redde I;
+            }
+            /* signum stabile: limae eaedem -> mutatum falsum */
+            arg_signum = json_objectum_creare(piscina);
+            json_objectum_ponere(arg_signum, "signum",
+                json_objectum_capere(graphum, "signum"));
+            iterum = _censum_legere(arg_signum, piscina, &forum,
+                &culpa_ch);
+            si (iterum == NIHIL
+                || json_objectum_capere(iterum, "mutatum") == NIHIL
+                || json_ad_boolean(json_objectum_capere(iterum,
+                       "mutatum")))
+            {
+                imprimere("[forum] fumus charta FRACTUS: signum"
+                    " instabile\n");
+                redde I;
+            }
+            imprimere("[forum] fumus charta: %d nodi, %d aristae,"
+                " %d glossae generum, %d praetermissa\n",
+                (int)json_objectum_numerus(nodi_f),
+                (int)json_tabulatum_numerus(aristae_f),
+                (int)json_ad_integer(json_objectum_capere(graphum,
+                    "glossae_generum")),
+                (int)json_ad_integer(json_objectum_capere(graphum,
+                    "praetermissa")));
+        }
         piscina_destruere(piscina_vocationis);
         piscina_destruere(piscina);
         redde ZEPHYRUM;
