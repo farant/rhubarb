@@ -84,15 +84,23 @@
     <nota>C89 stricte (-pedantic).</nota>
   </%>
 
-  <!-- ============ BIBLIOTHECAE (specimina, gradus 0-2) ==== -->
+  <!-- ============ BIBLIOTHECAE (specimina) ============
+       gradus = longitudo catenae dependentiarum domesticarum:
+       0 = sola bibliotheca vulgaris, n = maximum fontium + 1.
+       (Advena I: 'gradus 0-2 promissi, solus 0 datus' - nunc
+       definitus et cuique datus.) -->
 
   <bibliotheca nomen="&piscina;" scripta-in="&c;">
-    <nota>Arena memoriae. Gradus 0.</nota>
+    <nota>Arena memoriae. Gradus 0 - solum omnium.</nota>
   </bibliotheca>
 
   <bibliotheca nomen="&chorda;" scripta-in="&c;">
+    <dependet-ex ad="&piscina;"/>
     <nota>Chorda mensuram fert, NUMQUAM nullo terminatur -
-      functiones bibliothecae vulgaris alienae sunt. Gradus 0.</nota>
+      functiones bibliothecae vulgaris alienae sunt. Functiones
+      sumentes piscinam accipiunt (arcus quem census prior
+      tacebat et advena I contra documentum recte divinavit).
+      Gradus 1.</nota>
   </bibliotheca>
 
   <bibliotheca nomen="&stml;" scripta-in="&c;">
@@ -100,27 +108,40 @@
     <dependet-ex ad="&chorda;"/>
     <nota>XML-varians domus. textus internus VERBATIM est
       (migratio 2026-08-06). silva exemplar suum vendicat -
-      amalgamare.sh post mutationes.</nota>
+      amalgamare.sh post mutationes. Gradus 2.</nota>
   </bibliotheca>
 
   <bibliotheca nomen="&canon;" scripta-in="&c;">
     <dependet-ex ad="&stml;"/>
     <nota>Schemata STML: vocabularium, cardinalitas, genera
-      valorum, citationes, fines. Lingua expressionum NUMQUAM.</nota>
+      valorum, citationes, fines. Lingua expressionum NUMQUAM.
+      Gradus 3.</nota>
   </bibliotheca>
 
   <bibliotheca nomen="&natura;" scripta-in="&c;">
     <dependet-ex ad="&stml;"/>
     <dependet-ex ad="&canon;"/>
     <nota>Numeri eius NON hic iacent sed in signis infra:
-      quisque viam suam fert, ideo re-examinari potest.</nota>
+      quisque viam suam fert, ideo re-examinari potest.
+      Gradus 4.</nota>
   </bibliotheca>
 
   <bibliotheca nomen="&silva;" scripta-in="&c;">
     <dependet-ex ad="&piscina;"/>
     <dependet-ex ad="&chorda;"/>
     <nota>Analysta C89 robustus: emissio byte-fidelis, codices
-      54-88, fundamentum legati et instrumentorum.</nota>
+      54-88, fundamentum legati et instrumentorum. Gradus 2.</nota>
+  </bibliotheca>
+
+  <bibliotheca nomen="&credo;" scripta-in="&c;">
+    <dependet-ex ad="&piscina;"/>
+    <nota>Probationum bibliotheca domus: asserta CREDO_*,
+      compendium probationis. Exemplar usūs canonicum:
+      probationes/probatio_piscina.c. Cursor suitarum:
+      ./compile_tests.sh [pars] - vexilla eadem norma
+      vexillorum. Silentium advenae I acerbissimum: census sine
+      probationibus stabat dum periculum cardinale eius porta
+      vacua erat. Gradus 1.</nota>
   </bibliotheca>
 
   <!-- ============ PROGRAMMATA ============ -->
@@ -168,7 +189,7 @@
   <!-- ============ NORMAE (conventiones domus) ============ -->
 
   <norma nomen="&norma-vexillorum;" titulus="vexilla compilationis"
-    status-vigor="vigens"
+    status-vigor="vigens" proprium="&c;"
     contentum="clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -Wno-long-long -Wno-overlength-strings -fbracket-depth=512">
     <nota>Fons verus: compile_tests.sh GCC_FLAGS. ADVENA I
       (regeneratio prima) defectum invenit: index prior X vexilla
@@ -179,9 +200,14 @@
 
   <norma nomen="&norma-latinitatis;" titulus="latinitas nominum"
     status-vigor="vigens"
-    contentum="Identificatores, commenta, nuntii Latine; verba latina.h identificatores VETITI (nomen, casus, per, magnitudo, structura...).">
+    contentum="Identificatores, commenta, nuntii Latine; verba technica singula (offset...) intacta licent. Verba latina.h identificatores VETITI (nomen, casus, per, magnitudo, structura...) - mechanismus in pacto latinitatis fontis.">
     <nota>Duos fines habet (superdeterminata: RM 18) - vide
-      spinam.</nota>
+      spinam. VOCABULARIUM RESERVATUM praeter latina.h: verba
+      par.3/4 METAMODULI in dominio naturae (genus, species,
+      actio, status, fons...) et nomina generum censūs (signum,
+      observatio...) - advena I 'signum' pro nota arenae
+      adhibuit et se ipse correxit: lexicon reservatorum
+      deerat.</nota>
   </norma>
 
   <norma nomen="&norma-plagularum-privatarum;"
@@ -198,6 +224,77 @@
     status-vigor="vigens" normat="&natura;"
     contentum="Forma exemplarium naturae: par.8 contractus lectoris (regulae XVII), par.9 doctrina. Tabula par.3 GENERATA - natura.canon fons, numquam tabula ipsa editur."/>
 
+  <!-- ============ PACTA (foedera consilii) ============
+       Forma artefactorum quam implementatio QUAEVIS honorare
+       debet. Advena I capita poscebat; censui PACTA debentur:
+       interfacies in capitibus vivunt (artefactum se ipsum
+       optime dicit), foedera formae HIC. Relatio proprium
+       ABSENS = commune (lingua quavis honorandum); praesens =
+       linguae huic proprium (decretum Franis 2026-08-11). -->
+
+  <pactum nomen="&pactum-interfaciei-primae;"
+    contentum="Interfacies thesaurus est, implementatio fluit: interfaciem primam recte fingere; implementatio post libere emendatur, interfacies refingi dolet (Steenberg)."
+    tendit-ad="&perennitas;"/>
+
+  <pactum nomen="&pactum-chordae;"
+    contentum="Chorda par (datum, mensura) est, sentinella NUMQUAM terminata; limes ad mundum sentinellarum functio una explicita. Mensura portatur, non quaeritur."
+    tendit-ad="&perennitas;">
+    <nota>Commune: in C disciplina est (vide periculum
+      chordae), in linguis recentioribus natura ipsa.</nota>
+  </pactum>
+
+  <pactum nomen="&pactum-piscinae;"
+    contentum="Memoria per piscinas: sumptio in arenam ambitūs, liberatio TOTIUS simul, rei singulae numquam; interfacies sumens piscinam EXPLICITE accipit."
+    tendit-ad="&perennitas;"/>
+
+  <pactum nomen="&pactum-exituum;"
+    contentum="Exitus 0 purus, 1 defectus inventi, 2 NIHIL CURSUM - defectus, non salus. Custos omnis hoc pactum servat; qui solum 0 spectat fallitur."
+    tendit-ad="&dominium;">
+    <natum-ex ad="&periculum-exitus-secundi;"/>
+  </pactum>
+
+  <pactum nomen="&pactum-recusationis;"
+    contentum="Defectus CLARE recusat et causam nominat; degradatio tacita vetita - quod tacet, fidem fabricat."
+    tendit-ad="&dominium;"/>
+
+  <pactum nomen="&pactum-fidelitatis;"
+    contentum="Analysta circuitum byte-idem servat: quod legitur et remittitur idem est (silva in C, stml sine ornatu). Scriptor lectorem probat."
+    tendit-ad="&dominium;"/>
+
+  <pactum nomen="&pactum-parseris-unius;"
+    contentum="Analysta UNUS cuique formae; instrumenta cetera tabulas eius consumunt, praesentatio sola. Lectiones plures corporis unius dissensum tacitum parant."
+    tendit-ad="&intellectus;"/>
+
+  <pactum nomen="&pactum-veritatis;"
+    contentum="Veritas UNA committitur; visus omnis proiectio refectibilis (annales/db, corpus/INDEX, liber/arbor). Quod bis stat, semel mentietur."
+    tendit-ad="&intellectus;"/>
+
+  <pactum nomen="&pactum-portae-natalis;"
+    contentum="Porta quaeque culpa plantata RUBRA nascitur antequam viridi eius creditur: porta tacita et porta mortua idem videntur."
+    tendit-ad="&dominium;">
+    <natum-ex ad="&casus-uncorum-mutorum;"/>
+  </pactum>
+
+  <pactum nomen="&pactum-numerorum;"
+    contentum="Numeri insignati ordinarii, signati nominatim (domi: i32/i64 insignati, s32/s64 signati); quod ex horologio venit SEMPER signatum - differentia temporis natura sua signata est, involutio insignata ramus est qui tacite numquam currit."
+    tendit-ad="&perennitas;"/>
+
+  <pactum nomen="&pactum-latinitatis-fontis;"
+    contentum="Fons PER macros latina.h scribitur (si, alioquin, per, dum, redde, structura...): verba clavium Latina in ipso textu stant, unde macro-verba identificatoribus VETITA."
+    proprium="&c;" tendit-ad="&intellectus;">
+    <nota>Coniectura stili maxima advenae I ('mutat omnem
+      lineam') hic soluta: per macros, non solum praeter
+      verba.</nota>
+  </pactum>
+
+  <pactum nomen="&pactum-suturae;"
+    contentum="Quod machinae proprium est post suturam iacet; nucleus systema numquam directe vocat - portatio suturam novam scribit, nucleum numquam."
+    tendit-ad="&perennitas;"/>
+
+  <pactum nomen="&pactum-generatorum;"
+    contentum="Artefactum generatum generatorem suum se ipso declarat et manu numquam editur: fons mutatur, artefactum refit."
+    tendit-ad="&intellectus;"/>
+
   <!-- ============ PERICULA (laquei quos domus novit) ======= -->
 
   <periculum nomen="&periculum-chordae;"
@@ -211,7 +308,19 @@
     probabilitas="0.7" gravitas="levis" minatur="&claude-code;">
     <minuitur-per ad="&claude-md;"/>
     <nota>Mensuratum 01KZ6GH88Z. Remedium: examen frigidum
-      auctoritas est post editiones capitum.</nota>
+      auctoritas est post editiones capitum - mandato
+      ./silva/examen.sh via (advena I: remedium sine mandato
+      nominato inutile advenae).</nota>
+  </periculum>
+
+  <periculum nomen="&periculum-expansionis-aequalis;"
+    contentum="Verbum '===' nudum in mandato zsh expansionem aequalis evocat: separator innocens cursum abrumpit et exitum falsum instrumento innocenti tribuit."
+    probabilitas="0.7" gravitas="levis" minatur="&claude-code;">
+    <minuitur-per ad="&claude-md;"/>
+    <nota>Probabilitas MENSURATA, non aestimata: ictus VII in
+      tabulario (res 01KYRCJ340...), saepissime icta rerum
+      omnium - disciplina signorum (via) in pericula extensa:
+      numerus morsuum pro numero ex memoria.</nota>
   </periculum>
 
   <periculum nomen="&periculum-exitus-secundi;"
@@ -253,7 +362,10 @@
 
   <acta nomen="&annales-tabularii;">
     <nota>gesta/annales/tabularium.jsonl - VERITAS committenda;
-      .db proiectio refectibilis. Frigide: ./gesta/frigida.sh.</nota>
+      .db proiectio refectibilis. Frigide: ./gesta/frigida.sh.
+      ULID ubique in domo (01K...) HIC resolvuntur: mcp
+      tabularii res, aut frigide per annales - advena I quinque
+      ULID sine resolutore nominato invenit.</nota>
   </acta>
 
   <artefactum-aedificationis nomen="&monolithus-canonum;">
@@ -361,6 +473,9 @@
   <observatio nomen="&casus-truncationis;"
     contentum="Inspectio nominis per 'head -c 60' truncata tag '[species:...]' abscidit: candidatus 'mensuratio' liber visus est dum apud fundamentum sedebat. Custos generum invenit quod inspectio celaverat - eadem lectio ac peregrini '|...'."/>
 
+  <observatio nomen="&casus-uncorum-mutorum;"
+    contentum="Unci domus QUATTUOR muti stabant tempus ignotum: involucrum hookSpecificOutput deerat et additionalContext nudum tacite abiciebatur - porta tacita et porta mortua idem videntur. Casus qui pactum portae natalis coegit."/>
+
   <!-- ====== SIGNA: numeri viam suam ferentes (ancorae) ======
        Signum = observationis species quam instrumentum dat.
        'via' methodum fert, ideo quisque numerus RE-EXAMINARI
@@ -441,10 +556,33 @@
        declarata). Culpa plantata probata: signum ad rem orbam
        ligatum ipsum natat - quod custos vetus admisisset.
 
+       VI. REGENERATIO I (2026-08-11, decretum: census SEMEN
+       est). Agens sine contextu (advena) ex documento solo:
+       VIII/XV catechismi pure, consilium aedificationis ordine
+       fere recto, teleologia paene perfecta - et VITIA duo
+       FACTUALIA inventa (vexilla X contra XIV, -std=c89 ipsum
+       aberat; contradictio plagularum privatarum sine subiecto
+       vetiti). Messis: genus PACTUM natum (foedus consilii -
+       forma quam lingua quavis honorat; a norma subiecto, a
+       postulato ambitu differt) cum necessitudine proprium_de
+       (commune/proprium - absentia commune significat); pacta
+       XIII enrollata; credo et probationes tandem dictae
+       (silentium acerbissimum advenae); gradus definitus et
+       datus; arcus chorda-piscina scriptus (advena contra
+       documentum recte divinaverat); remedium legati mandato
+       nominato; periculum expansionis aequalis cum probabilitate
+       EX ICTIBUS mensurata (VII morsūs) - disciplina viae in
+       pericula extensa; vocabularium reservatum dictum; ULID
+       resolutorem nominant. Exempla artefactorum: natura/exempla
+       et hortus.planta specimina viva - census citat, non
+       inlineat (regula differentiae advenae).
+
        MANENT: machina (ferrum sub systemate), uncus, proiectum
        + participatio (parcum 01KZGYS87E); citatio trans
        documenta (duplicatum #c); etiam= in documentis
-       (tabulariumd daemon ET servus_mcp).
+       (tabulariumd daemon ET servus_mcp); capita ut pacta
+       legere (advena capita poscit - pactum formam dat, caput
+       formam probat: nexus nondum mechanicus).
        Custos: ./tools/census_orbi.sh -->
 
 </individua>
