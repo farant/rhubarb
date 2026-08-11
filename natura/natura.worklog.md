@@ -5927,3 +5927,60 @@ Named deferral: mensura is the natural first home for waking
 necessitudo-level fines (mensurat is truly unitas→magnitudo) —
 gated behind the direction-marking mechanism (01KZQCPZ5E),
 declared a=*/ad=* like everything else until that arc.
+
+## 2026-08-11 — Direction mechanism: citations name the direction (decretum Franis)
+
+The parked hole (01KZQCPZ5E): ~20 sites cited a converse-capable
+family by its head name while running the converse direction, with
+the truth living only in "via conversa" notas. Rule XXII's direction
+test compared only the SITE WORD against conversum= — a cited site
+always tested as forward.
+
+Fran's ruling: **necessitudo= names the DIRECTION you run, not the
+family.** The conversum is already a first-class resolvable name, so
+the grammar didn't change at all — only which name the direction
+test reads.
+
+Mechanism (lib/natura.c, red-green proven):
+- Rule XXII now reads the EFFECTIVE BINDING NAME (citation when
+  present, else slot word) against conversum=. Old code flagged the
+  two lawful converse citations in the fixture and missed the
+  unlawful one — count-identical (1 vs 1) until a second lawful site
+  broke the tie. Planted-fault lesson: a count assert needs
+  ASYMMETRY between old and new behavior to be red.
+- New rule XXIV [M]: a conversum-less family with asymmetric
+  effective ends draws ONE monitum on the DECLARATION (one fact, one
+  monitum — not per site). Born silent: zero asymmetric families
+  measured before building. This is the tripwire that makes noun
+  families (participatio, fundatio, situs...) safe to leave
+  direction-agnostic until the day they narrow.
+
+Migration judgments worth keeping:
+- The parcum's list was NOT trustworthy as a work order: scitur_a →
+  tenetur_a and translata_ex → orta_ex turned out SAME-direction
+  (secretum tenetur_a scientibus reads forward). Every site needed
+  individual judgment against the family's definitio.
+- fundat splits cleanly: support flows forward (sustinet, testatur,
+  confert_capacitatem = fundat), groundedness flows converse
+  (potestate, capacitas_per, signatus_per, calibratum_contra,
+  veritas_sua, plicatur_in, ad_punctum = fundatur_in). The metrology
+  chain calibratum_contra is CONVERSE — the standard grounds the
+  instrument.
+- operatio.tenet_apertam's nota said "via recta" but ran the
+  converse of tenetur_a — prose direction claims lie; only the name
+  system can be checked.
+- Ten families gained conversum= (genitus_a, afficitur_a,
+  causatur_a, tenet, normat, edit, constituit, exsecuta_a,
+  auctor_de, adhibetur_ab). Six sites then DISSOLVED into plain
+  word-binding — where the site word deserves to be a direction
+  name, declare it and drop the citation (singleton case law from
+  the burn-down, now with a mechanism).
+- Collision discipline: every new conversum name grepped against
+  existing slots/munera AND the declared-name table before minting.
+  index()-based table checks give substring false positives
+  (constituit inside constituitur_per) — verify exact.
+
+Canones byte-identical (necessitudo=/conversum= never reach the
+fold). Gates: examen SANUM 85/0/0, four suites green, canones -probare
+exit 0. Fines-narrowing is now UNBLOCKED — mensura (mensuratur_per
+ad=unitas_mensurae-ish) is the natural first customer when wanted.

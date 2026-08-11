@@ -682,9 +682,9 @@ exits 1. Exit 2 means NOTHING RAN — never read it as health.
 | 19 | A bare name used in two models is a declared homonym: a `nota` on each side naming the other and saying why they are not the same kind, and every citation of it carries `modulus=` | [M] → [E] on first use |
 | 20 | Slot names (relatio `nomen=`, terminus `munus=`) that bind to no declared necessitudo are counted per model, ONE aggregated monitum each (top names + count) — the burn-down metric; silent while zero necessitudines are declared | [M] (2026-08-10) |
 | 21 | An explicit `necessitudo=` citation resolves to a declared necessitudo; no spelling (nomen/conversum/scriptio) maps to two declarations | [E] (2026-08-10) |
-| 22 | A slot's `ad=` lies within the bound necessitudo's effective end (direction-aware: a converse-named slot checks `a=`); a sub-necessitudo never widens an inherited end | [E] (2026-08-10) |
+| 22 | A slot's `ad=` lies within the bound necessitudo's effective end, direction-aware: the **effective binding name** — the `necessitudo=` citation when present, else the slot's own word — matched against `conversum=` decides which end; a sub-necessitudo never widens an inherited end | [E] (2026-08-10; citation direction 2026-08-11) |
 | 23 | `munus=` is unique within one frame (`<termini>`) | [E] (2026-08-10) |
-| 24 | (reserved) | — |
+| 24 | A necessitudo with no `conversum=` whose effective ends differ draws ONE monitum on the declaration — asymmetric ends demand both direction-names before citing sites can say which way they run | [M] (2026-08-11; born silent — zero asymmetric families) |
 | 25 | A model declares at least one `genus` OR one `necessitudo` (replaces the canon's old `minimum="1"` on genus — co-occurrence above the canon, like "ad AUT a") | [E] (2026-08-10) |
 
 Rules 9–13 are the Cyc-consistency defense: they are what makes a
@@ -701,7 +701,17 @@ grammatical spelling variants (`situm_in`/`sita_in`/`situs_in` are
 ONE relation). Use sites stay light: a `relatio` or `terminus`
 whose name matches a declared nomen/conversum/scriptio binds
 automatically; `necessitudo=` cites explicitly when the domain word
-diverges. Act-genera declare FRAMES — `<termini>` wrapping
+diverges. **The citation names the DIRECTION, not the family**
+(Fran's ruling, 2026-08-11): a site running the converse direction
+cites the `conversum=` name — `fundatur_in`, never `fundat` plus a
+"via conversa" nota — so the citation reads true with the
+slot-holder as subject, and rule 22 checks the right end without a
+human reading prose. Where the site's own word IS a direction name,
+the citation is superfluous and word-binding is preferred (six
+sites dissolved this way in the 2026-08-11 migration). Scriptiones
+spell the NOMEN side by convention; a converse-side spelling would
+need a `latus=` attribute, coined on first need (zero cases
+today). Act-genera declare FRAMES — `<termini>` wrapping
 `<terminus munus=…>` ends; a munus is frame-local (never in the
 global namespace) and `relatum` resolves through termini as well as
 relationes (rule 11). `necessaria=` on a terminus is
