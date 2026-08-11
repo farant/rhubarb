@@ -5754,3 +5754,24 @@ would lie); gradus_supra → successio (graded series is a
 series); assignatur_per → fundatio; applicatur_per → exsecutio;
 fingit → repraesentatio (a legal fiction is a deliberately
 binding misrepresentation).
+
+## 2026-08-10 — actus burn-down: the paradigm frames
+
+10 → 0 (global 124 → 114, ligata 318 = 74%), monita 23, canons
+byte-identical, versio 1 → 2.
+
+actus_sollemnis got the richest frame yet — seven termini in
+original order, and validity IS the frame: quis (agens), qua
+potestate (capacitas_per → fundat via converse, the third
+validity-ground after iussum.potestate and tractatus.
+signatus_per — the pattern is now a family habit), quid
+constituens (constituit → constituta_per FORWARD — the model's
+own "RELATIO CARDINALIS", the machine by which instituted facts
+come to be), quem afficiens + secundum quam legem (both bind BY
+NAME — afficit to its workhorse, secundum_legem to the scriptio
+of secundum_normam), quibus testibus (participatio), qua forma
+(forma_eius → conformitas). ritus framed too (minister/recipiens).
+
+quorum: condicio_actus → implet via converse (a quorum is a
+postulatum the act must fulfil); statutum_per → constituta_per
+(third site for that word-shape); coetus → de.

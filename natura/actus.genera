@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/actus.genera
-  Exemplar semanticum: ACTUS SOLLEMNIS (versio 1, PLASTICUM)
+  Exemplar semanticum: ACTUS SOLLEMNIS (versio 2, PLASTICUM)
   Genera: actus_sollemnis, ritus (+sacramentum, sacramentale),
   actus_iuridicus.
 
@@ -45,7 +45,7 @@
   Searle de regulis constitutivis ("X pro Y valet in C") idem
   quod nos de generibus institutis dicimus, aliis verbis.
 -->
-<natura modulus="actus" versio="1" lingua="latina">
+<natura modulus="actus" versio="2" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -131,33 +131,43 @@
     "quid de rebus interim gestis?" respondere non potest.
   </nota>
 
-  <relationes>
-    <relatio nomen="agens" ad="persona" modulus="persona"
+  <termini>
+    <nota>compages actus sollemnis: validitas ipsa finibus
+      constat - quis, qua potestate, quid constituens, quem
+      afficiens, secundum quam legem, quibus testibus, qua
+      forma. Septem fines, ordo pristinus (afficit et
+      secundum_legem titulo ligant).</nota>
+    <terminus munus="agens" necessitudo="participatio"
+      ad="persona" modulus="persona"
       nota="qui actum ponit - non quilibet"/>
-    <relatio nomen="capacitas_per" ad="*"
+    <terminus munus="capacitas_per" necessitudo="fundat" ad="*"
       nota="unde agenti potestas: officium, titulus, character,
-            licentia. CAPACITAS non PERITIA - vide caput"/>
-    <relatio nomen="constituit" ad="*"
+            licentia. CAPACITAS non PERITIA - vide caput.
+            Fundamentum validitatis, via conversa (ut
+            iussum.potestate)"/>
+    <terminus munus="constituit" necessitudo="constituta_per"
+      ad="*"
       nota="RELATIO CARDINALIS HUIUS EXEMPLARIS: factum
             institutum quod actus in esse ponit - officium,
             titulum, obligationem, possessionem, matrimonium.
             Bibliotheca res institutas habebat, ortum earum
-            non habebat"/>
-    <relatio nomen="afficit" ad="*"
+            non habebat (constituta_per via recta: actus
+            constituit)"/>
+    <terminus munus="afficit" ad="*"
       nota="quem aut quid mutat"/>
-    <relatio nomen="secundum_legem" ad="lex" modulus="norma"
+    <terminus munus="secundum_legem" ad="lex" modulus="norma"
       nota="genus LEX superficit (cursu quarto notatum: norma
             cui CONFORMARIS, lex quae IMPONITUR) - nondum
             descriptum"/>
-    <relatio nomen="testes" ad="persona" modulus="persona"
-      multiplex="verum"/>
-    <relatio nomen="forma_eius" ad="praescriptum"
-      modulus="praescriptum"
+    <terminus munus="testes" necessitudo="participatio"
+      ad="persona" modulus="persona" multiplex="verum"/>
+    <terminus munus="forma_eius" necessitudo="conformitas"
+      ad="praescriptum" modulus="praescriptum"
       nota="forma ut ordo operationum PRAESCRIPTUM est; actus
             tamen praescriptum non est - praescriptum peritia
             operatur et artefactum efficit, actus auctoritate
             operatur et factum institutum ponit"/>
-  </relationes>
+  </termini>
 
 </.genus>
 
@@ -192,9 +202,13 @@
             SIGNIFICAT, illic transformatur"/>
   </proprietates>
 
+  <termini>
+    <terminus munus="minister" necessitudo="participatio"
+      ad="persona" modulus="persona"/>
+    <terminus munus="recipiens" necessitudo="participatio"
+      ad="persona" modulus="persona"/>
+  </termini>
   <relationes>
-    <relatio nomen="minister" ad="persona" modulus="persona"/>
-    <relatio nomen="recipiens" ad="persona" modulus="persona"/>
     <relatio nomen="adhibet" ad="res_sacra" modulus="corporalia"
       nota="genus res_sacra superfectum cursu quarto - res
             consecratae, quarum alienatio restricta"/>
@@ -585,15 +599,17 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="coetus" ad="*"
+    <relatio nomen="coetus" ad="*" necessitudo="de"
       nota="cuius sit - concilium, curia, capitulum, coetus
             machinarum. APERTUM CONSULTO: hoc genus utrumque
             dominium ferre debet, et angustare ad organizationem
             id ipsum amitteret propter quod aedificatum est"/>
     <relatio nomen="condicio_actus" ad="actus_sollemnis"
-      multiplex="verum"
-      nota="quos actus validos faciat"/>
+      multiplex="verum" necessitudo="implet"
+      nota="quos actus validos faciat - postulatum quod actus
+            implere debet (implet via conversa)"/>
     <relatio nomen="statutum_per" ad="norma" modulus="norma"
+      necessitudo="constituta_per"
       nota="quorum plerumque scribitur, non ex natura fluit -
             unde mutari potest, et mutatio quorumatum quorum
             mutare debet"/>
