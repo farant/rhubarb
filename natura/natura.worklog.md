@@ -6088,3 +6088,39 @@ The canon-custos caught a forward-reference mid-batch (pactum
 cited an observatio not yet written) — the gate working live.
 census_orbi's perpetual "CAVE 2 nomina" measured as pre-existing
 librarium blindness (quaestio 01KZRS606V).
+
+## 2026-08-11 — Ambulatio realista: uncus, ambulatio, auctoritates
+
+Fran's corrective: the philosophy is not parsimony of kinds but
+ACCURATE kinds — and my own walk from the day before was caught
+wearing the parsimony costume (gradus in prose sentences, reserved
+vocabulary stuffed into a nota). The realist pass lifted what
+prose was carrying:
+
+- **uncus** (fabricatio): machine guard bound to an event —
+  differs from probatio by MODE OF INVOCATION (a test is called,
+  a hook watches). Six individua had biography (a measured
+  collective death) before they had a genus.
+- **ambulatio** (documentatio): the census's own history lived in
+  a comment its own machinery couldn't read. Seven walk-events
+  now entities; MESSIS stays as narrative.
+- **auctoritates**: Pieper was ALREADY in the library; Steenberg
+  minted (birth date omitted, not faked); DO-178C is a real norma
+  beside ISO 9899:1990, editor RTCA minted. ex_fonte relation on
+  pactum + norma = provenance as arcs, not prose.
+- **programma.adhibet widened** ad="bibliotheca" → ad="*": the
+  narrowing was assumed, not measured — frigida (which uses the
+  annales, not a library) was the first false rejection. Recorded
+  in the slot's own nota.
+
+Gates earned their keep three times in one walk: census_orbi went
+RED on six real orphans (walks without spine edges, frigida
+edgeless); canon-custos rejected ex-fonte as a child element
+(singular relations project to ATTRIBUTES — my mistake, its
+correction); the compiled closure kind-rejected frigida→annales
+under the old narrow slot. A schema layer that pushes back during
+enrollment is the difference between recording and modeling.
+
+New queryable question the walk created: which pericula have a
+MACHINE watching them vs only prose? (chordae: none — known gap,
+recorded in its nota.)
