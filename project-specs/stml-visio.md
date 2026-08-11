@@ -77,7 +77,7 @@ reference sigils carve three spaces:
 | `##prefix` | UUID/NanoID git-style prefix selector | **VIVIT** (TS); **DEEST** in C (no uuid autogen in C either — adopt only on real pull) |
 | `.ns::label` | label namespaces | **VIVIT** (TS); C has labels API without namespaces |
 | `%` family | operations on what exists elsewhere (G1: `%remove/%replace-with/%append/%wrap/%set-attr…`) | **ALIBI VIVIT** as tools (renominare/emendare); **PARCATUM** as data-plane augmentation — see §5 |
-| `<% &x;>` | augmentation (single lawful data-plane verb of the `%` family) | **IN OPERE** — 01KZPA16E4 tractum 2026-08-10; spec project-specs/librarium-spec.md (W1 claves-externae SHIPPED 591a6ea — census cites library individua; `<%` = W3, then collision tripwire W2) |
+| `<% &x;>` | augmentation (single lawful data-plane verb of the `%` family) | **VIVIT** — W3 SHIPPED 2026-08-10 (87b5944 grammar, 320aab8 judgment, e7a41ab migration); strict at birth (`<%>`/`<% laika>`/`<% .canis>` = vitium, unclosed = TAG_NON_CLAUSUM); additive-only mechanical (AUGMENTUM_PUGNANS XV); W2 collision tripwire remains (spec librarium-spec.md §3, COLLISA = XVI) |
 | `<-->` + `$var` | selector combinator blocks + pattern extraction (G1) | **ALIBI VIVIT** (silva selectors; TOLERA forward-capture); remainder feeds the future transform tool (§6) |
 | `@x` | value interpolation (G2) | **MORTUUM** — data documents do not compute; no successor wanted |
 | `:` / `::` | parameter definition vs invocation (G1/G2) | syntax **MORTUUM**; the DISCIPLINE (define-side and use-side must be visually distinct) **VIVIT** as doctrine — it is the ancestor of the loud tripartition (§5) |
