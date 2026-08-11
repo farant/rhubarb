@@ -1201,6 +1201,63 @@ curare_cum(defs_vetera).then(function () {
     charta_camera.x = 0; charta_camera.initum = false;
 })();
 
+/* ---- charta: tabella + legenda + cribrum (gradus V) ---- */
+(function () {
+    var r = { nodi: {
+        "&piscina;": { genus: "bibliotheca", externus: false,
+            notae: ["Arena memoriae."], glossa_generis: "Memory arena.",
+            attributa: { gradus: "0" } },
+        "&pactum-piscinae;": { genus: "pactum", externus: false,
+            notae: [] }
+    }, aristae: [
+        { a: "&pactum-piscinae;", ad: "&piscina;",
+          familia: "informat" },
+        { a: "&piscina;", ad: "&pactum-piscinae;",
+          familia: "adhibet" }
+    ], signum: "s9", scaena: "census" };
+    var tabella = document.getElementById("charta-tabella");
+    var textus;
+
+    charta_datum = r;
+    charta_positus = charta_disponere(r);
+    charta_legendam_implere();
+    aequale(charta_familiae_visae["informat"], true,
+        "charta: informat (formalis) ordinarie visum");
+    aequale(charta_familiae_visae["adhibet"], false,
+        "charta: adhibet (efficiens) ordinarie celatum");
+    proba(charta_colores["informat"] === "#9fb87a",
+        "charta: color informat viridis fixus");
+    proba(document.getElementById("charta-legenda")
+        .textContent.indexOf("adhibet (1)") !== -1,
+        "charta: legenda familiam cum numero fert");
+
+    /* cribrum: celata familia invisibilis - nisi electi nexus */
+    charta_electum = null;
+    proba(!charta_arista_visibilis(r.aristae[1]),
+        "charta: arista familiae celatae invisibilis");
+    charta_electum = "&piscina;";
+    proba(charta_arista_visibilis(r.aristae[1]),
+        "charta: nexus electi cribrum transcendit");
+
+    /* tabella: titulus, glossa generis, nota, attributum, arista */
+    charta_eligere("&piscina;");
+    textus = tabella.textContent;
+    proba(tabella.hidden === false, "charta: electio tabellam aperit");
+    proba(textus.indexOf("piscina") !== -1
+        && textus.indexOf("Memory arena.") !== -1
+        && textus.indexOf("Arena memoriae.") !== -1
+        && textus.indexOf("gradus = 0") !== -1
+        && textus.indexOf("informat") !== -1
+        && textus.indexOf("pactum-piscinae") !== -1,
+        "charta: tabella titulum/glossam/notam/attributum/aristas fert");
+    charta_eligere(null);
+    proba(tabella.hidden === true, "charta: electio nulla claudit");
+
+    /* purgatio */
+    charta_datum = null; charta_positus = null; charta_electum = null;
+    charta_familiae_visae = {}; charta_colores = {};
+})();
+
 /* Synchrona omnia (vide Sync supra), ergo hic tuto iudicamus.
  * IACTUS, non $.exit: $.exit in hoc ambitu non exstat, et iactus
  * osascript exitu non-zephyro terminat (porta exitus, ut

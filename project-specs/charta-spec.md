@@ -128,9 +128,12 @@ scaena requested by nomen. v1 never sends more than one.
   (§5). Edge = line with arrowhead at `ad`; color by familia.
 - Hit-testing in world space for hover (highlight incident edges) and
   click (detail panel).
-- Gloss display toggle: **Latine / Anglice / ambo** (Anglice shows
-  entity gloss, falling back to kind gloss). v1 default: Latine —
-  everything rendered as-is from the file.
+- Gloss display: the detail panel shows the Latin truth plus any
+  glosses that exist (kind gloss always, entity gloss when
+  authored) — both visible, no mode. (Shipped amendment: the
+  three-way Latine/Anglice/ambo toggle is deferred until entity
+  glossae exist in volume — today there are zero, so the toggle
+  would switch between identical views.)
 
 ## 5. Layout — the only real risk, iterate with eyes
 

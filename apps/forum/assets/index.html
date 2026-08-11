@@ -425,9 +425,37 @@
   #charta-tela.trahens { cursor: grabbing; }
   #charta-status { color: #8a7a55; font-size: .75em;
     margin: .3em 0 0 0; }
-  #charta-vexillum { position: absolute; top: .6em; right: .6em;
+  #charta-vexillum { position: absolute; top: .6em; left: .6em;
     background: #3a2420; color: #c46a5a; border: 1px solid #c46a5a;
     border-radius: 4px; padding: .2em .6em; font-size: .75em; }
+  #charta-tabella { position: absolute; top: .6em; right: .6em;
+    width: 23em; max-height: calc(78vh - 1.4em); overflow-y: auto;
+    background: rgba(23,21,18,.96); border: 1px solid #8a7a55;
+    border-radius: 4px; padding: .6em .9em; font-size: .78em; }
+  #charta-tabella h3 { color: #ece5d8; margin: 0 0 .1em 0;
+    font-size: 1.1em; }
+  #charta-tabella .charta-genus { color: #8a7a55;
+    margin-bottom: .5em; }
+  #charta-tabella .charta-glossa { color: #9fb87a;
+    font-style: italic; margin: .2em 0 .5em 0; }
+  #charta-tabella .charta-nota { margin: .3em 0;
+    white-space: pre-wrap; }
+  #charta-tabella .charta-attributum { color: #8a7a55; }
+  #charta-tabella .charta-familia-caput { color: #d8b978;
+    margin: .6em 0 .1em 0; }
+  #charta-tabella .charta-arista-ordo { cursor: pointer;
+    color: #9fb87a; }
+  #charta-tabella .charta-arista-ordo:hover { color: #d8b978; }
+  #charta-legenda { position: absolute; left: .6em; bottom: .6em;
+    max-height: 46vh; overflow-y: auto;
+    background: rgba(23,21,18,.92); border: 1px solid #453d2f;
+    border-radius: 4px; padding: .3em .7em .4em .7em;
+    font-size: .68em; }
+  #charta-legenda .charta-causa { color: #d8b978;
+    cursor: pointer; margin-top: .4em; }
+  #charta-legenda label { display: block; cursor: pointer;
+    white-space: nowrap; }
+  #charta-legenda input { width: auto; margin-right: .4em; }
 </style>
 </head>
 <body>
@@ -631,6 +659,8 @@
     <canvas id="charta-tela"></canvas>
     <div id="charta-vexillum" hidden>census non legibilis
       (servatio media?) - graphum ultimum bonum monstratur</div>
+    <div id="charta-tabella" hidden></div>
+    <div id="charta-legenda"></div>
     <div id="charta-status"></div>
   </div>
 </section>
@@ -1088,6 +1118,8 @@ var charta_signum   = null;  /* signum graphi boni ultimi */
 var charta_interrogatio = null;      /* manubrium setInterval */
 var charta_fulgores = {};    /* clavis nodi -> {t, novus} (fulgor) */
 var charta_fulgores_aristae = {};    /* clavis aristae -> t */
+var charta_iter     = null;  /* {x,y} - camera eo labitur (electio
+                                usoris SOLA; recargatio numquam) */
 
 /* strata: tabula generis -> fascia. VECTIS (spec par. V): si
  * tabula manualis mentiri incipit, e sceleto causali derivanda.
@@ -1116,6 +1148,50 @@ var CHARTA_ALIA = { titulus: 'alia', color: '#6a6156' };
  * Tabula velaminis ut strata - spec par. II.5. */
 var CHARTA_SPINA = { 'causat': true, 'pendet-ex': true,
                      'dependet-ex': true };
+
+/* lens causarum: familia -> causa (tabula velaminis promissa,
+ * spec par. II.5 - in natura causat/pendet_ex CONSULTO intacta
+ * manent; haec est lens picturae, non doctrina). Ignota ->
+ * 'incerta'. Legenda per causas grege ordinatur. */
+var CHARTA_CAUSAE = {
+  'causat': 'finalis', 'pendet-ex': 'finalis',
+  'tendit-ad': 'finalis',
+  'informat': 'formalis', 'proprium-de': 'formalis',
+  'dependet-ex': 'materialis', 'scripta-in': 'materialis',
+  'natum-ex': 'materialis',
+  'adhibet': 'efficiens', 'custodit': 'efficiens',
+  'invenit': 'efficiens', 'ex-fonte': 'efficiens',
+  'minuitur-per': 'efficiens', 'editor': 'efficiens'
+};
+var CHARTA_CAUSAE_ORDO = ['finalis', 'formalis', 'materialis',
+  'efficiens', 'incerta'];
+
+/* visibilitas familiarum (legenda scribit). Ordinaria = sceletum:
+ * spina + finalis + formalis; ceterae opt-in. Electio et fulgor
+ * cribrum transcendunt (nexus electi semper visi; arista nova
+ * familiae celatae fulget tunc evanescit - 'hic aliquid natum'). */
+var charta_familiae_visae = {};
+var charta_colores = {};   /* familia -> color (legenda dat) */
+var CHARTA_COLORES_CETERI = ['#7ea7c4', '#a98fc0', '#8fc0a9',
+  '#c4a97e', '#b47ec4', '#7ec4b4', '#c47e93', '#c46a5a'];
+
+function charta_familia_ordinaria(f) {
+  var causa = CHARTA_CAUSAE[f] || 'incerta';
+  return CHARTA_SPINA[f] === true
+    || causa === 'finalis' || causa === 'formalis';
+}
+
+function charta_arista_visibilis(a) {
+  if (charta_familiae_visae[a.familia] !== false) { return true; }
+  if (charta_electum !== null
+      && (a.a === charta_electum || a.ad === charta_electum)) {
+    return true;
+  }
+  if (charta_fulgores_aristae[charta_clavis_aristae(a)]) {
+    return true;
+  }
+  return false;
+}
 
 function charta_titulus_nodi(clavis) {
   if (clavis.charAt(0) === '&') { return clavis.slice(1, -1); }
@@ -1312,14 +1388,8 @@ function charta_ad_oram(x1, y1, x2, y2, p) {
   return { x: x1 + dx * t, y: y1 + dy * t, dx: dx, dy: dy };
 }
 
-function charta_color_aristae(a, nexa) {
-  if (nexa) { return 'rgba(236,229,216,0.9)'; }
-  if (CHARTA_SPINA[a.familia]) { return 'rgba(216,185,120,0.55)'; }
-  if (a.familia === 'informat') { return 'rgba(159,184,122,0.5)'; }
-  if (a.familia === 'adhibet' || a.familia === 'scripta-in') {
-    return 'rgba(126,167,196,0.4)';
-  }
-  return 'rgba(138,122,85,0.35)';
+function charta_color_familiae(f) {
+  return charta_colores[f] || '#8a7a55';
 }
 
 function charta_aristam_pingere(ctx, a, pa, pad) {
@@ -1339,17 +1409,24 @@ function charta_aristam_pingere(ctx, a, pa, pad) {
     if (aetas > 3000) {
       delete charta_fulgores_aristae[charta_clavis_aristae(a)];
       fulgor = null;
-    } else {
-      nexa = false;   /* fulgor vincit */
-      ctx.strokeStyle = 'rgba(159,184,122,'
-        + (0.4 + 0.6 * (1 - aetas / 3000)) + ')';
-      ctx.lineWidth = 2.4;
     }
   }
-  if (!fulgor) {
-    ctx.strokeStyle = charta_color_aristae(a, nexa);
-    ctx.lineWidth = nexa ? 2 : (CHARTA_SPINA[a.familia] ? 1.6 : 1);
+  if (fulgor) {
+    /* fulgor vincit: arista nova viridis, vanescens */
+    ctx.strokeStyle = '#9fb87a';
+    ctx.globalAlpha = 0.4
+      + 0.6 * (1 - (Date.now() - fulgor) / 3000);
+    ctx.lineWidth = 2.4;
+  } else if (nexa) {
+    ctx.strokeStyle = '#ece5d8';
+    ctx.globalAlpha = 0.9;
+    ctx.lineWidth = 2;
+  } else {
+    ctx.strokeStyle = charta_color_familiae(a.familia);
+    ctx.globalAlpha = CHARTA_SPINA[a.familia] ? 0.55 : 0.42;
+    ctx.lineWidth = CHARTA_SPINA[a.familia] ? 1.6 : 1;
   }
+  ux = cuspis.dx / longit; uy = cuspis.dy / longit;
   ctx.beginPath();
   ctx.moveTo(x1, y1);
   ctx.lineTo(cuspis.x, cuspis.y);
@@ -1362,6 +1439,7 @@ function charta_aristam_pingere(ctx, a, pa, pad) {
   ctx.lineTo(cuspis.x - ux * 9 + uy * 4, cuspis.y - uy * 9 - ux * 4);
   ctx.closePath();
   ctx.fill();
+  ctx.globalAlpha = 1;
 }
 
 function charta_nodum_pingere(ctx, clavis, p) {
@@ -1436,6 +1514,7 @@ function charta_pingere() {
 
   for (i = 0; i < charta_datum.aristae.length; i++) {
     a = charta_datum.aristae[i];
+    if (!charta_arista_visibilis(a)) { continue; }
     pa = charta_positus[a.a];
     pad = charta_positus[a.ad];
     if (!pa || !pad) { continue; }
@@ -1486,6 +1565,204 @@ function charta_medium_ponere() {
     charta_camera.scala = Math.max(0.12, Math.min(1,
       0.92 * tela.clientWidth / (x1 - x0 + 120),
       0.92 * tela.clientHeight / (y1 - y0 + 120)));
+  }
+}
+
+/* ---- tabella singulorum (spec par. VII): LEGENDI SOLUM index in
+ * strata annalium - nulla affordantia scribendi ulla. ---- */
+
+function charta_iter_ad(clavis) {
+  var p = charta_positus ? charta_positus[clavis] : null;
+
+  if (p) {
+    charta_iter = { x: p.x + p.lat / 2, y: p.y + p.alt / 2 };
+  }
+}
+
+function charta_eligere(clavis) {
+  var tabella = document.getElementById('charta-tabella');
+
+  charta_electum = clavis;
+  if (clavis === null) {
+    tabella.hidden = true;
+    return;
+  }
+  charta_tabellam_implere(clavis);
+  tabella.hidden = false;
+}
+
+function charta_tabellam_implere(clavis) {
+  var tabella = document.getElementById('charta-tabella');
+  var n = charta_datum.nodi[clavis];
+  var p = charta_positus[clavis];
+  var s = p && p.stratum < CHARTA_STRATA.length
+    ? CHARTA_STRATA[p.stratum] : CHARTA_ALIA;
+  var familiae = {};
+  var ordo_familiarum = [];
+  var caput, linea, i, a, k;
+
+  tabella.textContent = '';
+  caput = document.createElement('h3');
+  caput.textContent = charta_titulus_nodi(clavis);
+  tabella.appendChild(caput);
+  linea = document.createElement('div');
+  linea.className = 'charta-genus';
+  linea.textContent = n.genus + ' · ' + s.titulus
+    + (n.externus ? ' · externum' : '');
+  tabella.appendChild(linea);
+  if (n.glossa_generis) {
+    linea = document.createElement('div');
+    linea.className = 'charta-glossa';
+    linea.textContent = n.glossa_generis;
+    tabella.appendChild(linea);
+  }
+  for (i = 0; n.notae && i < n.notae.length; i++) {
+    linea = document.createElement('div');
+    linea.className = 'charta-nota';
+    linea.textContent = n.notae[i];
+    tabella.appendChild(linea);
+  }
+  if (n.glossa) {
+    linea = document.createElement('div');
+    linea.className = 'charta-glossa';
+    linea.textContent = n.glossa;
+    tabella.appendChild(linea);
+  }
+  if (n.attributa) {
+    for (k in n.attributa) {
+      if (!n.attributa.hasOwnProperty(k)) { continue; }
+      linea = document.createElement('div');
+      linea.className = 'charta-attributum';
+      linea.textContent = k + ' = ' + n.attributa[k];
+      tabella.appendChild(linea);
+    }
+  }
+  /* aristae per familiam gregatae; ordo quisque premi potest -
+   * camera ad alterum finem labitur (index in tabulam viva) */
+  for (i = 0; i < charta_datum.aristae.length; i++) {
+    a = charta_datum.aristae[i];
+    if (a.a !== clavis && a.ad !== clavis) { continue; }
+    if (!familiae[a.familia]) {
+      familiae[a.familia] = [];
+      ordo_familiarum.push(a.familia);
+    }
+    familiae[a.familia].push(a);
+  }
+  ordo_familiarum.sort();
+  for (i = 0; i < ordo_familiarum.length; i++) {
+    var fam = ordo_familiarum[i];
+    var j;
+
+    linea = document.createElement('div');
+    linea.className = 'charta-familia-caput';
+    linea.textContent = fam;
+    tabella.appendChild(linea);
+    for (j = 0; j < familiae[fam].length; j++) {
+      a = familiae[fam][j];
+      (function (alter) {
+        var ordo = document.createElement('div');
+        var exiens = a.a === clavis;
+
+        ordo.className = 'charta-arista-ordo';
+        ordo.textContent = (exiens ? '→ ' : '← ')
+          + charta_titulus_nodi(alter);
+        ordo.onclick = function () {
+          charta_eligere(alter);
+          charta_iter_ad(alter);
+        };
+        tabella.appendChild(ordo);
+      })(a.a === clavis ? a.ad : a.a);
+    }
+  }
+}
+
+/* ---- legenda (spec par. VI): familiae praesentes per causas
+ * gregatae, quaeque cum pyxide; caput causae gregem totum vertit.
+ * Ordinaria = sceletum (spina + finalis + formalis) - silva
+ * integra opt-in est, non oneris primi. ---- */
+
+function charta_legendam_implere() {
+  var legenda = document.getElementById('charta-legenda');
+  var numeri = {};
+  var familiae = [];
+  var greges = {};
+  var index_coloris = 0;
+  var i, a, f, causa;
+
+  if (!charta_datum) { return; }
+  for (i = 0; i < charta_datum.aristae.length; i++) {
+    a = charta_datum.aristae[i];
+    if (numeri[a.familia] === undefined) {
+      numeri[a.familia] = 0;
+      familiae.push(a.familia);
+    }
+    numeri[a.familia]++;
+  }
+  familiae.sort();
+  /* colores stabiles: spina aurea, informat viridis, ceterae e
+   * palette ordine nominum (determinatum trans recargationes) */
+  for (i = 0; i < familiae.length; i++) {
+    f = familiae[i];
+    if (charta_familiae_visae[f] === undefined) {
+      charta_familiae_visae[f] = charta_familia_ordinaria(f);
+    }
+    if (!charta_colores[f]) {
+      charta_colores[f] = CHARTA_SPINA[f] ? '#d8b978'
+        : f === 'informat' ? '#9fb87a'
+        : CHARTA_COLORES_CETERI[
+            index_coloris % CHARTA_COLORES_CETERI.length];
+    }
+    if (!CHARTA_SPINA[f] && f !== 'informat') { index_coloris++; }
+    causa = CHARTA_CAUSAE[f] || 'incerta';
+    if (!greges[causa]) { greges[causa] = []; }
+    greges[causa].push(f);
+  }
+  legenda.textContent = '';
+  for (i = 0; i < CHARTA_CAUSAE_ORDO.length; i++) {
+    causa = CHARTA_CAUSAE_ORDO[i];
+    if (!greges[causa]) { continue; }
+    (function (grex) {
+      var caput = document.createElement('div');
+
+      caput.className = 'charta-causa';
+      caput.textContent = causa;
+      caput.title = 'gregem totum vertere';
+      caput.onclick = function () {
+        var j, aliquid_celatum = false;
+
+        for (j = 0; j < grex.length; j++) {
+          if (charta_familiae_visae[grex[j]] === false) {
+            aliquid_celatum = true;
+          }
+        }
+        for (j = 0; j < grex.length; j++) {
+          charta_familiae_visae[grex[j]] = aliquid_celatum;
+        }
+        charta_legendam_implere();
+      };
+      legenda.appendChild(caput);
+    })(greges[causa]);
+    var j;
+    for (j = 0; j < greges[causa].length; j++) {
+      (function (fam) {
+        var titulus = document.createElement('label');
+        var pyxis = document.createElement('input');
+        var color = document.createElement('span');
+
+        pyxis.type = 'checkbox';
+        pyxis.checked = charta_familiae_visae[fam] !== false;
+        pyxis.onchange = function () {
+          charta_familiae_visae[fam] = pyxis.checked;
+        };
+        titulus.appendChild(pyxis);
+        color.textContent = '— ';
+        color.style.color = charta_colores[fam];
+        titulus.appendChild(color);
+        titulus.appendChild(document.createTextNode(
+          fam + ' (' + numeri[fam] + ')'));
+        legenda.appendChild(titulus);
+      })(greges[causa][j]);
+    }
   }
 }
 
@@ -1568,6 +1845,15 @@ function charta_recipere(r) {
     + (r.praetermissa ? ' · praetermissa: ' + r.praetermissa : '')
     + (r.monita && r.monita.length ? ' · '
         + r.monita.join('; ') : '');
+  charta_legendam_implere();
+  /* tabella aperta datum recens sequitur; nodus periens claudit */
+  if (charta_electum !== null) {
+    if (r.nodi[charta_electum]) {
+      charta_tabellam_implere(charta_electum);
+    } else {
+      charta_eligere(null);
+    }
+  }
   if (!charta_camera.initum) {
     charta_camera.initum = true;
     charta_medium_ponere();
@@ -1589,16 +1875,25 @@ function charta_interrogare() {
 }
 
 function charta_gyrus(t) {
-  var v;
+  var dt, v;
 
   if (visus !== 'charta') { charta_gyrus_it = false; return; }
-  v = charta_tempus ? Math.min(50, t - charta_tempus) : 16;
+  dt = charta_tempus ? Math.min(50, t - charta_tempus) : 16;
   charta_tempus = t;
-  v = 0.9 * v / charta_camera.scala;  /* celeritas scaenae constans */
-  if (charta_claves.w) { charta_camera.y -= v; }
-  if (charta_claves.s) { charta_camera.y += v; }
-  if (charta_claves.a) { charta_camera.x -= v; }
-  if (charta_claves.d) { charta_camera.x += v; }
+  v = 0.9 * dt / charta_camera.scala; /* celeritas scaenae constans */
+  if (charta_claves.w) { charta_camera.y -= v; charta_iter = null; }
+  if (charta_claves.s) { charta_camera.y += v; charta_iter = null; }
+  if (charta_claves.a) { charta_camera.x -= v; charta_iter = null; }
+  if (charta_claves.d) { charta_camera.x += v; charta_iter = null; }
+  /* lapsus ad electum (ex ordine aristae in tabella) */
+  if (charta_iter) {
+    var lx = charta_iter.x - charta_camera.x;
+    var ly = charta_iter.y - charta_camera.y;
+    var gradus = Math.min(1, 0.008 * dt);
+    charta_camera.x += lx * gradus;
+    charta_camera.y += ly * gradus;
+    if (Math.abs(lx) + Math.abs(ly) < 2) { charta_iter = null; }
+  }
   charta_pingere();
   requestAnimationFrame(charta_gyrus);
 }
@@ -1612,6 +1907,7 @@ function charta_parare() {
 
   tela.onmousedown = function (ev) {
     charta_trahens = { x: ev.clientX, y: ev.clientY, motum: false };
+    charta_iter = null;   /* tractus lapsui potior */
     tela.className = 'trahens';
   };
   tela.onmousemove = function (ev) {
@@ -1638,9 +1934,8 @@ function charta_parare() {
     var r = tela.getBoundingClientRect();
 
     if (charta_trahens && !charta_trahens.motum) {
-      charta_electum = charta_nodus_sub(ev.clientX - r.left,
-        ev.clientY - r.top);
-      /* gradus V: tabella singulorum hic aperietur */
+      charta_eligere(charta_nodus_sub(ev.clientX - r.left,
+        ev.clientY - r.top));
     }
     charta_trahens = null;
     tela.className = '';
@@ -1718,7 +2013,8 @@ function charta_parare() {
       charta_claves[c] = true;
       ev.preventDefault();
     } else if (ev.key === 'Escape') {
-      charta_electum = null;
+      charta_eligere(null);
+      charta_iter = null;
     }
   };
   document.onkeyup = function (ev) {

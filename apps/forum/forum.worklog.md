@@ -135,3 +135,40 @@ identity `a|familia|ad`.
   is eyes-territory — the signum-change path in C is logically
   covered (equality proven by fumus round-trip; inequality falls
   through to the default full-parse path, also proven).
+
+## 2026-08-11 — charta step 5: tabella + legenda + cribrum
+
+Detail panel (read-only, spec §7): titulus, genus + stratum +
+externum badge, kind gloss (green italic), notae, entity gloss,
+attributes verbatim, edges grouped by familia with direction
+arrows — each edge row clicks through: selects the other end and
+GLIDES the camera there (charta_iter lerp in the rAF loop; WASD,
+drag, and Esc all cancel it; reload never sets it, so
+camera-never-moves-on-reload still holds). Esc or background click
+closes. Reload refreshes an open panel; a vanished node closes it.
+
+Legend (spec §6): families present in the payload, grouped under
+CHARTA_CAUSAE_ORDO headers (finalis/formalis/materialis/
+efficiens/incerta); clicking a causa header toggles its whole
+group. Default = the skeleton: spine + finalis + formalis causae
+(charta_familia_ordinaria) — adhibet/custodit/invenit etc. are
+opt-in. User checkbox state survives reloads (only unseen
+families get defaults). Colors deterministic: spine gold, informat
+green, the rest from a fixed palette in sorted-name order.
+
+- **Filter bypass rules** (charta_arista_visibilis, tested):
+  a selected node's incident edges always draw (white), and a
+  glowing new edge draws even in a hidden family — then fades
+  away, which reads as "something landed here" and is exactly
+  right.
+- **Confession**: step 4's aristam_pingere rewrite dropped the
+  ux/uy unit-vector computation — arrowheads NaN'd silently from
+  e71e13b until now (visual-only; no gate renders). Restored in
+  this step's rewrite. Lesson: a replace-edit that reflows a
+  function must re-check every downstream use of locals the
+  old text defined.
+- Spec §4 amended: Latine/Anglice/ambo toggle deferred until
+  entity glossae exist in volume (today: zero — the toggle would
+  switch between identical views). Panel shows both where present.
+- Harness: 254 assertions (+9). Planted fault (inverted
+  default-visibility) → FRACTA (1). Full smoke green.
