@@ -5731,3 +5731,26 @@ geritur_a already cited fert from the other side — both
 directions of one identity now consistently cited); tenet_apertam
 → tenetur_a forward; commissum → participatio; sanat → effectio
 family (whose definitio names "sanat" itself).
+
+## 2026-08-10 — norma burn-down
+
+11 → 0 + 1 free (global 136 → 124, ligata 308 = 71%), monita 24,
+necessitudines 79, canons byte-identical, versio 4 → 5.
+
+Core: in_iurisdictione declared sub=situs with the distinction
+recorded IN the declaration: SUB iurisdictione (custodia) =
+subject to the power; IN iurisdictione (situs) = within the
+scope. Two prepositions, two families, both now declared — the
+twin site elsewhere bound free.
+
+Citations: editor → edita_a (agent noun vs participle, same
+identity); normat → normata_per via converse (the norm's own
+defining verb closes the loop with the conformitas family);
+promulgata_per and instituta_per → constituta_per ("per actum
+sollemnem" verbatim); imponit → parit ("lex obligationem" is
+parit's own example); abrogat → successio FAMILY not substituit
+(repeal without replacement — the family holds, the identity
+would lie); gradus_supra → successio (graded series is a
+series); assignatur_per → fundatio; applicatur_per → exsecutio;
+fingit → repraesentatio (a legal fiction is a deliberately
+binding misrepresentation).

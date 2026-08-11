@@ -390,6 +390,15 @@
     <glossa lingua="en">Within.</glossa>
   </necessitudo>
 
+  <necessitudo nomen="in_iurisdictione" sub="situs" a="*" ad="*">
+    <definitio>Quod intra fines iurisdictionis valet aut iacet:
+      lex, negotium. A sub_iurisdictione (custodia) differt:
+      SUB = potestati subiectum, IN = intra ambitum. Duobus
+      exemplaribus adhibitum - regula duorum impleta.</definitio>
+    <glossa lingua="en">Within-the-jurisdiction: scope, not
+      subjection (that is sub_iurisdictione).</glossa>
+  </necessitudo>
+
   <necessitudo nomen="situm_in" sub="situs" a="*" ad="*">
     <definitio>Res in loco posita. Scripturae genere gerentis
       flectuntur - identitas una, tres formae (casus mensuratus

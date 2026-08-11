@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/norma.genera
-  Exemplar semanticum: NORMA (versio 4, PLASTICUM)
+  Exemplar semanticum: NORMA (versio 5, PLASTICUM)
 
   Genus a Frane petitum: norma res est, non chorda - editorem,
   diem, statum, successionem habet. Normae se invicem SUBSTITUUNT:
   catena temporalis (stratum historicum in relationibus ipsis).
 -->
-<natura modulus="norma" versio="4" lingua="latina">
+<natura modulus="norma" versio="5" lingua="latina">
 
 <.genus nomen="norma">
 
@@ -63,10 +63,12 @@
 
   <relationes>
     <relatio nomen="editor" ad="corpus_normans"
+      necessitudo="edita_a"
       modulus="organizatio" multiplex="verum"/>
     <relatio nomen="substituit" ad="norma"
       nota="catena successionis - historia in relationibus"/>
     <relatio nomen="normat" ad="*"
+      necessitudo="normata_per"
       nota="rem normatam cuiusvis generis - linguam, protocollum,
             formam plagulae"/>
   </relationes>
@@ -187,8 +189,13 @@
             Norma fines non habet (ISO ubique eadem est) -
             differentia practica gravissima inter genera"/>
     <relatio nomen="promulgata_per" ad="actus_sollemnis"
+      necessitudo="constituta_per"
       modulus="actus"/>
-    <relatio nomen="abrogat" ad="lex" multiplex="verum"/>
+    <relatio nomen="abrogat" ad="lex" multiplex="verum"
+      necessitudo="successio"
+      nota="catena corporis normativi: abrogatio sine
+            substituto - familia successionis, non identitas
+            substituendi"/>
     <relatio nomen="parit" ad="obligatio" modulus="obligatio"
       multiplex="verum"
       nota="obligatio ex lege - hic fons eius describitur"/>
@@ -356,16 +363,19 @@
             aedificia, merces. Quod classem normativam potentem
             facit est quod QUIDLIBET classificari potest"/>
     <relatio nomen="imponit" ad="obligatio" modulus="obligatio"
+      necessitudo="parit"
       multiplex="verum"
       nota="quid membris debeatur - inventarium perpetuum,
             custodia clausa, relatio intra horas. RELATIO
             PROPTER QUAM GENUS EXSISTIT: sine ea classis nomen
             nudum esset"/>
     <relatio nomen="assignatur_per" ad="iudicium" modulus="iudicium"
+      necessitudo="fundatio"
       nota="MEMBRUM PER ACTUM aut PER IUDICIUM, numquam per
             naturam: assignatio auctorem, momentum, gradum
             assensus habet, et mutari potest"/>
     <relatio nomen="gradus_supra" ad="classis_normativa"
+      necessitudo="successio"
       nota="si ordinata - classis proxime gravior"/>
   </relationes>
 
@@ -501,14 +511,17 @@
 
   <relationes>
     <relatio nomen="instituta_per" ad="norma"
+      necessitudo="constituta_per"
       nota="fictio a lege sola institui potest - nemo privatus
             fingit"/>
     <relatio nomen="applicatur_per" ad="actus_iuridicus"
+      necessitudo="exsecutio"
       modulus="actus"
       nota="actus quo fictio huic casui adhibetur (decretum
             adoptionis, sententia mortis praesumptae) - fictio
             generalis, applicatio singularis et NUMERATA"/>
     <relatio nomen="fingit" ad="*"
+      necessitudo="repraesentatio"
       nota="quid tractandum tamquam quid - apertum, quia
             fictiones res cuiusvis generis fingunt"/>
   </relationes>
