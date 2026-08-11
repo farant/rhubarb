@@ -60,6 +60,7 @@
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="paradigmata" intra="lingua-programmandi" textus="verum"/>
   <elementum nomen="auctor" intra="lingua-programmandi">
@@ -113,6 +114,7 @@
     <liberum nomen="auctor"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="paradigmata" intra="lingua-iussuum" textus="verum"/>
   <elementum nomen="auctor" intra="lingua-iussuum">
@@ -159,6 +161,7 @@
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-linguae">
     <attributum nomen="ad" genus="referentia"/>
@@ -194,6 +197,7 @@
     <liberum nomen="emittit-pro"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="auctor" intra="implementatio-linguae">
     <attributum nomen="ad" genus="referentia"/>
@@ -221,6 +225,7 @@
     <attributum nomen="additum-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="verbum-clavis">
     <liberum nomen="eventum"/>
@@ -229,6 +234,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

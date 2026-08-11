@@ -43,6 +43,7 @@
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="res-corporea">
     <liberum nomen="eventum"/>
@@ -74,6 +75,7 @@
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="artefactum">
     <attributum nomen="nota" genus="textus"/>
@@ -101,6 +103,7 @@
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="cibus">
     <attributum nomen="nota" genus="textus"/>
@@ -139,6 +142,7 @@
     <liberum nomen="ingreditur"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="ingreditur" intra="materia">
     <attributum nomen="ad" genus="referentia"/>
@@ -180,6 +184,7 @@
     <liberum nomen="ex-materia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="materiae-constituentes" intra="instrumentum">
     <attributum nomen="nota" genus="textus"/>
@@ -224,6 +229,7 @@
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra">
     <liberum nomen="eventum"/>
@@ -250,6 +256,7 @@
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra-immobilis">
     <liberum nomen="eventum"/>
@@ -276,6 +283,7 @@
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="res-sacra-mobilis">
     <liberum nomen="eventum"/>
@@ -302,6 +310,7 @@
     <attributum nomen="sita-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="reliquiae">
     <liberum nomen="eventum"/>
@@ -338,6 +347,7 @@
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="damnum">
     <liberum nomen="eventum"/>
@@ -362,6 +372,7 @@
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="fractura">
     <liberum nomen="eventum"/>
@@ -386,6 +397,7 @@
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="corruptio">
     <liberum nomen="eventum"/>
@@ -410,6 +422,7 @@
     <attributum nomen="praevisum-ut" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="contaminatio">
     <liberum nomen="eventum"/>
@@ -451,6 +464,7 @@
     <liberum nomen="laborat"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="generat" intra="vivens">
     <attributum nomen="ad" genus="referentia"/>
@@ -465,6 +479,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

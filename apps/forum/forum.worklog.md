@@ -172,3 +172,14 @@ green, the rest from a fixed palette in sorted-name order.
   switch between identical views). Panel shows both where present.
 - Harness: 254 assertions (+9). Planted fault (inverted
   default-visibility) → FRACTA (1). Full smoke green.
+
+## 2026-08-11 — charta step 6: entity glossae unblocked
+
+Canon side in natura.worklog.md (emitter grants universal glossa
+liberum + definition; red-green proven; chain regenerated). Forum
+side: the fumus gained a NON-GATING probe line — `glossa entis
+piscinae ADEST/abest` — because the serializer's entity-glossa
+branch had never run against a real glossa (none existed until
+&piscina; got the first one today). Probe, not gate: glossae come
+and go at authoring pace, and a gate would break the fumus the day
+Fran rewords the census. All six spec steps now shipped.

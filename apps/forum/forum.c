@@ -1985,6 +1985,18 @@ s32 principale (integer argc, character** argv)
                     "glossae_generum")),
                 (int)json_ad_integer(json_objectum_capere(graphum,
                     "praetermissa")));
+            /* semita glossae ENTIS contra conditorium verum
+             * (nuntius, non porta - glossae veniunt et eunt) */
+            {
+                JsonValor* piscina_n = json_objectum_capere(nodi_f,
+                    "&piscina;");
+
+                imprimere("[forum] fumus charta: glossa entis"
+                    " piscinae %s\n",
+                    (piscina_n != NIHIL
+                     && json_objectum_capere(piscina_n, "glossa")
+                        != NIHIL) ? "ADEST" : "abest");
+            }
         }
         piscina_destruere(piscina_vocationis);
         piscina_destruere(piscina);

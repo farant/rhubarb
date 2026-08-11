@@ -47,6 +47,7 @@
     <liberum nomen="exsequitur-in"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="auctor" intra="systema-operativum">
     <attributum nomen="ad" genus="referentia"/>
@@ -98,6 +99,7 @@
     <liberum nomen="exsequitur-in"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="auctor" intra="systema-unixiforme">
     <attributum nomen="ad" genus="referentia"/>
@@ -132,6 +134,7 @@
     <attributum nomen="edita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="distributio-systematis">
     <liberum nomen="eventum"/>
@@ -171,6 +174,7 @@
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-systematis">
     <attributum nomen="ad" genus="referentia"/>
@@ -182,6 +186,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

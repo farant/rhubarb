@@ -86,6 +86,7 @@ nomen structura PlantaGrannySmithGenerat PlantaGrannySmithGenerat;
 nomen structura PlantaGrannySmithLaborat PlantaGrannySmithLaborat;
 nomen structura PlantaGrannySmithHistoria PlantaGrannySmithHistoria;
 nomen structura PlantaNota PlantaNota;
+nomen structura PlantaGlossa PlantaGlossa;
 nomen structura PlantaHistoriaEventum PlantaHistoriaEventum;
 
 nomen enumeratio {
@@ -459,6 +460,7 @@ structura PlantaPlanta {
     Xar*        laborat;   /* PlantaPlantaLaborat* */
     PlantaPlantaHistoria* historia;
     Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaPlantaRadix {
@@ -534,6 +536,7 @@ structura PlantaRosaceae {
     Xar*        laborat;   /* PlantaRosaceaeLaborat* */
     PlantaRosaceaeHistoria* historia;
     Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaRosaceaeRadix {
@@ -609,6 +612,7 @@ structura PlantaRosa {
     Xar*        laborat;   /* PlantaRosaLaborat* */
     PlantaRosaHistoria* historia;
     Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaRosaRadix {
@@ -684,6 +688,7 @@ structura PlantaRosaCanina {
     Xar*        laborat;   /* PlantaRosaCaninaLaborat* */
     PlantaRosaCaninaHistoria* historia;
     Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaRosaCaninaRadix {
@@ -759,6 +764,7 @@ structura PlantaMalus {
     Xar*        laborat;   /* PlantaMalusLaborat* */
     PlantaMalusHistoria* historia;
     Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaMalusRadix {
@@ -834,6 +840,7 @@ structura PlantaMalusDomestica {
     Xar*        laborat;   /* PlantaMalusDomesticaLaborat* */
     PlantaMalusDomesticaHistoria* historia;
     Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaMalusDomesticaRadix {
@@ -909,6 +916,7 @@ structura PlantaGrannySmith {
     Xar*        laborat;   /* PlantaGrannySmithLaborat* */
     PlantaGrannySmithHistoria* historia;
     Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaGrannySmithRadix {
@@ -958,6 +966,12 @@ structura PlantaGrannySmithHistoria {
 
 structura PlantaNota {
     StmlNodus*  nodus;
+    chorda      textus;
+};
+
+structura PlantaGlossa {
+    StmlNodus*  nodus;
+    chorda*     lingua;
     chorda      textus;
 };
 
@@ -1188,6 +1202,9 @@ PlantaGrannySmithHistoria* planta_granny_smith_historia_legere_nodum(
     StmlNodus* nodus, Piscina* piscina,
     InternamentumChorda* intern);
 PlantaNota* planta_nota_legere_nodum(
+    StmlNodus* nodus, Piscina* piscina,
+    InternamentumChorda* intern);
+PlantaGlossa* planta_glossa_legere_nodum(
     StmlNodus* nodus, Piscina* piscina,
     InternamentumChorda* intern);
 PlantaHistoriaEventum* planta_historia_eventum_legere_nodum(

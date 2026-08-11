@@ -32,6 +32,7 @@
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="realizata-a" intra="forma-datorum">
     <attributum nomen="ad" genus="referentia"/>
@@ -45,6 +46,7 @@
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="realizata-a" intra="series">
     <attributum nomen="ad" genus="referentia"/>
@@ -58,6 +60,7 @@
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="realizata-a" intra="cauda">
     <attributum nomen="ad" genus="referentia"/>
@@ -71,6 +74,7 @@
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="realizata-a" intra="acervus">
     <attributum nomen="ad" genus="referentia"/>
@@ -84,6 +88,7 @@
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="realizata-a" intra="tabula-associativa">
     <attributum nomen="ad" genus="referentia"/>
@@ -97,6 +102,7 @@
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="realizata-a" intra="copia">
     <attributum nomen="ad" genus="referentia"/>
@@ -110,6 +116,7 @@
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="realizata-a" intra="arbor">
     <attributum nomen="ad" genus="referentia"/>
@@ -121,6 +128,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

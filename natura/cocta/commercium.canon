@@ -46,6 +46,7 @@
     <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="moneta">
     <liberum nomen="eventum"/>
@@ -70,6 +71,7 @@
     <attributum nomen="in-moneta" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="pecunia">
     <liberum nomen="eventum"/>
@@ -93,6 +95,7 @@
     <attributum nomen="possessum" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="possessio">
     <liberum nomen="eventum"/>
@@ -116,6 +119,7 @@
     <attributum nomen="quantum" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="pretium">
     <liberum nomen="eventum"/>
@@ -142,6 +146,7 @@
     <liberum nomen="res-vendita"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="res-vendita" intra="venditio">
     <attributum nomen="ad" genus="referentia"/>
@@ -178,6 +183,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="tessera">
     <liberum nomen="eventum"/>
@@ -216,6 +222,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-negotiabilis">
     <liberum nomen="eventum"/>
@@ -237,6 +244,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="charta-onerum">
     <liberum nomen="eventum"/>
@@ -258,6 +266,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="apocha-horrei">
     <liberum nomen="eventum"/>
@@ -279,6 +288,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="syngrapha">
     <liberum nomen="eventum"/>
@@ -300,6 +310,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="perscriptio">
     <liberum nomen="eventum"/>
@@ -321,6 +332,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="nummus-chartaceus">
     <liberum nomen="eventum"/>
@@ -342,6 +354,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="obligatio-ad-portitorem">
     <liberum nomen="eventum"/>
@@ -378,6 +391,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-simplex">
     <liberum nomen="eventum"/>
@@ -399,6 +413,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-spectaculi">
     <liberum nomen="eventum"/>
@@ -420,6 +435,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-repositoria">
     <liberum nomen="eventum"/>
@@ -441,6 +457,7 @@
     <attributum nomen="possessio-eius" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="tessera-digitalis">
     <liberum nomen="eventum"/>
@@ -500,6 +517,7 @@
     <liberum nomen="signata-per"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="ratio-rationaria">
     <attributum nomen="ad" genus="referentia"/>
@@ -565,6 +583,7 @@
     <liberum nomen="signata-per"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="ratio-duplex">
     <attributum nomen="ad" genus="referentia"/>
@@ -597,6 +616,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

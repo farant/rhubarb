@@ -981,6 +981,10 @@ _elementum_scribere(
      * explicationes in commenta XML fugiebant, quae nemo
      * quaerere potest */
     fputs("    <liberum nomen=\"nota\"/>\n", f);
+    /* glossa universalis (charta, 2026-08-11): individuum quodque
+     * glossam vernaculam ferre potest, ut genera iam ferunt -
+     * definitio Latine VERITAS manet, glossa explicat */
+    fputs("    <liberum nomen=\"glossa\"/>\n", f);
     fputs("  </elementum>\n", f);
 
     /* definitiones liberorum, ad hoc genus ADSTRICTAE */
@@ -1948,6 +1952,17 @@ _canonem_emittere(
           "    nota=\"margo curatorialis individui - stratum\n"
           "          documenti quod stratum generum iam habebat\"/>"
           "\n", f);
+
+    /* glossa universalis: forma eadem quam natura.canon generibus
+     * dat (textus liber + lingua necessaria) - individua nunc
+     * aequo iure glossantur */
+    fputs("\n  <elementum nomen=\"glossa\" textus=\"verum\"\n"
+          "    nota=\"glossa vernacula individui - lingua ISO 639-1\n"
+          "          (en/fr/...); definitio Latine VERITAS manet,\n"
+          "          glossa explicat, numquam renominat\">\n"
+          "    <attributum nomen=\"lingua\" genus=\"nomen\""
+          " necessarium=\"verum\"/>\n"
+          "  </elementum>\n", f);
 
     _eventum_scribere(f, elementa);
     _unicitas_scribere(f, elementa);

@@ -223,14 +223,15 @@ audire/SSE gap stays untouched).
 
 ## 9. Glossa admission (small, separate commit)
 
-Entity-level glossae are REJECTED today: `individua.canon` has zero
-`<liberum nomen="glossa"/>` admissions on individuum elements. Fix at
-the source: the natura_canones emitter admits glossa as a liberum on
-projected individuum elements → `./tools/natura_canones.sh` regen →
-custos gate. The admission ships with v1 so authoring is UNBLOCKED,
-but no glossae are seeded: they arrive later via a
-Fran-requests-translations process (shape TBD — possibly a tabularium
-processus one day). v1 ships on kind glosses alone.
+**SHIPPED 2026-08-11.** The natura_canones emitter grants every
+projected kind a universal `<liberum nomen="glossa"/>` (beside the
+L5 nota) plus one shared `<elementum nomen="glossa" textus="verum">`
+definition with `lingua` obligatory — the same shape natura.canon
+gives genera. Red-green proven (entity glossa drew two vitia before,
+ACCIPE after); first real gloss authored on `&piscina;` and its path
+through the serializer proven against the real store. No seeding:
+glossae arrive via a Fran-requests-translations process (shape TBD —
+possibly a tabularium processus one day).
 
 ## 10. Testing (gate at birth)
 

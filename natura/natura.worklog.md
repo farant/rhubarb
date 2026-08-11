@@ -6162,3 +6162,23 @@ census_orbi learned external keys, learned to NAME unknowns, and
 was caught deriving its own pertinence from a parser leak
 (praesens flowing into augmentation blocks — the orphan-checker
 was an orphan and nobody knew).
+
+## 2026-08-11 — glossa individuorum admissa (charta gradus VI)
+
+The natura_canones emitter now grants every projected kind a
+universal `<liberum nomen="glossa"/>` (beside the L5 nota) plus one
+shared `<elementum nomen="glossa" textus="verum">` definition with
+`lingua` obligatory — the exact shape natura.canon already gives
+genera. Individua are now glossable with equal right; definitio
+Latine stays the truth, the gloss explains.
+
+Diff shape verified before believing: 463 per-kind admissions in
+the monolith + the one definition, insertions only, 35 canons, no
+unrelated churn. Chain: struere (wrapper refused the stale binary
+loudly — the gate worked) → natura_canones (exit 3 named the stale
+readers) → canon_coquere (planta reader re-baked) → -probare exit 0.
+Red-green: a scratch census with an entity glossa drew exactly two
+vitia BEFORE (`liberum hic non licet` + `elementum extra canonem`)
+and ACCIPE after. First real gloss authored on &piscina; in
+rhubarb.census; the charta serializer's entity-glossa path proven
+against the real store (fumus prints `glossa entis piscinae ADEST`).

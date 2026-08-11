@@ -56,6 +56,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-computatralis" textus="verum"/>
   <elementum nomen="historia" intra="plagula-computatralis">
@@ -88,6 +89,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-fontis" textus="verum"/>
   <elementum nomen="historia" intra="plagula-fontis">
@@ -112,6 +114,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="fons-c" textus="verum"/>
   <elementum nomen="historia" intra="fons-c">
@@ -136,6 +139,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="caput-c" textus="verum"/>
   <elementum nomen="historia" intra="caput-c">
@@ -160,6 +164,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="fons-python" textus="verum"/>
   <elementum nomen="historia" intra="fons-python">
@@ -184,6 +189,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="fons-rust" textus="verum"/>
   <elementum nomen="historia" intra="fons-rust">
@@ -214,6 +220,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="scriptum-exsecutabile" textus="verum"/>
   <elementum nomen="historia" intra="scriptum-exsecutabile">
@@ -238,6 +245,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="scriptum-conchae" textus="verum"/>
   <elementum nomen="historia" intra="scriptum-conchae">
@@ -268,6 +276,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-notationis" textus="verum"/>
   <elementum nomen="historia" intra="plagula-notationis">
@@ -290,6 +299,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-xml" textus="verum"/>
   <elementum nomen="historia" intra="plagula-xml">
@@ -312,6 +322,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-stml" textus="verum"/>
   <elementum nomen="historia" intra="plagula-stml">
@@ -334,6 +345,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-markdown" textus="verum"/>
   <elementum nomen="historia" intra="plagula-markdown">
@@ -363,6 +375,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-figurationis" textus="verum"/>
   <elementum nomen="historia" intra="plagula-figurationis">
@@ -385,6 +398,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-toml" textus="verum"/>
   <elementum nomen="historia" intra="plagula-toml">
@@ -407,6 +421,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-plist" textus="verum"/>
   <elementum nomen="historia" intra="plagula-plist">
@@ -436,6 +451,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-datorum" textus="verum"/>
   <elementum nomen="historia" intra="plagula-datorum">
@@ -458,6 +474,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-json" textus="verum"/>
   <elementum nomen="historia" intra="plagula-json">
@@ -480,6 +497,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-csv" textus="verum"/>
   <elementum nomen="historia" intra="plagula-csv">
@@ -509,6 +527,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="plagula-sqlite" textus="verum"/>
   <elementum nomen="historia" intra="plagula-sqlite">
@@ -531,6 +550,7 @@
     <liberum nomen="suffixus-solitus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="suffixus-solitus" intra="volumen" textus="verum"/>
   <elementum nomen="historia" intra="volumen">
@@ -567,6 +587,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="radix" intra="systema-plagularum">
     <attributum nomen="nota" genus="textus"/>
@@ -610,6 +631,7 @@
     <liberum nomen="continet"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="directorium">
     <attributum nomen="ad" genus="referentia"/>
@@ -621,6 +643,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

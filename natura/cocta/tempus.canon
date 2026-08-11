@@ -42,6 +42,7 @@
     <attributum nomen="zona-horaria" genus="textus"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="momentum">
     <liberum nomen="eventum"/>
@@ -64,6 +65,7 @@
     <attributum nomen="finis" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="intervallum">
     <liberum nomen="eventum"/>
@@ -94,6 +96,7 @@
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="exceptiones" intra="recurrentia" textus="dies"/>
   <elementum nomen="historia" intra="recurrentia">
@@ -127,6 +130,7 @@
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="exceptiones" intra="recurrentia-computata" textus="dies"/>
   <elementum nomen="historia" intra="recurrentia-computata">
@@ -147,6 +151,7 @@
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="exceptiones" intra="pascha" textus="dies"/>
   <elementum nomen="historia" intra="pascha">
@@ -167,6 +172,7 @@
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="exceptiones" intra="dies-negotiorum" textus="dies"/>
   <elementum nomen="historia" intra="dies-negotiorum">
@@ -187,6 +193,7 @@
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="exceptiones" intra="dies-ordinalis-mensis" textus="dies"/>
   <elementum nomen="historia" intra="dies-ordinalis-mensis">
@@ -216,6 +223,7 @@
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="exceptiones" intra="recurrentia-per-usum" textus="dies"/>
   <elementum nomen="historia" intra="recurrentia-per-usum">
@@ -235,6 +243,7 @@
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="exceptiones" intra="per-horas-operis" textus="dies"/>
   <elementum nomen="historia" intra="per-horas-operis">
@@ -254,6 +263,7 @@
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="exceptiones" intra="per-cyclos" textus="dies"/>
   <elementum nomen="historia" intra="per-cyclos">
@@ -273,6 +283,7 @@
     <liberum nomen="exceptiones"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="exceptiones" intra="per-spatium" textus="dies"/>
   <elementum nomen="historia" intra="per-spatium">
@@ -296,6 +307,7 @@
     <liberum nomen="vinctum-per"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="horarium">
     <attributum nomen="ad" genus="referentia"/>
@@ -321,6 +333,7 @@
     <attributum nomen="conditum-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="calendarium">
     <liberum nomen="eventum"/>
@@ -352,6 +365,7 @@
     <attributum nomen="parit" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="reservatio">
     <liberum nomen="eventum"/>
@@ -360,6 +374,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

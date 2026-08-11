@@ -28,6 +28,7 @@
     <liberum nomen="sub-iurisdictione"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="sub-iurisdictione" intra="locus">
     <attributum nomen="ad" genus="referentia"/>
@@ -53,6 +54,7 @@
     <liberum nomen="linea"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="linea" intra="inscriptio" textus="verum"/>
   <elementum nomen="historia" intra="inscriptio">
@@ -77,6 +79,7 @@
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="fert" intra="iurisdictio">
     <attributum nomen="ad" genus="referentia"/>
@@ -101,6 +104,7 @@
     <liberum nomen="occupatum-a"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="spatia" intra="aedificium">
     <attributum nomen="nota" genus="textus"/>
@@ -115,6 +119,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

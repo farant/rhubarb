@@ -92,6 +92,10 @@
 
   <bibliotheca nomen="&piscina;" scripta-in="&c;" gradus="0">
     <nota>Arena memoriae - solum omnium.</nota>
+    <glossa lingua="en">The memory arena - the ground beneath
+      everything: every library builds on it, allocation moves a
+      pointer, and freeing hands back the whole pool at
+      once.</glossa>
   </bibliotheca>
 
   <bibliotheca nomen="&chorda;" scripta-in="&c;" gradus="1">

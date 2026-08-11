@@ -44,6 +44,7 @@
     <liberum nomen="classificata-ut"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="exemplatur-in" intra="substantia-chemica">
     <attributum nomen="ad" genus="referentia"/>
@@ -90,6 +91,7 @@
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum">
     <attributum nomen="ad" genus="referentia"/>
@@ -128,6 +130,7 @@
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum-genericum">
     <attributum nomen="ad" genus="referentia"/>
@@ -166,6 +169,7 @@
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum-nominatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -204,6 +208,7 @@
     <liberum nomen="fabricatum-in"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="medicamentum-compositum">
     <attributum nomen="ad" genus="referentia"/>
@@ -246,6 +251,7 @@
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="coctura">
     <liberum nomen="eventum"/>
@@ -275,6 +281,7 @@
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="inter" intra="interactio">
     <attributum nomen="ad" genus="referentia"/>
@@ -298,6 +305,7 @@
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="inter" intra="interactio-medicamentorum">
     <attributum nomen="ad" genus="referentia"/>
@@ -321,6 +329,7 @@
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="inter" intra="interactio-cum-cibo">
     <attributum nomen="ad" genus="referentia"/>
@@ -344,6 +353,7 @@
     <liberum nomen="inter"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="inter" intra="incompatibilitas-mercium">
     <attributum nomen="ad" genus="referentia"/>
@@ -355,6 +365,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

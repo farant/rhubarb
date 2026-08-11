@@ -28,6 +28,7 @@
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="gradus-eius" intra="procedura">
     <attributum nomen="ad" genus="referentia"/>
@@ -68,6 +69,7 @@
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="efficit" intra="procedura-automata">
     <attributum nomen="ad" genus="referentia"/>
@@ -96,6 +98,7 @@
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="efficit" intra="fistula-integrationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -124,6 +127,7 @@
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="efficit" intra="depositio">
     <attributum nomen="ad" genus="referentia"/>
@@ -172,6 +176,7 @@
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="materiae" intra="praescriptum">
     <attributum nomen="nota" genus="textus"/>
@@ -209,6 +214,7 @@
     <liberum nomen="pendet-ex"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="pendet-ex" intra="gradus-praescripti">
     <attributum nomen="ad" genus="referentia"/>
@@ -253,6 +259,7 @@
     <liberum nomen="compatibilis-cum"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="compatibilis-cum" intra="versio-praescripti">
     <attributum nomen="ad" genus="referentia"/>
@@ -284,6 +291,7 @@
     <liberum nomen="gradus-eius"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="adhibetur-in" intra="index-verificationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -298,6 +306,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

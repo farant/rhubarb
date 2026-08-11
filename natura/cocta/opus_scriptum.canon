@@ -41,6 +41,7 @@
     <liberum nomen="scriba"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="materia" intra="opus-scriptum" textus="verum"/>
   <elementum nomen="auctor" intra="opus-scriptum">
@@ -76,6 +77,7 @@
     <liberum nomen="translator"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="translator" intra="expressio">
     <attributum nomen="ad" genus="referentia"/>
@@ -106,6 +108,7 @@
     <liberum nomen="editio-de"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="editio-de" intra="editio">
     <attributum nomen="ad" genus="referentia"/>
@@ -141,6 +144,7 @@
     <attributum nomen="possessor" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="codex">
     <liberum nomen="eventum"/>
@@ -185,6 +189,7 @@
     <liberum nomen="scriba"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="materia" intra="periodicum" textus="verum"/>
   <elementum nomen="auctor" intra="periodicum">
@@ -214,6 +219,7 @@
     <attributum nomen="fasciculus-de" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="fasciculus">
     <liberum nomen="eventum"/>
@@ -222,6 +228,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

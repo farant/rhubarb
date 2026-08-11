@@ -42,6 +42,7 @@
     <liberum nomen="informat"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="natum-ex" intra="pactum">
     <attributum nomen="ad" genus="referentia"/>
@@ -65,6 +66,7 @@
     <liberum nomen="adhibet"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="adhibet" intra="uncus">
     <attributum nomen="ad" genus="referentia"/>
@@ -97,6 +99,7 @@
     <attributum nomen="interrogatur-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="postulatum">
     <liberum nomen="eventum"/>
@@ -119,6 +122,7 @@
     <liberum nomen="realizata-a"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="implet" intra="facultas">
     <attributum nomen="ad" genus="referentia"/>
@@ -148,6 +152,7 @@
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="probatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -167,6 +172,7 @@
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-unitatis">
     <attributum nomen="ad" genus="referentia"/>
@@ -186,6 +192,7 @@
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-integrationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -205,6 +212,7 @@
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-regressionis">
     <attributum nomen="ad" genus="referentia"/>
@@ -224,6 +232,7 @@
     <liberum nomen="exercet"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="continet" intra="probatio-fumi">
     <attributum nomen="ad" genus="referentia"/>
@@ -266,6 +275,7 @@
     <attributum nomen="habitat-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="vitium">
     <liberum nomen="eventum"/>
@@ -290,6 +300,7 @@
     <attributum nomen="habitat-in" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="regressio">
     <liberum nomen="eventum"/>
@@ -325,6 +336,7 @@
     <liberum nomen="solvitur-per"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="emit" intra="debitum-technicum">
     <attributum nomen="ad" genus="referentia"/>
@@ -375,6 +387,7 @@
     <attributum nomen="asseritur-per" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="complicatio">
     <liberum nomen="eventum"/>
@@ -421,6 +434,7 @@
     <liberum nomen="exsequitur-per"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="ordinat" intra="consilium">
     <attributum nomen="ad" genus="referentia"/>
@@ -456,6 +470,7 @@
     <liberum nomen="exsequitur-per"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="ordinat" intra="consilium-computatum">
     <attributum nomen="ad" genus="referentia"/>
@@ -515,6 +530,7 @@
     <liberum nomen="afficit"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="prodita-per" intra="depravatio">
     <attributum nomen="ad" genus="referentia"/>
@@ -567,6 +583,7 @@
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="interventio">
     <liberum nomen="eventum"/>
@@ -590,6 +607,7 @@
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="conservatio">
     <liberum nomen="eventum"/>
@@ -613,6 +631,7 @@
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="restauratio-aedificii">
     <liberum nomen="eventum"/>
@@ -636,6 +655,7 @@
     <attributum nomen="acta-sua" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="historia" intra="curatio-medica">
     <liberum nomen="eventum"/>
@@ -644,6 +664,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

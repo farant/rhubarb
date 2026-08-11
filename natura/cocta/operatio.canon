@@ -33,6 +33,7 @@
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="fert" intra="ambitus">
     <attributum nomen="ad" genus="referentia"/>
@@ -52,6 +53,7 @@
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="fert" intra="ambitus-fabricae">
     <attributum nomen="ad" genus="referentia"/>
@@ -71,6 +73,7 @@
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="fert" intra="ambitus-probationis">
     <attributum nomen="ad" genus="referentia"/>
@@ -90,6 +93,7 @@
     <liberum nomen="fert"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="fert" intra="ambitus-producens">
     <attributum nomen="ad" genus="referentia"/>
@@ -127,6 +131,7 @@
     <liberum nomen="impeditur-a"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="implet" intra="pensum">
     <attributum nomen="ad" genus="referentia"/>
@@ -174,6 +179,7 @@
     <liberum nomen="causa-eius"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="causa-eius" intra="incidens">
     <attributum nomen="ad" genus="referentia"/>
@@ -223,6 +229,7 @@
     <liberum nomen="tenet-apertam"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="spatium-memoriae" intra="processus">
     <attributum nomen="nota" genus="textus"/>
@@ -252,6 +259,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>

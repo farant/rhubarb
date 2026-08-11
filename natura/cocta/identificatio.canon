@@ -59,6 +59,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="schema-identificandi">
     <attributum nomen="nota" genus="textus"/>
@@ -95,6 +96,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="uuid">
     <attributum nomen="nota" genus="textus"/>
@@ -131,6 +133,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="ulid">
     <attributum nomen="nota" genus="textus"/>
@@ -169,6 +172,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="isbn">
     <attributum nomen="nota" genus="textus"/>
@@ -207,6 +211,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="isbn-10">
     <attributum nomen="nota" genus="textus"/>
@@ -249,6 +254,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="isbn-13">
     <attributum nomen="nota" genus="textus"/>
@@ -285,6 +291,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="issn">
     <attributum nomen="nota" genus="textus"/>
@@ -321,6 +328,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="doi">
     <attributum nomen="nota" genus="textus"/>
@@ -357,6 +365,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="orcid">
     <attributum nomen="nota" genus="textus"/>
@@ -393,6 +402,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="iban">
     <attributum nomen="nota" genus="textus"/>
@@ -429,6 +439,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="e164">
     <attributum nomen="nota" genus="textus"/>
@@ -465,6 +476,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="gtin">
     <attributum nomen="nota" genus="textus"/>
@@ -501,6 +513,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="uri">
     <attributum nomen="nota" genus="textus"/>
@@ -537,6 +550,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="cas">
     <attributum nomen="nota" genus="textus"/>
@@ -573,6 +587,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="ndc">
     <attributum nomen="nota" genus="textus"/>
@@ -609,6 +624,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="rxnorm">
     <attributum nomen="nota" genus="textus"/>
@@ -645,6 +661,7 @@
     <liberum nomen="nota-custos" maximum="1"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
   </elementum>
   <elementum nomen="praefixum" intra="numerus-dea">
     <attributum nomen="nota" genus="textus"/>
@@ -662,6 +679,13 @@
   <elementum nomen="nota" textus="verum"
     nota="margo curatorialis individui - stratum
           documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
 
   <elementum nomen="eventum" intra="historia" textus="verum">
     <attributum nomen="quando" genus="dies"/>
