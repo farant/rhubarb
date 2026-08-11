@@ -35,10 +35,20 @@
   <!-- ============ RADIX ET FINES (spina) ============ -->
 
   <causa-finalis nomen="&instauratio;" extra-ordinem="verum"
-    contentum="Civilizationem catholicam instaurare per opera quae saecula durent."/>
+    contentum="Civilizationem catholicam instaurare per opera quae saecula durent.">
+    <glossa lingua="en">The restoration: to rebuild Catholic
+      civilization through works meant to last for centuries. The
+      root end - marked extra-ordinem because nothing above it
+      exists to cause it; every other end in this census depends
+      on this one.</glossa>
+  </causa-finalis>
 
   <causa-finalis nomen="&perennitas;"
     contentum="Opera sine putredine: nullae dependentiae externae, bibliothecae propriae, C89 quia stabile manet.">
+    <glossa lingua="en">Permanence: works free of rot - no external
+      dependencies, libraries of our own, C89 because it holds
+      still. A program is a machine that does not wear out; decay
+      enters only where it is invited in.</glossa>
     <pendet-ex ad="&instauratio;"/>
     <causat ad="&c;"/>
     <causat ad="&piscina;"/>
@@ -51,6 +61,11 @@
 
   <causa-finalis nomen="&intellectus;"
     contentum="Fran codicem OMNEM intellegit - homo est RAG systematis totius; quidquid intellectum servat, hic pendet.">
+    <glossa lingua="en">Understanding: Fran understands ALL the
+      code - the human is the retrieval system of the whole, the
+      one mind holding the map. Whatever preserves understanding
+      (the semantic dictionary, the onboarding letter, the ledger)
+      hangs from this end.</glossa>
     <pendet-ex ad="&instauratio;"/>
     <causat ad="&claude-md;"/>
     <causat ad="&index-naturae;"/>
@@ -63,6 +78,10 @@
 
   <causa-finalis nomen="&dominium;"
     contentum="Machinae nostrae: LSP proprium, analysta proprius, instrumenta propria - fiducia crescens in apparatu domus.">
+    <glossa lingua="en">Ownership: our own machinery - our own
+      language server, our own parser, our own build and judgment
+      tools - with trust in the house's apparatus growing as it
+      proves itself against real work.</glossa>
     <pendet-ex ad="&instauratio;"/>
     <causat ad="&silva;"/>
     <causat ad="&legatus;"/>
