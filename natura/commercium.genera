@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/commercium.genera
-  Exemplar semanticum: COMMERCIUM (versio 3, PLASTICUM)
+  Exemplar semanticum: COMMERCIUM (versio 4, PLASTICUM)
   Genera: moneta, pecunia, possessio, venditio, pretium,
   ratio_rationaria.
 
@@ -20,7 +20,7 @@
   esse-venale MUNUS est, ergo relatio - panis idem panis manet
   sive venalis sive donatus.
 -->
-<natura modulus="commercium" versio="3" lingua="latina">
+<natura modulus="commercium" versio="4" lingua="latina">
 
 <!-- ==================================================
      MONETA - genus pecuniae
@@ -112,7 +112,9 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="in_moneta" ad="moneta"/>
+    <relatio nomen="in_moneta" ad="moneta"
+      necessitudo="mensuratur_per"
+      nota="moneta unitas est qua summa dicitur"/>
   </relationes>
 
   <nota>
@@ -151,9 +153,9 @@
     chose : elle transfère la relation.</glossa>
 
   <relationes>
-    <relatio nomen="possessor" ad="*"
+    <relatio nomen="possessor" ad="*" necessitudo="participatio"
       nota="persona aut organizatio"/>
-    <relatio nomen="possessum" ad="*"
+    <relatio nomen="possessum" ad="*" necessitudo="obiectum_actus"
       nota="res corporea, artefactum, etiam res incorporalis
             (ius, nomen) - apertum consulto"/>
   </relationes>
@@ -191,8 +193,9 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="pretium_rei" ad="*"/>
-    <relatio nomen="quantum" ad="pecunia"/>
+    <relatio nomen="pretium_rei" ad="*" necessitudo="de"/>
+    <relatio nomen="quantum" ad="pecunia"
+      necessitudo="mensuratur_per"/>
   </relationes>
 
 </.genus>
@@ -305,7 +308,7 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="fert_ius_in" ad="*"
+    <relatio nomen="fert_ius_in" ad="*" necessitudo="fert"
       nota="merces, pecunia, admissio, auctoritas"/>
     <relatio nomen="emissa_a" ad="*"/>
     <relatio nomen="possessio_eius" ad="possessio"
@@ -594,7 +597,8 @@
 
   <relationes>
     <relatio nomen="continet" ad="venditio" multiplex="verum"/>
-    <relatio nomen="rationarius" ad="persona" modulus="persona"/>
+    <relatio nomen="rationarius" ad="persona" modulus="persona"
+      necessitudo="participatio"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->

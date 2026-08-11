@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/pharmacon.genera
-  Exemplar semanticum: PHARMACON (versio 1, PLASTICUM)
+  Exemplar semanticum: PHARMACON (versio 2, PLASTICUM)
 
   Cursus septimus circuli (pharmacopolium), euristica punitionis
   electus: qui dosem, interactionem, dispensationem contra
@@ -34,7 +34,7 @@
   dant. Specimen secundum ex dominio alieno: tabulae
   segregationis mercium periculosarum eandem formam ferunt.
 -->
-<natura modulus="pharmacon" versio="1" lingua="latina">
+<natura modulus="pharmacon" versio="2" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -93,14 +93,17 @@
 
   <relationes>
     <relatio nomen="exemplatur_in" ad="materia"
+      necessitudo="successio"
       modulus="corporalia" multiplex="verum"
       nota="acervi concreti huius substantiae"/>
     <relatio nomen="classificata_ut" ad="classis_normativa"
+      necessitudo="normata_per"
       modulus="norma" multiplex="verum"
       nota="schedulae substantiarum huc adhaerent - et
             RESCHEDULATIO substantiam non mutat, quod genus
             classis normativae probat"/>
     <relatio nomen="interagit" a="interactio" inversa="verum"
+      necessitudo="participatio"
       nota="impletur ab interactio.inter"/>
   </relationes>
 
@@ -200,6 +203,7 @@
       multiplex="verum"
       nota="ingredientia activa"/>
     <relatio nomen="aequivalens" ad="medicamentum"
+      necessitudo="conformitas"
       multiplex="verum"
       nota="RELATIO PER IUDICIUM, non per naturam:
             aequivalentia therapeutica ASSERITUR ab auctoritate
@@ -320,8 +324,10 @@
             est, ergo relatio aperta (signum manet, clavis
             nulla)"/>
     <relatio nomen="fabricata_a" ad="organizatio"
+      necessitudo="origo"
       modulus="organizatio"/>
     <relatio nomen="acta_sua" ad="acta" modulus="acta"
+      necessitudo="repraesentatio"
       nota="acta fabricationis (batch record) - species
             acta_auditus: quis quid quando, contra fabricantem
             ipsum valitura"/>
@@ -396,6 +402,7 @@
 
   <relationes>
     <relatio nomen="inter" ad="*" multiplex="verum"
+      necessitudo="participatio"
       nota="relata - apertum consulto: substantiae, sed etiam
             merces periculosae, cibus, morbi, condiciones"/>
     <relatio nomen="asseritur_per" ad="iudicium" modulus="iudicium"

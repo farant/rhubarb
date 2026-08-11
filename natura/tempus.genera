@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/tempus.genera
-  Exemplar semanticum: TEMPUS (versio 4, PLASTICUM)
+  Exemplar semanticum: TEMPUS (versio 5, PLASTICUM)
   Genera: momentum, intervallum, recurrentia, horarium,
   calendarium, reservatio.
 
@@ -63,7 +63,7 @@
   mensuram temporis (secundum, minutum) in exemplari mensurae
   invenies; hic de temporis STRUCTURA agitur, non de mensura.
 -->
-<natura modulus="tempus" versio="4" lingua="latina">
+<natura modulus="tempus" versio="5" lingua="latina">
 
 <!-- ==================================================
      MOMENTUM - punctum in tempore
@@ -145,11 +145,14 @@
             '25 minuta' unitatem poscit"/>
   </proprietates>
 
-  <relationes>
-    <relatio nomen="initium" ad="momentum"/>
-    <relatio nomen="finis" ad="momentum"
+  <termini>
+    <nota>compages intervalli: fines suis momentis CONSTITUITUR -
+      quod initio et fine caret intervallum non est.</nota>
+    <terminus munus="initium" necessitudo="pars_totum"
+      ad="momentum"/>
+    <terminus munus="finis" necessitudo="pars_totum" ad="momentum"
       nota="vacuum = adhuc currens (intervallum apertum)"/>
-  </relationes>
+  </termini>
 
   <nota>
     Intervalla se SUPERPONERE possunt, contineri, tangere -
@@ -398,10 +401,11 @@
 
   <relationes>
     <relatio nomen="continet" ad="recurrentia" multiplex="verum"/>
-    <relatio nomen="regit" ad="*"
+    <relatio nomen="regit" ad="*" necessitudo="administrat"
       nota="organizatio, aedificium, persona - quod horario
             ordinatur"/>
     <relatio nomen="vinctum_per" ad="instrumentum"
+      necessitudo="administrat"
       modulus="corporalia" multiplex="verum"
       nota="capacitas instrumenti horarium DETERMINAT: fornax
             duodecim panes simul - vinculum corporeum quod
@@ -434,7 +438,7 @@
     jours.</glossa>
 
   <relationes>
-    <relatio nomen="conditum_a" ad="*"
+    <relatio nomen="conditum_a" ad="*" necessitudo="origo"
       nota="persona aut auctoritas - Gregorius XIII, magistratus"/>
   </relationes>
 
@@ -507,9 +511,12 @@
   </machina_statuum>
 
   <relationes>
-    <relatio nomen="tempus_servatum" ad="intervallum"/>
-    <relatio nomen="res_servata" ad="*"/>
-    <relatio nomen="vindicans" ad="*"/>
+    <relatio nomen="tempus_servatum" ad="intervallum"
+      necessitudo="obiectum_actus"/>
+    <relatio nomen="res_servata" ad="*"
+      necessitudo="obiectum_actus"/>
+    <relatio nomen="vindicans" ad="*"
+      necessitudo="participatio"/>
     <relatio nomen="parit" ad="obligatio" modulus="obligatio"
       nota="servans tenetur servare - obligatio ex contractu,
             etiam sine pretio soluto"/>

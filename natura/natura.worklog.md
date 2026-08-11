@@ -5816,3 +5816,29 @@ log point), signata_per → fundatio. ex_actis → ex_fonte (the
 house fons/fundamentum distinction applied: "ex" is provenance);
 suscepta_per → constituta_per (fifth site for the shape);
 appenditur_a and positum_a → origo (the scriba pattern).
+
+## 2026-08-10 — tempus + commercium + pharmacon burn-down
+
+8 + 7 + 7 → 0 (global 86 → 64, ligata 368 = 85%), monita 17,
+canons byte-identical, zero new declarations — three models bound
+entirely against the existing 81.
+
+intervallum framed (initium/finis → pars_totum: "quod initio et
+fine caret intervallum non est"). horarium's two directions both
+cite administrat: regit forward (the schedule governs the bakery)
+and vinctum_per converse ("ferrum horas imperat" — the oven
+governs the schedule). in_moneta and quantum → mensuratur_per
+(currency as unit — "unitate ligata" verbatim). fert_ius_in →
+fert (the tessera CARRIES the right — the family's own verb).
+exemplatur_in → successio (substance-to-batch is form-to-instance,
+third site for that step). classificata_ut → normata_per;
+aequivalens → conformitas (bioequivalence = conformity to the
+reference); interagit/inter → participatio both ways (the
+interaction's relata are its participants). commercium arrived at
+7 not 8 — tessera.possessio_eius had self-bound via the
+vectura-arc core declaration.
+
+NON-declaration recorded: initium appears in two models (programma
+entry-function → continet; intervallum bound → pars_totum) — same
+bare name, DIFFERENT relations; rule-19 homonym territory, cited
+per-site, never to be unified.
