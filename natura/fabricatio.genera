@@ -443,8 +443,9 @@
             quae iudicium honestum facit (commutatio facultatem
             ad esse adduxit - causat)"/>
     <relatio nomen="solvitur_per" ad="pensum" modulus="operatio"
-      multiplex="verum" necessitudo="exsecutio"
-      nota="opus quod solutionem exsequitur"/>
+      multiplex="verum"
+      nota="opus quod solutionem exsequitur (necessitudo
+            solvitur_per in cardine - titulo ligat)"/>
   </relationes>
 
 </.genus>

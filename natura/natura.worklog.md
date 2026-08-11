@@ -5617,3 +5617,42 @@ existing binding — give-back and receive, one family);
 initium → continet (the distinguished part; distinction lives in
 the slot name); dirigitur_a → administrat via converse (the
 Makefile governs the tool).
+
+## 2026-08-10 — iudicium burn-down: the model frames itself
+
+17 → 0 (global 190 → 174... arithmetic note: one of the 17,
+investigatio.producit, had ALREADY bound itself overnight — the
+producit declaration made in elementa_programmatis binds globally
+by name, cross-model. Domain declarations are not module-scoped
+at binding time; only their sub= resolution needs modulus=.).
+Monita 28, necessitudines 73, canons byte-identical.
+
+The flagship move: IUDICIUM ITSELF got a frame — its definitio
+has always named exactly four constitutive ends ("cum auctore,
+momento, fundamento, gradu assensus"; momentum is a property, the
+other three plus de are termini). They sat at prefix positions,
+so the conversion was free. Same for attributio (opus + persona —
+its ad_auctorem terminus cites the auctor necessitudo because
+predicating authorship IS what an attribution does).
+
+Second multi-model declaration: solvitur_per (debitum per opus,
+ignotum per observationem) — declared in core sub=exsecutio, and
+the fabricatio citation from this morning REMOVED so name-binding
+takes over (a declared name with a divergent citation at one site
+would be exactly the homonym-confusion the system kills).
+
+Citations worth remembering: sustinet → fundat in the FORWARD
+direction (fundamentum is the family's own genus — the ground
+grounds); superat → substituit (the model's nota already said "ut
+norma substituit normam"); scitur_a → tenetur_a (knowing a secret
+IS holding it — numerus scientium is a count of holders);
+custodia_obligat → parit (the nota literally says "obligationes
+pariunt"); transfertur_per → translatio_nuntii (risk transfer =
+transfer); assensus → mensuratur_per (the grade measures the
+assent); ex_regula → secundum_normam; probator/agnitum_per/
+invenit → fundatio (the epistemic cluster keeps absorbing).
+
+Flag for later: producit's definitio (in elementa_programmatis)
+is build-flavored but now serves investigatio's
+conclusion-production too — third use should trigger promotion to
+core with a widened definitio.

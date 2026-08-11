@@ -414,6 +414,15 @@
     <glossa lingua="en">Executes / carries-out.</glossa>
   </necessitudo>
 
+  <necessitudo nomen="solvitur_per" sub="exsecutio" a="*" ad="*">
+    <definitio>Quod per aliud absolvitur: debitum per opus,
+      ignotum per observationem. Duobus exemplaribus adhibitum
+      (fabricatio, iudicium) - regula duorum impleta.</definitio>
+    <glossa lingua="en">Discharged-through: what resolves or pays
+      it off. Two models used the name before it was
+      declared.</glossa>
+  </necessitudo>
+
   <necessitudo nomen="currit_ut" sub="exsecutio" a="*" ad="*">
     <definitio>Quod ut operatio currit: programma, servus.</definitio>
     <glossa lingua="en">Runs-as.</glossa>

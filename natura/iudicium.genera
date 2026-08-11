@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/iudicium.genera
-  Exemplar semanticum: IUDICIUM (versio 7, PLASTICUM)
+  Exemplar semanticum: IUDICIUM (versio 8, PLASTICUM)
+
+  VERSIO 8 (2026-08-10): migratio necessitudinum - iudicium ipsum
+  compagem accepit (definitio quattuor fines nominat: auctor, de,
+  assensus, fundatur_in), attributio quoque (opus + persona);
+  solvitur_per in cardine declaratum (fabricatio + iudicium);
+  relationes ceterae necessitudine citata ligatae. Sedes solutae
+  17 -> 0.
   Genera: gradus_assensus, fons, observatio, iudicium,
   periculum, ignotum.
 
@@ -46,7 +53,7 @@
   historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
   verificatis, et hoc dicere debet.
 -->
-<natura modulus="iudicium" versio="7" lingua="latina">
+<natura modulus="iudicium" versio="8" lingua="latina">
 
 <!-- ==================================================
      GRADUS ASSENSUS - quanto animus adhaeret
@@ -404,24 +411,34 @@
             semper venire potest"/>
   </machina_statuum>
 
-  <relationes>
-    <relatio nomen="auctor" ad="persona" modulus="persona"
+  <termini>
+    <nota>compages iudicii: definitio ipsa quattuor fines
+      nominat - 'cum auctore, momento, fundamento, gradu
+      assensus' (momentum proprietas est, cetera termini).
+      Ordo pristinus servatus.</nota>
+    <terminus munus="auctor" necessitudo="auctor" ad="persona"
+      modulus="persona"
       nota="QUIS iudicavit - iudicium sine auctore orphanum
             est, et schemata plana hoc semper perdunt"/>
-    <relatio nomen="de" ad="*"
+    <terminus munus="de" necessitudo="de" ad="*"
       nota="res de qua - apertum consulto: de quovis iudicari
             potest"/>
-    <relatio nomen="assensus" ad="gradus_assensus"
+    <terminus munus="assensus" necessitudo="mensuratur_per"
+      ad="gradus_assensus"
       nota="RELATIO non electio: gradus res vera est cum
             definitione sua, non valor nudus in enumeratione"/>
-    <relatio nomen="fundatur_in" ad="observatio"
-      multiplex="verum"
+    <terminus munus="fundatur_in" necessitudo="fundat"
+      ad="observatio" multiplex="verum"
       nota="testimonia quibus nititur - umbra rotae XVI hic
             impleta"/>
+  </termini>
+  <relationes>
     <relatio nomen="ex_fonte" ad="fons" multiplex="verum"/>
     <relatio nomen="superat" ad="iudicium"
+      necessitudo="substituit"
       nota="quod hoc iudicium revisit - catena temporalis,
-            ut norma substituit normam"/>
+            ut norma substituit normam (structura eadem, nomen
+            mollius: vetus visibile manet)"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->
@@ -514,12 +531,14 @@
     <relatio nomen="de" ad="*"
       nota="quod annotatur - res quaelibet (mos iudicii)"/>
     <relatio nomen="probator" ad="programma"
-      modulus="elementa_programmatis"
+      modulus="elementa_programmatis" necessitudo="fundatio"
       nota="instrumentum quod probavit - canon_examen ipse
             programma est. Verbum capitis ('tres probatores');
             'instrumentum' vitatum ne genus corporalium
-            obumbraret"/>
+            obumbraret (familia fundationis: 'per quod
+            probetur')"/>
     <relatio nomen="ex_regula" ad="*"
+      necessitudo="secundum_normam"
       nota="norma/canon applicata - auctoritas per eam fluit;
             derivatio non auctoritas (mos expressionis, L14)"/>
   </relationes>
@@ -588,6 +607,7 @@
             deprimunt (non tollunt: periculum sublatum
             periculum non est)"/>
     <relatio nomen="transfertur_per" ad="contractus"
+      necessitudo="translatio_nuntii"
       modulus="obligatio"
       nota="ASSECURATIO: contractus cuius materia ipsa
             periculum est - alter periculum suscipit pro
@@ -688,10 +708,12 @@
     <relatio nomen="de" ad="*"
       nota="res de qua nescitur"/>
     <relatio nomen="agnitum_per" ad="iudicium"
+      necessitudo="fundatio"
       nota="hiatum agnoscere IUDICIUM est, cum auctore et
             momento: alius hiatum videt ubi alius nihil videt -
             et hoc ipsum peritia est"/>
     <relatio nomen="impedit" ad="*" multiplex="verum"
+      necessitudo="afficit"
       nota="pensa, consilia, actus quos moratur"/>
     <relatio nomen="solvitur_per" ad="observatio" multiplex="verum"
       nota="quid ad solvendum opus sit"/>
@@ -871,12 +893,16 @@
   <relationes>
     <relatio nomen="de" ad="*"
       nota="eventus investigatus - incidens, casus, defectus"/>
-    <relatio nomen="colligit" ad="observatio" multiplex="verum"/>
+    <relatio nomen="colligit" ad="observatio" multiplex="verum"
+      necessitudo="accipit"
+      nota="testimonia in se recipit ante conclusionem"/>
     <relatio nomen="producit" ad="iudicium" multiplex="verum"
       nota="conclusiones de causis - iudicia, non facta:
-            revocabiles, cum auctore, cum gradu assensus"/>
+            revocabiles, cum auctore, cum gradu assensus
+            (necessitudo producit trans modulos ligat -
+            derivatio ex materiis collectis)"/>
     <relatio nomen="invenit" ad="causa" modulus="causa"
-      multiplex="verum"
+      multiplex="verum" necessitudo="fundatio"
       nota="MULTIPLEX consulto - vide causa: necessaria et
             sufficiens raro conveniunt, ergo causa una
             'radicalis' fere semper simplificatio"/>
@@ -1032,15 +1058,17 @@
 
   <relationes>
     <relatio nomen="scitur_a" ad="*" multiplex="verum"
+      necessitudo="tenetur_a"
       nota="quibus notum sit - personae, organizationes,
-            processus"/>
+            processus. Scire secretum = tenere: numerus
+            scientium numerus tenentium est"/>
     <relatio nomen="substituit" ad="secretum"
       nota="CATENA ROTATIONIS: secretum novum vetus succedit, et
             vetus emeritum manet, non deletum - quia quae eo
             signata sunt adhuc verificanda esse possunt.
             Structura eadem qua norma normam substituit"/>
     <relatio nomen="custodia_obligat" ad="obligatio"
-      modulus="obligatio" multiplex="verum"
+      modulus="obligatio" multiplex="verum" necessitudo="parit"
       nota="secreta plerumque obligationes pariunt (pactum
             silentii, sigillum confessionis, officium fiduciae) -
             obligatio tamen secretum non est, nec secretum
@@ -1224,6 +1252,7 @@
 
   <relationes>
     <relatio nomen="residet_in" ad="universitas"
+      necessitudo="situs"
       modulus="organizatio"
       nota="coetus qui eam gerit"/>
     <relatio nomen="de" ad="*" nota="cuius rei sit peritia"/>
@@ -1353,10 +1382,16 @@
             acta.origo_dominii"/>
   </proprietates>
 
-  <relationes>
-    <relatio nomen="de_opere" ad="*"/>
-    <relatio nomen="ad_auctorem" ad="persona" modulus="persona"/>
-  </relationes>
+  <termini>
+    <nota>compages attributionis: iudicium de eo QUIS FECERIT
+      per opus et personam constituitur - duo fines, duo
+      termini.</nota>
+    <terminus munus="de_opere" necessitudo="de" ad="*"/>
+    <terminus munus="ad_auctorem" necessitudo="auctor"
+      ad="persona" modulus="persona"
+      nota="auctor PROPOSITUS: terminus necessitudinem auctoris
+            citat quia id ipsum est quod attributio praedicat"/>
+  </termini>
 
   <nota>
     ATTRIBUTIO MUTATUR ET RES NON. Consilium Investigationis
@@ -1449,8 +1484,9 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="sustinet" ad="*"
-      nota="propositionem, iudicium, attestationem, mensuram"/>
+    <relatio nomen="sustinet" ad="*" necessitudo="fundat"
+      nota="propositionem, iudicium, attestationem, mensuram -
+            fundat via recta: fundamentum fundamentum praebet"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM =================
