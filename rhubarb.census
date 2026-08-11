@@ -319,6 +319,10 @@
 
   <uncus nomen="&censor;" eventus="editio .c/.h/.m"
     custodit="&norma-latinitatis;">
+    <glossa lingua="en">Fires on C-file edits: catches a latina.h
+      macro word used in a declarator and NAMES the culprit -
+      before it, the symptom was a cascade of cryptic parse
+      errors and manual diagnosis.</glossa>
     <adhibet ad="&silva;"/>
     <nota>./silva/censor.sh: macro-verbum latina.h in
       declaratore deprehendit et culpam nominat - cascata
@@ -327,6 +331,9 @@
 
   <uncus nomen="&uncus-examinis;" eventus="editio .c/.h"
     custodit="&norma-vexillorum;">
+    <glossa lingua="en">C89 judgment after every edit, verdict
+      ACCEPT or REJECT on the spot. Beware batched edits mid-
+      flight: the cold examen from disk is the arbiter.</glossa>
     <adhibet ad="&silva-examen;"/>
     <nota>Iudicium C89 post editionem, verdictum ACCIPE/REICE
       statim. CAVE: editiones acervatas currit - examen
@@ -335,6 +342,9 @@
 
   <uncus nomen="&natura-custos;" eventus="servatio natura/*.genera"
     custodit="&natura;">
+    <glossa lingua="en">Names cross-model wounds after every
+      .genera save - it once narrated a healing LIVE, three
+      wounds to one to none across successive edits.</glossa>
     <adhibet ad="&natura-examen;"/>
     <nota>Vulnera trans-exemplaria post servationem nominat -
       sanationem trium vulnerum hodiernam VIVE narravit
@@ -343,6 +353,10 @@
 
   <uncus nomen="&canon-custos;" eventus="servatio .canon/.stml/.census"
     custodit="&canon;">
+    <glossa lingua="en">Judges a document's contract after each
+      write - it has caught a premature citation mid-edit-series,
+      and a fabricated element the moment it landed. The guard
+      this very gloss was written under.</glossa>
     <adhibet ad="&canon-examen;"/>
     <nota>Contractum documenti post scriptionem iudicat -
       citationem praematuram in media serie editionum
@@ -351,6 +365,10 @@
 
   <uncus nomen="&excubitor;" eventus="editio capitum (include/*.h)"
     custodit="&aedilis;">
+    <glossa lingua="en">The header watchman: on an include edit
+      it reports the blast radius - how many files include it
+      directly, whose objects just went stale. Reads silva's
+      include graph.</glossa>
     <adhibet ad="&silva;"/>
     <nota>Radius editionis capitis: quot plagulae directe
       includunt, obiecta consumptorum stala fiunt. Graphum
@@ -359,6 +377,9 @@
 
   <uncus nomen="&natura-canonum-custos;" eventus="servatio *.genera"
     custodit="&monolithus-canonum;">
+    <glossa lingua="en">Cries RANCID on the baked canons after a
+      genera change and names the regeneration command - a loud
+      refusal carrying its own remedy.</glossa>
     <nota>Canones coctos RANCIDOS post mutationem generum
       clamat et mandatum regenerationis nominat
       (./tools/natura_canones.sh) - recusatio clara cum
@@ -569,6 +590,10 @@
   <periculum nomen="&periculum-chordae;"
     contentum="Functiones bibliothecae vulgaris in chorda adhibitae: chorda mensuram fert nec nullo terminatur, ideo strcpy/strlen silenter corrumpunt."
     probabilitas="0.6" gravitas="gravis" minatur="&claude-code;">
+    <glossa lingua="en">Standard-library string functions applied
+      to a chorda: it carries a length and no terminator, so
+      strcpy/strlen corrupt silently. Held off by discipline
+      alone - no machine guard exists for this one.</glossa>
     <minuitur-per ad="&claude-md;"/>
     <minuitur-per ad="&pactum-chordae;"/>
     <nota>Custos machinalis NULLUS hoc periculum vigilat -
@@ -580,6 +605,10 @@
   <periculum nomen="&periculum-promptuarii-legati;"
     contentum="Legatus capita promptuaria numquam revalidat: post caput editum verdictum REICE falsum reddit et 'renovare' se recentem dicit."
     probabilitas="0.7" gravitas="levis" minatur="&claude-code;">
+    <glossa lingua="en">The language server never revalidates its
+      header cache: after a header edit it returns false REJECT
+      verdicts while its own refresh insists it is fresh. Cold
+      judgment from disk is the arbiter.</glossa>
     <minuitur-per ad="&claude-md;"/>
     <minuitur-per ad="&silva-examen;"/>
     <nota>Mensuratum 01KZ6GH88Z. Remedium nunc RES est, non
@@ -590,6 +619,10 @@
   <periculum nomen="&periculum-expansionis-aequalis;"
     contentum="Verbum '===' nudum in mandato zsh expansionem aequalis evocat: separator innocens cursum abrumpit et exitum falsum instrumento innocenti tribuit."
     probabilitas="0.7" gravitas="levis" minatur="&claude-code;">
+    <glossa lingua="en">A bare "===" in a zsh command triggers
+      equals-expansion: an innocent separator aborts the run and
+      pins a false exit code on an innocent tool. The probability
+      here is MEASURED - seven recorded bites.</glossa>
     <minuitur-per ad="&claude-md;"/>
     <nota>Probabilitas MENSURATA, non aestimata: ictus VII in
       tabulario (res 01KYRCJ340...), saepissime icta rerum
@@ -600,6 +633,9 @@
   <periculum nomen="&periculum-exitus-secundi;"
     contentum="Porta quae NIHIL probavit exitum 2 reddit: qui solum exitum 0 spectat fiduciam falsam accipit - porta vacua fiduciam FABRICAT."
     probabilitas="0.4" gravitas="gravis" minatur="&claude-code;">
+    <glossa lingua="en">A gate that proved NOTHING exits 2:
+      whoever watches only for zero receives manufactured trust -
+      an empty gate FABRICATES confidence.</glossa>
     <minuitur-per ad="&claude-md;"/>
     <minuitur-per ad="&pactum-exituum;"/>
   </periculum>
@@ -607,6 +643,10 @@
   <periculum nomen="&periculum-additionis-totius;"
     contentum="'git add -A' plagulas Franis privatas committit (FAQ.md, gesta/annales/*) - damnum in acta publica transit."
     probabilitas="0.3" gravitas="gravis" minatur="&fran;">
+    <glossa lingua="en">"git add -A" would commit Fran's staging
+      files, and the damage passes into the public record. Note
+      whom it threatens: Fran, not the agent - which is why
+      staging is explicit by path, always.</glossa>
     <minuitur-per ad="&norma-plagularum-privatarum;"/>
   </periculum>
 
@@ -788,13 +828,30 @@
        singularis quae iudicium fundat iam observatio est) -->
 
   <observatio nomen="&casus-actionis-mortuae;"
-    contentum="Candidati 'actio' et 'administrator' cogitatione superfuerunt, ambulatione perierunt - alter relatione iam exsistente tectus, alter proprietatibus gubernationis."/>
+    contentum="Candidati 'actio' et 'administrator' cogitatione superfuerunt, ambulatione perierunt - alter relatione iam exsistente tectus, alter proprietatibus gubernationis.">
+    <glossa lingua="en">Candidates "actio" and "administrator"
+      survived deliberation and died on the walk - one already
+      covered by an existing relation, the other by governance
+      properties. The case behind "park, then WALK".</glossa>
+  </observatio>
 
   <observatio nomen="&casus-truncationis;"
-    contentum="Inspectio nominis per 'head -c 60' truncata tag '[species:...]' abscidit: candidatus 'mensuratio' liber visus est dum apud fundamentum sedebat. Custos generum invenit quod inspectio celaverat - eadem lectio ac peregrini '|...'."/>
+    contentum="Inspectio nominis per 'head -c 60' truncata tag '[species:...]' abscidit: candidatus 'mensuratio' liber visus est dum apud fundamentum sedebat. Custos generum invenit quod inspectio celaverat - eadem lectio ac peregrini '|...'.">
+    <glossa lingua="en">A name check through "head -c 60" cut off
+      the tag that mattered: candidate "mensuratio" looked free
+      while it sat occupied at fundamentum. The guard found what
+      the truncated look concealed - the case behind "collide
+      names BEFORE the walk".</glossa>
+  </observatio>
 
   <observatio nomen="&casus-uncorum-mutorum;"
-    contentum="Unci domus QUATTUOR muti stabant tempus ignotum: involucrum hookSpecificOutput deerat et additionalContext nudum tacite abiciebatur - porta tacita et porta mortua idem videntur. Casus qui pactum portae natalis coegit."/>
+    contentum="Unci domus QUATTUOR muti stabant tempus ignotum: involucrum hookSpecificOutput deerat et additionalContext nudum tacite abiciebatur - porta tacita et porta mortua idem videntur. Casus qui pactum portae natalis coegit.">
+    <glossa lingua="en">The house's four hooks stood MUTE for an
+      unknown span: a missing envelope meant their output was
+      silently dropped - a silent gate and a dead gate look
+      identical. The case that forced the birth-gate
+      covenant.</glossa>
+  </observatio>
 
   <!-- ============ AMBULATIONES (historia censūs) ============
        Eventus dati cum messe - in commento MESSIS vivebant,
@@ -838,11 +895,19 @@
 
   <signum nomen="&mensura-exemplarium;" de="&natura;"
     contentum="exemplaria 35" facta="2026-08-11"
-    via="ls natura/*.genera | wc -l"/>
+    via="ls natura/*.genera | wc -l">
+    <glossa lingua="en">Counts natura's models (the .genera
+      files). Like every signum here, the number carries its own
+      measuring path, so anyone can measure it again.</glossa>
+  </signum>
 
   <signum nomen="&mensura-generum;" de="&natura;"
     contentum="genera 463" facta="2026-08-11"
     via="bin/natura_examen | tail -1">
+    <glossa lingua="en">Counts the kinds in the dictionary. The
+      jump 188 to 463 was REDEFINITION, not growth - the path
+      survived while the meaning under it changed, which is why
+      review needs a human reading the diff.</glossa>
     <nota>Saltus 188 -> 463 non incrementum sed REDEFINITIO:
       arbor porphyriana (2026-08-10) species in genera vertit.
       Via superstes, sensus sub ea mutatus - recensio hominem
@@ -852,6 +917,10 @@
   <signum nomen="&mensura-rerum;" de="&natura;"
     contentum="res lexici 117" facta="2026-08-11"
     via="bin/natura_examen | tail -1">
+    <glossa lingua="en">Counts the dictionary's individuals. Once
+      condemned as "unverifiable" because the WRONG path was used
+      - a true number damned by a bad anchor, worse than no anchor
+      because it wears the look of trust.</glossa>
     <nota>LECTIO DE ANCORIS: hic numerus in auditu primo
       'inverificabilis' damnatus est quia VIA FALSA quaesitus
       ('grep -c &lt;res ' nihil invenit - lexicon species et
@@ -864,6 +933,9 @@
   <signum nomen="&mensura-canonum;" de="&natura;"
     contentum="canones in cocta/ 35" facta="2026-08-11"
     via="ls natura/cocta/*.canon | wc -l">
+    <glossa lingua="en">Counts the baked canons on disk. The
+      tool's own report claims one more than the disk holds; this
+      number is the DISK's.</glossa>
     <nota>CAVE: natura_canones.sh 'canones 36' nuntiat dum in
       disco 35 sunt - numerus instrumenti proprius uno errat
       (quaestio 01KZGX4ED0). Numerus hic DISCI est.</nota>
@@ -872,6 +944,10 @@
   <signum nomen="&mensura-seminum;" de="&natura;"
     contentum="individua in semina 117" facta="2026-08-11"
     via="grep -c 'nomen=&quot;&amp;' natura/cocta/semina.census">
+    <glossa lingua="en">Counts the individuals in the seed bank.
+      Its path was once DEAD - a sigil migration broke the method
+      while the value lived on - so review must distinguish "the
+      value moved" from "the method died".</glossa>
     <nota>VIA IPSA MORTUA erat: migratio sigillorum (# -&gt;
       &amp;nomen;) methodum fregit - via vetus ZEPHYRUM mensurabat
       dum 117 exsistunt. Lectio ancorae iterum, gradu altiore:
