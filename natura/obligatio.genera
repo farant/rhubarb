@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/obligatio.genera
-  Exemplar semanticum: OBLIGATIO (versio 8, PLASTICUM)
+  Exemplar semanticum: OBLIGATIO (versio 9, PLASTICUM)
   Genera: obligatio, contractus, licentia.
+
+  VERSIO 9 (2026-08-10): migratio necessitudinum - fines
+  constitutivi in <termini> (decretum Franis: compages ubi fines
+  constituunt, non solum in actibus - obligatio ipsa 'duo termini
+  eius' dicit), relationes ceterae necessitudine citata ligatae.
+  Sedes solutae 32 -> 0.
 
   Natum ex experimento pistrinae (ratio caffeae, conductio
   operariorum, licentia sanitatis).
@@ -20,7 +26,7 @@
   datur, revocari potest, expirat. Non idem genus - quod
   schemata vulgaria confundunt.
 -->
-<natura modulus="obligatio" versio="8" lingua="latina">
+<natura modulus="obligatio" versio="9" lingua="latina">
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -73,12 +79,20 @@
     <transitus a="violata" ad="soluta" per="solutio_sera"/>
   </machina_statuum>
 
-  <relationes>
-    <relatio nomen="debitor" ad="*"/>
-    <relatio nomen="creditor" ad="*"/>
-    <relatio nomen="praestandum" ad="*"
+  <termini>
+    <nota>compages VINCULI, non actus (decretum Franis 2026-08-10:
+      termini ubi fines CONSTITUTIVI sunt, non solum in actibus) -
+      definitio ipsa dicit 'debitor et creditor duo termini eius;
+      sine relatione obligatio non est'. Genus quod compagem suam
+      ante nos nominavit.</nota>
+    <terminus munus="debitor" necessitudo="participatio" ad="*"/>
+    <terminus munus="creditor" necessitudo="participatio" ad="*"/>
+    <terminus munus="praestandum" necessitudo="obiectum_actus"
+      ad="*"
       nota="pecunia, res, opus, aut ABSTINENTIA (non facere est
             praestatio quoque - obligatio negativa)"/>
+  </termini>
+  <relationes>
     <relatio nomen="orta_ex" ad="*"
       nota="fons: contractus, delictum, venditio, lex ipsa"/>
   </relationes>
@@ -140,9 +154,12 @@
       nota="vacuum = sine termino"/>
   </proprietates>
 
-  <relationes>
-    <relatio nomen="partes" ad="*" multiplex="verum"
+  <termini>
+    <terminus munus="partes" necessitudo="participatio" ad="*"
+      multiplex="verum"
       nota="qui consenserunt - DUO saltem, semper"/>
+  </termini>
+  <relationes>
     <relatio nomen="parit" ad="obligatio" multiplex="verum"/>
   </relationes>
 
@@ -258,11 +275,14 @@
     <transitus a="expirata" ad="concessa" per="renovatio"/>
   </machina_statuum>
 
-  <relationes>
-    <relatio nomen="concedens" ad="organizatio"
-      modulus="organizatio"
+  <termini>
+    <terminus munus="concedens" necessitudo="participatio"
+      ad="organizatio" modulus="organizatio"
       nota="magistratus fere semper - auctoritas publica"/>
-    <relatio nomen="accipiens" ad="*"/>
+    <terminus munus="accipiens" necessitudo="participatio"
+      ad="*"/>
+  </termini>
+  <relationes>
     <relatio nomen="secundum_normam" ad="norma" modulus="norma"
       nota="licentia normam SUPPONIT: quod inspector metitur,
             norma dicit - nexus qui exemplar normae iterum
@@ -319,9 +339,13 @@
     </proprietas>
   </proprietates>
 
+  <termini>
+    <terminus munus="exigitur_a" necessitudo="participatio"
+      ad="magistratus" modulus="organizatio"
+      nota="creditor publicus - finis quem differentia nominat
+            (res publica, non homo)"/>
+  </termini>
   <relationes>
-    <relatio nomen="exigitur_a" ad="magistratus"
-      modulus="organizatio"/>
     <relatio nomen="secundum_normam" ad="norma" modulus="norma"/>
   </relationes>
 
@@ -406,9 +430,11 @@
       nota="quo titulo nominatur - 'doctor', 'magister'"/>
   </proprietates>
 
+  <termini>
+    <terminus munus="conferens" necessitudo="participatio"
+      ad="organizatio" modulus="organizatio"/>
+  </termini>
   <relationes>
-    <relatio nomen="conferens" ad="organizatio"
-      modulus="organizatio"/>
     <relatio nomen="latus_a" ad="persona" modulus="persona"/>
     <relatio nomen="fundat" ad="licentia"
       nota="titulus licentiam saepe PRAECEDIT et fundat
@@ -579,21 +605,26 @@
     <actio nomen="revocari"/>
   </actiones>
 
-  <relationes>
-    <relatio nomen="iubens" ad="*"
+  <termini>
+    <terminus munus="iubens" necessitudo="participatio" ad="*"
       nota="persona aut organizatio - sed non quaelibet: vide
-            relationem potestatis infra"/>
-    <relatio nomen="potestate" ad="titulus"
+            terminum potestatis infra"/>
+    <terminus munus="potestate" necessitudo="fundat" ad="titulus"
       nota="QUA AUCTORITATE iubeat. Iussum sine potestate
             IRRITUM est, non malum - unde titulus (licentia
             medici, officium iudicis) pars validitatis, non
-            ornamentum"/>
-    <relatio nomen="exsecutor" ad="*"
+            ornamentum. Finis constitutivus non-personalis:
+            fundamentum (iussum in titulo fundatur -
+            necessitudo fundat, via conversa)"/>
+    <terminus munus="exsecutor" necessitudo="participatio" ad="*"
       nota="cui exsequendum - saepe non idem ac beneficiarius:
             medicus iubet, pharmacopola exsequitur, aeger
             accipit. TRES personae, quod iussum a contractu
             (duae) distinguit"/>
-    <relatio nomen="beneficiarius" ad="*"/>
+    <terminus munus="beneficiarius" necessitudo="participatio"
+      ad="*"/>
+  </termini>
+  <relationes>
     <relatio nomen="latum_per" ad="actus_iuridicus" modulus="actus"
       nota="actus quo natum est"/>
     <relatio nomen="parit" ad="obligatio"
@@ -781,19 +812,27 @@
     <transitus a="violata" ad="gesta" per="emendatio"/>
   </machina_statuum>
 
-  <relationes>
-    <relatio nomen="fiduciarius" ad="*"
-      nota="qui tenet"/>
-    <relatio nomen="beneficiarius" ad="*" multiplex="verum"
+  <termini>
+    <terminus munus="fiduciarius" necessitudo="participatio"
+      ad="*" nota="qui tenet"/>
+    <terminus munus="beneficiarius" necessitudo="participatio"
+      ad="*" multiplex="verum"
       nota="cuius commodo. SAEPE INDETERMINATUS ET FUTURUS:
             museum generationibus nondum natis tenet, quae nec
             queri nec agere possunt - unde custodia externa
             (magistratus, norma professionis) necessaria fit ubi
             beneficiarius se ipsum tueri non potest"/>
-    <relatio nomen="res_fiduciaria" ad="*" multiplex="verum"/>
+    <terminus munus="res_fiduciaria" necessitudo="obiectum_actus"
+      ad="*" multiplex="verum"/>
+  </termini>
+  <relationes>
     <relatio nomen="constituta_per" ad="actus_sollemnis"
       modulus="actus"/>
-    <relatio nomen="officia" ad="obligatio" multiplex="verum"/>
+    <relatio nomen="officia" ad="obligatio" multiplex="verum"
+      necessitudo="parit"
+      nota="obligationes quas fiducia ipsa gignit (sub officiis
+            tenetur) - eadem necessitudo qua contractus
+            obligationes parit, verbo domus servato"/>
   </relationes>
 
   <nota>
@@ -908,11 +947,14 @@
       non nova, quod identificator praestat"/>
   </actiones>
 
+  <termini>
+    <terminus munus="petens" necessitudo="participatio" ad="*"/>
+    <terminus munus="rogatus" necessitudo="participatio" ad="*"/>
+  </termini>
   <relationes>
-    <relatio nomen="petens" ad="*"/>
-    <relatio nomen="rogatus" ad="*"/>
     <relatio nomen="de" ad="*" nota="quid petatur"/>
     <relatio nomen="iudicatur_per" ad="iudicium" modulus="iudicium"
+      necessitudo="fundatio"
       nota="concessio aut negatio IUDICIUM est, cum auctore et
             fundamento - unde petitiones negatae rationem
             debent, et systemata quae eam non servant appellare
@@ -1079,17 +1121,22 @@
     <transitus a="data" ad="extincta" per="mors_delegantis"/>
   </machina_statuum>
 
+  <termini>
+    <terminus munus="delegans" necessitudo="participatio" ad="*"/>
+    <terminus munus="delegatus" necessitudo="participatio"
+      ad="*"/>
+  </termini>
   <relationes>
-    <relatio nomen="delegans" ad="*"/>
-    <relatio nomen="delegatus" ad="*"/>
     <relatio nomen="probatur_per" ad="attestatio" modulus="acta"
+      necessitudo="fundatio"
       nota="charta qua potestas exhibetur (litterae plenae
             potestatis, instrumentum procurationis). CHARTA
             POTESTAS NON EST: potestas revocari potest charta
             intacta manente - unde omnia problemata"/>
     <relatio nomen="obligat_per" ad="actus_sollemnis" modulus="actus"
-      multiplex="verum"
-      nota="actus quos delegatus nomine alieno ponit"/>
+      multiplex="verum" necessitudo="exsecutio"
+      nota="actus quos delegatus nomine alieno ponit - delegatio
+            in his exercetur"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->
@@ -1221,18 +1268,27 @@
     <actio nomen="denuntiari" nota="cum praemonitione plerumque"/>
   </actiones>
 
-  <relationes>
-    <relatio nomen="depositarius" ad="organizatio"
-      modulus="organizatio"
+  <termini>
+    <terminus munus="depositarius" necessitudo="participatio"
+      ad="organizatio" modulus="organizatio"
       nota="qui textum authenticum et indicem ratificationum,
             limitationum, accessionum, denuntiationum custodit.
             ACTA CONSTITUTIVA (vide acta.vis): accedens pars fit
             cum depositum INSCRIBITUR, non cum mittitur - unde
             registrum rem facit, non refert"/>
+  </termini>
+  <relationes>
     <relatio nomen="signatus_per" ad="delegatio" multiplex="verum"
-      nota="plenae potestates quibus signatum est"/>
-    <relatio nomen="limitatus_per" ad="limitatio" multiplex="verum"/>
-    <relatio nomen="ad_vigorem_per" ad="quorum" modulus="actus"/>
+      necessitudo="fundat"
+      nota="plenae potestates quibus signatum est - validitas
+            signationis in his fundatur (via conversa, ut
+            iussum.potestate)"/>
+    <relatio nomen="limitatus_per" ad="limitatio" multiplex="verum"
+      necessitudo="afficit"
+      nota="via conversa: limitatio effectum tractatus afficit"/>
+    <relatio nomen="ad_vigorem_per" ad="quorum" modulus="actus"
+      necessitudo="conformitas"
+      nota="vigor postulato quori impleto venit"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->
@@ -1326,9 +1382,14 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="ad_tractatum" ad="tractatus"/>
+    <relatio nomen="ad_tractatum" ad="tractatus"
+      necessitudo="afficit"
+      nota="tractatus cuius effectum limitatio mutat -
+            differentia ipsa dicit 'effectum excludit aut
+            mutat'"/>
     <relatio nomen="lata_a" ad="*"/>
     <relatio nomen="obiecta_a" ad="*" multiplex="verum"
+      necessitudo="participatio"
       nota="partes quae obiecerunt. RETICULUM HINC ORITUR:
             inter limitantem et non-obicientem tractatus
             limitatus valet; inter limitantem et obicientem
@@ -1437,13 +1498,19 @@
             et altera memoriam poscit quam altera non poscit"/>
   </proprietates>
 
-  <relationes>
-    <relatio nomen="in_re_communi" ad="*"
+  <termini>
+    <terminus munus="in_re_communi" necessitudo="pars_de" ad="*"
       nota="fons communis - pascuum, piscatio, aqua, aer,
-            spatium radiophonicum, vis computandi"/>
-    <relatio nomen="competit" ad="*"
+            spatium radiophonicum, vis computandi. Portio PARS
+            rei communis est (differentia: 'partem rei ALIENAE
+            ET COMMUNIS')"/>
+    <terminus munus="competit" necessitudo="participatio" ad="*"
       nota="cui - personae, praedio, navi"/>
-    <relatio nomen="statuta_per" ad="norma" modulus="norma"/>
+  </termini>
+  <relationes>
+    <relatio nomen="statuta_per" ad="norma" modulus="norma"
+      necessitudo="constituta_per"
+      nota="norma portionem CONSTITUIT, non solum regit"/>
     <relatio nomen="custodita_per" ad="organizatio"
       modulus="organizatio"
       nota="quis excessum puniat. SINE CUSTODE PORTIO NIHIL EST:

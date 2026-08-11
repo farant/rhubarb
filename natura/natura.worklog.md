@@ -5489,3 +5489,54 @@ Trap note: <proprietates> is a bare container — no nota= attribute
 (hook caught it twice; prose belongs on the proprietas rows).
 Left open deliberately: glossae curation (177/460 hand-written),
 quaestio 01KZPSA3G1 (pre-existing red census).
+
+## 2026-08-10 — obligatio burn-down: frames beyond actus (Fran's ruling)
+
+First full model burn-down after necessitudines shipped: obligatio
+32 soluta → 0 (global 263 → 231), monita 33 → 32, canons
+byte-identical under -probare (the fold reads terminus/munus= as
+relatio/nomen= — venditio's gate generalizes).
+
+**The ruling that shaped it**: frames are NOT actus-only. The canon
+always admitted <termini> on every genus; the doctrine's "act-genera
+declare frames" was the paradigm case, not a fence. Fran ruled:
+termini wherever the ends are CONSTITUTIVE. Obligatio is the
+flagship — its own definitio says "debitor et creditor duo termini
+eius; sine relatione obligatio non est". Bonds, directives, and
+rights are relational entities more than acts are.
+
+**What became frames** (roles → participatio, patients →
+obiectum_actus): obligatio(debitor/creditor/praestandum),
+contractus(partes), licentia(concedens/accipiens),
+tributum(exigitur_a), titulus(conferens),
+iussum(iubens/potestate/exsecutor/beneficiarius),
+fiducia(fiduciarius/beneficiarius/res_fiduciaria),
+petitio(petens/rogatus), delegatio(delegans/delegatus),
+tractatus(depositarius), portio_communis(in_re_communi/competit).
+Ordering law held everywhere: termini at the old relationes
+position, original slot order preserved — that is what keeps the
+cooked canon byte-identical.
+
+**Non-obvious assignments** (the pattern for later models):
+- Validity-grounds cite fundat via the CONVERSE direction:
+  iussum.potestate (iussum fundatur in titulo) and
+  tractatus.signatus_per — one identity, two directions, no new
+  declaration.
+- A terminus need not be a person: iussum.potestate is a
+  constitutive non-personal end (necessitudo="fundat");
+  portio.in_re_communi cites pars_de (the differentia says the
+  share IS a part of the common thing).
+- Through-a-iudicium standings cite the fundatio FAMILY when the
+  word diverges from asseritur_per (petitio.iudicatur_per,
+  delegatio.probatur_per — the family definitio says "per quod
+  asseratur aut probetur").
+- limitatio.ad_tractatum + tractatus.limitatus_per = afficit both
+  ways (the differentia: "effectum excludit aut mutat");
+  fiducia.officia = parit (same identity as contractus/petitio
+  begetting obligations); portio.statuta_per = constituta_per
+  (the norm CONSTITUTES the share); delegatio.obligat_per =
+  exsecutio family; tractatus.ad_vigorem_per = conformitas
+  (quorum requirement fulfilled).
+- Singleton domain words CITE (family or workhorse); nothing was
+  newly declared — rule of two held, zero additions to
+  necessitudines.genera.
