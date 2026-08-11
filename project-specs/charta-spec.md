@@ -192,6 +192,12 @@ Click a node → side panel:
 - attributes rendered verbatim (tags, dates, vias — as-is per ruling)
 - edges grouped by familia, each row **clickable → camera pans to the
   other end** (this is the "index into the record" in miniature)
+- **res | stml tabs** (added post-v1, Fran's ask): the stml tab
+  shows the node's VERBATIM source — the entity element plus its
+  augmentation blocks byte-faithfully emitted, or the semina
+  definition for external stubs; sourceless stubs say so. Payload
+  carries it as per-node `stml`; tab mode is sticky across
+  selections.
 - Esc or background-click closes. No edit affordance of any kind.
 
 ## 8. Hot reload (watchable growth)

@@ -1253,6 +1253,24 @@ curare_cum(defs_vetera).then(function () {
     charta_eligere(null);
     proba(tabella.hidden === true, "charta: electio nulla claudit");
 
+    /* tab stml: fons verbatim monstratur, modus haeret, stipes
+     * sine fonte nuntium fert (numquam vacuum tacite) */
+    charta_datum.nodi["&piscina;"].stml =
+        "<bibliotheca nomen=\"&piscina;\" gradus=\"0\"/>";
+    charta_tabella_visus = 'stml';
+    charta_eligere("&piscina;");
+    proba(tabella.textContent.indexOf("gradus=\"0\"") !== -1,
+        "charta: tab stml fontem verbatim monstrat");
+    proba(tabella.textContent.indexOf("Arena memoriae.") === -1,
+        "charta: tab stml structuram parsatam NON monstrat");
+    charta_eligere("&pactum-piscinae;");
+    proba(tabella.textContent.indexOf("fons non fertur") !== -1,
+        "charta: stipes sine fonte nuntium fert, non vacuum");
+    proba(charta_tabella_visus === 'stml',
+        "charta: modus tabellae trans electiones haeret");
+    charta_tabella_visus = 'res';
+    charta_eligere(null);
+
     /* purgatio */
     charta_datum = null; charta_positus = null; charta_electum = null;
     charta_familiae_visae = {}; charta_colores = {};

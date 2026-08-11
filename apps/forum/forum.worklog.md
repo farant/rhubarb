@@ -173,6 +173,30 @@ green, the rest from a fixed palette in sorted-name order.
 - Harness: 254 assertions (+9). Planted fault (inverted
   default-visibility) → FRACTA (1). Full smoke green.
 
+## 2026-08-11 — charta: raw-STML tab in the detail panel
+
+Fran's ask after v1: see the verbatim source beside the parsed
+view. The payload now carries per-node `stml`: the C side emits
+each entity element with `stml_scribere(elementum, piscina,
+FALSUM)` (non-pretty = byte-faithful) — an entity plus its
+augmentation blocks concatenate in document order, and external
+stubs get their SEMINA definition (ChartaSemen now carries the
+emission), so do_178c shows where it was minted without opening
+semina.census. Dot-kind/`#`/ignotum stubs have no source; the tab
+says so instead of showing empty ("fons non fertur"). Panel gained
+a two-tab bar (res | stml) with STICKY mode — someone walking
+sources keeps seeing sources as they click through nodes.
+
+- Fumus: `stml` on a census-minted node is a GATE (structural —
+  its absence means the serializer broke), unlike the entity-gloss
+  probe (content — comes and goes at authoring pace).
+- The examen hook earned its keep: the `_charta_genus_seminis` →
+  `_charta_semen_invenire` rename left two callers behind and the
+  hook named both lines before I ever compiled.
+- Harness: 258 (+4: verbatim shown, parsed-view absent in stml
+  mode, stub fallback message, mode stickiness); planted fault
+  red. Full smoke green.
+
 ## 2026-08-11 — charta step 6: entity glossae unblocked
 
 Canon side in natura.worklog.md (emitter grants universal glossa

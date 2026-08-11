@@ -434,6 +434,15 @@
     border-radius: 4px; padding: .6em .9em; font-size: .78em; }
   #charta-tabella h3 { color: #ece5d8; margin: 0 0 .1em 0;
     font-size: 1.1em; }
+  #charta-tabella .charta-tabs { margin-bottom: .4em; }
+  #charta-tabella .charta-tabs a { color: #9fb87a; cursor: pointer;
+    margin-right: .9em; font-size: .9em; }
+  #charta-tabella .charta-tabs a.activa { color: #d8b978;
+    border-bottom: 1px solid #d8b978; }
+  #charta-tabella pre.charta-stml { background: #12100e;
+    border: 1px solid #453d2f; border-radius: 4px; padding: .5em;
+    font-size: .85em; line-height: 1.35; white-space: pre-wrap;
+    overflow-x: auto; margin: .2em 0; }
   #charta-tabella .charta-genus { color: #8a7a55;
     margin-bottom: .5em; }
   #charta-tabella .charta-glossa { color: #9fb87a;
@@ -1120,6 +1129,7 @@ var charta_fulgores = {};    /* clavis nodi -> {t, novus} (fulgor) */
 var charta_fulgores_aristae = {};    /* clavis aristae -> t */
 var charta_iter     = null;  /* {x,y} - camera eo labitur (electio
                                 usoris SOLA; recargatio numquam) */
+var charta_tabella_visus = 'res';   /* 'res' | 'stml' - haeret */
 
 /* strata: tabula generis -> fascia. VECTIS (spec par. V): si
  * tabula manualis mentiri incipit, e sceleto causali derivanda.
@@ -1610,6 +1620,42 @@ function charta_tabellam_implere(clavis) {
   linea.textContent = n.genus + ' · ' + s.titulus
     + (n.externus ? ' · externum' : '');
   tabella.appendChild(linea);
+  /* tabs: res (structura parsata) | stml (fons verbatim).
+   * Modus HAERET trans electiones - qui fontes percurrit fontes
+   * percurrere pergit. */
+  {
+    var tabs = document.createElement('div');
+    var t_res = document.createElement('a');
+    var t_stml = document.createElement('a');
+
+    tabs.className = 'charta-tabs';
+    t_res.textContent = 'res';
+    t_res.className = charta_tabella_visus === 'res' ? 'activa' : '';
+    t_res.onclick = function () {
+      charta_tabella_visus = 'res';
+      charta_tabellam_implere(clavis);
+    };
+    t_stml.textContent = 'stml';
+    t_stml.className = charta_tabella_visus === 'stml'
+      ? 'activa' : '';
+    t_stml.onclick = function () {
+      charta_tabella_visus = 'stml';
+      charta_tabellam_implere(clavis);
+    };
+    tabs.appendChild(t_res);
+    tabs.appendChild(t_stml);
+    tabella.appendChild(tabs);
+  }
+  if (charta_tabella_visus === 'stml') {
+    var fons = document.createElement('pre');
+
+    fons.className = 'charta-stml';
+    fons.textContent = n.stml
+      ? n.stml
+      : '(fons non fertur - stipes sine origine scripta)';
+    tabella.appendChild(fons);
+    return;
+  }
   if (n.glossa_generis) {
     linea = document.createElement('div');
     linea.className = 'charta-glossa';
