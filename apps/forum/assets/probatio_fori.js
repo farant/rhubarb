@@ -1139,6 +1139,68 @@ curare_cum(defs_vetera).then(function () {
         "charta: dispositio cum aristis quoque determinata");
 })();
 
+/* ---- charta: recargatio calida (gradus IV) - differentia pura
+ * + receptio (vitium retinet, bonum purgat, camera immota) ---- */
+(function () {
+    var vetus = { nodi: {
+        "&manens;": { genus: "bibliotheca", externus: false,
+            notae: ["vetus nota"] },
+        "&mutandus;": { genus: "pactum", externus: false,
+            notae: ["ante"] },
+        "&periens;": { genus: "uncus", externus: false, notae: [] }
+    }, aristae: [
+        { a: "&mutandus;", ad: "&manens;", familia: "informat" }
+    ] };
+    var novum = { nodi: {
+        "&manens;": { genus: "bibliotheca", externus: false,
+            notae: ["vetus nota"] },
+        "&mutandus;": { genus: "pactum", externus: false,
+            notae: ["post"] },
+        "&natus;": { genus: "uncus", externus: false, notae: [] }
+    }, aristae: [
+        { a: "&mutandus;", ad: "&manens;", familia: "informat" },
+        { a: "&natus;", ad: "&manens;", familia: "custodit" }
+    ], signum: "s2", scaena: "census" };
+    var d = charta_differre(vetus, novum);
+    aequale(d.nodi_novi.join(","), "&natus;",
+        "charta: differentia nodum novum videt");
+    aequale(d.nodi_mutati.join(","), "&mutandus;",
+        "charta: differentia notam mutatam videt, manentem tacet");
+    aequale(d.aristae_novae.length, 1,
+        "charta: differentia aristam novam videt, veterem tacet");
+
+    /* receptio: vitium graphum retinet et vexillum monstrat */
+    charta_datum = vetus;
+    charta_signum = "s1";
+    charta_camera.x = 123;
+    charta_camera.initum = true;
+    charta_recipere({ vitium: "probatio" });
+    proba(charta_datum === vetus,
+        "charta: vitium graphum bonum ultimum retinet");
+    aequale(document.getElementById("charta-vexillum").hidden, false,
+        "charta: vitium vexillum monstrat");
+    /* mutatum falsum: nihil tangitur */
+    charta_recipere({ mutatum: false });
+    proba(charta_datum === vetus && charta_signum === "s1",
+        "charta: mutatum falsum nihil tangit");
+    aequale(document.getElementById("charta-vexillum").hidden, true,
+        "charta: responsum bonum vexillum purgat");
+    /* responsum plenum: datum novum, signum novum, camera IMMOTA */
+    charta_recipere(novum);
+    proba(charta_datum === novum && charta_signum === "s2",
+        "charta: responsum plenum datum et signum mutat");
+    aequale(charta_camera.x, 123,
+        "charta: camera in recargatione NUMQUAM movetur");
+    proba(charta_fulgores["&natus;"] !== undefined
+        && charta_fulgores["&mutandus;"] !== undefined
+        && charta_fulgores["&manens;"] === undefined,
+        "charta: fulgores in natis et mutatis solis");
+    /* purgatio pro probationibus sequentibus */
+    charta_datum = null; charta_signum = null;
+    charta_fulgores = {}; charta_fulgores_aristae = {};
+    charta_camera.x = 0; charta_camera.initum = false;
+})();
+
 /* Synchrona omnia (vide Sync supra), ergo hic tuto iudicamus.
  * IACTUS, non $.exit: $.exit in hoc ambitu non exstat, et iactus
  * osascript exitu non-zephyro terminat (porta exitus, ut

@@ -107,3 +107,31 @@ put them under nodes / off-viewport at fit zoom).
 - Harness: 235 assertions; crossing-reduction fixture
   (alpha→secundus / beta→primus uncrossed after passes) proven
   red-capable via inverted copy.
+
+## 2026-08-11 — charta step 4: hot reload
+
+`charta_interrogare` polls `censum_legere` with the last signum
+every 1500ms while the tab is visible (self-clearing interval on
+tab exit, same pattern as the rAF loop; `document.hidden` skips).
+`charta_recipere` is the testable core: `{vitium}` keeps the last
+good graph and shows the badge, a good reply clears it,
+`{mutatum:false}` touches nothing, a full payload swaps
+datum+signum, re-runs layout, diffs, and NEVER moves the camera
+(asserted). `charta_differre` is pure: node identity by nomen,
+change by JSON-stringify equality (safe because the C serializer
+emits attributes in file order — determinism end to end), edge
+identity `a|familia|ad`.
+
+- Spec amendment recorded (§8): removed edges don't flash —
+  they no longer exist to draw. Removals are visible as absence;
+  additions glow green, changes gold, 3s fade (free animation:
+  the rAF loop repaints every frame anyway).
+- Glow state lives OUTSIDE the payload (`charta_fulgores`,
+  keyed by nomen) so a reload can't clear another reload's glow
+  mid-fade; entries self-delete at age > 3s during paint.
+- Harness: 245 assertions (+10: diff classification ×3, receive
+  flow ×7). Planted fault: wrong camera expectation → FRACTA (1).
+- End-to-end (edit census while the tab is open, watch the glow)
+  is eyes-territory — the signum-change path in C is logically
+  covered (equality proven by fumus round-trip; inequality falls
+  through to the default full-parse path, also proven).

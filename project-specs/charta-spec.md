@@ -201,11 +201,16 @@ audire/SSE gap stays untouched).
   ~1500 ms, passing the last `signum`. `{mutatum: false}` costs three
   stats and a tiny reply. Polling pauses when the tab is hidden.
 - On a changed payload: **re-run layout (deterministic → stable),
-  then diff old vs new by nomen**:
-  - added node → glow that fades over ~3 s
-  - removed node → gone next frame (no ghost)
-  - changed node (prosa/attributa/glossa) → brief pulse
-  - added/removed edge → the edge itself flashes
+  then diff old vs new by nomen** (pure `charta_differre`, edge
+  identity = `a|familia|ad`):
+  - added node → green glow fading over ~3 s
+  - changed node (notae/attributa/glossa, by JSON equality) →
+    gold glow fading over ~3 s
+  - added edge → green flash fading over ~3 s
+  - removed node or edge → gone next frame, no ghost (shipped
+    amendment: a removed edge cannot flash — it no longer exists
+    to draw; removals are visible as absence, additions and
+    changes as glow)
 - **Mid-save resilience**: a `{vitium}` reply (census momentarily
   unparseable) keeps the last good graph on screen and shows a small
   badge — "census non legibilis (servatio media?)" — cleared on the

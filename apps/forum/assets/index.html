@@ -425,6 +425,9 @@
   #charta-tela.trahens { cursor: grabbing; }
   #charta-status { color: #8a7a55; font-size: .75em;
     margin: .3em 0 0 0; }
+  #charta-vexillum { position: absolute; top: .6em; right: .6em;
+    background: #3a2420; color: #c46a5a; border: 1px solid #c46a5a;
+    border-radius: 4px; padding: .2em .6em; font-size: .75em; }
 </style>
 </head>
 <body>
@@ -626,6 +629,8 @@
 <section id="visus-charta" hidden>
   <div id="charta-domus">
     <canvas id="charta-tela"></canvas>
+    <div id="charta-vexillum" hidden>census non legibilis
+      (servatio media?) - graphum ultimum bonum monstratur</div>
     <div id="charta-status"></div>
   </div>
 </section>
@@ -1079,6 +1084,10 @@ var charta_tactum   = null;  /* clavis nodi sub mure */
 var charta_trahens  = null;  /* status tractus muris */
 var charta_tempus   = 0;     /* tempus rAF prius */
 var charta_parata   = false;
+var charta_signum   = null;  /* signum graphi boni ultimi */
+var charta_interrogatio = null;      /* manubrium setInterval */
+var charta_fulgores = {};    /* clavis nodi -> {t, novus} (fulgor) */
+var charta_fulgores_aristae = {};    /* clavis aristae -> t */
 
 /* strata: tabula generis -> fascia. VECTIS (spec par. V): si
  * tabula manualis mentiri incipit, e sceleto causali derivanda.
@@ -1321,12 +1330,26 @@ function charta_aristam_pingere(ctx, a, pa, pad) {
     && (a.a === charta_electum || a.ad === charta_electum);
   var longit = Math.sqrt(cuspis.dx * cuspis.dx
     + cuspis.dy * cuspis.dy);
+  var fulgor = charta_fulgores_aristae[charta_clavis_aristae(a)];
   var ux, uy;
 
   if (longit < 1) { return; }
-  ux = cuspis.dx / longit; uy = cuspis.dy / longit;
-  ctx.strokeStyle = charta_color_aristae(a, nexa);
-  ctx.lineWidth = nexa ? 2 : (CHARTA_SPINA[a.familia] ? 1.6 : 1);
+  if (fulgor) {
+    var aetas = Date.now() - fulgor;
+    if (aetas > 3000) {
+      delete charta_fulgores_aristae[charta_clavis_aristae(a)];
+      fulgor = null;
+    } else {
+      nexa = false;   /* fulgor vincit */
+      ctx.strokeStyle = 'rgba(159,184,122,'
+        + (0.4 + 0.6 * (1 - aetas / 3000)) + ')';
+      ctx.lineWidth = 2.4;
+    }
+  }
+  if (!fulgor) {
+    ctx.strokeStyle = charta_color_aristae(a, nexa);
+    ctx.lineWidth = nexa ? 2 : (CHARTA_SPINA[a.familia] ? 1.6 : 1);
+  }
   ctx.beginPath();
   ctx.moveTo(x1, y1);
   ctx.lineTo(cuspis.x, cuspis.y);
@@ -1347,7 +1370,25 @@ function charta_nodum_pingere(ctx, clavis, p) {
   var n = charta_datum.nodi[clavis];
   var electum = clavis === charta_electum;
   var tactum = clavis === charta_tactum;
+  var fulgor = charta_fulgores[clavis];
 
+  /* fulgor recargationis: novus viridis, mutatus aureus - vanescit
+   * per III s (rAF quaque tabula repingit, ergo gratis animatur) */
+  if (fulgor) {
+    var aetas = Date.now() - fulgor.t;
+    if (aetas > 3000) {
+      delete charta_fulgores[clavis];
+    } else {
+      var vis = 1 - aetas / 3000;
+      ctx.strokeStyle = fulgor.novus
+        ? 'rgba(159,184,122,' + (0.9 * vis) + ')'
+        : 'rgba(216,185,120,' + (0.9 * vis) + ')';
+      ctx.lineWidth = 5;
+      charta_rect_rotundum(ctx, p.x - 4, p.y - 4,
+        p.lat + 8, p.alt + 8, 9);
+      ctx.stroke();
+    }
+  }
   ctx.fillStyle = '#1d1a17';
   ctx.strokeStyle = electum ? '#ece5d8' : s.color;
   ctx.lineWidth = (electum || tactum) ? 2.4 : 1.2;
@@ -1448,33 +1489,103 @@ function charta_medium_ponere() {
   }
 }
 
-function charta_reficere() {
-  internuntius.vocare('censum_legere', {})
-    .then(function (r) {
-      var status = document.getElementById('charta-status');
-      var n = 0, k;
+/* ---- recargatio calida (spec par. VIII): interrogatio cum signo
+ * omni ~1500ms dum tabula visibilis; {mutatum:falsum} = tres stat
+ * in C, nihil hic. Camera NUMQUAM movetur in recargatione - Fran
+ * locum spectat, non taeniam. ---- */
 
-      if (!r || r.vitium) {
-        status.textContent = 'census non legibilis: '
-          + (r ? r.vitium : 'responsum nullum');
-        return;
-      }
-      charta_datum = r;
-      charta_positus = charta_disponere(r);
-      for (k in r.nodi) {
-        if (r.nodi.hasOwnProperty(k)) { n++; }
-      }
-      status.textContent = n + ' nodi · '
-        + r.aristae.length + ' aristae'
-        + (r.praetermissa ? ' · praetermissa: '
-            + r.praetermissa : '')
-        + (r.monita && r.monita.length ? ' · '
-            + r.monita.join('; ') : '');
-      if (!charta_camera.initum) {
-        charta_camera.initum = true;
-        charta_medium_ponere();
-      }
-    });
+function charta_clavis_aristae(a) {
+  return a.a + '|' + a.familia + '|' + a.ad;
+}
+
+/* differentia graphorum per nomen (functio pura - probata).
+ * Remota evanescunt sine vestigio (fulgere non possunt - iam non
+ * sunt); nova et mutata fulgent. */
+function charta_differre(vetus, novum) {
+  var d = { nodi_novi: [], nodi_mutati: [], aristae_novae: [] };
+  var copia = {};
+  var i, k;
+
+  for (k in novum.nodi) {
+    if (!novum.nodi.hasOwnProperty(k)) { continue; }
+    if (!vetus.nodi.hasOwnProperty(k)) {
+      d.nodi_novi.push(k);
+    } else if (JSON.stringify(vetus.nodi[k])
+        !== JSON.stringify(novum.nodi[k])) {
+      d.nodi_mutati.push(k);
+    }
+  }
+  for (i = 0; i < vetus.aristae.length; i++) {
+    copia[charta_clavis_aristae(vetus.aristae[i])] = true;
+  }
+  for (i = 0; i < novum.aristae.length; i++) {
+    k = charta_clavis_aristae(novum.aristae[i]);
+    if (!copia[k]) { d.aristae_novae.push(k); }
+  }
+  return d;
+}
+
+/* responsum censum_legere recipere - nucleus probabilis.
+ * Vitium graphum bonum ultimum RETINET (tela numquam vacua fit),
+ * vexillum monstrat; responsum bonum vexillum purgat. */
+function charta_recipere(r) {
+  var status = document.getElementById('charta-status');
+  var vexillum = document.getElementById('charta-vexillum');
+  var vetus, delta, nunc, n, i, k;
+
+  if (!r || r.vitium) {
+    vexillum.hidden = false;
+    return;
+  }
+  vexillum.hidden = true;
+  if (r.mutatum === false) { return; }
+
+  vetus = charta_datum;
+  charta_datum = r;
+  charta_signum = r.signum || null;
+  charta_positus = charta_disponere(r);
+  if (vetus) {
+    delta = charta_differre(vetus, r);
+    nunc = Date.now();
+    for (i = 0; i < delta.nodi_novi.length; i++) {
+      charta_fulgores[delta.nodi_novi[i]] =
+        { t: nunc, novus: true };
+    }
+    for (i = 0; i < delta.nodi_mutati.length; i++) {
+      charta_fulgores[delta.nodi_mutati[i]] =
+        { t: nunc, novus: false };
+    }
+    for (i = 0; i < delta.aristae_novae.length; i++) {
+      charta_fulgores_aristae[delta.aristae_novae[i]] = nunc;
+    }
+  }
+  n = 0;
+  for (k in r.nodi) {
+    if (r.nodi.hasOwnProperty(k)) { n++; }
+  }
+  status.textContent = n + ' nodi · '
+    + r.aristae.length + ' aristae'
+    + (r.praetermissa ? ' · praetermissa: ' + r.praetermissa : '')
+    + (r.monita && r.monita.length ? ' · '
+        + r.monita.join('; ') : '');
+  if (!charta_camera.initum) {
+    charta_camera.initum = true;
+    charta_medium_ponere();
+  }
+}
+
+function charta_interrogare() {
+  if (visus !== 'charta') {
+    if (charta_interrogatio) {
+      clearInterval(charta_interrogatio);
+      charta_interrogatio = null;
+    }
+    return;
+  }
+  if (document.hidden) { return; }
+  internuntius.vocare('censum_legere',
+      charta_signum ? { signum: charta_signum } : {})
+    .then(charta_recipere);
 }
 
 function charta_gyrus(t) {
@@ -1619,7 +1730,10 @@ function charta_parare() {
 
 function charta_intrare() {
   charta_parare();
-  if (!charta_datum) { charta_reficere(); }
+  charta_interrogare();   /* statim; signum sequentes viles facit */
+  if (!charta_interrogatio) {
+    charta_interrogatio = setInterval(charta_interrogare, 1500);
+  }
   if (!charta_gyrus_it) {
     charta_gyrus_it = true;
     charta_tempus = 0;
