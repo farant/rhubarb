@@ -289,15 +289,7 @@
        colliguntur et subgenus titulum alium fert. Signa: '#'
        individuum inscriptum (clavis verbatim), '.' genus e
        vocabulario indicis. -->
-  <citatio nomen="magnitudo-mensurabilis-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="magnitudo-mensurabilis/mensuratur-per"/>
-  <citatio nomen="longitudo-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="longitudo/mensuratur-per"/>
-  <citatio nomen="massa-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="massa/mensuratur-per"/>
-  <citatio nomen="tempus-intervallum-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="tempus-intervallum/mensuratur-per"/>
-  <citatio nomen="temperatura-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="temperatura/mensuratur-per"/>
-  <citatio nomen="capacitas-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="capacitas/mensuratur-per"/>
-  <citatio nomen="numerositas-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="numerositas/mensuratur-per"/>
   <citatio nomen="unitas-mensurae-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="unitas-mensurae"/>
-  <citatio nomen="quantitas-in-unitate" attributum="in-unitate" ad="unitas-mensurae/nomen" super="quantitas"/>
   <citatio nomen="quantitas-cum-incertitudine" attributum="cum-incertitudine" ad="incertitudo/nomen" super="quantitas"/>
   <citatio nomen="incertitudo-de-quantitate" attributum="de-quantitate" ad="quantitas/nomen" super="incertitudo"/>
   <citatio nomen="incertitudo-componitur-ex" attributum="ad" ad="incertitudo/nomen" super="incertitudo/componitur-ex"/>

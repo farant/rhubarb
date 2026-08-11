@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1619 sedibus relationum huius canonis, 1163
+  RELATIONES - ex 1621 sedibus relationum huius canonis, 1165
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -3015,6 +3015,9 @@
     <attributum nomen="symbolum" genus="textus"/>
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fundamentalis" genus="veritas"/>
+    <attributum nomen="mensurat" genus="referentia"/>
+    <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
   </elementum>
@@ -14969,6 +14972,8 @@
   <citatio nomen="servus-mcp-currit-ut" attributum="currit-ut" ad="processus/nomen" super="servus-mcp"/>
   <citatio nomen="moneta-emissa-a" attributum="emissa-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="moneta"/>
   <citatio nomen="moneta-normata-per" attributum="normata-per" ad="norma/nomen" super="moneta"/>
+  <citatio nomen="moneta-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="moneta"/>
+  <citatio nomen="moneta-custodita-a" attributum="custodita-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="moneta"/>
   <citatio nomen="pecunia-in-moneta" attributum="in-moneta" ad="moneta/nomen" super="pecunia"/>
   <citatio nomen="possessio-possessor" attributum="possessor" ad="*/nomen" super="possessio"/>
   <citatio nomen="possessio-possessum" attributum="possessum" ad="*/nomen" super="possessio"/>
@@ -15533,17 +15538,17 @@
   <citatio nomen="aedificium-situm-in" attributum="situm-in" ad="locus/nomen" super="aedificium"/>
   <citatio nomen="aedificium-inscriptio-eius" attributum="inscriptio-eius" ad="inscriptio/nomen" super="aedificium"/>
   <citatio nomen="aedificium-occupatum-a" attributum="ad" ad="*/nomen" super="aedificium/occupatum-a"/>
-  <citatio nomen="magnitudo-mensurabilis-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="magnitudo-mensurabilis/mensuratur-per"/>
-  <citatio nomen="longitudo-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="longitudo/mensuratur-per"/>
-  <citatio nomen="massa-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="massa/mensuratur-per"/>
-  <citatio nomen="tempus-intervallum-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="tempus-intervallum/mensuratur-per"/>
-  <citatio nomen="temperatura-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="temperatura/mensuratur-per"/>
-  <citatio nomen="capacitas-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="capacitas/mensuratur-per"/>
-  <citatio nomen="numerositas-mensuratur-per" attributum="ad" ad="unitas-mensurae/nomen" super="numerositas/mensuratur-per"/>
+  <citatio nomen="magnitudo-mensurabilis-mensuratur-per" attributum="ad" ad="unitas-mensurae moneta/nomen" super="magnitudo-mensurabilis/mensuratur-per"/>
+  <citatio nomen="longitudo-mensuratur-per" attributum="ad" ad="unitas-mensurae moneta/nomen" super="longitudo/mensuratur-per"/>
+  <citatio nomen="massa-mensuratur-per" attributum="ad" ad="unitas-mensurae moneta/nomen" super="massa/mensuratur-per"/>
+  <citatio nomen="tempus-intervallum-mensuratur-per" attributum="ad" ad="unitas-mensurae moneta/nomen" super="tempus-intervallum/mensuratur-per"/>
+  <citatio nomen="temperatura-mensuratur-per" attributum="ad" ad="unitas-mensurae moneta/nomen" super="temperatura/mensuratur-per"/>
+  <citatio nomen="capacitas-mensuratur-per" attributum="ad" ad="unitas-mensurae moneta/nomen" super="capacitas/mensuratur-per"/>
+  <citatio nomen="numerositas-mensuratur-per" attributum="ad" ad="unitas-mensurae moneta/nomen" super="numerositas/mensuratur-per"/>
   <citatio nomen="unitas-mensurae-mensurat" attributum="mensurat" ad="magnitudo-mensurabilis longitudo massa tempus-intervallum temperatura capacitas numerositas/nomen" super="unitas-mensurae"/>
   <citatio nomen="unitas-mensurae-normata-per" attributum="normata-per" ad="norma/nomen" super="unitas-mensurae"/>
   <citatio nomen="unitas-mensurae-custodita-a" attributum="custodita-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="unitas-mensurae"/>
-  <citatio nomen="quantitas-in-unitate" attributum="in-unitate" ad="unitas-mensurae/nomen" super="quantitas"/>
+  <citatio nomen="quantitas-in-unitate" attributum="in-unitate" ad="unitas-mensurae moneta/nomen" super="quantitas"/>
   <citatio nomen="quantitas-cum-incertitudine" attributum="cum-incertitudine" ad="incertitudo/nomen" super="quantitas"/>
   <citatio nomen="incertitudo-de-quantitate" attributum="de-quantitate" ad="quantitas/nomen" super="incertitudo"/>
   <citatio nomen="incertitudo-componitur-ex" attributum="ad" ad="incertitudo/nomen" super="incertitudo/componitur-ex"/>

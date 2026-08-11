@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/commercium.genera
-  Exemplar semanticum: COMMERCIUM (versio 4, PLASTICUM)
+  Exemplar semanticum: COMMERCIUM (versio 5, PLASTICUM)
   Genera: moneta, pecunia, possessio, venditio, pretium,
   ratio_rationaria.
 
@@ -20,18 +20,20 @@
   esse-venale MUNUS est, ergo relatio - panis idem panis manet
   sive venalis sive donatus.
 -->
-<natura modulus="commercium" versio="4" lingua="latina">
+<natura modulus="commercium" versio="5" lingua="latina">
 
 <!-- ==================================================
      MONETA - genus pecuniae
      ================================================== -->
 
-<.genus nomen="moneta">
+<.genus nomen="moneta" sub="unitas_mensurae" modulus="mensura">
 
   <definitio>
     Genus pecuniae ab auctoritate emissum et receptum: unitas
     mensurae valoris - sed unitas cuius valor ipse MUTATUR
-    (metrum longitudinem servat, moneta valorem non).
+    (metrum longitudinem servat, moneta valorem non). Parens
+    quem definitio ipsa semper nominabat; angustatio finis
+    mensuratur_per (2026-08-11) eum tandem scripsit.
   </definitio>
 
   <glossa lingua="en">A currency: a kind of money issued by an
@@ -195,7 +197,11 @@
   <relationes>
     <relatio nomen="pretium_rei" ad="*" necessitudo="de"/>
     <relatio nomen="quantum" ad="pecunia"
-      necessitudo="mensuratur_per"/>
+      necessitudo="repraesentatio"
+      nota="pecunia mensor NON est - quantitas pecuniaria est
+            (numerus CUM MONETA, definitio sua): summa pretium
+            DICIT. Sedes ab angustatione finis capta 2026-08-11:
+            familia una nimis specifica, parens verus"/>
   </relationes>
 
 </.genus>

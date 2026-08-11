@@ -5984,3 +5984,38 @@ Canones byte-identical (necessitudo=/conversum= never reach the
 fold). Gates: examen SANUM 85/0/0, four suites green, canones -probare
 exit 0. Fines-narrowing is now UNBLOCKED — mensura (mensuratur_per
 ad=unitas_mensurae-ish) is the natural first customer when wanted.
+
+## 2026-08-11 — First fines-narrowing: mensuratur_per ad="unitas_mensurae"
+
+The direction mechanism's first customer, run in planted-fault
+order: narrow the family end FIRST, let rule XXII judge the live
+corpus, then heal what it names. It named exactly the predicted
+three (moneta, pecunia, gradus_assensus) while the lawful sites —
+both unitas_mensurae targets AND the converse-direction site
+checked against a= — passed silently. Direction-aware end-checking
+proven on real data, both directions.
+
+The three heals, each an ontological finding not a mechanical fix:
+- moneta -> sub="unitas_mensurae" modulus="mensura": its definitio
+  had said "unitas mensurae valoris" since birth — the corpus named
+  the parent before the mechanism demanded it (again). Inheritance
+  gave moneta mensurat/custodita_a/fundamentalis for free, and the
+  monolith closures now read ad="unitas-mensurae moneta" — a
+  magnitude may lawfully be measured in EUR.
+- pretium.quantum: mensuratur_per -> repraesentatio. pecunia is not
+  a measurer — it IS the money-quantitas ("numerus CUM MONETA");
+  the sum STATES the price. Too-specific by one family level.
+- iudicium.assensus: mensuratur_per -> repraesentatio. A gradus is
+  an ordinal degree of an INTENSIVE magnitude (firmitas), not an
+  additive partition — "tres certi" means nothing. Scholastic
+  intensio/remissio distinction doing real type-checking work.
+Both re-citations went UP to the parent (mensuratur_per
+sub=repraesentatio), so neither site changed family — they were
+over-specified, and the narrowed end is what exposed it.
+
+Definitio tightened alongside: "instrumento aut" dropped —
+measurement-by-instrument is a different relation that gets its own
+name on first use (rule of two). Module-canon note: mensura.canon
+dropped 8 citations because moneta made their closures
+cross-module (designed NC_CIT_ALIENA behavior); the monolith keeps
+all of them enriched. Gates: examen SANUM 85/0/0, six suites green.

@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **35** · genera **460** · res dictionarii **114** · necessitudines **85** · arcus **528**
+Exemplaria **35** · genera **460** · res dictionarii **114** · necessitudines **85** · arcus **529**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -113,9 +113,9 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **servus_procuratorius** ⊂ servus — Petitionem accipit et alteri servo transmittit: SERVUS PETENTI, CLIENS PRAEBENTI - idem programma utrumque simul
 - **servus_mcp** ⊂ servus — Instrumenta agenti artificiali praebet: petens homo non est nec programma more solito, sed agens qui instrumenta LEGIT
 
-### commercium (v4, genera 19)
+### commercium (v5, genera 19)
 
-- **moneta** — Genus pecuniae ab auctoritate emissum et receptum: unitas mensurae valoris - sed unitas cuius valor ipse MUTATUR (metr
+- **moneta** ⊂ mensura.unitas_mensurae — Genus pecuniae ab auctoritate emissum et receptum: unitas mensurae valoris - sed unitas cuius valor ipse MUTATUR (metr
 - **pecunia** — Quantitas in moneta: numerus CUM MONETA - "3,50" nihil est donec moneta adsit (eadem forma qua quantitas unitatem posc
 - **possessio** — Relatio inter personam (aut organizationem) et rem: quis quid habeat
 - **pretium** — Pecunia pro re petita: relatio TEMPORE VARIANS inter rem et pecuniam - non proprietas rei
@@ -274,7 +274,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **rxnorm** ⊂ schema_identificandi — Vocabularium normatum quo medicamenta clinica nominantur et gradus inter se nectuntur: ingrediens, medicamentum clinic
 - **numerus_dea** ⊂ schema_identificandi — Numerus quo auctoritas Americana eos registrat quibus substantias regulatas praescribere aut tractare licet: litterae 
 
-### iudicium (v9, genera 54)
+### iudicium (v10, genera 54)
 
 - **gradus_assensus** — Quanto firmitate animus propositioni adhaeret
 - **fons** — Id ex quo propositio accepta est: opus, mensura, testis, corpus institutionis
@@ -1147,7 +1147,7 @@ necessitudines altae (columna sub vacua).
 | lata_a | - | evulgatio | * | * | latum_per latus_a | necessitudines |
 | legit | legitur_a | dependentia | * | * | - | elementa_programmatis |
 | membrum | membrum_de | pars_totum | * | * | - | necessitudines |
-| mensuratur_per | mensurat | repraesentatio | * | * | - | necessitudines |
+| mensuratur_per | mensurat | repraesentatio | * | unitas_mensurae | - | necessitudines |
 | minatur | - | causalitas | * | * | - | necessitudines |
 | minuitur_per | - | causalitas | * | * | - | necessitudines |
 | mittit | missus_a | translatio_nuntii | * | * | - | necessitudines |

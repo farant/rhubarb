@@ -41,6 +41,9 @@
     <attributum nomen="symbolum" genus="textus"/>
     <attributum nomen="emissa-a" genus="referentia"/>
     <attributum nomen="normata-per" genus="referentia"/>
+    <attributum nomen="fundamentalis" genus="veritas"/>
+    <attributum nomen="mensurat" genus="referentia"/>
+    <attributum nomen="custodita-a" genus="referentia"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
   </elementum>

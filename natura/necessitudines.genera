@@ -184,11 +184,14 @@
   </necessitudo>
 
   <necessitudo nomen="mensuratur_per" conversum="mensurat"
-      sub="repraesentatio" a="*" ad="*">
-    <definitio>Quod per mensuram dicitur: magnitudo instrumento
-      aut unitate ligata; conversa via, unitas quae magnitudinem
-      mensurat.</definitio>
-    <glossa lingua="en">Measured-by / measures.</glossa>
+      sub="repraesentatio" a="*" ad="unitas_mensurae">
+    <definitio>Quod per mensuram dicitur: magnitudo unitate
+      ligata; conversa via, unitas quae magnitudinem mensurat.
+      FINIS PRIMUS ANGUSTATUS (2026-08-11): ad unitatem solam -
+      mensura per instrumentum relatio alia est, nomen suum in
+      primo usu accipiet (regula duorum).</definitio>
+    <glossa lingua="en">Measured-by / measures. First family with
+      a narrowed end: ad=unitas_mensurae.</glossa>
   </necessitudo>
 
   <!-- familia pars_totum -->

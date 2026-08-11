@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/iudicium.genera
-  Exemplar semanticum: IUDICIUM (versio 9, PLASTICUM)
+  Exemplar semanticum: IUDICIUM (versio 10, PLASTICUM)
 
   VERSIO 8 (2026-08-10): migratio necessitudinum - iudicium ipsum
   compagem accepit (definitio quattuor fines nominat: auctor, de,
@@ -53,7 +53,7 @@
   historicos EX CORPORE INSTITUTIONIS trahit, non ex fontibus
   verificatis, et hoc dicere debet.
 -->
-<natura modulus="iudicium" versio="9" lingua="latina">
+<natura modulus="iudicium" versio="10" lingua="latina">
 
 <!-- ==================================================
      GRADUS ASSENSUS - quanto animus adhaeret
@@ -423,10 +423,14 @@
     <terminus munus="de" necessitudo="de" ad="*"
       nota="res de qua - apertum consulto: de quovis iudicari
             potest"/>
-    <terminus munus="assensus" necessitudo="mensuratur_per"
+    <terminus munus="assensus" necessitudo="repraesentatio"
       ad="gradus_assensus"
       nota="RELATIO non electio: gradus res vera est cum
-            definitione sua, non valor nudus in enumeratione"/>
+            definitione sua, non valor nudus in enumeratione.
+            Gradus unitas NON est (partitio additiva deest -
+            'tres certi' nihil dicit): magnitudo intensiva
+            firmitatis gradu DICITUR, non numeratur. Sedes ab
+            angustatione finis capta 2026-08-11"/>
     <terminus munus="fundatur_in" ad="observatio" multiplex="verum"
       nota="testimonia quibus nititur - umbra rotae XVI hic
             impleta"/>
