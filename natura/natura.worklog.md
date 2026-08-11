@@ -5580,3 +5580,40 @@ ad_postulata cites tendit_ad (proposal, not yet fulfilment);
 emit cites causat (the trade brought the capability to be);
 propter cites natum_ex (the forcing case); acta_sua cites
 repraesentatio.
+
+## 2026-08-10 — elementa_programmatis burn-down: the state-life pairs
+
+19 soluta → 0 (global 211 → 190, ligata 242), monita 30 → 29,
+necessitudines 68 → 72, canons byte-identical (frames were
+prefix-position this time — the ordering law held for free).
+
+Four converse pairs declared in-model (each with both sites local,
+old inversa= form, zero site edits): legit/legitur_a
+(sub=dependentia — reading state is operational dependence),
+mutat/mutatur_a (sub=effectio), haurit/hauritur_a (sub=exsecutio —
+efficit's twin lives in a DIFFERENT family than efficit, and that
+asymmetry is honest: effecting is change, drawing is performance
+of observation), producit/per_instrumentum (sub=origo — the build
+tool and its artifact, one identity seen from both ends).
+
+FIRST SCRIPTIO USE outside the original migration:
+constans.realizatur_per is a spelling of core realizata_a
+(passive-present + per vs participle + a; same identity, same
+direction) — one <scriptio> line in the core module bound the
+site. Three models now share that one declaration.
+
+Frames: lectio and mutatio (true event-genera) each got a
+one-terminus frame — munus obiectum cites obiectum_actus, whose
+definitio ("res circa quam actus versatur") they satisfy
+literally. The gemini are constituted by their object.
+
+Notable citations: veritas_sua → fundat via converse (the
+veritas/proiectio HOUSE DOCTRINE now rides a declared necessitudo:
+a projection is GROUNDED in its truth); geritur_a → fert via
+converse (the bearer carries the state — the model's own word is
+"portatur"); vocat and invocat → exsecutio (calling IS executing
+another); reddit → translatio_nuntii (symmetric with accipit's
+existing binding — give-back and receive, one family);
+initium → continet (the distinguished part; distinction lives in
+the slot name); dirigitur_a → administrat via converse (the
+Makefile governs the tool).

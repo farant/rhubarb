@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/elementa_programmatis.genera
-  Exemplar semanticum: ELEMENTA PROGRAMMATIS (versio 4, PLASTICUM)
+  Exemplar semanticum: ELEMENTA PROGRAMMATIS (versio 5, PLASTICUM)
+
+  VERSIO 5 (2026-08-10): migratio necessitudinum - paria conversa
+  vitae status declarata (legit/mutat/haurit + producit), gemini
+  (lectio, mutatio) compages acceperunt (obiectum = finis
+  patientis), veritas_sua in fundat citata (proiectio in veritate
+  sua fundatur - doctrina domus necessitudine propria). Sedes
+  solutae 19 -> 0.
   Genera: status (+proiectio, sub qua artefactum_aedificationis,
   promptuarium, index), lectio, mutatio, functio (+functio_pura),
   constans (+numerica, textualis), bibliotheca, assertio,
@@ -74,7 +81,47 @@
   lingua_programmandi pertinet (differentia universalis/
   specialis, inserta/externa) - editio futura illius plagulae.
 -->
-<natura modulus="elementa_programmatis" versio="4" lingua="latina">
+<natura modulus="elementa_programmatis" versio="5" lingua="latina">
+
+<!-- ========== NECESSITUDINES DOMESTICAE ==========
+     Paria conversa vitae status et aedificationis: sedes formam
+     'inversa=verum' ferebant; declaratione una ambae directiones
+     titulo ligant, sedibus intactis (praecedens fabricationis). -->
+
+<necessitudo nomen="legit" conversum="legitur_a"
+    sub="dependentia" modulus="necessitudines" a="*" ad="*">
+  <definitio>Functio quae statum praeter parametra legit;
+    conversa via, status a functione lectus. Operatio ex statu
+    pendet - introitus occultus puritatis.</definitio>
+  <glossa lingua="en">Reads / is-read-by - the hidden input
+    channel of purity.</glossa>
+</necessitudo>
+
+<necessitudo nomen="mutat" conversum="mutatur_a"
+    sub="effectio" modulus="necessitudines" a="*" ad="*">
+  <definitio>Functio quae statum praeter reditum mutat; conversa
+    via, status a functione mutatus - exitus occultus
+    puritatis.</definitio>
+  <glossa lingua="en">Mutates / is-mutated-by - the hidden output
+    channel of purity.</glossa>
+</necessitudo>
+
+<necessitudo nomen="haurit" conversum="hauritur_a"
+    sub="exsecutio" modulus="necessitudines" a="*" ad="*">
+  <definitio>Functio quae genera lectionis exercet (ex fonte
+    ducere); conversa via, lectio a functione hausta. Geminum
+    efficiendi in latere legente.</definitio>
+  <glossa lingua="en">Draws / is-drawn-by - efficit's twin on the
+    reading side.</glossa>
+</necessitudo>
+
+<necessitudo nomen="producit" conversum="per_instrumentum"
+    sub="origo" modulus="necessitudines" a="*" ad="*">
+  <definitio>Instrumentum quod artefacta ex fontibus derivat;
+    conversa via, artefactum per instrumentum factum.</definitio>
+  <glossa lingua="en">Produces / made-through - the build tool
+    and its artifact, one identity.</glossa>
+</necessitudo>
 
 <fontes>
   <fons clavis="corpus" genus="corpus_institutionis"
@@ -129,10 +176,11 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="geritur_a" ad="*"
+    <relatio nomen="geritur_a" ad="*" necessitudo="fert"
       nota="gerens: vocatio (localis), processus (universalis,
             hic_manens), plagula, volumen, machina. Aperta
-            consulto - gerentes exemplaria transeunt"/>
+            consulto - gerentes exemplaria transeunt (fert via
+            conversa: gerens statum secum portat)"/>
     <relatio nomen="legitur_a" a="functio" inversa="verum"
       nota="impletur a functio.legit"/>
     <relatio nomen="mutatur_a" a="functio" inversa="verum"
@@ -196,8 +244,9 @@
     syntaxe ne porte ; seule l'intention la déclare.</glossa>
 
   <relationes>
-    <relatio nomen="veritas_sua" ad="*"
-      nota="id ex quo recomputatur. APERTUM 2026-08-08 (lacuna
+    <relatio nomen="veritas_sua" ad="*" necessitudo="fundat"
+      nota="id ex quo recomputatur - proiectio in veritate sua
+            FUNDATUR (via conversa). APERTUM 2026-08-08 (lacuna
             L13, quater in ambulatione XVI mensurata): clausura
             ad statum programmatis facta erat, quia doctrina
             veritas/proiectio in statu nata est - sed documentum
@@ -370,9 +419,13 @@
     lectionis: quod legere mutat, iam non solum legit.
   </nota>
 
+  <termini>
+    <terminus munus="obiectum" necessitudo="obiectum_actus"
+      ad="status"
+      nota="status qui observatur - eventus per obiectum suum
+            constituitur"/>
+  </termini>
   <relationes>
-    <relatio nomen="obiectum" ad="status"
-      nota="status qui observatur"/>
     <relatio nomen="hauritur_a" a="functio" inversa="verum"
       nota="impletur a functio.haurit"/>
   </relationes>
@@ -442,9 +495,13 @@
             fundamentum fusionis replicarum futurae"/>
   </proprietates>
 
+  <termini>
+    <terminus munus="obiectum" necessitudo="obiectum_actus"
+      ad="status"
+      nota="status qui mutatur - eventus per obiectum suum
+            constituitur"/>
+  </termini>
   <relationes>
-    <relatio nomen="obiectum" ad="status"
-      nota="status qui mutatur"/>
     <relatio nomen="efficitur_a" a="functio" inversa="verum"
       nota="impletur a functio.efficit"/>
   </relationes>
@@ -556,10 +613,15 @@
     <relatio nomen="accipit" ad="typus" externum="verum"
       multiplex="verum"
       nota="genus typus superficit, nondum descriptum"/>
-    <relatio nomen="reddit" ad="typus" externum="verum"/>
+    <relatio nomen="reddit" ad="typus" externum="verum"
+      necessitudo="translatio_nuntii"
+      nota="valorem vocanti reddit - geminum accipiendi, familia
+            eadem"/>
     <relatio nomen="vocat" ad="functio" multiplex="verum"
+      necessitudo="exsecutio"
       nota="graphus vocationum - in parochia legati
-            vocantes/vocata hoc metiuntur"/>
+            vocantes/vocata hoc metiuntur (vocare = exsequi
+            alterius)"/>
     <relatio nomen="legit" ad="status" multiplex="verum"
       nota="status lectus praeter parametra - lectio occulta,
             introitus occultus puritatis"/>
@@ -957,8 +1019,9 @@
   </nota>
 
   <relationes>
-    <relatio nomen="affirmat_de" ad="status"
-      nota="de quo statu propositio loquitur"/>
+    <relatio nomen="affirmat_de" ad="status" necessitudo="de"
+      nota="de quo statu propositio loquitur - intentionalitas
+            nuda"/>
   </relationes>
 
   <!-- ================= DICTIONARIUM ================= -->
@@ -1167,9 +1230,11 @@
   </proprietates>
 
   <relationes>
-    <relatio nomen="initium" ad="functio"
+    <relatio nomen="initium" ad="functio" necessitudo="continet"
       nota="functio unica quae non vocatur sed VOCATUR A
-            SYSTEMATE - unde 'principale' nomen in domo nostra"/>
+            SYSTEMATE - unde 'principale' nomen in domo nostra.
+            Pars distincta: continentia cuius munus nomen sedis
+            fert"/>
     <relatio nomen="adhibet" ad="bibliotheca" multiplex="verum"/>
     <relatio nomen="currit_ut" ad="processus" modulus="operatio"
       nota="programma FORMA est, processus INSTANTIA currens -
@@ -1259,13 +1324,16 @@
 
   <relationes>
     <relatio nomen="invocat" ad="implementatio_linguae"
-      modulus="lingua_programmandi" multiplex="verum"/>
+      modulus="lingua_programmandi" multiplex="verum"
+      necessitudo="exsecutio"
+      nota="dux militem exsequitur - eadem familia ac vocat"/>
     <relatio nomen="dirigitur_a" ad="plagula_computatralis"
-      modulus="plagula_computatralis"
+      modulus="plagula_computatralis" necessitudo="administrat"
       nota="Makefile, aedificare.sh - plagula quae graphum
-            declarat. Genus eius ambiguum consulto: Makefile
-            inter figurationem et fontem sedet (lingua make
-            completa Turing est - figuratio quae programma
+            declarat (administrat via conversa: plagula
+            instrumentum gubernat). Genus eius ambiguum consulto:
+            Makefile inter figurationem et fontem sedet (lingua
+            make completa Turing est - figuratio quae programma
             facta est, lapsus vulgaris)"/>
     <relatio nomen="producit" ad="artefactum_aedificationis"
       multiplex="verum"/>
