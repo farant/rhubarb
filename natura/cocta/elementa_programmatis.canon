@@ -949,6 +949,9 @@
   </elementum>
 
   <elementum nomen="instrumentum-lineae">
+    <glossa lingua="en">A command-line tool: invoked, it acts,
+      it exits - the shape that composes through pipes, one
+      small verb in a larger sentence.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-finiendi" genus="electio" ordinarius="terminans">
       <optio>terminans</optio>
@@ -970,6 +973,9 @@
   </elementum>
 
   <elementum nomen="daemon">
+    <glossa lingua="en">A daemon: perpetual, terminal-less,
+      serving requests - it seeks no ending but keeps a state
+      alive.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-finiendi" genus="electio" ordinarius="perpetuum">
       <optio>terminans</optio>
@@ -991,6 +997,9 @@
   </elementum>
 
   <elementum nomen="applicatio">
+    <glossa lingua="en">An application: present to a person,
+      through windows or a terminal - it runs while the human
+      is there.</glossa>
     <attributum nomen="nomen" genus="identitas"/>
     <attributum nomen="modus-finiendi" genus="electio">
       <optio>terminans</optio>

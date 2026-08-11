@@ -1263,6 +1263,9 @@
       (vide cliens.cliens_cli, quod idem ex parte ministerii
       describit).
     </definitio>
+    <glossa lingua="en">A command-line tool: invoked, it acts,
+      it exits - the shape that composes through pipes, one
+      small verb in a larger sentence.</glossa>
     <valor nomen="modus_finiendi">terminans</valor>
   </.species>
 
@@ -1271,6 +1274,9 @@
       Perpetuum, sine terminali, petitionibus serviens: non
       finem quaerit sed statum servat.
     </definitio>
+    <glossa lingua="en">A daemon: perpetual, terminal-less,
+      serving requests - it seeks no ending but keeps a state
+      alive.</glossa>
     <valor nomen="modus_finiendi">perpetuum</valor>
     <valor nomen="interactivum">falsum</valor>
   </.species>
@@ -1280,6 +1286,9 @@
       Homini praesens, fenestris aut terminali: dum homo
       adest currit.
     </definitio>
+    <glossa lingua="en">An application: present to a person,
+      through windows or a terminal - it runs while the human
+      is there.</glossa>
     <valor nomen="interactivum">verum</valor>
   </.species>
 
