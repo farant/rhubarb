@@ -713,8 +713,8 @@
             momento: alius hiatum videt ubi alius nihil videt -
             et hoc ipsum peritia est"/>
     <relatio nomen="impedit" ad="*" multiplex="verum"
-      necessitudo="afficit"
-      nota="pensa, consilia, actus quos moratur"/>
+      nota="pensa, consilia, actus quos moratur (necessitudo
+            impedit in cardine - titulo ligat)"/>
     <relatio nomen="solvitur_per" ad="observatio" multiplex="verum"
       nota="quid ad solvendum opus sit"/>
   </relationes>

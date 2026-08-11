@@ -5710,3 +5710,24 @@ constituted by the places it joins; "condicio itineris" stands by
 its ends). Citations: apta_viae → conformitas (built to suit),
 regitur_a → exercet (the driver operates the vehicle), passum →
 afficit via converse.
+
+## 2026-08-10 — operatio burn-down
+
+11 → 0 (global 147 → 136, ligata 296 = 69%), monita 25,
+necessitudines 78, canons byte-identical, versio 1 → 2.
+
+Third multi-model core declaration: impedit/impeditur_a
+(ignotum blocks work, tasks block tasks — the critical-path
+graph), converse pair sub=effectio; the afficit citation on
+ignotum.impedit removed per the solvitur_per precedent.
+
+Citations: causa_eius → causat via converse; deprehensum_per →
+fundatio (the epistemic cluster again); in_ambitu and currit_in
+→ intra; instantia_de → successio (form-to-instance is the same
+step as FRBR exemplar-of-edition — programma FORMA, processus
+INSTANTIA, the model's own words); genitus_a → parit via
+converse (the process tree); gerit → fert FORWARD (its converse
+geritur_a already cited fert from the other side — both
+directions of one identity now consistently cited); tenet_apertam
+→ tenetur_a forward; commissum → participatio; sanat → effectio
+family (whose definitio names "sanat" itself).

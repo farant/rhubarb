@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/operatio.genera
-  Exemplar semanticum: OPERATIO (versio 1, PLASTICUM)
+  Exemplar semanticum: OPERATIO (versio 2, PLASTICUM)
   Genera: ambitus, pensum, incidens.
 
   Natum ex cursu quinto circuli (praefectus operis / devops).
@@ -15,7 +15,7 @@
   "ruina tertii Martii"); ordo prioritatis non transit -
   ordinatio est, non res.
 -->
-<natura modulus="operatio" versio="1" lingua="latina">
+<natura modulus="operatio" versio="2" lingua="latina">
 
 <!-- ==================================================
      AMBITUS - ubi programma currit
@@ -150,14 +150,17 @@
 
   <relationes>
     <relatio nomen="commissum" ad="persona" modulus="persona"
+      necessitudo="participatio"
       nota="cui - et 'nemini' status verus est, non hiatus"/>
     <relatio nomen="implet" ad="postulatum" modulus="fabricatio"
       multiplex="verum"/>
     <relatio nomen="sanat" ad="vitium" modulus="fabricatio"
-      multiplex="verum"/>
+      multiplex="verum" necessitudo="effectio"
+      nota="familia effectionis 'sanat' ipsa nominat"/>
     <relatio nomen="impeditur_a" ad="pensum" multiplex="verum"
       nota="ordo dependentiae: GRAPHUS, non linea - unde
-            'via critica'"/>
+            'via critica' (necessitudo impedit in cardine -
+            converso titulo ligat)"/>
   </relationes>
 
 </.genus>
@@ -229,17 +232,19 @@
   </machina_statuum>
 
   <relationes>
-    <relatio nomen="in_ambitu" ad="ambitus"/>
+    <relatio nomen="in_ambitu" ad="ambitus" necessitudo="intra"/>
     <relatio nomen="ex_vitio" ad="vitium" modulus="fabricatio"
       nota="non semper: incidens ex mutatione figurationis,
             ex onere, ex defectu ferri oriri potest sine ullo
             vitio codicis"/>
     <relatio nomen="causa_eius" ad="causa" modulus="causa"
+      necessitudo="causat"
       multiplex="verum"
       nota="MULTIPLEX consulto: 'causa radicalis' singularis
             fere semper simplificatio est (vide causa: necessaria
             et sufficiens raro conveniunt)"/>
     <relatio nomen="deprehensum_per" ad="observatio"
+      necessitudo="fundatio"
       modulus="iudicium"
       nota="monitum SIGNUM est (instrumento mensum, ab omnibus
             verificabile) limen transiens - divisio
@@ -359,21 +364,29 @@
 
   <relationes>
     <relatio nomen="instantia_de" ad="programma"
-      modulus="elementa_programmatis"/>
+      modulus="elementa_programmatis" necessitudo="successio"
+      nota="forma et instantia - gradus idem quo FRBR exemplar
+            de editione (familia successionis)"/>
     <relatio nomen="genitus_a" ad="processus"
+      necessitudo="parit"
       nota="arbor processuum. Relatio in se ipsam, ut
             causa.pendet_ex - et hic quoque catena non sponte
-            desinit sed in radice sistitur"/>
-    <relatio nomen="currit_in" ad="ambitus"/>
+            desinit sed in radice sistitur (parit via conversa:
+            parens filium gignit)"/>
+    <relatio nomen="currit_in" ad="ambitus" necessitudo="intra"/>
     <relatio nomen="gerit" ad="status"
       modulus="elementa_programmatis" multiplex="verum"
+      necessitudo="fert"
       nota="INVERSA eius quod tres status individui iam
-            declarabant (geritur_a). Vita status a vita
+            declarabant (geritur_a - quae eandem necessitudinem
+            fert citat, via conversa). Vita status a vita
             processus terminatur: quod 'ephemerum' in
             durabilitate status significat HIC mensuram suam
             invenit"/>
     <relatio nomen="tenet_apertam" ad="plagula_computatralis"
-      modulus="plagula_computatralis" multiplex="verum"/>
+      modulus="plagula_computatralis" multiplex="verum"
+      necessitudo="tenetur_a"
+      nota="via recta: processus plagulam tenet"/>
   </relationes>
 
   <dubium>

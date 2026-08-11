@@ -445,6 +445,15 @@
     <glossa lingua="en">Affects.</glossa>
   </necessitudo>
 
+  <necessitudo nomen="impedit" conversum="impeditur_a"
+      sub="effectio" a="*" ad="*">
+    <definitio>Quod aliud moratur aut obstat: ignotum pensa,
+      pensum pensum (graphus dependentiae). Duobus exemplaribus
+      adhibitum - regula duorum impleta.</definitio>
+    <glossa lingua="en">Impedes / is-impeded-by. Two models used
+      the name before it was declared.</glossa>
+  </necessitudo>
+
   <necessitudo nomen="pollinat" conversum="pollinatur_a"
       sub="effectio" a="*" ad="*">
     <definitio>Animal quod plantae pollinem transfert; conversa
