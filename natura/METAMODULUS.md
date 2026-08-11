@@ -126,7 +126,7 @@ liberorum min..max.*
 | `actio` | **nomen**:nomen, nota | &mdash; | &mdash; |
 | `relationes` | &mdash; | `relatio` 1..* | &mdash; |
 | `relatio` | **nomen**:nomen, ad, a:nomen, inversa:veritas, necessitudo:nomen, modulus:nomen, multiplex:veritas, externum:veritas, nota | &mdash; | &mdash; |
-| `necessitudo` | **nomen**:nomen, conversum:nomen, sub:nomen, modulus:nomen, a, ad, nota | `definitio` 0..1, `glossa` 0..*, `scriptio` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
+| `necessitudo` | **nomen**:nomen, conversum:nomen, sub:nomen, modulus:nomen, causa:nomen, a, ad, nota | `definitio` 0..1, `glossa` 0..*, `scriptio` 0..*, `nota` 0..*, `dubium` 0..* | &mdash; |
 | `scriptio` | &mdash; | &mdash; | licet |
 | `termini` | &mdash; | `terminus` 1..*, `nota` 0..* | &mdash; |
 | `terminus` | **munus**:nomen, necessitudo:nomen, ad, modulus:nomen, multiplex:veritas, necessaria:veritas, nota | `nota` 0..* | &mdash; |

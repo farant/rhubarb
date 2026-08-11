@@ -60,7 +60,7 @@
       flavor.</glossa>
   </necessitudo>
 
-  <necessitudo nomen="pars_totum" a="*" ad="*">
+  <necessitudo nomen="pars_totum" a="*" ad="*" causa="materialis">
     <definitio>Pars et totum: quod intra aliud iacet aut aliud
       intra se habet, sive materialiter sive ut membrum.</definitio>
     <glossa lingua="en">Part-whole and membership.</glossa>
@@ -185,7 +185,7 @@
       scholastic proprium/commune distinction as a slot.</glossa>
   </necessitudo>
 
-  <necessitudo nomen="ex_fonte" sub="fundatio" a="*" ad="*">
+  <necessitudo nomen="ex_fonte" sub="fundatio" a="*" ad="*" causa="efficiens">
     <definitio>Unde propositio RECEPTA est - fons, non
       fundamentum (fons dicit unde venerit, non quod verum
       sit).</definitio>
@@ -242,14 +242,14 @@
   </necessitudo>
 
   <necessitudo nomen="parit" conversum="genitus_a"
-      sub="origo" a="*" ad="*">
+      sub="origo" a="*" ad="*" causa="efficiens">
     <definitio>Quod aliud gignit ut effectum iuridicum aut
       naturalem: lex obligationem, venditio obligationem (usus
       VII).</definitio>
     <glossa lingua="en">Begets / gives-rise-to.</glossa>
   </necessitudo>
 
-  <necessitudo nomen="orta_ex" sub="origo" a="*" ad="*">
+  <necessitudo nomen="orta_ex" sub="origo" a="*" ad="*" causa="efficiens">
     <definitio>Unde res orta est: systema e systemate, lingua e
       lingua (usus IV; scriptura genere flectitur).</definitio>
     <glossa lingua="en">Arose-from; spelling follows the bearer's
@@ -258,7 +258,7 @@
   </necessitudo>
 
   <necessitudo nomen="constituta_per" conversum="constituit"
-      sub="origo" a="*" ad="*">
+      sub="origo" a="*" ad="*" causa="efficiens">
     <definitio>Quod per actum sollemnem constitutum est: persona
       iuridica, fiducia, classis normativa.</definitio>
     <glossa lingua="en">Constituted-by-a-solemn-act.</glossa>
@@ -389,7 +389,7 @@
       name before it was declared.</glossa>
   </necessitudo>
 
-  <necessitudo nomen="condita_a" sub="origo" a="*" ad="*">
+  <necessitudo nomen="condita_a" sub="origo" a="*" ad="*" causa="efficiens">
     <definitio>A conditore condita: organizatio a personis,
       calendarium a Gregorio. Scriptura genere gerentis
       flectitur. Duobus exemplaribus adhibita - regula duorum
@@ -406,7 +406,7 @@
     <glossa lingua="en">Provides / is-provided-by.</glossa>
   </necessitudo>
 
-  <necessitudo nomen="scripta_in" sub="dependentia" a="*" ad="*">
+  <necessitudo nomen="scripta_in" sub="dependentia" a="*" ad="*" causa="materialis">
     <definitio>Quod in lingua programmandi scriptum est (usus
       III).</definitio>
     <glossa lingua="en">Written-in (a programming
@@ -536,13 +536,26 @@
       forward direction.</glossa>
   </necessitudo>
 
-  <necessitudo nomen="tendit_ad" sub="causalitas" a="*" ad="*">
+  <necessitudo nomen="informat" conversum="informatur_a"
+      sub="causalitas" a="*" ad="*" causa="formalis">
+    <definitio>Quod formam alterius dicit et ligat: pactum
+      bibliothecam informat - forma informat materiam. Causa
+      formalis ut arcus: quadrans quem graphus carebat, ab
+      interrogatione Franis inventus (bibliothecae numquam
+      parentes postulatorum erant, dum re vera artefactum foedus
+      suum gignit - 'derived requirements' apud DO-178C).</definitio>
+    <glossa lingua="en">In-forms / is-informed-by: states and
+      binds the FORM of - the formal-cause edge, the quadrant
+      the census graph lacked.</glossa>
+  </necessitudo>
+
+  <necessitudo nomen="tendit_ad" sub="causalitas" a="*" ad="*" causa="finalis">
     <definitio>Quod ad finem ordinatur: praeceptum ad finem
       domus.</definitio>
     <glossa lingua="en">Tends-toward (final causality).</glossa>
   </necessitudo>
 
-  <necessitudo nomen="natum_ex" sub="causalitas" a="*" ad="*">
+  <necessitudo nomen="natum_ex" sub="causalitas" a="*" ad="*" causa="efficiens">
     <definitio>Quod e casu cogente natum est: praeceptum sine
       casu suo maxima vacua est.</definitio>
     <glossa lingua="en">Born-from (the forcing case).</glossa>

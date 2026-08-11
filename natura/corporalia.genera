@@ -43,7 +43,7 @@
 <!-- ========== NECESSITUDINES DOMESTICAE ========== -->
 
 <necessitudo nomen="ingreditur" conversum="ex_materia"
-    sub="pars_totum" modulus="necessitudines" a="*" ad="*">
+    sub="pars_totum" modulus="necessitudines" a="*" ad="*" causa="materialis">
   <definitio>Materia quae in artefactum intrat; conversa via,
     artefactum ex materia factum. Causa materialis - familia
     partis-toti 'sive materialiter' ipsa dicit.</definitio>

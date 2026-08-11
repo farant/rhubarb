@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1632 sedibus relationum huius canonis, 1160
+  RELATIONES - ex 1633 sedibus relationum huius canonis, 1160
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  472 nomine solo iudicantur, id est sicut in canone per
+  473 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    465 petitum apertum habent (ad='*') - clavis nulla est;
+    466 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -5502,10 +5502,14 @@
     <attributum nomen="tendit-ad" genus="referentia"/>
     <attributum nomen="ex-fonte" genus="referentia"/>
     <liberum nomen="natum-ex"/>
+    <liberum nomen="informat"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="natum-ex" intra="pactum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="informat" intra="pactum">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="pactum">
@@ -15306,6 +15310,7 @@
   <citatio nomen="pactum-tendit-ad" attributum="tendit-ad" ad="*/nomen" super="pactum"/>
   <citatio nomen="pactum-natum-ex" attributum="ad" ad="*/nomen" super="pactum/natum-ex"/>
   <citatio nomen="pactum-ex-fonte" attributum="ex-fonte" ad="*/nomen" super="pactum"/>
+  <citatio nomen="pactum-informat" attributum="ad" ad="*/nomen" super="pactum/informat"/>
   <citatio nomen="uncus-custodit" attributum="custodit" ad="*/nomen" super="uncus"/>
   <citatio nomen="uncus-adhibet" attributum="ad" ad="*/nomen" super="uncus/adhibet"/>
   <citatio nomen="postulatum-impletur-a" attributum="impletur-a" ad="*/nomen" super="postulatum"/>

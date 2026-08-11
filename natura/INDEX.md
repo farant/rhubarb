@@ -3,7 +3,7 @@
 **GENERATUM** a `tools/natura_visus.sh` — noli manu emendare.
 Regenera: `./tools/natura_visus.sh` (idem cursus qui portam custodit).
 
-Exemplaria **35** · genera **463** · res dictionarii **117** · necessitudines **86** · arcus **529**
+Exemplaria **35** · genera **463** · res dictionarii **117** · necessitudines **87** · arcus **529**
 
 Cur haec exsistat, cui serviat, quomodo laboremus: `natura/RATIO.md`.
 Forma ipsa (elementa, attributa, regulae): `natura/METAMODULUS.md`.
@@ -224,7 +224,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - **daemon** ⊂ programma — Perpetuum, sine terminali, petitionibus serviens: non finem quaerit sed statum servat
 - **applicatio** ⊂ programma — Homini praesens, fenestris aut terminali: dum homo adest currit
 
-### fabricatio (v10, genera 20)
+### fabricatio (v11, genera 20)
 
 - **pactum** — Foedus consilii stans: quod de FORMA artefactorum semper tenendum est, opera OMNIA perpetuo ligans - implementatio qua
 - **uncus** — Custos machinalis eventui ligatus: sponte ignitur (editione, servatione, mutatione) et iudicium statim reddit
@@ -1098,7 +1098,7 @@ Signa apparatus — quid genus applicanti PRAESTET (RATIO §3):
 - `tempus.calendarium` — :calendarium_gregorianum, :calendarium_liturgicum
 - `vectura.via` — :canalis_suesianus, :via_appia
 
-## V. Necessitudines — relationes declaratae (86)
+## V. Necessitudines — relationes declaratae (87)
 
 Identitas relationis SEMEL declaratur; sedes usus (relatio,
 terminus) titulo, converso, aut scriptura ligant. Familiae =
@@ -1114,9 +1114,9 @@ necessitudines altae (columna sub vacua).
 | auctor | auctor_de | origo | * | * | - | necessitudines |
 | causalitas | - | - | * | * | - | necessitudines |
 | causat | causatur_a | causalitas | * | * | - | necessitudines |
-| condita_a | - | origo | * | * | conditum_a | necessitudines |
+| condita_a | - | origo | * | * | conditum_a|efficiens | necessitudines |
 | conformitas | - | - | * | * | - | necessitudines |
-| constituta_per | constituit | origo | * | * | constituitur_per | necessitudines |
+| constituta_per | constituit | origo | * | * | constituitur_per|efficiens | necessitudines |
 | continet | continetur_in | pars_totum | * | * | - | necessitudines |
 | cum_incertitudine | de_quantitate | repraesentatio | * | * | - | mensura |
 | currit_ut | - | exsecutio | * | * | - | necessitudines |
@@ -1129,7 +1129,7 @@ necessitudines altae (columna sub vacua).
 | efficit | efficitur_a | effectio | * | * | - | necessitudines |
 | emissa_a | - | evulgatio | * | * | - | necessitudines |
 | evulgatio | - | origo | * | * | - | necessitudines |
-| ex_fonte | - | fundatio | * | * | ex_fontibus | necessitudines |
+| ex_fonte | - | fundatio | * | * | ex_fontibus|efficiens | necessitudines |
 | ex_vitio | - | causalitas | * | * | - | necessitudines |
 | exercet | exercetur_a | exsecutio | * | * | - | necessitudines |
 | exsecutio | - | - | * | * | - | necessitudines |
@@ -1147,7 +1147,8 @@ necessitudines altae (columna sub vacua).
 | implementat | implementata_ab | effectio | * | * | - | lingua_programmandi |
 | implet | impletur_a | conformitas | * | * | - | necessitudines |
 | in_iurisdictione | - | situs | * | * | - | necessitudines |
-| ingreditur | ex_materia | pars_totum | * | * | - | corporalia |
+| informat | informatur_a | causalitas | * | * | |formalis | necessitudines |
+| ingreditur | ex_materia | pars_totum | * | * | |materialis | corporalia |
 | interrogat | interrogatur_a | fundatio | * | * | - | fabricatio |
 | intra | - | situs | * | * | - | necessitudines |
 | lata_a | - | evulgatio | * | * | latum_per latus_a | necessitudines |
@@ -1158,14 +1159,14 @@ necessitudines altae (columna sub vacua).
 | minuitur_per | - | causalitas | * | * | - | necessitudines |
 | mittit | missus_a | translatio_nuntii | * | * | - | necessitudines |
 | mutat | mutatur_a | effectio | * | * | - | elementa_programmatis |
-| natum_ex | - | causalitas | * | * | - | necessitudines |
+| natum_ex | - | causalitas | * | * | |efficiens | necessitudines |
 | normata_per | normat | conformitas | * | * | - | necessitudines |
 | obiectum_actus | - | participatio | * | * | - | necessitudines |
 | origo | ortum_dat | - | * | * | - | necessitudines |
-| orta_ex | - | origo | * | * | ortum_ex | necessitudines |
-| parit | genitus_a | origo | * | * | - | necessitudines |
+| orta_ex | - | origo | * | * | ortum_ex|efficiens | necessitudines |
+| parit | genitus_a | origo | * | * | |efficiens | necessitudines |
 | pars_de | - | pars_totum | * | * | - | necessitudines |
-| pars_totum | - | - | * | * | - | necessitudines |
+| pars_totum | - | - | * | * | |materialis | necessitudines |
 | participatio | - | - | * | * | - | necessitudines |
 | pendet_ex | - | dependentia | * | * | dependet_ex | necessitudines |
 | pertinet_ad | - | fundatio | * | * | - | necessitudines |
@@ -1178,7 +1179,7 @@ necessitudines altae (columna sub vacua).
 | realizata_a | - | effectio | * | * | realizatur_per | necessitudines |
 | repraesentatio | - | - | * | * | - | necessitudines |
 | retractat | retractatur_a | effectio | * | * | - | fabricatio |
-| scripta_in | - | dependentia | * | * | - | necessitudines |
+| scripta_in | - | dependentia | * | * | |materialis | necessitudines |
 | secundum_normam | - | conformitas | * | * | secundum_legem | necessitudines |
 | sequitur | praecedens | successio | * | * | - | necessitudines |
 | situm_in | - | situs | * | * | sita_in situs_in | necessitudines |
@@ -1187,7 +1188,7 @@ necessitudines altae (columna sub vacua).
 | sub_iurisdictione | - | custodia | * | * | - | necessitudines |
 | substituit | - | successio | * | * | - | necessitudines |
 | successio | - | - | * | * | - | necessitudines |
-| tendit_ad | - | causalitas | * | * | - | necessitudines |
+| tendit_ad | - | causalitas | * | * | |finalis | necessitudines |
 | tenetur_a | tenet | custodia | * | * | - | necessitudines |
 | translatio_nuntii | - | - | * | * | - | necessitudines |
 | versio_de | - | successio | * | * | - | necessitudines |

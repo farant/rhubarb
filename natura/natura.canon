@@ -227,6 +227,15 @@
             duae (vulnus inversae hac via moritur)"/>
     <attributum nomen="sub"       genus="nomen"/>
     <attributum nomen="modulus"   genus="nomen"/>
+    <attributum nomen="causa"     genus="nomen"
+      nota="STRATUM CAUSALE (decretum Franis 2026-08-11): genus
+            causae quod familia fert - finalis | formalis |
+            materialis | efficiens. ABSENS = non typata (relatio
+            operationalis aut ambigua: causat efficit ET census
+            fine adhibet - furca cum ambulatio iustificationis
+            eam poscat). Lens, non lex: nullum iudicium eam
+            legit hodie; instrumenta per eam graphum secare
+            possunt"/>
     <attributum nomen="a"         genus="textus"
       nota="finis gerentis: quod genus eam ferre potest ('*' apertum)"/>
     <attributum nomen="ad"        genus="textus"

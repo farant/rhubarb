@@ -395,6 +395,7 @@ tabulas_scribere(
             character  sb[CCLVI];
             character  fa[CCLVI];
             character  fad[CCLVI];
+            character  ca[CCLVI];
             character  scr[DXII];
             i32        j;
             i32        n_l;
@@ -406,6 +407,7 @@ tabulas_scribere(
             _attr(nx, "sub",       sb,  (i32)magnitudo(sb));
             _attr(nx, "a",         fa,  (i32)magnitudo(fa));
             _attr(nx, "ad",        fad, (i32)magnitudo(fad));
+            _attr(nx, "causa",     ca,  (i32)magnitudo(ca));
 
             scr[ZEPHYRUM] = '\0';
             pos = ZEPHYRUM;
@@ -437,8 +439,11 @@ tabulas_scribere(
                 pos += (i32)sprintf(scr + pos, "%s", unum);
             }
 
-            fprintf(f_necessitudines, "%s|%s|%s|%s|%s|%s|%s\n",
-                    mod, nn, cv, sb, fa, fad, scr);
+            /* columna VIII causa= APPENSA (stratum causale
+             * 2026-08-11) - lectores priores columnas I-VII
+             * intactas vident */
+            fprintf(f_necessitudines, "%s|%s|%s|%s|%s|%s|%s|%s\n",
+                    mod, nn, cv, sb, fa, fad, scr, ca);
         }
 
         /* ---- genera (arbor porphyriana: .genus/.species/.cultivar

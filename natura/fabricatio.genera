@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   natura/fabricatio.genera
-  Exemplar semanticum: FABRICATIO (versio 10, PLASTICUM)
+  Exemplar semanticum: FABRICATIO (versio 11, PLASTICUM)
   Genera: postulatum, facultas, probatio, vitium.
 
   VERSIO 8 (2026-08-10): migratio necessitudinum - paria conversa
@@ -21,7 +21,7 @@
   potest nisi intentione consulta. Quod probat totum quadratum
   in strato intentionis vivere.
 -->
-<natura modulus="fabricatio" versio="10" lingua="latina">
+<natura modulus="fabricatio" versio="11" lingua="latina">
 
 <!-- ========== NECESSITUDINES DOMESTICAE ==========
      Paria conversa quadrati intentionis: sedes antiquae formam
@@ -91,6 +91,11 @@
     <relatio nomen="ex_fonte" ad="*"
       nota="auctor externus doctrinae (Steenberg interfaciei
             primae) - provenientia, non veritas"/>
+    <relatio nomen="informat" ad="*" multiplex="verum"
+      nota="artefacta quorum formam dicit - arcus causae
+            formalis (interrogatio Franis: bibliothecae
+            parentes postulatorum fiunt, directione typata ne
+            spinam finalem corrumpat)"/>
   </relationes>
 
 </.genus>

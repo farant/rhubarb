@@ -39,10 +39,14 @@
     <attributum nomen="tendit-ad" genus="referentia"/>
     <attributum nomen="ex-fonte" genus="referentia"/>
     <liberum nomen="natum-ex"/>
+    <liberum nomen="informat"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
   </elementum>
   <elementum nomen="natum-ex" intra="pactum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="informat" intra="pactum">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="pactum">
