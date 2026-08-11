@@ -616,15 +616,20 @@
        scripti non mensurati. -->
 
   <signum nomen="&mensura-exemplarium;" de="&natura;"
-    contentum="exemplaria 34" facta="2026-08-08"
+    contentum="exemplaria 35" facta="2026-08-11"
     via="ls natura/*.genera | wc -l"/>
 
   <signum nomen="&mensura-generum;" de="&natura;"
-    contentum="genera 188" facta="2026-08-08"
-    via="bin/natura_examen | tail -1"/>
+    contentum="genera 463" facta="2026-08-11"
+    via="bin/natura_examen | tail -1">
+    <nota>Saltus 188 -> 463 non incrementum sed REDEFINITIO:
+      arbor porphyriana (2026-08-10) species in genera vertit.
+      Via superstes, sensus sub ea mutatus - recensio hominem
+      legentem postulat, non renovationem automaticam.</nota>
+  </signum>
 
   <signum nomen="&mensura-rerum;" de="&natura;"
-    contentum="res lexici 385" facta="2026-08-08"
+    contentum="res lexici 117" facta="2026-08-11"
     via="bin/natura_examen | tail -1">
     <nota>LECTIO DE ANCORIS: hic numerus in auditu primo
       'inverificabilis' damnatus est quia VIA FALSA quaesitus
@@ -636,7 +641,7 @@
   </signum>
 
   <signum nomen="&mensura-canonum;" de="&natura;"
-    contentum="canones in cocta/ 35" facta="2026-08-08"
+    contentum="canones in cocta/ 35" facta="2026-08-11"
     via="ls natura/cocta/*.canon | wc -l">
     <nota>CAVE: natura_canones.sh 'canones 36' nuntiat dum in
       disco 35 sunt - numerus instrumenti proprius uno errat
@@ -644,8 +649,14 @@
   </signum>
 
   <signum nomen="&mensura-seminum;" de="&natura;"
-    contentum="individua in semina 113" facta="2026-08-08"
-    via="grep -c 'nomen=&quot;#' natura/cocta/semina.census"/>
+    contentum="individua in semina 117" facta="2026-08-11"
+    via="grep -c 'nomen=&quot;&amp;' natura/cocta/semina.census">
+    <nota>VIA IPSA MORTUA erat: migratio sigillorum (# -&gt;
+      &amp;nomen;) methodum fregit - via vetus ZEPHYRUM mensurabat
+      dum 117 exsistunt. Lectio ancorae iterum, gradu altiore:
+      non solum valor putrescit, VIA putrescit - recensio
+      distinguere debet 'valor motus' a 'methodus mortua'.</nota>
+  </signum>
 
   <!-- ============ MESSIS AMBULATIONIS (compendium) ============
 

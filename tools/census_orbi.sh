@@ -26,7 +26,19 @@ if [ -z "$si_via" ] || [ ! -f "$si_via" ]; then
     exit 2
 fi
 
+# claves externae librarii (W1): nomina in seminibus declarata
+# CITARI possunt sine declaratione locali - custos olim caecus
+# numerum nudum clamabat (quaestio 01KZRS606V)
+semina="natura/cocta/semina.census"
+[ -f "$semina" ] || semina="/dev/null"
+
 awk '
+    FNR == NR {
+        if (match($0, /nomen="&[A-Za-z0-9_-]+;"/)) {
+            externa[substr($0, RSTART + 8, RLENGTH - 10)] = 1
+        }
+        next
+    }
     {
         linea = $0
 
@@ -90,14 +102,20 @@ awk '
             }
         }
 
-        pendentes = 0
-        for (n in vicini) if (!(n in declarata)) pendentes++
+        externae_citatae = 0
+        ignota = 0
+        for (n in vicini) {
+            if (n in declarata) continue
+            if (n in externa) { externae_citatae++; continue }
+            printf "CAVE: citatio ad nomen IGNOTUM: &%s;\n", n
+            ignota++
+        }
 
-        printf "census_orbi: res %d / radices %d / pertingentes %d / ORBAE %d\n", \
+        printf "census_orbi: res %d / radices %d / pertingentes %d / ORBAE %d", \
             quot, quot_seminum, quot - orbae, orbae
-        if (pendentes > 0)
-            printf "census_orbi: CAVE citationes ad %d nomina non declarata\n", \
-                pendentes
-        exit (orbae > 0 ? 1 : 0)
+        if (externae_citatae > 0)
+            printf " / externae %d", externae_citatae
+        printf "\n"
+        exit (orbae > 0 || ignota > 0 ? 1 : 0)
     }
-' "$si_via"
+' "$semina" "$si_via"
