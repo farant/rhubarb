@@ -1334,6 +1334,30 @@ _apparatum_plicare(
                 {
                     m->citatio_ad = clausura;
                 }
+                alioquin si (status == NC_CIT_APERTA && monolithus)
+                {
+                    /* ad="*" olim NIHIL emittebat - artefactum
+                     * aetatis ante claves externas, cum spatium
+                     * clavium apertum computari non posset (clavis
+                     * trans documenta falso IRRITA fuisset). Nunc
+                     * citatio STELLATA exsistentiam poscit: cusae
+                     * domesticae + claves externae spatium
+                     * complent. In monolitho solo: canones
+                     * modulorum claves externas non ferunt, unde
+                     * stella ibi falso clamaret. */
+                    Xar*     stella;
+                    chorda** locus_st;
+                    chorda*  st;
+
+                    stella = xar_creare(piscina,
+                                        (i32)magnitudo(chorda*));
+                    st = (chorda*)piscina_allocare(piscina,
+                                        magnitudo(chorda));
+                    *st = chorda_ex_literis("*", piscina);
+                    locus_st = (chorda**)xar_addere(stella);
+                    *locus_st = st;
+                    m->citatio_ad = stella;
+                }
                 _censum_notare(census, status);
             }
         }

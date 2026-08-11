@@ -1250,6 +1250,113 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: genus clavis externae + citatio stellata
+     * (librarium, 2026-08-10)
+     *
+     * Via domestica genus per collectionem clavigerorum iam
+     * custodit (claves solum ex elementis indicis ad=
+     * colliguntur); via externa solam exsistentiam probabat -
+     * clavis generis alieni tacite solvebat. Nunc genus= clavis
+     * contra indicem ad= comparatur (ALIENA XVII). Citatio
+     * STELLATA (stella ante solidum) exsistentiam solam poscit:
+     * claviger
+     * domesticus = elementum quodvis cuius definitio attributum
+     * identitatis eiusdem nominis fert; externa genere quovis.
+     * Ante hoc ad="*" NIHIL emittebat (artefactum aetatis ante
+     * claves externas: spatium clavium computari non poterat).
+     * ======================================================== */
+
+    {
+        Canon* c;
+        Xar*   vitia;
+
+        imprimere("\n--- Probans genus externum et stellam ---\n");
+
+        c = canon_ex_literis(
+            "<canon dialectus=\"nemus\" versio=\"1\">\n"
+            "  <elementum nomen=\"silva\" radix=\"verum\">\n"
+            "    <liberum nomen=\"avis\"/>\n"
+            "    <liberum nomen=\"quercus\"/>\n"
+            "  </elementum>\n"
+            "  <elementum nomen=\"quercus\">\n"
+            "    <attributum nomen=\"nomen\" genus=\"identitas\"/>\n"
+            "  </elementum>\n"
+            "  <elementum nomen=\"avis\">\n"
+            "    <attributum nomen=\"nidificat\""
+            " genus=\"referentia\"/>\n"
+            "    <attributum nomen=\"spectat\""
+            " genus=\"referentia\"/>\n"
+            "  </elementum>\n"
+            "  <citatio nomen=\"nidorum\" attributum=\"nidificat\"\n"
+            "    ad=\"quercus/nomen\" super=\"avis\"/>\n"
+            "  <citatio nomen=\"spectaculorum\""
+            " attributum=\"spectat\"\n"
+            "    ad=\"*/nomen\" super=\"avis\"/>\n"
+            "  <claves-externae fons=\"probatum\">\n"
+            "    <clavis genus=\"quercus\">&quercus_prima;</clavis>\n"
+            "    <clavis genus=\"avis\">&avis_peregrina;</clavis>\n"
+            "  </claves-externae>\n"
+            "</canon>\n", piscina, intern);
+        CREDO_NON_NIHIL (c);
+
+        /* genus rectum externum solvit (mos W1 servatus) */
+        vitia = iudicare_literis(c,
+            "<silva><avis nidificat=\"&quercus_prima;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* genus ALIENUM: clavis exsistit, genus non congruit -
+         * avis ubi quercus petita */
+        vitia = iudicare_literis(c,
+            "<silva><avis nidificat=\"&avis_peregrina;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_CITATIO_ALIENA), I);
+
+        /* stella + externa generis cuiusvis: solvit */
+        vitia = iudicare_literis(c,
+            "<silva><avis spectat=\"&avis_peregrina;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* stella + cusa domestica: claviger stellatus elementum
+         * est cuius definitio attributum identitatis fert */
+        vitia = iudicare_literis(c,
+            "<silva><quercus nomen=\"&quercus_domi;\"/>"
+            "<avis spectat=\"&quercus_domi;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* stella exsistentiam tamen POSCIT - clavis absens clamat */
+        vitia = iudicare_literis(c,
+            "<silva><avis spectat=\"&nemo_omnino;\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_CITATIO_IRRITA), I);
+
+        /* stella + signum generis ('.'): genus quodvis NOTUM -
+         * vocabularium elementorum totum, non index citationis
+         * (corpore VERO inventum: semina geritur_a='.processus') */
+        vitia = iudicare_literis(c,
+            "<silva><avis spectat=\".quercus\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+        vitia = iudicare_literis(c,
+            "<silva><avis spectat=\".draco\"/></silva>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (quot_generis(vitia,
+            CANON_VOCABULUM_IGNOTUM), I);
+    }
+
+
+    /* ========================================================
      * PROBARE: genera valorum identitas/referentia (signa)
      * ======================================================== */
 

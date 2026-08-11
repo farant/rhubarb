@@ -123,6 +123,8 @@ interior vacuum nodum_iudicare(Canon* c, StmlNodus* n, Xar* vitia,
 interior vacuum _augmenta_cusasque_colligere(Canon* c, StmlNodus* n,
     StmlNodus* infixus, Xar* augmenta, TabulaDispersa* cusa,
     Piscina* piscina);
+interior b32 _clavigerum_stellae(Canon* c, StmlNodus* n,
+    constans chorda* attributum);
 interior vacuum _augmentum_iudicare(Canon* c, StmlNodus* a,
     TabulaDispersa* cusa, Xar* vitia, Piscina* piscina);
 interior b32 album_solum(constans chorda* s);
@@ -1495,6 +1497,44 @@ canon_ex_nodo(
  * Iudicium
  * ================================================== */
 
+/* claviger stellatus: pro citatione cuius index ad= stellam fert
+ * (spatium clavium totum), claviger est elementum quodvis cuius
+ * DEFINITIO attributum identitatis nomine dato declarat. Ante
+ * claves externas spatium clavium apertum computari non poterat
+ * (NC_CIT_APERTA generatoris artefactum illius aetatis erat) -
+ * nunc cusae domesticae + claves externae id complent. */
+interior b32
+_clavigerum_stellae(
+    Canon*           c,
+    StmlNodus*       n,
+    constans chorda* attributum)
+{
+    CanonElementum* e;
+    i32             i;
+
+    si (!attributum)
+    {
+        redde FALSUM;
+    }
+    e = elementum_quaerere(c, n);
+    si (!e)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(e->attributa); i++)
+    {
+        CanonAttributum* def;
+
+        def = (CanonAttributum*)xar_obtinere(e->attributa, i);
+        si (def->genus == CANON_GENUS_IDENTITAS &&
+            chorda_aequalis(*def->titulus, *attributum))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* claves domi cusas + augmentationes colligere transitu UNO.
  * Cusio = valor attributi generis IDENTITAS in elemento noto.
  * Subarbor infixi praetermissa; in augmenta DESCENDIT (cusio intra
@@ -2211,7 +2251,17 @@ canon_iudicare(
 
                         t = (chorda**)xar_obtinere(
                             ci->ad_elementa, m);
-                        si (chorda_aequalis(*n->titulus, **t))
+                        si (chorda_aequalis_literis(**t, "*"))
+                        {
+                            si (_clavigerum_stellae(canon, n,
+                                    ci->ad_attributum))
+                            {
+                                clavigerum = VERUM;
+                                frange;
+                            }
+                        }
+                        alioquin si (chorda_aequalis(*n->titulus,
+                                                     **t))
                         {
                             clavigerum = VERUM;
                             frange;
@@ -2285,7 +2335,23 @@ canon_iudicare(
 
                             t = (chorda**)xar_obtinere(
                                 ci->ad_elementa, mv);
-                            si (chorda_aequalis(corpus, **t))
+                            si (chorda_aequalis_literis(**t, "*"))
+                            {
+                                /* stella: genus quodvis - sed
+                                 * NOTUM esse debet (vocabularium
+                                 * elementorum canonis totum) */
+                                vacuum* val_g;
+
+                                si (tabula_dispersa_invenire(
+                                        canon->elementa, corpus,
+                                        &val_g))
+                                {
+                                    notum = VERUM;
+                                    frange;
+                                }
+                            }
+                            alioquin si (chorda_aequalis(corpus,
+                                                         **t))
                             {
                                 notum = VERUM;
                                 frange;
@@ -2323,18 +2389,69 @@ canon_iudicare(
                         }
                     }
                     alioquin si (!tabula_dispersa_continet(claves,
-                                                           *v) &&
-                                 !(canon->claves_externae &&
-                                   tabula_dispersa_continet(
-                                       canon->claves_externae, *v)))
+                                                           *v))
                     {
-                        /* clavis verbatim, signo incluso ('&x;'
-                         * post migrationem signorum; forma nuda
-                         * canonum sine signis eadem via). Scopus =
-                         * claves documenti + claves externae
-                         * bibliothecae (librarium W1) */
-                        vitium_addere(vitia, CANON_CITATIO_IRRITA,
-                            n, n->titulus, v, ZEPHYRUM, ZEPHYRUM);
+                        vacuum* val_e;
+
+                        si (canon->claves_externae &&
+                            tabula_dispersa_invenire(
+                                canon->claves_externae, *v,
+                                &val_e))
+                        {
+                            /* clavis bibliothecae: exsistentia
+                             * non sufficit - GENUS quoque indici
+                             * ad= congruere debet (quod via
+                             * domestica per collectionem
+                             * clavigerorum praestat, via externa
+                             * per genus= clavis praestat; index
+                             * clausuram posterorum iam fert, ergo
+                             * subsumptio gratis). Stella genus
+                             * quodvis admittit. */
+                            CanonClavisExterna* ce;
+                            b32                 congruit;
+                            i32                 mg;
+
+                            ce = (CanonClavisExterna*)val_e;
+                            congruit = FALSUM;
+                            per (mg = ZEPHYRUM;
+                                 mg < xar_numerus(ci->ad_elementa);
+                                 mg++)
+                            {
+                                chorda** tg;
+
+                                tg = (chorda**)xar_obtinere(
+                                    ci->ad_elementa, mg);
+                                si (chorda_aequalis_literis(**tg,
+                                                            "*") ||
+                                    (ce->genus &&
+                                     chorda_aequalis(**tg,
+                                                     *ce->genus)))
+                                {
+                                    congruit = VERUM;
+                                    frange;
+                                }
+                            }
+                            si (!congruit)
+                            {
+                                vitium_addere(vitia,
+                                    CANON_CITATIO_ALIENA, n,
+                                    n->titulus, v, ZEPHYRUM,
+                                    ZEPHYRUM);
+                            }
+                        }
+                        alioquin
+                        {
+                            /* clavis verbatim, signo incluso
+                             * ('&x;' post migrationem signorum;
+                             * forma nuda canonum sine signis
+                             * eadem via). Scopus = claves
+                             * documenti + claves externae
+                             * bibliothecae (librarium W1) */
+                            vitium_addere(vitia,
+                                CANON_CITATIO_IRRITA, n,
+                                n->titulus, v, ZEPHYRUM,
+                                ZEPHYRUM);
+                        }
                     }
                 }
             }
@@ -2462,6 +2579,9 @@ canon_nuntius(
         casus CANON_CLAVIS_COLLISA:
             redde "clavis bibliothecae iterum cusa "
                   "(cita aut auge, ne itera)";
+        casus CANON_CITATIO_ALIENA:
+            redde "clavis exsistit sed generis alieni "
+                  "(extra indicem ad= citationis)";
         ordinarius:
             redde "vitium ignotum";
     }

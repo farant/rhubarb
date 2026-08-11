@@ -1242,10 +1242,13 @@ principale(
          * numerus citationum vere emissarum est. Sine hac
          * assertione praefatio libere errare posset - et
          * numerus in capite est id quod lector credit loco
-         * canonis ipsius legendi. */
-        CREDO_AEQUALIS_I32 (citatae,
+         * canonis ipsius legendi. APERTAE quoque emittuntur ex
+         * 2026-08-10 (citatio stellata - exsistentia clavium
+         * spatio toto probatur), ergo emissae = citatae +
+         * apertae in monolitho. */
+        CREDO_AEQUALIS_I32 (citatae + apertae,
                             xar_numerus(monolithus->citationes));
-        CREDO_AEQUALIS_I32 (citatae,
+        CREDO_AEQUALIS_I32 (citatae + apertae,
                             _titulo_numerare(monolithus_radix,
                                              "citatio"));
     }
@@ -1325,6 +1328,15 @@ principale(
                     t = chorda_praecidere(f.elementa[k]);
                     si (t.mensura == ZEPHYRUM)
                     {
+                        perge;
+                    }
+                    si (chorda_aequalis_literis(t, "*"))
+                    {
+                        /* stella (citatio aperta): spatium
+                         * clavium iudex ipse computat (cusae
+                         * domesticae + claves externae) - index
+                         * sanus sine elemento nominato */
+                        sani++;
                         perge;
                     }
                     petitum = _elementum_invenire(monolithus_radix,
@@ -2143,12 +2155,14 @@ principale(
             CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
         CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);
 
-        /* L2: coctura rem QUAMLIBET coquit - signum manet, clavis
-         * nulla (relatio aperta) */
+        /* L2: coctura rem QUAMLIBET coquit - relatio aperta manet
+         * aperta GENERE, sed stella exsistentiam ex 2026-08-10
+         * poscit: clavis vera bibliothecae generis cuiusvis
+         * (&laika; canis est - quamlibet-itas ipsa probata) */
         CREDO_VERUM (_documentum_iudicare(monolithus,
             "<individua>\n"
             "  <coctura nomen=\"&cursus-glossarum;\""
-            " coquitur=\"&opus-quodlibet;\"/>\n"
+            " coquitur=\"&laika;\"/>\n"
             "</individua>\n",
             CANON_VALOR_MALUS, &generis, &omnia, piscina, intern));
         CREDO_AEQUALIS_I32 (omnia, (i32)ZEPHYRUM);

@@ -133,7 +133,16 @@ nomen enumeratio {
      * bibliotheca est (semina - claves eius claves externae SUNT);
      * fons mendax editio manualis plagulae generatae signatae est,
      * quam generata-custos iam ut crimen tractat. */
-    CANON_CLAVIS_COLLISA      = XVI
+    CANON_CLAVIS_COLLISA      = XVI,
+    /* GENUS ALIENUM (librarium): citatio clavem externam nanciscitur
+     * quae EXSISTIT sed generis extra indicem ad= citationis est -
+     * lingua programmandi ubi possessio petita. Via domestica hoc
+     * per collectionem clavigerorum semper custodivit (claves solum
+     * ex elementis indicis colliguntur); via externa solam
+     * exsistentiam probabat - genus= clavis tabulae iam aderat,
+     * comparatio sola deerat. Citatio stellata (stella in indice)
+     * genus quodvis admittit. */
+    CANON_CITATIO_ALIENA      = XVII
 } CanonVitiumGenus;
 
 nomen structura {

@@ -406,3 +406,39 @@ Proofs: scratch census in the exact pre-migration shape (minting
 &c;) screams COLLISA against the real individua.canon; scratch
 with fons="natura" is exempt; live world (rhubarb.census + semina)
 VITIA 0; both suites PLENUS; -probare chain exit 0.
+
+## 2026-08-10 — external genus check + star citations (librarium closes its type gap)
+
+Fran asked whether canon kind-checks relation ends or just key
+existence — the answer exposed an asymmetry and an artifact:
+
+1. **CANON_CITATIO_ALIENA = XVII**: the cross-document path checked
+existence only. The intra-document path was always kind-strict
+(keys collected solely from ad_elementa-matching elements, with
+compiled descendant closure), but the W1 external fallback did a
+bare membership test — `scripta-in="&laika;"` (a dog where a
+language is demanded) resolved silently. The genus= was already
+IN the external table (emitted for W3's content models); only the
+comparison was missing. Now ce->genus is checked against the
+rule's ad-index (closure already compiled in, so subsumption is
+free); star admits any genus.
+
+2. **Star citations — ad="*/nomen"**: wildcard slots emitted NO
+rule at all (NC_CIT_APERTA, "clavis nulla") — a true artifact of
+the pre-librarium age, when a wildcard's key-space could not be
+computed and cross-document references would have false-flagged.
+With cusae + claves_externae the space is computable: the judge's
+star claviger is any element whose DEFINITION carries an identitas
+attribute of the rule's name; externals pass at any genus. Emitted
+in the MONOLITH ONLY (module canons lack claves-externae and would
+false-flag library keys). 449 rules materialized; the "428 petita
+aperta" audit tail is now checked.
+
+Corpus-contact finds, both pinned: (a) genus-sigil values in
+wildcard slots (semina's geritur_a=".processus") hit the
+'.'-branch, whose vocabulary for a star rule is the canon's WHOLE
+element table, not the ad-index; (b) the L2 fixture deliberately
+cited a nonexistent key BECAUSE apertae were unchecked ("clavis
+nulla" in its own comment) — now cites &laika;, proving
+quamlibet-ness with an existing key. Audit updates: emissae =
+citatae + apertae; star is a lawful index entry.
