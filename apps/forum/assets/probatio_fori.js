@@ -1202,6 +1202,28 @@ curare_cum(defs_vetera).then(function () {
     charta_acervus = []; charta_scaena = null;
 })();
 
+/* ---- charta: facultates in tabula radicali CELANTUR, in tabula
+ * propria bibliothecae apparent (CHARTA_CELATA) ---- */
+(function () {
+    var r = { nodi: {
+        "&piscina;": { genus: "bibliotheca", externus: false },
+        "&allocatio-arenae;": { genus: "facultas", externus: false }
+    }, aristae: [
+        { a: "&allocatio-arenae;", ad: "&piscina;",
+          familia: "realizata-a" }
+    ] };
+    var p_radix = charta_disponere(r);
+    var p_nidus = charta_disponere_nidi(r, "&piscina;");
+
+    proba(p_radix["&allocatio-arenae;"] === undefined,
+        "charta: facultas in tabula radicali celatur");
+    proba(p_radix["&piscina;"] !== undefined,
+        "charta: bibliotheca in radicali manet");
+    proba(p_nidus["&allocatio-arenae;"] !== undefined
+        && p_nidus["&allocatio-arenae;"].y < p_nidus["&piscina;"].y,
+        "charta: facultas in tabula propria apparet (adveniens)");
+})();
+
 /* ---- charta: recargatio calida (gradus IV) - differentia pura
  * + receptio (vitium retinet, bonum purgat, camera immota) ---- */
 (function () {

@@ -173,6 +173,32 @@ green, the rest from a fixed palette in sorted-name order.
 - Harness: 254 assertions (+9). Planted fault (inverted
   default-visibility) → FRACTA (1). Full smoke green.
 
+## 2026-08-11 — charta: facultates (board-scoped features)
+
+Fran asked for a "software feature" genus and a pass over the
+bibliothecae — expecting to mint one. **The dictionary already had
+it**: /fabricatio/facultas ("what a work can do, valued by the
+user: the unit of VALUE — what a user names when telling what a
+program does"), with `realizata_a` as the relation and en+fr kind
+glossae already projected into the monolith. Zero natura changes;
+the collision check (bin/natura quaere, praeceptum collisionis)
+found the answer before any name debate happened. The corpus
+pre-naming its own structure — third time this week.
+
+27 facultates authored into the census (4 piscina, 4 chorda,
+5 stml, 4 canon, 4 natura, 4 silva, 2 credo), each with contentum,
+English gloss, and `realizata-a` edge. Orbi: 111/111 pertinent —
+the realizata-a edges carry reachability.
+
+Charta: `CHARTA_CELATA = {facultas}` — hidden kinds are skipped by
+the ROOT layout only (positions are the filter: no position, no
+node, no edges, no hit-test — one skip does everything). On a
+library's own board they arrive as advenientes, grouped under
+their genus. Status line says "27 in tabulis propriis" so the
+hidden aren't silently absent (no-silent-caps law). Fumus counts
+close: 119 nodes / 180 edges / 116 kind-glossed. Harness 271;
+planted fault red; smoke green.
+
 ## 2026-08-11 — charta: nested boards (scaena, client-side)
 
 Fran's design: manually-picked genera (CHARTA_NIDI, bibliotheca

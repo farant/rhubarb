@@ -1140,6 +1140,11 @@ var charta_tabella_visus = 'res';   /* 'res' | 'stml' - haeret */
 /* tabulae nidificatae (Fran manu genera eligit - vectis):
  * genus hic notatum tactu duplici tabulam propriam pandit */
 var CHARTA_NIDI = { 'bibliotheca': true };
+
+/* genera in tabula RADICALI celata - in tabulis propriis entis
+ * sui apparent (facultates bibliothecam suam comitantur, non
+ * censum onerant - decretum Franis 2026-08-11) */
+var CHARTA_CELATA = { 'facultas': true };
 var charta_scaena  = null;   /* null = census; alioquin {clavis} */
 var charta_acervus = [];     /* via retro: [{scaena, camera}] */
 
@@ -1259,6 +1264,7 @@ function charta_disponere(r) {
   claves.sort();
   for (i = 0; i < claves.length; i++) {
     k = claves[i];
+    if (CHARTA_CELATA[r.nodi[k].genus]) { continue; }
     f = charta_stratum_generis(r.nodi[k].genus, r.nodi[k].externus);
     fasciae[f].push(k);
   }
@@ -1985,7 +1991,7 @@ function charta_differre(vetus, novum) {
 function charta_recipere(r) {
   var status = document.getElementById('charta-status');
   var vexillum = document.getElementById('charta-vexillum');
-  var vetus, delta, nunc, n, i, k;
+  var vetus, delta, nunc, n, celati, i, k;
 
   if (!r || r.vitium) {
     vexillum.hidden = false;
@@ -2020,11 +2026,15 @@ function charta_recipere(r) {
     }
   }
   n = 0;
+  celati = 0;
   for (k in r.nodi) {
-    if (r.nodi.hasOwnProperty(k)) { n++; }
+    if (!r.nodi.hasOwnProperty(k)) { continue; }
+    n++;
+    if (CHARTA_CELATA[r.nodi[k].genus]) { celati++; }
   }
   status.textContent = n + ' nodi · '
     + r.aristae.length + ' aristae'
+    + (celati ? ' · ' + celati + ' in tabulis propriis' : '')
     + (r.praetermissa ? ' · praetermissa: ' + r.praetermissa : '')
     + (r.monita && r.monita.length ? ' · '
         + r.monita.join('; ') : '');

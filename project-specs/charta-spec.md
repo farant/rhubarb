@@ -132,6 +132,16 @@ deleted mid-reload falls back to the census. The server-side
 `scaena` envelope remains reserved for boards whose content ISN'T
 in the census payload (e.g. a natura-level board).
 
+**Board-scoped genera (`CHARTA_CELATA`).** Some kinds live only on
+an entity's own board, never on the root — first case: `facultas`
+(software features, `realizata-a` → their bearer; the genus and
+relation ALREADY EXISTED in natura's fabricatio, minted for exactly
+this — nothing new was coined). Hidden kinds are skipped by the
+root layout (their edges vanish with them, positions being the
+filter); on a nested board they arrive as advenientes like any
+incoming neighbor, grouped under their genus. The status line
+counts them: "N in tabulis propriis".
+
 ## 4. Renderer (index.html, dependency-free)
 
 - Canvas 2D, camera `{x, y, scala}`, world→screen transform.
