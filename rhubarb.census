@@ -119,8 +119,23 @@
   </%>
 
   <!-- ============ BIBLIOTHECAE (specimina) ============
-       gradus = longitudo catenae dependentiarum domesticarum:
-       0 = sola bibliotheca vulgaris, n = maximum fontium + 1.
+       gradus = altitudo in graphu INTERFACIERUM: quid includere
+       debeas ut bibliotheca UTARIS. 0 = sola bibliotheca vulgaris,
+       n = maximum capitum inclusorum + 1.
+
+       CUR INTERFACIES, NON CORPUS (mensuratum 2026-08-12): graphus
+       corporum CYCLOS DUOS fert, ubi 'maximum + 1' definitum non
+       est - corpus bibliothecae inferioris ad superiorem manum
+       tendit:
+         lib/chorda.c    -> chorda_aedificator.h  (caput chordae non)
+         lib/stml.c      -> selectio.h            (caput stml non)
+       Utroque loco CAPUT mundum manet, ergo graphus interfacierum
+       ACYCLICUS est et numerum bene ponit. Arcus 'dependet-ex'
+       tamen dependentiam PLENAM fert (caput + corpus), quia
+       reficienti ad ligandum opus est: qui chordam ligat,
+       chorda_aedificator.o quoque ligare debet. Unde arcus qui
+       gradum sursum spectant - non error sed cyclus verus notatus.
+
        (Advena I: 'gradus 0-2 promissi, solus 0 datus' - nunc
        definitus et cuique datus.) -->
 
@@ -142,6 +157,11 @@
       string functions are foreign to it. Functions that allocate
       take a pool.</glossa>
     <dependet-ex ad="&piscina;"/>
+    <dependet-ex ad="&chorda-aedificator;"/>
+    <nota>CYCLUS NOTATUS: caput chordae solam piscinam poscit (unde
+      gradus I), sed lib/chorda.c chorda_aedificator.h includit -
+      corpus ad bibliothecam superiorem manum tendit. Qui chordam
+      ligat, chorda_aedificator.o quoque ligare debet.</nota>
     <nota>Chorda mensuram fert, NUMQUAM nullo terminatur -
       functiones bibliothecae vulgaris alienae sunt. Functiones
       sumentes piscinam accipiunt (arcus quem census prior
@@ -152,13 +172,25 @@
     <realizat ad="&limes-sentinellarum;"/>
   </bibliotheca>
 
-  <bibliotheca nomen="&stml;" scripta-in="&c;" gradus="2">
+  <bibliotheca nomen="&stml;" scripta-in="&c;" gradus="4">
     <glossa lingua="en">The house XML-variant: inner text reads
       VERBATIM (normalization is the consumer's choice, never the
       parser's). silva vendors its own copy - run amalgamare.sh
       after changes.</glossa>
     <dependet-ex ad="&piscina;"/>
     <dependet-ex ad="&chorda;"/>
+    <dependet-ex ad="&chorda-aedificator;"/>
+    <dependet-ex ad="&xar;"/>
+    <dependet-ex ad="&internamentum;"/>
+    <dependet-ex ad="&selectio;"/>
+    <nota>CYCLUS NOTATUS: caput stml selectionem non poscit (unde
+      gradus IV), sed lib/stml.c selectio.h includit dum caput
+      selectionis stml.h poscit.</nota>
+    <nota>NOMINA elementorum ASCII SOLA sunt, et defectus
+      TACET: titulus qui ASCII incipit et non-ASCII continuat
+      (&lt;cēnsūs&gt;) parsatur SINE errore in arborem falsam.
+      Valores attributorum et textus internus UTF-8 plenum
+      fideliter ferunt. Quaestio 01KZVA5ZHX.</nota>
     <nota>XML-varians domus. textus internus VERBATIM est
       (migratio 2026-08-06). silva exemplar suum vendicat -
       amalgamare.sh post mutationes.</nota>
@@ -169,10 +201,16 @@
     <realizat ad="&fragmenta-stml;"/>
   </bibliotheca>
 
-  <bibliotheca nomen="&canon;" scripta-in="&c;" gradus="3">
+  <bibliotheca nomen="&canon;" scripta-in="&c;" gradus="5">
     <glossa lingua="en">Schemas for STML documents: vocabulary,
       cardinality, value kinds, citations, bounds - and an
       expression language NEVER.</glossa>
+    <dependet-ex ad="&piscina;"/>
+    <dependet-ex ad="&chorda;"/>
+    <dependet-ex ad="&xar;"/>
+    <dependet-ex ad="&tabula-dispersa;"/>
+    <dependet-ex ad="&internamentum;"/>
+    <dependet-ex ad="&similitudo;"/>
     <dependet-ex ad="&stml;"/>
     <nota>Schemata STML: vocabularium, cardinalitas, genera
       valorum, citationes, fines. Lingua expressionum NUMQUAM.</nota>
@@ -182,13 +220,23 @@
     <realizat ad="&registrum-canonum;"/>
   </bibliotheca>
 
-  <bibliotheca nomen="&natura;" scripta-in="&c;" gradus="4">
+  <bibliotheca nomen="&natura;" scripta-in="&c;" gradus="5">
     <glossa lingua="en">The semantic dictionary of the house. Its
       numbers do not live here but in the signa below: each
       carries its own measuring path, so each can be measured
       again.</glossa>
+    <dependet-ex ad="&piscina;"/>
+    <dependet-ex ad="&chorda;"/>
+    <dependet-ex ad="&xar;"/>
+    <dependet-ex ad="&tabula-dispersa;"/>
+    <dependet-ex ad="&internamentum;"/>
     <dependet-ex ad="&stml;"/>
-    <dependet-ex ad="&canon;"/>
+    <nota>CANONEM NON INCLUDIT: bibliotheca natura sola stml
+      poscit. Vinculum naturae ad canonem in INSTRUMENTO sedet -
+      natura_examen utrumque adhibet (arcus ibi iam scriptus).
+      Arcus 'dependet-ex ad=&amp;canon;' hinc sublatus est quia
+      caput naturae canonem numquam includit (mensuratum
+      2026-08-12).</nota>
     <nota>Numeri eius NON hic iacent sed in signis infra:
       quisque viam suam fert, ideo re-examinari potest.</nota>
     <realizat ad="&onus-exemplarium;"/>
@@ -211,13 +259,14 @@
     <realizat ad="&selectores-silvae;"/>
   </bibliotheca>
 
-  <bibliotheca nomen="&credo;" scripta-in="&c;" gradus="1">
+  <bibliotheca nomen="&credo;" scripta-in="&c;" gradus="2">
     <glossa lingua="en">The house testing library: CREDO_*
       assertions and the test summary. Canonical usage lives in
       probatio_piscina.c. The first stranger's sharpest finding
       was silence: an earlier census never mentioned testing at
       all.</glossa>
     <dependet-ex ad="&piscina;"/>
+    <dependet-ex ad="&chorda;"/>
     <nota>Probationum bibliotheca domus: asserta CREDO_*,
       compendium probationis. Exemplar usūs canonicum:
       probationes/probatio_piscina.c. Cursor suitarum:
@@ -289,7 +338,7 @@
     <realizat ad="&integritas-crc32;"/>
   </bibliotheca>
 
-  <bibliotheca nomen="&tabula-dispersa;" scripta-in="&c;" gradus="3">
+  <bibliotheca nomen="&tabula-dispersa;" scripta-in="&c;" gradus="2">
     <glossa lingua="en">The hash table: open addressing with
       tombstones, chorda keys, and its hash and comparison
       functions INJECTED - the table never presumes what a key
@@ -297,6 +346,9 @@
     <dependet-ex ad="&piscina;"/>
     <dependet-ex ad="&chorda;"/>
     <dependet-ex ad="&friatio;"/>
+    <nota>Friatio in CORPORE sola sedet (caput eam non poscit),
+      unde gradus II non III - sed qui tabulam ligat, friatio.o
+      quoque ligare debet.</nota>
     <nota>Addressing apertum cum tumulis: factor oneris ET factor
       deletorum ambo crescentiam movent. Friatio in sloto cachata.
       Vacatio slotos reficit sine deallocatione (piscinae
@@ -306,7 +358,7 @@
     <realizat ad="&vacatio-arenae-amica;"/>
   </bibliotheca>
 
-  <bibliotheca nomen="&internamentum;" scripta-in="&c;" gradus="4">
+  <bibliotheca nomen="&internamentum;" scripta-in="&c;" gradus="3">
     <glossa lingua="en">String interning: one canonical copy per
       string, so comparing pointers becomes comparing strings. A
       lazily-created global table lets every library share the same
@@ -320,6 +372,24 @@
       participent.</nota>
     <realizat ad="&copia-canonica;"/>
     <realizat ad="&internamentum-globale;"/>
+  </bibliotheca>
+
+  <bibliotheca nomen="&selectio;" scripta-in="&c;" gradus="5">
+    <glossa lingua="en">CSS-shaped selectors over an STML tree -
+      tag, #id, .class, [attr], the combinators and a few
+      pseudo-classes. It is how a document is searched by SHAPE
+      rather than by text.</glossa>
+    <dependet-ex ad="&piscina;"/>
+    <dependet-ex ad="&chorda;"/>
+    <dependet-ex ad="&xar;"/>
+    <dependet-ex ad="&tabula-dispersa;"/>
+    <dependet-ex ad="&internamentum;"/>
+    <dependet-ex ad="&stml;"/>
+    <nota>Par cyclicum cum stml: caput selectionis stml.h poscit,
+      corpus stml selectio.h. Ideo neutra sine altera ligari
+      potest.</nota>
+    <realizat ad="&selectores-css;"/>
+    <realizat ad="&congruentia-arboris;"/>
   </bibliotheca>
 
   <!-- sqlite in bibliotheca naturae vivit (res mundi, ut c);
@@ -545,6 +615,15 @@
     contentum="Tabula globalis pigre creata cum piscina propria: bibliothecae omnes eandem participant.">
     <glossa lingua="en">A lazily-created global table with its own
       pool, so every library shares the same one.</glossa>  </facultas>
+
+  <facultas nomen="&selectores-css;"
+    contentum="Selectores more CSS: titulus, #id, .classis, [attributum], combinatores, pseudo-classes.">
+    <glossa lingua="en">CSS-shaped selectors: tag, #id, .class,
+      [attr], combinators, pseudo-classes.</glossa>  </facultas>
+  <facultas nomen="&congruentia-arboris;"
+    contentum="Selector arbori STML applicatus: quaesitus figura documenti, non textu.">
+    <glossa lingua="en">A selector matched against the STML tree:
+      searching a document by shape, not by text.</glossa>  </facultas>
 
   <!-- ============ ADSCITIONES ============
        Munera bibliothecarum alienarum intra hoc inceptum (more
