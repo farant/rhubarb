@@ -6194,3 +6194,36 @@ target scope, same shape as scripta_in). Census migrated: 27
 edges moved from facultas children to bibliotheca `<realizat>`
 lists; direction-citation doctrine in action — same fact, the
 writer cites the direction that runs.
+
+## 2026-08-11 — adscitio: the third-party-library ROLE (officium pattern)
+
+Fran's insight: third-party-ness is a ROLE, not a kind — sqlite is
+first-party to the Consortium and third-party to rhubarb, like one
+person holding an office. Genus `adscitio` (fabricatio): definitio
+says it plainly ("munus incepto relativum, quod bibliothecae NON
+inhaeret"). Shape per Fran's three AskUserQuestion rulings:
+machina_statuum `integratio` (destinata → vendita per venditionem),
+`tenetur_a` → bibliotheca, `intra` OPEN (proiectum still parked
+01KZGYS87E — first-narrowing will tighten it), new family
+`velata_per`/`velat` = the white-labeling (scrinium veils sqlite,
+imago stb_image, tls.h veils Security.framework today / bearssl
+later).
+
+Six world individua from Fran's forum list (vendoredlibrary,
+2026-07-30): monocypher, bearssl, freetype, harfbuzz, icu,
+opus_codec — July assessments preserved (harfbuzz: "the one thing
+we cannot write ourselves, but C++ inside"; icu: "worth its price
+only for collation").
+
+Custos taught three rules live this arc: rule II (cross-model
+relatio target needs modulus=, same as scripta_in), rule VIII twice
+(bare <status> children need the machina_statuum wrapper; titulus=
+is not a bibliotheca attribute). Also earlier same day: rule XIII
+(eventum actio= must name a declared action — drop it, prose
+carries meaning).
+
+Corpus-pre-named tally for the day: facultas (existed, WITH
+realizata_a and glossae), sqlite (already an individuum, zlib
+beside it), officium (the exact role pattern ready to copy). The
+collision check keeps answering design questions before the debate
+starts — run it FIRST, always.
