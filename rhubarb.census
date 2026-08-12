@@ -57,6 +57,16 @@
     <causat ad="&canon;"/>
     <causat ad="&norma-vexillorum;"/>
     <causat ad="&norma-latinitatis;"/>
+    <!-- adscitiones: aliena numquam viva dependentia sed corpus
+         adscitum in arbore - munus ipsum perennitatis forma est -->
+    <causat ad="&adscitio-sqlite;"/>
+    <causat ad="&adscitio-stb-image;"/>
+    <causat ad="&adscitio-monocypher;"/>
+    <causat ad="&adscitio-bearssl;"/>
+    <causat ad="&adscitio-freetype;"/>
+    <causat ad="&adscitio-harfbuzz;"/>
+    <causat ad="&adscitio-icu;"/>
+    <causat ad="&adscitio-opus;"/>
   </causa-finalis>
 
   <causa-finalis nomen="&intellectus;"
@@ -357,6 +367,65 @@
     contentum="Compendium probationis: probata, fracta, summa - forma quam cursor suitarum legit.">
     <glossa lingua="en">The test summary: passed, failed, total -
       the form the suite runner reads.</glossa>  </facultas>
+
+  <!-- ============ ADSCITIONES ============
+       Munera bibliothecarum alienarum intra hoc inceptum (more
+       officii: munus incepto relativum, bibliothecae non
+       inhaerens). Index e foro natus (genus vendoredlibrary,
+       2026-07-30). Finis 'intra' implicitus: census incepti sui
+       est (genus proiectum nondum mintatum). -->
+
+  <adscitio nomen="&adscitio-sqlite;" status-integratio="vendita"
+    tenetur-a="&sqlite;">
+    <glossa lingua="en">SQLite as this project's adopted library:
+      vendored in vendor/, veiled by scrinium; volumen builds
+      document-as-database on it.</glossa>
+    <nota>Velata per scrinium (nondum ens censūs - arcus
+      velata-per tunc scribetur).</nota>
+  </adscitio>
+  <adscitio nomen="&adscitio-stb-image;" status-integratio="vendita"
+    tenetur-a="&stb_image;">
+    <glossa lingua="en">stb_image adopted: vendored single header,
+      veiled by imago.</glossa>
+    <nota>Velata per imago (nondum ens censūs).</nota>
+  </adscitio>
+  <adscitio nomen="&adscitio-monocypher;"
+    status-integratio="destinata" tenetur-a="&monocypher;">
+    <glossa lingua="en">Monocypher destined: the house's chosen
+      cryptography - arca, the future secrets daemon, will build
+      on it.</glossa>
+  </adscitio>
+  <adscitio nomen="&adscitio-bearssl;"
+    status-integratio="destinata" tenetur-a="&bearssl;">
+    <glossa lingua="en">BearSSL destined for Linux day: the tls.h
+      seam veils Security.framework today and will veil BearSSL
+      then - the seam moves, the core never.</glossa>
+  </adscitio>
+  <adscitio nomen="&adscitio-freetype;"
+    status-integratio="destinata" tenetur-a="&freetype;">
+    <glossa lingua="en">FreeType destined: font rasterization for
+      the day text is drawn without the platform.</glossa>
+  </adscitio>
+  <adscitio nomen="&adscitio-harfbuzz;"
+    status-integratio="destinata" tenetur-a="&harfbuzz;">
+    <glossa lingua="en">HarfBuzz destined, with eyes open: the one
+      thing in the stack the house cannot write itself (decades of
+      script knowledge) - but C++ inside, so vendoring it brings
+      the first C++ compiler into the build. CoreText veils the
+      need today.</glossa>
+  </adscitio>
+  <adscitio nomen="&adscitio-icu;"
+    status-integratio="destinata" tenetur-a="&icu;">
+    <glossa lingua="en">ICU destined last of all: worth its ~30MB
+      only for collation - most of the rest is generable from the
+      Unicode Character Database by a house generator, to be tried
+      first.</glossa>
+  </adscitio>
+  <adscitio nomen="&adscitio-opus;"
+    status-integratio="destinata" tenetur-a="&opus_codec;">
+    <glossa lingua="en">Opus destined: one open codec from speech
+      to music, for the day the house carries sound.</glossa>
+  </adscitio>
 
   <!-- ============ PROGRAMMATA ============ -->
 
