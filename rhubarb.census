@@ -229,6 +229,99 @@
     <realizat ad="&compendium-probationum;"/>
   </bibliotheca>
 
+  <bibliotheca nomen="&xar;" scripta-in="&c;" gradus="1">
+    <glossa lingua="en">The growing array. Elements NEVER move: it
+      grows by adding segments, so an index handed out today is
+      still valid after a million pushes - the property a
+      realloc-based vector cannot give.</glossa>
+    <dependet-ex ad="&piscina;"/>
+    <nota>Tabula crescens ex segmentis duplicantibus - elementa
+      NUMQUAM moventur, ergo indices stabiles permanent (quod
+      tabula reallocata dare non potest). Duo prima segmenta
+      eiusdem magnitudinis; locatio indicis O(1).</nota>
+    <realizat ad="&indices-stabiles;"/>
+    <realizat ad="&segmenta-duplicantia;"/>
+    <realizat ad="&quaestio-per-comparatorem;"/>
+    <realizat ad="&remotio-cum-ultimo;"/>
+  </bibliotheca>
+
+  <bibliotheca nomen="&chorda-aedificator;" scripta-in="&c;" gradus="2">
+    <glossa lingua="en">The string builder, for text whose final
+      length is unknown: it tracks its own indentation level, so
+      pretty-printing needs no counting by the caller.</glossa>
+    <dependet-ex ad="&piscina;"/>
+    <dependet-ex ad="&chorda;"/>
+    <nota>Accumulatio cum magnitudine finali ignota. Gradum
+      indentationis IPSE observat (push/pop) - unde impressio
+      pulchra sine numeratione vocantis. 'finire' dominium
+      transfert et aedificatorem destruit.</nota>
+    <realizat ad="&accumulatio-crescens;"/>
+    <realizat ad="&indentatio-observata;"/>
+    <realizat ad="&evasio-json;"/>
+    <realizat ad="&spectatio-sine-fine;"/>
+  </bibliotheca>
+
+  <bibliotheca nomen="&similitudo;" scripta-in="&c;" gradus="2">
+    <glossa lingua="en">Fuzzy subsequence matching (fzf-shaped) for
+      identifiers - the net thrown when the exact name is not
+      known. Pure functions: no pool, no allocation, no
+      state.</glossa>
+    <dependet-ex ad="&chorda;"/>
+    <nota>Quaestio subsequentia candidati sit aut NON congruit.
+      Limites verborum, cursus continui, casus exactus praemiantur;
+      hiatus puniuntur. Functiones PURAE - nulla piscina, nulla
+      allocatio, nullus status.</nota>
+    <realizat ad="&congruentia-nebulosa;"/>
+    <realizat ad="&decurtatio-quaestionis;"/>
+    <realizat ad="&punctatio-pura;"/>
+  </bibliotheca>
+
+  <bibliotheca nomen="&friatio;" scripta-in="&c;" gradus="2">
+    <glossa lingua="en">The hashing library: table hashes and
+      cryptographic digests in one place, so nobody writes a
+      fourth FNV-1a.</glossa>
+    <dependet-ex ad="&chorda;"/>
+    <nota>Friationes uno loco: non-cryptographicae tabulis,
+      cryptographicae identitatibus, CRC32 integritati. Tabula
+      dispersa involucra sua circum has ponit.</nota>
+    <realizat ad="&friationes-tabularum;"/>
+    <realizat ad="&digestus-cryptographicus;"/>
+    <realizat ad="&integritas-crc32;"/>
+  </bibliotheca>
+
+  <bibliotheca nomen="&tabula-dispersa;" scripta-in="&c;" gradus="3">
+    <glossa lingua="en">The hash table: open addressing with
+      tombstones, chorda keys, and its hash and comparison
+      functions INJECTED - the table never presumes what a key
+      is.</glossa>
+    <dependet-ex ad="&piscina;"/>
+    <dependet-ex ad="&chorda;"/>
+    <dependet-ex ad="&friatio;"/>
+    <nota>Addressing apertum cum tumulis: factor oneris ET factor
+      deletorum ambo crescentiam movent. Friatio in sloto cachata.
+      Vacatio slotos reficit sine deallocatione (piscinae
+      amica).</nota>
+    <realizat ad="&addressing-apertum;"/>
+    <realizat ad="&friatio-immissa;"/>
+    <realizat ad="&vacatio-arenae-amica;"/>
+  </bibliotheca>
+
+  <bibliotheca nomen="&internamentum;" scripta-in="&c;" gradus="4">
+    <glossa lingua="en">String interning: one canonical copy per
+      string, so comparing pointers becomes comparing strings. A
+      lazily-created global table lets every library share the same
+      one.</glossa>
+    <dependet-ex ad="&piscina;"/>
+    <dependet-ex ad="&chorda;"/>
+    <dependet-ex ad="&tabula-dispersa;"/>
+    <nota>Post internationem comparatio indicum comparationem
+      chordarum valet. Internamentum globale pigre creatur cum
+      piscina propria, ut bibliothecae omnes eandem tabulam
+      participent.</nota>
+    <realizat ad="&copia-canonica;"/>
+    <realizat ad="&internamentum-globale;"/>
+  </bibliotheca>
+
   <!-- sqlite in bibliotheca naturae vivit (res mundi, ut c);
        augmentatio notam domūs apponit -->
   <% &sqlite;>
@@ -367,6 +460,91 @@
     contentum="Compendium probationis: probata, fracta, summa - forma quam cursor suitarum legit.">
     <glossa lingua="en">The test summary: passed, failed, total -
       the form the suite runner reads.</glossa>  </facultas>
+
+  <facultas nomen="&indices-stabiles;"
+    contentum="Elementa numquam moventur: index semel datus valet quamdiu tabula vivit.">
+    <glossa lingua="en">Elements never move: an index handed out
+      once stays valid as long as the array lives.</glossa>  </facultas>
+  <facultas nomen="&segmenta-duplicantia;"
+    contentum="Crescentia per segmenta duplicantia; locatio indicis O(1), sine reallocatione.">
+    <glossa lingua="en">Growth by doubling segments; locating an
+      index is O(1) and nothing is ever reallocated.</glossa>  </facultas>
+  <facultas nomen="&quaestio-per-comparatorem;"
+    contentum="Quaesitus, ordinatio, quaestio binaria - comparator datus genus elementi tenet.">
+    <glossa lingua="en">Search, sort, binary search - the supplied
+      comparator holds all knowledge of the element type.</glossa>  </facultas>
+  <facultas nomen="&remotio-cum-ultimo;"
+    contentum="Remotio O(1) mutatione cum ultimo - ordinem NON servat, consulto.">
+    <glossa lingua="en">O(1) removal by swapping with the last -
+      it does not preserve order, on purpose.</glossa>  </facultas>
+
+  <facultas nomen="&accumulatio-crescens;"
+    contentum="Capacitas duplicatur dum textus accumulatur: magnitudo finalis ignota esse licet.">
+    <glossa lingua="en">Capacity doubles as text accumulates: the
+      final size is allowed to be unknown.</glossa>  </facultas>
+  <facultas nomen="&indentatio-observata;"
+    contentum="Gradus indentationis ab aedificatore ipso observatur (push/pop) - vocans non numerat.">
+    <glossa lingua="en">The builder tracks its own indentation
+      level - the caller never counts spaces.</glossa>  </facultas>
+  <facultas nomen="&evasio-json;"
+    contentum="Effugium JSON in ipsa appensione: citationes, virgulae inversae, characteres imperantes.">
+    <glossa lingua="en">JSON escaping at append time: quotes,
+      backslashes, control characters.</glossa>  </facultas>
+  <facultas nomen="&spectatio-sine-fine;"
+    contentum="Contentum currens spectatur sine fine; 'finire' dominium transfert et aedificatorem destruit.">
+    <glossa lingua="en">Peek the content without finishing;
+      'finire' hands ownership over and destroys the
+      builder.</glossa>  </facultas>
+
+  <facultas nomen="&congruentia-nebulosa;"
+    contentum="Quaestio subsequentia candidati sit aut non congruit; limites verborum et cursus praemiantur, hiatus puniuntur.">
+    <glossa lingua="en">The query must be a subsequence of the
+      candidate or there is no match; word boundaries and runs are
+      rewarded, gaps punished.</glossa>  </facultas>
+  <facultas nomen="&decurtatio-quaestionis;"
+    contentum="Punctum optimum trans praefixa quaestionis: cauda male coniecta nomen totum non necat.">
+    <glossa lingua="en">Best score across the query's prefixes: a
+      badly-guessed tail no longer kills the whole name - what a
+      human does by deleting in fzf.</glossa>  </facultas>
+  <facultas nomen="&punctatio-pura;"
+    contentum="Nulla piscina, nulla allocatio, nullus status - functiones vocari possunt ubicumque.">
+    <glossa lingua="en">No pool, no allocation, no state - the
+      functions can be called anywhere.</glossa>  </facultas>
+
+  <facultas nomen="&friationes-tabularum;"
+    contentum="FNV-1a et DJB2 pro tabulis: rapidae, bene distribuentes, NON securae.">
+    <glossa lingua="en">FNV-1a and DJB2 for tables: fast, well
+      distributed, and explicitly not secure.</glossa>  </facultas>
+  <facultas nomen="&digestus-cryptographicus;"
+    contentum="SHA-1 et SHA-256 incrementales: contextus, additio, finitio - unde UUIDv5 et sigilla.">
+    <glossa lingua="en">Incremental SHA-1 and SHA-256: context,
+      add, finish - the ground under UUIDv5 and seals.</glossa>  </facultas>
+  <facultas nomen="&integritas-crc32;"
+    contentum="CRC32 (IEEE 802.3), integer et incrementalis, ad integritatem non securitatem.">
+    <glossa lingua="en">CRC32 (IEEE 802.3), whole or incremental,
+      for integrity - never for security.</glossa>  </facultas>
+
+  <facultas nomen="&addressing-apertum;"
+    contentum="Sloti plani cum tumulis: factor oneris ET factor deletorum ambo crescentiam movent.">
+    <glossa lingua="en">Flat slots with tombstones: both the load
+      factor and the deleted factor can trigger growth.</glossa>  </facultas>
+  <facultas nomen="&friatio-immissa;"
+    contentum="Friatio et comparatio indices functionum sunt: tabula genus clavis non praesumit.">
+    <glossa lingua="en">Hash and comparison are function pointers:
+      the table presumes nothing about what a key is.</glossa>  </facultas>
+  <facultas nomen="&vacatio-arenae-amica;"
+    contentum="Vacatio slotos reficit sine deallocatione; memoriam vera refectio piscinae purificat.">
+    <glossa lingua="en">Clearing resets the slots without freeing;
+      the pool's own reset reclaims the memory.</glossa>  </facultas>
+
+  <facultas nomen="&copia-canonica;"
+    contentum="Copia unica cuiusque chordae: post internationem comparatio indicum comparationem chordarum valet.">
+    <glossa lingua="en">One copy per string: after interning,
+      comparing pointers is comparing strings.</glossa>  </facultas>
+  <facultas nomen="&internamentum-globale;"
+    contentum="Tabula globalis pigre creata cum piscina propria: bibliothecae omnes eandem participant.">
+    <glossa lingua="en">A lazily-created global table with its own
+      pool, so every library shares the same one.</glossa>  </facultas>
 
   <!-- ============ ADSCITIONES ============
        Munera bibliothecarum alienarum intra hoc inceptum (more
@@ -1209,7 +1387,7 @@
   </signum>
 
   <signum nomen="&mensura-generum;" de="&natura;"
-    contentum="genera 463" facta="2026-08-11"
+    contentum="genera 464" facta="2026-08-12"
     via="bin/natura_examen | tail -1">
     <glossa lingua="en">Counts the kinds in the dictionary. The
       jump 188 to 463 was REDEFINITION, not growth - the path
@@ -1222,7 +1400,7 @@
   </signum>
 
   <signum nomen="&mensura-rerum;" de="&natura;"
-    contentum="res lexici 117" facta="2026-08-11"
+    contentum="res lexici 124" facta="2026-08-12"
     via="bin/natura_examen | tail -1">
     <glossa lingua="en">Counts the dictionary's individuals. Once
       condemned as "unverifiable" because the WRONG path was used
@@ -1249,7 +1427,7 @@
   </signum>
 
   <signum nomen="&mensura-seminum;" de="&natura;"
-    contentum="individua in semina 117" facta="2026-08-11"
+    contentum="individua in semina 124" facta="2026-08-12"
     via="grep -c 'nomen=&quot;&amp;' natura/cocta/semina.census">
     <glossa lingua="en">Counts the individuals in the seed bank.
       Its path was once DEAD - a sigil migration broke the method
