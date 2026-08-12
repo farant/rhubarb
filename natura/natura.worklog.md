@@ -6182,3 +6182,15 @@ vitia BEFORE (`liberum hic non licet` + `elementum extra canonem`)
 and ACCIPE after. First real gloss authored on &piscina; in
 rhubarb.census; the charta serializer's entity-glossa path proven
 against the real store (fumus prints `glossa entis piscinae ADEST`).
+
+## 2026-08-11 — realizat: conversum + situs bibliothecae
+
+Fran ruled the census should write feature edges from the WORK's
+side (a work carries its capabilities beneath it), so realizata_a
+gained `conversum="realizat"` and bibliotheca gained the slot
+(`necessitudo="realizat" ad="facultas" modulus="fabricatio"` —
+the custos taught the modulus= immediately: rule II, cross-model
+target scope, same shape as scripta_in). Census migrated: 27
+edges moved from facultas children to bibliotheca `<realizat>`
+lists; direction-citation doctrine in action — same fact, the
+writer cites the direction that runs.

@@ -693,6 +693,7 @@
     <liberum nomen="documenta" maximum="1"/>
     <liberum nomen="praebet"/>
     <liberum nomen="dependet-ex"/>
+    <liberum nomen="realizat"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
     <liberum nomen="glossa"/>
@@ -713,6 +714,9 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="dependet-ex" intra="bibliotheca">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="realizat" intra="bibliotheca">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="bibliotheca">

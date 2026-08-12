@@ -1203,14 +1203,16 @@ curare_cum(defs_vetera).then(function () {
 })();
 
 /* ---- charta: facultates in tabula radicali CELANTUR, in tabula
- * propria bibliothecae apparent (CHARTA_CELATA) ---- */
+ * propria bibliothecae apparent (CHARTA_CELATA). Arcus a latere
+ * bibliothecae currit (realizat) -> facultas fascia EXIENS INFRA
+ * subiectum, decretum Franis ---- */
 (function () {
     var r = { nodi: {
         "&piscina;": { genus: "bibliotheca", externus: false },
         "&allocatio-arenae;": { genus: "facultas", externus: false }
     }, aristae: [
-        { a: "&allocatio-arenae;", ad: "&piscina;",
-          familia: "realizata-a" }
+        { a: "&piscina;", ad: "&allocatio-arenae;",
+          familia: "realizat" }
     ] };
     var p_radix = charta_disponere(r);
     var p_nidus = charta_disponere_nidi(r, "&piscina;");
@@ -1220,8 +1222,8 @@ curare_cum(defs_vetera).then(function () {
     proba(p_radix["&piscina;"] !== undefined,
         "charta: bibliotheca in radicali manet");
     proba(p_nidus["&allocatio-arenae;"] !== undefined
-        && p_nidus["&allocatio-arenae;"].y < p_nidus["&piscina;"].y,
-        "charta: facultas in tabula propria apparet (adveniens)");
+        && p_nidus["&allocatio-arenae;"].y > p_nidus["&piscina;"].y,
+        "charta: facultas in tabula propria INFRA subiectum (exiens)");
 })();
 
 /* ---- charta: recargatio calida (gradus IV) - differentia pura

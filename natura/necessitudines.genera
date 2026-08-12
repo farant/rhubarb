@@ -513,12 +513,15 @@
       corpus's first measured converse pair.</glossa>
   </necessitudo>
 
-  <necessitudo nomen="realizata_a" sub="effectio" a="*" ad="*">
+  <necessitudo nomen="realizata_a" sub="effectio" a="*" ad="*"
+    conversum="realizat">
     <definitio>Intentio quae per elementa concreta efficitur:
       facultas per functiones, forma per implementationes,
       constans per constructa linguae. Tribus exemplaribus
       adhibita (fabricatio, formae_datorum,
-      elementa_programmatis) - regula duorum impleta.</definitio>
+      elementa_programmatis) - regula duorum impleta.
+      Conversum 'realizat' (2026-08-11): opus facultates suas
+      praestat - census a latere operis scribit.</definitio>
     <glossa lingua="en">Realized-by: an intention effected by
       concrete elements. Three models used the name (or its
       spelling) before it was declared.</glossa>

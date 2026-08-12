@@ -954,6 +954,11 @@
             dictionarium huius generis COLLIGI potest, non scribi"/>
     <relatio nomen="scripta_in" ad="lingua_programmandi"
       modulus="lingua_programmandi"/>
+    <relatio nomen="realizat" necessitudo="realizat" ad="facultas"
+      modulus="fabricatio" multiplex="verum"
+      nota="facultates quas praestat - conversum realizata_a,
+            census a latere operis scribit (decretum Franis
+            2026-08-11: opus facultates suas INFRA se fert)"/>
   </relationes>
   <!-- in C89 modulus linguae non est: interfacies/corpus
        CONVENTIO est (apud nos include/X.h + lib/X.c), non

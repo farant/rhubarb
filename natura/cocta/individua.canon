@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1633 sedibus relationum huius canonis, 1160
+  RELATIONES - ex 1634 sedibus relationum huius canonis, 1161
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -5294,6 +5294,7 @@
     <liberum nomen="documenta" maximum="1"/>
     <liberum nomen="praebet"/>
     <liberum nomen="dependet-ex"/>
+    <liberum nomen="realizat"/>
     <liberum nomen="historia" maximum="1"/>
     <liberum nomen="nota"/>
     <liberum nomen="glossa"/>
@@ -5314,6 +5315,9 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="dependet-ex" intra="bibliotheca">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="realizat" intra="bibliotheca">
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="bibliotheca">
@@ -15774,6 +15778,7 @@
   <citatio nomen="bibliotheca-praebet" attributum="ad" ad="*/nomen" super="bibliotheca/praebet"/>
   <citatio nomen="bibliotheca-dependet-ex" attributum="ad" ad="bibliotheca/nomen" super="bibliotheca/dependet-ex"/>
   <citatio nomen="bibliotheca-scripta-in" attributum="scripta-in" ad="lingua-programmandi lingua-iussuum/nomen" super="bibliotheca"/>
+  <citatio nomen="bibliotheca-realizat" attributum="ad" ad="facultas/nomen" super="bibliotheca/realizat"/>
   <citatio nomen="assertio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="assertio"/>
   <citatio nomen="praeconditio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="praeconditio"/>
   <citatio nomen="postconditio-affirmat-de" attributum="affirmat-de" ad="status proiectio artefactum-aedificationis obiectum-compilatum exsecutabile-ligatum promptuarium index index-inversus index-arboris/nomen" super="postconditio"/>
