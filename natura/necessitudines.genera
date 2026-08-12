@@ -575,6 +575,19 @@
     <glossa lingua="en">Born-from (the forcing case).</glossa>
   </necessitudo>
 
+  <necessitudo nomen="propagatum_ex" conversum="propagat" sub="causalitas" a="*" ad="*" causa="efficiens">
+    <definitio>Surculus a stirpe priore ductus: non quaestio nova
+      e casu nata (quod natum_ex dicit) sed VARIATIO eiusdem rei,
+      ut propago vitis a matre ducta unde vitis nova crescat.
+      Cursus laboratorii ita arborem faciunt - #3 ex #1 non
+      cogente casu sed eandem regionem aliter carpens.</definitio>
+    <glossa lingua="en">Propagated-from: a cutting taken from an
+      earlier stock. Not a new question forced by a case (which
+      natum_ex covers) but a VARIATION of the same thing - as a
+      vine layer is taken from the mother plant so a new vine may
+      grow from it.</glossa>
+  </necessitudo>
+
   <necessitudo nomen="minatur" sub="causalitas" a="*" ad="*">
     <definitio>Quod alii periculum fert.</definitio>
     <glossa lingua="en">Threatens.</glossa>

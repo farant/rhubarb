@@ -1477,47 +1477,30 @@
   <citatio nomen="iudicium-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="iudicium"/>
   <citatio nomen="iudicium-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="iudicium/fundatur-in"/>
   <citatio nomen="iudicium-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="iudicium/ex-fonte"/>
-  <citatio nomen="iudicium-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="iudicium"/>
   <citatio nomen="diagnosis-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="diagnosis"/>
   <citatio nomen="diagnosis-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="diagnosis/fundatur-in"/>
   <citatio nomen="diagnosis-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="diagnosis/ex-fonte"/>
-  <citatio nomen="diagnosis-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="diagnosis"/>
   <citatio nomen="aestimatio-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="aestimatio"/>
   <citatio nomen="aestimatio-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="aestimatio/fundatur-in"/>
   <citatio nomen="aestimatio-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="aestimatio/ex-fonte"/>
-  <citatio nomen="aestimatio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="aestimatio"/>
   <citatio nomen="praedictio-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="praedictio"/>
   <citatio nomen="praedictio-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="praedictio/fundatur-in"/>
   <citatio nomen="praedictio-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="praedictio/ex-fonte"/>
-  <citatio nomen="praedictio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="praedictio"/>
   <citatio nomen="sententia-iudicis-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="sententia-iudicis"/>
   <citatio nomen="sententia-iudicis-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="sententia-iudicis/fundatur-in"/>
   <citatio nomen="sententia-iudicis-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="sententia-iudicis/ex-fonte"/>
-  <citatio nomen="sententia-iudicis-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="sententia-iudicis"/>
-  <citatio nomen="ignotum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum"/>
   <citatio nomen="ignotum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="ignotum/solvitur-per"/>
-  <citatio nomen="ignotum-notum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum-notum"/>
   <citatio nomen="ignotum-notum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="ignotum-notum/solvitur-per"/>
-  <citatio nomen="ignotum-ignotum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum-ignotum"/>
   <citatio nomen="ignotum-ignotum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="ignotum-ignotum/solvitur-per"/>
-  <citatio nomen="indeterminatum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="indeterminatum"/>
   <citatio nomen="indeterminatum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="indeterminatum/solvitur-per"/>
-  <citatio nomen="amissum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="amissum"/>
   <citatio nomen="amissum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="amissum/solvitur-per"/>
-  <citatio nomen="retentum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="retentum"/>
   <citatio nomen="retentum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="retentum/solvitur-per"/>
-  <citatio nomen="impertinens-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="impertinens"/>
   <citatio nomen="impertinens-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="impertinens/solvitur-per"/>
-  <citatio nomen="controversum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="controversum"/>
   <citatio nomen="controversum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="controversum/solvitur-per"/>
   <citatio nomen="investigatio-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="investigatio/colligit"/>
-  <citatio nomen="investigatio-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="investigatio/producit"/>
   <citatio nomen="investigatio-praeventiva-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="investigatio-praeventiva/colligit"/>
-  <citatio nomen="investigatio-praeventiva-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="investigatio-praeventiva/producit"/>
   <citatio nomen="inquisitio-forensis-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="inquisitio-forensis/colligit"/>
-  <citatio nomen="inquisitio-forensis-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="inquisitio-forensis/producit"/>
   <citatio nomen="recensio-post-mortem-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="recensio-post-mortem/colligit"/>
-  <citatio nomen="recensio-post-mortem-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="recensio-post-mortem/producit"/>
   <citatio nomen="secretum-substituit" attributum="substituit" ad="secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis/nomen" super="secretum"/>
   <citatio nomen="clavis-privata-substituit" attributum="substituit" ad="secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis/nomen" super="clavis-privata"/>
   <citatio nomen="verbum-arcanum-substituit" attributum="substituit" ad="secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis/nomen" super="verbum-arcanum"/>
@@ -1526,6 +1509,5 @@
   <citatio nomen="attributio-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="attributio"/>
   <citatio nomen="attributio-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="attributio/fundatur-in"/>
   <citatio nomen="attributio-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="attributio/ex-fonte"/>
-  <citatio nomen="attributio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="attributio"/>
 
 </canon>

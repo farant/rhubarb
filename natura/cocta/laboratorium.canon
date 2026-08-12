@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERATUM a natura_canones e laboratorium - NOLI MANU MUTARE.
+     Regenera: ./tools/natura_canones.sh -->
+<canon dialectus="laboratorium" versio="1">
+
+  <elementum nomen="individua" radix="verum">
+    <attributum nomen="fons" genus="nomen"/>
+    <liberum nomen="propositum"/>
+    <liberum nomen="sententia"/>
+    <liberum nomen="tentamen"/>
+    <liberum nomen="experimentum"/>
+  </elementum>
+
+  <elementum nomen="propositum">
+    <glossa lingua="en">A proposal: what you are asking to be built,
+    set down before the work. This is the CONSTRUCTIVE kind of
+    "before" - it speaks about the artifact, not about the world -
+    which is why a probe and an experiment both carry one, while
+    only an experiment can carry a named unknown.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="descriptio" genus="textus"/>
+    <liberum nomen="postulat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="postulat" intra="propositum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="propositum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="sententia">
+    <glossa lingua="en">A verdict: the judgment passed on a
+    completed run - what was learned, and what it was worth. It
+    differs from the observations as a conclusion differs from
+    data: an observation says what happened, a verdict says what
+    follows from it.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="status-iudicatio" genus="electio">
+      <optio>pendens</optio>
+      <optio>confirmatum</optio>
+      <optio>refutatum</optio>
+      <optio>mixtum</optio>
+      <optio>incertum</optio>
+    </attributum>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="latum" genus="dies"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>latum</optio>
+      <optio>confirmatum</optio>
+      <optio>revisum</optio>
+      <optio>retractatum</optio>
+    </attributum>
+    <attributum nomen="auctor" genus="referentia"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="assensus" genus="referentia"/>
+    <attributum nomen="superat" genus="referentia"/>
+    <liberum nomen="fundatur-in"/>
+    <liberum nomen="ex-fonte"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="fundatur-in" intra="sententia">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="ex-fonte" intra="sententia">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="sententia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="tentamen">
+    <glossa lingua="en">A probe: a trial of the latent space with no
+    formed question - you build something to see what it is like.
+    This is the move proper to the unknown-unknown, which by
+    natura's own account cannot be handled one at a time but only
+    in aggregate, through shorter cycles and redundancy.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="numerus" genus="numerus"/>
+    <attributum nomen="quaerens" genus="textus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>coeptum</optio>
+      <optio>factum</optio>
+      <optio>fecundum</optio>
+      <optio>sterile</optio>
+      <optio>servandum</optio>
+    </attributum>
+    <attributum nomen="propositum" genus="referentia"/>
+    <liberum nomen="invenit"/>
+    <liberum nomen="propagatum-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="invenit" intra="tentamen">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="propagatum-ex" intra="tentamen">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="tentamen">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="experimentum">
+    <glossa lingua="en">An experiment: the run by which a KNOWN
+    unknown is resolved - question formed before the work,
+    expectation and refutation written before looking,
+    observations after. This is the move proper to the
+    known-unknown, which natura calls assignable: it is a task,
+    go and find out.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="numerus" genus="numerus"/>
+    <attributum nomen="exspectatio" genus="textus"/>
+    <attributum nomen="refutatio" genus="textus"/>
+    <attributum nomen="contra" genus="textus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>coeptum</optio>
+      <optio>factum</optio>
+      <optio>conclusum</optio>
+    </attributum>
+    <attributum nomen="quaerit" genus="referentia"/>
+    <attributum nomen="propositum" genus="referentia"/>
+    <attributum nomen="sententia" genus="referentia"/>
+    <liberum nomen="invenit"/>
+    <liberum nomen="propagatum-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="invenit" intra="experimentum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="propagatum-ex" intra="experimentum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="experimentum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="nota" textus="verum"
+    nota="margo curatorialis individui - stratum
+          documenti quod stratum generum iam habebat"/>
+
+  <elementum nomen="glossa" textus="verum"
+    nota="glossa vernacula individui - lingua ISO 639-1
+          (en/fr/...); definitio Latine VERITAS manet,
+          glossa explicat, numquam renominat">
+    <attributum nomen="lingua" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="eventum" intra="historia" textus="verum">
+    <attributum nomen="quando" genus="dies"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="certitudo" genus="nomen"/>
+    <attributum nomen="fons" genus="nomen"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+  <unicitas nomen="identitas" attributum="nomen"
+    nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
+    super="propositum sententia tentamen experimentum"/>
+
+  <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
+       Subsumptio COMPILATA est: petitum cum posteris omnibus in
+       indicem ad= enumeratur, quia claves per titulum exactum
+       colliguntur et subgenus titulum alium fert. Signa: '#'
+       individuum inscriptum (clavis verbatim), '.' genus e
+       vocabulario indicis. -->
+  <citatio nomen="tentamen-propositum" attributum="propositum" ad="propositum/nomen" super="tentamen"/>
+  <citatio nomen="experimentum-propositum" attributum="propositum" ad="propositum/nomen" super="experimentum"/>
+  <citatio nomen="experimentum-sententia" attributum="sententia" ad="sententia/nomen" super="experimentum"/>
+
+</canon>

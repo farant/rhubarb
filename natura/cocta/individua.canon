@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1637 sedibus relationum huius canonis, 1163
+  RELATIONES - ex 1652 sedibus relationum huius canonis, 1175
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  474 nomine solo iudicantur, id est sicut in canone per
+  477 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    467 petitum apertum habent (ad='*') - clavis nulla est;
+    470 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -313,6 +313,10 @@
     <liberum nomen="comparatio-stili"/>
     <liberum nomen="coniectura-periti"/>
     <liberum nomen="praesumptio"/>
+    <liberum nomen="propositum"/>
+    <liberum nomen="sententia"/>
+    <liberum nomen="tentamen"/>
+    <liberum nomen="experimentum"/>
     <liberum nomen="lingua-programmandi"/>
     <liberum nomen="lingua-iussuum"/>
     <liberum nomen="versio-linguae"/>
@@ -8459,6 +8463,137 @@
     <liberum nomen="eventum"/>
   </elementum>
 
+  <elementum nomen="propositum">
+    <glossa lingua="en">A proposal: what you are asking to be built,
+    set down before the work. This is the CONSTRUCTIVE kind of
+    "before" - it speaks about the artifact, not about the world -
+    which is why a probe and an experiment both carry one, while
+    only an experiment can carry a named unknown.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="descriptio" genus="textus"/>
+    <liberum nomen="postulat"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="postulat" intra="propositum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="propositum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="sententia">
+    <glossa lingua="en">A verdict: the judgment passed on a
+    completed run - what was learned, and what it was worth. It
+    differs from the observations as a conclusion differs from
+    data: an observation says what happened, a verdict says what
+    follows from it.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="status-iudicatio" genus="electio">
+      <optio>pendens</optio>
+      <optio>confirmatum</optio>
+      <optio>refutatum</optio>
+      <optio>mixtum</optio>
+      <optio>incertum</optio>
+    </attributum>
+    <attributum nomen="contentum" genus="textus"/>
+    <attributum nomen="latum" genus="dies"/>
+    <attributum nomen="status-vita" genus="electio">
+      <optio>latum</optio>
+      <optio>confirmatum</optio>
+      <optio>revisum</optio>
+      <optio>retractatum</optio>
+    </attributum>
+    <attributum nomen="auctor" genus="referentia"/>
+    <attributum nomen="de" genus="referentia"/>
+    <attributum nomen="assensus" genus="referentia"/>
+    <attributum nomen="superat" genus="referentia"/>
+    <liberum nomen="fundatur-in"/>
+    <liberum nomen="ex-fonte"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="fundatur-in" intra="sententia">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="ex-fonte" intra="sententia">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="sententia">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="tentamen">
+    <glossa lingua="en">A probe: a trial of the latent space with no
+    formed question - you build something to see what it is like.
+    This is the move proper to the unknown-unknown, which by
+    natura's own account cannot be handled one at a time but only
+    in aggregate, through shorter cycles and redundancy.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="numerus" genus="numerus"/>
+    <attributum nomen="quaerens" genus="textus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>coeptum</optio>
+      <optio>factum</optio>
+      <optio>fecundum</optio>
+      <optio>sterile</optio>
+      <optio>servandum</optio>
+    </attributum>
+    <attributum nomen="propositum" genus="referentia"/>
+    <liberum nomen="invenit"/>
+    <liberum nomen="propagatum-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="invenit" intra="tentamen">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="propagatum-ex" intra="tentamen">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="tentamen">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="experimentum">
+    <glossa lingua="en">An experiment: the run by which a KNOWN
+    unknown is resolved - question formed before the work,
+    expectation and refutation written before looking,
+    observations after. This is the move proper to the
+    known-unknown, which natura calls assignable: it is a task,
+    go and find out.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="numerus" genus="numerus"/>
+    <attributum nomen="exspectatio" genus="textus"/>
+    <attributum nomen="refutatio" genus="textus"/>
+    <attributum nomen="contra" genus="textus"/>
+    <attributum nomen="status-cursus" genus="electio">
+      <optio>coeptum</optio>
+      <optio>factum</optio>
+      <optio>conclusum</optio>
+    </attributum>
+    <attributum nomen="quaerit" genus="referentia"/>
+    <attributum nomen="propositum" genus="referentia"/>
+    <attributum nomen="sententia" genus="referentia"/>
+    <liberum nomen="invenit"/>
+    <liberum nomen="propagatum-ex"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="invenit" intra="experimentum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="propagatum-ex" intra="experimentum">
+    <attributum nomen="ad" genus="referentia"/>
+  </elementum>
+  <elementum nomen="historia" intra="experimentum">
+    <liberum nomen="eventum"/>
+  </elementum>
+
   <elementum nomen="lingua-programmandi">
     <glossa lingua="en">A programming language: a formal system of
     signs for expressing computations, with a defined grammar and a
@@ -15143,19 +15278,20 @@
            secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis
            peritia-communis notitia-pascui ars-officinae memoria-operis attributio
            fundamentum autopsia mensuratio documentum-scriptum auctoritas-testis
-           illatio comparatio-stili coniectura-periti praesumptio lingua-programmandi
-           lingua-iussuum versio-linguae implementatio-linguae verbum-clavis
-           locus inscriptio iurisdictio aedificium magnitudo-mensurabilis
-           longitudo massa tempus-intervallum temperatura capacitas numerositas
-           unitas-mensurae quantitas incertitudo instrumentum-mensurae morbus
-           morbus-infectiosus morbus-geneticus morbus-degenerativus vulnus
-           norma lex lex-aeterna lex-naturalis lex-humana lex-divina-positiva
-           consuetudo classis-normativa schedula-substantiarum gradus-eventus-aviatorii
-           classis-periculi-mercium fictio-iuris adoptio mors-praesumpta
-           personalitas-iuridica obligatio obligatio-ex-contractu obligatio-ex-delicto
-           obligatio-ex-lege contractus emptio-venditio locatio-conductio
-           societas-contractus mandatum commodatum licentia tributum portorium
-           vectigal decuma tributum-capitis titulus gradus-academicus character-indelebilis
+           illatio comparatio-stili coniectura-periti praesumptio propositum
+           sententia tentamen experimentum lingua-programmandi lingua-iussuum
+           versio-linguae implementatio-linguae verbum-clavis locus inscriptio
+           iurisdictio aedificium magnitudo-mensurabilis longitudo massa
+           tempus-intervallum temperatura capacitas numerositas unitas-mensurae
+           quantitas incertitudo instrumentum-mensurae morbus morbus-infectiosus
+           morbus-geneticus morbus-degenerativus vulnus norma lex lex-aeterna
+           lex-naturalis lex-humana lex-divina-positiva consuetudo classis-normativa
+           schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium
+           fictio-iuris adoptio mors-praesumpta personalitas-iuridica obligatio
+           obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege
+           contractus emptio-venditio locatio-conductio societas-contractus
+           mandatum commodatum licentia tributum portorium vectigal decuma
+           tributum-capitis titulus gradus-academicus character-indelebilis
            titulus-honoris iussum praescriptio-medica mandatum-iudicis iussum-emptionis
            iussum-operis iussum-ne-resuscitetur fiducia petitio petitio-assecurationis
            petitio-remota supplicatio delegatio plena-potestas procuratio
@@ -15511,26 +15647,26 @@
   <citatio nomen="versio-architecturae-versio-de" attributum="versio-de" ad="architectura-machinae/nomen" super="versio-architecturae"/>
   <citatio nomen="versio-architecturae-sequitur" attributum="sequitur" ad="versio-architecturae/nomen" super="versio-architecturae"/>
   <citatio nomen="versio-architecturae-compatibilis-cum" attributum="ad" ad="versio versio-architecturae versio-linguae versio-praescripti versio-systematis/nomen" super="versio-architecturae/compatibilis-cum"/>
-  <citatio nomen="versio-architecturae-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="versio-architecturae"/>
+  <citatio nomen="versio-architecturae-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="versio-architecturae"/>
   <citatio nomen="versio-architecturae-edita-a" attributum="edita-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="versio-architecturae"/>
   <citatio nomen="processorium-exsequitur" attributum="ad" ad="versio-architecturae/nomen" super="processorium/exsequitur"/>
   <citatio nomen="processorium-fabricatum-a" attributum="fabricatum-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="processorium"/>
   <citatio nomen="processorium-designatum-a" attributum="designatum-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="processorium"/>
   <citatio nomen="causa-causat" attributum="ad" ad="*/nomen" super="causa/causat"/>
   <citatio nomen="causa-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa/pendet-ex"/>
-  <citatio nomen="causa-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="causa"/>
+  <citatio nomen="causa-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="causa"/>
   <citatio nomen="causa-materialis-causat" attributum="ad" ad="*/nomen" super="causa-materialis/causat"/>
   <citatio nomen="causa-materialis-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa-materialis/pendet-ex"/>
-  <citatio nomen="causa-materialis-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="causa-materialis"/>
+  <citatio nomen="causa-materialis-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="causa-materialis"/>
   <citatio nomen="causa-formalis-causat" attributum="ad" ad="*/nomen" super="causa-formalis/causat"/>
   <citatio nomen="causa-formalis-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa-formalis/pendet-ex"/>
-  <citatio nomen="causa-formalis-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="causa-formalis"/>
+  <citatio nomen="causa-formalis-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="causa-formalis"/>
   <citatio nomen="causa-efficiens-causat" attributum="ad" ad="*/nomen" super="causa-efficiens/causat"/>
   <citatio nomen="causa-efficiens-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa-efficiens/pendet-ex"/>
-  <citatio nomen="causa-efficiens-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="causa-efficiens"/>
+  <citatio nomen="causa-efficiens-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="causa-efficiens"/>
   <citatio nomen="causa-finalis-causat" attributum="ad" ad="*/nomen" super="causa-finalis/causat"/>
   <citatio nomen="causa-finalis-pendet-ex" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="causa-finalis/pendet-ex"/>
-  <citatio nomen="causa-finalis-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="causa-finalis"/>
+  <citatio nomen="causa-finalis-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="causa-finalis"/>
   <citatio nomen="cliens-consumit" attributum="ad" ad="servus servus-telae servus-datorum servus-nominum servus-procuratorius servus-mcp/nomen" super="cliens/consumit"/>
   <citatio nomen="cliens-agit-pro" attributum="agit-pro" ad="*/nomen" super="cliens"/>
   <citatio nomen="cliens-telae-consumit" attributum="ad" ad="servus servus-telae servus-datorum servus-nominum servus-procuratorius servus-mcp/nomen" super="cliens-telae/consumit"/>
@@ -15860,13 +15996,13 @@
   <citatio nomen="vitium-habitat-in" attributum="habitat-in" ad="*/nomen" super="vitium"/>
   <citatio nomen="regressio-violat" attributum="violat" ad="postulatum/nomen" super="regressio"/>
   <citatio nomen="regressio-habitat-in" attributum="habitat-in" ad="*/nomen" super="regressio"/>
-  <citatio nomen="debitum-technicum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="debitum-technicum"/>
+  <citatio nomen="debitum-technicum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="debitum-technicum"/>
   <citatio nomen="debitum-technicum-inhaeret" attributum="inhaeret" ad="*/nomen" super="debitum-technicum"/>
   <citatio nomen="debitum-technicum-emit" attributum="ad" ad="facultas/nomen" super="debitum-technicum/emit"/>
   <citatio nomen="debitum-technicum-solvitur-per" attributum="ad" ad="pensum/nomen" super="debitum-technicum/solvitur-per"/>
   <citatio nomen="complicatio-aperitur-in" attributum="aperitur-in" ad="pensum/nomen" super="complicatio"/>
   <citatio nomen="complicatio-retractat" attributum="retractat" ad="consilium consilium-computatum/nomen" super="complicatio"/>
-  <citatio nomen="complicatio-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="complicatio"/>
+  <citatio nomen="complicatio-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="complicatio"/>
   <citatio nomen="consilium-ordinat" attributum="ad" ad="pensum/nomen" super="consilium/ordinat"/>
   <citatio nomen="consilium-ad-postulata" attributum="ad" ad="postulatum/nomen" super="consilium/ad-postulata"/>
   <citatio nomen="consilium-retractatur-a" attributum="retractatur-a" ad="*/nomen" super="consilium"/>
@@ -15990,31 +16126,31 @@
   <citatio nomen="iudicium-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="iudicium"/>
   <citatio nomen="iudicium-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="iudicium/fundatur-in"/>
   <citatio nomen="iudicium-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="iudicium/ex-fonte"/>
-  <citatio nomen="iudicium-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="iudicium"/>
+  <citatio nomen="iudicium-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="iudicium"/>
   <citatio nomen="diagnosis-auctor" attributum="auctor" ad="persona/nomen" super="diagnosis"/>
   <citatio nomen="diagnosis-de" attributum="de" ad="*/nomen" super="diagnosis"/>
   <citatio nomen="diagnosis-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="diagnosis"/>
   <citatio nomen="diagnosis-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="diagnosis/fundatur-in"/>
   <citatio nomen="diagnosis-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="diagnosis/ex-fonte"/>
-  <citatio nomen="diagnosis-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="diagnosis"/>
+  <citatio nomen="diagnosis-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="diagnosis"/>
   <citatio nomen="aestimatio-auctor" attributum="auctor" ad="persona/nomen" super="aestimatio"/>
   <citatio nomen="aestimatio-de" attributum="de" ad="*/nomen" super="aestimatio"/>
   <citatio nomen="aestimatio-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="aestimatio"/>
   <citatio nomen="aestimatio-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="aestimatio/fundatur-in"/>
   <citatio nomen="aestimatio-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="aestimatio/ex-fonte"/>
-  <citatio nomen="aestimatio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="aestimatio"/>
+  <citatio nomen="aestimatio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="aestimatio"/>
   <citatio nomen="praedictio-auctor" attributum="auctor" ad="persona/nomen" super="praedictio"/>
   <citatio nomen="praedictio-de" attributum="de" ad="*/nomen" super="praedictio"/>
   <citatio nomen="praedictio-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="praedictio"/>
   <citatio nomen="praedictio-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="praedictio/fundatur-in"/>
   <citatio nomen="praedictio-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="praedictio/ex-fonte"/>
-  <citatio nomen="praedictio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="praedictio"/>
+  <citatio nomen="praedictio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="praedictio"/>
   <citatio nomen="sententia-iudicis-auctor" attributum="auctor" ad="persona/nomen" super="sententia-iudicis"/>
   <citatio nomen="sententia-iudicis-de" attributum="de" ad="*/nomen" super="sententia-iudicis"/>
   <citatio nomen="sententia-iudicis-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="sententia-iudicis"/>
   <citatio nomen="sententia-iudicis-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="sententia-iudicis/fundatur-in"/>
   <citatio nomen="sententia-iudicis-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="sententia-iudicis/ex-fonte"/>
-  <citatio nomen="sententia-iudicis-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="sententia-iudicis"/>
+  <citatio nomen="sententia-iudicis-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="sententia-iudicis"/>
   <citatio nomen="annotatio-de" attributum="de" ad="*/nomen" super="annotatio"/>
   <citatio nomen="annotatio-probator" attributum="probator" ad="programma instrumentum-lineae daemon applicatio instrumentum-aedificationis/nomen" super="annotatio"/>
   <citatio nomen="annotatio-ex-regula" attributum="ex-regula" ad="*/nomen" super="annotatio"/>
@@ -16022,55 +16158,55 @@
   <citatio nomen="periculum-minuitur-per" attributum="ad" ad="*/nomen" super="periculum/minuitur-per"/>
   <citatio nomen="periculum-transfertur-per" attributum="transfertur-per" ad="contractus emptio-venditio locatio-conductio societas-contractus mandatum commodatum tractatus/nomen" super="periculum"/>
   <citatio nomen="ignotum-de" attributum="de" ad="*/nomen" super="ignotum"/>
-  <citatio nomen="ignotum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum"/>
+  <citatio nomen="ignotum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="ignotum"/>
   <citatio nomen="ignotum-impedit" attributum="ad" ad="*/nomen" super="ignotum/impedit"/>
   <citatio nomen="ignotum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="ignotum/solvitur-per"/>
   <citatio nomen="ignotum-notum-de" attributum="de" ad="*/nomen" super="ignotum-notum"/>
-  <citatio nomen="ignotum-notum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum-notum"/>
+  <citatio nomen="ignotum-notum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="ignotum-notum"/>
   <citatio nomen="ignotum-notum-impedit" attributum="ad" ad="*/nomen" super="ignotum-notum/impedit"/>
   <citatio nomen="ignotum-notum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="ignotum-notum/solvitur-per"/>
   <citatio nomen="ignotum-ignotum-de" attributum="de" ad="*/nomen" super="ignotum-ignotum"/>
-  <citatio nomen="ignotum-ignotum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="ignotum-ignotum"/>
+  <citatio nomen="ignotum-ignotum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="ignotum-ignotum"/>
   <citatio nomen="ignotum-ignotum-impedit" attributum="ad" ad="*/nomen" super="ignotum-ignotum/impedit"/>
   <citatio nomen="ignotum-ignotum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="ignotum-ignotum/solvitur-per"/>
   <citatio nomen="indeterminatum-de" attributum="de" ad="*/nomen" super="indeterminatum"/>
-  <citatio nomen="indeterminatum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="indeterminatum"/>
+  <citatio nomen="indeterminatum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="indeterminatum"/>
   <citatio nomen="indeterminatum-impedit" attributum="ad" ad="*/nomen" super="indeterminatum/impedit"/>
   <citatio nomen="indeterminatum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="indeterminatum/solvitur-per"/>
   <citatio nomen="amissum-de" attributum="de" ad="*/nomen" super="amissum"/>
-  <citatio nomen="amissum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="amissum"/>
+  <citatio nomen="amissum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="amissum"/>
   <citatio nomen="amissum-impedit" attributum="ad" ad="*/nomen" super="amissum/impedit"/>
   <citatio nomen="amissum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="amissum/solvitur-per"/>
   <citatio nomen="retentum-de" attributum="de" ad="*/nomen" super="retentum"/>
-  <citatio nomen="retentum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="retentum"/>
+  <citatio nomen="retentum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="retentum"/>
   <citatio nomen="retentum-impedit" attributum="ad" ad="*/nomen" super="retentum/impedit"/>
   <citatio nomen="retentum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="retentum/solvitur-per"/>
   <citatio nomen="impertinens-de" attributum="de" ad="*/nomen" super="impertinens"/>
-  <citatio nomen="impertinens-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="impertinens"/>
+  <citatio nomen="impertinens-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="impertinens"/>
   <citatio nomen="impertinens-impedit" attributum="ad" ad="*/nomen" super="impertinens/impedit"/>
   <citatio nomen="impertinens-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="impertinens/solvitur-per"/>
   <citatio nomen="controversum-de" attributum="de" ad="*/nomen" super="controversum"/>
-  <citatio nomen="controversum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="controversum"/>
+  <citatio nomen="controversum-agnitum-per" attributum="agnitum-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="controversum"/>
   <citatio nomen="controversum-impedit" attributum="ad" ad="*/nomen" super="controversum/impedit"/>
   <citatio nomen="controversum-solvitur-per" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="controversum/solvitur-per"/>
   <citatio nomen="investigatio-de" attributum="de" ad="*/nomen" super="investigatio"/>
   <citatio nomen="investigatio-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="investigatio/colligit"/>
-  <citatio nomen="investigatio-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="investigatio/producit"/>
+  <citatio nomen="investigatio-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="investigatio/producit"/>
   <citatio nomen="investigatio-invenit" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="investigatio/invenit"/>
   <citatio nomen="investigatio-parit" attributum="ad" ad="postulatum/nomen" super="investigatio/parit"/>
   <citatio nomen="investigatio-praeventiva-de" attributum="de" ad="*/nomen" super="investigatio-praeventiva"/>
   <citatio nomen="investigatio-praeventiva-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="investigatio-praeventiva/colligit"/>
-  <citatio nomen="investigatio-praeventiva-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="investigatio-praeventiva/producit"/>
+  <citatio nomen="investigatio-praeventiva-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="investigatio-praeventiva/producit"/>
   <citatio nomen="investigatio-praeventiva-invenit" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="investigatio-praeventiva/invenit"/>
   <citatio nomen="investigatio-praeventiva-parit" attributum="ad" ad="postulatum/nomen" super="investigatio-praeventiva/parit"/>
   <citatio nomen="inquisitio-forensis-de" attributum="de" ad="*/nomen" super="inquisitio-forensis"/>
   <citatio nomen="inquisitio-forensis-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="inquisitio-forensis/colligit"/>
-  <citatio nomen="inquisitio-forensis-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="inquisitio-forensis/producit"/>
+  <citatio nomen="inquisitio-forensis-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="inquisitio-forensis/producit"/>
   <citatio nomen="inquisitio-forensis-invenit" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="inquisitio-forensis/invenit"/>
   <citatio nomen="inquisitio-forensis-parit" attributum="ad" ad="postulatum/nomen" super="inquisitio-forensis/parit"/>
   <citatio nomen="recensio-post-mortem-de" attributum="de" ad="*/nomen" super="recensio-post-mortem"/>
   <citatio nomen="recensio-post-mortem-colligit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="recensio-post-mortem/colligit"/>
-  <citatio nomen="recensio-post-mortem-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="recensio-post-mortem/producit"/>
+  <citatio nomen="recensio-post-mortem-producit" attributum="ad" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="recensio-post-mortem/producit"/>
   <citatio nomen="recensio-post-mortem-invenit" attributum="ad" ad="causa causa-materialis causa-formalis causa-efficiens causa-finalis/nomen" super="recensio-post-mortem/invenit"/>
   <citatio nomen="recensio-post-mortem-parit" attributum="ad" ad="postulatum/nomen" super="recensio-post-mortem/parit"/>
   <citatio nomen="secretum-scitur-a" attributum="ad" ad="*/nomen" super="secretum/scitur-a"/>
@@ -16103,7 +16239,7 @@
   <citatio nomen="attributio-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="attributio"/>
   <citatio nomen="attributio-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="attributio/fundatur-in"/>
   <citatio nomen="attributio-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="attributio/ex-fonte"/>
-  <citatio nomen="attributio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="attributio"/>
+  <citatio nomen="attributio-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="attributio"/>
   <citatio nomen="fundamentum-sustinet" attributum="sustinet" ad="*/nomen" super="fundamentum"/>
   <citatio nomen="autopsia-sustinet" attributum="sustinet" ad="*/nomen" super="autopsia"/>
   <citatio nomen="mensuratio-sustinet" attributum="sustinet" ad="*/nomen" super="mensuratio"/>
@@ -16113,6 +16249,21 @@
   <citatio nomen="comparatio-stili-sustinet" attributum="sustinet" ad="*/nomen" super="comparatio-stili"/>
   <citatio nomen="coniectura-periti-sustinet" attributum="sustinet" ad="*/nomen" super="coniectura-periti"/>
   <citatio nomen="praesumptio-sustinet" attributum="sustinet" ad="*/nomen" super="praesumptio"/>
+  <citatio nomen="propositum-postulat" attributum="ad" ad="postulatum/nomen" super="propositum/postulat"/>
+  <citatio nomen="sententia-auctor" attributum="auctor" ad="persona/nomen" super="sententia"/>
+  <citatio nomen="sententia-de" attributum="de" ad="*/nomen" super="sententia"/>
+  <citatio nomen="sententia-assensus" attributum="assensus" ad="gradus-assensus scientia opinio fides suspicio dubitatio/nomen" super="sententia"/>
+  <citatio nomen="sententia-fundatur-in" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="sententia/fundatur-in"/>
+  <citatio nomen="sententia-ex-fonte" attributum="ad" ad="fons fons-scriptus fons-mensurae fons-testimonii corpus-institutionis/nomen" super="sententia/ex-fonte"/>
+  <citatio nomen="sententia-superat" attributum="superat" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="sententia"/>
+  <citatio nomen="tentamen-propositum" attributum="propositum" ad="propositum/nomen" super="tentamen"/>
+  <citatio nomen="tentamen-invenit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="tentamen/invenit"/>
+  <citatio nomen="tentamen-propagatum-ex" attributum="ad" ad="*/nomen" super="tentamen/propagatum-ex"/>
+  <citatio nomen="experimentum-quaerit" attributum="quaerit" ad="ignotum ignotum-notum ignotum-ignotum indeterminatum amissum retentum impertinens controversum/nomen" super="experimentum"/>
+  <citatio nomen="experimentum-propositum" attributum="propositum" ad="propositum/nomen" super="experimentum"/>
+  <citatio nomen="experimentum-invenit" attributum="ad" ad="observatio symptoma signum testimonium/nomen" super="experimentum/invenit"/>
+  <citatio nomen="experimentum-sententia" attributum="sententia" ad="sententia/nomen" super="experimentum"/>
+  <citatio nomen="experimentum-propagatum-ex" attributum="ad" ad="*/nomen" super="experimentum/propagatum-ex"/>
   <citatio nomen="lingua-programmandi-orta-ex" attributum="orta-ex" ad="lingua-programmandi lingua-iussuum/nomen" super="lingua-programmandi"/>
   <citatio nomen="lingua-programmandi-auctor" attributum="ad" ad="persona/nomen" super="lingua-programmandi/auctor"/>
   <citatio nomen="lingua-programmandi-habet-versionem" attributum="habet-versionem" ad="versio-linguae/nomen" super="lingua-programmandi"/>
@@ -16129,7 +16280,7 @@
   <citatio nomen="versio-linguae-sequitur" attributum="sequitur" ad="versio-linguae/nomen" super="versio-linguae"/>
   <citatio nomen="versio-linguae-normata-per" attributum="normata-per" ad="norma/nomen" super="versio-linguae"/>
   <citatio nomen="versio-linguae-compatibilis-cum" attributum="ad" ad="versio versio-architecturae versio-linguae versio-praescripti versio-systematis/nomen" super="versio-linguae/compatibilis-cum"/>
-  <citatio nomen="versio-linguae-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="versio-linguae"/>
+  <citatio nomen="versio-linguae-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="versio-linguae"/>
   <citatio nomen="versio-linguae-edita-a" attributum="edita-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="versio-linguae"/>
   <citatio nomen="implementatio-linguae-implementat" attributum="implementat" ad="lingua-programmandi lingua-iussuum/nomen" super="implementatio-linguae"/>
   <citatio nomen="implementatio-linguae-implementat-versionem" attributum="implementat-versionem" ad="versio-linguae/nomen" super="implementatio-linguae"/>
@@ -16161,7 +16312,7 @@
   <citatio nomen="quantitas-cum-incertitudine" attributum="cum-incertitudine" ad="incertitudo/nomen" super="quantitas"/>
   <citatio nomen="incertitudo-de-quantitate" attributum="de-quantitate" ad="quantitas/nomen" super="incertitudo"/>
   <citatio nomen="incertitudo-componitur-ex" attributum="ad" ad="incertitudo/nomen" super="incertitudo/componitur-ex"/>
-  <citatio nomen="incertitudo-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="incertitudo"/>
+  <citatio nomen="incertitudo-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="incertitudo"/>
   <citatio nomen="instrumentum-mensurae-calibratum-contra" attributum="calibratum-contra" ad="instrumentum-mensurae/nomen" super="instrumentum-mensurae"/>
   <citatio nomen="instrumentum-mensurae-attestatur-per" attributum="attestatur-per" ad="attestatio attestatio-civilis instrumentum-publicum apostilla/nomen" super="instrumentum-mensurae"/>
   <citatio nomen="instrumentum-mensurae-factum-per" attributum="factum-per" ad="praescriptum/nomen" super="instrumentum-mensurae"/>
@@ -16170,27 +16321,27 @@
   <citatio nomen="instrumentum-mensurae-sita-in" attributum="sita-in" ad="locus/nomen" super="instrumentum-mensurae"/>
   <citatio nomen="morbus-afficit" attributum="afficit" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="morbus"/>
   <citatio nomen="morbus-sedes" attributum="sedes" ad="*/nomen" super="morbus"/>
-  <citatio nomen="morbus-dignoscitur-per" attributum="dignoscitur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="morbus"/>
+  <citatio nomen="morbus-dignoscitur-per" attributum="dignoscitur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="morbus"/>
   <citatio nomen="morbus-curatur-per" attributum="ad" ad="praescriptum/nomen" super="morbus/curatur-per"/>
   <citatio nomen="morbus-classificatus-in" attributum="classificatus-in" ad="norma/nomen" super="morbus"/>
   <citatio nomen="morbus-infectiosus-afficit" attributum="afficit" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="morbus-infectiosus"/>
   <citatio nomen="morbus-infectiosus-sedes" attributum="sedes" ad="*/nomen" super="morbus-infectiosus"/>
-  <citatio nomen="morbus-infectiosus-dignoscitur-per" attributum="dignoscitur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="morbus-infectiosus"/>
+  <citatio nomen="morbus-infectiosus-dignoscitur-per" attributum="dignoscitur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="morbus-infectiosus"/>
   <citatio nomen="morbus-infectiosus-curatur-per" attributum="ad" ad="praescriptum/nomen" super="morbus-infectiosus/curatur-per"/>
   <citatio nomen="morbus-infectiosus-classificatus-in" attributum="classificatus-in" ad="norma/nomen" super="morbus-infectiosus"/>
   <citatio nomen="morbus-geneticus-afficit" attributum="afficit" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="morbus-geneticus"/>
   <citatio nomen="morbus-geneticus-sedes" attributum="sedes" ad="*/nomen" super="morbus-geneticus"/>
-  <citatio nomen="morbus-geneticus-dignoscitur-per" attributum="dignoscitur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="morbus-geneticus"/>
+  <citatio nomen="morbus-geneticus-dignoscitur-per" attributum="dignoscitur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="morbus-geneticus"/>
   <citatio nomen="morbus-geneticus-curatur-per" attributum="ad" ad="praescriptum/nomen" super="morbus-geneticus/curatur-per"/>
   <citatio nomen="morbus-geneticus-classificatus-in" attributum="classificatus-in" ad="norma/nomen" super="morbus-geneticus"/>
   <citatio nomen="morbus-degenerativus-afficit" attributum="afficit" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="morbus-degenerativus"/>
   <citatio nomen="morbus-degenerativus-sedes" attributum="sedes" ad="*/nomen" super="morbus-degenerativus"/>
-  <citatio nomen="morbus-degenerativus-dignoscitur-per" attributum="dignoscitur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="morbus-degenerativus"/>
+  <citatio nomen="morbus-degenerativus-dignoscitur-per" attributum="dignoscitur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="morbus-degenerativus"/>
   <citatio nomen="morbus-degenerativus-curatur-per" attributum="ad" ad="praescriptum/nomen" super="morbus-degenerativus/curatur-per"/>
   <citatio nomen="morbus-degenerativus-classificatus-in" attributum="classificatus-in" ad="norma/nomen" super="morbus-degenerativus"/>
   <citatio nomen="vulnus-afficit" attributum="afficit" ad="vivens animal apis canis homo planta rosaceae rosa rosa-canina malus malus-domestica granny-smith/nomen" super="vulnus"/>
   <citatio nomen="vulnus-sedes" attributum="sedes" ad="*/nomen" super="vulnus"/>
-  <citatio nomen="vulnus-dignoscitur-per" attributum="dignoscitur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="vulnus"/>
+  <citatio nomen="vulnus-dignoscitur-per" attributum="dignoscitur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="vulnus"/>
   <citatio nomen="vulnus-curatur-per" attributum="ad" ad="praescriptum/nomen" super="vulnus/curatur-per"/>
   <citatio nomen="vulnus-classificatus-in" attributum="classificatus-in" ad="norma/nomen" super="vulnus"/>
   <citatio nomen="norma-editor" attributum="ad" ad="corpus-normans/nomen" super="norma/editor"/>
@@ -16231,22 +16382,22 @@
   <citatio nomen="classis-normativa-constituta-per" attributum="constituta-per" ad="norma/nomen" super="classis-normativa"/>
   <citatio nomen="classis-normativa-continet" attributum="ad" ad="*/nomen" super="classis-normativa/continet"/>
   <citatio nomen="classis-normativa-imponit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="classis-normativa/imponit"/>
-  <citatio nomen="classis-normativa-assignatur-per" attributum="assignatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="classis-normativa"/>
+  <citatio nomen="classis-normativa-assignatur-per" attributum="assignatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="classis-normativa"/>
   <citatio nomen="classis-normativa-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="classis-normativa"/>
   <citatio nomen="schedula-substantiarum-constituta-per" attributum="constituta-per" ad="norma/nomen" super="schedula-substantiarum"/>
   <citatio nomen="schedula-substantiarum-continet" attributum="ad" ad="*/nomen" super="schedula-substantiarum/continet"/>
   <citatio nomen="schedula-substantiarum-imponit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="schedula-substantiarum/imponit"/>
-  <citatio nomen="schedula-substantiarum-assignatur-per" attributum="assignatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="schedula-substantiarum"/>
+  <citatio nomen="schedula-substantiarum-assignatur-per" attributum="assignatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="schedula-substantiarum"/>
   <citatio nomen="schedula-substantiarum-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="schedula-substantiarum"/>
   <citatio nomen="gradus-eventus-aviatorii-constituta-per" attributum="constituta-per" ad="norma/nomen" super="gradus-eventus-aviatorii"/>
   <citatio nomen="gradus-eventus-aviatorii-continet" attributum="ad" ad="*/nomen" super="gradus-eventus-aviatorii/continet"/>
   <citatio nomen="gradus-eventus-aviatorii-imponit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="gradus-eventus-aviatorii/imponit"/>
-  <citatio nomen="gradus-eventus-aviatorii-assignatur-per" attributum="assignatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="gradus-eventus-aviatorii"/>
+  <citatio nomen="gradus-eventus-aviatorii-assignatur-per" attributum="assignatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="gradus-eventus-aviatorii"/>
   <citatio nomen="gradus-eventus-aviatorii-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="gradus-eventus-aviatorii"/>
   <citatio nomen="classis-periculi-mercium-constituta-per" attributum="constituta-per" ad="norma/nomen" super="classis-periculi-mercium"/>
   <citatio nomen="classis-periculi-mercium-continet" attributum="ad" ad="*/nomen" super="classis-periculi-mercium/continet"/>
   <citatio nomen="classis-periculi-mercium-imponit" attributum="ad" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="classis-periculi-mercium/imponit"/>
-  <citatio nomen="classis-periculi-mercium-assignatur-per" attributum="assignatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="classis-periculi-mercium"/>
+  <citatio nomen="classis-periculi-mercium-assignatur-per" attributum="assignatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="classis-periculi-mercium"/>
   <citatio nomen="classis-periculi-mercium-gradus-supra" attributum="gradus-supra" ad="classis-normativa schedula-substantiarum gradus-eventus-aviatorii classis-periculi-mercium/nomen" super="classis-periculi-mercium"/>
   <citatio nomen="fictio-iuris-instituta-per" attributum="instituta-per" ad="norma/nomen" super="fictio-iuris"/>
   <citatio nomen="fictio-iuris-applicatur-per" attributum="applicatur-per" ad="actus-iuridicus stipulatio mancipatio manumissio testamentum confectio-instrumenti promulgatio inauguratio collatio-tituli sententia-lata/nomen" super="fictio-iuris"/>
@@ -16377,22 +16528,22 @@
   <citatio nomen="petitio-petens" attributum="petens" ad="*/nomen" super="petitio"/>
   <citatio nomen="petitio-rogatus" attributum="rogatus" ad="*/nomen" super="petitio"/>
   <citatio nomen="petitio-de" attributum="de" ad="*/nomen" super="petitio"/>
-  <citatio nomen="petitio-iudicatur-per" attributum="iudicatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="petitio"/>
+  <citatio nomen="petitio-iudicatur-per" attributum="iudicatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="petitio"/>
   <citatio nomen="petitio-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio"/>
   <citatio nomen="petitio-assecurationis-petens" attributum="petens" ad="*/nomen" super="petitio-assecurationis"/>
   <citatio nomen="petitio-assecurationis-rogatus" attributum="rogatus" ad="*/nomen" super="petitio-assecurationis"/>
   <citatio nomen="petitio-assecurationis-de" attributum="de" ad="*/nomen" super="petitio-assecurationis"/>
-  <citatio nomen="petitio-assecurationis-iudicatur-per" attributum="iudicatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="petitio-assecurationis"/>
+  <citatio nomen="petitio-assecurationis-iudicatur-per" attributum="iudicatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="petitio-assecurationis"/>
   <citatio nomen="petitio-assecurationis-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio-assecurationis"/>
   <citatio nomen="petitio-remota-petens" attributum="petens" ad="*/nomen" super="petitio-remota"/>
   <citatio nomen="petitio-remota-rogatus" attributum="rogatus" ad="*/nomen" super="petitio-remota"/>
   <citatio nomen="petitio-remota-de" attributum="de" ad="*/nomen" super="petitio-remota"/>
-  <citatio nomen="petitio-remota-iudicatur-per" attributum="iudicatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="petitio-remota"/>
+  <citatio nomen="petitio-remota-iudicatur-per" attributum="iudicatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="petitio-remota"/>
   <citatio nomen="petitio-remota-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="petitio-remota"/>
   <citatio nomen="supplicatio-petens" attributum="petens" ad="*/nomen" super="supplicatio"/>
   <citatio nomen="supplicatio-rogatus" attributum="rogatus" ad="*/nomen" super="supplicatio"/>
   <citatio nomen="supplicatio-de" attributum="de" ad="*/nomen" super="supplicatio"/>
-  <citatio nomen="supplicatio-iudicatur-per" attributum="iudicatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="supplicatio"/>
+  <citatio nomen="supplicatio-iudicatur-per" attributum="iudicatur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="supplicatio"/>
   <citatio nomen="supplicatio-parit" attributum="parit" ad="obligatio obligatio-ex-contractu obligatio-ex-delicto obligatio-ex-lege tributum portorium vectigal decuma tributum-capitis/nomen" super="supplicatio"/>
   <citatio nomen="delegatio-delegans" attributum="delegans" ad="*/nomen" super="delegatio"/>
   <citatio nomen="delegatio-delegatus" attributum="delegatus" ad="*/nomen" super="delegatio"/>
@@ -16419,7 +16570,7 @@
   <citatio nomen="limitatio-ad-tractatum" attributum="ad-tractatum" ad="tractatus/nomen" super="limitatio"/>
   <citatio nomen="limitatio-lata-a" attributum="lata-a" ad="*/nomen" super="limitatio"/>
   <citatio nomen="limitatio-obiecta-a" attributum="ad" ad="*/nomen" super="limitatio/obiecta-a"/>
-  <citatio nomen="limitatio-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="limitatio"/>
+  <citatio nomen="limitatio-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="limitatio"/>
   <citatio nomen="portio-communis-in-re-communi" attributum="in-re-communi" ad="*/nomen" super="portio-communis"/>
   <citatio nomen="portio-communis-competit" attributum="competit" ad="*/nomen" super="portio-communis"/>
   <citatio nomen="portio-communis-statuta-per" attributum="statuta-per" ad="norma/nomen" super="portio-communis"/>
@@ -16576,31 +16727,31 @@
   <citatio nomen="substantia-chemica-interagit" attributum="interagit" ad="*/nomen" super="substantia-chemica"/>
   <citatio nomen="medicamentum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum/continet"/>
   <citatio nomen="medicamentum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum/aequivalens"/>
-  <citatio nomen="medicamentum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="medicamentum"/>
+  <citatio nomen="medicamentum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="medicamentum"/>
   <citatio nomen="medicamentum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum/fabricatum-in"/>
   <citatio nomen="medicamentum-genericum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum-genericum/continet"/>
   <citatio nomen="medicamentum-genericum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum-genericum/aequivalens"/>
-  <citatio nomen="medicamentum-genericum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="medicamentum-genericum"/>
+  <citatio nomen="medicamentum-genericum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="medicamentum-genericum"/>
   <citatio nomen="medicamentum-genericum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum-genericum/fabricatum-in"/>
   <citatio nomen="medicamentum-nominatum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum-nominatum/continet"/>
   <citatio nomen="medicamentum-nominatum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum-nominatum/aequivalens"/>
-  <citatio nomen="medicamentum-nominatum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="medicamentum-nominatum"/>
+  <citatio nomen="medicamentum-nominatum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="medicamentum-nominatum"/>
   <citatio nomen="medicamentum-nominatum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum-nominatum/fabricatum-in"/>
   <citatio nomen="medicamentum-compositum-continet" attributum="ad" ad="substantia-chemica/nomen" super="medicamentum-compositum/continet"/>
   <citatio nomen="medicamentum-compositum-aequivalens" attributum="ad" ad="medicamentum medicamentum-genericum medicamentum-nominatum medicamentum-compositum/nomen" super="medicamentum-compositum/aequivalens"/>
-  <citatio nomen="medicamentum-compositum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="medicamentum-compositum"/>
+  <citatio nomen="medicamentum-compositum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="medicamentum-compositum"/>
   <citatio nomen="medicamentum-compositum-fabricatum-in" attributum="ad" ad="coctura/nomen" super="medicamentum-compositum/fabricatum-in"/>
   <citatio nomen="coctura-coquitur" attributum="coquitur" ad="*/nomen" super="coctura"/>
   <citatio nomen="coctura-fabricata-a" attributum="fabricata-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="coctura"/>
   <citatio nomen="coctura-acta-sua" attributum="acta-sua" ad="acta acta-publica regesta acta-transactionum acta-versionum acta-auditus ratio-rationaria ratio-duplex/nomen" super="coctura"/>
   <citatio nomen="interactio-inter" attributum="ad" ad="*/nomen" super="interactio/inter"/>
-  <citatio nomen="interactio-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="interactio"/>
+  <citatio nomen="interactio-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="interactio"/>
   <citatio nomen="interactio-medicamentorum-inter" attributum="ad" ad="*/nomen" super="interactio-medicamentorum/inter"/>
-  <citatio nomen="interactio-medicamentorum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="interactio-medicamentorum"/>
+  <citatio nomen="interactio-medicamentorum-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="interactio-medicamentorum"/>
   <citatio nomen="interactio-cum-cibo-inter" attributum="ad" ad="*/nomen" super="interactio-cum-cibo/inter"/>
-  <citatio nomen="interactio-cum-cibo-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="interactio-cum-cibo"/>
+  <citatio nomen="interactio-cum-cibo-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="interactio-cum-cibo"/>
   <citatio nomen="incompatibilitas-mercium-inter" attributum="ad" ad="*/nomen" super="incompatibilitas-mercium/inter"/>
-  <citatio nomen="incompatibilitas-mercium-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="incompatibilitas-mercium"/>
+  <citatio nomen="incompatibilitas-mercium-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="incompatibilitas-mercium"/>
   <citatio nomen="plagula-computatralis-continetur-in" attributum="continetur-in" ad="directorium/nomen" super="plagula-computatralis"/>
   <citatio nomen="plagula-computatralis-conformis-ad" attributum="conformis-ad" ad="norma/nomen" super="plagula-computatralis"/>
   <citatio nomen="plagula-fontis-scripta-in" attributum="scripta-in" ad="lingua-programmandi lingua-iussuum/nomen" super="plagula-fontis"/>
@@ -16726,7 +16877,7 @@
   <citatio nomen="versio-praescripti-sequitur" attributum="sequitur" ad="versio-praescripti/nomen" super="versio-praescripti"/>
   <citatio nomen="versio-praescripti-emendata-a" attributum="emendata-a" ad="persona/nomen" super="versio-praescripti"/>
   <citatio nomen="versio-praescripti-compatibilis-cum" attributum="ad" ad="versio versio-architecturae versio-linguae versio-praescripti versio-systematis/nomen" super="versio-praescripti/compatibilis-cum"/>
-  <citatio nomen="versio-praescripti-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="versio-praescripti"/>
+  <citatio nomen="versio-praescripti-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="versio-praescripti"/>
   <citatio nomen="versio-praescripti-edita-a" attributum="edita-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="versio-praescripti"/>
   <citatio nomen="index-verificationis-confirmat" attributum="confirmat" ad="*/nomen" super="index-verificationis"/>
   <citatio nomen="index-verificationis-adhibetur-in" attributum="ad" ad="ambitus ambitus-fabricae ambitus-probationis ambitus-producens/nomen" super="index-verificationis/adhibetur-in"/>
@@ -16755,7 +16906,7 @@
   <citatio nomen="versio-systematis-versio-de" attributum="versio-de" ad="systema-operativum systema-unixiforme/nomen" super="versio-systematis"/>
   <citatio nomen="versio-systematis-sequitur" attributum="sequitur" ad="versio-systematis/nomen" super="versio-systematis"/>
   <citatio nomen="versio-systematis-compatibilis-cum" attributum="ad" ad="versio versio-architecturae versio-linguae versio-praescripti versio-systematis/nomen" super="versio-systematis/compatibilis-cum"/>
-  <citatio nomen="versio-systematis-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="versio-systematis"/>
+  <citatio nomen="versio-systematis-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="versio-systematis"/>
   <citatio nomen="versio-systematis-edita-a" attributum="edita-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="versio-systematis"/>
   <citatio nomen="intervallum-initium" attributum="initium" ad="momentum/nomen" super="intervallum"/>
   <citatio nomen="intervallum-finis" attributum="finis" ad="momentum/nomen" super="intervallum"/>
@@ -16818,7 +16969,7 @@
   <citatio nomen="versio-versio-de" attributum="versio-de" ad="*/nomen" super="versio"/>
   <citatio nomen="versio-sequitur" attributum="sequitur" ad="versio versio-architecturae versio-linguae versio-praescripti versio-systematis/nomen" super="versio"/>
   <citatio nomen="versio-compatibilis-cum" attributum="ad" ad="versio versio-architecturae versio-linguae versio-praescripti versio-systematis/nomen" super="versio/compatibilis-cum"/>
-  <citatio nomen="versio-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio/nomen" super="versio"/>
+  <citatio nomen="versio-asseritur-per" attributum="asseritur-per" ad="iudicium diagnosis aestimatio praedictio sententia-iudicis attributio sententia/nomen" super="versio"/>
   <citatio nomen="versio-edita-a" attributum="edita-a" ad="organizatio persona-iuridica universitas-personarum universitas-rerum corpus-normans societas magistratus/nomen" super="versio"/>
 
   <!-- CLAVES EXTERNAE (librarium): individua bibliothecae citabilia.

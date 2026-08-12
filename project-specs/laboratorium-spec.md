@@ -173,6 +173,46 @@ eo est ut divergere non possint. Praeterea porta simplex fit:
 experimentum `solutum` sine observationibus mendacium est quod canon
 recusare potest.
 
+**CORRECTIO FORMAE (2026-08-12, ex proiectione mensurata).** Exemplar
+infra formam NIDIFICATAM ostendit, quae legendo clarior est. Forma VERA
+quam canon poscit PLANA est: entia singula mintantur, cursus ea CITAT.
+`bin/natura_canones -inspicere experimentum` id dicit —
+
+```
+experimentum  attributum  quaerit      referentia
+experimentum  attributum  propositum   referentia
+experimentum  attributum  sententia    referentia
+experimentum  liberum     invenit      referentia
+experimentum  liberum     propagatum-ex referentia
+```
+
+(Relatio singularis in ATTRIBUTUM cadit, multiplex in ELEMENTUM - regula
+census eadem.) Ergo:
+
+```xml
+<ignotum nomen="&0004-rima;" quaestio="..." species="ignotum_notum"/>
+<propositum nomen="&0004-propositum;" descriptio="..."/>
+<sententia nomen="&0004-sententia;" status-iudicatio="mixtum"/>
+<experimentum numerus="4" status-cursus="conclusum"
+  exspectatio="Adiuvabit." refutatio="Si nexus non premo..."
+  contra="regula"
+  quaerit="&0004-rima;" propositum="&0004-propositum;"
+  sententia="&0004-sententia;">
+  <invenit ad="&0004-symptoma-i;"/>
+  <propagatum-ex ad="&experimentum-0001;"/>
+</experimentum>
+```
+
+Verbosius est, sed NECESSARIUM: §3b sententiam CITABILEM poscit (ignotum
+novum eam per `agnitum_per` citat). Planities non damnum sed condicio
+stirpis.
+
+**EXSPECTATIO/REFUTATIO/CONTRA in EXPERIMENTO sedent, non in ignoto**
+(mutatum ab hoc consilio priore): ignotum hiatus est et sine ullo
+investigante stare potest - quaestionem fert, nihil amplius. Se
+OBLIGARE ad id quod expectes et ad id quod te vincat actus
+INVESTIGANTIS est, non proprietas rimae.
+
 Exemplar sequens exemplum VERUM Franis induit (nexus sponte facti):
 
 ```xml

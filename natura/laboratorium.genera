@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  natura/laboratorium.genera
+  Exemplar semanticum: LABORATORIUM (versio 1)
+  Genera: tentamen, experimentum, propositum, sententia.
+
+  CONSILIUM: project-specs/laboratorium-spec.md
+
+  DUO MODI, DUAE IGNORANTIAE. Exemplar hoc nihil novi de
+  ignorantia dicit - iudicium id iam tenebat. Duo sola addit:
+  ACTIONES quae duabus ignorantiae speciebus respondent.
+
+    ignotum_notum   -> experimentum  (quaestio formata; MOTUS
+                       naturae: "assignabile - pensum est, quaere")
+    ignotum_ignotum -> tentamen      (quaestio nondum formata;
+                       MOTUS: "singulatim tractari NON POTEST -
+                       in summa tantum: cycli breviores")
+
+  Unde asymmetria quae mira videtur sed necessaria est:
+  experimentum ignotum SUUM praeregistratum fert; tentamen nullum
+  ferre POTEST, quia (natura ipsa dicit) "ignotum ignotum
+  nominatum ignotum notum FIT" - quaestionem scribere speciem
+  mutat. Tentamen non est experimentum pigrum sed actio alia.
+
+  QUOD UTRUMQUE FERT: propositum. "Ante opus" duo significat -
+  epistemicum (quid credam) et constructivum (quid aedificari
+  velim). Tentamen prius ferre non potest, posterius ferre DEBET:
+  aliter nihil aedificatur.
+
+  CUR EXEMPLAR PROPRIUM, non in iudicio: genera haec inquisitionem
+  (ignotum, observatio) et fabricationem (propositum, postulatum)
+  UNA ligant. Neutri exemplari tota pertinent; laboratorium est
+  ubi conveniunt.
+-->
+<natura modulus="laboratorium" versio="1" lingua="latina">
+
+<.genus nomen="propositum">
+
+  <definitio>
+    Quid aedificari velis, ante opus positum: descriptio operis
+    petiti. "Ante opus" CONSTRUCTIVUM, non epistemicum - de
+    artificio dicit, non de mundo. Ideo tentamini et experimento
+    aeque convenit, cum ignotum experimento soli conveniat.
+  </definitio>
+
+  <glossa lingua="en">A proposal: what you are asking to be built,
+    set down before the work. This is the CONSTRUCTIVE kind of
+    "before" - it speaks about the artifact, not about the world -
+    which is why a probe and an experiment both carry one, while
+    only an experiment can carry a named unknown.</glossa>
+
+  <nota>
+    CUR CAPIENDUM SIT (ratio officinae unius-hominis-cum-agente):
+    cum prototypum male se habeat, duo causae possibiles sunt -
+    IDEA mala, aut AEDIFICATUM aliud quam petitum. Sine proposito
+    scripto haec discerni NON POSSUNT, et alterum ideam bonam
+    falso crimine occidit. Propositum regula est ad quam
+    AEDIFICATUM comparatur, sicut exspectatio regula ad quam
+    OBSERVATIONES.
+
+    NON SIGILLATUR ut ignotum: propositum in opere mutabitur, et
+    mutationes eius capiendae sunt, non prohibendae - quaeque
+    deviatio complicatio est (fabricatio), id est ignotum ignotum
+    quod apparuit.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="descriptio" genus="textus"
+      nota="opus petitum verbis - quantum satis ut alius id
+            aedificare possit"/>
+  </proprietates>
+
+  <relationes>
+    <relatio nomen="postulat" necessitudo="postulat"
+      ad="postulatum" modulus="fabricatio" multiplex="verum"
+      nota="intentiones declaratae quas opus implere debet.
+            Ansam claudit: postulatum -> aedificatum -> facultas
+            quae illud implet (arcus facultas/implet iam in
+            fabricatione sedet)"/>
+  </relationes>
+
+</.genus>
+
+<.genus nomen="sententia" sub="iudicium" modulus="iudicium">
+
+  <definitio>
+    Iudicium de cursu peracto latum: quid didicerimus, et cuius
+    pretii fuerit. Ab observationibus differt ut conclusio a
+    datis - observatio quid acciderit dicit, sententia quid inde
+    sequatur.
+  </definitio>
+
+  <glossa lingua="en">A verdict: the judgment passed on a
+    completed run - what was learned, and what it was worth. It
+    differs from the observations as a conclusion differs from
+    data: an observation says what happened, a verdict says what
+    follows from it.</glossa>
+
+  <nota>
+    DUO AXES, NE CONFUNDANTUR. Ignoti status quaerit an rima
+    CLAUSA sit (agnitum -> solutum); sententiae verdictum quaerit
+    an idea BONA fuerit. Experimentum 'solutum' cum verdicto
+    'refutatum' SUCCESSUS est: rem didicisti, et res mala erat.
+    Axibus separatis numerari licet quot cursus DOCUERINT seorsum
+    a quot ideae VALUERINT.
+
+    SUB IUDICIO consulto: ita ignotum novum eam per 'agnitum_per'
+    citare potest (cuius finis iudicium poscit), unde stirps
+    epistemica trans cursus currit.
+  </nota>
+
+  <machina_statuum nomen="iudicatio" gerens="individuum">
+    <status nomen="pendens"
+      nota="cursus peractus, nondum iudicatus"/>
+    <status nomen="confirmatum"
+      nota="quod expectabatur evenit, sine pretio quod refutatio
+            nominaverat"/>
+    <status nomen="refutatum"
+      nota="refutatio ipsa accensa est - criterium quod ANTE
+            scripsisti impletum"/>
+    <status nomen="mixtum"
+      nota="CASUS COMMUNIS, non rarus: munus valet, pretium
+            constat. Fere semper aliquid valet et aliquid
+            constat"/>
+    <status nomen="incertum"
+      nota="cucurristi, adhuc nescis. Honestum et permissum -
+            schema quod hoc ferre non potest mendacium
+            cogit"/>
+    <transitus a="pendens" ad="confirmatum" per="iudicatio"/>
+    <transitus a="pendens" ad="refutatum" per="iudicatio"/>
+    <transitus a="pendens" ad="mixtum" per="iudicatio"/>
+    <transitus a="pendens" ad="incertum" per="iudicatio"/>
+  </machina_statuum>
+
+</.genus>
+
+<.genus nomen="tentamen">
+
+  <definitio>
+    Probatio spatii latentis sine quaestione formata: aliquid
+    aedificas ut videas quale sit. Actio propria ignoti ignoti,
+    cuius MOTUS (natura dicente) "singulatim tractari NON POTEST -
+    in summa tantum: spatium, cycli breviores, redundantia".
+  </definitio>
+
+  <glossa lingua="en">A probe: a trial of the latent space with no
+    formed question - you build something to see what it is like.
+    This is the move proper to the unknown-unknown, which by
+    natura's own account cannot be handled one at a time but only
+    in aggregate, through shorter cycles and redundancy.</glossa>
+
+  <differentia>
+    A PROBATIONE (fabricatio) differt sicut exploratio a custodia:
+    probatio responsum EXSPECTATUM tenet et cadit cum res differt;
+    tentamen responsum non tenet - ea res tota est. Probatio
+    custodit, tentamen discit.
+
+    AB EXPERIMENTO differt ignoto: experimentum ignotum
+    praeregistratum fert, tentamen NULLUM FERRE POTEST. Non
+    licentia sed necessitas: ignotum ignotum nominatum ignotum
+    notum fit, ergo quaestionem ante scribere speciem mutaret.
+  </differentia>
+
+  <nota>
+    PORTA IN APPARATU, NON IN SINGULIS. Tentamen unum iudicari
+    non potest: terra ignota est, et punctum unum figuram terrae
+    non dicit. Ergo canon tentaminis levissimus est, et pretium
+    verum in officina ipsa mensuratur - mora gyri (ab initio ad
+    primam picturam), numerus per hebdomadam, quota pars fecunda.
+    Si laboratorium tardum fit, cycli breviores pereunt, et cum
+    eis id ipsum quod tentamen praestat.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="numerus" genus="numerus"
+      nota="numerus planus et chronologicus. Numeri hierarchici
+            frangunt: parens mutatus numerum necat, parentes duo
+            exprimi non possunt, ordo temporis perit - qui in
+            commentario officinae ipse notitia est. Stirps ex
+            arcubus legitur, non ex numero"/>
+    <proprietas nomen="quaerens" genus="textus"
+      nota="quod te huc traxit. NON quaestio praeregistrata:
+            scribi potest POSTQUAM vidisti, quia species ipsa
+            praescientiam vetat"/>
+  </proprietates>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="coeptum" nota="propositum scriptum, opus non"/>
+    <status nomen="factum" nota="aedificatum, nondum iudicatum"/>
+    <status nomen="fecundum"
+      nota="regio pretium reddit - plura hinc propaganda"/>
+    <status nomen="sterile"
+      nota="via exhausta. Sententia HONESTA quae sine hoc statu
+            perit: explorator qui desinere nescit viam mortuam in
+            aeternum poliet"/>
+    <status nomen="servandum"
+      nota="in armarium metendum"/>
+    <transitus a="coeptum" ad="factum" per="aedificatio"/>
+    <transitus a="factum" ad="fecundum" per="aestimatio"/>
+    <transitus a="factum" ad="sterile" per="aestimatio"/>
+    <transitus a="factum" ad="servandum" per="aestimatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="propositum" necessitudo="continet"
+      ad="propositum"
+      nota="quid aedificandum sit - OBLIGATORIUM, cum ignotum
+            ferre non possit"/>
+    <relatio nomen="invenit" necessitudo="parit"
+      ad="observatio" modulus="iudicium" multiplex="verum"
+      nota="quod repertum est. Observationes INOPINATAE messis
+            vera sunt: quae praevisa erant priorem sententiam
+            solum confirmant"/>
+    <relatio nomen="propagatum_ex" necessitudo="propagatum_ex"
+      ad="*" multiplex="verum"
+      nota="surculus ex cursu priore. MULTIPLEX consulto: cursus
+            ex duobus propagari potest, quod ex utroque didicisti
+            coniungens - arbor stricta id ferre non posset"/>
+  </relationes>
+
+</.genus>
+
+<.genus nomen="experimentum">
+
+  <definitio>
+    Cursus quo ignotum NOTUM solvitur: quaestio ante opus
+    formata, exspectatio et refutatio ante inspectionem scriptae,
+    observationes post. Actio propria ignoti noti, cuius MOTUS
+    (natura dicente) "assignabile - pensum est, quaere".
+  </definitio>
+
+  <glossa lingua="en">An experiment: the run by which a KNOWN
+    unknown is resolved - question formed before the work,
+    expectation and refutation written before looking,
+    observations after. This is the move proper to the
+    known-unknown, which natura calls assignable: it is a task,
+    go and find out.</glossa>
+
+  <nota>
+    PRAEREGISTRATIO PRAESENTIAM POSCIT, NON LONGITUDINEM.
+    'Adiuvabit.' exspectatio plena et legitima est. Disciplina
+    est ANTE INSPECTIONEM te obligare, non commentarium scribere.
+
+    CUR DUO CAMPI (exspectatio, refutatio) et non unus:
+    independentes sunt. Exspectatio impleri potest DUM refutatio
+    simul accenditur - casus verus qui verdictum 'mixtum' parit,
+    et campus unus id dicere non posset. Munera quoque differunt:
+    refutatio cursum FALSIFICABILEM facit; exspectatio regula est
+    ad quam inopinatum metitur, quia sine ea scripta "non
+    praevidi" ab "oblitus sum me praevidisse" discerni non potest.
+  </nota>
+
+  <proprietates>
+    <proprietas nomen="numerus" genus="numerus"
+      nota="planus et chronologicus, ut in tentamine"/>
+    <proprietas nomen="exspectatio" genus="textus"
+      nota="quid futurum putes, ANTE inspectionem. Brevitas
+            licita: 'Adiuvabit.' plena est. Munus eius: regula
+            ad quam INOPINATUM metitur - sine ea scripta, 'non
+            praevidi' ab 'oblitus sum me praevidisse' discerni
+            non potest, et posterius in prius se tacite vertit"/>
+    <proprietas nomen="refutatio" genus="textus"
+      nota="quid te sententiam mutare faciat, ANTE inspectionem.
+            Numeros NON poscit - poscit ne effugere possis. 'Si
+            nexus factos non premo, aut si pagina turbidior fit
+            sine pretio reddito' refutatio vera est: nulla
+            mensura, sed post opus negari non potest"/>
+    <proprietas nomen="contra" genus="textus"
+      nota="comparator NOMINATUS: 'adiuvat' sententia incompleta
+            est - adiuvat prae QUO? Plerumque 'regula' (quomodo
+            res hodie se habet), quae gratis adest; aut
+            'absentia'; aut variatio re vera aedificata"/>
+  </proprietates>
+
+  <nota>
+    CUR EXSPECTATIO ET REFUTATIO HIC SEDEANT, non in ignoto:
+    ignotum hiatus est et sine ullo investigante stare potest -
+    quaestionem fert, nihil amplius. Se OBLIGARE ad id quod
+    expectes et ad id quod te vincat actus INVESTIGANTIS est, non
+    proprietas hiatus. Ideo cursui adhaerent, non rimae.
+  </nota>
+
+  <machina_statuum nomen="cursus" gerens="individuum">
+    <status nomen="coeptum"
+      nota="ignotum et propositum scripta, opus non"/>
+    <status nomen="factum" nota="aedificatum, nondum iudicatum"/>
+    <status nomen="conclusum"
+      nota="sententia lata. Ignoti status seorsum currit: hic
+            cursum dicit, ille an rima clausa sit"/>
+    <transitus a="coeptum" ad="factum" per="aedificatio"/>
+    <transitus a="factum" ad="conclusum" per="iudicatio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="quaerit" necessitudo="continet"
+      ad="ignotum" modulus="iudicium"
+      nota="ignotum praeregistratum. OBLIGATORIUM, et post
+            statum 'coeptum' SIGILLATUM: mutatio postea
+            ratiocinationem post-factam admitteret, quod tota
+            praeregistratio prohibere debet"/>
+    <relatio nomen="propositum" necessitudo="continet"
+      ad="propositum"
+      nota="quid aedificandum sit - alter 'ante', constructivus"/>
+    <relatio nomen="invenit" necessitudo="parit"
+      ad="observatio" modulus="iudicium" multiplex="verum"
+      nota="signa (quivis peritus idem videre potest) et
+            symptomata (solus patiens accessum habet). In
+            interfacie iudicanda symptoma REGULA est, signum
+            exceptio - sed signum, cum venerit, viam suam ferat:
+            numerus qui viam suam non fert signum non est"/>
+    <relatio nomen="sententia" necessitudo="continet"
+      ad="sententia"
+      nota="verdictum. Ad statum 'conclusum' obligatoria"/>
+    <relatio nomen="propagatum_ex" necessitudo="propagatum_ex"
+      ad="*" multiplex="verum"
+      nota="surculus ex cursu priore, ut in tentamine - arbor
+            una per utrumque genus currit"/>
+  </relationes>
+
+</.genus>
+
+</natura>
