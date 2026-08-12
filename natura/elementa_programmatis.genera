@@ -991,6 +991,21 @@
     </nota>
   </individuum>
 
+  <individuum nomen="stb_image">
+    <relatum nomen="scripta_in" ad="c"
+      modulus="lingua_programmandi"/>
+    <historia>
+      <eventum quando="2010">a Sean Barrett (stb) edita -
+        dominium publicum ab initio</eventum>
+    </historia>
+    <nota>
+      Lectrix imaginum capite uno (PNG, JPEG, GIF...):
+      exemplar bibliothecarum capitis-unius, dominium
+      publicum. SINE pendentiis, ut sqlite - forma quam
+      perennitas amat. In domo: imago super eam.
+    </nota>
+  </individuum>
+
   <individuum nomen="zlib">
     <relatum nomen="scripta_in" ad="c"
       modulus="lingua_programmandi"/>

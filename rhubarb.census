@@ -219,6 +219,19 @@
     <realizat ad="&compendium-probationum;"/>
   </bibliotheca>
 
+  <!-- sqlite in bibliotheca naturae vivit (res mundi, ut c);
+       augmentatio notam domūs apponit -->
+  <% &sqlite;>
+    <nota>Vendita in vendor/ (amalgama sqlite3.c); scrinium et
+      tabularium super eam, volumen documentum-ut-sqlite. Venditio
+      a dependentia domestica excluditur (regula adhuc dicenda -
+      parcum ambulationis XVII).</nota>
+    <glossa lingua="en">The database in a single file, vendored in
+      vendor/ - the most widely deployed library in the world, and
+      deliberately dependency-free: the shape permanence
+      loves.</glossa>
+  </%>
+
   <!-- ============ FACULTATES BIBLIOTHECARUM ============
        Quod quaeque praestare potest, ab utente aestimatum
        (genus e fabricatione naturae - IAM ADERAT, non mintatum).
@@ -353,6 +366,7 @@
       truth is the journal, never itself.</glossa>
     <adhibet ad="&piscina;"/>
     <adhibet ad="&chorda;"/>
+    <adhibet ad="&sqlite;"/>
     <nota>Tabularium residens (MCP super TCP). Refectio: pkill
       tabulariumd. Servus_mcp QUOQUE est - sodalitas secundaria
       (etiam=) in documentis censūs indicibilis. Veritas eius:

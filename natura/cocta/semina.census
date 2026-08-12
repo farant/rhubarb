@@ -110,6 +110,13 @@
 
   <bibliotheca nomen="&sqlite;" scripta-in="&c;"/>
 
+  <bibliotheca nomen="&stb_image;" scripta-in="&c;">
+    <historia>
+      <eventum quando="2010">a Sean Barrett (stb) edita -
+        dominium publicum ab initio</eventum>
+    </historia>
+  </bibliotheca>
+
   <bibliotheca nomen="&zlib;" scripta-in="&c;"/>
 
   <instrumentum-aedificationis nomen="&make;" incrementale="verum" graphum-unde="declaratum">

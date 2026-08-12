@@ -16826,6 +16826,7 @@
     <clavis genus="constans-numerica">&eof;</clavis>
     <clavis genus="bibliotheca">&libc;</clavis>
     <clavis genus="bibliotheca">&sqlite;</clavis>
+    <clavis genus="bibliotheca">&stb_image;</clavis>
     <clavis genus="bibliotheca">&zlib;</clavis>
     <clavis genus="instrumentum-aedificationis">&make;</clavis>
     <clavis genus="instrumentum-aedificationis">&aedilis;</clavis>
