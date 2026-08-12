@@ -33,7 +33,8 @@ natura utrique MOTUM proprium assignat:
 | species | `ignotum_notum` | `ignotum_ignotum` (in summa) |
 | MOTUS naturae | "assignabile - pensum est, quaere" | "singulatim tractari NON POTEST - in summa tantum: spatium, **cycli breviores**, redundantia" |
 | quaestio | FORMATA | nondum formata |
-| praeregistratio | OBLIGATORIA | **IMPOSSIBILIS** (vide infra) |
+| `<ignotum>` (ante, epistemicum) | OBLIGATORIUM | **IMPOSSIBILE** (vide infra) |
+| `<propositum>` (ante, constructivum) | OBLIGATORIUM | **OBLIGATORIUM** (§2a) |
 | disciplina | falsificabilitas | celeritas gyri + amplitudo + redundantia |
 | verdictum | confirmatum\|refutatum\|mixtum\|incertum | fecundum\|sterile\|servandum |
 | porta in | singulis | **APPARATU IPSO** |
@@ -144,6 +145,7 @@ debet ESSE signum. Et signum, cum venerit, viam suam ferat more censūs:
 | `sententia` | iudicium experimenti (`sub iudicium`, §3b) |
 | `propagatum_ex` | NECESSITUDO: surculus ex priore (§3b) |
 | `tentamen` | probatio spatii latentis, sine quaestione formata (§0) |
+| `propositum` | quid aedificari velis — "ante" CONSTRUCTIVUM (§2a) |
 | `fecundum` / `sterile` / `servandum` | verdicta tentaminis (§3c) |
 | `dimensio` | axis spatii latentis — MESSIS, non consilium (§3c) |
 
@@ -235,6 +237,78 @@ adhuc nescis.
 **Cur `impedit` momenti sit**: ligat experimentum ad opus verum quod eo
 obstruitur. Experimentum quod nihil impedit fortasse currendum non est.
 
+### §2a DUO GENERA "ANTE" *(clarificatio Franis 2026-08-12)*
+
+"Ante opus" duas res omnino diversas significat, quas confundere
+facile est:
+
+| | `<ignotum>` | `<propositum>` |
+|---|---|---|
+| genus | EPISTEMICUM | CONSTRUCTIVUM |
+| dicit | quid credam, quid me mutet | quid aedificari velim |
+| de | mundo | artificio |
+| in experimento | obligatorium | obligatorium |
+| in tentamine | **impossibile** | **obligatorium** |
+
+**Hoc lacunam §0 explet.** Dixeram tentamen fere nihil "ante" ferre.
+FALSUM erat. Tentamen quaestionem praeregistrare non potest (vitium
+categoriae), sed quid aedificandum sit describere DEBET — aliter nihil
+aedificatur. Ergo tentamen propositum plenum habet et ignotum nullum.
+
+```xml
+<propositum>
+  <descriptio>Nexus sponte facti, sed sine subrectione: sola
+    gravitate coloris monstrentur, pondere textus circumstantis
+    minore.</descriptio>
+  <postulatum nomen="&0004-nulla-subrectio;">Subrectio nulla
+    usquam.</postulatum>
+  <postulatum nomen="&0004-clavis-tantum;">Nexus clavi solo
+    premi possit, mure non necessario.</postulatum>
+</propositum>
+```
+
+`postulatum` NON mintandum — natura id iam fert
+(`/fabricatio/postulatum`): *"intentio declarata ANTE opus: quod verum
+esse debet ut opus perfectum dicatur. Fons iudicii ceterorum: vitium
+contra postulatum mensuratur, probatio postulatum interrogat,
+**facultas postulatum implet**."*
+
+Ultima clausula ansam claudit: componens in armarium messum facultates
+habet, et `facultas implet postulatum` arcus IAM in canone fabricationis
+sedet. Unde legi potest: hoc postulatum → hoc aedificatum → haec
+facultas messa. **Nihil mintandum; catena tota exstat.**
+
+### Cur propositum CAPIENDUM sit — confusio propria huic officinae
+
+In laboratorio uno-hominis-cum-agente propositum non documentum est sed
+**custodia contra confusionem quae aliter INVISIBILIS est**:
+
+> Prototypum male se habet. Utrum IDEA mala erat, an CLAUDE rem aliam
+> aedificavit quam petiisti?
+
+Sine proposito scripto haec duo discerni NON POSSUNT — et alterum
+ideam bonam occidit falso crimine. Propositum captum est regula ad quam
+aedificatum comparatur, sicut exspectatio regula est ad quam
+observationes comparantur (§2). Eadem ratio, axis alter.
+
+### Deviationes = COMPLICATIONES, et eae messis sunt
+
+Propositum in opere mutabitur ("hoc caeruleum fac potius"). Mutationes
+NON in propositum retro scribantur — in `<acta>` ut `<complicatio>`
+eant, genere naturae iam exstante:
+
+> `/fabricatio/complicatio`: "consideratio quae consilio praevideri NON
+> POTEST sed opere incepto sola apparet… non defectus consilii sed
+> TERMINUS eius: quaedam nisi faciendo non discuntur."
+
+Et natura ipsa nexum dicit: *"COMPLICATIO EST IGNOTUM IGNOTUM QUOD
+APPARUIT."* Ergo differentia inter propositum et aedificatum non
+neglegentia est sed **seges**: quaeque deviatio est instantia consilii
+ad terminum suum pervenientis, id est ignoti ignoti in lucem venientis
+— quod est id ipsum quod laboratorium venari debet (§0).
+
+---
+
 ### `contra=` — comparator NOMINATUS *(decretum Franis 2026-08-12)*
 
 "Adiuvat" sententia INCOMPLETA est: adiuvat prae QUO? Fere semper prae
@@ -285,9 +359,15 @@ iudicante (more census/natura).
    `exspectatio` est regula ad quam `<inopinatum>` metitur — sine ea
    scripta, "non praevidi" ab "oblitus sum me praevidisse" discerni
    non potest, et posterius in prius se ipsum tacite vertit.
-2. **SIGILLUM PROPOSITI** — cum status `agnitum` relinquit, `<ignotum>`
+1a. **PROPOSITUM SEMPER** — `<propositum>` cum `<descriptio>` in
+   UTROQUE genere adesse debet (experimento et tentamine) antequam
+   opus incipiat. Tentamen ignotum non habet; propositum habet
+   SEMPER. *(§2a)*
+2. **SIGILLUM IGNOTI** — cum status `agnitum` relinquit, `<ignotum>`
    sigillo signatur. Mutatio postea = vulnus. Ita ratiocinatio
-   post-facta structuraliter impeditur.
+   post-facta structuraliter impeditur. (Propositum NON sigillatur
+   eodem modo: mutatur in opere, et mutationes eius complicationes
+   sunt quae capiendae, non prohibendae — §2a.)
 3. **CONCLUSIO VERA** — status `solutum` postulat ≥1 observationem ET
    `<sententia verdictum=…>`.
 4. **SIGNUM VIAM FERT** — quodque `<signum>` `via=` habeat, aliter
