@@ -19,9 +19,57 @@ Applicatio vitrea in qua ideae interfaciei per **experimenta numerata**
 Non scrinium ideārum sed LABORATORIUM: quod concludi non potest,
 concludi non licet.
 
-### Ratio (the frame)
+### Ratio (the frame) — DUO MODI, non unus
 
-**Experimentum est MOTUS quo ignotum solvitur.**
+*Reframing Franis 2026-08-12: "less the bisection type approach of
+something like chemistry… more about generating a lot of prototypes to
+map out a latent space of possibilities."*
+
+Hoc corpus IAM SCRIPTUM tenebat. Duae sunt ignorantiae species, et
+natura utrique MOTUM proprium assignat:
+
+| | **experimentum** | **tentamen** |
+|---|---|---|
+| species | `ignotum_notum` | `ignotum_ignotum` (in summa) |
+| MOTUS naturae | "assignabile - pensum est, quaere" | "singulatim tractari NON POTEST - in summa tantum: spatium, **cycli breviores**, redundantia" |
+| quaestio | FORMATA | nondum formata |
+| praeregistratio | OBLIGATORIA | **IMPOSSIBILIS** (vide infra) |
+| disciplina | falsificabilitas | celeritas gyri + amplitudo + redundantia |
+| verdictum | confirmatum\|refutatum\|mixtum\|incertum | fecundum\|sterile\|servandum |
+| porta in | singulis | **APPARATU IPSO** |
+
+**Praeregistratio in modo tentaminis non incommoda est sed VITIUM
+CATEGORIAE.** Natura dicit: *"species quae individua habere NON POTEST
+natura sua: ignotum ignotum nominatum ignotum notum FIT."* Quaestionem
+scribere speciem MUTAT. Ergo tentamen praeregistrari non potest — non
+quia pigri sumus, sed quia res ipsa id vetat.
+
+Unde decretum tuum prius (praeregistratio obligatoria) INTEGRUM manet:
+experimentis convenit. Tentamen non est exceptio regulae sed ACTIO
+ALIA ad ignorantiam aliam.
+
+**Cur omnino prototypa faciamus** — `fabricatio/complicatio` respondet:
+"consideratio quae consilio praevideri NON POTEST sed opere incepto
+sola apparet… non defectus consilii sed TERMINUS eius: **quaedam nisi
+faciendo non discuntur**." Et natura remedium nominat: *"non plus
+consilii sed APPARATUS QUI EA CITIUS APERIAT."*
+
+**Laboratorium ipsum est ille apparatus.** Non instrumentum quo
+hypotheses probentur, sed machina qua ignota ignota citius appareant.
+
+### Semita: tentamen → experimentum → armarium
+
+1. **Tentamina** multa, celeria, vilia — spatium latens carpunt.
+2. Tentamen `<inopinatum>` parit; inopinatum nominatum ignotum
+   NOTUM fit (mutatio speciei quam natura describit).
+3. Illud ignotum **experimentum** praeregistratum meretur — nunc
+   enim quaestio formata est.
+4. Quod utroque superest in **armarium** metitur (§5).
+
+Tentamina quaestiones INVENIUNT; experimenta eas RESPONDENT. `propagatum_ex`
+(§3b) per utrumque genus currit — arbor una est.
+
+**Experimentum est MOTUS quo ignotum NOTUM solvitur.**
 
 Natura hoc iam fert (`/iudicium/ignotum`): "absentia notitiae AGNITA et
 nominata: hiatus qui, quia nominatus est, tractari potest". Apparatus
@@ -94,7 +142,14 @@ debet ESSE signum. Et signum, cum venerit, viam suam ferat more censūs:
 | `refutatio` | criterium ruinae: quid experimentum necet |
 | `inopinatum` | quod non praevisum evenit — messis vera (§2) |
 | `sententia` | iudicium experimenti (`sub iudicium`, §3b) |
-| `propagatum_ex` | NECESSITUDO: surculus ex experimento priore (§3b) |
+| `propagatum_ex` | NECESSITUDO: surculus ex priore (§3b) |
+| `tentamen` | probatio spatii latentis, sine quaestione formata (§0) |
+| `fecundum` / `sterile` / `servandum` | verdicta tentaminis (§3c) |
+| `dimensio` | axis spatii latentis — MESSIS, non consilium (§3c) |
+
+**`tentamen`, non `prototypum`.** Prototypum "formam primam" significat
+— exemplar rei futurae. Tentamen CONATUS est, exploratio: quod facis
+cum quid quaeras nondum scias. Nomen alterum rem alteram promitteret.
 
 **`experimentum` CONTRA `probatio`.** Probatio est "interrogatio
 exsecutabilis intentionis: scaena parata, actio exercita, effectus
@@ -274,6 +329,60 @@ Hoc legem domus INVERTIT — alibi `bin/natura quaere` ante nominationem
 curritur, ne quod adest iterum mintetur. Hic corpus nomen habere NON
 potest, quia res nondum observata est. Laboratorium ergo unicus locus
 domus est ubi genera ex experientia oriuntur, non ex analysi.
+
+---
+
+## §3c Tentamina — porta in APPARATU, non in singulis
+
+Tentamen singulum iudicari non potest: terra ignota est, et unum
+punctum figuram terrae non dicit. Natura hoc exacte dicit —
+*"singulatim tractari NON POTEST - in summa tantum."*
+
+Ergo canon tentaminis LEVISSIMUS est:
+
+```xml
+<tentamen numerus="0012" verdictum="fecundum">
+  <quaerens>Quid sentiatur si nexus omnino non subrigantur sed
+    sola gravitate coloris monstrentur?</quaerens>
+  <inopinatum>Legibile manet MULTO minus colore quam putabam.</inopinatum>
+  <propagatum-ex ad="&tentamen-0009;" causa="variatio"/>
+</tentamen>
+```
+
+`<quaerens>` NON quaestio praeregistrata est sed quod te huc traxit —
+scribi potest postquam vidisti, quia species ipsa praescientiam vetat.
+
+### Portae verae sedent in laboratorio ipso
+
+Cum singula iudicari nequeant, apparatus iudicetur. Natura tria
+nominat (*spatium in consilio, cycli breviores, redundantia*):
+
+| signum apparatus | quod metitur | via |
+|---|---|---|
+| **mora gyri** | a directorio creato ad primam picturam | mensurabile RE VERA — signum verum cum via sua |
+| **numerus** | quot tentamina per hebdomadam | numeratio |
+| **proventus** | quota pars `fecunda` aut `servanda` | numeratio |
+
+**Mora gyri numerus cardinalis est.** Si laboratorium tardum fit,
+tentamina cessant, et quod natura poscit (*cycli breviores*) perit.
+Hoc unum signum verum laboratorii esse potest — quod quaestioni §7.5
+respondet aliter ac putabam: metiendum non est experimentum sed
+OFFICINA.
+
+### Dimensiones spatii MESSIS sunt
+
+Spatium latens axes habet — pondus visuale (subtile↔clamosum),
+excitatio (sponte↔manu), amplitudo (omnia↔electa). Sed **eos ante
+tentamina scribere divinatio esset**: axes non sciuntur donec spatium
+carptum sit.
+
+Regula eadem quae §3a: cum idem quiddam TER variaveris, axis est,
+nomen meretur, et in genera migrat. Tunc demum tentamina in eo collocari
+et amplitudo pingi potest — quid carptum sit, quid intactum.
+
+**Laboratorium ergo TRIA gignit**: componentia (armarium §5), VOCABULA
+defectuum (§3a), et DIMENSIONES spatii (hic). Nullum eorum ante
+inceptum sciri potest.
 
 ---
 
