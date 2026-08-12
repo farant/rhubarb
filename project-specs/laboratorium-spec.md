@@ -92,6 +92,9 @@ debet ESSE signum. Et signum, cum venerit, viam suam ferat more censūs:
 | `laboratorium` | continens experimentorum |
 | `armarium` | bibliotheca componentium messorum |
 | `refutatio` | criterium ruinae: quid experimentum necet |
+| `inopinatum` | quod non praevisum evenit — messis vera (§2) |
+| `sententia` | iudicium experimenti (`sub iudicium`, §3b) |
+| `propagatum_ex` | NECESSITUDO: surculus ex experimento priore (§3b) |
 
 **`experimentum` CONTRA `probatio`.** Probatio est "interrogatio
 exsecutabilis intentionis: scaena parata, actio exercita, effectus
@@ -238,28 +241,76 @@ domus est ubi genera ex experientia oriuntur, non ex analysi.
 
 ---
 
-## §3b Stirps experimentorum
+## §3b Stirps experimentorum *(decretum Franis 2026-08-12)*
 
-Exemplum Franis ipsum ostendit: "nexus satis graves non sentiuntur"
-responsum non est sed IGNOTUM NOVUM — *quantum ponderis visualis
-affordantia secundaria ferre debeat?*
+Experimenta ARBOREM faciunt, non seriem: #2, #3, #4 variationes vel
+extensiones #1 sunt; #5 ex #4 crescit.
 
-Natura hoc iam ferre potest: `ignotum` relationem `agnitum_per ->
-iudicium` habet. Ergo ignotum experimenti 0009 sententiam experimenti
-0004 citat:
+### Necessitudo mintanda: `propagatum_ex` (conversum `propagat`)
+
+```
+a="experimentum"  ad="experimentum"  multiplex="verum"
+```
+
+*Propago* in re rustica surculus est a vite matre ductus ut nova vitis
+ex eo crescat (Columella). Id exacte est quod #3 ad #1 facit: non
+quaestio nova ex casu nata, sed SURCULUS ex stirpe eadem.
+
+Cur necessitudo NOVA, cum `natum_ex` adsit: `natum_ex` "quod e casu
+cogente natum est" significat (praeceptum ex casu, pactum ex casu).
+Experimentum #3 ex casu cogente non nascitur — variatio est eiusdem
+rei. Sensus differt, ergo relatio differt.
+
+**Causa propagationis** attributo optionali notetur:
+
+| `causa=` | quid significet |
+|---|---|
+| `variatio` | eadem quaestio, via alia (#2, #3, #4 ex #1) |
+| `extensio` | eadem via, longius ducta (#5 ex #4) |
+| `responsio` | ad id quod parens INOPINATUM invenit |
+
+### Numeri PLANI manent, arbor ex arcubus legitur
+
+Numeri hierarchici (0001.2.1) TEMPTANT sed frangunt: parens mutatus
+numerum necat, parentes DUO exprimi non possunt, et ordo temporis —
+qui in commentario laboratorii ipse notitia est — perit. Ergo numerus
+planus et chronologicus manet; arbor ex `propagatum_ex` reficitur.
+*(Hoc quaestioni §7.3 respondet.)*
+
+### ARBOR revera RETE est
+
+`multiplex="verum"` consulto: #7 ex #2 ET #4 simul propagari potest —
+quod ex utroque didicisti coniungens. Arbor stricta id ferre non
+posset; nos nihil impedimus, et casus cum venerit gratis stat.
+
+### Duo arcus, duo munera — ne confundantur
+
+- **`propagatum_ex`**: experimentum → experimentum. STRUCTURA. Arbor
+  ipsa.
+- **`agnitum_per`**: ignotum → iudicium. CAUSA EPISTEMICA: quod
+  iudicium hanc quaestionem agnovit.
+
+**CORRECTIO (mensuratum 2026-08-12)**: forma prior huius §
+`<agnitum-per ad="&experimentum-…;"/>` scribebat. VITIUM erat.
+`bin/natura relationes` ostendit `agnitum_per` NON multiplex esse et
+finem `ad="iudicium"` ferre — experimentum iudicium non est, ergo
+sedes recusata esset. Sanatio: `<sententia>` species iudicii
+declaretur (`sub iudicium`), et `agnitum_per` sententiam patris citet,
+non experimentum:
 
 ```xml
 <experimentum numerus="0009" status="agnitum">
   <ignotum species="ignotum_notum"
     quaestio="Quantum ponderis visualis affordantia secundaria ferat?">
-    <agnitum-per ad="&experimentum-0004;"/>
-    …
+    <agnitum-per ad="&sententia-0004;"/>
+  </ignotum>
+  <propagatum-ex ad="&experimentum-0004;" causa="responsio"/>
 ```
 
-Filius patrem citat (directio naturae); visus laboratorii eam invertat
-ut stirpem monstret. Unde laboratorium non index fit sed ARBOR
-INQUISITIONIS: quaestio quaestionem parit, et via ab ignoto primo ad
-opus praesens legi potest. Quod charta iam pingere scit.
+Unde laboratorium non index fit sed **arbor inquisitionis**: via ab
+ignoto primo ad opus praesens legi potest. Quod charta iam pingere
+scit — nodi, arcus, tabulae nidificatae, colores ex statu. Visus
+indicis laboratorii chartam mutuari potest, paene gratis.
 
 ---
 
@@ -375,9 +426,9 @@ instrumentum domus est.
 2. **Sigillum propositi (porta II) — quam durum?** Vulnus (canon
    recusat) an monitum (canon queritur)? Durum honestum est sed
    experimentum male scriptum in aeternum male scriptum manet.
-3. **Numeri: `0001` an ULID?** Numeri ordinem narrant et breves sunt;
-   ULID cum tabulario congruit. Suadeo numeros — laboratorium narratio
-   est, et narrationes numerantur.
+3. ~~Numeri an ULID?~~ **RESPONSUM 2026-08-12**: numeri PLANI et
+   chronologici; arbor ex `propagatum_ex` legitur, non ex numero.
+   Vide §3b.
 4. **Quid de experimento `relictum`?** Servaturne in indice an
    celatur? (Suadeo servari et monstrari: quod temptatum et desertum
    est notitia est.)
