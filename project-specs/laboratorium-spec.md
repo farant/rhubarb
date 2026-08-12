@@ -122,7 +122,7 @@ Exemplar sequens exemplum VERUM Franis induit (nexus sponte facti):
 <experimentum numerus="0004" status="solutum">
 
   <!-- ANTE OPUS - obligatorium, et post 'agnitum' IMMUTABILE -->
-  <ignotum species="ignotum_notum"
+  <ignotum species="ignotum_notum" contra="regula"
     quaestio="Utrum textus talis sponte in nexus versus lectorem
               adiuvet?">
     <exspectatio>Adiuvabit: nexum manu quaerere molestum est, et
@@ -180,9 +180,29 @@ adhuc nescis.
 **Cur `impedit` momenti sit**: ligat experimentum ad opus verum quod eo
 obstruitur. Experimentum quod nihil impedit fortasse currendum non est.
 
-**Variationes optionales sunt.** Si duas formas comparas, `<variatio>`
-adde; si unam solam temptas (ut in exemplo), omitte. Comparatio
-instrumentum est, non ritus.
+### `contra=` — comparator NOMINATUS *(decretum Franis 2026-08-12)*
+
+"Adiuvat" sententia INCOMPLETA est: adiuvat prae QUO? Fere semper prae
+eo quomodo applicatio hodie se habet — sed comparator non scriptus
+comparator non est, et memoria rei quam ipse mutavisti instrumentum
+pessimum est quod habes. ("Turbidior facta est" — turbidior QUAM? Quam
+ante; sed 'ante' numquam ut res captum est.)
+
+| `contra=` | quid significet |
+|---|---|
+| `regula` | quomodo applicatio HODIE se habet (casus communis, gratis) |
+| `absentia` | res simpliciter abest |
+| `&variatio-…;` | alternativa quam RE VERA aedificasti |
+
+**Variationes optionales manent.** Quod opus est non sunt DUAE RES
+AEDIFICATAE sed comparator NOMINATUS — et is plerumque iam exstat.
+Comparatio duplex ad novitatis errorem (res nova per hebdomadam melior
+sentitur, deinde desinit) optima manet, sed pretium eius duplex opus
+est; et canon qui comparationem POSTULAT variationem fictam parit
+aliquando, quae peior est quam nulla, quia argumenti speciem habet.
+
+Nota: refutatio comparatorem iam IMPLICAT ("si pagina turbidior fit"
+prae non-turbida est). Eum explicitum facere paene gratis est.
 
 ---
 
@@ -191,9 +211,25 @@ instrumentum est, non ritus.
 Canon `laboratorium.canon`, per registrum dispatchatus, `bin/canon_examen`
 iudicante (more census/natura).
 
-1. **PRAEREGISTRATIO** — `<ignotum>` cum `quaestio`, `<exspectatio>`
-   ET `<refutatio>` adesse debet antequam status ex `agnitum` moveatur.
-   *(decretum Franis)*
+1. **PRAEREGISTRATIO** — `<ignotum>` cum `quaestio`, `contra=`,
+   `<exspectatio>` ET `<refutatio>` adesse debet antequam status ex
+   `agnitum` moveatur. *(decretum Franis)*
+
+   Canon PRAESENTIAM postulat, NON LONGITUDINEM.
+   `<exspectatio>Adiuvabit.</exspectatio>` legitima et plena est.
+   Disciplina est ANTE INSPECTIONEM te obligare, non commentarium
+   scribere.
+
+   **Cur duo campi, non unus** *(decretum Franis)*: independentes
+   sunt, et exemplum Franis id PROBAT — exspectatio eius impleta est
+   ("re vera adiuvit") dum refutatio simul accensa est ("pagina
+   turbida facta"). Campus unus id dicere non potest, et ille casus
+   verdictum `mixtum` est, quod communissimum erit.
+
+   Munera differunt: `refutatio` experimentum FALSIFICABILE facit;
+   `exspectatio` est regula ad quam `<inopinatum>` metitur — sine ea
+   scripta, "non praevidi" ab "oblitus sum me praevidisse" discerni
+   non potest, et posterius in prius se ipsum tacite vertit.
 2. **SIGILLUM PROPOSITI** — cum status `agnitum` relinquit, `<ignotum>`
    sigillo signatur. Mutatio postea = vulnus. Ita ratiocinatio
    post-facta structuraliter impeditur.
@@ -421,8 +457,8 @@ instrumentum domus est.
 
 ## §7 Quaestiones apertae (Fran iudicet)
 
-1. **`refutatio` an `ruina`?** Praevisio quam elegisti `<ruina>` ferebat;
-   `refutatio` terminus artis est (Popper). Verbum unum.
+1. ~~`refutatio` an `ruina`?~~ **RESPONSUM**: `refutatio` (Fran
+   praevisiones bis elegit quae eam ferebant).
 2. **Sigillum propositi (porta II) — quam durum?** Vulnus (canon
    recusat) an monitum (canon queritur)? Durum honestum est sed
    experimentum male scriptum in aeternum male scriptum manet.
@@ -435,11 +471,14 @@ instrumentum domus est.
 5. ~~Metirine possumus omnino?~~ **RESPONSUM 2026-08-12**: plerumque
    non, et id consulto. Symptoma regula est; signum rarum manet sed
    viam suam ferre debet cum venerit. Vide §1.
-6. **Quid de `<variatio>` fiat?** Nunc optionalis (comparatio
-   instrumentum, non ritus). Placetne, an experimentum semper duas
-   formas comparare debet?
-7. **`<exspectatio>` seorsum a `<refutatio>`?** Nunc duo campi sunt:
-   quid futurum putes, et quid te sententiam mutare faciat. Duo re
-   vera differunt (exspectatio impleri potest dum refutatio simul
-   accenditur — quod exemplo tuo EVENIT), sed duo campi duplum
-   scribendi sunt. Unumne an duo?
+6. ~~Quid de `<variatio>` fiat?~~ **RESPONSUM 2026-08-12**: optionalis
+   manet; `contra=` comparatorem nominat. Vide §2.
+7. ~~`<exspectatio>` seorsum a `<refutatio>`?~~ **RESPONSUM
+   2026-08-12**: DUO campi, ambo obligatorii, sed brevitas licet.
+   Vide §3 regulam I.
+
+---
+
+**STATUS CONSILII**: quinque ex septem quaestionibus clausae. Duae
+manent — II (duritia sigilli) et IV (experimenta relicta monstrentur
+an celentur), ambae parvae. Consilium ad aedificandum PARATUM est.
