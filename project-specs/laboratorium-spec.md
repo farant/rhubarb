@@ -54,16 +54,34 @@ huius…"* — id est, quaestio interfaciei.
 - **`/iudicium/investigatio`** — inquisitio ordinata in causas
 - **`/fabricatio/probatio`** — CONTRA quam definiendum (vide infra)
 
-**Cur signum/symptoma cardo sit.** Interfacies duo genera proprietatum
-habet: quae metiri licet (mora, numerus ictuum, error), et quae solum
-sentiuntur ("hoc male se habet"). Fran experimentator ET patiens idem
-erit — modus classicus se ipsum fallendi. Medicina saecula in hac
-distinctione posuit; nos eam mutuamur. Canon POSTULAT ut quaeque
-observatio se ipsam declaret: `signum` an `symptoma`. Ita "melius
-sensi" numquam tacite in argumentum transit.
+**SYMPTOMA REGULA EST, NON EXCEPTIO** *(decretum Franis 2026-08-12)*.
+Praedictiones et effectus PLERUMQUE qualitativi erunt. Exemplum verum
+Franis:
 
-Et quia signum in censu IAM viam suam fert (`via=`), signum laboratorii
-idem faciat: **numerus qui viam suam non fert, signum non est.**
+> ante: "puto utile fore si textus talis sponte in nexus vertatur"
+> post: "re vera adiuvit hoc modo… sed pagina visu turbida facta est,
+> et nexus satis graves non sentiebantur"
+
+Nullus numerus usquam. Definitio symptomatis id exacte capit: "a
+subiecto ipso relatum… ab alio verificari NON POTEST - solus patiens
+accessum habet."
+
+**Quid ergo structura emat, si omnia qualitativa sunt?** Tria, et sola
+tria — sed haec tria sufficiunt:
+
+1. **Praedictio ANTE scribitur.** Contra memoriam, quae se ipsam post
+   factum corrigit.
+2. **Praedictum a proventu SEPARATUR.** Discrimen ipsum est notitia:
+   quod expectatum non evenit, et quod inexpectatum evenit.
+3. **INOPINATUM sedem propriam habet.** In exemplo supra, messis vera
+   NON est "adiuvit" (id praevisum erat) sed "turbida facta est" et
+   "satis graves non sentiebantur" — quae neutra praevisa sunt.
+   Ubi omnia qualitativa sunt, notitia in SURPRISA habitat.
+
+Canon nihilominus postulat ut observatio se declaret (`signum` an
+`symptoma`), non quia signa multa erunt, sed quia rarum signum sciri
+debet ESSE signum. Et signum, cum venerit, viam suam ferat more censūs:
+**numerus qui viam suam non fert, signum non est.**
 
 ### Quod mintandum est (omnia LIBERA, probatum)
 
@@ -95,44 +113,73 @@ eo est ut divergere non possint. Praeterea porta simplex fit:
 experimentum `solutum` sine observationibus mendacium est quod canon
 recusare potest.
 
+Exemplar sequens exemplum VERUM Franis induit (nexus sponte facti):
+
 ```xml
-<experimentum numerus="0001" status="agnitum">
+<experimentum numerus="0004" status="solutum">
 
   <!-- ANTE OPUS - obligatorium, et post 'agnitum' IMMUTABILE -->
   <ignotum species="ignotum_notum"
-    quaestio="Utrum arbor nidificata censum celerius navigabilem
-              faciat quam index planus?">
-    <refutatio>Si neutra variatio indicem planum in tempore-ad-
-      inveniendum superat, idea moritur.</refutatio>
-    <impedit ad="&charta;"/>
+    quaestio="Utrum textus talis sponte in nexus versus lectorem
+              adiuvet?">
+    <exspectatio>Adiuvabit: nexum manu quaerere molestum est, et
+      nomina rerum iam in prosa sedent.</exspectatio>
+    <refutatio>Si nexus factos non premo, aut si pagina propterea
+      turbidior fit sine pretio reddito, idea cadit.</refutatio>
+    <impedit ad="&forum;"/>
   </ignotum>
 
-  <!-- variationes comparatae -->
-  <variatio nomen="&0001-planus;" titulus="index planus (regula)"/>
-  <variatio nomen="&0001-arbor;"  titulus="arbor nidificata"/>
-
-  <!-- DUM OPUS - libera, quantum vis -->
+  <!-- DUM OPUS - libera, quantum vis (aut nihil) -->
   <acta>
-    <nota quando="2026-08-13">Umbra radicis eventus ictus
-      absorbuit - shadow DOM hoc facit.</nota>
+    <nota quando="2026-08-13">Umbra radicis ictus absorbuit -
+      shadow DOM hoc facit.</nota>
   </acta>
 
   <!-- POST OPUS - ad statum 'solutum' obligatoriae -->
   <observationes>
-    <signum de="&0001-arbor;" contentum="tempus-ad-inveniendum 4.1s"
-      via="laboratorium/0001/metiri.sh arbor"/>
-    <signum de="&0001-planus;" contentum="tempus-ad-inveniendum 6.8s"
-      via="laboratorium/0001/metiri.sh planus"/>
-    <symptoma de="&0001-arbor;">Plicare gravius sentitur quam
-      numeri dicunt - mora animationis, non quaesitionis.</symptoma>
-    <sententia>Arbor vincit, sed animatio corrigenda ante messem.</sententia>
+    <symptoma respondens="exspectationi">Adiuvat re vera: ad rem
+      citatam sine quaesitione salire licet.</symptoma>
+
+    <inopinatum>Pagina VISU TURBIDA fit - hoc non praevidi.</inopinatum>
+    <inopinatum>Nexus 'satis graves' non sentiuntur: pondus visuale
+      ponderi sensus non respondet.</inopinatum>
+
+    <sententia verdictum="mixtum">Munus manet, vestis non. Sponte
+      nectere rectum est; QUOMODO id monstretur ignotum novum
+      est.</sententia>
   </observationes>
 
 </experimentum>
 ```
 
+**`<inopinatum>` campus pretiosissimus est.** In exemplo supra,
+`<symptoma>` id solum confirmat quod Fran iam putabat; duo
+`<inopinatum>` sunt quae experimentum RE VERA docuit. Ubi observationes
+qualitativae sunt, notitia in surprisa habitat — ergo surprisae sedes
+propria, non nota in margine.
+
+**DUO AXES, NE CONFUNDANTUR.** Error facilis est haec miscere:
+
+| axis | quaerit | valores |
+|---|---|---|
+| `ignotum/@status` | clausane est rima? | agnitum→quaesitum→**solutum**\|relictum\|insolubile |
+| `sententia/@verdictum` | bonane erat idea? | confirmatum \| refutatum \| **mixtum** \| incertum |
+
+Experimentum `solutum` cum verdicto `refutatum` SUCCESSUS est: rem
+didicisti, et res mala erat. Separatis axibus numerare licet quot
+experimenta DOCUERINT seorsum a quot ideae VALUERINT — quorum prior
+numerus laboratorium metitur, posterior iudicium tuum.
+
+`mixtum` casus COMMUNIS erit, non rarus: fere semper aliquid valet et
+aliquid constat. `incertum` honestum est et permittitur — cucurristi,
+adhuc nescis.
+
 **Cur `impedit` momenti sit**: ligat experimentum ad opus verum quod eo
 obstruitur. Experimentum quod nihil impedit fortasse currendum non est.
+
+**Variationes optionales sunt.** Si duas formas comparas, `<variatio>`
+adde; si unam solam temptas (ut in exemplo), omitte. Comparatio
+instrumentum est, non ritus.
 
 ---
 
@@ -141,25 +188,78 @@ obstruitur. Experimentum quod nihil impedit fortasse currendum non est.
 Canon `laboratorium.canon`, per registrum dispatchatus, `bin/canon_examen`
 iudicante (more census/natura).
 
-1. **PRAEREGISTRATIO** — `<ignotum>` cum `quaestio` ET `<refutatio>`
-   adesse debet antequam status ex `agnitum` moveatur. *(decretum Franis)*
+1. **PRAEREGISTRATIO** — `<ignotum>` cum `quaestio`, `<exspectatio>`
+   ET `<refutatio>` adesse debet antequam status ex `agnitum` moveatur.
+   *(decretum Franis)*
 2. **SIGILLUM PROPOSITI** — cum status `agnitum` relinquit, `<ignotum>`
    sigillo signatur. Mutatio postea = vulnus. Ita ratiocinatio
    post-facta structuraliter impeditur.
-3. **CONCLUSIO VERA** — status `solutum` postulat ≥1 observationem quae
-   variationem citet.
+3. **CONCLUSIO VERA** — status `solutum` postulat ≥1 observationem ET
+   `<sententia verdictum=…>`.
 4. **SIGNUM VIAM FERT** — quodque `<signum>` `via=` habeat, aliter
    symptoma est. *(regula censūs mutuata)*
-5. **GENUS DECLARATUM** — observatio nuda non licet: aut `signum` aut
-   `symptoma`.
+5. **GENUS DECLARATUM** — observatio nuda non licet: `signum`,
+   `symptoma`, aut `inopinatum`.
 6. **MESSIS IUSTIFICATA** — componentia armarii experimentum suum
    citent (§5).
 
-**Quod canon NON postulat**: variationes plures, acta, sententiam,
-mensuras numericas. Periculum verum est ne schema experimenta
-DEVORET — si structuram implere carius sit quam ideam temptare,
-experimenta cessabunt. Porta minima esto: quaestio, refutatio, et
-conclusio quae conclusionem habeat.
+**Quod canon NON postulat**: variationes, acta, numeros, taxinomiam
+inopinatorum. Periculum verum est ne schema experimenta DEVORET — si
+structuram implere carius sit quam ideam temptare, experimenta
+cessabunt. Porta minima esto: quaestio, quid expectes, quid te
+sententiam mutare faciat — et postea conclusio quae conclusionem habeat.
+
+**REFUTATIO QUALITATIVA.** Praeregistratio numeros NON poscit. Poscit ut
+ANTE scribas quid te sententiam mutare faciat, tam certe ut effugere
+non possis. "Si nexus factos non premo, aut si pagina turbidior fit
+sine pretio reddito" refutatio VERA est: nullus numerus, sed post opus
+negari non potest. Popper sine mensura stat.
+
+---
+
+## §3a Vocabularium ex laboratorio, non in laboratorium
+
+`<inopinatum>` liberum textum fert — CONSULTO. Taxinomia defectuum
+interfaciei ANTE experimenta scripta divinatio esset; eadem post
+centum experimenta MESSIS erit.
+
+Regula: cum idem inopinatum TER apparuerit, nomen meretur et in
+`natura/laboratorium.genera` migrat. Exemplum iam adest — "pondus
+visuale ponderi sensus non respondet" (§2) species est quae, si
+recurrat, `discrepantia-ponderis` fieri debet.
+
+**Ergo laboratorium duo gignit**: componentia (in armarium, §5) et
+VOCABULA (in naturam). Alterum fortasse pretiosius.
+
+Hoc legem domus INVERTIT — alibi `bin/natura quaere` ante nominationem
+curritur, ne quod adest iterum mintetur. Hic corpus nomen habere NON
+potest, quia res nondum observata est. Laboratorium ergo unicus locus
+domus est ubi genera ex experientia oriuntur, non ex analysi.
+
+---
+
+## §3b Stirps experimentorum
+
+Exemplum Franis ipsum ostendit: "nexus satis graves non sentiuntur"
+responsum non est sed IGNOTUM NOVUM — *quantum ponderis visualis
+affordantia secundaria ferre debeat?*
+
+Natura hoc iam ferre potest: `ignotum` relationem `agnitum_per ->
+iudicium` habet. Ergo ignotum experimenti 0009 sententiam experimenti
+0004 citat:
+
+```xml
+<experimentum numerus="0009" status="agnitum">
+  <ignotum species="ignotum_notum"
+    quaestio="Quantum ponderis visualis affordantia secundaria ferat?">
+    <agnitum-per ad="&experimentum-0004;"/>
+    …
+```
+
+Filius patrem citat (directio naturae); visus laboratorii eam invertat
+ut stirpem monstret. Unde laboratorium non index fit sed ARBOR
+INQUISITIONIS: quaestio quaestionem parit, et via ab ignoto primo ad
+opus praesens legi potest. Quod charta iam pingere scit.
 
 ---
 
@@ -281,7 +381,14 @@ instrumentum domus est.
 4. **Quid de experimento `relictum`?** Servaturne in indice an
    celatur? (Suadeo servari et monstrari: quod temptatum et desertum
    est notitia est.)
-5. **Metirine possumus omnino?** Signum verum interfaciei (tempus-ad-
-   inveniendum) HOMINEM cum horologio poscit. Estne id quod facere vis,
-   an sunt experimenta quorum observationes symptomata sola erunt?
-   (Legitimum utrumque — sed canon id scire debet.)
+5. ~~Metirine possumus omnino?~~ **RESPONSUM 2026-08-12**: plerumque
+   non, et id consulto. Symptoma regula est; signum rarum manet sed
+   viam suam ferre debet cum venerit. Vide §1.
+6. **Quid de `<variatio>` fiat?** Nunc optionalis (comparatio
+   instrumentum, non ritus). Placetne, an experimentum semper duas
+   formas comparare debet?
+7. **`<exspectatio>` seorsum a `<refutatio>`?** Nunc duo campi sunt:
+   quid futurum putes, et quid te sententiam mutare faciat. Duo re
+   vera differunt (exspectatio impleri potest dum refutatio simul
+   accenditur — quod exemplo tuo EVENIT), sed duo campi duplum
+   scribendi sunt. Unumne an duo?
