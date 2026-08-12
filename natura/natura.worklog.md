@@ -6227,3 +6227,53 @@ realizata_a and glossae), sqlite (already an individuum, zlib
 beside it), officium (the exact role pattern ready to copy). The
 collision check keeps answering design questions before the debate
 starts — run it FIRST, always.
+
+## 2026-08-12 — laboratorium exemplar, and a grep that confirmed its own error
+
+Added `natura/laboratorium.genera` (tentamen, experimentum, propositum,
+sententia) + necessitudo `propagatum_ex`. SANUM at 36/468/124/89.
+
+**The gate taught three things, all worth keeping:**
+
+1. **Rule IV** — a cross-model `sub=` needs `modulus=` too:
+   `<.genus nomen="sententia" sub="iudicium" modulus="iudicium">`.
+2. **Rule XXI ×5** — I invented the necessitudines `poscit` and
+   `invenit`. The corpus already had `postulat` and `parit`. This is
+   the "run quaere before minting" law hitting for the fifth time,
+   but the first time in the RELATION space rather than the genus
+   space — the same reflex applies to necessitudines, and there is no
+   `natura quaere` habit for them yet (the list lives in
+   `natura/necessitudines.genera`; 76 of them).
+3. **The projection found a design hole.** `exspectatio`, `refutatio`
+   and `contra` were in the spec with no home — `ignotum` is natura's
+   genus and only carries `quaestio`. Moving them onto `experimentum`
+   is better ontology anyway: a gap can sit there with nobody
+   investigating it, but committing to what you expect and to what
+   would defeat you is an act of the INVESTIGATOR, not a property of
+   the gap.
+
+**TRAP, recorded because it fooled me for three steps:**
+element names in canons and documents are **hyphenated**
+(`ignotum-notum`, `probatio-unitatis`, `propagatum-ex`); genus names
+in `.genera` are **underscored** (`ignotum_notum`). I wrote
+`<ignotum_notum>` in a test document, it was rejected, and I then ran
+`grep -c 'elementum nomen="ignotum_notum"' individua.canon` → 0 and
+concluded species do not project to elements at all. **The grep shared
+the document's spelling error, so it confirmed the error instead of
+exposing it.** Two further inferences were built on that before
+`grep 'ignotum-notum'` returned 1.
+
+Lesson, same family as the BSD-sed no-op traps: when a search returns
+zero and you wrote the query from the same assumption as the thing you
+are testing, zero is not evidence of absence. Vary the spelling before
+believing the count — or check a KNOWN-present neighbour first
+(`probatio-unitatis` would have exposed it in one call).
+
+Species DO project, and are cited by hyphenated element name — so the
+laboratorium's two modes can name their species of ignorance
+explicitly in a document.
+
+**Canon proven by planted fault**: a bad `status-cursus` value
+(`peractum` outside `coeptum|factum|conclusum`) and a dead citation
+were both caught with line numbers; the corrected document reaches
+VITIA 0.

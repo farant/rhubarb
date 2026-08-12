@@ -190,7 +190,10 @@ experimentum  liberum     propagatum-ex referentia
 census eadem.) Ergo:
 
 ```xml
-<ignotum nomen="&0004-rima;" quaestio="..." species="ignotum_notum"/>
+<!-- SPECIES = NOMEN ELEMENTI, non attributum. Et nomina generum
+     in .genera LINEOLIS SUBSCRIPTIS scribuntur (ignotum_notum),
+     in canonibus et documentis LINEOLIS (ignotum-notum). -->
+<ignotum-notum nomen="&0004-rima;" quaestio="..."/>
 <propositum nomen="&0004-propositum;" descriptio="..."/>
 <sententia nomen="&0004-sententia;" status-iudicatio="mixtum"/>
 <experimentum numerus="4" status-cursus="conclusum"
