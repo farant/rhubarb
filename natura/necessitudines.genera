@@ -513,6 +513,17 @@
       corpus's first measured converse pair.</glossa>
   </necessitudo>
 
+  <necessitudo nomen="velata_per" conversum="velat" a="*" ad="*">
+    <definitio>Opus quod ab involucro tegitur: consumptor
+      involucrum videt, opus velatum intus laborat. Albo-titulatio
+      adscitionis - scrinium sqlitem velat, imago stb_image;
+      exemplar tls.h idem facit systematis (Security.framework
+      velatum hodie, bearssl postea).</definitio>
+    <glossa lingua="en">Veiled-by / veils: a work covered by a
+      wrapper - consumers see the wrapper, the veiled work labors
+      inside. The white-labeling of an adoption.</glossa>
+  </necessitudo>
+
   <necessitudo nomen="realizata_a" sub="effectio" a="*" ad="*"
     conversum="realizat">
     <definitio>Intentio quae per elementa concreta efficitur:

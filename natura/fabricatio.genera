@@ -235,6 +235,48 @@
      PROBATIO - interrogatio exsecutabilis intentionis
      ================================================== -->
 
+<.genus nomen="adscitio">
+
+  <definitio>
+    Munus operis alieni intra inceptum, more officii: alibi
+    primae partis, hic adscitum - munus incepto relativum, quod
+    bibliothecae NON inhaeret (eadem bibliotheca alteri incepto
+    prima pars est, alteri tertia). Aut vendita tenetur aut
+    destinata exspectat.
+  </definitio>
+
+  <glossa lingua="en">An adoption: the role of an external work
+    within a project, in the manner of an office - first-party
+    somewhere else, taken in here. The role is relative to the
+    project and does not inhere in the library: the same library
+    is first-party to one project and third-party to
+    another.</glossa>
+
+  <machina_statuum nomen="integratio" gerens="individuum">
+    <status nomen="destinata"
+      nota="in indice futurorum: integranda, nondum vendita"/>
+    <status nomen="vendita"
+      nota="corpus in arbore (vendor/), plerumque involucro
+            domestico velata"/>
+    <transitus a="destinata" ad="vendita" per="venditio"/>
+  </machina_statuum>
+
+  <relationes>
+    <relatio nomen="tenetur_a" necessitudo="tenetur_a"
+      ad="bibliotheca" modulus="elementa_programmatis"
+      nota="bibliotheca quae munus tenet"/>
+    <relatio nomen="intra" ad="*"
+      nota="inceptum cuius munus est - genus proiectum NONDUM
+            mintatum (parcum 01KZGYS87E); in censu incepti sui
+            implicitum, finis angustabitur cum genus nascetur"/>
+    <relatio nomen="velata_per" necessitudo="velata_per"
+      ad="bibliotheca" modulus="elementa_programmatis"
+      nota="involucrum domesticum quod eam albo-titulo praestat
+            (scrinium sqlitem velat, imago stb_image)"/>
+  </relationes>
+
+</.genus>
+
 <.genus nomen="probatio">
 
   <definitio>

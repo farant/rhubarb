@@ -1006,6 +1006,86 @@
     </nota>
   </individuum>
 
+  <individuum nomen="monocypher">
+    <relatum nomen="scripta_in" ad="c"
+      modulus="lingua_programmandi"/>
+    <historia>
+      <eventum quando="2017">a Loup Vaillant edita</eventum>
+    </historia>
+    <nota>
+      Cryptographia tota plagula una: XChaCha20, Blake2b,
+      Argon2, X25519, EdDSA - sine pendentiis, auditata,
+      dominium publicum/BSD. Crypto domūs electa (arca futura
+      super eam, 01KYAMMMF58F).
+    </nota>
+  </individuum>
+
+  <individuum nomen="bearssl">
+    <relatum nomen="scripta_in" ad="c"
+      modulus="lingua_programmandi"/>
+    <historia>
+      <eventum quando="2016">a Thoma Pornin edita</eventum>
+    </historia>
+    <nota>
+      TLS integra parva: sine memoria dynamica coacta,
+      tempus-constans consulto (MIT). Diei Linux destinata -
+      sutura tls.h Security.framework hodie velat, bearssl
+      postea.
+    </nota>
+  </individuum>
+
+  <individuum nomen="freetype">
+    <relatum nomen="scripta_in" ad="c"
+      modulus="lingua_programmandi"/>
+    <historia>
+      <eventum quando="1996">a Davide Turner sociisque
+        incepta</eventum>
+    </historia>
+    <nota>
+      Rasterizatio formarum litterarum: TrueType, OpenType,
+      Type1 - norma facti mundi aperti.
+    </nota>
+  </individuum>
+
+  <individuum nomen="harfbuzz">
+    <historia>
+      <eventum quando="2006">e Pango a Behdad Esfahbod
+        seiuncta</eventum>
+    </historia>
+    <nota>
+      Formatio textūs (ligaturae Arabicae, reordinatio Indica,
+      OpenType): decennia scientiae scriptorum - res una acervi
+      quam scribere ipsi non possumus. CAVE: C++ intus (API C) -
+      venditio compilatorem C++ primum in domum ferret.
+    </nota>
+  </individuum>
+
+  <individuum nomen="icu">
+    <historia>
+      <eventum quando="1999">ab IBM edita</eventum>
+    </historia>
+    <nota>
+      Unicode officialis: normalizatio, collatio, fractio
+      linearum - tabulae ingentes (~XXX MB), C++ intus. Pretium
+      suum sola COLLATIONE meret; cetera ex UCD generabili
+      tabulis C89 (generator domūs prius temptandus).
+    </nota>
+  </individuum>
+
+  <individuum nomen="opus_codec">
+    <relatum nomen="scripta_in" ad="c"
+      modulus="lingua_programmandi"/>
+    <historia>
+      <eventum quando="2012-09-11">norma IETF (RFC 6716)
+        facta</eventum>
+    </historia>
+    <nota>
+      Codex audio (Xiph): vox et musica latitudine varia,
+      norma interretis aperta - a colloquiis ad musicam uno
+      codice.
+    </nota>
+  </individuum>
+
   <individuum nomen="zlib">
     <relatum nomen="scripta_in" ad="c"
       modulus="lingua_programmandi"/>

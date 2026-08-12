@@ -8,7 +8,7 @@
 
   QUID HIC EXAMINETUR, ET QUID NON:
 
-  RELATIONES - ex 1634 sedibus relationum huius canonis, 1161
+  RELATIONES - ex 1637 sedibus relationum huius canonis, 1163
   citationes VERAE fiunt (clavis intra documentum resoluta).
   Petitum cum posteris per CLAUSURAM citatur: subgenera resque
   eius omnes in indicem ad= enumerantur, quia claves per
@@ -19,10 +19,10 @@
   INDIVIDUA dictionarii elementa NON sunt (praedicabile non
   est): semina.census ea ut DATA fert; inscriptio per tag
   generis fit.
-  473 nomine solo iudicantur, id est sicut in canone per
+  474 nomine solo iudicantur, id est sicut in canone per
   modulum. Causae, quae omnes limites mechanismi sunt, non
   neglegentiae:
-    466 petitum apertum habent (ad='*') - clavis nulla est;
+    467 petitum apertum habent (ad='*') - clavis nulla est;
     7 petitum non resolvunt.
   Multiplicia OLIM hic stabant (sedes CDII nomine solo) -
   spec super-adstrictum viam 'parens/titulus' dedit et
@@ -218,6 +218,7 @@
     <liberum nomen="uncus"/>
     <liberum nomen="postulatum"/>
     <liberum nomen="facultas"/>
+    <liberum nomen="adscitio"/>
     <liberum nomen="probatio"/>
     <liberum nomen="probatio-unitatis"/>
     <liberum nomen="probatio-integrationis"/>
@@ -5778,6 +5779,29 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="facultas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="adscitio">
+    <glossa lingua="en">An adoption: the role of an external work
+    within a project, in the manner of an office - first-party
+    somewhere else, taken in here. The role is relative to the
+    project and does not inhere in the library: the same library
+    is first-party to one project and third-party to
+    another.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="status-integratio" genus="electio">
+      <optio>destinata</optio>
+      <optio>vendita</optio>
+    </attributum>
+    <attributum nomen="tenetur-a" genus="referentia"/>
+    <attributum nomen="intra" genus="referentia"/>
+    <attributum nomen="velata-per" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="adscitio">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -15103,23 +15127,23 @@
            documentarium monitum-futuri titulus-iuris codex-sepultus annotatio-machinae
            identificator identificator-baptismalis sigillum-contenti programma
            instrumentum-lineae daemon applicatio instrumentum-aedificationis
-           pactum uncus postulatum facultas probatio probatio-unitatis probatio-integrationis
-           probatio-regressionis probatio-fumi vitium regressio debitum-technicum
-           complicatio consilium consilium-computatum depravatio interventio
-           conservatio restauratio-aedificii curatio-medica forma-datorum
-           series cauda acervus tabula-associativa copia arbor schema-identificandi
-           uuid ulid isbn isbn-10 isbn-13 issn doi orcid iban e164 gtin uri
-           cas ndc rxnorm numerus-dea gradus-assensus scientia opinio fides
-           suspicio dubitatio fons fons-scriptus fons-mensurae fons-testimonii
-           corpus-institutionis observatio symptoma signum testimonium praeceptum
-           iudicium diagnosis aestimatio praedictio sententia-iudicis annotatio
-           periculum ignotum ignotum-notum ignotum-ignotum indeterminatum
-           amissum retentum impertinens controversum investigatio investigatio-praeventiva
-           inquisitio-forensis recensio-post-mortem secretum clavis-privata
-           verbum-arcanum secretum-negotii sigillum-confessionis peritia-communis
-           notitia-pascui ars-officinae memoria-operis attributio fundamentum
-           autopsia mensuratio documentum-scriptum auctoritas-testis illatio
-           comparatio-stili coniectura-periti praesumptio lingua-programmandi
+           pactum uncus postulatum facultas adscitio probatio probatio-unitatis
+           probatio-integrationis probatio-regressionis probatio-fumi vitium
+           regressio debitum-technicum complicatio consilium consilium-computatum
+           depravatio interventio conservatio restauratio-aedificii curatio-medica
+           forma-datorum series cauda acervus tabula-associativa copia arbor
+           schema-identificandi uuid ulid isbn isbn-10 isbn-13 issn doi orcid
+           iban e164 gtin uri cas ndc rxnorm numerus-dea gradus-assensus
+           scientia opinio fides suspicio dubitatio fons fons-scriptus fons-mensurae
+           fons-testimonii corpus-institutionis observatio symptoma signum
+           testimonium praeceptum iudicium diagnosis aestimatio praedictio
+           sententia-iudicis annotatio periculum ignotum ignotum-notum ignotum-ignotum
+           indeterminatum amissum retentum impertinens controversum investigatio
+           investigatio-praeventiva inquisitio-forensis recensio-post-mortem
+           secretum clavis-privata verbum-arcanum secretum-negotii sigillum-confessionis
+           peritia-communis notitia-pascui ars-officinae memoria-operis attributio
+           fundamentum autopsia mensuratio documentum-scriptum auctoritas-testis
+           illatio comparatio-stili coniectura-periti praesumptio lingua-programmandi
            lingua-iussuum versio-linguae implementatio-linguae verbum-clavis
            locus inscriptio iurisdictio aedificium magnitudo-mensurabilis
            longitudo massa tempus-intervallum temperatura capacitas numerositas
@@ -15814,6 +15838,9 @@
   <citatio nomen="postulatum-interrogatur-a" attributum="interrogatur-a" ad="*/nomen" super="postulatum"/>
   <citatio nomen="facultas-implet" attributum="ad" ad="postulatum/nomen" super="facultas/implet"/>
   <citatio nomen="facultas-realizata-a" attributum="ad" ad="*/nomen" super="facultas/realizata-a"/>
+  <citatio nomen="adscitio-tenetur-a" attributum="tenetur-a" ad="bibliotheca/nomen" super="adscitio"/>
+  <citatio nomen="adscitio-intra" attributum="intra" ad="*/nomen" super="adscitio"/>
+  <citatio nomen="adscitio-velata-per" attributum="velata-per" ad="bibliotheca/nomen" super="adscitio"/>
   <citatio nomen="probatio-interrogat" attributum="interrogat" ad="postulatum/nomen" super="probatio"/>
   <citatio nomen="probatio-continet" attributum="ad" ad="assertio praeconditio postconditio invarians assertio-statica assertio-probationis/nomen" super="probatio/continet"/>
   <citatio nomen="probatio-exercet" attributum="ad" ad="*/nomen" super="probatio/exercet"/>
@@ -16827,6 +16854,12 @@
     <clavis genus="bibliotheca">&libc;</clavis>
     <clavis genus="bibliotheca">&sqlite;</clavis>
     <clavis genus="bibliotheca">&stb_image;</clavis>
+    <clavis genus="bibliotheca">&monocypher;</clavis>
+    <clavis genus="bibliotheca">&bearssl;</clavis>
+    <clavis genus="bibliotheca">&freetype;</clavis>
+    <clavis genus="bibliotheca">&harfbuzz;</clavis>
+    <clavis genus="bibliotheca">&icu;</clavis>
+    <clavis genus="bibliotheca">&opus_codec;</clavis>
     <clavis genus="bibliotheca">&zlib;</clavis>
     <clavis genus="instrumentum-aedificationis">&make;</clavis>
     <clavis genus="instrumentum-aedificationis">&aedilis;</clavis>

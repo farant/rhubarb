@@ -117,6 +117,45 @@
     </historia>
   </bibliotheca>
 
+  <bibliotheca nomen="&monocypher;" scripta-in="&c;">
+    <historia>
+      <eventum quando="2017">a Loup Vaillant edita</eventum>
+    </historia>
+  </bibliotheca>
+
+  <bibliotheca nomen="&bearssl;" scripta-in="&c;">
+    <historia>
+      <eventum quando="2016">a Thoma Pornin edita</eventum>
+    </historia>
+  </bibliotheca>
+
+  <bibliotheca nomen="&freetype;" scripta-in="&c;">
+    <historia>
+      <eventum quando="1996">a Davide Turner sociisque
+        incepta</eventum>
+    </historia>
+  </bibliotheca>
+
+  <bibliotheca nomen="&harfbuzz;">
+    <historia>
+      <eventum quando="2006">e Pango a Behdad Esfahbod
+        seiuncta</eventum>
+    </historia>
+  </bibliotheca>
+
+  <bibliotheca nomen="&icu;">
+    <historia>
+      <eventum quando="1999">ab IBM edita</eventum>
+    </historia>
+  </bibliotheca>
+
+  <bibliotheca nomen="&opus_codec;" scripta-in="&c;">
+    <historia>
+      <eventum quando="2012-09-11">norma IETF (RFC 6716)
+        facta</eventum>
+    </historia>
+  </bibliotheca>
+
   <bibliotheca nomen="&zlib;" scripta-in="&c;"/>
 
   <instrumentum-aedificationis nomen="&make;" incrementale="verum" graphum-unde="declaratum">

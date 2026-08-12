@@ -9,6 +9,7 @@
     <liberum nomen="uncus"/>
     <liberum nomen="postulatum"/>
     <liberum nomen="facultas"/>
+    <liberum nomen="adscitio"/>
     <liberum nomen="probatio"/>
     <liberum nomen="probatio-unitatis"/>
     <liberum nomen="probatio-integrationis"/>
@@ -131,6 +132,29 @@
     <attributum nomen="ad" genus="referentia"/>
   </elementum>
   <elementum nomen="historia" intra="facultas">
+    <liberum nomen="eventum"/>
+  </elementum>
+
+  <elementum nomen="adscitio">
+    <glossa lingua="en">An adoption: the role of an external work
+    within a project, in the manner of an office - first-party
+    somewhere else, taken in here. The role is relative to the
+    project and does not inhere in the library: the same library
+    is first-party to one project and third-party to
+    another.</glossa>
+    <attributum nomen="nomen" genus="identitas"/>
+    <attributum nomen="status-integratio" genus="electio">
+      <optio>destinata</optio>
+      <optio>vendita</optio>
+    </attributum>
+    <attributum nomen="tenetur-a" genus="referentia"/>
+    <attributum nomen="intra" genus="referentia"/>
+    <attributum nomen="velata-per" genus="referentia"/>
+    <liberum nomen="historia" maximum="1"/>
+    <liberum nomen="nota"/>
+    <liberum nomen="glossa"/>
+  </elementum>
+  <elementum nomen="historia" intra="adscitio">
     <liberum nomen="eventum"/>
   </elementum>
 
@@ -682,10 +706,10 @@
 
   <unicitas nomen="identitas" attributum="nomen"
     nota="nomen= identitas est (par. 5.3): spatium nominum UNUM per genera omnia"
-    super="pactum uncus postulatum facultas probatio probatio-unitatis probatio-integrationis
-           probatio-regressionis probatio-fumi vitium regressio debitum-technicum
-           complicatio consilium consilium-computatum depravatio interventio
-           conservatio restauratio-aedificii curatio-medica"/>
+    super="pactum uncus postulatum facultas adscitio probatio probatio-unitatis
+           probatio-integrationis probatio-regressionis probatio-fumi vitium
+           regressio debitum-technicum complicatio consilium consilium-computatum
+           depravatio interventio conservatio restauratio-aedificii curatio-medica"/>
 
   <!-- CITATIONES: relatio petitum resolutum ferens clavem documenti fit.
        Subsumptio COMPILATA est: petitum cum posteris omnibus in
