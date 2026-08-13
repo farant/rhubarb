@@ -60,6 +60,7 @@ declare -a SOURCE_FILES=(
     "lib/imago.c"
     "lib/imago_collatio.c"
     "lib/imago_opus.c"
+    "lib/imago_png.c"
     "lib/imperium.c"
     "lib/importatio_visus.c"
     "lib/internamentum.c"
