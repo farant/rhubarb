@@ -9,6 +9,8 @@
     <via (>apps/forum/assets
     <via (>apps/villa
     <via (>apps/villa/assets
+    <via (>apps/mensor
+    <via (>apps/mensor/assets
     <via (>vendor
     <via (>gesta/fontes
     <via (>silva/amalgama

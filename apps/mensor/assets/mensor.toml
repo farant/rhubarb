@@ -1,0 +1,9 @@
+# Capsula config pro fronte mensoris
+# Regenerare: bin/capsula_generare apps/mensor/assets/mensor.toml
+# (generata capsula_mensor.{h,c} COMMITTUNTUR - mos villae/fori)
+#
+# COMPRIMITUR: facies una plagula est, sed exploratori nulla causa
+# est octetos crudos in binarium ferre.
+
+mensor_files = ["index.html"]
+mensor_compress = true

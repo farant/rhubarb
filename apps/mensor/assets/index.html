@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="utf-8">
+<title>mensor</title>
+<style>
+:root {
+  --fundus: #14161a; --tabula: #1c1f25; --ora: #2b3038;
+  --textus: #d8dce3; --tenuis: #8b94a3;
+  --totum: #7aa2f7; --compilatio: #e0af68; --cursus: #9ece6a;
+  --fracta: #f7768e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--fundus); color: var(--textus);
+  font: 13px/1.5 -apple-system, "SF Mono", Menlo, monospace;
+  padding: 18px;
+}
+h1 { font-size: 15px; font-weight: 600; letter-spacing: .04em; }
+h2 { font-size: 12px; font-weight: 600; color: var(--tenuis);
+     text-transform: uppercase; letter-spacing: .09em; margin-bottom: 10px; }
+.caput { display: flex; align-items: baseline; gap: 14px;
+         padding-bottom: 12px; border-bottom: 1px solid var(--ora); }
+.caput .nota { color: var(--tenuis); font-size: 11px; }
+.tabula { background: var(--tabula); border: 1px solid var(--ora);
+          border-radius: 6px; padding: 14px; margin-top: 14px; }
+.claves { display: flex; gap: 16px; margin-bottom: 8px; font-size: 11px; }
+.clavis { display: flex; align-items: center; gap: 5px; color: var(--tenuis); }
+.pila { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+td { padding: 3px 0; }
+td.n { text-align: right; color: var(--tenuis);
+       font-variant-numeric: tabular-nums; padding-left: 10px; }
+.virga { height: 11px; border-radius: 2px; background: var(--cursus); }
+.vacuum { color: var(--tenuis); padding: 22px 0; text-align: center; }
+.summa { display: flex; gap: 26px; flex-wrap: wrap; }
+.summa div { display: flex; flex-direction: column; }
+.summa .valor { font-size: 20px; font-variant-numeric: tabular-nums; }
+.summa .titulus { font-size: 10px; color: var(--tenuis);
+                  text-transform: uppercase; letter-spacing: .08em; }
+svg { display: block; width: 100%; height: 190px; }
+</style>
+</head>
+<body>
+
+<div class="caput">
+  <h1>mensor</h1>
+  <span class="nota" id="nota">…</span>
+</div>
+
+<div id="corpus"></div>
+
+<script>
+"use strict";
+
+function fig(n, d) { return (n === null || n === undefined || isNaN(n))
+  ? "—" : n.toFixed(d === undefined ? 2 : d); }
+
+function el(genus, attr, intra) {
+  var e = document.createElementNS(
+    genus === "svg" || genus === "path" || genus === "line" ||
+    genus === "circle" || genus === "text"
+      ? "http://www.w3.org/2000/svg" : "http://www.w3.org/1999/xhtml", genus);
+  for (var k in attr) { if (attr.hasOwnProperty(k)) e.setAttribute(k, attr[k]); }
+  if (intra !== undefined) { e.textContent = intra; }
+  return e;
+}
+
+/* Sessiones ordine temporis; clavis sessionis tempore praefixa est */
+function sessionesOrdinatae(d) {
+  var claves = {};
+  d.mensurae.forEach(function (m) { claves[m.sessio] = true; });
+  return Object.keys(claves).sort();
+}
+
+function valorem(d, sessio, titulus) {
+  for (var i = 0; i < d.mensurae.length; i++) {
+    var m = d.mensurae[i];
+    if (m.sessio === sessio && m.titulus === titulus) { return m.valor; }
+  }
+  return null;
+}
+
+/* Linea temporis: una series per titulum */
+function seriesPingere(sessiones, series) {
+  var lat = 800, alt = 190, ima = 24, sin = 44;
+  var svg = el("svg", { viewBox: "0 0 " + lat + " " + alt,
+                        preserveAspectRatio: "none" });
+  var maximum = 0;
+  series.forEach(function (s) {
+    s.valores.forEach(function (v) { if (v !== null && v > maximum) { maximum = v; } });
+  });
+  if (maximum <= 0) { maximum = 1; }
+
+  /* lineae ductrices */
+  for (var g = 0; g <= 4; g++) {
+    var y = 8 + (alt - ima - 8) * (g / 4);
+    svg.appendChild(el("line", { x1: sin, y1: y, x2: lat, y2: y,
+      stroke: "#2b3038", "stroke-width": 1 }));
+    svg.appendChild(el("text", { x: 0, y: y + 4, fill: "#8b94a3",
+      "font-size": 10 }, fig(maximum * (1 - g / 4), 0) + "s"));
+  }
+
+  var n = sessiones.length;
+  function px(i) { return n <= 1 ? sin : sin + (lat - sin) * (i / (n - 1)); }
+  function py(v) { return 8 + (alt - ima - 8) * (1 - v / maximum); }
+
+  series.forEach(function (s) {
+    var d = "", coepit = false;
+    s.valores.forEach(function (v, i) {
+      if (v === null) { return; }
+      d += (coepit ? " L" : "M") + px(i) + "," + py(v);
+      coepit = true;
+    });
+    if (d) {
+      svg.appendChild(el("path", { d: d, fill: "none", stroke: s.color,
+        "stroke-width": 2, "stroke-linejoin": "round" }));
+      s.valores.forEach(function (v, i) {
+        if (v !== null) {
+          svg.appendChild(el("circle", { cx: px(i), cy: py(v), r: 2.5,
+            fill: s.color }));
+        }
+      });
+    }
+  });
+
+  return svg;
+}
+
+function reddere() {
+  var d = window.MENSURAE;
+  var corpus = document.getElementById("corpus");
+  corpus.innerHTML = "";
+
+  if (!d || !d.mensurae || d.mensurae.length === 0) {
+    document.getElementById("nota").textContent = "nulla mensura";
+    var v = el("div", { "class": "vacuum" },
+      "Nullae mensurae. Curre ./compile_tests.sh");
+    corpus.appendChild(v);
+    return;
+  }
+
+  var sessiones = sessionesOrdinatae(d);
+  var ultima = sessiones[sessiones.length - 1];
+  var s0 = null;
+  d.sessiones.forEach(function (s) { if (s.clavis === ultima) { s0 = s; } });
+
+  document.getElementById("nota").textContent =
+    sessiones.length + " sessiones · " + d.mensurae.length + " mensurae" +
+    (s0 ? " · " + s0.systema + " " + s0.architectura +
+          " · machina " + s0.machina.substring(0, 8) : "");
+
+  /* ---- summa sessionis ultimae ---- */
+  var summa = el("div", { "class": "tabula" });
+  summa.appendChild(el("h2", {}, "sessio ultima"));
+  var box = el("div", { "class": "summa" });
+  [["totum", "suita.tempus.totum", "s", 1],
+   ["compilatio", "suita.tempus.compilatio", "s", 1],
+   ["cursus", "suita.tempus.cursus", "s", 1],
+   ["probationes", "suita.probationes.totae", "", 0],
+   ["fractae", "suita.probationes.fractae", "", 0]
+  ].forEach(function (par) {
+    var v = valorem(d, ultima, par[1]);
+    var c = el("div");
+    var n = el("span", { "class": "valor" }, fig(v, par[3]) + par[2]);
+    if (par[0] === "fractae" && v > 0) { n.style.color = "var(--fracta)"; }
+    c.appendChild(n);
+    c.appendChild(el("span", { "class": "titulus" }, par[0]));
+    box.appendChild(c);
+  });
+  summa.appendChild(box);
+  corpus.appendChild(summa);
+
+  /* ---- tendentia per sessiones ---- */
+  var tend = el("div", { "class": "tabula" });
+  tend.appendChild(el("h2", {}, "tendentia"));
+  var claves = el("div", { "class": "claves" });
+  var series = [
+    { titulus: "totum", clavis: "suita.tempus.totum", color: "#7aa2f7" },
+    { titulus: "compilatio", clavis: "suita.tempus.compilatio", color: "#e0af68" },
+    { titulus: "cursus", clavis: "suita.tempus.cursus", color: "#9ece6a" }
+  ];
+  series.forEach(function (s) {
+    s.valores = sessiones.map(function (k) { return valorem(d, k, s.clavis); });
+    var c = el("div", { "class": "clavis" });
+    var p = el("span", { "class": "pila" });
+    p.style.background = s.color;
+    c.appendChild(p);
+    c.appendChild(el("span", {}, s.titulus));
+    claves.appendChild(c);
+  });
+  tend.appendChild(claves);
+  tend.appendChild(seriesPingere(sessiones, series));
+  corpus.appendChild(tend);
+
+  /* ---- probationes tardissimae (sessio ultima) ---- */
+  var tard = d.mensurae.filter(function (m) {
+    return m.sessio === ultima && m.titulus.indexOf("probatio.cursus.") === 0;
+  }).sort(function (a, b) { return b.valor - a.valor; }).slice(0, 15);
+
+  if (tard.length > 0) {
+    var t = el("div", { "class": "tabula" });
+    t.appendChild(el("h2", {}, "probationes tardissimae"));
+    var tab = el("table");
+    var summus = tard[0].valor || 1;
+    tard.forEach(function (m) {
+      var tr = el("tr");
+      var nomen = m.titulus.replace("probatio.cursus.", "");
+      tr.appendChild(el("td", {}, nomen));
+      var tdv = el("td", { "style": "width:52%" });
+      var virga = el("div", { "class": "virga" });
+      virga.style.width = Math.max(2, (m.valor / summus) * 100) + "%";
+      tdv.appendChild(virga);
+      tr.appendChild(tdv);
+      tr.appendChild(el("td", { "class": "n" }, fig(m.valor) + "s"));
+      tab.appendChild(tr);
+    });
+    t.appendChild(tab);
+    corpus.appendChild(t);
+  }
+}
+
+window.reddere = reddere;
+
+/* Paginam paratam NUNTIARE: C datum tunc iniciet. Sine hoc nuntio
+ * iniectio cum onere certaret et interdum vacuum inveniret. */
+function nuntiare() {
+  try {
+    var h = window.webkit && window.webkit.messageHandlers;
+    if (h && h.internuntius) { h.internuntius.postMessage("paratus"); }
+  } catch (e) { /* sine ponte: datum iam adesse potest */ }
+  reddere();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", nuntiare);
+} else {
+  nuntiare();
+}
+</script>
+</body>
+</html>

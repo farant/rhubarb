@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>   /* execvp pro -ui */
 
 /* Mandatum metiendum horas capere potest (aedificatio plena) */
 #define MORA_AMPLA MMMMXCVI * M
@@ -540,6 +541,39 @@ main (integer argc, character** argv)
     si (piscina == NIHIL)
     {
         fprintf(stderr, "mensor: piscina fracta\n");
+        redde I;
+    }
+
+    /* -ui: BINARIUM ALIUD exsequimur, non vitream hic ligamus.
+     * Ligata, omnis vocatio in via calida AppKit et WebKit ad exec
+     * ferret - vitium observatoris per posticum. Semita ex argv[0]
+     * ducitur ut binaria iuxta se posita se inveniant. */
+    si (strcmp(argv[I], "-ui") == 0 || strcmp(argv[I], "ui") == 0)
+    {
+        character  semita[DXII];
+        character* ultima;
+
+        piscina_destruere(piscina);
+
+        strncpy(semita, argv[0], magnitudo(semita) - I);
+        semita[magnitudo(semita) - I] = '\0';
+
+        ultima = strrchr(semita, '/');
+        si (ultima != NIHIL)
+        {
+            strcpy(ultima + I, "mensor_ui");
+        }
+        alioquin
+        {
+            strcpy(semita, "mensor_ui");
+        }
+
+        argv[I] = semita;
+        execvp(semita, argv + I);
+
+        /* execvp solum redit cum fallit */
+        fprintf(stderr, "mensor: mensor_ui inveniri non potest (%s)\n",
+                semita);
         redde I;
     }
 
