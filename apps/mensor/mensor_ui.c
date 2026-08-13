@@ -438,10 +438,6 @@ main (integer argc, character** argv)
                  * Sine hac custodia internuntius de eo queritur
                  * ('culpa orba') in consola omni onere - strepitus
                  * qui culpas VERAS obtegeret. */
-                /* Nuntium 'paratus' chorda NUDA est, non JSON-RPC.
-                 * Sine hac custodia internuntius de eo queritur
-                 * ('culpa orba') in consola omni onere - strepitus
-                 * qui culpas VERAS obtegeret. */
                 si (vivarium.internuntius != NIHIL &&
                     nuntium.mensura > ZEPHYRUM &&
                     nuntium.datum[0] == '{')
