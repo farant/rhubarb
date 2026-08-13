@@ -130,6 +130,11 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(OFF(ifaddrs, ifa_flags) == 16);"
     echo "IUNGO_ASSERTA(OFF(ifaddrs, ifa_addr) == 24);"
     echo "IUNGO_ASSERTA(OFF(ifaddrs, ifa_netmask) == 32);"
+    # Unda 4 (2026-08-13): utsname + sysconf pro machina.h
+    echo "IUNGO_ASSERTA(sizeof(struct utsname) == 1280);"
+    echo "IUNGO_ASSERTA(OFF(utsname, release) == 512);"
+    echo "IUNGO_ASSERTA(OFF(utsname, machine) == 1024);"
+    echo "IUNGO_ASSERTA(_SC_NPROCESSORS_ONLN == 58);"
     echo "IUNGO_ASSERTA(sizeof(((struct ifaddrs*)0)->ifa_flags) == 4);"
     echo "IUNGO_ASSERTA(sizeof(struct ifaddrs) == 56);"
     echo "IUNGO_ASSERTA(IFF_UP == 0x1 && IFF_LOOPBACK == 0x8);"
@@ -195,6 +200,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <arpa/inet.h>"
     echo "#include <netdb.h>"
     echo "#include <ifaddrs.h>"
+    echo "#include <sys/utsname.h>"
     echo "#include <net/if.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta

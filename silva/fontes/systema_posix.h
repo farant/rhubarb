@@ -463,3 +463,26 @@ int sigemptyset(sigset_t* copia);
 
 /* <sectio caput="errno.h"/> errno.h - supplementa Undae 3 */
 #define EEXIST 17
+
+/* <sectio caput="sys/utsname.h"/> sys/utsname.h - nomina systematis
+ * (Unda 4, pro machina.h). Formae Darwin MENSURATAE 2026-08-13:
+ * _SYS_NAMELEN CCLVI, struct utsname MCCLXXX octeti, campi quini
+ * contigui (release ad 512, machine ad 1024). */
+#define _SYS_NAMELEN 256
+
+struct utsname {
+    char sysname[_SYS_NAMELEN];
+    char nodename[_SYS_NAMELEN];
+    char release[_SYS_NAMELEN];
+    char version[_SYS_NAMELEN];
+    char machine[_SYS_NAMELEN];
+};
+
+int uname(struct utsname* nomina);
+
+/* <sectio caput="unistd.h"/> unistd.h - sysconf (Unda 4)
+ * Valor _SC_NPROCESSORS_ONLN Darwin LVIII mensuratus; Linux LXXXIV
+ * differt - hic shim Darwin describit, dum compilatio vera capita
+ * vera adhibet. */
+long sysconf(int nomen);
+#define _SC_NPROCESSORS_ONLN 58
