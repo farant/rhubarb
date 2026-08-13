@@ -225,7 +225,19 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │  color, coloratio ─── color systems                 │    │
     │  │  fons, fons_visus, fons_6x8 ─── font rendering      │    │
     │  │  delineare ────────── 2D drawing primitives         │    │
-    │  │  imago, imago_opus ── image processing              │    │
+    │  │  imago_typus ──────── the Imago struct ALONE (no    │    │
+    │  │                  impl file, so wanting the type does│    │
+    │  │                  not import stb_image - measured)   │    │
+    │  │  imago, imago_opus ── image load (stb_image) + scale│    │
+    │  │  imago_collatio ───── image DIFF: verdict + counts  │    │
+    │  │                  + bounding box; antialias-aware    │    │
+    │  │                  (Kotsarenko/Ramos), tolerance is   │    │
+    │  │                  EXCEEDED not equalled, pixela_     │    │
+    │  │                  ferenda caps the COUNT. No I/O.    │    │
+    │  │  imago_png ────────── PNG ENCODER, portable C89 on  │    │
+    │  │                  flatura+crc32. No platform layer:  │    │
+    │  │                  the seam belongs at pixel capture, │    │
+    │  │                  not file format. Deterministic.    │    │
     │  │  dithering ────────── dithering algorithms          │    │
     │  │  cursor ───────────── custom mouse cursor           │    │
     │  │  tabula_characterum ─ 2D character grid (text edit) │    │
@@ -286,6 +298,24 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │                  proven by ../silicetum/laboratorium│    │
     │  │                  /fumus.sh (70, real window, BY     │    │
     │  │                  HAND - see the apps/ CAUTIO above) │    │
+    │  │  specimen ────── VISUAL REGRESSION over collatio +  │    │
+    │  │                  png + manus. Goldens in git;       │    │
+    │  │                  element crop is the default scope; │    │
+    │  │                  MISSING GOLDEN FAILS (never self-  │    │
+    │  │                  blesses); accept = mv x.novum.png  │    │
+    │  │                  x.png. A passing run DELETES stale │    │
+    │  │                  artifacts, so git status is the    │    │
+    │  │                  review queue. specimen_iudicare is │    │
+    │  │                  pure (no window); specimen_manus   │    │
+    │  │                  is smoke-only.                     │    │
+    │  │  vivarium ────── (in imperium.h) -vivum in ONE call:│    │
+    │  │                  brings its own hospitium+internun- │    │
+    │  │                  tius if the app has none. Seams    │    │
+    │  │                  only, so it never learns what a    │    │
+    │  │                  Vitrea is -> testable windowless.  │    │
+    │  │                  ONE internuntius = ONE imperium.   │    │
+    │  │                  Batteries-included app shell is    │    │
+    │  │                  PARKED as atrium (01KZYHBD7W).     │    │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
     │  ┌─ Domain Libraries ──────────────────────────────────┐    │
@@ -309,6 +339,36 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │  macho ──────────────── Mach-O binary format        │    │
     │  │  cliens_tabularii ───── tabulariumd client (MCP over │   │
     │  │                         TCP, start-if-absent)       │    │
+    │  │  machina ────────────── opaque STABLE machine id:   │    │
+    │  │                    SHA-256 of gethostuuid (macOS) / │    │
+    │  │                    /etc/machine-id (Linux). No state│    │
+    │  │                    file. REFUSES (empty) rather than│    │
+    │  │                    degrading to a constant - a const│    │
+    │  │                    would merge every machine's data.│    │
+    │  │                    machina_nota adds OS/arch/cores. │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                             │
+    │  ┌─ Measurement (2026-08-13) ──────────────────────────┐    │
+    │  │  mensura ────────────── NESTED measurements bound   │    │
+    │  │                    to a run. NOT metrum (parked RRD, │   │
+    │  │                    lossy); these are discrete,      │    │
+    │  │                    lossless, nested. Journal (plain │    │
+    │  │                    append) is the hot path; folded  │    │
+    │  │                    into a volumen after the run and │    │
+    │  │                    TRUNCATED, else double-counting. │    │
+    │  │  tools/mensor ───────── CLI: sessio / mensurare --  │    │
+    │  │                    cmd / addere / condere. Nesting  │    │
+    │  │                    is free across processes via     │    │
+    │  │                    MENSOR_SESSIO+MENSOR_PARENS in   │    │
+    │  │                    the environment; -parens for     │    │
+    │  │                    same-process loops. -ui execs    │    │
+    │  │                    apps/mensor (flame + trend).     │    │
+    │  │                    compile_tests.sh emits automat-  │    │
+    │  │                    ically; MENSOR_TACET=1 silences. │    │
+    │  │                    MEASURED: exec 95s / compile 19s │    │
+    │  │                    / PRE-FLIGHT 66s (runs whatever  │    │
+    │  │                    filter you pass - why a 1-test   │    │
+    │  │                    run still costs 40s+).           │    │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
     │  ┌─ Build / Remote Administration ─────────────────────┐    │
