@@ -77,6 +77,7 @@ nomen structura {
     i64 petitiones_fractae;   /* 404 - via in capsula absens */
     i64 navigationes_recusatae; /* navigationes extra originem */
     i64 errores_paginae;      /* exceptiones/promissa/console.error */
+    i64 lineae_consolae;      /* console.log/warn/info ad stdout */
 } VitreaFructus;
 
 /* ERRATOR - sutura errorum paginae.

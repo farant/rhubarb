@@ -62,3 +62,59 @@ verum tegit, manus id quod probatio ipsa excitat.
 - Sub `_nuntium_inserere` cauda plena `console.error` vocat - quod
   nunc per canalem erroris redit. Non est gyrus: console.error viam
   'erratum' adhibet, quae caudam non tangit.
+
+## 2026-08-13 — console.log ad stdout (canalis 'consola')
+
+`console.log` / `warn` / `info` nunc in effusionem processus eunt,
+praefixo notata:
+
+```
+[vitrea/log] salve ex pagina
+[vitrea/log] res: {"a":1,"b":[2,3]} 42 true
+[vitrea/monitum] cave
+[vitrea/info] nota
+```
+
+`console.error` in stderr manet (canalis 'erratum'), ergo `2>/dev/null`
+defectus solos tacet. Divisio ordinaria servata: log NUNTIUS est, non
+defectus.
+
+### Cur canalis alter, non 'erratum' cum genere novo
+
+Sutura `VitreaErrator` errores accipit. Si logi per eandem viam
+irent, applicatio quae errores CONDIT subito omnes lineas consolae
+conderet - mutatio morum tacita in codice qui iam scriptus est.
+Canalis alter ambo separatos servat.
+
+### Pingere, non String()
+
+`console.log('res', obiectum)` argumenta PLURA fert, et pleraque
+chordae non sunt. `String(obiectum)` `[object Object]` reddit - linea
+quae ADEST et TACET, pessimum genus actorum. Ergo JSON.stringify cum
+reditu duplici: circularia iactant, et `undefined` a stringify
+OMITTITUR (non 'undefined' redditur) - utrumque ad String() cadit.
+
+### Linea humana, JSON ad suturam
+
+`_lineam_imprimere` JSON parsat et lineam legibilem scribit; sutura
+JSON CRUDUM accipit. Homo `[vitrea/log] salve` legit, applicatio
+campos habet. Error paginae quoque hac forma nunc apparet (prius
+JSON crudum in stderr).
+
+`fflush` semper: effusio ad FISTULAM (quod fit cum manus
+applicationem generat, aut cum acta in plagulam vertuntur) plene
+bufferitur, ergo linea non effusa ordine falso apparet aut, si
+applicatio cadit, omnino perit.
+
+### Consola PRIOR servata
+
+`involvere` functionem priorem semper vocat post missionem, ergo
+inspector Safari quod semper habebat retinet. Additio est, non
+substitutio - qui inspectorem aperit nihil amittit.
+
+### Cavendum (nondum mordax)
+
+Pagina in gyro logens effusionem inundat. Sub `manus_incipere`
+fistula est, et `processus_pulsare` eam haurit (vide manus.h);
+sub terminali nihil obstat. Nullus modus temperandi positus - si
+umquam mordet, sedes recta est 'mittere' in JS, non C.

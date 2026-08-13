@@ -78,6 +78,61 @@ _litterae_copiare (Piscina* piscina, constans character* fons)
     redde l;
 }
 
+/* Lineam consolae/erroris HUMANE imprimere.
+ *
+ * JSON crudum ad suturam it (applicatio campos vult); homo lineam
+ * legit. '[vitrea/log] salve' longe utilius est quam
+ * '{"genus":"log","nuntius":"salve","ubi":""}' in actis inter
+ * lineas C mixtis.
+ *
+ * fflush semper: effusio ad FISTULAM (quod fit quando manus
+ * applicationem generat aut cum acta in plagulam vertuntur) plene
+ * bufferitur, et linea non effusa in ordine falso apparet - aut,
+ * si applicatio cadit, omnino perit. Acta quae ordinem mentiuntur
+ * peiora sunt quam nulla. */
+interior vacuum
+_lineam_imprimere (FILE* effusio, NSString* corpus,
+    constans character* crudum)
+{
+    NSData*  datum = [corpus dataUsingEncoding:NSUTF8StringEncoding];
+    NSError* error = nil;
+    id       obiectum = nil;
+
+    si (datum != nil)
+    {
+        obiectum = [NSJSONSerialization JSONObjectWithData:datum
+            options:0 error:&error];
+    }
+    si (obiectum != nil
+        && [obiectum isKindOfClass:[NSDictionary class]])
+    {
+        NSDictionary* d = (NSDictionary*)obiectum;
+        NSString* genus  = [d objectForKey:@"genus"];
+        NSString* textus = [d objectForKey:@"nuntius"];
+        NSString* ubi    = [d objectForKey:@"ubi"];
+
+        si (genus != nil && textus != nil)
+        {
+            si (ubi != nil && [ubi length] > 0)
+            {
+                fprintf(effusio, "[vitrea/%s] %s  (%s)\n",
+                    [genus UTF8String], [textus UTF8String],
+                    [ubi UTF8String]);
+            }
+            alioquin
+            {
+                fprintf(effusio, "[vitrea/%s] %s\n",
+                    [genus UTF8String], [textus UTF8String]);
+            }
+            fflush(effusio);
+            redde;
+        }
+    }
+    /* Forma ignota: crudum potius quam nihil. */
+    fprintf(effusio, "[vitrea] %s\n", crudum);
+    fflush(effusio);
+}
+
 /* nuntium in caudam inserere + pumpam expergefacere. Copia +
  * insertio SOLAE - nullus codex usoris intra vocamina WebKit.
  * Reset piscinae in adventu ad caudam VACUAM: chordae turmae
@@ -205,27 +260,51 @@ interior constans character* constans VITREA_CURSUS_JS =
  * captas; 'unhandledrejection' promissa reiecta (quae NIHIL usquam
  * scribunt); console.error quod codex ipse nuntiat. */
 "(function(){\n"
-"  function mittere(genus, nuntius, ubi) {\n"
+"  function mittere(canalis, genus, nuntius, ubi) {\n"
 "    try {\n"
-"      window.webkit.messageHandlers.erratum.postMessage(\n"
+"      window.webkit.messageHandlers[canalis].postMessage(\n"
 "        JSON.stringify({ genus: genus, nuntius: String(nuntius),\n"
 "                         ubi: ubi || '' }));\n"
 "    } catch (e) { /* canalis abest: tacendum, ne gyrus fiat */ }\n"
 "  }\n"
+/* console.log('res', obiectum) DUO argumenta fert, et alterum
+ * chorda non est. 'String(obiectum)' '[object Object]' redderet -
+ * quod nihil docet et pessimum genus actorum est: linea quae adest
+ * et tacet. Ergo JSON, cum reditu ad String pro circularibus (quae
+ * stringify iactant) et pro undefined (quod stringify OMITTIT). */
+"  function pingere(a) {\n"
+"    if (typeof a === 'string') { return a; }\n"
+"    if (a instanceof Error) { return a.message; }\n"
+"    try {\n"
+"      var s = JSON.stringify(a);\n"
+"      return (s === undefined) ? String(a) : s;\n"
+"    } catch (e) { return String(a); }\n"
+"  }\n"
+"  function iungere(argumenta) {\n"
+"    return Array.prototype.map.call(argumenta, pingere).join(' ');\n"
+"  }\n"
 "  window.addEventListener('error', function (ev) {\n"
-"    mittere('exceptio', ev.message || ev.error,\n"
+"    mittere('erratum', 'exceptio', ev.message || ev.error,\n"
 "      ev.filename ? (ev.filename + ':' + ev.lineno) : '');\n"
 "  });\n"
 "  window.addEventListener('unhandledrejection', function (ev) {\n"
 "    var r = ev.reason;\n"
-"    mittere('promissum', (r && r.message) ? r.message : r, '');\n"
+"    mittere('erratum', 'promissum', (r && r.message) ? r.message : r,\n"
+"      '');\n"
 "  });\n"
-"  var ce = console.error;\n"
-"  console.error = function () {\n"
-"    mittere('console', Array.prototype.slice.call(arguments)\n"
-"      .join(' '), '');\n"
-"    if (ce) { ce.apply(console, arguments); }\n"
-"  };\n"
+/* Consola involuta - PRIOR semper vocatur, ergo inspector Safari
+ * quod semper habebat retinet. Additio est, non substitutio. */
+"  function involvere(titulus, canalis, genus) {\n"
+"    var prior = console[titulus];\n"
+"    console[titulus] = function () {\n"
+"      mittere(canalis, genus, iungere(arguments), '');\n"
+"      if (prior) { prior.apply(console, arguments); }\n"
+"    };\n"
+"  }\n"
+"  involvere('error', 'erratum', 'console.error');\n"
+"  involvere('warn',  'consola', 'monitum');\n"
+"  involvere('log',   'consola', 'log');\n"
+"  involvere('info',  'consola', 'info');\n"
 "})();\n"
 "})();";
 
@@ -336,14 +415,17 @@ interior constans character* constans VITREA_CURSUS_JS =
         redde;
     }
 
-    /* Canalis 'erratum' caudam pontis NON tangit: applicationes
-     * omnes quod PONS non est ut 'recarica' tractant, ergo error
-     * per caudam missus gyrum cadendi-recargandi pareret. */
+    /* Canales 'erratum'/'consola' caudam pontis NON tangunt:
+     * applicationes omnes quod PONS non est ut 'recarica' tractant,
+     * ergo linea per caudam missa gyrum cadendi-recargandi
+     * pareret. */
     si ([nuntius.name isEqualToString:@"erratum"])
     {
         vitrea->fructus.errores_paginae++;
         si (vitrea->errator != NIHIL)
         {
+            /* Sutura JSON CRUDUM accipit: applicatio quae condit
+             * campos vult, non lineam formatam. */
             vitrea->errator(vitrea->errator_datum, octeti,
                 (i32)strlen(octeti));
         }
@@ -352,9 +434,25 @@ interior constans character* constans VITREA_CURSUS_JS =
             /* Ordinarius: clamare. Error paginae qui nusquam
              * apparet peior est quam nullus, quia fidem falsam
              * parit. */
-            fprintf(stderr, "[vitrea] erratum paginae: %s\n", octeti);
-            fflush(stderr);
+            _lineam_imprimere(stderr, corpus, octeti);
         }
+        redde;
+    }
+
+    /* console.log/warn/info -> stdout applicationis.
+     *
+     * CUR: qui faciem aedificat consolam WebKit habet - sed eam
+     * aperire debet, et in applicatione vecta aut per manum agitata
+     * eam omnino non habet. Effusio processus est ubi cetera acta
+     * iam sunt, ergo linea faciei iuxta lineam C apparet, ordine
+     * vero, sine inspectore.
+     *
+     * STDOUT, non stderr: log nuntius est, non defectus. Divisio
+     * ordinaria servatur ut '2>/dev/null' errores solos taceat. */
+    si ([nuntius.name isEqualToString:@"consola"])
+    {
+        vitrea->fructus.lineae_consolae++;
+        _lineam_imprimere(stdout, corpus, octeti);
         redde;
     }
 
@@ -561,6 +659,8 @@ vitrea_creare (Piscina* piscina, Fenestra* fenestra,
             name:@"internuntius"];
         [moderator addScriptMessageHandler:vitrea->auscultator
             name:@"erratum"];
+        [moderator addScriptMessageHandler:vitrea->auscultator
+            name:@"consola"];
         [figura setUserContentController:moderator];
         [moderator release];
         si (configuratio->origo == VITREA_ORIGO_CAPSULA)
@@ -629,6 +729,8 @@ vitrea_destruere (Vitrea* vitrea)
             removeScriptMessageHandlerForName:@"internuntius"];
         [[[vitrea->textura configuration] userContentController]
             removeScriptMessageHandlerForName:@"erratum"];
+        [[[vitrea->textura configuration] userContentController]
+            removeScriptMessageHandlerForName:@"consola"];
         [vitrea->textura setNavigationDelegate:nil];
         [vitrea->textura setUIDelegate:nil];
         [vitrea->textura stopLoading];
