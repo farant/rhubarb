@@ -106,3 +106,50 @@ needs `-Wno-long-long` like everything else, since `latina.h` defines
 i64/s64 as `long long`. The flag list in root `CLAUDE.md` omits
 `-std=c89`, `-Wno-long-long` **and** `-Wno-overlength-strings` — the
 real set is in `compile_tests.sh`. Bit me twice in one session.
+
+## 2026-08-13 — vivarium (baculi inclusi)
+
+Fran's framing was better than my own: the point is not the ~45 lines
+saved, it is **discoverability** — a new vitrea app should get `-vivum`
+out of the box rather than by copying wiring out of another app.
+
+### Why not in vitrea
+
+`vitrea.h` declares a permanent scope: *"adhaesio texturae + origo
+assetorum + transportus chordarum, IN AETERNUM"*. An HTTP server behind
+a vitrea flag would break that, and would make every vitrea app link
+hospitium whether or not it serves anything.
+
+### Why here
+
+imperium already includes hospitium and internuntius, so vivarium adds
+no dependency. And all three seams (`ImperiumAestimator`,
+`ImperiumImaginator`, `InternuntiusMissor`) are vitrea-free — so
+vivarium, like imperium, never learns what a Vitrea is. That is also
+why it can be tested with no window at all.
+
+### The premise this corrects
+
+This header said imperium builds on *"duas res quae IAM ADSUNT"*. True
+for forum and villa, which have hospitium and internuntius for real
+RPC. **False for a read-only viewer**: mensor_ui had neither, and had
+to stand up an HTTP server and an RPC bridge purely to get a JS eval
+channel. Vivarium absorbs that difference — bring your own, or get one
+made.
+
+### Constraint found by a failing test
+
+My first test handed vivarium the `inx` that already had an imperium
+bound to it, and it refused. That was **correct**: `imperium_praebere`
+registers the `imperium.responsum` bridge method, and a duplicate
+registration fails — so **one internuntius carries exactly one
+imperium**. Nobody had written that down. Now it is in the header and
+pinned as a test case, so passing a bound bridge is a named refusal
+rather than a baffling failure.
+
+### Note on reading diagnostics
+
+examen reported the new struct's seam types as `[infra]` — below
+threshold, which I read as noise. They were a real error: I had placed
+the struct *before* the typedefs it references. `infra` is not
+automatically noise.

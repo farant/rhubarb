@@ -582,3 +582,133 @@ imperium_fructus (
         redde f;
     }
 }
+
+/* ============================================================
+ * VIVARIUM - ligatio parata (vide imperium.h)
+ * ============================================================ */
+
+interior Vivarium
+_vivarium_fractum (constans character* causa, Piscina* piscina)
+{
+    Vivarium v;
+
+    v.successus    = FALSUM;
+    v.hospitium    = NIHIL;
+    v.internuntius = NIHIL;
+    v.imperium     = NIHIL;
+    v.portus       = ZEPHYRUM;
+    v.propria      = FALSUM;
+    v.causa        = chorda_ex_literis(causa, piscina);
+
+    redde v;
+}
+
+Vivarium
+imperium_vivarium (Piscina* piscina,
+                   constans VivariumConfiguratio* figura)
+{
+    Vivarium v;
+
+    si (piscina == NIHIL || figura == NIHIL)
+    {
+        redde _vivarium_fractum("Argumenta invalida", piscina);
+    }
+
+    si (figura->aestimator == NIHIL)
+    {
+        redde _vivarium_fractum(
+            "Aestimator deest - sine eo imperium JS mittere nequit",
+            piscina);
+    }
+
+    v.successus    = FALSUM;
+    v.hospitium    = figura->hospitium;
+    v.internuntius = figura->internuntius;
+    v.imperium     = NIHIL;
+    v.portus       = ZEPHYRUM;
+    v.propria      = FALSUM;
+    v.causa.datum  = NIHIL;
+    v.causa.mensura = ZEPHYRUM;
+
+    /* Hospitium: datum adhibere, aliter creare */
+    si (v.hospitium == NIHIL)
+    {
+        HospitiumConfiguratio figura_hospitii;
+
+        memset(&figura_hospitii, 0, magnitudo(figura_hospitii));
+        figura_hospitii.portus = figura->portus;
+
+        v.hospitium = hospitium_creare(piscina, &figura_hospitii);
+        si (v.hospitium == NIHIL)
+        {
+            redde _vivarium_fractum(
+                "Hospitium ligari non potuit (portus occupatus?)",
+                piscina);
+        }
+        v.propria = VERUM;
+    }
+
+    /* Internuntius: datum adhibere, aliter creare (missor opus est) */
+    si (v.internuntius == NIHIL)
+    {
+        si (figura->missor == NIHIL)
+        {
+            redde _vivarium_fractum(
+                "Missor deest et internuntius non datus - alterutrum "
+                "opus est ut responsa ex pagina redeant",
+                piscina);
+        }
+
+        v.internuntius = internuntius_creare(piscina, figura->missor,
+                                             figura->datum);
+        si (v.internuntius == NIHIL)
+        {
+            redde _vivarium_fractum("Internuntius creari non potuit",
+                                    piscina);
+        }
+    }
+
+    v.imperium = imperium_creare(piscina, figura->aestimator,
+                                 figura->datum);
+    si (v.imperium == NIHIL)
+    {
+        redde _vivarium_fractum("Imperium creari non potuit", piscina);
+    }
+
+    /* ORDO: praebere ANTE fenestram/imaginatorem ponere. Hic tenetur
+     * ut applicatio quaeque eum ex documentis rursus non deducat. */
+    si (!imperium_praebere(v.imperium, v.hospitium, v.internuntius))
+    {
+        redde _vivarium_fractum(
+            "imperium_praebere defecit (viae iam occupatae?)", piscina);
+    }
+
+    si (figura->fenestra != ZEPHYRUM)
+    {
+        imperium_fenestram_ponere(v.imperium, figura->fenestra);
+    }
+
+    /* Imaginator OPTIVUS: sine eo via imaginis CDIV reddit -
+     * recusatio APERTA, non imago vacua */
+    si (figura->imaginator != NIHIL)
+    {
+        imperium_imaginatorem_ponere(v.imperium, figura->imaginator,
+                                     figura->datum);
+    }
+
+    v.portus    = hospitium_portus(v.hospitium);
+    v.successus = VERUM;
+
+    redde v;
+}
+
+vacuum
+vivarium_gressus (constans Vivarium* vivarium)
+{
+    si (vivarium == NIHIL || vivarium->hospitium == NIHIL)
+    {
+        redde;
+    }
+
+    (vacuum)hospitium_gressus(vivarium->hospitium, ZEPHYRUM);
+}

@@ -285,6 +285,86 @@ principale (vacuum)
     CREDO_AEQUALIS_I32((i32)fructus.culpae, I);
     CREDO_AEQUALIS_I32((i32)fructus.pendentia, ZEPHYRUM);
 
+    /* --- XI. VIVARIUM: ligatio parata ---
+     * Sine fenestra probabile quia vivarium suturas accipit, non
+     * Vitream - eadem ratio qua imperium ipsum probari potest. */
+    {
+        VivariumConfiguratio fv;
+        Vivarium             v;
+
+        /* Omnia intus creata (casus spectatoris: nec hospitium nec
+         * internuntium habet) */
+        memset(&fv, 0, magnitudo(fv));
+        fv.aestimator = _aestimator_capiens;
+        fv.imaginator = _imaginator_falsus;
+        fv.missor     = _missor_mutus;
+        fv.datum      = NIHIL;
+        v = imperium_vivarium(piscina, &fv);
+
+        CREDO_VERUM(v.successus);
+        CREDO_NON_NIHIL(v.hospitium);
+        CREDO_NON_NIHIL(v.internuntius);
+        CREDO_NON_NIHIL(v.imperium);
+        CREDO_VERUM(v.propria);              /* hospitium NOSTRUM */
+        CREDO_MAIOR_I32(v.portus, ZEPHYRUM); /* auto-selectus resolutus */
+        CREDO_AEQUALIS_I32(v.causa.mensura, ZEPHYRUM);
+
+        /* Internuntius DATUM adhibetur, non novus - applicatio quae
+         * suum pontem habet duos habere non debet.
+         * NOTA: pons RECENS esse debet. Imperium methodum
+         * 'imperium.responsum' in eo registrat, et registratio
+         * gemina fallit - ergo unus pons UNUM imperium fert.
+         * (Hoc ipsum probatio prima huius sectionis invenit, cum
+         * pontem iam ligatum tradidissem: vivarium recte RECUSAVIT.) */
+        {
+            Internuntius* pons_novus =
+                internuntius_creare(piscina, _missor_mutus, NIHIL);
+
+            CREDO_NON_NIHIL(pons_novus);
+
+            memset(&fv, 0, magnitudo(fv));
+            fv.aestimator   = _aestimator_capiens;
+            fv.internuntius = pons_novus;
+            v = imperium_vivarium(piscina, &fv);
+            CREDO_VERUM(v.successus);
+            CREDO_AEQUALIS_PTR(v.internuntius, pons_novus);
+            CREDO_VERUM(v.propria);   /* hospitium tamen nostrum */
+
+            /* Pontem IAM LIGATUM tradere: RECUSAT et causam nominat */
+            memset(&fv, 0, magnitudo(fv));
+            fv.aestimator   = _aestimator_capiens;
+            fv.internuntius = pons_novus;
+            v = imperium_vivarium(piscina, &fv);
+            CREDO_FALSUM(v.successus);
+            CREDO_CHORDA_NON_VACUA(v.causa);
+        }
+
+        /* Aestimator OBLIGATORIUS: sine eo imperium mutum esset */
+        memset(&fv, 0, magnitudo(fv));
+        fv.missor = _missor_mutus;
+        v = imperium_vivarium(piscina, &fv);
+        CREDO_FALSUM(v.successus);
+        CREDO_CHORDA_NON_VACUA(v.causa);
+
+        /* Nec missor nec internuntius: responsa redire non possent.
+         * RECUSAT et causam NOMINAT - non tacite sine ponte pergit. */
+        memset(&fv, 0, magnitudo(fv));
+        fv.aestimator = _aestimator_capiens;
+        v = imperium_vivarium(piscina, &fv);
+        CREDO_FALSUM(v.successus);
+        CREDO_CHORDA_NON_VACUA(v.causa);
+
+        /* Argumenta nulla */
+        v = imperium_vivarium(piscina, NIHIL);
+        CREDO_FALSUM(v.successus);
+
+        /* Gressus super NIHIL tutus est (applicatio quae -vivum non
+         * dedit eum tamen in gyro vocat) */
+        vivarium_gressus(NIHIL);
+        memset(&v, 0, magnitudo(v));
+        vivarium_gressus(&v);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
 
