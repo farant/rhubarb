@@ -29,10 +29,14 @@
 #include "volumen.h"
 #include "silex.h"
 #include "mensa.h"
+#include "stml.h"
+#include "internamentum.h"
+#include "canon.h"
 #include "silex_assets/capsula_silex_frons.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* corpus bibliothecarum a struere genitum - externus directus
  * (mos consumptoris: caput generatum non includitur) */
@@ -40,6 +44,172 @@
 externus constans CapsulaEmbed capsula_corpus_silicis;
 
 #define SILEX_VERSIO "v0"
+
+#define REGISTRUM_CANONUM "canones.registrum"
+
+/* ========================================================================
+ * IUDICARE - documentum STML contra canonem domus
+ *
+ * Canones per FONTEM leguntur, non per viam disci: intra arborem
+ * rhubarb canon RECENS de disco venit, extra eam canon INFIXUS e
+ * corpore. Idem verbum utrobique, fons diversus - et '-versio'
+ * stampam corporis dicit, ergo interrogari potest QUEM canonem
+ * iudicium tulerit (numerus sine via signum non est).
+ * ======================================================================== */
+
+/* campus vitii cum limitibus cardinalitatis (par canon_examen) */
+interior constans character*
+_vitium_campus (
+    CanonVitium* v,
+    character*   buffer,
+    i32          tectum)
+{
+    si (v->genus == CANON_LIBERI_PAUCI ||
+        v->genus == CANON_LIBERI_MULTI)
+    {
+        sprintf(buffer, "%.*s (%u, limes %u)",
+            v->detail ? (integer)v->detail->mensura : 1,
+            v->detail ? (constans character*)v->detail->datum : "-",
+            v->numerus, v->limes);
+        redde buffer;
+    }
+    si (!v->detail)
+    {
+        redde "-";
+    }
+    {
+        i32 m;
+
+        m = v->detail->mensura < tectum - I ? v->detail->mensura
+                                            : tectum - I;
+        memcpy(buffer, v->detail->datum, (memoriae_index)m);
+        buffer[m] = '\0';
+    }
+    redde buffer;
+}
+
+/* Redde: 0 sanum, 1 vitia, 2 NIHIL IUDICATUM (canon non inventus,
+ * plagula illegibilis) - exitus II numquam pro 'praeteriit' sumendus */
+interior s32
+_iudicare (
+    Piscina*            piscina,
+    constans SilexFons* fons,
+    constans character* via)
+{
+    InternamentumChorda* intern;
+    StmlResultus         lectum;
+    chorda               textus;
+    chorda               via_canonis;
+    chorda               fons_canonis;
+    Canon*               canon;
+    chorda               causa;
+    StmlNodus*           infixus;
+    Xar*                 vitia;
+    b32                  inventum;
+    i32                  index;
+    constans character*  origo;
+
+    causa.datum   = NIHIL;
+    causa.mensura = ZEPHYRUM;
+
+    /* filum_legere_totum mensuram ZEPHYRUM reddit in defectu */
+    textus = filum_legere_totum(via, piscina);
+    si (textus.mensura == ZEPHYRUM)
+    {
+        fprintf(stderr, "silex iudicare: '%s' legi nequit\n", via);
+        redde II;
+    }
+    intern = internamentum_creare(piscina);
+    lectum = stml_legere_ex_literis(chorda_ut_cstr(textus, piscina),
+        piscina, intern);
+    si (!lectum.successus || lectum.elementum_radix == NIHIL)
+    {
+        fprintf(stderr, "silex iudicare: '%s' parsari nequit"
+            " (linea %u)\n", via, lectum.linea_erroris);
+        redde II;
+    }
+
+    /* canon INFIXUS vincit: documentum contractum suum ferre potest */
+    infixus = canon_infixum_invenire(lectum.elementum_radix);
+    si (infixus != NIHIL)
+    {
+        canon = canon_ex_nodo(infixus, piscina, intern, &causa);
+        origo = "(infixus)";
+    }
+    alioquin
+    {
+        chorda catalogus = silex_fons_legere(fons, REGISTRUM_CANONUM,
+            piscina, &inventum);
+
+        si (!inventum)
+        {
+            fprintf(stderr, "silex iudicare: registrum '%s' in fonte"
+                " abest\n", REGISTRUM_CANONUM);
+            redde II;
+        }
+        /* RADIX VINCIT: documentum se ipsum profitetur; extensio
+         * cadens est (vide canon.h) */
+        via_canonis = canon_registrum_quaerere_radice(catalogus,
+            lectum.elementum_radix->titulus, piscina);
+        si (via_canonis.mensura == ZEPHYRUM)
+        {
+            via_canonis = canon_registrum_quaerere(catalogus, via,
+                piscina);
+        }
+        si (via_canonis.mensura == ZEPHYRUM)
+        {
+            fprintf(stderr, "silex iudicare: '%s' - nullus canon in"
+                " registro (nec radix <%.*s> nec extensio)\n", via,
+                (integer)lectum.elementum_radix->titulus->mensura,
+                (constans character*)
+                    lectum.elementum_radix->titulus->datum);
+            redde II;
+        }
+        fons_canonis = silex_fons_legere(fons,
+            chorda_ut_cstr(via_canonis, piscina), piscina, &inventum);
+        si (!inventum)
+        {
+            fprintf(stderr, "silex iudicare: canon '%.*s' in fonte"
+                " abest\n", (integer)via_canonis.mensura,
+                (constans character*)via_canonis.datum);
+            redde II;
+        }
+        canon = canon_legere(fons_canonis, piscina, intern, &causa);
+        origo = chorda_ut_cstr(via_canonis, piscina);
+    }
+
+    si (canon == NIHIL)
+    {
+        fprintf(stderr, "silex iudicare: canon fractus: %.*s\n",
+            (integer)causa.mensura,
+            causa.datum ? (constans character*)causa.datum : "-");
+        redde II;
+    }
+
+    vitia = canon_iudicare(canon, lectum.radix, piscina);
+    si (vitia == NIHIL || xar_numerus(vitia) == ZEPHYRUM)
+    {
+        imprimere("silex iudicare: %s SANUM [%s]\n", via, origo);
+        redde ZEPHYRUM;
+    }
+    per (index = 0; index < xar_numerus(vitia); index = index + I)
+    {
+        CanonVitium* v = (CanonVitium*)xar_obtinere(vitia, index);
+        character    buffer[DXII];
+
+        imprimere("%s:%u: <%.*s> %s: %s [%s]\n", via,
+            v->nodus ? v->nodus->linea : ZEPHYRUM,
+            v->elementum ? (integer)v->elementum->mensura : 1,
+            v->elementum ? (constans character*)v->elementum->datum
+                         : "-",
+            canon_nuntius(v->genus),
+            _vitium_campus(v, buffer, (i32)magnitudo(buffer)),
+            origo);
+    }
+    imprimere("silex iudicare: %s VITIA %d\n", via,
+        (integer)xar_numerus(vitia));
+    redde I;
+}
 
 /* fabrica in datum tractatoris - NIHIL = ignota (ui tolerat) */
 interior JsonValor*
@@ -443,7 +613,8 @@ principale (integer argc, character** argv)
         "silex - proiecta nova e fabrica rhubarb excudere");
     argumenta_addere_positionalem(parser, "verbum",
         "verbum (novum | ui | status | condere | historia |"
-        " proicere | renovare | partes; sine argumentis = ui)",
+        " proicere | renovare | partes | iudicare;"
+        " sine argumentis = ui)",
         FALSUM);
     argumenta_addere_positionalem(parser, "titulus",
         "nomen proiecti (pro novo)", FALSUM);
@@ -468,6 +639,8 @@ principale (integer argc, character** argv)
         "silex novum 001 -f ~/Documents/projects/rhubarb");
     argumenta_addere_exemplum(parser,
         "silex proicere -ad 12 -scribere");
+    argumenta_addere_exemplum(parser,
+        "silex iudicare experimenta/0001/experimentum.census");
 
     lecta = argumenta_conari_parsere(parser, (i32)argc,
         (constans character* constans*)argv);
@@ -536,6 +709,19 @@ principale (integer argc, character** argv)
 
     /* partes: oraculum clausurae (proiectum = cwd; positionale
      * secundum = plagula una optionalis) */
+    si (chorda_aequalis_literis(verbum, "iudicare"))
+    {
+        si (titulus.mensura == ZEPHYRUM)
+        {
+            fprintf(stderr, "silex iudicare: plagula deest\n"
+                "  usus: silex iudicare <plagula.census|.stml|"
+                ".genera>\n");
+            redde II;
+        }
+        redde _iudicare(piscina, fons,
+            chorda_ut_cstr(titulus, piscina));
+    }
+
     si (chorda_aequalis_literis(verbum, "partes"))
     {
         constans character* plagula = titulus.mensura > ZEPHYRUM
@@ -854,7 +1040,7 @@ principale (integer argc, character** argv)
     {
         fprintf(stderr, "silex: verbum ignotum: %.*s"
             " (verba: novum, ui, status, condere, historia,"
-            " proicere, renovare, partes)\n",
+            " proicere, renovare, partes, iudicare)\n",
             (integer)verbum.mensura,
             (constans character*)verbum.datum);
         redde I;
