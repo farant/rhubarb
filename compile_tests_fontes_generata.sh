@@ -22,6 +22,7 @@ declare -a SOURCE_FILES=(
     "lib/arbor_typus.c"
     "lib/argumenta.c"
     "lib/arx_caeli.c"
+    "lib/atrium.c"
     "lib/base64.c"
     "lib/biblia_dr.c"
     "lib/biblia_visus.c"
