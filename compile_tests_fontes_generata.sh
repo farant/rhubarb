@@ -117,6 +117,7 @@ declare -a SOURCE_FILES=(
     "lib/sigillum.c"
     "lib/silex.c"
     "lib/similitudo.c"
+    "lib/specimen.c"
     "lib/speculum.c"
     "lib/sputnik_interpres.c"
     "lib/sputnik_lexema.c"
