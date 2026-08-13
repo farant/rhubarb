@@ -395,6 +395,84 @@ manus_textus (
     constans character* selector);
 
 /* ==================================================
+ * Affordantiae - QUID ADEST (enumeratio)
+ * ==================================================
+ *
+ * PROBLEMA: omnia supra selectorem POSCUNT quem iam nosti.
+ * manus_premere("#x") rogat 'estne #x?'; NIHIL rogat 'quid adest?'.
+ * Ergo qui applicationem ignotam agitat - agens, aut homo
+ * probationem scribens - selectores DIVINARE debet aut DOM crudum
+ * legere.
+ *
+ * IMAGO ID NON SOLVIT. Pictura ostendit quid VIDEATUR; nihil
+ * NOMINABILE reddit. Duo genera veritatis sunt: imago quid usor
+ * videat (situs, tegumentum, quid supra sit), affordantiae quid
+ * NOMINARI et TANGI possit. Neutrum alterum supplet - ergo
+ * affordantiae imaginem COMITANTUR.
+ *
+ * ET INTER SE RESPONDENT: quaeque aream suam fert, ergo 'res in illo
+ * loco picturae' numerus certus in indice est.
+ *
+ * LEX COHAERENTIAE: enumeratio EANDEM definitionem visibilitatis
+ * adhibet quam actiones. Ergo quidquid hic apparet manus premere
+ * accipiet, et impedimentum hic nominatum est ipsum verbum quod
+ * actio diceret. Si duae definitiones divergerent, affordantias
+ * reciperes quas premere recusaret - index qui mentiretur.
+ *
+ * LECTIO SOLA, ET CONSULTO: iudicium agibilitatis actionum
+ * scrollIntoView vocat - paginam MOVET. Enumeratio quae paginam
+ * moveret id ipsum mutaret quod nuntiare debet. Ergo:
+ *   - 'impeditum' idem iudicium est (purum, nihil mutat)
+ *   - obtectio SOLUM intra prospectum iudicatur; extra eum
+ *     impedimentum VACUUM redditur, quia actio elementum in
+ *     prospectum volvet et tunc RURSUS iudicabit. Nullum mendacium
+ *     propagatur: iudicium verum in tempore actionis fit.
+ */
+
+nomen enumeratio {
+    AFFORDANTIA_IGNOTA    = 0,
+    AFFORDANTIA_PREMENDA  = 1,  /* a[href], button, summary, role */
+    AFFORDANTIA_SCRIBENDA = 2,  /* input textualis, textarea */
+    AFFORDANTIA_ELIGENDA  = 3,  /* select */
+    AFFORDANTIA_COMMUTANDA = 4  /* checkbox, radio */
+} AffordantiaGenus;
+
+/*
+ * @selector:     manus_premere/scribere hunc ACCIPIT (#id si adest,
+ *                aliter semita nth-of-type)
+ * @titulus:      quod usor legit (aria-label > label > placeholder >
+ *                textus > nomen), spatiis coactis, LXXX litteris
+ * @valor:        scribendis/eligendis: contentum currens
+ * @impedimentum: VACUUM = agibile; aliter causa LITTERALIS
+ * @x/@y:         relativa prospectui - SIGNATA, nam quod supra
+ *                marginem volutum est negativum est
+ */
+nomen structura {
+    AffordantiaGenus genus;
+    chorda           selector;
+    chorda           titulus;
+    chorda           valor;
+    chorda           impedimentum;
+    s32              x;
+    s32              y;
+    s32              latitudo;
+    s32              altitudo;
+} Affordantia;
+
+nomen structura {
+    Affordantia* res;
+    i32          numerus;
+} Affordantiae;
+
+/* Omnia visibilia quae tangi possunt, in piscinam datam.
+ * numerus ZEPHYRUM si manus fracta est aut pagina nihil habet -
+ * distingue per manus_fracta. */
+Affordantiae
+manus_affordantiae (
+    Manus*   manus,
+    Piscina* piscina);
+
+/* ==================================================
  * Asserta (EXSPECTANT, notant, frangunt)
  * ==================================================
  *

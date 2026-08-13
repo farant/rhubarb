@@ -539,6 +539,82 @@ _iussum (
     "return r.length?r[r.length-1]:null;}" \
     "function qtn(t){return _tm(t).length;}"
 
+/* ENUMERATIO AFFORDANTIARUM - vide manus.h pro ratione.
+ *
+ * v() ADHIBETUR, non definitur: lex cohaerentiae poscit ut index
+ * eandem visibilitatem intellegat quam actiones. Si hic aliam
+ * definitionem scriberem, index affordantias ferret quas manus
+ * premere recusaret - et divergentia tacite cresceret.
+ *
+ * IMPEDIMENTUM: iudicium act() supra RECIPITUR quantum purum est.
+ * 'disabled' idem est verbatim. Obtectio autem scrollIntoView
+ * poscit ut vera sit, quod paginam moveret - ergo extra prospectum
+ * NON iudicamus (vacuum reddimus) et actio ipsa, quae volvere
+ * DEBET, rursus iudicabit. Melius est tacere quam divinare.
+ *
+ * SELECTOR: '#id' si adest (stabilis), aliter semita nth-of-type
+ * usque ad primum maiorem cum id, aut ad corpus. Semita fragilis
+ * est si pagina mutatur - sed hic index INSTANTANEUS est, non
+ * conditus, ergo fragilitas nullum tempus habet ad nocendum. */
+#define MANUS_JS_AFFORDANTIAE \
+    "var S='a[href],button,input,textarea,select,summary," \
+    "[role=\"button\"],[role=\"link\"],[contenteditable=\"true\"]';" \
+    "function _esc(s){return (window.CSS&&CSS.escape)?CSS.escape(s):s;}" \
+    "function _via(e){if(e.id)return '#'+_esc(e.id);" \
+    "var p=[],n,s;" \
+    "while(e&&e.nodeType===1&&e!==document.body){" \
+    "if(e.id){p.unshift('#'+_esc(e.id));break;}" \
+    "n=1;s=e.previousElementSibling;" \
+    "for(;s;s=s.previousElementSibling){if(s.tagName===e.tagName)n++;}" \
+    "p.unshift(e.tagName.toLowerCase()+':nth-of-type('+n+')');" \
+    "e=e.parentNode;}" \
+    "return p.join('>');}" \
+    "function _sp(t){var o='',pr=true,i,c;t=String(t||'');" \
+    "for(i=0;i<t.length;i++){c=t.charAt(i);" \
+    "if(c<=' '){if(!pr){o+=' ';pr=true;}}else{o+=c;pr=false;}}" \
+    "if(o.charAt(o.length-1)===' ')o=o.substring(0,o.length-1);" \
+    "return o.length>80?o.substring(0,80):o;}" \
+    "function _lab(e){var t=e.getAttribute?" \
+    "(e.getAttribute('aria-label')||''):'';" \
+    "if(!t&&e.labels&&e.labels.length)t=e.labels[0].textContent||'';" \
+    "if(!t)t=e.placeholder||'';" \
+    "if(!t&&e.tagName!=='INPUT'&&e.tagName!=='SELECT'" \
+    "&&e.tagName!=='TEXTAREA')t=e.textContent||'';" \
+    "if(!t)t=e.name||'';" \
+    "return _sp(t);}" \
+    "function _gen(e){var g=e.tagName.toLowerCase()," \
+    "y=(e.type||'').toLowerCase(),r;" \
+    "if(g==='select')return 3;" \
+    "if(g==='textarea')return 2;" \
+    "if(g==='input'){if(y==='checkbox'||y==='radio')return 4;" \
+    "if(y==='submit'||y==='button'||y==='reset')return 1;" \
+    "if(y==='hidden')return 0;return 2;}" \
+    "if(g==='a'||g==='button'||g==='summary')return 1;" \
+    "r=(e.getAttribute&&e.getAttribute('role'))||'';" \
+    "if(r==='button'||r==='link')return 1;" \
+    "if(e.isContentEditable)return 2;" \
+    "return 0;}" \
+    "function _imp(e,rc){" \
+    "if(e.disabled||(e.matches&&e.matches(':disabled')))" \
+    "return 'elementum impeditum (disabled)';" \
+    "if(rc.bottom<0||rc.right<0||rc.top>(window.innerHeight||0)" \
+    "||rc.left>(window.innerWidth||0))return '';" \
+    "var sup=document.elementFromPoint(rc.left+rc.width/2," \
+    "rc.top+rc.height/2);" \
+    "if(sup&&sup!==e&&!e.contains(sup)&&!sup.contains(e))" \
+    "return 'elementum obtectum a <'+sup.tagName.toLowerCase()+" \
+    "(sup.id?'#'+sup.id:'')+'>';" \
+    "return '';}" \
+    "var l=document.querySelectorAll(S),i,e,g,rc,r=[];" \
+    "for(i=0;i<l.length;i++){e=l[i];if(!v(e))continue;" \
+    "g=_gen(e);if(!g)continue;rc=e.getBoundingClientRect();" \
+    "r.push({genus:g,selector:_via(e),titulus:_lab(e)," \
+    "valor:(e.value===undefined||e.value===null)?'':String(e.value)," \
+    "impedimentum:_imp(e,rc),x:Math.round(rc.left)," \
+    "y:Math.round(rc.top),latitudo:Math.round(rc.width)," \
+    "altitudo:Math.round(rc.height)});}" \
+    "return r;"
+
 /* COLLECTOR ERRORUM - in paginam positus cum manus aperitur.
  *
  * Tres fontes, quia tres semitae DIVERSAE sunt et nulla alteram
@@ -1290,6 +1366,103 @@ manus_textus (
         redde vacua;
     }
     redde v.visum;
+}
+
+/* ========================================================================
+ * Affordantiae
+ * ======================================================================== */
+
+interior chorda
+_campus_chorda (
+    JsonValor*          obiectum,
+    constans character* clavis,
+    Piscina*            piscina)
+{
+    redde chorda_transcribere(
+        json_ad_chorda(json_objectum_capere(obiectum, clavis)), piscina);
+}
+
+interior s32
+_campus_numerus (
+    JsonValor*          obiectum,
+    constans character* clavis)
+{
+    redde (s32)json_ad_integer(json_objectum_capere(obiectum, clavis));
+}
+
+Affordantiae
+manus_affordantiae (
+    Manus*   manus,
+    Piscina* piscina)
+{
+    ChordaAedificator* a;
+    Affordantiae       fructus;
+    chorda             valor;
+    JsonResultus       lectio;
+    i32                i;
+    i32                n;
+
+    fructus.res     = NIHIL;
+    fructus.numerus = ZEPHYRUM;
+
+    si (manus == NIHIL || manus->fracta || piscina == NIHIL)
+    {
+        redde fructus;
+    }
+
+    a = chorda_aedificator_creare(manus->piscina,
+                                  (memoriae_index)(IV * M));
+    chorda_aedificator_appendere_literis(a, "(function(){");
+    chorda_aedificator_appendere_literis(a, MANUS_JS_VISUS);
+    chorda_aedificator_appendere_literis(a, MANUS_JS_AFFORDANTIAE);
+    chorda_aedificator_appendere_literis(a, "})()");
+
+    /* _iussum manum FRANGIT et causam nominat si defecit - ergo hic
+     * tacite redimus; vocans manus_fracta interroget. */
+    si (!_iussum(manus, chorda_aedificator_finire(a),
+                 MANUS_MORA_BREVIS, &valor))
+    {
+        redde fructus;
+    }
+
+    lectio = json_legere(valor, piscina);
+    si (!lectio.successus || !json_est_tabulatum(lectio.radix))
+    {
+        /* Pagina respondit sed non tabulato. Hoc vitium NOSTRUM est
+         * (JS supra), non usoris - ergo manum frangimus potius quam
+         * indicem vacuum reddere, qui 'nihil hic est' mentiretur. */
+        _frangere(manus,
+            "affordantiae: responsum tabulatum non est");
+        redde fructus;
+    }
+
+    n = json_tabulatum_numerus(lectio.radix);
+    si (n == ZEPHYRUM)
+    {
+        redde fructus;
+    }
+
+    fructus.res = (Affordantia*)piscina_allocare(
+        piscina, (memoriae_index)n * magnitudo(Affordantia));
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        JsonValor*   o = json_tabulatum_obtinere(lectio.radix, i);
+        Affordantia* d = &fructus.res[i];
+
+        d->genus        = (AffordantiaGenus)_campus_numerus(o, "genus");
+        d->selector     = _campus_chorda(o, "selector", piscina);
+        d->titulus      = _campus_chorda(o, "titulus", piscina);
+        d->valor        = _campus_chorda(o, "valor", piscina);
+        d->impedimentum = _campus_chorda(o, "impedimentum", piscina);
+        d->x            = _campus_numerus(o, "x");
+        d->y            = _campus_numerus(o, "y");
+        d->latitudo     = _campus_numerus(o, "latitudo");
+        d->altitudo     = _campus_numerus(o, "altitudo");
+    }
+
+    fructus.numerus = n;
+    redde fructus;
 }
 
 /* ========================================================================

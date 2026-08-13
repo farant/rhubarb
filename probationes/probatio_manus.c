@@ -48,6 +48,8 @@
 #define SCEN_RECUSANS VI   /* ok:false cum causa NOMINATA        */
 #define SCEN_ERRORES  VII  /* visum "3|exceptio: ..." (parsura)  */
 #define SCEN_SINE_COLL VIII /* visum "-1|..." collector abest    */
+#define SCEN_AFFORD   IX   /* tabulatum affordantiarum           */
+#define SCEN_AFFORD_PRAVUS X /* responsum quod tabulatum NON est */
 
 /* Operationes quas _agere_capere exercet. */
 #define OP_NULLUM        0   /* nihil - JS collectoris capitur */
@@ -78,6 +80,7 @@
 #define OP_TXT_ABEST_MORA XXV
 #define OP_OMNINO_MORA   XXVI
 #define OP_REFICERE      XXVII
+#define OP_AFFORD        XXVIII
 
 #define VIA_ULTIMI    "build/manus_ultimum.js"
 
@@ -234,6 +237,28 @@ _puer (
         {
             sprintf(corpus, "{\"status\":\"perfectum\",\"valor\":{"
                 "\"ok\":true,\"visum\":\"-1|collector abest\"}}");
+        }
+        alioquin si (scenario == SCEN_AFFORD)
+        {
+            /* x NEGATIVUM consulto: elementum supra marginem
+             * volutum. Campi loci SIGNATI sunt, et si quis eos in
+             * i32 (insignatum) verteret, -V in numerum immanem
+             * abiret - decipula domus nota. */
+            sprintf(corpus, "{\"status\":\"perfectum\",\"valor\":["
+                "{\"genus\":1,\"selector\":\"#b1\",\"titulus\":\"Salve\","
+                "\"valor\":\"\",\"impedimentum\":\"\","
+                "\"x\":8,\"y\":10,\"latitudo\":32,\"altitudo\":15},"
+                "{\"genus\":2,\"selector\":\"#i1\",\"titulus\":\"scribe\","
+                "\"valor\":\"textus\",\"impedimentum\":\"impedita\","
+                "\"x\":-5,\"y\":9,\"latitudo\":146,\"altitudo\":17}]}");
+        }
+        alioquin si (scenario == SCEN_AFFORD_PRAVUS)
+        {
+            /* Forma recta, contentum pravum: pagina respondit sed
+             * non tabulato. Index vacuus hic 'nihil adest'
+             * MENTIRETUR - ergo manus frangi DEBET. */
+            sprintf(corpus, "{\"status\":\"perfectum\",\"valor\":{"
+                "\"ok\":true,\"visum\":\"non sum tabulatum\"}}");
         }
         alioquin
         {
@@ -469,6 +494,45 @@ _agere_capere (
         casus OP_NULLUM:
             a.fructus = VERUM;
             frange;
+        casus OP_AFFORD:
+            {
+                Affordantiae aff = manus_affordantiae(m, p);
+
+                a.numerus = aff.numerus;
+                a.fructus = VERUM;
+                si (aff.numerus > ZEPHYRUM)
+                {
+                    /* Omnis campus PRIMI in unam chordam, ut assertum
+                     * unum totam semitam parsurae iudicet. */
+                    sprintf(a.primus,
+                        "%d|%.*s|%.*s|%.*s|%.*s|%d,%d,%dx%d",
+                        (integer)aff.res[0].genus,
+                        (integer)aff.res[0].selector.mensura,
+                        (constans character*)aff.res[0].selector.datum,
+                        (integer)aff.res[0].titulus.mensura,
+                        (constans character*)aff.res[0].titulus.datum,
+                        (integer)aff.res[0].valor.mensura,
+                        (constans character*)aff.res[0].valor.datum,
+                        (integer)aff.res[0].impedimentum.mensura,
+                        (constans character*)aff.res[0].impedimentum.datum,
+                        (integer)aff.res[0].x, (integer)aff.res[0].y,
+                        (integer)aff.res[0].latitudo,
+                        (integer)aff.res[0].altitudo);
+                }
+                si (aff.numerus > I)
+                {
+                    /* SECUNDI solum quae parsuram probant: x
+                     * negativum et impedimentum non vacuum. */
+                    character cauda[CXXVIII];
+                    sprintf(cauda, " |2:%d|%.*s|%d",
+                        (integer)aff.res[1].genus,
+                        (integer)aff.res[1].impedimentum.mensura,
+                        (constans character*)aff.res[1].impedimentum.datum,
+                        (integer)aff.res[1].x);
+                    strcat(a.primus, cauda);
+                }
+            }
+            frange;
         casus OP_PREMERE:
             a.fructus = manus_premere(m, "#pyxis");
             frange;
@@ -617,6 +681,7 @@ nomen structura {
     Actio aestimare, imago, imago_culpae;
     Actio purgare, cont_mora, txt_abest_mora, omnino_mora;
     Actio reficere_vivax, reficere_mortua;
+    Actio afford, afford_pravus;
 } Omnia;
 
 interior vacuum
@@ -651,6 +716,8 @@ _omnia_capere (
     o->aestimare    = _agere_capere(SCEN_OK,        OP_AESTIMARE);
     o->imago        = _agere_capere(SCEN_OK,        OP_IMAGO);
     o->imago_culpae = _agere_capere(SCEN_RECUSANS,  OP_IMAGO_CULPAE);
+    o->afford         = _agere_capere(SCEN_AFFORD,        OP_AFFORD);
+    o->afford_pravus  = _agere_capere(SCEN_AFFORD_PRAVUS, OP_AFFORD);
     o->purgare        = _agere_capere(SCEN_OK, OP_PURGARE);
     o->cont_mora      = _agere_capere(SCEN_OK, OP_CONT_MORA);
     o->txt_abest_mora = _agere_capere(SCEN_OK, OP_TXT_ABEST_MORA);
@@ -861,6 +928,49 @@ s32 principale (vacuum)
 
         imprimere("  errores: %d, primus '%s'\n",
                   (integer)o.cum_err.numerus, o.cum_err.primus);
+    }
+
+    imprimere("\n--- Affordantiae: parsura et recusatio ---\n");
+    {
+        /* Quod hic probatur SEMITA C est: tabulatum JSON -> structurae.
+         * An JS ipse elementa recte inveniat HINC NON APPARET - id
+         * probatio fumi contra applicationem VIVAM iudicat (eadem lex
+         * quae huic plagulae praeest). */
+        CREDO_AEQUALIS_I32 (o.afford.numerus, (i32)II);
+        CREDO_FALSUM (o.afford.fracta);
+
+        imprimere("  primus: '%s'\n", o.afford.primus);
+
+        /* Omnis campus primi, uno asserto. */
+        CREDO_VERUM (_continet(o.afford.primus, "1|#b1|Salve|||8,10,32x15"));
+
+        /* Secundus: impedimentum PERVENIT, et x NEGATIVUM negativum
+         * MANET. Si quis campos loci in i32 (insignatum) verteret, -V
+         * hic numerus immanis fieret - assertum quod decipulam domus
+         * ipsam custodit. */
+        CREDO_VERUM (_continet(o.afford.primus, "2:2|impedita|-5"));
+
+        /* JS missum eandem legem visibilitatis fert quam actiones -
+         * si quis enumerationem a v() separaret, index affordantias
+         * ferret quas premere recusaret. */
+        CREDO_VERUM (_continet(o.afford.js, "function v(e)"));
+        CREDO_VERUM (_continet(o.afford.js, "getBoundingClientRect"));
+
+        /* Iudicium impedimenti PROPRIUM est (_imp), non act().
+         *
+         * NOTA DE ASSERTO IPSO: primum hic 'scrollIntoView abest'
+         * scripsi - et recte FRACTUM est. Praeambulum enim act()
+         * DEFINIT (visus eum trahit), ergo textus adest etiamsi
+         * enumeratio eum numquam vocet. Praesentia litterarum non
+         * est mos vocandi; ergo quid enumeratio VOCET asserimus. */
+        CREDO_VERUM (_continet(o.afford.js, "impedimentum:_imp(e,rc)"));
+
+        /* Responsum quod tabulatum non est: manus FRANGITUR. Index
+         * vacuus 'nihil adest' mentiretur - genus defectus quod haec
+         * domus semper clamosum facit. */
+        CREDO_AEQUALIS_I32 (o.afford_pravus.numerus, ZEPHYRUM);
+        CREDO_VERUM (o.afford_pravus.fracta);
+        CREDO_VERUM (_continet(o.afford_pravus.causa, "tabulatum"));
     }
 
     imprimere("\n--- Superficies reliqua ---\n");

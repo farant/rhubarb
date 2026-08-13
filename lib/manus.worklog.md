@@ -642,3 +642,79 @@ custodes vitreae AtDocumentStart iniecti recargationem SUPERSUNT, sed
 collector manus (post aperire iniectus) NON - recargatio eum
 deleret, et manus_errores tacite in semitam 'collector abest'
 caderet, nullos errores in perpetuum nuntians.
+
+## 2026-08-13 — affordantiae: enumeration, the missing primitive
+
+Fran's framing while we were polishing `-vivum` ergonomics: driving a
+vitrea app is *"a weird hybrid of a text browser and a normal browser"*
+— a screenshot shows you the buttons but not their selectors.
+
+He was right that manus overlapped with what I'd sketched, and more
+right than I realised. manus already had the whole Cypress layer:
+launch/attach, click-by-text (innermost match, because `<body>` contains
+everything), auto-waiting assertions, visibility-not-presence, page
+error collection. My proposed "poll the ticket every 10ms from the
+client" was **specifically what this header already rejected** — external
+polling misses transient conditions, and 2s of it costs 40 connections
+where one suffices.
+
+**The actual gap was enumeration.** Every entry point — `premere`,
+`scribere`, `existit`, `numerus`, `textus` — takes a selector you
+already know. Nothing answered "what is here?"
+
+### Design points that are load-bearing
+
+**Reuses `v()` rather than redefining it.** If enumeration had its own
+visibility rule it would list affordances that `manus_premere` then
+refuses, and the two definitions would drift silently. The impediment
+strings are the same literals `act()` produces, so the list tells you
+in advance exactly what an action would say.
+
+**But it does NOT use `act()`,** because `act()` calls `scrollIntoView`
+— it *moves the page*. An enumeration that scrolls changes the very
+thing it reports. So: `disabled` is judged identically (it's pure),
+occlusion is judged only inside the viewport, and outside it we return
+no impediment rather than guessing. Nothing is lost: the action itself
+scrolls and re-judges at action time, so no stale verdict propagates.
+
+**Selectors are `#id` when available, else an nth-of-type path.** Paths
+are fragile under mutation — but this list is an *instantaneous* view,
+never stored, so the fragility has no time in which to hurt.
+
+### Proven twice, deliberately
+
+The header's own law: the mock tests the C protocol, and confidence in
+generated JS comes from a live app. Both were done.
+
+*Live* (`mensor_ui -vivum` + an injected fixture with the hard cases —
+real WebKit, real layout, only the content synthetic): 7 of 9 elements
+enumerated. `display:none` and `type=hidden` absent as required; the
+disabled button carried `elementum impeditum (disabled)`; the button
+under a full-size overlay carried `elementum obtectum a <div#velum>` —
+**real occlusion through real layout**; the `aria-label` link titled
+"Nexus Nominatus" rather than its text "clic".
+
+*Headless* (two new mock scenarios): field-by-field parse, plus a
+response that is well-formed but **not an array** → manus must BREAK.
+An empty list there would say "nothing is here", which is the lie this
+house keeps designing against.
+
+The mock's `x: -5` is deliberate. Position fields are `s32` because an
+element scrolled above the margin is genuinely negative; in `i32`
+(unsigned, house-wide) that becomes enormous. The assertion guards it.
+
+### An assertion of mine that was wrong, and failed correctly
+
+I first asserted `scrollIntoView` was **absent** from the emitted JS.
+It failed — because `MANUS_JS_VISUS` chains to `MANUS_JS_AGIBILE`, which
+*defines* `act()`, so the text is present as dead code that enumeration
+never calls. Presence of a literal is not a calling convention. Replaced
+with an assertion on what the enumeration actually invokes
+(`impedimentum:_imp(e,rc)`), which is the property I meant.
+
+### Still to come
+
+No CLI. manus remains reachable only from compiled C, which is why the
+`-vivum` session that started this conversation was driven with raw curl
+and a hand-rolled worse version of a library we already own. That's the
+next piece.
