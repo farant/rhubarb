@@ -58,6 +58,7 @@ declare -a SOURCE_FILES=(
     "lib/hospitium.c"
     "lib/http.c"
     "lib/imago.c"
+    "lib/imago_collatio.c"
     "lib/imago_opus.c"
     "lib/imperium.c"
     "lib/importatio_visus.c"
