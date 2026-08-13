@@ -24,6 +24,9 @@
 #include "vitrea.h"
 #include "capsula.h"
 #include "capsula_mensor.h"
+#include "hospitium.h"
+#include "internuntius.h"
+#include "imperium.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -279,6 +282,10 @@ main (integer argc, character** argv)
     character            tabula_viae[DXII];
     constans character*  imago_via;
     s32                  mora_picturae;   /* SIGNATUM: -I = nondum petita */
+    Hospitium*           hospitium;
+    Internuntius*        inx;
+    Imperium*            imperium;
+    b32                  vivum;
 
     piscina = piscina_generare_dynamicum("mensor_ui", M * M * XVI);
     si (piscina == NIHIL)
@@ -362,6 +369,46 @@ main (integer argc, character** argv)
         redde I;
     }
 
+    /* -vivum: canalis imperii. MODUS EVOLUTIONIS SOLUS - exsecutio
+     * JS arbitrarii est, ergo numquam in capsula tradita. 127.0.0.1
+     * solum, portus auto nisi -portus datur. */
+    hospitium = NIHIL;
+    inx       = NIHIL;
+    imperium  = NIHIL;
+    vivum     = _vexillum(argc, argv, "-vivum");
+
+    si (vivum)
+    {
+        HospitiumConfiguratio figura_hospitii;
+        constans character*   portus_litterae;
+
+        memset(&figura_hospitii, 0, magnitudo(figura_hospitii));
+        portus_litterae = _arg(argc, argv, "-portus");
+        figura_hospitii.portus = (portus_litterae != NIHIL)
+            ? (i32)atoi(portus_litterae) : ZEPHYRUM;
+
+        hospitium = hospitium_creare(piscina, &figura_hospitii);
+        inx       = internuntius_creare(piscina, vitrea_missor, vitrea);
+        imperium  = imperium_creare(piscina, vitrea_aestimator, vitrea);
+
+        si (hospitium == NIHIL || inx == NIHIL || imperium == NIHIL ||
+            !imperium_praebere(imperium, hospitium, inx))
+        {
+            fprintf(stderr, "mensor_ui: imperium fractum\n");
+            redde I;
+        }
+
+        imperium_fenestram_ponere(imperium,
+            fenestra_numerus_nativus(fenestra));
+        /* imaginator: photographia INTUS capta - nulla permissio
+         * scrinii, et res aliena in imagine apparere non potest */
+        imperium_imaginatorem_ponere(imperium, vitrea_imaginator, vitrea);
+
+        imprimere("[mensor_ui] imperium: http://127.0.0.1:%d/imperium\n",
+                  (integer)hospitium_portus(hospitium));
+        fflush(stdout);
+    }
+
     /* Iniectio praeparata SEMEL: datum non mutatur dum fenestra vivit */
     iniectio = chorda_aedificator_creare(piscina, (memoriae_index)(XVI * M));
     chorda_aedificator_appendere_literis(iniectio, "window.MENSURAE=");
@@ -387,6 +434,11 @@ main (integer argc, character** argv)
             /* eventus fenestrae: vitrea eos ipsa tractat */
         }
 
+        si (hospitium != NIHIL)
+        {
+            (vacuum)hospitium_gressus(hospitium, ZEPHYRUM);
+        }
+
         dum (vitrea_obtinere_nuntium(vitrea, &nuntium, &genus))
         {
             si (genus == VITREA_NUNTIUS_PONS)
@@ -396,6 +448,16 @@ main (integer argc, character** argv)
                  * paginam vacuam inveniret. */
                 vitrea_aestimare(vitrea,
                     chorda_aedificator_spectare(iniectio));
+
+                /* Nuntium 'paratus' chorda NUDA est, non JSON-RPC.
+                 * Sine hac custodia internuntius de eo queritur
+                 * ('culpa orba') in consola omni onere - strepitus
+                 * qui culpas VERAS obtegeret. */
+                si (inx != NIHIL && nuntium.mensura > ZEPHYRUM &&
+                    nuntium.datum[0] == '{')
+                {
+                    internuntius_tractare(inx, nuntium, piscina);
+                }
 
                 /* Paginam pingere sinere ANTE photographiam:
                  * iniectio synchrona non est */
