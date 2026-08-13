@@ -346,3 +346,69 @@ proxy: 2 salutatio acta after 2 launches — the count climbs across
 relaunches. AMBULATIO-VITREA-PLENA.
 Deviation from vocabularium worth noting: hyphens refused in vitrea
 tituli (the titulus becomes the capsula C symbol).
+
+## 2026-08-13 — clausura: suffixa conventionis + CLAMOR pro non inventis
+
+Resolutio capitis ad implementationem DUAS coniecturas solas
+temptabat - `lib/X.c`, deinde `lib/X_macos.m` - et defectus AMBORUM
+**tacebat**: fructus secundus `(vacuum)` abiciebatur.
+
+Mensuratum: capita SEPTEM neutri formae congruunt.
+
+| caput | implementatio vera |
+|---|---|
+| processus.h | processus_posix.c |
+| tcp.h | tcp_posix.c |
+| rete.h | rete_posix.c |
+| entitas_repositorium.h | entitas_repositorium_impl.c |
+| persistentia.h | persistentia_memoria.c + _nuntium.c |
+| biblia.h | biblia_dr.c + biblia_visus.c |
+| lapifex_c89.h | lapifex_c89_grammatica.c |
+
+Tres formae praeter duas notas: suffixum platformae (`_posix`),
+suffixum `_impl`, et **caput unum a plagulis MULTIS servitum** - quod
+forma unius-capitis-unius-plagulae omnino exprimere non potest.
+
+### Cur silentium peius erat quam coniectura falsa
+
+`renovare` '0 renovatae, 72 intactae' nuntiabat - id est SILENTIUM,
+non monitum - et vitium ad NEXUM apparebat. Aut, peius, NON
+apparebat: qui plagulam manu copiat debitum PERPETUUM creat quod
+nemo umquam nuntiat, et exemplar stale nectitur ut probatio VIRIDIS
+de codice VETERE fiat.
+
+tcp_posix et processus_posix eodem die BIS momorderunt (ictus in
+01KZVF4S5M).
+
+### Remedium
+
+Suffixa temptata nunc `_macos.m`, `_posix.c`, `_impl.c` (quattuor ex
+septem sanata); si NIHIL invenitur, **monitio cum omnibus temptatis**.
+
+Falsum positivum consulto acceptum: capita vere sola (latina,
+postulata_posix, fons_6x8) lineam unam pariunt quam lector semel
+legit et neglegit. Debitum invisibile nemo legit umquam.
+
+PROBATUM: exemplaria manu-copiata laboratorii DELETA, deinde
+`renovare` ea sponte recuperavit (`ADDENDA lib/tcp_posix.c`,
+`ADDENDA lib/processus_posix.c`).
+
+## 2026-08-13 — silex_struere.sh OBIECTA STALA nectit
+
+`silex_struere.sh` `build/*.o` nectit sed ea NON reficit. Custos eius
+build/ VACUUM probat, non STALUM:
+
+```sh
+if [ -z "$(ls -A build/*.o 2>/dev/null)" ]; then ... exit 1
+```
+
+Ergo post `lib/silex.c` mutatum: 'aedificatum: bin/silex' +
+'institutum: ~/.bin/silex' - et binarium codicem VETEREM ferens.
+Mensuratum hodie: `build/silex.o` 11:33, `lib/silex.c` 11:47,
+binarium chordam novam non ferens. Bis fefellit antequam
+intellexerim.
+
+Obiecta a `./compile_tests.sh` fiunt (quod error ille solus dicit).
+**ORDO: compile_tests.sh PRIMUM, deinde silex_struere.sh.** Corpus
+autem recte reficitur (custos proprius `find -newer` habet) - ergo
+corpus recens cum codice stale coire potest, quod pessimum est.

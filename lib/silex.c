@@ -506,19 +506,63 @@ silex_clausuram_colligere (Piscina* piscina,
             si (!_plagulam_e_fonte_colligere(piscina, fons,
                 "lib/", titulus_c, fructus, opus))
             {
-                /* geminus obiectivus: conventione aedilis
-                 * lib/X_macos.m ubi lib/X.c abest */
-                ChordaAedificator* aed_m =
-                    chorda_aedificator_creare(piscina,
-                        (memoriae_index)64);
+                /* SUFFIXA CONVENTIONIS. Prius duo sola temptabantur
+                 * (X.c, X_macos.m) et defectus AMBORUM tacebat -
+                 * '(vacuum)' fructum secundum abiciebat. Plagula
+                 * ergo numquam vendita, renovare '0 renovatae'
+                 * nuntians, et vitium ad nexum apparens (aut, peius,
+                 * NON apparens: exemplar stale nectitur et probatio
+                 * viridis de codice vetere fit).
+                 *
+                 * Mensuratum 2026-08-13: capita SEPTEM neutri formae
+                 * congruunt - processus/tcp/rete (_posix),
+                 * entitas_repositorium (_impl), et tria quae
+                 * plagulas MULTAS habent (persistentia, biblia,
+                 * lapifex_c89), quae forma unius-capitis-unius-
+                 * plagulae omnino exprimi non possunt.
+                 *
+                 * tcp_posix ET processus_posix eodem die bis
+                 * momorderunt. */
+                constans character* constans suffixa[] = {
+                    "_macos.m", "_posix.c", "_impl.c"
+                };
+                b32 inventum = FALSUM;
+                i32 s_i;
 
-                chorda_aedificator_appendere_chorda(aed_m,
-                    radix_capitis);
-                chorda_aedificator_appendere_literis(aed_m,
-                    "_macos.m");
-                (vacuum)_plagulam_e_fonte_colligere(piscina, fons,
-                    "lib/", chorda_aedificator_finire(aed_m),
-                    fructus, opus);
+                per (s_i = 0; s_i < III && !inventum; s_i = s_i + I)
+                {
+                    ChordaAedificator* aed_s =
+                        chorda_aedificator_creare(piscina,
+                            (memoriae_index)64);
+
+                    chorda_aedificator_appendere_chorda(aed_s,
+                        radix_capitis);
+                    chorda_aedificator_appendere_literis(aed_s,
+                        suffixa[s_i]);
+                    inventum = _plagulam_e_fonte_colligere(piscina,
+                        fons, "lib/", chorda_aedificator_finire(aed_s),
+                        fructus, opus);
+                }
+
+                si (!inventum)
+                {
+                    /* CLAMOR, non silentium. Falsum positivum hic
+                     * pretium rectum est: caput vere solum (latina,
+                     * postulata_posix, fons_6x8) lineam unam parit
+                     * quam lector semel legit et neglegit; caput cum
+                     * implementatione non inventa aliter DEBITUM
+                     * INVISIBILE pareret quod nemo umquam nuntiat. */
+                    fprintf(stderr,
+                        "silex: monitio - nulla implementatio pro"
+                        " %.*s (temptata: lib/%.*s.c, _macos.m,"
+                        " _posix.c, _impl.c).\n"
+                        "  si caput SOLUM est (macra, data), neglege;"
+                        " aliter plagulam MANU adde.\n",
+                        (integer)caput.mensura,
+                        (constans character*)caput.datum,
+                        (integer)radix_capitis.mensura,
+                        (constans character*)radix_capitis.datum);
+                }
             }
         }
     }
