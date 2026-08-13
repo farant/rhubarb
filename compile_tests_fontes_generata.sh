@@ -59,6 +59,7 @@ declare -a SOURCE_FILES=(
     "lib/http.c"
     "lib/imago.c"
     "lib/imago_opus.c"
+    "lib/imperium.c"
     "lib/importatio_visus.c"
     "lib/internamentum.c"
     "lib/internuntius.c"
