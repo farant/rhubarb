@@ -118,3 +118,40 @@ Pagina in gyro logens effusionem inundat. Sub `manus_incipere`
 fistula est, et `processus_pulsare` eam haurit (vide manus.h);
 sub terminali nihil obstat. Nullus modus temperandi positus - si
 umquam mordet, sedes recta est 'mittere' in JS, non C.
+
+## 2026-08-13 — transmissio consolae PROBATA (semita tota, sine simulacro)
+
+Canales 'erratum'/'consola' manu soli probati erant (curl + oculi).
+Nunc probatio automatica eos tegit, et semita TOTA probatur:
+
+```
+JS -> WebKit messageHandler -> ObjC -> stdout applicationis
+   -> fistula -> sacculus processus -> assertum
+```
+
+Nihil in ea fictum est.
+
+### Quomodo factum sit
+
+`processus_effusio_hactenus` effusionem HACTENUS haustam reddit (non
+destruit; `_sacculum_finire` iam `constans Sacculus*` accipiebat,
+ergo lectio partialis tuta erat et nemo eam exposuerat). Ante hoc
+effusio ante `processus_metere` - id est ante EXITUM - inaccessibilis
+erat, quod applicationi quae CURRERE debet inutile est.
+
+`manus_effusio` id involvit (pulsat primum: quod in fistula sedet
+nondum in sacculo est), et `CREDO_MANUS_EFFUSIO` EXSPECTAT - linea
+enim per fistulam venit quando applicatio pulsat, non quando nos
+poscimus. Somnus hic idem mendacium esset quod in DOM.
+
+Probatum: `console.log` apparet cum obiecto ut JSON (`{"a":1}`, non
+`[object Object]`), `console.warn` ut `[vitrea/monitum]`, et
+`console.error` in effusione NON apparet - divisio stdout/stderr
+servata, quod assertum negativum probat.
+
+### Cur hoc momenti fuit
+
+Transmissio consolae est genus quod TACITE frangitur: si involucrum
+rumpatur, applicationes omnes silent, et symptoma est ABSENTIA lineae
+quam nemo desiderat. Custos absens ab eo qui viridis-et-mutus est non
+differt - et hic nullus omnino erat.

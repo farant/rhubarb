@@ -231,6 +231,31 @@ manus_errores_purgare (
     Manus* manus);
 
 /* ==================================================
+ * Effusio applicationis generatae
+ * ==================================================
+ *
+ * Cum manus applicationem GENUIT (manus_incipere), fistulas eius
+ * tenet et in omni gyro exspectationis haurit. Hoc quod haustum est
+ * ostendit.
+ *
+ * QUARE HOC IN BIBLIOTHECA PROBATIONUM SIT: vitrea errores paginae
+ * et console.log in effusionem processus mittit. Semita illa - JS ->
+ * WebKit -> ObjC -> stdout - a NULLA probatione tegebatur, et est
+ * genus quod TACITE frangitur: si involucrum consolae rumpatur,
+ * applicationes omnes silent, et symptoma est ABSENTIA lineae quam
+ * nemo desiderat. Hinc probari potest sine simulacro ullo: iussum
+ * mitte, lineam exspecta.
+ *
+ * VACUA si manus applicationem non genuit (manus_aperire): fistulae
+ * enim tunc alienae sunt.
+ *
+ * CAVE ut in vitrea: chorda in sacculum spectat quem pulsatio
+ * proxima relocare potest. TRACTA STATIM. */
+chorda
+manus_effusio (
+    Manus* manus);
+
+/* ==================================================
  * Status
  * ================================================== */
 
@@ -460,6 +485,18 @@ manus_textus (
 	_manus_credo_omnino((m), (sel), \
 			(mora), __FILE__, __LINE__)
 
+/* Effusio applicationis textum hunc continet - EXSPECTANS.
+ *
+ * Linea per fistulam venit quando venit: applicatio eam scribit cum
+ * gyrus eius pulsat, et fistula cum manus pulsat. Assertum ergo
+ * exspectare DEBET, sicut cetera huius bibliothecae. */
+#define CREDO_MANUS_EFFUSIO(m, textus) \
+	_manus_credo_effusio((m), (textus), MANUS_MORA_ORDINARIA, \
+			__FILE__, __LINE__)
+
+#define CREDO_MANUS_EFFUSIO_MORA(m, textus, mora) \
+	_manus_credo_effusio((m), (textus), (mora), __FILE__, __LINE__)
+
 /* Nullus error in pagina ex quo manus aperta est. Vide 'Errores
  * paginae' supra: assertum ultimum eorum quae probatio de se ipsa
  * scire debet. */
@@ -511,6 +548,14 @@ b32
 _manus_credo_omnino (
     Manus*              manus,
     constans character* selector,
+    Mora                mora,
+    constans character* filum,
+    s32                 versus);
+
+b32
+_manus_credo_effusio (
+    Manus*              manus,
+    constans character* textus,
     Mora                mora,
     constans character* filum,
     s32                 versus);

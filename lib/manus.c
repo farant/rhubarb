@@ -1646,6 +1646,79 @@ manus_errores_purgare (
         "return{ok:true,visum:\"purgatum\"};");
 }
 
+chorda
+manus_effusio (
+    Manus* manus)
+{
+    chorda vacua;
+
+    vacua.datum   = NIHIL;
+    vacua.mensura = 0;
+
+    si (manus == NIHIL || manus->processus == NIHIL)
+    {
+        redde vacua;
+    }
+    /* Pulsare PRIMUM: quod in fistula sedet nondum in sacculo est,
+     * et vocator lineam modo scriptam quaerit. */
+    (vacuum)processus_pulsare(manus->processus);
+    redde processus_effusio_hactenus(manus->processus);
+}
+
+b32
+_manus_credo_effusio (
+    Manus*              manus,
+    constans character* textus,
+    Mora                mora,
+    constans character* filum,
+    s32                 versus)
+{
+    Momentum  terminus;
+    b32       inventum = FALSUM;
+    chorda    ultima;
+    character quot[XXXII];
+
+    ultima.datum   = NIHIL;
+    ultima.mensura = 0;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+
+    /* EXSPECTAT, sicut cetera: linea per fistulam venit quando
+     * applicatio pulsat, non quando nos poscimus. Somnus hic idem
+     * mendacium esset quod in DOM. */
+    terminus = _nunc() + mora;
+    dum (VERUM)
+    {
+        ultima = manus_effusio(manus);
+        si (ultima.mensura > 0
+            && chorda_continet(ultima,
+                   chorda_ex_literis(textus, manus->piscina)))
+        {
+            inventum = VERUM;
+            frange;
+        }
+        si (_nunc() > terminus)
+        {
+            frange;
+        }
+        _quiescere(MANUS_PULSUS_MAXIMUS);
+    }
+
+    sprintf(quot, "%lu octeti effusionis",
+            (insignatus longus)ultima.mensura);
+    _credo_notare("credo_manus_effusio",
+                  "effusio applicationis",
+                  quot, textus, filum, versus, inventum);
+    si (!inventum)
+    {
+        _frangere(manus, "effusio applicationis textum non tulit");
+    }
+    redde inventum;
+}
+
 b32
 _manus_credo_sine_erroribus (
     Manus*              manus,

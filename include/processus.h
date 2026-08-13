@@ -176,6 +176,26 @@ processus_incipere(
 ProcessusStatus
 processus_pulsare(Processus* processus);
 
+/* Effusio HACTENUS capta, sine expectatione - quod pulsare iam
+ * hausit. Non destruit: iterum vocari potest.
+ *
+ * PRO QUO: probatio integrans quae effusionem prolis CURRENTIS
+ * inspicere debet (e.g. 'console.log paginae in stdout applicationis
+ * apparuitne?'). Sine hoc effusio ante processus_metere - id est
+ * ante EXITUM - inaccessibilis erat, et applicatio quae currere
+ * debet numquam meteretur.
+ *
+ * CAVE: chorda in sacculum ipsum spectat, qui pulsatione proxima
+ * RELOCARI potest. Tracta statim; noli recondere trans pulsationem.
+ */
+chorda
+processus_effusio_hactenus (
+    constans Processus* processus);
+
+chorda
+processus_erratum_hactenus (
+    constans Processus* processus);
+
 /* Resultus post PARATUM. Si vocatur dum adhuc currit, OBSTAT donec
  * perficiatur (terminus adhuc valet) - commoditas pro vocatore qui
  * pulsare desiit, non semita ordinaria.

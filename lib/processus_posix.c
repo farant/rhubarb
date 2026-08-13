@@ -826,6 +826,34 @@ processus_pulsare (Processus* processus)
     redde PROCESSUS_CURRIT;
 }
 
+chorda
+processus_effusio_hactenus (constans Processus* processus)
+{
+    chorda vacua;
+
+    si (processus == NIHIL)
+    {
+        vacua.datum = NIHIL;
+        vacua.mensura = 0;
+        redde vacua;
+    }
+    redde _sacculum_finire(&processus->sac_ef);
+}
+
+chorda
+processus_erratum_hactenus (constans Processus* processus)
+{
+    chorda vacua;
+
+    si (processus == NIHIL)
+    {
+        vacua.datum = NIHIL;
+        vacua.mensura = 0;
+        redde vacua;
+    }
+    redde _sacculum_finire(&processus->sac_er);
+}
+
 ProcessusResultus
 processus_metere (Processus* processus)
 {
