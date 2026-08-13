@@ -185,6 +185,33 @@ manus_claudere (
     Manus* manus);
 
 /* ==================================================
+ * Errores paginae
+ * ==================================================
+ *
+ * Manus collectorem in paginam ponit cum aperitur: exceptiones non
+ * captae ('error'), promissa reiecta sine captura
+ * ('unhandledrejection'), et console.error involutum.
+ *
+ * CUR HOC NECESSARIUM SIT: asserta tua omnia transire possunt dum
+ * pagina exceptiones vomit. Facies quae in via silenter cecidit
+ * saepe eundem textum ostendit - ergo suita viridis manet et vitium
+ * ad usorem it. Assertum ultimum eorum quae probatio de se ipsa
+ * scire debet.
+ *
+ * QUOD NON CAPITUR: quidquid ANTE manus_aperire acciderit - onus
+ * paginae ipsum inprimis. Collector enim tunc nondum aderat. Pro
+ * illis vitrea ipsa manus tendere debet (semita non aedificata:
+ * involucrum in shim internuntii, quod OMNI applicationi prodesset,
+ * non probationibus solis). */
+
+/* Quot errores collecti; 'primus' (si non NIHIL) primum nuntium
+ * accipit - primus enim fere semper causa est, ceteri sequelae. */
+i32
+manus_errores (
+    Manus*  manus,
+    chorda* primus);
+
+/* ==================================================
  * Status
  * ================================================== */
 
@@ -226,6 +253,21 @@ b32
 manus_scribere (
     Manus*              manus,
     constans character* selector,
+    constans character* textus);
+
+/* Premere id quod TEXTUM hunc fert - non id quod selector nominat.
+ *
+ *   manus_premere_textum(m, "condere");
+ *
+ * CUR: 'preme pyxidem quae CONDERE dicit' est quod intendis; '#mittere'
+ * est quomodo hodie scriptum est. Probatio in textu fundata mutationem
+ * marcationis superest, et legitur ut intentio.
+ *
+ * Elementum IMUM eligitur quod textum continet: <body> enim omnia
+ * continet, et sine hac lege quaeque petitio corpus premeret. */
+b32
+manus_premere_textum (
+    Manus*              manus,
     constans character* textus);
 
 /* Imaginem paginae in plagulam scribere (per imperium/imago).
@@ -325,6 +367,42 @@ manus_textus (
 	_manus_credo_numerum((m), (sel), (quot), \
 			(mora), __FILE__, __LINE__)
 
+/* Textus USQUAM in pagina visibilis - sine selectore.
+ *
+ *   CREDO_MANUS_TEXTUM(m, "experimentum conditum est");
+ *
+ * Quod usor legit, non ubi marcatio id ponit. */
+#define CREDO_MANUS_TEXTUM(m, textus) \
+	_manus_credo_textum_paginae((m), (textus), VERUM, \
+			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+
+#define CREDO_MANUS_TEXTUM_MORA(m, textus, mora) \
+	_manus_credo_textum_paginae((m), (textus), VERUM, \
+			(mora), __FILE__, __LINE__)
+
+#define CREDO_MANUS_TEXTUM_ABEST(m, textus) \
+	_manus_credo_textum_paginae((m), (textus), FALSUM, \
+			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+
+/* ABEST vs ABEST_OMNINO - distinctio quam Cypress inter
+ * 'not.be.visible' et 'not.exist' servat.
+ *
+ * ABEST         = usor non videt (occultum SUFFICIT).
+ * ABEST_OMNINO  = in DOM omnino non est.
+ *
+ * Utrumque opus est: prius quaerit num scaena abierit; posterius
+ * num applicatio nodos occultos in aeternum congerat - quod primum
+ * numquam videret. */
+#define CREDO_MANUS_ABEST_OMNINO(m, sel) \
+	_manus_credo_omnino((m), (sel), \
+			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+
+/* Nullus error in pagina ex quo manus aperta est. Vide 'Errores
+ * paginae' supra: assertum ultimum eorum quae probatio de se ipsa
+ * scire debet. */
+#define CREDO_MANUS_SINE_ERRORIBUS(m) \
+	_manus_credo_sine_erroribus((m), __FILE__, __LINE__)
+
 /* ==================================================
  * Interiora macronum (ne voces recta - __FILE__ perderes)
  * ================================================== */
@@ -354,6 +432,29 @@ _manus_credo_numerum (
     constans character* selector,
     i32                 quot,
     Mora                mora,
+    constans character* filum,
+    s32                 versus);
+
+b32
+_manus_credo_textum_paginae (
+    Manus*              manus,
+    constans character* textus,
+    b32                 adesse,
+    Mora                mora,
+    constans character* filum,
+    s32                 versus);
+
+b32
+_manus_credo_omnino (
+    Manus*              manus,
+    constans character* selector,
+    Mora                mora,
+    constans character* filum,
+    s32                 versus);
+
+b32
+_manus_credo_sine_erroribus (
+    Manus*              manus,
     constans character* filum,
     s32                 versus);
 

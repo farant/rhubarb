@@ -498,7 +498,61 @@ _iussum (
     "if(sup&&sup!==e&&!e.contains(sup)&&!sup.contains(e))" \
     "return 'elementum obtectum a <'+sup.tagName.toLowerCase()+" \
     "(sup.id?'#'+sup.id:'')+'>';" \
-    "return null;}"
+    "return null;}" \
+    MANUS_JS_TEXTUS
+
+/* qt(t) = elementum IMUM visibile quod textum 't' continet.
+ *
+ * 'Imum' cardo est: <body> omnia continet, <main> fere omnia. Sine
+ * hac lege quaeque petitio textualis corpus inveniret et premere
+ * corpus premeret - viride et inutile. Ergo ex congruentibus id
+ * eligitur quod nullum aliud congruens INTRA se habet.
+ *
+ * qtn(t) = num quid omnino congruat (pro asserto textus paginae). */
+#define MANUS_JS_TEXTUS \
+    "function _tx(e){return (e.value!==undefined&&e.value!==null)" \
+    "?String(e.value):String(e.textContent||'');}" \
+    "function _tm(t){var l=document.querySelectorAll('*'),i,r=[];" \
+    "for(i=0;i<l.length;i++){var e=l[i];" \
+    "if(!v(e))continue;if(_tx(e).indexOf(t)<0)continue;r.push(e);}" \
+    "return r;}" \
+    "function qt(t){var r=_tm(t),i,j,intus;" \
+    "for(i=0;i<r.length;i++){intus=false;" \
+    "for(j=0;j<r.length;j++){if(j!==i&&r[i].contains(r[j]))" \
+    "{intus=true;break;}}" \
+    "if(!intus)return r[i];}" \
+    "return r.length?r[r.length-1]:null;}" \
+    "function qtn(t){return _tm(t).length;}"
+
+/* COLLECTOR ERRORUM - in paginam positus cum manus aperitur.
+ *
+ * Tres fontes, quia tres semitae DIVERSAE sunt et nulla alteram
+ * capit: 'error' exceptiones non captas fert; 'unhandledrejection'
+ * promissa reiecta (semita quae in hac domo maxime refert - pons
+ * TOTUS promissis agit, et promissum reiectum sine captura nihil
+ * omnino in consolam scribit); console.error involutum quod codex
+ * ipse nuntiat.
+ *
+ * Idempotens (vexillum __manus_errores): manus altera eundem
+ * collectorem non duplicat.
+ *
+ * Terminus C nuntiorum: pagina in gyro cadens memoriam aliter
+ * exhauriret, et centesimus error primo nihil addit. */
+#define MANUS_JS_ERRORES \
+    "(function(){if(window.__manus_errores)return 'iam';" \
+    "window.__manus_errores=[];" \
+    "function n(g,m){var a=window.__manus_errores;" \
+    "if(a.length<100)a.push(g+': '+m);}" \
+    "window.addEventListener('error',function(ev){" \
+    "n('exceptio',(ev.message||String(ev.error))+" \
+    "(ev.filename?(' @ '+ev.filename+':'+ev.lineno):''));});" \
+    "window.addEventListener('unhandledrejection',function(ev){" \
+    "var r=ev.reason;n('promissum reiectum'," \
+    "(r&&r.message)?r.message:String(r));});" \
+    "var ce=console.error;console.error=function(){" \
+    "n('console.error',Array.prototype.slice.call(arguments)" \
+    ".join(' '));if(ce)ce.apply(console,arguments);};" \
+    "return 'positum';})()"
 
 /* ========================================================================
  * JS: gyrus exspectationis IN PAGINA
@@ -652,6 +706,25 @@ _paratus (
     redde fructus;
 }
 
+/* Collectorem in paginam ponere. Defectus hic manum NON frangit:
+ * applicatio sine collectore probabilis manet, et defectus ipse in
+ * asserto errorum apparebit. */
+interior vacuum
+_errores_instituere (
+    Manus* manus)
+{
+    chorda valor;
+
+    manus->tacens = VERUM;
+    (vacuum)_iussum(manus,
+                    chorda_ex_literis(MANUS_JS_ERRORES, manus->piscina),
+                    MANUS_MORA_BREVIS, &valor);
+    manus->tacens = FALSUM;
+    manus->fracta        = FALSUM;
+    manus->causa.mensura = 0;
+    manus->causa.datum   = NIHIL;
+}
+
 interior Manus*
 _manus_creare (
     Piscina*            piscina,
@@ -719,6 +792,7 @@ manus_aperire (
     {
         redde NIHIL;
     }
+    _errores_instituere(manus);
     redde manus;
 }
 
@@ -755,6 +829,7 @@ manus_incipere (
         (vacuum)processus_pulsare(processus);
         si (_respondet(manus) && _paratus(manus))
         {
+            _errores_instituere(manus);
             redde manus;
         }
         _quiescere(XX);
@@ -893,6 +968,51 @@ manus_premere (
     redde _agere(manus, selector,
                  "e.click();return{ok:true,visum:\"pressum\"};",
                  "manus_premere");
+}
+
+b32
+manus_premere_textum (
+    Manus*              manus,
+    constans character* textus)
+{
+    ChordaAedificator* a;
+    ManusVerdictum     v;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+
+    /* Eadem porta agibilitatis quam _agere adhibet - sed elementum
+     * per textum quaeritur, non per selectorem. */
+    a = chorda_aedificator_creare(manus->piscina, CCLVI);
+    chorda_aedificator_appendere_literis(a, "var e=qt(");
+    _appendere_litteras_js(a, textus);
+    chorda_aedificator_appendere_literis(a, ");var c=act(e);"
+        "if(c)return{ok:false,visum:c};"
+        "e.click();return{ok:true,visum:\"pressum\"};");
+
+    v = _exspectare(manus,
+                    _js_exspectare(manus,
+                        _litterae(chorda_aedificator_finire(a), manus->piscina),
+                        MANUS_MORA_ORDINARIA),
+                    MANUS_MORA_ORDINARIA);
+
+    si (!v.respondit)
+    {
+        redde FALSUM;
+    }
+    si (!v.ok)
+    {
+        ChordaAedificator* n = chorda_aedificator_creare(manus->piscina, CXXVIII);
+        chorda_aedificator_appendere_literis(n, "manus_premere_textum fefellit: \"");
+        chorda_aedificator_appendere_literis(n, textus);
+        chorda_aedificator_appendere_literis(n, "\" - ");
+        chorda_aedificator_appendere_chorda(n, v.visum);
+        _frangere(manus, _litterae(chorda_aedificator_finire(n), manus->piscina));
+        redde FALSUM;
+    }
+    redde VERUM;
 }
 
 b32
@@ -1324,4 +1444,186 @@ _manus_credo_numerum (
     redde _notare(manus, "credo_manus_numerus",
                   _expressio(manus, selector),
                   numerus, v, filum, versus);
+}
+
+/* ========================================================================
+ * Textus paginae, praesentia cruda, errores
+ * ======================================================================== */
+
+b32
+_manus_credo_textum_paginae (
+    Manus*              manus,
+    constans character* textus,
+    b32                 adesse,
+    Mora                mora,
+    constans character* filum,
+    s32                 versus)
+{
+    ChordaAedificator* a;
+    ManusVerdictum     v;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+
+    a = chorda_aedificator_creare(manus->piscina, CCLVI);
+    chorda_aedificator_appendere_literis(a, "var n=qtn(");
+    _appendere_litteras_js(a, textus);
+    chorda_aedificator_appendere_literis(a, ");return{ok:n");
+    chorda_aedificator_appendere_literis(a, adesse ? ">0" : "===0");
+    chorda_aedificator_appendere_literis(a, ",visum:String(n)};");
+
+    v = _exspectare(manus,
+                    _js_exspectare(manus,
+                        _litterae(chorda_aedificator_finire(a), manus->piscina),
+                        mora),
+                    mora);
+
+    a = chorda_aedificator_creare(manus->piscina, CXXVIII);
+    chorda_aedificator_appendere_literis(a, "pagina continet \"");
+    chorda_aedificator_appendere_literis(a, textus);
+    chorda_aedificator_appendere_literis(a, "\"");
+
+    redde _notare(manus,
+                  adesse ? "credo_manus_textum" : "credo_manus_textum_abest",
+                  chorda_aedificator_finire(a),
+                  adesse ? "I aut plura elementa visibilia"
+                         : "nulla elementa visibilia",
+                  v, filum, versus);
+}
+
+b32
+_manus_credo_omnino (
+    Manus*              manus,
+    constans character* selector,
+    Mora                mora,
+    constans character* filum,
+    s32                 versus)
+{
+    ChordaAedificator* a;
+    ManusVerdictum     v;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+
+    /* querySelectorAll CRUDUM consulto - hoc solum assertum de DOM
+     * ipso loquitur, non de eo quod usor videt. */
+    a = chorda_aedificator_creare(manus->piscina, CXXVIII);
+    chorda_aedificator_appendere_literis(a,
+        "var n=document.querySelectorAll(");
+    _appendere_litteras_js(a, selector);
+    chorda_aedificator_appendere_literis(a,
+        ").length;return{ok:n===0,visum:String(n)};");
+
+    v = _exspectare(manus,
+                    _js_exspectare(manus,
+                        _litterae(chorda_aedificator_finire(a), manus->piscina),
+                        mora),
+                    mora);
+
+    redde _notare(manus, "credo_manus_abest_omnino",
+                  _expressio(manus, selector),
+                  "nulla elementa in DOM (ne occulta quidem)",
+                  v, filum, versus);
+}
+
+i32
+manus_errores (
+    Manus*  manus,
+    chorda* primus)
+{
+    ManusVerdictum v;
+    s32            quot = 0;
+
+    si (primus != NIHIL)
+    {
+        primus->mensura = 0;
+        primus->datum   = NIHIL;
+    }
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde 0;
+    }
+
+    /* 'visum' primum nuntium fert, 'ok' numerum nullum esse. Ergo
+     * una interrogatio et numerum et causam reddit - nam numerus
+     * sine nuntio nihil docet. */
+    v = _interrogare(manus,
+        "var a=window.__manus_errores;"
+        "if(!a)return{ok:true,visum:\"-1|collector abest\"};"
+        "return{ok:a.length===0,visum:String(a.length)+\"|\"+"
+        "(a.length?a[0]:\"\")};");
+
+    si (!v.respondit || v.visum.mensura == 0)
+    {
+        redde 0;
+    }
+    {
+        i32 i = 0;
+        dum (i < v.visum.mensura && v.visum.datum[i] != '|')
+        {
+            i++;
+        }
+        {
+            chorda numerus;
+            numerus.datum   = v.visum.datum;
+            numerus.mensura = i;
+            si (!chorda_ut_s32(numerus, &quot))
+            {
+                quot = 0;
+            }
+        }
+        si (primus != NIHIL && i + I < v.visum.mensura)
+        {
+            primus->datum   = v.visum.datum + i + I;
+            primus->mensura = v.visum.mensura - (i + I);
+        }
+    }
+    si (quot < 0)
+    {
+        redde 0;   /* collector abest - nihil de erroribus dicere possumus */
+    }
+    redde (i32)quot;
+}
+
+b32
+_manus_credo_sine_erroribus (
+    Manus*              manus,
+    constans character* filum,
+    s32                 versus)
+{
+    chorda    primus;
+    i32       quot;
+    character numerus[XXXII];
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+    quot = manus_errores(manus, &primus);
+
+    sprintf(numerus, "%lu", (insignatus longus)quot);
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(manus->piscina, CCLVI);
+        chorda_aedificator_appendere_literis(a, numerus);
+        si (primus.mensura > 0)
+        {
+            chorda_aedificator_appendere_literis(a, " (primus: ");
+            chorda_aedificator_appendere_chorda(a, primus);
+            chorda_aedificator_appendere_literis(a, ")");
+        }
+        _credo_notare("credo_manus_sine_erroribus",
+                      "errores paginae",
+                      _litterae(chorda_aedificator_finire(a), manus->piscina),
+                      "0",
+                      filum, versus, quot == 0);
+    }
+    si (quot != 0)
+    {
+        _frangere(manus, "pagina errores iactavit");
+    }
+    redde (quot == 0);
 }

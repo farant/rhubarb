@@ -330,6 +330,81 @@ a command log in failure messages, and splitting `ABEST` (invisible) from
 `ABEST_OMNINO` (not in DOM) the way Cypress separates `not.be.visible`
 from `not.exist`.
 
+## 2026-08-13 — contains, ABEST_OMNINO, and a page-error collector
+
+Smoke test 52 → **68 assertions**.
+
+### `contains` — press what the text says
+
+`manus_premere_textum(m, "condere")` and `CREDO_MANUS_TEXTUM(m, ...)`.
+"Press the button that says CONDERE" is the intent; `#mittere` is merely
+how it happens to be written today. Text-based tests survive markup
+churn and read as intent.
+
+The load-bearing detail is **deepest match**. `<body>` contains every
+string on the page, `<main>` nearly every one — so a naive "first
+element containing t" presses `<body>` forever, green and useless. `qt()`
+collects visible matches and returns the one with no other match inside
+it.
+
+### ABEST vs ABEST_OMNINO
+
+Cypress separates `not.be.visible` from `not.exist` and it was right to.
+Today's visibility change made `ABEST` mean invisible; that can't catch
+an app that leaks hidden nodes forever, because hidden is exactly what it
+now tolerates. `CREDO_MANUS_ABEST_OMNINO` uses raw `querySelectorAll`.
+
+Demonstrating the distinction needed care: asserting the *failing* side
+would have reddened the suite. Used the **silent probes** instead — the
+same element measured both ways in one breath:
+
+```
+manus_existit("#fructus fieldset")            -> FALSUM   (invisible)
+aestimare("...querySelectorAll(...).length")  -> "1"      (in DOM)
+```
+
+Two answers, one element. If they agreed, the distinction would be
+decorative.
+
+### Page-error collector
+
+Injected at `aperire`/`incipere`, no app cooperation needed — manus can
+already eval arbitrary JS through imperium, so the collector rides in on
+the channel that exists.
+
+Three sources, because **none of them catches the others**:
+
+| source | catches |
+|---|---|
+| `addEventListener('error')` | uncaught throws, resource load failures |
+| `'unhandledrejection'` | rejected promises with no `.catch` |
+| wrapped `console.error` | what the code deliberately reports |
+
+The middle one matters most here: the entire bridge is promises, and a
+rejected promise with no handler writes **nothing** anywhere by default.
+
+Why this is the last lying-green preventer: **a page can throw
+continuously while every assertion passes.** A view that failed halfway
+often shows the same text as one that succeeded. Verified with a planted
+fault that changes no DOM at all — `setTimeout(function(){
+nulla_functio_omnino(); })` — so every ordinary assertion still passed
+while the collector caught
+`ReferenceError: Can't find variable: nulla_functio_omnino`.
+
+`manus_errores()` is a **query** and does not break the manus (proven in
+the test: `manus_fracta` still FALSUM after two planted errors);
+`CREDO_MANUS_SINE_ERRORIBUS` is the assertion that does.
+
+**What it cannot catch: anything before `manus_aperire`** — page load
+itself, most importantly. The collector isn't installed yet. The fix
+belongs one layer down: vitrea already injects an internuntius JS shim,
+and installing the handlers there would give *every* app error-forwarding
+to C, not just apps under test. Not built; the right home for it is
+`lib/vitrea_macos.m`, not manus.
+
+Cosmetic gap: eval'd code reports `@ undefined:1` for filename, since it
+has no source URL.
+
 ### Tooling notes
 
 - The post-edit hook caught `Momentum * Momentum` and `Mora * Mora`
