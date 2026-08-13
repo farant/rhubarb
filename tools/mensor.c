@@ -289,17 +289,108 @@ _mensurare (Piscina* piscina, integer argc, character** argv)
     redde (integer)resultus.codex_exitus;
 }
 
+/*
+ * _addere_tabulam - Fascem mensurarum ex tabula "<valor> <titulus>"
+ *
+ * CUR FASCIS: aliter suita CXXX probationum CCLX processus gigneret.
+ * Forma tabulae ea ipsa est quam compile_tests.sh iam scribit.
+ * Formam lineae diarii BIBLIOTHECA tenet, non concha - aliter duo
+ * exemplaria formae per tempus dissiderent.
+ */
+interior integer
+_addere_tabulam (Piscina* piscina, integer argc, character** argv,
+                 constans character* via_tabulae,
+                 constans character* praefixum,
+                 constans character* unitas)
+{
+    FILE*              plagula;
+    character          linea[MMMMXCVI];
+    i32                numerus;
+    ChordaAedificator* aedificator;
+
+    plagula = fopen(via_tabulae, "rb");
+    si (plagula == NIHIL)
+    {
+        fprintf(stderr, "mensor: tabula aperiri non potest: %s\n",
+                via_tabulae);
+        redde I;
+    }
+
+    numerus = ZEPHYRUM;
+
+    dum (fgets(linea, MMMMXCVI, plagula) != NIHIL)
+    {
+        duplex     valor;
+        character* finis;
+        character* titulus;
+        Mensura    m;
+
+        valor = strtod(linea, &finis);
+        si (finis == linea)
+        {
+            perge;   /* linea sine numero */
+        }
+
+        dum (*finis == ' ' || *finis == '\t')
+        {
+            finis++;
+        }
+
+        titulus = finis;
+        dum (*finis != '\0' && *finis != '\n' && *finis != '\r')
+        {
+            finis++;
+        }
+        *finis = '\0';
+
+        si (titulus[0] == '\0')
+        {
+            perge;
+        }
+
+        aedificator = chorda_aedificator_creare(piscina,
+                                                (memoriae_index)C);
+        chorda_aedificator_appendere_literis(aedificator, praefixum);
+        chorda_aedificator_appendere_literis(aedificator, titulus);
+
+        m = _mensuram_struere(piscina, argc, argv, "", valor, unitas);
+        m.titulus = chorda_aedificator_finire(aedificator);
+
+        si (mensura_annotare(_diarium(argc, argv), &m, piscina))
+        {
+            numerus++;
+        }
+    }
+
+    fclose(plagula);
+
+    imprimere("mensor: %u mensurae ex tabula\n", numerus);
+
+    redde 0;
+}
+
 interior integer
 _addere (Piscina* piscina, integer argc, character** argv)
 {
     constans character* titulus;
     constans character* valor_litterae;
     constans character* unitas;
+    constans character* tabula;
+    constans character* praefixum;
     Mensura             m;
 
     titulus        = _arg(argc, argv, "-titulus");
     valor_litterae = _arg(argc, argv, "-valor");
     unitas         = _arg(argc, argv, "-unitas");
+    tabula         = _arg(argc, argv, "-tabula");
+    praefixum      = _arg(argc, argv, "-praefixum");
+
+    si (tabula != NIHIL)
+    {
+        redde _addere_tabulam(piscina, argc, argv, tabula,
+                              (praefixum != NIHIL) ? praefixum : "",
+                              (unitas != NIHIL) ? unitas : "secunda");
+    }
 
     si (titulus == NIHIL || valor_litterae == NIHIL)
     {

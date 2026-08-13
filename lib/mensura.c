@@ -324,6 +324,16 @@ mensura_condere (constans character* via_diarii,
         linea.datum   = (i8*)tabula;
         linea.mensura = (i32)strlen(tabula);
 
+        /* Terminatorem lineae NON condere: actum in volumine
+         * recordum est, non linea plagulae - qui postea quaerit
+         * eum tacite in ultimo campo inveniret */
+        dum (linea.mensura > ZEPHYRUM &&
+             (tabula[linea.mensura - I] == '\n' ||
+              tabula[linea.mensura - I] == '\r'))
+        {
+            linea.mensura--;
+        }
+
         si (linea.mensura == ZEPHYRUM)
         {
             perge;

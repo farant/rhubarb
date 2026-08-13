@@ -82,6 +82,27 @@ FAILED_TESTS=""
 START_TIME=0
 TOTAL_START_TIME=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
 TEST_TIMES_FILE=$(mktemp)
+COMPILE_TIMES_FILE=$(mktemp)
+
+# ==================================================
+# MENSURA (metra) - OPTIONALIA, suitam numquam frangunt
+# ==================================================
+# Porta probationum verdictum suum servat: instrumentum metiens quod
+# suitam frangere posset peius est quam nullum. Ergo omnis vocatio
+# mensoris '|| true' fert et defectus tacet.
+# MENSOR_TACET=1 metra omnino claudit.
+MENSOR=""
+if [ -z "${MENSOR_TACET:-}" ] && [ -x "./bin/mensor" ]; then
+    if eval "$(./bin/mensor sessio 2>/dev/null)" 2>/dev/null; then
+        MENSOR="./bin/mensor"
+    fi
+fi
+
+mensura_addere() {
+    [ -n "$MENSOR" ] || return 0
+    "$MENSOR" addere -titulus "$1" -valor "$2" -unitas "$3" \
+        >/dev/null 2>&1 || true
+}
 
 # GUI app results
 GUI_APPS_BUILT=0
@@ -317,7 +338,13 @@ compile_and_run_test() {
             ;;
     esac
 
-    # Compile test file and link with object files
+    # Compile test file and link with object files.
+    # COMPILATIO SEORSUM METITUR: test_start_time infra POST
+    # compilationem ponitur, ergo sine hoc tempus compilandi -
+    # pars maxima suitae - omnino invisibile manet.
+    local compilatio_initium
+    local compilatio_finis
+    compilatio_initium=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
     if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
@@ -325,6 +352,9 @@ compile_and_run_test() {
         echo ""
         return 1
     fi
+    compilatio_finis=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+    echo "$(echo "$compilatio_finis - $compilatio_initium" | bc) $test_name" \
+        >> "$COMPILE_TIMES_FILE"
 
     # Run with timing
     test_start_time=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
@@ -677,8 +707,46 @@ print_summary() {
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
     echo ""
 
-    # Cleanup temp file
-    rm -f "$TEST_TIMES_FILE"
+    # ==================================================
+    # MENSURAE
+    # ==================================================
+    # POST compendium visibile: metra nihil morantur quod homo videt,
+    # et si mensor haeret, numeri iam impressi sunt.
+    if [ -n "$MENSOR" ]; then
+        local summa_cursus
+        local summa_compilationis
+
+        summa_cursus=$(awk '{s+=$1} END {printf "%.6f", s+0}' \
+            "$TEST_TIMES_FILE" 2>/dev/null || echo 0)
+        summa_compilationis=$(awk '{s+=$1} END {printf "%.6f", s+0}' \
+            "$COMPILE_TIMES_FILE" 2>/dev/null || echo 0)
+
+        # Aggregata. compilatio et cursus SEORSUM: sine ea divisione
+        # 'tempus totum' fere solum narrat an arca aedificationis
+        # calida fuerit - strepitus bimodalis cum signo intus sepulto.
+        mensura_addere "suita.tempus.totum"       "$total_duration"      secunda
+        mensura_addere "suita.tempus.compilatio"  "$summa_compilationis" secunda
+        mensura_addere "suita.tempus.cursus"      "$summa_cursus"        secunda
+        mensura_addere "suita.probationes.totae"  "$TESTS_TOTAL"         numerus
+        mensura_addere "suita.probationes.fractae" "$TESTS_FAILED"       numerus
+        # LIBS_COMPILED = an bibliothecae hoc cursu recompilatae sint:
+        # frigidus contra calidum, discrimen quod tempus totum duplicat
+        mensura_addere "suita.bibliothecae.recompilatae" "$LIBS_COMPILED" veritas
+
+        # Fasces per-probationem: UNUS processus pro omnibus, non
+        # unus pro quaque (CXXX probationes => CCLX processus aliter)
+        "$MENSOR" addere -tabula "$TEST_TIMES_FILE" \
+            -praefixum "probatio.cursus." -unitas secunda \
+            >/dev/null 2>&1 || true
+        "$MENSOR" addere -tabula "$COMPILE_TIMES_FILE" \
+            -praefixum "probatio.compilatio." -unitas secunda \
+            >/dev/null 2>&1 || true
+
+        "$MENSOR" condere >/dev/null 2>&1 || true
+    fi
+
+    # Cleanup temp files
+    rm -f "$TEST_TIMES_FILE" "$COMPILE_TIMES_FILE"
 }
 
 # Parse arguments

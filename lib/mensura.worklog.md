@@ -83,3 +83,60 @@ The `mensor` CLI: `sessio`, `mensurare -- <cmd>`, `addere`, `condere`.
 Nesting plan — `MENSOR_SESSIO` / `MENSOR_PARENS` in the environment so
 child processes nest for free, plus an explicit `-parens` for
 same-process shell loops where inheritance gives nothing.
+
+## 2026-08-13 — wired into compile_tests.sh, and a correction
+
+### The metrics contradicted my own earlier claim
+
+Earlier today I told Fran "compilation dominates, not test execution",
+inferred from the only timing the suite printed: its top-5 slowest
+tests (38.5s of a 187s run). That inference was **backwards**. First
+full instrumented run, 131 tests:
+
+| phase | seconds | share |
+|---|---|---|
+| test execution (`cursus`) | 95.1 | 53% |
+| test compile+link | 19.4 | 11% |
+| **unaccounted pre-flight** | **66.1** | **37%** |
+| total | 180.6 | |
+
+Per-test compile is *tiny* — the slowest single link is 0.30s. What
+actually costs is (a) test execution and (b) a large fixed pre-flight.
+
+That pre-flight is visible in a filtered run: `./compile_tests.sh
+imago_png` took **43.9s for a 1.2s test**, with "Libraries up to date".
+It is the JS/oracle probations (`speculum velamen`, `forum velamen`,
+`mensa logica`, `qr gyrus` via CoreImage) plus `generare`, all of which
+run regardless of the filter.
+
+**The lesson is about the reasoning, not the numbers.** I drew a
+confident conclusion from a top-5 list, which is a biased sample by
+construction — it can tell you what is slowest but nothing about how
+the whole distributes. The measurement existed all along
+(`TEST_TIMES_FILE`); it was being thrown away.
+
+### Integration shape
+
+- compile is now timed separately (`test_start_time` sat *after* the
+  clang invocation, so compile time had never been measured at all)
+- `LIBS_COMPILED` becomes `suita.bibliothecae.recompilatae` — the
+  cold/warm discriminator, which otherwise makes total time bimodal
+- per-test rows go in via **one** `mensor addere -tabula` per table,
+  not one process per test (131 tests would have meant 262 spawns)
+- emission happens *after* the human-visible summary, so a slow or
+  stuck mensor can never delay or hide results
+
+### Never break the suite
+
+Every mensor call carries `|| true`; the session only activates if
+`bin/mensor` exists and starts cleanly; `MENSOR_TACET=1` disables it
+entirely. A metrics system that can fail the build is worse than no
+metrics system, because it makes the gate less trustworthy rather than
+more.
+
+### Storage note
+
+`mensura_condere` now strips the trailing newline before storing. An
+actum is a *record*, not a line of a file — left in, the terminator
+would sit invisibly at the end of the last field and surface later as a
+baffling query result.
