@@ -53,6 +53,21 @@ struct timeval {
 int gettimeofday(struct timeval* tp, void* tzp);
 
 /* ==================================================
+ * <sectio caput="time.h" poscit="sys/time.h"/>
+ * time.h POSIX (time/clock/time_t in systema_c89.h ut C89 - hae
+ * solae POSIX sunt). poscit: struct timespec.
+ * ================================================== */
+
+/* Successor usleep, quod XPG7 sustulit (codex 87 usum eius flagat).
+ *
+ * ABERAT hinc usque ad 2026-08-13, et absentia LAQUEUS erat: codex
+ * 87 usleep obsoletum dicebat et 'pro eo nanosleep' suadebat -
+ * deinde lexicon nanosleep ipsum ut vocationem implicitam flagabat.
+ * Instrumentum in foveam suam ducebat. Mensuratum in lib/manus.c,
+ * quae monitum secuta est et alterum monitum accepit. */
+int nanosleep(const struct timespec* petitum, struct timespec* reliquum);
+
+/* ==================================================
  * <sectio caput="sys/stat.h" poscit="sys/time.h"/>
  * sys/stat.h (forma Darwin arm64, 144 octeti - certificata).
  * poscit: struct timespec (st_atimespec et cetera).
@@ -230,6 +245,9 @@ int setsockopt(int fossa, int gradus, int titulus, const void* valor,
 #define SO_RCVTIMEO 0x1006
 #define SO_SNDTIMEO 0x1005
 #define INADDR_ANY  0u
+/* 127.0.0.1 - quaeque probatio quae ansam localem ligat eo utitur
+ * (probatio_manus mensuravit) */
+#define INADDR_LOOPBACK 0x7f000001u
 
 struct sockaddr {
     unsigned char sa_len;

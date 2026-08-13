@@ -12485,3 +12485,36 @@ of professions + inferred candidates, mass-claim emendator, the
 forum-split scout run (mark forum's core, read the violations).
 Ladder: suite 114/114 + XIV apps, silva 38/38, amalgama VERIFICATUM,
 PORTA LINUX TENET.
+
+## 2026-08-13 — lexicon: nanosleep + INADDR_LOOPBACK (foramina duo)
+
+Sanatio per viam documentatam (systema_posix.h sectiones, non pinnae:
+pinnae plagulas EXSPECTATO-rubras notant, foramina lexici aliud sunt).
+
+**nanosleep** — foramen quod SE IPSUM mordebat. Codex 87 usleep
+obsoletum dicit et 'pro eo nanosleep' suadet; nanosleep autem nusquam
+declaratum erat, ergo lexicon eum ut vocationem implicitam flagabat.
+Instrumentum monitum dabat et in laqueum suum ducebat. Mensuratum in
+lib/manus.c, quae monitum secuta est et alterum monitum accepit.
+Sectio nova `caput="time.h" poscit="sys/time.h"` (struct timespec ex
+sectione sys/time.h venit; sectiones semel emittuntur, ergo plagula
+quae ambo capita includit duplicationem non patitur).
+
+**INADDR_LOOPBACK** — INADDR_ANY aderat, frater eius non. Quaeque
+probatio quae ansam localem ligat eo utitur (probatio_manus id
+invenit).
+
+PORTAE: examen_vectis VECTIS TENET (fugae oraculi 0) · auspex_posix
+FORMAE CERTIFICATAE · silva 38/38 · amalgama VERIFICATUM (nec mutata
+est - systema_posix.h fixura est quam examen e disco legit, non pars
+amalgamatis).
+
+CAECITAS PROBATA NON ESSE: plagula ficta cum functione et macrone vere
+ignotis adhuc REICITUR, dum nanosleep/INADDR_LOOPBACK tacent. Additio
+ergo angusta est, non permissiva.
+
+Ianua relicta: systema_posix.h ipsa codicem 85 fert (symbola POSIX sine
+postulata_posix.h) - PRAEEXISTENS, verificatum contra HEAD. Falsum
+positivum generis alterius: plagula illa FIXURA est, numquam
+compilata. Emendare eam NOLI - inclusio in modelum systematis ipsum
+serperet.
