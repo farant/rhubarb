@@ -654,6 +654,74 @@ vitrea_aestimator (vacuum* datum, chorda js)
     vitrea_aestimare((Vitrea*)datum, js);
 }
 
+/* Imago: WKWebView contenta SUA reddit (takeSnapshot...), ergo
+ * nulla permissio scrinii, nulla condicio de fenestra prima aut
+ * obtecta - et res aliena in imagine apparere non potest. */
+b32
+vitrea_imaginem_petere (
+    Vitrea*             vitrea,
+    constans character* via,
+    VitreaImagoFacta    facta,
+    vacuum*             facta_datum)
+{
+    si (vitrea == NIHIL || vitrea->textura == nil || via == NIHIL)
+    {
+        redde FALSUM;
+    }
+    @autoreleasepool {
+        WKSnapshotConfiguration* figura =
+            [[WKSnapshotConfiguration alloc] init];
+        /* NSString ante bloccum: bloccum obiectum ObjC retinet,
+         * monstratorem C non - via vocantis mori potest */
+        NSString* semita = [NSString stringWithUTF8String:via];
+
+        [vitrea->textura takeSnapshotWithConfiguration:figura
+            completionHandler:^(NSImage* imago, NSError* err) {
+                b32 successus = FALSUM;
+
+                si (imago != nil && err == nil)
+                {
+                    CGImageRef cg = [imago
+                        CGImageForProposedRect:NULL
+                        context:nil hints:nil];
+
+                    si (cg != NULL)
+                    {
+                        NSBitmapImageRep* rep =
+                            [[NSBitmapImageRep alloc]
+                                initWithCGImage:cg];
+                        NSData* png = [rep
+                            representationUsingType:
+                                NSBitmapImageFileTypePNG
+                            properties:@{}];
+
+                        si (png != nil)
+                        {
+                            successus = [png writeToFile:semita
+                                atomically:YES] ? VERUM : FALSUM;
+                        }
+                    }
+                }
+                si (facta != NIHIL)
+                {
+                    facta(facta_datum, successus);
+                }
+            }];
+    }
+    redde VERUM;
+}
+
+b32
+vitrea_imaginator (
+    vacuum*             datum,
+    constans character* via,
+    VitreaImagoFacta    facta,
+    vacuum*             facta_datum)
+{
+    redde vitrea_imaginem_petere((Vitrea*)datum, via, facta,
+        facta_datum);
+}
+
 vacuum
 vitrea_recargare (Vitrea* vitrea)
 {

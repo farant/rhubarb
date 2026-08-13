@@ -52,6 +52,21 @@ nomen vacuum (*ImperiumAestimator)(
     vacuum* datum,
     chorda  js);
 
+/* IMAGO - suturae geminae (formae vitrea_imaginator pares).
+ *
+ * Imperium typum Vitrea IGNORAT consulto: suturae solae eum
+ * ligant, unde probatio sine fenestra fieri potest (probatio
+ * huius bibliothecae id facit). */
+nomen vacuum (*ImperiumImagoFacta)(
+    vacuum* datum,
+    b32     successus);
+
+nomen b32 (*ImperiumImaginator)(
+    vacuum*             datum,
+    constans character* via,
+    ImperiumImagoFacta  facta,
+    vacuum*             facta_datum);
+
 /* ==================================================
  * Cyclus vitae
  * ================================================== */
@@ -71,11 +86,26 @@ imperium_praebere (
     Internuntius* internuntius);
 
 /* Id fenestrae nativae (CGWindowID in macOS) ut instrumentum
- * exterius SOLAM hanc fenestram capere possit, non scrinium. */
+ * exterius SOLAM hanc fenestram capere possit, non scrinium.
+ * Cadens est: imaginator (infra) melior via est. */
 vacuum
 imperium_fenestram_ponere (
     Imperium* imperium,
     i32       id_fenestrae);
+
+/* Imaginatorem ponere -> viam 'POST /imperium/imago' aperit.
+ * Sine eo via CDIV reddit (recusatio APERTA, non imago vacua).
+ *
+ *   imperium_imaginatorem_ponere(imp, vitrea_imaginator, vitrea);
+ *
+ * Petitio tesseram reddit ut iussa cetera; imago scripta tesseram
+ * cum VIA plagulae perficit. Asynchrona enim est, et tesserae iam
+ * aderant - nihil novi machinamenti opus fuit. */
+vacuum
+imperium_imaginatorem_ponere (
+    Imperium*          imperium,
+    ImperiumImaginator imaginator,
+    vacuum*            datum);
 
 /* ==================================================
  * Numeratores (mensura est productum)

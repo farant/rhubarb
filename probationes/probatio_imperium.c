@@ -51,6 +51,30 @@ _aestimator_capiens (
     aestimator_falsus.numerus = aestimator_falsus.numerus + I;
 }
 
+/* imaginator falsus: viam servat et STATIM perficit (vera vitrea
+ * gyro proximo redderet - hic sine mora, ut probatio deterministica
+ * maneat) */
+interior character imaginator_via[512];
+interior i32       imaginator_numerus;
+
+interior b32
+_imaginator_falsus (
+    vacuum*             datum,
+    constans character* via,
+    ImperiumImagoFacta  facta,
+    vacuum*             facta_datum)
+{
+    (vacuum)datum;
+    strncpy(imaginator_via, via, magnitudo(imaginator_via) - I);
+    imaginator_via[magnitudo(imaginator_via) - I] = '\0';
+    imaginator_numerus = imaginator_numerus + I;
+    si (facta != NIHIL)
+    {
+        facta(facta_datum, VERUM);
+    }
+    redde VERUM;
+}
+
 /* missor internuntii: responsa in vacuum eunt (pagina non adest) */
 interior vacuum
 _missor_mutus (
@@ -230,10 +254,34 @@ principale (vacuum)
         buffer, (i32)magnitudo(buffer));
     CREDO_VERUM(strstr(buffer, "404") != NIHIL);
 
-    /* --- VIII. numeratores --- */
+    /* --- VIII. imago SINE imaginatore: CDIV, recusatio APERTA
+     *      (non tessera quae numquam perficitur) --- */
+    _commercium(hospitium, pv,
+        "POST /imperium/imago HTTP/1.1\r\nHost: x\r\n"
+        "Content-Length: 0\r\n\r\n", buffer, (i32)magnitudo(buffer));
+    CREDO_VERUM(strstr(buffer, "404") != NIHIL);
+    CREDO_AEQUALIS_I32(imaginator_numerus, ZEPHYRUM);
+
+    /* --- IX. imago CUM imaginatore: tessera + via in valore --- */
+    imperium_imaginatorem_ponere(imperium, _imaginator_falsus, NIHIL);
+    _commercium(hospitium, pv,
+        "POST /imperium/imago HTTP/1.1\r\nHost: x\r\n"
+        "Content-Length: 14\r\n\r\n/tmp/probo.png", buffer,
+        (i32)magnitudo(buffer));
+    CREDO_VERUM(strstr(buffer, "\"tessera\":3") != NIHIL);
+    CREDO_AEQUALIS_I32(imaginator_numerus, I);
+    CREDO_VERUM(strstr(imaginator_via, "/tmp/probo.png") != NIHIL);
+
+    _commercium(hospitium, pv,
+        "GET /imperium/3 HTTP/1.1\r\nHost: x\r\n\r\n",
+        buffer, (i32)magnitudo(buffer));
+    CREDO_VERUM(strstr(buffer, "perfectum") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "/tmp/probo.png") != NIHIL);
+
+    /* --- X. numeratores --- */
     fructus = imperium_fructus(imperium);
-    CREDO_AEQUALIS_I32((i32)fructus.iussa_missa, II);
-    CREDO_AEQUALIS_I32((i32)fructus.responsa_recepta, II);
+    CREDO_AEQUALIS_I32((i32)fructus.iussa_missa, III);
+    CREDO_AEQUALIS_I32((i32)fructus.responsa_recepta, III);
     CREDO_AEQUALIS_I32((i32)fructus.culpae, I);
     CREDO_AEQUALIS_I32((i32)fructus.pendentia, ZEPHYRUM);
 

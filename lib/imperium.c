@@ -32,8 +32,19 @@ structura Imperium {
     Xar*               iussa;
     i32                tessera_proxima;
     i32                id_fenestrae;
+    ImperiumImaginator imaginator;
+    vacuum*            imaginator_datum;
     ImperiumFructus    fructus;
 };
+
+/* contextus imaginis: tractator solum (datum, successus) accipit,
+ * ergo tessera et via hic vehuntur (piscina imperii, non
+ * petitionis - petitio ante imaginem moritur) */
+nomen structura {
+    Imperium* imperium;
+    i32       tessera;
+    chorda    via;
+} ImagoContextus;
 
 /* ========================================================================
  * INTERNA
@@ -110,6 +121,48 @@ _involvere (
     redde chorda_aedificator_finire(a);
 }
 
+/* imago scripta (aut fracta): tessera perficitur cum VIA plagulae */
+interior vacuum
+_imago_facta (
+    vacuum* datum,
+    b32     successus)
+{
+    ImagoContextus* ctx = (ImagoContextus*)datum;
+    Iussum*         iussum;
+
+    si (ctx == NIHIL || ctx->imperium == NIHIL)
+    {
+        redde;
+    }
+    iussum = _iussum_invenire(ctx->imperium, ctx->tessera);
+    si (iussum == NIHIL)
+    {
+        redde;
+    }
+    si (successus)
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(
+            ctx->imperium->piscina, CCLVI);
+
+        /* valor = JSON chordae (via), ergo virgulae hic */
+        chorda_aedificator_appendere_character(a, '"');
+        chorda_aedificator_appendere_evasus_json(a, ctx->via);
+        chorda_aedificator_appendere_character(a, '"');
+        iussum->valor  = chorda_aedificator_finire(a);
+        iussum->status = IMPERIUM_PERFECTUM;
+    }
+    alioquin
+    {
+        iussum->valor = chorda_ex_literis("imago capi non potuit",
+            ctx->imperium->piscina);
+        iussum->status = IMPERIUM_CULPA;
+        ctx->imperium->fructus.culpae =
+            ctx->imperium->fructus.culpae + I;
+    }
+    ctx->imperium->fructus.responsa_recepta =
+        ctx->imperium->fructus.responsa_recepta + I;
+}
+
 interior vacuum
 _respondere_json (
     HospitiumColloquium* colloquium,
@@ -179,6 +232,95 @@ _iubere (
 
     a = chorda_aedificator_creare(p, LXIV);
     sprintf(numerus, "%d", (integer)novum.tessera);
+    chorda_aedificator_appendere_literis(a, "{\"tessera\":");
+    chorda_aedificator_appendere_literis(a, numerus);
+    chorda_aedificator_appendere_literis(a, "}");
+    _respondere_json(colloquium, CCII, chorda_aedificator_finire(a));
+}
+
+/* POST /imperium/imago - corpus = via plagulae (vacuum = ordinaria) */
+interior vacuum
+_imaginem_petere (
+    HospitiumColloquium* colloquium)
+{
+    Imperium*                    imperium;
+    constans HttpPetitioServeri* petitio;
+    Piscina*                     p;
+    Iussum*                      sedes;
+    ImagoContextus*              ctx;
+    ChordaAedificator*           a;
+    character                    numerus[XXXII];
+    i32                          tessera;
+
+    imperium = (Imperium*)colloquium_datum(colloquium);
+    petitio  = colloquium_petitio(colloquium);
+    p        = colloquium_piscina(colloquium);
+
+    si (imperium == NIHIL || petitio == NIHIL)
+    {
+        _respondere_json(colloquium, D,
+            chorda_ex_literis("{\"culpa\":\"imperium abest\"}", p));
+        redde;
+    }
+    /* RECUSATIO APERTA: sine imaginatore via ipsa non exstat pro
+     * hac applicatione - melius quam imago vacua aut tessera quae
+     * numquam perficitur */
+    si (imperium->imaginator == NIHIL)
+    {
+        _respondere_json(colloquium, CDIV,
+            chorda_ex_literis(
+                "{\"culpa\":\"imaginator non positus\"}", p));
+        redde;
+    }
+
+    tessera = imperium->tessera_proxima;
+    imperium->tessera_proxima = imperium->tessera_proxima + I;
+
+    sedes = (Iussum*)xar_addere(imperium->iussa);
+    si (sedes == NIHIL)
+    {
+        _respondere_json(colloquium, D,
+            chorda_ex_literis("{\"culpa\":\"tabula plena\"}", p));
+        redde;
+    }
+    sedes->tessera      = tessera;
+    sedes->status       = IMPERIUM_PENDENS;
+    sedes->valor.datum  = NIHIL;
+    sedes->valor.mensura = ZEPHYRUM;
+
+    ctx = (ImagoContextus*)piscina_allocare(imperium->piscina,
+        (i32)magnitudo(ImagoContextus));
+    si (ctx == NIHIL)
+    {
+        _respondere_json(colloquium, D,
+            chorda_ex_literis("{\"culpa\":\"piscina\"}", p));
+        redde;
+    }
+    ctx->imperium = imperium;
+    ctx->tessera  = tessera;
+
+    si (petitio->corpus.mensura > ZEPHYRUM)
+    {
+        ctx->via = chorda_transcribere(petitio->corpus,
+            imperium->piscina);
+    }
+    alioquin
+    {
+        a = chorda_aedificator_creare(imperium->piscina, CXXVIII);
+        sprintf(numerus, "%d", (integer)tessera);
+        chorda_aedificator_appendere_literis(a, "/tmp/imperium-");
+        chorda_aedificator_appendere_literis(a, numerus);
+        chorda_aedificator_appendere_literis(a, ".png");
+        ctx->via = chorda_aedificator_finire(a);
+    }
+
+    imperium->fructus.iussa_missa = imperium->fructus.iussa_missa + I;
+    (vacuum)imperium->imaginator(imperium->imaginator_datum,
+        chorda_ut_cstr(ctx->via, imperium->piscina),
+        _imago_facta, ctx);
+
+    a = chorda_aedificator_creare(p, LXIV);
+    sprintf(numerus, "%d", (integer)tessera);
     chorda_aedificator_appendere_literis(a, "{\"tessera\":");
     chorda_aedificator_appendere_literis(a, numerus);
     chorda_aedificator_appendere_literis(a, "}");
@@ -346,6 +488,8 @@ imperium_creare (
         (i32)magnitudo(Iussum));
     imperium->tessera_proxima = I;
     imperium->id_fenestrae    = ZEPHYRUM;
+    imperium->imaginator       = NIHIL;
+    imperium->imaginator_datum = NIHIL;
     imperium->fructus.iussa_missa      = ZEPHYRUM;
     imperium->fructus.responsa_recepta = ZEPHYRUM;
     imperium->fructus.culpae           = ZEPHYRUM;
@@ -374,6 +518,11 @@ imperium_praebere (
     {
         redde FALSUM;
     }
+    si (!hospitium_praebere(hospitium, HTTP_POST, "/imperium/imago",
+        _imaginem_petere, imperium))
+    {
+        redde FALSUM;
+    }
     si (!hospitium_praebere(hospitium, HTTP_GET, "/imperium/:tessera",
         _quaerere, imperium))
     {
@@ -395,6 +544,19 @@ imperium_fenestram_ponere (
     si (imperium != NIHIL)
     {
         imperium->id_fenestrae = id_fenestrae;
+    }
+}
+
+vacuum
+imperium_imaginatorem_ponere (
+    Imperium*          imperium,
+    ImperiumImaginator imaginator,
+    vacuum*            datum)
+{
+    si (imperium != NIHIL)
+    {
+        imperium->imaginator       = imaginator;
+        imperium->imaginator_datum = datum;
     }
 }
 

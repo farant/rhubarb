@@ -130,6 +130,43 @@ vitrea_aestimator (
     vacuum* datum,
     chorda  js);
 
+/* ==================================================
+ * Imago - contenta sua ipsius photographare
+ *
+ * CUR INTUS ET NON PER SYSTEMA: 'screencapture' permissionem
+ * SCRINII poscit (id est: omnia quae in scrinio sunt), pendet an
+ * fenestra prima, non obtecta, in scrinio sit - et scrinium totum
+ * capere POTEST. Haec via contenta SUA SOLA reddit: nulla
+ * permissio, nulla condicio, et res aliena in imagine apparere
+ * NON POTEST. Custodia in forma ipsa sedet, non in disciplina.
+ *
+ * ASYNCHRONA: WebKit imaginem gyro proximo reddit. VERUM redditum
+ * = petitio MISSA, non imago scripta - tractator id nuntiat.
+ * ================================================== */
+
+/* Vocatur cum imago scripta est (aut capi non potuit). */
+nomen vacuum (*VitreaImagoFacta) (
+    vacuum* datum,
+    b32     successus);
+
+/* Contenta in plagulam PNG scribere.
+ * FALSUM statim = petitio ipsa fracta (vitrea aut via absens). */
+b32
+vitrea_imaginem_petere (
+    Vitrea*             vitrea,
+    constans character* via,
+    VitreaImagoFacta    facta,
+    vacuum*             facta_datum);
+
+/* imaginator seam-formis (gemellus vitrea_aestimator): datum =
+ * Vitrea*. Pro consumptoribus sine typo Vitrea (e.g. imperium). */
+b32
+vitrea_imaginator (
+    vacuum*             datum,
+    constans character* via,
+    VitreaImagoFacta    facta,
+    vacuum*             facta_datum);
+
 vacuum
 vitrea_recargare (
     Vitrea* vitrea);
