@@ -67,3 +67,50 @@ salve round trip, then reads fructus through the bridge and echoes
 breaks, the page NAVIGATES AWAY, the JS context dies, and the smoke
 line simply never prints. The echo also proves the page survived
 the attempt — a successful navigation could not have produced it.
+
+## 2026-08-13 — PNG encoding moved out of AppKit (the seam moved down)
+
+`vitrea_imaginem_petere` no longer encodes PNG. It now extracts pixels
+into an `Imago` and hands them to `imago_png_scribere` (portable C89).
+
+**The rule this established: the platform boundary belongs at pixel
+acquisition, not at file format.** "Capture this WKWebView's contents"
+is genuinely macOS-bound. "Serialize RGBA to PNG" is arithmetic. AppKit
+was doing both, which is exactly why the encode chain had been
+copy-pasted into `tools/vitrea_spica.m` as well — there was no portable
+place to put it.
+
+Two things worth knowing:
+
+**1. The type was dragging the decoder.** Adding `#include "imago_png.h"`
+put `lib/imago.c` AND `vendor/stb_image.h` into the closure of every
+vitrea app — measured with `bin/aedilis apps/forum/forum.c --partes`.
+Cause: `Imago` (a 3-field struct) lived in `imago.h` next to the
+stb_image-backed loaders, so wanting the type meant importing the
+decoder. Fixed by splitting the struct into `include/imago_typus.h`, a
+header with no implementation file, which therefore drags nothing.
+`imago_png.h` and `imago_collatio.h` now include only that. Forum's
+closure went from `vendores 1` back to `vendores 0`.
+
+This is the same error as the PNG seam itself, one level down: things
+that don't belong together sharing a header. Worth watching for — the
+include graph is where it shows up, and `--partes` is how you see it.
+
+**2. Row order was the real risk, and no unit test could catch it.**
+If `CGBitmapContext` had been bottom-row-first, every screenshot would
+be vertically flipped — and encoder and decoder would happily agree on
+the flipped buffer, so a round-trip test stays green. Verified instead
+with a scratch program (no window needed): build a CGImage whose top
+half is red and bottom half blue, run the identical extraction, and
+check byte 0. Result: row 0 in memory IS the top row. The emitted PNG
+was then viewed directly — red above, blue below.
+
+Alpha is un-premultiplied on the way out (CG premultiplies, PNG does
+not), with a clamp because rounding can push a channel past 255. For
+opaque snapshots — nearly all of them — it is a no-op.
+
+**Still duplicated:** `tools/vitrea_spica.m` keeps its own
+NSBitmapImageRep encode. It is a WebKit calibration probe whose job is
+exercising raw platform primitives, and reusing the new path would mean
+exposing a CG-typed function from the library. Left deliberately;
+revisit if a third site ever appears.

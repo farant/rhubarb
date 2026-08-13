@@ -12,6 +12,7 @@
 #include "vitrea.h"
 #include "chorda_aedificator.h"
 #include "internuntius.h"   /* effugator solus - directio sana */
+#include "imago_png.h"      /* codificatio PORTABILIS - vide limes infra */
 #include "mimen.h"
 #include <stdio.h>
 #include <string.h>
@@ -831,6 +832,113 @@ vitrea_aestimator (vacuum* datum, chorda js)
     vitrea_aestimare((Vitrea*)datum, js);
 }
 
+/* Praemultiplicationem solvere: CG colores alpha praemultiplicat,
+ * PNG non. Terminus superior necessarius est quia rotundatio
+ * valorem supra CCLV ferre potest. */
+interior i8
+_depraemultiplicare (i32 color, i32 alpha)
+{
+    i32 valor;
+
+    valor = (color * (i32)CCLV) / alpha;
+    si (valor > (i32)CCLV)
+    {
+        valor = (i32)CCLV;
+    }
+    redde (i8)valor;
+}
+
+/*
+ * _cg_in_png_scribere - CGImage in plagulam PNG per imago_png
+ *
+ * LIMES PLATFORMAE: pixela capere macOS est; PNG scribere non est.
+ * Ideo hic pixela SOLA extrahuntur et codificator portabilis
+ * cetera agit (vide lib/imago_png.worklog.md).
+ */
+interior b32
+_cg_in_png_scribere (CGImageRef cg, NSString* semita)
+{
+    i32             lat, alt;
+    i32             i, numerus;
+    Piscina*        piscina;
+    i8*             pixela;
+    CGColorSpaceRef spatium;
+    CGContextRef    contextus;
+    Imago           imago;
+    PngFructus      fructus;
+    b32             successus;
+
+    lat = (i32)CGImageGetWidth(cg);
+    alt = (i32)CGImageGetHeight(cg);
+    si (lat == ZEPHYRUM || alt == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    /* Piscina PROPRIA et brevis: imagines magnae sunt et arena
+     * singula non liberat - in vitrea->piscina sine fine crescerent */
+    piscina = piscina_generare_dynamicum(
+                  "vitrea_imago", (memoriae_index)(lat * alt * (i32)IV));
+    si (piscina == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    pixela = (i8*)piscina_allocare(
+                 piscina, (memoriae_index)(lat * alt * (i32)IV));
+    si (pixela == NIHIL)
+    {
+        piscina_destruere(piscina);
+        redde FALSUM;
+    }
+
+    /* 32Big + PremultipliedLast = ordo memoriae R,G,B,A */
+    spatium   = CGColorSpaceCreateDeviceRGB();
+    contextus = CGBitmapContextCreate(
+                    pixela, (size_t)lat, (size_t)alt, (size_t)VIII,
+                    (size_t)(lat * (i32)IV), spatium,
+                    kCGImageAlphaPremultipliedLast
+                        | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(spatium);
+
+    si (contextus == NULL)
+    {
+        piscina_destruere(piscina);
+        redde FALSUM;
+    }
+
+    CGContextDrawImage(
+        contextus, CGRectMake(0, 0, (CGFloat)lat, (CGFloat)alt), cg);
+    CGContextRelease(contextus);
+
+    numerus = lat * alt;
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        i8* p;
+        i32 alpha;
+
+        p     = pixela + i * (i32)IV;
+        alpha = (i32)p[III];
+
+        si (alpha != ZEPHYRUM && alpha != (i32)CCLV)
+        {
+            p[0]  = _depraemultiplicare((i32)p[0],  alpha);
+            p[I]  = _depraemultiplicare((i32)p[I],  alpha);
+            p[II] = _depraemultiplicare((i32)p[II], alpha);
+        }
+    }
+
+    imago.pixela   = pixela;
+    imago.latitudo = lat;
+    imago.altitudo = alt;
+
+    fructus   = imago_png_scribere(&imago, [semita UTF8String], piscina);
+    successus = fructus.successus;
+
+    piscina_destruere(piscina);
+    redde successus;
+}
+
 /* Imago: WKWebView contenta SUA reddit (takeSnapshot...), ergo
  * nulla permissio scrinii, nulla condicio de fenestra prima aut
  * obtecta - et res aliena in imagine apparere non potest. */
@@ -864,19 +972,7 @@ vitrea_imaginem_petere (
 
                     si (cg != NULL)
                     {
-                        NSBitmapImageRep* rep =
-                            [[NSBitmapImageRep alloc]
-                                initWithCGImage:cg];
-                        NSData* png = [rep
-                            representationUsingType:
-                                NSBitmapImageFileTypePNG
-                            properties:@{}];
-
-                        si (png != nil)
-                        {
-                            successus = [png writeToFile:semita
-                                atomically:YES] ? VERUM : FALSUM;
-                        }
+                        successus = _cg_in_png_scribere(cg, semita);
                     }
                 }
                 si (facta != NIHIL)

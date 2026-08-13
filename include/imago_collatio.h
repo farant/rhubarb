@@ -40,7 +40,7 @@
 
 #include "latina.h"
 #include "piscina.h"
-#include "imago.h"
+#include "imago_typus.h"   /* typum solum poscimus, non decodificatorem */
 
 /* ============================================================
  * Typi

@@ -11,22 +11,11 @@
 #include "latina.h"
 #include "chorda.h"
 #include "piscina.h"
+#include "imago_typus.h"   /* Imago ipsa - typus decodificatorem non trahit */
 
 /* ============================================================
  * Typi
  * ============================================================ */
-
-/*
- * Imago - Datum imaginis in memoria
- *
- * Pixela sunt in forma RGBA (4 bytes per pixel).
- * Datum allocatum in piscina, non opus est liberare.
- */
-nomen structura {
-    i8* pixela;       /* RGBA datum (4 bytes per pixel) */
-    i32 latitudo;     /* Latitudo in pixelis */
-    i32 altitudo;     /* Altitudo in pixelis */
-} Imago;
 
 /*
  * ImagoFructus - Fructus operationis caricare
