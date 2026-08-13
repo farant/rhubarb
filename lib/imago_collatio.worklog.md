@@ -96,3 +96,54 @@ cold tree and blows the 2-minute foreground cap. Background it. Also:
 the background-task notification reports the exit of the *whole*
 command, so a trailing `echo` launders a red suite into "exit code 0".
 Append `EXIT=$?` to the output file and read it from there.
+
+## 2026-08-13 — pixela_ferenda (a threshold on the COUNT)
+
+Added a fourth field to `CollatioRegula`. Interface change one day into
+the library's life, which is the cheap moment for one.
+
+### Why measurement forced it
+
+Once `imago_png` existed we could finally *look* at a diff. Rendered
+real antialiased text with CoreGraphics and shifted it by **0.3px** —
+the exact real-world case where nothing changed but the font rasterizer
+landed differently:
+
+| rule | different | suppressed as AA |
+|---|---|---|
+| AA off | 518 | 0 |
+| AA on | **211** | 307 |
+
+Antialias detection removes 59% and **211 pixels still report a change
+that did not happen.** Tolerance cannot close the gap either: the max
+delta there was 115, so a tolerance large enough to swallow the noise
+would swallow real changes too.
+
+Per-pixel tolerance and pixel-count allowance are genuinely different
+questions, and neither substitutes for the other. Hence `pixela_ferenda`.
+
+The same run confirmed the good half: recoloring a 62×24 button gave
+`diversa=1488` — **exactly 62×24, not one pixel more** — with `arca`
+matching the button's rect precisely. Noise 211 vs signal 1488 is a 7×
+gap, so a single threshold separates them cleanly here.
+
+### The design rule it encodes
+
+**The threshold moves the verdict ONLY.** `pixela_diversa`,
+`delta_maximum`, and `arca` are unchanged by it. The tempting wrong
+implementation zeroes the counts when the verdict is lenient — and it is
+tempting precisely because the pass/fail answer stays *correct* while
+the diagnostics go blind. A raised threshold must never make a test
+report less than it saw.
+
+Proven by poison: zeroing `pixela_diversa` inside the allowance broke
+exactly one assertion (the measurement guard, line 410) while **every
+verdict assertion still passed**. That asymmetry is the point.
+
+Default stays `ZEPHYRUM` deliberately — any other number would be a
+magic constant with no basis. How much noise is tolerable depends on the
+test, so the regression layer sets it, not this library.
+
+Ratio is left to the caller: `regula.pixela_ferenda = (lat * alt) / M;`
+Antialias noise scales with edge length, not area, so a bare count is
+often the more principled choice anyway.

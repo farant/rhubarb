@@ -372,6 +372,56 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * X. Limes numeri (pixela_ferenda)
+     *
+     * Tolerantia de pixelo UNO iudicat, hic limes de NUMERO.
+     * Necessarius est quia spretio lenimenti motum subpixelarem
+     * non totum tollit (MENSURATUM: CCXI pixela superfuerunt) et
+     * tolerantia tanta mutationes veras quoque devoraret.
+     * ======================================================== */
+
+    imprimere("\n--- X. Limes numeri ---\n");
+    {
+        Imago           a, b;
+        CollatioRegula  regula;
+        CollatioFructus fructus;
+
+        a = _imago_solida(piscina, X, X, (i8)ZEPHYRUM);
+        b = _imago_solida(piscina, X, X, (i8)ZEPHYRUM);
+        _ponere(&b, II,  III,  (i8)CCLV);
+        _ponere(&b, VII, VIII, (i8)CCLV);
+
+        regula = collatio_regula_solita();
+        regula.sperne_lenimentum = FALSUM;
+
+        /* Limes ZEPHYRUM: mos prior, nihil fertur */
+        CREDO_AEQUALIS_I32(regula.pixela_ferenda, ZEPHYRUM);
+        fructus = imago_conferre(&a, &b, regula, NIHIL);
+        CREDO_AEQUALIS_S32((s32)fructus.sententia, (s32)COLLATIO_DISCREPANT);
+
+        /* Limes II: duo pixela non EXCEDUNT duo */
+        regula.pixela_ferenda = (i32)II;
+        fructus = imago_conferre(&a, &b, regula, NIHIL);
+        CREDO_AEQUALIS_S32((s32)fructus.sententia, (s32)COLLATIO_CONGRUUNT);
+
+        /* MENSURA INTACTA MANET quamquam iudicium mite est - hoc
+         * cardo est: limes altior probationem caecam faceret si
+         * numeros quoque tolleret */
+        CREDO_AEQUALIS_I32(fructus.pixela_diversa, (i32)II);
+        CREDO_AEQUALIS_I32(fructus.delta_maximum, (i32)CCLV);
+        CREDO_AEQUALIS_I32(fructus.arca_x, (i32)II);
+        CREDO_AEQUALIS_I32(fructus.arca_y, (i32)III);
+        CREDO_AEQUALIS_I32(fructus.arca_latitudo, (i32)VI);
+        CREDO_AEQUALIS_I32(fructus.arca_altitudo, (i32)VI);
+
+        /* Limes I: duo pixela unum EXCEDUNT */
+        regula.pixela_ferenda = (i32)I;
+        fructus = imago_conferre(&a, &b, regula, NIHIL);
+        CREDO_AEQUALIS_S32((s32)fructus.sententia, (s32)COLLATIO_DISCREPANT);
+        CREDO_AEQUALIS_I32(fructus.pixela_diversa, (i32)II);
+    }
+
+    /* ========================================================
      * Compendium
      * ======================================================== */
 

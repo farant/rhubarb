@@ -248,6 +248,7 @@ collatio_regula_solita (vacuum)
 
     regula.tolerantia        = ZEPHYRUM;
     regula.sperne_lenimentum = VERUM;
+    regula.pixela_ferenda    = ZEPHYRUM;
     regula.picturam_facere   = FALSUM;
 
     redde regula;
@@ -412,9 +413,13 @@ imago_conferre (constans Imago* primus,
         fructus.arca_altitudo = max_y - min_y + (i32)I;
     }
 
-    fructus.sententia = (fructus.pixela_diversa == ZEPHYRUM)
-                      ? COLLATIO_CONGRUUNT
-                      : COLLATIO_DISCREPANT;
+    /* Limes sententiam solam movet: pixela_diversa, arca, delta
+     * INTACTA manent. Mensura numquam mentitur quia iudicium
+     * mitius est - aliter limes altior probationem caecam faceret
+     * pro sana. */
+    fructus.sententia = (fructus.pixela_diversa > regula.pixela_ferenda)
+                      ? COLLATIO_DISCREPANT
+                      : COLLATIO_CONGRUUNT;
 
     redde fructus;
 }
