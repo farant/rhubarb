@@ -439,34 +439,53 @@ s32 principale (vacuum)
      * PROBARE: volumen ORDINARIUM claudendo NON deletur
      *
      * Custos contra vitium quod campum addendo paene induxi:
-     * structura campo-post-campum impletur SINE memset, ergo
-     * 'temporarium' purgamentum ferret et volumen VERUM in
-     * claudendo periret.
+     * structura per piscina_allocare sumitur et CAMPO-POST-CAMPUM
+     * impletur, sine memset. Campus 'temporarium' non initializatus
+     * purgamentum ferret, et purgamentum non-nullum volumen VERUM in
+     * claudendo deleret.
+     *
+     * VENENUM, NON REPETITIO. Prima forma huius probationis volumen
+     * decies creabat et claudebat, sperans purgamentum aliquando
+     * non-nullum fore. MENSURATUM: culpa plantata (initializatione
+     * ablata) probationem VIRIDEM reliquit - paginae arenae recentes
+     * a systemate ZERO-IMPLETAE veniunt, ergo 'purgamentum' fideliter
+     * FALSUM legebatur. Probatio fortunam probabat, et fortuna cum
+     * vitio stabat.
+     *
+     * Ergo memoria ipsa VENENATUR: nota sumitur, spatium 0xFF
+     * impletur, piscina ad notam reficitur - et structura sequens in
+     * illos ipsos octetos cadit. Purgamentum nunc CERTUM est, non
+     * speratum.
      * ======================================================== */
 
     {
-        Volumen*  ordinarium;
-        character via_ord[CCLVI];
-        s32       i;
+        Volumen*       ordinarium;
+        constans character* via_ord = "/tmp/probatio_volumen_ordinarium.volumen";
+        PiscinaNotatio nota;
+        i8*            venenum;
 
         imprimere("\n--- Probans volumen ordinarium SUPERSTES ---\n");
 
-        /* Decies, quia purgamentum stabile non est: unus cursus
-         * casu nullum ferre potest. */
-        per (i = 0; i < X; i = i + I)
-        {
-            sprintf(via_ord, "/tmp/probatio_volumen_ordinarium.volumen");
-            (vacuum)filum_delere(via_ord);
+        (vacuum)filum_delere(via_ord);
 
+        nota = piscina_notare(piscina);
+        venenum = (i8*)piscina_allocare(piscina, (memoriae_index)512);
+        CREDO_NON_NIHIL (venenum);
+        si (venenum != NIHIL)
+        {
+            memset(venenum, 0xFF, (memoriae_index)512);
+            piscina_reficere(piscina, nota);
+
+            /* Structura Voluminis hic in octetos venenatos cadit. */
             ordinarium = volumen_creare(piscina, via_ord);
-            si (ordinarium == NIHIL)
+            CREDO_NON_NIHIL (ordinarium);
+            si (ordinarium != NIHIL)
             {
-                CREDO_NON_NIHIL (ordinarium);
-                frange;
+                volumen_claudere(ordinarium);
+                /* SI 'temporarium' non initializatur, hic PERIIT. */
+                CREDO_VERUM (filum_existit(via_ord));
+                (vacuum)filum_delere(via_ord);
             }
-            volumen_claudere(ordinarium);
-            CREDO_VERUM (filum_existit(via_ord));
-            (vacuum)filum_delere(via_ord);
         }
     }
 

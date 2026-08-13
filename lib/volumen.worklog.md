@@ -104,10 +104,24 @@ utrumque ergo PURGAMENTUM ferret in volumine ORDINARIO, et
 `temporarium` purgamentum non-nullum `filum_delere(via_purgamenti)`
 in claudendo vocaret. Volumen verum usoris perire posset.
 
-Initializatio explicita addita, ET custos in probatione: volumen
-ordinarium DECIES creatur et clauditur, et plagula superesse debet
-omni vice (purgamentum stabile non est - unus cursus casu nullum
-ferre potest).
+Initializatio explicita addita, ET custos in probatione - sed custos
+PRIMUS INUTILIS ERAT, et hoc pretiosius est quam remedium ipsum.
+
+**Custos qui fallere non poterat (iterum).** Prima forma volumen
+ordinarium DECIES creabat et claudebat, sperans purgamentum aliquando
+non-nullum fore. Culpa plantata (initializatione ablata) probationem
+VIRIDEM reliquit: paginae arenae recentes a systemate ZERO-IMPLETAE
+veniunt, ergo campus 'purgamentum' fideliter FALSUM legebatur.
+Probatio fortunam probabat, et fortuna cum vitio stabat.
+
+**Repetitio memoriam non-initializatam non probat; VENENUM probat.**
+Nunc: nota sumitur, spatium DXII octetorum 0xFF impletur, piscina ad
+notam reficitur - et structura sequens in illos ipsos octetos cadit.
+Purgamentum CERTUM est, non speratum. Culpa iterum plantata nunc
+RUBRAM facit (filum_existit cadit - plagula re vera deleta est).
+
+Lex generalis: custos contra campum non initializatum arenam
+VENENARE debet, aliter nihil probat nisi systema paginas purgare.
 
 Eadem forma qua VitreaConfiguratio hodie mane: applicationes figuram
 campo-post-campum implent sine memset, ergo campus additus ibi quoque
