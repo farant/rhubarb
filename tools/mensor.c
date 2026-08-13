@@ -56,6 +56,23 @@ _arg (integer argc, character** argv, constans character* clavis)
     redde NIHIL;
 }
 
+/* Vexillum nudum (sine valore sequente) adesse? */
+interior b32
+_vexillum (integer argc, character** argv, constans character* clavis)
+{
+    integer i;
+
+    per (i = I; i < argc; i++)
+    {
+        si (strcmp(argv[i], clavis) == 0)
+        {
+            redde VERUM;
+        }
+    }
+
+    redde FALSUM;
+}
+
 interior constans character*
 _ambitus_aut (constans character* clavis, constans character* alterum)
 {
@@ -411,6 +428,15 @@ _addere (Piscina* piscina, integer argc, character** argv)
     {
         fprintf(stderr, "mensor: mensura annotari non potuit\n");
         redde I;
+    }
+
+    /* -id: clavem creatam IMPRIMERE ut concha eam ut parentem
+     * adhibere possit. Sine hoc nidificatio intra processum unum
+     * impossibilis est - hereditas ambitus ibi nihil dat. */
+    si (_vexillum(argc, argv, "-id"))
+    {
+        imprimere("%.*s\n", (integer)m.id.mensura,
+                  (constans character*)m.id.datum);
     }
 
     redde 0;

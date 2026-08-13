@@ -98,10 +98,29 @@ if [ -z "${MENSOR_TACET:-}" ] && [ -x "./bin/mensor" ]; then
     fi
 fi
 
+# mensura_addere <titulus> <valor> <unitas> [parens]
 mensura_addere() {
     [ -n "$MENSOR" ] || return 0
-    "$MENSOR" addere -titulus "$1" -valor "$2" -unitas "$3" \
-        >/dev/null 2>&1 || true
+    if [ -n "${4:-}" ]; then
+        "$MENSOR" addere -titulus "$1" -valor "$2" -unitas "$3" \
+            -parens "$4" >/dev/null 2>&1 || true
+    else
+        "$MENSOR" addere -titulus "$1" -valor "$2" -unitas "$3" \
+            >/dev/null 2>&1 || true
+    fi
+}
+
+# mensura_nodus <titulus> <valor> <unitas> [parens] -> clavem imprimit
+# (nodus qui filias habebit; clavis eius parens earum fit)
+mensura_nodus() {
+    [ -n "$MENSOR" ] || { echo ""; return 0; }
+    if [ -n "${4:-}" ]; then
+        "$MENSOR" addere -titulus "$1" -valor "$2" -unitas "$3" \
+            -parens "$4" -id 2>/dev/null || echo ""
+    else
+        "$MENSOR" addere -titulus "$1" -valor "$2" -unitas "$3" \
+            -id 2>/dev/null || echo ""
+    fi
 }
 
 # GUI app results
@@ -724,23 +743,47 @@ print_summary() {
         # Aggregata. compilatio et cursus SEORSUM: sine ea divisione
         # 'tempus totum' fere solum narrat an arca aedificationis
         # calida fuerit - strepitus bimodalis cum signo intus sepulto.
-        mensura_addere "suita.tempus.totum"       "$total_duration"      secunda
-        mensura_addere "suita.tempus.compilatio"  "$summa_compilationis" secunda
-        mensura_addere "suita.tempus.cursus"      "$summa_cursus"        secunda
-        mensura_addere "suita.probationes.totae"  "$TESTS_TOTAL"         numerus
-        mensura_addere "suita.probationes.fractae" "$TESTS_FAILED"       numerus
+        local radix
+        local nodus_compilationis
+        local nodus_cursus
+        local praevolatus
+
+        # ARBOR, non tabula plana: totum radix est, phases rami,
+        # probationes singulae folia. Ita pictura flammae ostendere
+        # potest UBI tempus abierit, non solum quantum fuerit.
+        radix=$(mensura_nodus "suita.tempus.totum" "$total_duration" secunda)
+        nodus_compilationis=$(mensura_nodus "suita.tempus.compilatio" \
+            "$summa_compilationis" secunda "$radix")
+        nodus_cursus=$(mensura_nodus "suita.tempus.cursus" \
+            "$summa_cursus" secunda "$radix")
+
+        # PRAEVOLATUS = quod superest. Mensuratum 2026-08-13: LXVI
+        # secunda ex CLXXX - probationes JS/oraculi et generare, quae
+        # OMNI cursu currunt, filtro neglecto. Residuum nominare id
+        # ex 'ignoto' in 'mensuratum' vertit.
+        praevolatus=$(echo \
+            "$total_duration - $summa_compilationis - $summa_cursus" \
+            | bc 2>/dev/null || echo 0)
+        mensura_addere "suita.tempus.praevolatus" "$praevolatus" \
+            secunda "$radix"
+
+        mensura_addere "suita.probationes.totae"  "$TESTS_TOTAL" \
+            numerus "$radix"
+        mensura_addere "suita.probationes.fractae" "$TESTS_FAILED" \
+            numerus "$radix"
         # LIBS_COMPILED = an bibliothecae hoc cursu recompilatae sint:
         # frigidus contra calidum, discrimen quod tempus totum duplicat
-        mensura_addere "suita.bibliothecae.recompilatae" "$LIBS_COMPILED" veritas
+        mensura_addere "suita.bibliothecae.recompilatae" \
+            "$LIBS_COMPILED" veritas "$radix"
 
-        # Fasces per-probationem: UNUS processus pro omnibus, non
-        # unus pro quaque (CXXX probationes => CCLX processus aliter)
+        # Fasces per-probationem sub nodo phasis suae: UNUS processus
+        # pro omnibus (CXXXI probationes => CCLXII processus aliter)
         "$MENSOR" addere -tabula "$TEST_TIMES_FILE" \
             -praefixum "probatio.cursus." -unitas secunda \
-            >/dev/null 2>&1 || true
+            -parens "$nodus_cursus" >/dev/null 2>&1 || true
         "$MENSOR" addere -tabula "$COMPILE_TIMES_FILE" \
             -praefixum "probatio.compilatio." -unitas secunda \
-            >/dev/null 2>&1 || true
+            -parens "$nodus_compilationis" >/dev/null 2>&1 || true
 
         "$MENSOR" condere >/dev/null 2>&1 || true
     fi

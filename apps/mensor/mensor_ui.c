@@ -46,6 +46,26 @@ _imago_tractare (vacuum* datum, b32 successus)
     _imago_facta = VERUM;
 }
 
+/* Vexillum NUDUM ubicumque in argumentis. _arg valorem SEQUENTEM
+ * poscit, ergo vexillum sine valore ei invisibile est nisi primum
+ * stat - vitium quod fenestram tacite aperiebat cum '-json' post
+ * '-volumen X' veniret. */
+interior b32
+_vexillum (integer argc, character** argv, constans character* clavis)
+{
+    integer i;
+
+    per (i = I; i < argc; i++)
+    {
+        si (strcmp(argv[i], clavis) == 0)
+        {
+            redde VERUM;
+        }
+    }
+
+    redde FALSUM;
+}
+
 interior constans character*
 _arg (integer argc, character** argv, constans character* clavis)
 {
@@ -296,8 +316,7 @@ main (integer argc, character** argv)
     /* -json: semita datorum SINE fenestra probari potest. Pars dura
      * (volumen -> JSON) ita in probatione automatica vivit; sola
      * pictura oculos poscit. */
-    si (_arg(argc, argv, "-json") != NIHIL ||
-        (argc > I && strcmp(argv[I], "-json") == 0))
+    si (_vexillum(argc, argv, "-json"))
     {
         fwrite(datum.datum, (size_t)I, (size_t)datum.mensura, stdout);
         imprimere("\n");

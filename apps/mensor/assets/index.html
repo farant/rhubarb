@@ -38,7 +38,8 @@ td.n { text-align: right; color: var(--tenuis);
 .summa .valor { font-size: 20px; font-variant-numeric: tabular-nums; }
 .summa .titulus { font-size: 10px; color: var(--tenuis);
                   text-transform: uppercase; letter-spacing: .08em; }
-svg { display: block; width: 100%; height: 190px; }
+svg { display: block; width: 100%; }
+.tendentia svg { height: 190px; }
 </style>
 </head>
 <body>
@@ -56,11 +57,15 @@ svg { display: block; width: 100%; height: 190px; }
 function fig(n, d) { return (n === null || n === undefined || isNaN(n))
   ? "—" : n.toFixed(d === undefined ? 2 : d); }
 
+/* Elementa SVG spatium nominum PROPRIUM poscunt. Sine eo elementum
+   creatur, in DOM apparet, et NIHIL pingit - fractura tacita. */
+var SVG_GENERA = { svg: 1, path: 1, line: 1, circle: 1, text: 1,
+                   g: 1, rect: 1, title: 1 };
+
 function el(genus, attr, intra) {
   var e = document.createElementNS(
-    genus === "svg" || genus === "path" || genus === "line" ||
-    genus === "circle" || genus === "text"
-      ? "http://www.w3.org/2000/svg" : "http://www.w3.org/1999/xhtml", genus);
+    SVG_GENERA[genus] ? "http://www.w3.org/2000/svg"
+                      : "http://www.w3.org/1999/xhtml", genus);
   for (var k in attr) { if (attr.hasOwnProperty(k)) e.setAttribute(k, attr[k]); }
   if (intra !== undefined) { e.textContent = intra; }
   return e;
@@ -127,6 +132,89 @@ function seriesPingere(sessiones, series) {
   return svg;
 }
 
+/* ---- arbor ex ligaminibus parentum ----
+   Ordo scripturae NIHIL significat: proles ante parentem perficitur,
+   ergo ante eum scribitur. Arbor in ligaminibus vivit. */
+function arborem(d, sessio) {
+  var nodi = {}, radices = [];
+  d.mensurae.forEach(function (m) {
+    /* Sola tempora in flammam: numeri et veritates aream non habent */
+    if (m.sessio !== sessio || m.unitas !== "secunda") { return; }
+    nodi[m.id] = { m: m, filiae: [] };
+  });
+  Object.keys(nodi).forEach(function (k) {
+    var n = nodi[k];
+    if (n.m.parens && nodi[n.m.parens]) {
+      nodi[n.m.parens].filiae.push(n);
+    } else {
+      radices.push(n);
+    }
+  });
+  function ordinare(n) {
+    n.filiae.sort(function (a, b) { return b.m.valor - a.m.valor; });
+    n.filiae.forEach(ordinare);
+  }
+  radices.forEach(ordinare);
+  return radices;
+}
+
+function brevius(t) {
+  return t.replace("suita.tempus.", "").replace("probatio.cursus.", "")
+          .replace("probatio.compilatio.", "").replace("probatio_", "");
+}
+
+var TINCTURAE = ["#7aa2f7", "#e0af68", "#9ece6a", "#bb9af7", "#7dcfff"];
+
+function flammaPingere(radices) {
+  var lat = 1000, gradus = 22, margo = 2;
+  var summa = 0;
+  radices.forEach(function (r) { if (r.m.valor > summa) { summa = r.m.valor; } });
+  if (summa <= 0) { return null; }
+
+  var rect = [], altitudoMax = 0;
+
+  function ponere(n, x, w, prof, tinctura) {
+    if (w < 0.4) { return; }
+    rect.push({ n: n, x: x, w: w, y: prof * gradus, t: tinctura });
+    if (prof + 1 > altitudoMax) { altitudoMax = prof + 1; }
+    var cursor = x, i = 0;
+    n.filiae.forEach(function (f) {
+      var fw = (f.m.valor / n.m.valor) * w;
+      ponere(f, cursor, fw, prof + 1,
+             prof === 0 ? TINCTURAE[i % TINCTURAE.length] : tinctura);
+      cursor += fw;
+      i++;
+    });
+  }
+
+  /* Radix TINCTURAM NEUTRAM habet: eodem colore quo filia maxima
+     picta, duo strata unum videbantur. */
+  radices.forEach(function (r) { ponere(r, 0, lat, 0, "#5a6272"); });
+
+  var alt = altitudoMax * gradus;
+  var svg = el("svg", { viewBox: "0 0 " + lat + " " + alt,
+                        preserveAspectRatio: "none",
+                        style: "height:" + alt + "px" });
+
+  rect.forEach(function (r) {
+    var g = el("g", {});
+    g.appendChild(el("rect", { x: r.x, y: r.y, width: Math.max(0.6, r.w - margo),
+      height: gradus - margo, rx: 2, fill: r.t, "fill-opacity": 0.85 }));
+    if (r.w > 46) {
+      var nomen = brevius(r.n.m.titulus);
+      var txt = el("text", { x: r.x + 6, y: r.y + gradus / 2 + 2,
+        fill: "#14161a", "font-size": 11, "font-weight": 600 },
+        nomen + "  " + fig(r.n.m.valor, 1) + "s");
+      g.appendChild(txt);
+    }
+    var titulus = el("title", {}, r.n.m.titulus + " — " + fig(r.n.m.valor) + "s");
+    g.appendChild(titulus);
+    svg.appendChild(g);
+  });
+
+  return svg;
+}
+
 function reddere() {
   var d = window.MENSURAE;
   var corpus = document.getElementById("corpus");
@@ -171,6 +259,16 @@ function reddere() {
   summa.appendChild(box);
   corpus.appendChild(summa);
 
+  /* ---- flamma: UBI tempus abierit ---- */
+  var radices = arborem(d, ultima);
+  var flamma = radices.length > 0 ? flammaPingere(radices) : null;
+  if (flamma) {
+    var f = el("div", { "class": "tabula" });
+    f.appendChild(el("h2", {}, "ubi tempus abierit"));
+    f.appendChild(flamma);
+    corpus.appendChild(f);
+  }
+
   /* ---- tendentia per sessiones ---- */
   var tend = el("div", { "class": "tabula" });
   tend.appendChild(el("h2", {}, "tendentia"));
@@ -190,7 +288,9 @@ function reddere() {
     claves.appendChild(c);
   });
   tend.appendChild(claves);
-  tend.appendChild(seriesPingere(sessiones, series));
+  var wrap = el("div", { "class": "tendentia" });
+  wrap.appendChild(seriesPingere(sessiones, series));
+  tend.appendChild(wrap);
   corpus.appendChild(tend);
 
   /* ---- probationes tardissimae (sessio ultima) ---- */
