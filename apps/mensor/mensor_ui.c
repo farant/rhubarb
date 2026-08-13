@@ -19,12 +19,9 @@
 #include "chorda_aedificator.h"
 #include "xar.h"
 #include "volumen.h"
-#include "fenestra.h"
-#include "thema.h"
-#include "vitrea.h"
-#include "capsula.h"
+#include "atrium.h"     /* fenestra+thema+vitrea+capsula+imperium intus */
+#include "vitrea.h"     /* imaginem_petere: atrium partes suas non celat */
 #include "capsula_mensor.h"
-#include "imperium.h"   /* vivarium: hospitium+internuntius intus */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -271,16 +268,13 @@ main (integer argc, character** argv)
     constans character*  via;
     Volumen*             volumen;
     chorda               datum;
-    FenestraConfiguratio figura_fenestrae;
-    VitreaConfiguratio   figura_vitreae;
-    Fenestra*            fenestra;
-    Capsula*             capsula;
-    Vitrea*              vitrea;
+    AtriumConfiguratio   figura;
+    Atrium*              atrium;
+    chorda               causa;
     ChordaAedificator*   iniectio;
     character            tabula_viae[DXII];
     constans character*  imago_via;
     s32                  mora_picturae;   /* SIGNATUM: -I = nondum petita */
-    Vivarium             vivarium;
 
     piscina = piscina_generare_dynamicum("mensor_ui", M * M * XVI);
     si (piscina == NIHIL)
@@ -326,137 +320,70 @@ main (integer argc, character** argv)
         redde 0;
     }
 
-    thema_initiare();
+    /* Atrium: fenestra + capsula + vitrea + internuntius + imperium
+     * uno vocamine, ordine recto (vide atrium.h). Quod hic NON est
+     * mensura est: ~LXX lineae quas quaeque app vitreae describebat. */
+    memset(&figura, 0, magnitudo(figura));
+    figura.titulus       = "mensor";
+    figura.latitudo      = 1000;
+    figura.altitudo      = 760;
+    figura.capsula       = &capsula_mensor;
+    figura.via_initialis = "index.html";
+    /* Tictus CELER de industria: ordinarius atrii CC ms est, sed
+     * -imago numerationem tictuum ut moram adhibet, et haec facies
+     * nihil computat quod tardius pulsare mereatur. */
+    figura.tictus_ms     = (Mora)TICTUS_MS;
 
-    figura_fenestrae.titulus  = "mensor";
-    figura_fenestrae.x        = CC;
-    figura_fenestrae.y        = CC;
-    figura_fenestrae.latitudo = 1000;
-    figura_fenestrae.altitudo = 760;
-    figura_fenestrae.vexilla  = FENESTRA_CLAUDIBILIS
-                              | FENESTRA_MUTABILIS | FENESTRA_CENTRATA;
+    /* -vivum, -portus: vexilla domus. MODUS EVOLUTIONIS SOLUS -
+     * JS arbitrarium exsequitur (vide imperium.h). */
+    atrium_vexilla_legere(&figura, argc, argv);
 
-    fenestra = fenestra_creare(piscina, &figura_fenestrae);
-    si (fenestra == NIHIL)
+    atrium = atrium_creare(piscina, &figura, &causa);
+    si (atrium == NIHIL)
     {
-        fprintf(stderr, "mensor_ui: fenestra fracta\n");
+        fprintf(stderr, "mensor_ui: %.*s\n",
+                (integer)causa.mensura,
+                (constans character*)causa.datum);
         piscina_destruere(piscina);
         redde I;
     }
 
-    capsula = capsula_aperire(&capsula_mensor, piscina);
-    si (capsula == NIHIL)
+    si (atrium_portus(atrium) != ZEPHYRUM)
     {
-        fprintf(stderr, "mensor_ui: capsula fracta\n");
-        redde I;
-    }
-
-    figura_vitreae.origo         = VITREA_ORIGO_CAPSULA;
-    figura_vitreae.capsula       = capsula;
-    figura_vitreae.via_initialis = "index.html";
-    figura_vitreae.url           = NIHIL;
-    figura_vitreae.inspectabilis = VERUM;
-
-    vitrea = vitrea_creare(piscina, fenestra, &figura_vitreae);
-    si (vitrea == NIHIL)
-    {
-        fprintf(stderr, "mensor_ui: vitrea fracta\n");
-        redde I;
-    }
-
-    /* -vivum: canalis imperii uno vocamine (vide imperium.h).
-     * MODUS EVOLUTIONIS SOLUS - JS arbitrarium exsequitur. */
-    memset(&vivarium, 0, magnitudo(vivarium));
-
-    si (_vexillum(argc, argv, "-vivum"))
-    {
-        VivariumConfiguratio figura_vivarii;
-        constans character*  portus_litterae;
-
-        memset(&figura_vivarii, 0, magnitudo(figura_vivarii));
-        portus_litterae = _arg(argc, argv, "-portus");
-        figura_vivarii.portus     = (portus_litterae != NIHIL)
-                                  ? (i32)atoi(portus_litterae) : ZEPHYRUM;
-        figura_vivarii.aestimator = vitrea_aestimator;
-        figura_vivarii.imaginator = vitrea_imaginator;
-        figura_vivarii.missor     = vitrea_missor;
-        figura_vivarii.datum      = vitrea;
-        figura_vivarii.fenestra   = fenestra_numerus_nativus(fenestra);
-
-        vivarium = imperium_vivarium(piscina, &figura_vivarii);
-        si (!vivarium.successus)
-        {
-            fprintf(stderr, "mensor_ui: imperium: %.*s\n",
-                    (integer)vivarium.causa.mensura,
-                    (constans character*)vivarium.causa.datum);
-            redde I;
-        }
-
         imprimere("[mensor_ui] imperium: http://127.0.0.1:%d/imperium\n",
-                  (integer)vivarium.portus);
+                  (integer)atrium_portus(atrium));
         fflush(stdout);
     }
 
-    /* Iniectio praeparata SEMEL: datum non mutatur dum fenestra vivit */
+    /* Iniectio praeparata SEMEL: datum non mutatur dum fenestra vivit.
+     * Atrium eam COPIAT et post quamque 'paratus' rursus currit - ergo
+     * recargatio post interitum processus interretialis eam NON amittit
+     * (quod codex prior amittebat, sed nemo vidit quia datum mensoris
+     * numquam mutatur). */
     iniectio = chorda_aedificator_creare(piscina, (memoriae_index)(XVI * M));
     chorda_aedificator_appendere_literis(iniectio, "window.MENSURAE=");
     chorda_aedificator_appendere_chorda(iniectio, datum);
     chorda_aedificator_appendere_literis(
         iniectio, ";if(window.reddere){window.reddere();}");
 
+    atrium_iniectionem_ponere(atrium,
+        chorda_aedificator_spectare(iniectio));
+
     imago_via     = _arg(argc, argv, "-imago");
     mora_picturae = (s32)(-I);
 
-    fenestra_monstrare(fenestra);
+    atrium_monstrare(atrium);
 
-    dum (!fenestra_debet_claudere(fenestra))
+    dum (atrium_currendum(atrium))
     {
-        Eventus            eventus;
-        chorda             nuntium;
-        VitreaNuntiusGenus genus;
+        i32 actum = atrium_gressus(atrium);
 
-        fenestra_expectare_eventus(fenestra, (i32)TICTUS_MS);
-
-        dum (fenestra_obtinere_eventus(fenestra, &eventus))
+        /* Paginam pingere sinere ANTE photographiam: iniectio
+         * synchrona non est */
+        si ((actum & (i32)ATRIUM_ACTUM_PARATA) != ZEPHYRUM
+            && imago_via != NIHIL && mora_picturae < ZEPHYRUM)
         {
-            /* eventus fenestrae: vitrea eos ipsa tractat */
-        }
-
-        vivarium_gressus(&vivarium);
-
-        dum (vitrea_obtinere_nuntium(vitrea, &nuntium, &genus))
-        {
-            si (genus == VITREA_NUNTIUS_PONS)
-            {
-                /* Pagina se paratam nuntiat. Sine hoc nuntio
-                 * iniectio cum onere certaret et interdum
-                 * paginam vacuam inveniret. */
-                vitrea_aestimare(vitrea,
-                    chorda_aedificator_spectare(iniectio));
-
-                /* Nuntium 'paratus' chorda NUDA est, non JSON-RPC.
-                 * Sine hac custodia internuntius de eo queritur
-                 * ('culpa orba') in consola omni onere - strepitus
-                 * qui culpas VERAS obtegeret. */
-                si (vivarium.internuntius != NIHIL &&
-                    nuntium.mensura > ZEPHYRUM &&
-                    nuntium.datum[0] == '{')
-                {
-                    internuntius_tractare(vivarium.internuntius,
-                                          nuntium, piscina);
-                }
-
-                /* Paginam pingere sinere ANTE photographiam:
-                 * iniectio synchrona non est */
-                si (imago_via != NIHIL && mora_picturae < ZEPHYRUM)
-                {
-                    mora_picturae = (s32)X;
-                }
-            }
-            alioquin
-            {
-                vitrea_recargare(vitrea);
-            }
+            mora_picturae = (s32)X;
         }
 
         si (mora_picturae > ZEPHYRUM)
@@ -466,7 +393,7 @@ main (integer argc, character** argv)
         alioquin si (mora_picturae == ZEPHYRUM)
         {
             mora_picturae = (s32)(-I);
-            vitrea_imaginem_petere(vitrea, imago_via,
+            vitrea_imaginem_petere(atrium_vitrea(atrium), imago_via,
                                    _imago_tractare, NIHIL);
         }
 
@@ -476,8 +403,7 @@ main (integer argc, character** argv)
         }
     }
 
-    vitrea_destruere(vitrea);
-    fenestra_destruere(fenestra);
+    atrium_destruere(atrium);
     piscina_destruere(piscina);
 
     redde 0;
