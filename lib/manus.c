@@ -405,6 +405,39 @@ _iussum (
 }
 
 /* ========================================================================
+ * JS: adiutores communes
+ * ======================================================================== */
+
+/* VISIBILE, NON PRAESENS - et haec distinctio consulto sumpta est.
+ *
+ * 'hidden', 'display:none', pyxis clausa: elementum in DOM MANET.
+ * Ergo assertum quod praesentiam solam quaerit VIRIDE fit de re quam
+ * usor videre non potest - genus mendacii quod haec bibliotheca
+ * tollere debet.
+ *
+ * MENSURATUM 2026-08-13: probatio experimenti 0001 'forma abiit'
+ * asseruit; forma autem tantum occulta erat, et assertum sine
+ * visibilitate transiisset. Transitus scaenarum - id ipsum quod
+ * probandum erat - probari non poterat.
+ *
+ * Ergo OMNIA hic (asserta, interrogationes, actiones) idem
+ * significant: quod USOR videt. Pro interrogatione crudi DOM adest
+ * manus_aestimare.
+ *
+ * v() = visibile; q() = primum visibile congruens (NIHIL si nullum).
+ * Definitio: neque 'display:none' neque 'visibility:hidden', et
+ * area non vacua. */
+#define MANUS_JS_VISUS \
+    "function v(e){if(!e)return false;" \
+    "var s=window.getComputedStyle(e);" \
+    "if(s.display==='none'||s.visibility==='hidden')return false;" \
+    "return !!(e.offsetWidth||e.offsetHeight||e.getClientRects().length);}" \
+    "function q(s){var l=document.querySelectorAll(s),i;" \
+    "for(i=0;i<l.length;i++){if(v(l[i]))return l[i];}return null;}" \
+    "function qn(s){var l=document.querySelectorAll(s),i,n=0;" \
+    "for(i=0;i<l.length;i++){if(v(l[i]))n++;}return n;}"
+
+/* ========================================================================
  * JS: gyrus exspectationis IN PAGINA
  * ======================================================================== */
 
@@ -425,7 +458,9 @@ _js_exspectare (
 
     chorda_aedificator_appendere_literis(a, "new Promise(function(R){var d=Date.now()+");
     chorda_aedificator_appendere_literis(a, numerus);
-    chorda_aedificator_appendere_literis(a, ";function f(){");
+    chorda_aedificator_appendere_literis(a, ";");
+    chorda_aedificator_appendere_literis(a, MANUS_JS_VISUS);
+    chorda_aedificator_appendere_literis(a, "function f(){");
     chorda_aedificator_appendere_literis(a, corpus_functionis);
     chorda_aedificator_appendere_literis(a,
         "}(function c(){var r=f();"
@@ -751,7 +786,7 @@ _agere (
     }
 
     a = chorda_aedificator_creare(manus->piscina, CCLVI);
-    chorda_aedificator_appendere_literis(a, "var e=document.querySelector(");
+    chorda_aedificator_appendere_literis(a, "var e=q(");
     _appendere_litteras_js(a, selector);
     chorda_aedificator_appendere_literis(a,
         ");if(!e)return{ok:false,visum:\"(nullum elementum)\"};");
@@ -892,6 +927,7 @@ _interrogare (
     /* Sine promisso: interrogatio statim respondet. */
     a = chorda_aedificator_creare(manus->piscina, CCLVI);
     chorda_aedificator_appendere_literis(a, "(function(){");
+    chorda_aedificator_appendere_literis(a, MANUS_JS_VISUS);
     chorda_aedificator_appendere_literis(a, corpus_functionis);
     chorda_aedificator_appendere_literis(a, "})()");
     js = chorda_aedificator_finire(a);
@@ -913,10 +949,10 @@ manus_existit (
         redde FALSUM;
     }
     a = chorda_aedificator_creare(manus->piscina, CXXVIII);
-    chorda_aedificator_appendere_literis(a, "var n=document.querySelectorAll(");
+    chorda_aedificator_appendere_literis(a, "var n=qn(");
     _appendere_litteras_js(a, selector);
     chorda_aedificator_appendere_literis(a,
-        ").length;return{ok:n>0,visum:String(n)};");
+        ");return{ok:n>0,visum:String(n)};");
 
     v = _interrogare(manus,
                      _litterae(chorda_aedificator_finire(a), manus->piscina));
@@ -937,10 +973,10 @@ manus_numerus (
         redde 0;
     }
     a = chorda_aedificator_creare(manus->piscina, CXXVIII);
-    chorda_aedificator_appendere_literis(a, "var n=document.querySelectorAll(");
+    chorda_aedificator_appendere_literis(a, "var n=qn(");
     _appendere_litteras_js(a, selector);
     chorda_aedificator_appendere_literis(a,
-        ").length;return{ok:true,visum:String(n)};");
+        ");return{ok:true,visum:String(n)};");
 
     v = _interrogare(manus,
                      _litterae(chorda_aedificator_finire(a), manus->piscina));
@@ -968,7 +1004,7 @@ manus_textus (
         redde vacua;
     }
     a = chorda_aedificator_creare(manus->piscina, CXXVIII);
-    chorda_aedificator_appendere_literis(a, "var e=document.querySelector(");
+    chorda_aedificator_appendere_literis(a, "var e=q(");
     _appendere_litteras_js(a, selector);
     chorda_aedificator_appendere_literis(a,
         ");if(!e)return{ok:false,visum:\"\"};"
@@ -1069,9 +1105,9 @@ _manus_credo_existere (
     }
 
     a = chorda_aedificator_creare(manus->piscina, CXXVIII);
-    chorda_aedificator_appendere_literis(a, "var n=document.querySelectorAll(");
+    chorda_aedificator_appendere_literis(a, "var n=qn(");
     _appendere_litteras_js(a, selector);
-    chorda_aedificator_appendere_literis(a, ").length;return{ok:n");
+    chorda_aedificator_appendere_literis(a, ");return{ok:n");
     chorda_aedificator_appendere_literis(a, adesse ? ">0" : "===0");
     chorda_aedificator_appendere_literis(a, ",visum:String(n)};");
 
@@ -1107,7 +1143,7 @@ _manus_credo_textum (
     }
 
     a = chorda_aedificator_creare(manus->piscina, CCLVI);
-    chorda_aedificator_appendere_literis(a, "var e=document.querySelector(");
+    chorda_aedificator_appendere_literis(a, "var e=q(");
     _appendere_litteras_js(a, selector);
     chorda_aedificator_appendere_literis(a,
         ");if(!e)return{ok:false,visum:\"(nullum elementum)\"};"
@@ -1159,9 +1195,9 @@ _manus_credo_numerum (
     sprintf(numerus, "%lu", (insignatus longus)quot);
 
     a = chorda_aedificator_creare(manus->piscina, CXXVIII);
-    chorda_aedificator_appendere_literis(a, "var n=document.querySelectorAll(");
+    chorda_aedificator_appendere_literis(a, "var n=qn(");
     _appendere_litteras_js(a, selector);
-    chorda_aedificator_appendere_literis(a, ").length;return{ok:n===");
+    chorda_aedificator_appendere_literis(a, ");return{ok:n===");
     chorda_aedificator_appendere_literis(a, numerus);
     chorda_aedificator_appendere_literis(a, ",visum:String(n)};");
 

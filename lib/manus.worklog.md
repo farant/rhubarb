@@ -194,6 +194,63 @@ exactly one thing, which pointed straight at startup timing.
   `#salutatio` assertions go red while the static `h1` assertions stay
   green. The async assertion fails *specifically*, so it isn't vacuous.
 
+## 2026-08-13 — the interaction half, and 'visible' vs 'present'
+
+Until today `manus_premere` and `manus_scribere` were called by
+**nothing** — not the unit test, not the smoke test. Their generated JS
+(`e.click()`, `e.value=`, `dispatchEvent(new Event('input'))`) had never
+been evaluated by a browser. The lab app had no button and no input, so
+it *couldn't* be tested.
+
+Experiment 0001 (three inputs, a button, a two-scene swap driven through
+the bridge) closed that. The smoke test went 10 → **39 assertions**, and
+every previously-dead surface is now exercised: scribere, premere, the
+silent probes (`existit`/`numerus`/`textus`), `manus_aestimare`, bare
+`CREDO_MANUS_ABEST`, and the bridge's *error* path.
+
+Good news first: **scribere and premere worked on the first real run.**
+The click drove the bridge, the summary came back, the read-backs
+matched.
+
+### The finding: `hidden` is not `absent`
+
+`CREDO_MANUS_ABEST(m, "#forma fieldset")` failed — expected 0, saw 1.
+The section had `hidden = true`, but the fieldset inside it is still in
+the DOM. `querySelectorAll` counts it.
+
+This is the lying-green class again, and it would have been permanent: a
+suite asserting "the old screen went away" that passes when the screen is
+merely invisible tests nothing about the transition — which is the one
+thing a UI test is for.
+
+**Every selector in manus now means VISIBLE**, via `MANUS_JS_VISUS`
+(`v()` / `q()` / `qn()` injected into every generated snippet): not
+`display:none`, not `visibility:hidden`, non-empty box. Actions too —
+pressing something the user cannot see is never intended. Raw-DOM
+questions go through `manus_aestimare`.
+
+Deliberately paired assertions in the test: **both** `ABEST` on the old
+scene and `EXISTIT` on the new one. Absence alone can't tell a completed
+transition from a broken page.
+
+### A textual replace that changed a return type
+
+Converting the call sites, I ran
+`s/var n=document.querySelectorAll(/var n=qn(/` — which left the trailing
+`.length` in the *following* literal, producing `qn(".tessera").length`.
+`qn` returns a number, so `.length` was `undefined`, and every assertion
+reported `visum: "undefined"`.
+
+The rename was correct; the *shape* of the call changed with it and the
+regex couldn't see that. **A mechanical rename is only safe when the new
+callee has the old one's return type** — here `NodeList` became `number`.
+Dumping the actual generated JS (`build/manus_ultimum.js`, written by the
+unit-test simulator) found it in one look, after guessing had failed
+twice.
+
+That dump file is worth remembering: it is the only place the real
+generated JS is visible without a browser.
+
 ### Tooling notes
 
 - The post-edit hook caught `Momentum * Momentum` and `Mora * Mora`

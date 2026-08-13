@@ -72,6 +72,28 @@
  * 'falsum'. Assertum quod 'falsum' dicit et tacet horam furatur.
  *
  * ==================================================
+ * OMNIA 'VISIBILE' SIGNIFICANT, NON 'PRAESENS'
+ * ==================================================
+ *
+ * Selector quisque huius bibliothecae elementa VISIBILIA solum
+ * videt: neque 'display:none', neque 'visibility:hidden', et area
+ * non vacua. Attributum 'hidden' ergo elementum AUFERT quantum ad
+ * manum attinet.
+ *
+ * CUR: elementum occultum in DOM MANET. Assertum quod praesentiam
+ * quaerit ergo VIRIDE fit de re quam usor videre non potest -
+ * idemque de scaena quae numquam abiit. Mensuratum: probatio
+ * experimenti 0001 'forma abiit' asseruit dum forma tantum occulta
+ * esset, et sine hac lege transisset. Transitus scaenarum - id
+ * ipsum quod probandum erat - probari non poterat.
+ *
+ * Idem valet de ACTIONIBUS: premere quod usor videre non potest
+ * numquam intenditur, ergo manus id recusat.
+ *
+ * PRO DOM CRUDO: manus_aestimare, ubi JS tuum quidquid vis
+ * interrogat.
+ *
+ * ==================================================
  * MANUS FRACTA TACET
  * ==================================================
  *
