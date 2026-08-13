@@ -66,9 +66,43 @@ volumen_aperire_aut_creare (
     Piscina*            piscina,
     constans character* via);
 
+/* VOLUMEN SCRATCH - status qui probationem non superstat.
+ *
+ * Plagula unica sub /tmp, DELETA cum clauditur. Pro probationibus
+ * integrantibus, quae aliter in volumen VERUM usoris scribunt.
+ *
+ * CUR HOC EXSTAT (mensuratum 2026-08-13): probatio fumi laboratorii
+ * ~/.rhubarb/laboratorium.volumen adhibebat, quia applicatio viam
+ * FIXAM tenebat. Post diem unum acta XLII 'salutatio' et XXI
+ * 'experimentum' in volumine VERO Frannis sedebant - res quas nemo
+ * scripsit et nemo vult.
+ *
+ * Peius quam sordes: probatio talis REPETIBILIS non est. Numerus
+ * visitationum omni cursu crescit, ergo assertum quodlibet de eo
+ * hodie transit et cras cadit. Status inter cursus manens fontem
+ * fragilitatis facit quem nulla mora sanat.
+ *
+ * 'praefixum' plagulam nominat ut, si quid pendeat, cuius sit
+ * appareat (e.g. "fumus_manus" -> /tmp/fumus_manus-1.volumen).
+ *
+ * DELETIO IN CLAUDENDO: qui non claudit plagulam relinquit - quod
+ * ipsum indicium est (probatio quae claudere omisit id in /tmp
+ * ostendit). */
+Volumen*
+volumen_temporarium (
+    Piscina*            piscina,
+    constans character* praefixum);
+
+/* Volumen temporarium plagulam suam hic delet. */
 vacuum
 volumen_claudere (
     Volumen* volumen);
+
+/* Via plagulae (litterae - vita voluminis). Utilis in actis et
+ * probationibus: 'quod volumen re vera adhibetur?' */
+constans character*
+volumen_via (
+    constans Volumen* volumen);
 
 /* nuntius erroris ultimi (litterae - vita voluminis); NIHIL si nullus */
 constans character*

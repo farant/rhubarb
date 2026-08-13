@@ -244,6 +244,38 @@ chorda
 manus_causa (
     constans Manus* manus);
 
+/* TERMINUS SECTIONIS - manum fractam reficere.
+ *
+ * 'Manus fracta tacet' intra CATENAM causalem recta est: si premere
+ * fefellit, asserta de scaena inde secutura sensu carent. Sed inter
+ * sectiones INDEPENDENTES pura iactura est - sectio III cadit,
+ * sectiones XII-XX numquam currunt, et unum vitium per cursum
+ * discis.
+ *
+ * Hoc terminum praebet (quod Cypress per 'it()' facit): 'illa
+ * sectio finita est; sequens ab integro incipiat'.
+ *
+ * ITER PLENUM PROBAT ANTEQUAM REFICIAT, et hoc cardo est. Duo enim
+ * genera defectus distinguenda sunt:
+ *   assertum fefellit  -> applicatio VIVIT, res fracta est
+ *                         -> reficitur, VERUM redditur
+ *   applicatio abiit   -> nihil respondet
+ *                         -> FRACTA MANET, FALSUM redditur
+ *
+ * Sine hac probatione manus contra cadaver reficeretur, et quaeque
+ * sectio sequens terminum plenum ureret - viginti sectiones =
+ * septuaginta secunda nihil agendi, et viginti nuntii identici
+ * 'non respondit'. Cum ea, applicatio mortua semel cadit et
+ * silentium post eam RECTUM est.
+ *
+ * ERRORES QUOQUE PURGANTUR: terminus sectionis utrumque vult, et
+ * qui reficere meminit purgare oblivisceretur (vide
+ * manus_errores_purgare - acervus aliter primum errorem in
+ * perpetuum refert). */
+b32
+manus_reficere (
+    Manus* manus);
+
 /* ==================================================
  * Actiones (nihil exspectant - actio ipsa synchrona est)
  * ================================================== */

@@ -881,6 +881,45 @@ manus_fracta (
     redde (manus == NIHIL) ? VERUM : manus->fracta;
 }
 
+b32
+manus_reficere (
+    Manus* manus)
+{
+    si (manus == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* Iter PLENUM probare ANTE refectionem - et 'tacens' hic
+     * necessarium est, quia manus adhuc FRACTA est et sonda per
+     * _iussum it, quod aliter causam ORIGINALEM superscriberet
+     * antequam sciremus an reficienda sit. */
+    manus->tacens = VERUM;
+    {
+        chorda valor;
+        b32    vivit = _iussum(manus,
+                               chorda_ex_literis("1", manus->piscina),
+                               MANUS_MORA_BREVIS, &valor);
+        manus->tacens = FALSUM;
+        si (!vivit)
+        {
+            /* Cadaver non reficitur: causa prima manet, et manus
+             * fracta manet ut sectiones sequentes TACEANT - quod
+             * hic rectum est. */
+            redde FALSUM;
+        }
+    }
+
+    manus->fracta        = FALSUM;
+    manus->causa.mensura = 0;
+    manus->causa.datum   = NIHIL;
+
+    /* Acervus errorum quoque purgandus: terminus sectionis utrumque
+     * vult, et qui reficere meminit purgare oblivisceretur. */
+    manus_errores_purgare(manus);
+    redde VERUM;
+}
+
 chorda
 manus_causa (
     constans Manus* manus)

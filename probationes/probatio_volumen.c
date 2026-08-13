@@ -7,10 +7,18 @@
 #include "filum.h"
 #include "volumen.h"
 #include "credo.h"
+#include "filum.h"
+#include <string.h>
 
 #include <stdio.h>
 
 #define VIA_PROBATIONIS "build/probatio_volumen.db"
+
+interior b32
+_continet (constans character* fenum, constans character* acus)
+{
+    redde (strstr(fenum, acus) != NIHIL) ? VERUM : FALSUM;
+}
 
 s32 principale (vacuum)
 {
@@ -389,6 +397,77 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)xar_numerus(vetus), (i32)4);
 
         volumen_claudere(vol);
+    }
+
+    /* ========================================================
+     * PROBARE: volumen temporarium (scratch)
+     * ======================================================== */
+
+    {
+        Volumen*            tmp;
+        constans character* via_tmp;
+        character           via_servata[CCLVI];
+        s64                 seq;
+
+        imprimere("\n--- Probans volumen_temporarium ---\n");
+
+        tmp = volumen_temporarium(piscina, "probatio_volumen");
+        CREDO_NON_NIHIL (tmp);
+        si (tmp != NIHIL)
+        {
+            /* Plagula VERA est dum vivit - scribi et legi potest. */
+            via_tmp = volumen_via(tmp);
+            CREDO_VERUM (via_tmp != NIHIL);
+            si (via_tmp != NIHIL)
+            {
+                strcpy(via_servata, via_tmp);
+                CREDO_VERUM (filum_existit(via_servata));
+                CREDO_VERUM (_continet(via_servata, "probatio_volumen"));
+
+                seq = volumen_actum_appendere(tmp, "probatum",
+                    chorda_ex_literis("{}", piscina));
+                CREDO_VERUM (seq > 0);
+
+                /* Claudere DELET - id est totum consilium. */
+                volumen_claudere(tmp);
+                CREDO_FALSUM (filum_existit(via_servata));
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: volumen ORDINARIUM claudendo NON deletur
+     *
+     * Custos contra vitium quod campum addendo paene induxi:
+     * structura campo-post-campum impletur SINE memset, ergo
+     * 'temporarium' purgamentum ferret et volumen VERUM in
+     * claudendo periret.
+     * ======================================================== */
+
+    {
+        Volumen*  ordinarium;
+        character via_ord[CCLVI];
+        s32       i;
+
+        imprimere("\n--- Probans volumen ordinarium SUPERSTES ---\n");
+
+        /* Decies, quia purgamentum stabile non est: unus cursus
+         * casu nullum ferre potest. */
+        per (i = 0; i < X; i = i + I)
+        {
+            sprintf(via_ord, "/tmp/probatio_volumen_ordinarium.volumen");
+            (vacuum)filum_delere(via_ord);
+
+            ordinarium = volumen_creare(piscina, via_ord);
+            si (ordinarium == NIHIL)
+            {
+                CREDO_NON_NIHIL (ordinarium);
+                frange;
+            }
+            volumen_claudere(ordinarium);
+            CREDO_VERUM (filum_existit(via_ord));
+            (vacuum)filum_delere(via_ord);
+        }
     }
 
     /* ========================================================

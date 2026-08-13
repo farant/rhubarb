@@ -587,3 +587,58 @@ habebant; asymmetria illa nusquam intenta erat, et primus qui moram
 longiorem in 'continet' poposcisset eam invenisset abesse sine causa.
 
 Unitas LXXXIII -> XC; fumus LXVIII -> LXX.
+
+## 2026-08-13 — manus_reficere: terminus sectionis
+
+'Manus fracta tacet' intra CATENAM causalem recta est - si `premere`
+fefellit, asserta de scaena inde secutura sensu carent. Inter
+sectiones INDEPENDENTES pura iactura: sectio III cadit, sectiones
+XII-XX numquam currunt, et unum vitium per cursum discis.
+
+`manus_reficere` terminum praebet (quod Cypress per `it()` facit).
+
+**ITER PLENUM PROBAT ANTEQUAM REFICIAT** - et hoc totum consilium
+est. Duo genera defectus, quae haec bibliotheca ubique distinguit,
+hic quoque distinguenda sunt:
+
+| casus | applicatio | actio |
+|---|---|---|
+| assertum fefellit | VIVIT | reficitur, VERUM |
+| applicatio abiit | mortua | FRACTA MANET, FALSUM |
+
+Sine probatione manus contra cadaver reficeretur, et quaeque sectio
+sequens terminum plenum ureret: viginti sectiones = LXX secunda nihil
+agendi, finita viginti nuntiis identicis 'non respondit'. Cum ea,
+applicatio mortua semel cadit et silentium post eam RECTUM est.
+
+Errores quoque purgantur: terminus sectionis utrumque vult, et qui
+reficere meminit purgare oblivisceretur.
+
+Probatum utroque latere: SCEN_RECUSANS (actio fallit, app viva) ->
+reficere VERUM et manus integra; SCEN_PENDENS (app muta) -> reficere
+FALSUM et manus fracta manet.
+
+### Quod reficere NON facit, et cur
+
+Statum applicationis non tangit. Tres gradus refectionis sunt:
+
+| gradus | reficit | NON reficit |
+|---|---|---|
+| manus_reficere | vexillum fracturae | DOM, promptuarium |
+| pagina recargata | + DOM, scaenam, campos | promptuarium |
+| processus renovatus | + omnia in memoria | **promptuarium - plagula est** |
+
+Ergo ne processus quidem renovatus independentiam dat cum
+applicatio in plagulam scribit. **Isolatio officium APPLICATIONIS
+est, non agitatoris**: agitator recargationem praebere potest,
+statum-nullum non potest. Unde `-volumen` in laboratorio et
+`volumen_temporarium` in bibliotheca - eadem ratio qua `-portus`:
+probatio identitatem applicationis regere debet, et status identitas
+est non minus quam portus.
+
+Recargatio (gradus II) NON aedificata - cum promptuarium recens sit,
+sectiones fere sine ea independent. Si umquam opus erit, CAVE:
+custodes vitreae AtDocumentStart iniecti recargationem SUPERSUNT, sed
+collector manus (post aperire iniectus) NON - recargatio eum
+deleret, et manus_errores tacite in semitam 'collector abest'
+caderet, nullos errores in perpetuum nuntians.

@@ -77,6 +77,7 @@
 #define OP_CONT_MORA     XXIV
 #define OP_TXT_ABEST_MORA XXV
 #define OP_OMNINO_MORA   XXVI
+#define OP_REFICERE      XXVII
 
 #define VIA_ULTIMI    "build/manus_ultimum.js"
 
@@ -568,6 +569,13 @@ _agere_capere (
             a.fructus = CREDO_MANUS_ABEST_OMNINO_MORA(m, ".n",
                                                     MANUS_MORA_BREVIS);
             frange;
+        casus OP_REFICERE:
+            /* Actio fallit -> manus fracta -> reficere temptatur.
+             * Applicatione VIVA reficitur; MORTUA fracta manet. */
+            (vacuum)manus_premere(m, "#pyxis");
+            a.numerus = manus_fracta(m) ? (i32)I : (i32)ZEPHYRUM;
+            a.fructus = manus_reficere(m);
+            frange;
         casus OP_ERRORES:
             {
                 chorda primus;
@@ -608,6 +616,7 @@ nomen structura {
     Actio textus_ass, textus_cont, textum_abest;
     Actio aestimare, imago, imago_culpae;
     Actio purgare, cont_mora, txt_abest_mora, omnino_mora;
+    Actio reficere_vivax, reficere_mortua;
 } Omnia;
 
 interior vacuum
@@ -646,6 +655,8 @@ _omnia_capere (
     o->cont_mora      = _agere_capere(SCEN_OK, OP_CONT_MORA);
     o->txt_abest_mora = _agere_capere(SCEN_OK, OP_TXT_ABEST_MORA);
     o->omnino_mora    = _agere_capere(SCEN_OK, OP_OMNINO_MORA);
+    o->reficere_vivax = _agere_capere(SCEN_RECUSANS, OP_REFICERE);
+    o->reficere_mortua = _agere_capere(SCEN_PENDENS, OP_REFICERE);
 }
 
 interior b32
@@ -887,6 +898,19 @@ s32 principale (vacuum)
         CREDO_VERUM (o.cont_mora.fructus);
         CREDO_VERUM (o.txt_abest_mora.fructus);
         CREDO_VERUM (o.omnino_mora.fructus);
+
+        /* TERMINUS SECTIONIS. Applicatio VIVA: actio fefellit, manus
+         * fracta est, reficere SUCCEDIT et manum integram linquit -
+         * sectio sequens ergo re vera currit. */
+        CREDO_AEQUALIS_I32 (o.reficere_vivax.numerus, (i32)I);
+        CREDO_VERUM  (o.reficere_vivax.fructus);
+        CREDO_FALSUM (o.reficere_vivax.fracta);
+
+        /* Applicatio MORTUA: reficere RECUSAT et manus fracta manet.
+         * Sine hac distinctione probatio cadaver per omnes sectiones
+         * interrogaret, terminum plenum quaeque urens. */
+        CREDO_FALSUM (o.reficere_mortua.fructus);
+        CREDO_VERUM  (o.reficere_mortua.fracta);
     }
 
     imprimere("\n--- Semita felix (pulsus plus quam unus) ---\n");

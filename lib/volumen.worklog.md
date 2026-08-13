@@ -72,3 +72,52 @@ diagnostics), and neither re-query, header-first batching, nor
 renovare ("iam recens") heals it. Filed as quaestio 01KZ6GH88Z; cold
 ./silva/examen.sh is the authority for files including
 recently-changed headers until the resident restarts.
+
+## 2026-08-13 — volumen temporarium (status qui probationem non superstat)
+
+`volumen_temporarium(piscina, praefixum)` plagulam unicam sub /tmp
+creat et in CLAUDENDO delet. `volumen_via` viam nunc reddit (omni
+volumini, non temporario soli).
+
+### Quid hoc coegit
+
+Probatio fumi laboratorii viam FIXAM applicationis adhibebat, ergo in
+volumen VERUM usoris scribebat. Post diem unum:
+
+```
+experimentum|21   salutatio|42
+```
+
+in ~/.rhubarb/laboratorium.volumen - acta quae nemo scripsit nec vult.
+
+Sordes tamen minus gravis erat quam ALTERA sequela: probatio talis
+REPETIBILIS non est. Numerus visitationum omni cursu crescebat, ergo
+assertum quodlibet de eo hodie transiret et cras caderet. Status
+inter cursus manens fontem fragilitatis facit quem nulla mora sanat -
+et haec bibliotheca contra fragilitatem tota aedificatur.
+
+### Laqueus quem paene induxi
+
+Struct Volumen per `piscina_allocare` sumitur et CAMPO-POST-CAMPUM
+impletur - nullum memset. Campos duos addidi (`temporarium`, `via`);
+utrumque ergo PURGAMENTUM ferret in volumine ORDINARIO, et
+`temporarium` purgamentum non-nullum `filum_delere(via_purgamenti)`
+in claudendo vocaret. Volumen verum usoris perire posset.
+
+Initializatio explicita addita, ET custos in probatione: volumen
+ordinarium DECIES creatur et clauditur, et plagula superesse debet
+omni vice (purgamentum stabile non est - unus cursus casu nullum
+ferre potest).
+
+Eadem forma qua VitreaConfiguratio hodie mane: applicationes figuram
+campo-post-campum implent sine memset, ergo campus additus ibi quoque
+purgamentum ferret - unde sutura per FUNCTIONEM posita est, non per
+campum. **Structura quae memset non habet campum novum non patitur
+sine initializatione explicita.**
+
+### Nomina numerata, non fortuita
+
+`/tmp/<praefixum>-1.volumen`, `-2`, ... primum liberum. Volumen ergo
+pendens (probatio quae claudere omisit) nomen suum RETINET, et qui in
+/tmp inspicit videt quot cursus reliquerint. Tempus aut fors nomina
+nova semper daret, et reliquiae silentio congererentur.

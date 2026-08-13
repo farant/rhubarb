@@ -14,6 +14,10 @@ structura Volumen {
     Scrinium*           scrinium;
     constans character* erratum;   /* proprium; scrinium_error alias */
     b32                 in_transactione;   /* vocator possidet */
+
+    /* Volumen scratch: via servatur ut claudere eam delere possit. */
+    b32                 temporarium;
+    constans character* via;
 };
 
 /* migrationes solum-appende (lex scrinii: numquam mutandae, solum
@@ -57,6 +61,25 @@ _volumen_struere (Piscina* piscina, constans character* via)
     vol->piscina = piscina;
     vol->erratum = NIHIL;
     vol->in_transactione = FALSUM;
+    /* EXPLICITE, quia struere structuram campo-post-campum implet
+     * SINE memset: campus additus purgamentum ferret, et
+     * 'temporarium' purgamentum non-nullum volumen VERUM usoris in
+     * claudendo deleret. Vitium quod semel scriptum tacet et semel
+     * currit clamat. */
+    vol->temporarium = FALSUM;
+    vol->via = NIHIL;
+    {
+        /* Via COPIATUR: vocator litteras suas liberare potest, et
+         * volumen temporarium eas in claudendo adhuc eget. */
+        ChordaAedificator* aed = chorda_aedificator_creare(
+            piscina, (memoriae_index)64);
+        si (aed != NIHIL)
+        {
+            chorda_aedificator_appendere_literis(aed, via);
+            vol->via = chorda_ut_cstr(
+                chorda_aedificator_finire(aed), piscina);
+        }
+    }
     vol->scrinium = scrinium_aperire(piscina, via);
     si (vol->scrinium == NIHIL)
     {
@@ -127,6 +150,84 @@ volumen_claudere (Volumen* volumen)
         redde;
     }
     scrinium_claudere(volumen->scrinium);
+    si (volumen->temporarium && volumen->via != NIHIL)
+    {
+        /* Post claudere, non ante: scrinium plagulam adhuc tenet. */
+        (vacuum)filum_delere(volumen->via);
+        volumen->temporarium = FALSUM;
+    }
+}
+
+Volumen*
+volumen_temporarium (Piscina* piscina, constans character* praefixum)
+{
+    ChordaAedificator* aed;
+    constans character* via = NIHIL;
+    Volumen*           vol;
+    i32                i;
+
+    si (piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (praefixum == NIHIL || praefixum[0] == '\0')
+    {
+        praefixum = "volumen";
+    }
+
+    /* Nomen liberum quaerere. Numerus, non tempus nec fors: volumen
+     * pendens ita nomen suum RETINET, et qui in /tmp inspicit videt
+     * quot cursus reliquerint. */
+    per (i = I; i <= C; i = i + I)
+    {
+        character numerus[XXXII];
+
+        aed = chorda_aedificator_creare(piscina, (memoriae_index)128);
+        si (aed == NIHIL)
+        {
+            redde NIHIL;
+        }
+        sprintf(numerus, "%lu", (insignatus longus)i);
+        chorda_aedificator_appendere_literis(aed, "/tmp/");
+        chorda_aedificator_appendere_literis(aed, praefixum);
+        chorda_aedificator_appendere_literis(aed, "-");
+        chorda_aedificator_appendere_literis(aed, numerus);
+        chorda_aedificator_appendere_literis(aed, ".volumen");
+        via = chorda_ut_cstr(chorda_aedificator_finire(aed), piscina);
+        si (via == NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (!filum_existit(via))
+        {
+            frange;
+        }
+        via = NIHIL;
+    }
+    si (via == NIHIL)
+    {
+        fprintf(stderr, "volumen_temporarium: C nomina occupata"
+            " (praefixum '%s') - reliquiae in /tmp?\n", praefixum);
+        redde NIHIL;
+    }
+
+    vol = volumen_creare(piscina, via);
+    si (vol == NIHIL)
+    {
+        redde NIHIL;
+    }
+    vol->temporarium = VERUM;   /* via ex struere iam servata */
+    redde vol;
+}
+
+constans character*
+volumen_via (constans Volumen* volumen)
+{
+    si (volumen == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde volumen->via;
 }
 
 constans character*
