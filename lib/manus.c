@@ -65,6 +65,10 @@ structura Manus {
 
     b32        fracta;
     chorda     causa;
+
+    /* Dum paratitudinem probamus, defectus EXSPECTATUR - frangere
+     * manum ob eum absurdum esset. */
+    b32        tacens;
 };
 
 /* Quid ansa tota rettulit. 'respondit' ab 'ok' DISTAT consulto:
@@ -156,6 +160,10 @@ _frangere (
     Manus*              manus,
     constans character* causa)
 {
+    si (manus->tacens)
+    {
+        redde;
+    }
     /* Prima causa sola servatur: sequentes eius sequelae sunt. */
     si (!manus->fracta)
     {
@@ -229,8 +237,13 @@ _tesseram_petere (
     JsonValor*     t;
     s64            tessera = -I;
 
+    /* CCII 'Acceptum', non CC: imperium tesseram reddit, non
+     * effectum - iussum enim nondum factum est. Primum hic CC
+     * SOLUM accipiebam, et simulacrum probationis CC reddebat quia
+     * ego id scripseram - XXIV asserta viridia mecum consentiebant,
+     * non cum servo vero. Ergo omnis species II. */
     r = _petere(manus, HTTP_POST, via, corpus, manus->scriptorium);
-    si (r.successus && r.status == CC)
+    si (r.successus && r.status >= CC && r.status < CCC)
     {
         j = json_legere(r.corpus, manus->scriptorium);
         si (j.successus && j.radix != NIHIL)
@@ -506,6 +519,41 @@ _respondet (
     redde r.successus;
 }
 
+/* PORTUS LIGATUS NON EST PAGINA PARATA.
+ *
+ * Applicatio hospitium ligat multo ANTE quam vitrea paginam suam
+ * onerat - et modo vivo pagina per idem hospitium venit. Inter
+ * illud et hoc portus respondet dum pagina non est.
+ *
+ * Iussum in illam rimam missum in VACUUM abit: in documento
+ * inonerato 'internuntius' non est, ergo involucrum imperii iactat;
+ * sed semita culpae eius internuntium ipsum vocat, unde nec
+ * responsum nec culpa umquam redit. Tessera in AETERNUM pendet -
+ * et nihil in applicatione fractum est.
+ *
+ * Ergo paratitudo iter PLENUM probet, non portum: iussum minimum
+ * quod redire DEBET. MENSURATUM 2026-08-13: manus_incipere portu
+ * contenta erat, et probatio fumi 'applicatio non respondit' de
+ * applicatione perfecte sana nuntiabat. */
+interior b32
+_paratus (
+    Manus* manus)
+{
+    chorda valor;
+    b32    fructus;
+
+    manus->tacens = VERUM;
+    fructus = _iussum(manus, chorda_ex_literis("1", manus->piscina),
+                      MANUS_MORA_BREVIS, &valor);
+    manus->tacens = FALSUM;
+
+    /* Conatus defectus manum non maculet. */
+    manus->fracta        = FALSUM;
+    manus->causa.mensura = 0;
+    manus->causa.datum   = NIHIL;
+    redde fructus;
+}
+
 interior Manus*
 _manus_creare (
     Piscina*            piscina,
@@ -540,6 +588,7 @@ _manus_creare (
     manus->portus    = portus;
     manus->processus = NIHIL;
     manus->fracta    = FALSUM;
+    manus->tacens    = FALSUM;
     manus->causa.mensura = 0;
     manus->causa.datum   = NIHIL;
     memcpy(manus->hospes, hospes, (memoriae_index)longitudo);
@@ -562,8 +611,11 @@ manus_aperire (
     }
     /* NIHIL potius quam manus muta: manus quae nihil tangit omnia
      * asserta silentio praeterire faceret - suita viridis contra
-     * applicationem quae numquam cucurrit. */
-    si (!_respondet(manus))
+     * applicationem quae numquam cucurrit.
+     *
+     * Iter PLENUM probatur, non portus (vide _paratus): manus quae
+     * portum tangit sed paginam non attingit aeque inutilis est. */
+    si (!_respondet(manus) || !_paratus(manus))
     {
         redde NIHIL;
     }
@@ -601,7 +653,7 @@ manus_incipere (
     dum (_nunc() <= terminus)
     {
         (vacuum)processus_pulsare(processus);
-        si (_respondet(manus))
+        si (_respondet(manus) && _paratus(manus))
         {
             redde manus;
         }

@@ -123,6 +123,77 @@ Failing assertions are captured in a **separate credo session**
 suite red. The main session then asserts *about* the capture — the
 planted fault becomes a positive assertion.
 
+## 2026-08-13 — the smoke test, and two bugs no unit test could reach
+
+`../silicetum/laboratorium/fumus.sh` runs manus against the real app:
+real window, real WebKit, real DOM, real bridge. It found two defects
+within minutes of first running, and **neither was reachable from
+`probatio_manus`** — both times because my simulator encoded my
+assumptions rather than the server's behaviour.
+
+### 1. imperium answers the ticket POST with `202`, not `200`
+
+`_tesseram_petere` gated on `status == CC`. imperium replies **202
+Accepted** — correct, since a ticket is an acceptance, not a result.
+
+The unit test could not catch this: I wrote the simulator to return 200
+*because that's what I assumed*. Twenty-four green assertions agreed
+with me and disagreed with the server. Now the library accepts any 2xx,
+and the simulator returns 202 like the real thing.
+
+**A fixture written by the same hand that wrote the code tests
+self-consistency, not correctness.** Same family as the grep that
+confirmed its own spelling error (natura.worklog.md).
+
+### 2. A bound port is not a ready app — and the failure is unfalsifiable
+
+`manus_incipere` returned as soon as the port answered. But the app binds
+hospitium *before* vitrea loads its page, and in `-vivum` the page is
+served **by that same hospitium**. Between those two moments the port
+answers and the page does not exist.
+
+A command sent into that window is lost in a way that cannot report
+itself: in an unloaded document `internuntius` is undefined, so
+imperium's wrapper throws — and its *error* path calls `internuntius`
+too. Neither a result nor a fault can ever come back. **The ticket pends
+forever and nothing is broken.** Measured: manus reported "applicatio non
+respondit" about a perfectly healthy app, while curl drove that same app
+successfully in the same second.
+
+Fix: `_paratus` proves the **full round trip** (send `1`, require an
+answer), not the socket. Both `manus_aperire` and `manus_incipere` now
+demand it. A `tacens` flag suppresses `_frangere` during the probe, where
+failure is expected rather than fatal.
+
+Corollary for the simulator: the readiness probe must succeed in *every*
+scenario, so "wedged" and "throwing" now mean an app that was healthy and
+*then* failed — which is what those words mean in the real world anyway.
+
+### Diagnosis notes (two wrong turns, worth recording)
+
+- I blamed **keep-alive** first: http.c's read loop is `} dum (n > 0);`
+  — it reads until the socket closes and ignores `Content-Length`
+  entirely. That's true, and a real limitation (the client cannot use a
+  persistent connection). It was **not** the cause: http.c also sends
+  `Connection: close` on every request unconditionally, so its own
+  requests always terminate. I added a redundant header before checking
+  and had to take it back.
+- I blamed **arena corruption** for the always-false verdict before
+  finding the credo primitive. The arena bug was real and worth fixing,
+  but it was not that symptom's cause. Two true findings that explain
+  nothing are still not the explanation.
+
+The differential test settled it in one run: `fumus.sh -adhaerere`
+(attach) passed 10/10 while spawn failed. Attach vs spawn differ in
+exactly one thing, which pointed straight at startup timing.
+
+### Both gates proven red
+
+- library: forcing `v.ok = VERUM` → 6 red in `probatio_manus`.
+- app: emptying `laboratorium.js` so the bridge never fires → the
+  `#salutatio` assertions go red while the static `h1` assertions stay
+  green. The async assertion fails *specifically*, so it isn't vacuous.
+
 ### Tooling notes
 
 - The post-edit hook caught `Momentum * Momentum` and `Mora * Mora`

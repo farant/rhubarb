@@ -60,7 +60,8 @@ _respondere (
         "HTTP/1.1 %d %s\r\nContent-Type: application/json\r\n"
         "Content-Length: %d\r\nConnection: close\r\n\r\n",
         (integer)codex,
-        (codex == CC) ? "OK" : "Not Found",
+        (codex == CC) ? "OK"
+                      : ((codex == CCII) ? "Accepted" : "Not Found"),
         (integer)longitudo);
 
     (vacuum)write(fd, caput, strlen(caput));
@@ -121,9 +122,15 @@ _puer (
 
         si (strncmp(petitio, "POST", IV) == 0)
         {
+            /* CCII, ut imperium VERUM: tessera acceptio est, non
+             * effectus. Prius hic CC reddebam - quod ex mea
+             * coniectura veniebat, non ex servo, et probatio mecum
+             * consentiebat dum applicatio vera dissentiret. Fumus
+             * id invenit; unitas non poterat. */
             _ultimum_servare(petitio);
             tessera++;
             sprintf(corpus, "{\"tessera\":%d}", (integer)tessera);
+            codex = CCII;
         }
         alioquin si (strstr(petitio, "GET /imperium/0 ") != NIHIL)
         {
@@ -132,6 +139,16 @@ _puer (
              * vitam probat. */
             codex = CDIV;
             sprintf(corpus, "{\"culpa\":\"tessera ignota\"}");
+        }
+        alioquin si (strstr(petitio, "GET /imperium/1 ") != NIHIL)
+        {
+            /* Tessera I = sonda paratitudinis (iussum '1' quod
+             * manus ipsa mittit). Omni scenario SUCCEDAT: manus
+             * quae iter plenum probare non potest omnino non
+             * aperitur, et scenaria infra de manu APERTA loquuntur
+             * - de applicatione scilicet quae sana fuit et postea
+             * haesit aut iactavit. */
+            sprintf(corpus, "{\"status\":\"perfectum\",\"valor\":1}");
         }
         alioquin si (scenario == SCEN_VERUM)
         {
