@@ -950,6 +950,15 @@ fenestra_obtinere_tractationem_nativam (
     redde (__bridge vacuum*)fenestra->fenestra_ns;
 }
 
+i32
+fenestra_numerus_nativus (
+    Fenestra* fenestra)
+{
+    si (!fenestra || !fenestra->fenestra_ns) redde ZEPHYRUM;
+    /* windowNumber = CGWindowID, quem screencapture -l accipit */
+    redde (i32)[fenestra->fenestra_ns windowNumber];
+}
+
 /* Implementatio tabulae pixelorum */
 
 TabulaPixelorum*

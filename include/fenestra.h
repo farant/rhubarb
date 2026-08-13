@@ -529,6 +529,19 @@ vacuum*
 fenestra_obtinere_tractationem_nativam (
     Fenestra* fenestra);
 
+/* Obtinere NUMERUM fenestrae nativum (CGWindowID in macOS)
+ *
+ * Cur seorsum a tractatione: numerus per fines processuum transit,
+ * monstrator non. Unde instrumentum EXTERIUS hanc solam fenestram
+ * capere potest (screencapture -l<numerus>) loco scrinii totius -
+ * quod et rectius est et privatius.
+ *
+ * Reddit: numerum, aut ZEPHYRUM si ignotus
+ */
+i32
+fenestra_numerus_nativus (
+    Fenestra* fenestra);
+
 
 /* ==================================================
  * Tabula Pixelorum - Creatio / Destructio
