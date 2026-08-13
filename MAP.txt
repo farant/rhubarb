@@ -1,6 +1,6 @@
 RHUBARB CODEBASE MAP
 ====================
-Last updated: 2026-08-10
+Last updated: 2026-08-13
 
 A C89 monorepo for building catholic civilization.
 All identifiers in Latin. No dependencies. Long-term thinking.
@@ -10,10 +10,10 @@ DIRECTORY STRUCTURE
 -------------------
 
 rhubarb/
-├── include/         120 header files (.h)
-├── lib/             123 implementation files (.c, .m)
-├── probationes/     113 test modules (probatio_*.c)
-├── tools/           15 utility executables (.c/.m → bin/)
+├── include/         145 header files (.h)
+├── lib/             147 implementation files (.c, .m)
+├── probationes/     143 test modules (probatio_*.c)
+├── tools/           27 utility executables (.c/.m → bin/)
 │
 │   ── SELF-CONTAINED SUBPROJECTS (own fontes/ + probationes/ +
 │      compile_probationes.sh + phase-log.md; most amalgamate to
@@ -252,11 +252,40 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  ┌─ Webview App Layer ─────────────────────────────────┐    │
     │  │  vitrea ──────── WKWebView over fenestra, serving   │    │
     │  │                  capsula:// assets; JS<->C bridge   │    │
-    │  │                  (all WebKit in vitrea_macos.m)     │    │
+    │  │                  (all WebKit in vitrea_macos.m).    │    │
+    │  │                  Forwards PAGE ERRORS + console.log │    │
+    │  │                  to the process (channels erratum   │    │
+    │  │                  -> stderr, consola -> stdout) - no │    │
+    │  │                  app code needed; catches load-time │    │
+    │  │                  errors with file:line              │    │
     │  │  internuntius ── pure C89 JSON-RPC (registry,       │    │
     │  │                  envelope, push) over a missor      │    │
     │  │                  seam - transport-agnostic          │    │
     │  │  speculum ────── self-source debug mode (Cmd+Shift+D)│   │
+    │  │                                                     │    │
+    │  │  ── DRIVING A RUNNING APP (2026-08-13) ──           │    │
+    │  │  imperium ────── DEV-ONLY HTTP control channel over │    │
+    │  │                  hospitium+internuntius: POST JS -> │    │
+    │  │                  ticket, GET ticket -> value; also  │    │
+    │  │                  /imperium/imago (in-process PNG,   │    │
+    │  │                  no Screen Recording permission).   │    │
+    │  │                  Arbitrary code execution: -vivum   │    │
+    │  │                  only, NEVER in a shipped capsula   │    │
+    │  │  manus ───────── UI test library over imperium:     │    │
+    │  │                  press/type/WAIT/judge. Assertions  │    │
+    │  │                  auto-wait (so sleeps are needless, │    │
+    │  │                  not merely discouraged); the wait  │    │
+    │  │                  runs IN THE PAGE. Every selector   │    │
+    │  │                  means VISIBLE, not present, and    │    │
+    │  │                  actions gate on actionability      │    │
+    │  │                  (disabled / covered / off-screen). │    │
+    │  │                  Collects page errors; screenshots  │    │
+    │  │                  on failure. probatio_manus (90,    │    │
+    │  │                  protocol+generated-JS) is the      │    │
+    │  │                  automatic gate; behaviour is only  │    │
+    │  │                  proven by ../silicetum/laboratorium│    │
+    │  │                  /fumus.sh (70, real window, BY     │    │
+    │  │                  HAND - see the apps/ CAUTIO above) │    │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
     │  ┌─ Domain Libraries ──────────────────────────────────┐    │
@@ -362,9 +391,17 @@ BUILD
 -----
 
 Compiler:   C89 strict
-Flags:      -pedantic -Wall -Wextra -Werror -Wconversion
+Flags:      THE AUTHORITY IS compile_tests.sh, NOT THIS LIST.
+            -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion
             -Wsign-conversion -Wcast-qual -Wstrict-prototypes
             -Wmissing-prototypes -Wwrite-strings
+            -Wno-long-long -Wno-overlength-strings
+            The last three are load-bearing and were missing here
+            (and in root CLAUDE.md) until 2026-08-13: latina.h makes
+            i64/s64 `long long`, and any file embedding a big string
+            literal (vitrea's JS shim, ~1380 chars vs C90's
+            guaranteed 509) needs -Wno-overlength-strings. Copying
+            the short list costs two failed builds.
 
 Scripts:    ./compile_tests.sh <pattern>  ── run tests matching pattern
             ./compile_tools.sh            ── compile all tools
