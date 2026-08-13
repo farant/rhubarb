@@ -126,11 +126,70 @@ credo_numerus_fracti (
 }
 
 
-b32 
+b32
 credo_omnia_praeterierunt (
     vacuum)
 {
     redde credo_numerus_fracti() == ZEPHYRUM;
+}
+
+/* Fractas invenire. COPIAS reddit, non catenam filtratam: 'sequens'
+ * originalium filtrando corrumperetur, et catena principalis omnibus
+ * ceteris interrogationibus servit.
+ *
+ * Declarata ab initio, definita 2026-08-13 - probatio prima quae eam
+ * vocavit (probatio_manus, quae nuntium fracturae ipsum probat)
+ * symbolum deesse invenit. */
+CredoNotatio*
+credo_invenire_fractos (
+    memoriae_index* numerus_fructus)
+{
+    CredoNotatio*  primus  = NIHIL;
+    CredoNotatio*  ultimus = NIHIL;
+    CredoNotatio*  notatio = _credo_primus;
+    memoriae_index summa   = ZEPHYRUM;
+
+    si (numerus_fructus)
+    {
+        *numerus_fructus = ZEPHYRUM;
+    }
+    si (!_credo_piscina)
+    {
+        redde NIHIL;
+    }
+
+    dum (notatio)
+    {
+        si (!notatio->praeteritus)
+        {
+            CredoNotatio* copia = (CredoNotatio*)piscina_allocare(
+                _credo_piscina, magnitudo(CredoNotatio));
+            si (!copia)
+            {
+                frange;
+            }
+            *copia         = *notatio;
+            copia->sequens = NIHIL;
+
+            si (ultimus)
+            {
+                ultimus->sequens = copia;
+            }
+            alioquin
+            {
+                primus = copia;
+            }
+            ultimus = copia;
+            summa++;
+        }
+        notatio = notatio->sequens;
+    }
+
+    si (numerus_fructus)
+    {
+        *numerus_fructus = summa;
+    }
+    redde primus;
 }
 
 

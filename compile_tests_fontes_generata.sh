@@ -75,6 +75,7 @@ declare -a SOURCE_FILES=(
     "lib/librarium_visus.c"
     "lib/libro_paginarum.c"
     "lib/macho.c"
+    "lib/manus.c"
     "lib/mensa.c"
     "lib/mimen.c"
     "lib/moneta.c"
