@@ -23,8 +23,23 @@
 
 /* Gratia super terminum paginae: si pagina intra suum terminum non
  * respondet, respondere OMNINO non potest (haeret, mortua est).
- * Vide manus.h 'TERMINUS DUPLEX'. */
-#define MANUS_GRATIA        ((Mora)D)
+ * Vide manus.h 'TERMINUS DUPLEX'.
+ *
+ * CUR TAM LARGA: gratia non solum promissum exspectat sed ITER
+ * REDITUS - responsum per internuntium in gyrum applicationis it, et
+ * gyrus ille quotiens vult pulsat. Laboratorium 200 ms tictum habet;
+ * D ms ergo duos tictus cum dimidio dabat, quod SUB ONERE perdidit.
+ *
+ * MENSURATUM 2026-08-13: assertum de pyxide impedita (unicum quod
+ * terminum paginae PLENUM currit, nam pyxis clausa numquam aperitur)
+ * intermittenter 'applicatio non respondit' de applicatione sana
+ * nuntiabat - uno cursu ex tribus. Probatio FRAGILIS de bibliotheca
+ * cuius munus est fragilitatem tollere; ridiculum et corrigendum.
+ *
+ * Manus tictum hospitis scire NON potest, ergo large datur. Nihil
+ * constat in casu felici (gratia solum tunc valet cum pagina iam
+ * terminum suum tetigit); mors vera paulo tardius nuntiatur. */
+#define MANUS_GRATIA        ((Mora)(M + D))
 
 /* Intervallum pulsationis tesserae: incipit angustum ut casus
  * FELIX (assertum quod statim verum est) statim redeat; crescit ut

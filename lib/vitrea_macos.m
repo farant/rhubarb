@@ -51,6 +51,11 @@ structura Vitrea {
     Piscina*            piscina_petitionum;
     Piscina*            piscina_aestimationis;
     VitreaFructus       fructus;
+
+    /* Errores paginae: sutura optiva. NIHIL = clamor in stderr,
+     * quod applicationi cuilibet SINE mutatione prodest. */
+    VitreaErrator       errator;
+    vacuum*             errator_datum;
 };
 
 /* ==================================================
@@ -179,6 +184,49 @@ interior constans character* constans VITREA_CURSUS_JS =
 "      ' quaedam numquam solventur');\n"
 "  }\n"
 "};\n"
+/* ERRORES PAGINAE -> C.
+ *
+ * Facies quae in via cecidit saepe eundem textum ostendit: nihil in
+ * fenestra clamat, nihil in actis apparet, et exceptio ad usorem
+ * tacita it. Consola WebKit eam habet - sed nemo consolam
+ * applicationis vectae inspicit.
+ *
+ * CANALIS SEPARATUS ('erratum', non 'internuntius') CONSULTO: nuntii
+ * pontis in caudam eunt quam applicatio exhaurit, et applicationes
+ * omnes hodie quod PONS non est ut 'recarica' tractant. Error per
+ * eandem viam missus ergo paginam in gyro cadendi-recargandi
+ * verteret. Canalis alter nihil quod exstat tangit.
+ *
+ * INIECTIO AtDocumentStart: custodes ante scripta paginae ponuntur,
+ * ergo errores ONERIS ipsius capiuntur - quos collector manus (post
+ * aperire iniectus) numquam videre potest.
+ *
+ * Tres fontes quia nullus alterum capit: 'error' exceptiones non
+ * captas; 'unhandledrejection' promissa reiecta (quae NIHIL usquam
+ * scribunt); console.error quod codex ipse nuntiat. */
+"(function(){\n"
+"  function mittere(genus, nuntius, ubi) {\n"
+"    try {\n"
+"      window.webkit.messageHandlers.erratum.postMessage(\n"
+"        JSON.stringify({ genus: genus, nuntius: String(nuntius),\n"
+"                         ubi: ubi || '' }));\n"
+"    } catch (e) { /* canalis abest: tacendum, ne gyrus fiat */ }\n"
+"  }\n"
+"  window.addEventListener('error', function (ev) {\n"
+"    mittere('exceptio', ev.message || ev.error,\n"
+"      ev.filename ? (ev.filename + ':' + ev.lineno) : '');\n"
+"  });\n"
+"  window.addEventListener('unhandledrejection', function (ev) {\n"
+"    var r = ev.reason;\n"
+"    mittere('promissum', (r && r.message) ? r.message : r, '');\n"
+"  });\n"
+"  var ce = console.error;\n"
+"  console.error = function () {\n"
+"    mittere('console', Array.prototype.slice.call(arguments)\n"
+"      .join(' '), '');\n"
+"    if (ce) { ce.apply(console, arguments); }\n"
+"  };\n"
+"})();\n"
 "})();";
 
 /* ==================================================
@@ -287,6 +335,29 @@ interior constans character* constans VITREA_CURSUS_JS =
     {
         redde;
     }
+
+    /* Canalis 'erratum' caudam pontis NON tangit: applicationes
+     * omnes quod PONS non est ut 'recarica' tractant, ergo error
+     * per caudam missus gyrum cadendi-recargandi pareret. */
+    si ([nuntius.name isEqualToString:@"erratum"])
+    {
+        vitrea->fructus.errores_paginae++;
+        si (vitrea->errator != NIHIL)
+        {
+            vitrea->errator(vitrea->errator_datum, octeti,
+                (i32)strlen(octeti));
+        }
+        alioquin
+        {
+            /* Ordinarius: clamare. Error paginae qui nusquam
+             * apparet peior est quam nullus, quia fidem falsam
+             * parit. */
+            fprintf(stderr, "[vitrea] erratum paginae: %s\n", octeti);
+            fflush(stderr);
+        }
+        redde;
+    }
+
     vitrea->fructus.nuntii_recepti++;
     _nuntium_inserere(vitrea, VITREA_NUNTIUS_PONS, octeti,
         (i32)strlen(octeti));
@@ -488,6 +559,8 @@ vitrea_creare (Piscina* piscina, Fenestra* fenestra,
         [scriptum release];
         [moderator addScriptMessageHandler:vitrea->auscultator
             name:@"internuntius"];
+        [moderator addScriptMessageHandler:vitrea->auscultator
+            name:@"erratum"];
         [figura setUserContentController:moderator];
         [moderator release];
         si (configuratio->origo == VITREA_ORIGO_CAPSULA)
@@ -554,6 +627,8 @@ vitrea_destruere (Vitrea* vitrea)
          * ANTE dimissionem (mos notus) */
         [[[vitrea->textura configuration] userContentController]
             removeScriptMessageHandlerForName:@"internuntius"];
+        [[[vitrea->textura configuration] userContentController]
+            removeScriptMessageHandlerForName:@"erratum"];
         [vitrea->textura setNavigationDelegate:nil];
         [vitrea->textura setUIDelegate:nil];
         [vitrea->textura stopLoading];
@@ -745,4 +820,16 @@ vitrea_fructus (constans Vitrea* vitrea)
         redde vacua;
     }
     redde vitrea->fructus;
+}
+
+vacuum
+vitrea_erratorem_ponere (Vitrea* vitrea, VitreaErrator errator,
+    vacuum* datum)
+{
+    si (vitrea == NIHIL)
+    {
+        redde;
+    }
+    vitrea->errator = errator;
+    vitrea->errator_datum = datum;
 }

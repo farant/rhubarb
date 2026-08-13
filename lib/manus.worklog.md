@@ -420,3 +420,44 @@ has no source URL.
   the code.
 - `probatio_planta_lectio` fails on `main` independently of this work —
   verified by running it against `git show HEAD:lib/credo.c`. Pre-existing.
+
+## 2026-08-13 — my own timeout budget was the flaky thing
+
+The smoke test went 68/68, then 67/68, then 68/68. Flaky — in the
+library whose entire purpose is removing flakiness. Worth recording in
+full because the diagnosis was not where I first looked.
+
+Printing the actual cause instead of guessing:
+
+```
+causa: 'manus_premere fefellit: #impedita - elementum impeditum (disabled)'   ok
+causa: 'applicatio non respondit intra terminum ...'                          FLAKY
+```
+
+Not a wrong actionability verdict — a **timeout**.
+
+Why that assertion specifically: pressing a disabled button is the only
+case that runs the page's timeout to the *full* 2s, because the
+condition can never become true. Everything else resolves in
+milliseconds. So it was the only assertion sitting near the deadline at
+all.
+
+And the deadline was mine. `MANUS_GRATIA` was 500ms, but the grace does
+not merely cover the promise settling — it covers the **return trip**:
+the reply crosses internuntius into the host app's event loop, and that
+loop pulses whenever it likes. Laboratorium ticks at 200ms, so 500ms of
+grace was two and a half ticks of headroom. Under load it lost roughly
+one run in three.
+
+Raised to 1500ms. Manus cannot know the host's tick period, so the grace
+must be generous rather than tuned. It costs nothing in the happy case —
+grace only applies once the page has already hit its own deadline — and
+a genuinely dead app is simply reported a second later.
+
+Four consecutive clean runs after the change, all with the correct cause.
+
+**The general lesson**: a two-clock design needs the outer clock sized
+against the *slowest thing between the clocks*, not against the inner
+clock. I sized it against the inner one and got a test that blamed a
+healthy app one time in three — which is exactly the failure mode this
+library exists to abolish.

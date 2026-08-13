@@ -76,7 +76,28 @@ nomen structura {
     i64 petitiones_capsulae;  /* petitiones schematis servitae */
     i64 petitiones_fractae;   /* 404 - via in capsula absens */
     i64 navigationes_recusatae; /* navigationes extra originem */
+    i64 errores_paginae;      /* exceptiones/promissa/console.error */
 } VitreaFructus;
+
+/* ERRATOR - sutura errorum paginae.
+ *
+ * 'nuntius' est obiectum JSON: {genus, nuntius, ubi} ubi genus est
+ * "exceptio" | "promissum" | "console".
+ *
+ * SINE eo (ordinarius): vitrea in stderr clamat. Ergo applicatio
+ * quaelibet errores faciei suae in actis videt SINE mutatione
+ * codicis - id est totum consilium. Cum eo: applicatio eos condere
+ * potest (volumen, tabularium) aut tacere. */
+nomen vacuum (*VitreaErrator)(
+    vacuum*             datum,
+    constans character* nuntius_json,
+    i32                 mensura);
+
+vacuum
+vitrea_erratorem_ponere (
+    Vitrea*       vitrea,
+    VitreaErrator errator,
+    vacuum*       datum);
 
 nomen enumeratio {
     VITREA_NUNTIUS_PONS = 0,   /* nuntius pontis JS->C (textus) */
