@@ -948,6 +948,17 @@ s32 principale (vacuum)
         CREDO_NIHIL (m);
     }
 
+    /* QUID HAEC PROBATIO NON PROBAT - impressum, non solum
+     * commentatum: probatio quae limites suos tacet fidem parit quam
+     * non meruit, et haec suita SPONTE currit dum fumus MANU. Qui
+     * viride hic videt scire debet quid adhuc non probatum sit. */
+    imprimere("\n  NOTA: haec structuram et fistulas probat - JS in"
+              " pictore VERO agere\n"
+              "        NON probatur. Id sola probatio fumi potest:\n"
+              "        cd ../silicetum/laboratorium && ./fumus.sh\n"
+              "        (fenestram aperit; a nullo cursore sponte"
+              " curritur)\n");
+
     imprimere("\n");
     credo_imprimere_compendium();
 
