@@ -523,3 +523,33 @@ was invisible to the automated suite.
 `manus_incipere` — it spawns a real binary, and the simulator is a forked
 child rather than an executable. Faking it would test the fake. 28 of 29
 is where this stops.
+
+## 2026-08-13 — actiones per unam semitam (hygiene)
+
+`manus_premere_textum` describebat `_agere` totam - portam
+agibilitatis inclusam - quia solo RESOLUTORE differt: `q(` selectorem
+sumit, `qt(` textum. Cetera (porta, gyrus, nuntius) eadem erant.
+
+Resolutor nunc parameter est; tres actiones lineam unam quaeque
+sunt, et porta UNO loco emittitur (prius duobus).
+
+**Quid lucramur, et quid non.** Lineae ~35 ablatae sunt - id
+incidens est. Pretium verum: actio QUARTA (eligere, purgare,
+submittere?) portam OMITTERE non potest. Prius quisque additor
+occasionem tertiam habebat eam obliviscendi, ET TACITE: actio sine
+porta perfecte agit donec elementum impeditum aut obtectum occurrat,
+et tunc VIRIDE mentitur. Nunc quicumque `opus` tradit portam iam
+supra se habet.
+
+Nuntii fracturae quoque unius formae facti sunt (premere_textum
+olim textum virgulis cingebat, premere selectorem nudum ferebat -
+discrepantia quam ipse induxeram scribendo alteram seorsum).
+
+**Regula generalis**: custos qui invariantem PROBAT subsidium est;
+structura quae violationem EXPRIMERE non potest remedium. Custodem
+primum sumpsi quia vilis erat et duplicatio iam aderat - causa
+honesta, non principalis.
+
+Portam ablatam probationes adhuc III assertis capiunt (una sedes,
+tres exitus publici). Fumus 68/68 et unitas 83/83 per mutationem
+intacta - quod erat rete quod refactionem tutam fecit.

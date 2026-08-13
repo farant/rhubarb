@@ -922,13 +922,30 @@ manus_aestimare (
     redde valor;
 }
 
-/* Actio quae elementum EXSPECTAT antequam agat. Clic in elementum
- * quod nondum apparuit vitium temporis est - id ipsum quod haec
- * bibliotheca tollere debet. */
+/* ACTIO: unica semita omnium actionum.
+ *
+ * Actiones tres (premere, scribere, premere_textum) in uno solo
+ * differunt - QUOMODO elementum inveniatur:
+ *   "q("  selector CSS  -> primum VISIBILE congruens
+ *   "qt(" textus        -> elementum IMUM textum ferens
+ * Cetera - porta agibilitatis, gyrus exspectationis, nuntius
+ * fracturae - eadem sunt.
+ *
+ * CUR HIC UNA, NON TER: premere_textum olim hanc functionem totam
+ * describebat, portam inclusam. Porta ergo bis emittebatur, et
+ * actio QUARTA (eligere? purgare? submittere?) tertiam occasionem
+ * eam OMITTENDI ferret - silentio, quia actio sine porta
+ * perfecte operatur donec elementum impeditum aut obtectum
+ * occurrat. Nunc omittere eam impossibile est: quicumque 'opus'
+ * tradit portam iam supra se habet.
+ *
+ * Elementum EXSPECTATUR: clic in id quod nondum apparuit vitium
+ * temporis est - id ipsum quod haec bibliotheca tollere debet. */
 interior b32
 _agere (
     Manus*              manus,
-    constans character* selector,
+    constans character* resolutor,   /* "q(" aut "qt(" */
+    constans character* argumentum,  /* selector aut textus */
     constans character* opus,
     constans character* nomen_actionis)
 {
@@ -941,8 +958,9 @@ _agere (
     }
 
     a = chorda_aedificator_creare(manus->piscina, CCLVI);
-    chorda_aedificator_appendere_literis(a, "var e=q(");
-    _appendere_litteras_js(a, selector);
+    chorda_aedificator_appendere_literis(a, "var e=");
+    chorda_aedificator_appendere_literis(a, resolutor);
+    _appendere_litteras_js(a, argumentum);
     /* Porta agibilitatis ANTE opus. Causa reddita NOMINATUR, ergo
      * 'pyxis impedita' a 'pyxis abest' et ab 'pyxis obtecta'
      * distinguitur - tria vitia valde diversa quae omnia olim
@@ -966,7 +984,7 @@ _agere (
         ChordaAedificator* n = chorda_aedificator_creare(manus->piscina, CXXVIII);
         chorda_aedificator_appendere_literis(n, nomen_actionis);
         chorda_aedificator_appendere_literis(n, " fefellit: ");
-        chorda_aedificator_appendere_literis(n, selector);
+        chorda_aedificator_appendere_literis(n, argumentum);
         chorda_aedificator_appendere_literis(n, " - ");
         chorda_aedificator_appendere_chorda(n, v.visum);
         _frangere(manus, _litterae(chorda_aedificator_finire(n), manus->piscina));
@@ -980,7 +998,7 @@ manus_premere (
     Manus*              manus,
     constans character* selector)
 {
-    redde _agere(manus, selector,
+    redde _agere(manus, "q(", selector,
                  "e.click();return{ok:true,visum:\"pressum\"};",
                  "manus_premere");
 }
@@ -990,44 +1008,11 @@ manus_premere_textum (
     Manus*              manus,
     constans character* textus)
 {
-    ChordaAedificator* a;
-    ManusVerdictum     v;
-
-    si (manus == NIHIL || manus->fracta)
-    {
-        redde FALSUM;
-    }
-
-    /* Eadem porta agibilitatis quam _agere adhibet - sed elementum
-     * per textum quaeritur, non per selectorem. */
-    a = chorda_aedificator_creare(manus->piscina, CCLVI);
-    chorda_aedificator_appendere_literis(a, "var e=qt(");
-    _appendere_litteras_js(a, textus);
-    chorda_aedificator_appendere_literis(a, ");var c=act(e);"
-        "if(c)return{ok:false,visum:c};"
-        "e.click();return{ok:true,visum:\"pressum\"};");
-
-    v = _exspectare(manus,
-                    _js_exspectare(manus,
-                        _litterae(chorda_aedificator_finire(a), manus->piscina),
-                        MANUS_MORA_ORDINARIA),
-                    MANUS_MORA_ORDINARIA);
-
-    si (!v.respondit)
-    {
-        redde FALSUM;
-    }
-    si (!v.ok)
-    {
-        ChordaAedificator* n = chorda_aedificator_creare(manus->piscina, CXXVIII);
-        chorda_aedificator_appendere_literis(n, "manus_premere_textum fefellit: \"");
-        chorda_aedificator_appendere_literis(n, textus);
-        chorda_aedificator_appendere_literis(n, "\" - ");
-        chorda_aedificator_appendere_chorda(n, v.visum);
-        _frangere(manus, _litterae(chorda_aedificator_finire(n), manus->piscina));
-        redde FALSUM;
-    }
-    redde VERUM;
+    /* Sola differentia a manus_premere: qt() pro q(). Cetera -
+     * porta, mora, nuntius - ex _agere veniunt. */
+    redde _agere(manus, "qt(", textus,
+                 "e.click();return{ok:true,visum:\"pressum\"};",
+                 "manus_premere_textum");
 }
 
 b32
@@ -1055,7 +1040,7 @@ manus_scribere (
         "e.dispatchEvent(new Event('change',{bubbles:true}));"
         "return{ok:true,visum:e.value};");
 
-    fructus = _agere(manus, selector,
+    fructus = _agere(manus, "q(", selector,
                      _litterae(chorda_aedificator_finire(a), manus->piscina),
                      "manus_scribere");
     redde fructus;
