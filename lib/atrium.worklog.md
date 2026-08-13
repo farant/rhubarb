@@ -104,14 +104,42 @@ Two traps hit while writing the test itself:
 not-null-terminated case. Reverted, back to 37/37. The length check is
 genuinely load-bearing and the test genuinely guards it.
 
-### Not proven yet
+### Not proven by the unit test — proven by migration
 
 The assembly and the loop have **no automatic test** and cannot get one —
 they need a real window. Their gate is the migration: villa `-fumus`,
 forum's full-smoke, and `mensor_ui -json`/`-imago` are existing
-end-to-end checks, and porting those three apps onto atrium is the
-integration test. Until that's done, atrium compiles and its pure parts
-are proven; the assembly is claimed, not demonstrated.
+end-to-end checks.
+
+**mensor_ui migrated the same day** (`75ff760`), 122 lines → 48. Three
+independent checks, because "it compiled and a window appeared" proves
+very little:
+
+- **`-json`**: the five pre-existing sessions came back byte-identical
+  (first divergence at byte 809, exactly where the array had ended);
+  three new ones appended from my own suite runs. Data path untouched.
+- **`-imago`**: the page rendered with *real* data — "8 sessiones · 851
+  mensurae", and `probatio_atrium 0.23s` in the slowest-tests bar. This
+  is the one that proves capsula + vitrea + injection actually landed,
+  because a blank window also produces a valid PNG.
+- **`-vivum`**: `window.MENSURAE.sessiones.length` → 8 over the imperium
+  channel. First attempt returned `valor: 0` for a `.card` selector —
+  a *true* answer for a class that doesn't exist, but indistinguishable
+  from a dead channel returning a default, so I re-ran with three
+  queries that must be non-zero (111 elements, title "mensor", 8
+  sessions).
+
+**The subtle change that had to be verified rather than assumed:**
+vivarium used to create its own internuntius; atrium creates one and
+*hands it over*. `imperium.h` warns that one bridge carries exactly one
+imperium — `imperium_praebere` registers `imperium.responsum` and a
+duplicate registration fails. Atrium's bridge is fresh so it's fine, but
+that's a claim, and the full imperium round-trip is what turns it into a
+fact.
+
+Speculum still absent from mensor_ui (no source capsula). The difference
+is that the `fontes` field now sits visibly empty in the config, so it's
+a choice rather than an oversight — which was Fran's original complaint.
 
 ### Deferred
 
