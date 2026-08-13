@@ -38,6 +38,7 @@
 #define MANUS_PETITIO_MS    ((MoraAngusta)(II * M))
 
 #define MANUS_HOSPES_MAXIMUS LXIV
+#define MANUS_VIA_MAXIMA     CCLVI
 
 structura Manus {
     /* DUAE arenae, et distinctio non est commoditas.
@@ -69,6 +70,12 @@ structura Manus {
     /* Dum paratitudinem probamus, defectus EXSPECTATUR - frangere
      * manum ob eum absurdum esset. */
     b32        tacens;
+
+    /* Imago automatica cum manus frangitur; vacua = tacita.
+     * 'in_imagine' recursionem vetat: si captura ipsa fallit,
+     * _frangere iterum vocaretur. */
+    character  via_culpae[MANUS_VIA_MAXIMA];
+    b32        in_imagine;
 };
 
 /* Quid ansa tota rettulit. 'respondit' ab 'ok' DISTAT consulto:
@@ -155,6 +162,13 @@ _litterae (
     redde b;
 }
 
+interior b32
+_imaginem (
+    Manus*               manus,
+    constans character*  via,
+    Mora                 mora,
+    constans character** causa_out);
+
 interior vacuum
 _frangere (
     Manus*              manus,
@@ -169,6 +183,23 @@ _frangere (
     {
         manus->fracta = VERUM;
         manus->causa  = chorda_ex_literis(causa, manus->piscina);
+
+        /* Imago in ipso momento fracturae - ANTE quam quicquam
+         * aliud paginam moveat. Mora BREVIS consulto: si
+         * applicatio mortua est (causa frequens), longa hic decem
+         * secunda cuique fracturae adderet.
+         *
+         * 'in_imagine' recursionem vetat: captura fallens
+         * _frangere iterum vocaret. */
+        si (manus->via_culpae[0] != '\0' && !manus->in_imagine)
+        {
+            constans character* ignorata = NIHIL;
+
+            manus->in_imagine = VERUM;
+            (vacuum)_imaginem(manus, manus->via_culpae,
+                              MANUS_MORA_BREVIS, &ignorata);
+            manus->in_imagine = FALSUM;
+        }
     }
 }
 
@@ -435,7 +466,39 @@ _iussum (
     "function q(s){var l=document.querySelectorAll(s),i;" \
     "for(i=0;i<l.length;i++){if(v(l[i]))return l[i];}return null;}" \
     "function qn(s){var l=document.querySelectorAll(s),i,n=0;" \
-    "for(i=0;i<l.length;i++){if(v(l[i]))n++;}return n;}"
+    "for(i=0;i<l.length;i++){if(v(l[i]))n++;}return n;}" \
+    MANUS_JS_AGIBILE
+
+/* AGIBILITAS: quod usor facere POTEST, non quod JS facere potest.
+ *
+ * MENSURATUM in pictore vero 2026-08-13 - duo silentia:
+ *   pyxis 'disabled': e.click() nullum eventum parit (ictus 0),
+ *     et tamen redit ut si egisset;
+ *   pyxis OBTECTA velo pleno: e.click() eventum parit (ictus 2) -
+ *     JS enim scrutinium loci non facit, usor autem velum tangeret.
+ *
+ * Utrumque manus 'pressum' nuntiabat. Duo VIRIDIA MENDACIA: probatio
+ * transibat ubi usor omnino agere non posset. Doctrina a Cypress
+ * sumpta (actionability), causa nostra propria.
+ *
+ * Reddit CAUSAM litteralem si non agibile, NIHIL si agibile - ut
+ * nuntius fracturae dicat CUR, non solum 'falsum'. Et quia _agere
+ * per gyrum exspectationis it, condicio ITERUM ATQUE ITERUM
+ * temptatur: pyxis quae post iter pontis expedita fit sponte
+ * exspectatur. */
+#define MANUS_JS_AGIBILE \
+    "function act(e){" \
+    "if(!e)return 'nullum elementum visibile';" \
+    "if(e.disabled||(e.matches&&e.matches(':disabled')))" \
+    "return 'elementum impeditum (disabled)';" \
+    "if(e.scrollIntoView)e.scrollIntoView({block:'center'});" \
+    "var rc=e.getBoundingClientRect();" \
+    "var sup=document.elementFromPoint(rc.left+rc.width/2," \
+    "rc.top+rc.height/2);" \
+    "if(sup&&sup!==e&&!e.contains(sup)&&!sup.contains(e))" \
+    "return 'elementum obtectum a <'+sup.tagName.toLowerCase()+" \
+    "(sup.id?'#'+sup.id:'')+'>';" \
+    "return null;}"
 
 /* ========================================================================
  * JS: gyrus exspectationis IN PAGINA
@@ -623,7 +686,9 @@ _manus_creare (
     manus->portus    = portus;
     manus->processus = NIHIL;
     manus->fracta    = FALSUM;
-    manus->tacens    = FALSUM;
+    manus->tacens     = FALSUM;
+    manus->in_imagine = FALSUM;
+    manus->via_culpae[0] = '\0';
     manus->causa.mensura = 0;
     manus->causa.datum   = NIHIL;
     memcpy(manus->hospes, hospes, (memoriae_index)longitudo);
@@ -788,8 +853,12 @@ _agere (
     a = chorda_aedificator_creare(manus->piscina, CCLVI);
     chorda_aedificator_appendere_literis(a, "var e=q(");
     _appendere_litteras_js(a, selector);
-    chorda_aedificator_appendere_literis(a,
-        ");if(!e)return{ok:false,visum:\"(nullum elementum)\"};");
+    /* Porta agibilitatis ANTE opus. Causa reddita NOMINATUR, ergo
+     * 'pyxis impedita' a 'pyxis abest' et ab 'pyxis obtecta'
+     * distinguitur - tria vitia valde diversa quae omnia olim
+     * 'pressum' nuntiabant. */
+    chorda_aedificator_appendere_literis(a, ");var c=act(e);"
+        "if(c)return{ok:false,visum:c};");
     chorda_aedificator_appendere_literis(a, opus);
 
     v = _exspectare(manus,
@@ -857,42 +926,87 @@ manus_scribere (
     redde fructus;
 }
 
-b32
-manus_imaginem (
+/* Captura nuda: nec statum manus inspicit nec frangit. Necessaria
+ * quia _frangere ipsum eam vocat - manus iam fracta imaginem suam
+ * capere DEBET, quod publica forma (quae fractam recusat) vetaret. */
+interior b32
+_imaginem (
     Manus*              manus,
-    constans character* via)
+    constans character* via,
+    Mora                mora,
+    constans character** causa_out)
 {
     s64      tessera;
     Momentum terminus;
     chorda   valor;
     chorda   culpa;
 
-    si (manus == NIHIL || manus->fracta)
-    {
-        redde FALSUM;
-    }
-
-    culpa.mensura = 0;
-    culpa.datum   = NIHIL;
     valor.mensura = 0;
     valor.datum   = NIHIL;
+    culpa.mensura = 0;
+    culpa.datum   = NIHIL;
+    *causa_out    = NIHIL;
 
     tessera = _tesseram_petere(manus, "/imperium/imago",
                                chorda_ex_literis(via, manus->piscina));
     si (tessera < 0)
     {
-        _frangere(manus, "manus_imaginem: applicatio imaginatorem non praebuit "
-                         "(imperium_imaginatorem_ponere vocatum est?)");
+        *causa_out = "manus_imaginem: applicatio imaginatorem non praebuit "
+                     "(imperium_imaginatorem_ponere vocatum est?)";
         redde FALSUM;
     }
 
-    terminus = _nunc() + MANUS_MORA_LONGA;
+    terminus = _nunc() + mora;
     si (!_tesseram_pulsare(manus, tessera, terminus, &valor, &culpa))
     {
-        _frangere(manus, "manus_imaginem: imago non scripta");
+        *causa_out = "manus_imaginem: imago non scripta";
         redde FALSUM;
     }
     redde VERUM;
+}
+
+b32
+manus_imaginem (
+    Manus*              manus,
+    constans character* via)
+{
+    constans character* causa = NIHIL;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+    si (!_imaginem(manus, via, MANUS_MORA_LONGA, &causa))
+    {
+        _frangere(manus, causa);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+vacuum
+manus_imaginem_culpae_ponere (
+    Manus*              manus,
+    constans character* via)
+{
+    i32 longitudo;
+
+    si (manus == NIHIL)
+    {
+        redde;
+    }
+    si (via == NIHIL)
+    {
+        manus->via_culpae[0] = '\0';
+        redde;
+    }
+    longitudo = (i32)strlen(via);
+    si (longitudo >= MANUS_VIA_MAXIMA)
+    {
+        longitudo = MANUS_VIA_MAXIMA - I;
+    }
+    memcpy(manus->via_culpae, via, (memoriae_index)longitudo);
+    manus->via_culpae[longitudo] = '\0';
 }
 
 /* ========================================================================

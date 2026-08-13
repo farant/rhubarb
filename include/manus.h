@@ -235,6 +235,22 @@ manus_imaginem (
     Manus*              manus,
     constans character* via);
 
+/* Imago AUTOMATICA in hanc plagulam cum manus PRIMUM frangitur;
+ * NIHIL eam rursus tacet (tacita ordinarie).
+ *
+ * CUR: nuntius fracturae dicit quid exspectatum et quid visum sit -
+ * non quid SCAENA tunc esset. Probatio quae sine spectatore currit
+ * (suita nocturna, machina aliena) illam scaenam aliter perdit in
+ * aeternum. Imago in ipso momento capitur, ANTE quam quicquam
+ * aliud paginam moveat.
+ *
+ * Idea a Cypress sumpta. Consulto NON ordinaria: bibliotheca quae
+ * plagulas sine rogatu scribit importuna est. */
+vacuum
+manus_imaginem_culpae_ponere (
+    Manus*              manus,
+    constans character* via);
+
 /* ==================================================
  * Exploratio (TACITA - nihil notat, nihil exspectat)
  * ==================================================

@@ -251,6 +251,85 @@ twice.
 That dump file is worth remembering: it is the only place the real
 generated JS is visible without a browser.
 
+## 2026-08-13 — actionability, borrowed from Cypress and measured first
+
+Cypress refuses to act on an element unless it is visible, **enabled**,
+**not covered**, and scrolled into view. Before adopting that, I measured
+whether our gaps were real, in the actual webview:
+
+```
+disabled click   -> ictus=0     click did nothing, silently
+enabled  click   -> ictus=1
+obtectum click   -> ictus=2     fired THROUGH a full-screen overlay
+elementFromPoint -> DIV#        hit-test works
+```
+
+Both were **lying greens in shipped code**: `manus_premere` returned
+`{ok:true,visum:"pressum"}` for a disabled button that swallowed the
+event, and for a button under an overlay a user could never reach.
+`.click()` does no hit-testing, so JS can click what a person cannot.
+
+`MANUS_JS_AGIBILE` (`act()`) now gates every action and returns a
+**named** reason — "impeditum (disabled)" / "obtectum a &lt;div#velum&gt;" /
+"nullum elementum visibile" — three very different bugs that all used to
+report "pressum". Because actions run through the wait loop, the gate
+**retries**: a button enabled after a bridge round trip is waited for,
+not failed on.
+
+### Failure screenshots (opt-in, not default)
+
+`manus_imaginem_culpae_ponere(m, via)` captures the screen at the moment
+`_frangere` first fires. A failure message says what was expected and
+what was seen; it cannot say what the *screen* looked like, and an
+unattended run loses that forever.
+
+Deliberately opt-in — a library that writes files unasked is rude. Three
+implementation notes:
+
+- `manus_imaginem` refuses when the manus is fracta, so `_frangere`
+  can't call it. Factored a bare `_imaginem` that neither checks state
+  nor breaks; the public wrapper keeps both behaviours.
+- Short deadline (`MORA_BREVIS`). A dead app is the *common* failure
+  cause, and `MORA_LONGA` would add ten seconds to every one.
+- `in_imagine` guards re-entry: a failing capture would otherwise
+  re-enter `_frangere`.
+
+Verified by looking at the PNG: it shows the form mid-failure *and* the
+page auto-scrolled, which is `scrollIntoView` from the new gate — the
+gate visible in its own evidence.
+
+### Test-structure trap: closing a spawned manus kills the app
+
+The deliberate-failure cases need a *fresh* manus (fracta tacet). My
+first attempt did `manus_claudere(m)` then re-opened — but `m` came from
+`manus_incipere`, and claudere kills what it spawned. The re-open then
+found nothing.
+
+Right shape: keep the spawned manus alive as the scene-manager, and open
+a **separate attached** manus per deliberate failure. Closing an attached
+manus is harmless because its `processus` is NIHIL. Ownership is the
+whole distinction: `claudere` kills only what it started.
+
+Smoke test 39 → **52 assertions**.
+
+### Ideas from Cypress deliberately NOT taken
+
+- **Clock control** (`cy.clock`/`cy.tick`) — collides head-on with the
+  design: our in-page wait loop *is* `Date.now()` + `setTimeout`.
+  Freezing the clock freezes our own polling. Possible only if the loop
+  captures the originals before stubbing. Real trap, not a quick win.
+- **Network stubbing** (`cy.intercept`) — here the "network" is the
+  internuntius bridge, so stubbing it means asserting against a
+  simulacrum. That is precisely what produced the 202-vs-200 bug and
+  `probatio_fori.js`'s four green lies. Refused on principle.
+- **Chained implicit subject** (`cy.get().click()`) — C89 has no fluent
+  chains, and a "current subject" on the handle would add hidden state.
+
+Still open from that review: `contains`-style selection by visible text,
+a command log in failure messages, and splitting `ABEST` (invisible) from
+`ABEST_OMNINO` (not in DOM) the way Cypress separates `not.be.visible`
+from `not.exist`.
+
 ### Tooling notes
 
 - The post-edit hook caught `Momentum * Momentum` and `Mora * Mora`
