@@ -480,6 +480,9 @@ struct utsname {
 
 int uname(struct utsname* nomina);
 
+/* <sectio caput="unistd.h"/> unistd.h - identitas processus */
+pid_t getpid(void);
+
 /* <sectio caput="unistd.h"/> unistd.h - sysconf (Unda 4)
  * Valor _SC_NPROCESSORS_ONLN Darwin LVIII mensuratus; Linux LXXXIV
  * differt - hic shim Darwin describit, dum compilatio vera capita

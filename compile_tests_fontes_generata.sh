@@ -80,6 +80,7 @@ declare -a SOURCE_FILES=(
     "lib/macho.c"
     "lib/manus.c"
     "lib/mensa.c"
+    "lib/mensura.c"
     "lib/mimen.c"
     "lib/moneta.c"
     "lib/multipart.c"
