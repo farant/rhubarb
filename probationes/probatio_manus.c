@@ -73,6 +73,10 @@
 #define OP_AESTIMARE     XX
 #define OP_IMAGO         XXI
 #define OP_IMAGO_CULPAE  XXII
+#define OP_PURGARE       XXIII
+#define OP_CONT_MORA     XXIV
+#define OP_TXT_ABEST_MORA XXV
+#define OP_OMNINO_MORA   XXVI
 
 #define VIA_ULTIMI    "build/manus_ultimum.js"
 
@@ -542,6 +546,28 @@ _agere_capere (
             manus_imaginem_culpae_ponere(m, "build/probatio_culpa.png");
             a.fructus = manus_premere(m, "#pyxis");
             frange;
+        casus OP_PURGARE:
+            /* Post purgationem numerus ad ZEPHYRUM cadat, quamvis
+             * scaenarium adhuc "3|..." reddat: purgare acervum
+             * PAGINAE vacuat, ergo interrogatio sequens nihil
+             * inveniat. (Simulacrum responsum idem reddit, ergo
+             * hoc probat vocamen MISSUM esse - JS eius in a.js
+             * inspicitur.) */
+            manus_errores_purgare(m);
+            a.fructus = VERUM;
+            frange;
+        casus OP_CONT_MORA:
+            a.fructus = CREDO_MANUS_TEXTUS_CONTINET_MORA(m, "#t", "qu",
+                                                    MANUS_MORA_BREVIS);
+            frange;
+        casus OP_TXT_ABEST_MORA:
+            a.fructus = CREDO_MANUS_TEXTUM_ABEST_MORA(m, "nusquam",
+                                                    MANUS_MORA_BREVIS);
+            frange;
+        casus OP_OMNINO_MORA:
+            a.fructus = CREDO_MANUS_ABEST_OMNINO_MORA(m, ".n",
+                                                    MANUS_MORA_BREVIS);
+            frange;
         casus OP_ERRORES:
             {
                 chorda primus;
@@ -581,6 +607,7 @@ nomen structura {
     Actio existit_ass, abest_mora, numerus_ass;
     Actio textus_ass, textus_cont, textum_abest;
     Actio aestimare, imago, imago_culpae;
+    Actio purgare, cont_mora, txt_abest_mora, omnino_mora;
 } Omnia;
 
 interior vacuum
@@ -615,6 +642,10 @@ _omnia_capere (
     o->aestimare    = _agere_capere(SCEN_OK,        OP_AESTIMARE);
     o->imago        = _agere_capere(SCEN_OK,        OP_IMAGO);
     o->imago_culpae = _agere_capere(SCEN_RECUSANS,  OP_IMAGO_CULPAE);
+    o->purgare        = _agere_capere(SCEN_OK, OP_PURGARE);
+    o->cont_mora      = _agere_capere(SCEN_OK, OP_CONT_MORA);
+    o->txt_abest_mora = _agere_capere(SCEN_OK, OP_TXT_ABEST_MORA);
+    o->omnino_mora    = _agere_capere(SCEN_OK, OP_OMNINO_MORA);
 }
 
 interior b32
@@ -843,6 +874,19 @@ s32 principale (vacuum)
         CREDO_FALSUM (o.imago_culpae.fructus);
         CREDO_VERUM  (o.imago_culpae.fracta);
         CREDO_VERUM  (_continet(o.imago_culpae.causa, "impeditum"));
+
+        /* Purgatio: acervum PAGINAE mutat in loco ('length=0'), non
+         * reponit - custodes enim ad illum acervum ligati sunt. */
+        CREDO_VERUM (o.purgare.fructus);
+        CREDO_VERUM (_continet(o.purgare.js, "__manus_errores"));
+        CREDO_VERUM (_continet(o.purgare.js, "a.length=0"));
+        CREDO_FALSUM (o.purgare.fracta);
+
+        /* Formae _MORA quae hodie desiderabantur (TEXTUS_CONTINET,
+         * TEXTUM_ABEST, ABEST_OMNINO gemellos non habebant). */
+        CREDO_VERUM (o.cont_mora.fructus);
+        CREDO_VERUM (o.txt_abest_mora.fructus);
+        CREDO_VERUM (o.omnino_mora.fructus);
     }
 
     imprimere("\n--- Semita felix (pulsus plus quam unus) ---\n");

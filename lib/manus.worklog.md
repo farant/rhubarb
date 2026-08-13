@@ -553,3 +553,37 @@ honesta, non principalis.
 Portam ablatam probationes adhuc III assertis capiunt (una sedes,
 tres exitus publici). Fumus 68/68 et unitas 83/83 per mutationem
 intacta - quod erat rete quod refactionem tutam fecit.
+
+## 2026-08-13 — purgatio errorum + gemelli _MORA desiderati
+
+**Acervus errorum solum CRESCEBAT.** Ergo primus error
+`CREDO_MANUS_SINE_ERRORIBUS` in reliquum cursum INUTILEM faciebat:
+omne vocamen sequens eundem errorem VETEREM referebat, et error NOVUS
+ad assertum LX a vetere ad assertum V discerni non poterat (functio
+'primum' reddit, non 'ultimum').
+
+Me ipsum momordit: sectio errorum probationis fumi ULTIMA poni
+debebat, et nihil in superficie eam constrictionem nuntiabat.
+
+Peius in usu vero: probatio quae semitam culpae CONSULTO exercet -
+validatio fallens, iteratio, CDIV exspectatum - omnes custodes post
+se necaret. Scriptor tunc aut assertum delet aut discit id
+neglegere; utrumque custodem occidit.
+
+`manus_errores_purgare` acervum in loco mutat (`a.length=0`), non
+reponit: custodes ad ILLUM acervum ligati sunt, et eum reponere illos
+ad relictum scribere sineret - errores postea deleti viderentur.
+
+**Probatio quae hoc probare potuit erat FUMUS, non unitas.**
+Simulacrum responsa scripta reddit, ergo 'numerus post purgationem
+nullus est' ei sensu caret; unitas solum vocamen MISSUM esse et JS
+rectum (`a.length=0`) probat. Acervus VERUS in pagina VERA vacuari
+debuit: fumus nunc duos errores plantat, purgat, nullum invenit, et
+CREDO_MANUS_SINE_ERRORIBUS iterum TRANSIT.
+
+Additi quoque tres gemelli `_MORA` qui desiderabantur -
+TEXTUS_CONTINET, TEXTUM_ABEST, ABEST_OMNINO. Ceteri quinque eos
+habebant; asymmetria illa nusquam intenta erat, et primus qui moram
+longiorem in 'continet' poposcisset eam invenisset abesse sine causa.
+
+Unitas LXXXIII -> XC; fumus LXVIII -> LXX.

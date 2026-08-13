@@ -1589,6 +1589,24 @@ manus_errores (
     redde (i32)quot;
 }
 
+vacuum
+manus_errores_purgare (
+    Manus* manus)
+{
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde;
+    }
+    /* 'length = 0' MUTAT acervum in loco - non novum ponit. Custodes
+     * enim ad ILLUM acervum iam ligati sunt; eum reponere illos ad
+     * relictum scribere sineret, et errores postea deleti
+     * viderentur. */
+    (vacuum)_interrogare(manus,
+        "var a=window.__manus_errores;"
+        "if(a)a.length=0;"
+        "return{ok:true,visum:\"purgatum\"};");
+}
+
 b32
 _manus_credo_sine_erroribus (
     Manus*              manus,

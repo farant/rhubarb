@@ -211,6 +211,25 @@ manus_errores (
     Manus*  manus,
     chorda* primus);
 
+/* Collecta DELERE - 'his rationem reddidi; a novo incipe'.
+ *
+ * CUR NECESSARIUM: acervus solum CRESCIT. Sine hoc, primus error
+ * CREDO_MANUS_SINE_ERRORIBUS in reliquum cursum INUTILEM facit -
+ * omne vocamen sequens eundem errorem VETEREM refert, et error
+ * NOVUS ad assertum LX a vetere ad assertum V discerni non potest
+ * (manus_errores 'primum' reddit, non 'ultimum').
+ *
+ * Ergo probatio quae semitam culpae CONSULTO exercet - validatio
+ * fallens, iteratio, CDIV exspectatum - omnes custodes post se
+ * necaret, et scriptor aut assertum deleret aut discat id
+ * neglegere. Utrumque custodem occidit.
+ *
+ * Tutum si collector abest (nihil agit): 'nullus collector' non est
+ * error sed condicio. */
+vacuum
+manus_errores_purgare (
+    Manus* manus);
+
 /* ==================================================
  * Status
  * ================================================== */
@@ -359,6 +378,10 @@ manus_textus (
 	_manus_credo_textum((m), (sel), (pars), VERUM, \
 			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
 
+#define CREDO_MANUS_TEXTUS_CONTINET_MORA(m, sel, pars, mora) \
+	_manus_credo_textum((m), (sel), (pars), VERUM, \
+			(mora), __FILE__, __LINE__)
+
 #define CREDO_MANUS_NUMERUS(m, sel, quot) \
 	_manus_credo_numerum((m), (sel), (quot), \
 			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
@@ -384,6 +407,10 @@ manus_textus (
 	_manus_credo_textum_paginae((m), (textus), FALSUM, \
 			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
 
+#define CREDO_MANUS_TEXTUM_ABEST_MORA(m, textus, mora) \
+	_manus_credo_textum_paginae((m), (textus), FALSUM, \
+			(mora), __FILE__, __LINE__)
+
 /* ABEST vs ABEST_OMNINO - distinctio quam Cypress inter
  * 'not.be.visible' et 'not.exist' servat.
  *
@@ -396,6 +423,10 @@ manus_textus (
 #define CREDO_MANUS_ABEST_OMNINO(m, sel) \
 	_manus_credo_omnino((m), (sel), \
 			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+
+#define CREDO_MANUS_ABEST_OMNINO_MORA(m, sel, mora) \
+	_manus_credo_omnino((m), (sel), \
+			(mora), __FILE__, __LINE__)
 
 /* Nullus error in pagina ex quo manus aperta est. Vide 'Errores
  * paginae' supra: assertum ultimum eorum quae probatio de se ipsa
