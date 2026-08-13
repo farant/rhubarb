@@ -461,3 +461,65 @@ against the *slowest thing between the clocks*, not against the inner
 clock. I sized it against the inner one and got a test that blamed a
 healthy app one time in three — which is exactly the failure mode this
 library exists to abolish.
+
+## 2026-08-13 — coverage: 5 → 28 of 29 symbols, automatically
+
+Before this, `probatio_manus` exercised **five** of manus's 29 callable
+symbols. Everything else — press, type, contains, the error collector,
+visibility, the actionability gate — lived only in `fumus.sh`, which
+sits in a sibling repo, opens a window, and **nothing runs
+automatically**. `./compile_tests.sh` would have stayed green through a
+regression in any of it.
+
+That is the same disease as the rest of this file: something that looks
+like coverage and isn't.
+
+### The division of labour, stated so it isn't forgotten
+
+- **smoke test owns BEHAVIOUR** — does the JS do the right thing in a
+  real WKWebView. Only a browser can answer that.
+- **unit test owns STRUCTURE AND PLUMBING** — what the C returns, whether
+  it poisons, what the cause says, and what JS it *generated*.
+
+A unit test that faked browser behaviour would be my-JS-against-my-DOM
+again. So the simulator returns canned verdicts and never pretends to be
+a page.
+
+### What made it possible
+
+Two scenario kinds with **controllable verdicts** (`SCEN_OK`,
+`SCEN_RECUSANS`, plus `SCEN_ERRORES` / `SCEN_SINE_COLL` for the error
+parse), and `_agere_capere(scenario, operatio)` which runs one operation
+and captures four things at once: return value, fracta, cause text, and
+**the JS actually POSTed**.
+
+The JS capture is the interesting half. It turns "someone deleted the
+guard" — previously invisible — into a red test.
+
+### Two traps hit while writing it
+
+**1. `credo_claudere()` is global.** `_agere_capere` closes the session
+it opened, so calling it from *inside* the main session killed that
+session: `FATALE: credo nunquam aperitum`. All captures must run in
+phase I, before the main session opens, with phase II asserting about
+them. Same rule the older `_capere` already followed.
+
+**2. A regression guard that could not fail.** I first asserted
+`_continet(js, "act(")` — but `MANUS_JS_AGIBILE` injects
+`function act(e){` into *every* snippet, so the string is present even
+when the call site is deleted. The guard would have passed forever.
+
+Found it by planting the fault and watching the test stay green, which
+is exactly why the planted fault is not optional. Guards now assert the
+**call site** (`var c=act(e)`, `var e=qt(`, `var n=qn(`) — text that
+appears only where the thing is actually used, not where it is defined.
+
+**Proven red**: replacing `var c=act(e)` with `var c=null` (removing the
+actionability gate) now fails 3 unit assertions. This morning that change
+was invisible to the automated suite.
+
+### What is still smoke-only, honestly
+
+`manus_incipere` — it spawns a real binary, and the simulator is a forked
+child rather than an executable. Faking it would test the fake. 28 of 29
+is where this stops.
