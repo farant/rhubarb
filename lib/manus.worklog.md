@@ -856,3 +856,76 @@ Five new assertions in the JS-form regression block plus two for textus.
 These guard the *shape* of the emitted JS, not the behavior — the mock
 has no page, so behavior was proven live against the running app, per
 this file's standing split. Suite: 112/112.
+
+## 2026-08-13 — scroll, whitespace matching, and a latent fixture bug
+
+Second pass on the test-user report. The first item turned out not to be
+what the agent (or I) thought.
+
+### `premere-textum` was a whitespace bug, not a sibling-node bug
+
+The agent reported that `premere-textum 'praevolatus 75.0s'` failed while
+that exact text was on screen, and guessed the label was two adjacent
+sibling spans. It isn't — it's a single SVG `<text>`. The page writes
+`nomen + "  " + valor`, **two spaces**, and the browser collapses them
+when painting. The user reads one space; `textContent` holds two.
+
+So the real defect is broader than reported: `_tm` compared raw
+`textContent` byte-for-byte against text the user reads *collapsed*. Any
+multi-space or indented markup breaks the same way.
+
+Fixed with `_nz` — collapse whitespace runs, trim, applied to **both**
+sides. `_tx` now also prefers `innerText` where it exists (SVG has none,
+so `textContent` remains the fallback), which brings text matching under
+the same visible-not-present law as everything else.
+
+### And the fix exposed a second defect
+
+Once matching worked, the click failed with `e.click is not a function`.
+`.click()` is `HTMLElement`-only; the match was an SVG `<text>`. So
+chart elements — flame bars, trend points — could never be clicked at
+all. Now: use `.click()` when it exists, otherwise dispatch a real
+`MouseEvent`. The page can't tell the difference.
+
+Good sequence to notice: fixing the finder revealed the actor was broken.
+Neither was visible while the other failed first.
+
+### Absence now has its own message
+
+`act(null)` returned "nullum elementum visibile" for both resolvers, so a
+text query that matched nothing said the same thing as a selector that
+matched nothing — and the agent read it as "this isn't on the page" when
+the real cause was "no text is written that way". `_agere` now emits a
+resolver-specific message before the actionability gate.
+
+### `volvere`
+
+`imago` captures the viewport, so anything below the fold was invisible
+and the agent had to fall back to `aestimare` + `window.scrollTo`, which
+is documented nowhere. Added `manus_volvere_ad(selector)` and
+`manus_volvere(±pixels)`, CLI `volvere <selector|±N>` (a CSS identifier
+cannot begin with a digit or sign, so the discrimination is a language
+rule, not a guess).
+
+Deliberately **not** behind the actionability gate: scrolling to a
+disabled or covered element is legitimate — you're looking, not acting.
+Asserted in the tests so nobody "fixes" it later.
+
+### The latent bug my change surfaced
+
+Adding ~300 bytes of JS preamble broke five affordantiae assertions —
+while the same call worked fine against the live app. Cause: the mock
+server read **once** into a 4096-byte buffer. The affordantiae request
+had been sitting just under that; the preamble pushed it over, leaving
+unread bytes in the receive buffer, and `close()` with unread data sends
+RST — which destroyed the response that had already been written. The
+client saw "applicatio iussum non accepit".
+
+The fixture had been wrong the whole time. My change only crossed the
+threshold. Now it loops until headers are complete and `Content-Length`
+is satisfied, into a 16 KB buffer — the same accept/drain/close rule the
+http and tcp fixtures learned last year.
+
+Worth keeping: **live worked, mock failed.** That asymmetry pointed
+straight at the harness and saved me from hunting a phantom regression
+in the library.

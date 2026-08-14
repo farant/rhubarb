@@ -346,6 +346,34 @@ manus_premere_textum (
     Manus*              manus,
     constans character* textus);
 
+/* ==================================================
+ * Volvere
+ * ==================================================
+ *
+ * CUR OMNINO: imago PROSPECTUM capit, non paginam. Quidquid infra
+ * marginem iacet instrumento invisibile est - agens probans id
+ * mensuratum invenit et ad 'aestimare' cum window.scrollTo
+ * confugere debuit, quod nusquam scriptum erat.
+ *
+ * NOTA DE ACTIONIBUS: premere et scribere IAM volvunt (act()
+ * scrollIntoView vocat ante ictum), ergo hoc ad INSPICIENDUM
+ * pertinet - ad videndum, non ad agendum.
+ */
+
+/* Elementum in prospectum volvere (medium, si capit).
+ * FALSUM (et manus fracta) si nullum visibile congruit. */
+b32
+manus_volvere_ad (
+    Manus*              manus,
+    constans character* selector);
+
+/* Paginam pixelis volvere; NEGATIVUM sursum.
+ * Signatum de industria - directio hic sensus est, non magnitudo. */
+b32
+manus_volvere (
+    Manus* manus,
+    s32    pixela);
+
 /* Imaginem paginae in plagulam scribere (per imperium/imago).
  * FALSUM si applicatio imaginatorem non praebuit. */
 b32

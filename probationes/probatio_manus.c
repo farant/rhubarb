@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
@@ -81,6 +82,8 @@
 #define OP_OMNINO_MORA   XXVI
 #define OP_REFICERE      XXVII
 #define OP_AFFORD        XXVIII
+#define OP_VOLVERE       XXIX
+#define OP_VOLVERE_AD    XXX
 
 #define VIA_ULTIMI    "build/manus_ultimum.js"
 
@@ -142,10 +145,26 @@ _puer (
 
     dum (VERUM)
     {
-        character petitio[MMMMXCVI];
+        /* EXHAURIENDUM ANTE RESPONSUM - et spatium amplum.
+         *
+         * MENSURATUM 2026-08-13: petitio affordantiarum IV milia
+         * octetorum excessit (praeambulum JS crevit), et simulacrum
+         * SEMEL legebat in fuste IV milium. Quod restabat in
+         * receptaculo manebat; close() cum datis non lectis RST
+         * mittit, quod responsum IAM SCRIPTUM delet - unde cliens
+         * 'applicatio iussum non accepit' vidit.
+         *
+         * Vitium LATENS erat: dum petitiones sub limine manebant,
+         * lectio una sufficiebat. Mutatio mea limen transiit, non
+         * vitium creavit.
+         *
+         * (Eadem lex quae fixturis http/tcp anno praeterito imposita
+         *  est: accipe obstruens, EXHAURI, deinde claude.) */
+        character petitio[XVI * M];
         character corpus[DXII];
         s32       fd;
         s32       lecta;
+        s32       summa = 0;
         s32       codex = CC;
 
         fd = (s32)accept(fd_auscultans, NIHIL, NIHIL);
@@ -153,13 +172,44 @@ _puer (
         {
             perge;
         }
-        lecta = (s32)read(fd, petitio, magnitudo(petitio) - I);
-        si (lecta <= 0)
+
+        dum (summa < (s32)(magnitudo(petitio) - I))
+        {
+            constans character* finis_capitum;
+
+            lecta = (s32)read(fd, petitio + summa,
+                              magnitudo(petitio) - I - (memoriae_index)summa);
+            si (lecta <= 0)
+            {
+                frange;
+            }
+            summa += lecta;
+            petitio[summa] = '\0';
+
+            finis_capitum = strstr(petitio, "\r\n\r\n");
+            si (finis_capitum != NIHIL)
+            {
+                constans character* cl = strstr(petitio, "Content-Length:");
+                s32                 longitudo_corporis = 0;
+                s32                 habemus;
+
+                si (cl != NIHIL)
+                {
+                    longitudo_corporis = (s32)atoi(cl + XV);
+                }
+                habemus = summa - (s32)(finis_capitum + IV - petitio);
+                si (habemus >= longitudo_corporis)
+                {
+                    frange;
+                }
+            }
+        }
+
+        si (summa <= 0)
         {
             (vacuum)close(fd);
             perge;
         }
-        petitio[lecta] = '\0';
 
         si (strncmp(petitio, "POST", IV) == 0)
         {
@@ -494,6 +544,12 @@ _agere_capere (
         casus OP_NULLUM:
             a.fructus = VERUM;
             frange;
+        casus OP_VOLVERE:
+            a.fructus = manus_volvere(m, (s32)CC);
+            frange;
+        casus OP_VOLVERE_AD:
+            a.fructus = manus_volvere_ad(m, "#imum");
+            frange;
         casus OP_AFFORD:
             {
                 Affordantiae aff = manus_affordantiae(m, p);
@@ -682,6 +738,7 @@ nomen structura {
     Actio purgare, cont_mora, txt_abest_mora, omnino_mora;
     Actio reficere_vivax, reficere_mortua;
     Actio afford, afford_pravus;
+    Actio volvere, volvere_ad;
 } Omnia;
 
 interior vacuum
@@ -716,6 +773,8 @@ _omnia_capere (
     o->aestimare    = _agere_capere(SCEN_OK,        OP_AESTIMARE);
     o->imago        = _agere_capere(SCEN_OK,        OP_IMAGO);
     o->imago_culpae = _agere_capere(SCEN_RECUSANS,  OP_IMAGO_CULPAE);
+    o->volvere        = _agere_capere(SCEN_OK,            OP_VOLVERE);
+    o->volvere_ad     = _agere_capere(SCEN_OK,            OP_VOLVERE_AD);
     o->afford         = _agere_capere(SCEN_AFFORD,        OP_AFFORD);
     o->afford_pravus  = _agere_capere(SCEN_AFFORD_PRAVUS, OP_AFFORD);
     o->purgare        = _agere_capere(SCEN_OK, OP_PURGARE);
@@ -904,6 +963,40 @@ s32 principale (vacuum)
          * bibliothecae frangebat. */
         CREDO_VERUM  (_continet(o.textus.js, "innerText"));
         CREDO_VERUM  (_continet(o.textus.js, "e.tagName==='SELECT'"));
+
+        /* SPATIA COACTA in petitione textuali.
+         *
+         * Vitium mensuratum: 'praevolatus 75.0s' fefellit dum textus
+         * in schermo idem esset - pagina enim DUO spatia scribit et
+         * navigatrum ea in unum cogit. Petitio quod usor LEGIT
+         * describere debet, non quod fons scribit. */
+        CREDO_VERUM (_continet(o.textualis_ok.js, "function _nz("));
+        CREDO_VERUM (_continet(o.textualis_ok.js, "_nz(_tx(e)).indexOf(q)"));
+
+        /* ABSENTIA suum nuntium habet, distinctum ab agibilitate:
+         * 'nihil hoc fert' et 'adest sed premi non potest' duo
+         * vitia sunt et olim unum nomen ferebant. */
+        CREDO_VERUM (_continet(o.textualis_ok.js, "hunc textum fert"));
+        CREDO_VERUM (_continet(o.premere_ok.js, "huic selectori congruit"));
+
+        /* ICTUS SVG: HTMLElement solus '.click()' habet. Sine hac
+         * semita elementa picturae - virgae flammae, puncta
+         * tendentiae - omnino premi non poterant. */
+        CREDO_VERUM (_continet(o.premere_ok.js, "typeof e.click==='function'"));
+        CREDO_VERUM (_continet(o.premere_ok.js, "new MouseEvent('click'"));
+
+        /* Volvere: SPECTANDI causa, ergo porta agibilitatis ABEST
+         * consulto - ad pyxidem impeditam volvere legitimum est. */
+        CREDO_VERUM  (_continet(o.volvere_ad.js, "scrollIntoView"));
+        CREDO_FALSUM (_continet(o.volvere_ad.js, "var c=act(e)"));
+        CREDO_VERUM  (_continet(o.volvere.js, "window.scrollBy(0,200)"));
+    }
+
+    imprimere("\n--- Volvere ---\n");
+    {
+        CREDO_VERUM (o.volvere.fructus);
+        CREDO_VERUM (o.volvere_ad.fructus);
+        CREDO_FALSUM (o.volvere.fracta);
     }
 
     imprimere("\n--- Asserta cetera + formae _MORA ---\n");

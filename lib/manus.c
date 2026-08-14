@@ -525,11 +525,39 @@ _iussum (
  *
  * qtn(t) = num quid omnino congruat (pro asserto textus paginae). */
 #define MANUS_JS_TEXTUS \
-    "function _tx(e){return (e.value!==undefined&&e.value!==null)" \
-    "?String(e.value):String(e.textContent||'');}" \
-    "function _tm(t){var l=document.querySelectorAll('*'),i,r=[];" \
+    /* _nz: spatia COGERE ante comparationem.
+     *
+     * MENSURATUM 2026-08-13 (agens usor-probans): petitio
+     * 'praevolatus 75.0s' fefellit dum textus in schermo EXACTE
+     * ille esset. Causa: pagina 'nomen + "  " + valor' scribit -
+     * DUO spatia - et navigatrum ea in UNUM cogit cum pingit.
+     * Usor unum videt; textContent duo fert.
+     *
+     * Idem omni marcatione indentata accidit: '<button>\n  Salve\n
+     * </button>' lineas et spatia fert quae nemo videt.
+     *
+     * Ergo utrumque latus cogitur. Petitio quod usor LEGIT
+     * describit, non quod fons scribit - quae est tota ratio
+     * petitionis textualis.
+     *
+     * (Agens 'nodos fratres' causam esse coniecit; verum latius
+     *  est - spatia, non structura.) */ \
+    "function _nz(s){s=String(s==null?'':s);" \
+    "var o='',p=true,i,c;" \
+    "for(i=0;i<s.length;i++){c=s.charAt(i);" \
+    "if(c<=' '){if(!p){o+=' ';p=true;}}else{o+=c;p=false;}}" \
+    "if(o.charAt(o.length-1)===' ')o=o.substring(0,o.length-1);" \
+    "return o;}" \
+    /* innerText ubi adest (visibilitatem servat; SVG eum non habet,
+     * unde textContent superest). */ \
+    "function _tx(e){if(e.value!==undefined&&e.value!==null)" \
+    "return String(e.value);" \
+    "return String((e.innerText===undefined||e.innerText===null)" \
+    "?(e.textContent||''):e.innerText);}" \
+    "function _tm(t){var l=document.querySelectorAll('*'),i,r=[]," \
+    "q=_nz(t);" \
     "for(i=0;i<l.length;i++){var e=l[i];" \
-    "if(!v(e))continue;if(_tx(e).indexOf(t)<0)continue;r.push(e);}" \
+    "if(!v(e))continue;if(_nz(_tx(e)).indexOf(q)<0)continue;r.push(e);}" \
     "return r;}" \
     "function qt(t){var r=_tm(t),i,j,intus;" \
     "for(i=0;i<r.length;i++){intus=false;" \
@@ -1076,11 +1104,28 @@ _agere (
     chorda_aedificator_appendere_literis(a, "var e=");
     chorda_aedificator_appendere_literis(a, resolutor);
     _appendere_litteras_js(a, argumentum);
+    /* ABSENTIA ANTE AGIBILITATEM, et suo nuntio.
+     *
+     * Prius act(NIHIL) 'nullum elementum visibile' pro utroque
+     * itinere reddebat. Pro petitione TEXTUALI id fallit: agens
+     * probans nuntium 'praevolatus 75.0s - nullum elementum
+     * visibile' accepit dum textus in schermo PLANE esset, et
+     * intellexit 'hoc in pagina non est' - cum vera causa esset
+     * 'nullus textus ita scriptus'. Duo genera defectus unum
+     * nomen ferebant. */
+    chorda_aedificator_appendere_literis(a, ");if(!e)return{ok:false,visum:");
+    _appendere_litteras_js(a,
+        (resolutor[0] == 'q' && resolutor[1] == 't')
+        ? "nullum elementum VISIBILE hunc textum fert (spatia coacta"
+          " comparantur; vide 'affordantiae')"
+        : "nullum elementum VISIBILE huic selectori congruit");
+    chorda_aedificator_appendere_literis(a, "};");
+
     /* Porta agibilitatis ANTE opus. Causa reddita NOMINATUR, ergo
      * 'pyxis impedita' a 'pyxis abest' et ab 'pyxis obtecta'
      * distinguitur - tria vitia valde diversa quae omnia olim
      * 'pressum' nuntiabant. */
-    chorda_aedificator_appendere_literis(a, ");var c=act(e);"
+    chorda_aedificator_appendere_literis(a, "var c=act(e);"
         "if(c)return{ok:false,visum:c};");
     chorda_aedificator_appendere_literis(a, opus);
 
@@ -1114,7 +1159,15 @@ manus_premere (
     constans character* selector)
 {
     redde _agere(manus, "q(", selector,
-                 "e.click();return{ok:true,visum:\"pressum\"};",
+                 "if(typeof e.click==='function'){e.click();}"
+                 /* SVG 'click' non habet (HTMLElement solus):
+                  * elementa picturae - virgae flammae, puncta
+                  * tendentiae - aliter omnino premi non possent.
+                  * Eventus VERUS mittitur, ergo pagina eum eodem
+                  * modo audit. */
+                 "else{e.dispatchEvent(new MouseEvent('click',"
+                 "{bubbles:true,cancelable:true,view:window}));}"
+                 "return{ok:true,visum:\"pressum\"};",
                  "manus_premere");
 }
 
@@ -1126,7 +1179,15 @@ manus_premere_textum (
     /* Sola differentia a manus_premere: qt() pro q(). Cetera -
      * porta, mora, nuntius - ex _agere veniunt. */
     redde _agere(manus, "qt(", textus,
-                 "e.click();return{ok:true,visum:\"pressum\"};",
+                 "if(typeof e.click==='function'){e.click();}"
+                 /* SVG 'click' non habet (HTMLElement solus):
+                  * elementa picturae - virgae flammae, puncta
+                  * tendentiae - aliter omnino premi non possent.
+                  * Eventus VERUS mittitur, ergo pagina eum eodem
+                  * modo audit. */
+                 "else{e.dispatchEvent(new MouseEvent('click',"
+                 "{bubbles:true,cancelable:true,view:window}));}"
+                 "return{ok:true,visum:\"pressum\"};",
                  "manus_premere_textum");
 }
 
@@ -1432,6 +1493,65 @@ manus_textus (
         redde vacua;
     }
     redde v.visum;
+}
+
+/* ========================================================================
+ * Volvere
+ * ======================================================================== */
+
+b32
+manus_volvere_ad (
+    Manus*              manus,
+    constans character* selector)
+{
+    ChordaAedificator* a;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+
+    /* NON per _agere: porta agibilitatis hic falsa esset. Elementum
+     * impeditum aut obtectum VIDERI tamen potest, et videre est
+     * quod hic petimus. Volvere ad pyxidem impeditam legitimum est;
+     * eam PREMERE non est. */
+    a = chorda_aedificator_creare(manus->piscina, CXXVIII);
+    chorda_aedificator_appendere_literis(a, "var e=q(");
+    _appendere_litteras_js(a, selector);
+    chorda_aedificator_appendere_literis(a,
+        ");if(!e)return{ok:false,"
+        "visum:\"nullum elementum VISIBILE huic selectori congruit\"};"
+        "if(e.scrollIntoView)e.scrollIntoView({block:'center'});"
+        "return{ok:true,visum:String(Math.round(window.pageYOffset||0))};");
+
+    redde _interrogare(manus,
+        _litterae(chorda_aedificator_finire(a), manus->piscina)).ok;
+}
+
+b32
+manus_volvere (
+    Manus* manus,
+    s32    pixela)
+{
+    ChordaAedificator* a;
+    character          numerus[XXXII];
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+
+    sprintf(numerus, "%d", (integer)pixela);
+
+    a = chorda_aedificator_creare(manus->piscina, CXXVIII);
+    chorda_aedificator_appendere_literis(a, "window.scrollBy(0,");
+    chorda_aedificator_appendere_literis(a, numerus);
+    chorda_aedificator_appendere_literis(a,
+        ");return{ok:true,"
+        "visum:String(Math.round(window.pageYOffset||0))};");
+
+    redde _interrogare(manus,
+        _litterae(chorda_aedificator_finire(a), manus->piscina)).ok;
 }
 
 /* ========================================================================

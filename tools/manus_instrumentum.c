@@ -537,6 +537,7 @@ _auxilium (vacuum)
       "  bin/manus premere <selector>\n"
       "  bin/manus premere-textum <textus>\n"
       "  bin/manus scribere <selector> <textus>\n"
+      "  bin/manus volvere <selector|+-pixela>   imago PROSPECTUM capit\n"
       "  bin/manus textus <selector>\n"
       "  bin/manus aestimare <js>\n"
       "  bin/manus errores                        culpae paginae\n"
@@ -774,6 +775,23 @@ s32 principale (integer argc, character** argv)
     alioquin si (strcmp(verbum, "scribere") == ZEPHYRUM && n_reliqua >= II)
     {
         (vacuum)manus_scribere(m, reliqua[0], reliqua[I]);
+    }
+    alioquin si (strcmp(verbum, "volvere") == ZEPHYRUM && n_reliqua >= I)
+    {
+        /* Numerus an selector? Prima littera decidit, et discrimen
+         * TUTUM est: identificator CSS cifra aut signo incipere NON
+         * potest (constrictio linguae, non coniectura nostra). */
+        constans character* arg = reliqua[0];
+
+        si (arg[0] == '-' || arg[0] == '+'
+            || (arg[0] >= '0' && arg[0] <= '9'))
+        {
+            (vacuum)manus_volvere(m, (s32)atoi(arg));
+        }
+        alioquin
+        {
+            (vacuum)manus_volvere_ad(m, arg);
+        }
     }
     alioquin si (strcmp(verbum, "textus") == ZEPHYRUM && n_reliqua >= I)
     {
