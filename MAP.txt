@@ -298,6 +298,19 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │                  proven by ../silicetum/laboratorium│    │
     │  │                  /fumus.sh (70, real window, BY     │    │
     │  │                  HAND - see the apps/ CAUTIO above) │    │
+    │  │                  ENUMERATION (2026-08-13): affordan-│    │
+    │  │                  tiae = what can be TOUCHED, lectio │    │
+    │  │                  = what it SAYS. Both reuse v() so  │    │
+    │  │                  the list can't offer what actions  │    │
+    │  │                  refuse. Impediment strings are the │    │
+    │  │                  literals act() emits, so the list  │    │
+    │  │                  PREDICTS the refusal.              │    │
+    │  │  bin/manus ───── the CLI (tools/manus_instrumentum):│    │
+    │  │                  session = PORT; >1 live refuses    │    │
+    │  │                  and names them. Actions always     │    │
+    │  │                  waited; -exspecta/abest give reads │    │
+    │  │                  the same. -machina columns are     │    │
+    │  │                  documented in the usage text.      │    │
     │  │  specimen ────── VISUAL REGRESSION over collatio +  │    │
     │  │                  png + manus. Goldens in git;       │    │
     │  │                  element crop is the default scope; │    │
@@ -314,8 +327,24 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │                  only, so it never learns what a    │    │
     │  │                  Vitrea is -> testable windowless.  │    │
     │  │                  ONE internuntius = ONE imperium.   │    │
-    │  │                  Batteries-included app shell is    │    │
-    │  │                  PARKED as atrium (01KZYHBD7W).     │    │
+    │  │  atrium ──────── BATTERIES-INCLUDED app layer over  │    │
+    │  │                  vitrea (2026-08-13). fenestra +    │    │
+    │  │                  capsula + vitrea + internuntius +  │    │
+    │  │                  speculum + imperium in ONE call,   │    │
+    │  │                  teardown in the one order that     │    │
+    │  │                  works. THE APP KEEPS ITS LOOP:     │    │
+    │  │                  currendum/gressus/destruere - no   │    │
+    │  │                  inversion, no tick callback. The   │    │
+    │  │                  per-tick arena resets on ENTRY, so │    │
+    │  │                  the notare/reficere PAIR vanishes  │    │
+    │  │                  and app allocations live until the │    │
+    │  │                  NEXT gressus. Injection re-runs on │    │
+    │  │                  every 'paratus', so a crash-reload │    │
+    │  │                  keeps its state. Consumer:         │    │
+    │  │                  mensor_ui (122 -> 48 lines).       │    │
+    │  │                  villa/forum NOT yet migrated -     │    │
+    │  │                  they have speculum but no -vivum,  │    │
+    │  │                  so the richest UIs can't be driven.│    │
     │  └─────────────────────────────────────────────────────┘    │
     │                                                             │
     │  ┌─ Domain Libraries ──────────────────────────────────┐    │
