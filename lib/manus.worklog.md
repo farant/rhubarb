@@ -929,3 +929,42 @@ http and tcp fixtures learned last year.
 Worth keeping: **live worked, mock failed.** That asymmetry pointed
 straight at the harness and saved me from hunting a phantom regression
 in the library.
+
+## 2026-08-13 — output that says what it is
+
+Last two items from the test-user report. They looked like separate
+complaints and turned out to be one defect.
+
+**The reported symptoms.** `affordantiae -machina` emits nine unlabeled
+columns; the agent guessed the last four were x/y/w/h. And `manus
+sessiones` printed three bare numbers, which it confused with the app's
+own "SESSIONES" panel (test-run records).
+
+**The bounding-box guess was right, which is worse than wrong.** `x y
+width height` and `x1 y1 x2 y2` are equally standard encodings. A wrong
+guess surfaces immediately; a right guess is a coin-flip that happened to
+land, and the next reader may flip differently. Empty fields make it
+harder still — `valor` and `impedimentum` both blank produce a run of
+consecutive tabs, and counting those by eye is unreliable in a way that
+silently shifts every later column.
+
+**The naming collision is not a naming error.** *Sessio* correctly names
+a driven-app instance and correctly names a test-run record; any app
+could collide. Renaming manus's verb would relocate the problem, not
+remove it. What was actually missing was a label — three bare numbers
+give no clue which domain you are in. `portus / pid / applicatio` answers
+it without renaming anything.
+
+**One principle, not two patches:** the human form is self-describing;
+`-machina` stays pure and the *usage text* carries the column names.
+That keeps `-machina` awk-safe (no header line to skip, per the house
+rule) and puts the column list where the agent had already looked and
+found nothing.
+
+Also: the empty case now prints its reason to **stderr**, so
+`sessiones -machina` produces zero bytes on stdout rather than a
+human sentence a parser would choke on.
+
+Verified the actual claim rather than the appearance — piped both
+emitters through `awk -F'\t'` with no line skipped, and asserted every
+affordance row has exactly 9 fields.

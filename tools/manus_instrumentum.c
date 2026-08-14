@@ -543,7 +543,23 @@ _auxilium (vacuum)
       "  bin/manus errores                        culpae paginae\n"
       "  bin/manus effusio                        stdout applicationis\n\n"
       "  -s <portus>   sessionem nominare (omitte cum una sola vivit)\n"
-      "  -machina      TSV purum (affordantiae)\n\n"
+      "  -machina      TSV purum, sine capite (affordantiae, sessiones)\n\n"
+      /* COLUMNAE HIC NOMINANDAE.
+       *
+       * -machina caput ferre NON debet (mos domus: TSV purum, ne
+       * awk lineam saltare cogatur), sed columnae innominatae
+       * coniecturam poscunt: agens probans quattuor numeros ultimos
+       * ut x/y/lat/alt RECTE divinavit - quod peius est quam prave
+       * divinare, nam coniectura falsa statim appareret.
+       * Praeterea campi VACUI in TSV tabulationes CONTINUAS pariunt,
+       * quas oculus numerare non potest. Ergo index hic, ubi ille
+       * iam quaesiverat. */
+      "Columnae -machina:\n"
+      "  affordantiae  genus selector titulus valor impedimentum\n"
+      "                x y latitudo altitudo   (IX columnae; valor et\n"
+      "                impedimentum vacua esse possunt - tabulationes\n"
+      "                continuas exspecta)\n"
+      "  sessiones     portus pid applicatio   (pid 0 = adhaesa)\n\n"
       "Exitus: 0 factum; I defectum; II nihil actum.\n");
     redde II;
 }
@@ -694,10 +710,38 @@ s32 principale (integer argc, character** argv)
         i32    n = _sessiones_legere(vas, (i32)SESSIONES_MAX);
         i32    k;
 
+        /* CAPUT in forma humana, ABSENS in -machina.
+         *
+         * Prius tres numeri nudi imprimebantur ('61059 24091
+         * ./bin/mensor_ui') et agens probans eos cum tabula
+         * 'SESSIONES' ipsius applicationis confudit - quae acta
+         * probationum significat, non processus.
+         *
+         * VERBUM ipsum culpa NON est: 'sessio' utrumque recte
+         * nominat, et quaevis applicatio idem verbum habere potest.
+         * Quod deerat CAMPUS erat - unde 'portus' et 'applicatio'
+         * quaestionem sine renominatione solvunt. */
+        si (!machina && n > ZEPHYRUM)
+        {
+            imprimere("portus  pid     applicatio\n");
+        }
         per (k = ZEPHYRUM; k < n; k++)
         {
-            imprimere("%d\t%d\t%s\n", (integer)vas[k].portus,
-                      (integer)vas[k].pid, vas[k].binarium);
+            si (machina)
+            {
+                imprimere("%d\t%d\t%s\n", (integer)vas[k].portus,
+                          (integer)vas[k].pid, vas[k].binarium);
+            }
+            alioquin
+            {
+                imprimere("%-7d %-7d %s\n", (integer)vas[k].portus,
+                          (integer)vas[k].pid, vas[k].binarium);
+            }
+        }
+        si (n == ZEPHYRUM)
+        {
+            /* In stderr: effusio -machina munda manet etiam vacua. */
+            fprintf(stderr, "manus: nulla sessio viva\n");
         }
         redde (n > ZEPHYRUM) ? ZEPHYRUM : II;
     }
