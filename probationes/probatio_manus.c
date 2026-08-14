@@ -987,6 +987,30 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet(o.textualis_ok.js, "var e=qt("));
         CREDO_VERUM (_continet(o.textualis_ok.js, "var c=act(e)"));
 
+        /* _tx: VALOR SOLIS CAMPIS. MENSURATUM in laboratorio
+         * 2026-08-14: '<button>' '.value' habet (vacuam), ergo _tx
+         * omni pyxidi '' reddebat - unde 'textus <pyxis>' vacuum
+         * respondebat, et 'premere-textum' pyxidem congruere non
+         * poterat: qt() FIELDSET ambientem eligebat, eum premebat,
+         * 'pressum' nuntiabat. Exitus ZEPHYRUM, nihil actum.
+         *
+         * DOM verus hic abest (haec probatio PROTOCOLLUM probat),
+         * ergo quod EMITTITUR figitur; probatio viva in fumo
+         * seminis et laboratorii currit. */
+        CREDO_VERUM (_continet(o.textualis_ok.js,
+            "g==='INPUT'||g==='TEXTAREA'||g==='SELECT'"));
+        /* Ramus vetus - valorem SINE custodia praeferens - abesse
+         * DEBET. Sine assertione negativa utrumque adesse posset. */
+        CREDO_FALSUM (_continet(o.textualis_ok.js,
+            "function _tx(e){if(e.value!==undefined"));
+
+        /* manus_textus formam SUAM eiusdem iudicii fert (duplicatio
+         * quae iam de SELECT discrepabat) - ergo utraque figenda */
+        CREDO_VERUM (_continet(o.textus.js,
+            "e.tagName==='INPUT'||e.tagName==='TEXTAREA'"));
+        CREDO_FALSUM (_continet(o.textus.js,
+            "};if(e.value!==undefined"));
+
         /* VISIBILITAS: sondae et asserta per qn(), non per
          * querySelectorAll crudum. */
         CREDO_VERUM  (_continet(o.existit_ok.js, "var n=qn("));

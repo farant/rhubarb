@@ -550,7 +550,25 @@ _iussum (
     "return o;}" \
     /* innerText ubi adest (visibilitatem servat; SVG eum non habet,
      * unde textContent superest). */ \
-    "function _tx(e){if(e.value!==undefined&&e.value!==null)" \
+    /* VALOR SOLIS CAMPIS, non omnibus quod '.value' habent.
+     *
+     * MENSURATUM 2026-08-14 in laboratorio: '<button>' '.value'
+     * HABET, et vacuam ('') nisi attributum ponas. Ergo _tx pro
+     * OMNI pyxide '' reddebat, et inde DUO mendacia tacita:
+     *   - 'manus textus <pyxis>' vacuum reddebat (responsum falsum,
+     *     nullo signo)
+     *   - 'premere-textum "condere"' pyxidem congruere NON poterat,
+     *     ergo qt() FIELDSET ambientem eligebat (cuius innerText
+     *     textum continet), eum premebat, et 'pressum' nuntiabat.
+     *     Exitus ZEPHYRUM, nihil actum - defectus ille ipse quem
+     *     haec bibliotheca tollere debet.
+     *
+     * Campi soli (INPUT/TEXTAREA/SELECT) valorem ut contentum
+     * VISIBILE habent; ceteris textus visibilis est, et '.value'
+     * res interna formae quam nemo videt. */ \
+    "function _tx(e){var g=e.tagName;" \
+    "if((g==='INPUT'||g==='TEXTAREA'||g==='SELECT')" \
+    "&&e.value!==undefined&&e.value!==null)" \
     "return String(e.value);" \
     "return String((e.innerText===undefined||e.innerText===null)" \
     "?(e.textContent||''):e.innerText);}" \
@@ -1509,7 +1527,18 @@ manus_textus (
          * invenit' mentiebatur. */
         "if(e.tagName==='SELECT'){var o=e.options[e.selectedIndex];"
         "return{ok:true,visum:o?String(o.text):\"\"};}"
-        "if(e.value!==undefined&&e.value!==null)"
+        /* VALOR SOLIS CAMPIS - eadem custodia quam _tx fert.
+         *
+         * MENSURATUM 2026-08-14: '<button>' '.value' habet, vacuam
+         * nisi attributum ponas. Sine custodia 'textus <pyxis>'
+         * vacuum reddebat - responsum falsum sine ullo signo, dum
+         * pyxis 'condere' plane in schermo diceret.
+         *
+         * DUAE FORMAE EIUSDEM IUDICII hic vivunt (haec et _tx), et
+         * IAM discrepabant: haec SELECT ut textum optionis legit,
+         * illa ut valorem. Quod ipsum est cur duplicatio nocet. */
+        "if((e.tagName==='INPUT'||e.tagName==='TEXTAREA')"
+        "&&e.value!==undefined&&e.value!==null)"
         "return{ok:true,visum:String(e.value)};"
         "return{ok:true,visum:String("
         "(e.innerText===undefined||e.innerText===null)"
