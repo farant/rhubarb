@@ -1584,6 +1584,63 @@ manus_volvere (
 }
 
 /* ========================================================================
+ * Exspectatio
+ * ======================================================================== */
+
+b32
+manus_exspectare (
+    Manus*              manus,
+    constans character* selector,
+    b32                 adesse,
+    Mora                mora)
+{
+    ChordaAedificator* a;
+    ManusVerdictum     v;
+
+    si (manus == NIHIL || manus->fracta || selector == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* qn() numerat VISIBILIA solum - eadem lex quae actionibus et
+     * assertis praeest, ergo 'adest' hic idem significat quod illic. */
+    a = chorda_aedificator_creare(manus->piscina, CXXVIII);
+    chorda_aedificator_appendere_literis(a, "var n=qn(");
+    _appendere_litteras_js(a, selector);
+    chorda_aedificator_appendere_literis(a, ");return{ok:n");
+    chorda_aedificator_appendere_literis(a, adesse ? ">0" : "===0");
+    chorda_aedificator_appendere_literis(a, ",visum:String(n)};");
+
+    v = _exspectare(manus,
+                    _js_exspectare(manus,
+                        _litterae(chorda_aedificator_finire(a),
+                                  manus->piscina),
+                        mora),
+                    mora);
+
+    si (!v.ok)
+    {
+        ChordaAedificator* b = chorda_aedificator_creare(manus->piscina,
+                                                         CCLVI);
+
+        chorda_aedificator_appendere_literis(b,
+            adesse ? "exspectatio defecit: nihil VISIBILE congruit "
+                   : "exspectatio defecit: adhuc adest ");
+        chorda_aedificator_appendere_literis(b, selector);
+        /* Numerus visus quoque: 'nihil apparuit' et 'tria manserunt'
+         * diversa sunt, et alterum sine altero horam furatur. */
+        chorda_aedificator_appendere_literis(b, " (visa: ");
+        chorda_aedificator_appendere_chorda(b, v.visum);
+        chorda_aedificator_appendere_literis(b, ")");
+
+        _frangere(manus, _litterae(chorda_aedificator_finire(b),
+                                   manus->piscina));
+    }
+
+    redde v.ok;
+}
+
+/* ========================================================================
  * Lectio
  * ======================================================================== */
 

@@ -534,6 +534,7 @@ _auxilium (vacuum)
       "  bin/manus finire                         applicationem occidere\n\n"
       "  bin/manus affordantiae                   quid tangi possit\n"
       "  bin/manus lege <selector>                quid DICITUR\n"
+      "  bin/manus abest <selector>               MORATUR donec abeat\n"
       "  bin/manus imago <via>                    photographia\n"
       "  bin/manus premere <selector>\n"
       "  bin/manus premere-textum <textus>\n"
@@ -544,6 +545,10 @@ _auxilium (vacuum)
       "  bin/manus errores                        culpae paginae\n"
       "  bin/manus effusio                        stdout applicationis\n\n"
       "  -s <portus>   sessionem nominare (omitte cum una sola vivit)\n"
+      "  -exspecta     lege/textus: MORARI donec selector appareat\n"
+      "                (actiones IAM morantur; solae interrogationes\n"
+                       " non morabantur)\n"
+      "  -mora <ms>    terminus exspectandi (ordinarius MM)\n"
       "  -machina      TSV purum, sine capite (affordantiae,\n"
       "                sessiones, lege)\n\n"
       /* COLUMNAE HIC NOMINANDAE.
@@ -584,6 +589,8 @@ s32 principale (integer argc, character** argv)
     integer             i;
     i32                 rogatus = ZEPHYRUM;
     b32                 machina = FALSUM;
+    b32                 exspecta = FALSUM;
+    Mora                mora = MANUS_MORA_ORDINARIA;
     s32                 codex   = ZEPHYRUM;
 
     si (argc < II)
@@ -602,6 +609,15 @@ s32 principale (integer argc, character** argv)
         si (strcmp(argv[i], "-machina") == ZEPHYRUM)
         {
             machina = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-exspecta") == ZEPHYRUM)
+        {
+            exspecta = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-mora") == ZEPHYRUM && (i + I) < argc)
+        {
+            mora = (Mora)atoi(argv[i + I]);
+            i++;
         }
         alioquin si (strcmp(argv[i], "-s") == ZEPHYRUM && (i + I) < argc)
         {
@@ -825,10 +841,23 @@ s32 principale (integer argc, character** argv)
     {
         (vacuum)manus_scribere(m, reliqua[0], reliqua[I]);
     }
+    alioquin si (strcmp(verbum, "abest") == ZEPHYRUM && n_reliqua >= I)
+    {
+        /* ABSENTIA verbum PROPRIUM habet: '-exspecta' 'retempta donec
+         * non vacuum' significat, quod abitum exprimere non potest -
+         * rota volvens, dialogus clausus, ordo deletus. */
+        (vacuum)manus_exspectare(m, reliqua[0], FALSUM, mora);
+    }
     alioquin si (strcmp(verbum, "lege") == ZEPHYRUM && n_reliqua >= I)
     {
-        Lectio l = manus_legere(m, reliqua[0], piscina);
+        Lectio l;
         i32    k;
+
+        si (exspecta)
+        {
+            (vacuum)manus_exspectare(m, reliqua[0], VERUM, mora);
+        }
+        l = manus_legere(m, reliqua[0], piscina);
 
         per (k = ZEPHYRUM; k < l.numerus; k++)
         {
@@ -868,7 +897,13 @@ s32 principale (integer argc, character** argv)
     }
     alioquin si (strcmp(verbum, "textus") == ZEPHYRUM && n_reliqua >= I)
     {
-        chorda t = manus_textus(m, reliqua[0]);
+        chorda t;
+
+        si (exspecta)
+        {
+            (vacuum)manus_exspectare(m, reliqua[0], VERUM, mora);
+        }
+        t = manus_textus(m, reliqua[0]);
 
         imprimere("%.*s\n", (integer)t.mensura,
                   (constans character*)t.datum);

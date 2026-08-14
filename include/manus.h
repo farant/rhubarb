@@ -423,6 +423,43 @@ manus_textus (
     constans character* selector);
 
 /* ==================================================
+ * Exspectatio - interrogationes quoque MORENTUR
+ * ==================================================
+ *
+ * ASYMMETRIA MENSURATA: actiones IAM exspectant (premere per _agere
+ * it, quod in pagina donec elementum appareat retemptat - probatum:
+ * elementum post DCCC ms adveniens exitum ZEPHYRUM post CMXXXIV ms
+ * dedit). Interrogationes NON: existit/numerus/textus/legere per
+ * _interrogare eunt, quod 'statim respondet'.
+ *
+ * Ergo scriptum crustae faciem asynchronam AGERE poterat sed non
+ * LEGERE, et ad somnum retrudebatur - rem quam haec bibliotheca
+ * consulto non praebet.
+ *
+ * Haec functio foramen claudit, et mora IN PAGINA manet more solito:
+ * condicio ~LXII vicibus per secundum retemptatur, uno itinere retis.
+ *
+ * QUID EXSPECTAT: praesentiam VISIBILEM (aut absentiam). Non textum,
+ * non numerum - eas condiciones manus_aestimare tractet, ubi valorem
+ * comparare velis. Praedicatum unum quod casum dominantem tegit
+ * ('facies nondum reddita est') melius est quam sex quae vocabulum
+ * assertorum in crustam transferunt.
+ *
+ * ABSENTIA SEORSUM ESSE DEBET: 'retempta donec non vacuum' absentiam
+ * exprimere NON POTEST - rota volvens quae abit, dialogus qui
+ * clauditur, ordo qui deletur. Ergo adesse=FALSUM.
+ */
+
+/* Redde VERUM cum condicio impleta est; FALSUM (et manus fracta,
+ * causa nominata) si terminus transit. */
+b32
+manus_exspectare (
+    Manus*              manus,
+    constans character* selector,
+    b32                 adesse,
+    Mora                mora);
+
+/* ==================================================
  * Lectio - QUID DICIT (contentum structuratum)
  * ==================================================
  *

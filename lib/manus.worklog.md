@@ -1031,3 +1031,62 @@ the existing "expected X, saw Y" text), they'd be what makes shell
 driving non-flaky. Open design question is one generic `exspectare` with
 a condition enum versus typed siblings mirroring the macros — a header
 decision, so it waits for Fran.
+
+## 2026-08-13 — exspectatio: the reads learn to wait
+
+Fran's question closed this properly: *"can the script present a
+synchronous way to interact with something async — you ask for an action
+and it doesn't return until the thing is visible and clicked, within a
+timeout?"*
+
+**That is already true of actions**, and I hadn't said so plainly.
+Measured:
+
+| element appears at | `bin/manus premere` |
+|---|---|
+| 800 ms | exit 0 after **934 ms** — it waited |
+| 5000 ms | exit 1 after 2777 ms, cause named |
+
+`premere`/`scribere`/`premere-textum` go through `_agere`, whose promise
+re-tests in the page until the element appears or the deadline passes.
+So his mental model was right; the docs just never said it out loud.
+
+**The gap was only the reads.** `existit`/`numerus`/`textus`/`lege` go
+through `_interrogare` — "statim respondet". So a shell script could act
+synchronously but not *read* synchronously, which is what pushed it back
+toward `sleep`.
+
+That reframing shrank the job. I had been about to propose a six-verb
+`exspectare` family mirroring the assertion macros. What was actually
+needed:
+
+- **`-exspecta` on the reads** — same discipline the actions already
+  have, no new vocabulary
+- **`abest <selector>`** — because "retry until non-empty" *structurally
+  cannot* express disappearance: a spinner going away, a dialog closing,
+  a row being deleted
+
+One library function covers both: `manus_exspectare(sel, adesse, mora)`.
+It waits on **visible presence or absence** — not text, not counts. Those
+are assertion-shaped, and at a CLI you'd want to compare the value in the
+shell anyway, where `lege` now hands it to you.
+
+The wait stays **in the page** (`_js_exspectare`, ~62 re-tests/sec, one
+network round trip). An external poll would have been the exact thing
+this library's header forbids, and I nearly wrote it.
+
+Failure names the count, not just the fact: `(visa: 0)` vs `(visa: 1)` —
+"nothing appeared" and "one is still there" are different problems.
+
+Verified live at both edges: `.tarda` appearing at 700 ms read empty
+without the flag and correctly with it; `#rota` removed at 700 ms
+satisfied `abest`; an element that stays timed out with *adhuc adest
+#tabula-sessiones (visa: 1)*.
+
+### examen gap that bit
+
+`i32 k;` after a statement — C89 forbids it, clang caught it, and
+**examen said ACCIPE**. That is ledger `01KZBYEHJP` ("declaratio post
+sententiam (C99) non deprehenditur") firing in practice rather than in
+theory. Worth knowing: on declaration order, the compiler is the
+authority, not our judge.

@@ -87,6 +87,9 @@
 #define OP_VOLVERE_AD    XXX
 #define OP_LEGERE        XXXI
 #define OP_TEXTUM_VACUUM XXXII
+#define OP_EXSPECTARE    XXXIII
+#define OP_EXSPECTARE_NO XXXIV
+#define OP_ABEST_EXSP    XXXV
 
 #define VIA_ULTIMI    "build/manus_ultimum.js"
 
@@ -555,6 +558,18 @@ _agere_capere (
         casus OP_NULLUM:
             a.fructus = VERUM;
             frange;
+        casus OP_EXSPECTARE:
+            a.fructus = manus_exspectare(m, ".tessera", VERUM,
+                                         MANUS_MORA_BREVIS);
+            frange;
+        casus OP_EXSPECTARE_NO:
+            a.fructus = manus_exspectare(m, ".numquam", VERUM,
+                                         MANUS_MORA_BREVIS);
+            frange;
+        casus OP_ABEST_EXSP:
+            a.fructus = manus_exspectare(m, ".rota", FALSUM,
+                                         MANUS_MORA_BREVIS);
+            frange;
         casus OP_LEGERE:
             {
                 Lectio l = manus_legere(m, "tr", p);
@@ -782,6 +797,7 @@ nomen structura {
     Actio afford, afford_pravus;
     Actio volvere, volvere_ad;
     Actio legere, textum_vacuum;
+    Actio exsp, exsp_no, abest_exsp;
 } Omnia;
 
 interior vacuum
@@ -816,6 +832,9 @@ _omnia_capere (
     o->aestimare    = _agere_capere(SCEN_OK,        OP_AESTIMARE);
     o->imago        = _agere_capere(SCEN_OK,        OP_IMAGO);
     o->imago_culpae = _agere_capere(SCEN_RECUSANS,  OP_IMAGO_CULPAE);
+    o->exsp           = _agere_capere(SCEN_OK,     OP_EXSPECTARE);
+    o->exsp_no        = _agere_capere(SCEN_FALSUM, OP_EXSPECTARE_NO);
+    o->abest_exsp     = _agere_capere(SCEN_FALSUM, OP_ABEST_EXSP);
     o->legere         = _agere_capere(SCEN_LECTIO,        OP_LEGERE);
     o->textum_vacuum  = _agere_capere(SCEN_OK,            OP_TEXTUM_VACUUM);
     o->volvere        = _agere_capere(SCEN_OK,            OP_VOLVERE);
@@ -1042,6 +1061,34 @@ s32 principale (vacuum)
         CREDO_VERUM (o.volvere.fructus);
         CREDO_VERUM (o.volvere_ad.fructus);
         CREDO_FALSUM (o.volvere.fracta);
+    }
+
+    imprimere("\n--- Exspectatio: interrogationes quoque morantur ---\n");
+    {
+        /* ASYMMETRIA quam haec claudit: actiones IAM morabantur
+         * (per _agere cum promisso), interrogationes NON. Scriptum
+         * crustae ergo agere poterat sed non legere, et ad somnum
+         * retrudebatur - quod haec bibliotheca vetat. */
+        CREDO_VERUM  (o.exsp.fructus);
+        CREDO_FALSUM (o.exsp.fracta);
+
+        /* Mora IN PAGINA, non hic: unum iter retis, et condiciones
+         * TRANSEUNTES non elabuntur. */
+        CREDO_VERUM (_continet(o.exsp.js, "new Promise"));
+        CREDO_VERUM (_continet(o.exsp.js, "var n=qn("));
+
+        /* Terminus transiens: FALSUM, manus fracta, causa NOMINATA -
+         * et numerus visus quoque, nam 'nihil apparuit' et 'tria
+         * manserunt' diversa sunt. */
+        CREDO_FALSUM (o.exsp_no.fructus);
+        CREDO_VERUM  (o.exsp_no.fracta);
+        CREDO_VERUM  (_continet(o.exsp_no.causa, "nihil VISIBILE congruit"));
+        CREDO_VERUM  (_continet(o.exsp_no.causa, "visa:"));
+
+        /* ABSENTIA aliud verbum in causa habet: 'adhuc adest'. */
+        CREDO_FALSUM (o.abest_exsp.fructus);
+        CREDO_VERUM  (_continet(o.abest_exsp.causa, "adhuc adest"));
+        CREDO_VERUM  (_continet(o.abest_exsp.js, "n===0"));
     }
 
     imprimere("\n--- Lectio: contentum structuratum ---\n");
