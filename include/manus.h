@@ -423,6 +423,51 @@ manus_textus (
     constans character* selector);
 
 /* ==================================================
+ * Lectio - QUID DICIT (contentum structuratum)
+ * ==================================================
+ *
+ * SOROR AFFORDANTIARUM. Illae rogant 'quid tangi possit'; hae 'quid
+ * dicatur'. Utraque enumerat; neutra alteram supplet.
+ *
+ * CUR NECESSARIA: manus_textus chordam UNAM reddit, ergo quaerenti
+ * tabulam aut seriem nihil superest nisi manus_aestimare cum JS
+ * crudo. Mensuratum in me ipso: dies totus agendi hoc instrumento
+ * transactus est, et FERE OMNIS lectio per aestimare facta est -
+ * 'Array.prototype.map.call(...)' iterum atque iterum. Instrumentum
+ * cuius effugium via REGIA est vitium vocabuli fatetur.
+ *
+ * LEX UNA, NULLA MAGIA PER GENUS: pro quoque elemento VISIBILI quod
+ * selectori congruit, cellulae sunt textus FILIORUM visibilium; si
+ * filios elementares non habet, textus SUUS unica cellula est.
+ *   lege "tr"      -> cellulae ordinis
+ *   lege "h2"      -> titulus, una cellula
+ *   lege ".sessio" -> spatia pyxidis ut columnae
+ * Nulla regula per tagum; una regula quae his omnibus sufficit.
+ *
+ * Spatia COACTA (ut in petitione textuali): quod usor legit
+ * redditur, non quod fons scribit.
+ */
+
+nomen structura {
+    chorda* cellulae;
+    i32     numerus;
+} LineaLecta;
+
+nomen structura {
+    LineaLecta* lineae;
+    i32         numerus;
+} Lectio;
+
+/* Contentum visibile congruentium, in piscinam datam.
+ * numerus ZEPHYRUM si nihil congruit AUT manus fracta - distingue
+ * per manus_fracta. */
+Lectio
+manus_legere (
+    Manus*              manus,
+    constans character* selector,
+    Piscina*            piscina);
+
+/* ==================================================
  * Affordantiae - QUID ADEST (enumeratio)
  * ==================================================
  *

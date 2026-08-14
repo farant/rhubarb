@@ -554,8 +554,10 @@ _iussum (
     "return String(e.value);" \
     "return String((e.innerText===undefined||e.innerText===null)" \
     "?(e.textContent||''):e.innerText);}" \
+    /* Petitio vacua NIHIL congruit, non OMNIA. Sine hac linea
+     * asserta textus paginae de chorda vacua VIRIDIA fierent. */ \
     "function _tm(t){var l=document.querySelectorAll('*'),i,r=[]," \
-    "q=_nz(t);" \
+    "q=_nz(t);if(q==='')return r;" \
     "for(i=0;i<l.length;i++){var e=l[i];" \
     "if(!v(e))continue;if(_nz(_tx(e)).indexOf(q)<0)continue;r.push(e);}" \
     "return r;}" \
@@ -1176,6 +1178,33 @@ manus_premere_textum (
     Manus*              manus,
     constans character* textus)
 {
+    /* PETITIO VACUA RECUSATUR.
+     *
+     * MENSURATUM in me ipso 2026-08-13: chorda vacua OMNIBUS
+     * congruit, qt() imum eligit, et 'premere-textum ""' corpus
+     * pressit exitu ZEPHYRO. Bis hodie viridem vacuum ita peperi -
+     * aestimare meum 'null' reddidit, quod huc traditum 'operatum
+     * est'. Culpam meam esse credidi; dimidium instrumenti fuit,
+     * quod petitionem sine sensu admisit.
+     *
+     * Spatia sola idem faciunt (post _nz vacua fiunt), ergo hic
+     * quoque reiciuntur. */
+    si (textus != NIHIL)
+    {
+        constans character* p = textus;
+
+        dum (*p != '\0' && *p <= ' ')
+        {
+            p++;
+        }
+        si (*p == '\0')
+        {
+            _frangere(manus,
+                "petitio textualis VACUA - quidlibet congrueret");
+            redde FALSUM;
+        }
+    }
+
     /* Sola differentia a manus_premere: qt() pro q(). Cetera -
      * porta, mora, nuntius - ex _agere veniunt. */
     redde _agere(manus, "qt(", textus,
@@ -1552,6 +1581,99 @@ manus_volvere (
 
     redde _interrogare(manus,
         _litterae(chorda_aedificator_finire(a), manus->piscina)).ok;
+}
+
+/* ========================================================================
+ * Lectio
+ * ======================================================================== */
+
+Lectio
+manus_legere (
+    Manus*              manus,
+    constans character* selector,
+    Piscina*            piscina)
+{
+    ChordaAedificator* a;
+    Lectio             fructus;
+    chorda             valor;
+    JsonResultus       lectio;
+    i32                i;
+    i32                n;
+
+    fructus.lineae  = NIHIL;
+    fructus.numerus = ZEPHYRUM;
+
+    si (manus == NIHIL || manus->fracta || piscina == NIHIL
+        || selector == NIHIL)
+    {
+        redde fructus;
+    }
+
+    /* Selector INTERPOLATUR, ergo macro purum esse non potest ut
+     * affordantiarum. v/_nz/_tx ex praeambulo veniunt - eadem lex
+     * visibilitatis et eadem coactio spatiorum quae petitioni
+     * textuali praeest. */
+    a = chorda_aedificator_creare(manus->piscina, (memoriae_index)(II * M));
+    chorda_aedificator_appendere_literis(a, "(function(){");
+    chorda_aedificator_appendere_literis(a, MANUS_JS_VISUS);
+    chorda_aedificator_appendere_literis(a, "var L=document.querySelectorAll(");
+    _appendere_litteras_js(a, selector);
+    chorda_aedificator_appendere_literis(a,
+        "),i,j,r=[];"
+        "for(i=0;i<L.length;i++){var e=L[i];if(!v(e))continue;"
+        "var cel=[],ch=e.children;"
+        "for(j=0;j<ch.length;j++){if(v(ch[j]))cel.push(_nz(_tx(ch[j])));}"
+        /* Sine filiis elementaribus: textus SUUS una cellula. */
+        "if(cel.length===0)cel.push(_nz(_tx(e)));"
+        "r.push(cel);}"
+        "return r;})()");
+
+    /* Selector pravus hic IACTAT, et _iussum manum cum nuntio
+     * navigatri frangit ("'' is not a valid selector") - quod
+     * melius est quam index vacuus, qui 'nihil adest' mentiretur. */
+    si (!_iussum(manus, chorda_aedificator_finire(a),
+                 MANUS_MORA_BREVIS, &valor))
+    {
+        redde fructus;
+    }
+
+    lectio = json_legere(valor, piscina);
+    si (!lectio.successus || !json_est_tabulatum(lectio.radix))
+    {
+        _frangere(manus, "lectio: responsum tabulatum non est");
+        redde fructus;
+    }
+
+    n = json_tabulatum_numerus(lectio.radix);
+    si (n == ZEPHYRUM)
+    {
+        redde fructus;
+    }
+
+    fructus.lineae = (LineaLecta*)piscina_allocare(
+        piscina, (memoriae_index)n * magnitudo(LineaLecta));
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        JsonValor* ordo = json_tabulatum_obtinere(lectio.radix, i);
+        i32        quot = json_tabulatum_numerus(ordo);
+        i32        j;
+
+        fructus.lineae[i].numerus  = quot;
+        fructus.lineae[i].cellulae = (quot > ZEPHYRUM)
+            ? (chorda*)piscina_allocare(piscina,
+                  (memoriae_index)quot * magnitudo(chorda))
+            : NIHIL;
+
+        per (j = ZEPHYRUM; j < quot; j++)
+        {
+            fructus.lineae[i].cellulae[j] = chorda_transcribere(
+                json_ad_chorda(json_tabulatum_obtinere(ordo, j)), piscina);
+        }
+    }
+
+    fructus.numerus = n;
+    redde fructus;
 }
 
 /* ========================================================================

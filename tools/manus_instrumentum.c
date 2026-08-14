@@ -533,6 +533,7 @@ _auxilium (vacuum)
       "  bin/manus sessiones                      quae vivunt\n"
       "  bin/manus finire                         applicationem occidere\n\n"
       "  bin/manus affordantiae                   quid tangi possit\n"
+      "  bin/manus lege <selector>                quid DICITUR\n"
       "  bin/manus imago <via>                    photographia\n"
       "  bin/manus premere <selector>\n"
       "  bin/manus premere-textum <textus>\n"
@@ -543,7 +544,8 @@ _auxilium (vacuum)
       "  bin/manus errores                        culpae paginae\n"
       "  bin/manus effusio                        stdout applicationis\n\n"
       "  -s <portus>   sessionem nominare (omitte cum una sola vivit)\n"
-      "  -machina      TSV purum, sine capite (affordantiae, sessiones)\n\n"
+      "  -machina      TSV purum, sine capite (affordantiae,\n"
+      "                sessiones, lege)\n\n"
       /* COLUMNAE HIC NOMINANDAE.
        *
        * -machina caput ferre NON debet (mos domus: TSV purum, ne
@@ -559,7 +561,10 @@ _auxilium (vacuum)
       "                x y latitudo altitudo   (IX columnae; valor et\n"
       "                impedimentum vacua esse possunt - tabulationes\n"
       "                continuas exspecta)\n"
-      "  sessiones     portus pid applicatio   (pid 0 = adhaesa)\n\n"
+      "  sessiones     portus pid applicatio   (pid 0 = adhaesa)\n"
+      "  lege          cellulae ordinis (filii visibiles; sine\n"
+      "                filiis, textus ipsius) - numerus columnarum\n"
+      "                per ordinem VARIAT\n\n"
       "Exitus: 0 factum; I defectum; II nihil actum.\n");
     redde II;
 }
@@ -819,6 +824,30 @@ s32 principale (integer argc, character** argv)
     alioquin si (strcmp(verbum, "scribere") == ZEPHYRUM && n_reliqua >= II)
     {
         (vacuum)manus_scribere(m, reliqua[0], reliqua[I]);
+    }
+    alioquin si (strcmp(verbum, "lege") == ZEPHYRUM && n_reliqua >= I)
+    {
+        Lectio l = manus_legere(m, reliqua[0], piscina);
+        i32    k;
+
+        per (k = ZEPHYRUM; k < l.numerus; k++)
+        {
+            i32 c;
+
+            per (c = ZEPHYRUM; c < l.lineae[k].numerus; c++)
+            {
+                si (c > ZEPHYRUM)
+                {
+                    /* TAB in -machina, virgula in forma humana:
+                     * eadem lex qua affordantiae reguntur. */
+                    imprimere(machina ? "\t" : " | ");
+                }
+                imprimere("%.*s",
+                    (integer)l.lineae[k].cellulae[c].mensura,
+                    (constans character*)l.lineae[k].cellulae[c].datum);
+            }
+            imprimere("\n");
+        }
     }
     alioquin si (strcmp(verbum, "volvere") == ZEPHYRUM && n_reliqua >= I)
     {

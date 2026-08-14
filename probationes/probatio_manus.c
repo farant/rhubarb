@@ -51,6 +51,7 @@
 #define SCEN_SINE_COLL VIII /* visum "-1|..." collector abest    */
 #define SCEN_AFFORD   IX   /* tabulatum affordantiarum           */
 #define SCEN_AFFORD_PRAVUS X /* responsum quod tabulatum NON est */
+#define SCEN_LECTIO   XI   /* tabulatum tabulatorum (ordines)   */
 
 /* Operationes quas _agere_capere exercet. */
 #define OP_NULLUM        0   /* nihil - JS collectoris capitur */
@@ -84,6 +85,8 @@
 #define OP_AFFORD        XXVIII
 #define OP_VOLVERE       XXIX
 #define OP_VOLVERE_AD    XXX
+#define OP_LEGERE        XXXI
+#define OP_TEXTUM_VACUUM XXXII
 
 #define VIA_ULTIMI    "build/manus_ultimum.js"
 
@@ -301,6 +304,14 @@ _puer (
                 "{\"genus\":2,\"selector\":\"#i1\",\"titulus\":\"scribe\","
                 "\"valor\":\"textus\",\"impedimentum\":\"impedita\","
                 "\"x\":-5,\"y\":9,\"latitudo\":146,\"altitudo\":17}]}");
+        }
+        alioquin si (scenario == SCEN_LECTIO)
+        {
+            /* Ordines LONGITUDINIS DIVERSAE consulto: numerus
+             * columnarum per ordinem variat (filii visibiles), et
+             * parsura id ferre debet. */
+            sprintf(corpus, "{\"status\":\"perfectum\",\"valor\":"
+                "[[\"totum\",\"179.1s\",\"187.6s\"],[\"solum\"]]}");
         }
         alioquin si (scenario == SCEN_AFFORD_PRAVUS)
         {
@@ -544,6 +555,37 @@ _agere_capere (
         casus OP_NULLUM:
             a.fructus = VERUM;
             frange;
+        casus OP_LEGERE:
+            {
+                Lectio l = manus_legere(m, "tr", p);
+
+                a.numerus = l.numerus;
+                a.fructus = VERUM;
+                si (l.numerus > ZEPHYRUM)
+                {
+                    sprintf(a.primus, "%d:%.*s|%.*s|%.*s",
+                        (integer)l.lineae[0].numerus,
+                        (integer)l.lineae[0].cellulae[0].mensura,
+                        (constans character*)l.lineae[0].cellulae[0].datum,
+                        (integer)l.lineae[0].cellulae[1].mensura,
+                        (constans character*)l.lineae[0].cellulae[1].datum,
+                        (integer)l.lineae[0].cellulae[2].mensura,
+                        (constans character*)l.lineae[0].cellulae[2].datum);
+                }
+                si (l.numerus > I)
+                {
+                    character cauda[LXIV];
+                    sprintf(cauda, " |%d:%.*s",
+                        (integer)l.lineae[1].numerus,
+                        (integer)l.lineae[1].cellulae[0].mensura,
+                        (constans character*)l.lineae[1].cellulae[0].datum);
+                    strcat(a.primus, cauda);
+                }
+            }
+            frange;
+        casus OP_TEXTUM_VACUUM:
+            a.fructus = manus_premere_textum(m, "");
+            frange;
         casus OP_VOLVERE:
             a.fructus = manus_volvere(m, (s32)CC);
             frange;
@@ -739,6 +781,7 @@ nomen structura {
     Actio reficere_vivax, reficere_mortua;
     Actio afford, afford_pravus;
     Actio volvere, volvere_ad;
+    Actio legere, textum_vacuum;
 } Omnia;
 
 interior vacuum
@@ -773,6 +816,8 @@ _omnia_capere (
     o->aestimare    = _agere_capere(SCEN_OK,        OP_AESTIMARE);
     o->imago        = _agere_capere(SCEN_OK,        OP_IMAGO);
     o->imago_culpae = _agere_capere(SCEN_RECUSANS,  OP_IMAGO_CULPAE);
+    o->legere         = _agere_capere(SCEN_LECTIO,        OP_LEGERE);
+    o->textum_vacuum  = _agere_capere(SCEN_OK,            OP_TEXTUM_VACUUM);
     o->volvere        = _agere_capere(SCEN_OK,            OP_VOLVERE);
     o->volvere_ad     = _agere_capere(SCEN_OK,            OP_VOLVERE_AD);
     o->afford         = _agere_capere(SCEN_AFFORD,        OP_AFFORD);
@@ -997,6 +1042,31 @@ s32 principale (vacuum)
         CREDO_VERUM (o.volvere.fructus);
         CREDO_VERUM (o.volvere_ad.fructus);
         CREDO_FALSUM (o.volvere.fracta);
+    }
+
+    imprimere("\n--- Lectio: contentum structuratum ---\n");
+    {
+        /* Ordines longitudinis DIVERSAE: numerus columnarum ex
+         * filiis visibilibus venit, ergo per ordinem variat.
+         * Parsura quae longitudinem fixam praesumeret hic frangeret. */
+        CREDO_AEQUALIS_I32 (o.legere.numerus, (i32)II);
+        CREDO_FALSUM (o.legere.fracta);
+        imprimere("  primus: '%s'\n", o.legere.primus);
+        CREDO_VERUM (_continet(o.legere.primus, "3:totum|179.1s|187.6s"));
+        CREDO_VERUM (_continet(o.legere.primus, "1:solum"));
+
+        /* Lectio EANDEM legem visibilitatis et EANDEM coactionem
+         * spatiorum adhibet quam petitio textualis - una definitio
+         * eius quod usor legit, non duae. */
+        CREDO_VERUM (_continet(o.legere.js, "function v(e)"));
+        CREDO_VERUM (_continet(o.legere.js, "_nz(_tx(ch[j]))"));
+
+        /* PETITIO TEXTUALIS VACUA: chorda vacua omnibus congrueret
+         * et corpus premeret exitu ZEPHYRO. Bis hodie viridem
+         * vacuum ita peperi. */
+        CREDO_FALSUM (o.textum_vacuum.fructus);
+        CREDO_VERUM  (o.textum_vacuum.fracta);
+        CREDO_VERUM  (_continet(o.textum_vacuum.causa, "VACUA"));
     }
 
     imprimere("\n--- Asserta cetera + formae _MORA ---\n");

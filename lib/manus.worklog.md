@@ -968,3 +968,66 @@ human sentence a parser would choke on.
 Verified the actual claim rather than the appearance — piped both
 emitters through `awk -F'\t'` with no line skipped, and asserted every
 affordance row has exactly 9 fields.
+
+## 2026-08-13 — lectio: the reading half
+
+Fran asked how the interface felt after a day of heavy use. The honest
+answer was a diagnosis: **I live in `aestimare`.** Almost every
+verification I ran that day was raw JS —
+`Array.prototype.map.call(document.querySelectorAll(...))` over and over
+— not the typed verbs.
+
+A tool whose escape hatch is the main road is telling you something about
+its vocabulary. The specific shape: **acting is well covered, reading is
+barely covered.** Four action verbs; one reading verb returning a single
+string; one enumerator that only sees *interactive* things. Nothing
+answered "what does it say?"
+
+`affordantiae` proved enumeration was the missing primitive for
+interaction. The same hole existed on the content side and I hadn't
+noticed because I'd been papering over it with JS.
+
+**One rule, no per-tag magic.** For each visible element matching the
+selector, the cells are the visible *element children's* text; with no
+element children, its own text is the single cell. That covers every case
+I'd hand-written:
+
+    lege "tr"       → cells of a row
+    lege ".tabula h2" → one heading per line
+    lege ".sessio"  → the button's spans as columns
+
+Row lengths therefore **vary**, which the mock scenario exercises
+deliberately — a parser assuming fixed width would break on real content.
+
+Reuses `v()` and `_nz`/`_tx` from the preamble, so "what the user reads"
+has one definition shared with text matching, not two.
+
+### Empty text queries now refuse
+
+`premere-textum ''` matched everything, `qt` picked the innermost, and it
+clicked `<body>` with exit 0. **That is how I produced two vacuous passes
+in one session** — an `aestimare` returned `null`, I piped it into
+`premere-textum`, and it "worked". I put that down to my own sloppiness
+at the time. Half of it was the tool accepting a query that cannot mean
+anything. Guarded in C (with a named cause) and in `_tm` (so page-text
+assertions don't match everything either).
+
+### Noted, not built: `exspectare`
+
+Asymmetry worth recording: **CLI actions wait, CLI queries don't.**
+`premere` goes through `_agere`, which retries in the page until the
+element appears; `existit`/`numerus`/`textus`/`lege` go through
+`_interrogare`, which is documented as answering immediately.
+
+So a shell script driving an async UI has no way to wait for a
+*condition* and gets pushed back toward `sleep` — the one thing this
+library refuses to offer. That is exactly the gap `CREDO_MANUS_*` fills
+in C.
+
+The right port is **not** the assertions as assertions: an assertion is
+*wait + record*, and only the wait means anything outside a credo
+session. Ported as waiting predicates (exit 0 met / 1 timed out, carrying
+the existing "expected X, saw Y" text), they'd be what makes shell
+driving non-flaky. Open design question is one generic `exspectare` with
+a condition enum versus typed siblings mirroring the macros — a header
+decision, so it waits for Fran.
