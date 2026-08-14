@@ -453,10 +453,12 @@ _vcs_plagula_tractare (JsonValor* argumenta, Piscina* piscina,
 }
 
 interior s32
-_ui_currere (Piscina* piscina, constans character* fabrica);
+_ui_currere (Piscina* piscina, constans character* fabrica,
+    b32 nuda);
 
 interior s32
-_ui_currere (Piscina* piscina, constans character* fabrica)
+_ui_currere (Piscina* piscina, constans character* fabrica,
+    b32 nuda)
 {
     Piscina* piscina_vocationis;
     FenestraConfiguratio figura_fenestrae;
@@ -550,6 +552,19 @@ _ui_currere (Piscina* piscina, constans character* fabrica)
         }
     }
 
+    /* Fenestra sine verbo ullo in stdout aperiri potest: qui
+     * silicem e conclavi vocat (aut agens qui effusionem legit)
+     * NIHIL videt et imperium pependisse putat. Ergo nuntius - et
+     * fflush, quia in pipa aliter usque ad exitum haereret, quod
+     * est ipsum silentium quod vitare volumus. */
+    imprimere("[silex] fenestra aperta%s\n",
+        nuda ? " (sine argumentis: 'ui' subauditum)" : "");
+    si (nuda)
+    {
+        imprimere("[silex] subimperia videre: silex --help\n");
+    }
+    fflush(stdout);
+
     dum (!fenestra_debet_claudere(fenestra))
     {
         Eventus eventus;
@@ -635,6 +650,8 @@ principale (integer argc, character** argv)
         "versionem et stampam corporis imprimere");
     argumenta_addere_vexillum(parser, "-vitrea", "--vitrea",
         "novum: semen vitreum (cor voluminis + ordines IV)");
+    argumenta_addere_vexillum(parser, "-h", "--help",
+        "verba et optiones imprimere");
     argumenta_addere_exemplum(parser,
         "silex novum 001 -f ~/Documents/projects/rhubarb");
     argumenta_addere_exemplum(parser,
@@ -649,6 +666,16 @@ principale (integer argc, character** argv)
         argumenta_imprimere_errorem(parser);
         argumenta_imprimere_auxilium(parser);
         redde I;
+    }
+
+    /* ANTE fabricam de industria: auxilium numquam a fonte pendeat.
+     * Aliter 'silex --help' extra arborem rhubarb (nec fabrica nec
+     * corpus) exitu I deficeret - id est ubi auxilio maxime opus
+     * est. */
+    si (argumenta_habet_vexillum(lecta, "--help"))
+    {
+        argumenta_imprimere_auxilium(parser);
+        redde ZEPHYRUM;
     }
 
     verbum = argumenta_obtinere_positionalem(lecta, 0, piscina);
@@ -704,7 +731,8 @@ principale (integer argc, character** argv)
     si (argumenta_numerus_positionalium(lecta) == 0
         || chorda_aequalis_literis(verbum, "ui"))
     {
-        redde _ui_currere(piscina, fabrica);
+        redde _ui_currere(piscina, fabrica,
+            argumenta_numerus_positionalium(lecta) == 0);
     }
 
     /* partes: oraculum clausurae (proiectum = cwd; positionale
