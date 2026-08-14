@@ -149,6 +149,12 @@ void    _exit(int status);
 int     usleep(useconds_t microsecunda);
 int     dup2(int fossa_vetus, int fossa_nova);
 int     execvp(const char* plagula, char* const argumenta[]);
+/* execv: semita EXPLICITA (execvp PATH scrutatur). Instrumentum quod
+ * binarium nominatum detrahit hanc vult, non illam. */
+int     execv(const char* plagula, char* const argumenta[]);
+/* setsid: sessio nova - proles ab horto terminali SOLVITUR, ergo
+ * instrumentum exire potest dum applicatio vivit. */
+pid_t   setsid(void);
 unsigned int alarm(unsigned int secunda);
 
 /* <sectio caput="stdlib.h"/> stdlib.h POSIX (getenv in systema_c89.h

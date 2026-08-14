@@ -718,3 +718,80 @@ No CLI. manus remains reachable only from compiled C, which is why the
 `-vivum` session that started this conversation was driven with raw curl
 and a hand-rolled worse version of a library we already own. That's the
 next piece.
+
+## 2026-08-13 — bin/manus: the CLI (tools/manus_instrumentum.c)
+
+The library existed; the *surface* didn't. Everything manus does was
+reachable only from compiled C, which is why the `-vivum` session that
+started this whole thread was driven with raw curl.
+
+Before / after, same task:
+
+```
+# before
+./bin/mensor_ui -vivum -portus 8792 > log 2>&1 &
+PID=$!; sleep 4
+T=$(curl -s -X POST --data "$JS" .../imperium)
+N=$(echo "$T" | tr -dc '0-9')
+sleep 1
+curl -s .../imperium/$N
+kill $PID
+
+# after
+P=$(bin/manus incipere ./bin/mensor_ui)
+bin/manus affordantiae
+bin/manus finire
+```
+
+**Session = port.** No opaque handle was invented: the port is already
+unique, already in every message, and already what you'd grep for. A
+handle that *hid* the port would add a lookup that can be wrong.
+
+**Ambiguity refuses.** With two sessions live and no `-s`, it exits 2 and
+names both rather than picking. Driving the wrong app silently is the
+failure this house keeps designing against. Verified with two live apps.
+
+**Why not `manus_incipere` to launch:** it captures the child's stdout
+through pipes, and a pipe with no reader blocks or kills the app once the
+CLI exits — but a *session* must outlive the CLI. So the tool forks
+itself with `setsid` and redirects to a log file, which also makes
+`bin/manus effusio` possible later.
+
+### Three bugs, and the shape they shared
+
+**1. `mkdir` after the fork.** The session dir was created in
+`_sessionem_scribere`, which runs *after* launch — so the child's log
+`open()` failed, its output went nowhere, and when the app failed the
+tool pointed me at a file that did not exist. A failure that deleted its
+own diagnosis.
+
+**2. A silent child.** `execv` failure went straight to `_exit(127)` with
+nothing written. Fixed by writing `strerror(errno)` to the
+already-redirected log — which is correct behavior, not just
+instrumentation, and it's what let me confirm `execv` was *succeeding*
+for `/bin/echo` while producing no output.
+
+**3. The real one: `manus_incipere(piscina, NIHIL, portus, mora)`.**
+I wanted "wait for the port" and manus_incipere waits for a port, so I
+passed NIHIL for the argv it requires and wrote a comment asserting it
+would then *only* wait. I never verified that. It was killing my forked
+child — `/bin/echo` produced a 0-byte log until I removed the call, and
+21 bytes immediately after.
+
+The shared shape is worth naming: **all three were me asserting behavior
+in a comment instead of checking it.** The comment made the code read as
+if it had been reasoned about. Replaced with `_portum_exspectare`, which
+polls `manus_aperire` on a bounded deadline.
+
+(That poll uses `nanosleep`, which is *not* a violation of this library's
+no-sleep law: that law governs page conditions, where waiting must happen
+inside the page or transients are missed. Waiting for a process to exist
+is outside the page and cannot be observed from within it —
+`manus_incipere` itself does the same.)
+
+### silva shim
+
+`setsid` and `execv` were missing from `silva/fontes/systema_posix.h`, so
+examen reported implicit calls. Healed the shim rather than pinning the
+diagnostic (house doctrine). Amalgam regenerated — silva/CLAUDE.md warns
+the suite does not catch a stale one. silva 38/38, auspex certifies.
