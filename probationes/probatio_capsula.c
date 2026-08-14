@@ -614,6 +614,77 @@ proba_disci_enumerare(Piscina* piscina)
 }
 
 
+/* UBI EXACTE limes photographiae iacet.
+ *
+ * Lectio indicem NON adit - discum adit. Ergo plagula NOVA post
+ * aperturam addita LEGI potest statim (id est quod usor vere agit:
+ * plagulam addere, eam ex HTML citare, recargare). Sola ENUMERATIO
+ * photographiam videt. Sine hac probatione limes coniectura est. */
+interior i32
+proba_disci_plagula_nova(Piscina* piscina)
+{
+    Capsula*       capsula;
+    CapsulaFructus fructus;
+    i32            numerus_ante;
+
+    printf("  proba_disci_plagula_nova: ");
+
+    si (!_aream_parare())
+    {
+        printf("FALSUM - area probationis parari non potuit\n");
+        redde FALSUM;
+    }
+    (vacuum)filum_delere(RADIX_DISCI "/postnata.txt");
+
+    capsula = capsula_aperire_e_disco(RADIX_DISCI, piscina);
+    si (capsula == NIHIL)
+    {
+        printf("FALSUM - capsula NIHIL\n");
+        redde FALSUM;
+    }
+    numerus_ante = capsula_numerus(capsula);
+
+    /* POST aperturam nascitur */
+    si (!filum_scribere_literis(RADIX_DISCI "/postnata.txt", "NOVA"))
+    {
+        printf("FALSUM - scriptio fracta\n");
+        redde FALSUM;
+    }
+
+    /* LEGI potest - semita usoris integra est */
+    fructus = capsula_legere(capsula, "postnata.txt", piscina);
+    si (fructus.status != CAPSULA_OK
+        || fructus.datum.mensura != (i32)IV)
+    {
+        printf("FALSUM - plagula postnata legi NON potest"
+               " (status %s) - limes latior est quam creditum\n",
+               capsula_status_nuntium(fructus.status));
+        (vacuum)filum_delere(RADIX_DISCI "/postnata.txt");
+        redde FALSUM;
+    }
+    si (!capsula_habet(capsula, "postnata.txt"))
+    {
+        printf("FALSUM - habet() plagulam postnatam negat\n");
+        (vacuum)filum_delere(RADIX_DISCI "/postnata.txt");
+        redde FALSUM;
+    }
+
+    /* ENUMERATIO autem photographiam tenet - id est limes, et hic
+     * FIGITUR ne tacite mutetur */
+    si (capsula_numerus(capsula) != numerus_ante)
+    {
+        printf("FALSUM - enumeratio mutata est; caput contrarium"
+               " dicit (photographia aperiendo)\n");
+        (vacuum)filum_delere(RADIX_DISCI "/postnata.txt");
+        redde FALSUM;
+    }
+
+    (vacuum)filum_delere(RADIX_DISCI "/postnata.txt");
+    printf("VERUM\n");
+    redde VERUM;
+}
+
+
 interior i32
 proba_disci_radix_prava(Piscina* piscina)
 {
@@ -683,6 +754,7 @@ principale(vacuum)
     si (proba_disci_traversalis(piscina)) successus++; alioquin fallitae++;
     si (proba_disci_vacuum(piscina)) successus++; alioquin fallitae++;
     si (proba_disci_enumerare(piscina)) successus++; alioquin fallitae++;
+    si (proba_disci_plagula_nova(piscina)) successus++; alioquin fallitae++;
     si (proba_disci_radix_prava(piscina)) successus++; alioquin fallitae++;
 
     printf("\n");
