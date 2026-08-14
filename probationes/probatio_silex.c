@@ -538,6 +538,9 @@ s32 principale (vacuum)
                 AREA "/vitreum/probare.sh", piscina);
             chorda app = filum_legere_totum(
                 AREA "/vitreum/fontes/vitreum.c", piscina);
+            chorda prob_c = filum_legere_totum(
+                AREA "/vitreum/probationes/probatio_vitreum.c",
+                piscina);
 
             /* '-vivum' in semine: NON vexillum quod app legat, sed
              * atrium_vexilla_legere cui argv traditur. Sine argv in
@@ -552,6 +555,29 @@ s32 principale (vacuum)
             /* gyrus APP est, non atrii (vide atrium.h) */
             CREDO_CHORDA_CONTINET(app, chorda_ex_literis(
                 "dum (atrium_currendum(atrium))", piscina));
+
+            /* '-volumen': sine eo probatio integrationis in datis
+             * VERIS usoris currere cogitur (mensuratum in
+             * silicetum/003 et ante in laboratorio) */
+            CREDO_CHORDA_CONTINET(app, chorda_ex_literis(
+                "strcmp(argv[i], \"-volumen\")", piscina));
+
+            /* ORDO: volumen POST atrium. Volumen aperire plagulam
+             * CREAT, ergo cursus vexillo pravo moriens statum in
+             * disco relinquebat. Figitur per semitam purgationis
+             * quae SOLA in ea ordinatione exsistere potest. */
+            CREDO_CHORDA_CONTINET(app, chorda_ex_literis(
+                "atrium_destruere(atrium);\n        redde I;",
+                piscina));
+
+            /* probatio genita volumen TEMPORARIUM adhibeat - et
+             * viam fixam NON iam nominet (assertio negativa: ea
+             * sola distinguit 'mutatum' a 'utrumque praesens') */
+            CREDO_CHORDA_CONTINET(prob_c, chorda_ex_literis(
+                "volumen_temporarium(piscina,", piscina));
+            CREDO_FALSUM(chorda_continet(prob_c,
+                chorda_ex_literis("build/probatio.volumen",
+                    piscina)));
 
             CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
                 "GENERATUM a silice (novum -vitrea", piscina));
