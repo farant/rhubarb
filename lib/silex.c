@@ -1349,6 +1349,172 @@ _probationem_vitream_fingere (Piscina* piscina,
 }
 
 interior chorda
+_fumus_manus_fingere (Piscina* piscina,
+    constans character* titulus);
+
+interior chorda
+_fumus_manus_fingere (Piscina* piscina,
+    constans character* titulus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)4096);
+
+    chorda_aedificator_appendere_literis(a, "/* fumus_manus.c - manus"
+        " contra applicationem VERAM\n"
+        " *\n"
+        " * CUR SEORSUM A probare.sh: haec probatio applicationem"
+        " generat,\n"
+        " * FENESTRAM APERIT, DOM verum interrogat. probare.sh tacita"
+        " et\n"
+        " * sine facie manet, ergo in suite automatica vivere potest;"
+        " haec\n"
+        " * manu curritur (./fumus.sh).\n"
+        " *\n"
+        " * CUR NON SIMULACRUM: pagina ficta 'JS meus contra DOM meum'"
+        " est -\n"
+        " * probat quod scripsisti, non quod WebKit agit. Hic omnia"
+        " vera\n"
+        " * sunt: fenestra, WebKit, DOM, pons.\n"
+        " *\n"
+        " * CARDO est '#salutatio'. In indice '…' nudum iacet; textum"
+        " verum\n"
+        " * accipit SOLUM postquam JS pontem vocat, C respondet,"
+        " volumen\n"
+        " * numerat, promissum solvitur. Nemo scit quando - et manus"
+        " ideo\n"
+        " * IN PAGINA exspectat, non somno. Assertio quae transit"
+        " catenam\n"
+        " * TOTAM probat: fenestra -> WebKit -> JS -> pons -> C ->"
+        " volumen\n"
+        " * -> JSON -> DOM. Nulla pars ficta.\n"
+        " *\n"
+        " * HINC CRESCE: adde elementa faciei, adde assertiones. Semen"
+        " id\n"
+        " * quod habet probat; ceterum tuum est.\n"
+        " * (A silice genita - PROIECTIO: mutare licet.) */\n"
+        "#include \"postulata_posix.h\"\n"
+        "\n"
+        "#include \"manus.h\"\n"
+        "#include \"credo.h\"\n"
+        "#include \"piscina.h\"\n"
+        "\n"
+        "#include <stdio.h>\n"
+        "\n"
+        "/* Portus NOMINATUS, non auto-selectus: manus portum NON\n"
+        " * coniectat (vide manus.h), et proles suum nuntiare non"
+        " potest\n"
+        " * (fistulae eius ante exitum non leguntur). Ergo vocator"
+        " eligit\n"
+        " * et ambo sciunt. Litterae hinc finguntur, non alterum"
+        " #define:\n"
+        " * duo numeri pro eadem re divergunt. */\n"
+        "#define PORTUS (XVII * M + CD)\n"
+        "\n"
+        "/* Volumen SCRATCH: probatio in statum verum usoris scribere"
+        " non\n"
+        " * debet, et status inter cursus manens numerum visitationum"
+        "\n"
+        " * crescere sinit - quod probationem non-repetibilem"
+        " faceret. */\n"
+        "#define VIA_VOLUMINIS \"/tmp/fumus_");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        ".volumen\"\n"
+        "\n"
+        "s32\n"
+        "principale (vacuum)\n"
+        "{\n"
+        "    Piscina*  piscina;\n"
+        "    Manus*    m;\n"
+        "    b32       praeteritus;\n"
+        "    character portus_litterae[XVI];\n"
+        "\n"
+        "    constans character* argumenta[VII];\n"
+        "\n"
+        "    piscina = piscina_generare_dynamicum(\"fumus_");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "\",\n"
+        "        8388608);\n"
+        "    si (piscina == NIHIL)\n"
+        "    {\n"
+        "        imprimere(\"FRACTA: piscina\\n\");\n"
+        "        redde I;\n"
+        "    }\n"
+        "    credo_aperire(piscina);\n"
+        "\n"
+        "    sprintf(portus_litterae, \"%d\", (integer)PORTUS);\n"
+        "\n"
+        "    argumenta[0]  = \"bin/");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "\";\n"
+        "    argumenta[I]  = \"-vivum\";\n"
+        "    argumenta[II] = \"-portus\";\n"
+        "    argumenta[III] = portus_litterae;\n"
+        "    argumenta[IV] = \"-volumen\";\n"
+        "    argumenta[V]  = VIA_VOLUMINIS;\n"
+        "    argumenta[VI] = NIHIL;\n"
+        "\n"
+        "    /* Ab integro: cursus quisque a statu NOTO incipiat */\n"
+        "    (vacuum)remove(VIA_VOLUMINIS);\n"
+        "\n"
+        "    imprimere(\"\\n--- Applicationem generare ---\\n\");\n"
+        "    m = manus_incipere(piscina, argumenta, (i32)PORTUS,\n"
+        "                       MANUS_MORA_LONGA);\n"
+        "    CREDO_NON_NIHIL (m);\n"
+        "    si (m == NIHIL)\n"
+        "    {\n"
+        "        imprimere(\"  (e RADICE proiecti currendum -"
+        " 'bin/");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "'\\n\"\n"
+        "                  \"   via relativa est)\\n\");\n"
+        "        credo_imprimere_compendium();\n"
+        "        redde I;\n"
+        "    }\n"
+        "\n"
+        "    imprimere(\"\\n--- Probans faciem veram ---\\n\");\n"
+        "    CREDO_MANUS_EXISTIT (m, \"h1\");\n"
+        "    CREDO_MANUS_TEXTUS  (m, \"h1\", \"");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "\");\n"
+        "\n"
+        "    /* CATENA TOTA (vide caput): '…' manens significat"
+        " pontem\n"
+        "     * tacuisse - quod nexus viridis et fenestra aperta soli"
+        "\n"
+        "     * numquam deprehenderent. */\n"
+        "    CREDO_MANUS_TEXTUS_CONTINET (m, \"#salutatio\","
+        " \"visitatio\");\n"
+        "\n"
+        "    /* Applicatio ipsa hoc impressit - non nos finximus */\n"
+        "    CREDO_MANUS_EFFUSIO (m, \"fenestra aperta\");\n"
+        "\n"
+        "    /* Pagina sine culpis oneravit (vitrea culpas onerationis"
+        "\n"
+        "     * cum file:linea in stderr fundit) */\n"
+        "    CREDO_MANUS_SINE_ERRORIBUS (m);\n"
+        "\n"
+        "    manus_claudere(m);\n"
+        "    (vacuum)remove(VIA_VOLUMINIS);\n"
+        "\n"
+        "    imprimere(\"\\n\");\n"
+        "    credo_imprimere_compendium();\n"
+        "    praeteritus = credo_omnia_praeterierunt();\n"
+        "    piscina_destruere(piscina);\n"
+        "    si (praeteritus)\n"
+        "    {\n"
+        "        redde ZEPHYRUM;\n"
+        "    }\n"
+        "    redde I;\n"
+        "}\n");
+    redde chorda_aedificator_finire(a);
+}
+
+interior chorda
 _readme_vitreum_fingere (Piscina* piscina,
     constans character* titulus);
 
@@ -1757,6 +1923,63 @@ _probare_vitreum_fingere (Piscina* piscina,
     redde chorda_aedificator_finire(a);
 }
 
+interior chorda
+_fumus_sh_fingere (Piscina* piscina,
+    constans character* titulus, Xar* clausura_fumi,
+    constans character* fons_titulus);
+
+interior chorda
+_fumus_sh_fingere (Piscina* piscina,
+    constans character* titulus, Xar* clausura_fumi,
+    constans character* fons_titulus)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina,
+        (memoriae_index)2048);
+
+    _stampam_ordinis_appendere(a, fons_titulus);
+    chorda_aedificator_appendere_literis(a,
+        "# fumus.sh - manus contra applicationem VERAM (fenestram"
+        " aperit)\n"
+        "#\n"
+        "# NON pars probare.sh de industria: haec fenestram aperit,"
+        " ergo\n"
+        "# in suite tacita vivere non potest. E RADICE proiecti"
+        " currendum -\n"
+        "# 'bin/");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "' via relativa est.\n"
+        "#\n"
+        "# APPLICATIO PRIMUM AEDIFICATUR: binarium stale probationem"
+        " stale\n"
+        "# facit, et cursus viridis de codice vetere verus esset.\n"
+        "set -e\n"
+        "cd \"$(dirname \"$0\")\"\n"
+        "mkdir -p bin build\n"
+        "VEXILLA=\"" SILEX_VEXILLA_VITREA "\"\n"
+        "VEXILLA_VENDITORIA=\"" SILEX_VEXILLA_VENDITORIA "\"\n"
+        "\n"
+        "./aedificare.sh\n"
+        "\n");
+    _regulas_venditorias_appendere(a, clausura_fumi);
+    chorda_aedificator_appendere_literis(a,
+        "clang $VEXILLA -Iinclude \\\n"
+        "    probationes/fumus_manus.c");
+    _ordinem_fontium_appendere(a, clausura_fumi, VERUM);
+    _obiecta_venditoria_appendere(a, clausura_fumi);
+    /* Security: manus http trahit, quod tls_macos.m ligat. Foundation:
+     * tempus objectivum-C in eodem. Cocoa/WebKit ABSUNT - hoc binarium
+     * CONCLAVIS est, fenestram non aperit (applicatio eam aperit). */
+    chorda_aedificator_appendere_literis(a,
+        " \\\n    -framework Security -framework Foundation \\\n"
+        "    -o build/fumus_manus.novum\n"
+        "rm -f bin/fumus_manus\n"
+        "mv build/fumus_manus.novum bin/fumus_manus\n"
+        "\n"
+        "exec bin/fumus_manus \"$@\"\n");
+    redde chorda_aedificator_finire(a);
+}
+
 /* ==================================================
  * Novum
  * ================================================== */
@@ -1876,13 +2099,17 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
             optiones->titulus);
         chorda probatio_c = _probationem_vitream_fingere(piscina,
             optiones->titulus);
+        chorda fumus_c = _fumus_manus_fingere(piscina,
+            optiones->titulus);
         chorda contenta_app[3];
         chorda contenta_probationis[3];
         chorda contentum_instrumenti;
         chorda ordo_aedificandi;
         chorda ordo_probandi;
+        chorda ordo_fumi;
         Xar*   clausura_instrumenti;
         Xar*   clausura_probationis;
+        Xar*   clausura_fumi;
         b32    inventum = FALSUM;
 
         contenta_app[0] = fons_c;
@@ -1921,6 +2148,16 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
             fructus.erratum = "clausura probationis fracta";
             redde fructus;
         }
+        /* CLAUSURA QUARTA (fumus): manum trahit quam nec app nec
+         * probatio trahit. Semina e templo IPSO leguntur, sicut
+         * ceterae tres - nullus index manu servatus. */
+        clausura_fumi = _clausuram_e_contentis(piscina,
+            optiones->fons, &fumus_c, 1);
+        si (clausura_fumi == NIHIL)
+        {
+            fructus.erratum = "clausura fumi fracta";
+            redde fructus;
+        }
         /* ordines HIC finguntur - res_omnes adhuc clausura app
          * PURA est (ante mixturam instrumenti) */
         ordo_aedificandi = _aedificare_vitreum_fingere(piscina,
@@ -1929,6 +2166,8 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
         ordo_probandi = _probare_vitreum_fingere(piscina,
             optiones->titulus, clausura_probationis,
             optiones->fons->titulus);
+        ordo_fumi = _fumus_sh_fingere(piscina, optiones->titulus,
+            clausura_fumi, optiones->fons->titulus);
         /* mergere dedup per viam */
         {
             TabulaDispersa* viae = tabula_dispersa_creare_chorda(
@@ -1948,34 +2187,47 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
                 tabula_dispersa_inserere(viae, e->via,
                     (vacuum*)e);
             }
-            /* instrumenti ET probationis clausurae mergendae -
-             * probatio credonem trahit quem app numquam trahit
-             * (AMBULATIO ACCEPTIONIS 2026-08-10: probare.sh
-             * lib/credo.c nominavit quod vendicatum non erat) */
-            per (k = 0; k < xar_numerus(clausura_instrumenti)
-                    + xar_numerus(clausura_probationis);
-                k = k + 1)
+            /* Clausurae SUBSIDIARIAE omnes mergendae - quaeque
+             * plagulas trahit quas app numquam trahit: probatio
+             * credonem (AMBULATIO ACCEPTIONIS 2026-08-10:
+             * probare.sh lib/credo.c nominavit quod vendicatum non
+             * erat), fumus manum.
+             *
+             * TABULATA, non ternarius nidificatus: cum tertia
+             * accessit, ratio indicum 'k - numerus prioris' iam
+             * bis errare poterat sine ullo signo. */
             {
-                SilexRes* e = k < xar_numerus(clausura_instrumenti)
-                    ? (SilexRes*)xar_obtinere(clausura_instrumenti,
-                        k)
-                    : (SilexRes*)xar_obtinere(clausura_probationis,
-                        k - xar_numerus(clausura_instrumenti));
+                Xar* subsidiariae[III];
+                i32  s;
 
-                si (e == NIHIL)
-                {
-                    perge;
-                }
-                si (!tabula_dispersa_continet(viae, e->via))
-                {
-                    SilexRes* novus = (SilexRes*)xar_addere(
-                        res_omnes);
+                subsidiariae[0] = clausura_instrumenti;
+                subsidiariae[I] = clausura_probationis;
+                subsidiariae[II] = clausura_fumi;
 
-                    si (novus != NIHIL)
+                per (s = 0; s < (i32)III; s = s + 1)
+                {
+                    per (k = 0; k < xar_numerus(subsidiariae[s]);
+                        k = k + 1)
                     {
-                        *novus = *e;
-                        tabula_dispersa_inserere(viae,
-                            novus->via, (vacuum*)novus);
+                        SilexRes* e = (SilexRes*)xar_obtinere(
+                            subsidiariae[s], k);
+
+                        si (e == NIHIL)
+                        {
+                            perge;
+                        }
+                        si (!tabula_dispersa_continet(viae, e->via))
+                        {
+                            SilexRes* novus = (SilexRes*)xar_addere(
+                                res_omnes);
+
+                            si (novus != NIHIL)
+                            {
+                                *novus = *e;
+                                tabula_dispersa_inserere(viae,
+                                    novus->via, (vacuum*)novus);
+                            }
+                        }
                     }
                 }
             }
@@ -2021,10 +2273,14 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
             _readme_vitreum_fingere(piscina, optiones->titulus));
         /* ordines IV generati - PROIECTIONES cum listis
          * computatis (fictae supra, ex clausura pura) */
+        _rem_genitam_addere(piscina, res_omnes,
+            "probationes/fumus_manus.c", fumus_c);
         _rem_genitam_addere(piscina, res_omnes, "aedificare.sh",
             ordo_aedificandi);
         _rem_genitam_addere(piscina, res_omnes, "probare.sh",
             ordo_probandi);
+        _rem_genitam_addere(piscina, res_omnes, "fumus.sh",
+            ordo_fumi);
     }
     fructus.genitae = xar_numerus(res_omnes) - fructus.vendicatae;
 
@@ -2130,8 +2386,9 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
     /* scripta exsecutabilia (defectus non fatalis - 'sh x.sh'
      * semper manet) */
     {
-        constans character* argumenta_chmod[5];
+        constans character* argumenta_chmod[6];
         ProcessusResultus   r;
+        i32                 n;
 
         argumenta_chmod[0] = "/bin/chmod";
         argumenta_chmod[1] = "+x";
@@ -2139,7 +2396,15 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
             "/aedificare.sh", NIHIL);
         argumenta_chmod[3] = _texere(piscina, proiectum_dir,
             "/probare.sh", NIHIL);
-        argumenta_chmod[4] = NIHIL;
+        n = (i32)IV;
+        /* fumus.sh soli semini vitreo est */
+        si (optiones->vitrea)
+        {
+            argumenta_chmod[4] = _texere(piscina, proiectum_dir,
+                "/fumus.sh", NIHIL);
+            n = (i32)V;
+        }
+        argumenta_chmod[n] = NIHIL;
         r = processus_exsequi(argumenta_chmod, 5000, piscina);
         si (!r.successus || r.codex_exitus != 0)
         {
