@@ -76,6 +76,9 @@ nomen structura {
     i32              numerus_filorum; /* Number of files */
     CapsulaIndexum*  index;           /* Parsed TOC array */
     Piscina*         piscina;         /* Arena used for parsing */
+    /* RADIX: via absoluta normalizata cum capsula e DISCO legit.
+     * mensura ZEPHYRUM = capsula infixa (mos antiquus, immutatus). */
+    chorda           radix;
 } Capsula;
 
 
@@ -110,6 +113,47 @@ Capsula*
 capsula_aperire(
     constans CapsulaEmbed* embed,
     Piscina*               piscina);
+
+
+/* Aperire capsulam E DISCO - eadem ansa, fons alius
+ * =================================================
+ *
+ * CUR: applicatio vitreae assetum suum per capsula_legere sumit, et
+ * id est SOLA vox qua vitrea capsulam tangit. Ergo capsula quae e
+ * directorio legit modum evolutionis dat - muta plagulam, recarica,
+ * vide - SINE aedificatione et SINE servitore HTTP.
+ *
+ * QUOD LUCRAMUR quod hospitium dare non potest: schema, URL, origo
+ * MANENT eadem (capsula://radix/...). Pagina discernere NON POTEST
+ * utro modo currat. Ergo modus evolutionis et res vecta uno solo
+ * modo differunt - QUAE PLAGULAE EXSTENT - non septem (portus,
+ * origo, transportus, cwd, servitor...). Id unum crisp est et per
+ * se probabile; cetera eadem semita sunt.
+ *
+ * NULLUM FORAMEN: nihil auscultat. Modus vivus hospitii portum
+ * aperit quem quivis in machina legere potest; hic nulla theca est.
+ *
+ * radix:   via ad directorium (relativa cwd aut absoluta)
+ * piscina: arena
+ *
+ * Redde: Capsula*, aut NIHIL si radix directorium non est.
+ *
+ * SEMANTICA, honeste:
+ *  - capsula_legere / _chorda / _habet DISCUM adeunt omni vocatione.
+ *    Ergo plagula mutata statim recens legitur. Id est totum consilium.
+ *  - capsula_numerus / _indexum / _iter / _invenire INDICEM adeunt,
+ *    qui HIC APERIENDO photographatur. Plagula NOVA post aperturam
+ *    addita legi potest sed enumerari non potest usque ad restitutionem.
+ *    (Enumeratio arenam poscit; eam omni vocatione reficere piscinam
+ *    applicationis diurnae sine fine cresceret.)
+ *  - Traversalis REICITUR: via iuncta normalizatur et radicem ut
+ *    praefixum byteorum CUM limite segmenti retinere debet.
+ *  - Nulla compressio: quod in disco iacet id redditur.
+ */
+Capsula*
+capsula_aperire_e_disco(
+    constans character* radix,
+    Piscina*            piscina);
 
 
 /* ========================================================================

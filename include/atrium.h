@@ -173,6 +173,18 @@ nomen structura {
     /* --- PAGINA --- */
     constans CapsulaEmbed* capsula;       /* OBLIGATORIA */
     constans character*    via_initialis; /* NIHIL = "index.html" */
+    /* RADIX: non-NIHIL = assetum e DIRECTORIO legere, non e capsula
+     * infixa. Vexillum domus '-radix <via>' hoc implet.
+     *
+     * SCHEMA, URL, ORIGO MANENT EADEM (capsula://...): pagina discernere
+     * NON POTEST. Ergo modus evolutionis a re vecta uno solo modo
+     * differt - QUAE PLAGULAE EXSTENT - non transportu, portu, origine.
+     * Vide capsula.h; hospitium hic nullum est et nihil auscultat.
+     *
+     * 'capsula' OBLIGATORIA MANET: id est quod vehitur. Radix fontem
+     * mutat, non pactum - ergo binarium sine vexillo semper id agit
+     * quod vectum est. */
+    constans character*    capsula_radix;
     /* VERUM = inspector Safari CELATUS. Tres apps eum volunt, ergo
      * ordinarium est adesse; capsula vecta eum claudat.
      *

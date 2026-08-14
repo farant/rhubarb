@@ -87,6 +87,17 @@ atrium_vexilla_legere (AtriumConfiguratio* figura, integer argc,
         {
             figura->vivum = VERUM;
         }
+        /* -radix <via>: assetum e disco. INDEPENDENS a -vivum de
+         * industria - laboratorium ambo sub uno vexillo ligavit, et
+         * ita duas figuras rationabiles inattingibiles fecit: imperium
+         * contra capsulam VECTAM (id quod probare vis), et assetum e
+         * disco SINE canali exsecutionis aperto. */
+        alioquin si (strcmp(argv[i], "-radix") == ZEPHYRUM
+                     && (i + I) < argc)
+        {
+            i++;
+            figura->capsula_radix = argv[i];
+        }
         alioquin si (strcmp(argv[i], "-portus") == ZEPHYRUM
                      && (i + I) < argc)
         {
@@ -204,11 +215,31 @@ atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
     }
 
     /* --- CAPSULA + VITREA --- */
-    atrium->capsula = capsula_aperire(figura->capsula, piscina);
-    si (atrium->capsula == NIHIL)
+    /* Radix data = fons discus, ansa eadem. Vitrea nihil de hoc scit:
+     * capsula_legere unica vox est qua eam tangit. */
+    si (figura->capsula_radix != NIHIL
+        && figura->capsula_radix[0] != '\0')
     {
-        redde _frangere(causa,
-            "Capsula aperiri non potuit (assets fracta?)", piscina);
+        atrium->capsula = capsula_aperire_e_disco(
+            figura->capsula_radix, piscina);
+        si (atrium->capsula == NIHIL)
+        {
+            /* Radix prava TACITE ad capsulam infixam NON labitur: qui
+             * '-radix' poscit modum evolutionis poscit, et lapsus
+             * tacitus eum assetum VETUS videre sineret dum se sua
+             * videre credit. */
+            redde _frangere(causa,
+                "Radix capsulae directorium non est (-radix)", piscina);
+        }
+    }
+    alioquin
+    {
+        atrium->capsula = capsula_aperire(figura->capsula, piscina);
+        si (atrium->capsula == NIHIL)
+        {
+            redde _frangere(causa,
+                "Capsula aperiri non potuit (assets fracta?)", piscina);
+        }
     }
 
     memset(&figura_vitreae, 0, magnitudo(figura_vitreae));

@@ -209,6 +209,46 @@ s32 principale (vacuum)
         CREDO_VERUM (VERUM);
     }
 
+    {
+        AtriumConfiguratio figura;
+        character          a0[] = "app";
+        character          a1[] = "-radix";
+        character          a2[] = "assets";
+        character          a3[] = "-vivum";
+        character*         argv[IV];
+
+        imprimere("\n--- Probans vexilla_legere: -radix ---\n");
+
+        argv[0] = a0; argv[1] = a1; argv[2] = a2; argv[3] = a3;
+
+        /* -radix SOLUM: assetum e disco, canalis imperii CLAUSUS.
+         * Ea est figura quam laboratorium sub uno vexillo perdidit. */
+        memset(&figura, 0, magnitudo(figura));
+        atrium_vexilla_legere(&figura, (integer)III, argv);
+        CREDO_VERUM (figura.capsula_radix != NIHIL);
+        CREDO_VERUM (strcmp(figura.capsula_radix, "assets") == ZEPHYRUM);
+        CREDO_FALSUM (figura.vivum);
+
+        /* ambo simul: independentia in utramque partem */
+        memset(&figura, 0, magnitudo(figura));
+        atrium_vexilla_legere(&figura, (integer)IV, argv);
+        CREDO_VERUM (figura.vivum);
+        CREDO_VERUM (strcmp(figura.capsula_radix, "assets") == ZEPHYRUM);
+
+        /* -vivum SOLUM: capsula VECTA manet (id quod probare vis) */
+        memset(&figura, 0, magnitudo(figura));
+        argv[1] = a3;   /* "-vivum" */
+        atrium_vexilla_legere(&figura, (integer)II, argv);
+        CREDO_VERUM (figura.vivum);
+        CREDO_VERUM (figura.capsula_radix == NIHIL);
+
+        /* -radix ultimum, sine valore: nulla lectio ultra finem */
+        memset(&figura, 0, magnitudo(figura));
+        argv[1] = a1;   /* "-radix" restituere */
+        atrium_vexilla_legere(&figura, (integer)II, argv);
+        CREDO_VERUM (figura.capsula_radix == NIHIL);
+    }
+
     /* ========================================================
      * PROBARE: atrium_creare - semitae recusationis
      *
