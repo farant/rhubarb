@@ -878,6 +878,32 @@ s32 principale (vacuum)
         /* Mora IN PAGINA manet: gyrus C nihil de condicione scit. */
         CREDO_VERUM (_continet(o.premere_ok.js, "new Promise"));
         CREDO_VERUM (_continet(o.premere_ok.js, "setTimeout"));
+
+        /* SCRIBERE: assignatio PROBANDA.
+         *
+         * Vitium mensuratum ab agente qui ut usor tractabat:
+         * 'scribere #select <textus visibilis>' exitum ZEPHYRUM
+         * dabat et NIHIL mutabat, quia .value optionem congruentem
+         * quaerit. Tria custodimus - congruentia optionum, recusatio
+         * elementi sine valore, relectio post assignationem.
+         *
+         * MORES ipsi HINC NON probantur (simulacrum paginam non
+         * habet); probatio VIVA contra applicationem currentem eos
+         * iudicavit. Haec custodia est ne forma redeat. */
+        CREDO_VERUM (_continet(o.scribere_ok.js, "e.tagName==='SELECT'"));
+        CREDO_VERUM (_continet(o.scribere_ok.js, "e.selectedIndex=o.index"));
+        CREDO_VERUM (_continet(o.scribere_ok.js, "nulla optio congruit"));
+        CREDO_VERUM (_continet(o.scribere_ok.js, "valorem non habet"));
+        CREDO_VERUM (_continet(o.scribere_ok.js, "valor non mansit"));
+
+        /* TEXTUS: innerText, NON textContent.
+         *
+         * 'textus body' fontem <script> totum reddebat (XXXII milia
+         * octetorum) - textContent enim quae usor videre NON POTEST
+         * quoque legit, quod legem 'VISIBILE, NON PRAESENS' huius
+         * bibliothecae frangebat. */
+        CREDO_VERUM  (_continet(o.textus.js, "innerText"));
+        CREDO_VERUM  (_continet(o.textus.js, "e.tagName==='SELECT'"));
     }
 
     imprimere("\n--- Asserta cetera + formae _MORA ---\n");

@@ -53,6 +53,14 @@ svg { display: block; width: 100%; }
 .sessio .dur { color: #8b94a3; margin-left: 6px; }
 .sessio.electa { background: #2d3b57; border-color: #7aa2f7; }
 .sessio.electa .ordo, .sessio.electa .dur { color: #c0cbe0; }
+.sessio .quot { color: #6f7787; margin-left: 8px; font-size: 11px; }
+/* Cursus FILTRATUS: linea intercisa, ne cum pleno confundatur.
+   Tinctura sola non sufficit - forma quoque differre debet. */
+.sessio.pars { border-style: dashed; opacity: .72; }
+.sessio.pars .quot { color: var(--compilatio); }
+.collatioLinea label { display: flex; align-items: center; gap: 5px;
+                       cursor: pointer; }
+.collatioLinea .sep { color: #3d4450; }
 
 .collatioLinea { display: flex; align-items: center; gap: 10px;
                  margin-top: 10px; font-size: 12px; color: var(--tenuis); }
@@ -129,6 +137,30 @@ var sessioElecta = null;
    mensura sine damno condit (vide mensura.h: RRD eam respondere
    NON POTEST) - et facies eam usque adhuc rogare non poterat. */
 var sessioComparanda = null;
+
+/* Solos cursus PLENOS monstrare.
+   Cur omnino: sessiones cursus plenos (CXXXI probationes, ~180s) et
+   cursus FILTRATOS (una probatio, ~20s) permiscent, et prius nihil
+   eos distinguebat. Usor probans lineam tendentiae serratam
+   (180→24→179→20→187) ut INSTABILITATEM TERRIBILEM legit antequam
+   intellexit puncta poma cum piris conferri. Numerus probationum
+   nunc in quaque pyxide apparet, et hoc vexillum reliqua abscondit. */
+var soliPleni = false;
+
+function probationesQuot(d, sessio) {
+  var v = valorem(d, sessio, "suita.probationes.totae");
+  return (v === null) ? 0 : v;
+}
+
+/* PLENUS = dimidium maximi saltem.
+   Limen laxum consulto: cursus filtratus unam probationem habet,
+   plenus centum triginta - hiatus immanis est, ergo limen medium
+   utrumque robuste separat ET suitam crescentem superest (cursus
+   plenus antiquus CXXXI probationum plenus manet cum suita ad CC
+   creverit). */
+function estPlenus(d, sessio, maximum) {
+  return probationesQuot(d, sessio) * 2 >= maximum;
+}
 
 /* Tempora cursus per titulum, sessionis unius. */
 function temporaCursus(d, sessio) {
@@ -322,7 +354,20 @@ function reddere() {
     return;
   }
 
-  var sessiones = sessionesOrdinatae(d);
+  var omnesSessiones = sessionesOrdinatae(d);
+  var maxProb = 0;
+  omnesSessiones.forEach(function (k) {
+    var q = probationesQuot(d, k);
+    if (q > maxProb) { maxProb = q; }
+  });
+
+  /* Sessiones VISAE: quod vexillum reliquit. Omnia infra - pyxides,
+     tendentia, index electae - ex his fluunt, ne facies partim
+     filtrata partim non sit. */
+  var sessiones = soliPleni
+    ? omnesSessiones.filter(function (k) { return estPlenus(d, k, maxProb); })
+    : omnesSessiones;
+  if (sessiones.length === 0) { sessiones = omnesSessiones; }
   var ultima = sessiones[sessiones.length - 1];
 
   /* Electa VALIDATUR contra sessiones praesentes: datum reficitur
@@ -348,17 +393,30 @@ function reddere() {
   sessiones.forEach(function (k, i) {
     var totum = valorem(d, k, "suita.tempus.totum");
     var comm  = commissumBreve(d, k);
+    var quot  = probationesQuot(d, k);
+    var plenus = estPlenus(d, k, maxProb);
+    /* ORDO EX INDICE PLENO, non ex viso: aliter eadem sessio
+       'XII' sine vexillo et 'IV' cum vexillo vocaretur, et duo
+       nomina unius rei lectorem fallunt. Numerus PYXIDIS (i) situm
+       tenet; numerus SESSIONIS identitatem. */
+    var ordo = omnesSessiones.indexOf(k) + 1;
     /* ID STABILIS + aria-label: instrumentum manus hunc premit
-       nomine ('#sessio-3'), et nomen quod legit hinc venit. */
+       nomine ('#sessio-3'), et nomen quod legit hinc venit.
+       Numerus probationum in nomine QUOQUE: cursus filtratus a
+       pleno distinguendus est etiam ei qui pyxidem non VIDET. */
     var b = el("button", {
       id: "sessio-" + (i + 1),
-      "class": "sessio" + (k === electa ? " electa" : ""),
-      "aria-label": "sessio " + (i + 1) + " " + comm
+      "class": "sessio" + (k === electa ? " electa" : "")
+             + (plenus ? "" : " pars"),
+      "aria-label": "sessio " + ordo + " " + comm + " "
+        + quot + (plenus ? " probationes (plenus)" : " probationes (filtratus)")
     });
-    b.appendChild(el("span", { "class": "ordo" }, String(i + 1)));
+    b.appendChild(el("span", { "class": "ordo" }, String(ordo)));
     b.appendChild(el("span", {}, comm));
     b.appendChild(el("span", { "class": "dur" },
       totum === null ? "—" : fig(totum, 1) + "s"));
+    b.appendChild(el("span", { "class": "quot" },
+      quot + "p" + (plenus ? "" : " filtr.")));
     b.addEventListener("click", function () {
       sessioElecta = k;
       reddere();
@@ -371,13 +429,27 @@ function reddere() {
      sessiones viginti duas pyxides facerent, et centum ducentas -
      selectio cum indice crescit, pyxides non. */
   var linea = el("div", { "class": "collatioLinea" });
+
+  /* Vexillum ANTE selectionem: quid monstretur ante quid conferatur. */
+  var lab = el("label", { "for": "soli-pleni" });
+  var cb = el("input", { type: "checkbox", id: "soli-pleni",
+                         "aria-label": "solos cursus plenos monstrare" });
+  if (soliPleni) { cb.setAttribute("checked", "checked"); }
+  cb.addEventListener("change", function () {
+    soliPleni = cb.checked;
+    reddere();
+  });
+  lab.appendChild(cb);
+  lab.appendChild(el("span", {}, " soli cursus pleni"));
+  linea.appendChild(lab);
+  linea.appendChild(el("span", { "class": "sep" }, "·"));
   linea.appendChild(el("span", {}, "conferre cum"));
   var comp = el("select", { id: "comparanda",
                             "aria-label": "sessio basis collationis" });
   comp.appendChild(el("option", { value: "" }, "— nulla —"));
   sessiones.forEach(function (k, i) {
     comp.appendChild(el("option", { value: k },
-      (i + 1) + " · " + commissumBreve(d, k)));
+      (omnesSessiones.indexOf(k) + 1) + " · " + commissumBreve(d, k)));
   });
   /* Valorem POST appensionem ponere: optio nondum exsistens
      assignationem tacite abicit. */
@@ -392,7 +464,7 @@ function reddere() {
 
   /* ---- summa sessionis electae ---- */
   var summa = el("div", { "class": "tabula", id: "tabula-summa" });
-  summa.appendChild(el("h2", {}, "sessio " + (index + 1) + " · "
+  summa.appendChild(el("h2", {}, "sessio " + (omnesSessiones.indexOf(electa) + 1) + " · "
     + commissumBreve(d, electa)
     + (electa === ultima ? " (ultima)" : "")));
   var box = el("div", { "class": "summa" });
@@ -419,15 +491,18 @@ function reddere() {
                && sessioComparanda !== electa) ? sessioComparanda : null;
 
   if (basis !== null) {
-    var iBasis = sessiones.indexOf(basis);
+    /* ORDO EX INDICE PLENO (vide pyxides supra): idem numerus
+       sub quolibet vexillo. */
+    var iBasis = omnesSessiones.indexOf(basis);
+    var iElecta = omnesSessiones.indexOf(electa);
     var col = el("div", { "class": "tabula", id: "tabula-collatio" });
-    col.appendChild(el("h2", {}, "collatio · sessio " + (index + 1)
+    col.appendChild(el("h2", {}, "collatio · sessio " + (iElecta + 1)
       + " − sessio " + (iBasis + 1)));
 
     /* Signum SEMPER electa MINUS basis: positivum = tardius nunc.
        Ordo alius numeros rectos daret et sensum inversum. */
     var caput = el("div", { "class": "collatioLinea" });
-    caput.appendChild(el("span", {}, "sessio " + (index + 1) + " ("
+    caput.appendChild(el("span", {}, "sessio " + (iElecta + 1) + " ("
       + commissumBreve(d, electa) + ") relata ad sessionem "
       + (iBasis + 1) + " (" + commissumBreve(d, basis)
       + ") · positivum = TARDIUS"));

@@ -795,3 +795,64 @@ is outside the page and cannot be observed from within it —
 examen reported implicit calls. Healed the shim rather than pinning the
 diagnostic (house doctrine). Amalgam regenerated — silva/CLAUDE.md warns
 the suite does not catch a stale one. silva 38/38, auspex certifies.
+
+## 2026-08-13 — two defects found by a test-user subagent
+
+Fran's experiment: brief a subagent as a developer investigating a slow
+test suite, give it `bin/manus` and the app, tell it **not** to read any
+source, and collect where it got stuck. It reported friction on both the
+app and the tool. I verified its two most serious claims myself before
+acting — both real.
+
+### `manus_scribere` returned ok:true while doing nothing
+
+```
+bin/manus scribere '#comparanda' '1 · 64d3dbf0'   → exit 0, nothing changed
+```
+
+`.value` on a `<select>` only takes if it matches an option's *value*;
+any other string is silently discarded. The old code assigned and
+returned `{ok:true}` unconditionally.
+
+The uncomfortable part: **I had demonstrated this exact call "working"
+earlier the same day** — but I'd pulled the option's `value` out with
+`aestimare` first. My verification was privileged: it depended on
+knowledge the tool never surfaces. A user who reads the screen sees only
+the label.
+
+Fixed with three changes, of which only the first is select-specific:
+1. `<select>` matches by option value **or visible text** — the text is
+   what the user can actually see.
+2. An element with no `.value` is **refused**, not silently written to.
+3. **The value is re-read after assignment.** A number input rejecting
+   letters, or a `maxlength` truncating, would have lied in exactly the
+   same way. This is the general fix; the select was just the instance
+   that got caught.
+
+### `manus_textus` returned invisible content
+
+```
+bin/manus textus body   → 32,594 bytes, including the page's entire
+                          inline <script> with implementation comments
+```
+
+`textContent` reads everything, including what no user can see. That
+directly contradicts this library's founding law — *"OMNIA 'VISIBILE'
+SIGNIFICANT, NON 'PRAESENS'"* — which every selector and assertion
+already obeys. `manus_textus` was the one hole.
+
+Now uses `innerText` (which respects visibility and drops script/style),
+and for a `<select>` returns the **selected option's text** rather than
+its value. The old behavior returned an empty string when the selected
+option had an empty value, which read as "the selector matched nothing".
+
+It also breached the experiment's own "don't read source" rule through
+an ordinary read command — the agent disclosed that rather than quietly
+using what it saw.
+
+### Test coverage
+
+Five new assertions in the JS-form regression block plus two for textus.
+These guard the *shape* of the emitted JS, not the behavior — the mock
+has no page, so behavior was proven live against the running app, per
+this file's standing split. Suite: 112/112.

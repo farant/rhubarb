@@ -1146,14 +1146,57 @@ manus_scribere (
 
     /* Eventus 'input'/'change' manu immittendi sunt: assignatio
      * .value eos NON parit, et facies reactiva quae eos audit
-     * nihil omnino sentiret. */
-    a = chorda_aedificator_creare(manus->piscina, CCLVI);
-    chorda_aedificator_appendere_literis(a, "e.value=");
+     * nihil omnino sentiret.
+     *
+     * ASSIGNATIO PROBANDA EST - vitium MENSURATUM 2026-08-13 ab
+     * agente qui applicationem ut usor tractabat:
+     *
+     *   bin/manus scribere '#comparanda' '1 · 64d3dbf0'
+     *   exit=0, et NIHIL mutatum est.
+     *
+     * '.value' in <select> optionem CONGRUENTEM quaerit; chorda
+     * quae nulli optioni par est TACITE abicitur. Prior forma
+     * 'ok:true' semper reddebat - viride mendax, genus pessimum.
+     *
+     * Ego IPSE eandem functionem hodie 'operari' demonstravi, sed
+     * VALOREM optionis tradideram quem prius per aestimare
+     * extraxeram - probatio privilegiata, quae scientiam
+     * postulabat quam instrumentum non ostendit.
+     *
+     * Ergo TRIA: (1) <select> et per valorem et per TEXTUM VISIBILEM
+     * congruit - textus enim est quod usor legit; (2) elementum sine
+     * .value RECUSAT potius quam nihil agit; (3) post assignationem
+     * valor RELECTUS est - campus numericus qui litteras reicit, aut
+     * maxlength qui truncat, eodem silentio mentiretur. */
+    a = chorda_aedificator_creare(manus->piscina, DXII);
+    chorda_aedificator_appendere_literis(a, "var T=");
     _appendere_litteras_js(a, textus);
     chorda_aedificator_appendere_literis(a,
-        ";e.dispatchEvent(new Event('input',{bubbles:true}));"
+        ";function _t(s){s=String(s==null?'':s);"
+        "var i=0,j=s.length;"
+        "while(i<j&&s.charAt(i)<=' ')i++;"
+        "while(j>i&&s.charAt(j-1)<=' ')j--;"
+        "return s.substring(i,j);}"
+        "if(e.tagName==='SELECT'){"
+        "var o=null,i,d=[];"
+        "for(i=0;i<e.options.length;i++){d.push(_t(e.options[i].text));}"
+        "for(i=0;i<e.options.length&&!o;i++){"
+        "if(e.options[i].value===T)o=e.options[i];}"
+        "for(i=0;i<e.options.length&&!o;i++){"
+        "if(_t(e.options[i].text)===_t(T))o=e.options[i];}"
+        "if(!o)return{ok:false,visum:\"nulla optio congruit; praesto: \""
+        "+d.join(\" | \")};"
+        "e.selectedIndex=o.index;"
+        "}else if(e.value===undefined||e.value===null){"
+        "return{ok:false,visum:'<'+e.tagName.toLowerCase()+"
+        "'> valorem non habet - scribere hic nihil ageret'};"
+        "}else{e.value=T;}"
+        "e.dispatchEvent(new Event('input',{bubbles:true}));"
         "e.dispatchEvent(new Event('change',{bubbles:true}));"
-        "return{ok:true,visum:e.value};");
+        "if(e.tagName!=='SELECT'&&String(e.value)!==String(T)){"
+        "return{ok:false,visum:'valor non mansit: petitum \"'+T+"
+        "'\", remansit \"'+e.value+'\"'};}"
+        "return{ok:true,visum:String(e.value)};");
 
     fructus = _agere(manus, "q(", selector,
                      _litterae(chorda_aedificator_finire(a), manus->piscina),
@@ -1357,7 +1400,30 @@ manus_textus (
     _appendere_litteras_js(a, selector);
     chorda_aedificator_appendere_literis(a,
         ");if(!e)return{ok:false,visum:\"\"};"
-        "return{ok:true,visum:String(e.value!==undefined?e.value:e.textContent)};");
+        /* TEXTUM VISIBILEM reddere, non textContent.
+         *
+         * MENSURATUM 2026-08-13: 'manus textus body' XXXII milia
+         * octetorum reddidit - fontem <script> paginae TOTUM,
+         * commentariis inclusis. textContent enim omnia legit,
+         * etiam quae usor videre NON POTEST.
+         *
+         * Id legem huius bibliothecae ipsam frangebat: omnia hic
+         * 'VISIBILE, NON PRAESENS' significant (vide caput
+         * MANUS_JS_VISUS supra). innerText solus eam servat -
+         * scripta, styli, occulta omnia excludit.
+         *
+         * <select>: TEXTUS optionis electae, non valor. Valor
+         * saepe clavis interna est ('019ffd86e206'); usor verba
+         * legit. Prior forma chordam VACUAM reddebat cum optio
+         * prima valorem vacuum haberet - quod 'selector nihil
+         * invenit' mentiebatur. */
+        "if(e.tagName==='SELECT'){var o=e.options[e.selectedIndex];"
+        "return{ok:true,visum:o?String(o.text):\"\"};}"
+        "if(e.value!==undefined&&e.value!==null)"
+        "return{ok:true,visum:String(e.value)};"
+        "return{ok:true,visum:String("
+        "(e.innerText===undefined||e.innerText===null)"
+        "?e.textContent:e.innerText)};");
 
     v = _interrogare(manus,
                      _litterae(chorda_aedificator_finire(a), manus->piscina));
