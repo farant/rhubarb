@@ -968,15 +968,19 @@ _fontem_vitreum_fingere (Piscina* piscina,
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,
         "_pipa.c; facies in assets/.\n"
-        " * (A silice genita - exemplar: vocabularium/villa.) */\n"
+        " *\n"
+        " * ATRIUM fenestram + capsulam + vitream + internuntium"
+        " +\n"
+        " * imperium uno vocamine struit, ordine recto - gyrus"
+        " tamen\n"
+        " * TUUS manet (vide include/atrium.h).\n"
+        " * (A silice genita - exemplar: apps/mensor/mensor_ui.c.)"
+        " */\n"
         "#include \"latina.h\"\n"
         "#include \"piscina.h\"\n"
         "#include \"chorda.h\"\n"
         "#include \"json.h\"\n"
-        "#include \"fenestra.h\"\n"
-        "#include \"capsula.h\"\n"
-        "#include \"vitrea.h\"\n"
-        "#include \"internuntius.h\"\n"
+        "#include \"atrium.h\"\n"
         "#include \"volumen.h\"\n"
         "#include \"");
     chorda_aedificator_appendere_literis(a, titulus);
@@ -987,34 +991,24 @@ _fontem_vitreum_fingere (Piscina* piscina,
     chorda_aedificator_appendere_literis(a,
         ".h\"\n"
         "#include <stdio.h>\n"
-        "\n"
-        "#define TICTUS_MS 200\n"
+        "#include <string.h>\n"
         "\n"
         "s32\n"
-        "principale (vacuum)\n"
+        "principale (integer argc, character** argv)\n"
         "{\n"
-        "    Piscina* piscina = piscina_generare_dynamicum(\n"
-        "        \"");
-    chorda_aedificator_appendere_literis(a, titulus);
-    chorda_aedificator_appendere_literis(a,
-        "\", 16777216);\n"
-        "    Piscina* piscina_vocationis ="
-        " piscina_generare_dynamicum(\n"
-        "        \"");
-    chorda_aedificator_appendere_literis(a, titulus);
-    chorda_aedificator_appendere_literis(a,
-        "_vocationes\", 8388608);\n"
+        "    Piscina*            piscina;\n"
         "    constans character* via;\n"
-        "    Pipa          pipa;\n"
-        "    FenestraConfiguratio figura_fenestrae;\n"
-        "    VitreaConfiguratio   figura_vitreae;\n"
-        "    Fenestra*     fenestra;\n"
-        "    Capsula*      capsula;\n"
-        "    Vitrea*       vitrea;\n"
-        "    Internuntius* inx;\n"
+        "    Pipa                pipa;\n"
+        "    AtriumConfiguratio  figura;\n"
+        "    Atrium*             atrium;\n"
+        "    chorda              causa;\n"
         "\n"
-        "    si (piscina == NIHIL || piscina_vocationis =="
-        " NIHIL)\n"
+        "    piscina = piscina_generare_dynamicum(\"");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "\",\n"
+        "        16777216);\n"
+        "    si (piscina == NIHIL)\n"
         "    {\n"
         "        redde I;\n"
         "    }\n"
@@ -1035,96 +1029,70 @@ _fontem_vitreum_fingere (Piscina* piscina,
         "        redde I;\n"
         "    }\n"
         "\n"
-        "    figura_fenestrae.titulus  = \"");
+        "    /* memset ZEPHYRO primum: quod non ponis ordinarium"
+        " sanum\n"
+        "     * est (vide atrium.h). */\n"
+        "    memset(&figura, 0, magnitudo(figura));\n"
+        "    figura.titulus  = \"");
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,
         "\";\n"
-        "    figura_fenestrae.x        = CC;\n"
-        "    figura_fenestrae.y        = CC;\n"
-        "    figura_fenestrae.latitudo = 640;\n"
-        "    figura_fenestrae.altitudo = 400;\n"
-        "    figura_fenestrae.vexilla  = FENESTRA_CLAUDIBILIS\n"
-        "        | FENESTRA_MUTABILIS | FENESTRA_CENTRATA;\n"
-        "    fenestra = fenestra_creare(piscina,"
-        " &figura_fenestrae);\n"
-        "    si (fenestra == NIHIL)\n"
-        "    {\n"
-        "        imprimere(\"FRACTA: fenestra\\n\");\n"
-        "        redde I;\n"
-        "    }\n"
-        "    capsula = capsula_aperire(&capsula_");
+        "    figura.latitudo = 640;\n"
+        "    figura.altitudo = 400;\n"
+        "    figura.capsula  = &capsula_");
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,
-        ", piscina);\n"
-        "    si (capsula == NIHIL)\n"
+        ";\n"
+        "\n"
+        "    /* -vivum [-portus N]: canalem imperii aperit, unde\n"
+        "     * 'bin/manus' hanc app agere potest (affordantiae,\n"
+        "     * premere, lege, imago). MODUS EVOLUTIONIS SOLUS -\n"
+        "     * JS arbitrarium exsequitur; in capsula vecta"
+        " NUMQUAM\n"
+        "     * (vide imperium.h). */\n"
+        "    atrium_vexilla_legere(&figura, argc, argv);\n"
+        "\n"
+        "    atrium = atrium_creare(piscina, &figura, &causa);\n"
+        "    si (atrium == NIHIL)\n"
         "    {\n"
-        "        imprimere(\"FRACTA: capsula\\n\");\n"
+        "        /* causa NOMINAT quid defecerit - numquam vacua"
+        " */\n"
+        "        imprimere(\"FRACTA: %.*s\\n\","
+        " (integer)causa.mensura,\n"
+        "            (constans character*)causa.datum);\n"
         "        redde I;\n"
         "    }\n"
-        "    figura_vitreae.origo         ="
-        " VITREA_ORIGO_CAPSULA;\n"
-        "    figura_vitreae.capsula       = capsula;\n"
-        "    figura_vitreae.via_initialis = \"index.html\";\n"
-        "    figura_vitreae.url           = NIHIL;\n"
-        "    figura_vitreae.inspectabilis = VERUM;\n"
-        "    vitrea = vitrea_creare(piscina, fenestra,"
-        " &figura_vitreae);\n"
-        "    si (vitrea == NIHIL)\n"
-        "    {\n"
-        "        imprimere(\"FRACTA: vitrea\\n\");\n"
-        "        redde I;\n"
-        "    }\n"
-        "    inx = internuntius_creare(piscina, vitrea_missor,"
-        " vitrea);\n"
-        "    si (inx == NIHIL)\n"
-        "    {\n"
-        "        imprimere(\"FRACTA: internuntius\\n\");\n"
-        "        redde I;\n"
-        "    }\n"
-        "    (vacuum)internuntius_praebere(inx, \"salve\",\n"
-        "        pipa_salve_tractare, &pipa);\n"
+        "    (vacuum)internuntius_praebere("
+        "atrium_internuntius(atrium),\n"
+        "        \"salve\", pipa_salve_tractare, &pipa);\n"
         "\n"
         "    imprimere(\"[");
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,
         "] fenestra aperta (volumen %s)\\n\", via);\n"
+        "    si (atrium_portus(atrium) != ZEPHYRUM)\n"
+        "    {\n"
+        "        imprimere(\"[");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        "] imperium:"
+        " http://127.0.0.1:%d/imperium\\n\",\n"
+        "            (integer)atrium_portus(atrium));\n"
+        "    }\n"
         "    fflush(stdout);\n"
         "\n"
-        "    dum (!fenestra_debet_claudere(fenestra))\n"
-        "    {\n"
-        "        Eventus            eventus;\n"
-        "        chorda             nuntium;\n"
-        "        VitreaNuntiusGenus genus_nuntii;\n"
-        "        PiscinaNotatio     nota;\n"
+        "    atrium_monstrare(atrium);\n"
         "\n"
-        "        fenestra_expectare_eventus(fenestra,"
-        " TICTUS_MS);\n"
-        "        dum (fenestra_obtinere_eventus(fenestra,"
-        " &eventus))\n"
-        "        {\n"
-        "            /* JS omnia tractat */\n"
-        "        }\n"
-        "        nota = piscina_notare(piscina_vocationis);\n"
-        "        dum (vitrea_obtinere_nuntium(vitrea, &nuntium,\n"
-        "            &genus_nuntii))\n"
-        "        {\n"
-        "            si (genus_nuntii == VITREA_NUNTIUS_PONS)\n"
-        "            {\n"
-        "                internuntius_tractare(inx, nuntium,\n"
-        "                    piscina_vocationis);\n"
-        "            }\n"
-        "            alioquin\n"
-        "            {\n"
-        "                vitrea_recargare(vitrea);\n"
-        "            }\n"
-        "        }\n"
-        "        piscina_reficere(piscina_vocationis, nota);\n"
+        "    /* GYRUS TUUS EST - atrium eum non possidet. Opus"
+        " tuum\n"
+        "     * per tictum hic pone; 'frange' tuum est. */\n"
+        "    dum (atrium_currendum(atrium))\n"
+        "    {\n"
+        "        (vacuum)atrium_gressus(atrium);\n"
         "    }\n"
         "\n"
-        "    vitrea_destruere(vitrea);\n"
-        "    fenestra_destruere(fenestra);\n"
+        "    atrium_destruere(atrium);\n"
         "    volumen_claudere(pipa.volumen);\n"
-        "    piscina_destruere(piscina_vocationis);\n"
         "    piscina_destruere(piscina);\n"
         "    redde ZEPHYRUM;\n"
         "}\n");
@@ -1360,6 +1328,17 @@ _readme_vitreum_fingere (Piscina* piscina,
     chorda_aedificator_appendere_literis(a,
         "` — fenestra (numerus visitationum\n"
         "  trans aperturas crescit — persistentia visibilis)\n"
+        "- `./bin/");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        " -vivum` — idem, sed canali imperii aperto:\n"
+        "  `manus incipere ./bin/");
+    chorda_aedificator_appendere_literis(a, titulus);
+    chorda_aedificator_appendere_literis(a,
+        " -vivum` deinde `manus\n"
+        "  affordantiae` fenestram e conclavi agit. MODUS"
+        " EVOLUTIONIS\n"
+        "  SOLUS — JS arbitrarium exsequitur.\n"
         "- `./probare.sh` — probationes\n"
         "- `silex partes` — clausura; `silex renovare -scribere`"
         " post\n"
@@ -1637,7 +1616,17 @@ _aedificare_vitreum_fingere (Piscina* piscina,
     _ordinem_fontium_appendere(a, clausura_app, VERUM);
     _obiecta_venditoria_appendere(a, clausura_app);
     chorda_aedificator_appendere_literis(a,
-        " \\\n    -framework Cocoa -framework WebKit \\\n"
+        /* Security NON ornamentum: atrium imperium trahit ->
+         * hospitium -> tls -> tls_macos.m, quod SecPolicy...
+         * poscit. Sine eo nexus deficit, et deficiebat - vitium
+         * quod nemo vidit quia scaffoldatum numquam aedificabatur
+         * (vide tools/silex_semen_fumus.sh, natum eodem die).
+         * Hic ordo IDEM est quem omne binarium rhubarb ligat
+         * (compile_tests.sh, compile_tools.sh, silex_struere.sh):
+         * copiatus, non divinatus. Carbon abest de industria -
+         * fenestra_macos.m eum importat pro CONSTANTIBUS solis. */
+        " \\\n    -framework Cocoa -framework Security"
+        " -framework WebKit \\\n"
         "    -o build/");
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,

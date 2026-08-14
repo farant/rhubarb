@@ -507,6 +507,16 @@ s32 principale (vacuum)
             AREA "/vitreum/lib/vitrea_macos.m"));
         CREDO_VERUM(filum_existit(
             AREA "/vitreum/lib/fenestra_macos.m"));
+        /* atrium: semen baculos inclusos accipit (imperium ->
+         * '-vivum'), et trahit CLAUSURAM SUAM - tls_macos.m hic
+         * est quia atrium -> imperium -> hospitium -> tls. Illa
+         * plagula est quae '-framework Security' poscit; sine
+         * ea assertio infra causam suam amitteret. */
+        CREDO_VERUM(filum_existit(AREA "/vitreum/lib/atrium.c"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/include/atrium.h"));
+        CREDO_VERUM(filum_existit(
+            AREA "/vitreum/lib/tls_macos.m"));
         CREDO_VERUM(filum_existit(
             AREA "/vitreum/vendor/sqlite3.c"));
         /* clausura instrumenti: toml quod app non trahit */
@@ -526,6 +536,22 @@ s32 principale (vacuum)
                 AREA "/vitreum/aedificare.sh", piscina);
             chorda prob = filum_legere_totum(
                 AREA "/vitreum/probare.sh", piscina);
+            chorda app = filum_legere_totum(
+                AREA "/vitreum/fontes/vitreum.c", piscina);
+
+            /* '-vivum' in semine: NON vexillum quod app legat, sed
+             * atrium_vexilla_legere cui argv traditur. Sine argv in
+             * principali vexillum invisibile est - ergo utrumque
+             * figitur, non alterum solum. */
+            CREDO_CHORDA_CONTINET(app, chorda_ex_literis(
+                "principale (integer argc, character** argv)",
+                piscina));
+            CREDO_CHORDA_CONTINET(app, chorda_ex_literis(
+                "atrium_vexilla_legere(&figura, argc, argv)",
+                piscina));
+            /* gyrus APP est, non atrii (vide atrium.h) */
+            CREDO_CHORDA_CONTINET(app, chorda_ex_literis(
+                "dum (atrium_currendum(atrium))", piscina));
 
             CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
                 "GENERATUM a silice (novum -vitrea", piscina));
@@ -537,8 +563,15 @@ s32 principale (vacuum)
                 "lib/vitrea_macos.m", piscina));
             CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
                 "vendor/sqlite3.c", piscina));
+            /* Security ADEST quia tls_macos.m in clausura est
+             * (vide supra). Hoc ANTE portam fumi deerat, et nexus
+             * omnis proiecti novi deficiebat sine ulla probatione
+             * rubente - quia haec probatio manifestum iudicat, non
+             * aedificationem. Porta vera:
+             * ./tools/silex_semen_fumus.sh */
             CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
-                "-framework Cocoa -framework WebKit", piscina));
+                "-framework Cocoa -framework Security"
+                " -framework WebKit", piscina));
             CREDO_CHORDA_CONTINET(aed, chorda_ex_literis(
                 "rm -f bin/vitreum", piscina));
             CREDO_CHORDA_CONTINET(prob, chorda_ex_literis(
