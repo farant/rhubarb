@@ -40,6 +40,19 @@ td.n { text-align: right; color: var(--tenuis);
                   text-transform: uppercase; letter-spacing: .08em; }
 svg { display: block; width: 100%; }
 .tendentia svg { height: 190px; }
+
+/* Sessiones eligendae. Pyxides VERAE (non div cum onclick): manus
+   eas ut affordantias premendas videt, et lector schermi quoque. */
+.sessiones { display: flex; flex-wrap: wrap; gap: 6px; }
+.sessio { font: inherit; font-size: 12px; cursor: pointer;
+          background: #22262e; color: var(--textus);
+          border: 1px solid #2b3038; border-radius: 4px;
+          padding: 6px 10px; line-height: 1.35; text-align: left; }
+.sessio:hover { border-color: #3d4450; }
+.sessio .ordo { color: #8b94a3; margin-right: 6px; }
+.sessio .dur { color: #8b94a3; margin-left: 6px; }
+.sessio.electa { background: #2d3b57; border-color: #7aa2f7; }
+.sessio.electa .ordo, .sessio.electa .dur { color: #c0cbe0; }
 </style>
 </head>
 <body>
@@ -86,8 +99,27 @@ function valorem(d, sessio, titulus) {
   return null;
 }
 
-/* Linea temporis: una series per titulum */
-function seriesPingere(sessiones, series) {
+/* Sessio ELECTA. NIHIL = ultima (mos ante hanc facultatem).
+   Status in modulo vivit, non in DOM: reddere() corpus totum
+   reficit, ergo quidquid in DOM solo viveret quoque reddendo
+   periret. */
+var sessioElecta = null;
+
+/* Commissum breve, aut clavis si commissum abest (sessio ante
+   integrationem git, aut arbor sordida sine commisso). */
+function commissumBreve(d, clavis) {
+  var r = "?";
+  d.sessiones.forEach(function (s) {
+    if (s.clavis === clavis && s.commissum) {
+      r = s.commissum.substring(0, 8);
+    }
+  });
+  return r;
+}
+
+/* Linea temporis: una series per titulum. 'index' = sessio electa,
+   signata linea verticali ut oculus eam in tendentia inveniat. */
+function seriesPingere(sessiones, series, index) {
   var lat = 800, alt = 190, ima = 24, sin = 44;
   var svg = el("svg", { viewBox: "0 0 " + lat + " " + alt,
                         preserveAspectRatio: "none" });
@@ -109,6 +141,13 @@ function seriesPingere(sessiones, series) {
   var n = sessiones.length;
   function px(i) { return n <= 1 ? sin : sin + (lat - sin) * (i / (n - 1)); }
   function py(v) { return 8 + (alt - ima - 8) * (1 - v / maximum); }
+
+  /* Signum sessionis electae ANTE lineas: aliter eas obtegeret. */
+  if (index >= 0 && index < n) {
+    svg.appendChild(el("line", { x1: px(index), y1: 4,
+      x2: px(index), y2: alt - ima, stroke: "#7aa2f7",
+      "stroke-width": 1, "stroke-dasharray": "3 3" }));
+  }
 
   series.forEach(function (s) {
     var d = "", coepit = false;
@@ -167,8 +206,15 @@ var TINCTURAE = ["#7aa2f7", "#e0af68", "#9ece6a", "#bb9af7", "#7dcfff"];
 
 function flammaPingere(radices) {
   var lat = 1000, gradus = 22, margo = 2;
+  /* SUMMA radicum, non MAXIMUM.
+     Vitium mensuratum 2026-08-13: prius maximum sumebatur et
+     quaeque radix ad x=0 latitudine PLENA ponebatur - ergo radices
+     plures se invicem obtegebant et sola ULTIMA picta videbatur.
+     Cum arbor una radice constat (mos post 757ff96) nihil differt;
+     cum pluribus, pictura mentiebatur. Sessio antiqua id ostendit:
+     CCLXV radices planae, et 'xml 0.1s' totam latitudinem tenebat. */
   var summa = 0;
-  radices.forEach(function (r) { if (r.m.valor > summa) { summa = r.m.valor; } });
+  radices.forEach(function (r) { summa += r.m.valor; });
   if (summa <= 0) { return null; }
 
   var rect = [], altitudoMax = 0;
@@ -189,7 +235,12 @@ function flammaPingere(radices) {
 
   /* Radix TINCTURAM NEUTRAM habet: eodem colore quo filia maxima
      picta, duo strata unum videbantur. */
-  radices.forEach(function (r) { ponere(r, 0, lat, 0, "#5a6272"); });
+  var cursorRadicum = 0;
+  radices.forEach(function (r) {
+    var w = lat * (r.m.valor / summa);
+    ponere(r, cursorRadicum, w, 0, "#5a6272");
+    cursorRadicum += w;
+  });
 
   var alt = altitudoMax * gradus;
   var svg = el("svg", { viewBox: "0 0 " + lat + " " + alt,
@@ -230,17 +281,55 @@ function reddere() {
 
   var sessiones = sessionesOrdinatae(d);
   var ultima = sessiones[sessiones.length - 1];
+
+  /* Electa VALIDATUR contra sessiones praesentes: datum reficitur
+     dum fenestra vivit, et clavis quae evanuit tabulas vacuas
+     redderet sine causa apparente. */
+  var electa = (sessioElecta !== null
+                && sessiones.indexOf(sessioElecta) >= 0)
+             ? sessioElecta : ultima;
+  var index = sessiones.indexOf(electa);
+
   var s0 = null;
-  d.sessiones.forEach(function (s) { if (s.clavis === ultima) { s0 = s; } });
+  d.sessiones.forEach(function (s) { if (s.clavis === electa) { s0 = s; } });
 
   document.getElementById("nota").textContent =
     sessiones.length + " sessiones · " + d.mensurae.length + " mensurae" +
     (s0 ? " · " + s0.systema + " " + s0.architectura +
           " · machina " + s0.machina.substring(0, 8) : "");
 
-  /* ---- summa sessionis ultimae ---- */
+  /* ---- sessiones eligendae ---- */
+  var sel = el("div", { "class": "tabula" });
+  sel.appendChild(el("h2", {}, "sessiones"));
+  var pyxides = el("div", { "class": "sessiones", id: "sessiones" });
+  sessiones.forEach(function (k, i) {
+    var totum = valorem(d, k, "suita.tempus.totum");
+    var comm  = commissumBreve(d, k);
+    /* ID STABILIS + aria-label: instrumentum manus hunc premit
+       nomine ('#sessio-3'), et nomen quod legit hinc venit. */
+    var b = el("button", {
+      id: "sessio-" + (i + 1),
+      "class": "sessio" + (k === electa ? " electa" : ""),
+      "aria-label": "sessio " + (i + 1) + " " + comm
+    });
+    b.appendChild(el("span", { "class": "ordo" }, String(i + 1)));
+    b.appendChild(el("span", {}, comm));
+    b.appendChild(el("span", { "class": "dur" },
+      totum === null ? "—" : fig(totum, 1) + "s"));
+    b.addEventListener("click", function () {
+      sessioElecta = k;
+      reddere();
+    });
+    pyxides.appendChild(b);
+  });
+  sel.appendChild(pyxides);
+  corpus.appendChild(sel);
+
+  /* ---- summa sessionis electae ---- */
   var summa = el("div", { "class": "tabula" });
-  summa.appendChild(el("h2", {}, "sessio ultima"));
+  summa.appendChild(el("h2", {}, "sessio " + (index + 1) + " · "
+    + commissumBreve(d, electa)
+    + (electa === ultima ? " (ultima)" : "")));
   var box = el("div", { "class": "summa" });
   [["totum", "suita.tempus.totum", "s", 1],
    ["compilatio", "suita.tempus.compilatio", "s", 1],
@@ -248,7 +337,7 @@ function reddere() {
    ["probationes", "suita.probationes.totae", "", 0],
    ["fractae", "suita.probationes.fractae", "", 0]
   ].forEach(function (par) {
-    var v = valorem(d, ultima, par[1]);
+    var v = valorem(d, electa, par[1]);
     var c = el("div");
     var n = el("span", { "class": "valor" }, fig(v, par[3]) + par[2]);
     if (par[0] === "fractae" && v > 0) { n.style.color = "var(--fracta)"; }
@@ -260,13 +349,32 @@ function reddere() {
   corpus.appendChild(summa);
 
   /* ---- flamma: UBI tempus abierit ---- */
-  var radices = arborem(d, ultima);
-  var flamma = radices.length > 0 ? flammaPingere(radices) : null;
-  if (flamma) {
-    var f = el("div", { "class": "tabula" });
-    f.appendChild(el("h2", {}, "ubi tempus abierit"));
-    f.appendChild(flamma);
+  var radices = arborem(d, electa);
+  var nodiQuot = 0;
+  d.mensurae.forEach(function (m) {
+    if (m.sessio === electa && m.unitas === "secunda") { nodiQuot++; }
+  });
+
+  /* NULLA ligamina parentum = nulla ARBOR, et pictura flammae
+     arborem REPRAESENTAT. Radices planas summare tempus BIS
+     numeraret (totum continet cursum, cursus quamque probationem),
+     ergo pictura recte disposita adhuc mentiretur. Tacere et causam
+     NOMINARE melius est quam pingere quod falsum sit. */
+  var sineArbore = (nodiQuot > 1 && radices.length === nodiQuot);
+  var f = el("div", { "class": "tabula" });
+  f.appendChild(el("h2", {}, "ubi tempus abierit"));
+
+  if (sineArbore) {
+    f.appendChild(el("div", { "class": "vacuum" },
+      "Sessio sine arbore: " + nodiQuot + " mensurae planae, nullum"
+      + " ligamen parentis. Suita arborem emittere coepit a 757ff96."));
     corpus.appendChild(f);
+  } else if (radices.length > 0) {
+    var flamma = flammaPingere(radices);
+    if (flamma) {
+      f.appendChild(flamma);
+      corpus.appendChild(f);
+    }
   }
 
   /* ---- tendentia per sessiones ---- */
@@ -289,13 +397,13 @@ function reddere() {
   });
   tend.appendChild(claves);
   var wrap = el("div", { "class": "tendentia" });
-  wrap.appendChild(seriesPingere(sessiones, series));
+  wrap.appendChild(seriesPingere(sessiones, series, index));
   tend.appendChild(wrap);
   corpus.appendChild(tend);
 
-  /* ---- probationes tardissimae (sessio ultima) ---- */
+  /* ---- probationes tardissimae (sessio ELECTA) ---- */
   var tard = d.mensurae.filter(function (m) {
-    return m.sessio === ultima && m.titulus.indexOf("probatio.cursus.") === 0;
+    return m.sessio === electa && m.titulus.indexOf("probatio.cursus.") === 0;
   }).sort(function (a, b) { return b.valor - a.valor; }).slice(0, 15);
 
   if (tard.length > 0) {
