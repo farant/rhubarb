@@ -53,6 +53,25 @@ svg { display: block; width: 100%; }
 .sessio .dur { color: #8b94a3; margin-left: 6px; }
 .sessio.electa { background: #2d3b57; border-color: #7aa2f7; }
 .sessio.electa .ordo, .sessio.electa .dur { color: #c0cbe0; }
+
+.collatioLinea { display: flex; align-items: center; gap: 10px;
+                 margin-top: 10px; font-size: 12px; color: var(--tenuis); }
+/* appearance:none - sine eo WebKit ornatum SUUM pingit (candidum,
+   caeruleum) qui in themate obscuro alienus sedet. */
+.collatioLinea select { font: inherit; font-size: 12px;
+  background: #22262e; color: var(--textus); border: 1px solid #2b3038;
+  border-radius: 4px; padding: 5px 26px 5px 8px; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #8b94a3 50%),
+                    linear-gradient(135deg, #8b94a3 50%, transparent 50%);
+  background-position: calc(100% - 14px) 12px, calc(100% - 9px) 12px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat; }
+.tardior { color: var(--fracta); }
+.celerior { color: var(--cursus); }
+.nulla { color: var(--tenuis); }
+td.delta { text-align: right; font-variant-numeric: tabular-nums;
+           padding-left: 12px; }
 </style>
 </head>
 <body>
@@ -104,6 +123,30 @@ function valorem(d, sessio, titulus) {
    reficit, ergo quidquid in DOM solo viveret quoque reddendo
    periret. */
 var sessioElecta = null;
+
+/* Sessio BASIS collationis. NIHIL = nulla collatio.
+   'Quod commissum hoc tardius fecit' est quaestio propter quam
+   mensura sine damno condit (vide mensura.h: RRD eam respondere
+   NON POTEST) - et facies eam usque adhuc rogare non poterat. */
+var sessioComparanda = null;
+
+/* Tempora cursus per titulum, sessionis unius. */
+function temporaCursus(d, sessio) {
+  var t = {};
+  d.mensurae.forEach(function (m) {
+    if (m.sessio === sessio
+        && m.titulus.indexOf("probatio.cursus.") === 0) {
+      t[m.titulus] = m.valor;
+    }
+  });
+  return t;
+}
+
+/* Signum ET tinctura: numerus nudus lectorem cogit meminisse utra
+   sessio basis sit. */
+function deltaTextus(delta) {
+  return (delta >= 0 ? "+" : "−") + fig(Math.abs(delta), 2) + "s";
+}
 
 /* Commissum breve, aut clavis si commissum abest (sessio ante
    integrationem git, aut arbor sordida sine commisso). */
@@ -299,7 +342,7 @@ function reddere() {
           " · machina " + s0.machina.substring(0, 8) : "");
 
   /* ---- sessiones eligendae ---- */
-  var sel = el("div", { "class": "tabula" });
+  var sel = el("div", { "class": "tabula", id: "tabula-sessiones" });
   sel.appendChild(el("h2", {}, "sessiones"));
   var pyxides = el("div", { "class": "sessiones", id: "sessiones" });
   sessiones.forEach(function (k, i) {
@@ -323,10 +366,32 @@ function reddere() {
     pyxides.appendChild(b);
   });
   sel.appendChild(pyxides);
+
+  /* Basis collationis: SELECTIO, non pyxides alterae. Undecim
+     sessiones viginti duas pyxides facerent, et centum ducentas -
+     selectio cum indice crescit, pyxides non. */
+  var linea = el("div", { "class": "collatioLinea" });
+  linea.appendChild(el("span", {}, "conferre cum"));
+  var comp = el("select", { id: "comparanda",
+                            "aria-label": "sessio basis collationis" });
+  comp.appendChild(el("option", { value: "" }, "— nulla —"));
+  sessiones.forEach(function (k, i) {
+    comp.appendChild(el("option", { value: k },
+      (i + 1) + " · " + commissumBreve(d, k)));
+  });
+  /* Valorem POST appensionem ponere: optio nondum exsistens
+     assignationem tacite abicit. */
+  comp.value = (sessioComparanda !== null) ? sessioComparanda : "";
+  comp.addEventListener("change", function () {
+    sessioComparanda = comp.value ? comp.value : null;
+    reddere();
+  });
+  linea.appendChild(comp);
+  sel.appendChild(linea);
   corpus.appendChild(sel);
 
   /* ---- summa sessionis electae ---- */
-  var summa = el("div", { "class": "tabula" });
+  var summa = el("div", { "class": "tabula", id: "tabula-summa" });
   summa.appendChild(el("h2", {}, "sessio " + (index + 1) + " · "
     + commissumBreve(d, electa)
     + (electa === ultima ? " (ultima)" : "")));
@@ -348,6 +413,94 @@ function reddere() {
   summa.appendChild(box);
   corpus.appendChild(summa);
 
+  /* ---- collatio duarum sessionum ---- */
+  var basis = (sessioComparanda !== null
+               && sessiones.indexOf(sessioComparanda) >= 0
+               && sessioComparanda !== electa) ? sessioComparanda : null;
+
+  if (basis !== null) {
+    var iBasis = sessiones.indexOf(basis);
+    var col = el("div", { "class": "tabula", id: "tabula-collatio" });
+    col.appendChild(el("h2", {}, "collatio · sessio " + (index + 1)
+      + " − sessio " + (iBasis + 1)));
+
+    /* Signum SEMPER electa MINUS basis: positivum = tardius nunc.
+       Ordo alius numeros rectos daret et sensum inversum. */
+    var caput = el("div", { "class": "collatioLinea" });
+    caput.appendChild(el("span", {}, "sessio " + (index + 1) + " ("
+      + commissumBreve(d, electa) + ") relata ad sessionem "
+      + (iBasis + 1) + " (" + commissumBreve(d, basis)
+      + ") · positivum = TARDIUS"));
+    col.appendChild(caput);
+
+    var tsum = el("table", { id: "collatio-summa" });
+    [["totum", "suita.tempus.totum"],
+     ["compilatio", "suita.tempus.compilatio"],
+     ["cursus", "suita.tempus.cursus"]
+    ].forEach(function (par) {
+      var a = valorem(d, basis, par[1]);
+      var b = valorem(d, electa, par[1]);
+      var tr = el("tr");
+      tr.appendChild(el("td", {}, par[0]));
+      tr.appendChild(el("td", { "class": "n" }, fig(a, 1) + "s"));
+      tr.appendChild(el("td", { "class": "n" }, fig(b, 1) + "s"));
+      if (a === null || b === null) {
+        tr.appendChild(el("td", { "class": "delta nulla" }, "—"));
+      } else {
+        var dl = b - a;
+        tr.appendChild(el("td", { "class": "delta "
+          + (dl > 0.05 ? "tardior" : (dl < -0.05 ? "celerior" : "nulla")) },
+          deltaTextus(dl)));
+      }
+      tsum.appendChild(tr);
+    });
+    col.appendChild(tsum);
+
+    /* Per probationem: quae maxime mutatae sunt. */
+    var ta = temporaCursus(d, basis);
+    var tb = temporaCursus(d, electa);
+    var claves = {};
+    Object.keys(ta).forEach(function (k) { claves[k] = 1; });
+    Object.keys(tb).forEach(function (k) { claves[k] = 1; });
+
+    var lineae = [];
+    Object.keys(claves).forEach(function (k) {
+      var a = (ta[k] === undefined) ? null : ta[k];
+      var b = (tb[k] === undefined) ? null : tb[k];
+      lineae.push({ k: k, a: a, b: b,
+        d: (a === null || b === null) ? null : (b - a) });
+    });
+
+    /* Absentes PRIMUM: probatio quae abiit aut advenit mutatio
+       maior est quam quaevis differentia temporis, et ordo per
+       delta eas omnino celaret (delta earum NIHIL est). */
+    lineae.sort(function (x, y) {
+      if ((x.d === null) !== (y.d === null)) { return x.d === null ? -1 : 1; }
+      return Math.abs(y.d || 0) - Math.abs(x.d || 0);
+    });
+
+    var tprob = el("table", { id: "collatio-probationes" });
+    lineae.slice(0, 20).forEach(function (L) {
+      var tr = el("tr");
+      tr.appendChild(el("td", {}, brevius(L.k)));
+      tr.appendChild(el("td", { "class": "n" },
+        L.a === null ? "—" : fig(L.a) + "s"));
+      tr.appendChild(el("td", { "class": "n" },
+        L.b === null ? "—" : fig(L.b) + "s"));
+      if (L.d === null) {
+        tr.appendChild(el("td", { "class": "delta nulla" },
+          L.a === null ? "nova" : "abest"));
+      } else {
+        tr.appendChild(el("td", { "class": "delta "
+          + (L.d > 0.05 ? "tardior" : (L.d < -0.05 ? "celerior" : "nulla")) },
+          deltaTextus(L.d)));
+      }
+      tprob.appendChild(tr);
+    });
+    col.appendChild(tprob);
+    corpus.appendChild(col);
+  }
+
   /* ---- flamma: UBI tempus abierit ---- */
   var radices = arborem(d, electa);
   var nodiQuot = 0;
@@ -361,7 +514,7 @@ function reddere() {
      ergo pictura recte disposita adhuc mentiretur. Tacere et causam
      NOMINARE melius est quam pingere quod falsum sit. */
   var sineArbore = (nodiQuot > 1 && radices.length === nodiQuot);
-  var f = el("div", { "class": "tabula" });
+  var f = el("div", { "class": "tabula", id: "tabula-flamma" });
   f.appendChild(el("h2", {}, "ubi tempus abierit"));
 
   if (sineArbore) {
@@ -378,7 +531,7 @@ function reddere() {
   }
 
   /* ---- tendentia per sessiones ---- */
-  var tend = el("div", { "class": "tabula" });
+  var tend = el("div", { "class": "tabula", id: "tabula-tendentia" });
   tend.appendChild(el("h2", {}, "tendentia"));
   var claves = el("div", { "class": "claves" });
   var series = [
@@ -407,7 +560,7 @@ function reddere() {
   }).sort(function (a, b) { return b.valor - a.valor; }).slice(0, 15);
 
   if (tard.length > 0) {
-    var t = el("div", { "class": "tabula" });
+    var t = el("div", { "class": "tabula", id: "tabula-tardissimae" });
     t.appendChild(el("h2", {}, "probationes tardissimae"));
     var tab = el("table");
     var summus = tard[0].valor || 1;
