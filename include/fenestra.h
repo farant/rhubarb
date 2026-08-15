@@ -593,17 +593,27 @@ fenestra_clavem_capere (
  * Focum RAPIT: eventus ad fenestram clavem it, ergo agitatio eam
  * clavem facere debet.
  *
- * CLAVES NOMINATAE SOLAE - consulto. Codices macOS POSITIONEM
- * clavis nominant, non litteram: 'a' ZEPHYRUM est in dispositione
- * ANSI SOLA, aliter alibi. Nomina infra positione stabilia sunt in
- * omni dispositione; litterae non sunt. Textum per 'manus_scribere'
- * pone - via illa dispositionis omnino nescia est et iam operatur.
- *
  * Nomina: Enter Tab Escape Space Backspace Delete
  *         ArrowUp ArrowDown ArrowLeft ArrowRight
  *         Home End PageUp PageDown F1..F12
  * Modificatores praefixi: 'Cmd+' 'Ctrl+' 'Shift+' 'Alt+' (aut 'Opt+'),
  * cumulabiles: "Cmd+Shift+ArrowLeft".
+ *
+ * LITTERA SOLA CUM MODIFICATORE quoque licet: "Cmd+c",
+ * "Cmd+Shift+z". Imperiis servit (aequivalentiae menu, brevitates
+ * applicationis).
+ *
+ * SINE MODIFICATORE littera RECUSATUR - non quod fieri non possit,
+ * sed quod textus per 'manus_scribere' iter suum habet, quod
+ * dispositionis omnino nescium est.
+ *
+ * Dispositio hic NON obstat, quamquam prima specie obstare videtur.
+ * MENSURATUM 2026-08-15: AppKit aequivalentias per characteres
+ * congruit, non per codicem - spica codicem PRAVUM omni litterae
+ * dedit et 'Cmd+c'/'Cmd+v' nihilominus egerunt. Tabula codicum
+ * adest ob 'e.code' solum, quod POSITIONEM ex definitione nominat
+ * (idem quod kVK_ANSI_* nominat). Vide lib/fenestra_macos.m pro
+ * limite honesto in dispositionibus non-US.
  *
  * Redde FALSUM si nomen ignotum est (RECUSATIO, non ictus mutus).
  */

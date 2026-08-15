@@ -69,10 +69,10 @@ nomen b32 (*ImperiumImaginator)(
 
 /* CLAVIS - sutura (forma fenestra_claviarius par).
  *
- * NOMEN SOLUM transit ("Enter", "Cmd+Shift+ArrowLeft"): codices
- * virtuales et vexilla modificatorum res PLATFORMAE sunt, ergo
- * imperium ea nescit et nescire debet. Tabula in fenestra_macos.m
- * vivit, ubi sola valet.
+ * NOMEN SOLUM transit ("Enter", "Cmd+Shift+ArrowLeft", "Cmd+c"):
+ * codices virtuales et vexilla modificatorum res PLATFORMAE sunt,
+ * ergo imperium ea nescit et nescire debet. Tabula in
+ * fenestra_macos.m vivit, ubi sola valet.
  *
  * Redde FALSUM si nomen ignotum - unde via CD reddit, non CCII
  * mendax. */

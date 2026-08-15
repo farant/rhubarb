@@ -1271,6 +1271,81 @@ fenestra_claviarius (
         }
     }
 
+    /* LITTERA CUM MODIFICATORE - 'Cmd+c', 'Cmd+Shift+z'.
+     *
+     * SINE MODIFICATORE RECUSATUR: textus per 'scribere' it, quae
+     * dispositionis omnino nescia est. Haec via imperiis servit.
+     *
+     * QUOD AEQUIVALENTIAM MENU REGIT - MENSURATUM 2026-08-15, et
+     * mensura consilium mutavit: AppKit aequivalentias per
+     * 'charactersIgnoringModifiers' congruit, NON per codicem.
+     * Spica codicem ZEPHYRUM (positionem 'a') omni litterae dedit,
+     * et tamen 'Cmd+c' deinde 'Cmd+v' textum inter campos
+     * transtulit - quamquam 'c' VIII est et 'v' IX. Ergo nulla
+     * tabula dispositionum opus est, nullum argumentum
+     * dispositionis: characteres sufficiunt, et macOS ipse idem
+     * facit (aequivalentia Cmd operatur dum Graece scribis).
+     *
+     * TABULA TAMEN ADEST, ob 'e.code' SOLUM. Spica ostendit paginam
+     * 'KeyA' pro omni littera videre - 'e.key' et 'e.keyCode' recta
+     * erant (ex characteribus veniunt), 'e.code' solus pravus.
+     *
+     * ET HIC 'ANSI' NON EST DIVINATIO: 'e.code' POSITIONEM nominat
+     * ex definitione, et 'KeyC' significat 'ubi C in tabula US
+     * sedet' - quod est ipsum quod kVK_ANSI_C significat. Duo nomina
+     * eiusdem rei. (Limes honestus: in dispositione AZERTY homo qui
+     * 'a' scribit positionem 'KeyQ' premit, ergo noster 'KeyA' ab eo
+     * differret. 'e.key' ubique rectum manet - et id est quod codex
+     * legere debet.) */
+    si (modi != ZEPHYRUM && p[0] != '\0' && p[1] == '\0'
+        && ((p[0] >= 'a' && p[0] <= 'z')
+            || (p[0] >= 'A' && p[0] <= 'Z')))
+    {
+        /* kVK_ANSI_* pro a..z, ordine litterarum.
+         *
+         * NUMERI, non constantes Carbon, et hoc consulto: Carbon ab
+         * Apple deprecatum est, et arbor haec saecula spectat.
+         * Codices ipsi ABI sunt - immoti ab anno MCMLXXXIV, nec
+         * mutari possunt sine omni agitatore claviaturae frangendo.
+         * Ergo periculum non est mutatio sed TRANSCRIPTIO.
+         *
+         * Contra eam: ./tools/claves_codices_probare.sh omnes XXVI
+         * contra systema ipsum comparat (culpa inserta probatum -
+         * litteram et utrumque numerum nominat). Si Carbon evanescet,
+         * scriptum solum perit; tabula manet. */
+        interior constans i32 CODICES_LITTERARUM[XXVI] = {
+            0, 11,  8,  2, 14,  3,  5,  4, 34, 38, 40, 37, 46,
+           45, 31, 35, 12, 15,  1, 17, 32,  9, 13,  7, 16,  6
+        };
+        character littera[2];
+        i32       index;
+        i32       codex;
+
+        littera[0] = (character)((p[0] >= 'A' && p[0] <= 'Z')
+            ? (p[0] + ('a' - 'A')) : p[0]);
+        index = (i32)(littera[0] - 'a');
+        codex = CODICES_LITTERARUM[index];
+
+        /* Shift depressus litteram MAIUSCULAM parit:
+         * 'charactersIgnoringModifiers' modificatores ignorat PRAETER
+         * Shift, ergo eventus verus 'Z' fert, non 'z'. Menu cuius
+         * aequivalens '@"Z"' est ita solum congruit. */
+        si ((modi & (i32)NSEventModifierFlagShift) != ZEPHYRUM)
+        {
+            littera[0] = (character)(littera[0] - ('a' - 'A'));
+        }
+        littera[1] = '\0';
+
+        fenestra_clavem_capere(fenestra);
+        si (!fenestra_clavem_immittere(fenestra, codex, modi,
+                littera, VERUM))
+        {
+            redde FALSUM;
+        }
+        redde fenestra_clavem_immittere(fenestra, codex, modi,
+            littera, FALSUM);
+    }
+
     per (i = ZEPHYRUM; i < CLAVES_NUMERUS; i++)
     {
         si (strcmp(p, CLAVES[i].titulus) == 0)

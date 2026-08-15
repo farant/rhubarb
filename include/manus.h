@@ -363,14 +363,23 @@ manus_movere (
  * FOCUM RAPIT: eventus ad fenestram clavem it, ergo fenestra
  * applicationis in ante venit. Pretium agitationis GUI apertum.
  *
- * CLAVES NOMINATAE SOLAE: Enter Tab Escape Space Backspace Delete
+ * CLAVES NOMINATAE: Enter Tab Escape Space Backspace Delete
  * ArrowUp ArrowDown ArrowLeft ArrowRight Home End PageUp PageDown
  * F1..F12; praefixa Cmd+ Ctrl+ Shift+ Alt+ (cumulabilia).
  *
- * TEXTUM PER 'manus_scribere' PONE, non per claves: codices macOS
- * POSITIONEM clavis nominant, non litteram ('a' ZEPHYRUM est in
- * ANSI sola), ergo litterae dispositioni adhaererent. scribere via
- * dispositionis nescia est et iam operatur.
+ * LITTERA CUM MODIFICATORE: "Cmd+c", "Cmd+Shift+z". Aequivalentiae
+ * menu ita aguntur - PROBATUM per effectum, non per exitum: 'Cmd+a'
+ * deinde 'Cmd+c' deinde 'Cmd+v' textum inter campos transtulit.
+ *
+ * QUOD MENU RAPIT PAGINAM NON ATTINGIT, et hoc rectum est: macOS
+ * aequivalentias ante catenam responsorum tractat, ergo 'Cmd+c'
+ * auditorem 'keydown' paginae NON excitat (MENSURATUM) - prorsus ut
+ * sub manu hominis. 'Cmd+k' (quod nullum menu tenet) paginam
+ * attingit, cum e.key/e.code/e.keyCode rectis.
+ *
+ * TEXTUM PER 'manus_scribere' PONE: littera SINE modificatore
+ * recusatur, quia scribere iter proprium habet quod dispositionis
+ * nescium est.
  *
  * FALSUM (et manus fracta) si nomen ignotum aut app claviarium non
  * praebuit - causa UTRUMQUE distinguit. */
