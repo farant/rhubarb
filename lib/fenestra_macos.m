@@ -959,6 +959,60 @@ fenestra_numerus_nativus (
     redde (i32)[fenestra->fenestra_ns windowNumber];
 }
 
+vacuum
+fenestra_clavem_capere (
+    Fenestra* fenestra)
+{
+    si (!fenestra || !fenestra->fenestra_ns) redde;
+    [NSApp activateIgnoringOtherApps:YES];
+    [fenestra->fenestra_ns makeKeyAndOrderFront:nil];
+}
+
+b32
+fenestra_clavem_immittere (
+    Fenestra*           fenestra,
+    i32                 codex,
+    i32                 modificatores,
+    constans character* characteres,
+    b32                 depressa)
+{
+    NSString* chordae;
+    NSEvent*  eventus;
+
+    si (!fenestra || !fenestra->fenestra_ns) redde FALSUM;
+
+    /* Characteres VACUI liciti sunt: claves mutae (Tab, Escape,
+     * sagittae) nihil pariunt, et NSEvent id fert. */
+    chordae = (characteres != NIHIL)
+        ? [NSString stringWithUTF8String:characteres]
+        : @"";
+    si (chordae == nil)
+    {
+        redde FALSUM;   /* UTF-8 pravum */
+    }
+
+    eventus = [NSEvent
+        keyEventWithType:(depressa ? NSEventTypeKeyDown : NSEventTypeKeyUp)
+                location:NSZeroPoint
+           modifierFlags:(NSEventModifierFlags)(unsigned long)modificatores
+               timestamp:[[NSProcessInfo processInfo] systemUptime]
+            windowNumber:[fenestra->fenestra_ns windowNumber]
+                 context:nil
+              characters:chordae
+    charactersIgnoringModifiers:chordae
+               isARepeat:NO
+                 keyCode:(unsigned short)codex];
+    si (eventus == nil)
+    {
+        redde FALSUM;
+    }
+
+    /* atStart:NO - post ea quae iam pendent, ut ordo humanus servetur
+     * (clavis post clavem, non ante). */
+    [NSApp postEvent:eventus atStart:NO];
+    redde VERUM;
+}
+
 /* Implementatio tabulae pixelorum */
 
 TabulaPixelorum*

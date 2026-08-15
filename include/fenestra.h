@@ -544,6 +544,50 @@ fenestra_numerus_nativus (
 
 
 /* ==================================================
+ * Claves IMMITTERE (agitatio, non usus)
+ * ==================================================
+ *
+ * CUR NON IN JS: eventus per 'dispatchEvent(new KeyboardEvent(...))'
+ * missus NON FIDUS est (isTrusted=false). Auditores applicationis eum
+ * audiunt, sed textura ipsa eum IGNORAT: nullus character inseritur,
+ * Tab focum non movet, forma non mittitur. Instrumentum ita structum
+ * 'pressi' nuntiaret et NIHIL egisset - id genus mendacii quod haec
+ * domus tollere studet.
+ *
+ * Eventus hic synthetizatus in caudam ipsius applicationis ponitur
+ * ([NSApp postEvent:]), unde per viam ordinariam ad primum
+ * respondentem venit - ergo WebKit eum ut VERUM tractat. Nulla
+ * permissio accessibilitatis petitur: intra processum NOSTRUM manemus
+ * (differt a CGEventPost, qui totum systema tangeret et permissionem
+ * poasceret quam non habemus).
+ *
+ * FENESTRA CLAVIS ESSE DEBET: eventus ad fenestram clavem it. Si alia
+ * applicatio focum tenet, hic eventus nusquam apparet. Vide
+ * 'fenestra_clavem_capere'.
+ *
+ * codex: codex virtualis macOS (Enter XXXVI, Tab XLVIII, Esc LIII...)
+ * modificatores: vexilla NSEventModifierFlags (0 = nulli)
+ * characteres: UTF-8 quos clavis PARIT (NIHIL pro clavibus mutis)
+ * depressa: VERUM = keyDown, FALSUM = keyUp
+ *
+ * Redde FALSUM si fenestra abest aut eventus fingi non potuit.
+ */
+b32
+fenestra_clavem_immittere (
+    Fenestra*           fenestra,
+    i32                 codex,
+    i32                 modificatores,
+    constans character* characteres,
+    b32                 depressa);
+
+/* Fenestram clavem facere (focum rapere). Agitatio focum poscit;
+ * usus humanus eum iam habet. */
+vacuum
+fenestra_clavem_capere (
+    Fenestra* fenestra);
+
+
+/* ==================================================
  * Tabula Pixelorum - Creatio / Destructio
  * ================================================== */
 
