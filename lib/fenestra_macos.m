@@ -1147,6 +1147,37 @@ fenestra_musarius (
     redde FALSUM;   /* genus ignotum: RECUSATIO, non motus mutus */
 }
 
+b32
+fenestra_magnitudinator (
+    vacuum* datum,
+    i32     latitudo,
+    i32     altitudo,
+    i32*    latitudo_facta,
+    i32*    altitudo_facta)
+{
+    Fenestra* fenestra = (Fenestra*)datum;
+
+    si (fenestra == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* Non positiva RECUSANTUR hic, non transmittuntur. NSWindow
+     * mensuram ZEPHYRUM sine querela accipit et fenestram simpliciter
+     * non mutat - quod verbum 'factum' redderet ubi nihil factum est. */
+    si (latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    fenestra_ponere_magnitudinem(fenestra, latitudo, altitudo);
+    /* RURSUS LEGERE, semper. Numerus petitus nihil probat: systema
+     * minimas suas silenter imponit. Solum haec lectio scit quid
+     * pagina revera accepit. */
+    fenestra_obtinere_magnitudinem(fenestra, latitudo_facta,
+        altitudo_facta);
+    redde VERUM;
+}
+
 /* ==================================================
  * Claves NOMINATAE
  * ==================================================

@@ -38,6 +38,8 @@ structura Imperium {
     vacuum*            claviarius_datum;
     ImperiumMusarius   musarius;
     vacuum*            musarius_datum;
+    ImperiumMagnitudinator magnitudinator;
+    vacuum*                magnitudinator_datum;
     ImperiumFructus    fructus;
 };
 
@@ -395,6 +397,94 @@ _murem_immittere (
         chorda_ex_literis("{\"ok\":true}", p));
 }
 
+/* POST /imperium/magnitudo - corpus = "<latitudo> <altitudo>"
+ *
+ * Responsum FACTA fert: {"latitudo":N,"altitudo":M}.
+ *
+ * CUR NON '{"ok":true}' UT CETERAE: hoc iussum solum a systemate
+ * TACITE emendari potest. macOS latitudinem minimam imponit (ornamenta
+ * tituli), ergo 'magnitudo 200 800' fenestram CCC latam relinquere
+ * potest. Verbum quod 'factum' diceret probationem dispositionis
+ * angustae viridem faceret in fenestra quae angusta numquam fuit.
+ * Numerus verus redit ut qui vocat comparare POSSIT. */
+interior vacuum
+_magnitudinem_ponere (
+    HospitiumColloquium* colloquium);
+
+interior vacuum
+_magnitudinem_ponere (
+    HospitiumColloquium* colloquium)
+{
+    Imperium*                    imperium;
+    constans HttpPetitioServeri* petitio;
+    Piscina*                     p;
+    constans character*          corpus;
+    integer                      latitudo;
+    integer                      altitudo;
+    i32                          facta_lat;
+    i32                          facta_alt;
+    ChordaAedificator*           a;
+    character                    numerus[XXXII];
+
+    imperium = (Imperium*)colloquium_datum(colloquium);
+    petitio  = colloquium_petitio(colloquium);
+    p        = colloquium_piscina(colloquium);
+
+    si (imperium == NIHIL || petitio == NIHIL)
+    {
+        _respondere_json(colloquium, D,
+            chorda_ex_literis("{\"culpa\":\"imperium abest\"}", p));
+        redde;
+    }
+    si (imperium->magnitudinator == NIHIL)
+    {
+        _respondere_json(colloquium, CDIV,
+            chorda_ex_literis(
+                "{\"culpa\":\"magnitudinator non positus\"}", p));
+        redde;
+    }
+    si (petitio->corpus.mensura == ZEPHYRUM)
+    {
+        _respondere_json(colloquium, CD,
+            chorda_ex_literis("{\"culpa\":\"corpus vacuum\"}", p));
+        redde;
+    }
+
+    corpus = chorda_ut_cstr(petitio->corpus, p);
+    si (corpus == NIHIL
+        || sscanf(corpus, "%d %d", &latitudo, &altitudo) != (integer)II)
+    {
+        _respondere_json(colloquium, CD,
+            chorda_ex_literis(
+                "{\"culpa\":\"forma: <latitudo> <altitudo>\"}", p));
+        redde;
+    }
+
+    imperium->fructus.iussa_missa = imperium->fructus.iussa_missa + I;
+
+    facta_lat = ZEPHYRUM;
+    facta_alt = ZEPHYRUM;
+    si (!imperium->magnitudinator(imperium->magnitudinator_datum,
+            (i32)latitudo, (i32)altitudo, &facta_lat, &facta_alt))
+    {
+        _respondere_json(colloquium, CD,
+            chorda_ex_literis(
+                "{\"culpa\":\"mensura non positiva aut poni non potuit\"}",
+                p));
+        redde;
+    }
+
+    a = chorda_aedificator_creare(p, LXIV);
+    chorda_aedificator_appendere_literis(a, "{\"latitudo\":");
+    sprintf(numerus, "%d", (integer)facta_lat);
+    chorda_aedificator_appendere_literis(a, numerus);
+    chorda_aedificator_appendere_literis(a, ",\"altitudo\":");
+    sprintf(numerus, "%d", (integer)facta_alt);
+    chorda_aedificator_appendere_literis(a, numerus);
+    chorda_aedificator_appendere_literis(a, "}");
+    _respondere_json(colloquium, CC, chorda_aedificator_finire(a));
+}
+
 /* POST /imperium/imago - corpus = via plagulae (vacuum = ordinaria) */
 interior vacuum
 _imaginem_petere (
@@ -651,6 +741,8 @@ imperium_creare (
     imperium->claviarius_datum = NIHIL;
     imperium->musarius         = NIHIL;
     imperium->musarius_datum   = NIHIL;
+    imperium->magnitudinator       = NIHIL;
+    imperium->magnitudinator_datum = NIHIL;
     imperium->fructus.iussa_missa      = ZEPHYRUM;
     imperium->fructus.responsa_recepta = ZEPHYRUM;
     imperium->fructus.culpae           = ZEPHYRUM;
@@ -693,6 +785,11 @@ imperium_praebere (
     }
     si (!hospitium_praebere(hospitium, HTTP_POST, "/imperium/mus",
         _murem_immittere, imperium))
+    {
+        redde FALSUM;
+    }
+    si (!hospitium_praebere(hospitium, HTTP_POST, "/imperium/magnitudo",
+        _magnitudinem_ponere, imperium))
     {
         redde FALSUM;
     }
@@ -756,6 +853,19 @@ imperium_musarium_ponere (
     {
         imperium->musarius       = musarius;
         imperium->musarius_datum = datum;
+    }
+}
+
+vacuum
+imperium_magnitudinatorem_ponere (
+    Imperium*              imperium,
+    ImperiumMagnitudinator magnitudinator,
+    vacuum*                datum)
+{
+    si (imperium != NIHIL)
+    {
+        imperium->magnitudinator       = magnitudinator;
+        imperium->magnitudinator_datum = datum;
     }
 }
 
@@ -901,6 +1011,12 @@ imperium_vivarium (Piscina* piscina,
     {
         imperium_claviarium_ponere(v.imperium, figura->claviarius,
                                    figura->claviarius_datum);
+    }
+    si (figura->magnitudinator != NIHIL)
+    {
+        imperium_magnitudinatorem_ponere(v.imperium,
+                                         figura->magnitudinator,
+                                         figura->magnitudinator_datum);
     }
     si (figura->musarius != NIHIL)
     {

@@ -646,6 +646,83 @@ manus_affordantiae (
     Piscina* piscina);
 
 /* ==================================================
+ * Focus - UBI CLAVIS CADET
+ * ==================================================
+ *
+ * COMPLEMENTUM 'manus_clavem'. Illa focum MOVERE potest (Tab per
+ * eventum nativum vere ordinem focalem percurrit - quod Cypress
+ * facere NON potest); haec rogat quo pervenerit. Sine ea capacitas
+ * dimidia est: motum habes, testimonium non habes.
+ *
+ * CUR NON PER 'aestimare': quia sic factum est, et JS manu scriptus
+ * ('document.activeElement.id') selectorem formae ALIENAE reddebat -
+ * nudum id sine '#', nihil omnino cum id abesset. Nomen quod
+ * affordantiae dant hic idem esse debet, aliter inter instrumenta
+ * transferri non potest. Ergo eaedem functiones (MANUS_JS_SEMITA).
+ *
+ * 'habet' SEORSUM A SELECTORE VACUO: activeElement <body> reddit cum
+ * NIHIL focum habet - numquam nihil. Sine hoc campo 'focus in body'
+ * et 'focus nusquam' idem apparerent, quod est ipsum genus erroris
+ * quod 'premere-textum ""' corpus premere fecit. Ergo habet=FALSUM
+ * cum corpus (aut nullum) focum tenet.
+ */
+
+nomen structura {
+    b32    habet;      /* FALSUM = nihil (corpus) focum tenet */
+    chorda selector;   /* forma affordantiarum: '#id' aut semita */
+    chorda titulus;    /* quod usor legit */
+    chorda tag;        /* 'input', 'button', ... (minusculis) */
+} ManusFocus;
+
+/* Quod nunc focum tenet. habet=FALSUM si nihil, aut manus fracta. */
+ManusFocus
+manus_focus (
+    Manus*   manus,
+    Piscina* piscina);
+
+/* ==================================================
+ * Magnitudo - PROSPECTUM MUTARE
+ * ==================================================
+ *
+ * CUR: omnis imago hactenus in UNA latitudine capta est, ergo
+ * dispositio responsiva - quae in facie omni huius domus adest -
+ * probari OMNINO non poterat. Cum hac, 'magnitudo CCCXX DCCC' deinde
+ * 'imago' casus regressionis visualis est, et specimen_manus eum
+ * gratis accipit.
+ *
+ * MENSURAE CONTENTAE (area quam pagina accipit), non totius formae:
+ * titulus fenestrae probatorem non interest.
+ *
+ * FACTA REDDUNTUR, non petita - vide fenestra_magnitudinator. Si
+ * systema mensuram tuam emendat, hic id VIDES. Compara si refert;
+ * numeri qui differre possunt et taciti sunt probationes mendaces
+ * pariunt.
+ *
+ * Redde FALSUM si applicatio magnitudinatorem non praebuit (app manu
+ * structa imperium_magnitudinatorem_ponere vocet; atrium eum ponit),
+ * aut mensura non positiva est. */
+b32
+manus_magnitudinem_ponere (
+    Manus* manus,
+    i32    latitudo,
+    i32    altitudo,
+    i32*   latitudo_facta,   /* NIHIL licet */
+    i32*   altitudo_facta);  /* NIHIL licet */
+
+/* Prospectus currens ut pagina eum videt (innerWidth/innerHeight).
+ *
+ * PER PAGINAM, non per fenestram, et consulto: numerus qui
+ * dispositionem regit is est quem CSS videt. Si quando a mensura
+ * contenta differret, numerus PAGINAE verus est.
+ *
+ * FALSUM si manus fracta aut pagina non respondit. */
+b32
+manus_magnitudo (
+    Manus* manus,
+    i32*   latitudo,
+    i32*   altitudo);
+
+/* ==================================================
  * Asserta (EXSPECTANT, notant, frangunt)
  * ==================================================
  *
@@ -754,6 +831,24 @@ manus_affordantiae (
 #define CREDO_MANUS_SINE_ERRORIBUS(m) \
 	_manus_credo_sine_erroribus((m), __FILE__, __LINE__)
 
+/* Selector hic focum tenet - EXSPECTANS.
+ *
+ * PROPTER TAB SCRIPTUM. 'clavis Tab' eventum in caudam ponit et
+ * statim redit; textura eum postea tractat. Ergo interrogatio
+ * immediata ordinem PRIOREM legere potest - probatio quae ordinem
+ * focalem verum probat, et tamen certatione laborat. Exspectatio id
+ * tollit more solito bibliothecae: condicio in pagina retemptatur.
+ *
+ *   manus_clavem(m, "Tab");
+ *   CREDO_MANUS_FOCUS(m, "#quaestio-campus");
+ */
+#define CREDO_MANUS_FOCUS(m, sel) \
+	_manus_credo_focum((m), (sel), MANUS_MORA_ORDINARIA, \
+			__FILE__, __LINE__)
+
+#define CREDO_MANUS_FOCUS_MORA(m, sel, mora) \
+	_manus_credo_focum((m), (sel), (mora), __FILE__, __LINE__)
+
 /* ==================================================
  * Interiora macronum (ne voces recta - __FILE__ perderes)
  * ================================================== */
@@ -763,6 +858,14 @@ _manus_credo_existere (
     Manus*              manus,
     constans character* selector,
     b32                 adesse,
+    Mora                mora,
+    constans character* filum,
+    s32                 versus);
+
+b32
+_manus_credo_focum (
+    Manus*              manus,
+    constans character* selector,
     Mora                mora,
     constans character* filum,
     s32                 versus);

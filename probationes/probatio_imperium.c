@@ -75,6 +75,40 @@ _imaginator_falsus (
     redde VERUM;
 }
 
+/* magnitudinator falsus qui MENSURAM COERCET.
+ *
+ * Coercitio hic NON ornamentum est: macOS ipse altitudinem ad
+ * scrinium coercet - MENSURATUM 2026-08-15, 'magnitudo 9000 9000'
+ * IX milia x MCXLVII reddidit. Sutura ergo facta reddere DEBET, et
+ * probatio quae fictum obsequens adhiberet illam ipsam proprietatem
+ * numquam tangeret. Ficta haec altitudinem ad D coercet ut via
+ * probetur numerum SUUM nuntiare, non petitum. */
+interior i32 magnitudinator_lat_petita;
+interior i32 magnitudinator_alt_petita;
+interior i32 magnitudinator_numerus;
+
+interior b32
+_magnitudinator_falsus (
+    vacuum* datum,
+    i32     latitudo,
+    i32     altitudo,
+    i32*    latitudo_facta,
+    i32*    altitudo_facta)
+{
+    (vacuum)datum;
+    si (latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    magnitudinator_lat_petita = latitudo;
+    magnitudinator_alt_petita = altitudo;
+    magnitudinator_numerus = magnitudinator_numerus + I;
+
+    *latitudo_facta = latitudo;
+    *altitudo_facta = (altitudo > (i32)D) ? (i32)D : altitudo;
+    redde VERUM;
+}
+
 /* missor internuntii: responsa in vacuum eunt (pagina non adest) */
 interior vacuum
 _missor_mutus (
@@ -284,6 +318,50 @@ principale (vacuum)
     CREDO_AEQUALIS_I32((i32)fructus.responsa_recepta, III);
     CREDO_AEQUALIS_I32((i32)fructus.culpae, I);
     CREDO_AEQUALIS_I32((i32)fructus.pendentia, ZEPHYRUM);
+
+    /* --- X-bis. MAGNITUDO: facta reddita, non petita --- */
+
+    /* sine magnitudinatore: CDIV, recusatio APERTA */
+    _commercium(hospitium, pv,
+        "POST /imperium/magnitudo HTTP/1.1\r\nHost: x\r\n"
+        "Content-Length: 7\r\n\r\n320 800", buffer,
+        (i32)magnitudo(buffer));
+    CREDO_VERUM(strstr(buffer, "404") != NIHIL);
+    CREDO_AEQUALIS_I32(magnitudinator_numerus, ZEPHYRUM);
+
+    imperium_magnitudinatorem_ponere(imperium, _magnitudinator_falsus,
+                                     NIHIL);
+
+    /* CARDO HUIUS PROBATIONIS: altitudo DCCC petita est, ficta eam ad
+     * D coercet, et via D nuntiare DEBET. Si petitum nuntiaret,
+     * probatio dispositionis in fenestra ALIA curreret quam credit -
+     * viride mendax quod nihil aliud caperet. */
+    _commercium(hospitium, pv,
+        "POST /imperium/magnitudo HTTP/1.1\r\nHost: x\r\n"
+        "Content-Length: 7\r\n\r\n320 800", buffer,
+        (i32)magnitudo(buffer));
+    CREDO_AEQUALIS_I32(magnitudinator_numerus, I);
+    CREDO_AEQUALIS_I32(magnitudinator_lat_petita, (i32)CCCXX);
+    CREDO_AEQUALIS_I32(magnitudinator_alt_petita, (i32)DCCC);
+    CREDO_VERUM(strstr(buffer, "\"latitudo\":320") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "\"altitudo\":500") != NIHIL);
+    /* Et petitum NUSQUAM apparet - ne 'DCCC' alicubi lateat. */
+    CREDO_NIHIL(strstr(buffer, "800"));
+
+    /* corpus pravum: CD, sutura INTACTA */
+    _commercium(hospitium, pv,
+        "POST /imperium/magnitudo HTTP/1.1\r\nHost: x\r\n"
+        "Content-Length: 5\r\n\r\nlatum", buffer,
+        (i32)magnitudo(buffer));
+    CREDO_VERUM(strstr(buffer, "400") != NIHIL);
+    CREDO_AEQUALIS_I32(magnitudinator_numerus, I);
+
+    /* mensura non positiva: sutura FALSUM reddit -> CD */
+    _commercium(hospitium, pv,
+        "POST /imperium/magnitudo HTTP/1.1\r\nHost: x\r\n"
+        "Content-Length: 5\r\n\r\n0 800", buffer,
+        (i32)magnitudo(buffer));
+    CREDO_VERUM(strstr(buffer, "400") != NIHIL);
 
     /* --- XI. VIVARIUM: ligatio parata ---
      * Sine fenestra probabile quia vivarium suturas accipit, non

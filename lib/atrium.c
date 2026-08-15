@@ -303,6 +303,8 @@ atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
         figura_vivarii.claviarius_datum = atrium->fenestra;
         figura_vivarii.musarius         = fenestra_musarius;
         figura_vivarii.musarius_datum   = atrium->fenestra;
+        figura_vivarii.magnitudinator       = fenestra_magnitudinator;
+        figura_vivarii.magnitudinator_datum = atrium->fenestra;
         figura_vivarii.fenestra     =
             fenestra_numerus_nativus(atrium->fenestra);
         /* Internuntium NOSTRUM tradimus: pons unus imperium unum

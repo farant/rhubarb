@@ -94,6 +94,21 @@ nomen b32 (*ImperiumMusarius)(
     i32                 x,
     i32                 y);
 
+/* MAGNITUDO - sutura (forma fenestra_magnitudinator par).
+ *
+ * SOLA suturarum quae valorem REDDIT, et consulto: systema mensuras
+ * minimas suas imponit, ergo 'quod petisti' et 'quod accepisti'
+ * duo numeri sunt. Sutura utrumque scit; qui vocat solum petitum
+ * sciret. Ergo facta hic exeunt, et via HTTP ea nuntiat.
+ *
+ * Redde FALSUM si mensura non positiva. */
+nomen b32 (*ImperiumMagnitudinator)(
+    vacuum* datum,
+    i32     latitudo,
+    i32     altitudo,
+    i32*    latitudo_facta,
+    i32*    altitudo_facta);
+
 /* ==========================================================
  * VIVARIUM - imperium PARATUM (baculi inclusi)
  * ==========================================================
@@ -146,6 +161,10 @@ nomen structura {
     vacuum*            claviarius_datum;
     ImperiumMusarius   musarius;     /* NIHIL = sine /imperium/mus */
     vacuum*            musarius_datum;
+    /* NIHIL = sine /imperium/magnitudo. FENESTRAM poscit ut
+     * claviarius, non vitream - ergo datum proprium. */
+    ImperiumMagnitudinator magnitudinator;
+    vacuum*                magnitudinator_datum;
     InternuntiusMissor missor;       /* opus nisi internuntius datur */
     vacuum*            datum;        /* idem omnibus suturis */
     i32                fenestra;     /* ID nativum (ZEPHYRUM = nullum) */
@@ -255,6 +274,19 @@ imperium_musarium_ponere (
     Imperium*         imperium,
     ImperiumMusarius  musarius,
     vacuum*           datum);
+
+/* Magnitudinatorem ponere -> viam 'POST /imperium/magnitudo' aperit.
+ * Corpus: "<latitudo> <altitudo>" (e.g. "320 800").
+ *
+ * Responsum FACTA fert, non petita:
+ *   {"latitudo":320,"altitudo":800}
+ *
+ * Synchrona ut clavis. Mensura non positiva CD. */
+vacuum
+imperium_magnitudinatorem_ponere (
+    Imperium*              imperium,
+    ImperiumMagnitudinator magnitudinator,
+    vacuum*                datum);
 
 /* ==================================================
  * Numeratores (mensura est productum)

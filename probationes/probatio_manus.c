@@ -52,6 +52,10 @@
 #define SCEN_AFFORD   IX   /* tabulatum affordantiarum           */
 #define SCEN_AFFORD_PRAVUS X /* responsum quod tabulatum NON est */
 #define SCEN_LECTIO   XI   /* tabulatum tabulatorum (ordines)   */
+#define SCEN_FOCUS    XII  /* obiectum foci (habet=1)           */
+#define SCEN_FOCUS_NIHIL XIII /* habet=0 - corpus focum tenet   */
+#define SCEN_MAGN_ABSENS XIV  /* CDIV: app magnitudinatorem non  */
+                              /* praebuit                        */
 
 /* Operationes quas _agere_capere exercet. */
 #define OP_NULLUM        0   /* nihil - JS collectoris capitur */
@@ -90,6 +94,9 @@
 #define OP_EXSPECTARE    XXXIII
 #define OP_EXSPECTARE_NO XXXIV
 #define OP_ABEST_EXSP    XXXV
+#define OP_FOCUS         XXXVI
+#define OP_FOCUS_ASS     XXXVII
+#define OP_MAGNITUDO     XXXVIII
 
 #define VIA_ULTIMI    "build/manus_ultimum.js"
 
@@ -217,7 +224,31 @@ _puer (
             perge;
         }
 
-        si (strncmp(petitio, "POST", IV) == 0)
+        si (strstr(petitio, "POST /imperium/magnitudo") != NIHIL)
+        {
+            /* SEORSUM ANTE POST generalem: haec via tesseram NON
+             * fert (synchrona est, ut clavis). Sine hac diramatione
+             * simulacrum '{"tessera":N}' redderet, quod CCII est -
+             * ergo manus 'factum' diceret et mensuras ZEPHYRUM
+             * legeret, tacite. Probatio ipsa mendax fieret. */
+            _ultimum_servare(petitio);
+            si (scenario == SCEN_MAGN_ABSENS)
+            {
+                codex = CDIV;
+                sprintf(corpus,
+                    "{\"culpa\":\"magnitudinator non positus\"}");
+            }
+            alioquin
+            {
+                /* FACTA ALIA QUAM PETITA consulto (probatio CCCXX x
+                 * DCCC petit): sic solum probatur manum responsum
+                 * legere, non petitionem suam repetere. */
+                codex = CC;
+                sprintf(corpus,
+                    "{\"latitudo\":320,\"altitudo\":500}");
+            }
+        }
+        alioquin si (strncmp(petitio, "POST", IV) == 0)
         {
             /* CCII, ut imperium VERUM: tessera acceptio est, non
              * effectus. Prius hic CC reddebam - quod ex mea
@@ -315,6 +346,21 @@ _puer (
              * parsura id ferre debet. */
             sprintf(corpus, "{\"status\":\"perfectum\",\"valor\":"
                 "[[\"totum\",\"179.1s\",\"187.6s\"],[\"solum\"]]}");
+        }
+        alioquin si (scenario == SCEN_FOCUS)
+        {
+            sprintf(corpus, "{\"status\":\"perfectum\",\"valor\":{"
+                "\"habet\":1,\"selector\":\"#i1\","
+                "\"titulus\":\"scribe\",\"tag\":\"input\"}}");
+        }
+        alioquin si (scenario == SCEN_FOCUS_NIHIL)
+        {
+            /* CORPUS FOCUM TENET. Selector VACUUS hic, sed 'habet'
+             * FALSUM - duo campi quia unus mentiretur: selector
+             * vacuus et 'quaesivi et defeci' idem apparerent. */
+            sprintf(corpus, "{\"status\":\"perfectum\",\"valor\":{"
+                "\"habet\":0,\"selector\":\"\","
+                "\"titulus\":\"\",\"tag\":\"\"}}");
         }
         alioquin si (scenario == SCEN_AFFORD_PRAVUS)
         {
@@ -692,6 +738,35 @@ _agere_capere (
         casus OP_EXISTIT_ASS:
             a.fructus = CREDO_MANUS_EXISTIT(m, ".t");
             frange;
+        casus OP_FOCUS:
+            {
+                ManusFocus f = manus_focus(m, p);
+
+                a.fructus = f.habet;
+                sprintf(a.primus, "%d|%.*s|%.*s|%.*s",
+                    (integer)(f.habet ? I : ZEPHYRUM),
+                    (integer)f.selector.mensura,
+                    (constans character*)f.selector.datum,
+                    (integer)f.titulus.mensura,
+                    (constans character*)f.titulus.datum,
+                    (integer)f.tag.mensura,
+                    (constans character*)f.tag.datum);
+            }
+            frange;
+        casus OP_FOCUS_ASS:
+            a.fructus = CREDO_MANUS_FOCUS(m, "#i1");
+            frange;
+        casus OP_MAGNITUDO:
+            {
+                i32 lat = (i32)IX;   /* venenum: si non scribitur, */
+                i32 alt = (i32)IX;   /* assertum id videbit        */
+
+                a.fructus = manus_magnitudinem_ponere(m,
+                    (i32)CCCXX, (i32)DCCC, &lat, &alt);
+                sprintf(a.primus, "%d,%d",
+                    (integer)lat, (integer)alt);
+            }
+            frange;
         casus OP_ABEST_MORA:
             a.fructus = CREDO_MANUS_ABEST_MORA(m, ".t",
                                                MANUS_MORA_BREVIS);
@@ -798,6 +873,10 @@ nomen structura {
     Actio volvere, volvere_ad;
     Actio legere, textum_vacuum;
     Actio exsp, exsp_no, abest_exsp;
+    Actio focus, focus_nihil, focus_ass, focus_ass_no;
+    /* NON 'magnitudo': id macrum latinae est ('sizeof'), et campus
+     * ita nominatus structuram totam frangit. Censor eum nominavit. */
+    Actio amplitudo, amplitudo_absens;
 } Omnia;
 
 interior vacuum
@@ -847,6 +926,13 @@ _omnia_capere (
     o->omnino_mora    = _agere_capere(SCEN_OK, OP_OMNINO_MORA);
     o->reficere_vivax = _agere_capere(SCEN_RECUSANS, OP_REFICERE);
     o->reficere_mortua = _agere_capere(SCEN_PENDENS, OP_REFICERE);
+    o->focus          = _agere_capere(SCEN_FOCUS,       OP_FOCUS);
+    o->focus_nihil    = _agere_capere(SCEN_FOCUS_NIHIL, OP_FOCUS);
+    o->focus_ass      = _agere_capere(SCEN_OK,          OP_FOCUS_ASS);
+    o->focus_ass_no   = _agere_capere(SCEN_RECUSANS,    OP_FOCUS_ASS);
+    o->amplitudo      = _agere_capere(SCEN_OK,          OP_MAGNITUDO);
+    o->amplitudo_absens = _agere_capere(SCEN_MAGN_ABSENS,
+                                        OP_MAGNITUDO);
 }
 
 interior b32
@@ -1231,6 +1317,56 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (o.afford_pravus.numerus, ZEPHYRUM);
         CREDO_VERUM (o.afford_pravus.fracta);
         CREDO_VERUM (_continet(o.afford_pravus.causa, "tabulatum"));
+    }
+
+    imprimere("\n--- focus: quid clavem accipiat ---\n");
+    {
+        imprimere("  primus: '%s'\n", o.focus.primus);
+        CREDO_VERUM (o.focus.fructus);
+        CREDO_FALSUM (o.focus.fracta);
+        CREDO_VERUM (_continet(o.focus.primus, "1|#i1|scribe|input"));
+
+        /* SELECTOR EIUSDEM FORMAE quam affordantiae dant: nomen ab
+         * uno instrumento acceptum alteri utile esse DEBET. Functio
+         * una (MANUS_JS_SEMITA) hoc praestat, et hoc assertum eam
+         * seorsum manere custodit. */
+        CREDO_VERUM (_continet(o.focus.js, "function _via(e)"));
+        CREDO_VERUM (_continet(o.focus.js, "function _lab(e)"));
+        CREDO_VERUM (_continet(o.focus.js, "document.activeElement"));
+        /* CORPUS excluditur - aliter 'focus' semper aliquid diceret */
+        CREDO_VERUM (_continet(o.focus.js, "document.body"));
+
+        /* NIHIL focum tenens: habet FALSUM, et manus NON fracta -
+         * 'nemo focum tenet' responsum legitimum est, non defectus. */
+        CREDO_FALSUM (o.focus_nihil.fructus);
+        CREDO_FALSUM (o.focus_nihil.fracta);
+        CREDO_VERUM (_continet(o.focus_nihil.primus, "0|||"));
+
+        /* Assertum: exspectat (per gyrum paginae), transit, frangit */
+        CREDO_VERUM  (o.focus_ass.fructus);
+        CREDO_FALSUM (o.focus_ass.fracta);
+        CREDO_VERUM (_continet(o.focus_ass.js, "new Promise"));
+        CREDO_FALSUM (o.focus_ass_no.fructus);
+    }
+
+    imprimere("\n--- magnitudo: FACTA, non petita ---\n");
+    {
+        imprimere("  facta: '%s'\n", o.amplitudo.primus);
+        CREDO_VERUM  (o.amplitudo.fructus);
+        CREDO_FALSUM (o.amplitudo.fracta);
+
+        /* CARDO: CCCXX x DCCC petita sunt; simulacrum CCCXX x D
+         * respondet. Si manus petitionem SUAM repeteret (facillimus
+         * error) hic 'CCCXX,DCCC' staret et probatio dispositionis
+         * in fenestra alia curreret quam credit. */
+        CREDO_VERUM (_continet(o.amplitudo.primus, "320,500"));
+
+        /* App sine magnitudinatore: CDIV -> causa NOMINAT quid
+         * desit et quomodo id ponatur. */
+        CREDO_FALSUM (o.amplitudo_absens.fructus);
+        CREDO_VERUM  (o.amplitudo_absens.fracta);
+        CREDO_VERUM  (_continet(o.amplitudo_absens.causa,
+                                "magnitudinatorem non praebuit"));
     }
 
     imprimere("\n--- Superficies reliqua ---\n");

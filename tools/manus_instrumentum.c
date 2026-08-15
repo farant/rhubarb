@@ -542,6 +542,8 @@ _auxilium (vacuum)
       "  bin/manus premere-textum <textus>\n"
       "  bin/manus scribere <selector> <textus>\n"
       "  bin/manus volvere <selector|+-pixela>   imago PROSPECTUM capit\n"
+    "  bin/manus focus                          quid focum tenet\n"
+    "  bin/manus magnitudo [<lat> <alt>]        prospectum legere/ponere\n"
       "  bin/manus textus <selector>\n"
       "  bin/manus aestimare <js>\n"
       "  bin/manus errores                        culpae paginae\n"
@@ -571,7 +573,10 @@ _auxilium (vacuum)
       "  sessiones     portus pid applicatio   (pid 0 = adhaesa)\n"
       "  lege          cellulae ordinis (filii visibiles; sine\n"
       "                filiis, textus ipsius) - numerus columnarum\n"
-      "                per ordinem VARIAT\n\n"
+      "                per ordinem VARIAT\n"
+      "  focus         selector tag titulus   (linea VACUA = nihil\n"
+      "                focum tenet)\n"
+      "  magnitudo     latitudo altitudo   (FACTA, non petita)\n\n"
       "Exitus: 0 factum; I defectum; II nihil actum.\n");
     redde II;
 }
@@ -588,6 +593,7 @@ s32 principale (integer argc, character** argv)
     constans character* verbum;
     character**         reliqua;
     integer             n_reliqua;
+    character*          positiva[XXXII];
     integer             i;
     i32                 rogatus = ZEPHYRUM;
     b32                 machina = FALSUM;
@@ -628,11 +634,28 @@ s32 principale (integer argc, character** argv)
         }
         alioquin si (verbum == NIHIL)
         {
-            verbum    = argv[i];
-            reliqua   = &argv[i + I];
-            n_reliqua = argc - i - I;
+            verbum = argv[i];
+        }
+        /* POSITIVA COLLIGUNTUR, non 'omnia post verbum'.
+         *
+         * Prior forma 'reliqua = &argv[i+I]' erat, ergo vexillum POST
+         * verbum positum in argumentis manebat. Nemo id videbat quia
+         * omne verbum usque adhuc positiva OBLIGATORIA habebat:
+         * 'lege "tr" -machina' recte agit, nam reliqua[0] "tr" est.
+         * 'magnitudo' primum est cuius positiva OPTIVA sunt, ergo
+         * '-machina' solum reliquum fiebat et numerus mensurae
+         * videbatur. Vitium latens quod verbum novum in lucem traxit.
+         *
+         * NON 'omne quod '-' incipit reicere': 'volvere -200' sursum
+         * volvit, et numerus negativus argumentum verum est. Sola
+         * vexilla NOTA (supra) hauriuntur; cetera transeunt. */
+        alioquin si (n_reliqua < (integer)XXXII)
+        {
+            positiva[n_reliqua] = argv[i];
+            n_reliqua = n_reliqua + I;
         }
     }
+    reliqua = positiva;
 
     si (verbum == NIHIL)
     {
@@ -846,6 +869,69 @@ s32 principale (integer argc, character** argv)
     alioquin si (strcmp(verbum, "movere") == ZEPHYRUM && n_reliqua >= I)
     {
         (vacuum)manus_movere(m, reliqua[0]);
+    }
+    alioquin si (strcmp(verbum, "focus") == ZEPHYRUM)
+    {
+        ManusFocus f = manus_focus(m, piscina);
+
+        si (!manus_fracta(m))
+        {
+            si (!f.habet)
+            {
+                /* '(nihil)' NON chorda vacua: vacua 'quaesivi et
+                 * defecit' significare posset. Verbum id tollit. */
+                imprimere(machina ? "\n" : "(nihil)\n");
+            }
+            alioquin si (machina)
+            {
+                imprimere("%.*s\t%.*s\t%.*s\n",
+                    (integer)f.selector.mensura,
+                    (constans character*)f.selector.datum,
+                    (integer)f.tag.mensura,
+                    (constans character*)f.tag.datum,
+                    (integer)f.titulus.mensura,
+                    (constans character*)f.titulus.datum);
+            }
+            alioquin
+            {
+                imprimere("%.*s  <%.*s>  %.*s\n",
+                    (integer)f.selector.mensura,
+                    (constans character*)f.selector.datum,
+                    (integer)f.tag.mensura,
+                    (constans character*)f.tag.datum,
+                    (integer)f.titulus.mensura,
+                    (constans character*)f.titulus.datum);
+            }
+        }
+    }
+    alioquin si (strcmp(verbum, "magnitudo") == ZEPHYRUM)
+    {
+        i32 lat = ZEPHYRUM;
+        i32 alt = ZEPHYRUM;
+
+        si (n_reliqua >= II)
+        {
+            /* PONERE. Facta imprimuntur, non petita - si systema
+             * mensuram emendavit, hic apparet. */
+            si (manus_magnitudinem_ponere(m,
+                    (i32)atoi(reliqua[0]), (i32)atoi(reliqua[I]),
+                    &lat, &alt))
+            {
+                imprimere(machina ? "%d\t%d\n" : "%d %d\n",
+                    (integer)lat, (integer)alt);
+            }
+        }
+        alioquin si (n_reliqua == I)
+        {
+            fprintf(stderr, "manus magnitudo: duo numeri opus sunt"
+                " (latitudo altitudo), aut nullus ut legatur\n");
+            redde I;
+        }
+        alioquin si (manus_magnitudo(m, &lat, &alt))
+        {
+            imprimere(machina ? "%d\t%d\n" : "%d %d\n",
+                (integer)lat, (integer)alt);
+        }
     }
     alioquin si (strcmp(verbum, "scribere") == ZEPHYRUM && n_reliqua >= II)
     {

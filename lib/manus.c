@@ -604,9 +604,18 @@ _iussum (
  * usque ad primum maiorem cum id, aut ad corpus. Semita fragilis
  * est si pagina mutatur - sed hic index INSTANTANEUS est, non
  * conditus, ergo fragilitas nullum tempus habet ad nocendum. */
-#define MANUS_JS_AFFORDANTIAE \
-    "var S='a[href],button,input,textarea,select,summary," \
-    "[role=\"button\"],[role=\"link\"],[contenteditable=\"true\"]';" \
+/* SEMITA ET TITULUS - communia inter 'affordantiae' et 'focus'.
+ *
+ * SEORSUM STANT, non bis scripta, et hoc caput causam portat: _tx
+ * bis scriptum est (vide manus_textus infra) et duo exemplaria IAM
+ * DISCREPABANT de <select> antequam quisquam animadverteret. Verbum
+ * 'focus' selectorem eiusdem formae reddere DEBET quam affordantiae
+ * imprimunt - aliter nomen quod unum instrumentum dat alteri ignotum
+ * est, quod totam rem inutilem facit. Forma una ex fonte uno venit.
+ *
+ * _esc/_via: selector stabilis ('#id' si adest, aliter semita
+ * nth-of-type). _sp/_lab: titulus quem HOMO videt. */
+#define MANUS_JS_SEMITA \
     "function _esc(s){return (window.CSS&&CSS.escape)?CSS.escape(s):s;}" \
     "function _via(e){if(e.id)return '#'+_esc(e.id);" \
     "var p=[],n,s;" \
@@ -629,7 +638,12 @@ _iussum (
     "if(!t&&e.tagName!=='INPUT'&&e.tagName!=='SELECT'" \
     "&&e.tagName!=='TEXTAREA')t=e.textContent||'';" \
     "if(!t)t=e.name||'';" \
-    "return _sp(t);}" \
+    "return _sp(t);}"
+
+#define MANUS_JS_AFFORDANTIAE \
+    "var S='a[href],button,input,textarea,select,summary," \
+    "[role=\"button\"],[role=\"link\"],[contenteditable=\"true\"]';" \
+    MANUS_JS_SEMITA \
     "function _gen(e){var g=e.tagName.toLowerCase()," \
     "y=(e.type||'').toLowerCase(),r;" \
     "if(g==='select')return 3;" \
@@ -2006,6 +2020,197 @@ manus_affordantiae (
 }
 
 /* ========================================================================
+ * Focus
+ * ======================================================================== */
+
+ManusFocus
+manus_focus (
+    Manus*   manus,
+    Piscina* piscina)
+{
+    ChordaAedificator* a;
+    ManusFocus         fructus;
+    chorda             valor;
+    JsonResultus       lectio;
+
+    fructus.habet           = FALSUM;
+    fructus.selector.mensura = 0;
+    fructus.selector.datum   = NIHIL;
+    fructus.titulus.mensura  = 0;
+    fructus.titulus.datum    = NIHIL;
+    fructus.tag.mensura      = 0;
+    fructus.tag.datum        = NIHIL;
+
+    si (manus == NIHIL || manus->fracta || piscina == NIHIL)
+    {
+        redde fructus;
+    }
+
+    a = chorda_aedificator_creare(manus->piscina, (memoriae_index)M);
+    chorda_aedificator_appendere_literis(a, "(function(){");
+    chorda_aedificator_appendere_literis(a, MANUS_JS_SEMITA);
+    /* CORPUS ET documentElement AMBO 'nihil' sunt. activeElement
+     * corpus reddit cum nemo focum tenet, sed post 'blur()' aut in
+     * pagina nondum tacta documentElement reddere potest - idem
+     * significant, ergo idem nuntiant. */
+    chorda_aedificator_appendere_literis(a,
+        "var e=document.activeElement;"
+        "if(!e||e===document.body||e===document.documentElement)"
+        "return{habet:0,selector:\"\",titulus:\"\",tag:\"\"};"
+        "return{habet:1,selector:_via(e),titulus:_lab(e),"
+        "tag:String(e.tagName).toLowerCase()};");
+    chorda_aedificator_appendere_literis(a, "})()");
+
+    si (!_iussum(manus, chorda_aedificator_finire(a),
+                 MANUS_MORA_BREVIS, &valor))
+    {
+        redde fructus;
+    }
+
+    lectio = json_legere(valor, piscina);
+    si (!lectio.successus)
+    {
+        _frangere(manus, "focus: responsum JSON non est");
+        redde fructus;
+    }
+
+    fructus.habet    = _campus_numerus(lectio.radix, "habet") != ZEPHYRUM;
+    fructus.selector = _campus_chorda(lectio.radix, "selector", piscina);
+    fructus.titulus  = _campus_chorda(lectio.radix, "titulus", piscina);
+    fructus.tag      = _campus_chorda(lectio.radix, "tag", piscina);
+    redde fructus;
+}
+
+/* ========================================================================
+ * Magnitudo
+ * ======================================================================== */
+
+b32
+manus_magnitudinem_ponere (
+    Manus* manus,
+    i32    latitudo,
+    i32    altitudo,
+    i32*   latitudo_facta,
+    i32*   altitudo_facta)
+{
+    PiscinaNotatio nota;
+    ManusResponsum r;
+    JsonResultus   lectio;
+    i32            status;
+    b32            ok;
+    character      corpus[LXIV];
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+    si (latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM)
+    {
+        _frangere(manus,
+            "manus_magnitudinem_ponere: mensura non positiva");
+        redde FALSUM;
+    }
+
+    sprintf(corpus, "%d %d", (integer)latitudo, (integer)altitudo);
+
+    nota = piscina_notare(manus->scriptorium);
+    r = _petere(manus, HTTP_POST, "/imperium/magnitudo",
+                chorda_ex_literis(corpus, manus->scriptorium),
+                manus->scriptorium);
+    status = r.successus ? r.status : ZEPHYRUM;
+    ok = r.successus && r.status >= CC && r.status < CCC;
+
+    /* FACTA ANTE REFECTIONEM legere: corpus responsi in scriptorio
+     * vivit, quod infra reficitur. Lectio post refectionem memoriam
+     * mortuam legeret - genus erroris quod fere semper 'operatur'
+     * donec piscina aliud eodem loco ponat. */
+    si (ok)
+    {
+        lectio = json_legere(r.corpus, manus->scriptorium);
+        si (lectio.successus)
+        {
+            si (latitudo_facta != NIHIL)
+            {
+                *latitudo_facta = (i32)_campus_numerus(lectio.radix,
+                                                       "latitudo");
+            }
+            si (altitudo_facta != NIHIL)
+            {
+                *altitudo_facta = (i32)_campus_numerus(lectio.radix,
+                                                       "altitudo");
+            }
+        }
+    }
+    piscina_reficere(manus->scriptorium, nota);
+
+    si (!ok)
+    {
+        si (status == (i32)CDIV)
+        {
+            _frangere(manus,
+                "manus_magnitudinem_ponere: applicatio"
+                " magnitudinatorem non praebuit (atrium eum ponit;"
+                " app manu structa imperium_magnitudinatorem_ponere"
+                " vocet)");
+        }
+        alioquin si (status == (i32)CD)
+        {
+            _frangere(manus,
+                "manus_magnitudinem_ponere: mensura recusata"
+                " (positiva esse debet)");
+        }
+        alioquin
+        {
+            _frangere(manus,
+                "manus_magnitudinem_ponere: applicatio non respondit");
+        }
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+b32
+manus_magnitudo (
+    Manus* manus,
+    i32*   latitudo,
+    i32*   altitudo)
+{
+    chorda       valor;
+    JsonResultus lectio;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+
+    si (!_iussum(manus,
+            chorda_ex_literis(
+                "(function(){return{latitudo:window.innerWidth,"
+                "altitudo:window.innerHeight};})()",
+                manus->piscina),
+            MANUS_MORA_BREVIS, &valor))
+    {
+        redde FALSUM;
+    }
+
+    lectio = json_legere(valor, manus->piscina);
+    si (!lectio.successus)
+    {
+        _frangere(manus, "magnitudo: responsum JSON non est");
+        redde FALSUM;
+    }
+    si (latitudo != NIHIL)
+    {
+        *latitudo = (i32)_campus_numerus(lectio.radix, "latitudo");
+    }
+    si (altitudo != NIHIL)
+    {
+        *altitudo = (i32)_campus_numerus(lectio.radix, "altitudo");
+    }
+    redde VERUM;
+}
+
+/* ========================================================================
  * Asserta
  * ======================================================================== */
 
@@ -2108,6 +2313,52 @@ _manus_credo_existere (
                   _expressio(manus, selector),
                   adesse ? "I aut plura elementa" : "nulla elementa",
                   v, filum, versus);
+}
+
+b32
+_manus_credo_focum (
+    Manus*              manus,
+    constans character* selector,
+    Mora                mora,
+    constans character* filum,
+    s32                 versus)
+{
+    ChordaAedificator* a;
+    ManusVerdictum     v;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+
+    a = chorda_aedificator_creare(manus->piscina, (memoriae_index)M);
+    chorda_aedificator_appendere_literis(a, MANUS_JS_SEMITA);
+    chorda_aedificator_appendere_literis(a, "var e=document.activeElement,t=");
+    /* querySelector, NON q(): elementum focum tenens visibile esse
+     * DEBET ut focum utile habeat, sed si occultum est id ipsum est
+     * quod probatio nosse vult. q() nihil inveniret et nuntius
+     * 'focus alibi' diceret ubi verum est 'focus hic, sed latet'. */
+    chorda_aedificator_appendere_literis(a, "document.querySelector(");
+    _appendere_litteras_js(a, selector);
+    chorda_aedificator_appendere_literis(a,
+        ");"
+        /* VISUM semper focum CURRENTEM nominat, etiam cum ok.
+         * Nuntius fracturae qui solum 'falsum' dicit probatorem ad
+         * aestimare manu scriptum remittit - id ipsum quod hoc
+         * verbum tollere debet. */
+        "var u=(!e||e===document.body||e===document.documentElement)"
+        "?\"(nihil)\":_via(e);"
+        "return{ok:!!(t&&e===t),visum:u};");
+
+    v = _exspectare(manus,
+                    _js_exspectare(manus,
+                        _litterae(chorda_aedificator_finire(a), manus->piscina),
+                        mora),
+                    mora);
+
+    redde _notare(manus, "credo_manus_focus",
+                  _expressio(manus, selector),
+                  selector, v, filum, versus);
 }
 
 b32

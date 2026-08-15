@@ -660,6 +660,32 @@ fenestra_musarius (
     i32                 y);
 
 
+/* Magnitudinem ponere per suturam (forma imperii par; 'datum'
+ * Fenestra* est).
+ *
+ * MENSURAM FACTAM REDDIT, non petitam - et haec sola causa cur
+ * sutura haec parametros exitus fert ubi claviarius et musarius
+ * nullos ferunt.
+ *
+ * CUR: systema minimas suas imponit (latitudo tituli, ornamenta), et
+ * fenestra quae CCCXX petita CDXXX manet TACITE id facit. Sine
+ * reditu, probatio dispositionis angustae in fenestra LATA curreret
+ * et viridis esset - genus mendacii quod haec domus iam nimis saepe
+ * vidit. Ergo numerus VERUS redit, et qui vocat comparare potest.
+ *
+ * Mensurae CONTENTAE sunt (area utilis), non totius formae: id est
+ * quod pagina accipit, ergo id est quod probator cogitat.
+ *
+ * Redde FALSUM si mensura non positiva aut fenestra abest. */
+b32
+fenestra_magnitudinator (
+    vacuum* datum,
+    i32     latitudo,
+    i32     altitudo,
+    i32*    latitudo_facta,
+    i32*    altitudo_facta);
+
+
 /* ==================================================
  * Tabula Pixelorum - Creatio / Destructio
  * ================================================== */
