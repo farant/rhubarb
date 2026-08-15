@@ -1352,6 +1352,93 @@ _imaginem (
 }
 
 b32
+manus_movere (
+    Manus*              manus,
+    constans character* selector)
+{
+    ChordaAedificator* a;
+    ManusVerdictum     v;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+    si (selector == NIHIL || selector[0] == '\0')
+    {
+        _frangere(manus, "manus_movere: selector VACUUS");
+        redde FALSUM;
+    }
+
+    /* EVENTUS JS, NON NATIVI - et hoc consulto (2026-08-15).
+     *
+     * QUOD AMITTITUR: CSS ':hover' non congruet. Eventus per
+     * dispatchEvent missus isTrusted=false fert, et textura eum ad
+     * statum ':hover' non admittit. Eadem est limitatio quam Cypress
+     * fatetur (nullum '.hover()' habet, eandem ob causam).
+     *
+     * QUOD NON AMITTITUR, et cur hoc satis est: regulae ':hover'
+     * huius domus OMNES ornatoriae sunt - color limbi, fundus,
+     * linea subducta. MENSURATUM in foro, villa, mensore: nulla
+     * regula 'display', 'visibility', 'opacity' mutat. Nihil
+     * APPARET quod ante latebat, ergo nihil quod assertum meretur.
+     * Indicia autem quae vere informant (tituli volantes, menus)
+     * per JS fiunt, et ea haec via EXCITAT.
+     *
+     * CUR NON NATIVI: eventus nativus ':hover' verum daret, sed
+     * cursorem SYSTEMATIS implicat - et Fran in eadem machina
+     * laborat dum probationes currunt. Instrumentum quod indicem
+     * rapit dum ille scribit instrumentum est quod nemo curret.
+     * Primitivum nativum manet (fenestra_murem_immittere) si
+     * aliquando ':hover' verum poposcerimus.
+     *
+     * EXITUS ET INTROITUS PARES: titulus volans qui in 'mouseenter'
+     * apparet in 'mouseleave' abire DEBET. Sine pari, elementum
+     * prius libratum in aeternum apertum maneret et imago sequens
+     * mentiretur. Ergo elementum ultimum servamus. */
+    a = chorda_aedificator_creare(manus->piscina, M);
+    chorda_aedificator_appendere_literis(a, "var e=q(");
+    _appendere_litteras_js(a, selector);
+    chorda_aedificator_appendere_literis(a,
+        ");if(!e)return{ok:false,visum:"
+        "\"nullum elementum VISIBILE huic selectori congruit\"};"
+        "e.scrollIntoView({block:'center',inline:'center'});"
+        "var r=e.getBoundingClientRect();"
+        "if(r.width<=0||r.height<=0)return{ok:false,visum:"
+        "\"elementum sine mensura (nihil librari potest)\"};"
+        "var cx=r.left+r.width/2,cy=r.top+r.height/2;"
+        /* enter/leave NON bulliunt (norma DOM); over/out bulliunt */
+        "function mk(g,rel){return new MouseEvent(g,{bubbles:"
+        "(g!=='mouseenter'&&g!=='mouseleave'),cancelable:true,"
+        "view:window,clientX:cx,clientY:cy,relatedTarget:rel||null});}"
+        "var ante=window.__manus_libratum||null;"
+        "if(ante&&ante!==e&&document.contains(ante)){"
+        "ante.dispatchEvent(mk('mouseout',e));"
+        "ante.dispatchEvent(mk('mouseleave',e));}"
+        "if(ante!==e){e.dispatchEvent(mk('mouseover',ante));"
+        "e.dispatchEvent(mk('mouseenter',ante));}"
+        "e.dispatchEvent(mk('mousemove',null));"
+        "window.__manus_libratum=e;"
+        "return{ok:true,visum:\"libratum\"};");
+
+    v = _exspectare(manus,
+                    _js_exspectare(manus, (constans character*)
+                        _litterae(chorda_aedificator_finire(a),
+                                  manus->piscina),
+                        MANUS_MORA_ORDINARIA),
+                    MANUS_MORA_ORDINARIA);
+    si (!v.respondit)
+    {
+        redde FALSUM;   /* _iussum iam fregit */
+    }
+    si (!v.ok)
+    {
+        _frangere(manus, _litterae(v.visum, manus->piscina));
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+b32
 manus_clavem (
     Manus*              manus,
     constans character* clavis)

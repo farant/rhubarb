@@ -36,6 +36,8 @@ structura Imperium {
     vacuum*            imaginator_datum;
     ImperiumClaviarius claviarius;
     vacuum*            claviarius_datum;
+    ImperiumMusarius   musarius;
+    vacuum*            musarius_datum;
     ImperiumFructus    fructus;
 };
 
@@ -305,6 +307,94 @@ _clavem_immittere (
         chorda_ex_literis("{\"ok\":true}", p));
 }
 
+/* POST /imperium/mus - corpus = "<genus> <x> <y>" ("motus 180 260")
+ *
+ * Coordinatae PAGINAE sunt (CSS px, origo summa sinistra). Versio in
+ * systema AppKit intra stratum platformae fit - hic nihil de ea
+ * scitur, sicut de codicibus clavium nihil scitur.
+ *
+ * ==========================================================
+ * NEMO HANC VIAM ADHUC ADHIBET, NEC PROBATA EST VIVA
+ * ==========================================================
+ *
+ * 'manus movere' per JS it (dispatchEvent), non huc: eventus nativus
+ * cursorem SYSTEMATIS implicat, et haec domus in eadem machina
+ * laborat dum probationes currunt.
+ *
+ * Semita ipsa recte respondet (CCII, suturam vocat), sed EVENTUM AD
+ * TEXTURAM PERVENIRE non potui constanter ostendere: spicae binae
+ * ':hover' verum dederunt, deinde eaedem, codice immutato, defecerunt.
+ * Suspicio: positio cursoris VERI statum librationis regit. NON
+ * SOLUTUM.
+ *
+ * Ergo: hoc opus manet, non testimonium. Qui redit primum causam
+ * inveniat, deinde huic credat. */
+interior vacuum
+_murem_immittere (
+    HospitiumColloquium* colloquium);
+
+interior vacuum
+_murem_immittere (
+    HospitiumColloquium* colloquium)
+{
+    Imperium*                    imperium;
+    constans HttpPetitioServeri* petitio;
+    Piscina*                     p;
+    constans character*          corpus;
+    character                    genus[XXXII];
+    integer                      x;
+    integer                      y;
+
+    imperium = (Imperium*)colloquium_datum(colloquium);
+    petitio  = colloquium_petitio(colloquium);
+    p        = colloquium_piscina(colloquium);
+
+    si (imperium == NIHIL || petitio == NIHIL)
+    {
+        _respondere_json(colloquium, D,
+            chorda_ex_literis("{\"culpa\":\"imperium abest\"}", p));
+        redde;
+    }
+    si (imperium->musarius == NIHIL)
+    {
+        _respondere_json(colloquium, CDIV,
+            chorda_ex_literis(
+                "{\"culpa\":\"musarius non positus\"}", p));
+        redde;
+    }
+    si (petitio->corpus.mensura == ZEPHYRUM)
+    {
+        _respondere_json(colloquium, CD,
+            chorda_ex_literis("{\"culpa\":\"corpus vacuum\"}", p));
+        redde;
+    }
+
+    corpus = chorda_ut_cstr(petitio->corpus, p);
+    si (corpus == NIHIL
+        || sscanf(corpus, "%31s %d %d", genus, &x, &y) != (integer)III)
+    {
+        _respondere_json(colloquium, CD,
+            chorda_ex_literis(
+                "{\"culpa\":\"forma: <genus> <x> <y>\"}", p));
+        redde;
+    }
+
+    imperium->fructus.iussa_missa = imperium->fructus.iussa_missa + I;
+
+    si (!imperium->musarius(imperium->musarius_datum, genus,
+            (i32)x, (i32)y))
+    {
+        _respondere_json(colloquium, CD,
+            chorda_ex_literis(
+                "{\"culpa\":\"genus ignotum aut immitti non potuit\"}",
+                p));
+        redde;
+    }
+
+    _respondere_json(colloquium, CC,
+        chorda_ex_literis("{\"ok\":true}", p));
+}
+
 /* POST /imperium/imago - corpus = via plagulae (vacuum = ordinaria) */
 interior vacuum
 _imaginem_petere (
@@ -559,6 +649,8 @@ imperium_creare (
     imperium->imaginator_datum = NIHIL;
     imperium->claviarius       = NIHIL;
     imperium->claviarius_datum = NIHIL;
+    imperium->musarius         = NIHIL;
+    imperium->musarius_datum   = NIHIL;
     imperium->fructus.iussa_missa      = ZEPHYRUM;
     imperium->fructus.responsa_recepta = ZEPHYRUM;
     imperium->fructus.culpae           = ZEPHYRUM;
@@ -596,6 +688,11 @@ imperium_praebere (
      * et ordo registrationis eligit. (Idem quod 'imago' iam agit.) */
     si (!hospitium_praebere(hospitium, HTTP_POST, "/imperium/clavis",
         _clavem_immittere, imperium))
+    {
+        redde FALSUM;
+    }
+    si (!hospitium_praebere(hospitium, HTTP_POST, "/imperium/mus",
+        _murem_immittere, imperium))
     {
         redde FALSUM;
     }
@@ -646,6 +743,19 @@ imperium_claviarium_ponere (
     {
         imperium->claviarius       = claviarius;
         imperium->claviarius_datum = datum;
+    }
+}
+
+vacuum
+imperium_musarium_ponere (
+    Imperium*        imperium,
+    ImperiumMusarius musarius,
+    vacuum*          datum)
+{
+    si (imperium != NIHIL)
+    {
+        imperium->musarius       = musarius;
+        imperium->musarius_datum = datum;
     }
 }
 
@@ -791,6 +901,11 @@ imperium_vivarium (Piscina* piscina,
     {
         imperium_claviarium_ponere(v.imperium, figura->claviarius,
                                    figura->claviarius_datum);
+    }
+    si (figura->musarius != NIHIL)
+    {
+        imperium_musarium_ponere(v.imperium, figura->musarius,
+                                 figura->musarius_datum);
     }
 
     v.portus    = hospitium_portus(v.hospitium);

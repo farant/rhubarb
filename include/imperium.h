@@ -80,6 +80,20 @@ nomen b32 (*ImperiumClaviarius)(
     vacuum*             datum,
     constans character* clavis);
 
+/* MUS - sutura (forma fenestra_musarius par).
+ *
+ * GENUS NOMINATUM transit ("motus", "depressio", ...) cum
+ * coordinatis PAGINAE (CSS px, origo summa sinistra - quod
+ * getBoundingClientRect reddit). Versio in systema AppKit intra
+ * stratum platformae sola fit; imperium eam nescit.
+ *
+ * Redde FALSUM si genus ignotum. */
+nomen b32 (*ImperiumMusarius)(
+    vacuum*             datum,
+    constans character* genus,
+    i32                 x,
+    i32                 y);
+
 /* ==========================================================
  * VIVARIUM - imperium PARATUM (baculi inclusi)
  * ==========================================================
@@ -130,6 +144,8 @@ nomen structura {
      * datum proprium. Unum 'datum' pro utroque ruinam silentem
      * daret (typus alius, compilator tacet). */
     vacuum*            claviarius_datum;
+    ImperiumMusarius   musarius;     /* NIHIL = sine /imperium/mus */
+    vacuum*            musarius_datum;
     InternuntiusMissor missor;       /* opus nisi internuntius datur */
     vacuum*            datum;        /* idem omnibus suturis */
     i32                fenestra;     /* ID nativum (ZEPHYRUM = nullum) */
@@ -230,6 +246,15 @@ imperium_claviarium_ponere (
     Imperium*          imperium,
     ImperiumClaviarius claviarius,
     vacuum*            datum);
+
+/* Musarium ponere -> viam 'POST /imperium/mus' aperit.
+ * Corpus: "<genus> <x> <y>" (e.g. "motus 180 260").
+ * Synchrona ut clavis; genus ignotum aut coordinatae pravae CD. */
+vacuum
+imperium_musarium_ponere (
+    Imperium*         imperium,
+    ImperiumMusarius  musarius,
+    vacuum*           datum);
 
 /* ==================================================
  * Numeratores (mensura est productum)

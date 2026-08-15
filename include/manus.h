@@ -316,6 +316,42 @@ manus_aestimare (
     constans character* js,
     Mora                mora);
 
+/* Murem super elementum LIBRARE (hover), sine ullo clicu.
+ *
+ * ==========================================================
+ * CSS ':hover' NON CONGRUET - hoc scito ante usum
+ * ==========================================================
+ *
+ * Eventus hinc missi JS sunt (dispatchEvent), ergo isTrusted=false
+ * ferunt, ergo textura eos ad statum ':hover' NON admittit. Eadem
+ * est limitatio quam Cypress fatetur - nullum '.hover()' habet,
+ * eandem ob causam.
+ *
+ * CUR TAMEN SATIS: regulae ':hover' huius domus omnes ORNATORIAE
+ * sunt (color limbi, fundus, linea subducta) - MENSURATUM in foro,
+ * villa, mensore: nulla 'display' aut 'visibility' aut 'opacity'
+ * mutat. Nihil APPARET quod ante latebat. Quae vere informant -
+ * tituli volantes, menus, indicia - per JS fiunt, et ea haec via
+ * EXCITAT. Ergo 'imago' post 'movere' id ostendit quod ostendendum
+ * est.
+ *
+ * CUR NON NATIVI: eventus nativus ':hover' verum daret sed cursorem
+ * SYSTEMATIS implicat, et haec domus in eadem machina laborat dum
+ * probationes currunt. Primitivum nativum manet
+ * (fenestra_murem_immittere) si aliquando opus erit.
+ *
+ * EXITUS PAR INTROITUI: elementum prius libratum 'mouseout' et
+ * 'mouseleave' accipit ANTE quam novum 'mouseover' - aliter titulus
+ * volans prior apertus maneret et imago sequens mentiretur.
+ *
+ * Elementum in PROSPECTUM prius volvitur. Selector VISIBILE
+ * significat, ut ubique. FALSUM (et manus fracta) si nihil congruit
+ * aut mensura ZEPHYRUM est. */
+b32
+manus_movere (
+    Manus*              manus,
+    constans character* selector);
+
 /* Clavem NOMINATAM immittere (ictus unus: depressa + liberata).
  *
  * EVENTUS NATIVUS, non JS. Eventus per 'dispatchEvent' missus

@@ -646,6 +646,19 @@ fenestra_murem_immittere (
     i32              y,             /* CSS px a SUMMO */
     i32              modificatores);
 
+/* Mus per NOMEN generis (forma suturae imperii par; 'datum'
+ * Fenestra* est). Nomina: "motus" "depressio" "tractus" "liberatio"
+ * "depressio-dextra" "liberatio-dextra".
+ *
+ * Nomen transit, non enumeratio: imperium de AppKit nihil scit, ut
+ * in claviario. Redde FALSUM si genus ignotum. */
+b32
+fenestra_musarius (
+    vacuum*             datum,
+    constans character* genus,
+    i32                 x,
+    i32                 y);
+
 
 /* ==================================================
  * Tabula Pixelorum - Creatio / Destructio

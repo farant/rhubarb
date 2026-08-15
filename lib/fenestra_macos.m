@@ -1033,11 +1033,9 @@ fenestra_murem_immittere (
     visus = [fenestra->fenestra_ns contentView];
     si (visus == nil) redde FALSUM;
 
-    /* NE ADDAS 'setAcceptsMouseMovedEvents:YES' - eam addidi dum
-     * causam quaero, et MENSURAVI superfluam esse: motus et ':hover'
-     * sine ea recte veniunt (textura eam sibi ponit). Vitium verum
-     * inversio duplex infra erat. Coniectura sanata quae remanet
-     * mendacium fit quod nemo iterum probat. */
+    /* NE ADDAS 'setAcceptsMouseMovedEvents:YES' - BIS mensuratum
+     * superfluam esse (semel dum causam quaero, iterum dum hanc
+     * ipsam suspicor). Textura eam sibi ponit. */
     /* VERSIO COORDINATARUM - sola causa cur haec functio hic vivit.
      *
      * CSS: origo SUMMA sinistra, y deorsum crescit.
@@ -1094,6 +1092,59 @@ fenestra_murem_immittere (
 
     [NSApp postEvent:eventus atStart:NO];
     redde VERUM;
+}
+
+b32
+fenestra_musarius (
+    vacuum*             datum,
+    constans character* genus,
+    i32                 x,
+    i32                 y)
+{
+    Fenestra* fenestra = (Fenestra*)datum;
+
+    si (fenestra == NIHIL || genus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* Focum rapere ut claviarius: eventus ad fenestram CLAVEM it.
+     * Spica focum ceperat (per clavem) ante immissionem; verbum
+     * 'movere' non capiebat - sola differentia structuralis quae
+     * inter spicam operantem et verbum mutum restabat. */
+    fenestra_clavem_capere(fenestra);
+
+    si (strcmp(genus, "motus") == 0)
+    {
+        redde fenestra_murem_immittere(fenestra, FENESTRA_MUS_MOTUS,
+            x, y, ZEPHYRUM);
+    }
+    si (strcmp(genus, "depressio") == 0)
+    {
+        redde fenestra_murem_immittere(fenestra,
+            FENESTRA_MUS_DEPRESSIO, x, y, ZEPHYRUM);
+    }
+    si (strcmp(genus, "tractus") == 0)
+    {
+        redde fenestra_murem_immittere(fenestra,
+            FENESTRA_MUS_TRACTUS, x, y, ZEPHYRUM);
+    }
+    si (strcmp(genus, "liberatio") == 0)
+    {
+        redde fenestra_murem_immittere(fenestra,
+            FENESTRA_MUS_LIBERATIO, x, y, ZEPHYRUM);
+    }
+    si (strcmp(genus, "depressio-dextra") == 0)
+    {
+        redde fenestra_murem_immittere(fenestra,
+            FENESTRA_MUS_DEPRESSIO_DEXTRA, x, y, ZEPHYRUM);
+    }
+    si (strcmp(genus, "liberatio-dextra") == 0)
+    {
+        redde fenestra_murem_immittere(fenestra,
+            FENESTRA_MUS_LIBERATIO_DEXTRA, x, y, ZEPHYRUM);
+    }
+
+    redde FALSUM;   /* genus ignotum: RECUSATIO, non motus mutus */
 }
 
 /* ==================================================
