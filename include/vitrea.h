@@ -83,7 +83,7 @@ nomen structura {
 /* ERRATOR - sutura errorum paginae.
  *
  * 'nuntius' est obiectum JSON: {genus, nuntius, ubi} ubi genus est
- * "exceptio" | "promissum" | "console".
+ * "exceptio" | "promissum" | "console.error".
  *
  * SINE eo (ordinarius): vitrea in stderr clamat. Ergo applicatio
  * quaelibet errores faciei suae in actis videt SINE mutatione
