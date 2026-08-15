@@ -1352,6 +1352,65 @@ _imaginem (
 }
 
 b32
+manus_clavem (
+    Manus*              manus,
+    constans character* clavis)
+{
+    PiscinaNotatio nota;
+    ManusResponsum r;
+    i32            status;
+    b32            ok;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+    si (clavis == NIHIL || clavis[0] == '\0')
+    {
+        _frangere(manus, "manus_clavem: clavis VACUA");
+        redde FALSUM;
+    }
+
+    nota = piscina_notare(manus->scriptorium);
+    r = _petere(manus, HTTP_POST, "/imperium/clavis",
+                chorda_ex_literis(clavis, manus->scriptorium),
+                manus->scriptorium);
+    status = r.successus ? r.status : ZEPHYRUM;
+    ok = r.successus && r.status >= CC && r.status < CCC;
+    piscina_reficere(manus->scriptorium, nota);
+
+    si (!ok)
+    {
+        /* Causae DISTINCTAE. Prius omnes 'clavis non immissa'
+         * essent, et 'applicatio hanc semitam non habet' ab
+         * 'hanc clavem non novi' indiscretum - duo vitia valde
+         * diversa quae ambo idem nomen ferrent. */
+        si (status == (i32)CDIV)
+        {
+            _frangere(manus,
+                "manus_clavem: applicatio claviarium non praebuit"
+                " (atrium eum ponit; app manu structa"
+                " imperium_claviarium_ponere vocet)");
+        }
+        alioquin si (status == (i32)CD)
+        {
+            _frangere(manus,
+                "manus_clavem: clavis IGNOTA - nomina posita sunt"
+                " (Enter Tab Escape Space Backspace Delete"
+                " ArrowUp/Down/Left/Right Home End PageUp PageDown"
+                " F1-F12), praefixis Cmd+ Ctrl+ Shift+ Alt+."
+                " Textum per 'scribere' pone, non per claves");
+        }
+        alioquin
+        {
+            _frangere(manus, "manus_clavem: applicatio non respondit");
+        }
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+b32
 manus_imaginem (
     Manus*              manus,
     constans character* via)

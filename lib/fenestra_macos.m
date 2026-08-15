@@ -1013,6 +1013,123 @@ fenestra_clavem_immittere (
     redde VERUM;
 }
 
+/* ==================================================
+ * Claves NOMINATAE
+ * ==================================================
+ *
+ * TABULA HIC, non in imperio: codices virtuales et vexilla
+ * modificatorum res macOS sunt. Imperium nomen SOLUM transmittit,
+ * ergo neutrum systema alterius scientiam portat.
+ *
+ * Litterae ABSUNT de industria (vide fenestra.h): codex positionem
+ * nominat, non litteram. Nomina infra positione stabilia sunt.
+ */
+
+nomen structura {
+    constans character* titulus;
+    i32                 codex;
+    constans character* characteres;   /* quod clavis parit */
+} ClavisNominata;
+
+interior constans ClavisNominata CLAVES[] = {
+    { "Enter",      36, "\r"   },
+    { "Tab",        48, "\t"   },
+    { "Escape",     53, "\033" },
+    { "Space",      49, " "    },
+    { "Backspace",  51, "\010" },
+    { "Delete",    117, ""     },
+    { "ArrowUp",   126, ""     },
+    { "ArrowDown", 125, ""     },
+    { "ArrowLeft", 123, ""     },
+    { "ArrowRight",124, ""     },
+    { "Home",      115, ""     },
+    { "End",       119, ""     },
+    { "PageUp",    116, ""     },
+    { "PageDown",  121, ""     },
+    { "F1",        122, ""     }, { "F2",  120, "" },
+    { "F3",         99, ""     }, { "F4",  118, "" },
+    { "F5",         96, ""     }, { "F6",   97, "" },
+    { "F7",         98, ""     }, { "F8",  100, "" },
+    { "F9",        101, ""     }, { "F10", 109, "" },
+    { "F11",       103, ""     }, { "F12", 111, "" }
+};
+
+#define CLAVES_NUMERUS \
+    ((i32)(magnitudo(CLAVES) / magnitudo(CLAVES[0])))
+
+b32
+fenestra_claviarius (
+    vacuum*             datum,
+    constans character* clavis)
+{
+    Fenestra*           fenestra = (Fenestra*)datum;
+    constans character* p        = clavis;
+    i32                 modi     = ZEPHYRUM;
+    i32                 i;
+
+    si (fenestra == NIHIL || clavis == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* Praefixa modificatorum, cumulabilia */
+    per (;;)
+    {
+        si (strncmp(p, "Cmd+", 4) == 0)
+        {
+            modi = modi | (i32)NSEventModifierFlagCommand;
+            p = p + 4;
+        }
+        alioquin si (strncmp(p, "Ctrl+", 5) == 0)
+        {
+            modi = modi | (i32)NSEventModifierFlagControl;
+            p = p + 5;
+        }
+        alioquin si (strncmp(p, "Shift+", 6) == 0)
+        {
+            modi = modi | (i32)NSEventModifierFlagShift;
+            p = p + 6;
+        }
+        alioquin si (strncmp(p, "Alt+", 4) == 0)
+        {
+            modi = modi | (i32)NSEventModifierFlagOption;
+            p = p + 4;
+        }
+        alioquin si (strncmp(p, "Opt+", 4) == 0)
+        {
+            modi = modi | (i32)NSEventModifierFlagOption;
+            p = p + 4;
+        }
+        alioquin
+        {
+            frange;
+        }
+    }
+
+    per (i = ZEPHYRUM; i < CLAVES_NUMERUS; i++)
+    {
+        si (strcmp(p, CLAVES[i].titulus) == 0)
+        {
+            /* Focus PRIMUM: eventus ad fenestram clavem it, et
+             * agitator eam non tenet. Ante depressionem solum -
+             * bis rapere nihil addit. */
+            fenestra_clavem_capere(fenestra);
+
+            si (!fenestra_clavem_immittere(fenestra, CLAVES[i].codex,
+                    modi, CLAVES[i].characteres, VERUM))
+            {
+                redde FALSUM;
+            }
+            redde fenestra_clavem_immittere(fenestra, CLAVES[i].codex,
+                modi, CLAVES[i].characteres, FALSUM);
+        }
+    }
+
+    /* Nomen ignotum: RECUSATIO, non ictus mutus qui 'factum'
+     * nuntiaret. */
+    redde FALSUM;
+}
+
 /* Implementatio tabulae pixelorum */
 
 TabulaPixelorum*

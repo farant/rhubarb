@@ -67,6 +67,19 @@ nomen b32 (*ImperiumImaginator)(
     ImperiumImagoFacta  facta,
     vacuum*             facta_datum);
 
+/* CLAVIS - sutura (forma fenestra_claviarius par).
+ *
+ * NOMEN SOLUM transit ("Enter", "Cmd+Shift+ArrowLeft"): codices
+ * virtuales et vexilla modificatorum res PLATFORMAE sunt, ergo
+ * imperium ea nescit et nescire debet. Tabula in fenestra_macos.m
+ * vivit, ubi sola valet.
+ *
+ * Redde FALSUM si nomen ignotum - unde via CD reddit, non CCII
+ * mendax. */
+nomen b32 (*ImperiumClaviarius)(
+    vacuum*             datum,
+    constans character* clavis);
+
 /* ==========================================================
  * VIVARIUM - imperium PARATUM (baculi inclusi)
  * ==========================================================
@@ -112,6 +125,11 @@ nomen structura {
     i32                portus;       /* ZEPHYRUM = auto-selectus */
     ImperiumAestimator aestimator;   /* OBLIGATORIUS */
     ImperiumImaginator imaginator;   /* NIHIL = sine /imperium/imago */
+    ImperiumClaviarius claviarius;   /* NIHIL = sine /imperium/clavis */
+    /* Claviarius FENESTRAM poscit, ceterae suturae VITREAM - ergo
+     * datum proprium. Unum 'datum' pro utroque ruinam silentem
+     * daret (typus alius, compilator tacet). */
+    vacuum*            claviarius_datum;
     InternuntiusMissor missor;       /* opus nisi internuntius datur */
     vacuum*            datum;        /* idem omnibus suturis */
     i32                fenestra;     /* ID nativum (ZEPHYRUM = nullum) */
@@ -196,6 +214,21 @@ vacuum
 imperium_imaginatorem_ponere (
     Imperium*          imperium,
     ImperiumImaginator imaginator,
+    vacuum*            datum);
+
+/* Claviarium ponere -> viam 'POST /imperium/clavis' aperit.
+ * Sine eo via CDIV reddit (recusatio APERTA).
+ *
+ *   imperium_claviarium_ponere(imp, fenestra_claviarius, fenestra);
+ *
+ * Corpus petitionis = NOMEN clavis ("Enter", "Cmd+ArrowLeft").
+ * SYNCHRONA, sine tessera: eventus in caudam ponitur et vocatio
+ * statim redit - nihil est quod exspectetur, ergo tessera
+ * machinamentum sine causa esset. Nomen ignotum CD reddit. */
+vacuum
+imperium_claviarium_ponere (
+    Imperium*          imperium,
+    ImperiumClaviarius claviarius,
     vacuum*            datum);
 
 /* ==================================================

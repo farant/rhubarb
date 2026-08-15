@@ -587,6 +587,32 @@ fenestra_clavem_capere (
     Fenestra* fenestra);
 
 
+/* Clavem NOMINATAM immittere (depressam ET liberatam - ictus unus).
+ *
+ * Forma suturae imperii par (vide imperium.h); 'datum' Fenestra* est.
+ * Focum RAPIT: eventus ad fenestram clavem it, ergo agitatio eam
+ * clavem facere debet.
+ *
+ * CLAVES NOMINATAE SOLAE - consulto. Codices macOS POSITIONEM
+ * clavis nominant, non litteram: 'a' ZEPHYRUM est in dispositione
+ * ANSI SOLA, aliter alibi. Nomina infra positione stabilia sunt in
+ * omni dispositione; litterae non sunt. Textum per 'manus_scribere'
+ * pone - via illa dispositionis omnino nescia est et iam operatur.
+ *
+ * Nomina: Enter Tab Escape Space Backspace Delete
+ *         ArrowUp ArrowDown ArrowLeft ArrowRight
+ *         Home End PageUp PageDown F1..F12
+ * Modificatores praefixi: 'Cmd+' 'Ctrl+' 'Shift+' 'Alt+' (aut 'Opt+'),
+ * cumulabiles: "Cmd+Shift+ArrowLeft".
+ *
+ * Redde FALSUM si nomen ignotum est (RECUSATIO, non ictus mutus).
+ */
+b32
+fenestra_claviarius (
+    vacuum*             datum,
+    constans character* clavis);
+
+
 /* ==================================================
  * Tabula Pixelorum - Creatio / Destructio
  * ================================================== */

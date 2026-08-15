@@ -316,6 +316,33 @@ manus_aestimare (
     constans character* js,
     Mora                mora);
 
+/* Clavem NOMINATAM immittere (ictus unus: depressa + liberata).
+ *
+ * EVENTUS NATIVUS, non JS. Eventus per 'dispatchEvent' missus
+ * isTrusted=false fert: auditores applicationis eum audiunt, sed
+ * textura eum IGNORAT - nullus character inseritur, Tab focum non
+ * movet, forma non mittitur. Ergo haec via per imperium ad stratum
+ * platformae it, ubi NSEvent verus in caudam applicationis ponitur.
+ *
+ * FOCUM RAPIT: eventus ad fenestram clavem it, ergo fenestra
+ * applicationis in ante venit. Pretium agitationis GUI apertum.
+ *
+ * CLAVES NOMINATAE SOLAE: Enter Tab Escape Space Backspace Delete
+ * ArrowUp ArrowDown ArrowLeft ArrowRight Home End PageUp PageDown
+ * F1..F12; praefixa Cmd+ Ctrl+ Shift+ Alt+ (cumulabilia).
+ *
+ * TEXTUM PER 'manus_scribere' PONE, non per claves: codices macOS
+ * POSITIONEM clavis nominant, non litteram ('a' ZEPHYRUM est in
+ * ANSI sola), ergo litterae dispositioni adhaererent. scribere via
+ * dispositionis nescia est et iam operatur.
+ *
+ * FALSUM (et manus fracta) si nomen ignotum aut app claviarium non
+ * praebuit - causa UTRUMQUE distinguit. */
+b32
+manus_clavem (
+    Manus*              manus,
+    constans character* clavis);
+
 /* Elementum primum selectoris premere. FALSUM (et manus fracta) si
  * nullum congruit - clic in vacuum vitium est, non nihil. */
 b32

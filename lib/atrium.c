@@ -296,6 +296,11 @@ atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
         figura_vivarii.imaginator   = vitrea_imaginator;
         figura_vivarii.missor       = vitrea_missor;
         figura_vivarii.datum        = atrium->vitrea;
+        /* Claviarius FENESTRAM poscit (eventus nativus ad fenestram
+         * clavem it), ceterae suturae VITREAM - ergo datum proprium.
+         * Vide imperium.h. */
+        figura_vivarii.claviarius       = fenestra_claviarius;
+        figura_vivarii.claviarius_datum = atrium->fenestra;
         figura_vivarii.fenestra     =
             fenestra_numerus_nativus(atrium->fenestra);
         /* Internuntium NOSTRUM tradimus: pons unus imperium unum

@@ -34,6 +34,8 @@ structura Imperium {
     i32                id_fenestrae;
     ImperiumImaginator imaginator;
     vacuum*            imaginator_datum;
+    ImperiumClaviarius claviarius;
+    vacuum*            claviarius_datum;
     ImperiumFructus    fructus;
 };
 
@@ -236,6 +238,71 @@ _iubere (
     chorda_aedificator_appendere_literis(a, numerus);
     chorda_aedificator_appendere_literis(a, "}");
     _respondere_json(colloquium, CCII, chorda_aedificator_finire(a));
+}
+
+/* POST /imperium/clavis - corpus = NOMEN clavis ("Cmd+ArrowLeft")
+ *
+ * SYNCHRONA, sine tessera: eventus nativus in caudam applicationis
+ * ponitur et vocatio statim redit. Nihil est quod exspectetur, ergo
+ * tessera hic machinamentum sine causa esset (differt ab imagine,
+ * quae vere asynchrona est). */
+interior vacuum
+_clavem_immittere (
+    HospitiumColloquium* colloquium);
+
+interior vacuum
+_clavem_immittere (
+    HospitiumColloquium* colloquium)
+{
+    Imperium*                    imperium;
+    constans HttpPetitioServeri* petitio;
+    Piscina*                     p;
+    constans character*          nomen_clavis;
+
+    imperium = (Imperium*)colloquium_datum(colloquium);
+    petitio  = colloquium_petitio(colloquium);
+    p        = colloquium_piscina(colloquium);
+
+    si (imperium == NIHIL || petitio == NIHIL)
+    {
+        _respondere_json(colloquium, D,
+            chorda_ex_literis("{\"culpa\":\"imperium abest\"}", p));
+        redde;
+    }
+    /* RECUSATIO APERTA: sine claviario via ipsa non exstat pro hac
+     * applicatione - melius quam CCII quod nihil egit */
+    si (imperium->claviarius == NIHIL)
+    {
+        _respondere_json(colloquium, CDIV,
+            chorda_ex_literis(
+                "{\"culpa\":\"claviarius non positus\"}", p));
+        redde;
+    }
+    si (petitio->corpus.mensura == ZEPHYRUM)
+    {
+        _respondere_json(colloquium, CD,
+            chorda_ex_literis(
+                "{\"culpa\":\"clavis vacua\"}", p));
+        redde;
+    }
+
+    nomen_clavis = chorda_ut_cstr(petitio->corpus, p);
+    imperium->fructus.iussa_missa = imperium->fructus.iussa_missa + I;
+
+    si (!imperium->claviarius(imperium->claviarius_datum, nomen_clavis))
+    {
+        /* Nomen ignotum aut immissio fracta. CD, non CCII: ictus
+         * mutus qui 'factum' nuntiaret est ipsum vitium quod haec
+         * semita tollere debet. */
+        _respondere_json(colloquium, CD,
+            chorda_ex_literis(
+                "{\"culpa\":\"clavis ignota aut immitti non potuit\"}",
+                p));
+        redde;
+    }
+
+    _respondere_json(colloquium, CC,
+        chorda_ex_literis("{\"ok\":true}", p));
 }
 
 /* POST /imperium/imago - corpus = via plagulae (vacuum = ordinaria) */
@@ -490,6 +557,8 @@ imperium_creare (
     imperium->id_fenestrae    = ZEPHYRUM;
     imperium->imaginator       = NIHIL;
     imperium->imaginator_datum = NIHIL;
+    imperium->claviarius       = NIHIL;
+    imperium->claviarius_datum = NIHIL;
     imperium->fructus.iussa_missa      = ZEPHYRUM;
     imperium->fructus.responsa_recepta = ZEPHYRUM;
     imperium->fructus.culpae           = ZEPHYRUM;
@@ -520,6 +589,13 @@ imperium_praebere (
     }
     si (!hospitium_praebere(hospitium, HTTP_POST, "/imperium/imago",
         _imaginem_petere, imperium))
+    {
+        redde FALSUM;
+    }
+    /* ANTE ':tessera': via nominata specialior est quam parameter,
+     * et ordo registrationis eligit. (Idem quod 'imago' iam agit.) */
+    si (!hospitium_praebere(hospitium, HTTP_POST, "/imperium/clavis",
+        _clavem_immittere, imperium))
     {
         redde FALSUM;
     }
@@ -557,6 +633,19 @@ imperium_imaginatorem_ponere (
     {
         imperium->imaginator       = imaginator;
         imperium->imaginator_datum = datum;
+    }
+}
+
+vacuum
+imperium_claviarium_ponere (
+    Imperium*          imperium,
+    ImperiumClaviarius claviarius,
+    vacuum*            datum)
+{
+    si (imperium != NIHIL)
+    {
+        imperium->claviarius       = claviarius;
+        imperium->claviarius_datum = datum;
     }
 }
 
@@ -694,6 +783,14 @@ imperium_vivarium (Piscina* piscina,
     {
         imperium_imaginatorem_ponere(v.imperium, figura->imaginator,
                                      figura->datum);
+    }
+    /* Claviarius datum SUUM fert (Fenestra*), non 'figura->datum'
+     * quod ceteris suturis Vitrea* est. Duo genera rerum, duae
+     * suturae - miscere ea ruinam silentem daret. */
+    si (figura->claviarius != NIHIL)
+    {
+        imperium_claviarium_ponere(v.imperium, figura->claviarius,
+                                   figura->claviarius_datum);
     }
 
     v.portus    = hospitium_portus(v.hospitium);

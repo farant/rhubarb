@@ -537,6 +537,7 @@ _auxilium (vacuum)
       "  bin/manus abest <selector>               MORATUR donec abeat\n"
       "  bin/manus imago <via>                    photographia\n"
       "  bin/manus premere <selector>\n"
+    "  bin/manus clavis <nomen>                 clavis NATIVA\n"
       "  bin/manus premere-textum <textus>\n"
       "  bin/manus scribere <selector> <textus>\n"
       "  bin/manus volvere <selector|+-pixela>   imago PROSPECTUM capit\n"
@@ -836,6 +837,10 @@ s32 principale (integer argc, character** argv)
                  && n_reliqua >= I)
     {
         (vacuum)manus_premere_textum(m, reliqua[0]);
+    }
+    alioquin si (strcmp(verbum, "clavis") == ZEPHYRUM && n_reliqua >= I)
+    {
+        (vacuum)manus_clavem(m, reliqua[0]);
     }
     alioquin si (strcmp(verbum, "scribere") == ZEPHYRUM && n_reliqua >= II)
     {
