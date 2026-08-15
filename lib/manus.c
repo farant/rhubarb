@@ -604,6 +604,66 @@ _iussum (
  * usque ad primum maiorem cum id, aut ad corpus. Semita fragilis
  * est si pagina mutatur - sed hic index INSTANTANEUS est, non
  * conditus, ergo fragilitas nullum tempus habet ad nocendum. */
+/* FOCUS EX CLICU - quid clicus VERUS focet.
+ *
+ * MENSURATUM 2026-08-15 in laboratorio vivo, eventibus NATIVIS per
+ * /imperium/mus missis (non fictis - fictus hic nihil probaret, quia
+ * ipsa quaestio est quid textura ex eventu VERO faciat):
+ *
+ *   campus textus     -> FOCATUR
+ *   textarea          -> FOCATUR
+ *   contenteditable   -> FOCATUR
+ *   pyxis (button)    -> NON focatur
+ *   nexus (a)         -> NON focatur
+ *   capsula (checkbox)-> NON focatur
+ *   radius (radio)    -> NON focatur
+ *
+ * Custodiae: elementFromPoint quodque punctum ad elementum
+ * intentum resolvit; pagina inter probationes intacta mansit.
+ * 'select' NON probatum est - clicus nativus menu nativum aperit,
+ * quod gyrum OBSTRUIT; regula infra eum inter regimina numerat.
+ *
+ * Haec mos macOS est (focus ex clicu solis superficiebus SCRIBENDI
+ * datur), non casus. Ergo 'premere' eam sequitur: superficies
+ * scribendi focat, regimina non. Si omnia focaremus, duo mala:
+ * fidem MINUEREMUS in ipso systemate in quo currimus, et anulum
+ * foci in imagines induceremus quas nulla regula ':focus' huius
+ * domus exspectat (tres solae adsunt, omnes campos textus solos
+ * petentes - MENSURATUM).
+ *
+ * ANTE 'click', non post: clicus verus in mousedown focat, eventum
+ * 'click' in mouseup mittit. Auditor qui activeElement legit
+ * elementum IAM focatum videre debet. */
+#define MANUS_JS_FOCARE \
+    "function _fscr(e){" \
+    "var g=String(e.tagName||'').toUpperCase(),y;" \
+    "if(e.isContentEditable)return true;" \
+    "if(g==='TEXTAREA')return true;" \
+    "if(g!=='INPUT')return false;" \
+    "y=String(e.type||'text').toLowerCase();" \
+    "return !(y==='button'||y==='submit'||y==='reset'" \
+    "||y==='checkbox'||y==='radio'||y==='image'||y==='file'" \
+    "||y==='hidden'||y==='color'||y==='range');}" \
+    "if(_fscr(e)&&typeof e.focus==='function'){e.focus();}"
+
+/* ACTIO PREMENDI - UNA forma, duo verba (premere, premere-textum).
+ *
+ * Prius bis scripta erat, verbatim. Nihil aliud quam tempus opus
+ * erat ut discreparent - id ipsum quod _tx fecit (vide
+ * manus_textus infra: duo exemplaria de <select> iam dissentiebant
+ * antequam quisquam animadverteret). Focus additus utrique
+ * simul additur quia forma UNA est. */
+#define MANUS_JS_PREMERE \
+    MANUS_JS_FOCARE \
+    "if(typeof e.click==='function'){e.click();}" \
+    /* SVG 'click' non habet (HTMLElement solus): elementa \
+     * picturae - virgae flammae, puncta tendentiae - aliter \
+     * omnino premi non possent. Eventus VERUS mittitur, ergo \
+     * pagina eum eodem modo audit. */ \
+    "else{e.dispatchEvent(new MouseEvent('click'," \
+    "{bubbles:true,cancelable:true,view:window}));}" \
+    "return{ok:true,visum:\"pressum\"};"
+
 /* SEMITA ET TITULUS - communia inter 'affordantiae' et 'focus'.
  *
  * SEORSUM STANT, non bis scripta, et hoc caput causam portat: _tx
@@ -1192,16 +1252,7 @@ manus_premere (
     Manus*              manus,
     constans character* selector)
 {
-    redde _agere(manus, "q(", selector,
-                 "if(typeof e.click==='function'){e.click();}"
-                 /* SVG 'click' non habet (HTMLElement solus):
-                  * elementa picturae - virgae flammae, puncta
-                  * tendentiae - aliter omnino premi non possent.
-                  * Eventus VERUS mittitur, ergo pagina eum eodem
-                  * modo audit. */
-                 "else{e.dispatchEvent(new MouseEvent('click',"
-                 "{bubbles:true,cancelable:true,view:window}));}"
-                 "return{ok:true,visum:\"pressum\"};",
+    redde _agere(manus, "q(", selector, MANUS_JS_PREMERE,
                  "manus_premere");
 }
 
@@ -1238,17 +1289,8 @@ manus_premere_textum (
     }
 
     /* Sola differentia a manus_premere: qt() pro q(). Cetera -
-     * porta, mora, nuntius - ex _agere veniunt. */
-    redde _agere(manus, "qt(", textus,
-                 "if(typeof e.click==='function'){e.click();}"
-                 /* SVG 'click' non habet (HTMLElement solus):
-                  * elementa picturae - virgae flammae, puncta
-                  * tendentiae - aliter omnino premi non possent.
-                  * Eventus VERUS mittitur, ergo pagina eum eodem
-                  * modo audit. */
-                 "else{e.dispatchEvent(new MouseEvent('click',"
-                 "{bubbles:true,cancelable:true,view:window}));}"
-                 "return{ok:true,visum:\"pressum\"};",
+     * porta, mora, nuntius, ACTIO IPSA - communia sunt. */
+    redde _agere(manus, "qt(", textus, MANUS_JS_PREMERE,
                  "manus_premere_textum");
 }
 
@@ -2022,6 +2064,52 @@ manus_affordantiae (
 /* ========================================================================
  * Focus
  * ======================================================================== */
+
+b32
+manus_focus_ponere (
+    Manus*              manus,
+    constans character* selector)
+{
+    ChordaAedificator* a;
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+
+    a = chorda_aedificator_creare(manus->piscina, CCLVI);
+    /* NULLA custodia generis hic - et hoc consulto.
+     *
+     * 'premere' clicum FINGIT, ergo morem clici sequi debet
+     * (superficies scribendi solae). Hoc verbum nihil fingit: focum
+     * PETIS. Petitio explicita regimen focare licite vult - ordinem
+     * Tab probare, anulum foci in imagine videre, auditorem 'focus'
+     * excitare. Instrumentum quod petitionem apertam recusaret
+     * usorem ad 'aestimare' remitteret, quod est ipsum foramen quod
+     * hoc verbum claudit.
+     *
+     * VERIFICATIO tamen OBLIGATORIA: '.focus()' in <div> sine
+     * tabindex NIHIL agit et NIHIL dicit. Sine relectione verbum
+     * 'factum' redderet dum focus alibi maneret - eadem forma
+     * mendacii quam 'scribere' in <select> olim habuit. Ergo post
+     * vocationem activeElement comparatur, et nomen eius in nuntio
+     * fracturae apparet ut causa NOMINETUR. */
+    chorda_aedificator_appendere_literis(a,
+        "if(typeof e.focus!=='function')"
+        "return{ok:false,visum:'<'+e.tagName.toLowerCase()+"
+        "'> focum capere non potest'};"
+        "e.focus();"
+        "if(document.activeElement!==e){"
+        "var b=document.activeElement;"
+        "return{ok:false,visum:'focus non mansit - tenet '+"
+        "(b?('<'+b.tagName.toLowerCase()+(b.id?'#'+b.id:'')+'>')"
+        ":'nihil')+' (tabindex deest?)'};}"
+        "return{ok:true,visum:\"focatum\"};");
+
+    redde _agere(manus, "q(", selector,
+                 _litterae(chorda_aedificator_finire(a), manus->piscina),
+                 "manus_focus_ponere");
+}
 
 ManusFocus
 manus_focus (

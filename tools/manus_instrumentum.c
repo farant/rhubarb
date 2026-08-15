@@ -542,7 +542,8 @@ _auxilium (vacuum)
       "  bin/manus premere-textum <textus>\n"
       "  bin/manus scribere <selector> <textus>\n"
       "  bin/manus volvere <selector|+-pixela>   imago PROSPECTUM capit\n"
-    "  bin/manus focus                          quid focum tenet\n"
+    "  bin/manus focus [<selector>]             quid focum tenet"
+                                              " / focum ponere\n"
     "  bin/manus magnitudo [<lat> <alt>]        prospectum legere/ponere\n"
       "  bin/manus textus <selector>\n"
       "  bin/manus aestimare <js>\n"
@@ -869,6 +870,10 @@ s32 principale (integer argc, character** argv)
     alioquin si (strcmp(verbum, "movere") == ZEPHYRUM && n_reliqua >= I)
     {
         (vacuum)manus_movere(m, reliqua[0]);
+    }
+    alioquin si (strcmp(verbum, "focus") == ZEPHYRUM && n_reliqua >= I)
+    {
+        (vacuum)manus_focus_ponere(m, reliqua[0]);
     }
     alioquin si (strcmp(verbum, "focus") == ZEPHYRUM)
     {

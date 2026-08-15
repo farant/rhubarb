@@ -680,6 +680,29 @@ manus_focus (
     Manus*   manus,
     Piscina* piscina);
 
+/* Focum PONERE in elementum nominatum.
+ *
+ * CUR SEORSUM A 'premere': premere clicum FINGIT, ergo morem clici
+ * sequitur - et clicus verus superficies SCRIBENDI solas focat
+ * (MENSURATUM: pyxis, nexus, capsula, radius nullum focum ex clicu
+ * accipiunt in WebKit). Hoc verbum nihil fingit: focum PETIS, ergo
+ * quodlibet elementum focabile accipit. Duae res diversae, duo
+ * verba.
+ *
+ * Sine eo unica via ad elementum certum erat Tab iterare a loco
+ * incerto - fragile, quia ab ordine DOM et a puncto initiali
+ * pendet - aut ad 'aestimare' descendere. Caput huius bibliothecae
+ * id vitium nominat: instrumentum cuius effugium via REGIA est
+ * vocabulum suum accusat.
+ *
+ * VERIFICAT: '.focus()' in elemento non focabili (div sine
+ * tabindex) TACITE nihil agit. Hoc verbum activeElement relegit et
+ * FRANGIT si focus non mansit, causam nominans. */
+b32
+manus_focus_ponere (
+    Manus*              manus,
+    constans character* selector);
+
 /* ==================================================
  * Magnitudo - PROSPECTUM MUTARE
  * ==================================================

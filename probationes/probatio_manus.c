@@ -97,6 +97,7 @@
 #define OP_FOCUS         XXXVI
 #define OP_FOCUS_ASS     XXXVII
 #define OP_MAGNITUDO     XXXVIII
+#define OP_FOCUS_PONERE  XXXIX
 
 #define VIA_ULTIMI    "build/manus_ultimum.js"
 
@@ -756,6 +757,9 @@ _agere_capere (
         casus OP_FOCUS_ASS:
             a.fructus = CREDO_MANUS_FOCUS(m, "#i1");
             frange;
+        casus OP_FOCUS_PONERE:
+            a.fructus = manus_focus_ponere(m, "#i1");
+            frange;
         casus OP_MAGNITUDO:
             {
                 i32 lat = (i32)IX;   /* venenum: si non scribitur, */
@@ -874,6 +878,7 @@ nomen structura {
     Actio legere, textum_vacuum;
     Actio exsp, exsp_no, abest_exsp;
     Actio focus, focus_nihil, focus_ass, focus_ass_no;
+    Actio focus_pone, focus_pone_no;
     /* NON 'magnitudo': id macrum latinae est ('sizeof'), et campus
      * ita nominatus structuram totam frangit. Censor eum nominavit. */
     Actio amplitudo, amplitudo_absens;
@@ -930,6 +935,8 @@ _omnia_capere (
     o->focus_nihil    = _agere_capere(SCEN_FOCUS_NIHIL, OP_FOCUS);
     o->focus_ass      = _agere_capere(SCEN_OK,          OP_FOCUS_ASS);
     o->focus_ass_no   = _agere_capere(SCEN_RECUSANS,    OP_FOCUS_ASS);
+    o->focus_pone     = _agere_capere(SCEN_OK,       OP_FOCUS_PONERE);
+    o->focus_pone_no  = _agere_capere(SCEN_RECUSANS, OP_FOCUS_PONERE);
     o->amplitudo      = _agere_capere(SCEN_OK,          OP_MAGNITUDO);
     o->amplitudo_absens = _agere_capere(SCEN_MAGN_ABSENS,
                                         OP_MAGNITUDO);
@@ -1347,6 +1354,44 @@ s32 principale (vacuum)
         CREDO_FALSUM (o.focus_ass.fracta);
         CREDO_VERUM (_continet(o.focus_ass.js, "new Promise"));
         CREDO_FALSUM (o.focus_ass_no.fructus);
+
+        /* PONERE: focum petere, non clicum fingere. Nulla custodia
+         * generis (regimen focari licite potest); sed RELECTIO
+         * obligatoria - '.focus()' in elemento non focabili tacet. */
+        CREDO_VERUM  (o.focus_pone.fructus);
+        CREDO_FALSUM (o.focus_pone.fracta);
+        CREDO_VERUM (_continet(o.focus_pone.js,
+                               "document.activeElement!==e"));
+        CREDO_VERUM (_continet(o.focus_pone.js, "tabindex deest"));
+        /* Custodia contra regressum: si quis hic custodiam generis
+         * (_fscr) adderet, verbum regimina focare RECUSARET et
+         * ordinem Tab probare impossibile fieret. */
+        CREDO_FALSUM (_continet(o.focus_pone.js, "_fscr"));
+
+        CREDO_FALSUM (o.focus_pone_no.fructus);
+        CREDO_VERUM  (o.focus_pone_no.fracta);
+    }
+
+    imprimere("\n--- premere: focat sicut clicus VERUS ---\n");
+    {
+        /* MENSURATUM eventibus NATIVIS (vide caput MANUS_JS_FOCARE):
+         * campus/textarea/contenteditable focantur, pyxis/nexus/
+         * capsula/radius non. Praedicatum id in pagina iudicat;
+         * haec asserta custodiunt ne quis id silenter mutet. */
+        CREDO_VERUM (_continet(o.premere_ok.js, "function _fscr(e)"));
+        CREDO_VERUM (_continet(o.premere_ok.js, "y==='checkbox'"));
+        CREDO_VERUM (_continet(o.premere_ok.js, "e.isContentEditable"));
+
+        /* ORDO REFERT: focus ANTE 'click'. Clicus verus in mousedown
+         * focat, eventum in mouseup mittit - ergo auditor qui
+         * activeElement legit elementum IAM focatum videt. Si ordo
+         * verteretur, probatio nihil sentiret sed applicatio vera
+         * differret. */
+        CREDO_VERUM (strstr(o.premere_ok.js, "_fscr(e)")
+                     < strstr(o.premere_ok.js, "e.click()"));
+
+        /* EADEM ACTIO in premere-textum: forma UNA est, non duae. */
+        CREDO_VERUM (_continet(o.textualis_ok.js, "function _fscr(e)"));
     }
 
     imprimere("\n--- magnitudo: FACTA, non petita ---\n");
