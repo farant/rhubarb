@@ -614,6 +614,40 @@ fenestra_claviarius (
 
 
 /* ==================================================
+ * Mus (agitatio)
+ * ==================================================
+ *
+ * CUR NATIVUS, ut claves: 'dispatchEvent(new MouseEvent(...))'
+ * auditores JS excitat sed CSS ':hover' NON tangit - quod in domo
+ * quattuor locis adhibetur (thema, villa, forum, mensor). Eventus
+ * nativus positionem VERAM muris movet, ergo ':hover' congruit, et
+ * tractus (mousedown/move/up) sicut manus hominis apparet.
+ *
+ * COORDINATAE PAGINAE HIC DANTUR (CSS px, origo SUMMA sinistra -
+ * quod getBoundingClientRect reddit). Stratum hoc solum eas in
+ * systema AppKit vertit (origo IMA sinistra), quia solum hic
+ * geometria visus nota est. Quisquis supra stat de paginis loquitur.
+ */
+
+nomen enumeratio {
+    FENESTRA_MUS_MOTUS = 0,      /* sine pyxide depressa */
+    FENESTRA_MUS_DEPRESSIO,      /* sinistra deprimitur */
+    FENESTRA_MUS_TRACTUS,        /* motus DUM sinistra depressa */
+    FENESTRA_MUS_LIBERATIO,      /* sinistra liberatur */
+    FENESTRA_MUS_DEPRESSIO_DEXTRA,
+    FENESTRA_MUS_LIBERATIO_DEXTRA
+} FenestraMusGenus;
+
+b32
+fenestra_murem_immittere (
+    Fenestra*        fenestra,
+    FenestraMusGenus genus,
+    i32              x,             /* CSS px a sinistra */
+    i32              y,             /* CSS px a SUMMO */
+    i32              modificatores);
+
+
+/* ==================================================
  * Tabula Pixelorum - Creatio / Destructio
  * ================================================== */
 

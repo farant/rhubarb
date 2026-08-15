@@ -1013,6 +1013,89 @@ fenestra_clavem_immittere (
     redde VERUM;
 }
 
+b32
+fenestra_murem_immittere (
+    Fenestra*        fenestra,
+    FenestraMusGenus genus,
+    i32              x,
+    i32              y,
+    i32              modificatores)
+{
+    NSView*     visus;
+    NSPoint     in_visu;
+    NSPoint     in_fenestra;
+    NSEventType typus;
+    NSEvent*    eventus;
+    float       pressio;
+
+    si (!fenestra || !fenestra->fenestra_ns) redde FALSUM;
+
+    visus = [fenestra->fenestra_ns contentView];
+    si (visus == nil) redde FALSUM;
+
+    /* NE ADDAS 'setAcceptsMouseMovedEvents:YES' - eam addidi dum
+     * causam quaero, et MENSURAVI superfluam esse: motus et ':hover'
+     * sine ea recte veniunt (textura eam sibi ponit). Vitium verum
+     * inversio duplex infra erat. Coniectura sanata quae remanet
+     * mendacium fit quod nemo iterum probat. */
+    /* VERSIO COORDINATARUM - sola causa cur haec functio hic vivit.
+     *
+     * CSS: origo SUMMA sinistra, y deorsum crescit.
+     * AppKit: origo IMA sinistra, y sursum crescit - NISI visus se
+     * 'flipped' declarat, quod visus vitreae FACIT.
+     *
+     * MENSURATUM 2026-08-14, et haec sola causa cur spica ante ansam
+     * scripta est: inversione manu addita, eventus 'mouseup @ 180,140'
+     * in paginam venit ubi 260 missum erat (CD - CCLX = CXL). Duplex
+     * inversio. Clicus omnis ALIBI cecidisset - intra fenestram, in
+     * elemento verisimili, ergo 'operatur' visum esset donec aliquis
+     * miraretur cur pyxis falsa premeretur.
+     *
+     * Ergo visum ipsum rogamus, non numerum scribimus. */
+    in_visu = [visus isFlipped]
+        ? NSMakePoint((CGFloat)x, (CGFloat)y)
+        : NSMakePoint((CGFloat)x,
+                      [visus bounds].size.height - (CGFloat)y);
+    in_fenestra = [visus convertPoint:in_visu toView:nil];
+
+    pressio = (float)0.0;
+    commutatio (genus)
+    {
+        casus FENESTRA_MUS_MOTUS:
+            typus = NSEventTypeMouseMoved; frange;
+        casus FENESTRA_MUS_DEPRESSIO:
+            typus = NSEventTypeLeftMouseDown;
+            pressio = (float)1.0; frange;
+        casus FENESTRA_MUS_TRACTUS:
+            typus = NSEventTypeLeftMouseDragged;
+            pressio = (float)1.0; frange;
+        casus FENESTRA_MUS_LIBERATIO:
+            typus = NSEventTypeLeftMouseUp; frange;
+        casus FENESTRA_MUS_DEPRESSIO_DEXTRA:
+            typus = NSEventTypeRightMouseDown; frange;
+        casus FENESTRA_MUS_LIBERATIO_DEXTRA:
+            typus = NSEventTypeRightMouseUp; frange;
+        ordinarius:
+            redde FALSUM;
+    }
+
+    eventus = [NSEvent
+        mouseEventWithType:typus
+                  location:in_fenestra
+             modifierFlags:(NSEventModifierFlags)(unsigned long)
+                           modificatores
+                 timestamp:[[NSProcessInfo processInfo] systemUptime]
+              windowNumber:[fenestra->fenestra_ns windowNumber]
+                   context:nil
+               eventNumber:0
+                clickCount:1
+                  pressure:pressio];
+    si (eventus == nil) redde FALSUM;
+
+    [NSApp postEvent:eventus atStart:NO];
+    redde VERUM;
+}
+
 /* ==================================================
  * Claves NOMINATAE
  * ==================================================
