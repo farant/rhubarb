@@ -1,6 +1,6 @@
 RHUBARB CODEBASE MAP
 ====================
-Last updated: 2026-08-13
+Last updated: 2026-08-15
 
 A C89 monorepo for building catholic civilization.
 All identifiers in Latin. No dependencies. Long-term thinking.
@@ -80,6 +80,18 @@ rhubarb/
 │   (+ mensa_assets/ - thinkboard frontend battery: cards, z-order,
 │   pagination, genus registry), tools/glomerare.sh (JS bundler).
 │   Tutorial: project-specs/compages-rationes-tutorial.md.
+│   STARTER 2026-08-14/15: -vitrea scaffold runs on ATRIUM, so a new
+│   project gets -vivum (imperium), -radix <via> (assets from DISK,
+│   same capsula:// URL - no server, nothing listening), -volumen
+│   <via> (state elsewhere = testable at all), a generated fumus.sh
+│   + fumus_manus.c (real-window manus smoke test, FOURTH closure,
+│   derived not listed), and volumen_temporarium in its unit test.
+│   Volumen opens AFTER atrium: a run that dies on a bad flag must
+│   not leave state behind (measured in silicetum/003).
+│   GATE: ./tools/silex_semen_fumus.sh [-agere] -- scaffolds from
+│   the CORPUS INFIXUM, compiles, LINKS, runs generated tests.
+│   probatio_silex judges the MANIFEST only and says so, which is
+│   how every new project shipped a link failure unnoticed.
 ├── natura/          SEMANTIC LIBRARY - hand-crafted taxonomy + dictionary
 │                    in STML. "OOP done right": the taxonomy layer.
 │                    30 models / 140 genera / 294 dictionary residents.
@@ -311,6 +323,19 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │                  waited; -exspecta/abest give reads │    │
     │  │                  the same. -machina columns are     │    │
     │  │                  documented in the usage text.      │    │
+    │  │                  INPUT (2026-08-15), two mechanisms:│    │
+    │  │                  'clavis <nomen>' = NATIVE NSEvent  │    │
+    │  │                  via fenestra->imperium->atrium, so │    │
+    │  │                  Tab REALLY moves focus (Cypress    │    │
+    │  │                  cannot). Named keys only: keycodes │    │
+    │  │                  name a POSITION, not a letter --   │    │
+    │  │                  text goes through scribere.        │    │
+    │  │                  'movere <sel>' = JS dispatch, so   │    │
+    │  │                  CSS :hover will NOT match. Fine:   │    │
+    │  │                  every house :hover is cosmetic     │    │
+    │  │                  (measured); JS tooltips DO fire.   │    │
+    │  │                  Native mouse exists but is UNUSED  │    │
+    │  │                  and UNPROVEN -- ledger 01M02XS32B. │    │
     │  │  specimen ────── VISUAL REGRESSION over collatio +  │    │
     │  │                  png + manus. Goldens in git;       │    │
     │  │                  element crop is the default scope; │    │
