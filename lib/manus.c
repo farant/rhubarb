@@ -1816,6 +1816,116 @@ manus_volvere (
         _litterae(chorda_aedificator_finire(a), manus->piscina)).ok;
 }
 
+b32
+manus_volvere_in (
+    Manus*              manus,
+    constans character* selector,
+    s32                 pixela)
+{
+    ChordaAedificator* a;
+    ManusVerdictum     v;
+    character          numerus[XXXII];
+
+    si (manus == NIHIL || manus->fracta)
+    {
+        redde FALSUM;
+    }
+    si (selector == NIHIL || selector[0] == '\0')
+    {
+        _frangere(manus, "manus_volvere_in: selector VACUUS");
+        redde FALSUM;
+    }
+
+    sprintf(numerus, "%d", (integer)pixela);
+
+    a = chorda_aedificator_creare(manus->piscina, CCLVI);
+    chorda_aedificator_appendere_literis(a, "var e=q(");
+    _appendere_litteras_js(a, selector);
+    chorda_aedificator_appendere_literis(a,
+        ");if(!e)return{ok:false,"
+        "visum:\"nullum elementum VISIBILE huic selectori congruit\"};"
+        /* IMMOBILE ET COERCITUM DUO SUNT.
+         *
+         * Elementum quod omnino non volvitur vitium probationis est
+         * (selector pravus, aut prospectus quem finxisti non est is
+         * qui volvitur) - ergo RECUSATIO cum causa.
+         *
+         * Coercitio ad finem contra legitima est: 'volve mille' in
+         * fine legitime nihil movet. Ideo positio VERA redditur, non
+         * verbum - qui vocat comparare potest. */
+        "if(e.scrollHeight<=e.clientHeight)return{ok:false,"
+        "visum:'elementum non volvitur (scrollHeight '+e.scrollHeight+"
+        "' <= clientHeight '+e.clientHeight+')'};"
+        "e.scrollTop=e.scrollTop+(");
+    chorda_aedificator_appendere_literis(a, numerus);
+    chorda_aedificator_appendere_literis(a,
+        ");return{ok:true,visum:String(Math.round(e.scrollTop))};");
+
+    v = _interrogare(manus,
+        _litterae(chorda_aedificator_finire(a), manus->piscina));
+
+    si (!v.ok)
+    {
+        ChordaAedificator* b = chorda_aedificator_creare(manus->piscina,
+                                                         CCLVI);
+        chorda_aedificator_appendere_literis(b,
+            "manus_volvere_in fefellit: ");
+        chorda_aedificator_appendere_literis(b, selector);
+        chorda_aedificator_appendere_literis(b, " - ");
+        chorda_aedificator_appendere_chorda(b, v.visum);
+        _frangere(manus, _litterae(chorda_aedificator_finire(b),
+                                   manus->piscina));
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+s32
+manus_volutio (
+    Manus*              manus,
+    constans character* selector)
+{
+    ChordaAedificator* a;
+    ManusVerdictum     v;
+    i32                k;
+    s32                positio;
+
+    si (manus == NIHIL || manus->fracta || selector == NIHIL)
+    {
+        redde -I;
+    }
+
+    a = chorda_aedificator_creare(manus->piscina, CXXVIII);
+    chorda_aedificator_appendere_literis(a, "var e=q(");
+    _appendere_litteras_js(a, selector);
+    chorda_aedificator_appendere_literis(a,
+        ");if(!e)return{ok:false,visum:\"\"};"
+        "return{ok:true,visum:String(Math.round(e.scrollTop))};");
+
+    v = _interrogare(manus,
+        _litterae(chorda_aedificator_finire(a), manus->piscina));
+    si (!v.ok)
+    {
+        redde -I;
+    }
+
+    /* Parsura MANU: 'atoi' <stdlib.h> posceret, et haec plagula
+     * <stdio.h> solum fert. Numerus hic parvus et non negativus est
+     * (scrollTop), ergo sex lineae satis sunt et nihil additur. */
+    positio = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < (i32)v.visum.mensura; k = k + I)
+    {
+        character c = ((character*)v.visum.datum)[k];
+
+        si (c < '0' || c > '9')
+        {
+            frange;
+        }
+        positio = positio * (s32)X + (s32)(c - '0');
+    }
+    redde positio;
+}
+
 /* ========================================================================
  * Exspectatio
  * ======================================================================== */

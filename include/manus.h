@@ -439,12 +439,51 @@ manus_volvere_ad (
     Manus*              manus,
     constans character* selector);
 
-/* Paginam pixelis volvere; NEGATIVUM sursum.
- * Signatum de industria - directio hic sensus est, non magnitudo. */
+/* PAGINAM pixelis volvere; NEGATIVUM sursum.
+ * Signatum de industria - directio hic sensus est, non magnitudo.
+ *
+ * PAGINAM SOLAM: 'window.scrollBy'. Pro elemento quod INTRA se
+ * volvitur vide manus_volvere_in infra - et lege cur. */
 b32
 manus_volvere (
     Manus* manus,
     s32    pixela);
+
+/* ELEMENTUM intra se volvere; NEGATIVUM sursum.
+ *
+ * CUR SEORSUM A 'manus_volvere' - vitium MENSURATUM 2026-08-15:
+ * 'volvere 500' contra indicem virtualem (experimentum 0002
+ * laboratorii) nihil omnino movit et tamen VERUM reddidit.
+ * 'window.scrollBy' enim paginam volvit, et pagina illa non
+ * volvebatur: prospectus intra elementum erat. Nullum signum,
+ * nullus error - scrollTop ZEPHYRUM ante et post, ordo primus idem.
+ *
+ * ET HOC GENUS APPARATUS REGULA EST, NON EXCEPTIO: arbor
+ * plagularum, editor, tabula actorum, suggestiones - omnia intra se
+ * volvuntur. Pagina ipsa fere numquam volvitur. Ergo verbum quod
+ * paginam solam volvit instrumentum est quod rem communissimam
+ * TACITE non agit.
+ *
+ * RECUSAT si elementum non volvitur omnino (scrollHeight <=
+ * clientHeight): 'nihil movit' et 'nihil movere potuit' duo sunt, et
+ * alterum sine altero horam furatur. Coercitio ad finem NON est
+ * defectus - positio vera redditur, ergo comparare potes.
+ *
+ * FALSUM (et manus fracta) si nullum visibile congruit aut
+ * elementum immobile est. */
+b32
+manus_volvere_in (
+    Manus*              manus,
+    constans character* selector,
+    s32                 pixela);
+
+/* Positio volutionis elementi (scrollTop). NEGATIVUM si nullum
+ * visibile congruit aut manus fracta - ZEPHYRUM enim positio
+ * legitima est et defectum significare NON potest. */
+s32
+manus_volutio (
+    Manus*              manus,
+    constans character* selector);
 
 /* Imaginem paginae in plagulam scribere (per imperium/imago).
  * FALSUM si applicatio imaginatorem non praebuit. */

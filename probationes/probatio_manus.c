@@ -98,6 +98,8 @@
 #define OP_FOCUS_ASS     XXXVII
 #define OP_MAGNITUDO     XXXVIII
 #define OP_FOCUS_PONERE  XXXIX
+#define OP_VOLVERE_IN    XL
+#define OP_VOLUTIO       XLI
 
 #define VIA_ULTIMI    "build/manus_ultimum.js"
 
@@ -760,6 +762,13 @@ _agere_capere (
         casus OP_FOCUS_PONERE:
             a.fructus = manus_focus_ponere(m, "#i1");
             frange;
+        casus OP_VOLVERE_IN:
+            a.fructus = manus_volvere_in(m, "#prospectus", (s32)CC);
+            frange;
+        casus OP_VOLUTIO:
+            a.numerus = (i32)manus_volutio(m, "#prospectus");
+            a.fructus = VERUM;
+            frange;
         casus OP_MAGNITUDO:
             {
                 i32 lat = (i32)IX;   /* venenum: si non scribitur, */
@@ -879,6 +888,7 @@ nomen structura {
     Actio exsp, exsp_no, abest_exsp;
     Actio focus, focus_nihil, focus_ass, focus_ass_no;
     Actio focus_pone, focus_pone_no;
+    Actio volv_in, volv_in_no, volutio;
     /* NON 'magnitudo': id macrum latinae est ('sizeof'), et campus
      * ita nominatus structuram totam frangit. Censor eum nominavit. */
     Actio amplitudo, amplitudo_absens;
@@ -937,6 +947,9 @@ _omnia_capere (
     o->focus_ass_no   = _agere_capere(SCEN_RECUSANS,    OP_FOCUS_ASS);
     o->focus_pone     = _agere_capere(SCEN_OK,       OP_FOCUS_PONERE);
     o->focus_pone_no  = _agere_capere(SCEN_RECUSANS, OP_FOCUS_PONERE);
+    o->volv_in        = _agere_capere(SCEN_OK,       OP_VOLVERE_IN);
+    o->volv_in_no     = _agere_capere(SCEN_RECUSANS, OP_VOLVERE_IN);
+    o->volutio        = _agere_capere(SCEN_OK,       OP_VOLUTIO);
     o->amplitudo      = _agere_capere(SCEN_OK,          OP_MAGNITUDO);
     o->amplitudo_absens = _agere_capere(SCEN_MAGN_ABSENS,
                                         OP_MAGNITUDO);
@@ -1370,6 +1383,33 @@ s32 principale (vacuum)
 
         CREDO_FALSUM (o.focus_pone_no.fructus);
         CREDO_VERUM  (o.focus_pone_no.fracta);
+    }
+
+    imprimere("\n--- volvere INTRA elementum ---\n");
+    {
+        /* VITIUM QUOD HOC VERBUM PEPERIT (MENSURATUM 2026-08-15):
+         * 'volvere 500' contra indicem virtualem VERUM reddidit et
+         * nihil movit - 'window.scrollBy' paginam volvit, et pagina
+         * non volvebatur. Nullum signum. Ergo verbum novum, et haec
+         * asserta custodiunt ne quis ad 'window' redeat. */
+        CREDO_VERUM  (o.volv_in.fructus);
+        CREDO_FALSUM (o.volv_in.fracta);
+        CREDO_VERUM (_continet(o.volv_in.js, "e.scrollTop=e.scrollTop+"));
+        CREDO_FALSUM (_continet(o.volv_in.js, "window.scrollBy"));
+
+        /* IMMOBILE RECUSATUR, et numeri in causa apparent - aliter
+         * 'selector pravus' et 'iam in fine' idem viderentur. */
+        CREDO_VERUM (_continet(o.volv_in.js, "scrollHeight<=e.clientHeight"));
+        CREDO_VERUM (_continet(o.volv_in.js, "non volvitur"));
+        CREDO_FALSUM (o.volv_in_no.fructus);
+        CREDO_VERUM  (o.volv_in_no.fracta);
+
+        /* Lectio positionis: 'factum' scaenarium 'ok:true,visum:
+         * "factum"' reddit, quod cifris caret - ergo ZEPHYRUM, non
+         * numerus fictus. Parsura manu scripta hoc ferre DEBET. */
+        CREDO_VERUM (o.volutio.fructus);
+        CREDO_AEQUALIS_I32 (o.volutio.numerus, ZEPHYRUM);
+        CREDO_VERUM (_continet(o.volutio.js, "e.scrollTop"));
     }
 
     imprimere("\n--- premere: focat sicut clicus VERUS ---\n");

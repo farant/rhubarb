@@ -543,6 +543,7 @@ _auxilium (vacuum)
       "  bin/manus premere-textum <textus>\n"
       "  bin/manus scribere <selector> <textus>\n"
       "  bin/manus volvere <selector|+-pixela>   imago PROSPECTUM capit\n"
+    "  bin/manus volvere <sel> <+-pixela>       elementum INTRA se\n"
     "  bin/manus focus [<selector>]             quid focum tenet"
                                               " / focum ponere\n"
     "  bin/manus magnitudo [<lat> <alt>]        prospectum legere/ponere\n"
@@ -987,7 +988,20 @@ s32 principale (integer argc, character** argv)
          * potest (constrictio linguae, non coniectura nostra). */
         constans character* arg = reliqua[0];
 
-        si (arg[0] == '-' || arg[0] == '+'
+        /* DUO ARGUMENTA = elementum INTRA se volvere.
+         *
+         * Forma quae maxime deest, et quae maxime refert: apparatus
+         * IDE (arbor, editor, acta, suggestiones) intra se volvitur,
+         * et pagina fere numquam. Positio VERA imprimitur ut asseri
+         * possit. */
+        si (n_reliqua >= II)
+        {
+            si (manus_volvere_in(m, arg, (s32)atoi(reliqua[I])))
+            {
+                imprimere("%d\n", (integer)manus_volutio(m, arg));
+            }
+        }
+        alioquin si (arg[0] == '-' || arg[0] == '+'
             || (arg[0] >= '0' && arg[0] <= '9'))
         {
             (vacuum)manus_volvere(m, (s32)atoi(arg));
