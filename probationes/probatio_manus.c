@@ -1154,6 +1154,14 @@ s32 principale (vacuum)
         CREDO_VERUM (_continet(o.scribere_ok.js, "nulla optio congruit"));
         CREDO_VERUM (_continet(o.scribere_ok.js, "valorem non habet"));
         CREDO_VERUM (_continet(o.scribere_ok.js, "valor non mansit"));
+        /* SUPERFICIES SCRIBENDI SOLAE - _fscr, idem iudicium quo
+         * premere focat. MENSURATUM 2026-08-17: pyxis '.value' habet,
+         * ergo 'scribere <pyxis>' exitum 0 dabat et valor in
+         * proprietatem invisibilem ibat - viride mendax in latere
+         * SCRIBENDI, familia eadem quae '<li>.value' in _tx. */
+        CREDO_VERUM (_continet(o.scribere_ok.js, "function _fscr(e)"));
+        CREDO_VERUM (_continet(o.scribere_ok.js,
+            "superficies scribendi non est"));
 
         /* TEXTUS: innerText, NON textContent.
          *

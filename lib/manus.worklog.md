@@ -1125,3 +1125,42 @@ including `visum:_tx(e)` in the textus body and the negative on the old
 branch. The lesson worth keeping: **when an assertion and its query
 tool can disagree about the same element, every green assertion is
 suspect** — unify the judgment, don't patch the copy that got caught.
+
+## 2026-08-17 — consolidation pass: the write side, the affordance dump, the CLI port
+
+Follow-through on the `_tx` unification, same law ("forma una ex fonte
+uno venit"), three more sites measured and fixed:
+
+**`scribere` accepted anything with `.value`** — which includes button
+(`""`), checkbox/radio (`"on"`), even `<li>` (ordinal). Measured live:
+`scribere '#tm-aperire' text` on a button exited 0 while the button
+visibly changed nothing — the write went into a property no user sees.
+The acceptance test for "where can a user type" already existed as
+`_fscr` (the measured focus-on-click table premere uses). Extracted it
+to `MANUS_JS_FSCR`; `MANUS_JS_FOCARE` = FSCR + the focus action;
+scribere now refuses non-writing surfaces by name ("superficies
+scribendi non est"). SELECT keeps its own option-matching branch.
+Note the negative pin still holds: `focus_ponere` deliberately does
+NOT carry `_fscr` — asking is not simulating.
+
+**affordantiae `valor` read raw `.value`** — same unguarded read.
+Now `(g===2||g===3)?_tx(e):''` — the affordance dump already
+classifies elements (`_gen`), so the guard reuses ITS judgment plus
+`_tx`: text fields report their value, selects their option TEXT,
+buttons/checkboxes report nothing instead of noise.
+
+**`manus incipere` + caller `-portus` hung confusingly** (bit me this
+session): incipere picks its own port and waits on it; a caller-
+supplied `-portus` made the app open a different one, and the failure
+message pointed at `-vivum`. Now refused up front with the mechanism
+named: portus = sessio, so a caller port is a contradiction, not a
+configuration.
+
+**fumus section boundaries**: `manus_reficere` before 0002/0003/0004/
+Imago. PLANTED FAULT proved it: a broken assertion in 0002 produced 10
+failures all confined to 0002 — 0003, 0004 and the screenshot ran
+clean with their own verdicts. Before the boundaries the same plant
+cascaded into every later section (14 from 1). Within-section poison
+stays, deliberately: the boundary is the section.
+
+probatio_manus 195/195 (two new pins); laboratorium fumus 173/173.

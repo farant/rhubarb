@@ -679,6 +679,31 @@ s32 principale (integer argc, character** argv)
             fprintf(stderr, "manus: 'incipere' binarium poscit\n");
             redde II;
         }
+        /* '-portus' PROPRIUM recusatur, non tacite vincitur.
+         *
+         * MENSURATUM 2026-08-17: 'incipere <bin> -portus 17301'
+         * pependit - manus portum SUUM eligit et eum exspectat, dum
+         * applicatio portum datum aperit; nuntius defectus ('-vivum
+         * praebet?') in directionem falsam monstrabat. Portus
+         * sessionis EST identitas sessionis; alium dare non est
+         * figuratio sed contradictio - ergo nominatur et statim. */
+        {
+            integer j;
+
+            per (j = I; j < n_reliqua; j = j + I)
+            {
+                si (strcmp(reliqua[j], "-portus") == ZEPHYRUM)
+                {
+                    fprintf(stderr,
+                        "manus: '-portus' in argumentis applicationis"
+                        " non licet - 'incipere' portum ipse eligit"
+                        " (portus = sessio) et eum applicationi"
+                        " tradit; portum tuum dare sessionem in"
+                        " portu alieno exspectantem relinqueret\n");
+                    redde II;
+                }
+            }
+        }
         /* ANTE detractionem: proles diarium ibi aperit. */
         _sedem_parare();
         portus = _portus_liber();

@@ -647,7 +647,10 @@ _iussum (
  * ANTE 'click', non post: clicus verus in mousedown focat, eventum
  * 'click' in mouseup mittit. Auditor qui activeElement legit
  * elementum IAM focatum videre debet. */
-#define MANUS_JS_FOCARE \
+/* _fscr SEORSUM ab actione focandi: scribere EANDEM superficiem
+ * iudicat ('ubi usor scribere potest'), et forma una ex fonte uno
+ * venit - lex eadem quae _tx peperit. */
+#define MANUS_JS_FSCR \
     "function _fscr(e){" \
     "var g=String(e.tagName||'').toUpperCase(),y;" \
     "if(e.isContentEditable)return true;" \
@@ -656,7 +659,10 @@ _iussum (
     "y=String(e.type||'text').toLowerCase();" \
     "return !(y==='button'||y==='submit'||y==='reset'" \
     "||y==='checkbox'||y==='radio'||y==='image'||y==='file'" \
-    "||y==='hidden'||y==='color'||y==='range');}" \
+    "||y==='hidden'||y==='color'||y==='range');}"
+
+#define MANUS_JS_FOCARE \
+    MANUS_JS_FSCR \
     "if(_fscr(e)&&typeof e.focus==='function'){e.focus();}"
 
 /* ACTIO PREMENDI - UNA forma, duo verba (premere, premere-textum).
@@ -744,7 +750,11 @@ _iussum (
     "for(i=0;i<l.length;i++){e=l[i];if(!v(e))continue;" \
     "g=_gen(e);if(!g)continue;rc=e.getBoundingClientRect();" \
     "r.push({genus:g,selector:_via(e),titulus:_lab(e)," \
-    "valor:(e.value===undefined||e.value===null)?'':String(e.value)," \
+    /* VALOR solis superficiebus contenti (campus 2, electio 3), per \
+     * _tx - '.value' crudum pyxidi '' et capsulae 'on' dabat, quae \
+     * nemo videt; electioni valorem internum pro TEXTU optionis. \
+     * Iudicium generis IAM factum est (g) - illud adhibetur. */ \
+    "valor:(g===2||g===3)?_tx(e):''," \
     "impedimentum:_imp(e,rc),x:Math.round(rc.left)," \
     "y:Math.round(rc.top),latitudo:Math.round(rc.width)," \
     "altitudo:Math.round(rc.height)});}" \
@@ -1340,16 +1350,23 @@ manus_scribere (
      * extraxeram - probatio privilegiata, quae scientiam
      * postulabat quam instrumentum non ostendit.
      *
-     * Ergo TRIA: (1) <select> et per valorem et per TEXTUM VISIBILEM
-     * congruit - textus enim est quod usor legit; (2) elementum sine
-     * .value RECUSAT potius quam nihil agit; (3) post assignationem
-     * valor RELECTUS est - campus numericus qui litteras reicit, aut
+     * Ergo QUATTUOR: (1) <select> et per valorem et per TEXTUM
+     * VISIBILEM congruit - textus enim est quod usor legit; (2)
+     * superficies NON scribendi (_fscr falsum: pyxis, capsula,
+     * radius) RECUSATUR etiamsi '.value' habet - MENSURATUM
+     * 2026-08-17: 'scribere <pyxis>' exitum 0 dabat, valor in
+     * proprietatem invisibilem ibat, pyxis in schermo immota ('<li>'
+     * eiusdem familiae erat in _tx); (3) elementum sine .value
+     * RECUSAT potius quam nihil agit; (4) post assignationem valor
+     * RELECTUS est - campus numericus qui litteras reicit, aut
      * maxlength qui truncat, eodem silentio mentiretur. */
     a = chorda_aedificator_creare(manus->piscina, DXII);
     chorda_aedificator_appendere_literis(a, "var T=");
     _appendere_litteras_js(a, textus);
+    chorda_aedificator_appendere_literis(a, ";");
+    chorda_aedificator_appendere_literis(a, MANUS_JS_FSCR);
     chorda_aedificator_appendere_literis(a,
-        ";function _t(s){s=String(s==null?'':s);"
+        "function _t(s){s=String(s==null?'':s);"
         "var i=0,j=s.length;"
         "while(i<j&&s.charAt(i)<=' ')i++;"
         "while(j>i&&s.charAt(j-1)<=' ')j--;"
@@ -1364,6 +1381,10 @@ manus_scribere (
         "if(!o)return{ok:false,visum:\"nulla optio congruit; praesto: \""
         "+d.join(\" | \")};"
         "e.selectedIndex=o.index;"
+        "}else if(!_fscr(e)){"
+        "return{ok:false,visum:'<'+e.tagName.toLowerCase()+"
+        "'> superficies scribendi non est - usor hic scribere non"
+        " posset, et valor invisibilis maneret'};"
         "}else if(e.value===undefined||e.value===null){"
         "return{ok:false,visum:'<'+e.tagName.toLowerCase()+"
         "'> valorem non habet - scribere hic nihil ageret'};"
