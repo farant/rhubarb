@@ -1,6 +1,6 @@
 RHUBARB CODEBASE MAP
 ====================
-Last updated: 2026-08-15
+Last updated: 2026-08-17
 
 A C89 monorepo for building catholic civilization.
 All identifiers in Latin. No dependencies. Long-term thinking.
@@ -92,6 +92,18 @@ rhubarb/
 │   the CORPUS INFIXUM, compiles, LINKS, runs generated tests.
 │   probatio_silex judges the MANIFEST only and says so, which is
 │   how every new project shipped a link failure unnoticed.
+│
+│   JS SYNTAX GATE (2026-08-17): ./tools/js_syntaxis.sh <f.js> --
+│   'new Function' under JXA, which PARSES without executing. Runs
+│   automatically in compile_tests.sh (all house .js) and in
+│   laboratorium's probare.sh (vendored copy, so a missing parent
+│   tree can't silently skip it). Exit 2 = NOTHING CHECKED, kept
+│   distinct from 0 so a glob that matches nothing can't pass as a
+│   clean run. WHY: this house writes JS no compiler reads, and two
+│   syntax errors shipped in two days -- one in manus's generated
+│   JS, one in a laboratorium experiment; both caught only by the
+│   live app. COVERS STATIC FILES ONLY -- manus concatenates JS at
+│   runtime and that path is still smoke-only.
 ├── natura/          SEMANTIC LIBRARY - hand-crafted taxonomy + dictionary
 │                    in STML. "OOP done right": the taxonomy layer.
 │                    30 models / 140 genera / 294 dictionary residents.
@@ -327,15 +339,32 @@ LIBRARY DEPENDENCY TIERS  (include/ + lib/ core libraries)
     │  │                  'clavis <nomen>' = NATIVE NSEvent  │    │
     │  │                  via fenestra->imperium->atrium, so │    │
     │  │                  Tab REALLY moves focus (Cypress    │    │
-    │  │                  cannot). Named keys only: keycodes │    │
-    │  │                  name a POSITION, not a letter --   │    │
-    │  │                  text goes through scribere.        │    │
+    │  │                  cannot). Named keys + LETTERS with│    │
+    │  │                  a modifier ('Cmd+c'): menu equiva- │    │
+    │  │                  lents match on CHARACTERS, not the │    │
+    │  │                  keycode (measured -- a deliberately│    │
+    │  │                  wrong keycode still worked), so no │    │
+    │  │                  layout table is needed. Bare       │    │
+    │  │                  letters -> scribere. No 'menu'     │    │
+    │  │                  verb: every house menu item has an │    │
+    │  │                  equivalent.                        │    │
     │  │                  'movere <sel>' = JS dispatch, so   │    │
     │  │                  CSS :hover will NOT match. Fine:   │    │
     │  │                  every house :hover is cosmetic     │    │
     │  │                  (measured); JS tooltips DO fire.   │    │
-    │  │                  Native mouse exists but is UNUSED  │    │
-    │  │                  and UNPROVEN -- ledger 01M02XS32B. │    │
+    │  │                  Native mouse: mousedown DELIVERS  │    │
+    │  │                  and focuses, but down/up does NOT  │    │
+    │  │                  synthesize a click -- 01M02XS32B.  │    │
+    │  │                  VERBS 2026-08-15/17: 'magnitudo'   │    │
+    │  │                  (resize; the ONLY way to test      │    │
+    │  │                  responsive layout -- reports what  │    │
+    │  │                  it GOT, macOS clamps silently),    │    │
+    │  │                  'focus [sel]' (read/set; premere   │    │
+    │  │                  focuses text-entry surfaces only,  │    │
+    │  │                  like a real click), 'volvere <sel> │    │
+    │  │                  <±N>' = INNER element -- bare      │    │
+    │  │                  'volvere N' is window-only and     │    │
+    │  │                  SILENTLY no-ops on inner scrollers.│    │
     │  │  specimen ────── VISUAL REGRESSION over collatio +  │    │
     │  │                  png + manus. Goldens in git;       │    │
     │  │                  element crop is the default scope; │    │
