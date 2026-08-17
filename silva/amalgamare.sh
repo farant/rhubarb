@@ -67,10 +67,11 @@ for f in "silva_token" "silva_lexema"; do
 done
 
 # ---- 2. build + run the amalgamator (manifest + shared mechanism) ----
-echo "  [silva] amalgamator.c (+ silva_amalgama.c)"
+echo "  [silva] amalgamator.c (+ silva_amalgama.c + silva_unitates.c)"
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -I"$SILVA_DIR/instrumenta" \
     "$SILVA_DIR/instrumenta/principalia/amalgamator.c" \
-    "$SILVA_DIR/instrumenta/silva_amalgama.c" $obj_files \
+    "$SILVA_DIR/instrumenta/silva_amalgama.c" \
+    "$SILVA_DIR/instrumenta/silva_unitates.c" $obj_files \
     -o "$BUILD_DIR/amalgamator" || exit 1
 
 "$BUILD_DIR/amalgamator" "$RADIX_DIR" "$AMALGAMA_DIR/silva.c" || exit 1

@@ -12,6 +12,7 @@
 #include "tabula_dispersa.h"
 #include "silva_token.h"
 #include "silva_lexema.h"
+#include "silva_unitates.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -186,179 +187,10 @@ _lexema_emittere (Amalgamator* am, SilvaToken* t, b32 sine_ante)
 }
 
 /* ==================================================
- * Scansio unitatum
+ * Scansio unitatum: MOTA in silva_unitates.{h,c} 2026-08-17
+ * (mechanismus communis - differre consumptor alter; porta
+ * extractionis = silva.c byte-identicum)
  * ================================================== */
-
-interior i32
-_lineam_finire (Xar* lexemata, i32 i, i32 n)
-{
-    i32 j = i + I;
-
-    dum (j < n)
-    {
-        SilvaToken* t = _ad(lexemata, j);
-
-        si (t->initium_lineae || t->genus == SILVA_LEX_EOF)
-        {
-            frange;
-        }
-        j++;
-    }
-    redde j;
-}
-
-/* Unitas suprema: [i, finis). titulus_out = identificator ante '('
- * primum (functio) aut ante '='/'[' aut ultimus ante ';' (datum,
- * typus) aut post structura/unio/enumeratio (definitio tag) aut in
- * '(*IDENT)' (typedef indicis functionis). est_definitio_out:
- * corpus functionis {...} habet. */
-interior i32
-_unitatem_finire (Xar* lexemata, i32 i, i32 n, chorda* titulus_out,
-    b32* est_functio_out, b32* est_statica_out, b32* est_definitio_out,
-    b32* est_typedef_out, b32* est_tag_def_out)
-{
-    i32 pp = ZEPHYRUM;
-    i32 pb = ZEPHYRUM;
-    b32 vidit_clausam = FALSUM;
-    b32 est_typedef = FALSUM;
-    b32 titulus_fixus = FALSUM;
-    chorda ultimus;
-    SilvaLexemaGenus prius = SILVA_LEX_EOF;
-    SilvaLexemaGenus prius_prius = SILVA_LEX_EOF;
-    i32 j;
-
-    titulus_out->datum = NIHIL;
-    titulus_out->mensura = ZEPHYRUM;
-    ultimus.datum = NIHIL;
-    ultimus.mensura = ZEPHYRUM;
-    *est_functio_out = FALSUM;
-    *est_statica_out = FALSUM;
-    *est_definitio_out = FALSUM;
-    *est_tag_def_out = FALSUM;
-
-    {
-        SilvaToken* primum = _ad(lexemata, i);
-
-        si (primum->genus == SILVA_LEX_STATIC)
-        {
-            *est_statica_out = VERUM;
-        }
-        alioquin si (primum->genus == SILVA_LEX_IDENTIFICATOR
-            && (_chorda_est(primum->valor, "interior")
-                || _chorda_est(primum->valor, "hic_manens")
-                || _chorda_est(primum->valor, "staticus")
-                || _chorda_est(primum->valor, "universalis")))
-        {
-            *est_statica_out = VERUM;
-        }
-        si (primum->genus == SILVA_LEX_TYPEDEF
-            || (primum->genus == SILVA_LEX_IDENTIFICATOR
-                && _chorda_est(primum->valor, "nomen")))
-        {
-            est_typedef = VERUM;
-        }
-
-        /* Definitio tag (structura X {...};) - titulus = tag ipse */
-        si (!est_typedef
-            && (primum->genus == SILVA_LEX_STRUCT
-                || primum->genus == SILVA_LEX_UNION
-                || primum->genus == SILVA_LEX_ENUM
-                || (primum->genus == SILVA_LEX_IDENTIFICATOR
-                    && (_chorda_est(primum->valor, "structura")
-                        || _chorda_est(primum->valor, "unio")
-                        || _chorda_est(primum->valor, "enumeratio"))))
-            && i + I < n)
-        {
-            SilvaToken* secundum = _ad(lexemata, i + I);
-
-            si (secundum->genus == SILVA_LEX_IDENTIFICATOR)
-            {
-                *titulus_out = secundum->valor;
-                titulus_fixus = VERUM;
-                *est_tag_def_out = VERUM;
-            }
-        }
-    }
-    *est_typedef_out = est_typedef;
-
-    per (j = i; j < n; j++)
-    {
-        SilvaToken* t = _ad(lexemata, j);
-
-        commutatio (t->genus)
-        {
-            casus SILVA_LEX_EOF:
-                redde j;
-            casus SILVA_LEX_PAREN_APERTA:
-                si (pp == ZEPHYRUM && pb == ZEPHYRUM && !est_typedef
-                    && !titulus_fixus && ultimus.datum != NIHIL)
-                {
-                    *titulus_out = ultimus;
-                    *est_functio_out = VERUM;
-                    titulus_fixus = VERUM;
-                }
-                pp++;
-                frange;
-            casus SILVA_LEX_PAREN_CLAUSA:
-                pp--;
-                si (pp == ZEPHYRUM && pb == ZEPHYRUM)
-                {
-                    vidit_clausam = VERUM;
-                }
-                frange;
-            casus SILVA_LEX_BRACE_APERTA:
-                si (pb == ZEPHYRUM && pp == ZEPHYRUM && vidit_clausam
-                    && *est_functio_out)
-                {
-                    *est_definitio_out = VERUM;
-                }
-                pb++;
-                frange;
-            casus SILVA_LEX_BRACE_CLAUSA:
-                pb--;
-                si (pb == ZEPHYRUM && *est_definitio_out)
-                {
-                    redde j + I;
-                }
-                frange;
-            casus SILVA_LEX_SEMICOLON:
-                si (pp == ZEPHYRUM && pb == ZEPHYRUM)
-                {
-                    si (titulus_out->datum == NIHIL)
-                    {
-                        *titulus_out = ultimus;
-                    }
-                    redde j + I;
-                }
-                frange;
-            casus SILVA_LEX_ASSIGNATIO:
-            casus SILVA_LEX_QUADRA_APERTA:
-                si (pp == ZEPHYRUM && pb == ZEPHYRUM && !titulus_fixus
-                    && ultimus.datum != NIHIL)
-                {
-                    *titulus_out = ultimus;
-                    titulus_fixus = VERUM;
-                }
-                frange;
-            casus SILVA_LEX_IDENTIFICATOR:
-                /* typedef indicis functionis: nomen ... (*IDENT)(...) */
-                si (est_typedef && !titulus_fixus
-                    && prius == SILVA_LEX_STAR
-                    && prius_prius == SILVA_LEX_PAREN_APERTA)
-                {
-                    *titulus_out = t->valor;
-                    titulus_fixus = VERUM;
-                }
-                ultimus = t->valor;
-                frange;
-            ordinarius:
-                frange;
-        }
-        prius_prius = prius;
-        prius = t->genus;
-    }
-    redde n;
-}
 
 interior b32
 _in_indice (chorda titulus, constans character* constans* index)
@@ -503,7 +335,7 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
          * ceterae (custodiae, defines) verbatim renominatae */
         si (t->genus == SILVA_LEX_CANCELLUM && t->initium_lineae)
         {
-            i32 lf = _lineam_finire(lexemata, i, n);
+            i32 lf = silva_lineam_finire(lexemata, i, n);
             b32 est_includendum = FALSUM;
 
             si (i + I < lf)
@@ -543,9 +375,9 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
             b32 est_typedef;
             b32 est_tag_def;
             b32 inicere;
-            i32 finis = _unitatem_finire(lexemata, i, n, &titulus,
-                &est_functio, &est_statica, &est_definitio,
-                &est_typedef, &est_tag_def);
+            i32 finis = silva_unitatem_finire(lexemata, i, n,
+                &titulus, &est_functio, &est_statica,
+                &est_definitio, &est_typedef, &est_tag_def);
             i32 j;
 
             si (!_in_servandis(titulus, pl->servanda))
