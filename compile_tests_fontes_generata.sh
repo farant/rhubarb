@@ -44,6 +44,7 @@ declare -a SOURCE_FILES=(
     "lib/delineare.c"
     "lib/dialogus.c"
     "lib/dialogus_importatio.c"
+    "lib/differentia.c"
     "lib/dithering.c"
     "lib/elementa.c"
     "lib/entitas.c"
