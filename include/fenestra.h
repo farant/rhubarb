@@ -67,6 +67,13 @@ nomen enumeratio {
     FENESTRA_MAXIMIZABILIS = I << III,        /* Maximizable */
     FENESTRA_CENTRATA      = I << IV,         /* Centered */
     FENESTRA_PLENA_VISIO   = I << V,          /* Fullscreen */
+    /* RETRO: fenestra apparet sed applicatio focum systematis NON
+     * rapit (activateIgnoringOtherApps omissum). Pro probationibus
+     * fumi: XII generationes = XII raptus foci sine eo. Fenestra
+     * intra applicationem CLAVIS manet (makeKeyAndOrderFront
+     * app-localis est), ergo claves nativae per fistulam nostram
+     * immissae adhuc perveniunt - MENSURATUM fumo laboratorii. */
+    FENESTRA_RETRO         = I << VI,
     FENESTRA_ORDINARIA     = FENESTRA_MUTABILIS | FENESTRA_CLAUDIBILIS |
                              FENESTRA_MINUIBILIS | FENESTRA_MAXIMIZABILIS
 } fenestra_vexilla_t;

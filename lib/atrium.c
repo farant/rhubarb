@@ -87,6 +87,12 @@ atrium_vexilla_legere (AtriumConfiguratio* figura, integer argc,
         {
             figura->vivum = VERUM;
         }
+        /* -retro: focum systematis non rapere - fumus XII
+         * applicationes generat et usor scribens non interpellandus. */
+        alioquin si (strcmp(argv[i], "-retro") == ZEPHYRUM)
+        {
+            figura->retro = VERUM;
+        }
         /* -radix <via>: assetum e disco. INDEPENDENS a -vivum de
          * industria - laboratorium ambo sub uno vexillo ligavit, et
          * ita duas figuras rationabiles inattingibiles fecit: imperium
@@ -207,6 +213,11 @@ atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
                               : (i32)(FENESTRA_CLAUDIBILIS
                                     | FENESTRA_MUTABILIS
                                     | FENESTRA_CENTRATA);
+    si (figura->retro)
+    {
+        figura_fenestrae.vexilla = figura_fenestrae.vexilla
+                                 | (i32)FENESTRA_RETRO;
+    }
 
     atrium->fenestra = fenestra_creare(piscina, &figura_fenestrae);
     si (atrium->fenestra == NIHIL)

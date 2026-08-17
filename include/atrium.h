@@ -169,6 +169,11 @@ nomen structura {
     i32                 altitudo;       /* ZEPHYRUM = 900 */
     i32                 vexilla;        /* ZEPHYRUM = CLAUDIBILIS
                                          * | MUTABILIS | CENTRATA */
+    b32                 retro;          /* VERUM = focum systematis
+                                         * NON rapere (FENESTRA_RETRO;
+                                         * vexillum domus '-retro' -
+                                         * probationes fumi sine
+                                         * interpellatione usoris) */
 
     /* --- PAGINA --- */
     constans CapsulaEmbed* capsula;       /* OBLIGATORIA */

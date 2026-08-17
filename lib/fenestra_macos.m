@@ -367,11 +367,16 @@ fenestra_creare (
             [fenestra->fenestra_ns center];
         }
 
-        /* Facere fenestram visibilem et clavem */
+        /* Facere fenestram visibilem et clavem (app-localiter) */
         [fenestra->fenestra_ns makeKeyAndOrderFront:nil];
 
-        /* Activare applicationem */
-        [NSApp activateIgnoringOtherApps:YES];
+        /* Activare applicationem - NISI RETRO: raptus foci systematis
+         * in hac una linea vivit; sine ea fenestra apparet, claves
+         * app-locales perveniunt, sed usor scribens non interpellatur. */
+        si (!(configuratio->vexilla & FENESTRA_RETRO))
+        {
+            [NSApp activateIgnoringOtherApps:YES];
+        }
 
         /* Intrare plenam visionem si petitum */
         si (configuratio->vexilla & FENESTRA_PLENA_VISIO)
