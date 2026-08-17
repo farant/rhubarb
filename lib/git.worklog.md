@@ -53,3 +53,18 @@ fixture (suite runs from root), and the external oracle is
 byte-comparison against the worktree file (latina.h — chosen
 because it never changes). Deep-history reads exercise packs and
 deltas naturally.
+
+## 2026-08-17 (later) — sha breve + differre goes native
+
+The short-sha door lasted exactly one invocation: the FIRST real
+differre -git call pasted `2147d9d` (humans paste short shas; the
+subprocess wrapper had hidden this by letting git resolve them).
+Implemented as last-resort fallback in ref_resolvere (refs beat
+prefixes): pack idx fanout-bucket scan + loose two-char-dir scan,
+cross-source dedup (same object loose AND packed is one candidate,
+not ambiguity), unique-or-refuse, minimum 4 hex.
+
+differre gained `-git <via> [ref_vetus] [ref_novum]` (native
+library sides, worktree default for the new side, absent-at-ref =
+empty side); differre_git.sh is now a two-line alias with the same
+face — the subprocess guts lived one day, as planned.

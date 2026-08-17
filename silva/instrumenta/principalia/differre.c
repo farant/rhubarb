@@ -25,6 +25,10 @@
  *      classificationi serviunt.
  *
  * Usus:   ./silva/differre.sh <vetus.c> <novum.c> [-machina]
+ *         ./silva/differre.sh -git <via> [ref_vetus] [ref_novum]
+ *           modus git NATIVUS (bibliotheca git, non subprocessus):
+ *           ref_vetus ordinarius CAPUT; ref_novum absens = discus.
+ *           Plagula ad ref absens = latus vacuum (honestum).
  * Exitus: 0 = cucurrit (differentia fractura NON est) |
  *         2 = usus malus aut plagula illegibilis
  * -machina: TSV genus, titulus, status, classificatio, +N, -M
@@ -41,6 +45,7 @@
 #include "sigillum.h"
 #include "filum.h"
 #include "differentia.h"
+#include "git.h"
 #include "silva_token.h"
 #include "silva_lexema.h"
 #include "silva_unitates.h"
@@ -109,28 +114,27 @@ _unitatis_initium (Xar* lexemata, constans SilvaUnitas* u)
 }
 
 interior b32
-_latus_parare (Piscina* piscina, InternamentumChorda* intern,
-    constans character* via, DifferreLatus* latus);
+_latus_ex_textu (Piscina* piscina, InternamentumChorda* intern,
+    chorda textus, constans character* titulus, DifferreLatus* latus);
 
 interior b32
-_latus_parare (Piscina* piscina, InternamentumChorda* intern,
-    constans character* via, DifferreLatus* latus)
+_latus_ex_textu (Piscina* piscina, InternamentumChorda* intern,
+    chorda textus, constans character* titulus, DifferreLatus* latus)
 {
     i32 k;
 
-    si (!filum_existit(via))
+    si (textus.datum == NIHIL)
     {
-        fprintf(stderr, "differre: plagula non exsistit: %s\n",
-            via);
-        redde FALSUM;
+        textus = chorda_ex_literis("", piscina);
     }
-    latus->textus = filum_legere_totum(via, piscina);
+    latus->textus = textus;
     latus->lexemata = silva_lexare(piscina,
         (constans character*)latus->textus.datum,
         latus->textus.mensura, ZEPHYRUM);
     si (latus->lexemata == NIHIL)
     {
-        fprintf(stderr, "differre: lexari non potuit: %s\n", via);
+        fprintf(stderr, "differre: lexari non potuit: %s\n",
+            titulus);
         redde FALSUM;
     }
     latus->unitates = silva_unitates_scandere(piscina,
@@ -189,6 +193,24 @@ _latus_parare (Piscina* piscina, InternamentumChorda* intern,
         latus->identitates[k] = (vacuum*)internata;
     }
     redde VERUM;
+}
+
+interior b32
+_latus_parare (Piscina* piscina, InternamentumChorda* intern,
+    constans character* via, DifferreLatus* latus);
+
+interior b32
+_latus_parare (Piscina* piscina, InternamentumChorda* intern,
+    constans character* via, DifferreLatus* latus)
+{
+    si (!filum_existit(via))
+    {
+        fprintf(stderr, "differre: plagula non exsistit: %s\n",
+            via);
+        redde FALSUM;
+    }
+    redde _latus_ex_textu(piscina, intern,
+        filum_legere_totum(via, piscina), via, latus);
 }
 
 interior chorda
@@ -409,7 +431,9 @@ s32 principale (integer argc, character** argv)
     DifferreLatus        b;
     constans character*  via_a = NIHIL;
     constans character*  via_b = NIHIL;
+    constans character*  positio_tertia = NIHIL;
     b32                  machina = FALSUM;
+    b32                  git_modus = FALSUM;
     Xar*                 paria;
     Xar*                 tractus;
     i32                  immotae = 0;
@@ -424,6 +448,10 @@ s32 principale (integer argc, character** argv)
         {
             machina = VERUM;
         }
+        alioquin si (strcmp(argv[arg], "-git") == 0)
+        {
+            git_modus = VERUM;
+        }
         alioquin si (via_a == NIHIL)
         {
             via_a = argv[arg];
@@ -432,10 +460,16 @@ s32 principale (integer argc, character** argv)
         {
             via_b = argv[arg];
         }
+        alioquin si (positio_tertia == NIHIL)
+        {
+            positio_tertia = argv[arg];
+        }
     }
-    si (via_a == NIHIL || via_b == NIHIL)
+    si (via_a == NIHIL || (!git_modus && via_b == NIHIL))
     {
         fprintf(stderr, "usus: differre <vetus.c> <novum.c>"
+            " [-machina]\n"
+            "      differre -git <via> [ref_vetus] [ref_novum]"
             " [-machina]\n");
         redde II;
     }
@@ -451,7 +485,72 @@ s32 principale (integer argc, character** argv)
     {
         redde II;
     }
-    si (!_latus_parare(piscina, intern, via_a, &a)
+    si (git_modus)
+    {
+        /* latera e bibliotheca git NATIVA - nullus subprocessus */
+        GitRepositorium*    repositorium = git_aperire(piscina,
+            ".");
+        character           sha[GIT_SHA_HEX_MENSURA];
+        constans character* ref_vetus = via_b != NIHIL ? via_b
+            : "HEAD";
+        chorda              textus_vetus;
+        chorda              textus_novum;
+        b32                 inventum = FALSUM;
+
+        si (repositorium == NIHIL)
+        {
+            fprintf(stderr, "differre: non in repositorio git\n");
+            redde II;
+        }
+        si (!git_ref_resolvere(repositorium, ref_vetus, sha))
+        {
+            fprintf(stderr, "differre: ref non resolutum: %s\n",
+                ref_vetus);
+            redde II;
+        }
+        textus_vetus = git_massam_per_viam(repositorium, sha,
+            via_a, piscina, &inventum);
+        si (!inventum)
+        {
+            textus_vetus.datum = NIHIL;
+            textus_vetus.mensura = 0;
+        }
+        si (positio_tertia != NIHIL)
+        {
+            si (!git_ref_resolvere(repositorium, positio_tertia,
+                sha))
+            {
+                fprintf(stderr, "differre: ref non resolutum:"
+                    " %s\n", positio_tertia);
+                redde II;
+            }
+            inventum = FALSUM;
+            textus_novum = git_massam_per_viam(repositorium, sha,
+                via_a, piscina, &inventum);
+            si (!inventum)
+            {
+                textus_novum.datum = NIHIL;
+                textus_novum.mensura = 0;
+            }
+        }
+        alioquin si (filum_existit(via_a))
+        {
+            textus_novum = filum_legere_totum(via_a, piscina);
+        }
+        alioquin
+        {
+            textus_novum.datum = NIHIL;
+            textus_novum.mensura = 0;
+        }
+        si (!_latus_ex_textu(piscina, intern, textus_vetus, via_a,
+                &a)
+            || !_latus_ex_textu(piscina, intern, textus_novum,
+                   via_a, &b))
+        {
+            redde II;
+        }
+    }
+    alioquin si (!_latus_parare(piscina, intern, via_a, &a)
         || !_latus_parare(piscina, intern, via_b, &b))
     {
         redde II;

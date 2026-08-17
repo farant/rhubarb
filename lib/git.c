@@ -1197,6 +1197,187 @@ _ref_legere (GitRepositorium* repositorium,
     redde FALSUM;
 }
 
+/* --------------------------------------------------
+ * sha breve: praefixum unicum trans sarcinas et laxa
+ * -------------------------------------------------- */
+
+interior b32
+_praefixo_congruit (constans i8* sha_bin,
+    constans character* praefixum, i32 mensura);
+
+interior b32
+_praefixo_congruit (constans i8* sha_bin,
+    constans character* praefixum, i32 mensura)
+{
+    i32 i;
+
+    per (i = 0; i < mensura; i = i + 1)
+    {
+        i32 octetus = (i32)sha_bin[i / 2];
+        s32 nibulus = (i % 2) == 0
+            ? (s32)((octetus >> 4) & 0x0F)
+            : (s32)(octetus & 0x0F);
+
+        si (nibulus != _hex_valor(praefixum[i]))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+nomen structura {
+    constans character* praefixum;
+    i32                 mensura;
+    i32                 inventa;
+    character           candidatus[GIT_SHA_HEX_MENSURA];
+} ShaBreveContextus;
+
+interior vacuum
+_candidatum_notare (ShaBreveContextus* ctx,
+    constans character* sha_hex);
+
+interior vacuum
+_candidatum_notare (ShaBreveContextus* ctx,
+    constans character* sha_hex)
+{
+    si (ctx->inventa > 0
+        && memcmp(ctx->candidatus, sha_hex, 40) == 0)
+    {
+        redde;   /* idem obiectum laxum ET in sarcina - non ambiguum */
+    }
+    ctx->inventa = ctx->inventa + 1;
+    memcpy(ctx->candidatus, sha_hex, 41);
+}
+
+interior s32
+_laxa_breve_ambulator (chorda via_plena,
+    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+
+interior s32
+_laxa_breve_ambulator (chorda via_plena,
+    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+{
+    ShaBreveContextus* ctx = (ShaBreveContextus*)contextus;
+    character          sha_hex[GIT_SHA_HEX_MENSURA];
+    i32                i;
+
+    si (introitus->genus != INTROITUS_FILUM
+        || via_plena.mensura < 38)
+    {
+        redde 0;
+    }
+    /* titulus plagulae = 38 hex; praefixum[0..2) iam directorio
+     * congruit */
+    sha_hex[0] = ctx->praefixum[0];
+    sha_hex[1] = ctx->praefixum[1];
+    per (i = 0; i < 38; i = i + 1)
+    {
+        character c = (character)via_plena.datum[
+            via_plena.mensura - 38 + i];
+
+        si (_hex_valor(c) < 0)
+        {
+            redde 0;
+        }
+        sha_hex[2 + i] = c;
+    }
+    sha_hex[40] = '\0';
+    per (i = 2; i < ctx->mensura; i = i + 1)
+    {
+        si (sha_hex[i] != ctx->praefixum[i])
+        {
+            redde 0;
+        }
+    }
+    _candidatum_notare(ctx, sha_hex);
+    redde 0;
+}
+
+interior b32
+_sha_breve_resolvere (GitRepositorium* repositorium,
+    constans character* praefixum, character* sha_exitus);
+
+interior b32
+_sha_breve_resolvere (GitRepositorium* repositorium,
+    constans character* praefixum, character* sha_exitus)
+{
+    ShaBreveContextus ctx;
+    i32 mensura = (i32)strlen(praefixum);
+    i32 i;
+
+    si (mensura < 4 || mensura > 39)
+    {
+        redde FALSUM;
+    }
+    per (i = 0; i < mensura; i = i + 1)
+    {
+        si (_hex_valor(praefixum[i]) < 0)
+        {
+            redde FALSUM;
+        }
+    }
+    ctx.praefixum = praefixum;
+    ctx.mensura = mensura;
+    ctx.inventa = 0;
+
+    /* sarcinae: fanout octetum primum angustat, deinde percursus */
+    per (i = 0; i < xar_numerus(repositorium->sarcinae); i = i + 1)
+    {
+        constans GitSarcina* s = (constans GitSarcina*)
+            xar_obtinere(repositorium->sarcinae, i);
+        constans i8* fanout = s->idx_datum + 8;
+        constans i8* shas = fanout + 1024;
+        i32 primus = (i32)((_hex_valor(praefixum[0]) << 4)
+            | _hex_valor(praefixum[1]));
+        i32 imus = primus == 0 ? 0 : _be32(fanout + (primus - 1) * 4);
+        i32 summus = _be32(fanout + primus * 4);
+        i32 j;
+
+        per (j = imus; j < summus; j = j + 1)
+        {
+            si (_praefixo_congruit(shas + j * 20, praefixum,
+                mensura))
+            {
+                character sha_hex[GIT_SHA_HEX_MENSURA];
+
+                _bin_ad_hex(shas + j * 20, 20, sha_hex);
+                _candidatum_notare(&ctx, sha_hex);
+                si (ctx.inventa > 1)
+                {
+                    redde FALSUM;   /* ambiguum */
+                }
+            }
+        }
+    }
+
+    /* laxa: directorium praefixi bilitterati */
+    {
+        ChordaAedificator* aed = chorda_aedificator_creare(
+            repositorium->piscina, (memoriae_index)128);
+        DirectoriumFiltrum filtrum;
+
+        chorda_aedificator_appendere_literis(aed,
+            repositorium->via_git);
+        chorda_aedificator_appendere_literis(aed, "/objects/");
+        chorda_aedificator_appendere_character(aed, praefixum[0]);
+        chorda_aedificator_appendere_character(aed, praefixum[1]);
+        filtrum = directorium_filtrum_omnia();
+        filtrum.includere_occultos = FALSUM;
+        directorium_ambulare(chorda_ut_cstr(
+            chorda_aedificator_finire(aed),
+            repositorium->piscina), &filtrum,
+            _laxa_breve_ambulator, &ctx, repositorium->piscina);
+    }
+
+    si (ctx.inventa != 1)
+    {
+        redde FALSUM;   /* nihil aut ambiguum */
+    }
+    memcpy(sha_exitus, ctx.candidatus, 41);
+    redde VERUM;
+}
+
 interior b32
 _caput_legere (GitRepositorium* repositorium,
     character* sha_exitus);
@@ -1354,6 +1535,12 @@ git_ref_resolvere (GitRepositorium* repositorium,
 
                 resolutum = _ref_legere(repositorium, candidata,
                     sha_exitus);
+            }
+            /* postremo: sha breve (refs vincunt praefixa) */
+            si (!resolutum)
+            {
+                resolutum = _sha_breve_resolvere(repositorium,
+                    basis, sha_exitus);
             }
         }
         si (!resolutum)

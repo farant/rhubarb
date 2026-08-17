@@ -114,6 +114,22 @@ s32 principale (vacuum)
             "ramus/qui/non/est", vanum));
     }
 
+    /* sha breve: praefixum VIII resolvitur ad CAPUT; praefixum
+     * III recusatur (minimum IV) */
+    {
+        character breve[9];
+        character resolutum[GIT_SHA_HEX_MENSURA];
+
+        memcpy(breve, caput, 8);
+        breve[8] = '\0';
+        CREDO_VERUM(git_ref_resolvere(repositorium, breve,
+            resolutum));
+        CREDO_VERUM(strcmp(caput, resolutum) == 0);
+        breve[3] = '\0';
+        CREDO_FALSUM(git_ref_resolvere(repositorium, breve,
+            resolutum));
+    }
+
     imprimere("\n--- Probans commissum ---\n");
 
     {
