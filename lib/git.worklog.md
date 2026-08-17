@@ -68,3 +68,33 @@ differre gained `-git <via> [ref_vetus] [ref_novum]` (native
 library sides, worktree default for the new side, absent-at-ref =
 empty side); differre_git.sh is now a two-line alias with the same
 face — the subprocess guts lived one day, as planned.
+
+## 2026-08-18 — git_arbores_differre (differentia arborum)
+
+The recursive tree-vs-tree diff, the sigillum-screen pattern one
+level up: entry shas are compared BEFORE any content is read, so
+an unchanged subtree costs one string compare no matter how many
+thousand files live under it. Only changed paths ever open blobs.
+
+Design decisions:
+- Hash-join by entry name per level (tabula_dispersa, ordinal
+  cells — Xar is segmented, no cross-element arithmetic), NOT a
+  sorted merge-join: git's tree ordering treats directories as
+  name+"/" ("foo.bar" sorts before directory "foo"), and a
+  merge-join replicating that quirk is a bug farm. The join is
+  order-blind; determinism comes from one xar_ordinare
+  (chorda_comparare) over the finished list.
+- Mode-only change (same sha, 100644<->100755) = MUTATA row with
+  equal shas — honest, and downstream unit-diff naturally reports
+  zero pairs.
+- Type flip (blob<->tree, same name) = REMOTA of the whole old
+  side + ADDITA of the whole new side. No "modified" lie.
+- Gitlinks (mode 160000, submodules) fall out as blob-shaped rows;
+  shas compare fine, content reads would refuse (not a MASSA).
+  Rhubarb has no submodules; noted, not handled specially.
+
+Oracle: frozen history. 4aafde9 (this library's own birth commit)
+vs parent d4a89dd, expectations transcribed from
+`git show --name-status`: 1 M + 4 A in chorda_comparare order,
+plus tree-vs-itself = empty and the reversed direction flipping
+ADDITA<->REMOTA. First run green.

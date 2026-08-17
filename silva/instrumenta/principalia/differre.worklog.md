@@ -52,3 +52,33 @@ Factoring: unit scanner extracted from the amalgamator into
 instrumenta/silva_unitates.{h,c} (PORTA: amalgam byte-identical,
 suite 39/39). silva_unitates_scandere = the enumeration wrapper;
 directive titles for define/undef/ifdef/ifndef/include.
+
+## 2026-08-18 — modus -commissum (commissum totum in symbolis)
+
+`differre -commissum [ref | vetus novus]` = "what did this commit
+do, in symbols" — git log --stat at unit granularity. Zero refs =
+HEAD vs parent; one = that commit vs its first parent; two =
+tree vs tree across any range. Built on git_arbores_differre:
+unchanged subtrees are never opened, so the whole-repo walk costs
+roughly what the changed files cost.
+
+The refactor that paid for it: the pairing block and the emission
+loop moved out of principale into _paria_computare /
+_paria_emittere unchanged (same rows byte-for-byte in single-file
+mode, verified against the pre-refactor output). Emission gained
+two knobs: via_machina (prefix a path column — commissum -machina
+only) and corpora (unified bodies under MUTATA — ON for
+single-file modes, OFF for -commissum; the --stat spirit is rows,
+you drill into one file with `-git <via> <vetus> <novus>`).
+
+Per-file handling: .c/.h → full unit pairing; anything else → one
+line-diff summary row (genus "plagula" in TSV); NUL byte on
+either side → "(binaria)", no counts. Line totals are per-unit
+sums, deliberately NOT git's whole-file counts (MOTA counts 0,
+boundaries differ) — same numbers as single-file differre, which
+is the consistency that matters.
+
+First light: 0f7ad83 renders as 6 files / 17 unit pairs with the
+sha-breve arc named function by function; file list matches
+`git show --name-status` exactly. The prototype+definition twin
+rows (parked door) show up as expected and read fine in practice.

@@ -135,4 +135,31 @@ git_massam_per_viam (
     Piscina*            piscina,
     b32*                inventum);
 
+nomen enumeratio {
+    GIT_VIA_MUTATA = 0,
+    GIT_VIA_ADDITA,
+    GIT_VIA_REMOTA
+} GitViaGenus;
+
+nomen structura {
+    chorda      via;        /* a radice repositorii */
+    chorda      sha_vetus;  /* hex 40; vacua si ADDITA */
+    chorda      sha_novus;  /* hex 40; vacua si REMOTA */
+    GitViaGenus genus;
+} GitViaMutata;
+
+/* 'git diff --name-status' inter arbores duas, ut vocatio C:
+ * introitus nomine iuncti gradatim, subarbores sha aequali GRATIS
+ * omissae - shas ipsi comparantur, contentum non tangitur nisi
+ * mutatum. MUTATA = sha aut modus differt; conversio generis
+ * (massa in arborem eodem nomine, aut contra) = REMOTA + ADDITA
+ * ambae, honeste. Xar de GitViaMutata viis ordinatis
+ * (chorda_comparare); NIHIL = erratum lectionis arboris. */
+Xar*
+git_arbores_differre (
+    GitRepositorium*    repositorium,
+    constans character* sha_arboris_vetus,
+    constans character* sha_arboris_novum,
+    Piscina*            piscina);
+
 #endif /* GIT_H */

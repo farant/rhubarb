@@ -235,6 +235,98 @@ s32 principale (vacuum)
         CREDO_VERUM(massa.mensura > (i32)1000);
     }
 
+    imprimere("\n--- Probans differentiam arborum ---\n");
+
+    /* historia congelata = oraculum immutabile: commissum 4aafde9
+     * (bibliotheca git ipsa nata) contra parentem d4a89dd.
+     * Exspectata transcripta ex 'git show --name-status 4aafde9':
+     *   M  compile_tests_fontes_generata.sh
+     *   A  include/git.h
+     *   A  lib/git.c
+     *   A  lib/git.worklog.md
+     *   A  probationes/probatio_git.c
+     * (ordo idem: viae ordinatae chorda_comparare) */
+    {
+        character    sha_parentis[GIT_SHA_HEX_MENSURA];
+        character    sha_nati[GIT_SHA_HEX_MENSURA];
+        GitCommissum parens;
+        GitCommissum natus;
+        Xar*         mutatae;
+
+        CREDO_VERUM(git_ref_resolvere(repositorium, "d4a89dd",
+            sha_parentis));
+        CREDO_VERUM(git_ref_resolvere(repositorium, "4aafde9",
+            sha_nati));
+        parens = git_commissum_legere(repositorium, sha_parentis,
+            piscina);
+        natus = git_commissum_legere(repositorium, sha_nati,
+            piscina);
+        CREDO_VERUM(parens.successus);
+        CREDO_VERUM(natus.successus);
+
+        /* arbor contra se ipsam - differentia nulla */
+        mutatae = git_arbores_differre(repositorium,
+            chorda_ut_cstr(parens.arbor, piscina),
+            chorda_ut_cstr(parens.arbor, piscina), piscina);
+        CREDO_NON_NIHIL(mutatae);
+        CREDO_AEQUALIS_I32(xar_numerus(mutatae), (i32)0);
+
+        mutatae = git_arbores_differre(repositorium,
+            chorda_ut_cstr(parens.arbor, piscina),
+            chorda_ut_cstr(natus.arbor, piscina), piscina);
+        CREDO_NON_NIHIL(mutatae);
+        CREDO_AEQUALIS_I32(xar_numerus(mutatae), (i32)5);
+        {
+            GitViaMutata* m = (GitViaMutata*)xar_obtinere(mutatae,
+                0);
+
+            CREDO_VERUM(chorda_aequalis_literis(m->via,
+                "compile_tests_fontes_generata.sh"));
+            CREDO_VERUM(m->genus == GIT_VIA_MUTATA);
+            CREDO_AEQUALIS_I32(m->sha_vetus.mensura, (i32)40);
+            CREDO_AEQUALIS_I32(m->sha_novus.mensura, (i32)40);
+
+            m = (GitViaMutata*)xar_obtinere(mutatae, 1);
+            CREDO_VERUM(chorda_aequalis_literis(m->via,
+                "include/git.h"));
+            CREDO_VERUM(m->genus == GIT_VIA_ADDITA);
+            CREDO_AEQUALIS_I32(m->sha_vetus.mensura, (i32)0);
+            CREDO_AEQUALIS_I32(m->sha_novus.mensura, (i32)40);
+
+            m = (GitViaMutata*)xar_obtinere(mutatae, 2);
+            CREDO_VERUM(chorda_aequalis_literis(m->via,
+                "lib/git.c"));
+            CREDO_VERUM(m->genus == GIT_VIA_ADDITA);
+
+            m = (GitViaMutata*)xar_obtinere(mutatae, 3);
+            CREDO_VERUM(chorda_aequalis_literis(m->via,
+                "lib/git.worklog.md"));
+            CREDO_VERUM(m->genus == GIT_VIA_ADDITA);
+
+            m = (GitViaMutata*)xar_obtinere(mutatae, 4);
+            CREDO_VERUM(chorda_aequalis_literis(m->via,
+                "probationes/probatio_git.c"));
+            CREDO_VERUM(m->genus == GIT_VIA_ADDITA);
+        }
+
+        /* directio inversa: ADDITA fiunt REMOTA, symmetria */
+        mutatae = git_arbores_differre(repositorium,
+            chorda_ut_cstr(natus.arbor, piscina),
+            chorda_ut_cstr(parens.arbor, piscina), piscina);
+        CREDO_NON_NIHIL(mutatae);
+        CREDO_AEQUALIS_I32(xar_numerus(mutatae), (i32)5);
+        {
+            GitViaMutata* m = (GitViaMutata*)xar_obtinere(mutatae,
+                1);
+
+            CREDO_VERUM(chorda_aequalis_literis(m->via,
+                "include/git.h"));
+            CREDO_VERUM(m->genus == GIT_VIA_REMOTA);
+            CREDO_AEQUALIS_I32(m->sha_vetus.mensura, (i32)40);
+            CREDO_AEQUALIS_I32(m->sha_novus.mensura, (i32)0);
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

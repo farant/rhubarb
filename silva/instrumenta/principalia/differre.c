@@ -29,10 +29,19 @@
  *           modus git NATIVUS (bibliotheca git, non subprocessus):
  *           ref_vetus ordinarius CAPUT; ref_novum absens = discus.
  *           Plagula ad ref absens = latus vacuum (honestum).
+ *         ./silva/differre.sh -commissum [ref | vetus novus]
+ *           commissum TOTUM in symbolis ('git log --stat' gradu
+ *           unitatum): sine refs = CAPUT contra parentem; ref una
+ *           = ea contra parentem; duae = arbor contra arborem.
+ *           Plagulae C unitatim (ordines soli, sine corporibus -
+ *           corpus petis per '-git <via> <vetus> <novus>');
+ *           ceterae summa linearum; binariae notatae.
  * Exitus: 0 = cucurrit (differentia fractura NON est) |
  *         2 = usus malus aut plagula illegibilis
  * -machina: TSV genus, titulus, status, classificatio, +N, -M
- *           (sine textu; par fistulis - nexus.sh, vocantes)
+ *           (sine textu; par fistulis - nexus.sh, vocantes);
+ *           modo -commissum columna VIae praefigitur et plagulae
+ *           non-C ordines 'plagula' accipiunt
  */
 
 #include "latina.h"
@@ -423,6 +432,364 @@ nomen structura {
     s32                 b_index;
 } DifferrePar;
 
+/* differentia unitatum -> paria statuum (MOTA sigillo, MUTATA
+ * titulo, ceterae ADDITA/REMOTA); *immotae_exitus accumulat;
+ * NIHIL = defectus */
+interior Xar*
+_paria_computare (Piscina* piscina, constans DifferreLatus* a,
+    constans DifferreLatus* b, i32* immotae_exitus);
+
+interior Xar*
+_paria_computare (Piscina* piscina, constans DifferreLatus* a,
+    constans DifferreLatus* b, i32* immotae_exitus)
+{
+    Xar* tractus;
+    Xar* paria;
+    Xar* remotae_ordo;
+    Xar* additae_ordo;
+    TabulaDispersa* sigilla_remotarum;
+    TabulaDispersa* tituli_remotarum;
+    i32* sumptae;
+    i32  k;
+
+    tractus = differentia_seriei(piscina,
+        (constans vacuum* constans*)a->identitates, a->numerus,
+        (constans vacuum* constans*)b->identitates, b->numerus);
+    si (tractus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    paria = xar_creare(piscina, (i32)magnitudo(DifferrePar));
+    remotae_ordo = xar_creare(piscina, (i32)magnitudo(i32));
+    additae_ordo = xar_creare(piscina, (i32)magnitudo(i32));
+    sigilla_remotarum = tabula_dispersa_creare_chorda(piscina, 32);
+    tituli_remotarum = tabula_dispersa_creare_chorda(piscina, 32);
+    si (paria == NIHIL || remotae_ordo == NIHIL
+        || additae_ordo == NIHIL || sigilla_remotarum == NIHIL
+        || tituli_remotarum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = 0; k < xar_numerus(tractus); k = k + 1)
+    {
+        DifferentiaTractus* t = (DifferentiaTractus*)
+            xar_obtinere(tractus, k);
+        i32 l;
+
+        si (t->genus == DIFFERENTIA_IDEM)
+        {
+            *immotae_exitus = *immotae_exitus + t->numerus;
+        }
+        alioquin si (t->genus == DIFFERENTIA_DELETA)
+        {
+            per (l = 0; l < t->numerus; l = l + 1)
+            {
+                i32* cella = (i32*)xar_addere(remotae_ordo);
+
+                si (cella == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                *cella = t->index_a + l;
+            }
+        }
+        alioquin
+        {
+            per (l = 0; l < t->numerus; l = l + 1)
+            {
+                i32* cella = (i32*)xar_addere(additae_ordo);
+
+                si (cella == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                *cella = t->index_b + l;
+            }
+        }
+    }
+
+    /* indices remotarum: sigillo (MOTA) et titulo (MUTATA) -
+     * prima non sumpta vincit */
+    sumptae = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(xar_numerus(remotae_ordo) == 0 ? I
+            : xar_numerus(remotae_ordo)) * magnitudo(i32));
+    si (sumptae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = 0; k < xar_numerus(remotae_ordo); k = k + 1)
+    {
+        i32    ai = *(i32*)xar_obtinere(remotae_ordo, k);
+        chorda sigillum_ai = *(chorda*)a->identitates[ai];
+        constans SilvaUnitas* ua = _unitas_ad(a->unitates, ai);
+
+        sumptae[k] = 0;
+        /* valor tabulae = ORDINALIS k in cella propria (Xar
+         * segmentatum est - arithmetica trans elementa
+         * vetita) */
+        si (!tabula_dispersa_continet(sigilla_remotarum,
+            sigillum_ai))
+        {
+            i32* cella = (i32*)piscina_allocare(piscina,
+                (memoriae_index)magnitudo(i32));
+
+            si (cella == NIHIL)
+            {
+                redde NIHIL;
+            }
+            *cella = k;
+            tabula_dispersa_inserere(sigilla_remotarum,
+                sigillum_ai, (vacuum*)cella);
+        }
+        si (ua->titulus.mensura > 0
+            && !tabula_dispersa_continet(tituli_remotarum,
+                   ua->titulus))
+        {
+            i32* cella = (i32*)piscina_allocare(piscina,
+                (memoriae_index)magnitudo(i32));
+
+            si (cella == NIHIL)
+            {
+                redde NIHIL;
+            }
+            *cella = k;
+            tabula_dispersa_inserere(tituli_remotarum,
+                ua->titulus, (vacuum*)cella);
+        }
+    }
+
+    /* additae: MOTA (sigillum idem) > MUTATA (titulus idem) >
+     * ADDITA */
+    per (k = 0; k < xar_numerus(additae_ordo); k = k + 1)
+    {
+        i32     bi = *(i32*)xar_obtinere(additae_ordo, k);
+        chorda  sigillum_bi = *(chorda*)b->identitates[bi];
+        constans SilvaUnitas* ub = _unitas_ad(b->unitates, bi);
+        vacuum* inventum = NIHIL;
+        DifferrePar* par;
+
+        par = (DifferrePar*)xar_addere(paria);
+        si (par == NIHIL)
+        {
+            redde NIHIL;
+        }
+        par->b_index = (s32)bi;
+        par->a_index = -1;
+        si (tabula_dispersa_invenire(sigilla_remotarum,
+            sigillum_bi, &inventum))
+        {
+            i32 ordinis = *(i32*)inventum;
+
+            si (!sumptae[ordinis])
+            {
+                sumptae[ordinis] = 1;
+                par->a_index = (s32)*(i32*)xar_obtinere(
+                    remotae_ordo, ordinis);
+                par->status = "MOTA";
+                perge;
+            }
+        }
+        si (ub->titulus.mensura > 0
+            && tabula_dispersa_invenire(tituli_remotarum,
+                   ub->titulus, &inventum))
+        {
+            i32 ordinis = *(i32*)inventum;
+
+            si (!sumptae[ordinis])
+            {
+                sumptae[ordinis] = 1;
+                par->a_index = (s32)*(i32*)xar_obtinere(
+                    remotae_ordo, ordinis);
+                par->status = "MUTATA";
+                perge;
+            }
+        }
+        par->status = "ADDITA";
+    }
+
+    /* remotae non sumptae */
+    per (k = 0; k < xar_numerus(remotae_ordo); k = k + 1)
+    {
+        si (!sumptae[k])
+        {
+            DifferrePar* par = (DifferrePar*)xar_addere(paria);
+
+            si (par == NIHIL)
+            {
+                redde NIHIL;
+            }
+            par->status = "REMOTA";
+            par->a_index = (s32)*(i32*)xar_obtinere(
+                remotae_ordo, k);
+            par->b_index = -1;
+        }
+    }
+    redde paria;
+}
+
+/* emissio parium: ordines (-machina TSV aut lectio humana);
+ * via_machina non NIHIL = columna viae praefixa (modus
+ * -commissum); corpora = textus unificatus sub MUTATA */
+interior vacuum
+_paria_emittere (Piscina* piscina, constans DifferreLatus* a,
+    constans DifferreLatus* b, Xar* paria, b32 machina,
+    constans character* via_machina, b32 corpora,
+    i32* additae_totae, i32* deletae_totae);
+
+interior vacuum
+_paria_emittere (Piscina* piscina, constans DifferreLatus* a,
+    constans DifferreLatus* b, Xar* paria, b32 machina,
+    constans character* via_machina, b32 corpora,
+    i32* additae_totae, i32* deletae_totae)
+{
+    i32 k;
+
+    per (k = 0; k < xar_numerus(paria); k = k + 1)
+    {
+        DifferrePar* par = (DifferrePar*)xar_obtinere(paria, k);
+        constans SilvaUnitas* u = par->b_index >= 0
+            ? _unitas_ad(b->unitates, (i32)par->b_index)
+            : _unitas_ad(a->unitates, (i32)par->a_index);
+        constans character* classificatio = "-";
+        DifferentiaSumma    summa;
+        chorda              spatium_a;
+        chorda              spatium_b;
+
+        spatium_a.datum = NIHIL;
+        spatium_a.mensura = 0;
+        spatium_b = spatium_a;
+        si (par->a_index >= 0)
+        {
+            spatium_a = _spatium(a, (i32)par->a_index);
+        }
+        si (par->b_index >= 0)
+        {
+            spatium_b = _spatium(b, (i32)par->b_index);
+        }
+        si (strcmp(par->status, "MOTA") == 0)
+        {
+            summa.additae = 0;
+            summa.deletae = 0;
+        }
+        alioquin
+        {
+            summa = _summa_spatii(piscina, spatium_a, spatium_b);
+        }
+        si (strcmp(par->status, "MUTATA") == 0)
+        {
+            classificatio = _classificare(piscina, a,
+                (i32)par->a_index, b, (i32)par->b_index);
+        }
+        *additae_totae = *additae_totae + (i32)summa.additae;
+        *deletae_totae = *deletae_totae + (i32)summa.deletae;
+
+        si (machina)
+        {
+            si (via_machina != NIHIL)
+            {
+                imprimere("%s\t", via_machina);
+            }
+            imprimere("%s\t", _generis_titulus(u));
+            _titulum_imprimere(u->titulus);
+            imprimere("\t%s\t%s\t+%d\t-%d\n", par->status,
+                classificatio, (integer)summa.additae,
+                (integer)summa.deletae);
+            perge;
+        }
+
+        imprimere("%s %s ", par->status, _generis_titulus(u));
+        _titulum_imprimere(u->titulus);
+        si (strcmp(par->status, "MOTA") == 0)
+        {
+            imprimere("  (contentum idem, sede nova)\n");
+            perge;
+        }
+        si (strcmp(par->status, "MUTATA") == 0)
+        {
+            imprimere("  [%s]  +%d -%d\n", classificatio,
+                (integer)summa.additae, (integer)summa.deletae);
+            /* textus solum ubi codex aut commenta mutata - spatia
+             * alba lineis saepe invisibilia essent */
+            si (corpora)
+            {
+                DifferentiaLinearum* d = differentia_linearum(
+                    piscina, spatium_a, spatium_b);
+
+                si (d != NIHIL)
+                {
+                    chorda textus = differentia_unificata(piscina,
+                        d,
+                        _titulum_cstr(piscina, "a/", u->titulus),
+                        _titulum_cstr(piscina, "b/", u->titulus),
+                        (i32)3);
+
+                    imprimere("%.*s", (integer)textus.mensura,
+                        (constans character*)textus.datum);
+                }
+            }
+            perge;
+        }
+        imprimere("  +%d -%d\n", (integer)summa.additae,
+            (integer)summa.deletae);
+    }
+}
+
+interior b32
+_via_est_c (chorda via);
+
+interior b32
+_via_est_c (chorda via)
+{
+    character ultima;
+
+    si (via.mensura < 2 || via.datum[via.mensura - 2] != '.')
+    {
+        redde FALSUM;
+    }
+    ultima = (character)via.datum[via.mensura - 1];
+    redde ultima == 'c' || ultima == 'h';
+}
+
+/* massa e git per sha (chorda hex 40); vacua si sha vacua aut
+ * obiectum non massa */
+interior chorda
+_massam_ex_git (GitRepositorium* repositorium, chorda sha,
+    Piscina* piscina);
+
+interior chorda
+_massam_ex_git (GitRepositorium* repositorium, chorda sha,
+    Piscina* piscina)
+{
+    chorda      vacua;
+    GitObiectum obiectum;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = 0;
+    si (sha.mensura != 40)
+    {
+        redde vacua;
+    }
+    obiectum = git_obiectum_legere(repositorium,
+        chorda_ut_cstr(sha, piscina), piscina);
+    si (!obiectum.successus
+        || obiectum.genus != GIT_OBIECTUM_MASSA)
+    {
+        redde vacua;
+    }
+    redde obiectum.datum;
+}
+
+interior b32
+_est_binaria (chorda textus);
+
+interior b32
+_est_binaria (chorda textus)
+{
+    redde textus.mensura > 0
+        && memchr(textus.datum, 0,
+               (memoriae_index)textus.mensura) != NIHIL;
+}
+
 s32 principale (integer argc, character** argv)
 {
     Piscina*             piscina;
@@ -434,8 +801,8 @@ s32 principale (integer argc, character** argv)
     constans character*  positio_tertia = NIHIL;
     b32                  machina = FALSUM;
     b32                  git_modus = FALSUM;
+    b32                  commissum_modus = FALSUM;
     Xar*                 paria;
-    Xar*                 tractus;
     i32                  immotae = 0;
     i32                  additae_totae = 0;
     i32                  deletae_totae = 0;
@@ -452,6 +819,10 @@ s32 principale (integer argc, character** argv)
         {
             git_modus = VERUM;
         }
+        alioquin si (strcmp(argv[arg], "-commissum") == 0)
+        {
+            commissum_modus = VERUM;
+        }
         alioquin si (via_a == NIHIL)
         {
             via_a = argv[arg];
@@ -465,11 +836,15 @@ s32 principale (integer argc, character** argv)
             positio_tertia = argv[arg];
         }
     }
-    si (via_a == NIHIL || (!git_modus && via_b == NIHIL))
+    si ((git_modus && commissum_modus)
+        || (!commissum_modus
+               && (via_a == NIHIL || (!git_modus && via_b == NIHIL))))
     {
         fprintf(stderr, "usus: differre <vetus.c> <novum.c>"
             " [-machina]\n"
             "      differre -git <via> [ref_vetus] [ref_novum]"
+            " [-machina]\n"
+            "      differre -commissum [ref | vetus novus]"
             " [-machina]\n");
         redde II;
     }
@@ -484,6 +859,191 @@ s32 principale (integer argc, character** argv)
     si (intern == NIHIL)
     {
         redde II;
+    }
+    si (commissum_modus)
+    {
+        /* commissum TOTUM: arbores differuntur (shas subarborum -
+         * contentum tangitur solum ubi mutatum), plagulae C
+         * unitatim, ceterae summa linearum */
+        GitRepositorium* repositorium = git_aperire(piscina, ".");
+        character        sha_veteris[GIT_SHA_HEX_MENSURA];
+        character        sha_novi[GIT_SHA_HEX_MENSURA];
+        GitCommissum     vetus_commissum;
+        GitCommissum     novum_commissum;
+        Xar*             mutatae;
+        i32              paria_totae = 0;
+
+        si (repositorium == NIHIL)
+        {
+            fprintf(stderr, "differre: non in repositorio git\n");
+            redde II;
+        }
+        si (via_a != NIHIL && via_b != NIHIL)
+        {
+            /* refs duae: arbor contra arborem */
+            si (!git_ref_resolvere(repositorium, via_a,
+                sha_veteris))
+            {
+                fprintf(stderr, "differre: ref non resolutum:"
+                    " %s\n", via_a);
+                redde II;
+            }
+            si (!git_ref_resolvere(repositorium, via_b, sha_novi))
+            {
+                fprintf(stderr, "differre: ref non resolutum:"
+                    " %s\n", via_b);
+                redde II;
+            }
+        }
+        alioquin
+        {
+            /* nulla aut una: commissum contra parentem primum */
+            constans character* ref = via_a != NIHIL ? via_a
+                : "HEAD";
+
+            si (!git_ref_resolvere(repositorium, ref, sha_novi))
+            {
+                fprintf(stderr, "differre: ref non resolutum:"
+                    " %s\n", ref);
+                redde II;
+            }
+            novum_commissum = git_commissum_legere(repositorium,
+                sha_novi, piscina);
+            si (!novum_commissum.successus
+                || xar_numerus(novum_commissum.parentes) == 0)
+            {
+                fprintf(stderr, "differre: commissum sine"
+                    " parente: %s\n", ref);
+                redde II;
+            }
+            memcpy(sha_veteris, chorda_ut_cstr(
+                *(chorda*)xar_obtinere(novum_commissum.parentes,
+                    0), piscina), (memoriae_index)41);
+        }
+        vetus_commissum = git_commissum_legere(repositorium,
+            sha_veteris, piscina);
+        novum_commissum = git_commissum_legere(repositorium,
+            sha_novi, piscina);
+        si (!vetus_commissum.successus
+            || !novum_commissum.successus)
+        {
+            fprintf(stderr, "differre: commissum legi non"
+                " potuit\n");
+            redde II;
+        }
+        mutatae = git_arbores_differre(repositorium,
+            chorda_ut_cstr(vetus_commissum.arbor, piscina),
+            chorda_ut_cstr(novum_commissum.arbor, piscina),
+            piscina);
+        si (mutatae == NIHIL)
+        {
+            fprintf(stderr, "differre: arbores differri non"
+                " potuerunt\n");
+            redde II;
+        }
+        si (!machina)
+        {
+            imprimere("commissum %.7s contra %.7s: %d plagulae"
+                " mutatae\n\n", sha_veteris, sha_novi,
+                (integer)xar_numerus(mutatae));
+        }
+        per (k = 0; k < xar_numerus(mutatae); k = k + 1)
+        {
+            GitViaMutata* m = (GitViaMutata*)xar_obtinere(mutatae,
+                k);
+            constans character* via_cstr = chorda_ut_cstr(m->via,
+                piscina);
+            constans character* status_plagulae =
+                m->genus == GIT_VIA_ADDITA ? "ADDITA"
+                : m->genus == GIT_VIA_REMOTA ? "REMOTA"
+                : "MUTATA";
+            chorda textus_vetus = _massam_ex_git(repositorium,
+                m->sha_vetus, piscina);
+            chorda textus_novus = _massam_ex_git(repositorium,
+                m->sha_novus, piscina);
+            b32 binaria = _est_binaria(textus_vetus)
+                || _est_binaria(textus_novus);
+
+            si (_via_est_c(m->via) && !binaria)
+            {
+                DifferreLatus la;
+                DifferreLatus lb;
+                Xar*          paria_plagulae;
+
+                si (!_latus_ex_textu(piscina, intern,
+                        textus_vetus, via_cstr, &la)
+                    || !_latus_ex_textu(piscina, intern,
+                           textus_novus, via_cstr, &lb))
+                {
+                    redde II;
+                }
+                paria_plagulae = _paria_computare(piscina, &la,
+                    &lb, &immotae);
+                si (paria_plagulae == NIHIL)
+                {
+                    redde II;
+                }
+                si (!machina)
+                {
+                    imprimere("== %s  %s\n", via_cstr,
+                        status_plagulae);
+                }
+                _paria_emittere(piscina, &la, &lb,
+                    paria_plagulae, machina,
+                    machina ? via_cstr : NIHIL, FALSUM,
+                    &additae_totae, &deletae_totae);
+                paria_totae = paria_totae
+                    + xar_numerus(paria_plagulae);
+                si (!machina)
+                {
+                    imprimere("\n");
+                }
+            }
+            alioquin
+            {
+                DifferentiaSumma summa;
+
+                summa.additae = 0;
+                summa.deletae = 0;
+                si (!binaria)
+                {
+                    summa = _summa_spatii(piscina, textus_vetus,
+                        textus_novus);
+                }
+                additae_totae = additae_totae
+                    + (i32)summa.additae;
+                deletae_totae = deletae_totae
+                    + (i32)summa.deletae;
+                si (machina)
+                {
+                    imprimere(
+                        "%s\tplagula\t-\t%s\t%s\t+%d\t-%d\n",
+                        via_cstr, status_plagulae,
+                        binaria ? "binaria" : "-",
+                        (integer)summa.additae,
+                        (integer)summa.deletae);
+                }
+                alioquin si (binaria)
+                {
+                    imprimere("== %s  %s  (binaria)\n\n",
+                        via_cstr, status_plagulae);
+                }
+                alioquin
+                {
+                    imprimere("== %s  %s  +%d -%d\n\n", via_cstr,
+                        status_plagulae, (integer)summa.additae,
+                        (integer)summa.deletae);
+                }
+            }
+        }
+        si (!machina)
+        {
+            imprimere("differre: %d plagulae, %d paria unitatum"
+                " (+%d -%d)\n", (integer)xar_numerus(mutatae),
+                (integer)paria_totae, (integer)additae_totae,
+                (integer)deletae_totae);
+        }
+        redde ZEPHYRUM;
     }
     si (git_modus)
     {
@@ -556,187 +1116,12 @@ s32 principale (integer argc, character** argv)
         redde II;
     }
 
-    tractus = differentia_seriei(piscina,
-        (constans vacuum* constans*)a.identitates, a.numerus,
-        (constans vacuum* constans*)b.identitates, b.numerus);
-    si (tractus == NIHIL)
+    paria = _paria_computare(piscina, &a, &b, &immotae);
+    si (paria == NIHIL)
     {
         fprintf(stderr, "differre: differentia computari non"
             " potuit\n");
         redde II;
-    }
-
-    /* runs -> paria statuum */
-    paria = xar_creare(piscina, (i32)magnitudo(DifferrePar));
-    {
-        Xar* remotae_ordo = xar_creare(piscina, (i32)magnitudo(i32));
-        Xar* additae_ordo = xar_creare(piscina, (i32)magnitudo(i32));
-        TabulaDispersa* sigilla_remotarum =
-            tabula_dispersa_creare_chorda(piscina, 32);
-        TabulaDispersa* tituli_remotarum =
-            tabula_dispersa_creare_chorda(piscina, 32);
-        i32* sumptae;
-
-        si (paria == NIHIL || remotae_ordo == NIHIL
-            || additae_ordo == NIHIL || sigilla_remotarum == NIHIL
-            || tituli_remotarum == NIHIL)
-        {
-            redde II;
-        }
-        per (k = 0; k < xar_numerus(tractus); k = k + 1)
-        {
-            DifferentiaTractus* t = (DifferentiaTractus*)
-                xar_obtinere(tractus, k);
-            i32 l;
-
-            si (t->genus == DIFFERENTIA_IDEM)
-            {
-                immotae = immotae + t->numerus;
-            }
-            alioquin si (t->genus == DIFFERENTIA_DELETA)
-            {
-                per (l = 0; l < t->numerus; l = l + 1)
-                {
-                    i32* cella = (i32*)xar_addere(remotae_ordo);
-
-                    si (cella == NIHIL)
-                    {
-                        redde II;
-                    }
-                    *cella = t->index_a + l;
-                }
-            }
-            alioquin
-            {
-                per (l = 0; l < t->numerus; l = l + 1)
-                {
-                    i32* cella = (i32*)xar_addere(additae_ordo);
-
-                    si (cella == NIHIL)
-                    {
-                        redde II;
-                    }
-                    *cella = t->index_b + l;
-                }
-            }
-        }
-
-        /* indices remotarum: sigillo (MOTA) et titulo (MUTATA) -
-         * prima non sumpta vincit */
-        sumptae = (i32*)piscina_allocare(piscina,
-            (memoriae_index)(xar_numerus(remotae_ordo) == 0 ? I
-                : xar_numerus(remotae_ordo)) * magnitudo(i32));
-        si (sumptae == NIHIL)
-        {
-            redde II;
-        }
-        per (k = 0; k < xar_numerus(remotae_ordo); k = k + 1)
-        {
-            i32    ai = *(i32*)xar_obtinere(remotae_ordo, k);
-            chorda sigillum_ai = *(chorda*)a.identitates[ai];
-            constans SilvaUnitas* ua = _unitas_ad(a.unitates, ai);
-
-            sumptae[k] = 0;
-            /* valor tabulae = ORDINALIS k in cella propria (Xar
-             * segmentatum est - arithmetica trans elementa
-             * vetita) */
-            si (!tabula_dispersa_continet(sigilla_remotarum,
-                sigillum_ai))
-            {
-                i32* cella = (i32*)piscina_allocare(piscina,
-                    (memoriae_index)magnitudo(i32));
-
-                si (cella == NIHIL)
-                {
-                    redde II;
-                }
-                *cella = k;
-                tabula_dispersa_inserere(sigilla_remotarum,
-                    sigillum_ai, (vacuum*)cella);
-            }
-            si (ua->titulus.mensura > 0
-                && !tabula_dispersa_continet(tituli_remotarum,
-                       ua->titulus))
-            {
-                i32* cella = (i32*)piscina_allocare(piscina,
-                    (memoriae_index)magnitudo(i32));
-
-                si (cella == NIHIL)
-                {
-                    redde II;
-                }
-                *cella = k;
-                tabula_dispersa_inserere(tituli_remotarum,
-                    ua->titulus, (vacuum*)cella);
-            }
-        }
-
-        /* additae: MOTA (sigillum idem) > MUTATA (titulus idem) >
-         * ADDITA */
-        per (k = 0; k < xar_numerus(additae_ordo); k = k + 1)
-        {
-            i32     bi = *(i32*)xar_obtinere(additae_ordo, k);
-            chorda  sigillum_bi = *(chorda*)b.identitates[bi];
-            constans SilvaUnitas* ub = _unitas_ad(b.unitates, bi);
-            vacuum* inventum = NIHIL;
-            DifferrePar* par;
-
-            par = (DifferrePar*)xar_addere(paria);
-            si (par == NIHIL)
-            {
-                redde II;
-            }
-            par->b_index = (s32)bi;
-            par->a_index = -1;
-            si (tabula_dispersa_invenire(sigilla_remotarum,
-                sigillum_bi, &inventum))
-            {
-                i32 ordinis = *(i32*)inventum;
-
-                si (!sumptae[ordinis])
-                {
-                    sumptae[ordinis] = 1;
-                    par->a_index = (s32)*(i32*)xar_obtinere(
-                        remotae_ordo, ordinis);
-                    par->status = "MOTA";
-                    perge;
-                }
-            }
-            si (ub->titulus.mensura > 0
-                && tabula_dispersa_invenire(tituli_remotarum,
-                       ub->titulus, &inventum))
-            {
-                i32 ordinis = *(i32*)inventum;
-
-                si (!sumptae[ordinis])
-                {
-                    sumptae[ordinis] = 1;
-                    par->a_index = (s32)*(i32*)xar_obtinere(
-                        remotae_ordo, ordinis);
-                    par->status = "MUTATA";
-                    perge;
-                }
-            }
-            par->status = "ADDITA";
-        }
-
-        /* remotae non sumptae */
-        per (k = 0; k < xar_numerus(remotae_ordo); k = k + 1)
-        {
-            si (!sumptae[k])
-            {
-                DifferrePar* par = (DifferrePar*)xar_addere(paria);
-
-                si (par == NIHIL)
-                {
-                    redde II;
-                }
-                par->status = "REMOTA";
-                par->a_index = (s32)*(i32*)xar_obtinere(
-                    remotae_ordo, k);
-                par->b_index = -1;
-            }
-        }
     }
 
     /* emissio */
@@ -749,89 +1134,8 @@ s32 principale (integer argc, character** argv)
         }
         redde ZEPHYRUM;
     }
-    per (k = 0; k < xar_numerus(paria); k = k + 1)
-    {
-        DifferrePar* par = (DifferrePar*)xar_obtinere(paria, k);
-        constans SilvaUnitas* u = par->b_index >= 0
-            ? _unitas_ad(b.unitates, (i32)par->b_index)
-            : _unitas_ad(a.unitates, (i32)par->a_index);
-        constans character* classificatio = "-";
-        DifferentiaSumma    summa;
-        chorda              spatium_a;
-        chorda              spatium_b;
-
-        spatium_a.datum = NIHIL;
-        spatium_a.mensura = 0;
-        spatium_b = spatium_a;
-        si (par->a_index >= 0)
-        {
-            spatium_a = _spatium(&a, (i32)par->a_index);
-        }
-        si (par->b_index >= 0)
-        {
-            spatium_b = _spatium(&b, (i32)par->b_index);
-        }
-        si (strcmp(par->status, "MOTA") == 0)
-        {
-            summa.additae = 0;
-            summa.deletae = 0;
-        }
-        alioquin
-        {
-            summa = _summa_spatii(piscina, spatium_a, spatium_b);
-        }
-        si (strcmp(par->status, "MUTATA") == 0)
-        {
-            classificatio = _classificare(piscina, &a,
-                (i32)par->a_index, &b, (i32)par->b_index);
-        }
-        additae_totae = additae_totae + (i32)summa.additae;
-        deletae_totae = deletae_totae + (i32)summa.deletae;
-
-        si (machina)
-        {
-            imprimere("%s\t", _generis_titulus(u));
-            _titulum_imprimere(u->titulus);
-            imprimere("\t%s\t%s\t+%d\t-%d\n", par->status,
-                classificatio, (integer)summa.additae,
-                (integer)summa.deletae);
-            perge;
-        }
-
-        imprimere("%s %s ", par->status, _generis_titulus(u));
-        _titulum_imprimere(u->titulus);
-        si (strcmp(par->status, "MOTA") == 0)
-        {
-            imprimere("  (contentum idem, sede nova)\n");
-            perge;
-        }
-        si (strcmp(par->status, "MUTATA") == 0)
-        {
-            imprimere("  [%s]  +%d -%d\n", classificatio,
-                (integer)summa.additae, (integer)summa.deletae);
-            /* textus solum ubi codex aut commenta mutata - spatia
-             * alba lineis saepe invisibilia essent */
-            {
-                DifferentiaLinearum* d = differentia_linearum(
-                    piscina, spatium_a, spatium_b);
-
-                si (d != NIHIL)
-                {
-                    chorda textus = differentia_unificata(piscina,
-                        d,
-                        _titulum_cstr(piscina, "a/", u->titulus),
-                        _titulum_cstr(piscina, "b/", u->titulus),
-                        (i32)3);
-
-                    imprimere("%.*s", (integer)textus.mensura,
-                        (constans character*)textus.datum);
-                }
-            }
-            perge;
-        }
-        imprimere("  +%d -%d\n", (integer)summa.additae,
-            (integer)summa.deletae);
-    }
+    _paria_emittere(piscina, &a, &b, paria, machina, NIHIL, VERUM,
+        &additae_totae, &deletae_totae);
     si (!machina)
     {
         imprimere("differre: %d paria (+%d -%d), %d unitates"

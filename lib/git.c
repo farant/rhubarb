@@ -11,6 +11,7 @@
 
 #include "git.h"
 #include "chorda_aedificator.h"
+#include "tabula_dispersa.h"
 #include "flatura.h"
 #include "filum.h"
 #include "via.h"
@@ -1871,4 +1872,328 @@ git_massam_per_viam (GitRepositorium* repositorium,
         reliqua = finis + 1;
     }
     redde vacua;
+}
+
+/* ==================================================
+ * Differentia arborum (screen sharum: subarbores
+ * aequales numquam apertae)
+ * ================================================= */
+
+interior chorda
+_viam_construere (Piscina* piscina, constans character* praefixum,
+    chorda titulus);
+
+interior chorda
+_viam_construere (Piscina* piscina, constans character* praefixum,
+    chorda titulus)
+{
+    i32    praefixi_mensura = (i32)strlen(praefixum);
+    i32    tota = praefixi_mensura + titulus.mensura;
+    i8*    datum;
+    chorda via;
+
+    via.datum = NIHIL;
+    via.mensura = 0;
+    datum = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(tota == 0 ? 1 : tota));
+    si (datum == NIHIL)
+    {
+        redde via;
+    }
+    memcpy(datum, praefixum, (memoriae_index)praefixi_mensura);
+    memcpy(datum + praefixi_mensura, titulus.datum,
+        (memoriae_index)titulus.mensura);
+    via.datum = datum;
+    via.mensura = tota;
+    redde via;
+}
+
+interior constans character*
+_praefixum_filii (Piscina* piscina, constans character* praefixum,
+    chorda titulus);
+
+interior constans character*
+_praefixum_filii (Piscina* piscina, constans character* praefixum,
+    chorda titulus)
+{
+    i32        praefixi_mensura = (i32)strlen(praefixum);
+    character* exitus = (character*)piscina_allocare(piscina,
+        (memoriae_index)(praefixi_mensura + titulus.mensura + 2));
+
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memcpy(exitus, praefixum, (memoriae_index)praefixi_mensura);
+    memcpy(exitus + praefixi_mensura, titulus.datum,
+        (memoriae_index)titulus.mensura);
+    exitus[praefixi_mensura + titulus.mensura] = '/';
+    exitus[praefixi_mensura + titulus.mensura + 1] = '\0';
+    redde exitus;
+}
+
+interior b32
+_viam_mutatam_addere (Xar* exitus, Piscina* piscina,
+    constans character* praefixum, chorda titulus,
+    chorda sha_vetus, chorda sha_novus, GitViaGenus genus);
+
+interior b32
+_viam_mutatam_addere (Xar* exitus, Piscina* piscina,
+    constans character* praefixum, chorda titulus,
+    chorda sha_vetus, chorda sha_novus, GitViaGenus genus)
+{
+    GitViaMutata* m = (GitViaMutata*)xar_addere(exitus);
+
+    si (m == NIHIL)
+    {
+        redde FALSUM;
+    }
+    m->via = _viam_construere(piscina, praefixum, titulus);
+    si (m->via.datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    m->sha_vetus = sha_vetus;
+    m->sha_novus = sha_novus;
+    m->genus = genus;
+    redde VERUM;
+}
+
+/* gradus unus recursionis: latus NIHIL = subarbor tota absens
+ * (introitus omnes lateris alterius ADDITA aut REMOTA fiunt) */
+interior b32
+_arbores_differre_gradus (GitRepositorium* repositorium,
+    constans character* praefixum, constans character* sha_vetus,
+    constans character* sha_novus, Xar* exitus, Piscina* piscina);
+
+interior b32
+_arbores_differre_gradus (GitRepositorium* repositorium,
+    constans character* praefixum, constans character* sha_vetus,
+    constans character* sha_novus, Xar* exitus, Piscina* piscina)
+{
+    Xar*            vetus_introitus = NIHIL;
+    Xar*            novus_introitus = NIHIL;
+    TabulaDispersa* nomina_veterum;
+    i32*            sumptae;
+    i32             numerus_veterum;
+    i32             numerus_novorum;
+    chorda          vacua;
+    i32             k;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = 0;
+    si (sha_vetus != NIHIL)
+    {
+        vetus_introitus = git_arborem_legere(repositorium,
+            sha_vetus, piscina);
+        si (vetus_introitus == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    si (sha_novus != NIHIL)
+    {
+        novus_introitus = git_arborem_legere(repositorium,
+            sha_novus, piscina);
+        si (novus_introitus == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    numerus_veterum = vetus_introitus != NIHIL
+        ? xar_numerus(vetus_introitus) : 0;
+    numerus_novorum = novus_introitus != NIHIL
+        ? xar_numerus(novus_introitus) : 0;
+
+    /* index nominum lateris veteris (nomina in arbore unica sunt);
+     * valor = ORDINALIS in cella propria (Xar segmentatum -
+     * arithmetica trans elementa vetita) */
+    nomina_veterum = tabula_dispersa_creare_chorda(piscina, 32);
+    sumptae = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(numerus_veterum == 0 ? 1
+            : numerus_veterum) * magnitudo(i32));
+    si (nomina_veterum == NIHIL || sumptae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = 0; k < numerus_veterum; k = k + 1)
+    {
+        GitArborIntroitus* va = (GitArborIntroitus*)
+            xar_obtinere(vetus_introitus, k);
+        i32* cella = (i32*)piscina_allocare(piscina,
+            (memoriae_index)magnitudo(i32));
+
+        si (cella == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *cella = k;
+        sumptae[k] = 0;
+        tabula_dispersa_inserere(nomina_veterum, va->titulus,
+            (vacuum*)cella);
+    }
+
+    per (k = 0; k < numerus_novorum; k = k + 1)
+    {
+        GitArborIntroitus* na = (GitArborIntroitus*)
+            xar_obtinere(novus_introitus, k);
+        vacuum*            sedes = NIHIL;
+
+        si (tabula_dispersa_invenire(nomina_veterum, na->titulus,
+            &sedes))
+        {
+            GitArborIntroitus* va = (GitArborIntroitus*)
+                xar_obtinere(vetus_introitus, *(i32*)sedes);
+
+            sumptae[*(i32*)sedes] = 1;
+            si (va->est_arbor && na->est_arbor)
+            {
+                si (!chorda_aequalis(va->sha, na->sha))
+                {
+                    constans character* filii = _praefixum_filii(
+                        piscina, praefixum, na->titulus);
+
+                    si (filii == NIHIL
+                        || !_arbores_differre_gradus(repositorium,
+                               filii,
+                               chorda_ut_cstr(va->sha, piscina),
+                               chorda_ut_cstr(na->sha, piscina),
+                               exitus, piscina))
+                    {
+                        redde FALSUM;
+                    }
+                }
+            }
+            alioquin si (!va->est_arbor && !na->est_arbor)
+            {
+                si ((!chorda_aequalis(va->sha, na->sha)
+                        || !chorda_aequalis(va->modus, na->modus))
+                    && !_viam_mutatam_addere(exitus, piscina,
+                           praefixum, na->titulus, va->sha,
+                           na->sha, GIT_VIA_MUTATA))
+                {
+                    redde FALSUM;
+                }
+            }
+            alioquin
+            {
+                /* conversio generis eodem nomine: latus vetus
+                 * totum REMOTA, novum totum ADDITA */
+                constans character* filii = _praefixum_filii(
+                    piscina, praefixum, na->titulus);
+
+                si (filii == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                si (va->est_arbor
+                    ? !_arbores_differre_gradus(repositorium,
+                          filii, chorda_ut_cstr(va->sha, piscina),
+                          NIHIL, exitus, piscina)
+                    : !_viam_mutatam_addere(exitus, piscina,
+                          praefixum, va->titulus, va->sha, vacua,
+                          GIT_VIA_REMOTA))
+                {
+                    redde FALSUM;
+                }
+                si (na->est_arbor
+                    ? !_arbores_differre_gradus(repositorium,
+                          filii, NIHIL,
+                          chorda_ut_cstr(na->sha, piscina),
+                          exitus, piscina)
+                    : !_viam_mutatam_addere(exitus, piscina,
+                          praefixum, na->titulus, vacua, na->sha,
+                          GIT_VIA_ADDITA))
+                {
+                    redde FALSUM;
+                }
+            }
+        }
+        alioquin si (na->est_arbor)
+        {
+            constans character* filii = _praefixum_filii(piscina,
+                praefixum, na->titulus);
+
+            si (filii == NIHIL
+                || !_arbores_differre_gradus(repositorium, filii,
+                       NIHIL, chorda_ut_cstr(na->sha, piscina),
+                       exitus, piscina))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (!_viam_mutatam_addere(exitus, piscina,
+            praefixum, na->titulus, vacua, na->sha,
+            GIT_VIA_ADDITA))
+        {
+            redde FALSUM;
+        }
+    }
+
+    per (k = 0; k < numerus_veterum; k = k + 1)
+    {
+        GitArborIntroitus* va;
+
+        si (sumptae[k])
+        {
+            perge;
+        }
+        va = (GitArborIntroitus*)xar_obtinere(vetus_introitus, k);
+        si (va->est_arbor)
+        {
+            constans character* filii = _praefixum_filii(piscina,
+                praefixum, va->titulus);
+
+            si (filii == NIHIL
+                || !_arbores_differre_gradus(repositorium, filii,
+                       chorda_ut_cstr(va->sha, piscina), NIHIL,
+                       exitus, piscina))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (!_viam_mutatam_addere(exitus, piscina,
+            praefixum, va->titulus, va->sha, vacua,
+            GIT_VIA_REMOTA))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior s32
+_viae_mutatae_comparare (constans vacuum* a, constans vacuum* b);
+
+interior s32
+_viae_mutatae_comparare (constans vacuum* a, constans vacuum* b)
+{
+    redde chorda_comparare(
+        ((constans GitViaMutata*)a)->via,
+        ((constans GitViaMutata*)b)->via);
+}
+
+Xar*
+git_arbores_differre (GitRepositorium* repositorium,
+    constans character* sha_arboris_vetus,
+    constans character* sha_arboris_novum, Piscina* piscina)
+{
+    Xar* exitus = xar_creare(piscina,
+        (i32)magnitudo(GitViaMutata));
+
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (strcmp(sha_arboris_vetus, sha_arboris_novum) == 0)
+    {
+        redde exitus;   /* arbores eaedem - differentia nulla */
+    }
+    si (!_arbores_differre_gradus(repositorium, "",
+        sha_arboris_vetus, sha_arboris_novum, exitus, piscina))
+    {
+        redde NIHIL;
+    }
+    xar_ordinare(exitus, _viae_mutatae_comparare);
+    redde exitus;
 }
