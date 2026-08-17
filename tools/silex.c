@@ -321,6 +321,8 @@ _vcs_historia_tractare (JsonValor* argumenta, Piscina* piscina,
             json_chorda_creare(piscina, c->nuntius));
         json_objectum_ponere(introitus, "tactae",
             json_integer_creare(piscina, (s64)c->tactae));
+        json_objectum_ponere(introitus, "renovatio",
+            json_boolean_creare(piscina, c->renovatio));
         json_tabulatum_addere(tabulatum, introitus);
     }
     json_objectum_ponere(fructus, "ordo", tabulatum);
@@ -642,6 +644,11 @@ principale (integer argc, character** argv)
         "nuntius conditionis (pro condere)");
     argumenta_addere_optionem(parser, "-ad", "--ad",
         "proicere: plica usque ad seq (iter temporis)");
+    argumenta_addere_optionem(parser, "-via", "--via",
+        "historia: plagulae unius (via relativa in proiecto)");
+    argumenta_addere_vexillum(parser, "-sine-renovationibus",
+        "--sine-renovationibus",
+        "historia: conditiones renovationum celare");
     argumenta_addere_vexillum(parser, "-scribere", "--scribere",
         "proicere: consilium applicare (ordinarie consilium solum)");
     argumenta_addere_vexillum(parser, "-machina", "--machina",
@@ -656,6 +663,8 @@ principale (integer argc, character** argv)
         "silex novum 001 -f ~/Documents/projects/rhubarb");
     argumenta_addere_exemplum(parser,
         "silex proicere -ad 12 -scribere");
+    argumenta_addere_exemplum(parser,
+        "silex historia -via lib/manus.c");
     argumenta_addere_exemplum(parser,
         "silex iudicare experimenta/0001/experimentum.census");
 
@@ -1034,33 +1043,98 @@ principale (integer argc, character** argv)
             redde ZEPHYRUM;
         }
         {
-            Xar* ordo = silex_historia(piscina, via_proiecti);
-            s32  index;   /* SIGNATUS: numeratio descendens -
-                           * i32 >= 0 semper verum esset (examen
-                           * comparationem vanam cepit) */
+            chorda via_plagulae = argumenta_obtinere_optionem(
+                lecta, "--via", piscina);
+            b32 sine_renovationibus = argumenta_habet_vexillum(
+                lecta, "--sine-renovationibus");
+            s32 index;   /* SIGNATUS: numeratio descendens -
+                          * i32 >= 0 semper verum esset (examen
+                          * comparationem vanam cepit) */
 
-            si (ordo == NIHIL)
+            si (via_plagulae.mensura > ZEPHYRUM)
             {
-                fprintf(stderr, "silex historia: volumen legi non"
-                    " potuit\n");
-                redde I;
-            }
-            /* recentissima primum */
-            per (index = (s32)xar_numerus(ordo) - 1; index >= 0;
-                index = index - 1)
-            {
-                SilexConditio* c = (SilexConditio*)xar_obtinere(
-                    ordo, (i32)index);
+                Xar* ordo = silex_historia_plagulae(piscina,
+                    via_proiecti,
+                    chorda_ut_cstr(via_plagulae, piscina));
 
-                imprimere("  [%ld] %.*s  %.*s (%d plagulae)\n",
-                    (longus)c->seq,
-                    (integer)c->momentum.mensura,
-                    (constans character*)c->momentum.datum,
-                    (integer)c->nuntius.mensura,
-                    (constans character*)c->nuntius.datum,
-                    (integer)c->tactae);
+                si (ordo == NIHIL)
+                {
+                    fprintf(stderr, "silex historia: volumen legi"
+                        " non potuit\n");
+                    redde I;
+                }
+                si (xar_numerus(ordo) == 0)
+                {
+                    imprimere("silex historia: plagula numquam"
+                        " condita: %.*s\n",
+                        (integer)via_plagulae.mensura,
+                        (constans character*)via_plagulae.datum);
+                    redde ZEPHYRUM;
+                }
+                /* recentissima primum */
+                per (index = (s32)xar_numerus(ordo) - 1; index >= 0;
+                    index = index - 1)
+                {
+                    SilexPlagulaConditio* c =
+                        (SilexPlagulaConditio*)xar_obtinere(ordo,
+                            (i32)index);
+
+                    si (c->remota)
+                    {
+                        imprimere("  [%ld] %.*s  %.*s  REMOTA\n",
+                            (longus)c->seq,
+                            (integer)c->momentum.mensura,
+                            (constans character*)c->momentum.datum,
+                            (integer)c->nuntius.mensura,
+                            (constans character*)c->nuntius.datum);
+                    }
+                    alioquin
+                    {
+                        /* sigillum breve: VIII characteres primi
+                         * satis oculo (hex 64 totum strepitus) */
+                        imprimere("  [%ld] %.*s  %.*s  %.*s\n",
+                            (longus)c->seq,
+                            (integer)c->momentum.mensura,
+                            (constans character*)c->momentum.datum,
+                            (integer)c->nuntius.mensura,
+                            (constans character*)c->nuntius.datum,
+                            (integer)(c->sigillum.mensura < 8
+                                ? c->sigillum.mensura : 8),
+                            (constans character*)c->sigillum.datum);
+                    }
+                }
+                redde ZEPHYRUM;
             }
-            redde ZEPHYRUM;
+            {
+                Xar* ordo = silex_historia(piscina, via_proiecti);
+
+                si (ordo == NIHIL)
+                {
+                    fprintf(stderr, "silex historia: volumen legi"
+                        " non potuit\n");
+                    redde I;
+                }
+                /* recentissima primum */
+                per (index = (s32)xar_numerus(ordo) - 1; index >= 0;
+                    index = index - 1)
+                {
+                    SilexConditio* c = (SilexConditio*)xar_obtinere(
+                        ordo, (i32)index);
+
+                    si (sine_renovationibus && c->renovatio)
+                    {
+                        perge;
+                    }
+                    imprimere("  [%ld] %.*s  %.*s (%d plagulae)\n",
+                        (longus)c->seq,
+                        (integer)c->momentum.mensura,
+                        (constans character*)c->momentum.datum,
+                        (integer)c->nuntius.mensura,
+                        (constans character*)c->nuntius.datum,
+                        (integer)c->tactae);
+                }
+                redde ZEPHYRUM;
+            }
         }
     }
 

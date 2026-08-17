@@ -412,3 +412,38 @@ Obiecta a `./compile_tests.sh` fiunt (quod error ille solus dicit).
 **ORDO: compile_tests.sh PRIMUM, deinde silex_struere.sh.** Corpus
 autem recte reficitur (custos proprius `find -newer` habet) - ergo
 corpus recens cum codice stale coire potest, quod pessimum est.
+
+## 2026-08-17 — historia plagulae + vexillum renovationis (QoL ex dogfood)
+
+Ex desiderato 01M08Q43BT (62 plagulae per duas sessiones tacite
+immundae latuerunt). Tria parva navigata:
+
+1. **`silex historia -via <plagula>`** — historia plagulae UNIUS.
+   Nullum primitivum novum: actus `plagula-condita`/`plagula-remota`
+   iam `{via, sigillum, origo}` ferunt; functio nova
+   `silex_historia_plagulae` acta semel percurrit, actum viae datae
+   conditioni SEQUENTI attribuit (regula eadem qua `tactae`).
+   Plures actus inter limites: ULTIMUS vincit (status plagulae AD
+   punctum, non flumen intra). Consecutio: doctrina "plica
+   experimenti congelata" libri adumbrationum iam MECHANICE
+   probabilis — `historia -via .../componentia.js` introitum UNUM
+   ostendit; secundus = violatio visibilis.
+
+2. **`SilexConditio.renovatio`** — STRUCTURALITER lectum (clavis
+   `renovatae` in dato actus; condere `conditae`/`remotae` scribit,
+   renovare `renovatae`/`additae`), numquam e textu nuntii. Helper
+   `_conditionem_exuere` nunc nuntium + vexillum utrique functioni
+   dat. JSON `vcs_historia` (UI) campum `renovatio` quoque fert —
+   mensa.js eo nondum utitur.
+
+3. **`silex historia -sine-renovationibus`** — cauda laboratorii
+   mensurata: forma plena 9/10 strepitus renovationum erat; filtrata
+   narratio operis pura. Renovatio ipsa BONA manet (provenientia in
+   volumine), solum e conspectu tollitur.
+
+Extra arborem: cauda `fumus.sh`/`aedificare.sh` laboratorii monitum
+unum accepit (`[silex] MONITUM: N aliae...`) — exitum numquam mutat,
+silex absens tacet. Manent aperta ex desiderato: verbum
+`differentia` (textus — bibliotheca diff linearum in domo NON est;
+similitudo punctatio confusa est, non diff) et condere viis
+circumscriptum.

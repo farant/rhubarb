@@ -1137,6 +1137,140 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: historia plagulae unius + vexillum renovationis
+     * (fixturae iam divites: notae.md ter condita in specimine,
+     * lib/piscina.c nata et remota; renovandum conditiones
+     * renovationum veras fert)
+     * ======================================================== */
+
+    {
+        Xar* hp;
+
+        imprimere("\n--- Probans historiam plagulae (notae.md) ---\n");
+
+        /* nova (prima manualis) + vandalismus (experimentum)
+         * + restitutio (reversio) = 3 */
+        hp = silex_historia_plagulae(piscina, AREA "/specimen",
+            "notae.md");
+        CREDO_NON_NIHIL(hp);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(hp), (i32)3);
+        {
+            SilexPlagulaConditio* prima = (SilexPlagulaConditio*)
+                xar_obtinere(hp, 0);
+            SilexPlagulaConditio* ultima = (SilexPlagulaConditio*)
+                xar_obtinere(hp, 2);
+
+            CREDO_CHORDA_AEQUALIS_LITERIS(prima->nuntius,
+                "prima conditio manualis");
+            CREDO_CHORDA_AEQUALIS_LITERIS(ultima->nuntius,
+                "reversio");
+            CREDO_FALSUM(prima->remota);
+            CREDO_FALSUM(prima->renovatio);
+            CREDO_AEQUALIS_I32((i32)prima->sigillum.mensura,
+                (i32)64);
+            CREDO_VERUM(prima->seq < ultima->seq);
+            /* reversio contentum pristinum restituit - sigilla
+             * prima et ultima aequalia, media alia */
+            CREDO_VERUM(chorda_aequalis(prima->sigillum,
+                ultima->sigillum));
+            {
+                SilexPlagulaConditio* media =
+                    (SilexPlagulaConditio*)xar_obtinere(hp, 1);
+
+                CREDO_FALSUM(chorda_aequalis(prima->sigillum,
+                    media->sigillum));
+            }
+        }
+
+        imprimere("\n--- Probans historiam plagulae (remota) ---\n");
+
+        /* nata (conditio novi) + remota (prima manualis) = 2 */
+        hp = silex_historia_plagulae(piscina, AREA "/specimen",
+            "lib/piscina.c");
+        CREDO_NON_NIHIL(hp);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(hp), (i32)2);
+        {
+            SilexPlagulaConditio* nata = (SilexPlagulaConditio*)
+                xar_obtinere(hp, 0);
+            SilexPlagulaConditio* remota = (SilexPlagulaConditio*)
+                xar_obtinere(hp, 1);
+
+            CREDO_FALSUM(nata->remota);
+            CREDO_VERUM(remota->remota);
+            CREDO_AEQUALIS_I32((i32)remota->sigillum.mensura,
+                (i32)0);
+        }
+
+        imprimere("\n--- Probans historiam plagulae (ignota) ---\n");
+
+        hp = silex_historia_plagulae(piscina, AREA "/specimen",
+            "numquam/fuit.c");
+        CREDO_NON_NIHIL(hp);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(hp), (i32)0);
+
+        imprimere("\n--- Probans vexillum renovationis ---\n");
+
+        /* specimen: nulla renovatio umquam */
+        {
+            Xar* h = silex_historia(piscina, AREA "/specimen");
+            i32  index;
+
+            CREDO_NON_NIHIL(h);
+            per (index = 0; index < xar_numerus(h);
+                index = index + 1)
+            {
+                SilexConditio* c = (SilexConditio*)xar_obtinere(
+                    h, index);
+
+                CREDO_FALSUM(c->renovatio);
+            }
+        }
+
+        /* renovandum: conditiones renovationum verae adsunt */
+        {
+            Xar* h = silex_historia(piscina, AREA "/renovandum");
+            i32  index;
+            i32  renovationes = 0;
+
+            CREDO_NON_NIHIL(h);
+            per (index = 0; index < xar_numerus(h);
+                index = index + 1)
+            {
+                SilexConditio* c = (SilexConditio*)xar_obtinere(
+                    h, index);
+
+                si (c->renovatio)
+                {
+                    renovationes = renovationes + 1;
+                }
+            }
+            CREDO_VERUM(renovationes >= (i32)2);
+            /* ortus numquam renovatio */
+            CREDO_FALSUM(((SilexConditio*)xar_obtinere(h, 0))
+                ->renovatio);
+        }
+
+        /* historia plagulae vexillum quoque fert: actus nudi ortus
+         * (ante conditionem ullam) conditioni renovationis primae
+         * attribuuntur - regula 'ultimus inter limites vincit' */
+        hp = silex_historia_plagulae(piscina, AREA "/renovandum",
+            "include/minima.h");
+        CREDO_NON_NIHIL(hp);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(hp), (i32)2);
+        {
+            SilexPlagulaConditio* prima = (SilexPlagulaConditio*)
+                xar_obtinere(hp, 0);
+            SilexPlagulaConditio* ultima = (SilexPlagulaConditio*)
+                xar_obtinere(hp, 1);
+
+            CREDO_VERUM(prima->renovatio);
+            CREDO_VERUM(ultima->renovatio);
+            CREDO_VERUM(chorda_incipit(prima->origo,
+                chorda_ex_literis("vendicata:", piscina)));
+        }
+    }
+
+    /* ========================================================
      * PROBARE: identitas voluminis (decisum red-team IX):
      * solitarium vincit, plura recusantur
      * ======================================================== */

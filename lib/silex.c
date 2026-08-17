@@ -2851,6 +2851,41 @@ silex_condere (Piscina* piscina, constans character* proiectum_dir,
     redde fructus;
 }
 
+/* nuntius + vexillum renovationis ex actu conditionis: renovatio
+ * STRUCTURALITER lecta (clavis 'renovatae' in dato - condere
+ * 'conditae'/'remotae' scribit, renovare 'renovatae'/'additae'),
+ * non e textu nuntii */
+interior vacuum
+_conditionem_exuere (Piscina* piscina, constans VolumenActum* actum,
+    b32 est_ortus, chorda* nuntius, b32* renovatio);
+
+interior vacuum
+_conditionem_exuere (Piscina* piscina, constans VolumenActum* actum,
+    b32 est_ortus, chorda* nuntius, b32* renovatio)
+{
+    JsonResultus lectum;
+
+    *renovatio = FALSUM;
+    si (est_ortus)
+    {
+        *nuntius = chorda_ex_literis("(ortus voluminis)", piscina);
+        redde;
+    }
+    *nuntius = chorda_ex_literis("(sine nuntio)", piscina);
+    lectum = json_legere(actum->datum, piscina);
+    si (lectum.successus && json_est_objectum(lectum.radix))
+    {
+        JsonValor* n = json_objectum_capere(lectum.radix, "nuntius");
+
+        si (n != NIHIL && json_est_chorda(n))
+        {
+            *nuntius = json_ad_chorda(n);
+        }
+        *renovatio = json_objectum_capere(lectum.radix, "renovatae")
+            != NIHIL;
+    }
+}
+
 Xar*
 silex_historia (Piscina* piscina, constans character* proiectum_dir)
 {
@@ -2908,30 +2943,120 @@ silex_historia (Piscina* piscina, constans character* proiectum_dir)
             c->momentum = a->momentum;
             c->tactae = tactae;
             tactae = 0;
-            si (est_ortus)
-            {
-                c->nuntius = chorda_ex_literis("(ortus voluminis)",
-                    piscina);
-            }
-            alioquin
-            {
-                JsonResultus lectum = json_legere(a->datum,
-                    piscina);
+            _conditionem_exuere(piscina, a, est_ortus, &c->nuntius,
+                &c->renovatio);
+        }
+    }
+    redde ordo;
+}
 
-                c->nuntius = chorda_ex_literis("(sine nuntio)",
-                    piscina);
-                si (lectum.successus
-                    && json_est_objectum(lectum.radix))
+Xar*
+silex_historia_plagulae (Piscina* piscina,
+    constans character* proiectum_dir, constans character* via)
+{
+    constans character* volumen_via;
+    Volumen*            vol;
+    Xar*                acta;
+    Xar*                ordo;
+    chorda              quaesita;
+    chorda              pendens_sigillum;
+    chorda              pendens_origo;
+    b32                 pendens = FALSUM;
+    b32                 pendens_remota = FALSUM;
+    i32                 index;
+
+    volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
+    si (volumen_via == NIHIL)
+    {
+        redde NIHIL;
+    }
+    vol = volumen_aperire(piscina, volumen_via);
+    si (vol == NIHIL)
+    {
+        redde NIHIL;
+    }
+    acta = volumen_acta_legere(vol, 0, piscina);
+    volumen_claudere(vol);
+    si (acta == NIHIL)
+    {
+        redde NIHIL;
+    }
+    ordo = xar_creare(piscina, (i32)magnitudo(SilexPlagulaConditio));
+    si (ordo == NIHIL)
+    {
+        redde NIHIL;
+    }
+    quaesita = chorda_ex_literis(via, piscina);
+    pendens_sigillum = chorda_ex_literis("", piscina);
+    pendens_origo = chorda_ex_literis("", piscina);
+
+    per (index = 0; index < xar_numerus(acta); index = index + 1)
+    {
+        VolumenActum* a = (VolumenActum*)xar_obtinere(acta, index);
+        b32 est_condita = chorda_aequalis_literis(a->genus,
+            "plagula-condita");
+        b32 est_remota = chorda_aequalis_literis(a->genus,
+            "plagula-remota");
+        b32 est_conditio = chorda_aequalis_literis(a->genus,
+            "conditio");
+        b32 est_ortus = chorda_aequalis_literis(a->genus,
+            "volumen-creatum");
+
+        si (est_condita || est_remota)
+        {
+            JsonResultus lectum = json_legere(a->datum, piscina);
+
+            si (lectum.successus && json_est_objectum(lectum.radix))
+            {
+                JsonValor* v = json_objectum_capere(lectum.radix,
+                    "via");
+
+                si (v != NIHIL && json_est_chorda(v)
+                    && chorda_aequalis(json_ad_chorda(v), quaesita))
                 {
-                    JsonValor* n = json_objectum_capere(
-                        lectum.radix, "nuntius");
-
-                    si (n != NIHIL && json_est_chorda(n))
+                    /* plures actus inter conditiones: ultimus
+                     * vincit (status plagulae AD conditionem) */
+                    pendens = VERUM;
+                    pendens_remota = est_remota;
+                    pendens_sigillum = chorda_ex_literis("",
+                        piscina);
+                    pendens_origo = chorda_ex_literis("", piscina);
+                    si (est_condita)
                     {
-                        c->nuntius = json_ad_chorda(n);
+                        JsonValor* s = json_objectum_capere(
+                            lectum.radix, "sigillum");
+                        JsonValor* o = json_objectum_capere(
+                            lectum.radix, "origo");
+
+                        si (s != NIHIL && json_est_chorda(s))
+                        {
+                            pendens_sigillum = json_ad_chorda(s);
+                        }
+                        si (o != NIHIL && json_est_chorda(o))
+                        {
+                            pendens_origo = json_ad_chorda(o);
+                        }
                     }
                 }
             }
+        }
+        alioquin si ((est_conditio || est_ortus) && pendens)
+        {
+            SilexPlagulaConditio* c = (SilexPlagulaConditio*)
+                xar_addere(ordo);
+
+            si (c == NIHIL)
+            {
+                redde NIHIL;
+            }
+            c->seq = a->seq;
+            c->momentum = a->momentum;
+            _conditionem_exuere(piscina, a, est_ortus, &c->nuntius,
+                &c->renovatio);
+            c->sigillum = pendens_sigillum;
+            c->origo = pendens_origo;
+            c->remota = pendens_remota;
+            pendens = FALSUM;
         }
     }
     redde ordo;

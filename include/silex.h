@@ -184,6 +184,9 @@ nomen structura {
     chorda momentum;
     chorda nuntius;    /* "(ortus voluminis)" pro ortu */
     i32    tactae;     /* plagulae ab introitu priore */
+    b32    renovatio;  /* conditio a 'renovare -scribere' posita -
+                        * STRUCTURALITER lecta (clavis 'renovatae'
+                        * in dato), non e nuntio */
 } SilexConditio;
 
 /* conditiones (+ ortus) ordine temporis; NIHIL = erratum */
@@ -191,6 +194,27 @@ Xar*
 silex_historia (
     Piscina*            piscina,
     constans character* proiectum_dir);
+
+/* historia plagulae UNIUS: actus plagulae viae datae, quisque
+ * conditioni SEQUENTI attributus (regula eadem qua 'tactae' supra -
+ * actus ante conditionem primam ad eam pertinent; ortus ipse
+ * vacuus). Xar de SilexPlagulaConditio ordine temporis; vacuum =
+ * via numquam tacta; NIHIL = volumen legi non potuit. */
+nomen structura {
+    s64    seq;        /* conditionis */
+    chorda momentum;   /* conditionis */
+    chorda nuntius;
+    chorda sigillum;   /* hex post conditionem; vacua si remota */
+    chorda origo;      /* "condita" | "vendicata:<via>" | ... */
+    b32    remota;
+    b32    renovatio;
+} SilexPlagulaConditio;
+
+Xar*
+silex_historia_plagulae (
+    Piscina*            piscina,
+    constans character* proiectum_dir,
+    constans character* via);
 
 /* ==================================================
  * Proiectio: volumen arborem scribit (condere inversum)
