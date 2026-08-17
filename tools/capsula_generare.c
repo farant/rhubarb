@@ -26,6 +26,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <sys/stat.h>
 
 
 /* ========================================================================
@@ -104,6 +105,175 @@ _glob_congruit(constans character* pattern, constans character* str)
  * HELPER: EXPAND GLOB
  * ======================================================================== */
 
+/* Expansio SEGMENTIS CONSCIA: stella intra segmentum congruit,
+ * numquam trans '/'. Exemplar 'experimenta/<stella>/x.js' directoria
+ * media congruit; 'experimenta/0006/<stella>.js' iam valet quia
+ * segmenta litteralia sine scrutatione transitur.
+ *
+ * HISTORIA: forma prior segmentum NOMINIS solum globabat -
+ * directorium ante ultimum '/' litterale esse debebat. Quae
+ * limitatio in laboratorio ARCHITECTURA facta erat ('experimenta
+ * PLANA sunt, non nidificata') - instrumentum domus dolorem in
+ * doctrinam calcificaverat, quod CLAUDE.md ipsum vetat. Sublata
+ * 2026-08-17: plicae per experimentum nunc possibiles.
+ *
+ * Praefixum relativum (sine base) portatur ut viae emissae eaedem
+ * maneant ac prius; directoria in segmento ULTIMO omittuntur (plica
+ * inserenda non est plagula). */
+interior vacuum
+_expand_glob_gradus(
+    constans character* base_dir,
+    constans character* praefixum,   /* via relativa constructa ('' initio) */
+    constans character* reliquum,    /* exemplar reliquum */
+    Xar*                files_out,
+    Piscina*            piscina)
+{
+    constans character* slash;
+    character           segmentum[512];
+    character           plenum[1024];
+    character           filius[1024];
+    i32                 seg_len;
+    DIR*                dir;
+    structura dirent*   entry;
+    structura stat      st;
+
+    slash = strchr(reliquum, '/');
+    si (slash != NIHIL)
+    {
+        /* Segmentum DIRECTORII. */
+        seg_len = (i32)(slash - reliquum);
+        si (seg_len >= 512) seg_len = 511;
+        memcpy(segmentum, reliquum, (size_t)seg_len);
+        segmentum[seg_len] = '\0';
+
+        si (strchr(segmentum, '*') == NIHIL)
+        {
+            /* Litterale: sine scrutatione descende (defectus viae in
+             * segmento ultimo clare nuntiabitur). */
+            si (praefixum[0] != '\0')
+            {
+                snprintf(filius, sizeof(filius), "%s/%s",
+                         praefixum, segmentum);
+            }
+            alioquin
+            {
+                snprintf(filius, sizeof(filius), "%s", segmentum);
+            }
+            _expand_glob_gradus(base_dir, filius, slash + 1,
+                                files_out, piscina);
+            redde;
+        }
+
+        /* Stellatum: directoria congruentia scrutare et descendere. */
+        si (base_dir != NIHIL && base_dir[0] != '\0')
+        {
+            si (praefixum[0] != '\0')
+            {
+                snprintf(plenum, sizeof(plenum), "%s/%s",
+                         base_dir, praefixum);
+            }
+            alioquin
+            {
+                snprintf(plenum, sizeof(plenum), "%s", base_dir);
+            }
+        }
+        alioquin
+        {
+            snprintf(plenum, sizeof(plenum), "%s",
+                     praefixum[0] != '\0' ? praefixum : ".");
+        }
+        dir = opendir(plenum);
+        si (dir == NIHIL)
+        {
+            fprintf(stderr,
+                    "Error: non possum aperire directorium '%s'\n",
+                    plenum);
+            redde;
+        }
+        dum ((entry = readdir(dir)) != NIHIL)
+        {
+            si (entry->d_name[0] == '.') { perge; }
+            si (!_glob_congruit(segmentum, entry->d_name)) { perge; }
+            snprintf(filius, sizeof(filius), "%s/%s",
+                     plenum, entry->d_name);
+            si (stat(filius, &st) != 0 || !S_ISDIR(st.st_mode))
+            {
+                perge;   /* segmentum directorii: plagulae omissae */
+            }
+            si (praefixum[0] != '\0')
+            {
+                snprintf(filius, sizeof(filius), "%s/%s",
+                         praefixum, entry->d_name);
+            }
+            alioquin
+            {
+                snprintf(filius, sizeof(filius), "%s", entry->d_name);
+            }
+            _expand_glob_gradus(base_dir, filius, slash + 1,
+                                files_out, piscina);
+        }
+        closedir(dir);
+        redde;
+    }
+
+    /* Segmentum ULTIMUM: plagulae congruentes. */
+    si (base_dir != NIHIL && base_dir[0] != '\0')
+    {
+        si (praefixum[0] != '\0')
+        {
+            snprintf(plenum, sizeof(plenum), "%s/%s",
+                     base_dir, praefixum);
+        }
+        alioquin
+        {
+            snprintf(plenum, sizeof(plenum), "%s", base_dir);
+        }
+    }
+    alioquin
+    {
+        snprintf(plenum, sizeof(plenum), "%s",
+                 praefixum[0] != '\0' ? praefixum : ".");
+    }
+    dir = opendir(plenum);
+    si (dir == NIHIL)
+    {
+        fprintf(stderr, "Error: non possum aperire directorium '%s'\n",
+                plenum);
+        redde;
+    }
+    dum ((entry = readdir(dir)) != NIHIL)
+    {
+        si (entry->d_name[0] == '.') { perge; }
+        si (!_glob_congruit(reliquum, entry->d_name)) { perge; }
+        snprintf(filius, sizeof(filius), "%s/%s", plenum, entry->d_name);
+        si (stat(filius, &st) == 0 && S_ISDIR(st.st_mode))
+        {
+            perge;   /* directorium non est plagula */
+        }
+        {
+            character full_path[1024];
+            chorda*   path_chorda;
+
+            si (praefixum[0] != '\0')
+            {
+                snprintf(full_path, sizeof(full_path), "%s/%s",
+                         praefixum, entry->d_name);
+            }
+            alioquin
+            {
+                snprintf(full_path, sizeof(full_path), "%s",
+                         entry->d_name);
+            }
+            path_chorda = (chorda*)xar_addere(files_out);
+            si (path_chorda != NIHIL)
+            {
+                *path_chorda = chorda_ex_literis(full_path, piscina);
+            }
+        }
+    }
+    closedir(dir);
+}
+
 /* Expand a glob pattern to list of file paths */
 interior vacuum
 _expand_glob(
@@ -112,80 +282,7 @@ _expand_glob(
     Xar*                files_out,
     Piscina*            piscina)
 {
-    DIR*            dir;
-    structura dirent* entry;
-    character       path_buffer[1024];
-    constans character* slash;
-    character       dir_part[512];
-    constans character* file_pattern;
-    i32             dir_len;
-
-    /* Find the directory part and file pattern */
-    slash = strrchr(pattern, '/');
-    si (slash != NIHIL)
-    {
-        dir_len = (i32)(slash - pattern);
-        si (dir_len >= 512) dir_len = 511;
-        memcpy(dir_part, pattern, (size_t)dir_len);
-        dir_part[dir_len] = '\0';
-        file_pattern = slash + 1;
-    }
-    alioquin
-    {
-        strcpy(dir_part, ".");
-        file_pattern = pattern;
-    }
-
-    /* Build full directory path */
-    si (base_dir != NIHIL && strlen(base_dir) > 0)
-    {
-        snprintf(path_buffer, sizeof(path_buffer), "%s/%s", base_dir, dir_part);
-    }
-    alioquin
-    {
-        strncpy(path_buffer, dir_part, sizeof(path_buffer) - 1);
-        path_buffer[sizeof(path_buffer) - 1] = '\0';
-    }
-
-    dir = opendir(path_buffer);
-    si (dir == NIHIL)
-    {
-        fprintf(stderr, "Error: non possum aperire directorium '%s'\n", path_buffer);
-        redde;
-    }
-
-    dum ((entry = readdir(dir)) != NIHIL)
-    {
-        si (entry->d_name[0] == '.')
-        {
-            perge;  /* Skip hidden files and . / .. */
-        }
-
-        si (_glob_congruit(file_pattern, entry->d_name))
-        {
-            character full_path[1024];
-            chorda*   path_chorda;
-
-            /* Build full path */
-            si (strcmp(dir_part, ".") == 0)
-            {
-                snprintf(full_path, sizeof(full_path), "%s", entry->d_name);
-            }
-            alioquin
-            {
-                snprintf(full_path, sizeof(full_path), "%s/%s", dir_part, entry->d_name);
-            }
-
-            /* Add to output */
-            path_chorda = (chorda*)xar_addere(files_out);
-            si (path_chorda != NIHIL)
-            {
-                *path_chorda = chorda_ex_literis(full_path, piscina);
-            }
-        }
-    }
-
-    closedir(dir);
+    _expand_glob_gradus(base_dir, "", pattern, files_out, piscina);
 }
 
 
