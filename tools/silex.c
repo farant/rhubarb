@@ -630,7 +630,7 @@ principale (integer argc, character** argv)
         "silex - proiecta nova e fabrica rhubarb excudere");
     argumenta_addere_positionalem(parser, "verbum",
         "verbum (novum | ui | status | condere | historia |"
-        " proicere | renovare | partes | iudicare;"
+        " differentia | proicere | renovare | partes | iudicare;"
         " sine argumentis = ui)",
         FALSUM);
     argumenta_addere_positionalem(parser, "titulus",
@@ -643,7 +643,12 @@ principale (integer argc, character** argv)
     argumenta_addere_optionem(parser, "-n", "--nuntius",
         "nuntius conditionis (pro condere)");
     argumenta_addere_optionem(parser, "-ad", "--ad",
-        "proicere: plica usque ad seq (iter temporis)");
+        "proicere/differentia: seq lateris novi");
+    argumenta_addere_optionem(parser, "-a", "--a",
+        "differentia: seq lateris veteris (absente: plica"
+        " praesens)");
+    argumenta_addere_vexillum(parser, "-summa", "--summa",
+        "differentia: nomina et numeri soli, sine textu");
     argumenta_addere_optionem(parser, "-via", "--via",
         "historia: plagulae unius (via relativa in proiecto)");
     argumenta_addere_vexillum(parser, "-sine-renovationibus",
@@ -665,6 +670,8 @@ principale (integer argc, character** argv)
         "silex proicere -ad 12 -scribere");
     argumenta_addere_exemplum(parser,
         "silex historia -via lib/manus.c");
+    argumenta_addere_exemplum(parser,
+        "silex differentia -summa");
     argumenta_addere_exemplum(parser,
         "silex iudicare experimenta/0001/experimentum.census");
 
@@ -821,6 +828,7 @@ principale (integer argc, character** argv)
     si (chorda_aequalis_literis(verbum, "status")
         || chorda_aequalis_literis(verbum, "condere")
         || chorda_aequalis_literis(verbum, "historia")
+        || chorda_aequalis_literis(verbum, "differentia")
         || chorda_aequalis_literis(verbum, "proicere")
         || chorda_aequalis_literis(verbum, "renovare"))
     {
@@ -932,6 +940,99 @@ principale (integer argc, character** argv)
             imprimere("silex renovare: %d renovatae, %d additae"
                 " (%d intactae)\n", (integer)r.renovatae,
                 (integer)r.additae, (integer)r.intactae);
+            redde ZEPHYRUM;
+        }
+        si (chorda_aequalis_literis(verbum, "differentia"))
+        {
+            chorda a_opt = argumenta_obtinere_optionem(lecta,
+                "--a", piscina);
+            chorda ad_opt = argumenta_obtinere_optionem(lecta,
+                "--ad", piscina);
+            b32    summa_sola = argumenta_habet_vexillum(lecta,
+                "--summa");
+            s64    a_seq = 0;
+            s64    ad_seq = 0;
+            SilexDifferentiaFructus f;
+            i32    index;
+            i32    additae_totae = 0;
+            i32    deletae_totae = 0;
+
+            si (a_opt.mensura > ZEPHYRUM)
+            {
+                longus lectus = 0;
+
+                si (sscanf(chorda_ut_cstr(a_opt, piscina), "%ld",
+                        &lectus) != 1 || lectus <= 0)
+                {
+                    fprintf(stderr, "silex differentia: -a seq"
+                        " numerum positivum poscit\n");
+                    redde I;
+                }
+                a_seq = (s64)lectus;
+            }
+            si (ad_opt.mensura > ZEPHYRUM)
+            {
+                longus lectus = 0;
+
+                si (sscanf(chorda_ut_cstr(ad_opt, piscina), "%ld",
+                        &lectus) != 1 || lectus <= 0)
+                {
+                    fprintf(stderr, "silex differentia: -ad seq"
+                        " numerum positivum poscit\n");
+                    redde I;
+                }
+                ad_seq = (s64)lectus;
+            }
+
+            f = ad_opt.mensura > ZEPHYRUM
+                ? silex_differentia_plicarum(piscina, via_proiecti,
+                    a_seq, ad_seq, !summa_sola)
+                : silex_differentia_laborans(piscina, via_proiecti,
+                    a_seq, !summa_sola);
+            si (!f.successus)
+            {
+                fprintf(stderr, "silex differentia: %s\n",
+                    f.erratum);
+                redde I;
+            }
+            si (xar_numerus(f.res) == 0)
+            {
+                imprimere("silex differentia: nulla (%d plagulae"
+                    " aequales)\n", (integer)f.aequales);
+                redde ZEPHYRUM;
+            }
+            per (index = 0; index < xar_numerus(f.res);
+                index = index + 1)
+            {
+                SilexDifferentiaRes* r = (SilexDifferentiaRes*)
+                    xar_obtinere(f.res, index);
+                constans character*  signum =
+                    r->genus == SILEX_PLAGULA_MUTATA ? "MUTATA"
+                    : r->genus == SILEX_PLAGULA_NOVA ? "NOVA  "
+                    : "ABSENS";
+
+                additae_totae = additae_totae
+                    + (i32)r->summa.additae;
+                deletae_totae = deletae_totae
+                    + (i32)r->summa.deletae;
+                si (summa_sola)
+                {
+                    imprimere("  %s  %.*s  +%d -%d\n", signum,
+                        (integer)r->via.mensura,
+                        (constans character*)r->via.datum,
+                        (integer)r->summa.additae,
+                        (integer)r->summa.deletae);
+                }
+                alioquin
+                {
+                    imprimere("%.*s", (integer)r->textus.mensura,
+                        (constans character*)r->textus.datum);
+                }
+            }
+            imprimere("silex differentia: %d plagulae (+%d -%d),"
+                " %d aequales\n", (integer)xar_numerus(f.res),
+                (integer)additae_totae, (integer)deletae_totae,
+                (integer)f.aequales);
             redde ZEPHYRUM;
         }
         si (chorda_aequalis_literis(verbum, "proicere"))
@@ -1142,6 +1243,7 @@ principale (integer argc, character** argv)
     {
         fprintf(stderr, "silex: verbum ignotum: %.*s"
             " (verba: novum, ui, status, condere, historia,"
+            " differentia,"
             " proicere, renovare, partes, iudicare)\n",
             (integer)verbum.mensura,
             (constans character*)verbum.datum);

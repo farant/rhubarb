@@ -3063,6 +3063,395 @@ silex_historia_plagulae (Piscina* piscina,
 }
 
 /* ==================================================
+ * Differentia (vide silex.h pro doctrina laterum)
+ * ================================================== */
+
+interior constans character*
+_titulum_differentiae (Piscina* piscina,
+    constans character* praefixum, chorda via);
+
+interior constans character*
+_titulum_differentiae (Piscina* piscina,
+    constans character* praefixum, chorda via)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+        (memoriae_index)64);
+
+    chorda_aedificator_appendere_literis(aed, praefixum);
+    chorda_aedificator_appendere_chorda(aed, via);
+    redde chorda_ut_cstr(chorda_aedificator_finire(aed), piscina);
+}
+
+/* differentia currit SEMPER (summa inde); emissio si cum_textu */
+interior b32
+_differentiae_rem_implere (Piscina* piscina,
+    SilexDifferentiaRes* r, chorda via, SilexPlagulaStatus genus,
+    chorda vetus, chorda novum, b32 cum_textu);
+
+interior b32
+_differentiae_rem_implere (Piscina* piscina,
+    SilexDifferentiaRes* r, chorda via, SilexPlagulaStatus genus,
+    chorda vetus, chorda novum, b32 cum_textu)
+{
+    DifferentiaLinearum* d = differentia_linearum(piscina, vetus,
+        novum);
+
+    si (d == NIHIL)
+    {
+        redde FALSUM;
+    }
+    r->via = via;
+    r->genus = genus;
+    r->summa = differentia_summa(d->tractus);
+    si (cum_textu)
+    {
+        r->textus = differentia_unificata(piscina, d,
+            _titulum_differentiae(piscina, "a/", via),
+            _titulum_differentiae(piscina, "b/", via), III);
+    }
+    alioquin
+    {
+        r->textus = chorda_ex_literis("", piscina);
+    }
+    redde VERUM;
+}
+
+nomen structura {
+    Piscina*        piscina;
+    Volumen*        vol;
+    TabulaDispersa* vetus_tabula;   /* via -> VolumenPlagula* */
+    TabulaDispersa* visae;
+    Xar*            res;            /* SilexDifferentiaRes */
+    i32             aequales;
+    i32             radix_mensura;
+    b32             cum_textu;
+    b32             fractum;
+} DifferentiaContextus;
+
+interior s32
+_differentia_ambulator (chorda via_plena,
+    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+
+interior s32
+_differentia_ambulator (chorda via_plena,
+    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+{
+    DifferentiaContextus* ctx = (DifferentiaContextus*)contextus;
+    chorda                via_rel;
+    chorda                contentum;
+    Sigillum              sig;
+    character             hex[SIGILLUM_HEX_MENSURA];
+    vacuum*               conditum = NIHIL;
+
+    si (ctx->fractum || introitus->genus != INTROITUS_FILUM)
+    {
+        redde 0;
+    }
+    si (via_plena.mensura <= (i32)ctx->radix_mensura)
+    {
+        redde 0;
+    }
+    via_rel = chorda_ex_buffer(via_plena.datum + ctx->radix_mensura,
+        via_plena.mensura - (i32)ctx->radix_mensura);
+    si (_praetermittenda(via_rel))
+    {
+        redde 0;
+    }
+    contentum = filum_legere_totum(
+        chorda_ut_cstr(via_plena, ctx->piscina), ctx->piscina);
+    sig = sigillum_computare((constans vacuum*)contentum.datum,
+        (memoriae_index)contentum.mensura);
+    sigillum_hex(&sig, hex);
+    tabula_dispersa_inserere(ctx->visae, via_rel, (vacuum*)ctx);
+
+    si (tabula_dispersa_invenire(ctx->vetus_tabula, via_rel,
+        &conditum))
+    {
+        VolumenPlagula* p = (VolumenPlagula*)conditum;
+
+        si (p->sigillum_hex.mensura == 64
+            && memcmp(p->sigillum_hex.datum, hex, 64) == 0)
+        {
+            ctx->aequales = ctx->aequales + 1;
+        }
+        alioquin
+        {
+            b32                  inventum = FALSUM;
+            chorda               vetus = volumen_massam_promere(
+                ctx->vol, p->sigillum_hex, ctx->piscina,
+                &inventum);
+            SilexDifferentiaRes* r;
+
+            si (!inventum)
+            {
+                ctx->fractum = VERUM;
+                redde 0;
+            }
+            r = (SilexDifferentiaRes*)xar_addere(ctx->res);
+            si (r == NIHIL || !_differentiae_rem_implere(
+                ctx->piscina, r, via_rel, SILEX_PLAGULA_MUTATA,
+                vetus, contentum, ctx->cum_textu))
+            {
+                ctx->fractum = VERUM;
+            }
+        }
+    }
+    alioquin
+    {
+        SilexDifferentiaRes* r = (SilexDifferentiaRes*)xar_addere(
+            ctx->res);
+
+        si (r == NIHIL || !_differentiae_rem_implere(ctx->piscina,
+            r, via_rel, SILEX_PLAGULA_NOVA,
+            chorda_ex_literis("", ctx->piscina), contentum,
+            ctx->cum_textu))
+        {
+            ctx->fractum = VERUM;
+        }
+    }
+    redde 0;
+}
+
+interior s32
+_differentiae_res_comparare (constans vacuum* a,
+    constans vacuum* b);
+
+interior s32
+_differentiae_res_comparare (constans vacuum* a,
+    constans vacuum* b)
+{
+    redde chorda_comparare(
+        ((constans SilexDifferentiaRes*)a)->via,
+        ((constans SilexDifferentiaRes*)b)->via);
+}
+
+interior SilexDifferentiaFructus
+_differentia_communis (Piscina* piscina,
+    constans character* proiectum_dir, s64 a_seq, b32 ad_discum,
+    s64 ad_seq, b32 cum_textu);
+
+interior SilexDifferentiaFructus
+_differentia_communis (Piscina* piscina,
+    constans character* proiectum_dir, s64 a_seq, b32 ad_discum,
+    s64 ad_seq, b32 cum_textu)
+{
+    SilexDifferentiaFructus fructus;
+    constans character*     volumen_via;
+    Volumen*                vol;
+    Xar*                    vetus_plica;
+    DifferentiaContextus    ctx;
+    i32                     index;
+
+    fructus.successus = FALSUM;
+    fructus.res = NIHIL;
+    fructus.aequales = 0;
+    fructus.erratum = NIHIL;
+
+    volumen_via = silex_volumen_viam_invenire(piscina,
+        proiectum_dir);
+    si (volumen_via == NIHIL)
+    {
+        fructus.erratum = "volumen deest - estne proiectum"
+            " silicis?";
+        redde fructus;
+    }
+    vol = volumen_aperire(piscina, volumen_via);
+    si (vol == NIHIL)
+    {
+        fructus.erratum = "volumen aperiri non potuit";
+        redde fructus;
+    }
+    vetus_plica = volumen_plicam_ad(vol, a_seq, piscina);
+    si (vetus_plica == NIHIL)
+    {
+        volumen_claudere(vol);
+        fructus.erratum = "plica legi non potuit";
+        redde fructus;
+    }
+
+    ctx.piscina = piscina;
+    ctx.vol = vol;
+    ctx.vetus_tabula = tabula_dispersa_creare_chorda(piscina, 128);
+    ctx.visae = tabula_dispersa_creare_chorda(piscina, 128);
+    ctx.res = xar_creare(piscina,
+        (i32)magnitudo(SilexDifferentiaRes));
+    ctx.aequales = 0;
+    ctx.radix_mensura = 0;
+    ctx.cum_textu = cum_textu;
+    ctx.fractum = FALSUM;
+    si (ctx.vetus_tabula == NIHIL || ctx.visae == NIHIL
+        || ctx.res == NIHIL)
+    {
+        volumen_claudere(vol);
+        fructus.erratum = "memoria defecit";
+        redde fructus;
+    }
+    per (index = 0; index < xar_numerus(vetus_plica);
+        index = index + 1)
+    {
+        VolumenPlagula* p = (VolumenPlagula*)xar_obtinere(
+            vetus_plica, index);
+
+        tabula_dispersa_inserere(ctx.vetus_tabula, p->via,
+            (vacuum*)p);
+    }
+
+    si (ad_discum)
+    {
+        DirectoriumFiltrum filtrum;
+        chorda             radix_absoluta = via_absoluta(
+            chorda_ex_literis(proiectum_dir, piscina), piscina);
+
+        ctx.radix_mensura = radix_absoluta.mensura + 1;
+        filtrum = directorium_filtrum_omnia();
+        filtrum.includere_occultos = FALSUM;
+        directorium_ambulare(
+            chorda_ut_cstr(radix_absoluta, piscina), &filtrum,
+            _differentia_ambulator, &ctx, piscina);
+    }
+    alioquin
+    {
+        Xar* novum_plica = volumen_plicam_ad(vol, ad_seq, piscina);
+
+        si (novum_plica == NIHIL)
+        {
+            volumen_claudere(vol);
+            fructus.erratum = "plica altera legi non potuit";
+            redde fructus;
+        }
+        per (index = 0; index < xar_numerus(novum_plica)
+            && !ctx.fractum; index = index + 1)
+        {
+            VolumenPlagula* q = (VolumenPlagula*)xar_obtinere(
+                novum_plica, index);
+            vacuum*         conditum = NIHIL;
+
+            tabula_dispersa_inserere(ctx.visae, q->via,
+                (vacuum*)&ctx);
+            si (tabula_dispersa_invenire(ctx.vetus_tabula, q->via,
+                &conditum))
+            {
+                VolumenPlagula* p = (VolumenPlagula*)conditum;
+
+                si (chorda_aequalis(p->sigillum_hex,
+                    q->sigillum_hex))
+                {
+                    ctx.aequales = ctx.aequales + 1;
+                    perge;
+                }
+                {
+                    b32    inventum_vetus = FALSUM;
+                    b32    inventum_novum = FALSUM;
+                    chorda vetus = volumen_massam_promere(vol,
+                        p->sigillum_hex, piscina,
+                        &inventum_vetus);
+                    chorda novum = volumen_massam_promere(vol,
+                        q->sigillum_hex, piscina,
+                        &inventum_novum);
+                    SilexDifferentiaRes* r;
+
+                    si (!inventum_vetus || !inventum_novum)
+                    {
+                        ctx.fractum = VERUM;
+                        perge;
+                    }
+                    r = (SilexDifferentiaRes*)xar_addere(ctx.res);
+                    si (r == NIHIL || !_differentiae_rem_implere(
+                        piscina, r, q->via, SILEX_PLAGULA_MUTATA,
+                        vetus, novum, cum_textu))
+                    {
+                        ctx.fractum = VERUM;
+                    }
+                }
+            }
+            alioquin
+            {
+                b32    inventum_novum = FALSUM;
+                chorda novum = volumen_massam_promere(vol,
+                    q->sigillum_hex, piscina, &inventum_novum);
+                SilexDifferentiaRes* r;
+
+                si (!inventum_novum)
+                {
+                    ctx.fractum = VERUM;
+                    perge;
+                }
+                r = (SilexDifferentiaRes*)xar_addere(ctx.res);
+                si (r == NIHIL || !_differentiae_rem_implere(
+                    piscina, r, q->via, SILEX_PLAGULA_NOVA,
+                    chorda_ex_literis("", piscina), novum,
+                    cum_textu))
+                {
+                    ctx.fractum = VERUM;
+                }
+            }
+        }
+    }
+
+    /* in vetere, lateri novo ignotae -> ABSENS */
+    si (!ctx.fractum)
+    {
+        per (index = 0; index < xar_numerus(vetus_plica)
+            && !ctx.fractum; index = index + 1)
+        {
+            VolumenPlagula* p = (VolumenPlagula*)xar_obtinere(
+                vetus_plica, index);
+
+            si (!tabula_dispersa_continet(ctx.visae, p->via))
+            {
+                b32    inventum_vetus = FALSUM;
+                chorda vetus = volumen_massam_promere(vol,
+                    p->sigillum_hex, piscina, &inventum_vetus);
+                SilexDifferentiaRes* r;
+
+                si (!inventum_vetus)
+                {
+                    ctx.fractum = VERUM;
+                    perge;
+                }
+                r = (SilexDifferentiaRes*)xar_addere(ctx.res);
+                si (r == NIHIL || !_differentiae_rem_implere(
+                    piscina, r, p->via, SILEX_PLAGULA_ABSENS,
+                    vetus, chorda_ex_literis("", piscina),
+                    cum_textu))
+                {
+                    ctx.fractum = VERUM;
+                }
+            }
+        }
+    }
+    volumen_claudere(vol);
+    si (ctx.fractum)
+    {
+        fructus.erratum = "differentia legi non potuit (massa"
+            " deest aut memoria defecit)";
+        redde fructus;
+    }
+    xar_ordinare(ctx.res, _differentiae_res_comparare);
+    fructus.successus = VERUM;
+    fructus.res = ctx.res;
+    fructus.aequales = ctx.aequales;
+    redde fructus;
+}
+
+SilexDifferentiaFructus
+silex_differentia_laborans (Piscina* piscina,
+    constans character* proiectum_dir, s64 a_seq, b32 cum_textu)
+{
+    redde _differentia_communis(piscina, proiectum_dir, a_seq,
+        VERUM, (s64)0, cum_textu);
+}
+
+SilexDifferentiaFructus
+silex_differentia_plicarum (Piscina* piscina,
+    constans character* proiectum_dir, s64 a_seq, s64 ad_seq,
+    b32 cum_textu)
+{
+    redde _differentia_communis(piscina, proiectum_dir, a_seq,
+        FALSUM, ad_seq, cum_textu);
+}
+
+/* ==================================================
  * Proiectio: volumen arborem scribit (vide silex.h pro foedere)
  * ================================================== */
 

@@ -28,6 +28,7 @@
 #include "chorda.h"
 #include "xar.h"
 #include "capsula.h"
+#include "differentia.h"
 
 /* ==================================================
  * Fons bibliothecarum: DISCUS (fabrica in disco) aut CORPUS
@@ -215,6 +216,48 @@ silex_historia_plagulae (
     Piscina*            piscina,
     constans character* proiectum_dir,
     constans character* via);
+
+/* ==================================================
+ * Differentia: QUID mutatum est, textu (desideratum 01M08Q43BT -
+ * '62 plagulas fide condidi'; status QUAE dicit, hoc QUID).
+ *
+ * Latera vetus -> novum:
+ *   laborans: vetus = plica (a_seq; <= 0 praesens), novum = DISCUS
+ *   plicarum: ambo plicae (a_seq/ad_seq; <= 0 = praesens)
+ * res ordine viae; aequales tacent (numerus solum). textus =
+ * emissio unificata (differentia.h, contextus III) titulis
+ * a/<via> b/<via>; !cum_textu: summa tamen computatur (differentia
+ * currit, emissio sola omittitur), textus vacua.
+ * ================================================== */
+
+nomen structura {
+    chorda             via;
+    SilexPlagulaStatus genus;    /* MUTATA | NOVA | ABSENS */
+    DifferentiaSumma   summa;
+    chorda             textus;
+} SilexDifferentiaRes;
+
+nomen structura {
+    b32                 successus;
+    Xar*                res;       /* SilexDifferentiaRes */
+    i32                 aequales;
+    constans character* erratum;
+} SilexDifferentiaFructus;
+
+SilexDifferentiaFructus
+silex_differentia_laborans (
+    Piscina*            piscina,
+    constans character* proiectum_dir,
+    s64                 a_seq,
+    b32                 cum_textu);
+
+SilexDifferentiaFructus
+silex_differentia_plicarum (
+    Piscina*            piscina,
+    constans character* proiectum_dir,
+    s64                 a_seq,
+    s64                 ad_seq,
+    b32                 cum_textu);
 
 /* ==================================================
  * Proiectio: volumen arborem scribit (condere inversum)

@@ -447,3 +447,27 @@ silex absens tacet. Manent aperta ex desiderato: verbum
 `differentia` (textus — bibliotheca diff linearum in domo NON est;
 similitudo punctatio confusa est, non diff) et condere viis
 circumscriptum.
+
+## 2026-08-17 — verbum differentia (desideratum 01M08Q43BT item 2)
+
+Duo introitus lib, sine sentinellis: `silex_differentia_laborans`
+(vetus = plica a_seq / praesens, novum = DISCUS) et
+`silex_differentia_plicarum` (ambo plicae). Nucleus communis:
+tabula veteris ex `volumen_plicam_ad`, latus novum aut ambulator
+disci (forma `_status_ambulator`, sigilla comparans, contentum
+solum mutatarum promens) aut plica altera; contentum veterum
+semper e massis (`volumen_massam_promere` sigillo). Res ordine
+viae (`xar_ordinare` + `chorda_comparare` - ambulator disci ordine
+FS ambulat). Textus per bibliothecam differentia (contextus III,
+tituli a/<via> b/<via>); `!cum_textu` summam tamen computat (diff
+currit, emissio omittitur). CLI: `-a` / `-ad` (ad praesente:
+plicarum), `-summa` = conspectus nominum.
+
+Dogfood die natali: seq 320..323 in laboratorio = conditio moniti
+ipsius (+17), et post purgationem lineae probationis 'nulla, 149
+aequales' - instrumentum suam ipsius purgationem probavit.
+
+Non factum (consulto): detectio binariorum (plagulae domus textus
+sunt), contextus configurabilis, differentia in UI vitrea
+(tractator `vcs_differentia` cum opus erit). Manet ex desiderato:
+condere viis circumscriptum (item 4) solum.

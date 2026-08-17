@@ -141,6 +141,27 @@ _texere_probationis (Piscina* piscina, constans character* a,
     redde chorda_ut_cstr(chorda_aedificator_finire(aed), piscina);
 }
 
+interior SilexDifferentiaRes*
+_differentiam_invenire (Xar* res, constans character* via);
+
+interior SilexDifferentiaRes*
+_differentiam_invenire (Xar* res, constans character* via)
+{
+    i32 index;
+
+    per (index = 0; index < xar_numerus(res); index = index + 1)
+    {
+        SilexDifferentiaRes* r = (SilexDifferentiaRes*)
+            xar_obtinere(res, index);
+
+        si (chorda_aequalis_literis(r->via, via))
+        {
+            redde r;
+        }
+    }
+    redde NIHIL;
+}
+
 s32 principale (vacuum)
 {
     b32      praeteritus;
@@ -1267,6 +1288,170 @@ s32 principale (vacuum)
             CREDO_VERUM(ultima->renovatio);
             CREDO_VERUM(chorda_incipit(prima->origo,
                 chorda_ex_literis("vendicata:", piscina)));
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: differentia - QUID mutatum, textu
+     * (laborans contra discum, deinde inter plicas; fixturae
+     * profundae: conditio novi -> prima manualis iam MUTATA +
+     * NOVA + ABSENS fert)
+     * ======================================================== */
+
+    {
+        SilexDifferentiaFructus f;
+        SilexConditioFructus    conditio;
+        s64                     seq_ante;
+        s64                     seq_post;
+
+        imprimere("\n--- Probans differentiam (arbor munda) ---\n");
+
+        f = silex_differentia_laborans(piscina, AREA "/specimen",
+            (s64)0, VERUM);
+        CREDO_VERUM(f.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(f.res), (i32)0);
+        CREDO_VERUM(f.aequales > (i32)10);
+
+        imprimere("\n--- Probans differentiam (laborans) ---\n");
+
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/specimen/notae.md", "# notae\nnova linea\n"));
+        CREDO_VERUM(filum_scribere_literis(
+            AREA "/specimen/addenda.txt", "prima\nsecunda\n"));
+
+        f = silex_differentia_laborans(piscina, AREA "/specimen",
+            (s64)0, VERUM);
+        CREDO_VERUM(f.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(f.res), (i32)2);
+        {
+            SilexDifferentiaRes* addenda = _differentiam_invenire(
+                f.res, "addenda.txt");
+            SilexDifferentiaRes* notae = _differentiam_invenire(
+                f.res, "notae.md");
+
+            CREDO_NON_NIHIL(addenda);
+            CREDO_NON_NIHIL(notae);
+            /* ordo viae: addenda.txt ante notae.md */
+            CREDO_VERUM((SilexDifferentiaRes*)xar_obtinere(f.res,
+                0) == addenda);
+
+            CREDO_VERUM(addenda->genus == SILEX_PLAGULA_NOVA);
+            CREDO_AEQUALIS_I32(addenda->summa.additae, (i32)2);
+            CREDO_AEQUALIS_I32(addenda->summa.deletae, (i32)0);
+            CREDO_CHORDA_CONTINET(addenda->textus,
+                chorda_ex_literis("+++ b/addenda.txt", piscina));
+            CREDO_CHORDA_CONTINET(addenda->textus,
+                chorda_ex_literis("@@ -0,0 +1,2 @@", piscina));
+            CREDO_CHORDA_CONTINET(addenda->textus,
+                chorda_ex_literis("+prima", piscina));
+
+            CREDO_VERUM(notae->genus == SILEX_PLAGULA_MUTATA);
+            CREDO_AEQUALIS_I32(notae->summa.additae, (i32)1);
+            CREDO_AEQUALIS_I32(notae->summa.deletae, (i32)0);
+            CREDO_CHORDA_CONTINET(notae->textus,
+                chorda_ex_literis("+nova linea", piscina));
+            CREDO_CHORDA_CONTINET(notae->textus,
+                chorda_ex_literis(" # notae", piscina));
+        }
+
+        /* sine textu: summa manet, textus vacua */
+        f = silex_differentia_laborans(piscina, AREA "/specimen",
+            (s64)0, FALSUM);
+        CREDO_VERUM(f.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(f.res), (i32)2);
+        {
+            SilexDifferentiaRes* addenda = _differentiam_invenire(
+                f.res, "addenda.txt");
+
+            CREDO_NON_NIHIL(addenda);
+            CREDO_AEQUALIS_I32(addenda->summa.additae, (i32)2);
+            CREDO_AEQUALIS_I32(addenda->textus.mensura, (i32)0);
+        }
+
+        imprimere("\n--- Probans differentiam (inter plicas) ---\n");
+
+        conditio = silex_condere(piscina, AREA "/specimen",
+            "differentia probata");
+        CREDO_VERUM(conditio.successus);
+        seq_post = conditio.seq;
+        {
+            Xar* h = silex_historia(piscina, AREA "/specimen");
+
+            CREDO_NON_NIHIL(h);
+            seq_ante = ((SilexConditio*)xar_obtinere(h,
+                (i32)(xar_numerus(h) - 2)))->seq;
+        }
+
+        f = silex_differentia_plicarum(piscina, AREA "/specimen",
+            seq_ante, seq_post, VERUM);
+        CREDO_VERUM(f.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(f.res), (i32)2);
+        {
+            SilexDifferentiaRes* notae = _differentiam_invenire(
+                f.res, "notae.md");
+
+            CREDO_NON_NIHIL(notae);
+            CREDO_VERUM(notae->genus == SILEX_PLAGULA_MUTATA);
+            CREDO_AEQUALIS_I32(notae->summa.additae, (i32)1);
+            CREDO_CHORDA_CONTINET(notae->textus,
+                chorda_ex_literis("+nova linea", piscina));
+        }
+
+        /* arbor munda: laborans a seq_ante = plicarum(ante,
+         * post) - crux transversa */
+        f = silex_differentia_laborans(piscina, AREA "/specimen",
+            seq_ante, VERUM);
+        CREDO_VERUM(f.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(f.res), (i32)2);
+
+        /* plica contra se ipsam: nulla */
+        f = silex_differentia_plicarum(piscina, AREA "/specimen",
+            seq_post, seq_post, VERUM);
+        CREDO_VERUM(f.successus);
+        CREDO_AEQUALIS_I32((i32)xar_numerus(f.res), (i32)0);
+
+        imprimere("\n--- Probans differentiam (ABSENS ex"
+            " historia) ---\n");
+
+        /* inter conditionem novi et primam manualem:
+         * fontes/specimen.c MUTATA, notae.md NOVA,
+         * lib/piscina.c ABSENS - ordine viae */
+        {
+            Xar* h = silex_historia(piscina, AREA "/specimen");
+            s64  seq_novi;
+            s64  seq_primae;
+
+            CREDO_NON_NIHIL(h);
+            seq_novi = ((SilexConditio*)xar_obtinere(h, 1))->seq;
+            seq_primae = ((SilexConditio*)xar_obtinere(h, 2))->seq;
+
+            f = silex_differentia_plicarum(piscina,
+                AREA "/specimen", seq_novi, seq_primae, VERUM);
+            CREDO_VERUM(f.successus);
+            CREDO_AEQUALIS_I32((i32)xar_numerus(f.res), (i32)3);
+            {
+                SilexDifferentiaRes* piscinae =
+                    _differentiam_invenire(f.res, "lib/piscina.c");
+                SilexDifferentiaRes* fontis =
+                    _differentiam_invenire(f.res,
+                        "fontes/specimen.c");
+                SilexDifferentiaRes* notarum =
+                    _differentiam_invenire(f.res, "notae.md");
+
+                CREDO_NON_NIHIL(piscinae);
+                CREDO_NON_NIHIL(fontis);
+                CREDO_NON_NIHIL(notarum);
+                CREDO_VERUM(piscinae->genus
+                    == SILEX_PLAGULA_ABSENS);
+                CREDO_VERUM(piscinae->summa.deletae > (i32)0);
+                CREDO_AEQUALIS_I32(piscinae->summa.additae,
+                    (i32)0);
+                CREDO_CHORDA_CONTINET(piscinae->textus,
+                    chorda_ex_literis("--- a/lib/piscina.c",
+                        piscina));
+                CREDO_VERUM(fontis->genus == SILEX_PLAGULA_MUTATA);
+                CREDO_VERUM(notarum->genus == SILEX_PLAGULA_NOVA);
+            }
         }
     }
 
