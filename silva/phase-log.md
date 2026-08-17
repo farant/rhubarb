@@ -12518,3 +12518,19 @@ postulata_posix.h) - PRAEEXISTENS, verificatum contra HEAD. Falsum
 positivum generis alterius: plagula illa FIXURA est, numquam
 compilata. Emendare eam NOLI - inclusio in modelum systematis ipsum
 serperet.
+
+## 2026-08-17 — instrumenta: differre (differentia semantica unitatum) + silva_unitates extractum
+
+Scansor unitatum ex amalgamatore in instrumenta/silva_unitates.{h,c}
+motus (mechanismus communis; PORTA extractionis TENUIT: amalgama
+byte-identicum, suite 39/39 cum probatio_silva_unitates nova).
+Instrumentum novum ./silva/differre.sh <vetus> <novum> [-machina]:
+differentia per UNITATES (MUTATA [substantiva/documentaria/
+cosmetica] cum textu, MOTA sine strepitu linearum, ADDITA/REMOTA),
+nucleo differentia (lib nova hodie) super sigilla unitatum
+internata — granularitas tertia eiusdem nuclei (unitas/linea/
+lexema). VCS-agnosticum: versiones vocator materializat. Semantica
+MOTA mensurata: ancoratio LCS — motus relativus est, vicini
+immoti arbitri. Ianuae nominatae in worklog: differentia brachiorum
+conditionalium (arma retenta!), par symbolorum prototypum+definitio,
+recepta fistulae vocantes.
