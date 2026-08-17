@@ -1090,3 +1090,38 @@ satisfied `abest`; an element that stays timed out with *adhuc adest
 sententiam (C99) non deprehenditur") firing in practice rather than in
 theory. Worth knowing: on declaration order, the compiler is the
 authority, not our judge.
+
+## 2026-08-17 — the THIRD copy of the text judgment, found by `<li>`
+
+Laboratorium experiment 0004 (command palette) tripped a failure that
+looked impossible: `CREDO_MANUS_TEXTUS_CONTINET(m, ".tm-electus",
+"Omnia servare")` reported `Receptus: 0` while `manus textus
+'.tm-electus'` on the same live page returned the text correctly. The
+assertion and the instrument disagreed about the same element.
+
+Cause: `_manus_credo_textum` carried its own inline copy of the
+element-text judgment — the ORIGINAL buggy form, `e.value!==undefined ?
+e.value : e.textContent`. `HTMLLIElement.value` is a real DOM property
+(the ordinal for `<ol>` items), a NUMBER, default 0 — so the assertion
+read `"0"` for every list item. This is the same defect class as the
+2026-08-14 `<button>.value` finding, except worse: button gave `""`
+(suspicious), li gives `"0"` (looks like data).
+
+The `manus_textus` comment had already prophesied this: "DUAE FORMAE
+EIUSDEM IUDICII hic vivunt... quod ipsum est cur duplicatio nocet." It
+was three forms, not two, and the third had the oldest bug.
+
+Fix: `_tx` (in the preamble every script already receives) is now the
+ONE form, upgraded with `manus_textus`'s SELECT semantics (selected
+option's TEXT, not `.value` — the user reads words). `manus_textus` and
+`_manus_credo_textum` both collapsed to `_tx(e)` calls. That also
+retired the known `_tx`-vs-`manus_textus` SELECT divergence in the
+direction the comment already argued for. Text search (`premere-textum`)
+now matches selects by their visible option text too — behavior change,
+correct direction.
+
+Regression pins in probatio_manus updated to pin the NEW form,
+including `visum:_tx(e)` in the textus body and the negative on the old
+branch. The lesson worth keeping: **when an assertion and its query
+tool can disagree about the same element, every green assertion is
+suspect** — unify the judgment, don't patch the copy that got caught.

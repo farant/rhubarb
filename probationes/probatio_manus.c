@@ -1104,16 +1104,22 @@ s32 principale (vacuum)
          * ergo quod EMITTITUR figitur; probatio viva in fumo
          * seminis et laboratorii currit. */
         CREDO_VERUM (_continet(o.textualis_ok.js,
-            "g==='INPUT'||g==='TEXTAREA'||g==='SELECT'"));
+            "g==='INPUT'||g==='TEXTAREA'"));
+        /* SELECT ramum SUUM habet: textus optionis, non valor. */
+        CREDO_VERUM (_continet(o.textualis_ok.js, "g==='SELECT'"));
+        CREDO_VERUM (_continet(o.textualis_ok.js,
+            "o?String(o.text):''"));
         /* Ramus vetus - valorem SINE custodia praeferens - abesse
          * DEBET. Sine assertione negativa utrumque adesse posset. */
         CREDO_FALSUM (_continet(o.textualis_ok.js,
             "function _tx(e){if(e.value!==undefined"));
 
-        /* manus_textus formam SUAM eiusdem iudicii fert (duplicatio
-         * quae iam de SELECT discrepabat) - ergo utraque figenda */
-        CREDO_VERUM (_continet(o.textus.js,
-            "e.tagName==='INPUT'||e.tagName==='TEXTAREA'"));
+        /* manus_textus formam SUAM NON iam fert: forma una _tx est
+         * (unificatum 2026-08-17 postquam forma TERTIA in asserto
+         * '<li>.value' ut '0' legit dum instrumentum textum daret).
+         * Assertum et instrumentum idem videre DEBENT - id ipsum
+         * hic figitur. */
+        CREDO_VERUM  (_continet(o.textus.js, "visum:_tx(e)"));
         CREDO_FALSUM (_continet(o.textus.js,
             "};if(e.value!==undefined"));
 
@@ -1156,7 +1162,7 @@ s32 principale (vacuum)
          * quoque legit, quod legem 'VISIBILE, NON PRAESENS' huius
          * bibliothecae frangebat. */
         CREDO_VERUM  (_continet(o.textus.js, "innerText"));
-        CREDO_VERUM  (_continet(o.textus.js, "e.tagName==='SELECT'"));
+        CREDO_VERUM  (_continet(o.textus.js, "g==='SELECT'"));
 
         /* SPATIA COACTA in petitione textuali.
          *

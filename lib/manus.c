@@ -550,7 +550,12 @@ _iussum (
     "return o;}" \
     /* innerText ubi adest (visibilitatem servat; SVG eum non habet,
      * unde textContent superest). */ \
-    /* VALOR SOLIS CAMPIS, non omnibus quod '.value' habent.
+    /* _tx = FORMA UNA textus elementi. Omnes viae (textus, asserta,
+     * petitio textualis, affordantiae) HANC vocant - tres exemplaria
+     * eiusdem iudicii vixerunt et BIS iam discrepaverant antequam
+     * quisquam animadverteret (vide infra).
+     *
+     * VALOR SOLIS CAMPIS, non omnibus quod '.value' habent.
      *
      * MENSURATUM 2026-08-14 in laboratorio: '<button>' '.value'
      * HABET, et vacuam ('') nisi attributum ponas. Ergo _tx pro
@@ -563,11 +568,19 @@ _iussum (
      *     Exitus ZEPHYRUM, nihil actum - defectus ille ipse quem
      *     haec bibliotheca tollere debet.
      *
-     * Campi soli (INPUT/TEXTAREA/SELECT) valorem ut contentum
-     * VISIBILE habent; ceteris textus visibilis est, et '.value'
-     * res interna formae quam nemo videt. */ \
+     * MENSURATUM 2026-08-17 (experimentum 0004): '<li>' quoque
+     * '.value' habet - NUMERUM ordinalem, ZEPHYRUM ordinarie. Forma
+     * tertia (in asserto) 'e.value!==undefined' nudum iudicabat et
+     * pro ordine tabellae '0' legebat dum 'manus textus' idem
+     * elementum recte legeret: assertum et instrumentum de eadem re
+     * dissentiebant.
+     *
+     * SELECT: TEXTUS optionis electae, non valor - valor saepe
+     * clavis interna est ('019ffd86e206'); usor verba legit. */ \
     "function _tx(e){var g=e.tagName;" \
-    "if((g==='INPUT'||g==='TEXTAREA'||g==='SELECT')" \
+    "if(g==='SELECT'){var o=e.options[e.selectedIndex];" \
+    "return o?String(o.text):'';}" \
+    "if((g==='INPUT'||g==='TEXTAREA')" \
     "&&e.value!==undefined&&e.value!==null)" \
     "return String(e.value);" \
     "return String((e.innerText===undefined||e.innerText===null)" \
@@ -1712,41 +1725,14 @@ manus_textus (
     _appendere_litteras_js(a, selector);
     chorda_aedificator_appendere_literis(a,
         ");if(!e)return{ok:false,visum:\"\"};"
-        /* TEXTUM VISIBILEM reddere, non textContent.
-         *
-         * MENSURATUM 2026-08-13: 'manus textus body' XXXII milia
-         * octetorum reddidit - fontem <script> paginae TOTUM,
-         * commentariis inclusis. textContent enim omnia legit,
-         * etiam quae usor videre NON POTEST.
-         *
-         * Id legem huius bibliothecae ipsam frangebat: omnia hic
-         * 'VISIBILE, NON PRAESENS' significant (vide caput
-         * MANUS_JS_VISUS supra). innerText solus eam servat -
-         * scripta, styli, occulta omnia excludit.
-         *
-         * <select>: TEXTUS optionis electae, non valor. Valor
-         * saepe clavis interna est ('019ffd86e206'); usor verba
-         * legit. Prior forma chordam VACUAM reddebat cum optio
-         * prima valorem vacuum haberet - quod 'selector nihil
-         * invenit' mentiebatur. */
-        "if(e.tagName==='SELECT'){var o=e.options[e.selectedIndex];"
-        "return{ok:true,visum:o?String(o.text):\"\"};}"
-        /* VALOR SOLIS CAMPIS - eadem custodia quam _tx fert.
-         *
-         * MENSURATUM 2026-08-14: '<button>' '.value' habet, vacuam
-         * nisi attributum ponas. Sine custodia 'textus <pyxis>'
-         * vacuum reddebat - responsum falsum sine ullo signo, dum
-         * pyxis 'condere' plane in schermo diceret.
-         *
-         * DUAE FORMAE EIUSDEM IUDICII hic vivunt (haec et _tx), et
-         * IAM discrepabant: haec SELECT ut textum optionis legit,
-         * illa ut valorem. Quod ipsum est cur duplicatio nocet. */
-        "if((e.tagName==='INPUT'||e.tagName==='TEXTAREA')"
-        "&&e.value!==undefined&&e.value!==null)"
-        "return{ok:true,visum:String(e.value)};"
-        "return{ok:true,visum:String("
-        "(e.innerText===undefined||e.innerText===null)"
-        "?e.textContent:e.innerText)};");
+        /* _tx FORMA UNA est (vide MANUS_JS_TEXTUS): innerText pro
+         * visibilitate (2026-08-13: textContent fontem <script>
+         * TOTUM reddebat), valor solis campis (2026-08-14: pyxis
+         * '.value' vacuam habet), SELECT textus optionis. Duae
+         * formae huius iudicii hic vixerunt et de SELECT iam
+         * discrepabant; tertia (in asserto) '<li>' ut '0' legebat.
+         * Forma una ex fonte uno venit. */
+        "return{ok:true,visum:_tx(e)};");
 
     v = _interrogare(manus,
                      _litterae(chorda_aedificator_finire(a), manus->piscina));
@@ -2584,7 +2570,11 @@ _manus_credo_textum (
     _appendere_litteras_js(a, selector);
     chorda_aedificator_appendere_literis(a,
         ");if(!e)return{ok:false,visum:\"(nullum elementum)\"};"
-        "var v=String(e.value!==undefined?e.value:e.textContent);return{ok:");
+        /* _tx, non 'e.value?...:textContent' - forma illa '<li>' ut
+         * ordinem ('0') legebat dum 'manus textus' textum redderet:
+         * assertum quod aliud videt quam instrumentum quo scrutaris
+         * horas furatur (MENSURATUM 2026-08-17, experimentum 0004). */
+        "var v=_tx(e);return{ok:");
     si (pars_sufficit)
     {
         chorda_aedificator_appendere_literis(a, "v.indexOf(");
