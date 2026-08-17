@@ -514,6 +514,33 @@ run_speculum() {
         fi
     done
 
+    # SYNTAXIS JS - porta ANTE probationes velaminum.
+    #
+    # CUR OMNINO: haec domus JS scribit quem NULLUS compilator legit -
+    # assets velaminum hic, et manus eum ex chordis C concatenat. BIS
+    # in duobus diebus vitium syntaxis transiit (manus_focus_ponere:
+    # '}' intra litteras JS clausum, ergo obiectum numquam clausum;
+    # experimentum laboratorii 0003: paren impar a renominatione), et
+    # UTRUMQUE sola applicatio viva cepit. Probationes quae in
+    # CONTENTO JS asserta faciunt vitium syntaxis capere
+    # structuraliter non possunt.
+    #
+    # ANTE velamina consulto: plagula prava eas quoque frangit, sed
+    # cum nuntio obscuro ('probatio fracta'). Hic causa NOMINATUR.
+    if [ -x "./tools/js_syntaxis.sh" ]; then
+        js_plagulae=$(find lib tools apps probationes \
+            -name '*.js' -not -path '*/node_modules/*' 2>/dev/null \
+            | grep -v '^tools/js_syntaxis.js$' | sort)
+        if [ -n "$js_plagulae" ]; then
+            if ! ./tools/js_syntaxis.sh -tacite $js_plagulae; then
+                echo -e "${RED}✗ syntaxis JS prava (curre:"
+                echo -e "  ./tools/js_syntaxis.sh <plagula.js>)${RESET}"
+                return 1
+            fi
+            echo -e "${BLUE}syntaxis JS: omnes plagulae validae${RESET}"
+        fi
+    fi
+
     # Probatio velaminis JS sine navigatro (JavaScriptCore/JXA) -
     # porta per codicem exitus (iactus in plagula -> non-zephyrum)
     if [ -f "lib/speculum_assets/probatio_velaminis.js" ]; then
