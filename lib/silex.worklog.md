@@ -471,3 +471,34 @@ Non factum (consulto): detectio binariorum (plagulae domus textus
 sunt), contextus configurabilis, differentia in UI vitrea
 (tractator `vcs_differentia` cum opus erit). Manet ex desiderato:
 condere viis circumscriptum (item 4) solum.
+
+## 2026-08-18 — differentia --unitates (silex fit semanticus)
+
+Fran's call: silex is the one batteries-included binary long-term,
+so the semantic diff goes INTO it rather than staying a
+rhubarb-side differre mode. Mechanics:
+
+- The unit engine was first extracted from differre's principale
+  into silva/instrumenta/silva_differre.{h,c} (9c32eb8; byte-gate
+  on all three differre modes held). silex links it plus the full
+  modular silva fontes — silex_struere.sh now compiles them into
+  silva/build (same cache + flags as differre.sh, so the two
+  builds share objects).
+- SilexDifferentiaRes gained textus_vetus/textus_novus — the raw
+  sides were already materialized in the API piscina, so storing
+  the chordas costs nothing and any consumer (GUI later) can
+  reach the texts. cum_textu semantics untouched.
+- tools/silex.c: --unitates flag on the differentia verb. Per
+  changed file: .c/.h → silva_differre latus/paria/emission
+  (same rows, same classification as differre); others → line
+  summary; NUL guard → "(binaria)". NOVA files read as their
+  units ADDITA — "this seq added these three functions".
+- TRAP for the next verb: argumenta is a DECLARED-options parser.
+  argumenta_habet_vexillum on an unregistered flag doesn't just
+  return false — the parser REFUSES the whole invocation
+  ("Optio ignota"). Register with argumenta_addere_vexillum
+  first; the flag then also self-documents in --help.
+
+First light on the real lab store (seq 257→320, the componentia
+arc): fumus.c files unitatim, capsula_laboratorium.c one honest
+MUTATA datum row (+23216), js/css/md as line summaries.

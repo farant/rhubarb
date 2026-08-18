@@ -104,12 +104,49 @@ TOML
         || exit 1
 fi
 
+# obiecta silvae (machina differentiae unitatum --unitates) -
+# lacus idem quo differre.sh (silva/build), vexillae eaedem
+# (fontes silvae -Wno-overlength-strings poscunt)
+declare -a SILVA_FLAGS=("${GCC_FLAGS[@]}" "-Wno-overlength-strings")
+declare -a SILVA_INCLUDA=("-Iinclude" "-Isilva/fontes"
+    "-Isilva/instrumenta")
+mkdir -p silva/build
+silva_recentior () {
+    find include silva/fontes silva/instrumenta -name '*.h' \
+        -newer "$1" 2>/dev/null | head -1
+}
+silva_obiecta=""
+for src in silva/fontes/*.c; do
+    base="$(basename "$src" .c)"
+    obj="silva/build/fons_$base.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || \
+       [ -n "$(silva_recentior "$obj")" ]; then
+        echo "  [silva] $base.c"
+        clang "${SILVA_FLAGS[@]}" "${SILVA_INCLUDA[@]}" -c "$src" \
+            -o "$obj" || exit 1
+    fi
+    silva_obiecta="$silva_obiecta $obj"
+done
+for base in silva_unitates silva_differre; do
+    src="silva/instrumenta/$base.c"
+    obj="silva/build/instr_$base.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || \
+       [ -n "$(silva_recentior "$obj")" ]; then
+        echo "  [instr] $base.c"
+        clang "${SILVA_FLAGS[@]}" "${SILVA_INCLUDA[@]}" -c "$src" \
+            -o "$obj" || exit 1
+    fi
+    silva_obiecta="$silva_obiecta $obj"
+done
+
 mkdir -p bin
 echo "  [silex] tools/silex.c + capsula_silex_frons.c + corpus"
-clang "${GCC_FLAGS[@]}" -Iinclude \
+clang "${GCC_FLAGS[@]}" -Iinclude -Isilva/fontes \
+    -Isilva/instrumenta \
     tools/silex.c tools/silex_assets/capsula_silex_frons.c \
     build/capsula_corpus_silicis.c \
     build/*.o \
+    $silva_obiecta \
     -framework Cocoa -framework Security -framework WebKit \
     -o bin/silex || exit 1
 echo "aedificatum: bin/silex"

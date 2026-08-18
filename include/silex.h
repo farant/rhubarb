@@ -235,6 +235,8 @@ nomen structura {
     SilexPlagulaStatus genus;    /* MUTATA | NOVA | ABSENS */
     DifferentiaSumma   summa;
     chorda             textus;
+    chorda             textus_vetus;  /* latus crudum (semper) */
+    chorda             textus_novus;  /* - consumptores unitatum */
 } SilexDifferentiaRes;
 
 nomen structura {

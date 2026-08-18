@@ -3103,6 +3103,8 @@ _differentiae_rem_implere (Piscina* piscina,
     r->via = via;
     r->genus = genus;
     r->summa = differentia_summa(d->tractus);
+    r->textus_vetus = vetus;
+    r->textus_novus = novum;
     si (cum_textu)
     {
         r->textus = differentia_unificata(piscina, d,

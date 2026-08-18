@@ -32,6 +32,7 @@
 #include "stml.h"
 #include "internamentum.h"
 #include "canon.h"
+#include "silva_differre.h"
 #include "silex_assets/capsula_silex_frons.h"
 
 #include <stdio.h>
@@ -602,6 +603,34 @@ _ui_currere (Piscina* piscina, constans character* fabrica,
     redde ZEPHYRUM;
 }
 
+/* auxilia modi --unitates (differentia gradu symbolorum) */
+interior b32
+_plagula_c_est (chorda via);
+
+interior b32
+_plagula_c_est (chorda via)
+{
+    character ultima;
+
+    si (via.mensura < 2 || via.datum[via.mensura - 2] != '.')
+    {
+        redde FALSUM;
+    }
+    ultima = (character)via.datum[via.mensura - 1];
+    redde ultima == 'c' || ultima == 'h';
+}
+
+interior b32
+_massa_binaria_est (chorda textus);
+
+interior b32
+_massa_binaria_est (chorda textus)
+{
+    redde textus.mensura > 0
+        && memchr(textus.datum, 0,
+               (memoriae_index)textus.mensura) != NIHIL;
+}
+
 s32
 principale (integer argc, character** argv)
 {
@@ -649,6 +678,9 @@ principale (integer argc, character** argv)
         " praesens)");
     argumenta_addere_vexillum(parser, "-summa", "--summa",
         "differentia: nomina et numeri soli, sine textu");
+    argumenta_addere_vexillum(parser, "-unitates", "--unitates",
+        "differentia: gradu symbolorum (functiones/typi/macra -"
+        " MUTATA classificatae, MOTA, ADDITA, REMOTA)");
     argumenta_addere_optionem(parser, "-via", "--via",
         "historia: plagulae unius (via relativa in proiecto)");
     argumenta_addere_vexillum(parser, "-sine-renovationibus",
@@ -950,6 +982,8 @@ principale (integer argc, character** argv)
                 "--ad", piscina);
             b32    summa_sola = argumenta_habet_vexillum(lecta,
                 "--summa");
+            b32    unitates_modus = argumenta_habet_vexillum(
+                lecta, "--unitates");
             s64    a_seq = 0;
             s64    ad_seq = 0;
             SilexDifferentiaFructus f;
@@ -986,9 +1020,9 @@ principale (integer argc, character** argv)
 
             f = ad_opt.mensura > ZEPHYRUM
                 ? silex_differentia_plicarum(piscina, via_proiecti,
-                    a_seq, ad_seq, !summa_sola)
+                    a_seq, ad_seq, !summa_sola && !unitates_modus)
                 : silex_differentia_laborans(piscina, via_proiecti,
-                    a_seq, !summa_sola);
+                    a_seq, !summa_sola && !unitates_modus);
             si (!f.successus)
             {
                 fprintf(stderr, "silex differentia: %s\n",
@@ -999,6 +1033,103 @@ principale (integer argc, character** argv)
             {
                 imprimere("silex differentia: nulla (%d plagulae"
                     " aequales)\n", (integer)f.aequales);
+                redde ZEPHYRUM;
+            }
+            si (unitates_modus)
+            {
+                /* gradu symbolorum: machina silva_differre super
+                 * latera cruda (plagulae C unitatim, ceterae
+                 * summa linearum, binariae notatae) */
+                InternamentumChorda* internamentum_unitatum =
+                    internamentum_creare(piscina);
+
+                si (internamentum_unitatum == NIHIL)
+                {
+                    fprintf(stderr, "silex differentia:"
+                        " memoria\n");
+                    redde I;
+                }
+                per (index = 0; index < xar_numerus(f.res);
+                    index = index + 1)
+                {
+                    SilexDifferentiaRes* r =
+                        (SilexDifferentiaRes*)xar_obtinere(f.res,
+                            index);
+                    constans character* signum =
+                        r->genus == SILEX_PLAGULA_MUTATA
+                            ? "MUTATA"
+                        : r->genus == SILEX_PLAGULA_NOVA
+                            ? "NOVA"
+                        : "ABSENS";
+                    b32 binaria =
+                        _massa_binaria_est(r->textus_vetus)
+                        || _massa_binaria_est(r->textus_novus);
+
+                    si (_plagula_c_est(r->via) && !binaria)
+                    {
+                        SilvaDifferreLatus la;
+                        SilvaDifferreLatus lb;
+                        Xar* paria;
+                        i32  immotae = 0;
+                        constans character* via_cstr =
+                            chorda_ut_cstr(r->via, piscina);
+
+                        si (!silva_differre_latus_ex_textu(
+                                piscina, internamentum_unitatum,
+                                r->textus_vetus, via_cstr, &la)
+                            || !silva_differre_latus_ex_textu(
+                                   piscina,
+                                   internamentum_unitatum,
+                                   r->textus_novus, via_cstr,
+                                   &lb))
+                        {
+                            redde I;
+                        }
+                        paria = silva_differre_paria(piscina,
+                            &la, &lb, &immotae);
+                        si (paria == NIHIL)
+                        {
+                            redde I;
+                        }
+                        imprimere("== %s  %s\n", via_cstr,
+                            signum);
+                        silva_differre_paria_emittere(piscina,
+                            &la, &lb, paria, FALSUM, NIHIL,
+                            FALSUM, &additae_totae,
+                            &deletae_totae);
+                        imprimere("\n");
+                    }
+                    alioquin
+                    {
+                        additae_totae = additae_totae
+                            + (i32)r->summa.additae;
+                        deletae_totae = deletae_totae
+                            + (i32)r->summa.deletae;
+                        si (binaria)
+                        {
+                            imprimere("== %.*s  %s  (binaria)"
+                                "\n\n",
+                                (integer)r->via.mensura,
+                                (constans character*)
+                                    r->via.datum, signum);
+                        }
+                        alioquin
+                        {
+                            imprimere("== %.*s  %s  +%d -%d\n\n",
+                                (integer)r->via.mensura,
+                                (constans character*)
+                                    r->via.datum, signum,
+                                (integer)r->summa.additae,
+                                (integer)r->summa.deletae);
+                        }
+                    }
+                }
+                imprimere("silex differentia: %d plagulae"
+                    " (+%d -%d), %d aequales\n",
+                    (integer)xar_numerus(f.res),
+                    (integer)additae_totae,
+                    (integer)deletae_totae,
+                    (integer)f.aequales);
                 redde ZEPHYRUM;
             }
             per (index = 0; index < xar_numerus(f.res);
