@@ -71,6 +71,7 @@ declare -a SOURCE_FILES=(
     "lib/internamentum.c"
     "lib/internuntius.c"
     "lib/iter_directoria.c"
+    "lib/js_lexema.c"
     "lib/json.c"
     "lib/lapifex_c89_grammatica.c"
     "lib/lapifex_generare.c"
