@@ -875,7 +875,10 @@ derived cache reset (summa back to 1).
 Gates: probatio_officina_legatus OMNIA; probe scripts REICE→ACCIPE
 flip. Delivered to the live session resident via renovare itself
 (signum 03019c… → 9c9e44…), and the original failing scenario now
-ACCIPEs on the reborn resident.
+ACCIPEs on the reborn resident. The differential is committed as
+`officina/probationes/probatio_custodia_capitum.sh` (spawns a fresh
+`-mcp` resident, expects REICE→ACCIPE around a mid-session header
+birth) — the standing regression guard for both holes.
 
 Residual notes: (1) an orphan second `-mcp` resident (old signum)
 from some prior session was observed alive — harmless, heals on
