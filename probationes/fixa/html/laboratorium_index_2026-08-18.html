@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="utf-8">
+<title>laboratorium</title>
+<link rel="stylesheet" href="thema.css">
+<!-- Bibliotheca (componentia) NON hic: exemplar VENDITUM cuiusque
+     experimenti ab oneratore cum experimento oneratur. Cima
+     assets/componentia.* fons vendicationis est, non pagina. -->
+<style>
+  /* CRUSTA SOLA hic vivit. Quod experimentum pingit in plagula sua
+     vivit, et onerator eam cum experimento aufert - ergo experimenta
+     inter se styli non miscentur, quamquam umbra abest.
+     Classes crustae 'lab-' praefixum ferunt: sine umbra spatium
+     nominum unum est, et collisio silens vitium visuale parit. */
+  * { box-sizing: border-box; }
+  body { margin: 0; height: 100vh; display: flex;
+         font-family: var(--forma-sans); font-size: var(--magnitudo-iii);
+         background: var(--fundus); color: var(--ante); }
+
+  /* --- index experimentorum (latus) --- */
+  .lab-latus { width: 15rem; flex: 0 0 auto; overflow-y: auto;
+               background: var(--fundus-alter);
+               border-right: 1px solid var(--limbus);
+               padding: var(--spatium-iv) 0; }
+  .lab-latus h2 { font-size: var(--magnitudo-i); letter-spacing: .1em;
+                  text-transform: uppercase; color: var(--ante-tenuis);
+                  margin: 0 0 var(--spatium-ii);
+                  padding: 0 var(--spatium-iv); }
+  .lab-index { list-style: none; margin: 0; padding: 0; }
+  .lab-index button { display: block; width: 100%; text-align: left;
+                      font: inherit; cursor: pointer; border: 0;
+                      background: transparent; color: inherit;
+                      padding: var(--spatium-ii) var(--spatium-iv);
+                      border-left: 2px solid transparent; }
+  .lab-index button:hover { background: var(--fundus-tertius); }
+  .lab-index button[aria-current="true"] {
+      background: var(--fundus-electi);
+      border-left-color: var(--accentus); }
+  .lab-index .lab-numerus { font-family: var(--forma-mono);
+                            font-size: var(--magnitudo-i);
+                            color: var(--ante-tenuis);
+                            margin-right: var(--spatium-ii); }
+  .lab-index .lab-quaestio { display: block;
+                             font-size: var(--magnitudo-i);
+                             color: var(--ante-subtilis);
+                             margin-top: 2px; line-height: 1.35; }
+
+  /* --- corpus --- */
+  .lab-corpus { flex: 1 1 auto; min-width: 0; overflow: auto;
+                padding: var(--spatium-vi); }
+  .lab-caput { margin-bottom: var(--spatium-v); }
+  h1 { letter-spacing: .06em; margin: 0 0 .2rem;
+       font-size: var(--magnitudo-iv); }
+  #salutatio { font-size: var(--magnitudo-ii); color: var(--ante-subtilis);
+               margin: 0; }
+  #scaena { display: block; }
+  [hidden] { display: none !important; }
+
+  /* --- oculi: scaena / status / textura ---
+     Tres aspectus REI UNIUS, non tres res. 'Tabulae' vitatum est ne
+     cum 'tabella' (0004) confunderetur. */
+  .lab-oculi { display: flex; gap: var(--spatium-i);
+               margin-bottom: var(--spatium-iv);
+               border-bottom: 1px solid var(--limbus); }
+  .lab-oculi button { font: inherit; font-size: var(--magnitudo-ii);
+               cursor: pointer; border: 0; background: transparent;
+               color: var(--ante-subtilis);
+               padding: var(--spatium-ii) var(--spatium-iii);
+               border-bottom: 2px solid transparent;
+               margin-bottom: -1px; }
+  .lab-oculi button:hover { color: var(--ante); }
+  .lab-oculi button[aria-current="true"] { color: var(--ante);
+               border-bottom-color: var(--accentus); }
+  .lab-oculi-clavis { margin-left: auto; align-self: center;
+               font-family: var(--forma-mono);
+               font-size: var(--magnitudo-i);
+               color: var(--ante-tenuis); }
+  .lab-oculus-caput { font-family: var(--forma-mono);
+               font-size: var(--magnitudo-i); color: var(--ante-tenuis);
+               margin: 0 0 var(--spatium-ii); }
+  .lab-oculus-textus { font-family: var(--forma-mono);
+               font-size: var(--magnitudo-ii);
+               background: var(--fundus-alter);
+               border: 1px solid var(--limbus);
+               border-radius: var(--rotunditas);
+               padding: var(--spatium-iii); margin: 0;
+               overflow: auto; white-space: pre; }
+
+  /* --- scholia: margines libri --- */
+  .lab-scholium { background: var(--fundus-alter);
+               border: 1px solid var(--limbus);
+               border-radius: var(--rotunditas);
+               padding: var(--spatium-iii);
+               margin: 0 0 var(--spatium-iii); }
+  .lab-scholium-caput { font-family: var(--forma-mono);
+               font-size: var(--magnitudo-i);
+               color: var(--ante-tenuis);
+               margin: 0 0 var(--spatium-i); }
+  .lab-scholium-textus { margin: 0; white-space: pre-wrap; }
+  .lab-scholia-vacua { color: var(--ante-tenuis);
+               margin: 0 0 var(--spatium-iii); }
+  .lab-scholia-forma { display: flex; gap: var(--spatium-ii);
+               align-items: flex-start; margin: 0; }
+  .lab-scholia-forma textarea { flex: 1 1 auto; font: inherit;
+               background: var(--fundus-alter); color: inherit;
+               border: 1px solid var(--limbus);
+               border-radius: var(--rotunditas);
+               padding: var(--spatium-ii); }
+  .lab-scholia-forma button { font: inherit; cursor: pointer;
+               background: var(--fundus-tertius); color: inherit;
+               border: 1px solid var(--limbus);
+               border-radius: var(--rotunditas);
+               padding: var(--spatium-ii) var(--spatium-iii); }
+</style>
+</head>
+<body>
+
+<nav class="lab-latus">
+  <h2>experimenta</h2>
+  <ul class="lab-index" id="lab-index"></ul>
+</nav>
+
+<div class="lab-corpus">
+  <header class="lab-caput">
+    <h1>laboratorium</h1>
+    <p id="salutatio">…</p>
+  </header>
+
+  <!-- OCULI: aspectus tres rei unius. Scaena = quod usor videt;
+       status = quod experimentum DECLARAT (si declarat); textura =
+       marcatio VIVA scaenae, observatore mutationum recta. -->
+  <nav class="lab-oculi" id="lab-oculi" aria-label="oculi">
+    <button type="button" data-oculus="scaena"
+            aria-current="true">scaena</button>
+    <button type="button" data-oculus="status"
+            aria-current="false">status</button>
+    <button type="button" data-oculus="textura"
+            aria-current="false">textura</button>
+    <button type="button" data-oculus="fons"
+            aria-current="false">fons</button>
+    <button type="button" data-oculus="scholia"
+            aria-current="false">scholia</button>
+    <span class="lab-oculi-clavis">Ctrl+O circumit vivos</span>
+  </nav>
+
+  <!-- SCAENA UNICA. Experimentum unum simul vivit; onerator quod
+       praecessit destruit ANTE quod sequitur. Sine ea lege duo
+       experimenta eosdem 'id' ferrent et selector probationis
+       primum inveniret - viride et mendax. -->
+  <main id="scaena"></main>
+
+  <section id="lab-status" hidden>
+    <p class="lab-oculus-caput" id="lab-status-versio">versio status: 0</p>
+    <pre class="lab-oculus-textus" id="lab-status-textus"></pre>
+  </section>
+  <section id="lab-textura" hidden>
+    <p class="lab-oculus-caput" id="lab-mutationes">mutationes: 0</p>
+    <pre class="lab-oculus-textus" id="lab-textura-textus"></pre>
+  </section>
+  <!-- FONS: quod AUCTUM est (plagulae ex disco/capsula), par oculo
+       texturae (quod EST). Fragmentis insulae auctae immutatae hic
+       manent dum vivae mutantur - ipsa demonstratio veritatis
+       vivae. -->
+  <section id="lab-fons" hidden>
+    <p class="lab-oculus-caput" id="lab-fons-via">fons experimenti</p>
+    <pre class="lab-oculus-textus" id="lab-fons-textus"></pre>
+  </section>
+  <!-- SCHOLIA: margines libri. Commentarii de experimento, plagula
+       scholia.stml in plica eius (scriptor UNUS in C: pons hinc,
+       vexillum -scholium a Claudio). Ut fons: recenter quaque
+       apertura legitur et EXTRA circuitum Ctrl+O est - commentarii
+       cum statu currente non variant. -->
+  <section id="lab-scholia" hidden>
+    <p class="lab-oculus-caput" id="lab-scholia-numerus">scholia: 0</p>
+    <div id="lab-scholia-index"></div>
+    <p class="lab-scholia-forma">
+      <textarea id="lab-scholia-textus" rows="3"
+        placeholder="scholium novum…"></textarea>
+      <button type="button" id="lab-scholia-addere">addere</button>
+      <span id="lab-scholia-nuntius"></span>
+    </p>
+  </section>
+</div>
+
+<script src="laboratorium.js"></script>
+</body>
+</html>

@@ -60,6 +60,7 @@ declare -a SOURCE_FILES=(
     "lib/friatio.c"
     "lib/git.c"
     "lib/hospitium.c"
+    "lib/html_lexema.c"
     "lib/http.c"
     "lib/imago.c"
     "lib/imago_collatio.c"
