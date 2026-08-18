@@ -255,6 +255,83 @@ _classificare (Piscina* piscina, constans SilvaDifferreLatus* a,
     redde "cosmetica";
 }
 
+b32
+silva_differre_symbolum_ex_textu (Piscina* piscina, chorda textus,
+    constans character* titulus, SilvaDifferreSymbolum* exitus)
+{
+    Piscina*             temporaria;
+    InternamentumChorda* intern_brevis;
+    SilvaDifferreLatus   latus;
+    ChordaAedificator*   aed;
+    i32                  k;
+
+    exitus->inventa = FALSUM;
+    exitus->textus.datum = NIHIL;
+    exitus->textus.mensura = 0;
+    exitus->sigillum_hex = exitus->textus;
+    si (textus.datum == NIHIL || textus.mensura == 0)
+    {
+        redde VERUM;
+    }
+    temporaria = piscina_generare_dynamicum(
+        "silva_differre_symbolum", 1048576);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    intern_brevis = internamentum_creare(temporaria);
+    si (intern_brevis == NIHIL
+        || !silva_differre_latus_ex_textu(temporaria,
+               intern_brevis, textus, "symbolum", &latus))
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    aed = chorda_aedificator_creare(piscina,
+        (memoriae_index)256);
+    si (aed == NIHIL)
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    per (k = 0; k < latus.numerus; k = k + 1)
+    {
+        constans SilvaUnitas* u = (constans SilvaUnitas*)
+            xar_obtinere(latus.unitates, k);
+
+        si (chorda_aequalis_literis(u->titulus, titulus))
+        {
+            chorda_aedificator_appendere_chorda(aed,
+                silva_differre_spatium(&latus, k));
+            exitus->inventa = VERUM;
+        }
+    }
+    piscina_destruere(temporaria);
+    si (!exitus->inventa)
+    {
+        redde VERUM;
+    }
+    exitus->textus = chorda_aedificator_finire(aed);
+    {
+        Sigillum  sig;
+        character hex[SIGILLUM_HEX_MENSURA];
+        i8*       datum = (i8*)piscina_allocare(piscina,
+            (memoriae_index)64);
+
+        si (datum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        sig = sigillum_computare(
+            (constans vacuum*)exitus->textus.datum,
+            (memoriae_index)exitus->textus.mensura);
+        sigillum_hex(&sig, hex);
+        memcpy(datum, hex, (memoriae_index)64);
+        exitus->sigillum_hex = chorda_ex_buffer(datum, 64);
+    }
+    redde VERUM;
+}
+
 constans character*
 silva_differre_classificare_textus (Piscina* piscina, chorda a,
     chorda b)

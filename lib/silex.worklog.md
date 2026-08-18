@@ -502,3 +502,33 @@ rhubarb-side differre mode. Mechanics:
 First light on the real lab store (seq 257→320, the componentia
 arc): fumus.c files unitatim, capsula_laboratorium.c one honest
 MUTATA datum row (+23216), js/css/md as line summaries.
+
+## 2026-08-18 — historia --symbolum (historia symboli super seqs)
+
+The silex analogue of differre -historia, and it came out CHEAPER
+than git's: the stage-1 screen (file content sigillum per touch)
+is already materialized in SilexPlagulaConditio — the store did
+the screening work at condere time. The walk just compares
+neighbor sigilla; only differing states get parsed.
+
+Shape: `silex historia --via <plagula> --symbolum <titulus>
+[--summa]`. Events newest-first: seq, date, MUTATA/ADDITA/REMOTA,
+classification, ±counts, nuntius, unified body of the symbol
+(--summa drops bodies). --sine-renovationibus is deliberately
+inert here: the symbol sigillum screen already silences
+renovation noise, and filtering entries would fabricate false
+ADDITA gaps.
+
+Sharing: the span-extractor was generalized into
+silva_differre_symbolum_ex_textu (module) — takes TEXT, so the
+caller owns the fetch (differre fetches git blobs, silex fetches
+volumen massae via the already-public silex_volumen_viam_invenire
++ volumen_massam_promere; no lib/silex.c change needed at all).
+differre's historia was re-based on the same helper; byte gate
+held again.
+
+First light on the lab: atrium_creare born seq 204, four
+substantive changes riding renovations — the newest (+5, seq 257)
+is visibly the -retro flag arriving. Also: probing a WRONG name
+(atrium_incipere) answered "symbolum non exsistit - ambulatio
+pergit" and 0 events — honest, not silent.

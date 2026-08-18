@@ -631,6 +631,55 @@ _massa_binaria_est (chorda textus)
                (memoriae_index)textus.mensura) != NIHIL;
 }
 
+/* symbolum ad conditionem unam (historia --symbolum): massa
+ * sigillo e volumine prompta (piscina brevi propria, deleta post
+ * extractionem - memoria plana trans ambulationem), symbolum in
+ * piscinam datam extractum. Conditio remota = latus vacuum
+ * honestum; massa ignota = FALSUM (volumen corruptum, clama). */
+interior b32
+_symbolum_ad_conditionem (Volumen* vol,
+    constans SilexPlagulaConditio* conditio,
+    constans character* titulus, Piscina* piscina,
+    SilvaDifferreSymbolum* exitus);
+
+interior b32
+_symbolum_ad_conditionem (Volumen* vol,
+    constans SilexPlagulaConditio* conditio,
+    constans character* titulus, Piscina* piscina,
+    SilvaDifferreSymbolum* exitus)
+{
+    Piscina* massae;
+    chorda   massa;
+    b32      inventum = FALSUM;
+    b32      fructus;
+
+    exitus->inventa = FALSUM;
+    exitus->textus.datum = NIHIL;
+    exitus->textus.mensura = 0;
+    exitus->sigillum_hex = exitus->textus;
+    si (conditio->remota || conditio->sigillum.mensura == 0)
+    {
+        redde VERUM;
+    }
+    massae = piscina_generare_dynamicum("silex_symbolum_massa",
+        1048576);
+    si (massae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    massa = volumen_massam_promere(vol, conditio->sigillum,
+        massae, &inventum);
+    si (!inventum)
+    {
+        piscina_destruere(massae);
+        redde FALSUM;
+    }
+    fructus = silva_differre_symbolum_ex_textu(piscina, massa,
+        titulus, exitus);
+    piscina_destruere(massae);
+    redde fructus;
+}
+
 s32
 principale (integer argc, character** argv)
 {
@@ -681,6 +730,9 @@ principale (integer argc, character** argv)
     argumenta_addere_vexillum(parser, "-unitates", "--unitates",
         "differentia: gradu symbolorum (functiones/typi/macra -"
         " MUTATA classificatae, MOTA, ADDITA, REMOTA)");
+    argumenta_addere_optionem(parser, "-symbolum", "--symbolum",
+        "historia: symbolum unum sequi (--via obligatoria) -"
+        " quando et QUOMODO mutatum; --summa = eventa sola");
     argumenta_addere_optionem(parser, "-via", "--via",
         "historia: plagulae unius (via relativa in proiecto)");
     argumenta_addere_vexillum(parser, "-sine-renovationibus",
@@ -1277,12 +1329,23 @@ principale (integer argc, character** argv)
         {
             chorda via_plagulae = argumenta_obtinere_optionem(
                 lecta, "--via", piscina);
+            chorda symbolum_opt = argumenta_obtinere_optionem(
+                lecta, "--symbolum", piscina);
+            b32 summa_sola_h = argumenta_habet_vexillum(lecta,
+                "--summa");
             b32 sine_renovationibus = argumenta_habet_vexillum(
                 lecta, "--sine-renovationibus");
             s32 index;   /* SIGNATUS: numeratio descendens -
                           * i32 >= 0 semper verum esset (examen
                           * comparationem vanam cepit) */
 
+            si (symbolum_opt.mensura > ZEPHYRUM
+                && via_plagulae.mensura == ZEPHYRUM)
+            {
+                fprintf(stderr, "silex historia: --symbolum viam"
+                    " poscit (--via <plagula>)\n");
+                redde I;
+            }
             si (via_plagulae.mensura > ZEPHYRUM)
             {
                 Xar* ordo = silex_historia_plagulae(piscina,
@@ -1301,6 +1364,165 @@ principale (integer argc, character** argv)
                         " condita: %.*s\n",
                         (integer)via_plagulae.mensura,
                         (constans character*)via_plagulae.datum);
+                    redde ZEPHYRUM;
+                }
+                si (symbolum_opt.mensura > ZEPHYRUM)
+                {
+                    /* historia symboli: cribrum duplici gradu -
+                     * sigillum plagulae in actis IAM
+                     * materializatum (gradus primus gratis),
+                     * sigillum spatiorum symboli deinde.
+                     * --sine-renovationibus hic otiosum: cribrum
+                     * ipse strepitum renovationum tacet. */
+                    constans character* titulus_symboli =
+                        chorda_ut_cstr(symbolum_opt, piscina);
+                    constans character* volumen_via =
+                        silex_volumen_viam_invenire(piscina,
+                            via_proiecti);
+                    Volumen* vol;
+                    SilvaDifferreSymbolum posterior;
+                    SilvaDifferreSymbolum prior;
+                    i32 eventa = 0;
+
+                    si (volumen_via == NIHIL)
+                    {
+                        fprintf(stderr, "silex historia: volumen"
+                            " deest\n");
+                        redde I;
+                    }
+                    vol = volumen_aperire(piscina, volumen_via);
+                    si (vol == NIHIL)
+                    {
+                        fprintf(stderr, "silex historia: volumen"
+                            " aperiri non potuit\n");
+                        redde I;
+                    }
+                    si (!_symbolum_ad_conditionem(vol,
+                        (SilexPlagulaConditio*)xar_obtinere(ordo,
+                            xar_numerus(ordo) - 1),
+                        titulus_symboli, piscina, &posterior))
+                    {
+                        fprintf(stderr, "silex historia: massa"
+                            " promi non potuit\n");
+                        redde I;
+                    }
+                    imprimere("historia symboli '%s' in %.*s\n\n",
+                        titulus_symboli,
+                        (integer)via_plagulae.mensura,
+                        (constans character*)via_plagulae.datum);
+                    si (!posterior.inventa)
+                    {
+                        imprimere("(symbolum in conditione"
+                            " recentissima non exsistit -"
+                            " ambulatio pergit)\n\n");
+                    }
+                    per (index = (s32)xar_numerus(ordo) - 1;
+                        index >= 0; index = index - 1)
+                    {
+                        SilexPlagulaConditio* c =
+                            (SilexPlagulaConditio*)xar_obtinere(
+                                ordo, (i32)index);
+
+                        si (index == 0)
+                        {
+                            prior.inventa = FALSUM;
+                            prior.textus.datum = NIHIL;
+                            prior.textus.mensura = 0;
+                            prior.sigillum_hex = prior.textus;
+                        }
+                        alioquin
+                        {
+                            SilexPlagulaConditio* p =
+                                (SilexPlagulaConditio*)
+                                xar_obtinere(ordo,
+                                    (i32)(index - 1));
+
+                            si (!c->remota && !p->remota
+                                && chorda_aequalis(p->sigillum,
+                                       c->sigillum))
+                            {
+                                prior = posterior;
+                            }
+                            alioquin si (!_symbolum_ad_conditionem(
+                                vol, p, titulus_symboli, piscina,
+                                &prior))
+                            {
+                                fprintf(stderr, "silex historia:"
+                                    " massa promi non potuit\n");
+                                redde I;
+                            }
+                        }
+                        si (posterior.inventa != prior.inventa
+                            || (posterior.inventa
+                                   && !chorda_aequalis(
+                                          posterior.sigillum_hex,
+                                          prior.sigillum_hex)))
+                        {
+                            constans character* status =
+                                !prior.inventa ? "ADDITA"
+                                : !posterior.inventa ? "REMOTA"
+                                : "MUTATA";
+                            DifferentiaSumma summa =
+                                silva_differre_summa_textuum(
+                                    piscina, prior.textus,
+                                    posterior.textus);
+
+                            imprimere("== [%ld] %.10s  %s",
+                                (longus)c->seq,
+                                (constans character*)
+                                    c->momentum.datum, status);
+                            si (strcmp(status, "MUTATA") == 0)
+                            {
+                                imprimere("  [%s]",
+                                    silva_differre_classificare_textus(
+                                        piscina, prior.textus,
+                                        posterior.textus));
+                            }
+                            imprimere("  +%d -%d\n   %.*s\n",
+                                (integer)summa.additae,
+                                (integer)summa.deletae,
+                                (integer)c->nuntius.mensura,
+                                (constans character*)
+                                    c->nuntius.datum);
+                            si (!summa_sola_h)
+                            {
+                                DifferentiaLinearum* d =
+                                    differentia_linearum(piscina,
+                                        prior.textus,
+                                        posterior.textus);
+
+                                si (d != NIHIL)
+                                {
+                                    chorda corpus_textus =
+                                        differentia_unificata(
+                                            piscina, d,
+                                            silva_differre_titulum_cstr(
+                                                piscina, "a/",
+                                                chorda_ex_literis(
+                                                    titulus_symboli,
+                                                    piscina)),
+                                            silva_differre_titulum_cstr(
+                                                piscina, "b/",
+                                                chorda_ex_literis(
+                                                    titulus_symboli,
+                                                    piscina)),
+                                            (i32)3);
+
+                                    imprimere("%.*s",
+                                        (integer)
+                                            corpus_textus.mensura,
+                                        (constans character*)
+                                            corpus_textus.datum);
+                                }
+                            }
+                            imprimere("\n");
+                            eventa = eventa + 1;
+                        }
+                        posterior = prior;
+                    }
+                    imprimere("historia: %d eventa\n",
+                        (integer)eventa);
+                    volumen_claudere(vol);
                     redde ZEPHYRUM;
                 }
                 /* recentissima primum */

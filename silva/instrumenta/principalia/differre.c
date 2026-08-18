@@ -158,34 +158,23 @@ _est_binaria (chorda textus)
  * modus -historia: symbolum per commissa sequi
  * -------------------------------------------------- */
 
-nomen structura {
-    b32    inventa;       /* unitas ulla titulo data */
-    chorda textus;        /* spatia concatenata (piscina AMBULATIONIS) */
-    chorda sigillum_hex;  /* identitas contenti (64 hex) */
-} HistoriaLatus;
-
-/* massam parsare piscina BREVI (deleta ante reditum - memoria
- * plana trans ambulationem totam), spatia unitatum titulo
- * congruentium in piscinam ambulationis concatenare. Unitates
- * OMNES titulo (prototypum + definitio una identitate).
- * sha_massae NIHIL = plagula ad commissum absens (latus vacuum
- * honestum). FALSUM = defectus verus. */
+/* massam git promere (piscina brevi propria, deleta post
+ * extractionem - memoria plana), symbolum per
+ * silva_differre_symbolum_ex_textu extrahere. sha_massae NIHIL =
+ * plagula ad commissum absens (latus vacuum honestum). */
 interior b32
 _historia_latus_legere (GitRepositorium* repositorium,
     constans character* sha_massae, constans character* titulus,
-    Piscina* ambulationis, HistoriaLatus* exitus);
+    Piscina* ambulationis, SilvaDifferreSymbolum* exitus);
 
 interior b32
 _historia_latus_legere (GitRepositorium* repositorium,
     constans character* sha_massae, constans character* titulus,
-    Piscina* ambulationis, HistoriaLatus* exitus)
+    Piscina* ambulationis, SilvaDifferreSymbolum* exitus)
 {
-    Piscina*             temporaria;
-    InternamentumChorda* intern_brevis;
-    GitObiectum          obiectum;
-    SilvaDifferreLatus   latus;
-    ChordaAedificator*   aed;
-    i32                  k;
+    Piscina*    massae;
+    GitObiectum obiectum;
+    b32         fructus;
 
     exitus->inventa = FALSUM;
     exitus->textus.datum = NIHIL;
@@ -195,67 +184,24 @@ _historia_latus_legere (GitRepositorium* repositorium,
     {
         redde VERUM;
     }
-    temporaria = piscina_generare_dynamicum("differre_historia",
+    massae = piscina_generare_dynamicum("differre_historia",
         1048576);
-    si (temporaria == NIHIL)
+    si (massae == NIHIL)
     {
         redde FALSUM;
     }
     obiectum = git_obiectum_legere(repositorium, sha_massae,
-        temporaria);
-    intern_brevis = internamentum_creare(temporaria);
+        massae);
     si (!obiectum.successus
-        || obiectum.genus != GIT_OBIECTUM_MASSA
-        || intern_brevis == NIHIL
-        || !silva_differre_latus_ex_textu(temporaria,
-               intern_brevis, obiectum.datum, "historia", &latus))
+        || obiectum.genus != GIT_OBIECTUM_MASSA)
     {
-        piscina_destruere(temporaria);
+        piscina_destruere(massae);
         redde FALSUM;
     }
-    aed = chorda_aedificator_creare(ambulationis,
-        (memoriae_index)256);
-    si (aed == NIHIL)
-    {
-        piscina_destruere(temporaria);
-        redde FALSUM;
-    }
-    per (k = 0; k < latus.numerus; k = k + 1)
-    {
-        constans SilvaUnitas* u = (constans SilvaUnitas*)
-            xar_obtinere(latus.unitates, k);
-
-        si (chorda_aequalis_literis(u->titulus, titulus))
-        {
-            chorda_aedificator_appendere_chorda(aed,
-                silva_differre_spatium(&latus, k));
-            exitus->inventa = VERUM;
-        }
-    }
-    piscina_destruere(temporaria);
-    si (!exitus->inventa)
-    {
-        redde VERUM;
-    }
-    exitus->textus = chorda_aedificator_finire(aed);
-    {
-        Sigillum  sig;
-        character hex[SIGILLUM_HEX_MENSURA];
-        i8*       datum = (i8*)piscina_allocare(ambulationis,
-            (memoriae_index)64);
-
-        si (datum == NIHIL)
-        {
-            redde FALSUM;
-        }
-        sig = sigillum_computare(
-            (constans vacuum*)exitus->textus.datum,
-            (memoriae_index)exitus->textus.mensura);
-        sigillum_hex(&sig, hex);
-        memcpy(datum, hex, (memoriae_index)64);
-        exitus->sigillum_hex = chorda_ex_buffer(datum, 64);
-    }
-    redde VERUM;
+    fructus = silva_differre_symbolum_ex_textu(ambulationis,
+        obiectum.datum, titulus, exitus);
+    piscina_destruere(massae);
+    redde fructus;
 }
 
 /* dies ex epocha commissoris; exitus >= 16 octeti */
@@ -301,14 +247,14 @@ interior vacuum
 _historia_eventum_emittere (Piscina* piscina,
     constans character* sha_commissi,
     constans GitCommissum* commissum, constans character* status,
-    constans HistoriaLatus* vetus, constans HistoriaLatus* novus,
+    constans SilvaDifferreSymbolum* vetus, constans SilvaDifferreSymbolum* novus,
     b32 machina, b32 summa_modus, constans character* titulus);
 
 interior vacuum
 _historia_eventum_emittere (Piscina* piscina,
     constans character* sha_commissi,
     constans GitCommissum* commissum, constans character* status,
-    constans HistoriaLatus* vetus, constans HistoriaLatus* novus,
+    constans SilvaDifferreSymbolum* vetus, constans SilvaDifferreSymbolum* novus,
     b32 machina, b32 summa_modus, constans character* titulus)
 {
     DifferentiaSumma    summa;
@@ -475,7 +421,7 @@ s32 principale (integer argc, character** argv)
         character           sha_massae_currentis[
             GIT_SHA_HEX_MENSURA];
         b32                 habet_currens = FALSUM;
-        HistoriaLatus       latus_currens;
+        SilvaDifferreSymbolum       latus_currens;
         i32                 eventa = 0;
 
         si (repositorium == NIHIL)
@@ -532,7 +478,7 @@ s32 principale (integer argc, character** argv)
             character     sha_massae_parentis[
                 GIT_SHA_HEX_MENSURA];
             b32           habet_parens = FALSUM;
-            HistoriaLatus latus_parentis;
+            SilvaDifferreSymbolum latus_parentis;
             b32           plagula_mutata;
 
             si (xar_numerus(commissum_currens.parentes) == 0)
@@ -540,7 +486,7 @@ s32 principale (integer argc, character** argv)
                 /* radix historiae: symbolum praesens = natum hic */
                 si (latus_currens.inventa)
                 {
-                    HistoriaLatus vacuum_latus;
+                    SilvaDifferreSymbolum vacuum_latus;
 
                     vacuum_latus.inventa = FALSUM;
                     vacuum_latus.textus.datum = NIHIL;

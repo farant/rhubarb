@@ -80,6 +80,25 @@ silva_differre_paria_emittere (
     i32*                         additae_totae,
     i32*                         deletae_totae);
 
+/* symbolum unum e textu: spatia concatenata unitatum OMNIUM
+ * titulo congruentium (prototypum + definitio una identitate) */
+nomen structura {
+    b32    inventa;
+    chorda textus;        /* spatia concatenata (piscina data) */
+    chorda sigillum_hex;  /* identitas contenti (64 hex) */
+} SilvaDifferreSymbolum;
+
+/* textum parsare piscina brevi INTERNA (deleta ante reditum -
+ * memoria vocatoris plana trans ambulationes), spatia in piscinam
+ * datam concatenare. textus vacuus/NIHIL = latus vacuum honestum
+ * (inventa FALSUM, VERUM redditur). FALSUM = defectus verus. */
+b32
+silva_differre_symbolum_ex_textu (
+    Piscina*               piscina,
+    chorda                 textus,
+    constans character*    titulus,
+    SilvaDifferreSymbolum* exitus);
+
 /* classificatio duorum textuum planorum (sine unitatibus):
  * substantiva | documentaria | cosmetica */
 constans character*
