@@ -831,3 +831,57 @@ self-transform + raw-wire drive; a session connected before the
 renewal cannot see the new tool until reconnect —
 tools/list_changed notification is the named future (also in the
 renovare worklog entry 2026-07-28).
+
+## 2026-08-18 — the "stale header cache" was two custodia holes (both fixed)
+
+Two-week-old quaestio 01KZ6GH88Z ("false REICE from stale header
+cache, renovare lies") diagnosed by measurement and closed. The
+journey matters because every prior theory was wrong:
+
+- NOT a stale cache design — `_aetates_custodire` runs before every
+  MCP tools/call and `praeparator_caput_stalum` watches directory
+  mtimes for new files. A fresh resident handles a mid-session new
+  header perfectly (probed via scripted stdin `-mcp` runs with
+  visible stderr — the decisive instrument; framing is plain
+  newline JSON).
+- NOT a stale process image, and renovare did NOT lie — `-signum`
+  is sha256 of the binary, rebirth is exec (which preserves ps
+  lstart, so an Aug-6 birthdate proved nothing), and the running
+  signum matched the disk binary exactly.
+
+The real defects, both in `_aetates_custodire`'s MCP path:
+
+**Hole A — fail-once-die-forever.** `praeparata` guarded the
+staleness check itself, so ONE transient `_praeparationem_struere`
+failure (e.g. racing a file mid-write) permanently disabled both
+judgment quality (every verdict rendered header-blind: unknown
+types, implicit calls — the afternoon's js_lexema.c REICE with
+`Xar` unknown was this state) AND the machinery that would repair
+it. No retry existed anywhere in MCP; the LSP never shows this
+because didSave rebuilds unconditionally. Fix: a `!praeparata`
+branch that retries the build on every request entry — loud,
+never silently dead.
+
+**Hole B — derived cache survives base rebuild.** The stala branch
+rebuilt the base but never called
+`_praeparationes_derivatas_destruere`, unlike the LSP's
+`_contextum_reaedificare` (step ①b). A file re-judged after a
+header birth reused its own signature-cached derived preparation
+from before the rebuild. Measured differentially: judge .c before
+its header exists (REICE, correct) → create header → re-judge →
+REICE persisted pre-fix, ACCIPE post-fix, with stderr showing the
+derived cache reset (summa back to 1).
+
+Gates: probatio_officina_legatus OMNIA; probe scripts REICE→ACCIPE
+flip. Delivered to the live session resident via renovare itself
+(signum 03019c… → 9c9e44…), and the original failing scenario now
+ACCIPEs on the reborn resident.
+
+Residual notes: (1) an orphan second `-mcp` resident (old signum)
+from some prior session was observed alive — harmless, heals on
+its own renovare, killable at leisure. (2) `_contextum_reaedificare`
+(LSP path) still has no retry after a failed struere — lower
+urgency (didSave re-triggers), noted not fixed. (3) If false REICE
+ever recurs: stderr "praeparatio absens - iterum conatur" spam =
+the build itself is persistently failing; that is the new loud
+signal, by design.

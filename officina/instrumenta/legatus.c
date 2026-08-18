@@ -4756,6 +4756,28 @@ _aetates_custodire (Legatus* l, Piscina* pn)
     {
         _vigiliam_inspicere_epocha(l, pn);
     }
+    /* FORAMEN A (2026-08-18, 01KZ6GH88Z): praeparatio absens -
+     * aedificatio prior lapsa. Sine hoc ramo status mortuus sine
+     * reditu erat: 'praeparata' custos custodiae ipsius erat, ergo
+     * lapsus UNUS et transitorius (e.g. plagula inter scripturam)
+     * custodiam claudebat et iudicia OMNIA sine capitibus
+     * reddebantur (typi ignoti, vocationes implicitae) - donec
+     * residens moreretur. Quisque introitus iterum conatur:
+     * clamor, numquam mors tacita. */
+    si (l->modus_mcp && !l->praeparata && l->radix_mensura
+        != ZEPHYRUM)
+    {
+        fprintf(stderr, "legati: praeparatio absens - iterum"
+            " conatur\n");
+        _praeparationes_derivatas_destruere(l);
+        si (_praeparationem_struere(l))
+        {
+            _indicem_renovare(l, pn, VERUM);
+            redde;
+        }
+        /* lapsa iterum: iudicia degradata hoc introitu, conatus
+         * proximo - cadit infra ad indicem */
+    }
     si (l->modus_mcp && l->praeparata)
     {
         constans character* stalum = praeparator_caput_stalum(
@@ -4765,6 +4787,13 @@ _aetates_custodire (Legatus* l, Piscina* pn)
         {
             fprintf(stderr, "legati: praeparatio stala (%s) -"
                 " reaedificatur\n", stalum);
+            /* FORAMEN B (2026-08-18): derivatae quoque moriuntur.
+             * Antea cache signaturae reaedificationi supervivebat
+             * et plagula re-iudicata visum capitum VETUS accipiebat
+             * (mensuratum: caput natum post iudicium primum -
+             * REICE manebat). Mos viae LSP (contextum_reaedificare
+             * gradus (1)b): derivatae ante basim moriuntur. */
+            _praeparationes_derivatas_destruere(l);
             si (_praeparationem_struere(l))
             {
                 _indicem_renovare(l, pn, VERUM);
