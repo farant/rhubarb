@@ -61,8 +61,8 @@ for src in "$SILVA_DIR"/fontes/*.c; do
     obj_files="$obj_files $obj"
 done
 
-# moduli instrumentorum communes (scansor unitatum)
-for base in silva_unitates; do
+# moduli instrumentorum communes (scansor unitatum + machina)
+for base in silva_unitates silva_differre; do
     src="$SILVA_DIR/instrumenta/$base.c"
     obj="$BUILD_DIR/instr_$base.o"
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
