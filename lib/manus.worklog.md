@@ -1164,3 +1164,17 @@ cascaded into every later section (14 from 1). Within-section poison
 stays, deliberately: the boundary is the section.
 
 probatio_manus 195/195 (two new pins); laboratorium fumus 173/173.
+
+## 2026-08-18 — scribere does NOT leave focus in the field (measured)
+
+Composite-experiment finding (laboratorium 0017): after
+`manus_scribere`, `document.activeElement` is BODY — the typed
+text lands (value + input events fire) but native focus does not
+persist in the field. Every earlier green run that sent native
+keys after scribere (0014's Enter-commit) passed only because a
+prior click handler had explicitly focused the field
+(vertere → campus.focus()). The working contract: **scribere,
+then manus_focus_ponere, then native keys.** Recorded in the lab
+memory + 0017 inventum; desideratum filed for scribere to retain
+focus (would match user-typing semantics and remove the
+trap-shaped step).
