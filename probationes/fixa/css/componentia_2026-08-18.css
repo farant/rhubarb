@@ -1,0 +1,388 @@
+/* componentia.css - styli BIBLIOTHECAE (stratum commune, vivum).
+ *
+ * NON archivum: mutatio hic consumentes OMNES mutat - id est munus
+ * bibliothecae, sicut signum in thema.css thema totum mutat.
+ * Praefixum 'ca-' spatium nominum bibliothecae est.
+ *
+ * Arbor ex 0007 transcripta (quae ex 0006, quae ex 0003 - linea
+ * adumbrationum in bibliothecam confluxit).
+ */
+
+.ca-culpa {
+  color: var(--periculum);
+  font-family: var(--forma-mono);
+  font-size: var(--magnitudo-ii);
+  margin: 0;
+}
+
+.ca-numeri {
+  font-family: var(--forma-mono);
+  font-size: var(--magnitudo-ii);
+  color: var(--ante-subtilis);
+  margin: 0 0 var(--spatium-ii);
+  white-space: pre-wrap;
+}
+
+.ca-remontare {
+  font: inherit;
+  font-size: var(--magnitudo-ii);
+  padding: var(--spatium-i) var(--spatium-iii);
+  margin-bottom: var(--spatium-iii);
+  background: var(--fundus-tertius);
+  color: var(--ante);
+  border: 1px solid var(--limbus-fortis);
+  border-radius: var(--rotunditas);
+  cursor: pointer;
+}
+
+.ca-quaerere {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: var(--magnitudo-ii);
+  padding: var(--spatium-ii) var(--spatium-iii);
+  margin-bottom: var(--spatium-ii);
+  background: var(--fundus);
+  color: var(--ante);
+  border: 1px solid var(--limbus);
+  border-radius: var(--rotunditas);
+}
+
+.ca-prospectus {
+  height: 50vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid var(--limbus-fortis);
+  border-radius: var(--rotunditas);
+  background: var(--fundus-alter);
+}
+.ca-prospectus:focus {
+  outline: 2px solid var(--accentus);
+  outline-offset: -2px;
+}
+
+.ca-spatium { position: relative; width: 100%; }
+.ca-ordines { position: absolute; top: 0; left: 0; right: 0; }
+
+.ca-ordo {
+  position: absolute; left: 0; right: 0;
+  height: var(--ordo-altitudo);
+  line-height: var(--ordo-altitudo);
+  display: flex; align-items: center; gap: var(--spatium-ii);
+  padding-right: var(--spatium-iii);
+  font-family: var(--forma-mono);
+  font-size: var(--magnitudo-ii);
+  white-space: nowrap;
+  cursor: default;
+}
+.ca-ordo:hover { background: var(--fundus-tertius); }
+.ca-electus   { background: var(--fundus-electi); }
+
+.ca-signum  { color: var(--ante-tenuis); width: 1ch;
+              display: inline-block; text-align: center; }
+.ca-nomen   { color: var(--ante); flex: 1 1 auto; overflow: hidden;
+              text-overflow: ellipsis; }
+.ca-mensura { color: var(--ante-subtilis); }
+
+.ca-ordo[aria-expanded] .ca-nomen { color: var(--ante); font-weight: 600; }
+
+/* --- tabella mandatorum (cm-) - ex 0004 transcripta --- */
+
+.cm-aperire {
+  font: inherit;
+  font-size: var(--magnitudo-ii);
+  padding: var(--spatium-i) var(--spatium-iii);
+  background: var(--fundus-tertius);
+  color: var(--ante);
+  border: 1px solid var(--limbus-fortis);
+  border-radius: var(--rotunditas);
+  cursor: pointer;
+}
+
+.cm-velum {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .25);
+  z-index: 10;
+}
+.cm-velum.cm-aperta { display: block; }
+
+.cm-tabella {
+  width: min(30rem, 90vw);
+  margin: 10vh auto 0;
+  background: var(--fundus-alter);
+  border: 1px solid var(--limbus-fortis);
+  border-radius: var(--rotunditas-maior);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .3);
+  overflow: hidden;
+}
+
+.cm-quaerere {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--spatium-iii) var(--spatium-iv);
+  border: none;
+  border-bottom: 1px solid var(--limbus);
+  background: var(--fundus);
+  color: var(--ante);
+  font: inherit;
+  font-size: var(--magnitudo-iii);
+  outline: none;
+}
+
+.cm-index {
+  max-height: min(50vh, 20rem);
+  overflow-y: auto;
+  margin: 0;
+  padding: var(--spatium-i) 0;
+  list-style: none;
+}
+
+.cm-mandatum {
+  height: var(--ordo-altitudo);
+  line-height: var(--ordo-altitudo);
+  padding: 0 var(--spatium-iv);
+  font-size: var(--magnitudo-ii);
+  color: var(--ante);
+  cursor: default;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cm-mandatum.cm-electus { background: var(--fundus-electi); }
+
+.cm-congrua { color: var(--accentus); font-weight: 600; }
+
+.cm-nihil {
+  padding: var(--spatium-iii) var(--spatium-iv);
+  color: var(--ante-subtilis);
+  font-style: italic;
+}
+
+.cm-numerus {
+  padding: var(--spatium-i) var(--spatium-iv);
+  border-top: 1px solid var(--limbus);
+  color: var(--ante-tenuis);
+  font-size: var(--magnitudo-i);
+}
+
+/* ==================================================
+ * OPTIO - capsa electionis (0014)
+ * ================================================== */
+.ca-optio-involucrum {
+  position: relative;
+  display: inline-block;
+  min-width: 18rem;
+}
+.ca-optio-campus {
+  box-sizing: border-box;
+  width: calc(100% - 2.2rem);
+  font: inherit;
+  font-size: var(--magnitudo-ii);
+  padding: var(--spatium-ii) var(--spatium-iii);
+  border: 1px solid var(--limbus);
+  border-radius: 4px;
+  background: var(--fundus);
+  color: var(--ante);
+}
+.ca-optio-vertere {
+  width: 2rem;
+  font: inherit;
+  font-size: var(--magnitudo-ii);
+  border: 1px solid var(--limbus);
+  border-radius: 4px;
+  background: var(--fundus);
+  color: var(--ante-subtilis);
+  cursor: pointer;
+}
+.ca-optio-pyxis {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  max-height: 12rem;
+  overflow-y: auto;
+  border: 1px solid var(--limbus);
+  border-radius: 4px;
+  background: var(--fundus);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: 10;
+}
+.ca-optio-ordo {
+  padding: var(--spatium-ii) var(--spatium-iii);
+  font-size: var(--magnitudo-ii);
+  color: var(--ante);
+  cursor: default;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ca-optio-ordo.ca-electus { background: var(--fundus-electi); }
+
+/* ==================================================
+ * COLOR - lector coloris (0015)
+ * ================================================== */
+.ca-color-planum {
+  position: relative;
+  width: 16rem;
+  height: 9rem;
+  border: 1px solid var(--limbus);
+  border-radius: 4px;
+  cursor: crosshair;
+}
+.ca-color-regula {
+  position: relative;
+  width: 16rem;
+  height: 1rem;
+  margin-top: var(--spatium-ii);
+  border: 1px solid var(--limbus);
+  border-radius: 4px;
+  background: linear-gradient(to right,
+    #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%,
+    #00f 67%, #f0f 83%, #f00 100%);
+  cursor: pointer;
+}
+.ca-color-planum:focus, .ca-color-regula:focus {
+  outline: 2px solid var(--fundus-electi);
+}
+.ca-color-thumb {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  top: 50%;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+.ca-color-linea {
+  display: flex;
+  align-items: center;
+  gap: var(--spatium-ii);
+  margin: var(--spatium-ii) 0 0;
+}
+.ca-color-quadrum {
+  display: inline-block;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 1px solid var(--limbus);
+  border-radius: 4px;
+}
+.ca-color-hex {
+  font-family: var(--forma-mono);
+  font-size: var(--magnitudo-ii);
+  width: 7ch;
+  padding: var(--spatium-i) var(--spatium-ii);
+  border: 1px solid var(--limbus);
+  border-radius: 4px;
+  background: var(--fundus);
+  color: var(--ante);
+}
+
+/* ==================================================
+ * HARMONIA - genitor thematum (0016)
+ * ================================================== */
+.ca-harmonia-rationes {
+  margin: var(--spatium-ii) 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spatium-i);
+}
+.ca-harmonia-ratio, .ca-harmonia-rota {
+  font: inherit;
+  font-size: var(--magnitudo-i);
+  padding: var(--spatium-i) var(--spatium-ii);
+  border: 1px solid var(--limbus);
+  border-radius: 4px;
+  background: var(--fundus);
+  color: var(--ante);
+  cursor: pointer;
+}
+.ca-harmonia-ratio.ca-electus { background: var(--fundus-electi); }
+.ca-harmonia-ordo {
+  display: flex;
+  gap: var(--spatium-i);
+  margin-bottom: var(--spatium-i);
+}
+.ca-harmonia-quadrum {
+  display: inline-block;
+  width: 2.4rem;
+  height: 1.6rem;
+  border: 1px solid var(--limbus);
+  border-radius: 3px;
+}
+.ca-harmonia-exportatio {
+  display: block;
+  width: 22rem;
+  margin-top: var(--spatium-ii);
+  font-family: var(--forma-mono);
+  font-size: var(--magnitudo-i);
+  border: 1px solid var(--limbus);
+  border-radius: 4px;
+  background: var(--fundus);
+  color: var(--ante-subtilis);
+}
+
+/* ==================================================
+ * LECTOR (0019) - textus fontis lineatim
+ * ================================================== */
+.ca-lector-caput { font-family: var(--forma-mono);
+  font-size: var(--magnitudo-i); color: var(--ante-tenuis);
+  margin: 0 0 var(--spatium-i); }
+.ca-lector-corpus { font-family: var(--forma-mono);
+  font-size: var(--magnitudo-ii); background: var(--fundus-alter);
+  border: 1px solid var(--limbus); border-radius: var(--rotunditas);
+  padding: var(--spatium-ii); max-height: 24em; overflow: auto;
+  line-height: 1.5; }
+.ca-lector-linea { display: flex; min-height: 1.5em; }
+.ca-lector-numerus { min-width: 3em; text-align: right;
+  padding-right: var(--spatium-iii); user-select: none;
+  -webkit-user-select: none; color: var(--ante-tenuis); }
+.ca-lector-textus { white-space: pre; }
+/* classificatio tecti lineae - margo colore loquitur.
+   THEMABILE (0022): classes semanticae, colores per variabiles
+   cum praefinitis - thema (aut harmonia applicata) ab alto
+   superscribit, bibliotheca immota. */
+.ca-lc-totus  { background: var(--ca-lc-totus, rgba(120, 200, 120, .35)); }
+.ca-lc-caput  { background: var(--ca-lc-caput, rgba(120, 180, 220, .35)); }
+.ca-lc-cauda  { background: var(--ca-lc-cauda, rgba(230, 200, 110, .35)); }
+.ca-lc-medius { background: var(--ca-lc-medius, rgba(230, 150, 110, .35)); }
+/* lumina (0020) - segmenta durabilia + nuntius recusationum */
+.ca-lumen { background: var(--ca-lumen-fundus, rgba(245, 220, 90, .5));
+  border-radius: 2px; }
+.ca-lumen:hover { cursor: pointer; }
+.ca-lector-nuntius { font-family: var(--forma-mono);
+  font-size: var(--magnitudo-i); color: var(--periculum);
+  min-height: 1.2em; margin: var(--spatium-i) 0 0; }
+/* marginalia (0021) - sectio = [margo notae | lineae] */
+.ca-sectio { display: flex; gap: var(--spatium-iii);
+  align-items: flex-start; }
+.ca-sectio-margo { flex: 0 0 16em; min-width: 0; }
+.ca-sectio-lineae { flex: 1 1 auto; min-width: 0; }
+.ca-nota-charta { background: var(--fundus-tertius);
+  border: 1px solid var(--limbus); border-radius: var(--rotunditas);
+  padding: var(--spatium-ii); margin: var(--spatium-i) 0;
+  font-size: var(--magnitudo-i); white-space: pre-wrap;
+  line-height: 1.4; }
+.ca-nota-vacua { color: var(--ante-tenuis); font-style: italic; }
+.ca-nota-scriptorium { width: 100%; box-sizing: border-box;
+  font: inherit; font-size: var(--magnitudo-i);
+  background: var(--fundus-alter); color: inherit;
+  border: 1px solid var(--accentus);
+  border-radius: var(--rotunditas); padding: var(--spatium-ii);
+  margin: var(--spatium-i) 0; }
+/* marginalia in crate (0022b) - ordo documenti != ordo visus:
+   ordines contigui, chartae post omnes, collocatio explicita */
+.ca-lector-marginatus { display: grid;
+  column-gap: var(--spatium-iii); align-items: start; }
+/* color syntaxis (0023) - stratum derivatum, classes semanticae,
+   colores themabiles per variabiles (angulus non pictus) */
+.ca-sy-commentarium { color: var(--ca-sy-commentarium, #7a8a6f); font-style: italic; }
+.ca-sy-chorda        { color: var(--ca-sy-chorda, #a5654a); }
+.ca-sy-numerus       { color: var(--ca-sy-numerus, #8a6fa8); }
+.ca-sy-clavis        { color: var(--ca-sy-clavis, #4a6fa5); font-weight: 600; }
+.ca-sy-genus         { color: var(--ca-sy-genus, #3f8a7a); }
+.ca-sy-praeprocessor { color: var(--ca-sy-praeprocessor, #8a8a8a); }

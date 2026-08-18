@@ -1,0 +1,87 @@
+/* thema.css - signa thematis (CSS custom properties).
+ *
+ * FUNDAMENTUM OMNIUM EXPERIMENTORUM. Quod hic nominatur componentes
+ * adhibent; quod hic non est componens fingere non debet.
+ *
+ * CUR PROPRIETATES ET NON CLASSES: proprietates per DOM LUCIS
+ * hereditantur. Quia umbram (shadow DOM) consulto vitamus, signum in
+ * ':root' positum ad omnem componentem sine ullo opere descendit -
+ * quod est ipsa causa cur thematizatio sine umbra FACILIOR est, non
+ * difficilior.
+ *
+ * NOMINA RES SIGNIFICANT, NON COLORES. '--fundus-altior' per themata
+ * migrat; '--cinereus-clarus' in themate obscuro mendacium fit.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- superficies (gradus elevationis) --- */
+  --fundus:          #fbfbfa;   /* pagina ipsa            */
+  --fundus-alter:    #f2f2ef;   /* tabulae, latera        */
+  --fundus-tertius:  #e7e7e3;   /* quod supra utrumque    */
+  --fundus-electi:   #dfe6f0;   /* ordo electus           */
+
+  /* --- littera --- */
+  --ante:            #1c1c1a;   /* textus praecipuus      */
+  --ante-subtilis:   #6b6b66;   /* textus secundus        */
+  --ante-tenuis:     #9a9a94;   /* vix legendus (numeri)  */
+
+  /* --- limbi --- */
+  --limbus:          #d6d6d0;
+  --limbus-fortis:   #b4b4ac;
+
+  /* --- accentus --- */
+  --accentus:        #2f5d9e;
+  --accentus-ante:   #ffffff;
+  --periculum:       #c0392b;
+
+  /* --- mensurae --- */
+  --spatium-i:       .25rem;
+  --spatium-ii:      .5rem;
+  --spatium-iii:     .75rem;
+  --spatium-iv:      1rem;
+  --spatium-v:       1.5rem;
+  --spatium-vi:      2rem;
+
+  --rotunditas:      .3rem;
+  --rotunditas-maior:.5rem;
+
+  /* --- litterae formae --- */
+  --forma-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+                sans-serif;
+  --forma-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --magnitudo-i:   .72rem;
+  --magnitudo-ii:  .82rem;
+  --magnitudo-iii: .95rem;
+  --magnitudo-iv:  1.15rem;
+
+  /* --- ordo indicis (unum in loco uno) ---
+   * Altitudo ordinis SIGNUM est, non numerus in codice sparsus:
+   * index virtualis eam LEGIT ut quot ordines pingat computet. Si
+   * duobus locis viveret, mathematica volutionis a pictura tacite
+   * discreparet - et error talis se ut 'ordines saltant' ostendit,
+   * quod nemo ad signum refert. */
+  --ordo-altitudo:   24px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundus:          #17181a;
+    --fundus-alter:    #1e2023;
+    --fundus-tertius:  #26292d;
+    --fundus-electi:   #2c3a4f;
+
+    --ante:            #e6e6e3;
+    --ante-subtilis:   #9b9b95;
+    --ante-tenuis:     #6a6a65;
+
+    --limbus:          #2f3236;
+    --limbus-fortis:   #45484d;
+
+    --accentus:        #6f9fe0;
+    --accentus-ante:   #10141a;
+    --periculum:       #e06b5f;
+  }
+}

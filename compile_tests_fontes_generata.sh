@@ -39,6 +39,7 @@ declare -a SOURCE_FILES=(
     "lib/coloratio.c"
     "lib/concha.c"
     "lib/credo.c"
+    "lib/css_lexema.c"
     "lib/cursor.c"
     "lib/cursus.c"
     "lib/delineare.c"
