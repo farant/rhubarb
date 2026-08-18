@@ -124,6 +124,20 @@ git_arborem_legere (
     constans character* sha,
     Piscina*            piscina);
 
+/* sha introitus ad viam SINE lectione contenti - cribrum gradus
+ * primi ("mutatane plagula inter commissa?" = comparatio shas,
+ * contentum numquam apertum). sha_exitus[GIT_SHA_HEX_MENSURA];
+ * *est_arbor_exitus = introitus directorium est. FALSUM = via
+ * ad commissum non exsistit. */
+b32
+git_sha_per_viam (
+    GitRepositorium*    repositorium,
+    constans character* sha_commissi,
+    constans character* via,
+    Piscina*            piscina,
+    character*          sha_exitus,
+    b32*                est_arbor_exitus);
+
 /* 'git show <commissum>:<via>' ut vocatio C - arborem a radice
  * per segmenta viae ambulat, massam promit. *inventum FALSUM si
  * via ad commissum non exsistit (chorda vacua redditur). */

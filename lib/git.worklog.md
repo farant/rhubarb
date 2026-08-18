@@ -98,3 +98,21 @@ vs parent d4a89dd, expectations transcribed from
 `git show --name-status`: 1 M + 4 A in chorda_comparare order,
 plus tree-vs-itself = empty and the reversed direction flipping
 ADDITA<->REMOTA. First run green.
+
+## 2026-08-18 — git_sha_per_viam (cribrum sine contento)
+
+The stage-1 screen historia needed: walk the tree by path, return
+the entry's sha + est_arbor, never open the blob. "Did this file
+change between commits?" is now two tree walks and a strcmp.
+git_massam_per_viam refactored into a thin wrapper over it
+(sha_per_viam → obiectum_legere → MASSA check); the existing
+byte-oracle test (latina.h == disk) was the refactor gate and
+stayed green. Directory answers VERUM with est_arbor set — the
+caller decides; massam treats it as not-found, preserving the old
+contract exactly.
+
+Test note: no transcribed blob-sha pin needed. sha_per_viam →
+obiectum_legere(sha) is self-proving: obiectum_legere recomputes
+the sha of what it reads, so a wrong sha from the walk either
+fails the lookup or the content mismatches disk. The chain IS the
+oracle.

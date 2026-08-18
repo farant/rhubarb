@@ -1772,30 +1772,27 @@ git_arborem_legere (GitRepositorium* repositorium,
     redde introitus;
 }
 
-chorda
-git_massam_per_viam (GitRepositorium* repositorium,
+b32
+git_sha_per_viam (GitRepositorium* repositorium,
     constans character* sha_commissi, constans character* via,
-    Piscina* piscina, b32* inventum)
+    Piscina* piscina, character* sha_exitus,
+    b32* est_arbor_exitus)
 {
-    chorda    vacua;
     character sha[GIT_SHA_HEX_MENSURA];
     GitCommissum commissum;
     chorda    arbor_sha;
     constans character* reliqua = via;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
-    *inventum = FALSUM;
-
+    *est_arbor_exitus = FALSUM;
     memcpy(sha, sha_commissi, strlen(sha_commissi) + 1);
     si (!_ad_commissum_pellere(repositorium, sha, piscina))
     {
-        redde vacua;
+        redde FALSUM;
     }
     commissum = git_commissum_legere(repositorium, sha, piscina);
     si (!commissum.successus)
     {
-        redde vacua;
+        redde FALSUM;
     }
     arbor_sha = commissum.arbor;
 
@@ -1823,9 +1820,10 @@ git_massam_per_viam (GitRepositorium* repositorium,
             chorda_ut_cstr(arbor_sha, piscina), piscina);
         si (introitus == NIHIL)
         {
-            redde vacua;
+            redde FALSUM;
         }
-        sequens_sha = vacua;
+        sequens_sha.datum = NIHIL;
+        sequens_sha.mensura = 0;
         per (i = 0; i < xar_numerus(introitus); i = i + 1)
         {
             GitArborIntroitus* e = (GitArborIntroitus*)
@@ -1843,35 +1841,54 @@ git_massam_per_viam (GitRepositorium* repositorium,
         }
         si (!inventum_hic)
         {
-            redde vacua;
+            redde FALSUM;
         }
         si (*finis == '\0')
         {
-            /* segmentum ultimum: massa exspectatur */
-            GitObiectum obiectum;
-
-            si (sequens_arbor)
-            {
-                redde vacua;
-            }
-            obiectum = git_obiectum_legere(repositorium,
-                chorda_ut_cstr(sequens_sha, piscina), piscina);
-            si (!obiectum.successus
-                || obiectum.genus != GIT_OBIECTUM_MASSA)
-            {
-                redde vacua;
-            }
-            *inventum = VERUM;
-            redde obiectum.datum;
+            /* segmentum ultimum: sha introitus, sine contento */
+            memcpy(sha_exitus, sequens_sha.datum,
+                (memoriae_index)40);
+            sha_exitus[40] = '\0';
+            *est_arbor_exitus = sequens_arbor;
+            redde VERUM;
         }
         si (!sequens_arbor)
         {
-            redde vacua;
+            redde FALSUM;
         }
         arbor_sha = sequens_sha;
         reliqua = finis + 1;
     }
-    redde vacua;
+    redde FALSUM;
+}
+
+chorda
+git_massam_per_viam (GitRepositorium* repositorium,
+    constans character* sha_commissi, constans character* via,
+    Piscina* piscina, b32* inventum)
+{
+    chorda      vacua;
+    character   sha[GIT_SHA_HEX_MENSURA];
+    b32         est_arbor = FALSUM;
+    GitObiectum obiectum;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = 0;
+    *inventum = FALSUM;
+    si (!git_sha_per_viam(repositorium, sha_commissi, via,
+            piscina, sha, &est_arbor)
+        || est_arbor)
+    {
+        redde vacua;
+    }
+    obiectum = git_obiectum_legere(repositorium, sha, piscina);
+    si (!obiectum.successus
+        || obiectum.genus != GIT_OBIECTUM_MASSA)
+    {
+        redde vacua;
+    }
+    *inventum = VERUM;
+    redde obiectum.datum;
 }
 
 /* ==================================================

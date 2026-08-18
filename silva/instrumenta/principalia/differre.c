@@ -36,12 +36,23 @@
  *           Plagulae C unitatim (ordines soli, sine corporibus -
  *           corpus petis per '-git <via> <vetus> <novus>');
  *           ceterae summa linearum; binariae notatae.
+ *         ./silva/differre.sh -historia <via> <titulus> [ref]
+ *           historia symboli ("quando functio X mutata est - et
+ *           QUOMODO"): ambulatio parentum primorum a ref (CAPUT
+ *           ordinarius), cribrum duplici gradu - sha massae
+ *           plagulae primum (plagula intacta = zerum parsationis),
+ *           sigillum spatiorum deinde. Unitates OMNES titulo
+ *           congruentes una identitate vehuntur (prototypum +
+ *           definitio simul). Eventa MUTATA/ADDITA/REMOTA cum
+ *           classificatione et corpore unificato; -summa =
+ *           ordines eventuum soli.
  * Exitus: 0 = cucurrit (differentia fractura NON est) |
  *         2 = usus malus aut plagula illegibilis
  * -machina: TSV genus, titulus, status, classificatio, +N, -M
  *           (sine textu; par fistulis - nexus.sh, vocantes);
  *           modo -commissum columna VIae praefigitur et plagulae
- *           non-C ordines 'plagula' accipiunt
+ *           non-C ordines 'plagula' accipiunt; modo -historia:
+ *           sha, dies, status, classificatio, +N, -M, subiectum
  */
 
 #include "latina.h"
@@ -61,6 +72,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 /* --------------------------------------------------
  * latus unum: plagula lexata cum partitione unitatum
@@ -790,6 +802,274 @@ _est_binaria (chorda textus)
                (memoriae_index)textus.mensura) != NIHIL;
 }
 
+/* --------------------------------------------------
+ * modus -historia: symbolum per commissa sequi
+ * -------------------------------------------------- */
+
+nomen structura {
+    b32    inventa;       /* unitas ulla titulo data */
+    chorda textus;        /* spatia concatenata (piscina AMBULATIONIS) */
+    chorda sigillum_hex;  /* identitas contenti (64 hex) */
+} HistoriaLatus;
+
+/* massam parsare piscina BREVI (deleta ante reditum - memoria
+ * plana trans ambulationem totam), spatia unitatum titulo
+ * congruentium in piscinam ambulationis concatenare. Unitates
+ * OMNES titulo (prototypum + definitio una identitate).
+ * sha_massae NIHIL = plagula ad commissum absens (latus vacuum
+ * honestum). FALSUM = defectus verus. */
+interior b32
+_historia_latus_legere (GitRepositorium* repositorium,
+    constans character* sha_massae, constans character* titulus,
+    Piscina* ambulationis, HistoriaLatus* exitus);
+
+interior b32
+_historia_latus_legere (GitRepositorium* repositorium,
+    constans character* sha_massae, constans character* titulus,
+    Piscina* ambulationis, HistoriaLatus* exitus)
+{
+    Piscina*             temporaria;
+    InternamentumChorda* intern_brevis;
+    GitObiectum          obiectum;
+    DifferreLatus        latus;
+    ChordaAedificator*   aed;
+    i32                  k;
+
+    exitus->inventa = FALSUM;
+    exitus->textus.datum = NIHIL;
+    exitus->textus.mensura = 0;
+    exitus->sigillum_hex = exitus->textus;
+    si (sha_massae == NIHIL)
+    {
+        redde VERUM;
+    }
+    temporaria = piscina_generare_dynamicum("differre_historia",
+        1048576);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    obiectum = git_obiectum_legere(repositorium, sha_massae,
+        temporaria);
+    intern_brevis = internamentum_creare(temporaria);
+    si (!obiectum.successus
+        || obiectum.genus != GIT_OBIECTUM_MASSA
+        || intern_brevis == NIHIL
+        || !_latus_ex_textu(temporaria, intern_brevis,
+               obiectum.datum, "historia", &latus))
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    aed = chorda_aedificator_creare(ambulationis,
+        (memoriae_index)256);
+    si (aed == NIHIL)
+    {
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    per (k = 0; k < latus.numerus; k = k + 1)
+    {
+        constans SilvaUnitas* u = _unitas_ad(latus.unitates, k);
+
+        si (chorda_aequalis_literis(u->titulus, titulus))
+        {
+            chorda_aedificator_appendere_chorda(aed,
+                _spatium(&latus, k));
+            exitus->inventa = VERUM;
+        }
+    }
+    piscina_destruere(temporaria);
+    si (!exitus->inventa)
+    {
+        redde VERUM;
+    }
+    exitus->textus = chorda_aedificator_finire(aed);
+    {
+        Sigillum  sig;
+        character hex[SIGILLUM_HEX_MENSURA];
+        i8*       datum = (i8*)piscina_allocare(ambulationis,
+            (memoriae_index)64);
+
+        si (datum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        sig = sigillum_computare(
+            (constans vacuum*)exitus->textus.datum,
+            (memoriae_index)exitus->textus.mensura);
+        sigillum_hex(&sig, hex);
+        memcpy(datum, hex, (memoriae_index)64);
+        exitus->sigillum_hex = chorda_ex_buffer(datum, 64);
+    }
+    redde VERUM;
+}
+
+/* classificatio duorum textuum planorum (sine unitatibus):
+ * lexemata codicis -> substantiva; commenta -> documentaria;
+ * cetera cosmetica. Textus parvi (spatia symboli unius), piscina
+ * ambulationis sufficit. */
+interior constans character*
+_classificare_textus (Piscina* piscina, chorda a, chorda b);
+
+interior constans character*
+_classificare_textus (Piscina* piscina, chorda a, chorda b)
+{
+    Xar* la = silva_lexare(piscina,
+        (constans character*)a.datum, a.mensura, ZEPHYRUM);
+    Xar* lb = silva_lexare(piscina,
+        (constans character*)b.datum, b.mensura, ZEPHYRUM);
+    i32  k;
+
+    si (la == NIHIL || lb == NIHIL
+        || xar_numerus(la) != xar_numerus(lb))
+    {
+        redde "substantiva";
+    }
+    per (k = 0; k < xar_numerus(la); k = k + 1)
+    {
+        SilvaToken* ta = _lexema_ad(la, k);
+        SilvaToken* tb = _lexema_ad(lb, k);
+
+        si (ta->genus != tb->genus
+            || !chorda_aequalis(ta->valor, tb->valor))
+        {
+            redde "substantiva";
+        }
+    }
+    {
+        ChordaAedificator* aa = chorda_aedificator_creare(piscina,
+            (memoriae_index)64);
+        ChordaAedificator* ab = chorda_aedificator_creare(piscina,
+            (memoriae_index)64);
+
+        si (aa == NIHIL || ab == NIHIL)
+        {
+            redde "substantiva";
+        }
+        per (k = 0; k < xar_numerus(la); k = k + 1)
+        {
+            _commenta_conserere(aa, _lexema_ad(la, k)->spatia_ante);
+            _commenta_conserere(aa, _lexema_ad(la, k)->spatia_post);
+        }
+        per (k = 0; k < xar_numerus(lb); k = k + 1)
+        {
+            _commenta_conserere(ab, _lexema_ad(lb, k)->spatia_ante);
+            _commenta_conserere(ab, _lexema_ad(lb, k)->spatia_post);
+        }
+        si (!chorda_aequalis(chorda_aedificator_finire(aa),
+            chorda_aedificator_finire(ab)))
+        {
+            redde "documentaria";
+        }
+    }
+    redde "cosmetica";
+}
+
+/* dies ex epocha commissoris; exitus >= 16 octeti */
+interior vacuum
+_diem_scribere (s64 tempus, character* exitus);
+
+interior vacuum
+_diem_scribere (s64 tempus, character* exitus)
+{
+    time_t         t = (time_t)tempus;
+    structura tm*  fractum = gmtime(&t);
+
+    si (fractum == NIHIL
+        || strftime(exitus, (memoriae_index)16, "%Y-%m-%d",
+               fractum) == 0)
+    {
+        strcpy(exitus, "0000-00-00");
+    }
+}
+
+/* linea prima nuntii commissi */
+interior chorda
+_subiectum (chorda nuntius);
+
+interior chorda
+_subiectum (chorda nuntius)
+{
+    i32 k;
+
+    per (k = 0; k < nuntius.mensura; k = k + 1)
+    {
+        si (nuntius.datum[k] == '\n')
+        {
+            frange;
+        }
+    }
+    redde chorda_ex_buffer(nuntius.datum, k);
+}
+
+/* eventum unum historiae emittere: vetus = latus parentis, novus
+ * = latus commissi mutantis */
+interior vacuum
+_historia_eventum_emittere (Piscina* piscina,
+    constans character* sha_commissi,
+    constans GitCommissum* commissum, constans character* status,
+    constans HistoriaLatus* vetus, constans HistoriaLatus* novus,
+    b32 machina, b32 summa_modus, constans character* titulus);
+
+interior vacuum
+_historia_eventum_emittere (Piscina* piscina,
+    constans character* sha_commissi,
+    constans GitCommissum* commissum, constans character* status,
+    constans HistoriaLatus* vetus, constans HistoriaLatus* novus,
+    b32 machina, b32 summa_modus, constans character* titulus)
+{
+    DifferentiaSumma    summa;
+    constans character* classificatio = "-";
+    character           dies[16];
+    chorda              subiectum = _subiectum(commissum->nuntius);
+
+    summa = _summa_spatii(piscina, vetus->textus, novus->textus);
+    si (strcmp(status, "MUTATA") == 0)
+    {
+        classificatio = _classificare_textus(piscina,
+            vetus->textus, novus->textus);
+    }
+    _diem_scribere(commissum->tempus, dies);
+    si (machina)
+    {
+        imprimere("%.7s\t%s\t%s\t%s\t+%d\t-%d\t", sha_commissi,
+            dies, status, classificatio, (integer)summa.additae,
+            (integer)summa.deletae);
+        _titulum_imprimere(subiectum);
+        imprimere("\n");
+        redde;
+    }
+    imprimere("== %.7s %s  %s", sha_commissi, dies, status);
+    si (strcmp(status, "MUTATA") == 0)
+    {
+        imprimere("  [%s]", classificatio);
+    }
+    imprimere("  +%d -%d\n   ", (integer)summa.additae,
+        (integer)summa.deletae);
+    _titulum_imprimere(subiectum);
+    imprimere("\n");
+    si (!summa_modus)
+    {
+        DifferentiaLinearum* d = differentia_linearum(piscina,
+            vetus->textus, novus->textus);
+
+        si (d != NIHIL)
+        {
+            chorda textus = differentia_unificata(piscina, d,
+                _titulum_cstr(piscina, "a/",
+                    chorda_ex_literis(titulus, piscina)),
+                _titulum_cstr(piscina, "b/",
+                    chorda_ex_literis(titulus, piscina)),
+                (i32)3);
+
+            imprimere("%.*s", (integer)textus.mensura,
+                (constans character*)textus.datum);
+        }
+    }
+    imprimere("\n");
+}
+
 s32 principale (integer argc, character** argv)
 {
     Piscina*             piscina;
@@ -802,6 +1082,8 @@ s32 principale (integer argc, character** argv)
     b32                  machina = FALSUM;
     b32                  git_modus = FALSUM;
     b32                  commissum_modus = FALSUM;
+    b32                  historia_modus = FALSUM;
+    b32                  summa_modus = FALSUM;
     Xar*                 paria;
     i32                  immotae = 0;
     i32                  additae_totae = 0;
@@ -823,6 +1105,14 @@ s32 principale (integer argc, character** argv)
         {
             commissum_modus = VERUM;
         }
+        alioquin si (strcmp(argv[arg], "-historia") == 0)
+        {
+            historia_modus = VERUM;
+        }
+        alioquin si (strcmp(argv[arg], "-summa") == 0)
+        {
+            summa_modus = VERUM;
+        }
         alioquin si (via_a == NIHIL)
         {
             via_a = argv[arg];
@@ -836,17 +1126,35 @@ s32 principale (integer argc, character** argv)
             positio_tertia = argv[arg];
         }
     }
-    si ((git_modus && commissum_modus)
-        || (!commissum_modus
-               && (via_a == NIHIL || (!git_modus && via_b == NIHIL))))
     {
-        fprintf(stderr, "usus: differre <vetus.c> <novum.c>"
-            " [-machina]\n"
-            "      differre -git <via> [ref_vetus] [ref_novum]"
-            " [-machina]\n"
-            "      differre -commissum [ref | vetus novus]"
-            " [-machina]\n");
-        redde II;
+        i32 modi = (git_modus ? (i32)1 : (i32)0)
+            + (commissum_modus ? (i32)1 : (i32)0)
+            + (historia_modus ? (i32)1 : (i32)0);
+        b32 usus_malus = modi > (i32)1;
+
+        si (!usus_malus)
+        {
+            si (historia_modus || (!git_modus && !commissum_modus))
+            {
+                usus_malus = via_a == NIHIL || via_b == NIHIL;
+            }
+            alioquin si (git_modus)
+            {
+                usus_malus = via_a == NIHIL;
+            }
+        }
+        si (usus_malus)
+        {
+            fprintf(stderr, "usus: differre <vetus.c> <novum.c>"
+                " [-machina]\n"
+                "      differre -git <via> [ref_vetus]"
+                " [ref_novum] [-machina]\n"
+                "      differre -commissum [ref | vetus novus]"
+                " [-machina]\n"
+                "      differre -historia <via> <titulus> [ref]"
+                " [-summa] [-machina]\n");
+            redde II;
+        }
     }
 
     piscina = piscina_generare_dynamicum("differre", 1048576);
@@ -859,6 +1167,172 @@ s32 principale (integer argc, character** argv)
     si (intern == NIHIL)
     {
         redde II;
+    }
+    si (historia_modus)
+    {
+        /* ambulatio parentum primorum, cribrum duplici gradu:
+         * sha massae plagulae (gratis), sigillum spatiorum
+         * (parsatio solum ubi plagula mutata) */
+        GitRepositorium*    repositorium = git_aperire(piscina,
+            ".");
+        constans character* ref = positio_tertia != NIHIL
+            ? positio_tertia : "HEAD";
+        character           sha_currentis[GIT_SHA_HEX_MENSURA];
+        GitCommissum        commissum_currens;
+        character           sha_massae_currentis[
+            GIT_SHA_HEX_MENSURA];
+        b32                 habet_currens = FALSUM;
+        HistoriaLatus       latus_currens;
+        i32                 eventa = 0;
+
+        si (repositorium == NIHIL)
+        {
+            fprintf(stderr, "differre: non in repositorio git\n");
+            redde II;
+        }
+        si (!git_ref_resolvere(repositorium, ref, sha_currentis))
+        {
+            fprintf(stderr, "differre: ref non resolutum: %s\n",
+                ref);
+            redde II;
+        }
+        commissum_currens = git_commissum_legere(repositorium,
+            sha_currentis, piscina);
+        si (!commissum_currens.successus)
+        {
+            fprintf(stderr, "differre: commissum legi non"
+                " potuit\n");
+            redde II;
+        }
+        {
+            b32 est_arbor = FALSUM;
+
+            sha_massae_currentis[0] = '\0';
+            habet_currens = git_sha_per_viam(repositorium,
+                sha_currentis, via_a, piscina,
+                sha_massae_currentis, &est_arbor) && !est_arbor;
+        }
+        si (!_historia_latus_legere(repositorium,
+            habet_currens ? sha_massae_currentis : NIHIL, via_b,
+            piscina, &latus_currens))
+        {
+            fprintf(stderr, "differre: latus legi non potuit ad"
+                " %.7s\n", sha_currentis);
+            redde II;
+        }
+        si (!machina)
+        {
+            imprimere("historia symboli '%s' in %s (a %.7s)\n\n",
+                via_b, via_a, sha_currentis);
+            si (!latus_currens.inventa)
+            {
+                imprimere("(symbolum ad %.7s non exsistit -"
+                    " ambulatio pergit, fortasse olim fuit)\n\n",
+                    sha_currentis);
+            }
+        }
+
+        dum (VERUM)
+        {
+            character     sha_parentis[GIT_SHA_HEX_MENSURA];
+            GitCommissum  commissum_parentis;
+            character     sha_massae_parentis[
+                GIT_SHA_HEX_MENSURA];
+            b32           habet_parens = FALSUM;
+            HistoriaLatus latus_parentis;
+            b32           plagula_mutata;
+
+            si (xar_numerus(commissum_currens.parentes) == 0)
+            {
+                /* radix historiae: symbolum praesens = natum hic */
+                si (latus_currens.inventa)
+                {
+                    HistoriaLatus vacuum_latus;
+
+                    vacuum_latus.inventa = FALSUM;
+                    vacuum_latus.textus.datum = NIHIL;
+                    vacuum_latus.textus.mensura = 0;
+                    vacuum_latus.sigillum_hex = vacuum_latus.textus;
+                    _historia_eventum_emittere(piscina,
+                        sha_currentis, &commissum_currens,
+                        "ADDITA", &vacuum_latus, &latus_currens,
+                        machina, summa_modus, via_b);
+                    eventa = eventa + 1;
+                }
+                frange;
+            }
+            memcpy(sha_parentis, chorda_ut_cstr(
+                *(chorda*)xar_obtinere(
+                    commissum_currens.parentes, 0), piscina),
+                (memoriae_index)41);
+            commissum_parentis = git_commissum_legere(
+                repositorium, sha_parentis, piscina);
+            si (!commissum_parentis.successus)
+            {
+                fprintf(stderr, "differre: commissum legi non"
+                    " potuit: %.7s\n", sha_parentis);
+                redde II;
+            }
+            {
+                b32 est_arbor = FALSUM;
+
+                sha_massae_parentis[0] = '\0';
+                habet_parens = git_sha_per_viam(repositorium,
+                    sha_parentis, via_a, piscina,
+                    sha_massae_parentis, &est_arbor) && !est_arbor;
+            }
+            plagula_mutata = habet_currens != habet_parens
+                || (habet_currens
+                       && strcmp(sha_massae_currentis,
+                              sha_massae_parentis) != 0);
+            si (!plagula_mutata)
+            {
+                /* cribrum gradus primi: plagula intacta */
+                latus_parentis = latus_currens;
+            }
+            alioquin
+            {
+                si (!_historia_latus_legere(repositorium,
+                    habet_parens ? sha_massae_parentis : NIHIL,
+                    via_b, piscina, &latus_parentis))
+                {
+                    fprintf(stderr, "differre: latus legi non"
+                        " potuit ad %.7s\n", sha_parentis);
+                    redde II;
+                }
+                /* cribrum gradus secundi: sigilla spatiorum */
+                si (latus_currens.inventa != latus_parentis.inventa
+                    || (latus_currens.inventa
+                           && !chorda_aequalis(
+                                  latus_currens.sigillum_hex,
+                                  latus_parentis.sigillum_hex)))
+                {
+                    constans character* status =
+                        !latus_parentis.inventa ? "ADDITA"
+                        : !latus_currens.inventa ? "REMOTA"
+                        : "MUTATA";
+
+                    _historia_eventum_emittere(piscina,
+                        sha_currentis, &commissum_currens, status,
+                        &latus_parentis, &latus_currens, machina,
+                        summa_modus, via_b);
+                    eventa = eventa + 1;
+                }
+            }
+            /* descendere */
+            memcpy(sha_currentis, sha_parentis,
+                (memoriae_index)41);
+            commissum_currens = commissum_parentis;
+            memcpy(sha_massae_currentis, sha_massae_parentis,
+                (memoriae_index)41);
+            habet_currens = habet_parens;
+            latus_currens = latus_parentis;
+        }
+        si (!machina)
+        {
+            imprimere("historia: %d eventa\n", (integer)eventa);
+        }
+        redde ZEPHYRUM;
     }
     si (commissum_modus)
     {

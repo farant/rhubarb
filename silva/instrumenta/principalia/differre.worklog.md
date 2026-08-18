@@ -82,3 +82,41 @@ First light: 0f7ad83 renders as 6 files / 17 unit pairs with the
 sha-breve arc named function by function; file list matches
 `git show --name-status` exactly. The prototype+definition twin
 rows (parked door) show up as expected and read fine in practice.
+
+## 2026-08-18 — modus -historia (symbolum per commissa)
+
+`differre -historia <via> <titulus> [ref]` — when did symbol X
+change, and HOW. First-parent walk from ref; two-stage screen:
+(1) file blob sha per commit via git_sha_per_viam — unchanged
+file = zero parsing, zero content reads; (2) where the file
+changed, parse both sides and compare the sigillum of the
+CONCATENATED spans of every unit bearing the title — prototype +
+definition travel as one identity, so a signature change is one
+event, not two. Events: MUTATA (classified substantiva/
+documentaria/cosmetica via flat token/comment compare of the
+concatenated spans), ADDITA (birth — walk continues afterward, so
+removed-then-readded ghosts surface as REMOTA deeper down),
+REMOTA. Bodies = unified diff of the spans; -summa = event lines;
+-machina = sha/dies/status/classificatio/+N/-M/subiectum TSV.
+
+Memory stays flat across the walk: each parse lives in a
+throwaway piscina destroyed after span extraction; only the
+extracted spans + sigilla survive into the walk arena. Ten months
+of lib/piscina.c history walks in ~4s wall.
+
+Two compile-time landmines worth recording:
+- `brevis` as a variable name = latina macro for `short` →
+  `Piscina* short;` syntax error. censor.sh named the culprit
+  immediately. (Firing #7 of the every-latina-word-is-reserved
+  rule.)
+- `"????-??-??"` as a date sentinel: `??-` is a TRIGRAPH (→ `~`)
+  and -Wtrigraphs -Werror rejects it. Any `??` run in a string
+  literal is suspect in C89. silva's examen does NOT model
+  trigraphs — clang caught what the house parser passed.
+
+First light: git_ref_resolvere = born 4aafde9, +6 at 0f7ad83
+(short-sha hook), a930731 correctly SKIPPED (file changed, symbol
+didn't — the stage-2 screen proving itself).
+`imprimere` in latina.h: never substantively changed since
+2025-10-21 — both events [cosmetica] (a drifting blank line). The
+classifier telling true stories about the project's whole life.

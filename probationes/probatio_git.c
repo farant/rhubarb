@@ -235,6 +235,42 @@ s32 principale (vacuum)
         CREDO_VERUM(massa.mensura > (i32)1000);
     }
 
+    imprimere("\n--- Probans sha per viam (cribrum sine contento) ---\n");
+
+    /* catena probationis completa sine sha transcripto: sha
+     * promptum -> obiectum eo sha lectum (lectio se ipsam contra
+     * sha verificat!) -> octeti == discus. Sha falsum catenam
+     * alicubi frangeret. */
+    {
+        character sha_massae[GIT_SHA_HEX_MENSURA];
+        b32       est_arbor = VERUM;
+        GitObiectum obiectum;
+        chorda    discus;
+
+        CREDO_VERUM(git_sha_per_viam(repositorium, caput,
+            "include/latina.h", piscina, sha_massae, &est_arbor));
+        CREDO_FALSUM(est_arbor);
+        CREDO_VERUM(_est_sha_hex(sha_massae));
+        obiectum = git_obiectum_legere(repositorium, sha_massae,
+            piscina);
+        CREDO_VERUM(obiectum.successus);
+        CREDO_VERUM(obiectum.genus == GIT_OBIECTUM_MASSA);
+        discus = filum_legere_totum("include/latina.h", piscina);
+        CREDO_AEQUALIS_I32(obiectum.datum.mensura, discus.mensura);
+        CREDO_VERUM(obiectum.datum.mensura == discus.mensura
+            && memcmp(obiectum.datum.datum, discus.datum,
+                   (memoriae_index)discus.mensura) == 0);
+
+        /* directorium: sha redditur, est_arbor VERUM */
+        CREDO_VERUM(git_sha_per_viam(repositorium, caput, "lib",
+            piscina, sha_massae, &est_arbor));
+        CREDO_VERUM(est_arbor);
+
+        /* via ignota */
+        CREDO_FALSUM(git_sha_per_viam(repositorium, caput,
+            "non/exsistit.c", piscina, sha_massae, &est_arbor));
+    }
+
     imprimere("\n--- Probans differentiam arborum ---\n");
 
     /* historia congelata = oraculum immutabile: commissum 4aafde9
