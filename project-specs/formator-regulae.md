@@ -416,6 +416,39 @@ pushed no net new lines past 72) + vexillum (56). differre:
 Probatio 167/167; suite 40/40. THE FIX TIER IS COMPLETE — next: the
 supervised corpus rollout, then G3 doors.
 
+## Status EVOLUTIONIS (2026-08-19) — lib/ + include/ COMPLETE
+
+The rollout is done for the library tier: all of lib/ (batches
+1-3) and all of include/ (batch 4) are in house form, PROTOTYPES
+INCLUDED (the 2a door closed: R1/R2/R8/R7-params now judge
+root-level declarations; true prototype = function declarator
+whose internum is TITULUS; fn-pointer declarators exempt; local
+prototypes untouched). Rules added/refined during rollout by
+Fran's corpus reads: R17 catena-logica; R9 equal-width→max+1,
+cluster-level 72 guard, declaration initializers join clusters.
+Engine hardenings (see formator.worklog.md 2026-08-19, evolutio
+III): block-shaped specifiers exempt from runs; same-line members
+never co-align; alignment pulls tolerans; ONLY source-level
+operators judged (_token_fons); title-before-cb sanity;
+banner-banner gap owned by ante; AMBIGUUS subtrees unjudged;
+latina.h praebere'd guard-blanked (lexicon typedefs visible to
+the oracle — silva door 01M0D4QV5S for the true root fix).
+
+CENSUS: 42,674 pre-fix → **6,499 post-rollout**, of which 6,397
+(98%) is the lint-forever tier (longitudo 5,160 + vexillum
+1,237). The 102 fixable-rule residuals are honest unfixables:
+tolerans-dropped spans (comments/macro geometry), directive-
+guarded edits, mid-line banners. Exclusiones: 21 rows (latina.h
+newest — tab-stop macro table, lexicon datum generated from it).
+
+ROLLOUT CHOREOGRAPHY (for the remaining terrain — silva/fontes +
+instrumenta, apps/, tools/, probationes/): after formatting,
+run ./silva/amalgamare.sh (the amalgam vendors lib sources) and
+./tools/natura_struere.sh (mtime-gated tools go STALUS); expect
+other self-gating tools to complain loudly. Purity oracle for
+differre pairing quirks (01M0D4RN3B): whitespace-stripped sha
+compare of both sides.
+
 EXCLUSIONES (decretae 2026-08-19): pins file
 `silva/probationes/fixa/formatoris/exclusiones.txt`, format
 `via<TAB>causa` (the examen-pins pattern — every row carries a
