@@ -171,7 +171,12 @@ Build nothing before it fires. Consensed design, all from 2026-08-10:
 ## 6. RESERVATUM / FUTURUM — everything else on the books
 
 - **Transclusion resolution in C** — the node type exists; a consumer
-  with a selector engine does not. Adopt on pull.
+  with a selector engine does not. Adopt on pull. **The pull may have
+  arrived 2026-08-19: `arbor-stml-visio.md`** (silva parsura ⇄
+  canonical STML — the dormant half of silva's fidelity oracle,
+  decreed NEXT PROJECT) needs fragments + transclusion for shared
+  structure (expansion bodies, ambiguity arms — a DAG in tree
+  clothes; duplication would lie about identity).
 - **STML transform tool** — G1's stylesheet system (selector + `%`
   verbs + pipeline) as a TOOL in the renominare/emendare lineage:
   "XSLT done right" for corpus-wide STML migrations (35 models through
