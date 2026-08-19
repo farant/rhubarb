@@ -996,6 +996,197 @@ s32 principale (vacuum)
             "}\n"));
     }
 
+    imprimere("\n--- Probans scribere: columnae binae (R7) ---\n");
+    {
+        /* typi dextre ordinati, stella in hiatu, tituli
+         * sinistre - forma exemplaris Alvei */
+        SilvaContextus* ctx;
+        constans character* caput;
+        constans character* fons;
+        FormatorScriptum s;
+
+        caput = "nomen insignatus integer mensura_probanda;\n";
+        ctx = silva_contextus_creare(piscina);
+        CREDO_NON_NIHIL(ctx);
+        CREDO_VERUM(silva_contextus_latinam_addere(ctx));
+        CREDO_VERUM(silva_contextus_praebere(ctx,
+            "probandum.h", caput, (i32)strlen(caput)));
+
+        fons =
+            "#include \"probandum.h\"\n"
+            "nomen structura {\n"
+            "    vacuum* memoria;\n"
+            "    mensura_probanda cursor;\n"
+            "} Probandum;\n";
+        s = formator_scribere(piscina, ctx, fons,
+            (i32)strlen(fons));
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "#include \"probandum.h\"\n"
+            "nomen structura {\n"
+            "              vacuum* memoria;\n"
+            "    mensura_probanda  cursor;\n"
+            "} Probandum;\n"));
+    }
+
+    imprimere("\n--- Probans scribere: aequatio glomeris (R9)"
+        " ---\n");
+    {
+        /* operator ad max(cb) + II: LHS longissimum spatia
+         * DUO accipit (decretum "xyz  = valor") */
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    i32 a;\n"
+            "    i32 b_longa;\n"
+            "\n"
+            "    a = I;\n"
+            "    b_longa = II;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    i32 a;\n"
+            "    i32 b_longa;\n"
+            "\n"
+            "    a        = I;\n"
+            "    b_longa  = II;\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans scribere: operatores arboris (R10)"
+        " ---\n");
+    {
+        /* binarium spatiatur, accessus stringitur - et R9
+         * glomus eadem iteratione co-ordinat */
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    i32 a;\n"
+            "    i32 d;\n"
+            "\n"
+            "    a = b+c;\n"
+            "    d = e -> f;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    i32 a;\n"
+            "    i32 d;\n"
+            "\n"
+            "    a  = b + c;\n"
+            "    d  = e->f;\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans scribere: continuatio indentata"
+        " (R11) ---\n");
+    {
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    a = b\n"
+            "      + c;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    a = b\n"
+            "        + c;\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans scribere: motus operatoris (R11"
+        " bi-span) ---\n");
+    {
+        /* operator finem lineae claudens ad initium
+         * continuationis movetur - editiones duae, una
+         * transactione (series lexematum immutata) */
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    a = b &&\n"
+            "        c;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_AEQUALIS_I32(s.iterationes, (i32)3);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    a = b\n"
+            "        && c;\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans scribere: parametra composita"
+        " (R8 -> R7) ---\n");
+    {
+        /* compositio plena: R8 findit, R7 typos dextre
+         * ordinat, stellam in hiatu ponit, titulos sinistre -
+         * forma manuali exemplaris _allocare_interna */
+        SilvaContextus* ctx;
+        constans character* caput;
+        constans character* fons;
+        FormatorScriptum s;
+
+        caput = "nomen insignatus integer i32;\n";
+        ctx = silva_contextus_creare(piscina);
+        CREDO_NON_NIHIL(ctx);
+        CREDO_VERUM(silva_contextus_latinam_addere(ctx));
+        CREDO_VERUM(silva_contextus_praebere(ctx,
+            "probandum.h", caput, (i32)strlen(caput)));
+
+        fons =
+            "#include \"probandum.h\"\n"
+            "vacuum\n"
+            "probare (i32 breve_nomen, constans character* longum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n";
+        s = formator_scribere(piscina, ctx, fons,
+            (i32)strlen(fons));
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "#include \"probandum.h\"\n"
+            "vacuum\n"
+            "probare (\n"
+            "                   i32  breve_nomen,\n"
+            "    constans character* longum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"));
+        CREDO_VERUM(strcmp(silva_differre_classificare_textus(
+            piscina, chorda_ex_literis(fons, piscina),
+            s.textus), "cosmetica") == ZEPHYRUM);
+        {
+            FormatorScriptum s2;
+
+            s2 = formator_scribere(piscina, ctx,
+                (constans character*)s.textus.datum,
+                s.textus.mensura);
+            CREDO_VERUM(s2.successus);
+            CREDO_FALSUM(s2.mutatum);
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

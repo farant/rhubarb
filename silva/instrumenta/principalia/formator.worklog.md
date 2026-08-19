@@ -332,3 +332,65 @@ behavior) — the tolerans trim just refuses there, so it is safe
 but unexamined; revisit with the comment query layer. G2c next:
 R7 columns / R9 clusters / R10-tree spacing / R11 continuation
 (incl. the two-span operator move).
+
+## 2026-08-19 — G2c: alignment emendationes — FIX TIER COMPLETE
+
+R7 (three fixes per member: type-shift is an insert at the
+specifier start — R7Membrum gained `ca`; star pull-left; title
+push-pull GUARDED on the star being correctly placed, else the
+delete span would contain the star and trip the strict guard —
+iteration handles it after the star moves), R9 push-pull to max+2,
+R10 tree gaps (all tolerans), R11 under-indent (line-start insert)
++ the operator-move: TWO strict spans from one divergence (insert
+newline+indent before the op; join op with next line's first
+token), withheld as a pair when a comment or '\' continuation
+obstructs — the applier has no transactions, so the DETECTOR is
+the transaction boundary.
+
+TWO G1-ERA LATENT BUGS, both exposed the moment lint's claims
+became physical edits:
+
+1. **The parametra LISTA carries comma TOKENS.** _valor_nodus on
+   the comma gives NIHIL and _parametra_ordinem_censere treated
+   that as fatal — R7-params has NEVER judged a multi-param
+   function since 2b (R8's loop always skipped non-nodes, which is
+   why R8 worked). Symptom: identical member shapes fired as a
+   struct but were CONFORMIS as params. Census +2229 columnae.
+   Lesson: silva grammar lists interleave separator tokens with
+   nodes — every lista consumer must skip VALOR_TOKEN elements.
+
+2. **The R11/R1 prototype war.** A two-line prototype (specifiers
+   line, name at column 1) is a DECLARATIO → R11 span → its
+   R1-correct shape counted as an under-indented continuation.
+   Lint had silently miscounted this for the whole census era
+   (~2110 rows); the FIX physically indented json.c's
+   _scribere_valor prototype by 4, and THE DIFFERRE GATE CAUGHT
+   IT — the reshaped prototype broke unit pairing (ADDITA+REMOTA
+   of the same titulus instead of MUTATA). Function-declarator
+   declarations now join forma_bloccalis in the R11 exemption.
+   The dogfood twist paid for itself: a gate of a different KIND
+   caught what token-series + whitespace-only + examen all passed.
+
+Census at final G2c semantics: 42,674 (continuatio 3341→1231,
+columnae 6212→8441 — the two corrections visible as numbers).
+
+First light: piscina.c 35/2 — the R9 calibration points from 2b
+resolved exactly as decreed (alveus stanzas minimal→max+2, the
+loop-body pair alveus->offset/alveus co-aligned aggressively);
+json.c 535/4; chorda.c 478/3. Residuals on all three = ONLY
+longitudo 119 (total unchanged — no net new long lines from
+alignment) + vexillum 56. differre 17/42/72 all [cosmetica],
+examen ACCIPE ×3, rerun stable ×3. Probatio 167/167 (six new
+sections incl. the two-span move pinned at 3 iterations and the
+R8→R7 composition reproducing the _allocare_interna exemplar
+form byte-for-byte). Suite 40/40.
+
+Doors: R7 has no 72-exception (R9 does) — watch rollout for
+alignment pushing lines long (three-file trial: zero net). Debug
+note for next time: the machine has no stdio — printf debugging
+needs a temporary include.
+
+FIX TIER COMPLETE. Next: supervised corpus rollout
+(library-by-library, differre + examen + suite as acceptance),
+then G3 doors (banners, R14 promotion, prototype R1/R8 coverage,
+comment-interior whitespace).

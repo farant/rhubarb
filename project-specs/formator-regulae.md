@@ -332,6 +332,38 @@ lines); differre 69 MUTATA ALL [cosmetica]; examen ACCIPE; rerun
 stable. Probatio 144/144; suite 40/40. Remaining: G2c alignment
 (R7/R9/R10-tree/R11), then the supervised corpus rollout.
 
+## Status G2c (2026-08-19) — alignment fixes: FIX TIER COMPLETE
+
+Wired: R7 all three column adjustments (type-shift right / star into
+gap / title push-pull, with the title fix withheld while the star is
+misplaced — next round handles it), R9 `=` push-pull to max+2 (72-
+exception inherited from lint), R10 tree gaps (binarium/accessus/
+conversio/unarium — all tolerans, comments can sit in expression
+gaps), R11 under-indent + the operator-move (TWO spans emitted as
+one transaction, withheld entirely when a comment or continuation
+obstructs either side).
+
+TWO G1-ERA LATENT BUGS exposed when fixes made lint physical:
+(1) the parametra LISTA carries comma TOKENS between parametrum
+nodes — `_parametra_ordinem_censere` treated a non-node element as
+fatal, so R7-params never judged ANY multi-param function (census
++2229 columnae now visible); (2) two-line PROTOTYPES are DECLARATIOs
+so R11 counted their R1-correct name-at-column-1 line as an
+under-indented continuation — the fix physically indented a json.c
+prototype and differre could no longer pair the unit (ADDITA+REMOTA
+instead of MUTATA: the dogfood gate caught it). Function-declarator
+declarations now exempt from R11 spans (census −2110 continuatio).
+Census at G2c semantics: 42,674.
+
+Real-file first light: piscina.c 35 em/2 it (the alveus stanzas
+moved to max+2, the loop-body cluster co-aligned — the decrees
+executing on the exemplar); json.c 535/4; chorda.c 478/3. Residual
+lint on all three: ONLY longitudo (119, count unchanged — alignment
+pushed no net new lines past 72) + vexillum (56). differre:
+17/42/72 MUTATA ALL [cosmetica]; examen ACCIPE ×3; rerun stable ×3.
+Probatio 167/167; suite 40/40. THE FIX TIER IS COMPLETE — next: the
+supervised corpus rollout, then G3 doors.
+
 EXCLUSIONES (decretae 2026-08-19): pins file
 `silva/probationes/fixa/formatoris/exclusiones.txt`, format
 `via<TAB>causa` (the examen-pins pattern — every row carries a

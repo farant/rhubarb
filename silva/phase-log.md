@@ -12641,3 +12641,19 @@ directivarum per vexillum-post ante '#include' fixa. json.c lux
 prima: 213 emendationes / 3 iterationes, R1 7->0 R8 96->0 R2
 69->0; differre 69 MUTATA omnes [cosmetica]; examen ACCIPE.
 Probatio 144/144, suite 40/40. Sequens: G2c ordinatio (R7/R9/R11).
+
+## 2026-08-19 — formator G2c: ordinatio — GRADUS FIX COMPLETUS
+
+R7 tres emendationes (trusio typorum/stella/titulus custoditus),
+R9 ad max+II, R10 arboris (tolerans), R11 (motus operatoris
+bi-span: detector = terminus transactionis). VITIA G1 LATENTIA
+DUO ab luce prima detecta: (1) lista parametrorum virgulas ut
+LEXEMATA fert - R7 functiones multi-parametrorum numquam
+iudicavit (+2229 columnae); (2) bellum R11/R1 - prototypa
+bi-linearia ut continuationes numerata (~2110 falsa), fix
+prototypum indentavit et PORTA DIFFERRE id cepit (unitas non
+iuncta). Census 42674. Lux prima: piscina 35/2 (decreta R9 in
+exemplari exsecuta), json 535/4, chorda 478/3 - residuae SOLUM
+longitudo+vexillum; differre omnes [cosmetica]; examen ACCIPE.
+Probatio 167/167, suite 40/40. GRADUS FIX COMPLETUS - sequens:
+evolutio corporis supervisa, tum portae G3.

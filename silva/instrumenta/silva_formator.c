@@ -1150,6 +1150,7 @@ _vocationem_censere (
 
 nomen structura {
     i32 linea;
+    i32 ca;              /* columna initii specificatorum */
     i32 cb;              /* una post oram typorum */
     i32 stellae;
     i32 stella_prima;    /* columna; 0 = nulla */
@@ -1307,6 +1308,7 @@ _membrum_colligere (
     }
     si (titulus->linea != la) redde FALSUM;
     exitus->linea           = la;
+    exitus->ca              = ca;
     exitus->cb              = cb;
     exitus->titulus_columna = titulus->columna;
     redde VERUM;
@@ -1342,21 +1344,42 @@ _ordinem_censere (
 
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
+        b32 stella_recta;
+
         si (membra[i].cb != cb_maxima)
         {
+            /* typi dextre ordinati: totum membrum dextrorsum
+             * trudere (cb < maxima semper - maxima est) */
             _addere(ambitus->divergentiae, "columnae-binae",
                 "columna typorum dextra non ordinata",
                 membra[i].linea, membra[i].cb - I,
                 (s32)(membra[i].cb - I), (s32)(cb_maxima - I));
+            si (membra[i].cb < cb_maxima)
+            {
+                _emendare(ambitus->divergentiae,
+                    membra[i].linea, membra[i].ca,
+                    membra[i].linea, membra[i].ca,
+                    _textus_emendationis(ambitus->piscina,
+                        ZEPHYRUM, cb_maxima - membra[i].cb));
+            }
             perge;
         }
-        si (membra[i].stellae != (i32)ZEPHYRUM
-            && membra[i].stella_prima != cb_maxima)
+        stella_recta = membra[i].stellae == (i32)ZEPHYRUM
+            || membra[i].stella_prima == cb_maxima;
+        si (!stella_recta)
         {
             _addere(ambitus->divergentiae, "columnae-binae",
                 "stella in hiatu post typum exspectata",
                 membra[i].linea, membra[i].stella_prima,
                 (s32)membra[i].stella_prima, (s32)cb_maxima);
+            si (membra[i].stella_prima > cb_maxima)
+            {
+                _emendare(ambitus->divergentiae,
+                    membra[i].linea, cb_maxima,
+                    membra[i].linea, membra[i].stella_prima,
+                    _textus_emendationis(ambitus->piscina,
+                        ZEPHYRUM, ZEPHYRUM));
+            }
         }
         si (membra[i].titulus_columna != cb_maxima + hiatus)
         {
@@ -1365,6 +1388,33 @@ _ordinem_censere (
                 membra[i].linea, membra[i].titulus_columna,
                 (s32)membra[i].titulus_columna,
                 (s32)(cb_maxima + hiatus));
+            /* solum stella recta: aliter spatium stellam
+             * contineret - iteratio sequens post stellam
+             * motam id sanat */
+            si (stella_recta)
+            {
+                si (membra[i].titulus_columna
+                    < cb_maxima + hiatus)
+                {
+                    _emendare(ambitus->divergentiae,
+                        membra[i].linea,
+                        membra[i].titulus_columna,
+                        membra[i].linea,
+                        membra[i].titulus_columna,
+                        _textus_emendationis(ambitus->piscina,
+                            ZEPHYRUM, cb_maxima + hiatus
+                                - membra[i].titulus_columna));
+                }
+                alioquin
+                {
+                    _emendare(ambitus->divergentiae,
+                        membra[i].linea, cb_maxima + hiatus,
+                        membra[i].linea,
+                        membra[i].titulus_columna,
+                        _textus_emendationis(ambitus->piscina,
+                            ZEPHYRUM, ZEPHYRUM));
+                }
+            }
         }
     }
 }
@@ -1482,6 +1532,25 @@ _aequationes_censere (
             lineae[i], operator_columnae[i],
             (s32)operator_columnae[i],
             (s32)columna_recta);
+        si (operator_columnae[i] < columna_recta)
+        {
+            _emendare(ambitus->divergentiae, lineae[i],
+                operator_columnae[i], lineae[i],
+                operator_columnae[i],
+                _textus_emendationis(ambitus->piscina,
+                    ZEPHYRUM,
+                    columna_recta - operator_columnae[i]));
+        }
+        alioquin
+        {
+            /* sinister ad cb[i] <= recta - II desinit: spatium
+             * [recta, operator) spatiale est */
+            _emendare(ambitus->divergentiae, lineae[i],
+                columna_recta, lineae[i],
+                operator_columnae[i],
+                _textus_emendationis(ambitus->piscina,
+                    ZEPHYRUM, ZEPHYRUM));
+        }
     }
 }
 
@@ -1694,8 +1763,11 @@ _parametra_ordinem_censere (
         elementum = silva_valor_lista_obtinere(parametra, i);
         parametrum = elementum ? _valor_nodus(*elementum)
             : NIHIL;
-        si (!parametrum || parametrum->genus
-            != SILVA_C89_GENUS_PARAMETRUM)
+        /* lista virgulas ut lexemata fert - omittere (VITIUM
+         * G1 latens: bail hic omnem functionem multi-parametri
+         * R7 caecam fecit; R8 semper recte omisit) */
+        si (!parametrum) perge;
+        si (parametrum->genus != SILVA_C89_GENUS_PARAMETRUM)
         {
             redde;
         }
@@ -1753,6 +1825,11 @@ _binarium_operatorem_censere (
             "spatium unicum ante operatorem binarium",
             operator_tok->linea, operator_tok->columna,
             (s32)(operator_tok->columna - scb), I);
+        _emendare_tolerans(ambitus->divergentiae,
+            operator_tok->linea, scb, operator_tok->linea,
+            operator_tok->columna,
+            _textus_emendationis(ambitus->piscina, ZEPHYRUM,
+                I));
     }
     si (_valoris_extensio(ambitus,
         silva_c89_binarium_dexter(nodus), &dla, &dca, &dlb,
@@ -1766,6 +1843,13 @@ _binarium_operatorem_censere (
             operator_tok->linea, dca,
             (s32)(dca - (operator_tok->columna
                 + operator_tok->valor.mensura)), I);
+        _emendare_tolerans(ambitus->divergentiae,
+            operator_tok->linea,
+            operator_tok->columna
+                + operator_tok->valor.mensura,
+            operator_tok->linea, dca,
+            _textus_emendationis(ambitus->piscina, ZEPHYRUM,
+                I));
     }
 }
 
@@ -1795,6 +1879,11 @@ _accessum_censere (
             "accessus basi arte iungendus",
             operator_tok->linea, operator_tok->columna,
             (s32)(operator_tok->columna - bcb), ZEPHYRUM);
+        _emendare_tolerans(ambitus->divergentiae,
+            operator_tok->linea, bcb, operator_tok->linea,
+            operator_tok->columna,
+            _textus_emendationis(ambitus->piscina, ZEPHYRUM,
+                ZEPHYRUM));
     }
     titulus = _valor_radix(
         silva_c89_accessus_tok_titulus(nodus));
@@ -1809,6 +1898,13 @@ _accessum_censere (
             (s32)(titulus->columna
                 - (operator_tok->columna
                     + operator_tok->valor.mensura)), ZEPHYRUM);
+        _emendare_tolerans(ambitus->divergentiae,
+            titulus->linea,
+            operator_tok->columna
+                + operator_tok->valor.mensura,
+            titulus->linea, titulus->columna,
+            _textus_emendationis(ambitus->piscina, ZEPHYRUM,
+                ZEPHYRUM));
     }
 }
 
@@ -1836,6 +1932,11 @@ _conversionem_censere (
             "conversio operando arte iungenda",
             clausum->linea, ica,
             (s32)(ica - clausum->columna - I), ZEPHYRUM);
+        _emendare_tolerans(ambitus->divergentiae,
+            clausum->linea, clausum->columna + I,
+            clausum->linea, ica,
+            _textus_emendationis(ambitus->piscina, ZEPHYRUM,
+                ZEPHYRUM));
     }
 }
 
@@ -1865,6 +1966,13 @@ _unarium_censere (
             operator_tok->linea, ica,
             (s32)(ica - (operator_tok->columna
                 + operator_tok->valor.mensura)), ZEPHYRUM);
+        _emendare_tolerans(ambitus->divergentiae,
+            operator_tok->linea,
+            operator_tok->columna
+                + operator_tok->valor.mensura,
+            operator_tok->linea, ica,
+            _textus_emendationis(ambitus->piscina, ZEPHYRUM,
+                ZEPHYRUM));
     }
 }
 
@@ -2143,6 +2251,19 @@ _nodum_percurrere (
                     {
                         forma_bloccalis = VERUM;
                     }
+                    /* prototypa formam R1 sequuntur (titulus
+                     * in columna prima) - lineae eorum
+                     * continuationes NON sunt (bellum R11/R1
+                     * quod lux prima json.c detexit: lint id
+                     * tacite falso numerabat, fix prototypum
+                     * physice indentavit et differre unitates
+                     * iungere non potuit) */
+                    si (n_d_nodus
+                        && _declarator_functionis(n_d_nodus)
+                            != NIHIL)
+                    {
+                        forma_bloccalis = VERUM;
+                    }
                 }
             }
             si (!forma_bloccalis
@@ -2249,9 +2370,10 @@ _spatium_invenire (
 
 interior vacuum
 _continuationes_censere (
-    Xar* divergentiae,
-    Xar* cruda,
-    Xar* continuationes)
+    Piscina* piscina,
+        Xar* divergentiae,
+        Xar* cruda,
+        Xar* continuationes)
 {
     i32 numerus;
     i32 i;
@@ -2283,6 +2405,10 @@ _continuationes_censere (
                     lexema->linea, lexema->columna,
                     (s32)lexema->columna,
                     (s32)(spatium->ca + IV));
+                _emendare(divergentiae, lexema->linea, I,
+                    lexema->linea, I,
+                    _textus_emendationis(piscina, ZEPHYRUM,
+                        spatium->ca + IV - lexema->columna));
             }
         }
 
@@ -2291,13 +2417,20 @@ _continuationes_censere (
             && i + I < numerus)
         {
             i32 j;
+            b32 commentum_visum;
 
             j = i + I;
+            commentum_visum = FALSUM;
             dum (j < numerus
                 && (_lexema(cruda, j)->genus == SILVA_LEX_SPATIA
                     || _lexema(cruda, j)->genus
                         == SILVA_LEX_COMMENTUM_CLAUSUM))
             {
+                si (_lexema(cruda, j)->genus
+                    == SILVA_LEX_COMMENTUM_CLAUSUM)
+                {
+                    commentum_visum = VERUM;
+                }
                 j += I;
             }
             si (j < numerus && _lexema(cruda, j)->genus
@@ -2307,11 +2440,53 @@ _continuationes_censere (
                     lexema->linea, FALSUM);
                 si (spatium)
                 {
+                    SilvaToken* sequens;
+                           i32  k;
+
                     _addere(divergentiae, "continuatio",
                         "operator initio continuationis"
                         " ponendus, non fine lineae",
                         lexema->linea, lexema->columna,
                         ZEPHYRUM, ZEPHYRUM);
+
+                    /* motus bi-span: ambo aut neuter (commentum
+                     * aut continuatio '\\' in via = neuter) */
+                    sequens = NIHIL;
+                    k = j + I;
+                    dum (k < numerus)
+                    {
+                        SilvaLexemaGenus g;
+
+                        g = _lexema(cruda, k)->genus;
+                        si (g != SILVA_LEX_SPATIA
+                            && g != SILVA_LEX_TABULAE
+                            && g != SILVA_LEX_NOVA_LINEA)
+                        {
+                            si (g != SILVA_LEX_EOF
+                                && g != SILVA_LEX_CONTINUATIO
+                                && g != SILVA_LEX_COMMENTUM_CLAUSUM
+                                && g != SILVA_LEX_COMMENTUM_LINEA)
+                            {
+                                sequens = _lexema(cruda, k);
+                            }
+                            frange;
+                        }
+                        k += I;
+                    }
+                    si (!commentum_visum && sequens)
+                    {
+                        _emendare(divergentiae,
+                            lexema->linea, lexema->columna,
+                            lexema->linea, lexema->columna,
+                            _textus_emendationis(piscina, I,
+                                spatium->ca + IV - I));
+                        _emendare(divergentiae,
+                            lexema->linea, lexema->columna
+                                + lexema->valor.mensura,
+                            sequens->linea, sequens->columna,
+                            _textus_emendationis(piscina,
+                                ZEPHYRUM, I));
+                    }
                 }
             }
         }
@@ -2605,7 +2780,7 @@ formator_lint (
             _nodum_percurrere(&ambitus, radix.datum.nodus);
         }
 
-        _continuationes_censere(divergentiae, cruda,
+        _continuationes_censere(piscina, divergentiae, cruda,
             ambitus.continuationes);
     }
 
