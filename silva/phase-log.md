@@ -12797,3 +12797,24 @@ DOMINANS residua (146): '(nomen) * x' in corporibus macrorum
 registratio localium = ostium silvae nominatum). Praeoneratio
 lexicorum (94899b2) has sanationes gratis dedit - censu nunc
 mensuratas.
+
+## 2026-08-19 — differre: paria sub reformatione spatiali (01M0D4RN3B)
+
+Probatio propria machinae parium NATA (specimina ante praedicatum;
+V sectiones). Defectus duo: tabulae parium ordinalem PRIMUM solum
+per clavem servabant (copia gemina - bracchia #ifdef - irreperibilis
+-> ADDITA+REMOTA falsa) et clavis spatiis-caeca NULLA erat (sigillum
+crudum + titulus solus: unitates sine titulo - #endif - numquam
+parem, tituli collidentes trans bracchia 'substantiva' falsam
+ligare poterant). Sanatio: listae ordinalium per clavem (primus non
+sumptus vincit) + sigillum NORMATUM (series lexematum genus+valor,
+spatiis exempta) ut gradus parium inter MOTA et titulum - oraculum
+interim 'sha spatiis exemptis' in machinam ipsam promotum.
+PROPRIETAS METAMORPHICA pinnata et super tabularium verum probata:
+differre(F, W(F)) pro W formatore = ADDITA 0, REMOTA 0, MUTATA
+omnes cosmeticae - LIX plagulae transformatae, violationes NULLAE
+(awk contra vitium plantatum probatum). Moderamina servata (IV).
+Probatio 36/36; silva 42/42; silex restructum (machinam fert).
+Tres gradus probationis nunc omnes vivunt: assertiones punctatae
+(fixturae), census corporis pinnatus (ambigua), proprietas
+metamorphica (haec).

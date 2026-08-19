@@ -120,3 +120,40 @@ didn't — the stage-2 screen proving itself).
 `imprimere` in latina.h: never substantively changed since
 2025-10-21 — both events [cosmetica] (a drifting blank line). The
 classifier telling true stories about the project's whole life.
+
+## 2026-08-19 — pairing survives whitespace-only reshapes (01M0D4RN3B closed)
+
+The engine's first dedicated probatio (probatio_silva_differre.c) was
+born for this fix. Two defects, both found by reading the pairing
+loop against the reproduced filum.c case:
+
+1. **First-ordinal-only tables**: sigilla/tituli_remotarum stored only
+   the FIRST remota ordinal per key ("si !continet → inserere"), so
+   the second identical `#include` in #ifdef arms could never find
+   its partner — the first was claimed, the second unreachable →
+   false ADDITA+REMOTA. Fix: table values are now Xar lists of
+   ordinals; lookup takes the first UNCLAIMED (_ordinalis_liber).
+2. **No whitespace-blind pairing key**: unit identity was a sha of
+   RAW span bytes; whitespace change killed both IDEM and MOTA, and
+   title-pairing was the only rescue — so TITLE-LESS units (#endif,
+   #else) could never re-pair, and title collisions across #ifdef
+   arms could cross-pair into false "substantiva". Fix: a second
+   NORMALIZED seal per unit (sha over the token series, genus+valor,
+   whitespace excluded) — identitates_normatae on the latus — pairs
+   between MOTA and title: MOTA (raw) > MUTATA (normata) > MUTATA
+   (titulus) > ADDITA.
+
+The normalized seal IS the "whitespace-stripped sha" interim oracle
+from the rollout, promoted into the engine — the pairing key now has
+exactly cosmetica-semantics, so the classification downstream agrees
+with the pairing by construction.
+
+METAMORPHIC PROPERTY, pinned in probatio section V and swept over
+the real store: for file F and whitespace-only transform W (the
+formator), differre(F, W(F)) = ADDITA 0, REMOTA 0, MUTATA all
+cosmetica. Sweep: 59 unformatted-terrain files transformed (silva/
+fontes + instrumenta + tools + 2 probationes), ZERO violations; the
+sweep's awk verified against a planted fault (counts 2 on a real
+ADDITA diff — a zero you haven't tested is not a zero). Controls:
+true ADDITA/REMOTA/substantiva/documentaria all preserved (section
+IV). Suite 42/42; silex rebuilt (it bundles this engine).

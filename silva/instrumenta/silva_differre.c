@@ -99,8 +99,13 @@ silva_differre_latus_ex_textu (Piscina* piscina,
     latus->identitates = (vacuum**)piscina_allocare(piscina,
         (memoriae_index)(latus->numerus == 0 ? I : latus->numerus)
             * magnitudo(vacuum*));
+    latus->identitates_normatae = (vacuum**)piscina_allocare(
+        piscina,
+        (memoriae_index)(latus->numerus == 0 ? I : latus->numerus)
+            * magnitudo(vacuum*));
     si (latus->initia == NIHIL || latus->fines == NIHIL
-        || latus->identitates == NIHIL)
+        || latus->identitates == NIHIL
+        || latus->identitates_normatae == NIHIL)
     {
         redde FALSUM;
     }
@@ -137,6 +142,50 @@ silva_differre_latus_ex_textu (Piscina* piscina,
             redde FALSUM;
         }
         latus->identitates[k] = (vacuum*)internata;
+    }
+    /* sigilla NORMATA: series lexematum (genus + valor) spatiis
+     * exempta - identitas quae reformationem spatialem transit
+     * (clavis parium sub W spatiali, 01M0D4RN3B) */
+    per (k = 0; k < latus->numerus; k = k + 1)
+    {
+        constans SilvaUnitas* u = _unitas_ad(latus->unitates, k);
+        ChordaAedificator*    aed = chorda_aedificator_creare(
+            piscina, (memoriae_index)128);
+        Sigillum  sig;
+        character hex[SIGILLUM_HEX_MENSURA];
+        chorda    normata;
+        chorda*   internata;
+        i32       j;
+
+        si (aed == NIHIL)
+        {
+            redde FALSUM;
+        }
+        per (j = u->lexema_primum; j < u->lexema_finis; j = j + 1)
+        {
+            SilvaToken* t = _lexema_ad(latus->lexemata, j);
+            i8          limites[2];
+
+            limites[0] = (i8)((integer)t->genus + I);
+            limites[1] = (i8)0x1F;
+            chorda_aedificator_appendere_chorda(aed,
+                chorda_ex_buffer(limites, (i32)II));
+            chorda_aedificator_appendere_chorda(aed, t->valor);
+            limites[0] = (i8)0x1E;
+            chorda_aedificator_appendere_chorda(aed,
+                chorda_ex_buffer(limites, (i32)I));
+        }
+        normata = chorda_aedificator_finire(aed);
+        sig = sigillum_computare((constans vacuum*)normata.datum,
+            (memoriae_index)normata.mensura);
+        sigillum_hex(&sig, hex);
+        internata = chorda_internare(intern,
+            chorda_ex_buffer((i8*)hex, 64));
+        si (internata == NIHIL)
+        {
+            redde FALSUM;
+        }
+        latus->identitates_normatae[k] = (vacuum*)internata;
     }
     redde VERUM;
 }
@@ -468,6 +517,75 @@ silva_differre_titulum_cstr (Piscina* piscina,
  * paria + emissio
  * -------------------------------------------------- */
 
+/* ordinalem in listam clavis appendere (lista creatur si abest).
+ * Valor tabulae = Xar* ordinalium - copiae geminae (bracchia
+ * #ifdef) singulae reperibiles manent (olim ordinalis PRIMUS
+ * solus servabatur - copia secunda irreperibilis, 01M0D4RN3B). */
+interior b32
+_ordinalem_registrare (Piscina* piscina, TabulaDispersa* tabula,
+    chorda clavis, i32 ordinis);
+
+interior b32
+_ordinalem_registrare (Piscina* piscina, TabulaDispersa* tabula,
+    chorda clavis, i32 ordinis)
+{
+    vacuum* inventum = NIHIL;
+    Xar*    ordines;
+    i32*    cella;
+
+    si (tabula_dispersa_invenire(tabula, clavis, &inventum))
+    {
+        ordines = (Xar*)inventum;
+    }
+    alioquin
+    {
+        ordines = xar_creare(piscina, (i32)magnitudo(i32));
+        si (ordines == NIHIL)
+        {
+            redde FALSUM;
+        }
+        tabula_dispersa_inserere(tabula, clavis,
+            (vacuum*)ordines);
+    }
+    cella = (i32*)xar_addere(ordines);
+    si (cella == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *cella = ordinis;
+    redde VERUM;
+}
+
+/* ordinalis primus NON sumptus in lista clavis; -1 = nullus */
+interior s32
+_ordinalis_liber (TabulaDispersa* tabula, chorda clavis,
+    constans i32* sumptae);
+
+interior s32
+_ordinalis_liber (TabulaDispersa* tabula, chorda clavis,
+    constans i32* sumptae)
+{
+    vacuum* inventum = NIHIL;
+    Xar*    ordines;
+    i32     k;
+
+    si (!tabula_dispersa_invenire(tabula, clavis, &inventum))
+    {
+        redde -I;
+    }
+    ordines = (Xar*)inventum;
+    per (k = 0; k < xar_numerus(ordines); k = k + 1)
+    {
+        i32 ordinis = *(i32*)xar_obtinere(ordines, k);
+
+        si (!sumptae[ordinis])
+        {
+            redde (s32)ordinis;
+        }
+    }
+    redde -I;
+}
+
 Xar*
 silva_differre_paria (Piscina* piscina,
     constans SilvaDifferreLatus* a,
@@ -478,6 +596,7 @@ silva_differre_paria (Piscina* piscina,
     Xar* remotae_ordo;
     Xar* additae_ordo;
     TabulaDispersa* sigilla_remotarum;
+    TabulaDispersa* normata_remotarum;
     TabulaDispersa* tituli_remotarum;
     i32* sumptae;
     i32  k;
@@ -493,9 +612,11 @@ silva_differre_paria (Piscina* piscina,
     remotae_ordo = xar_creare(piscina, (i32)magnitudo(i32));
     additae_ordo = xar_creare(piscina, (i32)magnitudo(i32));
     sigilla_remotarum = tabula_dispersa_creare_chorda(piscina, 32);
+    normata_remotarum = tabula_dispersa_creare_chorda(piscina, 32);
     tituli_remotarum = tabula_dispersa_creare_chorda(piscina, 32);
     si (paria == NIHIL || remotae_ordo == NIHIL
         || additae_ordo == NIHIL || sigilla_remotarum == NIHIL
+        || normata_remotarum == NIHIL
         || tituli_remotarum == NIHIL)
     {
         redde NIHIL;
@@ -538,8 +659,9 @@ silva_differre_paria (Piscina* piscina,
         }
     }
 
-    /* indices remotarum: sigillo (MOTA) et titulo (MUTATA) -
-     * prima non sumpta vincit */
+    /* indices remotarum: sigillo crudo (MOTA), sigillo normato
+     * et titulo (MUTATA) - listae ordinalium per clavem, primus
+     * non sumptus vincit */
     sumptae = (i32*)piscina_allocare(piscina,
         (memoriae_index)(xar_numerus(remotae_ordo) == 0 ? I
             : xar_numerus(remotae_ordo)) * magnitudo(i32));
@@ -551,51 +673,37 @@ silva_differre_paria (Piscina* piscina,
     {
         i32    ai = *(i32*)xar_obtinere(remotae_ordo, k);
         chorda sigillum_ai = *(chorda*)a->identitates[ai];
+        chorda normatum_ai =
+            *(chorda*)a->identitates_normatae[ai];
         constans SilvaUnitas* ua = _unitas_ad(a->unitates, ai);
 
         sumptae[k] = 0;
-        /* valor tabulae = ORDINALIS k in cella propria (Xar
-         * segmentatum est - arithmetica trans elementa
-         * vetita) */
-        si (!tabula_dispersa_continet(sigilla_remotarum,
-            sigillum_ai))
+        si (!_ordinalem_registrare(piscina, sigilla_remotarum,
+                sigillum_ai, k)
+            || !_ordinalem_registrare(piscina, normata_remotarum,
+                   normatum_ai, k))
         {
-            i32* cella = (i32*)piscina_allocare(piscina,
-                (memoriae_index)magnitudo(i32));
-
-            si (cella == NIHIL)
-            {
-                redde NIHIL;
-            }
-            *cella = k;
-            tabula_dispersa_inserere(sigilla_remotarum,
-                sigillum_ai, (vacuum*)cella);
+            redde NIHIL;
         }
         si (ua->titulus.mensura > 0
-            && !tabula_dispersa_continet(tituli_remotarum,
-                   ua->titulus))
+            && !_ordinalem_registrare(piscina, tituli_remotarum,
+                   ua->titulus, k))
         {
-            i32* cella = (i32*)piscina_allocare(piscina,
-                (memoriae_index)magnitudo(i32));
-
-            si (cella == NIHIL)
-            {
-                redde NIHIL;
-            }
-            *cella = k;
-            tabula_dispersa_inserere(tituli_remotarum,
-                ua->titulus, (vacuum*)cella);
+            redde NIHIL;
         }
     }
 
-    /* additae: MOTA (sigillum idem) > MUTATA (titulus idem) >
-     * ADDITA */
+    /* additae: MOTA (sigillum crudum idem) > MUTATA (sigillum
+     * normatum idem - reformatio spatialis, etiam sine titulo) >
+     * MUTATA (titulus idem) > ADDITA */
     per (k = 0; k < xar_numerus(additae_ordo); k = k + 1)
     {
         i32     bi = *(i32*)xar_obtinere(additae_ordo, k);
         chorda  sigillum_bi = *(chorda*)b->identitates[bi];
+        chorda  normatum_bi =
+            *(chorda*)b->identitates_normatae[bi];
         constans SilvaUnitas* ub = _unitas_ad(b->unitates, bi);
-        vacuum* inventum = NIHIL;
+        s32     ordinis;
         SilvaDifferrePar* par;
 
         par = (SilvaDifferrePar*)xar_addere(paria);
@@ -605,31 +713,35 @@ silva_differre_paria (Piscina* piscina,
         }
         par->b_index = (s32)bi;
         par->a_index = -1;
-        si (tabula_dispersa_invenire(sigilla_remotarum,
-            sigillum_bi, &inventum))
+        ordinis = _ordinalis_liber(sigilla_remotarum, sigillum_bi,
+            sumptae);
+        si (ordinis >= 0)
         {
-            i32 ordinis = *(i32*)inventum;
-
-            si (!sumptae[ordinis])
-            {
-                sumptae[ordinis] = 1;
-                par->a_index = (s32)*(i32*)xar_obtinere(
-                    remotae_ordo, ordinis);
-                par->status = "MOTA";
-                perge;
-            }
+            sumptae[ordinis] = 1;
+            par->a_index = (s32)*(i32*)xar_obtinere(remotae_ordo,
+                (i32)ordinis);
+            par->status = "MOTA";
+            perge;
         }
-        si (ub->titulus.mensura > 0
-            && tabula_dispersa_invenire(tituli_remotarum,
-                   ub->titulus, &inventum))
+        ordinis = _ordinalis_liber(normata_remotarum, normatum_bi,
+            sumptae);
+        si (ordinis >= 0)
         {
-            i32 ordinis = *(i32*)inventum;
-
-            si (!sumptae[ordinis])
+            sumptae[ordinis] = 1;
+            par->a_index = (s32)*(i32*)xar_obtinere(remotae_ordo,
+                (i32)ordinis);
+            par->status = "MUTATA";
+            perge;
+        }
+        si (ub->titulus.mensura > 0)
+        {
+            ordinis = _ordinalis_liber(tituli_remotarum,
+                ub->titulus, sumptae);
+            si (ordinis >= 0)
             {
                 sumptae[ordinis] = 1;
                 par->a_index = (s32)*(i32*)xar_obtinere(
-                    remotae_ordo, ordinis);
+                    remotae_ordo, (i32)ordinis);
                 par->status = "MUTATA";
                 perge;
             }

@@ -7,8 +7,11 @@
  *
  * Cursus: latus_ex_textu bis -> paria -> paria_emittere.
  * Semantica (vide principalia/differre.c pro doctrina plena):
- * partitio byte totalis, sigilla spatiorum internata, MOTA sigillo
- * aequali / MUTATA titulo aequali / ADDITA / REMOTA; MUTATA
+ * partitio byte totalis, sigilla internata (cruda + NORMATA -
+ * series lexematum spatiis exempta), MOTA sigillo crudo aequali /
+ * MUTATA sigillo normato AUT titulo aequali / ADDITA / REMOTA;
+ * claves parium listas ordinalium ferunt (copiae geminae - bracchia
+ * #ifdef - singulae parem suum inveniunt, 01M0D4RN3B); MUTATA
  * classificantur substantiva / documentaria / cosmetica.
  */
 
@@ -28,7 +31,12 @@ nomen structura {
     Xar*     unitates;     /* SilvaUnitas */
     i32*     initia;       /* byte initium unitatis k */
     i32*     fines;        /* byte finis (exclusivum) */
-    vacuum** identitates;  /* sigilla internata (chorda*) */
+    vacuum** identitates;  /* sigilla internata (chorda*) - octeti
+                            * crudi spatii (IDEM/MOTA) */
+    vacuum** identitates_normatae; /* sigilla serierum lexematum
+                            * (genus + valor, spatiis exemptis) -
+                            * clavis parium sub reformatione
+                            * spatiali (chorda*) */
     i32      numerus;
 } SilvaDifferreLatus;
 
