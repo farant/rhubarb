@@ -12562,3 +12562,15 @@ between). Ladder below.
 First light: piscina.c 45 divergentiae (24 vexilla-59 / 6 caudae /
 14 longae / 1 vacua finalis — supersets the hand archaeology, zero
 false fires); chorda.c 132 tabulae + 5 + 42.
+
+## 2026-08-19 — formator tranche 2a (regulae structurales R1/R2/R3/R4/R8)
+
+Tree pass in silva_formator: parse per lint (latina contextus),
+positions ONLY through origin roots (silva_token_radix — expanded
+tokens carry def-site fields; pinned by a principale->main probatio
+case), alioquin-si chains measure braces from the chain head.
+Census: 19549 in 259/291 (parametra 2284 / spatium-def 2029 /
+bracchia 829 / custos 114 / typus 7 — all 7 in json.c). Probatio
+52/52, suite 40/40, piscina.c = 45 unchanged (exemplar conformant
+under its own rules). Doors in formator.worklog.md (arbor-absens
+marker, prototypes, alignment tranche 2b).

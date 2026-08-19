@@ -75,3 +75,34 @@ trailing 51 / keyword 1). Hook note: mid-edit examen flagged
 "variabilis inutilis" on the exclusiones declaration — intermediate
 state between the declaration edit and the use edits; rebuild under
 -Werror (unused = error) is the authority and passed.
+
+## 2026-08-19 — tranche 2a: structural rules (R1/R2/R3/R4/R8)
+
+Tree pass added to the machine: silva_contextus + latinam_addere +
+silva_c89_parsare_cum_contextu per lint; parse failure => stream
+rules only (fragments stay lintable, lint never crashes). LAW OF
+POSITIONS: tree tokens are EXPANDED and carry def-site lexical
+fields (a `principale` definition's name token is `main` pointing
+into latina.h) — every direct token position check goes through
+silva_token_radix; node spans use extensionem_lineis (resolves
+internally). Pinned by the principale probatio case. alioquin-si
+chains thread the chain-head node (caput) so else-if braces measure
+against the chain start, not the inner si column. R8 exempts a sole
+bare-void parameter (detected structurally: 1 specifier ==
+TYPUS_PRIMITIVUS with 1 VOID token, no declarator). R3 applies to
+CORPUS only — struct/union/enum braces stay on the declaration line
+by design. Skipped with cause: FAC_DUM corpus, bare nested blocks,
+prototypes (R1/R2/R8 on DECLARATIO = tranche 2b).
+
+Doors: per-file "arbor absens" loud marker when parse fails (today
+it silently skips structural rules; coverage argument for now =
+examen parses this whole corpus daily with pinned exclusions, so
+house files parse); prototype checks; R7/R9/R13 alignment tranche.
+
+Census (tree live): 19549 in 259/291 — parametra-singula 2284
+(the abandoned fiddly rule), spatium-definitionis 2029 (2000 def /
+29 call), bracchia-allman 829, custos-una-linea 114,
+typus-in-linea-sua 7 (ALL seven = one cluster of flat one-line
+predicates in lib/json.c:1021-1051). Probatio 52/52; suite 40/40;
+piscina.c still exactly 45 (zero structural — the exemplar is
+conformant under its own executable rules).

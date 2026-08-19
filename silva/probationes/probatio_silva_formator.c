@@ -64,7 +64,8 @@ s32 principale (vacuum)
     imprimere("\n--- Probans tabulas (R5) ---\n");
     {
         Xar* d = _lint(piscina,
-            "vacuum probare (vacuum)\n"
+            "vacuum\n"
+            "probare (vacuum)\n"
             "{\n"
             "\tredde;\n"
             "}\n");
@@ -72,7 +73,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
         CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
             "indentatio-quaterna") == ZEPHYRUM);
-        CREDO_AEQUALIS_I32(_divergentia(d, 0)->linea, (i32)3);
+        CREDO_AEQUALIS_I32(_divergentia(d, 0)->linea, (i32)4);
         CREDO_AEQUALIS_I32(_divergentia(d, 0)->columna, (i32)1);
     }
 
@@ -189,6 +190,145 @@ s32 principale (vacuum)
             (i32)76);
         CREDO_AEQUALIS_I32(_divergentia(d, 0)->columna,
             (i32)73);
+    }
+
+    imprimere("\n--- Probans titulum in linea sua (R1+R8) ---\n");
+    {
+        /* titulus in linea specificatorum + parametrum in
+         * linea parenthesis - ambae regulae flagrant */
+        Xar* d = _lint(piscina,
+            "interior i32 _f (i32 a)\n"
+            "{\n"
+            "    redde a;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)2);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "typus-in-linea-sua") == ZEPHYRUM);
+        CREDO_VERUM(strcmp(_divergentia(d, 1)->regula,
+            "parametra-singula") == ZEPHYRUM);
+    }
+
+    imprimere("\n--- Probans spatium definitionis (R2) ---\n");
+    {
+        /* nullum spatium ante parenthesim definitionis */
+        Xar* d = _lint(piscina,
+            "interior i32\n"
+            "_f(\n"
+            "    i32 a)\n"
+            "{\n"
+            "    redde a;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "spatium-definitionis") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)_divergentia(d, 0)->inventum,
+            (i32)0);
+    }
+    {
+        /* spatium ante parenthesim VOCATIONIS - inversum */
+        Xar* d = _lint(piscina,
+            "interior i32\n"
+            "_f (\n"
+            "    i32 a)\n"
+            "{\n"
+            "    redde _f (a);\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "spatium-definitionis") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32(_divergentia(d, 0)->linea, (i32)5);
+    }
+
+    imprimere("\n--- Probans bracchia (R3) ---\n");
+    {
+        /* brachium apertum in linea conditionis */
+        Xar* d = _lint(piscina,
+            "interior vacuum\n"
+            "_f (\n"
+            "    i32 a)\n"
+            "{\n"
+            "    si (a) {\n"
+            "        a = I;\n"
+            "    }\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "bracchia-allman") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32(_divergentia(d, 0)->linea, (i32)5);
+    }
+    {
+        /* columna bracchiorum non columna possessoris */
+        Xar* d = _lint(piscina,
+            "interior vacuum\n"
+            "_f (\n"
+            "    i32 a)\n"
+            "{\n"
+            "    si (a)\n"
+            "      {\n"
+            "        a = I;\n"
+            "      }\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)2);
+        CREDO_AEQUALIS_I32((i32)_divergentia(d, 0)->inventum,
+            (i32)7);
+        CREDO_AEQUALIS_I32(
+            (i32)_divergentia(d, 0)->exspectatum, (i32)5);
+    }
+
+    imprimere("\n--- Probans custodem una linea (R4) ---\n");
+    {
+        Xar* d = _lint(piscina,
+            "interior vacuum\n"
+            "_f (\n"
+            "    i32 a)\n"
+            "{\n"
+            "    si (a)\n"
+            "        a = I;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "custos-una-linea") == ZEPHYRUM);
+    }
+
+    imprimere("\n--- Probans radicem originis + vacuum (R1/R8) ---\n");
+    {
+        /* principale->main expansum: positiones per radicem
+         * originis resolvendae; '(vacuum)' in linea manet */
+        Xar* d = _lint(piscina,
+            "integer\n"
+            "principale (vacuum)\n"
+            "{\n"
+            "    redde ZEPHYRUM;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
+    }
+
+    imprimere("\n--- Probans catenam alioquin-si (caput) ---\n");
+    {
+        /* bracchia catenae e capite mensurata - conformis */
+        Xar* d = _lint(piscina,
+            "interior vacuum\n"
+            "_f (\n"
+            "    i32 a)\n"
+            "{\n"
+            "    si (a)\n"
+            "    {\n"
+            "        a = I;\n"
+            "    }\n"
+            "    alioquin si (a)\n"
+            "    {\n"
+            "        a = II;\n"
+            "    }\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
     }
 
     imprimere("\n");

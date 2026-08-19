@@ -11,6 +11,12 @@
 #include "silva_formator.h"
 #include "silva_token.h"
 #include "silva_lexema.h"
+#include "silva_nodus.h"
+#include "silva_contextus.h"
+#include "silva_parsare.h"
+#include "silva_commissio.h"
+#include "silva_c89_oraculum.h"
+#include "silva_tabulae_c89.h"
 
 #include <string.h>
 
@@ -229,6 +235,540 @@ _finem_censere (
 }
 
 /* ==================================================
+ * pars arboris - regulae structurales (tranche II.a:
+ * R1 typus-in-linea-sua, R2 spatium-definitionis,
+ * R3 bracchia-allman, R4 custos-una-linea,
+ * R8 parametra-singula)
+ *
+ * CAUTIO positionum: lexemata arboris EXPANSA sunt et campos
+ * lexicales def-sitos ferunt (si->if lineam latinae monstrat!).
+ * Ergo omnis inspectio positionis per radicem originis it:
+ * silva_token_radix directe, extensionem_lineis intra se.
+ * ================================================== */
+
+nomen structura {
+        Xar* divergentiae;
+    Piscina* piscina;
+        s32  fons_princeps;
+} FormatorAmbitus;
+
+interior SilvaNodus*
+_valor_nodus (SilvaValor valor)
+{
+    redde valor.genus == SILVA_VALOR_NODUS
+        ? valor.datum.nodus : NIHIL;
+}
+
+interior SilvaToken*
+_valor_radix (SilvaValor valor)
+{
+    si (valor.genus != SILVA_VALOR_TOKEN
+        || valor.datum.token == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde silva_token_radix(valor.datum.token);
+}
+
+interior b32
+_extensio (
+    constans SilvaNodus* nodus,
+                    s32  fons_index,
+                    i32* linea_a,
+                    i32* columna_a,
+                    i32* linea_b,
+                    i32* columna_b)
+{
+    si (!nodus) redde FALSUM;
+    silva_nodus_extensionem_lineis(nodus, fons_index, linea_a,
+        columna_a, linea_b, columna_b);
+    redde *linea_a != (i32)ZEPHYRUM;
+}
+
+/* catenam declaratoris descendere ad FUNCTIONIS extimam */
+interior SilvaNodus*
+_declarator_functionis (SilvaNodus* declarator)
+{
+    dum (declarator)
+    {
+        commutatio (declarator->genus)
+        {
+            casus SILVA_C89_GENUS_DECLARATOR_FUNCTIONIS:
+                redde declarator;
+            casus SILVA_C89_GENUS_DECLARATOR_MONSTRATOR:
+                declarator = _valor_nodus(
+                    silva_c89_declarator_monstrator_internum(
+                        declarator));
+                frange;
+            casus SILVA_C89_GENUS_PARENTHESIS:
+                declarator = _valor_nodus(
+                    silva_c89_parenthesis_internum(declarator));
+                frange;
+            casus SILVA_C89_GENUS_DECLARATOR_ACIEI:
+                declarator = _valor_nodus(
+                    silva_c89_declarator_aciei_internum(
+                        declarator));
+                frange;
+            ordinarius:
+                redde NIHIL;
+        }
+    }
+    redde NIHIL;
+}
+
+/* titulum declaratoris invenire (radix originis reddita) */
+interior SilvaToken*
+_titulus_declaratoris (SilvaNodus* declarator)
+{
+    dum (declarator)
+    {
+        commutatio (declarator->genus)
+        {
+            casus SILVA_C89_GENUS_DECLARATOR_TITULUS:
+                redde _valor_radix(
+                    silva_c89_declarator_titulus_tok_titulus(
+                        declarator));
+            casus SILVA_C89_GENUS_DECLARATOR_MONSTRATOR:
+                declarator = _valor_nodus(
+                    silva_c89_declarator_monstrator_internum(
+                        declarator));
+                frange;
+            casus SILVA_C89_GENUS_PARENTHESIS:
+                declarator = _valor_nodus(
+                    silva_c89_parenthesis_internum(declarator));
+                frange;
+            casus SILVA_C89_GENUS_DECLARATOR_ACIEI:
+                declarator = _valor_nodus(
+                    silva_c89_declarator_aciei_internum(
+                        declarator));
+                frange;
+            casus SILVA_C89_GENUS_DECLARATOR_FUNCTIONIS:
+                declarator = _valor_nodus(
+                    silva_c89_declarator_functionis_internum(
+                        declarator));
+                frange;
+            ordinarius:
+                redde NIHIL;
+        }
+    }
+    redde NIHIL;
+}
+
+/* parametrum '(vacuum)' - exceptio R8 (in linea manet) */
+interior b32
+_parametrum_vacuum (SilvaNodus* parametrum)
+{
+    SilvaValor  specificatores;
+    SilvaValor* primus;
+    SilvaNodus* nodus_primus;
+    SilvaValor  verba;
+    SilvaValor* verbum;
+
+    si (!parametrum) redde FALSUM;
+    si (_valor_nodus(silva_c89_parametrum_declarator(parametrum))
+        != NIHIL)
+    {
+        redde FALSUM;
+    }
+    specificatores =
+        silva_c89_parametrum_specificatores(parametrum);
+    si (silva_valor_lista_numerus(specificatores) != (i32)I)
+    {
+        redde FALSUM;
+    }
+    primus = silva_valor_lista_obtinere(specificatores,
+        ZEPHYRUM);
+    nodus_primus = primus ? _valor_nodus(*primus) : NIHIL;
+    si (!nodus_primus || nodus_primus->genus
+        != SILVA_C89_GENUS_TYPUS_PRIMITIVUS)
+    {
+        redde FALSUM;
+    }
+    verba = silva_c89_typus_primitivus_tok_verba(nodus_primus);
+    si (silva_valor_lista_numerus(verba) != (i32)I) redde FALSUM;
+    verbum = silva_valor_lista_obtinere(verba, ZEPHYRUM);
+    redde verbum != NIHIL
+        && verbum->genus == SILVA_VALOR_TOKEN
+        && verbum->datum.token != NIHIL
+        && verbum->datum.token->genus == SILVA_LEX_VOID;
+}
+
+/* R3: bracchia corporis in lineis suis, columna possessoris */
+interior vacuum
+_corpus_censere (
+        FormatorAmbitus* ambitus,
+             SilvaNodus* corpus,
+    constans SilvaNodus* possessor)
+{
+    SilvaToken* aperta;
+    SilvaToken* clausa;
+           i32  la;
+           i32  ca;
+           i32  lb;
+           i32  cb;
+           b32  situs;
+
+    si (!corpus || corpus->genus != SILVA_C89_GENUS_CORPUS)
+    {
+        redde;
+    }
+
+    aperta = _valor_radix(silva_c89_corpus_tok_aperta(corpus));
+    clausa = _valor_radix(silva_c89_corpus_tok_clausa(corpus));
+    situs  = _extensio(possessor, ambitus->fons_princeps,
+        &la, &ca, &lb, &cb);
+
+    si (aperta)
+    {
+        si (!aperta->initium_lineae)
+        {
+            _addere(ambitus->divergentiae, "bracchia-allman",
+                "brachium apertum in linea sua exspectatum",
+                aperta->linea, aperta->columna,
+                (s32)aperta->columna, I);
+        }
+        alioquin si (situs && aperta->columna != ca)
+        {
+            _addere(ambitus->divergentiae, "bracchia-allman",
+                "columna brachii aperti", aperta->linea,
+                aperta->columna, (s32)aperta->columna, (s32)ca);
+        }
+    }
+    si (clausa)
+    {
+        si (!clausa->initium_lineae)
+        {
+            _addere(ambitus->divergentiae, "bracchia-allman",
+                "brachium clausum in linea sua exspectatum",
+                clausa->linea, clausa->columna,
+                (s32)clausa->columna, I);
+        }
+        alioquin si (situs && clausa->columna != ca)
+        {
+            _addere(ambitus->divergentiae, "bracchia-allman",
+                "columna brachii clausi", clausa->linea,
+                clausa->columna, (s32)clausa->columna, (s32)ca);
+        }
+    }
+}
+
+/* R4: ramus sine brachiis in linea ancorae (')' aut 'alioquin') */
+interior vacuum
+_ramum_censere (
+    FormatorAmbitus* ambitus,
+         SilvaValor  ramus,
+        SilvaToken*  ancora)
+{
+    SilvaNodus* nodus;
+           i32  la;
+           i32  ca;
+           i32  lb;
+           i32  cb;
+
+    nodus = _valor_nodus(ramus);
+    si (!nodus || !ancora) redde;
+    si (nodus->genus == SILVA_C89_GENUS_CORPUS) redde;
+    si (!_extensio(nodus, ambitus->fons_princeps,
+        &la, &ca, &lb, &cb))
+    {
+        redde;
+    }
+    si (la != ancora->linea)
+    {
+        _addere(ambitus->divergentiae, "custos-una-linea",
+            "corpus sine brachiis in linea conditionis"
+            " exspectatum", la, ca, (s32)la,
+            (s32)ancora->linea);
+    }
+}
+
+/* R1 + R2 (definitio) + R8 */
+interior vacuum
+_definitionem_censere (
+    FormatorAmbitus* ambitus,
+         SilvaNodus* definitio)
+{
+    SilvaNodus* declarator;
+    SilvaNodus* functionis;
+    SilvaToken* titulus;
+    SilvaToken* apertum;
+     SilvaValor parametra;
+            i32 numerus;
+            i32 prior_linea;
+            i32 i;
+
+    declarator = _valor_nodus(
+        silva_c89_definitio_functionis_declarator(definitio));
+    functionis = _declarator_functionis(declarator);
+    si (!functionis) redde;
+
+    titulus = _titulus_declaratoris(_valor_nodus(
+        silva_c89_declarator_functionis_internum(functionis)));
+    apertum = _valor_radix(
+        silva_c89_declarator_functionis_tok_apertum(functionis));
+
+    /* R1: titulus in columna prima lineae suae */
+    si (titulus && (!titulus->initium_lineae
+        || titulus->columna != (i32)I))
+    {
+        _addere(ambitus->divergentiae, "typus-in-linea-sua",
+            "titulus functionis in columna prima lineae suae"
+            " exspectatus", titulus->linea, titulus->columna,
+            (s32)titulus->columna, I);
+    }
+
+    /* R2 (definitio): spatium unicum ante parenthesim */
+    si (titulus && apertum && apertum->linea == titulus->linea)
+    {
+        i32 finis_tituli;
+
+        finis_tituli = titulus->columna + titulus->valor.mensura;
+        si (apertum->columna != finis_tituli + I)
+        {
+            _addere(ambitus->divergentiae,
+                "spatium-definitionis",
+                "spatium unicum inter titulum et parenthesim"
+                " definitionis", apertum->linea,
+                apertum->columna,
+                (s32)(apertum->columna - finis_tituli), I);
+        }
+    }
+
+    /* R8: parametra singula ('(vacuum)' exceptum) */
+    parametra = silva_c89_declarator_functionis_parametra(
+        functionis);
+    numerus = silva_valor_lista_numerus(parametra);
+    si (numerus == (i32)I)
+    {
+        SilvaValor* elementum;
+
+        elementum = silva_valor_lista_obtinere(parametra,
+            ZEPHYRUM);
+        si (elementum && _parametrum_vacuum(
+            _valor_nodus(*elementum)))
+        {
+            redde;
+        }
+    }
+    prior_linea = apertum ? apertum->linea : (i32)ZEPHYRUM;
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        SilvaValor* elementum;
+        SilvaNodus* parametrum;
+               i32  la;
+               i32  ca;
+               i32  lb;
+               i32  cb;
+
+        elementum = silva_valor_lista_obtinere(parametra, i);
+        parametrum = elementum ? _valor_nodus(*elementum)
+            : NIHIL;
+        si (!_extensio(parametrum, ambitus->fons_princeps,
+            &la, &ca, &lb, &cb))
+        {
+            perge;
+        }
+        si (la <= prior_linea)
+        {
+            _addere(ambitus->divergentiae, "parametra-singula",
+                "parametrum in linea sua exspectatum", la, ca,
+                (s32)la, (s32)(prior_linea + I));
+        }
+        prior_linea = lb;
+    }
+}
+
+/* R2 (vocatio): nullum spatium ante parenthesim */
+interior vacuum
+_vocationem_censere (
+    FormatorAmbitus* ambitus,
+         SilvaNodus* vocatio)
+{
+    SilvaNodus* functio;
+    SilvaToken* apertum;
+           i32  la;
+           i32  ca;
+           i32  lb;
+           i32  cb;
+
+    functio = _valor_nodus(silva_c89_vocatio_functio(vocatio));
+    apertum = _valor_radix(
+        silva_c89_vocatio_tok_apertum(vocatio));
+    si (!functio || !apertum) redde;
+    si (!_extensio(functio, ambitus->fons_princeps,
+        &la, &ca, &lb, &cb))
+    {
+        redde;
+    }
+    si (apertum->linea == lb && apertum->columna != cb)
+    {
+        _addere(ambitus->divergentiae, "spatium-definitionis",
+            "nullum spatium ante parenthesim vocationis"
+            " exspectatum", apertum->linea, apertum->columna,
+            (s32)(apertum->columna - cb), ZEPHYRUM);
+    }
+}
+
+interior vacuum
+_nodum_percurrere (
+    FormatorAmbitus* ambitus,
+         SilvaNodus* nodus);
+
+/* catena si/alioquin-si: caput = si primum (columna brachiorum
+ * catenae totius e capite mensuratur) */
+interior vacuum
+_si_censere (
+        FormatorAmbitus* ambitus,
+             SilvaNodus* nodus,
+    constans SilvaNodus* caput)
+{
+    SilvaToken* clausum;
+    SilvaToken* verbum_alioquin;
+    SilvaNodus* consequens;
+    SilvaNodus* ramus_alioquin;
+     SilvaValor valor_alioquin;
+
+    clausum = _valor_radix(silva_c89_si_tok_clausum(nodus));
+    consequens = _valor_nodus(silva_c89_si_consequens(nodus));
+
+    si (consequens
+        && consequens->genus == SILVA_C89_GENUS_CORPUS)
+    {
+        _corpus_censere(ambitus, consequens, caput);
+    }
+    alioquin si (clausum)
+    {
+        _ramum_censere(ambitus, silva_c89_si_consequens(nodus),
+            clausum);
+    }
+    _nodum_percurrere(ambitus,
+        _valor_nodus(silva_c89_si_conditio(nodus)));
+    _nodum_percurrere(ambitus, consequens);
+
+    valor_alioquin = silva_c89_si_alioquin(nodus);
+    ramus_alioquin = _valor_nodus(valor_alioquin);
+    verbum_alioquin = _valor_radix(
+        silva_c89_si_tok_alioquin(nodus));
+    si (ramus_alioquin)
+    {
+        si (ramus_alioquin->genus == SILVA_C89_GENUS_SI)
+        {
+            _si_censere(ambitus, ramus_alioquin, caput);
+        }
+        alioquin
+        {
+            si (ramus_alioquin->genus == SILVA_C89_GENUS_CORPUS)
+            {
+                _corpus_censere(ambitus, ramus_alioquin, caput);
+            }
+            alioquin si (verbum_alioquin)
+            {
+                _ramum_censere(ambitus, valor_alioquin,
+                    verbum_alioquin);
+            }
+            _nodum_percurrere(ambitus, ramus_alioquin);
+        }
+    }
+}
+
+interior vacuum
+_nodum_percurrere (
+    FormatorAmbitus* ambitus,
+         SilvaNodus* nodus)
+{
+    si (!nodus) redde;
+
+    commutatio (nodus->genus)
+    {
+        casus SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS:
+        {
+            SilvaNodus* corpus;
+
+            corpus = _valor_nodus(
+                silva_c89_definitio_functionis_corpus(nodus));
+            _definitionem_censere(ambitus, nodus);
+            si (corpus) _corpus_censere(ambitus, corpus, nodus);
+            frange;
+        }
+        casus SILVA_C89_GENUS_SI:
+            _si_censere(ambitus, nodus, nodus);
+            redde;   /* subarbor manualiter percursa */
+        casus SILVA_C89_GENUS_DUM:
+        {
+            SilvaNodus* corpus;
+            SilvaToken* clausum;
+
+            corpus = _valor_nodus(silva_c89_dum_corpus(nodus));
+            clausum = _valor_radix(
+                silva_c89_dum_tok_clausum(nodus));
+            si (corpus
+                && corpus->genus == SILVA_C89_GENUS_CORPUS)
+            {
+                _corpus_censere(ambitus, corpus, nodus);
+            }
+            alioquin si (clausum)
+            {
+                _ramum_censere(ambitus,
+                    silva_c89_dum_corpus(nodus), clausum);
+            }
+            frange;
+        }
+        casus SILVA_C89_GENUS_PER:
+        {
+            SilvaNodus* corpus;
+            SilvaToken* clausum;
+
+            corpus = _valor_nodus(silva_c89_per_corpus(nodus));
+            clausum = _valor_radix(
+                silva_c89_per_tok_clausum(nodus));
+            si (corpus
+                && corpus->genus == SILVA_C89_GENUS_CORPUS)
+            {
+                _corpus_censere(ambitus, corpus, nodus);
+            }
+            alioquin si (clausum)
+            {
+                _ramum_censere(ambitus,
+                    silva_c89_per_corpus(nodus), clausum);
+            }
+            frange;
+        }
+        casus SILVA_C89_GENUS_COMMUTATIO:
+        {
+            SilvaNodus* corpus;
+
+            corpus = _valor_nodus(
+                silva_c89_commutatio_corpus(nodus));
+            si (corpus
+                && corpus->genus == SILVA_C89_GENUS_CORPUS)
+            {
+                _corpus_censere(ambitus, corpus, nodus);
+            }
+            frange;
+        }
+        casus SILVA_C89_GENUS_VOCATIO:
+            _vocationem_censere(ambitus, nodus);
+            frange;
+        ordinarius:
+            frange;
+    }
+
+    {
+        Xar* liberi;
+        i32  numerus;
+        i32  i;
+
+        liberi = silva_nodus_liberi(ambitus->piscina, nodus);
+        numerus = liberi ? xar_numerus(liberi) : (i32)ZEPHYRUM;
+        per (i = ZEPHYRUM; i < numerus; i += I)
+        {
+            _nodum_percurrere(ambitus,
+                *(SilvaNodus**)xar_obtinere(liberi, i));
+        }
+    }
+}
+
+/* ==================================================
  * introitus
  * ================================================== */
 
@@ -238,10 +778,12 @@ formator_lint (
     constans character* fons,
                    i32  mensura)
 {
-    Xar* divergentiae;
-    Xar* cruda;
-    i32  numerus;
-    i32  i;
+    Xar*            divergentiae;
+    Xar*            cruda;
+    SilvaContextus* contextus;
+    SilvaParsura*   parsura;
+    i32             numerus;
+    i32             i;
 
     divergentiae = xar_creare(piscina,
         magnitudo(FormatorDivergentia));
@@ -320,6 +862,50 @@ formator_lint (
 
     _longitudinem_censere(divergentiae, fons, mensura);
     _finem_censere(divergentiae, fons, mensura);
+
+    /* pars arboris: parsura fracta => regulae fluminis solae
+     * (fragmenta licita - lint numquam frangit) */
+    contextus = silva_contextus_creare(piscina);
+    si (contextus == NIHIL) redde divergentiae;
+    silva_contextus_latinam_addere(contextus);
+    parsura = silva_c89_parsare_cum_contextu(piscina, contextus,
+        "lint", fons, mensura, NIHIL);
+    si (parsura && parsura->successus
+        && parsura->numerus_errorum == ZEPHYRUM
+        && parsura->commissio)
+    {
+        FormatorAmbitus ambitus;
+        SilvaValor      radix;
+
+        ambitus.divergentiae  = divergentiae;
+        ambitus.piscina       = piscina;
+        ambitus.fons_princeps = parsura->fons_princeps;
+        radix = parsura->commissio->radix;
+
+        si (radix.genus == SILVA_VALOR_LISTA)
+        {
+            i32 n;
+            i32 j;
+
+            n = silva_valor_lista_numerus(radix);
+            per (j = ZEPHYRUM; j < n; j += I)
+            {
+                SilvaValor* elementum;
+
+                elementum = silva_valor_lista_obtinere(radix,
+                    j);
+                si (elementum)
+                {
+                    _nodum_percurrere(&ambitus,
+                        _valor_nodus(*elementum));
+                }
+            }
+        }
+        alioquin si (radix.genus == SILVA_VALOR_NODUS)
+        {
+            _nodum_percurrere(&ambitus, radix.datum.nodus);
+        }
+    }
 
     redde divergentiae;
 }
