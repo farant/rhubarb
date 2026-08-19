@@ -1565,6 +1565,43 @@ s32 principale (vacuum)
         CREDO_FALSUM(s.mutatum);
     }
 
+    imprimere("\n--- Probans vocationem in corpore macri "
+        "(geometria fida) ---\n");
+    {
+        /* vocatio INTRA corpus macri: lexemata omnia ad sedem
+         * invocationis collabuntur - hiatus mensuratus mendax
+         * (negativus; venatio probatio_silva_puritas: XLVI ordines
+         * falsi e macris CREDO). Vocatio corporis NON iudicatur;
+         * vocatio honesta eadem plagula iudicatur adhuc (contra
+         * sectionem nimiam). */
+        constans character* fons =
+            "#define ADFIRMA(x) probare((x), 1)\n"
+            "\n"
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    ADFIRMA(2);\n"
+            "    probare (3);\n"
+            "}\n";
+        Xar* d = _lint(piscina, fons);
+        i32  numerus_vocationis = ZEPHYRUM;
+        i32  linea_inventa = ZEPHYRUM;
+        i32  k;
+
+        CREDO_NON_NIHIL(d);
+        per (k = ZEPHYRUM; k < xar_numerus(d); k++)
+        {
+            si (strcmp(_divergentia(d, k)->regula,
+                    "spatium-definitionis") == ZEPHYRUM)
+            {
+                numerus_vocationis = numerus_vocationis + I;
+                linea_inventa = _divergentia(d, k)->linea;
+            }
+        }
+        CREDO_AEQUALIS_I32(numerus_vocationis, (i32)1);
+        CREDO_AEQUALIS_I32(linea_inventa, (i32)7);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

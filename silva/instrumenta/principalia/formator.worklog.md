@@ -711,3 +711,39 @@ the CLI itself (exempta → stderr, no rows). Warm cost ~0.6s
 three ways: fires on unformatted terrain (silva_lexema.c, 270
 fixable), silent on formatted-with-lint-residue (piscina), silent
 on pinned (biblia_dr).
+
+## 2026-08-19 — geometria_fida adoption: the R2-call false-positive class
+
+Silva shipped the provenance queries (5b3ddab: est_fons_purus +
+geometria_fida, born from the evolutio-III door). The very probatio
+testing them provided the live case: being full of CREDO_* macro
+invocations, it drew 46 FALSE spatium-definitionis rows the moment the
+post-edit hook linted it. Mechanism: a call INSIDE a macro body has all
+its tokens collapsed to the invocation site — the callee "ends" at
+invocation-column+len while the paren claims the invocation column
+itself, so the measured gap goes negative (-15). The evolutio-III
+hardening had assumed parens were 1:1-honest via radix — true for
+latina keyword parens, false for parens inside macro bodies; lib/ and
+include/ never fired it loudly because their residual rows were
+silently unfixable (tolerans dropped the edits).
+
+Fix in _vocationem_censere: apertum through _token_fons (a call paren
+must be SOURCE to judge call spacing) + the callee subtree gated by
+silva_nodus_geometria_fida — the first bespoke-guard replacement by
+the silva query, exactly as the door promised. TDD: probatio section
+"vocatio in corpore macri" pinned first (macro-body call = 0 rows,
+honest spaced call in the same fixture still fires — no over-cut).
+
+Gates: probatio 210/210; silva 41/41; corpus census 6,499 -> 6,491
+with longitudo/vexillum byte-identical — EIGHT of the 102 "honest
+unfixable" residuals across lib/+include were actually this false
+class (zero spatium-definitionis rows remain). Lint-only rule change:
+removes judgments, cannot create edits — formatted corpus fixpoint
+undisturbed by construction.
+
+Remaining adoption door: the other _valor_radix anchor sites (statement
+keywords/braces) survived the whole lib/include corpus clean; if the
+probationes rollout (CREDO-dense terrain) fires new classes, the cheap
+general design is a per-parse LYING-SITE set (one linear pass over
+parsura->lexemata marking sites claimed by >=2 distinct tokens; then
+per-token honesty is O(1)) rather than per-node subtree walks.

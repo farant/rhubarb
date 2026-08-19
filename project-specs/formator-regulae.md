@@ -462,3 +462,20 @@ the target — the norm is, and recent practice sits under 72.
 Census baseline with exclusions live: 14286 divergences in 244 of
 291 judged files (tabs 7772 / long 5225 / banners 1237 / trailing
 51 / keyword-spacing 1).
+
+## Status ADOPTIONIS PROVENIENTIAE (2026-08-19)
+
+Silva quaestiones provenientiae praebet (5b3dab~: silva_nodus_
+est_fons_purus severa + silva_nodus_geometria_fida — sedes radicum
+distinctae; expansio 1:1 fida, 1:N collabitur). Adoptio prima:
+R2-vocatio (_vocationem_censere) — apertum per _token_fons (paren
+fontis sola iudicatur) + subarbor functionis per geometria_fida.
+Classis falsorum interfecta: vocatio in corpore macri (hiatus
+negativi; XLVI ordines in probatione ipsa quaestionum, VIII
+residua "infixabilia" trans lib/+include — census 6499→6491,
+spatium-definitionis residuum NULLUM). Porta corporis formati
+intacta per constructionem (iudicia sola remota). Ostium: sedes
+_valor_radix reliquae (ancorae sententiarum) mundae trans lib/
+include; si evolutio probationum (terra CREDO-densa) classes novas
+accendit, consilium generale = tabula SEDIUM MENTIENTIUM per
+parsuram (transitus linearis unus; honestas per lexema O(1)).

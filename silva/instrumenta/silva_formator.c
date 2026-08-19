@@ -1178,9 +1178,19 @@ _vocationem_censere (
            i32  cb;
 
     functio = _valor_nodus(silva_c89_vocatio_functio(vocatio));
-    apertum = _valor_radix(
+    /* parenthesis FONTIS sola iudicatur: vocatio in corpore macri
+     * lexemata omnia ad sedem invocationis collabit - hiatus
+     * mensuratus mendax (negativus; XLVI ordines falsi e macris
+     * CREDO in probationibus). Extensio functionis quoque fida
+     * esse debet (quaestio silvae, non custos localis). */
+    apertum = _token_fons(
         silva_c89_vocatio_tok_apertum(vocatio));
     si (!functio || !_principalis(ambitus, apertum)) redde;
+    si (!silva_nodus_geometria_fida(ambitus->piscina, functio,
+        ambitus->fons_princeps))
+    {
+        redde;
+    }
     si (!_extensio(functio, ambitus->fons_princeps,
         &la, &ca, &lb, &cb))
     {
