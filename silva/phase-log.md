@@ -12683,3 +12683,18 @@ Fractura XII iterationum honeste recusavit - machina recusationis
 se solvit. PORTAE silvae: visibilitas typorum lexici pro oraculo;
 differre directivae bis apparentes (ADDITA+REMOTA pro cosmetica).
 Evolutio II: X plagulae fundamenti, omnes portae virides.
+
+## 2026-08-19 — formator: visibilitas typorum lexici
+
+Damnum congelatum 'i8 * x;' (Fran in nuntium.c invenit) ad
+radicem ductum: (1) via lexici directivas SOLAS processat -
+typedefs latinae numquam arborem attingunt; (2) custos LATINA_H
+a lexico definitus corpus plagulae praebitae supprimit. Sanatio:
+formator_latinam_praebere - custos VACUATUS (non deletus,
+positiones servatae), typedefs fluunt, oraculum registrat.
+Probatio differentialis: stella prava II flagrat pro ZEPHYRUM.
+Cursus sanationis: XLI sedes damni trans VI plagulas emendatae;
+classis FILUM (=FILE, typus SYSTEMATIS - numquam parsatur) manu
+sanata et porta nominata. Portae silvae: contentum lexici
+fluere (radix vera); visibilitas typorum systematis. Probatio
+185/185; suites virides.

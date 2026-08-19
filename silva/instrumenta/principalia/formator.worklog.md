@@ -476,3 +476,56 @@ chorda_aedificator 441/3, iter_directoria 220/3, tabula_dispersa
 18/3. differre all [cosmetica] (filum's directive rows explained
 above); examen ACCIPE ×10; root suite 136/137 (planta_lectio
 pre-existing); silva 40/40. Probatio 179/179.
+
+## 2026-08-19 — lexicon-type visibility: the root of the ambiguus class
+
+Fran spotted `i8 * novum_datum;` in nuntium.c — frozen damage from
+the PRE-cut era: `typus * titulus;` in statement position is the
+classic declaration-vs-multiplication ambiguity, and before the
+AMBIGUUS cut the walk enforced both readings (R10's binarium
+spacing on the multiplication arm inserted the spaces; the
+converged hybrid satisfied both arms). Post-cut, lint went blind
+to the site and froze it. Damage census: 41 sites across 6 files
+(chorda 14, filum 11, xar 7, chorda_aedificator 4, json 3,
+nuntium 1) — ALL i8*/FILUM* i.e. LEXICON-typed.
+
+ROOT CAUSE (two mechanisms conspiring): (1) silva_parsare's
+lexicon path processes DIRECTIVES ONLY ("Reliqua lexici
+abiciuntur" — documented), so latina.h's typedef lines never
+reach the tree and never register with the oracle; (2) the disk
+include/latina.h IS praebere'd by the CLI, but the lexicon's
+'#define LATINA_H' survives (it IS a directive), so the include
+guard suppresses the real body. json's own JsonValor* locals
+aligned fine all along because FILE-LOCAL/header typedefs
+register normally — only latina primitives were invisible.
+
+FIX (formator-side, faithful): formator_latinam_praebere — the
+CLI praeberet latina.h with the guard NEUTRALIZED (the #ifndef/
+#define pair and the LAST #endif are BLANKED, not deleted — line
+positions and provenance preserved). The transitive
+#include "latina.h" in every house file then parses the real
+typedefs; identical macro redefinitions are legal C89 and silva
+tolerates them. Differential probatio pin: a guarded mini-latina
+praebere'd through the helper makes 'typus * x;' fire TWO
+columnae-binae (star + title) where the suppressed form yields
+ZERO (ambiguus-skipped).
+
+Repair pass over all 13 formatted files: chorda 48, json 17,
+xar 13, chorda_aedificator 7, nuntium 3, filum 2 emendationes —
+the nuntium glitch site now reads 'i32  nova_capacitas; /
+ i8* novum_datum;' (the exemplar two-column form). REMAINING
+CLASS: FILUM = #define FILUM FILE — a SYSTEM typedef (stdio.h is
+never parsed), genuinely unresolvable → those sites stay
+ambiguus-skipped; the 10 frozen filum.c sites hand-repaired
+(tight star restored), stable under re-scribere. DOOR: system
+typedef visibility (FILE/DIR...) — a praebere'd systema-mini or
+examen's systema_posix.h sections could feed the oracle; needs
+its own design pass. The SILVA-side door stands too: lexicon
+content flowing (typedefs, not just directives) would fix this
+at the true root for every silva consumer, not just the
+formator.
+
+Gates: examen ACCIPE x13; differre all [cosmetica] (filum's
+directive rows = the known classification quirk); root suite
+136/137 (planta_lectio pre-existing); silva 40/40. Probatio
+185/185.
