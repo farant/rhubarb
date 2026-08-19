@@ -224,3 +224,58 @@ transcript archived (the G1/G2 recovery lesson).
   first consumer decide).
 - memoriae_index-class knowledge invalidation policing: static verb
   column vs dynamic oracle-diff check after mutation.
+
+## 9. Simulatio I — prototypa_synchronizare (2026-08-19, same session)
+
+Pretend-implementation of verb one against real seams (house
+technique; findings grounded in header reads, unverified by
+compilation — strong hypotheses that shape the spec, to be confirmed
+at build time).
+
+**The architecture discovered (supersedes §8's open API question):**
+mutant emission = `silva_scribere_nodum` (structural, position-free —
+its header literally says "ingressus transformationum") to RENDER the
+replacement subtree, then a byte SPLICE into the original file at the
+old subtree's span. `silva_scribere_fontem` is offset-partitioned
+FIDELITY machinery, structurally hostile to mutant trees (copied
+offsets collide in its stratum-0 dedup) — never the mutant path.
+Route A (tree) and Route B (bytes) compose instead of competing:
+trees render and match; bytes land. The one new primitive =
+**emendatio-with-content** (the formator's paranoid applier
+generalized from whitespace-only to verb-contracted payloads;
+descending application, span validation, whole-file refusal all
+transfer).
+
+**Findings:**
+1. Committed trees immutable by contract (S27/S32) → verbs BUILD
+   replacement subtrees (clone-spine helper: fresh creare +
+   re-ponere; write-once becomes construction CHECKING; prospectus
+   sharing = the GLR fork mechanics reused).
+2. Token sharing across positions is structurally FORBIDDEN (trivia
+   single-ownership + scribere_fontem offset dedup) — copying is
+   law. Provenance fork: copy-as-FONS (cheap skeleton) vs
+   **ORIGO_MUTATIO** (mutation as provenance event = generation N+1,
+   unifying with the expansion-layer model; blocked only by the
+   emitter's NAMED deferral "PASTA/CHORDA/API in catena = fractura
+   clara" — a labeled dig site, not a surprise).
+3. Payloads arrive TRIVIA-STRIPPED (copied trivia carries the source
+   site's indentation); the formator restores house form — the §2
+   division of labor held on first contact.
+4. Contracts SHRINK on contact: the verb collapsed from "sync the
+   prototype head" to "replace the parameter-list span, content
+   token-matching the definition's" — specifiers legitimately differ
+   between definition and prototype. Expect per-verb narrowing.
+5. Verb one needs NO pattern language, NO DSL, NO components — plain
+   C against existing seams (vista + prototype shape-test for find;
+   clone helper; splice; gates). The walking-skeleton doctrine
+   demonstrated, not just asserted.
+6. Gates wire up from existing parts: differre (one
+   MUTATA[substantiva] expected, rest immotae — the 2026-08-19
+   pairing fix load-bearing immediately), reparse-identity (the
+   puritas probatio's token collector promotable to shared helper),
+   formator last.
+
+**Interview questions generated:** ORIGO_MUTATIO in v1 or after?
+emendatio-with-content extracted as shared instrumentum or grown in
+place? verb one = prototype-sync or the narrower
+parameter-list-replace it collapsed into?
